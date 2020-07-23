@@ -50,15 +50,7 @@ export function quotePattern(text: string): string {
  * @return {number[]}  Array of numbers representing the string's unicode character positions
  */
 export function unicodeChars(text: string): number[] {
-  let unicode: number[] = [];
-  for (let i = 0, m = text.length; i < m; i++) {
-    let n = text.charCodeAt(i);
-    if (n >= 0xD800 && n < 0xDBFF) {
-      n = (((n - 0xD800) << 10) + (text.charCodeAt(++i) - 0xDC00)) + 0x10000;
-    }
-    unicode.push(n);
-  }
-  return unicode;
+  return Array.from(text).map((c) => c.codePointAt(0));
 }
 
 /**

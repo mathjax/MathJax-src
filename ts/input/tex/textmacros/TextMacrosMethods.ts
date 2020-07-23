@@ -254,7 +254,7 @@ export const TextMacrosMethods = {
    * @param {string} name         The control sequence that called this function
    */
   CheckAutoload(parser: TextParser, name: string) {
-    const autoload = parser.configuration.packageData.autoload;
+    const autoload = parser.configuration.packageData.get('autoload');
     const texParser = parser.texParser;
     name = name.slice(1);
     //

@@ -62,7 +62,7 @@ export const ColorMethods: Record<string, ParseMethod> = {};
 ColorMethods.Color = function (parser: TexParser, name: string) {
   const model = parser.GetBrackets(name, '');
   const colorDef = parser.GetArgument(name);
-  const colorModel: ColorModel = parser.configuration.packageData.color.model;
+  const colorModel: ColorModel = parser.configuration.packageData.get('color').model;
   const color = colorModel.getColor(model, colorDef);
 
   const style = parser.itemFactory.create('style')
@@ -82,7 +82,7 @@ ColorMethods.Color = function (parser: TexParser, name: string) {
 ColorMethods.TextColor = function (parser: TexParser, name: string) {
   const model = parser.GetBrackets(name, '');
   const colorDef = parser.GetArgument(name);
-  const colorModel: ColorModel = parser.configuration.packageData.color.model;
+  const colorModel: ColorModel = parser.configuration.packageData.get('color').model;
   const color = colorModel.getColor(model, colorDef);
   const old = parser.stack.env['color'];
 
@@ -110,7 +110,7 @@ ColorMethods.DefineColor = function (parser: TexParser, name: string) {
   const model = parser.GetArgument(name);
   const def = parser.GetArgument(name);
 
-  const colorModel: ColorModel = parser.configuration.packageData.color.model;
+  const colorModel: ColorModel = parser.configuration.packageData.get('color').model;
   colorModel.defineColor(model, cname, def);
 };
 
@@ -123,7 +123,7 @@ ColorMethods.DefineColor = function (parser: TexParser, name: string) {
 ColorMethods.ColorBox = function (parser: TexParser, name: string) {
   const cname = parser.GetArgument(name);
   const math = ParseUtil.internalMath(parser, parser.GetArgument(name));
-  const colorModel: ColorModel = parser.configuration.packageData.color.model;
+  const colorModel: ColorModel = parser.configuration.packageData.get('color').model;
 
   const node = parser.create('node', 'mpadded', math, {
     mathbackground: colorModel.getColor('named', cname)
@@ -144,7 +144,7 @@ ColorMethods.FColorBox = function (parser: TexParser, name: string) {
   const cname = parser.GetArgument(name);
   const math = ParseUtil.internalMath(parser, parser.GetArgument(name));
   const options = parser.options.color;
-  const colorModel: ColorModel = parser.configuration.packageData.color.model;
+  const colorModel: ColorModel = parser.configuration.packageData.get('color').model;
 
   const node = parser.create('node', 'mpadded', math, {
     mathbackground: colorModel.getColor('named', cname),

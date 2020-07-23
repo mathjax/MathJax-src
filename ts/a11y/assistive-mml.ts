@@ -27,7 +27,23 @@ import {MathItem, AbstractMathItem, STATE, newState} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {OptionList, expandable} from '../util/Options.js';
-import {StyleList} from '../output/common/CssStyles.js';
+import {StyleList} from '../util/StyleList.js';
+
+/*==========================================================================*/
+
+export class LimitedMmlVisitor extends SerializedMmlVisitor {
+
+  /**
+   * @override
+   */
+  protected getAttributes(node: MmlNode): string {
+    /**
+     * Remove id from attribute output
+     */
+    return super.getAttributes(node).replace(/ ?id=".*?"/, '');
+  }
+
+}
 
 /**
  * Generic constructor for Mixins
@@ -51,8 +67,9 @@ newState('ASSISTIVEMML', 153);
 export interface AssistiveMmlMathItem<N, T, D> extends MathItem<N, T, D> {
   /**
    * @param {MathDocument} document  The document where assistive MathML is being added
+   * @param {boolean} force          True to force assistive MathML even if enableAssistiveMml is false
    */
-  assistiveMml(document: MathDocument<N, T, D>): void;
+  assistiveMml(document: MathDocument<N, T, D>, force?: boolean): void;
 }
 
 /**
@@ -74,33 +91,36 @@ export function AssistiveMmlMathItemMixin<N, T, D, B extends Constructor<Abstrac
 
     /**
      * @param {MathDocument} document   The MathDocument for the MathItem
+     * @param {boolean} force           True to force assistive MathML evenif enableAssistiveMml is false
      */
-    public assistiveMml(document: AssistiveMmlMathDocument<N, T, D>) {
-      if (this.state() >= STATE.ASSISTIVEMML || this.isEscaped) return;
+    public assistiveMml(document: AssistiveMmlMathDocument<N, T, D>, force: boolean = false) {
+      if (this.state() >= STATE.ASSISTIVEMML) return;
+      if (!this.isEscaped && (document.options.enableAssistiveMml || force)) {
+        const adaptor = document.adaptor;
+        //
+        // Get the serialized MathML
+        //
+        const mml = document.toMML(this.root).replace(/\n */g, '').replace(/<!--.*?-->/g, '');
+        //
+        // Parse is as HTML and retrieve the <math> element
+        //
+        const mmlNodes = adaptor.firstChild(adaptor.body(adaptor.parse(mml, 'text/html')));
+        //
+        // Create a container for the hidden MathML
+        //
+        const node = adaptor.node('mjx-assistive-mml', {
+          role: 'presentation', unselectable: 'on', display: (this.display ? 'block' : 'inline')
+        }, [mmlNodes]);
+        //
+        // Hide the typeset math from assistive technology and append the MathML that is visually
+        //   hidden from other users
+        //
+        adaptor.setAttribute(this.typesetRoot, 'role', 'presentation');
+        adaptor.setAttribute(adaptor.firstChild(this.typesetRoot) as N, 'aria-hidden', 'true');
+        adaptor.setStyle(this.typesetRoot, 'position', 'relative');
+        adaptor.append(this.typesetRoot, node);
+      }
       this.state(STATE.ASSISTIVEMML);
-      const adaptor = document.adaptor;
-      //
-      // Get the serialized MathML
-      //
-      const mml = document.toMML(this.root).replace(/\n */g, '').replace(/<!--.*?-->/g, '');
-      //
-      // Parse is as HTML and retrieve the <math> element
-      //
-      const mmlNodes = adaptor.firstChild(adaptor.body(adaptor.parse(mml, 'text/html')));
-      //
-      // Create a container for the hidden MathML
-      //
-      const node = adaptor.node('mjx-assistive-mml', {
-        role: 'presentation', unselectable: 'on', display: (this.display ? 'block' : 'inline')
-      }, [mmlNodes]);
-      //
-      // Hide the typeset math from assistive technology and append the MathML that is visually
-      //   hidden from other users
-      //
-      adaptor.setAttribute(this.typesetRoot, 'role', 'presentation');
-      adaptor.setAttribute(adaptor.firstChild(this.typesetRoot) as N, 'aria-hidden', 'true');
-      adaptor.setStyle(this.typesetRoot, 'position', 'relative');
-      adaptor.append(this.typesetRoot, node);
     }
 
   };
@@ -156,6 +176,7 @@ B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
      */
     public static OPTIONS: OptionList = {
       ...BaseDocument.OPTIONS,
+      enableAssistiveMml: true,
       renderActions: expandable({
         ...BaseDocument.OPTIONS.renderActions,
         assistiveMml: [STATE.ASSISTIVEMML]
@@ -193,7 +214,7 @@ B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
     /**
      * Visitor used for serializing internal MathML nodes
      */
-    protected visitor: SerializedMmlVisitor;
+    protected visitor: LimitedMmlVisitor;
 
     /**
      * Augment the MathItem class used for this MathDocument, and create the serialization visitor.
@@ -208,7 +229,7 @@ B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
       if (!ProcessBits.has('assistive-mml')) {
         ProcessBits.allocate('assistive-mml');
       }
-      this.visitor = new SerializedMmlVisitor(this.mmlFactory);
+      this.visitor = new LimitedMmlVisitor(this.mmlFactory);
       this.options.MathItem =
         AssistiveMmlMathItemMixin<N, T, D, Constructor<AbstractMathItem<N, T, D>>>(
           this.options.MathItem

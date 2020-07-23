@@ -16,7 +16,8 @@
  */
 
 /**
- * @fileoverview  Mixin that adds semantic enrichment to internal MathML
+ * @fileoverview  Mixin that computes complexity of the internal MathML
+ *                and optionally marks collapsible items
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -61,8 +62,9 @@ export interface ComplexityMathItem<N, T, D> extends EnrichedMathItem<N, T, D> {
 
   /**
    * @param {ComplexityMathDocument} document   The MathDocument for the MathItem
+   * @param {boolean} force                     True to force the computation even if enableComplexity is false
    */
-  complexity(document: ComplexityMathDocument<N, T, D>): void;
+  complexity(document: ComplexityMathDocument<N, T, D>, force?: boolean): void;
 
 }
 
@@ -85,13 +87,15 @@ EMItemC<N, T, D>>(BaseMathItem: B, computeComplexity: (node: MmlNode) => void): 
 
     /**
      * @param {ComplexityMathDocument} document   The MathDocument for the MathItem
+     * @param {boolean} force                     True to force the computation even if enableComplexity is false
      */
-    public complexity(document: ComplexityMathDocument<N, T, D>) {
-      if (this.state() < STATE.COMPLEXITY && !this.isEscaped) {
-        this.enrich(document);
+    public complexity(document: ComplexityMathDocument<N, T, D>, force: boolean = false) {
+      if (this.state() >= STATE.COMPLEXITY) return;
+      if (!this.isEscaped && (document.options.enableComplexity || force)) {
+        this.enrich(document, true);
         computeComplexity(this.root);
-        this.state(STATE.COMPLEXITY);
       }
+      this.state(STATE.COMPLEXITY);
     }
 
   };
@@ -138,6 +142,7 @@ EMDocC<N, T, D>>(BaseDocument: B): CMDocC<N, T, D> & B {
     public static OPTIONS: OptionList = {
       ...BaseDocument.OPTIONS,
       ...ComplexityVisitor.OPTIONS,
+      enableComplexity: true,
       ComplexityVisitor: ComplexityVisitor,
       renderActions: expandable({
         ...BaseDocument.OPTIONS.renderActions,
@@ -176,8 +181,10 @@ EMDocC<N, T, D>>(BaseDocument: B): CMDocC<N, T, D> & B {
      */
     public complexity() {
       if (!this.processed.isSet('complexity')) {
-        for (const math of this.math) {
-          (math as ComplexityMathItem<N, T, D>).complexity(this);
+        if (this.options.enableComplexity) {
+          for (const math of this.math) {
+            (math as ComplexityMathItem<N, T, D>).complexity(this);
+          }
         }
         this.processed.set('complexity');
       }

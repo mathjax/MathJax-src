@@ -28,7 +28,7 @@ import {CHTMLmtr} from './mtr.js';
 import {CHTMLmtd} from './mtd.js';
 import {MmlMtable} from '../../../core/MmlTree/MmlNodes/mtable.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {StyleList} from '../../common/CssStyles.js';
+import {StyleList} from '../../../util/StyleList.js';
 import {isPercent} from '../../../util/string.js';
 import {OptionList} from '../../../util/Options.js';
 

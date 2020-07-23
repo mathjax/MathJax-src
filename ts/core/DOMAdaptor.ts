@@ -115,6 +115,15 @@ export interface DOMAdaptor<N, T, D> {
   getElements(nodes: (string | N | N[])[], document: D): N[];
 
   /**
+   * Determine if a container node contains a given node is somewhere in its DOM tree
+   *
+   * @param {N} container  The container to search
+   * @param {N|T} node     The node to look for
+   * @return {boolean}     True if the node is in the container's DOM tree
+   */
+  contains(container: N, node: N | T): boolean;
+
+  /**
    * @param {N|T} node  The HTML node whose parent is to be obtained
    * @return {N}        The parent node of the given one
    */
@@ -317,6 +326,12 @@ export interface DOMAdaptor<N, T, D> {
   fontSize(node: N): number;
 
   /**
+   * @param {N} node        The HTML node whose font family is to be determined
+   * @return {string}       The font family
+   */
+  fontFamily(node: N): string;
+
+  /**
    * @param {N} node            The HTML node whose dimensions are to be determined
    * @param {number} em         The number of pixels in an em
    * @param {boolean} local     True if local coordinates are to be used in SVG elements
@@ -430,6 +445,11 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
    * @override
    */
   public abstract getElements(nodes: (string | N | N[])[], document: D): N[];
+
+  /**
+   * @override
+   */
+  public abstract contains(container: N, node: N | T): boolean;
 
   /**
    * @override
@@ -596,6 +616,11 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
    * @override
    */
   public abstract fontSize(node: N): number;
+
+  /**
+   * @override
+   */
+  public abstract fontFamily(node: N): string;
 
   /**
    * @override

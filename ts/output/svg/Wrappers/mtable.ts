@@ -29,7 +29,7 @@ import {SVGmtd} from './mtd.js';
 import {MmlMtable} from '../../../core/MmlTree/MmlNodes/mtable.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {OptionList} from '../../../util/Options.js';
-import {StyleList} from '../../common/CssStyles.js';
+import {StyleList} from '../../../util/StyleList.js';
 
 const CLASSPREFIX = 'mjx-';
 

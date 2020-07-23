@@ -50,6 +50,11 @@ MathJax.config.loader.paths.mathjax = (function () {
 Loader.preLoad('loader', 'startup', 'core', 'adaptors/liteDOM');
 require('../core/core.js');
 require('../adaptors/liteDOM/liteDOM.js');
+const REQUIRE = MathJax.config.loader.require;
+MathJax._.mathjax.mathjax.asyncLoad = function (name) {
+  return REQUIRE(name.charAt(0) === '.' ? path.resolve(root, name) : name);
+}
+
 
 /*
  * The initialization function.  Use as:

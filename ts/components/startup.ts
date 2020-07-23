@@ -166,11 +166,32 @@ export namespace Startup {
   export let document: MATHDOCUMENT = null;
 
   /**
-   * The promise for the startup process (the initial typesetting).
-   * Initially, it is resolved when the page is loaded and ready to be processed,
-   *   but it is replaced by the pageReady() action in the ready() function.
+   * The function that resolves the first promise defined below
+   *   (called in the defaultReady() function when MathJax is finished with
+   *    its initial typesetting)
    */
-  export let promise: Promise<void> = new Promise<void>((resolve, _reject) => {
+  export let promiseResolve: () => void;
+  /**
+   * The function that rejects the first promise defined below
+   *   (called in the defaultReady() function when MathJax's initial
+   *    typesetting fails)
+   */
+  export let promiseReject: (reason: any) => void;
+
+  /**
+   * The promise for the startup process (the initial typesetting).
+   * It is resolves or rejected in the ready() function.
+   */
+  export let promise = new Promise<void>((resolve, reject) => {
+    promiseResolve = resolve;
+    promiseReject = reject;
+  });
+
+  /**
+   * A promise that is resolved when the page contents are available
+   * for processing.
+   */
+  export let pagePromise = new Promise<void>((resolve, _reject) => {
     const doc = global.document;
     if (!doc || !doc.readyState || doc.readyState === 'complete' || doc.readyState === 'interactive') {
       resolve();
@@ -260,7 +281,10 @@ export namespace Startup {
   export function defaultReady() {
     getComponents();
     makeMethods();
-    promise = promise.then(() => CONFIG.pageReady());  // usually the initial typesetting call
+    pagePromise
+      .then(() => CONFIG.pageReady())  // usually the initial typesetting call
+      .then(() => promiseResolve())
+      .catch((err) => promiseReject(err));
   }
 
   /**
@@ -270,7 +294,9 @@ export namespace Startup {
    * Setting Mathjax.startup.pageReady in the configuration will override this.
    */
   export function defaultPageReady() {
-    return (CONFIG.typeset && MathJax.typesetPromise ? MathJax.typesetPromise(CONFIG.elements) : null);
+    return (CONFIG.typeset && MathJax.typesetPromise ?
+            MathJax.typesetPromise(CONFIG.elements) as Promise<void> :
+            Promise.resolve());
   }
 
   /**
@@ -327,19 +353,25 @@ export namespace Startup {
    * TypeseClear() clears all the MathItems from the document.
    */
   export function makeTypesetMethods() {
-    MathJax.typeset = (elements: any = null) => {
+    MathJax.typeset = (elements: any[] = null) => {
       document.options.elements = elements;
       document.reset();
       document.render();
     };
-    MathJax.typesetPromise = (elements: any = null) => {
+    MathJax.typesetPromise = (elements: any[] = null) => {
       document.options.elements = elements;
       document.reset();
       return mathjax.handleRetriesFor(() => {
         document.render();
       });
     };
-    MathJax.typesetClear = () => document.clear();
+    MathJax.typesetClear = (elements: any[] = null) => {
+      if (elements) {
+        document.clearMathItemsWithin(elements);
+      } else {
+        document.clear();
+      }
+    };
   }
 
   /**

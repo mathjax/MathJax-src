@@ -22,7 +22,7 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {Configuration, ConfigurationHandler} from '../Configuration.js';
+import {Configuration, ParserConfiguration, ConfigurationHandler} from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import {CommandMap} from '../SymbolMap.js';
 import {ParseMethod} from '../Types.js';
@@ -48,7 +48,7 @@ const MJCONFIG = MathJax.config;
  */
 function RegisterExtension(jax: TeX<any, any, any>, name: string) {
   const require = jax.parseOptions.options.require;
-  const required = jax.parseOptions.packageData.require.required as string[];
+  const required = jax.parseOptions.packageData.get('require').required as string[];
   const extension = name.substr(require.prefix.length);
   if (required.indexOf(extension) < 0) {
     required.push(extension);
@@ -72,13 +72,13 @@ function RegisterExtension(jax: TeX<any, any, any>, name: string) {
       //
       //  Register the extension with the jax's configuration
       //
-      (jax as any).configuration.register(handler, jax, options);
+      (jax as any).configuration.add(handler, jax, options);
       //
       // If there are preprocessors, restart so that they run
       // (we don't have access to the document or MathItem needed to call
       //  the preprocessors from here)
       //
-      const configured = jax.parseOptions.packageData.require.configured;
+      const configured = jax.parseOptions.packageData.get('require').configured;
       if (handler.preprocessors.length && !configured.has(extension)) {
         configured.set(extension, true);
         mathjax.retryAfter(Promise.resolve());
@@ -118,7 +118,7 @@ export function RequireLoad(parser: TexParser, name: string) {
     throw new TexError('BadRequire', 'Extension "%1" is now allowed to be loaded', extension);
   }
   if (Package.packages.has(extension)) {
-    RegisterExtension(parser.configuration.packageData.require.jax, extension);
+    RegisterExtension(parser.configuration.packageData.get('require').jax, extension);
   } else {
     mathjax.retryAfter(Loader.load(extension));
   }
@@ -127,12 +127,12 @@ export function RequireLoad(parser: TexParser, name: string) {
 /**
  * Save the jax so that it can be used when \require{} is processed.
  */
-function config(_config: Configuration, jax: TeX<any, any, any>) {
-  jax.parseOptions.packageData.require = {
+function config(_config: ParserConfiguration, jax: TeX<any, any, any>) {
+  jax.parseOptions.packageData.set('require', {
     jax: jax,                             // \require needs access to this
     required: [...jax.options.packages],  // stores the names of the packages that have been added
     configured: new Map()                 // stores the packages that have been configured
-  };
+  });
   const options = jax.parseOptions.options.require;
   const prefix = options.prefix;
   if (prefix.match(/[^_a-zA-Z0-9]/)) {

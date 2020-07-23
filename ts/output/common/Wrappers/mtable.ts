@@ -24,7 +24,7 @@
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {CommonMtr} from './mtr.js';
 import {CommonMo} from './mo.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 import {DIRECTION} from '../FontData.js';
 import {split, isPercent} from '../../../util/string.js';
 import {sum, max} from '../../../util/numeric.js';
