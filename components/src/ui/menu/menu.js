@@ -1,4 +1,3 @@
-import './context-menu.js';
 import './lib/menu.js';
 
 import {MenuHandler} from '../../../../js/ui/menu/MenuHandler.js';
