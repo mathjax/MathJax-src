@@ -104,7 +104,7 @@ CommonMactionMixin<SVGWrapper<any, any, any>, SVGConstructor<any, any, any>>(SVG
       // Add a click handler that changes the selection and rerenders the expression
       //
       node.setEventHandler('click', (event: Event) => {
-        if (!math.start.node) {
+        if (!math.end.node) {
           //
           // If the MathItem was created by hand, it might not have a node
           // telling it where to replace the existing math, so set it.
