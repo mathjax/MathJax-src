@@ -350,7 +350,7 @@ namespace ParseUtil {
    * @param {EnvList} def The attributes of the text node.
    * @return {MmlNode} The text node.
    */
-  function internalText(parser: TexParser, text: string, def: EnvList): MmlNode {
+  export function internalText(parser: TexParser, text: string, def: EnvList): MmlNode {
     // @test Label, Fbox, Hbox
     text = text.replace(/^\s+/, entities.nbsp).replace(/\s+$/, entities.nbsp);
     let textNode = parser.create('text', text);
