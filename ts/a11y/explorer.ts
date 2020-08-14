@@ -395,7 +395,7 @@ let allExplorers: {[options: string]: ExplorerInit} = {
     let [domain, style] = doc.options.a11y.speechRules.split('-');
     explorer.speechGenerator.setOptions({
       locale: doc.options.a11y.locale, domain: domain,
-      style: style, modality: 'speech'});
+      style: style, modality: 'speech', cache: false});
     explorer.showRegion = 'subtitles';
     return explorer;
   },
