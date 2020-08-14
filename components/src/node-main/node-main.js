@@ -21,16 +21,28 @@ combineDefaults(MathJax.config.loader, 'provides', provides);
 
 MathJax.config.loader.paths.mathjax = (function () {
   //
-  // Try to locate the mathjax-full or mathjax package
-  // If neither is found, try to use the directory where this file is located
+  // Convert a windows path to a unix path (when needed)
+  //
+  const convertWindows = (name) => (path.win32 || !name.match(/^[a-z]:\\/i)) ? name : name.replace(/\\/g, '/');
+  //
+  // Locate the directory for this file:
+  //   Note that __dirname is not effective in webpacked files,
+  //   but the complete path is listed in an error message's requireStack when require.resolve() fails.
   //
   try {
-    return path.resolve(MathJax.config.loader.require.resolve('mathjax-full/package.json'), '../es5');
-  } catch (err) {}
-  try {
-    return path.resolve(MathJax.config.loader.require.resolve('mathjax/package.json'), '../es5');
+    //
+    //  Try to locate a non-existing file in order to throw an error
+    //
+    const dir = MathJax.config.loader.require.resolve('mathjax/es5/non-existing-file');
+    //
+    //  (in case it ever exists, use its directory)
+    //
+    return path.dirname(convertWindows(dir));
   } catch (err) {
-    let dir = path.dirname(err.requireStack[0]); // err.requireStack[0] is the full path to this module
+    //
+    // Find the directory containing this file from the error message
+    //
+    let dir = path.dirname(convertWindows(err.requireStack[0]));
     if (path.basename(dir) == 'node-main') {
       //
       // This is components/src/node-main/node-main.js, so use
