@@ -74,7 +74,7 @@ CommonTextNodeMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
       adaptor.append(parent, this.jax.unknownText(text, variant, font));
     } else {
       const c = this.parent.stretch.c;
-      const chars = this.parent.remapChars(c ? [c] : this.unicodeChars(text, variant));
+      const chars = c ? [c] : this.parent.remapChars(this.unicodeChars(text, variant));
       for (const n of chars) {
         const data = this.getVariantChar(variant, n)[3];
         const font = (data.f ? ' TEX-' + data.f : '');

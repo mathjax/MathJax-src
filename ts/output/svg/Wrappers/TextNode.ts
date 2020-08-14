@@ -62,7 +62,7 @@ CommonTextNodeMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
       this.adaptor.append(parent, this.jax.unknownText(text, variant));
     } else {
       const c = this.parent.stretch.c;
-      const chars = this.parent.remapChars(c ? [c] : this.unicodeChars(text, variant));
+      const chars = c ? [c] : this.parent.remapChars(this.unicodeChars(text, variant));
       let x = 0;
       for (const n of chars) {
         x += this.placeChar(n, x, 0, parent, variant);

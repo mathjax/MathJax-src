@@ -64,7 +64,7 @@ export function CommonTextNodeMixin<T extends WrapperConstructor>(Base: T): Text
         bbox.w = w;
       } else {
         const c = this.parent.stretch.c;
-        const chars = this.parent.remapChars(c ? [c] : this.unicodeChars(text, variant));
+        const chars = c ? [c] : this.parent.remapChars(this.unicodeChars(text, variant));
         bbox.empty();
         //
         // Loop through the characters and add them in one by one
