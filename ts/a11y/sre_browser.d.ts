@@ -84,7 +84,8 @@ declare namespace SRE {
     style?: string,
     markup?: string,
     speech?: string,
-    semantics?: boolean
+    semantics?: boolean,
+    cache?: boolean
   };
   export function toEnriched(mml: string): void;
   export function setupEngine(obj: config): void;
