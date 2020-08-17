@@ -24,7 +24,7 @@
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
-const Uglify = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 /**************************************************************/
 
@@ -146,8 +146,9 @@ const PACKAGE = function (name, mathjax, libs, dir, dist) {
       hints: false
     },
     optimization: {
-      minimizer: [new Uglify({
-        uglifyOptions: {
+      minimize: true,
+      minimizer: [new TerserPlugin({
+        terserOptions: {
           output: {
             ascii_only: true
           }
