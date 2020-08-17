@@ -116,7 +116,7 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
       parts.push(starts.sort(sortLength).join('|'));
     }
     if (options['processEnvironments']) {
-      parts.push('\\\\begin\\{([^}]*)\\}');
+      parts.push('\\\\begin\\s*\\{([^}]*)\\}');
       this.env = i;
       i++;
     }
@@ -124,7 +124,7 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
       subparts.push('\\\\([\\\\$])');
     }
     if (options['processRefs']) {
-      subparts.push('(\\\\(?:eq)?ref\\{[^}]*\\})');
+      subparts.push('(\\\\(?:eq)?ref\\s*\\{[^}]*\\})');
     }
     if (subparts.length) {
       parts.push('(' + subparts.join('|') + ')');
@@ -150,11 +150,12 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
   /**
    * Create the pattern for a close delimiter
    *
-   * @param {string} end  The end delimiter text
-   * @return {RegExp}     The regular expression for the end delimiter
+   * @param {string} end   The end delimiter text
+   * @param {string} endp  The end delimiter pattern (overrides the literal end pattern)
+   * @return {RegExp}      The regular expression for the end delimiter
    */
-  protected endPattern(end: string): RegExp {
-    return new RegExp(quotePattern(end) + '|\\\\(?:[a-zA-Z]|.)|[{}]', 'g');
+  protected endPattern(end: string, endp?: string): RegExp {
+    return new RegExp((endp || quotePattern(end)) + '|\\\\(?:[a-zA-Z]|.)|[{}]', 'g');
   }
 
   /**
@@ -173,7 +174,7 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
     let i = pattern.lastIndex = start.index + start[0].length;
     let match: RegExpExecArray, braces: number = 0;
     while ((match = pattern.exec(text))) {
-      if (match[0] === close && braces === 0) {
+      if ((match[1] || match[0]) === close && braces === 0) {
         return protoItem<N, T>(start[0], text.substr(i, match.index - i), match[0],
                                n, start.index, match.index + match[0].length, display);
       } else if (match[0] === '{') {
@@ -198,8 +199,8 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
     this.start.lastIndex = 0;
     while ((start = this.start.exec(text))) {
       if (start[this.env] !== undefined && this.env) {
-        let end = '\\end{' + start[this.env] + '}';
-        match = this.findEnd(text, n, start, [end, true, this.endPattern(end)]);
+        let end = '\\\\end\\s*(\\{' + quotePattern(start[this.env]) + '\\})';
+        match = this.findEnd(text, n, start, ['{' + start[this.env] + '}', true, this.endPattern(null, end)]);
         if (match) {
           match.math = match.open + match.math + match.close;
           match.open = match.close = '';
