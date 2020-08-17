@@ -1,4 +1,4 @@
-const path = require('path');
+const path = eval("require('path')");  // use actual node version, not webpack's version
 
 /*
  * Load the needed MathJax components
@@ -19,52 +19,31 @@ combineDefaults(MathJax.config.loader, 'dependencies', dependencies);
 combineDefaults(MathJax.config.loader, 'paths', paths);
 combineDefaults(MathJax.config.loader, 'provides', provides);
 
-MathJax.config.loader.paths.mathjax = (function () {
-  //
-  // Convert a windows path to a unix path (when needed)
-  //
-  const convertWindows = (name) => (path.win32 || !name.match(/^[a-z]:\\/i)) ? name : name.replace(/\\/g, '/');
-  //
-  // Locate the directory for this file:
-  //   Note that __dirname is not effective in webpacked files,
-  //   but the complete path is listed in an error message's requireStack when require.resolve() fails.
-  //
-  try {
-    //
-    //  Try to locate a non-existing file in order to throw an error
-    //
-    const dir = MathJax.config.loader.require.resolve('mathjax/es5/non-existing-file');
-    //
-    //  (in case it ever exists, use its directory)
-    //
-    return path.dirname(convertWindows(dir));
-  } catch (err) {
-    //
-    // Find the directory containing this file from the error message
-    //
-    let dir = path.dirname(convertWindows(err.requireStack[0]));
-    if (path.basename(dir) == 'node-main') {
-      //
-      // This is components/src/node-main/node-main.js, so use
-      // components/src as the mathjax directory, and load the source array
-      //
-      dir = path.dirname(dir);
-      combineDefaults(MathJax.config.loader, 'source', require('../source.js').source);
-    }
-    return dir;
-  }
-})();
-
-
 /*
  * Preload core and liteDOM adaptor (needed for node)
  */
 Loader.preLoad('loader', 'startup', 'core', 'adaptors/liteDOM');
 require('../core/core.js');
 require('../adaptors/liteDOM/liteDOM.js');
-const REQUIRE = MathJax.config.loader.require;
-MathJax._.mathjax.mathjax.asyncLoad = function (name) {
-  return REQUIRE(name.charAt(0) === '.' ? path.resolve(root, name) : name);
+
+/*
+ * Set the mathjax root path to the location where node-main.js was loaded from,
+ * using the actual node __dirname, not the webpack one, and removing
+ * the directory if we are loaded from components/src/node-main.
+ */
+const dir = CONFIG.paths.mathjax = eval('__dirname');
+if (path.basename(dir) === 'node-main') {
+  CONFIG.paths.mathjax = path.dirname(dir);
+  combineDefaults(CONFIG, 'source', require('../source.js').source);
+  //
+  //  Set the asynchronous loader to use the js directory, so we can load
+  //  other files like entity definitions
+  //
+  const ROOT = path.resolve(dir, '../../../js');
+  const REQUIRE = MathJax.config.loader.require;
+  MathJax._.mathjax.mathjax.asyncLoad = function (name) {
+    return REQUIRE(name.charAt(0) === '.' ? path.resolve(ROOT, name) : name);
+  };
 }
 
 
