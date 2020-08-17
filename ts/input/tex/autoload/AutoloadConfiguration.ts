@@ -145,6 +145,7 @@ export const AutoloadConfiguration = Configuration.create(
         bbox: ['bbox'],
         boldsymbol: ['boldsymbol'],
         braket: ['bra', 'ket', 'braket', 'set', 'Bra', 'Ket', 'Braket', 'Set', 'ketbra', 'Ketbra'],
+        bussproofs: [[], ['prooftree']],
         cancel: ['cancel', 'bcancel', 'xcancel', 'cancelto'],
         color: ['color', 'definecolor', 'textcolor', 'colorbox', 'fcolorbox'],
         enclose: ['enclose'],
