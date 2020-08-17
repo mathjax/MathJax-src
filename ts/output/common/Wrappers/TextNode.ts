@@ -30,6 +30,12 @@ import {TextNode} from '../../../core/MmlTree/MmlNode.js';
  * The CommonTextNode interface
  */
 export interface CommonTextNode extends AnyWrapper {
+  /**
+   * @param {string} text     The text to remap
+   * @param {string} variant  The variant for the character
+   * @return {number[]}       The unicode points for the (remapped) text
+   */
+  remappedText(text: string, variant: string): number[];
 }
 
 /**
@@ -63,8 +69,7 @@ export function CommonTextNodeMixin<T extends WrapperConstructor>(Base: T): Text
         bbox.d = d;
         bbox.w = w;
       } else {
-        const c = this.parent.stretch.c;
-        const chars = this.parent.remapChars(c ? [c] : this.unicodeChars(text, variant));
+        const chars = this.remappedText(text, variant);
         bbox.empty();
         //
         // Loop through the characters and add them in one by one
@@ -94,6 +99,16 @@ export function CommonTextNodeMixin<T extends WrapperConstructor>(Base: T): Text
         }
         bbox.clean();
       }
+    }
+
+    /**
+     * @param {string} text     The text to remap
+     * @param {string} variant  The variant for the character
+     * @return {number[]}       The unicode points for the (remapped) text
+     */
+    public remappedText(text: string, variant: string): number[] {
+      const c = this.parent.stretch.c;
+      return (c ? [c] : this.parent.remapChars(this.unicodeChars(text, variant)));
     }
 
     /******************************************************/
