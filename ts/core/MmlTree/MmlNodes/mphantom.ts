@@ -30,15 +30,24 @@ import {AbstractMmlLayoutNode, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMphantom extends AbstractMmlLayoutNode {
-    public static defaults: PropertyList = {
-        ...AbstractMmlLayoutNode.defaults
-    };
-    public texClass = TEXCLASS.ORD;
 
-    /**
-     * @return {string}  The mphantom kind
-     */
-    public get kind() {
-        return 'mphantom';
-    }
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlLayoutNode.defaults
+  };
+
+  /**
+   * TeX class is ORD
+   */
+  public texClass = TEXCLASS.ORD;
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'mphantom';
+  }
+
 }

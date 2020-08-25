@@ -22,12 +22,12 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration} from '../Configuration.js';
-import {CommandMap} from '../SymbolMap.js';
-import TexParser from '../TexParser.js';
+import {Configuration, ParserConfiguration} from '../Configuration.js';
 import {MultlineItem} from './AmsItems.js';
 import {AbstractTags} from '../Tags.js';
+import {NEW_OPS} from './AmsMethods.js';
 import './AmsMappings.js';
+import {CommandMap} from '../SymbolMap.js';
 
 
 /**
@@ -40,24 +40,26 @@ export class AmsTags extends AbstractTags { }
 
 /**
  * Init method for AMS package.
- * @param {Configuration} config The current configuration.
+ * @param {ParserConfiguration} config The current configuration.
  */
-let init = function(config: Configuration) {
-  config.append(Configuration.extension());
+let init = function(config: ParserConfiguration) {
+  new CommandMap(NEW_OPS, {}, {});
+  config.append(Configuration.local({handler: {macro: [NEW_OPS]},
+                                    priority: -1}));
 };
 
 export const AmsConfiguration = Configuration.create(
-  'ams',
-  {handler: {
-    delimiter: ['AMSsymbols-delimiter', 'AMSmath-delimiter'],
-    macro: ['AMSsymbols-mathchar0mi', 'AMSsymbols-mathchar0m0',
-            'AMSsymbols-delimiter', 'AMSsymbols-macros',
-            'AMSmath-mathchar0mo', 'AMSmath-macros', 'AMSmath-delimiter'],
-    environment: ['AMSmath-environment']
-  },
-   items: {[MultlineItem.prototype.kind]: MultlineItem},
-   tags: {'ams': AmsTags},
-   init: init
+  'ams', {
+    handler: {
+      delimiter: ['AMSsymbols-delimiter', 'AMSmath-delimiter'],
+      macro: ['AMSsymbols-mathchar0mi', 'AMSsymbols-mathchar0m0',
+              'AMSsymbols-delimiter', 'AMSsymbols-macros',
+              'AMSmath-mathchar0mo', 'AMSmath-macros', 'AMSmath-delimiter'],
+      environment: ['AMSmath-environment']
+    },
+    items: {[MultlineItem.prototype.kind]: MultlineItem},
+    tags: {'ams': AmsTags},
+    init: init
   }
 );
 

@@ -23,11 +23,11 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonSemantics, CommonSemanticsMixin} from '../../common/Wrappers/semantics.js';
-import {BBox} from '../BBox.js';
+import {CommonSemanticsMixin} from '../../common/Wrappers/semantics.js';
+import {BBox} from '../../../util/BBox.js';
 import {MmlSemantics, MmlAnnotation, MmlAnnotationXML} from '../../../core/MmlTree/MmlNodes/semantics.js';
-import {MmlNode, XMLNode} from '../../../core/MmlTree/MmlNode.js';
-import {StyleList} from '../../common/CssStyles.js';
+import {XMLNode} from '../../../core/MmlTree/MmlNode.js';
+import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
@@ -37,19 +37,24 @@ import {StyleList} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLsemantics<N, T, D> extends CommonSemanticsMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
+// @ts-ignore
+export class CHTMLsemantics<N, T, D> extends
+CommonSemanticsMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
-    public static kind = MmlSemantics.prototype.kind;
+  /**
+   * The semantics wrapper
+   */
+  public static kind = MmlSemantics.prototype.kind;
 
-    /**
-     * @override
-     */
-    public toCHTML(parent: N) {
-        const chtml = this.standardCHTMLnode(parent);
-        if (this.childNodes.length) {
-            this.childNodes[0].toCHTML(chtml);
-        }
+  /**
+   * @override
+   */
+  public toCHTML(parent: N) {
+    const chtml = this.standardCHTMLnode(parent);
+    if (this.childNodes.length) {
+      this.childNodes[0].toCHTML(chtml);
     }
+  }
 
 }
 
@@ -63,23 +68,27 @@ export class CHTMLsemantics<N, T, D> extends CommonSemanticsMixin<CHTMLConstruct
  * @template D  The Document class
  */
 export class CHTMLannotation<N, T, D> extends CHTMLWrapper<N, T, D> {
-    public static kind = MmlAnnotation.prototype.kind;
 
-    /**
-     * @override
-     */
-    public toCHTML(parent: N) {
-        // FIXME:  output as plain text
-        super.toCHTML(parent);
-    }
+  /**
+   * The annotation wrapper
+   */
+  public static kind = MmlAnnotation.prototype.kind;
 
-    /**
-     * @override
-     */
-    public computeBBox() {
-        // FIXME:  compute using the DOM, if possible
-        return this.bbox;
-    }
+  /**
+   * @override
+   */
+  public toCHTML(parent: N) {
+    // FIXME:  output as plain text
+    super.toCHTML(parent);
+  }
+
+  /**
+   * @override
+   */
+  public computeBBox() {
+    // FIXME:  compute using the DOM, if possible
+    return this.bbox;
+  }
 
 }
 
@@ -92,14 +101,21 @@ export class CHTMLannotation<N, T, D> extends CHTMLWrapper<N, T, D> {
  * @template D  The Document class
  */
 export class CHTMLannotationXML<N, T, D> extends CHTMLWrapper<N, T, D> {
-    public static kind = MmlAnnotationXML.prototype.kind;
 
-    public static styles: StyleList = {
-        'mjx-annotation-xml': {
-            'font-family': 'initial',
-            'line-height': 'normal'
-        }
-    };
+  /**
+   * The annotation-xml wrapper
+   */
+  public static kind = MmlAnnotationXML.prototype.kind;
+
+  /**
+   * @override
+   */
+  public static styles: StyleList = {
+    'mjx-annotation-xml': {
+      'font-family': 'initial',
+      'line-height': 'normal'
+    }
+  };
 
 }
 
@@ -112,39 +128,47 @@ export class CHTMLannotationXML<N, T, D> extends CHTMLWrapper<N, T, D> {
  * @template D  The Document class
  */
 export class CHTMLxml<N, T, D> extends CHTMLWrapper<N, T, D> {
-    public static kind = XMLNode.prototype.kind;
 
-    public static autoStyle = false;
+  /**
+   * The xml wrapper
+   */
+  public static kind = XMLNode.prototype.kind;
 
-    /**
-     * @override
-     */
-    public toCHTML(parent: N) {
-        this.chtml = this.adaptor.append(parent, this.adaptor.clone((this.node as XMLNode).getXML() as N));
-    }
+  /**
+   * Don't set up inline-block styles for this
+   */
+  public static autoStyle = false;
 
-    /**
-     * @override
-     */
-    public computeBBox(bbox: BBox, recompute: boolean = false) {
-        const {w, h, d} = this.jax.measureXMLnode((this.node as XMLNode).getXML() as N);
-        bbox.w = w;
-        bbox.h = h;
-        bbox.d = d;
-    }
+  /**
+   * @override
+   */
+  public toCHTML(parent: N) {
+    this.chtml = this.adaptor.append(parent, this.adaptor.clone((this.node as XMLNode).getXML() as N));
+  }
 
-    /**
-     * @override
-     */
-    protected getStyles() {}
+  /**
+   * @override
+   */
+  public computeBBox(bbox: BBox, _recompute: boolean = false) {
+    const {w, h, d} = this.jax.measureXMLnode((this.node as XMLNode).getXML() as N);
+    bbox.w = w;
+    bbox.h = h;
+    bbox.d = d;
+  }
 
-    /**
-     * @override
-     */
-    protected getScale() {}
+  /**
+   * @override
+   */
+  protected getStyles() {}
 
-    /**
-     * @override
-     */
-    protected getVariant() {}
+  /**
+   * @override
+   */
+  protected getScale() {}
+
+  /**
+   * @override
+   */
+  protected getVariant() {}
+
 }

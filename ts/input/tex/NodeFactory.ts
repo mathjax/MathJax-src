@@ -23,13 +23,8 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {TextNode, MmlNode, AbstractMmlNode, AbstractMmlEmptyNode} from '../../core/MmlTree/MmlNode.js';
-import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
-import {Property, PropertyList} from '../../core/Tree/Node.js';
+import {TextNode, MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {MmlFactory} from '../../core/MmlTree/MmlFactory.js';
-import {Args} from './Types.js';
-import {OperatorDef} from '../../core/MmlTree/OperatorDictionary.js';
-import TexParser from './TexParser.js';
 import ParseOptions from './ParseOptions.js';
 import NodeUtil from './NodeUtil.js';
 
@@ -61,13 +56,6 @@ export class NodeFactory {
      'text': NodeFactory.createText,
      'error': NodeFactory.createError
     };
-
-  /**
-   * @param {MmlFactory} mmlFactory   The MmlFactory for the TeX jax to use
-   */
-  public setMmlFactory(mmlFactory: MmlFactory) {
-    this.mmlFactory = mmlFactory;
-  }
 
   /**
    * Default node generation function.
@@ -111,7 +99,7 @@ export class NodeFactory {
     }
     NodeUtil.setProperties(node, def);
     return node;
-  };
+  }
 
 
   /**
@@ -140,7 +128,7 @@ export class NodeFactory {
       return null;
     }
     return (factory.mmlFactory.create('text') as TextNode).setText(text);
-  };
+  }
 
 
   /**
@@ -152,10 +140,17 @@ export class NodeFactory {
   public static createError(factory: NodeFactory, message: string): MmlNode  {
     let text = factory.create('text', message);
     let mtext = factory.create('node', 'mtext', [], {}, text);
-    let error = factory.create('node', 'merror', [mtext]);
+    let error = factory.create('node', 'merror', [mtext], {'data-mjx-error': message});
     return error;
-  };
+  }
 
+
+  /**
+   * @param {MmlFactory} mmlFactory   The MmlFactory for the TeX jax to use
+   */
+  public setMmlFactory(mmlFactory: MmlFactory) {
+    this.mmlFactory = mmlFactory;
+  }
 
   /**
    * Adds a method to the factory.

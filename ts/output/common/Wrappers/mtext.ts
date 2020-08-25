@@ -22,7 +22,6 @@
  */
 
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
-import {BBox} from '../BBox.js';
 
 /*****************************************************************/
 /**
@@ -43,47 +42,45 @@ export type MtextConstructor = Constructor<CommonMtext>;
  * @template T  The Wrapper class constructor type
  */
 export function CommonMtextMixin<T extends WrapperConstructor>(Base: T): MtextConstructor & T {
-    return class extends Base {
 
-        /**
-         * The font-family, weight, and style to use for the variants when mtextInheritFont
-         * is true.  If not in this list, then usual MathJax fonts are used instead.
-         */
-        public static INHERITFONTS = {
-            normal: ['', '', ''],
-            bold: ['', 'bold', ''],
-            italic: ['', '', 'italic'],
-            'bold-italic': ['', 'bold', 'italic'],
-            script: ['cursive', '', ''],
-            'bold-script': ['cursive', 'bold', ''],
-            'sans-serif': ['sans-serif', '', ''],
-            'bold-sans-serif': ['sans-serif', 'bold', ''],
-            'sans-serif-italic': ['sans-serif', '', 'italic'],
-            'sans-serif-bold-italic': ['sans-serif', 'bold', 'italic'],
-            monospace: ['monospace', '', '']
-        };
+  return class extends Base {
 
-        /**
-         * @override
-         */
-        protected getVariant() {
-            const options = this.jax.options;
-            //
-            //  If the font is to be inherited from the surrounding text, check the mathvariant
-            //  and see if it allows for inheritance. If so, set the variant appropriately,
-            //  otherwise get the usual variant.
-            //
-            if (options.mtextInheritFont || (options.merrorInheritFont && this.node.Parent.isKind('merror'))) {
-                const variant = this.node.attributes.get('mathvariant') as string;
-                const font = (this.constructor as any).INHERITFONTS[variant] as [string, string, string];
-                if (font) {
-                    this.variant = this.explicitVariant(...font);
-                    return;
-                }
-            }
-            super.getVariant();
-        }
-
+    /**
+     * The font-family, weight, and style to use for the variants when mtextInheritFont
+     * is true or mtextFont is specified.  If not in this list, then the font's
+     * getCssFont() is called.  When the font family is not specified (as in these four),
+     * the inherited or specified font is used.
+     */
+    public static INHERITFONTS = {
+      normal: ['', false, false],
+      bold: ['', false, true],
+      italic: ['', true, false],
+      'bold-italic': ['', true, true]
     };
+
+    /**
+     * @override
+     */
+    protected getVariant() {
+      const options = this.jax.options;
+      const data = this.jax.math.outputData;
+      //
+      //  If the font is to be inherited from the surrounding text, check the mathvariant
+      //  and see if it allows for inheritance. If so, set the variant appropriately,
+      //  otherwise get the usual variant.
+      //
+      const merror = ((!!data.merrorFamily || !!options.merrorFont) && this.node.Parent.isKind('merror'));
+      if (!!data.mtextFamily || !!options.mtextFont || merror) {
+        const variant = this.node.attributes.get('mathvariant') as string;
+        const font = (this.constructor as any).INHERITFONTS[variant] || this.jax.font.getCssFont(variant);
+        const family = font[0] || (merror ? data.merrorFamily || options.merrorFont :
+                                            data.mtextFamily || options.mtextFont);
+        this.variant = this.explicitVariant(family, font[2] ? 'bold' : '', font[1] ? 'italic' : '');
+        return;
+      }
+      super.getVariant();
+    }
+
+  };
 
 }

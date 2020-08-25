@@ -25,7 +25,7 @@
 import {AnyWrapper, Constructor} from '../Wrapper.js';
 import {CommonScriptbase, ScriptbaseConstructor} from './scriptbase.js';
 import {MmlMunderover, MmlMunder, MmlMover} from '../../../core/MmlTree/MmlNodes/munderover.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 
 /*****************************************************************/
 /**
@@ -50,49 +50,52 @@ export type MunderConstructor<W extends AnyWrapper> = Constructor<CommonMunder<W
  * @template W  The child-node Wrapper class
  * @template T  The Wrapper class constructor type
  */
-export function CommonMunderMixin<W extends AnyWrapper,
-                                  T extends ScriptbaseConstructor<W>>(Base: T): MunderConstructor<W> & T {
-    return class extends Base {
+export function CommonMunderMixin<
+  W extends AnyWrapper,
+  T extends ScriptbaseConstructor<W>
+>(Base: T): MunderConstructor<W> & T {
 
-        /**
-         * @override
-         */
-        public get script() {
-            return this.childNodes[(this.node as MmlMunder).under];
-        }
+  return class extends Base {
 
-        /**
-         * @override
-         * @constructor
-         */
-        constructor(...args: any[]) {
-            super(...args);
-            this.stretchChildren();
-        }
+    /**
+     * @override
+     */
+    public get script() {
+      return this.childNodes[(this.node as MmlMunder).under];
+    }
 
-        /**
-         * @override
-         */
-        public computeBBox(bbox: BBox, recompute: boolean = false) {
-            if (this.hasMovableLimits()) {
-                super.computeBBox(bbox, recompute);
-                return;
-            }
-            bbox.empty();
-            const basebox = this.baseChild.getBBox();
-            const underbox = this.script.getBBox();
-            const [k, v] = this.getUnderKV(basebox, underbox);
-            const delta = this.getDelta(true);
-            const [bw, uw] = this.getDeltaW([basebox, underbox], [0, -delta]);
-            bbox.combine(basebox, bw, 0);
-            bbox.combine(underbox, uw, v);
-            bbox.d += this.font.params.big_op_spacing5;
-            bbox.ic = -this.baseCore.bbox.ic;
-            bbox.clean();
-            this.setChildPWidths(recompute);
-        }
+    /**
+     * @override
+     * @constructor
+     */
+    constructor(...args: any[]) {
+      super(...args);
+      this.stretchChildren();
+    }
 
-    };
+    /**
+     * @override
+     */
+    public computeBBox(bbox: BBox, recompute: boolean = false) {
+      if (this.hasMovableLimits()) {
+        super.computeBBox(bbox, recompute);
+        return;
+      }
+      bbox.empty();
+      const basebox = this.baseChild.getBBox();
+      const underbox = this.script.getBBox();
+      const v = this.getUnderKV(basebox, underbox)[1];
+      const delta = this.getDelta(true);
+      const [bw, uw] = this.getDeltaW([basebox, underbox], [0, -delta]);
+      bbox.combine(basebox, bw, 0);
+      bbox.combine(underbox, uw, v);
+      bbox.d += this.font.params.big_op_spacing5;
+      bbox.ic = -this.baseCore.bbox.ic;
+      bbox.clean();
+      this.setChildPWidths(recompute);
+    }
+
+  };
 
 }
 
@@ -119,48 +122,51 @@ export type MoverConstructor<W extends AnyWrapper> = Constructor<CommonMover<W>>
  * @template W  The child-node Wrapper class
  * @template T  The Wrapper class constructor type
  */
-export function CommonMoverMixin<W extends AnyWrapper,
-                                 T extends ScriptbaseConstructor<W>>(Base: T): MoverConstructor<W> & T {
-    return class extends Base {
+export function CommonMoverMixin<
+  W extends AnyWrapper,
+  T extends ScriptbaseConstructor<W>
+>(Base: T): MoverConstructor<W> & T {
 
-        /**
-         * @override
-         */
-        public get script() {
-            return this.childNodes[(this.node as MmlMover).over];
-        }
+  return class extends Base {
 
-        /**
-         * @override
-         * @constructor
-         */
-        constructor(...args: any[]) {
-            super(...args);
-            this.stretchChildren();
-        }
+    /**
+     * @override
+     */
+    public get script() {
+      return this.childNodes[(this.node as MmlMover).over];
+    }
 
-        /*
-         * @override
-         */
-        public computeBBox(bbox: BBox) {
-            if (this.hasMovableLimits()) {
-                super.computeBBox(bbox);
-                return;
-            }
-            bbox.empty();
-            const basebox = this.baseChild.getBBox();
-            const overbox = this.script.getBBox();
-            const [k, u] = this.getOverKU(basebox, overbox);
-            const delta = this.getDelta();
-            const [bw, ow] = this.getDeltaW([basebox, overbox], [0, delta]);
-            bbox.combine(basebox, bw, 0);
-            bbox.combine(overbox, ow, u);
-            bbox.h += this.font.params.big_op_spacing5;
-            bbox.ic = -this.baseCore.bbox.ic;
-            bbox.clean();
-        }
+    /**
+     * @override
+     * @constructor
+     */
+    constructor(...args: any[]) {
+      super(...args);
+      this.stretchChildren();
+    }
 
-    };
+    /**
+     * @override
+     */
+    public computeBBox(bbox: BBox) {
+      if (this.hasMovableLimits()) {
+        super.computeBBox(bbox);
+        return;
+      }
+      bbox.empty();
+      const basebox = this.baseChild.getBBox();
+      const overbox = this.script.getBBox();
+      const u = this.getOverKU(basebox, overbox)[1];
+      const delta = this.getDelta();
+      const [bw, ow] = this.getDeltaW([basebox, overbox], [0, delta]);
+      bbox.combine(basebox, bw, 0);
+      bbox.combine(overbox, ow, u);
+      bbox.h += this.font.params.big_op_spacing5;
+      bbox.ic = -this.baseCore.bbox.ic;
+      bbox.clean();
+    }
+
+  };
 
 }
 
@@ -172,15 +178,15 @@ export function CommonMoverMixin<W extends AnyWrapper,
  */
 export interface CommonMunderover<W extends AnyWrapper> extends CommonScriptbase<W> {
 
-    /*
-     * The wrapped under node
-     */
-    readonly underChild: W;
+  /*
+   * The wrapped under node
+   */
+  readonly underChild: W;
 
-    /*
-     * The wrapped overder node
-     */
-    readonly overChild: W;
+  /*
+   * The wrapped overder node
+   */
+  readonly overChild: W;
 
 }
 
@@ -198,77 +204,80 @@ export type MunderoverConstructor<W extends AnyWrapper> = Constructor<CommonMund
  * @template W  The child-node Wrapper class
  * @template T  The Wrapper class constructor type
  */
-export function CommonMunderoverMixin<W extends AnyWrapper,
-                                      T extends ScriptbaseConstructor<W>>(Base: T): MunderoverConstructor<W> & T {
-    return class extends Base {
+export function CommonMunderoverMixin<
+  W extends AnyWrapper,
+  T extends ScriptbaseConstructor<W>
+>(Base: T): MunderoverConstructor<W> & T {
 
-        /*
-         * @return {W}   The wrapped under node
-         */
-        public get underChild() {
-            return this.childNodes[(this.node as MmlMunderover).under];
-        }
+  return class extends Base {
 
-        /*
-         * @return {W}   The wrapped overder node
-         */
-        public get overChild() {
-            return this.childNodes[(this.node as MmlMunderover).over];
-        }
+    /*
+     * @return {W}   The wrapped under node
+     */
+    public get underChild() {
+      return this.childNodes[(this.node as MmlMunderover).under];
+    }
 
-        /*
-         * Needed for movablelimits
-         *
-         * @override
-         */
-        public get subChild() {
-            return this.underChild;
-        }
+    /*
+     * @return {W}   The wrapped overder node
+     */
+    public get overChild() {
+      return this.childNodes[(this.node as MmlMunderover).over];
+    }
 
-        /*
-         * Needed for movablelimits
-         *
-         * @override
-         */
-        public get supChild() {
-            return this.overChild;
-        }
+    /*
+     * Needed for movablelimits
+     *
+     * @override
+     */
+    public get subChild() {
+      return this.underChild;
+    }
 
-        /*
-         * @override
-         * @constructor
-         */
-        constructor(...args: any[]) {
-            super(...args);
-            this.stretchChildren();
-        }
+    /*
+     * Needed for movablelimits
+     *
+     * @override
+     */
+    public get supChild() {
+      return this.overChild;
+    }
 
-        /*
-         * @override
-         */
-        public computeBBox(bbox: BBox) {
-            if (this.hasMovableLimits()) {
-                super.computeBBox(bbox);
-                return;
-            }
-            bbox.empty();
-            const overbox = this.overChild.getBBox();
-            const basebox = this.baseChild.getBBox();
-            const underbox = this.underChild.getBBox();
-            const [ok, u] = this.getOverKU(basebox, overbox);
-            const [uk, v] = this.getUnderKV(basebox, underbox);
-            const delta = this.getDelta();
-            const [bw, uw, ow] = this.getDeltaW([basebox, underbox, overbox], [0, -delta, delta]);
-            bbox.combine(basebox, bw, 0);
-            bbox.combine(overbox, ow, u);
-            bbox.combine(underbox, uw, v);
-            const z = this.font.params.big_op_spacing5;
-            bbox.h += z;
-            bbox.d += z;
-            bbox.ic = -this.baseCore.bbox.ic;
-            bbox.clean();
-        }
+    /**
+     * @override
+     * @constructor
+     */
+    constructor(...args: any[]) {
+      super(...args);
+      this.stretchChildren();
+    }
 
-    };
+    /**
+     * @override
+     */
+    public computeBBox(bbox: BBox) {
+      if (this.hasMovableLimits()) {
+        super.computeBBox(bbox);
+        return;
+      }
+      bbox.empty();
+      const overbox = this.overChild.getBBox();
+      const basebox = this.baseChild.getBBox();
+      const underbox = this.underChild.getBBox();
+      const u = this.getOverKU(basebox, overbox)[1];
+      const v = this.getUnderKV(basebox, underbox)[1];
+      const delta = this.getDelta();
+      const [bw, uw, ow] = this.getDeltaW([basebox, underbox, overbox], [0, -delta, delta]);
+      bbox.combine(basebox, bw, 0);
+      bbox.combine(overbox, ow, u);
+      bbox.combine(underbox, uw, v);
+      const z = this.font.params.big_op_spacing5;
+      bbox.h += z;
+      bbox.d += z;
+      bbox.ic = -this.baseCore.bbox.ic;
+      bbox.clean();
+    }
+
+  };
 
 }

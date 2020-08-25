@@ -22,7 +22,6 @@
  */
 
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
-import {TextNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -43,28 +42,29 @@ export type MnConstructor = Constructor<CommonMn>;
  * @template T  The Wrapper class constructor type
  */
 export function CommonMnMixin<T extends WrapperConstructor>(Base: T): MnConstructor & T {
-    return class extends Base {
 
-        /**
-         * @override
-         */
-        public remapChars(chars: number[]) {
-            //
-            //  Convert a leading hyphen to a minus
-            //
-            if (chars.length) {
-                const text = this.font.getRemappedChar('mn', chars[0]);
-                if (text) {
-                    const c = this.unicodeChars(text, this.variant);
-                    if (c.length === 1) {
-                        chars[0] = c[0];
-                    } else {
-                        chars = c.concat(chars.slice(1));
-                    }
-                }
-            }
-            return chars;
+  return class extends Base {
+
+    /**
+     * @override
+     */
+    public remapChars(chars: number[]) {
+      //
+      //  Convert a leading hyphen to a minus
+      //
+      if (chars.length) {
+        const text = this.font.getRemappedChar('mn', chars[0]);
+        if (text) {
+          const c = this.unicodeChars(text, this.variant);
+          if (c.length === 1) {
+            chars[0] = c[0];
+          } else {
+            chars = c.concat(chars.slice(1));
+          }
         }
-    };
+      }
+      return chars;
+    }
+  };
 
 }

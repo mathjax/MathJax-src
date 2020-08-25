@@ -30,32 +30,42 @@ import {AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMroot extends AbstractMmlNode {
-    public static defaults: PropertyList = {
-        ...AbstractMmlNode.defaults
-    };
-    public texClass = TEXCLASS.ORD;
 
-    /**
-     * @return {string}  The mroot kind
-     */
-    public get kind() {
-        return 'mroot';
-    }
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlNode.defaults
+  };
 
-    /**
-     * @return {number}  <mroot> requires two children
-     */
-    public get arity() {
-        return 2;
-    }
+  /**
+   * TeX class is ORD
+   */
+  public texClass = TEXCLASS.ORD;
 
-    /**
-     * Set the children display/level/prime for the base and root.
-     *
-     * @override
-     */
-    protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-        this.childNodes[0].setInheritedAttributes(attributes, display, level, true);
-        this.childNodes[1].setInheritedAttributes(attributes, false, level + 2, prime);
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'mroot';
+  }
+
+  /**
+   * <mroot> requires two children
+   * @override
+   */
+  public get arity() {
+    return 2;
+  }
+
+  /**
+   * Set the children display/level/prime for the base and root.
+   *
+   * @override
+   */
+  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+    this.childNodes[0].setInheritedAttributes(attributes, display, level, true);
+    this.childNodes[1].setInheritedAttributes(attributes, false, level + 2, prime);
+  }
+
 }

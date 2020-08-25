@@ -22,7 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {TextNode, MmlNode, AbstractMmlNode, AbstractMmlEmptyNode} from '../../core/MmlTree/MmlNode.js';
+import {TextNode, MMLNODE, MmlNode, AbstractMmlNode, AbstractMmlEmptyNode} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {Property, PropertyList} from '../../core/Tree/Node.js';
 import {Args} from './Types.js';
@@ -44,8 +44,6 @@ namespace NodeUtil {
     ['close', true]
   ]);
 
-  const methodOut: boolean = false;
-
 
   /**
    * Creates a single character from a unicode hex string.
@@ -53,18 +51,18 @@ namespace NodeUtil {
    * @return {string} The newly created entity.
    */
   export function createEntity(code: string): string  {
-    return String.fromCharCode(parseInt(code, 16));
-  };
+    return String.fromCodePoint(parseInt(code, 16));
+  }
 
 
   /**
    * Get the children of the a node.
-   * @param {MmlNode} node The node. 
-   * @return {(MmlNode|TextNode)[]} Its children.
+   * @param {MmlNode} node The node.
+   * @return {MMLNODE[]} Its children.
    */
-  export function getChildren(node: MmlNode): (MmlNode|TextNode)[] {
-    return (node.childNodes as (MmlNode|TextNode)[]);
-  };
+  export function getChildren(node: MmlNode): MMLNODE[] {
+    return (node.childNodes as MMLNODE[]);
+  }
 
 
   /**
@@ -74,19 +72,19 @@ namespace NodeUtil {
    */
   export function getText(node: TextNode): string {
     return node.getText();
-  };
+  }
 
 
   /**
    * Append children to a node.
    * @param {MmlNode} node The node.
-   * @param {(MmlNode|TextNode)[]} children A list of new children.
+   * @param {MMLNODE[]} children A list of new children.
    */
-  export function appendChildren(node: MmlNode, children: (MmlNode|TextNode)[])  {
+  export function appendChildren(node: MmlNode, children: MMLNODE[])  {
     for (let child of children) {
       node.appendChild(child);
     }
-  };
+  }
 
 
   /**
@@ -97,7 +95,7 @@ namespace NodeUtil {
    */
   export function setAttribute(node: MmlNode, attribute: string, value: Args) {
     node.attributes.set(attribute, value);
-  };
+  }
 
 
   /**
@@ -108,7 +106,7 @@ namespace NodeUtil {
    */
   export function setProperty(node: MmlNode, property: string, value: Args) {
     node.setProperty(property, value);
-  };
+  }
 
 
   /**
@@ -135,7 +133,7 @@ namespace NodeUtil {
         node.attributes.set(name, value);
       }
     }
-  };
+  }
 
 
   /**
@@ -146,13 +144,13 @@ namespace NodeUtil {
    */
   export function getProperty(node: MmlNode, property: string): Property  {
     return node.getProperty(property);
-  };
+  }
 
 
   /**
    * Returns the attribute of a node.
    * @param {MmlNode} node The node.
-   * @param {string} attribute A attribute name.
+   * @param {string} attr A attribute name.
    * @return {Property} Value of the attribute.
    */
   export function getAttribute(node: MmlNode, attr: string): Property  {
@@ -174,11 +172,11 @@ namespace NodeUtil {
    * Returns a child node at a given position.
    * @param {MmlNode} node The node.
    * @param {number} position The position of the child.
-   * @return {MmlNode|TextNode} The child node at position.
+   * @return {MMLNODE} The child node at position.
    */
-  export function getChildAt(node: MmlNode, position: number): MmlNode|TextNode {
-    return (node.childNodes[position] as MmlNode|TextNode) ;
-  };
+  export function getChildAt(node: MmlNode, position: number): MMLNODE {
+    return (node.childNodes[position] as MMLNODE);
+  }
 
 
   /**
@@ -193,7 +191,7 @@ namespace NodeUtil {
     if (child) {
       child.parent = node;
     }
-  };
+  }
 
 
   /**
@@ -202,22 +200,22 @@ namespace NodeUtil {
    * @param {MmlNode} newNode The target node.
    */
   export function copyChildren(oldNode: MmlNode, newNode: MmlNode) {
-    let children = oldNode.childNodes as (TextNode|MmlNode)[];
+    let children = oldNode.childNodes as (TextNode | MmlNode)[];
     for (let i = 0; i < children.length; i++) {
       setChild(newNode, i, children[i]);
     }
-  };
+  }
 
 
   /**
-   * Copies attributes between nodes. 
+   * Copies attributes between nodes.
    * @param {MmlNode} oldNode The source node.
    * @param {MmlNode} newNode The target node.
    */
   export function copyAttributes(oldNode: MmlNode, newNode: MmlNode) {
     newNode.attributes = oldNode.attributes;
     setProperties(newNode, oldNode.getAllProperties());
-  };
+  }
 
 
   /**
@@ -228,7 +226,7 @@ namespace NodeUtil {
    */
   export function isType(node: MmlNode, kind: string): boolean  {
     return node.isKind(kind);
-  };
+  }
 
 
   /**
@@ -238,7 +236,7 @@ namespace NodeUtil {
    */
   export function isEmbellished(node: MmlNode): boolean {
     return node.isEmbellished;
-  };
+  }
 
 
   /**
@@ -248,7 +246,7 @@ namespace NodeUtil {
    */
   export function getTexClass(node: MmlNode): number  {
     return node.texClass;
-  };
+  }
 
 
   /**
@@ -258,7 +256,7 @@ namespace NodeUtil {
    */
   export function getCoreMO(node: MmlNode): MmlNode  {
     return node.coreMO();
-  };
+  }
 
 
   /**
@@ -268,7 +266,7 @@ namespace NodeUtil {
    */
   export function isNode(item: any): boolean  {
     return item instanceof AbstractMmlNode || item instanceof AbstractMmlEmptyNode;
-  };
+  }
 
 
   /**
@@ -278,7 +276,7 @@ namespace NodeUtil {
    */
   export function isInferred(node: MmlNode): boolean {
     return node.isInferred;
-  };
+  }
 
 
   /**
@@ -300,7 +298,7 @@ namespace NodeUtil {
       }
     }
     return null;
-  };
+  }
 
 }
 

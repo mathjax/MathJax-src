@@ -22,7 +22,7 @@
  */
 
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 
 /*****************************************************************/
 /**
@@ -43,26 +43,27 @@ export type MspaceConstructor = Constructor<CommonMspace>;
  * @template T  The Wrapper class constructor type
  */
 export function CommonMspaceMixin<T extends WrapperConstructor>(Base: T): MspaceConstructor & T {
-    return class extends Base {
 
-        /**
-         * @override
-         */
-        public computeBBox(bbox: BBox, recompute: boolean = false) {
-            const attributes = this.node.attributes;
-            bbox.w = this.length2em(attributes.get('width'), 0);
-            bbox.h = this.length2em(attributes.get('height'), 0);
-            bbox.d = this.length2em(attributes.get('depth'), 0);
-        }
+  return class extends Base {
 
-        /**
-         * No contents, so no need for variant class
-         *
-         * @override
-         */
-        public handleVariant() {
-        }
+    /**
+     * @override
+     */
+    public computeBBox(bbox: BBox, _recompute: boolean = false) {
+      const attributes = this.node.attributes;
+      bbox.w = this.length2em(attributes.get('width'), 0);
+      bbox.h = this.length2em(attributes.get('height'), 0);
+      bbox.d = this.length2em(attributes.get('depth'), 0);
+    }
 
-    };
+    /**
+     * No contents, so no need for variant class
+     *
+     * @override
+     */
+    public handleVariant() {
+    }
+
+  };
 
 }

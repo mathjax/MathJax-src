@@ -24,12 +24,12 @@
 
 import StackItemFactory from './StackItemFactory.js';
 import {Tags} from './Tags.js';
-import {HandlerType, SubHandlers} from './MapHandler.js';
+import {SubHandlers} from './MapHandler.js';
 import {NodeFactory} from './NodeFactory.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import TexParser from './TexParser.js';
 import {defaultOptions, OptionList} from '../../util/Options.js';
-import {Configuration} from './Configuration.js';
+import {ParserConfiguration} from './Configuration.js';
 
 
 /**
@@ -67,6 +67,12 @@ export default class ParseOptions {
    */
   public tags: Tags;
 
+  /**
+   * Storage area for parser-specific package data (indexed by package name)
+   * @type {Map<string, any>}
+   */
+  public packageData: Map<string, any> = new Map();
+
   // Fields for ephemeral options, i.e., options that will be cleared for each
   // run of the parser.
   /**
@@ -99,12 +105,12 @@ export default class ParseOptions {
 
   /**
    * @constructor
-   * @param {{[key: string]: (string|boolean)}} setting A list of option
-   *     settings. Those are added to the default options.
+   * @param {Configuration} configuration Configuration object of the current
+   *     TeX parser.
    * @param {OptionList[]} options   [TeX options, Tag options, {packages}]
    */
-  public constructor(configuration: Configuration, options: OptionList[] = []) {
-    this.handlers = new SubHandlers(configuration);
+  public constructor(configuration: ParserConfiguration, options: OptionList[] = []) {
+    this.handlers = configuration.handlers;
     // Add node factory methods from packages.
     this.nodeFactory = new NodeFactory();
     this.nodeFactory.configuration = this;

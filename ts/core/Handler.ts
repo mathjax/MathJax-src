@@ -34,44 +34,44 @@ import {DOMAdaptor} from '../core/DOMAdaptor.js';
  * @template D  The Document class
  */
 export interface Handler<N, T, D> {
-    /**
-     * The name of the handler class
-     */
-    name: string;
+  /**
+   * The name of the handler class
+   */
+  name: string;
 
-    /**
-     * The DOM Adaptor to use for managing HTML elements
-     */
-    adaptor: DOMAdaptor<N, T, D>;
+  /**
+   * The DOM Adaptor to use for managing HTML elements
+   */
+  adaptor: DOMAdaptor<N, T, D>;
 
-    /**
-     * The priority for the handler when handlers are polled
-     *   to see which one can process a given document.
-     */
-    priority: number;
+  /**
+   * The priority for the handler when handlers are polled
+   *   to see which one can process a given document.
+   */
+  priority: number;
 
-    /**
-     * The class implementing the MathDocument for this handler
-     *   (so it can be subclassed by extensions as needed)
-     */
-    documentClass: MathDocumentConstructor<AbstractMathDocument<N, T, D>>;
+  /**
+   * The class implementing the MathDocument for this handler
+   *   (so it can be subclassed by extensions as needed)
+   */
+  documentClass: MathDocumentConstructor<AbstractMathDocument<N, T, D>>;
 
-    /**
-     * Checks to see if the handler can process a given document
-     *
-     * @param {any} document  The document to be processed (string, window, etc.)
-     * @return {boolean}      True if this handler can process the given document
-     */
-    handlesDocument(document: any): boolean;
+  /**
+   * Checks to see if the handler can process a given document
+   *
+   * @param {any} document  The document to be processed (string, window, etc.)
+   * @return {boolean}      True if this handler can process the given document
+   */
+  handlesDocument(document: any): boolean;
 
-    /**
-     * Creates a MathDocument for the given handler
-     *
-     * @param {any} document        The document to be handled
-     * @param {OptionList} options  The options for the handling of the document
-     * @return {MathDocument}       The MathDocument object that manages the processing
-     */
-    create(document: any, options: OptionList): MathDocument<N, T, D>;
+  /**
+   * Creates a MathDocument for the given handler
+   *
+   * @param {any} document        The document to be handled
+   * @param {OptionList} options  The options for the handling of the document
+   * @return {MathDocument}       The MathDocument object that manages the processing
+   */
+  create(document: any, options: OptionList): MathDocument<N, T, D>;
 }
 
 /*****************************************************************/
@@ -94,56 +94,56 @@ class DefaultMathDocument<N, T, D> extends AbstractMathDocument<N, T, D> {}
  */
 export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
 
-    /**
-     * The name of this class
-     */
-    public static NAME: string = 'generic';
+  /**
+   * The name of this class
+   */
+  public static NAME: string = 'generic';
 
-    /**
-     * The DOM Adaptor to use for managing HTML elements
-     */
-    public adaptor: DOMAdaptor<N, T, D>;
+  /**
+   * The DOM Adaptor to use for managing HTML elements
+   */
+  public adaptor: DOMAdaptor<N, T, D>;
 
-    /**
-     * The priority for this handler
-     */
-    public priority: number;
+  /**
+   * The priority for this handler
+   */
+  public priority: number;
 
-    /**
-     * The class implementing the MathDocument for this handler
-     *   (so it can be subclassed by extensions as needed)
-     */
-    public documentClass: MathDocumentConstructor<AbstractMathDocument<N, T, D>> = DefaultMathDocument;
+  /**
+   * The class implementing the MathDocument for this handler
+   *   (so it can be subclassed by extensions as needed)
+   */
+  public documentClass: MathDocumentConstructor<AbstractMathDocument<N, T, D>> = DefaultMathDocument;
 
-    /**
-     * @param {number} priority  The priority to use for this handler
-     *
-     * @constructor
-     */
-    constructor(adaptor: DOMAdaptor<N, T, D>, priority: number = 5) {
-        this.adaptor = adaptor;
-        this.priority = priority;
-    }
+  /**
+   * @param {number} priority  The priority to use for this handler
+   *
+   * @constructor
+   */
+  constructor(adaptor: DOMAdaptor<N, T, D>, priority: number = 5) {
+    this.adaptor = adaptor;
+    this.priority = priority;
+  }
 
-    /**
-     * @return {string}  The name of this handler class
-     */
-    public get name() {
-        return (this.constructor as typeof AbstractHandler).NAME;
-    }
+  /**
+   * @return {string}  The name of this handler class
+   */
+  public get name(): string {
+    return (this.constructor as typeof AbstractHandler).NAME;
+  }
 
-    /**
-     * @override
-     */
-    public handlesDocument(document: any) {
-        return false;
-    }
+  /**
+   * @override
+   */
+  public handlesDocument(_document: any) {
+    return false;
+  }
 
-    /**
-     * @override
-     */
-    public create(document: any, options: OptionList) {
-        return new this.documentClass(document, this.adaptor, options) as MathDocument<N, T, D>;
-    }
+  /**
+   * @override
+   */
+  public create(document: any, options: OptionList) {
+    return new this.documentClass(document, this.adaptor, options) as MathDocument<N, T, D>;
+  }
 
 }

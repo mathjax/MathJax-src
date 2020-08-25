@@ -41,44 +41,44 @@ export type LiteNode = LiteElement | LiteText;
  * Implements a lightweight HTML element replacement
  */
 export class LiteElement {
-    /**
-     * The type of element (tag name)
-     */
-    public kind: string;
+  /**
+   * The type of element (tag name)
+   */
+  public kind: string;
 
-    /**
-     * The element's attribute list
-     */
-    public attributes: LiteAttributeList;
+  /**
+   * The element's attribute list
+   */
+  public attributes: LiteAttributeList;
 
-    /**
-     * The element's children
-     */
-    public children: LiteNode[];
+  /**
+   * The element's children
+   */
+  public children: LiteNode[];
 
-    /**
-     * The element's parent
-     */
-    public parent: LiteElement;
+  /**
+   * The element's parent
+   */
+  public parent: LiteElement;
 
-    /**
-     * The styles for the element
-     */
-    public styles: Styles;
+  /**
+   * The styles for the element
+   */
+  public styles: Styles;
 
-    /**
-     * @param {string} kind  The type of node to create
-     * @param {LiteAttributeList} attributes  The list of attributes to set (if any)
-     * @param {LiteNode[]} children  The children for the node (if any)
-     * @constructor
-     */
-    constructor(kind: string, attributes: LiteAttributeList = {}, children: LiteNode[] = []) {
-        this.kind = kind;
-        this.attributes = {...attributes};
-        this.children = [...children];
-        for (const child of this.children) {
-            child.parent = this;
-        }
-        this.styles = null;
+  /**
+   * @param {string} kind  The type of node to create
+   * @param {LiteAttributeList} attributes  The list of attributes to set (if any)
+   * @param {LiteNode[]} children  The children for the node (if any)
+   * @constructor
+   */
+  constructor(kind: string, attributes: LiteAttributeList = {}, children: LiteNode[] = []) {
+    this.kind = kind;
+    this.attributes = {...attributes};
+    this.children = [...children];
+    for (const child of this.children) {
+      child.parent = this;
     }
+    this.styles = null;
+  }
 }

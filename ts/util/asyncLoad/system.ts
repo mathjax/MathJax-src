@@ -29,15 +29,17 @@ declare var __dirname: string;
 let root = 'file://' + __dirname.replace(/\/\/[^\/]*$/, '/');
 
 if (!mathjax.asyncLoad && typeof System !== 'undefined' && System.import) {
-    mathjax.asyncLoad = (name: string) => {
-        return System.import(name, root);
-    };
+  mathjax.asyncLoad = (name: string) => {
+    return System.import(name, root);
+  };
 }
 
+/**
+ * @param {string} URL   the base URL to use for loading relative paths
+ */
 export function setBaseURL(URL: string) {
-    root = URL;
-    if (!root.match(/\/$/)) {
-        root += '/';
-    }
+  root = URL;
+  if (!root.match(/\/$/)) {
+    root += '/';
+  }
 }
-

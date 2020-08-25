@@ -22,13 +22,8 @@
  */
 
 import {SVGFontData, SVGFontDataClass, SVGCharOptions, SVGVariantData, SVGDelimiterData,
-        CharData, CharOptions, DelimiterMap, CharMapMap, CssFontMap, FontDataClass} from '../FontData.js';
+        DelimiterMap, CharMapMap} from '../FontData.js';
 import {CommonTeXFontMixin} from '../../common/fonts/tex.js';
-import {StyleList, StyleData} from '../../common/CssStyles.js';
-import {em} from '../../../util/lengths.js';
-import {OptionList, defaultOptions, userOptions} from '../../../util/Options.js';
-import {StringMap} from '../Wrapper.js';
-import {DIRECTION} from '../FontData.js';
 
 import {boldItalic} from './tex/bold-italic.js';
 import {bold} from './tex/bold.js';
@@ -64,84 +59,84 @@ import {delimiters} from '../../common/fonts/tex/delimiters.js';
 export class TeXFont extends
 CommonTeXFontMixin<SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontDataClass>(SVGFontData) {
 
-    /**
-     *  The stretchy delimiter data
-     */
-    protected static defaultDelimiters: DelimiterMap<SVGDelimiterData> = delimiters;
+  /**
+   *  The stretchy delimiter data
+   */
+  protected static defaultDelimiters: DelimiterMap<SVGDelimiterData> = delimiters;
 
-    /**
-     *  The character data by variant
-     */
-    protected static defaultChars: CharMapMap<SVGCharOptions> = {
-        'normal': normal,
-        'bold': bold,
-        'italic': italic,
-        'bold-italic': boldItalic,
-        'double-struck': doubleStruck,
-        'fraktur': fraktur,
-        'bold-fraktur': frakturBold,
-        'script': script,
-        'bold-script': scriptBold,
-        'sans-serif': sansSerif,
-        'bold-sans-serif': sansSerifBold,
-        'sans-serif-italic': sansSerifItalic,
-        'sans-serif-bold-italic': sansSerifBoldItalic,
-        'monospace': monospace,
-        '-smallop': smallop,
-        '-largeop': largeop,
-        '-size3': texSize3,
-        '-size4': texSize4,
-        '-tex-calligraphic': texCalligraphic,
-        '-tex-bold-calligraphic': texCalligraphicBold,
-        '-tex-mathit': texMathit,
-        '-tex-oldstyle': texOldstyle,
-        '-tex-bold-oldstyle': texOldstyleBold,
-        '-tex-variant': texVariant
-    };
+  /**
+   *  The character data by variant
+   */
+  protected static defaultChars: CharMapMap<SVGCharOptions> = {
+    'normal': normal,
+    'bold': bold,
+    'italic': italic,
+    'bold-italic': boldItalic,
+    'double-struck': doubleStruck,
+    'fraktur': fraktur,
+    'bold-fraktur': frakturBold,
+    'script': script,
+    'bold-script': scriptBold,
+    'sans-serif': sansSerif,
+    'bold-sans-serif': sansSerifBold,
+    'sans-serif-italic': sansSerifItalic,
+    'sans-serif-bold-italic': sansSerifBoldItalic,
+    'monospace': monospace,
+    '-smallop': smallop,
+    '-largeop': largeop,
+    '-size3': texSize3,
+    '-size4': texSize4,
+    '-tex-calligraphic': texCalligraphic,
+    '-tex-bold-calligraphic': texCalligraphicBold,
+    '-tex-mathit': texMathit,
+    '-tex-oldstyle': texOldstyle,
+    '-tex-bold-oldstyle': texOldstyleBold,
+    '-tex-variant': texVariant
+  };
 
-    /**
-     * The cacheIDs to use for the variants in font-caching
-     */
-    protected static variantCacheIds: {[name: string]: string} = {
-        'normal': 'N',
-        'bold': 'B',
-        'italic': 'I',
-        'bold-italic': 'BI',
-        'double-struck': 'D',
-        'fraktur': 'F',
-        'bold-fraktur': 'BF',
-        'script': 'S',
-        'bold-script': 'BS',
-        'sans-serif': 'SS',
-        'bold-sans-serif': 'BSS',
-        'sans-serif-italic': 'SSI',
-        'sans-serif-bold-italic': 'SSBI',
-        'monospace': 'M',
-        '-smallop': 'SO',
-        '-largeop': 'LO',
-        '-size3': 'S3',
-        '-size4': 'S4',
-        '-tex-calligraphic': 'C',
-        '-tex-bold-calligraphic': 'BC',
-        '-tex-mathit': 'MI',
-        '-tex-oldstyle': 'OS',
-        '-tex-bold-oldstyle': 'BOS',
-        '-tex-variant': 'V'
-    };
+  /**
+   * The cacheIDs to use for the variants in font-caching
+   */
+  protected static variantCacheIds: {[name: string]: string} = {
+    'normal': 'N',
+    'bold': 'B',
+    'italic': 'I',
+    'bold-italic': 'BI',
+    'double-struck': 'D',
+    'fraktur': 'F',
+    'bold-fraktur': 'BF',
+    'script': 'S',
+    'bold-script': 'BS',
+    'sans-serif': 'SS',
+    'bold-sans-serif': 'BSS',
+    'sans-serif-italic': 'SSI',
+    'sans-serif-bold-italic': 'SSBI',
+    'monospace': 'M',
+    '-smallop': 'SO',
+    '-largeop': 'LO',
+    '-size3': 'S3',
+    '-size4': 'S4',
+    '-tex-calligraphic': 'C',
+    '-tex-bold-calligraphic': 'BC',
+    '-tex-mathit': 'MI',
+    '-tex-oldstyle': 'OS',
+    '-tex-bold-oldstyle': 'BOS',
+    '-tex-variant': 'V'
+  };
 
-    /**
-     * @override
-     */
-    constructor() {
-        super();
-        //
-        //  Add the cacheIDs to the variants
-        //
-        const CLASS = this.constructor as typeof TeXFont;
-        for (const variant of Object.keys(CLASS.variantCacheIds)) {
-            this.variant[variant].cacheID = 'TEX-' + CLASS.variantCacheIds[variant];
-        }
+  /**
+   * @override
+   */
+  constructor() {
+    super();
+    //
+    //  Add the cacheIDs to the variants
+    //
+    const CLASS = this.constructor as typeof TeXFont;
+    for (const variant of Object.keys(CLASS.variantCacheIds)) {
+      this.variant[variant].cacheID = 'TEX-' + CLASS.variantCacheIds[variant];
     }
+  }
 
 }
 

@@ -23,7 +23,6 @@
  */
 
 import {Configuration} from '../Configuration.js';
-import TexParser from '../TexParser.js';
 import {NodeFactory} from '../NodeFactory.js';
 
 /**
@@ -34,13 +33,14 @@ import {NodeFactory} from '../NodeFactory.js';
  * @param {string} expr The original LaTeX expression.
  */
 function noErrors(factory: NodeFactory,
-                  message: string, id: string, expr: string) {
+                  message: string, _id: string, expr: string) {
   let mtext = factory.create('token', 'mtext', {}, expr.replace(/\n/g, ' '));
-  let error = factory.create('node', 'merror', [mtext], {'data-mjx-error': message});
+  let error = factory.create('node', 'merror', [mtext], {'data-mjx-error': message, title: message});
   return error;
-};
+}
 
 export const NoErrorsConfiguration = Configuration.create(
-  'noerrors', {nodes: {'error': noErrors}});
+  'noerrors', {nodes: {'error': noErrors}}
+);
 
 

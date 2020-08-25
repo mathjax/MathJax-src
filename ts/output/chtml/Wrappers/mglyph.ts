@@ -22,9 +22,9 @@
  */
 
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonMglyph, CommonMglyphMixin} from '../../common/Wrappers/mglyph.js';
+import {CommonMglyphMixin} from '../../common/Wrappers/mglyph.js';
 import {MmlMglyph} from '../../../core/MmlTree/MmlNodes/mglyph.js';
-import {StyleList, StyleData} from '../../common/CssStyles.js';
+import {StyleList, StyleData} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
@@ -34,33 +34,41 @@ import {StyleList, StyleData} from '../../common/CssStyles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLmglyph<N, T, D> extends CommonMglyphMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
+// @ts-ignore
+export class CHTMLmglyph<N, T, D> extends
+CommonMglyphMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
-    public static kind = MmlMglyph.prototype.kind;
+  /**
+   * The mglyph wrapper
+   */
+  public static kind = MmlMglyph.prototype.kind;
 
-    public static styles: StyleList = {
-        'mjx-mglyph > img': {
-            display: 'inline-block',
-            border: 0,
-            padding: 0
-        }
-    };
-
-    /**
-     * @override
-     */
-    public toCHTML(parent: N) {
-        const chtml = this.standardCHTMLnode(parent);
-        const {src, alt} = this.node.attributes.getList('src', 'alt');
-        const styles: StyleData = {
-            width: this.em(this.width),
-            height: this.em(this.height)
-        };
-        if (this.valign) {
-            styles.verticalAlign = this.em(this.valign);
-        }
-        const img = this.html('img', {src: src, style: styles, alt: alt, title: alt});
-        this.adaptor.append(chtml, img);
+  /**
+   * @override
+   */
+  public static styles: StyleList = {
+    'mjx-mglyph > img': {
+      display: 'inline-block',
+      border: 0,
+      padding: 0
     }
+  };
+
+  /**
+   * @override
+   */
+  public toCHTML(parent: N) {
+    const chtml = this.standardCHTMLnode(parent);
+    const {src, alt} = this.node.attributes.getList('src', 'alt');
+    const styles: StyleData = {
+      width: this.em(this.width),
+      height: this.em(this.height)
+    };
+    if (this.valign) {
+      styles.verticalAlign = this.em(this.valign);
+    }
+    const img = this.html('img', {src: src, style: styles, alt: alt, title: alt});
+    this.adaptor.append(chtml, img);
+  }
 
 }

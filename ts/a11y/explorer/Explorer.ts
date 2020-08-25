@@ -24,7 +24,7 @@
 
 
 import {A11yDocument, Region} from './Region.js';
-import {sreReady} from '../sre.js';
+import '../sre.js';
 
 
 /**
@@ -151,9 +151,11 @@ export class AbstractExplorer<T> implements Explorer {
    *
    * @template T
    */
-  public static create<T>(document: A11yDocument,
-                region: Region<T>,
-                node: HTMLElement, ...rest: any[]): Explorer {
+  public static create<T>(
+    document: A11yDocument,
+    region: Region<T>,
+    node: HTMLElement, ...rest: any[]
+  ): Explorer {
     let explorer = new this(document, region, node, ...rest);
     return explorer;
   }
@@ -165,9 +167,11 @@ export class AbstractExplorer<T> implements Explorer {
    * @param {HTMLElement} node The node on which the explorer works.
    * @param {any[]} ...rest Remaining information.
    */
-  protected constructor(public document: A11yDocument,
-                        protected region: Region<T>,
-                        protected node: HTMLElement, ...rest: any[]) {
+  protected constructor(
+    public document: A11yDocument,
+    protected region: Region<T>,
+    protected node: HTMLElement, ..._rest: any[]
+  ) {
   }
 
 
@@ -248,6 +252,7 @@ export class AbstractExplorer<T> implements Explorer {
   /**
    * @override
    */
+  // @ts-ignore: unused variable
   public Update(force: boolean = false): void {}
 
 
@@ -257,9 +262,9 @@ export class AbstractExplorer<T> implements Explorer {
   protected getHighlighter(): sre.Highlighter {
     let opts = this.document.options.a11y;
     let foreground = {color: opts.foregroundColor.toLowerCase(),
-                      alpha: opts.foregroundOpacity};
+                      alpha: opts.foregroundOpacity / 100};
     let background = {color: opts.backgroundColor.toLowerCase(),
-                      alpha: opts.backgroundOpacity};
+                      alpha: opts.backgroundOpacity / 100};
     return sre.HighlighterFactory.highlighter(
       background, foreground,
       {renderer: this.document.outputJax.name, browser: 'v3'});

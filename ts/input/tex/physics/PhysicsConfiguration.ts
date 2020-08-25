@@ -23,15 +23,12 @@
  */
 
 import {Configuration} from '../Configuration.js';
-import ParseOptions from '../ParseOptions.js';
-import NodeUtil from '../NodeUtil.js';
 import {AutoOpen} from './PhysicsItems.js';
 import './PhysicsMappings.js';
 
 
 export const PhysicsConfiguration = Configuration.create(
-  'physics',
-  {
+  'physics', {
     handler: {
       macro: [
         'Physics-automatic-bracing-macros',

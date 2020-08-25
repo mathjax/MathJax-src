@@ -22,23 +22,21 @@
  */
 
 
-import { CommandMap } from '../SymbolMap.js';
-import { Configuration } from '../Configuration.js';
-
-import { ColorMethods } from './ColorMethods.js';
-import { ColorModel } from './ColorUtil.js';
-
-import { TeX } from '../../tex.js';
+import {CommandMap} from '../SymbolMap.js';
+import {Configuration, ParserConfiguration} from '../Configuration.js';
+import {ColorMethods} from './ColorMethods.js';
+import {ColorModel} from './ColorUtil.js';
+import {TeX} from '../../tex.js';
 
 /**
  * The color macros
  */
 new CommandMap('color', {
-    color: 'Color',
-    textcolor: 'TextColor',
-    definecolor: 'DefineColor',
-    colorbox: 'ColorBox',
-    fcolorbox: 'FColorBox'
+  color: 'Color',
+  textcolor: 'TextColor',
+  definecolor: 'DefineColor',
+  colorbox: 'ColorBox',
+  fcolorbox: 'FColorBox'
 }, ColorMethods);
 
 /**
@@ -47,24 +45,24 @@ new CommandMap('color', {
  * @param {Configuration} config The current configuration.
  * @param {TeX} jax              The TeX jax having that configuration
  */
-const config = function(config: Configuration, jax: TeX<any, any, any>) {
-    jax.parseOptions.options.color.model = new ColorModel();
+const config = function(_config: ParserConfiguration, jax: TeX<any, any, any>) {
+  jax.parseOptions.packageData.set('color', {model: new ColorModel()});
 };
 
 /**
  * The configuration for the color macros
  */
 export const ColorConfiguration = Configuration.create(
-    'color', {
-        handler: {
-            macro: ['color'],
-        },
-        options: {
-            color: {
-                padding: '5px',
-                borderWidth: '2px'
-            }
-        },
-        config: config
-    }
+  'color', {
+    handler: {
+      macro: ['color'],
+    },
+    options: {
+      color: {
+        padding: '5px',
+        borderWidth: '2px'
+      }
+    },
+    config: config
+  }
 );

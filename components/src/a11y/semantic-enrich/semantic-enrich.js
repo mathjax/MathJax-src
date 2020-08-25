@@ -6,9 +6,9 @@ import {EnrichHandler} from '../../../../js/a11y/semantic-enrich.js';
 import {MathML} from '../../../../js/input/mathml.js';
 
 if (MathJax.loader) {
-    combineDefaults(MathJax.config.loader, 'a11y/semantic-enrich', {checkReady: () => sreReady()});
+  combineDefaults(MathJax.config.loader, 'a11y/semantic-enrich', {checkReady: () => sreReady()});
 }
 
 if (MathJax.startup) {
-    MathJax.startup.extendHandler(handler => EnrichHandler(handler, new MathML()));
+  MathJax.startup.extendHandler(handler => EnrichHandler(handler, new MathML()));
 }

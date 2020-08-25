@@ -22,7 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import AmsMethods from './AmsMethods.js';
+import {AmsMethods} from './AmsMethods.js';
 import *  as sm from '../SymbolMap.js';
 import {TexConstant} from '../TexConstants.js';
 import ParseMethods from '../ParseMethods.js';
@@ -357,7 +357,7 @@ new sm.CharacterMap('AMSsymbols-mathchar0m0', ParseMethods.mathchar0mo, {
   precnapprox:            '\u2AB9',
   succnapprox:            '\u2ABA',
   nsim:                   '\u2241',
-  ncong:                  '\u2246',
+  ncong:                  '\u2247',
   nshortmid:              ['\u2224', {variantForm: true}],
   nshortparallel:         ['\u2226', {variantForm: true}],
   nmid:                   '\u2224',

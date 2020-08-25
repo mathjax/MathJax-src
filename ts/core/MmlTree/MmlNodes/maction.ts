@@ -30,100 +30,105 @@ import {MmlNode, AbstractMmlNode} from '../MmlNode.js';
  */
 
 export class MmlMaction extends AbstractMmlNode {
-    public static defaults: PropertyList = {
-        ...AbstractMmlNode.defaults,
-        actiontype: 'toggle',
-        selection: 1
-    };
 
-    /**
-     *  @return {string}  The maction kind
-     */
-    public get kind() {
-        return 'maction';
-    }
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlNode.defaults,
+    actiontype: 'toggle',
+    selection: 1
+  };
 
-    /**
-     * @return {number}  At least one child
-     */
-    public get arity() {
-        return 1;
-    }
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'maction';
+  }
 
-    /**
-     * @return {MmlNode}  The selected child node (or an mrow if none selected)
-     */
-    public get selected(): MmlNode {
-        const selection = this.attributes.get('selection') as number;
-        const i = Math.max(1, Math.min(this.childNodes.length, selection)) - 1;
-        return this.childNodes[i] || this.factory.create('mrow');
-    }
+  /**
+   * At least one child
+   * @override
+   */
+  public get arity() {
+    return 1;
+  }
 
-    /**
-     * @override
-     */
-    public get isEmbellished() {
-        return this.selected.isEmbellished;
-    }
+  /**
+   * @return {MmlNode}  The selected child node (or an mrow if none selected)
+   */
+  public get selected(): MmlNode {
+    const selection = this.attributes.get('selection') as number;
+    const i = Math.max(1, Math.min(this.childNodes.length, selection)) - 1;
+    return this.childNodes[i] || this.factory.create('mrow');
+  }
 
-    /**
-     * @override
-     */
-    public get isSpacelike() {
-        return this.selected.isSpacelike;
-    }
+  /**
+   * @override
+   */
+  public get isEmbellished() {
+    return this.selected.isEmbellished;
+  }
 
-    /**
-     * @override
-     */
-    public core(): MmlNode {
-        return this.selected.core();
-    }
+  /**
+   * @override
+   */
+  public get isSpacelike() {
+    return this.selected.isSpacelike;
+  }
 
-    /**
-     * @override
-     */
-    public coreMO(): MmlNode {
-        return this.selected.coreMO();
-    }
+  /**
+   * @override
+   */
+  public core(): MmlNode {
+    return this.selected.core();
+  }
 
-    /**
-     * @override
-     */
-    protected verifyAttributes(options: PropertyList) {
-        super.verifyAttributes(options);
-        if (this.attributes.get('actiontype') !== 'toggle' &&
-            this.attributes.getExplicit('selection') !== undefined) {
-            const attributes = this.attributes.getAllAttributes();
-            delete attributes.selection;
-        }
-    }
+  /**
+   * @override
+   */
+  public coreMO(): MmlNode {
+    return this.selected.coreMO();
+  }
 
-    /**
-     * Get the TeX class from the selceted node
-     * For tooltips, set TeX classes within the tip as a separate math list
-     *
-     * @override
-     */
-    public setTeXclass(prev: MmlNode) {
-        if (this.attributes.get('actiontype') === 'tooltip' && this.childNodes[1]) {
-            this.childNodes[1].setTeXclass(null);
-        }
-        let selected = this.selected;
-        prev = selected.setTeXclass(prev);
-        this.updateTeXclass(selected);
-        return prev;
+  /**
+   * @override
+   */
+  protected verifyAttributes(options: PropertyList) {
+    super.verifyAttributes(options);
+    if (this.attributes.get('actiontype') !== 'toggle' &&
+        this.attributes.getExplicit('selection') !== undefined) {
+      const attributes = this.attributes.getAllAttributes();
+      delete attributes.selection;
     }
+  }
 
-    /**
-     * Select the next child for a toggle action
-     */
-    public nextToggleSelection() {
-        let selection = Math.max(1, (this.attributes.get('selection') as number) + 1);
-        if (selection > this.childNodes.length) {
-            selection = 1;
-        }
-        this.attributes.set('selection', selection);
+  /**
+   * Get the TeX class from the selceted node
+   * For tooltips, set TeX classes within the tip as a separate math list
+   *
+   * @override
+   */
+  public setTeXclass(prev: MmlNode) {
+    if (this.attributes.get('actiontype') === 'tooltip' && this.childNodes[1]) {
+      this.childNodes[1].setTeXclass(null);
     }
+    let selected = this.selected;
+    prev = selected.setTeXclass(prev);
+    this.updateTeXclass(selected);
+    return prev;
+  }
+
+  /**
+   * Select the next child for a toggle action
+   */
+  public nextToggleSelection() {
+    let selection = Math.max(1, (this.attributes.get('selection') as number) + 1);
+    if (selection > this.childNodes.length) {
+      selection = 1;
+    }
+    this.attributes.set('selection', selection);
+  }
 
 }

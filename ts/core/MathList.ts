@@ -22,7 +22,7 @@
  */
 
 import {LinkedList} from '../util/LinkedList.js';
-import {MathItem, AbstractMathItem} from './MathItem.js';
+import {MathItem} from './MathItem.js';
 
 /*****************************************************************/
 /**
@@ -33,13 +33,13 @@ import {MathItem, AbstractMathItem} from './MathItem.js';
  * @template D  The Document class
  */
 export interface MathList<N, T, D> extends LinkedList<MathItem<N, T, D>> {
-    /**
-     * Test if one math item is before the other in the document (a < b)
-     *
-     * @param {MathItem} a   The first MathItem
-     * @param {MathItem} b   The second MathItem
-     */
-    isBefore(a: MathItem<N, T, D>, b: MathItem<N, T, D>): boolean;
+  /**
+   * Test if one math item is before the other in the document (a < b)
+   *
+   * @param {MathItem} a   The first MathItem
+   * @param {MathItem} b   The second MathItem
+   */
+  isBefore(a: MathItem<N, T, D>, b: MathItem<N, T, D>): boolean;
 }
 
 /*****************************************************************/
@@ -50,15 +50,14 @@ export interface MathList<N, T, D> extends LinkedList<MathItem<N, T, D>> {
  * @template T  The Text node class
  * @template D  The Document class
  */
-export abstract class AbstractMathList<N, T, D>
-    extends LinkedList<MathItem<N, T, D>> implements MathList<N, T, D> {
+export abstract class AbstractMathList<N, T, D> extends
+LinkedList<MathItem<N, T, D>> implements MathList<N, T, D> {
 
-    /**
-     * @override
-     */
-    public isBefore(a: MathItem<N, T, D>, b: MathItem<N, T, D>) {
-        return (a.start.i < b.start.i || (a.start.i === b.start.i && a.start.n < b.start.n));
-    }
+  /**
+   * @override
+   */
+  public isBefore(a: MathItem<N, T, D>, b: MathItem<N, T, D>) {
+    return (a.start.i < b.start.i || (a.start.i === b.start.i && a.start.n < b.start.n));
+  }
 
 }
-

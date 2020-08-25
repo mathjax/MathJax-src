@@ -29,13 +29,12 @@ import Stack from './Stack.js';
 import StackItemFactory from './StackItemFactory.js';
 import {Tags} from './Tags.js';
 import TexError from './TexError.js';
-import {AbstractSymbolMap, SymbolMap} from './SymbolMap.js';
-import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {MmlNode, AbstractMmlNode} from '../../core/MmlTree/MmlNode.js';
-import {ParseInput, ParseResult, ParseMethod} from './Types.js';
+import {ParseInput, ParseResult} from './Types.js';
 import ParseOptions from './ParseOptions.js';
 import {StackItem, EnvList} from './StackItem.js';
 import {Symbol} from './Symbol.js';
+import {OptionList} from '../../util/Options.js';
 
 
 /**
@@ -62,20 +61,19 @@ export default class TexParser {
   public i: number = 0;
 
   /**
-   * The last command sequence 
+   * The last command sequence
    * @type {string}
    */
   public currentCS: string = '';
 
   /**
    * @constructor
-   * @param {string} _string The string to parse.
+   * @param {string} string The string to parse.
    * @param {EnvList} env The intial environment representing the current parse
    *     state of the overall expression translation.
-   * @param {ParseOptions=} config A parser configuration.
+   * @param {ParseOptions} configuration A parser configuration.
    */
-  constructor(private _string: string, env: EnvList,
-              public configuration: ParseOptions) {
+  constructor(private _string: string, env: EnvList, public configuration: ParseOptions) {
     const inner = env.hasOwnProperty('isInner');
     const isInner = env['isInner'] as boolean;
     delete env['isInner'];
@@ -95,21 +93,21 @@ export default class TexParser {
   /**
    * @return {OptionList} The configuration options.
    */
-  get options() {
+  get options(): OptionList {
     return this.configuration.options;
   }
 
   /**
    * @return {StackItemFactory} The factory for stack items.
    */
-  get itemFactory() {
+  get itemFactory(): StackItemFactory {
     return this.configuration.itemFactory;
   }
 
   /**
    * @return {Tags} The tags style of this configuration.
    */
-  get tags() {
+  get tags(): Tags {
     return this.configuration.tags;
   }
 
@@ -124,7 +122,7 @@ export default class TexParser {
   /**
    * @return {string} The string that is currently parsed.
    */
-  get string() {
+  get string(): string {
     return this._string;
   }
 
@@ -144,9 +142,9 @@ export default class TexParser {
    * Maps a symbol to its "parse value" if it exists.
    * @param {HandlerType} kind Configuration name.
    * @param {string} symbol The symbol to parse.
-   * @return {T} A boolean, Character, or Macro.
+   * @return {any} A boolean, Character, or Macro.
    */
-  public lookup(kind: HandlerType, symbol: string) {
+  public lookup(kind: HandlerType, symbol: string): any {
     return this.configuration.handlers.get(kind).lookup(symbol);
   }
 
@@ -154,6 +152,7 @@ export default class TexParser {
   /**
    * Checks if a symbol is contained in one of the symbol mappings of the
    * specified kind.
+   * @param {HandlerType} kind Configuration name.
    * @param {string} symbol The symbol to parse.
    * @return {boolean} True if the symbol is contained in the given types of
    *     symbol mapping.
@@ -181,13 +180,9 @@ export default class TexParser {
    */
   public Parse() {
     let c: string;
-    let n: number;
     while (this.i < this.string.length) {
-      c = this.string.charAt(this.i++);
-      n = c.charCodeAt(0);
-      if (n >= 0xD800 && n < 0xDC00) {
-        c += this.string.charAt(this.i++);
-      }
+      c = this.getCodePoint();
+      this.i += c.length;
       this.parse('character', [this, c]);
     }
   }
@@ -198,7 +193,7 @@ export default class TexParser {
    *   but if the mml item is an inferred row, push its children instead.
    * @param {StackItem|MmlNode} arg The new item.
    */
-  public Push(arg: StackItem|MmlNode) {
+  public Push(arg: StackItem | MmlNode) {
     if (arg instanceof AbstractMmlNode && arg.isInferred) {
       this.PushAll(arg.childNodes);
     } else {
@@ -211,7 +206,7 @@ export default class TexParser {
    * Pushes a list of new items onto the stack.
    * @param {StackItem|MmlNode[]} args The new items.
    */
-  public PushAll(args: (StackItem|MmlNode)[]) {
+  public PushAll(args: (StackItem | MmlNode)[]) {
     for (const arg of args) {
       this.stack.Push(arg);
     }
@@ -246,10 +241,18 @@ export default class TexParser {
   }
 
   /**
+   * @return {string}   Get the next unicode character in the string
+   */
+  public getCodePoint(): string {
+    const code = this.string.codePointAt(this.i);
+    return code === undefined ? '' : String.fromCodePoint(code);
+  }
+
+  /**
    * @return {boolean} True if the next character to parse is a space.
    */
-  public nextIsSpace() {
-    return this.string.charAt(this.i).match(/\s/);
+  public nextIsSpace(): boolean {
+    return !!this.string.charAt(this.i).match(/\s/);
   }
 
   /**
@@ -259,16 +262,16 @@ export default class TexParser {
     while (this.nextIsSpace()) {
       this.i++;
     }
-    return this.string.charAt(this.i);
+    return this.getCodePoint();
   }
 
   /**
    * @return {string} Get and return a control-sequence name
    */
   public GetCS(): string {
-    let CS = this.string.slice(this.i).match(/^([a-z]+|.) ?/i);
+    let CS = this.string.slice(this.i).match(/^([a-z]+|[\uD800-\uDBFF].|.) ?/i);
     if (CS) {
-      this.i += CS[1].length;
+      this.i += CS[0].length;
       return CS[1];
     } else {
       this.i++;
@@ -283,7 +286,7 @@ export default class TexParser {
    * @param {boolean} noneOK? True if no argument is OK.
    * @return {string} The next argument.
    */
-  public GetArgument(name: string, noneOK?: boolean): string {
+  public GetArgument(_name: string, noneOK?: boolean): string {
     switch (this.GetNext()) {
     case '':
       if (!noneOK) {
@@ -317,7 +320,9 @@ export default class TexParser {
       // @test MissingCloseBrace
       throw new TexError('MissingCloseBrace', 'Missing close brace');
     }
-    return this.string.charAt(this.i++);
+    const c = this.getCodePoint();
+    this.i += c.length;
+    return c;
   }
 
 
@@ -327,7 +332,7 @@ export default class TexParser {
    * @param {string} def? The default value for the optional argument.
    * @return {string} The optional argument.
    */
-  public GetBrackets(name: string, def?: string): string {
+  public GetBrackets(_name: string, def?: string): string {
     if (this.GetNext() !== '[') {
       return def;
     }
@@ -362,10 +367,7 @@ export default class TexParser {
    * @return {string} The delimiter name.
    */
   public GetDelimiter(name: string, braceOK?: boolean): string {
-    while (this.nextIsSpace()) {
-      this.i++;
-    }
-    let c = this.string.charAt(this.i); this.i++;
+    let c = this.GetNext(); this.i += c.length;
     if (this.i <= this.string.length) {
       if (c === '\\') {
         c += this.GetCS();
@@ -388,12 +390,9 @@ export default class TexParser {
    * @return {string} The dimension string.
    */
   public GetDimen(name: string): string {
-    if (this.nextIsSpace()) {
-      this.i++;
-    }
-    if (this.string.charAt(this.i) === '{') {
+    if (this.GetNext() === '{') {
       let dimen = this.GetArgument(name);
-      let [value, unit, _] = ParseUtil.matchDimen(dimen);
+      let [value, unit] = ParseUtil.matchDimen(dimen);
       if (value) {
         // @test Raise In Line, Lower 2, (Raise|Lower) Negative
         return value + unit;
@@ -418,7 +417,7 @@ export default class TexParser {
    * @param {string} token The element until where to parse.
    * @return {string} The text between the current position and the given token.
    */
-  public GetUpTo(name: string, token: string): string {
+  public GetUpTo(_name: string, token: string): string {
     while (this.nextIsSpace()) {
       this.i++;
     }
@@ -426,7 +425,7 @@ export default class TexParser {
     let parens = 0;
     while (this.i < this.string.length) {
       let k = this.i;
-      let c = this.string.charAt(this.i++);
+      let c = this.GetNext(); this.i += c.length;
       switch (c) {
       case '\\':  c += this.GetCS(); break;
       case '{':   parens++; break;

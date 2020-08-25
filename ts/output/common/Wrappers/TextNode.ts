@@ -22,16 +22,20 @@
  */
 
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
-import {BIGDIMEN} from '../../../util/lengths.js';
-import {StyleList} from '../CssStyles.js';
 
 /*****************************************************************/
 /**
  * The CommonTextNode interface
  */
 export interface CommonTextNode extends AnyWrapper {
+  /**
+   * @param {string} text     The text to remap
+   * @param {string} variant  The variant for the character
+   * @return {number[]}       The unicode points for the (remapped) text
+   */
+  remappedText(text: string, variant: string): number[];
 }
 
 /**
@@ -46,83 +50,93 @@ export type TextNodeConstructor = Constructor<CommonTextNode>;
  * @template T  The Wrapper class constructor type
  */
 export function CommonTextNodeMixin<T extends WrapperConstructor>(Base: T): TextNodeConstructor & T {
-   return class extends Base {
 
-       /**
-        * @override
-        */
-       public computeBBox(bbox: BBox, recompute: boolean = false) {
-           const variant = this.parent.variant;
-           const text = (this.node as TextNode).getText();
-           if (variant === '-explicitFont') {
-               //
-               // Measure the size of the text (using the DOM if possible)
-               //
-               const font = this.jax.getFontData(this.parent.styles);
-               const {w, h, d} = this.jax.measureText(text, variant, font);
-               bbox.h = h;
-               bbox.d = d;
-               bbox.w = w;
-           } else {
-               const c = this.parent.stretch.c;
-               const chars = this.parent.remapChars(c ? [c] : this.unicodeChars(text, variant));
-               bbox.empty();
-               //
-               // Loop through the characters and add them in one by one
-               //
-               for (const char of chars) {
-                   let [h, d, w, data] = this.getVariantChar(variant, char);
-                   if (data.unknown) {
-                       //
-                       // Measure unknown characters using the DOM (if possible)
-                       //
-                       const cbox = this.jax.measureText(String.fromCodePoint(char), variant);
-                       w = cbox.w;
-                       h = cbox.h;
-                       d = cbox.d;
-                   }
-                   //
-                   // Update the bounding box
-                   //
-                   bbox.w += w;
-                   if (h > bbox.h) bbox.h = h;
-                   if (d > bbox.d) bbox.d = d;
-                   bbox.ic = data.ic || 0;
-                   bbox.sk = data.sk || 0;
-               }
-               if (chars.length > 1) {
-                   bbox.sk = 0;
-               }
-               bbox.clean();
-           }
-       }
+  return class extends Base {
 
-       /******************************************************/
-       /*
-        * TextNodes don't need these, since these properties
-        *   are inherited from the parent nodes
-        */
+    /**
+     * @override
+     */
+    public computeBBox(bbox: BBox, _recompute: boolean = false) {
+      const variant = this.parent.variant;
+      const text = (this.node as TextNode).getText();
+      if (variant === '-explicitFont') {
+        //
+        // Measure the size of the text (using the DOM if possible)
+        //
+        const font = this.jax.getFontData(this.parent.styles);
+        const {w, h, d} = this.jax.measureText(text, variant, font);
+        bbox.h = h;
+        bbox.d = d;
+        bbox.w = w;
+      } else {
+        const chars = this.remappedText(text, variant);
+        bbox.empty();
+        //
+        // Loop through the characters and add them in one by one
+        //
+        for (const char of chars) {
+          let [h, d, w, data] = this.getVariantChar(variant, char);
+          if (data.unknown) {
+            //
+            // Measure unknown characters using the DOM (if possible)
+            //
+            const cbox = this.jax.measureText(String.fromCodePoint(char), variant);
+            w = cbox.w;
+            h = cbox.h;
+            d = cbox.d;
+          }
+          //
+          // Update the bounding box
+          //
+          bbox.w += w;
+          if (h > bbox.h) bbox.h = h;
+          if (d > bbox.d) bbox.d = d;
+          bbox.ic = data.ic || 0;
+          bbox.sk = data.sk || 0;
+        }
+        if (chars.length > 1) {
+          bbox.sk = 0;
+        }
+        bbox.clean();
+      }
+    }
 
-       /**
-        * @override
-        */
-       public getStyles() {}
+    /**
+     * @param {string} text     The text to remap
+     * @param {string} variant  The variant for the character
+     * @return {number[]}       The unicode points for the (remapped) text
+     */
+    public remappedText(text: string, variant: string): number[] {
+      const c = this.parent.stretch.c;
+      return (c ? [c] : this.parent.remapChars(this.unicodeChars(text, variant)));
+    }
 
-       /**
-        * @override
-        */
-       public getVariant() {}
+    /******************************************************/
+    /*
+     * TextNodes don't need these, since these properties
+     *   are inherited from the parent nodes
+     */
 
-       /**
-        * @override
-        */
-       public getScale() {}
+    /**
+     * @override
+     */
+    public getStyles() {}
 
-       /**
-        * @override
-        */
-       public getSpace() {}
+    /**
+     * @override
+     */
+    public getVariant() {}
 
-   };
+    /**
+     * @override
+     */
+    public getScale() {}
+
+    /**
+     * @override
+     */
+    public getSpace() {}
+
+  };
 
 }

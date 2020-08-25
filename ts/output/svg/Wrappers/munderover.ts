@@ -22,12 +22,11 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVGWrapper, SVGConstructor, Constructor} from '../Wrapper.js';
-import {SVGscriptbase} from './scriptbase.js';
+import {SVGWrapper, Constructor} from '../Wrapper.js';
 import {SVGmsubsup, SVGmsub, SVGmsup} from './msubsup.js';
-import {CommonMunder, CommonMunderMixin} from '../../common/Wrappers/munderover.js';
-import {CommonMover, CommonMoverMixin} from '../../common/Wrappers/munderover.js';
-import {CommonMunderover, CommonMunderoverMixin} from '../../common/Wrappers/munderover.js';
+import {CommonMunderMixin} from '../../common/Wrappers/munderover.js';
+import { CommonMoverMixin} from '../../common/Wrappers/munderover.js';
+import {CommonMunderoverMixin} from '../../common/Wrappers/munderover.js';
 import {MmlMunderover, MmlMunder, MmlMover} from '../../../core/MmlTree/MmlNodes/munderover.js';
 
 /*****************************************************************/
@@ -38,36 +37,43 @@ import {MmlMunderover, MmlMunder, MmlMover} from '../../../core/MmlTree/MmlNodes
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class SVGmunder<N, T, D> extends
 CommonMunderMixin<SVGWrapper<any, any, any>, Constructor<SVGmsub<any, any, any>>>(SVGmsub)  {
 
-    public static kind = MmlMunder.prototype.kind;
+  /**
+   * The munder wrapper
+   */
+  public static kind = MmlMunder.prototype.kind;
 
-    public static useIC: boolean = true;
+  /**
+   * Do include italic correction
+   */
+  public static useIC: boolean = true;
 
-    /**
-     * @override
-     */
-    public toSVG(parent: N) {
-        if (this.hasMovableLimits()) {
-            super.toSVG(parent);
-            return;
-        }
-
-        const svg = this.standardSVGnode(parent);
-        const [base, script] = [this.baseChild, this.script];
-        const [bbox, sbox] = [base.getBBox(), script.getBBox()];
-
-        base.toSVG(svg);
-        script.toSVG(svg);
-
-        const delta = this.getDelta(true);
-        const [k, v] = this.getUnderKV(bbox, sbox);
-        const [bx, sx] = this.getDeltaW([bbox, sbox], [0, -delta]);
-
-        base.place(bx, 0);
-        script.place(sx, v);
+  /**
+   * @override
+   */
+  public toSVG(parent: N) {
+    if (this.hasMovableLimits()) {
+      super.toSVG(parent);
+      return;
     }
+
+    const svg = this.standardSVGnode(parent);
+    const [base, script] = [this.baseChild, this.script];
+    const [bbox, sbox] = [base.getBBox(), script.getBBox()];
+
+    base.toSVG(svg);
+    script.toSVG(svg);
+
+    const delta = this.getDelta(true);
+    const v = this.getUnderKV(bbox, sbox)[1];
+    const [bx, sx] = this.getDeltaW([bbox, sbox], [0, -delta]);
+
+    base.place(bx, 0);
+    script.place(sx, v);
+  }
 
 }
 
@@ -79,35 +85,42 @@ CommonMunderMixin<SVGWrapper<any, any, any>, Constructor<SVGmsub<any, any, any>>
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class SVGmover<N, T, D> extends
 CommonMoverMixin<SVGWrapper<any, any, any>, Constructor<SVGmsup<any, any, any>>>(SVGmsup)  {
 
-    public static kind = MmlMover.prototype.kind;
+  /**
+   * The mover wrapper
+   */
+  public static kind = MmlMover.prototype.kind;
 
-    public static useIC: boolean = true;
+  /**
+   * Do include italic correction
+   */
+  public static useIC: boolean = true;
 
-    /*
-     * @override
-     */
-    public toSVG(parent: N) {
-        if (this.hasMovableLimits()) {
-            super.toSVG(parent);
-            return;
-        }
-        const svg = this.standardSVGnode(parent);
-        const [base, script] = [this.baseChild, this.script];
-        const [bbox, sbox] = [base.getBBox(), script.getBBox()];
-
-        base.toSVG(svg);
-        script.toSVG(svg);
-
-        const delta = this.getDelta();
-        const [k, u] = this.getOverKU(bbox, sbox);
-        const [bx, sx] = this.getDeltaW([bbox, sbox], [0, delta]);
-
-        base.place(bx, 0);
-        script.place(sx, u);
+  /**
+   * @override
+   */
+  public toSVG(parent: N) {
+    if (this.hasMovableLimits()) {
+      super.toSVG(parent);
+      return;
     }
+    const svg = this.standardSVGnode(parent);
+    const [base, script] = [this.baseChild, this.script];
+    const [bbox, sbox] = [base.getBBox(), script.getBBox()];
+
+    base.toSVG(svg);
+    script.toSVG(svg);
+
+    const delta = this.getDelta();
+    const u = this.getOverKU(bbox, sbox)[1];
+    const [bx, sx] = this.getDeltaW([bbox, sbox], [0, delta]);
+
+    base.place(bx, 0);
+    script.place(sx, u);
+  }
 
 }
 
@@ -119,37 +132,44 @@ CommonMoverMixin<SVGWrapper<any, any, any>, Constructor<SVGmsup<any, any, any>>>
  * @template T  The Text node class
  * @template D  The Document class
  */
+// @ts-ignore
 export class SVGmunderover<N, T, D> extends
 CommonMunderoverMixin<SVGWrapper<any, any, any>, Constructor<SVGmsubsup<any, any, any>>>(SVGmsubsup)  {
 
-    public static kind = MmlMunderover.prototype.kind;
+  /**
+   * The munderover wrapper
+   */
+  public static kind = MmlMunderover.prototype.kind;
 
-    public static useIC: boolean = true;
+  /**
+   * Do include italic correction
+   */
+  public static useIC: boolean = true;
 
-    /*
-     * @override
-     */
-    public toSVG(parent: N) {
-        if (this.hasMovableLimits()) {
-            super.toSVG(parent);
-            return;
-        }
-        const svg = this.standardSVGnode(parent);
-        const [base, over, under] = [this.baseChild, this.overChild, this.underChild];
-        const [bbox, obox, ubox] = [base.getBBox(), over.getBBox(), under.getBBox()];
-
-        base.toSVG(svg);
-        under.toSVG(svg);
-        over.toSVG(svg);
-
-        const delta = this.getDelta();
-        const [ok, u] = this.getOverKU(bbox, obox);
-        const [uk, v] = this.getUnderKV(bbox, ubox);
-        const [bx, ux, ox] = this.getDeltaW([bbox, ubox, obox], [0, -delta, delta]);
-
-        base.place(bx, 0);
-        under.place(ux, v);
-        over.place(ox, u);
+  /**
+   * @override
+   */
+  public toSVG(parent: N) {
+    if (this.hasMovableLimits()) {
+      super.toSVG(parent);
+      return;
     }
+    const svg = this.standardSVGnode(parent);
+    const [base, over, under] = [this.baseChild, this.overChild, this.underChild];
+    const [bbox, obox, ubox] = [base.getBBox(), over.getBBox(), under.getBBox()];
+
+    base.toSVG(svg);
+    under.toSVG(svg);
+    over.toSVG(svg);
+
+    const delta = this.getDelta();
+    const u = this.getOverKU(bbox, obox)[1];
+    const v = this.getUnderKV(bbox, ubox)[1];
+    const [bx, ux, ox] = this.getDeltaW([bbox, ubox, obox], [0, -delta, delta]);
+
+    base.place(bx, 0);
+    under.place(ux, v);
+    over.place(ox, u);
+  }
 
 }

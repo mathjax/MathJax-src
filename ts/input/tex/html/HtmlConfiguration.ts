@@ -35,6 +35,5 @@ new CommandMap('html_macros', {
 }, HtmlMethods);
 
 export const HtmlConfiguration = Configuration.create(
-  'html',
-  {handler: { macro: ['html_macros']}}
+  'html', {handler: { macro: ['html_macros']}}
 );

@@ -54,7 +54,6 @@ CancelMethods.Cancel = function(parser: TexParser, name: string, notation: strin
  * Parse function implementing \cancelto{value}[attributes]{math}
  * @param {TexParser} parser The current tex parser.
  * @param {string} name The name of the calling macro.
- * @param {string} notation The type of cancel notation to use.
  */
 
 CancelMethods.CancelTo = function(parser: TexParser, name: string) {

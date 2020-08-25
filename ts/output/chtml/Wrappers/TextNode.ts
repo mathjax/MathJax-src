@@ -23,9 +23,8 @@
 
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonTextNode, CommonTextNodeMixin} from '../../common/Wrappers/TextNode.js';
-import {StyleList, StyleData} from '../../common/CssStyles.js';
-import {OptionList} from '../../../util/Options.js';
+import {CommonTextNodeMixin} from '../../common/Wrappers/TextNode.js';
+import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
@@ -35,46 +34,56 @@ import {OptionList} from '../../../util/Options.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLTextNode<N, T, D> extends CommonTextNodeMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
+// @ts-ignore
+export class CHTMLTextNode<N, T, D> extends
+CommonTextNodeMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
 
-    public static kind = TextNode.prototype.kind;
+  /**
+   * The TextNode wrapper
+   */
+  public static kind = TextNode.prototype.kind;
 
-    public static autoStyle = false;
+  /**
+   * @override
+   */
+  public static autoStyle = false;
 
-    public static styles: StyleList = {
-        'mjx-c': {
-            display: 'inline-block'
-        },
-        'mjx-utext': {
-            display: 'inline-block',
-            padding: '.75em 0 .2em 0'
-        }
-    };
-
-    /**
-     * @override
-     */
-    public toCHTML(parent: N) {
-        this.markUsed();
-        const adaptor = this.adaptor;
-        const variant = this.parent.variant;
-        const text = (this.node as TextNode).getText();
-        if (variant === '-explicitFont') {
-            const font = this.jax.getFontData(this.parent.styles);
-            adaptor.append(parent, this.jax.unknownText(text, variant, font));
-        } else {
-            const c = this.parent.stretch.c;
-            const chars = this.parent.remapChars(c ? [c] : this.unicodeChars(text, variant));
-            for (const n of chars) {
-                const data = this.getVariantChar(variant, n)[3];
-                const font = (data.f ? ' TEX-' + data.f : '');
-                const node = (data.unknown ?
-                              this.jax.unknownText(String.fromCodePoint(n), variant) :
-                              this.html('mjx-c', {class: this.char(n) + font}));
-                adaptor.append(parent, node);
-                data.used = true;
-            }
-        }
+  /**
+   * @override
+   */
+  public static styles: StyleList = {
+    'mjx-c': {
+      display: 'inline-block'
+    },
+    'mjx-utext': {
+      display: 'inline-block',
+      padding: '.75em 0 .2em 0'
     }
+  };
+
+  /**
+   * @override
+   */
+  public toCHTML(parent: N) {
+    this.markUsed();
+    const adaptor = this.adaptor;
+    const variant = this.parent.variant;
+    const text = (this.node as TextNode).getText();
+    if (variant === '-explicitFont') {
+      const font = this.jax.getFontData(this.parent.styles);
+      adaptor.append(parent, this.jax.unknownText(text, variant, font));
+    } else {
+      const chars = this.remappedText(text, variant);
+      for (const n of chars) {
+        const data = this.getVariantChar(variant, n)[3];
+        const font = (data.f ? ' TEX-' + data.f : '');
+        const node = (data.unknown ?
+                      this.jax.unknownText(String.fromCodePoint(n), variant) :
+                      this.html('mjx-c', {class: this.char(n) + font}));
+        adaptor.append(parent, node);
+        data.used = true;
+      }
+    }
+  }
 
 }

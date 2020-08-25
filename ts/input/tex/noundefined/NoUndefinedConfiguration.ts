@@ -23,7 +23,6 @@
  */
 
 import {Configuration} from '../Configuration.js';
-import NodeUtil from '../NodeUtil.js';
 import TexParser from '../TexParser.js';
 
 /**
@@ -34,10 +33,28 @@ import TexParser from '../TexParser.js';
  */
 function noUndefined(parser: TexParser, name: string) {
   const textNode = parser.create('text', '\\' + name);
-  parser.Push(parser.create('node', 'mtext', [], {mathcolor: 'red'}, textNode));
-};
+  const options = parser.options.noundefined || {};
+  const def = {} as {[name: string]: string};
+  for (const id of ['color', 'background', 'size']) {
+    if (options[id]) {
+      def['math' + id] = options[id];
+    }
+  }
+  parser.Push(parser.create('node', 'mtext', [], def, textNode));
+}
 
 export const NoUndefinedConfiguration = Configuration.create(
-  'noundefined', {fallback: {macro: noUndefined}});
+  'noundefined', {
+    fallback: {macro: noUndefined},
+    options: {
+      noundefined: {
+        color: 'red',
+        background: '',
+        size: ''
+      }
+    },
+    priority: 3
+  }
+);
 
 

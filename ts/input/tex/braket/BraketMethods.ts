@@ -18,15 +18,15 @@
 
 /**
  * @fileoverview Methods for TeX parsing of the braket package.
- *                                            
+ *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
 import {ParseMethod} from '../Types.js';
 import BaseMethods from '../base/BaseMethods.js';
-import {MapHandler} from '../MapHandler.js';
 import TexParser from '../TexParser.js';
 import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
+import TexError from '../TexError.js';
 
 
 let BraketMethods: Record<string, ParseMethod> = {};
@@ -43,10 +43,13 @@ BraketMethods.Macro = BaseMethods.Macro;
  * @param {boolean} stretchy Is it stretchy.
  * @param {number} barmax Maximum number of bars allowed.
  */
-BraketMethods.Braket = function(parser: TexParser, name: string,
+BraketMethods.Braket = function(parser: TexParser, _name: string,
                                 open: string, close: string,
                                 stretchy: boolean, barmax: number) {
   let next = parser.GetNext();
+  if (next === '') {
+    throw new TexError('MissingArgFor', 'Missing argument for %1', parser.currentCS);
+  }
   let single = true;
   if (next === '{') {
     parser.i++;

@@ -28,7 +28,7 @@ import {ParseMethod} from '../Types.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import BaseMethods from '../base/BaseMethods.js';
-import AmsMethods from '../ams/AmsMethods.js';
+import {AmsMethods} from '../ams/AmsMethods.js';
 import {mhchemParser, texify} from './mhchem_parser.js';
 
 // Namespace
@@ -36,6 +36,12 @@ let MhchemMethods: Record<string, ParseMethod> = {};
 
 MhchemMethods.Macro = BaseMethods.Macro;
 MhchemMethods.xArrow = AmsMethods.xArrow;
+
+/**
+ * @param{TeXParser} parser   The parser for this expression
+ * @param{string} name        The macro name being called
+ * @param{string} machine     The name of the fininte-state machine to use
+ */
 MhchemMethods.Machine = function(parser: TexParser, name: string, machine: string) {
   try {
     let arg = parser.GetArgument(name);
@@ -51,31 +57,32 @@ MhchemMethods.Machine = function(parser: TexParser, name: string, machine: strin
 };
 
 new CommandMap(
-  'mhchem',
-  {ce: ['Machine', 'ce'],
-   pu: ['Machine', 'pu'],
-   longrightleftharpoons: ['Macro',
-                           '\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}'],
-   longRightleftharpoons: ['Macro',
-                           '\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\smash{\\leftharpoondown}}'],
-   longLeftrightharpoons: ['Macro',
-                           '\\stackrel{\\textstyle\\vphantom{{-}}{\\rightharpoonup}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}'],
-   longleftrightarrows: ['Macro',
-                         '\\stackrel{\\longrightarrow}{\\smash{\\longleftarrow}\\Rule{0px}{.25em}{0px}}'],
-   //
-   //  Needed for \bond for the ~ forms
-   //  Not perfectly aligned when zoomed in, but on 100%
-   //
-   tripledash: ['Macro',
-                '\\vphantom{-}\\raise2mu{\\kern2mu\\tiny\\text{-}\\kern1mu\\text{-}\\kern1mu\\text{-}\\kern2mu}'],
-   xrightarrow: ['xArrow', 0x2192, 5, 6],
-   xleftarrow:  ['xArrow', 0x2190, 7, 3],
-   xleftrightarrow:    ['xArrow', 0x2194, 6, 6],
-   xrightleftharpoons: ['xArrow', 0x21CC, 5, 7],   // FIXME:  doesn't stretch in HTML-CSS output
-   xRightleftharpoons: ['xArrow', 0x21CC, 5, 7],   // FIXME:  how should this be handled?
-   xLeftrightharpoons: ['xArrow', 0x21CC, 5, 7]
+  'mhchem', {
+    ce: ['Machine', 'ce'],
+    pu: ['Machine', 'pu'],
+    longrightleftharpoons: ['Macro',
+                            '\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}'],
+    longRightleftharpoons: ['Macro',
+                            '\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\smash{\\leftharpoondown}}'],
+    longLeftrightharpoons: ['Macro',
+                            '\\stackrel{\\textstyle\\vphantom{{-}}{\\rightharpoonup}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}'],
+    longleftrightarrows: ['Macro',
+                          '\\stackrel{\\longrightarrow}{\\smash{\\longleftarrow}\\Rule{0px}{.25em}{0px}}'],
+    //
+    //  Needed for \bond for the ~ forms
+    //  Not perfectly aligned when zoomed in, but on 100%
+    //
+    tripledash: ['Macro',
+                 '\\vphantom{-}\\raise2mu{\\kern2mu\\tiny\\text{-}\\kern1mu\\text{-}\\kern1mu\\text{-}\\kern2mu}'],
+    xrightarrow: ['xArrow', 0x2192, 5, 6],
+    xleftarrow:  ['xArrow', 0x2190, 7, 3],
+    xleftrightarrow:    ['xArrow', 0x2194, 6, 6],
+    xrightleftharpoons: ['xArrow', 0x21CC, 5, 7],   // FIXME:  doesn't stretch in HTML-CSS output
+    xRightleftharpoons: ['xArrow', 0x21CC, 5, 7],   // FIXME:  how should this be handled?
+    xLeftrightharpoons: ['xArrow', 0x21CC, 5, 7]
   },
-  MhchemMethods);
+  MhchemMethods
+);
 
 
 export const MhchemConfiguration = Configuration.create(

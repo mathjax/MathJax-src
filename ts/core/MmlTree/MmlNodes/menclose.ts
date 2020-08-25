@@ -30,39 +30,51 @@ import {MmlNode, AbstractMmlNode, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMenclose extends AbstractMmlNode {
-    public static defaults: PropertyList = {
-        ...AbstractMmlNode.defaults,
-        notation: 'longdiv'
-    };
-    public texClass = TEXCLASS.ORD;
 
-    /**
-     * @return {string}  The menclose kind
-     */
-    public get kind() {
-        return 'menclose';
-    }
+  /**
+   * @override
+   */
+  public static defaults: PropertyList = {
+    ...AbstractMmlNode.defaults,
+    notation: 'longdiv'
+  };
 
-    /**
-     * @return {number}  <menclose> has an inferred mrow
-     */
-    public get arity() {
-        return -1;
-    }
+  /**
+   * TeX class is ORD
+   */
+  public texClass = TEXCLASS.ORD;
 
-    /**
-     * @return {boolean}  <menclose> is a linebreak container
-     */
-    public get linebreakContininer() {
-        return true;
-    }
+  /**
+   * The menclose kind
+   * @override
+   */
+  public get kind() {
+    return 'menclose';
+  }
 
-    /**
-     * @override
-     */
-    public setTeXclass(prev: MmlNode) {
-        prev = this.childNodes[0].setTeXclass(prev);
-        this.updateTeXclass(this.childNodes[0]);
-        return prev;
-    }
+  /**
+   * <menclose> has an inferred mrow
+   * @override
+   */
+  public get arity() {
+    return -1;
+  }
+
+  /**
+   * <menclose> is a linebreak container
+   * @override
+   */
+  public get linebreakContininer() {
+    return true;
+  }
+
+  /**
+   * @override
+   */
+  public setTeXclass(prev: MmlNode) {
+    prev = this.childNodes[0].setTeXclass(prev);
+    this.updateTeXclass(this.childNodes[0]);
+    return prev;
+  }
+
 }

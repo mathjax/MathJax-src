@@ -29,7 +29,6 @@ import TexParser from '../TexParser.js';
 import {Macro, Symbol} from '../Symbol.js';
 import {Args, Attributes, ParseMethod} from '../Types.js';
 import * as sm from '../SymbolMap.js';
-import {ExtensionMaps} from '../MapHandler.js';
 
 
 namespace NewcommandUtil {
@@ -38,7 +37,7 @@ namespace NewcommandUtil {
    * Transforms the attributes of a symbol into the arguments of a macro. E.g.,
    * Symbol('ell', 'l', {mathvariant: "italic"}) is turned into Macro arguments:
    * ['ell', 'l', 'mathvariant', 'italic'].
-   * 
+   *
    * @param {string} name The command name for the symbol.
    * @param {Symbol} symbol The symbol associated with name.
    * @return {Args[]} Arguments for a macro.
@@ -54,13 +53,13 @@ namespace NewcommandUtil {
       }
     }
     return newArgs;
-  };
+  }
 
 
   /**
    * Assembles a symbol from a list of macro arguments. This is the inverse
    * method of the one above.
-   * 
+   *
    * @param {Args[]} args The arguments of the macro.
    * @return {Symbol} The Symbol generated from the arguments..
    */
@@ -74,7 +73,7 @@ namespace NewcommandUtil {
       attrs[args[i] as string] = args[i + 1];
     }
     return new Symbol(name, char, attrs);
-  };
+  }
 
 
   /**
@@ -83,7 +82,7 @@ namespace NewcommandUtil {
    * @param {string} cmd The string starting with a control sequence.
    * @return {string} The control sequence.
    */
-  export function GetCSname(parser: TexParser, cmd: string) {
+  export function GetCSname(parser: TexParser, cmd: string): string {
     // @test Def ReDef, Let Bar, Let Brace Equal
     let c = parser.GetNext();
     if (c !== '\\') {
@@ -93,7 +92,7 @@ namespace NewcommandUtil {
     }
     let cs = ParseUtil.trimSpaces(parser.GetArgument(cmd));
     return cs.substr(1);
-  };
+  }
 
 
   /**
@@ -149,7 +148,7 @@ namespace NewcommandUtil {
     // @test No Replacement
     throw new TexError('MissingReplacementString',
                         'Missing replacement string for definition of %1', cmd);
-  };
+  }
 
 
   /**
@@ -205,7 +204,7 @@ namespace NewcommandUtil {
     }
     // @test Runaway Argument
     throw new TexError('RunawayArgument', 'Runaway argument for %1?', name);
-  };
+  }
 
 
   /**
@@ -216,7 +215,7 @@ namespace NewcommandUtil {
    * @param {string} param Tries to match an optional parameter.
    * @return {number} The number of optional parameters, either 0 or 1.
    */
-  export function MatchParam(parser: TexParser, param: string) {
+  export function MatchParam(parser: TexParser, param: string): number {
     // @test Def Let, Def Optional Brace, Def Options CS
     if (parser.string.substr(parser.i, param.length) !== param) {
       // @test Def Let, Def Options CS
@@ -230,7 +229,7 @@ namespace NewcommandUtil {
     // @test Def Let, Def Optional Brace, Def Options CS
     parser.i += param.length;
     return 1;
-  };
+  }
 
 
   /**
@@ -242,9 +241,9 @@ namespace NewcommandUtil {
    */
   export function addDelimiter(parser: TexParser, cs: string, char: string, attr: Attributes) {
     const handlers = parser.configuration.handlers;
-    const handler = handlers.retrieve(ExtensionMaps.NEW_DELIMITER) as sm.DelimiterMap;
+    const handler = handlers.retrieve(NEW_DELIMITER) as sm.DelimiterMap;
     handler.add(cs, new Symbol(cs, char, attr));
-  };
+  }
 
   /**
    * Adds a new macro as extension to the parser.
@@ -258,9 +257,9 @@ namespace NewcommandUtil {
   export function addMacro(parser: TexParser, cs: string, func: ParseMethod, attr: Args[],
                            symbol: string = '') {
     const handlers = parser.configuration.handlers;
-    const handler = handlers.retrieve(ExtensionMaps.NEW_COMMAND) as sm.CommandMap;
+    const handler = handlers.retrieve(NEW_COMMAND) as sm.CommandMap;
     handler.add(cs, new Macro(symbol ? symbol : cs, func, attr));
-  };
+  }
 
 
   /**
@@ -272,9 +271,16 @@ namespace NewcommandUtil {
    */
   export function addEnvironment(parser: TexParser, env: string, func: ParseMethod, attr: Args[]) {
     const handlers = parser.configuration.handlers;
-    const handler = handlers.retrieve(ExtensionMaps.NEW_ENVIRONMENT) as sm.EnvironmentMap;
+    const handler = handlers.retrieve(NEW_ENVIRONMENT) as sm.EnvironmentMap;
     handler.add(env, new Macro(env, func, attr));
-  };
+  }
+
+  /**
+   * Naming constants for the extension mappings.
+   */
+  export const NEW_DELIMITER = 'new-Delimiter';
+  export const NEW_COMMAND = 'new-Command';
+  export const NEW_ENVIRONMENT = 'new-Environment';
 
 }
 

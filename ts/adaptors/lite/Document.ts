@@ -28,27 +28,39 @@ import {LiteElement} from './Element.js';
  * Implements a lightweight Document replacement
  */
 export class LiteDocument {
-    /**
-     * The <html>, <head>, and <body> elements
-     */
-    public root: LiteElement;
-    public head: LiteElement;
-    public body: LiteElement;
+  /**
+   * The document's <html> element
+   */
+  public root: LiteElement;
+  /**
+   * The document's <head> element
+   */
+  public head: LiteElement;
+  /**
+   * The document's <body> element
+   */
+  public body: LiteElement;
 
-    /**
-     * The kind is always #document
-     */
-    public get kind() {
-        return '#document';
-    }
+  /**
+   * the DOCTYPE comment
+   */
+  public type: string;
 
-    /**
-     * @constructor
-     */
-    constructor() {
-        this.root = new LiteElement('html', {}, [
-            this.head = new LiteElement('head'),
-            this.body = new LiteElement('body')
-        ]);
-    }
+  /**
+   * The kind is always #document
+   */
+  public get kind() {
+    return '#document';
+  }
+
+  /**
+   * @constructor
+   */
+  constructor() {
+    this.root = new LiteElement('html', {}, [
+      this.head = new LiteElement('head'),
+      this.body = new LiteElement('body')
+    ]);
+    this.type = '<!DOCTYPE html>';
+  }
 }

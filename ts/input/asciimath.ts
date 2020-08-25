@@ -39,40 +39,47 @@ import {FindAsciiMath} from './asciimath/FindAsciiMath.js';
  */
 export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
 
-    public static NAME: string = 'AsciiMath';
-    public static OPTIONS: OptionList = {
-        ...AbstractInputJax.OPTIONS,
-        FindAsciiMath: null
-    };
+  /**
+   * The name of the input jax
+   */
+  public static NAME: string = 'AsciiMath';
 
-    /**
-     * The FindMath object used to search for AsciiMath in the document
-     */
-    protected findAsciiMath: FindAsciiMath<N, T, D>;
+  /**
+   * @override
+   */
+  public static OPTIONS: OptionList = {
+    ...AbstractInputJax.OPTIONS,
+    FindAsciiMath: null
+  };
 
-    /**
-     * @override
-     */
-    constructor(options: OptionList) {
-        let [am, find] = separateOptions(options, FindAsciiMath.OPTIONS);
-        super(am);
-        this.findAsciiMath = this.options['FindAsciiMath'] || new FindAsciiMath(find);
-    }
+  /**
+   * The FindMath object used to search for AsciiMath in the document
+   */
+  protected findAsciiMath: FindAsciiMath<N, T, D>;
 
-    /**
-     * Use legacy AsciiMath input jax for now
-     *
-     * @override
-     */
-    public compile(math: MathItem<N, T, D>, document: MathDocument<N, T, D>) {
-        return LegacyAsciiMath.Compile(math.math, math.display);
-    }
+  /**
+   * @override
+   */
+  constructor(options: OptionList) {
+    let [am, find] = separateOptions(options, FindAsciiMath.OPTIONS);
+    super(am);
+    this.findAsciiMath = this.options['FindAsciiMath'] || new FindAsciiMath(find);
+  }
 
-    /**
-     * @override
-     */
-    public findMath(strings: string[]) {
-        return this.findAsciiMath.findMath(strings);
-    }
+  /**
+   * Use legacy AsciiMath input jax for now
+   *
+   * @override
+   */
+  public compile(math: MathItem<N, T, D>, _document: MathDocument<N, T, D>) {
+    return LegacyAsciiMath.Compile(math.math, math.display);
+  }
+
+  /**
+   * @override
+   */
+  public findMath(strings: string[]) {
+    return this.findAsciiMath.findMath(strings);
+  }
 
 }

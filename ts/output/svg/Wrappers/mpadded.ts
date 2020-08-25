@@ -22,7 +22,7 @@
  */
 
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
-import {CommonMpadded, CommonMpaddedMixin} from '../../common/Wrappers/mpadded.js';
+import {CommonMpaddedMixin} from '../../common/Wrappers/mpadded.js';
 import {MmlMpadded} from '../../../core/MmlTree/MmlNodes/mpadded.js';
 
 /*****************************************************************/
@@ -33,27 +33,32 @@ import {MmlMpadded} from '../../../core/MmlTree/MmlNodes/mpadded.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGmpadded<N, T, D> extends CommonMpaddedMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
+// @ts-ignore
+export class SVGmpadded<N, T, D> extends
+CommonMpaddedMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
-    public static kind = MmlMpadded.prototype.kind;
+  /**
+   * The mpadded wrapper
+   */
+  public static kind = MmlMpadded.prototype.kind;
 
-    /**
-     * @override
-     */
-    public toSVG(parent: N) {
-        let svg = this.standardSVGnode(parent);
-        const [H, D, W, dh, dd, dw, x, y, dx] = this.getDimens();
-        const align = (this.node.attributes.get('data-align') as string) || 'left';
-        const X = x + dx - (dw < 0 && align !== 'left' ? align === 'center' ? dw / 2 : dw : 0);
-        //
-        // If there is a horizontal or vertical shift,
-        //   use relative positioning to move the contents
-        //
-        if (X || y) {
-            svg = this.adaptor.append(svg, this.svg('g'));
-            this.place(X, y, svg);
-        }
-        this.addChildren(svg);
+  /**
+   * @override
+   */
+  public toSVG(parent: N) {
+    let svg = this.standardSVGnode(parent);
+    const [ , , , , , dw, x, y, dx] = this.getDimens();
+    const align = (this.node.attributes.get('data-align') as string) || 'left';
+    const X = x + dx - (dw < 0 && align !== 'left' ? align === 'center' ? dw / 2 : dw : 0);
+    //
+    // If there is a horizontal or vertical shift,
+    //   use relative positioning to move the contents
+    //
+    if (X || y) {
+      svg = this.adaptor.append(svg, this.svg('g'));
+      this.place(X, y, svg);
     }
+    this.addChildren(svg);
+  }
 
 }

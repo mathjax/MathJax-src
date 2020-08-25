@@ -22,7 +22,7 @@
  */
 
 
-import {TEXCLASS, MmlNode, TextNode} from '../../core/MmlTree/MmlNode.js';
+import {TEXCLASS, MMLNODE, MmlNode} from '../../core/MmlTree/MmlNode.js';
 import NodeUtil from './NodeUtil.js';
 import ParseOptions from './ParseOptions.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
@@ -35,8 +35,8 @@ namespace FilterUtil {
    * Visitor to set stretchy attributes to false on <mo> elements, if they are
    * not used as delimiters. Also wraps non-stretchy infix delimiters into a
    * TeXAtom.
-   * @param {MmlNode} node The node to rewrite.
-   * @param {ParseOptions} options The parse options.
+   * @param {MmlNode} math The node to rewrite.
+   * @param {ParseOptions} data The parse options.
    */
   export let cleanStretchy = function(arg: {math: any, data: ParseOptions}) {
     let options = arg.data;
@@ -62,12 +62,11 @@ namespace FilterUtil {
    * Visitor that removes superfluous attributes from nodes. I.e., if a node has
    * an attribute, which is also an inherited attribute it will be removed. This
    * is necessary as attributes are set bottom up in the parser.
-   * @param {MmlNode} mml The node to clean.
-   * @param {ParseOptions} options The parse options.
+   * @param {ParseOptions} data The parse options.
    */
   export let cleanAttributes = function(arg: {data: ParseOptions}) {
     let node = arg.data.root as MmlNode;
-    node.walkTree((mml: MmlNode, d: any) => {
+    node.walkTree((mml: MmlNode, _d: any) => {
       let attribs = mml.attributes as any;
       if (!attribs) {
         return;
@@ -84,8 +83,7 @@ namespace FilterUtil {
   /**
    * Combine adjacent <mo> elements that are relations (since MathML treats the
    * spacing very differently)
-   * @param {MmlNode} mml The node in which to combine relations.
-   * @param {ParseOptions} options The parse options.
+   * @param {ParseOptions} data The parse options.
    */
   export let combineRelations = function(arg: {data: ParseOptions}) {
     for (let mo of arg.data.getList('mo')) {
@@ -97,7 +95,7 @@ namespace FilterUtil {
       }
       let mml = mo.parent;
       let m2: MmlNode;
-      let children = mml.childNodes as (MmlNode|TextNode)[];
+      let children = mml.childNodes as MMLNODE[];
       let next = children.indexOf(mo) + 1;
       let variantForm = NodeUtil.getProperty(mo, 'variantForm');
       while (next < children.length && (m2 = children[next]) &&
@@ -259,7 +257,7 @@ namespace FilterUtil {
    * Visitor that rewrites in-line munderover elements with movablelimits but bases
    * that are not mo's into explicit msubsup elements.
    *
-   * @param {{data:ParseOptions}} arg   The parse options to use
+   * @param {ParseOptions} data  The parse options to use
    */
   export let moveLimits = function (arg: {data: ParseOptions}) {
     const options = arg.data;
