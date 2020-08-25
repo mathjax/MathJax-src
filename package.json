@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "esm": "^3.2.25",
-    "mj-context-menu": "^0.5.4",
+    "mj-context-menu": "^0.6.1",
     "speech-rule-engine": "^3.1.0"
   }
 }
