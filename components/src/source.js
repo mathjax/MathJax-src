@@ -39,6 +39,7 @@ export const source = {
   'output/chtml/fonts/tex': `${src}/output/chtml/fonts/tex/tex.js`,
   'output/svg': `${src}/output/svg/svg.js`,
   'output/svg/fonts/tex': `${src}/output/svg/fonts/tex/tex.js`,
+  'output/svg/fonts/stix2': `${src}/output/svg/fonts/tex/stix2.js`,
   'a11y/assistive-mml': `${src}/a11y/assistive-mml/assistive-mml.js`,
   'a11y/semantic-enrich': `${src}/a11y/semantic-enrich/semantic-enrich.js`,
   'a11y/complexity': `${src}/a11y/complexity/complexity.js`,
@@ -53,6 +54,7 @@ export const source = {
   'tex-svg': `${src}/tex-svg/tex-svg.js`,
   'tex-mml-chtml': `${src}/tex-mml-chtml/tex-mml-chtml.js`,
   'tex-mml-svg': `${src}/tex-mml-svg/tex-mml-svg.js`,
+  'tex-mml-svg-stix2': `${src}/tex-mml-svg/tex-mml-svg-stix2.js`,
   'loader': `${src}/loader/loader.js`,
   'startup': `${src}/startup/startup.js`
 };
