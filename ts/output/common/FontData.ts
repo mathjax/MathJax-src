@@ -473,6 +473,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    */
   protected static defaultStretchVariants: string[] = [];
 
+
   /**
    * The font options
    */
