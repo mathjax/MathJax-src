@@ -1,0 +1,255 @@
+.header {
+  font-weight: bold;
+  padding: 3px;
+  font-family: sans-serif;
+}
+
+.space {
+  width: 2px;
+}
+
+.blank {
+  padding: 10px;
+}
+
+.label {
+  padding: 5px;
+  font-family: monospace;
+  text-align: right;
+  font-size: 80%;
+}
+
+.NA {
+  padding: 10px;
+  background: #AAAAAA;
+}
+
+.NA.smp {
+  padding: 0;
+  border-color: transparent;
+}
+
+.other {
+  padding: 10px;
+  background: #CCCCCC;
+}
+
+.other.smp {
+  padding: 0;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.mapped {
+  font-size: 133%;
+  background: #F8F8F8;
+  border-color: #999;
+}
+
+.smp {
+  border: 2px #888 dotted;
+}
+
+.font {
+  border: 2px #888 double;
+}
+
+.back {
+  border: 2px #888 dotted;
+}
+
+.NA.back {
+  padding: 0;
+  border-color: #EEE;
+}
+
+.NA.forward {
+  border-color: #EEE;
+}
+
+.inherit {
+  font-size: 133%;
+  background: #E8E8E8;
+}
+
+.caption td {
+  font-family: monospace;
+  font-size: 80%;
+  text-align: center;
+}
+
+.small {
+  font-size: 80%;
+  vertical-align: .15em;
+}
+
+.tt {
+  font-family: monospace;
+  margin: 0px -.125em;
+}
+
+td {
+  min-width: 1em;
+  border: 2px solid transparent;
+  white-space: nowrap;
+}
+
+tr {
+  vertical-align: baseline;
+}
+
+.combine {
+  font-family: MJXTEX;
+}
+
+.unicode-block {
+  margin-top: 2em;
+  page-break-inside: avoid;
+}
+
+h1 {
+  text-align: center;
+  padding-left: 2em;
+}
+
+table {
+  margin: auto;
+}
+
+mjx-cell {
+  display: inline-block;
+  padding: 10px;
+  line-height: 0;
+}
+
+mjx-utext {
+  line-height: normal;
+  font-family: initial;
+}
+
+.navigation {
+  position: fixed;
+  top: 5px;
+  right: 5px;
+  width: auto;
+  border: 1px solid black;
+  padding: 5px 10px;
+  font-family: sans-serif;
+  text-align: center;
+  background-color: white;
+}
+
+.navigation > hr {
+  border: none;
+  border-top: 2px dotted;
+}
+
+.navigation .links {
+  margin-bottom: 5px;
+}
+
+.navigation .options {
+  font-size: 80%;
+  line-height: 2;
+}
+
+.navigation a {
+  text-decoration: none;
+  font-family: Times New Roman;
+}
+
+.navigation a[disabled] {
+  pointer-events: none;
+  color: #CCC;
+}
+
+.navigation select {
+  margin-left: 3px;
+}
+
+svg {
+  overflow: visible;
+}
+
+.bbox-outline svg {
+  border: 1px solid #F66;
+  margin: -1px;
+}
+
+.bbox-block svg {
+  background-color: #FAB;
+}
+
+.hilite-stix mjx-c.STX path {
+  fill: #B00;
+}
+
+.hilite-variant td.mapped {
+  background-color: #FFD;
+}
+
+.hilite-variant td.mapped.back {
+  background-color: #D8F6F6;
+}
+
+.hilite-variant td.inherit.variant {
+  background-color: #D8F6F6;
+}
+
+.hilite-variant td.variant.smp {
+  border-color: #888;
+}
+
+.hilite-remapped td.mapped.smp {
+  background-color: #FFD;
+}
+
+.hilite-remapped td.inherit.smp {
+  background-color: #F0F0D0;
+}
+
+.hilite-remapped td.other.smp {
+  background-color: #DDB;
+}
+
+.hilite-remapped td.back {
+  background-color: #D8F6F6;
+}
+
+.hilite-remapped td.NA.back {
+  background-color: #ACC;
+  border-color: #666;
+}
+
+.hilite-remapped td.forward {
+  background-color: #DDB;
+  border-color: #666;
+}
+
+.hilite-font td.font {
+  background-color: #FFD;
+}
+
+.hilite-chained td.inherit:not([title~="normal"]) {
+  background-color: #FFD;
+  border-color: #CCC;
+}
+
+.hilite-normal td[title~="normal"] {
+  background-color: #FFD;
+  border-color: #CCC;
+}
+
+.hilite-inherit td.inherit {
+  background-color: #FFD;
+  border-color: #CCC;
+}
+
+.show-nonempty .empty {
+  display: none;
+}
+
+@media print {.navigation {display: none}}
+

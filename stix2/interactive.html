@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width">
+  <title>Interactive TeX and MathML input and SVG output using STIX2 fonts</title>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+  MathJax = {
+    tex: {inlineMath: [['$', '$'], ['\\(', '\\)']]},
+    svg: {fontCache: 'global'},
+    startup: {
+      ready: function () {
+        MathJax.startup.defaultReady();
+        document.getElementById('render').disabled = false;
+      }
+    }
+  }
+  </script>
+  <script id="MathJax-script" async src="../es5/tex-mml-svg-stix2.js"></script>
+  <script>
+    function convert() {
+      //
+      //  Get the input (it is HTML containing delimited TeX math
+      //    and/or MathML tags
+      //
+      var input = document.getElementById("input").value.trim();
+      //
+      //  Disable the render button until MathJax is done
+      //
+      var button = document.getElementById("render");
+      button.disabled = true;
+      //
+      //  Clear the old output
+      //
+      output = document.getElementById('output');
+      output.innerHTML = input;
+      //
+      //  Reset the tex labels (and automatic equation numbers, though there aren't any here).
+      //  Reset the typesetting system (font caches, etc.)
+      //  Typeset the page, using a promise to let us know when that is complete
+      //
+      MathJax.texReset();
+      MathJax.typesetClear();
+      MathJax.typesetPromise()
+        .catch(function (err) {
+          //
+          //  If there was an internal error, put the message into the output instead
+          //
+          output.innerHTML = '';
+          output.appendChild(document.createElement('pre')).appendChild(document.createTextNode(err.message));
+        })
+        .then(function() {
+          //
+          //  Error or not, re-enable the render button
+          //
+          button.disabled = false;
+        });
+    }
+  </script>
+  <style>
+  #frame {
+    max-width: 40em;
+    margin: auto;
+  }
+  #input {
+    border: 1px solid grey;
+    margin: 0 0 .25em;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  #output {
+    margin-top: .75em;
+    border: 1px solid grey;
+    padding: .25em;
+    min-height: 2em;
+  }
+  #output > pre {
+    margin-left: 5px;
+  }
+  .right {
+    float: right;
+  }
+  </style>
+</head>
+
+<body>
+<div id="frame">
+
+<h1>TeX &amp; MathML to SVG with STIX2 fonts</h1>
+
+<textarea id="input" rows="15" cols="10">
+<!--  Enter HTML containing TeX or MathML below -->
+
+If $a \ne 0$, then $ax^2 + bx + c = 0$ has two solutions,
+$$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
+
+As MathML:
+<math>
+  <mi>a</mi>
+  <msup>
+    <mi>x</mi>
+    <mn>2</mn>
+  </msup>
+  <mo>+</mo>
+  <mi>b</mi>
+  <mi>x</mi>
+  <mo>+</mo>
+  <mi>c</mi>
+  <mo>=</mo>
+  <mn>0</mn>
+</math>.
+</textarea>
+<br />
+<div class="right">
+<input type="button" value="Render HTML" id="render" onclick="convert()" disabled />
+</div>
+<br clear="all" />
+<div id="output"></div>
+</div>
+
+</body>
+
+</html>
