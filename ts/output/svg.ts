@@ -236,7 +236,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
     //
     const g = this.svg('g', {
       stroke: 'currentColor', fill: 'currentColor',
-      'stroke-width': 0, transform: 'matrix(1 0 0 -1 0 0)'
+      'stroke-width': 0, transform: 'scale(1,-1)'
     }) as N;
     //
     //  The svg element with its viewBox, size and alignment
@@ -262,9 +262,9 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
       adaptor.setStyle(svg, 'min-width', this.ex(W));
       adaptor.setAttribute(svg, 'width', pwidth);
       adaptor.removeAttribute(svg, 'viewBox');
-      const scale = wrapper.metrics.ex / (this.font.params.x_height * 1000);
-      adaptor.setAttribute(g, 'transform', 'matrix(1 0 0 -1 0 0) scale(' +
-                           this.fixed(scale, 6) + ') translate(0, ' + this.fixed(-h * 1000, 1) + ')');
+      const scale = this.fixed(wrapper.metrics.ex / (this.font.params.x_height * 1000), 6);
+      adaptor.setAttribute(g, 'transform', 'scale(' + scale + ',-' + scale + ') '
+                            + 'translate(0, ' + this.fixed(-h * 1000, 1) + ')');
     }
     if (this.options.fontCache !== 'none') {
       adaptor.setAttribute(svg, 'xmlns:xlink', XLINKNS);
@@ -346,7 +346,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
     const scale = this.font.params.x_height / metrics.ex * metrics.em * 1000;
     const svg = this.svg('text', {
       'data-variant': variant,
-      transform: 'matrix(1 0 0 -1 0 0)', 'font-size': this.fixed(scale, 1) + 'px'
+      transform: 'scale(1,-1)', 'font-size': this.fixed(scale, 1) + 'px'
     }, [this.text(text)]);
     const adaptor = this.adaptor;
     if (variant !== '-explicitFont') {

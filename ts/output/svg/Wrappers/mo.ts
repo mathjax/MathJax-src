@@ -65,9 +65,7 @@ CommonMoMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
       this.stretchSVG();
     } else {
       if (symmetric || attributes.get('largeop')) {
-        const bbox = BBox.empty();
-        super.computeBBox(bbox);
-        const u = this.fixed((bbox.d - bbox.h) / 2 + this.font.params.axis_height);
+        const u = this.fixed(this.getCenterOffset());
         if (u !== '0') {
           this.adaptor.setAttribute(svg, 'transform', 'translate(0 ' + u + ')');
         }
@@ -81,46 +79,61 @@ CommonMoMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
    */
   protected stretchSVG() {
     const stretch = this.stretch.stretch;
+    const variants = this.getStretchVariants();
     const bbox = this.getBBox();
     if (this.stretch.dir === DIRECTION.Vertical) {
-      this.stretchVertical(stretch, bbox);
+      this.stretchVertical(stretch, variants, bbox);
     } else {
-      this.stretchHorizontal(stretch, bbox);
+      this.stretchHorizontal(stretch, variants, bbox);
     }
   }
 
   /**
+   * Get the variant array for the assembly pieces
+   */
+  protected getStretchVariants() {
+    const c = this.stretch.c || this.getText().codePointAt(0);
+    const variants = [] as string[];
+    for (const i of this.stretch.stretch.keys()) {
+      variants[i] = this.font.getStretchVariant(c, i);
+    }
+    return variants;
+  }
+
+  /**
    * @param {number[]} stretch    The characters to use for stretching
+   * @param {string[]} variant    The variants for the parts to use for stretching
    * @param {BBox} bbox           The full size of the stretched character
    */
-  protected stretchVertical(stretch: number[], bbox: BBox) {
+  protected stretchVertical(stretch: number[], variant: string[], bbox: BBox) {
     const {h, d, w} = bbox;
-    const T = this.addTop(stretch[0], h, w);
-    const B = this.addBot(stretch[2], d, w);
+    const T = this.addTop(stretch[0], variant[0], h, w);
+    const B = this.addBot(stretch[2], variant[2], d, w);
     if (stretch.length === 4) {
-      const [H, D] = this.addMidV(stretch[3], w);
-      this.addExtV(stretch[1], h, 0, T, H, w);
-      this.addExtV(stretch[1], 0, d, D, B, w);
+      const [H, D] = this.addMidV(stretch[3], variant[3], w);
+      this.addExtV(stretch[1], variant[1], h, 0, T, H, w);
+      this.addExtV(stretch[1], variant[1], 0, d, D, B, w);
     } else {
-      this.addExtV(stretch[1], h, d, T, B, w);
+      this.addExtV(stretch[1], variant[1], h, d, T, B, w);
     }
   }
 
   /**
    * @param {number[]} stretch    The characters to use for stretching
+   * @param {string[]} variant    The variants for the parts to use for stretching
    * @param {BBox} bbox           The full size of the stretched character
    */
-  protected stretchHorizontal(stretch: number[], bbox: BBox) {
+  protected stretchHorizontal(stretch: number[], variant: string[], bbox: BBox) {
     const w = bbox.w;
-    const L = this.addLeft(stretch[0]);
-    const R = this.addRight(stretch[2], w);
+    const L = this.addLeft(stretch[0], variant[0]);
+    const R = this.addRight(stretch[2], variant[2], w);
     if (stretch.length === 4) {
-      const [x1, x2] = this.addMidH(stretch[3], w);
+      const [x1, x2] = this.addMidH(stretch[3], variant[3], w);
       const w2 = w / 2;
-      this.addExtH(stretch[1], w2, L, w2 - x1);
-      this.addExtH(stretch[1], w2, x2 - w2, R, w2);
+      this.addExtH(stretch[1], variant[1], w2, L, w2 - x1);
+      this.addExtH(stretch[1], variant[1], w2, x2 - w2, R, w2);
     } else {
-      this.addExtH(stretch[1], w, L, R);
+      this.addExtH(stretch[1], variant[1], w, L, R);
     }
   }
 
@@ -128,53 +141,57 @@ CommonMoMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
   /**
    * @param {number} n         The number of the character to look up
+   * @param {string} variant   The variant for the character to look up
    * @return {SVGCharData}     The full CharData object, with CharOptions guaranteed to be defined
    */
-  protected getChar(n: number): SVGCharData {
-    const char = this.font.getChar('-size4', n) || [0, 0, 0, null];
+  protected getChar(n: number, variant: string): SVGCharData {
+    const char = this.font.getChar(variant, n) || [0, 0, 0, null];
     return [char[0], char[1], char[2], char[3] || {}] as [number, number, number, SVGCharOptions];
   }
 
   /**
-   * @param {number} n   The character code for the glyph
-   * @param {number} x   The x position of the glyph
-   * @param {number} y   The y position of the glyph
-   * @param {N} parent   The container for the glyph
-   * @return {number}    The width of the character placed
+   * @param {number} n         The character code for the glyph
+   * @param {string} variant   The variant for the glyph
+   * @param {number} x         The x position of the glyph
+   * @param {number} y         The y position of the glyph
+   * @param {N} parent         The container for the glyph
+   * @return {number}          The width of the character placed
    */
-  protected addGlyph(n: number, x: number, y: number, parent: N = null): number {
-    return this.placeChar(n, x, y, parent || this.element, '-size4');
+  protected addGlyph(n: number, variant: string, x: number, y: number, parent: N = null): number {
+    return this.placeChar(n, x, y, parent || this.element, variant);
   }
 
   /***********************************************************/
 
   /**
    * @param {number} n    The character number for the top glyph
+   * @param {srting} v    The variant for the top glyph
    * @param {number} H    The height of the stretched delimiter
    * @param {number} W    The width of the stretched delimiter
    * @return {number}     The total height of the top glyph
    */
-  protected addTop(n: number, H: number, W: number): number {
+  protected addTop(n: number, v: string, H: number, W: number): number {
     if (!n)  return 0;
-    const [h, d, w] = this.getChar(n);
-    this.addGlyph(n, (W - w) / 2, H - h);
+    const [h, d, w] = this.getChar(n, v);
+    this.addGlyph(n, v, (W - w) / 2, H - h);
     return h + d;
   }
 
   /**
    * @param {number} n    The character number for the extender glyph
+   * @param {srting} v    The variant for the extender glyph
    * @param {number} H    The height of the stretched delimiter
    * @param {number} D    The depth of the stretched delimiter
    * @param {number} T    The height of the top glyph in the delimiter
    * @param {number} B    The height of the bottom glyph in the delimiter
    * @param {number} W    The width of the stretched delimiter
    */
-  protected addExtV(n: number, H: number, D: number, T: number, B: number, W: number) {
+  protected addExtV(n: number, v: string, H: number, D: number, T: number, B: number, W: number) {
     if (!n) return;
     T = Math.max(0, T - VFUZZ);              // A little overlap on top
     B = Math.max(0, B - VFUZZ);              // A little overlap on bottom
     const adaptor = this.adaptor;
-    const [h, d, w] = this.getChar(n);
+    const [h, d, w] = this.getChar(n, v);
     const Y = H + D - T - B;                 // The height of the extender
     const s = 1.5 * Y / (h + d);             // Scale height by 1.5 to avoid bad ends
     //   (glyphs with rounded or anti-aliased ends don't stretch well,
@@ -186,35 +203,37 @@ CommonMoMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
       y: this.fixed(B - D), x: this.fixed((W - w) / 2),
       viewBox: [0, y, w, Y].map(x => this.fixed(x)).join(' ')
     });
-    this.addGlyph(n, 0, 0, svg);
+    this.addGlyph(n, v, 0, 0, svg);
     const glyph = adaptor.lastChild(svg);
-    adaptor.setAttribute(glyph, 'transform', 'scale(1, ' + this.jax.fixed(s) + ')');
+    adaptor.setAttribute(glyph, 'transform', 'scale(1,' + this.jax.fixed(s) + ')');
     adaptor.append(this.element, svg);
   }
 
   /**
    * @param {number} n    The character number for the bottom glyph
+   * @param {srting} v    The variant for the bottom glyph
    * @param {number} D    The depth of the stretched delimiter
    * @param {number} W    The width of the stretched delimiter
    * @return {number}     The total height of the bottom glyph
    */
-  protected addBot(n: number, D: number, W: number): number {
+  protected addBot(n: number, v: string, D: number, W: number): number {
     if (!n) return 0;
-    const [h, d, w] = this.getChar(n);
-    this.addGlyph(n, (W - w) / 2, d - D);
+    const [h, d, w] = this.getChar(n, v);
+    this.addGlyph(n, v, (W - w) / 2, d - D);
     return h + d;
   }
 
   /**
    * @param {number} n    The character number for the middle glyph
+   * @param {srting} v    The variant for the middle glyph
    * @param {number} W    The width of the stretched delimiter
    * @return {[number, number]}   The top and bottom positions of the middle glyph
    */
-  protected addMidV(n: number, W: number): [number, number] {
+  protected addMidV(n: number, v: string, W: number): [number, number] {
     if (!n) return [0, 0];
-    const [h, d, w] = this.getChar(n);
+    const [h, d, w] = this.getChar(n, v);
     const y = (d - h) / 2 + this.font.params.axis_height;
-    this.addGlyph(n, (W - w) / 2, y);
+    this.addGlyph(n, v, (W - w) / 2, y);
     return [h + y, d - y];
   }
 
@@ -222,24 +241,27 @@ CommonMoMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
   /**
    * @param {number} n   The character number for the left glyph of the stretchy character
+   * @param {srting} v   The variant for the left glyph
    * @return {number}    The width of the left glyph
    */
-  protected addLeft(n: number): number {
-    return (n ? this.addGlyph(n, 0, 0) : 0);
+  protected addLeft(n: number, v: string): number {
+    return (n ? this.addGlyph(n, v, 0, 0) : 0);
   }
 
   /**
    * @param {number} n   The character number for the extender glyph of the stretchy character
+   * @param {srting} v   The variant for the extender glyph
    * @param {number} W   The width of the stretched character
    * @param {number} L   The width of the left glyph of the stretchy character
    * @param {number} R   The width of the right glyph of the stretchy character
    * @param {number} x   The x-position of the extender (needed for ones with two extenders)
    */
-  protected addExtH(n: number, W: number, L: number, R: number, x: number = 0) {
+  protected addExtH(n: number, v: string, W: number, L: number, R: number, x: number = 0) {
     if (!n) return;
     R = Math.max(0, R - HFUZZ);     // A little less than the width of the right glyph
     L = Math.max(0, L - HFUZZ);     // A little less than the width of the left glyph
-    const [h, d, w] = this.getChar(n);
+    const adaptor = this.adaptor;
+    const [h, d, w] = this.getChar(n, v);
     const X = W - L - R;            // The width of the extender
     const Y = h + d + 2 * VFUZZ;    // The height (plus some fuzz) of the extender
     const s = 1.5 * (X / w);        // Scale the width so that left- and right-bearing won't hurt us
@@ -250,32 +272,34 @@ CommonMoMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
       x: this.fixed(x + L), y: this.fixed(D),
       viewBox: [(s * w - X) / 2, D, X, Y].map(x => this.fixed(x)).join(' ')
     });
-    this.addGlyph(n, 0, 0, svg);
-    const glyph = this.adaptor.lastChild(svg);
-    this.adaptor.setAttribute(glyph, 'transform', 'scale(' + this.jax.fixed(s) + ', 1)');
-    this.adaptor.append(this.element, svg);
+    this.addGlyph(n, v, 0, 0, svg);
+    const glyph = adaptor.lastChild(svg);
+    adaptor.setAttribute(glyph, 'transform', 'scale(' + this.jax.fixed(s) + ',1)');
+    adaptor.append(this.element, svg);
   }
 
   /**
    * @param {number} n   The character number for the right glyph of the stretchy character
+   * @param {srting} v   The variant for the right glyph
    * @param {number} W   The width of the stretched character
    * @return {number}    The width of the right glyph
    */
-  protected addRight(n: number, W: number): number {
+  protected addRight(n: number, v: string, W: number): number {
     if (!n) return 0;
-    const w = this.getChar(n)[2];
-    return this.addGlyph(n, W - w, 0);
+    const w = this.getChar(n, v)[2];
+    return this.addGlyph(n, v, W - w, 0);
   }
 
   /**
    * @param {number} n   The character number for the middle glyph of the stretchy character
+   * @param {srting} v   The variant for the middle glyph
    * @param {number} W   The width of the stretched character
    * @return {[number, number]}  The positions of the left and right edges of the middle glyph
    */
-  protected addMidH(n: number, W: number): [number, number] {
+  protected addMidH(n: number, v: string, W: number): [number, number] {
     if (!n) return [0, 0];
-    const w = this.getChar(n)[2];
-    this.addGlyph(n, (W - w) / 2, 0);
+    const w = this.getChar(n, v)[2];
+    this.addGlyph(n, v, (W - w) / 2, 0);
     return [(W - w) / 2, (W + w) / 2];
   }
 

@@ -24,7 +24,6 @@
 import {CHTMLWrapper, CHTMLConstructor, StringMap} from '../Wrapper.js';
 import {CommonMoMixin, DirectionVH} from '../../common/Wrappers/mo.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
-import {BBox} from '../../../util/BBox.js';
 import {StyleList} from '../../../util/StyleList.js';
 import {DIRECTION} from '../FontData.js';
 
@@ -139,9 +138,7 @@ CommonMoMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
       this.stretchHTML(chtml);
     } else {
       if (symmetric || attributes.get('largeop')) {
-        const bbox = BBox.empty();
-        super.computeBBox(bbox);
-        const u = this.em((bbox.d - bbox.h) / 2 + this.font.params.axis_height);
+        const u = this.em(this.getCenterOffset());
         if (u !== '0') {
           this.adaptor.setStyle(chtml, 'verticalAlign', u);
         }
