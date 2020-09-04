@@ -61,7 +61,7 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
    * @override
    */
   constructor(options: OptionList) {
-    let [am, find] = separateOptions(options, FindAsciiMath.OPTIONS);
+    let [ , find, am] = separateOptions(options, FindAsciiMath.OPTIONS, AsciiMath.OPTIONS);
     super(am);
     this.findAsciiMath = this.options['FindAsciiMath'] || new FindAsciiMath(find);
   }
