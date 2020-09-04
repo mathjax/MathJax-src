@@ -99,10 +99,8 @@ export class TextParser extends TexParser {
    */
   public saveText() {
     if (this.text) {
-      const text = ParseUtil.internalText(this, this.text, {});
-      if (this.stack.env.mathvariant) {
-        NodeUtil.setAttribute(text, 'mathvariant', this.stack.env.mathvariant);
-      }
+      const mathvariant = this.stack.env.mathvariant;
+      const text = ParseUtil.internalText(this, this.text, mathvariant ? {mathvariant} : {});
       this.text = '';
       this.Push(text);
     }
