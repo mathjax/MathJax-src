@@ -145,10 +145,9 @@ export class TextParser extends TexParser {
       }
     }
     if (mml.isKind('inferredMrow')) {
-      mml.childNodes.forEach(child => this.nodes.push(child as MmlNode));
-    } else {
-      this.nodes.push(mml);
+      mml = this.create('node', 'mrow', mml.childNodes);
     }
+    this.nodes.push(mml);
   }
 
   /**
