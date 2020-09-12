@@ -269,10 +269,10 @@ export default class TexParser {
    * @return {string} Get and return a control-sequence name
    */
   public GetCS(): string {
-    let CS = this.string.slice(this.i).match(/^([a-z]+ ?|[\uD800-\uDBFF].|.)/i);
+    let CS = this.string.slice(this.i).match(/^(([a-z]+) ?|[\uD800-\uDBFF].|.)/i);
     if (CS) {
       this.i += CS[0].length;
-      return CS[1];
+      return CS[2] || CS[1];
     } else {
       this.i++;
       return ' ';
