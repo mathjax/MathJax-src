@@ -127,7 +127,7 @@ if (typeof global.MathJax === 'undefined') {
  */
 if (!(global.MathJax as MathJaxObject).version) {
   global.MathJax = {
-    version: '3.1.1',
+    version: '3.1.2',
     _: {},
     config: global.MathJax
   };
