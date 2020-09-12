@@ -1003,10 +1003,11 @@ BaseMethods.BuildRel = function(parser: TexParser, name: string) {
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  * @param {string} style Box style.
+ * @param {string} font The mathvariant to use
  */
-BaseMethods.HBox = function(parser: TexParser, name: string, style: string) {
+BaseMethods.HBox = function(parser: TexParser, name: string, style: string, font?: string) {
   // @test Hbox
-  parser.PushAll(ParseUtil.internalMath(parser, parser.GetArgument(name), style));
+  parser.PushAll(ParseUtil.internalMath(parser, parser.GetArgument(name), style, font));
 };
 
 /**

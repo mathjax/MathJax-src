@@ -236,14 +236,16 @@ namespace ParseUtil {
    * @param {TexParser} parser The calling parser.
    * @param {string} text The text in the math expression to parse.
    * @param {number|string=} level The scriptlevel.
+   * @param {string} font The mathvariant to use
    * @return {MmlNode[]} The nodes corresponding to the internal math expression.
    */
   export function internalMath(parser: TexParser, text: string,
-                               level?: number | string): MmlNode[] {
+                               level?: number | string, font?: string): MmlNode[] {
     if (parser.configuration.options.internalMath) {
-      return parser.configuration.options.internalMath(parser, text, level);
+      return parser.configuration.options.internalMath(parser, text, level, font);
     }
-    let def = (parser.stack.env['font'] ? {mathvariant: parser.stack.env['font']} : {});
+    let mathvariant = font || parser.stack.env.font;
+    let def = (mathvariant ? {mathvariant} : {});
     let mml: MmlNode[] = [], i = 0, k = 0, c, node, match = '', braces = 0;
     if (text.match(/\\?[${}\\]|\\\(|\\(eq)?ref\s*\{/)) {
       while (i < text.length) {
