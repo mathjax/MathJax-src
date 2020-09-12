@@ -66,6 +66,13 @@ export class TextParser extends TexParser {
 
   /**
    * @override
+   */
+  public get tags() {
+    return this.texParser.tags;
+  }
+
+  /**
+   * @override
    * @constructor
    */
   constructor(text: string, env: EnvList, configuration: ParseOptions, level?: number | string) {

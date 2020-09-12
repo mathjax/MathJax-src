@@ -280,7 +280,8 @@ export const TextMacrosMethods = {
   Spacer: BaseMethods.Spacer,
   Hskip: BaseMethods.Hskip,
   rule: BaseMethods.rule,
-  Rule: BaseMethods.Rule
+  Rule: BaseMethods.Rule,
+  HandleRef: BaseMethods.HandleRef
 
 };
 
