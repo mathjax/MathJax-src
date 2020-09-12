@@ -1003,7 +1003,7 @@ BaseMethods.BuildRel = function(parser: TexParser, name: string) {
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  * @param {string} style Box style.
- * @param {srting} font the mathvariant to use
+ * @param {string} font The mathvariant to use
  */
 BaseMethods.HBox = function(parser: TexParser, name: string, style: string, font?: string) {
   // @test Hbox
