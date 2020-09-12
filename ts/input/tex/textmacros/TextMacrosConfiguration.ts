@@ -79,14 +79,15 @@ export const textBase = Configuration.local({
  * @param {TexParser} parser      The TexParser calling this function
  * @param {string} text           The text-mode string to be processed
  * @param {number|string} level   The scriptlevel of the text
+ * @param {string} mathvariant    The mathvariant for the text
  * @return {MmlNode[]}            The final MmlNode generated for the text
  */
-function internalMath(parser: TexParser, text: string, level?: number | string): MmlNode[] {
+function internalMath(parser: TexParser, text: string, level?: number | string, mathvariant?: string): MmlNode[] {
   const config = parser.configuration.packageData.get('textmacros');
   if (!(parser instanceof TextParser)) {
     config.texParser = parser;
   }
-  return [(new TextParser(text, {}, config.parseOptions, level)).mml()];
+  return [(new TextParser(text, mathvariant ? {mathvariant} : {}, config.parseOptions, level)).mml()];
 }
 
 //

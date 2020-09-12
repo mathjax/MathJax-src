@@ -687,9 +687,9 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
    * @override
    */
   public convert(math: string, options: OptionList = {}) {
-    let {format, display, end, ex, em, containerWidth, lineWidth, scale} = userOptions({
+    let {format, display, end, ex, em, containerWidth, lineWidth, scale, family} = userOptions({
       format: this.inputJax[0].name, display: true, end: STATE.LAST,
-      em: 16, ex: 8, containerWidth: null, lineWidth: 1000000, scale: 1
+      em: 16, ex: 8, containerWidth: null, lineWidth: 1000000, scale: 1, family: ''
     }, options);
     if (containerWidth === null) {
       containerWidth = 80 * ex;
@@ -698,6 +698,12 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
     const mitem = new this.options.MathItem(math, jax, display);
     mitem.start.node = this.adaptor.body(this.document);
     mitem.setMetrics(em, ex, containerWidth, lineWidth, scale);
+    if (this.outputJax.options.mtextInheritFont) {
+      mitem.outputData.mtextFamily = family;
+    }
+    if (this.outputJax.options.merrorInheritFont) {
+      mitem.outputData.merrorFamily = family;
+    }
     mitem.convert(this, end);
     return (mitem.typesetRoot || mitem.root);
   }

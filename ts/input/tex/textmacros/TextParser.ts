@@ -66,6 +66,13 @@ export class TextParser extends TexParser {
 
   /**
    * @override
+   */
+  public get tags() {
+    return this.texParser.tags;
+  }
+
+  /**
+   * @override
    * @constructor
    */
   constructor(text: string, env: EnvList, configuration: ParseOptions, level?: number | string) {
@@ -99,10 +106,8 @@ export class TextParser extends TexParser {
    */
   public saveText() {
     if (this.text) {
-      const text = ParseUtil.internalText(this, this.text, {});
-      if (this.stack.env.mathvariant) {
-        NodeUtil.setAttribute(text, 'mathvariant', this.stack.env.mathvariant);
-      }
+      const mathvariant = this.stack.env.mathvariant;
+      const text = ParseUtil.internalText(this, this.text, mathvariant ? {mathvariant} : {});
       this.text = '';
       this.Push(text);
     }
@@ -143,6 +148,9 @@ export class TextParser extends TexParser {
         }
         NodeUtil.setAttribute(mml, name, env[name]);
       }
+    }
+    if (mml.isKind('inferredMrow')) {
+      mml = this.create('node', 'mrow', mml.childNodes);
     }
     this.nodes.push(mml);
   }

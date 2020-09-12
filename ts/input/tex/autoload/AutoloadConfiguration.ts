@@ -55,7 +55,11 @@ function Autoload(parser: TexParser, name: string, extension: string, isMacro: b
     for (const env of envs) {
       AutoloadEnvironments.remove(env);
     }
-    parser.i -= name.length + (isMacro ? 0 : 7);  // back up and read the macro or \begin again
+    //
+    //  Put back the macro or \begin and read it again
+    //
+    parser.string = (isMacro ? name : '\\begin{' + name.slice(1) + '}' ) + parser.string.slice(parser.i);
+    parser.i = 0;
   }
   RequireLoad(parser, extension);
 }
