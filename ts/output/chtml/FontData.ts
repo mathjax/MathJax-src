@@ -200,7 +200,9 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
     //
     //  Add fonts with proper URL
     //
-    this.addFontURLs(styles, CLASS.defaultFonts, this.options.fontURL);
+    if (this.options.fontURL !== false) {
+      this.addFontURLs(styles, CLASS.defaultFonts, this.options.fontURL);
+    }
     //
     //  Create styles needed for the delimiters
     //
