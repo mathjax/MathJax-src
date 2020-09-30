@@ -29,6 +29,10 @@ import {EnvironmentMap} from '../SymbolMap.js';
 
 export class XalignArrayItem extends ArrayItem {
 
+  /**
+   * Maximum row number in the array.
+   * @type {number}
+   */
   public maxrow: number = 0;
 
   /**
@@ -96,16 +100,15 @@ export class XalignArrayItem extends ArrayItem {
 let XalignMethods: Record<string, ParseMethod> = {};
 
 /**
- * Generate a bra-ket expression.
+ * Generate an align at environment.
  * @param {TexParser} parser The current TeX parser.
  * @param {string} name Name of the current control sequence.
- * @param {string} open Opening delimiter.
- * @param {string} close Closing delimiter.
- * @param {boolean} stretchy Is it stretchy.
- * @param {number} barmax Maximum number of bars allowed.
+ * @param {string} begin
+ * @param {boolean} numbered
+ * @param {boolean} padded
  */
 XalignMethods.XalignAt = function(parser: TexParser, _name: string,
-                                  begin, numbered, padded) {
+                                  begin, numbered: boolean, padded: boolean) {
   let arg = parser.GetArgument('\\begin{' + begin.getName() + '}');
   if (arg.match(/[^0-9]/)) {
     throw new TexError('PositiveIntegerArg',
