@@ -102,13 +102,13 @@ let XalignMethods: Record<string, ParseMethod> = {};
 /**
  * Generate an align at environment.
  * @param {TexParser} parser The current TeX parser.
- * @param {string} name Name of the current control sequence.
- * @param {string} begin
- * @param {boolean} numbered
- * @param {boolean} padded
+ * @param {StackItem} begin The begin stackitem.
+ * @param {boolean} numbered Is this a numbered array.
+ * @param {boolean} padded Is it padded.
  */
-XalignMethods.XalignAt = function(parser: TexParser, _name: string,
-                                  begin, numbered: boolean, padded: boolean) {
+XalignMethods.XalignAt = function(parser: TexParser, begin: StackItem,
+                                  numbered: boolean, padded: boolean) {
+  console.log(begin);
   let arg = parser.GetArgument('\\begin{' + begin.getName() + '}');
   if (arg.match(/[^0-9]/)) {
     throw new TexError('PositiveIntegerArg',
