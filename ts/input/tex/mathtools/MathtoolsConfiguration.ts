@@ -66,10 +66,10 @@ export class MultlinedItem extends MultlineItem {
         last, 'columnalign') !== TexConstant.Align.LEFT) {
         let top = last.childNodes[0] as MmlNode;
         top.childNodes.unshift(null);
-        NodeUtil.setChild(top, 0,
-                          this.create('node', 'mspace', [],
-                                      { width: this.factory.configuration.options['MultlineGap'] || '2em' })
-                         );
+        const space = this.create(
+          'node', 'mspace', [],
+          { width: this.factory.configuration.options['MultlineGap'] || '2em' });
+        NodeUtil.setChild(top, 0, space);
       }
     }
     super.EndTable.call(this);
@@ -83,19 +83,13 @@ MathtoolsMethods.MtMatrix = function(parser: TexParser, begin: StackItem, open, 
   return BaseMethods.Array(parser, begin, open, close, align);
 },
 
-MathtoolsMethods.MtSmallMatrix = function(parser: TexParser, begin: StackItem, open, close, align) {
+MathtoolsMethods.MtSmallMatrix = function(
+    parser: TexParser, begin: StackItem, open, close, align) {
   if (!align) {
     align = parser.GetBrackets('\\begin{' + begin.getName() + '}') || 'c';
   }
-  return BaseMethods.Array(parser, begin,
-                           open,
-                           close,
-                           align,
-                           ParseUtil.Em(1 / 3),
-                           '.2em',
-                           'S',
-                           1
-                          );
+  return BaseMethods.Array(
+      parser, begin, open, close, align, ParseUtil.Em(1 / 3), '.2em', 'S', 1);
 },
 
 MathtoolsMethods.MtMultlined = function(parser: TexParser, begin: StackItem) {
