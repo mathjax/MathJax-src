@@ -160,6 +160,8 @@ new CommandMap('mathtools-macros', {
 
 new EnvironmentMap('mathtools-environment', ParseMethods.environment, {
   dcases: ['Array', null, '\\{', '.', 'll', null, '.2em', 'D'],
+  rcases: ['Array', null, '.', '\\}', 'll', null, '.2em', 'D'],
+  drcases: ['Array', null, '\\{', '\\}', 'll', null, '.2em', 'D'],
   'matrix*': ['MtMatrix', null, null, null],
   'pmatrix*': ['MtMatrix', null, '(', ')'],
   'bmatrix*': ['MtMatrix', null, '[', ']'],
