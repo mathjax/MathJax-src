@@ -309,7 +309,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
   /**
    * The node factory is an MmlFactory
    */
-  public factory: MmlFactory;
+  public readonly factory: MmlFactory;
 
   /**
    *  Create an MmlNode:
