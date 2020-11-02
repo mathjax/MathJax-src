@@ -126,7 +126,7 @@ function webpackLib(dir) {
   const wd = process.cwd();
   try {
     process.chdir(dir);
-    const result = execSync('npx webpack --display-modules');
+    const result = execSync('npx webpack --stats-modules');
     console.info('    ' + String(result).replace(/\n/g, '\n    ')
                  .replace(/ \.\.\//g, ' ' + path.dirname(path.resolve(dir)) + '/')
                  .replace(compRE, '[components]')
