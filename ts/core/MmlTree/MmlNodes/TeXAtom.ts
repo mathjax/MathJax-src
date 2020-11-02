@@ -42,7 +42,7 @@ export class TeXAtom extends AbstractMmlBaseNode {
   /**
    * TeX class is ORD
    */
-  public texClass = TEXCLASS.ORD;
+  protected texclass = TEXCLASS.ORD;
 
   /**
    * @override
