@@ -246,7 +246,8 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
         ...BaseDocument.OPTIONS.renderActions,
         explorable: [STATE.EXPLORER]
       }),
-      a11y: {
+      a11y: expandable({
+        ...BaseDocument.OPTIONS.a11y,
         align: 'top',                      // placement of magnified expression
         backgroundColor: 'Blue',           // color for background of selected sub-expression
         backgroundOpacity: 20,             // opacity for background of selected sub-expression
@@ -260,16 +261,14 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
         infoRole: false,                   // show semantic role on mouse hovering
         infoType: false,                   // show semantic type on mouse hovering
         keyMagnifier: false,               // switch on magnification via key exploration
-        locale: 'en',                      // switch the locale
         magnification: 'None',             // type of magnification
         magnify: '400%',                   // percentage of magnification of zoomed expressions
         mouseMagnifier: false,             // switch on magnification via mouse hovering
         speech: true,                      // switch on speech output
-        speechRules: 'mathspeak-default',  // speech rules as domain-style pair
         subtitles: true,                   // show speech as a subtitle
         treeColoring: false,               // tree color expression
         viewBraille: false                 // display Braille output as subtitles
-      }
+      })
     };
 
     /**

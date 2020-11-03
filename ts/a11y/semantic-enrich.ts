@@ -132,7 +132,10 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
           mathjax.retryAfter(sreReady());
         }
         if (document.options.enrichSpeech !== currentSpeech) {
-          SRE.setupEngine({speech: document.options.enrichSpeech});
+          let [domain, style] = document.options.a11y.speechRules.split('-');
+          SRE.setupEngine({speech: document.options.enrichSpeech,
+                           domain: domain, style: style,
+                           locale: document.options.a11y.locale});
           currentSpeech = document.options.enrichSpeech;
         }
         const math = new document.options.MathItem('', MmlJax);
@@ -245,7 +248,11 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
         ...BaseDocument.OPTIONS.renderActions,
         enrich:       [STATE.ENRICHED],
         attachSpeech: [STATE.ATTACHSPEECH]
-      })
+      }),
+      a11y: {
+        locale: 'en',                     // switch the locale
+        speechRules: 'mathspeak-default'  // speech rules as domain-style pair
+      }
     };
 
     /**
