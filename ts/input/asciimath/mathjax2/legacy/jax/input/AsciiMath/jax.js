@@ -1043,7 +1043,18 @@ function AMparseExpr(str,rightbracket) {
     node = result[0];
     str = result[1];
     symbol = AMgetSymbol(str);
-    if (symbol.ttype == INFIX && symbol.input == "/") {
+    if (symbol.input == "'") { // Speciall handle for prime
+      node = createMmlNode("msup",node);
+      var childNode = createMmlNode(symbol.tag);
+      do {
+        childNode.appendChild(document.createTextNode(symbol.output));
+        str = AMremoveCharsAndBlanks(str,symbol.input.length);
+        symbol = AMgetSymbol(str);
+      } while (symbol.input == "'");
+      node.appendChild(childNode);
+      newFrag.appendChild(node);
+    }
+    else if (symbol.ttype == INFIX && symbol.input == "/") {
       str = AMremoveCharsAndBlanks(str,symbol.input.length);
       result = AMparseIexpr(str);
       if (result[0] == null) // show box in place of missing argument
