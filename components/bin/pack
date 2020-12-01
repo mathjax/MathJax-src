@@ -32,11 +32,11 @@ const {execSync} = require('child_process');
 /**
  * Regular expressions for the components directory and the MathJax .js location
  */
-const compRE = new RegExp(path.dirname(__dirname).replace(/([\\.{}[\]()?*^$])/g, '\$1'), 'g');
+const compRE = new RegExp(path.dirname(__dirname).replace(/([\\.{}[\]()?*^$])/g, '\\$1'), 'g');
 const rootRE = new RegExp(path.join(path.dirname(path.dirname(__dirname)), 'js')
-                          .replace(/([\\.{}[\]()?*^$])/g, '\$1'), 'g');
+                          .replace(/([\\.{}[\]()?*^$])/g, '\\$1'), 'g');
 const nodeRE = new RegExp(path.join(path.dirname(path.dirname(__dirname)), 'node_modules')
-                          .replace(/([\\.{}[\]()?*^$])/g, '\$1'), 'g');
+                          .replace(/([\\.{}[\]()?*^$])/g, '\\$1'), 'g');
 
 /**
  * Run webpack if there is a configuration file for it

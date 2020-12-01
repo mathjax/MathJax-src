@@ -33,7 +33,7 @@ const TerserPlugin = require('terser-webpack-plugin');
  * @return {string}        The string with regex special characters escaped
  */
 function quoteRE(string) {
-  return string.replace(/([\\.{}[\]()?*^$])/g, '\$1')
+  return string.replace(/([\\.{}[\]()?*^$])/g, '\\$1')
 }
 
 /**
@@ -46,10 +46,10 @@ function quoteRE(string) {
  */
 const PLUGINS = function (mathjax, libs, dir) {
   const mjdir = path.resolve(dir, mathjax);
-  const mjRE = new RegExp('^' + quoteRE(mjdir + '/'));
+  const mjRE = new RegExp('^' + quoteRE(mjdir + path.sep));
   const root = path.dirname(mjdir);
-  const rootRE = new RegExp('^' + quoteRE(root + '/'));
-  const nodeRE = new RegExp('^' + quoteRE(path.dirname(root) + '/'));
+  const rootRE = new RegExp('^' + quoteRE(root + path.sep));
+  const nodeRE = new RegExp('^' + quoteRE(path.dirname(root) + path.sep));
 
   const plugins = [];
   if (libs.length) {
@@ -63,7 +63,7 @@ const PLUGINS = function (mathjax, libs, dir) {
           const request = path.resolve(resource.context, resource.request);
           if (!request.match(mjRE)) return;
           for (const lib of libs) {
-            const file = request.replace(mjRE, path.join(root, lib) + '/');
+            const file = request.replace(mjRE, path.join(root, lib) + path.sep);
             if (fs.existsSync(file)) {
               resource.request = file;
               break;
@@ -82,7 +82,7 @@ const PLUGINS = function (mathjax, libs, dir) {
       function (resource) {
         const request = path.resolve(resource.context, resource.request);
         if (request.match(rootRE) || !request.match(nodeRE) || fs.existsSync(request)) return;
-        const file = request.replace(nodeRE, path.join(root, 'node_modules') + '/');
+        const file = request.replace(nodeRE, path.join(root, 'node_modules') + path.sep);
         if (fs.existsSync(file)) {
           resource.request = file;
         }
@@ -107,8 +107,8 @@ const MODULE = function (dir) {
   return {
     // NOTE: for babel transpilation
     rules: [{
-      test: new RegExp(dirRE + '\\/.*\\.js$'),
-      exclude: new RegExp(quoteRE(path.dirname(__dirname)) + '\\/es5\\/'),
+      test: new RegExp(dirRE + quoteRE(path.sep) + '.*\\.js$'),
+      exclude: new RegExp(quoteRE(path.join(path.dirname(__dirname), 'es5') + path.sep)),
       use: {
         loader: 'babel-loader',
         options: {
