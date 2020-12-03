@@ -226,6 +226,7 @@ export interface MmlNodeClass extends NodeClass {
  */
 
 export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
+  protected texclass: number = null;
   /**
    * The properties common to all MathML nodes
    */
@@ -281,10 +282,6 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
    */
 
   /**
-   * The TeX class for this node
-   */
-  public texClass: number = null;
-  /**
    * The TeX class for the preceding node
    */
   public prevClass: number = null;
@@ -309,7 +306,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
   /**
    * The node factory is an MmlFactory
    */
-  public factory: MmlFactory;
+  public readonly factory: MmlFactory;
 
   /**
    *  Create an MmlNode:
@@ -331,6 +328,20 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
       factory.getNodeClass('math').defaults
     );
     this.attributes.setList(attributes);
+  }
+
+  /**
+   * The TeX class for this node
+   */
+  public get texClass(): number {
+    return this.texclass;
+  }
+
+  /**
+   * The TeX class for this node
+   */
+  public set texClass(texClass: number) {
+    this.texclass = texClass;
   }
 
   /**

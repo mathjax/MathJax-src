@@ -42,7 +42,7 @@ export class MmlMenclose extends AbstractMmlNode {
   /**
    * TeX class is ORD
    */
-  public texClass = TEXCLASS.ORD;
+  protected texclass = TEXCLASS.ORD;
 
   /**
    * The menclose kind
