@@ -58,7 +58,7 @@ function Autoload(parser: TexParser, name: string, extension: string, isMacro: b
     //
     //  Put back the macro or \begin and read it again
     //
-    parser.string = (isMacro ? name : '\\begin{' + name.slice(1) + '}' ) + parser.string.slice(parser.i);
+    parser.string = (isMacro ? name + ' ' : '\\begin{' + name.slice(1) + '}' ) + parser.string.slice(parser.i);
     parser.i = 0;
   }
   RequireLoad(parser, extension);
