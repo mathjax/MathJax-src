@@ -21,6 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
+import {MmlFactory} from '../MmlFactory.js';
 import {PropertyList} from '../../Tree/Node.js';
 import {AbstractMmlBaseNode, MmlNode, TEXCLASS} from '../MmlNode.js';
 import {MmlMo} from './mo.js';
@@ -70,8 +71,8 @@ export class TeXAtom extends AbstractMmlBaseNode {
   /**
    * @override
    */
-  constructor(node: any, properties: any, children: any) {
-    super(node, properties, children);
+  constructor(factory: MmlFactory, attributes: PropertyList, children: MmlNode[]) {
+    super(factory, attributes, children);
     this.setProperty('texClass', this.texClass);   // needed for serialization to include the texClass
   }
 
