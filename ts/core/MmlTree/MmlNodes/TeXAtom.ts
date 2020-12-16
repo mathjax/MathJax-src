@@ -70,6 +70,14 @@ export class TeXAtom extends AbstractMmlBaseNode {
   /**
    * @override
    */
+  constructor(node: any, properties: any, children: any) {
+    super(node, properties, children);
+    this.setProperty('texClass', this.texClass);   // needed for serialization to include the texClass
+  }
+
+  /**
+   * @override
+   */
   public setTeXclass(prev: MmlNode) {
     this.childNodes[0].setTeXclass(null);
     return this.adjustTeXclass(prev);
