@@ -74,7 +74,7 @@ CommonMoMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
       transform: 'scalex(500)'
     },
     'mjx-stretchy-h > mjx-ext > mjx-c': {
-      width: 0
+      width: '100%'
     },
     'mjx-stretchy-h > mjx-beg > mjx-c': {
       'margin-right': '-.1em'

@@ -327,6 +327,8 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
       css.padding = this.padding(data, dw);
     } else if (dw) {
       css['padding-left'] = this.em0(dw);
+    } else {
+      css.padding = '.1em 0';    // for Safari
     }
     styles['mjx-stretchy-v' + c + ' mjx-' + part + ' mjx-c::before'] = css;
     return data[0] + data[1];
@@ -364,6 +366,8 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
     const css: StyleData = {content: (options && options.c ? '"' + options.c + '"' : this.charContent(n))};
     if (part !== 'ext' || force) {
       css.padding = this.padding(data, 0, -data[2]);
+    } else {
+      css['padding-top'] = '1px';   // for Safari
     }
     styles['mjx-stretchy-h' + c + ' mjx-' + part + ' mjx-c::before'] = css;
   }
