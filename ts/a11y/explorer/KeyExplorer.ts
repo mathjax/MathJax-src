@@ -130,8 +130,8 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
       this.node.tabIndex = this.oldIndex;
       this.oldIndex = null;
       this.node.removeAttribute('role');
-      super.Detach();
     }
+    super.Detach();
   }
 
   /**
