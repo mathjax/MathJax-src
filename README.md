@@ -99,7 +99,7 @@ setup will not work properly in the browser, even if you webpack it or
 bundle it in other ways.
     
 See the
-[documentation](https//docs.mathjax.org/en/latest/index.html#server-nodejs)
+[documentation](https://docs.mathjax.org/en/latest/index.html#server-nodejs)
 and the [MathJax Node
 Repository](https://github.com/mathjax/MathJax-demos-node) for more details.
 
