@@ -41,7 +41,7 @@ export function CommonSTIX2FontMixin<
   return class extends Base {
 
     /**
-     *  Add the extra variants for the TeX fonts
+     *  Add the extra variants for the STIX2 fonts
      */
     protected static defaultVariants = [
       ...Base.defaultVariants,
@@ -60,7 +60,9 @@ export function CommonSTIX2FontMixin<
       ['-tex-oldstyle', 'normal'],
       ['-tex-bold-oldstyle', 'bold'],
       ['-tex-mathit', 'italic'],
-      ['-tex-variant', 'normal']
+      ['-tex-variant', 'normal'],
+      ['-extend', 'normal'],
+      ['-double-struck-italic', 'bold-italic']
     ];
 
     /**
@@ -85,7 +87,9 @@ export function CommonSTIX2FontMixin<
       '-tex-oldstyle': ['serif', false, false],
       '-tex-bold-oldstyle': ['serif', false, true],
       '-tex-mathit': ['serif', true, false],
-      '-tex-variant': ['serif', false, false]
+      '-tex-variant': ['serif', false, false],
+      '-extend': ['serif', false, false],
+      '-double-struck-italic': ['serif', true, true]
     };
 
     /**

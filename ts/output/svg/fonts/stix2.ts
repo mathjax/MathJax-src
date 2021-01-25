@@ -1,5 +1,5 @@
 import {SVGFontData, SVGFontDataClass, SVGCharOptions, SVGVariantData, SVGDelimiterData,
-        DelimiterMap, CharMapMap, CssFontMap} from '../FontData.js';
+        DelimiterMap, CharMapMap, CssFontMap, RemapMap} from '../FontData.js';
 import {CommonSTIX2FontMixin} from '../../common/fonts/stix2.js';
 
 import {normal} from './stix2/normal.js';
@@ -35,6 +35,7 @@ import {sansSerifBold} from './stix2/sans-serif-bold.js';
 import {sansSerifItalic} from './stix2/sans-serif-italic.js';
 import {sansSerifBoldItalic} from './stix2/sans-serif-bold-italic.js';
 import {sansSerif} from './stix2/sans-serif.js';
+import {doubleStruckItalic} from './stix2/double-struck-italic.js';
 
 import {delimiters} from './stix2/delimiters.js';
 
@@ -44,6 +45,24 @@ import {delimiters} from './stix2/delimiters.js';
  */
 export class STIX2Font extends
 CommonSTIX2FontMixin<SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontDataClass>(SVGFontData) {
+
+  /**
+   *  Remap accents
+   */
+  protected static defaultAccentMap: RemapMap = {
+    0x005E: '\u02C6',
+    0x0300: '\u02CB',
+    0x0301: '\u02CA',
+    0x0302: '\u02C6',
+    0x0303: '\u02DC',
+    0x0304: '\u02C9',
+    0x0306: '\u02D8',
+    0x0307: '\u02D9',
+    0x0308: '\u00A8',
+    0x030A: '\u02DA',
+    0x030C: '\u02C7',
+    0x2192: '\u20D7'
+  };
 
   /**
    *  The stretchy delimiter data
@@ -73,7 +92,8 @@ CommonSTIX2FontMixin<SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontDa
     ['-size11', 'normal'],
     ['-size12', 'normal'],
     ['-tex-variant', 'normal'],
-    ['-extend', 'normal']
+    ['-extend', 'normal'],
+    ['-double-struck-italic', 'normal']
   ];
 
   /**
@@ -99,7 +119,8 @@ CommonSTIX2FontMixin<SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontDa
     '-size11': ['serif', false, false],
     '-size12': ['serif', false, false],
     '-tex-variant': ['serif', false, false],
-    '-extend': ['serif', false, false]
+    '-extend': ['serif', false, false],
+    '-double-struck-italic': ['serif', false, false]
   };
 
   /**
@@ -138,7 +159,8 @@ CommonSTIX2FontMixin<SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontDa
     'bold-sans-serif': sansSerifBold,
     'sans-serif-italic': sansSerifItalic,
     'sans-serif-bold-italic': sansSerifBoldItalic,
-    'sans-serif': sansSerif
+    'sans-serif': sansSerif,
+    '-double-struck-italic': doubleStruckItalic
   };
 
   /**
@@ -177,7 +199,8 @@ CommonSTIX2FontMixin<SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontDa
     'bold-sans-serif': 'SSB',
     'sans-serif-italic': 'SSI',
     'sans-serif-bold-italic': 'SSBI',
-    'sans-serif': 'SS'
+    'sans-serif': 'SS',
+    '-double-struck-italic': 'DSI'
   };
 
   /**
