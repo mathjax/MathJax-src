@@ -370,7 +370,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    *  The default remappings
    */
-  protected static defaultAccentMap = {
+  protected static defaultAccentMap: RemapMap = {
     0x0300: '\u02CB',  // grave accent
     0x0301: '\u02CA',  // acute accent
     0x0302: '\u02C6',  // curcumflex
@@ -405,14 +405,14 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    * Default map for characters inside <mo>
    */
-  protected static defaultMoMap = {
+  protected static defaultMoMap: RemapMap = {
     0x002D: '\u2212' // hyphen
   };
 
   /**
    * Default map for characters inside <mn>
    */
-  protected static defaultMnMap = {
+  protected static defaultMnMap: RemapMap = {
     0x002D: '\u2212' // hyphen
   };
 
