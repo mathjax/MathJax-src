@@ -251,5 +251,9 @@ svg {
   display: none;
 }
 
+td a {
+  color: black;
+}
+
 @media print {.navigation {display: none}}
 
