@@ -120,6 +120,7 @@ export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracCo
       if (this.node.attributes.get('bevelled')) {
         const {H} = this.getBevelData(this.isDisplay());
         const bevel = this.bevel = this.createMo('/') as CommonMo;
+        bevel.node.attributes.set('symmetric', true);
         bevel.canStretch(DIRECTION.Vertical);
         bevel.getStretchedVariant([H], true);
       }
