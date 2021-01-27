@@ -58,6 +58,9 @@ CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstru
       'position': 'relative',
       'box-sizing': 'border-box'
     },
+    'mjx-mstyle[size="s"] mjx-mtable': {
+      'vertical-align': '.354em'
+    },
     'mjx-labels': {
       position: 'absolute',
       left: 0,
