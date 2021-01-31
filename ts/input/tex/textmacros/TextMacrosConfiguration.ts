@@ -62,7 +62,7 @@ export const textBase = Configuration.local({
       if (macro && macro._func !== TextMacrosMethods.Macro) {
         parser.Error('MathMacro', '%1 is only supported in math mode', '\\' + name);
       }
-      texParser.parse('macro', [macro ? parser : texParser, name]);
+      texParser.parse('macro', [parser, name]);
     }
   },
   items: {
