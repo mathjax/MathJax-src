@@ -26,6 +26,7 @@
 import {CheckType, BaseItem, StackItem} from '../StackItem.js';
 import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import ParseUtil from '../ParseUtil.js';
+import NodeUtil from '../NodeUtil.js';
 
 
 /**
@@ -81,7 +82,9 @@ export class BraketItem extends BaseItem {
     let openNode = this.create('token', 'mo', attrs, open);
     attrs.texClass = TEXCLASS.CLOSE;
     let closeNode = this.create('token', 'mo', attrs, close);
-    let mrow = this.create('node', 'mrow', [openNode, inner, closeNode],
+    let mrow = this.create('node', 'mrow',
+                           !NodeUtil.isType(inner, 'inferredMrow') ? [openNode, inner, closeNode] :
+                           [openNode, ...NodeUtil.getChildren(inner), closeNode],
                          {open: open, close: close, texClass: TEXCLASS.INNER});
     return mrow;
   }
