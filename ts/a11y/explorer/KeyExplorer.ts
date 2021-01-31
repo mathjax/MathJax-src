@@ -126,9 +126,11 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
    * @override
    */
   public Detach() {
-    this.node.tabIndex = this.oldIndex;
-    this.oldIndex = null;
-    this.node.removeAttribute('role');
+    if (this.active) {
+      this.node.tabIndex = this.oldIndex;
+      this.oldIndex = null;
+      this.node.removeAttribute('role');
+    }
     super.Detach();
   }
 
