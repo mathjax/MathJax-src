@@ -74,9 +74,6 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
     },
     'mjx-container[jax="SVG"] > svg': {
       overflow: 'visible'
-    },
-    'mjx-container[jax="SVG"] > svg a': {
-      fill: 'blue', stroke: 'blue'
     }
   };
 
