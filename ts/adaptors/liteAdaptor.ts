@@ -64,11 +64,11 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
     '\uFE10-\uFE19', // Vertical Forms
     '\uFE30-\uFE6B', // CJK Compatibility Forms ... Small Form Variants
     '\uFF01-\uFF60\uFFE0-\uFFE6', // Halfwidth and Fullwidth Forms
-    '\u1B000-\u1B001', // Kana Supplement
-    '\u1F200-\u1F251', // Enclosed Ideographic Supplement
-    '\u20000-\u3FFFD', // CJK Unified Ideographs Extension B ... Tertiary Ideographic Plane
+    '\u{1B000}-\u{1B001}', // Kana Supplement
+    '\u{1F200}-\u{1F251}', // Enclosed Ideographic Supplement
+    '\u{20000}-\u{3FFFD}', // CJK Unified Ideographs Extension B ... Tertiary Ideographic Plane
     ']'
-  ].join(''), 'g');
+  ].join(''), 'gu');
 
   /**
    * The options for the instance
@@ -594,8 +594,8 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
    */
   public nodeSize(node: LiteElement, _em: number = 1, _local: boolean = null) {
     const text = this.textContent(node);
-    const non = text.replace(LiteAdaptor.cjkPattern, '').split('').length; // # of non-CJK chars
-    const CJK = text.split('').length - non;                               // # of cjk chars
+    const non = Array.from(text.replace(LiteAdaptor.cjkPattern, '')).length; // # of non-CJK chars
+    const CJK = Array.from(text).length - non;                               // # of cjk chars
     return [
       CJK * this.options.cjkCharWidth + non * this.options.unknownCharWidth,
       this.options.unknownCharHeight
