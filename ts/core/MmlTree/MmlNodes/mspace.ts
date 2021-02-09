@@ -22,7 +22,7 @@
  */
 
 import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
+import {MmlNode, AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -45,7 +45,14 @@ export class MmlMspace extends AbstractMmlTokenNode {
   /**
    * TeX class is ORD
    */
-  protected texclass = TEXCLASS.ORD;
+  public texClass = TEXCLASS.NONE;
+
+  /**
+   * @override
+   */
+  public setTeXclass(prev: MmlNode): MmlNode {
+    return prev;
+  }
 
   /**
    * @override
