@@ -302,8 +302,8 @@ export class MathMLCompile<N, T, D> {
     if (mml.isKind('mrow') && !mml.isInferred && mml.childNodes.length >= 2) {
       let first = mml.childNodes[0] as MmlNode;
       let last = mml.childNodes[mml.childNodes.length - 1] as MmlNode;
-      if (first.isKind('mo') && first.attributes.get('fence') &&
-          last.isKind('mo') && last.attributes.get('fence')) {
+      if (first.isKind('mo') && first.attributes.get('fence') && first.attributes.get('stretchy') &&
+          last.isKind('mo') && last.attributes.get('fence') && last.attributes.get('stretchy')) {
         if (first.childNodes.length) {
           mml.setProperty('open', (first as AbstractMmlTokenNode).getText());
         }
