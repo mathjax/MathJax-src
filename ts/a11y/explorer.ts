@@ -246,8 +246,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
         ...BaseDocument.OPTIONS.renderActions,
         explorable: [STATE.EXPLORER]
       }),
-      a11y: expandable({
-        ...BaseDocument.OPTIONS.a11y,
+      a11y: {
         align: 'top',                      // placement of magnified expression
         backgroundColor: 'Blue',           // color for background of selected sub-expression
         backgroundOpacity: 20,             // opacity for background of selected sub-expression
@@ -268,7 +267,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
         subtitles: true,                   // show speech as a subtitle
         treeColoring: false,               // tree color expression
         viewBraille: false                 // display Braille output as subtitles
-      })
+      }
     };
 
     /**
