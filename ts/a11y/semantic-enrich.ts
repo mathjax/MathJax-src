@@ -131,12 +131,15 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
         if (typeof sre === 'undefined' || !sre.Engine.isReady()) {
           mathjax.retryAfter(sreReady());
         }
-        if (document.options.enrichSpeech !== currentSpeech) {
-          let [domain, style] = document.options.a11y.speechRules.split('-');
-          SRE.setupEngine({speech: document.options.enrichSpeech,
-                           domain: domain, style: style,
-                           locale: document.options.a11y.locale});
-          currentSpeech = document.options.enrichSpeech;
+        if (document.options.sre.speech !== currentSpeech) {
+          console.log(22);
+          // let [domain, style] = document.options.a11y.speechRules.split('-');
+          // {speech: document.options.enrichSpeech,
+          //  domain: domain, style: style,
+          //  locale: document.options.a11y.locale}
+          console.log(document.options.sre);
+          SRE.setupEngine(document.options.sre);
+          currentSpeech = document.options.sre.speech;
         }
         const math = new document.options.MathItem('', MmlJax);
         math.math = this.serializeMml(SRE.toEnriched(toMathML(this.root)));
@@ -243,16 +246,15 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
     public static OPTIONS: OptionList = {
       ...BaseDocument.OPTIONS,
       enableEnrichment: true,
-      enrichSpeech: 'none',                   // or 'shallow', or 'deep'
       renderActions: expandable({
         ...BaseDocument.OPTIONS.renderActions,
         enrich:       [STATE.ENRICHED],
         attachSpeech: [STATE.ATTACHSPEECH]
       }),
-      a11y: {
-        locale: 'en',                     // switch the locale
-        speechRules: 'mathspeak-default'  // speech rules as domain-style pair
-      }
+      sre: expandable({
+        speech: 'none',                    // by default no speech is included
+        domain: 'mathspeak'                // speech rules domain
+      }),
     };
 
     /**

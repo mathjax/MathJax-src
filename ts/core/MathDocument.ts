@@ -551,8 +551,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
       metrics: [STATE.METRICS, 'getMetrics', '', false],
       typeset: [STATE.TYPESET],
       update:  [STATE.INSERTED, 'updateDocument', false]
-    }) as RenderActions<any, any, any>,
-    a11y: expandable({})       // A11Y options that can be added later
+    }) as RenderActions<any, any, any>
   };
 
   /**
