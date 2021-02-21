@@ -45,7 +45,7 @@ export class MmlMspace extends AbstractMmlTokenNode {
   /**
    * TeX class is ORD
    */
-  public texClass = TEXCLASS.NONE;
+  protected texclass = TEXCLASS.NONE;
 
   /**
    * @override
