@@ -489,8 +489,8 @@ export class Menu {
               ['clearspeak-default', 'Auto']
             ])),
             this.submenu('ChromeVox', 'ChromeVox Rules', this.radioGroup('speechRules', [
-              ['default-default', 'Standard'],
-              ['default-alternative', 'Alternative']
+              ['chromevox-default', 'Standard'],
+              ['chromevox-alternative', 'Alternative']
             ]))
           ]),
           this.submenu('Highlight', 'Highlight', [
