@@ -80,6 +80,14 @@ async function webpackLib(dir) {
   try {
     process.chdir(dir);
     const dirRE = fileRegExp(path.resolve(dir));
+
+    //
+    // Get js directory from the webpack.config.js file
+    //
+    const jsdir = require(path.resolve(dir, 'webpack.config.js')).plugins[0].definitions.jsdir;
+    const jsRE = fileRegExp(jsdir);
+    const libRE = fileRegExp(path.resolve(jsdir, '..', 'components'));
+
     //
     // Get the json from webpack and print the asset name and size
     //
@@ -100,8 +108,10 @@ async function webpackLib(dir) {
       if (module.moduleType.match(/javascript/)) {
         const name = module.name
               .replace(compRE, '[components]')
-              .replace(rootRE, '[js]')
-              .replace(nodeRE, '[node]');
+              .replace(rootRE, '[mathjax]')
+              .replace(nodeRE, '[node]')
+              .replace(jsRE,   '[js]')
+              .replace(libRE,  '[lib]');
         console.log('  ' + name + fileSize(module));
       }
     }
