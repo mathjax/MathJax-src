@@ -251,7 +251,7 @@ new CommandMap('empheq-macros', {
 //
 //  Define the package for our new environment
 //
-export const empheqConfiguration = Configuration.create('empheq', {
+export const EmpheqConfiguration = Configuration.create('empheq', {
   handler: {
     macro: ['empheq-macros'],
     environment: ['empheq-env'],

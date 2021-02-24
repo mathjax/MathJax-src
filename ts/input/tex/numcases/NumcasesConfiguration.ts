@@ -27,7 +27,7 @@ export class CasesBeginItem extends BeginItem {
   }
 }
 
-class CasesTags extends AmsTags {
+export class CasesTags extends AmsTags {
   protected subcounter = 0;
 
   public start(env: string, taggable: boolean, defaultTags: boolean) {
@@ -53,10 +53,7 @@ class CasesTags extends AmsTags {
 
 }
 
-new EnvironmentMap('numcases-env', EmpheqUtil.environment, {
-  numcases: ['NumCases', 'cases'],
-  subnumcases: ['NumCases', 'cases']
-}, {
+export const NumcasesMethods = {
   NumCases(parser: TexParser, begin: CasesBeginItem) {
     if (parser.stack.env.closing === begin.getName()) {
       delete parser.stack.env.closing;
@@ -78,12 +75,8 @@ new EnvironmentMap('numcases-env', EmpheqUtil.environment, {
       parser.Push(begin);
       return array;
     }
-  }
-});
+  },
 
-new MacroMap('numcases-macros', {
-  '&': 'Entry'
-}, {
   Entry(parser: TexParser, name: string) {
     if (!parser.stack.Top().getProperty('numCases')) {
       return BaseMethods.Entry(parser, name);
@@ -150,12 +143,22 @@ new MacroMap('numcases-macros', {
     parser.PushAll(ParseUtil.internalMath(parser, text, 0));
     parser.i = i;
   }
-});
+
+};
+
+new EnvironmentMap('numcases-env', EmpheqUtil.environment, {
+  numcases: ['NumCases', 'cases'],
+  subnumcases: ['NumCases', 'cases']
+}, NumcasesMethods);
+
+new MacroMap('numcases-macros', {
+  '&': 'Entry'
+}, NumcasesMethods);
 
 //
 //  Define the package for our new environment
 //
-export const numcasesConfiguration = Configuration.create('numcases', {
+export const NumcasesConfiguration = Configuration.create('numcases', {
   handler: {
     environment: ['numcases-env'],
     character: ['numcases-macros']
