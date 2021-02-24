@@ -656,7 +656,10 @@ export class Menu {
    */
   protected getA11y(option: string): any {
     if (MathJax._.a11y && MathJax._.a11y.explorer) {
-      return this.document.options.a11y[option];
+      if (this.document.options.a11y[option] !== undefined) {
+        return this.document.options.a11y[option];
+      }
+      return this.document.options.sre[option];
     }
   }
 

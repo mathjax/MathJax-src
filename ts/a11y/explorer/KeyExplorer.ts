@@ -193,15 +193,10 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    */
   public Start() {
     let options = this.getOptions();
-    console.log('Starting');
-    console.log(options);
     // TODO: Check and set locale not only on init, but on every start.
     if (!this.init) {
       this.init = true;
       sreReady().then(() => {
-        console.log('Setup Engine');
-        console.log(SRE.engineSetup().locale);
-        console.log(options.locale);
         if (SRE.engineSetup().locale !== options.locale) {
           SRE.setupEngine({locale: options.locale});
         }
@@ -235,8 +230,6 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     // This is a necessary in case speech options have changed via keypress
     // during walking.
     let options = this.speechGenerator.getOptions();
-    console.log('In Speech explorer');
-    console.log(options);
     if (options.modality === 'speech') {
       this.document.options.a11y.speechRules = options.domain + '-' + options.style;
     }
@@ -310,7 +303,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
           options.domain !== domain || options.style !== style)) {
       options.domain = domain;
       options.style = style;
-      options.locale = this.document.options.sre.locale;xo
+      options.locale = this.document.options.sre.locale;
       this.walker.update(options);
     }
     return options;

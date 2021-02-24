@@ -396,9 +396,6 @@ let allExplorers: {[options: string]: ExplorerInit} = {
   speech: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) => {
     let explorer = ke.SpeechExplorer.create(
       doc, doc.explorerRegions.speechRegion, node, ...rest) as ke.SpeechExplorer;
-    console.log('All explorers on document: ');
-    console.log(doc.options);
-    console.log(doc.options.sre.locale);
     explorer.speechGenerator.setOptions({
       locale: doc.options.sre.locale, domain: doc.options.sre.domain,
       style: doc.options.sre.style, modality: 'speech', cache: false});
@@ -528,11 +525,9 @@ export function setA11yOption(document: HTMLDOCUMENT, option: string, value: str
     }
     break;
   case 'speechRules':
-      console.log('Setting a11y option: ' + value);
       let [domain, style] = (value as string).split('-');
       document.options.sre.domain = domain;
       document.options.sre.style = style;
-    break;
   default:
     document.options.a11y[option] = value;
   }

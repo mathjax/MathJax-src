@@ -132,12 +132,6 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
           mathjax.retryAfter(sreReady());
         }
         if (document.options.sre.speech !== currentSpeech) {
-          console.log(22);
-          // let [domain, style] = document.options.a11y.speechRules.split('-');
-          // {speech: document.options.enrichSpeech,
-          //  domain: domain, style: style,
-          //  locale: document.options.a11y.locale}
-          console.log(document.options.sre);
           SRE.setupEngine(document.options.sre);
           currentSpeech = document.options.sre.speech;
         }
