@@ -108,7 +108,6 @@ let XalignMethods: Record<string, ParseMethod> = {};
  */
 XalignMethods.XalignAt = function(parser: TexParser, begin: StackItem,
                                   numbered: boolean, padded: boolean) {
-  console.log(begin);
   let arg = parser.GetArgument('\\begin{' + begin.getName() + '}');
   if (arg.match(/[^0-9]/)) {
     throw new TexError('PositiveIntegerArg',
@@ -138,8 +137,6 @@ XalignMethods.XalignAt = function(parser: TexParser, begin: StackItem,
 
 XalignMethods.XalignArray = function(parser: TexParser, begin: StackItem, numbered: boolean,
                                      padded: boolean, center: boolean, align: string, width: string) {
-  console.log('Width!');
-  console.log(width);
   parser.Push(begin);
   ParseUtil.checkEqnEnv(parser);
   align = align
