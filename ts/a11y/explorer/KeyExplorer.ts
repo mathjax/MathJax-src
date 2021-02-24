@@ -257,6 +257,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    */
   public KeyDown(event: KeyboardEvent) {
     const code = event.keyCode;
+    this.walker.modifier = event.shiftKey;
     if (code === 27) {
       this.Stop();
       this.stopEvent(event);
@@ -380,6 +381,7 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
    */
   public KeyDown(event: KeyboardEvent) {
     const code = event.keyCode;
+    this.walker.modifier = event.shiftKey;
     if (code === 27) {
       this.Stop();
       this.stopEvent(event);
