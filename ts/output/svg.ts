@@ -230,6 +230,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
   protected createRoot(wrapper: SVGWrapper<N, T, D>): [N, N] {
     const {w, h, d, pwidth} = wrapper.getBBox();
     const W = Math.max(w, .001); // make sure we are at least one unit wide (needed for e.g. \llap)
+    const H = Math.max(h + d, .001); // make sure we are at least one unit tall (needed for e.g., \smash)
     //
     //  The container that flips the y-axis and sets the colors to inherit from the surroundings
     //
@@ -243,10 +244,10 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
     const adaptor = this.adaptor;
     const svg = adaptor.append(this.container, this.svg('svg', {
       xmlns: SVGNS,
-      width: this.ex(W), height: this.ex(h + d),
+      width: this.ex(W), height: this.ex(H),
       role: 'img', focusable: false,
       style: {'vertical-align': this.ex(-d)},
-      viewBox: [0, this.fixed(-h * 1000, 1), this.fixed(W * 1000, 1), this.fixed((h + d) * 1000, 1)].join(' ')
+      viewBox: [0, this.fixed(-h * 1000, 1), this.fixed(W * 1000, 1), this.fixed(H * 1000, 1)].join(' ')
     }, [g])) as N;
     if (W === .001) {
       adaptor.setAttribute(svg, 'preserveAspectRatio', 'xMidYMid slice');
