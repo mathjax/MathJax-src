@@ -155,7 +155,7 @@ new MacroMap('numcases-macros', {
 //
 //  Define the package for our new environment
 //
-Configuration.create('numcases', {
+export const numcasesConfiguration = Configuration.create('numcases', {
   handler: {
     environment: ['numcases-env'],
     character: ['numcases-macros']
