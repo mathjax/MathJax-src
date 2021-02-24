@@ -25,6 +25,7 @@ declare namespace sre {
   }
 
   interface Walker {
+    modifier: boolean;
     activate(): void;
     deactivate(): void;
     speech(): string;
