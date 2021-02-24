@@ -253,7 +253,9 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
       }),
       sre: expandable({
         speech: 'none',                    // by default no speech is included
-        domain: 'mathspeak'                // speech rules domain
+        domain: 'mathspeak',               // speech rules domain
+        style: 'default',                  // speech rules style
+        locale: 'en'                       // switch the locale
       }),
     };
 
