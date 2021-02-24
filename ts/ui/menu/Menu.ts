@@ -84,7 +84,7 @@ export interface MenuSettings {
   // A11y settings
   backgroundColor: string;
   backgroundOpacity: string;
-  braille: boolean;
+  brailleExp: boolean;
   explorer: boolean;
   foregroundColor: string;
   foregroundOpacity: string;
@@ -95,7 +95,7 @@ export interface MenuSettings {
   infoType: boolean;
   magnification: string;
   magnify: string;
-  speech: boolean;
+  speechExp: boolean;
   speechRules: string;
   subtitles: boolean;
   treeColoring: boolean;
@@ -414,9 +414,9 @@ export class Menu {
         this.a11yVar<string> ('backgroundOpacity'),
         this.a11yVar<string> ('foregroundColor'),
         this.a11yVar<string> ('foregroundOpacity'),
-        this.a11yVar<boolean>('speech'),
+        this.a11yVar<boolean>('speechExp'),
         this.a11yVar<boolean>('subtitles'),
-        this.a11yVar<boolean>('braille'),
+        this.a11yVar<boolean>('brailleExp'),
         this.a11yVar<boolean>('viewBraille'),
         this.a11yVar<string>('locale'),
         this.a11yVar<string> ('speechRules'),
@@ -473,9 +473,9 @@ export class Menu {
         this.submenu('Accessibility', 'Accessibility', [
           this.checkbox('Activate', 'Activate', 'explorer'),
           this.submenu('Speech', 'Speech', [
-            this.checkbox('Speech', 'Speech Output', 'speech'),
+            this.checkbox('Speech', 'Speech Output', 'speechExp'),
             this.checkbox('Subtitles', 'Speech Subtities', 'subtitles'),
-            this.checkbox('Braille', 'Braille Output', 'braille'),
+            this.checkbox('Braille', 'Braille Output', 'brailleExp'),
             this.checkbox('View Braille', 'Braille Subtitles', 'viewBraille'),
             this.rule(),
             this.submenu('A11yLanguage', 'Language'),
