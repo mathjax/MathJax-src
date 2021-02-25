@@ -220,8 +220,6 @@ new sm.CharacterMap('mathchar0mo', ParseMethods.mathchar0mo, {
   times:        '\u00D7',
   star:         '\u22C6',
 
-  Vert:         ['\u2225', {texClass: TEXCLASS.ORD}],
-  '|':          ['\u2225', {texClass: TEXCLASS.ORD}],
 
   // Relations
   propto:       '\u221D',
