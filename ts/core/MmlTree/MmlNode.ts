@@ -226,7 +226,7 @@ export interface MmlNodeClass extends NodeClass {
  */
 
 export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
-  protected texclass: number = null;
+
   /**
    * The properties common to all MathML nodes
    */
@@ -307,6 +307,11 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
    * The node factory is an MmlFactory
    */
   public readonly factory: MmlFactory;
+
+  /**
+   * The TeX class of this node (obtained via texClass below)
+   */
+  protected texclass: number = null;
 
   /**
    *  Create an MmlNode:
@@ -427,13 +432,20 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
     return super.setChildren(children);
   }
   /**
-   * If there is an inferred row, append to that instead
+   * If there is an inferred row, append to that instead.
+   * If a child is inferred, append its children instead.
    *
    * @override
    */
   public appendChild(child: MmlNode) {
     if (this.arity < 0) {
       this.childNodes[0].appendChild(child);
+      return child;
+    }
+    if (child.isInferred) {
+      for (const node of child.childNodes) {
+        super.appendChild(node);
+      }
       return child;
     }
     return super.appendChild(child);
