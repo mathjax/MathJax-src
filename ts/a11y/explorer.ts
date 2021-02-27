@@ -246,16 +246,14 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
         explorable: [STATE.EXPLORER]
       }),
       sre: expandable({
+        ...BaseDocument.OPTIONS.sre,
         speech: 'shallow',                 // overrides option in EnrichedMathDocument
-        domain: 'mathspeak',               // speech rules domain
-        style: 'default',                  // speech rules style
-        locale: 'en'                       // switch the locale
       }),
       a11y: {
         align: 'top',                      // placement of magnified expression
         backgroundColor: 'Blue',           // color for background of selected sub-expression
         backgroundOpacity: 20,             // opacity for background of selected sub-expression
-        brailleExp: false,                 // switch on Braille output
+        braille: false,                    // switch on Braille output
         flame: false,                      // color collapsible sub-expressions
         foregroundColor: 'Black',          // color to use for text of selected sub-expression
         foregroundOpacity: 100,            // opacity for text of selected sub-expression
@@ -265,10 +263,11 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
         infoRole: false,                   // show semantic role on mouse hovering
         infoType: false,                   // show semantic type on mouse hovering
         keyMagnifier: false,               // switch on magnification via key exploration
+        locale: 'en',                      // switch the locale
         magnification: 'None',             // type of magnification
         magnify: '400%',                   // percentage of magnification of zoomed expressions
         mouseMagnifier: false,             // switch on magnification via mouse hovering
-        speechExp: true,                   // switch on speech output
+        speech: true,                      // switch on speech output
         speechRules: 'mathspeak-default',  // speech rules as domain-style pair
         subtitles: true,                   // show speech as a subtitle
         treeColoring: false,               // tree color expression
@@ -393,7 +392,7 @@ type ExplorerInit = (doc: ExplorerMathDocument,
  *  Generation methods for all MathJax explorers available via option settings.
  */
 let allExplorers: {[options: string]: ExplorerInit} = {
-  speechExp: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) => {
+  speech: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) => {
     let explorer = ke.SpeechExplorer.create(
       doc, doc.explorerRegions.speechRegion, node, ...rest) as ke.SpeechExplorer;
     explorer.speechGenerator.setOptions({
@@ -402,7 +401,7 @@ let allExplorers: {[options: string]: ExplorerInit} = {
     explorer.showRegion = 'subtitles';
     return explorer;
   },
-  brailleExp: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) => {
+  braille: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) => {
     let explorer = ke.SpeechExplorer.create(
       doc, doc.explorerRegions.brailleRegion, node, ...rest) as ke.SpeechExplorer;
     explorer.speechGenerator.setOptions({locale: 'nemeth', domain: 'default',
@@ -465,6 +464,9 @@ export function setA11yOptions(document: HTMLDOCUMENT, options: {[key: string]: 
   for (let key in options) {
     if (document.options.a11y[key] !== undefined) {
       setA11yOption(document, key, options[key]);
+      if (key === 'locale') {
+        document.options.sre[key] = options[key];
+      }
       continue;
     }
     if (sreOptions[key] !== undefined) {
