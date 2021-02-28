@@ -145,17 +145,28 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      * @param {ExplorerMathDocument} document The current document.
      */
     public attachExplorers(document: ExplorerMathDocument) {
-      this.attached = [];
+      let keyExplorers = [];
       for (let key of Object.keys(this.explorers)) {
         let explorer = this.explorers[key];
+        if (explorer instanceof ke.AbstractKeyExplorer) {
+          explorer.AddEvents();
+          explorer.stoppable = false;
+          keyExplorers.unshift(explorer);
+        }
         if (document.options.a11y[key]) {
           explorer.Attach();
-          this.attached.push(explorer);
         } else {
           explorer.Detach();
         }
       }
-      this.addExplorers(this.attached);
+      // Ensure that the last currently attached key explorer stops propagating
+      // key events.
+      for (let explorer of keyExplorers) {
+        if (explorer.attached) {
+          explorer.stoppable = true;
+          break;
+        }
+      }
     }
 
     /**
@@ -181,23 +192,6 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
       this.refocus && this.typesetRoot.focus();
       this.restart && this.attached.forEach(x => x.Start());
       this.refocus = this.restart = false;
-    }
-
-    /**
-     * Adds a list of explorers and makes sure the right one stops propagating.
-     * @param {Explorer[]} explorers The active explorers to be added.
-     */
-    private addExplorers(explorers: Explorer[]) {
-      if (explorers.length <= 1) return;
-      let lastKeyExplorer = null;
-      for (let explorer of this.attached) {
-        if (!(explorer instanceof ke.AbstractKeyExplorer)) continue;
-        explorer.stoppable = false;
-        lastKeyExplorer = explorer;
-      }
-      if (lastKeyExplorer) {
-        lastKeyExplorer.stoppable = true;
-      }
     }
 
   };
