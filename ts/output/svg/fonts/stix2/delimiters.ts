@@ -560,6 +560,13 @@ export const delimiters: DelimiterMap<DelimiterData> = {
     stretchv: [0, 1, 1],
     HDW: [1, 0, .349]
   },
+  0x2312: {
+    c: 0x23DC,
+    dir: H,
+    sizes: [.633, 1.001, 1.501, 1.771, 2.181, 2.601],
+    stretch: [0xE142, 0x23B4, 0xE143],
+    HDW: [.82, -.583, .75]
+  },
   0x2322: {
     c: 0x23DC,
     dir: H,
@@ -751,6 +758,13 @@ export const delimiters: DelimiterMap<DelimiterData> = {
     sizes: [.948],
     stretch: [0x21A6, 0x2212, 0x21C1],
     HDW: [.459, -.059, .596]
+  },
+  0x2980: {
+    dir: V,
+    sizes: [.905],
+    stretch: [0x0, 0x2980],
+    stretchv: [0, 1],
+    HDW: [.711, .194, .608]
   },
   0x2983: {
     dir: V,
