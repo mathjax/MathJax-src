@@ -193,13 +193,15 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
         let D = this.getWH(WH);
         const min = this.getSize('minsize', 0);
         const max = this.getSize('maxsize', Infinity);
+        const mathaccent = this.node.getProperty('mathaccent');
         //
         //  Clamp the dimension to the max and min
-        //  then get the minimum size via TeX rules
+        //  then get the target size via TeX rules
         //
         D = Math.max(min, Math.min(max, D));
-        const m = (min || exact ? D : Math.max(D * this.font.params.delimiterfactor / 1000,
-                                               D - this.font.params.delimitershortfall));
+        const df = this.font.params.delimiterfactor / 1000;
+        const ds = this.font.params.delimitershortfall;
+        const m = (min || exact ? D : mathaccent ? Math.min(D / df, D + ds) :  Math.max(D * df, D - ds));
         //
         //  Look through the delimiter sizes for one that matches
         //
@@ -209,6 +211,9 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
         if (delim.sizes) {
           for (const d of delim.sizes) {
             if (d >= m) {
+              if (mathaccent && i) {
+                i--;
+              }
               this.variant = this.font.getSizeVariant(c, i);
               this.size = i;
               return;
