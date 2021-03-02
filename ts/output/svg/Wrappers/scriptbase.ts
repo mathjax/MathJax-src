@@ -25,7 +25,7 @@
  */
 
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
-import {CommonScriptbaseMixin, CommonScriptbase} from '../../common/Wrappers/scriptbase.js';
+import {CommonScriptbaseMixin} from '../../common/Wrappers/scriptbase.js';
 
 /*****************************************************************/
 /**
