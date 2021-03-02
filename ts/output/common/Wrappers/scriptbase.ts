@@ -234,6 +234,31 @@ export function CommonScriptbaseMixin<
       }
     }
 
+    private getBaseFence(fence: any, id: string): any {
+      if (!fence || !fence.node.attributes) {
+        return null;
+      }
+      if (fence.node.attributes.getExplicit('data-semantic-id') === id) {
+        return fence;
+      }
+      for (let child of fence.childNodes) {
+        let result = this.getBaseFence(child, id);
+        if (result) {
+          return result;
+        }
+      }
+      return null;
+    }
+
+    public getRealBaseChild() {
+      let pointer = this.node.attributes.getExplicit('data-semantic-fencepointer') as string;
+      if (pointer === undefined) {
+        return this.baseChild;
+      }
+      let result = this.getBaseFence(this.baseChild, pointer);
+      return result ? result : this.baseChild;
+    }
+
     /**
      * This gives the common bbox for msub and msup.  It is overridden
      * for all the others (msubsup, munder, mover, munderover).
@@ -241,11 +266,8 @@ export function CommonScriptbaseMixin<
      * @override
      */
     public computeBBox(bbox: BBox, recompute: boolean = false) {
-      let basebox = this.baseChild.getBBox();
-      if ((this as any).chtml.dataset &&
-        (this as any).chtml.dataset.semanticFencepointer !== undefined) {
-        basebox = this.baseChild.childNodes[this.baseChild.childNodes.length - 1].getBBox();
-      }
+      const baseChild = this.getRealBaseChild();
+      const basebox = baseChild.getBBox();
       const scriptbox = this.script.getBBox();
       const [x, y] = this.getOffset(basebox, scriptbox);
       bbox.append(basebox);
@@ -331,7 +353,6 @@ export function CommonScriptbaseMixin<
      * @return {number}     The vertical offset for the script
      */
     public getU(bbox: BBox, sbox: BBox): number {
-      console.log(8);
       const tex = this.font.params;
       const attr = this.node.attributes.getList('displaystyle', 'superscriptshift');
       const prime = this.node.getProperty('texprimestyle');
