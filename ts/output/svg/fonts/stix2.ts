@@ -51,6 +51,7 @@ CommonSTIX2FontMixin<SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontDa
    */
   protected static defaultAccentMap: RemapMap = {
     0x005E: '\u02C6',
+    0x007E: '\u02DC',
     0x0300: '\u02CB',
     0x0301: '\u02CA',
     0x0302: '\u02C6',

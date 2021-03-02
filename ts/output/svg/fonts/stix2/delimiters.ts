@@ -632,13 +632,13 @@ export const delimiters: DelimiterMap<DelimiterData> = {
   0x23DE: {
     dir: H,
     sizes: [.631, 1.001, 1.501, 1.771, 2.181, 2.601],
-    stretch: [0xE13B, 0x23B4, 0xE13C, 0x23DE],
+    stretch: [0xE13B, 0x23B4, 0xE13C, 0xE140],
     HDW: [.826, -.588, .75]
   },
   0x23DF: {
     dir: H,
     sizes: [.631, 1.001, 1.501, 1.771, 2.181, 2.601],
-    stretch: [0xE13D, 0x23B5, 0xE13E, 0x23DF],
+    stretch: [0xE13D, 0x23B5, 0xE13E, 0xE141],
     HDW: [-.062, .3, .75]
   },
   0x23E0: {
