@@ -24,6 +24,7 @@
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../../../util/BBox.js';
+import {unicodeString} from '../../../util/string.js';
 import {DelimiterData} from '../FontData.js';
 import {DIRECTION, NOSTRETCH} from '../FontData.js';
 
@@ -107,7 +108,25 @@ export type MoConstructor = Constructor<CommonMo>;
  */
 export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstructor & T {
 
-  return class extends Base {
+  return class Mo extends Base {
+
+    /**
+     * Pattern for matching when the contents is one ore more pseudoscripts
+     */
+    public static pseudoScripts = new RegExp([
+      '^["\'*`',
+      '\u00AA',               // FEMININE ORDINAL INDICATOR
+      '\u00B0',               // DEGREE SIGN
+      '\u00B2-\u00B4',        // SUPERSCRIPT 2 and 3, ACUTE ACCENT
+      '\u00B9',               // SUPERSCRIPT ONE
+      '\u00BA',               // MASCULINE ORDINAL INDICATOR
+      '\u2018-\u201F',        // Various double and single quotation marks (up and down)
+      '\u2032-\u2037\u2057',  // Primes and reversed primes (forward and reversed)
+      '\u2070\u2071',         // SUPERSCRIPT 0 and i
+      '\u2074-\u207F',        // SUPERCRIPT 4 through 9, -, =, (, ), and n
+      '\u2080-\u208E',        // SUBSCRIPT 0 through 9, -, =, (, ).
+      ']+$'
+    ].join(''));
 
     /**
      * True if no italic correction should be used
@@ -161,9 +180,19 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
     public getVariant() {
       if (this.node.attributes.get('largeop')) {
         this.variant = (this.node.attributes.get('displaystyle') ? '-largeop' : '-smallop');
-      } else {
-        super.getVariant();
+        return;
       }
+      if (!this.node.attributes.getExplicit('mathvariant')) {
+        const text = this.getText();
+        if ((this.constructor as typeof Mo).pseudoScripts.exec(text)) {
+          const parent = (this.node as MmlMo).coreParent().Parent;
+          if (parent && parent.isKind('msubsup')) {
+            this.variant = '-tex-variant';
+            return;
+          }
+        }
+      }
+      super.getVariant();
     }
 
     /**
@@ -316,13 +345,19 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
      * @override
      */
     public remapChars(chars: number[]) {
-      if (chars.length === 1) {
+      const text = unicodeString(chars);
+      if (text.match(this.font.primes)) {
+        const remapped = chars.map(
+          (c) => (this.font.getRemappedChar('primes', c) || String.fromCodePoint(c))
+        ).join('');
+        chars = this.unicodeChars(remapped, this.variant);
+      } else if (chars.length === 1) {
         const parent = (this.node as MmlMo).coreParent().parent;
         const isAccent = this.isAccent && !parent.isKind('mrow');
         const map = (isAccent ? 'accent' : 'mo');
-        const text = this.font.getRemappedChar(map, chars[0]);
-        if (text) {
-          chars = this.unicodeChars(text, this.variant);
+        const c = this.font.getRemappedChar(map, chars[0]);
+        if (c) {
+          chars = this.unicodeChars(c, this.variant);
         }
       }
       return chars;

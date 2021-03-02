@@ -399,6 +399,32 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   };
 
   /**
+   * Pattern for when contents is a collection of primes
+   */
+  protected static defaultPrimes = new RegExp([
+    '^["\'`',
+    '\u2018-\u201F',        // Various double and single quotation marks (up and down)
+    ']+$'
+  ].join(''));
+
+  /**
+   * Default map for remapping prime characters
+   */
+  protected static defaultPrimeMap: RemapMap = {
+    0x0022: '\u2033',   // double quotes
+    0x0027: '\u2032',   // single quote
+    0x0060: '\u2035',   // back quote
+    0x2018: '\u2035',   // open single quote
+    0x2019: '\u2032',   // close single quote
+    0x201A: '\u2032',   // low open single quote
+    0x201B: '\u2035',   // reversed open single quote
+    0x201C: '\u2036',   // open double quote
+    0x201D: '\u2033',   // close double quote
+    0x201E: '\u2033',   // low open double quote
+    0x201F: '\u2036',   // reversed open double quote
+  };
+
+  /**
    * Default map for characters inside <mo>
    */
   protected static defaultMoMap = {
@@ -454,6 +480,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * The default delimiter data
    */
   protected static defaultDelimiters: DelimiterMap<any> = {};
+
   /**
    * The default character data
    */
@@ -490,6 +517,11 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * The character maps
    */
   protected remapChars: RemapMapMap = {};
+
+  /**
+   * The pattern for content that is all primes
+   */
+  public primes: RegExp = /^$/;
 
   /**
    * The actual font parameters for this font
@@ -531,8 +563,10 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
       this.defineChars(name, CLASS.defaultChars[name]);
     }
     this.defineRemap('accent', CLASS.defaultAccentMap);
+    this.defineRemap('primes', CLASS.defaultPrimeMap);
     this.defineRemap('mo', CLASS.defaultMoMap);
     this.defineRemap('mn', CLASS.defaultMnMap);
+    this.primes = CLASS.defaultPrimes;
   }
 
   /**

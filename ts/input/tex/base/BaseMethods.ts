@@ -237,7 +237,7 @@ BaseMethods.Prime = function(parser: TexParser, c: string) {
     sup += entities.prime; parser.i++, c = parser.GetNext();
   } while (c === '\'' || c === entities.rquote);
   sup = ['', '\u2032', '\u2033', '\u2034', '\u2057'][sup.length] || sup;
-  const node = parser.create('token', 'mo', {}, sup);
+  const node = parser.create('token', 'mo', {variantForm: true}, sup);
   parser.Push(
     parser.itemFactory.create('prime', base, node) );
 };
