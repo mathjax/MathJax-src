@@ -25,7 +25,7 @@
  */
 
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
-import {CommonScriptbaseMixin} from '../../common/Wrappers/scriptbase.js';
+import {CommonScriptbaseMixin, CommonScriptbase} from '../../common/Wrappers/scriptbase.js';
 
 /*****************************************************************/
 /**
@@ -60,7 +60,7 @@ CommonScriptbaseMixin<SVGWrapper<any, any, any>, SVGConstructor<any, any, any>>(
     const svg = this.standardSVGnode(parent);
     const bbox = this.baseChild.getBBox();
     const sbox = this.script.getBBox();
-    const [x, v] = this.getOffset(bbox, sbox);
+    const [x, v] = this.getOffset((this as any).getRealBaseChild().getBBox(), sbox);
     this.baseChild.toSVG(svg);
     this.script.toSVG(svg);
     this.script.place(bbox.w * bbox.rscale + x, v);

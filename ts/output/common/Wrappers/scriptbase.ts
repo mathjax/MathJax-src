@@ -266,8 +266,7 @@ export function CommonScriptbaseMixin<
      * @override
      */
     public computeBBox(bbox: BBox, recompute: boolean = false) {
-      const baseChild = this.getRealBaseChild();
-      const basebox = baseChild.getBBox();
+      const basebox = this.baseChild.getBBox();
       const scriptbox = this.script.getBBox();
       const [x, y] = this.getOffset(basebox, scriptbox);
       bbox.append(basebox);
