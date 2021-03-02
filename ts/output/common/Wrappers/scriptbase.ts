@@ -241,7 +241,11 @@ export function CommonScriptbaseMixin<
      * @override
      */
     public computeBBox(bbox: BBox, recompute: boolean = false) {
-      const basebox = this.baseChild.getBBox();
+      let basebox = this.baseChild.getBBox();
+      if ((this as any).chtml.dataset &&
+        (this as any).chtml.dataset.semanticFencepointer !== undefined) {
+        basebox = this.baseChild.childNodes[this.baseChild.childNodes.length - 1].getBBox();
+      }
       const scriptbox = this.script.getBBox();
       const [x, y] = this.getOffset(basebox, scriptbox);
       bbox.append(basebox);
@@ -327,6 +331,7 @@ export function CommonScriptbaseMixin<
      * @return {number}     The vertical offset for the script
      */
     public getU(bbox: BBox, sbox: BBox): number {
+      console.log(8);
       const tex = this.font.params;
       const attr = this.node.attributes.getList('displaystyle', 'superscriptshift');
       const prime = this.node.getProperty('texprimestyle');

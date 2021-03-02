@@ -60,7 +60,12 @@ CommonScriptbaseMixin<CHTMLWrapper<any, any, any>, CHTMLConstructor<any, any, an
    */
   public toCHTML(parent: N) {
     this.chtml = this.standardCHTMLnode(parent);
-    const [x, v] = this.getOffset(this.baseChild.getBBox(), this.script.getBBox());
+    let baseChild = this.baseChild;
+    if ((this as any).chtml.dataset &&
+      (this as any).chtml.dataset.semanticFencepointer !== undefined) {
+      baseChild = this.childNodes[this.childNodes.length - 1];
+    }
+    const [x, v] = this.getOffset(baseChild.getBBox(), this.script.getBBox());
     const style: StyleData = {'vertical-align': this.em(v)};
     if (x) {
       style['margin-left'] = this.em(x);
