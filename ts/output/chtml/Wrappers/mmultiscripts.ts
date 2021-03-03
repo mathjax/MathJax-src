@@ -76,7 +76,7 @@ CommonMmultiscriptsMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsubsup<a
     //
     const sub = this.combinePrePost(data.sub, data.psub);
     const sup = this.combinePrePost(data.sup, data.psup);
-    const [u, v] = this.getUVQ(data.base, sub, sup);
+    const [u, v] = this.getUVQ((this as any).getRealBaseChild().getBBox(), sub, sup);
     //
     //  Place the pre-scripts, then the base, then the post-scripts
     //
