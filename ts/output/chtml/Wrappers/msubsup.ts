@@ -129,7 +129,8 @@ CommonMsubsupMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any,
   public toCHTML(parent: N) {
     const chtml = this.standardCHTMLnode(parent);
     const [base, sup, sub] = [this.baseChild, this.supChild, this.subChild];
-    const [ , v, q] = this.getUVQ(base.getBBox(), sub.getBBox(), sup.getBBox());
+    let baseBox = (this as any).getRealBaseChild().getBBox();
+    const [ , v, q] = this.getUVQ(baseBox, sub.getBBox(), sup.getBBox());
     const x = this.baseCore.bbox.ic ? this.coreIC() * this.coreScale() : 0;
     const style = {'vertical-align': this.em(v)};
     base.toCHTML(chtml);
