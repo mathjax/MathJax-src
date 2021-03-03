@@ -30,11 +30,6 @@ import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {BBox} from '../../../util/BBox.js';
 import {DIRECTION} from '../FontData.js';
 
-/*
- * Mutliply italic correction by this much (improve horizontal shift for italic characters)
- */
-const DELTA = 1.5;
-
 /*****************************************************************/
 /**
  * The CommonScriptbase interface
@@ -277,10 +272,7 @@ export function CommonScriptbaseMixin<
      * @return {boolean}  True if the base is an mi, mn, or mo (not a largeop) consisting of a single character
      */
     public isCharBase(): boolean {
-      let base = this.baseChild;
-      while ((base.node.isKind('mstyle') || base.node.isKind('mrow')) && base.childNodes.length === 1) {
-        base = base.childNodes[0];
-      }
+      let base = this.baseCore;
       return ((base.node.isKind('mo') || base.node.isKind('mi') || base.node.isKind('mn')) &&
               base.bbox.rscale === 1 && Array.from(base.getText()).length === 1 &&
               !base.node.attributes.get('largeop'));
@@ -419,8 +411,8 @@ export function CommonScriptbaseMixin<
      */
     public getDelta(noskew: boolean = false): number {
       const accent = this.node.attributes.get('accent');
-      const ddelta = (accent && !noskew ? this.baseChild.coreMO().bbox.sk : 0);
-      return (DELTA * this.baseCore.bbox.ic / 2 + ddelta) * this.coreScale();
+      const {sk, ic} = this.baseCore.bbox;
+      return (accent && !noskew ? sk + this.font.skewIcFactor * ic : 0) * this.coreScale();
     }
 
     /**

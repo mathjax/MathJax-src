@@ -25,6 +25,7 @@
 import {AnyWrapper, Constructor} from '../Wrapper.js';
 import {CommonScriptbase, ScriptbaseConstructor} from './scriptbase.js';
 import {MmlMunderover, MmlMunder, MmlMover} from '../../../core/MmlTree/MmlNodes/munderover.js';
+import {CommonMo} from './mo.js';
 import {BBox} from '../../../util/BBox.js';
 
 /*****************************************************************/
@@ -142,6 +143,10 @@ export function CommonMoverMixin<
      */
     constructor(...args: any[]) {
       super(...args);
+      if (this.baseCore && 'noIC' in this.baseCore && this.isCharBase() &&
+          this.script.node.getProperty('mathaccent')) {
+        (this.baseCore as undefined as CommonMo).noIC = true;
+      }
       this.stretchChildren();
     }
 

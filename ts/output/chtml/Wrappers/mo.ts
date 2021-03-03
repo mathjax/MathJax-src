@@ -143,6 +143,10 @@ CommonMoMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
           this.adaptor.setStyle(chtml, 'verticalAlign', u);
         }
       }
+      if (this.node.getProperty('mathaccent')) {
+        this.adaptor.setStyle(chtml, 'width', '0');
+        this.adaptor.setStyle(chtml, 'margin-left', this.em(this.getAccentOffset()));
+      }
       for (const child of this.childNodes) {
         child.toCHTML(chtml);
       }

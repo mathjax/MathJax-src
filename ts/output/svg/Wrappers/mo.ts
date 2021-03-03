@@ -64,11 +64,10 @@ CommonMoMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
     if (stretchy && this.size < 0) {
       this.stretchSVG();
     } else {
-      if (symmetric || attributes.get('largeop')) {
-        const u = this.fixed(this.getCenterOffset());
-        if (u !== '0') {
-          this.adaptor.setAttribute(svg, 'transform', 'translate(0 ' + u + ')');
-        }
+      const u = (symmetric || attributes.get('largeop') ? this.fixed(this.getCenterOffset()) : '0');
+      const v = (this.node.getProperty('mathaccent') ? this.fixed(this.getAccentOffset()) : '0');
+      if (u !== '0' || v !== '0') {
+        this.adaptor.setAttribute(svg, 'transform', 'translate(' + v + ' ' + u + ')');
       }
       this.addChildren(svg);
     }

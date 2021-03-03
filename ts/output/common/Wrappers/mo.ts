@@ -58,6 +58,18 @@ export interface CommonMo extends AnyWrapper {
   isAccent: boolean;
 
   /**
+   * Get the (unmodified) bbox of the contents (before centering or setting accents to width 0)
+   *
+   * @param {BBox} bbox   The bbox to fill
+   */
+  protoBBox(bbox: BBox): void;
+
+  /**
+   * @return {number}    Offset to the left by half the actual width of the accent
+   */
+  getAccentOffset(): number;
+
+  /**
    * @param {BBox} bbox   The bbox to center, or null to compute the bbox
    * @return {number}     The offset to move the glyph to center it
    */
@@ -143,6 +155,25 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
      * @override
      */
     public computeBBox(bbox: BBox, _recompute: boolean = false) {
+      this.protoBBox(bbox);
+      if (this.node.attributes.get('symmetric') &&
+          this.stretch.dir !== DIRECTION.Horizontal) {
+        const d = this.getCenterOffset(bbox);
+        bbox.h += d;
+        bbox.d -= d;
+      }
+      if (this.node.getProperty('mathaccent') &&
+          (this.stretch.dir === DIRECTION.None || this.size >= 0)) {
+        bbox.w = 0;
+      }
+    }
+
+    /**
+     * Get the (unmodified) bbox of the contents (before centering or setting accents to width 0)
+     *
+     * @param {BBox} bbox   The bbox to fill
+     */
+    public protoBBox(bbox: BBox) {
       const stretchy = (this.stretch.dir !== DIRECTION.None);
       if (stretchy && this.size === null) {
         this.getStretchedVariant([0]);
@@ -153,12 +184,15 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
       if (this.noIC) {
         bbox.w -= bbox.ic;
       }
-      if (this.node.attributes.get('symmetric') &&
-          this.stretch.dir !== DIRECTION.Horizontal) {
-        const d = this.getCenterOffset(bbox);
-        bbox.h += d;
-        bbox.d -= d;
-      }
+    }
+
+    /**
+     * @return {number}    Offset to the left by half the actual width of the accent
+     */
+    public getAccentOffset(): number {
+      const bbox = BBox.empty();
+      this.protoBBox(bbox);
+      return -bbox.w / 2;
     }
 
     /**

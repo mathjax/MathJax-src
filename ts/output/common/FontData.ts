@@ -520,6 +520,11 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   public params: FontParameters;
 
   /**
+   * Non-zero means use IC to fake skew values, and this is a scaling factor for it.
+   */
+  public skewIcFactor: number = 0;
+
+  /**
    * Any styles needed for the font
    */
   protected _styles: StyleList;

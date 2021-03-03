@@ -84,6 +84,11 @@ export function CommonTeXFontMixin<
     protected static defaultStretchVariants = ['-size4'];
 
     /**
+     * The factor to use for computing skews from italic correction
+     */
+    public skewIcFactor = .75;
+
+    /**
      * @override
      */
     protected getDelimiterData(n: number) {
