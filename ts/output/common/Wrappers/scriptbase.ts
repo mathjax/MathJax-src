@@ -412,7 +412,7 @@ export function CommonScriptbaseMixin<
     public getDelta(noskew: boolean = false): number {
       const accent = this.node.attributes.get('accent');
       const {sk, ic} = this.baseCore.bbox;
-      return (accent && !noskew ? sk + this.font.skewIcFactor * ic : 0) * this.coreScale();
+      return ((accent && !noskew ? sk : 0) + this.font.skewIcFactor * ic) * this.coreScale();
     }
 
     /**
