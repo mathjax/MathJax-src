@@ -152,6 +152,12 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
    */
   stretchChildren(): void;
 
+  /**
+   * Computes the base fence in case of a fencepointer on an enriched element.
+   * @return{W} The base child fence.
+   */
+  getRealBaseChild(): W;
+
 }
 
 export interface CommonScriptbaseClass extends AnyWrapperClass {
@@ -234,7 +240,13 @@ export function CommonScriptbaseMixin<
       }
     }
 
-    private getBaseFence(fence: any, id: string): any {
+    /**
+     * Recursively retrieves an element for a given fencepointer.
+     * @param {W} fence The potential fence.
+     * @param {string} id The fencepointer id.
+     * @return {W} The original fence the scripts belong to.
+     */
+    private getBaseFence(fence: W, id: string): W {
       if (!fence || !fence.node.attributes) {
         return null;
       }
@@ -250,6 +262,9 @@ export function CommonScriptbaseMixin<
       return null;
     }
 
+    /**
+     * @override
+     */
     public getRealBaseChild() {
       let pointer = this.node.attributes.getExplicit('data-semantic-fencepointer') as string;
       if (pointer === undefined) {

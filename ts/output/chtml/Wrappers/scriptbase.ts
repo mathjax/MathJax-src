@@ -60,7 +60,7 @@ CommonScriptbaseMixin<CHTMLWrapper<any, any, any>, CHTMLConstructor<any, any, an
    */
   public toCHTML(parent: N) {
     this.chtml = this.standardCHTMLnode(parent);
-    let baseChild = (this as any).getRealBaseChild();
+    let baseChild = this.getRealBaseChild();
     const [x, v] = this.getOffset(baseChild.getBBox(), this.script.getBBox());
     const style: StyleData = {'vertical-align': this.em(v)};
     if (x) {
