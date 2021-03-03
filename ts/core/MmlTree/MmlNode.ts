@@ -443,10 +443,26 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
       return child;
     }
     if (child.isInferred) {
-      for (const node of child.childNodes) {
-        super.appendChild(node);
+      //
+      //  If we can have arbitrary children, remove the inferred mrow
+      //  (just add its children).
+      //
+      if (this.arity === Infinity) {
+        for (const node of child.childNodes) {
+          super.appendChild(node);
+        }
+        return child;
       }
-      return child;
+      //
+      //  Otherwise, convert the inferred mrow to an explicit mrow
+      //
+      const original = child;
+      child = this.factory.create('mrow');
+      child.setChildren(original.childNodes);
+      child.attributes = original.attributes;
+      for (const name of original.getPropertyNames()) {
+        child.setProperty(name, original.getProperty(name));
+      }
     }
     return super.appendChild(child);
   }
