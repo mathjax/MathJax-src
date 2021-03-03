@@ -302,7 +302,7 @@ export function CommonScriptbaseMixin<
      * @return {boolean}  True if the base is an mi, mn, or mo (not a largeop) consisting of a single character
      */
     public isCharBase(): boolean {
-      let base = this.getRealBaseChild();
+      let base = this.baseChild;
       while ((base.node.isKind('mstyle') || base.node.isKind('mrow')) && base.childNodes.length === 1) {
         base = base.childNodes[0];
       }

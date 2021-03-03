@@ -338,6 +338,20 @@ export function CommonMmultiscriptsMixin<
       return this.UVQ;
     }
 
+
+    /**
+     * @override
+     */
+    public isCharBase(): boolean {
+      let base = this.getRealBaseChild();
+      while ((base.node.isKind('mstyle') || base.node.isKind('mrow')) && base.childNodes.length === 1) {
+        base = base.childNodes[0];
+      }
+      return ((base.node.isKind('mo') || base.node.isKind('mi') || base.node.isKind('mn')) &&
+              base.bbox.rscale === 1 && Array.from(base.getText()).length === 1 &&
+              !base.node.attributes.get('largeop'));
+    }
+
   };
 
 }
