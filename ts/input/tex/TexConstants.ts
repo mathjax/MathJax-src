@@ -144,23 +144,6 @@ export namespace TexConstant {
     INPUT: 'input'
   };
 
-  export const Length = {
-    VERYVERYTHINMATHSPACE: 'veryverythinmathspace',
-    VERYTHINMATHSPACE: 'verythinmathspace',
-    THINMATHSPACE: 'thinmathspace',
-    MEDIUMMATHSPACE: 'mediummathspace',
-    THICKMATHSPACE: 'thickmathspace',
-    VERYTHICKMATHSPACE: 'verythickmathspace',
-    VERYVERYTHICKMATHSPACE: 'veryverythickmathspace',
-    NEGATIVEVERYVERYTHINMATHSPACE: 'negativeveryverythinmathspace',
-    NEGATIVEVERYTHINMATHSPACE: 'negativeverythinmathspace',
-    NEGATIVETHINMATHSPACE: 'negativethinmathspace',
-    NEGATIVEMEDIUMMATHSPACE: 'negativemediummathspace',
-    NEGATIVETHICKMATHSPACE: 'negativethickmathspace',
-    NEGATIVEVERYTHICKMATHSPACE: 'negativeverythickmathspace',
-    NEGATIVEVERYVERYTHICKMATHSPACE: 'negativeveryverythickmathspace'
-  };
-
   export const Overflow = {
     LINBREAK: 'linebreak',
     SCROLL: 'scroll',

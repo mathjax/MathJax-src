@@ -27,6 +27,7 @@ import {TexConstant} from '../TexConstants.js';
 import BaseMethods from './BaseMethods.js';
 import ParseMethods from '../ParseMethods.js';
 import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
+import {MATHSPACE} from '../../../util/lengths.js';
 
 
 /**
@@ -499,16 +500,16 @@ new sm.CommandMap('macros', {
   moveleft:           'MoveLeftRight',
   moveright:          'MoveLeftRight',
 
-  ',':               ['Spacer', TexConstant.Length.THINMATHSPACE],
-  ':':               ['Spacer', TexConstant.Length.MEDIUMMATHSPACE],
-  '>':               ['Spacer', TexConstant.Length.MEDIUMMATHSPACE],
-  ';':               ['Spacer', TexConstant.Length.THICKMATHSPACE],
-  '!':               ['Spacer', TexConstant.Length.NEGATIVETHINMATHSPACE],
+  ',':               ['Spacer', MATHSPACE.thinmathspace + 'em'],
+  ':':               ['Spacer', MATHSPACE.mediummathspace + 'em'],
+  '>':               ['Spacer', MATHSPACE.mediummathspace + 'em'],
+  ';':               ['Spacer', MATHSPACE.thickmathspace + 'em'],
+  '!':               ['Spacer', MATHSPACE.negativethinmathspace + 'em'],
   enspace:           ['Spacer', '.5em'],
   quad:              ['Spacer', '1em'],
   qquad:             ['Spacer', '2em'],
-  thinspace:         ['Spacer', TexConstant.Length.THINMATHSPACE],
-  negthinspace:      ['Spacer', TexConstant.Length.NEGATIVETHINMATHSPACE],
+  thinspace:         ['Spacer', MATHSPACE.thinmathspace + 'em'],
+  negthinspace:      ['Spacer', MATHSPACE.negativethinmathspace + 'em'],
 
   hskip:              'Hskip',
   hspace:             'Hskip',
@@ -581,7 +582,7 @@ new sm.CommandMap('macros', {
   cases:             ['Matrix', '{', '', 'left left', null, '.1em', null,
                       true],
   eqalign:           ['Matrix', null, null, 'right left',
-                      TexConstant.Length.THICKMATHSPACE, '.5em', 'D'],
+                      MATHSPACE.thickmathspace + 'em', '.5em', 'D'],
   displaylines:      ['Matrix', null, null, 'center', null, '.5em', 'D'],
   cr:                 'Cr',
   '\\':               'CrLaTeX',
@@ -590,10 +591,10 @@ new sm.CommandMap('macros', {
   hdashline:         ['HLine', 'dashed'],
   //      noalign:            'HandleNoAlign',
   eqalignno:         ['Matrix', null, null, 'right left',
-                      TexConstant.Length.THICKMATHSPACE, '.5em', 'D', null,
+                      MATHSPACE.thickmathspace + 'em', '.5em', 'D', null,
                       'right'],
   leqalignno:        ['Matrix', null, null, 'right left',
-                      TexConstant.Length.THICKMATHSPACE, '.5em', 'D', null,
+                      MATHSPACE.thickmathspace + 'em', '.5em', 'D', null,
                       'left'],
   hfill:              'HFill',
   hfil:               'HFill',   // \hfil treated as \hfill for now
@@ -660,7 +661,7 @@ new sm.EnvironmentMap('environment', ParseMethods.environment, {
   equation:      ['Equation', null, true],
   'equation*':   ['Equation', null, false],
   eqnarray:      ['EqnArray', null, true, true, 'rcl',
-                  '0 ' + TexConstant.Length.THICKMATHSPACE, '.5em']
+                  '0 ' + MATHSPACE.thickmathspace + 'em', '.5em']
 }, BaseMethods);
 
 
