@@ -229,13 +229,15 @@ AmsMethods.xArrow = function(parser: TexParser, name: string,
     'mo', {stretchy: true, texClass: TEXCLASS.REL}, String.fromCodePoint(chr));
   let mml = parser.create('node', 'munderover', [arrow]) as MmlMunderover;
   let mpadded = parser.create('node', 'mpadded', [first], def);
-  NodeUtil.setAttribute(mpadded, 'voffset', '.15em');
+  NodeUtil.setAttribute(mpadded, 'voffset', '-.25em');
+  NodeUtil.setAttribute(mpadded, 'height', '-.25em');
   NodeUtil.setChild(mml, mml.over, mpadded);
   if (bot) {
     // @test Above Below Left Arrow, Above Below Right Arrow
     let bottom = new TexParser(bot, parser.stack.env, parser.configuration).mml();
     mpadded = parser.create('node', 'mpadded', [bottom], def);
-    NodeUtil.setAttribute(mpadded, 'voffset', '-.24em');
+    NodeUtil.setAttribute(mpadded, 'voffset', '.15em');
+    NodeUtil.setAttribute(mpadded, 'depth', '-.15em');
     NodeUtil.setChild(mml, mml.under, mpadded);
   }
   // @test Above Left Arrow, Above Right Arrow, Above Left Arrow in Context,
