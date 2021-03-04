@@ -150,8 +150,8 @@ export class MathMLCompile<N, T, D> {
     for (const attr of this.adaptor.allAttributes(node)) {
       let name = attr.name;
       let value = this.filterAttribute(name, attr.value);
-      if (value === null) {
-        return;
+      if (value === null || name === 'xmlns') {
+        continue;
       }
       if (name.substr(0, 9) === 'data-mjx-') {
         if (name === 'data-mjx-alternate') {
