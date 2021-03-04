@@ -232,7 +232,7 @@ export class MmlMo extends AbstractMmlTokenNode {
       //
       //  Force previous node to be TEXCLASS.OP and skip this node
       //
-      if (prev) {
+      if (prev && prev.getProperty('texClass') === undefined) {
         prev.texClass = TEXCLASS.OP;
         prev.setProperty('fnOP', true);
       }
