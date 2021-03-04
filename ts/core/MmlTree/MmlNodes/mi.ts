@@ -82,7 +82,7 @@ export class MmlMi extends AbstractMmlTokenNode {
   public setTeXclass(prev: AbstractMmlNode) {
     this.getPrevClass(prev);
     let name = this.getText();
-    if (name.length > 1 && name.match(MmlMi.operatorName) && this.texClass === TEXCLASS.ORD) {
+    if (name.length > 1 && name.match(MmlMi.operatorName) && this.getProperty('texClass') === undefined) {
       this.texClass = TEXCLASS.OP;
       this.setProperty('autoOP', true);
     }

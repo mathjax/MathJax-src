@@ -131,8 +131,10 @@ export class MathMLCompile<N, T, D> {
       mml.setProperty('movesupsub', true);
       mml.attributes.setInherited('movablelimits', true);
     }
-    mml.texClass = (TEXCLASS as {[name: string]: number})[texClass];
-    mml.setProperty('texClass', mml.texClass);
+    if (texClass) {
+      mml.texClass = (TEXCLASS as {[name: string]: number})[texClass];
+      mml.setProperty('texClass', mml.texClass);
+    }
     this.addAttributes(mml, node);
     this.checkClass(mml, node);
     this.addChildren(mml, node);
