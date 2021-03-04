@@ -127,12 +127,12 @@ export class MathMLCompile<N, T, D> {
     }
     this.factory.getNodeClass(type) || this.error('Unknown node type "' + type + '"');
     let mml = this.factory.create(type);
-    if (type === 'TeXAtom') {
-      this.texAtom(mml, texClass, limits);
-    } else if (texClass) {
-      mml.texClass = (TEXCLASS as {[name: string]: number})[texClass];
-      mml.setProperty('texClass', mml.texClass);
+    if (type === 'TeXAtom' && texClass === 'OP' && !limits) {
+      mml.setProperty('movesupsub', true);
+      mml.attributes.setInherited('movablelimits', true);
     }
+    mml.texClass = (TEXCLASS as {[name: string]: number})[texClass];
+    mml.setProperty('texClass', mml.texClass);
     this.addAttributes(mml, node);
     this.checkClass(mml, node);
     this.addChildren(mml, node);
@@ -275,22 +275,6 @@ export class MathMLCompile<N, T, D> {
    */
   protected fixCalligraphic(variant: string): string {
     return variant.replace(/caligraphic/, 'calligraphic');
-  }
-
-  /**
-   * Handle the properties of a TeXAtom
-   *
-   * @param {MmlNode} mml      The node to be updated
-   * @param {string} texClass  The texClass indicated in the MJX class identifier
-   * @param {boolean} limits   Whether MJX-fixedlimits was found in the class list
-   */
-  protected texAtom(mml: MmlNode, texClass: string, limits: boolean) {
-    mml.texClass = (TEXCLASS as {[name: string]: number})[texClass];
-    mml.setProperty('texClass', mml.texClass);
-    if (texClass === 'OP' && !limits) {
-      mml.setProperty('movesupsub', true);
-      mml.attributes.setInherited('movablelimits', true);
-    }
   }
 
   /**
