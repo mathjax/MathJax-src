@@ -175,9 +175,10 @@ export const delimiters: DelimiterMap<DelimiterData> = {
     HDW: [.279, -.222, 1]
   },
   0x2015: {
-    c: 0x2F,
-    dir: V,
-    sizes: [.799, 1.26, 1.89, 2.52, 3.149]
+    dir: H,
+    stretch: [0, 0x2015],
+    stretchv: [0, 1],
+    HDW: [.279, -.222, .94]
   },
   0x2016: {
     dir: V,
