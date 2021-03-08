@@ -58,7 +58,6 @@ const nodeRE = fileRegExp(path.join(path.dirname(path.dirname(__dirname)), 'node
 async function readJSON() {
   return new Promise((ok, fail) => {
     const buffer = [];
-    const error = [];
     const child = spawn('npx', ['webpack', '--json']);
     child.stdout.on('data', (data) => buffer.push(String(data)));
     child.stdout.on('close', (code) => {
@@ -88,7 +87,7 @@ async function webpackLib(dir) {
       console.log(asset.name + fileSize(asset));
     }
     //
-    // Sort the modules and print their names ans sizes
+    // Sort the modules and print their names and sizes
     //
     const modules = json.modules;
     for (const module of modules) {
