@@ -44,15 +44,13 @@ if (dirs.length === 0) {
  */
 const build = 'node ' + path.join(__dirname, 'build');
 const copy = 'node ' + path.join(__dirname, 'copy');
+const pack = 'node ' + path.join(__dirname, 'pack');
 
 /**
- * Regular expressions for the components directory, the MathJax .js location, and the node_modules directory
+ * Regular expression for the components directory
  */
 const compRE = new RegExp(path.dirname(__dirname).replace(/([\\.{}[\]()?*^$])/g, '\$1'), 'g');
-const rootRE = new RegExp(path.join(path.dirname(path.dirname(__dirname)), 'js')
-                          .replace(/([\\.{}[\]()?*^$])/g, '\$1'), 'g');
-const nodeRE = new RegExp(path.join(path.dirname(path.dirname(__dirname)), 'node_modules')
-                          .replace(/([\\.{}[\]()?*^$])/g, '\$1'), 'g');
+
 
 /**
  * Process the contents of an array of directories
@@ -126,12 +124,8 @@ function webpackLib(dir) {
   const wd = process.cwd();
   try {
     process.chdir(dir);
-    const result = execSync('npx webpack --display-modules');
-    console.info('    ' + String(result).replace(/\n/g, '\n    ')
-                 .replace(/ \.\.\//g, ' ' + path.dirname(path.resolve(dir)) + '/')
-                 .replace(compRE, '[components]')
-                 .replace(rootRE, '[js]')
-                 .replace(nodeRE, '[node]'));
+    const result = execSync(pack);
+    console.info('    ' + String(result).replace(/\n/g, '\n    '));
   } catch (err) {
     console.info('    ' + err.message);
   }
