@@ -22,7 +22,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {OptionList} from '../../util/Options.js';
+import {OptionList, defaultOptions, userOptions} from '../../util/Options.js';
 import {StyleList} from '../../util/StyleList.js';
 
 /****************************************************************************/
@@ -231,9 +231,11 @@ export type FontParameters = {
 export class FontData<C extends CharOptions, V extends VariantData<C>, D extends DelimiterData> {
 
   /**
-   * Subclasses may need options
+   * Options for the font
    */
-  public static OPTIONS: OptionList = {};
+  public static OPTIONS: OptionList = {
+    unknownFamily: 'serif'     // Should use 'monospace' with LiteAdaptor
+  };
 
   /**
    *  The standard variants to define
@@ -256,16 +258,17 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   ];
 
   /**
-   * The style and weight to use for each variant (for unkown characters)
+   * The family, style, and weight to use for each variant (for unknown characters)
+   * The 'unknown' family is replaced by options.unknownFamily
    */
   public static defaultCssFonts: CssFontMap = {
-    normal: ['serif', false, false],
-    bold: ['serif', false, true],
-    italic: ['serif', true, false],
-    'bold-italic': ['serif', true, true],
-    'double-struck': ['serif', false, true],
-    fraktur: ['serif', false, false],
-    'bold-fraktur': ['serif', false, true],
+    normal: ['unknown', false, false],
+    bold: ['unknown', false, true],
+    italic: ['unknown', true, false],
+    'bold-italic': ['unknown', true, true],
+    'double-struck': ['unknown', false, true],
+    fraktur: ['unknown', false, false],
+    'bold-fraktur': ['unknown', false, true],
     script: ['cursive', false, false],
     'bold-script': ['cursive', false, true],
     'sans-serif': ['sans-serif', false, false],
@@ -465,6 +468,11 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   protected static defaultSizeVariants: string[] = [];
 
   /**
+   * The font options
+   */
+  protected options: OptionList;
+
+  /**
    * The actual variant information for this font
    */
   protected variant: VariantMap<C, V> = {};
@@ -517,13 +525,21 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    * Copies the data from the defaults to the instance
    *
+   * @param {OptionList} options   The options for this font
+   *
    * @constructor
    */
-  constructor() {
+  constructor(options: OptionList = null) {
     let CLASS = (this.constructor as typeof FontData);
+    this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
     this.params = {...CLASS.defaultParams};
     this.sizeVariants = [...CLASS.defaultSizeVariants];
     this.cssFontMap = {...CLASS.defaultCssFonts};
+    for (const name of Object.keys(this.cssFontMap)) {
+      if (this.cssFontMap[name][0] === 'unknown') {
+        this.cssFontMap[name][0] = this.options.unknownFamily;
+      }
+    }
     this.cssFamilyPrefix = CLASS.defaultCssFamilyPrefix;
     this.createVariants(CLASS.defaultVariants);
     this.defineDelimiters(CLASS.defaultDelimiters);
