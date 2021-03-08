@@ -42,15 +42,15 @@ if (dirs.length === 0) {
  *  (on Unix, could be done without the 'node ' prefix, but
  *   for Windows, these are needed.)
  */
-const build = 'node ' + path.join(__dirname, 'build');
-const copy = 'node ' + path.join(__dirname, 'copy');
-const pack = 'node ' + path.join(__dirname, 'pack');
+const build = `node '${path.join(__dirname, 'build')}'`;
+const copy = `node '${path.join(__dirname, 'copy')}'`;
+const pack = `node '${path.join(__dirname, 'pack')}'`;
 
 /**
  * Regular expression for the components directory
  */
-const compRE = new RegExp(path.dirname(__dirname).replace(/([\\.{}[\]()?*^$])/g, '\$1'), 'g');
-
+const compRE = new RegExp(path.dirname(__dirname).replace(/([\\.{}[\]()?*^$])/g, '\\$1'));
+const dirRE = new RegExp(process.cwd().replace(/([\\.{}[\]()?*^$])/g, '\\$1'));
 
 /**
  * Process the contents of an array of directories
@@ -100,7 +100,7 @@ function processSubdirs(dir, action) {
 function buildLib(dir) {
   const file = path.join(dir, 'build.json');
   if (!fs.existsSync(file)) return;
-  console.info('Building ' + dir.replace(compRE, ''));
+  console.info('Building ' + dir.replace(compRE, '').replace(dirRE, '.'));
   const wd = process.cwd();
   try {
     process.chdir(dir);
@@ -120,7 +120,7 @@ function buildLib(dir) {
 function webpackLib(dir) {
   const file = path.join(dir, 'webpack.config.js');
   if (!fs.existsSync(file)) return;
-  console.info('Webpacking ' + dir.replace(compRE, ''));
+  console.info('Webpacking ' + dir.replace(compRE, '').replace(dirRE, '.'));
   const wd = process.cwd();
   try {
     process.chdir(dir);

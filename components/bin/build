@@ -56,11 +56,11 @@ const config = JSON.parse(fs.readFileSync(process.argv[2] || 'build.json'));
 const TARGETS = config.targets || [];                                       // the files to include in the component
 const EXCLUDE = new Map((config.exclude || []).map(name => [name, true]));  // files to exclude from the component
 const EXCLUDESUBDIRS = config.excludeSubdirs === 'true';                    // exclude subdirectories
-const MATHJAX = config.mathjax || mjPath;                                   // path to the MathJax .js files
+const MATHJAX = config.js || config.mathjax || mjPath;                      // path to the compiled .js files
 const LIB = config.lib || './lib';                                          // path to the lib directory to create
 const COMPONENT = path.basename(config.component || 'part');                // name of the component
 const GLOBAL = config.global || `../${MATHJAX}/components/global.js`;       // the location of global.js
-const SRC = MATHJAX.replace(/js$/, 'ts');                                   // path to the MathJax .ts files
+const SRC = config.ts || MATHJAX.replace(/js$/, 'ts');                      // path to the .ts files
 
 /**
  * The list of files that need to be added to the lib directory
