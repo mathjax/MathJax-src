@@ -243,19 +243,12 @@ CommonWrapper<
    */
   public place(x: number, y: number, element: N = null) {
     if (!(x || y)) return;
-    const adaptor = this.adaptor;
-    const translate = 'translate(' + this.fixed(x) + ', ' + this.fixed(y) + ')';
     if (!element) {
       element = this.element;
-      if (this.node.attributes.get('href')) {
-        const rect = adaptor.previous(element);
-        if (rect && adaptor.kind(rect) === 'rect' && adaptor.getAttribute(rect, 'data-hitbox')) {
-          adaptor.setAttribute(rect, 'transform', translate);
-        }
-      }
     }
-    let transform = adaptor.getAttribute(element, 'transform') || '';
-    adaptor.setAttribute(element, 'transform', translate + (transform ? ' ' + transform : ''));
+    let transform = this.adaptor.getAttribute(element, 'transform') || '';
+    transform = 'translate(' + this.fixed(x) + ', ' + this.fixed(y) + ')' + (transform ? ' ' + transform : '');
+    this.adaptor.setAttribute(element, 'transform', transform);
   }
 
   /**
