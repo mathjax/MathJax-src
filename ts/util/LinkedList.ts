@@ -101,19 +101,6 @@ export class LinkedList<DataClass> {
   }
 
   /**
-   * Typescript < 2.3 targeted at ES5 doesn't handle
-   *
-   *     for (const x of this) {...}
-   *
-   * so use toArray() to convert to array, when needed
-   *
-   * @return {DataClass[]}  The list converted to an array
-   */
-  public toArray(): DataClass[] {
-    return Array.from(this);
-  }
-
-  /**
    *  Used for sorting and merging lists (Overridden by subclasses)
    *
    * @param {DataClass} a   The first item to compare
