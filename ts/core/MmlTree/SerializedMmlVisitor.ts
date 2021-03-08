@@ -210,6 +210,8 @@ export class SerializedMmlVisitor extends MmlVisitor {
       }
       setclass && this.setDataAttribute(data, 'texclass', texclass < 0 ? 'NONE' : TEXCLASSNAMES[texclass]);
     }
+    node.getProperty('scriptlevel') && node.getProperty('useHeight') === false &&
+      this.setDataAttribute(data, 'smallmatrix', 'true');
     return data;
   }
 

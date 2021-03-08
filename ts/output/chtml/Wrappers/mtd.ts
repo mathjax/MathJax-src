@@ -109,9 +109,12 @@ CommonMtdMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
       this.adaptor.setStyle(this.chtml, 'textAlign', calign);
     }
     //
-    // Include a strut to force minimum height and depth
+    // If we are using minimum row heights,
+    //   Include a strut to force minimum height and depth
     //
-    this.adaptor.append(this.chtml, this.html('mjx-tstrut'));
+    if (this.parent.parent.node.getProperty('useHeight')) {
+      this.adaptor.append(this.chtml, this.html('mjx-tstrut'));
+    }
   }
 
 }

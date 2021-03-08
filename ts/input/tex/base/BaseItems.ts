@@ -846,6 +846,9 @@ export class ArrayItem extends BaseItem {
       const scriptlevel = this.arraydef['scriptlevel'];
       delete this.arraydef['scriptlevel'];
       let mml = this.create('node', 'mtable', this.table, this.arraydef);
+      if (scriptlevel) {
+        mml.setProperty('scriptlevel', scriptlevel);
+      }
       if (this.frame.length === 4) {
         // @test Enclosed frame solid, Enclosed frame dashed
         NodeUtil.setAttribute(mml, 'frame', this.dashed ? 'dashed' : 'solid');
@@ -865,10 +868,6 @@ export class ArrayItem extends BaseItem {
           // @test Enclosed dashed column, Enclosed solid column
           NodeUtil.setAttribute(mml, 'padding', 0);
         }
-      }
-      if (scriptlevel) {
-        // @test Subarray, Small Matrix
-        mml = this.create('node', 'mstyle', [mml], {scriptlevel: scriptlevel});
       }
       if (this.getProperty('open') || this.getProperty('close')) {
         // @test Cross Product Formula
