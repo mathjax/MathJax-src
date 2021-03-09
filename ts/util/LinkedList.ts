@@ -210,22 +210,31 @@ export class LinkedList<DataClass> {
     return this;
   }
 
+  protected *iterator(): IterableIterator<DataClass> {
+    let current = this.list;
+
+    while (current.data !== END) {
+      yield current.data as DataClass;
+      current = current.next;
+    }
+  }
+
+  protected *reverse_iterator() : IterableIterator<DataClass> {
+    let current = this.list;
+
+    while (current.data !== END) {
+      yield current.data as DataClass;
+      current = current.prev;
+    }
+  }
+
   /**
    * Make the list iterable and return the data from the items in the list
    *
-   * @return {{next: Function}}  The object containing the iterator's next() function
+   * @return iterator  The object containing the iterator's next() function
    */
-  public [Symbol.iterator](): Iterator<DataClass> {
-    let current = this.list;
-    return {
-                                                                    /* tslint:disable-next-line:jsdoc-require */
-      next() {
-        current = current.next;
-        return (current.data === END ?
-                {value: null, done: true} :
-                {value: current.data, done: false}) as IteratorResult<DataClass>;
-      }
-    };
+  public [Symbol.iterator](): IterableIterator<DataClass> {
+    return this.iterator();
   }
 
   /**
@@ -233,26 +242,8 @@ export class LinkedList<DataClass> {
    *
    * @return {Object}  The iterator for walking the list in reverse
    */
-                                                                    /* tslint:disable-next-line:jsdoc-require */
-  public reversed(): IterableIterator<DataClass> | {toArray(): DataClass[]} {
-    let current = this.list;
-    return {
-                                                                    /* tslint:disable-next-line:jsdoc-require */
-      [Symbol.iterator](): IterableIterator<DataClass> {
-        return this;
-      },
-                                                                    /* tslint:disable-next-line:jsdoc-require */
-      next() {
-        current = current.prev;
-        return (current.data === END ?
-                {value: null, done: true} :
-                {value: current.data, done: false}) as IteratorResult<DataClass>;
-      },
-                                                                    /* tslint:disable-next-line:jsdoc-require */
-      toArray() {
-        return Array.from(this) as DataClass[];
-      }
-    };
+  public reversed(): IterableIterator<DataClass> {
+    return this.reverse_iterator();
   }
 
   /**
