@@ -147,7 +147,7 @@ export namespace Loader {
    * @returns {string}   The root location (directory for node.js, URL for browser)
    */
   export function getRoot(): string {
-    let root = __dirname + '/../../es5';
+    let root = __dirname + '/../../es6';
     if (typeof document !== 'undefined') {
       const script = document.currentScript || document.getElementById('MathJax-script');
       if (script) {

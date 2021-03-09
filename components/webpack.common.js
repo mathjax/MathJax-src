@@ -55,7 +55,7 @@ const PLUGINS = function (js, libs, dir) {
   //
   //  Record the js directory for the pack command
   //
-  const plugins = [new webpack.DefinePlugin({jsdir: jsdir})];
+  const plugins = [new webpack.DefinePlugin({ jsdir: jsdir })];
 
   if (libs.length) {
     plugins.push(
@@ -66,8 +66,8 @@ const PLUGINS = function (js, libs, dir) {
         /^[^\/]/,
         function (resource) {
           const request = require.resolve(resource.request.charAt(0) === '.' ?
-                                          path.resolve(resource.context, resource.request) :
-                                          resource.request);
+            path.resolve(resource.context, resource.request) :
+            resource.request);
           if (!request.match(mjRE)) return;
           for (const lib of libs) {
             const file = request.replace(mjRE, path.join(root, lib) + path.sep);
@@ -88,8 +88,8 @@ const PLUGINS = function (js, libs, dir) {
       /^[^\/]$/,
       function (resource) {
         const request = require.resolve(resource.request.charAt(0) === '.' ?
-                                        path.resolve(resource.context, resource.request) :
-                                        resource.request);
+          path.resolve(resource.context, resource.request) :
+          resource.request);
         if (request.match(rootRE) || !request.match(nodeRE) || fs.existsSync(request)) return;
         const file = request.replace(nodeRE, path.join(root, 'node_modules') + path.sep);
         if (fs.existsSync(file)) {
@@ -112,12 +112,12 @@ const MODULE = function (dir) {
   // Only need to transpile our directory and components directory
   //
   const dirRE = (dir.substr(0, __dirname.length) === __dirname ? quoteRE(__dirname) :
-                 '(?:' + quoteRE(__dirname) + '|' + quoteRE(dir) + ')');
+    '(?:' + quoteRE(__dirname) + '|' + quoteRE(dir) + ')');
   return {
     // NOTE: for babel transpilation
     rules: [{
       test: new RegExp(dirRE + quoteRE(path.sep) + '.*\\.js$'),
-      exclude: new RegExp(quoteRE(path.join(path.dirname(__dirname), 'es5') + path.sep)),
+      exclude: new RegExp(quoteRE(path.join(path.dirname(__dirname), 'es6') + path.sep)),
       use: {
         loader: 'babel-loader',
         options: {
@@ -140,7 +140,7 @@ const MODULE = function (dir) {
  */
 const PACKAGE = function (name, js, libs, dir, dist) {
   const distDir = dist ? path.resolve(dir, dist) :
-                         path.resolve(path.dirname(js), 'es5', path.dirname(name));
+    path.resolve(path.dirname(js), 'es6', path.dirname(name));
   name = path.basename(name);
   return {
     name: name,
@@ -149,7 +149,7 @@ const PACKAGE = function (name, js, libs, dir, dist) {
       path: distDir,
       filename: name + (dist === '.' ? '.min.js' : '.js')
     },
-    target: ['web', 'es5'],  // needed for IE11 and old browsers
+    target: ['web', 'es6'],  // needed for IE11 and old browsers
     plugins: PLUGINS(js, libs, dir),
     module: MODULE(dir),
     performance: {
