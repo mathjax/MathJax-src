@@ -54,8 +54,8 @@ new sm.CharacterMap('AMSmath-mathchar0mo', ParseMethods.mathchar0mo, {
 new sm.CommandMap('AMSmath-macros', {
   mathring:   ['Accent', '02DA'],  // or 0x30A
   nobreakspace: 'Tilde',
-  negmedspace:    ['Spacer', MATHSPACE.negativemediummathspace + 'em'],
-  negthickspace:  ['Spacer', MATHSPACE.negativethickmathspace + 'em'],
+  negmedspace:    ['Spacer', MATHSPACE.negativemediummathspace],
+  negthickspace:  ['Spacer', MATHSPACE.negativethickmathspace],
 
   idotsint:   ['MultiIntegral', '\\int\\cdots\\int'],
 

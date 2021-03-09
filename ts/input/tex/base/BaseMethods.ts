@@ -321,9 +321,9 @@ BaseMethods.SetSize = function(parser: TexParser, _name: string, size: string) {
  * @param {string} name The macro name.
  * @param {string} space The space value.
  */
-BaseMethods.Spacer = function(parser: TexParser, _name: string, space: string) {
+BaseMethods.Spacer = function(parser: TexParser, _name: string, space: number) {
   // @test Positive Spacing, Negative Spacing
-  const node = parser.create('node', 'mspace', [], {width: space});
+  const node = parser.create('node', 'mspace', [], {width: space + 'em'});
   const style = parser.create('node', 'mstyle', [node], {scriptlevel: 0});
   parser.Push(style);
 };
