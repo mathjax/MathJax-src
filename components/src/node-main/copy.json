@@ -1,5 +1,5 @@
 {
-    "to": "../../../es5/sre",
+    "to": "../../../es6/sre",
     "from": "../../../js/a11y",
     "copy": [
         "sre-node.js"

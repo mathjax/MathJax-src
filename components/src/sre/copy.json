@@ -1,5 +1,5 @@
 {
-  "to": "../../../es5/sre",
+  "to": "../../../es6/sre",
   "from": "[node]/speech-rule-engine/lib",
   "copy": [
     "sre_browser.js",

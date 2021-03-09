@@ -37,7 +37,7 @@ type ScriptData = {
   src: string,              // the script's (possibly modified) source attribute
   id: string,               // the script's (possibly empty) id string
   version: string,          // the MathJax version where latest.js was loaded
-  dir: string,              // the subdirectory where latest.js was loaded from (e.g., /es5)
+  dir: string,              // the subdirectory where latest.js was loaded from (e.g., /es6)
   file: string,             // the file to be loaded by latest.js
   cdn: CdnData              // the CDN where latest.js was loaded
 } | null;
