@@ -21,13 +21,6 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-/*****************************************************************/
-/**
- *  A symbol used to mark the special node used to indicate
- *  the start and end of the list.
- */
-export const END = Symbol();
-
 /**
  * Shorthand type for the functions used to sort the data items
  *
@@ -48,7 +41,7 @@ export class ListItem<DataClass> {
   /**
    * The data for the list item
    */
-  public data: DataClass | symbol;
+  public data: DataClass;
 
   /**
    * Pointers to the next item in the list
@@ -95,7 +88,7 @@ export class LinkedList<DataClass> {
    * @constructor
    */
   constructor(...args: DataClass[]) {
-    this.list = new ListItem<DataClass>(END);
+    this.list = new ListItem<DataClass>(null);
     this.list.next = this.list.prev = this.list;
     this.push(...args);
   }
@@ -135,7 +128,7 @@ export class LinkedList<DataClass> {
    */
   public pop(): DataClass {
     let item = this.list.prev;
-    if (item.data === END) {
+    if (!item.data) {
       return null;
     }
     this.list.prev = item.prev;
@@ -168,7 +161,7 @@ export class LinkedList<DataClass> {
    */
   public shift(): DataClass {
     let item = this.list.next;
-    if (item.data === END) {
+    if (!item.data) {
       return null;
     }
     this.list.next = item.next;
@@ -188,7 +181,7 @@ export class LinkedList<DataClass> {
       map.set(item, true);
     }
     let item = this.list.next;
-    while (item.data !== END) {
+    while (item.data) {
       const next = item.next;
       if (map.has(item.data as DataClass)) {
         item.prev.next = item.next;
@@ -210,22 +203,31 @@ export class LinkedList<DataClass> {
     return this;
   }
 
+  protected *iterator(): IterableIterator<DataClass> {
+    let current = this.list;
+
+    while (current.data) {
+      yield current.data;
+      current = current.next;
+    }
+  }
+
+  protected *reverse_iterator() : IterableIterator<DataClass> {
+    let current = this.list;
+
+    while (current.data) {
+      yield current.data;
+      current = current.prev;
+    }
+  }
+
   /**
    * Make the list iterable and return the data from the items in the list
    *
-   * @return {{next: Function}}  The object containing the iterator's next() function
+   * @return iterator  The object containing the iterator's next() function
    */
-  public [Symbol.iterator](): Iterator<DataClass> {
-    let current = this.list;
-    return {
-                                                                    /* tslint:disable-next-line:jsdoc-require */
-      next() {
-        current = current.next;
-        return (current.data === END ?
-                {value: null, done: true} :
-                {value: current.data, done: false}) as IteratorResult<DataClass>;
-      }
-    };
+  public [Symbol.iterator](): IterableIterator<DataClass> {
+    return this.iterator();
   }
 
   /**
@@ -233,26 +235,8 @@ export class LinkedList<DataClass> {
    *
    * @return {Object}  The iterator for walking the list in reverse
    */
-                                                                    /* tslint:disable-next-line:jsdoc-require */
-  public reversed(): IterableIterator<DataClass> | {toArray(): DataClass[]} {
-    let current = this.list;
-    return {
-                                                                    /* tslint:disable-next-line:jsdoc-require */
-      [Symbol.iterator](): IterableIterator<DataClass> {
-        return this;
-      },
-                                                                    /* tslint:disable-next-line:jsdoc-require */
-      next() {
-        current = current.prev;
-        return (current.data === END ?
-                {value: null, done: true} :
-                {value: current.data, done: false}) as IteratorResult<DataClass>;
-      },
-                                                                    /* tslint:disable-next-line:jsdoc-require */
-      toArray() {
-        return Array.from(this) as DataClass[];
-      }
-    };
+  public reversed(): IterableIterator<DataClass> {
+    return this.reverse_iterator();
   }
 
   /**
@@ -268,7 +252,7 @@ export class LinkedList<DataClass> {
     }
     let item = new ListItem<DataClass>(data);
     let cur = this.list.next;
-    while (cur.data !== END && isBefore(cur.data as DataClass, item.data as DataClass)) {
+    while (cur.data && isBefore(cur.data as DataClass, item.data as DataClass)) {
       cur = cur.next;
     }
     item.prev = cur.prev;
@@ -335,7 +319,7 @@ export class LinkedList<DataClass> {
     //
     //  While there is more in both lists
     //
-    while (lcur.data !== END && mcur.data !== END) {
+    while (lcur.data && mcur.data) {
       //
       //  If the merge item is before the list item
       //    (we have found where the head of the merge list belongs)
@@ -360,7 +344,7 @@ export class LinkedList<DataClass> {
     //  If there is more to be merged (i.e., we came to the end of the main list),
     //  then link that at the end of the main list.
     //
-    if (mcur.data !== END) {
+    if (mcur.data) {
       this.list.prev.next = list.list.next;
       list.list.next.prev = this.list.prev;
       list.list.prev.next = this.list;
