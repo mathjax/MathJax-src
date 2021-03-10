@@ -61,7 +61,7 @@ CommonMunderMixin<SVGWrapper<any, any, any>, Constructor<SVGmsub<any, any, any>>
     }
 
     const svg = this.standardSVGnode(parent);
-    const [base, script] = [this.baseChild, this.script];
+    const [base, script] = [this.baseChild, this.scriptChild];
     const [bbox, sbox] = [base.getBBox(), script.getBBox()];
 
     base.toSVG(svg);
@@ -108,7 +108,7 @@ CommonMoverMixin<SVGWrapper<any, any, any>, Constructor<SVGmsup<any, any, any>>>
       return;
     }
     const svg = this.standardSVGnode(parent);
-    const [base, script] = [this.baseChild, this.script];
+    const [base, script] = [this.baseChild, this.scriptChild];
     const [bbox, sbox] = [base.getBBox(), script.getBBox()];
 
     base.toSVG(svg);

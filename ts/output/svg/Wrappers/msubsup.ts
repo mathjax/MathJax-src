@@ -106,15 +106,14 @@ CommonMsubsupMixin<SVGWrapper<any, any, any>, Constructor<SVGscriptbase<any, any
     const svg = this.standardSVGnode(parent);
     const [base, sup, sub] = [this.baseChild, this.supChild, this.subChild];
     const bbox = base.getBBox();
-    const [u, v] = this.getUVQ(bbox, sub.getBBox(), sup.getBBox());
-    const x = this.baseCore.bbox.ic ? this.coreIC() * this.coreScale() : 0;
+    const [u, v] = this.getUVQ();
 
     base.toSVG(svg);
     sup.toSVG(svg);
     sub.toSVG(svg);
 
     sub.place(bbox.w * bbox.rscale, v);
-    sup.place(bbox.w * bbox.rscale + x, u);
+    sup.place(bbox.w * bbox.rscale + this.baseIc, u);
   }
 
 }

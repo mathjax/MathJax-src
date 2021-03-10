@@ -129,17 +129,16 @@ CommonMsubsupMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any,
   public toCHTML(parent: N) {
     const chtml = this.standardCHTMLnode(parent);
     const [base, sup, sub] = [this.baseChild, this.supChild, this.subChild];
-    const [ , v, q] = this.getUVQ(base.getBBox(), sub.getBBox(), sup.getBBox());
-    const x = this.baseCore.bbox.ic ? this.coreIC() * this.coreScale() : 0;
+    const [ , v, q] = this.getUVQ();
     const style = {'vertical-align': this.em(v)};
     base.toCHTML(chtml);
     const stack = this.adaptor.append(chtml, this.html('mjx-script', {style})) as N;
     sup.toCHTML(stack);
     this.adaptor.append(stack, this.html('mjx-spacer', {style: {'margin-top': this.em(q)}}));
     sub.toCHTML(stack);
-    const corebox = this.baseCore.bbox;
+    const corebox = this.baseCore.getBBox();
     if (corebox.ic) {
-      this.adaptor.setStyle(sup.chtml, 'marginLeft', this.em(x / sup.bbox.rscale));
+      this.adaptor.setStyle(sup.chtml, 'marginLeft', this.em(this.baseIc / sup.bbox.rscale));
     }
   }
 

@@ -60,7 +60,7 @@ export function CommonMsubMixin<
     /**
      * @override
      */
-    public get script() {
+    public get scriptChild() {
       return this.childNodes[(this.node as MmlMsub).sub];
     }
 
@@ -69,8 +69,8 @@ export function CommonMsubMixin<
      *
      * @override
      */
-    public getOffset(bbox: BBox, sbox: BBox) {
-      return [0, -this.getV(bbox, sbox)];
+    public getOffset() {
+      return [0, -this.getV()];
     }
 
   };
@@ -103,14 +103,14 @@ export type MsupConstructor<W extends AnyWrapper> = Constructor<CommonMsup<W>>;
 export function CommonMsupMixin<
   W extends AnyWrapper,
   T extends ScriptbaseConstructor<W>
->(Base: T): MsubConstructor<W> & T {
+>(Base: T): MsupConstructor<W> & T {
 
   return class extends Base {
 
     /**
      * @override
      */
-    public get script() {
+    public get scriptChild() {
       return this.childNodes[(this.node as MmlMsup).sup];
     }
 
@@ -119,9 +119,9 @@ export function CommonMsupMixin<
      *
      * @override
      */
-    public getOffset(bbox: BBox, sbox: BBox) {
+    public getOffset() {
       const x = (this.baseCore.bbox.ic ? .05 * this.baseCore.bbox.ic + .05 : 0);
-      return [x * this.coreScale(), this.getU(bbox, sbox)];
+      return [x * this.baseScale, this.getU()];
     }
 
   };
@@ -155,12 +155,11 @@ export interface CommonMsubsup<W extends AnyWrapper> extends CommonScriptbase<W>
   /**
    * Get the shift for the scripts and their separation (TeXBook Appendix G 18adef)
    *
-   * @param {BBox} basebox    The bounding box of the base
    * @param {BBox} subbox     The bounding box of the superscript
    * @param {BBox} supbox     The bounding box of the subscript
    * @return {number[]}       The vertical offsets for super and subscripts, and the space between them
    */
-  getUVQ(basebox: BBox, subbox: BBox, supbox: BBox): number[];
+  getUVQ(subbox?: BBox, supbox?: BBox): number[];
 }
 
 /**
@@ -209,15 +208,13 @@ export function CommonMsubsupMixin<
      */
     public computeBBox(bbox: BBox, recompute: boolean = false) {
       const basebox = this.baseChild.getBBox();
-      const subbox  = this.subChild.getBBox();
-      const supbox  = this.supChild.getBBox();
+      const [subbox, supbox] = [this.subChild.getBBox(), this.supChild.getBBox()];
       bbox.empty();
       bbox.append(basebox);
       const w = bbox.w;
-      const [u, v] = this.getUVQ(basebox, subbox, supbox);
-      const x = (this.baseCore.bbox.ic ? this.coreIC() * this.coreScale() : 0);
+      const [u, v] = this.getUVQ();
       bbox.combine(subbox, w, v);
-      bbox.combine(supbox, w + x, u);
+      bbox.combine(supbox, w + this.baseIc, u);
       bbox.w += this.font.params.scriptspace;
       bbox.clean();
       this.setChildPWidths(recompute);
@@ -226,21 +223,25 @@ export function CommonMsubsupMixin<
     /**
      * Get the shift for the scripts and their separation (TeXBook Appendix G 18adef)
      *
-     * @param {BBox} basebox    The bounding box of the base
      * @param {BBox} subbox     The bounding box of the superscript
      * @param {BBox} supbox     The bounding box of the subscript
      * @return {number[]}       The vertical offsets for super and subscripts, and the space between them
      */
-    public getUVQ(basebox: BBox, subbox: BBox, supbox: BBox): number[] {
+    public getUVQ(
+      subbox: BBox = this.subChild.getBBox(),
+      supbox: BBox = this.supChild.getBBox()
+    ): number[] {
+      const basebox = this.baseCore.getBBox();
       if (this.UVQ) return this.UVQ;
       const tex = this.font.params;
       const t = 3 * tex.rule_thickness;
       const subscriptshift = this.length2em(this.node.attributes.get('subscriptshift'), tex.sub2);
-      const drop = (this.isCharBase() ? 0 : basebox.d * basebox.rscale + tex.sub_drop * subbox.rscale);
+      const scale = this.baseScale;
+      const drop = (this.baseIsChar && scale === 1 ? 0 : basebox.d * scale + tex.sub_drop * subbox.rscale);
       //
       // u and v are the veritcal shifts of the scripts, initially set to minimum values and then adjusted
       //
-      let [u, v] = [this.getU(basebox, supbox), Math.max(drop, subscriptshift)];
+      let [u, v] = [this.getU(), Math.max(drop, subscriptshift)];
       //
       // q is the space currently between the super- and subscripts.
       // If it is less than 3 rule thicknesses,

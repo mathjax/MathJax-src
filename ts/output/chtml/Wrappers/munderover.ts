@@ -89,9 +89,9 @@ CommonMunderMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsub<any, any, a
       this.html('mjx-under')
     ) as N;
     this.baseChild.toCHTML(base);
-    this.script.toCHTML(under);
+    this.scriptChild.toCHTML(under);
     const basebox = this.baseChild.getBBox();
-    const underbox = this.script.getBBox();
+    const underbox = this.scriptChild.getBBox();
     const k = this.getUnderKV(basebox, underbox)[0];
     const delta = this.getDelta(true);
     this.adaptor.setStyle(under, 'paddingTop', this.em(k));
@@ -148,9 +148,9 @@ CommonMoverMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsup<any, any, an
     this.chtml = this.standardCHTMLnode(parent);
     const over = this.adaptor.append(this.chtml, this.html('mjx-over')) as N;
     const base = this.adaptor.append(this.chtml, this.html('mjx-base')) as N;
-    this.script.toCHTML(over);
+    this.scriptChild.toCHTML(over);
     this.baseChild.toCHTML(base);
-    const overbox = this.script.getBBox();
+    const overbox = this.scriptChild.getBBox();
     const basebox = this.baseChild.getBBox();
     const k = this.getOverKU(basebox, overbox)[0];
     const delta = this.getDelta();
