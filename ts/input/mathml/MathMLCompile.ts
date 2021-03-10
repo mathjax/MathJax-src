@@ -162,6 +162,8 @@ export class MathMLCompile<N, T, D> {
         } else if (name === 'data-mjx-smallmatrix') {
           mml.setProperty('scriptlevel', 1);
           mml.setProperty('useHeight', false);
+        } else if (name === 'data-mjx-accent') {
+          mml.setProperty('mathaccent', value === 'true');
         }
       } else if (name !== 'class') {
         let val = value.toLowerCase();

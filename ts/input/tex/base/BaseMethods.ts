@@ -589,8 +589,7 @@ BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, s
   // @test Vector
   const c = parser.ParseArg(name);
   // @test Vector Font
-  const def = ParseUtil.getFontDef(parser);
-  def['accent'] = true;
+  const def = {...ParseUtil.getFontDef(parser), accent: true, mathaccent: true};
   const entity = NodeUtil.createEntity(accent);
   const moNode = parser.create('token', 'mo', def, entity);
   const mml = moNode;

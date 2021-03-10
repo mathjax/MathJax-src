@@ -519,6 +519,11 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   public params: FontParameters;
 
   /**
+   * Factor to multiply italic correction by for delta computations for munderover
+   */
+  public skewIcFactor: number = .75;
+
+  /**
    * Any styles needed for the font
    */
   protected _styles: StyleList;
