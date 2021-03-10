@@ -26,7 +26,9 @@
 
 import {AnyWrapper, WrapperConstructor, Constructor, AnyWrapperClass} from '../Wrapper.js';
 import {CommonMo} from './mo.js';
+import {CommonMunderover} from './munderover.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
+import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../../../util/BBox.js';
 import {DIRECTION} from '../FontData.js';
 
@@ -62,6 +64,18 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
    * True if the base is a single character
    */
   readonly baseIsChar: boolean;
+
+  /**
+   * True if the base has an accent under or over
+   */
+  readonly baseHasAccentOver: boolean;
+  readonly baseHasAccentUnder: boolean;
+
+  /**
+   * True if this is an overline or underline
+   */
+  readonly isLineAbove: boolean;
+  readonly isLineBelow: boolean;
 
   /**
    * True if this is an msup with script that is a math accent
@@ -112,6 +126,16 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
    *                    a single unstretched character
    */
   isCharBase(): boolean;
+
+  /**
+   * Determine if the under- and overscripts are under- or overlines.
+   */
+  checkLineAccents(): void;
+
+  /**
+   * @param {W} script   The script node to check for being a line
+   */
+  isLineAccent(script: W): boolean;
 
   /***************************************************************************/
   /*
@@ -243,6 +267,18 @@ export function CommonScriptbaseMixin<
     public baseIsChar: boolean = false;
 
     /**
+     * True if the base has an accent under or over
+     */
+    public baseHasAccentOver: boolean = null;
+    public baseHasAccentUnder: boolean = null;
+
+    /**
+     * True if this is an overline or underline
+     */
+    public isLineAbove: boolean = false;
+    public isLineBelow: boolean = false;
+
+    /**
      * True if this is an msup with script that is a math accent
      */
     public isMathAccent: boolean = false;
@@ -284,9 +320,14 @@ export function CommonScriptbaseMixin<
       //
       // Get information about the base element
       //
+      this.setBaseAccentsFor(core);
       this.baseScale = this.getBaseScale();
       this.baseIc = this.getBaseIc();
       this.baseIsChar = this.isCharBase();
+      //
+      // Check for overline/underline
+      //
+      this.checkLineAccents();
     }
 
     /***************************************************************************/
@@ -305,9 +346,24 @@ export function CommonScriptbaseMixin<
                 core.node.isKind('mstyle') || core.node.isKind('mpadded') ||
                 core.node.isKind('mphantom') || core.node.isKind('semantics'))) ||
               (core.node.isKind('mover') && core.isMathAccent)))  {
+        this.setBaseAccentsFor(core);
         core = core.childNodes[0];
       }
       return core || this.childNodes[0];
+    }
+
+    /**
+     * @param {W} core   The element to check for accents
+     */
+    public setBaseAccentsFor(core: W) {
+      if (core.node.isKind('munderover')) {
+        if (this.baseHasAccentOver === null) {
+          this.baseHasAccentOver = !!core.node.attributes.get('accent');
+        }
+        if (this.baseHasAccentUnder === null) {
+          this.baseHasAccentUnder = !!core.node.attributes.get('accentunder');
+        }
+      }
     }
 
     /**
@@ -371,6 +427,31 @@ export function CommonScriptbaseMixin<
                base.node.isKind('mi') || base.node.isKind('mn')) &&
               base.bbox.rscale === 1 && Array.from(base.getText()).length === 1 &&
               !base.node.attributes.get('largeop'));
+    }
+
+    /**
+     * Determine if the under- and overscripts are under- or overlines.
+     */
+    public checkLineAccents() {
+      if (!this.node.isKind('munderover')) return;
+      if (this.node.isKind('mover')) {
+        this.isLineAbove = this.isLineAccent(this.scriptChild);
+      } else if (this.node.isKind('munder')) {
+        this.isLineBelow = this.isLineAccent(this.scriptChild);
+      } else {
+        const mml = this as unknown as CommonMunderover<W>;
+        this.isLineAbove = this.isLineAccent(mml.overChild);
+        this.isLineBelow = this.isLineAccent(mml.underChild);
+      }
+    }
+
+    /**
+     * @param {W} script   The script node to check for being a line
+     * @return {boolean}   True if the script is U+2015
+     */
+    public isLineAccent(script: W): boolean {
+      const node = script.coreMO().node;
+      return (node.isToken && (node as MmlMo).getText() === '\u2015');
     }
 
     /**
@@ -466,9 +547,10 @@ export function CommonScriptbaseMixin<
       const accent = this.node.attributes.get('accent') as boolean;
       const tex = this.font.params;
       const d = overbox.d * overbox.rscale;
-      const k = (accent ? tex.rule_thickness :
-                 Math.max(tex.big_op_spacing1, tex.big_op_spacing3 - Math.max(0, d))) -
-        (this.baseChild.node.isKind('munderover') ? .1 : 0);
+      const t = tex.rule_thickness * tex.separation_factor;
+      const delta = (this.baseHasAccentOver ? t : 0);
+      const T = (this.isLineAbove ? 3 * tex.rule_thickness : t);
+      const k = (accent ? T : Math.max(tex.big_op_spacing1, tex.big_op_spacing3 - Math.max(0, d))) - delta;
       return [k, basebox.h * basebox.rscale + k + d];
     }
 
@@ -483,9 +565,10 @@ export function CommonScriptbaseMixin<
       const accent = this.node.attributes.get('accentunder') as boolean;
       const tex = this.font.params;
       const h = underbox.h * underbox.rscale;
-      const k = (accent ? tex.rule_thickness :
-                 Math.max(tex.big_op_spacing2, tex.big_op_spacing4 - h)) -
-        (this.baseChild.node.isKind('munderover') ? .1 : 0);
+      const t = tex.rule_thickness * tex.separation_factor;
+      const delta = (this.baseHasAccentUnder ? t : 0);
+      const T = (this.isLineBelow ? 3 * tex.rule_thickness : t);
+      const k = (accent ? T : Math.max(tex.big_op_spacing2, tex.big_op_spacing4 - h)) - delta;
       return [k, -(basebox.d * basebox.rscale + k + h)];
     }
 

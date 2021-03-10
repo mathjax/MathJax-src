@@ -93,7 +93,7 @@ CommonMunderMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsub<any, any, a
     const basebox = this.baseChild.getBBox();
     const underbox = this.scriptChild.getBBox();
     const k = this.getUnderKV(basebox, underbox)[0];
-    const delta = this.getDelta(true);
+    const delta = (this.isLineBelow ? 0 : this.getDelta(true));
     this.adaptor.setStyle(under, 'paddingTop', this.em(k));
     this.setDeltaW([base, under], this.getDeltaW([basebox, underbox], [0, -delta]));
     this.adjustUnderDepth(under, underbox);
@@ -153,7 +153,7 @@ CommonMoverMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsup<any, any, an
     const overbox = this.scriptChild.getBBox();
     const basebox = this.baseChild.getBBox();
     const k = this.getOverKU(basebox, overbox)[0];
-    const delta = this.getDelta();
+    const delta = (this.isLineAbove ? 0 : this.getDelta());
     this.adaptor.setStyle(over, 'paddingBottom', this.em(k));
     this.setDeltaW([base, over], this.getDeltaW([basebox, overbox], [0, delta]));
     this.adjustOverDepth(over, overbox);
@@ -229,7 +229,9 @@ CommonMunderoverMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsubsup<any,
     const delta = this.getDelta();
     this.adaptor.setStyle(over, 'paddingBottom', this.em(ok));
     this.adaptor.setStyle(under, 'paddingTop', this.em(uk));
-    this.setDeltaW([base, under, over], this.getDeltaW([basebox, underbox, overbox], [0, -delta, delta]));
+    this.setDeltaW([base, under, over],
+                   this.getDeltaW([basebox, underbox, overbox],
+                                  [0, this.isLineBelow ? 0 : -delta, this.isLineAbove ? 0 : delta]));
     this.adjustOverDepth(over, overbox);
     this.adjustUnderDepth(under, underbox);
   }

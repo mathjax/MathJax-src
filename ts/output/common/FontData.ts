@@ -217,7 +217,8 @@ export type FontParameters = {
   delimiterfactor: number,
   delimitershortfall: number,
 
-  min_rule_thickness: number
+  min_rule_thickness: number,
+  separation_factor: number
 };
 
 /****************************************************************************/
@@ -451,7 +452,8 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     delimiterfactor:     901,
     delimitershortfall:   .3,
 
-    min_rule_thickness:  1.25     // in pixels
+    min_rule_thickness:  1.25,     // in pixels
+    separation_factor:   1.75      // expansion factor for spacing e.g. between accents and base
   };
 
   /**

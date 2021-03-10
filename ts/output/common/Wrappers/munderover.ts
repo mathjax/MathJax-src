@@ -86,7 +86,7 @@ export function CommonMunderMixin<
       const basebox = this.baseChild.getBBox();
       const underbox = this.scriptChild.getBBox();
       const v = this.getUnderKV(basebox, underbox)[1];
-      const delta = this.getDelta(true);
+      const delta = (this.isLineBelow ? 0 : this.getDelta(true));
       const [bw, uw] = this.getDeltaW([basebox, underbox], [0, -delta]);
       bbox.combine(basebox, bw, 0);
       bbox.combine(underbox, uw, v);
@@ -162,7 +162,7 @@ export function CommonMoverMixin<
       const basebox = this.baseChild.getBBox();
       const overbox = this.scriptChild.getBBox();
       const u = this.getOverKU(basebox, overbox)[1];
-      const delta = this.getDelta();
+      const delta = (this.isLineAbove ? 0 : this.getDelta());
       const [bw, ow] = this.getDeltaW([basebox, overbox], [0, delta]);
       bbox.combine(basebox, bw, 0);
       bbox.combine(overbox, ow, u);
@@ -272,7 +272,8 @@ export function CommonMunderoverMixin<
       const u = this.getOverKU(basebox, overbox)[1];
       const v = this.getUnderKV(basebox, underbox)[1];
       const delta = this.getDelta();
-      const [bw, uw, ow] = this.getDeltaW([basebox, underbox, overbox], [0, -delta, delta]);
+      const [bw, uw, ow] = this.getDeltaW([basebox, underbox, overbox],
+                                          [0, this.isLineBelow ? 0 : -delta, this.isLineAbove ? 0 : delta]);
       bbox.combine(basebox, bw, 0);
       bbox.combine(overbox, ow, u);
       bbox.combine(underbox, uw, v);
