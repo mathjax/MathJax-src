@@ -1,5 +1,5 @@
 import {SVGFontData, SVGFontDataClass, SVGCharOptions, SVGVariantData, SVGDelimiterData,
-        DelimiterMap, CharMapMap, CssFontMap, RemapMap} from '../FontData.js';
+        DelimiterMap, CharMapMap, CssFontMap, RemapMap, FontParameters} from '../FontData.js';
 import {CommonSTIX2FontMixin} from '../../common/fonts/stix2.js';
 
 import {normal} from './stix2/normal.js';
@@ -63,6 +63,14 @@ CommonSTIX2FontMixin<SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontDa
     0x030A: '\u02DA',
     0x030C: '\u02C7',
     0x2192: '\u20D7'
+  };
+
+  /**
+   *  Remap accents
+   */
+  public static defaultParams: FontParameters = {
+    ...SVGFontData.defaultParams,
+    separation_factor: 1
   };
 
   /**
