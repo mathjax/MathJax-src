@@ -316,6 +316,7 @@ export function CommonScriptbaseMixin<
       //
       if (('noIC' in core) && !(this.constructor as CommonScriptbaseClass).useIC) {
         (core as unknown as CommonMo).noIC = true;
+        core.invalidateBBox();  // force bbox to be recomputed since it may already have been cached
       }
       //
       // Get information about the base element
