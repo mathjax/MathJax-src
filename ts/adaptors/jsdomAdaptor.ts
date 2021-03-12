@@ -36,7 +36,7 @@ export class JsdomAdaptor extends HTMLAdaptor<HTMLElement, Text, Document> {
   };
 
   /**
-   * Pattern to identify CJK (.i.e., full-width) characters
+   * Pattern to identify CJK (i.e., full-width) characters
    */
   public static cjkPattern = new RegExp([
     '[',
