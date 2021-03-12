@@ -75,7 +75,7 @@ export interface MathJaxObject extends MJObject {
 export namespace Loader {
 
   /**
-   * Get a promise that is resolved when all the named packages have been loaded.
+   * Get a promise that is resolved when all the named packages are ready to be loaded (doesn't actually load them)
    *
    * @param {string[]} names  The packages to wait for
    * @returns {Promise}       A promise that resolves when all the named packages are ready
