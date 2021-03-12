@@ -257,10 +257,11 @@ export interface CommonMtable<C extends AnyWrapper, R extends CommonMtr<C>> exte
   /**
    * @param {number} fspace   The frame spacing to use
    * @param {number[]} space  The array of spacing values to convert to strings
+   * @param {number} scale    A scaling factor to use for the sizes
    * @return {string[]}       The half-spacing as stings with units of "em"
    *                           with frame spacing at the beginning and end
    */
-  getEmHalfSpacing(fspace: number, space: number[]): string[];
+  getEmHalfSpacing(fspace: number, space: number[], scale?: number): string[];
 
   /**
    * @return {number[]}   The half-spacing for rows with frame spacing at the ends
@@ -1007,15 +1008,16 @@ export function CommonMtableMixin<
     /**
      * @param {number} fspace   The frame spacing to use
      * @param {number[]} space  The array of spacing values to convert to strings
+     * @param {number} scale    A scaling factor to use for the sizes
      * @return {string[]}       The half-spacing as stings with units of "em"
      *                           with frame spacing at the beginning and end
      */
-    public getEmHalfSpacing(fspace: number, space: number[]): string[] {
+    public getEmHalfSpacing(fspace: number, space: number[], scale: number = 1): string[] {
       //
       //  Get the column spacing values, and add the frame spacing values at the left and right
       //
-      const fspaceEm = this.em(fspace);
-      const spaceEm = this.addEm(space, 2);
+      const fspaceEm = this.em(fspace * scale);
+      const spaceEm = this.addEm(space, 2 / scale);
       spaceEm.unshift(fspaceEm);
       spaceEm.push(fspaceEm);
       return spaceEm;
