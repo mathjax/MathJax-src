@@ -247,7 +247,7 @@ CommonWrapper<
     const translate = 'translate(' + this.fixed(x) + ', ' + this.fixed(y) + ')';
     if (!element) {
       element = this.element;
-      if (this.node.attributes.get('href')) {
+      if (this.node.attributes && this.node.attributes.get('href')) {
         const rect = adaptor.previous(element);
         if (rect && adaptor.kind(rect) === 'rect' && adaptor.getAttribute(rect, 'data-hitbox')) {
           adaptor.setAttribute(rect, 'transform', translate);
