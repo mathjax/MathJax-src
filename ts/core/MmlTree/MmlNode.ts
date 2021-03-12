@@ -448,9 +448,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
       //  (just add its children).
       //
       if (this.arity === Infinity) {
-        for (const node of child.childNodes) {
-          super.appendChild(node);
-        }
+        child.childNodes.forEach((node) => super.appendChild(node));
         return child;
       }
       //
