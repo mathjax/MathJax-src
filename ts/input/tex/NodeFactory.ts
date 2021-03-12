@@ -70,30 +70,7 @@ export class NodeFactory {
                            children: MmlNode[] = [], def: any = {},
                            text?: TextNode): MmlNode {
     const node = factory.mmlFactory.create(kind);
-    // If infinity or -1 remove inferred mrow
-    //
-    // In all other cases replace inferred mrow with a regular mrow, before adding
-    // children.
-    const arity = node.arity;
-    if (arity === Infinity || arity === -1) {
-      if (children.length === 1 && children[0].isInferred) {
-        node.setChildren(NodeUtil.getChildren(children[0]));
-      } else {
-        node.setChildren(children);
-      }
-    } else {
-      let cleanChildren = [];
-      for (let i = 0, child; child = children[i]; i++) {
-        if (child.isInferred) {
-          let mrow = factory.mmlFactory.create('mrow', {}, NodeUtil.getChildren(child));
-          NodeUtil.copyAttributes(child, mrow);
-          cleanChildren.push(mrow);
-        } else {
-          cleanChildren.push(child);
-        }
-      }
-      node.setChildren(cleanChildren);
-    }
+    node.setChildren(children);
     if (text) {
       node.appendChild(text);
     }

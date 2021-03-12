@@ -149,7 +149,7 @@ export class TextParser extends TexParser {
         NodeUtil.setAttribute(mml, name, env[name]);
       }
     }
-    if (mml.isKind('inferredMrow')) {
+    if (mml.isInferred) {
       mml = this.create('node', 'mrow', mml.childNodes);
     }
     this.nodes.push(mml);
