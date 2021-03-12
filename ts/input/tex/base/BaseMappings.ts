@@ -220,6 +220,7 @@ new sm.CharacterMap('mathchar0mo', ParseMethods.mathchar0mo, {
   times:        '\u00D7',
   star:         '\u22C6',
 
+
   // Relations
   propto:       '\u221D',
   sqsubseteq:   '\u2291',
@@ -361,8 +362,8 @@ new sm.DelimiterMap('delimiter', ParseMethods.delimiter, {
   '\\arrowvert':      '\u23D0',
   '\\Arrowvert':      '\u2016',
   '\\bracevert':      '\u23AA',  // non-standard
-  '\\Vert':           ['\u2225', {texClass: TEXCLASS.ORD}],
-  '\\|':              ['\u2225', {texClass: TEXCLASS.ORD}],
+  '\\Vert':           ['\u2016', {texClass: TEXCLASS.ORD}],
+  '\\|':              ['\u2016', {texClass: TEXCLASS.ORD}],
   '\\vert':           ['|', {texClass: TEXCLASS.ORD}],
   '\\uparrow':        '\u2191',
   '\\downarrow':      '\u2193',
