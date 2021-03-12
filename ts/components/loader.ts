@@ -80,12 +80,9 @@ export namespace Loader {
    * @param {string[]} names  The packages to wait for
    * @returns {Promise}       A promise that resolves when all the named packages are ready
    */
-  export function ready(...names: string[]): Promise<string[]> {
-    if (names.length === 0) {
-      names = Array.from(Package.packages.keys());
-    }
+  export function ready(..._names: string[]): Promise<string[]> {
     const promises = [];
-    for (const name of names) {
+    for (const name of CONFIG.load) {
       const extension = Package.packages.get(name) || new Package(name, true);
       promises.push(extension.promise);
     }
@@ -98,12 +95,9 @@ export namespace Loader {
    * @param {string[]} names  The packages to load
    * @returns {Promise}       A promise that resolves when all the named packages are ready
    */
-  export function load(...names: string[]): Promise<void | string[]> {
-    if (names.length === 0) {
-      return Promise.resolve();
-    }
+  export function load(..._names: string[]): Promise<void | string[]> {
     const promises = [];
-    for (const name of names) {
+    for (const name of CONFIG.load) {
       let extension = Package.packages.get(name);
       if (!extension) {
         extension = new Package(name);
