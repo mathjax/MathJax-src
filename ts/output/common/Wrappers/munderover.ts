@@ -91,7 +91,6 @@ export function CommonMunderMixin<
       bbox.combine(basebox, bw, 0);
       bbox.combine(underbox, uw, v);
       bbox.d += this.font.params.big_op_spacing5;
-      bbox.ic = -this.baseCore.bbox.ic;
       bbox.clean();
       this.setChildPWidths(recompute);
     }
@@ -167,7 +166,6 @@ export function CommonMoverMixin<
       bbox.combine(basebox, bw, 0);
       bbox.combine(overbox, ow, u);
       bbox.h += this.font.params.big_op_spacing5;
-      bbox.ic = -this.baseCore.bbox.ic;
       bbox.clean();
     }
 
@@ -280,7 +278,6 @@ export function CommonMunderoverMixin<
       const z = this.font.params.big_op_spacing5;
       bbox.h += z;
       bbox.d += z;
-      bbox.ic = -this.baseCore.bbox.ic;
       bbox.clean();
     }
 

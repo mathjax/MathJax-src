@@ -312,18 +312,19 @@ export function CommonScriptbaseMixin<
       const core = this.baseCore = this.getBaseCore();
       if (!core) return;
       //
-      //  Check if the base is a mi or mo that needs italic correction removed
-      //
-      if (('noIC' in core) && (this.constructor as CommonScriptbaseClass).useIC) {
-        (core as unknown as CommonMo).noIC = true;
-      }
-      //
       // Get information about the base element
       //
       this.setBaseAccentsFor(core);
       this.baseScale = this.getBaseScale();
       this.baseIc = this.getBaseIc();
       this.baseIsChar = this.isCharBase();
+      //
+      //  Check if the base is a mi or mo that needs italic correction removed
+      //
+      if (this.baseIsChar && (this.isMathAccent || this.node.isKind('msubsup'))) {
+        (core as unknown as CommonMo).noIC = true;
+        core.invalidateBBox();
+      }
       //
       // Check for overline/underline
       //
