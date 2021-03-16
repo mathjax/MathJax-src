@@ -61,6 +61,11 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
   readonly baseIc: number;
 
   /**
+   * True if the base IC has already been added (when it was removed from the base)
+   */
+  readonly baseHasIc: boolean;
+
+  /**
    * True if the base is a single character
    */
   readonly baseIsChar: boolean;
@@ -122,6 +127,11 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
   getBaseIc(): number;
 
   /**
+   * An adjusted italic correction (for slightly better results)
+   */
+  getAdjustedIc(): number;
+
+  /**
    * @return {boolean}  True if the base is an mi, mn, or mo (not a largeop) consisting of
    *                    a single unstretched character
    */
@@ -137,6 +147,16 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
    */
   isLineAccent(script: W): boolean;
 
+  /**
+   * @return {number}    The base child's width adjusted for the base italic correction
+   */
+  getBaseWidth(): number;
+
+  /**
+   * @return {number}   Italic correction adjustment for base
+   */
+  baseWidthAdjust(): number;
+
   /***************************************************************************/
   /*
    *  Methods for sub-sup nodes
@@ -148,6 +168,12 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
    * @return {number[]}   The horizontal and vertical offsets for the script
    */
   getOffset(): number[];
+
+  /**
+   * @param {number} n    The value to use if the base isn't a (non-large-op, unstretched) char
+   * @return {number}     Either n or 0
+   */
+  baseCharZero(n: number): number;
 
   /**
    * Get the shift for a subscript (TeXBook Appendix G 18ab)
@@ -262,6 +288,11 @@ export function CommonScriptbaseMixin<
     public baseIc: number = 0;
 
     /**
+     * True if the base IC has already been added (when it was removed from the base)
+     */
+    public baseHasIc: boolean = false;
+
+    /**
      * True if the base is a single character
      */
     public baseIsChar: boolean = false;
@@ -303,10 +334,6 @@ export function CommonScriptbaseMixin<
     constructor(...args: any[]) {
       super(...args);
       //
-      //  Determine if we are setting a mathaccent
-      //
-      this.isMathAccent = (this.scriptChild && !!this.scriptChild.coreMO().node.getProperty('mathaccent')) as boolean;
-      //
       //  Find the base core
       //
       const core = this.baseCore = this.getBaseCore();
@@ -319,14 +346,22 @@ export function CommonScriptbaseMixin<
       this.baseIc = this.getBaseIc();
       this.baseIsChar = this.isCharBase();
       //
+      //  Determine if we are setting a mathaccent
+      //
+      this.isMathAccent = this.baseIsChar &&
+        (this.scriptChild && !!this.scriptChild.coreMO().node.getProperty('mathaccent')) as boolean;
+      //
       //  Check if the base is a mi or mo that needs italic correction removed
       //
-      if (this.baseIsChar && (this.isMathAccent || this.node.isKind('msubsup'))) {
+      const useIC = (this.constructor as CommonScriptbaseClass).useIC;
+      if (!useIC || this.isMathAccent) {
         (core as unknown as CommonMo).noIC = true;
         core.invalidateBBox();
+      } else {
+        this.baseHasIc = useIC && !this.baseCore.node.attributes.get('largeop');
       }
       //
-      // Check for overline/underline
+      // Check for overline/underline accents
       //
       this.checkLineAccents();
     }
@@ -346,9 +381,13 @@ export function CommonScriptbaseMixin<
                (core.node.isKind('mrow') || core.node.isKind('TeXAtom') ||
                 core.node.isKind('mstyle') || core.node.isKind('mpadded') ||
                 core.node.isKind('mphantom') || core.node.isKind('semantics'))) ||
-              (core.node.isKind('mover') && core.isMathAccent)))  {
+              (core.node.isKind('munderover') && core.isMathAccent)))  {
         this.setBaseAccentsFor(core);
         core = core.childNodes[0];
+      }
+      if (!core) {
+        this.baseHasAccentOver = this.baseHasAccentUnder = false;
+        this.baseHasIc = false;
       }
       return core || this.childNodes[0];
     }
@@ -358,6 +397,7 @@ export function CommonScriptbaseMixin<
      */
     public setBaseAccentsFor(core: W) {
       if (core.node.isKind('munderover')) {
+        this.baseHasIc = true;
         if (this.baseHasAccentOver === null) {
           this.baseHasAccentOver = !!core.node.attributes.get('accent');
         }
@@ -416,18 +456,25 @@ export function CommonScriptbaseMixin<
      * The base's italic correction (properly scaled)
      */
     public getBaseIc(): number {
-      return (this.baseCore.bbox.ic ? 1.05 * this.baseCore.bbox.ic + .05 : 0) * this.baseScale;
+      return this.baseCore.getBBox().ic * this.baseScale;
     }
 
     /**
-     * @return {boolean}  True if the base is an mi, mn, or mo (not a largeop) consisting of a single character
+     * An adjusted italic correction (for slightly better results)
+     */
+    public getAdjustedIc(): number {
+      const bbox = this.baseCore.getBBox();
+      return (bbox.ic ? 1.05 * bbox.ic + .05 : 0) * this.baseScale;
+    }
+
+    /**
+     * @return {boolean}  True if the base is an mi, mn, or mo consisting of a single character
      */
     public isCharBase(): boolean {
       let base = this.baseCore;
       return (((base.node.isKind('mo') && (base as any).size === null) ||
                base.node.isKind('mi') || base.node.isKind('mn')) &&
-              base.bbox.rscale === 1 && Array.from(base.getText()).length === 1 &&
-              !base.node.attributes.get('largeop'));
+              base.bbox.rscale === 1 && Array.from(base.getText()).length === 1);
     }
 
     /**
@@ -444,6 +491,9 @@ export function CommonScriptbaseMixin<
         this.isLineAbove = this.isLineAccent(mml.overChild);
         this.isLineBelow = this.isLineAccent(mml.underChild);
       }
+      if (this.isLineAbove || this.isLineBelow) {
+        this.baseHasIc = false;
+      }
     }
 
     /**
@@ -453,6 +503,22 @@ export function CommonScriptbaseMixin<
     public isLineAccent(script: W): boolean {
       const node = script.coreMO().node;
       return (node.isToken && (node as MmlMo).getText() === '\u2015');
+    }
+
+    /**
+     * @return {number}   The base child's width adjusted for the base italic correction
+     */
+    public getBaseWidth(): number {
+      const bbox = this.baseChild.getBBox();
+      return bbox.w * bbox.rscale - (this.baseHasIc ? this.baseIc : 0);
+    }
+
+    /**
+     * @return {number}   Italic correction adjustment for base
+     */
+    public baseWidthAdjust(): number {
+      return (!this.baseHasIc && !this.isLineAbove && !this.isLineBelow ?
+              this.baseCore.getBBox().ic * this.baseScale : 0);
     }
 
     /**
@@ -485,6 +551,16 @@ export function CommonScriptbaseMixin<
     }
 
     /**
+     * @param {number} n    The value to use if the base isn't a (non-large-op, unstretched) char
+     * @return {number}     Either n or 0
+     */
+    public baseCharZero(n: number): number {
+      const largeop = !!this.baseCore.node.attributes.get('largeop');
+      const scale = this.baseScale;
+      return (this.baseIsChar && !largeop && scale === 1 ? 0 : n);
+    }
+
+    /**
      * Get the shift for a subscript (TeXBook Appendix G 18ab)
      *
      * @return {number}     The vertical offset for the script
@@ -494,9 +570,8 @@ export function CommonScriptbaseMixin<
       const sbox = this.scriptChild.getBBox();
       const tex = this.font.params;
       const subscriptshift = this.length2em(this.node.attributes.get('subscriptshift'), tex.sub1);
-      const scale = this.baseScale;
       return Math.max(
-        this.baseIsChar && scale === 1 ? 0 : bbox.d * scale + tex.sub_drop * sbox.rscale,
+        this.baseCharZero(bbox.d * this.baseScale + tex.sub_drop * sbox.rscale),
         subscriptshift,
         sbox.h * sbox.rscale - (4 / 5) * tex.x_height
       );
@@ -515,9 +590,8 @@ export function CommonScriptbaseMixin<
       const prime = this.node.getProperty('texprimestyle');
       const p = prime ? tex.sup3 : (attr.displaystyle ? tex.sup1 : tex.sup2);
       const superscriptshift = this.length2em(attr.superscriptshift, p);
-      const scale = this.baseScale;
       return Math.max(
-        this.baseIsChar && scale === 1 ? 0 : bbox.h * scale - tex.sup_drop * sbox.rscale,
+        this.baseCharZero(bbox.h * this.baseScale - tex.sup_drop * sbox.rscale),
         superscriptshift,
         sbox.d * sbox.rscale + (1 / 4) * tex.x_height
       );
@@ -581,6 +655,7 @@ export function CommonScriptbaseMixin<
     public getDeltaW(boxes: BBox[], delta: number[] = [0, 0, 0]): number[] {
       const align = this.node.attributes.get('align');
       const widths = boxes.map(box => box.w * box.rscale);
+      widths[0] -= (this.baseHasIc ? this.baseIc : 0);
       const w = Math.max(...widths);
       const dw = [];
       let m = 0;

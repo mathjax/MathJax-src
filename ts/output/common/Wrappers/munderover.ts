@@ -25,7 +25,6 @@
 import {AnyWrapper, Constructor} from '../Wrapper.js';
 import {CommonScriptbase, ScriptbaseConstructor} from './scriptbase.js';
 import {MmlMunderover, MmlMunder, MmlMover} from '../../../core/MmlTree/MmlNodes/munderover.js';
-import {CommonMo} from './mo.js';
 import {BBox} from '../../../util/BBox.js';
 
 /*****************************************************************/
@@ -57,6 +56,11 @@ export function CommonMunderMixin<
 >(Base: T): MunderConstructor<W> & T {
 
   return class extends Base {
+
+    /**
+     * Do include italic correction
+     */
+    public static useIC: boolean = true;
 
     /**
      * @override
@@ -91,6 +95,7 @@ export function CommonMunderMixin<
       bbox.combine(basebox, bw, 0);
       bbox.combine(underbox, uw, v);
       bbox.d += this.font.params.big_op_spacing5;
+      bbox.w += this.baseWidthAdjust();
       bbox.clean();
       this.setChildPWidths(recompute);
     }
@@ -130,6 +135,11 @@ export function CommonMoverMixin<
   return class extends Base {
 
     /**
+     * Do include italic correction
+     */
+    public static useIC: boolean = true;
+
+    /**
      * @override
      */
     public get scriptChild() {
@@ -142,10 +152,6 @@ export function CommonMoverMixin<
      */
     constructor(...args: any[]) {
       super(...args);
-      if (this.baseCore && 'noIC' in this.baseCore && this.isCharBase() &&
-          this.scriptChild.node.getProperty('mathaccent')) {
-        (this.baseCore as undefined as CommonMo).noIC = true;
-      }
       this.stretchChildren();
     }
 
@@ -166,6 +172,7 @@ export function CommonMoverMixin<
       bbox.combine(basebox, bw, 0);
       bbox.combine(overbox, ow, u);
       bbox.h += this.font.params.big_op_spacing5;
+      bbox.w += this.baseWidthAdjust();
       bbox.clean();
     }
 
@@ -213,6 +220,11 @@ export function CommonMunderoverMixin<
 >(Base: T): MunderoverConstructor<W> & T {
 
   return class extends Base {
+
+    /**
+     * Do include italic correction
+     */
+    public static useIC: boolean = true;
 
     /*
      * @return {W}   The wrapped under node
@@ -278,6 +290,7 @@ export function CommonMunderoverMixin<
       const z = this.font.params.big_op_spacing5;
       bbox.h += z;
       bbox.d += z;
+      bbox.w += this.baseWidthAdjust();
       bbox.clean();
     }
 

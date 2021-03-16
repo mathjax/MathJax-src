@@ -105,4 +105,14 @@ CommonScriptbaseMixin<CHTMLWrapper<any, any, any>, CHTMLConstructor<any, any, an
     adaptor.append(adaptor.firstChild(under) as N, box);
   }
 
+  /**
+   * Add base italic correction, if needed
+   */
+  protected adjustBaseWidth() {
+    const w = this.baseWidthAdjust();
+    if (w) {
+      this.adaptor.setStyle(this.chtml, 'paddingRight', this.em(w));
+    }
+  }
+
 }

@@ -47,11 +47,6 @@ CommonMunderMixin<SVGWrapper<any, any, any>, Constructor<SVGmsub<any, any, any>>
   public static kind = MmlMunder.prototype.kind;
 
   /**
-   * Do include italic correction
-   */
-  public static useIC: boolean = true;
-
-  /**
    * @override
    */
   public toSVG(parent: N) {
@@ -95,11 +90,6 @@ CommonMoverMixin<SVGWrapper<any, any, any>, Constructor<SVGmsup<any, any, any>>>
   public static kind = MmlMover.prototype.kind;
 
   /**
-   * Do include italic correction
-   */
-  public static useIC: boolean = true;
-
-  /**
    * @override
    */
   public toSVG(parent: N) {
@@ -140,11 +130,6 @@ CommonMunderoverMixin<SVGWrapper<any, any, any>, Constructor<SVGmsubsup<any, any
    * The munderover wrapper
    */
   public static kind = MmlMunderover.prototype.kind;
-
-  /**
-   * Do include italic correction
-   */
-  public static useIC: boolean = true;
 
   /**
    * @override

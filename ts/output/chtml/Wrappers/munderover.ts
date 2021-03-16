@@ -48,11 +48,6 @@ CommonMunderMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsub<any, any, a
   public static kind = MmlMunder.prototype.kind;
 
   /**
-   * Include italic correction
-   */
-  public static useIC: boolean = true;
-
-  /**
    * @override
    */
   public static styles: StyleList = {
@@ -97,6 +92,7 @@ CommonMunderMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsub<any, any, a
     this.adaptor.setStyle(under, 'paddingTop', this.em(k));
     this.setDeltaW([base, under], this.getDeltaW([basebox, underbox], [0, -delta]));
     this.adjustUnderDepth(under, underbox);
+    this.adjustBaseWidth();
   }
 
 }
@@ -117,11 +113,6 @@ CommonMoverMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsup<any, any, an
    * The mover wrapper
    */
   public static kind = MmlMover.prototype.kind;
-
-  /**
-   * Include italic correction
-   */
-  public static useIC: boolean = true;
 
   /**
    * @override
@@ -157,6 +148,7 @@ CommonMoverMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsup<any, any, an
     this.adaptor.setStyle(over, 'paddingBottom', this.em(k));
     this.setDeltaW([base, over], this.getDeltaW([basebox, overbox], [0, delta]));
     this.adjustOverDepth(over, overbox);
+    this.adjustBaseWidth();
   }
 
 }
@@ -177,11 +169,6 @@ CommonMunderoverMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsubsup<any,
    * The munderover wrapper
    */
   public static kind = MmlMunderover.prototype.kind;
-
-  /**
-   * Include italic correction
-   */
-  public static useIC: boolean = true;
 
   /**
    * @override
@@ -234,6 +221,7 @@ CommonMunderoverMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsubsup<any,
                                   [0, this.isLineBelow ? 0 : -delta, this.isLineAbove ? 0 : delta]));
     this.adjustOverDepth(over, overbox);
     this.adjustUnderDepth(under, underbox);
+    this.adjustBaseWidth();
   }
 
 }
