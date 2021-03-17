@@ -46,11 +46,6 @@ CommonMsubMixin<SVGWrapper<any, any, any>, Constructor<SVGscriptbase<any, any, a
    */
   public static kind = MmlMsub.prototype.kind;
 
-  /**
-   * Don't include italic correction
-   */
-  public static useIC = false;
-
 }
 
 /*****************************************************************/
@@ -70,11 +65,6 @@ CommonMsupMixin<SVGWrapper<any, any, any>, Constructor<SVGscriptbase<any, any, a
    */
   public static kind = MmlMsup.prototype.kind;
 
-  /**
-   * Do include italic correction
-   */
-  public static useIC = true;
-
 }
 
 /*****************************************************************/
@@ -93,11 +83,6 @@ CommonMsubsupMixin<SVGWrapper<any, any, any>, Constructor<SVGscriptbase<any, any
    * The msubsup wrapper
    */
   public static kind = MmlMsubsup.prototype.kind;
-
-  /**
-   * Don't use italic correction
-   */
-  public static useIC = false;
 
   /**
    * @override

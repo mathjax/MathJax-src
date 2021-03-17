@@ -48,11 +48,6 @@ CommonScriptbaseMixin<CHTMLWrapper<any, any, any>, CHTMLConstructor<any, any, an
   public static kind = 'scriptbase';
 
   /**
-   * Set to true for munderover/munder/mover/msup (Appendix G 13)
-   */
-  public static useIC: boolean = false;
-
-  /**
    * This gives the common output for msub and msup.  It is overridden
    * for all the others (msubsup, munder, mover, munderover).
    *
@@ -103,16 +98,6 @@ CommonScriptbaseMixin<CHTMLWrapper<any, any, any>, CHTMLConstructor<any, any, an
       adaptor.append(box, child);
     }
     adaptor.append(adaptor.firstChild(under) as N, box);
-  }
-
-  /**
-   * Add base italic correction, if needed
-   */
-  protected adjustBaseWidth() {
-    const w = this.baseWidthAdjust();
-    if (w) {
-      this.adaptor.setStyle(this.chtml, 'paddingRight', this.em(w));
-    }
   }
 
 }

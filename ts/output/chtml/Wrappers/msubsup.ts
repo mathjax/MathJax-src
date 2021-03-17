@@ -47,11 +47,6 @@ CommonMsubMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any, an
    */
   public static kind = MmlMsub.prototype.kind;
 
-  /**
-   * don't include italic correction
-   */
-  public static useIC = false;
-
 }
 
 /*****************************************************************/
@@ -70,11 +65,6 @@ CommonMsupMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any, an
    * The msup wrapper
    */
   public static kind = MmlMsup.prototype.kind;
-
-  /**
-   * Use italic correction
-   */
-  public static useIC = true;
 
 }
 
@@ -109,11 +99,6 @@ CommonMsubsupMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any,
   };
 
   /**
-   * Don't use italic correction
-   */
-  public static useIC = false;
-
-  /**
    * Make sure styles get output when called from munderover with movable limits
    *
    * @override
@@ -141,7 +126,7 @@ CommonMsubsupMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any,
     if (ic) {
       adaptor.setStyle(sup.chtml, 'marginLeft', this.em(ic / sup.bbox.rscale));
     }
-    if (this.baseHasIc) {
+    if (this.baseRemoveIc) {
       adaptor.setStyle(stack, 'marginLeft', this.em(-this.baseIc));
     }
   }

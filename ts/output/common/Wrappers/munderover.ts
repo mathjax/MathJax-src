@@ -58,11 +58,6 @@ export function CommonMunderMixin<
   return class extends Base {
 
     /**
-     * Do include italic correction
-     */
-    public static useIC: boolean = true;
-
-    /**
      * @override
      */
     public get scriptChild() {
@@ -95,7 +90,6 @@ export function CommonMunderMixin<
       bbox.combine(basebox, bw, 0);
       bbox.combine(underbox, uw, v);
       bbox.d += this.font.params.big_op_spacing5;
-      bbox.w += this.baseWidthAdjust();
       bbox.clean();
       this.setChildPWidths(recompute);
     }
@@ -135,11 +129,6 @@ export function CommonMoverMixin<
   return class extends Base {
 
     /**
-     * Do include italic correction
-     */
-    public static useIC: boolean = true;
-
-    /**
      * @override
      */
     public get scriptChild() {
@@ -172,7 +161,6 @@ export function CommonMoverMixin<
       bbox.combine(basebox, bw, 0);
       bbox.combine(overbox, ow, u);
       bbox.h += this.font.params.big_op_spacing5;
-      bbox.w += this.baseWidthAdjust();
       bbox.clean();
     }
 
@@ -220,11 +208,6 @@ export function CommonMunderoverMixin<
 >(Base: T): MunderoverConstructor<W> & T {
 
   return class extends Base {
-
-    /**
-     * Do include italic correction
-     */
-    public static useIC: boolean = true;
 
     /*
      * @return {W}   The wrapped under node
@@ -290,7 +273,6 @@ export function CommonMunderoverMixin<
       const z = this.font.params.big_op_spacing5;
       bbox.h += z;
       bbox.d += z;
-      bbox.w += this.baseWidthAdjust();
       bbox.clean();
     }
 

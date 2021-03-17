@@ -61,9 +61,9 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
   readonly baseIc: number;
 
   /**
-   * True if the base IC has already been added (when it was removed from the base)
+   * True if base italic correction should be removed (msub and msubsup or mathaccents)
    */
-  readonly baseHasIc: boolean;
+  readonly baseRemoveIc: boolean;
 
   /**
    * True if the base is a single character
@@ -151,11 +151,6 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
    * @return {number}    The base child's width adjusted for the base italic correction
    */
   getBaseWidth(): number;
-
-  /**
-   * @return {number}   Italic correction adjustment for base
-   */
-  baseWidthAdjust(): number;
 
   /***************************************************************************/
   /*
@@ -268,9 +263,9 @@ export function CommonScriptbaseMixin<
   return class extends Base {
 
     /**
-     * Set to true for munderover/munder/mover/msup (Appendix G 13)
+     * Set to false for msubsup/msub (Appendix G 13)
      */
-    public static useIC: boolean = false;
+    public static useIC: boolean = true;
 
     /**
      * The core mi or mo of the base (or the base itself if there isn't one)
@@ -288,9 +283,9 @@ export function CommonScriptbaseMixin<
     public baseIc: number = 0;
 
     /**
-     * True if the base IC has already been added (when it was removed from the base)
+     * True if base italic correction should be removed (msub and msubsup or mathaccents)
      */
-    public baseHasIc: boolean = false;
+    public baseRemoveIc: boolean = false;
 
     /**
      * True if the base is a single character
@@ -351,19 +346,14 @@ export function CommonScriptbaseMixin<
       this.isMathAccent = this.baseIsChar &&
         (this.scriptChild && !!this.scriptChild.coreMO().node.getProperty('mathaccent')) as boolean;
       //
-      //  Check if the base is a mi or mo that needs italic correction removed
-      //
-      const useIC = (this.constructor as CommonScriptbaseClass).useIC;
-      if (!useIC || this.isMathAccent) {
-        (core as unknown as CommonMo).noIC = true;
-        core.invalidateBBox();
-      } else {
-        this.baseHasIc = useIC && !this.baseCore.node.attributes.get('largeop');
-      }
-      //
       // Check for overline/underline accents
       //
       this.checkLineAccents();
+      //
+      //  Check if the base is a mi or mo that needs italic correction removed
+      //
+      this.baseRemoveIc = !this.isLineAbove && !this.isLineBelow &&
+        (!(this.constructor as CommonScriptbaseClass).useIC || this.isMathAccent);
     }
 
     /***************************************************************************/
@@ -387,7 +377,6 @@ export function CommonScriptbaseMixin<
       }
       if (!core) {
         this.baseHasAccentOver = this.baseHasAccentUnder = false;
-        this.baseHasIc = false;
       }
       return core || this.childNodes[0];
     }
@@ -397,7 +386,6 @@ export function CommonScriptbaseMixin<
      */
     public setBaseAccentsFor(core: W) {
       if (core.node.isKind('munderover')) {
-        this.baseHasIc = true;
         if (this.baseHasAccentOver === null) {
           this.baseHasAccentOver = !!core.node.attributes.get('accent');
         }
@@ -491,9 +479,6 @@ export function CommonScriptbaseMixin<
         this.isLineAbove = this.isLineAccent(mml.overChild);
         this.isLineBelow = this.isLineAccent(mml.underChild);
       }
-      if (this.isLineAbove || this.isLineBelow) {
-        this.baseHasIc = false;
-      }
     }
 
     /**
@@ -510,15 +495,7 @@ export function CommonScriptbaseMixin<
      */
     public getBaseWidth(): number {
       const bbox = this.baseChild.getBBox();
-      return bbox.w * bbox.rscale - (this.baseHasIc ? this.baseIc : 0);
-    }
-
-    /**
-     * @return {number}   Italic correction adjustment for base
-     */
-    public baseWidthAdjust(): number {
-      return (!this.baseHasIc && !this.isLineAbove && !this.isLineBelow ?
-              this.baseCore.getBBox().ic * this.baseScale : 0);
+      return bbox.w * bbox.rscale - (this.baseRemoveIc ? this.baseIc : 0);
     }
 
     /**
@@ -655,7 +632,7 @@ export function CommonScriptbaseMixin<
     public getDeltaW(boxes: BBox[], delta: number[] = [0, 0, 0]): number[] {
       const align = this.node.attributes.get('align');
       const widths = boxes.map(box => box.w * box.rscale);
-      widths[0] -= (this.baseHasIc ? this.baseIc : 0);
+      widths[0] -= (this.baseRemoveIc ? this.baseIc : 0);
       const w = Math.max(...widths);
       const dw = [];
       let m = 0;

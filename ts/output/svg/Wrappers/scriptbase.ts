@@ -46,11 +46,6 @@ CommonScriptbaseMixin<SVGWrapper<any, any, any>, SVGConstructor<any, any, any>>(
   public static kind = 'scriptbase';
 
   /**
-   * Set to true for munderover/munder/mover/msup (Appendix G 13)
-   */
-  public static useIC: boolean = false;
-
-  /**
    * This gives the common output for msub and msup.  It is overridden
    * for all the others (msubsup, munder, mover, munderover).
    *
