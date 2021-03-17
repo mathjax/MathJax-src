@@ -58,6 +58,12 @@ export interface CommonMo extends AnyWrapper {
   isAccent: boolean;
 
   /**
+   * @param {BBox} bbox   The bbox to center, or null to compute the bbox
+   * @return {number}     The offset to move the glyph to center it
+   */
+  getCenterOffset(bbox?: BBox): number;
+
+  /**
    * Determint variant for vertically/horizontally stretched character
    *
    * @param {number[]} WH  size to stretch to, either [W] or [H, D]
@@ -149,10 +155,22 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
       }
       if (this.node.attributes.get('symmetric') &&
           this.stretch.dir !== DIRECTION.Horizontal) {
-        const d = ((bbox.h + bbox.d) / 2 + this.font.params.axis_height) - bbox.h;
+        const d = this.getCenterOffset(bbox);
         bbox.h += d;
         bbox.d -= d;
       }
+    }
+
+    /**
+     * @param {BBox} bbox   The bbox to center, or null to compute the bbox
+     * @return {number}     The offset to move the glyph to center it
+     */
+    public getCenterOffset(bbox: BBox = null): number {
+      if (!bbox) {
+        bbox = BBox.empty();
+        super.computeBBox(bbox);
+      }
+      return ((bbox.h + bbox.d) / 2 + this.font.params.axis_height) - bbox.h;
     }
 
     /**

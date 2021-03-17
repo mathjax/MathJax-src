@@ -79,6 +79,11 @@ export function CommonTeXFontMixin<
     protected static defaultSizeVariants = ['normal', '-smallop', '-largeop', '-size3', '-size4'];
 
     /**
+     *  The default variants for the standard stretchy assmebly parts
+     */
+    protected static defaultStretchVariants = ['-size4'];
+
+    /**
      * @override
      */
     protected getDelimiterData(n: number) {

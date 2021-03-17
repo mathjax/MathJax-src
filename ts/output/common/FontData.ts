@@ -132,6 +132,7 @@ export type DelimiterData = {
   variants?: number[];  // The variants in which the different sizes can be found (if not the default)
   schar?: number[];     // The character number to use for each size (if different from the default)
   stretch?: number[];   // The unicode code points for the parts of multi-character versions [beg, ext, end, mid?]
+  stretchv?: number[];  // the variants to use for the stretchy characters (index into variant name array)
   HDW?: number[];       // [h, d, w] (for vertical, h and d are the normal size, w is the multi-character width,
   //            for horizontal, h and d are the multi-character ones, w is for the normal size).
   min?: number;         // The minimum size a multi-character version can be
@@ -468,6 +469,11 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   protected static defaultSizeVariants: string[] = [];
 
   /**
+   * The default variants for the assembly parts for stretchy delimiters
+   */
+  protected static defaultStretchVariants: string[] = [];
+
+  /**
    * The font options
    */
   protected options: OptionList;
@@ -476,14 +482,22 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * The actual variant information for this font
    */
   protected variant: VariantMap<C, V> = {};
+
   /**
    * The actual delimiter information for this font
    */
   protected delimiters: DelimiterMap<D> = {};
+
   /**
-   * The actual size information for this font
+   * The actual size variants to use for this font
    */
   protected sizeVariants: string[];
+
+  /**
+   * The actual stretchy variants to use for this font
+   */
+  protected stretchVariants: string[];
+
   /**
    * The data to use to make variants to default fonts and css for unknown characters
    */
@@ -534,6 +548,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
     this.params = {...CLASS.defaultParams};
     this.sizeVariants = [...CLASS.defaultSizeVariants];
+    this.stretchVariants = [...CLASS.defaultStretchVariants];
     this.cssFontMap = {...CLASS.defaultCssFonts};
     for (const name of Object.keys(this.cssFontMap)) {
       if (this.cssFontMap[name][0] === 'unknown') {
@@ -717,6 +732,15 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
       i = this.delimiters[n].variants[i];
     }
     return this.sizeVariants[i];
+  }
+
+  /**
+   * @param {number} n  The delimiter character number whose variant is needed
+   * @param {number} i  The index in the stretch array of the part whose variant is needed
+   * @return {string}   The variant of the i-th part for delimiter n
+   */
+  public getStretchVariant(n: number, i: number): string {
+    return this.stretchVariants[this.delimiters[n].stretchv ? this.delimiters[n].stretchv[i] : 0];
   }
 
   /**
