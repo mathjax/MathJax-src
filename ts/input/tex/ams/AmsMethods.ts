@@ -225,17 +225,22 @@ AmsMethods.xArrow = function(parser: TexParser, name: string,
   let def = {width: '+' + ParseUtil.Em((l + r) / 18), lspace: ParseUtil.Em(l / 18)};
   let bot = parser.GetBrackets(name);
   let first = parser.ParseArg(name);
+  let dstrut = parser.create('node', 'mspace', [], {depth: '.25em'});
   let arrow = parser.create('token',
     'mo', {stretchy: true, texClass: TEXCLASS.REL}, String.fromCodePoint(chr));
+  arrow = parser.create('node', 'mstyle', [arrow], {scriptlevel: 0});
   let mml = parser.create('node', 'munderover', [arrow]) as MmlMunderover;
-  let mpadded = parser.create('node', 'mpadded', [first], def);
-  NodeUtil.setAttribute(mpadded, 'voffset', '.15em');
+  let mpadded = parser.create('node', 'mpadded', [first, dstrut], def);
+  NodeUtil.setAttribute(mpadded, 'voffset', '-.2em');
+  NodeUtil.setAttribute(mpadded, 'height', '-.2em');
   NodeUtil.setChild(mml, mml.over, mpadded);
   if (bot) {
     // @test Above Below Left Arrow, Above Below Right Arrow
     let bottom = new TexParser(bot, parser.stack.env, parser.configuration).mml();
-    mpadded = parser.create('node', 'mpadded', [bottom], def);
-    NodeUtil.setAttribute(mpadded, 'voffset', '-.24em');
+    let bstrut = parser.create('node', 'mspace', [], {height: '.75em'});
+    mpadded = parser.create('node', 'mpadded', [bottom, bstrut], def);
+    NodeUtil.setAttribute(mpadded, 'voffset', '.15em');
+    NodeUtil.setAttribute(mpadded, 'depth', '-.15em');
     NodeUtil.setChild(mml, mml.under, mpadded);
   }
   // @test Above Left Arrow, Above Right Arrow, Above Left Arrow in Context,
