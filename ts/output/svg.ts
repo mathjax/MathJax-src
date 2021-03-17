@@ -263,8 +263,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
       adaptor.setAttribute(svg, 'width', pwidth);
       adaptor.removeAttribute(svg, 'viewBox');
       const scale = this.fixed(wrapper.metrics.ex / (this.font.params.x_height * 1000), 6);
-      adaptor.setAttribute(g, 'transform', 'scale(' + scale + ',-' + scale + ') '
-                            + 'translate(0, ' + this.fixed(-h * 1000, 1) + ')');
+      adaptor.setAttribute(g, 'transform', `scale(${scale},-${scale}) translate(0, ${this.fixed(-h * 1000, 1)})`);
     }
     if (this.options.fontCache !== 'none') {
       adaptor.setAttribute(svg, 'xmlns:xlink', XLINKNS);

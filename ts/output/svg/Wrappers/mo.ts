@@ -1,3 +1,4 @@
+
 /*************************************************************
  *
  *  Copyright (c) 2018 The MathJax Consortium
@@ -205,13 +206,13 @@ CommonMoMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
     });
     this.addGlyph(n, v, 0, 0, svg);
     const glyph = adaptor.lastChild(svg);
-    adaptor.setAttribute(glyph, 'transform', 'scale(1,' + this.jax.fixed(s) + ')');
+    adaptor.setAttribute(glyph, 'transform', 'scale(1,${this.jax.fixed(s)})');
     adaptor.append(this.element, svg);
   }
 
   /**
    * @param {number} n    The character number for the bottom glyph
-   * @param {srting} v    The variant for the bottom glyph
+   * @param {string} v    The variant for the bottom glyph
    * @param {number} D    The depth of the stretched delimiter
    * @param {number} W    The width of the stretched delimiter
    * @return {number}     The total height of the bottom glyph
@@ -225,7 +226,7 @@ CommonMoMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
   /**
    * @param {number} n    The character number for the middle glyph
-   * @param {srting} v    The variant for the middle glyph
+   * @param {string} v    The variant for the middle glyph
    * @param {number} W    The width of the stretched delimiter
    * @return {[number, number]}   The top and bottom positions of the middle glyph
    */
@@ -241,7 +242,7 @@ CommonMoMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
   /**
    * @param {number} n   The character number for the left glyph of the stretchy character
-   * @param {srting} v   The variant for the left glyph
+   * @param {string} v   The variant for the left glyph
    * @return {number}    The width of the left glyph
    */
   protected addLeft(n: number, v: string): number {
@@ -250,7 +251,7 @@ CommonMoMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
   /**
    * @param {number} n   The character number for the extender glyph of the stretchy character
-   * @param {srting} v   The variant for the extender glyph
+   * @param {string} v   The variant for the extender glyph
    * @param {number} W   The width of the stretched character
    * @param {number} L   The width of the left glyph of the stretchy character
    * @param {number} R   The width of the right glyph of the stretchy character
@@ -280,7 +281,7 @@ CommonMoMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
   /**
    * @param {number} n   The character number for the right glyph of the stretchy character
-   * @param {srting} v   The variant for the right glyph
+   * @param {string} v   The variant for the right glyph
    * @param {number} W   The width of the stretched character
    * @return {number}    The width of the right glyph
    */
@@ -292,7 +293,7 @@ CommonMoMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
   /**
    * @param {number} n   The character number for the middle glyph of the stretchy character
-   * @param {srting} v   The variant for the middle glyph
+   * @param {string} v   The variant for the middle glyph
    * @param {number} W   The width of the stretched character
    * @return {[number, number]}  The positions of the left and right edges of the middle glyph
    */
