@@ -56,9 +56,10 @@ CommonScriptbaseMixin<CHTMLWrapper<any, any, any>, CHTMLConstructor<any, any, an
   public toCHTML(parent: N) {
     this.chtml = this.standardCHTMLnode(parent);
     const [x, v] = this.getOffset();
+    const dx = x - (this.baseRemoveIc ? this.baseIc : 0);
     const style: StyleData = {'vertical-align': this.em(v)};
-    if (x) {
-      style['margin-left'] = this.em(x);
+    if (dx) {
+      style['margin-left'] = this.em(dx);
     }
     this.baseChild.toCHTML(this.chtml);
     this.scriptChild.toCHTML(this.adaptor.append(this.chtml, this.html('mjx-script', {style})) as N);

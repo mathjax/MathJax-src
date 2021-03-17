@@ -75,7 +75,7 @@ export function CommonMsubMixin<
      * @override
      */
     public getOffset() {
-      return [this.baseRemoveIc ? -this.baseIc : 0, -this.getV()];
+      return [0, -this.getV()];
     }
 
   };
@@ -125,7 +125,7 @@ export function CommonMsupMixin<
      * @override
      */
     public getOffset() {
-      const x = this.getAdjustedIc() - this.baseIc;
+      const x = this.getAdjustedIc() - (this.baseRemoveIc ? 0 : this.baseIc);
       return [x, this.getU()];
     }
 

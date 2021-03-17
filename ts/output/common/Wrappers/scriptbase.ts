@@ -505,9 +505,10 @@ export function CommonScriptbaseMixin<
      * @override
      */
     public computeBBox(bbox: BBox, recompute: boolean = false) {
+      const w = this.getBaseWidth();
       const [x, y] = this.getOffset();
       bbox.append(this.baseChild.getBBox());
-      bbox.combine(this.scriptChild.getBBox(), bbox.w + x, y);
+      bbox.combine(this.scriptChild.getBBox(), w + x, y);
       bbox.w += this.font.params.scriptspace;
       bbox.clean();
       this.setChildPWidths(recompute);
@@ -632,7 +633,7 @@ export function CommonScriptbaseMixin<
     public getDeltaW(boxes: BBox[], delta: number[] = [0, 0, 0]): number[] {
       const align = this.node.attributes.get('align');
       const widths = boxes.map(box => box.w * box.rscale);
-      widths[0] -= (this.baseRemoveIc ? this.baseIc : 0);
+      widths[0] -= (this.baseRemoveIc && !this.baseCore.node.attributes.get('largeop') ? this.baseIc : 0);
       const w = Math.max(...widths);
       const dw = [];
       let m = 0;

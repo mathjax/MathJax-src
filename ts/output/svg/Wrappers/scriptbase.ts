@@ -53,8 +53,7 @@ CommonScriptbaseMixin<SVGWrapper<any, any, any>, SVGConstructor<any, any, any>>(
    */
   public toSVG(parent: N) {
     const svg = this.standardSVGnode(parent);
-    const bbox = this.baseChild.getBBox();
-    const w = bbox.w * bbox.rscale;
+    const w = this.getBaseWidth();
     const [x, v] = this.getOffset();
     this.baseChild.toSVG(svg);
     this.scriptChild.toSVG(svg);
