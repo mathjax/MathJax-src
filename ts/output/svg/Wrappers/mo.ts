@@ -166,7 +166,7 @@ CommonMoMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
   /**
    * @param {number} n    The character number for the top glyph
-   * @param {srting} v    The variant for the top glyph
+   * @param {string} v    The variant for the top glyph
    * @param {number} H    The height of the stretched delimiter
    * @param {number} W    The width of the stretched delimiter
    * @return {number}     The total height of the top glyph
@@ -180,7 +180,7 @@ CommonMoMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
   /**
    * @param {number} n    The character number for the extender glyph
-   * @param {srting} v    The variant for the extender glyph
+   * @param {string} v    The variant for the extender glyph
    * @param {number} H    The height of the stretched delimiter
    * @param {number} D    The depth of the stretched delimiter
    * @param {number} T    The height of the top glyph in the delimiter

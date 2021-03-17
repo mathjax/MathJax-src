@@ -406,7 +406,7 @@ export class Styles {
 
   /**
    * @param {string} name   The name of the style to set
-   * @param {srting|number|boolean} value The value to set it to
+   * @param {string|number|boolean} value The value to set it to
    */
   public set(name: string, value: string | number | boolean) {
     name = this.normalizeName(name);
