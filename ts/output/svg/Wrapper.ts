@@ -318,7 +318,7 @@ CommonWrapper<
    * @return {N}                The <use> node for the glyph
    */
   protected useNode(variant: string, C: string, path: string): N {
-    const use = this.svg('use');
+    const use = this.svg('use', {'data-c': C});
     const id = '#' + this.jax.fontCache.cachePath(variant, C, path);
     this.adaptor.setAttribute(use, 'href', id, XLINKNS);
     return use;
