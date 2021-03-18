@@ -206,7 +206,7 @@ CommonMoMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
     });
     this.addGlyph(n, v, 0, 0, svg);
     const glyph = adaptor.lastChild(svg);
-    adaptor.setAttribute(glyph, 'transform', 'scale(1,${this.jax.fixed(s)})');
+    adaptor.setAttribute(glyph, 'transform', `scale(1,${this.jax.fixed(s)})`);
     adaptor.append(this.element, svg);
   }
 
