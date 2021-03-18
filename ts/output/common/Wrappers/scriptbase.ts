@@ -90,7 +90,6 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
   /**
    * The script element's wrapper (overridden in subclasses)
    */
-
   readonly scriptChild: W;
 
   /***************************************************************************/
