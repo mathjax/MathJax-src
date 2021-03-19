@@ -457,6 +457,11 @@ export class MmlMo extends AbstractMmlTokenNode {
     }
   }
 
+  /**
+   * Determine of the mo consists of primes, and remap them if so.
+   *
+   * @param {string} mo   The test of the mo element
+   */
   protected checkPrimes(mo: string) {
     const PRIMES = (this.constructor as typeof MmlMo).primes;
     const REMAP = (this.constructor as typeof MmlMo).remapPrimes;
