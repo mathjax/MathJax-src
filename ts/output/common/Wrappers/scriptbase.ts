@@ -321,8 +321,8 @@ export function CommonScriptbaseMixin<
       if (fence.node.attributes.getExplicit('data-semantic-id') === id) {
         return fence;
       }
-      for (let child of fence.childNodes) {
-        let result = this.getBaseFence(child, id);
+      for (const child of fence.childNodes) {
+        const result = this.getBaseFence(child, id);
         if (result) {
           return result;
         }
