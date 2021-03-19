@@ -347,7 +347,6 @@ export class MmlMo extends AbstractMmlTokenNode {
     this.checkOperatorTable(mo);
     this.checkPseudoScripts(mo);
     this.checkPrimes(mo);
-console.log(this.properties);
   }
 
   /**
