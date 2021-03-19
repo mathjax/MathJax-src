@@ -1222,6 +1222,8 @@ BaseMethods.Cr = function(parser: TexParser, name: string) {
 BaseMethods.CrLaTeX = function(parser: TexParser, name: string, nobrackets: boolean = false) {
   let n: string;
   if (!nobrackets) {
+    // TODO: spaces before * and [ are not allowed in AMS environments like align, but
+    //       should be allowed in array and eqnarray.  This distinction should be honored here.
     if (parser.string.charAt(parser.i) === '*') {  // The * controls page breaking, so ignore it
       parser.i++;
     }
