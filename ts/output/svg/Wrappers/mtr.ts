@@ -107,14 +107,14 @@ CommonMtrMixin<SVGmtd<any, any, any>, SVGConstructor<any, any, any>>(SVGWrapper)
     const cSpace = this.parent.getColumnHalfSpacing();
     const cLines = [this.parent.fLine, ...this.parent.cLines, this.parent.fLine];
     const cWidth = this.parent.getComputedWidths();
-    const scale = this.getBBox().rscale;
+    const scale = 1 / this.getBBox().rscale;
     let x = cLines[0];
     for (let i = 0; i < this.numCells; i++) {
       const child = this.getChild(i);
       child.toSVG(svg);
       x += this.placeCell(child, {
-        x: x, y: 0, lSpace: cSpace[i] / scale, rSpace: cSpace[i + 1] / scale, w: cWidth[i] / scale,
-        lLine: cLines[i] / scale, rLine: cLines[i + 1] / scale
+        x: x, y: 0, lSpace: cSpace[i] * scale, rSpace: cSpace[i + 1] * scale, w: cWidth[i] * scale,
+        lLine: cLines[i] * scale, rLine: cLines[i + 1] * scale
       });
     }
   }
@@ -126,9 +126,9 @@ CommonMtrMixin<SVGmtd<any, any, any>, SVGConstructor<any, any, any>>(SVGWrapper)
    */
   public placeCell(cell: SVGmtd<N, T, D>, sizes: SizeData): number {
     const {x, y, lSpace, w, rSpace, lLine, rLine} = sizes;
-    const scale = this.getBBox().rscale;
-    const [h, d] = [this.H / scale, this.D / scale];
-    const [t, b] = [this.tSpace / scale, this.bSpace / scale];
+    const scale = 1 / this.getBBox().rscale;
+    const [h, d] = [this.H * scale, this.D * scale];
+    const [t, b] = [this.tSpace * scale, this.bSpace * scale];
     const [dx, dy] = cell.placeCell(x + lSpace, y, w, h, d);
     const W = lSpace + w + rSpace;
     cell.placeColor(-(dx + lSpace + lLine / 2), -(d + b + dy), W + (lLine + rLine) / 2, h + d + t + b);
@@ -139,15 +139,15 @@ CommonMtrMixin<SVGmtd<any, any, any>, SVGConstructor<any, any, any>>(SVGWrapper)
    * Expand the backgound color to fill the entire row
    */
   protected placeColor() {
-    const scale = this.getBBox().rscale;
+    const scale = 1 / this.getBBox().rscale;
     const adaptor = this.adaptor;
     const child = adaptor.firstChild(this.element);
     if (child && adaptor.kind(child) === 'rect' && adaptor.getAttribute(child, 'data-bgcolor')) {
-      const [TL, BL] = [this.tLine / 2 / scale, this.bLine / 2 / scale];
-      const [TS, BS] = [this.tSpace / scale, this.bSpace / scale];
-      const [H, D] = [this.H / scale, this.D / scale];
+      const [TL, BL] = [(this.tLine / 2) * scale, (this.bLine / 2) * scale];
+      const [TS, BS] = [this.tSpace * scale, this.bSpace * scale];
+      const [H, D] = [this.H * scale, this.D * scale];
       adaptor.setAttribute(child, 'y', this.fixed(-(D + BS + BL)));
-      adaptor.setAttribute(child, 'width', this.fixed(this.parent.getWidth() / scale));
+      adaptor.setAttribute(child, 'width', this.fixed(this.parent.getWidth() * scale));
       adaptor.setAttribute(child, 'height', this.fixed(TL + TS + H + D + BS + BL));
     }
   }
