@@ -148,7 +148,7 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
   isLineAccent(script: W): boolean;
 
   /**
-   * @return {number}    The base child's width adjusted for the base italic correction
+   * @return {number}    The base child's width without the base italic correction (if not needed)
    */
   getBaseWidth(): number;
 
@@ -491,7 +491,7 @@ export function CommonScriptbaseMixin<
     }
 
     /**
-     * @return {number}   The base child's width adjusted for the base italic correction
+     * @return {number}    The base child's width without the base italic correction (if not needed)
      */
     public getBaseWidth(): number {
       const bbox = this.baseChild.getBBox();
