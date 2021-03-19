@@ -957,14 +957,14 @@ export class Menu {
    * Copy the original form to the clipboard
    */
   protected copyOriginal() {
-    this.copyToClipboard(this.menu.mathItem.math);
+    this.copyToClipboard(this.menu.mathItem.math.trim());
   }
 
   /**
    * Copy the original annotation text to the clipboard
    */
   public copyAnnotation() {
-    this.copyToClipboard(this.menu.annotation);
+    this.copyToClipboard(this.menu.annotation.trim());
   }
 
   /**
