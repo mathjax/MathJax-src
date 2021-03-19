@@ -47,11 +47,6 @@ CommonMunderMixin<SVGWrapper<any, any, any>, Constructor<SVGmsub<any, any, any>>
   public static kind = MmlMunder.prototype.kind;
 
   /**
-   * Do include italic correction
-   */
-  public static useIC: boolean = true;
-
-  /**
    * @override
    */
   public toSVG(parent: N) {
@@ -67,7 +62,7 @@ CommonMunderMixin<SVGWrapper<any, any, any>, Constructor<SVGmsub<any, any, any>>
     base.toSVG(svg);
     script.toSVG(svg);
 
-    const delta = this.getDelta(true);
+    const delta = (this.isLineBelow ? 0 : this.getDelta(true));
     const v = this.getUnderKV(bbox, sbox)[1];
     const [bx, sx] = this.getDeltaW([bbox, sbox], [0, -delta]);
 
@@ -95,11 +90,6 @@ CommonMoverMixin<SVGWrapper<any, any, any>, Constructor<SVGmsup<any, any, any>>>
   public static kind = MmlMover.prototype.kind;
 
   /**
-   * Do include italic correction
-   */
-  public static useIC: boolean = true;
-
-  /**
    * @override
    */
   public toSVG(parent: N) {
@@ -114,7 +104,7 @@ CommonMoverMixin<SVGWrapper<any, any, any>, Constructor<SVGmsup<any, any, any>>>
     base.toSVG(svg);
     script.toSVG(svg);
 
-    const delta = this.getDelta();
+    const delta = (this.isLineAbove ? 0 : this.getDelta());
     const u = this.getOverKU(bbox, sbox)[1];
     const [bx, sx] = this.getDeltaW([bbox, sbox], [0, delta]);
 
@@ -142,11 +132,6 @@ CommonMunderoverMixin<SVGWrapper<any, any, any>, Constructor<SVGmsubsup<any, any
   public static kind = MmlMunderover.prototype.kind;
 
   /**
-   * Do include italic correction
-   */
-  public static useIC: boolean = true;
-
-  /**
    * @override
    */
   public toSVG(parent: N) {
@@ -165,7 +150,8 @@ CommonMunderoverMixin<SVGWrapper<any, any, any>, Constructor<SVGmsubsup<any, any
     const delta = this.getDelta();
     const u = this.getOverKU(bbox, obox)[1];
     const v = this.getUnderKV(bbox, ubox)[1];
-    const [bx, ux, ox] = this.getDeltaW([bbox, ubox, obox], [0, -delta, delta]);
+    const [bx, ux, ox] = this.getDeltaW([bbox, ubox, obox],
+                                        [0, this.isLineBelow ? 0 : -delta, this.isLineAbove ? 0 : delta]);
 
     base.place(bx, 0);
     under.place(ux, v);

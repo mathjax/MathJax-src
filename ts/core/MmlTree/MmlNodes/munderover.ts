@@ -130,7 +130,7 @@ export class MmlMunderover extends AbstractMmlBaseNode {
   }
 
   /**
-   * Check if an under or over accent should cause the appropriate accent attribute to eb inherited
+   * Check if an under or over accent should cause the appropriate accent attribute to be inherited
    *   on the munderover node, and if it is not the default, re-inherit the scriptlevel, since that
    *   is affected by the accent attribute
    *

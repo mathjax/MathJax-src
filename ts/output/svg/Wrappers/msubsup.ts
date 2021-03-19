@@ -46,11 +46,6 @@ CommonMsubMixin<SVGWrapper<any, any, any>, Constructor<SVGscriptbase<any, any, a
    */
   public static kind = MmlMsub.prototype.kind;
 
-  /**
-   * Don't include italic correction
-   */
-  public static useIC = false;
-
 }
 
 /*****************************************************************/
@@ -69,11 +64,6 @@ CommonMsupMixin<SVGWrapper<any, any, any>, Constructor<SVGscriptbase<any, any, a
    * The msup wrapper
    */
   public static kind = MmlMsup.prototype.kind;
-
-  /**
-   * Do include italic correction
-   */
-  public static useIC = true;
 
 }
 
@@ -95,25 +85,21 @@ CommonMsubsupMixin<SVGWrapper<any, any, any>, Constructor<SVGscriptbase<any, any
   public static kind = MmlMsubsup.prototype.kind;
 
   /**
-   * Don't use italic correction
-   */
-  public static useIC = false;
-
-  /**
    * @override
    */
   public toSVG(parent: N) {
     const svg = this.standardSVGnode(parent);
     const [base, sup, sub] = [this.baseChild, this.supChild, this.subChild];
-    const bbox = base.getBBox();
+    const w = this.getBaseWidth();
+    const x = this.getAdjustedIc();
     const [u, v] = this.getUVQ();
 
     base.toSVG(svg);
     sup.toSVG(svg);
     sub.toSVG(svg);
 
-    sub.place(bbox.w * bbox.rscale, v);
-    sup.place(bbox.w * bbox.rscale + this.baseIc, u);
+    sub.place(w, v);
+    sup.place(w + x, u);
   }
 
 }
