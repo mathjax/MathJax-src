@@ -207,7 +207,7 @@ export const TextMacrosMethods = {
    * @param {string} name         The control sequence that called this function
    * @param {string} c            The character to insert into the string
    */
-  Accent(parser: TextParser, _name: string, c: string) {
+  Accent(parser: TextParser, name: string, c: string) {
     //
     //  Create an accented character using mover
     //

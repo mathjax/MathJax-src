@@ -24,7 +24,6 @@
 import {CHTMLWrapper, CHTMLConstructor, StringMap} from '../Wrapper.js';
 import {CommonMoMixin, DirectionVH} from '../../common/Wrappers/mo.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
-import {BBox} from '../../../util/BBox.js';
 import {StyleList} from '../../../util/StyleList.js';
 import {DIRECTION} from '../FontData.js';
 
@@ -74,7 +73,7 @@ CommonMoMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
       transform: 'scalex(500)'
     },
     'mjx-stretchy-h > mjx-ext > mjx-c': {
-      width: '100%'
+      width: 0
     },
     'mjx-stretchy-h > mjx-beg > mjx-c': {
       'margin-right': '-.1em'
@@ -132,19 +131,18 @@ CommonMoMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
       this.getStretchedVariant([]);
     }
     let chtml = this.standardCHTMLnode(parent);
-    if (this.noIC) {
-      this.adaptor.setAttribute(chtml, 'noIC', 'true');
-    }
     if (stretchy && this.size < 0) {
       this.stretchHTML(chtml);
     } else {
       if (symmetric || attributes.get('largeop')) {
-        const bbox = BBox.empty();
-        super.computeBBox(bbox);
-        const u = this.em((bbox.d - bbox.h) / 2 + this.font.params.axis_height);
+        const u = this.em(this.getCenterOffset());
         if (u !== '0') {
           this.adaptor.setStyle(chtml, 'verticalAlign', u);
         }
+      }
+      if (this.node.getProperty('mathaccent')) {
+        this.adaptor.setStyle(chtml, 'width', '0');
+        this.adaptor.setStyle(chtml, 'margin-left', this.em(this.getAccentOffset()));
       }
       for (const child of this.childNodes) {
         child.toCHTML(chtml);

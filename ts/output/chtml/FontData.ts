@@ -25,7 +25,6 @@ import {CharMap, CharOptions, CharData, VariantData, DelimiterData, FontData, DI
 import {StringMap} from './Wrapper.js';
 import {StyleList, StyleData} from '../../util/StyleList.js';
 import {em} from '../../util/lengths.js';
-import {OptionList, defaultOptions, userOptions} from '../../util/Options.js';
 
 export * from '../common/FontData.js';
 
@@ -71,6 +70,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
    * Default options
    */
   public static OPTIONS = {
+    ...FontData.OPTIONS,
     fontURL: 'js/output/chtml/fonts/tex-woff-v2'
   };
 
@@ -105,11 +105,6 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
   };
 
   /**
-   * The font options
-   */
-  protected options: OptionList;
-
-  /**
    * @override
    */
   public static charOptions(font: CHTMLCharMap, n: number) {
@@ -117,18 +112,6 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
   }
 
   /***********************************************************************/
-
-  /**
-   * @param {OptionList} options   The options for this font
-   *
-   * @override
-   * @constructor
-   */
-  constructor(options: OptionList = null) {
-    super();
-    let CLASS = (this.constructor as CHTMLFontDataClass);
-    this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
-  }
 
   /**
    * @param {boolean} adapt   Whether to use adaptive CSS or not
@@ -381,7 +364,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
    * @param {CHTMLCharData} data     The bounding box data and options for the character
    */
   protected addCharStyles(styles: StyleList, vletter: string, n: number, data: CHTMLCharData) {
-    const [ , , w, options] = data as [number, number, number, CHTMLCharOptions];
+    const options = data[3] as CHTMLCharOptions;
     if (this.options.adaptiveCSS && !options.used) return;
     const letter = (options.f !== undefined ? options.f : vletter);
     const selector = 'mjx-c' + this.charSelector(n) + (letter ? '.TEX-' + letter : '');
@@ -389,11 +372,6 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
       padding: this.padding(data, 0, options.ic || 0),
       content: (options.c != null ? '"' + options.c + '"' : this.charContent(n))
     };
-    if (options.ic) {
-      styles['[noIC] ' + selector + ':last-child::before'] = {
-        'padding-right': this.em(w)
-      };
-    }
   }
 
   /***********************************************************************/

@@ -1,3 +1,4 @@
+
 /*************************************************************
  *
  *  Copyright (c) 2017 The MathJax Consortium
@@ -102,8 +103,8 @@ new sm.CommandMap('AMSmath-macros', {
   shoveleft:  ['HandleShove', TexConstant.Align.LEFT],
   shoveright: ['HandleShove', TexConstant.Align.RIGHT],
 
-  xrightarrow: ['xArrow', 0x2192, 5, 6],
-  xleftarrow:  ['xArrow', 0x2190, 7, 3]
+  xrightarrow: ['xArrow', 0x2192, 7, 12],
+  xleftarrow:  ['xArrow', 0x2190, 10, 5]
 }, AmsMethods);
 
 

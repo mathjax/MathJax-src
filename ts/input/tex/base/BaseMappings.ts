@@ -203,6 +203,7 @@ new sm.CharacterMap('mathchar0mo', ParseMethods.mathchar0mo, {
   bullet:       '\u2219',
   wr:           '\u2240',
   div:          '\u00F7',
+  divsymbol:    '\u00F7',
   odot:         ['\u2299', {largeop: false}],
   oslash:       ['\u2298', {largeop: false}],
   otimes:       ['\u2297', {largeop: false}],
@@ -217,6 +218,7 @@ new sm.CharacterMap('mathchar0mo', ParseMethods.mathchar0mo, {
   ast:          '\u2217',
   times:        '\u00D7',
   star:         '\u22C6',
+
 
   // Relations
   propto:       '\u221D',
@@ -359,8 +361,8 @@ new sm.DelimiterMap('delimiter', ParseMethods.delimiter, {
   '\\arrowvert':      '\u23D0',
   '\\Arrowvert':      '\u2016',
   '\\bracevert':      '\u23AA',  // non-standard
-  '\\Vert':           ['\u2225', {texClass: TEXCLASS.ORD}],
-  '\\|':              ['\u2225', {texClass: TEXCLASS.ORD}],
+  '\\Vert':           ['\u2016', {texClass: TEXCLASS.ORD}],
+  '\\|':              ['\u2016', {texClass: TEXCLASS.ORD}],
   '\\vert':           ['|', {texClass: TEXCLASS.ORD}],
   '\\uparrow':        '\u2191',
   '\\downarrow':      '\u2193',
@@ -453,8 +455,8 @@ new sm.CommandMap('macros', {
   limits:            ['Limits', 1],
   nolimits:          ['Limits', 0],
 
-  overline:            ['UnderOver', '00AF', null, 1],
-  underline:           ['UnderOver', '005F'],
+  overline:            ['UnderOver', '2015'],
+  underline:           ['UnderOver', '2015'],
   overbrace:           ['UnderOver', '23DE', 1],
   underbrace:          ['UnderOver', '23DF', 1],
   overparen:           ['UnderOver', '23DC'],

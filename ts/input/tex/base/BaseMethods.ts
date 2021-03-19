@@ -589,8 +589,7 @@ BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, s
   // @test Vector
   const c = parser.ParseArg(name);
   // @test Vector Font
-  const def = ParseUtil.getFontDef(parser);
-  def['accent'] = true;
+  const def = {...ParseUtil.getFontDef(parser), accent: true, mathaccent: true};
   const entity = NodeUtil.createEntity(accent);
   const moNode = parser.create('token', 'mo', def, entity);
   const mml = moNode;
@@ -617,9 +616,8 @@ BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, s
  * @param {string} name The macro name.
  * @param {string} c Character to stack.
  * @param {boolean} stack True if stacked operator.
- * @param {boolean} noaccent True if not an accent.
  */
-BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, stack: boolean, noaccent: boolean) {
+BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, stack: boolean) {
   // @test Overline
   let base = parser.ParseArg(name);
   let symbol = NodeUtil.getForm(base);
@@ -638,7 +636,7 @@ BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, sta
   }
   const mml = parser.create('node', 'munderover', [base]) as MmlMunderover;
   const entity = NodeUtil.createEntity(c);
-  mo = parser.create('token', 'mo', {stretchy: true, accent: !noaccent}, entity);
+  mo = parser.create('token', 'mo', {stretchy: true, accent: true}, entity);
 
   NodeUtil.setChild(mml, name.charAt(1) === 'o' ?  mml.over : mml.under, mo);
   let node: MmlNode = mml;
@@ -1221,16 +1219,23 @@ BaseMethods.Cr = function(parser: TexParser, name: string) {
  */
 BaseMethods.CrLaTeX = function(parser: TexParser, name: string, nobrackets: boolean = false) {
   let n: string;
-  if (!nobrackets && parser.string.charAt(parser.i) === '[') {
-    let dim = parser.GetBrackets(name, '');
-    let [value, unit, ] = ParseUtil.matchDimen(dim);
-    // @test Custom Linebreak
-    if (dim && !value) {
-      // @test Dimension Error
-      throw new TexError('BracketMustBeDimension',
-                          'Bracket argument to %1 must be a dimension', parser.currentCS);
+  if (!nobrackets) {
+    // TODO: spaces before * and [ are not allowed in AMS environments like align, but
+    //       should be allowed in array and eqnarray.  This distinction should be honored here.
+    if (parser.string.charAt(parser.i) === '*') {  // The * controls page breaking, so ignore it
+      parser.i++;
     }
-    n = value + unit;
+    if (parser.string.charAt(parser.i) === '[') {
+      let dim = parser.GetBrackets(name, '');
+      let [value, unit, ] = ParseUtil.matchDimen(dim);
+      // @test Custom Linebreak
+      if (dim && !value) {
+        // @test Dimension Error
+        throw new TexError('BracketMustBeDimension',
+                           'Bracket argument to %1 must be a dimension', parser.currentCS);
+      }
+      n = value + unit;
+    }
   }
   parser.Push(
     parser.itemFactory.create('cell').setProperties({isCR: true, name: name, linebreak: true}) );

@@ -48,11 +48,6 @@ CommonScriptbaseMixin<CHTMLWrapper<any, any, any>, CHTMLConstructor<any, any, an
   public static kind = 'scriptbase';
 
   /**
-   * Set to true for munderover/munder/mover/msup (Appendix G 13)
-   */
-  public static useIC: boolean = false;
-
-  /**
    * This gives the common output for msub and msup.  It is overridden
    * for all the others (msubsup, munder, mover, munderover).
    *
@@ -60,13 +55,14 @@ CommonScriptbaseMixin<CHTMLWrapper<any, any, any>, CHTMLConstructor<any, any, an
    */
   public toCHTML(parent: N) {
     this.chtml = this.standardCHTMLnode(parent);
-    const [x, v] = this.getOffset(this.baseChild.getBBox(), this.script.getBBox());
+    const [x, v] = this.getOffset();
+    const dx = x - (this.baseRemoveIc ? this.baseIc : 0);
     const style: StyleData = {'vertical-align': this.em(v)};
-    if (x) {
-      style['margin-left'] = this.em(x);
+    if (dx) {
+      style['margin-left'] = this.em(dx);
     }
     this.baseChild.toCHTML(this.chtml);
-    this.script.toCHTML(this.adaptor.append(this.chtml, this.html('mjx-script', {style})) as N);
+    this.scriptChild.toCHTML(this.adaptor.append(this.chtml, this.html('mjx-script', {style})) as N);
   }
 
   /**

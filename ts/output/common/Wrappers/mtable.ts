@@ -617,8 +617,16 @@ export function CommonMtableMixin<
      */
     public updateHDW(cell: C, i: number, j: number, H: number[], D: number[], W: number[] = null) {
       let {h, d, w} = cell.getBBox();
-      if (h < .75) h = .75;
-      if (d < .25) d = .25;
+      const scale = cell.parent.bbox.rscale;
+      if (cell.parent.bbox.rscale !== 1) {
+        h *= scale;
+        d *= scale;
+        w *= scale;
+      }
+      if (this.node.getProperty('useHeight')) {
+        if (h < .75) h = .75;
+        if (d < .25) d = .25;
+      }
       if (h > H[j]) H[j] = h;
       if (d > D[j]) D[j] = d;
       if (W && w > W[i]) W[i] = w;

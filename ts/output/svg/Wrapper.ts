@@ -243,12 +243,19 @@ CommonWrapper<
    */
   public place(x: number, y: number, element: N = null) {
     if (!(x || y)) return;
+    const adaptor = this.adaptor;
+    const translate = 'translate(' + this.fixed(x) + ', ' + this.fixed(y) + ')';
     if (!element) {
       element = this.element;
+      if (this.node.attributes && this.node.attributes.get('href')) {
+        const rect = adaptor.previous(element);
+        if (rect && adaptor.kind(rect) === 'rect' && adaptor.getAttribute(rect, 'data-hitbox')) {
+          adaptor.setAttribute(rect, 'transform', translate);
+        }
+      }
     }
-    let transform = this.adaptor.getAttribute(element, 'transform') || '';
-    transform = 'translate(' + this.fixed(x) + ', ' + this.fixed(y) + ')' + (transform ? ' ' + transform : '');
-    this.adaptor.setAttribute(element, 'transform', transform);
+    let transform = adaptor.getAttribute(element, 'transform') || '';
+    adaptor.setAttribute(element, 'transform', translate + (transform ? ' ' + transform : ''));
   }
 
   /**
@@ -311,7 +318,7 @@ CommonWrapper<
    * @return {N}                The <use> node for the glyph
    */
   protected useNode(variant: string, C: string, path: string): N {
-    const use = this.svg('use');
+    const use = this.svg('use', {'data-c': C});
     const id = '#' + this.jax.fontCache.cachePath(variant, C, path);
     this.adaptor.setAttribute(use, 'href', id, XLINKNS);
     return use;

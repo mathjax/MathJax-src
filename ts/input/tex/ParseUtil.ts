@@ -136,14 +136,7 @@ namespace ParseUtil {
                      {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.OPEN},
                      openNode);
     }
-    NodeUtil.appendChildren(mrow, [mo]);
-    if (NodeUtil.isType(mml, 'mrow') && NodeUtil.isInferred(mml)) {
-      // @test Fenced, Middle
-      NodeUtil.appendChildren(mrow, NodeUtil.getChildren(mml));
-    } else {
-      // @test Fenced3
-      NodeUtil.appendChildren(mrow, [mml]);
-    }
+    NodeUtil.appendChildren(mrow, [mo, mml]);
     if (big) {
       mo = new TexParser('\\' + big + 'r' + close, configuration.parser.stack.env, configuration).mml();
     } else {
