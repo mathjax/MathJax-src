@@ -1219,16 +1219,23 @@ BaseMethods.Cr = function(parser: TexParser, name: string) {
  */
 BaseMethods.CrLaTeX = function(parser: TexParser, name: string, nobrackets: boolean = false) {
   let n: string;
-  if (!nobrackets && parser.string.charAt(parser.i) === '[') {
-    let dim = parser.GetBrackets(name, '');
-    let [value, unit, ] = ParseUtil.matchDimen(dim);
-    // @test Custom Linebreak
-    if (dim && !value) {
-      // @test Dimension Error
-      throw new TexError('BracketMustBeDimension',
-                          'Bracket argument to %1 must be a dimension', parser.currentCS);
+  if (!nobrackets) {
+    // TODO: spaces before * and [ are not allowed in AMS environments like align, but
+    //       should be allowed in array and eqnarray.  This distinction should be honored here.
+    if (parser.string.charAt(parser.i) === '*') {  // The * controls page breaking, so ignore it
+      parser.i++;
     }
-    n = value + unit;
+    if (parser.string.charAt(parser.i) === '[') {
+      let dim = parser.GetBrackets(name, '');
+      let [value, unit, ] = ParseUtil.matchDimen(dim);
+      // @test Custom Linebreak
+      if (dim && !value) {
+        // @test Dimension Error
+        throw new TexError('BracketMustBeDimension',
+                           'Bracket argument to %1 must be a dimension', parser.currentCS);
+      }
+      n = value + unit;
+    }
   }
   parser.Push(
     parser.itemFactory.create('cell').setProperties({isCR: true, name: name, linebreak: true}) );
