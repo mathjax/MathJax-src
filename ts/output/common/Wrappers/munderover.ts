@@ -60,7 +60,7 @@ export function CommonMunderMixin<
     /**
      * @override
      */
-    public get script() {
+    public get scriptChild() {
       return this.childNodes[(this.node as MmlMunder).under];
     }
 
@@ -83,7 +83,7 @@ export function CommonMunderMixin<
       }
       bbox.empty();
       const basebox = this.baseChild.getBBox();
-      const underbox = this.script.getBBox();
+      const underbox = this.scriptChild.getBBox();
       const v = this.getUnderKV(basebox, underbox)[1];
       const delta = this.getDelta(true);
       const [bw, uw] = this.getDeltaW([basebox, underbox], [0, -delta]);
@@ -132,7 +132,7 @@ export function CommonMoverMixin<
     /**
      * @override
      */
-    public get script() {
+    public get scriptChild() {
       return this.childNodes[(this.node as MmlMover).over];
     }
 
@@ -155,7 +155,7 @@ export function CommonMoverMixin<
       }
       bbox.empty();
       const basebox = this.baseChild.getBBox();
-      const overbox = this.script.getBBox();
+      const overbox = this.scriptChild.getBBox();
       const u = this.getOverKU(basebox, overbox)[1];
       const delta = this.getDelta();
       const [bw, ow] = this.getDeltaW([basebox, overbox], [0, delta]);

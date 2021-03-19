@@ -46,7 +46,7 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
   /**
    * The core mi or mo of the base (or the base itself if there isn't one)
    */
-  baseCore: W;
+  readonly baseCore: W;
 
   /**
    * The base element's wrapper
@@ -54,12 +54,62 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
   readonly baseChild: W;
 
   /**
-   * The script element's wrapper (overridden in subclasses)
+   * The relative scaling of the base compared to the munderover/msubsup
    */
-  readonly script: W;
+  readonly baseScale: number;
 
   /**
-   * @return {boolean}  True if the base is an mi, mn, or mo (not a largeop) consisting of a single character
+   * The italic correction of the base (if any)
+   */
+  readonly baseIc: number;
+
+  /**
+   * True if the base is a single character
+   */
+  readonly baseIsChar: boolean;
+
+  /**
+   * The script element's wrapper (overridden in subclasses)
+   */
+  readonly scriptChild: W;
+
+  /***************************************************************************/
+  /*
+   *  Methods for information about the core element for the base
+   */
+
+  /**
+   * @return {W}    The wrapper for the base core mi or mo (or whatever)
+   */
+  getBaseCore(): W;
+
+  /**
+   * @return {W}    The base fence item or null
+   */
+  getSemanticBase(): W;
+
+  /**
+   * Recursively retrieves an element for a given fencepointer.
+   *
+   * @param {W} fence The potential fence.
+   * @param {string} id The fencepointer id.
+   * @return {W} The original fence the scripts belong to.
+   */
+  getBaseFence(fence: W, id: string): W;
+
+  /**
+   * @return {number}   The scaling factor for the base core relative to the munderover/msubsup
+   */
+  getBaseScale(): number;
+
+  /**
+   * The base's italic correction (properly scaled)
+   */
+  getBaseIc(): number;
+
+  /**
+   * @return {boolean}  True if the base is an mi, mn, or mo (not a largeop) consisting of
+   *                    a single unstretched character
    */
   isCharBase(): boolean;
 
@@ -69,41 +119,25 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
    */
 
   /**
-   * @return {number}  The ic for the core element
-   */
-  coreIC(): number;
-
-  /**
-   * @return {number}   The relative scaling of the base
-   */
-  coreScale(): number;
-
-  /**
    * Get the shift for the script (implemented in subclasses)
    *
-   * @param {BBox} bbox   The bounding box of the base element
-   * @param {BBox} sbox   The bounding box of the script element
    * @return {number[]}   The horizontal and vertical offsets for the script
    */
-  getOffset(bbox: BBox, sbox: BBox): number[];
+  getOffset(): number[];
 
   /**
    * Get the shift for a subscript (TeXBook Appendix G 18ab)
    *
-   * @param {BBox} bbox   The bounding box of the base element
-   * @param {BBox} sbox   The bounding box of the superscript element
    * @return {number}     The vertical offset for the script
    */
-  getV(bbox: BBox, sbox: BBox): number;
+  getV(): number;
 
   /**
    * Get the shift for a superscript (TeXBook Appendix G 18acd)
    *
-   * @param {BBox} bbox   The bounding box of the base element
-   * @param {BBox} sbox   The bounding box of the superscript element
    * @return {number}     The vertical offset for the script
    */
-  getU(bbox: BBox, sbox: BBox): number;
+  getU(): number;
 
   /***************************************************************************/
   /*
@@ -194,6 +228,21 @@ export function CommonScriptbaseMixin<
     public baseCore: W;
 
     /**
+     * The base element's wrapper
+     */
+    public baseScale: number = 1;
+
+    /**
+     * The relative scaling of the base compared to the munderover/msubsup
+     */
+    public baseIc: number = 0;
+
+    /**
+     * True if the base is a single character
+     */
+    public baseIsChar: boolean = false;
+
+    /**
      * @return {W}  The base element's wrapper
      */
     public get baseChild(): W {
@@ -203,7 +252,7 @@ export function CommonScriptbaseMixin<
     /**
      * @return {W}  The script element's wrapper (overridden in subclasses)
      */
-    public get script(): W {
+    public get scriptChild(): W {
       return this.childNodes[1];
     }
 
@@ -215,23 +264,102 @@ export function CommonScriptbaseMixin<
       //
       //  Find the base core
       //
-      let core = this.baseCore = this.childNodes[0];
+      const core = this.baseCore = this.getBaseCore();
       if (!core) return;
-      while (core.childNodes.length === 1 &&
-             (core.node.isKind('mrow') || core.node.isKind('TeXAtom') ||
-              core.node.isKind('mstyle') || core.node.isKind('mpadded') ||
-              core.node.isKind('mphantom') || core.node.isKind('semantics'))) {
-        core = core.childNodes[0];
-        if (!core) return;
-      }
-      if (!('noIC' in core)) return;
-      this.baseCore = core;
       //
       //  Check if the base is a mi or mo that needs italic correction removed
       //
-      if (!(this.constructor as CommonScriptbaseClass).useIC) {
-        (core as CommonMo).noIC = true;
+      if (('noIC' in core) && !(this.constructor as CommonScriptbaseClass).useIC) {
+        (core as unknown as CommonMo).noIC = true;
       }
+      //
+      // Get information about the base element
+      //
+      this.baseScale = this.getBaseScale();
+      this.baseIc = this.getBaseIc();
+      this.baseIsChar = this.isCharBase();
+    }
+
+    /***************************************************************************/
+    /*
+     *  Methods for information about the core element for the base
+     */
+
+    /**
+     * @return {W}    The wrapper for the base core mi or mo (or whatever)
+     */
+    public getBaseCore(): W {
+      let core = this.getSemanticBase() || this.childNodes[0];
+      while (core && (core.childNodes.length === 1 &&
+              (core.node.isKind('mrow') || core.node.isKind('TeXAtom') ||
+               core.node.isKind('mstyle') || core.node.isKind('mpadded') ||
+               core.node.isKind('mphantom') || core.node.isKind('semantics')))) {
+        core = core.childNodes[0];
+      }
+      return core || this.childNodes[0];
+    }
+
+    /**
+     * @return {W}    The base fence item or null
+     */
+    public getSemanticBase(): W {
+      let fence = this.node.attributes.getExplicit('data-semantic-fencepointer') as string;
+      return this.getBaseFence(this.baseChild, fence);
+    }
+
+    /**
+     * Recursively retrieves an element for a given fencepointer.
+     *
+     * @param {W} fence The potential fence.
+     * @param {string} id The fencepointer id.
+     * @return {W} The original fence the scripts belong to.
+     */
+    public getBaseFence(fence: W, id: string): W {
+      if (!fence || !fence.node.attributes || !id) {
+        return null;
+      }
+      if (fence.node.attributes.getExplicit('data-semantic-id') === id) {
+        return fence;
+      }
+      for (const child of fence.childNodes) {
+        const result = this.getBaseFence(child, id);
+        if (result) {
+          return result;
+        }
+      }
+      return null;
+    }
+
+    /**
+     * @return {number}   The scaling factor for the base core relative to the munderover/msubsup
+     */
+    public getBaseScale(): number {
+      let child = this.baseCore as any;
+      let scale = 1;
+      while (child && child !== this) {
+        const bbox = child.getBBox();
+        scale *= bbox.rscale;
+        child = child.parent;
+      }
+      return scale;
+    }
+
+    /**
+     * The base's italic correction (properly scaled)
+     */
+    public getBaseIc(): number {
+      return (this.baseCore.bbox.ic ? 1.05 * this.baseCore.bbox.ic + .05 : 0) * this.baseScale;
+    }
+
+    /**
+     * @return {boolean}  True if the base is an mi, mn, or mo (not a largeop) consisting of a single character
+     */
+    public isCharBase(): boolean {
+      let base = this.baseCore;
+      return (((base.node.isKind('mo') && (base as any).size === null) ||
+               base.node.isKind('mi') || base.node.isKind('mn')) &&
+              base.bbox.rscale === 1 && Array.from(base.getText()).length === 1 &&
+              !base.node.attributes.get('largeop'));
     }
 
     /**
@@ -241,49 +369,12 @@ export function CommonScriptbaseMixin<
      * @override
      */
     public computeBBox(bbox: BBox, recompute: boolean = false) {
-      const basebox = this.baseChild.getBBox();
-      const scriptbox = this.script.getBBox();
-      const [x, y] = this.getOffset(basebox, scriptbox);
-      bbox.append(basebox);
-      bbox.combine(scriptbox, bbox.w + x, y);
+      const [x, y] = this.getOffset();
+      bbox.append(this.baseChild.getBBox());
+      bbox.combine(this.scriptChild.getBBox(), bbox.w + x, y);
       bbox.w += this.font.params.scriptspace;
       bbox.clean();
       this.setChildPWidths(recompute);
-    }
-
-    /**
-     * @return {number}  The ic for the core element
-     */
-    public coreIC(): number {
-      const corebox = this.baseCore.getBBox();
-      return (corebox.ic ? 1.05 * corebox.ic + .05 : 0);
-    }
-
-    /**
-     * @return {number}   The relative scaling of the base
-     */
-    public coreScale(): number {
-      let scale = this.baseChild.getBBox().rscale;
-      let base = this.baseChild;
-      while ((base.node.isKind('mstyle') || base.node.isKind('mrow') || base.node.isKind('TeXAtom'))
-             && base.childNodes.length === 1) {
-        base = base.childNodes[0];
-        scale *= base.getBBox().rscale;
-      }
-      return scale;
-    }
-
-    /**
-     * @return {boolean}  True if the base is an mi, mn, or mo (not a largeop) consisting of a single character
-     */
-    public isCharBase(): boolean {
-      let base = this.baseChild;
-      while ((base.node.isKind('mstyle') || base.node.isKind('mrow')) && base.childNodes.length === 1) {
-        base = base.childNodes[0];
-      }
-      return ((base.node.isKind('mo') || base.node.isKind('mi') || base.node.isKind('mn')) &&
-              base.bbox.rscale === 1 && Array.from(base.getText()).length === 1 &&
-              !base.node.attributes.get('largeop'));
     }
 
     /***************************************************************************/
@@ -294,26 +385,25 @@ export function CommonScriptbaseMixin<
     /**
      * Get the shift for the script (implemented in subclasses)
      *
-     * @param {BBox} bbox   The bounding box of the base element
-     * @param {BBox} sbox   The bounding box of the script element
      * @return {[number, number]}   The horizontal and vertical offsets for the script
      */
-    public getOffset(_bbox: BBox, _sbox: BBox): [number, number] {
+    public getOffset(): [number, number] {
       return [0, 0];
     }
 
     /**
      * Get the shift for a subscript (TeXBook Appendix G 18ab)
      *
-     * @param {BBox} bbox   The bounding box of the base element
-     * @param {BBox} sbox   The bounding box of the superscript element
      * @return {number}     The vertical offset for the script
      */
-    public getV(bbox: BBox, sbox: BBox): number {
+    public getV(): number {
+      const bbox = this.baseCore.getBBox();
+      const sbox = this.scriptChild.getBBox();
       const tex = this.font.params;
       const subscriptshift = this.length2em(this.node.attributes.get('subscriptshift'), tex.sub1);
+      const scale = this.baseScale;
       return Math.max(
-        this.isCharBase() ? 0 : bbox.d * bbox.rscale + tex.sub_drop * sbox.rscale,
+        this.baseIsChar && scale === 1 ? 0 : bbox.d * scale + tex.sub_drop * sbox.rscale,
         subscriptshift,
         sbox.h * sbox.rscale - (4 / 5) * tex.x_height
       );
@@ -322,18 +412,19 @@ export function CommonScriptbaseMixin<
     /**
      * Get the shift for a superscript (TeXBook Appendix G 18acd)
      *
-     * @param {BBox} bbox   The bounding box of the base element
-     * @param {BBox} sbox   The bounding box of the superscript element
      * @return {number}     The vertical offset for the script
      */
-    public getU(bbox: BBox, sbox: BBox): number {
+    public getU(): number {
+      const bbox = this.baseCore.getBBox();
+      const sbox = this.scriptChild.getBBox();
       const tex = this.font.params;
       const attr = this.node.attributes.getList('displaystyle', 'superscriptshift');
       const prime = this.node.getProperty('texprimestyle');
       const p = prime ? tex.sup3 : (attr.displaystyle ? tex.sup1 : tex.sup2);
       const superscriptshift = this.length2em(attr.superscriptshift, p);
+      const scale = this.baseScale;
       return Math.max(
-        this.isCharBase() ? 0 : bbox.h * bbox.rscale - tex.sup_drop * sbox.rscale,
+        this.baseIsChar && scale === 1 ? 0 : bbox.h * scale - tex.sup_drop * sbox.rscale,
         superscriptshift,
         sbox.d * sbox.rscale + (1 / 4) * tex.x_height
       );
@@ -419,8 +510,8 @@ export function CommonScriptbaseMixin<
      */
     public getDelta(noskew: boolean = false): number {
       const accent = this.node.attributes.get('accent');
-      const ddelta = (accent && !noskew ? this.baseChild.coreMO().bbox.sk : 0);
-      return (DELTA * this.baseCore.bbox.ic / 2 + ddelta) * this.coreScale();
+      const ddelta = (accent && !noskew ? this.baseCore.bbox.sk : 0);
+      return (DELTA * this.baseCore.bbox.ic / 2 + ddelta) * this.baseScale;
     }
 
     /**

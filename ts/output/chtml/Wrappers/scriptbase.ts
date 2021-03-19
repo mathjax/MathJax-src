@@ -60,13 +60,13 @@ CommonScriptbaseMixin<CHTMLWrapper<any, any, any>, CHTMLConstructor<any, any, an
    */
   public toCHTML(parent: N) {
     this.chtml = this.standardCHTMLnode(parent);
-    const [x, v] = this.getOffset(this.baseChild.getBBox(), this.script.getBBox());
+    const [x, v] = this.getOffset();
     const style: StyleData = {'vertical-align': this.em(v)};
     if (x) {
       style['margin-left'] = this.em(x);
     }
     this.baseChild.toCHTML(this.chtml);
-    this.script.toCHTML(this.adaptor.append(this.chtml, this.html('mjx-script', {style})) as N);
+    this.scriptChild.toCHTML(this.adaptor.append(this.chtml, this.html('mjx-script', {style})) as N);
   }
 
   /**

@@ -59,11 +59,10 @@ CommonScriptbaseMixin<SVGWrapper<any, any, any>, SVGConstructor<any, any, any>>(
   public toSVG(parent: N) {
     const svg = this.standardSVGnode(parent);
     const bbox = this.baseChild.getBBox();
-    const sbox = this.script.getBBox();
-    const [x, v] = this.getOffset(bbox, sbox);
+    const [x, v] = this.getOffset();
     this.baseChild.toSVG(svg);
-    this.script.toSVG(svg);
-    this.script.place(bbox.w * bbox.rscale + x, v);
+    this.scriptChild.toSVG(svg);
+    this.scriptChild.place(bbox.w * bbox.rscale + x, v);
   }
 
 }
