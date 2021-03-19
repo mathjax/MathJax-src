@@ -67,7 +67,7 @@ CommonMoMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
       const u = (symmetric || attributes.get('largeop') ? this.fixed(this.getCenterOffset()) : '0');
       const v = (this.node.getProperty('mathaccent') ? this.fixed(this.getAccentOffset()) : '0');
       if (u !== '0' || v !== '0') {
-        this.adaptor.setAttribute(svg, 'transform', 'translate(' + v + ' ' + u + ')');
+        this.adaptor.setAttribute(svg, 'transform', `translate(${v} ${u})`);
       }
       this.addChildren(svg);
     }
