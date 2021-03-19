@@ -23,9 +23,9 @@ export const HDW3 = [.583, .082, .5];
 export const VSIZES = [1, 1.2, 1.8, 2.4, 3];
 
 const DELIM2F = {c: 0x2F, dir: V, sizes: VSIZES};
-const DELIMAF = {c: 0xAF, dir: H, sizes: [.59], stretch: [0, 0xAF], HDW: [.59, -0.544, .5]};
-const DELIM2C6 = {c: 0x2C6, dir: H, sizes: [.517, .817, 1.335, 1.777, 1.909]};
-const DELIM2DC = {c: 0x2DC, dir: H, sizes: [.583, .805, 1.33, 1.773, 1.887]};
+const DELIMAF = {c: 0xAF, dir: H, sizes: [.5], stretch: [0, 0xAF], HDW: [.59, -0.544, .5]};
+const DELIM2C6 = {c: 0x2C6, dir: H, sizes: [.5, .556, 1, 1.444, 1.889]};
+const DELIM2DC = {c: 0x2DC, dir: H, sizes: [.5, .556, 1, 1.444, 1.889]};
 const DELIM2013 = {c: 0x2013, dir: H, sizes: [.5], stretch: [0, 0x2013], HDW: [.285, -0.248, .5]};
 const DELIM2190 = {c: 0x2190, dir: H, sizes: [1], stretch: [0x2190, 0x2212], HDW: HDW3};
 const DELIM2192 = {c: 0x2192, dir: H, sizes: [1], stretch: [0, 0x2212, 0x2192], HDW: HDW3};
@@ -54,7 +54,7 @@ export const delimiters: DelimiterMap<DelimiterData> = {
   0x29: {dir: V, sizes: VSIZES, stretch: [0x239E, 0x239F, 0x23A0], HDW: [.85, .349, .875]},
   0x2D: DELIM2212,
   0x2F: DELIM2F,
-  0x3D: {dir: H, sizes: [.767], stretch: [0, 0x3D], HDW: HDW3},
+  0x3D: {dir: H, sizes: [.778], stretch: [0, 0x3D], HDW: HDW3},
   0x5B: {dir: V, sizes: VSIZES, stretch: [0x23A1, 0x23A2, 0x23A3], HDW: HDW2},
   0x5C: {dir: V, sizes: VSIZES},
   0x5D: {dir: V, sizes: VSIZES, stretch: [0x23A4, 0x23A5, 0x23A6], HDW: HDW2},
