@@ -40,6 +40,7 @@ namespace NodeUtil {
     ['useHeight', true],
     ['variantForm', true],
     ['withDelims', true],
+    ['mathaccent', true],
     ['open', true],
     ['close', true]
   ]);

@@ -30,11 +30,6 @@ import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {BBox} from '../../../util/BBox.js';
 import {DIRECTION} from '../FontData.js';
 
-/*
- * Mutliply italic correction by this much (improve horizontal shift for italic characters)
- */
-const DELTA = 1.5;
-
 /*****************************************************************/
 /**
  * The CommonScriptbase interface
@@ -67,6 +62,11 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
    * True if the base is a single character
    */
   readonly baseIsChar: boolean;
+
+  /**
+   * True if this is an msup with script that is a math accent
+   */
+  readonly isMathAccent: boolean;
 
   /**
    * The script element's wrapper (overridden in subclasses)
@@ -243,6 +243,11 @@ export function CommonScriptbaseMixin<
     public baseIsChar: boolean = false;
 
     /**
+     * True if this is an msup with script that is a math accent
+     */
+    public isMathAccent: boolean = false;
+
+    /**
      * @return {W}  The base element's wrapper
      */
     public get baseChild(): W {
@@ -261,6 +266,10 @@ export function CommonScriptbaseMixin<
      */
     constructor(...args: any[]) {
       super(...args);
+      //
+      //  Determine if we are setting a mathaccent
+      //
+      this.isMathAccent = (this.scriptChild && !!this.scriptChild.coreMO().node.getProperty('mathaccent')) as boolean;
       //
       //  Find the base core
       //
@@ -290,10 +299,12 @@ export function CommonScriptbaseMixin<
      */
     public getBaseCore(): W {
       let core = this.getSemanticBase() || this.childNodes[0];
-      while (core && (core.childNodes.length === 1 &&
-              (core.node.isKind('mrow') || core.node.isKind('TeXAtom') ||
-               core.node.isKind('mstyle') || core.node.isKind('mpadded') ||
-               core.node.isKind('mphantom') || core.node.isKind('semantics')))) {
+      while (core &&
+             ((core.childNodes.length === 1 &&
+               (core.node.isKind('mrow') || core.node.isKind('TeXAtom') ||
+                core.node.isKind('mstyle') || core.node.isKind('mpadded') ||
+                core.node.isKind('mphantom') || core.node.isKind('semantics'))) ||
+              (core.node.isKind('mover') && core.isMathAccent)))  {
         core = core.childNodes[0];
       }
       return core || this.childNodes[0];
@@ -510,8 +521,8 @@ export function CommonScriptbaseMixin<
      */
     public getDelta(noskew: boolean = false): number {
       const accent = this.node.attributes.get('accent');
-      const ddelta = (accent && !noskew ? this.baseCore.bbox.sk : 0);
-      return (DELTA * this.baseCore.bbox.ic / 2 + ddelta) * this.baseScale;
+      const {sk, ic} = this.baseCore.getBBox();
+      return ((accent && !noskew ? sk : 0) + this.font.skewIcFactor * ic) * this.baseScale;
     }
 
     /**
