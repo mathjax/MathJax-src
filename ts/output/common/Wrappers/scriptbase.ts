@@ -147,15 +147,15 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
    */
   isLineAccent(script: W): boolean;
 
-  /**
-   * @return {number}    The base child's width adjusted for the base italic correction
-   */
-  getBaseWidth(): number;
-
   /***************************************************************************/
   /*
    *  Methods for sub-sup nodes
    */
+
+  /**
+   * @return {number}    The base child's width adjusted for the base italic correction
+   */
+  getBaseWidth(): number;
 
   /**
    * Get the shift for the script (implemented in subclasses)
@@ -490,12 +490,17 @@ export function CommonScriptbaseMixin<
       return (node.isToken && (node as MmlMo).getText() === '\u2015');
     }
 
+    /***************************************************************************/
+    /*
+     *  Methods for sub-sup nodes
+     */
+
     /**
      * @return {number}   The base child's width adjusted for the base italic correction
      */
     public getBaseWidth(): number {
       const bbox = this.baseChild.getBBox();
-      return bbox.w * bbox.rscale - (this.baseRemoveIc ? this.baseIc : 0);
+      return bbox.w * bbox.rscale - (this.baseRemoveIc ? this.baseIc : 0) + this.font.params.extra_ic;
     }
 
     /**
@@ -513,11 +518,6 @@ export function CommonScriptbaseMixin<
       bbox.clean();
       this.setChildPWidths(recompute);
     }
-
-    /***************************************************************************/
-    /*
-     *  Methods for sub-sup nodes
-     */
 
     /**
      * Get the shift for the script (implemented in subclasses)

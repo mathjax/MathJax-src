@@ -91,7 +91,8 @@ CommonMsubsupMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any,
   public static styles: StyleList = {
     'mjx-script': {
       display: 'inline-block',
-      'padding-right': '.05em'   // scriptspace
+      'padding-right': '.05em',  // scriptspace
+      'padding-left': '.033em'   // extra_ic
     },
     'mjx-script > *': {
       display: 'block'
