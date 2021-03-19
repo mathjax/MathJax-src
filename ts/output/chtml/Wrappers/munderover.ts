@@ -48,11 +48,6 @@ CommonMunderMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsub<any, any, a
   public static kind = MmlMunder.prototype.kind;
 
   /**
-   * Include italic correction
-   */
-  public static useIC: boolean = true;
-
-  /**
    * @override
    */
   public static styles: StyleList = {
@@ -119,11 +114,6 @@ CommonMoverMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsup<any, any, an
   public static kind = MmlMover.prototype.kind;
 
   /**
-   * Include italic correction
-   */
-  public static useIC: boolean = true;
-
-  /**
    * @override
    */
   public static styles: StyleList = {
@@ -177,11 +167,6 @@ CommonMunderoverMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsubsup<any,
    * The munderover wrapper
    */
   public static kind = MmlMunderover.prototype.kind;
-
-  /**
-   * Include italic correction
-   */
-  public static useIC: boolean = true;
 
   /**
    * @override

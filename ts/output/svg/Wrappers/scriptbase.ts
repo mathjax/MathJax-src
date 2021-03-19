@@ -46,11 +46,6 @@ CommonScriptbaseMixin<SVGWrapper<any, any, any>, SVGConstructor<any, any, any>>(
   public static kind = 'scriptbase';
 
   /**
-   * Set to true for munderover/munder/mover/msup (Appendix G 13)
-   */
-  public static useIC: boolean = false;
-
-  /**
    * This gives the common output for msub and msup.  It is overridden
    * for all the others (msubsup, munder, mover, munderover).
    *
@@ -58,11 +53,11 @@ CommonScriptbaseMixin<SVGWrapper<any, any, any>, SVGConstructor<any, any, any>>(
    */
   public toSVG(parent: N) {
     const svg = this.standardSVGnode(parent);
-    const bbox = this.baseChild.getBBox();
+    const w = this.getBaseWidth();
     const [x, v] = this.getOffset();
     this.baseChild.toSVG(svg);
     this.scriptChild.toSVG(svg);
-    this.scriptChild.place(bbox.w * bbox.rscale + x, v);
+    this.scriptChild.place(w + x, v);
   }
 
 }

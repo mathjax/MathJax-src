@@ -41,10 +41,6 @@ export const DirectionVH: {[n: number]: string} = {
  * The CommonMo interface
  */
 export interface CommonMo extends AnyWrapper {
-  /**
-   * True if no italic correction should be used
-   */
-  noIC: boolean;
 
   /**
    * The font size that a stretched operator uses.
@@ -128,11 +124,6 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
   return class extends Base {
 
     /**
-     * True if no italic correction should be used
-     */
-    public noIC: boolean = false;
-
-    /**
      * The font size that a stretched operator uses.
      * If -1, then stretch arbitrarily, and bbox gives the actual height, depth, width
      */
@@ -181,9 +172,6 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
       if (stretchy && this.size < 0) return;
       super.computeBBox(bbox);
       this.copySkewIC(bbox);
-      if (this.noIC) {
-        bbox.w -= bbox.ic;
-      }
     }
 
     /**

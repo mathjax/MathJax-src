@@ -42,14 +42,4 @@ CommonMiMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
    */
   public static kind = MmlMi.prototype.kind;
 
-  /**
-   * @override
-   */
-  public toCHTML(parent: N) {
-    super.toCHTML(parent);
-    if (this.noIC) {
-      this.adaptor.setAttribute(this.chtml, 'noIC', 'true');
-    }
-  }
-
 }

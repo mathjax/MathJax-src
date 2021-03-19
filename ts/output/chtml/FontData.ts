@@ -364,7 +364,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
    * @param {CHTMLCharData} data     The bounding box data and options for the character
    */
   protected addCharStyles(styles: StyleList, vletter: string, n: number, data: CHTMLCharData) {
-    const [ , , w, options] = data as [number, number, number, CHTMLCharOptions];
+    const options = data[3] as CHTMLCharOptions;
     if (this.options.adaptiveCSS && !options.used) return;
     const letter = (options.f !== undefined ? options.f : vletter);
     const selector = 'mjx-c' + this.charSelector(n) + (letter ? '.TEX-' + letter : '');
@@ -372,11 +372,6 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
       padding: this.padding(data, 0, options.ic || 0),
       content: (options.c != null ? '"' + options.c + '"' : this.charContent(n))
     };
-    if (options.ic) {
-      styles['[noIC] ' + selector + ':last-child::before'] = {
-        'padding-right': this.em(w)
-      };
-    }
   }
 
   /***********************************************************************/

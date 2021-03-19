@@ -58,6 +58,11 @@ export function CommonMsubMixin<
   return class extends Base {
 
     /**
+     * Do not include italic correction
+     */
+    public static useIC: boolean = false;
+
+    /**
      * @override
      */
     public get scriptChild() {
@@ -120,8 +125,8 @@ export function CommonMsupMixin<
      * @override
      */
     public getOffset() {
-      const x = (this.baseCore.bbox.ic ? .05 * this.baseCore.bbox.ic + .05 : 0);
-      return [x * this.baseScale, this.getU()];
+      const x = this.getAdjustedIc() - (this.baseRemoveIc ? 0 : this.baseIc);
+      return [x, this.getU()];
     }
 
   };
@@ -184,6 +189,11 @@ export function CommonMsubsupMixin<
   return class extends Base {
 
     /**
+     * Do not include italic correction
+     */
+    public static useIC: boolean = false;
+
+    /**
      *  Cached values for the script offsets and separation (so if they are
      *  computed in computeBBox(), they don't have to be recomputed during output)
      */
@@ -211,10 +221,11 @@ export function CommonMsubsupMixin<
       const [subbox, supbox] = [this.subChild.getBBox(), this.supChild.getBBox()];
       bbox.empty();
       bbox.append(basebox);
-      const w = bbox.w;
+      const w = this.getBaseWidth();
+      const x = this.getAdjustedIc();
       const [u, v] = this.getUVQ();
       bbox.combine(subbox, w, v);
-      bbox.combine(supbox, w + this.baseIc, u);
+      bbox.combine(supbox, w + x, u);
       bbox.w += this.font.params.scriptspace;
       bbox.clean();
       this.setChildPWidths(recompute);
@@ -236,8 +247,7 @@ export function CommonMsubsupMixin<
       const tex = this.font.params;
       const t = 3 * tex.rule_thickness;
       const subscriptshift = this.length2em(this.node.attributes.get('subscriptshift'), tex.sub2);
-      const scale = this.baseScale;
-      const drop = (this.baseIsChar && scale === 1 ? 0 : basebox.d * scale + tex.sub_drop * subbox.rscale);
+      const drop = this.baseCharZero(basebox.d * this.baseScale + tex.sub_drop * subbox.rscale);
       //
       // u and v are the veritcal shifts of the scripts, initially set to minimum values and then adjusted
       //

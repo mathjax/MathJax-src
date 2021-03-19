@@ -131,9 +131,6 @@ CommonMoMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
       this.getStretchedVariant([]);
     }
     let chtml = this.standardCHTMLnode(parent);
-    if (this.noIC) {
-      this.adaptor.setAttribute(chtml, 'noIC', 'true');
-    }
     if (stretchy && this.size < 0) {
       this.stretchHTML(chtml);
     } else {
