@@ -147,6 +147,13 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
   /**
    * @override
    */
+  public reset() {
+    this.clearFontCache();
+  }
+
+  /**
+   * @override
+   */
   protected setScale(node: N) {
     if (this.options.scale !== 1) {
       this.adaptor.setStyle(node, 'fontSize', percent(this.options.scale));

@@ -1,3 +1,4 @@
+
 /*************************************************************
  *
  *  Copyright (c) 2017 The MathJax Consortium
@@ -84,6 +85,13 @@ export interface InputJax<N, T, D> {
    * Do any initialization that depends on the document being set up
    */
   initialize(): void;
+
+  /**
+   * Reset any needed features of the input jax
+   *
+   * @param {any[]} args   The arguments needed by the reset operation
+   */
+  reset(...args: any[]): void;
 
   /**
    * Finds the math within the DOM or the list of strings
@@ -186,6 +194,12 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
    * @override
    */
   public initialize() {
+  }
+
+  /**
+   * @override
+   */
+  public reset(..._args: any[]) {
   }
 
   /**
