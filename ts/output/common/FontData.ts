@@ -134,7 +134,7 @@ export type DelimiterData = {
   stretch?: number[];   // The unicode code points for the parts of multi-character versions [beg, ext, end, mid?]
   stretchv?: number[];  // the variants to use for the stretchy characters (index into variant name array)
   HDW?: number[];       // [h, d, w] (for vertical, h and d are the normal size, w is the multi-character width,
-  //            for horizontal, h and d are the multi-character ones, w is for the normal size).
+                        //            for horizontal, h and d are the multi-character ones, w is for the normal size).
   min?: number;         // The minimum size a multi-character version can be
   c?: number;           // The character number (for aliased delimiters)
 };

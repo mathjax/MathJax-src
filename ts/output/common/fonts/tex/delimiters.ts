@@ -37,10 +37,10 @@ const DELIM21D2 = {c: 0x21D2, dir: H, sizes: [1], stretch: [0, 0x3D, 0x21D2], HD
 const DELIM21D4 = {c: 0x21D4, dir: H, sizes: [1], stretch: [0x21D0, 0x3D, 0x21D2], HDW: HDW3};
 const DELIM2212 = {c: 0x2212, dir: H, sizes: [.778], stretch: [0, 0x2212], HDW: HDW3};
 const DELIM2223 = {c: 0x2223, dir: V, sizes: [1], stretch: [0, 0x2223], HDW: [.627, .015, .333]};
-const DELIM23DC = {c: 0x23DC, dir: H, sizes: [.778, 1], schar: [0x2322, 0x2322], stretch: [0xE150, 0xE154, 0xE151],
-                   HDW: [.32, .2, .5]};
-const DELIM23DD = {c: 0x23DD, dir: H, sizes: [.778, 1], schar: [0x2323, 0x2323], stretch: [0xE152, 0xE154, 0xE153],
-                   HDW: [.32, .2, .5]};
+const DELIM23DC = {c: 0x23DC, dir: H, sizes: [.778, 1], schar: [0x2322, 0x2322], variants: [5, 0],
+                   stretch: [0xE150, 0xE154, 0xE151], HDW: [.32, .2, .5]};
+const DELIM23DD = {c: 0x23DD, dir: H, sizes: [.778, 1], schar: [0x2323, 0x2323], variants: [5, 0],
+                   stretch: [0xE152, 0xE154, 0xE153], HDW: [.32, .2, .5]};
 const DELIM23DE = {c: 0x23DE, dir: H, stretch: [0xE150, 0xE154, 0xE151, 0xE155], HDW: [.32, .2, .5], min: 1.8};
 const DELIM23DF = {c: 0x23DF, dir: H, stretch: [0xE152, 0xE154, 0xE153, 0xE156], HDW: [.32, .2, .5], min: 1.8};
 const DELIM27E8 = {c: 0x27E8, dir: V, sizes: VSIZES};
@@ -74,7 +74,7 @@ export const delimiters: DelimiterMap<DelimiterData> = {
   0x2013: DELIM2013,
   0x2014: DELIM2013,
   0x2015: DELIM2013,
-  0x2016: {dir: V, sizes: [.602, 1], schar: [0, 0x2225], stretch: [0, 0x2225], HDW: [.602, 0, .556]},
+  0x2016: {dir: V, sizes: [.602, 1], schar: [0, 0x2225], variants: [1, 0], stretch: [0, 0x2225], HDW: [.602, 0, .556]},
   0x2017: DELIM2013,
   0x203E: DELIMAF,
   0x20D7: DELIM2192,
@@ -128,7 +128,7 @@ export const delimiters: DelimiterMap<DelimiterData> = {
   0x23B1: {dir: V, sizes: [.989], stretch: [0x23AB, 0x23AA, 0x23A9], HDW: [.75, .25, .889]},
   0x23B4: {dir: H, stretch: [0x250C, 0x2212, 0x2510], HDW: HDW3, min: 1},
   0x23B5: {dir: H, stretch: [0x2514, 0x2212, 0x2518], HDW: HDW3, min: 1},
-  0x23D0: {dir: V, sizes: [.602, 1], schar: [0, 0x2223], stretch: [0, 0x2223], HDW: [.602, 0, .333]},
+  0x23D0: {dir: V, sizes: [.602, 1], schar: [0, 0x2223], variants: [1, 0], stretch: [0, 0x2223], HDW: [.602, 0, .333]},
   0x23DC: DELIM23DC,
   0x23DD: DELIM23DD,
   0x23DE: DELIM23DE,
