@@ -80,35 +80,73 @@ export const MO = {
  *  The default TeX classes for the various unicode blocks, and their names
  */
 export const RANGES: RangeDef[] = [
-  [0x20, 0x7F, TEXCLASS.REL, 'BasicLatin'],
-  [0xA0, 0xFF, TEXCLASS.ORD, 'Latin1Supplement'],
-  [0x100, 0x17F, TEXCLASS.ORD, 'LatinExtendedA'],
-  [0x180, 0x24F, TEXCLASS.ORD, 'LatinExtendedB'],
-  [0x2B0, 0x2FF, TEXCLASS.ORD, 'SpacingModLetters'],
-  [0x300, 0x36F, TEXCLASS.ORD, 'CombDiacritMarks'],
-  [0x370, 0x3FF, TEXCLASS.ORD, 'GreekAndCoptic'],
-  [0x1E00, 0x1EFF, TEXCLASS.ORD, 'LatinExtendedAdditional'],
-  [0x2000, 0x206F, TEXCLASS.PUNCT, 'GeneralPunctuation'],
-  [0x2070, 0x209F, TEXCLASS.ORD, 'SuperAndSubscripts'],
-  [0x20A0, 0x20CF, TEXCLASS.ORD, 'Currency'],
-  [0x20D0, 0x20FF, TEXCLASS.ORD, 'CombDiactForSymbols'],
-  [0x2100, 0x214F, TEXCLASS.ORD, 'LetterlikeSymbols'],
-  [0x2150, 0x218F, TEXCLASS.ORD, 'NumberForms'],
-  [0x2190, 0x21FF, TEXCLASS.REL, 'Arrows'],
-  [0x2200, 0x22FF, TEXCLASS.BIN, 'MathOperators'],
-  [0x2300, 0x23FF, TEXCLASS.ORD, 'MiscTechnical'],
-  [0x2460, 0x24FF, TEXCLASS.ORD, 'EnclosedAlphaNums'],
-  [0x2500, 0x259F, TEXCLASS.ORD, 'BoxDrawing'],
-  [0x25A0, 0x25FF, TEXCLASS.ORD, 'GeometricShapes'],
-  [0x2700, 0x27BF, TEXCLASS.ORD, 'Dingbats'],
-  [0x27C0, 0x27EF, TEXCLASS.ORD, 'MiscMathSymbolsA'],
-  [0x27F0, 0x27FF, TEXCLASS.REL, 'SupplementalArrowsA'],
-  [0x2900, 0x297F, TEXCLASS.REL, 'SupplementalArrowsB'],
-  [0x2980, 0x29FF, TEXCLASS.ORD, 'MiscMathSymbolsB'],
-  [0x2A00, 0x2AFF, TEXCLASS.BIN, 'SuppMathOperators'],
-  [0x2B00, 0x2BFF, TEXCLASS.ORD, 'MiscSymbolsAndArrows'],
-  [0x1D400, 0x1D7FF, TEXCLASS.ORD, 'MathAlphabets']
+  [0x0020, 0x007F, TEXCLASS.REL, 'mo'], // Basic Latin
+  [0x00A0, 0x024F, TEXCLASS.ORD, 'mi'], // Latin-1 Supplement, Latin Extended-A, Latin Extended-B
+  [0x02B0, 0x036F, TEXCLASS.ORD, 'mo'], // Spacing modifier letters, Combining Diacritical Marks
+  [0x0370, 0x1A20, TEXCLASS.ORD, 'mi'], // Greek and Coptic (through) Tai Tham
+  [0x1AB0, 0x1AFF, TEXCLASS.ORD, 'mo'], // Combining Diacritical Marks Extended
+  [0x1B00, 0x1DBF, TEXCLASS.ORD, 'mi'], // Balinese (through) Phonetic Extensions Supplement
+  [0x1DC0, 0x1DFF, TEXCLASS.ORD, 'mo'], // Combining Diacritical Marks Supplement
+  [0x1E00, 0x1FFF, TEXCLASS.ORD, 'mi'], // Latin Extended Additional, Greek Extended
+  [0x2000, 0x206F, TEXCLASS.ORD, 'mo'], // General Punctuation
+  [0x2070, 0x209F, TEXCLASS.ORD, 'mo'], // Superscript and Subscripts (through) Combining Diacritical Marks for Symbols
+  [0x2100, 0x214F, TEXCLASS.ORD, 'mi'], // Letterlike Symbols
+  [0x2150, 0x218F, TEXCLASS.ORD, 'mn'], // Number Forms
+  [0x2190, 0x21FF, TEXCLASS.REL, 'mo'], // Arrows
+  [0x2200, 0x22FF, TEXCLASS.BIN, 'mo'], // Mathematical Operators
+  [0x2300, 0x23FF, TEXCLASS.ORD, 'mo'], // Miscellaneous Technical
+  [0x2460, 0x24FF, TEXCLASS.ORD, 'mn'], // Enclosed Alphanumerics
+  [0x2500, 0x27EF, TEXCLASS.ORD, 'mo'], // Box Drawing (though) Miscellaneous Math Symbols-A
+  [0x27F0, 0x27FF, TEXCLASS.REL, 'mo'], // Supplemental Arrows-A
+  [0x2800, 0x28FF, TEXCLASS.ORD, 'mtext'], // Braille Patterns
+  [0x2900, 0x297F, TEXCLASS.REL, 'mo'], // Supplemental Arrows-B
+  [0x2980, 0x29FF, TEXCLASS.ORD, 'mo'], // Miscellaneous Math Symbols-B
+  [0x2A00, 0x2AFF, TEXCLASS.BIN, 'mo'], // Supplemental Math Operators
+  [0x2B00, 0x2B2F, TEXCLASS.ORD, 'mo'], // Miscellaneous Symbols and Arrows
+  [0x2B30, 0x2B4F, TEXCLASS.REL, 'mo'], //   Arrows from above
+  [0x2B50, 0x2BFF, TEXCLASS.ORD, 'mo'], //   Rest of above
+  [0x2C00, 0x2DE0, TEXCLASS.ORD, 'mi'], // Glagolitic (through) Ethipoc Extended
+  [0x2E00, 0x2E7F, TEXCLASS.ORD, 'mo'], // Supplemental Punctuation
+  [0x2E80, 0x2FDF, TEXCLASS.ORD, 'mi'], // CJK Radicals Supplement (through) Kangxi Radicals
+  [0x2FF0, 0x303F, TEXCLASS.ORD, 'mo'], // Ideographic Desc. Characters, CJK Symbols and Punctuation
+  [0x3040, 0xA82F, TEXCLASS.ORD, 'mi'], // Hiragana (through) Syloti Nagri
+  [0xA830, 0xA83F, TEXCLASS.ORD, 'mn'], // Common Indic Number FormsArabic Presentation Forms-A
+  [0xA840, 0xD7FF, TEXCLASS.ORD, 'mi'], // Phags-pa (though) Hangul Jamo Extended-B
+  [0xF900, 0xFDFF, TEXCLASS.ORD, 'mi'], // CJK Compatibility Ideographs (though) Arabic Presentation Forms-A
+  [0xFE00, 0xFE6F, TEXCLASS.ORD, 'mo'], // Variation Selector (through) Small Form Variants
+  [0xFE70, 0x100FF, TEXCLASS.ORD, 'mi'], // Arabic Presentation Forms-B (through) Linear B Ideograms
+  [0x10100, 0x1018F, TEXCLASS.ORD, 'mn'], // Aegean Numbers, Ancient Greek Numbers
+  [0x10190, 0x123FF, TEXCLASS.ORD, 'mi'], // Ancient Symbols (through) Cuneiform
+  [0x12400, 0x1247F, TEXCLASS.ORD, 'mn'], // Cuneiform Numbers and Punctuation
+  [0x12480, 0x1BC9F, TEXCLASS.ORD, 'mi'], // Early Dynastic Cuneiform (through) Duployan
+  [0x1BCA0, 0x1D25F, TEXCLASS.ORD, 'mo'], // Shorthand Format Controls (through) TaiXuan Jing Symbols
+  [0x1D360, 0x1D37F, TEXCLASS.ORD, 'mn'], // Counting Rod Numerals
+  [0x1D400, 0x1D7CD, TEXCLASS.ORD, 'mi'], // Math Alphanumeric Symbols
+  [0x1D7CE, 0x1D7FF, TEXCLASS.ORD, 'mn'], //   Numerals from above
+  [0x1DF00, 0x1F7FF, TEXCLASS.ORD, 'mo'], // Mahjong Tiles (through) Geometric Shapes Extended
+  [0x1F800, 0x1F8FF, TEXCLASS.REL, 'mo'], // Supplemental Arrows-C
+  [0x1F900, 0x1F9FF, TEXCLASS.ORD, 'mo'], // Supplemental Symbols and Pictographs
+  [0x20000, 0x2FA1F, TEXCLASS.ORD, 'mi'], // CJK Unified Ideographs Ext. B (through) CJK Sompatibility Ideographs Supp.
 ];
+
+/**
+ * Get the Unicode range for the first character of a string
+ *
+ * @param {string} text      The character to check
+ * @return {RangeDef|null}   The range containing that character, or null
+ */
+export function getRange(text: string): RangeDef | null {
+  const n = text.codePointAt(0);
+  for (const range of RANGES) {
+    if (n <= range[1]) {
+      if (n >= range[0]) {
+        return range;
+      }
+      break;
+    }
+  }
+  return null;
+}
 
 /**
  * The default MathML spacing for the various TeX classes.
