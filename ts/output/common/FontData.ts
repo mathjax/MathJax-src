@@ -137,6 +137,8 @@ export type DelimiterData = {
   //            for horizontal, h and d are the multi-character ones, w is for the normal size).
   min?: number;         // The minimum size a multi-character version can be
   c?: number;           // The character number (for aliased delimiters)
+  fullExt?: [number, number]  // When present, extenders must be full sized, and the first number is
+                              //   the size of the extender, while the second is the total size of the ends
 };
 
 /**
