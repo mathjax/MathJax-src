@@ -70,7 +70,7 @@ CommonSTIX2FontMixin<SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontDa
    */
   public static defaultParams: FontParameters = {
     ...SVGFontData.defaultParams,
-    separation_factor: 1
+    separation_factor: 1.5
   };
 
   /**
