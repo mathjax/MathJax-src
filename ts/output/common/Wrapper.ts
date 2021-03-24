@@ -533,20 +533,11 @@ export class CommonWrapper<
                    Math.max(0, this.length2em(attributes.get('rspace'))) :
                    MathMLSpace(isScript, node.rspace));
     //
-    // Remove lspace if we are first in the mrow, and rspace if last
-    //
-    const n = parent.childIndex(child);
-    if (n === 0) {
-      this.bbox.L = 0;
-      return;
-    }
-    if (n === parent.childNodes.length - 1) {
-      this.bbox.R = 0;
-    }
-    //
     // If there are two adjacent <mo>, use enough left space to make it
     //   the maximum of the rspace of the first and lspace of the second
     //
+    const n = parent.childIndex(child);
+    if (n === 0) return;
     const prev = parent.childNodes[n - 1] as AbstractMmlNode;
     if (!prev.isEmbellished) return;
     const bbox = this.jax.nodeMap.get(prev).getBBox();
