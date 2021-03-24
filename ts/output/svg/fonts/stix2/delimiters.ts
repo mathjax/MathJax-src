@@ -21,7 +21,7 @@ export const delimiters: DelimiterMap<DelimiterData> = {
     sizes: [.72],
     stretch: [0, 0x2212],
     stretchv: [0, 1],
-    HDW: [.293, -.225, .72]
+    HDW: [.558, .04, .72]
   },
   0x2F: {
     dir: V,
@@ -213,7 +213,7 @@ export const delimiters: DelimiterMap<DelimiterData> = {
   0x20D6: {
     dir: H,
     sizes: [.436, .893, 1.34, 1.787, 2.233, 3.073],
-    stretch: [0, 0x20D6],
+    stretch: [0x20D6, 0x20D6],
     stretchv: [3, 0],
     HDW: [.735, -.688, 0]
   },
@@ -227,7 +227,7 @@ export const delimiters: DelimiterMap<DelimiterData> = {
   0x20E1: {
     dir: H,
     sizes: [.494],
-    stretch: [0, 0x20D6, 0x20D7],
+    stretch: [0x20D6, 0x20D6, 0x20D7],
     stretchv: [3, 0, 3],
     HDW: [.735, -.688, 0]
   },
@@ -242,7 +242,7 @@ export const delimiters: DelimiterMap<DelimiterData> = {
   0x20EE: {
     dir: H,
     sizes: [.436, .893, 1.34, 1.787, 2.233, 3.073],
-    stretch: [0, 0x20EE],
+    stretch: [0x20EE, 0x20EE],
     stretchv: [3, 0],
     HDW: [-.13, .177, 0]
   },
@@ -263,12 +263,12 @@ export const delimiters: DelimiterMap<DelimiterData> = {
     sizes: [.948],
     stretch: [0x2190, 0x2212],
     stretchv: [4, 0],
-    HDW: [.293, -.225, .948]
+    HDW: [.459, -.058, .948]
   },
   0x2191: {
     dir: V,
     sizes: [.839],
-    stretch: [0, 0x2191],
+    stretch: [0x2191, 0x2191],
     stretchv: [1, 0],
     HDW: [.678, .16, .523]
   },
@@ -277,7 +277,7 @@ export const delimiters: DelimiterMap<DelimiterData> = {
     sizes: [.948],
     stretch: [0, 0x2212, 0x2192],
     stretchv: [0, 0, 4],
-    HDW: [.293, -.225, .948]
+    HDW: [.459, -.058, .948]
   },
   0x2193: {
     dir: V,
@@ -291,12 +291,12 @@ export const delimiters: DelimiterMap<DelimiterData> = {
     sizes: [.948],
     stretch: [0x2190, 0x2212, 0x2192],
     stretchv: [4, 0, 4],
-    HDW: [.293, -.225, .948]
+    HDW: [.459, -.058, .948]
   },
   0x2195: {
     dir: V,
     sizes: [.978],
-    stretch: [0, 0x2191, 0x2193],
+    stretch: [0x2191, 0x2191, 0x2193],
     stretchv: [1, 0, 1],
     HDW: [.747, .23, .523]
   },
@@ -305,64 +305,64 @@ export const delimiters: DelimiterMap<DelimiterData> = {
     sizes: [.948],
     stretch: [0x2190, 0x2212, 0x21A4],
     stretchv: [4, 0, 0],
-    HDW: [.293, -.225, .948]
+    HDW: [.459, -.058, .948]
   },
   0x21A6: {
     dir: H,
     sizes: [.948],
     stretch: [0x21A6, 0x2212, 0x2192],
     stretchv: [0, 0, 4],
-    HDW: [.293, -.225, .948]
+    HDW: [.459, -.058, .948]
   },
   0x21A9: {
     dir: H,
     sizes: [.948],
     stretch: [0x2190, 0x2212, 0x21A9],
     stretchv: [4, 0, 0],
-    HDW: [.293, -.225, .948]
+    HDW: [.459, -.058, .948]
   },
   0x21AA: {
     dir: H,
     sizes: [.948],
     stretch: [0x21AA, 0x2212, 0x2192],
     stretchv: [0, 0, 4],
-    HDW: [.293, -.225, .948]
+    HDW: [.459, -.058, .948]
   },
   0x21BC: {
     dir: H,
     sizes: [.978],
     stretch: [0x21BC, 0x2212],
-    HDW: [.293, -.225, .978]
+    HDW: [.459, -.058, .978]
   },
   0x21BD: {
     dir: H,
     sizes: [.978],
     stretch: [0x21BD, 0x2212],
-    HDW: [.293, -.225, .978]
+    HDW: [.459, -.058, .978]
   },
   0x21C0: {
     dir: H,
     sizes: [.978],
     stretch: [0, 0x2212, 0x21C0],
-    HDW: [.293, -.225, .978]
+    HDW: [.459, -.058, .978]
   },
   0x21C1: {
     dir: H,
     sizes: [.978],
     stretch: [0, 0x2212, 0x21C1],
-    HDW: [.293, -.225, .978]
+    HDW: [.459, -.058, .978]
   },
   0x21D0: {
     dir: H,
     sizes: [.888],
     stretch: [0x21D0, 0x21D4, 0x21D2],
     stretchv: [1, 0, 0],
-    HDW: [.395, -.123, .887]
+    HDW: [.529, .01, .887]
   },
   0x21D1: {
     dir: V,
     sizes: [.839],
-    stretch: [0, 0x21D1],
+    stretch: [0x21D1, 0x21D1],
     stretchv: [1, 0],
     HDW: [.678, .16, .701]
   },
@@ -371,7 +371,7 @@ export const delimiters: DelimiterMap<DelimiterData> = {
     sizes: [.887],
     stretch: [0x21D0, 0x21D4, 0x21D2],
     stretchv: [0, 0, 1],
-    HDW: [.395, -.123, .887]
+    HDW: [.529, .01, .887]
   },
   0x21D3: {
     dir: V,
@@ -385,28 +385,28 @@ export const delimiters: DelimiterMap<DelimiterData> = {
     sizes: [.948],
     stretch: [0x21D0, 0x21D4, 0x21D2],
     stretchv: [1, 0, 1],
-    HDW: [.395, -.123, .948]
+    HDW: [.529, .01, .948]
   },
   0x21D5: {
     dir: V,
     sizes: [.978],
-    stretch: [0, 0x21D1, 0x21D3],
+    stretch: [0x21D1, 0x21D1, 0x21D3],
     stretchv: [1, 0, 1],
     HDW: [.747, .23, .701]
   },
   0x21DA: {
     dir: H,
     sizes: [.873],
-    stretch: [0, 0x21DA],
+    stretch: [0x21DA, 0x21DA],
     stretchv: [1, 0],
-    HDW: [.497, -.02, .872]
+    HDW: [.659, .143, .872]
   },
   0x21DB: {
     dir: H,
     sizes: [.872],
     stretch: [0, 0x21DA, 0x21DB],
     stretchv: [0, 0, 1],
-    HDW: [.497, -.02, .872]
+    HDW: [.659, .143, .872]
   },
   0x220F: {
     dir: V,
@@ -428,7 +428,7 @@ export const delimiters: DelimiterMap<DelimiterData> = {
     sizes: [.72],
     stretch: [0, 0x2212],
     stretchv: [0, 1],
-    HDW: [.293, -.225, .72]
+    HDW: [.558, .04, .72]
   },
   0x221A: {
     dir: V,
@@ -700,7 +700,7 @@ export const delimiters: DelimiterMap<DelimiterData> = {
   0x27F0: {
     dir: V,
     sizes: [.839],
-    stretch: [0, 0x27F0],
+    stretch: [0x27F0, 0x27F0],
     stretchv: [1, 0],
     HDW: [.678, .16, 1.058]
   },
@@ -714,7 +714,7 @@ export const delimiters: DelimiterMap<DelimiterData> = {
   0x290A: {
     dir: V,
     sizes: [.839],
-    stretch: [0, 0x290A],
+    stretch: [0x290A, 0x290A],
     stretchv: [1, 0],
     HDW: [.678, .16, .948]
   },
@@ -729,37 +729,37 @@ export const delimiters: DelimiterMap<DelimiterData> = {
     dir: H,
     sizes: [.948],
     stretch: [0x21BC, 0x2212, 0x21C0],
-    HDW: [.293, -.225, .948]
+    HDW: [.459, -.058, .948]
   },
   0x2950: {
     dir: H,
     sizes: [.948],
     stretch: [0x21BD, 0x2212, 0x21C1],
-    HDW: [.293, -.225, .948]
+    HDW: [.459, -.058, .948]
   },
   0x295A: {
     dir: H,
     sizes: [.948],
     stretch: [0x21BC, 0x2212, 0x21A4],
-    HDW: [.293, -.225, .948]
+    HDW: [.459, -.058, .948]
   },
   0x295B: {
     dir: H,
     sizes: [.948],
     stretch: [0x21A6, 0x2212, 0x21C0],
-    HDW: [.293, -.225, .948]
+    HDW: [.459, -.058, .948]
   },
   0x295E: {
     dir: H,
     sizes: [.948],
     stretch: [0x21BD, 0x2212, 0x21A4],
-    HDW: [.293, -.225, .948]
+    HDW: [.459, -.058, .948]
   },
   0x295F: {
     dir: H,
     sizes: [.948],
     stretch: [0x21A6, 0x2212, 0x21C1],
-    HDW: [.293, -.225, .948]
+    HDW: [.459, -.058, .948]
   },
   0x2980: {
     dir: V,
