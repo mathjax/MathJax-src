@@ -43,6 +43,7 @@ import './noundefined/NoUndefinedConfiguration.js';
 import './physics/PhysicsConfiguration.js';
 import './tagformat/TagFormatConfiguration.js';
 import './textmacros/TextMacrosConfiguration.js';
+import './upgreek/UpgreekConfiguration.js';
 import './unicode/UnicodeConfiguration.js';
 import './verb/VerbConfiguration.js';
 
@@ -67,6 +68,7 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
     '[tex]/noerrors',
     '[tex]/noundefined',
     '[tex]/physics',
+    '[tex]/upgreek',
     '[tex]/unicode',
     '[tex]/verb',
     '[tex]/configmacros',
@@ -93,6 +95,7 @@ export const AllPackages: string[] = [
   'newcommand',
   'noerrors',
   'noundefined',
+  'upgreek',
   'unicode',
   'verb',
   'configmacros',
