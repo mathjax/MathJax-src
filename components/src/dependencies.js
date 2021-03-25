@@ -25,6 +25,7 @@ export const dependencies = {
   '[tex]/physics': ['input/tex-base'],
   '[tex]/require': ['input/tex-base'],
   '[tex]/tagformat': ['input/tex-base'],
+  '[tex]/textcomp': ['input/tex-base', '[tex]/textmacros'],
   '[tex]/textmacros': ['input/tex-base'],
   '[tex]/unicode': ['input/tex-base'],
   '[tex]/verb': ['input/tex-base']
@@ -56,6 +57,7 @@ const allPackages = [
   '[tex]/physics',
   '[tex]/require',
   '[tex]/tagformat',
+  '[tex]/textcomp',
   '[tex]/textmacros',
   '[tex]/unicode',
   '[tex]/verb'

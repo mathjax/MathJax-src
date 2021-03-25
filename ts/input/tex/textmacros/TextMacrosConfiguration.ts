@@ -114,7 +114,7 @@ export const TextMacrosConfiguration = Configuration.create('textmacros', {
     parseOptions.tags.configuration = parseOptions;
     //
     // Share the TeX input jax's parseOptions packageData object
-    //   so that require and other packagses will work in both parsers,
+    //   so that require and other packages will work in both parsers,
     //   set the textmacros data (texParser will be filled in later),
     //   and replace the internalMath function with our own.
     //
