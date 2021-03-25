@@ -37,7 +37,7 @@ import './TextMacrosMappings.js';
 /**
  *  The base text macro configuration (used in the TextParser)
  */
-export const textBase = Configuration.local({
+export const textBase = Configuration.create('text-base', {
   handler: {
     character: ['command', 'text-special'],
     macro: ['text-macros']
@@ -103,8 +103,7 @@ export const TextMacrosConfiguration = Configuration.create('textmacros', {
     //  Create the configuration and parseOptions objects for the
     //    internal TextParser and add the textBase configuration.
     //
-    const textConf = new ParserConfiguration([]);
-    textConf.append(textBase);
+    const textConf = new ParserConfiguration(jax.parseOptions.options.textmacros.packages);
     textConf.init();
     const parseOptions = new ParseOptions(textConf, []);
     parseOptions.options = jax.parseOptions.options;      // share the TeX options
@@ -129,5 +128,10 @@ export const TextMacrosConfiguration = Configuration.create('textmacros', {
     //
     const config = data.data.packageData.get('textmacros');
     config.parseOptions.nodeFactory.setMmlFactory(config.jax.mmlFactory);
-  }]
+  }],
+  options: {
+    textmacros: {
+      packages: ['text-base']    // textmacro packages to load
+    }
+  }
 });
