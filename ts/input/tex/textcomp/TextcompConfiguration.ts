@@ -25,21 +25,8 @@
 import {Configuration} from '../Configuration.js';
 import './TextcompMappings.js';
 
-// import {TeX} from '../../tex.js';
-// import {TextParser} from '../textmacros/TextParser.js';
-// import {TextMacrosConfiguration} from '../textmacros/TextMacrosConfiguration.js';
-
 
 export const TextcompConfiguration = Configuration.create(
-  'textcomp', {
-    // config(config: ParserConfiguration, jax: TeX<any, any, any>) {
-    //   try {
-    //     TextMacrosConfiguration.config(config, jax);
-    //   } catch (e) {
-    //     console.log(e);
-    //   }
-    // },
-    handler: {macro: ['textcomp']},
-  }
+  'textcomp', {handler: {macro: ['textcomp-macros', 'textcomp-oldstyle']}}
 );
 

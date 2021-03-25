@@ -24,84 +24,151 @@
 
 
 import ParseMethods from '../ParseMethods.js';
-import {CharacterMap} from '../SymbolMap.js';
+import {CharacterMap, CommandMap} from '../SymbolMap.js';
 import {TexConstant} from '../TexConstants.js';
+import {TextMacrosMethods} from '../textmacros/TextMacrosMethods.js';
 
 
 /**
  * Identifiers from the Textcomp package.
  */
-new CharacterMap('textcomp', ParseMethods.mathchar0mi, {
+new CommandMap('textcomp-macros', {
 
   // Table 3: Predefined LATEX 2ε Text-Mode Commands
-  'textasciicircum':     ['\u005E', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textasciitilde':      ['\u007E', {mathvariant: TexConstant.Variant.NORMAL}],
-// 'textasteriskcentered'
-  'textbackslash':       ['\u005C', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textbar':             ['\u007C', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textbraceleft':       ['\u007B', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textbraceright':      ['\u007D', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textbullet':          ['\u2022', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textdagger':          ['\u2020', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textdaggerdbl':       ['\u2021', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textellipsis':        ['\u2026', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textemdash':          ['\u2014', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textendash':          ['\u2013', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textexclamdown':      ['\u00A1', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textgreater':         ['\u003E', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textless':            ['\u003C', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textordfeminine':     ['\u00AA', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textordmasculine':    ['\u00BA', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textparagraph':       ['\u00B6', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textperiodcentered':  ['\u00B7', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textquestiondown':    ['\u00BF', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textquotedblleft':    ['\u201C', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textquotedblright':   ['\u201D', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textquoteleft':       ['\u2018', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textquoteright':      ['\u2019', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textsection':         ['\u00A7', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textunderscore':      ['\u005F', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textvisiblespace':    ['\u2423', {mathvariant: TexConstant.Variant.NORMAL}],
+  'textasciicircum':     ['Insert', '\u005E'],
+  'textasciitilde':      ['Insert', '\u007E'],
+  'textasteriskcentered': ['Insert', '\u002A'],
+  'textbackslash':       ['Insert', '\u005C'],
+  'textbar':             ['Insert', '\u007C'],
+  'textbraceleft':       ['Insert', '\u007B'],
+  'textbraceright':      ['Insert', '\u007D'],
+  'textbullet':          ['Insert', '\u2022'],
+  'textdagger':          ['Insert', '\u2020'],
+  'textdaggerdbl':       ['Insert', '\u2021'],
+  'textellipsis':        ['Insert', '\u2026'],
+  'textemdash':          ['Insert', '\u2014'],
+  'textendash':          ['Insert', '\u2013'],
+  'textexclamdown':      ['Insert', '\u00A1'],
+  'textgreater':         ['Insert', '\u003E'],
+  'textless':            ['Insert', '\u003C'],
+  'textordfeminine':     ['Insert', '\u00AA'],
+  'textordmasculine':    ['Insert', '\u00BA'],
+  'textparagraph':       ['Insert', '\u00B6'],
+  'textperiodcentered':  ['Insert', '\u00B7'],
+  'textquestiondown':    ['Insert', '\u00BF'],
+  'textquotedblleft':    ['Insert', '\u201C'],
+  'textquotedblright':   ['Insert', '\u201D'],
+  'textquoteleft':       ['Insert', '\u2018'],
+  'textquoteright':      ['Insert', '\u2019'],
+  'textsection':         ['Insert', '\u00A7'],
+  'textunderscore':      ['Insert', '\u005F'],
+  'textvisiblespace':    ['Insert', '\u2423'],
 
   // Table 12: textcomp Diacritics
-  'textacutedbl':        ['\u02DD', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textasciiacute':      ['\u00B4', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textasciibreve':      ['\u02D8', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textasciicaron':      ['\u02C7', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textasciidieresis':   ['\u00A8', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textasciimacron':     ['\u00AF', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textgravedbl':        ['\u02F5', {mathvariant: TexConstant.Variant.NORMAL}],
-  'texttildelow':        ['\u02F7', {mathvariant: TexConstant.Variant.NORMAL}],
+  'textacutedbl':        ['Insert', '\u02DD'],
+  'textasciiacute':      ['Insert', '\u00B4'],
+  'textasciibreve':      ['Insert', '\u02D8'],
+  'textasciicaron':      ['Insert', '\u02C7'],
+  'textasciidieresis':   ['Insert', '\u00A8'],
+  'textasciimacron':     ['Insert', '\u00AF'],
+  'textgravedbl':        ['Insert', '\u02F5'],
+  'texttildelow':        ['Insert', '\u02F7'],
 
   // Table 13: textcomp Currency Symbols
-  'textbaht':            ['\u0E3F', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textcent':            ['\u00A2', {mathvariant: TexConstant.Variant.NORMAL}],
-  // This is not the correct glyph
-  'textcentoldstyle':    ['$', {mathvariant: TexConstant.Variant.OLDSTYLE}],
-  'textcolonmonetary':   ['\u20A1', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textcurrency':        ['\u00A4', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textdollar':          ['\u0024', {mathvariant: TexConstant.Variant.NORMAL}],
-  // This is not the correct glyph
-  'textdollaroldstyle':    ['$', {mathvariant: TexConstant.Variant.OLDSTYLE}],
-  'textdong':            ['\u20AB', {mathvariant: TexConstant.Variant.NORMAL}],
-  'texteuro':            ['\u20AC', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textflorin':          ['\u0192', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textguarani':         ['\u20B2', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textlira':            ['\u20A4', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textnaira':           ['\u20A6', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textpeso':            ['\u20B1', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textsterling':        ['\u00A3', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textwon':             ['\u20A9', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textyen':             ['\u00A5', {mathvariant: TexConstant.Variant.NORMAL}],
+  'textbaht':            ['Insert', '\u0E3F'],
+  'textcent':            ['Insert', '\u00A2'],
+  'textcolonmonetary':   ['Insert', '\u20A1'],
+  'textcurrency':        ['Insert', '\u00A4'],
+  'textdollar':          ['Insert', '\u0024'],
+  'textdong':            ['Insert', '\u20AB'],
+  'texteuro':            ['Insert', '\u20AC'],
+  'textflorin':          ['Insert', '\u0192'],
+  'textguarani':         ['Insert', '\u20B2'],
+  'textlira':            ['Insert', '\u20A4'],
+  'textnaira':           ['Insert', '\u20A6'],
+  'textpeso':            ['Insert', '\u20B1'],
+  'textsterling':        ['Insert', '\u00A3'],
+  'textwon':             ['Insert', '\u20A9'],
+  'textyen':             ['Insert', '\u00A5'],
 
   // Table 15: textcomp Legal Symbols
-  'textcircledP':        ['\u2117', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textcompwordmark':    ['\u200C', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textcopyleft':        ['\u1F12F', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textcopyright':       ['\u00A9', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textregistered':      ['\u00AE', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textservicemark':     ['\u2120', {mathvariant: TexConstant.Variant.NORMAL}],
-  'texttrademark':       ['\u2122', {mathvariant: TexConstant.Variant.NORMAL}],
+  'textcircledP':        ['Insert', '\u2117'],
+  'textcompwordmark':    ['Insert', '\u200C'],
+  'textcopyleft':        ['Insert', '\u1F12F'],
+  'textcopyright':       ['Insert', '\u00A9'],
+  'textregistered':      ['Insert', '\u00AE'],
+  'textservicemark':     ['Insert', '\u2120'],
+  'texttrademark':       ['Insert', '\u2122'],
+
+  // Table 20: Miscellaneous textcomp Symbol
+  'textbardbl':          ['Insert', '\u2016'],
+  'textbigcircle':       ['Insert', '\u25EF'],
+  'textblank':           ['Insert', '\u2422'],
+  'textbrokenbar':       ['Insert', '\u00A6'],
+  'textdiscount':        ['Insert', '\u2052'],
+  'textestimated':       ['Insert', '\u212E'],
+  'textinterrobang':     ['Insert', '\u203D'],
+  'textinterrobangdown': ['Insert', '\u2E18'],
+  'textmusicalnote':     ['Insert', '\u266A'],
+  'textnumero':          ['Insert', '\u2116'],
+  'textopenbullet':      ['Insert', '\u25E6'],
+  'textpertenthousand':  ['Insert', '\u2031'],
+  'textperthousand':     ['Insert', '\u2030'],
+  'textrecipe':          ['Insert', '\u211E'],
+  'textreferencemark':   ['Insert', '\u203B'],
+  // 'textthreequartersemdash'
+  // 'texttwelveudash'
+
+  // Table 51: textcomp Text-Mode Delimiters
+  'textlangle':          ['Insert', '\u2329'],
+  'textrangle':          ['Insert', '\u232A'],
+  'textlbrackdbl':       ['Insert', '\u27E6'],
+  'textrbrackdbl':       ['Insert', '\u27E7'],
+  'textlquill':          ['Insert', '\u2045'],
+  'textrquill':          ['Insert', '\u2046'],
+
+  // Table 62: textcomp Text-Mode Math and Science Symbols
+  'textcelsius':         ['Insert', '\u2103'],
+  'textdegree':          ['Insert', '\u00B0'],
+  'textdiv':             ['Insert', '\u00F7'],
+  'textdownarrow':       ['Insert', '\u2193'],
+  'textfractionsolidus': ['Insert', '\u2044'],
+  'textleftarrow':       ['Insert', '\u2190'],
+  'textlnot':            ['Insert', '\u00AC'],
+  'textmho':             ['Insert', '\u2127'],
+  'textminus':           ['Insert', '\u2212'],
+  'textmu':              ['Insert', '\u00B5'],
+  'textohm':             ['Insert', '\u2126'],
+  'textonehalf':         ['Insert', '\u00BD'],
+  'textonequarter':      ['Insert', '\u00BC'],
+  'textonesuperior':     ['Insert', '\u00B9'],
+  'textpm':              ['Insert', '\u00B1'],
+  'textrightarrow':      ['Insert', '\u2192'],
+  'textsurd':            ['Insert', '\u221A'],
+  'textthreequarters':   ['Insert', '\u00BE'],
+  'textthreesuperior':   ['Insert', '\u00B3'],
+  'texttimes':           ['Insert', '\u00D7'],
+  'texttwosuperior':     ['Insert', '\u00B2'],
+  'textuparrow':         ['Insert', '\u2191'],
+
+  // Table 110: textcomp Genealogical Symbols
+  'textborn':            ['Insert', '\u002A'],
+  'textdied':            ['Insert', '\u2020'],
+  'textdivorced':        ['Insert', '\u26AE'],
+  //  'textleaf'
+  'textmarried':         ['Insert', '\u26AD']
+}, TextMacrosMethods);
+
+
+/**
+ * Identifiers from the Textcomp package.
+ */
+new CharacterMap('textcomp-oldstyle', ParseMethods.mathchar0mi, {
+
+  // This is not the correct glyph
+  'textcentoldstyle':    ['\u00A2', {mathvariant: TexConstant.Variant.OLDSTYLE}],
+  // This is not the correct glyph
+  'textdollaroldstyle':  ['\u0024', {mathvariant: TexConstant.Variant.OLDSTYLE}],
 
   // Table 16: textcomp Old-Style Numerals
   'textzerooldstyle':    ['0', {mathvariant: TexConstant.Variant.OLDSTYLE}],
@@ -113,63 +180,5 @@ new CharacterMap('textcomp', ParseMethods.mathchar0mi, {
   'textsixoldstyle':     ['6', {mathvariant: TexConstant.Variant.OLDSTYLE}],
   'textsevenoldstyle':   ['7', {mathvariant: TexConstant.Variant.OLDSTYLE}],
   'texteightoldstyle':   ['8', {mathvariant: TexConstant.Variant.OLDSTYLE}],
-  'textnineoldstyle':    ['9', {mathvariant: TexConstant.Variant.OLDSTYLE}],
-
-  // Table 20: Miscellaneous textcomp Symbol
-  'textbardbl':          ['\u2016', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textbigcircle':       ['\u25EF', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textblank':           ['\u2422', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textbrokenbar':       ['\u00A6', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textdiscount':        ['\u2052', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textestimated':       ['\u212E', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textinterrobang':     ['\u203D', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textinterrobangdown': ['\u2E18', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textmusicalnote':     ['\u266A', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textnumero':          ['\u2116', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textopenbullet':      ['\u25E6', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textpertenthousand':  ['\u2031', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textperthousand':     ['\u2030', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textrecipe':          ['\u211E', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textreferencemark':   ['\u203B', {mathvariant: TexConstant.Variant.NORMAL}],
-  // 'textthreequartersemdash'
-  // 'texttwelveudash'
-
-  // Table 51: textcomp Text-Mode Delimiters
-  'textlangle':          ['\u2329', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textrangle':          ['\u232A', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textlbrackdbl':       ['\u27E6', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textrbrackdbl':       ['\u27E7', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textlquill':          ['\u2045', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textrquill':          ['\u2046', {mathvariant: TexConstant.Variant.NORMAL}],
-
-  // Table 62: textcomp Text-Mode Math and Science Symbols
-    'textcelsius':         ['\u2103', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textdegree':          ['\u00B0', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textdiv':             ['\u00F7', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textdownarrow':       ['\u2193', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textfractionsolidus': ['\u2044', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textleftarrow':       ['\u2190', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textlnot':            ['\u00AC', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textmho':             ['\u2127', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textminus':           ['\u2212', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textmu':              ['\u00B5', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textohm':             ['\u2126', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textonehalf':         ['\u00BD', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textonequarter':      ['\u00BC', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textonesuperior':     ['\u00B9', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textpm':              ['\u00B1', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textrightarrow':      ['\u2192', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textsurd':            ['\u221A', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textthreequarters':   ['\u00BE', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textthreesuperior':   ['\u00B3', {mathvariant: TexConstant.Variant.NORMAL}],
-  'texttimes':           ['\u00D7', {mathvariant: TexConstant.Variant.NORMAL}],
-  'texttwosuperior':     ['\u00B2', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textuparrow':         ['\u2191', {mathvariant: TexConstant.Variant.NORMAL}],
-
-  // Table 110: textcomp Genealogical Symbols
-  'textborn':            ['\u002A', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textdied':            ['\u2020', {mathvariant: TexConstant.Variant.NORMAL}],
-  'textdivorced':        ['\u26AE', {mathvariant: TexConstant.Variant.NORMAL}],
-  //  'textleaf'
-  'textmarried':         ['\u26AD', {mathvariant: TexConstant.Variant.NORMAL}]
+  'textnineoldstyle':    ['9', {mathvariant: TexConstant.Variant.OLDSTYLE}]
 });
