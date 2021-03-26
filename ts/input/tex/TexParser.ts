@@ -32,6 +32,7 @@ import TexError from './TexError.js';
 import {MmlNode, AbstractMmlNode} from '../../core/MmlTree/MmlNode.js';
 import {ParseInput, ParseResult} from './Types.js';
 import ParseOptions from './ParseOptions.js';
+import {ParserConfiguration} from './Configuration.js';
 import {StackItem, EnvList} from './StackItem.js';
 import {Symbol} from './Symbol.js';
 import {OptionList} from '../../util/Options.js';
@@ -41,6 +42,11 @@ import {OptionList} from '../../util/Options.js';
  * The main Tex Parser class.
  */
 export default class TexParser {
+
+  /**
+   * The name this parser is registered under
+   */
+  public static registeredName: string = '';
 
   /**
    * Counter for recursive macros.
@@ -65,6 +71,15 @@ export default class TexParser {
    * @type {string}
    */
   public currentCS: string = '';
+
+
+  /**
+   * Register this parser under the given name
+   */
+  public static register(name: string) {
+    this.registeredName = name;
+    ParserConfiguration.registerParser(name, this);
+  }
 
   /**
    * @constructor
@@ -510,5 +525,6 @@ export default class TexParser {
     return this.configuration.nodeFactory.create(kind, ...rest);
   }
 
-
 }
+
+TexParser.register('tex');

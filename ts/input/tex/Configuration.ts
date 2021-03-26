@@ -31,6 +31,7 @@ import {FunctionList} from '../../util/FunctionList.js';
 import {TeX} from '../tex.js';
 import {PrioritizedList} from '../../util/PrioritizedList.js';
 import {TagsFactory} from './Tags.js';
+import TexParser from './TexParser.js';
 
 
 export type StackItemConfig = {[kind: string]: StackItemClass};
@@ -41,7 +42,7 @@ export type ProcessorList = Processor<Function>[];
 export type ConfigMethod = (c: ParserConfiguration, j: TeX<any, any, any>) => void;
 export type InitMethod = (c: ParserConfiguration) => void;
 
-
+export type Parser = typeof TexParser;
 
 export class Configuration {
 
@@ -74,6 +75,7 @@ export class Configuration {
                                   init?: ProtoProcessor<InitMethod>,
                                   config?: ProtoProcessor<ConfigMethod>,
                                   priority?: number,
+                                  parser?: string,
                                  } = {}): Configuration {
     let priority = config.priority || PrioritizedList.DEFAULTPRIORITY;
     let init = config.init ? this.makeProcessor(config.init, priority) : null;
@@ -82,6 +84,7 @@ export class Configuration {
       pre => this.makeProcessor(pre, priority));
     let postprocessors = (config.postprocessors || []).map(
       post => this.makeProcessor(post, priority));
+    let parser = config.parser || TexParser.registeredName;
     return new Configuration(
       name,
       config.handler || {},
@@ -90,7 +93,8 @@ export class Configuration {
       config.tags || {},
       config.options || {},
       config.nodes || {},
-      preprocessors, postprocessors, init, conf, priority
+      preprocessors, postprocessors, init, conf, priority,
+      parser
     );
   }
 
@@ -113,6 +117,7 @@ export class Configuration {
    *  * _init_ init method and optionally its priority.
    *  * _config_ config method and optionally its priority.
    *  * _priority_ default priority of the configuration.
+   *  * _parser_ the name of the parser that this configuration targets
    * @return {Configuration} The newly generated configuration.
    */
   public static create(name: string,
@@ -127,6 +132,7 @@ export class Configuration {
                                 init?: ProtoProcessor<InitMethod>,
                                 config?: ProtoProcessor<ConfigMethod>,
                                 priority?: number,
+                                parser?: string
                                } = {}): Configuration {
     let configuration = Configuration._create(name, config);
     ConfigurationHandler.set(name, configuration);
@@ -140,16 +146,17 @@ export class Configuration {
    * @return {Configuration} The ephemeral package configuration.
    */
   public static local(config: {handler?: HandlerConfig,
-                              fallback?: FallbackConfig,
-                              items?: StackItemConfig,
-                              tags?: TagsConfig,
-                              options?: OptionList,
-                              nodes?: {[key: string]: any},
-                              preprocessors?: ProtoProcessor<Function>[],
-                              postprocessors?: ProtoProcessor<Function>[],
-                              init?: ProtoProcessor<InitMethod>,
-                              config?: ProtoProcessor<ConfigMethod>,
-                              priority?: number,
+                               fallback?: FallbackConfig,
+                               items?: StackItemConfig,
+                               tags?: TagsConfig,
+                               options?: OptionList,
+                               nodes?: {[key: string]: any},
+                               preprocessors?: ProtoProcessor<Function>[],
+                               postprocessors?: ProtoProcessor<Function>[],
+                               init?: ProtoProcessor<InitMethod>,
+                               config?: ProtoProcessor<ConfigMethod>,
+                               priority?: number,
+                               parser?: string
                              } = {}): Configuration {
     return Configuration._create('', config);
   }
@@ -169,7 +176,8 @@ export class Configuration {
                       readonly postprocessors: ProcessorList = [],
                       readonly initMethod: Processor<InitMethod> = null,
                       readonly configMethod: Processor<ConfigMethod> = null,
-                      public priority: number
+                      public priority: number,
+                      readonly parser: string
                      ) {
     this.handler = Object.assign(
       {character: [], delimiter: [], macro: [], environment: []}, handler);
@@ -237,6 +245,16 @@ export namespace ConfigurationHandler {
 export class ParserConfiguration {
 
   /**
+   * Registered parsers
+   */
+  protected static registry: Map<string, Parser> = new Map();
+
+  /**
+   * The parser class this configuration targets
+   */
+  protected parser: Parser = null;
+
+  /**
    * Priority list of init methods.
    * @type {FunctionList}
    */
@@ -286,11 +304,24 @@ export class ParserConfiguration {
 
 
   /**
+   * Register a named parser
+   */
+  public static registerParser(name: string, parser: Parser) {
+    const registry = ParserConfiguration.registry;
+    if (registry.has(name)) {
+      throw Error(`Parser ${name} is already registered`);
+    }
+    ParserConfiguration.registry.set(name, parser);
+  }
+
+  /**
    * @constructor
    * @param {(string|[string,number])[]} packages A list of packages with
    *     optional priorities.
+   * @param {string} parser   The name of the parser this configuration targets
    */
-  constructor(packages: (string | [string, number])[]) {
+  constructor(packages: (string | [string, number])[], parserName: string) {
+    this.parser = ParserConfiguration.registry.get(parserName);
     for (const pkg of packages.slice().reverse()) {
       this.addPackage(pkg);
     }
@@ -323,22 +354,20 @@ export class ParserConfiguration {
    */
   public addPackage(pkg: (string | [string, number])) {
     const name = typeof pkg === 'string' ? pkg : pkg[0];
-    let conf = ConfigurationHandler.get(name);
-    if (conf) {
-      this.configurations.add(
-        conf, typeof pkg === 'string' ? conf.priority : pkg[1]);
-    }
+    const conf = this.getPackage(name);
+    conf && this.configurations.add(conf, typeof pkg === 'string' ? conf.priority : pkg[1]);
   }
 
   /**
    * Adds a configuration after the input jax is created.  (Used by \require.)
    * Sets items, nodes and runs configuration method explicitly.
    *
-   * @param {Configuration} config   The configuration to be registered in this one
+   * @param {string} name            The name of the configuration package
    * @param {TeX} jax                The TeX jax where it is being registered
    * @param {OptionList=} options    The options for the configuration.
    */
-  public add(config: Configuration, jax: TeX<any, any, any>, options: OptionList = {}) {
+  public add(name: string, jax: TeX<any, any, any>, options: OptionList = {}) {
+    const config = this.getPackage(name);
     this.append(config);
     this.configurations.add(config, config.priority);
     this.init();
@@ -356,6 +385,25 @@ export class ParserConfiguration {
     }
   }
 
+  /**
+   * Check if a package is for the targeted parser
+   *
+   * @param {string} name       The name of the package to check
+   * @return {Configuration}    The configuration for the package
+   */
+  protected getPackage(name: string): Configuration {
+    const config = ConfigurationHandler.get(name);
+    if (config) {
+      const parser = ParserConfiguration.registry.get(config.parser);
+      if (!parser) {
+        throw Error(`Parser '${config.name}' is not registered`);
+      }
+      if (!(this.parser === parser || this.parser.prototype instanceof parser)) {
+        throw Error(`Package '${name}' does not target the proper parser`);
+      }
+    }
+    return config;
+  }
 
   /**
    * Appends a configuration to the overall configuration object.

@@ -204,3 +204,5 @@ export class TextParser extends TexParser {
   }
 
 }
+
+TextParser.register('text');
