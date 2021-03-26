@@ -222,7 +222,7 @@ new sm.CharacterMap('AMSsymbols-mathchar0mi', ParseMethods.mathchar0mi, {
 /**
  * Operators from the AMS Symbols package.
  */
-new sm.CharacterMap('AMSsymbols-mathchar0m0', ParseMethods.mathchar0mo, {
+new sm.CharacterMap('AMSsymbols-mathchar0mo', ParseMethods.mathchar0mo, {
   // Binary operators
   dotplus:                '\u2214',
   ltimes:                 '\u22C9',
