@@ -29,20 +29,27 @@ import {CharacterMap} from '../SymbolMap.js';
 
 
 /**
- * Upright Greek characters.
+ * Ohm symbol as in gensymb. Usually upright, but can be affected by fonts.
  */
-new CharacterMap('gensymb', ParseMethods.mathchar7, {
-  degree:         '\u00B0',
-  celsius:        '\u2103',
-  perthousand:    '\u2030',
-  ohm:            ['\u03A9', {mathvariant: TexConstant.Variant.NORMAL}],
+new CharacterMap('gensymb-ohm', ParseMethods.mathchar7, {
+  ohm:            '\u03A9'
+});
+
+
+/**
+ * Remaining symbols from the gensymb package are all in \rm font only.
+ */
+new CharacterMap('gensymb-rest', ParseMethods.mathchar0mo, {
+  degree:         ['\u00B0', {mathvariant: TexConstant.Variant.NORMAL}],
+  celsius:        ['\u2103', {mathvariant: TexConstant.Variant.NORMAL}],
+  perthousand:    ['\u2030', {mathvariant: TexConstant.Variant.NORMAL}],
   micro:          ['\u00B5', {mathvariant: TexConstant.Variant.NORMAL}]
 });
 
 
 export const GensymbConfiguration = Configuration.create(
   'gensymb', {
-    handler: {macro: ['gensymb']},
+    handler: {macro: ['gensymb-ohm', 'gensymb-rest']},
   }
 );
 
