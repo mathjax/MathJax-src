@@ -72,7 +72,7 @@ function RegisterExtension(jax: TeX<any, any, any>, name: string) {
       //
       //  Register the extension with the jax's configuration
       //
-      (jax as any).configuration.add(handler, jax, options);
+      (jax as any).configuration.add(extension, jax, options);
       //
       // If there are preprocessors, restart so that they run
       // (we don't have access to the document or MathItem needed to call
