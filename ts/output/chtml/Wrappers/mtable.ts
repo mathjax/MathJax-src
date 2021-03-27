@@ -166,7 +166,7 @@ CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstru
     this.handleColumnWidths();
     this.handleRowSpacing();
     this.handleRowLines();
-    this.handleEqualRows();
+    this.handleRowHeights();
     this.handleFrame();
     this.handleWidth();
     this.handleLabels();
@@ -328,11 +328,19 @@ CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstru
   }
 
   /**
+   * Adjust row heights for equal-sized rows
+   */
+  protected handleRowHeights() {
+    if (this.node.attributes.get('equalrows')) {
+      this.handleEqualRows();
+    }
+  }
+
+  /**
    * Set the heights of all rows to be the same, and properly center
    * baseline or axis rows within the newly sized
    */
   protected handleEqualRows() {
-    if (!this.node.attributes.get('equalrows')) return;
     const space = this.getRowHalfSpacing();
     const {H, D, NH, ND} = this.getTableData();
     const HD = this.getEqualRowHeight();
@@ -341,23 +349,30 @@ CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstru
     //
     for (let i = 0; i < this.numRows; i++) {
       const row = this.childNodes[i];
+      this.setRowHeight(row, HD + space[i] + space[i + 1] + this.rLines[i]);
       if (HD !== NH[i] + ND[i]) {
-        this.setRowHeight(row, HD, (HD - H[i] + D[i]) / 2, space[i] + space[i + 1]);
+        this.setRowBaseline(row, HD, (HD - H[i] + D[i]) / 2);
       }
     }
   }
 
   /**
-   * Set the height of the row, and make sure that the baseline is in the right position for cells
+   * @param {CHTMLWrapper} row   The row whose hieght is to be set
+   * @param {number} HD          The height to be set for the row
+   */
+  protected setRowHeight(row: CHTMLWrapper<N, T, D>, HD: number) {
+      this.adaptor.setStyle(row.chtml, 'height', this.em(HD));
+  }
+
+  /**
+   * Make sure the baseline is in the right position for cells
    *   that are row aligned to baseline ot axis
    *
    * @param {CHTMLWrapper} row   The row to be set
    * @param {number} HD          The total height+depth for the row
    * @param {number] D           The new depth for the row
-   * @param {number} space       The total spacing above and below the row
    */
-  protected setRowHeight(row: CHTMLWrapper<N, T, D>, HD: number, D: number, space: number) {
-    this.adaptor.setStyle(row.chtml, 'height', this.em(HD + space));
+  protected setRowBaseline(row: CHTMLWrapper<N, T, D>, HD: number, D: number) {
     const ralign = row.node.attributes.get('rowalign') as string;
     //
     //  Loop through the cells and set the strut height and depth.
@@ -520,8 +535,9 @@ CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstru
     const space = this.getRowHalfSpacing();
     for (let i = 0; i < this.numRows; i++) {
       const row = this.childNodes[i];
+      this.setRowHeight(row, H[i] + D[i] + space[i] + space[i + 1] + this.rLines[i]);
       if (H[i] !== NH[i] || D[i] !== ND[i]) {
-        this.setRowHeight(row, H[i] + D[i], D[i], space[i] + space[i + 1]);
+        this.setRowBaseline(row, H[i] + D[i], D[i]);
       } else if (row.node.isKind('mlabeledtr')) {
         this.setCellBaseline(row.childNodes[0], '', H[i] + D[i], D[i]);
       }
