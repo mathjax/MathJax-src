@@ -407,6 +407,7 @@ new sm.CommandMap('macros', {
   scr:               ['SetFont', TexConstant.Variant.SCRIPT],
   frak:              ['SetFont', TexConstant.Variant.FRAKTUR],
   sf:                ['SetFont', TexConstant.Variant.SANSSERIF],
+  sfit:              ['SetFont', TexConstant.Variant.SANSSERIFITALIC],
   tt:                ['SetFont', TexConstant.Variant.MONOSPACE],
 
   //      font:
@@ -621,11 +622,13 @@ new sm.CommandMap('macros', {
   mathit:            ['Macro', '{\\it #1}', 1],
   mathfrak:          ['Macro', '{\\frak #1}', 1],
   mathsf:            ['Macro', '{\\sf #1}', 1],
+  mathsfit:          ['Macro', '{\\sfit #1}', 1],
   mathtt:            ['Macro', '{\\tt #1}', 1],
   textrm:            ['HBox', null, TexConstant.Variant.NORMAL],
   textit:            ['HBox', null, TexConstant.Variant.ITALIC],
   textbf:            ['HBox', null, TexConstant.Variant.BOLD],
   textsf:            ['HBox', null, TexConstant.Variant.SANSSERIF],
+  textsfit:          ['HBox', null, TexConstant.Variant.SANSSERIFITALIC],
   texttt:            ['HBox', null, TexConstant.Variant.MONOSPACE],
   pmb:               ['Macro', '\\rlap{#1}\\kern1px{#1}', 1],
   TeX:               ['Macro', 'T\\kern-.14em\\lower.5ex{E}\\kern-.115em X'],

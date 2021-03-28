@@ -87,6 +87,7 @@ new CommandMap('text-macros', {
   scr:          ['SetFont', TexConstant.Variant.SCRIPT],
   frak:         ['SetFont', TexConstant.Variant.FRAKTUR],
   sf:           ['SetFont', TexConstant.Variant.SANSSERIF],
+  sfit:         ['SetFont', TexConstant.Variant.SANSSERIFITALIC],
   tt:           ['SetFont', TexConstant.Variant.MONOSPACE],
 
   tiny:         ['SetSize', 0.5],
@@ -108,12 +109,14 @@ new CommandMap('text-macros', {
   mathit:       'MathModeOnly',
   mathfrak:     'MathModeOnly',
   mathsf:       'MathModeOnly',
+  mathsfit:     'MathModeOnly',
   mathtt:       'MathModeOnly',
   Bbb:          ['Macro', '{\\bbFont #1}', 1],
   textrm:       ['Macro', '{\\rm #1}', 1],
   textit:       ['Macro', '{\\it #1}', 1],
   textbf:       ['Macro', '{\\bf #1}', 1],
   textsf:       ['Macro', '{\\sf #1}', 1],
+  textsfit:     ['Macro', '{\\sfit #1}', 1],
   texttt:       ['Macro', '{\\tt #1}', 1],
 
   dagger:       ['Insert', '\u2020'],
