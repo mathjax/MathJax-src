@@ -462,6 +462,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * The default delimiter data
    */
   protected static defaultDelimiters: DelimiterMap<any> = {};
+
   /**
    * The default character data
    */

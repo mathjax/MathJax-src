@@ -24,6 +24,7 @@
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../../../util/BBox.js';
+import {unicodeChars} from '../../../util/string.js';
 import {DelimiterData} from '../FontData.js';
 import {DIRECTION, NOSTRETCH} from '../FontData.js';
 
@@ -201,9 +202,14 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
     public getVariant() {
       if (this.node.attributes.get('largeop')) {
         this.variant = (this.node.attributes.get('displaystyle') ? '-largeop' : '-smallop');
-      } else {
-        super.getVariant();
+        return;
       }
+      if (!this.node.attributes.getExplicit('mathvariant') &&
+          this.node.getProperty('pseudoscript') === false) {
+        this.variant = '-tex-variant';
+        return;
+      }
+      super.getVariant();
     }
 
     /**
@@ -364,6 +370,10 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
      * @override
      */
     public remapChars(chars: number[]) {
+      const primes = this.node.getProperty('primes') as string;
+      if (primes) {
+        return unicodeChars(primes);
+      }
       if (chars.length === 1) {
         const parent = (this.node as MmlMo).coreParent().parent;
         const isAccent = this.isAccent && !parent.isKind('mrow');
