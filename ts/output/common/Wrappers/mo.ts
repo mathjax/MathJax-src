@@ -107,6 +107,16 @@ export interface CommonMo extends AnyWrapper {
    * @return {number[]}        The height and depth for the vertically stretched delimiter
    */
   getBaseline(WHD: number[], HD: number, C: DelimiterData): number[];
+
+  /**
+   * Determine the size of the delimiter based on whether full extenders should be used or not.
+   *
+   * @param {number} D          The requested size of the delimiter
+   * @param {DelimiterData} C   The data for the delimiter
+   * @return {number}           The final size of the assembly
+   */
+  checkExtendedHeight(D: number, C: DelimiterData): number;
+
 }
 
 /**
@@ -277,7 +287,7 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
         if (delim.stretch) {
           this.size = -1;
           this.invalidateBBox();
-          this.getStretchBBox(WH, D, delim);
+          this.getStretchBBox(WH, this.checkExtendedHeight(D, delim), delim);
         } else {
           this.variant = this.font.getSizeVariant(c, i - 1);
           this.size = i - 1;
@@ -364,6 +374,18 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
         d = cd * (h / (ch + cd));
       }
       return [h - d, d];
+    }
+
+    /**
+     * @override
+     */
+    public checkExtendedHeight(D: number, C: DelimiterData): number {
+      if (C.fullExt) {
+        const [extSize, endSize] = C.fullExt;
+        const n = Math.ceil(Math.max(0, D - endSize) / extSize);
+        D = endSize + n * extSize;
+      }
+      return D;
     }
 
     /**
