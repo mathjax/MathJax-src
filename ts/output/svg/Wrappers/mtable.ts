@@ -144,7 +144,7 @@ CommonMtableMixin<SVGmtd<any, any, any>, SVGmtr<any, any, any>, SVGConstructor<a
    */
   public handleColor() {
     super.handleColor();
-    const rect = this.adaptor.firstChild(this.element);
+    const rect = this.firstChild();
     if (rect) {
       this.adaptor.setAttribute(rect, 'width', this.fixed(this.getWidth()));
     }

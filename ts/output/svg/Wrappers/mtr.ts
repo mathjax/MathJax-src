@@ -138,7 +138,7 @@ CommonMtrMixin<SVGmtd<any, any, any>, SVGConstructor<any, any, any>>(SVGWrapper)
    */
   protected placeColor() {
     const adaptor = this.adaptor;
-    const child = adaptor.firstChild(this.element);
+    const child = this.firstChild();
     if (child && adaptor.kind(child) === 'rect' && adaptor.getAttribute(child, 'data-bgcolor')) {
       const [TL, BL] = [this.tLine / 2, this.bLine / 2];
       const [TS, BS] = [this.tSpace, this.bSpace];

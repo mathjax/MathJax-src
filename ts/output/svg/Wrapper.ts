@@ -141,16 +141,17 @@ CommonWrapper<
    * @returns {N}  The root of the HTML tree for the wrapped node's output
    */
   protected createSVGnode(parent: N): N {
+    this.element = this.svg('g', {'data-mml-node': this.node.kind});
     const href = this.node.attributes.get('href');
     if (href) {
       parent = this.adaptor.append(parent, this.svg('a', {href: href})) as N;
       const {h, d, w} = this.getBBox();
-      this.adaptor.append(parent, this.svg('rect', {
+      this.adaptor.append(this.element, this.svg('rect', {
         'data-hitbox': true, fill: 'none', stroke: 'none', 'pointer-events': 'all',
         width: this.fixed(w), height: this.fixed(h + d), y: this.fixed(-d)
       }));
     }
-    this.element = this.adaptor.append(parent, this.svg('g', {'data-mml-node': this.node.kind})) as N;
+    this.adaptor.append(parent, this.element) as N;
     return this.element;
   }
 
@@ -243,19 +244,60 @@ CommonWrapper<
    */
   public place(x: number, y: number, element: N = null) {
     if (!(x || y)) return;
-    const adaptor = this.adaptor;
-    const translate = 'translate(' + this.fixed(x) + ', ' + this.fixed(y) + ')';
     if (!element) {
       element = this.element;
-      if (this.node.attributes && this.node.attributes.get('href')) {
-        const rect = adaptor.previous(element);
-        if (rect && adaptor.kind(rect) === 'rect' && adaptor.getAttribute(rect, 'data-hitbox')) {
-          adaptor.setAttribute(rect, 'transform', translate);
-        }
-      }
+      y = this.handleId(y);
     }
-    let transform = adaptor.getAttribute(element, 'transform') || '';
-    adaptor.setAttribute(element, 'transform', translate + (transform ? ' ' + transform : ''));
+    const translate = `translate(${this.fixed(x)},${this.fixed(y)})`;
+    const transform = this.adaptor.getAttribute(element, 'transform') || '';
+    this.adaptor.setAttribute(element, 'transform', translate + (transform ? ' ' + transform : ''));
+  }
+
+  /**
+   * Firefox and Safari don't scroll to the top of the element with an Id, so
+   *   we shift the element up and then translate its contents down in order to
+   *   correct for their positioning.  Also, Safari will go to the baseline of
+   *   a <text> element (e.g., when mtextInheritFont is true), so add a text
+   *   element to help Safari get the right location.
+   *
+   * @param {number} y     The current offset of the element
+   * @return {number}      The new offset for the element if it has an id
+   */
+  protected handleId(y: number): number {
+    if (!this.node.attributes || !this.node.attributes.get('id')) {
+      return y;
+    }
+    const adaptor = this.adaptor;
+    const h = this.getBBox().h;
+    //
+    //  Remove the element's children and put them into a <g> with transform
+    //
+    const children =  adaptor.childNodes(this.element);
+    children.forEach(child => adaptor.remove(child));
+    const g = this.svg('g', {'data-idbox': true, transform: `translate(0,${this.fixed(-h)})`}, children);
+    //
+    //  Add the text element (not transformed) and the transformed <g>
+    //
+    adaptor.append(this.element, this.svg('text', {'data-align': true} , [this.text('')]));
+    adaptor.append(this.element, g);
+    return y + h;
+  }
+
+  /**
+   * Return the first child element, skipping id align boxes and href hit boxes
+   *
+   * @return {N}   The first "real" child element
+   */
+  public firstChild(): N {
+    const adaptor = this.adaptor;
+    let child = adaptor.firstChild(this.element);
+    if (child && adaptor.kind(child) === 'text' && adaptor.getAttribute(child, 'data-align')) {
+      child = adaptor.firstChild(adaptor.next(child));
+    }
+    if (child && adaptor.kind(child) === 'rect' && adaptor.getAttribute(child, 'data-hitbox')) {
+      child = adaptor.next(child);
+    }
+    return child;
   }
 
   /**
