@@ -79,7 +79,7 @@ export interface MathJaxObject extends MJObject {
 }
 
 /**
- * Functions to used to filter the path to a package
+ * Functions used to filter the path to a package
  */
 export const PathFilters: {[name: string]: PathFilterFunction} = {
   /**
@@ -107,7 +107,7 @@ export const PathFilters: {[name: string]: PathFilterFunction} = {
   },
 
   /**
-   * Revursively replace path prefixes (e.g., [mathjax], [tex], etc.)
+   * Recursively replace path prefixes (e.g., [mathjax], [tex], etc.)
    */
   prefix: (data) => {
     let match;
