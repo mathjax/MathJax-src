@@ -369,8 +369,9 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
     public remapChars(chars: number[]) {
       const primes = this.node.getProperty('primes') as string;
       if (primes) {
-        chars = unicodeChars(primes);
-      } else if (chars.length === 1) {
+        return unicodeChars(primes);
+      }
+      if (chars.length === 1) {
         const parent = (this.node as MmlMo).coreParent().parent;
         const isAccent = this.isAccent && !parent.isKind('mrow');
         const map = (isAccent ? 'accent' : 'mo');
