@@ -368,11 +368,7 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
     }
 
     /**
-     * Determine the size of the delimiter based on whether full extenders should be used or not.
-     *
-     * @param {number} D          The requested size of the delimiter
-     * @param {DelimiterData} C   The data for the delimiter
-     * @return {number}           The final size of the assembly
+     * @override
      */
     public checkExtendedHeight(D: number, C: DelimiterData): number {
       if (C.fullExt) {
