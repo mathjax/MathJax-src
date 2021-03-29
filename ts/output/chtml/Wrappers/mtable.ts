@@ -530,7 +530,6 @@ CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstru
    *   and set the baseline for labels that are baseline aligned.
    */
   protected updateRowHeights() {
-    if (this.node.attributes.get('equalrows') as boolean) return;
     let {H, D, NH, ND} = this.getTableData();
     const space = this.getRowHalfSpacing();
     for (let i = 0; i < this.numRows; i++) {

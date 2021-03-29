@@ -158,11 +158,12 @@ export interface CommonMtable<C extends AnyWrapper, R extends CommonMtr<C>> exte
    * @param {C} cell        The cell whose height, depth, and width are to be added into the H, D, W arrays
    * @param {number} i      The column number for the cell
    * @param {number} j      The row number for the cell
+   * @param {string} align  The row alignment
    * @param {number[]} H    The maximum height for each of the rows
    * @param {number[]} D    The maximum depth for each of the rows
    * @param {number[]=} W   The maximum width for each column
    */
-  updateHDW(cell: C, i: number, j: number, H: number[], D: number[], W?: number[]): void;
+  updateHDW(cell: C, i: number, j: number, align: string, H: number[], D: number[], W?: number[]): void;
 
   /**
    * Set cell widths for columns with percentage width children
@@ -591,15 +592,16 @@ export function CommonMtableMixin<
       const rows = this.tableRows;
       for (let j = 0; j < rows.length; j++) {
         const row = rows[j];
+        const align = row.node.attributes.get('rowalign') as string;
         for (let i = 0; i < row.numCells; i++) {
           const cell = row.getChild(i);
-          this.updateHDW(cell, i, j, H, D, W);
+          this.updateHDW(cell, i, j, align, H, D, W);
           this.recordPWidthCell(cell, i);
         }
         NH[j] = H[j];
         ND[j] = D[j];
         if (row.labeled) {
-          this.updateHDW(row.childNodes[0], 0, j, H, D, LW);
+          this.updateHDW(row.childNodes[0], 0, j, align, H, D, LW);
         }
       }
       const L = LW[0];
@@ -611,11 +613,12 @@ export function CommonMtableMixin<
      * @param {C} cell         The cell whose height, depth, and width are to be added into the H, D, W arrays
      * @param {number} i       The column number for the cell
      * @param {number} j       The row number for the cell
+     * @param {string} align   The row alignment
      * @param {number[]} H     The maximum height for each of the rows
      * @param {number[]} D     The maximum depth for each of the rows
      * @param {number[]=} W    The maximum width for each column
      */
-    public updateHDW(cell: C, i: number, j: number, H: number[], D: number[], W: number[] = null) {
+    public updateHDW(cell: C, i: number, j: number, align: string, H: number[], D: number[], W: number[] = null) {
       let {h, d, w} = cell.getBBox();
       const scale = cell.parent.bbox.rscale;
       if (cell.parent.bbox.rscale !== 1) {
@@ -627,9 +630,23 @@ export function CommonMtableMixin<
         if (h < .75) h = .75;
         if (d < .25) d = .25;
       }
+      [h, d] = this.alignedHD(align, h, d);
       if (h > H[j]) H[j] = h;
       if (d > D[j]) D[j] = d;
       if (W && w > W[i]) W[i] = w;
+    }
+
+    /**
+     * @param {string} align       The row alignment
+     * @param {number} h           The cell height
+     * @param {number} d           The cell depth
+     * @return {[number,number]}   The adjusted height and depth for the alignment
+     */
+    public alignedHD(align: string, h: number, d: number): [number, number] {
+      if (align === 'baseline' || align === 'axis') return [h, d];
+      if (align === 'top' || align === 'bottom') return [h + d, 0];
+      const hd = (h + d) / 2;
+      return [hd, hd];
     }
 
     /**
