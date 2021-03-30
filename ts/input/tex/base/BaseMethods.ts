@@ -337,30 +337,7 @@ BaseMethods.Spacer = function(parser: TexParser, _name: string, space: string) {
 BaseMethods.LeftRight = function(parser: TexParser, name: string) {
   // @test Fenced, Fenced3
   const first = name.substr(1);
-  parser.Push(
-    parser.itemFactory.create(first)
-      .setProperty('delim', parser.GetDelimiter(name)));
-};
-
-/**
- * Parses middle fenced expressions.
- * @param {TexParser} parser The calling parser.
- * @param {string} name The macro name.
- */
-BaseMethods.Middle = function(parser: TexParser, name: string) {
-  // @test Middle
-  const delim = parser.GetDelimiter(name);
-  let node = parser.create('node', 'TeXAtom', [], {texClass: TEXCLASS.CLOSE});
-  parser.Push(node);
-  if (!parser.stack.Top().isKind('left')) {
-    // @test Orphan Middle, Middle with Right
-    throw new TexError('MisplacedMiddle',
-                        '%1 must be within \\left and \\right', parser.currentCS);
-  }
-  node = parser.create('token', 'mo', {stretchy: true}, delim);
-  parser.Push(node);
-  node = parser.create('node', 'TeXAtom', [], {texClass: TEXCLASS.OPEN});
-  parser.Push(node);
+  parser.Push(parser.itemFactory.create(first, parser.GetDelimiter(name), parser.stack.env.color));
 };
 
 /**
