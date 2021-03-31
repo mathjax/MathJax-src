@@ -143,7 +143,7 @@ export const delimiters: DelimiterMap<DelimiterData> = {
     dir: H,
     sizes: [0, 1, 1.5, 1.77, 2.18, 2.6],
     stretch: [0xE144, 0x23B5, 0xE145],
-    HDW: [-.257, .346, 0]
+    HDW: [-.012, .346, 0]
   },
   0x30C: {
     dir: H,
@@ -215,21 +215,21 @@ export const delimiters: DelimiterMap<DelimiterData> = {
     sizes: [.436, .893, 1.34, 1.787, 2.233, 3.073],
     stretch: [0x20D6, 0x20D6],
     stretchv: [3, 0],
-    HDW: [.735, -.688, 0]
+    HDW: [.843, -.58, 0]
   },
   0x20D7: {
     dir: H,
     sizes: [.436, .893, 1.34, 1.787, 2.233, 3.073],
     stretch: [0, 0x20D6, 0x20D7],
     stretchv: [0, 0, 3],
-    HDW: [.735, -.688, 0]
+    HDW: [.843, -.58, 0]
   },
   0x20E1: {
     dir: H,
     sizes: [.494],
     stretch: [0x20D6, 0x20D6, 0x20D7],
     stretchv: [3, 0, 3],
-    HDW: [.735, -.688, 0]
+    HDW: [.843, -.58, 0]
   },
   0x20EC: {
     dir: H,
@@ -244,14 +244,14 @@ export const delimiters: DelimiterMap<DelimiterData> = {
     sizes: [.436, .893, 1.34, 1.787, 2.233, 3.073],
     stretch: [0x20EE, 0x20EE],
     stretchv: [3, 0],
-    HDW: [-.13, .177, 0]
+    HDW: [-.022, .285, 0]
   },
   0x20EF: {
     dir: H,
     sizes: [.436, .893, 1.34, 1.787, 2.233, 3.073],
     stretch: [0, 0x20EE, 0x20EF],
     stretchv: [0, 0, 3],
-    HDW: [-.13, .177, 0]
+    HDW: [-.022, .285, 0]
   },
   0x2140: {
     dir: V,
@@ -567,21 +567,21 @@ export const delimiters: DelimiterMap<DelimiterData> = {
     dir: H,
     sizes: [.633, 1.001, 1.501, 1.771, 2.181, 2.601],
     stretch: [0xE142, 0x23B4, 0xE143],
-    HDW: [.876, -.787, .632]
+    HDW: [.876, -.542, .632]
   },
   0x2322: {
     c: 0x23DC,
     dir: H,
     sizes: [.633, 1.001, 1.501, 1.771, 2.181, 2.601],
     stretch: [0xE142, 0x23B4, 0xE143],
-    HDW: [.876, -.787, .632]
+    HDW: [.876, -.542, .632]
   },
   0x2323: {
     c: 0x23DD,
     dir: H,
     sizes: [.633, 1.001, 1.501, 1.771, 2.181, 2.601],
     stretch: [0xE144, 0x23B5, 0xE145],
-    HDW: [-.257, .346, .632]
+    HDW: [-.012, .346, .632]
   },
   0x2329: {
     c: 0x27E8,
@@ -611,37 +611,37 @@ export const delimiters: DelimiterMap<DelimiterData> = {
     dir: H,
     sizes: [.631, 1.001, 1.501, 1.771, 2.181, 2.601],
     stretch: [0xE146, 0x23B4, 0xE147],
-    HDW: [.876, -.787, .63]
+    HDW: [.876, -.542, .63]
   },
   0x23B5: {
     dir: H,
     sizes: [.631, 1.001, 1.501, 1.771, 2.181, 2.601],
     stretch: [0xE148, 0x23B5, 0xE149],
-    HDW: [-.257, .346, .63]
+    HDW: [-.012, .346, .63]
   },
   0x23DC: {
     dir: H,
     sizes: [.633, 1.001, 1.501, 1.771, 2.181, 2.601],
     stretch: [0xE142, 0x23B4, 0xE143],
-    HDW: [.876, -.787, .632]
+    HDW: [.876, -.542, .632]
   },
   0x23DD: {
     dir: H,
     sizes: [.633, 1.001, 1.501, 1.771, 2.181, 2.601],
     stretch: [0xE144, 0x23B5, 0xE145],
-    HDW: [-.257, .346, .632]
+    HDW: [-.012, .346, .632]
   },
   0x23DE: {
     dir: H,
     sizes: [.631, 1.001, 1.501, 1.771, 2.181, 2.601],
     stretch: [0xE13B, 0x23B4, 0xE13C, 0xE140],
-    HDW: [.876, -.787, .63]
+    HDW: [.876, -.542, .63]
   },
   0x23DF: {
     dir: H,
     sizes: [.631, 1.001, 1.501, 1.771, 2.181, 2.601],
     stretch: [0xE13D, 0x23B5, 0xE13E, 0xE141],
-    HDW: [-.257, .346, .63]
+    HDW: [-.012, .346, .63]
   },
   0x23E0: {
     dir: H,
