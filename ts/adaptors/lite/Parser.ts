@@ -345,9 +345,10 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
   /**
    * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
    * @param {LiteElement} node     The node to serialize
+   * @param {boolean} xml          True when producing XML, false for HTML
    * @return {string}              The serialized element (like outerHTML)
    */
-  public serialize(adaptor: LiteAdaptor, node: LiteElement): string {
+  public serialize(adaptor: LiteAdaptor, node: LiteElement, xml: boolean = false): string {
     const SELF_CLOSING = (this.constructor as typeof LiteParser).SELF_CLOSING;
     const CDATA = (this.constructor as typeof LiteParser).CDATA_ATTR;
     const tag = adaptor.kind(node);
@@ -355,8 +356,8 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
       (x: AttributeData) => x.name + '="' + (CDATA[x.name] ? x.value : this.protectAttribute(x.value)) + '"'
     ).join(' ');
     const html =
-      '<' + tag + (attributes ? ' ' + attributes : '') + '>'
-      + (SELF_CLOSING[tag] ? '' : adaptor.innerHTML(node) + '</' + tag + '>');
+      '<' + tag + (attributes ? ' ' + attributes : '')
+      + (SELF_CLOSING[tag] ? (xml ? ' />' : '>') : adaptor.innerHTML(node) + '</' + tag + '>');
     return html;
   }
 

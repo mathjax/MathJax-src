@@ -30,6 +30,7 @@ declare global {
   interface Window {
     Document: typeof Document;
     DOMParser: typeof DOMParser;
+    XMLSerializer: typeof XMLSerializer;
     HTMLElement: typeof HTMLElement;
     HTMLCollection: typeof HTMLCollection;
     NodeList: typeof NodeList;
