@@ -274,6 +274,23 @@ BaseMethods.Hash = function(_parser: TexParser, _c: string) {
  *
  */
 
+
+/**
+ * Handle \mathrm, \mathbf, etc, allowing for multi-letter runs to be one <mi>.
+ */
+BaseMethods.MathFont = function(parser: TexParser, name: string, variant: string) {
+  const text = parser.GetArgument(name);
+  let mml = new TexParser(text, {
+    ...parser.stack.env,
+    font: variant,
+    multiLetterIdentifiers: true
+  }, parser.configuration).mml();
+  if (mml.isKind('inferredMrow')) {
+    mml = parser.create('node', 'mrow', mml.childNodes);
+  }
+  parser.Push(mml);
+};
+
 /**
  * Setting font, e.g., via \\rm, \\bf etc.
  * @param {TexParser} parser The calling parser.

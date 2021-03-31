@@ -46,9 +46,9 @@ export class SerializedMmlVisitor extends MmlVisitor {
    */
   public static variants: PropertyList = {
     '-tex-calligraphic':      'script',
-    '-tex-calligraphic-bold': 'bold-script',
+    '-tex-bold-calligraphic': 'bold-script',
     '-tex-oldstyle':          'normal',
-    '-tex-oldstyle-bold':     'bold',
+    '-tex-bold-oldstyle':     'bold',
     '-tex-mathit':            'italic'
   };
 
@@ -203,6 +203,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
     node.getProperty('variantForm') && this.setDataAttribute(data, 'alternate', '1');
     node.getProperty('pseudoscript') && this.setDataAttribute(data, 'pseudoscript', 'true');
     node.getProperty('mathaccent') && this.setDataAttribute(data, 'accent', 'true');
+    node.getProperty('autoOP') === false && this.setDataAttribute(data, 'auto-op', 'false');
     const texclass = node.getProperty('texClass') as number;
     if (texclass !== undefined) {
       let setclass = true;
