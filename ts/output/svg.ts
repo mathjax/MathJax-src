@@ -166,7 +166,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
    */
   public styleSheet(html: MathDocument<N, T, D>) {
     if (this.svgStyles) {
-      return null;  // stylesheet is already added to the document
+      return this.svgStyles;  // stylesheet is already added to the document
     }
     const sheet = this.svgStyles = super.styleSheet(html);
     this.adaptor.setAttribute(sheet, 'id', SVG.STYLESHEETID);

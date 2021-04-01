@@ -209,7 +209,8 @@ CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstru
    *   of the column space.)
    */
   protected handleColumnSpacing() {
-    const spacing = this.getEmHalfSpacing(this.fSpace[0], this.cSpace);
+    const scale = (this.childNodes[0] ? 1 / this.childNodes[0].getBBox().rscale : 1);
+    const spacing = this.getEmHalfSpacing(this.fSpace[0], this.cSpace, scale);
     const frame = this.frame;
     //
     //  For each row...
@@ -281,7 +282,8 @@ CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstru
    *   of the row space.)
    */
   protected handleRowSpacing() {
-    const spacing = this.getEmHalfSpacing(this.fSpace[1], this.rSpace);
+    const scale = (this.childNodes[0] ? 1 / this.childNodes[0].getBBox().rscale : 1);
+    const spacing = this.getEmHalfSpacing(this.fSpace[1], this.rSpace, scale);
     const frame = this.frame;
     //
     //  For each row...
