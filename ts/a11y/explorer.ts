@@ -516,6 +516,8 @@ export function setA11yOption(document: HTMLDOCUMENT, option: string, value: str
       break;
     }
     break;
+  case 'locale':
+      SRE.setupEngine({locale: value as string});
   default:
     document.options.a11y[option] = value;
   }
