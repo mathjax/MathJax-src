@@ -28,6 +28,7 @@ import {CommandMap, EnvironmentMap} from '../SymbolMap.js';
 import ParseMethods from '../ParseMethods.js';
 import {Macro} from '../Symbol.js';
 import NewcommandMethods from '../newcommand/NewcommandMethods.js';
+import {BeginEnvItem} from '../newcommand/NewcommandItems.js';
 import {TeX} from '../../tex.js';
 
 type TEX = TeX<any, any, any>;
@@ -107,6 +108,9 @@ export const ConfigMacrosConfiguration = Configuration.create(
   'configmacros', {
     init: configmacrosInit,
     config: configmacrosConfig,
+    items: {
+      [BeginEnvItem.prototype.kind]: BeginEnvItem,
+    },
     options: {
       macros: expandable({}),
       environments: expandable({})
