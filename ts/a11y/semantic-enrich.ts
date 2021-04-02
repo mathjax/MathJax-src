@@ -136,11 +136,16 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
           currentSpeech = document.options.enrichSpeech;
         }
         const math = new document.options.MathItem('', MmlJax);
-        math.math = this.serializeMml(SRE.toEnriched(toMathML(this.root)));
-        math.display = this.display;
-        math.compile(document);
-        this.root = math.root;
-        this.inputData.originalMml = math.math;
+        try {
+          const mml = this.inputData.originalMml = toMathML(this.root);
+          math.math = this.serializeMml(SRE.toEnriched(mml));
+          math.display = this.display;
+          math.compile(document);
+          this.root = math.root;
+          this.inputData.enrichedMml = math.math;
+        } catch (err) {
+          document.options.enrichError(document, this, err);
+        }
       }
       this.state(STATE.ENRICHED);
     }
@@ -213,6 +218,13 @@ export interface EnrichedMathDocument<N, T, D> extends AbstractMathDocument<N, T
    * @return {EnrichedMathDocument}   The MathDocument (so calls can be chained)
    */
   attachSpeech(): EnrichedMathDocument<N, T, D>;
+
+  /**
+   * @param {EnrichedMathDocument} doc   The MathDocument for the error
+   * @paarm {EnrichedMathItem} math      The MathItem causing the error
+   * @param {Error} err                  The error being processed
+   */
+  enrichError(doc: EnrichedMathDocument<N, T, D>, math: EnrichedMathItem<N, T, D>, err: Error): void;
 }
 
 /**
@@ -241,6 +253,9 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
       ...BaseDocument.OPTIONS,
       enableEnrichment: true,
       enrichSpeech: 'none',                   // or 'shallow', or 'deep'
+      enrichError: (doc: EnrichedMathDocument<N, T, D>,
+                    math: EnrichedMathItem<N, T, D>,
+                    err: Error) => doc.enrichError(doc, math, err),
       renderActions: expandable({
         ...BaseDocument.OPTIONS.renderActions,
         enrich:       [STATE.ENRICHED],
@@ -297,6 +312,12 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
         this.processed.set('enriched');
       }
       return this;
+    }
+
+    /**
+     */
+    public enrichError(_doc: EnrichedMathDocument<N, T, D>, _math: EnrichedMathItem<N, T, D>, err: Error) {
+      console.warn('Enrichment error:', err);
     }
 
     /**
