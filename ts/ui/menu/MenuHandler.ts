@@ -173,6 +173,8 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
       enableComplexity: true,
       enableExplorer: true,
       enrichSpeech: 'none',
+      enrichError: (_doc: MenuMathDocument, _math: MenuMathItem, err: Error) =>
+        console.warn('Enrichment Error:', err),
       ...BaseDocument.OPTIONS,
       MenuClass: Menu,
       menuOptions: Menu.OPTIONS,
