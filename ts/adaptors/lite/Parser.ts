@@ -357,7 +357,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     ).join(' ');
     const html =
       '<' + tag + (attributes ? ' ' + attributes : '')
-      + (SELF_CLOSING[tag] ? (xml ? ' />' : '>') : adaptor.innerHTML(node) + '</' + tag + '>');
+      + (SELF_CLOSING[tag] ? (xml ? ' />' : '>') : '>' + adaptor.innerHTML(node) + '</' + tag + '>');
     return html;
   }
 
