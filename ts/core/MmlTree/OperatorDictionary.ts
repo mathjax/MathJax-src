@@ -1271,7 +1271,3 @@ export const OPTABLE: {[form: string]: OperatorList} = {
 //
 OPTABLE['infix']['^'] = MO.WIDEREL;
 OPTABLE['infix']['_'] = MO.WIDEREL;
-OPTABLE['prefix']['\u2223'] = MO.OPEN;
-OPTABLE['prefix']['\u2225'] = MO.OPEN;
-OPTABLE['postfix']['\u2223'] = MO.CLOSE;
-OPTABLE['postfix']['\u2225'] = MO.CLOSE;

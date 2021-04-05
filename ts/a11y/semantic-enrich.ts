@@ -261,6 +261,18 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
      * @constructor
      */
     constructor(...args: any[]) {
+      //
+      // TODO(v3.2): For now, we move enrichSpeech to sre.speech (will remove
+      // enrichSpeech in a later version)
+      //
+      const options = args[2] || {};
+      if (options.enrichSpeech) {
+        if (!options.sre) {
+          options.sre = {};
+        }
+        options.sre.speech = options.enrichSpeech;
+        delete options.enrichSpeech;
+      }
       super(...args);
       MmlJax.setMmlFactory(this.mmlFactory);
       const ProcessBits = (this.constructor as typeof AbstractMathDocument).ProcessBits;

@@ -69,14 +69,14 @@ CommonMmultiscriptsMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsubsup<a
    */
   public toCHTML(parent: N) {
     const chtml = this.standardCHTMLnode(parent);
-    const data = this.getScriptData();
+    const data = this.scriptData;
     //
     //  Combine the bounding boxes of the pre- and post-scripts,
     //  and get the resulting baseline offsets
     //
     const sub = this.combinePrePost(data.sub, data.psub);
     const sup = this.combinePrePost(data.sup, data.psup);
-    const [u, v] = this.getUVQ(data.base, sub, sup);
+    const [u, v] = this.getUVQ(sub, sup);
     //
     //  Place the pre-scripts, then the base, then the post-scripts
     //

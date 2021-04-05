@@ -115,7 +115,7 @@ export function RequireLoad(parser: TexParser, name: string) {
   const allowed = (allow.hasOwnProperty(extension) ? allow[extension] :
                    allow.hasOwnProperty(name) ? allow[name] : options.defaultAllow);
   if (!allowed) {
-    throw new TexError('BadRequire', 'Extension "%1" is now allowed to be loaded', extension);
+    throw new TexError('BadRequire', 'Extension "%1" is not allowed to be loaded', extension);
   }
   if (Package.packages.has(extension)) {
     RegisterExtension(parser.configuration.packageData.get('require').jax, extension);

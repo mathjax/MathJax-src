@@ -1,3 +1,4 @@
+
 /*************************************************************
  *
  *  Copyright (c) 2017 The MathJax Consortium
@@ -102,8 +103,8 @@ new sm.CommandMap('AMSmath-macros', {
   shoveleft:  ['HandleShove', TexConstant.Align.LEFT],
   shoveright: ['HandleShove', TexConstant.Align.RIGHT],
 
-  xrightarrow: ['xArrow', 0x2192, 5, 6],
-  xleftarrow:  ['xArrow', 0x2190, 7, 3]
+  xrightarrow: ['xArrow', 0x2192, 7, 12],
+  xleftarrow:  ['xArrow', 0x2190, 10, 5]
 }, AmsMethods);
 
 
@@ -221,7 +222,7 @@ new sm.CharacterMap('AMSsymbols-mathchar0mi', ParseMethods.mathchar0mi, {
 /**
  * Operators from the AMS Symbols package.
  */
-new sm.CharacterMap('AMSsymbols-mathchar0m0', ParseMethods.mathchar0mo, {
+new sm.CharacterMap('AMSsymbols-mathchar0mo', ParseMethods.mathchar0mo, {
   // Binary operators
   dotplus:                '\u2214',
   ltimes:                 '\u22C9',
