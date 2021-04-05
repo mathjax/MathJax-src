@@ -40,9 +40,35 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
    * The default options
    */
   public static OPTIONS: OptionList = {
-    fontSize: 16,        // We can't compute the font size, so always use this
-    fontFamily: 'Times'  // We can't compute the font family, so always use this
+    fontSize: 16,          // We can't compute the font size, so always use this
+    fontFamily: 'Times',   // We can't compute the font family, so always use this
+    cjkCharWidth: 1,       // Width (in em units) of full width characters
+    unknownCharWidth: .6,  // Width (in em units) of unknown (non-full-width) characters
+    unknownCharHeight: .8, // Height (in em units) of unknown characters
   };
+
+  /**
+   * Pattern to identify CJK (.i.e., full-width) characters
+   */
+  public static cjkPattern = new RegExp([
+    '[',
+    '\u1100-\u115F', // Hangul Jamo
+    '\u2329\u232A',  // LEFT-POINTING ANGLE BRACKET, RIGHT-POINTING ANGLE BRACKET
+    '\u2E80-\u303E', // CJK Radicals Supplement ... CJK Symbols and Punctuation
+    '\u3040-\u3247', // Hiragana ... Enclosed CJK Letters and Months
+    '\u3250-\u4DBF', // Enclosed CJK Letters and Months ... CJK Unified Ideographs Extension A
+    '\u4E00-\uA4C6', // CJK Unified Ideographs ... Yi Radicals
+    '\uA960-\uA97C', // Hangul Jamo Extended-A
+    '\uAC00-\uD7A3', // Hangul Syllables
+    '\uF900-\uFAFF', // CJK Compatibility Ideographs
+    '\uFE10-\uFE19', // Vertical Forms
+    '\uFE30-\uFE6B', // CJK Compatibility Forms ... Small Form Variants
+    '\uFF01-\uFF60\uFFE0-\uFFE6', // Halfwidth and Fullwidth Forms
+    '\u{1B000}-\u{1B001}', // Kana Supplement
+    '\u{1F200}-\u{1F251}', // Enclosed Ideographic Supplement
+    '\u{20000}-\u{3FFFD}', // CJK Unified Ideographs Extension B ... Tertiary Ideographic Plane
+    ']'
+  ].join(''), 'gu');
 
   /**
    * The options for the instance
@@ -568,7 +594,12 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
    */
   public nodeSize(node: LiteElement, _em: number = 1, _local: boolean = null) {
     const text = this.textContent(node);
-    return [.6 * text.length, 0] as [number, number];
+    const non = Array.from(text.replace(LiteAdaptor.cjkPattern, '')).length; // # of non-CJK chars
+    const CJK = Array.from(text).length - non;                               // # of cjk chars
+    return [
+      CJK * this.options.cjkCharWidth + non * this.options.unknownCharWidth,
+      this.options.unknownCharHeight
+    ] as [number, number];
   }
 
   /**

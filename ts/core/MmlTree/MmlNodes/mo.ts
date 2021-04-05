@@ -26,6 +26,7 @@ import {AbstractMmlTokenNode, MmlNode, AttributeList, TEXCLASS} from '../MmlNode
 import {MmlMrow} from './mrow.js';
 import {MmlMover, MmlMunder, MmlMunderover} from './munderover.js';
 import {OperatorList, OPTABLE, RangeDef, RANGES, MMLSPACING} from '../OperatorDictionary.js';
+import {unicodeChars, unicodeString} from '../../../util/string.js';
 
 /*****************************************************************/
 /**
@@ -77,6 +78,50 @@ export class MmlMo extends AbstractMmlTokenNode {
    * The Operator Dictionary
    */
   public static OPTABLE: {[form: string]: OperatorList} = OPTABLE;
+
+  /**
+   * Pattern for matching when the contents is one ore more pseudoscripts
+   */
+  public static pseudoScripts = new RegExp([
+    '^["\'*`',
+    '\u00AA',               // FEMININE ORDINAL INDICATOR
+    '\u00B0',               // DEGREE SIGN
+    '\u00B2-\u00B4',        // SUPERSCRIPT 2 and 3, ACUTE ACCENT
+    '\u00B9',               // SUPERSCRIPT ONE
+    '\u00BA',               // MASCULINE ORDINAL INDICATOR
+    '\u2018-\u201F',        // Various double and single quotation marks (up and down)
+    '\u2032-\u2037\u2057',  // Primes and reversed primes (forward and reversed)
+    '\u2070\u2071',         // SUPERSCRIPT 0 and i
+    '\u2074-\u207F',        // SUPERCRIPT 4 through 9, -, =, (, ), and n
+    '\u2080-\u208E',        // SUBSCRIPT 0 through 9, -, =, (, ).
+    ']+$'
+  ].join(''));
+
+  /**
+   * Pattern for when contents is a collection of primes
+   */
+   protected static primes = new RegExp([
+     '^["\'`',
+     '\u2018-\u201F',        // Various double and single quotation marks (up and down)
+     ']+$'
+   ].join(''));
+
+   /**
+    * Default map for remapping prime characters
+    */
+  protected static remapPrimes: {[n: number]: number} = {
+     0x0022: 0x2033,   // double quotes
+     0x0027: 0x2032,   // single quote
+     0x0060: 0x2035,   // back quote
+     0x2018: 0x2035,   // open single quote
+     0x2019: 0x2032,   // close single quote
+     0x201A: 0x2032,   // low open single quote
+     0x201B: 0x2035,   // reversed open single quote
+     0x201C: 0x2036,   // open double quote
+     0x201D: 0x2033,   // close double quote
+     0x201E: 0x2033,   // low open double quote
+     0x201F: 0x2036,   // reversed open double quote
+   };
 
   /**
    * The internal TeX class of the node (for use with getter/setter below)
@@ -232,7 +277,8 @@ export class MmlMo extends AbstractMmlTokenNode {
       //
       //  Force previous node to be TEXCLASS.OP and skip this node
       //
-      if (prev) {
+      if (prev && prev.getProperty('texClass') === undefined &&
+          prev.attributes.get('mathvariant') !== 'italic') {
         prev.texClass = TEXCLASS.OP;
         prev.setProperty('fnOP', true);
       }
@@ -299,6 +345,17 @@ export class MmlMo extends AbstractMmlTokenNode {
                                 display: boolean = false, level: number = 0, prime: boolean = false) {
     super.setInheritedAttributes(attributes, display, level, prime);
     let mo = this.getText();
+    this.checkOperatorTable(mo);
+    this.checkPseudoScripts(mo);
+    this.checkPrimes(mo);
+  }
+
+  /**
+   * Set the attributes from the operator table
+   *
+   * @param {string} mo   The test of the mo element
+   */
+  protected checkOperatorTable(mo: string) {
     let [form1, form2, form3] = this.handleExplicitForm(this.getForms());
     this.attributes.setInherited('form', form1);
     let OPTABLE = (this.constructor as typeof MmlMo).OPTABLE;
@@ -381,6 +438,37 @@ export class MmlMo extends AbstractMmlTokenNode {
       }
     }
     return null;
+  }
+
+  /**
+   * Mark the mo as a pseudoscript if it is one.  True means it is,
+   *   false means it is a pseudo-script character, but in an msup (so needs a variant form)
+   *
+   * @param {string} mo   The test of the mo element
+   */
+  protected checkPseudoScripts(mo: string) {
+    const PSEUDOSCRIPTS = (this.constructor as typeof MmlMo).pseudoScripts;
+    if (!mo.match(PSEUDOSCRIPTS)) return;
+    const parent = this.coreParent().Parent;
+    const isPseudo = !parent || !(parent.isKind('msubsup') && !parent.isKind('msub'));
+    this.setProperty('pseudoscript', isPseudo);
+    if (isPseudo) {
+      this.attributes.setInherited('lspace', 0);
+      this.attributes.setInherited('rspace', 0);
+    }
+  }
+
+  /**
+   * Determine whether the mo consists of primes, and remap them if so.
+   *
+   * @param {string} mo   The test of the mo element
+   */
+  protected checkPrimes(mo: string) {
+    const PRIMES = (this.constructor as typeof MmlMo).primes;
+    if (!mo.match(PRIMES)) return;
+    const REMAP = (this.constructor as typeof MmlMo).remapPrimes;
+    const primes = unicodeString(unicodeChars(mo).map(c => REMAP[c]));
+    this.setProperty('primes', primes);
   }
 
 }

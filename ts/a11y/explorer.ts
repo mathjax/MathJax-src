@@ -530,6 +530,8 @@ export function setA11yOption(document: HTMLDOCUMENT, option: string, value: str
       let [domain, style] = (value as string).split('-');
       document.options.sre.domain = domain;
       document.options.sre.style = style;
+  case 'locale':
+      SRE.setupEngine({locale: value as string});
   default:
     document.options.a11y[option] = value;
   }
@@ -630,7 +632,8 @@ const iso: {[locale: string]: string} = {
   'de': 'German',
   'en': 'English',
   'es': 'Spanish',
-  'fr': 'French'
+  'fr': 'French',
+  'it': 'Italian'
 };
 
 /**

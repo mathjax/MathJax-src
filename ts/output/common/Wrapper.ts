@@ -734,7 +734,7 @@ export class CommonWrapper<
       //  Is map[n] doesn't exist, (map[n] || []) still gives an CharData array.
       //  If the array doesn't have a CharOptions element use {} instead.
       //  Then check if the options has an smp property, which gives
-      //    the Math Alphabet mapping for this characger.
+      //    the Math Alphabet mapping for this character.
       //  Otherwise use the original code point, n.
       //
       chars = chars.map((n) => ((map[n] || [])[3] || {}).smp || n);

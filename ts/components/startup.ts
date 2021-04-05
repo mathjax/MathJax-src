@@ -560,7 +560,7 @@ if (typeof MathJax._.startup === 'undefined') {
 }
 
 /**
- * Export the loader configuration for convenience
+ * Export the startup configuration for convenience
  */
 export const CONFIG = MathJax.config.startup;
 
