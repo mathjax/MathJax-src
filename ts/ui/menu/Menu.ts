@@ -474,7 +474,7 @@ export class Menu {
           this.checkbox('Activate', 'Activate', 'explorer'),
           this.submenu('Speech', 'Speech', [
             this.checkbox('Speech', 'Speech Output', 'speech'),
-            this.checkbox('Subtitles', 'Speech Subtities', 'subtitles'),
+            this.checkbox('Subtitles', 'Speech Subtitles', 'subtitles'),
             this.checkbox('Braille', 'Braille Output', 'braille'),
             this.checkbox('View Braille', 'Braille Subtitles', 'viewBraille'),
             this.rule(),
