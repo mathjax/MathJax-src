@@ -361,17 +361,4 @@ export function processSreOptions(options: OptionList) {
     options.sre.speech = options.enrichSpeech;
     delete options.enrichSpeech;
   }
-  if (!options.a11y) {
-    return;
-  }
-  if (options.a11y.locale) {
-    options.sre.locale = options.a11y.locale;
-    delete options.a11y.locale;
-  }
-  if (options.a11y.speechRules) {
-    let [domain, style] = (options.a11y.speechRules as string).split('-');
-    options.sre.domain = domain;
-    options.sre.style = style;
-    delete options.a11y.speechRules;
-  }
 }
