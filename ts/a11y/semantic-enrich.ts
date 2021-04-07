@@ -261,18 +261,7 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
      * @constructor
      */
     constructor(...args: any[]) {
-      //
-      // TODO(v3.2): For now, we move enrichSpeech to sre.speech (will remove
-      // enrichSpeech in a later version)
-      //
-      const options = args[2] || {};
-      if (options.enrichSpeech) {
-        if (!options.sre) {
-          options.sre = {};
-        }
-        options.sre.speech = options.enrichSpeech;
-        delete options.enrichSpeech;
-      }
+      processSreOptions(args[2]);
       super(...args);
       MmlJax.setMmlFactory(this.mmlFactory);
       const ProcessBits = (this.constructor as typeof AbstractMathDocument).ProcessBits;
@@ -351,4 +340,38 @@ export function EnrichHandler<N, T, D>(handler: Handler<N, T, D>, MmlJax: MathML
       handler.documentClass, MmlJax
     );
   return handler;
+}
+
+
+//
+// TODO(v3.2): This is for backward compatibility of old option parameters.
+//
+/**
+ * Processes old enrichment option for backward compatibility.
+ * @param {OptionList} options The options to process.
+ */
+export function processSreOptions(options: OptionList) {
+  if (!options) {
+    return;
+  }
+  if (!options.sre) {
+    options.sre = {};
+  }
+  if (options.enrichSpeech) {
+    options.sre.speech = options.enrichSpeech;
+    delete options.enrichSpeech;
+  }
+  if (!options.a11y) {
+    return;
+  }
+  if (options.a11y.locale) {
+    options.sre.locale = options.a11y.locale;
+    delete options.a11y.locale;
+  }
+  if (options.a11y.speechRules) {
+    let [domain, style] = (options.a11y.speechRules as string).split('-');
+    options.sre.domain = domain;
+    options.sre.style = style;
+    delete options.a11y.speechRules;
+  }
 }
