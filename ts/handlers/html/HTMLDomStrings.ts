@@ -242,7 +242,7 @@ export class HTMLDomStrings<N, T, D> {
   }
 
   /**
-   * Handle an unknown node type (nodeType other than 1, 3, 7)
+   * Handle an unknown node type (nodeType other than 1, 3, 8)
    *
    * @param {N} node           The node to process
    * @param {boolean} ignore   Whether we are currently ignoring content
