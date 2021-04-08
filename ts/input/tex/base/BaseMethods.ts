@@ -36,9 +36,6 @@ import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMunderover} from '../../../core/MmlTree/MmlNodes/munderover.js';
 import {Label} from '../Tags.js';
 import {entities} from '../../../util/Entities.js';
-import '../../../util/entities/n.js';
-import '../../../util/entities/p.js';
-import '../../../util/entities/r.js';
 
 
 // Namespace
@@ -235,7 +232,7 @@ BaseMethods.Prime = function(parser: TexParser, c: string) {
   do {
     // @test Prime, PrimeSup, Double Prime, PrePrime
     sup += entities.prime; parser.i++, c = parser.GetNext();
-  } while (c === '\'' || c === entities.rquote);
+  } while (c === '\'' || c === entities.rsquo);
   sup = ['', '\u2032', '\u2033', '\u2034', '\u2057'][sup.length] || sup;
   const node = parser.create('token', 'mo', {variantForm: true}, sup);
   parser.Push(
