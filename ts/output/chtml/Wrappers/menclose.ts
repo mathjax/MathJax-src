@@ -434,8 +434,7 @@ CommonMencloseMixin<
     if (!d) return;
     const transform = this.adaptor.getStyle(arrow, 'transform');
     this.adaptor.setStyle(
-      arrow, 'transform',
-      `translate${offset}(${this.em(-d)})` + (transform ? ' ' + transform : '')
+      arrow, 'transform', `translate${offset}(${this.em(-d)})${(transform ? ' ' + transform : '')}`
     );
   }
 

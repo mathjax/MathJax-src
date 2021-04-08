@@ -69,7 +69,7 @@ export const computeLineData = {
  * @param {Menclose} node   The node whose line is to be drawn
  * @param {LineName} kind   The type of line to draw for the node
  * @param {string} offset   The offset direction, if any
- * @return {LineData}   The coordinates of the two nedpoints
+ * @return {LineData}       The coordinates of the two endpoints
  */
 export const lineData = function(node: Menclose, kind: LineName, offset: string = ''): LineData {
   const {h, d, w} = node.getBBox();
