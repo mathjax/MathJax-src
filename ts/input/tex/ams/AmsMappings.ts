@@ -28,7 +28,7 @@ import {TexConstant} from '../TexConstants.js';
 import ParseMethods from '../ParseMethods.js';
 import ParseUtil from '../ParseUtil.js';
 import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
-import {MATHSPACE} from '../../../util/lengths.js';
+import {MATHSPACE, em} from '../../../util/lengths.js';
 
 
 let COLS = function(W: number[]) {
@@ -107,7 +107,7 @@ new sm.CommandMap('AMSmath-macros', {
  */
 new sm.EnvironmentMap('AMSmath-environment', ParseMethods.environment, {
   'eqnarray*':   ['EqnArray', null, false, true, 'rcl',
-                  '0 ' + MATHSPACE.thickmathspace + 'em', '.5em'],
+                  '0 ' + em(MATHSPACE.thickmathspace), '.5em'],
   align:         ['EqnArray', null, true, true,  'rlrlrlrlrlrl',
                   COLS([0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0])],
   'align*':      ['EqnArray', null, false, true, 'rlrlrlrlrlrl',

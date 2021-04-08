@@ -35,6 +35,7 @@ import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMunderover} from '../../../core/MmlTree/MmlNodes/munderover.js';
 import {Label} from '../Tags.js';
+import {em} from '../../../util/lengths.js';
 import {entities} from '../../../util/Entities.js';
 import '../../../util/entities/n.js';
 import '../../../util/entities/p.js';
@@ -307,12 +308,12 @@ BaseMethods.SetStyle = function(parser: TexParser, _name: string,
  * Setting size of an expression, e.g., \\small, \\huge.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
- * @param {string} size The size value.
+ * @param {number} size The size value.
  */
-BaseMethods.SetSize = function(parser: TexParser, _name: string, size: string) {
+BaseMethods.SetSize = function(parser: TexParser, _name: string, size: number) {
   parser.stack.env['size'] = size;
   parser.Push(
-    parser.itemFactory.create('style').setProperty('styles', {mathsize: size + 'em'}));
+    parser.itemFactory.create('style').setProperty('styles', {mathsize: em(size)}));
 };
 
 /**
@@ -323,7 +324,7 @@ BaseMethods.SetSize = function(parser: TexParser, _name: string, size: string) {
  */
 BaseMethods.Spacer = function(parser: TexParser, _name: string, space: number) {
   // @test Positive Spacing, Negative Spacing
-  const node = parser.create('node', 'mspace', [], {width: space + 'em'});
+  const node = parser.create('node', 'mspace', [], {width: em(space)});
   const style = parser.create('node', 'mstyle', [node], {scriptlevel: 0});
   parser.Push(style);
 };
