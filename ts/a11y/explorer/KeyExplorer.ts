@@ -212,8 +212,8 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     super.Start();
     this.speechGenerator = sre.SpeechGeneratorFactory.generator('Direct');
     this.speechGenerator.setOptions(options);
-    this.walker = sre.WalkerFactory.walker('table',
-                                           this.node, this.speechGenerator, this.highlighter, this.mml);
+    this.walker = sre.WalkerFactory.walker(
+      'table', this.node, this.speechGenerator, this.highlighter, this.mml);
     this.walker.activate();
     this.Update();
     if (this.document.options.a11y[this.showRegion]) {
@@ -233,7 +233,10 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     // during walking.
     let options = this.speechGenerator.getOptions();
     if (options.modality === 'speech') {
-      this.document.options.a11y.speechRules = options.domain + '-' + options.style;
+      this.document.options.sre.domain = options.domain;
+      this.document.options.sre.style = options.style;
+      this.document.options.a11y.speechRules =
+        options.domain + '-' + options.style;
     }
   }
 
@@ -300,13 +303,14 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    */
   private getOptions(): {[key: string]: string} {
     let options = this.speechGenerator.getOptions();
-    let [domain, style] = this.document.options.a11y.speechRules.split('-');
+    let sreOptions = this.document.options.sre;
     if (options.modality === 'speech' &&
-        (options.locale !== this.document.options.a11y.locale ||
-          options.domain !== domain || options.style !== style)) {
-      options.domain = domain;
-      options.style = style;
-      options.locale = this.document.options.a11y.locale;
+      (options.locale !== sreOptions.locale ||
+        options.domain !== sreOptions.domain ||
+        options.style !== sreOptions.style)) {
+      options.domain = sreOptions.domain;
+      options.style = sreOptions.style;
+      options.locale = sreOptions.locale;
       this.walker.update(options);
     }
     return options;
