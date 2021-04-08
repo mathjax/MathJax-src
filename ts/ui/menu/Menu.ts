@@ -945,11 +945,7 @@ export class Menu {
     this.rerenderStart = Math.min(start, this.rerenderStart);
     if (!Menu.loading) {
       if (this.rerenderStart <= STATE.COMPILED) {
-        for (const jax of this.document.inputJax) {
-          if (jax.name === 'TeX') {
-            (jax as any).parseOptions.tags.reset(0);
-          }
-        }
+        this.document.reset({inputJax: []});
       }
       this.document.rerender(this.rerenderStart);
       this.rerenderStart = STATE.LAST;
