@@ -213,7 +213,7 @@ export class MmlMo extends AbstractMmlTokenNode {
     let math = this.factory.getNodeClass('math');
     while (parent && parent.isEmbellished && parent.coreMO() === this && !(parent instanceof math)) {
       embellished = parent;
-      parent = (parent as MmlNode).Parent;
+      parent = (parent as MmlNode).parent;
     }
     return embellished;
   }
