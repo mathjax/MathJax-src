@@ -350,7 +350,7 @@ export function EnrichHandler<N, T, D>(handler: Handler<N, T, D>, MmlJax: MathML
  * Processes old enrichment option for backward compatibility.
  * @param {OptionList} options The options to process.
  */
-export function processSreOptions(options: OptionList) {
+function processSreOptions(options: OptionList) {
   if (!options) {
     return;
   }

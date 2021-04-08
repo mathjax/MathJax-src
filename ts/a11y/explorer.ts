@@ -25,8 +25,7 @@ import {Handler} from '../core/Handler.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {MathML} from '../input/mathml.js';
 import {STATE, newState} from '../core/MathItem.js';
-import {EnrichedMathItem, EnrichedMathDocument, EnrichHandler,
-        processSreOptions as enrichSreOptions} from './semantic-enrich.js';
+import {EnrichedMathItem, EnrichedMathDocument, EnrichHandler} from './semantic-enrich.js';
 import {MathDocumentConstructor} from '../core/MathDocument.js';
 import {OptionList, expandable} from '../util/Options.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
@@ -339,14 +338,12 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
  * Processes old a11y options for backward compatibility.
  * @param {OptionList} options The options to process.
  */
-export function processSreOptions(options: OptionList) {
-  if (!options) {
+function processSreOptions(options: OptionList) {
+  if (!options || !options.a11y) {
     return;
   }
-  enrichSreOptions(options);
-  // At this point options.sre will be set.
-  if (!options.a11y) {
-    return;
+  if (!options.sre) {
+    options.sre = {};
   }
   if (options.a11y.locale) {
     options.sre.locale = options.a11y.locale;
