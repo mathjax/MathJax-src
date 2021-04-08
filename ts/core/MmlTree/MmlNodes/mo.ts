@@ -478,7 +478,7 @@ export class MmlMo extends AbstractMmlTokenNode {
   }
 
   /**
-   * Determine of the mo consists of primes, and remap them if so.
+   * Determine if the mo consists of primes, and remap them if so.
    *
    * @param {string} mo   The test of the mo element
    */
@@ -491,7 +491,7 @@ export class MmlMo extends AbstractMmlTokenNode {
   }
 
   /**
-   * Determine of the mo is a mathaccent character
+   * Determine if the mo is a mathaccent character
    *
    * @param {string} mo   The test of the mo element
    */
