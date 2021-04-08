@@ -174,6 +174,7 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '\u22C3': MO.OP,         // n-ary union
     '\u2308': MO.OPEN,       // left ceiling
     '\u230A': MO.OPEN,       // left floor
+    '\u2329': MO.OPEN,       // left-pointing angle bracket
     '\u2772': MO.OPEN,       // light left tortoise shell bracket ornament
     '\u27E6': MO.OPEN,       // mathematical left white square bracket
     '\u27E8': MO.OPEN,       // mathematical left angle bracket
@@ -228,6 +229,7 @@ export const OPTABLE: {[form: string]: OperatorList} = {
   postfix: {
     '!!': OPDEF(1, 0),       // multiple character operator: !!
     '!': [1, 0, TEXCLASS.CLOSE, null], // exclamation mark
+    '"': MO.ACCENT,          // quotation mark
     '&': MO.ORD,             // ampersand
     ')': MO.CLOSE,           // right parenthesis
     '++': OPDEF(0, 0),       // multiple character operator: ++
@@ -245,10 +247,15 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '||': [0, 0, TEXCLASS.BIN, {fence: true, stretchy: true, symmetric: true}], // multiple character operator: ||
     '|||': [0, 0, TEXCLASS.ORD, {fence: true, stretchy: true, symmetric: true}], // multiple character operator: |||
     '\u00A8': MO.ACCENT,     // diaeresis
+    '\u00AA': MO.ACCENT,     // feminie ordinal indicator
     '\u00AF': MO.WIDEACCENT, // macron
     '\u00B0': MO.ORD,        // degree sign
+    '\u00B2': MO.ACCENT,     // superscript 2
+    '\u00B3': MO.ACCENT,     // superscript 3
     '\u00B4': MO.ACCENT,     // acute accent
     '\u00B8': MO.ACCENT,     // cedilla
+    '\u00B9': MO.ACCENT,     // superscript 1
+    '\u00BA': MO.ACCENT,     // masculine ordinal indicator
     '\u02C6': MO.WIDEACCENT, // modifier letter circumflex accent
     '\u02C7': MO.WIDEACCENT, // caron
     '\u02C9': MO.WIDEACCENT, // modifier letter macron
@@ -266,13 +273,24 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '\u03F6': MO.REL,        // greek reversed lunate epsilon symbol
     '\u2016': [0, 0, TEXCLASS.ORD, {fence: true, stretchy: true}], // double vertical line
     '\u2019': [0, 0, TEXCLASS.CLOSE, {fence: true}], // right single quotation mark
+    '\u201A': MO.ACCENT,     // single low-9 quotation mark
+    '\u201B': MO.ACCENT,     // single high-reversed-9 quotation mark
     '\u201D': [0, 0, TEXCLASS.CLOSE, {fence: true}],  // right double quotation mark
-    '\u2032': MO.ORD02,      // prime
+    '\u201E': MO.ACCENT,     // double low-9 quotation mark
+    '\u201F': MO.ACCENT,     // double high-reversed-9 quotation mark
+    '\u2032': MO.ORD,        // prime
+    '\u2033': MO.ACCENT,     // double prime
+    '\u2034': MO.ACCENT,     // triple prime
+    '\u2035': MO.ACCENT,     // reversed prime
+    '\u2036': MO.ACCENT,     // reversed double prime
+    '\u2037': MO.ACCENT,     // reversed triple prime
     '\u203E': MO.WIDEACCENT, // overline
+    '\u2057': MO.ACCENT,     // quadruple prime
     '\u20DB': MO.ACCENT,     // combining three dots above
     '\u20DC': MO.ACCENT,     // combining four dots above
     '\u2309': MO.CLOSE,      // right ceiling
     '\u230B': MO.CLOSE,      // right floor
+    '\u232A': MO.CLOSE,      // right-pointing angle bracket
     '\u23B4': MO.WIDEACCENT, // top square bracket
     '\u23B5': MO.WIDEACCENT, // bottom square bracket
     '\u23DC': MO.WIDEACCENT, // top parenthesis
@@ -395,6 +413,7 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '\u2021': MO.BIN3,       // \ddagger
     '\u2022': MO.BIN4,       // bullet
     '\u2026': MO.INNER,      // horizontal ellipsis
+    '\u2043': MO.BIN4,       // hyphen bullet
     '\u2044': MO.TALLBIN,    // fraction slash
     '\u2061': MO.ORD,        // function application
     '\u2062': MO.ORD,        // invisible times
@@ -589,6 +608,7 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '\u2258': MO.REL,        // corresponds to
     '\u2259': MO.REL,        // estimates
     '\u225A': MO.REL,        // equiangular to
+    '\u225B': MO.REL,        // star equals
     '\u225C': MO.REL,        // delta equal to
     '\u225D': MO.REL,        // equal to by definition
     '\u225E': MO.REL,        // measured by
@@ -1222,8 +1242,8 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '\u2AD9': MO.REL,        // element of opening downwards
     '\u2ADA': MO.REL,        // pitchfork with tee top
     '\u2ADB': MO.REL,        // transversal intersection
-    '\u2ADC': MO.REL,        // forking
     '\u2ADD': MO.REL,        // nonforking
+    '\u2ADD\u0338': MO.REL,  // nonforking with slash
     '\u2ADE': MO.REL,        // short left tack
     '\u2ADF': MO.REL,        // short down tack
     '\u2AE0': MO.REL,        // short up tack
@@ -1266,8 +1286,12 @@ export const OPTABLE: {[form: string]: OperatorList} = {
 };
 
 //
-//  These are not in the W3C table, but FF works this way,
-//  and it makes sense, so add them here
+//  These are not in the W3C table, but we need them for \widehat and \underline
 //
-OPTABLE['infix']['^'] = MO.WIDEREL;
-OPTABLE['infix']['_'] = MO.WIDEREL;
+OPTABLE.infix['^'] = MO.WIDEREL;
+OPTABLE.infix['_'] = MO.WIDEREL;
+
+//
+//  Remove from Appendix C, but perhaps that was a mistake?
+//
+OPTABLE.infix['\u2ADC'] = MO.REL;
