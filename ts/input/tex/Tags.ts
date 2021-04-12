@@ -404,7 +404,7 @@ export class AbstractTags implements Tags {
   public clearTag() {
     this.label = '';
     this.tag(null, true);
-    this.currentTag = new TagInfo('', undefined, undefined);
+    this.currentTag.tagId = '';
   }
 
 
@@ -456,6 +456,7 @@ export class AbstractTags implements Tags {
     this.history = [];
     this.stack = [];
     this.clearTag();
+    this.currentTag = new TagInfo('', undefined, undefined);
     this.labels = {};
     this.ids = {};
     this.counter = this.allCounter;

@@ -67,6 +67,13 @@ export interface OutputJax<N, T, D> {
   initialize(): void;
 
   /**
+   * Reset any needed features of the output jax
+   *
+   * @param {any[]} args   The arguments needed by the reset operation
+   */
+  reset(...args: any[]): void;
+
+  /**
    * Typset a given MathItem
    *
    * @param {MathItem} math          The MathItem to be typeset
@@ -169,6 +176,12 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
    * @override
    */
   public initialize() {
+  }
+
+  /**
+   * @override
+   */
+  public reset(..._args: any[]) {
   }
 
   /**

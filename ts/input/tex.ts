@@ -163,6 +163,13 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     return this._parseOptions;
   }
 
+  /**
+   * @override
+   */
+  public reset(tag: number = 0) {
+    this.parseOptions.tags.reset(tag);
+  }
+
 
   /**
    * @override

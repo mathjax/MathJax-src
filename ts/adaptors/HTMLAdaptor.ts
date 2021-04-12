@@ -53,6 +53,7 @@ export interface MinDocument<N, T> {
  * @template T  The Text node class
  */
 export interface MinHTMLElement<N, T> {
+  nodeType: number;
   nodeName: string;
   nodeValue: string;
   textContent: string;
@@ -99,6 +100,7 @@ export interface MinHTMLElement<N, T> {
  * @template T  The Text node class
  */
 export interface MinText<N, T> {
+  nodeType: number;
   nodeName: string;
   nodeValue: string;
   parentNode: N | Node;
@@ -365,7 +367,8 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    * @override
    */
   public kind(node: N | T) {
-    return node.nodeName.toLowerCase();
+    const n = node.nodeType;
+    return (n === 1 || n === 3 || n === 8 ? node.nodeName.toLowerCase() : '');
   }
 
   /**

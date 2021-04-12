@@ -30,7 +30,6 @@ import NodeUtil from './NodeUtil.js';
 import TexParser from './TexParser.js';
 import TexError from './TexError.js';
 import {entities} from '../../util/Entities.js';
-import '../../util/entities/n.js';
 
 
 namespace ParseUtil {
