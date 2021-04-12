@@ -496,7 +496,9 @@ export class MmlMo extends AbstractMmlTokenNode {
    * @param {string} mo   The test of the mo element
    */
   protected checkMathAccent(mo: string) {
-    if (this.getProperty('mathaccent') !== undefined || !this.Parent || !this.Parent.isKind('munderover')) return;
+    const parent = this.Parent;
+    if (this.getProperty('mathaccent') !== undefined || !parent ||
+        !parent.isKind('munderover') || parent.childNodes[0] === this) return;
     const MATHACCENT = (this.constructor as typeof MmlMo).mathaccents;
     if (mo.match(MATHACCENT)) {
       this.setProperty('mathaccent', true);
