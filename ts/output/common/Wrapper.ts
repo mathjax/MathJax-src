@@ -669,13 +669,13 @@ export class CommonWrapper<
    * @param {number} D        The total depth
    * @param {number} h        The height to be aligned
    * @param {number} d        The depth to be aligned
-   * @param {string} align    How to align (top, bottom, middle, axis, baseline)
+   * @param {string} align    How to align (top, bottom, center, axis, baseline)
    * @return {number}         The y position of the aligned baseline
    */
   protected getAlignY(H: number, D: number, h: number, d: number, align: string): number {
     return (align === 'top' ? H - h :
             align === 'bottom' ? d - D :
-            align === 'middle' ? ((H - h) - (D - d)) / 2 :
+            align === 'center' ? ((H - h) - (D - d)) / 2 :
             0); // baseline and axis
   }
 
