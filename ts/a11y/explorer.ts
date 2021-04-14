@@ -100,12 +100,12 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     /**
      * The currently attached explorers
      */
-    protected attached: Explorer[] = [];
+    protected attached: string[] = [];
 
     /**
-     * True when a rerendered element should restart the explorer
+     * True when a rerendered element should restart these explorers
      */
-    protected restart: boolean = false;
+    protected restart: string[] = [];
 
     /**
      * True when a rerendered element should regain the focus
@@ -155,6 +155,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
         }
         if (document.options.a11y[key]) {
           explorer.Attach();
+          this.attached.push(key);
         } else {
           explorer.Detach();
         }
@@ -175,12 +176,14 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     public rerender(document: ExplorerMathDocument, start: number = STATE.RERENDER) {
       this.savedId = this.typesetRoot.getAttribute('sre-explorer-id');
       this.refocus = (window.document.activeElement === this.typesetRoot);
-      for (let explorer of this.attached) {
+      for (let key of this.attached) {
+        let explorer = this.explorers[key];
         if (explorer.active) {
-          this.restart = true;
+          this.restart.push(key);
           explorer.Stop();
         }
       }
+      this.attached = [];
       super.rerender(document, start);
     }
 
@@ -190,8 +193,9 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     public updateDocument(document: ExplorerMathDocument) {
       super.updateDocument(document);
       this.refocus && this.typesetRoot.focus();
-      this.restart && this.attached.forEach(x => x.Start());
-      this.refocus = this.restart = false;
+      this.restart.forEach(x => this.explorers[x].Start());
+      this.restart = [];
+      this.refocus = false;
     }
 
   };
