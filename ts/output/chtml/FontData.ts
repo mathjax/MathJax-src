@@ -267,14 +267,14 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
    * @param {CHTMLDelimiterData} data  The data for the delimiter whose CSS is to be added
    */
   protected addDelimiterVStyles(styles: StyleList, c: string, data: CHTMLDelimiterData) {
-    const W = data.HDW[2];
+    const HDW = data.HDW as CHTMLCharData;
     const [beg, ext, end, mid] = data.stretch;
-    const Hb = this.addDelimiterVPart(styles, c, W, 'beg', beg);
-    this.addDelimiterVPart(styles, c, W, 'ext', ext);
-    const He = this.addDelimiterVPart(styles, c, W, 'end', end);
+    const Hb = this.addDelimiterVPart(styles, c, 'beg', beg, HDW);
+    this.addDelimiterVPart(styles, c, 'ext', ext, HDW);
+    const He = this.addDelimiterVPart(styles, c, 'end', end, HDW);
     const css: StyleData = {};
     if (mid) {
-      const Hm = this.addDelimiterVPart(styles, c, W, 'mid', mid);
+      const Hm = this.addDelimiterVPart(styles, c, 'mid', mid, HDW);
       css.height = '50%';
       styles['mjx-stretchy-v' + c + ' > mjx-mid'] = {
         'margin-top': this.em(-Hm / 2),
@@ -296,22 +296,23 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
   /**
    * @param {StyleList} styles  The style object to add styles to
    * @param {string} c          The vertical character whose part is being added
-   * @param {number} W          The width for the stretchy delimiter as a whole
    * @param {string} part       The name of the part (beg, ext, end, mid) that is being added
    * @param {number} n          The unicode character to use for the part
+   * @param {number} HDW        The height-depth-width data for the stretchy delimiter
    * @return {number}           The total height of the character
    */
-  protected addDelimiterVPart(styles: StyleList, c: string, W: number, part: string, n: number): number {
+  protected addDelimiterVPart(styles: StyleList, c: string, part: string, n: number, HDW: CHTMLCharData): number {
     if (!n) return 0;
     const data = this.getDelimiterData(n);
-    const dw = (W - data[2]) / 2;
+    const dw = (HDW[2] - data[2]) / 2;
     const css: StyleData = {content: this.charContent(n)};
     if (part !== 'ext') {
       css.padding = this.padding(data, dw);
-    } else if (dw) {
-      css['padding-left'] = this.em0(dw);
     } else {
-      css.padding = '.1em 0';    // for Safari
+      css.width = this.em0(HDW[2]);
+      if (dw) {
+        css['padding-left'] = this.em0(dw);
+      }
     }
     styles['mjx-stretchy-v' + c + ' mjx-' + part + ' mjx-c::before'] = css;
     return data[0] + data[1];
@@ -326,11 +327,12 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
    */
   protected addDelimiterHStyles(styles: StyleList, c: string, data: CHTMLDelimiterData) {
     const [beg, ext, end, mid] = data.stretch;
-    this.addDelimiterHPart(styles, c, 'beg', beg);
-    this.addDelimiterHPart(styles, c, 'ext', ext, !(beg || end));
-    this.addDelimiterHPart(styles, c, 'end', end);
+    const HDW = data.HDW as CHTMLCharData;
+    this.addDelimiterHPart(styles, c, 'beg', beg, HDW);
+    this.addDelimiterHPart(styles, c, 'ext', ext, HDW);
+    this.addDelimiterHPart(styles, c, 'end', end, HDW);
     if (mid) {
-      this.addDelimiterHPart(styles, c, 'mid', mid);
+      this.addDelimiterHPart(styles, c, 'mid', mid, HDW);
       styles['mjx-stretchy-h' + c + ' > mjx-ext'] = {width: '50%'};
     }
   }
@@ -340,18 +342,14 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
    * @param {string} c          The vertical character whose part is being added
    * @param {string} part       The name of the part (beg, ext, end, mid) that is being added
    * @param {number} n          The unicode character to use for the part
-   * @param {boolean} force     True if padding is always enforced
+   * @param {CHTMLCharData} HDW The height-depth-width data for the stretchy character
    */
-  protected addDelimiterHPart(styles: StyleList, c: string, part: string, n: number, force: boolean = false) {
+  protected addDelimiterHPart(styles: StyleList, c: string, part: string, n: number, HDW: CHTMLCharData) {
     if (!n) return;
     const data = this.getDelimiterData(n);
     const options = data[3] as CHTMLCharOptions;
     const css: StyleData = {content: (options && options.c ? '"' + options.c + '"' : this.charContent(n))};
-    if (part !== 'ext' || force) {
-      css.padding = this.padding(data, 0, -data[2]);
-    } else {
-      css['padding-top'] = '1px';   // for Safari
-    }
+    css.padding = this.padding(HDW as CHTMLCharData, 0, -HDW[2]);
     styles['mjx-stretchy-h' + c + ' mjx-' + part + ' mjx-c::before'] = css;
   }
 
