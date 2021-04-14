@@ -45,6 +45,11 @@ export type DEFPAIR<N, T, D> = Notation.DefPair<SVGmenclose<N, T, D>, N>;
 export type LineName = Notation.Side | ('vertical' | 'horizontal' | 'up' | 'down');
 
 /**
+ * [x1,y1, x2,y2] endpoints for a line
+ */
+export type LineData = [number, number, number, number];
+
+/**
  * Functions for computing the line data for each type of line
  */
 export const computeLineData = {
@@ -52,24 +57,47 @@ export const computeLineData = {
   right: (h, d, w, t) => [w - t, -d, w - t, h],
   bottom: (_h, d, w, t) => [0, t - d, w, t - d],
   left: (h, d, _w, t) => [t, -d, t, h],
-  vertical: (h, d, w, t) => [w / 2 - t, h, w / 2 - t, -d],
-  horizontal: (h, d, w, t) => [0, (h - d) / 2 - t, w, (h - d) / 2 - t],
+  vertical: (h, d, w, _t) => [w / 2, h, w / 2, -d],
+  horizontal: (h, d, w, _t) => [0, (h - d) / 2, w, (h - d) / 2],
   up: (h, d, w, t) => [t, t - d, w - t, h - t],
   down: (h, d, w, t) => [t, h - t, w - t, t - d]
-} as {[kind: string]: (h: number, d: number, w: number, t: number) => [number, number, number, number]};
+} as {[kind: string]: (h: number, d: number, w: number, t: number) => LineData};
 
 /**
  * The data for a given line as two endpoints: [x1, y1, x2, y1]
  *
  * @param {Menclose} node   The node whose line is to be drawn
  * @param {LineName} kind   The type of line to draw for the node
- * @return {[number, number, number, number]}   The coordinates of the two nedpoints
+ * @param {string} offset   The offset direction, if any
+ * @return {LineData}       The coordinates of the two endpoints
  */
-
-export const lineData = function(node: Menclose, kind: LineName): [number, number, number, number] {
+export const lineData = function(node: Menclose, kind: LineName, offset: string = ''): LineData {
   const {h, d, w} = node.getBBox();
   const t = node.thickness / 2;
-  return computeLineData[kind](h, d, w, t);
+  return lineOffset(computeLineData[kind](h, d, w, t), node, offset);
+};
+
+/**
+ * Recenter the line data for vertical and horizontal lines
+ *
+ * @param {LineData} data   The line endpoints to adjust
+ * @param {Menclose} node   The menclose node
+ * @param {string} offset   The direction to offset
+ */
+export const lineOffset = function(data: LineData, node: Menclose, offset: string): LineData {
+  if (offset) {
+    const d = node.getOffset(offset);
+    if (d) {
+      if (offset === 'X') {
+        data[0] -= d;
+        data[2] -= d;
+      } else {
+        data[1] -= d;
+        data[3] -= d;
+      }
+    }
+  }
+  return data;
 };
 
 
@@ -79,9 +107,10 @@ export const lineData = function(node: Menclose, kind: LineName): [number, numbe
  * @param {LineName} line  The name of the line to create
  * @return {RENDERER}      The renderer function for the given line
  */
-export const RenderLine = function<N, T, D>(line: LineName): RENDERER<N, T, D> {
+export const RenderLine = function<N, T, D>(line: LineName, offset: string = ''): RENDERER<N, T, D> {
   return ((node, _child) => {
-    node.adaptor.append(node.element, node.line(lineData(node, line)));
+    const L = node.line(lineData(node, line, offset));
+    node.adaptor.append(node.element, L);
   });
 };
 

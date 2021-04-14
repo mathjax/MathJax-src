@@ -29,6 +29,7 @@ import {TexConstant} from '../TexConstants.js';
 import ParseMethods from '../ParseMethods.js';
 import ParseUtil from '../ParseUtil.js';
 import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
+import {MATHSPACE, em} from '../../../util/lengths.js';
 
 
 let COLS = function(W: number[]) {
@@ -54,17 +55,11 @@ new sm.CharacterMap('AMSmath-mathchar0mo', ParseMethods.mathchar0mo, {
 new sm.CommandMap('AMSmath-macros', {
   mathring:   ['Accent', '02DA'],  // or 0x30A
   nobreakspace: 'Tilde',
-  negmedspace:    ['Spacer', TexConstant.Length.NEGATIVEMEDIUMMATHSPACE],
-  negthickspace:  ['Spacer', TexConstant.Length.NEGATIVETHICKMATHSPACE],
+  negmedspace:    ['Spacer', MATHSPACE.negativemediummathspace],
+  negthickspace:  ['Spacer', MATHSPACE.negativethickmathspace],
 
-  //    intI:       ['Macro', '\\mathchoice{\\!}{}{}{}\\!\\!\\int'],
-  //    iint:       ['MultiIntegral', '\\int\\intI'],          // now in core TeX input jax
-  //    iiint:      ['MultiIntegral', '\\int\\intI\\intI'],    // now in core TeX input jax
-  //    iiiint:     ['MultiIntegral', '\\int\\intI\\intI\\intI'], // now in mathchar0mo above
   idotsint:   ['MultiIntegral', '\\int\\cdots\\int'],
 
-  //    dddot:      ['Macro', '\\mathop{#1}\\limits^{\\textstyle \\mathord{.}\\mathord{.}\\mathord{.}}', 1],
-  //    ddddot:     ['Macro', '\\mathop{#1}\\limits^{\\textstyle \\mathord{.}\\mathord{.}\\mathord{.}\\mathord{.}}', 1],
   dddot:      ['Accent', '20DB'],
   ddddot:     ['Accent', '20DC'],
 
@@ -113,7 +108,7 @@ new sm.CommandMap('AMSmath-macros', {
  */
 new sm.EnvironmentMap('AMSmath-environment', ParseMethods.environment, {
   'eqnarray*':   ['EqnArray', null, false, true, 'rcl',
-                  '0 ' + TexConstant.Length.THICKMATHSPACE, '.5em'],
+                  '0 ' + em(MATHSPACE.thickmathspace), '.5em'],
   align:         ['EqnArray', null, true, true,  'rlrlrlrlrlrl',
                   COLS([0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0])],
   'align*':      ['EqnArray', null, false, true, 'rlrlrlrlrlrl',

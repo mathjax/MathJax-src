@@ -353,9 +353,11 @@ CommonMencloseMixin<
    * @param {number} w        The length of the arrow
    * @param {number} a        The angle for the arrow
    * @param {boolean} double  True if this is a double-headed arrow
-   * @return {N}               The newly created arrow
+   * @param {string} offset   'X' for vertical arrow, 'Y' for horizontal
+   * @param {number} dist     Distance to translate in the offset direction
+   * @return {N}              The newly created arrow
    */
-  public arrow(w: number, a: number, double: boolean = false): N {
+  public arrow(w: number, a: number, double: boolean, offset: string = '', dist: number = 0): N {
     const W = this.getBBox().w;
     const style = {width: this.em(w)} as OptionList;
     if (W !== w) {
@@ -373,6 +375,7 @@ CommonMencloseMixin<
       this.adaptor.setAttribute(arrow, 'double', 'true');
     }
     this.adjustArrow(arrow, double);
+    this.moveArrow(arrow, offset, dist);
     return arrow;
   }
 
@@ -420,6 +423,19 @@ CommonMencloseMixin<
     if (double) {
       this.adaptor.setStyle(line, 'left', this.em(t * (x - 1)));
     }
+  }
+
+  /**
+   * @param {N} arrow        The arrow whose position is to be adjusted
+   * @param {string} offset  The direction to move the arrow
+   * @param {number} d       The distance to translate in that direction
+   */
+  protected moveArrow(arrow: N, offset: string, d: number) {
+    if (!d) return;
+    const transform = this.adaptor.getStyle(arrow, 'transform');
+    this.adaptor.setStyle(
+      arrow, 'transform', `translate${offset}(${this.em(-d)})${(transform ? ' ' + transform : '')}`
+    );
   }
 
   /********************************************************/

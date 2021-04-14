@@ -25,6 +25,7 @@
 import {MacroMap, CommandMap} from '../SymbolMap.js';
 import {TexConstant} from '../TexConstants.js';
 import {TextMacrosMethods} from './TextMacrosMethods.js';
+import {MATHSPACE} from '../../../util/lengths.js';
 
 //
 //  The special characters in text-mode
@@ -120,16 +121,16 @@ new CommandMap('text-macros', {
   ddagger:      ['Insert', '\u2021'],
   S:            ['Insert', '\u00A7'],
 
-  ',':          ['Spacer', TexConstant.Length.THINMATHSPACE],
-  ':':          ['Spacer', TexConstant.Length.MEDIUMMATHSPACE],
-  '>':          ['Spacer', TexConstant.Length.MEDIUMMATHSPACE],
-  ';':          ['Spacer', TexConstant.Length.THICKMATHSPACE],
-  '!':          ['Spacer', TexConstant.Length.NEGATIVETHINMATHSPACE],
-  enspace:      ['Spacer', '.5em'],
-  quad:         ['Spacer', '1em'],
-  qquad:        ['Spacer', '2em'],
-  thinspace:    ['Spacer', TexConstant.Length.THINMATHSPACE],
-  negthinspace: ['Spacer', TexConstant.Length.NEGATIVETHINMATHSPACE],
+  ',':          ['Spacer', MATHSPACE.thinmathspace],
+  ':':          ['Spacer', MATHSPACE.mediummathspace],
+  '>':          ['Spacer', MATHSPACE.mediummathspace],
+  ';':          ['Spacer', MATHSPACE.thickmathspace],
+  '!':          ['Spacer', MATHSPACE.negativethinmathspace],
+  enspace:      ['Spacer', .5],
+  quad:         ['Spacer', 1],
+  qquad:        ['Spacer', 2],
+  thinspace:    ['Spacer', MATHSPACE.thinmathspace],
+  negthinspace: ['Spacer', MATHSPACE.negativethinmathspace],
 
   hskip:        'Hskip',
   hspace:       'Hskip',

@@ -121,7 +121,25 @@ export class MmlMo extends AbstractMmlTokenNode {
      0x201D: 0x2033,   // close double quote
      0x201E: 0x2033,   // low open double quote
      0x201F: 0x2036,   // reversed open double quote
-   };
+  };
+
+  protected static mathaccents = new RegExp([
+    '^[',
+    '\u00B4\u0301\u02CA',  // acute
+    '\u0060\u0300\u02CB',  // grave
+    '\u00A8\u0308',        // ddot
+    '\u007E\u0303\u02DC',  // tilde
+    '\u00AF\u0304\u02C9',  // bar
+    '\u02D8\u0306',        // breve
+    '\u02C7\u030C',        // check
+    '\u005E\u0302\u02C6',  // hat
+    '\u2192\u20D7',        // vec
+    '\u02D9\u0307',        // dot
+    '\u02DA\u030A',        // mathring
+    '\u20DB',              // dddot
+    '\u20DC',              // ddddot
+    ']$'
+  ].join(''));
 
   /**
    * The internal TeX class of the node (for use with getter/setter below)
@@ -195,7 +213,7 @@ export class MmlMo extends AbstractMmlTokenNode {
     let math = this.factory.getNodeClass('math');
     while (parent && parent.isEmbellished && parent.coreMO() === this && !(parent instanceof math)) {
       embellished = parent;
-      parent = (parent as MmlNode).Parent;
+      parent = (parent as MmlNode).parent;
     }
     return embellished;
   }
@@ -348,6 +366,7 @@ export class MmlMo extends AbstractMmlTokenNode {
     this.checkOperatorTable(mo);
     this.checkPseudoScripts(mo);
     this.checkPrimes(mo);
+    this.checkMathAccent(mo);
   }
 
   /**
@@ -469,6 +488,19 @@ export class MmlMo extends AbstractMmlTokenNode {
     const REMAP = (this.constructor as typeof MmlMo).remapPrimes;
     const primes = unicodeString(unicodeChars(mo).map(c => REMAP[c]));
     this.setProperty('primes', primes);
+  }
+
+  /**
+   * Determine whether the mo is a mathaccent character
+   *
+   * @param {string} mo   The test of the mo element
+   */
+  protected checkMathAccent(mo: string) {
+    if (this.getProperty('mathaccent') !== undefined || !this.Parent.isKind('munderover')) return;
+    const MATHACCENT = (this.constructor as typeof MmlMo).mathaccents;
+    if (mo.match(MATHACCENT)) {
+      this.setProperty('mathaccent', true);
+    }
   }
 
 }

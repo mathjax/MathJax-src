@@ -166,6 +166,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
       MenuClass: Menu,
       menuOptions: Menu.OPTIONS,
       enableMenu: true,
+      sre: (BaseDocument.OPTIONS.sre || expandable({})),
       a11y: (BaseDocument.OPTIONS.a11y || expandable({})),
       renderActions: expandable({
         ...BaseDocument.OPTIONS.renderActions,
