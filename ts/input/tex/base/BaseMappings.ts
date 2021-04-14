@@ -491,7 +491,7 @@ new sm.CommandMap('macros', {
 
   left:               'LeftRight',
   right:              'LeftRight',
-  middle:             'Middle',
+  middle:             'LeftRight',
 
   llap:               'Lap',
   rlap:               'Lap',
