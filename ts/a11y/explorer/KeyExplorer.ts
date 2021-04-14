@@ -116,7 +116,12 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
   public Update(force: boolean = false) {
     if (!this.active && !force) return;
     this.highlighter.unhighlight();
-    this.highlighter.highlight(this.walker.getFocus(true).getNodes());
+    let nodes = this.walker.getFocus(true).getNodes();
+    if (!nodes.length) {
+      this.walker.refocus();
+      nodes = this.walker.getFocus().getNodes();
+    }
+    this.highlighter.highlight(nodes);
   }
 
   /**

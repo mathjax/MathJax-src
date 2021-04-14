@@ -30,6 +30,7 @@ declare namespace sre {
     deactivate(): void;
     speech(): string;
     move(key: number): boolean;
+    refocus(): void;
     getFocus(update?: boolean): Focus;
     update(options: {[key: string]: string}): void;
   }
