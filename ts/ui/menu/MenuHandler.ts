@@ -167,7 +167,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
       //    initially, and so would cause "undefined option" error messages
       //    if a user tries to configure them.  So we include them here.
       //    They are overridden by the options from the extensions when
-      //    those are laoded (via ...BaseDocument.OPTIONS).
+      //    those are loaded (via ...BaseDocument.OPTIONS).
       //
       enableEnrichment: true,
       enableComplexity: true,
