@@ -173,7 +173,7 @@ export interface CommonMtable<C extends AnyWrapper, R extends CommonMtr<C>> exte
    * @param {number} i     The row whose hight and depth should be adjusted
    * @param {number[]} H   The row heights
    * @param {number[]} D   The row depths
-   * @param {number} M     The maximum heoght of top/bottom aligned items
+   * @param {number} M     The maximum height of top/bottom aligned items
    */
   extendHD(i: number, H: number[], D: number[], M: number): void;
 

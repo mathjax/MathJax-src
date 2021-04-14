@@ -357,7 +357,7 @@ CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstru
   }
 
   /**
-   * @param {CHTMLWrapper} row   The row whose hieght is to be set
+   * @param {CHTMLWrapper} row   The row whose height is to be set
    * @param {number} HD          The height to be set for the row
    */
   protected setRowHeight(row: CHTMLWrapper<N, T, D>, HD: number) {
