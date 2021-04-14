@@ -145,6 +145,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      * @param {ExplorerMathDocument} document The current document.
      */
     public attachExplorers(document: ExplorerMathDocument) {
+      this.attached = [];
       let keyExplorers = [];
       for (let key of Object.keys(this.explorers)) {
         let explorer = this.explorers[key];
@@ -183,7 +184,6 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
           explorer.Stop();
         }
       }
-      this.attached = [];
       super.rerender(document, start);
     }
 
