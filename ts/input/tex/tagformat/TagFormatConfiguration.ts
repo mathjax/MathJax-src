@@ -116,7 +116,7 @@ export const TagFormatConfiguration = Configuration.create(
       tagformat: {
         number: (n: number) => n.toString(),
         tag:    (tag: string) => '(' + tag + ')',
-        id:     (id: string) => 'mjx-eqn-' + id.replace(/\s/g, '_'),
+        id:     (id: string) => 'mjx-eqn:' + id.replace(/\s/g, '_'),
         url:    (id: string, base: string) => base + '#' + encodeURIComponent(id),
       }
     }

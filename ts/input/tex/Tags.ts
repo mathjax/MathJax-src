@@ -57,7 +57,7 @@ export class TagInfo {
    * @param {boolean} defaultTags Environment is tagged by default (e.g., align
    *     is, but align* is not).
    * @param {string} tag The tag name (e.g., 1).
-   * @param {string} tagId The unique id for that tag (e.g., mjx-eqn-1).
+   * @param {string} tagId The unique id for that tag (e.g., mjx-eqn:1).
    * @param {string} tagFormat The formatted tag (e.g., "(1)").
    * @param {boolean} noTag A no tagging command has been set (e.g., \notag,
    *     \nonumber).
@@ -374,7 +374,7 @@ export class AbstractTags implements Tags {
    * @return {string} The formatted id.
    */
   protected formatId(id: string): string {
-    return 'mjx-eqn-' + id.replace(/\s/g, '_');
+    return 'mjx-eqn:' + id.replace(/\s/g, '_');
   }
 
   /**
@@ -620,8 +620,8 @@ export namespace TagsFactory {
     multlineWidth: '85%',
     // make element ID's use \label name rather than equation number
     // MJ puts in an equation prefix: mjx-eqn
-    // When true it uses the label name XXX as mjx-eqn-XXX
-    // If false it uses the actual number N that is displayed: mjx-eqn-N
+    // When true it uses the label name XXX as mjx-eqn:XXX
+    // If false it uses the actual number N that is displayed: mjx-eqn:N
     useLabelIds: true,
     // Set to true in order to prevent error messages for duplicate label ids
     ignoreDuplicateLabels: false
