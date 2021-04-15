@@ -45,6 +45,7 @@ export const source = {
   'a11y/explorer': `${src}/a11y/explorer/explorer.js`,
   '[sre]': (typeof window === 'undefined' ? `${src}/../../js/a11y/sre-node.js` :
             `${src}/../../node_modules/speech-rule-engine/lib/sre_browser.js`),
+  'ui/lazy': `${src}/ui/lazy/lazy.js`,
   'ui/menu': `${src}/ui/menu/menu.js`,
   'ui/safe': `${src}/ui/safe/safe.js`,
   'mml-chtml': `${src}/mml-chtml/mml-chtml.js`,
