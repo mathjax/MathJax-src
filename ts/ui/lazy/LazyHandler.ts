@@ -21,10 +21,11 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Handler} from '../../core/Handler.js';
-import {MathDocument, AbstractMathDocument,
-        MathDocumentConstructor, ContainerList} from '../../core/MathDocument.js';
-import {MathItem, AbstractMathItem, STATE} from '../../core/MathItem.js';
+import {MathDocumentConstructor, ContainerList} from '../../core/MathDocument.js';
+import {MathItem, STATE} from '../../core/MathItem.js';
+import {HTMLMathItem} from '../../handlers/html/HTMLMathItem.js';
+import {HTMLDocument} from '../../handlers/html/HTMLDocument.js';
+import {HTMLHandler} from '../../handlers/html/HTMLHandler.js';
 import {handleRetriesFor} from '../../util/Retries.js';
 
 /**
@@ -38,6 +39,11 @@ declare const window: {
  * Generic constructor for Mixins
  */
 export type Constructor<T> = new(...args: any[]) => T;
+
+/**
+ * A set of lazy MathItems
+ */
+export type LazySet = Set<string>;
 
 /*==========================================================================*/
 
@@ -143,7 +149,7 @@ export interface LazyMathItem<N, T, D> extends MathItem<N, T, D> {
  * @template D  The Document class
  * @template B  The MathItem class to extend
  */
-export function LazyMathItemMixin<N, T, D, B extends Constructor<AbstractMathItem<N, T, D>>>(
+export function LazyMathItemMixin<N, T, D, B extends Constructor<HTMLMathItem<N, T, D>>>(
   BaseMathItem: B
 ): Constructor<LazyMathItem<N, T, D>> & B {
 
@@ -212,9 +218,20 @@ export function LazyMathItemMixin<N, T, D, B extends Constructor<AbstractMathIte
       }
     }
 
+    /**
+     * @override
+     */
+    public state(state: number = undefined, restore: boolean = false) {
+      //
+      // don't set the state if we are lazy processing
+      //
+      return (restore === null ? this._state : super.state(state, restore));
+    }
+
   };
 
 }
+
 /*==========================================================================*/
 
 /**
@@ -224,7 +241,7 @@ export function LazyMathItemMixin<N, T, D, B extends Constructor<AbstractMathIte
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface LazyMathDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
+export interface LazyMathDocument<N, T, D> extends HTMLDocument<N, T, D> {
 
   /**
    * The Intersection Observer used to track the appearance of the expression markers
@@ -250,9 +267,9 @@ export interface LazyMathDocument<N, T, D> extends AbstractMathDocument<N, T, D>
  * @template B  The MathDocument class to extend
  */
 export function LazyMathDocumentMixin<N, T, D,
-B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
+B extends MathDocumentConstructor<HTMLDocument<N, T, D>>>(
   BaseDocument: B
-): MathDocumentConstructor<MathDocument<N, T, D>> & B {
+): MathDocumentConstructor<HTMLDocument<N, T, D>> & B {
 
   return class BaseClass extends BaseDocument {
 
@@ -272,8 +289,26 @@ B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
     protected lazyPromise: Promise<void> = Promise.resolve();
 
     /**
+     * The function used to typeset a set of lazy MathItems.
+     *   (uses requestIdleCallback if available, or setTimeout otherwise)
+     */
+    protected lazyProcessSet: () => void;
+
+    /**
+     * True when a set of MathItems is queued for being processed
+     */
+    protected lazyIdle: boolean = false;
+
+    /**
+     * The set of items that have come into view
+     */
+    protected lazySet: LazySet = new Set();
+
+    /**
      * Augment the MathItem class used for this MathDocument,
-     *   then create the intersection observer and laxzy list.
+     *   then create the intersection observer and lazy list,
+     *   and bind the lazyProcessSet function to this instance
+     *   so it can be used as a callback more easily.
      *
      * @override
      * @constructor
@@ -281,60 +316,124 @@ B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
     constructor(...args: any[]) {
       super(...args);
       this.options.MathItem =
-        LazyMathItemMixin<N, T, D, Constructor<AbstractMathItem<N, T, D>>>(this.options.MathItem);
-      this.lazyObserver = new IntersectionObserver(this.observe.bind(this));
+        LazyMathItemMixin<N, T, D, Constructor<HTMLMathItem<N, T, D>>>(this.options.MathItem);
+      this.lazyObserver = new IntersectionObserver(this.lazyObserve.bind(this));
       this.lazyList = new LazyList<N, T, D>();
+      const callback = this.lazyHandleSet.bind(this);
+      this.lazyProcessSet = (typeof window !== 'undefined' && window.requestIdleCallback ?
+                          () => window.requestIdleCallback(callback) :
+                          () => setTimeout(callback, 10));
     }
 
     /**
      * The function used by the IntersectionObserver to monitor the markers coming into view.
-     * When one (or more) does, use an idle callback to process the marker:
-     *  Get the id of the marker and look up the associated MathItem;
-     *  Remove the item from the list (it will be typeset from now on);
-     *  Compile any previous TeX expressions (since they may contain definitions, automatic numbering, etc.);
-     *  Remove the lazy markers from the math item so it will compile and typeset as usual;
-     *  Rerender the math (in order, and handing retries as needed for loading extensions).
+     * When one (or more) does, add it to or remove it from the set to be processed, and
+     *   if added to the set, queue an idle task, if one isn't already pending.
      *
      * @param {IntersectionObserverEntry[]} entries   The markers that have come into or out of view.
      */
-    public observe(entries: IntersectionObserverEntry[]) {
-      for (const entry of Array.from(entries).reverse()) {
+    protected lazyObserve(entries: IntersectionObserverEntry[]) {
+      for (const entry of entries) {
+        const id = this.adaptor.getAttribute(entry.target as any as N, LAZYID);
+        const math = this.lazyList.get(id);
+        if (!math) return;
         if (entry.isIntersecting) {
-          this.lazyObserver.unobserve(entry.target);
-          window.requestIdleCallback(() => {
-            const id = this.adaptor.getAttribute(entry.target as any as N, LAZYID);
-            const math = this.lazyList.get(id);
-            if (!math) return;
-            this.lazyList.delete(id);
-            this.compileEarlier(math);
-            math.lazyMarker = null;
-            math.lazyTypeset = math.lazyCompile = false;
-            this.lazyPromise = this.lazyPromise.then(() => {
-              return handleRetriesFor(() => math.rerender(this, math.lazyState));
-            });
-          });
+          this.lazySet.add(id);
+          if (!this.lazyIdle) {
+            this.lazyIdle = true;
+            this.lazyProcessSet();
+          }
+        } else {
+          this.lazySet.delete(id);
         }
       }
     }
 
     /**
-     * If this is a TeX item, look through the math list for any earlier math
-     * that needs to be compiled and rerender it (it will be compiled, but
-     * its marker will be reinserted into the page).
+     * Mark the MathItems in the set as needing compiling or typesetting,
+     *   and for TeX items, make sure the earlier TeX items are typeset
+     *   (in case they have automatic numbers, or define macros, etc.).
+     * Then rerender the page to update the visible equations.
      */
-    public compileEarlier(math: LazyMathItem<N, T, D>) {
-      if (!math.lazyTex) return;
+    protected lazyHandleSet() {
+      const set = this.lazySet;
+      this.lazySet = new Set();
+      this.lazyPromise = this.lazyPromise.then(() => {
+        let state = this.compileEarlierItems(set) ? STATE.COMPILED : STATE.TYPESET;
+        state = this.resetStates(set, state);
+        this.state(state - 1, null); // reset processed bits to allow reprocessing
+        return handleRetriesFor(() => {
+          this.render();
+          this.lazyIdle = false;
+        });
+      });
+    }
+
+    /**
+     * Set the states of the MathItems in the set, depending on
+     *   whether they need compiling or just typesetting, and
+     *   update the state needed for the page rerendering.
+     *
+     * @param {LazySet} set    The set of math items to update
+     * @param {number} state   The state needed for the items
+     * @return {number}        The updated state based on the items
+     */
+    protected resetStates(set: LazySet, state: number): number {
+      for (const id of set.values()) {
+        const math = this.lazyList.get(id);
+        if (math.lazyCompile) {
+          math.state(STATE.COMPILED - 1);
+          state = STATE.COMPILED;
+        } else {
+          math.state(STATE.TYPESET - 1);
+        }
+        math.lazyCompile = math.lazyTypeset = false;
+        math.lazyMarker && this.lazyObserver.unobserve(math.lazyMarker as any as Element);
+      }
+      return state;
+    }
+
+    /**
+     * Mark any TeX items (earlier than the ones in the set) to be compiled.
+     *
+     * @param {LazySet} set   The set of items that are newly visible
+     * @return {boolean}      True if there are TeX items to be typeset
+     */
+    protected compileEarlierItems(set: LazySet): boolean {
+      let math = this.earliestTex(set);
+      if (!math) return false;
+      let compile = false;
       for (const item of this.math) {
         if (item === math) break;
         const earlier = item as LazyMathItem<N, T, D>;
         if (earlier.lazyTex && earlier.lazyCompile) {
           earlier.lazyCompile = false;
           earlier.lazyMarker && this.lazyObserver.unobserve(earlier.lazyMarker as any as Element);
-          this.lazyPromise = this.lazyPromise.then(() => {
-            return handleRetriesFor(() => earlier.rerender(this, STATE.COMPILED));
-          });
+          earlier.state(STATE.COMPILED - 1);
+          compile = true;
         }
       }
+      return compile;
+    }
+
+    /**
+     * Find the earliest TeX math item in the set, if any.
+     *
+     * @param {LazySet} set     The set of newly visble math items
+     * @return {LazyMathItem}   The earliest TeX math item in the set, if any
+     */
+    protected earliestTex(set: LazySet): LazyMathItem<N, T, D> {
+      let min: number = null;
+      let minMath = null;
+      for (const id of set.values()) {
+        const math = this.lazyList.get(id);
+        if (!math.lazyTex) continue;
+        if (min === null || parseInt(id) < min) {
+          min = parseInt(id);
+          minMath = math;
+        }
+      }
+      return minMath;
     }
 
     /**
@@ -370,16 +469,15 @@ B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
  * @template T  The Text node class
  * @template D  The Document class
  */
-export function LazyHandler<N, T, D>(handler: Handler<N, T, D>): Handler<N, T, D> {
+export function LazyHandler<N, T, D>(handler: HTMLHandler<N, T, D>): HTMLHandler<N, T, D> {
   //
   // Only update the document class if we can handle IntersectionObservers and idle callbacks
   //
-  if (typeof window !== 'undefined' && window.requestIdleCallback &&
-      typeof IntersectionObserver !== 'undefined') {
+  if (typeof IntersectionObserver !== 'undefined') {
     handler.documentClass =
-      LazyMathDocumentMixin<N, T, D, MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
+      LazyMathDocumentMixin<N, T, D, MathDocumentConstructor<HTMLDocument<N, T, D>>>(
         handler.documentClass
-      );
+      ) as typeof HTMLDocument;
   }
   return handler;
 }
