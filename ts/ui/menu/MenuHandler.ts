@@ -162,6 +162,19 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
      * @override
      */
     public static OPTIONS = {
+      //
+      //  These options are from the a11y extensions, which may not be loaded
+      //    initially, and so would cause "undefined option" error messages
+      //    if a user tries to configure them.  So we include them here.
+      //    They are overridden by the options from the extensions when
+      //    those are loaded (via ...BaseDocument.OPTIONS).
+      //
+      enableEnrichment: true,
+      enableComplexity: true,
+      enableExplorer: true,
+      enrichSpeech: 'none',
+      enrichError: (_doc: MenuMathDocument, _math: MenuMathItem, err: Error) =>
+        console.warn('Enrichment Error:', err),
       ...BaseDocument.OPTIONS,
       MenuClass: Menu,
       menuOptions: Menu.OPTIONS,
