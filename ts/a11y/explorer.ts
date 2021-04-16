@@ -100,12 +100,12 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     /**
      * The currently attached explorers
      */
-    protected attached: Explorer[] = [];
+    protected attached: string[] = [];
 
     /**
-     * True when a rerendered element should restart the explorer
+     * True when a rerendered element should restart these explorers
      */
-    protected restart: boolean = false;
+    protected restart: string[] = [];
 
     /**
      * True when a rerendered element should regain the focus
@@ -146,16 +146,29 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      */
     public attachExplorers(document: ExplorerMathDocument) {
       this.attached = [];
+      let keyExplorers = [];
       for (let key of Object.keys(this.explorers)) {
         let explorer = this.explorers[key];
+        if (explorer instanceof ke.AbstractKeyExplorer) {
+          explorer.AddEvents();
+          explorer.stoppable = false;
+          keyExplorers.unshift(explorer);
+        }
         if (document.options.a11y[key]) {
           explorer.Attach();
-          this.attached.push(explorer);
+          this.attached.push(key);
         } else {
           explorer.Detach();
         }
       }
-      this.addExplorers(this.attached);
+      // Ensure that the last currently attached key explorer stops propagating
+      // key events.
+      for (let explorer of keyExplorers) {
+        if (explorer.attached) {
+          explorer.stoppable = true;
+          break;
+        }
+      }
     }
 
     /**
@@ -164,9 +177,10 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     public rerender(document: ExplorerMathDocument, start: number = STATE.RERENDER) {
       this.savedId = this.typesetRoot.getAttribute('sre-explorer-id');
       this.refocus = (window.document.activeElement === this.typesetRoot);
-      for (let explorer of this.attached) {
+      for (let key of this.attached) {
+        let explorer = this.explorers[key];
         if (explorer.active) {
-          this.restart = true;
+          this.restart.push(key);
           explorer.Stop();
         }
       }
@@ -179,25 +193,9 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     public updateDocument(document: ExplorerMathDocument) {
       super.updateDocument(document);
       this.refocus && this.typesetRoot.focus();
-      this.restart && this.attached.forEach(x => x.Start());
-      this.refocus = this.restart = false;
-    }
-
-    /**
-     * Adds a list of explorers and makes sure the right one stops propagating.
-     * @param {Explorer[]} explorers The active explorers to be added.
-     */
-    private addExplorers(explorers: Explorer[]) {
-      if (explorers.length <= 1) return;
-      let lastKeyExplorer = null;
-      for (let explorer of this.attached) {
-        if (!(explorer instanceof ke.AbstractKeyExplorer)) continue;
-        explorer.stoppable = false;
-        lastKeyExplorer = explorer;
-      }
-      if (lastKeyExplorer) {
-        lastKeyExplorer.stoppable = true;
-      }
+      this.restart.forEach(x => this.explorers[x].Start());
+      this.restart = [];
+      this.refocus = false;
     }
 
   };

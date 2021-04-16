@@ -65,10 +65,17 @@ export interface KeyExplorer extends Explorer {
 export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> implements KeyExplorer {
 
   /**
+   * Flag indicating if the explorer is attached to an object.
+   */
+  public attached: boolean = false;
+
+  /**
    * The attached SRE walker.
    * @type {sre.Walker}
    */
   protected walker: sre.Walker;
+
+  private eventsAttached: boolean = false;
 
   /**
    * @override
@@ -117,9 +124,20 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
    */
   public Attach() {
     super.Attach();
+    this.attached = true;
     this.oldIndex = this.node.tabIndex;
     this.node.tabIndex = 1;
     this.node.setAttribute('role', 'application');
+  }
+
+  /**
+   * @override
+   */
+  public AddEvents() {
+    if (!this.eventsAttached) {
+      super.AddEvents();
+      this.eventsAttached = true;
+    }
   }
 
   /**
@@ -131,7 +149,7 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
       this.oldIndex = null;
       this.node.removeAttribute('role');
     }
-    super.Detach();
+    this.attached = false;
   }
 
   /**
@@ -194,6 +212,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @override
    */
   public Start() {
+    if (!this.attached) return;
     let options = this.getOptions();
     // TODO: Check and set locale not only on init, but on every start.
     if (!this.init) {
@@ -354,6 +373,7 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
    */
   public Start() {
     super.Start();
+    if (!this.attached) return;
     this.region.Show(this.node, this.highlighter);
     this.walker.activate();
     this.Update();
