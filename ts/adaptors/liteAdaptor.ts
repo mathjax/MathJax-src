@@ -466,6 +466,13 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
   /**
    * @override
    */
+  public serializeXML(node: LiteElement) {
+    return this.parser.serialize(this, node, true);
+  }
+
+  /**
+   * @override
+   */
   public setAttribute(node: LiteElement, name: string, value: string | number, ns: string = null) {
     if (typeof value !== 'string') {
       value = String(value);
