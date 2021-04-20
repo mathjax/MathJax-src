@@ -56,7 +56,9 @@ CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstru
       'vertical-align': '.25em',
       'text-align': 'center',
       'position': 'relative',
-      'box-sizing': 'border-box'
+      'box-sizing': 'border-box',
+      'border-spacing': 0,            // prevent this from being inherited from an outer table
+      'border-collapse': 'collapse'   // similarly here
     },
     'mjx-mstyle[size="s"] mjx-mtable': {
       'vertical-align': '.354em'
