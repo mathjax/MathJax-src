@@ -278,7 +278,7 @@ CommonWrapper<
     //
     //  Add the text element (not transformed) and the transformed <g>
     //
-    adaptor.append(this.element, this.svg('text', {'data-align': true} , [this.text('')]));
+    adaptor.append(this.element, this.svg('text', {'data-id-align': true} , [this.text('')]));
     adaptor.append(this.element, g);
     return y + h;
   }
@@ -291,7 +291,7 @@ CommonWrapper<
   public firstChild(): N {
     const adaptor = this.adaptor;
     let child = adaptor.firstChild(this.element);
-    if (child && adaptor.kind(child) === 'text' && adaptor.getAttribute(child, 'data-align')) {
+    if (child && adaptor.kind(child) === 'text' && adaptor.getAttribute(child, 'data-id-align')) {
       child = adaptor.firstChild(adaptor.next(child));
     }
     if (child && adaptor.kind(child) === 'rect' && adaptor.getAttribute(child, 'data-hitbox')) {
