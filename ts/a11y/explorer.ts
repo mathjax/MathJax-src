@@ -643,8 +643,11 @@ let csSelectionBox = function(menu: MJContextMenu, locale: string) {
 let csMenu = function(menu: MJContextMenu, sub: Submenu) {
   let locale = menu.pool.lookup('locale').getValue() as string;
   const box = csSelectionBox(menu, locale);
-  const items = sre.ClearspeakPreferences.smartPreferences(
-    menu.mathItem, locale);
+  let items: Object[] = [];
+  try {
+    items = sre.ClearspeakPreferences.smartPreferences(
+      menu.mathItem, locale);
+  } catch (e) {}
   if (box) {
     items.splice(2, 0, box);
   }
