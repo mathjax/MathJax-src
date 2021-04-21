@@ -292,6 +292,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     }
     if (this.active) {
       this.Move(code);
+      if (this.triggerLink(code)) return;
       this.stopEvent(event);
       return;
     }
@@ -301,6 +302,24 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     }
   }
 
+  /**
+   * Programmatically triggers a link if the focused node contains one.
+   */
+  protected triggerLink(code: number) {
+    if (code !== 13) {
+      return false;
+    }
+    let node = this.walker.getFocus().getNodes()?.[0];
+    let focus = node?.
+      getAttribute('data-semantic-postfix')?.
+      match(/(^| )link($| )/);
+    if (focus) {
+      // Works for CHTML only.
+      node.parentElement.click();
+      return true;
+    }
+    return false;
+  }
 
   /**
    * @override

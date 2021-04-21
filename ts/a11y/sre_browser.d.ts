@@ -21,7 +21,7 @@ declare namespace sre {
   }
 
   interface Focus {
-    getNodes(): Node[];
+    getNodes(): Element[];
   }
 
   interface Walker {
