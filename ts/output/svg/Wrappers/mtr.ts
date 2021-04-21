@@ -141,7 +141,7 @@ CommonMtrMixin<SVGmtd<any, any, any>, SVGConstructor<any, any, any>>(SVGWrapper)
   protected placeColor() {
     const scale = 1 / this.getBBox().rscale;
     const adaptor = this.adaptor;
-    const child = adaptor.firstChild(this.element);
+    const child = this.firstChild();
     if (child && adaptor.kind(child) === 'rect' && adaptor.getAttribute(child, 'data-bgcolor')) {
       const [TL, BL] = [(this.tLine / 2) * scale, (this.bLine / 2) * scale];
       const [TS, BS] = [this.tSpace * scale, this.bSpace * scale];

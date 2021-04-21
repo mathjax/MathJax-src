@@ -35,10 +35,8 @@ import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMunderover} from '../../../core/MmlTree/MmlNodes/munderover.js';
 import {Label} from '../Tags.js';
+import {em} from '../../../util/lengths.js';
 import {entities} from '../../../util/Entities.js';
-import '../../../util/entities/n.js';
-import '../../../util/entities/p.js';
-import '../../../util/entities/r.js';
 
 
 // Namespace
@@ -235,7 +233,7 @@ BaseMethods.Prime = function(parser: TexParser, c: string) {
   do {
     // @test Prime, PrimeSup, Double Prime, PrePrime
     sup += entities.prime; parser.i++, c = parser.GetNext();
-  } while (c === '\'' || c === entities.rquote);
+  } while (c === '\'' || c === entities.rsquo);
   sup = ['', '\u2032', '\u2033', '\u2034', '\u2057'][sup.length] || sup;
   const node = parser.create('token', 'mo', {variantForm: true}, sup);
   parser.Push(
@@ -274,6 +272,23 @@ BaseMethods.Hash = function(_parser: TexParser, _c: string) {
  *
  */
 
+
+/**
+ * Handle \mathrm, \mathbf, etc, allowing for multi-letter runs to be one <mi>.
+ */
+BaseMethods.MathFont = function(parser: TexParser, name: string, variant: string) {
+  const text = parser.GetArgument(name);
+  let mml = new TexParser(text, {
+    ...parser.stack.env,
+    font: variant,
+    multiLetterIdentifiers: true
+  }, parser.configuration).mml();
+  if (mml.isKind('inferredMrow')) {
+    mml = parser.create('node', 'mrow', mml.childNodes);
+  }
+  parser.Push(mml);
+};
+
 /**
  * Setting font, e.g., via \\rm, \\bf etc.
  * @param {TexParser} parser The calling parser.
@@ -307,12 +322,12 @@ BaseMethods.SetStyle = function(parser: TexParser, _name: string,
  * Setting size of an expression, e.g., \\small, \\huge.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
- * @param {string} size The size value.
+ * @param {number} size The size value.
  */
-BaseMethods.SetSize = function(parser: TexParser, _name: string, size: string) {
+BaseMethods.SetSize = function(parser: TexParser, _name: string, size: number) {
   parser.stack.env['size'] = size;
   parser.Push(
-    parser.itemFactory.create('style').setProperty('styles', {mathsize: size + 'em'}));
+    parser.itemFactory.create('style').setProperty('styles', {mathsize: em(size)}));
 };
 
 /**
@@ -321,9 +336,9 @@ BaseMethods.SetSize = function(parser: TexParser, _name: string, size: string) {
  * @param {string} name The macro name.
  * @param {string} space The space value.
  */
-BaseMethods.Spacer = function(parser: TexParser, _name: string, space: string) {
+BaseMethods.Spacer = function(parser: TexParser, _name: string, space: number) {
   // @test Positive Spacing, Negative Spacing
-  const node = parser.create('node', 'mspace', [], {width: space});
+  const node = parser.create('node', 'mspace', [], {width: em(space)});
   const style = parser.create('node', 'mstyle', [node], {scriptlevel: 0});
   parser.Push(style);
 };
@@ -337,30 +352,7 @@ BaseMethods.Spacer = function(parser: TexParser, _name: string, space: string) {
 BaseMethods.LeftRight = function(parser: TexParser, name: string) {
   // @test Fenced, Fenced3
   const first = name.substr(1);
-  parser.Push(
-    parser.itemFactory.create(first)
-      .setProperty('delim', parser.GetDelimiter(name)));
-};
-
-/**
- * Parses middle fenced expressions.
- * @param {TexParser} parser The calling parser.
- * @param {string} name The macro name.
- */
-BaseMethods.Middle = function(parser: TexParser, name: string) {
-  // @test Middle
-  const delim = parser.GetDelimiter(name);
-  let node = parser.create('node', 'TeXAtom', [], {texClass: TEXCLASS.CLOSE});
-  parser.Push(node);
-  if (!parser.stack.Top().isKind('left')) {
-    // @test Orphan Middle, Middle with Right
-    throw new TexError('MisplacedMiddle',
-                        '%1 must be within \\left and \\right', parser.currentCS);
-  }
-  node = parser.create('token', 'mo', {stretchy: true}, delim);
-  parser.Push(node);
-  node = parser.create('node', 'TeXAtom', [], {texClass: TEXCLASS.OPEN});
-  parser.Push(node);
+  parser.Push(parser.itemFactory.create(first, parser.GetDelimiter(name), parser.stack.env.color));
 };
 
 /**

@@ -66,12 +66,12 @@ export class SVGmenclose<N, T, D> extends CommonMencloseMixin<
     Notation.DiagonalStrike('down'),
 
     ['horizontalstrike', {
-      renderer: Notation.RenderLine('horizontal'),
+      renderer: Notation.RenderLine('horizontal', 'Y'),
       bbox: (node) => [0, node.padding, 0, node.padding]
     }],
 
     ['verticalstrike', {
-      renderer: Notation.RenderLine('vertical'),
+      renderer: Notation.RenderLine('vertical', 'X'),
       bbox: (node) => [node.padding, 0, node.padding, 0]
     }],
 
@@ -228,14 +228,16 @@ export class SVGmenclose<N, T, D> extends CommonMencloseMixin<
   /********************************************************/
 
   /**
-   * Create an arrow using HTML elements
+   * Create an arrow using SVG elements
    *
    * @param {number} W        The length of the arrow
    * @param {number} a        The angle for the arrow
    * @param {boolean} double  True if this is a double-headed arrow
-   * @return {N}               The newly created arrow
+   * @param {string} offset   'X' for vertical arrow, 'Y' for horizontal
+   * @param {number} dist     Distance to translate in the offset direction
+   * @return {N}              The newly created arrow
    */
-  public arrow(W: number, a: number, double: boolean = false): N {
+  public arrow(W: number, a: number, double: boolean, offset: string = '', dist: number = 0): N {
     const {w, h, d} = this.getBBox();
     const dw = (W - w) / 2;
     const m = (h - d) / 2;
@@ -260,10 +262,16 @@ export class SVGmenclose<N, T, D> extends CommonMencloseMixin<
          'L', w + dw - x, m - t2,                   // lower side of shaft
          'l', -dx, t2 - y, 'Z'                      // lower head
        ));
+    const transform = [];
+    if (dist) {
+      transform.push(offset === 'X' ? `translate(${this.fixed(-dist)} 0)` : `translate(0 ${this.fixed(dist)})`);
+    }
     if (a) {
       const A = this.jax.fixed(-a * 180 / Math.PI);
-      this.adaptor.setAttribute(arrow, 'transform',
-                                'rotate(' + [A, this.fixed(w / 2), this.fixed(m)].join(' ') + ')');
+      transform.push(`rotate(${A} ${this.fixed(w / 2)} ${this.fixed(m)})`);
+    }
+    if (transform.length) {
+      this.adaptor.setAttribute(arrow, 'transform', transform.join(' '));
     }
     return arrow as N;
   }

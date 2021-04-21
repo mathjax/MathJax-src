@@ -515,6 +515,15 @@ export class CommonWrapper<
    */
   protected getMathMLSpacing() {
     const node = this.node.coreMO() as MmlMo;
+    //
+    // If the mo is not within a multi-node mrow, don't add space
+    //
+    const child = node.coreParent();
+    const parent = child.parent;
+    if (!parent || !parent.isKind('mrow') || parent.childNodes.length === 1) return;
+    //
+    // Get the lspace and rspace
+    //
     const attributes = node.attributes;
     const isScript = (attributes.get('scriptlevel') > 0);
     this.bbox.L = (attributes.isSet('lspace') ?
@@ -523,6 +532,18 @@ export class CommonWrapper<
     this.bbox.R = (attributes.isSet('rspace') ?
                    Math.max(0, this.length2em(attributes.get('rspace'))) :
                    MathMLSpace(isScript, node.rspace));
+    //
+    // If there are two adjacent <mo>, use enough left space to make it
+    //   the maximum of the rspace of the first and lspace of the second
+    //
+    const n = parent.childIndex(child);
+    if (n === 0) return;
+    const prev = parent.childNodes[n - 1] as AbstractMmlNode;
+    if (!prev.isEmbellished) return;
+    const bbox = this.jax.nodeMap.get(prev).getBBox();
+    if (bbox.R) {
+      this.bbox.L = Math.max(0, this.bbox.L - bbox.R);
+    }
   }
 
   /**
@@ -555,7 +576,7 @@ export class CommonWrapper<
    */
   protected isTopEmbellished(): boolean {
     return (this.node.isEmbellished &&
-            !(this.node.Parent && this.node.Parent.isEmbellished));
+            !(this.node.parent && this.node.parent.isEmbellished));
   }
 
   /*******************************************************************/
@@ -648,13 +669,13 @@ export class CommonWrapper<
    * @param {number} D        The total depth
    * @param {number} h        The height to be aligned
    * @param {number} d        The depth to be aligned
-   * @param {string} align    How to align (top, bottom, middle, axis, baseline)
+   * @param {string} align    How to align (top, bottom, center, axis, baseline)
    * @return {number}         The y position of the aligned baseline
    */
   protected getAlignY(H: number, D: number, h: number, d: number, align: string): number {
     return (align === 'top' ? H - h :
             align === 'bottom' ? d - D :
-            align === 'middle' ? ((H - h) - (D - d)) / 2 :
+            align === 'center' ? ((H - h) - (D - d)) / 2 :
             0); // baseline and axis
   }
 

@@ -194,7 +194,13 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
     for (const kind of this.factory.getKinds()) {
       this.factory.getNodeClass(kind).used = false;
     }
+  }
 
+  /**
+   * @override
+   */
+  public reset() {
+    this.clearCache();
   }
 
   /*****************************************************************/

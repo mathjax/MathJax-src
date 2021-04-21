@@ -155,14 +155,27 @@ export interface CommonMtable<C extends AnyWrapper, R extends CommonMtr<C>> exte
   getTableData(): TableData;
 
   /**
-   * @param {C} cell        The cell whose height, depth, and width are to be added into the H, D, W arrays
-   * @param {number} i      The column number for the cell
-   * @param {number} j      The row number for the cell
-   * @param {number[]} H    The maximum height for each of the rows
-   * @param {number[]} D    The maximum depth for each of the rows
-   * @param {number[]=} W   The maximum width for each column
+   * @param {C} cell         The cell whose height, depth, and width are to be added into the H, D, W arrays
+   * @param {number} i       The column number for the cell
+   * @param {number} j       The row number for the cell
+   * @param {string} align   The row alignment
+   * @param {number[]} H     The maximum height for each of the rows
+   * @param {number[]} D     The maximum depth for each of the rows
+   * @param {number[]} W     The maximum width for each column
+   * @param {number} M       The current height for items aligned top and bottom
+   * @return {number}        The updated value for M
    */
-  updateHDW(cell: C, i: number, j: number, H: number[], D: number[], W?: number[]): void;
+  updateHDW(cell: C, i: number, j: number, align: string, H: number[], D: number[], W: number[], M: number): number;
+
+  /**
+   * Extend the H and D of a row to cover the maximum height needed by top/bottom aligned items
+   *
+   * @param {number} i     The row whose hight and depth should be adjusted
+   * @param {number[]} H   The row heights
+   * @param {number[]} D   The row depths
+   * @param {number} M     The maximum height of top/bottom aligned items
+   */
+  extendHD(i: number, H: number[], D: number[], M: number): void;
 
   /**
    * Set cell widths for columns with percentage width children
@@ -591,17 +604,21 @@ export function CommonMtableMixin<
       const LW = [0];
       const rows = this.tableRows;
       for (let j = 0; j < rows.length; j++) {
+        let M = 0;
         const row = rows[j];
+        const align = row.node.attributes.get('rowalign') as string;
         for (let i = 0; i < row.numCells; i++) {
           const cell = row.getChild(i);
-          this.updateHDW(cell, i, j, H, D, W);
+          M = this.updateHDW(cell, i, j, align, H, D, W, M);
           this.recordPWidthCell(cell, i);
         }
         NH[j] = H[j];
         ND[j] = D[j];
         if (row.labeled) {
-          this.updateHDW(row.childNodes[0], 0, j, H, D, LW);
+          M = this.updateHDW(row.childNodes[0], 0, j, align, H, D, LW, M);
         }
+        this.extendHD(j, H, D, M);
+        this.extendHD(j, NH, ND, M);
       }
       const L = LW[0];
       this.data = {H, D, W, NH, ND, L};
@@ -609,14 +626,11 @@ export function CommonMtableMixin<
     }
 
     /**
-     * @param {C} cell         The cell whose height, depth, and width are to be added into the H, D, W arrays
-     * @param {number} i       The column number for the cell
-     * @param {number} j       The row number for the cell
-     * @param {number[]} H     The maximum height for each of the rows
-     * @param {number[]} D     The maximum depth for each of the rows
-     * @param {number[]=} W    The maximum width for each column
+     * @override
      */
-    public updateHDW(cell: C, i: number, j: number, H: number[], D: number[], W: number[] = null) {
+    public updateHDW(
+      cell: C, i: number, j: number, align: string, H: number[], D: number[], W: number[], M: number
+    ): number {
       let {h, d, w} = cell.getBBox();
       const scale = cell.parent.bbox.rscale;
       if (cell.parent.bbox.rscale !== 1) {
@@ -628,9 +642,27 @@ export function CommonMtableMixin<
         if (h < .75) h = .75;
         if (d < .25) d = .25;
       }
+      let m = 0;
+      align = cell.node.attributes.get('rowalign') as string || align;
+      if (align !== 'baseline' && align !== 'axis') {
+        m = h + d;
+        h = d = 0;
+      }
       if (h > H[j]) H[j] = h;
       if (d > D[j]) D[j] = d;
+      if (m > M) M = m;
       if (W && w > W[i]) W[i] = w;
+      return M;
+    }
+
+    /**
+     * @override
+     */
+    public extendHD(i: number, H: number[], D: number[], M: number) {
+      const d = (M - (H[i] + D[i])) / 2;
+      if (d < .00001) return;
+      H[i] += d;
+      D[i] += d;
     }
 
     /**
