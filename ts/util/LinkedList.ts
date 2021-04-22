@@ -246,8 +246,12 @@ export class LinkedList<DataClass> {
    *
    * @return {Object}  The iterator for walking the list in reverse
    */
+  public reversed(): IterableIterator<DataClass> | {
                                                                     /* tslint:disable-next-line:jsdoc-require */
-  public reversed(): IterableIterator<DataClass> | {toArray(): DataClass[]} {
+    toArray(): DataClass[];
+                                                                    /* tslint:disable-next-line:jsdoc-require */
+    [Symbol.iterator](): IterableIterator<DataClass>;
+  } {
     let current = this.list;
     return {
                                                                     /* tslint:disable-next-line:jsdoc-require */
