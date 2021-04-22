@@ -44,7 +44,7 @@ export class MmlMfenced extends AbstractMmlNode {
   /**
    * TeX class is INNER
    */
-  public texClass = TEXCLASS.INNER;
+  protected texclass = TEXCLASS.INNER;
 
   /**
    * Storage for "fake" nodes for the separators

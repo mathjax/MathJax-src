@@ -153,7 +153,7 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
    */
   public styleSheet(html: MathDocument<N, T, D>) {
     if (this.chtmlStyles && !this.options.adaptiveCSS) {
-      return null;  // stylesheet is already added to the document
+      return this.chtmlStyles;  // stylesheet is already added to the document
     }
     const sheet = this.chtmlStyles = super.styleSheet(html);
     this.adaptor.setAttribute(sheet, 'id', CHTML.STYLESHEETID);
@@ -194,7 +194,13 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
     for (const kind of this.factory.getKinds()) {
       this.factory.getNodeClass(kind).used = false;
     }
+  }
 
+  /**
+   * @override
+   */
+  public reset() {
+    this.clearCache();
   }
 
   /*****************************************************************/

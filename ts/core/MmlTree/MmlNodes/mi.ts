@@ -45,12 +45,13 @@ export class MmlMi extends AbstractMmlTokenNode {
   /**
    * Pattern for single-character texts
    */
-  public static singleCharacter: RegExp = /^[\uD800-\uDBFF]?.$/;
+  public static singleCharacter: RegExp =
+    /^[\uD800-\uDBFF]?.[\u0300-\u036F\u1AB0-\u1ABE\u1DC0-\u1DFF\u20D0-\u20EF]*$/;
 
   /**
    * TeX class is ORD
    */
-  public texClass = TEXCLASS.ORD;
+  protected texclass = TEXCLASS.ORD;
 
   /**
    * @override
@@ -82,7 +83,10 @@ export class MmlMi extends AbstractMmlTokenNode {
   public setTeXclass(prev: AbstractMmlNode) {
     this.getPrevClass(prev);
     let name = this.getText();
-    if (name.length > 1 && name.match(MmlMi.operatorName) && this.texClass === TEXCLASS.ORD) {
+    if (name.length > 1 && name.match(MmlMi.operatorName) &&
+        this.attributes.get('mathvariant') === 'normal' &&
+        this.getProperty('autoOP') === undefined &&
+        this.getProperty('texClass') === undefined) {
       this.texClass = TEXCLASS.OP;
       this.setProperty('autoOP', true);
     }

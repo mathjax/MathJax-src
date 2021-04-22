@@ -88,7 +88,7 @@ export class TextParser extends TexParser {
   public mml() {
     return (this.level != null ?
             this.create('node', 'mstyle', this.nodes, {displaystyle: false, scriptlevel: this.level}) :
-            this.nodes.length === 1 ? this.nodes[0] : this.create('node', 'inferredMrow', this.nodes));
+            this.nodes.length === 1 ? this.nodes[0] : this.create('node', 'mrow', this.nodes));
   }
 
   /**
@@ -149,7 +149,7 @@ export class TextParser extends TexParser {
         NodeUtil.setAttribute(mml, name, env[name]);
       }
     }
-    if (mml.isKind('inferredMrow')) {
+    if (mml.isInferred) {
       mml = this.create('node', 'mrow', mml.childNodes);
     }
     this.nodes.push(mml);

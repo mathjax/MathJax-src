@@ -47,7 +47,7 @@ CommonTextNodeMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
    * @override
    */
   public static styles: StyleList = {
-    '.MathJax path': {
+    'mjx-container[jax="SVG"] path[data-c], mjx-container[jax="SVG"] use[data-c]': {
       'stroke-width': 3
     }
   };

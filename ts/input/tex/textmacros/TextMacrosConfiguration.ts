@@ -62,7 +62,7 @@ export const textBase = Configuration.local({
       if (macro && macro._func !== TextMacrosMethods.Macro) {
         parser.Error('MathMacro', '%1 is only supported in math mode', '\\' + name);
       }
-      texParser.parse('macro', [macro ? parser : texParser, name]);
+      texParser.parse('macro', [parser, name]);
     }
   },
   items: {
@@ -93,7 +93,7 @@ function internalMath(parser: TexParser, text: string, level?: number | string, 
 //
 //  The textmacros package configuration
 //
-Configuration.create('textmacros', {
+export const TextMacrosConfiguration = Configuration.create('textmacros', {
   /**
    * @param {ParserConfiguration} config   The configuration object we are being configured within
    * @param {TeX<any,any,any>} jax         The TeX input jax in which we are running

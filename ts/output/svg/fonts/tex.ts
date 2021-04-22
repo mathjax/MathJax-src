@@ -24,6 +24,7 @@
 import {SVGFontData, SVGFontDataClass, SVGCharOptions, SVGVariantData, SVGDelimiterData,
         DelimiterMap, CharMapMap} from '../FontData.js';
 import {CommonTeXFontMixin} from '../../common/fonts/tex.js';
+import {OptionList} from '../../../util/Options.js';
 
 import {boldItalic} from './tex/bold-italic.js';
 import {bold} from './tex/bold.js';
@@ -127,8 +128,8 @@ CommonTeXFontMixin<SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData
   /**
    * @override
    */
-  constructor() {
-    super();
+  constructor(options: OptionList = null) {
+    super(options);
     //
     //  Add the cacheIDs to the variants
     //
@@ -139,4 +140,3 @@ CommonTeXFontMixin<SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData
   }
 
 }
-
