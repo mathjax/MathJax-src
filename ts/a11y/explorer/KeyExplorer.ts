@@ -304,6 +304,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
 
   /**
    * Programmatically triggers a link if the focused node contains one.
+   * @param {number} code The keycode of the last key pressed.
    */
   protected triggerLink(code: number) {
     if (code !== 13) {
@@ -314,8 +315,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
       getAttribute('data-semantic-postfix')?.
       match(/(^| )link($| )/);
     if (focus) {
-      // Works for CHTML only.
-      node.parentElement.click();
+      node.parentNode.dispatchEvent(new MouseEvent('click'));
       return true;
     }
     return false;
