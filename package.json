@@ -59,7 +59,6 @@
   },
   "dependencies": {
     "esm": "^3.2.25",
-    "mhchemparser": "^4.0.0",
     "mj-context-menu": "^0.6.1",
     "speech-rule-engine": "^3.2.0"
   }
