@@ -1,3 +1,4 @@
+
 /*************************************************************
  *
  *  Copyright (c) 2018 The MathJax Consortium
@@ -358,7 +359,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     const content = this.serializeInner(adaptor, node, xml);
     const html =
       '<' + tag + (attributes ? ' ' + attributes : '')
-          + (content && !SELF_CLOSING[tag] ? `>${content}</${tag}>` : xml ? '/>' : '>');
+          + ((!xml || content) && !SELF_CLOSING[tag] ? `>${content}</${tag}>` : xml ? '/>' : '>');
     return html;
   }
 

@@ -158,6 +158,7 @@ const PACKAGE = function (name, js, libs, dir, dist) {
     optimization: {
       minimize: true,
       minimizer: [new TerserPlugin({
+        extractComments: false,
         terserOptions: {
           output: {
             ascii_only: true
