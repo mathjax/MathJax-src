@@ -23,7 +23,8 @@
 
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
+import {unicodeChars} from '../../../util/string.js';
 import {DelimiterData} from '../FontData.js';
 import {DIRECTION, NOSTRETCH} from '../FontData.js';
 
@@ -41,10 +42,6 @@ export const DirectionVH: {[n: number]: string} = {
  * The CommonMo interface
  */
 export interface CommonMo extends AnyWrapper {
-  /**
-   * True if no italic correction should be used
-   */
-  noIC: boolean;
 
   /**
    * The font size that a stretched operator uses.
@@ -56,6 +53,24 @@ export interface CommonMo extends AnyWrapper {
    * True if used as an accent in an munderover construct
    */
   isAccent: boolean;
+
+  /**
+   * Get the (unmodified) bbox of the contents (before centering or setting accents to width 0)
+   *
+   * @param {BBox} bbox   The bbox to fill
+   */
+  protoBBox(bbox: BBox): void;
+
+  /**
+   * @return {number}    Offset to the left by half the actual width of the accent
+   */
+  getAccentOffset(): number;
+
+  /**
+   * @param {BBox} bbox   The bbox to center, or null to compute the bbox
+   * @return {number}     The offset to move the glyph to center it
+   */
+  getCenterOffset(bbox?: BBox): number;
 
   /**
    * Determint variant for vertically/horizontally stretched character
@@ -92,6 +107,16 @@ export interface CommonMo extends AnyWrapper {
    * @return {number[]}        The height and depth for the vertically stretched delimiter
    */
   getBaseline(WHD: number[], HD: number, C: DelimiterData): number[];
+
+  /**
+   * Determine the size of the delimiter based on whether full extenders should be used or not.
+   *
+   * @param {number} D          The requested size of the delimiter
+   * @param {DelimiterData} C   The data for the delimiter
+   * @return {number}           The final size of the assembly
+   */
+  checkExtendedHeight(D: number, C: DelimiterData): number;
+
 }
 
 /**
@@ -108,11 +133,6 @@ export type MoConstructor = Constructor<CommonMo>;
 export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstructor & T {
 
   return class extends Base {
-
-    /**
-     * True if no italic correction should be used
-     */
-    public noIC: boolean = false;
 
     /**
      * The font size that a stretched operator uses.
@@ -137,6 +157,25 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
      * @override
      */
     public computeBBox(bbox: BBox, _recompute: boolean = false) {
+      this.protoBBox(bbox);
+      if (this.node.attributes.get('symmetric') &&
+          this.stretch.dir !== DIRECTION.Horizontal) {
+        const d = this.getCenterOffset(bbox);
+        bbox.h += d;
+        bbox.d -= d;
+      }
+      if (this.node.getProperty('mathaccent') &&
+          (this.stretch.dir === DIRECTION.None || this.size >= 0)) {
+        bbox.w = 0;
+      }
+    }
+
+    /**
+     * Get the (unmodified) bbox of the contents (before centering or setting accents to width 0)
+     *
+     * @param {BBox} bbox   The bbox to fill
+     */
+    public protoBBox(bbox: BBox) {
       const stretchy = (this.stretch.dir !== DIRECTION.None);
       if (stretchy && this.size === null) {
         this.getStretchedVariant([0]);
@@ -144,15 +183,27 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
       if (stretchy && this.size < 0) return;
       super.computeBBox(bbox);
       this.copySkewIC(bbox);
-      if (this.noIC) {
-        bbox.w -= bbox.ic;
+    }
+
+    /**
+     * @return {number}    Offset to the left by half the actual width of the accent
+     */
+    public getAccentOffset(): number {
+      const bbox = BBox.empty();
+      this.protoBBox(bbox);
+      return -bbox.w / 2;
+    }
+
+    /**
+     * @param {BBox} bbox   The bbox to center, or null to compute the bbox
+     * @return {number}     The offset to move the glyph to center it
+     */
+    public getCenterOffset(bbox: BBox = null): number {
+      if (!bbox) {
+        bbox = BBox.empty();
+        super.computeBBox(bbox);
       }
-      if (this.node.attributes.get('symmetric') &&
-          this.stretch.dir !== DIRECTION.Horizontal) {
-        const d = ((bbox.h + bbox.d) / 2 + this.font.params.axis_height) - bbox.h;
-        bbox.h += d;
-        bbox.d -= d;
-      }
+      return ((bbox.h + bbox.d) / 2 + this.font.params.axis_height) - bbox.h;
     }
 
     /**
@@ -161,9 +212,14 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
     public getVariant() {
       if (this.node.attributes.get('largeop')) {
         this.variant = (this.node.attributes.get('displaystyle') ? '-largeop' : '-smallop');
-      } else {
-        super.getVariant();
+        return;
       }
+      if (!this.node.attributes.getExplicit('mathvariant') &&
+          this.node.getProperty('pseudoscript') === false) {
+        this.variant = '-tex-variant';
+        return;
+      }
+      super.getVariant();
     }
 
     /**
@@ -176,8 +232,8 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
       const attributes = this.node.attributes;
       if (!attributes.get('stretchy')) return false;
       const c = this.getText();
-      if (c.length !== 1) return false;
-      const delim = this.font.getDelimiter(c.charCodeAt(0));
+      if (Array.from(c).length !== 1) return false;
+      const delim = this.font.getDelimiter(c.codePointAt(0));
       this.stretch = (delim && delim.dir === direction ? delim : NOSTRETCH);
       return this.stretch.dir !== DIRECTION.None;
     }
@@ -193,24 +249,32 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
         let D = this.getWH(WH);
         const min = this.getSize('minsize', 0);
         const max = this.getSize('maxsize', Infinity);
+        const mathaccent = this.node.getProperty('mathaccent');
         //
         //  Clamp the dimension to the max and min
-        //  then get the minimum size via TeX rules
+        //  then get the target size via TeX rules
         //
         D = Math.max(min, Math.min(max, D));
-        const m = (min || exact ? D : Math.max(D * this.font.params.delimiterfactor / 1000,
-                                               D - this.font.params.delimitershortfall));
+        const df = this.font.params.delimiterfactor / 1000;
+        const ds = this.font.params.delimitershortfall;
+        const m = (min || exact ? D : mathaccent ? Math.min(D / df, D + ds) :  Math.max(D * df, D - ds));
         //
         //  Look through the delimiter sizes for one that matches
         //
         const delim = this.stretch;
-        const c = delim.c || this.getText().charCodeAt(0);
+        const c = delim.c || this.getText().codePointAt(0);
         let i = 0;
         if (delim.sizes) {
           for (const d of delim.sizes) {
             if (d >= m) {
+              if (mathaccent && i) {
+                i--;
+              }
               this.variant = this.font.getSizeVariant(c, i);
               this.size = i;
+              if (delim.schar && delim.schar[i]) {
+                this.stretch.c = delim.schar[i];
+              }
               return;
             }
             i++;
@@ -223,7 +287,7 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
         if (delim.stretch) {
           this.size = -1;
           this.invalidateBBox();
-          this.getStretchBBox(WH, D, delim);
+          this.getStretchBBox(WH, this.checkExtendedHeight(D, delim), delim);
         } else {
           this.variant = this.font.getSizeVariant(c, i - 1);
           this.size = i - 1;
@@ -315,7 +379,23 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
     /**
      * @override
      */
+    public checkExtendedHeight(D: number, C: DelimiterData): number {
+      if (C.fullExt) {
+        const [extSize, endSize] = C.fullExt;
+        const n = Math.ceil(Math.max(0, D - endSize) / extSize);
+        D = endSize + n * extSize;
+      }
+      return D;
+    }
+
+    /**
+     * @override
+     */
     public remapChars(chars: number[]) {
+      const primes = this.node.getProperty('primes') as string;
+      if (primes) {
+        return unicodeChars(primes);
+      }
       if (chars.length === 1) {
         const parent = (this.node as MmlMo).coreParent().parent;
         const isAccent = this.isAccent && !parent.isKind('mrow');

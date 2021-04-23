@@ -24,7 +24,7 @@
 import {CommonOutputJax} from './common/OutputJax.js';
 import {CommonWrapper} from './common/Wrapper.js';
 import {StyleList} from '../util/Styles.js';
-import {StyleList as CssStyleList} from './common/CssStyles.js';
+import {StyleList as CssStyleList} from '../util/StyleList.js';
 import {OptionList} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
@@ -127,6 +127,11 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
   public factory: CHTMLWrapperFactory<N, T, D>;
 
   /**
+   * The CHTML stylesheet, once it is constructed
+   */
+  public chtmlStyles: N = null;
+
+  /**
    * @override
    * @constructor
    */
@@ -147,7 +152,10 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
    * @override
    */
   public styleSheet(html: MathDocument<N, T, D>) {
-    const sheet = super.styleSheet(html);
+    if (this.chtmlStyles && !this.options.adaptiveCSS) {
+      return this.chtmlStyles;  // stylesheet is already added to the document
+    }
+    const sheet = this.chtmlStyles = super.styleSheet(html);
     this.adaptor.setAttribute(sheet, 'id', CHTML.STYLESHEETID);
     return sheet;
   }
@@ -186,7 +194,13 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
     for (const kind of this.factory.getKinds()) {
       this.factory.getNodeClass(kind).used = false;
     }
+  }
 
+  /**
+   * @override
+   */
+  public reset() {
+    this.clearCache();
   }
 
   /*****************************************************************/

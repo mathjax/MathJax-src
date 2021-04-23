@@ -23,7 +23,7 @@
 
 
 import TexError from '../TexError.js';
-import { COLORS } from './ColorConstants.js';
+import {COLORS} from './ColorConstants.js';
 
 type ColorModelProcessor = (def: string) => string;
 const ColorModelProcessors: Map<string, ColorModelProcessor> = new Map<string, ColorModelProcessor>();

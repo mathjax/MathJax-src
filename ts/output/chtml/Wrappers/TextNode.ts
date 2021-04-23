@@ -24,7 +24,7 @@
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
 import {CommonTextNodeMixin} from '../../common/Wrappers/TextNode.js';
-import {StyleList} from '../../common/CssStyles.js';
+import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
@@ -73,8 +73,7 @@ CommonTextNodeMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
       const font = this.jax.getFontData(this.parent.styles);
       adaptor.append(parent, this.jax.unknownText(text, variant, font));
     } else {
-      const c = this.parent.stretch.c;
-      const chars = this.parent.remapChars(c ? [c] : this.unicodeChars(text, variant));
+      const chars = this.remappedText(text, variant);
       for (const n of chars) {
         const data = this.getVariantChar(variant, n)[3];
         const font = (data.f ? ' TEX-' + data.f : '');

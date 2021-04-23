@@ -24,7 +24,7 @@
 import {CHTMLWrapper} from '../Wrapper.js';
 import {CHTMLmsqrt} from './msqrt.js';
 import {CommonMrootMixin, MrootConstructor} from '../../common/Wrappers/mroot.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 import {MmlMroot} from '../../../core/MmlTree/MmlNodes/mroot.js';
 
 /*****************************************************************/

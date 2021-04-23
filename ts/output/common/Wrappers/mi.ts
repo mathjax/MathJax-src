@@ -22,17 +22,13 @@
  */
 
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 
 /*****************************************************************/
 /**
  * The CommonMi interface
  */
 export interface CommonMi extends AnyWrapper {
-  /**
-   * True if no italic correction should be used
-   */
-  noIC: boolean;
 }
 
 /**
@@ -51,19 +47,11 @@ export function CommonMiMixin<T extends WrapperConstructor>(Base: T): MiConstruc
   return class extends Base {
 
     /**
-     * True if no italic correction should be used
-     */
-    public noIC: boolean = false;
-
-    /**
      * @override
      */
     public computeBBox(bbox: BBox, _recompute: boolean = false) {
       super.computeBBox(bbox);
       this.copySkewIC(bbox);
-      if (this.noIC) {
-        bbox.w -= bbox.ic;
-      }
     }
   };
 

@@ -116,7 +116,7 @@ AmsCdMethods.arrow = function(parser: TexParser, name: string) {
         a = '\\kern ' + top.getProperty('minw');
       } // minsize needs work
       if (a || b) {
-        let pad: EnvList = {width: '+11mu', lspace: '6mu'};
+        let pad: EnvList = {width: '.67em', lspace: '.33em'};
         mml = parser.create('node', 'munderover', [mml]) as MmlMunderover;
         if (a) {
           let nodeA = new TexParser(a, parser.stack.env, parser.configuration).mml();

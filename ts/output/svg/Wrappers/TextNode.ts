@@ -24,7 +24,7 @@
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
 import {CommonTextNodeMixin} from '../../common/Wrappers/TextNode.js';
-import {StyleList} from '../../common/CssStyles.js';
+import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
@@ -47,7 +47,7 @@ CommonTextNodeMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
    * @override
    */
   public static styles: StyleList = {
-    '.MathJax path': {
+    'mjx-container[jax="SVG"] path[data-c], mjx-container[jax="SVG"] use[data-c]': {
       'stroke-width': 3
     }
   };
@@ -61,8 +61,7 @@ CommonTextNodeMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
     if (variant === '-explicitFont') {
       this.adaptor.append(parent, this.jax.unknownText(text, variant));
     } else {
-      const c = this.parent.stretch.c;
-      const chars = this.parent.remapChars(c ? [c] : this.unicodeChars(text, variant));
+      const chars = this.remappedText(text, variant);
       let x = 0;
       for (const n of chars) {
         x += this.placeChar(n, x, 0, parent, variant);

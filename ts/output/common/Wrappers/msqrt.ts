@@ -23,7 +23,7 @@
 
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {CommonMo} from './mo.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/

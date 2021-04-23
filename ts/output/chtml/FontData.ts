@@ -23,9 +23,8 @@
 
 import {CharMap, CharOptions, CharData, VariantData, DelimiterData, FontData, DIRECTION} from '../common/FontData.js';
 import {StringMap} from './Wrapper.js';
-import {StyleList, StyleData} from '../common/CssStyles.js';
+import {StyleList, StyleData} from '../../util/StyleList.js';
 import {em} from '../../util/lengths.js';
-import {OptionList, defaultOptions, userOptions} from '../../util/Options.js';
 
 export * from '../common/FontData.js';
 
@@ -71,6 +70,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
    * Default options
    */
   public static OPTIONS = {
+    ...FontData.OPTIONS,
     fontURL: 'js/output/chtml/fonts/tex-woff-v2'
   };
 
@@ -105,11 +105,6 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
   };
 
   /**
-   * The font options
-   */
-  protected options: OptionList;
-
-  /**
    * @override
    */
   public static charOptions(font: CHTMLCharMap, n: number) {
@@ -117,18 +112,6 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
   }
 
   /***********************************************************************/
-
-  /**
-   * @param {OptionList} options   The options for this font
-   *
-   * @override
-   * @constructor
-   */
-  constructor(options: OptionList = null) {
-    super();
-    let CLASS = (this.constructor as CHTMLFontDataClass);
-    this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
-  }
 
   /**
    * @param {boolean} adapt   Whether to use adaptive CSS or not
@@ -284,14 +267,14 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
    * @param {CHTMLDelimiterData} data  The data for the delimiter whose CSS is to be added
    */
   protected addDelimiterVStyles(styles: StyleList, c: string, data: CHTMLDelimiterData) {
-    const W = data.HDW[2];
+    const HDW = data.HDW as CHTMLCharData;
     const [beg, ext, end, mid] = data.stretch;
-    const Hb = this.addDelimiterVPart(styles, c, W, 'beg', beg);
-    this.addDelimiterVPart(styles, c, W, 'ext', ext);
-    const He = this.addDelimiterVPart(styles, c, W, 'end', end);
+    const Hb = this.addDelimiterVPart(styles, c, 'beg', beg, HDW);
+    this.addDelimiterVPart(styles, c, 'ext', ext, HDW);
+    const He = this.addDelimiterVPart(styles, c, 'end', end, HDW);
     const css: StyleData = {};
     if (mid) {
-      const Hm = this.addDelimiterVPart(styles, c, W, 'mid', mid);
+      const Hm = this.addDelimiterVPart(styles, c, 'mid', mid, HDW);
       css.height = '50%';
       styles['mjx-stretchy-v' + c + ' > mjx-mid'] = {
         'margin-top': this.em(-Hm / 2),
@@ -313,20 +296,23 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
   /**
    * @param {StyleList} styles  The style object to add styles to
    * @param {string} c          The vertical character whose part is being added
-   * @param {number} W          The width for the stretchy delimiter as a whole
    * @param {string} part       The name of the part (beg, ext, end, mid) that is being added
    * @param {number} n          The unicode character to use for the part
+   * @param {number} HDW        The height-depth-width data for the stretchy delimiter
    * @return {number}           The total height of the character
    */
-  protected addDelimiterVPart(styles: StyleList, c: string, W: number, part: string, n: number): number {
+  protected addDelimiterVPart(styles: StyleList, c: string, part: string, n: number, HDW: CHTMLCharData): number {
     if (!n) return 0;
     const data = this.getDelimiterData(n);
-    const dw = (W - data[2]) / 2;
+    const dw = (HDW[2] - data[2]) / 2;
     const css: StyleData = {content: this.charContent(n)};
     if (part !== 'ext') {
       css.padding = this.padding(data, dw);
-    } else if (dw) {
-      css['padding-left'] = this.em0(dw);
+    } else {
+      css.width = this.em0(HDW[2]);
+      if (dw) {
+        css['padding-left'] = this.em0(dw);
+      }
     }
     styles['mjx-stretchy-v' + c + ' mjx-' + part + ' mjx-c::before'] = css;
     return data[0] + data[1];
@@ -341,11 +327,12 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
    */
   protected addDelimiterHStyles(styles: StyleList, c: string, data: CHTMLDelimiterData) {
     const [beg, ext, end, mid] = data.stretch;
-    this.addDelimiterHPart(styles, c, 'beg', beg);
-    this.addDelimiterHPart(styles, c, 'ext', ext, !(beg || end));
-    this.addDelimiterHPart(styles, c, 'end', end);
+    const HDW = data.HDW as CHTMLCharData;
+    this.addDelimiterHPart(styles, c, 'beg', beg, HDW);
+    this.addDelimiterHPart(styles, c, 'ext', ext, HDW);
+    this.addDelimiterHPart(styles, c, 'end', end, HDW);
     if (mid) {
-      this.addDelimiterHPart(styles, c, 'mid', mid);
+      this.addDelimiterHPart(styles, c, 'mid', mid, HDW);
       styles['mjx-stretchy-h' + c + ' > mjx-ext'] = {width: '50%'};
     }
   }
@@ -355,16 +342,14 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
    * @param {string} c          The vertical character whose part is being added
    * @param {string} part       The name of the part (beg, ext, end, mid) that is being added
    * @param {number} n          The unicode character to use for the part
-   * @param {boolean} force     True if padding is always enforced
+   * @param {CHTMLCharData} HDW The height-depth-width data for the stretchy character
    */
-  protected addDelimiterHPart(styles: StyleList, c: string, part: string, n: number, force: boolean = false) {
+  protected addDelimiterHPart(styles: StyleList, c: string, part: string, n: number, HDW: CHTMLCharData) {
     if (!n) return;
     const data = this.getDelimiterData(n);
     const options = data[3] as CHTMLCharOptions;
     const css: StyleData = {content: (options && options.c ? '"' + options.c + '"' : this.charContent(n))};
-    if (part !== 'ext' || force) {
-      css.padding = this.padding(data, 0, -data[2]);
-    }
+    css.padding = this.padding(HDW as CHTMLCharData, 0, -HDW[2]);
     styles['mjx-stretchy-h' + c + ' mjx-' + part + ' mjx-c::before'] = css;
   }
 
@@ -377,7 +362,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
    * @param {CHTMLCharData} data     The bounding box data and options for the character
    */
   protected addCharStyles(styles: StyleList, vletter: string, n: number, data: CHTMLCharData) {
-    const [ , , w, options] = data as [number, number, number, CHTMLCharOptions];
+    const options = data[3] as CHTMLCharOptions;
     if (this.options.adaptiveCSS && !options.used) return;
     const letter = (options.f !== undefined ? options.f : vletter);
     const selector = 'mjx-c' + this.charSelector(n) + (letter ? '.TEX-' + letter : '');
@@ -385,11 +370,6 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
       padding: this.padding(data, 0, options.ic || 0),
       content: (options.c != null ? '"' + options.c + '"' : this.charContent(n))
     };
-    if (options.ic) {
-      styles['[noIC] ' + selector + ':last-child::before'] = {
-        'padding-right': this.em(w)
-      };
-    }
   }
 
   /***********************************************************************/

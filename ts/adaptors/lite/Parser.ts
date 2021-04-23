@@ -41,8 +41,8 @@ export namespace PATTERNS {
   export const OPTIONALSPACE = '(?:\\s|\\n)*';
   export const ATTRIBUTE = ATTNAME + '(?:' + OPTIONALSPACE + '=' + OPTIONALSPACE + VALUE + ')?';
   export const ATTRIBUTESPLIT = '(' + ATTNAME + ')(?:' + OPTIONALSPACE + '=' + OPTIONALSPACE + VALUESPLIT + ')?';
-  export const TAG = '(<(?:' + TAGNAME + '(?:' + SPACE + ATTRIBUTE + ')*' +
-    OPTIONALSPACE + '/?|/' + TAGNAME + '|!--[^]*?--|![^]*?)(?:>|$))';
+  export const TAG = '(<(?:' + TAGNAME + '(?:' + SPACE + ATTRIBUTE + ')*'
+                       + OPTIONALSPACE + '/?|/' + TAGNAME + '|!--[^]*?--|![^]*?)(?:>|$))';
   export const tag = new RegExp(TAG, 'i');
   export const attr = new RegExp(ATTRIBUTE, 'i');
   export const attrsplit = new RegExp(ATTRIBUTESPLIT, 'i');
@@ -277,6 +277,14 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
   protected checkDocument(adaptor: LiteAdaptor, root: LiteDocument) {
     let node = this.getOnlyChild(adaptor, adaptor.body(root));
     if (!node) return;
+    for (const child of adaptor.childNodes(adaptor.body(root))) {
+      if (child === node) {
+        break;
+      }
+      if (child instanceof LiteComment && child.value.match(/^<!DOCTYPE/)) {
+        root.type = child.value;
+      }
+    }
     switch (adaptor.kind(node)) {
     case 'html':
       //
@@ -337,18 +345,20 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
   /**
    * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
    * @param {LiteElement} node     The node to serialize
+   * @param {boolean} xml          True when producing XML, false for HTML
    * @return {string}              The serialized element (like outerHTML)
    */
-  public serialize(adaptor: LiteAdaptor, node: LiteElement): string {
+  public serialize(adaptor: LiteAdaptor, node: LiteElement, xml: boolean = false): string {
     const SELF_CLOSING = (this.constructor as typeof LiteParser).SELF_CLOSING;
     const CDATA = (this.constructor as typeof LiteParser).CDATA_ATTR;
     const tag = adaptor.kind(node);
     const attributes = adaptor.allAttributes(node).map(
       (x: AttributeData) => x.name + '="' + (CDATA[x.name] ? x.value : this.protectAttribute(x.value)) + '"'
     ).join(' ');
+    const content = this.serializeInner(adaptor, node, xml);
     const html =
-      '<' + tag + (attributes ? ' ' + attributes : '') + '>'
-      + (SELF_CLOSING[tag] ? '' : adaptor.innerHTML(node) + '</' + tag + '>');
+      '<' + tag + (attributes ? ' ' + attributes : '')
+          + (content && !SELF_CLOSING[tag] ? `>${content}</${tag}>` : xml ? '/>' : '>');
     return html;
   }
 
@@ -357,7 +367,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
    * @param {LiteElement} node     The node whose innerHTML is needed
    * @return {string}              The serialized element (like innerHTML)
    */
-  public serializeInner(adaptor: LiteAdaptor, node: LiteElement): string {
+  public serializeInner(adaptor: LiteAdaptor, node: LiteElement, xml: boolean = false): string {
     const PCDATA = (this.constructor as typeof LiteParser).PCDATA;
     if (PCDATA.hasOwnProperty(node.kind)) {
       return adaptor.childNodes(node).map(x => adaptor.value(x)).join('');
@@ -365,8 +375,8 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     return adaptor.childNodes(node).map(x => {
       const kind = adaptor.kind(x);
       return (kind === '#text' ? this.protectHTML(adaptor.value(x)) :
-              kind === '#comment' ? adaptor.value(x) :
-              this.serialize(adaptor, x as LiteElement));
+              kind === '#comment' ? (x as LiteComment).value :
+              this.serialize(adaptor, x as LiteElement, xml));
     }).join('');
   }
 

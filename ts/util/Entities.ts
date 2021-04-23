@@ -445,7 +445,13 @@ export const entities: EntityList = {
   xi: '\u03BE',
   yen: '\u00A5',
   zeta: '\u03B6',
-  zigrarr: '\u21DD'
+  zigrarr: '\u21DD',
+
+  //
+  //  Needed by TeX input jax
+  nbsp: '\u00A0',
+  rsquo: '\u2019',
+  lsquo: '\u2018'
 };
 
 /**
@@ -515,17 +521,5 @@ export function numeric(entity: string): string {
   let n = (entity.charAt(0) === 'x' ?
            parseInt(entity.slice(1), 16) :
            parseInt(entity));
-  //
-  // For BMP only one character needed
-  //
-  if (n < 0x10000) {
-    return String.fromCharCode(n);
-  }
-  //
-  // Use surrogate pair for values outside the BMP0
-  //
-  n -= 0x10000;
-  const hi = (n >> 10) + 0xD800;
-  const lo = (n & 0x3FF) + 0xDC00;
-  return String.fromCharCode(hi, lo);
+  return String.fromCodePoint(n);
 }

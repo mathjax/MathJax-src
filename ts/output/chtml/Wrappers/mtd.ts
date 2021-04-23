@@ -24,7 +24,7 @@
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
 import {CommonMtdMixin} from '../../common/Wrappers/mtd.js';
 import {MmlMtd} from '../../../core/MmlTree/MmlNodes/mtd.js';
-import {StyleList} from '../../common/CssStyles.js';
+import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
@@ -109,9 +109,12 @@ CommonMtdMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
       this.adaptor.setStyle(this.chtml, 'textAlign', calign);
     }
     //
-    // Include a strut to force minimum height and depth
+    // If we are using minimum row heights,
+    //   Include a strut to force minimum height and depth
     //
-    this.adaptor.append(this.chtml, this.html('mjx-tstrut'));
+    if (this.parent.parent.node.getProperty('useHeight')) {
+      this.adaptor.append(this.chtml, this.html('mjx-tstrut'));
+    }
   }
 
 }

@@ -27,7 +27,7 @@ import {ActionDef} from '../../common/Wrappers/maction.js';
 import {EventHandler, TooltipData} from '../../common/Wrappers/maction.js';
 import {MmlMaction} from '../../../core/MmlTree/MmlNodes/maction.js';
 import {TextNode, AbstractMmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {StyleList} from '../../common/CssStyles.js';
+import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
@@ -104,7 +104,7 @@ CommonMactionMixin<SVGWrapper<any, any, any>, SVGConstructor<any, any, any>>(SVG
       // Add a click handler that changes the selection and rerenders the expression
       //
       node.setEventHandler('click', (event: Event) => {
-        if (!math.start.node) {
+        if (!math.end.node) {
           //
           // If the MathItem was created by hand, it might not have a node
           // telling it where to replace the existing math, so set it.
@@ -121,7 +121,7 @@ CommonMactionMixin<SVGWrapper<any, any, any>, SVGConstructor<any, any, any>>(SVG
     ['tooltip', [(node, data) => {
       const tip = node.childNodes[1];
       if (!tip) return;
-      const rect = node.adaptor.firstChild(node.element);
+      const rect = node.firstChild();
       if (tip.node.isKind('mtext')) {
         //
         // Text tooltips are handled through title attributes

@@ -21,14 +21,16 @@ declare namespace sre {
   }
 
   interface Focus {
-    getNodes(): Node[];
+    getNodes(): Element[];
   }
 
   interface Walker {
+    modifier: boolean;
     activate(): void;
     deactivate(): void;
     speech(): string;
     move(key: number): boolean;
+    refocus(): void;
     getFocus(update?: boolean): Focus;
     update(options: {[key: string]: string}): void;
   }
@@ -48,6 +50,7 @@ declare namespace sre.SpeechGeneratorFactory {
 }
 
 declare namespace sre.Engine {
+  export const DOMAIN_TO_STYLES: {[rules: string]: string};
   export function isReady(): boolean;
 }
 
@@ -62,9 +65,18 @@ declare namespace sre.HighlighterFactory {
 
 declare namespace sre.ClearspeakPreferences {
 
-  export function smartPreferences(item: Object, locale: string): string[];
+  export function smartPreferences(item: Object, locale: string): Object[];
 
+  export function getLocalePreferences(): {[locale: string]: {[pref: string]: string[]}};
+
+  export function addPreference(previous: string, key: string, value: string): string;
 }
+
+declare namespace sre.Variables {
+  export const LOCALES: string[];
+}
+
+
 
 declare namespace SRE {
   type config = {
@@ -74,7 +86,8 @@ declare namespace SRE {
     style?: string,
     markup?: string,
     speech?: string,
-    semantics?: boolean
+    semantics?: boolean,
+    cache?: boolean
   };
   export function toEnriched(mml: string): void;
   export function setupEngine(obj: config): void;

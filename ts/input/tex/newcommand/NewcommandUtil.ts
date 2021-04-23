@@ -29,7 +29,6 @@ import TexParser from '../TexParser.js';
 import {Macro, Symbol} from '../Symbol.js';
 import {Args, Attributes, ParseMethod} from '../Types.js';
 import * as sm from '../SymbolMap.js';
-import {ExtensionMaps} from '../MapHandler.js';
 
 
 namespace NewcommandUtil {
@@ -242,7 +241,7 @@ namespace NewcommandUtil {
    */
   export function addDelimiter(parser: TexParser, cs: string, char: string, attr: Attributes) {
     const handlers = parser.configuration.handlers;
-    const handler = handlers.retrieve(ExtensionMaps.NEW_DELIMITER) as sm.DelimiterMap;
+    const handler = handlers.retrieve(NEW_DELIMITER) as sm.DelimiterMap;
     handler.add(cs, new Symbol(cs, char, attr));
   }
 
@@ -258,7 +257,7 @@ namespace NewcommandUtil {
   export function addMacro(parser: TexParser, cs: string, func: ParseMethod, attr: Args[],
                            symbol: string = '') {
     const handlers = parser.configuration.handlers;
-    const handler = handlers.retrieve(ExtensionMaps.NEW_COMMAND) as sm.CommandMap;
+    const handler = handlers.retrieve(NEW_COMMAND) as sm.CommandMap;
     handler.add(cs, new Macro(symbol ? symbol : cs, func, attr));
   }
 
@@ -272,9 +271,16 @@ namespace NewcommandUtil {
    */
   export function addEnvironment(parser: TexParser, env: string, func: ParseMethod, attr: Args[]) {
     const handlers = parser.configuration.handlers;
-    const handler = handlers.retrieve(ExtensionMaps.NEW_ENVIRONMENT) as sm.EnvironmentMap;
+    const handler = handlers.retrieve(NEW_ENVIRONMENT) as sm.EnvironmentMap;
     handler.add(env, new Macro(env, func, attr));
   }
+
+  /**
+   * Naming constants for the extension mappings.
+   */
+  export const NEW_DELIMITER = 'new-Delimiter';
+  export const NEW_COMMAND = 'new-Command';
+  export const NEW_ENVIRONMENT = 'new-Environment';
 
 }
 

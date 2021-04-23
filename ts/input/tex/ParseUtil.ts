@@ -30,7 +30,6 @@ import NodeUtil from './NodeUtil.js';
 import TexParser from './TexParser.js';
 import TexError from './TexError.js';
 import {entities} from '../../util/Entities.js';
-import '../../util/entities/n.js';
 
 
 namespace ParseUtil {
@@ -122,7 +121,7 @@ namespace ParseUtil {
    * @param {string=} big Bigg command.
    */
   export function fenced(configuration: ParseOptions, open: string, mml: MmlNode,
-                         close: string, big: string = '') {
+                         close: string, big: string = '', color: string = '') {
     // @test Fenced, Fenced3
     let nf = configuration.nodeFactory;
     let mrow = nf.create('node', 'mrow', [],
@@ -136,14 +135,7 @@ namespace ParseUtil {
                      {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.OPEN},
                      openNode);
     }
-    NodeUtil.appendChildren(mrow, [mo]);
-    if (NodeUtil.isType(mml, 'mrow') && NodeUtil.isInferred(mml)) {
-      // @test Fenced, Middle
-      NodeUtil.appendChildren(mrow, NodeUtil.getChildren(mml));
-    } else {
-      // @test Fenced3
-      NodeUtil.appendChildren(mrow, [mml]);
-    }
+    NodeUtil.appendChildren(mrow, [mo, mml]);
     if (big) {
       mo = new TexParser('\\' + big + 'r' + close, configuration.parser.stack.env, configuration).mml();
     } else {
@@ -152,6 +144,7 @@ namespace ParseUtil {
                      {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.CLOSE},
                      closeNode);
     }
+    color && mo.attributes.set('mathcolor', color);
     NodeUtil.appendChildren(mrow, [mo]);
     return mrow;
   }
@@ -236,11 +229,16 @@ namespace ParseUtil {
    * @param {TexParser} parser The calling parser.
    * @param {string} text The text in the math expression to parse.
    * @param {number|string=} level The scriptlevel.
+   * @param {string} font The mathvariant to use
    * @return {MmlNode[]} The nodes corresponding to the internal math expression.
    */
   export function internalMath(parser: TexParser, text: string,
-                               level?: number | string): MmlNode[] {
-    let def = (parser.stack.env['font'] ? {mathvariant: parser.stack.env['font']} : {});
+                               level?: number | string, font?: string): MmlNode[] {
+    if (parser.configuration.options.internalMath) {
+      return parser.configuration.options.internalMath(parser, text, level, font);
+    }
+    let mathvariant = font || parser.stack.env.font;
+    let def = (mathvariant ? {mathvariant} : {});
     let mml: MmlNode[] = [], i = 0, k = 0, c, node, match = '', braces = 0;
     if (text.match(/\\?[${}\\]|\\\(|\\(eq)?ref\s*\{/)) {
       while (i < text.length) {
@@ -347,7 +345,7 @@ namespace ParseUtil {
    * @param {EnvList} def The attributes of the text node.
    * @return {MmlNode} The text node.
    */
-  function internalText(parser: TexParser, text: string, def: EnvList): MmlNode {
+  export function internalText(parser: TexParser, text: string, def: EnvList): MmlNode {
     // @test Label, Fbox, Hbox
     text = text.replace(/^\s+/, entities.nbsp).replace(/\s+$/, entities.nbsp);
     let textNode = parser.create('text', text);

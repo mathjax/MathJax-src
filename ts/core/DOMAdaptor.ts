@@ -97,6 +97,12 @@ export interface DOMAdaptor<N, T, D> {
   root(doc: D): N;
 
   /**
+   * @param {D} doc     The document whose doctype is to be obtained
+   * @return {string}   The DOCTYPE comment
+   */
+  doctype(doc: D): string;
+
+  /**
    * @param {N} node        The node to search for tags
    * @param {string} name   The name of the tag to search for
    * @param {string} ns     The namespace to search in (or null for no namespace)
@@ -113,6 +119,15 @@ export interface DOMAdaptor<N, T, D> {
    * @return {N[]}                        The array of containers to search
    */
   getElements(nodes: (string | N | N[])[], document: D): N[];
+
+  /**
+   * Determine if a container node contains a given node is somewhere in its DOM tree
+   *
+   * @param {N} container  The container to search
+   * @param {N|T} node     The node to look for
+   * @return {boolean}     True if the node is in the container's DOM tree
+   */
+  contains(container: N, node: N | T): boolean;
 
   /**
    * @param {N|T} node  The HTML node whose parent is to be obtained
@@ -226,6 +241,12 @@ export interface DOMAdaptor<N, T, D> {
   outerHTML(node: N): string;
 
   /**
+   * @param {N} node   The HTML node whose serialized string is to be obtained
+   * @return {string}  The serialized node and its content
+   */
+  serializeXML(node: N): string;
+
+  /**
    * @param {N} node               The HTML node whose attribute is to be set
    * @param {string|number} name   The name of the attribute to set
    * @param {string} value         The new value of the attribute
@@ -315,6 +336,12 @@ export interface DOMAdaptor<N, T, D> {
    * @return {number}       The font size (in pixels) of the node
    */
   fontSize(node: N): number;
+
+  /**
+   * @param {N} node        The HTML node whose font family is to be determined
+   * @return {string}       The font family
+   */
+  fontFamily(node: N): string;
 
   /**
    * @param {N} node            The HTML node whose dimensions are to be determined
@@ -424,12 +451,22 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
   /**
    * @override
    */
+  public abstract doctype(doc: D): string;
+
+  /**
+   * @override
+   */
   public abstract tags(node: N, name: string, ns?: string): N[];
 
   /**
    * @override
    */
   public abstract getElements(nodes: (string | N | N[])[], document: D): N[];
+
+  /**
+   * @override
+   */
+  public abstract contains(container: N, node: N | T): boolean;
 
   /**
    * @override
@@ -530,6 +567,11 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
   /**
    * @override
    */
+  public abstract serializeXML(node: N): string;
+
+  /**
+   * @override
+   */
   public abstract setAttribute(node: N, name: string, value: string, ns?: string): void;
 
   /**
@@ -596,6 +638,11 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
    * @override
    */
   public abstract fontSize(node: N): number;
+
+  /**
+   * @override
+   */
+  public abstract fontFamily(node: N): string;
 
   /**
    * @override

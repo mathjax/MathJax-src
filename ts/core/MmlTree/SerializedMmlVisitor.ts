@@ -29,6 +29,8 @@ import {MmlMi} from './MmlNodes/mi.js';
 
 export const DATAMJX = 'data-mjx-';
 
+export const toEntity = (c: string) => '&#x' + c.codePointAt(0).toString(16).toUpperCase() + ';';
+
 type PropertyList = {[name: string]: string};
 
 
@@ -44,9 +46,9 @@ export class SerializedMmlVisitor extends MmlVisitor {
    */
   public static variants: PropertyList = {
     '-tex-calligraphic':      'script',
-    '-tex-calligraphic-bold': 'bold-script',
+    '-tex-bold-calligraphic': 'bold-script',
     '-tex-oldstyle':          'normal',
-    '-tex-oldstyle-bold':     'bold',
+    '-tex-bold-oldstyle':     'bold',
     '-tex-mathit':            'italic'
   };
 
@@ -199,6 +201,8 @@ export class SerializedMmlVisitor extends MmlVisitor {
     const variants = (this.constructor as typeof SerializedMmlVisitor).variants;
     variant && variants.hasOwnProperty(variant) && this.setDataAttribute(data, 'variant', variant);
     node.getProperty('variantForm') && this.setDataAttribute(data, 'alternate', '1');
+    node.getProperty('pseudoscript') && this.setDataAttribute(data, 'pseudoscript', 'true');
+    node.getProperty('autoOP') === false && this.setDataAttribute(data, 'auto-op', 'false');
     const texclass = node.getProperty('texClass') as number;
     if (texclass !== undefined) {
       let setclass = true;
@@ -208,6 +212,8 @@ export class SerializedMmlVisitor extends MmlVisitor {
       }
       setclass && this.setDataAttribute(data, 'texclass', texclass < 0 ? 'NONE' : TEXCLASSNAMES[texclass]);
     }
+    node.getProperty('scriptlevel') && node.getProperty('useHeight') === false &&
+      this.setDataAttribute(data, 'smallmatrix', 'true');
     return data;
   }
 
@@ -233,13 +239,8 @@ export class SerializedMmlVisitor extends MmlVisitor {
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/\"/g, '&quot;')
-      .replace(/([\uD800-\uDBFF].)/g, (_m, c) => {
-        return '&#x' + ((c.charCodeAt(0) - 0xD800) * 0x400 +
-                        (c.charCodeAt(1) - 0xDC00) + 0x10000).toString(16).toUpperCase() + ';';
-      })
-      .replace(/([\u0080-\uD7FF\uE000-\uFFFF])/g, (_m, c) => {
-        return '&#x' + c.charCodeAt(0).toString(16).toUpperCase() + ';';
-      });
+      .replace(/[\uD800-\uDBFF]./g, toEntity)
+      .replace(/[\u0080-\uD7FF\uE000-\uFFFF]/g, toEntity);
   }
 
 }

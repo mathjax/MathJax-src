@@ -25,7 +25,7 @@ import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {CommonInferredMrow} from './mrow.js';
 import {MmlNode, AbstractMmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMfenced} from '../../../core/MmlTree/MmlNodes/mfenced.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 
 /*****************************************************************/
 /**

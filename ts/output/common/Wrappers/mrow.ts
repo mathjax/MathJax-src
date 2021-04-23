@@ -23,7 +23,7 @@
 
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {CommonMo} from './mo.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
@@ -102,7 +102,9 @@ export function CommonMrowMixin<T extends WrapperConstructor>(Base: T): MrowCons
         for (const child of this.childNodes) {
           const noStretch = (child.stretch.dir === DIRECTION.None);
           if (all || noStretch) {
-            const {h, d} = child.getBBox(noStretch);
+            let {h, d, rscale} = child.getBBox(noStretch);
+            h *= rscale;
+            d *= rscale;
             if (h > H) H = h;
             if (d > D) D = d;
           }

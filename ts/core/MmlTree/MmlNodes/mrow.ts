@@ -153,10 +153,9 @@ export class MmlMrow extends AbstractMmlNode {
    * @override
    */
   public setTeXclass(prev: MmlNode) {
-    if ((this.getProperty('open') != null || this.getProperty('close') != null) &&
-        (!prev || prev.getProperty('fnOp') != null)) {
+    if (this.getProperty('open') != null || this.getProperty('close') != null) {
       //
-      // <mrow> came from \left...\right
+      // <mrow> looks like it came from \left...\right
       //   so treat as subexpression (TeX class INNER).
       // Use prev = null for the initial element in the
       //   delimiters, since there is nothing previous to

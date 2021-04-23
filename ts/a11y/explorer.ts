@@ -37,6 +37,8 @@ import * as me from './explorer/MouseExplorer.js';
 import {TreeColorer, FlameColorer} from './explorer/TreeExplorer.js';
 import {LiveRegion, ToolTip, HoverRegion} from './explorer/Region.js';
 
+import {Submenu} from 'mj-context-menu/js/item_submenu.js';
+
 /**
  * Generic constructor for Mixins
  */
@@ -64,8 +66,9 @@ export interface ExplorerMathItem extends HTMLMATHITEM {
 
   /**
    * @param {HTMLDocument} document  The document where the Explorer is being added
+   * @param {boolean} force          True to force the explorer even if enableExplorer is false
    */
-  explorable(document: HTMLDOCUMENT): void;
+  explorable(document: HTMLDOCUMENT, force?: boolean): void;
 
   /**
    * @param {HTMLDocument} document  The document where the Explorer is being added
@@ -97,12 +100,12 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     /**
      * The currently attached explorers
      */
-    protected attached: Explorer[] = [];
+    protected attached: string[] = [];
 
     /**
-     * True when a rerendered element should restart the explorer
+     * True when a rerendered element should restart these explorers
      */
-    protected restart: boolean = false;
+    protected restart: string[] = [];
 
     /**
      * True when a rerendered element should regain the focus
@@ -118,18 +121,21 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      * Add the explorer to the output for this math item
      *
      * @param {HTMLDocument} document   The MathDocument for the MathItem
+     * @param {boolean} force           True to force the explorer even if enableExplorer is false
      */
-    public explorable(document: ExplorerMathDocument) {
-      if (this.state() >= STATE.EXPLORER || this.isEscaped) return;
-      const node = this.typesetRoot;
-      const mml = toMathML(this.root);
-      if (this.savedId) {
-        this.typesetRoot.setAttribute('sre-explorer-id', this.savedId);
-        this.savedId = null;
+    public explorable(document: ExplorerMathDocument, force: boolean = false) {
+      if (this.state() >= STATE.EXPLORER) return;
+      if (!this.isEscaped && (document.options.enableExplorer || force)) {
+        const node = this.typesetRoot;
+        const mml = toMathML(this.root);
+        if (this.savedId) {
+          this.typesetRoot.setAttribute('sre-explorer-id', this.savedId);
+          this.savedId = null;
+        }
+        // Init explorers:
+        this.explorers = initExplorers(document, node, mml);
+        this.attachExplorers(document);
       }
-      // Init explorers:
-      this.explorers = initExplorers(document, node, mml);
-      this.attachExplorers(document);
       this.state(STATE.EXPLORER);
     }
 
@@ -140,16 +146,29 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      */
     public attachExplorers(document: ExplorerMathDocument) {
       this.attached = [];
+      let keyExplorers = [];
       for (let key of Object.keys(this.explorers)) {
         let explorer = this.explorers[key];
+        if (explorer instanceof ke.AbstractKeyExplorer) {
+          explorer.AddEvents();
+          explorer.stoppable = false;
+          keyExplorers.unshift(explorer);
+        }
         if (document.options.a11y[key]) {
           explorer.Attach();
-          this.attached.push(explorer);
+          this.attached.push(key);
         } else {
           explorer.Detach();
         }
       }
-      this.addExplorers(this.attached);
+      // Ensure that the last currently attached key explorer stops propagating
+      // key events.
+      for (let explorer of keyExplorers) {
+        if (explorer.attached) {
+          explorer.stoppable = true;
+          break;
+        }
+      }
     }
 
     /**
@@ -158,9 +177,10 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     public rerender(document: ExplorerMathDocument, start: number = STATE.RERENDER) {
       this.savedId = this.typesetRoot.getAttribute('sre-explorer-id');
       this.refocus = (window.document.activeElement === this.typesetRoot);
-      for (let explorer of this.attached) {
+      for (let key of this.attached) {
+        let explorer = this.explorers[key];
         if (explorer.active) {
-          this.restart = true;
+          this.restart.push(key);
           explorer.Stop();
         }
       }
@@ -173,25 +193,9 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     public updateDocument(document: ExplorerMathDocument) {
       super.updateDocument(document);
       this.refocus && this.typesetRoot.focus();
-      this.restart && this.attached.forEach(x => x.Start());
-      this.refocus = this.restart = false;
-    }
-
-    /**
-     * Adds a list of explorers and makes sure the right one stops propagating.
-     * @param {Explorer[]} explorers The active explorers to be added.
-     */
-    private addExplorers(explorers: Explorer[]) {
-      if (explorers.length <= 1) return;
-      let lastKeyExplorer = null;
-      for (let explorer of this.attached) {
-        if (!(explorer instanceof ke.AbstractKeyExplorer)) continue;
-        explorer.stoppable = false;
-        lastKeyExplorer = explorer;
-      }
-      if (lastKeyExplorer) {
-        lastKeyExplorer.stoppable = true;
-      }
+      this.restart.forEach(x => this.explorers[x].Start());
+      this.restart = [];
+      this.refocus = false;
     }
 
   };
@@ -234,31 +238,33 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
      */
     public static OPTIONS: OptionList = {
       ...BaseDocument.OPTIONS,
-      enrichSpeech: 'shallow',                   // overrides option in EnrichedMathDocument
+      enableExplorer: true,
       renderActions: expandable({
         ...BaseDocument.OPTIONS.renderActions,
         explorable: [STATE.EXPLORER]
       }),
+      sre: expandable({
+        ...BaseDocument.OPTIONS.sre,
+        speech: 'shallow',                 // overrides option in EnrichedMathDocument
+      }),
       a11y: {
         align: 'top',                      // placement of magnified expression
         backgroundColor: 'Blue',           // color for background of selected sub-expression
-        backgroundOpacity: .2,             // opacity for background of selected sub-expression
+        backgroundOpacity: 20,             // opacity for background of selected sub-expression
         braille: false,                    // switch on Braille output
         flame: false,                      // color collapsible sub-expressions
         foregroundColor: 'Black',          // color to use for text of selected sub-expression
-        foregroundOpacity: 1,              // opacity for text of selected sub-expression
+        foregroundOpacity: 100,            // opacity for text of selected sub-expression
         highlight: 'None',                 // type of highlighting for collapsible sub-expressions
         hover: false,                      // show collapsible sub-expression on mouse hovering
         infoPrefix: false,                 // show speech prefixes on mouse hovering
         infoRole: false,                   // show semantic role on mouse hovering
         infoType: false,                   // show semantic type on mouse hovering
         keyMagnifier: false,               // switch on magnification via key exploration
-        locale: 'en',                      // switch the locale
         magnification: 'None',             // type of magnification
         magnify: '400%',                   // percentage of magnification of zoomed expressions
         mouseMagnifier: false,             // switch on magnification via mouse hovering
         speech: true,                      // switch on speech output
-        speechRules: 'mathspeak-default',  // speech rules as domain-style pair
         subtitles: true,                   // show speech as a subtitle
         treeColoring: false,               // tree color expression
         viewBraille: false                 // display Braille output as subtitles
@@ -278,6 +284,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
      * @constructor
      */
     constructor(...args: any[]) {
+      processSreOptions(args[2]);
       super(...args);
       const ProcessBits = (this.constructor as typeof BaseDocument).ProcessBits;
       if (!ProcessBits.has('explorer')) {
@@ -286,6 +293,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
       const visitor = new SerializedMmlVisitor(this.mmlFactory);
       const toMathML = ((node: MmlNode) => visitor.visitTree(node));
       this.options.MathItem = ExplorerMathItemMixin(this.options.MathItem, toMathML);
+      // TODO: set backward compatibility options here.
       this.explorerRegions = initExplorerRegions(this);
     }
 
@@ -296,8 +304,10 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
      */
     public explorable(): ExplorerMathDocument {
       if (!this.processed.isSet('explorer')) {
-        for (const math of this.math) {
-          (math as ExplorerMathItem).explorable(this);
+        if (this.options.enableExplorer) {
+          for (const math of this.math) {
+            (math as ExplorerMathItem).explorable(this);
+          }
         }
         this.processed.set('explorer');
       }
@@ -318,6 +328,33 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
   };
 
 }
+
+//
+// TODO(v3.2): This is for backward compatibility of old option parameters.
+//
+/**
+ * Processes old a11y options for backward compatibility.
+ * @param {OptionList} options The options to process.
+ */
+function processSreOptions(options: OptionList) {
+  if (!options || !options.a11y) {
+    return;
+  }
+  if (!options.sre) {
+    options.sre = {};
+  }
+  if (options.a11y.locale) {
+    options.sre.locale = options.a11y.locale;
+    delete options.a11y.locale;
+  }
+  if (options.a11y.speechRules) {
+    let [domain, style] = (options.a11y.speechRules as string).split('-');
+    options.sre.domain = domain;
+    options.sre.style = style;
+    delete options.a11y.speechRules;
+  }
+}
+
 
 /*==========================================================================*/
 
@@ -383,10 +420,9 @@ let allExplorers: {[options: string]: ExplorerInit} = {
   speech: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) => {
     let explorer = ke.SpeechExplorer.create(
       doc, doc.explorerRegions.speechRegion, node, ...rest) as ke.SpeechExplorer;
-    let [domain, style] = doc.options.a11y.speechRules.split('-');
     explorer.speechGenerator.setOptions({
-      locale: doc.options.a11y.locale, domain: domain,
-      style: style, modality: 'speech'});
+      locale: doc.options.sre.locale, domain: doc.options.sre.domain,
+      style: doc.options.sre.style, modality: 'speech', cache: false});
     explorer.showRegion = 'subtitles';
     return explorer;
   },
@@ -449,9 +485,17 @@ function initExplorers(document: ExplorerMathDocument, node: HTMLElement, mml: s
  * @param {{[key: string]: any}} options Association list for a11y option value pairs.
  */
 export function setA11yOptions(document: HTMLDOCUMENT, options: {[key: string]: any}) {
+  let sreOptions = SRE.engineSetup() as {[name: string]: string};
   for (let key in options) {
     if (document.options.a11y[key] !== undefined) {
       setA11yOption(document, key, options[key]);
+      if (key === 'locale') {
+        document.options.sre[key] = options[key];
+      }
+      continue;
+    }
+    if (sreOptions[key] !== undefined) {
+      document.options.sre[key] = options[key];
     }
   }
   // Reinit explorers
@@ -507,19 +551,142 @@ export function setA11yOption(document: HTMLDOCUMENT, option: string, value: str
       break;
     }
     break;
+  //
+  // TODO(v3.2): These two cases should be handled directly in the menu
+  //             variable actions.
+  //
+  case 'speechRules':
+      let [domain, style] = (value as string).split('-');
+      document.options.sre.domain = domain;
+      document.options.sre.style = style;
+      break;
+  case 'locale':
+      document.options.sre.locale = value;
+      SRE.setupEngine({locale: value as string});
+      break;
   default:
     document.options.a11y[option] = value;
   }
 }
 
+/**
+ * Values for the ClearSpeak preference variables.
+ */
+let csPrefsSetting: {[pref: string]: string} = {};
 
-let csMenu = function(menu: MJContextMenu, sub: ContextMenu.Submenu) {
-  // TODO: Replace with real locale!
-  const items = sre.ClearspeakPreferences.smartPreferences(menu.mathItem, 'en');
-  return ContextMenu.SubMenu.parse({
+/**
+ * Generator of all variables for the Clearspeak Preference settings.
+ * @param {MJContextMenu} menu The current context menu.
+ * @param {string[]} prefs The preferences.
+ */
+let csPrefsVariables = function(menu: MJContextMenu, prefs: string[]) {
+  let srVariable = menu.pool.lookup('speechRules');
+  for (let pref of prefs) {
+    if (csPrefsSetting[pref]) continue;
+    menu.factory.get('variable')(menu.factory, {
+      name: 'csprf_' + pref,
+      setter: (value: string) => {
+        csPrefsSetting[pref] = value;
+          srVariable.setValue(
+          'clearspeak-' +
+            sre.ClearspeakPreferences.addPreference(
+              sre.Engine.DOMAIN_TO_STYLES['clearspeak'], pref, value)
+        );
+      },
+      getter: () => { return csPrefsSetting[pref] || 'Auto'; }
+    }, menu.pool);
+  }
+};
+
+/**
+ * Generate the selection box for the Clearspeak Preferences.
+ * @param {MJContextMenu} menu The current context menu.
+ * @param {string} locale The current locale.
+ */
+let csSelectionBox = function(menu: MJContextMenu, locale: string) {
+  let prefs = sre.ClearspeakPreferences.getLocalePreferences();
+  let props = prefs[locale];
+  if (!props) {
+    let csEntry = menu.findID('Accessibility', 'Speech', 'Clearspeak');
+    if (csEntry) {
+      csEntry.disable();
+    }
+    return null;
+  }
+  csPrefsVariables(menu, Object.keys(props));
+  let items = [];
+  for (const prop of Object.getOwnPropertyNames(props)) {
+    items.push({
+      'title': prop,
+      'values': props[prop].map(x => x.replace(RegExp('^' + prop + '_'), '')),
+      'variable': 'csprf_' + prop
+    });
+  }
+  let sb = menu.factory.get('selectionBox')(menu.factory, {
+    'title': 'Clearspeak Preferences',
+    'signature': '',
+    'order': 'alphabetic',
+    'grid': 'square',
+    'selections': items
+  }, menu);
+  return {'type': 'command',
+          'id': 'ClearspeakPreferences',
+          'content': 'Select Preferences',
+          'action': () => sb.post(0, 0)};
+};
+
+/**
+ * Creates dynamic clearspeak menu.
+ * @param {MJContextMenu} menu The context menu.
+ * @param {Submenu} sub The submenu to attach.
+ */
+let csMenu = function(menu: MJContextMenu, sub: Submenu) {
+  let locale = menu.pool.lookup('locale').getValue() as string;
+  const box = csSelectionBox(menu, locale);
+  let items: Object[] = [];
+  try {
+    items = sre.ClearspeakPreferences.smartPreferences(
+      menu.mathItem, locale);
+  } catch (e) {}
+  if (box) {
+    items.splice(2, 0, box);
+  }
+  return menu.factory.get('subMenu')(menu.factory, {
     items: items,
     id: 'Clearspeak'
   }, sub);
 };
 
 MJContextMenu.DynamicSubmenus.set('Clearspeak', csMenu);
+
+/**
+ * Locale mapping to language names.
+ * @type {{[locale: string]: string}}
+ */
+const iso: {[locale: string]: string} = {
+  'de': 'German',
+  'en': 'English',
+  'es': 'Spanish',
+  'fr': 'French',
+  'it': 'Italian'
+};
+
+/**
+ * Creates dynamic locale menu.
+ * @param {MJContextMenu} menu The context menu.
+ * @param {Submenu} sub The submenu to attach.
+ */
+let language = function(menu: MJContextMenu, sub: Submenu) {
+  let radios: {type: string, id: string,
+               content: string, variable: string}[] = [];
+  for (let lang of sre.Variables.LOCALES) {
+    if (lang === 'nemeth') continue;
+    radios.push({type: 'radio', id: lang,
+                 content: iso[lang] || lang, variable: 'locale'});
+  }
+  radios.sort((x, y) => x.content.localeCompare(y.content, 'en'));
+  return menu.factory.get('subMenu')(menu.factory, {
+    items: radios, id: 'Language'}, sub);
+};
+
+MJContextMenu.DynamicSubmenus.set('A11yLanguage', language);

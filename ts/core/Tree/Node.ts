@@ -37,6 +37,10 @@ export type PropertyList = {[key: string]: Property};
 
 export interface Node {
   readonly kind: string;
+  /**
+   * The NodeFactory to use to create additional nodes, as needed
+   */
+  readonly factory: NodeFactory<Node, NodeClass>;
   parent: Node;
   childNodes: Node[];
 
@@ -144,11 +148,6 @@ export abstract class AbstractNode implements Node {
   protected properties: PropertyList = {};
 
   /**
-   * The NodeFactory to use to create additional nodes, as needed
-   */
-  protected _factory: NodeFactory<Node, NodeClass> = null;
-
-  /**
    * The children for this node
    */
   public childNodes: Node[] = [];
@@ -161,21 +160,13 @@ export abstract class AbstractNode implements Node {
    * @constructor
    * @implements {Node}
    */
-  constructor(factory: NodeFactory<Node, NodeClass>, properties: PropertyList = {}, children: Node[] = []) {
-    this._factory = factory;
+  constructor(readonly factory: NodeFactory<Node, NodeClass>, properties: PropertyList = {}, children: Node[] = []) {
     for (const name of Object.keys(properties)) {
       this.setProperty(name, properties[name]);
     }
     if (children.length) {
       this.setChildren(children);
     }
-  }
-
-  /**
-   * @override
-   */
-  public get factory () {
-    return this._factory;
   }
 
   /**

@@ -28,7 +28,7 @@ import {CommonMsubMixin} from '../../common/Wrappers/msubsup.js';
 import {CommonMsupMixin} from '../../common/Wrappers/msubsup.js';
 import {CommonMsubsupMixin} from '../../common/Wrappers/msubsup.js';
 import {MmlMsubsup, MmlMsub, MmlMsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
-import {StyleList} from '../../common/CssStyles.js';
+import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
@@ -46,11 +46,6 @@ CommonMsubMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any, an
    * The msub wrapper
    */
   public static kind = MmlMsub.prototype.kind;
-
-  /**
-   * don't include italic correction
-   */
-  public static useIC = false;
 
 }
 
@@ -70,11 +65,6 @@ CommonMsupMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any, an
    * The msup wrapper
    */
   public static kind = MmlMsup.prototype.kind;
-
-  /**
-   * Use italic correction
-   */
-  public static useIC = true;
 
 }
 
@@ -101,17 +91,13 @@ CommonMsubsupMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any,
   public static styles: StyleList = {
     'mjx-script': {
       display: 'inline-block',
-      'padding-right': '.05em'   // scriptspace
+      'padding-right': '.05em',  // scriptspace
+      'padding-left': '.033em'   // extra_ic
     },
     'mjx-script > *': {
       display: 'block'
     }
   };
-
-  /**
-   * Don't use italic correction
-   */
-  public static useIC = false;
 
   /**
    * Make sure styles get output when called from munderover with movable limits
@@ -127,19 +113,22 @@ CommonMsubsupMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any,
    * @override
    */
   public toCHTML(parent: N) {
+    const adaptor = this.adaptor;
     const chtml = this.standardCHTMLnode(parent);
     const [base, sup, sub] = [this.baseChild, this.supChild, this.subChild];
-    const [ , v, q] = this.getUVQ(base.getBBox(), sub.getBBox(), sup.getBBox());
-    const x = this.baseCore.bbox.ic ? this.coreIC() * this.coreScale() : 0;
+    const [ , v, q] = this.getUVQ();
     const style = {'vertical-align': this.em(v)};
     base.toCHTML(chtml);
-    const stack = this.adaptor.append(chtml, this.html('mjx-script', {style})) as N;
+    const stack = adaptor.append(chtml, this.html('mjx-script', {style})) as N;
     sup.toCHTML(stack);
-    this.adaptor.append(stack, this.html('mjx-spacer', {style: {'margin-top': this.em(q)}}));
+    adaptor.append(stack, this.html('mjx-spacer', {style: {'margin-top': this.em(q)}}));
     sub.toCHTML(stack);
-    const corebox = this.baseCore.bbox;
-    if (corebox.ic) {
-      this.adaptor.setStyle(sup.chtml, 'marginLeft', this.em(x / sup.bbox.rscale));
+    const ic = this.getAdjustedIc();
+    if (ic) {
+      adaptor.setStyle(sup.chtml, 'marginLeft', this.em(ic / sup.bbox.rscale));
+    }
+    if (this.baseRemoveIc) {
+      adaptor.setStyle(stack, 'marginLeft', this.em(-this.baseIc));
     }
   }
 

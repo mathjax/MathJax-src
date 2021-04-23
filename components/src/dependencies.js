@@ -25,13 +25,14 @@ export const dependencies = {
   '[tex]/physics': ['input/tex-base'],
   '[tex]/require': ['input/tex-base'],
   '[tex]/tagformat': ['input/tex-base'],
+  '[tex]/textmacros': ['input/tex-base'],
   '[tex]/unicode': ['input/tex-base'],
   '[tex]/verb': ['input/tex-base']
 };
 
 export const paths = {
   tex: '[mathjax]/input/tex/extensions',
-  sre: '[mathjax]/sre/sre_browser'
+  sre: '[mathjax]/sre/' + (typeof window === 'undefined' ? 'sre-node' : 'sre_browser')
 };
 
 const allPackages = [
@@ -55,6 +56,7 @@ const allPackages = [
   '[tex]/physics',
   '[tex]/require',
   '[tex]/tagformat',
+  '[tex]/textmacros',
   '[tex]/unicode',
   '[tex]/verb'
 ];

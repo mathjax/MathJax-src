@@ -61,13 +61,13 @@ export class MmlMtable extends AbstractMmlNode {
    * Extra properties for this node
    */
   public properties = {
-    useHeight: 1
+    useHeight: true
   };
 
   /**
    * TeX class is ORD
    */
-  public texClass = TEXCLASS.ORD;
+  protected texclass = TEXCLASS.ORD;
 
   /**
    * @override
@@ -116,6 +116,7 @@ export class MmlMtable extends AbstractMmlNode {
           .appendChild(child);
       }
     }
+    level = this.getProperty('scriptlevel') as number || level;
     display = !!(this.attributes.getExplicit('displaystyle') || this.attributes.getDefault('displaystyle'));
     attributes = this.addInheritedAttributes(attributes, {
       columnalign: this.attributes.get('columnalign'),

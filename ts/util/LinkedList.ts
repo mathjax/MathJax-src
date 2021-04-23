@@ -26,7 +26,7 @@
  *  A symbol used to mark the special node used to indicate
  *  the start and end of the list.
  */
-const END = Symbol();
+export const END = Symbol();
 
 /**
  * Shorthand type for the functions used to sort the data items
@@ -191,6 +191,28 @@ export class LinkedList<DataClass> {
   }
 
   /**
+   * Remove items from the list
+   *
+   * @param {DataClass[]} items   The items to remove
+   */
+  public remove(...items: DataClass[]) {
+    const map = new Map<DataClass, boolean>();
+    for (const item of items) {
+      map.set(item, true);
+    }
+    let item = this.list.next;
+    while (item.data !== END) {
+      const next = item.next;
+      if (map.has(item.data as DataClass)) {
+        item.prev.next = item.next;
+        item.next.prev = item.prev;
+        item.next = item.prev = null;
+      }
+      item = next;
+    }
+  }
+
+  /**
    * Empty the list
    *
    * @return {LinkedList}  The LinkedList object (for chaining)
@@ -224,8 +246,12 @@ export class LinkedList<DataClass> {
    *
    * @return {Object}  The iterator for walking the list in reverse
    */
+  public reversed(): IterableIterator<DataClass> | {
                                                                     /* tslint:disable-next-line:jsdoc-require */
-  public reversed(): IterableIterator<DataClass> | {toArray(): DataClass[]} {
+    toArray(): DataClass[];
+                                                                    /* tslint:disable-next-line:jsdoc-require */
+    [Symbol.iterator](): IterableIterator<DataClass>;
+  } {
     let current = this.list;
     return {
                                                                     /* tslint:disable-next-line:jsdoc-require */

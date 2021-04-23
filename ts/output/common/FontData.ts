@@ -22,8 +22,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {OptionList} from '../../util/Options.js';
-import {StyleList} from './CssStyles.js';
+import {OptionList, defaultOptions, userOptions} from '../../util/Options.js';
+import {StyleList} from '../../util/StyleList.js';
 
 /****************************************************************************/
 
@@ -132,10 +132,13 @@ export type DelimiterData = {
   variants?: number[];  // The variants in which the different sizes can be found (if not the default)
   schar?: number[];     // The character number to use for each size (if different from the default)
   stretch?: number[];   // The unicode code points for the parts of multi-character versions [beg, ext, end, mid?]
+  stretchv?: number[];  // the variants to use for the stretchy characters (index into variant name array)
   HDW?: number[];       // [h, d, w] (for vertical, h and d are the normal size, w is the multi-character width,
-  //            for horizontal, h and d are the multi-character ones, w is for the normal size).
+                        //            for horizontal, h and d are the multi-character ones, w is for the normal size).
   min?: number;         // The minimum size a multi-character version can be
   c?: number;           // The character number (for aliased delimiters)
+  fullExt?: [number, number]  // When present, extenders must be full sized, and the first number is
+                              //   the size of the extender, while the second is the total size of the ends
 };
 
 /**
@@ -216,7 +219,9 @@ export type FontParameters = {
   delimiterfactor: number,
   delimitershortfall: number,
 
-  min_rule_thickness: number
+  min_rule_thickness: number,
+  separation_factor: number,
+  extra_ic: number
 };
 
 /****************************************************************************/
@@ -231,9 +236,11 @@ export type FontParameters = {
 export class FontData<C extends CharOptions, V extends VariantData<C>, D extends DelimiterData> {
 
   /**
-   * Subclasses may need options
+   * Options for the font
    */
-  public static OPTIONS: OptionList = {};
+  public static OPTIONS: OptionList = {
+    unknownFamily: 'serif'     // Should use 'monospace' with LiteAdaptor
+  };
 
   /**
    *  The standard variants to define
@@ -256,16 +263,17 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   ];
 
   /**
-   * The style and weight to use for each variant (for unkown characters)
+   * The family, style, and weight to use for each variant (for unknown characters)
+   * The 'unknown' family is replaced by options.unknownFamily
    */
   public static defaultCssFonts: CssFontMap = {
-    normal: ['serif', false, false],
-    bold: ['serif', false, true],
-    italic: ['serif', true, false],
-    'bold-italic': ['serif', true, true],
-    'double-struck': ['serif', false, true],
-    fraktur: ['serif', false, false],
-    'bold-fraktur': ['serif', false, true],
+    normal: ['unknown', false, false],
+    bold: ['unknown', false, true],
+    italic: ['unknown', true, false],
+    'bold-italic': ['unknown', true, true],
+    'double-struck': ['unknown', false, true],
+    fraktur: ['unknown', false, false],
+    'bold-fraktur': ['unknown', false, true],
     script: ['cursive', false, false],
     'bold-script': ['cursive', false, true],
     'sans-serif': ['sans-serif', false, false],
@@ -366,7 +374,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    *  The default remappings
    */
-  protected static defaultAccentMap = {
+  protected static defaultAccentMap: RemapMap = {
     0x0300: '\u02CB',  // grave accent
     0x0301: '\u02CA',  // acute accent
     0x0302: '\u02C6',  // curcumflex
@@ -401,14 +409,14 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    * Default map for characters inside <mo>
    */
-  protected static defaultMoMap = {
+  protected static defaultMoMap: RemapMap = {
     0x002D: '\u2212' // hyphen
   };
 
   /**
    * Default map for characters inside <mn>
    */
-  protected static defaultMnMap = {
+  protected static defaultMnMap: RemapMap = {
     0x002D: '\u2212' // hyphen
   };
 
@@ -447,13 +455,16 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     delimiterfactor:     901,
     delimitershortfall:   .3,
 
-    min_rule_thickness:  1.25     // in pixels
+    min_rule_thickness:  1.25,     // in pixels
+    separation_factor:   1.75,     // expansion factor for spacing e.g. between accents and base
+    extra_ic:            .033      // extra spacing for scripts (compensate for not having actual ic values)
   };
 
   /**
    * The default delimiter data
    */
   protected static defaultDelimiters: DelimiterMap<any> = {};
+
   /**
    * The default character data
    */
@@ -465,17 +476,35 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   protected static defaultSizeVariants: string[] = [];
 
   /**
+   * The default variants for the assembly parts for stretchy delimiters
+   */
+  protected static defaultStretchVariants: string[] = [];
+
+  /**
+   * The font options
+   */
+  protected options: OptionList;
+
+  /**
    * The actual variant information for this font
    */
   protected variant: VariantMap<C, V> = {};
+
   /**
    * The actual delimiter information for this font
    */
   protected delimiters: DelimiterMap<D> = {};
+
   /**
-   * The actual size information for this font
+   * The actual size variants to use for this font
    */
   protected sizeVariants: string[];
+
+  /**
+   * The actual stretchy variants to use for this font
+   */
+  protected stretchVariants: string[];
+
   /**
    * The data to use to make variants to default fonts and css for unknown characters
    */
@@ -497,9 +526,14 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   public params: FontParameters;
 
   /**
+   * Factor by which to multiply italic correction for computation of delta in munderover
+   */
+  public skewIcFactor: number = .75;
+
+  /**
    * Any styles needed for the font
    */
-  public styles: StyleList;
+  protected _styles: StyleList;
 
   /**
    * @param {CharMap} font   The font to check
@@ -517,13 +551,22 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    * Copies the data from the defaults to the instance
    *
+   * @param {OptionList} options   The options for this font
+   *
    * @constructor
    */
-  constructor() {
+  constructor(options: OptionList = null) {
     let CLASS = (this.constructor as typeof FontData);
+    this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
     this.params = {...CLASS.defaultParams};
     this.sizeVariants = [...CLASS.defaultSizeVariants];
+    this.stretchVariants = [...CLASS.defaultStretchVariants];
     this.cssFontMap = {...CLASS.defaultCssFonts};
+    for (const name of Object.keys(this.cssFontMap)) {
+      if (this.cssFontMap[name][0] === 'unknown') {
+        this.cssFontMap[name][0] = this.options.unknownFamily;
+      }
+    }
     this.cssFamilyPrefix = CLASS.defaultCssFamilyPrefix;
     this.createVariants(CLASS.defaultVariants);
     this.defineDelimiters(CLASS.defaultDelimiters);
@@ -533,6 +576,20 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     this.defineRemap('accent', CLASS.defaultAccentMap);
     this.defineRemap('mo', CLASS.defaultMoMap);
     this.defineRemap('mn', CLASS.defaultMnMap);
+  }
+
+  /**
+   * Returns list of styles needed for the font
+   */
+  get styles(): StyleList {
+    return this._styles;
+  }
+
+  /**
+   * Sets styles needed for that font.
+   */
+  set styles(style: StyleList) {
+    this._styles = style;
   }
 
   /**
@@ -687,6 +744,15 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
       i = this.delimiters[n].variants[i];
     }
     return this.sizeVariants[i];
+  }
+
+  /**
+   * @param {number} n  The delimiter character number whose variant is needed
+   * @param {number} i  The index in the stretch array of the part whose variant is needed
+   * @return {string}   The variant of the i-th part for delimiter n
+   */
+  public getStretchVariant(n: number, i: number): string {
+    return this.stretchVariants[this.delimiters[n].stretchv ? this.delimiters[n].stretchv[i] : 0];
   }
 
   /**

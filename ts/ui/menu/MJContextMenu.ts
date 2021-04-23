@@ -25,21 +25,27 @@ import {MathItem} from '../../core/MathItem.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {SelectableInfo} from './SelectableInfo.js';
 
+import {ContextMenu} from 'mj-context-menu/js/context_menu.js';
+import {SubMenu} from 'mj-context-menu/js/sub_menu.js';
+import {Submenu} from 'mj-context-menu/js/item_submenu.js';
+import {Menu} from 'mj-context-menu/js/menu.js';
+import {Item} from 'mj-context-menu/js/item.js';
+
 /*==========================================================================*/
 
 /**
  * The subclass of ContextMenu that handles the needs of the MathJax
  *   contextual menu (in particular, tying it to a MathItem).
  */
-export class MJContextMenu extends ContextMenu.ContextMenu {
+export class MJContextMenu extends ContextMenu {
 
   /**
    * Static map to hold methods for re-computing dynamic submenus.
-   * @type {Map<string, (menu: MJContextMenu, sub: ContextMenu.Submenu)}
+   * @type {Map<string, (menu: MJContextMenu, sub: Submenu)}
    */
   public static DynamicSubmenus: Map<string,
-  (menu: MJContextMenu, sub: ContextMenu.Submenu) =>
-    ContextMenu.SubMenu> = new Map();
+  (menu: MJContextMenu, sub: Submenu) =>
+    SubMenu> = new Map();
 
   /**
    * The MathItem that has posted the menu
@@ -110,13 +116,13 @@ export class MJContextMenu extends ContextMenu.ContextMenu {
    * @param {string[]} names   The menu IDs to look for
    * @returns {Item}         The menu item (or null if not found)
    */
-  public findID(...names: string[]): ContextMenu.Item {
-    let menu = this as ContextMenu.Menu;
-    let item = null as ContextMenu.Item;
+  public findID(...names: string[]) {
+    let menu = this as Menu;
+    let item = null as Item;
     for (const name of names) {
       if (menu) {
         item = menu.find(name);
-        menu = (item instanceof ContextMenu.Submenu ? item.getSubmenu() : null);
+        menu = (item instanceof Submenu ? item.submenu : null);
       } else {
         item = null;
       }
@@ -191,8 +197,8 @@ export class MJContextMenu extends ContextMenu.ContextMenu {
    * @param {() => void} action                The action to perform when the annotation is selected
    */
   protected createAnnotationMenu(id: string, annotations: [string, string][], action: () => void) {
-    const menu = this.findID(id, 'Annotation') as ContextMenu.Submenu;
-    menu.setSubmenu(ContextMenu.SubMenu.parse({
+    const menu = this.findID(id, 'Annotation') as Submenu;
+    menu.submenu = this.factory.get('subMenu')(this.factory, {
       items: annotations.map(([type, value]) => {
         return {
           type: 'command',
@@ -205,7 +211,7 @@ export class MJContextMenu extends ContextMenu.ContextMenu {
         };
       }),
       id: 'annotations'
-    }, menu));
+    }, menu);
     if (annotations.length) {
       menu.enable();
     } else {
@@ -220,11 +226,11 @@ export class MJContextMenu extends ContextMenu.ContextMenu {
    */
   public dynamicSubmenus() {
     for (const [id, method] of MJContextMenu.DynamicSubmenus) {
-      const menu = this.find(id) as ContextMenu.Submenu;
+      const menu = this.find(id) as Submenu;
       if (!menu) continue;
       const sub = method(this, menu);
-      menu.setSubmenu(sub);
-      if (sub.getItems().length) {
+      menu.submenu = sub;
+      if (sub.items.length) {
         menu.enable();
       } else {
         menu.disable();

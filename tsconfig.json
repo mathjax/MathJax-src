@@ -10,6 +10,10 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "removeComments": true,
+    "baseUrl": ".",
+    "paths": {
+      "mj-context-menu": ["node_modules/mj-context-menu"]
+    },
     "lib": ["es6", "dom"],
     "noLib": false,
     "sourceMap": true,

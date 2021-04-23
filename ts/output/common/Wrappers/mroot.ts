@@ -24,7 +24,7 @@
 import {Constructor} from '../../common/Wrapper.js';
 import {CommonMsqrt, MsqrtConstructor} from './msqrt.js';
 import {CommonMo} from './mo.js';
-import {BBox} from '../BBox.js';
+import {BBox} from '../../../util/BBox.js';
 
 /*****************************************************************/
 /**
