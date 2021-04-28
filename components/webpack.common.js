@@ -33,37 +33,44 @@ const TerserPlugin = require('terser-webpack-plugin');
  * @return {string}        The string with regex special characters escaped
  */
 function quoteRE(string) {
-  return string.replace(/([\\.{}[\]()?*^$])/g, '\$1')
+  return string.replace(/([\\.{}[\]()?*^$])/g, '\\$1')
 }
 
 /**
  * Creates the plugin needed for converting mathjax references to component/lib references
  *
- * @param {string} mathjax     The location of the MathJax js files
+ * @param {string} js          The location of the compiled js files
  * @param {string[]} lib       The component library directories to be linked against
  * @param {string} dir         The directory of the component being built
  * @return {any[]}             The plugin array (empty or with the conversion plugin)
  */
-const PLUGINS = function (mathjax, libs, dir) {
-  const mjdir = path.resolve(dir, mathjax);
-  const mjRE = new RegExp('^' + quoteRE(mjdir + '/'));
+const PLUGINS = function (js, libs, dir) {
+  const mjdir = path.resolve(__dirname, '..', 'js');
+  const jsdir = path.resolve(dir, js);
+  const mjRE = new RegExp('^(?:' + quoteRE(jsdir) + '|' + quoteRE(mjdir) + ')' + quoteRE(path.sep));
   const root = path.dirname(mjdir);
-  const rootRE = new RegExp('^' + quoteRE(root + '/'));
-  const nodeRE = new RegExp('^' + quoteRE(path.dirname(root) + '/'));
+  const rootRE = new RegExp('^' + quoteRE(root + path.sep));
+  const nodeRE = new RegExp('^' + quoteRE(path.dirname(root) + path.sep));
 
-  const plugins = [];
+  //
+  //  Record the js directory for the pack command
+  //
+  const plugins = [new webpack.DefinePlugin({jsdir: jsdir})];
+
   if (libs.length) {
     plugins.push(
       //
       // Move mathjax references to component libraries
       //
       new webpack.NormalModuleReplacementPlugin(
-        /^[^\/].*\.js$/,
+        /^[^\/]/,
         function (resource) {
-          const request = path.resolve(resource.context, resource.request);
+          const request = require.resolve(resource.request.charAt(0) === '.' ?
+                                          path.resolve(resource.context, resource.request) :
+                                          resource.request);
           if (!request.match(mjRE)) return;
           for (const lib of libs) {
-            const file = request.replace(mjRE, path.join(root, lib) + '/');
+            const file = request.replace(mjRE, path.join(root, lib) + path.sep);
             if (fs.existsSync(file)) {
               resource.request = file;
               break;
@@ -78,11 +85,13 @@ const PLUGINS = function (mathjax, libs, dir) {
     // Check for packages that should be rerouted to node_modules
     //
     new webpack.NormalModuleReplacementPlugin(
-      /^[^\/].*\.js$/,
+      /^[^\/]$/,
       function (resource) {
-        const request = path.resolve(resource.context, resource.request);
+        const request = require.resolve(resource.request.charAt(0) === '.' ?
+                                        path.resolve(resource.context, resource.request) :
+                                        resource.request);
         if (request.match(rootRE) || !request.match(nodeRE) || fs.existsSync(request)) return;
-        const file = request.replace(nodeRE, path.join(root, 'node_modules') + '/');
+        const file = request.replace(nodeRE, path.join(root, 'node_modules') + path.sep);
         if (fs.existsSync(file)) {
           resource.request = file;
         }
@@ -107,8 +116,8 @@ const MODULE = function (dir) {
   return {
     // NOTE: for babel transpilation
     rules: [{
-      test: new RegExp(dirRE + '\\/.*\\.js$'),
-      exclude: new RegExp(quoteRE(path.dirname(__dirname)) + '\\/es5\\/'),
+      test: new RegExp(dirRE + quoteRE(path.sep) + '.*\\.js$'),
+      exclude: new RegExp(quoteRE(path.join(path.dirname(__dirname), 'es5') + path.sep)),
       use: {
         loader: 'babel-loader',
         options: {
@@ -123,15 +132,15 @@ const MODULE = function (dir) {
  * Create a webpack configuration for a distribution file
  *
  * @param {string} name       The name of the component to create
- * @param {string} mathjax    The path to the MathJax .js files
+ * @param {string} js         The path to the compiled .js files
  * @param {string[]} libs     Array of paths to component lib directories to link against
  * @param {string} dir        The directory of the component buing built
  * @param {string} dist       The path to the directory where the component .js file will be placed
- *                              (defaults to mathjax/es5)
+ *                              (defaults to es5 in the same directory as the js directory)
  */
-const PACKAGE = function (name, mathjax, libs, dir, dist) {
+const PACKAGE = function (name, js, libs, dir, dist) {
   const distDir = dist ? path.resolve(dir, dist) :
-                         path.resolve(path.dirname(mathjax), 'es5', path.dirname(name));
+                         path.resolve(path.dirname(js), 'es5', path.dirname(name));
   name = path.basename(name);
   return {
     name: name,
@@ -140,7 +149,8 @@ const PACKAGE = function (name, mathjax, libs, dir, dist) {
       path: distDir,
       filename: name + (dist === '.' ? '.min.js' : '.js')
     },
-    plugins: PLUGINS(mathjax, libs, dir),
+    target: ['web', 'es5'],  // needed for IE11 and old browsers
+    plugins: PLUGINS(js, libs, dir),
     module: MODULE(dir),
     performance: {
       hints: false
@@ -148,6 +158,7 @@ const PACKAGE = function (name, mathjax, libs, dir, dist) {
     optimization: {
       minimize: true,
       minimizer: [new TerserPlugin({
+        extractComments: false,
         terserOptions: {
           output: {
             ascii_only: true

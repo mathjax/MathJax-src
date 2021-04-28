@@ -100,12 +100,12 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     /**
      * The currently attached explorers
      */
-    protected attached: Explorer[] = [];
+    protected attached: string[] = [];
 
     /**
-     * True when a rerendered element should restart the explorer
+     * True when a rerendered element should restart these explorers
      */
-    protected restart: boolean = false;
+    protected restart: string[] = [];
 
     /**
      * True when a rerendered element should regain the focus
@@ -146,16 +146,29 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      */
     public attachExplorers(document: ExplorerMathDocument) {
       this.attached = [];
+      let keyExplorers = [];
       for (let key of Object.keys(this.explorers)) {
         let explorer = this.explorers[key];
+        if (explorer instanceof ke.AbstractKeyExplorer) {
+          explorer.AddEvents();
+          explorer.stoppable = false;
+          keyExplorers.unshift(explorer);
+        }
         if (document.options.a11y[key]) {
           explorer.Attach();
-          this.attached.push(explorer);
+          this.attached.push(key);
         } else {
           explorer.Detach();
         }
       }
-      this.addExplorers(this.attached);
+      // Ensure that the last currently attached key explorer stops propagating
+      // key events.
+      for (let explorer of keyExplorers) {
+        if (explorer.attached) {
+          explorer.stoppable = true;
+          break;
+        }
+      }
     }
 
     /**
@@ -164,9 +177,10 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     public rerender(document: ExplorerMathDocument, start: number = STATE.RERENDER) {
       this.savedId = this.typesetRoot.getAttribute('sre-explorer-id');
       this.refocus = (window.document.activeElement === this.typesetRoot);
-      for (let explorer of this.attached) {
+      for (let key of this.attached) {
+        let explorer = this.explorers[key];
         if (explorer.active) {
-          this.restart = true;
+          this.restart.push(key);
           explorer.Stop();
         }
       }
@@ -179,25 +193,9 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     public updateDocument(document: ExplorerMathDocument) {
       super.updateDocument(document);
       this.refocus && this.typesetRoot.focus();
-      this.restart && this.attached.forEach(x => x.Start());
-      this.refocus = this.restart = false;
-    }
-
-    /**
-     * Adds a list of explorers and makes sure the right one stops propagating.
-     * @param {Explorer[]} explorers The active explorers to be added.
-     */
-    private addExplorers(explorers: Explorer[]) {
-      if (explorers.length <= 1) return;
-      let lastKeyExplorer = null;
-      for (let explorer of this.attached) {
-        if (!(explorer instanceof ke.AbstractKeyExplorer)) continue;
-        explorer.stoppable = false;
-        lastKeyExplorer = explorer;
-      }
-      if (lastKeyExplorer) {
-        lastKeyExplorer.stoppable = true;
-      }
+      this.restart.forEach(x => this.explorers[x].Start());
+      this.restart = [];
+      this.refocus = false;
     }
 
   };
@@ -240,11 +238,14 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
      */
     public static OPTIONS: OptionList = {
       ...BaseDocument.OPTIONS,
-      enrichSpeech: 'shallow',                   // overrides option in EnrichedMathDocument
       enableExplorer: true,
       renderActions: expandable({
         ...BaseDocument.OPTIONS.renderActions,
         explorable: [STATE.EXPLORER]
+      }),
+      sre: expandable({
+        ...BaseDocument.OPTIONS.sre,
+        speech: 'shallow',                 // overrides option in EnrichedMathDocument
       }),
       a11y: {
         align: 'top',                      // placement of magnified expression
@@ -260,12 +261,10 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
         infoRole: false,                   // show semantic role on mouse hovering
         infoType: false,                   // show semantic type on mouse hovering
         keyMagnifier: false,               // switch on magnification via key exploration
-        locale: 'en',                      // switch the locale
         magnification: 'None',             // type of magnification
         magnify: '400%',                   // percentage of magnification of zoomed expressions
         mouseMagnifier: false,             // switch on magnification via mouse hovering
         speech: true,                      // switch on speech output
-        speechRules: 'mathspeak-default',  // speech rules as domain-style pair
         subtitles: true,                   // show speech as a subtitle
         treeColoring: false,               // tree color expression
         viewBraille: false                 // display Braille output as subtitles
@@ -285,6 +284,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
      * @constructor
      */
     constructor(...args: any[]) {
+      processSreOptions(args[2]);
       super(...args);
       const ProcessBits = (this.constructor as typeof BaseDocument).ProcessBits;
       if (!ProcessBits.has('explorer')) {
@@ -293,6 +293,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
       const visitor = new SerializedMmlVisitor(this.mmlFactory);
       const toMathML = ((node: MmlNode) => visitor.visitTree(node));
       this.options.MathItem = ExplorerMathItemMixin(this.options.MathItem, toMathML);
+      // TODO: set backward compatibility options here.
       this.explorerRegions = initExplorerRegions(this);
     }
 
@@ -327,6 +328,33 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
   };
 
 }
+
+//
+// TODO(v3.2): This is for backward compatibility of old option parameters.
+//
+/**
+ * Processes old a11y options for backward compatibility.
+ * @param {OptionList} options The options to process.
+ */
+function processSreOptions(options: OptionList) {
+  if (!options || !options.a11y) {
+    return;
+  }
+  if (!options.sre) {
+    options.sre = {};
+  }
+  if (options.a11y.locale) {
+    options.sre.locale = options.a11y.locale;
+    delete options.a11y.locale;
+  }
+  if (options.a11y.speechRules) {
+    let [domain, style] = (options.a11y.speechRules as string).split('-');
+    options.sre.domain = domain;
+    options.sre.style = style;
+    delete options.a11y.speechRules;
+  }
+}
+
 
 /*==========================================================================*/
 
@@ -392,10 +420,9 @@ let allExplorers: {[options: string]: ExplorerInit} = {
   speech: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) => {
     let explorer = ke.SpeechExplorer.create(
       doc, doc.explorerRegions.speechRegion, node, ...rest) as ke.SpeechExplorer;
-    let [domain, style] = doc.options.a11y.speechRules.split('-');
     explorer.speechGenerator.setOptions({
-      locale: doc.options.a11y.locale, domain: domain,
-      style: style, modality: 'speech', cache: false});
+      locale: doc.options.sre.locale, domain: doc.options.sre.domain,
+      style: doc.options.sre.style, modality: 'speech', cache: false});
     explorer.showRegion = 'subtitles';
     return explorer;
   },
@@ -458,9 +485,17 @@ function initExplorers(document: ExplorerMathDocument, node: HTMLElement, mml: s
  * @param {{[key: string]: any}} options Association list for a11y option value pairs.
  */
 export function setA11yOptions(document: HTMLDOCUMENT, options: {[key: string]: any}) {
+  let sreOptions = SRE.engineSetup() as {[name: string]: string};
   for (let key in options) {
     if (document.options.a11y[key] !== undefined) {
       setA11yOption(document, key, options[key]);
+      if (key === 'locale') {
+        document.options.sre[key] = options[key];
+      }
+      continue;
+    }
+    if (sreOptions[key] !== undefined) {
+      document.options.sre[key] = options[key];
     }
   }
   // Reinit explorers
@@ -516,6 +551,19 @@ export function setA11yOption(document: HTMLDOCUMENT, option: string, value: str
       break;
     }
     break;
+  //
+  // TODO(v3.2): These two cases should be handled directly in the menu
+  //             variable actions.
+  //
+  case 'speechRules':
+      let [domain, style] = (value as string).split('-');
+      document.options.sre.domain = domain;
+      document.options.sre.style = style;
+      break;
+  case 'locale':
+      document.options.sre.locale = value;
+      SRE.setupEngine({locale: value as string});
+      break;
   default:
     document.options.a11y[option] = value;
   }
@@ -595,8 +643,11 @@ let csSelectionBox = function(menu: MJContextMenu, locale: string) {
 let csMenu = function(menu: MJContextMenu, sub: Submenu) {
   let locale = menu.pool.lookup('locale').getValue() as string;
   const box = csSelectionBox(menu, locale);
-  const items = sre.ClearspeakPreferences.smartPreferences(
-    menu.mathItem, locale);
+  let items: Object[] = [];
+  try {
+    items = sre.ClearspeakPreferences.smartPreferences(
+      menu.mathItem, locale);
+  } catch (e) {}
   if (box) {
     items.splice(2, 0, box);
   }
@@ -616,7 +667,8 @@ const iso: {[locale: string]: string} = {
   'de': 'German',
   'en': 'English',
   'es': 'Spanish',
-  'fr': 'French'
+  'fr': 'French',
+  'it': 'Italian'
 };
 
 /**

@@ -474,7 +474,7 @@ export class Menu {
           this.checkbox('Activate', 'Activate', 'explorer'),
           this.submenu('Speech', 'Speech', [
             this.checkbox('Speech', 'Speech Output', 'speech'),
-            this.checkbox('Subtitles', 'Speech Subtities', 'subtitles'),
+            this.checkbox('Subtitles', 'Speech Subtitles', 'subtitles'),
             this.checkbox('Braille', 'Braille Output', 'braille'),
             this.checkbox('View Braille', 'Braille Subtitles', 'viewBraille'),
             this.rule(),
@@ -489,8 +489,8 @@ export class Menu {
               ['clearspeak-default', 'Auto']
             ])),
             this.submenu('ChromeVox', 'ChromeVox Rules', this.radioGroup('speechRules', [
-              ['default-default', 'Standard'],
-              ['default-alternative', 'Alternative']
+              ['chromevox-default', 'Standard'],
+              ['chromevox-alternative', 'Alternative']
             ]))
           ]),
           this.submenu('Highlight', 'Highlight', [
@@ -656,7 +656,10 @@ export class Menu {
    */
   protected getA11y(option: string): any {
     if (MathJax._.a11y && MathJax._.a11y.explorer) {
-      return this.document.options.a11y[option];
+      if (this.document.options.a11y[option] !== undefined) {
+        return this.document.options.a11y[option];
+      }
+      return this.document.options.sre[option];
     }
   }
 
@@ -941,6 +944,9 @@ export class Menu {
   protected rerender(start: number = STATE.TYPESET) {
     this.rerenderStart = Math.min(start, this.rerenderStart);
     if (!Menu.loading) {
+      if (this.rerenderStart <= STATE.COMPILED) {
+        this.document.reset({inputJax: []});
+      }
       this.document.rerender(this.rerenderStart);
       this.rerenderStart = STATE.LAST;
     }
@@ -957,14 +963,14 @@ export class Menu {
    * Copy the original form to the clipboard
    */
   protected copyOriginal() {
-    this.copyToClipboard(this.menu.mathItem.math);
+    this.copyToClipboard(this.menu.mathItem.math.trim());
   }
 
   /**
    * Copy the original annotation text to the clipboard
    */
   public copyAnnotation() {
-    this.copyToClipboard(this.menu.annotation);
+    this.copyToClipboard(this.menu.annotation.trim());
   }
 
   /**

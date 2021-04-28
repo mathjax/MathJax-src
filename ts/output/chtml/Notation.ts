@@ -41,9 +41,12 @@ export type DEFPAIR<N, T, D> = Notation.DefPair<CHTMLmenclose<N, T, D>, N>;
 export const RenderElement = function<N, T, D>(name: string, offset: string = ''):  RENDERER<N, T, D> {
   return ((node, _child) => {
     const shape = node.adjustBorder(node.html('mjx-' + name));
-    if (offset && node.thickness !== Notation.THICKNESS) {
-      const transform = 'translate' + offset + '(' + node.em(node.thickness / 2) + ')';
-      node.adaptor.setStyle(shape, 'transform', transform);
+    if (offset) {
+      const d = node.getOffset(offset);
+      if (node.thickness !== Notation.THICKNESS || d)  {
+        const transform = `translate${offset}(${node.em(node.thickness / 2 - d)})`;
+        node.adaptor.setStyle(shape, 'transform', transform);
+      }
     }
     node.adaptor.append(node.chtml, shape);
   }) as Notation.Renderer<CHTMLmenclose<N, T, D>, N>;

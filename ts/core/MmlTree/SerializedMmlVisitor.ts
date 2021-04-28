@@ -46,9 +46,9 @@ export class SerializedMmlVisitor extends MmlVisitor {
    */
   public static variants: PropertyList = {
     '-tex-calligraphic':      'script',
-    '-tex-calligraphic-bold': 'bold-script',
+    '-tex-bold-calligraphic': 'bold-script',
     '-tex-oldstyle':          'normal',
-    '-tex-oldstyle-bold':     'bold',
+    '-tex-bold-oldstyle':     'bold',
     '-tex-mathit':            'italic'
   };
 
@@ -201,6 +201,8 @@ export class SerializedMmlVisitor extends MmlVisitor {
     const variants = (this.constructor as typeof SerializedMmlVisitor).variants;
     variant && variants.hasOwnProperty(variant) && this.setDataAttribute(data, 'variant', variant);
     node.getProperty('variantForm') && this.setDataAttribute(data, 'alternate', '1');
+    node.getProperty('pseudoscript') && this.setDataAttribute(data, 'pseudoscript', 'true');
+    node.getProperty('autoOP') === false && this.setDataAttribute(data, 'auto-op', 'false');
     const texclass = node.getProperty('texClass') as number;
     if (texclass !== undefined) {
       let setclass = true;
@@ -210,6 +212,8 @@ export class SerializedMmlVisitor extends MmlVisitor {
       }
       setclass && this.setDataAttribute(data, 'texclass', texclass < 0 ? 'NONE' : TEXCLASSNAMES[texclass]);
     }
+    node.getProperty('scriptlevel') && node.getProperty('useHeight') === false &&
+      this.setDataAttribute(data, 'smallmatrix', 'true');
     return data;
   }
 

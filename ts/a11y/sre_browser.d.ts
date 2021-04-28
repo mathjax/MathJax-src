@@ -21,14 +21,16 @@ declare namespace sre {
   }
 
   interface Focus {
-    getNodes(): Node[];
+    getNodes(): Element[];
   }
 
   interface Walker {
+    modifier: boolean;
     activate(): void;
     deactivate(): void;
     speech(): string;
     move(key: number): boolean;
+    refocus(): void;
     getFocus(update?: boolean): Focus;
     update(options: {[key: string]: string}): void;
   }
