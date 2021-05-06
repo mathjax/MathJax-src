@@ -36,6 +36,7 @@ import './configmacros/ConfigMacrosConfiguration.js';
 import './enclose/EncloseConfiguration.js';
 import './extpfeil/ExtpfeilConfiguration.js';
 import './html/HtmlConfiguration.js';
+import './mathtools/MathtoolsConfiguration.js';
 import './mhchem/MhchemConfiguration.js';
 import './newcommand/NewcommandConfiguration.js';
 import './noerrors/NoErrorsConfiguration.js';
@@ -62,6 +63,7 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
     '[tex]/enclose',
     '[tex]/extpfeil',
     '[tex]/html',
+    '[tex]/mathtools',
     '[tex]/mhchem',
     '[tex]/newcommand',
     '[tex]/noerrors',
@@ -89,6 +91,7 @@ export const AllPackages: string[] = [
   'enclose',
   'extpfeil',
   'html',
+  'mathtools',
   'mhchem',
   'newcommand',
   'noerrors',
