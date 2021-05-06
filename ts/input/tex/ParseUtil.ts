@@ -30,6 +30,7 @@ import NodeUtil from './NodeUtil.js';
 import TexParser from './TexParser.js';
 import TexError from './TexError.js';
 import {entities} from '../../util/Entities.js';
+import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
 
 
 namespace ParseUtil {
@@ -104,7 +105,7 @@ namespace ParseUtil {
    * @param {number} m The number.
    * @return {string} The em dimension string.
    */
-    export function Em(m: number): string {
+  export function Em(m: number): string {
     if (Math.abs(m) < .0006) {
       return '0em';
     }
@@ -353,6 +354,40 @@ namespace ParseUtil {
   }
 
   /**
+   * Create an munderover node with the given script position.
+   * @param {TexParser} parser   The current TeX parser.
+   * @param {MmlNode} base       The base node.
+   * @param {MmlNode} script     The under- or over-script.
+   * @param {string} pos         Either 'over' or 'under'.
+   * @param {boolean} stack      True if super- or sub-scripts should stack.
+   * @return {MmlNode}           The generated node (MmlMunderover or TeXAtom)
+   */
+  export function underOver(parser: TexParser, base: MmlNode, script: MmlNode, pos: string, stack: boolean): MmlNode {
+    // @test Overline
+    const symbol = NodeUtil.getForm(base);
+    if ((symbol && symbol[3] && symbol[3]['movablelimits']) || NodeUtil.getProperty(base, 'movablelimits')) {
+      // @test Overline Sum
+      NodeUtil.setProperties(base, {'movablelimits': false});
+    }
+    if (NodeUtil.isType(base, 'munderover') && NodeUtil.isEmbellished(base)) {
+      // @test Overline Limits
+      NodeUtil.setProperties(NodeUtil.getCoreMO(base), {lspace: 0, rspace: 0});
+      const mo = parser.create('node', 'mo', [], {rspace: 0});
+      base = parser.create('node', 'mrow', [mo, base]);
+      // TODO? add an empty <mi> so it's not embellished any more
+    }
+    const mml = parser.create('node', 'munderover', [base]) as MmlMunderover;
+    NodeUtil.setChild(mml, pos === 'over' ?  mml.over : mml.under, script);
+    let node: MmlNode = mml;
+    if (stack) {
+      // @test Overbrace 1 2 3, Underbrace, Overbrace Op 1 2
+      node = parser.create('node', 'TeXAtom', [mml], {texClass: TEXCLASS.OP, movesupsub: true});
+    }
+    NodeUtil.setProperty(node, 'subsupOK', true);
+    return node;
+  }
+
+  /**
    * Trim spaces from a string.
    * @param {string} text The string to clean.
    * @return {string} The string with leading and trailing whitespace removed.
@@ -383,7 +418,7 @@ namespace ParseUtil {
     } else if (align === 'b') {
       array.arraydef.align = 'baseline -1';
     } else if (align === 'c') {
-      array.arraydef.align = 'center';
+      array.arraydef.align = 'axis';
     } else if (align) {
       array.arraydef.align = align;
     } // FIXME: should be an error?
