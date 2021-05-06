@@ -75,19 +75,22 @@ CommonMtdMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
     'mjx-labels[align="right"] > mjx-mtr > mjx-mtd': {
       'text-align': 'right'
     },
-    'mjx-mtr mjx-mtd[rowalign="top"], mjx-mlabeledtr mjx-mtd[rowalign="top"]': {
+    'mjx-mtd[extra]': {
+      padding: 0
+    },
+    'mjx-mtd[rowalign="top"]': {
       'vertical-align': 'top'
     },
-    'mjx-mtr mjx-mtd[rowalign="center"], mjx-mlabeledtr mjx-mtd[rowalign="center"]': {
+    'mjx-mtd[rowalign="center"]': {
       'vertical-align': 'middle'
     },
-    'mjx-mtr mjx-mtd[rowalign="bottom"], mjx-mlabeledtr mjx-mtd[rowalign="bottom"]': {
+    'mjx-mtd[rowalign="bottom"]': {
       'vertical-align': 'bottom'
     },
-    'mjx-mtr mjx-mtd[rowalign="baseline"], mjx-mlabeledtr mjx-mtd[rowalign="baseline"]': {
+    'mjx-mtd[rowalign="baseline"]': {
       'vertical-align': 'baseline'
     },
-    'mjx-mtr mjx-mtd[rowalign="axis"], mjx-mlabeledtr mjx-mtd[rowalign="axis"]': {
+    'mjx-mtd[rowalign="axis"]': {
       'vertical-align': '.25em'
     }
   };
