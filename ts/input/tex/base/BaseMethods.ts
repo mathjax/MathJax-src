@@ -1231,25 +1231,14 @@ BaseMethods.CrLaTeX = function(parser: TexParser, name: string, nobrackets: bool
     }
   }
   parser.Push(
-    parser.itemFactory.create('cell').setProperties({isCR: true, name: name, linebreak: true}) );
+    parser.itemFactory.create('cell').setProperties({isCR: true, name: name, linebreak: true})
+  );
   const top = parser.stack.Top();
   let node: MmlNode;
   if (top instanceof sitem.ArrayItem) {
     // @test Array
-    if (n && top.arraydef['rowspacing']) {
-      const rows = (top.arraydef['rowspacing'] as string).split(/ /);
-      if (!top.getProperty('rowspacing')) {
-        // @test Array Custom Linebreak
-        let dimem = ParseUtil.dimen2em(rows[0]);
-        top.setProperty('rowspacing', dimem);
-      }
-      const rowspacing = top.getProperty('rowspacing') as number;
-      while (rows.length < top.table.length) {
-        rows.push(ParseUtil.Em(rowspacing));
-      }
-      rows[top.table.length - 1] = ParseUtil.Em(
-        Math.max(0, rowspacing + ParseUtil.dimen2em(n)));
-      top.arraydef['rowspacing'] = rows.join(' ');
+    if (n) {
+      top.addRowSpacing(n);
     }
   } else {
     if (n) {
@@ -1339,11 +1328,7 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
     // Remember the user defined environment we are closing.
     parser.stack.env['closing'] = env;
   }
-  if (++parser.macroCount > parser.configuration.options['maxMacros']) {
-    throw new TexError('MaxMacroSub2',
-                        'MathJax maximum substitution count exceeded; ' +
-                        'is there a recursive latex environment?');
-  }
+  ParseUtil.checkMaxMacros(parser, false);
   parser.parse('environment', [parser, env]);
 };
 
@@ -1570,11 +1555,7 @@ BaseMethods.Macro = function(parser: TexParser, name: string,
   }
   parser.string = ParseUtil.addArgs(parser, macro, parser.string.slice(parser.i));
   parser.i = 0;
-  if (++parser.macroCount > parser.configuration.options['maxMacros']) {
-    throw new TexError('MaxMacroSub1',
-                        'MathJax maximum macro substitution count exceeded; ' +
-                        'is there a recursive macro call?');
-  }
+  ParseUtil.checkMaxMacros(parser);
 };
 
 

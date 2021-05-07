@@ -214,11 +214,7 @@ NewcommandMethods.MacroWithTemplate = function (parser: TexParser, name: string,
   parser.string = ParseUtil.addArgs(parser, text,
                                     parser.string.slice(parser.i));
   parser.i = 0;
-  if (++parser.macroCount > parser.configuration.options['maxMacros']) {
-    throw new TexError('MaxMacroSub1',
-                        'MathJax maximum macro substitution count exceeded; ' +
-                        'is here a recursive macro call?');
-  }
+  ParseUtil.checkMaxMacros(parser);
 };
 
 

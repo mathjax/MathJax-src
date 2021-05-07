@@ -485,6 +485,26 @@ namespace ParseUtil {
     return s1 + s2;
   }
 
+  /**
+   * Repoort an error if there are too many macro substitutions.
+   * @param {TexParser} parser The current TeX parser.
+   * @param {boolean} isMacro  True if we are substituting a macro, false for environment.
+   */
+  export function checkMaxMacros(parser: TexParser, isMacro: boolean = true) {
+    if (++parser.macroCount <= parser.configuration.options['maxMacros']) {
+      return;
+    }
+    if (isMacro) {
+      throw new TexError('MaxMacroSub1',
+                         'MathJax maximum macro substitution count exceeded; ' +
+                         'is here a recursive macro call?');
+    } else {
+      throw new TexError('MaxMacroSub2',
+                         'MathJax maximum substitution count exceeded; ' +
+                         'is there a recursive latex environment?');
+    }
+  }
+
 
   /**
    *  Check for bad nesting of equation environments
