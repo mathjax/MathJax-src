@@ -1,5 +1,5 @@
 /*************************************************************
- *  Copyright (c) 2019-2020 MathJax Consortium
+ *  Copyright (c) 2020-2021 MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,183 +14,120 @@
  *  limitations under the License.
  */
 
+/**
+ * @fileoverview    Configuration file for the mathtools package.
+ *
+ * @author v.sorge@mathjax.org (Volker Sorge)
+ * @author dpvc@mathjax.org (Davide P. Cervone)
+ */
 
-import {ArrayItem} from '../base/BaseItems.js';
-import {MultlineItem} from '../ams/AmsItems.js';
-import {StackItem} from '../StackItem.js';
-import ParseUtil from '../ParseUtil.js';
-import ParseMethods from '../ParseMethods.js';
 import {Configuration} from '../Configuration.js';
-import {ParseMethod} from '../Types.js';
-import {AmsMethods} from '../ams/AmsMethods.js';
-import BaseMethods from '../base/BaseMethods.js';
-import TexParser from '../TexParser.js';
-import TexError from '../TexError.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {CommandMap, EnvironmentMap} from '../SymbolMap.js';
+import {CommandMap} from '../SymbolMap.js';
 import NodeUtil from '../NodeUtil.js';
-import {TexConstant} from '../TexConstants.js';
+import {expandable} from '../../../util/Options.js';
+import {ParserConfiguration} from '../Configuration.js';
+import {TeX} from '../../tex.js';
+import ParseOptions from '../ParseOptions.js';
 
+import './MathtoolsMappings.js';
+import {MathtoolsUtil} from './MathtoolsUtil.js';
+import {MathtoolsTagFormat} from './MathtoolsTags.js';
+import {MultlinedItem} from './MathtoolsItems.js';
 
-let MathtoolsMethods: Record<string, ParseMethod> = {};
+/**
+ * The name of the paried-delimiters command map.
+ */
+export const PAIREDDELIMS = 'mathtools-paired-delims';
 
-export class MultlinedItem extends MultlineItem {
-
-  /**
-   * @override
-   */
-  get kind() {
-    return 'multlined';
-  }
-
-
-  /**
-   * @override
-   */
-  public EndTable() {
-    if (this.Size() || this.row.length) {
-      this.EndEntry();
-      this.EndRow();
-    }
-    if (this.table.length) {
-      let first = NodeUtil.getChildren(this.table[0])[0];
-      let m = this.table.length - 1;
-      if (NodeUtil.getAttribute(first, 'columnalign') !== TexConstant.Align.RIGHT) {
-        first.appendChild(
-          this.create('node', 'mspace', [],
-                      { width: this.factory.configuration.options['MultlineGap'] || '2em' })
-        );
-      }
-      let last = NodeUtil.getChildren(this.table[m])[0];
-      if (NodeUtil.getAttribute(
-        last, 'columnalign') !== TexConstant.Align.LEFT) {
-        let top = last.childNodes[0] as MmlNode;
-        top.childNodes.unshift(null);
-        const space = this.create(
-          'node', 'mspace', [],
-          { width: this.factory.configuration.options['MultlineGap'] || '2em' });
-        NodeUtil.setChild(top, 0, space);
-      }
-    }
-    super.EndTable.call(this);
-  }
-
+/**
+ * Create the paired-delimiters command map, and link it into the configuration.
+ * @param {ParserConfiguration} config   The current configuration.
+ */
+function initMathtools(config: ParserConfiguration) {
+  new CommandMap(PAIREDDELIMS, {}, {});
+  config.append(Configuration.local({handler: {macro: [PAIREDDELIMS]}, priority: -5}));
 }
 
-
-MathtoolsMethods.MtMatrix = function(parser: TexParser, begin: StackItem, open, close) {
-  const align = parser.GetBrackets('\\begin{' + begin.getName() + '}') || 'c';
-  return BaseMethods.Array(parser, begin, open, close, align);
-},
-
-MathtoolsMethods.MtSmallMatrix = function(
-    parser: TexParser, begin: StackItem, open, close, align) {
-  if (!align) {
-    align = parser.GetBrackets('\\begin{' + begin.getName() + '}') || 'c';
+/**
+ * Add any pre-defined paried delimiters, and subclass the configured tag format.
+ * @param {ParserConfiguration} config   The current configuration.
+ * @param {TeX} jac                      The TeX input jax
+ */
+function configMathtools(config: ParserConfiguration, jax: TeX<any, any, any>) {
+  const parser = jax.parseOptions;
+  const pairedDelims = parser.options.mathtools.pairedDelimiters;
+  for (const cs of Object.keys(pairedDelims)) {
+    MathtoolsUtil.addPairedDelims(parser, cs, pairedDelims[cs]);
   }
-  return BaseMethods.Array(
-      parser, begin, open, close, align, ParseUtil.Em(1 / 3), '.2em', 'S', 1);
-},
+  MathtoolsTagFormat(config, jax);
+}
 
-MathtoolsMethods.MtMultlined = function(parser: TexParser, begin: StackItem) {
-  let pos = parser.GetBrackets('\\begin{' + begin.getName() + '}') || '';
-  let width = pos ? parser.GetBrackets('\\begin{' + begin.getName() + '}') : null;
-  if (!pos.match(/^[cbt]$/)) {
-    let tmp = width;
-    width = pos;
-    pos = tmp;
-  }
-  parser.Push(begin);
-  let item = parser.itemFactory.create('multlined', parser, begin) as ArrayItem;
-  item.arraydef = {
-    displaystyle: true,
-    rowspacing: '.5em',
-    width: width || parser.options['multlineWidth'],
-    columnwidth: '100%',
-  };
-  return ParseUtil.setArrayAlign(item as ArrayItem, pos || 'c');
-};
-
-MathtoolsMethods.HandleShove = function(parser: TexParser, name: string, shove: string) {
-  let top = parser.stack.Top();
-  if (top.kind !== 'multline' && top.kind !== 'multlined') {
-    throw new TexError(
-      'CommandInMultlined',
-      '%1 can only appear within the multline or multlined environments',
-      name);
-  }
-  if (top.Size()) {
-    throw new TexError(
-      'CommandAtTheBeginingOfLine',
-      '%1 must come at the beginning of the line',
-      name);
-  }
-  top.setProperty('shove', shove);
-  let shift = parser.GetBrackets(name);
-  let mml = parser.ParseArg(name);
-  if (shift) {
-    let mrow = parser.create('node', 'mrow', []);
-    let mspace = parser.create('node', 'mspace', [], { width: shift });
-    if (shove === 'left') {
-      mrow.appendChild(mspace);
-      mrow.appendChild(mml);
-    } else {
-      mrow.appendChild(mml);
-      mrow.appendChild(mspace);
+/**
+ * A filter to fix up mmultiscripts elements.
+ * @param {ParseOptions} data   The parse options.
+ */
+export function fixPrescripts({data}: {data: ParseOptions}) {
+  for (const node of data.getList('mmultiscripts')) {
+    if (!node.getProperty('fixPrescript')) continue;
+    const childNodes = NodeUtil.getChildren(node);
+    let n = 0;
+    for (const i of [1, 2]) {
+      if (!childNodes[i]) {
+        NodeUtil.setChild(node, i, data.nodeFactory.create('node', 'none'));
+        n++;
+      }
     }
-    mml = mrow;
+    for (const i of [4, 5]) {
+      if (NodeUtil.isType(childNodes[i], 'mrow') && NodeUtil.getChildren(childNodes[i]).length === 0) {
+        NodeUtil.setChild(node, i, data.nodeFactory.create('node', 'none'));
+      }
+    }
+    if (n === 2) {
+      childNodes.splice(1, 2);
+    }
   }
-  parser.Push(mml);
-};
+}
 
-
-MathtoolsMethods.Array = BaseMethods.Array;
-MathtoolsMethods.Macro = BaseMethods.Macro;
-MathtoolsMethods.xArrow = AmsMethods.xArrow;
-
-
-new CommandMap('mathtools-macros', {
-  shoveleft:  ['HandleShove', TexConstant.Align.LEFT],
-  shoveright: ['HandleShove', TexConstant.Align.RIGHT],
-
-  coloneqq: ['Macro', '\\mathrel{≔}'],
-  xleftrightarrow: ['xArrow', 0x2194, 7, 6]
-}, MathtoolsMethods);
-
-
-new EnvironmentMap('mathtools-environment', ParseMethods.environment, {
-  dcases: ['Array', null, '\\{', '.', 'll', null, '.2em', 'D'],
-  rcases: ['Array', null, '.', '\\}', 'll', null, '.2em', 'D'],
-  drcases: ['Array', null, '\\{', '\\}', 'll', null, '.2em', 'D'],
-  'matrix*': ['MtMatrix', null, null, null],
-  'pmatrix*': ['MtMatrix', null, '(', ')'],
-  'bmatrix*': ['MtMatrix', null, '[', ']'],
-  'Bmatrix*': ['MtMatrix', null, '\\{', '\\}'],
-  'vmatrix*': ['MtMatrix', null, '\\vert', '\\vert'],
-  'Vmatrix*': ['MtMatrix', null, '\\Vert', '\\Vert'],
-
-  'smallmatrix*': ['MtSmallMatrix', null, null, null],
-  psmallmatrix: ['MtSmallMatrix', null, '(', ')', 'c'],
-  'psmallmatrix*': ['MtSmallMatrix', null, '(', ')'],
-  bsmallmatrix: ['MtSmallMatrix', null, '[', ']', 'c'],
-  'bsmallmatrix*': ['MtSmallMatrix', null, '[', ']'],
-  Bsmallmatrix: ['MtSmallMatrix', null, '\\{', '\\}', 'c'],
-  'Bsmallmatrix*': ['MtSmallMatrix', null, '\\{', '\\}'],
-  vsmallmatrix: ['MtSmallMatrix', null, '\\vert', '\\vert', 'c'],
-  'vsmallmatrix*': ['MtSmallMatrix', null, '\\vert', '\\vert'],
-  Vsmallmatrix: ['MtSmallMatrix', null, '\\Vert', '\\Vert', 'c'],
-  'Vsmallmatrix*': ['MtSmallMatrix', null, '\\Vert', '\\Vert'],
-
-  multlined: 'MtMultlined',
-}, MathtoolsMethods);
-
-
+/**
+ * The configuration for the mathtools package
+ */
 export const MathtoolsConfiguration = Configuration.create(
   'mathtools', {
     handler: {
-      macro: ['mathtools-macros'],
-      environment: ['mathtools-environment']
+      macro: ['mathtools-macros', 'mathtools-delimiters'],
+      environment: ['mathtools-environments'],
+      delimiter: ['mathtools-delimiters'],
+      character: ['mathtools-characters']
     },
-    items: {[MultlinedItem.prototype.kind]: MultlinedItem}
+    items: {
+      [MultlinedItem.prototype.kind]: MultlinedItem
+    },
+    init: initMathtools,
+    config: configMathtools,
+    postprocessors: [[fixPrescripts, -6]],
+    options: {
+      mathtools: {
+        'multlinegap': '1em',                   // horizontal space for multlined environments
+        'multlined-pos': 'c',                   // default alignment for multlined environments
+        'firstline-afterskip': '',              // space for first line of multlined (overrides multlinegap)
+        'lastline-preskip': '',                 // space for last line of multlined (overrides multlinegap)
+        'smallmatrix-align': 'c',               // default alignment for smallmatrix environments
+        'shortvdotsadjustabove': '.2em',        // space to remove above \shortvdots
+        'shortvdotsadjustbelow': '.2em',        // space to remove below \shortvdots
+        'centercolon': false,                   // true to have colon automatically centered
+        'centercolon-offset': '.04em',          // vertical adjustment for centered colons
+        'thincolon-dx': '-.04em',               // horizontal adjustment for thin colons (e.g., \coloneqq)
+        'thincolon-dw': '-.08em',               // width adjustment for thin colons
+        'use-unicode': false,                   // true to use unicode characters rather than multi-character
+                                                //   version for \coloneqq, etc., when possible
+        'prescript-sub-format': '',             // format for \prescript subscript
+        'prescript-sup-format': '',             // format for \prescript superscript
+        'prescript-arg-format': '',             // format for \prescript base
+        pairedDelimiters: expandable({}),       // predefined paired delimiters
+                                                //     name: [left, right, body, argcount, pre, post]
+        tagforms: expandable({}),               // tag form definitions
+                                                //     name: [left, right, format]
+       }
+    }
   }
 );
