@@ -106,10 +106,11 @@ export class MmlMtable extends AbstractMmlNode {
   /**
    * Make sure all children are mtr or mlabeledtr nodes
    * Inherit the table attributes, and set the display attribute based on the table's displaystyle attribute
+   * Reset the prime value to false
    *
    * @override
    */
-  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, _prime: boolean) {
     for (const child of this.childNodes) {
       if (!child.isKind('mtr')) {
         this.replaceChild(this.factory.create('mtr'), child)
@@ -125,7 +126,7 @@ export class MmlMtable extends AbstractMmlNode {
     const ralign = split(this.attributes.get('rowalign') as string);
     for (const child of this.childNodes) {
       attributes.rowalign[1] = ralign.shift() || attributes.rowalign[1];
-      child.setInheritedAttributes(attributes, display, level, prime);
+      child.setInheritedAttributes(attributes, display, level, false);
     }
   }
 
