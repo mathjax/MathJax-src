@@ -5,6 +5,7 @@ module.exports = PACKAGE(
   '../../../../../../js',             // location of the MathJax js library
   [                                   // packages to link to
     'components/src/input/tex/extensions/ams/lib',
+    'components/src/input/tex/extensions/newcommand/lib',
     'components/src/input/tex-base/lib',
     'components/src/core/lib'
   ],

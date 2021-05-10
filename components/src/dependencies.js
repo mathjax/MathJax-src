@@ -18,7 +18,7 @@ export const dependencies = {
   '[tex]/enclose': ['input/tex-base'],
   '[tex]/extpfeil': ['input/tex-base', '[tex]/newcommand', '[tex]/ams'],
   '[tex]/html': ['input/tex-base'],
-  '[tex]/mathtools': ['input/tex-base', '[tex]/ams'],
+  '[tex]/mathtools': ['input/tex-base', '[tex]/newcommand', '[tex]/ams'],
   '[tex]/mhchem': ['input/tex-base', '[tex]/ams'],
   '[tex]/newcommand': ['input/tex-base'],
   '[tex]/noerrors': ['input/tex-base'],
