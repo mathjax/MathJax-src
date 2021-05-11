@@ -123,10 +123,11 @@ export class MmlMtable extends AbstractMmlNode {
       columnalign: this.attributes.get('columnalign'),
       rowalign: 'center'
     });
+    const cramped = this.attributes.getExplicit('data-cramped') as boolean;
     const ralign = split(this.attributes.get('rowalign') as string);
     for (const child of this.childNodes) {
       attributes.rowalign[1] = ralign.shift() || attributes.rowalign[1];
-      child.setInheritedAttributes(attributes, display, level, false);
+      child.setInheritedAttributes(attributes, display, level, cramped == null ? false : cramped);
     }
   }
 
