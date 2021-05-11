@@ -60,22 +60,19 @@ new CommandMap('mathtools-macros', {
   xleftharpoonup:     ['xArrow', 0x21BC, 10, 5],
   xleftrightharpoons: ['xArrow', 0x21CB, 10, 10],
 
-  mathllap: ['MathLap', 'l'],
-  mathrlap: ['MathLap', 'r'],
-  mathclap: ['MathLap', 'c'],
+  mathllap: ['MathLap', 'l', false],
+  mathrlap: ['MathLap', 'r', false],
+  mathclap: ['MathLap', 'c', false],
   clap:     ['MtLap', 'c'],
   textllap: ['MtLap', 'l'],
   textrlap: ['MtLap', 'r'],
   textclap: ['MtLap', 'c'],
 
-  //
-  // We don't currently have control over the texprimestyle, and hboxes and style changes don't
-  //   affect it, so the need for these is limited, but we define them for completeness.
-  //
-  cramped: ['Macro', '{#1 #2}', 2, ''],
-  crampedllap: ['MathLap', 'l'],
-  crampedrlap: ['MathLap', 'r'],
-  crampedclap: ['MathLap', 'c'],
+  cramped: 'Cramped',
+  crampedllap: ['MathLap', 'l', true],
+  crampedrlap: ['MathLap', 'r', true],
+  crampedclap: ['MathLap', 'c', true],
+  crampedsubstack: ['Macro', '\\begin{crampedsubarray}{c}#1\\end{crampedsubarray}', 1],
 
   mathmbox:    'MathMBox',
   mathmakebox: 'MathMakeBox',
@@ -131,12 +128,10 @@ new CommandMap('mathtools-macros', {
   renewtagform: ['NewTagForm', true],
   usetagform: 'UseTagForm',
 
-  crampedsubstack: ['Macro', '\\begin{crampedsubarray}{c}#1\\end{crampedsubarray}', 1],
-
   adjustlimits: [
     'MacroWithTemplate',
     '\\mathop{{#1}\\vphantom{{#3}}}_{{#2}\\vphantom{{#4}}}\\mathop{{#3}\\vphantom{{#1}}}_{{#4}\\vphantom{{#2}}}',
-    4, ,'_', , '_'
+    4, , '_', , '_'
   ]
 
 }, MathtoolsMethods);
@@ -170,7 +165,7 @@ new EnvironmentMap('mathtools-environments', ParseMethods.environment, {
   Vsmallmatrix:    ['MtSmallMatrix', null, '\\Vert', '\\Vert', 'c'],
   'Vsmallmatrix*': ['MtSmallMatrix', null, '\\Vert', '\\Vert'],
 
-  crampedsubarray: ['Array', null, null, null, null, '0em', '0.1em', 'S', 1],
+  crampedsubarray: ['Array', null, null, null, null, '0em', '0.1em', 'S\'', 1],
 
   multlined: 'MtMultlined',
 

@@ -1386,6 +1386,10 @@ BaseMethods.Array = function(parser: TexParser, begin: StackItem,
     // @test Cross Product
     array.setProperty('close', parser.convertDelimiter(close));
   }
+  if (style.charAt(1) === '\'') {
+    array.arraydef['data-cramped'] = true;
+    style = style.charAt(0);
+  }
   if (style === 'D') {
     // TODO: This case never seems to occur! No test.
     array.arraydef['displaystyle'] = true;

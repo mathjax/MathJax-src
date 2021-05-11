@@ -135,27 +135,27 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
    *
    * @param {TexParser} parser   The calling parser.
    * @param {string} name        The macro name.
-   * @param {string} post        The position (l, c, r) of the lapped content
+   * @param {string} pos         The position (l, c, r) of the lapped content
+   * @param {boolean} cramped    True if the style should be cramped
    */
-  MathLap(parser: TexParser, name: string, pos: string) {
-    const style = parser.GetBrackets(name);
-    let mml = parser.create('node', 'mpadded', [parser.ParseArg(name)], {width: 0});
-    if (pos !== 'r') {
-      NodeUtil.setAttribute(mml, 'lspace', pos === 'l' ? '-1width' : '-.5width');
-    }
-    if (style) {
-      const [display, script] = lookup(style, {
-        '\\displaystyle':      [true, 0],
-        '\\textstyle':         [false, 0],
-        '\\scriptstyle':       [false, 1],
-        '\\scriptscriptstyle': [false, 2]
-      }, [null, null]);
-      if (display !== null) {
-        mml = parser.create('node', 'mstyle', [mml], {displaystyle: display, scriptlevel: script});
-      }
-    }
+  MathLap(parser: TexParser, name: string, pos: string, cramped: boolean) {
+    const style = parser.GetBrackets(name, '').trim();
+    let mml = parser.create('node', 'mstyle', [
+      parser.create('node', 'mpadded', [parser.ParseArg(name)], {
+        width: 0, ...(pos === 'r' ? {} : {lspace: (pos === 'l' ? '-1width' : '-.5width')})
+      })
+    ], {'data-cramped': cramped});
+    MathtoolsUtil.setDisplayLevel(mml, style);
     const atom = parser.create('node', 'TeXAtom', [mml]);
     parser.Push(atom);
+  },
+
+  Cramped(parser: TexParser, name: string) {
+    const style = parser.GetBrackets(name, '').trim();
+    const arg = parser.ParseArg(name);
+    const mml = parser.create('node', 'mstyle', [arg], {'data-cramped': true});
+    MathtoolsUtil.setDisplayLevel(mml, style);
+    parser.Push(mml);
   },
 
   MtLap(parser: TexParser, name: string, pos: string) {

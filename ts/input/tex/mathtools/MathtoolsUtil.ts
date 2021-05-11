@@ -27,6 +27,7 @@ import TexError from '../TexError.js';
 import {CommandMap} from '../SymbolMap.js';
 import {Macro} from '../Symbol.js';
 import ParseOptions from '../ParseOptions.js';
+import {lookup} from '../../../util/Options.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 
 import {MathtoolsMethods} from './MathtoolsMethods.js';
@@ -36,6 +37,20 @@ import {PAIREDDELIMS} from './MathtoolsConfiguration.js';
  * Utility functions for the Mathtools package.
  */
 export const MathtoolsUtil = {
+
+  setDisplayLevel(mml: MmlNode, style: string) {
+    if (!style) return;
+    const [display, script] = lookup(style, {
+      '\\displaystyle':      [true, 0],
+      '\\textstyle':         [false, 0],
+      '\\scriptstyle':       [false, 1],
+      '\\scriptscriptstyle': [false, 2]
+    }, [null, null]);
+    if (display !== null) {
+      mml.attributes.set('displaystyle', display);
+      mml.attributes.set('scriptlevel', script);
+    }
+  },
 
   checkAlignment(parser: TexParser, name: string) {
     const top = parser.stack.Top() as EqnArrayItem;
