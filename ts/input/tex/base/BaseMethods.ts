@@ -283,10 +283,7 @@ BaseMethods.MathFont = function(parser: TexParser, name: string, variant: string
     font: variant,
     multiLetterIdentifiers: true
   }, parser.configuration).mml();
-  if (mml.isKind('inferredMrow')) {
-    mml = parser.create('node', 'mrow', mml.childNodes);
-  }
-  parser.Push(mml);
+  parser.Push(parser.create('node', 'TeXAtom', [mml]));
 };
 
 /**
