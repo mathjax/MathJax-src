@@ -45,12 +45,31 @@ import {MathtoolsUtil} from './MathtoolsUtil.js';
  */
 export const MathtoolsMethods: Record<string, ParseMethod> = {
 
+  /**
+   * Handle a mathtools matrix environment, with optional alignment.
+   *
+   * @param {TexParser} parser   The active tex parser.
+   * @param {StackItem} begin    The BeginItem for the environment.
+   * @param {string} open        The open delimiter for the matrix.
+   * @param {string} close       The close delimiter for the matrix.
+   * @return {StackItem}         The ArrayItem for the matrix.
+   */
   MtMatrix(parser: TexParser, begin: StackItem, open: string, close: string) {
     const align = parser.GetBrackets(`\\begin{${begin.getName()}}`, 'c');
     return MathtoolsMethods.Array(parser, begin, open, close, align);
   },
 
-  MtSmallMatrix(parser: TexParser, begin: StackItem, open: string, close: string, align: string) {
+  /**
+   * Create a smallmatrix with given delimiters, and with optional alignment (and settable default)
+   *
+   * @param {TexParser} parser   The active tex parser.
+   * @param {StackItem} begin    The BeginItem for the environment.
+   * @param {string} open        The open delimiter for the matrix.
+   * @param {string} close       The close delimiter for the matrix.
+   * @param {string} align       The (optional) alignment.  If not given, use a bracket argument for it.
+   * @return {StackItem}         The ArrayItem for the matrix.
+   */
+  MtSmallMatrix(parser: TexParser, begin: StackItem, open: string, close: string, align?: string) {
     if (!align) {
       align = parser.GetBrackets(`\\begin{${begin.getName()}}`, parser.options.mathtools['smallmatrix-align']);
     }
@@ -59,6 +78,13 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     );
   },
 
+  /**
+   * Create the multlined StackItem.
+   *
+   * @param {TexParser} parser   The active tex parser.
+   * @param {StackItem} begin    The BeginItem for the environment.
+   * @return {StackItem}         The MultlinedItem.
+   */
   MtMultlined(parser: TexParser, begin: StackItem) {
     const name = `\\begin{${begin.getName()}}`;
     let pos = parser.GetBrackets(name, parser.options.mathtools['multlined-pos'] || 'c');
@@ -77,6 +103,13 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     return ParseUtil.setArrayAlign(item as ArrayItem, pos || 'c');
   },
 
+  /**
+   * Replacement for the AMS HandleShove that incldues optional spacing values
+   *
+   * @param {TexParser} parser   The active tex parser.
+   * @param {string} name        The name of the calling macro.
+   * @param {string} shove       Which way to shove the result.
+   */
   HandleShove(parser: TexParser, name: string, shove: string) {
     let top = parser.stack.Top();
     if (top.kind !== 'multline' && top.kind !== 'multlined') {
@@ -109,8 +142,18 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     parser.Push(mml);
   },
 
+  /**
+   * Handle the spreadlines environment.
+   *
+   * @param {TexParser} parser   The active tex parser.
+   * @param {StackItem} begin    The BeginItem for the environment.
+   */
   SpreadLines(parser: TexParser, begin: StackItem) {
     if (parser.stack.env.closing === begin.getName()) {
+      //
+      //  When the environment ends, look through the contents and
+      //  adjust the spacing in any tables, then push the results.
+      //
       delete parser.stack.env.closing;
       const top = parser.stack.Pop();
       const mml = top.toMml();
@@ -124,6 +167,9 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
       }
       parser.Push(mml);
     } else {
+      //
+      //  Read the spread dimension and save it, then begin the environment.
+      //
       const spread = parser.GetDimen(`\\begin{${begin.getName()}}`);
       begin.setProperty('spread', spread);
       parser.Push(begin);
@@ -131,7 +177,32 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
   },
 
   /**
-   * Handle mathrlap, mathllap, mathclap commands.
+   * Implements the various cases environments.
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {StackItem} begin    The BeginItem for the environment.
+   * @param {string} open        The open delimiter for the matrix.
+   * @param {string} close       The close delimiter for the matrix.
+   * @param {string} style       The style (D, T, S, SS) for the contents of the array
+   * @return {ArrayItem}         The ArrayItem for the environment
+   */
+  Cases(parser: TexParser, begin: StackItem, open: string, close: string, style: string) {
+    const array = parser.itemFactory.create('array').setProperty('casesEnv', begin.getName()) as ArrayItem;
+    array.arraydef = {
+      rowspacing: '.2em',
+      columnspacing: '1em',
+      columnalign: 'left'
+    };
+    if (style === 'D') {
+      array.arraydef.displaystyle = true;
+    }
+    array.setProperties({open, close});
+    parser.Push(begin);
+    return array;
+  },
+
+  /**
+   * Handle \mathrlap, \mathllap, \mathclap, and their cramped versions.
    *
    * @param {TexParser} parser   The calling parser.
    * @param {string} name        The macro name.
@@ -146,10 +217,15 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
       })
     ], {'data-cramped': cramped});
     MathtoolsUtil.setDisplayLevel(mml, style);
-    const atom = parser.create('node', 'TeXAtom', [mml]);
-    parser.Push(atom);
+    parser.Push(parser.create('node', 'TeXAtom', [mml]));
   },
 
+  /**
+   * Implements \cramped.
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   */
   Cramped(parser: TexParser, name: string) {
     const style = parser.GetBrackets(name, '').trim();
     const arg = parser.ParseArg(name);
@@ -158,6 +234,13 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     parser.Push(mml);
   },
 
+  /**
+   * Implements \clap (and could do \llap and \rlap, where the contents are text mode).
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   * @param {string} pos         The position (l, c, r) of the lapped content
+   */
   MtLap(parser: TexParser, name: string, pos: string) {
     const content = ParseUtil.internalMath(parser, parser.GetArgument(name), 0);
     let mml = parser.create('node', 'mpadded', content, {width: 0});
@@ -167,6 +250,12 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     parser.Push(mml);
   },
 
+  /**
+   * Implements \mathmakebox.
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   */
   MathMakeBox(parser: TexParser, name: string) {
     const width = parser.GetBrackets(name);
     const pos = parser.GetBrackets(name, 'c');
@@ -181,10 +270,26 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     parser.Push(mml);
   },
 
+  /**
+   * Implements \mathmbox.
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   */
   MathMBox(parser: TexParser, name: string) {
     parser.Push(parser.create('node', 'mrow', [parser.ParseArg(name)]));
   },
 
+  /**
+   * Implements \underbacket and \overbracket.
+   * (Currently only works in CHTML, since we don't yet handle styles properly in SVG.
+   *  This includes a workaround oin CHTML to the fact that the border size is not
+   *  part of MathJax's bbox computations yet.  That will need to be removed when
+   *  we handle borders properly.)
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   */
   UnderOverBracket(parser: TexParser, name: string) {
     const thickness = length2em(parser.GetBrackets(name, '.1em'), .1);
     const height = parser.GetBrackets(name, '.2em');
@@ -217,21 +322,12 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     parser.Push(node);
   },
 
-  Cases(parser: TexParser, begin: StackItem, open: string, close: string, style: string) {
-    const array = parser.itemFactory.create('array').setProperty('casesEnv', begin.getName()) as ArrayItem;
-    array.arraydef = {
-      rowspacing: '.2em',
-      columnspacing: '1em',
-      columnalign: 'left'
-    };
-    if (style === 'D') {
-      array.arraydef.displaystyle = true;
-    }
-    array.setProperties({open, close});
-    parser.Push(begin);
-    return array;
-  },
-
+  /**
+   * Implements \Aboxed.
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   */
   Aboxed(parser: TexParser, name: string) {
     //
     //  Check that the top item is an alignment, and that we are on an even number of cells
@@ -247,15 +343,16 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     const arg = parser.GetArgument(name);
     const rest = parser.string.substr(parser.i);
     //
-    //  Put argument back, followed by "&&", which we look for below.
+    //  Put the argument back, followed by "&&", and a marker that we look for below.
     //
-    parser.string = arg + '&&';
+    parser.string = arg + '&&\\endAboxed';
     parser.i = 0;
     //
     //  Get the two parts separated by ampersands, and ignore the rest.
     //
     const left = parser.GetUpTo(name, '&');
     const right = parser.GetUpTo(name, '&');
+    parser.GetUpTo(name, '\\endAboxed');
     //
     //  Insert the TeX needed for the boxed content
     //
@@ -266,6 +363,12 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     parser.i = 0;
   },
 
+  /**
+   * Implements \ArrowBetweenLines.
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   */
   ArrowBetweenLines(parser: TexParser, name: string) {
     const top = MathtoolsUtil.checkAlignment(parser, name);
     if (top.Size() || top.row.length) {
@@ -284,6 +387,12 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     top.EndRow();
   },
 
+  /**
+   * Implements \vdotswithin.
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   */
   VDotsWithin(parser: TexParser, name: string) {
     const top = parser.stack.Top() as EqnArrayItem;
     const isFlush = (top.getProperty('flushspaceabove') === top.table.length);
@@ -298,6 +407,12 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     parser.Push(mml);
   },
 
+  /**
+   * Implements \shortvdotswithin.
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   */
   ShortVDotsWithin(parser: TexParser, _name: string) {
     const top = parser.stack.Top() as EqnArrayItem;
     const star = parser.GetStar();
@@ -308,12 +423,24 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     MathtoolsMethods.FlushSpaceBelow(parser, '\\MTFlushSpaceBelow');
   },
 
+  /**
+   * Implements \MTFlushSpaceAbove.
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   */
   FlushSpaceAbove(parser: TexParser, name: string) {
     const top = MathtoolsUtil.checkAlignment(parser, name);
-    top.setProperty('flushspaceabove', top.table.length);
+    top.setProperty('flushspaceabove', top.table.length);  // marker so \vdotswithin can shorten its height
     top.addRowSpacing('-' + parser.options.mathtools['shortvdotsadjustabove']);
   },
 
+  /**
+   * Implements \MTFlushSpaceBelow.
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   */
   FlushSpaceBelow(parser: TexParser, name: string) {
     const top = MathtoolsUtil.checkAlignment(parser, name);
     top.Size() && top.EndEntry();
@@ -321,6 +448,18 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     top.addRowSpacing('-' + parser.options.mathtools['shortvdotsadjustbelow']);
   },
 
+  /**
+   * Implements a paired delimiter (e.g., from \DeclarePairedDelimiter).
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   * @param {string} open        The open delimiter.
+   * @param {string} close       The close delimiter.
+   * @param {string?} body       The body betweeen the delimiters.
+   * @param {number?} n          The number of arguments to use for the body.
+   * @param {string?} pre        The TeX to go before the open delimiter.
+   * @param {string?} post       The TeX to go after the close delimiter.
+   */
   PairedDelimiters(parser: TexParser, name: string,
                    open: string, close: string,
                    body: string = '#1', n: number = 1,
@@ -343,6 +482,12 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     ParseUtil.checkMaxMacros(parser);
   },
 
+  /**
+   * Implements \DeclarePairedDelimiters.
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   */
   DeclarePairedDelimiters(parser: TexParser, name: string) {
     const cs = NewcommandUtil.GetCsNameArgument(parser, name);
     const open = parser.GetArgument(name);
@@ -350,6 +495,12 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     MathtoolsUtil.addPairedDelims(parser.configuration, cs, [open, close]);
   },
 
+  /**
+   * Implements \DeclarePairedDelimitersX.
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   */
   DeclarePairedDelimitersX(parser: TexParser, name: string) {
     const cs = NewcommandUtil.GetCsNameArgument(parser, name);
     const n = NewcommandUtil.GetArgCount(parser, name);
@@ -359,6 +510,12 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     MathtoolsUtil.addPairedDelims(parser.configuration, cs, [open, close, body, n]);
   },
 
+  /**
+   * Implements \DeclarePairedDelimitersXPP.
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   */
   DeclarePairedDelimitersXPP(parser: TexParser, name: string) {
     const cs = NewcommandUtil.GetCsNameArgument(parser, name);
     const n = NewcommandUtil.GetArgCount(parser, name);
@@ -370,6 +527,15 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     MathtoolsUtil.addPairedDelims(parser.configuration, cs, [open, close, body, n, pre, post]);
   },
 
+  /**
+   * Implements \centeredcolon, \ordinarycolon, \MTThinColon.
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   * @param {boolean} center     True if colon should be centered
+   * @param {boolean} force      True menas always center (don't use centercolon option).
+   * @param {boolean} thin       True if this is a thin color (for \coloneqq, etc).
+   */
   CenterColon(parser: TexParser, _name: string, center: boolean, force: boolean = false, thin: boolean = false) {
     const options = parser.options.mathtools;
     let mml = parser.create('token', 'mo', {}, ':');
@@ -383,6 +549,14 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     parser.Push(mml);
   },
 
+  /**
+   * Implements \coloneqq and related macros.
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   * @param {string} tex         The tex string to use (if not using unicode versions or if there isn't one).
+   * @param {string} unicode     The unicode character (if there is one).
+   */
   Relation(parser: TexParser, _name: string, tex: string, unicode?: string) {
     const options = parser.options.mathtools;
     if (options['use-unicode'] && unicode) {
@@ -394,6 +568,12 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     }
   },
 
+  /**
+   * Implements \ndownarrow and \nuparrow via a terrible hack (visual only, no chance of this working with SRE).
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   */
   NArrow(parser: TexParser, _name: string, c: string, dy: string) {
     parser.Push(
       parser.create('node', 'TeXAtom', [
@@ -412,6 +592,13 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     );
   },
 
+  /**
+   * Implements \splitfrac and \splitdfrac.
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   * @param {boolean} display    True if \splitdfrac.
+   */
   SplitFrac(parser: TexParser, name: string, display: boolean) {
     const num = parser.ParseArg(name);
     const den = parser.ParseArg(name);
@@ -421,7 +608,7 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
           parser.create('node', 'mstyle', [
             num,
             parser.create('token', 'mi'),
-            parser.create('token', 'mspace', {width: '1em'})
+            parser.create('token', 'mspace', {width: '1em'}) // no parameter for this in mathtools.  Should we add one?
           ], {scriptlevel: 0}),
           parser.create('node', 'mstyle', [
             parser.create('token', 'mspace', {width: '1em'}),
@@ -433,6 +620,12 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     );
   },
 
+  /**
+   * Implements \xmathstrut.
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   */
   XMathStrut(parser: TexParser, name: string) {
     let dd = parser.GetBrackets(name);
     let dh = parser.GetArgument(name);
@@ -449,6 +642,12 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     );
   },
 
+  /**
+   * Implements \prescript.
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   */
   Prescript(parser: TexParser, name: string) {
     const sup = MathtoolsUtil.getScript(parser, name, 'sup');
     const sub = MathtoolsUtil.getScript(parser, name, 'sub');
@@ -464,6 +663,13 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     parser.Push(mml);
   },
 
+  /**
+   * Implements \newtagform and \renewtagform.
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   * @param {boolean=} renew     True if \renewtagform.
+   */
   NewTagForm(parser: TexParser, name: string, renew: boolean = false) {
     const tags = parser.tags as MathtoolsTags;
     if (!('mtFormats' in tags)) {
@@ -482,6 +688,12 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     tags.mtFormats.set(id, [left, right, format]);
   },
 
+  /**
+   * Implements \usetagform.
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   */
   UseTagForm(parser: TexParser, name: string) {
     const tags = parser.tags as MathtoolsTags;
     if (!('mtFormats' in tags)) {
@@ -498,6 +710,12 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     tags.mtCurrent = tags.mtFormats.get(id);
   },
 
+  /**
+   * Implements \mathtoolsset.
+   *
+   * @param {TexParser} parser   The calling parser.
+   * @param {string} name        The macro name.
+   */
   SetOptions(parser: TexParser, name: string) {
     const options = parser.options.mathtools;
     if (!options['allow-mathtoolsset']) {
@@ -524,6 +742,6 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
   xArrow:      AmsMethods.xArrow,
   HandleRef:   AmsMethods.HandleRef,
   AmsEqnArray: AmsMethods.AmsEqnArray,
-  MacroWithTemplate: NewcommandMethods.MacroWithTemplate
+  MacroWithTemplate: NewcommandMethods.MacroWithTemplate,
 
 };

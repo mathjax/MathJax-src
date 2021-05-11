@@ -28,7 +28,7 @@ import {TexConstant} from '../TexConstants.js';
 import {MathtoolsMethods} from './MathtoolsMethods.js';
 
 //
-//  Not implemented:
+//  Mathtools macros that are not implemented:
 //
 //    \smashoperator[〈pos〉]{〈operator with limits〉}
 //    \SwapAboveDisplaySkip
@@ -41,6 +41,9 @@ import {MathtoolsMethods} from './MathtoolsMethods.js';
 //    \renewgathered{〈name〉}{〈pre_line〉}{〈post_line〉}{〈after〉}
 //
 
+/**
+ * The macros for this package.
+ */
 new CommandMap('mathtools-macros', {
 
   shoveleft:  ['HandleShove', TexConstant.Align.LEFT],    // override AMS version
@@ -138,7 +141,9 @@ new CommandMap('mathtools-macros', {
 
 }, MathtoolsMethods);
 
-
+/**
+ *  The environments for this package.
+ */
 new EnvironmentMap('mathtools-environments', ParseMethods.environment, {
   dcases:  ['Array', null, '\\{', '', 'll', null, '.2em', 'D'],
   rcases:  ['Array', null, '', '\\}', 'll', null, '.2em'],
@@ -178,11 +183,17 @@ new EnvironmentMap('mathtools-environments', ParseMethods.environment, {
 
 }, MathtoolsMethods);
 
+/**
+ * The delimiters for this package.
+ */
 new DelimiterMap('mathtools-delimiters', ParseMethods.delimiter, {
   '\\lparen': '(',
   '\\rparen': ')'
 });
 
+/**
+ * The special characters for this package.
+ */
 new CommandMap('mathtools-characters', {
   ':' : ['CenterColon', true]
 }, MathtoolsMethods);
