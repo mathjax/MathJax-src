@@ -486,7 +486,7 @@ namespace ParseUtil {
   }
 
   /**
-   * Repoort an error if there are too many macro substitutions.
+   * Report an error if there are too many macro substitutions.
    * @param {TexParser} parser The current TeX parser.
    * @param {boolean} isMacro  True if we are substituting a macro, false for environment.
    */

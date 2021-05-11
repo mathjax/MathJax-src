@@ -328,7 +328,7 @@ export function separateOptions(options: OptionList, ...objects: OptionList[]): 
 
 /*****************************************************************/
 /**
- *  Look up a value fromn object literal, being sure it is an
+ *  Look up a value from object literal, being sure it is an
  *  actual property (not inherited), with a default if not found.
  *
  * @param {string} name         The name of the key to look up.
