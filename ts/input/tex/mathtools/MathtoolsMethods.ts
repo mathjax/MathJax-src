@@ -498,6 +498,24 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     tags.mtCurrent = tags.mtFormats.get(id);
   },
 
+  SetOptions(parser: TexParser, name: string) {
+    const options = parser.options.mathtools;
+    if (!options['allow-mathtoolsset']) {
+      throw new TexError('ForbiddenMathtoolsSet', '%1 is disabled', name);
+    }
+    const allowed = {} as {[id: string]: number};
+    Object.keys(options).forEach(id => {
+      if (id !== 'pariedDelimiters' && id !== 'tagforms' && id !== 'allow-mathtoolsset') {
+        allowed[id] = 1;
+      }
+    });
+    const args = parser.GetArgument(name);
+    const keys = ParseUtil.keyvalOptions(args, allowed, true);
+    for (const [id, value] of Object.entries(keys)) {
+      options[id] = value;
+    }
+  },
+
   /**
    * Use the Base or AMS methods for these
    */

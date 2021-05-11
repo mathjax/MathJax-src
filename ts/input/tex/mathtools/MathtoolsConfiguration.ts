@@ -123,6 +123,7 @@ export const MathtoolsConfiguration = Configuration.create(
         'prescript-sub-format': '',             // format for \prescript subscript
         'prescript-sup-format': '',             // format for \prescript superscript
         'prescript-arg-format': '',             // format for \prescript base
+        'allow-mathtoolsset': true,             // true to allow \mathtoolsset to change settings
         pairedDelimiters: expandable({}),       // predefined paired delimiters
                                                 //     name: [left, right, body, argcount, pre, post]
         tagforms: expandable({}),               // tag form definitions

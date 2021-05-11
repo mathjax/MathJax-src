@@ -560,8 +560,7 @@ namespace ParseUtil {
       for (let key of Object.keys(def)) {
         if (!allowed.hasOwnProperty(key)) {
           if (error) {
-            throw new TexError('InvalidOption',
-                               'Invalid optional argument: %1', key);
+            throw new TexError('InvalidOption', 'Invalid option: %1', key);
           }
           delete def[key];
         }
