@@ -113,18 +113,4 @@ export class PrioritizedList<DataClass> {
       this.items.splice(i, 1);
     }
   }
-
-  /**
-   * Typescript < 2.3 targeted at ES5 doesn't handle
-   *
-   *     for (const x of this) {...}
-   *
-   * so use toArray() to convert to array, when needed
-   *
-   * @return {PrioritizedListItem<DataClass>[]}  The list converted to an array
-   */
-  public toArray(): PrioritizedListItem<DataClass>[] {
-    return Array.from(this);
-  }
-
 }
