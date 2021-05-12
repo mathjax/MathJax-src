@@ -29,7 +29,6 @@ import {Macro} from '../Symbol.js';
 import ParseOptions from '../ParseOptions.js';
 import {lookup} from '../../../util/Options.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMstyle} from '../../../core/MmlTree/MmlNodes/mstyle.js';
 
 import {MathtoolsMethods} from './MathtoolsMethods.js';
 import {PAIREDDELIMS} from './MathtoolsConfiguration.js';
@@ -42,10 +41,10 @@ export const MathtoolsUtil = {
   /**
    * Set the displaystyle and scriptlevel attributes of an mstyle element
    *
-   * @param {MmlMstyle} mml   The mstyle node to modify.
+   * @param {MmlNode} mml     The mstyle node to modify.
    * @param {string} style    The TeX style macro to apply.
    */
-  setDisplayLevel(mml: MmlMstyle, style: string) {
+  setDisplayLevel(mml: MmlNode, style: string) {
     if (!style) return;
     const [display, script] = lookup(style, {
       '\\displaystyle':      [true, 0],

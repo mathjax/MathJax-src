@@ -25,7 +25,7 @@
 import {ArrayItem, EqnArrayItem} from '../base/BaseItems.js';
 import {StackItem} from '../StackItem.js';
 import ParseUtil from '../ParseUtil.js';
-import {ParseMethod} from '../Types.js';
+import {ParseMethod, ParseResult} from '../Types.js';
 import {AmsMethods} from '../ams/AmsMethods.js';
 import BaseMethods from '../base/BaseMethods.js';
 import TexParser from '../TexParser.js';
@@ -52,9 +52,9 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
    * @param {StackItem} begin    The BeginItem for the environment.
    * @param {string} open        The open delimiter for the matrix.
    * @param {string} close       The close delimiter for the matrix.
-   * @return {StackItem}         The ArrayItem for the matrix.
+   * @return {ParserResult}      The ArrayItem for the matrix.
    */
-  MtMatrix(parser: TexParser, begin: StackItem, open: string, close: string) {
+  MtMatrix(parser: TexParser, begin: StackItem, open: string, close: string): ParseResult {
     const align = parser.GetBrackets(`\\begin{${begin.getName()}}`, 'c');
     return MathtoolsMethods.Array(parser, begin, open, close, align);
   },
@@ -67,9 +67,9 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
    * @param {string} open        The open delimiter for the matrix.
    * @param {string} close       The close delimiter for the matrix.
    * @param {string} align       The (optional) alignment.  If not given, use a bracket argument for it.
-   * @return {StackItem}         The ArrayItem for the matrix.
+   * @return {ParseResult}       The ArrayItem for the matrix.
    */
-  MtSmallMatrix(parser: TexParser, begin: StackItem, open: string, close: string, align?: string) {
+  MtSmallMatrix(parser: TexParser, begin: StackItem, open: string, close: string, align?: string): ParseResult {
     if (!align) {
       align = parser.GetBrackets(`\\begin{${begin.getName()}}`, parser.options.mathtools['smallmatrix-align']);
     }
@@ -83,9 +83,9 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
    *
    * @param {TexParser} parser   The active tex parser.
    * @param {StackItem} begin    The BeginItem for the environment.
-   * @return {StackItem}         The MultlinedItem.
+   * @return {ParseResult}       The MultlinedItem.
    */
-  MtMultlined(parser: TexParser, begin: StackItem) {
+  MtMultlined(parser: TexParser, begin: StackItem): ParseResult {
     const name = `\\begin{${begin.getName()}}`;
     let pos = parser.GetBrackets(name, parser.options.mathtools['multlined-pos'] || 'c');
     let width = pos ? parser.GetBrackets(name, '') : '';
@@ -186,7 +186,7 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
    * @param {string} style       The style (D, T, S, SS) for the contents of the array
    * @return {ArrayItem}         The ArrayItem for the environment
    */
-  Cases(parser: TexParser, begin: StackItem, open: string, close: string, style: string) {
+  Cases(parser: TexParser, begin: StackItem, open: string, close: string, style: string): ArrayItem {
     const array = parser.itemFactory.create('array').setProperty('casesEnv', begin.getName()) as ArrayItem;
     array.arraydef = {
       rowspacing: '.2em',
@@ -729,8 +729,8 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     });
     const args = parser.GetArgument(name);
     const keys = ParseUtil.keyvalOptions(args, allowed, true);
-    for (const [id, value] of Object.entries(keys)) {
-      options[id] = value;
+    for (const id of Object.keys(keys)) {
+      options[id] = keys[id];
     }
   },
 
