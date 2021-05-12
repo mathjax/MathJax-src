@@ -131,16 +131,21 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
         if (typeof sre === 'undefined' || !sre.Engine.isReady()) {
           mathjax.retryAfter(sreReady());
         }
-        if (document.options.enrichSpeech !== currentSpeech) {
-          SRE.setupEngine({speech: document.options.enrichSpeech});
-          currentSpeech = document.options.enrichSpeech;
+        if (document.options.sre.speech !== currentSpeech) {
+          SRE.setupEngine(document.options.sre);
+          currentSpeech = document.options.sre.speech;
         }
         const math = new document.options.MathItem('', MmlJax);
-        math.math = this.serializeMml(SRE.toEnriched(toMathML(this.root)));
-        math.display = this.display;
-        math.compile(document);
-        this.root = math.root;
-        this.inputData.originalMml = math.math;
+        try {
+          const mml = this.inputData.originalMml = toMathML(this.root);
+          math.math = this.serializeMml(SRE.toEnriched(mml));
+          math.display = this.display;
+          math.compile(document);
+          this.root = math.root;
+          this.inputData.enrichedMml = math.math;
+        } catch (err) {
+          document.options.enrichError(document, this, err);
+        }
       }
       this.state(STATE.ENRICHED);
     }
@@ -213,6 +218,13 @@ export interface EnrichedMathDocument<N, T, D> extends AbstractMathDocument<N, T
    * @return {EnrichedMathDocument}   The MathDocument (so calls can be chained)
    */
   attachSpeech(): EnrichedMathDocument<N, T, D>;
+
+  /**
+   * @param {EnrichedMathDocument} doc   The MathDocument for the error
+   * @paarm {EnrichedMathItem} math      The MathItem causing the error
+   * @param {Error} err                  The error being processed
+   */
+  enrichError(doc: EnrichedMathDocument<N, T, D>, math: EnrichedMathItem<N, T, D>, err: Error): void;
 }
 
 /**
@@ -240,12 +252,20 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
     public static OPTIONS: OptionList = {
       ...BaseDocument.OPTIONS,
       enableEnrichment: true,
-      enrichSpeech: 'none',                   // or 'shallow', or 'deep'
+      enrichError: (doc: EnrichedMathDocument<N, T, D>,
+                    math: EnrichedMathItem<N, T, D>,
+                    err: Error) => doc.enrichError(doc, math, err),
       renderActions: expandable({
         ...BaseDocument.OPTIONS.renderActions,
         enrich:       [STATE.ENRICHED],
         attachSpeech: [STATE.ATTACHSPEECH]
-      })
+      }),
+      sre: expandable({
+        speech: 'none',                    // by default no speech is included
+        domain: 'mathspeak',               // speech rules domain
+        style: 'default',                  // speech rules style
+        locale: 'en'                       // switch the locale
+      }),
     };
 
     /**
@@ -256,6 +276,7 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
      * @constructor
      */
     constructor(...args: any[]) {
+      processSreOptions(args[2]);
       super(...args);
       MmlJax.setMmlFactory(this.mmlFactory);
       const ProcessBits = (this.constructor as typeof AbstractMathDocument).ProcessBits;
@@ -300,6 +321,12 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
     }
 
     /**
+     */
+    public enrichError(_doc: EnrichedMathDocument<N, T, D>, _math: EnrichedMathItem<N, T, D>, err: Error) {
+      console.warn('Enrichment error:', err);
+    }
+
+    /**
      * @override
      */
     public state(state: number, restore: boolean = false) {
@@ -334,4 +361,25 @@ export function EnrichHandler<N, T, D>(handler: Handler<N, T, D>, MmlJax: MathML
       handler.documentClass, MmlJax
     );
   return handler;
+}
+
+
+//
+// TODO(v3.2): This is for backward compatibility of old option parameters.
+//
+/**
+ * Processes old enrichment option for backward compatibility.
+ * @param {OptionList} options The options to process.
+ */
+function processSreOptions(options: OptionList) {
+  if (!options) {
+    return;
+  }
+  if (!options.sre) {
+    options.sre = {};
+  }
+  if (options.enrichSpeech) {
+    options.sre.speech = options.enrichSpeech;
+    delete options.enrichSpeech;
+  }
 }

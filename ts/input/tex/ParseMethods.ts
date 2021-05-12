@@ -33,13 +33,20 @@ import ParseUtil from './ParseUtil.js';
 namespace ParseMethods {
 
   /**
-   * Handle a variable (a single letter).
+   * Handle a variable (a single letter or multi-letter if allowed).
    * @param {TexParser} parser The current tex parser.
-   * @param {string} c The single letter string to transform into an mi.
+   * @param {string} c The letter to transform into an mi.
    */
   export function variable(parser: TexParser, c: string) {
     // @test Identifier Font
     const def = ParseUtil.getFontDef(parser);
+    if (parser.stack.env.multiLetterIdentifiers && parser.stack.env.font !== '') {
+      c = parser.string.substr(parser.i - 1).match(/^[a-z]+/i)[0];
+      parser.i += c.length - 1;
+      if (def.mathvariant === TexConstant.Variant.NORMAL) {
+        def.autoOP = false;
+      }
+    }
     // @test Identifier
     const node = parser.create('token', 'mi', def, c);
     parser.Push(node);

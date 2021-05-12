@@ -134,9 +134,11 @@ export type DelimiterData = {
   stretch?: number[];   // The unicode code points for the parts of multi-character versions [beg, ext, end, mid?]
   stretchv?: number[];  // the variants to use for the stretchy characters (index into variant name array)
   HDW?: number[];       // [h, d, w] (for vertical, h and d are the normal size, w is the multi-character width,
-  //            for horizontal, h and d are the multi-character ones, w is for the normal size).
+                        //            for horizontal, h and d are the multi-character ones, w is for the normal size).
   min?: number;         // The minimum size a multi-character version can be
   c?: number;           // The character number (for aliased delimiters)
+  fullExt?: [number, number]  // When present, extenders must be full sized, and the first number is
+                              //   the size of the extender, while the second is the total size of the ends
 };
 
 /**
@@ -372,7 +374,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    *  The default remappings
    */
-  protected static defaultAccentMap = {
+  protected static defaultAccentMap: RemapMap = {
     0x0300: '\u02CB',  // grave accent
     0x0301: '\u02CA',  // acute accent
     0x0302: '\u02C6',  // curcumflex
@@ -407,14 +409,14 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    * Default map for characters inside <mo>
    */
-  protected static defaultMoMap = {
+  protected static defaultMoMap: RemapMap = {
     0x002D: '\u2212' // hyphen
   };
 
   /**
    * Default map for characters inside <mn>
    */
-  protected static defaultMnMap = {
+  protected static defaultMnMap: RemapMap = {
     0x002D: '\u2212' // hyphen
   };
 
@@ -462,6 +464,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * The default delimiter data
    */
   protected static defaultDelimiters: DelimiterMap<any> = {};
+
   /**
    * The default character data
    */

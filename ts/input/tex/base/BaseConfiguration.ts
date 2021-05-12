@@ -122,6 +122,7 @@ export const BaseConfiguration: Configuration = Configuration.create(
       [bitem.SubsupItem.prototype.kind]: bitem.SubsupItem,
       [bitem.OverItem.prototype.kind]: bitem.OverItem,
       [bitem.LeftItem.prototype.kind]: bitem.LeftItem,
+      [bitem.Middle.prototype.kind]: bitem.Middle,
       [bitem.RightItem.prototype.kind]: bitem.RightItem,
       [bitem.BeginItem.prototype.kind]: bitem.BeginItem,
       [bitem.EndItem.prototype.kind]: bitem.EndItem,

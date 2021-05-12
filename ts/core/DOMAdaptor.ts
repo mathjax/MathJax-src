@@ -241,6 +241,12 @@ export interface DOMAdaptor<N, T, D> {
   outerHTML(node: N): string;
 
   /**
+   * @param {N} node   The HTML node whose serialized string is to be obtained
+   * @return {string}  The serialized node and its content
+   */
+  serializeXML(node: N): string;
+
+  /**
    * @param {N} node               The HTML node whose attribute is to be set
    * @param {string|number} name   The name of the attribute to set
    * @param {string} value         The new value of the attribute
@@ -557,6 +563,11 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
    * @override
    */
   public abstract outerHTML(node: N): string;
+
+  /**
+   * @override
+   */
+  public abstract serializeXML(node: N): string;
 
   /**
    * @override

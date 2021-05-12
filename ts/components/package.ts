@@ -22,7 +22,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CONFIG} from './loader.js';
+import {CONFIG, Loader} from './loader.js';
 
 /*
  * The browser document (for creating scripts to load components)
@@ -61,9 +61,8 @@ export interface PackageConfig {
   ready?: PackageReady;                // Function to call when package is loaded successfully
   failed?: PackageFailed;              // Function to call when package fails to load
   checkReady?: () => Promise<void>;    // Function called to see if package is fully loaded
-  //   (may cause additional packages to load, for example)
+                                       //   (may cause additional packages to load, for example)
 }
-
 
 /**
  * The Package class for handling individual components
@@ -145,37 +144,16 @@ export class Package {
   }
 
   /**
-   * Compute the path for a package.
-   *
-   * First, look for a configured source for the package.
-   * Then, if the path doesn't look like the start of a URI, or
-   *   an absolute file path, and doesn't have a [path] prefix,
-   *     prepend [mathjax]
-   * Add .js if there isn't already a file type
-   * While the path begins with a [path] prefix
-   *   Look for the prefix in the path configuration and
-   *     replace the [path] with the actual path
-   *     (this is done recursively, so paths can refer to other paths)
-   * return the result
+   * Compute the path for a package using the loader's path filters
    *
    * @param {string} name            The name of the package to resolve
    * @param {boolean} addExtension   True if .js should be added automatically
    * @return {string}                The path (file or URL) for this package
    */
   public static resolvePath(name: string, addExtension: boolean = true): string {
-    let file = CONFIG.source[name] || name;
-    if (!file.match(/^(?:[a-z]+:\/)?\/|[a-z]:\\|\[/i)) {
-      file = '[mathjax]/' + file.replace(/^\.\//, '');
-    }
-    if (addExtension && !file.match(/\.[^\/]+$/)) {
-      file += '.js';
-    }
-    let match;
-    while ((match = file.match(/^\[([^\]]*)\]/))) {
-      if (!CONFIG.paths.hasOwnProperty(match[1])) break;
-      file = CONFIG.paths[match[1]] + file.substr(match[0].length);
-    }
-    return file;
+    const data = {name, addExtension};
+    Loader.pathFilters.execute(data);
+    return data.name;
   }
 
   /**

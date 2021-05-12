@@ -65,7 +65,7 @@ export class TeXAtom extends AbstractMmlBaseNode {
    * @override
    */
   public get notParent() {
-    return true;
+    return this.childNodes[0] && this.childNodes[0].childNodes.length === 1;
   }
 
   /**

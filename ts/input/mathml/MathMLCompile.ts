@@ -166,6 +166,8 @@ export class MathMLCompile<N, T, D> {
           mml.setProperty('useHeight', false);
         } else if (name === 'data-mjx-accent') {
           mml.setProperty('mathaccent', value === 'true');
+        } else if (name === 'data-mjx-auto-op') {
+          mml.setProperty('autoOP', value === 'true');
         }
       } else if (name !== 'class') {
         let val = value.toLowerCase();
