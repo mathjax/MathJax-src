@@ -65,11 +65,6 @@ export class MmlMo extends AbstractMmlTokenNode {
   };
 
   /**
-   * Unicode ranges and their default TeX classes
-   */
-  public static RANGES = RANGES;
-
-  /**
    * The MathML spacing values for the TeX classes
    */
   public static MMLSPACING = MMLSPACING;
@@ -389,7 +384,7 @@ export class MmlMo extends AbstractMmlTokenNode {
       this.lspace = (def[0] + 1) / 18;
       this.rspace = (def[1] + 1) / 18;
     } else {
-      let range = this.getRange(mo);
+      let range = getRange(mo);
       if (range) {
         if (this.getProperty('texClass') === undefined) {
           this.texClass = range[2];
