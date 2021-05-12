@@ -105,7 +105,7 @@ export class SubHandler {
       }
     }
     let [env, symbol] = input;
-    this._fallback.toArray()[0].item(env, symbol);
+    Array.from(this._fallback)[0].item(env, symbol);
   }
 
 

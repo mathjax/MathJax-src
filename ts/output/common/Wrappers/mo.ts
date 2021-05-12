@@ -24,6 +24,7 @@
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../../../util/BBox.js';
+import {unicodeChars} from '../../../util/string.js';
 import {DelimiterData} from '../FontData.js';
 import {DIRECTION, NOSTRETCH} from '../FontData.js';
 
@@ -106,6 +107,16 @@ export interface CommonMo extends AnyWrapper {
    * @return {number[]}        The height and depth for the vertically stretched delimiter
    */
   getBaseline(WHD: number[], HD: number, C: DelimiterData): number[];
+
+  /**
+   * Determine the size of the delimiter based on whether full extenders should be used or not.
+   *
+   * @param {number} D          The requested size of the delimiter
+   * @param {DelimiterData} C   The data for the delimiter
+   * @return {number}           The final size of the assembly
+   */
+  checkExtendedHeight(D: number, C: DelimiterData): number;
+
 }
 
 /**
@@ -201,9 +212,14 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
     public getVariant() {
       if (this.node.attributes.get('largeop')) {
         this.variant = (this.node.attributes.get('displaystyle') ? '-largeop' : '-smallop');
-      } else {
-        super.getVariant();
+        return;
       }
+      if (!this.node.attributes.getExplicit('mathvariant') &&
+          this.node.getProperty('pseudoscript') === false) {
+        this.variant = '-tex-variant';
+        return;
+      }
+      super.getVariant();
     }
 
     /**
@@ -256,6 +272,9 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
               }
               this.variant = this.font.getSizeVariant(c, i);
               this.size = i;
+              if (delim.schar && delim.schar[i]) {
+                this.stretch.c = delim.schar[i];
+              }
               return;
             }
             i++;
@@ -268,7 +287,7 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
         if (delim.stretch) {
           this.size = -1;
           this.invalidateBBox();
-          this.getStretchBBox(WH, D, delim);
+          this.getStretchBBox(WH, this.checkExtendedHeight(D, delim), delim);
         } else {
           this.variant = this.font.getSizeVariant(c, i - 1);
           this.size = i - 1;
@@ -360,7 +379,23 @@ export function CommonMoMixin<T extends WrapperConstructor>(Base: T): MoConstruc
     /**
      * @override
      */
+    public checkExtendedHeight(D: number, C: DelimiterData): number {
+      if (C.fullExt) {
+        const [extSize, endSize] = C.fullExt;
+        const n = Math.ceil(Math.max(0, D - endSize) / extSize);
+        D = endSize + n * extSize;
+      }
+      return D;
+    }
+
+    /**
+     * @override
+     */
     public remapChars(chars: number[]) {
+      const primes = this.node.getProperty('primes') as string;
+      if (primes) {
+        return unicodeChars(primes);
+      }
       if (chars.length === 1) {
         const parent = (this.node as MmlMo).coreParent().parent;
         const isAccent = this.isAccent && !parent.isKind('mrow');

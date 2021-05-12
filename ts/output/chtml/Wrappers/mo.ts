@@ -58,11 +58,10 @@ CommonMoMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
     },
     'mjx-stretchy-h > * > mjx-c': {
       display: 'inline-block',
-      transform: 'scalex(1.0000001)'        // improves blink positioning
+      transform: 'scalex(1.0000001)'      // improves blink positioning
     },
     'mjx-stretchy-h > * > mjx-c::before': {
       display: 'inline-block',
-      padding: '.001em 0',                  // for blink
       width: 'initial'
     },
     'mjx-stretchy-h > mjx-ext': {
@@ -107,10 +106,11 @@ CommonMoMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
       overflow: 'hidden'
     },
     'mjx-stretchy-v > mjx-ext > mjx-c::before': {
-      width: 'initial'
+      width: 'initial',
+      'box-sizing': 'border-box'
     },
     'mjx-stretchy-v > mjx-ext > mjx-c': {
-      transform: 'scaleY(500) translateY(.1em)',
+      transform: 'scaleY(500) translateY(.075em)',
       overflow: 'visible'
     },
     'mjx-mark': {

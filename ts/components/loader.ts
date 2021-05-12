@@ -30,11 +30,19 @@ import {Package, PackageError, PackageReady, PackageFailed} from './package.js';
 export {Package, PackageError, PackageReady, PackageFailed} from './package.js';
 export {MathJaxLibrary} from './global.js';
 
+import {FunctionList} from '../util/FunctionList.js';
+
 /*
  * The current directory (for webpack), and the browser document (if any)
  */
 declare var __dirname: string;
 declare var document: Document;
+
+/**
+ * Function used to determine path to a given package.
+ */
+export type PathFilterFunction = (data: {name: string, original: string, addExtension: boolean}) => boolean;
+export type PathFilterList = {[name: string]: PathFilterFunction};
 
 /**
  * Update the configuration structure to include the loader configuration
@@ -65,9 +73,52 @@ export interface MathJaxObject extends MJObject {
     preLoad: (...names: string[]) => void;            // Indicate that packages are already loaded by hand
     defaultReady: () => void;                         // The function performed when all packages are loaded
     getRoot: () => string;                            // Find the root URL for the MathJax files
+    pathFilters: PathFilterList;                      // the filters to use for looking for package paths
   };
   startup?: any;
 }
+
+/**
+ * Functions used to filter the path to a package
+ */
+export const PathFilters: {[name: string]: PathFilterFunction} = {
+  /**
+   * Look up the path in the configuration's source list
+   */
+  source: (data) => {
+    if (CONFIG.source.hasOwnProperty(data.name)) {
+      data.name = CONFIG.source[data.name];
+    }
+    return true;
+  },
+
+  /**
+   * Add [mathjax] before any relative path, and add .js if needed
+   */
+  normalize: (data) => {
+    const name = data.name;
+    if (!name.match(/^(?:[a-z]+:\/)?\/|[a-z]:\\|\[/i)) {
+      data.name = '[mathjax]/' + name.replace(/^\.\//, '');
+    }
+    if (data.addExtension && !name.match(/\.[^\/]+$/)) {
+      data.name += '.js';
+    }
+    return true;
+  },
+
+  /**
+   * Recursively replace path prefixes (e.g., [mathjax], [tex], etc.)
+   */
+  prefix: (data) => {
+    let match;
+    while ((match = data.name.match(/^\[([^\]]*)\]/))) {
+      if (!CONFIG.paths.hasOwnProperty(match[1])) break;
+      data.name = CONFIG.paths[match[1]] + data.name.substr(match[0].length);
+    }
+    return true;
+  }
+};
+
 
 /**
  * The implementation of the dynamic loader
@@ -157,6 +208,17 @@ export namespace Loader {
     return root;
   }
 
+  /**
+   * The filters to use to modify the paths used to obtain the packages
+   */
+  export const pathFilters = new FunctionList();
+
+  /**
+   * The default filters to use.
+   */
+  pathFilters.add(PathFilters.source, 1);
+  pathFilters.add(PathFilters.normalize, 2);
+  pathFilters.add(PathFilters.prefix, 5);
 }
 
 /**

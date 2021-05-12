@@ -30,7 +30,6 @@ import NodeUtil from './NodeUtil.js';
 import TexParser from './TexParser.js';
 import TexError from './TexError.js';
 import {entities} from '../../util/Entities.js';
-import '../../util/entities/n.js';
 
 
 namespace ParseUtil {
@@ -122,7 +121,7 @@ namespace ParseUtil {
    * @param {string=} big Bigg command.
    */
   export function fenced(configuration: ParseOptions, open: string, mml: MmlNode,
-                         close: string, big: string = '') {
+                         close: string, big: string = '', color: string = '') {
     // @test Fenced, Fenced3
     let nf = configuration.nodeFactory;
     let mrow = nf.create('node', 'mrow', [],
@@ -145,6 +144,7 @@ namespace ParseUtil {
                      {fence: true, stretchy: true, symmetric: true, texClass: TEXCLASS.CLOSE},
                      closeNode);
     }
+    color && mo.attributes.set('mathcolor', color);
     NodeUtil.appendChildren(mrow, [mo]);
     return mrow;
   }

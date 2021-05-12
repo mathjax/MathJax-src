@@ -76,7 +76,7 @@ export function CommonTeXFontMixin<
     /**
      *  The default variants for the standard stretchy sizes
      */
-    protected static defaultSizeVariants = ['normal', '-smallop', '-largeop', '-size3', '-size4'];
+    protected static defaultSizeVariants = ['normal', '-smallop', '-largeop', '-size3', '-size4', '-tex-variant'];
 
     /**
      *  The default variants for the standard stretchy assmebly parts

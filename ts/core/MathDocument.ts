@@ -231,6 +231,7 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
 }
 
 /*****************************************************************/
+
 /**
  * The ways of specifying a container (a selector string, an actual node,
  * or an array of those (e.g., the result of document.getElementsByTagName())
@@ -238,6 +239,36 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
  * @template N  The HTMLElement node class
  */
 export type ContainerList<N> = string | N | (string | N | N[])[];
+
+/**
+ * The options allowed for the reset() method
+ */
+export type ResetList = {
+  all?: boolean,
+  processed?: boolean,
+  inputJax?: any[],
+  outputJax?: any[]
+};
+
+/**
+ * The default option list for the reset() method
+ */
+export const resetOptions: ResetList = {
+  all: false,
+  processed: false,
+  inputJax: null,
+  outputJax: null
+};
+
+/**
+ * The option list for when all options are to be reset
+ */
+export const resetAllOptions: ResetList = {
+  all: true,
+  processed: true,
+  inputJax: [],
+  outputJax: []
+};
 
 /*****************************************************************/
 /**
@@ -417,9 +448,10 @@ export interface MathDocument<N, T, D> {
   /**
    * Clear the processed values so that the document can be reprocessed
    *
-   * @return {MathDocument}  The math document instance
+   * @param {ResetList} options   The things to be reset
+   * @return {MathDocument}       The math document instance
    */
-  reset(): MathDocument<N, T, D>;
+  reset(options?: ResetList): MathDocument<N, T, D>;
 
   /**
    * Reset the processed values and clear the MathList (so that new math
@@ -891,8 +923,12 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
   /**
    * @override
    */
-  public reset() {
-    this.processed.reset();
+  public reset(options: ResetList = {processed: true}) {
+    options = userOptions(Object.assign({}, resetOptions), options);
+    options.all && Object.assign(options, resetAllOptions);
+    options.processed && this.processed.reset();
+    options.inputJax && this.inputJax.forEach(jax => jax.reset(...options.inputJax));
+    options.outputJax && this.outputJax.reset(...options.outputJax);
     return this;
   }
 
