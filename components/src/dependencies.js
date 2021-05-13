@@ -27,7 +27,9 @@ export const dependencies = {
   '[tex]/tagformat': ['input/tex-base'],
   '[tex]/textmacros': ['input/tex-base'],
   '[tex]/unicode': ['input/tex-base'],
-  '[tex]/verb': ['input/tex-base']
+  '[tex]/verb': ['input/tex-base'],
+  '[tex]/numcases': ['[tex]/empheq'],
+  '[tex]/empheq': ['input/tex-base', '[tex]/ams']
 };
 
 export const paths = {
@@ -58,7 +60,9 @@ const allPackages = [
   '[tex]/tagformat',
   '[tex]/textmacros',
   '[tex]/unicode',
-  '[tex]/verb'
+  '[tex]/verb',
+  '[tex]/numcases',
+  '[tex]/empheq'
 ];
 
 export const provides = {

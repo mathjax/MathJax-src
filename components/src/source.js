@@ -32,6 +32,8 @@ export const source = {
   '[tex]/textmacros': `${src}/input/tex/extensions/textmacros/textmacros.js`,
   '[tex]/unicode': `${src}/input/tex/extensions/unicode/unicode.js`,
   '[tex]/verb': `${src}/input/tex/extensions/verb/verb.js`,
+  '[tex]/numcases': `${src}/input/tex/extensions/numcases/numcases.js`,
+  '[tex]/empheq': `${src}/input/tex/extensions/empheq/empheq.js`,
   'input/mml': `${src}/input/mml/mml.js`,
   'input/mml/entities': `${src}/input/mml/entities/entities.js`,
   'input/asciimath': `${src}/input/asciimath/asciimath.js`,
