@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {AbstractMmlTokenNode, MmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
 import {MmlMrow} from './mrow.js';
 import {MmlMover, MmlMunder, MmlMunderover} from './munderover.js';
-import {OperatorList, OPTABLE, RangeDef, RANGES, MMLSPACING} from '../OperatorDictionary.js';
+import {OperatorList, OPTABLE, getRange, MMLSPACING} from '../OperatorDictionary.js';
 import {unicodeChars, unicodeString} from '../../../util/string.js';
 
 /*****************************************************************/
@@ -118,6 +118,9 @@ export class MmlMo extends AbstractMmlTokenNode {
      0x201F: 0x2036,   // reversed open double quote
   };
 
+  /**
+   * Regular expression matching characters that are marked as math accents
+   */
   protected static mathaccents = new RegExp([
     '^[',
     '\u00B4\u0301\u02CA',  // acute
@@ -431,27 +434,6 @@ export class MmlMo extends AbstractMmlTokenNode {
       forms = [form].concat(forms.filter(name => (name !== form)));
     }
     return forms;
-  }
-
-  /**
-   * @param {string} mo  The character to look up in the range table
-   * @return {RangeDef}  The unicode range in which the character falls, or null
-   */
-  protected getRange(mo: string): RangeDef {
-    if (!mo.match(/^[\uD800-\uDBFF]?.$/)) {
-      return null;
-    }
-    let n = mo.codePointAt(0);
-    let ranges = (this.constructor as typeof MmlMo).RANGES;
-    for (const range of ranges) {
-      if (range[0] <= n && n <= range[1]) {
-        return range;
-      }
-      if (n < range[0]) {
-        return null;
-      }
-    }
-    return null;
   }
 
   /**
