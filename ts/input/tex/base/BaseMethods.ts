@@ -1386,7 +1386,7 @@ BaseMethods.Array = function(parser: TexParser, begin: StackItem,
     // @test Cross Product
     array.setProperty('close', parser.convertDelimiter(close));
   }
-  if (style.charAt(1) === '\'') {
+  if ((style || '').charAt(1) === '\'') {
     array.arraydef['data-cramped'] = true;
     style = style.charAt(0);
   }
