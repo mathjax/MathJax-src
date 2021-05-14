@@ -20,6 +20,9 @@
     "outDir": "js",
     "typeRoots": ["./typings"]
   },
+  "files": [
+    "ts/input/tex/mhchem/mhchemparser/mhchemParser.d.ts"
+  ],
   "include": ["ts/**/*"],
   "exclude": ["js", "es5", "components"]
 }
