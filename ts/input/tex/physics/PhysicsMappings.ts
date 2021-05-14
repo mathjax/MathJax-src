@@ -71,18 +71,18 @@ new CharacterMap('Physics-vector-chars', ParseMethods.mathchar0mi, {
 });
 
 new CommandMap('Physics-vector-macros', {
+  'vnabla':      'Vnabla',
   'vectorbold':  'VectorBold',
   'vb':          'VectorBold',
   'vectorarrow': ['StarMacro', 1, '\\vec{\\vb', '{#1}}'],
   'va':          ['StarMacro', 1, '\\vec{\\vb', '{#1}}'],
   'vectorunit':  ['StarMacro', 1, '\\hat{\\vb', '{#1}}'],
   'vu':          ['StarMacro', 1, '\\hat{\\vb', '{#1}}'],
-  'gradient':    ['OperatorApplication', '\\gradientnabla', '(', '['],
-  'grad':        ['OperatorApplication', '\\gradientnabla', '(', '['],
-  'divergence':  ['VectorOperator', '\\gradientnabla\\vdot', '(', '['],
-  'div':         ['VectorOperator', '\\gradientnabla\\vdot', '(', '['],
-  'curl':        ['VectorOperator',
-                  '\\gradientnabla\\crossproduct', '(', '['],
+  'gradient':    ['OperatorApplication', '\\vnabla', '(', '['],
+  'grad':        ['OperatorApplication', '\\vnabla', '(', '['],
+  'divergence':  ['VectorOperator', '\\vnabla\\vdot', '(', '['],
+  'div':         ['VectorOperator', '\\vnabla\\vdot', '(', '['],
+  'curl':        ['VectorOperator', '\\vnabla\\crossproduct', '(', '['],
   'laplacian':   ['OperatorApplication', '\\nabla^2', '(', '['],
 }, PhysicsMethods);
 
