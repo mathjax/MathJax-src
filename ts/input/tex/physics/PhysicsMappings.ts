@@ -183,7 +183,7 @@ new CommandMap('Physics-quick-quad-macros', {
   'qgiven':     ['Qqtext', 'given'],
   'qusing':     ['Qqtext', 'using'],
   'qassume':    ['Qqtext', 'assume'],
-  'qsince,':    ['Qqtext', 'since,'],
+  'qsince':     ['Qqtext', 'since'],
   'qlet':       ['Qqtext', 'let'],
   'qfor':       ['Qqtext', 'for'],
   'qall':       ['Qqtext', 'all'],
