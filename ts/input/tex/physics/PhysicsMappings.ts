@@ -38,7 +38,7 @@ new CommandMap('Physics-automatic-bracing-macros', {
   'pqty':           ['Quantity', '(', ')', true],
   'bqty':           ['Quantity', '[', ']', true],
   'vqty':           ['Quantity', '|', '|', true],
-  'Bqty':           ['Quantity', '{', '}', true],
+  'Bqty':           ['Quantity', '\\{', '\\}', true],
   'absolutevalue':  ['Quantity', '|', '|', true],
   'abs':            ['Quantity', '|', '|', true],
   'norm':           ['Quantity', '\\|', '\\|', true],
