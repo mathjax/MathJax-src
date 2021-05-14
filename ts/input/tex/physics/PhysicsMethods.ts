@@ -951,6 +951,18 @@ PhysicsMethods.Vnabla = function(parser: TexParser, _name: string) {
 
 
 /**
+ * Generates the differential d depending on the italicdiff option.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
+PhysicsMethods.DiffD = function(parser: TexParser, _name: string) {
+  let argument = parser.options.physics.italicdiff ? 'd' : '{\\rm d}';
+  return parser.Push(new TexParser(argument, parser.stack.env,
+                                   parser.configuration).mml());
+};
+
+
+/**
  *  Methods taken from Base package.
  */
 PhysicsMethods.Macro = BaseMethods.Macro;

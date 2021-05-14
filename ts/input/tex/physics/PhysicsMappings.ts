@@ -202,13 +202,14 @@ new CommandMap('Physics-quick-quad-macros', {
  * Macros for physics package (section 2.5).
  */
 new CommandMap('Physics-derivative-macros', {
+  'diffd':                'DiffD',
   'flatfrac':             ['Macro', '\\left.#1\\middle/#2\\right.', 2],
-  'differential':         ['Differential', '{\\rm d}'],
-  'dd':                   ['Differential', '{\\rm d}'],
+  'differential':         ['Differential', '\\diffd'],
+  'dd':                   ['Differential', '\\diffd'],
   'variation':            ['Differential', '\\delta'],
   'var':                  ['Differential', '\\delta'],
-  'derivative':           ['Derivative', 2, '{\\rm d}'],
-  'dv':                   ['Derivative', 2, '{\\rm d}'],
+  'derivative':           ['Derivative', 2, '\\diffd'],
+  'dv':                   ['Derivative', 2, '\\diffd'],
   'partialderivative':    ['Derivative', 3, '\\partial'],
   'pderivative':          ['Derivative', 3, '\\partial'],
   'pdv':                  ['Derivative', 3, '\\partial'],
