@@ -58,7 +58,7 @@ newState('ATTACHSPEECH', 155);
 
 
 /**
- * The funtions added to MathItem for enrichment
+ * The functions added to MathItem for enrichment
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
@@ -197,7 +197,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
 /*==========================================================================*/
 
 /**
- * The funtions added to MathDocument for enrichment
+ * The functions added to MathDocument for enrichment
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class

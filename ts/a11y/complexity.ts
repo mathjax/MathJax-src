@@ -105,7 +105,7 @@ EMItemC<N, T, D>>(BaseMathItem: B, computeComplexity: (node: MmlNode) => void): 
 /*==========================================================================*/
 
 /**
- * The funtions added to MathDocument for complexity
+ * The functions added to MathDocument for complexity
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
