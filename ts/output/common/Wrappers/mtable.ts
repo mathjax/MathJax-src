@@ -464,7 +464,7 @@ export function CommonMtableMixin<
       //
       const attributes = this.node.attributes;
       this.frame = attributes.get('frame') !== 'none';
-      this.fLine = (this.frame ? .07 : 0);
+      this.fLine = (this.frame && attributes.get('frame') ? .07 : 0);
       this.fSpace = (this.frame ? this.convertLengths(this.getAttributeArray('framespacing')) : [0, 0]);
       this.cSpace = this.convertLengths(this.getColumnAttributes('columnspacing'));
       this.rSpace = this.convertLengths(this.getRowAttributes('rowspacing'));

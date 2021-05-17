@@ -416,7 +416,7 @@ CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstru
    * Add a frame to the mtable, if needed
    */
   protected handleFrame() {
-    if (this.frame) {
+    if (this.frame && this.fLine) {
       this.adaptor.setStyle(this.itable, 'border', '.07em ' + this.node.attributes.get('frame'));
     }
   }
