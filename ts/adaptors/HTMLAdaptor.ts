@@ -247,7 +247,7 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    * @override
    */
   public doctype(doc: D) {
-    return `<!DOCTYPE ${doc.doctype.name}>`;
+    return (doc.doctype ? `<!DOCTYPE ${doc.doctype.name}>` : '');
   }
 
   /**
