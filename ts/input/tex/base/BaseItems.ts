@@ -933,8 +933,7 @@ export class ArrayItem extends BaseItem {
       }
       // @test Enclosed left right
       NodeUtil.setAttribute(mml, 'frame', '');
-      mml = this.create('node', 'menclose', [mml],
-                        {notation: this.frame.join(' '), isFrame: true});
+      mml = this.create('node', 'menclose', [mml], {notation: this.frame.join(' ')});
       if ((this.arraydef['columnlines'] || 'none') !== 'none' ||
           (this.arraydef['rowlines'] || 'none') !== 'none') {
         // @test Enclosed dashed row, Enclosed solid row
