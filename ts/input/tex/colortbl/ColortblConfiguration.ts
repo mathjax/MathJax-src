@@ -91,19 +91,13 @@ new CommandMap('colortbl', {
    * @param {keyof ColorData} type   The type (col, row, cell) of color being added
    */
   TableColor(parser: TexParser, name: string, type: keyof ColorData) {
-    const top = parser.stack.Top() as ColorArrayItem;
+    const lookup = parser.configuration.packageData.get('color').model;  // use the color extension's color model
     const model = parser.GetBrackets(name, '');
-    const lookup = parser.configuration.packageData.get('color').model;
     const color = lookup.getColor(model, parser.GetArgument(name));
-    //
-    // Ignore the left and right overlap options.
-    //
-    if (parser.GetBrackets(name, '')) {
-      parser.GetBrackets(name, '');
-    }
     //
     // Check that we are in a colorable array.
     //
+    const top = parser.stack.Top() as ColorArrayItem;
     if (!(top instanceof ColorArrayItem)) {
       throw new TexError('UnsupportedTableColor', 'Unsupported use of %1', parser.currentCS);
     }
@@ -115,6 +109,12 @@ new CommandMap('colortbl', {
         throw new TexError('ColumnColorNotTop', '%1 must be in the top row', name);
       }
       top.color.col[top.row.length] = color;
+      //
+      // Ignore the left and right overlap options.
+      //
+      if (parser.GetBrackets(name, '')) {
+        parser.GetBrackets(name, '');
+      }
     } else {
       top.color[type] = color;
       if (type === 'row' && (top.Size() || top.row.length)) {
