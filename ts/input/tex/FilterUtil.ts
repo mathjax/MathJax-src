@@ -243,7 +243,7 @@ namespace FilterUtil {
   let _moveLimits = function (options: ParseOptions, underover: string, subsup: string) {
     const remove: MmlNode[] = [];
     for (const mml of options.getList(underover)) {
-      if (mml.attributes.get('displaystyle') || mml.getProperty('removed')) {
+      if (mml.attributes.get('displaystyle')) {
         continue;
       }
       const base = mml.childNodes[(mml as any).base] as MmlNode;
