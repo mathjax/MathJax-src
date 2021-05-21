@@ -119,7 +119,7 @@ AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: b
   item.arraydef = {
     displaystyle: true,
     rowspacing: '.5em',
-    columnwidth: '100%',
+    columnspacing: '100%',
     width: parser.options['multlineWidth'],
     side: parser.options['tagSide'],
     minlabelspacing: parser.options['tagIndent'],
@@ -141,30 +141,17 @@ AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: b
  */
 AmsMethods.XalignAt = function(parser: TexParser, begin: StackItem,
                                   numbered: boolean, padded: boolean) {
-  let arg = parser.GetArgument('\\begin{' + begin.getName() + '}');
-  if (arg.match(/[^0-9]/)) {
+  let n = parser.GetArgument('\\begin{' + begin.getName() + '}');
+  if (n.match(/[^0-9]/)) {
     throw new TexError('PositiveIntegerArg',
                        'Argument to %1 must me a positive integer',
                        '\\begin{' + begin.getName() + '}');
   }
-  let n = parseInt(arg, 10);
-  let align = [];
-  let width = [];
-  if (padded) {
-    align.push('');
-    width.push('');
-  }
-  while (n > 0) {
-    align.push('rl');
-    width.push('auto auto');
-    n--;
-  }
-  if (padded) {
-    align.push('');
-    width.push('');
-  }
-  return AmsMethods.FlalignArray(
-    parser, begin, numbered, padded, false, align.join('c'), width.join(' fit '), true);
+  const align = (padded ? 'crl' : 'rlc');
+  const width = (padded ? 'fit auto auto' : 'auto auto fit');
+  const item = AmsMethods.FlalignArray(parser, begin, numbered, padded, false, align, width, true) as FlalignItem;
+  item.setProperty('xalignat', 2 * parseInt(n));
+  return item;
 };
 
 

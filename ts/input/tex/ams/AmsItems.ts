@@ -125,12 +125,6 @@ export class MultlineItem extends ArrayItem {
 export class FlalignItem extends EqnArrayItem {
 
   /**
-   * Maximum row number in the array.
-   * @type {number}
-   */
-  public maxrow: number = 0;
-
-  /**
    * @override
    */
   get kind() {
@@ -147,6 +141,18 @@ export class FlalignItem extends EqnArrayItem {
     this.factory.configuration.tags.start(name, numbered, numbered);
   }
 
+  /**
+   * @override
+   */
+  public EndEntry() {
+    super.EndEntry();
+    const n = this.getProperty('xalignat') as number;
+    if (!n) return;
+    if (this.row.length > n) {
+      throw new TexError('XalignOverflow', 'Extra %1 in row of %2', '&', this.name);
+    }
+  }
+
 
   /**
    * @override
@@ -154,11 +160,18 @@ export class FlalignItem extends EqnArrayItem {
   public EndRow() {
     let cell: MmlNode;
     let row = this.row;
-    this.row = [];
+    //
+    //  For xalignat and xxalignat, pad the row to the expected number if it is too short.
+    //
+    const n = this.getProperty('xalignat') as number;
+    while (row.length < n) {
+      row.push(this.create('node', 'mtd'));
+    }
     //
     //  Insert padding cells between pairs of entries, as needed for "fit" columns,
-    //    and include initial and end cells if that is needed
+    //    and include initial and end cells if that is needed.
     //
+    this.row = [];
     if (this.padded) {
       this.row.push(this.create('node', 'mtd'));
     }
@@ -174,8 +187,8 @@ export class FlalignItem extends EqnArrayItem {
     if (this.row.length > this.maxrow) this.maxrow = this.row.length;
     super.EndRow();
     //
-    // For full-0width environments with labels that aren't supposed to take up space,
-    //   move the label into a zero-width mpadded element that laps in the proper direction
+    // For full-width environments with labels that aren't supposed to take up space,
+    //   move the label into a zero-width mpadded element that laps in the proper direction.
     //
     const mtr = this.table[this.table.length - 1];
     if (this.getProperty('zeroWidthLabel') && mtr.isKind('mlabeledtr')) {
@@ -194,27 +207,16 @@ export class FlalignItem extends EqnArrayItem {
   public EndTable() {
     super.EndTable();
     if (this.center) {
-      let def = this.arraydef;
       //
       //  If there is only one equation (one pair):
-      //    Don't make it 100%, and don't change the indentalign
+      //    Don't make it 100%, and don't change the indentalign.
       //
       if (this.maxrow <= 2) {
+        const def = this.arraydef;
         delete def.width;
         delete this.global.indentalign;
       }
-      //
-      //  Remove any unwanted column alignments and widths
-      //
-      def.columnalign = (def.columnalign as string)
-        .split(/ /)
-        .slice(0, this.maxrow)
-        .join(' ');
-      def.columnwidth = (def.columnwidth as string)
-          .split(/ /)
-          .slice(0, this.maxrow)
-          .join(' ');
-      }
+    }
   }
 
 }
