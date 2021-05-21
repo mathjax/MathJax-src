@@ -738,7 +738,8 @@ export function CommonMtableMixin<
         this.container.bbox.pwidth = '';
       }
       const {w, L, R} = this.bbox;
-      const W = Math.max(w, this.length2em(width, Math.max(cwidth, L + w + R)));
+      const labelInWidth = this.node.attributes.get('data-width-includes-label') as boolean;
+      const W = Math.max(w, this.length2em(width, Math.max(cwidth, L + w + R))) - (labelInWidth ? L + R : 0);
       const cols = (this.node.attributes.get('equalcolumns') as boolean ?
                     Array(this.numCols).fill(this.percent(1 / Math.max(1, this.numCols))) :
                     this.getColumnAttributes('columnwidth', 0));
@@ -933,7 +934,7 @@ export function CommonMtableMixin<
     }
 
     /**
-     * For tables with percentage widths, let 'fit' columns (or 'auto'
+     * For tables with percentage widths, the 'fit' columns (or 'auto'
      * columns if there are not 'fit' ones) will stretch automatically,
      * but for 'auto' columns (when there are 'fit' ones), set the size
      * to the natural size of the column.
@@ -979,7 +980,7 @@ export function CommonMtableMixin<
       let dw = cwidth;
       indices.forEach(i => {
         const x = swidths[i];
-        dw -= (x === 'fit' || x === 'auto' ? W[i] : this.length2em(x, width));
+        dw -= (x === 'fit' || x === 'auto' ? W[i] : this.length2em(x, cwidth));
       });
       //
       // Get the amount of extra space per column, or 0 (fw)

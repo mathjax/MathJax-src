@@ -121,8 +121,12 @@ AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: b
     columnwidth: '100%',
     width: parser.options['multlineWidth'],
     side: parser.options['tagSide'],
-    minlabelspacing: parser.options['tagIndent']
+    minlabelspacing: parser.options['tagIndent'],
+    framespacing: parser.options['multlineIndent'] + ' 0',
+    frame: '',   // Use frame spacing with no actual frame
+    'data-width-includes-label': true // take label space out of 100% width
   };
+  parser.stack.global.indentalign = (item.arraydef.side === 'right' ? 'left' : 'right');
   return item;
 };
 

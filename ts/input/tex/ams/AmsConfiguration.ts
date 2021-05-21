@@ -59,7 +59,11 @@ export const AmsConfiguration = Configuration.create(
     },
     items: {[MultlineItem.prototype.kind]: MultlineItem},
     tags: {'ams': AmsTags},
-    init: init
+    init: init,
+    options: {
+      multlineWidth: '100%',  // The width to use for multline environments.
+      multlineIndent: '1em',  // The margin to use on both sides of multline environments.
+    }
   }
 );
 
