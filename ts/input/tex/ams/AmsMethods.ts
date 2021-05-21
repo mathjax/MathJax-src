@@ -487,3 +487,5 @@ AmsMethods.Spacer = BaseMethods.Spacer;
 AmsMethods.NamedOp = BaseMethods.NamedOp;
 
 AmsMethods.EqnArray = BaseMethods.EqnArray;
+
+AmsMethods.Equation = BaseMethods.Equation;

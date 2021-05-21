@@ -26,6 +26,7 @@ import *  as sm from '../SymbolMap.js';
 import {TexConstant} from '../TexConstants.js';
 import BaseMethods from './BaseMethods.js';
 import ParseMethods from '../ParseMethods.js';
+import ParseUtil from '../ParseUtil.js';
 import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MATHSPACE, em} from '../../../util/lengths.js';
 
@@ -697,9 +698,8 @@ new sm.CommandMap('macros', {
 new sm.EnvironmentMap('environment', ParseMethods.environment, {
   array:         ['AlignedArray'],
   equation:      ['Equation', null, true],
-  'equation*':   ['Equation', null, false],
   eqnarray:      ['EqnArray', null, true, true, 'rcl',
-                  '0 ' + em(MATHSPACE.thickmathspace), '.5em']
+                  ParseUtil.cols(0, MATHSPACE.thickmathspace), '.5em']
 }, BaseMethods);
 
 
