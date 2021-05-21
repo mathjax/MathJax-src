@@ -23,7 +23,7 @@
  */
 
 import {Configuration, ParserConfiguration} from '../Configuration.js';
-import {MultlineItem} from './AmsItems.js';
+import {MultlineItem, FlalignItem} from './AmsItems.js';
 import {AbstractTags} from '../Tags.js';
 import {NEW_OPS} from './AmsMethods.js';
 import './AmsMappings.js';
@@ -57,7 +57,10 @@ export const AmsConfiguration = Configuration.create(
               'AMSmath-mathchar0mo', 'AMSmath-macros', 'AMSmath-delimiter'],
       environment: ['AMSmath-environment']
     },
-    items: {[MultlineItem.prototype.kind]: MultlineItem},
+    items: {
+      [MultlineItem.prototype.kind]: MultlineItem,
+      [FlalignItem.prototype.kind]: FlalignItem,
+    },
     tags: {'ams': AmsTags},
     init: init,
     options: {

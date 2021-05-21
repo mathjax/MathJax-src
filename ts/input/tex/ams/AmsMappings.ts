@@ -127,6 +127,14 @@ new sm.EnvironmentMap('AMSmath-environment', ParseMethods.environment, {
                   COLS([0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0]), '.5em', 'D'],
   gathered:      ['AmsEqnArray', null, null, null, 'c', null, '.5em', 'D'],
 
+  xalignat:      ['XalignAt', null, true, true],
+  'xalignat*':   ['XalignAt', null, false, true],
+  xxalignat:     ['XalignAt', null, false, false],
+  flalign:       ['FlalignArray', null, true, false, true, 'rlcrlcrlcrlcrlcrlc',
+                  ['', ' ', ' ', ' ', ' ', ' ', ''].join('auto auto fit')],
+  'flalign*':    ['FlalignArray', null, false, false, true, 'rlcrlcrlcrlcrlcrlc',
+                  ['', ' ', ' ', ' ', ' ', ' ', ''].join('auto auto fit')],
+
   subarray:      ['Array', null, null, null, null, COLS([0]), '0.1em', 'S', 1],
   smallmatrix:   ['Array', null, null, null, 'c', COLS([1 / 3]),
                   '.2em', 'S', 1],

@@ -23,11 +23,12 @@
  */
 
 
-import {ArrayItem} from '../base/BaseItems.js';
+import {ArrayItem, EqnArrayItem} from '../base/BaseItems.js';
 import ParseUtil from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import TexError from '../TexError.js';
 import {TexConstant} from '../TexConstants.js';
+import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 
 
 /**
@@ -116,4 +117,104 @@ export class MultlineItem extends ArrayItem {
     }
     this.factory.configuration.tags.end();
   }
+}
+
+/**
+ * StackItem for handling flalign, xalignat, and xxalignat environments.
+ */
+export class FlalignItem extends EqnArrayItem {
+
+  /**
+   * Maximum row number in the array.
+   * @type {number}
+   */
+  public maxrow: number = 0;
+
+  /**
+   * @override
+   */
+  get kind() {
+    return 'flalign';
+  }
+
+
+  /**
+   * @override
+   */
+  constructor(factory: any, public name: string, public numbered: boolean,
+              public padded: boolean, public center: boolean) {
+    super(factory);
+    this.factory.configuration.tags.start(name, numbered, numbered);
+  }
+
+
+  /**
+   * @override
+   */
+  public EndRow() {
+    let cell: MmlNode;
+    let row = this.row;
+    this.row = [];
+    //
+    //  Insert padding cells between pairs of entries, as needed for "fit" columns,
+    //    and include initial and end cells if that is needed
+    //
+    if (this.padded) {
+      this.row.push(this.create('node', 'mtd'));
+    }
+    while ((cell = row.shift())) {
+      this.row.push(cell);
+      cell = row.shift();
+      if (cell) this.row.push(cell);
+      if (row.length || this.padded) {
+        this.row.push(this.create('node', 'mtd'));
+      }
+    }
+    //
+    if (this.row.length > this.maxrow) this.maxrow = this.row.length;
+    super.EndRow();
+    //
+    // For full-0width environments with labels that aren't supposed to take up space,
+    //   move the label into a zero-width mpadded element that laps in the proper direction
+    //
+    const mtr = this.table[this.table.length - 1];
+    if (this.getProperty('zeroWidthLabel') && mtr.isKind('mlabeledtr')) {
+      const mtd = NodeUtil.getChildren(mtr)[0];
+      const side = this.factory.configuration.options['tagSide'];
+      const def = {width: 0, ...(side === 'right' ? {lspace: '-1width'} : {})};
+      const mpadded = this.create('node', 'mpadded', NodeUtil.getChildren(mtd), def);
+      mtd.setChildren([mpadded]);
+    }
+  }
+
+
+  /**
+   * @override
+   */
+  public EndTable() {
+    super.EndTable();
+    if (this.center) {
+      let def = this.arraydef;
+      //
+      //  If there is only one equation (one pair):
+      //    Don't make it 100%, and don't change the indentalign
+      //
+      if (this.maxrow <= 2) {
+        delete def.width;
+        delete this.global.indentalign;
+      }
+      //
+      //  Remove any unwanted column alignments and widths
+      //
+      def.columnalign = (def.columnalign as string)
+        .split(/ /)
+        .slice(0, this.maxrow)
+        .join(' ');
+      def.columnwidth = (def.columnwidth as string)
+          .split(/ /)
+          .slice(0, this.maxrow)
+          .join(' ');
+      }
+  }
+
 }

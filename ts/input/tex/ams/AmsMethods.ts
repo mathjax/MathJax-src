@@ -33,6 +33,7 @@ import TexError from '../TexError.js';
 import {Macro} from '../Symbol.js';
 import {CommandMap} from '../SymbolMap.js';
 import {ArrayItem} from '../base/BaseItems.js';
+import {FlalignItem} from './AmsItems.js';
 import BaseMethods from '../base/BaseMethods.js';
 import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMunderover} from '../../../core/MmlTree/MmlNodes/munderover.js';
@@ -126,6 +127,83 @@ AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: b
     frame: '',   // Use frame spacing with no actual frame
     'data-width-includes-label': true // take label space out of 100% width
   };
+  parser.stack.global.indentalign = (item.arraydef.side === 'right' ? 'left' : 'right');
+  return item;
+};
+
+
+/**
+ * Generate an align at environment.
+ * @param {TexParser} parser The current TeX parser.
+ * @param {StackItem} begin The begin stackitem.
+ * @param {boolean} numbered Is this a numbered array.
+ * @param {boolean} padded Is it padded.
+ */
+AmsMethods.XalignAt = function(parser: TexParser, begin: StackItem,
+                                  numbered: boolean, padded: boolean) {
+  let arg = parser.GetArgument('\\begin{' + begin.getName() + '}');
+  if (arg.match(/[^0-9]/)) {
+    throw new TexError('PositiveIntegerArg',
+                       'Argument to %1 must me a positive integer',
+                       '\\begin{' + begin.getName() + '}');
+  }
+  let n = parseInt(arg, 10);
+  let align = [];
+  let width = [];
+  if (padded) {
+    align.push('');
+    width.push('');
+  }
+  while (n > 0) {
+    align.push('rl');
+    width.push('auto auto');
+    n--;
+  }
+  if (padded) {
+    align.push('');
+    width.push('');
+  }
+  return AmsMethods.FlalignArray(
+    parser, begin, numbered, padded, false, align.join('c'), width.join(' fit '), true);
+};
+
+
+/**
+ * Generate an flalign environment.
+ * @param {TexParser} parser The current TeX parser.
+ * @param {StackItem} begin The begin stackitem.
+ * @param {boolean} numbered Is this a numbered array.
+ * @param {boolean} padded Is it padded.
+ * @param {boolean} center Is it centered.
+ * @param {string} align The horizontal alignment for columns
+ * @param {string} width The column widths of the table
+ * @param {boolean} zeroWidthLabel True if the label should be in llap/rlap
+ */
+AmsMethods.FlalignArray = function(parser: TexParser, begin: StackItem, numbered: boolean,
+                                  padded: boolean, center: boolean, align: string,
+                                  width: string, zeroWidthLabel: boolean = false) {
+  parser.Push(begin);
+  ParseUtil.checkEqnEnv(parser);
+  align = align
+    .split('')
+    .join(' ')
+    .replace(/r/g, 'right')
+    .replace(/l/g, 'left')
+    .replace(/c/g, 'center');
+  const item = parser.itemFactory.create(
+    'flalign', begin.getName(), numbered, padded, center, parser.stack) as FlalignItem;
+  item.arraydef = {
+    width: '100%',
+    displaystyle: true,
+    columnalign: align,
+    columnspacing: '0em',
+    columnwidth: width,
+    rowspacing: '3pt',
+    side: parser.options['tagSide'],
+    minlabelspacing: (zeroWidthLabel ? '0' : parser.options['tagIndent']),
+    'data-width-includes-label': true,
+  };
+  item.setProperty('zeroWidthLabel', zeroWidthLabel);
   parser.stack.global.indentalign = (item.arraydef.side === 'right' ? 'left' : 'right');
   return item;
 };
