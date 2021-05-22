@@ -32,6 +32,8 @@ import * as bitem from './BaseItems.js';
 import {AbstractTags} from '../Tags.js';
 import './BaseMappings.js';
 import {getRange} from '../../../core/MmlTree/OperatorDictionary.js';
+import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
+import ParseOptions from '../ParseOptions.js';
 
 /**
  * Remapping some ASCII characters to their Unicode operator equivalent.
@@ -89,6 +91,36 @@ function envUndefined(_parser: TexParser, env: string) {
   throw new TexError('UnknownEnv', 'Unknown environment \'%1\'', env);
 }
 
+/**
+ * Filter for removing spacing following \nonscript
+ * @param{ParseOptions} data The active tex parser.
+ */
+function filterNonscript({data}: {data: ParseOptions}) {
+  for (const mml of data.getList('nonscript')) {
+    //
+    //  If we are in script or script-script style
+    //    remove the space (either mspace or mrow containing it)
+    //    and remove it (and its contents) from the other lists.
+    //  Otherwise, if it is an mrow (which we added),
+    //    replace the mrow with its contents
+    //    and remove it from its list
+    //
+    if (mml.attributes.get('scriptlevel') > 0) {
+      const parent = mml.parent;
+      parent.childNodes.splice(parent.childIndex(mml), 1);
+      data.removeFromList(mml.kind, [mml]);
+      if (mml.isKind('mrow')) {
+        const mstyle = mml.childNodes[0] as MmlNode;
+        data.removeFromList('mstyle', [mstyle]);
+        data.removeFromList('mspace', mstyle.childNodes[0].childNodes as MmlNode[]);
+      }
+    } else if (mml.isKind('mrow')) {
+      mml.parent.replaceChild(mml.childNodes[0], mml);
+      data.removeFromList('mrow', [mml]);
+    }
+  }
+}
+
 
 /**
  * @constructor
@@ -135,19 +167,21 @@ export const BaseConfiguration: Configuration = Configuration.create(
       [bitem.MmlItem.prototype.kind]: bitem.MmlItem,
       [bitem.FnItem.prototype.kind]: bitem.FnItem,
       [bitem.NotItem.prototype.kind]: bitem.NotItem,
+      [bitem.NonscriptItem.prototype.kind]: bitem.NonscriptItem,
       [bitem.DotsItem.prototype.kind]: bitem.DotsItem,
       [bitem.ArrayItem.prototype.kind]: bitem.ArrayItem,
       [bitem.EqnArrayItem.prototype.kind]: bitem.EqnArrayItem,
       [bitem.EquationItem.prototype.kind]: bitem.EquationItem
-     },
-     options: {
-       maxMacros: 1000,
-       baseURL: (typeof(document) === 'undefined' ||
-                 document.getElementsByTagName('base').length === 0) ?
-             '' : String(document.location).replace(/#.*$/, '')
-     },
-     tags: {
-       base: BaseTags
-     }
+    },
+    options: {
+      maxMacros: 1000,
+      baseURL: (typeof(document) === 'undefined' ||
+                document.getElementsByTagName('base').length === 0) ?
+                '' : String(document.location).replace(/#.*$/, '')
+    },
+    tags: {
+      base: BaseTags
+    },
+    postprocessors: [[filterNonscript, -4]]
   }
 );

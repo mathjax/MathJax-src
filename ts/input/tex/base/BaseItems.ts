@@ -774,6 +774,45 @@ export class NotItem extends BaseItem {
   }
 }
 
+export class NonscriptItem extends BaseItem {
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'nonscript';
+  }
+
+  /**
+   * @override
+   */
+  public checkItem(item: StackItem): CheckType {
+    if (item.isKind('mml') && item.Size() === 1) {
+      let mml = item.First;
+      //
+      //  Space macros like \, wrap with an mstyle to set scriptlevel=0 (so size is independent of level)
+      //
+      if (mml.isKind('mstyle') && mml.notParent) {
+        mml = NodeUtil.getChildren(NodeUtil.getChildren(mml)[0])[0];
+      }
+      if (mml.isKind('mspace')) {
+        //
+        //  If the space is in an mstyle, wrap it in an mrow so we can test is scriptlevel.
+        //  The mrow will be removed in the post-filter.
+        //
+        if (mml !== item.First) {
+          mml = this.create('node', 'mrow', [item.Pop()]);
+          item.Push(mml);
+        }
+        //
+        //  Save the item for alter post-processing
+        //
+        this.factory.configuration.addNode('nonscript', item.First);
+      }
+    }
+    return [[item], true];
+  }
+}
 
 /**
  * Item indicating a dots command has been encountered.
