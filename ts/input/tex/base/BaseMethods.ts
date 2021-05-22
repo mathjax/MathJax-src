@@ -676,6 +676,21 @@ BaseMethods.Underset = function(parser: TexParser, name: string) {
 
 
 /**
+ * Handles overunderset.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
+BaseMethods.Overunderset = function(parser: TexParser, name: string) {
+  const top = parser.ParseArg(name), bot = parser.ParseArg(name), base = parser.ParseArg(name);
+  if (NodeUtil.isType(base, 'mo') || NodeUtil.getProperty(base, 'movablelimits')) {
+    NodeUtil.setProperties(base, {'movablelimits': false});
+  }
+  const node = parser.create('node', 'munderover', [base, bot, top]);
+  parser.Push(node);
+};
+
+
+/**
  * Creates TeXAtom, when class of element is changed explicitly.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.

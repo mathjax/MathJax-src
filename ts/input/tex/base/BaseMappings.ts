@@ -524,7 +524,9 @@ new sm.CommandMap('macros', {
 
   overset:            'Overset',
   underset:           'Underset',
+  overunderset:       'Overunderset',
   stackrel:           ['Macro', '\\mathrel{\\mathop{#2}\\limits^{#1}}', 2],
+  stackbin:           ['Macro', '\\mathbin{\\mathop{#2}\\limits^{#1}}', 2],
 
   over:               'Over',
   overwithdelims:     'Over',
