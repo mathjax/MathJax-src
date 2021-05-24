@@ -300,7 +300,7 @@ export class ParserConfiguration {
    * @constructor
    * @param {(string|[string,number])[]} packages A list of packages with
    *     optional priorities.
-   * @parm {string[]} parsers   The names of the parsers whose packages are supported
+   * @parm {string[]} parsers   The names of the parsers this package targets
    */
   constructor(packages: (string | [string, number])[], parsers: string[] = ['tex']) {
     this.parsers = parsers;
