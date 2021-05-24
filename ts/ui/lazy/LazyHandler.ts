@@ -127,11 +127,6 @@ export interface LazyMathItem<N, T, D> extends MathItem<N, T, D> {
   lazyMarker: N;
 
   /**
-   * The state to use when rerednering the math item (COMPILED vs TYPESET)
-   */
-  lazyState: number;
-
-  /**
    * True if this item is a TeX MathItem
    */
   lazyTex: boolean;
@@ -139,7 +134,7 @@ export interface LazyMathItem<N, T, D> extends MathItem<N, T, D> {
 }
 
 /**
- * The mixin for adding laxy typesetting to MathItems
+ * The mixin for adding lazy typesetting to MathItems
  *
  * @param {B} BaseMathItem      The MathItem class to be extended
  * @return {AssistiveMathItem}  The augmented MathItem class
@@ -155,10 +150,27 @@ export function LazyMathItemMixin<N, T, D, B extends Constructor<HTMLMathItem<N,
 
   return class extends BaseMathItem {
 
+    /**
+     * True when this item should be skipped during compilation
+     * (i.e., it is not showing on screen, and has not needed to be
+     * compiled for a later TeX expression that is showing).
+     */
     public lazyCompile: boolean = true;
+
+    /**
+     * True when this item should be skipped during typesetting
+     * (i.e., it has not yet appeared on screen).
+     */
     public lazyTypeset: boolean = true;
+
+    /**
+     * The marker DOM node for this item.
+     */
     public lazyMarker: N;
-    public lazyState: number = STATE.COMPILED;
+
+    /**
+     * True if this is a TeX expression.
+     */
     public lazyTex: boolean = false;
 
     /**
@@ -170,15 +182,14 @@ export function LazyMathItemMixin<N, T, D, B extends Constructor<HTMLMathItem<N,
      * @override
      */
     public compile(document: LazyMathDocument<N, T, D>) {
-      if (this.lazyCompile) {
-        if (this.state() < STATE.COMPILED) {
-          this.lazyTex = (this.inputJax.name === 'TeX');
-          this.root = document.mmlFactory.create('math');
-          this.state(STATE.COMPILED);
-        }
-      } else {
+      if (!this.lazyCompile) {
         super.compile(document);
-        this.lazyState = STATE.TYPESET;
+        return;
+      }
+      if (this.state() < STATE.COMPILED) {
+        this.lazyTex = (this.inputJax.name === 'TeX');
+        this.root = document.mmlFactory.create('math');
+        this.state(STATE.COMPILED);
       }
     }
 
@@ -190,18 +201,18 @@ export function LazyMathItemMixin<N, T, D, B extends Constructor<HTMLMathItem<N,
      * @override
      */
     public typeset(document: LazyMathDocument<N, T, D>) {
-      if (this.lazyTypeset) {
-        if (this.state() < STATE.TYPESET) {
-          const adaptor = document.adaptor;
-          if (!this.lazyMarker) {
-            const id = document.lazyList.add(this);
-            this.lazyMarker = adaptor.node('mjx-lazy', {[LAZYID]: id});
-            this.typesetRoot = adaptor.node('mjx-container', {}, [this.lazyMarker]);
-          }
-          this.state(STATE.TYPESET);
-        }
-      } else {
+      if (!this.lazyTypeset) {
         super.typeset(document);
+        return;
+      }
+      if (this.state() < STATE.TYPESET) {
+        const adaptor = document.adaptor;
+        if (!this.lazyMarker) {
+          const id = document.lazyList.add(this);
+          this.lazyMarker = adaptor.node('mjx-lazy', {[LAZYID]: id});
+          this.typesetRoot = adaptor.node('mjx-container', {}, [this.lazyMarker]);
+        }
+        this.state(STATE.TYPESET);
       }
     }
 
@@ -327,7 +338,7 @@ B extends MathDocumentConstructor<HTMLDocument<N, T, D>>>(
 
     /**
      * The function used by the IntersectionObserver to monitor the markers coming into view.
-     * When one (or more) does, add it to or remove it from the set to be processed, and
+     * When one (or more) does, add its math item to or remove it from the set to be processed, and
      *   if added to the set, queue an idle task, if one isn't already pending.
      *
      * @param {IntersectionObserverEntry[]} entries   The markers that have come into or out of view.
@@ -336,15 +347,15 @@ B extends MathDocumentConstructor<HTMLDocument<N, T, D>>>(
       for (const entry of entries) {
         const id = this.adaptor.getAttribute(entry.target as any as N, LAZYID);
         const math = this.lazyList.get(id);
-        if (!math) return;
-        if (entry.isIntersecting) {
-          this.lazySet.add(id);
-          if (!this.lazyIdle) {
-            this.lazyIdle = true;
-            this.lazyProcessSet();
-          }
-        } else {
+        if (!math) continue;
+        if (!entry.isIntersecting) {
           this.lazySet.delete(id);
+          continue;
+        }
+        this.lazySet.add(id);
+        if (!this.lazyIdle) {
+          this.lazyIdle = true;
+          this.lazyProcessSet();
         }
       }
     }
@@ -460,7 +471,7 @@ B extends MathDocumentConstructor<HTMLDocument<N, T, D>>>(
 /*==========================================================================*/
 
 /**
- * Add lazy typesetting support a Handler instance
+ * Add lazy typesetting support to a Handler instance
  *
  * @param {Handler} handler   The Handler instance to enhance
  * @return {Handler}          The handler that was modified (for purposes of chaining extensions)
@@ -471,7 +482,7 @@ B extends MathDocumentConstructor<HTMLDocument<N, T, D>>>(
  */
 export function LazyHandler<N, T, D>(handler: HTMLHandler<N, T, D>): HTMLHandler<N, T, D> {
   //
-  // Only update the document class if we can handle IntersectionObservers and idle callbacks
+  // Only update the document class if we can handle IntersectionObservers
   //
   if (typeof IntersectionObserver !== 'undefined') {
     handler.documentClass =
