@@ -181,13 +181,13 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     this.latex = math.math;
     let node: MmlNode;
     this.parseOptions.tags.startEquation(math);
-    let global;
+    let globalEnv;
     try {
       let parser = new TexParser(this.latex,
                                  {display: display, isInner: false},
                                  this.parseOptions);
       node = parser.mml();
-      global = parser.stack.global;
+      globalEnv = parser.stack.global;
     } catch (err) {
       if (!(err instanceof TexError)) {
         throw err;
@@ -196,8 +196,8 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
       node = this.options.formatError(this, err);
     }
     node = this.parseOptions.nodeFactory.create('node', 'math', [node]);
-    if (global && global.indentalign) {
-      NodeUtil.setAttribute(node, 'indentalign', global.indentalign);
+    if (globalEnv?.indentalign) {
+      NodeUtil.setAttribute(node, 'indentalign', globalEnv.indentalign);
     }
     if (display) {
       NodeUtil.setAttribute(node, 'display', 'block');

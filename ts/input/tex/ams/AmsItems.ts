@@ -184,7 +184,9 @@ export class FlalignItem extends EqnArrayItem {
       }
     }
     //
-    if (this.row.length > this.maxrow) this.maxrow = this.row.length;
+    if (this.row.length > this.maxrow) {
+      this.maxrow = this.row.length;
+    }
     super.EndRow();
     //
     // For full-width environments with labels that aren't supposed to take up space,
