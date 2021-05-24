@@ -135,8 +135,9 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
    */
   public initialize() {
     if (this.options.fontCache === 'global') {
-      this.fontCache.clearCache();
+      this.clearFontCache();
     }
+    this.svgStyles = null;
   }
 
   /**
