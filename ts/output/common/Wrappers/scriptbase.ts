@@ -635,7 +635,7 @@ export function CommonScriptbaseMixin<
       const widths = boxes.map(box => box.w * box.rscale);
       widths[0] -= (this.baseRemoveIc && !this.baseCore.node.attributes.get('largeop') ? this.baseIc : 0);
       const w = Math.max(...widths);
-      const dw = [];
+      const dw = [] as number[];
       let m = 0;
       for (const i of widths.keys()) {
         dw[i] = (align === 'center' ? (w - widths[i]) / 2 :
@@ -649,6 +649,7 @@ export function CommonScriptbaseMixin<
           dw[i] += m;
         }
       }
+      [1, 2].map(i => dw[i] += (boxes[i] ? boxes[i].dx * boxes[0].scale : 0));
       return dw;
     }
 
