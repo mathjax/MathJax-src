@@ -35,6 +35,7 @@ import './colorv2/ColorV2Configuration.js';
 import './configmacros/ConfigMacrosConfiguration.js';
 import './enclose/EncloseConfiguration.js';
 import './extpfeil/ExtpfeilConfiguration.js';
+import './gensymb/GensymbConfiguration.js';
 import './html/HtmlConfiguration.js';
 import './mhchem/MhchemConfiguration.js';
 import './newcommand/NewcommandConfiguration.js';
@@ -62,6 +63,7 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
     '[tex]/colorv2',
     '[tex]/enclose',
     '[tex]/extpfeil',
+    '[tex]/gensymb',
     '[tex]/html',
     '[tex]/mhchem',
     '[tex]/newcommand',
@@ -90,6 +92,7 @@ export const AllPackages: string[] = [
   'color',
   'enclose',
   'extpfeil',
+  'gensymb',
   'html',
   'mhchem',
   'newcommand',
