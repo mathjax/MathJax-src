@@ -30,6 +30,7 @@ import './boldsymbol/BoldsymbolConfiguration.js';
 import './braket/BraketConfiguration.js';
 import './bussproofs/BussproofsConfiguration.js';
 import './cancel/CancelConfiguration.js';
+import './centernot/CenternotConfiguration.js';
 import './color/ColorConfiguration.js';
 import './colorv2/ColorV2Configuration.js';
 import './configmacros/ConfigMacrosConfiguration.js';
@@ -57,6 +58,7 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
     '[tex]/braket',
     '[tex]/bussproofs',
     '[tex]/cancel',
+    '[tex]/centernot',
     '[tex]/color',
     '[tex]/colorv2',
     '[tex]/enclose',
@@ -85,6 +87,7 @@ export const AllPackages: string[] = [
   'braket',
   'bussproofs',
   'cancel',
+  'centernot',
   'color',
   'enclose',
   'extpfeil',

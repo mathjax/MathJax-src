@@ -16,6 +16,7 @@ export const source = {
   '[tex]/braket': `${src}/input/tex/extensions/braket/braket.js`,
   '[tex]/bussproofs': `${src}/input/tex/extensions/bussproofs/bussproofs.js`,
   '[tex]/cancel': `${src}/input/tex/extensions/cancel/cancel.js`,
+  '[tex]/centernot': `${src}/input/tex/extensions/centernot/centernot.js`,
   '[tex]/color': `${src}/input/tex/extensions/color/color.js`,
   '[tex]/colorv2': `${src}/input/tex/extensions/colorv2/colorv2.js`,
   '[tex]/configmacros': `${src}/input/tex/extensions/configmacros/configmacros.js`,
