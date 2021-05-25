@@ -423,8 +423,9 @@ export abstract class CommonOutputJax<
     const adaptor = this.adaptor;
     const family = (getFamily ? adaptor.fontFamily(node) : '');
     const em = adaptor.fontSize(node);
-    const ex = (adaptor.nodeSize(adaptor.childNode(node, 1) as N)[1] / 60) || (em * this.options.exFactor);
-    const containerWidth = (adaptor.getStyle(node, 'display') === 'table' ?
+    const [w, h] = adaptor.nodeSize(adaptor.childNode(node, 1) as N);
+    const ex = (w ? h / 60 : em * this.options.exFactor);
+    const containerWidth = (!w ? 1000000 : adaptor.getStyle(node, 'display') === 'table' ?
                             adaptor.nodeSize(adaptor.lastChild(node) as N)[0] - 1 :
                             adaptor.nodeBBox(adaptor.lastChild(node) as N).left -
                             adaptor.nodeBBox(adaptor.firstChild(node) as N).left - 2);

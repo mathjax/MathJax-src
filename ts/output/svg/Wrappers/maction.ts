@@ -121,7 +121,7 @@ CommonMactionMixin<SVGWrapper<any, any, any>, SVGConstructor<any, any, any>>(SVG
     ['tooltip', [(node, data) => {
       const tip = node.childNodes[1];
       if (!tip) return;
-      const rect = node.adaptor.firstChild(node.element);
+      const rect = node.firstChild();
       if (tip.node.isKind('mtext')) {
         //
         // Text tooltips are handled through title attributes
