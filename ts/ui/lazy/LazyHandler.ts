@@ -174,6 +174,21 @@ export function LazyMathItemMixin<N, T, D, B extends Constructor<HTMLMathItem<N,
     public lazyTex: boolean = false;
 
     /**
+     * @override
+     */
+    constructor(...args: any[]) {
+      super(...args);
+      if (!this.end.node) {
+        //
+        // This is a MathItem that isn't in the document
+        // (so either from semantic enrich, or from convert())
+        // and should be typeset as usual.
+        //
+        this.lazyCompile = this.lazyTypeset = false;
+      }
+    }
+
+    /**
      * Initially don't compile math, just use an empty math item,
      *   then when the math comes into view (or is before something
      *   that comes into view), compile it properly and mark the item
