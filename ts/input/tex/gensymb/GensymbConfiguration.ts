@@ -23,33 +23,42 @@
  */
 
 import {Configuration} from '../Configuration.js';
-import ParseMethods from '../ParseMethods.js';
+import {Symbol} from '../Symbol.js';
 import {TexConstant} from '../TexConstants.js';
 import {CharacterMap} from '../SymbolMap.js';
+import TexParser from '../TexParser.js';
 
 
 /**
- * Ohm symbol as in gensymb. Usually upright, but can be affected by fonts.
+ * Handle characters that are known units.
+ * @param {TexParser} parser The current tex parser.
+ * @param {Symbol} mchar The parsed symbol.
  */
-new CharacterMap('gensymb-ohm', ParseMethods.mathchar7, {
-  ohm:            '\u03A9'
-});
+function mathcharUnit(parser: TexParser, mchar: Symbol) {
+  console.log(mchar.attributes);
+  const def = mchar.attributes || {};
+  def.mathvariant = TexConstant.Variant.NORMAL;
+  def.class = 'MathML-Unit';
+  const node = parser.create('token', 'mi', def, mchar.char);
+  parser.Push(node);
+}
 
 
 /**
- * Remaining symbols from the gensymb package are all in \rm font only.
+ * gensymb units.
  */
-new CharacterMap('gensymb-rest', ParseMethods.mathchar0mo, {
-  degree:         ['\u00B0', {mathvariant: TexConstant.Variant.NORMAL}],
-  celsius:        ['\u2103', {mathvariant: TexConstant.Variant.NORMAL}],
-  perthousand:    ['\u2030', {mathvariant: TexConstant.Variant.NORMAL}],
-  micro:          ['\u00B5', {mathvariant: TexConstant.Variant.NORMAL}]
+new CharacterMap('gensymb-symbols', mathcharUnit, {
+  ohm:            '\u2126',
+  degree:         '\u00B0',
+  celsius:        '\u2103',
+  perthousand:    '\u2030',
+  micro:          '\u00B5'
 });
 
 
 export const GensymbConfiguration = Configuration.create(
   'gensymb', {
-    handler: {macro: ['gensymb-ohm', 'gensymb-rest']},
+    handler: {macro: ['gensymb-symbols']},
   }
 );
 
