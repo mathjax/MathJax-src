@@ -143,6 +143,13 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
   /**
    * @override
    */
+  public initialize() {
+    this.chtmlStyles = null;
+  }
+
+  /**
+   * @override
+   */
   public escaped(math: MathItem<N, T, D>, html: MathDocument<N, T, D>) {
     this.setDocument(html);
     return this.html('span', {}, [this.text(math.math)]);
@@ -153,7 +160,7 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
    */
   public styleSheet(html: MathDocument<N, T, D>) {
     if (this.chtmlStyles && !this.options.adaptiveCSS) {
-      return null;  // stylesheet is already added to the document
+      return this.chtmlStyles;  // stylesheet is already added to the document
     }
     const sheet = this.chtmlStyles = super.styleSheet(html);
     this.adaptor.setAttribute(sheet, 'id', CHTML.STYLESHEETID);
@@ -194,7 +201,13 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
     for (const kind of this.factory.getKinds()) {
       this.factory.getNodeClass(kind).used = false;
     }
+  }
 
+  /**
+   * @override
+   */
+  public reset() {
+    this.clearCache();
   }
 
   /*****************************************************************/
@@ -202,7 +215,7 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
   /**
    * @override
    */
-  public unknownText(text: string, variant: string) {
+  public unknownText(text: string, variant: string, width: number = null) {
     const styles: StyleList = {};
     const scale = 100 / this.math.metrics.scale;
     if (scale !== 100) {
@@ -215,6 +228,16 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
         this.cssFontStyles(this.font.getCssFont(variant), styles);
       }
     }
+    //
+    // Work around Safari bug with the MJXZERO font by forcing the width.
+    //   (If MJXZERO can be made to work with Safari, then remove width parameter
+    //    and call to getBBox().w in TextNode.ts)
+    //
+    if (width !== null) {
+      const metrics = this.math.metrics;
+      styles.width = Math.round(width * metrics.em * metrics.scale) + 'px';
+    }
+    //
     return this.html('mjx-utext', {variant: variant, style: styles}, [this.text(text)]);
   }
 
@@ -225,11 +248,16 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
    * @override
    */
 
-  public measureTextNode(text: N) {
+  public measureTextNode(textNode: N) {
     const adaptor = this.adaptor;
-    text = adaptor.clone(text);
+    const text = adaptor.clone(textNode);
+    //
+    // Work arround Safari bug with the MJXZERO font.
+    //
+    adaptor.setStyle(text, 'font-family', adaptor.getStyle(text, 'font-family').replace(/MJXZERO, /g, ''));
+    //
     const style = {position: 'absolute', 'white-space': 'nowrap'};
-    const node = this.html('mjx-measure-text', {style}, [ text]);
+    const node = this.html('mjx-measure-text', {style}, [text]);
     adaptor.append(adaptor.parent(this.math.start.node), this.container);
     adaptor.append(this.container, node);
     let w = adaptor.nodeSize(text, this.math.metrics.em)[0] / this.math.metrics.scale;

@@ -53,6 +53,7 @@ export interface MinDocument<N, T> {
  * @template T  The Text node class
  */
 export interface MinHTMLElement<N, T> {
+  nodeType: number;
   nodeName: string;
   nodeValue: string;
   textContent: string;
@@ -99,6 +100,7 @@ export interface MinHTMLElement<N, T> {
  * @template T  The Text node class
  */
 export interface MinText<N, T> {
+  nodeType: number;
   nodeName: string;
   nodeValue: string;
   parentNode: N | Node;
@@ -111,11 +113,20 @@ export interface MinText<N, T> {
 /**
  * The minimum fields needed for a DOMParser
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
+ * @template D  The Document class
  */
 export interface MinDOMParser<D> {
   parseFromString(text: string, format?: string): D;
+}
+
+/*****************************************************************/
+/**
+ * The minimum fields needed for a DOMParser
+ *
+ * @template N  The HTMLElement node class
+ */
+export interface MinXMLSerializer<N> {
+  serializeToString(node: N): string;
 }
 
 /*****************************************************************/
@@ -129,6 +140,9 @@ export interface MinWindow<N, D> {
   document: D;
   DOMParser: {
     new(): MinDOMParser<D>
+  };
+  XMLSerializer: {
+    new(): MinXMLSerializer<N>;
   };
   NodeList: any;
   HTMLCollection: any;
@@ -233,7 +247,7 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    * @override
    */
   public doctype(doc: D) {
-    return `<!DOCTYPE ${doc.doctype.name}>`;
+    return (doc.doctype ? `<!DOCTYPE ${doc.doctype.name}>` : '');
   }
 
   /**
@@ -365,7 +379,8 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    * @override
    */
   public kind(node: N | T) {
-    return node.nodeName.toLowerCase();
+    const n = node.nodeType;
+    return (n === 1 || n === 3 || n === 8 ? node.nodeName.toLowerCase() : '');
   }
 
   /**
@@ -394,6 +409,11 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    */
   public outerHTML(node: N) {
     return node.outerHTML;
+  }
+
+  public serializeXML(node: N) {
+    const serializer = new this.window.XMLSerializer();
+    return serializer.serializeToString(node) as string;
   }
 
   /**

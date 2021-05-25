@@ -52,7 +52,7 @@ export const AmsConfiguration = Configuration.create(
   'ams', {
     handler: {
       delimiter: ['AMSsymbols-delimiter', 'AMSmath-delimiter'],
-      macro: ['AMSsymbols-mathchar0mi', 'AMSsymbols-mathchar0m0',
+      macro: ['AMSsymbols-mathchar0mi', 'AMSsymbols-mathchar0mo',
               'AMSsymbols-delimiter', 'AMSsymbols-macros',
               'AMSmath-mathchar0mo', 'AMSmath-macros', 'AMSmath-delimiter'],
       environment: ['AMSmath-environment']

@@ -212,13 +212,14 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
    */
   public addStyleSheet() {
     const sheet = this.documentStyleSheet();
-    if (sheet) {
-      const head = this.adaptor.head(this.document);
-      let styles = this.findSheet(head, this.adaptor.getAttribute(sheet, 'id'));
+    const adaptor = this.adaptor;
+    if (sheet && !adaptor.parent(sheet)) {
+      const head = adaptor.head(this.document);
+      let styles = this.findSheet(head, adaptor.getAttribute(sheet, 'id'));
       if (styles) {
-        this.adaptor.replace(sheet, styles);
+        adaptor.replace(sheet, styles);
       } else {
-        this.adaptor.append(head, sheet);
+        adaptor.append(head, sheet);
       }
     }
   }

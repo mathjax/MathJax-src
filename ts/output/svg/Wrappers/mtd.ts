@@ -70,7 +70,7 @@ CommonMtdMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
    */
   public placeColor(x: number, y: number, W: number, H: number) {
     const adaptor = this.adaptor;
-    const child = adaptor.firstChild(this.element);
+    const child = this.firstChild();
     if (child && adaptor.kind(child) === 'rect' && adaptor.getAttribute(child, 'data-bgcolor')) {
       adaptor.setAttribute(child, 'x', this.fixed(x));
       adaptor.setAttribute(child, 'y', this.fixed(y));
