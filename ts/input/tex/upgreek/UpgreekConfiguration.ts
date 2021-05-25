@@ -23,57 +23,70 @@
  */
 
 import {Configuration} from '../Configuration.js';
-import ParseMethods from '../ParseMethods.js';
-import {TexConstant} from '../TexConstants.js';
+import {Symbol} from '../Symbol.js';
 import {CharacterMap} from '../SymbolMap.js';
+import {TexConstant} from '../TexConstants.js';
+import TexParser from '../TexParser.js';
 
+
+/**
+ * Handle greek mathchar as mi in normal variant.
+ * @param {TexParser} parser The current tex parser.
+ * @param {Symbol} mchar The parsed symbol.
+ */
+function mathchar0miNormal(parser: TexParser, mchar: Symbol) {
+  const def = mchar.attributes || {};
+  def.mathvariant = TexConstant.Variant.NORMAL;
+  const node = parser.create('token', 'mi', def, mchar.char);
+  parser.Push(node);
+}
 
 /**
  * Upright Greek characters.
  */
-new CharacterMap('upgreek', ParseMethods.mathchar0mi, {
-  upalpha:        ['\u03B1', {mathvariant: TexConstant.Variant.NORMAL}],
-  upbeta:         ['\u03B2', {mathvariant: TexConstant.Variant.NORMAL}],
-  upgamma:        ['\u03B3', {mathvariant: TexConstant.Variant.NORMAL}],
-  updelta:        ['\u03B4', {mathvariant: TexConstant.Variant.NORMAL}],
-  upepsilon:      ['\u03F5', {mathvariant: TexConstant.Variant.NORMAL}],
-  upzeta:         ['\u03B6', {mathvariant: TexConstant.Variant.NORMAL}],
-  upeta:          ['\u03B7', {mathvariant: TexConstant.Variant.NORMAL}],
-  uptheta:        ['\u03B8', {mathvariant: TexConstant.Variant.NORMAL}],
-  upiota:         ['\u03B9', {mathvariant: TexConstant.Variant.NORMAL}],
-  upkappa:        ['\u03BA', {mathvariant: TexConstant.Variant.NORMAL}],
-  uplambda:       ['\u03BB', {mathvariant: TexConstant.Variant.NORMAL}],
-  upmu:           ['\u03BC', {mathvariant: TexConstant.Variant.NORMAL}],
-  upnu:           ['\u03BD', {mathvariant: TexConstant.Variant.NORMAL}],
-  upxi:           ['\u03BE', {mathvariant: TexConstant.Variant.NORMAL}],
-  upomicron:      ['\u03BF', {mathvariant: TexConstant.Variant.NORMAL}],
-  uppi:           ['\u03C0', {mathvariant: TexConstant.Variant.NORMAL}],
-  uprho:          ['\u03C1', {mathvariant: TexConstant.Variant.NORMAL}],
-  upsigma:        ['\u03C3', {mathvariant: TexConstant.Variant.NORMAL}],
-  uptau:          ['\u03C4', {mathvariant: TexConstant.Variant.NORMAL}],
-  upupsilon:      ['\u03C5', {mathvariant: TexConstant.Variant.NORMAL}],
-  upphi:          ['\u03D5', {mathvariant: TexConstant.Variant.NORMAL}],
-  upchi:          ['\u03C7', {mathvariant: TexConstant.Variant.NORMAL}],
-  uppsi:          ['\u03C8', {mathvariant: TexConstant.Variant.NORMAL}],
-  upomega:        ['\u03C9', {mathvariant: TexConstant.Variant.NORMAL}],
-  upvarepsilon:   ['\u03B5', {mathvariant: TexConstant.Variant.NORMAL}],
-  upvartheta:     ['\u03D1', {mathvariant: TexConstant.Variant.NORMAL}],
-  upvarpi:        ['\u03D6', {mathvariant: TexConstant.Variant.NORMAL}],
-  upvarrho:       ['\u03F1', {mathvariant: TexConstant.Variant.NORMAL}],
-  upvarsigma:     ['\u03C2', {mathvariant: TexConstant.Variant.NORMAL}],
-  upvarphi:       ['\u03C6', {mathvariant: TexConstant.Variant.NORMAL}],
+new CharacterMap('upgreek', mathchar0miNormal, {
+  upalpha:        '\u03B1',
+  upbeta:         '\u03B2',
+  upgamma:        '\u03B3',
+  updelta:        '\u03B4',
+  upepsilon:      '\u03F5',
+  upzeta:         '\u03B6',
+  upeta:          '\u03B7',
+  uptheta:        '\u03B8',
+  upiota:         '\u03B9',
+  upkappa:        '\u03BA',
+  uplambda:       '\u03BB',
+  upmu:           '\u03BC',
+  upnu:           '\u03BD',
+  upxi:           '\u03BE',
+  upomicron:      '\u03BF',
+  uppi:           '\u03C0',
+  uprho:          '\u03C1',
+  upsigma:        '\u03C3',
+  uptau:          '\u03C4',
+  upupsilon:      '\u03C5',
+  upphi:          '\u03D5',
+  upchi:          '\u03C7',
+  uppsi:          '\u03C8',
+  upomega:        '\u03C9',
+  upvarepsilon:   '\u03B5',
+  upvartheta:     '\u03D1',
+  upvarpi:        '\u03D6',
+  upvarrho:       '\u03F1',
+  upvarsigma:     '\u03C2',
+  upvarphi:       '\u03C6',
 
-  Upgamma:        ['\u0393', {mathvariant: TexConstant.Variant.NORMAL}],
-  Updelta:        ['\u0394', {mathvariant: TexConstant.Variant.NORMAL}],
-  Uptheta:        ['\u0398', {mathvariant: TexConstant.Variant.NORMAL}],
-  Uplambda:       ['\u039B', {mathvariant: TexConstant.Variant.NORMAL}],
-  Upxi:           ['\u039E', {mathvariant: TexConstant.Variant.NORMAL}],
-  Uppi:           ['\u03A0', {mathvariant: TexConstant.Variant.NORMAL}],
-  Upsigma:        ['\u03A3', {mathvariant: TexConstant.Variant.NORMAL}],
-  Upupsilon:      ['\u03A5', {mathvariant: TexConstant.Variant.NORMAL}],
-  Upphi:          ['\u03A6', {mathvariant: TexConstant.Variant.NORMAL}],
-  Uppsi:          ['\u03A8', {mathvariant: TexConstant.Variant.NORMAL}],
-  Upomega:        ['\u03A9', {mathvariant: TexConstant.Variant.NORMAL}]
+  Upgamma:        '\u0393',
+  Updelta:        '\u0394',
+  Uptheta:        '\u0398',
+  Uplambda:       '\u039B',
+  Upxi:           '\u039E',
+  Uppi:           '\u03A0',
+  Upsigma:        '\u03A3',
+  Upupsilon:      '\u03A5',
+  Upphi:          '\u03A6',
+  Uppsi:          '\u03A8',
+  Upomega:        '\u03A9'
 });
 
 
