@@ -35,7 +35,6 @@ import TexParser from '../TexParser.js';
  * @param {Symbol} mchar The parsed symbol.
  */
 function mathcharUnit(parser: TexParser, mchar: Symbol) {
-  console.log(mchar.attributes);
   const def = mchar.attributes || {};
   def.mathvariant = TexConstant.Variant.NORMAL;
   def.class = 'MathML-Unit';
