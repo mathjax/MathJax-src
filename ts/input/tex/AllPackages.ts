@@ -41,6 +41,7 @@ import './newcommand/NewcommandConfiguration.js';
 import './noerrors/NoErrorsConfiguration.js';
 import './noundefined/NoUndefinedConfiguration.js';
 import './physics/PhysicsConfiguration.js';
+import './setoptions/SetOptionsConfiguration.js';
 import './tagformat/TagFormatConfiguration.js';
 import './textmacros/TextMacrosConfiguration.js';
 import './unicode/UnicodeConfiguration.js';
@@ -71,7 +72,8 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
     '[tex]/verb',
     '[tex]/configmacros',
     '[tex]/tagformat',
-    '[tex]/textmacros'
+    '[tex]/textmacros',
+    '[tex]/setoptions',
   );
 }
 
