@@ -467,14 +467,14 @@ export abstract class CommonOutputJax<
   }
 
   /**
-   * @param {CssStyles} styles   The style obejct to add to
+   * @param {CssStyles} styles   The style object to add to
    */
   protected addFontStyles(styles: CssStyles) {
     styles.addStyles(this.font.styles);
   }
 
   /**
-   * @param {CssStyles} styles   The style obejct to add to
+   * @param {CssStyles} styles   The style object to add to
    */
   protected addWrapperStyles(styles: CssStyles) {
     for (const kind of this.factory.getKinds()) {

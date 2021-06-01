@@ -187,13 +187,13 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
    * @override
    */
   protected addWrapperStyles(styles: CssStyles) {
-    if (this.options.adaptiveCSS) {
-      for (const kind of this.wrapperUsage.update()) {
-        const wrapper = this.factory.getNodeClass(kind) as any as typeof CommonWrapper;
-        wrapper && this.addClassStyles(wrapper, styles);
-      }
-    } else {
+    if (!this.options.adaptiveCSS) {
       super.addWrapperStyles(styles);
+      return;
+    }
+    for (const kind of this.wrapperUsage.update()) {
+      const wrapper = this.factory.getNodeClass(kind) as any as typeof CommonWrapper;
+      wrapper && this.addClassStyles(wrapper, styles);
     }
   }
 

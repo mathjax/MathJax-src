@@ -22,7 +22,7 @@
  */
 
 /**
- * Class used for traking usage of font characters or wrppers
+ * Class used for tracking usage of font characters or wrappers
  *  (should extend Set<T>, but that doesn't work for compiling to ES2015).
  */
 export class Usage<T> {
