@@ -143,9 +143,9 @@ export const SetOptionsConfiguration = Configuration.create(
         filterPackage: SetOptionsUtil.filterPackage,  // filter for whether a package can be configured
         filterOption: SetOptionsUtil.filterOption,    // filter for whether an option can be set
         filterValue: SetOptionsUtil.filterValue,      // filter for the value to assign to an option
-        allowPackageDefault: true,       // default for allowing packages if not erxplicitly set in allowOptions
+        allowPackageDefault: true,       // default for allowing packages when not explicitly set in allowOptions
         allowOptionsDefault: true,       // default for allowing option that isn't explicitly set in allowOptions
-        allowOptions: expandable({       // list of packages to allow/disablow, and their options to allow/disallow
+        allowOptions: expandable({       // list of packages to allow/disallow, and their options to allow/disallow
           //
           //  top-level tex items can be set, but not these
           //    (that leaves digits and the tagging options)
