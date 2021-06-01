@@ -1,7 +1,7 @@
 const PACKAGE = require('../../../../../webpack.common.js');
 
 module.exports = PACKAGE(
-  'numcases',          // the package to build
+  'cases',             // the package to build
   '../../../../../js', // location of the compiled js files
   [                    // packages to link to (relative to Mathjax components)
     'components/src/input/tex-base/lib',

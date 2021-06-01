@@ -87,6 +87,7 @@ export type MMLNODE = MmlNode | TextNode | XMLNode;
  */
 
 export interface MmlNode extends Node {
+
   /**
    * Test various properties of MathML nodes
    */
@@ -95,21 +96,25 @@ export interface MmlNode extends Node {
   readonly isSpacelike: boolean;
   readonly linebreakContainer: boolean;
   readonly hasNewLine: boolean;
+
   /**
    *  The expected number of children (-1 means use inferred mrow)
    */
   readonly arity: number;
   readonly isInferred: boolean;
+
   /**
    *  Get the parent node (skipping inferred mrows and
    *    other nodes marked as notParent)
    */
   readonly Parent: MmlNode;
   readonly notParent: boolean;
+
   /**
    * The actual parent in the tree
    */
   parent: MmlNode;
+
   /**
    *  values needed for TeX spacing computations
    */
@@ -127,16 +132,19 @@ export interface MmlNode extends Node {
    *                    core <mo> node.  For non-embellished nodes, the original node.
    */
   core(): MmlNode;
+
   /**
    * @return {MmlNode}  For embellished operators, the core <mo> element (at whatever
    *                    depth).  For non-embellished nodes, the original node itself.
    */
   coreMO(): MmlNode;
+
   /**
    * @return {number}   For embellished operators, the index of the child node containing
    *                    the core <mo>.  For non-embellished nodes, 0.
    */
   coreIndex(): number;
+
   /**
    * @return {number}  The index of this node in its parent's childNodes array.
    */
@@ -149,10 +157,12 @@ export interface MmlNode extends Node {
    *                    in the tree (usually, either the last child, or the node itself)
    */
   setTeXclass(prev: MmlNode): MmlNode;
+
   /**
    * @return {string}  The spacing to use before this element (one of TEXSPACELENGTH array above)
    */
   texSpacing(): string;
+
   /**
    * @return {boolean}  The core mo element has an explicit 'form', 'lspace', or 'rspace' attribute
    */
@@ -201,10 +211,12 @@ export interface MmlNode extends Node {
  */
 
 export interface MmlNodeClass extends NodeClass {
+
   /**
    *  The list of default attribute values for nodes of this class
    */
   defaults?: PropertyList;
+
   /**
    * An MmlNode takes a NodeFactory (so it can create additional nodes as needed), a list
    *   of attributes, and an array of children and returns the desired MmlNode with
@@ -216,6 +228,7 @@ export interface MmlNodeClass extends NodeClass {
    * @param {MmlNode[]} children       The initial child nodes (more can be added later)
    */
   new (factory: MmlFactory, attributes?: PropertyList, children?: MmlNode[]): MmlNode;
+
 }
 
 
@@ -237,6 +250,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
     //    scale all spaces, fractions, etc.
     dir: INHERIT
   };
+
   /**
    *  This lists properties that do NOT get inherited between specific kinds
    *  of nodes.  The outer keys are the node kinds that are being inherited FROM,
@@ -285,6 +299,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
    * The TeX class for the preceding node
    */
   public prevClass: number = null;
+
   /**
    * The scriptlevel of the preceding node
    */
@@ -299,10 +314,12 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
    *  Child nodes are MmlNodes (special case of Nodes).
    */
   public childNodes: MmlNode[];
+
   /**
    * The parent is an MmlNode
    */
   public parent: MmlNode;
+
   /**
    * The node factory is an MmlFactory
    */
@@ -328,6 +345,36 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
       factory.getNodeClass('math').defaults
     );
     this.attributes.setList(attributes);
+  }
+
+  /**
+   * @override
+   *
+   * @param {boolean} keepIds   True to copy id attributes, false to skip them.
+   */
+  public copy(keepIds: boolean = false): AbstractMmlNode {
+    const node = this.factory.create(this.kind) as AbstractMmlNode;
+    node.properties = {...this.properties};
+    if (this.attributes) {
+      const attributes = this.attributes.getAllAttributes();
+      for (const name of Object.keys(attributes)) {
+        if (name !== 'id' || keepIds) {
+          node.attributes.set(name, attributes[name]);
+        }
+      }
+    }
+    if (this.childNodes && this.childNodes.length) {
+      let children = this.childNodes as MmlNode[];
+      if (children.length === 1 && children[0].isInferred) {
+        children = children[0].childNodes as MmlNode[];
+      }
+      for (const child of children) {
+        if (child) {
+          node.appendChild(child.copy() as MmlNode);
+        }
+      }
+    }
+    return node;
   }
 
   /**
@@ -1151,6 +1198,13 @@ export class TextNode extends AbstractMmlEmptyNode {
   }
 
   /**
+   * @override
+   */
+  public copy() {
+    return (this.factory.create(this.kind) as TextNode).setText(this.getText());
+  }
+
+  /**
    * Just use the text
    */
   public toString() {
@@ -1206,6 +1260,13 @@ export class XMLNode extends AbstractMmlEmptyNode {
    */
   public getSerializedXML(): string {
     return this.adaptor.outerHTML(this.xml);
+  }
+
+  /**
+   * @override
+   */
+  public copy(): XMLNode {
+    return (this.factory.create(this.kind) as XMLNode).setXML(this.adaptor.clone(this.xml));
   }
 
   /**

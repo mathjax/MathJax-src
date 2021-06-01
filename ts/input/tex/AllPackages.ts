@@ -30,9 +30,11 @@ import './boldsymbol/BoldsymbolConfiguration.js';
 import './braket/BraketConfiguration.js';
 import './bussproofs/BussproofsConfiguration.js';
 import './cancel/CancelConfiguration.js';
+import './cases/CasesConfiguration.js';
 import './color/ColorConfiguration.js';
 import './colorv2/ColorV2Configuration.js';
 import './configmacros/ConfigMacrosConfiguration.js';
+import './empheq/EmpheqConfiguration.js';
 import './enclose/EncloseConfiguration.js';
 import './extpfeil/ExtpfeilConfiguration.js';
 import './html/HtmlConfiguration.js';
@@ -45,8 +47,6 @@ import './tagformat/TagFormatConfiguration.js';
 import './textmacros/TextMacrosConfiguration.js';
 import './unicode/UnicodeConfiguration.js';
 import './verb/VerbConfiguration.js';
-import './numcases/NumcasesConfiguration.js';
-import './empheq/EmpheqConfiguration.js';
 
 declare const MathJax: any;
 if (typeof MathJax !== 'undefined' && MathJax.loader) {
@@ -59,8 +59,10 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
     '[tex]/braket',
     '[tex]/bussproofs',
     '[tex]/cancel',
+    '[tex]/cases',
     '[tex]/color',
     '[tex]/colorv2',
+    '[tex]/empheq',
     '[tex]/enclose',
     '[tex]/extpfeil',
     '[tex]/html',
@@ -71,8 +73,6 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
     '[tex]/physics',
     '[tex]/unicode',
     '[tex]/verb',
-    '[tex]/numcases',
-    '[tex]/empheq',
     '[tex]/configmacros',
     '[tex]/tagformat',
     '[tex]/textmacros'
@@ -89,7 +89,9 @@ export const AllPackages: string[] = [
   'braket',
   'bussproofs',
   'cancel',
+  'cases',
   'color',
+  'empheq',
   'enclose',
   'extpfeil',
   'html',
@@ -99,8 +101,6 @@ export const AllPackages: string[] = [
   'noundefined',
   'unicode',
   'verb',
-  'numcases',
-  'empheq',
   'configmacros',
   'tagformat',
   'textmacros'

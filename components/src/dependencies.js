@@ -28,7 +28,7 @@ export const dependencies = {
   '[tex]/textmacros': ['input/tex-base'],
   '[tex]/unicode': ['input/tex-base'],
   '[tex]/verb': ['input/tex-base'],
-  '[tex]/numcases': ['[tex]/empheq'],
+  '[tex]/cases': ['[tex]/empheq'],
   '[tex]/empheq': ['input/tex-base', '[tex]/ams']
 };
 
@@ -61,7 +61,7 @@ const allPackages = [
   '[tex]/textmacros',
   '[tex]/unicode',
   '[tex]/verb',
-  '[tex]/numcases',
+  '[tex]/cases',
   '[tex]/empheq'
 ];
 

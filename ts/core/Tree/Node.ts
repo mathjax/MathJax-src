@@ -103,6 +103,11 @@ export interface Node {
   childIndex(child: Node): number;
 
   /**
+   * Make a deep copy of the node (but with no parent).
+   */
+  copy(): Node;
+
+  /**
    * @param {string} kind  The kind of nodes to be located in the tree
    * @return {Node[]}      An array of nodes that are children (at any depth) of the given kind
    */
@@ -263,6 +268,18 @@ export abstract class AbstractNode implements Node {
     return (i === -1 ? null : i);
   }
 
+
+  /**
+   * @override
+   */
+  public copy() {
+    const node = (this as AbstractNode).factory.create(this.kind) as AbstractNode;
+    node.properties = {...this.properties};
+    for (const child of this.childNodes || []) {
+      if (child) node.appendChild(child.copy());
+    }
+    return node;
+  }
 
   /**
    * @override

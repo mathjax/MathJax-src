@@ -8,14 +8,23 @@ import {BeginItem, EqnArrayItem} from '../base/BaseItems.js';
 import {AmsTags} from '../ams/AmsConfiguration.js';
 import {StackItem, CheckType} from '../StackItem.js';
 import {MmlMtable} from '../../../core/MmlTree/MmlNodes/mtable.js';
-import {EmpheqUtil} from '../empheq/EmpheqConfiguration.js';
+import {EmpheqUtil} from '../empheq/EmpheqUtil.js';
 
+/**
+ * The StakItem for the numcases environment.
+ */
 export class CasesBeginItem extends BeginItem {
 
+  /**
+   * @override
+   */
   get kind() {
     return 'cases-begin';
   }
 
+  /**
+   * @override
+   */
   public checkItem(item: StackItem) {
     if (item.isKind('end') && item.getName() === this.getName()) {
       if (this.getProperty('end')) {
@@ -25,16 +34,30 @@ export class CasesBeginItem extends BeginItem {
     }
     return super.checkItem(item);
   }
+
 }
 
+/**
+ * A tagging class for the subnumcases environment.
+ */
 export class CasesTags extends AmsTags {
+
+  /**
+   * The counter for the subnumber.
+   */
   protected subcounter = 0;
 
+  /**
+   * @override
+   */
   public start(env: string, taggable: boolean, defaultTags: boolean) {
     this.subcounter = 0;
     super.start(env, taggable, defaultTags);
   }
 
+  /**
+   * @override
+   */
   public autoTag() {
     if (this.currentTag.tag != null) return;
     if (this.currentTag.env === 'subnumcases') {
@@ -47,6 +70,9 @@ export class CasesTags extends AmsTags {
     }
   }
 
+  /**
+   * @override
+   */
   public formatNumber(n: number, m: number = null) {
     return n.toString() + (m === null ? '' : String.fromCharCode(0x60 + m));
   }
@@ -54,13 +80,20 @@ export class CasesTags extends AmsTags {
 }
 
 export const NumcasesMethods = {
+
+  /**
+   * Implements the numcases environment.
+   *
+   * @param {TexParser} texparser   The active tex parser.
+   * @param {CasesBeginItem} begin  The environment begin item.
+   */
   NumCases(parser: TexParser, begin: CasesBeginItem) {
     if (parser.stack.env.closing === begin.getName()) {
       delete parser.stack.env.closing;
       parser.Push(parser.itemFactory.create('end').setProperty('name', begin.getName())); // finish eqnarray
       const cases = parser.stack.Top();
       const table = cases.Last as MmlMtable;
-      const original = EmpheqUtil.copyMml(table) as MmlMtable;
+      const original = table.copy() as MmlMtable;
       const left = cases.getProperty('left');
       EmpheqUtil.left(table, original, left + '\\empheqlbrace\\,', parser, 'numcases-left');
       parser.Push(parser.itemFactory.create('end').setProperty('name', begin.getName()));
@@ -77,6 +110,9 @@ export const NumcasesMethods = {
     }
   },
 
+  /**
+   * Replacement for & in cases environment.
+   */
   Entry(parser: TexParser, name: string) {
     if (!parser.stack.Top().getProperty('numCases')) {
       return BaseMethods.Entry(parser, name);
@@ -139,32 +175,38 @@ export const NumcasesMethods = {
     //
     //  Process the second column as text and continue parsing from there,
     //
-    const text = tex.substr(parser.i, i - parser.i);
+    const text = tex.substr(parser.i, i - parser.i).replace(/^\s*/, '');
     parser.PushAll(ParseUtil.internalMath(parser, text, 0));
     parser.i = i;
   }
 
 };
 
-new EnvironmentMap('numcases-env', EmpheqUtil.environment, {
+/**
+ * The environments for this package
+ */
+new EnvironmentMap('cases-env', EmpheqUtil.environment, {
   numcases: ['NumCases', 'cases'],
   subnumcases: ['NumCases', 'cases']
 }, NumcasesMethods);
 
-new MacroMap('numcases-macros', {
+/**
+ * The macros for this package
+ */
+new MacroMap('cases-macros', {
   '&': 'Entry'
 }, NumcasesMethods);
 
 //
 //  Define the package for our new environment
 //
-export const NumcasesConfiguration = Configuration.create('numcases', {
+export const NumcasesConfiguration = Configuration.create('cases', {
   handler: {
-    environment: ['numcases-env'],
-    character: ['numcases-macros']
+    environment: ['cases-env'],
+    character: ['cases-macros']
   },
   items: {
     [CasesBeginItem.prototype.kind]: CasesBeginItem
   },
-  tags: {'numcases': CasesTags}
+  tags: {'cases': CasesTags}
 });
