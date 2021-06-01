@@ -98,7 +98,8 @@ export abstract class CommonOutputJax<
     displayIndent: '0',            // default for indentshift when set to 'auto'
     wrapperFactory: null,          // The wrapper factory to use
     font: null,                    // The FontData object to use
-    cssStyles: null                // The CssStyles object to use
+    cssStyles: null,               // The CssStyles object to use
+    nonce: null                    // The nonce value to apply to style tags created by MathJax
   };
 
   /**
@@ -465,11 +466,26 @@ export abstract class CommonOutputJax<
     // Get the font styles
     //
     this.cssStyles.addStyles(this.font.styles);
+    // 
+    // Set up the properties for the stylesheet
+    //
+    const def : {id: string, nonce?: string} = {id: 'MJX-styles'};
+    const nonce = this.getNonce();
+    if (nonce) {
+        def['nonce'] = nonce;
+    }
     //
     // Create the stylesheet for the CSS
     //
-    const sheet = this.html('style', {id: 'MJX-styles'}, [this.text('\n' + this.cssStyles.cssText + '\n')]);
+    const sheet = this.html('style', def, [this.text('\n' + this.cssStyles.cssText + '\n')]);
     return sheet as N;
+  }
+
+  /**
+   * @return {string}   The nonce value to apply to stylesheets created by MathJax
+   */
+  protected getNonce(): string|null {
+      return this.options.nonce;
   }
 
   /**
