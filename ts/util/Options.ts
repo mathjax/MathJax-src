@@ -29,7 +29,7 @@ const OBJECT = {}.constructor;
 /**
  *  Check if an object is an object literal (as opposed to an instance of a class)
  */
-function isObject(obj: any) {
+export function isObject(obj: any) {
   return typeof obj === 'object' && obj !== null &&
     (obj.constructor === OBJECT || obj.constructor === Expandable);
 }
