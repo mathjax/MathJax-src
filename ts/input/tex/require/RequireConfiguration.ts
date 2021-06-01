@@ -178,7 +178,11 @@ export const options = {
     //
     allow: expandable({
       base: false,
-      'all-packages': false
+      'all-packages': false,
+      autoload: false,
+      configmacros: false,
+      tagformat: false,
+      setoptions: false
     }),
     //
     //  The default allow value if the extension isn't in the list above
