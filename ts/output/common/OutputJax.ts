@@ -456,15 +456,10 @@ export abstract class CommonOutputJax<
       }
     }
     //
-    // Gather the CSS from the classes
+    // Gather the CSS from the classes and font
     //
-    for (const kind of this.factory.getKinds()) {
-      this.addClassStyles(this.factory.getNodeClass(kind));
-    }
-    //
-    // Get the font styles
-    //
-    this.cssStyles.addStyles(this.font.styles);
+    this.addWrapperStyles(this.cssStyles);
+    this.addFontStyles(this.cssStyles);
     //
     // Create the stylesheet for the CSS
     //
@@ -473,10 +468,27 @@ export abstract class CommonOutputJax<
   }
 
   /**
-   * @param {any} CLASS  The Wrapper class whose styles are to be added
+   * @param {CssStyles} styles   The style object to add to
    */
-  protected addClassStyles(CLASS: typeof CommonWrapper) {
-    this.cssStyles.addStyles(CLASS.styles);
+  protected addFontStyles(styles: CssStyles) {
+    styles.addStyles(this.font.styles);
+  }
+
+  /**
+   * @param {CssStyles} styles   The style object to add to
+   */
+  protected addWrapperStyles(styles: CssStyles) {
+    for (const kind of this.factory.getKinds()) {
+      this.addClassStyles(this.factory.getNodeClass(kind), styles);
+    }
+  }
+
+  /**
+   * @param {typeof CommonWrapper} CLASS  The Wrapper class whose styles are to be added
+   * @param {CssStyles} styles            The style object to add to.
+   */
+  protected addClassStyles(CLASS: typeof CommonWrapper, styles: CssStyles) {
+    styles.addStyles(CLASS.styles);
   }
 
   /*****************************************************************/

@@ -100,16 +100,6 @@ CommonMsubsupMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any,
   };
 
   /**
-   * Make sure styles get output when called from munderover with movable limits
-   *
-   * @override
-   */
-  public markUsed() {
-    super.markUsed();
-    (CHTMLmsubsup as any).used = true;
-  }
-
-  /**
    * @override
    */
   public toCHTML(parent: N) {

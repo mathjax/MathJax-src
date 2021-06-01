@@ -22,6 +22,7 @@
  */
 
 import {CharMap, CharOptions, CharData, VariantData, DelimiterData, FontData, DIRECTION} from '../common/FontData.js';
+import {Usage} from './Usage.js';
 import {StringMap} from './Wrapper.js';
 import {StyleList, StyleData} from '../../util/StyleList.js';
 import {em} from '../../util/lengths.js';
@@ -36,7 +37,6 @@ export * from '../common/FontData.js';
 export interface CHTMLCharOptions extends CharOptions {
   c?: string;                   // the content value (for css)
   f?: string;                   // the font postfix (for css)
-  used?: boolean;               // true when the character has been used on the page
 }
 
 /**
@@ -57,7 +57,6 @@ export interface CHTMLVariantData extends VariantData<CHTMLCharOptions> {
  * The extra data needed for a Delimiter in CHTML output
  */
 export interface CHTMLDelimiterData extends DelimiterData {
-  used?: boolean;               // true when this delimiter has been used on the page
 }
 
 /****************************************************************************/
@@ -104,6 +103,20 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
     }
   };
 
+  /***********************************************************************/
+
+  /**
+   * Data about the characters used (for adaptive CSS)
+   */
+  public charUsage: Usage<[string, number]> = new Usage<[string, number]>();
+
+  /**
+   * Data about the delimiters used (for adpative CSS)
+   */
+  public delimUsage: Usage<number> = new Usage<number>();
+
+  /***********************************************************************/
+
   /**
    * @override
    */
@@ -124,24 +137,9 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
    * Clear the cache of which characters have been used
    */
   public clearCache() {
-    if (!this.options.adaptiveCSS) return;
-    //
-    // Clear delimiter usage
-    //
-    for (const n of Object.keys(this.delimiters)) {
-      this.delimiters[parseInt(n)].used = false;
-    }
-    //
-    // Clear the character usage
-    //
-    for (const name of Object.keys(this.variant)) {
-      const chars = this.variant[name].chars;
-      for (const n of Object.keys(chars)) {
-        const options = chars[parseInt(n)][3] as CHTMLCharOptions;
-        if (options) {
-          options.used = false;
-        }
-      }
+    if (this.options.adaptiveCSS) {
+      this.charUsage.clear();
+      this.delimUsage.clear();
     }
   }
 
@@ -179,22 +177,21 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
     //
     //  Include the default styles
     //
-    let styles: StyleList = {...CLASS.defaultStyles};
+    const styles: StyleList = {...CLASS.defaultStyles};
     //
     //  Add fonts with proper URL
     //
     this.addFontURLs(styles, CLASS.defaultFonts, this.options.fontURL);
     //
-    //  Create styles needed for the delimiters
+    //  Create styles needed for the delimiters and characters
     //
-    for (const n of Object.keys(this.delimiters)) {
-      const N = parseInt(n);
-      this.addDelimiterStyles(styles, N, this.delimiters[N]);
-    }
+    this.addDelimiterCharStyles(styles);
+    this.addVariantCharStyles(styles);
     //
-    //  Create styles needed for the characters in each variant
+    //   We have updated the rules, so clear the update data
     //
-    this.addVariantChars(styles);
+    this.delimUsage.update();
+    this.charUsage.update();
     //
     //  Return the final style sheet
     //
@@ -202,9 +199,37 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
   }
 
   /**
-   * @param {StyleList} styles  The style list to add characters to
+   * Get the styles for any newly used characters and delimiters
    */
-  protected addVariantChars(styles: StyleList) {
+  public updateStyles() {
+    const styles: StyleList = {};
+    for (const N of this.delimUsage.update()) {
+      this.addDelimiterStyles(styles, N, this.delimiters[N]);
+    }
+    for (const [name, N] of this.charUsage.update()) {
+      const variant = this.variant[name];
+      this.addCharStyles(styles, variant.letter, N, variant.chars[N]);
+    }
+    return styles;
+  }
+
+  /**
+   * @param {StyleList} styles  The style list to add delimiter styles to.
+   */
+  protected addDelimiterCharStyles(styles: StyleList) {
+    const allCSS = !this.options.adaptiveCSS;
+    for (const n of Object.keys(this.delimiters)) {
+      const N = parseInt(n);
+      if (allCSS || this.delimUsage.has(N)) {
+        this.addDelimiterStyles(styles, N, this.delimiters[N]);
+      }
+    }
+  }
+
+  /**
+   * @param {StyleList} styles  The style list to add character styles to.
+   */
+  protected addVariantCharStyles(styles: StyleList) {
     const allCSS = !this.options.adaptiveCSS;
     for (const name of Object.keys(this.variant)) {
       const variant = this.variant[name];
@@ -216,7 +241,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
         if (allCSS && char.length < 4) {
           (char as CHTMLCharData)[3] = {};
         }
-        if (char.length === 4 || allCSS) {
+        if (allCSS || this.charUsage.has([name, N])) {
           this.addCharStyles(styles, vletter, N, char);
         }
       }
@@ -244,7 +269,6 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
    * @param {CHTMLDelimiterData} data  The data for the delimiter whose CSS is to be added
    */
   protected addDelimiterStyles(styles: StyleList, n: number, data: CHTMLDelimiterData) {
-    if (this.options.adaptiveCSS && !data.used) return;
     const c = this.charSelector(n);
     if (data.c && data.c !== n) {
       styles['.mjx-stretched mjx-c' + c + '::before'] = {
@@ -363,7 +387,6 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
    */
   protected addCharStyles(styles: StyleList, vletter: string, n: number, data: CHTMLCharData) {
     const options = data[3] as CHTMLCharOptions;
-    if (this.options.adaptiveCSS && !options.used) return;
     const letter = (options.f !== undefined ? options.f : vletter);
     const selector = 'mjx-c' + this.charSelector(n) + (letter ? '.TEX-' + letter : '');
     styles[selector + '::before'] = {
