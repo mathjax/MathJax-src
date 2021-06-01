@@ -86,6 +86,7 @@ namespace FilterUtil {
    * @param {ParseOptions} data The parse options.
    */
   export let combineRelations = function(arg: {data: ParseOptions}) {
+    const remove: MmlNode[] = [];
     for (let mo of arg.data.getList('mo')) {
       if (mo.getProperty('relationsCombined') || !mo.parent ||
           (mo.parent && !NodeUtil.isType(mo.parent, 'mrow')) ||
@@ -111,6 +112,7 @@ namespace FilterUtil {
           _copyExplicit(['stretchy', 'rspace'], mo, m2);
           NodeUtil.setProperties(mo, m2.getAllProperties());
           children.splice(next, 1);
+          remove.push(m2);
           m2.parent = null;
           m2.setProperty('relationsCombined', true);
         } else {
@@ -127,7 +129,8 @@ namespace FilterUtil {
         }
       }
       mo.attributes.setInherited('form', (mo as MmlMo).getForms()[0]);
-      }
+    }
+    arg.data.removeFromList('mo', remove);
   };
 
 
@@ -191,6 +194,7 @@ namespace FilterUtil {
    * @param {string} up String representing the upper part.
    */
   let _cleanSubSup = function(options: ParseOptions, low: string, up: string) {
+    const remove: MmlNode[] = [];
     for (let mml of options.getList('m' + low + up) as any[]) {
       const children = mml.childNodes;
       if (children[mml[low]] && children[mml[up]]) {
@@ -206,7 +210,9 @@ namespace FilterUtil {
       } else {
         options.root = newNode;
       }
+      remove.push(mml);
     }
+    options.removeFromList('m' + low + up, remove);
   };
 
 
@@ -235,6 +241,7 @@ namespace FilterUtil {
    * @param {ParseOptions} data The parse options.
    */
   let _moveLimits = function (options: ParseOptions, underover: string, subsup: string) {
+    const remove: MmlNode[] = [];
     for (const mml of options.getList(underover)) {
       if (mml.attributes.get('displaystyle')) {
         continue;
@@ -249,8 +256,10 @@ namespace FilterUtil {
         } else {
           options.root = node;
         }
+        remove.push(mml);
       }
     }
+    options.removeFromList(underover, remove);
   };
 
   /**
