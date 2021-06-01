@@ -32,6 +32,7 @@ import './bussproofs/BussproofsConfiguration.js';
 import './cancel/CancelConfiguration.js';
 import './color/ColorConfiguration.js';
 import './colorv2/ColorV2Configuration.js';
+import './colortbl/ColortblConfiguration.js';
 import './configmacros/ConfigMacrosConfiguration.js';
 import './enclose/EncloseConfiguration.js';
 import './extpfeil/ExtpfeilConfiguration.js';
@@ -61,6 +62,7 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
     '[tex]/cancel',
     '[tex]/color',
     '[tex]/colorv2',
+    '[tex]/colortbl',
     '[tex]/enclose',
     '[tex]/extpfeil',
     '[tex]/gensymb',
@@ -90,6 +92,7 @@ export const AllPackages: string[] = [
   'bussproofs',
   'cancel',
   'color',
+  'colortbl',
   'enclose',
   'extpfeil',
   'gensymb',

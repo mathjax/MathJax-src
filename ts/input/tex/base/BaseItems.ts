@@ -894,39 +894,7 @@ export class ArrayItem extends BaseItem {
       }
       this.EndTable();
       this.clearEnv();
-      const scriptlevel = this.arraydef['scriptlevel'];
-      delete this.arraydef['scriptlevel'];
-      let mml = this.create('node', 'mtable', this.table, this.arraydef);
-      if (scriptlevel) {
-        mml.setProperty('scriptlevel', scriptlevel);
-      }
-      if (this.frame.length === 4) {
-        // @test Enclosed frame solid, Enclosed frame dashed
-        NodeUtil.setAttribute(mml, 'frame', this.dashed ? 'dashed' : 'solid');
-      } else if (this.frame.length) {
-        // @test Enclosed left right
-        if (this.arraydef['rowlines']) {
-          // @test Enclosed dashed row, Enclosed solid row,
-          this.arraydef['rowlines'] =
-            (this.arraydef['rowlines'] as string).replace(/none( none)+$/, 'none');
-        }
-        // @test Enclosed left right
-        mml = this.create('node', 'menclose', [mml],
-                          {notation: this.frame.join(' '), isFrame: true});
-        if ((this.arraydef['columnlines'] || 'none') !== 'none' ||
-            (this.arraydef['rowlines'] || 'none') !== 'none') {
-          // @test Enclosed dashed row, Enclosed solid row
-          // @test Enclosed dashed column, Enclosed solid column
-          NodeUtil.setAttribute(mml, 'padding', 0);
-        }
-      }
-      if (this.getProperty('open') || this.getProperty('close')) {
-        // @test Cross Product Formula
-        mml = ParseUtil.fenced(this.factory.configuration,
-                               this.getProperty('open') as string, mml,
-                               this.getProperty('close') as string);
-      }
-      let newItem = this.factory.create('mml', mml);
+      let newItem = this.factory.create('mml', this.createMml());
       if (this.getProperty('requireClose')) {
         // @test: Label
         if (item.isKind('close')) {
@@ -941,6 +909,46 @@ export class ArrayItem extends BaseItem {
     return super.checkItem(item);
   }
 
+  /**
+   * Create the MathML representation of the table.
+   *
+   * @return {MmlNode}
+   */
+  public createMml(): MmlNode {
+    const scriptlevel = this.arraydef['scriptlevel'];
+    delete this.arraydef['scriptlevel'];
+    let mml = this.create('node', 'mtable', this.table, this.arraydef);
+    if (scriptlevel) {
+      mml.setProperty('scriptlevel', scriptlevel);
+    }
+    if (this.frame.length === 4) {
+      // @test Enclosed frame solid, Enclosed frame dashed
+      NodeUtil.setAttribute(mml, 'frame', this.dashed ? 'dashed' : 'solid');
+    } else if (this.frame.length) {
+      // @test Enclosed left right
+      if (this.arraydef['rowlines']) {
+        // @test Enclosed dashed row, Enclosed solid row,
+        this.arraydef['rowlines'] =
+          (this.arraydef['rowlines'] as string).replace(/none( none)+$/, 'none');
+      }
+      // @test Enclosed left right
+      NodeUtil.setAttribute(mml, 'frame', '');
+      mml = this.create('node', 'menclose', [mml], {notation: this.frame.join(' ')});
+      if ((this.arraydef['columnlines'] || 'none') !== 'none' ||
+          (this.arraydef['rowlines'] || 'none') !== 'none') {
+        // @test Enclosed dashed row, Enclosed solid row
+        // @test Enclosed dashed column, Enclosed solid column
+        NodeUtil.setAttribute(mml, 'data-padding', 0);
+      }
+    }
+    if (this.getProperty('open') || this.getProperty('close')) {
+      // @test Cross Product Formula
+      mml = ParseUtil.fenced(this.factory.configuration,
+                             this.getProperty('open') as string, mml,
+                             this.getProperty('close') as string);
+    }
+    return mml;
+  }
 
   /**
    * Finishes a single cell of the array.
