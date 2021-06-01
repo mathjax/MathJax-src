@@ -49,7 +49,7 @@ function initMathtools(config: ParserConfiguration) {
 }
 
 /**
- * Add any pre-defined paried delimiters, and subclass the configured tag format.
+ * Add any pre-defined paired delimiters, and subclass the configured tag format.
  * @param {ParserConfiguration} config   The current configuration.
  * @param {TeX} jac                      The TeX input jax
  */

@@ -41,7 +41,7 @@ import {MathtoolsTags} from './MathtoolsTags.js';
 import {MathtoolsUtil} from './MathtoolsUtil.js';
 
 /**
- * The implementations for the macros and environemtns for the mathtools package.
+ * The implementations for the macros and environments for the mathtools package.
  */
 export const MathtoolsMethods: Record<string, ParseMethod> = {
 
@@ -104,7 +104,7 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
   },
 
   /**
-   * Replacement for the AMS HandleShove that incldues optional spacing values
+   * Replacement for the AMS HandleShove that includes optional spacing values
    *
    * @param {TexParser} parser   The active tex parser.
    * @param {string} name        The name of the calling macro.
@@ -400,10 +400,17 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     const base = new TexParser(arg, parser.stack.env, parser.configuration).mml();
     let mml = parser.create('node', 'mpadded', [
       parser.create('node', 'mpadded', [
-        parser.create('node', 'mo', [parser.create('text', '\u22EE')])
-      ], {width: 0, lspace: '-.5width', ...(isFlush ? {height: '-.6em', voffset: '-.18em'} : {})}),
+        parser.create('node', 'mo', [
+          parser.create('text', '\u22EE')
+        ])
+      ], {
+        width: 0,
+        lspace: '-.5width', ...(isFlush ? {height: '-.6em', voffset: '-.18em'} : {})
+      }),
       parser.create('node', 'mphantom', [base])
-    ], {lspace: '.5width'});
+    ], {
+      lspace: '.5width'
+    });
     parser.Push(mml);
   },
 
@@ -573,6 +580,8 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
    *
    * @param {TexParser} parser   The calling parser.
    * @param {string} name        The macro name.
+   * @param {string} c           The base arrow for the slashed version
+   * @param {string} dy          A vertical offset for the slash
    */
   NArrow(parser: TexParser, _name: string, c: string, dy: string) {
     parser.Push(

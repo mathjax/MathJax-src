@@ -127,7 +127,7 @@ export class MmlMtable extends AbstractMmlNode {
     const ralign = split(this.attributes.get('rowalign') as string);
     for (const child of this.childNodes) {
       attributes.rowalign[1] = ralign.shift() || attributes.rowalign[1];
-      child.setInheritedAttributes(attributes, display, level, cramped == null ? false : cramped);
+      child.setInheritedAttributes(attributes, display, level, !!cramped);
     }
   }
 
