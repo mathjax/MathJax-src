@@ -356,6 +356,22 @@ B extends MathDocumentConstructor<HTMLDocument<N, T, D>>>(
      * When one (or more) does, add its math item to or remove it from the set to be processed, and
      *   if added to the set, queue an idle task, if one isn't already pending.
      *
+     * The idea is, if you start scrolling and reveal an expression marker, we add it into
+     * the set and queue an idle task. But if you keep scrolling and the idle task hasn't run
+     * yet, the mark may move out of view, and we don't want to waste time typesetting it, so
+     * we remove it from the set. When you stop scrolling and the idle task finally runs, it
+     * takes the expressions still in the set (those should be the ones still in view) and
+     * starts typesetting them after having created a new set to add expressions to. If one
+     * of the expressions loads an extension and the idle task has to pause, you can add new
+     * expressions into the new list (or remove them from there), but can't affect the
+     * current idle-task list. Those will be typeset even if they scroll out of view at that
+     * point.
+     *
+     * Note that it is possible that an expression is added to the set and then removed
+     * before the idle task runs, and it could be that the set is empty when it does. Then
+     * the idle task does nothing, and new expressions are added to the new set to be
+     * processed by the next idle task.
+     *
      * @param {IntersectionObserverEntry[]} entries   The markers that have come into or out of view.
      */
     protected lazyObserve(entries: IntersectionObserverEntry[]) {
@@ -430,14 +446,14 @@ B extends MathDocumentConstructor<HTMLDocument<N, T, D>>>(
       if (!math) return false;
       let compile = false;
       for (const item of this.math) {
-        if (item === math) break;
         const earlier = item as LazyMathItem<N, T, D>;
-        if (earlier.lazyTex && earlier.lazyCompile) {
-          earlier.lazyCompile = false;
-          earlier.lazyMarker && this.lazyObserver.unobserve(earlier.lazyMarker as any as Element);
-          earlier.state(STATE.COMPILED - 1);
-          compile = true;
+        if (earlier === math || !earlier?.lazyCompile) {
+          break;
         }
+        earlier.lazyCompile = false;
+        earlier.lazyMarker && this.lazyObserver.unobserve(earlier.lazyMarker as any as Element);
+        earlier.state(STATE.COMPILED - 1);
+        compile = true;
       }
       return compile;
     }
