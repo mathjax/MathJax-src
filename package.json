@@ -34,11 +34,15 @@
     "clean:lib": "npx rimraf 'components/src/**/lib'",
     "clean": "npm run --silent clean:js && npm run --silent clean:es5 && npm run --silent clean:lib",
     "copy:mj2": "npx copyfiles -u 1 'ts/input/asciimath/mathjax2/**/*' js",
+    "copy:mml3": "npx copyfiles -u 1 'ts/input/mathml/mml3/mml3.sef.json' js",
     "precompile": "npm run --silent clean:js",
     "compile": "npx tsc",
-    "postcompile": "npm run --silent copy:mj2",
+    "postcompile": "npm run --silent copy:mj2 && npm run --silent copy:mml3",
     "premake-components": "npm run --silent clean:es5 && npm run --silent clean:lib",
-    "make-components": "cd components && node bin/makeAll src | grep 'Building\\|Webpacking\\|Copying\\|npx'"
+    "make-components": "cd components && node bin/makeAll src | grep 'Building\\|Webpacking\\|Copying\\|npx'",
+    "premake-mml3-xslt": "cd ts/input/mathml/mml3 && grep '^\\s*\\(<\\|or\\|xmlns\\|excl\\|\">\\)' mml3.ts > mml3.xsl",
+    "make-mml3-xslt": "cd ts/input/mathml/mml3 && npx xslt3 -t -xsl:mml3.xsl -export:mml3.sef.json -nogo",
+    "postmake-mml3-xslt": "rpx rimraf ts/input/mathml/mml3/mml3.xsl"
   },
   "devDependencies": {
     "@babel/core": "^7.13.16",

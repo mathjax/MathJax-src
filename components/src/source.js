@@ -34,6 +34,7 @@ export const source = {
   '[tex]/verb': `${src}/input/tex/extensions/verb/verb.js`,
   'input/mml': `${src}/input/mml/mml.js`,
   'input/mml/entities': `${src}/input/mml/entities/entities.js`,
+  '[mml]/mml3': `${src}/input/mml/extensions/mml3/mml3.js`,
   'input/asciimath': `${src}/input/asciimath/asciimath.js`,
   'output/chtml': `${src}/output/chtml/chtml.js`,
   'output/chtml/fonts/tex': `${src}/output/chtml/fonts/tex/tex.js`,

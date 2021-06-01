@@ -2,6 +2,7 @@ export const dependencies = {
   'a11y/semantic-enrich': ['input/mml', '[sre]'],
   'a11y/complexity': ['a11y/semantic-enrich'],
   'a11y/explorer': ['a11y/semantic-enrich', 'ui/menu'],
+  '[mml]/mml3': ['input/mml'],
   '[tex]/all-packages': ['input/tex-base'],
   '[tex]/action': ['input/tex-base', '[tex]/newcommand'],
   '[tex]/autoload': ['input/tex-base', '[tex]/require'],
@@ -32,6 +33,7 @@ export const dependencies = {
 
 export const paths = {
   tex: '[mathjax]/input/tex/extensions',
+  mml: '[mathjax]/input/mml/extensions',
   sre: '[mathjax]/sre/' + (typeof window === 'undefined' ? 'sre-node' : 'sre_browser')
 };
 
