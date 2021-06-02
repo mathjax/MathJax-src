@@ -79,7 +79,7 @@ export class CasesTags extends AmsTags {
 
 }
 
-export const NumcasesMethods = {
+export const CasesMethods = {
 
   /**
    * Implements the numcases environment.
@@ -188,19 +188,19 @@ export const NumcasesMethods = {
 new EnvironmentMap('cases-env', EmpheqUtil.environment, {
   numcases: ['NumCases', 'cases'],
   subnumcases: ['NumCases', 'cases']
-}, NumcasesMethods);
+}, CasesMethods);
 
 /**
  * The macros for this package
  */
 new MacroMap('cases-macros', {
   '&': 'Entry'
-}, NumcasesMethods);
+}, CasesMethods);
 
 //
 //  Define the package for our new environment
 //
-export const NumcasesConfiguration = Configuration.create('cases', {
+export const CasesConfiguration = Configuration.create('cases', {
   handler: {
     environment: ['cases-env'],
     character: ['cases-macros']
