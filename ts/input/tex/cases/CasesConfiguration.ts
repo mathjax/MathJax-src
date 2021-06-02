@@ -93,7 +93,7 @@ export const CasesMethods = {
       parser.Push(parser.itemFactory.create('end').setProperty('name', begin.getName())); // finish eqnarray
       const cases = parser.stack.Top();
       const table = cases.Last as MmlMtable;
-      const original = table.copy() as MmlMtable;
+      const original = ParseUtil.copyNode(table, parser) as MmlMtable;
       const left = cases.getProperty('left');
       EmpheqUtil.left(table, original, left + '\\empheqlbrace\\,', parser, 'numcases-left');
       parser.Push(parser.itemFactory.create('end').setProperty('name', begin.getName()));

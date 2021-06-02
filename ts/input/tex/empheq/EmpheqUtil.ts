@@ -111,7 +111,7 @@ export const EmpheqUtil = {
    * @return {MmlNode}             The resulting mphantom element.
    */
   topRowTable(original: MmlMtable, parser: TexParser): MmlNode {
-    const table = original.copy();
+    const table = ParseUtil.copyNode(original, parser);
     table.setChildren(table.childNodes.slice(0, 1));
     table.attributes.set('align', 'baseline 1');
     return original.factory.create('mphantom', {}, [parser.create('node', 'mpadded', [table],  {width: 0})]);
@@ -130,7 +130,7 @@ export const EmpheqUtil = {
   rowspanCell(mtd: MmlMtd, tex: string, table: MmlMtable, parser: TexParser, env: string) {
     mtd.appendChild(
       parser.create('node', 'mpadded', [
-        this.cellBlock(tex, table.copy(), parser, env),
+        this.cellBlock(tex, ParseUtil.copyNode(table, parser), parser, env),
         this.topRowTable(table, parser)
       ], {height: 0, depth: 0, voffset: 'height'})
     );
@@ -197,7 +197,7 @@ export const EmpheqUtil = {
     const right = empheq.getProperty('right');
     if (left || right) {
       const table = empheq.Last;
-      const original = table.copy();
+      const original = ParseUtil.copyNode(table, parser);
       if (left) this.left(table, original, left, parser);
       if (right) this.right(table, original, right, parser);
     }

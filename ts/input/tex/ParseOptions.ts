@@ -26,6 +26,7 @@ import StackItemFactory from './StackItemFactory.js';
 import {Tags} from './Tags.js';
 import {SubHandlers} from './MapHandler.js';
 import {NodeFactory} from './NodeFactory.js';
+import NodeUtil from './NodeUtil.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import TexParser from './TexParser.js';
 import {defaultOptions, OptionList} from '../../util/Options.js';
@@ -173,6 +174,14 @@ export default class ParseOptions {
       list = this.nodeLists[property] = [];
     }
     list.push(node);
+    if (node.kind !== property) {
+      //
+      // If the list is not just for its kind, record that it is in this list
+      //   so that if it is copied, the copy can also be added to the list.
+      //
+      let lists = (NodeUtil.getProperty(node, 'in-lists') as string || '').split(',').concat(property).join(',');
+      NodeUtil.setProperty(node, 'in-lists', lists);
+    }
   }
 
 

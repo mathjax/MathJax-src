@@ -371,6 +371,8 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
       for (const child of children) {
         if (child) {
           node.appendChild(child.copy() as MmlNode);
+        } else {
+          node.childNodes.push(null);
         }
       }
     }
