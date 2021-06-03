@@ -35,7 +35,7 @@ import {EmpheqBeginItem} from './EmpheqConfiguration.js';
 export const EmpheqUtil = {
 
   /**
-   * Create the needed envonronment and process it by the give function.
+   * Create the needed envinronment and process it by the give function.
    *
    * @param {TexParser} parser   The active tex parser.
    * @param {string} env         The environment to create.

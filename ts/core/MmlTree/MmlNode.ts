@@ -351,6 +351,8 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
    * @override
    *
    * @param {boolean} keepIds   True to copy id attributes, false to skip them.
+   *                              (May cause error in the future, since not part of the interface.)
+   * @return {AbstractMmlNode}  The copied node tree.
    */
   public copy(keepIds: boolean = false): AbstractMmlNode {
     const node = this.factory.create(this.kind) as AbstractMmlNode;

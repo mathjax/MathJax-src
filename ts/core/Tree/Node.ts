@@ -276,7 +276,9 @@ export abstract class AbstractNode implements Node {
     const node = (this as AbstractNode).factory.create(this.kind) as AbstractNode;
     node.properties = {...this.properties};
     for (const child of this.childNodes || []) {
-      if (child) node.appendChild(child.copy());
+      if (child) {
+        node.appendChild(child.copy());
+      }
     }
     return node;
   }

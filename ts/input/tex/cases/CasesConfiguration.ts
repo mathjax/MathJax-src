@@ -11,7 +11,7 @@ import {MmlMtable} from '../../../core/MmlTree/MmlNodes/mtable.js';
 import {EmpheqUtil} from '../empheq/EmpheqUtil.js';
 
 /**
- * The StakItem for the numcases environment.
+ * The StackItem for the numcases environment.
  */
 export class CasesBeginItem extends BeginItem {
 
