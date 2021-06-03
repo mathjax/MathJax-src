@@ -196,8 +196,9 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
    * Get the styles for any newly used characters and delimiters
    *
    * @param {StyleList} styles  The style list to add delimiter styles to.
+   * @return {StyleList}        The modified style list.
    */
-  public updateStyles(styles: StyleList) {
+  public updateStyles(styles: StyleList): StyleList {
     for (const N of this.delimUsage.update()) {
       this.addDelimiterStyles(styles, N, this.delimiters[N]);
     }
