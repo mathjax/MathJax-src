@@ -98,23 +98,32 @@ function envUndefined(_parser: TexParser, env: string) {
 function filterNonscript({data}: {data: ParseOptions}) {
   for (const mml of data.getList('nonscript')) {
     //
-    //  If we are in script or script-script style
-    //    remove the space (either mspace or mrow containing it)
-    //    and remove it (and its contents) from the other lists.
-    //  Otherwise, if it is an mrow (which we added),
-    //    replace the mrow with its contents
-    //    and remove it from its list
+    //  This is the list of mspace elements or mrow > mstyle > mspace
+    //    that followed \nonscript macros to be tested for removal.
     //
     if (mml.attributes.get('scriptlevel') > 0) {
+      //
+      //  The mspace needs to be removed, since we are in a script style.
+      //  Remove it from the DOM and from the list of mspace elements.
+      //
       const parent = mml.parent;
       parent.childNodes.splice(parent.childIndex(mml), 1);
       data.removeFromList(mml.kind, [mml]);
+      //
+      //  If it is an mrow > mstyle > mspace, then we have just
+      //    removed the mrow from its list, and must remove
+      //    the mstyle and mspace from their lists as well.
+      //
       if (mml.isKind('mrow')) {
         const mstyle = mml.childNodes[0] as MmlNode;
         data.removeFromList('mstyle', [mstyle]);
         data.removeFromList('mspace', mstyle.childNodes[0].childNodes as MmlNode[]);
       }
     } else if (mml.isKind('mrow')) {
+      //
+      // This is an mrow > mstyle > mspace  but we're not in a script
+      //   style, so remove the mrow that we had added in the NonscriptItem.
+      //
       mml.parent.replaceChild(mml.childNodes[0], mml);
       data.removeFromList('mrow', [mml]);
     }
