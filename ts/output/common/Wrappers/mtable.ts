@@ -797,9 +797,21 @@ export function CommonMtableMixin<
      */
     public getBBoxLR() {
       if (this.hasLabels) {
-        const side = this.node.attributes.get('side') as string;
-        const [pad, align] = this.getPadAlignShift(side);
-        return (align === 'center' ? [pad, pad] :
+        const attributes = this.node.attributes;
+        const side = attributes.get('side') as string;
+        let [pad, align] = this.getPadAlignShift(side);
+        //
+        // If labels are included in the width,
+        //   remove the frame spacing if there is no frame line (added by multline)
+        //   and use left or right justification rather than centering so that
+        //   there is no extra space reserved for the label on the opposite side,
+        //   (as there usually is to center the equation).
+        //
+        const labels = this.hasLabels && !!attributes.get('data-width-includes-label');
+        if (labels && this.frame && this.fSpace[0]) {
+          pad -= this.fSpace[0];
+        }
+        return (align === 'center' && !labels ? [pad, pad] :
                 side === 'left' ? [pad, 0] : [0, pad]);
       }
       return [0, 0];

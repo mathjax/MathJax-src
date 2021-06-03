@@ -127,7 +127,6 @@ AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: b
     frame: '',   // Use frame spacing with no actual frame
     'data-width-includes-label': true // take label space out of 100% width
   };
-  parser.stack.global.indentalign = (item.arraydef.side === 'right' ? 'left' : 'right');
   return item;
 };
 
@@ -191,7 +190,7 @@ AmsMethods.FlalignArray = function(parser: TexParser, begin: StackItem, numbered
     'data-width-includes-label': true,
   };
   item.setProperty('zeroWidthLabel', zeroWidthLabel);
-  parser.stack.global.indentalign = (item.arraydef.side === 'right' ? 'left' : 'right');
+//  parser.stack.global.indentalign = (item.arraydef.side === 'right' ? 'left' : 'right');
   return item;
 };
 
