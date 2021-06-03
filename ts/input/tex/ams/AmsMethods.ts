@@ -190,7 +190,6 @@ AmsMethods.FlalignArray = function(parser: TexParser, begin: StackItem, numbered
     'data-width-includes-label': true,
   };
   item.setProperty('zeroWidthLabel', zeroWidthLabel);
-//  parser.stack.global.indentalign = (item.arraydef.side === 'right' ? 'left' : 'right');
   return item;
 };
 
