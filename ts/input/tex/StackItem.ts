@@ -353,7 +353,8 @@ export abstract class BaseItem extends MmlStack implements StackItem {
     // @test ExtraCloseMissingOpen
     close: ['ExtraCloseMissingOpen', 'Extra close brace or missing open brace'],
     // @test MissingLeftExtraRight
-    right: ['MissingLeftExtraRight', 'Missing \\left or extra \\right']
+    right: ['MissingLeftExtraRight', 'Missing \\left or extra \\right'],
+    middle: ['ExtraMiddle', 'Extra \\middle']
   };
 
 

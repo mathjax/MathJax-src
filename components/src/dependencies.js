@@ -2,6 +2,7 @@ export const dependencies = {
   'a11y/semantic-enrich': ['input/mml', '[sre]'],
   'a11y/complexity': ['a11y/semantic-enrich'],
   'a11y/explorer': ['a11y/semantic-enrich', 'ui/menu'],
+  '[mml]/mml3': ['input/mml'],
   '[tex]/all-packages': ['input/tex-base'],
   '[tex]/action': ['input/tex-base', '[tex]/newcommand'],
   '[tex]/autoload': ['input/tex-base', '[tex]/require'],
@@ -12,8 +13,10 @@ export const dependencies = {
   '[tex]/braket': ['input/tex-base'],
   '[tex]/bussproofs': ['input/tex-base'],
   '[tex]/cancel': ['input/tex-base', '[tex]/enclose'],
+  '[tex]/centernot': ['input/tex-base'],
   '[tex]/color': ['input/tex-base'],
   '[tex]/colorv2': ['input/tex-base'],
+  '[tex]/colortbl': ['input/tex-base', '[tex]/color'],
   '[tex]/configmacros': ['input/tex-base', '[tex]/newcommand'],
   '[tex]/enclose': ['input/tex-base'],
   '[tex]/extpfeil': ['input/tex-base', '[tex]/newcommand', '[tex]/ams'],
@@ -24,6 +27,7 @@ export const dependencies = {
   '[tex]/noundefined': ['input/tex-base'],
   '[tex]/physics': ['input/tex-base'],
   '[tex]/require': ['input/tex-base'],
+  '[tex]/setoptions': ['input/tex-base'],
   '[tex]/tagformat': ['input/tex-base'],
   '[tex]/textmacros': ['input/tex-base'],
   '[tex]/unicode': ['input/tex-base'],
@@ -34,6 +38,7 @@ export const dependencies = {
 
 export const paths = {
   tex: '[mathjax]/input/tex/extensions',
+  mml: '[mathjax]/input/mml/extensions',
   sre: '[mathjax]/sre/' + (typeof window === 'undefined' ? 'sre-node' : 'sre_browser')
 };
 
@@ -46,7 +51,9 @@ const allPackages = [
   '[tex]/braket',
   '[tex]/bussproofs',
   '[tex]/cancel',
+  '[tex]/centernot',
   '[tex]/color',
+  '[tex]/colortbl',
   '[tex]/configmacros',
   '[tex]/enclose',
   '[tex]/extpfeil',
@@ -57,6 +64,7 @@ const allPackages = [
   '[tex]/noundefined',
   '[tex]/physics',
   '[tex]/require',
+  '[tex]/setoptions',
   '[tex]/tagformat',
   '[tex]/textmacros',
   '[tex]/unicode',

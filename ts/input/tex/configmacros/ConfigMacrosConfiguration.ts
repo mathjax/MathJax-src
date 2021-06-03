@@ -24,15 +24,24 @@
 
 import {Configuration, ParserConfiguration} from '../Configuration.js';
 import {expandable} from '../../../util/Options.js';
-import {CommandMap} from '../SymbolMap.js';
+import {CommandMap, EnvironmentMap} from '../SymbolMap.js';
+import ParseMethods from '../ParseMethods.js';
 import {Macro} from '../Symbol.js';
 import NewcommandMethods from '../newcommand/NewcommandMethods.js';
+import {BeginEnvItem} from '../newcommand/NewcommandItems.js';
 import {TeX} from '../../tex.js';
+
+type TEX = TeX<any, any, any>;
 
 /**
  * The name to use for the macros map
  */
 const MACROSMAP = 'configmacros-map';
+
+/**
+ * The name to use for the environment map
+ */
+const ENVIRONMENTMAP = 'configmacros-env-map';
 
 /**
  * Create the command map for the macros
@@ -41,24 +50,54 @@ const MACROSMAP = 'configmacros-map';
  */
 function configmacrosInit(config: ParserConfiguration) {
   new CommandMap(MACROSMAP, {}, {});
-  config.append(Configuration.local({handler: {macro: [MACROSMAP]}, priority: 3}));
+  new EnvironmentMap(ENVIRONMENTMAP, ParseMethods.environment, {}, {});
+  config.append(Configuration.local({
+    handler: {
+      macro: [MACROSMAP],
+      environment: [ENVIRONMENTMAP]
+    },
+    priority: 3
+  }));
 }
 
 /**
- * Create the user-defined macros from the macros option
+ * Create the user-defined macros and environments from their options
  *
  * @param {Configuration} config   The configuration object for the input jax
  * @param {TeX} jax                The TeX input jax
  */
-function configmacrosConfig(_config: ParserConfiguration, jax: TeX<any, any, any>) {
-  const macrosMap = jax.parseOptions.handlers.retrieve(MACROSMAP) as CommandMap;
+function configmacrosConfig(_config: ParserConfiguration, jax: TEX) {
+  configMacros(jax);
+  configEnvironments(jax);
+}
+
+/**
+ * Create user-defined macros from the macros option
+ *
+ * @param {TeX} jax                The TeX input jax
+ */
+function configMacros(jax: TEX) {
+  const handler = jax.parseOptions.handlers.retrieve(MACROSMAP) as CommandMap;
   const macros = jax.parseOptions.options.macros;
   for (const cs of Object.keys(macros)) {
     const def = (typeof macros[cs] === 'string' ? [macros[cs]] : macros[cs]);
     const macro = Array.isArray(def[2]) ?
       new Macro(cs, NewcommandMethods.MacroWithTemplate, def.slice(0, 2).concat(def[2])) :
       new Macro(cs, NewcommandMethods.Macro, def);
-    macrosMap.add(cs, macro);
+    handler.add(cs, macro);
+  }
+}
+
+/**
+ * Create user-defined environments from the environments option
+ *
+ * @param {TeX} jax                The TeX input jax
+ */
+function configEnvironments(jax: TEX) {
+  const handler = jax.parseOptions.handlers.retrieve(ENVIRONMENTMAP) as EnvironmentMap;
+  const environments = jax.parseOptions.options.environments;
+  for (const env of Object.keys(environments)) {
+    handler.add(env, new Macro(env, NewcommandMethods.BeginEnv, [true].concat(environments[env])));
   }
 }
 
@@ -69,6 +108,12 @@ export const ConfigMacrosConfiguration = Configuration.create(
   'configmacros', {
     init: configmacrosInit,
     config: configmacrosConfig,
-    options: {macros: expandable({})}
+    items: {
+      [BeginEnvItem.prototype.kind]: BeginEnvItem,
+    },
+    options: {
+      macros: expandable({}),
+      environments: expandable({})
+    }
   }
 );

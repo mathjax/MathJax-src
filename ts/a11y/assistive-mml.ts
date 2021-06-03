@@ -58,7 +58,7 @@ export type Constructor<T> = new(...args: any[]) => T;
 newState('ASSISTIVEMML', 153);
 
 /**
- * The funtions added to MathItem for assistive MathML
+ * The functions added to MathItem for assistive MathML
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
@@ -109,13 +109,12 @@ export function AssistiveMmlMathItemMixin<N, T, D, B extends Constructor<Abstrac
         // Create a container for the hidden MathML
         //
         const node = adaptor.node('mjx-assistive-mml', {
-          role: 'presentation', unselectable: 'on', display: (this.display ? 'block' : 'inline')
+          unselectable: 'on', display: (this.display ? 'block' : 'inline')
         }, [mmlNodes]);
         //
         // Hide the typeset math from assistive technology and append the MathML that is visually
         //   hidden from other users
         //
-        adaptor.setAttribute(this.typesetRoot, 'role', 'presentation');
         adaptor.setAttribute(adaptor.firstChild(this.typesetRoot) as N, 'aria-hidden', 'true');
         adaptor.setStyle(this.typesetRoot, 'position', 'relative');
         adaptor.append(this.typesetRoot, node);
@@ -130,7 +129,7 @@ export function AssistiveMmlMathItemMixin<N, T, D, B extends Constructor<Abstrac
 /*==========================================================================*/
 
 /**
- * The funtions added to MathDocument for assistive MathML
+ * The functions added to MathDocument for assistive MathML
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class

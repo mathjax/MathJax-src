@@ -41,13 +41,18 @@ export const SOLID = THICKNESS + 'em solid';  // a solid border
 export type Menclose = CommonMenclose<any, any, any>;
 
 /**
+ * Top, right, bottom, left padding data
+ */
+export type PaddingData = [number, number, number, number];
+
+/**
  * The functions used for notation definitions
  *
  * @templare N  The DOM node class
  */
 export type Renderer<W extends AnyWrapper, N> = (node: W, child: N) => void;
-export type BBoxExtender<W extends AnyWrapper> = (node: W) => number[];
-export type BBoxBorder<W extends AnyWrapper> = (node: W) => number[];
+export type BBoxExtender<W extends AnyWrapper> = (node: W) => PaddingData;
+export type BBoxBorder<W extends AnyWrapper> = (node: W) => PaddingData;
 export type Initializer<W extends AnyWrapper> = (node: W) => void;
 
 /**
@@ -112,7 +117,7 @@ export const arrowHead = (node: Menclose) => {
 /**
  * Adjust short bbox for tall arrow heads
  */
-export const arrowBBoxHD = (node: Menclose, TRBL: number[]) => {
+export const arrowBBoxHD = (node: Menclose, TRBL: PaddingData) => {
   if (node.childNodes[0]) {
     const {h, d} = node.childNodes[0].getBBox();
     TRBL[0] = TRBL[2] = Math.max(0, node.thickness * node.arrowhead.y - (h + d) / 2);
@@ -123,7 +128,7 @@ export const arrowBBoxHD = (node: Menclose, TRBL: number[]) => {
 /**
  * Adjust thin bbox for wide arrow heads
  */
-export const arrowBBoxW = (node: Menclose, TRBL: number[]) => {
+export const arrowBBoxW = (node: Menclose, TRBL: PaddingData) => {
   if (node.childNodes[0]) {
     const {w} = node.childNodes[0].getBBox();
     TRBL[1] = TRBL[3] = Math.max(0, node.thickness * node.arrowhead.y - w / 2);
@@ -193,7 +198,7 @@ export const CommonBorder = function<W extends Menclose, N>(render: Renderer<W, 
       // Indicate the extra space on the given side
       //
       bbox: (node) => {
-        const bbox = [0, 0, 0, 0];
+        const bbox = [0, 0, 0, 0] as PaddingData;
         bbox[i] = node.thickness + node.padding;
         return bbox;
       },
@@ -201,7 +206,7 @@ export const CommonBorder = function<W extends Menclose, N>(render: Renderer<W, 
       // Indicate the border on the given side
       //
       border: (node) => {
-        const bbox = [0, 0, 0, 0];
+        const bbox = [0, 0, 0, 0] as PaddingData;
         bbox[i] = node.thickness;
         return bbox;
       }
@@ -235,7 +240,7 @@ export const CommonBorder2 = function<W extends Menclose, N>(render: Renderer<W,
       //
       bbox: (node) => {
         const t = node.thickness + node.padding;
-        const bbox = [0, 0, 0, 0];
+        const bbox = [0, 0, 0, 0] as PaddingData;
         bbox[i1] = bbox[i2] = t;
         return bbox;
       },
@@ -243,7 +248,7 @@ export const CommonBorder2 = function<W extends Menclose, N>(render: Renderer<W,
       // Indicate the border on the two sides
       //
       border: (node) => {
-        const bbox = [0, 0, 0, 0];
+        const bbox = [0, 0, 0, 0] as PaddingData;
         bbox[i1] = bbox[i2] = node.thickness;
         return bbox;
       },
@@ -301,8 +306,8 @@ export const CommonDiagonalArrow = function<W extends Menclose, N>(render: Rende
       //   the arrow from them and the other arrow data
       //
       renderer: (node, _child) => {
-        const {a, W} = node.arrowData();
-        const arrow = node.arrow(W, c * (a - pi), double);
+        const [a, W] = node.arrowAW();
+       const arrow = node.arrow(W, c * (a - pi), double);
         render(node, arrow);
       },
       //
@@ -342,8 +347,9 @@ export const CommonArrow = function<W extends Menclose, N>(render: Renderer<W, N
       //
       renderer: (node, _child) => {
         const {w, h, d} = node.getBBox();
-        const W = (isVertical ? h + d : w);
-        const arrow = node.arrow(W, angle, double);
+        const [W, offset] = (isVertical ? [h + d, 'X'] : [w, 'Y']);
+        const dd = node.getOffset(offset);
+        const arrow = node.arrow(W, angle, double, offset, dd);
         render(node, arrow);
       },
       //

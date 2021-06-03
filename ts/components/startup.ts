@@ -449,9 +449,7 @@ export namespace Startup {
    * @param {INPUTJAX} input  The input jax itself
    */
   export function makeResetMethod(name: string, input: INPUTJAX) {
-    if (name === 'tex') {
-      MathJax.texReset = (start: number = 0) => (input as TEX).parseOptions.tags.reset(start);
-    }
+    MathJax[name + 'Reset'] = (...args: any[]) => input.reset(...args);
   }
 
   /**
@@ -560,7 +558,7 @@ if (typeof MathJax._.startup === 'undefined') {
 }
 
 /**
- * Export the loader configuration for convenience
+ * Export the startup configuration for convenience
  */
 export const CONFIG = MathJax.config.startup;
 

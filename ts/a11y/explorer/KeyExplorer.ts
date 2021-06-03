@@ -65,10 +65,17 @@ export interface KeyExplorer extends Explorer {
 export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> implements KeyExplorer {
 
   /**
+   * Flag indicating if the explorer is attached to an object.
+   */
+  public attached: boolean = false;
+
+  /**
    * The attached SRE walker.
    * @type {sre.Walker}
    */
   protected walker: sre.Walker;
+
+  private eventsAttached: boolean = false;
 
   /**
    * @override
@@ -109,7 +116,12 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
   public Update(force: boolean = false) {
     if (!this.active && !force) return;
     this.highlighter.unhighlight();
-    this.highlighter.highlight(this.walker.getFocus(true).getNodes());
+    let nodes = this.walker.getFocus(true).getNodes();
+    if (!nodes.length) {
+      this.walker.refocus();
+      nodes = this.walker.getFocus().getNodes();
+    }
+    this.highlighter.highlight(nodes);
   }
 
   /**
@@ -117,9 +129,20 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
    */
   public Attach() {
     super.Attach();
+    this.attached = true;
     this.oldIndex = this.node.tabIndex;
     this.node.tabIndex = 1;
     this.node.setAttribute('role', 'application');
+  }
+
+  /**
+   * @override
+   */
+  public AddEvents() {
+    if (!this.eventsAttached) {
+      super.AddEvents();
+      this.eventsAttached = true;
+    }
   }
 
   /**
@@ -131,7 +154,7 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
       this.oldIndex = null;
       this.node.removeAttribute('role');
     }
-    super.Detach();
+    this.attached = false;
   }
 
   /**
@@ -194,6 +217,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @override
    */
   public Start() {
+    if (!this.attached) return;
     let options = this.getOptions();
     // TODO: Check and set locale not only on init, but on every start.
     if (!this.init) {
@@ -212,8 +236,8 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     super.Start();
     this.speechGenerator = sre.SpeechGeneratorFactory.generator('Direct');
     this.speechGenerator.setOptions(options);
-    this.walker = sre.WalkerFactory.walker('table',
-                                           this.node, this.speechGenerator, this.highlighter, this.mml);
+    this.walker = sre.WalkerFactory.walker(
+      'table', this.node, this.speechGenerator, this.highlighter, this.mml);
     this.walker.activate();
     this.Update();
     if (this.document.options.a11y[this.showRegion]) {
@@ -233,7 +257,10 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     // during walking.
     let options = this.speechGenerator.getOptions();
     if (options.modality === 'speech') {
-      this.document.options.a11y.speechRules = options.domain + '-' + options.style;
+      this.document.options.sre.domain = options.domain;
+      this.document.options.sre.style = options.style;
+      this.document.options.a11y.speechRules =
+        options.domain + '-' + options.style;
     }
   }
 
@@ -257,6 +284,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    */
   public KeyDown(event: KeyboardEvent) {
     const code = event.keyCode;
+    this.walker.modifier = event.shiftKey;
     if (code === 27) {
       this.Stop();
       this.stopEvent(event);
@@ -264,6 +292,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     }
     if (this.active) {
       this.Move(code);
+      if (this.triggerLink(code)) return;
       this.stopEvent(event);
       return;
     }
@@ -273,6 +302,24 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     }
   }
 
+  /**
+   * Programmatically triggers a link if the focused node contains one.
+   * @param {number} code The keycode of the last key pressed.
+   */
+  protected triggerLink(code: number) {
+    if (code !== 13) {
+      return false;
+    }
+    let node = this.walker.getFocus().getNodes()?.[0];
+    let focus = node?.
+      getAttribute('data-semantic-postfix')?.
+      match(/(^| )link($| )/);
+    if (focus) {
+      node.parentNode.dispatchEvent(new MouseEvent('click'));
+      return true;
+    }
+    return false;
+  }
 
   /**
    * @override
@@ -299,13 +346,14 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    */
   private getOptions(): {[key: string]: string} {
     let options = this.speechGenerator.getOptions();
-    let [domain, style] = this.document.options.a11y.speechRules.split('-');
+    let sreOptions = this.document.options.sre;
     if (options.modality === 'speech' &&
-        (options.locale !== this.document.options.a11y.locale ||
-          options.domain !== domain || options.style !== style)) {
-      options.domain = domain;
-      options.style = style;
-      options.locale = this.document.options.a11y.locale;
+      (options.locale !== sreOptions.locale ||
+        options.domain !== sreOptions.domain ||
+        options.style !== sreOptions.style)) {
+      options.domain = sreOptions.domain;
+      options.style = sreOptions.style;
+      options.locale = sreOptions.locale;
       this.walker.update(options);
     }
     return options;
@@ -349,6 +397,7 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
    */
   public Start() {
     super.Start();
+    if (!this.attached) return;
     this.region.Show(this.node, this.highlighter);
     this.walker.activate();
     this.Update();
@@ -380,6 +429,7 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
    */
   public KeyDown(event: KeyboardEvent) {
     const code = event.keyCode;
+    this.walker.modifier = event.shiftKey;
     if (code === 27) {
       this.Stop();
       this.stopEvent(event);

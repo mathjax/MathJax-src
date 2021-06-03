@@ -54,6 +54,16 @@ export function unicodeChars(text: string): number[] {
 }
 
 /**
+ * Convert an array of unicode code points to a string
+ *
+ * @param {number[]} data   The array of unicode code points
+ * @return {string}         The string consisting of the characters at those points
+ */
+export function unicodeString(data: number[]): string {
+  return String.fromCodePoint(...data);
+}
+
+/**
  * Test if a value is a percentage
  *
  * @param {string} x   The string to test

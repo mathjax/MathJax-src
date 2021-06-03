@@ -105,7 +105,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @return {Configuration} The configuration object.
    */
   protected static configure(packages: (string | [string, number])[]): ParserConfiguration {
-    let configuration = new ParserConfiguration(packages);
+    let configuration = new ParserConfiguration(packages, ['tex']);
     configuration.init();
     return configuration;
   }
@@ -161,6 +161,13 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    */
   public get parseOptions(): ParseOptions {
     return this._parseOptions;
+  }
+
+  /**
+   * @override
+   */
+  public reset(tag: number = 0) {
+    this.parseOptions.tags.reset(tag);
   }
 
 

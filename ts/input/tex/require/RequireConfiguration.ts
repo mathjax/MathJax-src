@@ -72,7 +72,7 @@ function RegisterExtension(jax: TeX<any, any, any>, name: string) {
       //
       //  Register the extension with the jax's configuration
       //
-      (jax as any).configuration.add(handler, jax, options);
+      (jax as any).configuration.add(extension, jax, options);
       //
       // If there are preprocessors, restart so that they run
       // (we don't have access to the document or MathItem needed to call
@@ -115,7 +115,7 @@ export function RequireLoad(parser: TexParser, name: string) {
   const allowed = (allow.hasOwnProperty(extension) ? allow[extension] :
                    allow.hasOwnProperty(name) ? allow[name] : options.defaultAllow);
   if (!allowed) {
-    throw new TexError('BadRequire', 'Extension "%1" is now allowed to be loaded', extension);
+    throw new TexError('BadRequire', 'Extension "%1" is not allowed to be loaded', extension);
   }
   if (Package.packages.has(extension)) {
     RegisterExtension(parser.configuration.packageData.get('require').jax, extension);
@@ -178,7 +178,11 @@ export const options = {
     //
     allow: expandable({
       base: false,
-      'all-packages': false
+      'all-packages': false,
+      autoload: false,
+      configmacros: false,
+      tagformat: false,
+      setoptions: false
     }),
     //
     //  The default allow value if the extension isn't in the list above

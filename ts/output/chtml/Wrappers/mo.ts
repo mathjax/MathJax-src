@@ -24,7 +24,6 @@
 import {CHTMLWrapper, CHTMLConstructor, StringMap} from '../Wrapper.js';
 import {CommonMoMixin, DirectionVH} from '../../common/Wrappers/mo.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
-import {BBox} from '../../../util/BBox.js';
 import {StyleList} from '../../../util/StyleList.js';
 import {DIRECTION} from '../FontData.js';
 
@@ -59,11 +58,10 @@ CommonMoMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
     },
     'mjx-stretchy-h > * > mjx-c': {
       display: 'inline-block',
-      transform: 'scalex(1.0000001)'        // improves blink positioning
+      transform: 'scalex(1.0000001)'      // improves blink positioning
     },
     'mjx-stretchy-h > * > mjx-c::before': {
       display: 'inline-block',
-      padding: '.001em 0',                  // for blink
       width: 'initial'
     },
     'mjx-stretchy-h > mjx-ext': {
@@ -74,7 +72,7 @@ CommonMoMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
       transform: 'scalex(500)'
     },
     'mjx-stretchy-h > mjx-ext > mjx-c': {
-      width: '100%'
+      width: 0
     },
     'mjx-stretchy-h > mjx-beg > mjx-c': {
       'margin-right': '-.1em'
@@ -108,10 +106,11 @@ CommonMoMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
       overflow: 'hidden'
     },
     'mjx-stretchy-v > mjx-ext > mjx-c::before': {
-      width: 'initial'
+      width: 'initial',
+      'box-sizing': 'border-box'
     },
     'mjx-stretchy-v > mjx-ext > mjx-c': {
-      transform: 'scaleY(500) translateY(.1em)',
+      transform: 'scaleY(500) translateY(.075em)',
       overflow: 'visible'
     },
     'mjx-mark': {
@@ -132,19 +131,18 @@ CommonMoMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
       this.getStretchedVariant([]);
     }
     let chtml = this.standardCHTMLnode(parent);
-    if (this.noIC) {
-      this.adaptor.setAttribute(chtml, 'noIC', 'true');
-    }
     if (stretchy && this.size < 0) {
       this.stretchHTML(chtml);
     } else {
       if (symmetric || attributes.get('largeop')) {
-        const bbox = BBox.empty();
-        super.computeBBox(bbox);
-        const u = this.em((bbox.d - bbox.h) / 2 + this.font.params.axis_height);
+        const u = this.em(this.getCenterOffset());
         if (u !== '0') {
           this.adaptor.setStyle(chtml, 'verticalAlign', u);
         }
+      }
+      if (this.node.getProperty('mathaccent')) {
+        this.adaptor.setStyle(chtml, 'width', '0');
+        this.adaptor.setStyle(chtml, 'margin-left', this.em(this.getAccentOffset()));
       }
       for (const child of this.childNodes) {
         child.toCHTML(chtml);
@@ -159,8 +157,8 @@ CommonMoMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
    */
   protected stretchHTML(chtml: N) {
     const c = this.getText().codePointAt(0);
+    this.font.delimUsage.add(c);
     const delim = this.stretch;
-    delim.used = true;
     const stretch = delim.stretch;
     const content: N[] = [];
     //

@@ -73,7 +73,9 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
       direction: 'ltr'
     },
     'mjx-container[jax="SVG"] > svg': {
-      overflow: 'visible'
+      overflow: 'visible',
+      'min-height': '1px',
+      'min-width': '1px'
     },
     'mjx-container[jax="SVG"] > svg a': {
       fill: 'blue', stroke: 'blue'
@@ -133,8 +135,9 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
    */
   public initialize() {
     if (this.options.fontCache === 'global') {
-      this.fontCache.clearCache();
+      this.clearFontCache();
     }
+    this.svgStyles = null;
   }
 
   /**
@@ -142,6 +145,13 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
    */
   public clearFontCache() {
     this.fontCache.clearCache();
+  }
+
+  /**
+   * @override
+   */
+  public reset() {
+    this.clearFontCache();
   }
 
   /**
@@ -166,7 +176,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
    */
   public styleSheet(html: MathDocument<N, T, D>) {
     if (this.svgStyles) {
-      return null;  // stylesheet is already added to the document
+      return this.svgStyles;  // stylesheet is already added to the document
     }
     const sheet = this.svgStyles = super.styleSheet(html);
     this.adaptor.setAttribute(sheet, 'id', SVG.STYLESHEETID);
@@ -229,14 +239,15 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
    */
   protected createRoot(wrapper: SVGWrapper<N, T, D>): [N, N] {
     const {w, h, d, pwidth} = wrapper.getBBox();
-    const W = Math.max(w, .001); // make sure we are at least one unit wide (needed for e.g. \llap)
-    const H = Math.max(h + d, .001); // make sure we are at least one unit tall (needed for e.g., \smash)
+    const px = wrapper.metrics.em / 1000;
+    const W = Math.max(w, px); // make sure we are at least one unitpx wide (needed for e.g. \llap)
+    const H = Math.max(h + d, px); // make sure we are at least one px tall (needed for e.g., \smash)
     //
     //  The container that flips the y-axis and sets the colors to inherit from the surroundings
     //
     const g = this.svg('g', {
       stroke: 'currentColor', fill: 'currentColor',
-      'stroke-width': 0, transform: 'matrix(1 0 0 -1 0 0)'
+      'stroke-width': 0, transform: 'scale(1,-1)'
     }) as N;
     //
     //  The svg element with its viewBox, size and alignment
@@ -262,9 +273,8 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
       adaptor.setStyle(svg, 'min-width', this.ex(W));
       adaptor.setAttribute(svg, 'width', pwidth);
       adaptor.removeAttribute(svg, 'viewBox');
-      const scale = wrapper.metrics.ex / (this.font.params.x_height * 1000);
-      adaptor.setAttribute(g, 'transform', 'matrix(1 0 0 -1 0 0) scale(' +
-                           this.fixed(scale, 6) + ') translate(0, ' + this.fixed(-h * 1000, 1) + ')');
+      const scale = this.fixed(wrapper.metrics.ex / (this.font.params.x_height * 1000), 6);
+      adaptor.setAttribute(g, 'transform', `scale(${scale},-${scale}) translate(0, ${this.fixed(-h * 1000, 1)})`);
     }
     if (this.options.fontCache !== 'none') {
       adaptor.setAttribute(svg, 'xmlns:xlink', XLINKNS);
@@ -346,7 +356,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
     const scale = this.font.params.x_height / metrics.ex * metrics.em * 1000;
     const svg = this.svg('text', {
       'data-variant': variant,
-      transform: 'matrix(1 0 0 -1 0 0)', 'font-size': this.fixed(scale, 1) + 'px'
+      transform: 'scale(1,-1)', 'font-size': this.fixed(scale, 1) + 'px'
     }, [this.text(text)]);
     const adaptor = this.adaptor;
     if (variant !== '-explicitFont') {

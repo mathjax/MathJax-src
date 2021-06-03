@@ -55,6 +55,11 @@ export interface CommonMenclose<W extends AnyWrapper, S extends CommonMsqrt, N> 
   arrowhead: {x: number, y: number, dx: number};
 
   /**
+   * The top, right, bottom, and left padding, added by notations
+   */
+  TRBL: Notation.PaddingData;
+
+  /**
    * Look up the data-* attributes and override the default values
    */
   getParameters(): void;
@@ -76,45 +81,62 @@ export interface CommonMenclose<W extends AnyWrapper, S extends CommonMsqrt, N> 
   initializeNotations(): void;
 
   /**
-   * @return {number[]}  Array of the maximum extra space from the notations along each side
+   * @return {Notation.PaddingData}  Array of the maximum extra space from the notations along each side
    */
-  getBBoxExtenders(): number[];
+  getBBoxExtenders(): Notation.PaddingData;
 
   /**
-   * @return {number[]}  Array of padding (i.e., BBox minus border) along each side
+   * @return {Notation.PaddingData}  Array of padding (i.e., BBox minus border) along each side
    */
-  getPadding(): number[];
+  getPadding(): Notation.PaddingData;
 
   /**
    * Each entry in X gets replaced by the corresponding one in Y if it is larger
    *
-   * @param {number[]} X   An array of numbers
-   * @param {number[]} Y   An array of numbers that replace smaller ones in X
+   * @param {Notation.PaddingData} X   An array of numbers
+   * @param {Notation.PaddingData} Y   An array of numbers that replace smaller ones in X
    */
-  maximizeEntries(X: number[], Y: number[]): void;
+  maximizeEntries(X: Notation.PaddingData, Y: Notation.PaddingData): void;
+
+  /**
+   * Get the offset amount for the given direction for vertical and horizontal centering
+   *
+   * @param {string} direction    The direction 'X' or 'Y' for the offset
+   * @return {number}             The amount of offset in that direction
+   */
+  getOffset(direction: string): number;
 
   /**
    * @param {number} w    The width of the box whose diagonal is needed
    * @param {number} h    The height of the box whose diagonal is needed
    * @return {number[]}   The angle and width of the diagonal of the box
    */
-  getArgMod(w: number, h: number): number[];
+  getArgMod(w: number, h: number): [number, number];
 
   /**
-   * Create an arrow using an svg element
+   * Create an arrow for output
    *
    * @param {number} w         The length of the arrow
    * @param {number} a         The angle for the arrow
-   * @param {boolean=} double  True if this is a double-headed arrow
+   * @param {boolean} double   True if this is a double-headed arrow
+   * @param {string} offset    'X' for vertical arrow, 'Y' for horizontal
+   * @param {number} trans     Distance to translate in the offset direction
    * @return {N}               The newly created arrow
    */
-  arrow(w: number, a: number, double?: boolean): N;
+  arrow(w: number, a: number, double: boolean, offset?: string, trans?: number): N;
 
   /**
    * Get the angle and width of a diagonal arrow, plus the x and y extension
    *   past the content bounding box
    */
   arrowData(): {a: number, W: number, x: number, y: number};
+
+  /**
+   * Get the angle and width for a diagonal arrow
+   *
+   * @return {[number, number]}   The angle and width
+   */
+  arrowAW(): [number, number];
 
   /**
    * Create an unattached msqrt wrapper to render the 'radical' notation.
@@ -202,6 +224,11 @@ export function CommonMencloseMixin<
     public arrowhead = {x: Notation.ARROWX, y: Notation.ARROWY, dx: Notation.ARROWDX};
 
     /**
+     * The top, right, bottom, and left padding (added by notations)
+     */
+    public TRBL: Notation.PaddingData = [0, 0, 0, 0];
+
+    /**
      * @override
      * @constructor
      */
@@ -211,6 +238,7 @@ export function CommonMencloseMixin<
       this.getNotations();
       this.removeRedundantNotations();
       this.initializeNotations();
+      this.TRBL = this.getBBoxExtenders();
     }
 
     /**
@@ -287,7 +315,7 @@ export function CommonMencloseMixin<
       //
       //  Combine the BBox from the child and add the extenders
       //
-      let [T, R, B, L] = this.getBBoxExtenders();
+      let [T, R, B, L] = this.TRBL;
       const child = this.childNodes[0].getBBox();
       bbox.combine(child, L, 0);
       bbox.h += T;
@@ -297,10 +325,10 @@ export function CommonMencloseMixin<
     }
 
     /**
-     * @return {number[]}  Array of the maximum extra space from the notations along each side
+     * @return {Notation.PaddingData}  Array of the maximum extra space from the notations along each side
      */
-    public getBBoxExtenders(): number[] {
-      let TRBL = [0, 0, 0, 0];
+    public getBBoxExtenders(): Notation.PaddingData {
+      let TRBL = [0, 0, 0, 0] as Notation.PaddingData;
       for (const name of Object.keys(this.notations)) {
         this.maximizeEntries(TRBL, this.notations[name].bbox(this as any));
       }
@@ -308,28 +336,26 @@ export function CommonMencloseMixin<
     }
 
     /**
-     * @return {number[]}  Array of padding (i.e., BBox minus border) along each side
+     * @return {Notation.PaddingData}  Array of padding (i.e., BBox minus border) along each side
      */
-    public getPadding(): number[] {
-      let TRBL = [0, 0, 0, 0];
-      let BTRBL = [0, 0, 0, 0];
+    public getPadding(): Notation.PaddingData {
+      let BTRBL = [0, 0, 0, 0] as Notation.PaddingData;
       for (const name of Object.keys(this.notations)) {
-        this.maximizeEntries(TRBL, this.notations[name].bbox(this as any));
         const border = this.notations[name].border;
         if (border) {
           this.maximizeEntries(BTRBL, border(this as any));
         }
       }
-      return [0, 1, 2, 3].map(i => TRBL[i] - BTRBL[i]);
+      return [0, 1, 2, 3].map(i => this.TRBL[i] - BTRBL[i]) as Notation.PaddingData;
     }
 
     /**
      * Each entry in X gets replaced by the corresponding one in Y if it is larger
      *
-     * @param {number[]} X   An array of numbers
-     * @param {number[]} Y   An array of numbers that replace smaller ones in X
+     * @param {Notation.PaddingData} X   An array of numbers
+     * @param {Notation.PaddingData} Y   An array of numbers that replace smaller ones in X
      */
-    public maximizeEntries(X: number[], Y: number[]) {
+    public maximizeEntries(X: Notation.PaddingData, Y: Notation.PaddingData) {
       for (let i = 0; i < X.length; i++) {
         if (X[i] < Y[i]) {
           X[i] = Y[i];
@@ -338,6 +364,18 @@ export function CommonMencloseMixin<
     }
 
     /********************************************************/
+
+    /**
+     * Get the offset amount for the given direction for vertical and horizontal centering
+     *
+     * @param {string} direction    The direction 'X' or 'Y' for the offset
+     * @return {number}             The amount of offset in that direction
+     */
+    public getOffset(direction: string): number {
+      let [T, R, B, L] = this.TRBL;
+      const d = (direction === 'X' ? R - L : B - T) / 2;
+      return (Math.abs(d) > .001 ? d : 0);
+    }
 
     /**
      * @param {number} w    The width of the box whose diagonal is needed
@@ -354,9 +392,11 @@ export function CommonMencloseMixin<
      * @param {number} w        The length of the arrow
      * @param {number} a        The angle for the arrow
      * @param {boolean} double  True if this is a double-headed arrow
+     * @param {string} offset   'X' for vertical arrow, 'Y' for horizontal
+     * @param {number} dist     Distance to translate in the offset direction
      * @return {N}              The newly created arrow
      */
-    public arrow(_w: number, _a: number, _double: boolean = false): N {
+    public arrow(_w: number, _a: number, _double: boolean, _offset: string = '', _dist: number = 0): N {
       return null as N;
     }
 
@@ -376,6 +416,17 @@ export function CommonMencloseMixin<
       const y = Math.max(p, r * H / R);
       const [a, W] = this.getArgMod(w + 2 * x, H + 2 * y);
       return {a, W, x, y};
+    }
+
+    /**
+     * Get the angle and width for a diagonal arrow
+     *
+     * @return {[number, number]}   The angle and width
+     */
+    public arrowAW(): [number, number] {
+      const {h, d, w} = this.childNodes[0].getBBox();
+      const [T, R, B, L] = this.TRBL;
+      return this.getArgMod(L + w + R, T + h + d + B);
     }
 
     /********************************************************/

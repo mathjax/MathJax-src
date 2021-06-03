@@ -53,18 +53,18 @@ CommonMtableMixin<SVGmtd<any, any, any>, SVGmtr<any, any, any>, SVGConstructor<a
    * @override
    */
   public static styles: StyleList = {
-    'g[data-mml-node="mtable"] > line[data-line]': {
+    'g[data-mml-node="mtable"] > line[data-line], svg[data-table] > g > line[data-line]': {
       'stroke-width': '70px',
       fill: 'none'
     },
-    'g[data-mml-node="mtable"] > rect[data-frame]': {
+    'g[data-mml-node="mtable"] > rect[data-frame], svg[data-table] > g > rect[data-frame]': {
       'stroke-width': '70px',
       fill: 'none'
     },
-    'g[data-mml-node="mtable"] > .mjx-dashed': {
+    'g[data-mml-node="mtable"] > .mjx-dashed, svg[data-table] > g > .mjx-dashed': {
       'stroke-dasharray': '140'
     },
-    'g[data-mml-node="mtable"] > .mjx-dotted': {
+    'g[data-mml-node="mtable"] > .mjx-dotted, svg[data-table] > g > .mjx-dotted': {
       'stroke-linecap': 'round',
       'stroke-dasharray': '0,140'
     },
@@ -144,7 +144,7 @@ CommonMtableMixin<SVGmtd<any, any, any>, SVGmtr<any, any, any>, SVGConstructor<a
    */
   public handleColor() {
     super.handleColor();
-    const rect = this.adaptor.firstChild(this.element);
+    const rect = this.firstChild();
     if (rect) {
       this.adaptor.setAttribute(rect, 'width', this.fixed(this.getWidth()));
     }
@@ -204,7 +204,7 @@ CommonMtableMixin<SVGmtd<any, any, any>, SVGmtr<any, any, any>, SVGConstructor<a
    * @param {N} svg   The container for the table
    */
   protected handleFrame(svg: N) {
-    if (this.frame) {
+    if (this.frame && this.fLine) {
       const {h, d, w} = this.getBBox();
       const style = this.node.attributes.get('frame') as string;
       this.adaptor.append(svg, this.makeFrame(w, h, d, style));

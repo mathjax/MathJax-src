@@ -22,7 +22,7 @@
  */
 
 import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
+import {MmlNode, AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -56,6 +56,19 @@ export class MmlMroot extends AbstractMmlNode {
    */
   public get arity() {
     return 2;
+  }
+
+  /**
+   * Set the TeX class for the content of the root and the root separately.
+   * Return ourself as the previous item.
+   *
+   * @override
+   */
+  public setTeXclass(prev: MmlNode) {
+    this.getPrevClass(prev);
+    this.childNodes[0].setTeXclass(null);
+    this.childNodes[1].setTeXclass(null);
+    return this;
   }
 
   /**

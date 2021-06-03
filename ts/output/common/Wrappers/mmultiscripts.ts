@@ -95,9 +95,9 @@ export interface CommonMmultiscripts<W extends AnyWrapper> extends CommonMsubsup
   combinePrePost(pre: BBox, post: BBox): BBox;
 
   /**
-   * @return {ScriptData}   The bounding box information about all the scripts
+   * Compute the bounding box information about all the scripts
    */
-  getScriptData(): ScriptData;
+  getScriptData(): void;
 
   /**
    * @return {ScriptLists}  The bounding boxes for all the scripts divided into lists by position
@@ -158,6 +158,14 @@ export function CommonMmultiscriptsMixin<
      */
     public firstPrescript = 0;
 
+    /**
+     * @override
+     */
+    constructor(...args: any[]) {
+      super(...args);
+      this.getScriptData();
+    }
+
     /*************************************************************/
 
     /**
@@ -182,10 +190,10 @@ export function CommonMmultiscriptsMixin<
       //  to get a common offset for both
       //
       const scriptspace = this.font.params.scriptspace;
-      const data = this.getScriptData();
+      const data = this.scriptData;
       const sub = this.combinePrePost(data.sub, data.psub);
       const sup = this.combinePrePost(data.sup, data.psup);
-      const [u, v] = this.getUVQ(data.base, sub, sup);
+      const [u, v] = this.getUVQ(sub, sup);
       //
       //  Lay out the pre-scripts, then the base, then the post-scripts
       //
@@ -206,15 +214,9 @@ export function CommonMmultiscriptsMixin<
     }
 
     /**
-     * @return {ScriptData}   The bounding box information about all the scripts
+     * Compute the bounding box information about all the scripts
      */
-    public getScriptData(): ScriptData {
-      //
-      //  Return cached data, if any
-      //
-      if (this.scriptData) {
-        return this.scriptData;
-      }
+    public getScriptData() {
       //
       //  Initialize the bounding box data
       //
@@ -228,13 +230,12 @@ export function CommonMmultiscriptsMixin<
       const lists = this.getScriptBBoxLists();
       this.combineBBoxLists(data.sub, data.sup, lists.subList, lists.supList);
       this.combineBBoxLists(data.psub, data.psup, lists.psubList, lists.psupList);
-      this.scriptData.base = lists.base[0];
+      data.base = lists.base[0];
       //
       //  Save the lengths and return the data
       //
-      this.scriptData.numPrescripts = lists.psubList.length;
-      this.scriptData.numScripts = lists.subList.length;
-      return this.scriptData;
+      data.numPrescripts = lists.psubList.length;
+      data.numScripts = lists.subList.length;
     }
 
     /**
@@ -314,24 +315,24 @@ export function CommonMmultiscriptsMixin<
     /**
      * @override
      */
-    public getUVQ(basebox: BBox, subbox: BBox, supbox: BBox) {
+    public getUVQ(subbox: BBox, supbox: BBox) {
       if (!this.UVQ) {
         let [u, v, q] = [0, 0, 0];
         if (subbox.h === 0 && subbox.d === 0) {
           //
           //  Use placement for superscript only
           //
-          u = this.getU(basebox, supbox);
+          u = this.getU();
         } else if (supbox.h === 0 && supbox.d === 0) {
           //
           //  Use placement for subsccript only
           //
-          u = -this.getV(basebox, subbox);
+          u = -this.getV();
         } else {
           //
           //  Use placement for both
           //
-          [u, v, q] = super.getUVQ(basebox, subbox, supbox);
+          [u, v, q] = super.getUVQ(subbox, supbox);
         }
         this.UVQ = [u, v, q];
       }

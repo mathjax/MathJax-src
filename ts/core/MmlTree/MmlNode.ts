@@ -239,7 +239,7 @@ export interface MmlNodeClass extends NodeClass {
  */
 
 export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
-  protected texclass: number = null;
+
   /**
    * The properties common to all MathML nodes
    */
@@ -324,6 +324,11 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
    * The node factory is an MmlFactory
    */
   public readonly factory: MmlFactory;
+
+  /**
+   * The TeX class of this node (obtained via texClass below)
+   */
+  protected texclass: number = null;
 
   /**
    *  Create an MmlNode:
@@ -478,7 +483,8 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
     return super.setChildren(children);
   }
   /**
-   * If there is an inferred row, append to that instead
+   * If there is an inferred row, append to that instead.
+   * If a child is inferred, append its children instead.
    *
    * @override
    */
@@ -486,6 +492,26 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
     if (this.arity < 0) {
       this.childNodes[0].appendChild(child);
       return child;
+    }
+    if (child.isInferred) {
+      //
+      //  If we can have arbitrary children, remove the inferred mrow
+      //  (just add its children).
+      //
+      if (this.arity === Infinity) {
+        child.childNodes.forEach((node) => super.appendChild(node));
+        return child;
+      }
+      //
+      //  Otherwise, convert the inferred mrow to an explicit mrow
+      //
+      const original = child;
+      child = this.factory.create('mrow');
+      child.setChildren(original.childNodes);
+      child.attributes = original.attributes;
+      for (const name of original.getPropertyNames()) {
+        child.setProperty(name, original.getProperty(name));
+      }
     }
     return super.appendChild(child);
   }
@@ -1263,7 +1289,7 @@ export class XMLNode extends AbstractMmlEmptyNode {
    * @return {string}  The serialized XML content
    */
   public getSerializedXML(): string {
-    return this.adaptor.outerHTML(this.xml);
+    return this.adaptor.serializeXML(this.xml);
   }
 
   /**
