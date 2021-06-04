@@ -284,7 +284,6 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
      * @constructor
      */
     constructor(...args: any[]) {
-      processSreOptions(args[2]);
       super(...args);
       const ProcessBits = (this.constructor as typeof BaseDocument).ProcessBits;
       if (!ProcessBits.has('explorer')) {
@@ -327,32 +326,6 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
 
   };
 
-}
-
-//
-// TODO(v3.2): This is for backward compatibility of old option parameters.
-//
-/**
- * Processes old a11y options for backward compatibility.
- * @param {OptionList} options The options to process.
- */
-function processSreOptions(options: OptionList) {
-  if (!options || !options.a11y) {
-    return;
-  }
-  if (!options.sre) {
-    options.sre = {};
-  }
-  if (options.a11y.locale) {
-    options.sre.locale = options.a11y.locale;
-    delete options.a11y.locale;
-  }
-  if (options.a11y.speechRules) {
-    let [domain, style] = (options.a11y.speechRules as string).split('-');
-    options.sre.domain = domain;
-    options.sre.style = style;
-    delete options.a11y.speechRules;
-  }
 }
 
 
