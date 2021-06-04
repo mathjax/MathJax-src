@@ -60,6 +60,7 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
   public static OPTIONS: OptionList = {
     ...CommonOutputJax.OPTIONS,
     adaptiveCSS: true,            // true means only produce CSS that is used in the processed equations
+    matchFontHeight: true,        // true to match ex-height of surrounding font
   };
 
   /**
