@@ -524,19 +524,6 @@ export function setA11yOption(document: HTMLDOCUMENT, option: string, value: str
       break;
     }
     break;
-  //
-  // TODO(v3.2): These two cases should be handled directly in the menu
-  //             variable actions.
-  //
-  case 'speechRules':
-      let [domain, style] = (value as string).split('-');
-      document.options.sre.domain = domain;
-      document.options.sre.style = style;
-      break;
-  case 'locale':
-      document.options.sre.locale = value;
-      SRE.setupEngine({locale: value as string});
-      break;
   default:
     document.options.a11y[option] = value;
   }
