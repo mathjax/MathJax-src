@@ -152,7 +152,7 @@ export class OpenItem extends BaseItem {
 
 
 /**
- * Item indicating an close brace. Collapses stack until an OpenItem is found.
+ * Item indicating a close brace. Collapses stack until an OpenItem is found.
  */
 export class CloseItem extends BaseItem {
 
@@ -359,9 +359,9 @@ export class LeftItem extends BaseItem {
   /**
    * @override
    */
-  constructor(factory: StackItemFactory) {
+  constructor(factory: StackItemFactory, delim: string) {
     super(factory);
-    this.setProperty('delim', '(');
+    this.setProperty('delim', delim);
   }
 
   /**
@@ -386,16 +386,66 @@ export class LeftItem extends BaseItem {
   public checkItem(item: StackItem): CheckType {
     // @test Missing Right
     if (item.isKind('right')) {
+      //
+      //  Create the fenced structure as an mrow
+      //
       return [[this.factory.create('mml', ParseUtil.fenced(
         this.factory.configuration,
         this.getProperty('delim') as string, this.toMml(),
-        item.getProperty('delim') as string))], true];
+        item.getProperty('delim') as string, '', item.getProperty('color') as string))], true];
+    }
+    if (item.isKind('middle')) {
+      //
+      //  Add the middle delimiter, with empty open and close elements around it for spacing
+      //
+      const def = {stretchy: true} as any;
+      if (item.getProperty('color')) {
+        def.mathcolor = item.getProperty('color');
+      }
+      this.Push(
+        this.create('node', 'TeXAtom', [], {texClass: TEXCLASS.CLOSE}),
+        this.create('token', 'mo', def, item.getProperty('delim')),
+        this.create('node', 'TeXAtom', [], {texClass: TEXCLASS.OPEN})
+      );
+      this.env = {};         // Since \middle closes the group, clear the environment
+      return [[this], true]; // this will reset the environment to its initial state
     }
     return super.checkItem(item);
   }
 
 }
 
+/**
+ * Item pushed when a \\middle delimiter has been found. Stack is
+ * collapsed until a corresponding LeftItem is encountered.
+ */
+export class Middle extends BaseItem {
+
+  /**
+   * @override
+   */
+  constructor(factory: StackItemFactory, delim: string, color: string) {
+    super(factory);
+    this.setProperty('delim', delim);
+    color && this.setProperty('color', color);
+  }
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'middle';
+  }
+
+
+  /**
+   * @override
+   */
+  get isClose() {
+    return true;
+  }
+
+}
 
 /**
  * Item pushed when a \\right closing delimiter has been found. Stack is
@@ -406,9 +456,10 @@ export class RightItem extends BaseItem {
   /**
    * @override
    */
-  constructor(factory: StackItemFactory) {
+  constructor(factory: StackItemFactory, delim: string, color: string) {
     super(factory);
-    this.setProperty('delim', ')');
+    this.setProperty('delim', delim);
+    color && this.setProperty('color', color);
   }
 
   /**
@@ -843,39 +894,7 @@ export class ArrayItem extends BaseItem {
       }
       this.EndTable();
       this.clearEnv();
-      const scriptlevel = this.arraydef['scriptlevel'];
-      delete this.arraydef['scriptlevel'];
-      let mml = this.create('node', 'mtable', this.table, this.arraydef);
-      if (scriptlevel) {
-        mml.setProperty('scriptlevel', scriptlevel);
-      }
-      if (this.frame.length === 4) {
-        // @test Enclosed frame solid, Enclosed frame dashed
-        NodeUtil.setAttribute(mml, 'frame', this.dashed ? 'dashed' : 'solid');
-      } else if (this.frame.length) {
-        // @test Enclosed left right
-        if (this.arraydef['rowlines']) {
-          // @test Enclosed dashed row, Enclosed solid row,
-          this.arraydef['rowlines'] =
-            (this.arraydef['rowlines'] as string).replace(/none( none)+$/, 'none');
-        }
-        // @test Enclosed left right
-        mml = this.create('node', 'menclose', [mml],
-                          {notation: this.frame.join(' '), isFrame: true});
-        if ((this.arraydef['columnlines'] || 'none') !== 'none' ||
-            (this.arraydef['rowlines'] || 'none') !== 'none') {
-          // @test Enclosed dashed row, Enclosed solid row
-          // @test Enclosed dashed column, Enclosed solid column
-          NodeUtil.setAttribute(mml, 'padding', 0);
-        }
-      }
-      if (this.getProperty('open') || this.getProperty('close')) {
-        // @test Cross Product Formula
-        mml = ParseUtil.fenced(this.factory.configuration,
-                               this.getProperty('open') as string, mml,
-                               this.getProperty('close') as string);
-      }
-      let newItem = this.factory.create('mml', mml);
+      let newItem = this.factory.create('mml', this.createMml());
       if (this.getProperty('requireClose')) {
         // @test: Label
         if (item.isKind('close')) {
@@ -890,6 +909,46 @@ export class ArrayItem extends BaseItem {
     return super.checkItem(item);
   }
 
+  /**
+   * Create the MathML representation of the table.
+   *
+   * @return {MmlNode}
+   */
+  public createMml(): MmlNode {
+    const scriptlevel = this.arraydef['scriptlevel'];
+    delete this.arraydef['scriptlevel'];
+    let mml = this.create('node', 'mtable', this.table, this.arraydef);
+    if (scriptlevel) {
+      mml.setProperty('scriptlevel', scriptlevel);
+    }
+    if (this.frame.length === 4) {
+      // @test Enclosed frame solid, Enclosed frame dashed
+      NodeUtil.setAttribute(mml, 'frame', this.dashed ? 'dashed' : 'solid');
+    } else if (this.frame.length) {
+      // @test Enclosed left right
+      if (this.arraydef['rowlines']) {
+        // @test Enclosed dashed row, Enclosed solid row,
+        this.arraydef['rowlines'] =
+          (this.arraydef['rowlines'] as string).replace(/none( none)+$/, 'none');
+      }
+      // @test Enclosed left right
+      NodeUtil.setAttribute(mml, 'frame', '');
+      mml = this.create('node', 'menclose', [mml], {notation: this.frame.join(' ')});
+      if ((this.arraydef['columnlines'] || 'none') !== 'none' ||
+          (this.arraydef['rowlines'] || 'none') !== 'none') {
+        // @test Enclosed dashed row, Enclosed solid row
+        // @test Enclosed dashed column, Enclosed solid column
+        NodeUtil.setAttribute(mml, 'data-padding', 0);
+      }
+    }
+    if (this.getProperty('open') || this.getProperty('close')) {
+      // @test Cross Product Formula
+      mml = ParseUtil.fenced(this.factory.configuration,
+                             this.getProperty('open') as string, mml,
+                             this.getProperty('close') as string);
+    }
+    return mml;
+  }
 
   /**
    * Finishes a single cell of the array.

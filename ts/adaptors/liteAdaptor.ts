@@ -466,6 +466,13 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
   /**
    * @override
    */
+  public serializeXML(node: LiteElement) {
+    return this.parser.serialize(this, node, true);
+  }
+
+  /**
+   * @override
+   */
   public setAttribute(node: LiteElement, name: string, value: string | number, ns: string = null) {
     if (typeof value !== 'string') {
       value = String(value);
@@ -573,6 +580,13 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
    */
   public allStyles(node: LiteElement) {
     return this.getAttribute(node, 'style');
+  }
+
+  /**
+   * @override
+   */
+  public insertRules(node: LiteElement, rules: string[]) {
+    node.children = [this.text(rules.join('\n\n') + '\n\n' + this.textContent(node))];
   }
 
   /**

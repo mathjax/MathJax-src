@@ -221,4 +221,14 @@ CommonMunderoverMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsubsup<any,
     this.adjustUnderDepth(under, underbox);
   }
 
+  /**
+   * Make sure styles get output when called from munderover with movable limits
+   *
+   * @override
+   */
+  public markUsed() {
+    super.markUsed();
+    this.jax.wrapperUsage.add(CHTMLmsubsup.kind);
+  }
+
 }

@@ -45,7 +45,10 @@ export namespace TexConstant {
     LOOPED: 'looped',
     STRETCHED: 'stretched',
     CALLIGRAPHIC: '-tex-calligraphic',
-    OLDSTYLE: '-tex-oldstyle'
+    BOLDCALLIGRAPHIC: '-tex-bold-calligraphic',
+    OLDSTYLE: '-tex-oldstyle',
+    BOLDOLDSTYLE: '-tex-bold-oldstyle',
+    MATHITALIC: '-tex-mathit'
   };
 
   export const Form = {
@@ -142,23 +145,6 @@ export namespace TexConstant {
     STATUSLINE: 'statusline',
     TOOLTIP: 'tooltip',
     INPUT: 'input'
-  };
-
-  export const Length = {
-    VERYVERYTHINMATHSPACE: 'veryverythinmathspace',
-    VERYTHINMATHSPACE: 'verythinmathspace',
-    THINMATHSPACE: 'thinmathspace',
-    MEDIUMMATHSPACE: 'mediummathspace',
-    THICKMATHSPACE: 'thickmathspace',
-    VERYTHICKMATHSPACE: 'verythickmathspace',
-    VERYVERYTHICKMATHSPACE: 'veryverythickmathspace',
-    NEGATIVEVERYVERYTHINMATHSPACE: 'negativeveryverythinmathspace',
-    NEGATIVEVERYTHINMATHSPACE: 'negativeverythinmathspace',
-    NEGATIVETHINMATHSPACE: 'negativethinmathspace',
-    NEGATIVEMEDIUMMATHSPACE: 'negativemediummathspace',
-    NEGATIVETHICKMATHSPACE: 'negativethickmathspace',
-    NEGATIVEVERYTHICKMATHSPACE: 'negativeverythickmathspace',
-    NEGATIVEVERYVERYTHICKMATHSPACE: 'negativeveryverythickmathspace'
   };
 
   export const Overflow = {

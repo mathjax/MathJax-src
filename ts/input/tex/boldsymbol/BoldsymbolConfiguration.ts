@@ -40,6 +40,7 @@ BOLDVARIANT[TexConstant.Variant.SCRIPT]    = TexConstant.Variant.BOLDSCRIPT;
 BOLDVARIANT[TexConstant.Variant.SANSSERIF] = TexConstant.Variant.BOLDSANSSERIF;
 BOLDVARIANT['-tex-calligraphic']   = '-tex-bold-calligraphic';
 BOLDVARIANT['-tex-oldstyle']       = '-tex-bold-oldstyle';
+BOLDVARIANT['-tex-mathit']         = TexConstant.Variant.BOLDITALIC;
 
 
 // Namespace

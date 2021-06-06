@@ -241,6 +241,12 @@ export interface DOMAdaptor<N, T, D> {
   outerHTML(node: N): string;
 
   /**
+   * @param {N} node   The HTML node whose serialized string is to be obtained
+   * @return {string}  The serialized node and its content
+   */
+  serializeXML(node: N): string;
+
+  /**
    * @param {N} node               The HTML node whose attribute is to be set
    * @param {string|number} name   The name of the attribute to set
    * @param {string} value         The new value of the attribute
@@ -324,6 +330,12 @@ export interface DOMAdaptor<N, T, D> {
    * @return {string}       The cssText for the styles
    */
   allStyles(node: N): string;
+
+  /**
+   * @param {N} node           The stylesheet node where the rule will be added
+   * @param {string[]} rules   The rule to add at the beginning of the stylesheet
+   */
+  insertRules(node: N, rules: string[]): void;
 
   /**
    * @param {N} node        The HTML node whose font size is to be determined
@@ -561,6 +573,11 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
   /**
    * @override
    */
+  public abstract serializeXML(node: N): string;
+
+  /**
+   * @override
+   */
   public abstract setAttribute(node: N, name: string, value: string, ns?: string): void;
 
   /**
@@ -622,6 +639,11 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
    * @override
    */
   public abstract allStyles(node: N): string;
+
+  /**
+   * @override
+   */
+  public abstract insertRules(node: N, rules: string[]): void;
 
   /**
    * @override

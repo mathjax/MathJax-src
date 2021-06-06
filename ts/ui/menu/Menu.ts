@@ -656,7 +656,10 @@ export class Menu {
    */
   protected getA11y(option: string): any {
     if (MathJax._.a11y && MathJax._.a11y.explorer) {
-      return this.document.options.a11y[option];
+      if (this.document.options.a11y[option] !== undefined) {
+        return this.document.options.a11y[option];
+      }
+      return this.document.options.sre[option];
     }
   }
 
@@ -942,11 +945,7 @@ export class Menu {
     this.rerenderStart = Math.min(start, this.rerenderStart);
     if (!Menu.loading) {
       if (this.rerenderStart <= STATE.COMPILED) {
-        for (const jax of this.document.inputJax) {
-          if (jax.name === 'TeX') {
-            (jax as any).parseOptions.tags.reset(0);
-          }
-        }
+        this.document.reset({inputJax: []});
       }
       this.document.rerender(this.rerenderStart);
       this.rerenderStart = STATE.LAST;

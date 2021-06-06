@@ -61,6 +61,6 @@ export class LiteDocument {
       this.head = new LiteElement('head'),
       this.body = new LiteElement('body')
     ]);
-    this.type = '<!DOCTYPE html>';
+    this.type = '';
   }
 }

@@ -31,7 +31,7 @@ import {CharacterMap} from '../SymbolMap.js';
 import * as bitem from './BaseItems.js';
 import {AbstractTags} from '../Tags.js';
 import './BaseMappings.js';
-
+import {getRange} from '../../../core/MmlTree/OperatorDictionary.js';
 
 /**
  * Remapping some ASCII characters to their Unicode operator equivalent.
@@ -53,13 +53,16 @@ export function Other(parser: TexParser, char: string) {
   let def = font ?
     // @test Other Font
     {mathvariant: parser.stack.env['font']} : {};
-  const remap = (MapHandler.getMap('remap') as CharacterMap).
-    lookup(char);
+  const remap = (MapHandler.getMap('remap') as CharacterMap).lookup(char);
+  const range = getRange(char);
+  const type = (range ? range[3] : 'mo');
   // @test Other
   // @test Other Remap
-  let mo = parser.create('token', 'mo', def, (remap ? remap.char : char));
-  NodeUtil.setProperty(mo, 'fixStretchy', true);
-  parser.configuration.addNode('fixStretchy', mo);
+  let mo = parser.create('token', type, def, (remap ? remap.char : char));
+  if (type === 'mo') {
+    NodeUtil.setProperty(mo, 'fixStretchy', true);
+    parser.configuration.addNode('fixStretchy', mo);
+  }
   parser.Push(mo);
 }
 
@@ -122,6 +125,7 @@ export const BaseConfiguration: Configuration = Configuration.create(
       [bitem.SubsupItem.prototype.kind]: bitem.SubsupItem,
       [bitem.OverItem.prototype.kind]: bitem.OverItem,
       [bitem.LeftItem.prototype.kind]: bitem.LeftItem,
+      [bitem.Middle.prototype.kind]: bitem.Middle,
       [bitem.RightItem.prototype.kind]: bitem.RightItem,
       [bitem.BeginItem.prototype.kind]: bitem.BeginItem,
       [bitem.EndItem.prototype.kind]: bitem.EndItem,

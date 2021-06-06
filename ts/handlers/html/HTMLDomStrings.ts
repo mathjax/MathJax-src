@@ -242,6 +242,18 @@ export class HTMLDomStrings<N, T, D> {
   }
 
   /**
+   * Handle an unknown node type (nodeType other than 1, 3, 8)
+   *
+   * @param {N} node           The node to process
+   * @param {boolean} ignore   Whether we are currently ignoring content
+   * @return {N|T}             The next element to process
+   */
+  protected handleOther(node: N, _ignore: boolean): N | T {
+    this.pushString();
+    return this.adaptor.next(node);
+  }
+
+  /**
    * Find the strings for a given DOM element:
    *   Initialize the state
    *   Get the element where we stop processing
@@ -266,12 +278,15 @@ export class HTMLDomStrings<N, T, D> {
     let include = this.options['includeHtmlTags'];
 
     while (node && node !== stop) {
-      if (this.adaptor.kind(node) === '#text') {
+      const kind = this.adaptor.kind(node);
+      if (kind === '#text') {
         node = this.handleText(node as T, ignore);
-      } else if (include[this.adaptor.kind(node)] !== undefined) {
+      } else if (include.hasOwnProperty(kind)) {
         node = this.handleTag(node as N, ignore);
-      } else {
+      } else if (kind) {
         [node, ignore] = this.handleContainer(node as N, ignore);
+      } else {
+        node = this.handleOther(node as N, ignore);
       }
       if (!node && this.stack.length) {
         this.pushString();

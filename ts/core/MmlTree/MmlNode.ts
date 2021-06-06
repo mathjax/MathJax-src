@@ -1231,7 +1231,7 @@ export class XMLNode extends AbstractMmlEmptyNode {
    * @return {string}  The serialized XML content
    */
   public getSerializedXML(): string {
-    return this.adaptor.outerHTML(this.xml);
+    return this.adaptor.serializeXML(this.xml);
   }
 
   /**

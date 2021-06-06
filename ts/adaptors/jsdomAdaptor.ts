@@ -30,6 +30,8 @@ export class JsdomAdaptor extends HTMLAdaptor<HTMLElement, Text, Document> {
    * The default options
    */
   public static OPTIONS: OptionList = {
+    fontSize: 16,          // We can't compute the font size, so always use this
+    fontFamily: 'Times',   // We can't compute the font family, so always use this
     cjkCharWidth: 1,       // Width (in em units) of full width characters
     unknownCharWidth: .6,  // Width (in em units) of unknown (non-full-width) characters
     unknownCharHeight: .8, // Height (in em units) of unknown characters
@@ -72,6 +74,32 @@ export class JsdomAdaptor extends HTMLAdaptor<HTMLElement, Text, Document> {
     super(window);
     let CLASS = this.constructor as typeof JsdomAdaptor;
     this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
+  }
+
+  /**
+   * JSDOM's getComputedStyle() implementation is badly broken, and only
+   *   return the styles explicitly set on the given node, not the
+   *   inherited values frmo the cascading style sheets (so it is pretty
+   *   useless).  This is somethig we can't really work around, so use
+   *   the default value given in the options instead.  Sigh
+   *
+   * @override
+   */
+  public fontSize(_node: HTMLElement) {
+    return this.options.fontSize;
+  }
+
+  /**
+   * JSDOM's getComputedStyle() implementation is badly broken, and only
+   *   return the styles explicitly set on the given node, not the
+   *   inherited values frmo the cascading style sheets (so it is pretty
+   *   useless).  This is somethig we can't really work around, so use
+   *   the default value given in the options instead.  Sigh
+   *
+   * @override
+   */
+  public fontFamily(_node: HTMLElement) {
+    return this.options.fontFamily;
   }
 
   /**
