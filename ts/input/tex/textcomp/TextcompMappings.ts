@@ -23,10 +23,11 @@
  */
 
 
-import ParseMethods from '../ParseMethods.js';
 import {CharacterMap, CommandMap} from '../SymbolMap.js';
+import {Symbol} from '../Symbol.js';
 import {TexConstant} from '../TexConstants.js';
 import {TextMacrosMethods} from '../textmacros/TextMacrosMethods.js';
+import TexParser from '../TexParser.js';
 
 
 /**
@@ -161,24 +162,36 @@ new CommandMap('textcomp-macros', {
 
 
 /**
+ * Handle old style characters.
+ * @param {TexParser} parser The current tex parser.
+ * @param {Symbol} mchar The parsed symbol.
+ */
+function mathchar0miOldstyle(parser: TexParser, mchar: Symbol) {
+  const def = mchar.attributes || {};
+  def.mathvariant = TexConstant.Variant.OLDSTYLE;
+  const node = parser.create('token', 'mi', def, mchar.char);
+  parser.Push(node);
+}
+
+/**
  * Identifiers from the Textcomp package.
  */
-new CharacterMap('textcomp-oldstyle', ParseMethods.mathchar0mi, {
+new CharacterMap('textcomp-oldstyle', mathchar0miOldstyle, {
 
   // This is not the correct glyph
-  'textcentoldstyle':    ['\u00A2', {mathvariant: TexConstant.Variant.OLDSTYLE}],
+  'textcentoldstyle':    '\u00A2',
   // This is not the correct glyph
-  'textdollaroldstyle':  ['\u0024', {mathvariant: TexConstant.Variant.OLDSTYLE}],
+  'textdollaroldstyle':  '\u0024',
 
   // Table 16: textcomp Old-Style Numerals
-  'textzerooldstyle':    ['0', {mathvariant: TexConstant.Variant.OLDSTYLE}],
-  'textoneoldstyle':     ['1', {mathvariant: TexConstant.Variant.OLDSTYLE}],
-  'texttwooldstyle':     ['2', {mathvariant: TexConstant.Variant.OLDSTYLE}],
-  'textthreeoldstyle':   ['3', {mathvariant: TexConstant.Variant.OLDSTYLE}],
-  'textfouroldstyle':    ['4', {mathvariant: TexConstant.Variant.OLDSTYLE}],
-  'textfiveoldstyle':    ['5', {mathvariant: TexConstant.Variant.OLDSTYLE}],
-  'textsixoldstyle':     ['6', {mathvariant: TexConstant.Variant.OLDSTYLE}],
-  'textsevenoldstyle':   ['7', {mathvariant: TexConstant.Variant.OLDSTYLE}],
-  'texteightoldstyle':   ['8', {mathvariant: TexConstant.Variant.OLDSTYLE}],
-  'textnineoldstyle':    ['9', {mathvariant: TexConstant.Variant.OLDSTYLE}]
+  'textzerooldstyle':    '0',
+  'textoneoldstyle':     '1',
+  'texttwooldstyle':     '2',
+  'textthreeoldstyle':   '3',
+  'textfouroldstyle':    '4',
+  'textfiveoldstyle':    '5',
+  'textsixoldstyle':     '6',
+  'textsevenoldstyle':   '7',
+  'texteightoldstyle':   '8',
+  'textnineoldstyle':    '9'
 });
