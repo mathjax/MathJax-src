@@ -110,7 +110,9 @@ namespace FilterUtil {
           // This treatment means we might loose some inheritance structure, but
           // no properties.
           _copyExplicit(['stretchy', 'rspace'], mo, m2);
-          NodeUtil.setProperties(mo, m2.getAllProperties());
+          for (const name of m2.getPropertyNames()) {
+            mo.setProperty(name, m2.getProperty(name));
+          }
           children.splice(next, 1);
           remove.push(m2);
           m2.parent = null;
