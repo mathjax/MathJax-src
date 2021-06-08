@@ -464,7 +464,7 @@ export function CommonMtableMixin<
       //
       const attributes = this.node.attributes;
       this.frame = attributes.get('frame') !== 'none';
-      this.fLine = (this.frame ? .07 : 0);
+      this.fLine = (this.frame && attributes.get('frame') ? .07 : 0);
       this.fSpace = (this.frame ? this.convertLengths(this.getAttributeArray('framespacing')) : [0, 0]);
       this.cSpace = this.convertLengths(this.getColumnAttributes('columnspacing'));
       this.rSpace = this.convertLengths(this.getRowAttributes('rowspacing'));
@@ -738,7 +738,8 @@ export function CommonMtableMixin<
         this.container.bbox.pwidth = '';
       }
       const {w, L, R} = this.bbox;
-      const W = Math.max(w, this.length2em(width, Math.max(cwidth, L + w + R)));
+      const labelInWidth = this.node.attributes.get('data-width-includes-label') as boolean;
+      const W = Math.max(w, this.length2em(width, Math.max(cwidth, L + w + R))) - (labelInWidth ? L + R : 0);
       const cols = (this.node.attributes.get('equalcolumns') as boolean ?
                     Array(this.numCols).fill(this.percent(1 / Math.max(1, this.numCols))) :
                     this.getColumnAttributes('columnwidth', 0));
@@ -796,9 +797,21 @@ export function CommonMtableMixin<
      */
     public getBBoxLR() {
       if (this.hasLabels) {
-        const side = this.node.attributes.get('side') as string;
-        const [pad, align] = this.getPadAlignShift(side);
-        return (align === 'center' ? [pad, pad] :
+        const attributes = this.node.attributes;
+        const side = attributes.get('side') as string;
+        let [pad, align] = this.getPadAlignShift(side);
+        //
+        // If labels are included in the width,
+        //   remove the frame spacing if there is no frame line (added by multline)
+        //   and use left or right justification rather than centering so that
+        //   there is no extra space reserved for the label on the opposite side,
+        //   (as there usually is to center the equation).
+        //
+        const labels = this.hasLabels && !!attributes.get('data-width-includes-label');
+        if (labels && this.frame && this.fSpace[0]) {
+          pad -= this.fSpace[0];
+        }
+        return (align === 'center' && !labels ? [pad, pad] :
                 side === 'left' ? [pad, 0] : [0, pad]);
       }
       return [0, 0];
@@ -933,7 +946,7 @@ export function CommonMtableMixin<
     }
 
     /**
-     * For tables with percentage widths, let 'fit' columns (or 'auto'
+     * For tables with percentage widths, the 'fit' columns (or 'auto'
      * columns if there are not 'fit' ones) will stretch automatically,
      * but for 'auto' columns (when there are 'fit' ones), set the size
      * to the natural size of the column.
@@ -979,7 +992,7 @@ export function CommonMtableMixin<
       let dw = cwidth;
       indices.forEach(i => {
         const x = swidths[i];
-        dw -= (x === 'fit' || x === 'auto' ? W[i] : this.length2em(x, width));
+        dw -= (x === 'fit' || x === 'auto' ? W[i] : this.length2em(x, cwidth));
       });
       //
       // Get the amount of extra space per column, or 0 (fw)

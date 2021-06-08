@@ -157,8 +157,8 @@ CommonMoMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
    */
   protected stretchHTML(chtml: N) {
     const c = this.getText().codePointAt(0);
+    this.font.delimUsage.add(c);
     const delim = this.stretch;
-    delim.used = true;
     const stretch = delim.stretch;
     const content: N[] = [];
     //

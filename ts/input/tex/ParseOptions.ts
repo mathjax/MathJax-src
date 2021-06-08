@@ -200,6 +200,24 @@ export default class ParseOptions {
 
 
   /**
+   * Remove a list of nodes from a saved list (e.g., when a filter removes the
+   * node from the DOM, like for munderover => munder).
+   *
+   * @param {string} property The property from which to remove nodes.
+   * @param {MmlNode[]} nodes The nodes to remove.
+   */
+  public removeFromList(property: string, nodes: MmlNode[]) {
+    const list = this.nodeLists[property] || [];
+    for (const node of nodes) {
+      const i = list.indexOf(node);
+      if (i >= 0) {
+        list.splice(i, 1);
+      }
+    }
+  }
+
+
+  /**
    * Tests if the node is in the tree spanned by the current root node.
    * @param {MmlNode} node The node to test.
    */

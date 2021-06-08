@@ -585,6 +585,13 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
   /**
    * @override
    */
+  public insertRules(node: LiteElement, rules: string[]) {
+    node.children = [this.text(rules.join('\n\n') + '\n\n' + this.textContent(node))];
+  }
+
+  /**
+   * @override
+   */
   public fontSize(_node: LiteElement) {
     return this.options.fontSize;
   }

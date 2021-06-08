@@ -69,6 +69,7 @@ export interface MinHTMLElement<N, T> {
   className: string;
   classList: DOMTokenList;
   style: OptionList;
+  sheet?: {insertRule: (rule: string) => void};
 
   childNodes: (N | T)[] | NodeList;
   firstChild: N | T | Node;
@@ -247,7 +248,7 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    * @override
    */
   public doctype(doc: D) {
-    return `<!DOCTYPE ${doc.doctype.name}>`;
+    return (doc.doctype ? `<!DOCTYPE ${doc.doctype.name}>` : '');
   }
 
   /**
@@ -510,6 +511,15 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    */
   public allStyles(node: N) {
     return node.style.cssText;
+  }
+
+  /**
+   * @override
+   */
+  public insertRules(node: N, rules: string[]) {
+    for (const rule of rules.reverse()) {
+      node.sheet.insertRule(rule);
+    }
   }
 
   /**

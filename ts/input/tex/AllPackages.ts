@@ -30,11 +30,14 @@ import './boldsymbol/BoldsymbolConfiguration.js';
 import './braket/BraketConfiguration.js';
 import './bussproofs/BussproofsConfiguration.js';
 import './cancel/CancelConfiguration.js';
+import './centernot/CenternotConfiguration.js';
 import './color/ColorConfiguration.js';
 import './colorv2/ColorV2Configuration.js';
+import './colortbl/ColortblConfiguration.js';
 import './configmacros/ConfigMacrosConfiguration.js';
 import './enclose/EncloseConfiguration.js';
 import './extpfeil/ExtpfeilConfiguration.js';
+import './gensymb/GensymbConfiguration.js';
 import './html/HtmlConfiguration.js';
 import './mathtools/MathtoolsConfiguration.js';
 import './mhchem/MhchemConfiguration.js';
@@ -42,8 +45,10 @@ import './newcommand/NewcommandConfiguration.js';
 import './noerrors/NoErrorsConfiguration.js';
 import './noundefined/NoUndefinedConfiguration.js';
 import './physics/PhysicsConfiguration.js';
+import './setoptions/SetOptionsConfiguration.js';
 import './tagformat/TagFormatConfiguration.js';
 import './textmacros/TextMacrosConfiguration.js';
+import './upgreek/UpgreekConfiguration.js';
 import './unicode/UnicodeConfiguration.js';
 import './verb/VerbConfiguration.js';
 
@@ -58,10 +63,13 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
     '[tex]/braket',
     '[tex]/bussproofs',
     '[tex]/cancel',
+    '[tex]/centernot',
     '[tex]/color',
     '[tex]/colorv2',
+    '[tex]/colortbl',
     '[tex]/enclose',
     '[tex]/extpfeil',
+    '[tex]/gensymb',
     '[tex]/html',
     '[tex]/mathtools',
     '[tex]/mhchem',
@@ -69,11 +77,13 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
     '[tex]/noerrors',
     '[tex]/noundefined',
     '[tex]/physics',
+    '[tex]/upgreek',
     '[tex]/unicode',
     '[tex]/verb',
     '[tex]/configmacros',
     '[tex]/tagformat',
-    '[tex]/textmacros'
+    '[tex]/textmacros',
+    '[tex]/setoptions',
   );
 }
 
@@ -87,15 +97,19 @@ export const AllPackages: string[] = [
   'braket',
   'bussproofs',
   'cancel',
+  'centernot',
   'color',
+  'colortbl',
   'enclose',
   'extpfeil',
+  'gensymb',
   'html',
   'mathtools',
   'mhchem',
   'newcommand',
   'noerrors',
   'noundefined',
+  'upgreek',
   'unicode',
   'verb',
   'configmacros',

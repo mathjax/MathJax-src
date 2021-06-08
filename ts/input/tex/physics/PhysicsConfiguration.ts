@@ -45,6 +45,12 @@ export const PhysicsConfiguration = Configuration.create(
     },
     items: {
       [AutoOpen.prototype.kind]: AutoOpen
+    },
+    options: {
+      physics: {
+        italicdiff: false,
+        arrowdel: false
+      }
     }
   }
 );

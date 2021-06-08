@@ -284,10 +284,7 @@ BaseMethods.MathFont = function(parser: TexParser, name: string, variant: string
     font: variant,
     multiLetterIdentifiers: true
   }, parser.configuration).mml();
-  if (mml.isKind('inferredMrow')) {
-    mml = parser.create('node', 'mrow', mml.childNodes);
-  }
-  parser.Push(mml);
+  parser.Push(parser.create('node', 'TeXAtom', [mml]));
 };
 
 /**
@@ -626,7 +623,8 @@ BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, sta
  */
 BaseMethods.Overset = function(parser: TexParser, name: string) {
   // @test Overset
-  const top = parser.ParseArg(name), base = parser.ParseArg(name);
+  const top = parser.ParseArg(name);
+  const base = parser.ParseArg(name);
   if (NodeUtil.getAttribute(base, 'movablelimits') || NodeUtil.getProperty(base, 'movablelimits')) {
     NodeUtil.setProperties(base, {'movablelimits': false});
   }
@@ -636,18 +634,36 @@ BaseMethods.Overset = function(parser: TexParser, name: string) {
 
 
 /**
- * Handles overset.
+ * Handles underset.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
 BaseMethods.Underset = function(parser: TexParser, name: string) {
   // @test Underset
-  const bot = parser.ParseArg(name), base = parser.ParseArg(name);
+  const bot = parser.ParseArg(name);
+  const base = parser.ParseArg(name);
   if (NodeUtil.isType(base, 'mo') || NodeUtil.getProperty(base, 'movablelimits')) {
     // @test Overline Sum
     NodeUtil.setProperties(base, {'movablelimits': false});
   }
   const node = parser.create('node', 'munder', [base, bot]);
+  parser.Push(node);
+};
+
+
+/**
+ * Handles overunderset.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
+BaseMethods.Overunderset = function(parser: TexParser, name: string) {
+  const top = parser.ParseArg(name);
+  const bot = parser.ParseArg(name);
+  const base = parser.ParseArg(name);
+  if (NodeUtil.isType(base, 'mo') || NodeUtil.getProperty(base, 'movablelimits')) {
+    NodeUtil.setProperties(base, {'movablelimits': false});
+  }
+  const node = parser.create('node', 'munderover', [base, bot, top]);
   parser.Push(node);
 };
 

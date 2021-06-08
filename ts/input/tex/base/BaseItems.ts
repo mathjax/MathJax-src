@@ -36,7 +36,6 @@ import StackItemFactory from '../StackItemFactory.js';
 import {CheckType, BaseItem, StackItem, EnvList} from '../StackItem.js';
 
 
-
 /**
  * Initial item on the stack. It's pushed when parsing begins.
  */
@@ -894,39 +893,7 @@ export class ArrayItem extends BaseItem {
       }
       this.EndTable();
       this.clearEnv();
-      const scriptlevel = this.arraydef['scriptlevel'];
-      delete this.arraydef['scriptlevel'];
-      let mml = this.create('node', 'mtable', this.table, this.arraydef);
-      if (scriptlevel) {
-        mml.setProperty('scriptlevel', scriptlevel);
-      }
-      if (this.frame.length === 4) {
-        // @test Enclosed frame solid, Enclosed frame dashed
-        NodeUtil.setAttribute(mml, 'frame', this.dashed ? 'dashed' : 'solid');
-      } else if (this.frame.length) {
-        // @test Enclosed left right
-        if (this.arraydef['rowlines']) {
-          // @test Enclosed dashed row, Enclosed solid row,
-          this.arraydef['rowlines'] =
-            (this.arraydef['rowlines'] as string).replace(/none( none)+$/, 'none');
-        }
-        // @test Enclosed left right
-        mml = this.create('node', 'menclose', [mml],
-                          {notation: this.frame.join(' '), isFrame: true});
-        if ((this.arraydef['columnlines'] || 'none') !== 'none' ||
-            (this.arraydef['rowlines'] || 'none') !== 'none') {
-          // @test Enclosed dashed row, Enclosed solid row
-          // @test Enclosed dashed column, Enclosed solid column
-          NodeUtil.setAttribute(mml, 'padding', 0);
-        }
-      }
-      if (this.getProperty('open') || this.getProperty('close')) {
-        // @test Cross Product Formula
-        mml = ParseUtil.fenced(this.factory.configuration,
-                               this.getProperty('open') as string, mml,
-                               this.getProperty('close') as string);
-      }
-      let newItem = this.factory.create('mml', mml);
+      let newItem = this.factory.create('mml', this.createMml());
       if (this.getProperty('requireClose')) {
         // @test: Label
         if (item.isKind('close')) {
@@ -941,6 +908,46 @@ export class ArrayItem extends BaseItem {
     return super.checkItem(item);
   }
 
+  /**
+   * Create the MathML representation of the table.
+   *
+   * @return {MmlNode}
+   */
+  public createMml(): MmlNode {
+    const scriptlevel = this.arraydef['scriptlevel'];
+    delete this.arraydef['scriptlevel'];
+    let mml = this.create('node', 'mtable', this.table, this.arraydef);
+    if (scriptlevel) {
+      mml.setProperty('scriptlevel', scriptlevel);
+    }
+    if (this.frame.length === 4) {
+      // @test Enclosed frame solid, Enclosed frame dashed
+      NodeUtil.setAttribute(mml, 'frame', this.dashed ? 'dashed' : 'solid');
+    } else if (this.frame.length) {
+      // @test Enclosed left right
+      if (this.arraydef['rowlines']) {
+        // @test Enclosed dashed row, Enclosed solid row,
+        this.arraydef['rowlines'] =
+          (this.arraydef['rowlines'] as string).replace(/none( none)+$/, 'none');
+      }
+      // @test Enclosed left right
+      NodeUtil.setAttribute(mml, 'frame', '');
+      mml = this.create('node', 'menclose', [mml], {notation: this.frame.join(' ')});
+      if ((this.arraydef['columnlines'] || 'none') !== 'none' ||
+          (this.arraydef['rowlines'] || 'none') !== 'none') {
+        // @test Enclosed dashed row, Enclosed solid row
+        // @test Enclosed dashed column, Enclosed solid column
+        NodeUtil.setAttribute(mml, 'data-padding', 0);
+      }
+    }
+    if (this.getProperty('open') || this.getProperty('close')) {
+      // @test Cross Product Formula
+      mml = ParseUtil.fenced(this.factory.configuration,
+                             this.getProperty('open') as string, mml,
+                             this.getProperty('close') as string);
+    }
+    return mml;
+  }
 
   /**
    * Finishes a single cell of the array.
@@ -1051,6 +1058,11 @@ export class ArrayItem extends BaseItem {
 export class EqnArrayItem extends ArrayItem {
 
   /**
+   * The length of the longest row.
+   */
+  public maxrow: number = 0;
+
+  /**
    * @override
    */
   constructor(factory: any, ...args: any[]) {
@@ -1084,6 +1096,9 @@ export class EqnArrayItem extends ArrayItem {
    * @override
    */
   public EndRow() {
+    if (this.row.length > this.maxrow) {
+      this.maxrow = this.row.length;
+    }
     // @test Cubic Binomial
     let mtr = 'mtr';
     let tag = this.factory.configuration.tags.getTag();
@@ -1104,6 +1119,29 @@ export class EqnArrayItem extends ArrayItem {
     // @test Cubic Binomial
     super.EndTable();
     this.factory.configuration.tags.end();
+    //
+    // Repeat the column align and width specifications
+    //   to match the number of columns
+    //
+    this.extendArray('columnalign', this.maxrow);
+    this.extendArray('columnwidth', this.maxrow);
+    this.extendArray('columnspacing', this.maxrow - 1);
+  }
+
+  /**
+   * Extend a column specification to include a repeating set of values
+   *   so that it has enough to match the maximum row length.
+   */
+  protected extendArray(name: string, max: number) {
+    if (!this.arraydef[name]) return;
+    const repeat = (this.arraydef[name] as string).split(/ /);
+    const columns = [...repeat];
+    if (columns.length > 1) {
+      while (columns.length < max) {
+        columns.push(...repeat);
+      }
+      this.arraydef[name] = columns.slice(0, max).join(' ');
+    }
   }
 }
 

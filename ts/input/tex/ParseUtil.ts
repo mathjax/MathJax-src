@@ -31,6 +31,7 @@ import TexParser from './TexParser.js';
 import TexError from './TexError.js';
 import {entities} from '../../util/Entities.js';
 import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
+import {em} from '../../util/lengths.js';
 
 
 namespace ParseUtil {
@@ -106,10 +107,17 @@ namespace ParseUtil {
    * @return {string} The em dimension string.
    */
   export function Em(m: number): string {
-    if (Math.abs(m) < .0006) {
-      return '0em';
-    }
-    return m.toFixed(3).replace(/\.?0+$/, '') + 'em';
+    return em(m);
+  }
+
+
+  /**
+   * Takes an array of numbers and returns a space-separated string of em values.
+   * @param {number[]} W  The widths to be turned into em values
+   * @return {string}     The numbers with em units, separated by spaces.
+   */
+  export function cols(...W: number[]): string {
+    return W.map(n => Em(n)).join(' ');
   }
 
 

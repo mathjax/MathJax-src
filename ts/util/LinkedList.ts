@@ -63,11 +63,10 @@ export class ListItem<DataClass> {
    * @param {any} data  The data to be stored in the list item
    * @constructor
    */
-  constructor (data: any = null) {
+  constructor(data: any = null) {
     this.data = data;
   }
 }
-
 
 /*****************************************************************/
 /**
@@ -77,7 +76,6 @@ export class ListItem<DataClass> {
  */
 
 export class LinkedList<DataClass> {
-
   /**
    * The linked list
    */
@@ -98,19 +96,6 @@ export class LinkedList<DataClass> {
     this.list = new ListItem<DataClass>(END);
     this.list.next = this.list.prev = this.list;
     this.push(...args);
-  }
-
-  /**
-   * Typescript < 2.3 targeted at ES5 doesn't handle
-   *
-   *     for (const x of this) {...}
-   *
-   * so use toArray() to convert to array, when needed
-   *
-   * @return {DataClass[]}  The list converted to an array
-   */
-  public toArray(): DataClass[] {
-    return Array.from(this);
   }
 
   /**
@@ -224,52 +209,31 @@ export class LinkedList<DataClass> {
   }
 
   /**
-   * Make the list iterable and return the data from the items in the list
+   * An iterator for the list in forward order
    *
-   * @return {{next: Function}}  The object containing the iterator's next() function
+   * @yield {DataClass} The next item in the iteration sequence
    */
-  public [Symbol.iterator](): Iterator<DataClass> {
-    let current = this.list;
-    return {
-                                                                    /* tslint:disable-next-line:jsdoc-require */
-      next() {
-        current = current.next;
-        return (current.data === END ?
-                {value: null, done: true} :
-                {value: current.data, done: false}) as IteratorResult<DataClass>;
-      }
-    };
+  public *[Symbol.iterator](): IterableIterator<DataClass> {
+    let current = this.list.next;
+
+    while (current.data !== END) {
+      yield current.data as DataClass;
+      current = current.next;
+    }
   }
 
   /**
    * An iterator for the list in reverse order
    *
-   * @return {Object}  The iterator for walking the list in reverse
+   * @yield {DataClass} The previous item in the iteration sequence
    */
-  public reversed(): IterableIterator<DataClass> | {
-                                                                    /* tslint:disable-next-line:jsdoc-require */
-    toArray(): DataClass[];
-                                                                    /* tslint:disable-next-line:jsdoc-require */
-    [Symbol.iterator](): IterableIterator<DataClass>;
-  } {
-    let current = this.list;
-    return {
-                                                                    /* tslint:disable-next-line:jsdoc-require */
-      [Symbol.iterator](): IterableIterator<DataClass> {
-        return this;
-      },
-                                                                    /* tslint:disable-next-line:jsdoc-require */
-      next() {
-        current = current.prev;
-        return (current.data === END ?
-                {value: null, done: true} :
-                {value: current.data, done: false}) as IteratorResult<DataClass>;
-      },
-                                                                    /* tslint:disable-next-line:jsdoc-require */
-      toArray() {
-        return Array.from(this) as DataClass[];
-      }
-    };
+  public *reversed(): IterableIterator<DataClass> {
+    let current = this.list.prev;
+
+    while (current.data !== END) {
+      yield current.data as DataClass;
+      current = current.prev;
+    }
   }
 
   /**
@@ -386,5 +350,4 @@ export class LinkedList<DataClass> {
     }
     return this;
   }
-
 }

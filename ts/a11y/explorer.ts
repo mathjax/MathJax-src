@@ -203,7 +203,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
 }
 
 /**
- * The funtions added to MathDocument for the Explorer
+ * The functions added to MathDocument for the Explorer
  */
 export interface ExplorerMathDocument extends HTMLDOCUMENT {
 

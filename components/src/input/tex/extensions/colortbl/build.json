@@ -1,0 +1,4 @@
+{
+  "component": "input/tex/extensions/colortbl",
+  "targets": ["input/tex/colortbl"]
+}

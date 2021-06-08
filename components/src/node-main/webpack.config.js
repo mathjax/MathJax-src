@@ -7,6 +7,11 @@ const package = PACKAGE(
   __dirname                           // our directory
 );
 
-package.output.libraryTarget = 'this';  // make node-main.js exports available to caller
+// make node-main.js exports available to caller
+package.output.library = {
+  name: 'init',
+  type: 'commonjs',
+  export: 'init'
+};
 
 module.exports = package;
