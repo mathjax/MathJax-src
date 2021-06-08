@@ -57,7 +57,7 @@ export interface MathJaxConfig extends MJConfig {
     ready?: PackageReady;                      // A function to call when MathJax is ready
     failed?: PackageFailed;                    // A function to call when MathJax fails to load
     require?: (url: string) => any;            // A function for loading URLs
-    pathFilters: PathFilterList;               // List of path filters (and optional priorities) to add
+    pathFilters?: PathFilterList;              // List of path filters (and optional priorities) to add
     [name: string]: any;                       // Other configuration blocks
   };
 }
