@@ -27,7 +27,7 @@ import {CharacterMap, CommandMap} from '../SymbolMap.js';
 import {Symbol} from '../Symbol.js';
 import {TexConstant} from '../TexConstants.js';
 import {TextMacrosMethods} from '../textmacros/TextMacrosMethods.js';
-import TexParser from '../TexParser.js';
+import {TextParser} from '../textmacros/TextParser.js';
 
 
 /**
@@ -163,10 +163,10 @@ new CommandMap('textcomp-macros', {
 
 /**
  * Handle old style characters.
- * @param {TexParser} parser The current tex parser.
+ * @param {TextParser} parser The current tex parser.
  * @param {Symbol} mchar The parsed symbol.
  */
-function mathchar0miOldstyle(parser: TexParser, mchar: Symbol) {
+function mathchar0miOldstyle(parser: TextParser, mchar: Symbol) {
   const def = mchar.attributes || {};
   def.mathvariant = TexConstant.Variant.OLDSTYLE;
   const node = parser.create('token', 'mi', def, mchar.char);

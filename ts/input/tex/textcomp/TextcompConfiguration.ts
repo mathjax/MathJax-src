@@ -27,6 +27,9 @@ import './TextcompMappings.js';
 
 
 export const TextcompConfiguration = Configuration.create(
-  'textcomp', {handler: {macro: ['textcomp-macros', 'textcomp-oldstyle']}}
+  'textcomp', {
+    parser: 'tex',
+    handler: {macro: ['textcomp-macros', 'textcomp-oldstyle']}
+  }
 );
 
