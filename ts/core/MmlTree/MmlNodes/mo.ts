@@ -289,18 +289,6 @@ export class MmlMo extends AbstractMmlTokenNode {
         this.texClass = TEXCLASS.CLOSE;
       }
     }
-    if (this.getText() === '\u2061') {
-      //
-      //  Force previous node to be TEXCLASS.OP and skip this node
-      //
-      if (prev && prev.getProperty('texClass') === undefined &&
-          prev.attributes.get('mathvariant') !== 'italic') {
-        prev.texClass = TEXCLASS.OP;
-        prev.setProperty('fnOP', true);
-      }
-      this.texClass = this.prevClass = TEXCLASS.NONE;
-      return prev;
-    }
     return this.adjustTeXclass(prev);
   }
   /**
