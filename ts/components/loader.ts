@@ -42,7 +42,7 @@ declare var document: Document;
  * Function used to determine path to a given package.
  */
 export type PathFilterFunction = (data: {name: string, original: string, addExtension: boolean}) => boolean;
-export type PathFilterList = {[name: string]: PathFilterFunction};
+export type PathFilterList = (PathFilterFunction | [PathFilterFunction, number])[];
 
 /**
  * Update the configuration structure to include the loader configuration
@@ -57,6 +57,7 @@ export interface MathJaxConfig extends MJConfig {
     ready?: PackageReady;                      // A function to call when MathJax is ready
     failed?: PackageFailed;                    // A function to call when MathJax fails to load
     require?: (url: string) => any;            // A function for loading URLs
+    pathFilters?: PathFilterList;              // List of path filters (and optional priorities) to add
     [name: string]: any;                       // Other configuration blocks
   };
 }
@@ -73,7 +74,7 @@ export interface MathJaxObject extends MJObject {
     preLoad: (...names: string[]) => void;            // Indicate that packages are already loaded by hand
     defaultReady: () => void;                         // The function performed when all packages are loaded
     getRoot: () => string;                            // Find the root URL for the MathJax files
-    pathFilters: PathFilterList;                      // the filters to use for looking for package paths
+    pathFilters: FunctionList;                        // the filters to use for looking for package paths
   };
   startup?: any;
 }
@@ -117,6 +118,7 @@ export const PathFilters: {[name: string]: PathFilterFunction} = {
     }
     return true;
   }
+
 };
 
 
@@ -216,9 +218,9 @@ export namespace Loader {
   /**
    * The default filters to use.
    */
-  pathFilters.add(PathFilters.source, 1);
-  pathFilters.add(PathFilters.normalize, 2);
-  pathFilters.add(PathFilters.prefix, 5);
+  pathFilters.add(PathFilters.source, 0);
+  pathFilters.add(PathFilters.normalize, 10);
+  pathFilters.add(PathFilters.prefix, 20);
 }
 
 /**
@@ -229,6 +231,7 @@ export const MathJax = MJGlobal as MathJaxObject;
 /*
  * If the loader hasn't been added to the MathJax variable,
  *   Add the loader configuration, library, and data objects.
+ *   Add any path filters from the configuration.
  */
 if (typeof MathJax.loader === 'undefined') {
 
@@ -242,12 +245,23 @@ if (typeof MathJax.loader === 'undefined') {
     load: [],
     ready: Loader.defaultReady.bind(Loader),
     failed: (error: PackageError) => console.log(`MathJax(${error.package || '?'}): ${error.message}`),
-    require: null
+    require: null,
+    pathFilters: [],
   });
   combineWithMathJax({
     loader: Loader
   });
 
+  //
+  // Add any path filters from the configuration
+  //
+  for (const filter of MathJax.config.loader.pathFilters) {
+    if (Array.isArray(filter)) {
+      Loader.pathFilters.add(filter[0], filter[1]);
+    } else {
+      Loader.pathFilters.add(filter);
+    }
+  }
 }
 
 /**
