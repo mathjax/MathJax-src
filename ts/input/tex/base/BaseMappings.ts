@@ -575,6 +575,7 @@ new sm.CommandMap('macros', {
   rule:               'rule',
   Rule:              ['Rule'],
   Space:             ['Rule', 'blank'],
+  nonscript:          'Nonscript',
 
   big:               ['MakeBig', TEXCLASS.ORD, 0.85],
   Big:               ['MakeBig', TEXCLASS.ORD, 1.15],

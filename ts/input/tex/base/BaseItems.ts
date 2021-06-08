@@ -773,6 +773,53 @@ export class NotItem extends BaseItem {
   }
 }
 
+/**
+ * A StackItem that removes an mspace that follows it (for \nonscript).
+ */
+export class NonscriptItem extends BaseItem {
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'nonscript';
+  }
+
+  /**
+   * @override
+   */
+  public checkItem(item: StackItem): CheckType {
+    //
+    //  Check if the next item is an mspace (or an mspace in an mstyle) and remove it.
+    //
+    if (item.isKind('mml') && item.Size() === 1) {
+      let mml = item.First;
+      //
+      //  Space macros like \, are wrapped with an mstyle to set scriptlevel="0"
+      //    (so size is independent of level), we look at the contents of the mstyle for the mspace.
+      //
+      if (mml.isKind('mstyle') && mml.notParent) {
+        mml = NodeUtil.getChildren(NodeUtil.getChildren(mml)[0])[0];
+      }
+      if (mml.isKind('mspace')) {
+        //
+        //  If the space is in an mstyle, wrap it in an mrow so we can test its scriptlevel
+        //    in the post-filter (the mrow will be removed in the filter).  We can't test
+        //    the mstyle's scriptlevel, since it is ecxplicitly setting it to 0.
+        //
+        if (mml !== item.First) {
+          const mrow = this.create('node', 'mrow', [item.Pop()]);
+          item.Push(mrow);
+        }
+        //
+        //  Save the mspace for later post-processing.
+        //
+        this.factory.configuration.addNode('nonscript', item.First);
+      }
+    }
+    return [[item], true];
+  }
+}
 
 /**
  * Item indicating a dots command has been encountered.

@@ -897,6 +897,16 @@ BaseMethods.Hskip = function(parser: TexParser, name: string) {
 
 
 /**
+ * Handle removal of spaces in script modes
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
+BaseMethods.Nonscript = function(parser: TexParser, _name: string) {
+  parser.Push(parser.itemFactory.create('nonscript'));
+};
+
+
+/**
  * Handle Rule and Space command
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
