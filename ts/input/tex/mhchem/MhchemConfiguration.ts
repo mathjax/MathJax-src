@@ -80,8 +80,6 @@ new CommandMap(
       'Macro',
       '\\vphantom{-}\\raise2mu{\\kern2mu\\tiny\\text{-}\\kern1mu\\text{-}\\kern1mu\\text{-}\\kern2mu}'
     ],
-    xrightarrow: ['xArrow', 0x2192, 5, 6],
-    xleftarrow:  ['xArrow', 0x2190, 7, 3],
     xleftrightarrow:    ['xArrow', 0x2194, 6, 6],
     xrightleftharpoons: ['xArrow', 0x21CC, 5, 7],   // FIXME:  doesn't stretch in HTML-CSS output
     xRightleftharpoons: ['xArrow', 0x21CC, 5, 7],   // FIXME:  how should this be handled?

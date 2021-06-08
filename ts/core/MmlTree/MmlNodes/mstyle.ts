@@ -75,10 +75,16 @@ export class MmlMstyle extends AbstractMmlLayoutNode {
       } else {
         level = parseInt(scriptlevel);
       }
+      prime = false;  // style change resets tex prime style
     }
     let displaystyle = this.attributes.getExplicit('displaystyle') as boolean;
     if (displaystyle != null) {
       display = (displaystyle === true);
+      prime = false;  // style change resets tex prime style
+    }
+    const cramped = this.attributes.getExplicit('data-cramped') as boolean;  // manual control of tex prime style
+    if (cramped != null) {
+      prime = cramped;
     }
     attributes = this.addInheritedAttributes(attributes, this.attributes.getAllAttributes());
     this.childNodes[0].setInheritedAttributes(attributes, display, level, prime);

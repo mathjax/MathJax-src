@@ -346,3 +346,18 @@ export function separateOptions(options: OptionList, ...objects: OptionList[]): 
   results.unshift(options);
   return results;
 }
+
+
+/*****************************************************************/
+/**
+ *  Look up a value from object literal, being sure it is an
+ *  actual property (not inherited), with a default if not found.
+ *
+ * @param {string} name         The name of the key to look up.
+ * @param {OptionList} lookup   The list of options to check.
+ * @param {any} def             The default value if the key isn't found.
+ */
+export function lookup(name: string, lookup: OptionList, def: any = null) {
+  return (lookup.hasOwnProperty(name) ? lookup[name] : def);
+}
+

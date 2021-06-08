@@ -37,6 +37,7 @@ import {MmlMunderover} from '../../../core/MmlTree/MmlNodes/munderover.js';
 import {Label} from '../Tags.js';
 import {em} from '../../../util/lengths.js';
 import {entities} from '../../../util/Entities.js';
+import {lookup} from '../../../util/Options.js';
 
 
 // Namespace
@@ -607,35 +608,11 @@ BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, s
  * @param {boolean} stack True if stacked operator.
  */
 BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, stack: boolean) {
-  // @test Overline
-  let base = parser.ParseArg(name);
-  let symbol = NodeUtil.getForm(base);
-  if ((symbol && symbol[3] && symbol[3]['movablelimits'])
-      || NodeUtil.getProperty(base, 'movablelimits')) {
-    // @test Overline Sum
-    NodeUtil.setProperties(base, {'movablelimits': false});
-  }
-  let mo;
-  if (NodeUtil.isType(base, 'munderover') && NodeUtil.isEmbellished(base)) {
-    // @test Overline Limits
-    NodeUtil.setProperties(NodeUtil.getCoreMO(base), {lspace: 0, rspace: 0});
-    mo = parser.create('node', 'mo', [], {rspace: 0});
-    base = parser.create('node', 'mrow', [mo, base]);
-    // TODO? add an empty <mi> so it's not embellished any more
-  }
-  const mml = parser.create('node', 'munderover', [base]) as MmlMunderover;
   const entity = NodeUtil.createEntity(c);
-  mo = parser.create('token', 'mo', {stretchy: true, accent: true}, entity);
-
-  NodeUtil.setChild(mml, name.charAt(1) === 'o' ?  mml.over : mml.under, mo);
-  let node: MmlNode = mml;
-  if (stack) {
-    // @test Overbrace 1 2 3, Underbrace, Overbrace Op 1 2
-    node = parser.create('node', 'TeXAtom', [mml],
-                                                   {texClass: TEXCLASS.OP, movesupsub: true});
-  }
-  NodeUtil.setProperty(node, 'subsupOK', true);
-  parser.Push(node);
+  const mo = parser.create('token', 'mo', {stretchy: true, accent: true}, entity);
+  const pos = (name.charAt(1) === 'o' ? 'over' : 'under');
+  const base = parser.ParseArg(name);
+  parser.Push(ParseUtil.underOver(parser, base, mo, pos, stack));
 };
 
 
@@ -1028,6 +1005,27 @@ BaseMethods.FBox = function(parser: TexParser, name: string) {
   parser.Push(node);
 };
 
+/**
+ * Handle framed boxes with options.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
+BaseMethods.FrameBox = function(parser: TexParser, name: string) {
+  const width = parser.GetBrackets(name);
+  const pos = parser.GetBrackets(name) || 'c';
+  let mml = ParseUtil.internalMath(parser, parser.GetArgument(name));
+  if (width) {
+    mml = [parser.create('node', 'mpadded', mml, {
+      width,
+      'data-align': lookup(pos, {l: 'left', r: 'right'}, 'center')
+    })];
+  }
+  const node = parser.create('node', 'TeXAtom',
+                             [parser.create('node', 'menclose', mml, {notation: 'box'})],
+                             {texClass: TEXCLASS.ORD});
+  parser.Push(node);
+};
+
 
 /**
  * Handle \\not.
@@ -1129,80 +1127,83 @@ BaseMethods.Matrix = function(parser: TexParser, _name: string,
  */
 BaseMethods.Entry = function(parser: TexParser, name: string) {
   // @test Label, Array, Cross Product Formula
-  parser.Push(
-    parser.itemFactory.create('cell').setProperties({isEntry: true, name: name}));
-  if (parser.stack.Top().getProperty('isCases')) {
-    //
-    //  Make second column be in \text{...} (unless it is already
-    //  in a \text{...}, for backward compatibility).
-    //
-    const str = parser.string;
-    let braces = 0, close = -1, i = parser.i, m = str.length;
-    //
-    //  Look through the string character by character...
-    //
-    while (i < m) {
-      const c = str.charAt(i);
-      if (c === '{') {
-        //
-        //  Increase the nested brace count and go on
-        //
-        braces++;
-        i++;
-      } else if (c === '}') {
-        //
-        //  If there are too many close braces, just end (we will get an
-        //    error message later when the rest of the string is parsed)
-        //  Otherwise
-        //    decrease the nested brace count,
-        //    if it is now zero and we haven't already marked the end of the
-        //      first brace group, record the position (use to check for \text{} later)
-        //    go on to the next character.
-        //
-        if (braces === 0) {
-          m = 0;
-        } else {
-          braces--;
-          if (braces === 0 && close < 0) {
-            close = i - parser.i;
-          }
-          i++;
-        }
-      } else if (c === '&' && braces === 0) {
-        //
-        //  Extra alignment tabs are not allowed in cases
-        //
-        // @test ExtraAlignTab
-        throw new TexError('ExtraAlignTab', 'Extra alignment tab in \\cases text');
-      } else if (c === '\\') {
-        //
-        //  If the macro is \cr or \\, end the search, otherwise skip the macro
-        //  (multi-letter names don't matter, as we will skip the rest of the
-        //   characters in the main loop)
-        //
-        if (str.substr(i).match(/^((\\cr)[^a-zA-Z]|\\\\)/)) {
-          m = 0;
-        } else {
-          i += 2;
-        }
+  parser.Push(parser.itemFactory.create('cell').setProperties({isEntry: true, name: name}));
+  const top = parser.stack.Top();
+  const env = top.getProperty('casesEnv') as string;
+  const cases = top.getProperty('isCases');
+  if (!cases && !env) return;
+  //
+  //  Make second column be in \text{...} (unless it is already
+  //  in a \text{...}, for backward compatibility).
+  //
+  const str = parser.string;
+  let braces = 0, close = -1, i = parser.i, m = str.length;
+  const end = (env ? new RegExp(`^\\\\end\\s*\\{${env.replace(/\*/, '\\*')}\\}`) : null);
+  //
+  //  Look through the string character by character...
+  //
+  while (i < m) {
+    const c = str.charAt(i);
+    if (c === '{') {
+      //
+      //  Increase the nested brace count and go on
+      //
+      braces++;
+      i++;
+    } else if (c === '}') {
+      //
+      //  If there are too many close braces, just end (we will get an
+      //    error message later when the rest of the string is parsed)
+      //  Otherwise
+      //    decrease the nested brace count,
+      //    if it is now zero and we haven't already marked the end of the
+      //      first brace group, record the position (use to check for \text{} later)
+      //    go on to the next character.
+      //
+      if (braces === 0) {
+        m = 0;
       } else {
-        //
-        //  Go on to the next character
-        //
+        braces--;
+        if (braces === 0 && close < 0) {
+          close = i - parser.i;
+        }
         i++;
       }
+    } else if (c === '&' && braces === 0) {
+      //
+      //  Extra alignment tabs are not allowed in cases
+      //
+      // @test ExtraAlignTab
+      throw new TexError('ExtraAlignTab', 'Extra alignment tab in \\cases text');
+    } else if (c === '\\') {
+      //
+      //  If the macro is \cr or \\, end the search, otherwise skip the macro
+      //  (multi-letter names don't matter, as we will skip the rest of the
+      //   characters in the main loop)
+      //
+      const rest = str.substr(i);
+      if (rest.match(/^((\\cr)[^a-zA-Z]|\\\\)/) || (end && rest.match(end))) {
+        m = 0;
+      } else {
+        i += 2;
+      }
+    } else {
+      //
+      //  Go on to the next character
+      //
+      i++;
     }
-    //
-    //  Check if the second column text is already in \text{};
-    //  If not, process the second column as text and continue parsing from there,
-    //    (otherwise process the second column as normal, since it is in \text{}
-    //
-    const text = str.substr(parser.i, i - parser.i);
-    if (!text.match(/^\s*\\text[^a-zA-Z]/) || close !== text.replace(/\s+$/, '').length - 1) {
-      const internal = ParseUtil.internalMath(parser, text, 0);
-      parser.PushAll(internal);
-      parser.i = i;
-    }
+  }
+  //
+  //  Check if the second column text is already in \text{};
+  //  If not, process the second column as text and continue parsing from there,
+  //    (otherwise process the second column as normal, since it is in \text{}
+  //
+  const text = str.substr(parser.i, i - parser.i);
+  if (!text.match(/^\s*\\text[^a-zA-Z]/) || close !== text.replace(/\s+$/, '').length - 1) {
+    const internal = ParseUtil.internalMath(parser, ParseUtil.trimSpaces(text), 0);
+    parser.PushAll(internal);
+    parser.i = i;
   }
 };
 
@@ -1246,25 +1247,14 @@ BaseMethods.CrLaTeX = function(parser: TexParser, name: string, nobrackets: bool
     }
   }
   parser.Push(
-    parser.itemFactory.create('cell').setProperties({isCR: true, name: name, linebreak: true}) );
+    parser.itemFactory.create('cell').setProperties({isCR: true, name: name, linebreak: true})
+  );
   const top = parser.stack.Top();
   let node: MmlNode;
   if (top instanceof sitem.ArrayItem) {
     // @test Array
-    if (n && top.arraydef['rowspacing']) {
-      const rows = (top.arraydef['rowspacing'] as string).split(/ /);
-      if (!top.getProperty('rowspacing')) {
-        // @test Array Custom Linebreak
-        let dimem = ParseUtil.dimen2em(rows[0]);
-        top.setProperty('rowspacing', dimem);
-      }
-      const rowspacing = top.getProperty('rowspacing') as number;
-      while (rows.length < top.table.length) {
-        rows.push(ParseUtil.Em(rowspacing));
-      }
-      rows[top.table.length - 1] = ParseUtil.Em(
-        Math.max(0, rowspacing + ParseUtil.dimen2em(n)));
-      top.arraydef['rowspacing'] = rows.join(' ');
+    if (n) {
+      top.addRowSpacing(n);
     }
   } else {
     if (n) {
@@ -1354,11 +1344,7 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
     // Remember the user defined environment we are closing.
     parser.stack.env['closing'] = env;
   }
-  if (++parser.macroCount > parser.configuration.options['maxMacros']) {
-    throw new TexError('MaxMacroSub2',
-                        'MathJax maximum substitution count exceeded; ' +
-                        'is there a recursive latex environment?');
-  }
+  ParseUtil.checkMaxMacros(parser, false);
   parser.parse('environment', [parser, env]);
 };
 
@@ -1415,6 +1401,10 @@ BaseMethods.Array = function(parser: TexParser, begin: StackItem,
   if (close) {
     // @test Cross Product
     array.setProperty('close', parser.convertDelimiter(close));
+  }
+  if ((style || '').charAt(1) === '\'') {
+    array.arraydef['data-cramped'] = true;
+    style = style.charAt(0);
   }
   if (style === 'D') {
     // TODO: This case never seems to occur! No test.
@@ -1585,11 +1575,7 @@ BaseMethods.Macro = function(parser: TexParser, name: string,
   }
   parser.string = ParseUtil.addArgs(parser, macro, parser.string.slice(parser.i));
   parser.i = 0;
-  if (++parser.macroCount > parser.configuration.options['maxMacros']) {
-    throw new TexError('MaxMacroSub1',
-                        'MathJax maximum macro substitution count exceeded; ' +
-                        'is there a recursive macro call?');
-  }
+  ParseUtil.checkMaxMacros(parser);
 };
 
 

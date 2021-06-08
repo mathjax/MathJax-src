@@ -89,7 +89,7 @@ new sm.CommandMap('AMSmath-macros', {
   shoveleft:  ['HandleShove', TexConstant.Align.LEFT],
   shoveright: ['HandleShove', TexConstant.Align.RIGHT],
 
-  xrightarrow: ['xArrow', 0x2192, 7, 12],
+  xrightarrow: ['xArrow', 0x2192, 5, 10],
   xleftarrow:  ['xArrow', 0x2190, 10, 5]
 }, AmsMethods);
 

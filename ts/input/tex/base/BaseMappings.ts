@@ -610,6 +610,8 @@ new sm.CommandMap('macros', {
   text:               'HBox',
   mbox:               ['HBox', 0],
   fbox:               'FBox',
+  boxed:              ['Macro', '\\fbox{$\\displaystyle{#1}$}', 1],
+  framebox:           'FrameBox',
 
   strut:              'Strut',
   mathstrut:         ['Macro', '\\vphantom{(}'],

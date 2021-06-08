@@ -200,7 +200,7 @@ CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstru
     const adaptor = this.adaptor;
     for (const row of adaptor.childNodes(this.itable) as N[]) {
       while (adaptor.childNodes(row).length < this.numCols) {
-        adaptor.append(row, this.html('mjx-mtd'));
+        adaptor.append(row, this.html('mjx-mtd', {'extra': true}));
       }
     }
   }

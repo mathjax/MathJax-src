@@ -1025,6 +1025,29 @@ export class ArrayItem extends BaseItem {
     }
   }
 
+  /**
+   * Adds a row-spacing to the current row (padding out the rowspacing if needed to get there).
+   *
+   * @param {string} spacing   The rowspacing to use for the current row.
+   */
+  public addRowSpacing(spacing: string) {
+    if (this.arraydef['rowspacing']) {
+      const rows = (this.arraydef['rowspacing'] as string).split(/ /);
+      if (!this.getProperty('rowspacing')) {
+        // @test Array Custom Linebreak
+        let dimem = ParseUtil.dimen2em(rows[0]);
+        this.setProperty('rowspacing', dimem);
+      }
+      const rowspacing = this.getProperty('rowspacing') as number;
+      while (rows.length < this.table.length) {
+        rows.push(ParseUtil.Em(rowspacing));
+      }
+      rows[this.table.length - 1] = ParseUtil.Em(
+        Math.max(0, rowspacing + ParseUtil.dimen2em(spacing)));
+      this.arraydef['rowspacing'] = rows.join(' ');
+    }
+  }
+
 }
 
 

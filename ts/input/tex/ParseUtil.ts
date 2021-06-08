@@ -30,6 +30,7 @@ import NodeUtil from './NodeUtil.js';
 import TexParser from './TexParser.js';
 import TexError from './TexError.js';
 import {entities} from '../../util/Entities.js';
+import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
 import {em} from '../../util/lengths.js';
 
 
@@ -361,6 +362,40 @@ namespace ParseUtil {
   }
 
   /**
+   * Create an munderover node with the given script position.
+   * @param {TexParser} parser   The current TeX parser.
+   * @param {MmlNode} base       The base node.
+   * @param {MmlNode} script     The under- or over-script.
+   * @param {string} pos         Either 'over' or 'under'.
+   * @param {boolean} stack      True if super- or sub-scripts should stack.
+   * @return {MmlNode}           The generated node (MmlMunderover or TeXAtom)
+   */
+  export function underOver(parser: TexParser, base: MmlNode, script: MmlNode, pos: string, stack: boolean): MmlNode {
+    // @test Overline
+    const symbol = NodeUtil.getForm(base);
+    if ((symbol && symbol[3] && symbol[3]['movablelimits']) || NodeUtil.getProperty(base, 'movablelimits')) {
+      // @test Overline Sum
+      NodeUtil.setProperties(base, {'movablelimits': false});
+    }
+    if (NodeUtil.isType(base, 'munderover') && NodeUtil.isEmbellished(base)) {
+      // @test Overline Limits
+      NodeUtil.setProperties(NodeUtil.getCoreMO(base), {lspace: 0, rspace: 0});
+      const mo = parser.create('node', 'mo', [], {rspace: 0});
+      base = parser.create('node', 'mrow', [mo, base]);
+      // TODO? add an empty <mi> so it's not embellished any more
+    }
+    const mml = parser.create('node', 'munderover', [base]) as MmlMunderover;
+    NodeUtil.setChild(mml, pos === 'over' ?  mml.over : mml.under, script);
+    let node: MmlNode = mml;
+    if (stack) {
+      // @test Overbrace 1 2 3, Underbrace, Overbrace Op 1 2
+      node = parser.create('node', 'TeXAtom', [mml], {texClass: TEXCLASS.OP, movesupsub: true});
+    }
+    NodeUtil.setProperty(node, 'subsupOK', true);
+    return node;
+  }
+
+  /**
    * Trim spaces from a string.
    * @param {string} text The string to clean.
    * @return {string} The string with leading and trailing whitespace removed.
@@ -391,7 +426,7 @@ namespace ParseUtil {
     } else if (align === 'b') {
       array.arraydef.align = 'baseline -1';
     } else if (align === 'c') {
-      array.arraydef.align = 'center';
+      array.arraydef.align = 'axis';
     } else if (align) {
       array.arraydef.align = align;
     } // FIXME: should be an error?
@@ -458,6 +493,26 @@ namespace ParseUtil {
     return s1 + s2;
   }
 
+  /**
+   * Report an error if there are too many macro substitutions.
+   * @param {TexParser} parser The current TeX parser.
+   * @param {boolean} isMacro  True if we are substituting a macro, false for environment.
+   */
+  export function checkMaxMacros(parser: TexParser, isMacro: boolean = true) {
+    if (++parser.macroCount <= parser.configuration.options['maxMacros']) {
+      return;
+    }
+    if (isMacro) {
+      throw new TexError('MaxMacroSub1',
+                         'MathJax maximum macro substitution count exceeded; ' +
+                         'is here a recursive macro call?');
+    } else {
+      throw new TexError('MaxMacroSub2',
+                         'MathJax maximum substitution count exceeded; ' +
+                         'is there a recursive latex environment?');
+    }
+  }
+
 
   /**
    *  Check for bad nesting of equation environments
@@ -513,8 +568,7 @@ namespace ParseUtil {
       for (let key of Object.keys(def)) {
         if (!allowed.hasOwnProperty(key)) {
           if (error) {
-            throw new TexError('InvalidOption',
-                               'Invalid optional argument: %1', key);
+            throw new TexError('InvalidOption', 'Invalid option: %1', key);
           }
           delete def[key];
         }
