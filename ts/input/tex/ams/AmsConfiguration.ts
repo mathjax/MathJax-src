@@ -23,7 +23,7 @@
  */
 
 import {Configuration, ParserConfiguration} from '../Configuration.js';
-import {MultlineItem} from './AmsItems.js';
+import {MultlineItem, FlalignItem} from './AmsItems.js';
 import {AbstractTags} from '../Tags.js';
 import {NEW_OPS} from './AmsMethods.js';
 import './AmsMappings.js';
@@ -57,9 +57,28 @@ export const AmsConfiguration = Configuration.create(
               'AMSmath-mathchar0mo', 'AMSmath-macros', 'AMSmath-delimiter'],
       environment: ['AMSmath-environment']
     },
-    items: {[MultlineItem.prototype.kind]: MultlineItem},
+    items: {
+      [MultlineItem.prototype.kind]: MultlineItem,
+      [FlalignItem.prototype.kind]: FlalignItem,
+    },
     tags: {'ams': AmsTags},
-    init: init
+    init: init,
+    config: (_config: ParserConfiguration, jax: any)  => {
+      //
+      //  Move multlineWidth from old location to ams block (remove in next version)
+      //
+      if (jax.parseOptions.options.multlineWidth) {
+        jax.parseOptions.options.ams.multlineWidth = jax.parseOptions.options.multlineWidth;
+      }
+      delete jax.parseOptions.options.multlineWidth;
+    },
+    options: {
+      multlineWidth: '',
+      ams: {
+        multlineWidth: '100%',  // The width to use for multline environments.
+        multlineIndent: '1em',  // The margin to use on both sides of multline environments.
+      }
+    }
   }
 );
 

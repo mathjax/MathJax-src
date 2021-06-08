@@ -29,16 +29,7 @@ import {TexConstant} from '../TexConstants.js';
 import ParseMethods from '../ParseMethods.js';
 import ParseUtil from '../ParseUtil.js';
 import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
-import {MATHSPACE, em} from '../../../util/lengths.js';
-
-
-let COLS = function(W: number[]) {
-  const WW: string[] = [];
-  for (let i = 0, m = W.length; i < m; i++) {
-    WW[i] = ParseUtil.Em(W[i]);
-  }
-  return WW.join(' ');
-};
+import {MATHSPACE} from '../../../util/lengths.js';
 
 
 /**
@@ -107,15 +98,14 @@ new sm.CommandMap('AMSmath-macros', {
  * Environments from the AMS Math package.
  */
 new sm.EnvironmentMap('AMSmath-environment', ParseMethods.environment, {
+  'equation*':   ['Equation', null, false],
   'eqnarray*':   ['EqnArray', null, false, true, 'rcl',
-                  '0 ' + em(MATHSPACE.thickmathspace), '.5em'],
-  align:         ['EqnArray', null, true, true,  'rlrlrlrlrlrl',
-                  COLS([0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0])],
-  'align*':      ['EqnArray', null, false, true, 'rlrlrlrlrlrl',
-                  COLS([0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0])],
+                  ParseUtil.cols(0, MATHSPACE.thickmathspace), '.5em'],
+  align:         ['EqnArray', null, true, true,  'rl',  ParseUtil.cols(0, 2)],
+  'align*':      ['EqnArray', null, false, true, 'rl',  ParseUtil.cols(0, 2)],
   multline:      ['Multline', null, true],
   'multline*':   ['Multline', null, false],
-  split:         ['EqnArray', null, false, false, 'rl', COLS([0])],
+  split:         ['EqnArray', null, false, false, 'rl', ParseUtil.cols(0)],
   gather:        ['EqnArray', null, true, true,  'c'],
   'gather*':     ['EqnArray', null, false, true, 'c'],
 
@@ -123,12 +113,17 @@ new sm.EnvironmentMap('AMSmath-environment', ParseMethods.environment, {
   'alignat*':    ['AlignAt', null, false, true],
   alignedat:     ['AlignAt', null, false, false],
 
-  aligned:       ['AmsEqnArray', null, null, null, 'rlrlrlrlrlrl',
-                  COLS([0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0]), '.5em', 'D'],
+  aligned:       ['AmsEqnArray', null, null, null, 'rl', ParseUtil.cols(0, 2), '.5em', 'D'],
   gathered:      ['AmsEqnArray', null, null, null, 'c', null, '.5em', 'D'],
 
-  subarray:      ['Array', null, null, null, null, COLS([0]), '0.1em', 'S', 1],
-  smallmatrix:   ['Array', null, null, null, 'c', COLS([1 / 3]),
+  xalignat:      ['XalignAt', null, true, true],
+  'xalignat*':   ['XalignAt', null, false, true],
+  xxalignat:     ['XalignAt', null, false, false],
+  flalign:       ['FlalignArray', null, true, false, true, 'rlc', 'auto auto fit'],
+  'flalign*':    ['FlalignArray', null, false, false, true, 'rlc', 'auto auto fit'],
+
+  subarray:      ['Array', null, null, null, null, ParseUtil.cols(0), '0.1em', 'S', 1],
+  smallmatrix:   ['Array', null, null, null, 'c', ParseUtil.cols(1 / 3),
                   '.2em', 'S', 1],
   matrix:       ['Array', null, null, null, 'c'],
   pmatrix:      ['Array', null, '(', ')', 'c'],

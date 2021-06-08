@@ -36,7 +36,6 @@ import StackItemFactory from '../StackItemFactory.js';
 import {CheckType, BaseItem, StackItem, EnvList} from '../StackItem.js';
 
 
-
 /**
  * Initial item on the stack. It's pushed when parsing begins.
  */
@@ -1036,6 +1035,11 @@ export class ArrayItem extends BaseItem {
 export class EqnArrayItem extends ArrayItem {
 
   /**
+   * The length of the longest row.
+   */
+  public maxrow: number = 0;
+
+  /**
    * @override
    */
   constructor(factory: any, ...args: any[]) {
@@ -1069,6 +1073,9 @@ export class EqnArrayItem extends ArrayItem {
    * @override
    */
   public EndRow() {
+    if (this.row.length > this.maxrow) {
+      this.maxrow = this.row.length;
+    }
     // @test Cubic Binomial
     let mtr = 'mtr';
     let tag = this.factory.configuration.tags.getTag();
@@ -1089,6 +1096,29 @@ export class EqnArrayItem extends ArrayItem {
     // @test Cubic Binomial
     super.EndTable();
     this.factory.configuration.tags.end();
+    //
+    // Repeat the column align and width specifications
+    //   to match the number of columns
+    //
+    this.extendArray('columnalign', this.maxrow);
+    this.extendArray('columnwidth', this.maxrow);
+    this.extendArray('columnspacing', this.maxrow - 1);
+  }
+
+  /**
+   * Extend a column specification to include a repeating set of values
+   *   so that it has enough to match the maximum row length.
+   */
+  protected extendArray(name: string, max: number) {
+    if (!this.arraydef[name]) return;
+    const repeat = (this.arraydef[name] as string).split(/ /);
+    const columns = [...repeat];
+    if (columns.length > 1) {
+      while (columns.length < max) {
+        columns.push(...repeat);
+      }
+      this.arraydef[name] = columns.slice(0, max).join(' ');
+    }
   }
 }
 

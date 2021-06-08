@@ -70,7 +70,8 @@ CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstru
     },
     'mjx-table': {
       'display': 'inline-block',
-      'vertical-align': '-.5ex'
+      'vertical-align': '-.5ex',
+      'box-sizing': 'border-box'
     },
     'mjx-table > mjx-itable': {
       'vertical-align': 'middle',
@@ -441,10 +442,11 @@ CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstru
     adaptor.setStyle(table, 'minWidth', this.em(w));
     if (L || R) {
       adaptor.setStyle(this.chtml, 'margin', '');
+      const style = (this.node.attributes.get('data-width-includes-label') ? 'padding' : 'margin');
       if (L === R) {
-        adaptor.setStyle(table, 'margin', '0 ' + this.em(R));
+        adaptor.setStyle(table, style, '0 ' + this.em(R));
       } else {
-        adaptor.setStyle(table, 'margin', '0 ' + this.em(R) + ' 0 ' + this.em(L));
+        adaptor.setStyle(table, style, '0 ' + this.em(R) + ' 0 ' + this.em(L));
       }
     }
     adaptor.setAttribute(this.itable, 'width', 'full');
@@ -518,7 +520,7 @@ CommonMtableMixin<CHTMLmtd<any, any, any>, CHTMLmtr<any, any, any>, CHTMLConstru
   protected addLabelPadding(side: string): [string, number] {
     const [ , align, shift] = this.getPadAlignShift(side);
     const styles: OptionList = {};
-    if (side === 'right') {
+    if (side === 'right' && !this.node.attributes.get('data-width-includes-label')) {
       const W = this.node.attributes.get('width') as string;
       const {w, L, R} = this.getBBox();
       styles.style = {
