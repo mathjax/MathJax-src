@@ -187,7 +187,7 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
    * @param {CssStyles} styles   The styles to update with newly used character styles
    */
   protected updateFontStyles(styles: CssStyles) {
-    styles.addStyles(this.font.updateStyles());
+    styles.addStyles(this.font.updateStyles({}));
   }
 
   /**

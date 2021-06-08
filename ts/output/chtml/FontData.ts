@@ -183,15 +183,9 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
     //
     this.addFontURLs(styles, CLASS.defaultFonts, this.options.fontURL);
     //
-    //  Create styles needed for the delimiters and characters
+    //  Add the styles for delimiters and characters
     //
-    this.addDelimiterCharStyles(styles);
-    this.addVariantCharStyles(styles);
-    //
-    //   We have updated the rules, so clear the update data
-    //
-    this.delimUsage.update();
-    this.charUsage.update();
+    this.updateStyles(styles);
     //
     //  Return the final style sheet
     //
@@ -200,9 +194,11 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
 
   /**
    * Get the styles for any newly used characters and delimiters
+   *
+   * @param {StyleList} styles  The style list to add delimiter styles to.
+   * @return {StyleList}        The modified style list.
    */
-  public updateStyles() {
-    const styles: StyleList = {};
+  public updateStyles(styles: StyleList): StyleList {
     for (const N of this.delimUsage.update()) {
       this.addDelimiterStyles(styles, N, this.delimiters[N]);
     }
@@ -211,41 +207,6 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
       this.addCharStyles(styles, variant.letter, N, variant.chars[N]);
     }
     return styles;
-  }
-
-  /**
-   * @param {StyleList} styles  The style list to add delimiter styles to.
-   */
-  protected addDelimiterCharStyles(styles: StyleList) {
-    const allCSS = !this.options.adaptiveCSS;
-    for (const n of Object.keys(this.delimiters)) {
-      const N = parseInt(n);
-      if (allCSS || this.delimUsage.has(N)) {
-        this.addDelimiterStyles(styles, N, this.delimiters[N]);
-      }
-    }
-  }
-
-  /**
-   * @param {StyleList} styles  The style list to add character styles to.
-   */
-  protected addVariantCharStyles(styles: StyleList) {
-    const allCSS = !this.options.adaptiveCSS;
-    for (const name of Object.keys(this.variant)) {
-      const variant = this.variant[name];
-      const vletter = variant.letter;
-      for (const n of Object.keys(variant.chars)) {
-        const N = parseInt(n);
-        const char = variant.chars[N];
-        if ((char[3] || {}).smp) continue;
-        if (allCSS && char.length < 4) {
-          (char as CHTMLCharData)[3] = {};
-        }
-        if (allCSS || this.charUsage.has([name, N])) {
-          this.addCharStyles(styles, vletter, N, char);
-        }
-      }
-    }
   }
 
   /**
