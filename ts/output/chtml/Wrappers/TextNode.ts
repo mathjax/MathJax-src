@@ -58,6 +58,19 @@ CommonTextNodeMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
     'mjx-utext': {
       display: 'inline-block',
       padding: '.75em 0 .2em 0'
+    },
+    //
+    //  WebKit-specific CSS to handle bug with clipped characters.
+    //  (test found at https://browserstrangeness.bitbucket.io/css_hacks.html#safari)
+    //
+    '@supports (-webkit-marquee-repetition:infinite) and (object-fit:fill)': {
+      //
+      //  We don't really support nested CSS, so fake it byt putting the CSS
+      //    directly in the string, and commenting out the colon that is
+      //    inserted after the selector (that would normally be a CSS property name)
+      //    See issue #2435.
+      //
+      'mjx-c::before/*': '*/ {will-change: opacity}'
     }
   };
 
