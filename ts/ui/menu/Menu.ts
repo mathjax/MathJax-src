@@ -402,13 +402,13 @@ export class Menu {
         this.variable<boolean>('semantics'),
         this.variable<string> ('zoom'),
         this.variable<string> ('zscale'),
-        this.variable<string> ('renderer', (jax: string) => this.setRenderer(jax)),
+        this.variable<string> ('renderer', jax => this.setRenderer(jax)),
         this.variable<boolean>('alt'),
         this.variable<boolean>('cmd'),
         this.variable<boolean>('ctrl'),
         this.variable<boolean>('shift'),
-        this.variable<string> ('scale', (scale: string) => this.setScale(scale)),
-        this.variable<boolean>('explorer', (explore: boolean) => this.setExplorer(explore)),
+        this.variable<string> ('scale', scale => this.setScale(scale)),
+        this.variable<boolean>('explorer', explore => this.setExplorer(explore)),
         this.a11yVar<string> ('highlight'),
         this.a11yVar<string> ('backgroundColor'),
         this.a11yVar<string> ('backgroundOpacity'),
@@ -418,8 +418,12 @@ export class Menu {
         this.a11yVar<boolean>('subtitles'),
         this.a11yVar<boolean>('braille'),
         this.a11yVar<boolean>('viewBraille'),
-        this.a11yVar<string>('locale'),
-        this.a11yVar<string> ('speechRules'),
+        this.a11yVar<string>('locale', value => SRE.setupEngine({locale: value as string})),
+        this.a11yVar<string> ('speechRules', value => {
+          const [domain, style] = value.split('-');
+          this.document.options.sre.domain = domain;
+          this.document.options.sre.style = style;
+        }),
         this.a11yVar<string> ('magnification'),
         this.a11yVar<string> ('magnify'),
         this.a11yVar<boolean>('treeColoring'),
@@ -427,9 +431,9 @@ export class Menu {
         this.a11yVar<boolean>('infoRole'),
         this.a11yVar<boolean>('infoPrefix'),
         this.variable<boolean>('autocollapse'),
-        this.variable<boolean>('collapsible', (collapse: boolean) => this.setCollapsible(collapse)),
-        this.variable<boolean>('inTabOrder', (tab: boolean) => this.setTabOrder(tab)),
-        this.variable<boolean>('assistiveMml', (mml: boolean) => this.setAssistiveMml(mml))
+        this.variable<boolean>('collapsible', collapse => this.setCollapsible(collapse)),
+        this.variable<boolean>('inTabOrder', tab => this.setTabOrder(tab)),
+        this.variable<boolean>('assistiveMml', mml => this.setAssistiveMml(mml))
       ],
       items: [
         this.submenu('Show', 'Show Math As', [
@@ -864,6 +868,7 @@ export class Menu {
       this.transferMathList(document);
       this.document.processed = document.processed;
       if (!Menu._loadingPromise) {
+        this.document.outputJax.reset();
         this.rerender(component === 'complexity' || noEnrich ? STATE.COMPILED : STATE.TYPESET);
       }
     });
@@ -1001,8 +1006,8 @@ export class Menu {
     const element = math.typesetRoot;
     element.addEventListener('contextmenu', () => this.menu.mathItem = math, true);
     element.addEventListener('keydown', () => this.menu.mathItem = math, true);
-    element.addEventListener('click', (event: MouseEvent) => this.zoom(event, 'Click', math), true);
-    element.addEventListener('dblclick', (event: MouseEvent) => this.zoom(event, 'DoubleClick', math), true);
+    element.addEventListener('click', event => this.zoom(event, 'Click', math), true);
+    element.addEventListener('dblclick', event => this.zoom(event, 'DoubleClick', math), true);
     this.menu.store.insert(element);
   }
 
@@ -1044,7 +1049,7 @@ export class Menu {
    *
    * @tempate T    The type of variable being defined
    */
-  public a11yVar<T extends (string | boolean)>(name: keyof MenuSettings): Object {
+  public a11yVar<T extends (string | boolean)>(name: keyof MenuSettings, action?: (value: T) => void): Object {
     return {
       name: name,
       getter: () => this.getA11y(name),
@@ -1053,6 +1058,7 @@ export class Menu {
         let options: {[key: string]: any} = {};
         options[name] = value;
         this.setA11y(options);
+        action && action(value);
         this.saveUserSettings();
       }
     };
