@@ -230,8 +230,9 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
    * @param {CHTMLDelimiterData} data  The data for the delimiter whose CSS is to be added
    */
   protected addDelimiterStyles(styles: StyleList, n: number, data: CHTMLDelimiterData) {
-    const c = this.charSelector(n);
+    let c = this.charSelector(n);
     if (data.c && data.c !== n) {
+      c = this.charSelector(data.c);
       styles['.mjx-stretched mjx-c' + c + '::before'] = {
         content: this.charContent(data.c)
       };
