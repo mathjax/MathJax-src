@@ -96,7 +96,7 @@ new CommandMap('textcomp-macros', {
   // Table 15: textcomp Legal Symbols
   'textcircledP':        ['Insert', '\u2117'],
   'textcompwordmark':    ['Insert', '\u200C'],
-  'textcopyleft':        ['Insert', '\u1F12F'],
+  'textcopyleft':        ['Insert', '\u{1F12F}'],
   'textcopyright':       ['Insert', '\u00A9'],
   'textregistered':      ['Insert', '\u00AE'],
   'textservicemark':     ['Insert', '\u2120'],
