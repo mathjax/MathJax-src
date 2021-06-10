@@ -331,7 +331,7 @@ export class ParserConfiguration {
   }
 
   /**
-   * Retrieves and adds configuration for a pacakge with priority.
+   * Retrieves and adds configuration for a package with priority.
    * @param {(string | [string, number]} pkg Package with priority.
    */
   public addPackage(pkg: (string | [string, number])) {
