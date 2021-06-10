@@ -276,7 +276,6 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
      * @constructor
      */
     constructor(...args: any[]) {
-      processSreOptions(args[2]);
       super(...args);
       MmlJax.setMmlFactory(this.mmlFactory);
       const ProcessBits = (this.constructor as typeof AbstractMathDocument).ProcessBits;
@@ -361,25 +360,4 @@ export function EnrichHandler<N, T, D>(handler: Handler<N, T, D>, MmlJax: MathML
       handler.documentClass, MmlJax
     );
   return handler;
-}
-
-
-//
-// TODO(v3.2): This is for backward compatibility of old option parameters.
-//
-/**
- * Processes old enrichment option for backward compatibility.
- * @param {OptionList} options The options to process.
- */
-function processSreOptions(options: OptionList) {
-  if (!options) {
-    return;
-  }
-  if (!options.sre) {
-    options.sre = {};
-  }
-  if (options.enrichSpeech) {
-    options.sre.speech = options.enrichSpeech;
-    delete options.enrichSpeech;
-  }
 }

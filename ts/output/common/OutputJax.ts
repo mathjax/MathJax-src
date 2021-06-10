@@ -86,7 +86,6 @@ export abstract class CommonOutputJax<
       ...AbstractOutputJax.OPTIONS,
     scale: 1,                      // global scaling factor for all expressions
     minScale: .5,                  // smallest scaling factor to use
-    matchFontHeight: true,         // true to match ex-height of surrounding font
     mtextInheritFont: false,       // true to make mtext elements use surrounding font
     merrorInheritFont: false,      // true to make merror text use surrounding font
     mtextFont: '',                 // font to use for mtext, if not inheriting (empty means use MathJax fonts)
