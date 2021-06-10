@@ -23,8 +23,7 @@
  */
 
 
-import {CharacterMap, CommandMap} from '../SymbolMap.js';
-import {Symbol} from '../Symbol.js';
+import {CommandMap} from '../SymbolMap.js';
 import {TexConstant} from '../TexConstants.js';
 import {TextMacrosMethods} from '../textmacros/TextMacrosMethods.js';
 import TexParser from '../TexParser.js';
@@ -159,56 +158,34 @@ new CommandMap('textcomp-macros', {
   'textdied':            ['Insert', '\u2020'],
   'textdivorced':        ['Insert', '\u26AE'],
   //  'textleaf'
-  'textmarried':         ['Insert', '\u26AD']
-}, {
-  Insert: function(parser: TexParser, name: string, c: string) {
-    if (parser instanceof TextParser) {
-      TextMacrosMethods.Insert(parser, name, c);
-    } else {
-      parser.Push(ParseUtil.internalText(parser, c, {}));
-    }
-  }
-});
-
-
-/**
- * Handle old style characters.
- * @param {TextParser} parser The current tex parser.
- * @param {Symbol} mchar The parsed symbol.
- */
-function oldstyleText(parser: TexParser, mchar: Symbol) {
-  if (!(parser instanceof TextParser)) {
-    parser.Push(ParseUtil.internalText(
-      parser, mchar.char, {mathvariant: TexConstant.Variant.OLDSTYLE}));
-    return;
-  }
-  if (parser.stack.env.mathvariant = TexConstant.Variant.OLDSTYLE) {
-    parser.text += mchar.char;
-    return;
-  }
-  TextMacrosMethods.SetFont(parser, mchar.symbol, TexConstant.Variant.OLDSTYLE);
-  parser.text = mchar.char;
-}
-
-/**
- * Identifiers from the Textcomp package.
- */
-new CharacterMap('textcomp-oldstyle', oldstyleText, {
+  'textmarried':         ['Insert', '\u26AD'],
 
   // This is not the correct glyph
-  'textcentoldstyle':    '\u00A2',
+  'textcentoldstyle':    ['Insert', '\u00A2', TexConstant.Variant.OLDSTYLE],
   // This is not the correct glyph
-  'textdollaroldstyle':  '\u0024',
+  'textdollaroldstyle':  ['Insert', '\u0024', TexConstant.Variant.OLDSTYLE],
 
   // Table 16: textcomp Old-Style Numerals
-  'textzerooldstyle':    '0',
-  'textoneoldstyle':     '1',
-  'texttwooldstyle':     '2',
-  'textthreeoldstyle':   '3',
-  'textfouroldstyle':    '4',
-  'textfiveoldstyle':    '5',
-  'textsixoldstyle':     '6',
-  'textsevenoldstyle':   '7',
-  'texteightoldstyle':   '8',
-  'textnineoldstyle':    '9'
+  'textzerooldstyle':    ['Insert', '0', TexConstant.Variant.OLDSTYLE],
+  'textoneoldstyle':     ['Insert', '1', TexConstant.Variant.OLDSTYLE],
+  'texttwooldstyle':     ['Insert', '2', TexConstant.Variant.OLDSTYLE],
+  'textthreeoldstyle':   ['Insert', '3', TexConstant.Variant.OLDSTYLE],
+  'textfouroldstyle':    ['Insert', '4', TexConstant.Variant.OLDSTYLE],
+  'textfiveoldstyle':    ['Insert', '5', TexConstant.Variant.OLDSTYLE],
+  'textsixoldstyle':     ['Insert', '6', TexConstant.Variant.OLDSTYLE],
+  'textsevenoldstyle':   ['Insert', '7', TexConstant.Variant.OLDSTYLE],
+  'texteightoldstyle':   ['Insert', '8', TexConstant.Variant.OLDSTYLE],
+  'textnineoldstyle':    ['Insert', '9', TexConstant.Variant.OLDSTYLE]
+}, {
+  Insert: function(parser: TexParser, name: string, c: string, font: string) {
+    if (parser instanceof TextParser) {
+      if (!font) {
+        TextMacrosMethods.Insert(parser, name, c);
+        return;
+      }
+      parser.saveText();
+    }
+    parser.Push(ParseUtil.internalText(
+      parser, c, font ? {mathvariant: font} : {}));
+  }
 });
