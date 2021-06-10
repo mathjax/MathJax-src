@@ -525,6 +525,18 @@ namespace ParseUtil {
     parser.stack.global.eqnenv = true;
   }
 
+  export function copyNode(node: MmlNode, parser: TexParser): MmlNode  {
+    const tree = node.copy() as MmlNode;
+    const options = parser.configuration;
+    tree.walkTree((n: MmlNode) => {
+      options.addNode(n.kind, n);
+      const lists = (n.getProperty('in-lists') as string || '').split(/,/);
+      for (const list of lists) {
+        options.addNode(list, n);
+      }
+    });
+    return tree;
+  }
 
   /**
    * This is a placeholder for future security filtering of attributes.
