@@ -82,7 +82,9 @@ CommonMpaddedMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
     //
     if (x + dx || y) {
       style.position = 'relative';
-      const rbox = this.html('mjx-rbox', {style: {left: this.em(x + dx), top: this.em(-y)}});
+      const rbox = this.html('mjx-rbox', {
+        style: {left: this.em(x + dx), top: this.em(-y), 'max-width': style.width}
+      });
       if (x + dx && this.childNodes[0].getBBox().pwidth) {
         this.adaptor.setAttribute(rbox, 'width', 'full');
         this.adaptor.setStyle(rbox, 'left', this.em(x));

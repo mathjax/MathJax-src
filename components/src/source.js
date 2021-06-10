@@ -23,6 +23,7 @@ export const source = {
   '[tex]/enclose': `${src}/input/tex/extensions/enclose/enclose.js`,
   '[tex]/extpfeil': `${src}/input/tex/extensions/extpfeil/extpfeil.js`,
   '[tex]/html': `${src}/input/tex/extensions/html/html.js`,
+  '[tex]/mathtools': `${src}/input/tex/extensions/mathtools/mathtools.js`,
   '[tex]/mhchem': `${src}/input/tex/extensions/mhchem/mhchem.js`,
   '[tex]/newcommand': `${src}/input/tex/extensions/newcommand/newcommand.js`,
   '[tex]/noerrors': `${src}/input/tex/extensions/noerrors/noerrors.js`,

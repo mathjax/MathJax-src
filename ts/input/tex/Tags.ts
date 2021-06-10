@@ -616,8 +616,6 @@ export namespace TagsFactory {
     tagSide: 'right',
     // This is the amount of indentation (from right or left) for the tags.
     tagIndent: '0.8em',
-    // This is the width to use for the multline environment
-    multlineWidth: '85%',
     // make element ID's use \label name rather than equation number
     // MJ puts in an equation prefix: mjx-eqn
     // When true it uses the label name XXX as mjx-eqn:XXX

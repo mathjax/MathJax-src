@@ -39,6 +39,7 @@ import './enclose/EncloseConfiguration.js';
 import './extpfeil/ExtpfeilConfiguration.js';
 import './gensymb/GensymbConfiguration.js';
 import './html/HtmlConfiguration.js';
+import './mathtools/MathtoolsConfiguration.js';
 import './mhchem/MhchemConfiguration.js';
 import './newcommand/NewcommandConfiguration.js';
 import './noerrors/NoErrorsConfiguration.js';
@@ -71,6 +72,7 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
     '[tex]/extpfeil',
     '[tex]/gensymb',
     '[tex]/html',
+    '[tex]/mathtools',
     '[tex]/mhchem',
     '[tex]/newcommand',
     '[tex]/noerrors',
@@ -104,6 +106,7 @@ export const AllPackages: string[] = [
   'extpfeil',
   'gensymb',
   'html',
+  'mathtools',
   'mhchem',
   'newcommand',
   'noerrors',

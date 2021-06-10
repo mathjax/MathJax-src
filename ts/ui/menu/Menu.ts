@@ -860,6 +860,7 @@ export class Menu {
       const document = this.document;
       this.document = startup.document = startup.getDocument();
       this.document.menu = this;
+      this.document.outputJax.reset();
       this.transferMathList(document);
       this.document.processed = document.processed;
       if (!Menu._loadingPromise) {

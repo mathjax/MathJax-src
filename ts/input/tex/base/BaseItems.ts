@@ -36,7 +36,6 @@ import StackItemFactory from '../StackItemFactory.js';
 import {CheckType, BaseItem, StackItem, EnvList} from '../StackItem.js';
 
 
-
 /**
  * Initial item on the stack. It's pushed when parsing begins.
  */
@@ -774,6 +773,53 @@ export class NotItem extends BaseItem {
   }
 }
 
+/**
+ * A StackItem that removes an mspace that follows it (for \nonscript).
+ */
+export class NonscriptItem extends BaseItem {
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'nonscript';
+  }
+
+  /**
+   * @override
+   */
+  public checkItem(item: StackItem): CheckType {
+    //
+    //  Check if the next item is an mspace (or an mspace in an mstyle) and remove it.
+    //
+    if (item.isKind('mml') && item.Size() === 1) {
+      let mml = item.First;
+      //
+      //  Space macros like \, are wrapped with an mstyle to set scriptlevel="0"
+      //    (so size is independent of level), we look at the contents of the mstyle for the mspace.
+      //
+      if (mml.isKind('mstyle') && mml.notParent) {
+        mml = NodeUtil.getChildren(NodeUtil.getChildren(mml)[0])[0];
+      }
+      if (mml.isKind('mspace')) {
+        //
+        //  If the space is in an mstyle, wrap it in an mrow so we can test its scriptlevel
+        //    in the post-filter (the mrow will be removed in the filter).  We can't test
+        //    the mstyle's scriptlevel, since it is ecxplicitly setting it to 0.
+        //
+        if (mml !== item.First) {
+          const mrow = this.create('node', 'mrow', [item.Pop()]);
+          item.Push(mrow);
+        }
+        //
+        //  Save the mspace for later post-processing.
+        //
+        this.factory.configuration.addNode('nonscript', item.First);
+      }
+    }
+    return [[item], true];
+  }
+}
 
 /**
  * Item indicating a dots command has been encountered.
@@ -1026,6 +1072,29 @@ export class ArrayItem extends BaseItem {
     }
   }
 
+  /**
+   * Adds a row-spacing to the current row (padding out the rowspacing if needed to get there).
+   *
+   * @param {string} spacing   The rowspacing to use for the current row.
+   */
+  public addRowSpacing(spacing: string) {
+    if (this.arraydef['rowspacing']) {
+      const rows = (this.arraydef['rowspacing'] as string).split(/ /);
+      if (!this.getProperty('rowspacing')) {
+        // @test Array Custom Linebreak
+        let dimem = ParseUtil.dimen2em(rows[0]);
+        this.setProperty('rowspacing', dimem);
+      }
+      const rowspacing = this.getProperty('rowspacing') as number;
+      while (rows.length < this.table.length) {
+        rows.push(ParseUtil.Em(rowspacing));
+      }
+      rows[this.table.length - 1] = ParseUtil.Em(
+        Math.max(0, rowspacing + ParseUtil.dimen2em(spacing)));
+      this.arraydef['rowspacing'] = rows.join(' ');
+    }
+  }
+
 }
 
 
@@ -1034,6 +1103,11 @@ export class ArrayItem extends BaseItem {
  * tagging information according to the given tagging style.
  */
 export class EqnArrayItem extends ArrayItem {
+
+  /**
+   * The length of the longest row.
+   */
+  public maxrow: number = 0;
 
   /**
    * @override
@@ -1069,6 +1143,9 @@ export class EqnArrayItem extends ArrayItem {
    * @override
    */
   public EndRow() {
+    if (this.row.length > this.maxrow) {
+      this.maxrow = this.row.length;
+    }
     // @test Cubic Binomial
     let mtr = 'mtr';
     let tag = this.factory.configuration.tags.getTag();
@@ -1089,6 +1166,29 @@ export class EqnArrayItem extends ArrayItem {
     // @test Cubic Binomial
     super.EndTable();
     this.factory.configuration.tags.end();
+    //
+    // Repeat the column align and width specifications
+    //   to match the number of columns
+    //
+    this.extendArray('columnalign', this.maxrow);
+    this.extendArray('columnwidth', this.maxrow);
+    this.extendArray('columnspacing', this.maxrow - 1);
+  }
+
+  /**
+   * Extend a column specification to include a repeating set of values
+   *   so that it has enough to match the maximum row length.
+   */
+  protected extendArray(name: string, max: number) {
+    if (!this.arraydef[name]) return;
+    const repeat = (this.arraydef[name] as string).split(/ /);
+    const columns = [...repeat];
+    if (columns.length > 1) {
+      while (columns.length < max) {
+        columns.push(...repeat);
+      }
+      this.arraydef[name] = columns.slice(0, max).join(' ');
+    }
   }
 }
 

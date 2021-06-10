@@ -35,7 +35,7 @@ import {OutputJax} from '../core/OutputJax.js';
 import {CommonOutputJax} from '../output/common/OutputJax.js';
 import {DOMAdaptor} from '../core/DOMAdaptor.js';
 import {PrioritizedList} from '../util/PrioritizedList.js';
-import {OptionList} from '../util/Options.js';
+import {OptionList, OPTIONS} from '../util/Options.js';
 
 import {TeX} from '../input/tex.js';
 
@@ -54,6 +54,8 @@ export interface MathJaxConfig extends MJConfig {
     typeset?: boolean;       // Perform initial typeset?
     ready?: () => void;      // Function to perform when components are ready
     pageReady?: () => void;  // Function to perform when page is ready
+    invalidOption?: 'fatal' | 'warn'; // Do invalid options produce a warning, or throw an error?
+    optionError?: (message: string, key: string) => void,  // Function to report invalid options
     [name: string]: any;     // Other configuration blocks
   };
 }
@@ -534,8 +536,8 @@ export const MathJax = MJGlobal as MathJaxObject;
 
 /*
  * If the startup module hasn't been added to the MathJax variable,
- *   Add the startup configuration and data objects, and create
- *   the initial typeset and conversion calls.
+ *   Add the startup configuration and data objects, and
+ *   set the method for handling invalid options, if provided.
  */
 if (typeof MathJax._.startup === 'undefined') {
 
@@ -554,6 +556,13 @@ if (typeof MathJax._.startup === 'undefined') {
     startup: Startup,
     options: {}
   });
+
+  if (MathJax.config.startup.invalidOption) {
+    OPTIONS.invalidOption = MathJax.config.startup.invalidOption;
+  }
+  if (MathJax.config.startup.optionError) {
+    OPTIONS.optionError = MathJax.config.startup.optionError;
+  }
 
 }
 
