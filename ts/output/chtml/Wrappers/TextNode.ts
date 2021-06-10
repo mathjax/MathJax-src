@@ -80,7 +80,7 @@ CommonTextNodeMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
                       this.jax.unknownText(String.fromCodePoint(n), variant) :
                       this.html('mjx-c', {class: this.char(n) + font}));
         adaptor.append(parent, node);
-        this.font.charUsage.add([variant, n]);
+        !data.unknown && this.font.charUsage.add([variant, n]);
       }
     }
   }
