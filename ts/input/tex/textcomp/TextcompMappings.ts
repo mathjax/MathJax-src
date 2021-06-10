@@ -27,6 +27,8 @@ import {CharacterMap, CommandMap} from '../SymbolMap.js';
 import {Symbol} from '../Symbol.js';
 import {TexConstant} from '../TexConstants.js';
 import {TextMacrosMethods} from '../textmacros/TextMacrosMethods.js';
+import TexParser from '../TexParser.js';
+import ParseUtil from '../ParseUtil.js';
 import {TextParser} from '../textmacros/TextParser.js';
 
 
@@ -158,7 +160,15 @@ new CommandMap('textcomp-macros', {
   'textdivorced':        ['Insert', '\u26AE'],
   //  'textleaf'
   'textmarried':         ['Insert', '\u26AD']
-}, TextMacrosMethods);
+}, {
+  Insert: function(parser: TexParser, name: string, c: string) {
+    if (parser instanceof TextParser) {
+      TextMacrosMethods.Insert(parser, name, c);
+    } else {
+      parser.Push(ParseUtil.internalText(parser, c, {}));
+    }
+  }
+});
 
 
 /**
@@ -166,17 +176,24 @@ new CommandMap('textcomp-macros', {
  * @param {TextParser} parser The current tex parser.
  * @param {Symbol} mchar The parsed symbol.
  */
-function mathchar0miOldstyle(parser: TextParser, mchar: Symbol) {
-  const def = mchar.attributes || {};
-  def.mathvariant = TexConstant.Variant.OLDSTYLE;
-  const node = parser.create('token', 'mi', def, mchar.char);
-  parser.Push(node);
+function oldstyleText(parser: TexParser, mchar: Symbol) {
+  if (!(parser instanceof TextParser)) {
+    parser.Push(ParseUtil.internalText(
+      parser, mchar.char, {mathvariant: TexConstant.Variant.OLDSTYLE}));
+    return;
+  }
+  if (parser.stack.env.mathvariant = TexConstant.Variant.OLDSTYLE) {
+    parser.text += mchar.char;
+    return;
+  }
+  TextMacrosMethods.SetFont(parser, mchar.symbol, TexConstant.Variant.OLDSTYLE);
+  parser.text = mchar.char;
 }
 
 /**
  * Identifiers from the Textcomp package.
  */
-new CharacterMap('textcomp-oldstyle', mathchar0miOldstyle, {
+new CharacterMap('textcomp-oldstyle', oldstyleText, {
 
   // This is not the correct glyph
   'textcentoldstyle':    '\u00A2',
