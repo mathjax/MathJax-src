@@ -25,7 +25,6 @@
 import {SVGWrapper, SVGConstructor, Constructor} from '../Wrapper.js';
 import {CommonMtrMixin} from '../../common/Wrappers/mtr.js';
 import {CommonMlabeledtrMixin} from '../../common/Wrappers/mtr.js';
-import {SVGmtable} from './mtable.js';
 import {SVGmtd} from './mtd.js';
 import {MmlMtr, MmlMlabeledtr} from '../../../core/MmlTree/MmlNodes/mtr.js';
 
@@ -58,11 +57,6 @@ CommonMtrMixin<SVGmtd<any, any, any>, SVGConstructor<any, any, any>>(SVGWrapper)
    * The mtr wrapper
    */
   public static kind = MmlMtr.prototype.kind;
-
-  /**
-   * The mtable in which this mtr appears
-   */
-  public parent: SVGmtable<N, T, D>;
 
   /**
    * The height of the row
