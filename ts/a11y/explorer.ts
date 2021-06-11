@@ -628,6 +628,7 @@ const iso: {[locale: string]: string} = {
   'en': 'English',
   'es': 'Spanish',
   'fr': 'French',
+  'hi': 'Hindi',
   'it': 'Italian'
 };
 
