@@ -48,7 +48,7 @@ function fileSize(file) {
 /**
  * Regular expressions for the components directory and the MathJax .js location
  */
-const compRE = fileRegExp(path.dirname(__dirname));
+const compRE = fileRegExp(path.join(path.dirname(__dirname), 'src'));
 const rootRE = fileRegExp(path.join(path.dirname(path.dirname(__dirname)), 'js'));
 const nodeRE = fileRegExp(path.join(path.dirname(path.dirname(__dirname)), 'node_modules'));
 
