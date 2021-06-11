@@ -113,8 +113,17 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
       color: 'red',
       'background-color': 'yellow'
     },
-    'mjx-mphantom': {visibility: 'hidden'}
+    'mjx-mphantom': {
+      visibility: 'hidden'
+    },
 
+    //
+    //  WebKit-specific CSS to handle bug with clipped characters.
+    //  (test found at https://browserstrangeness.bitbucket.io/css_hacks.html#safari)
+    //
+    '_::-webkit-full-page-media, _:future, :root mjx-container': {
+      'will-change': 'opacity'
+    }
   };
 
   /**
