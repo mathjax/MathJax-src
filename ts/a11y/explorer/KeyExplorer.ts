@@ -252,10 +252,12 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    */
   public Update(force: boolean = false) {
     super.Update(force);
+    let options = this.speechGenerator.getOptions();
+    SRE.setupEngine({modality: options.modality,
+                     locale: options.locale});
     this.region.Update(this.walker.speech());
     // This is a necessary in case speech options have changed via keypress
     // during walking.
-    let options = this.speechGenerator.getOptions();
     if (options.modality === 'speech') {
       this.document.options.sre.domain = options.domain;
       this.document.options.sre.style = options.style;
