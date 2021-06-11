@@ -31,7 +31,6 @@ import TexParser from './TexParser.js';
 import TexError from './TexError.js';
 import {entities} from '../../util/Entities.js';
 import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
-import {em} from '../../util/lengths.js';
 
 
 namespace ParseUtil {
@@ -107,7 +106,10 @@ namespace ParseUtil {
    * @return {string} The em dimension string.
    */
   export function Em(m: number): string {
-    return em(m);
+    if (Math.abs(m) < .0006) {
+      return '0em';
+    }
+    return m.toFixed(3).replace(/\.?0+$/, '') + 'em';
   }
 
 
@@ -525,6 +527,13 @@ namespace ParseUtil {
     parser.stack.global.eqnenv = true;
   }
 
+  /**
+   * Copy an MmlNode and add it (and its children) to the proper lists.
+   *
+   * @param {MmlNode} node       The MmlNode to copy
+   * @param {TexParser} parser   The active tex parser
+   * @return {MmlNode}           The duplicate tree
+   */
   export function copyNode(node: MmlNode, parser: TexParser): MmlNode  {
     const tree = node.copy() as MmlNode;
     const options = parser.configuration;
