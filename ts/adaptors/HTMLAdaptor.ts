@@ -517,12 +517,13 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    * @override
    */
   public insertRules(node: N, rules: string[]) {
-    for (const rule of rules.reverse()) {
-      try {
+    let rule;
+    try {
+      for (rule of rules.reverse()) {
         node.sheet.insertRule(rule, 0);
-      } catch (e) {
-        console.warn(`MathJax: can't insert css rule '${rule}': ${e.message}`);
       }
+    } catch (e) {
+      console.warn(`MathJax: can't insert css rule '${rule}': ${e.message}`);
     }
   }
 
