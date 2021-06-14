@@ -104,8 +104,11 @@ export function Mml3Handler<N, T, D>(handler: Handler<N, T, D>): Handler<N, T, D
       if (options.InputJax) {
         for (const jax of options.InputJax) {
           if (jax.name === 'MathML') {
-            const mml3 = new Mml3(this);
-            jax.preFilters.add(mml3.preFilter.bind(mml3));
+            if (!jax.options._mml3) {  // prevent filter being added twice (e.g., when a11y tools load)
+              const mml3 = new Mml3(this);
+              jax.preFilters.add(mml3.preFilter.bind(mml3));
+              jax.options._mml3 = true;
+            }
             break;
           }
         }
