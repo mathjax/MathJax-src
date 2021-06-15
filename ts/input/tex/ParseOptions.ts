@@ -179,7 +179,8 @@ export default class ParseOptions {
       // If the list is not just for its kind, record that it is in this list
       //   so that if it is copied, the copy can also be added to the list.
       //
-      let lists = (NodeUtil.getProperty(node, 'in-lists') as string || '').split(',').concat(property).join(',');
+      const inlists = (NodeUtil.getProperty(node, 'in-lists') as string || '');
+      const lists = (inlists ? inlists.split(/,/) : []).concat(property).join(',');
       NodeUtil.setProperty(node, 'in-lists', lists);
     }
   }
