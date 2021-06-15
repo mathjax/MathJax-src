@@ -81,7 +81,8 @@ export const MO = {
  */
 export const RANGES: RangeDef[] = [
   [0x0020, 0x007F, TEXCLASS.REL, 'mo'], // Basic Latin
-  [0x00A0, 0x024F, TEXCLASS.ORD, 'mi'], // Latin-1 Supplement, Latin Extended-A, Latin Extended-B
+  [0x00A0, 0x00BF, TEXCLASS.ORD, 'mo'], // Latin-1 Supplement symbols
+  [0x00C0, 0x024F, TEXCLASS.ORD, 'mi'], // Latin-1 Supplement, Latin Extended-A, Latin Extended-B
   [0x02B0, 0x036F, TEXCLASS.ORD, 'mo'], // Spacing modifier letters, Combining Diacritical Marks
   [0x0370, 0x1A20, TEXCLASS.ORD, 'mi'], // Greek and Coptic (through) Tai Tham
   [0x1AB0, 0x1AFF, TEXCLASS.ORD, 'mo'], // Combining Diacritical Marks Extended
