@@ -647,7 +647,8 @@ BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, sta
 BaseMethods.Overset = function(parser: TexParser, name: string) {
   // @test Overset
   const top = parser.ParseArg(name), base = parser.ParseArg(name);
-  if (NodeUtil.getAttribute(base, 'movablelimits') || NodeUtil.getProperty(base, 'movablelimits')) {
+  let symbol = NodeUtil.getForm(base);
+  if ((symbol && symbol[3] && symbol[3]['movablelimits'])) {
     NodeUtil.setProperties(base, {'movablelimits': false});
   }
   const node = parser.create('node', 'mover', [base, top]);
