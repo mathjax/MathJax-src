@@ -374,11 +374,7 @@ namespace ParseUtil {
    */
   export function underOver(parser: TexParser, base: MmlNode, script: MmlNode, pos: string, stack: boolean): MmlNode {
     // @test Overline
-    const symbol = NodeUtil.getForm(base);
-    if ((symbol && symbol[3] && symbol[3]['movablelimits']) || NodeUtil.getProperty(base, 'movablelimits')) {
-      // @test Overline Sum
-      NodeUtil.setProperties(base, {'movablelimits': false});
-    }
+    ParseUtil.checkMovableLimits(base);
     if (NodeUtil.isType(base, 'munderover') && NodeUtil.isEmbellished(base)) {
       // @test Overline Limits
       NodeUtil.setProperties(NodeUtil.getCoreMO(base), {lspace: 0, rspace: 0});
@@ -395,6 +391,18 @@ namespace ParseUtil {
     }
     NodeUtil.setProperty(node, 'subsupOK', true);
     return node;
+  }
+
+  /**
+   * Set movablelimits to false if necessary.
+   * @param {MmlNode} base   The base node being tested.
+   */
+  export function checkMovableLimits(base: MmlNode) {
+    const symbol = (NodeUtil.isType(base, 'mo') ? NodeUtil.getForm(base) : null);
+    if (NodeUtil.getProperty(base, 'movablelimits') || (symbol && symbol[3] && symbol[3].movablelimits)) {
+      // @test Overline Sum
+      NodeUtil.setProperties(base, {movablelimits: false});
+    }
   }
 
   /**
