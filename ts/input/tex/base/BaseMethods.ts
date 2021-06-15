@@ -625,9 +625,7 @@ BaseMethods.Overset = function(parser: TexParser, name: string) {
   // @test Overset
   const top = parser.ParseArg(name);
   const base = parser.ParseArg(name);
-  if (NodeUtil.getAttribute(base, 'movablelimits') || NodeUtil.getProperty(base, 'movablelimits')) {
-    NodeUtil.setProperties(base, {'movablelimits': false});
-  }
+  ParseUtil.checkMovableLimits(base);
   const node = parser.create('node', 'mover', [base, top]);
   parser.Push(node);
 };
@@ -642,10 +640,7 @@ BaseMethods.Underset = function(parser: TexParser, name: string) {
   // @test Underset
   const bot = parser.ParseArg(name);
   const base = parser.ParseArg(name);
-  if (NodeUtil.isType(base, 'mo') || NodeUtil.getProperty(base, 'movablelimits')) {
-    // @test Overline Sum
-    NodeUtil.setProperties(base, {'movablelimits': false});
-  }
+  ParseUtil.checkMovableLimits(base);
   const node = parser.create('node', 'munder', [base, bot]);
   parser.Push(node);
 };
@@ -660,9 +655,7 @@ BaseMethods.Overunderset = function(parser: TexParser, name: string) {
   const top = parser.ParseArg(name);
   const bot = parser.ParseArg(name);
   const base = parser.ParseArg(name);
-  if (NodeUtil.isType(base, 'mo') || NodeUtil.getProperty(base, 'movablelimits')) {
-    NodeUtil.setProperties(base, {'movablelimits': false});
-  }
+  ParseUtil.checkMovableLimits(base);
   const node = parser.create('node', 'munderover', [base, bot, top]);
   parser.Push(node);
 };
