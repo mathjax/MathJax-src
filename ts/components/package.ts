@@ -151,7 +151,7 @@ export class Package {
    * @return {string}                The path (file or URL) for this package
    */
   public static resolvePath(name: string, addExtension: boolean = true): string {
-    const data = {name, addExtension};
+    const data = {name, original: name, addExtension};
     Loader.pathFilters.execute(data);
     return data.name;
   }
