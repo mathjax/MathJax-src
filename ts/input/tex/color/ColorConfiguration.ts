@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018 Omar Al-Ithawi and The MathJax Consortium
+ *  Copyright (c) 2018-2021 Omar Al-Ithawi and The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
