@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018 The MathJax Consortium
+ *  Copyright (c) 2018-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -204,7 +204,7 @@ CommonMtableMixin<SVGmtd<any, any, any>, SVGmtr<any, any, any>, SVGConstructor<a
    * @param {N} svg   The container for the table
    */
   protected handleFrame(svg: N) {
-    if (this.frame) {
+    if (this.frame && this.fLine) {
       const {h, d, w} = this.getBBox();
       const style = this.node.attributes.get('frame') as string;
       this.adaptor.append(svg, this.makeFrame(w, h, d, style));

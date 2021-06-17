@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2017-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import {StyleList} from '../../util/StyleList.js';
 export interface CharOptions {
   ic?: number;                  // italic correction value
   sk?: number;                  // skew value
+  dx?: number;                  // offset for combining characters
   unknown?: boolean;            // true if not found in the given variant
   smp?: number;                 // Math Alphanumeric codepoint this char is mapped to
 }

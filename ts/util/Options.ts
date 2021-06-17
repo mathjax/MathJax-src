@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2017-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ const OBJECT = {}.constructor;
 /**
  *  Check if an object is an object literal (as opposed to an instance of a class)
  */
-function isObject(obj: any) {
+export function isObject(obj: any) {
   return typeof obj === 'object' && obj !== null &&
     (obj.constructor === OBJECT || obj.constructor === Expandable);
 }
@@ -67,6 +67,27 @@ export const APPEND = '[+]';
  *  then the final value will be [1, 3] instead.
  */
 export const REMOVE = '[-]';
+
+
+/**
+ *  Provides options for the option utlities.
+ */
+export const OPTIONS = {
+  invalidOption: 'warn' as ('fatal' | 'warn'),
+  /**
+   * Function to report messages for invalid options
+   *
+   * @param {string} message   The message for the invalid parameter.
+   * @param {string} key       The invalid key itself.
+   */
+  optionError: (message: string, _key: string) => {
+    if (OPTIONS.invalidOption === 'fatal') {
+      throw new Error(message);
+    }
+    console.warn('MathJax: ' + message);
+  }
+};
+
 
 /**
  * A Class to use for options that should not produce warnings if an undefined key is used
@@ -163,7 +184,8 @@ export function insert(dst: OptionList, src: OptionList, warn: boolean = true): 
       if (typeof key === 'symbol') {
         key = (key as symbol).toString();
       }
-      throw new Error('Invalid option "' + key + '" (no default value).');
+      OPTIONS.optionError(`Invalid option "${key}" (no default value).`, key);
+      continue;
     }
     //
     // Shorthands for the source and destination values
@@ -324,3 +346,18 @@ export function separateOptions(options: OptionList, ...objects: OptionList[]): 
   results.unshift(options);
   return results;
 }
+
+
+/*****************************************************************/
+/**
+ *  Look up a value from object literal, being sure it is an
+ *  actual property (not inherited), with a default if not found.
+ *
+ * @param {string} name         The name of the key to look up.
+ * @param {OptionList} lookup   The list of options to check.
+ * @param {any} def             The default value if the key isn't found.
+ */
+export function lookup(name: string, lookup: OptionList, def: any = null) {
+  return (lookup.hasOwnProperty(name) ? lookup[name] : def);
+}
+

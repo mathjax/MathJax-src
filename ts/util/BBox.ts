@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2017-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -71,6 +71,7 @@ export class BBox {
   public pwidth: string; // percentage width (for tables)
   public ic: number;     // italic correction
   public sk: number;     // skew
+  public dx: number;     // offset for combining characters as accents
   /* tslint:enable */
 
   /**
@@ -96,7 +97,7 @@ export class BBox {
     this.w = def.w || 0;
     this.h = ('h' in def ? def.h : -BIGDIMEN);
     this.d = ('d' in def ? def.d : -BIGDIMEN);
-    this.L = this.R = this.ic = this.sk = 0;
+    this.L = this.R = this.ic = this.sk = this.dx = 0;
     this.scale = this.rscale = 1;
     this.pwidth = '';
   }

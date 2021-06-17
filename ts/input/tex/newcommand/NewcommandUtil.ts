@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2017 The MathJax Consortium
+ *  Copyright (c) 2009-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -75,7 +75,6 @@ namespace NewcommandUtil {
     return new Symbol(name, char, attrs);
   }
 
-
   /**
    * Get the next CS name or give an error.
    * @param {TexParser} parser The calling parser.
@@ -94,6 +93,46 @@ namespace NewcommandUtil {
     return cs.substr(1);
   }
 
+  /**
+   * Get a control sequence name as an argument (doesn't require the backslash)
+   * @param {TexParser} parser The calling parser.
+   * @param {string} name The macro that is getting the name.
+   * @return {string} The control sequence.
+   */
+  export function GetCsNameArgument(parser: TexParser, name: string): string {
+    let cs = ParseUtil.trimSpaces(parser.GetArgument(name));
+    if (cs.charAt(0) === '\\') {
+      // @test Newcommand Simple
+      cs = cs.substr(1);
+    }
+    if (!cs.match(/^(.|[a-z]+)$/i)) {
+      // @test Illegal CS
+      throw new TexError('IllegalControlSequenceName',
+                         'Illegal control sequence name for %1', name);
+    }
+    return cs;
+  }
+
+  /**
+   * Get the number of arguments for a macro definition
+   * @param {TexParser} parser The calling parser.
+   * @param {string} name The macro that is getting the argument count.
+   * @return {string} The number of arguments (or blank).
+   */
+  export function GetArgCount(parser: TexParser, name: string): string {
+    let n = parser.GetBrackets(name);
+    if (n) {
+      // @test Newcommand Optional, Newcommand Arg, Newcommand Arg Optional
+      // @test Newenvironment Optional, Newenvironment Arg Optional
+      n = ParseUtil.trimSpaces(n);
+      if (!n.match(/^[0-9]+$/)) {
+        // @test Illegal Argument Number
+        throw new TexError('IllegalParamNumber',
+                           'Illegal number of parameters specified in %1', name);
+      }
+    }
+    return n;
+  }
 
   /**
    * Get a \def parameter template.

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018 The MathJax Consortium
+ *  Copyright (c) 2018-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -616,8 +616,6 @@ export namespace TagsFactory {
     tagSide: 'right',
     // This is the amount of indentation (from right or left) for the tags.
     tagIndent: '0.8em',
-    // This is the width to use for the multline environment
-    multlineWidth: '85%',
     // make element ID's use \label name rather than equation number
     // MJ puts in an equation prefix: mjx-eqn
     // When true it uses the label name XXX as mjx-eqn:XXX

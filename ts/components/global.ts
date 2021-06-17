@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018 The MathJax Consortium
+ *  Copyright (c) 2018-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -127,7 +127,7 @@ if (typeof global.MathJax === 'undefined') {
  */
 if (!(global.MathJax as MathJaxObject).version) {
   global.MathJax = {
-    version: '3.1.4',
+    version: '3.2.0',
     _: {},
     config: global.MathJax
   };

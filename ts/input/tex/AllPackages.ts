@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018 The MathJax Consortium
+ *  Copyright (c) 2018-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,19 +30,28 @@ import './boldsymbol/BoldsymbolConfiguration.js';
 import './braket/BraketConfiguration.js';
 import './bussproofs/BussproofsConfiguration.js';
 import './cancel/CancelConfiguration.js';
+import './cases/CasesConfiguration.js';
+import './centernot/CenternotConfiguration.js';
 import './color/ColorConfiguration.js';
 import './colorv2/ColorV2Configuration.js';
+import './colortbl/ColortblConfiguration.js';
 import './configmacros/ConfigMacrosConfiguration.js';
+import './empheq/EmpheqConfiguration.js';
 import './enclose/EncloseConfiguration.js';
 import './extpfeil/ExtpfeilConfiguration.js';
+import './gensymb/GensymbConfiguration.js';
 import './html/HtmlConfiguration.js';
+import './mathtools/MathtoolsConfiguration.js';
 import './mhchem/MhchemConfiguration.js';
 import './newcommand/NewcommandConfiguration.js';
 import './noerrors/NoErrorsConfiguration.js';
 import './noundefined/NoUndefinedConfiguration.js';
 import './physics/PhysicsConfiguration.js';
+import './setoptions/SetOptionsConfiguration.js';
 import './tagformat/TagFormatConfiguration.js';
+import './textcomp/TextcompConfiguration.js';
 import './textmacros/TextMacrosConfiguration.js';
+import './upgreek/UpgreekConfiguration.js';
 import './unicode/UnicodeConfiguration.js';
 import './verb/VerbConfiguration.js';
 
@@ -57,21 +66,30 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
     '[tex]/braket',
     '[tex]/bussproofs',
     '[tex]/cancel',
+    '[tex]/cases',
+    '[tex]/centernot',
     '[tex]/color',
     '[tex]/colorv2',
+    '[tex]/colortbl',
+    '[tex]/empheq',
     '[tex]/enclose',
     '[tex]/extpfeil',
+    '[tex]/gensymb',
     '[tex]/html',
+    '[tex]/mathtools',
     '[tex]/mhchem',
     '[tex]/newcommand',
     '[tex]/noerrors',
     '[tex]/noundefined',
     '[tex]/physics',
+    '[tex]/upgreek',
     '[tex]/unicode',
     '[tex]/verb',
     '[tex]/configmacros',
     '[tex]/tagformat',
-    '[tex]/textmacros'
+    '[tex]/textcomp',
+    '[tex]/textmacros',
+    '[tex]/setoptions',
   );
 }
 
@@ -85,17 +103,25 @@ export const AllPackages: string[] = [
   'braket',
   'bussproofs',
   'cancel',
+  'cases',
+  'centernot',
   'color',
+  'colortbl',
+  'empheq',
   'enclose',
   'extpfeil',
+  'gensymb',
   'html',
+  'mathtools',
   'mhchem',
   'newcommand',
   'noerrors',
   'noundefined',
+  'upgreek',
   'unicode',
   'verb',
   'configmacros',
   'tagformat',
+  'textcomp',
   'textmacros'
 ];

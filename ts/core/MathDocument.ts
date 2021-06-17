@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2017-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -476,8 +476,9 @@ export interface MathDocument<N, T, D> {
    *   associated MathItems)
    *
    * @param {ContainerList<N>} elements   The container DOM elements whose math items are to be removed
+   * @return {MathItem<N,T,D>[]}          The removed MathItems
    */
-  clearMathItemsWithin(containers: ContainerList<N>): void;
+  clearMathItemsWithin(containers: ContainerList<N>): MathItem<N, T, D>[];
 
   /**
    * Get the typeset MathItems that are within a given container.
@@ -953,7 +954,9 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
    * @override
    */
   public clearMathItemsWithin(containers: ContainerList<N>) {
-    this.math.remove(...this.getMathItemsWithin(containers));
+    const items = this.getMathItemsWithin(containers);
+    this.math.remove(...items);
+    return items;
   }
 
   /**

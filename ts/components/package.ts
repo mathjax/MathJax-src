@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018 The MathJax Consortium
+ *  Copyright (c) 2018-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -151,7 +151,7 @@ export class Package {
    * @return {string}                The path (file or URL) for this package
    */
   public static resolvePath(name: string, addExtension: boolean = true): string {
-    const data = {name, addExtension};
+    const data = {name, original: name, addExtension};
     Loader.pathFilters.execute(data);
     return data.name;
   }

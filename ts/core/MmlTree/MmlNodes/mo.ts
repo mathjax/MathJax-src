@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2017-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {AbstractMmlTokenNode, MmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
 import {MmlMrow} from './mrow.js';
 import {MmlMover, MmlMunder, MmlMunderover} from './munderover.js';
-import {OperatorList, OPTABLE, RangeDef, RANGES, MMLSPACING} from '../OperatorDictionary.js';
+import {OperatorList, OPTABLE, getRange, MMLSPACING} from '../OperatorDictionary.js';
 import {unicodeChars, unicodeString} from '../../../util/string.js';
 
 /*****************************************************************/
@@ -63,11 +63,6 @@ export class MmlMo extends AbstractMmlTokenNode {
     indentalignlast: 'indentalign',
     indentshiftlast: 'indentshift'
   };
-
-  /**
-   * Unicode ranges and their default TeX classes
-   */
-  public static RANGES = RANGES;
 
   /**
    * The MathML spacing values for the TeX classes
@@ -123,6 +118,9 @@ export class MmlMo extends AbstractMmlTokenNode {
      0x201F: 0x2036,   // reversed open double quote
   };
 
+  /**
+   * Regular expression matching characters that are marked as math accents
+   */
   protected static mathaccents = new RegExp([
     '^[',
     '\u00B4\u0301\u02CA',  // acute
@@ -291,18 +289,6 @@ export class MmlMo extends AbstractMmlTokenNode {
         this.texClass = TEXCLASS.CLOSE;
       }
     }
-    if (this.getText() === '\u2061') {
-      //
-      //  Force previous node to be TEXCLASS.OP and skip this node
-      //
-      if (prev && prev.getProperty('texClass') === undefined &&
-          prev.attributes.get('mathvariant') !== 'italic') {
-        prev.texClass = TEXCLASS.OP;
-        prev.setProperty('fnOP', true);
-      }
-      this.texClass = this.prevClass = TEXCLASS.NONE;
-      return prev;
-    }
     return this.adjustTeXclass(prev);
   }
   /**
@@ -389,7 +375,7 @@ export class MmlMo extends AbstractMmlTokenNode {
       this.lspace = (def[0] + 1) / 18;
       this.rspace = (def[1] + 1) / 18;
     } else {
-      let range = this.getRange(mo);
+      let range = getRange(mo);
       if (range) {
         if (this.getProperty('texClass') === undefined) {
           this.texClass = range[2];
@@ -436,27 +422,6 @@ export class MmlMo extends AbstractMmlTokenNode {
       forms = [form].concat(forms.filter(name => (name !== form)));
     }
     return forms;
-  }
-
-  /**
-   * @param {string} mo  The character to look up in the range table
-   * @return {RangeDef}  The unicode range in which the character falls, or null
-   */
-  protected getRange(mo: string): RangeDef {
-    if (!mo.match(/^[\uD800-\uDBFF]?.$/)) {
-      return null;
-    }
-    let n = mo.codePointAt(0);
-    let ranges = (this.constructor as typeof MmlMo).RANGES;
-    for (const range of ranges) {
-      if (range[0] <= n && n <= range[1]) {
-        return range;
-      }
-      if (n < range[0]) {
-        return null;
-      }
-    }
-    return null;
   }
 
   /**

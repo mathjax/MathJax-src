@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2021-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,10 +15,20 @@
  *  limitations under the License.
  */
 
+
 /**
- * @fileoverview  Implements the common bounding box object
+ * @fileoverview Configuration file for the textcomp package.
  *
- * @author dpvc@mathjax.org (Davide Cervone)
+ * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-export * from '../../util/BBox.js';
+import {Configuration} from '../Configuration.js';
+import './TextcompMappings.js';
+
+
+export const TextcompConfiguration = Configuration.create(
+  'textcomp', {
+    handler: {macro: ['textcomp-macros']}
+  }
+);
+

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2020 The MathJax Consortium
+ *  Copyright (c) 2020-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -37,7 +37,8 @@ import './TextMacrosMappings.js';
 /**
  *  The base text macro configuration (used in the TextParser)
  */
-export const textBase = Configuration.local({
+export const TextBaseConfiguration = Configuration.create('text-base', {
+  parser: 'text',
   handler: {
     character: ['command', 'text-special'],
     macro: ['text-macros']
@@ -103,8 +104,7 @@ export const TextMacrosConfiguration = Configuration.create('textmacros', {
     //  Create the configuration and parseOptions objects for the
     //    internal TextParser and add the textBase configuration.
     //
-    const textConf = new ParserConfiguration([]);
-    textConf.append(textBase);
+    const textConf = new ParserConfiguration(jax.parseOptions.options.textmacros.packages, ['tex', 'text']);
     textConf.init();
     const parseOptions = new ParseOptions(textConf, []);
     parseOptions.options = jax.parseOptions.options;      // share the TeX options
@@ -114,7 +114,7 @@ export const TextMacrosConfiguration = Configuration.create('textmacros', {
     parseOptions.tags.configuration = parseOptions;
     //
     // Share the TeX input jax's parseOptions packageData object
-    //   so that require and other packagses will work in both parsers,
+    //   so that require and other packages will work in both parsers,
     //   set the textmacros data (texParser will be filled in later),
     //   and replace the internalMath function with our own.
     //
@@ -129,5 +129,10 @@ export const TextMacrosConfiguration = Configuration.create('textmacros', {
     //
     const config = data.data.packageData.get('textmacros');
     config.parseOptions.nodeFactory.setMmlFactory(config.jax.mmlFactory);
-  }]
+  }],
+  options: {
+    textmacros: {
+      packages: ['text-base']    // textmacro packages to load
+    }
+  }
 });

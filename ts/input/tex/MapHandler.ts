@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2017-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -105,7 +105,7 @@ export class SubHandler {
       }
     }
     let [env, symbol] = input;
-    this._fallback.toArray()[0].item(env, symbol);
+    Array.from(this._fallback)[0].item(env, symbol);
   }
 
 

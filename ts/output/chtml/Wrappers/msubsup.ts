@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2017-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -98,16 +98,6 @@ CommonMsubsupMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any,
       display: 'block'
     }
   };
-
-  /**
-   * Make sure styles get output when called from munderover with movable limits
-   *
-   * @override
-   */
-  public markUsed() {
-    super.markUsed();
-    (CHTMLmsubsup as any).used = true;
-  }
 
   /**
    * @override

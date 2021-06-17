@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2017-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@
 import {CommonOutputJax} from './common/OutputJax.js';
 import {CommonWrapper} from './common/Wrapper.js';
 import {StyleList} from '../util/Styles.js';
-import {StyleList as CssStyleList} from '../util/StyleList.js';
+import {StyleList as CssStyleList, CssStyles} from '../util/StyleList.js';
 import {OptionList} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
@@ -32,6 +32,7 @@ import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {CHTMLWrapper} from './chtml/Wrapper.js';
 import {CHTMLWrapperFactory} from './chtml/WrapperFactory.js';
 import {CHTMLFontData} from './chtml/FontData.js';
+import {Usage} from './chtml/Usage.js';
 import {TeXFont} from './chtml/fonts/tex.js';
 import * as LENGTHS from '../util/lengths.js';
 import {unicodeChars} from '../util/string.js';
@@ -59,6 +60,7 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
   public static OPTIONS: OptionList = {
     ...CommonOutputJax.OPTIONS,
     adaptiveCSS: true,            // true means only produce CSS that is used in the processed equations
+    matchFontHeight: true,        // true to match ex-height of surrounding font
   };
 
   /**
@@ -111,8 +113,17 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
       color: 'red',
       'background-color': 'yellow'
     },
-    'mjx-mphantom': {visibility: 'hidden'}
+    'mjx-mphantom': {
+      visibility: 'hidden'
+    },
 
+    //
+    //  WebKit-specific CSS to handle bug with clipped characters.
+    //  (test found at https://browserstrangeness.bitbucket.io/css_hacks.html#safari)
+    //
+    '_::-webkit-full-page-media, _:future, :root mjx-container': {
+      'will-change': 'opacity'
+    }
   };
 
   /**
@@ -121,10 +132,14 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
   public static STYLESHEETID = 'MJX-CHTML-styles';
 
   /**
-   *  Used to store the CHTMLWrapper factory,
-   *  the FontData object, and the CssStyles object.
+   *  Used to store the CHTMLWrapper factory.
    */
   public factory: CHTMLWrapperFactory<N, T, D>;
+
+  /**
+   * The usage information for the wrapper classes
+   */
+  public wrapperUsage: Usage<string>;
 
   /**
    * The CHTML stylesheet, once it is constructed
@@ -138,6 +153,7 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
   constructor(options: OptionList = null) {
     super(options, CHTMLWrapperFactory as any, TeXFont);
     this.font.adaptiveCSS(this.options.adaptiveCSS);
+    this.wrapperUsage = new Usage<string>();
   }
 
   /**
@@ -152,29 +168,60 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
    * @override
    */
   public styleSheet(html: MathDocument<N, T, D>) {
-    if (this.chtmlStyles && !this.options.adaptiveCSS) {
+    if (this.chtmlStyles) {
+      if (this.options.adaptiveCSS) {
+        //
+        // Update the style sheet rules
+        //
+        const styles = new CssStyles();
+        this.addWrapperStyles(styles);
+        this.updateFontStyles(styles);
+        this.adaptor.insertRules(this.chtmlStyles, styles.getStyleRules());
+      }
       return this.chtmlStyles;  // stylesheet is already added to the document
     }
     const sheet = this.chtmlStyles = super.styleSheet(html);
     this.adaptor.setAttribute(sheet, 'id', CHTML.STYLESHEETID);
+    this.wrapperUsage.update();
     return sheet;
+  }
+
+  /**
+   * @param {CssStyles} styles   The styles to update with newly used character styles
+   */
+  protected updateFontStyles(styles: CssStyles) {
+    styles.addStyles(this.font.updateStyles({}));
   }
 
   /**
    * @override
    */
-  protected addClassStyles(CLASS: typeof CommonWrapper) {
-    if (!this.options.adaptiveCSS || (CLASS as typeof CHTMLWrapper).used) {
-      if ((CLASS as typeof CHTMLWrapper).autoStyle && CLASS.kind !== 'unknown') {
-        this.cssStyles.addStyles({
-          ['mjx-' + CLASS.kind]: {
-            display: 'inline-block',
-            'text-align': 'left'
-          }
-        });
-      }
-      super.addClassStyles(CLASS);
+  protected addWrapperStyles(styles: CssStyles) {
+    if (!this.options.adaptiveCSS) {
+      super.addWrapperStyles(styles);
+      return;
     }
+    for (const kind of this.wrapperUsage.update()) {
+      const wrapper = this.factory.getNodeClass(kind) as any as typeof CommonWrapper;
+      wrapper && this.addClassStyles(wrapper, styles);
+    }
+  }
+
+  /**
+   * @override
+   */
+  protected addClassStyles(wrapper: typeof CommonWrapper, styles: CssStyles) {
+    const CLASS = wrapper as typeof CHTMLWrapper;
+    if (CLASS.autoStyle && CLASS.kind !== 'unknown') {
+      styles.addStyles({
+        ['mjx-' + CLASS.kind]: {
+          display: 'inline-block',
+          'text-align': 'left'
+        }
+      });
+    }
+    this.wrapperUsage.add(CLASS.kind);
+    super.addClassStyles(wrapper, styles);
   }
 
   /**
@@ -191,9 +238,8 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
   public clearCache() {
     this.cssStyles.clear();
     this.font.clearCache();
-    for (const kind of this.factory.getKinds()) {
-      this.factory.getNodeClass(kind).used = false;
-    }
+    this.wrapperUsage.clear();
+    this.chtmlStyles = null;
   }
 
   /**
@@ -208,7 +254,7 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
   /**
    * @override
    */
-  public unknownText(text: string, variant: string) {
+  public unknownText(text: string, variant: string, width: number = null) {
     const styles: StyleList = {};
     const scale = 100 / this.math.metrics.scale;
     if (scale !== 100) {
@@ -221,6 +267,16 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
         this.cssFontStyles(this.font.getCssFont(variant), styles);
       }
     }
+    //
+    // Work around Safari bug with the MJXZERO font by forcing the width.
+    //   (If MJXZERO can be made to work with Safari, then remove width parameter
+    //    and call to getBBox().w in TextNode.ts)
+    //
+    if (width !== null) {
+      const metrics = this.math.metrics;
+      styles.width = Math.round(width * metrics.em * metrics.scale) + 'px';
+    }
+    //
     return this.html('mjx-utext', {variant: variant, style: styles}, [this.text(text)]);
   }
 
@@ -231,11 +287,16 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
    * @override
    */
 
-  public measureTextNode(text: N) {
+  public measureTextNode(textNode: N) {
     const adaptor = this.adaptor;
-    text = adaptor.clone(text);
+    const text = adaptor.clone(textNode);
+    //
+    // Work arround Safari bug with the MJXZERO font.
+    //
+    adaptor.setStyle(text, 'font-family', adaptor.getStyle(text, 'font-family').replace(/MJXZERO, /g, ''));
+    //
     const style = {position: 'absolute', 'white-space': 'nowrap'};
-    const node = this.html('mjx-measure-text', {style}, [ text]);
+    const node = this.html('mjx-measure-text', {style}, [text]);
     adaptor.append(adaptor.parent(this.math.start.node), this.container);
     adaptor.append(this.container, node);
     let w = adaptor.nodeSize(text, this.math.metrics.em)[0] / this.math.metrics.scale;

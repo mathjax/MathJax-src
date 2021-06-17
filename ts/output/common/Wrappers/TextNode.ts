@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2017-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -93,6 +93,7 @@ export function CommonTextNodeMixin<T extends WrapperConstructor>(Base: T): Text
           if (d > bbox.d) bbox.d = d;
           bbox.ic = data.ic || 0;
           bbox.sk = data.sk || 0;
+          bbox.dx = data.dx || 0;
         }
         if (chars.length > 1) {
           bbox.sk = 0;

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018 The MathJax Consortium
+ *  Copyright (c) 2018-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -203,7 +203,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
 }
 
 /**
- * The funtions added to MathDocument for the Explorer
+ * The functions added to MathDocument for the Explorer
  */
 export interface ExplorerMathDocument extends HTMLDOCUMENT {
 
@@ -284,7 +284,6 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
      * @constructor
      */
     constructor(...args: any[]) {
-      processSreOptions(args[2]);
       super(...args);
       const ProcessBits = (this.constructor as typeof BaseDocument).ProcessBits;
       if (!ProcessBits.has('explorer')) {
@@ -327,32 +326,6 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
 
   };
 
-}
-
-//
-// TODO(v3.2): This is for backward compatibility of old option parameters.
-//
-/**
- * Processes old a11y options for backward compatibility.
- * @param {OptionList} options The options to process.
- */
-function processSreOptions(options: OptionList) {
-  if (!options || !options.a11y) {
-    return;
-  }
-  if (!options.sre) {
-    options.sre = {};
-  }
-  if (options.a11y.locale) {
-    options.sre.locale = options.a11y.locale;
-    delete options.a11y.locale;
-  }
-  if (options.a11y.speechRules) {
-    let [domain, style] = (options.a11y.speechRules as string).split('-');
-    options.sre.domain = domain;
-    options.sre.style = style;
-    delete options.a11y.speechRules;
-  }
 }
 
 
@@ -551,19 +524,6 @@ export function setA11yOption(document: HTMLDOCUMENT, option: string, value: str
       break;
     }
     break;
-  //
-  // TODO(v3.2): These two cases should be handled directly in the menu
-  //             variable actions.
-  //
-  case 'speechRules':
-      let [domain, style] = (value as string).split('-');
-      document.options.sre.domain = domain;
-      document.options.sre.style = style;
-      break;
-  case 'locale':
-      document.options.sre.locale = value;
-      SRE.setupEngine({locale: value as string});
-      break;
   default:
     document.options.a11y[option] = value;
   }
@@ -668,6 +628,7 @@ const iso: {[locale: string]: string} = {
   'en': 'English',
   'es': 'Spanish',
   'fr': 'French',
+  'hi': 'Hindi',
   'it': 'Italian'
 };
 

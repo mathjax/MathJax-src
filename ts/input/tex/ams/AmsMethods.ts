@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018 The MathJax Consortium
+ *  Copyright (c) 2018-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,6 +33,7 @@ import TexError from '../TexError.js';
 import {Macro} from '../Symbol.js';
 import {CommandMap} from '../SymbolMap.js';
 import {ArrayItem} from '../base/BaseItems.js';
+import {FlalignItem} from './AmsItems.js';
 import BaseMethods from '../base/BaseMethods.js';
 import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMunderover} from '../../../core/MmlTree/MmlNodes/munderover.js';
@@ -118,11 +119,77 @@ AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: b
   item.arraydef = {
     displaystyle: true,
     rowspacing: '.5em',
-    columnwidth: '100%',
-    width: parser.options['multlineWidth'],
+    columnspacing: '100%',
+    width: parser.options.ams['multlineWidth'],
     side: parser.options['tagSide'],
-    minlabelspacing: parser.options['tagIndent']
+    minlabelspacing: parser.options['tagIndent'],
+    framespacing: parser.options.ams['multlineIndent'] + ' 0',
+    frame: '',   // Use frame spacing with no actual frame
+    'data-width-includes-label': true // take label space out of 100% width
   };
+  return item;
+};
+
+
+/**
+ * Generate an align at environment.
+ * @param {TexParser} parser The current TeX parser.
+ * @param {StackItem} begin The begin stackitem.
+ * @param {boolean} numbered Is this a numbered array.
+ * @param {boolean} padded Is it padded.
+ */
+AmsMethods.XalignAt = function(parser: TexParser, begin: StackItem,
+                                  numbered: boolean, padded: boolean) {
+  let n = parser.GetArgument('\\begin{' + begin.getName() + '}');
+  if (n.match(/[^0-9]/)) {
+    throw new TexError('PositiveIntegerArg',
+                       'Argument to %1 must me a positive integer',
+                       '\\begin{' + begin.getName() + '}');
+  }
+  const align = (padded ? 'crl' : 'rlc');
+  const width = (padded ? 'fit auto auto' : 'auto auto fit');
+  const item = AmsMethods.FlalignArray(parser, begin, numbered, padded, false, align, width, true) as FlalignItem;
+  item.setProperty('xalignat', 2 * parseInt(n));
+  return item;
+};
+
+
+/**
+ * Generate an flalign environment.
+ * @param {TexParser} parser The current TeX parser.
+ * @param {StackItem} begin The begin stackitem.
+ * @param {boolean} numbered Is this a numbered array.
+ * @param {boolean} padded Is it padded.
+ * @param {boolean} center Is it centered.
+ * @param {string} align The horizontal alignment for columns
+ * @param {string} width The column widths of the table
+ * @param {boolean} zeroWidthLabel True if the label should be in llap/rlap
+ */
+AmsMethods.FlalignArray = function(parser: TexParser, begin: StackItem, numbered: boolean,
+                                  padded: boolean, center: boolean, align: string,
+                                  width: string, zeroWidthLabel: boolean = false) {
+  parser.Push(begin);
+  ParseUtil.checkEqnEnv(parser);
+  align = align
+    .split('')
+    .join(' ')
+    .replace(/r/g, 'right')
+    .replace(/l/g, 'left')
+    .replace(/c/g, 'center');
+  const item = parser.itemFactory.create(
+    'flalign', begin.getName(), numbered, padded, center, parser.stack) as FlalignItem;
+  item.arraydef = {
+    width: '100%',
+    displaystyle: true,
+    columnalign: align,
+    columnspacing: '0em',
+    columnwidth: width,
+    rowspacing: '3pt',
+    side: parser.options['tagSide'],
+    minlabelspacing: (zeroWidthLabel ? '0' : parser.options['tagIndent']),
+    'data-width-includes-label': true,
+  };
+  item.setProperty('zeroWidthLabel', zeroWidthLabel);
   return item;
 };
 
@@ -405,3 +472,5 @@ AmsMethods.Spacer = BaseMethods.Spacer;
 AmsMethods.NamedOp = BaseMethods.NamedOp;
 
 AmsMethods.EqnArray = BaseMethods.EqnArray;
+
+AmsMethods.Equation = BaseMethods.Equation;

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018 The MathJax Consortium
+ *  Copyright (c) 2018-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -69,6 +69,7 @@ export interface MinHTMLElement<N, T> {
   className: string;
   classList: DOMTokenList;
   style: OptionList;
+  sheet?: {insertRule: (rule: string, index?: number) => void};
 
   childNodes: (N | T)[] | NodeList;
   firstChild: N | T | Node;
@@ -247,7 +248,7 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    * @override
    */
   public doctype(doc: D) {
-    return `<!DOCTYPE ${doc.doctype.name}>`;
+    return (doc.doctype ? `<!DOCTYPE ${doc.doctype.name}>` : '');
   }
 
   /**
@@ -510,6 +511,19 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    */
   public allStyles(node: N) {
     return node.style.cssText;
+  }
+
+  /**
+   * @override
+   */
+  public insertRules(node: N, rules: string[]) {
+    for (const rule of rules.reverse()) {
+      try {
+        node.sheet.insertRule(rule, 0);
+      } catch (e) {
+        console.warn(`MathJax: can't insert css rule '${rule}': ${e.message}`);
+      }
+    }
   }
 
   /**

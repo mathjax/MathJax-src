@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018 The MathJax Consortium
+ *  Copyright (c) 2018-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -61,6 +61,6 @@ export class LiteDocument {
       this.head = new LiteElement('head'),
       this.body = new LiteElement('body')
     ]);
-    this.type = '<!DOCTYPE html>';
+    this.type = '';
   }
 }

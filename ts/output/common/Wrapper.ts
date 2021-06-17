@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2017-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -375,11 +375,14 @@ export class CommonWrapper<
    */
   protected copySkewIC(bbox: BBox) {
     const first = this.childNodes[0];
-    if (first && first.bbox.sk) {
+    if (first?.bbox.sk) {
       bbox.sk = first.bbox.sk;
     }
+    if (first?.bbox.dx) {
+      bbox.dx = first.bbox.dx;
+    }
     const last = this.childNodes[this.childNodes.length - 1];
-    if (last && last.bbox.ic) {
+    if (last?.bbox.ic) {
       bbox.ic = last.bbox.ic;
       bbox.w += bbox.ic;
     }

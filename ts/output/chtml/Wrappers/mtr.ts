@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2017-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -138,9 +138,16 @@ CommonMlabeledtrMixin<CHTMLmtd<any, any, any>, Constructor<CHTMLmtr<any, any, an
       const align = this.node.attributes.get('rowalign') as string;
       const attr = (align !== 'baseline' && align !== 'axis' ? {rowalign: align} : {});
       const row = this.html('mjx-mtr', attr, [child]);
-      (CHTMLmtr as any).used = true;
       this.adaptor.append((this.parent as CHTMLmtable<N, T, D>).labels, row);
     }
+  }
+
+  /**
+   * @override
+   */
+  public markUsed() {
+    super.markUsed();
+    this.jax.wrapperUsage.add(CHTMLmtr.kind);
   }
 
 }

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018 The MathJax Consortium
+ *  Copyright (c) 2018-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -580,6 +580,13 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
    */
   public allStyles(node: LiteElement) {
     return this.getAttribute(node, 'style');
+  }
+
+  /**
+   * @override
+   */
+  public insertRules(node: LiteElement, rules: string[]) {
+    node.children = [this.text(rules.join('\n\n') + '\n\n' + this.textContent(node))];
   }
 
   /**

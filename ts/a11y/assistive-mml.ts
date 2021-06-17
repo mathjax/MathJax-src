@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019 The MathJax Consortium
+ *  Copyright (c) 2019-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ export type Constructor<T> = new(...args: any[]) => T;
 newState('ASSISTIVEMML', 153);
 
 /**
- * The funtions added to MathItem for assistive MathML
+ * The functions added to MathItem for assistive MathML
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
@@ -129,7 +129,7 @@ export function AssistiveMmlMathItemMixin<N, T, D, B extends Constructor<Abstrac
 /*==========================================================================*/
 
 /**
- * The funtions added to MathDocument for assistive MathML
+ * The functions added to MathDocument for assistive MathML
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class

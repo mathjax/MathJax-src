@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018 The MathJax Consortium
+ *  Copyright (c) 2018-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -74,6 +74,7 @@ export class Configuration {
                                   init?: ProtoProcessor<InitMethod>,
                                   config?: ProtoProcessor<ConfigMethod>,
                                   priority?: number,
+                                  parser?: string,
                                  } = {}): Configuration {
     let priority = config.priority || PrioritizedList.DEFAULTPRIORITY;
     let init = config.init ? this.makeProcessor(config.init, priority) : null;
@@ -82,6 +83,7 @@ export class Configuration {
       pre => this.makeProcessor(pre, priority));
     let postprocessors = (config.postprocessors || []).map(
       post => this.makeProcessor(post, priority));
+    let parser = config.parser || 'tex';
     return new Configuration(
       name,
       config.handler || {},
@@ -90,7 +92,8 @@ export class Configuration {
       config.tags || {},
       config.options || {},
       config.nodes || {},
-      preprocessors, postprocessors, init, conf, priority
+      preprocessors, postprocessors, init, conf, priority,
+      parser
     );
   }
 
@@ -113,6 +116,7 @@ export class Configuration {
    *  * _init_ init method and optionally its priority.
    *  * _config_ config method and optionally its priority.
    *  * _priority_ default priority of the configuration.
+   *  * _parser_ the name of the parser that this configuration targets.
    * @return {Configuration} The newly generated configuration.
    */
   public static create(name: string,
@@ -127,6 +131,7 @@ export class Configuration {
                                 init?: ProtoProcessor<InitMethod>,
                                 config?: ProtoProcessor<ConfigMethod>,
                                 priority?: number,
+                                parser?: string,
                                } = {}): Configuration {
     let configuration = Configuration._create(name, config);
     ConfigurationHandler.set(name, configuration);
@@ -150,6 +155,7 @@ export class Configuration {
                               init?: ProtoProcessor<InitMethod>,
                               config?: ProtoProcessor<ConfigMethod>,
                               priority?: number,
+                              parser?: string,
                              } = {}): Configuration {
     return Configuration._create('', config);
   }
@@ -169,7 +175,8 @@ export class Configuration {
                       readonly postprocessors: ProcessorList = [],
                       readonly initMethod: Processor<InitMethod> = null,
                       readonly configMethod: Processor<ConfigMethod> = null,
-                      public priority: number
+                      public priority: number,
+                      readonly parser: string
                      ) {
     this.handler = Object.assign(
       {character: [], delimiter: [], macro: [], environment: []}, handler);
@@ -255,6 +262,11 @@ export class ParserConfiguration {
   protected configurations: PrioritizedList<Configuration> = new PrioritizedList();
 
   /**
+   * The list of parsers this configuration targets
+   */
+  protected parsers: string[] = [];
+
+  /**
    * The subhandlers for this configuration.
    * @type {SubHandlers}
    */
@@ -284,13 +296,14 @@ export class ParserConfiguration {
    */
   public nodes: {[key: string]: any}  = {};
 
-
   /**
    * @constructor
    * @param {(string|[string,number])[]} packages A list of packages with
    *     optional priorities.
+   * @parm {string[]} parsers   The names of the parsers this package targets
    */
-  constructor(packages: (string | [string, number])[]) {
+  constructor(packages: (string | [string, number])[], parsers: string[] = ['tex']) {
+    this.parsers = parsers;
     for (const pkg of packages.slice().reverse()) {
       this.addPackage(pkg);
     }
@@ -318,27 +331,25 @@ export class ParserConfiguration {
   }
 
   /**
-   * Retrieves and adds configuration for a pacakge with priority.
+   * Retrieves and adds configuration for a package with priority.
    * @param {(string | [string, number]} pkg Package with priority.
    */
   public addPackage(pkg: (string | [string, number])) {
     const name = typeof pkg === 'string' ? pkg : pkg[0];
-    let conf = ConfigurationHandler.get(name);
-    if (conf) {
-      this.configurations.add(
-        conf, typeof pkg === 'string' ? conf.priority : pkg[1]);
-    }
+    const conf = this.getPackage(name);
+    conf && this.configurations.add(conf, typeof pkg === 'string' ? conf.priority : pkg[1]);
   }
 
   /**
    * Adds a configuration after the input jax is created.  (Used by \require.)
    * Sets items, nodes and runs configuration method explicitly.
    *
-   * @param {Configuration} config   The configuration to be registered in this one
+   * @param {string} name            The name of the package to add
    * @param {TeX} jax                The TeX jax where it is being registered
    * @param {OptionList=} options    The options for the configuration.
    */
-  public add(config: Configuration, jax: TeX<any, any, any>, options: OptionList = {}) {
+  public add(name: string, jax: TeX<any, any, any>, options: OptionList = {}) {
+    const config = this.getPackage(name);
     this.append(config);
     this.configurations.add(config, config.priority);
     this.init();
@@ -356,6 +367,19 @@ export class ParserConfiguration {
     }
   }
 
+ /**
+  * Find a package and check that it is for the targeted parser
+  *
+  * @param {string} name       The name of the package to check
+  * @return {Configuration}    The configuration for the package
+  */
+  protected getPackage(name: string): Configuration {
+    const config = ConfigurationHandler.get(name);
+    if (config && this.parsers.indexOf(config.parser) < 0) {
+      throw Error(`Package ${name} doesn't target the proper parser`);
+    }
+    return config;
+  }
 
   /**
    * Appends a configuration to the overall configuration object.

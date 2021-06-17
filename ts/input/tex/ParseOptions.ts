@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018 The MathJax Consortium
+ *  Copyright (c) 2018-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import StackItemFactory from './StackItemFactory.js';
 import {Tags} from './Tags.js';
 import {SubHandlers} from './MapHandler.js';
 import {NodeFactory} from './NodeFactory.js';
+import NodeUtil from './NodeUtil.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import TexParser from './TexParser.js';
 import {defaultOptions, OptionList} from '../../util/Options.js';
@@ -173,6 +174,15 @@ export default class ParseOptions {
       list = this.nodeLists[property] = [];
     }
     list.push(node);
+    if (node.kind !== property) {
+      //
+      // If the list is not just for its kind, record that it is in this list
+      //   so that if it is copied, the copy can also be added to the list.
+      //
+      const inlists = (NodeUtil.getProperty(node, 'in-lists') as string || '');
+      const lists = (inlists ? inlists.split(/,/) : []).concat(property).join(',');
+      NodeUtil.setProperty(node, 'in-lists', lists);
+    }
   }
 
 
@@ -196,6 +206,24 @@ export default class ParseOptions {
     }
     this.nodeLists[property] = result;
     return result;
+  }
+
+
+  /**
+   * Remove a list of nodes from a saved list (e.g., when a filter removes the
+   * node from the DOM, like for munderover => munder).
+   *
+   * @param {string} property The property from which to remove nodes.
+   * @param {MmlNode[]} nodes The nodes to remove.
+   */
+  public removeFromList(property: string, nodes: MmlNode[]) {
+    const list = this.nodeLists[property] || [];
+    for (const node of nodes) {
+      const i = list.indexOf(node);
+      if (i >= 0) {
+        list.splice(i, 1);
+      }
+    }
   }
 
 

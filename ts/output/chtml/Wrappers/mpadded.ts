@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2017-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -82,7 +82,9 @@ CommonMpaddedMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
     //
     if (x + dx || y) {
       style.position = 'relative';
-      const rbox = this.html('mjx-rbox', {style: {left: this.em(x + dx), top: this.em(-y)}});
+      const rbox = this.html('mjx-rbox', {
+        style: {left: this.em(x + dx), top: this.em(-y), 'max-width': style.width}
+      });
       if (x + dx && this.childNodes[0].getBBox().pwidth) {
         this.adaptor.setAttribute(rbox, 'width', 'full');
         this.adaptor.setStyle(rbox, 'left', this.em(x));

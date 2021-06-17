@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018 The MathJax Consortium
+ *  Copyright (c) 2018-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import BaseMethods from '../base/BaseMethods.js';
 import {AmsMethods} from '../ams/AmsMethods.js';
-import {mhchemParser} from './mhchemparser/mhchemParser.js';
+import {mhchemParser} from 'mhchemparser/dist/mhchemParser.js';
 
 // Namespace
 let MhchemMethods: Record<string, ParseMethod> = {};
@@ -80,8 +80,6 @@ new CommandMap(
       'Macro',
       '\\vphantom{-}\\raise2mu{\\kern2mu\\tiny\\text{-}\\kern1mu\\text{-}\\kern1mu\\text{-}\\kern2mu}'
     ],
-    xrightarrow: ['xArrow', 0x2192, 5, 6],
-    xleftarrow:  ['xArrow', 0x2190, 7, 3],
     xleftrightarrow:    ['xArrow', 0x2194, 6, 6],
     xrightleftharpoons: ['xArrow', 0x21CC, 5, 7],   // FIXME:  doesn't stretch in HTML-CSS output
     xRightleftharpoons: ['xArrow', 0x21CC, 5, 7],   // FIXME:  how should this be handled?

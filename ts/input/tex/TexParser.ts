@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2017-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -373,7 +373,7 @@ export default class TexParser {
         c += this.GetCS();
       } else if (c === '{' && braceOK) {
         this.i--;
-        c = this.GetArgument(name);
+        c = this.GetArgument(name).trim();
       }
       if (this.contains('delimiter', c)) {
         return this.convertDelimiter(c);

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2017-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -86,7 +86,6 @@ export abstract class CommonOutputJax<
       ...AbstractOutputJax.OPTIONS,
     scale: 1,                      // global scaling factor for all expressions
     minScale: .5,                  // smallest scaling factor to use
-    matchFontHeight: true,         // true to match ex-height of surrounding font
     mtextInheritFont: false,       // true to make mtext elements use surrounding font
     merrorInheritFont: false,      // true to make merror text use surrounding font
     mtextFont: '',                 // font to use for mtext, if not inheriting (empty means use MathJax fonts)
@@ -423,8 +422,9 @@ export abstract class CommonOutputJax<
     const adaptor = this.adaptor;
     const family = (getFamily ? adaptor.fontFamily(node) : '');
     const em = adaptor.fontSize(node);
-    const ex = (adaptor.nodeSize(adaptor.childNode(node, 1) as N)[1] / 60) || (em * this.options.exFactor);
-    const containerWidth = (adaptor.getStyle(node, 'display') === 'table' ?
+    const [w, h] = adaptor.nodeSize(adaptor.childNode(node, 1) as N);
+    const ex = (w ? h / 60 : em * this.options.exFactor);
+    const containerWidth = (!w ? 1000000 : adaptor.getStyle(node, 'display') === 'table' ?
                             adaptor.nodeSize(adaptor.lastChild(node) as N)[0] - 1 :
                             adaptor.nodeBBox(adaptor.lastChild(node) as N).left -
                             adaptor.nodeBBox(adaptor.firstChild(node) as N).left - 2);
@@ -455,15 +455,10 @@ export abstract class CommonOutputJax<
       }
     }
     //
-    // Gather the CSS from the classes
+    // Gather the CSS from the classes and font
     //
-    for (const kind of this.factory.getKinds()) {
-      this.addClassStyles(this.factory.getNodeClass(kind));
-    }
-    //
-    // Get the font styles
-    //
-    this.cssStyles.addStyles(this.font.styles);
+    this.addWrapperStyles(this.cssStyles);
+    this.addFontStyles(this.cssStyles);
     //
     // Create the stylesheet for the CSS
     //
@@ -472,10 +467,27 @@ export abstract class CommonOutputJax<
   }
 
   /**
-   * @param {any} CLASS  The Wrapper class whose styles are to be added
+   * @param {CssStyles} styles   The style object to add to
    */
-  protected addClassStyles(CLASS: typeof CommonWrapper) {
-    this.cssStyles.addStyles(CLASS.styles);
+  protected addFontStyles(styles: CssStyles) {
+    styles.addStyles(this.font.styles);
+  }
+
+  /**
+   * @param {CssStyles} styles   The style object to add to
+   */
+  protected addWrapperStyles(styles: CssStyles) {
+    for (const kind of this.factory.getKinds()) {
+      this.addClassStyles(this.factory.getNodeClass(kind), styles);
+    }
+  }
+
+  /**
+   * @param {typeof CommonWrapper} CLASS  The Wrapper class whose styles are to be added
+   * @param {CssStyles} styles            The style object to add to.
+   */
+  protected addClassStyles(CLASS: typeof CommonWrapper, styles: CssStyles) {
+    styles.addStyles(CLASS.styles);
   }
 
   /*****************************************************************/

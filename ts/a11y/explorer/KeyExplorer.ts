@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2019 The MathJax Consortium
+ *  Copyright (c) 2009-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -252,10 +252,12 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    */
   public Update(force: boolean = false) {
     super.Update(force);
+    let options = this.speechGenerator.getOptions();
+    SRE.setupEngine({modality: options.modality,
+                     locale: options.locale});
     this.region.Update(this.walker.speech());
     // This is a necessary in case speech options have changed via keypress
     // during walking.
-    let options = this.speechGenerator.getOptions();
     if (options.modality === 'speech') {
       this.document.options.sre.domain = options.domain;
       this.document.options.sre.style = options.style;

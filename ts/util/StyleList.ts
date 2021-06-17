@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2017-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -94,13 +94,20 @@ export class CssStyles {
    * @return {string} The CSS string for the style list
    */
   public getStyleString(): string {
+    return this.getStyleRules().join('\n\n');
+  }
+
+  /**
+   * @return {string[]}  An array of rule strings for the style list
+   */
+  public getStyleRules(): string[] {
     const selectors = Object.keys(this.styles);
     const defs: string[] = new Array(selectors.length);
     let i = 0;
     for (const selector of selectors) {
       defs[i++] = selector + ' {\n' + this.getStyleDefString(this.styles[selector]) + '\n}';
     }
-    return defs.join('\n\n');
+    return defs;
   }
 
   /**

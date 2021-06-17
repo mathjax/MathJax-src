@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2017-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -101,6 +101,11 @@ export interface Node {
    * @return {number}     The index of the child in childNodes, or null if not found
    */
   childIndex(child: Node): number;
+
+  /**
+   * Make a deep copy of the node (but with no parent).
+   */
+  copy(): Node;
 
   /**
    * @param {string} kind  The kind of nodes to be located in the tree
@@ -263,6 +268,20 @@ export abstract class AbstractNode implements Node {
     return (i === -1 ? null : i);
   }
 
+
+  /**
+   * @override
+   */
+  public copy() {
+    const node = (this as AbstractNode).factory.create(this.kind) as AbstractNode;
+    node.properties = {...this.properties};
+    for (const child of this.childNodes || []) {
+      if (child) {
+        node.appendChild(child.copy());
+      }
+    }
+    return node;
+  }
 
   /**
    * @override

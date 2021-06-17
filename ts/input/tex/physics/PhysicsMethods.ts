@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018 The MathJax Consortium
+ *  Copyright (c) 2018-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -291,11 +291,7 @@ PhysicsMethods.StarMacro = function(parser: TexParser, name: string,
   macro = ParseUtil.substituteArgs(parser, args, macro);
   parser.string = ParseUtil.addArgs(parser, macro, parser.string.slice(parser.i));
   parser.i = 0;
-  if (++parser.macroCount > parser.configuration.options['maxMacros']) {
-    throw new TexError('MaxMacroSub1',
-                        'MathJax maximum macro substitution count exceeded; ' +
-                        'is there a recursive macro call?');
-  }
+  ParseUtil.checkMaxMacros(parser);
 };
 
 
@@ -934,6 +930,31 @@ PhysicsMethods.AutoClose = function(parser: TexParser, fence: string, _texclass:
   const item = parser.itemFactory.create('mml', mo).
     setProperties({autoclose: fence});
   parser.Push(item);
+};
+
+
+/**
+ * Generates the vector nabla depending on the arrowdel option.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
+PhysicsMethods.Vnabla = function(parser: TexParser, _name: string) {
+  let argument = parser.options.physics.arrowdel ?
+    '\\vec{\\gradientnabla}' : '{\\gradientnabla}';
+  return parser.Push(new TexParser(argument, parser.stack.env,
+                                   parser.configuration).mml());
+};
+
+
+/**
+ * Generates the differential d depending on the italicdiff option.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
+PhysicsMethods.DiffD = function(parser: TexParser, _name: string) {
+  let argument = parser.options.physics.italicdiff ? 'd' : '{\\rm d}';
+  return parser.Push(new TexParser(argument, parser.stack.env,
+                                   parser.configuration).mml());
 };
 
 

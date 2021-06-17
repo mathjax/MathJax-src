@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2017-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -80,12 +80,6 @@ export interface CHTMLWrapperClass extends AnyWrapperClass {
    */
   autoStyle: boolean;
 
-  /**
-   * True when an instance of this class has been typeset
-   * (used to control whether the styles for this class need to be output)
-   */
-  used: boolean;
-
 }
 
 /*****************************************************************/
@@ -116,12 +110,6 @@ CommonWrapper<
    * that sets display:inline-block (as needed for the output for MmlNodes).
    */
   public static autoStyle = true;
-
-  /**
-   * True when an instance of this class has been typeset
-   * (used to control whether the styles for this class need to be output)
-   */
-  public static used: boolean = false;
 
   /**
    * @override
@@ -181,7 +169,7 @@ CommonWrapper<
    * Mark this class as having been typeset (so its styles will be output)
    */
   public markUsed() {
-    (this.constructor as CHTMLWrapperClass).used = true;
+    this.jax.wrapperUsage.add(this.kind);
   }
 
   /**

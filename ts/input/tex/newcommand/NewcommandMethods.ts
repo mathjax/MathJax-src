@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018 The MathJax Consortium
+ *  Copyright (c) 2018-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -44,28 +44,10 @@ let NewcommandMethods: Record<string, ParseMethod> = {};
  */
 NewcommandMethods.NewCommand = function(parser: TexParser, name: string) {
   // @test Newcommand Simple
-  let cs = ParseUtil.trimSpaces(parser.GetArgument(name));
-  let n = parser.GetBrackets(name);
+  let cs = NewcommandUtil.GetCsNameArgument(parser, name);
+  let n = NewcommandUtil.GetArgCount(parser, name);
   let opt = parser.GetBrackets(name);
   let def = parser.GetArgument(name);
-  if (cs.charAt(0) === '\\') {
-    // @test Newcommand Simple
-    cs = cs.substr(1);
-  }
-  if (!cs.match(/^(.|[a-z]+)$/i)) {
-    // @test Illegal CS
-    throw new TexError('IllegalControlSequenceName',
-                        'Illegal control sequence name for %1', name);
-  }
-  if (n) {
-    // @test Newcommand Optional, Newcommand Arg, Newcommand Arg Optional
-    n = ParseUtil.trimSpaces(n);
-    if (!n.match(/^[0-9]+$/)) {
-      // @test Illegal Argument Number
-      throw new TexError('IllegalParamNumber',
-                          'Illegal number of parameters specified in %1', name);
-    }
-  }
   NewcommandUtil.addMacro(parser, cs, NewcommandMethods.Macro, [def, n, opt]);
 };
 
@@ -78,19 +60,10 @@ NewcommandMethods.NewCommand = function(parser: TexParser, name: string) {
 NewcommandMethods.NewEnvironment = function(parser: TexParser, name: string) {
   // @test Newenvironment Empty, Newenvironment Content
   let env = ParseUtil.trimSpaces(parser.GetArgument(name));
-  let n = parser.GetBrackets(name);
+  let n = NewcommandUtil.GetArgCount(parser, name);
   let opt = parser.GetBrackets(name);
   let bdef = parser.GetArgument(name);
   let edef = parser.GetArgument(name);
-  if (n) {
-    // @test Newenvironment Optional, Newenvironment Arg Optional
-    n = ParseUtil.trimSpaces(n);
-    if (!n.match(/^[0-9]+$/)) {
-      // @test Illegal Parameter Number
-      throw new TexError('IllegalParamNumber',
-                          'Illegal number of parameters specified in %1', name);
-        }
-  }
   NewcommandUtil.addEnvironment(parser, env, NewcommandMethods.BeginEnv, [true, bdef, edef, n, opt]);
 };
 
@@ -214,11 +187,7 @@ NewcommandMethods.MacroWithTemplate = function (parser: TexParser, name: string,
   parser.string = ParseUtil.addArgs(parser, text,
                                     parser.string.slice(parser.i));
   parser.i = 0;
-  if (++parser.macroCount > parser.configuration.options['maxMacros']) {
-    throw new TexError('MaxMacroSub1',
-                        'MathJax maximum macro substitution count exceeded; ' +
-                        'is here a recursive macro call?');
-  }
+  ParseUtil.checkMaxMacros(parser);
 };
 
 

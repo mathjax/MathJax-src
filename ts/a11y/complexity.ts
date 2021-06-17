@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018 The MathJax Consortium
+ *  Copyright (c) 2018-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -105,7 +105,7 @@ EMItemC<N, T, D>>(BaseMathItem: B, computeComplexity: (node: MmlNode) => void): 
 /*==========================================================================*/
 
 /**
- * The funtions added to MathDocument for complexity
+ * The functions added to MathDocument for complexity
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017 The MathJax Consortium
+ *  Copyright (c) 2017-2021 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import *  as sm from '../SymbolMap.js';
 import {TexConstant} from '../TexConstants.js';
 import BaseMethods from './BaseMethods.js';
 import ParseMethods from '../ParseMethods.js';
+import ParseUtil from '../ParseUtil.js';
 import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MATHSPACE, em} from '../../../util/lengths.js';
 
@@ -523,7 +524,9 @@ new sm.CommandMap('macros', {
 
   overset:            'Overset',
   underset:           'Underset',
+  overunderset:       'Overunderset',
   stackrel:           ['Macro', '\\mathrel{\\mathop{#2}\\limits^{#1}}', 2],
+  stackbin:           ['Macro', '\\mathbin{\\mathop{#2}\\limits^{#1}}', 2],
 
   over:               'Over',
   overwithdelims:     'Over',
@@ -572,6 +575,7 @@ new sm.CommandMap('macros', {
   rule:               'rule',
   Rule:              ['Rule'],
   Space:             ['Rule', 'blank'],
+  nonscript:          'Nonscript',
 
   big:               ['MakeBig', TEXCLASS.ORD, 0.85],
   Big:               ['MakeBig', TEXCLASS.ORD, 1.15],
@@ -607,6 +611,8 @@ new sm.CommandMap('macros', {
   text:               'HBox',
   mbox:               ['HBox', 0],
   fbox:               'FBox',
+  boxed:              ['Macro', '\\fbox{$\\displaystyle{#1}$}', 1],
+  framebox:           'FrameBox',
 
   strut:              'Strut',
   mathstrut:         ['Macro', '\\vphantom{(}'],
@@ -697,9 +703,8 @@ new sm.CommandMap('macros', {
 new sm.EnvironmentMap('environment', ParseMethods.environment, {
   array:         ['AlignedArray'],
   equation:      ['Equation', null, true],
-  'equation*':   ['Equation', null, false],
   eqnarray:      ['EqnArray', null, true, true, 'rcl',
-                  '0 ' + em(MATHSPACE.thickmathspace), '.5em']
+                  ParseUtil.cols(0, MATHSPACE.thickmathspace), '.5em']
 }, BaseMethods);
 
 
