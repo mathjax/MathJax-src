@@ -398,10 +398,10 @@ export class Styles {
     for (const name of Object.keys(this.styles)) {
       const parent = this.parentName(name);
       if (!this.styles[parent]) {
-        styles.push(name + ': ' + this.styles[name]);
+        styles.push(name + ': ' + this.styles[name] + ';');
       }
     }
-    return styles.join('; ');
+    return styles.join(' ');
   }
 
   /**
