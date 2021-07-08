@@ -86,12 +86,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
   /**
    * The CSS styles needed for this font.
    */
-  protected static defaultStyles = {
-    'mjx-c::before': {
-      display: 'block',
-      width: 0
-    }
-  };
+  protected static defaultStyles = {};
 
   /**
    * The default @font-face declarations with %%URL%% where the font path should go
@@ -233,9 +228,6 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
     let c = this.charSelector(n);
     if (data.c && data.c !== n) {
       c = this.charSelector(data.c);
-      styles['.mjx-stretched mjx-c' + c + '::before'] = {
-        content: this.charContent(data.c)
-      };
     }
     if (!data.stretch) return;
     if (data.dir === DIRECTION.Vertical) {
@@ -291,7 +283,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
     if (!n) return 0;
     const data = this.getDelimiterData(n);
     const dw = (HDW[2] - data[2]) / 2;
-    const css: StyleData = {content: this.charContent(n)};
+    const css: StyleData = {};
     if (part !== 'ext') {
       css.padding = this.padding(data, dw);
     } else {
@@ -300,7 +292,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
         css['padding-left'] = this.em0(dw);
       }
     }
-    styles['mjx-stretchy-v' + c + ' mjx-' + part + ' mjx-c::before'] = css;
+    styles['mjx-stretchy-v' + c + ' mjx-' + part + ' mjx-c'] = css;
     return data[0] + data[1];
   }
 
@@ -332,11 +324,8 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
    */
   protected addDelimiterHPart(styles: StyleList, c: string, part: string, n: number, HDW: CHTMLCharData) {
     if (!n) return;
-    const data = this.getDelimiterData(n);
-    const options = data[3] as CHTMLCharOptions;
-    const css: StyleData = {content: (options && options.c ? '"' + options.c + '"' : this.charContent(n))};
-    css.padding = this.padding(HDW as CHTMLCharData, 0, -HDW[2]);
-    styles['mjx-stretchy-h' + c + ' mjx-' + part + ' mjx-c::before'] = css;
+    const css: StyleData = {padding: this.padding(HDW as CHTMLCharData, 0, -HDW[2])};
+    styles['mjx-stretchy-h' + c + ' mjx-' + part + ' mjx-c'] = css;
   }
 
   /*******************************************************/
@@ -351,10 +340,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
     const options = data[3] as CHTMLCharOptions;
     const letter = (options.f !== undefined ? options.f : vletter);
     const selector = 'mjx-c' + this.charSelector(n) + (letter ? '.TEX-' + letter : '');
-    styles[selector + '::before'] = {
-      padding: this.padding(data, 0, options.ic || 0),
-      content: (options.c != null ? '"' + options.c + '"' : this.charContent(n))
-    };
+    styles[selector] = {padding: this.padding(data, 0, options.ic || 0)};
   }
 
   /***********************************************************************/
@@ -394,17 +380,6 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
   }
 
   /**
-   * @param {number} n  A unicode code point to be converted to character content for use with the
-   *                    CSS rules for fonts (either a literal character for most ASCII values, or \nnnn
-   *                    for higher values, or for the double quote and backslash characters).
-   * @return {string}   The character as a properly encoded string in quotes.
-   */
-  public charContent(n: number): string {
-    return '"' + (n >= 0x20 && n <= 0x7E && n !== 0x22 && n !== 0x27 && n !== 0x5C ?
-                  String.fromCharCode(n) : '\\' + n.toString(16).toUpperCase()) + '"';
-  }
-
-  /**
    * @param {number} n  A unicode code point to be converted to a selector for use with the
    *                    CSS rules for fonts
    * @return {string}   The character as a selector value.
@@ -436,7 +411,11 @@ export type CssMap = {[name: number]: number};
 export function AddCSS(font: CHTMLCharMap, options: CharOptionsMap): CHTMLCharMap {
   for (const c of Object.keys(options)) {
     const n = parseInt(c);
-    Object.assign(FontData.charOptions(font, n), options[n]);
+    const data = options[n];
+    if (data.c) {
+      data.c = data.c.replace(/\\[0-9A-F]+/ig, (x) => String.fromCodePoint(parseInt(x.substr(1), 16)));
+    }
+    Object.assign(FontData.charOptions(font, n), data);
   }
   return font;
 }

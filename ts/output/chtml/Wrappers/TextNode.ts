@@ -53,7 +53,8 @@ CommonTextNodeMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
    */
   public static styles: StyleList = {
     'mjx-c': {
-      display: 'inline-block'
+      display: 'inline-block',
+      width: 0
     },
     'mjx-utext': {
       display: 'inline-block',
@@ -78,7 +79,7 @@ CommonTextNodeMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
         const font = (data.f ? ' TEX-' + data.f : '');
         const node = (data.unknown ?
                       this.jax.unknownText(String.fromCodePoint(n), variant) :
-                      this.html('mjx-c', {class: this.char(n) + font}));
+                      this.html('mjx-c', {class: this.char(n) + font}, [this.text(data.c || String.fromCodePoint(n))]));
         adaptor.append(parent, node);
         !data.unknown && this.font.charUsage.add([variant, n]);
       }
