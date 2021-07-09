@@ -109,24 +109,46 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<N, T, D> 
      */
     public toCHTML(parents: N[]) {
       this.markUsed();
+      const parent = parents[0];
       const adaptor = this.adaptor;
       const variant = this.parent.variant;
       const text = (this.node as TextNode).getText();
       if (text.length === 0) return;
       if (variant === '-explicitFont') {
-        adaptor.append(parents[0], this.jax.unknownText(text, variant, this.getBBox().w));
+        adaptor.append(parent, this.jax.unknownText(text, variant, this.getBBox().w));
       } else {
+        let utext = '';
         const chars = this.remappedText(text, variant);
         for (const n of chars) {
           const data = (this.getVariantChar(variant, n) as ChtmlCharData)[3];
-          const font = (data.f ? ' TEX-' + data.f : '');
-          const node = (data.unknown ?
-                        this.jax.unknownText(String.fromCodePoint(n), variant) :
-                        this.html('mjx-c', {class: this.char(n) + font}, [this.text(data.c || String.fromCodePoint(n))]));
-          adaptor.append(parents[0], node);
-          !data.unknown && this.font.charUsage.add([variant, n]);
+          if (data.unknown) {
+            utext += String.fromCodePoint(n);
+          } else {
+            utext = this.addUtext(utext, variant, parent);
+            const font = (data.f ? ' TEX-' + data.f : '');
+            adaptor.append(parent, this.html('mjx-c', {class: this.char(n) + font}, [
+              this.text(data.c || String.fromCodePoint(n))
+            ]));
+            this.font.charUsage.add([variant, n]);
+          }
         }
+        this.addUtext(utext, variant, parent);
       }
+    }
+
+    /**
+     * Append unknown text, if any
+     *
+     * @param {string} utext     The text to add
+     * @param {string} variant   The mathvariant for the text
+     * @param {N} parent         The parent node where the text is being added
+     * @return {string}          The new value for utext
+     */
+    protected addUtext(utext: string, variant: string, parent: N): string {
+      if (utext) {
+        this.adaptor.append(parent, this.jax.unknownText(utext, variant));
+      }
+      return '';
     }
 
   };
