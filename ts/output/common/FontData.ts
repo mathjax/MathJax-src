@@ -51,7 +51,7 @@ export type CharData<C extends CharOptions> =
   [number, number, number, C];
 
 /**
- * An object making character positions to character data
+ * An object mapping character positions to character data
  *
  * @template C  The CharOptions type
  */
@@ -60,7 +60,7 @@ export type CharMap<C extends CharOptions> = {
 };
 
 /**
- * An object making variants to character maps
+ * An object mapping variants to character maps
  *
  * @template C  The CharOptions type
  */
@@ -88,7 +88,7 @@ export interface VariantData<C extends CharOptions> {
 }
 
 /**
- * An object making variants names to variant data
+ * An object mapping variants names to variant data
  *
  * @template C  The CharOptions type
  * @template V  The VariantData type
@@ -257,6 +257,9 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    *  The standard variants to define
    */
   public static defaultVariants = [
+    //
+    //  The MathML variants
+    //
     ['normal'],
     ['bold', 'normal'],
     ['italic', 'normal'],
@@ -270,7 +273,19 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     ['bold-sans-serif', 'bold', 'sans-serif'],
     ['sans-serif-italic', 'italic', 'sans-serif'],
     ['sans-serif-bold-italic', 'bold-italic', 'bold-sans-serif'],
-    ['monospace', 'normal']
+    ['monospace', 'normal'],
+
+    //
+    //  Internal variants needed for TeX input and all output jax
+    //
+    ['-smallop', 'normal'],
+    ['-largeop', 'normal'],
+    ['-tex-calligraphic', 'italic'],
+    ['-tex-bold-calligraphic', 'bold-italic'],
+    ['-tex-oldstyle', 'normal'],
+    ['-tex-bold-oldstyle', 'bold'],
+    ['-tex-mathit', 'italic'],
+    ['-tex-variant', 'normal']
   ];
 
   /**
@@ -291,7 +306,16 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     'bold-sans-serif': ['sans-serif', false, true],
     'sans-serif-italic': ['sans-serif', true, false],
     'sans-serif-bold-italic': ['sans-serif', true, true],
-    monospace: ['monospace', false, false]
+    monospace: ['monospace', false, false],
+
+    '-smallop': ['unknown', false, false],
+    '-largeop': ['unknown', false, false],
+    '-tex-calligraphic': ['cursive', true, false],
+    '-tex-bold-calligraphic': ['cursive', true, true],
+    '-tex-oldstyle': ['unknown', false, false],
+    '-tex-bold-oldstyle': ['unknown', false, true],
+    '-tex-mathit': ['unknown', true, false],
+    '-tex-variant': ['unknown', false, false]
   };
 
   /**

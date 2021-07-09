@@ -50,16 +50,8 @@ export function CommonTeXFontMixin<
      */
     protected static defaultVariants = [
       ...Base.defaultVariants,
-      ['-smallop', 'normal'],
-      ['-largeop', 'normal'],
       ['-size3', 'normal'],
-      ['-size4', 'normal'],
-      ['-tex-calligraphic', 'italic'],
-      ['-tex-bold-calligraphic', 'bold-italic'],
-      ['-tex-oldstyle', 'normal'],
-      ['-tex-bold-oldstyle', 'bold'],
-      ['-tex-mathit', 'italic'],
-      ['-tex-variant', 'normal']
+      ['-size4', 'normal']
     ];
 
     /**
@@ -67,15 +59,8 @@ export function CommonTeXFontMixin<
      */
     protected static defaultCssFonts: CssFontMap = {
       ...Base.defaultCssFonts,
-      '-smallop': ['serif', false, false],
-      '-largeop': ['serif', false, false],
       '-size3': ['serif', false, false],
-      '-size4': ['serif', false, false],
-      '-tex-calligraphic': ['cursive', true, false],
-      '-tex-bold-calligraphic': ['cursive', true, true],
-      '-tex-oldstyle': ['serif', false, false],
-      '-tex-bold-oldstyle': ['serif', false, true],
-      '-tex-mathit': ['serif', true, false]
+      '-size4': ['serif', false, false]
     };
 
     /**
@@ -87,13 +72,6 @@ export function CommonTeXFontMixin<
      *  The default variants for the standard stretchy assmebly parts
      */
     protected static defaultStretchVariants = ['-size4'];
-
-    /**
-     * @override
-     */
-    protected getDelimiterData(n: number) {
-      return this.getChar('-smallop', n) || this.getChar('-size4', n);
-    }
 
   };
 
