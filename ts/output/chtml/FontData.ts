@@ -21,7 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CharMap, CharOptions, CharData, VariantData, DelimiterData, FontData, DIRECTION} from '../common/FontData.js';
+import {CharMap, CharOptions, CharDataArray, VariantData,
+        DelimiterData, FontData, DIRECTION} from '../common/FontData.js';
 import {Usage} from './Usage.js';
 import {StringMap} from './Wrapper.js';
 import {StyleList, StyleData} from '../../util/StyleList.js';
@@ -43,7 +44,7 @@ export interface ChtmlCharOptions extends CharOptions {
  * Shorthands for CHTML char maps and char data
  */
 export type ChtmlCharMap = CharMap<ChtmlCharOptions>;
-export type ChtmlCharData = CharData<ChtmlCharOptions>;
+export type ChtmlCharData = CharDataArray<ChtmlCharOptions>;
 
 /**
  * The extra data needed for a Variant in CHTML output
@@ -65,11 +66,13 @@ export interface ChtmlDelimiterData extends DelimiterData {
  * The CHTML FontData class
  */
 export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData> {
+
   /**
    * Default options
    */
   public static OPTIONS = {
     ...FontData.OPTIONS,
+    dynamicPrefix: './output/chtml/fonts',
     fontURL: 'js/output/chtml/fonts/tex-woff-v2'
   };
 
@@ -160,7 +163,9 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
     super.defineChars(name, chars);
     const letter = this.variant[name].letter;
     for (const n of Object.keys(chars)) {
-      const options = ChtmlFontData.charOptions(chars, parseInt(n));
+      const i = parseInt(n);
+      if (!Array.isArray(chars[i])) continue;
+      const options = ChtmlFontData.charOptions(chars, i);
       if (options.f === undefined) {
         options.f = letter;
       }
@@ -235,7 +240,7 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
         const char = variant.chars[N] as ChtmlCharData;
         if ((char[3] || {}).smp) continue;
         if (char.length < 4) {
-          (char)[3] = {};
+          char[3] = {};
         }
         this.addCharStyles(styles, vletter, N, char);
       }
