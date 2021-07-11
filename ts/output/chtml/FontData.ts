@@ -209,7 +209,7 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
    */
   public updateStyles(styles: StyleList): StyleList {
     for (const N of this.delimUsage.update()) {
-      this.addDelimiterStyles(styles, N, this.delimiters[N] as ChtmlDelimiterData);
+      this.addDelimiterStyles(styles, N, this.getDelimiter(N));
     }
     for (const [name, N] of this.charUsage.update()) {
       const variant = this.variant[name];
