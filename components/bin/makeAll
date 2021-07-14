@@ -29,10 +29,20 @@ const fs = require('fs');
 const path = require('path');
 const {execSync} = require('child_process');
 
+const options = {
+  recursive: true
+};
+
 /**
- * Get the directories to process
+ * Get the directories to process and check for options
  */
 const dirs = process.argv.slice(2);
+
+if (dirs[0] === '--no-subdirs') {
+  dirs.shift();
+  options.recursive = false;
+}
+
 if (dirs.length === 0) {
   dirs.push('.');
 }
@@ -74,7 +84,9 @@ function processList(dirs) {
  */
 function processDir(dir, action) {
   action(dir);
-  processSubdirs(dir, action);
+  if (options.recursive) {
+    processSubdirs(dir, action);
+  }
 }
 
 /**
