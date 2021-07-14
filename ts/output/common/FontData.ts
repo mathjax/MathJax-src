@@ -640,7 +640,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     dynamicFiles.map(([file, variants, delimiters]) => {
       list[file] = {
         file, variants, delimiters: delimiters || [],
-        promise: null, failed: false, setup: ((_font) => {})
+        promise: null, failed: false, setup: ((_font) => { list[file].failed = true; })
       } as DynamicFile;
     });
     return list;
@@ -651,9 +651,12 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    *
    * @param {string} file           The file being loaded
    * @param {CharMapMap} variants   The character data to be added
+   *
+   * @template C  The CharOptions type
+   * @template D  The DelimiterData type
    */
-  public static dynamicSetup(
-    file: string, variants: CharMapMap<CharOptions>, delimiters: DelimiterMap<DelimiterData>
+  public static dynamicSetup<C extends CharOptions, D extends DelimiterData>(
+    file: string, variants: CharMapMap<C>, delimiters: DelimiterMap<D> = []
   ) {
     this.dynamicFiles[file].setup = (font) => {
       Object.keys(variants).forEach(name => font.defineChars(name, variants[name]));
@@ -885,7 +888,9 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   public loadDynamicFile(dynamic: DynamicFile) {
     if (dynamic.failed) return;
     if (!dynamic.promise) {
-      dynamic.promise = asyncLoad(this.options.dynamicPrefix + '/' + dynamic.file).catch(err => {
+      const file = (dynamic.file.match(/^(?:[\/\[]|[a-z]+:\/\/)/) ? dynamic.file :
+                    this.options.dynamicPrefix + '/' + dynamic.file);
+      dynamic.promise = asyncLoad(file).catch(err => {
         dynamic.failed = true;
         console.warn(err);
       });
