@@ -889,7 +889,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     if (dynamic.failed) return;
     if (!dynamic.promise) {
       const file = (dynamic.file.match(/^(?:[\/\[]|[a-z]+:\/\/)/) ? dynamic.file :
-                    this.options.dynamicPrefix + '/' + dynamic.file);
+                    this.options.dynamicPrefix + '/' + dynamic.file.replace(/\.js$/, ''));
       dynamic.promise = asyncLoad(file).catch(err => {
         dynamic.failed = true;
         console.warn(err);
