@@ -83,7 +83,7 @@ async function webpackLib(dir) {
     //
     // Get js directory from the webpack.config.js file
     //
-    const jsdir = require(path.resolve(dir, 'webpack.config.js')).plugins[0].definitions.jsdir;
+    const jsdir = require(path.resolve(dir, 'webpack.config.js')).plugins[0].definitions.__JSDIR__;
     const jsRE = fileRegExp(jsdir);
     const libRE = fileRegExp(path.resolve(jsdir, '..', 'components'));
 

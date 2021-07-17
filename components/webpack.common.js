@@ -50,7 +50,7 @@ const PLUGINS = function (js, dir) {
   //
   //  Record the js directory for the pack command
   //
-  return [new webpack.DefinePlugin({jsdir: jsdir})];
+  return [new webpack.DefinePlugin({__JSDIR__: jsdir})];
 };
 
 /**
