@@ -55,13 +55,16 @@ const config = JSON.parse(fs.readFileSync(process.argv[2] || 'build.json'));
  * Extract the configuration values
  */
 const COMPONENT = path.basename(config.component || 'part');                // name of the component
+const ID = config.id || config.component || 'part';                         // the ID of the component
 const TARGETS = config.targets || [];                                       // the files to include in the component
 const EXCLUDE = new Map((config.exclude || []).map(name => [name, true]));  // files to exclude from the component
 const EXCLUDESUBDIRS = config.excludeSubdirs === 'true';                    // exclude subdirectories or not
 const JS = config.js || config.mathjax || mjPath;                           // path to the compiled .js files
 const LIB = config.lib || './lib';                                          // path to the lib directory to create
 const GLOBAL = config.global || mjGlobal;                                   // path to the global.js file
+const VERSION = config.version || mjGlobal.replace(/global/, 'version');    // path to the version.js file
 const TS = config.ts || JS.replace(/js$/, 'ts');                            // path to the .ts files
+
 
 /**
  * The list of files that need to be added to the lib directory
@@ -222,6 +225,7 @@ function processGlobal() {
   console.info('  ' + COMPONENT + '.ts');
   const lines = [
     `import {combineWithMathJax} from '${GLOBAL}';`,
+    `import {VERSION} from '${VERSION}';`,
     '',
   ];
   const packages = [];
@@ -230,7 +234,9 @@ function processGlobal() {
     const dir = path.dirname(PACKAGE[0]).split(path.sep)[0];
     packages.push(processPackage(lines, INDENT, dir));
   }
+  const name = (ID.match(/[^a-zA-Z0-9_]/) ? `"${ID}"` : ID);
   lines.push('', `combineWithMathJax({_: {`);
+  lines.push(INDENT + `_versions: {${name}: VERSION},`);
   lines.push(INDENT + packages.join(',\n' + INDENT));
   lines.push('}});');
   fs.writeFileSync(path.join(LIB, COMPONENT + '.js'), lines.join('\n') + '\n');

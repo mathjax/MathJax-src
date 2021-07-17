@@ -58,6 +58,7 @@ export interface MathJaxConfig extends MJConfig {
     failed?: PackageFailed;                    // A function to call when MathJax fails to load
     require?: (url: string) => any;            // A function for loading URLs
     pathFilters?: PathFilterList;              // List of path filters (and optional priorities) to add
+    versionWarnings?: boolean;                 // True means warn when extension version doesn't match MJ version
     [name: string]: any;                       // Other configuration blocks
   };
 }
@@ -127,6 +128,8 @@ export const PathFilters: {[name: string]: PathFilterFunction} = {
  */
 export namespace Loader {
 
+  const VERSION = MJGlobal.version;
+
   /**
    * Get a promise that is resolved when all the named packages have been loaded.
    *
@@ -163,7 +166,15 @@ export namespace Loader {
         extension.provides(CONFIG.provides[name]);
       }
       extension.checkNoLoad();
-      promises.push(extension.promise);
+      promises.push(extension.promise.then(() => {
+        if (!CONFIG.versionWarnings) return;
+        const version = MathJax._._versions[name];
+        if (!version) {
+          console.warn(`No version information available for component ${name}`);
+        } else if (version !== VERSION) {
+          console.warn(`Component ${name} uses ${version} of MathJax; version in use is ${VERSION}`);
+        }
+      }) as Promise<null>);
     }
     Package.loadAll();
     return Promise.all(promises);
@@ -247,6 +258,7 @@ if (typeof MathJax.loader === 'undefined') {
     failed: (error: PackageError) => console.log(`MathJax(${error.package || '?'}): ${error.message}`),
     require: null,
     pathFilters: [],
+    versionWarnings: true
   });
   combineWithMathJax({
     loader: Loader
