@@ -1,4 +1,5 @@
 {
+  "id": "[tex]/upgreek",
   "component": "input/tex/extensions/upgreek",
   "targets": ["input/tex/upgreek"]
 }
