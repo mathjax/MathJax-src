@@ -1,4 +1,6 @@
 (function () {
+  "use strict"
+  var value 
   var MML = MathJax.ElementJax.mml;
   
   var PROPERTY = [
