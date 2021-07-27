@@ -40,7 +40,9 @@
  */
 
 (function (ASCIIMATH) {
-
+  "use strict"
+  var mathfontfamily
+  var mathfontsize
   var MML;  // Filled in later
 
   //
