@@ -26,6 +26,7 @@ import {OptionList, defaultOptions, userOptions} from '../../util/Options.js';
 import {StyleList} from '../../util/StyleList.js';
 import {asyncLoad} from '../../util/AsyncLoad.js';
 import {retryAfter} from '../../util/Retries.js';
+import {mathjax} from '../../mathjax.js';
 
 /****************************************************************************/
 
@@ -884,9 +885,10 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    *   and do any associated setup that needs access to the FontData instance.
    *
    * @param {DynamicFile} dynamic   The data for the file to load
+   * @return {Promise<void>}        The promise that is resolved when the file is loaded
    */
-  public loadDynamicFile(dynamic: DynamicFile) {
-    if (dynamic.failed) return;
+  public async loadDynamicFile(dynamic: DynamicFile): Promise<void> {
+    if (dynamic.failed) return Promise.resolve();
     if (!dynamic.promise) {
       const file = (dynamic.file.match(/^(?:[\/\[]|[a-z]+:\/\/)/) ? dynamic.file :
                     this.options.dynamicPrefix + '/' + dynamic.file.replace(/\.js$/, ''));
@@ -895,7 +897,44 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
         console.warn(err);
       });
     }
-    retryAfter(dynamic.promise.then(() => dynamic.setup(this)));
+    return dynamic.promise.then(() => dynamic.setup(this));
+  }
+
+  /**
+   * Load all dynamic files.
+   *
+   * @return {Promise<void[]>}   A promise that is resolved after all the dynamic files are loaded.
+   */
+  public loadDynamicFiles(): Promise<void[]> {
+    const dynamicFiles = (this.constructor as typeof FontData).dynamicFiles;
+    const promises = Object.keys(dynamicFiles).map(name => this.loadDynamicFile(dynamicFiles[name]));
+    return Promise.all(promises);
+  }
+
+  /**
+   * Load all dynamic files synchronously, using mathjax.asyncLoad, when it is set to a
+   *   synchronous loading function, as in util/asyncLoad/node.ts.
+   */
+  public loadDynamicFilesSync() {
+    if (!mathjax.asyncLoad) {
+      throw Error('MathJax(loadDynamicFilesSync): mathjax.asyncLoad must be specified and synchronous');
+    }
+    const dynamicFiles = (this.constructor as typeof FontData).dynamicFiles;
+    for (const name of Object.keys(dynamicFiles)) {
+      const dynamic = dynamicFiles[name];
+      if (!dynamic.promise) {
+        const file = (dynamic.file.match(/^(?:[\/\[]|[a-z]+:\/\/)/) ? dynamic.file :
+                      this.options.dynamicPrefix + '/' + dynamic.file.replace(/\.js$/, ''));
+        dynamic.promise = Promise.resolve();
+        try {
+          mathjax.asyncLoad(file);
+        } catch (err) {
+          dynamic.failed = true;
+          console.warn(err);
+        }
+        dynamic.setup(this);
+      }
+    }
   }
 
   /**
@@ -905,7 +944,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   public getDelimiter(n: number): DelimiterData {
     const delim = this.delimiters[n];
     if (delim && !('dir' in delim)) {
-      this.loadDynamicFile(delim);
+      retryAfter(this.loadDynamicFile(delim));
       return null;
     }
     return delim as DelimiterData;
@@ -950,7 +989,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   public getChar(name: string, n: number): CharDataArray<C> {
     const char = this.variant[name].chars[n];
     if (char && !Array.isArray(char)) {
-      this.loadDynamicFile(char);
+      retryAfter(this.loadDynamicFile(char));
       return null;
     }
     return char as CharDataArray<C>;
