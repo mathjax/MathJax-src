@@ -41,6 +41,11 @@ export function CommonTeXFontMixin<
   return class extends Base {
 
     /**
+     * @override
+     */
+    public static NAME = 'TeX';
+
+    /**
      *  Add the extra variants for the TeX fonts
      */
     protected static defaultVariants = [

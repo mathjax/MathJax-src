@@ -74,6 +74,11 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
   };
 
   /**
+   * @override
+   */
+  public static JAX = 'CHTML';
+
+  /**
    * The default class names to use for each variant
    */
   protected static defaultVariantClasses: StringMap = {};

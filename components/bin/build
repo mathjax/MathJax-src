@@ -30,7 +30,7 @@ const path = require('path');
 /**
  * The amount of space for each level of indentation
  */
-const INDENT = '    ';
+const INDENT = '  ';
 
 /**
  * The pattern to use when looking for explort commands to process
@@ -51,6 +51,14 @@ const mjGlobal = path.join('..', mjPath, 'components', 'global.js');
  */
 const config = JSON.parse(fs.readFileSync(process.argv[2] || 'build.json'));
 
+function getType() {
+  const component = config.component || 'part';
+  if (component.match(/\/(svg|chtml|common)\/fonts\//)) return RegExp.$1 + '-font';
+  if (component.match(/\/(mathml|tex)\/.+\//)) return RegExp.$1 + '-extension';
+  if (component.match(/^(.+)\//)) return RegExp.$1;
+  return component;
+}
+
 /**
  * Extract the configuration values
  */
@@ -61,10 +69,10 @@ const EXCLUDE = new Map((config.exclude || []).map(name => [name, true]));  // f
 const EXCLUDESUBDIRS = config.excludeSubdirs === 'true';                    // exclude subdirectories or not
 const JS = config.js || config.mathjax || mjPath;                           // path to the compiled .js files
 const LIB = config.lib || './lib';                                          // path to the lib directory to create
+const TS = config.ts || JS.replace(/js$/, 'ts');                            // path to the .ts files
 const GLOBAL = config.global || mjGlobal;                                   // path to the global.js file
 const VERSION = config.version || mjGlobal.replace(/global/, 'version');    // path to the version.js file
-const TS = config.ts || JS.replace(/js$/, 'ts');                            // path to the .ts files
-
+const TYPE = config.type || getType();                                      // the module type
 
 /**
  * The list of files that need to be added to the lib directory
@@ -235,10 +243,16 @@ function processGlobal() {
     packages.push(processPackage(lines, INDENT, dir));
   }
   const name = (ID.match(/[^a-zA-Z0-9_]/) ? `"${ID}"` : ID);
-  lines.push('', `combineWithMathJax({_: {`);
-  lines.push(INDENT + `_versions: {${name}: VERSION},`);
-  lines.push(INDENT + packages.join(',\n' + INDENT));
-  lines.push('}});');
+  lines.push(
+    '',
+    'if (MathJax.loader) {',
+      INDENT + `MathJax.loader.checkVersion('${ID}', VERSION, '${TYPE}');`,
+    '}',
+    '',
+    `combineWithMathJax({_: {`,
+      INDENT + packages.join(',\n' + INDENT),
+    '}});'
+  );
   fs.writeFileSync(path.join(LIB, COMPONENT + '.js'), lines.join('\n') + '\n');
 }
 
