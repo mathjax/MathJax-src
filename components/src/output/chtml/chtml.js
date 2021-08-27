@@ -6,10 +6,10 @@ import {CHTML} from '../../../../js/output/chtml.js';
 if (MathJax.loader) {
   combineDefaults(MathJax.config.loader, 'output/chtml', {
     checkReady() {
-      let font = MathJax.config.svg.font || 'tex';
+      let font = (MathJax.config.chtml || {}).font || 'tex';
       if (typeof(font) !== 'string') {
-        MathJax.config.svg.fontData = font;
-        MathJax.config.svg.font = font = 'tex';
+        MathJax.config.chtml.fontData = font;
+        MathJax.config.chtml.font = font = 'tex';
       }
       return MathJax.loader.load(font.match(/^[\[\/]|^[a-z]+:/) ? font : 'output/chtml/fonts/' + font);
     }
