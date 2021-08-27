@@ -712,7 +712,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
       ['stretchVariants', 'defaultStretchVariants']
     ] as [keyof FontExtensionData, keyof typeof FontData][]) {
       if (data[src]) {
-        this[dst] = mergeOptions(this[dst], data[src]);
+        this[dst] = mergeOptions(this[dst] as OptionList, data[src]);
       }
     }
     if (data.dynamicFiles) {
