@@ -177,7 +177,7 @@ export namespace Loader {
       extension.checkNoLoad();
       promises.push(extension.promise.then(() => {
         if (!CONFIG.versionWarnings) return;
-        if (!versions.has(Package.resolvePath(name))) {
+        if (extension.isLoaded && !versions.has(Package.resolvePath(name))) {
           console.warn(`No version information available for component ${name}`);
         }
       }) as Promise<null>);
