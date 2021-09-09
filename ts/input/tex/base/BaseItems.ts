@@ -34,6 +34,7 @@ import NodeUtil from '../NodeUtil.js';
 import {Property} from '../../../core/Tree/Node.js';
 import StackItemFactory from '../StackItemFactory.js';
 import {CheckType, BaseItem, StackItem, EnvList} from '../StackItem.js';
+import { dimen2em, Em } from '../../../util/lengths.js';
 
 
 /**
@@ -1082,15 +1083,15 @@ export class ArrayItem extends BaseItem {
       const rows = (this.arraydef['rowspacing'] as string).split(/ /);
       if (!this.getProperty('rowspacing')) {
         // @test Array Custom Linebreak
-        let dimem = ParseUtil.dimen2em(rows[0]);
+        let dimem = dimen2em(rows[0]);
         this.setProperty('rowspacing', dimem);
       }
       const rowspacing = this.getProperty('rowspacing') as number;
       while (rows.length < this.table.length) {
-        rows.push(ParseUtil.Em(rowspacing));
+        rows.push(Em(rowspacing));
       }
-      rows[this.table.length - 1] = ParseUtil.Em(
-        Math.max(0, rowspacing + ParseUtil.dimen2em(spacing)));
+      rows[this.table.length - 1] = Em(
+        Math.max(0, rowspacing + dimen2em(spacing)));
       this.arraydef['rowspacing'] = rows.join(' ');
     }
   }

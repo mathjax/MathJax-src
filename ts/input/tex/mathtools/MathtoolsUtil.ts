@@ -32,6 +32,7 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 
 import {MathtoolsMethods} from './MathtoolsMethods.js';
 import {PAIREDDELIMS} from './MathtoolsConfiguration.js';
+import { dimen2em, Em } from '../../../util/lengths.js';
 
 /**
  * Utility functions for the Mathtools package.
@@ -98,10 +99,10 @@ export const MathtoolsUtil = {
     if (!mtable.isKind('mtable')) return;
     let rowspacing = mtable.attributes.get('rowspacing') as string;
     if (rowspacing) {
-      const add = ParseUtil.dimen2em(spread);
+      const add = dimen2em(spread);
       rowspacing = rowspacing
         .split(/ /)
-        .map(s => ParseUtil.Em(Math.max(0, ParseUtil.dimen2em(s) + add)))
+        .map(s => Em(Math.max(0, dimen2em(s) + add)))
         .join(' ');
     } else {
       rowspacing = spread;

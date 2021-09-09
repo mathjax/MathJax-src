@@ -82,3 +82,19 @@ export function isPercent(x: string): boolean {
 export function split(x: string): string[] {
   return x.trim().split(/\s+/);
 }
+
+/**
+ * Trim spaces from a string.
+ * @param {string} text The string to clean.
+ * @return {string} The string with leading and trailing whitespace removed.
+ */
+export function trimSpaces(text: string): string {
+  if (typeof text !== 'string') {
+    return text;
+  }
+  let TEXT = text.trim();
+  if (TEXT.match(/\\$/) && text.match(/ $/)) {
+    TEXT += ' ';
+  }
+  return TEXT;
+}

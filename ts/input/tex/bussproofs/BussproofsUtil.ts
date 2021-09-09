@@ -25,12 +25,12 @@
 
 import ParseOptions from '../ParseOptions.js';
 import NodeUtil from '../NodeUtil.js';
-import ParseUtil from '../ParseUtil.js';
 
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {Property} from '../../../core/Tree/Node.js';
 import {MathItem} from '../../../core/MathItem.js';
 import {MathDocument} from '../../../core/MathDocument.js';
+import {dimen2em, Em} from '../../../util/lengths.js';
 
 
 type MATHITEM = MathItem<any, any, any>;
@@ -270,12 +270,12 @@ let addSpace = function(config: ParseOptions, inf: MmlNode,
   if (NodeUtil.isType(mspace, 'mspace')) {
     NodeUtil.setAttribute(
       mspace, 'width',
-      ParseUtil.Em(ParseUtil.dimen2em(
+      Em(dimen2em(
         NodeUtil.getAttribute(mspace, 'width') as string) + space));
     return;
   }
   mspace = config.nodeFactory.create('node', 'mspace', [],
-                                     {width: ParseUtil.Em(space)});
+                                     {width: Em(space)});
   if (right) {
     inf.appendChild(mspace);
     return;
@@ -362,7 +362,7 @@ let adjustSequents = function(config: ParseOptions) {
 const addSequentSpace = function(config: ParseOptions, sequent: MmlNode,
                                  position: number, direction: string, width: number) {
   let mspace = config.nodeFactory.create('node', 'mspace', [],
-                                         {width: ParseUtil.Em(width)});
+                                         {width: Em(width)});
   if (direction === 'left') {
     let row = sequent.childNodes[position].childNodes[0] as MmlNode;
     mspace.parent = row;

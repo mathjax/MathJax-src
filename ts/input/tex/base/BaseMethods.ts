@@ -35,7 +35,7 @@ import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMunderover} from '../../../core/MmlTree/MmlNodes/munderover.js';
 import {Label} from '../Tags.js';
-import {em} from '../../../util/lengths.js';
+import {em, matchDimen} from '../../../util/lengths.js';
 import {entities} from '../../../util/Entities.js';
 import {lookup} from '../../../util/Options.js';
 
@@ -1239,7 +1239,7 @@ BaseMethods.CrLaTeX = function(parser: TexParser, name: string, nobrackets: bool
     }
     if (parser.string.charAt(parser.i) === '[') {
       let dim = parser.GetBrackets(name, '');
-      let [value, unit, ] = ParseUtil.matchDimen(dim);
+      let [value, unit, ] = matchDimen(dim);
       // @test Custom Linebreak
       if (dim && !value) {
         // @test Dimension Error
