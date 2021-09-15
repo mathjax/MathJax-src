@@ -28,7 +28,7 @@ import {asyncLoad} from '../../util/AsyncLoad.js';
 import {retryAfter} from '../../util/Retries.js';
 import {mathjax} from '../../mathjax.js';
 import {DIRECTION} from './Direction.js';
-export {DIRECTION, V, H} from './Direction.js';
+export {DIRECTION} from './Direction.js';
 
 /****************************************************************************/
 
