@@ -159,13 +159,6 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
   /**
    * @override
    */
-  public initialize() {
-    this.chtmlStyles = null;
-  }
-
-  /**
-   * @override
-   */
   public escaped(math: MathItem<N, T, D>, html: MathDocument<N, T, D>) {
     this.setDocument(html);
     return this.html('span', {}, [this.text(math.math)]);

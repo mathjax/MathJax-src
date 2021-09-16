@@ -1,5 +1,15 @@
 # MathJax (Source Repository)
-<img class="shield" alt="GitHub release version" src="https://img.shields.io/github/v/release/mathjax/MathJax-src.svg?sort=semver"> <img class="shield" alt="GitHub release version (branch)" src="https://img.shields.io/github/package-json/v/mathjax/MathJax/legacy-v2.svg?label=release-v2"> <a class="reference external image-reference" href="http://www.numfocus.org"><img alt="powered-by NumFocus" src="https://img.shields.io/badge/powered%20by-NumFOCUS-orange.svg?style=flat&amp;amp;colorA=E1523D&amp;amp;colorB=007D8A"></a>
+
+![GitHub release version](https://img.shields.io/github/v/release/mathjax/MathJax-src.svg?sort=semver)
+![GitHub release version (v2)](https://img.shields.io/github/package-json/v/mathjax/MathJax/legacy-v2.svg?label=release-v2)
+![NPM version](https://img.shields.io/npm/v/mathjax.svg?style=flat)
+<a href="http://www.numfocus.org">![powered by NumFOCUS](https://img.shields.io/badge/powered%20by-NumFOCUS-orange.svg?style=flat)</a>
+![jsdelivr rank](https://flat.badgen.net/jsdelivr/rank/npm/mathjax?color=green)
+![jsDelivr hits (npm)](https://img.shields.io/jsdelivr/npm/hm/mathjax)
+![npm monthly downloads (full)](https://img.shields.io/npm/dm/mathjax?label=npm)
+![npm monthly downloads (full)](https://img.shields.io/npm/dm/mathjax-full?label=npm%20%28full%29)
+![npm total downloads](https://img.shields.io/npm/dt/mathjax.svg?style=flat&label=npm%20total)
+![npm total downloads](https://img.shields.io/npm/dt/mathjax-full.svg?style=flat&label=npm%20total%20%28full%29)
 
 ## Beautiful math in all browsers
 
