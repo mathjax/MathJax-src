@@ -15,7 +15,8 @@
  *  limitations under the License.
  */
 
-import {DelimiterMap, DelimiterData, V, H} from '../../FontData.js';
+import {DelimiterMap, DelimiterData} from '../../FontData.js';
+import {V, H} from '../../Direction.js';
 
 export const HDW1 = [.75, .25, .875];
 export const HDW2 = [.85, .349, .667];
