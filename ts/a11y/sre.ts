@@ -16,52 +16,22 @@
  */
 
 /**
- * @fileoverview  Loads SRE (if necessary) and provides a promise for
- *                when it is ready.
+ * @fileoverview  Provides the interface functionality to SRE.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
+ * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-// import {asyncLoad} from '../util/AsyncLoad.js';
-import {engineReady} from 'speech-rule-engine/js/common/system.js';
+export {engineReady as sreReady, setupEngine, engineSetup, toEnriched} from 'speech-rule-engine/js/common/system.js';
+export {Walker} from 'speech-rule-engine/js/walker/walker.js';
+export * as WalkerFactory from 'speech-rule-engine/js/walker/walker_factory.js';
+export {SpeechGenerator} from 'speech-rule-engine/js/speech_generator/speech_generator.js';
+export * as SpeechGeneratorFactory from 'speech-rule-engine/js/speech_generator/speech_generator_factory.js';
+export {EngineConst} from 'speech-rule-engine/js/common/engine.js';
+export {ClearspeakPreferences} from 'speech-rule-engine/js/speech_rules/clearspeak_preferences.js';
+export {Highlighter} from 'speech-rule-engine/js/highlighter/highlighter.js';
+export * as HighlighterFactory from 'speech-rule-engine/js/highlighter/highlighter_factory.js';
 
-/**
- * The name of the modiule to load, if necessary
- */
-// const SRELIB = (typeof window === 'undefined' ? './a11y/sre-node.js' :
-//                 '../../../speech-rule-engine/lib/sre_browser.js');
+import {Variables} from 'speech-rule-engine/js/common/variables.js';
 
-/**
- * The promise for loading the SRE library, if it is not already loaded
- */
-// const srePromise = engineReady(); // (typeof sre === 'undefined' ? asyncLoad(SRELIB) : Promise.resolve());
-
-// /**
-//  * Values to control the polling for when SRE is ready
-//  */
-// const SRE_DELAY = 100;         // in milliseconds
-// const SRE_TIMEOUT = 20 * 1000; // 20 seconds
-
-/**
- * A promise that resolves when SRE is loaded and ready, and rejects if
- * SRE can't be loaded, or does not become ready within the timout period.
- */
-export const sreReady = engineReady;// function() {
-//   return new Promise<void>((resolve, reject) => {
-//     srePromise.then(() => {
-//       const start = new Date().getTime();
-//       const checkSRE = function () {
-//         if (sre.Engine.isReady()) {
-//           resolve();
-//         } else {
-//           if (new Date().getTime() - start < SRE_TIMEOUT) {
-//             setTimeout(checkSRE, SRE_DELAY);
-//           } else {
-//             reject('Timed out waiting for Speech-Rule-Engine');
-//           }
-//         }
-//       };
-//       checkSRE();
-//     }).catch((error: Error) => reject(error.message || error));
-//   });
-// };
+export const Locales = Variables.LOCALES;

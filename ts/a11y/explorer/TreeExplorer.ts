@@ -26,8 +26,7 @@
 
 import {A11yDocument, Region} from './Region.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
-import * as SpeechGeneratorFactory from 'speech-rule-engine/js/speech_generator/speech_generator_factory.js';
-
+import * as Sre from '../sre.js';
 
 export interface TreeExplorer extends Explorer {
 
@@ -103,12 +102,12 @@ export class TreeColorer extends AbstractTreeExplorer {
   public Start() {
     if (this.active) return;
     this.active = true;
-    let generator = SpeechGeneratorFactory.generator('Color');
+    let generator = Sre.SpeechGeneratorFactory.generator('Color');
     if (!this.node.hasAttribute('hasforegroundcolor')) {
       generator.generateSpeech(this.node, this.mml);
       this.node.setAttribute('hasforegroundcolor', 'true');
     }
-    // TODO: Make this cleaner in SRE.
+    // TODO: Make this cleaner in Sre.
     (this.highlighter as any).colorizeAll(this.node);
   }
 

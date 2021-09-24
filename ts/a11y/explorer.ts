@@ -39,10 +39,7 @@ import {LiveRegion, ToolTip, HoverRegion} from './explorer/Region.js';
 
 import {Submenu} from 'mj-context-menu/js/item_submenu.js';
 
-import {EngineConst} from 'speech-rule-engine/js/common/engine.js';
-import {engineSetup} from 'speech-rule-engine/js/common/system.js';
-import {Variables} from 'speech-rule-engine/js/common/variables.js';
-import {ClearspeakPreferences} from 'speech-rule-engine/js/speech_rules/clearspeak_preferences.js';
+import * as Sre from './sre.js';
 
 /**
  * Generic constructor for Mixins
@@ -463,7 +460,7 @@ function initExplorers(document: ExplorerMathDocument, node: HTMLElement, mml: s
  * @param {{[key: string]: any}} options Association list for a11y option value pairs.
  */
 export function setA11yOptions(document: HTMLDOCUMENT, options: {[key: string]: any}) {
-  let sreOptions = engineSetup() as {[name: string]: string};
+  let sreOptions = Sre.engineSetup() as {[name: string]: string};
   for (let key in options) {
     if (document.options.a11y[key] !== undefined) {
       setA11yOption(document, key, options[key]);
@@ -554,8 +551,8 @@ let csPrefsVariables = function(menu: MJContextMenu, prefs: string[]) {
         csPrefsSetting[pref] = value;
           srVariable.setValue(
           'clearspeak-' +
-              ClearspeakPreferences.addPreference(
-                EngineConst.DOMAIN_TO_STYLES['clearspeak'], pref, value)
+              Sre.ClearspeakPreferences.addPreference(
+                Sre.EngineConst.DOMAIN_TO_STYLES['clearspeak'], pref, value)
         );
       },
       getter: () => { return csPrefsSetting[pref] || 'Auto'; }
@@ -569,7 +566,7 @@ let csPrefsVariables = function(menu: MJContextMenu, prefs: string[]) {
  * @param {string} locale The current locale.
  */
 let csSelectionBox = function(menu: MJContextMenu, locale: string) {
-  let prefs = ClearspeakPreferences.getLocalePreferences();
+  let prefs = Sre.ClearspeakPreferences.getLocalePreferences();
   let props = prefs[locale];
   if (!props) {
     let csEntry = menu.findID('Accessibility', 'Speech', 'Clearspeak');
@@ -610,7 +607,7 @@ let csMenu = function(menu: MJContextMenu, sub: Submenu) {
   const box = csSelectionBox(menu, locale);
   let items: Object[] = [];
   try {
-    items = ClearspeakPreferences.smartPreferences(
+    items = Sre.ClearspeakPreferences.smartPreferences(
       menu.mathItem, locale);
   } catch (e) {
     console.log(e);
@@ -647,7 +644,7 @@ const iso: {[locale: string]: string} = {
 let language = function(menu: MJContextMenu, sub: Submenu) {
   let radios: {type: string, id: string,
                content: string, variable: string}[] = [];
-  for (let lang of Variables.LOCALES) {
+  for (let lang of Sre.Locales) {
     if (lang === 'nemeth') continue;
     radios.push({type: 'radio', id: lang,
                  content: iso[lang] || lang, variable: 'locale'});

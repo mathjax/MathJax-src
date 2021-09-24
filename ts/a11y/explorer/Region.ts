@@ -25,8 +25,7 @@
 
 import {MathDocument} from '../../core/MathDocument.js';
 import {CssStyles} from '../../util/StyleList.js';
-import {Highlighter} from 'speech-rule-engine/js/highlighter/highlighter.js';
-// import '../sre.js';
+import * as Sre from '../sre.js';
 
 export type A11yDocument = MathDocument<HTMLElement, Text, Document>;
 
@@ -45,9 +44,9 @@ export interface Region<T> {
   /**
    * Shows the live region in the document.
    * @param {HTMLElement} node
-   * @param {Highlighter} highlighter
+   * @param {Sre.Highlighter} highlighter
    */
-  Show(node: HTMLElement, highlighter: Highlighter): void;
+  Show(node: HTMLElement, highlighter: Sre.Highlighter): void;
 
   /**
    * Takes the element out of the document flow.
@@ -152,7 +151,7 @@ export abstract class AbstractRegion<T> implements Region<T> {
   /**
    * @override
    */
-  public Show(node: HTMLElement, highlighter: Highlighter) {
+  public Show(node: HTMLElement, highlighter: Sre.Highlighter) {
     this.position(node);
     this.highlight(highlighter);
     this.div.classList.add(this.CLASS.className + '_Show');
@@ -168,9 +167,9 @@ export abstract class AbstractRegion<T> implements Region<T> {
 
   /**
    * Highlights the region.
-   * @param {Highlighter} highlighter The SRE highlighter.
+   * @param {Sre.Highlighter} highlighter The Sre highlighter.
    */
-  protected abstract highlight(highlighter: Highlighter): void;
+  protected abstract highlight(highlighter: Sre.Highlighter): void;
 
 
   /**
@@ -259,7 +258,7 @@ export class DummyRegion extends AbstractRegion<void> {
   /**
    * @override
    */
-  public highlight(_highlighter: Highlighter) {}
+  public highlight(_highlighter: Sre.Highlighter) {}
 }
 
 
@@ -294,7 +293,7 @@ export class StringRegion extends AbstractRegion<string> {
   /**
    * @override
    */
-  protected highlight(highlighter: Highlighter) {
+  protected highlight(highlighter: Sre.Highlighter) {
     const color = highlighter.colorString();
     this.inner.style.backgroundColor = color.background;
     this.inner.style.color = color.foreground;
@@ -438,7 +437,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
   /**
    * @override
    */
-  protected highlight(highlighter: Highlighter) {
+  protected highlight(highlighter: Sre.Highlighter) {
     // TODO Do this with styles to avoid the interaction of SVG/CHTML.
     if (this.inner.firstChild &&
         !(this.inner.firstChild as HTMLElement).hasAttribute('sre-highlight')) {
@@ -452,7 +451,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
   /**
    * @override
    */
-  public Show(node: HTMLElement, highlighter: Highlighter) {
+  public Show(node: HTMLElement, highlighter: Sre.Highlighter) {
     this.div.style.fontSize = this.document.options.a11y.magnify;
     this.Update(node);
     super.Show(node, highlighter);

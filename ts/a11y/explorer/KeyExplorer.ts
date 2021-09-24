@@ -25,12 +25,7 @@
 
 import {A11yDocument, Region} from './Region.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
-import {sreReady} from '../sre.js';
-import {setupEngine} from 'speech-rule-engine/js/common/system.js';
-import {Walker} from 'speech-rule-engine/js/walker/walker.js';
-import * as WalkerFactory from 'speech-rule-engine/js/walker/walker_factory.js';
-import {SpeechGenerator} from 'speech-rule-engine/js/speech_generator/speech_generator.js';
-import * as SpeechGeneratorFactory from 'speech-rule-engine/js/speech_generator/speech_generator_factory.js';
+import * as Sre from '../sre.js';
 
 
 /**
@@ -75,10 +70,10 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
   public attached: boolean = false;
 
   /**
-   * The attached SRE walker.
+   * The attached Sre walker.
    * @type {Walker}
    */
-  protected walker: Walker;
+  protected walker: Sre.Walker;
 
   private eventsAttached: boolean = false;
 
@@ -186,10 +181,10 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
   private static updatePromise = Promise.resolve();
 
   /**
-   * The SRE speech generator associated with the walker.
+   * The Sre speech generator associated with the walker.
    * @type {SpeechGenerator}
    */
-  public speechGenerator: SpeechGenerator;
+  public speechGenerator: Sre.SpeechGenerator;
 
   /**
    * The name of the option used to control when this is being shown
@@ -201,7 +196,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
 
   /**
    * Flag in case the start method is triggered before the walker is fully
-   * initialised. I.e., we have to wait for SRE. Then region is re-shown if
+   * initialised. I.e., we have to wait for Sre. Then region is re-shown if
    * necessary, as otherwise it leads to incorrect stacking.
    * @type {boolean}
    */
@@ -230,8 +225,8 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
       this.init = true;
       SpeechExplorer.updatePromise.then(() => {
         SpeechExplorer.updatePromise = new Promise((res) => {
-          sreReady()
-            .then(() => setupEngine({locale: options.locale}))
+          Sre.sreReady()
+            .then(() => Sre.setupEngine({locale: options.locale}))
             .then(() => {
               // Important that both are in the same block so speech explorers
               // are restarted sequentially.
@@ -245,9 +240,9 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
       return;
     }
     super.Start();
-    this.speechGenerator = SpeechGeneratorFactory.generator('Direct');
+    this.speechGenerator = Sre.SpeechGeneratorFactory.generator('Direct');
     this.speechGenerator.setOptions(options);
-    this.walker = WalkerFactory.walker(
+    this.walker = Sre.WalkerFactory.walker(
       'table', this.node, this.speechGenerator, this.highlighter, this.mml);
     this.walker.activate();
     this.Update();
@@ -267,8 +262,8 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     let options = this.speechGenerator.getOptions();
     SpeechExplorer.updatePromise.then(() => {
       SpeechExplorer.updatePromise = new Promise((res) => {
-        sreReady()
-          .then(() => setupEngine({modality: options.modality,
+        Sre.sreReady()
+          .then(() => Sre.setupEngine({modality: options.modality,
                                    locale: options.locale}))
           .then(() => this.region.Update(this.walker.speech()))
           .then(() => res());
@@ -286,10 +281,10 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
 
 
   /**
-   * Computes the speech for the current expression once SRE is ready.
+   * Computes the speech for the current expression once Sre is ready.
    * @param {Walker} walker The sre walker.
    */
-  public Speech(walker: Walker) {
+  public Speech(walker: Sre.Walker) {
     SpeechExplorer.updatePromise.then(() => {
       walker.speech();
       this.node.setAttribute('hasspeech', 'true');
@@ -352,11 +347,11 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
   }
 
   /**
-   * Initialises the SRE walker.
+   * Initialises the Sre walker.
    */
   private initWalker() {
-    this.speechGenerator = SpeechGeneratorFactory.generator('Tree');
-    let dummy = WalkerFactory.walker(
+    this.speechGenerator = Sre.SpeechGeneratorFactory.generator('Tree');
+    let dummy = Sre.WalkerFactory.walker(
       'dummy', this.node, this.speechGenerator, this.highlighter, this.mml);
     this.walker = dummy;
   }
@@ -400,8 +395,8 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
               protected node: HTMLElement,
               private mml: string) {
     super(document, region, node);
-    this.walker = WalkerFactory.walker(
-      'table', this.node, SpeechGeneratorFactory.generator('Dummy'),
+    this.walker = Sre.WalkerFactory.walker(
+      'table', this.node, Sre.SpeechGeneratorFactory.generator('Dummy'),
       this.highlighter, this.mml);
   }
 

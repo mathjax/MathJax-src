@@ -29,14 +29,12 @@ import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {MathML} from '../input/mathml.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {OptionList, expandable} from '../util/Options.js';
-import {setupEngine, toEnriched} from 'speech-rule-engine/js/common/system.js';
-
-// import {sreReady} from './sre.js';
+import * as Sre from './sre.js';
 
 /*==========================================================================*/
 
 /**
- *  The current speech setting for SRE
+ *  The current speech setting for Sre
  */
 let currentSpeech = 'none';
 
@@ -117,7 +115,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
         return div.innerHTML;
       }
       //
-      //  For NodeJS version of SRE
+      //  For NodeJS version of Sre
       //
       return node.toString();
     }
@@ -131,12 +129,12 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
       if (!this.isEscaped && (document.options.enableEnrichment || force)) {
         if (document.options.sre.speech !== currentSpeech) {
           currentSpeech = document.options.sre.speech;
-          mathjax.retryAfter(setupEngine(document.options.sre));
+          mathjax.retryAfter(Sre.setupEngine(document.options.sre));
         }
         const math = new document.options.MathItem('', MmlJax);
         try {
           const mml = this.inputData.originalMml = toMathML(this.root);
-          math.math = this.serializeMml(toEnriched(mml));
+          math.math = this.serializeMml(Sre.toEnriched(mml));
           math.display = this.display;
           math.compile(document);
           this.root = math.root;

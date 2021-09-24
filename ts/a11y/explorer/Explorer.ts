@@ -24,8 +24,7 @@
 
 
 import {A11yDocument, Region} from './Region.js';
-import {Highlighter} from 'speech-rule-engine/js/highlighter/highlighter.js';
-import * as HighlighterFactory from 'speech-rule-engine/js/highlighter/highlighter_factory.js';
+import * as Sre from '../sre.js';
 
 /**
  * A11y explorers.
@@ -112,10 +111,10 @@ export class AbstractExplorer<T> implements Explorer {
   protected events: [string, (x: Event) => void][] = [];
 
   /**
-   * The SRE highlighter associated with the walker.
-   * @type {Highlighter}
+   * The Sre highlighter associated with the walker.
+   * @type {Sre.Highlighter}
    */
-  protected highlighter: Highlighter = this.getHighlighter();
+  protected highlighter: Sre.Highlighter = this.getHighlighter();
 
   /**
    * Flag if explorer is active.
@@ -257,15 +256,15 @@ export class AbstractExplorer<T> implements Explorer {
 
 
   /**
-   * @return {Highlighter} A highlighter for the explorer.
+   * @return {Sre.Highlighter} A highlighter for the explorer.
    */
-  protected getHighlighter(): Highlighter {
+  protected getHighlighter(): Sre.Highlighter {
     let opts = this.document.options.a11y;
     let foreground = {color: opts.foregroundColor.toLowerCase(),
                       alpha: opts.foregroundOpacity / 100};
     let background = {color: opts.backgroundColor.toLowerCase(),
                       alpha: opts.backgroundOpacity / 100};
-    return HighlighterFactory.highlighter(
+    return Sre.HighlighterFactory.highlighter(
       background, foreground,
       {renderer: this.document.outputJax.name, browser: 'v3'});
   }

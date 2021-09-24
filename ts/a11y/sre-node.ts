@@ -22,22 +22,22 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import * as SRE from 'speech-rule-engine';
+// import * as SRE from 'speech-rule-engine';
 
-declare const global: any;
+// declare const global: any;
 
-/**
- * The global sre with sre.Engine.isReady() and sre.toEnriched()
- */
-global.SRE = SRE;
-global.sre = Object.create(SRE);
-global.sre.Engine = {
-  /**
-   * @return {boolean}   True when SRE is ready
-   */
-  isReady(): boolean {
-    return SRE.engineReady();
-  }
-};
+// /**
+//  * The global sre with sre.Engine.isReady() and sre.toEnriched()
+//  */
+// global.SRE = SRE;
+// global.sre = Object.create(SRE);
+// global.sre.Engine = {
+//   /**
+//    * @return {boolean}   True when SRE is ready
+//    */
+//   isReady(): boolean {
+//     return SRE.engineReady();
+//   }
+// };
 
-export {};
+// export {};
