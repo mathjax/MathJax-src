@@ -39,8 +39,10 @@ import {LiveRegion, ToolTip, HoverRegion} from './explorer/Region.js';
 
 import {Submenu} from 'mj-context-menu/js/item_submenu.js';
 
+import {EngineConst} from 'speech-rule-engine/js/common/engine.js';
 import {engineSetup} from 'speech-rule-engine/js/common/system.js';
 import {Variables} from 'speech-rule-engine/js/common/variables.js';
+import {ClearspeakPreferences} from 'speech-rule-engine/js/speech_rules/clearspeak_preferences.js';
 
 /**
  * Generic constructor for Mixins
@@ -552,8 +554,8 @@ let csPrefsVariables = function(menu: MJContextMenu, prefs: string[]) {
         csPrefsSetting[pref] = value;
           srVariable.setValue(
           'clearspeak-' +
-            sre.ClearspeakPreferences.addPreference(
-              sre.Engine.DOMAIN_TO_STYLES['clearspeak'], pref, value)
+              ClearspeakPreferences.addPreference(
+                EngineConst.DOMAIN_TO_STYLES['clearspeak'], pref, value)
         );
       },
       getter: () => { return csPrefsSetting[pref] || 'Auto'; }
@@ -567,7 +569,7 @@ let csPrefsVariables = function(menu: MJContextMenu, prefs: string[]) {
  * @param {string} locale The current locale.
  */
 let csSelectionBox = function(menu: MJContextMenu, locale: string) {
-  let prefs = sre.ClearspeakPreferences.getLocalePreferences();
+  let prefs = ClearspeakPreferences.getLocalePreferences();
   let props = prefs[locale];
   if (!props) {
     let csEntry = menu.findID('Accessibility', 'Speech', 'Clearspeak');
@@ -608,9 +610,11 @@ let csMenu = function(menu: MJContextMenu, sub: Submenu) {
   const box = csSelectionBox(menu, locale);
   let items: Object[] = [];
   try {
-    items = sre.ClearspeakPreferences.smartPreferences(
+    items = ClearspeakPreferences.smartPreferences(
       menu.mathItem, locale);
-  } catch (e) {}
+  } catch (e) {
+    console.log(e);
+  }
   if (box) {
     items.splice(2, 0, box);
   }

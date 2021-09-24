@@ -226,7 +226,6 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
   public Start() {
     if (!this.attached) return;
     let options = this.getOptions();
-    // TODO: Check and set locale not only on init, but on every start.
     if (!this.init) {
       this.init = true;
       SpeechExplorer.updatePromise.then(() => {
@@ -234,6 +233,8 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
           sreReady()
             .then(() => setupEngine({locale: options.locale}))
             .then(() => {
+              // Important that both are in the same block so speech explorers
+              // are restarted sequentially.
               this.Speech(this.walker);
               this.Start();
             })
