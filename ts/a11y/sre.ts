@@ -22,45 +22,46 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {asyncLoad} from '../util/AsyncLoad.js';
+// import {asyncLoad} from '../util/AsyncLoad.js';
+import {engineReady} from 'speech-rule-engine/js/common/system.js';
 
 /**
  * The name of the modiule to load, if necessary
  */
-const SRELIB = (typeof window === 'undefined' ? './a11y/sre-node.js' :
-                '../../../speech-rule-engine/lib/sre_browser.js');
+// const SRELIB = (typeof window === 'undefined' ? './a11y/sre-node.js' :
+//                 '../../../speech-rule-engine/lib/sre_browser.js');
 
 /**
  * The promise for loading the SRE library, if it is not already loaded
  */
-const srePromise = (typeof sre === 'undefined' ? asyncLoad(SRELIB) : Promise.resolve());
+// const srePromise = engineReady(); // (typeof sre === 'undefined' ? asyncLoad(SRELIB) : Promise.resolve());
 
-/**
- * Values to control the polling for when SRE is ready
- */
-const SRE_DELAY = 100;         // in milliseconds
-const SRE_TIMEOUT = 20 * 1000; // 20 seconds
+// /**
+//  * Values to control the polling for when SRE is ready
+//  */
+// const SRE_DELAY = 100;         // in milliseconds
+// const SRE_TIMEOUT = 20 * 1000; // 20 seconds
 
 /**
  * A promise that resolves when SRE is loaded and ready, and rejects if
  * SRE can't be loaded, or does not become ready within the timout period.
  */
-export const sreReady = function() {
-  return new Promise<void>((resolve, reject) => {
-    srePromise.then(() => {
-      const start = new Date().getTime();
-      const checkSRE = function () {
-        if (sre.Engine.isReady()) {
-          resolve();
-        } else {
-          if (new Date().getTime() - start < SRE_TIMEOUT) {
-            setTimeout(checkSRE, SRE_DELAY);
-          } else {
-            reject('Timed out waiting for Speech-Rule-Engine');
-          }
-        }
-      };
-      checkSRE();
-    }).catch((error: Error) => reject(error.message || error));
-  });
-};
+export const sreReady = engineReady;// function() {
+//   return new Promise<void>((resolve, reject) => {
+//     srePromise.then(() => {
+//       const start = new Date().getTime();
+//       const checkSRE = function () {
+//         if (sre.Engine.isReady()) {
+//           resolve();
+//         } else {
+//           if (new Date().getTime() - start < SRE_TIMEOUT) {
+//             setTimeout(checkSRE, SRE_DELAY);
+//           } else {
+//             reject('Timed out waiting for Speech-Rule-Engine');
+//           }
+//         }
+//       };
+//       checkSRE();
+//     }).catch((error: Error) => reject(error.message || error));
+//   });
+// };

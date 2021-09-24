@@ -39,6 +39,9 @@ import {LiveRegion, ToolTip, HoverRegion} from './explorer/Region.js';
 
 import {Submenu} from 'mj-context-menu/js/item_submenu.js';
 
+import {engineSetup} from 'speech-rule-engine/js/common/system.js';
+import {Variables} from 'speech-rule-engine/js/common/variables.js';
+
 /**
  * Generic constructor for Mixins
  */
@@ -395,7 +398,7 @@ let allExplorers: {[options: string]: ExplorerInit} = {
       doc, doc.explorerRegions.speechRegion, node, ...rest) as ke.SpeechExplorer;
     explorer.speechGenerator.setOptions({
       locale: doc.options.sre.locale, domain: doc.options.sre.domain,
-      style: doc.options.sre.style, modality: 'speech', cache: false});
+      style: doc.options.sre.style, modality: 'speech'});
     explorer.showRegion = 'subtitles';
     return explorer;
   },
@@ -458,7 +461,7 @@ function initExplorers(document: ExplorerMathDocument, node: HTMLElement, mml: s
  * @param {{[key: string]: any}} options Association list for a11y option value pairs.
  */
 export function setA11yOptions(document: HTMLDOCUMENT, options: {[key: string]: any}) {
-  let sreOptions = SRE.engineSetup() as {[name: string]: string};
+  let sreOptions = engineSetup() as {[name: string]: string};
   for (let key in options) {
     if (document.options.a11y[key] !== undefined) {
       setA11yOption(document, key, options[key]);
@@ -640,7 +643,7 @@ const iso: {[locale: string]: string} = {
 let language = function(menu: MJContextMenu, sub: Submenu) {
   let radios: {type: string, id: string,
                content: string, variable: string}[] = [];
-  for (let lang of sre.Variables.LOCALES) {
+  for (let lang of Variables.LOCALES) {
     if (lang === 'nemeth') continue;
     radios.push({type: 'radio', id: lang,
                  content: iso[lang] || lang, variable: 'locale'});

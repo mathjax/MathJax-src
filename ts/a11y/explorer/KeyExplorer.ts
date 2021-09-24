@@ -26,6 +26,11 @@
 import {A11yDocument, Region} from './Region.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
 import {sreReady} from '../sre.js';
+import {setupEngine} from 'speech-rule-engine/js/common/system.js';
+import {Walker} from 'speech-rule-engine/js/walker/walker.js';
+import * as WalkerFactory from 'speech-rule-engine/js/walker/walker_factory.js';
+import {SpeechGenerator} from 'speech-rule-engine/js/speech_generator/speech_generator.js';
+import * as SpeechGeneratorFactory from 'speech-rule-engine/js/speech_generator/speech_generator_factory.js';
 
 
 /**
@@ -71,9 +76,9 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
 
   /**
    * The attached SRE walker.
-   * @type {sre.Walker}
+   * @type {Walker}
    */
-  protected walker: sre.Walker;
+  protected walker: Walker;
 
   private eventsAttached: boolean = false;
 
@@ -121,7 +126,7 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
       this.walker.refocus();
       nodes = this.walker.getFocus().getNodes();
     }
-    this.highlighter.highlight(nodes);
+    this.highlighter.highlight(nodes as HTMLElement[]);
   }
 
   /**
@@ -178,11 +183,13 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
  */
 export class SpeechExplorer extends AbstractKeyExplorer<string> {
 
+  private static updatePromise = Promise.resolve();
+
   /**
    * The SRE speech generator associated with the walker.
-   * @type {sre.SpeechGenerator}
+   * @type {SpeechGenerator}
    */
-  public speechGenerator: sre.SpeechGenerator;
+  public speechGenerator: SpeechGenerator;
 
   /**
    * The name of the option used to control when this is being shown
@@ -207,7 +214,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
   constructor(public document: A11yDocument,
               protected region: Region<string>,
               protected node: HTMLElement,
-              private mml: HTMLElement) {
+              private mml: string) {
     super(document, region, node);
     this.initWalker();
   }
@@ -222,26 +229,30 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     // TODO: Check and set locale not only on init, but on every start.
     if (!this.init) {
       this.init = true;
-      sreReady().then(() => {
-        if (SRE.engineSetup().locale !== options.locale) {
-          SRE.setupEngine({locale: options.locale});
-        }
-        sreReady().then(() => {
-          this.Speech(this.walker);
-          this.Start();
+      SpeechExplorer.updatePromise.then(() => {
+        SpeechExplorer.updatePromise = new Promise((res) => {
+          sreReady()
+            .then(() => setupEngine({locale: options.locale}))
+            .then(() => {
+              this.Speech(this.walker);
+              this.Start();
+            })
+            .then(() => res());
         });
-      }).catch((error: Error) => console.log(error.message));
+      })
+        .catch((error: Error) => console.log(error.message));
       return;
     }
     super.Start();
-    this.speechGenerator = sre.SpeechGeneratorFactory.generator('Direct');
+    this.speechGenerator = SpeechGeneratorFactory.generator('Direct');
     this.speechGenerator.setOptions(options);
-    this.walker = sre.WalkerFactory.walker(
+    this.walker = WalkerFactory.walker(
       'table', this.node, this.speechGenerator, this.highlighter, this.mml);
     this.walker.activate();
     this.Update();
     if (this.document.options.a11y[this.showRegion]) {
-      this.region.Show(this.node, this.highlighter);
+      SpeechExplorer.updatePromise.then(
+        () => this.region.Show(this.node, this.highlighter));
     }
     this.restarted = true;
   }
@@ -253,31 +264,39 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
   public Update(force: boolean = false) {
     super.Update(force);
     let options = this.speechGenerator.getOptions();
-    SRE.setupEngine({modality: options.modality,
-                     locale: options.locale});
-    this.region.Update(this.walker.speech());
-    // This is a necessary in case speech options have changed via keypress
-    // during walking.
-    if (options.modality === 'speech') {
-      this.document.options.sre.domain = options.domain;
-      this.document.options.sre.style = options.style;
-      this.document.options.a11y.speechRules =
-        options.domain + '-' + options.style;
-    }
+    SpeechExplorer.updatePromise.then(() => {
+      SpeechExplorer.updatePromise = new Promise((res) => {
+        sreReady()
+          .then(() => setupEngine({modality: options.modality,
+                                   locale: options.locale}))
+          .then(() => this.region.Update(this.walker.speech()))
+          .then(() => res());
+      });
+      // This is a necessary in case speech options have changed via keypress
+      // during walking.
+      if (options.modality === 'speech') {
+        this.document.options.sre.domain = options.domain;
+        this.document.options.sre.style = options.style;
+        this.document.options.a11y.speechRules =
+          options.domain + '-' + options.style;
+      }
+    });
   }
 
 
   /**
    * Computes the speech for the current expression once SRE is ready.
-   * @param {sre.Walker} walker The sre walker.
+   * @param {Walker} walker The sre walker.
    */
-  public Speech(walker: sre.Walker) {
-    walker.speech();
-    this.node.setAttribute('hasspeech', 'true');
-    this.Update();
-    if (this.restarted && this.document.options.a11y[this.showRegion]) {
-      this.region.Show(this.node, this.highlighter);
-    }
+  public Speech(walker: Walker) {
+    SpeechExplorer.updatePromise.then(() => {
+      walker.speech();
+      this.node.setAttribute('hasspeech', 'true');
+      this.Update();
+      if (this.restarted && this.document.options.a11y[this.showRegion]) {
+        this.region.Show(this.node, this.highlighter);
+      }
+    });
   }
 
 
@@ -335,8 +354,8 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * Initialises the SRE walker.
    */
   private initWalker() {
-    this.speechGenerator = sre.SpeechGeneratorFactory.generator('Tree');
-    let dummy = sre.WalkerFactory.walker(
+    this.speechGenerator = SpeechGeneratorFactory.generator('Tree');
+    let dummy = WalkerFactory.walker(
       'dummy', this.node, this.speechGenerator, this.highlighter, this.mml);
     this.walker = dummy;
   }
@@ -378,10 +397,10 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
   constructor(public document: A11yDocument,
               protected region: Region<HTMLElement>,
               protected node: HTMLElement,
-              private mml: HTMLElement) {
+              private mml: string) {
     super(document, region, node);
-    this.walker = sre.WalkerFactory.walker(
-      'table', this.node, sre.SpeechGeneratorFactory.generator('Dummy'),
+    this.walker = WalkerFactory.walker(
+      'table', this.node, SpeechGeneratorFactory.generator('Dummy'),
       this.highlighter, this.mml);
   }
 
