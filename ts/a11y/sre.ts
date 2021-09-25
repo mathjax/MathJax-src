@@ -22,6 +22,29 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {MathJax as MJGlobal} from '../components/global.js';
+
+declare namespace window {
+  let SREfeature: {[key: string]: any};
+}
+
+declare namespace global {
+  let SREfeature: {[key: string]: any};
+}
+
+// This sets up the correct link to the mathmaps files.
+//
+// We could also use a custom method for loading locales that are webpacked into
+// the distribution.
+(() => {
+  if (typeof window !== 'undefined') {
+    window.SREfeature = {json: MJGlobal.config.loader.source['[sre]'] + '/mathmaps'};
+  } else {
+    // TODO: This is does not yet work correctly!
+    global.SREfeature = {json: MJGlobal.config.loader.paths.mathjax + '/sre/mathmaps'};
+  }
+})();
+
 export {engineReady as sreReady, setupEngine, engineSetup, toEnriched} from 'speech-rule-engine/js/common/system.js';
 export {Walker} from 'speech-rule-engine/js/walker/walker.js';
 export * as WalkerFactory from 'speech-rule-engine/js/walker/walker_factory.js';
