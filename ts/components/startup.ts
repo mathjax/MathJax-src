@@ -92,13 +92,14 @@ export interface MathJaxObject extends MJObject {
     promise: Promise<void>;
     /* tslint:disable:jsdoc-require */
     registerConstructor(name: string, constructor: any): void;
-    useHander(name: string, force?: boolean): void;
+    useHandler(name: string, force?: boolean): void;
     useAdaptor(name: string, force?: boolean): void;
     useOutput(name: string, force?: boolean): void;
     useInput(name: string, force?: boolean): void;
     extendHandler(extend: HandlerExtension): void;
     toMML(node: MmlNode): string;
     defaultReady(): void;
+    defaultPageReady(): void,
     getComponents(): void;
     makeMethods(): void;
     makeTypesetMethods(): void;
