@@ -184,7 +184,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
     for (const name of Object.keys(attributes)) {
       const value = String(attributes[name]);
       if (value === undefined) continue;
-      attr.push(name + '="' + this.quoteHTML(value) + '"');
+      attr.push(this.quoteHTML(name) + '="' + this.quoteHTML(value) + '"');
     }
     return attr.length ? ' ' + attr.join(' ') : '';
   }
