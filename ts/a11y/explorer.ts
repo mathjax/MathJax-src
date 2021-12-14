@@ -35,7 +35,7 @@ import {Explorer} from './explorer/Explorer.js';
 import * as ke from './explorer/KeyExplorer.js';
 import * as me from './explorer/MouseExplorer.js';
 import {TreeColorer, FlameColorer} from './explorer/TreeExplorer.js';
-import {LiveRegion, ToolTip, HoverRegion} from './explorer/Region.js';
+import {LiveRegion, SpeechRegion, ToolTip, HoverRegion} from './explorer/Region.js';
 
 import {Submenu} from 'mj-context-menu/js/item_submenu.js';
 
@@ -355,7 +355,7 @@ export function ExplorerHandler(handler: HANDLER, MmlJax: MATHML = null): HANDLE
  * The regions objects needed for the explorers.
  */
 export type ExplorerRegions = {
-  speechRegion?: LiveRegion,
+  speechRegion?: SpeechRegion,
   brailleRegion?: LiveRegion,
   magnifier?: HoverRegion,
   tooltip1?: ToolTip,
@@ -370,7 +370,7 @@ export type ExplorerRegions = {
  */
 function initExplorerRegions(document: ExplorerMathDocument) {
   return {
-    speechRegion: new LiveRegion(document),
+    speechRegion: new SpeechRegion(document),
     brailleRegion: new LiveRegion(document),
     magnifier: new HoverRegion(document),
     tooltip1: new ToolTip(document),

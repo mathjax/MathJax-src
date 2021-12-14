@@ -367,6 +367,17 @@ export class LiveRegion extends StringRegion {
 }
 
 
+export class SpeechRegion extends LiveRegion {
+
+  public Update(speech: string) {
+    super.Update(speech);
+    let utterance = new SpeechSynthesisUtterance(speech);
+    utterance.lang = 'en';
+    speechSynthesis.speak(utterance);
+  }
+
+}
+
 // Region that overlays the current element.
 export class HoverRegion extends AbstractRegion<HTMLElement> {
 
