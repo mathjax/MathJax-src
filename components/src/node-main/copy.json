@@ -2,6 +2,5 @@
     "to": "../../../es5/sre",
     "from": "../../../js/a11y",
     "copy": [
-        "sre-node.js"
     ]
 }
