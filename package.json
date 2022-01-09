@@ -29,20 +29,20 @@
     "AsciiMath"
   ],
   "scripts": {
-    "clean:js": "npx rimraf js",
-    "clean:es5": "npx rimraf es5",
-    "clean:lib": "npx rimraf 'components/src/**/lib'",
-    "clean": "npm run --silent clean:js && npm run --silent clean:es5 && npm run --silent clean:lib",
-    "copy:mj2": "npx copyfiles -u 1 'ts/input/asciimath/mathjax2/**/*' js",
-    "copy:mml3": "npx copyfiles -u 1 'ts/input/mathml/mml3/mml3.sef.json' js",
-    "precompile": "npm run --silent clean:js",
-    "compile": "npx tsc",
-    "postcompile": "npm run --silent copy:mj2 && npm run --silent copy:mml3",
-    "premake-components": "npm run --silent clean:es5 && npm run --silent clean:lib",
-    "make-components": "cd components && node bin/makeAll src | grep --line-buffered 'Building\\|Webpacking\\|Copying\\|npx'",
+    "clean:js": "yarn exec rimraf js",
+    "clean:es5": "yarn exec rimraf es5",
+    "clean:lib": "yarn exec rimraf 'components/src/**/lib'",
+    "clean": "yarn run --silent clean:js && yarn run --silent clean:es5 && yarn run --silent clean:lib",
+    "copy:mj2": "yarn exec copyfiles -u 1 'ts/input/asciimath/mathjax2/**/*' js",
+    "copy:mml3": "yarn exec copyfiles -u 1 'ts/input/mathml/mml3/mml3.sef.json' js",
+    "precompile": "yarn run --silent clean:js",
+    "compile": "yarn exec tsc",
+    "postcompile": "yarn run --silent copy:mj2 && npm run --silent copy:mml3",
+    "premake-components": "yarn run --silent clean:es5 && npm run --silent clean:lib",
+    "make-components": "cd components && yarn node bin/makeAll src | grep --line-buffered 'Building\\|Webpacking\\|Copying\\|npx'",
     "premake-mml3-xslt": "cd ts/input/mathml/mml3 && grep '^\\s*\\(<\\|or\\|xmlns\\|excl\\|\">\\)' mml3.ts > mml3.xsl",
-    "make-mml3-xslt": "cd ts/input/mathml/mml3 && npx xslt3 -t -xsl:mml3.xsl -export:mml3.sef.json -nogo",
-    "postmake-mml3-xslt": "rpx rimraf ts/input/mathml/mml3/mml3.xsl"
+    "make-mml3-xslt": "cd ts/input/mathml/mml3 && yarn exec xslt3 -t -xsl:mml3.xsl -export:mml3.sef.json -nogo",
+    "postmake-mml3-xslt": "yarn exec rimraf ts/input/mathml/mml3/mml3.xsl"
   },
   "devDependencies": {
     "@babel/core": "^7.14.5",
