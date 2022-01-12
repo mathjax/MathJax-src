@@ -71,7 +71,8 @@ CommonTextNodeMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
     const variant = this.parent.variant;
     const text = (this.node as TextNode).getText();
     if (variant === '-explicitFont') {
-      adaptor.append(parent, this.jax.unknownText(text, variant, this.getBBox().w));
+      const rscale = this.parent.getBBox().rscale;
+      adaptor.append(parent, this.jax.unknownText(text, variant, this.getBBox().w, rscale));
     } else {
       let utext = '';
       const chars = this.remappedText(text, variant);
