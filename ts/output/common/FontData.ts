@@ -409,7 +409,9 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    *  The default remappings
    */
-  protected static defaultAccentMap: RemapMap = {
+  public static defaultAccentMap: RemapMap = {
+    0x005E: '\u02C6',  // hat
+    0x007E: '\u02DC',  // tilde
     0x0300: '\u02CB',  // grave accent
     0x0301: '\u02CA',  // acute accent
     0x0302: '\u02C6',  // curcumflex
