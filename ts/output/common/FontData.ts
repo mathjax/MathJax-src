@@ -767,6 +767,14 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   }
 
   /**
+   * @param {number} n   The delimiter character number whose variants are needed
+   * @return {string[]}  The variants for the parts of the delimiter
+   */
+  public getStretchVariants(n: number): string[] {
+    return [0, 1, 2, 3].map(i => this.getStretchVariant(n, i));
+  }
+
+  /**
    * @param {string} name  The variant whose character data is being querried
    * @param {number} n     The unicode number for the character to be found
    * @return {CharData}    The data for the given character (or undefined)
