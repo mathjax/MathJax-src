@@ -480,7 +480,9 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
       for (let i = args.length; i < n; i++) {
         args.push(parser.GetArgument(name));
       }
+      pre  = ParseUtil.substituteArgs(parser, args, pre);
       body = ParseUtil.substituteArgs(parser, args, body);
+      post = ParseUtil.substituteArgs(parser, args, post);
     }
     body = body.replace(/\\delimsize/g, delim);
     parser.string = [pre, left, open, body, right, close, post, parser.string.substr(parser.i)]
@@ -490,12 +492,12 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
   },
 
   /**
-   * Implements \DeclarePairedDelimiters.
+   * Implements \DeclarePairedDelimiter.
    *
    * @param {TexParser} parser   The calling parser.
    * @param {string} name        The macro name.
    */
-  DeclarePairedDelimiters(parser: TexParser, name: string) {
+  DeclarePairedDelimiter(parser: TexParser, name: string) {
     const cs = NewcommandUtil.GetCsNameArgument(parser, name);
     const open = parser.GetArgument(name);
     const close = parser.GetArgument(name);
@@ -503,12 +505,12 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
   },
 
   /**
-   * Implements \DeclarePairedDelimitersX.
+   * Implements \DeclarePairedDelimiterX.
    *
    * @param {TexParser} parser   The calling parser.
    * @param {string} name        The macro name.
    */
-  DeclarePairedDelimitersX(parser: TexParser, name: string) {
+  DeclarePairedDelimiterX(parser: TexParser, name: string) {
     const cs = NewcommandUtil.GetCsNameArgument(parser, name);
     const n = NewcommandUtil.GetArgCount(parser, name);
     const open = parser.GetArgument(name);
@@ -518,12 +520,12 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
   },
 
   /**
-   * Implements \DeclarePairedDelimitersXPP.
+   * Implements \DeclarePairedDelimiterXPP.
    *
    * @param {TexParser} parser   The calling parser.
    * @param {string} name        The macro name.
    */
-  DeclarePairedDelimitersXPP(parser: TexParser, name: string) {
+  DeclarePairedDelimiterXPP(parser: TexParser, name: string) {
     const cs = NewcommandUtil.GetCsNameArgument(parser, name);
     const n = NewcommandUtil.GetArgCount(parser, name);
     const pre = parser.GetArgument(name);
