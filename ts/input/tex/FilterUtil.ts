@@ -71,8 +71,10 @@ namespace FilterUtil {
       if (!attribs) {
         return;
       }
+      const keep = new Set((attribs.get('mjx-keep-attrs') || '').split(/ /));
+      delete (attribs.getAllAttributes())['mjx-keep-attrs'];
       for (const key of attribs.getExplicitNames()) {
-        if (attribs.attributes[key] === mml.attributes.getInherited(key)) {
+        if (!keep.has(key) && attribs.attributes[key] === mml.attributes.getInherited(key)) {
           delete attribs.attributes[key];
         }
       }
