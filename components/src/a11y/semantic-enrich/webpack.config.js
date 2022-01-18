@@ -5,7 +5,8 @@ module.exports = PACKAGE(
   '../../../../js',                   // location of the MathJax js library
   [                                   // packages to link to
     'components/src/input/mml/lib',
-    'components/src/core/lib'
+    'components/src/core/lib',
+    'node_modules/speech-rule-engine/js'
   ],
   __dirname                           // our directory
 );

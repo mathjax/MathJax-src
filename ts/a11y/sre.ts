@@ -50,7 +50,7 @@ export {Walker} from 'speech-rule-engine/js/walker/walker.js';
 export * as WalkerFactory from 'speech-rule-engine/js/walker/walker_factory.js';
 export {SpeechGenerator} from 'speech-rule-engine/js/speech_generator/speech_generator.js';
 export * as SpeechGeneratorFactory from 'speech-rule-engine/js/speech_generator/speech_generator_factory.js';
-export {EngineConst} from 'speech-rule-engine/js/common/engine.js';
+export * as EngineConst from 'speech-rule-engine/js/common/engine_const.js';
 export {ClearspeakPreferences} from 'speech-rule-engine/js/speech_rules/clearspeak_preferences.js';
 export {Highlighter} from 'speech-rule-engine/js/highlighter/highlighter.js';
 export * as HighlighterFactory from 'speech-rule-engine/js/highlighter/highlighter_factory.js';
