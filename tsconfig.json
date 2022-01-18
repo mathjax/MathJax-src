@@ -13,7 +13,7 @@
     "baseUrl": ".",
     "paths": {
       "mj-context-menu": ["node_modules/mj-context-menu"],
-      "sre-rule-engine": ["speech-rule-engine"]
+      "sre-rule-engine": ["node_modules/speech-rule-engine"]
     },
     "lib": ["es6", "dom", "es2020"],
     "noLib": false,
