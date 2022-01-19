@@ -264,8 +264,8 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
       SpeechExplorer.updatePromise = new Promise((res) => {
         Sre.sreReady()
           .then(() => Sre.setupEngine({modality: options.modality,
-                                   locale: options.locale}))
-          .then(() => this.region.Update(this.walker.speech()))
+                                       locale: options.locale}))
+          .then(() => (this.region.Update as any)(this.walker.speech(), options.locale))
           .then(() => res());
       });
       // This is a necessary in case speech options have changed via keypress

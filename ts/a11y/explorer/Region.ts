@@ -369,10 +369,13 @@ export class LiveRegion extends StringRegion {
 
 export class SpeechRegion extends LiveRegion {
 
-  public Update(speech: string) {
+  /**
+   * @override
+   */
+  public Update(speech: string, locale: string = 'en') {
     super.Update(speech);
     let utterance = new SpeechSynthesisUtterance(speech);
-    utterance.lang = 'en';
+    utterance.lang = locale;
     speechSynthesis.speak(utterance);
   }
 
