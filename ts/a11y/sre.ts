@@ -24,6 +24,7 @@
 
 import {MathJax as MJGlobal} from '../components/global.js';
 import {Package} from '../components/package.js';
+import {SpeechGenerator as SG} from 'speech-rule-engine/js/speech_generator/speech_generator.js';
 
 declare namespace window {
   let SREfeature: {[key: string]: any};
@@ -39,7 +40,7 @@ declare namespace global {
 // the distribution.
 (() => {
   if (typeof window !== 'undefined') {
-    window.SREfeature = {json: Package.resolvePath(['[sre]'], false) + '/mathmaps'};
+    window.SREfeature = {json: Package.resolvePath('[sre]', false) + '/mathmaps'};
   } else {
     // TODO: This is does not yet work correctly!
     global.SREfeature = {json: MJGlobal.config.loader.paths.mathjax + '/sre/mathmaps'};
@@ -49,7 +50,6 @@ declare namespace global {
 export {engineReady as sreReady, setupEngine, engineSetup, toEnriched} from 'speech-rule-engine/js/common/system.js';
 export {Walker} from 'speech-rule-engine/js/walker/walker.js';
 export * as WalkerFactory from 'speech-rule-engine/js/walker/walker_factory.js';
-export {SpeechGenerator} from 'speech-rule-engine/js/speech_generator/speech_generator.js';
 export * as SpeechGeneratorFactory from 'speech-rule-engine/js/speech_generator/speech_generator_factory.js';
 export * as EngineConst from 'speech-rule-engine/js/common/engine_const.js';
 export {ClearspeakPreferences} from 'speech-rule-engine/js/speech_rules/clearspeak_preferences.js';
@@ -58,4 +58,5 @@ export * as HighlighterFactory from 'speech-rule-engine/js/highlighter/highlight
 
 import {Variables} from 'speech-rule-engine/js/common/variables.js';
 
+export type SpeechGenerator = SG;
 export const Locales = Variables.LOCALES;
