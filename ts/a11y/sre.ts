@@ -23,6 +23,7 @@
  */
 
 import {MathJax as MJGlobal} from '../components/global.js';
+import {Package} from '../components/package.js';
 
 declare namespace window {
   let SREfeature: {[key: string]: any};
@@ -38,8 +39,7 @@ declare namespace global {
 // the distribution.
 (() => {
   if (typeof window !== 'undefined') {
-    console.log(MJGlobal.config.loader.source);
-    window.SREfeature = {json: MJGlobal.config.loader.source['[sre]'] + '/mathmaps'};
+    window.SREfeature = {json: Package.resolvePath(['[sre]'], false) + '/mathmaps'};
   } else {
     // TODO: This is does not yet work correctly!
     global.SREfeature = {json: MJGlobal.config.loader.paths.mathjax + '/sre/mathmaps'};
