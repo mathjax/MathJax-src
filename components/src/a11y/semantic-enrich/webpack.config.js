@@ -6,7 +6,7 @@ module.exports = PACKAGE(
   [                                   // packages to link to
     'components/src/input/mml/lib',
     'components/src/core/lib',
-    'node_modules/speech-rule-engine/js'
+    'components/src/a11y/sre/lib'
   ],
   __dirname                           // our directory
 );
