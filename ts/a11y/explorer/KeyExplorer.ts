@@ -25,7 +25,7 @@
 
 import {A11yDocument, Region} from './Region.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
-import * as Sre from '../sre.js';
+import Sre from '../sre.js';
 
 
 /**
@@ -73,7 +73,7 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
    * The attached Sre walker.
    * @type {Walker}
    */
-  protected walker: Sre.Walker;
+  protected walker: Sre.walker;
 
   private eventsAttached: boolean = false;
 
@@ -184,7 +184,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * The Sre speech generator associated with the walker.
    * @type {SpeechGenerator}
    */
-  public speechGenerator: Sre.SpeechGenerator;
+  public speechGenerator: Sre.speechGenerator;
 
   /**
    * The name of the option used to control when this is being shown
@@ -240,9 +240,9 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
       return;
     }
     super.Start();
-    this.speechGenerator = Sre.SpeechGeneratorFactory.generator('Direct');
+    this.speechGenerator = Sre.getSpeechGenerator('Direct');
     this.speechGenerator.setOptions(options);
-    this.walker = Sre.WalkerFactory.walker(
+    this.walker = Sre.getWalker(
       'table', this.node, this.speechGenerator, this.highlighter, this.mml);
     this.walker.activate();
     this.Update();
@@ -284,7 +284,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * Computes the speech for the current expression once Sre is ready.
    * @param {Walker} walker The sre walker.
    */
-  public Speech(walker: Sre.Walker) {
+  public Speech(walker: Sre.walker) {
     SpeechExplorer.updatePromise.then(() => {
       walker.speech();
       this.node.setAttribute('hasspeech', 'true');
@@ -350,8 +350,8 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * Initialises the Sre walker.
    */
   private initWalker() {
-    this.speechGenerator = Sre.SpeechGeneratorFactory.generator('Tree');
-    let dummy = Sre.WalkerFactory.walker(
+    this.speechGenerator = Sre.getSpeechGenerator('Tree');
+    let dummy = Sre.getWalker(
       'dummy', this.node, this.speechGenerator, this.highlighter, this.mml);
     this.walker = dummy;
   }
@@ -395,8 +395,8 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
               protected node: HTMLElement,
               private mml: string) {
     super(document, region, node);
-    this.walker = Sre.WalkerFactory.walker(
-      'table', this.node, Sre.SpeechGeneratorFactory.generator('Dummy'),
+    this.walker = Sre.getWalker(
+      'table', this.node, Sre.getSpeechGenerator('Dummy'),
       this.highlighter, this.mml);
   }
 

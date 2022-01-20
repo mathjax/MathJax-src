@@ -41,7 +41,7 @@ import {Rule} from 'mj-context-menu/js/item_rule.js';
 import {CssStyles} from 'mj-context-menu/js/css_util.js';
 import {Submenu} from 'mj-context-menu/js/item_submenu.js';
 
-import * as Sre from '../../a11y/sre.js';
+import Sre from '../../a11y/sre.js';
 
 
 /*==========================================================================*/

@@ -26,7 +26,7 @@
 
 import {A11yDocument, Region} from './Region.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
-import * as Sre from '../sre.js';
+import Sre from '../sre.js';
 
 export interface TreeExplorer extends Explorer {
 
@@ -102,7 +102,7 @@ export class TreeColorer extends AbstractTreeExplorer {
   public Start() {
     if (this.active) return;
     this.active = true;
-    let generator = Sre.SpeechGeneratorFactory.generator('Color');
+    let generator = Sre.getSpeechGenerator('Color');
     if (!this.node.hasAttribute('hasforegroundcolor')) {
       generator.generateSpeech(this.node, this.mml);
       this.node.setAttribute('hasforegroundcolor', 'true');

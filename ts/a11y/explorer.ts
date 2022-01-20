@@ -39,7 +39,7 @@ import {LiveRegion, ToolTip, HoverRegion} from './explorer/Region.js';
 
 import {Submenu} from 'mj-context-menu/js/item_submenu.js';
 
-import * as Sre from './sre.js';
+import Sre from './sre.js';
 
 /**
  * Generic constructor for Mixins
@@ -551,8 +551,8 @@ let csPrefsVariables = function(menu: MJContextMenu, prefs: string[]) {
         csPrefsSetting[pref] = value;
           srVariable.setValue(
           'clearspeak-' +
-              Sre.ClearspeakPreferences.addPreference(
-                Sre.EngineConst.DOMAIN_TO_STYLES['clearspeak'], pref, value)
+              Sre.clearspeakPreferences.addPreference(
+                Sre.clearspeakStyle(), pref, value)
         );
       },
       getter: () => { return csPrefsSetting[pref] || 'Auto'; }
@@ -566,7 +566,7 @@ let csPrefsVariables = function(menu: MJContextMenu, prefs: string[]) {
  * @param {string} locale The current locale.
  */
 let csSelectionBox = function(menu: MJContextMenu, locale: string) {
-  let prefs = Sre.ClearspeakPreferences.getLocalePreferences();
+  let prefs = Sre.clearspeakPreferences.getLocalePreferences();
   let props = prefs[locale];
   if (!props) {
     let csEntry = menu.findID('Accessibility', 'Speech', 'Clearspeak');
@@ -607,7 +607,7 @@ let csMenu = function(menu: MJContextMenu, sub: Submenu) {
   const box = csSelectionBox(menu, locale);
   let items: Object[] = [];
   try {
-    items = Sre.ClearspeakPreferences.smartPreferences(
+    items = Sre.clearspeakPreferences.smartPreferences(
       menu.mathItem, locale);
   } catch (e) {
     console.log(e);
@@ -644,7 +644,7 @@ const iso: {[locale: string]: string} = {
 let language = function(menu: MJContextMenu, sub: Submenu) {
   let radios: {type: string, id: string,
                content: string, variable: string}[] = [];
-  for (let lang of Sre.Locales) {
+  for (let lang of Sre.locales) {
     if (lang === 'nemeth') continue;
     radios.push({type: 'radio', id: lang,
                  content: iso[lang] || lang, variable: 'locale'});

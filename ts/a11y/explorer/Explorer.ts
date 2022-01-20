@@ -24,7 +24,7 @@
 
 
 import {A11yDocument, Region} from './Region.js';
-import * as Sre from '../sre.js';
+import Sre from '../sre.js';
 
 /**
  * A11y explorers.
@@ -112,9 +112,9 @@ export class AbstractExplorer<T> implements Explorer {
 
   /**
    * The Sre highlighter associated with the walker.
-   * @type {Sre.Highlighter}
+   * @type {Sre.highlighter}
    */
-  protected highlighter: Sre.Highlighter = this.getHighlighter();
+  protected highlighter: Sre.highlighter = this.getHighlighter();
 
   /**
    * Flag if explorer is active.
@@ -258,13 +258,13 @@ export class AbstractExplorer<T> implements Explorer {
   /**
    * @return {Sre.Highlighter} A highlighter for the explorer.
    */
-  protected getHighlighter(): Sre.Highlighter {
+  protected getHighlighter(): Sre.highlighter {
     let opts = this.document.options.a11y;
     let foreground = {color: opts.foregroundColor.toLowerCase(),
                       alpha: opts.foregroundOpacity / 100};
     let background = {color: opts.backgroundColor.toLowerCase(),
                       alpha: opts.backgroundOpacity / 100};
-    return Sre.HighlighterFactory.highlighter(
+    return Sre.getHighlighter(
       background, foreground,
       {renderer: this.document.outputJax.name, browser: 'v3'});
   }
