@@ -1,4 +1,4 @@
-import '../startup/lib/startup.js';
+import '../startup/init.js';
 import './preload.js';
 import '../core/core.js';
 import '../input/tex-full/tex-full.js';

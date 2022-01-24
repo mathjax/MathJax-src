@@ -38,14 +38,12 @@ declare namespace global {
 //
 // We could also use a custom method for loading locales that are webpacked into
 // the distribution.
-(() => {
-  if (typeof window !== 'undefined') {
-    window.SREfeature = {json: Package.resolvePath('[sre]', false) + '/mathmaps'};
-  } else {
-    // TODO: This is does not yet work correctly!
-    global.SREfeature = {json: MJGlobal.config.loader.paths.mathjax + '/sre/mathmaps'};
-  }
-})();
+if (typeof window !== 'undefined') {
+  window.SREfeature = {json: Package.resolvePath('[sre]', false) + '/mathmaps'};
+} else {
+  // TODO: This is does not yet work correctly!
+  global.SREfeature = {json: MJGlobal.config.loader.paths.mathjax + '/sre/mathmaps'};
+}
 
 export {engineReady as sreReady, setupEngine, engineSetup, toEnriched} from 'speech-rule-engine/js/common/system.js';
 export {Walker} from 'speech-rule-engine/js/walker/walker.js';
