@@ -118,7 +118,7 @@ export class MathMLCompile<N, T, D> {
     }
     let type = texClass && kind === 'mrow' ? 'TeXAtom' : kind;
     for (const name of this.filterClassList(adaptor.allClasses(node))) {
-      if (name.match(/^MJX-TeXAtom-/)) {
+      if (name.match(/^MJX-TeXAtom-/) && kind === 'mrow') {
         texClass = name.substr(12);
         type = 'TeXAtom';
       } else if (name === 'MJX-fixedlimits') {
