@@ -76,7 +76,7 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
   /**
    * A list of functions to call on the parsed MathML DOM before conversion to internal structure
    */
-  protected mmlFilters: FunctionList;
+  public mmlFilters: FunctionList;
 
   /**
    * @override
