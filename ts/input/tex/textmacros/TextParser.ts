@@ -141,6 +141,9 @@ export class TextParser extends TexParser {
    */
   public PushMath(mml: MmlNode) {
     const env = this.stack.env;
+    if (!mml.isKind('TeXAtom')) {
+      mml = this.create('node', 'TeXAtom', [mml]);  // make sure the math is an ORD
+    }
     for (const name of ['mathsize', 'mathcolor']) {
       if (env[name] && !mml.attributes.getExplicit(name)) {
         if (!mml.isToken && !mml.isKind('mstyle')) {
