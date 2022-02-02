@@ -56,7 +56,7 @@
       }
       for (var i = 0, m = names.length; i < m; i++) {
         if (copy[names[i]] === 1 && !defaults.hasOwnProperty(names[i])) continue;
-        value = (this.attr||{})[names[i]];
+        var value = (this.attr||{})[names[i]];
         if (value == null) value = this[names[i]];
         if (value === 'true' || value === 'false') value = (value === 'true');
         if (value != null) node.attributes.set(names[i],value);
