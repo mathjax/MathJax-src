@@ -647,7 +647,7 @@ BaseMethods.Underset = function(parser: TexParser, name: string) {
   if (bot.isKind('mo')) {
     NodeUtil.setAttribute(bot, 'accent', false);
   }
-  const node = parser.create('node', 'munder', [base, bot], {underaccent: false});
+  const node = parser.create('node', 'munder', [base, bot], {accentunder: false});
   parser.Push(node);
 };
 
@@ -668,7 +668,7 @@ BaseMethods.Overunderset = function(parser: TexParser, name: string) {
   if (bot.isKind('mo')) {
     NodeUtil.setAttribute(bot, 'accent', false);
   }
-  const node = parser.create('node', 'munderover', [base, bot, top], {accent: false, underaccent: false});
+  const node = parser.create('node', 'munderover', [base, bot, top], {accent: false, accentunder: false});
   parser.Push(node);
 };
 
