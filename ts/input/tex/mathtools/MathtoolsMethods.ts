@@ -32,7 +32,7 @@ import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
 import NodeUtil from '../NodeUtil.js';
 import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
-import {length2em, em} from '../../../util/lengths.js';
+import {length2em, em, Em} from '../../../util/lengths.js';
 import {lookup} from '../../../util/Options.js';
 import NewcommandUtil from '../newcommand/NewcommandUtil.js';
 import NewcommandMethods from '../newcommand/NewcommandMethods.js';
@@ -74,7 +74,7 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
       align = parser.GetBrackets(`\\begin{${begin.getName()}}`, parser.options.mathtools['smallmatrix-align']);
     }
     return MathtoolsMethods.Array(
-      parser, begin, open, close, align, ParseUtil.Em(1 / 3), '.2em', 'S', 1
+      parser, begin, open, close, align, Em(1 / 3), '.2em', 'S', 1
     );
   },
 

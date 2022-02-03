@@ -155,3 +155,78 @@ export function px(m: number, M: number = -BIGDIMEN, em: number = 16): string {
   if (Math.abs(m) < .1) return '0';
   return m.toFixed(1).replace(/\.0$/, '') + 'px';
 }
+
+// TODO (VS): Combine some of this with lengths in util.
+const emPerInch = 7.2;
+const pxPerInch = 72;
+// Note, the following are TeX CM font values.
+const UNIT_CASES: { [key: string]: (m: number) => number } = {
+  em: (m) => m,
+  ex: (m) => m * 0.43,
+  pt: (m) => m / 10, // 10 pt to an em
+  pc: (m) => m * 1.2, // 12 pt to a pc
+  px: (m) => (m * emPerInch) / pxPerInch,
+  in: (m) => m * emPerInch,
+  cm: (m) => (m * emPerInch) / 2.54, // 2.54 cm to an inch
+  mm: (m) => (m * emPerInch) / 25.4, // 10 mm to a cm
+  mu: (m) => m / 18,
+};
+const num = '([-+]?([.,]\\d+|\\d+([.,]\\d*)?))';
+const unit = '(pt|em|ex|mu|px|mm|cm|in|pc)';
+const dimenEnd = RegExp('^\\s*' + num + '\\s*' + unit + '\\s*$');
+const dimenRest = RegExp('^\\s*' + num + '\\s*' + unit + ' ?');
+/**
+ * Matches for a dimension argument.
+ * @param {string} dim The argument.
+ * @param {boolean} rest Allow for trailing garbage in the dimension string.
+ * @return {[string, string, number]} The match result as (Anglosaxon) value,
+ *     unit name, length of matched string. The latter is interesting in the
+ *     case of trailing garbage.
+ */
+export function matchDimen(
+  dim: string,
+  rest: boolean = false
+): [string, string, number] {
+  let match = dim.match(rest ? dimenRest : dimenEnd);
+  return match
+    ? muReplace([match[1].replace(/,/, '.'), match[4], match[0].length])
+    : [null, null, 0];
+}
+/**
+ * Convert a dimension string into standard em dimension.
+ * @param {string} dim The attribute string.
+ * @return {number} The numerical value.
+ */
+export function dimen2em(dim: string): number {
+  let [value, unit] = matchDimen(dim);
+  let m = parseFloat(value || '1');
+  let func = UNIT_CASES[unit];
+  return func ? func(m) : 0;
+}
+/**
+ * Transforms mu dimension to em if necessary.
+ * @param {[string, string, number]} [value, unit, length] The dimension triple.
+ * @return {[string, string, number]} [value, unit, length] The transformed triple.
+ */
+function muReplace([value, unit, length]: [string, string, number]): [
+  string,
+  string,
+  number
+] {
+  if (unit !== 'mu') {
+    return [value, unit, length];
+  }
+  let em = Em(UNIT_CASES[unit](parseFloat(value || '1')));
+  return [em.slice(0, -2), 'em', length];
+}
+/**
+ * Turns a number into an em value.
+ * @param {number} m The number.
+ * @return {string} The em dimension string.
+ */
+export function Em(m: number): string {
+  if (Math.abs(m) < 0.0006) {
+    return '0em';
+  }
+  return m.toFixed(3).replace(/\.?0+$/, '') + 'em';
+}

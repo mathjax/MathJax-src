@@ -23,7 +23,6 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import ParseUtil from './ParseUtil.js';
 import {HandlerType} from './MapHandler.js';
 import Stack from './Stack.js';
 import StackItemFactory from './StackItemFactory.js';
@@ -35,6 +34,8 @@ import ParseOptions from './ParseOptions.js';
 import {StackItem, EnvList} from './StackItem.js';
 import {Symbol} from './Symbol.js';
 import {OptionList} from '../../util/Options.js';
+import {matchDimen} from '../../util/lengths.js';
+import {trimSpaces} from '../../util/string.js';
 
 
 /**
@@ -392,7 +393,7 @@ export default class TexParser {
   public GetDimen(name: string): string {
     if (this.GetNext() === '{') {
       let dimen = this.GetArgument(name);
-      let [value, unit] = ParseUtil.matchDimen(dimen);
+      let [value, unit] = matchDimen(dimen);
       if (value) {
         // @test Raise In Line, Lower 2, (Raise|Lower) Negative
         return value + unit;
@@ -400,7 +401,7 @@ export default class TexParser {
     } else {
       // @test Above, Raise, Lower, Modulo, Above With Delims
       let dimen = this.string.slice(this.i);
-      let [value, unit, length] = ParseUtil.matchDimen(dimen, true);
+      let [value, unit, length] = matchDimen(dimen, true);
       if (value) {
         this.i += length;
         return value + unit;
@@ -475,7 +476,7 @@ export default class TexParser {
    * @return {string} The delimiter.
    */
   public GetDelimiterArg(name: string): string {
-    let c = ParseUtil.trimSpaces(this.GetArgument(name));
+    let c = trimSpaces(this.GetArgument(name));
     if (c === '') {
       return null;
     }
