@@ -22,18 +22,8 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import * as Api from 'speech-rule-engine/js/common/system.js';
-import {Walker} from 'speech-rule-engine/js/walker/walker.js';
-import * as WalkerFactory from 'speech-rule-engine/js/walker/walker_factory.js';
-import * as SpeechGeneratorFactory from 'speech-rule-engine/js/speech_generator/speech_generator_factory.js';
-import * as EngineConst from 'speech-rule-engine/js/common/engine_const.js';
-import {ClearspeakPreferences} from 'speech-rule-engine/js/speech_rules/clearspeak_preferences.js';
-import {Highlighter} from 'speech-rule-engine/js/highlighter/highlighter.js';
-import * as HighlighterFactory from 'speech-rule-engine/js/highlighter/highlighter_factory.js';
-import {SpeechGenerator} from 'speech-rule-engine/js/speech_generator/speech_generator.js';
-import {Variables} from 'speech-rule-engine/js/common/variables.js';
-
 import {Package} from '../components/package.js';
+import MathMaps from './mathmaps.js';
 
 declare namespace window {
   let SREfeature: {[key: string]: any};
@@ -48,16 +38,35 @@ declare namespace global {
 // We could also use a custom method for loading locales that are webpacked into
 // the distribution.
 (() => {
+  console.log('Typescript path');
   let path = Package.resolvePath('[sre]', false) + '/mathmaps';
   console.log(path);
   if (typeof window !== 'undefined') {
-    window.SREfeature = {json: path};
+    console.log(6);
+    console.log(MathMaps);
+    console.log((window as any)['SRE']);
+    window.SREfeature = {json: path, delay: true};
+    // window.SREfeature = {
+    //   json: path
+    // };
   } else {
+    console.log(7);
     // TODO: This is does not yet work correctly!
-    global.SREfeature = {json: path};
+    global.SREfeature = {json: path, delay: true};
   }
 })();
 
+
+import * as Api from 'speech-rule-engine/js/common/system.js';
+import {Walker} from 'speech-rule-engine/js/walker/walker.js';
+import * as WalkerFactory from 'speech-rule-engine/js/walker/walker_factory.js';
+import * as SpeechGeneratorFactory from 'speech-rule-engine/js/speech_generator/speech_generator_factory.js';
+import * as EngineConst from 'speech-rule-engine/js/common/engine_const.js';
+import {ClearspeakPreferences} from 'speech-rule-engine/js/speech_rules/clearspeak_preferences.js';
+import {Highlighter} from 'speech-rule-engine/js/highlighter/highlighter.js';
+import * as HighlighterFactory from 'speech-rule-engine/js/highlighter/highlighter_factory.js';
+import {SpeechGenerator} from 'speech-rule-engine/js/speech_generator/speech_generator.js';
+import {Variables} from 'speech-rule-engine/js/common/variables.js';
 
 export namespace Sre {
 
