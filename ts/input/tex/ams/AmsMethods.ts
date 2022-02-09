@@ -37,6 +37,7 @@ import {FlalignItem} from './AmsItems.js';
 import BaseMethods from '../base/BaseMethods.js';
 import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMunderover} from '../../../core/MmlTree/MmlNodes/munderover.js';
+import {MmlNode, AbstractMmlTokenNode} from '../../../core/MmlTree/MmlNode.js';
 
 
 // Namespace
@@ -232,6 +233,50 @@ AmsMethods.HandleOperatorName = function(parser: TexParser, name: string) {
     parser.string.slice(parser.i);
   parser.i = 0;
 };
+
+/**
+ * Handle sideset.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
+AmsMethods.SideSet = function (parser: TexParser, name: string) {
+  const pre = parser.ParseArg(name);
+  const post = parser.ParseArg(name);
+  const base = parser.ParseArg(name);
+  if (!checkSideSet(pre) || !checkSideSet(post)) {
+    throw new TexError('SideSetArgs', 'First two arguments to %1 must consist only of super- and subscripts', name);
+  }
+  const mml = parser.create('node', 'mmultiscripts', [base]);
+  if (!post.isInferred) {
+    NodeUtil.appendChildren(mml, [
+      NodeUtil.getChildAt(post, 1) || parser.create('node', 'none'),
+      NodeUtil.getChildAt(post, 2) || parser.create('node', 'none')
+    ]);
+  }
+  if (!pre.isInferred) {
+    NodeUtil.setProperty(mml, 'scriptalign', 'left');
+    NodeUtil.appendChildren(mml, [
+      parser.create('node', 'mprescripts'),
+      NodeUtil.getChildAt(pre, 1) || parser.create('node', 'none'),
+      NodeUtil.getChildAt(pre, 2) || parser.create('node', 'none')
+    ]);
+  }
+  parser.Push(mml);
+};
+
+/**
+ * Utility for checking the pre- and postscript arguments for validity.
+ * @param {MmlNode} mml The node to check.
+ * @return {boolean} True if scripts are OK, false otherwise.
+ */
+function checkSideSet(mml: MmlNode): boolean {
+  if (!mml) return false;
+  if (mml.isInferred && mml.childNodes.length === 0) return true;
+  if (!mml.isKind('msubsup')) return false;
+  const base = mml.childNodes[0];
+  if (!(base && base.isKind('mi') && (base as AbstractMmlTokenNode).getText() === '')) return false;
+  return true;
+}
 
 
 /**
