@@ -33,6 +33,10 @@ import {handleRetriesFor} from '../../util/Retries.js';
  */
 declare const window: {
   requestIdleCallback: (callback: () => void) => void;
+  addEventListener: ((type: string, handler: (event: Event) => void) => void);
+  matchMedia: (type: string) => {
+    addListener: (handler: (event: Event) => void) => void;
+  };
 };
 
 /**
@@ -279,6 +283,11 @@ export interface LazyMathDocument<N, T, D> extends HTMLDocument<N, T, D> {
    */
   lazyList: LazyList<N, T, D>;
 
+  /**
+   * A function that will typeset all the remaining expressions (e.g., for printing)
+   */
+  lazyTypesetAll(): Promise<void>;
+
 }
 
 /**
@@ -346,9 +355,80 @@ B extends MathDocumentConstructor<HTMLDocument<N, T, D>>>(
       this.lazyObserver = new IntersectionObserver(this.lazyObserve.bind(this));
       this.lazyList = new LazyList<N, T, D>();
       const callback = this.lazyHandleSet.bind(this);
-      this.lazyProcessSet = (typeof window !== 'undefined' && window.requestIdleCallback ?
-                          () => window.requestIdleCallback(callback) :
-                          () => setTimeout(callback, 10));
+      this.lazyProcessSet = (window && window.requestIdleCallback ?
+                             () => window.requestIdleCallback(callback) :
+                             () => setTimeout(callback, 10));
+      //
+      //  Install print listeners to typeset the rest of the document before printing
+      //
+      if (window) {
+        let done = false;
+        const handler = () => {
+          !done && this.lazyTypesetAll();
+          done = true;
+        };
+        window.matchMedia('print').addListener(handler);  // for Safari
+        window.addEventListener('beforeprint', handler);  // for everyone else
+      }
+    }
+
+    /**
+     * Function to typeset all remaining expressions (for printing, etc.)
+     *
+     * @return {Promise}   Promise that is resolved after the typesetting completes.
+     */
+    public async lazyTypesetAll(): Promise<void> {
+      //
+      // The state we need to go back to (COMPILED or TYPESET).
+      //
+      let state = STATE.LAST;
+      //
+      // Loop through all the math...
+      //
+      for (const item of this.math) {
+        const math = item as LazyMathItem<N, T, D>;
+        //
+        // If it is not laxy compile or typeset, skip it.
+        //
+        if (!math.lazyCompile && !math.lazyTypeset) continue;
+        //
+        // Mark the state that we need to start at.
+        //
+        if (math.lazyCompile) {
+          math.state(STATE.COMPILED - 1);
+          state = STATE.COMPILED;
+        } else {
+          math.state(STATE.TYPESET - 1);
+          if (STATE.TYPESET < state) state = STATE.TYPESET;
+        }
+        //
+        // Mark it as not lazy and remove it from the observer.
+        //
+        math.lazyCompile = math.lazyTypeset = false;
+        math.lazyMarker && this.lazyObserver.unobserve(math.lazyMarker as any as Element);
+      }
+      //
+      // If something needs updating
+      //
+      if (state === STATE.LAST) return Promise.resolve();
+      //
+      // Reset the document state to the starting state that we need.
+      //
+      this.state(state - 1, null);
+      //
+      // Save the SVG font cache and set it to "none" temporarily
+      //   (needed by Firefox, which doesn't seem to process the
+      //    xlinks otherwise).
+      //
+      const fontCache = this.outputJax.options.fontCache;
+      if (fontCache) this.outputJax.options.fontCache = 'none';
+      //
+      //  Typeset the math and put back the font cache when done.
+      //
+      this.reset();
+      return handleRetriesFor(() => this.render()).then(() => {
+        if (fontCache) this.outputJax.options.fontCache = fontCache;
+      });
     }
 
     /**
