@@ -27,6 +27,7 @@ import {HTMLMathItem} from '../../handlers/html/HTMLMathItem.js';
 import {HTMLDocument} from '../../handlers/html/HTMLDocument.js';
 import {HTMLHandler} from '../../handlers/html/HTMLHandler.js';
 import {handleRetriesFor} from '../../util/Retries.js';
+import {OptionList} from '../../util/Options.js';
 
 /**
  * Add the needed function to the window object.
@@ -309,6 +310,14 @@ B extends MathDocumentConstructor<HTMLDocument<N, T, D>>>(
   return class BaseClass extends BaseDocument {
 
     /**
+     * @override
+     */
+    public static OPTIONS: OptionList = {
+      ...BaseDocument.OPTIONS,
+      lazyMargin: '200px'
+    };
+
+    /**
      * The Intersection Observer used to track the appearance of the expression markers
      */
     public lazyObserver: IntersectionObserver;
@@ -352,7 +361,7 @@ B extends MathDocumentConstructor<HTMLDocument<N, T, D>>>(
       super(...args);
       this.options.MathItem =
         LazyMathItemMixin<N, T, D, Constructor<HTMLMathItem<N, T, D>>>(this.options.MathItem);
-      this.lazyObserver = new IntersectionObserver(this.lazyObserve.bind(this));
+      this.lazyObserver = new IntersectionObserver(this.lazyObserve.bind(this), {rootMargin: this.options.lazyMargin});
       this.lazyList = new LazyList<N, T, D>();
       const callback = this.lazyHandleSet.bind(this);
       this.lazyProcessSet = (window && window.requestIdleCallback ?
