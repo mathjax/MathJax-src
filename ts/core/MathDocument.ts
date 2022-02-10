@@ -437,15 +437,6 @@ export interface MathDocument<N, T, D> {
   state(state: number, restore?: boolean): MathDocument<N, T, D>;
 
   /**
-   * Rerender the MathItems on the page
-   *
-   * @param {number=} start    The state to start rerendering at
-   * @param {number=} end      The state to end rerendering at
-   * @return {MathDocument}    The math document instance
-   */
-  rerender(start?: number, end?: number): MathDocument<N, T, D>;
-
-  /**
    * Clear the processed values so that the document can be reprocessed
    *
    * @param {ResetList} options   The things to be reset
