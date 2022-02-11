@@ -61,6 +61,7 @@ export function Other(parser: TexParser, char: string) {
   // @test Other
   // @test Other Remap
   let mo = parser.create('token', type, def, (remap ? remap.char : char));
+  range[4] && mo.attributes.set('mathvariant', range[4]);
   if (type === 'mo') {
     NodeUtil.setProperty(mo, 'fixStretchy', true);
     parser.configuration.addNode('fixStretchy', mo);
