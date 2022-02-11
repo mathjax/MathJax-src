@@ -22,6 +22,8 @@
  */
 
 import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
+import {CommonTextNode} from './TextNode.js';
+import {TextNode} from '../../../core/MmlTree/MmlNodes/TextNode.js';
 import {BBox} from '../../../util/BBox.js';
 
 /*****************************************************************/
@@ -35,6 +37,11 @@ export interface CommonMglyph extends AnyWrapper {
   width: number;
   height: number;
   valign: number;
+
+  /**
+   * TextNode used for deprecated fontfamily/index use case
+   */
+  charWrapper: CommonTextNode;
 
   /**
    * Obtain the width, height, and valign.
@@ -71,6 +78,11 @@ export function CommonMglyphMixin<T extends WrapperConstructor>(Base: T): Mglyph
     public valign: number;
 
     /**
+     * TextNode used for deprecated fontfamily/index use case
+     */
+    public charWrapper: CommonTextNode;
+
+    /**
      * @override
      * @constructor
      */
@@ -87,19 +99,31 @@ export function CommonMglyphMixin<T extends WrapperConstructor>(Base: T): Mglyph
      *   perhaps as a post-filter on the MathML input jax that adds the needed dimensions
      */
     public getParameters() {
-      const {width, height, valign} = this.node.attributes.getList('width', 'height', 'valign');
-      this.width = (width === 'auto' ? 1 : this.length2em(width));
-      this.height = (height === 'auto' ? 1 : this.length2em(height));
-      this.valign = this.length2em(valign || '0');
+      const {width, height, valign, src, index} =
+        this.node.attributes.getList('width', 'height', 'valign', 'src', 'index');
+      if (src) {
+        this.width = (width === 'auto' ? 1 : this.length2em(width));
+        this.height = (height === 'auto' ? 1 : this.length2em(height));
+        this.valign = this.length2em(valign || '0');
+      } else {
+        const text = String.fromCodePoint(parseInt(index as string));
+        const mmlFactory = this.node.factory;
+        this.charWrapper = this.wrap((mmlFactory.create('text') as TextNode).setText(text));
+        this.charWrapper.parent = this as any as AnyWrapper;
+      }
     }
 
     /**
      * @override
      */
     public computeBBox(bbox: BBox, _recompute: boolean = false) {
-      bbox.w = this.width;
-      bbox.h = this.height + this.valign;
-      bbox.d = -this.valign;
+      if (this.charWrapper) {
+        bbox.updateFrom(this.charWrapper.getBBox());
+      } else {
+        bbox.w = this.width;
+        bbox.h = this.height + this.valign;
+        bbox.d = -this.valign;
+      }
     }
 
   };
