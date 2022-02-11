@@ -137,10 +137,18 @@ export class MmlMtable extends AbstractMmlNode {
    * @override
    */
   protected verifyChildren(options: PropertyList) {
-    if (!options['fixMtables']) {
-      for (const child of this.childNodes) {
-        if (!child.isKind('mtr')) {
-          this.mError('Children of ' + this.kind + ' must be mtr or mlabeledtr', options);
+    for (const child of this.childNodes) {
+      if (!child.isKind('mtr')) {
+        const isMtd = child.isKind('mtd');
+        const factory = this.factory;
+        let mtr = this.replaceChild(factory.create('mtr'), child) as MmlNode;
+        mtr.appendChild(isMtd ? child : factory.create('mtd', {}, [child]));
+        if (!options['fixMtables']) {
+          child.parent.childNodes = [];   // remove the child from the parent...
+          child.parent = this;            // ... and make it think it is a child of the table again
+          isMtd && mtr.appendChild(factory.create('mtd'));  // child will be replaced, so make sure there is an mtd
+          const merror = child.mError('Children of ' + this.kind + ' must be mtr or mlabeledtr', options, isMtd);
+          mtr.childNodes[0].appendChild(merror);     // append the error to the mtd in the mtr
         }
       }
     }
