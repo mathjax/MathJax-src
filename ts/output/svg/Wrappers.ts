@@ -52,6 +52,7 @@ import {SVGsemantics, SVGannotation, SVGannotationXML, SVGxml} from './Wrappers/
 import {SVGmglyph} from './Wrappers/mglyph.js';
 import {SVGTeXAtom} from './Wrappers/TeXAtom.js';
 import {SVGTextNode} from './Wrappers/TextNode.js';
+import {SVGHtmlNode} from './Wrappers/HtmlNode.js';
 
 export const SVGWrappers: {[kind: string]: WrapperConstructor}  = {
   [SVGmath.kind]: SVGmath,
@@ -90,5 +91,6 @@ export const SVGWrappers: {[kind: string]: WrapperConstructor}  = {
   [SVGmglyph.kind]: SVGmglyph,
   [SVGTeXAtom.kind]: SVGTeXAtom,
   [SVGTextNode.kind]: SVGTextNode,
+  [SVGHtmlNode.kind]: SVGHtmlNode,
   [SVGWrapper.kind]: SVGWrapper
 };

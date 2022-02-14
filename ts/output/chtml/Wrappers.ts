@@ -48,6 +48,7 @@ import {CHTMLmglyph} from './Wrappers/mglyph.js';
 import {CHTMLsemantics, CHTMLannotation, CHTMLannotationXML, CHTMLxml} from './Wrappers/semantics.js';
 import {CHTMLTeXAtom} from './Wrappers/TeXAtom.js';
 import {CHTMLTextNode} from './Wrappers/TextNode.js';
+import {CHTMLHtmlNode} from './Wrappers/HtmlNode.js';
 
 export const CHTMLWrappers: {[kind: string]: WrapperConstructor}  = {
   [CHTMLmath.kind]: CHTMLmath,
@@ -84,5 +85,6 @@ export const CHTMLWrappers: {[kind: string]: WrapperConstructor}  = {
   [CHTMLxml.kind]: CHTMLxml,
   [CHTMLTeXAtom.kind]: CHTMLTeXAtom,
   [CHTMLTextNode.kind]: CHTMLTextNode,
+  [CHTMLHtmlNode.kind]: CHTMLHtmlNode,
   [CHTMLWrapper.kind]: CHTMLWrapper
 };

@@ -25,6 +25,7 @@
 import {MmlVisitor} from './MmlVisitor.js';
 import {MmlNode, TextNode, XMLNode, TEXCLASS, TEXCLASSNAMES} from './MmlNode.js';
 import {MmlMi} from './MmlNodes/mi.js';
+import {HtmlNode} from './MmlNodes/HTMLNode.js';
 
 
 export const DATAMJX = 'data-mjx-';
@@ -87,6 +88,15 @@ export class SerializedMmlVisitor extends MmlVisitor {
    */
   public visitXMLNode(node: XMLNode, space: string): string {
     return space + node.getSerializedXML();
+  }
+
+  /**
+   * @param {HtmlNode} node  The HTML node to visit
+   * @param {string} space   The amount of indenting for this node
+   * @return {string}        The serialization of the HTML
+   */
+  public visitHtmlNode(node: HtmlNode<any>, space: string): string {
+    return space + node.getSerializedHTML();
   }
 
   /**

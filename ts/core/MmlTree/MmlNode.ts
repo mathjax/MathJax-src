@@ -851,6 +851,8 @@ export abstract class AbstractMmlTokenNode extends AbstractMmlNode {
     for (const child of this.childNodes) {
       if (child instanceof TextNode) {
         text += child.getText();
+      } else if ('textContent' in child) {
+        text += (child as any).textContent();
       }
     }
     return text;
