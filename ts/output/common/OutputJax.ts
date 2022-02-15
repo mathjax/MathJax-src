@@ -25,6 +25,7 @@ import {AbstractOutputJax} from '../../core/OutputJax.js';
 import {MathDocument} from '../../core/MathDocument.js';
 import {MathItem, Metrics, STATE} from '../../core/MathItem.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 import {FontData, FontDataClass, CharOptions, DelimiterData, CssFontData} from './FontData.js';
 import {OptionList, separateOptions} from '../../util/Options.js';
 import {CommonWrapper, AnyWrapper, AnyWrapperClass} from './Wrapper.js';
@@ -95,6 +96,7 @@ export abstract class CommonOutputJax<
     exFactor: .5,                  // default size of ex in em units
     displayAlign: 'center',        // default for indentalign when set to 'auto'
     displayIndent: '0',            // default for indentshift when set to 'auto'
+    htmlHDW: 'auto',               // 'use', 'force', or 'ignore' data-mjx-hdw attributes
     wrapperFactory: null,          // The wrapper factory to use
     font: null,                    // The FontData object to use
     cssStyles: null                // The CssStyles object to use
@@ -191,6 +193,20 @@ export abstract class CommonOutputJax<
     this.font = this.options.font || new defaultFont(fontOptions);
     this.unknownCache = new Map();
   }
+
+  /**
+   * @override
+   */
+  public setAdaptor(adaptor: DOMAdaptor<N, T, D>) {
+    super.setAdaptor(adaptor);
+    //
+    //  Set the htmlHDW option based on the adaptor's ability to measure nodes
+    //
+    if (this.options.htmlHDW === 'auto') {
+      this.options.htmlHDW = (adaptor.canMeasureNodes ? 'ignore' : 'force');
+    }
+  }
+
 
   /*****************************************************************/
 

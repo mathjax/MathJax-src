@@ -71,6 +71,11 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
   ].join(''), 'gu');
 
   /**
+   * The liteDOM adaptor can't measure DOM node sizes
+   */
+  public canMeasureNodes: boolean = false;
+
+  /**
    * The options for the instance
    */
   public options: OptionList;

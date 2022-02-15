@@ -181,6 +181,11 @@ export interface MinHTMLAdaptor<N, T, D> extends DOMAdaptor<N, T, D> {
 export class HTMLAdaptor<N extends MinHTMLElement<N, T>, T extends MinText<N, T>, D extends MinDocument<N, T>> extends
 AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
   /**
+   * The HTML adaptor can measure DOM node sizes
+   */
+  public canMeasureNodes: boolean = true;
+
+  /**
    * The window object for this adaptor
    */
   public window: MinWindow<N, D>;

@@ -25,7 +25,8 @@ import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
 import {HtmlNode} from '../../../core/MmlTree/MmlNodes/HtmlNode.js';
 import {BBox} from '../../../util/BBox.js';
 import {StyleList} from '../../../util/Styles.js';
-import {ExtendedMetrics} from '../../common/OutputJax.js';
+import {ExtendedMetrics, UnknownBBox} from '../../common/OutputJax.js';
+import {split} from '../../../util/string.js';
 
 /*****************************************************************/
 /**
@@ -37,6 +38,27 @@ export interface CommonHtmlNode<N> extends AnyWrapper {
    * @return {N}   The HTML for the node
    */
   getHTML(): N;
+
+  /**
+   * @param {N} html            The html to adjust if using or forcing HDW
+   * @param {StyleList} styles  The styles object to add to, as needed
+   */
+  addHDW(html: N, styles: StyleList): N;
+
+  /**
+   * @param {N} html         The HTML tree to check
+   * @param {string} use     The first htmlHDW value to check
+   * @param {string} force   The second (optional) htmlHDW value to check
+   * @return {string}        The data-mjx-hdw value, if the options are met
+   */
+  getHDW(html: N, use: string, force?: string): string;
+
+  /**
+   * @param {string} hdw     The data-mjx-hdw string to split
+   * @return {UnknownBBox}   The h, d, w values (in em units) as an object
+   */
+  splitHDW(hdw: string): UnknownBBox;
+
 }
 
 /**
@@ -60,7 +82,8 @@ export function CommonHtmlNodeMixin<N, T extends WrapperConstructor>(Base: T): H
      * @override
      */
     public computeBBox(bbox: BBox, _recompute: boolean = false) {
-      const {w, h, d} = this.jax.measureXMLnode(this.getHTML());
+      const hdw = this.getHDW((this.node as HtmlNode<N>).getHTML() as N, 'use', 'force');
+      const {h, d, w} = (hdw ? this.splitHDW(hdw) : this.jax.measureXMLnode(this.getHTML()));
       bbox.w = w;
       bbox.h = h;
       bbox.d = d;
@@ -70,17 +93,54 @@ export function CommonHtmlNodeMixin<N, T extends WrapperConstructor>(Base: T): H
      * @return {N}   The HTML for the node
      */
     public getHTML(): N {
+      const adaptor = this.adaptor;
+      const jax = this.jax;
       const styles: StyleList = {};
-      const html = this.adaptor.clone((this.node as HtmlNode<N>).getHTML() as N);
-      const metrics = this.jax.math.metrics as ExtendedMetrics;
-      const scale = 100 / metrics.scale;
-      if (scale !== 100) {
-        styles['font-size'] = this.jax.fixed(scale, 1) + '%';
+      const html = this.addHDW(adaptor.clone((this.node as HtmlNode<N>).getHTML() as N), styles);
+      const metrics = jax.math.metrics as ExtendedMetrics;
+      if (metrics.scale !== 1) {
+        styles['font-size'] = jax.fixed(100 / metrics.scale, 1) + '%';
       }
-      const parent = this.adaptor.parent(this.jax.math.start.node);
+      const parent = adaptor.parent(jax.math.start.node);
       styles['font-family'] = this.parent.styles?.styles?.['font-family'] ||
-        metrics.family || this.adaptor.fontFamily(parent) || 'initial';
+        metrics.family || adaptor.fontFamily(parent) || 'initial';
       return this.html('mjx-html', {variant: this.parent.variant, style: styles}, [html]);
+    }
+
+    /**
+     * @param {N} html            The html to adjust if using or forcing HDW
+     * @param {StyleList} styles  The styles object to add to, as needed
+     */
+    public addHDW(html: N, styles: StyleList): N {
+      const hdw = this.getHDW(html, 'force');
+      if (!hdw) return html;
+      const {h, d, w} = this.splitHDW(hdw);
+      styles.height = this.em(h + d);
+      styles.width = this.em(w);
+      styles['vertical-align'] = this.em(-d);
+      styles.position = 'relative';
+      return this.html('mjx-html-holder', {}, [html]);
+    }
+
+    /**
+     * @param {N} html         The HTML tree to check
+     * @param {string} use     The first htmlHDW value to check
+     * @param {string} force   The second (optional) htmlHDW value to check
+     * @return {string}        The data-mjx-hdw value, if the options are met
+     */
+    public getHDW(html: N, use: string, force: string = use): string {
+      const option = this.jax.options.htmlHDW;
+      const hdw = this.adaptor.getAttribute(html, 'data-mjx-hdw') as string;
+      return (hdw && (option === use || option === force) ? hdw : null);
+    }
+
+    /**
+     * @param {string} hdw     The data-mjx-hdw string to split
+     * @return {UnknownBBox}   The h, d, w values (in em units) as an object
+     */
+    public splitHDW(hdw: string): UnknownBBox {
+      const [h, d, w] = split(hdw).map(x => this.length2em(x || '0'));
+      return {h, d, w};
     }
 
     /**

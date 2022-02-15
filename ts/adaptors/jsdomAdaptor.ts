@@ -61,6 +61,11 @@ export class JsdomAdaptor extends HTMLAdaptor<HTMLElement, Text, Document> {
   ].join(''), 'gu');
 
   /**
+   * The jsdom adaptor can't measure DOM node sizes
+   */
+  public canMeasureNodes: boolean = false;
+
+  /**
    * The options for the instance
    */
   public options: OptionList;

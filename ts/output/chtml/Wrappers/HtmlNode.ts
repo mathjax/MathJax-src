@@ -46,7 +46,14 @@ export class CHTMLHtmlNode<N, _T, _D> extends CommonHtmlNodeMixin<any, CHTMLCons
    */
   public static styles: StyleList = {
     'mjx-html': {
-      'line-height': 'normal'
+      'line-height': 'normal',
+      'text-align': 'initial'
+    },
+    'mjx-html-holder': {
+      display: 'block',
+      position: 'absolute',
+      width: '100%',
+      height: '100%'
     }
   };
 
