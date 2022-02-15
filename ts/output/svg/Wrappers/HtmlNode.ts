@@ -46,8 +46,18 @@ export class SvgHtmlNode<N, _T, _D> extends CommonHtmlNodeMixin<any, SvgConstruc
    */
   public static styles: StyleList = {
     'foreignObject[data-mjx-html]': {
-      'line-height': 'normal',
       overflow: 'visible'
+    },
+    'mjx-html': {
+      display: 'inline-block',
+      'line-height': 'normal',
+      'text-align': 'initial',
+    },
+    'mjx-html-holder': {
+      display: 'block',
+      position: 'absolute',
+      width: '100%',
+      height: '100%'
     }
   };
 
