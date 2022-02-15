@@ -95,8 +95,8 @@ export class SerializedMmlVisitor extends MmlVisitor {
    * @param {string} space   The amount of indenting for this node
    * @return {string}        The serialization of the HTML
    */
-  public visitHtmlNode(node: HtmlNode<any>, space: string): string {
-    return space + node.getSerializedHTML();
+  public visitHtmlNode(node: HtmlNode<any>, _space: string): string {
+    return node.getSerializedHTML();
   }
 
   /**
