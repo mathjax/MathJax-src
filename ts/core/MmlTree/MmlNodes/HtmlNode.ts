@@ -63,6 +63,14 @@ export class HtmlNode<N> extends AbstractMmlEmptyNode {
    * @return {HTMLNode}            The HTML node (for chaining of method calls)
    */
   public setHTML(html: N, adaptor: DOMAdaptor<any, any, any> = null): HtmlNode<N> {
+    //
+    // Test if the HTML element has attributes and wrap in a <span> if not
+    //
+    try {
+      adaptor.getAttribute(html, 'data-mjx-hdw');
+    } catch (error) {
+      html = adaptor.node('span', {}, [html]);
+    }
     this.html = html;
     this.adaptor = adaptor;
     return this;
