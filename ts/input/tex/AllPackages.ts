@@ -49,6 +49,7 @@ import './noundefined/NoUndefinedConfiguration.js';
 import './physics/PhysicsConfiguration.js';
 import './setoptions/SetOptionsConfiguration.js';
 import './tagformat/TagFormatConfiguration.js';
+import './texhtml/TexHtmlConfiguration.js';
 import './textcomp/TextcompConfiguration.js';
 import './textmacros/TextMacrosConfiguration.js';
 import './upgreek/UpgreekConfiguration.js';
@@ -87,6 +88,7 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
     '[tex]/verb',
     '[tex]/configmacros',
     '[tex]/tagformat',
+    '[tex]/texhtml',
     '[tex]/textcomp',
     '[tex]/textmacros',
     '[tex]/setoptions',
@@ -122,6 +124,7 @@ export const AllPackages: string[] = [
   'verb',
   'configmacros',
   'tagformat',
+  'texhtml',
   'textcomp',
   'textmacros'
 ];

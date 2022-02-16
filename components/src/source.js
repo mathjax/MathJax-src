@@ -50,6 +50,7 @@ export const source = {
   '[tex]/setoptions': `${src}/input/tex/extensions/setoptions/setoptions.js`,
   '[tex]/tagformat': `${src}/input/tex/extensions/tagformat/tagformat.js`,
   '[tex]/textmacros': `${src}/input/tex/extensions/textmacros/textmacros.js`,
+  '[tex]/texhtml': `${src}/input/tex/extensions/texhtml/texhtml.js`,
   '[tex]/unicode': `${src}/input/tex/extensions/unicode/unicode.js`,
   '[tex]/verb': `${src}/input/tex/extensions/verb/verb.js`,
   '[tex]/cases': `${src}/input/tex/extensions/cases/cases.js`,

@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {userOptions, defaultOptions, OptionList, makeArray} from '../../util/Options.js';
+import {userOptions, defaultOptions, OptionList, makeArray, expandable} from '../../util/Options.js';
 import {DOMAdaptor} from '../../core/DOMAdaptor.js';
 
 /**
@@ -52,7 +52,7 @@ export class HTMLDomStrings<N, T, D> {
                                         // The names of the tags whose contents will not be
                                         // scanned for math delimiters
 
-    includeHtmlTags: {br: '\n', wbr: '', '#comment': ''},
+    includeHtmlTags: expandable({br: '\n', wbr: '', '#comment': ''}),
                                         //  tags to be included in the text (and what
                                         //  text to replace them with)
 
@@ -70,7 +70,7 @@ export class HTMLDomStrings<N, T, D> {
   /**
    * The options for this instance
    */
-  protected options: OptionList;
+  public options: OptionList;
 
   /**
    * The array of strings found in the DOM
@@ -201,7 +201,11 @@ export class HTMLDomStrings<N, T, D> {
   protected handleTag(node: N, ignore: boolean): N | T {
     if (!ignore) {
       let text = this.options['includeHtmlTags'][this.adaptor.kind(node)];
-      this.extendString(node, text);
+      if (Array.isArray(text)) {
+        this.extendString(node, text[0] + this.adaptor.outerHTML(node) + text[1]);
+      } else {
+        this.extendString(node, text);
+      }
     }
     return this.adaptor.next(node);
   }
