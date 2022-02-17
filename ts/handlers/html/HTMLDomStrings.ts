@@ -201,8 +201,8 @@ export class HTMLDomStrings<N, T, D> {
   protected handleTag(node: N, ignore: boolean): N | T {
     if (!ignore) {
       let text = this.options['includeHtmlTags'][this.adaptor.kind(node)];
-      if (Array.isArray(text)) {
-        this.extendString(node, text[0] + this.adaptor.outerHTML(node) + text[1]);
+      if (text instanceof Function) {
+        this.extendString(node, text(node, this.adaptor));
       } else {
         this.extendString(node, text);
       }
