@@ -31,6 +31,7 @@ import TexError from '../TexError.js';
 import {HTMLDocument} from '../../../handlers/html/HTMLDocument.js';
 import {HtmlNode} from '../../../core/MmlTree/MmlNodes/HtmlNode.js';
 import {HTMLDomStrings} from '../../../handlers/HTML/HTMLDomStrings.js';
+import {DOMAdaptor} from '../../../core/DOMAdaptor.js';
 
 export const TexHtmlMethods: Record<string, ParseMethod> = {
   /**
@@ -74,7 +75,10 @@ export const TexHtmlConfiguration = Configuration.create(
       if (HTMLDomStrings) {
         const include = HTMLDomStrings.OPTIONS.includeHtmlTags;
         if (!include['tex-html']) {
-          include['tex-html'] = ['\\texHTML{', '}'];
+          include['tex-html'] = (node: any, adaptor: DOMAdaptor<any, any, any>) =>
+            '\\texHTML{' +
+            adaptor.innerHTML(node).replace(/\}/g, '&#x7D;').replace(/\{/g, '&#x7B;') +
+            '}';
         }
       }
     },
