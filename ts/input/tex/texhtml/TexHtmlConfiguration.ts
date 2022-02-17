@@ -24,7 +24,7 @@
 
 import {Configuration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
-import {CommandMap} from '../SymbolMap.js';
+import {MacroMap} from '../SymbolMap.js';
 import {ParseMethod} from '../Types.js';
 import ParseOptions from '../ParseOptions.js';
 import TexError from '../TexError.js';
@@ -33,52 +33,80 @@ import {HtmlNode} from '../../../core/MmlTree/MmlNodes/HtmlNode.js';
 import {HTMLDomStrings} from '../../../handlers/HTML/HTMLDomStrings.js';
 import {DOMAdaptor} from '../../../core/DOMAdaptor.js';
 
-export const TexHtmlMethods: Record<string, ParseMethod> = {
+
+export const HtmlNodeMethods: Record<string, ParseMethod> = {
   /**
-   * Handle the \texHTML macro
+   * Handle a serialized <tex-html> tag
    *
    * @param {TexParser} parser  The active TeX parser
    * @param {string} name       The name of the macro
    */
-  TexHtml(parser: TexParser, name: string) {
-    if (!parser.options.allowTexHTML) {
-      throw new TexError('NoTexHtml', '%1 is not allowed in the current configuration', name);
+  TexHTML(parser: TexParser, _name: string) {
+    //
+    //  Check that <tex-html> is allowed and that that is what we have
+    //
+    if (!parser.options.allowTexHTML) return false;
+    const match = parser.string.slice(parser.i).match(/^tex-html(?: n="(\d+)")?>/);
+    if (!match) return false;
+    //
+    //  Get the serialized HTML that <tex-html> contains
+    //  (If there are nested <tex-html>, they are marked using an n="x" attribute and
+    //   and associated comment <!x> that marks which </tex-html> goes with it.)
+    //
+    parser.i += match[0].length;
+    const end = (match[1] ? `<!${match[1]}>` : '') + '</tex-html>';
+    const i = parser.string.indexOf(end);
+    if (i < 0) {
+      throw new TexError('TokenNotFoundForCommand', 'Could not find %1 for %2', end, '<' + match[0]);
     }
+    const html = parser.string.substr(parser.i, i - parser.i).trim();
+    parser.i = i + 11 + (match[1] ? 3 + match[1].length : 0);
     //
-    //  get and parse the HTML fragment.
+    // Parse the HTML and check that there is something there
     //
-    const html = parser.GetArgument(name)
-      .trim()
-      .replace(/^<tex-html>(.*)<\/tex-html>/, '$1')   // remove redundant <tex-html> node
-      .replace(/^\\texHTML\{(.*)\}$/, '$1');          // remove \texHTML introduced by <tex-html> by FindTeX
     const adaptor = parser.configuration.packageData.get('texhtml').adaptor;
     const nodes = adaptor.childNodes(adaptor.body(adaptor.parse(html)));
-    if (nodes.length === 0) return;
+    if (nodes.length === 0) return true;
     //
     // Create an mtext element containing the HtmlNode internal node and push it.
     //
     const DOM = (nodes.length === 1 ? nodes[0] : adaptor.node('div', {}, nodes));
     const node = (parser.create('node', 'html') as HtmlNode<any>).setHTML(DOM, adaptor);
     parser.Push(parser.create('node', 'mtext', [node]));
+    return true;
   }
 };
 
-new CommandMap('texhtml', {texHTML: 'TexHtml'}, TexHtmlMethods);
+new MacroMap('tex-html', {'<': 'TexHTML'}, HtmlNodeMethods);
 
 export const TexHtmlConfiguration = Configuration.create(
   'texhtml', {
-    handler: {macro: ['texhtml']},
+    handler: {
+      character: ['tex-html']
+    },
     options: {
       allowTexHTML: false    // Must turn this on explicitly, since it allows unfiltered HTML insertion.
     },
     config: () => {
       if (HTMLDomStrings) {
+        //
+        //  Add the needed includeHtmlTags definition to handle <tex-html> tags
+        //
         const include = HTMLDomStrings.OPTIONS.includeHtmlTags;
         if (!include['tex-html']) {
-          include['tex-html'] = (node: any, adaptor: DOMAdaptor<any, any, any>) =>
-            '\\texHTML{' +
-            adaptor.innerHTML(node).replace(/\}/g, '&#x7D;').replace(/\{/g, '&#x7B;') +
-            '}';
+          include['tex-html'] = (node: any, adaptor: DOMAdaptor<any, any, any>) => {
+            //
+            // Use the node's serialized contents, and check if there are
+            //   nested <tex-html> nodes; if so, mark the one that we are using
+            //   so that we match the correct one when we look for it later
+            //   (such comments are removed from the DOM by the browser, so can't
+            //   be spoofed).
+            //
+            const html =  adaptor.innerHTML(node);
+            const n = html.split(/<\/tex-html>/).length;
+            const N = (n > 1 ? ` n="${n}"` : '');
+            return `<tex-html${N}>` + html + (n > 1 ? `<!${n}>` : '') + `</tex-html>`;
+          };
         }
       }
     },
