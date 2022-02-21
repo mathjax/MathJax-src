@@ -67,7 +67,7 @@ export class LinkedomAdaptor extends HTMLAdaptor<HTMLElement, Text, Document> {
 
   /**
    * @param {Window} window   The window to work with
-   * @param {OptionList} options  The options for the jsdom adaptor
+   * @param {OptionList} options  The options for the linkedom adaptor
    * @constructor
    */
   constructor(window: Window, options: OptionList = null) {
@@ -138,7 +138,7 @@ export class LinkedomAdaptor extends HTMLAdaptor<HTMLElement, Text, Document> {
 }
 
 /**
- * Function for creating an HTML adaptor using jsdom
+ * Function for creating an HTML adaptor using linkedom
  *
  * @param {any} parseHTML   The linkedom HTML parser to use for this adaptor
  * @return {HTMLAdaptor}    The newly created adaptor
