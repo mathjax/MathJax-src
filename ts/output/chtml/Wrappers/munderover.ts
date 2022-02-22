@@ -142,6 +142,7 @@ CommonMoverMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsup<any, any, an
     this.baseChild.toCHTML(base);
     const overbox = this.scriptChild.getBBox();
     const basebox = this.baseChild.getBBox();
+    this.adjustBaseHeight(base, basebox);
     const k = this.getOverKU(basebox, overbox)[0];
     const delta = (this.isLineAbove ? 0 : this.getDelta());
     this.adaptor.setStyle(over, 'paddingBottom', this.em(k));
@@ -209,6 +210,7 @@ CommonMunderoverMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsubsup<any,
     const overbox = this.overChild.getBBox();
     const basebox = this.baseChild.getBBox();
     const underbox = this.underChild.getBBox();
+    this.adjustBaseHeight(base, basebox);
     const ok = this.getOverKU(basebox, overbox)[0];
     const uk = this.getUnderKV(basebox, underbox)[0];
     const delta = this.getDelta();
