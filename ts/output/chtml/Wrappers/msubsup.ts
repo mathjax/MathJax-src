@@ -94,7 +94,7 @@ CommonMsubsupMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLscriptbase<any,
       'padding-right': '.05em',  // scriptspace
       'padding-left': '.033em'   // extra_ic
     },
-    'mjx-script > *': {
+    'mjx-script > mjx-spacer': {
       display: 'block'
     }
   };
