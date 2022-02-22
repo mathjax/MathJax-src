@@ -477,7 +477,7 @@ B extends MathDocumentConstructor<HTMLDocument<N, T, D>>>(
       for (const item of this.math) {
         const math = item as LazyMathItem<N, T, D>;
         //
-        // If it is not laxy compile or typeset, skip it.
+        // If it is not lazy compile or typeset, skip it.
         //
         if (!math.lazyCompile && !math.lazyTypeset) continue;
         //
