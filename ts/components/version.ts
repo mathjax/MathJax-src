@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  The version of MathJax (iused to tell what version a component
+ * @fileoverview  The version of MathJax (used to tell what version a component
  *                was compiled against).
  *
  * @author dpvc@mathjax.org (Davide Cervone)
