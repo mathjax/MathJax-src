@@ -1,14 +1,12 @@
 import './lib/tex-full.js';
-
+import '../tex/extensions/all-packages/all-packages.js';
 import {registerTeX} from '../tex/register.js';
-import {Loader} from '../../../../js/components/loader.js';
-import {AllPackages} from '../../../../js/input/tex/AllPackages.js';
-import '../../../../js/input/tex/require/RequireConfiguration.js';
 
-Loader.preLoad(
-  'input/tex-base',
-  '[tex]/all-packages',
-  '[tex]/require'
-);
+if (MathJax.loader) {
+  MathJax.loader.preLoad(
+    'input/tex-base',
+    '[tex]/all-packages'
+  );
+}
 
-registerTeX(['require',...AllPackages]);
+registerTeX();
