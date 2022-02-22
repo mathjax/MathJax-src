@@ -429,11 +429,14 @@ Mml3.XSLT = `
     <xsl:copy-of select="@*"/>
     <xsl:choose>
      <xsl:when test="$m[$p]/m:mpadded">
+      <m:mpadded depth="+.2em">
       <m:menclose notation="bottom">
-       <m:mpadded depth=".1em" height="1em" width=".5em">
-	<xsl:copy-of select="*"/>
+       <m:mpadded depth=".1em" height=".8em" width=".8em">
+        <m:mspace width=".15em"/>
+        <xsl:copy-of select="*"/>
        </m:mpadded>
       </m:menclose>
+      </m:mpadded>
      </xsl:when>
      <xsl:otherwise>
       <xsl:copy-of select="*"/>
@@ -466,7 +469,7 @@ Mml3.XSLT = `
  <xsl:param name="maxl" select="0"/>
  <m:mtr l="{1 + $p}">
   <xsl:if test="ancestor::mstack[1]/@stackalign='left'">
-   <xsl:attribute name="l"><xsl:value-of  select="$p"/></xsl:attribute>
+   <xsl:attribute name="l"><xsl:value-of select="$p"/></xsl:attribute>
   </xsl:if>
   <m:mtd><xsl:apply-templates select="."/></m:mtd>
  </m:mtr>
@@ -535,9 +538,16 @@ Mml3.XSLT = `
    <xsl:when test="$align='decimalpoint'">
     <xsl:attribute name="l"><xsl:value-of select="$p + string-length(substring-before($mn,$dp))"/></xsl:attribute>
    </xsl:when>
-  </xsl:choose>  <xsl:for-each select="(//node())[position() &lt;=$len]">
+  </xsl:choose>
+  <xsl:for-each select="(//node())[position() &lt;=$len]">
    <xsl:variable name="pos" select="position()"/>
-   <m:mtd><m:mn><xsl:value-of select="substring($mn,$pos,1)"/></m:mn></m:mtd>
+   <xsl:variable name="digit" select="substring($mn,$pos,1)"/>
+   <m:mtd>
+    <xsl:if test="$digit='.' or $digit=','">
+     <m:mspace width=".15em"/>
+    </xsl:if>
+    <m:mn><xsl:value-of select="$digit"/></m:mn>
+   </m:mtd>
   </xsl:for-each>
  </m:mtr>
 </xsl:template>
@@ -689,7 +699,7 @@ Mml3.XSLT = `
     </xsl:when>
     <xsl:when test="@longdivstyle='stackedleftlinetop'">
      <xsl:copy-of select="*[2]"/>
-     <m:msline length="{string-length(*[3])-1}"/>
+     <m:msline length="{string-length(*[3])}"/>
      <m:msrow>
       <m:mrow>
      <m:menclose notation="bottom right">
@@ -710,10 +720,12 @@ Mml3.XSLT = `
     </xsl:when>
     <xsl:otherwise>
      <xsl:copy-of select="*[2]"/>
-     <m:msline length="{string-length(*[3])}"/>
+     <m:msline length="{string-length(*[3])+1}"/>
      <m:msrow>
-      <m:mrow><xsl:copy-of select="*[1]"/></m:mrow>
-      <m:mo>)</m:mo>
+      <m:mrow><xsl:copy-of select="*[1]"/><m:mspace width=".2em"/></m:mrow>
+      <m:mpadded voffset=".1em" lspace="-.15em" depth="-.2em" height="-.2em">
+       <m:mo minsize="1.2em">)</m:mo>
+      </m:mpadded>
       <xsl:copy-of select="*[3]"/>
      </m:msrow>
     </xsl:otherwise>
