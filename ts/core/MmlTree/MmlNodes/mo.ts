@@ -227,7 +227,9 @@ export class MmlMo extends AbstractMmlTokenNode {
     if (parent.isEmbellished) {
       return (parent.coreMO() as MmlMo).getText();
     }
-    while ((((parent.isKind('mrow') || parent.isKind('TeXAtom') || parent.isKind('mstyle') ||
+    while ((((parent.isKind('mrow') ||
+              (parent.isKind('TeXAtom') && parent.texClass !== TEXCLASS.VCENTER) ||
+              parent.isKind('mstyle') ||
               parent.isKind('mphantom')) && parent.childNodes.length === 1) ||
             parent.isKind('munderover')) && parent.childNodes[0]) {
       parent = parent.childNodes[0] as MmlNode;
