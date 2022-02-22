@@ -43,7 +43,8 @@ const EXPORT_PROCESS = ['let', 'const', 'var', 'function', 'class', 'namespace']
 /**
  * The relative path to the MathJax directory
  */
-const mjPath = path.relative(process.cwd(), path.resolve(__dirname,'../../js'));
+const mjPath = path.relative(process.cwd(), path.resolve(__dirname, '..', '..', 'js'));
+const mjGlobal = path.join('..', mjPath, 'components', 'global.js');
 
 /**
  * Read the configuration for the component
@@ -53,14 +54,14 @@ const config = JSON.parse(fs.readFileSync(process.argv[2] || 'build.json'));
 /**
  * Extract the configuration values
  */
+const COMPONENT = path.basename(config.component || 'part');                // name of the component
 const TARGETS = config.targets || [];                                       // the files to include in the component
 const EXCLUDE = new Map((config.exclude || []).map(name => [name, true]));  // files to exclude from the component
-const EXCLUDESUBDIRS = config.excludeSubdirs === 'true';                    // exclude subdirectories
-const MATHJAX = config.js || config.mathjax || mjPath;                      // path to the compiled .js files
+const EXCLUDESUBDIRS = config.excludeSubdirs === 'true';                    // exclude subdirectories or not
+const JS = config.js || config.mathjax || mjPath;                           // path to the compiled .js files
 const LIB = config.lib || './lib';                                          // path to the lib directory to create
-const COMPONENT = path.basename(config.component || 'part');                // name of the component
-const GLOBAL = config.global || `../${MATHJAX}/components/global.js`;       // the location of global.js
-const SRC = config.ts || MATHJAX.replace(/js$/, 'ts');                      // path to the .ts files
+const GLOBAL = config.global || mjGlobal;                                   // path to the global.js file
+const TS = config.ts || JS.replace(/js$/, 'ts');                            // path to the .ts files
 
 /**
  * The list of files that need to be added to the lib directory
@@ -160,17 +161,15 @@ function processLines(file, objects) {
   if (objects.length === 0) return [];
   const dir = path.dirname(file).replace(/^\.$/, '');
   const dots = dir.replace(/[^\/]+/g, '..') || '.';
-  const relative = path.join(dots, '..', MATHJAX, dir, path.basename(file)).replace(/\.ts$/, '.js');
+  const relative = path.join(dots, '..', JS, dir, path.basename(file)).replace(/\.ts$/, '.js');
   const name = path.parse(file).name;
   const lines = [
     '"use strict";',
     `Object.defineProperty(exports, '__esModule', {value: true});`
   ];
-  let source = (dir.replace(/\//g, '.') + '.' + name).replace(/^\./, '')
+  let source = ((dir.replace(/\//g, '.') + '.' + name).replace(/^\./, '')
+                + (exists(path.resolve(JS, file.replace(/\.ts$/, ''))) ? '_ts' : ''))
       .replace(/\.[^.]*/g, (x) => (x.substr(1).match(/[^a-zA-Z_]/) ? '[\'' + x.substr(1) + '\']' : x));
-  if (exists(path.resolve(MATHJAX, file.replace(/\.ts$/, '')))) {
-    source += '_ts';
-  }
   for (const id of objects) {
     lines.push(`exports.${id} = MathJax._.${source}.${id};`);
   }
@@ -273,11 +272,11 @@ function processPackage(lines, space, dir) {
     if (path.dirname(PACKAGE[0]) === dir) {
       const file = PACKAGE.shift();
       const name = path.basename(file);
-      const relativefile = path.join('..', MATHJAX, dir, name).replace(/\.ts$/, '.js');
+      const relativefile = path.join('..', JS, dir, name).replace(/\.ts$/, '.js');
       const component = 'module' + (++importCount);
       lines.push(`import * as ${component} from '${relativefile}';`);
       let property = name.replace(/\.ts$/, '');
-      if (property !== name && exists(path.resolve(MATHJAX, file.replace(/\.ts$/, '')))) {
+      if (property !== name && exists(path.resolve(JS, file.replace(/\.ts$/, '')))) {
         property += '_ts';
       }
       if (property.match(/[^a-zA-Z0-9_]/)) {
@@ -324,5 +323,5 @@ function rmDir(dir) {
 //
 rmDir(LIB);
 console.info("Processing:");
-processList(SRC, '', TARGETS);
+processList(TS, '', TARGETS);
 processGlobal();
