@@ -35,7 +35,7 @@ import {split} from '../../../util/string.js';
 export type AlignFunction = (w: number, W: number) => number;
 
 /**
- * Get the function for aligning scripts horizontally (left, center, right(
+ * Get the function for aligning scripts horizontally (left, center, right)
  */
 export function AlignX(align: string) {
   return ({
