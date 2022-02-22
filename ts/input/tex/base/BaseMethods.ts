@@ -718,6 +718,7 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
   let attr = parser.GetBrackets(name, '').replace(/^\s+/, '');
   const text = parser.GetArgument(name);
   const def: EnvList = {};
+  const keep: string[] = [];
   let node: MmlNode;
   try {
     node = parser.create('node', kind);
@@ -750,8 +751,12 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
         value = false;
       }
       def[match[1]] = value;
+      keep.push(match[1]);
     }
     attr = attr.substr(match[0].length);
+  }
+  if (keep.length) {
+    def['mjx-keep-attrs'] = keep.join(' ');
   }
   const textNode = parser.create('text', text);
   node.appendChild(textNode);
