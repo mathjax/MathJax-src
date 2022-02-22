@@ -370,7 +370,7 @@ B extends MathDocumentConstructor<HTMLDocument<N, T, D>>>(
      *   then create the intersection observer and lazy list,
      *   and bind the lazyProcessSet function to this instance
      *   so it can be used as a callback more easily. Add the
-     *   event listeners to typeset everytihng before printing.
+     *   event listeners to typeset everything before printing.
      *
      * @override
      * @constructor
