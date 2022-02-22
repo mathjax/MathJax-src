@@ -161,7 +161,7 @@ export class MmlMtable extends AbstractMmlNode {
           child.parent = this;              // ... and make it think it is a child of the table again
           isMtd && mtr.appendChild(factory.create('mtd'));  // child will be replaced, so make sure there is an mtd
           const merror = child.mError('Children of ' + this.kind + ' must be mtr or mlabeledtr', options, isMtd);
-          mtr.childNodes[0].appendChild(merror);     // append the error to the mtd in the mtr
+          mtr.childNodes[mtr.childNodes.length - 1].appendChild(merror);   // append the error to the mtd in the mtr
         }
       }
     }
