@@ -240,42 +240,103 @@ AmsMethods.HandleOperatorName = function(parser: TexParser, name: string) {
  * @param {string} name The macro name.
  */
 AmsMethods.SideSet = function (parser: TexParser, name: string) {
-  const pre = parser.ParseArg(name);
-  const post = parser.ParseArg(name);
+  //
+  //  Get the pre- and post-scripts, and any extra material from the arguments
+  //
+  const [preScripts, preRest] = splitSideSet(parser.ParseArg(name));
+  const [postScripts, postRest] = splitSideSet(parser.ParseArg(name));
   const base = parser.ParseArg(name);
-  if (!checkSideSet(pre) || !checkSideSet(post)) {
-    throw new TexError('SideSetArgs', 'First two arguments to %1 must consist only of super- and subscripts', name);
+  let mml = base;
+  //
+  //  If there are pre-scripts...
+  //
+  if (preScripts) {
+    //
+    //  If there is other material...
+    //
+    if (preRest) {
+      //
+      //  Replace the empty base of the prescripts with a phantom element of the
+      //    original base, with width 0 (so of the correct height and depth).
+      //    so the scripts will be at the right heights.
+      //
+      preScripts.replaceChild(
+        parser.create('node', 'mphantom', [
+          parser.create('node', 'mpadded', [base.copy()], {width: 0})
+        ]),
+        NodeUtil.getChildAt(preScripts, 0)
+      );
+    } else {
+      //
+      //  If there is no extra meterial, make a mmultiscripts element
+      //
+      mml = parser.create('node', 'mmultiscripts', [base]);
+      //
+      //  Add any postscripts
+      //
+      if (postScripts) {
+        NodeUtil.appendChildren(mml, [
+          NodeUtil.getChildAt(postScripts, 1) || parser.create('node', 'none'),
+          NodeUtil.getChildAt(postScripts, 2) || parser.create('node', 'none')
+        ]);
+      }
+      //
+      //  Add the prescripts (left aligned)
+      //
+      NodeUtil.setProperty(mml, 'scriptalign', 'left');
+      NodeUtil.appendChildren(mml, [
+        parser.create('node', 'mprescripts'),
+        NodeUtil.getChildAt(preScripts, 1) || parser.create('node', 'none'),
+        NodeUtil.getChildAt(preScripts, 2) || parser.create('node', 'none')
+      ]);
+    }
   }
-  const mml = parser.create('node', 'mmultiscripts', [base]);
-  if (!post.isInferred) {
-    NodeUtil.appendChildren(mml, [
-      NodeUtil.getChildAt(post, 1) || parser.create('node', 'none'),
-      NodeUtil.getChildAt(post, 2) || parser.create('node', 'none')
-    ]);
+  //
+  //  If there are postscripts and we didn't make a mmultiscript element above...
+  //
+  if (postScripts && mml === base) {
+    //
+    //  Replace the emtpy base with actual base, and use that as the mml
+    //
+    postScripts.replaceChild(base, NodeUtil.getChildAt(postScripts, 0));
+    mml = postScripts;
   }
-  if (!pre.isInferred) {
-    NodeUtil.setProperty(mml, 'scriptalign', 'left');
-    NodeUtil.appendChildren(mml, [
-      parser.create('node', 'mprescripts'),
-      NodeUtil.getChildAt(pre, 1) || parser.create('node', 'none'),
-      NodeUtil.getChildAt(pre, 2) || parser.create('node', 'none')
-    ]);
+  //
+  //  Push the needed pieces onto the stack.
+  //  Note that the postScripts are in the mml element,
+  //    either as part of the mmultiscripts node, or the
+  //    msubsup with the base inserted into it.
+  //
+  if (preRest) {
+    preScripts && parser.Push(preScripts);
+    parser.Push(preRest);
   }
   parser.Push(mml);
+  postRest && parser.Push(postRest);
 };
 
 /**
- * Utility for checking the pre- and postscript arguments for validity.
+ * Utility for breaking the \sideset scripts from any other material.
  * @param {MmlNode} mml The node to check.
- * @return {boolean} True if scripts are OK, false otherwise.
+ * @return {[MmlNode, MmlNode]} The msubsup with the scripts together with any extra nodes.
  */
-function checkSideSet(mml: MmlNode): boolean {
-  if (!mml) return false;
-  if (mml.isInferred && mml.childNodes.length === 0) return true;
-  if (!mml.isKind('msubsup')) return false;
+function splitSideSet(mml: MmlNode): [MmlNode, MmlNode] {
+    if (!mml || (mml.isInferred && mml.childNodes.length === 0)) return [null, null];
+    if (mml.isKind('msubsup') && checkSideSetBase(mml)) return [mml, null];
+    const child = NodeUtil.getChildAt(mml, 0);
+    if (!(mml.isInferred && child && checkSideSetBase(child))) return [null, mml];
+    mml.childNodes.splice(0, 1); // remove first child
+    return [child, mml];
+}
+
+/**
+ * Utility for checking if a \setset argument has scripts with an empty base.
+ * @param {MmlNode} mml The node to check.
+ * @return {boolean} True if the base is not and empty mi element.
+ */
+function checkSideSetBase(mml: MmlNode): boolean {
   const base = mml.childNodes[0];
-  if (!(base && base.isKind('mi') && (base as AbstractMmlTokenNode).getText() === '')) return false;
-  return true;
+  return base && base.isKind('mi') && (base as AbstractMmlTokenNode).getText() === '';
 }
 
 
