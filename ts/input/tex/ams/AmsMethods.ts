@@ -262,7 +262,7 @@ AmsMethods.SideSet = function (parser: TexParser, name: string) {
       //
       preScripts.replaceChild(
         parser.create('node', 'mphantom', [
-          parser.create('node', 'mpadded', [base.copy()], {width: 0})
+          parser.create('node', 'mpadded', [ParseUtil.copyNode(base, parser)], {width: 0})
         ]),
         NodeUtil.getChildAt(preScripts, 0)
       );
