@@ -23,7 +23,8 @@
  */
 
 import {Package} from '../components/package.js';
-import MathMaps from './mathmaps.js';
+import {MathJax as MJGlobal} from '../components/global.js';
+// import MathMaps from './mathmaps.js';
 
 declare namespace window {
   let SREfeature: {[key: string]: any};
@@ -37,24 +38,12 @@ declare namespace global {
 //
 // We could also use a custom method for loading locales that are webpacked into
 // the distribution.
-(() => {
-  console.log('Typescript path');
-  let path = Package.resolvePath('[sre]', false) + '/mathmaps';
-  console.log(path);
-  if (typeof window !== 'undefined') {
-    console.log(6);
-    console.log(MathMaps);
-    console.log((window as any)['SRE']);
-    window.SREfeature = {json: path, delay: true};
-    // window.SREfeature = {
-    //   json: path
-    // };
-  } else {
-    console.log(7);
-    // TODO: This is does not yet work correctly!
-    global.SREfeature = {json: path, delay: true};
-  }
-})();
+if (typeof window !== 'undefined') {
+  window.SREfeature = {json: Package.resolvePath('[sre]', false) + '/mathmaps'};
+} else {
+  // TODO: This is does not yet work correctly!
+  global.SREfeature = {json: MJGlobal.config.loader.paths.mathjax + '/sre/mathmaps'};
+}
 
 
 import * as Api from 'speech-rule-engine/js/common/system.js';
