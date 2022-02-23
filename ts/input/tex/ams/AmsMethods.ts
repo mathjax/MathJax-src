@@ -26,6 +26,7 @@
 import {StackItem} from '../StackItem.js';
 import {ParseMethod} from '../Types.js';
 import ParseUtil from '../ParseUtil.js';
+import ParseMethods from '../ParseMethods.js';
 import NodeUtil from '../NodeUtil.js';
 import {TexConstant} from '../TexConstants.js';
 import TexParser from '../TexParser.js';
@@ -202,17 +203,14 @@ export const NEW_OPS = 'ams-declare-ops';
  * @param {string} name The macro name.
  */
 AmsMethods.HandleDeclareOp =  function (parser: TexParser, name: string) {
-  let limits = (parser.GetStar() ? '' : '\\nolimits\\SkipLimits');
+  let star = (parser.GetStar() ? '*' : '');
   let cs = ParseUtil.trimSpaces(parser.GetArgument(name));
   if (cs.charAt(0) === '\\') {
     cs = cs.substr(1);
   }
   let op = parser.GetArgument(name);
-  if (!op.match(/\\text/)) {
-    op = op.replace(/\*/g, '\\text{*}').replace(/-/g, '\\text{-}');
-  }
   (parser.configuration.handlers.retrieve(NEW_OPS) as CommandMap).
-    add(cs, new Macro(cs, AmsMethods.Macro, ['\\mathop{\\rm ' + op + '}' + limits]));
+    add(cs, new Macro(cs, AmsMethods.Macro, [`\\operatorname${star}{${op}}`]));
 };
 
 
@@ -223,28 +221,47 @@ AmsMethods.HandleDeclareOp =  function (parser: TexParser, name: string) {
  */
 AmsMethods.HandleOperatorName = function(parser: TexParser, name: string) {
   // @test Operatorname
-  const limits = (parser.GetStar() ? '' : '\\nolimits\\SkipLimits');
+  const star = parser.GetStar();
+  //
+  //  Parse the argument using operator letters and grouping multiple letters.
+  //
   let op = ParseUtil.trimSpaces(parser.GetArgument(name));
-  if (!op.match(/\\text/)) {
-    op = op.replace(/\*/g, '\\text{*}').replace(/-/g, '\\text{-}');
+  let mml = new TexParser(op, {
+    ...parser.stack.env,
+    font: TexConstant.Variant.NORMAL,
+    multiLetterIdentifiers: /^[-*a-z]+/i,
+    operatorLetters: true
+  }, parser.configuration).mml();
+  //
+  //  If we get something other than a single mi, wrap in a TeXAtom.
+  //
+  if (!mml.isKind('mi')) {
+    mml = parser.create('node', 'TeXAtom', [mml]);
   }
-  parser.string = '\\mathop{\\rm ' + op + '}' + limits + ' ' +
-    parser.string.slice(parser.i);
-  parser.i = 0;
+  //
+  //  Mark the limit properties and the TeX class.
+  //
+  NodeUtil.setProperties(mml, {movesupsub: star, movablelimits: true, texClass: TEXCLASS.OP});
+  //
+  //  Skip a following \limits macro if not a starred operator
+  //
+  if (!star) {
+    const c = parser.GetNext(), i = parser.i;
+    if (c === '\\' && ++parser.i && parser.GetCS() !== 'limits') {
+      parser.i = i;
+    }
+  }
+  //
+  parser.Push(mml);
 };
 
-
 /**
- * Handle SkipLimits.
+ * Handle extra letters in \operatorname (- and *), default to normal otherwise.
  * @param {TexParser} parser The calling parser.
- * @param {string} name The macro name.
+ * @param {string} c The letter being checked
  */
-AmsMethods.SkipLimits = function(parser: TexParser, _name: string) {
-  // @test Operatorname
-  const c = parser.GetNext(), i = parser.i;
-  if (c === '\\' && ++parser.i && parser.GetCS() !== 'limits') {
-    parser.i = i;
-  }
+AmsMethods.operatorLetter = function (parser: TexParser, c: string) {
+  return parser.stack.env.operatorLetters ? ParseMethods.variable(parser, c) : false;
 };
 
 
