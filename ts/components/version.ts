@@ -22,4 +22,23 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-export const VERSION = '3.2.0';
+declare const PACKAGE_VERSION: string;  // provided by webpack via DefinePlugin
+
+export const VERSION = (
+  typeof PACKAGE_VERSION === 'undefined' ?
+    //
+    //  This will not be included in the webpack version, so only runs in node
+    //
+    (function () {
+      //
+      //  Look up the version from the package.json file
+      //
+      /* tslint:disable-next-line:no-eval */
+      const load = eval('require');
+      /* tslint:disable-next-line:no-eval */
+      const dirname = eval('__dirname');
+      const path = load('path');
+      return load(path.resolve(dirname, '..', '..', 'package.json')).version;
+    })() :
+  PACKAGE_VERSION
+);
