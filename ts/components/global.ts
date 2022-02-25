@@ -22,6 +22,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
+import {VERSION} from './version.js';
+
 /**
  * The MathJax variable as a configuration object
  */
@@ -127,7 +129,7 @@ if (typeof global.MathJax === 'undefined') {
  */
 if (!(global.MathJax as MathJaxObject).version) {
   global.MathJax = {
-    version: '3.2.0',
+    version: VERSION,
     _: {},
     config: global.MathJax
   };
