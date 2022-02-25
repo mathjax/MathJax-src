@@ -330,7 +330,7 @@ function splitSideSet(mml: MmlNode): [MmlNode, MmlNode] {
 }
 
 /**
- * Utility for checking if a \setset argument has scripts with an empty base.
+ * Utility for checking if a \sideset argument has scripts with an empty base.
  * @param {MmlNode} mml The node to check.
  * @return {boolean} True if the base is not and empty mi element.
  */
