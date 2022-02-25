@@ -37,6 +37,7 @@ import {FlalignItem} from './AmsItems.js';
 import BaseMethods from '../base/BaseMethods.js';
 import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMunderover} from '../../../core/MmlTree/MmlNodes/munderover.js';
+import {MmlNode, AbstractMmlTokenNode} from '../../../core/MmlTree/MmlNode.js';
 
 
 // Namespace
@@ -232,6 +233,111 @@ AmsMethods.HandleOperatorName = function(parser: TexParser, name: string) {
     parser.string.slice(parser.i);
   parser.i = 0;
 };
+
+/**
+ * Handle sideset.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
+AmsMethods.SideSet = function (parser: TexParser, name: string) {
+  //
+  //  Get the pre- and post-scripts, and any extra material from the arguments
+  //
+  const [preScripts, preRest] = splitSideSet(parser.ParseArg(name));
+  const [postScripts, postRest] = splitSideSet(parser.ParseArg(name));
+  const base = parser.ParseArg(name);
+  let mml = base;
+  //
+  //  If there are pre-scripts...
+  //
+  if (preScripts) {
+    //
+    //  If there is other material...
+    //
+    if (preRest) {
+      //
+      //  Replace the empty base of the prescripts with a phantom element of the
+      //    original base, with width 0 (but still of the correct height and depth).
+      //    so the scripts will be at the right heights.
+      //
+      preScripts.replaceChild(
+        parser.create('node', 'mphantom', [
+          parser.create('node', 'mpadded', [ParseUtil.copyNode(base, parser)], {width: 0})
+        ]),
+        NodeUtil.getChildAt(preScripts, 0)
+      );
+    } else {
+      //
+      //  If there is no extra meterial, make a mmultiscripts element
+      //
+      mml = parser.create('node', 'mmultiscripts', [base]);
+      //
+      //  Add any postscripts
+      //
+      if (postScripts) {
+        NodeUtil.appendChildren(mml, [
+          NodeUtil.getChildAt(postScripts, 1) || parser.create('node', 'none'),
+          NodeUtil.getChildAt(postScripts, 2) || parser.create('node', 'none')
+        ]);
+      }
+      //
+      //  Add the prescripts (left aligned)
+      //
+      NodeUtil.setProperty(mml, 'scriptalign', 'left');
+      NodeUtil.appendChildren(mml, [
+        parser.create('node', 'mprescripts'),
+        NodeUtil.getChildAt(preScripts, 1) || parser.create('node', 'none'),
+        NodeUtil.getChildAt(preScripts, 2) || parser.create('node', 'none')
+      ]);
+    }
+  }
+  //
+  //  If there are postscripts and we didn't make a mmultiscript element above...
+  //
+  if (postScripts && mml === base) {
+    //
+    //  Replace the emtpy base with actual base, and use that as the mml
+    //
+    postScripts.replaceChild(base, NodeUtil.getChildAt(postScripts, 0));
+    mml = postScripts;
+  }
+  //
+  //  Push the needed pieces onto the stack.
+  //  Note that the postScripts are in the mml element,
+  //    either as part of the mmultiscripts node, or the
+  //    msubsup with the base inserted into it.
+  //
+  if (preRest) {
+    preScripts && parser.Push(preScripts);
+    parser.Push(preRest);
+  }
+  parser.Push(mml);
+  postRest && parser.Push(postRest);
+};
+
+/**
+ * Utility for breaking the \sideset scripts from any other material.
+ * @param {MmlNode} mml The node to check.
+ * @return {[MmlNode, MmlNode]} The msubsup with the scripts together with any extra nodes.
+ */
+function splitSideSet(mml: MmlNode): [MmlNode, MmlNode] {
+    if (!mml || (mml.isInferred && mml.childNodes.length === 0)) return [null, null];
+    if (mml.isKind('msubsup') && checkSideSetBase(mml)) return [mml, null];
+    const child = NodeUtil.getChildAt(mml, 0);
+    if (!(mml.isInferred && child && checkSideSetBase(child))) return [null, mml];
+    mml.childNodes.splice(0, 1); // remove first child
+    return [child, mml];
+}
+
+/**
+ * Utility for checking if a \sideset argument has scripts with an empty base.
+ * @param {MmlNode} mml The node to check.
+ * @return {boolean} True if the base is not and empty mi element.
+ */
+function checkSideSetBase(mml: MmlNode): boolean {
+  const base = mml.childNodes[0];
+  return base && base.isKind('mi') && (base as AbstractMmlTokenNode).getText() === '';
+}
 
 
 /**

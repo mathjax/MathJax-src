@@ -156,18 +156,27 @@ export class MathMLCompile<N, T, D> {
         continue;
       }
       if (name.substr(0, 9) === 'data-mjx-') {
-        if (name === 'data-mjx-alternate') {
+        switch (name.substr(9)) {
+        case 'alternate':
           mml.setProperty('variantForm', true);
-        } else if (name === 'data-mjx-variant') {
+          break;
+        case 'variant':
           mml.attributes.set('mathvariant', value);
           ignoreVariant = true;
-        } else if (name === 'data-mjx-smallmatrix') {
+          break;
+        case 'smallmatrix':
           mml.setProperty('scriptlevel', 1);
           mml.setProperty('useHeight', false);
-        } else if (name === 'data-mjx-accent') {
+          break;
+        case 'accent':
           mml.setProperty('mathaccent', value === 'true');
-        } else if (name === 'data-mjx-auto-op') {
+          break;
+        case 'auto-op':
           mml.setProperty('autoOP', value === 'true');
+          break;
+        case 'script-align':
+          mml.setProperty('scriptalign', value);
+          break;
         }
       } else if (name !== 'class') {
         let val = value.toLowerCase();

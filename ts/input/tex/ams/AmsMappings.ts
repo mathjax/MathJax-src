@@ -54,8 +54,7 @@ new sm.CommandMap('AMSmath-macros', {
   dddot:      ['Accent', '20DB'],
   ddddot:     ['Accent', '20DC'],
 
-  sideset:    ['Macro', '\\mathop{\\mathop{\\rlap{\\phantom{#3}}}\\nolimits#1' +
-               '\\!\\mathop{#3}\\nolimits#2}', 3],
+  sideset:     'SideSet',
 
   boxed:      ['Macro', '\\fbox{$\\displaystyle{#1}$}', 1],
 
