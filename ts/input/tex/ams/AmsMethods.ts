@@ -257,7 +257,7 @@ AmsMethods.SideSet = function (parser: TexParser, name: string) {
     if (preRest) {
       //
       //  Replace the empty base of the prescripts with a phantom element of the
-      //    original base, with width 0 (so of the correct height and depth).
+      //    original base, with width 0 (but still of the correct height and depth).
       //    so the scripts will be at the right heights.
       //
       preScripts.replaceChild(
