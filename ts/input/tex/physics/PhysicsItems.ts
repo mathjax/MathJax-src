@@ -86,8 +86,8 @@ export class AutoOpen extends BaseItem {
       this.getProperty('big') as string
     );
     //
-    //  Remove fence markers so it is treated as a regular mrow when
-    //  setting the tex class, so it is not class INNER (#2760)
+    //  Remove fence markers that would cause it to be TeX class INNER,
+    //  so it is treated as a regular mrow when setting the tex class (#2760)
     //
     NodeUtil.removeProperties(mml, 'open', 'close', 'texClass');
     return mml;
