@@ -102,6 +102,8 @@ new CommandMap('text-macros', {
   Huge:         ['SetSize', 2.49],
 
   Bbb:          ['Macro', '{\\bbFont #1}', 1],
+  textnormal:   ['Macro', '{\\rm #1}', 1],
+  textup:       ['Macro', '{\\rm #1}', 1],
   textrm:       ['Macro', '{\\rm #1}', 1],
   textit:       ['Macro', '{\\it #1}', 1],
   textbf:       ['Macro', '{\\bf #1}', 1],
