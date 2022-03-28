@@ -140,6 +140,7 @@ new CommandMap('text-macros', {
   href:         'CheckAutoload',
   style:        'CheckAutoload',
   class:        'CheckAutoload',
+  data:         'CheckAutoload',
   cssId:        'CheckAutoload',
   unicode:      'CheckAutoload',
 
