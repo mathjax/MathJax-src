@@ -32,6 +32,28 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 // Namespace
 let HtmlMethods: Record<string, ParseMethod> = {};
 
+/**
+ * Implements \data{dataset}{content}
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
+HtmlMethods.Data = (parser: TexParser, name: string) => {
+  const dataset = parser.GetArgument(name);
+  const arg = GetArgumentMML(parser, name);
+  for (const [prop, val] of splitTokens(dataset)) {
+    NodeUtil.setAttribute(arg, `data-${prop}`, val);
+  }
+  parser.Push(arg);
+};
+
+/**
+ * Split a dataset string into tokens.
+ * @param str String to split.
+ */
+function splitTokens(str: string) {
+  const matches = Array.from(str.matchAll(/\b([A-Za-z0-9_-]+)=(['"])(.+?)\2/g));
+  return matches.map(([, name, , val]) => [name, val]);
+}
 
 /**
  * Implements \href{url}{math}
@@ -119,6 +141,5 @@ let GetArgumentMML = function(parser: TexParser, name: string): MmlNode {
   NodeUtil.copyAttributes(arg, mrow);
   return mrow;
 };
-
 
 export default HtmlMethods;
