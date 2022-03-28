@@ -48,7 +48,7 @@ HtmlMethods.Data = (parser: TexParser, name: string) => {
 
 /**
  * Split a dataset string into tokens.
- * @param str String to split.
+ * @param {string} str String to split.
  */
 function splitTokens(str: string) {
   const matches = Array.from(str.matchAll(/\b([A-Za-z0-9_-]+)=(['"])(.+?)\2/g));
@@ -141,5 +141,6 @@ let GetArgumentMML = function(parser: TexParser, name: string): MmlNode {
   NodeUtil.copyAttributes(arg, mrow);
   return mrow;
 };
+
 
 export default HtmlMethods;
