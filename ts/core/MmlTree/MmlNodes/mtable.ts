@@ -147,7 +147,7 @@ export class MmlMtable extends AbstractMmlNode {
         const isMtd = child.isKind('mtd');
         //
         //  If there is already an mtr for previous children, just remove the child
-        //    otherwise repalce the child with a new mtr
+        //    otherwise replace the child with a new mtr
         //
         if (mtr) {
           this.removeChild(child);
