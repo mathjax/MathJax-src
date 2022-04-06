@@ -24,6 +24,7 @@
 import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
 import {CommonMglyphMixin} from '../../common/Wrappers/mglyph.js';
 import {MmlMglyph} from '../../../core/MmlTree/MmlNodes/mglyph.js';
+import {CHTMLTextNode} from './TextNode.js';
 import {StyleList, StyleData} from '../../../util/StyleList.js';
 
 /*****************************************************************/
@@ -59,6 +60,10 @@ CommonMglyphMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
    */
   public toCHTML(parent: N) {
     const chtml = this.standardCHTMLnode(parent);
+    if (this.charWrapper) {
+      (this.charWrapper as CHTMLTextNode<N, T, D>).toCHTML(chtml);
+      return;
+    }
     const {src, alt} = this.node.attributes.getList('src', 'alt');
     const styles: StyleData = {
       width: this.em(this.width),
