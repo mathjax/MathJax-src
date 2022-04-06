@@ -719,7 +719,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * @template D  The DelimiterData type
    */
   public static dynamicSetup<C extends CharOptions, D extends DelimiterData>(
-    extension: string, file: string, variants: CharMapMap<C>, delimiters: DelimiterMap<D> = []
+    extension: string, file: string, variants: CharMapMap<C>, delimiters: DelimiterMap<D> = {}
   ) {
     const data = (extension ? this.dynamicExtensions.get(extension) : null);
     const files = (extension ? data.files : this.dynamicFiles);
