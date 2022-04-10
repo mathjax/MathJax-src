@@ -98,7 +98,10 @@ if (typeof window !== 'undefined') {
                       };
 } else {
   // TODO: This is does not yet work correctly!
-  global.SREfeature = {json: MJGlobal.config.loader.paths.mathjax + '/sre/mathmaps'};
+  global.SREfeature = {json: MJGlobal.config.loader.paths.mathjax + '/sre/mathmaps',
+                       delay: true,
+                       custom: (loc: string) => loadPreloadedLocales(loc)
+                      };
 }
 
 
