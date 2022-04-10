@@ -626,6 +626,9 @@ BaseMethods.Overset = function(parser: TexParser, name: string) {
   const top = parser.ParseArg(name);
   const base = parser.ParseArg(name);
   ParseUtil.checkMovableLimits(base);
+  if (top.isKind('mo')) {
+    NodeUtil.setAttribute(top, 'accent', false);
+  }
   const node = parser.create('node', 'mover', [base, top]);
   parser.Push(node);
 };
@@ -641,7 +644,10 @@ BaseMethods.Underset = function(parser: TexParser, name: string) {
   const bot = parser.ParseArg(name);
   const base = parser.ParseArg(name);
   ParseUtil.checkMovableLimits(base);
-  const node = parser.create('node', 'munder', [base, bot]);
+  if (bot.isKind('mo')) {
+    NodeUtil.setAttribute(bot, 'accent', false);
+  }
+  const node = parser.create('node', 'munder', [base, bot], {underaccent: false});
   parser.Push(node);
 };
 
@@ -656,7 +662,13 @@ BaseMethods.Overunderset = function(parser: TexParser, name: string) {
   const bot = parser.ParseArg(name);
   const base = parser.ParseArg(name);
   ParseUtil.checkMovableLimits(base);
-  const node = parser.create('node', 'munderover', [base, bot, top]);
+  if (top.isKind('mo')) {
+    NodeUtil.setAttribute(top, 'accent', false);
+  }
+  if (bot.isKind('mo')) {
+    NodeUtil.setAttribute(bot, 'accent', false);
+  }
+  const node = parser.create('node', 'munderover', [base, bot, top], {accent: false, underaccent: false});
   parser.Push(node);
 };
 
