@@ -22,18 +22,6 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Package} from '../components/package.js';
-import {MathJax as MJGlobal} from '../components/global.js';
-import MathMaps from './mathmaps.js';
-
-declare namespace window {
-  let SREfeature: {[key: string]: any};
-}
-
-declare namespace global {
-  let SREfeature: {[key: string]: any};
-}
-
 import * as Api from 'speech-rule-engine/js/common/system.js';
 import {Walker} from 'speech-rule-engine/js/walker/walker.js';
 import * as WalkerFactory from 'speech-rule-engine/js/walker/walker_factory.js';
@@ -44,6 +32,7 @@ import {Highlighter} from 'speech-rule-engine/js/highlighter/highlighter.js';
 import * as HighlighterFactory from 'speech-rule-engine/js/highlighter/highlighter_factory.js';
 import {SpeechGenerator} from 'speech-rule-engine/js/speech_generator/speech_generator.js';
 import {Variables} from 'speech-rule-engine/js/common/variables.js';
+import MathMaps from './mathmaps.js';
 
 export namespace Sre {
 
@@ -76,34 +65,17 @@ export namespace Sre {
     return EngineConst.DOMAIN_TO_STYLES['clearspeak'];
   };
 
+  /**
+   * Loads locales that are already included in the imported MathMaps. Defaults
+   * to standard loading if a locale is not yet preloaded.
+   */
+  export const preloadLocales = async function(locale: string) {
+    const json = MathMaps[locale];
+    return json ? new Promise((res, _rej) => res(JSON.stringify(json))) :
+      Api.localeLoader()(locale);
+  };
+
 }
-
-
-/**
- * Loads locales that are already included in the imported MathMaps.
- */
-const loadPreloadedLocales = async function(locale: string) {
-  let json = MathMaps[locale];
-  return json ? new Promise((res, _rej) => res(JSON.stringify(json))) : Api.localeLoader()(locale);
-};
-
-// This sets up the correct link to the mathmaps files.
-//
-// We could also use a custom method for loading locales that are webpacked into
-// the distribution.
-if (typeof window !== 'undefined') {
-  window.SREfeature = {json: Package.resolvePath('[sre]', false) + '/mathmaps',
-                       // delay: true,
-                       custom: (loc: string) => loadPreloadedLocales(loc)
-                      };
-} else {
-  // TODO: This is does not yet work correctly!
-  global.SREfeature = {json: MJGlobal.config.loader.paths.mathjax + '/sre/mathmaps',
-                       delay: true,
-                       custom: (loc: string) => loadPreloadedLocales(loc)
-                      };
-}
-
 
 
 export default Sre;

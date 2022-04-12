@@ -22,15 +22,6 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import base from 'speech-rule-engine/lib/mathmaps/base.json';
-import en from 'speech-rule-engine/lib/mathmaps/en.json';
-import nemeth from 'speech-rule-engine/lib/mathmaps/nemeth.json';
-
-const MathMaps: {[locale: string]: {[path: string]: any}} = {
-  base: base,
-  en: en,
-  nemeth: nemeth
-}
-
+const MathMaps: {[locale: string]: {[path: string]: any}} = {}
 
 export default MathMaps;
