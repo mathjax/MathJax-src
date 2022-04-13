@@ -8,10 +8,9 @@ import base from 'speech-rule-engine/lib/mathmaps/base.json';
 import en from 'speech-rule-engine/lib/mathmaps/en.json';
 import nemeth from 'speech-rule-engine/lib/mathmaps/nemeth.json';
 
-MathMaps['base'] = base;
-MathMaps['en'] = en;
-MathMaps['nemeth'] = nemeth;
-
+MathMaps.set('base', base);
+MathMaps.set('en', en);
+MathMaps.set('nemeth', nemeth);
 
 // This sets up the correct link to the mathmaps files.
 //

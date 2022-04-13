@@ -70,7 +70,7 @@ export namespace Sre {
    * to standard loading if a locale is not yet preloaded.
    */
   export const preloadLocales = async function(locale: string) {
-    const json = MathMaps[locale];
+    const json = MathMaps.get(locale);
     return json ? new Promise((res, _rej) => res(JSON.stringify(json))) :
       Api.localeLoader()(locale);
   };

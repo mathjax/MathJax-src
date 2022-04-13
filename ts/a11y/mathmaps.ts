@@ -22,6 +22,6 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-const MathMaps: {[locale: string]: {[path: string]: any}} = {}
+const MathMaps: Map<string, {[path: string]: any}> = new Map();
 
 export default MathMaps;
