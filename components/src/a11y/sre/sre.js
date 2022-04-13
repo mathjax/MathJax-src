@@ -3,14 +3,6 @@ import './lib/sre.js';
 import {Package} from '../../../../js/components/package.js';
 
 import Sre from '../../../../js/a11y/sre.js';
-import MathMaps from '../../../../js/a11y/mathmaps.js';
-import base from 'speech-rule-engine/lib/mathmaps/base.json';
-import en from 'speech-rule-engine/lib/mathmaps/en.json';
-import nemeth from 'speech-rule-engine/lib/mathmaps/nemeth.json';
-
-MathMaps.set('base', base);
-MathMaps.set('en', en);
-MathMaps.set('nemeth', nemeth);
 
 // This sets up the correct link to the mathmaps files.
 //
