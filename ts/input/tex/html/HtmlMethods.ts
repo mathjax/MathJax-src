@@ -26,6 +26,7 @@
 import TexParser from '../TexParser.js';
 import {ParseMethod} from '../Types.js';
 import NodeUtil from '../NodeUtil.js';
+import ParseUtil from "../ParseUtil.js";
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 
 
@@ -40,19 +41,23 @@ let HtmlMethods: Record<string, ParseMethod> = {};
 HtmlMethods.Data = (parser: TexParser, name: string) => {
   const dataset = parser.GetArgument(name);
   const arg = GetArgumentMML(parser, name);
-  for (const [prop, val] of splitTokens(dataset)) {
-    NodeUtil.setAttribute(arg, `data-${prop}`, val);
+  const data = ParseUtil.keyvalOptions(dataset);
+  for (const key in data) {
+    // remove illegal attribute names
+    if (!isLegalAttributeName(key)) {
+      continue;
+    }
+    NodeUtil.setAttribute(arg, `data-${key}`, data[key]);
   }
   parser.Push(arg);
 };
 
 /**
- * Split a dataset string into tokens.
- * @param {string} str String to split.
+ * Whether the string is a valid HTML attribute name according to {@link https://html.spec.whatwg.org/multipage/syntax.html#attributes-2}.
+ * @param {string} name String to validate.
  */
-function splitTokens(str: string) {
-  const matches = Array.from(str.matchAll(/\b([A-Za-z0-9_-]+)=(['"])(.+?)\2/g));
-  return matches.map(([, name, , val]) => [name, val]);
+function isLegalAttributeName(name: string): boolean {
+  return !!name.match(/^([^\x00-\x1f\x7f-\x9f "'>\/=]+)$/);
 }
 
 /**
