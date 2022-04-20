@@ -230,7 +230,7 @@ AmsMethods.HandleOperatorName = function(parser: TexParser, name: string) {
   let mml = new TexParser(op, {
     ...parser.stack.env,
     font: TexConstant.Variant.NORMAL,
-    multiLetterIdentifiers: /^[-*a-z]+/i,
+    multiLetterIdentifiers: /^[-*a-z]+/i as any,
     operatorLetters: true
   }, parser.configuration).mml();
   //

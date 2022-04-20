@@ -28,7 +28,7 @@ import TexError from './TexError.js';
 import StackItemFactory from './StackItemFactory.js';
 
 // Union types for abbreviation.
-export type EnvProp = string | number | boolean | RegExp;
+export type EnvProp = string | number | boolean;
 
 export type EnvList = {[key: string]: EnvProp};
 

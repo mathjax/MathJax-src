@@ -282,7 +282,7 @@ BaseMethods.MathFont = function(parser: TexParser, name: string, variant: string
   let mml = new TexParser(text, {
     ...parser.stack.env,
     font: variant,
-    multiLetterIdentifiers: /^[a-zA-Z]+/,
+    multiLetterIdentifiers: /^[a-zA-Z]+/ as any,
     noAutoOP: true
   }, parser.configuration).mml();
   parser.Push(parser.create('node', 'TeXAtom', [mml]));
