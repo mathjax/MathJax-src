@@ -38,7 +38,7 @@ export class SVGmtext<N, T, D> extends
 CommonMtextMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
 
   /**
-   * The mtet wrapper
+   * The mtext wrapper
    */
   public static kind = MmlMtext.prototype.kind;
 
