@@ -252,8 +252,8 @@ CommonWrapper<
     const [h, d, w] = [bbox.h + f, bbox.d + f, bbox.w + f];
     const paths: [number, number][][] = [
       [[-f, h], [w, h], [w - width[1], h - width[0]], [-f + width[3], h - width[0]]],
-      [[w, h], [w, -d], [w - width[1], -d + width[2]], [w - width[1], h - width[0]]],
-      [[w, -d], [-f, -d], [-f + width[3], -d + width[2]], [w - width[1], -d + width[2]]],
+      [[w, -d], [w, h], [w - width[1], h - width[0]], [w - width[1], -d + width[2]]],
+      [[-f, -d], [w, -d], [w - width[1], -d + width[2]], [-f + width[3], -d + width[2]]],
       [[-f, -d], [-f, h], [-f + width[3], h - width[0]], [-f + width[3], -d + width[2]]]
     ];
     const adaptor = this.adaptor;
@@ -262,7 +262,7 @@ CommonWrapper<
       if (!width[i]) continue;
       const path = paths[i];
       if (style[i] === 'dashed' || style[i] === 'dotted') {
-        this.addBorderBroken(path, color[i], style[i], width[i], !!(i % 2));
+        this.addBorderBroken(path, color[i], style[i], width[i], i);
       } else {
         this.addBorderSolid(path, color[i], child);
       }
@@ -296,14 +296,16 @@ CommonWrapper<
    * @param {string} color              The color to use
    * @param {string} style              Either 'dotted' or 'dashed'
    * @param {number} t                  The thickness for the border line
-   * @param {boolean} vertical          True if the line is vertical, false for horizontal
+   * @param {number} i                  The side being drawn
    */
-  protected addBorderBroken(path: [number, number][], color: string, style: string, t: number, vertical: boolean) {
+  protected addBorderBroken(path: [number, number][], color: string, style: string, t: number, i: number) {
     const dot = (style === 'dotted');
-    const [A, B, C, D] = path;
-    const x1 = (A[0] + D[0]) / 2 - this.dx, y1 = (A[1] + D[1]) / 2;
-    const x2 = (B[0] + C[0]) / 2 - this.dx, y2 = (B[1] + C[1]) / 2;
-    const W = Math.abs(vertical ? y2 - y1 : x2 - x1);
+    const t2 = t / 2;
+    const [tx1, ty1, tx2, ty2] = [[t2, -t2, -t2, -t2], [-t2, t2, -t2, -t2], [t2, t2, -t2, t2], [t2, t2, t2, -t2]][i];
+    const [A, B] = path;
+    const x1 = A[0] + tx1 - this.dx, y1 = A[1] + ty1;
+    const x2 = B[0] + tx2 - this.dx, y2 = B[1] + ty2;
+    const W = Math.abs(i % 2 ? y2 - y1 : x2 - x1);
     const n = (dot ? Math.ceil(W / (2 * t)) : Math.ceil((W - t) / (4 * t)));
     const m = W / (4 * n + 1);
     const line = this.svg('line', {
