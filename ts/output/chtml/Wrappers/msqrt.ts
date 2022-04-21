@@ -78,7 +78,7 @@ export class CHTMLmsqrt<N, T, D> extends CommonMsqrtMixin<CHTMLConstructor<any, 
     //  Get the parameters for the spacing of the parts
     //
     const sbox = surd.getBBox();
-    const bbox = base.getBBox();
+    const bbox = base.getOuterBBox();
     const [ , q] = this.getPQ(sbox);
     const t = this.font.params.rule_thickness;
     const H = bbox.h + q + t;

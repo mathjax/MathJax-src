@@ -92,7 +92,7 @@ CommonMathMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
     if (this.bbox.pwidth === BBox.fullWidth) {
       this.adaptor.setAttribute(this.jax.container, 'width', 'full');
       if (this.jax.table) {
-        let {L, w, R} = this.jax.table.getBBox();
+        let {L, w, R} = this.jax.table.getOuterBBox();
         if (align === 'right') {
           R = Math.max(R || -shift, -shift);
         } else if (align === 'left') {
