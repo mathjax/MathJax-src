@@ -123,10 +123,11 @@ CommonWrapper<
     let x = 0;
     for (const child of this.childNodes) {
       child.toSVG(parent);
+      const bbox = child.getOuterBBox();
       if (child.element) {
-        child.place(x + child.bbox.L * child.bbox.rscale, 0);
+        child.place(x + bbox.L * bbox.rscale, 0);
       }
-      x += (child.bbox.L + child.bbox.w + child.bbox.R) * child.bbox.rscale;
+      x += (bbox.L + bbox.w + bbox.R) * bbox.rscale;
     }
   }
 
@@ -157,7 +158,7 @@ CommonWrapper<
     const href = this.node.attributes.get('href');
     if (href) {
       parent = this.adaptor.append(parent, this.svg('a', {href: href})) as N;
-      const {h, d, w} = this.getBBox();
+      const {h, d, w} = this.getOuterBBox();
       this.adaptor.append(this.element, this.svg('rect', {
         'data-hitbox': true, fill: 'none', stroke: 'none', 'pointer-events': 'all',
         width: this.fixed(w), height: this.fixed(h + d), y: this.fixed(-d)
