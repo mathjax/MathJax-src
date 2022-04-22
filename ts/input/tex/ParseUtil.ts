@@ -543,7 +543,7 @@ namespace ParseUtil {
    * @return {MmlNode}           The duplicate tree
    */
   export function copyNode(node: MmlNode, parser: TexParser): MmlNode  {
-    const tree = node.copy() as MmlNode;
+    const tree = node.copy();
     const options = parser.configuration;
     tree.walkTree((n: MmlNode) => {
       options.addNode(n.kind, n);

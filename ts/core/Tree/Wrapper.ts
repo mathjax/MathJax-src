@@ -33,7 +33,7 @@ import {WrapperFactory} from './WrapperFactory.js';
  * @template N  The Node type being wrapped
  * @template W  The Wrapper type being produced
  */
-export interface Wrapper<N extends Node, W extends Wrapper<N, W>> {
+export interface Wrapper<N extends Node<N, any>, W extends Wrapper<N, W>> {
   node: N;
   readonly kind: string;
 
@@ -52,7 +52,7 @@ export interface Wrapper<N extends Node, W extends Wrapper<N, W>> {
  * @template N  The Node type being wrapped
  * @template W  The Wrapper type being produced
  */
-export interface WrapperClass<N extends Node, W extends Wrapper<N, W>> {
+export interface WrapperClass<N extends Node<N, any>, W extends Wrapper<N, W>> {
   /**
    * @param {WrapperFactory} factory  The factory used to create more wrappers
    * @param {N} node  The node to be wrapped
@@ -69,7 +69,7 @@ export interface WrapperClass<N extends Node, W extends Wrapper<N, W>> {
  * @template N  The Node type being created by the factory
  * @template W  The Wrapper type being produced
  */
-export class AbstractWrapper<N extends Node, W extends Wrapper<N, W>> implements Wrapper<N, W> {
+export class AbstractWrapper<N extends Node<N, any>, W extends Wrapper<N, W>> implements Wrapper<N, W> {
   /**
    * The Node object associated with this instance
    */

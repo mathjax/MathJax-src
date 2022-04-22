@@ -229,7 +229,7 @@ export class MathMLCompile<N, T, D> {
       } else if (mml.isKind('annotation-xml')) {
         mml.appendChild((this.factory.create('XML') as XMLNode).setXML(child, adaptor));
       } else {
-        let childMml = mml.appendChild(this.makeNode(child)) as MmlNode;
+        let childMml = mml.appendChild(this.makeNode(child));
         if (childMml.arity === 0 && adaptor.childNodes(child).length) {
           if (this.options['fixMisplacedChildren']) {
             this.addChildren(mml, child);
@@ -302,8 +302,8 @@ export class MathMLCompile<N, T, D> {
    */
   protected markMrows(mml: MmlNode) {
     if (mml.isKind('mrow') && !mml.isInferred && mml.childNodes.length >= 2) {
-      let first = mml.childNodes[0] as MmlNode;
-      let last = mml.childNodes[mml.childNodes.length - 1] as MmlNode;
+      let first = mml.childNodes[0];
+      let last = mml.childNodes[mml.childNodes.length - 1];
       if (first.isKind('mo') && first.attributes.get('fence') && first.attributes.get('stretchy') &&
           last.isKind('mo') && last.attributes.get('fence') && last.attributes.get('stretchy')) {
         if (first.childNodes.length) {
