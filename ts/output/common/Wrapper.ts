@@ -33,7 +33,7 @@ import {StyleList} from '../../util/StyleList.js';
 import {CommonOutputJax} from './OutputJax.js';
 import {CommonWrapperFactory} from './WrapperFactory.js';
 import {BBox} from '../../util/BBox.js';
-import {FontData, DelimiterData, CharData, CharOptions, DIRECTION, NOSTRETCH} from './FontData.js';
+import {FontData, DelimiterData, VariantData, CharData, CharOptions, DIRECTION, NOSTRETCH} from './FontData.js';
 
 /*****************************************************************/
 
@@ -82,12 +82,12 @@ export interface CommonWrapperClass<
   C extends CommonWrapperClass<J, W, C, CC, DD, FD>,
   CC extends CharOptions,
   DD extends DelimiterData,
-  FD extends FontData<CC, any, DD>
-> extends WrapperClass<MmlNode, CommonWrapper<J, W, C, CC, DD, FD>> {
+  FD extends FontData<CC, VariantData<CC>, DD>
+> extends WrapperClass<MmlNode, W> {
   /**
    * @override
    */
-  new(factory: CommonWrapperFactory<J, W, C, CC, DD, FD>, node: MmlNode, ...args: any[]): W;
+  new(factory: W, node: MmlNode, ...args: any[]): W;
 }
 
 /*****************************************************************/
@@ -106,8 +106,8 @@ export class CommonWrapper<
   C extends CommonWrapperClass<J, W, C, CC, DD, FD>,
   CC extends CharOptions,
   DD extends DelimiterData,
-  FD extends FontData<CC, any, DD>
-> extends AbstractWrapper<MmlNode, CommonWrapper<J, W, C, CC, DD, FD>> {
+  FD extends FontData<CC, VariantData<CC>, DD>
+> extends AbstractWrapper<MmlNode, W> {
 
   /**
    * The wrapper kind

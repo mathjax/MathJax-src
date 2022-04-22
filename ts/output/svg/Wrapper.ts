@@ -82,15 +82,6 @@ CommonWrapper<
   protected factory: SVGWrapperFactory<N, T, D>;
 
   /**
-   * @override
-   */
-  public parent: SVGWrapper<N, T, D>;
-  /**
-   * @override
-   */
-  public childNodes: SVGWrapper<N, T, D>[];
-
-  /**
    * The SVG element generated for this wrapped node
    */
   public element: N = null;

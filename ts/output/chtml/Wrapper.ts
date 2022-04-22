@@ -117,15 +117,6 @@ CommonWrapper<
   protected factory: CHTMLWrapperFactory<N, T, D>;
 
   /**
-   * @override
-   */
-  public parent: CHTMLWrapper<N, T, D>;
-  /**
-   * @override
-   */
-  public childNodes: CHTMLWrapper<N, T, D>[];
-
-  /**
    * The HTML element generated for this wrapped node
    */
   public chtml: N = null;

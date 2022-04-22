@@ -116,6 +116,11 @@ export interface MmlNode extends Node {
   parent: MmlNode;
 
   /**
+   * @ override
+   */
+  childNodes: MmlNode[];
+
+  /**
    *  values needed for TeX spacing computations
    */
   texClass: number;
@@ -1028,6 +1033,11 @@ export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode implements 
    *  Parent is an MmlNode
    */
   public parent: MmlNode;
+
+  /**
+   *  @override
+   */
+  public childNodes: MmlNode[];
 
   /**
    * @return {boolean}  Not a token element

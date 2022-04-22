@@ -76,6 +76,11 @@ export class AbstractWrapper<N extends Node, W extends Wrapper<N, W>> implements
   public node: N;
 
   /**
+   * The wrapped child nodes for the wrapped node
+   */
+  public childNodes: W[];
+
+  /**
    * The WrapperFactory to use to wrap child nodes, as needed
    */
   protected factory: WrapperFactory<N, W, WrapperClass<N, W>>;
