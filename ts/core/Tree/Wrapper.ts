@@ -35,6 +35,7 @@ import {WrapperFactory} from './WrapperFactory.js';
  * @template W  The Wrapper type being produced
  */
 export interface Wrapper<N extends Node<N, C>, C extends NodeClass<N, C>, W extends Wrapper<N, C, W>> {
+
   /**
    * The kind of this wrapper
    */
@@ -58,6 +59,13 @@ export interface Wrapper<N extends Node<N, C>, C extends NodeClass<N, C>, W exte
    * @return {TT}         The wrapped node
    */
   wrap<T extends W = W>(node: N, ...args: any[]): T;
+
+  /**
+   * @param {Function} func  A function to apply to each wrapper in the tree rooted at this node
+   * @param {any} data       Data to pass to the function (as state information)
+   */
+  walkTree(func: (node: W, data?: any) => void, data?: any): void;
+
 }
 
 /*********************************************************/
@@ -69,6 +77,7 @@ export interface Wrapper<N extends Node<N, C>, C extends NodeClass<N, C>, W exte
  * @template W  The Wrapper type being produced
  */
 export interface WrapperClass<N extends Node<N, C>, C extends NodeClass<N, C>, W extends Wrapper<N, C, W>> {
+
   /**
    * @param {WrapperFactory} factory  The factory used to create more wrappers
    * @param {N} node  The node to be wrapped
@@ -76,6 +85,7 @@ export interface WrapperClass<N extends Node<N, C>, C extends NodeClass<N, C>, W
    * @return {W}  The wrapped node
    */
   new(factory: WrapperFactory<N, C, W, WrapperClass<N, C, W>>, node: N, ...args: any[]): W;
+
 }
 
 /*********************************************************/
@@ -91,6 +101,7 @@ export class AbstractWrapper<
   C extends NodeClass<N, C>,
   W extends Wrapper<N, C, W>
 > implements Wrapper<N, C, W> {
+
   /**
    * @override
    */
@@ -130,6 +141,21 @@ export class AbstractWrapper<
    */
   public wrap<T extends W = W>(node: N) {
     return this.factory.wrap(node) as T;
+  }
+
+  /**
+   * @override
+   */
+  public walkTree(func: (node: W, data?: any) => void, data?: any) {
+    func(this as any as W, data);
+    if ('childNodes' in this) {
+      for (const child of this.childNodes) {
+        if (child) {
+          child.walkTree(func, data);
+        }
+      }
+    }
+    return data;
   }
 
 }
