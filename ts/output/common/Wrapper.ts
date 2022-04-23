@@ -352,6 +352,15 @@ export class CommonWrapper<
     return !this.node.notParent && !this.node.isToken;
   }
 
+  /**
+   * The number of breakpoints in the node
+   */
+  get breakCount(): number {
+    const node = this.node;
+    if (node.isEmbellished) return this.coreMO().breakCount;
+    return (node.arity < 0 && !node.linebreakContainer ? this.childNodes[0].breakCount : 0);
+  }
+
   /*******************************************************************/
 
   /**

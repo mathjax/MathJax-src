@@ -195,13 +195,6 @@ export class MmlMo extends AbstractMmlTokenNode {
   }
 
   /**
-   * @return {boolean}  Is <mo> marked as an explicit linebreak?
-   */
-  public get hasNewLine(): boolean {
-    return this.attributes.get('linebreak') === 'newline';
-  }
-
-  /**
    * @return {MmlNode}  The node that is the outermost embellished operator
    *                    with this node as its core
    */

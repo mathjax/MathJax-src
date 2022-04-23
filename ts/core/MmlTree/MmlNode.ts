@@ -95,7 +95,6 @@ export interface MmlNode extends Node<MmlNode, MmlNodeClass> {
   readonly isEmbellished: boolean;
   readonly isSpacelike: boolean;
   readonly linebreakContainer: boolean;
-  readonly hasNewLine: boolean;
 
   /**
    *  The expected number of children (-1 means use inferred mrow)
@@ -431,13 +430,6 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
    * @return {boolean}  true if this is a node that supports linebreaks in its children
    */
   public get linebreakContainer(): boolean {
-    return false;
-  }
-
-  /**
-   * @return {boolean}  true if this node contains a line break
-   */
-  public get hasNewLine(): boolean {
     return false;
   }
 
@@ -1064,13 +1056,6 @@ export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode<MmlNode, Mm
    * @return {boolean}  Not a container of any kind
    */
   public get linebreakContainer(): boolean {
-    return false;
-  }
-
-  /**
-   * @return {boolean}  Does not contain new lines
-   */
-  public get hasNewLine(): boolean {
     return false;
   }
 

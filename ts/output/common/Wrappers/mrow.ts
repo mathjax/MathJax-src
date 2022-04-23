@@ -186,6 +186,14 @@ export function CommonMrowMixin<
 
     /**
      * @override
+     */
+    get breakCount() {
+      if (!this.childNodes.length) return 0;
+      return this.childNodes.reduce((n, child) => n + child.breakCount, 0);
+    }
+
+    /**
+     * @override
      * @constructor
      */
     constructor(factory: WF, node: MmlNode, parent: WW = null) {

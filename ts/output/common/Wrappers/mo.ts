@@ -221,6 +221,10 @@ export function CommonMoMixin<
      */
     public isAccent: boolean;
 
+    get breakCount() {
+      return (this.node.attributes.get('linebreak') === 'newline' ? 1 : 0);
+    }
+
     /**
      * @override
      */
@@ -407,6 +411,9 @@ export function CommonMoMixin<
      * @override
      */
     public computeBBox(bbox: BBox, _recompute: boolean = false) {
+      if (this.node.attributes.get('linebreak') === 'newline') {
+        this.jax.math.outputData.forcedLinebreak = true;
+      }
       this.protoBBox(bbox);
       if (this.node.attributes.get('symmetric') &&
           this.stretch.dir !== DIRECTION.Horizontal) {
