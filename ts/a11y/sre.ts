@@ -27,6 +27,7 @@ import {Walker} from 'speech-rule-engine/js/walker/walker.js';
 import * as WalkerFactory from 'speech-rule-engine/js/walker/walker_factory.js';
 import * as SpeechGeneratorFactory from 'speech-rule-engine/js/speech_generator/speech_generator_factory.js';
 import * as EngineConst from 'speech-rule-engine/js/common/engine_const.js';
+import Engine from 'speech-rule-engine/js/common/engine.js';
 import {ClearspeakPreferences} from 'speech-rule-engine/js/speech_rules/clearspeak_preferences.js';
 import {Highlighter} from 'speech-rule-engine/js/highlighter/highlighter.js';
 import * as HighlighterFactory from 'speech-rule-engine/js/highlighter/highlighter_factory.js';
@@ -77,5 +78,9 @@ export namespace Sre {
 
 }
 
+// Setting delay stops SRE from setting itself up (and loading locales) when it
+// is not actually being used. As we are not yet sure in which environment we
+// are (browser, node) we can not use a configuration vector.
+Engine.getInstance().delay = true;
 
 export default Sre;
