@@ -244,6 +244,16 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   };
 
   /**
+   * The name of the output jax this font data is for (used by extensions)
+   */
+  public static JAX: string = 'common';
+
+  /**
+   * The name of the font that is being defined (used by extensions)
+   */
+  public static NAME: string = '';
+
+  /**
    *  The standard variants to define
    */
   public static defaultVariants = [

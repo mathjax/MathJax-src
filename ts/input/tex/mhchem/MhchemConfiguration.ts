@@ -43,14 +43,15 @@ MhchemMethods.xArrow = AmsMethods.xArrow;
  * @param{string} machine     The name of the fininte-state machine to use
  */
 MhchemMethods.Machine = function(parser: TexParser, name: string, machine: 'tex' | 'ce' | 'pu') {
+  let arg = parser.GetArgument(name);
+  let tex;
   try {
-    let arg = parser.GetArgument(name);
-    let tex = mhchemParser.toTex(arg, machine);
-    parser.string = tex + parser.string.substr(parser.i);
-    parser.i = 0;
+    tex = mhchemParser.toTex(arg, machine);
   } catch (err) {
-    throw new TexError(err[0], err[1], err.slice(2));
+    throw new TexError(err[0], err[1]);
   }
+  parser.string = tex + parser.string.substr(parser.i);
+  parser.i = 0;
 };
 
 new CommandMap(

@@ -64,6 +64,19 @@ export class SVGFontData extends FontData<SVGCharOptions, SVGVariantData, SVGDel
   /**
    * @override
    */
+  public static OPTIONS = {
+    ...FontData.OPTIONS,
+    dynamicPrefix: './output/svg/fonts'
+  };
+
+  /**
+   * @override
+   */
+  public static JAX = 'SVG';
+
+  /**
+   * @override
+   */
   public static charOptions(font: SVGCharMap, n: number) {
     return super.charOptions(font, n) as SVGCharOptions;
   }

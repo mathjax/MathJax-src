@@ -61,38 +61,11 @@ export const paths = {
   sre: '[mathjax]/sre'
 };
 
-const allPackages = [
-  '[tex]/action',
-  '[tex]/ams',
-  '[tex]/amscd',
-  '[tex]/bbox',
-  '[tex]/boldsymbol',
-  '[tex]/braket',
-  '[tex]/bussproofs',
-  '[tex]/cancel',
-  '[tex]/centernot',
-  '[tex]/color',
-  '[tex]/colortbl',
-  '[tex]/configmacros',
-  '[tex]/enclose',
-  '[tex]/extpfeil',
-  '[tex]/html',
-  '[tex]/mathtools',
-  '[tex]/mhchem',
-  '[tex]/newcommand',
-  '[tex]/noerrors',
-  '[tex]/noundefined',
-  '[tex]/physics',
-  '[tex]/require',
-  '[tex]/setoptions',
-  '[tex]/tagformat',
-  '[tex]/textcomp',
-  '[tex]/textmacros',
-  '[tex]/unicode',
-  '[tex]/verb',
-  '[tex]/cases',
-  '[tex]/empheq'
-];
+const allPackages = Array.from(Object.keys(dependencies))
+      .filter(name => name.substr(0,5) === '[tex]' &&
+              name !== '[tex]/autoload' &&
+              name !== '[tex]/colorv2' &&
+              name !== '[tex]/all-packages');
 
 export const provides = {
   'startup': ['loader'],

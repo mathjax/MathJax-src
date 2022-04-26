@@ -97,6 +97,12 @@ export interface Node {
   replaceChild(newChild: Node, oldChild: Node): Node;
 
   /**
+   * @param {Node} child   Child node to be removed
+   * @return {Node}        The old child node that was removed
+   */
+  removeChild(child: Node): Node;
+
+  /**
    * @param {Node} child  A child node whose index in childNodes is desired
    * @return {number}     The index of the child in childNodes, or null if not found
    */
@@ -255,8 +261,21 @@ export abstract class AbstractNode implements Node {
     if (i !== null) {
       this.childNodes[i] = newChild;
       newChild.parent = this;
+      oldChild.parent = null;
     }
     return newChild;
+  }
+
+  /**
+   * @override
+   */
+  public removeChild(child: Node) {
+    const i = this.childIndex(child);
+    if (i !== null) {
+      this.childNodes.splice(i, 1);
+      child.parent = null;
+    }
+    return child;
   }
 
 

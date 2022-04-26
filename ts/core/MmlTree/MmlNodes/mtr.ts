@@ -94,11 +94,12 @@ export class MmlMtr extends AbstractMmlNode {
       this.mError(this.kind + ' can only be a child of an mtable', options, true);
       return;
     }
-    if (!options['fixMtables']) {
-      for (const child of this.childNodes) {
-        if (!child.isKind('mtd')) {
-          let mtr = this.replaceChild(this.factory.create('mtr'), child) as MmlNode;
-          mtr.mError('Children of ' + this.kind + ' must be mtd', options, true);
+    for (const child of this.childNodes) {
+      if (!child.isKind('mtd')) {
+        let mtd = this.replaceChild(this.factory.create('mtd'), child) as MmlNode;
+        mtd.appendChild(child);
+        if (!options['fixMtables']) {
+          child.mError('Children of ' + this.kind + ' must be mtd', options);
         }
       }
     }

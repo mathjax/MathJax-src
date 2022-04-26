@@ -94,9 +94,16 @@ new CommandMap('mathtools-macros', {
   MTFlushSpaceAbove: 'FlushSpaceAbove',
   MTFlushSpaceBelow: 'FlushSpaceBelow',
 
-  DeclarePairedDelimiters:    'DeclarePairedDelimiters',
-  DeclarePairedDelimitersX:   'DeclarePairedDelimitersX',
-  DeclarePairedDelimitersXPP: 'DeclarePairedDelimitersXPP',
+  DeclarePairedDelimiter:     'DeclarePairedDelimiter',
+  DeclarePairedDelimiterX:    'DeclarePairedDelimiterX',
+  DeclarePairedDelimiterXPP:  'DeclarePairedDelimiterXPP',
+
+  //
+  //  Typos from initial release -- kept for backward compatibility for now
+  //
+  DeclarePairedDelimiters:    'DeclarePairedDelimiter',
+  DeclarePairedDelimitersX:   'DeclarePairedDelimiterX',
+  DeclarePairedDelimitersXPP: 'DeclarePairedDelimiterXPP',
 
   centercolon: ['CenterColon', true, true],
   ordinarycolon: ['CenterColon', false],

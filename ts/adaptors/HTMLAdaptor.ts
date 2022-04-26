@@ -227,21 +227,21 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    * @override
    */
   public head(doc: D) {
-    return doc.head;
+    return doc.head || (doc as any as N);
   }
 
   /**
    * @override
    */
   public body(doc: D) {
-    return doc.body;
+    return doc.body || (doc as any as N);
   }
 
   /**
    * @override
    */
   public root(doc: D) {
-    return doc.documentElement;
+    return doc.documentElement || (doc as any as N);
   }
 
   /**

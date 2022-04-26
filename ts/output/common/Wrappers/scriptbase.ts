@@ -27,6 +27,7 @@
 import {AnyWrapper, WrapperConstructor, Constructor, AnyWrapperClass} from '../Wrapper.js';
 import {CommonMo} from './mo.js';
 import {CommonMunderover} from './munderover.js';
+import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../../../util/BBox.js';
@@ -368,7 +369,8 @@ export function CommonScriptbaseMixin<
       let core = this.getSemanticBase() || this.childNodes[0];
       while (core &&
              ((core.childNodes.length === 1 &&
-               (core.node.isKind('mrow') || core.node.isKind('TeXAtom') ||
+               (core.node.isKind('mrow') ||
+                (core.node.isKind('TeXAtom') && core.node.texClass !== TEXCLASS.VCENTER) ||
                 core.node.isKind('mstyle') || core.node.isKind('mpadded') ||
                 core.node.isKind('mphantom') || core.node.isKind('semantics'))) ||
               (core.node.isKind('munderover') && core.isMathAccent)))  {

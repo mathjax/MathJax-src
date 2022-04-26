@@ -374,6 +374,7 @@ export class Menu {
     this.initSettings();
     this.mergeUserSettings();
     this.initMenu();
+    this.applySettings();
   }
 
   /**
@@ -674,6 +675,18 @@ export class Menu {
   /*======================================================================*/
 
   /**
+   * Do what is needed to apply the initial user settings
+   */
+  protected applySettings() {
+    this.setTabOrder(this.settings.inTabOrder);
+    this.document.options.enableAssistiveMml = this.settings.assistiveMml;
+    this.document.outputJax.options.scale = parseFloat(this.settings.scale);
+    if (this.settings.renderer !== this.defaultSettings.renderer) {
+      this.setRenderer(this.settings.renderer);
+    }
+  }
+
+  /**
    * @param {string} scale   The new scaling value
    */
   protected setScale(scale: string) {
@@ -768,7 +781,7 @@ export class Menu {
       if (percent.match(/^\s*\d+(\.\d*)?\s*%?\s*$/)) {
         const scale = parseFloat(percent) / 100;
         if (scale) {
-          this.setScale(String(scale));
+          this.menu.pool.lookup('scale').setValue(String(scale));
         } else {
           alert('The scale should not be zero');
         }
