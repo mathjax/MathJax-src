@@ -17,7 +17,7 @@
       "mj-context-menu": ["node_modules/mj-context-menu"],
       "speech-rule-engine": ["node_modules/speech-rule-engine"]
     },
-    "lib": ["es6", "dom", "es2020"],
+    "lib": ["es6", "dom"],
     "noLib": false,
     "sourceMap": true,
     "outDir": "js",
