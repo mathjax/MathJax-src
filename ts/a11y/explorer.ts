@@ -628,12 +628,17 @@ MJContextMenu.DynamicSubmenus.set('Clearspeak', csMenu);
  * @type {{[locale: string]: string}}
  */
 const iso: {[locale: string]: string} = {
+  'ca': 'Catalan',
+  'da': 'Danish',
   'de': 'German',
   'en': 'English',
   'es': 'Spanish',
   'fr': 'French',
   'hi': 'Hindi',
-  'it': 'Italian'
+  'it': 'Italian',
+  'nb': 'Bokmål',
+  'nn': 'Nynorsk',
+  'sv': 'Swedish'
 };
 
 /**
