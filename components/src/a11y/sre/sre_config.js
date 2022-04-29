@@ -1,13 +1,21 @@
+import {combineDefaults} from '../../../../js/components/global.js';
 import {Package} from '../../../../js/components/package.js';
 
 // This sets up the correct link to the mathmaps files.
 if (MathJax.startup) {
 
-  const path = Package.resolvePath('[sre]', false) + '/mathmaps';
+  // Combine path with user defined path and resolve it wrt. MathJax path.
+  combineDefaults(MathJax.config.loader, 'paths', {sre: '[mathjax]/sre'});
+  let path = Package.resolvePath('[sre]', false) + '/mathmaps';
 
   if (typeof window !== 'undefined') {
     window.SREfeature = {json: path};
   } else {
+    // In Node get the absolute path to the mathmaps directory.
+    try {
+      path = MathJax.config.loader.require.resolve(
+        path + '/base.json').replace(/\/base\.json$/, '');
+    } catch(_err) { }
     global.SREfeature = {json: path};
   }
 }
