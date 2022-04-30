@@ -91,8 +91,8 @@ export const SvgScriptbase = (function <N, T, D>(): SvgScriptbaseClass<N, T, D> 
      *
      * @override
      */
-    public toSVG(parent: N) {
-      const svg = this.standardSvgNode(parent);
+    public toSVG(parents: N[]) {
+      const svg = this.standardSvgNodes(parents);
       const w = this.getBaseWidth();
       const [x, v] = this.getOffset();
       this.baseChild.toSVG(svg);

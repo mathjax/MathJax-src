@@ -108,8 +108,8 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<N, 
     /**
      * @override
      */
-    public toSVG(parent: N) {
-      const svg = this.standardSvgNode(parent);
+    public toSVG(parents: N[]) {
+      const svg = this.standardSvgNodes(parents);
       const data = this.scriptData;
       //
       //  Get the alignment for the scripts
@@ -153,8 +153,9 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<N, 
     protected addScripts(x: number, u: number, v: number, i: number, n: number, align: string): number {
       const adaptor = this.adaptor;
       const alignX = AlignX(align);
-      const supRow = adaptor.append(this.dom, this.svg('g')) as N;
-      const subRow = adaptor.append(this.dom, this.svg('g')) as N;
+      const node = this.dom[this.dom.length - 1];
+      const supRow = adaptor.append(node, this.svg('g')) as N;
+      const subRow = adaptor.append(node, this.svg('g')) as N;
       this.place(x, u, supRow);
       this.place(x, v, subRow);
       let m = i + 2 * n;
@@ -164,8 +165,8 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<N, 
         const [subbox, supbox] = [sub.getOuterBBox(), sup.getOuterBBox()];
         const [subr, supr] = [subbox.rscale, supbox.rscale];
         const w = Math.max(subbox.w * subr, supbox.w * supr);
-        sub.toSVG(subRow);
-        sup.toSVG(supRow);
+        sub.toSVG([subRow]);
+        sup.toSVG([supRow]);
         sub.place(dx + alignX(subbox.w * subr, w), 0);
         sup.place(dx + alignX(supbox.w * supr, w), 0);
         dx += w;

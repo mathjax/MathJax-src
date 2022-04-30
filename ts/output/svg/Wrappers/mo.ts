@@ -94,21 +94,21 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
+    public toSVG(parents: N[]) {
       const attributes = this.node.attributes;
       const symmetric = (attributes.get('symmetric') as boolean) && this.stretch.dir !== DIRECTION.Horizontal;
       const stretchy = this.stretch.dir !== DIRECTION.None;
       if (stretchy && this.size === null) {
         this.getStretchedVariant([]);
       }
-      let svg = this.standardSvgNode(parent);
+      let svg = this.standardSvgNodes(parents);
       if (stretchy && this.size < 0) {
         this.stretchSvg();
       } else {
         const u = (symmetric || attributes.get('largeop') ? this.fixed(this.getCenterOffset()) : '0');
         const v = (this.node.getProperty('mathaccent') ? this.fixed(this.getAccentOffset()) : '0');
         if (u !== '0' || v !== '0') {
-          this.adaptor.setAttribute(svg, 'transform', `translate(${v} ${u})`);
+          this.adaptor.setAttribute(svg[0], 'transform', `translate(${v} ${u})`);
         }
         this.addChildren(svg);
       }
@@ -198,7 +198,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      * @return {number}          The width of the character placed
      */
     protected addGlyph(n: number, variant: string, x: number, y: number, parent: N = null): number {
-      return this.placeChar(n, x, y, parent || this.dom, variant);
+      return this.placeChar(n, x, y, parent || this.dom[0], variant);
     }
 
     /***********************************************************/
@@ -246,7 +246,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
       this.addGlyph(n, v, 0, 0, svg);
       const glyph = adaptor.lastChild(svg);
       adaptor.setAttribute(glyph as N, 'transform', `scale(1,${this.jax.fixed(s)})`);
-      adaptor.append(this.dom, svg);
+      adaptor.append(this.dom[0], svg);
     }
 
     /**
@@ -315,7 +315,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
       this.addGlyph(n, v, 0, 0, svg);
       const glyph = adaptor.lastChild(svg);
       adaptor.setAttribute(glyph as N, 'transform', 'scale(' + this.jax.fixed(s) + ',1)');
-      adaptor.append(this.dom, svg);
+      adaptor.append(this.dom[0], svg);
     }
 
     /**

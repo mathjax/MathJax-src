@@ -144,11 +144,11 @@ export const SvgMath = (function <N, T, D>(): SvgMathClass<N, T, D> {
       if (speech) {
         const id = this.getTitleID();
         const label = this.svg('title', {id}, [this.text(speech)]);
-        adaptor.insert(label, adaptor.firstChild(this.dom));
-        adaptor.setAttribute(this.dom, 'aria-labeledby', id);
-        adaptor.removeAttribute(this.dom, 'aria-label');
+        adaptor.insert(label, adaptor.firstChild(this.dom[0]));
+        adaptor.setAttribute(this.dom[0], 'aria-labeledby', id);
+        adaptor.removeAttribute(this.dom[0], 'aria-label');
         for (const child of this.childNodes[0].childNodes) {
-          adaptor.setAttribute(child.dom, 'aria-hidden', 'true');
+          child.dom.forEach(node => adaptor.setAttribute(node, 'aria-hidden', 'true'));
         }
       }
     }
@@ -165,8 +165,8 @@ export const SvgMath = (function <N, T, D>(): SvgMathClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
-      super.toSVG(parent);
+    public toSVG(parents: N[]) {
+      super.toSVG(parents);
       const adaptor = this.adaptor;
       const display = (this.node.attributes.get('display') === 'block');
       if (display) {

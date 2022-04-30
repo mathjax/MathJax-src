@@ -87,10 +87,48 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
-      const svg = (this.node.isInferred ? (this.dom = parent) : this.standardSvgNode(parent));
-      this.addChildren(svg);
+    public toSVG(parents: N[]) {
+      if (this.parent.node.linebreakContainer) {
+        parents = this.createParentNodes(parents);
+      } else if (!this.node.isInferred) {
+        parents = this.standardSvgNodes(parents);
+      }
+      this.addChildren(parents);
       // FIXME:  handle line breaks
+    }
+
+    /**
+     * @override
+     */
+    public addChildren(parents: N[]) {
+      let x = 0;
+      let i = 0;
+      for (const child of this.childNodes) {
+        const n = child.breakCount;
+        child.toSVG(parents.slice(i, i + (child.node.isToken ? 1 : n + 1)));
+        if (child.dom) {
+          child.place(x + child.bbox.L * child.bbox.rscale, 0);
+        }
+        x += (child.bbox.L + child.bbox.w + child.bbox.R) * child.bbox.rscale;
+        i += n;
+      }
+    }
+
+    /**
+     * Create line boxes for the needed lines for a broken row
+     *
+     * @param {N[]} parents  The node in which to create the line boxes
+     * @return {N[]}         The needed line boxes
+     */
+    protected createParentNodes(parents: N[]): N[] {
+      const n = this.breakCount;
+      if (n === 0) return parents;
+      const adaptor = this.adaptor;
+      const svg = Array(n) as N[];
+      for (let i = 0; i <= n; i++) {
+        svg[i] = adaptor.append(parents[0], this.svg('g', {'data-mjx-linebox': true, 'data-mjx-lineno': i})) as N;
+      }
+      return svg;
     }
 
   };

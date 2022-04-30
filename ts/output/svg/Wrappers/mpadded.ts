@@ -86,8 +86,8 @@ export const SvgMpadded = (function <N, T, D>(): SvgMpaddedClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
-      let svg = this.standardSvgNode(parent);
+    public toSVG(parents: N[]) {
+      let svg = this.standardSvgNodes(parents);
       const [ , , , , , dw, x, y, dx] = this.getDimens();
       const align = (this.node.attributes.get('data-align') as string) || 'left';
       const X = x + dx - (dw < 0 && align !== 'left' ? align === 'center' ? dw / 2 : dw : 0);
@@ -96,8 +96,11 @@ export const SvgMpadded = (function <N, T, D>(): SvgMpaddedClass<N, T, D> {
       //   use relative positioning to move the contents
       //
       if (X || y) {
-        svg = this.adaptor.append(svg, this.svg('g')) as N;
-        this.place(X, y, svg);
+        svg = svg.map(node => {
+          this.adaptor.append(node, this.svg('g'));
+          this.place(X, y, node);
+          return node;
+        });
       }
       this.addChildren(svg);
     }

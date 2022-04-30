@@ -206,8 +206,8 @@ export const SvgMsubsup = (function <N, T, D>(): SvgMsubsupClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
-      const svg = this.standardSvgNode(parent);
+    public toSVG(parents: N[]) {
+      const svg = this.standardSvgNodes(parents);
       const [base, sup, sub] = [this.baseChild, this.supChild, this.subChild];
       const w = this.getBaseWidth();
       const x = this.getAdjustedIc();

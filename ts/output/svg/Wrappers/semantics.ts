@@ -90,8 +90,8 @@ export const SvgSemantics = (function <N, T, D>(): SvgSemanticsClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
-      const svg = this.standardSvgNode(parent);
+    public toSVG(parents: N[]) {
+      const svg = this.standardSvgNodes(parents);
       if (this.childNodes.length) {
         this.childNodes[0].toSVG(svg);
       }
@@ -118,9 +118,9 @@ export const SvgAnnotation = (function <N, T, D>(): SvgWrapperClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
+    public toSVG(parents: N[]) {
       // FIXME:  output as plain text
-      super.toSVG(parent);
+      super.toSVG(parents);
     }
 
     /**
@@ -184,18 +184,18 @@ export const SvgXmlNode = (function <N, T, D>(): SvgWrapperClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
+    public toSVG(parents: N[]) {
       const xml = this.adaptor.clone((this.node as XMLNode).getXML() as N);
       const em = this.jax.math.metrics.em * this.jax.math.metrics.scale;
       const scale = this.fixed(1 / em);
       const {w, h, d} = this.getBBox();
-      this.dom = this.adaptor.append(parent, this.svg('foreignObject', {
+      this.dom = [this.adaptor.append(parents[0], this.svg('foreignObject', {
         'data-mjx-xml': true,
         y: this.jax.fixed(-h * em) + 'px',
         width: this.jax.fixed(w * em) + 'px',
         height: this.jax.fixed((h + d) * em) + 'px',
         transform: `scale(${scale}) matrix(1 0 0 -1 0 0)`
-      }, [xml])) as N;
+      }, [xml])) as N];
     }
 
     /**

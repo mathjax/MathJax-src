@@ -92,13 +92,13 @@ export const SvgMunder = (function <N, T, D>(): SvgMunderClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
+    public toSVG(parents: N[]) {
       if (this.hasMovableLimits()) {
-        super.toSVG(parent);
+        super.toSVG(parents);
         return;
       }
 
-      const svg = this.standardSvgNode(parent);
+      const svg = this.standardSvgNodes(parents);
       const [base, script] = [this.baseChild, this.scriptChild];
       const [bbox, sbox] = [base.getOuterBBox(), script.getOuterBBox()];
 
@@ -177,12 +177,12 @@ export const SvgMover = (function <N, T, D>(): SvgMoverClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
+    public toSVG(parents: N[]) {
       if (this.hasMovableLimits()) {
-        super.toSVG(parent);
+        super.toSVG(parents);
         return;
       }
-      const svg = this.standardSvgNode(parent);
+      const svg = this.standardSvgNodes(parents);
       const [base, script] = [this.baseChild, this.scriptChild];
       const [bbox, sbox] = [base.getOuterBBox(), script.getOuterBBox()];
 
@@ -261,12 +261,12 @@ export const SvgMunderover = (function <N, T, D>(): SvgMunderoverClass<N, T, D> 
     /**
      * @override
      */
-    public toSVG(parent: N) {
+    public toSVG(parents: N[]) {
       if (this.hasMovableLimits()) {
-        super.toSVG(parent);
+        super.toSVG(parents);
         return;
       }
-      const svg = this.standardSvgNode(parent);
+      const svg = this.standardSvgNodes(parents);
       const [base, over, under] = [this.baseChild, this.overChild, this.underChild];
       const [bbox, obox, ubox] = [base.getOuterBBox(), over.getOuterBBox(), under.getOuterBBox()];
 

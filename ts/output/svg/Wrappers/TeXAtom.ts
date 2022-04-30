@@ -86,9 +86,9 @@ export const SvgTeXAtom = (function <N, T, D>(): SvgTeXAtomClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
-      super.toSVG(parent);
-      this.adaptor.setAttribute(this.dom, 'data-mjx-texclass', TEXCLASSNAMES[this.node.texClass]);
+    public toSVG(parents: N[]) {
+      super.toSVG(parents);
+      this.adaptor.setAttribute(this.dom[0], 'data-mjx-texclass', TEXCLASSNAMES[this.node.texClass]);
       //
       // Center VCENTER atoms vertically
       //
@@ -98,7 +98,7 @@ export const SvgTeXAtom = (function <N, T, D>(): SvgTeXAtomClass<N, T, D> {
         const a = this.font.params.axis_height;
         const dh = ((h + d) / 2 + a) - h;  // new height minus old height
         const translate = 'translate(0 ' + this.fixed(dh) + ')';
-        this.adaptor.setAttribute(this.dom, 'transform', translate);
+        this.dom.forEach(node => this.adaptor.setAttribute(node, 'transform', translate));
       }
     }
 

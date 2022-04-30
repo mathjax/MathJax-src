@@ -146,7 +146,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
         //
         // Mark which child is selected
         //
-        node.adaptor.setAttribute(node.dom, 'data-toggle', node.node.attributes.get('selection') as string);
+        node.adaptor.setAttribute(node.dom[0], 'data-toggle', node.node.attributes.get('selection') as string);
         //
         // Cache the data needed to select another node
         //
@@ -202,7 +202,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
               adaptor.setStyle(tool, 'top', '0');
               adaptor.append(container, tool);
               const tbox = adaptor.nodeBBox(tool);
-              const nbox = adaptor.nodeBBox(node.dom);
+              const nbox = adaptor.nodeBBox(node.dom[node.dom.length - 1]);
               const dx = (nbox.right - tbox.left) / node.metrics.em + node.dx;
               const dy = (nbox.bottom - tbox.bottom) / node.metrics.em + node.dy;
               adaptor.setStyle(tool, 'left', node.Px(dx));
@@ -225,7 +225,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
         if (tip.node.isKind('mtext')) {
           const adaptor = node.adaptor;
           const text = (tip.node as TextNode).getText();
-          adaptor.setAttribute(node.dom, 'data-statusline', text);
+          node.dom.forEach(dom => adaptor.setAttribute(dom, 'data-statusline', text));
           //
           // Set up event handlers to change the status window
           //
@@ -259,7 +259,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
      * Add an event handler to the output for this maction
      */
     public setEventHandler(type: string, handler: EventHandler) {
-      (this.dom as any).addEventListener(type, handler);
+      this.dom.forEach(node => (node as any).addEventListener(type, handler));
     }
 
     /**
@@ -274,14 +274,16 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
-      const svg = this.standardSvgNode(parent);
+    public toSVG(parents: N[]) {
+      const svg = this.standardSvgNodes(parents);
       const child = this.selected;
-      const {h, d, w} = child.getOuterBBox();
-      this.adaptor.append(this.dom, this.svg('rect', {
-        width: this.fixed(w), height: this.fixed(h + d), y: this.fixed(-d),
-        fill: 'none', 'pointer-events': 'all'
-      }));
+      const {h, d, w} = child.getOuterBBox();  // FIXME: use segment width if more than one
+      this.dom.forEach(node => {
+        this.adaptor.append(node, this.svg('rect', {
+          width: this.fixed(w), height: this.fixed(h + d), y: this.fixed(-d),
+          fill: 'none', 'pointer-events': 'all'
+        }));
+      });
       child.toSVG(svg);
       const bbox = child.getOuterBBox();
       if (child.dom) {

@@ -300,7 +300,7 @@ CommonOutputJax<
       this.fontCache.useLocalID(this.options.localID);
       adaptor.insert(this.fontCache.getCache(), g);
     }
-    wrapper.toSVG(g);
+    wrapper.toSVG([g]);
     this.fontCache.clearLocalID();
     if (this.minwidth) {
       adaptor.setStyle(svg, 'minWidth', this.ex(this.minwidth));
