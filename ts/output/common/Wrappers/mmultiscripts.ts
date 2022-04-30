@@ -21,8 +21,11 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, Constructor} from '../Wrapper.js';
-import {CommonMsubsup, MsubsupConstructor} from './msubsup.js';
+import {CommonWrapper, CommonWrapperClass, Constructor} from '../Wrapper.js';
+import {CommonWrapperFactory} from '../WrapperFactory.js';
+import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
+import {CommonOutputJax} from '../OutputJax.js';
+import {CommonMsubsup, CommonMsubsupClass} from './msubsup.js';
 import {BBox} from '../../../util/BBox.js';
 
 /*****************************************************************/
@@ -73,9 +76,31 @@ export const ScriptNames = ['sup', 'sup', 'psup', 'psub'] as ScriptDataName[];
 /**
  * The CommonMmultiscripts interface
  *
- * @template W  The child-node Wrapper class
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export interface CommonMmultiscripts<W extends AnyWrapper> extends CommonMsubsup<W> {
+export interface CommonMmultiscripts<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>
+> extends CommonMsubsup<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
 
   /**
    *  The cached data for the various bounding boxes
@@ -128,50 +153,84 @@ export interface CommonMmultiscripts<W extends AnyWrapper> extends CommonMsubsup
 }
 
 /**
- * Shorthand for the CommonMmultiscripts constructor
+ * The CommonMmlultisciptsClass interface
  *
- * @template W  The child-node Wrapper class
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export type MmultiscriptsConstructor<W extends AnyWrapper> = Constructor<CommonMmultiscripts<W>>;
+export interface CommonMmultiscriptsClass<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>
+> extends CommonMsubsupClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
 /**
  * The CommonMmultiscripts wrapper mixin for the MmlMmultiscripts object
  *
- * @template W  The child-node Wrapper class
- * @template T  The Wrapper class constructor type
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
+ *
+ * @template B   The mixin interface to create
  */
 export function CommonMmultiscriptsMixin<
-  W extends AnyWrapper,
-  T extends MsubsupConstructor<W>
->(Base: T): MmultiscriptsConstructor<W> & T {
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+  B extends CommonMsubsupClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+>(Base: Constructor<CommonMsubsup<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>): B {
 
-  return class extends Base {
-
-    /**
-     *  The cached data for the various bounding boxes
-     */
-    public scriptData: ScriptData = null;
-
-    /**
-     *  The index of the child following the <mprescripts/> tag
-     */
-    public firstPrescript = 0;
+  return class CommonMmultiscriptsMixin extends Base
+  implements CommonMmultiscripts<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
 
     /**
      * @override
      */
-    constructor(...args: any[]) {
-      super(...args);
-      this.getScriptData();
-    }
+    public scriptData: ScriptData = null;
+
+    /**
+     * @override
+     */
+    public firstPrescript = 0;
 
     /*************************************************************/
 
     /**
-     * @param {BBox} pre   The prescript bounding box
-     * @param {BBox} post  The postcript bounding box
-     * @return {BBox}      The combined bounding box
+     * @override
      */
     public combinePrePost(pre: BBox, post: BBox): BBox {
       const bbox = new BBox(pre);
@@ -180,6 +239,107 @@ export function CommonMmultiscriptsMixin<
     }
 
     /*************************************************************/
+
+    /**
+     * @override
+     */
+    public getScriptData() {
+      //
+      //  Initialize the bounding box data
+      //
+      const data: ScriptData = this.scriptData = {
+        base: null, sub: BBox.empty(), sup: BBox.empty(), psub: BBox.empty(), psup: BBox.empty(),
+        numPrescripts: 0, numScripts: 0
+      };
+      //
+      //  Get the bboxes for all the scripts and combine them into the scriptData
+      //
+      const lists = this.getScriptBBoxLists();
+      this.combineBBoxLists(data.sub, data.sup, lists.subList, lists.supList);
+      this.combineBBoxLists(data.psub, data.psup, lists.psubList, lists.psupList);
+      data.base = lists.base[0];
+      //
+      //  Save the lengths and return the data
+      //
+      data.numPrescripts = lists.psubList.length;
+      data.numScripts = lists.subList.length;
+    }
+
+    /**
+     * @override
+     */
+    public getScriptBBoxLists(): ScriptLists {
+      const lists: ScriptLists = {
+        base: [], subList: [], supList: [], psubList: [], psupList: []
+      };
+      //
+      // The first entry is the base, and then they altername sub- and superscripts.
+      // Once we find the <mprescripts/> element, switch to presub- and presuperscript lists.
+      //
+      let script: ScriptListName = 'base';
+      for (const child of this.childNodes) {
+        if (child.node.isKind('mprescripts')) {
+          script = 'psubList';
+        } else {
+          lists[script].push(child.getOuterBBox());
+          script = NextScript[script];
+        }
+      }
+      //
+      //  The index of the first prescript (skip over base, sub- and superscripts, and mprescripts)
+      //
+      this.firstPrescript = lists.subList.length + lists.supList.length + 2;
+      //
+      //  Make sure the lists are the same length
+      //
+      this.padLists(lists.subList, lists.supList);
+      this.padLists(lists.psubList, lists.psupList);
+      return lists;
+    }
+
+    /**
+     * @override
+     */
+    public padLists(list1: BBox[], list2: BBox[]) {
+      if (list1.length > list2.length) {
+        list2.push(BBox.empty());
+      }
+    }
+
+    /**
+     * @override
+     */
+    public combineBBoxLists(bbox1: BBox, bbox2: BBox, list1: BBox[], list2: BBox[]) {
+      for (let i = 0; i < list1.length; i++) {
+        const [w1, h1, d1] = this.getScaledWHD(list1[i]);
+        const [w2, h2, d2] = this.getScaledWHD(list2[i]);
+        const w = Math.max(w1, w2);
+        bbox1.w += w;
+        bbox2.w += w;
+        if (h1 > bbox1.h) bbox1.h = h1;
+        if (d1 > bbox1.d) bbox1.d = d1;
+        if (h2 > bbox2.h) bbox2.h = h2;
+        if (d2 > bbox2.d) bbox2.d = d2;
+      }
+    }
+
+    /**
+     * @override
+     */
+    public getScaledWHD(bbox: BBox) {
+      const {w, h, d, rscale} = bbox;
+      return [w * rscale, h * rscale, d * rscale];
+    }
+
+    /*************************************************************/
+
+    /**
+     * @override
+     */
+    constructor(...args: any[]) {
+      super(...args);
+      this.getScriptData();
+    }
 
     /**
      * @override
@@ -214,105 +374,6 @@ export function CommonMmultiscriptsMixin<
     }
 
     /**
-     * Compute the bounding box information about all the scripts
-     */
-    public getScriptData() {
-      //
-      //  Initialize the bounding box data
-      //
-      const data: ScriptData = this.scriptData = {
-        base: null, sub: BBox.empty(), sup: BBox.empty(), psub: BBox.empty(), psup: BBox.empty(),
-        numPrescripts: 0, numScripts: 0
-      };
-      //
-      //  Get the bboxes for all the scripts and combine them into the scriptData
-      //
-      const lists = this.getScriptBBoxLists();
-      this.combineBBoxLists(data.sub, data.sup, lists.subList, lists.supList);
-      this.combineBBoxLists(data.psub, data.psup, lists.psubList, lists.psupList);
-      data.base = lists.base[0];
-      //
-      //  Save the lengths and return the data
-      //
-      data.numPrescripts = lists.psubList.length;
-      data.numScripts = lists.subList.length;
-    }
-
-    /**
-     * @return {ScriptLists}  The bounding boxes for all the scripts divided into lists by position
-     */
-    public getScriptBBoxLists(): ScriptLists {
-      const lists: ScriptLists = {
-        base: [], subList: [], supList: [], psubList: [], psupList: []
-      };
-      //
-      // The first entry is the base, and then they altername sub- and superscripts.
-      // Once we find the <mprescripts/> element, switch to presub- and presuperscript lists.
-      //
-      let script: ScriptListName = 'base';
-      for (const child of this.childNodes) {
-        if (child.node.isKind('mprescripts')) {
-          script = 'psubList';
-        } else {
-          lists[script].push(child.getOuterBBox());
-          script = NextScript[script];
-        }
-      }
-      //
-      //  The index of the first prescript (skip over base, sub- and superscripts, and mprescripts)
-      //
-      this.firstPrescript = lists.subList.length + lists.supList.length + 2;
-      //
-      //  Make sure the lists are the same length
-      //
-      this.padLists(lists.subList, lists.supList);
-      this.padLists(lists.psubList, lists.psupList);
-      return lists;
-    }
-
-    /**
-     * Pad the second list, if it is one short
-     *
-     * @param {BBox[]} list1   The first list
-     * @param {BBox[]} list2   The second list
-     */
-    public padLists(list1: BBox[], list2: BBox[]) {
-      if (list1.length > list2.length) {
-        list2.push(BBox.empty());
-      }
-    }
-
-    /**
-     * @param {BBox} bbox1    The bbox for the combined subscripts
-     * @param {BBox} bbox2    The bbox for the combined superscripts
-     * @param {BBox[]} list1  The list of subscripts to combine
-     * @param {BBox[]} list2  The list of superscripts to combine
-     */
-    public combineBBoxLists(bbox1: BBox, bbox2: BBox, list1: BBox[], list2: BBox[]) {
-      for (let i = 0; i < list1.length; i++) {
-        const [w1, h1, d1] = this.getScaledWHD(list1[i]);
-        const [w2, h2, d2] = this.getScaledWHD(list2[i]);
-        const w = Math.max(w1, w2);
-        bbox1.w += w;
-        bbox2.w += w;
-        if (h1 > bbox1.h) bbox1.h = h1;
-        if (d1 > bbox1.d) bbox1.d = d1;
-        if (h2 > bbox2.h) bbox2.h = h2;
-        if (d2 > bbox2.d) bbox2.d = d2;
-      }
-    }
-
-    /**
-     * @param {BBox} bbox  The bounding box from which to get the (scaled) width, height, and depth
-     */
-    public getScaledWHD(bbox: BBox) {
-      const {w, h, d, rscale} = bbox;
-      return [w * rscale, h * rscale, d * rscale];
-    }
-
-    /*************************************************************/
-
-    /**
      * @override
      */
     public getUVQ(subbox: BBox, supbox: BBox) {
@@ -339,6 +400,6 @@ export function CommonMmultiscriptsMixin<
       return this.UVQ;
     }
 
-  };
+  } as any as B;
 
 }

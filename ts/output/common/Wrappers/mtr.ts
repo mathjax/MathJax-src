@@ -22,8 +22,10 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
-import {CommonMo} from './mo.js';
+import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor, Constructor} from '../Wrapper.js';
+import {CommonWrapperFactory} from '../WrapperFactory.js';
+import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
+import {CommonOutputJax} from '../OutputJax.js';
 import {BBox} from '../../../util/BBox.js';
 import {DIRECTION} from '../FontData.js';
 
@@ -31,9 +33,31 @@ import {DIRECTION} from '../FontData.js';
 /**
  * The CommonMtr interface
  *
- * @template C  The class for table cells
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export interface CommonMtr<C extends AnyWrapper> extends AnyWrapper {
+export interface CommonMtr<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+> extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
 
   /**
    * The number of mtd's in the mtr
@@ -48,18 +72,13 @@ export interface CommonMtr<C extends AnyWrapper> extends AnyWrapper {
   /**
    * The child nodes that are part of the table (no label node)
    */
-  readonly tableCells: C[];
-
-  /**
-   * @override;
-   */
-  childNodes: C[];
+  readonly tableCells: WW[];
 
   /**
    * @param {number} i   The index of the child to get (skipping labels)
    * @return {C}         The ith child node wrapper
    */
-  getChild(i: number): C;
+  getChild(i: number): WW;
 
   /**
    * @return {BBox[]}  An array of the bounding boxes for the mtd's in the row
@@ -79,79 +98,110 @@ export interface CommonMtr<C extends AnyWrapper> extends AnyWrapper {
 }
 
 /**
- * Shorthand for the CommonMtr constructor
+ * The CommonMtrClass interface
  *
- * @template C  The class for table cells
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export type MtrConstructor<C extends AnyWrapper> = Constructor<CommonMtr<C>>;
+export interface CommonMtrClass<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>
+> extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
 /**
  * The CommonMtr wrapper for the MmlMtr object
  *
- * @template C  The class for table cells
- * @template T  The Wrapper class constructor type
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
+ *
+ * @template B   The mixin interface to create
  */
 export function CommonMtrMixin<
-  C extends AnyWrapper,
-  T extends WrapperConstructor
->(Base: T): MtrConstructor<C> & T {
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+>(Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
 
-  return class extends Base {
+  return class CommonMtrMixin extends Base
+  implements CommonMtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
 
     /**
      * @override
-     */
-    get fixesPWidth() {
-      return false;
-    }
-
-    /**
-     * @return {number}   The number of mtd's in the mtr
      */
     get numCells(): number {
       return this.childNodes.length;
     }
 
     /**
-     * @return {boolean}   True if this is a labeled row
+     * @override
      */
     get labeled(): boolean {
       return false;
     }
 
     /**
-     * @return {C[]}  The child nodes that are part of the table (no label node)
+     * @override
      */
-    get tableCells(): C[] {
+    get tableCells(): WW[] {
       return this.childNodes;
     }
 
     /**
-     * @param {number} i   The index of the child to get (skipping labels)
-     * @return {C}         The ith child node wrapper
+     * @override
      */
-    public getChild(i: number): C {
+    public getChild(i: number): WW {
       return this.childNodes[i];
     }
 
     /**
-     * @return {BBox[]}  An array of the bounding boxes for the mtd's in the row
+     * @override
      */
     public getChildBBoxes(): BBox[] {
       return this.childNodes.map(cell => cell.getBBox());
     }
 
     /**
-     * Handle vertical stretching of cells to match height of
-     *  other cells in the row.
-     *
-     * @param {number[]} HD   The total height and depth for the row [H, D]
-     *
-     * If this isn't specified, the maximum height and depth is computed.
+     * @override
      */
     public stretchChildren(HD: number[] = null) {
-      let stretchy: AnyWrapper[] = [];
+      let stretchy: WW[] = [];
       let children = (this.labeled ? this.childNodes.slice(1) : this.childNodes);
       //
       //  Locate and count the stretchy children
@@ -192,12 +242,21 @@ export function CommonMtrMixin<
         //  Stretch the stretchable children
         //
         for (const child of stretchy) {
-          (child.coreMO() as CommonMo).getStretchedVariant(HD);
+          child.coreMO().getStretchedVariant(HD);
         }
       }
     }
 
-  };
+    /******************************************************/
+
+    /**
+     * @override
+     */
+    get fixesPWidth() {
+      return false;
+    }
+
+  } as any as B;
 
 }
 
@@ -205,31 +264,96 @@ export function CommonMtrMixin<
 /**
  * The CommonMlabeledtr interface
  *
- * @template C  The class for table cells
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export interface CommonMlabeledtr<C extends AnyWrapper> extends CommonMtr<C> {
-}
+export interface CommonMlabeledtr<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>
+> extends CommonMtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /**
- * Shorthand for the CommonMlabeledtr constructor
+ * The CommonMlabeledtrClass interface
  *
- * @template C  The class for table cells
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export type MlabeledtrConstructor<C extends AnyWrapper> = Constructor<CommonMlabeledtr<C>>;
+export interface CommonMlabeledtrClass<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>
+> extends CommonMtrClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
 /**
  * The CommonMlabeledtr wrapper mixin for the MmlMlabeledtr object
  *
- * @template C  The class for table cells
- * @template T  The Wrapper class constructor type
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
+ *
+ * @template B   The mixin interface to create
  */
 export function CommonMlabeledtrMixin<
-  C extends AnyWrapper,
-  T extends MtrConstructor<C>
->(Base: T): MlabeledtrConstructor<C> & T {
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+  B extends CommonMtrClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+>(Base: Constructor<CommonMtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>): B {
 
-  return class extends Base {
+  return class CommonMlabeledtrMixin extends Base
+  implements CommonMlabeledtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
 
     /**
      * @override
@@ -252,14 +376,14 @@ export function CommonMlabeledtrMixin<
      * @override
      */
     get tableCells() {
-      return this.childNodes.slice(1) as C[];
+      return this.childNodes.slice(1);
     }
 
     /**
      * @override
      */
     public getChild(i: number) {
-      return this.childNodes[i + 1] as C;
+      return this.childNodes[i + 1];
     }
 
     /**
@@ -272,6 +396,6 @@ export function CommonMlabeledtrMixin<
       return this.childNodes.slice(1).map(cell => cell.getBBox());
     }
 
-  };
+  } as any as B;
 
 }

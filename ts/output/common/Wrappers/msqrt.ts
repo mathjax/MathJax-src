@@ -21,16 +21,45 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
+import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wrapper.js';
+import {CommonWrapperFactory} from '../WrapperFactory.js';
+import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
+import {CommonOutputJax} from '../OutputJax.js';
 import {CommonMo} from './mo.js';
+import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../../../util/BBox.js';
 import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
 /**
  * The CommonMsqrt interface
+ *
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export interface CommonMsqrt extends AnyWrapper {
+export interface CommonMsqrt<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>
+> extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
+
   /**
    * The index of the base of the root in childNodes
    */
@@ -76,68 +105,145 @@ export interface CommonMsqrt extends AnyWrapper {
 }
 
 /**
- * Shorthand for the CommonMsqrt constructor
+ * The CommonMsqrtClass interface
+ *
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export type MsqrtConstructor = Constructor<CommonMsqrt>;
+export interface CommonMsqrtClass<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>
+> extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
 /**
  * The CommonMsqrt wrapper mixin for the MmlMsqrt object
  *
- * @template T  The Wrapper class constructor type
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
+ *
+ * @template B   The mixin interface to create
  */
-export function CommonMsqrtMixin<T extends WrapperConstructor>(Base: T): MsqrtConstructor & T {
+export function CommonMsqrtMixin<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+>(Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
 
-  return class extends Base {
+  return class CommonMsqrtMixin extends Base
+  implements CommonMsqrt<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
 
     /**
-     * @return {number}  The index of the base of the root in childNodes
+     * @override
      */
     get base(): number {
       return 0;
     }
 
     /**
-     * @return {number}  The index of the surd in childNodes
+     * @override
      */
     get surd(): number {
       return 1;
     }
 
     /**
-     * @return {number}  The index of the root in childNodes (or null if none)
+     * @override
      */
     get root(): number {
       return null;
     }
 
     /**
-     * The requested height of the stretched surd character
+     * @override
      */
     public surdH: number;
+
+    /**
+     * @override
+     */
+    public combineRootBBox(_bbox: BBox, _sbox: BBox, _H: number) {
+    }
+
+    /**
+     * @override
+     */
+    public getPQ(sbox: BBox): [number, number] {
+      const t = this.font.params.rule_thickness;
+      const p = (this.node.attributes.get('displaystyle') ? this.font.params.x_height : t);
+      const q = (sbox.h + sbox.d > this.surdH ?
+                 ((sbox.h + sbox.d) - (this.surdH - 2 * t - p / 2)) / 2 :
+                 t + p / 4);
+      return [p, q];
+    }
+
+    /**
+     * @override
+     */
+    public getRootDimens(_sbox: BBox, _H: number): [number, number, number, number] {
+      return [0, 0, 0, 0];
+    }
+
+    /*************************************************************/
 
     /**
      * Add the surd character so we can display it later
      *
      * @override
      */
-    constructor(...args: any[]) {
-      super(...args);
+    constructor(factory: WF, node: MmlNode, parent: WW = null) {
+      super(factory, node, parent);
       const surd = this.createMo('\u221A');
       surd.canStretch(DIRECTION.Vertical);
       const {h, d} = this.childNodes[this.base].getOuterBBox();
       const t = this.font.params.rule_thickness;
       const p = (this.node.attributes.get('displaystyle') ? this.font.params.x_height : t);
       this.surdH = h + d + 2 * t + p / 4;
-      (surd as CommonMo).getStretchedVariant([this.surdH - d, d], true);
+      surd.getStretchedVariant([this.surdH - d, d], true);
     }
 
     /**
      * @override
      */
-    public createMo(text: string) {
+    public createMo(text: string): CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
       const node = super.createMo(text);
-      this.childNodes.push(node);
+      this.childNodes.push(node as any as WW);
       return node;
     }
 
@@ -159,39 +265,6 @@ export function CommonMsqrtMixin<T extends WrapperConstructor>(Base: T): MsqrtCo
       this.setChildPWidths(recompute);
     }
 
-    /**
-     * Combine the bounding box of the root (overridden in mroot)
-     *
-     * @param {BBox} bbox  The bounding box so far
-     * @param {BBox} sbox  The bounding box of the surd
-     * @param {number} H   The height of the root as a whole
-     */
-    public combineRootBBox(_bbox: BBox, _sbox: BBox, _H: number) {
-    }
-
-    /**
-     * @param {BBox} sbox  The bounding box for the surd character
-     * @return {[number, number]}  The p, q, and x values for the TeX layout computations
-     */
-    public getPQ(sbox: BBox): [number, number] {
-      const t = this.font.params.rule_thickness;
-      const p = (this.node.attributes.get('displaystyle') ? this.font.params.x_height : t);
-      const q = (sbox.h + sbox.d > this.surdH ?
-                 ((sbox.h + sbox.d) - (this.surdH - 2 * t - p / 2)) / 2 :
-                 t + p / 4);
-      return [p, q];
-    }
-
-    /**
-     * @param {BBox} sbox  The bounding box of the surd
-     * @param {number} H   The height of the root as a whole
-     * @return {[number, number, number, number]} The x offset of the surd, and
-     *     the height, x offset, and scale of the root
-     */
-    public getRootDimens(_sbox: BBox, _H: number): [number, number, number, number] {
-      return [0, 0, 0, 0];
-    }
-
-  };
+  } as any as B;
 
 }

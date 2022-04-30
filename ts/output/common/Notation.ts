@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper} from './Wrapper.js';
+import {CommonWrapper} from './Wrapper.js';
 import {CommonMenclose} from './Wrappers/menclose.js';
 
 /*****************************************************************/
@@ -38,7 +38,12 @@ export const SOLID = THICKNESS + 'em solid';  // a solid border
 /**
  * Shorthand for CommonMenclose
  */
-export type Menclose = CommonMenclose<any, any, any>;
+export type Menclose = CommonMenclose<any, any, any, any, any, any, any, any, any, any, any, any, any>;
+
+/**
+ * Shorthand for CommonWrapper
+ */
+export type AnyWrapper = CommonWrapper<any, any, any, any, any, any, any, any, any, any, any, any>;
 
 /**
  * Top, right, bottom, left padding data

@@ -68,7 +68,7 @@ export type HANDLER = Handler<any, any, any>;
 export type DOMADAPTOR = DOMAdaptor<any, any, any>;
 export type INPUTJAX = InputJax<any, any, any>;
 export type OUTPUTJAX = OutputJax<any, any, any>;
-export type COMMONJAX = CommonOutputJax<any, any, any, any, any, any, any>;
+export type COMMONJAX = CommonOutputJax<any, any, any, any, any, any, any, any, any, any, any>;
 export type TEX = TeX<any, any, any>;
 
 /**
