@@ -29,9 +29,10 @@ import {OptionList} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
-import {CHTMLWrapper} from './chtml/Wrapper.js';
+import {CHTMLWrapper, CHTMLWrapperClass} from './chtml/Wrapper.js';
 import {CHTMLWrapperFactory} from './chtml/WrapperFactory.js';
-import {CHTMLFontData} from './chtml/FontData.js';
+import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
+        CHTMLFontData, CHTMLFontDataClass} from './chtml/FontData.js';
 import {Usage} from './chtml/Usage.js';
 import {TeXFont} from './chtml/fonts/tex.js';
 import * as LENGTHS from '../util/lengths.js';
@@ -47,7 +48,11 @@ import {unicodeChars} from '../util/string.js';
  * @template D  The Document class
  */
 export class CHTML<N, T, D> extends
-CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLFontData, typeof CHTMLFontData> {
+CommonOutputJax<
+  N, T, D,
+  CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
+  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+> {
 
   /**
    * The name of this output jax
@@ -228,7 +233,7 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
    * @param {MmlNode} math  The MML node whose HTML is to be produced
    * @param {N} parent      The HTML node to contain the HTML
    */
-  protected processMath(math: MmlNode, parent: N) {
+  public processMath(math: MmlNode, parent: N) {
     this.factory.wrap(math).toCHTML(parent);
   }
 

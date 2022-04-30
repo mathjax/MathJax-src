@@ -21,103 +21,147 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonMtdMixin} from '../../common/Wrappers/mtd.js';
+import {CHTML} from '../../chtml.js';
+import {CHTMLWrapper, CHTMLWrapperClass} from '../Wrapper.js';
+import {CHTMLWrapperFactory} from '../WrapperFactory.js';
+import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
+        CHTMLFontData, CHTMLFontDataClass} from '../FontData.js';
+import {CommonMtd, CommonMtdClass, CommonMtdMixin} from '../../common/Wrappers/mtd.js';
+import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMtd} from '../../../core/MmlTree/MmlNodes/mtd.js';
 import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
- * The CHTMLmtd wrapper for the MmlMtd object
+ * The CHTMLMtd interface for the CHTML Mtd wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-// @ts-ignore
-export class CHTMLmtd<N, T, D> extends
-CommonMtdMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
+export interface CHTMLMtdNTD<N, T, D> extends CHTMLWrapper<N, T, D>, CommonMtd<
+  N, T, D,
+  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
+  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+> {}
 
-  /**
-   * The mtd wrapper
-   */
-  public static kind = MmlMtd.prototype.kind;
+/**
+ * The CHTMLMtdClass interface for the CHTML Mtd wrapper
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export interface CHTMLMtdClass<N, T, D> extends CHTMLWrapperClass<N, T, D>, CommonMtdClass<
+  N, T, D,
+  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
+  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+> {
+  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLMtdNTD<N, T, D>;
+}
 
-  /**
-   * @override
-   */
-  public static styles: StyleList = {
-    'mjx-mtd': {
-      display: 'table-cell',
-      'text-align': 'center',
-      'padding': '.215em .4em'
-    },
-    'mjx-mtd:first-child': {
-      'padding-left': 0
-    },
-    'mjx-mtd:last-child': {
-      'padding-right': 0
-    },
-    'mjx-mtable > * > mjx-itable > *:first-child > mjx-mtd': {
-      'padding-top': 0
-    },
-    'mjx-mtable > * > mjx-itable > *:last-child > mjx-mtd': {
-      'padding-bottom': 0
-    },
-    'mjx-tstrut': {
-      display: 'inline-block',
-      height: '1em',
-      'vertical-align': '-.25em'
-    },
-    'mjx-labels[align="left"] > mjx-mtr > mjx-mtd': {
-      'text-align': 'left'
-    },
-    'mjx-labels[align="right"] > mjx-mtr > mjx-mtd': {
-      'text-align': 'right'
-    },
-    'mjx-mtd[extra]': {
-      padding: 0
-    },
-    'mjx-mtd[rowalign="top"]': {
-      'vertical-align': 'top'
-    },
-    'mjx-mtd[rowalign="center"]': {
-      'vertical-align': 'middle'
-    },
-    'mjx-mtd[rowalign="bottom"]': {
-      'vertical-align': 'bottom'
-    },
-    'mjx-mtd[rowalign="baseline"]': {
-      'vertical-align': 'baseline'
-    },
-    'mjx-mtd[rowalign="axis"]': {
-      'vertical-align': '.25em'
+
+/*****************************************************************/
+
+/**
+ * The CHTMLMtd wrapper class for the MmlMtd class
+ */
+export const CHTMLMtd = (function <N, T, D>(): CHTMLMtdClass<N, T, D> {
+
+  const Base = CommonMtdMixin<
+      N, T, D,
+      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
+      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
+      CHTMLMtdClass<N, T, D>
+    >(CHTMLWrapper);
+
+  // Avoid message about base constructors not having the same type
+  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  // @ts-ignore
+  return class CHTMLMtd extends Base implements CHTMLMtdNTD<N, T, D> {
+
+    /**
+     * @override
+     */
+    public static kind = MmlMtd.prototype.kind;
+
+    /**
+     * @override
+     */
+    public static styles: StyleList = {
+      'mjx-mtd': {
+        display: 'table-cell',
+        'text-align': 'center',
+        'padding': '.215em .4em'
+      },
+      'mjx-mtd:first-child': {
+        'padding-left': 0
+      },
+      'mjx-mtd:last-child': {
+        'padding-right': 0
+      },
+      'mjx-mtable > * > mjx-itable > *:first-child > mjx-mtd': {
+        'padding-top': 0
+      },
+      'mjx-mtable > * > mjx-itable > *:last-child > mjx-mtd': {
+        'padding-bottom': 0
+      },
+      'mjx-tstrut': {
+        display: 'inline-block',
+        height: '1em',
+        'vertical-align': '-.25em'
+      },
+      'mjx-labels[align="left"] > mjx-mtr > mjx-mtd': {
+        'text-align': 'left'
+      },
+      'mjx-labels[align="right"] > mjx-mtr > mjx-mtd': {
+        'text-align': 'right'
+      },
+      'mjx-mtd[extra]': {
+        padding: 0
+      },
+      'mjx-mtd[rowalign="top"]': {
+        'vertical-align': 'top'
+      },
+      'mjx-mtd[rowalign="center"]': {
+        'vertical-align': 'middle'
+      },
+      'mjx-mtd[rowalign="bottom"]': {
+        'vertical-align': 'bottom'
+      },
+      'mjx-mtd[rowalign="baseline"]': {
+        'vertical-align': 'baseline'
+      },
+      'mjx-mtd[rowalign="axis"]': {
+        'vertical-align': '.25em'
+      }
+    };
+
+    /**
+     * @override
+     */
+    public toCHTML(parent: N) {
+      super.toCHTML(parent);
+      const ralign = this.node.attributes.get('rowalign') as string;
+      const calign = this.node.attributes.get('columnalign') as string;
+      const palign = this.parent.node.attributes.get('rowalign') as string;
+      if (ralign !== palign) {
+        this.adaptor.setAttribute(this.chtml, 'rowalign', ralign);
+      }
+      if (calign !== 'center' &&
+          (this.parent.kind !== 'mlabeledtr' || this !== this.parent.childNodes[0] ||
+           calign !== this.parent.parent.node.attributes.get('side'))) {
+        this.adaptor.setStyle(this.chtml, 'textAlign', calign);
+      }
+      //
+      // If we are using minimum row heights,
+      //   Include a strut to force minimum height and depth
+      //
+      if (this.parent.parent.node.getProperty('useHeight')) {
+        this.adaptor.append(this.chtml, this.html('mjx-tstrut'));
+      }
     }
+
   };
 
-  /**
-   * @override
-   */
-  public toCHTML(parent: N) {
-    super.toCHTML(parent);
-    const ralign = this.node.attributes.get('rowalign') as string;
-    const calign = this.node.attributes.get('columnalign') as string;
-    const palign = this.parent.node.attributes.get('rowalign') as string;
-    if (ralign !== palign) {
-      this.adaptor.setAttribute(this.chtml, 'rowalign', ralign);
-    }
-    if (calign !== 'center' &&
-        (this.parent.kind !== 'mlabeledtr' || this !== this.parent.childNodes[0] ||
-         calign !== this.parent.parent.node.attributes.get('side'))) {
-      this.adaptor.setStyle(this.chtml, 'textAlign', calign);
-    }
-    //
-    // If we are using minimum row heights,
-    //   Include a strut to force minimum height and depth
-    //
-    if (this.parent.parent.node.getProperty('useHeight')) {
-      this.adaptor.append(this.chtml, this.html('mjx-tstrut'));
-    }
-  }
-
-}
+})<any, any, any>();

@@ -25,7 +25,8 @@ import {CHTML} from '../chtml.js';
 import {CommonWrapperFactory} from '../common/WrapperFactory.js';
 import {CHTMLWrapper, CHTMLWrapperClass} from './Wrapper.js';
 import {CHTMLWrappers} from './Wrappers.js';
-import {CHTMLCharOptions, CHTMLDelimiterData, CHTMLFontData} from './FontData.js';
+import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
+        CHTMLFontData, CHTMLFontDataClass} from './FontData.js';
 
 /*****************************************************************/
 /**
@@ -37,12 +38,9 @@ import {CHTMLCharOptions, CHTMLDelimiterData, CHTMLFontData} from './FontData.js
  */
 export class CHTMLWrapperFactory<N, T, D> extends
 CommonWrapperFactory<
-  CHTML<N, T, D>,
-  CHTMLWrapper<N, T, D>,
-  CHTMLWrapperClass,
-  CHTMLCharOptions,
-  CHTMLDelimiterData,
-  CHTMLFontData
+  N, T, D,
+  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
+  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
 > {
 
   /**

@@ -21,44 +21,87 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonTeXAtomMixin} from '../../common/Wrappers/TeXAtom.js';
+import {CHTML} from '../../chtml.js';
+import {CHTMLWrapper, CHTMLWrapperClass} from '../Wrapper.js';
+import {CHTMLWrapperFactory} from '../WrapperFactory.js';
+import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
+        CHTMLFontData, CHTMLFontDataClass} from '../FontData.js';
+import {CommonTeXAtom, CommonTeXAtomClass, CommonTeXAtomMixin} from '../../common/Wrappers/TeXAtom.js';
 import {TeXAtom} from '../../../core/MmlTree/MmlNodes/TeXAtom.js';
-import {TEXCLASS, TEXCLASSNAMES} from '../../../core/MmlTree/MmlNode.js';
+import {MmlNode, TEXCLASS, TEXCLASSNAMES} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /**
- * The CHTMLTeXAtom wrapper for the TeXAtom object
+ * The CHTMLTeXAtom interface for the CHTML TeXAtom wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-// @ts-ignore
-export class CHTMLTeXAtom<N, T, D> extends
-CommonTeXAtomMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
+export interface CHTMLTeXAtomNTD<N, T, D> extends CHTMLWrapper<N, T, D>, CommonTeXAtom<
+  N, T, D,
+  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
+  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+> {}
 
-  /**
-   * The TeXAtom wrapper
-   */
-  public static kind = TeXAtom.prototype.kind;
-
-  /**
-   * @override
-   */
-  public toCHTML(parent: N) {
-    super.toCHTML(parent);
-    this.adaptor.setAttribute(this.chtml, 'texclass', TEXCLASSNAMES[this.node.texClass]);
-    //
-    // Center VCENTER atoms vertically
-    //
-    if (this.node.texClass === TEXCLASS.VCENTER) {
-      const bbox = this.childNodes[0].getBBox();  // get unmodified bbox of children
-      const {h, d} = bbox;
-      const a = this.font.params.axis_height;
-      const dh = ((h + d) / 2 + a) - h;  // new height minus old height
-      this.adaptor.setStyle(this.chtml, 'verticalAlign', this.em(dh));
-    }
-  }
-
+/**
+ * The CHTMLTeXAtomClass interface for the CHTML TeXAtom wrapper
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export interface CHTMLTeXAtomClass<N, T, D> extends CHTMLWrapperClass<N, T, D>, CommonTeXAtomClass<
+  N, T, D,
+  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
+  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+> {
+  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLTeXAtomNTD<N, T, D>;
 }
+
+
+/*****************************************************************/
+
+/**
+ * The CHTMLTeXAtom wrapper class for the MmlTeXAtom class
+ */
+export const CHTMLTeXAtom = (function <N, T, D>(): CHTMLTeXAtomClass<N, T, D> {
+
+  const Base = CommonTeXAtomMixin<
+      N, T, D,
+      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
+      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
+      CHTMLTeXAtomClass<N, T, D>
+    >(CHTMLWrapper);
+
+  // Avoid message about base constructors not having the same type
+  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  // @ts-ignore
+  return class CHTMLTeXAtom extends Base implements CHTMLTeXAtomNTD<N, T, D> {
+
+    /**
+     * @override
+     */
+    public static kind = TeXAtom.prototype.kind;
+
+    /**
+     * @override
+     */
+    public toCHTML(parent: N) {
+      super.toCHTML(parent);
+      this.adaptor.setAttribute(this.chtml, 'texclass', TEXCLASSNAMES[this.node.texClass]);
+      //
+      // Center VCENTER atoms vertically
+      //
+      if (this.node.texClass === TEXCLASS.VCENTER) {
+        const bbox = this.childNodes[0].getBBox();  // get unmodified bbox of children
+        const {h, d} = bbox;
+        const a = this.font.params.axis_height;
+        const dh = ((h + d) / 2 + a) - h;  // new height minus old height
+        this.adaptor.setStyle(this.chtml, 'verticalAlign', this.em(dh));
+      }
+    }
+
+  };
+
+})<any, any, any>();

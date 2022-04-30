@@ -23,11 +23,12 @@
 
 import {OptionList} from '../../util/Options.js';
 import * as LENGTHS from '../../util/lengths.js';
-import {CommonWrapper, AnyWrapperClass, Constructor, StringMap} from '../common/Wrapper.js';
+import {CommonWrapper, CommonWrapperClass, Constructor, StringMap} from '../common/Wrapper.js';
 import {CHTML} from '../chtml.js';
 import {CHTMLWrapperFactory} from './WrapperFactory.js';
 import {BBox} from '../../util/BBox.js';
-import {CHTMLFontData, CHTMLCharOptions, CHTMLDelimiterData} from './FontData.js';
+import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
+        CHTMLFontData, CHTMLFontDataClass} from './FontData.js';
 
 export {Constructor, StringMap} from '../common/Wrapper.js';
 
@@ -59,20 +60,22 @@ export const SPACE: StringMap = {
   /* tslint:enable */
 };
 
+/*****************************************************************/
 
 /**
  * Shorthand for making a CHTMLWrapper constructor
  */
 export type CHTMLConstructor<N, T, D> = Constructor<CHTMLWrapper<N, T, D>>;
 
-
 /*****************************************************************/
 /**
  *  The type of the CHTMLWrapper class (used when creating the wrapper factory for this class)
  */
-export interface CHTMLWrapperClass extends AnyWrapperClass {
-
-  kind: string;
+export interface CHTMLWrapperClass<N, T, D> extends CommonWrapperClass<
+  N, T, D,
+  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
+  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+> {
 
   /**
    * If true, this causes a style for the node type to be generated automatically
@@ -92,16 +95,13 @@ export interface CHTMLWrapperClass extends AnyWrapperClass {
  */
 export class CHTMLWrapper<N, T, D> extends
 CommonWrapper<
-  CHTML<N, T, D>,
-  CHTMLWrapper<N, T, D>,
-  CHTMLWrapperClass,
-  CHTMLCharOptions,
-  CHTMLDelimiterData,
-  CHTMLFontData
+  N, T, D,
+  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
+  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
 > {
 
   /**
-   * The wrapper type
+   * @override
    */
   public static kind: string = 'unknown';
 
@@ -110,11 +110,6 @@ CommonWrapper<
    * that sets display:inline-block (as needed for the output for MmlNodes).
    */
   public static autoStyle = true;
-
-  /**
-   * @override
-   */
-  protected factory: CHTMLWrapperFactory<N, T, D>;
 
   /**
    * The HTML element generated for this wrapped node

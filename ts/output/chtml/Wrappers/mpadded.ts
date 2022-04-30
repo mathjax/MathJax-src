@@ -21,83 +21,127 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper, CHTMLConstructor, StringMap} from '../Wrapper.js';
-import {CommonMpaddedMixin} from '../../common/Wrappers/mpadded.js';
+import {CHTML} from '../../chtml.js';
+import {CHTMLWrapper, CHTMLWrapperClass, StringMap} from '../Wrapper.js';
+import {CHTMLWrapperFactory} from '../WrapperFactory.js';
+import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
+        CHTMLFontData, CHTMLFontDataClass} from '../FontData.js';
+import {CommonMpadded, CommonMpaddedClass, CommonMpaddedMixin} from '../../common/Wrappers/mpadded.js';
+import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMpadded} from '../../../core/MmlTree/MmlNodes/mpadded.js';
 import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
- * The CHTMLmpadded wrapper for the MmlMpadded object
+ * The CHTMLMpadded interface for the CHTML Mpadded wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-// @ts-ignore
-export class CHTMLmpadded<N, T, D> extends
-CommonMpaddedMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
+export interface CHTMLMpaddedNTD<N, T, D> extends CHTMLWrapper<N, T, D>, CommonMpadded<
+  N, T, D,
+  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
+  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+> {}
 
-  /**
-   * The mpadded wrapper
-   */
-  public static kind = MmlMpadded.prototype.kind;
+/**
+ * The CHTMLMpaddedClass interface for the CHTML Mpadded wrapper
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export interface CHTMLMpaddedClass<N, T, D> extends CHTMLWrapperClass<N, T, D>, CommonMpaddedClass<
+  N, T, D,
+  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
+  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+> {
+  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLMpaddedNTD<N, T, D>;
+}
 
-  /**
-   * @override
-   */
-  public static styles: StyleList = {
-    'mjx-mpadded': {
-      display: 'inline-block'
-    },
-    'mjx-rbox': {
-      display: 'inline-block',
-      position: 'relative'
+
+/*****************************************************************/
+
+/**
+ * The CHTMLMpadded wrapper class for the MmlMpadded class
+ */
+export const CHTMLMpadded = (function <N, T, D>(): CHTMLMpaddedClass<N, T, D> {
+
+  const Base = CommonMpaddedMixin<
+      N, T, D,
+      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
+      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
+      CHTMLMpaddedClass<N, T, D>
+    >(CHTMLWrapper);
+
+  // Avoid message about base constructors not having the same type
+  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  // @ts-ignore
+  return class CHTMLMpadded extends Base implements CHTMLMpaddedNTD<N, T, D> {
+
+    /**
+     * @override
+     */
+    public static kind = MmlMpadded.prototype.kind;
+
+    /**
+     * @override
+     */
+    public static styles: StyleList = {
+      'mjx-mpadded': {
+        display: 'inline-block'
+      },
+      'mjx-rbox': {
+        display: 'inline-block',
+        position: 'relative'
+      }
+    };
+
+    /**
+     * @override
+     */
+    public toCHTML(parent: N) {
+      let chtml = this.standardCHTMLnode(parent);
+      const content: N[] = [];
+      const style: StringMap = {};
+      const [ , , W, dh, dd, dw, x, y, dx] = this.getDimens();
+      //
+      // If the width changed, set the width explicitly
+      //
+      if (dw) {
+        style.width = this.em(W + dw);
+      }
+      //
+      // If the height or depth changed, use margin to make the change
+      //
+      if (dh || dd) {
+        style.margin = this.em(dh) + ' 0 ' + this.em(dd);
+      }
+      //
+      // If there is a horizontal or vertical shift,
+      //   use relative positioning to move the contents
+      //
+      if (x + dx || y) {
+        style.position = 'relative';
+        const rbox = this.html('mjx-rbox', {
+          style: {left: this.em(x + dx), top: this.em(-y), 'max-width': style.width}
+        });
+        if (x + dx && this.childNodes[0].getBBox().pwidth) {
+          this.adaptor.setAttribute(rbox, 'width', 'full');
+          this.adaptor.setStyle(rbox, 'left', this.em(x));
+        }
+        content.push(rbox);
+      }
+      //
+      //  Create the HTML with the proper styles and content
+      //
+      chtml = this.adaptor.append(chtml, this.html('mjx-block', {style: style}, content)) as N;
+      for (const child of this.childNodes) {
+        child.toCHTML(content[0] || chtml);
+      }
     }
+
   };
 
-  /**
-   * @override
-   */
-  public toCHTML(parent: N) {
-    let chtml = this.standardCHTMLnode(parent);
-    const content: N[] = [];
-    const style: StringMap = {};
-    const [ , , W, dh, dd, dw, x, y, dx] = this.getDimens();
-    //
-    // If the width changed, set the width explicitly
-    //
-    if (dw) {
-      style.width = this.em(W + dw);
-    }
-    //
-    // If the height or depth changed, use margin to make the change
-    //
-    if (dh || dd) {
-      style.margin = this.em(dh) + ' 0 ' + this.em(dd);
-    }
-    //
-    // If there is a horizontal or vertical shift,
-    //   use relative positioning to move the contents
-    //
-    if (x + dx || y) {
-      style.position = 'relative';
-      const rbox = this.html('mjx-rbox', {
-        style: {left: this.em(x + dx), top: this.em(-y), 'max-width': style.width}
-      });
-      if (x + dx && this.childNodes[0].getBBox().pwidth) {
-        this.adaptor.setAttribute(rbox, 'width', 'full');
-        this.adaptor.setStyle(rbox, 'left', this.em(x));
-      }
-      content.push(rbox);
-    }
-    //
-    //  Create the HTML with the proper styles and content
-    //
-    chtml = this.adaptor.append(chtml, this.html('mjx-block', {style: style}, content)) as N;
-    for (const child of this.childNodes) {
-      child.toCHTML(content[0] || chtml);
-    }
-  }
-
-}
+})<any, any, any>();
