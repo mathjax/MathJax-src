@@ -23,7 +23,7 @@
 
 import {AbstractWrapper, WrapperClass} from '../../core/Tree/Wrapper.js';
 import {PropertyList} from '../../core/Tree/Node.js';
-import {MmlNode, TextNode, AbstractMmlNode, indentAttributes} from '../../core/MmlTree/MmlNode.js';
+import {MmlNode, MmlNodeClass, TextNode, AbstractMmlNode, indentAttributes} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {Property} from '../../core/Tree/Node.js';
 import {unicodeChars} from '../../util/string.js';
@@ -83,7 +83,7 @@ export interface CommonWrapperClass<
   CC extends CharOptions,
   DD extends DelimiterData,
   FD extends FontData<CC, VariantData<CC>, DD>
-> extends WrapperClass<MmlNode, W> {
+> extends WrapperClass<MmlNode, MmlNodeClass, W> {
   /**
    * @override
    */
@@ -107,7 +107,7 @@ export class CommonWrapper<
   CC extends CharOptions,
   DD extends DelimiterData,
   FD extends FontData<CC, VariantData<CC>, DD>
-> extends AbstractWrapper<MmlNode, W> {
+> extends AbstractWrapper<MmlNode, MmlNodeClass, W> {
 
   /**
    * The wrapper kind

@@ -25,7 +25,7 @@ import {CommonOutputJax} from './OutputJax.js';
 import {AbstractWrapperFactory} from '../../core/Tree/WrapperFactory.js';
 import {CommonWrapper, CommonWrapperClass} from './Wrapper.js';
 import {CharOptions, DelimiterData, FontData} from './FontData.js';
-import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import {MmlNode, MmlNodeClass} from '../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -44,7 +44,7 @@ export class CommonWrapperFactory<
   CC extends CharOptions,
   DD extends DelimiterData,
   FD extends FontData<CC, any, DD>
-> extends AbstractWrapperFactory<MmlNode, W, C> {
+> extends AbstractWrapperFactory<MmlNode, MmlNodeClass, W, C> {
 
   /**
    * The default list of wrapper nodes this factory can create
