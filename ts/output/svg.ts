@@ -237,7 +237,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
    * @return {[N, N]}              The svg and g nodes for the math
    */
   protected createRoot(wrapper: SVGWrapper<N, T, D>): [N, N] {
-    const {w, h, d, pwidth} = wrapper.getBBox();
+    const {w, h, d, pwidth} = wrapper.getOuterBBox();
     const px = wrapper.metrics.em / 1000;
     const W = Math.max(w, px); // make sure we are at least one px wide (needed for e.g. \llap)
     const H = Math.max(h + d, px); // make sure we are at least one px tall (needed for e.g., \smash)

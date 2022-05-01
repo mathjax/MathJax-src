@@ -273,7 +273,7 @@ export abstract class CommonOutputJax<
     this.math = math;
     math.root.setTeXclass(null);
     this.nodeMap = new Map<MmlNode, W>();
-    let bbox = this.factory.wrap(math.root).getBBox();
+    let bbox = this.factory.wrap(math.root).getOuterBBox();
     this.nodeMap = null;
     return bbox;
   }

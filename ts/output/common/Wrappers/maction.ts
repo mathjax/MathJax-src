@@ -184,7 +184,7 @@ export function CommonMactionMixin<
      * @override
      */
     public computeBBox(bbox: BBox, recompute: boolean = false) {
-      bbox.updateFrom(this.selected.getBBox());
+      bbox.updateFrom(this.selected.getOuterBBox());
       this.selected.setChildPWidths(recompute);
     }
 

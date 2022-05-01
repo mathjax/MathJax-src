@@ -254,7 +254,7 @@ export function CommonMmultiscriptsMixin<
         if (child.node.isKind('mprescripts')) {
           script = 'psubList';
         } else {
-          lists[script].push(child.getBBox());
+          lists[script].push(child.getOuterBBox());
           script = NextScript[script];
         }
       }

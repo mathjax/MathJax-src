@@ -90,7 +90,7 @@ CommonMmultiscriptsMixin<SVGWrapper<any, any, any>, Constructor<SVGmsubsup<any, 
     const base = this.baseChild;
     base.toSVG(svg);
     base.place(x, 0);
-    x += base.getBBox().w;
+    x += base.getOuterBBox().w;
     if (data.numScripts) {
       this.addScripts(x, u, v, 1, data.numScripts, postAlign);
     }
@@ -118,7 +118,7 @@ CommonMmultiscriptsMixin<SVGWrapper<any, any, any>, Constructor<SVGmsubsup<any, 
     let dx = 0;
     while (i < m) {
       const [sub, sup] = [this.childNodes[i++], this.childNodes[i++]];
-      const [subbox, supbox] = [sub.getBBox(), sup.getBBox()];
+      const [subbox, supbox] = [sub.getOuterBBox(), sup.getOuterBBox()];
       const [subr, supr] = [subbox.rscale, supbox.rscale];
       const w = Math.max(subbox.w * subr, supbox.w * supr);
       sub.toSVG(subRow);

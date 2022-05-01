@@ -66,7 +66,7 @@ export function CommonMrootMixin<T extends MsqrtConstructor>(Base: T): MrootCons
      * @override
      */
     public combineRootBBox(BBOX: BBox, sbox: BBox, H: number) {
-      const bbox = this.childNodes[this.root].getBBox();
+      const bbox = this.childNodes[this.root].getOuterBBox();
       const h = this.getRootDimens(sbox, H)[1];
       BBOX.combine(bbox, 0, h);
     }
@@ -76,7 +76,7 @@ export function CommonMrootMixin<T extends MsqrtConstructor>(Base: T): MrootCons
      */
     public getRootDimens(sbox: BBox, H: number) {
       const surd = this.childNodes[this.surd] as CommonMo;
-      const bbox = this.childNodes[this.root].getBBox();
+      const bbox = this.childNodes[this.root].getOuterBBox();
       const offset = (surd.size < 0 ? .5 : .6) * sbox.w;
       const {w, rscale} = bbox;
       const W = Math.max(w, offset / rscale);
