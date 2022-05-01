@@ -250,11 +250,19 @@ CommonWrapper<
     const f = SVGWrapper.borderFuzz;
     const bbox = this.getOuterBBox();
     const [h, d, w] = [bbox.h + f, bbox.d + f, bbox.w + f];
-    const paths: [number, number][][] = [
-      [[-f, h], [w, h], [w - width[1], h - width[0]], [-f + width[3], h - width[0]]],
-      [[w, -d], [w, h], [w - width[1], h - width[0]], [w - width[1], -d + width[2]]],
-      [[-f, -d], [w, -d], [w - width[1], -d + width[2]], [-f + width[3], -d + width[2]]],
-      [[-f, -d], [-f, h], [-f + width[3], h - width[0]], [-f + width[3], -d + width[2]]]
+    const outerRT = [w, h];
+    const outerLT = [-f, h];
+    const outerRB = [w, -d];
+    const outerLB = [-f, -d];
+    const innerRT = [w - width[1], h - width[0]];
+    const innerLT = [-f + width[3], h - width[0]];
+    const innerRB = [w - width[1], -d + width[2]];
+    const innerLB = [-f + width[3],-d + width[2]];
+    const paths: number[][][] = [
+      [outerLT, outerRT, innerRT, innerLT],
+      [outerRB, outerRT, innerRT, innerRB],
+      [outerLB, outerRB, innerRB, innerLB],
+      [outerLB, outerLT, innerLT, innerLB]
     ];
     const adaptor = this.adaptor;
     const child = adaptor.firstChild(this.element) as N;
@@ -276,7 +284,7 @@ CommonWrapper<
    * @param {string} color               The color to use
    * @param {N} child                    Insert the border before this child, if any
    */
-  protected addBorderSolid(path: [number, number][], color: string, child: N) {
+  protected addBorderSolid(path: number[][], color: string, child: N) {
     const border = this.svg('polygon', {
       points: path.map(([x, y]) => `${this.fixed(x - this.dx)},${this.fixed(y)}`).join(' '),
       stroke: 'none',
@@ -298,7 +306,7 @@ CommonWrapper<
    * @param {number} t                  The thickness for the border line
    * @param {number} i                  The side being drawn
    */
-  protected addBorderBroken(path: [number, number][], color: string, style: string, t: number, i: number) {
+  protected addBorderBroken(path: number[][], color: string, style: string, t: number, i: number) {
     const dot = (style === 'dotted');
     const t2 = t / 2;
     const [tx1, ty1, tx2, ty2] = [[t2, -t2, -t2, -t2], [-t2, t2, -t2, -t2], [t2, t2, -t2, t2], [t2, t2, t2, -t2]][i];

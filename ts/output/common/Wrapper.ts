@@ -328,7 +328,7 @@ export class CommonWrapper<
     for (const [name, side] of BBox.StyleAdjust) {
       const x = this.styles.get(name);
       if (x) {
-        (obox as any)[side] += this.length2em(this.styles.get(name), 1, obox.rscale);
+        (obox as any)[side] += this.length2em(x, 1, obox.rscale);
       }
     }
     return obox;
