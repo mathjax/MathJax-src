@@ -40,7 +40,7 @@ export const XLINKNS = 'http://www.w3.org/1999/xlink';
 
 /*****************************************************************/
 /**
- *  Implements the CHTML class (extends AbstractOutputJax)
+ *  Implements the SVG class (extends AbstractOutputJax)
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
@@ -95,11 +95,6 @@ CommonOutputJax<
    * The ID for the stylesheet element for the styles for the SVG output
    */
   public static STYLESHEETID = 'MJX-SVG-styles';
-
-  /**
-   * Stores the CHTMLWrapper factory
-   */
-  public factory: SVGWrapperFactory<N, T, D>;
 
   /**
    * Stores the information about the cached character glyphs

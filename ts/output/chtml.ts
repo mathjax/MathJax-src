@@ -137,11 +137,6 @@ CommonOutputJax<
   public static STYLESHEETID = 'MJX-CHTML-styles';
 
   /**
-   *  Used to store the CHTMLWrapper factory.
-   */
-  public factory: CHTMLWrapperFactory<N, T, D>;
-
-  /**
    * The usage information for the wrapper classes
    */
   public wrapperUsage: Usage<string>;

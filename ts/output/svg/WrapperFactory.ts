@@ -29,7 +29,7 @@ import {SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDa
 
 /*****************************************************************/
 /*
- *  The SVGWrapperFactory class for creating CHTMLWrapper nodes
+ *  The SVGWrapperFactory class for creating SVGWrapper nodes
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
@@ -46,10 +46,5 @@ CommonWrapperFactory<
    * The default list of wrapper nodes this factory can create
    */
   public static defaultNodes = SVGWrappers;
-
-  /**
-   * The CHTML output jax associated with this factory
-   */
-  public jax: SVG<N, T, D> = null;
 
 }
