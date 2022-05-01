@@ -257,7 +257,7 @@ CommonWrapper<
     const innerRT = [w - width[1], h - width[0]];
     const innerLT = [-f + width[3], h - width[0]];
     const innerRB = [w - width[1], -d + width[2]];
-    const innerLB = [-f + width[3],-d + width[2]];
+    const innerLB = [-f + width[3], -d + width[2]];
     const paths: number[][][] = [
       [outerLT, outerRT, innerRT, innerLT],
       [outerRB, outerRT, innerRT, innerRB],
