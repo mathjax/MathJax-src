@@ -26,12 +26,39 @@
 import TexParser from '../TexParser.js';
 import {ParseMethod} from '../Types.js';
 import NodeUtil from '../NodeUtil.js';
+import ParseUtil from "../ParseUtil.js";
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 
 
 // Namespace
 let HtmlMethods: Record<string, ParseMethod> = {};
 
+/**
+ * Implements \data{dataset}{content}
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
+ HtmlMethods.Data = (parser: TexParser, name: string) => {
+  const dataset = parser.GetArgument(name);
+  const arg = GetArgumentMML(parser, name);
+  const data = ParseUtil.keyvalOptions(dataset);
+  for (const key in data) {
+    // remove illegal attribute names
+    if (!isLegalAttributeName(key)) {
+      continue;
+    }
+    NodeUtil.setAttribute(arg, `data-${key}`, data[key]);
+  }
+  parser.Push(arg);
+};
+
+/**
+ * Whether the string is a valid HTML attribute name according to {@link https://html.spec.whatwg.org/multipage/syntax.html#attributes-2}.
+ * @param {string} name String to validate.
+ */
+function isLegalAttributeName(name: string): boolean {
+  return Boolean(name.match(/^([^\x00-\x1f\x7f-\x9f "'>\/=]+)$/));
+}
 
 /**
  * Implements \href{url}{math}

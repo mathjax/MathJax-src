@@ -28,6 +28,7 @@ import HtmlMethods from './HtmlMethods.js';
 
 
 new CommandMap('html_macros', {
+  data:    'Data',
   href:    'Href',
   'class': 'Class',
   style:   'Style',
