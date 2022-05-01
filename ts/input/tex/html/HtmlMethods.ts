@@ -53,12 +53,15 @@ let HtmlMethods: Record<string, ParseMethod> = {};
   parser.Push(arg);
 };
 
+/** Regexp for matching non-characters as specified by {@link https://infra.spec.whatwg.org/#noncharacter}. */
+const nonCharacterRegexp = /[\u{FDD0}-\u{FDEF}\u{FFFE}\u{FFFF}\u{1FFFE}\u{1FFFF}\u{2FFFE}\u{2FFFF}\u{3FFFE}\u{3FFFF}\u{4FFFE}\u{4FFFF}\u{5FFFE}\u{5FFFF}\u{6FFFE}\u{6FFFF}\u{7FFFE}\u{7FFFF}\u{8FFFE}\u{8FFFF}\u{9FFFE}\u{9FFFF}\u{AFFFE}\u{AFFFF}\u{BFFFE}\u{BFFFF}\u{CFFFE}\u{CFFFF}\u{DFFFE}\u{DFFFF}\u{EFFFE}\u{EFFFF}\u{FFFFE}\u{FFFFF}\u{10FFFE}\u{10FFFF}]/u;
+
 /**
  * Whether the string is a valid HTML attribute name according to {@link https://html.spec.whatwg.org/multipage/syntax.html#attributes-2}.
  * @param {string} name String to validate.
  */
 function isLegalAttributeName(name: string): boolean {
-  return Boolean(name.match(/^([^\x00-\x1f\x7f-\x9f "'>\/=]+)$/));
+  return !(name.match(/[\x00-\x1f\x7f-\x9f "'>\/=]/) || name.match(nonCharacterRegexp));
 }
 
 /**
