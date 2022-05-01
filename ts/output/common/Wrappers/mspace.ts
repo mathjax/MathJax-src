@@ -24,7 +24,7 @@
 import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wrapper.js';
 import {CommonWrapperFactory} from '../WrapperFactory.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
-import {CommonOutputJax} from '../OutputJax.js';
+import {CommonOutputJax} from '../../common.js';
 import {BBox} from '../../../util/BBox.js';
 
 /*****************************************************************/

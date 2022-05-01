@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonOutputJax} from './OutputJax.js';
+import {CommonOutputJax} from '../common.js';
 import {AbstractWrapperFactory} from '../../core/Tree/WrapperFactory.js';
 import {CommonWrapper, CommonWrapperClass} from './Wrapper.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from './FontData.js';

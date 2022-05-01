@@ -30,7 +30,7 @@ import {unicodeChars} from '../../util/string.js';
 import * as LENGTHS from '../../util/lengths.js';
 import {Styles} from '../../util/Styles.js';
 import {StyleList} from '../../util/StyleList.js';
-import {CommonOutputJax} from './OutputJax.js';
+import {CommonOutputJax} from '../common.js';
 import {CommonWrapperFactory} from './WrapperFactory.js';
 import {CommonMo} from './Wrappers/mo.js';
 import {BBox} from '../../util/BBox.js';

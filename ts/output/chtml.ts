@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonOutputJax} from './common/OutputJax.js';
+import {CommonOutputJax} from './common.js';
 import {CommonWrapper} from './common/Wrapper.js';
 import {StyleList} from '../util/Styles.js';
 import {StyleList as CssStyleList, CssStyles} from '../util/StyleList.js';

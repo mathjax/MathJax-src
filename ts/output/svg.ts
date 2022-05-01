@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonOutputJax, UnknownBBox} from './common/OutputJax.js';
+import {CommonOutputJax, UnknownBBox} from './common.js';
 import {OptionList} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';

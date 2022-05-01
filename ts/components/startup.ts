@@ -32,7 +32,7 @@ import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {Handler} from '../core/Handler.js';
 import {InputJax} from '../core/InputJax.js';
 import {OutputJax} from '../core/OutputJax.js';
-import {CommonOutputJax} from '../output/common/OutputJax.js';
+import {CommonOutputJax} from '../output/common.js';
 import {DOMAdaptor} from '../core/DOMAdaptor.js';
 import {PrioritizedList} from '../util/PrioritizedList.js';
 import {OptionList, OPTIONS} from '../util/Options.js';

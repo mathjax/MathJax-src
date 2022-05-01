@@ -24,7 +24,7 @@
 import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wrapper.js';
 import {CommonWrapperFactory} from '../WrapperFactory.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
-import {CommonOutputJax} from '../OutputJax.js';
+import {CommonOutputJax} from '../../common.js';
 import {CommonInferredMrow} from './mrow.js';
 import {MmlNode, AbstractMmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMfenced} from '../../../core/MmlTree/MmlNodes/mfenced.js';

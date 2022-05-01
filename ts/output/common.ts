@@ -21,17 +21,17 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AbstractOutputJax} from '../../core/OutputJax.js';
-import {MathDocument} from '../../core/MathDocument.js';
-import {MathItem, Metrics, STATE} from '../../core/MathItem.js';
-import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import {FontData, FontDataClass, CharOptions, VariantData, DelimiterData, CssFontData} from './FontData.js';
-import {OptionList, separateOptions} from '../../util/Options.js';
-import {CommonWrapper, CommonWrapperClass} from './Wrapper.js';
-import {CommonWrapperFactory} from './WrapperFactory.js';
-import {percent} from '../../util/lengths.js';
-import {StyleList, Styles} from '../../util/Styles.js';
-import {StyleList as CssStyleList, CssStyles} from '../../util/StyleList.js';
+import {AbstractOutputJax} from '../core/OutputJax.js';
+import {MathDocument} from '../core/MathDocument.js';
+import {MathItem, Metrics, STATE} from '../core/MathItem.js';
+import {MmlNode} from '../core/MmlTree/MmlNode.js';
+import {FontData, FontDataClass, CharOptions, VariantData, DelimiterData, CssFontData} from './common/FontData.js';
+import {OptionList, separateOptions} from '../util/Options.js';
+import {CommonWrapper, CommonWrapperClass} from './common/Wrapper.js';
+import {CommonWrapperFactory} from './common/WrapperFactory.js';
+import {percent} from '../util/lengths.js';
+import {StyleList, Styles} from '../util/Styles.js';
+import {StyleList as CssStyleList, CssStyles} from '../util/StyleList.js';
 
 /*****************************************************************/
 

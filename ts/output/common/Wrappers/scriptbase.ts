@@ -27,7 +27,7 @@
 import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor, Constructor} from '../Wrapper.js';
 import {CommonWrapperFactory} from '../WrapperFactory.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
-import {CommonOutputJax} from '../OutputJax.js';
+import {CommonOutputJax} from '../../common.js';
 import {CommonMunderover} from './munderover.js';
 import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
