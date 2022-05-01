@@ -57,6 +57,7 @@ CommonMathMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
       'font-size': '100%',
       'font-size-adjust': 'none',
       'letter-spacing': 'normal',
+      'border-collapse': 'collapse',
       'word-wrap': 'normal',
       'word-spacing': 'normal',
       'white-space': 'nowrap',
