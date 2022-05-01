@@ -282,10 +282,6 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
 
   /**
    * Implements \underbacket and \overbracket.
-   * (Currently only works in CHTML, since we don't yet handle styles properly in SVG.
-   *  This includes a workaround oin CHTML to the fact that the border size is not
-   *  part of MathJax's bbox computations yet.  That will need to be removed when
-   *  we handle borders properly.)
    *
    * @param {TexParser} parser   The calling parser.
    * @param {string} name        The macro name.
@@ -294,27 +290,20 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     const thickness = length2em(parser.GetBrackets(name, '.1em'), .1);
     const height = parser.GetBrackets(name, '.2em');
     const arg = parser.GetArgument(name);
-    const [pos, accent, border, side] = (
+    const [pos, accent, border] = (
       name.charAt(1) === 'o' ?
-        ['over', 'accent', 'bottom', 'height'] :
-        ['under', 'accentunder', 'top', 'depth']
+        ['over', 'accent', 'bottom'] :
+        ['under', 'accentunder', 'top']
     );
     const t = em(thickness);
-    const t2 = em(2 * thickness);
     const base = new TexParser(arg, parser.stack.env, parser.configuration).mml();
     const copy = new TexParser(arg, parser.stack.env, parser.configuration).mml();
     const script = parser.create('node', 'mpadded', [
-      parser.create('node', 'mpadded', [
-        parser.create('node', 'mphantom', [copy])
-      ], {
-        style: `border: ${t} solid; border-${border}: none`,
-        width: `-${t2}`,
-        height: height,
-        depth: 0
-      })
+      parser.create('node', 'mphantom', [copy])
     ], {
-      width: `+${t2}`,
-      [side]: `+${t}`
+      style: `border: ${t} solid; border-${border}: none`,
+      height: height,
+      depth: 0
     });
     const node = ParseUtil.underOver(parser, base, script, pos, true);
     const munderover = NodeUtil.getChildAt(NodeUtil.getChildAt(node, 0), 0);  // TeXAtom.inferredMrow child 0
