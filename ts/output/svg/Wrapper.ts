@@ -23,30 +23,33 @@
 
 import {OptionList} from '../../util/Options.js';
 import {BBox} from '../../util/BBox.js';
-import {CommonWrapper, AnyWrapperClass, Constructor} from '../common/Wrapper.js';
+import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../common/Wrapper.js';
+import {SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass} from './FontData.js';
 import {SVG, XLINKNS} from '../svg.js';
 import {SVGWrapperFactory} from './WrapperFactory.js';
-import {SVGFontData, SVGDelimiterData, SVGCharOptions} from './FontData.js';
 
 export {Constructor, StringMap} from '../common/Wrapper.js';
 
 /*****************************************************************/
 
 /**
- * Shorthand for makeing a SVGWrapper constructor
+ * Shorthand for makeing an SVGWrapper constructor
  */
-export type SVGConstructor<N, T, D> = Constructor<SVGWrapper<N, T, D>>;
-
+export type SVGConstructor<N, T, D> = CommonWrapperConstructor<
+  N, T, D,
+  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
+  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+>;
 
 /*****************************************************************/
 /**
  *  The type of the SVGWrapper class (used when creating the wrapper factory for this class)
  */
-export interface SVGWrapperClass extends AnyWrapperClass {
-
-  kind: string;
-
-}
+export interface SVGWrapperClass<N, T, D> extends CommonWrapperClass<
+  N, T, D,
+  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
+  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+> {}
 
 /*****************************************************************/
 /**
@@ -56,14 +59,10 @@ export interface SVGWrapperClass extends AnyWrapperClass {
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGWrapper<N, T, D> extends
-CommonWrapper<
-  SVG<N, T, D>,
-  SVGWrapper<N, T, D>,
-  SVGWrapperClass,
-  SVGCharOptions,
-  SVGDelimiterData,
-  SVGFontData
+export class SVGWrapper<N, T, D> extends CommonWrapper<
+  N, T, D,
+  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
+  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
 > {
 
   /**
@@ -76,12 +75,7 @@ CommonWrapper<
    */
   public static borderFuzz = 0.005;
 
-  /**
-   * The factory used to create more SVGWrappers
-   */
-  protected factory: SVGWrapperFactory<N, T, D>;
-
-  /**
+  /*
    * The SVG element generated for this wrapped node
    */
   public element: N = null;
@@ -404,13 +398,13 @@ CommonWrapper<
   public firstChild(): N {
     const adaptor = this.adaptor;
     let child = adaptor.firstChild(this.element);
-    if (child && adaptor.kind(child) === 'text' && adaptor.getAttribute(child, 'data-id-align')) {
-      child = adaptor.firstChild(adaptor.next(child));
+    if (child && adaptor.kind(child) === 'text' && adaptor.getAttribute(child as N, 'data-id-align')) {
+      child = adaptor.firstChild(adaptor.next(child) as N);
     }
-    if (child && adaptor.kind(child) === 'rect' && adaptor.getAttribute(child, 'data-hitbox')) {
+    if (child && adaptor.kind(child) === 'rect' && adaptor.getAttribute(child as N, 'data-hitbox')) {
       child = adaptor.next(child);
     }
-    return child;
+    return child as N;
   }
 
   /**
@@ -429,9 +423,9 @@ CommonWrapper<
     const [ , , w, data] = this.getVariantChar(variant, n);
     if ('p' in data) {
       const path = (data.p ? 'M' + data.p + 'Z' : '');
-      this.place(x, y, this.adaptor.append(parent, this.charNode(variant, C, path)));
+      this.place(x, y, this.adaptor.append(parent, this.charNode(variant, C, path)) as N);
     } else if ('c' in data) {
-      const g = this.adaptor.append(parent, this.svg('g', {'data-c': C}));
+      const g = this.adaptor.append(parent, this.svg('g', {'data-c': C})) as N;
       this.place(x, y, g);
       x = 0;
       for (const n of this.unicodeChars(data.c, variant)) {
@@ -439,7 +433,7 @@ CommonWrapper<
       }
     } else if (data.unknown) {
       const char = String.fromCodePoint(n);
-      const text = this.adaptor.append(parent, this.jax.unknownText(char, variant));
+      const text = this.adaptor.append(parent, this.jax.unknownText(char, variant)) as N;
       this.place(x, y, text);
       return this.jax.measureTextNodeWithCache(text, char, variant).w;
     }

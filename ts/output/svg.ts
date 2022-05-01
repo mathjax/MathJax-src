@@ -26,9 +26,9 @@ import {OptionList} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
-import {SVGWrapper} from './svg/Wrapper.js';
+import {SVGWrapper, SVGWrapperClass} from './svg/Wrapper.js';
 import {SVGWrapperFactory} from './svg/WrapperFactory.js';
-import {SVGFontData} from './svg/FontData.js';
+import {SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass} from './svg/FontData.js';
 import {TeXFont} from './svg/fonts/tex.js';
 import {StyleList as CssStyleList} from '../util/StyleList.js';
 import {FontCache} from './svg/FontCache.js';
@@ -47,7 +47,11 @@ export const XLINKNS = 'http://www.w3.org/1999/xlink';
  * @template D  The Document class
  */
 export class SVG<N, T, D> extends
-CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFontData, typeof SVGFontData> {
+CommonOutputJax<
+  N, T, D,
+  SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
+  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+> {
 
   /**
    * The name of the output jax
@@ -213,7 +217,7 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
    * @param {MmlNode} math  The MML node whose SVG is to be produced
    * @param {N} parent      The HTML node to contain the SVG
    */
-  protected processMath(math: MmlNode, parent: N) {
+  public processMath(math: MmlNode, parent: N) {
     //
     // Cache the container (tooltips process into separate containers)
     //

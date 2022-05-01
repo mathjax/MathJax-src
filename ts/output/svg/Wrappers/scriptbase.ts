@@ -24,40 +24,82 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
-import {CommonScriptbaseMixin} from '../../common/Wrappers/scriptbase.js';
+import {SVG} from '../../svg.js';
+import {SVGWrapper, SVGWrapperClass} from '../Wrapper.js';
+import {SVGWrapperFactory} from '../WrapperFactory.js';
+import {SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass} from '../FontData.js';
+import {CommonScriptbase, CommonScriptbaseClass, CommonScriptbaseMixin} from '../../common/Wrappers/scriptbase.js';
+import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /**
- * A base class for msup/msub/msubsup and munder/mover/munderover
- * wrapper implementations
+ * The SVGScriptbase interface for the SVG msub/msup/msubsup/munder/mover/munderover wrappers
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-// @ts-ignore
-export class SVGscriptbase<N, T, D> extends
-CommonScriptbaseMixin<SVGWrapper<any, any, any>, SVGConstructor<any, any, any>>(SVGWrapper) {
+export interface SVGScriptbaseNTD<N, T, D> extends SVGWrapper<N, T, D>, CommonScriptbase<
+  N, T, D,
+  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
+  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+> {}
 
-  /**
-   * The scriptbase wrapper
-   */
-  public static kind = 'scriptbase';
-
-  /**
-   * This gives the common output for msub and msup.  It is overridden
-   * for all the others (msubsup, munder, mover, munderover).
-   *
-   * @override
-   */
-  public toSVG(parent: N) {
-    const svg = this.standardSVGnode(parent);
-    const w = this.getBaseWidth();
-    const [x, v] = this.getOffset();
-    this.baseChild.toSVG(svg);
-    this.scriptChild.toSVG(svg);
-    this.scriptChild.place(w + x, v);
-  }
-
+/**
+ * The SVGScriptbaseClass interface for the SVG msub/msup/msubsup/munder/mover/munderover wrapper
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export interface SVGScriptbaseClass<N, T, D> extends SVGWrapperClass<N, T, D>, CommonScriptbaseClass<
+  N, T, D,
+  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
+  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+> {
+  new(factory: SVGWrapperFactory<N, T, D>, node: MmlNode, parent?: SVGWrapper<N, T, D>): SVGScriptbaseNTD<N, T, D>;
 }
+
+
+/*****************************************************************/
+
+/**
+ * The SVGScriptbase wrapper class for the msub/msup/msubsup/munder/mover/munderover class
+ */
+export const SVGScriptbase = (function <N, T, D>(): SVGScriptbaseClass<N, T, D> {
+
+  const Base = CommonScriptbaseMixin<
+      N, T, D,
+      SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
+      SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass,
+      SVGScriptbaseClass<N, T, D>
+    >(SVGWrapper);
+
+  // Avoid message about base constructors not having the same type
+  //   (they should both be SVGWrapper<N, T, D>, but are thought of as different by typescript)
+  // @ts-ignore
+  return class SVGScriptbase extends Base implements SVGScriptbaseNTD<N, T, D> {
+
+    /**
+     * @override
+     */
+    public static kind = 'scriptbase';
+
+    /**
+     * This gives the common output for msub and msup.  It is overridden
+     * for all the others (msubsup, munder, mover, munderover).
+     *
+     * @override
+     */
+    public toSVG(parent: N) {
+      const svg = this.standardSVGnode(parent);
+      const w = this.getBaseWidth();
+      const [x, v] = this.getOffset();
+      this.baseChild.toSVG(svg);
+      this.scriptChild.toSVG(svg);
+      this.scriptChild.place(w + x, v);
+    }
+
+  };
+
+})<any, any, any>();

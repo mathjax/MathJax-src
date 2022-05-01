@@ -25,7 +25,7 @@ import {SVG} from '../svg.js';
 import {CommonWrapperFactory} from '../common/WrapperFactory.js';
 import {SVGWrapper, SVGWrapperClass} from './Wrapper.js';
 import {SVGWrappers} from './Wrappers.js';
-import {SVGCharOptions, SVGDelimiterData, SVGFontData} from './FontData.js';
+import {SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass} from './FontData.js';
 
 /*****************************************************************/
 /*
@@ -37,12 +37,9 @@ import {SVGCharOptions, SVGDelimiterData, SVGFontData} from './FontData.js';
  */
 export class SVGWrapperFactory<N, T, D> extends
 CommonWrapperFactory<
-  SVG<N, T, D>,
-  SVGWrapper<N, T, D>,
-  SVGWrapperClass,
-  SVGCharOptions,
-  SVGDelimiterData,
-  SVGFontData
+  N, T, D,
+  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
+  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
 > {
 
   /**

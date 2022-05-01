@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVGmenclose} from './Wrappers/menclose.js';
+import {SVGMencloseNTD} from './Wrappers/menclose.js';
 import * as Notation from '../common/Notation.js';
 export * from '../common/Notation.js';
 
@@ -30,14 +30,13 @@ export * from '../common/Notation.js';
 /**
  * Shorthand for SVGmenclose
  */
-export type Menclose = SVGmenclose<any, any, any>;
-
+export type Menclose = SVGMencloseNTD<any, any, any>;
 
 /*
  * Shorthands for common types
  */
-export type RENDERER<N, T, D> = Notation.Renderer<SVGmenclose<N, T, D>, N>;
-export type DEFPAIR<N, T, D> = Notation.DefPair<SVGmenclose<N, T, D>, N>;
+export type RENDERER<N, T, D> = Notation.Renderer<SVGMencloseNTD<N, T, D>, N>;
+export type DEFPAIR<N, T, D> = Notation.DefPair<SVGMencloseNTD<N, T, D>, N>;
 
 /**
  * The kinds of lines that can be drawn
@@ -121,7 +120,7 @@ export const RenderLine = function<N, T, D>(line: LineName, offset: string = '')
  * @return {DEFPAIR}      The notation definition for the notation having a line on the given side
  */
 export const Border = function<N, T, D>(side: Notation.Side): DEFPAIR<N, T, D> {
-  return Notation.CommonBorder<SVGmenclose<N, T, D>, N>((node, _child) => {
+  return Notation.CommonBorder<SVGMencloseNTD<N, T, D>, N>((node, _child) => {
     node.adaptor.append(node.element, node.line(lineData(node, side)));
   })(side);
 };
@@ -134,7 +133,7 @@ export const Border = function<N, T, D>(side: Notation.Side): DEFPAIR<N, T, D> {
  * @return {DEFPAIR}       The notation definition for the notation having lines on two sides
  */
 export const Border2 = function<N, T, D>(name: string, side1: Notation.Side, side2: Notation.Side): DEFPAIR<N, T, D> {
-  return Notation.CommonBorder2<SVGmenclose<N, T, D>, N>((node, _child) => {
+  return Notation.CommonBorder2<SVGMencloseNTD<N, T, D>, N>((node, _child) => {
     node.adaptor.append(node.element, node.line(lineData(node, side1)));
     node.adaptor.append(node.element, node.line(lineData(node, side2)));
   })(name, side1, side2);
@@ -147,7 +146,7 @@ export const Border2 = function<N, T, D>(name: string, side1: Notation.Side, sid
  * @return {DEFPAIR}       The notation definition for the diagonal strike
  */
 export const DiagonalStrike = function<N, T, D>(name: LineName): DEFPAIR<N, T, D> {
-  return Notation.CommonDiagonalStrike<SVGmenclose<N, T, D>, N>((_cname: string) => (node, _child) => {
+  return Notation.CommonDiagonalStrike<SVGMencloseNTD<N, T, D>, N>((_cname: string) => (node, _child) => {
     node.adaptor.append(node.element, node.line(lineData(node, name)));
   })(name);
 };
@@ -159,7 +158,7 @@ export const DiagonalStrike = function<N, T, D>(name: LineName): DEFPAIR<N, T, D
  * @return {DEFPAIR}      The notation definition for the diagonal arrow
  */
 export const DiagonalArrow = function<N, T, D>(name: string): DEFPAIR<N, T, D> {
-  return Notation.CommonDiagonalArrow<SVGmenclose<N, T, D>, N>((node, arrow) => {
+  return Notation.CommonDiagonalArrow<SVGMencloseNTD<N, T, D>, N>((node, arrow) => {
     node.adaptor.append(node.element, arrow);
   })(name);
 };
@@ -169,7 +168,7 @@ export const DiagonalArrow = function<N, T, D>(name: string): DEFPAIR<N, T, D> {
  * @return {DEFPAIR}      The notation definition for the arrow
  */
 export const Arrow = function<N, T, D>(name: string): DEFPAIR<N, T, D> {
-  return Notation.CommonArrow<SVGmenclose<N, T, D>, N>((node, arrow) => {
+  return Notation.CommonArrow<SVGMencloseNTD<N, T, D>, N>((node, arrow) => {
     node.adaptor.append(node.element, arrow);
   })(name);
 };
