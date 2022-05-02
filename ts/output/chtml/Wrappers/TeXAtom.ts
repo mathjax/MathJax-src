@@ -16,68 +16,68 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLTeXAtom wrapper for the MmlTeXAtom object
+ * @fileoverview  Implements the ChtmlTeXAtom wrapper for the MmlTeXAtom object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {CHTML} from '../../chtml.js';
-import {CHTMLWrapper, CHTMLWrapperClass} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
-        CHTMLFontData, CHTMLFontDataClass} from '../FontData.js';
+import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
+import {ChtmlWrapperFactory} from '../WrapperFactory.js';
+import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
 import {CommonTeXAtom, CommonTeXAtomClass, CommonTeXAtomMixin} from '../../common/Wrappers/TeXAtom.js';
 import {TeXAtom} from '../../../core/MmlTree/MmlNodes/TeXAtom.js';
 import {MmlNode, TEXCLASS, TEXCLASSNAMES} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /**
- * The CHTMLTeXAtom interface for the CHTML TeXAtom wrapper
+ * The ChtmlTeXAtom interface for the CHTML TeXAtom wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLTeXAtomNTD<N, T, D> extends CHTMLWrapper<N, T, D>, CommonTeXAtom<
+export interface ChtmlTeXAtomNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonTeXAtom<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {}
 
 /**
- * The CHTMLTeXAtomClass interface for the CHTML TeXAtom wrapper
+ * The ChtmlTeXAtomClass interface for the CHTML TeXAtom wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLTeXAtomClass<N, T, D> extends CHTMLWrapperClass<N, T, D>, CommonTeXAtomClass<
+export interface ChtmlTeXAtomClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonTeXAtomClass<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
-  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLTeXAtomNTD<N, T, D>;
+  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlTeXAtomNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The CHTMLTeXAtom wrapper class for the MmlTeXAtom class
+ * The ChtmlTeXAtom wrapper class for the MmlTeXAtom class
  */
-export const CHTMLTeXAtom = (function <N, T, D>(): CHTMLTeXAtomClass<N, T, D> {
+export const ChtmlTeXAtom = (function <N, T, D>(): ChtmlTeXAtomClass<N, T, D> {
 
   const Base = CommonTeXAtomMixin<
       N, T, D,
-      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-      CHTMLTeXAtomClass<N, T, D>
-    >(CHTMLWrapper);
+      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+      ChtmlTeXAtomClass<N, T, D>
+    >(ChtmlWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class CHTMLTeXAtom extends Base implements CHTMLTeXAtomNTD<N, T, D> {
+  return class ChtmlTeXAtom extends Base implements ChtmlTeXAtomNTD<N, T, D> {
 
     /**
      * @override

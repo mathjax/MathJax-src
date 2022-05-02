@@ -26,9 +26,9 @@ import {OptionList} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
-import {SVGWrapper, SVGWrapperClass} from './svg/Wrapper.js';
-import {SVGWrapperFactory} from './svg/WrapperFactory.js';
-import {SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass} from './svg/FontData.js';
+import {SvgWrapper, SvgWrapperClass} from './svg/Wrapper.js';
+import {SvgWrapperFactory} from './svg/WrapperFactory.js';
+import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from './svg/FontData.js';
 import {TeXFont} from './svg/fonts/tex.js';
 import {StyleList as CssStyleList} from '../util/StyleList.js';
 import {FontCache} from './svg/FontCache.js';
@@ -49,8 +49,8 @@ export const XLINKNS = 'http://www.w3.org/1999/xlink';
 export class SVG<N, T, D> extends
 CommonOutputJax<
   N, T, D,
-  SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {
 
   /**
@@ -125,7 +125,7 @@ CommonOutputJax<
    * @constructor
    */
   constructor(options: OptionList = null) {
-    super(options, SVGWrapperFactory as any, TeXFont);
+    super(options, SvgWrapperFactory as any, TeXFont);
     this.fontCache = new FontCache(this);
   }
 
@@ -224,7 +224,7 @@ CommonOutputJax<
     //
     const wrapper = this.factory.wrap(math);
     const [svg, g] = this.createRoot(wrapper);
-    this.typesetSVG(wrapper, svg, g);
+    this.typesetSvg(wrapper, svg, g);
     //
     //  Put back the original container
     //
@@ -232,10 +232,10 @@ CommonOutputJax<
   }
 
   /**
-   * @param {SVGWrapper} wrapper   The wrapped math to process
+   * @param {SvgWrapper} wrapper   The wrapped math to process
    * @return {[N, N]}              The svg and g nodes for the math
    */
-  protected createRoot(wrapper: SVGWrapper<N, T, D>): [N, N] {
+  protected createRoot(wrapper: SvgWrapper<N, T, D>): [N, N] {
     const {w, h, d, pwidth} = wrapper.getOuterBBox();
     const px = wrapper.metrics.em / 1000;
     const W = Math.max(w, px); // make sure we are at least one px wide (needed for e.g. \llap)
@@ -284,11 +284,11 @@ CommonOutputJax<
    * Typeset the math and add minwidth (from mtables), or set the alignment and indentation
    * of the finalized expression.
    *
-   * @param {SVGWrapper} wrapper   The wrapped math to typeset
+   * @param {SvgWrapper} wrapper   The wrapped math to typeset
    * @param {N} svg                The main svg element for the typeet math
    * @param {N} g                  The group in which the math is typeset
    */
-  protected typesetSVG(wrapper: SVGWrapper<N, T, D>, svg: N, g: N) {
+  protected typesetSvg(wrapper: SvgWrapper<N, T, D>, svg: N, g: N) {
     const adaptor = this.adaptor;
     //
     //  Typeset the math and add minWidth (from mtables), or set the alignment and indentation

@@ -16,68 +16,68 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLmi wrapper for the MmlMi object
+ * @fileoverview  Implements the ChtmlMi wrapper for the MmlMi object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {CHTML} from '../../chtml.js';
-import {CHTMLWrapper, CHTMLWrapperClass} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
-        CHTMLFontData, CHTMLFontDataClass} from '../FontData.js';
+import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
+import {ChtmlWrapperFactory} from '../WrapperFactory.js';
+import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
 import {CommonMi, CommonMiClass, CommonMiMixin} from '../../common/Wrappers/mi.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMi} from '../../../core/MmlTree/MmlNodes/mi.js';
 
 /*****************************************************************/
 /**
- * The CHTMLMi interface for the CHTML Mi wrapper
+ * The ChtmlMi interface for the CHTML Mi wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMiNTD<N, T, D> extends CHTMLWrapper<N, T, D>, CommonMi<
+export interface ChtmlMiNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMi<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {}
 
 /**
- * The CHTMLMiClass interface for the CHTML Mi wrapper
+ * The ChtmlMiClass interface for the CHTML Mi wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMiClass<N, T, D> extends CHTMLWrapperClass<N, T, D>, CommonMiClass<
+export interface ChtmlMiClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonMiClass<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
-  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLMiNTD<N, T, D>;
+  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMiNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The CHTMLMi wrapper class for the MmlMi class
+ * The ChtmlMi wrapper class for the MmlMi class
  */
-export const CHTMLMi = (function <N, T, D>(): CHTMLMiClass<N, T, D> {
+export const ChtmlMi = (function <N, T, D>(): ChtmlMiClass<N, T, D> {
 
   const Base = CommonMiMixin<
       N, T, D,
-      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-      CHTMLMiClass<N, T, D>
-    >(CHTMLWrapper);
+      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+      ChtmlMiClass<N, T, D>
+    >(ChtmlWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class CHTMLMi extends Base implements CHTMLMiNTD<N, T, D> {
+  return class ChtmlMi extends Base implements ChtmlMiNTD<N, T, D> {
 
     /**
      * @override

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the a base class for CHTMLmsubsup, CHTMLmunderover
+ * @fileoverview  Implements the a base class for ChtmlMsubsup, ChtmlMunderover
  *                and their relatives.  (Since munderover can become msubsup
  *                when movablelimits is set, munderover needs to be able to
  *                do the same thing as msubsup in some cases.)
@@ -25,10 +25,10 @@
  */
 
 import {CHTML} from '../../chtml.js';
-import {CHTMLWrapper, CHTMLWrapperClass} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
-        CHTMLFontData, CHTMLFontDataClass} from '../FontData.js';
+import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
+import {ChtmlWrapperFactory} from '../WrapperFactory.js';
+import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
 import {CommonScriptbase, CommonScriptbaseClass, CommonScriptbaseMixin} from '../../common/Wrappers/scriptbase.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../../../util/BBox.js';
@@ -36,16 +36,16 @@ import {StyleData} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
- * The CHTMLScriptbase interface for the CHTML Scriptbase wrapper
+ * The ChtmlScriptbase interface for the CHTML Scriptbase wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLScriptbaseNTD<N, T, D> extends CHTMLWrapper<N, T, D>, CommonScriptbase<
+export interface ChtmlScriptbaseNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonScriptbase<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
 
   /**
@@ -75,39 +75,39 @@ export interface CHTMLScriptbaseNTD<N, T, D> extends CHTMLWrapper<N, T, D>, Comm
 }
 
 /**
- * The CHTMLScriptbaseClass interface for the CHTML Scriptbase wrapper
+ * The ChtmlScriptbaseClass interface for the CHTML Scriptbase wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLScriptbaseClass<N, T, D> extends CHTMLWrapperClass<N, T, D>, CommonScriptbaseClass<
+export interface ChtmlScriptbaseClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonScriptbaseClass<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
-  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLScriptbaseNTD<N, T, D>;
+  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlScriptbaseNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The CHTMLScriptbase wrapper class for the MmlScriptbase class
+ * The ChtmlScriptbase wrapper class for the MmlScriptbase class
  */
-export const CHTMLScriptbase = (function <N, T, D>(): CHTMLScriptbaseClass<N, T, D> {
+export const ChtmlScriptbase = (function <N, T, D>(): ChtmlScriptbaseClass<N, T, D> {
 
   const Base = CommonScriptbaseMixin<
       N, T, D,
-      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-      CHTMLScriptbaseClass<N, T, D>
-    >(CHTMLWrapper);
+      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+      ChtmlScriptbaseClass<N, T, D>
+    >(ChtmlWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class CHTMLScriptbase extends Base implements CHTMLScriptbaseNTD<N, T, D> {
+  return class ChtmlScriptbase extends Base implements ChtmlScriptbaseNTD<N, T, D> {
 
     /**
      * @override
@@ -121,7 +121,7 @@ export const CHTMLScriptbase = (function <N, T, D>(): CHTMLScriptbaseClass<N, T,
      * @override
      */
     public toCHTML(parent: N) {
-      this.dom = this.standardCHTMLnode(parent);
+      this.dom = this.standardChtmlNode(parent);
       const [x, v] = this.getOffset();
       const dx = x - (this.baseRemoveIc ? this.baseIc : 0);
       const style: StyleData = {'vertical-align': this.em(v)};

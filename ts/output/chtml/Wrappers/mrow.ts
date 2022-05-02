@@ -16,16 +16,16 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLmrow wrapper for the MmlMrow object
+ * @fileoverview  Implements the ChtmlMrow wrapper for the MmlMrow object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {CHTML} from '../../chtml.js';
-import {CHTMLWrapper, CHTMLWrapperClass} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
-        CHTMLFontData, CHTMLFontDataClass} from '../FontData.js';
+import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
+import {ChtmlWrapperFactory} from '../WrapperFactory.js';
+import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
 import {CommonMrow, CommonMrowClass, CommonMrowMixin} from '../../common/Wrappers/mrow.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {CommonInferredMrow, CommonInferredMrowClass, CommonInferredMrowMixin} from '../../common/Wrappers/mrow.js';
@@ -33,52 +33,52 @@ import {MmlMrow, MmlInferredMrow} from '../../../core/MmlTree/MmlNodes/mrow.js';
 
 /*****************************************************************/
 /**
- * The CHTMLMrow interface for the CHTML Mrow wrapper
+ * The ChtmlMrow interface for the CHTML Mrow wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMrowNTD<N, T, D> extends CHTMLWrapper<N, T, D>, CommonMrow<
+export interface ChtmlMrowNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMrow<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {}
 
 /**
- * The CHTMLMrowClass interface for the CHTML Mrow wrapper
+ * The ChtmlMrowClass interface for the CHTML Mrow wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMrowClass<N, T, D> extends CHTMLWrapperClass<N, T, D>, CommonMrowClass<
+export interface ChtmlMrowClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonMrowClass<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
-  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLMrowNTD<N, T, D>;
+  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMrowNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The CHTMLMrow wrapper class for the MmlMrow class
+ * The ChtmlMrow wrapper class for the MmlMrow class
  */
-export const CHTMLMrow = (function <N, T, D>(): CHTMLMrowClass<N, T, D> {
+export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
 
   const Base = CommonMrowMixin<
       N, T, D,
-      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-      CHTMLMrowClass<N, T, D>
-    >(CHTMLWrapper);
+      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+      ChtmlMrowClass<N, T, D>
+    >(ChtmlWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class CHTMLMrow extends Base implements CHTMLMrowNTD<N, T, D> {
+  return class ChtmlMrow extends Base implements ChtmlMrowNTD<N, T, D> {
 
     /**
      * @override
@@ -89,7 +89,7 @@ export const CHTMLMrow = (function <N, T, D>(): CHTMLMrowClass<N, T, D> {
      * @override
      */
     public toCHTML(parent: N) {
-      const chtml = (this.node.isInferred ? (this.dom = parent) : this.standardCHTMLnode(parent));
+      const chtml = (this.node.isInferred ? (this.dom = parent) : this.standardChtmlNode(parent));
       let hasNegative = false;
       for (const child of this.childNodes) {
         child.toCHTML(chtml);
@@ -118,52 +118,52 @@ export const CHTMLMrow = (function <N, T, D>(): CHTMLMrowClass<N, T, D> {
 /*****************************************************************/
 
 /**
- * The CHTMLInferredMrow interface for the CHTML InferredMrow wrapper
+ * The ChtmlInferredMrow interface for the CHTML InferredMrow wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLInferredMrowNTD<N, T, D> extends CHTMLMrowNTD<N, T, D>, CommonInferredMrow<
+export interface ChtmlInferredMrowNTD<N, T, D> extends ChtmlMrowNTD<N, T, D>, CommonInferredMrow<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {}
 
 /**
- * The CHTMLInferredMrowClass interface for the CHTML InferredMrow wrapper
+ * The ChtmlInferredMrowClass interface for the CHTML InferredMrow wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLInferredMrowClass<N, T, D> extends CHTMLMrowClass<N, T, D>, CommonInferredMrowClass<
+export interface ChtmlInferredMrowClass<N, T, D> extends ChtmlMrowClass<N, T, D>, CommonInferredMrowClass<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
-  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLInferredMrowNTD<N, T, D>;
+  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlInferredMrowNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The CHTMLInferredMrow wrapper class for the MmlInferredMrow class
+ * The ChtmlInferredMrow wrapper class for the MmlInferredMrow class
  */
-export const CHTMLInferredMrow = (function <N, T, D>(): CHTMLInferredMrowClass<N, T, D> {
+export const ChtmlInferredMrow = (function <N, T, D>(): ChtmlInferredMrowClass<N, T, D> {
 
   const Base = CommonInferredMrowMixin<
       N, T, D,
-      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-      CHTMLInferredMrowClass<N, T, D>
-    >(CHTMLMrow);
+      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+      ChtmlInferredMrowClass<N, T, D>
+    >(ChtmlMrow);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class CHTMLInferredMrow extends Base implements CHTMLInferredMrowNTD<N, T, D> {
+  return class ChtmlInferredMrow extends Base implements ChtmlInferredMrowNTD<N, T, D> {
 
     /**
      * @override

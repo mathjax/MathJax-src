@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLWrapper class
+ * @fileoverview  Implements the ChtmlWrapper class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -25,10 +25,10 @@ import {OptionList} from '../../util/Options.js';
 import * as LENGTHS from '../../util/lengths.js';
 import {CommonWrapper, CommonWrapperClass, Constructor, StringMap} from '../common/Wrapper.js';
 import {CHTML} from '../chtml.js';
-import {CHTMLWrapperFactory} from './WrapperFactory.js';
+import {ChtmlWrapperFactory} from './WrapperFactory.js';
 import {BBox} from '../../util/BBox.js';
-import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
-        CHTMLFontData, CHTMLFontDataClass} from './FontData.js';
+import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+        ChtmlFontData, ChtmlFontDataClass} from './FontData.js';
 
 export {Constructor, StringMap} from '../common/Wrapper.js';
 
@@ -63,18 +63,18 @@ export const SPACE: StringMap = {
 /*****************************************************************/
 
 /**
- * Shorthand for making a CHTMLWrapper constructor
+ * Shorthand for making a ChtmlWrapper constructor
  */
-export type CHTMLConstructor<N, T, D> = Constructor<CHTMLWrapper<N, T, D>>;
+export type ChtmlConstructor<N, T, D> = Constructor<ChtmlWrapper<N, T, D>>;
 
 /*****************************************************************/
 /**
- *  The type of the CHTMLWrapper class (used when creating the wrapper factory for this class)
+ *  The type of the ChtmlWrapper class (used when creating the wrapper factory for this class)
  */
-export interface CHTMLWrapperClass<N, T, D> extends CommonWrapperClass<
+export interface ChtmlWrapperClass<N, T, D> extends CommonWrapperClass<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
 
   /**
@@ -87,17 +87,17 @@ export interface CHTMLWrapperClass<N, T, D> extends CommonWrapperClass<
 
 /*****************************************************************/
 /**
- *  The base CHTMLWrapper class
+ *  The base ChtmlWrapper class
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLWrapper<N, T, D> extends
+export class ChtmlWrapper<N, T, D> extends
 CommonWrapper<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
 
   /**
@@ -119,7 +119,7 @@ CommonWrapper<
    * @param {N} parent  The HTML node where the output is added
    */
   public toCHTML(parent: N) {
-    const chtml = this.standardCHTMLnode(parent);
+    const chtml = this.standardChtmlNode(parent);
     for (const child of this.childNodes) {
       child.toCHTML(chtml);
     }
@@ -133,9 +133,9 @@ CommonWrapper<
    * @param {N} parent  The HTML element in which the node is to be created
    * @returns {N}  The root of the HTML tree for the wrapped node's output
    */
-  protected standardCHTMLnode(parent: N): N {
+  protected standardChtmlNode(parent: N): N {
     this.markUsed();
-    const chtml = this.createCHTMLnode(parent);
+    const chtml = this.createChtmlNode(parent);
     this.handleStyles();
     this.handleVariant();
     this.handleScale();
@@ -157,7 +157,7 @@ CommonWrapper<
    * @param {N} parent  The HTML element in which the node is to be created
    * @returns {N}  The root of the HTML tree for the wrapped node's output
    */
-  protected createCHTMLnode(parent: N): N {
+  protected createChtmlNode(parent: N): N {
     const href = this.node.attributes.get('href');
     if (href) {
       parent = this.adaptor.append(parent, this.html('a', {href: href})) as N;
@@ -263,7 +263,7 @@ CommonWrapper<
   protected handleAttributes() {
     const attributes = this.node.attributes;
     const defaults = attributes.getAllDefaults();
-    const skip = CHTMLWrapper.skipAttributes;
+    const skip = ChtmlWrapper.skipAttributes;
     for (const name of attributes.getExplicitNames()) {
       if (skip[name] === false || (!(name in defaults) && !skip[name] &&
                                    !this.adaptor.hasAttribute(this.dom, name))) {

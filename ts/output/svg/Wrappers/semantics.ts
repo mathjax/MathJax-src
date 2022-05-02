@@ -16,16 +16,16 @@
  */
 
 /**
- * @fileoverview  Implements the SVGsemantics wrapper for the MmlSemantics object
+ * @fileoverview  Implements the SvgSemantics wrapper for the MmlSemantics object
  *                and the associated wrappers for annotations
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {SVG} from '../../svg.js';
-import {SVGWrapper, SVGWrapperClass} from '../Wrapper.js';
-import {SVGWrapperFactory} from '../WrapperFactory.js';
-import {SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass} from '../FontData.js';
+import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
+import {SvgWrapperFactory} from '../WrapperFactory.js';
+import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
 import {CommonSemantics, CommonSemanticsClass, CommonSemanticsMixin} from '../../common/Wrappers/semantics.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../../../util/BBox.js';
@@ -35,52 +35,52 @@ import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
- * The SVGSemantics interface for the SVG Semantics wrapper
+ * The SvgSemantics interface for the SVG Semantics wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGSemanticsNTD<N, T, D> extends SVGWrapper<N, T, D>, CommonSemantics<
+export interface SvgSemanticsNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonSemantics<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {}
 
 /**
- * The SVGSemanticsClass interface for the SVG Semantics wrapper
+ * The SvgSemanticsClass interface for the SVG Semantics wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGSemanticsClass<N, T, D> extends SVGWrapperClass<N, T, D>, CommonSemanticsClass<
+export interface SvgSemanticsClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonSemanticsClass<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {
-  new(factory: SVGWrapperFactory<N, T, D>, node: MmlNode, parent?: SVGWrapper<N, T, D>): SVGSemanticsNTD<N, T, D>;
+  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgSemanticsNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The SVGSemantics wrapper class for the MmlSemantics class
+ * The SvgSemantics wrapper class for the MmlSemantics class
  */
-export const SVGSemantics = (function <N, T, D>(): SVGSemanticsClass<N, T, D> {
+export const SvgSemantics = (function <N, T, D>(): SvgSemanticsClass<N, T, D> {
 
   const Base = CommonSemanticsMixin<
       N, T, D,
-      SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-      SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass,
-      SVGSemanticsClass<N, T, D>
-    >(SVGWrapper);
+      SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+      SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
+      SvgSemanticsClass<N, T, D>
+    >(SvgWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be SVGWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class SVGSemantics extends Base implements SVGSemanticsNTD<N, T, D> {
+  return class SvgSemantics extends Base implements SvgSemanticsNTD<N, T, D> {
 
     /**
      * @override
@@ -91,7 +91,7 @@ export const SVGSemantics = (function <N, T, D>(): SVGSemanticsClass<N, T, D> {
      * @override
      */
     public toSVG(parent: N) {
-      const svg = this.standardSVGnode(parent);
+      const svg = this.standardSvgNode(parent);
       if (this.childNodes.length) {
         this.childNodes[0].toSVG(svg);
       }
@@ -104,11 +104,11 @@ export const SVGSemantics = (function <N, T, D>(): SVGSemanticsClass<N, T, D> {
 
 /*****************************************************************/
 /**
- * The SVGAnnotation wrapper for the MmlAnnotation object
+ * The SvgAnnotation wrapper for the MmlAnnotation object
  */
-export const SVGAnnotation = (function <N, T, D>(): SVGWrapperClass<N, T, D> {
+export const SvgAnnotation = (function <N, T, D>(): SvgWrapperClass<N, T, D> {
 
-  return class SVGAnnotation extends SVGWrapper<N, T, D> {
+  return class SvgAnnotation extends SvgWrapper<N, T, D> {
 
     /**
      * The annotation wrapper
@@ -138,10 +138,10 @@ export const SVGAnnotation = (function <N, T, D>(): SVGWrapperClass<N, T, D> {
 
 /*****************************************************************/
 /**
- * The SVGAnnotationXML wrapper for the MmlAnnotationXML object
+ * The SvgAnnotationXML wrapper for the MmlAnnotationXML object
  */
-export const SVGAnnotationXML = (function <N, T, D>(): SVGWrapperClass<N, T, D> {
-  return class SVGAnnotationXML extends SVGWrapper<N, T, D> {
+export const SvgAnnotationXML = (function <N, T, D>(): SvgWrapperClass<N, T, D> {
+  return class SvgAnnotationXML extends SvgWrapper<N, T, D> {
 
     /**
      * The annotation-xml wrapper
@@ -166,10 +166,10 @@ export const SVGAnnotationXML = (function <N, T, D>(): SVGWrapperClass<N, T, D> 
 
 /*****************************************************************/
 /**
- * The SVGXmlNode wrapper for the XMLNode object
+ * The SvgXmlNode wrapper for the XMLNode object
  */
-export const SVGXmlNode = (function <N, T, D>(): SVGWrapperClass<N, T, D> {
-  return class SVGXmlNode extends SVGWrapper<N, T, D> {
+export const SvgXmlNode = (function <N, T, D>(): SvgWrapperClass<N, T, D> {
+  return class SvgXmlNode extends SvgWrapper<N, T, D> {
 
     /**
      * The XMLNode wrapper

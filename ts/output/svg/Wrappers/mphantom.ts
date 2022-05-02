@@ -16,46 +16,46 @@
  */
 
 /**
- * @fileoverview  Implements the SVGmphantom wrapper for the MmlMphantom object
+ * @fileoverview  Implements the SvgMphantom wrapper for the MmlMphantom object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVGWrapper, SVGWrapperClass} from '../Wrapper.js';
-import {SVGWrapperFactory} from '../WrapperFactory.js';
+import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
+import {SvgWrapperFactory} from '../WrapperFactory.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMphantom} from '../../../core/MmlTree/MmlNodes/mphantom.js';
 
 /*****************************************************************/
 /**
- * The SVGMphantom interface for the SVG Mphantom wrapper
+ * The SvgMphantom interface for the SVG Mphantom wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMphantomNTD<N, T, D> extends SVGWrapper<N, T, D> {}
+export interface SvgMphantomNTD<N, T, D> extends SvgWrapper<N, T, D> {}
 
 /**
- * The SVGMphantomClass interface for the SVG Mphantom wrapper
+ * The SvgMphantomClass interface for the SVG Mphantom wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMphantomClass<N, T, D> extends SVGWrapperClass<N, T, D> {
-  new(factory: SVGWrapperFactory<N, T, D>, node: MmlNode, parent?: SVGWrapper<N, T, D>): SVGMphantomNTD<N, T, D>;
+export interface SvgMphantomClass<N, T, D> extends SvgWrapperClass<N, T, D> {
+  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMphantomNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The SVGMphantom wrapper class for the MmlMphantom class
+ * The SvgMphantom wrapper class for the MmlMphantom class
  */
-export const SVGMphantom = (function <N, T, D>(): SVGMphantomClass<N, T, D> {
+export const SvgMphantom = (function <N, T, D>(): SvgMphantomClass<N, T, D> {
 
-  return class SVGMphantom extends SVGWrapper<N, T, D> implements SVGMphantomNTD<N, T, D> {
+  return class SvgMphantom extends SvgWrapper<N, T, D> implements SvgMphantomNTD<N, T, D> {
 
     /**
      * @override
@@ -66,7 +66,7 @@ export const SVGMphantom = (function <N, T, D>(): SVGMphantomClass<N, T, D> {
      * @override
      */
     public toSVG(parent: N) {
-      this.standardSVGnode(parent);
+      this.standardSvgNode(parent);
     }
 
   };

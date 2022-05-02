@@ -16,31 +16,31 @@
  */
 
 /**
- * @fileoverview  Implements the SVGmtd wrapper for the MmlMtd object
+ * @fileoverview  Implements the SvgMtd wrapper for the MmlMtd object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {SVG} from '../../svg.js';
-import {SVGWrapper, SVGWrapperClass} from '../Wrapper.js';
-import {SVGWrapperFactory} from '../WrapperFactory.js';
-import {SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass} from '../FontData.js';
+import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
+import {SvgWrapperFactory} from '../WrapperFactory.js';
+import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
 import {CommonMtd, CommonMtdClass, CommonMtdMixin} from '../../common/Wrappers/mtd.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMtd} from '../../../core/MmlTree/MmlNodes/mtd.js';
 
 /*****************************************************************/
 /**
- * The SVGMtd interface for the SVG Mtd wrapper
+ * The SvgMtd interface for the SVG Mtd wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMtdNTD<N, T, D> extends SVGWrapper<N, T, D>, CommonMtd<
+export interface SvgMtdNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMtd<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {
 
   /**
@@ -64,39 +64,39 @@ export interface SVGMtdNTD<N, T, D> extends SVGWrapper<N, T, D>, CommonMtd<
 }
 
 /**
- * The SVGMtdClass interface for the SVG Mtd wrapper
+ * The SvgMtdClass interface for the SVG Mtd wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMtdClass<N, T, D> extends SVGWrapperClass<N, T, D>, CommonMtdClass<
+export interface SvgMtdClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonMtdClass<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {
-  new(factory: SVGWrapperFactory<N, T, D>, node: MmlNode, parent?: SVGWrapper<N, T, D>): SVGMtdNTD<N, T, D>;
+  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMtdNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The SVGMtd wrapper class for the MmlMtd class
+ * The SvgMtd wrapper class for the MmlMtd class
  */
-export const SVGMtd = (function <N, T, D>(): SVGMtdClass<N, T, D> {
+export const SvgMtd = (function <N, T, D>(): SvgMtdClass<N, T, D> {
 
   const Base = CommonMtdMixin<
       N, T, D,
-      SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-      SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass,
-      SVGMtdClass<N, T, D>
-    >(SVGWrapper);
+      SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+      SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
+      SvgMtdClass<N, T, D>
+    >(SvgWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be SVGWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class SVGMtd extends Base implements SVGMtdNTD<N, T, D> {
+  return class SvgMtd extends Base implements SvgMtdNTD<N, T, D> {
 
     /**
      * @override

@@ -16,20 +16,20 @@
  */
 
 /**
- * @fileoverview  Implements the SVGmtable wrapper for the MmlMtable object
+ * @fileoverview  Implements the SvgMtable wrapper for the MmlMtable object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {SVG} from '../../svg.js';
-import {SVGWrapper, SVGWrapperClass} from '../Wrapper.js';
-import {SVGWrapperFactory} from '../WrapperFactory.js';
-import {SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass} from '../FontData.js';
+import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
+import {SvgWrapperFactory} from '../WrapperFactory.js';
+import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
 import {CommonMtable, CommonMtableClass, CommonMtableMixin} from '../../common/Wrappers/mtable.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMtable} from '../../../core/MmlTree/MmlNodes/mtable.js';
-import {SVGMtrNTD} from './mtr.js';
-import {SVGMtdNTD} from './mtd.js';
+import {SvgMtrNTD} from './mtr.js';
+import {SvgMtdNTD} from './mtd.js';
 import {OptionList} from '../../../util/Options.js';
 import {StyleList} from '../../../util/StyleList.js';
 
@@ -37,17 +37,17 @@ const CLASSPREFIX = 'mjx-';
 
 /*****************************************************************/
 /**
- * The SVGMtable interface for the SVG Mtable wrapper
+ * The SvgMtable interface for the SVG Mtable wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMtableNTD<N, T, D> extends SVGWrapper<N, T, D>, CommonMtable<
+export interface SvgMtableNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMtable<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass,
-  SVGMtrNTD<N, T, D>
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
+  SvgMtrNTD<N, T, D>
 > {
 
   /**
@@ -58,40 +58,40 @@ export interface SVGMtableNTD<N, T, D> extends SVGWrapper<N, T, D>, CommonMtable
 }
 
 /**
- * The SVGMtableClass interface for the SVG Mtable wrapper
+ * The SvgMtableClass interface for the SVG Mtable wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMtableClass<N, T, D> extends SVGWrapperClass<N, T, D>, CommonMtableClass<
+export interface SvgMtableClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonMtableClass<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {
-  new(factory: SVGWrapperFactory<N, T, D>, node: MmlNode, parent?: SVGWrapper<N, T, D>): SVGMtableNTD<N, T, D>;
+  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMtableNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The SVGMtable wrapper class for the MmlMtable class
+ * The SvgMtable wrapper class for the MmlMtable class
  */
-export const SVGMtable = (function <N, T, D>(): SVGMtableClass<N, T, D> {
+export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
 
   const Base = CommonMtableMixin<
       N, T, D,
-      SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-      SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass,
-      SVGMtrNTD<N, T, D>,
-      SVGMtableClass<N, T, D>
-    >(SVGWrapper);
+      SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+      SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
+      SvgMtrNTD<N, T, D>,
+      SvgMtableClass<N, T, D>
+    >(SvgWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be SVGWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class SVGMtable extends Base implements SVGMtableNTD<N, T, D> {
+  return class SvgMtable extends Base implements SvgMtableNTD<N, T, D> {
 
     /**
      * @override
@@ -140,7 +140,7 @@ export const SVGMtable = (function <N, T, D>(): SVGMtableClass<N, T, D> {
       const rLines = [this.fLine, ...this.rLines, this.fLine];
       let y = this.getBBox().h - rLines[0];
       for (let i = 0; i < this.numRows; i++) {
-        const row = this.childNodes[i] as SVGMtrNTD<N, T, D>;
+        const row = this.childNodes[i] as SvgMtrNTD<N, T, D>;
         [row.H, row.D] = this.getRowHD(equal, HD, H[i], D[i]);
         [row.tSpace, row.bSpace] = [rSpace[i], rSpace[i + 1]];
         [row.tLine, row.bLine] = [rLines[i], rLines[i + 1]];
@@ -373,9 +373,9 @@ export const SVGMtable = (function <N, T, D>(): SVGMtableClass<N, T, D> {
       let y = h - this.fLine;
       let current = adaptor.firstChild(this.labels) as N;
       for (let i = 0; i < this.numRows; i++) {
-        const row = this.childNodes[i] as SVGMtrNTD<N, T, D>;
+        const row = this.childNodes[i] as SvgMtrNTD<N, T, D>;
         if (row.node.isKind('mlabeledtr')) {
-          const cell = row.childNodes[0] as SVGMtdNTD<N, T, D>;
+          const cell = row.childNodes[0] as SvgMtdNTD<N, T, D>;
           y -= space[i] + row.H;
           row.placeCell(cell, {x: 0, y: y, w: L, lSpace: 0, rSpace: 0, lLine: 0, rLine: 0});
           y -= row.D + space[i + 1] + this.rLines[i];
@@ -442,7 +442,7 @@ export const SVGMtable = (function <N, T, D>(): SVGMtableClass<N, T, D> {
     /**
      * @override
      */
-    constructor(factory: SVGWrapperFactory<N, T, D>, node: MmlNode, parent: SVGWrapper<N, T, D> = null) {
+    constructor(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent: SvgWrapper<N, T, D> = null) {
       super(factory, node, parent);
       const def: OptionList = {'data-labels': true};
       if (this.isTop) {
@@ -455,7 +455,7 @@ export const SVGMtable = (function <N, T, D>(): SVGMtableClass<N, T, D> {
      * @override
      */
     public toSVG(parent: N) {
-      const svg = this.standardSVGnode(parent);
+      const svg = this.standardSvgNode(parent);
       this.placeRows(svg);
       this.handleColumnLines(svg);
       this.handleRowLines(svg);

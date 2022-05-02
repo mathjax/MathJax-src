@@ -16,67 +16,67 @@
  */
 
 /**
- * @fileoverview  Implements the SVGmn wrapper for the MmlMn object
+ * @fileoverview  Implements the SvgMn wrapper for the MmlMn object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {SVG} from '../../svg.js';
-import {SVGWrapper, SVGWrapperClass} from '../Wrapper.js';
-import {SVGWrapperFactory} from '../WrapperFactory.js';
-import {SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass} from '../FontData.js';
+import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
+import {SvgWrapperFactory} from '../WrapperFactory.js';
+import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
 import {CommonMn, CommonMnClass, CommonMnMixin} from '../../common/Wrappers/mn.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMn} from '../../../core/MmlTree/MmlNodes/mn.js';
 
 /*****************************************************************/
 /**
- * The SVGMn interface for the SVG Mn wrapper
+ * The SvgMn interface for the SVG Mn wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMnNTD<N, T, D> extends SVGWrapper<N, T, D>, CommonMn<
+export interface SvgMnNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMn<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {}
 
 /**
- * The SVGMnClass interface for the SVG Mn wrapper
+ * The SvgMnClass interface for the SVG Mn wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMnClass<N, T, D> extends SVGWrapperClass<N, T, D>, CommonMnClass<
+export interface SvgMnClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonMnClass<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {
-  new(factory: SVGWrapperFactory<N, T, D>, node: MmlNode, parent?: SVGWrapper<N, T, D>): SVGMnNTD<N, T, D>;
+  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMnNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The SVGMn wrapper class for the MmlMn class
+ * The SvgMn wrapper class for the MmlMn class
  */
-export const SVGMn = (function <N, T, D>(): SVGMnClass<N, T, D> {
+export const SvgMn = (function <N, T, D>(): SvgMnClass<N, T, D> {
 
   const Base = CommonMnMixin<
       N, T, D,
-      SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-      SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass,
-      SVGMnClass<N, T, D>
-    >(SVGWrapper);
+      SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+      SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
+      SvgMnClass<N, T, D>
+    >(SvgWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be SVGWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class SVGMn extends Base implements SVGMnNTD<N, T, D> {
+  return class SvgMn extends Base implements SvgMnNTD<N, T, D> {
 
     /**
      * @override

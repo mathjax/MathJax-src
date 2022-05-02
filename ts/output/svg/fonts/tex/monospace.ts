@@ -14,10 +14,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {SVGCharMap, AddPaths} from '../../FontData.js';
+import {SvgCharMap, AddPaths} from '../../FontData.js';
 import {monospace as font} from '../../../common/fonts/tex/monospace.js';
 
-export const monospace: SVGCharMap = AddPaths(font, {
+export const monospace: SvgCharMap = AddPaths(font, {
     0x20: '',
     0x21: '206 565Q206 590 222 606T265 622Q287 621 303 606T319 565T314 392L308 216Q299 194 273 194H262Q247 194 241 195T228 200T217 216L211 392Q206 539 206 565ZM206 56Q206 83 223 99T265 115Q288 113 304 99T320 58Q320 33 303 17T262 0Q237 0 222 17T206 56',
     0x22: '122 575Q122 593 137 608T173 623Q196 623 210 608T225 575Q225 562 218 464Q212 373 211 361T201 341Q193 333 173 333Q154 333 146 341Q138 348 137 360T129 464Q122 561 122 575ZM299 575Q299 593 314 608T350 623Q373 623 387 608T402 575Q402 562 395 464Q389 373 388 361T378 341Q370 333 350 333Q331 333 323 341Q315 348 314 360T306 464Q299 561 299 575',

@@ -16,37 +16,37 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLmtable wrapper for the MmlMtable object
+ * @fileoverview  Implements the ChtmlMtable wrapper for the MmlMtable object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {CHTML} from '../../chtml.js';
-import {CHTMLWrapper, CHTMLWrapperClass} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
-        CHTMLFontData, CHTMLFontDataClass} from '../FontData.js';
+import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
+import {ChtmlWrapperFactory} from '../WrapperFactory.js';
+import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
 import {CommonMtable, CommonMtableClass, CommonMtableMixin} from '../../common/Wrappers/mtable.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMtable} from '../../../core/MmlTree/MmlNodes/mtable.js';
-import {CHTMLMtrNTD} from './mtr.js';
+import {ChtmlMtrNTD} from './mtr.js';
 import {StyleList} from '../../../util/StyleList.js';
 import {isPercent} from '../../../util/string.js';
 import {OptionList} from '../../../util/Options.js';
 
 /*****************************************************************/
 /**
- * The CHTMLMtable interface for the CHTML Mtable wrapper
+ * The ChtmlMtable interface for the CHTML Mtable wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMtableNTD<N, T, D> extends CHTMLWrapper<N, T, D>, CommonMtable<
+export interface ChtmlMtableNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMtable<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-  CHTMLMtrNTD<N, T, D>
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+  ChtmlMtrNTD<N, T, D>
 > {
 
   /**
@@ -62,40 +62,40 @@ export interface CHTMLMtableNTD<N, T, D> extends CHTMLWrapper<N, T, D>, CommonMt
 }
 
 /**
- * The CHTMLMtableClass interface for the CHTML Mtable wrapper
+ * The ChtmlMtableClass interface for the CHTML Mtable wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMtableClass<N, T, D> extends CHTMLWrapperClass<N, T, D>, CommonMtableClass<
+export interface ChtmlMtableClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonMtableClass<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
-  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLMtableNTD<N, T, D>;
+  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMtableNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The CHTMLMtable wrapper class for the MmlMtable class
+ * The ChtmlMtable wrapper class for the MmlMtable class
  */
-export const CHTMLMtable = (function <N, T, D>(): CHTMLMtableClass<N, T, D> {
+export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
 
   const Base = CommonMtableMixin<
       N, T, D,
-      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-      CHTMLMtrNTD<N, T, D>,
-      CHTMLMtableClass<N, T, D>
-    >(CHTMLWrapper);
+      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+      ChtmlMtrNTD<N, T, D>,
+      ChtmlMtableClass<N, T, D>
+    >(ChtmlWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class CHTMLMtable extends Base implements CHTMLMtableNTD<N, T, D> {
+  return class ChtmlMtable extends Base implements ChtmlMtableNTD<N, T, D> {
 
     /**
      * @override
@@ -183,7 +183,7 @@ export const CHTMLMtable = (function <N, T, D>(): CHTMLMtableClass<N, T, D> {
     /**
      * @override
      */
-    constructor(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent: CHTMLWrapper<N, T, D> = null) {
+    constructor(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent: ChtmlWrapper<N, T, D> = null) {
       super(factory, node, parent);
       this.itable = this.html('mjx-itable');
       this.labels = this.html('mjx-itable');
@@ -207,7 +207,7 @@ export const CHTMLMtable = (function <N, T, D>(): CHTMLMtableClass<N, T, D> {
       //
       //  Create the rows inside an mjx-itable (which will be used to center the table on the math axis)
       //
-      const chtml = this.standardCHTMLnode(parent);
+      const chtml = this.standardChtmlNode(parent);
       this.adaptor.append(chtml, this.html('mjx-table', {}, [this.itable]));
       for (const child of this.childNodes) {
         child.toCHTML(this.itable);
@@ -416,10 +416,10 @@ export const CHTMLMtable = (function <N, T, D>(): CHTMLMtableClass<N, T, D> {
     }
 
     /**
-     * @param {CHTMLWrapper} row   The row whose height is to be set
+     * @param {ChtmlWrapper} row   The row whose height is to be set
      * @param {number} HD          The height to be set for the row
      */
-    protected setRowHeight(row: CHTMLWrapper<N, T, D>, HD: number) {
+    protected setRowHeight(row: ChtmlWrapper<N, T, D>, HD: number) {
       this.adaptor.setStyle(row.dom, 'height', this.em(HD));
     }
 
@@ -427,11 +427,11 @@ export const CHTMLMtable = (function <N, T, D>(): CHTMLMtableClass<N, T, D> {
      * Make sure the baseline is in the right position for cells
      *   that are row aligned to baseline ot axis
      *
-     * @param {CHTMLWrapper} row   The row to be set
+     * @param {ChtmlWrapper} row   The row to be set
      * @param {number} HD          The total height+depth for the row
      * @param {number] D           The new depth for the row
      */
-    protected setRowBaseline(row: CHTMLWrapper<N, T, D>, HD: number, D: number) {
+    protected setRowBaseline(row: ChtmlWrapper<N, T, D>, HD: number, D: number) {
       const ralign = row.node.attributes.get('rowalign') as string;
       //
       //  Loop through the cells and set the strut height and depth.
@@ -445,13 +445,13 @@ export const CHTMLMtable = (function <N, T, D>(): CHTMLMtableClass<N, T, D> {
     /**
      * Make sure the baseline is in the correct place for cells aligned on baseline or axis
      *
-     * @param {CHTMLWrapper} cell  The cell to modify
+     * @param {ChtmlWrapper} cell  The cell to modify
      * @param {string} ralign      The alignment of the row
      * @param {number} HD          The total height+depth for the row
      * @param {number] D           The new depth for the row
      * @return {boolean}           True if no other cells in this row need to be processed
      */
-    protected setCellBaseline(cell: CHTMLWrapper<N, T, D>, ralign: string, HD: number, D: number): boolean {
+    protected setCellBaseline(cell: ChtmlWrapper<N, T, D>, ralign: string, HD: number, D: number): boolean {
       const calign = cell.node.attributes.get('rowalign');
       if (calign === 'baseline' || calign === 'axis') {
         const adaptor = this.adaptor;

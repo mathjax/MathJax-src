@@ -16,73 +16,73 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLmsubsup wrapper for the MmlMsubsup object
- *                and the special cases CHTMLmsub and CHTMLmsup
+ * @fileoverview  Implements the ChtmlMsubsup wrapper for the MmlMsubsup object
+ *                and the special cases ChtmlMsub and ChtmlMsup
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {CHTML} from '../../chtml.js';
-import {CHTMLWrapper, CHTMLWrapperClass} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
-        CHTMLFontData, CHTMLFontDataClass} from '../FontData.js';
+import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
+import {ChtmlWrapperFactory} from '../WrapperFactory.js';
+import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
 import {CommonMsub, CommonMsubClass, CommonMsubMixin,
         CommonMsup, CommonMsupClass, CommonMsupMixin,
         CommonMsubsup, CommonMsubsupClass, CommonMsubsupMixin} from '../../common/Wrappers/msubsup.js';
-import {CHTMLScriptbase, CHTMLScriptbaseClass, CHTMLScriptbaseNTD} from './scriptbase.js';
+import {ChtmlScriptbase, ChtmlScriptbaseClass, ChtmlScriptbaseNTD} from './scriptbase.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup, MmlMsub, MmlMsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
- * The CHTMLMsub interface for the CHTML Msub wrapper
+ * The ChtmlMsub interface for the CHTML Msub wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMsubNTD<N, T, D> extends CHTMLScriptbaseNTD<N, T, D>, CommonMsub<
+export interface ChtmlMsubNTD<N, T, D> extends ChtmlScriptbaseNTD<N, T, D>, CommonMsub<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {}
 
 /**
- * The CHTMLMsubClass interface for the CHTML Msub wrapper
+ * The ChtmlMsubClass interface for the CHTML Msub wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMsubClass<N, T, D> extends CHTMLScriptbaseClass<N, T, D>, CommonMsubClass<
+export interface ChtmlMsubClass<N, T, D> extends ChtmlScriptbaseClass<N, T, D>, CommonMsubClass<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
-  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLMsubNTD<N, T, D>;
+  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMsubNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The CHTMLMsub wrapper class for the MmlMsub class
+ * The ChtmlMsub wrapper class for the MmlMsub class
  */
-export const CHTMLMsub = (function <N, T, D>(): CHTMLMsubClass<N, T, D> {
+export const ChtmlMsub = (function <N, T, D>(): ChtmlMsubClass<N, T, D> {
 
   const Base = CommonMsubMixin<
       N, T, D,
-      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-      CHTMLMsubClass<N, T, D>
-    >(CHTMLScriptbase);
+      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+      ChtmlMsubClass<N, T, D>
+    >(ChtmlScriptbase);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class CHTMLMsub extends Base implements CHTMLMsubNTD<N, T, D> {
+  return class ChtmlMsub extends Base implements ChtmlMsubNTD<N, T, D> {
 
     /**
      * @override
@@ -98,52 +98,52 @@ export const CHTMLMsub = (function <N, T, D>(): CHTMLMsubClass<N, T, D> {
 /*****************************************************************/
 
 /**
- * The CHTMLMsup interface for the CHTML Msup wrapper
+ * The ChtmlMsup interface for the CHTML Msup wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMsupNTD<N, T, D> extends CHTMLScriptbaseNTD<N, T, D>, CommonMsup<
+export interface ChtmlMsupNTD<N, T, D> extends ChtmlScriptbaseNTD<N, T, D>, CommonMsup<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {}
 
 /**
- * The CHTMLMsupClass interface for the CHTML Msup wrapper
+ * The ChtmlMsupClass interface for the CHTML Msup wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMsupClass<N, T, D> extends CHTMLScriptbaseClass<N, T, D>, CommonMsupClass<
+export interface ChtmlMsupClass<N, T, D> extends ChtmlScriptbaseClass<N, T, D>, CommonMsupClass<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
-  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLMsupNTD<N, T, D>;
+  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMsupNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The CHTMLMsup wrapper class for the MmlMsup class
+ * The ChtmlMsup wrapper class for the MmlMsup class
  */
-export const CHTMLMsup = (function <N, T, D>(): CHTMLMsupClass<N, T, D> {
+export const ChtmlMsup = (function <N, T, D>(): ChtmlMsupClass<N, T, D> {
 
   const Base = CommonMsupMixin<
       N, T, D,
-      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-      CHTMLMsupClass<N, T, D>
-    >(CHTMLScriptbase);
+      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+      ChtmlMsupClass<N, T, D>
+    >(ChtmlScriptbase);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class CHTMLMsup extends Base implements CHTMLMsupNTD<N, T, D> {
+  return class ChtmlMsup extends Base implements ChtmlMsupNTD<N, T, D> {
 
     /**
      * @override
@@ -159,52 +159,52 @@ export const CHTMLMsup = (function <N, T, D>(): CHTMLMsupClass<N, T, D> {
 /*****************************************************************/
 
 /**
- * The CHTMLMsubsup interface for the CHTML Msubsup wrapper
+ * The ChtmlMsubsup interface for the CHTML Msubsup wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMsubsupNTD<N, T, D> extends CHTMLScriptbaseNTD<N, T, D>, CommonMsubsup<
+export interface ChtmlMsubsupNTD<N, T, D> extends ChtmlScriptbaseNTD<N, T, D>, CommonMsubsup<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {}
 
 /**
- * The CHTMLMsubsupClass interface for the CHTML Msubsup wrapper
+ * The ChtmlMsubsupClass interface for the CHTML Msubsup wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMsubsupClass<N, T, D> extends CHTMLScriptbaseClass<N, T, D>, CommonMsubsupClass<
+export interface ChtmlMsubsupClass<N, T, D> extends ChtmlScriptbaseClass<N, T, D>, CommonMsubsupClass<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
-  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLMsubsupNTD<N, T, D>;
+  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMsubsupNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The CHTMLMsubsup wrapper class for the MmlMsubsup class
+ * The ChtmlMsubsup wrapper class for the MmlMsubsup class
  */
-export const CHTMLMsubsup = (function <N, T, D>(): CHTMLMsubsupClass<N, T, D> {
+export const ChtmlMsubsup = (function <N, T, D>(): ChtmlMsubsupClass<N, T, D> {
 
   const Base = CommonMsubsupMixin<
       N, T, D,
-      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-      CHTMLMsubsupClass<N, T, D>
-    >(CHTMLScriptbase);
+      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+      ChtmlMsubsupClass<N, T, D>
+    >(ChtmlScriptbase);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class CHTMLMsubsup extends Base implements CHTMLMsubsupNTD<N, T, D> {
+  return class ChtmlMsubsup extends Base implements ChtmlMsubsupNTD<N, T, D> {
 
     /**
      * @override
@@ -230,7 +230,7 @@ export const CHTMLMsubsup = (function <N, T, D>(): CHTMLMsubsupClass<N, T, D> {
      */
     public toCHTML(parent: N) {
       const adaptor = this.adaptor;
-      const chtml = this.standardCHTMLnode(parent);
+      const chtml = this.standardChtmlNode(parent);
       const [base, sup, sub] = [this.baseChild, this.supChild, this.subChild];
       const [ , v, q] = this.getUVQ();
       const style = {'vertical-align': this.em(v)};

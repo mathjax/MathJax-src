@@ -16,35 +16,35 @@
  */
 
 /**
- * @fileoverview  Implements the SVGWrapperFactory class
+ * @fileoverview  Implements the SvgWrapperFactory class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {SVG} from '../svg.js';
 import {CommonWrapperFactory} from '../common/WrapperFactory.js';
-import {SVGWrapper, SVGWrapperClass} from './Wrapper.js';
-import {SVGWrappers} from './Wrappers.js';
-import {SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass} from './FontData.js';
+import {SvgWrapper, SvgWrapperClass} from './Wrapper.js';
+import {SvgWrappers} from './Wrappers.js';
+import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from './FontData.js';
 
 /*****************************************************************/
 /*
- *  The SVGWrapperFactory class for creating SVGWrapper nodes
+ *  The SvgWrapperFactory class for creating SvgWrapper nodes
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGWrapperFactory<N, T, D> extends
+export class SvgWrapperFactory<N, T, D> extends
 CommonWrapperFactory<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {
 
   /**
    * The default list of wrapper nodes this factory can create
    */
-  public static defaultNodes = SVGWrappers;
+  public static defaultNodes = SvgWrappers;
 
 }

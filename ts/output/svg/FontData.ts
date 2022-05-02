@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SVGFontData class for font data in SVG output.
+ * @fileoverview  Implements the SvgFontData class for font data in SVG output.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -29,7 +29,7 @@ export type CharStringMap = {[name: number]: string};
 /**
  * Add the extra data needed for CharOptions in SVG
  */
-export interface SVGCharOptions extends CharOptions {
+export interface SvgCharOptions extends CharOptions {
   c?: string;                   // the character value (overrides default value)
   p?: string;                   // svg path
 }
@@ -37,20 +37,20 @@ export interface SVGCharOptions extends CharOptions {
 /**
  * Shorthands for SVG char maps and char data
  */
-export type SVGCharMap = CharMap<SVGCharOptions>;
-export type SVGCharData = CharData<SVGCharOptions>;
+export type SvgCharMap = CharMap<SvgCharOptions>;
+export type SvgCharData = CharData<SvgCharOptions>;
 
 /**
  * The extra data needed for a Variant in SVG output
  */
-export interface SVGVariantData extends VariantData<SVGCharOptions> {
+export interface SvgVariantData extends VariantData<SvgCharOptions> {
   cacheID: string;
 }
 
 /**
  * the extra data neede for a Delimiter in SVG output
  */
-export interface SVGDelimiterData extends DelimiterData {
+export interface SvgDelimiterData extends DelimiterData {
 }
 
 
@@ -59,7 +59,7 @@ export interface SVGDelimiterData extends DelimiterData {
 /**
  * The SVG FontData class
  */
-export class SVGFontData extends FontData<SVGCharOptions, SVGVariantData, SVGDelimiterData> {
+export class SvgFontData extends FontData<SvgCharOptions, SvgVariantData, SvgDelimiterData> {
 
   /**
    * @override
@@ -77,13 +77,13 @@ export class SVGFontData extends FontData<SVGCharOptions, SVGVariantData, SVGDel
   /**
    * @override
    */
-  public static charOptions(font: SVGCharMap, n: number) {
-    return super.charOptions(font, n) as SVGCharOptions;
+  public static charOptions(font: SvgCharMap, n: number) {
+    return super.charOptions(font, n) as SvgCharOptions;
   }
 
 }
 
-export type SVGFontDataClass = typeof SVGFontData;
+export type SvgFontDataClass = typeof SvgFontData;
 
 /****************************************************************************/
 
@@ -91,16 +91,16 @@ export type SVGFontDataClass = typeof SVGFontData;
  * @param {CharMap} font        The font to augment
  * @param {CharStringMap} paths     The path data to use for each character
  * @param {CharStringMap} content   The string to use for remapped characters
- * @return {SVGCharMap}            The augmented font
+ * @return {SvgCharMap}            The augmented font
  */
-export function AddPaths(font: SVGCharMap, paths: CharStringMap, content: CharStringMap): SVGCharMap {
+export function AddPaths(font: SvgCharMap, paths: CharStringMap, content: CharStringMap): SvgCharMap {
   for (const c of Object.keys(paths)) {
     const n = parseInt(c);
-    SVGFontData.charOptions(font, n).p = paths[n];
+    SvgFontData.charOptions(font, n).p = paths[n];
   }
   for (const c of Object.keys(content)) {
     const n = parseInt(c);
-    SVGFontData.charOptions(font, n).c = content[n];
+    SvgFontData.charOptions(font, n).c = content[n];
   }
   return font;
 }

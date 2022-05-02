@@ -16,68 +16,68 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLmtext wrapper for the MmlMtext object
+ * @fileoverview  Implements the ChtmlMtext wrapper for the MmlMtext object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {CHTML} from '../../chtml.js';
-import {CHTMLWrapper, CHTMLWrapperClass} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
-        CHTMLFontData, CHTMLFontDataClass} from '../FontData.js';
+import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
+import {ChtmlWrapperFactory} from '../WrapperFactory.js';
+import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
 import {CommonMtext, CommonMtextClass, CommonMtextMixin} from '../../common/Wrappers/mtext.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMtext} from '../../../core/MmlTree/MmlNodes/mtext.js';
 
 /*****************************************************************/
 /**
- * The CHTMLMtext interface for the CHTML Mtext wrapper
+ * The ChtmlMtext interface for the CHTML Mtext wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMtextNTD<N, T, D> extends CHTMLWrapper<N, T, D>, CommonMtext<
+export interface ChtmlMtextNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMtext<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {}
 
 /**
- * The CHTMLMtextClass interface for the CHTML Mtext wrapper
+ * The ChtmlMtextClass interface for the CHTML Mtext wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMtextClass<N, T, D> extends CHTMLWrapperClass<N, T, D>, CommonMtextClass<
+export interface ChtmlMtextClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonMtextClass<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
-  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLMtextNTD<N, T, D>;
+  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMtextNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The CHTMLMtext wrapper class for the MmlMtext class
+ * The ChtmlMtext wrapper class for the MmlMtext class
  */
-export const CHTMLMtext = (function <N, T, D>(): CHTMLMtextClass<N, T, D> {
+export const ChtmlMtext = (function <N, T, D>(): ChtmlMtextClass<N, T, D> {
 
   const Base = CommonMtextMixin<
       N, T, D,
-      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-      CHTMLMtextClass<N, T, D>
-    >(CHTMLWrapper);
+      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+      ChtmlMtextClass<N, T, D>
+    >(ChtmlWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class CHTMLMtext extends Base implements CHTMLMtextNTD<N, T, D> {
+  return class ChtmlMtext extends Base implements ChtmlMtextNTD<N, T, D> {
 
     /**
      * @override

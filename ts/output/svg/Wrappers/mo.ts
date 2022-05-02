@@ -16,20 +16,20 @@
  */
 
 /**
- * @fileoverview  Implements the SVGmo wrapper for the MmlMo object
+ * @fileoverview  Implements the SvgMo wrapper for the MmlMo object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {SVG} from '../../svg.js';
-import {SVGWrapper, SVGWrapperClass} from '../Wrapper.js';
-import {SVGWrapperFactory} from '../WrapperFactory.js';
-import {SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass} from '../FontData.js';
+import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
+import {SvgWrapperFactory} from '../WrapperFactory.js';
+import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
 import {CommonMo, CommonMoClass, CommonMoMixin} from '../../common/Wrappers/mo.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../../../util/BBox.js';
-import {DIRECTION, SVGCharData} from '../FontData.js';
+import {DIRECTION, SvgCharData} from '../FontData.js';
 
 
 /*****************************************************************/
@@ -39,52 +39,52 @@ const HFUZZ = 0.1;       // overlap for horizontal stretchy glyphs
 
 /*****************************************************************/
 /**
- * The SVGMo interface for the SVG Mo wrapper
+ * The SvgMo interface for the SVG Mo wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMoNTD<N, T, D> extends SVGWrapper<N, T, D>, CommonMo<
+export interface SvgMoNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMo<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {}
 
 /**
- * The SVGMoClass interface for the SVG Mo wrapper
+ * The SvgMoClass interface for the SVG Mo wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMoClass<N, T, D> extends SVGWrapperClass<N, T, D>, CommonMoClass<
+export interface SvgMoClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonMoClass<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {
-  new(factory: SVGWrapperFactory<N, T, D>, node: MmlNode, parent?: SVGWrapper<N, T, D>): SVGMoNTD<N, T, D>;
+  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMoNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The SVGMo wrapper class for the MmlMo class
+ * The SvgMo wrapper class for the MmlMo class
  */
-export const SVGMo = (function <N, T, D>(): SVGMoClass<N, T, D> {
+export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
 
   const Base = CommonMoMixin<
       N, T, D,
-      SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-      SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass,
-      SVGMoClass<N, T, D>
-    >(SVGWrapper);
+      SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+      SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
+      SvgMoClass<N, T, D>
+    >(SvgWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be SVGWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class SVGMo extends Base implements SVGMoNTD<N, T, D> {
+  return class SvgMo extends Base implements SvgMoNTD<N, T, D> {
 
     /**
      * @override
@@ -101,9 +101,9 @@ export const SVGMo = (function <N, T, D>(): SVGMoClass<N, T, D> {
       if (stretchy && this.size === null) {
         this.getStretchedVariant([]);
       }
-      let svg = this.standardSVGnode(parent);
+      let svg = this.standardSvgNode(parent);
       if (stretchy && this.size < 0) {
-        this.stretchSVG();
+        this.stretchSvg();
       } else {
         const u = (symmetric || attributes.get('largeop') ? this.fixed(this.getCenterOffset()) : '0');
         const v = (this.node.getProperty('mathaccent') ? this.fixed(this.getAccentOffset()) : '0');
@@ -117,7 +117,7 @@ export const SVGMo = (function <N, T, D>(): SVGMoClass<N, T, D> {
     /**
      * Create the SVG for a multi-character stretchy delimiter
      */
-    protected stretchSVG() {
+    protected stretchSvg() {
       const stretch = this.stretch.stretch;
       const variants = this.getStretchVariants();
       const bbox = this.getBBox();
@@ -182,11 +182,11 @@ export const SVGMo = (function <N, T, D>(): SVGMoClass<N, T, D> {
     /**
      * @param {number} n         The number of the character to look up
      * @param {string} variant   The variant for the character to look up
-     * @return {SVGCharData}     The full CharData object, with CharOptions guaranteed to be defined
+     * @return {SvgCharData}     The full CharData object, with CharOptions guaranteed to be defined
      */
-    protected getChar(n: number, variant: string): SVGCharData {
+    protected getChar(n: number, variant: string): SvgCharData {
       const char = this.font.getChar(variant, n) || [0, 0, 0, null];
-      return [char[0], char[1], char[2], char[3] || {}] as [number, number, number, SVGCharOptions];
+      return [char[0], char[1], char[2], char[3] || {}] as [number, number, number, SvgCharOptions];
     }
 
     /**

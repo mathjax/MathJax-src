@@ -16,69 +16,69 @@
  */
 
 /**
- * @fileoverview  Implements the SVGmglyph wrapper for the MmlMglyph object
+ * @fileoverview  Implements the SvgMglyph wrapper for the MmlMglyph object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {SVG} from '../../svg.js';
-import {SVGWrapper, SVGWrapperClass} from '../Wrapper.js';
-import {SVGWrapperFactory} from '../WrapperFactory.js';
-import {SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass} from '../FontData.js';
+import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
+import {SvgWrapperFactory} from '../WrapperFactory.js';
+import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
 import {CommonMglyph, CommonMglyphClass, CommonMglyphMixin} from '../../common/Wrappers/mglyph.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMglyph} from '../../../core/MmlTree/MmlNodes/mglyph.js';
-import {SVGTextNodeNTD} from './TextNode.js';
+import {SvgTextNodeNTD} from './TextNode.js';
 import {OptionList} from '../../../util/Options.js';
 
 /*****************************************************************/
 /**
- * The SVGMglyph interface for the SVG Mglyph wrapper
+ * The SvgMglyph interface for the SVG Mglyph wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMglyphNTD<N, T, D> extends SVGWrapper<N, T, D>, CommonMglyph<
+export interface SvgMglyphNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMglyph<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {}
 
 /**
- * The SVGMglyphClass interface for the SVG Mglyph wrapper
+ * The SvgMglyphClass interface for the SVG Mglyph wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMglyphClass<N, T, D> extends SVGWrapperClass<N, T, D>, CommonMglyphClass<
+export interface SvgMglyphClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonMglyphClass<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {
-  new(factory: SVGWrapperFactory<N, T, D>, node: MmlNode, parent?: SVGWrapper<N, T, D>): SVGMglyphNTD<N, T, D>;
+  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMglyphNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The SVGMglyph wrapper class for the MmlMglyph class
+ * The SvgMglyph wrapper class for the MmlMglyph class
  */
-export const SVGMglyph = (function <N, T, D>(): SVGMglyphClass<N, T, D> {
+export const SvgMglyph = (function <N, T, D>(): SvgMglyphClass<N, T, D> {
 
   const Base = CommonMglyphMixin<
       N, T, D,
-      SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-      SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass,
-      SVGMglyphClass<N, T, D>
-    >(SVGWrapper);
+      SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+      SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
+      SvgMglyphClass<N, T, D>
+    >(SvgWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be SVGWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class SVGMglyph extends Base implements SVGMglyphNTD<N, T, D> {
+  return class SvgMglyph extends Base implements SvgMglyphNTD<N, T, D> {
 
     /**
      * @override
@@ -89,9 +89,9 @@ export const SVGMglyph = (function <N, T, D>(): SVGMglyphClass<N, T, D> {
      * @override
      */
     public toSVG(parent: N) {
-      const svg = this.standardSVGnode(parent);
+      const svg = this.standardSvgNode(parent);
       if (this.charWrapper) {
-        (this.charWrapper as SVGTextNodeNTD<N, T, D>).toSVG(svg);
+        (this.charWrapper as SvgTextNodeNTD<N, T, D>).toSVG(svg);
         return;
       }
       const {src, alt} = this.node.attributes.getList('src', 'alt');

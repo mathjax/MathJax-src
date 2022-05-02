@@ -16,18 +16,18 @@
  */
 
 /**
- * @fileoverview  Implements the SVGmmultiscripts wrapper for the MmlMmultiscripts object
+ * @fileoverview  Implements the SvgMmultiscripts wrapper for the MmlMmultiscripts object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {SVG} from '../../svg.js';
-import {SVGWrapper, SVGWrapperClass} from '../Wrapper.js';
-import {SVGWrapperFactory} from '../WrapperFactory.js';
-import {SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass} from '../FontData.js';
+import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
+import {SvgWrapperFactory} from '../WrapperFactory.js';
+import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
 import {CommonMmultiscripts, CommonMmultiscriptsClass,
         CommonMmultiscriptsMixin} from '../../common/Wrappers/mmultiscripts.js';
-import {SVGMsubsup, SVGMsubsupNTD, SVGMsubsupClass} from './msubsup.js';
+import {SvgMsubsup, SvgMsubsupNTD, SvgMsubsupClass} from './msubsup.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMmultiscripts} from '../../../core/MmlTree/MmlNodes/mmultiscripts.js';
 import {split} from '../../../util/string.js';
@@ -52,53 +52,53 @@ export function AlignX(align: string) {
 
 /*****************************************************************/
 /**
- * The SVGMmultiscripts interface for the SVG Mmultiscripts wrapper
+ * The SvgMmultiscripts interface for the SVG Mmultiscripts wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMmultiscriptsNTD<N, T, D> extends SVGMsubsupNTD<N, T, D>, CommonMmultiscripts<
+export interface SvgMmultiscriptsNTD<N, T, D> extends SvgMsubsupNTD<N, T, D>, CommonMmultiscripts<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {}
 
 /**
- * The SVGMmultiscriptsClass interface for the SVG Mmultiscripts wrapper
+ * The SvgMmultiscriptsClass interface for the SVG Mmultiscripts wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMmultiscriptsClass<N, T, D> extends SVGMsubsupClass<N, T, D>, CommonMmultiscriptsClass<
+export interface SvgMmultiscriptsClass<N, T, D> extends SvgMsubsupClass<N, T, D>, CommonMmultiscriptsClass<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {
-  new(factory: SVGWrapperFactory<N, T, D>, node: MmlNode, parent?: SVGWrapper<N, T, D>): SVGMmultiscriptsNTD<N, T, D>;
+  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMmultiscriptsNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The SVGMmultiscripts wrapper class for the MmlMmultiscripts class
+ * The SvgMmultiscripts wrapper class for the MmlMmultiscripts class
  */
-export const SVGMmultiscripts = (function <N, T, D>(): SVGMmultiscriptsClass<N, T, D> {
+export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<N, T, D> {
 
 
   const Base = CommonMmultiscriptsMixin<
       N, T, D,
-      SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-      SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass,
-      SVGMmultiscriptsClass<N, T, D>
-    >(SVGMsubsup);
+      SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+      SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
+      SvgMmultiscriptsClass<N, T, D>
+    >(SvgMsubsup);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be SVGWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class SVGMmultiscripts extends Base implements SVGMmultiscriptsNTD<N, T, D> {
+  return class SvgMmultiscripts extends Base implements SvgMmultiscriptsNTD<N, T, D> {
 
     /**
      * @override
@@ -109,7 +109,7 @@ export const SVGMmultiscripts = (function <N, T, D>(): SVGMmultiscriptsClass<N, 
      * @override
      */
     public toSVG(parent: N) {
-      const svg = this.standardSVGnode(parent);
+      const svg = this.standardSvgNode(parent);
       const data = this.scriptData;
       //
       //  Get the alignment for the scripts

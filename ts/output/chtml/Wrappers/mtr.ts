@@ -16,72 +16,72 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLmtr wrapper for the MmlMtr object
- *                and CHTMLmlabeledtr for MmlMlabeledtr
+ * @fileoverview  Implements the ChtmlMtr wrapper for the MmlMtr object
+ *                and ChtmlMlabeledtr for MmlMlabeledtr
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {CHTML} from '../../chtml.js';
-import {CHTMLWrapper, CHTMLWrapperClass} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
-        CHTMLFontData, CHTMLFontDataClass} from '../FontData.js';
+import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
+import {ChtmlWrapperFactory} from '../WrapperFactory.js';
+import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
 import {CommonMtr, CommonMtrClass, CommonMtrMixin,
         CommonMlabeledtr, CommonMlabeledtrClass, CommonMlabeledtrMixin} from '../../common/Wrappers/mtr.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMtr, MmlMlabeledtr} from '../../../core/MmlTree/MmlNodes/mtr.js';
-import {CHTMLMtableNTD} from './mtable.js';
+import {ChtmlMtableNTD} from './mtable.js';
 import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
- * The CHTMLMtr interface for the CHTML Mtr wrapper
+ * The ChtmlMtr interface for the CHTML Mtr wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMtrNTD<N, T, D> extends CHTMLWrapper<N, T, D>, CommonMtr<
+export interface ChtmlMtrNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMtr<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {}
 
 /**
- * The CHTMLMtrClass interface for the CHTML Mtr wrapper
+ * The ChtmlMtrClass interface for the CHTML Mtr wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMtrClass<N, T, D> extends CHTMLWrapperClass<N, T, D>, CommonMtrClass<
+export interface ChtmlMtrClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonMtrClass<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
-  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLMtrNTD<N, T, D>;
+  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMtrNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The CHTMLMtr wrapper class for the MmlMtr class
+ * The ChtmlMtr wrapper class for the MmlMtr class
  */
-export const CHTMLMtr = (function <N, T, D>(): CHTMLMtrClass<N, T, D> {
+export const ChtmlMtr = (function <N, T, D>(): ChtmlMtrClass<N, T, D> {
 
   const Base = CommonMtrMixin<
       N, T, D,
-      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-      CHTMLMtrClass<N, T, D>
-    >(CHTMLWrapper);
+      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+      ChtmlMtrClass<N, T, D>
+    >(ChtmlWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class CHTMLMtr extends Base implements CHTMLMtrNTD<N, T, D> {
+  return class ChtmlMtr extends Base implements ChtmlMtrNTD<N, T, D> {
 
     /**
      * @override
@@ -130,52 +130,52 @@ export const CHTMLMtr = (function <N, T, D>(): CHTMLMtrClass<N, T, D> {
 
 /*****************************************************************/
 /**
- * The CHTMLMlabeledtr interface for the CHTML Mlabeledtr wrapper
+ * The ChtmlMlabeledtr interface for the CHTML Mlabeledtr wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMlabeledtrNTD<N, T, D> extends CHTMLMtrNTD<N, T, D>, CommonMlabeledtr<
+export interface ChtmlMlabeledtrNTD<N, T, D> extends ChtmlMtrNTD<N, T, D>, CommonMlabeledtr<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {}
 
 /**
- * The CHTMLMlabeledtrClass interface for the CHTML Mlabeledtr wrapper
+ * The ChtmlMlabeledtrClass interface for the CHTML Mlabeledtr wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMlabeledtrClass<N, T, D> extends CHTMLMtrClass<N, T, D>, CommonMlabeledtrClass<
+export interface ChtmlMlabeledtrClass<N, T, D> extends ChtmlMtrClass<N, T, D>, CommonMlabeledtrClass<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
-  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLMlabeledtrNTD<N, T, D>;
+  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMlabeledtrNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The CHTMLMlabeledtr wrapper class for the MmlMlabeledtr class
+ * The ChtmlMlabeledtr wrapper class for the MmlMlabeledtr class
  */
-export const CHTMLMlabeledtr = (function <N, T, D>(): CHTMLMlabeledtrClass<N, T, D> {
+export const ChtmlMlabeledtr = (function <N, T, D>(): ChtmlMlabeledtrClass<N, T, D> {
 
   const Base = CommonMlabeledtrMixin<
       N, T, D,
-      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-      CHTMLMlabeledtrClass<N, T, D>
-    >(CHTMLMtr);
+      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+      ChtmlMlabeledtrClass<N, T, D>
+    >(ChtmlMtr);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class CHTMLMlabeledtr extends Base implements CHTMLMlabeledtrNTD<N, T, D> {
+  return class ChtmlMlabeledtr extends Base implements ChtmlMlabeledtrNTD<N, T, D> {
 
     /**
      * @override
@@ -220,7 +220,7 @@ export const CHTMLMlabeledtr = (function <N, T, D>(): CHTMLMlabeledtrClass<N, T,
         const align = this.node.attributes.get('rowalign') as string;
         const attr = (align !== 'baseline' && align !== 'axis' ? {rowalign: align} : {});
         const row = this.html('mjx-mtr', attr, [child]);
-        this.adaptor.append((this.parent as CHTMLMtableNTD<N, T, D>).labels, row);
+        this.adaptor.append((this.parent as ChtmlMtableNTD<N, T, D>).labels, row);
       }
     }
 
@@ -229,7 +229,7 @@ export const CHTMLMlabeledtr = (function <N, T, D>(): CHTMLMlabeledtrClass<N, T,
      */
     public markUsed() {
       super.markUsed();
-      this.jax.wrapperUsage.add(CHTMLMtr.kind);
+      this.jax.wrapperUsage.add(ChtmlMtr.kind);
     }
 
   };

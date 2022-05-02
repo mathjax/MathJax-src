@@ -16,47 +16,47 @@
  */
 
 /**
- * @fileoverview  Implements the SVGmerror wrapper for the MmlMerror object
+ * @fileoverview  Implements the SvgMerror wrapper for the MmlMerror object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVGWrapper, SVGWrapperClass} from '../Wrapper.js';
-import {SVGWrapperFactory} from '../WrapperFactory.js';
+import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
+import {SvgWrapperFactory} from '../WrapperFactory.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMerror} from '../../../core/MmlTree/MmlNodes/merror.js';
 import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
- * The SVGMerror interface for the SVG merror wrapper
+ * The SvgMerror interface for the Svg merror wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMerrorNTD<N, T, D> extends SVGWrapper<N, T, D> {}
+export interface SvgMerrorNTD<N, T, D> extends SvgWrapper<N, T, D> {}
 
 /**
- * The SVGMerrorClass interface for the SVG merror wrapper
+ * The SvgMerrorClass interface for the SVG merror wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMerrorClass<N, T, D> extends SVGWrapperClass<N, T, D> {
-  new(factory: SVGWrapperFactory<N, T, D>, node: MmlNode, parent?: SVGWrapper<N, T, D>): SVGMerrorNTD<N, T, D>;
+export interface SvgMerrorClass<N, T, D> extends SvgWrapperClass<N, T, D> {
+  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMerrorNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The SVGMerror wrapper class for the MmlMerror class
+ * The SvgMerror wrapper class for the MmlMerror class
  */
-export const SVGMerror = (function <N, T, D>(): SVGMerrorClass<N, T, D> {
+export const SvgMerror = (function <N, T, D>(): SvgMerrorClass<N, T, D> {
 
-  return class SVGMerror extends SVGWrapper<N, T, D> implements SVGMerrorNTD<N, T, D> {
+  return class SvgMerror extends SvgWrapper<N, T, D> implements SvgMerrorNTD<N, T, D> {
 
     /**
      * @override
@@ -81,7 +81,7 @@ export const SVGMerror = (function <N, T, D>(): SVGMerrorClass<N, T, D> {
      * @override
      */
     public toSVG(parent: N) {
-      const svg = this.standardSVGnode(parent);
+      const svg = this.standardSvgNode(parent);
       const {h, d, w} = this.getBBox();
       this.adaptor.append(this.dom, this.svg('rect', {
         'data-background': true,

@@ -16,67 +16,67 @@
  */
 
 /**
- * @fileoverview  Implements the SVGTextNode wrapper for the TextNode object
+ * @fileoverview  Implements the SvgTextNode wrapper for the TextNode object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {SVG} from '../../svg.js';
-import {SVGWrapper, SVGWrapperClass} from '../Wrapper.js';
-import {SVGWrapperFactory} from '../WrapperFactory.js';
-import {SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass} from '../FontData.js';
+import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
+import {SvgWrapperFactory} from '../WrapperFactory.js';
+import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
 import {CommonTextNode, CommonTextNodeClass, CommonTextNodeMixin} from '../../common/Wrappers/TextNode.js';
 import {MmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
 import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
- * The SVGTextNode interface for the SVG TextNode wrapper
+ * The SvgTextNode interface for the SVG TextNode wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGTextNodeNTD<N, T, D> extends SVGWrapper<N, T, D>, CommonTextNode<
+export interface SvgTextNodeNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonTextNode<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {}
 
 /**
- * The SVGTextNodeClass interface for the SVG TextNode wrapper
+ * The SvgTextNodeClass interface for the SVG TextNode wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGTextNodeClass<N, T, D> extends SVGWrapperClass<N, T, D>, CommonTextNodeClass<
+export interface SvgTextNodeClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonTextNodeClass<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {
-  new(factory: SVGWrapperFactory<N, T, D>, node: MmlNode, parent?: SVGWrapper<N, T, D>): SVGTextNodeNTD<N, T, D>;
+  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgTextNodeNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The SVGTextNode wrapper for the MmlTextNode class
+ * The SvgTextNode wrapper for the MmlTextNode class
  */
-export const SVGTextNode = (function <N, T, D>(): SVGTextNodeClass<N, T, D> {
+export const SvgTextNode = (function <N, T, D>(): SvgTextNodeClass<N, T, D> {
 
   const Base = CommonTextNodeMixin<
       N, T, D,
-      SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-      SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass,
-      SVGTextNodeClass<N, T, D>
-    >(SVGWrapper);
+      SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+      SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
+      SvgTextNodeClass<N, T, D>
+    >(SvgWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be SVGWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class SVGTextNode extends Base implements SVGTextNodeNTD<N, T, D> {
+  return class SvgTextNode extends Base implements SvgTextNodeNTD<N, T, D> {
 
     /**
      * @override

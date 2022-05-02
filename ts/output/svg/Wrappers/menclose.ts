@@ -16,35 +16,35 @@
  */
 
 /**
- * @fileoverview  Implements the SVGmenclose wrapper for the MmlMenclose object
+ * @fileoverview  Implements the SvgMenclose wrapper for the MmlMenclose object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {SVG} from '../../svg.js';
-import {SVGWrapper, SVGWrapperClass} from '../Wrapper.js';
-import {SVGWrapperFactory} from '../WrapperFactory.js';
-import {SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass} from '../FontData.js';
+import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
+import {SvgWrapperFactory} from '../WrapperFactory.js';
+import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
 import {CommonMenclose, CommonMencloseClass, CommonMencloseMixin} from '../../common/Wrappers/menclose.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMenclose} from '../../../core/MmlTree/MmlNodes/menclose.js';
 import * as Notation from '../Notation.js';
-import {SVGMsqrtNTD} from './msqrt.js';
+import {SvgMsqrtNTD} from './msqrt.js';
 import {OptionList} from '../../../util/Options.js';
 
 /*****************************************************************/
 /**
- * The SVGMenclose interface for the SVG menclose wrapper
+ * The SvgMenclose interface for the SVG menclose wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMencloseNTD<N, T, D> extends SVGWrapper<N, T, D>, CommonMenclose<
+export interface SvgMencloseNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMenclose<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass,
-  SVGMsqrtNTD<N, T, D>
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
+  SvgMsqrtNTD<N, T, D>
 > {
 
   /**
@@ -97,40 +97,40 @@ export interface SVGMencloseNTD<N, T, D> extends SVGWrapper<N, T, D>, CommonMenc
 }
 
 /**
- * The SVGMencloseClass interface for the SVG menclose wrapper
+ * The SvgMencloseClass interface for the SVG menclose wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMencloseClass<N, T, D> extends SVGWrapperClass<N, T, D>, CommonMencloseClass<
+export interface SvgMencloseClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonMencloseClass<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {
-  new(factory: SVGWrapperFactory<N, T, D>, node: MmlNode, parent?: SVGWrapper<N, T, D>): SVGMencloseNTD<N, T, D>;
+  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMencloseNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The SVGMenclose wrapper for the MmlMenclose class
+ * The SvgMenclose wrapper for the MmlMenclose class
  */
-export const SVGMenclose = (function <N, T, D>(): SVGMencloseClass<N, T, D> {
+export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
 
   const Base = CommonMencloseMixin<
       N, T, D,
-      SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-      SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass,
-      SVGMsqrtNTD<N, T, D>,
-      SVGMencloseClass<N, T, D>
-    >(SVGWrapper);
+      SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+      SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
+      SvgMsqrtNTD<N, T, D>,
+      SvgMencloseClass<N, T, D>
+    >(SvgWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be SVGWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class SVGMenclose extends Base implements SVGMencloseNTD<N, T, D> {
+  return class SvgMenclose extends Base implements SvgMencloseNTD<N, T, D> {
 
     /**
      * @override
@@ -140,7 +140,7 @@ export const SVGMenclose = (function <N, T, D>(): SVGMencloseClass<N, T, D> {
     /**
      *  The definitions of the various notations
      */
-    public static notations: Notation.DefList<SVGMenclose, N> = new Map([
+    public static notations: Notation.DefList<SvgMenclose, N> = new Map([
 
       Notation.Border('top'),
       Notation.Border('right'),
@@ -281,7 +281,7 @@ export const SVGMenclose = (function <N, T, D>(): SVGMencloseClass<N, T, D> {
         renderChild: true
       }]
 
-    ] as Notation.DefPair<SVGMenclose, N>[]);
+    ] as Notation.DefPair<SvgMenclose, N>[]);
 
     /********************************************************/
 
@@ -396,7 +396,7 @@ export const SVGMenclose = (function <N, T, D>(): SVGMencloseClass<N, T, D> {
      * @override
      */
     public toSVG(parent: N) {
-      const svg = this.standardSVGnode(parent);
+      const svg = this.standardSvgNode(parent);
       //
       //  Create a box at the correct position and add the children
       //

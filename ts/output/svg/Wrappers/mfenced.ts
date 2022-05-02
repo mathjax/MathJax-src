@@ -16,68 +16,68 @@
  */
 
 /**
- * @fileoverview  Implements the SVGmfenced wrapper for the MmlMfenced object
+ * @fileoverview  Implements the SvgMfenced wrapper for the MmlMfenced object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {SVG} from '../../svg.js';
-import {SVGWrapper, SVGWrapperClass} from '../Wrapper.js';
-import {SVGWrapperFactory} from '../WrapperFactory.js';
-import {SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass} from '../FontData.js';
+import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
+import {SvgWrapperFactory} from '../WrapperFactory.js';
+import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
 import {CommonMfenced, CommonMfencedClass, CommonMfencedMixin} from '../../common/Wrappers/Mfenced.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMfenced} from '../../../core/MmlTree/MmlNodes/mfenced.js';
-import {SVGInferredMrowNTD} from './mrow.js';
+import {SvgInferredMrowNTD} from './mrow.js';
 
 /*****************************************************************/
 /**
- * The SVGMfenced interface for the SVG mfenced wrapper
+ * The SvgMfenced interface for the SVG mfenced wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMfencedNTD<N, T, D> extends SVGWrapper<N, T, D>, CommonMfenced<
+export interface SvgMfencedNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMfenced<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {}
 
 /**
- * The SVGMfencedClass interface for the SVG mfenced wrapper
+ * The SvgMfencedClass interface for the SVG mfenced wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMfencedClass<N, T, D> extends SVGWrapperClass<N, T, D>, CommonMfencedClass<
+export interface SvgMfencedClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonMfencedClass<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {
-  new(factory: SVGWrapperFactory<N, T, D>, node: MmlNode, parent?: SVGWrapper<N, T, D>): SVGMfencedNTD<N, T, D>;
+  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMfencedNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The SVGMfenced wrapper class for the MmlMfenced class
+ * The SvgMfenced wrapper class for the MmlMfenced class
  */
-export const SVGMfenced = (function <N, T, D>(): SVGMfencedClass<N, T, D> {
+export const SvgMfenced = (function <N, T, D>(): SvgMfencedClass<N, T, D> {
 
   const Base = CommonMfencedMixin<
       N, T, D,
-      SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-      SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass,
-      SVGMfencedClass<N, T, D>
-    >(SVGWrapper);
+      SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+      SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
+      SvgMfencedClass<N, T, D>
+    >(SvgWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be SVGWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class SVGMfenced extends Base implements SVGMfencedNTD<N, T, D> {
+  return class SvgMfenced extends Base implements SvgMfencedNTD<N, T, D> {
 
     /**
      * @override
@@ -87,22 +87,22 @@ export const SVGMfenced = (function <N, T, D>(): SVGMfencedClass<N, T, D> {
     /**
      * An mrow used to render the result
      */
-    public mrow: SVGInferredMrowNTD<N, T, D>;
+    public mrow: SvgInferredMrowNTD<N, T, D>;
 
     /**
      * @override
      */
     public toSVG(parent: N) {
-      const svg = this.standardSVGnode(parent);
+      const svg = this.standardSvgNode(parent);
       this.setChildrenParent(this.mrow);  // temporarily change parents to the mrow
       this.mrow.toSVG(svg);
       this.setChildrenParent(this);       // put back the correct parents
     }
 
     /**
-     * @param {SVGWrapper} parent   The parent to use for the fenced children
+     * @param {SvgWrapper} parent   The parent to use for the fenced children
      */
-    protected setChildrenParent(parent: SVGWrapper<N, T, D>) {
+    protected setChildrenParent(parent: SvgWrapper<N, T, D>) {
       for (const child of this.childNodes) {
         child.parent = parent;
       }

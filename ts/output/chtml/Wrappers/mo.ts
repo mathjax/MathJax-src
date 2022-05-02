@@ -16,16 +16,16 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLmo wrapper for the MmlMo object
+ * @fileoverview  Implements the ChtmlMo wrapper for the MmlMo object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {CHTML} from '../../chtml.js';
-import {CHTMLWrapper, CHTMLWrapperClass, StringMap} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
-        CHTMLFontData, CHTMLFontDataClass} from '../FontData.js';
+import {ChtmlWrapper, ChtmlWrapperClass, StringMap} from '../Wrapper.js';
+import {ChtmlWrapperFactory} from '../WrapperFactory.js';
+import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
 import {CommonMo, CommonMoClass, CommonMoMixin, DirectionVH} from '../../common/Wrappers/mo.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
@@ -34,52 +34,52 @@ import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
 /**
- * The CHTMLMo interface for the CHTML Mo wrapper
+ * The ChtmlMo interface for the CHTML Mo wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMoNTD<N, T, D> extends CHTMLWrapper<N, T, D>, CommonMo<
+export interface ChtmlMoNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMo<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {}
 
 /**
- * The CHTMLMoClass interface for the CHTML Mo wrapper
+ * The ChtmlMoClass interface for the CHTML Mo wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMoClass<N, T, D> extends CHTMLWrapperClass<N, T, D>, CommonMoClass<
+export interface ChtmlMoClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonMoClass<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
-  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLMoNTD<N, T, D>;
+  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMoNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The CHTMLMo wrapper class for the MmlMo class
+ * The ChtmlMo wrapper class for the MmlMo class
  */
-export const CHTMLMo = (function <N, T, D>(): CHTMLMoClass<N, T, D> {
+export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
 
   const Base = CommonMoMixin<
       N, T, D,
-      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-      CHTMLMoClass<N, T, D>
-    >(CHTMLWrapper);
+      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+      ChtmlMoClass<N, T, D>
+    >(ChtmlWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class CHTMLMo extends Base implements CHTMLMoNTD<N, T, D> {
+  return class ChtmlMo extends Base implements ChtmlMoNTD<N, T, D> {
 
     /**
      * @override
@@ -174,7 +174,7 @@ export const CHTMLMo = (function <N, T, D>(): CHTMLMoClass<N, T, D> {
       if (stretchy && this.size === null) {
         this.getStretchedVariant([]);
       }
-      let chtml = this.standardCHTMLnode(parent);
+      let chtml = this.standardChtmlNode(parent);
       if (stretchy && this.size < 0) {
         this.stretchHTML(chtml);
       } else {

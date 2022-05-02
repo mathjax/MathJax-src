@@ -16,67 +16,67 @@
  */
 
 /**
- * @fileoverview  Implements the SVGmtext wrapper for the MmlMtext object
+ * @fileoverview  Implements the SvgMtext wrapper for the MmlMtext object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {SVG} from '../../svg.js';
-import {SVGWrapper, SVGWrapperClass} from '../Wrapper.js';
-import {SVGWrapperFactory} from '../WrapperFactory.js';
-import {SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass} from '../FontData.js';
+import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
+import {SvgWrapperFactory} from '../WrapperFactory.js';
+import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
 import {CommonMtext, CommonMtextClass, CommonMtextMixin} from '../../common/Wrappers/mtext.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMtext} from '../../../core/MmlTree/MmlNodes/mtext.js';
 
 /*****************************************************************/
 /**
- * The SVGMtext interface for the SVG Mtext wrapper
+ * The SvgMtext interface for the SVG Mtext wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMtextNTD<N, T, D> extends SVGWrapper<N, T, D>, CommonMtext<
+export interface SvgMtextNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMtext<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {}
 
 /**
- * The SVGMtextClass interface for the SVG Mtext wrapper
+ * The SvgMtextClass interface for the SVG Mtext wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMtextClass<N, T, D> extends SVGWrapperClass<N, T, D>, CommonMtextClass<
+export interface SvgMtextClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonMtextClass<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {
-  new(factory: SVGWrapperFactory<N, T, D>, node: MmlNode, parent?: SVGWrapper<N, T, D>): SVGMtextNTD<N, T, D>;
+  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMtextNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The SVGMtext wrapper class for the MmlMtext class
+ * The SvgMtext wrapper class for the MmlMtext class
  */
-export const SVGMtext = (function <N, T, D>(): SVGMtextClass<N, T, D> {
+export const SvgMtext = (function <N, T, D>(): SvgMtextClass<N, T, D> {
 
   const Base = CommonMtextMixin<
       N, T, D,
-      SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-      SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass,
-      SVGMtextClass<N, T, D>
-    >(SVGWrapper);
+      SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+      SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
+      SvgMtextClass<N, T, D>
+    >(SvgWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be SVGWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class SVGMtext extends Base implements SVGMtextNTD<N, T, D> {
+  return class SvgMtext extends Base implements SvgMtextNTD<N, T, D> {
 
     /**
      * @override

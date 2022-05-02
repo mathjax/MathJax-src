@@ -16,69 +16,69 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLmfenced wrapper for the MmlMfenced object
+ * @fileoverview  Implements the ChtmlMfenced wrapper for the MmlMfenced object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {CHTML} from '../../chtml.js';
-import {CHTMLWrapper, CHTMLWrapperClass} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
-        CHTMLFontData, CHTMLFontDataClass} from '../FontData.js';
+import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
+import {ChtmlWrapperFactory} from '../WrapperFactory.js';
+import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
 import {CommonMfenced, CommonMfencedClass, CommonMfencedMixin} from '../../common/Wrappers/mfenced.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMfenced} from '../../../core/MmlTree/MmlNodes/mfenced.js';
-import {CHTMLInferredMrowNTD} from './mrow.js';
+import {ChtmlInferredMrowNTD} from './mrow.js';
 
 /*****************************************************************/
 /**
- * The CHTMLMfenced interface for the CHTML Mfenced wrapper
+ * The ChtmlMfenced interface for the CHTML Mfenced wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMfencedNTD<N, T, D> extends CHTMLWrapper<N, T, D>, CommonMfenced<
+export interface ChtmlMfencedNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMfenced<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {}
 
 /**
- * The CHTMLMfencedClass interface for the CHTML Mfenced wrapper
+ * The ChtmlMfencedClass interface for the CHTML Mfenced wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMfencedClass<N, T, D> extends CHTMLWrapperClass<N, T, D>, CommonMfencedClass<
+export interface ChtmlMfencedClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonMfencedClass<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
-  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLMfencedNTD<N, T, D>;
+  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMfencedNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The CHTMLMfenced wrapper class for the MmlMfenced class
+ * The ChtmlMfenced wrapper class for the MmlMfenced class
  */
-export const CHTMLMfenced = (function <N, T, D>(): CHTMLMfencedClass<N, T, D> {
+export const ChtmlMfenced = (function <N, T, D>(): ChtmlMfencedClass<N, T, D> {
 
   const Base = CommonMfencedMixin<
       N, T, D,
-      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-      CHTMLMfencedClass<N, T, D>
-    >(CHTMLWrapper);
+      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+      ChtmlMfencedClass<N, T, D>
+    >(ChtmlWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class CHTMLMfenced extends Base implements CHTMLMfencedNTD<N, T, D> {
+  return class ChtmlMfenced extends Base implements ChtmlMfencedNTD<N, T, D> {
 
     /**
      * @override
@@ -89,8 +89,8 @@ export const CHTMLMfenced = (function <N, T, D>(): CHTMLMfencedClass<N, T, D> {
      * @override
      */
     public toCHTML(parent: N) {
-      const chtml = this.standardCHTMLnode(parent);
-      (this.mrow as CHTMLInferredMrowNTD<N, T, D>).toCHTML(chtml);
+      const chtml = this.standardChtmlNode(parent);
+      (this.mrow as ChtmlInferredMrowNTD<N, T, D>).toCHTML(chtml);
     }
 
   };

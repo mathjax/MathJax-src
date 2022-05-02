@@ -16,16 +16,16 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLmaction wrapper for the MmlMaction object
+ * @fileoverview  Implements the ChtmlMaction wrapper for the MmlMaction object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {CHTML} from '../../chtml.js';
-import {CHTMLWrapper, CHTMLWrapperClass} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
-        CHTMLFontData, CHTMLFontDataClass} from '../FontData.js';
+import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
+import {ChtmlWrapperFactory} from '../WrapperFactory.js';
+import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
 import {CommonMaction, CommonMactionClass, CommonMactionMixin} from '../../common/Wrappers/maction.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMaction} from '../../../core/MmlTree/MmlNodes/maction.js';
@@ -36,16 +36,16 @@ import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
- * The CHTMLMaction interface for the CHTML Maction wrapper
+ * The ChtmlMaction interface for the CHTML Maction wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMactionNTD<N, T, D> extends CHTMLWrapper<N, T, D>, CommonMaction<
+export interface ChtmlMactionNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMaction<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
 
   /**
@@ -64,39 +64,39 @@ export interface CHTMLMactionNTD<N, T, D> extends CHTMLWrapper<N, T, D>, CommonM
 }
 
 /**
- * The CHTMLMactionClass interface for the CHTML Maction wrapper
+ * The ChtmlMactionClass interface for the CHTML Maction wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMactionClass<N, T, D> extends CHTMLWrapperClass<N, T, D>, CommonMactionClass<
+export interface ChtmlMactionClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonMactionClass<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
-  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLMactionNTD<N, T, D>;
+  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMactionNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The CHTMLMaction wrapper class for the MmlMaction class
+ * The ChtmlMaction wrapper class for the MmlMaction class
  */
-export const CHTMLMaction = (function <N, T, D>(): CHTMLMactionClass<N, T, D> {
+export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
 
   const Base = CommonMactionMixin<
       N, T, D,
-      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-      CHTMLMactionClass<N, T, D>
-    >(CHTMLWrapper);
+      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+      ChtmlMactionClass<N, T, D>
+    >(ChtmlWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class CHTMLMaction extends Base implements CHTMLMactionNTD<N, T, D> {
+  return class ChtmlMaction extends Base implements ChtmlMactionNTD<N, T, D> {
 
     /**
      * @override
@@ -242,9 +242,9 @@ export const CHTMLMaction = (function <N, T, D>(): CHTMLMactionClass<N, T, D> {
       }]]
 
     ] as ActionDef<N, T, D,
-                  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-                  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-                  CHTMLMactionNTD<N, T, D>>[]);
+                  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+                  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+                  ChtmlMactionNTD<N, T, D>>[]);
 
     /*************************************************************/
 
@@ -268,7 +268,7 @@ export const CHTMLMaction = (function <N, T, D>(): CHTMLMactionClass<N, T, D> {
      * @override
      */
     public toCHTML(parent: N) {
-      const chtml = this.standardCHTMLnode(parent);
+      const chtml = this.standardChtmlNode(parent);
       const child = this.selected;
       child.toCHTML(chtml);
       this.action(this, this.data);

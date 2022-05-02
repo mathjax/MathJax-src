@@ -16,16 +16,16 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLmpadded wrapper for the MmlMpadded object
+ * @fileoverview  Implements the ChtmlMpadded wrapper for the MmlMpadded object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {CHTML} from '../../chtml.js';
-import {CHTMLWrapper, CHTMLWrapperClass, StringMap} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
-        CHTMLFontData, CHTMLFontDataClass} from '../FontData.js';
+import {ChtmlWrapper, ChtmlWrapperClass, StringMap} from '../Wrapper.js';
+import {ChtmlWrapperFactory} from '../WrapperFactory.js';
+import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
 import {CommonMpadded, CommonMpaddedClass, CommonMpaddedMixin} from '../../common/Wrappers/mpadded.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMpadded} from '../../../core/MmlTree/MmlNodes/mpadded.js';
@@ -33,52 +33,52 @@ import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
- * The CHTMLMpadded interface for the CHTML Mpadded wrapper
+ * The ChtmlMpadded interface for the CHTML Mpadded wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMpaddedNTD<N, T, D> extends CHTMLWrapper<N, T, D>, CommonMpadded<
+export interface ChtmlMpaddedNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMpadded<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {}
 
 /**
- * The CHTMLMpaddedClass interface for the CHTML Mpadded wrapper
+ * The ChtmlMpaddedClass interface for the CHTML Mpadded wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMpaddedClass<N, T, D> extends CHTMLWrapperClass<N, T, D>, CommonMpaddedClass<
+export interface ChtmlMpaddedClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonMpaddedClass<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
-  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLMpaddedNTD<N, T, D>;
+  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMpaddedNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The CHTMLMpadded wrapper class for the MmlMpadded class
+ * The ChtmlMpadded wrapper class for the MmlMpadded class
  */
-export const CHTMLMpadded = (function <N, T, D>(): CHTMLMpaddedClass<N, T, D> {
+export const ChtmlMpadded = (function <N, T, D>(): ChtmlMpaddedClass<N, T, D> {
 
   const Base = CommonMpaddedMixin<
       N, T, D,
-      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-      CHTMLMpaddedClass<N, T, D>
-    >(CHTMLWrapper);
+      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+      ChtmlMpaddedClass<N, T, D>
+    >(ChtmlWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class CHTMLMpadded extends Base implements CHTMLMpaddedNTD<N, T, D> {
+  return class ChtmlMpadded extends Base implements ChtmlMpaddedNTD<N, T, D> {
 
     /**
      * @override
@@ -102,7 +102,7 @@ export const CHTMLMpadded = (function <N, T, D>(): CHTMLMpaddedClass<N, T, D> {
      * @override
      */
     public toCHTML(parent: N) {
-      let chtml = this.standardCHTMLnode(parent);
+      let chtml = this.standardChtmlNode(parent);
       const content: N[] = [];
       const style: StringMap = {};
       const [ , , W, dh, dd, dw, x, y, dx] = this.getDimens();

@@ -16,17 +16,17 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLsemantics wrapper for the MmlSemantics object
+ * @fileoverview  Implements the ChtmlSemantics wrapper for the MmlSemantics object
  *                and the associated wrappers for annotations
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {CHTML} from '../../chtml.js';
-import {CHTMLWrapper, CHTMLWrapperClass} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
-        CHTMLFontData, CHTMLFontDataClass} from '../FontData.js';
+import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
+import {ChtmlWrapperFactory} from '../WrapperFactory.js';
+import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
 import {CommonSemantics, CommonSemanticsClass, CommonSemanticsMixin} from '../../common/Wrappers/semantics.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlSemantics, MmlAnnotation, MmlAnnotationXML} from '../../../core/MmlTree/MmlNodes/semantics.js';
@@ -36,52 +36,52 @@ import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
- * The CHTMLSemantics interface for the CHTML Semantics wrapper
+ * The ChtmlSemantics interface for the CHTML Semantics wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLSemanticsNTD<N, T, D> extends CHTMLWrapper<N, T, D>, CommonSemantics<
+export interface ChtmlSemanticsNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonSemantics<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {}
 
 /**
- * The CHTMLSemanticsClass interface for the CHTML Semantics wrapper
+ * The ChtmlSemanticsClass interface for the CHTML Semantics wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLSemanticsClass<N, T, D> extends CHTMLWrapperClass<N, T, D>, CommonSemanticsClass<
+export interface ChtmlSemanticsClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonSemanticsClass<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
-  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLSemanticsNTD<N, T, D>;
+  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlSemanticsNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The CHTMLSemantics wrapper class for the MmlSemantics class
+ * The ChtmlSemantics wrapper class for the MmlSemantics class
  */
-export const CHTMLSemantics = (function <N, T, D>(): CHTMLSemanticsClass<N, T, D> {
+export const ChtmlSemantics = (function <N, T, D>(): ChtmlSemanticsClass<N, T, D> {
 
   const Base = CommonSemanticsMixin<
       N, T, D,
-      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-      CHTMLSemanticsClass<N, T, D>
-    >(CHTMLWrapper);
+      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+      ChtmlSemanticsClass<N, T, D>
+    >(ChtmlWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class CHTMLSemantics extends Base implements CHTMLSemanticsNTD<N, T, D> {
+  return class ChtmlSemantics extends Base implements ChtmlSemanticsNTD<N, T, D> {
 
     /**
      * @override
@@ -92,7 +92,7 @@ export const CHTMLSemantics = (function <N, T, D>(): CHTMLSemanticsClass<N, T, D
      * @override
      */
     public toCHTML(parent: N) {
-      const chtml = this.standardCHTMLnode(parent);
+      const chtml = this.standardChtmlNode(parent);
       if (this.childNodes.length) {
         this.childNodes[0].toCHTML(chtml);
       }
@@ -105,11 +105,11 @@ export const CHTMLSemantics = (function <N, T, D>(): CHTMLSemanticsClass<N, T, D
 
 /*****************************************************************/
 /**
- * The CHTMLAnnotation wrapper for the MmlAnnotation class
+ * The ChtmlAnnotation wrapper for the MmlAnnotation class
  */
-export const CHTMLAnnotation = (function <N, T, D>(): CHTMLWrapperClass<N, T, D> {
+export const ChtmlAnnotation = (function <N, T, D>(): ChtmlWrapperClass<N, T, D> {
 
-  return class CHTMLAnnotation extends CHTMLWrapper<N, T, D> {
+  return class ChtmlAnnotation extends ChtmlWrapper<N, T, D> {
 
     /**
      * @override
@@ -139,11 +139,11 @@ export const CHTMLAnnotation = (function <N, T, D>(): CHTMLWrapperClass<N, T, D>
 
 /*****************************************************************/
 /**
- * The CHTMLAnnotationXML wrapper for the MmlAnnotationXML class
+ * The ChtmlAnnotationXML wrapper for the MmlAnnotationXML class
  */
-export const CHTMLAnnotationXML = (function <N, T, D>(): CHTMLWrapperClass<N, T, D> {
+export const ChtmlAnnotationXML = (function <N, T, D>(): ChtmlWrapperClass<N, T, D> {
 
-  return class CHTMLAnnotationXML extends CHTMLWrapper<N, T, D> {
+  return class ChtmlAnnotationXML extends ChtmlWrapper<N, T, D> {
 
     /**
      * @override
@@ -167,11 +167,11 @@ export const CHTMLAnnotationXML = (function <N, T, D>(): CHTMLWrapperClass<N, T,
 
 /*****************************************************************/
 /**
- * The CHTMLXmlNode wrapper for the XMLNode class
+ * The ChtmlXmlNode wrapper for the XMLNode class
  */
-export const CHTMLXmlNode = (function <N, T, D>(): CHTMLWrapperClass<N, T, D> {
+export const ChtmlXmlNode = (function <N, T, D>(): ChtmlWrapperClass<N, T, D> {
 
-  return class CHTMLXmlNode extends CHTMLWrapper<N, T, D> {
+  return class ChtmlXmlNode extends ChtmlWrapper<N, T, D> {
 
     /**
      * @override

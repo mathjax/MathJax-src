@@ -16,15 +16,15 @@
  */
 
 /**
- * @fileoverview  Implements the SVGmath wrapper for the MmlMath object
+ * @fileoverview  Implements the SvgMath wrapper for the MmlMath object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {SVG} from '../../svg.js';
-import {SVGWrapper, SVGWrapperClass} from '../Wrapper.js';
-import {SVGWrapperFactory} from '../WrapperFactory.js';
-import {SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass} from '../FontData.js';
+import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
+import {SvgWrapperFactory} from '../WrapperFactory.js';
+import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
 import {CommonMath, CommonMathClass, CommonMathMixin} from '../../common/Wrappers/math.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMath} from '../../../core/MmlTree/MmlNodes/math.js';
@@ -33,52 +33,52 @@ import {BBox} from '../../../util/BBox.js';
 
 /*****************************************************************/
 /**
- * The SVGmath interface for the SVG math wrapper
+ * The Svgmath interface for the SVG math wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMathNTD<N, T, D> extends SVGWrapper<N, T, D>, CommonMath<
+export interface SvgMathNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMath<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {}
 
 /**
- * The SVGmathClass interface for the SVG math wrapper
+ * The SvgmathClass interface for the SVG math wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMathClass<N, T, D> extends SVGWrapperClass<N, T, D>, CommonMathClass<
+export interface SvgMathClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonMathClass<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {
-  new(factory: SVGWrapperFactory<N, T, D>, node: MmlNode, parent?: SVGWrapper<N, T, D>): SVGMathNTD<N, T, D>;
+  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMathNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The SVGMath wrapper for the MmlMath class
+ * The SvgMath wrapper for the MmlMath class
  */
-export const SVGMath = (function <N, T, D>(): SVGMathClass<N, T, D> {
+export const SvgMath = (function <N, T, D>(): SvgMathClass<N, T, D> {
 
   const Base = CommonMathMixin<
       N, T, D,
-      SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-      SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass,
-      SVGMathClass<N, T, D>
-    >(SVGWrapper);
+      SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+      SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
+      SvgMathClass<N, T, D>
+    >(SvgWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be SVGWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class SVGMath extends Base extends SVGMathNTD<N, T, D> {
+  return class SvgMath extends Base extends SvgMathNTD<N, T, D> {
 
     /**
      * @override

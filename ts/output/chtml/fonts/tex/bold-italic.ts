@@ -14,10 +14,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {CHTMLCharMap, AddCSS} from '../../FontData.js';
+import {ChtmlCharMap, AddCSS} from '../../FontData.js';
 import {boldItalic as font} from '../../../common/fonts/tex/bold-italic.js';
 
-export const boldItalic: CHTMLCharMap = AddCSS(font, {
+export const boldItalic: ChtmlCharMap = AddCSS(font, {
     0x131: {f: 'B'},
     0x237: {f: 'B'},
     0x2044: {c: '/'},

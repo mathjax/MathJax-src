@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SVGWrapper class
+ * @fileoverview  Implements the SvgWrapper class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -24,45 +24,45 @@
 import {OptionList} from '../../util/Options.js';
 import {BBox} from '../../util/BBox.js';
 import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../common/Wrapper.js';
-import {SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass} from './FontData.js';
+import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from './FontData.js';
 import {SVG, XLINKNS} from '../svg.js';
-import {SVGWrapperFactory} from './WrapperFactory.js';
+import {SvgWrapperFactory} from './WrapperFactory.js';
 
 export {Constructor, StringMap} from '../common/Wrapper.js';
 
 /*****************************************************************/
 
 /**
- * Shorthand for makeing an SVGWrapper constructor
+ * Shorthand for makeing an SvgWrapper constructor
  */
-export type SVGConstructor<N, T, D> = CommonWrapperConstructor<
+export type SvgConstructor<N, T, D> = CommonWrapperConstructor<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 >;
 
 /*****************************************************************/
 /**
- *  The type of the SVGWrapper class (used when creating the wrapper factory for this class)
+ *  The type of the SvgWrapper class (used when creating the wrapper factory for this class)
  */
-export interface SVGWrapperClass<N, T, D> extends CommonWrapperClass<
+export interface SvgWrapperClass<N, T, D> extends CommonWrapperClass<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {}
 
 /*****************************************************************/
 /**
- *  The base SVGWrapper class
+ *  The base SvgWrapper class
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGWrapper<N, T, D> extends CommonWrapper<
+export class SvgWrapper<N, T, D> extends CommonWrapper<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {
 
   /**
@@ -83,7 +83,7 @@ export class SVGWrapper<N, T, D> extends CommonWrapper<
   /**
    * @override
    */
-  public font: SVGFontData;
+  public font: SvgFontData;
 
   /*******************************************************************/
 
@@ -93,7 +93,7 @@ export class SVGWrapper<N, T, D> extends CommonWrapper<
    * @param {N} parent  The HTML node where the output is added
    */
   public toSVG(parent: N) {
-    this.addChildren(this.standardSVGnode(parent));
+    this.addChildren(this.standardSvgNode(parent));
   }
 
   /**
@@ -119,8 +119,8 @@ export class SVGWrapper<N, T, D> extends CommonWrapper<
    * @param {N} parent  The HTML element in which the node is to be created
    * @returns {N}  The root of the HTML tree for the wrapped node's output
    */
-  protected standardSVGnode(parent: N): N {
-    const svg = this.createSVGnode(parent);
+  protected standardSvgNode(parent: N): N {
+    const svg = this.createSvgNode(parent);
     this.handleStyles();
     this.handleScale();
     this.handleBorder();
@@ -133,7 +133,7 @@ export class SVGWrapper<N, T, D> extends CommonWrapper<
    * @param {N} parent  The HTML element in which the node is to be created
    * @returns {N}  The root of the HTML tree for the wrapped node's output
    */
-  protected createSVGnode(parent: N): N {
+  protected createSvgNode(parent: N): N {
     this.dom = this.svg('g', {'data-mml-node': this.node.kind});
     const href = this.node.attributes.get('href');
     if (href) {
@@ -227,7 +227,7 @@ export class SVGWrapper<N, T, D> extends CommonWrapper<
       style[i] = this.styles.get(key + 'Style') || 'solid';
       color[i] = this.styles.get(key + 'Color') || 'currentColor';
     }
-    const f = SVGWrapper.borderFuzz;
+    const f = SvgWrapper.borderFuzz;
     const bbox = this.getOuterBBox();
     const [h, d, w] = [bbox.h + f, bbox.d + f, bbox.w + f];
     const outerRT = [w, h];
@@ -321,7 +321,7 @@ export class SVGWrapper<N, T, D> extends CommonWrapper<
   protected handleAttributes() {
     const attributes = this.node.attributes;
     const defaults = attributes.getAllDefaults();
-    const skip = SVGWrapper.skipAttributes;
+    const skip = SvgWrapper.skipAttributes;
     for (const name of attributes.getExplicitNames()) {
       if (skip[name] === false || (!(name in defaults) && !skip[name] &&
                                    !this.adaptor.hasAttribute(this.dom, name))) {

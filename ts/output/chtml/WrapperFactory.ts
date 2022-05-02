@@ -16,41 +16,36 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLWrapperFactory class
+ * @fileoverview  Implements the ChtmlWrapperFactory class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {CHTML} from '../chtml.js';
 import {CommonWrapperFactory} from '../common/WrapperFactory.js';
-import {CHTMLWrapper, CHTMLWrapperClass} from './Wrapper.js';
-import {CHTMLWrappers} from './Wrappers.js';
-import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
-        CHTMLFontData, CHTMLFontDataClass} from './FontData.js';
+import {ChtmlWrapper, ChtmlWrapperClass} from './Wrapper.js';
+import {ChtmlWrappers} from './Wrappers.js';
+import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+        ChtmlFontData, ChtmlFontDataClass} from './FontData.js';
 
 /*****************************************************************/
 /**
- *  The CHTMLWrapperFactory class for creating CHTMLWrapper nodes
+ *  The ChtmlWrapperFactory class for creating ChtmlWrapper nodes
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLWrapperFactory<N, T, D> extends
+export class ChtmlWrapperFactory<N, T, D> extends
 CommonWrapperFactory<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
 
   /**
    * The default list of wrapper nodes this factory can create
    */
-  public static defaultNodes = CHTMLWrappers;
-
-  /**
-   * The CHTML output jax associated with this factory
-   */
-  public jax: CHTML<N, T, D>;
+  public static defaultNodes = ChtmlWrappers;
 
 }

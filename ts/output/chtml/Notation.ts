@@ -21,15 +21,15 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLMencloseNTD} from './Wrappers/menclose.js';
+import {ChtmlMencloseNTD} from './Wrappers/menclose.js';
 import * as Notation from '../common/Notation.js';
 export * from '../common/Notation.js';
 
 /*
  * Shorthands for common types
  */
-export type RENDERER<N, T, D> = Notation.Renderer<CHTMLMencloseNTD<N, T, D>, N>;
-export type DEFPAIR<N, T, D> = Notation.DefPair<CHTMLMencloseNTD<N, T, D>, N>;
+export type RENDERER<N, T, D> = Notation.Renderer<ChtmlMencloseNTD<N, T, D>, N>;
+export type DEFPAIR<N, T, D> = Notation.DefPair<ChtmlMencloseNTD<N, T, D>, N>;
 
 /**
  * Create a named element (handled by CSS), and adjust it if thickness is non-standard
@@ -49,7 +49,7 @@ export const RenderElement = function<N, T, D>(name: string, offset: string = ''
       }
     }
     node.adaptor.append(node.dom, shape);
-  }) as Notation.Renderer<CHTMLMencloseNTD<N, T, D>, N>;
+  }) as Notation.Renderer<ChtmlMencloseNTD<N, T, D>, N>;
 };
 
 /**
@@ -57,7 +57,7 @@ export const RenderElement = function<N, T, D>(name: string, offset: string = ''
  * @return {DEFPAIR}      The notation definition for the notation having a line on the given side
  */
 export const Border = function<N, T, D>(side: Notation.Side): DEFPAIR<N, T, D> {
-  return Notation.CommonBorder<CHTMLMencloseNTD<N, T, D>, N>((node, child) => {
+  return Notation.CommonBorder<ChtmlMencloseNTD<N, T, D>, N>((node, child) => {
     node.adaptor.setStyle(child, 'border-' + side, node.Em(node.thickness) + ' solid');
   })(side);
 };
@@ -70,7 +70,7 @@ export const Border = function<N, T, D>(side: Notation.Side): DEFPAIR<N, T, D> {
  * @return {DEFPAIR}       The notation definition for the notation having lines on two sides
  */
 export const Border2 = function<N, T, D>(name: string, side1: Notation.Side, side2: Notation.Side): DEFPAIR<N, T, D> {
-  return Notation.CommonBorder2<CHTMLMencloseNTD<N, T, D>, N>((node, child) => {
+  return Notation.CommonBorder2<ChtmlMencloseNTD<N, T, D>, N>((node, child) => {
     const border = node.Em(node.thickness) + ' solid';
     node.adaptor.setStyle(child, 'border-' + side1, border);
     node.adaptor.setStyle(child, 'border-' + side2, border);
@@ -83,7 +83,7 @@ export const Border2 = function<N, T, D>(name: string, side1: Notation.Side, sid
  * @return {DEFPAIR}     The notation definition for the diagonal strike
  */
 export const DiagonalStrike = function<N, T, D>(name: string, neg: number): DEFPAIR<N, T, D> {
-  return Notation.CommonDiagonalStrike<CHTMLMencloseNTD<N, T, D>, N>((cname: string) => (node, _child) => {
+  return Notation.CommonDiagonalStrike<ChtmlMencloseNTD<N, T, D>, N>((cname: string) => (node, _child) => {
     const {w, h, d} = node.getBBox();
     const [a, W] = node.getArgMod(w, h + d);
     const t = neg * node.thickness / 2;
@@ -100,7 +100,7 @@ export const DiagonalStrike = function<N, T, D>(name: string, neg: number): DEFP
  * @return {DEFPAIR}      The notation definition for the diagonal arrow
  */
 export const DiagonalArrow = function<N, T, D>(name: string): DEFPAIR<N, T, D> {
-  return Notation.CommonDiagonalArrow<CHTMLMencloseNTD<N, T, D>, N>((node, arrow) => {
+  return Notation.CommonDiagonalArrow<ChtmlMencloseNTD<N, T, D>, N>((node, arrow) => {
     node.adaptor.append(node.dom, arrow);
   })(name);
 };
@@ -110,7 +110,7 @@ export const DiagonalArrow = function<N, T, D>(name: string): DEFPAIR<N, T, D> {
  * @return {DEFPAIR}      The notation definition for the arrow
  */
 export const Arrow = function<N, T, D>(name: string): DEFPAIR<N, T, D> {
-  return Notation.CommonArrow<CHTMLMencloseNTD<N, T, D>, N>((node, arrow) => {
+  return Notation.CommonArrow<ChtmlMencloseNTD<N, T, D>, N>((node, arrow) => {
     node.adaptor.append(node.dom, arrow);
   })(name);
 };

@@ -16,19 +16,19 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLmmultiscripts wrapper for the MmlMmultiscripts object
+ * @fileoverview  Implements the ChtmlMmultiscripts wrapper for the MmlMmultiscripts object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {CHTML} from '../../chtml.js';
-import {CHTMLWrapper, CHTMLWrapperClass} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
-        CHTMLFontData, CHTMLFontDataClass} from '../FontData.js';
+import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
+import {ChtmlWrapperFactory} from '../WrapperFactory.js';
+import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
 import {CommonMmultiscripts, CommonMmultiscriptsClass,
         CommonMmultiscriptsMixin} from '../../common/Wrappers/mmultiscripts.js';
-import {CHTMLMsubsup, CHTMLMsubsupClass, CHTMLMsubsupNTD} from './msubsup.js';
+import {ChtmlMsubsup, ChtmlMsubsupClass, ChtmlMsubsupNTD} from './msubsup.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMmultiscripts} from '../../../core/MmlTree/MmlNodes/mmultiscripts.js';
 import {BBox} from '../../../util/BBox.js';
@@ -37,52 +37,52 @@ import {split} from '../../../util/string.js';
 
 /*****************************************************************/
 /**
- * The CHTMLMmultiscripts interface for the CHTML Mmultiscripts wrapper
+ * The ChtmlMmultiscripts interface for the CHTML Mmultiscripts wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMmultiscriptsNTD<N, T, D> extends CHTMLMsubsupNTD<N, T, D>, CommonMmultiscripts<
+export interface ChtmlMmultiscriptsNTD<N, T, D> extends ChtmlMsubsupNTD<N, T, D>, CommonMmultiscripts<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {}
 
 /**
- * The CHTMLMmultiscriptsClass interface for the CHTML Mmultiscripts wrapper
+ * The ChtmlMmultiscriptsClass interface for the CHTML Mmultiscripts wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMmultiscriptsClass<N, T, D> extends CHTMLMsubsupClass<N, T, D>, CommonMmultiscriptsClass<
+export interface ChtmlMmultiscriptsClass<N, T, D> extends ChtmlMsubsupClass<N, T, D>, CommonMmultiscriptsClass<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
-  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLMmultiscriptsNTD<N, T, D>;
+  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMmultiscriptsNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The CHTMLMmultiscripts wrapper class for the MmlMmultiscripts class
+ * The ChtmlMmultiscripts wrapper class for the MmlMmultiscripts class
  */
-export const CHTMLMmultiscripts = (function <N, T, D>(): CHTMLMmultiscriptsClass<N, T, D> {
+export const ChtmlMmultiscripts = (function <N, T, D>(): ChtmlMmultiscriptsClass<N, T, D> {
 
   const Base = CommonMmultiscriptsMixin<
       N, T, D,
-      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-      CHTMLMmultiscriptsClass<N, T, D>
-    >(CHTMLMsubsup);
+      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+      ChtmlMmultiscriptsClass<N, T, D>
+    >(ChtmlMsubsup);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class CHTMLMmultiscripts extends Base implements CHTMLMmultiscriptsNTD<N, T, D> {
+  return class ChtmlMmultiscripts extends Base implements ChtmlMmultiscriptsNTD<N, T, D> {
 
     /**
      * @override
@@ -121,7 +121,7 @@ export const CHTMLMmultiscripts = (function <N, T, D>(): CHTMLMmultiscriptsClass
      * @override
      */
     public toCHTML(parent: N) {
-      const chtml = this.standardCHTMLnode(parent);
+      const chtml = this.standardChtmlNode(parent);
       const data = this.scriptData;
       //
       //  Get the alignment for the scripts

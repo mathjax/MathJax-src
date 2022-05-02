@@ -16,19 +16,19 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLmenclose wrapper for the MmlMenclose object
+ * @fileoverview  Implements the ChtmlMenclose wrapper for the MmlMenclose object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {CHTML} from '../../chtml.js';
-import {CHTMLWrapper, CHTMLWrapperClass} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
-        CHTMLFontData, CHTMLFontDataClass} from '../FontData.js';
+import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
+import {ChtmlWrapperFactory} from '../WrapperFactory.js';
+import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
 import {CommonMenclose, CommonMencloseClass, CommonMencloseMixin} from '../../common/Wrappers/menclose.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {CHTMLMsqrtNTD} from './msqrt.js';
+import {ChtmlMsqrtNTD} from './msqrt.js';
 import {MmlMenclose} from '../../../core/MmlTree/MmlNodes/menclose.js';
 import * as Notation from '../Notation.js';
 import {OptionList} from '../../../util/Options.js';
@@ -48,17 +48,17 @@ const ANGLE = Angle(Notation.ARROWDX, Notation.ARROWY);
 
 /*****************************************************************/
 /**
- * The CHTMLMenclose interface for the CHTML Menclose wrapper
+ * The ChtmlMenclose interface for the CHTML Menclose wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMencloseNTD<N, T, D> extends CHTMLWrapper<N, T, D>, CommonMenclose<
+export interface ChtmlMencloseNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMenclose<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-  CHTMLMsqrtNTD<N, T, D>
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+  ChtmlMsqrtNTD<N, T, D>
 > {
 
   /**
@@ -93,40 +93,40 @@ export interface CHTMLMencloseNTD<N, T, D> extends CHTMLWrapper<N, T, D>, Common
 }
 
 /**
- * The CHTMLMencloseClass interface for the CHTML Menclose wrapper
+ * The ChtmlMencloseClass interface for the CHTML Menclose wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMencloseClass<N, T, D> extends CHTMLWrapperClass<N, T, D>, CommonMencloseClass<
+export interface ChtmlMencloseClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonMencloseClass<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
-  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLMencloseNTD<N, T, D>;
+  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMencloseNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The CHTMLMenclose wrapper class for the MmlMenclose class
+ * The ChtmlMenclose wrapper class for the MmlMenclose class
  */
-export const CHTMLMenclose = (function <N, T, D>(): CHTMLMencloseClass<N, T, D> {
+export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<N, T, D> {
 
   const Base = CommonMencloseMixin<
       N, T, D,
-      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-      CHTMLMsqrtNTD<N, T, D>,
-      CHTMLMencloseClass<N, T, D>
-    >(CHTMLWrapper);
+      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+      ChtmlMsqrtNTD<N, T, D>,
+      ChtmlMencloseClass<N, T, D>
+    >(ChtmlWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class CHTMLMenclose extends Base implements CHTMLMencloseNTD<N, T, D> {
+  return class ChtmlMenclose extends Base implements ChtmlMencloseNTD<N, T, D> {
 
     /**
      * @override
@@ -243,7 +243,7 @@ export const CHTMLMenclose = (function <N, T, D>(): CHTMLMencloseClass<N, T, D> 
     /**
      *  @override
      */
-    public static notations: Notation.DefList<CHTMLMencloseNTD<N, T, D>, N> = new Map([
+    public static notations: Notation.DefList<ChtmlMencloseNTD<N, T, D>, N> = new Map([
 
       Notation.Border('top'),
       Notation.Border('right'),
@@ -378,7 +378,7 @@ export const CHTMLMenclose = (function <N, T, D>(): CHTMLMencloseClass<N, T, D> 
         renderChild: true
       }]
 
-    ] as Notation.DefPair<CHTMLMencloseNTD<N, T, D>, N>[]);
+    ] as Notation.DefPair<ChtmlMencloseNTD<N, T, D>, N>[]);
 
     /********************************************************/
 
@@ -490,7 +490,7 @@ export const CHTMLMenclose = (function <N, T, D>(): CHTMLMencloseClass<N, T, D> 
      */
     public toCHTML(parent: N) {
       const adaptor = this.adaptor;
-      const chtml = this.standardCHTMLnode(parent);
+      const chtml = this.standardChtmlNode(parent);
       //
       //  Create a box for the child (that can have padding and borders added by the notations)
       //    and add the child HTML into it

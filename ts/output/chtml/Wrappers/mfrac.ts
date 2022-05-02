@@ -16,71 +16,71 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLmfrac wrapper for the MmlMfrac object
+ * @fileoverview  Implements the ChtmlMfrac wrapper for the MmlMfrac object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {CHTML} from '../../chtml.js';
-import {CHTMLWrapper, CHTMLWrapperClass} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
-        CHTMLFontData, CHTMLFontDataClass} from '../FontData.js';
+import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
+import {ChtmlWrapperFactory} from '../WrapperFactory.js';
+import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
 import {CommonMfrac, CommonMfracClass, CommonMfracMixin} from '../../common/Wrappers/mfrac.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMfrac} from '../../../core/MmlTree/MmlNodes/mfrac.js';
-import {CHTMLMoNTD} from './mo.js';
+import {ChtmlMoNTD} from './mo.js';
 import {StyleList} from '../../../util/StyleList.js';
 import {OptionList} from '../../../util/Options.js';
 
 /*****************************************************************/
 /**
- * The CHTMLMfrac interface for the CHTML Mfrac wrapper
+ * The ChtmlMfrac interface for the CHTML Mfrac wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMfracNTD<N, T, D> extends CHTMLWrapper<N, T, D>, CommonMfrac<
+export interface ChtmlMfracNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMfrac<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {}
 
 /**
- * The CHTMLMfracClass interface for the CHTML Mfrac wrapper
+ * The ChtmlMfracClass interface for the CHTML Mfrac wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMfracClass<N, T, D> extends CHTMLWrapperClass<N, T, D>, CommonMfracClass<
+export interface ChtmlMfracClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonMfracClass<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
-  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLMfracNTD<N, T, D>;
+  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMfracNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The CHTMLMfrac wrapper class for the MmlMfrac class
+ * The ChtmlMfrac wrapper class for the MmlMfrac class
  */
-export const CHTMLMfrac = (function <N, T, D>(): CHTMLMfracClass<N, T, D> {
+export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
 
   const Base = CommonMfracMixin<
       N, T, D,
-      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-      CHTMLMfracClass<N, T, D>
-    >(CHTMLWrapper);
+      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+      ChtmlMfracClass<N, T, D>
+    >(ChtmlWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class CHTMLMfrac extends Base implements CHTMLMfracNTD<N, T, D> {
+  return class ChtmlMfrac extends Base implements ChtmlMfracNTD<N, T, D> {
 
     /**
      * @override
@@ -178,7 +178,7 @@ export const CHTMLMfrac = (function <N, T, D>(): CHTMLMfracClass<N, T, D> {
     /**
      * An mop element to use for bevelled fractions
      */
-    protected bevel: CHTMLMoNTD<N, T, D>;
+    protected bevel: ChtmlMoNTD<N, T, D>;
 
     /************************************************/
 
@@ -186,7 +186,7 @@ export const CHTMLMfrac = (function <N, T, D>(): CHTMLMfracClass<N, T, D> {
      * @override
      */
     public toCHTML(parent: N) {
-      this.standardCHTMLnode(parent);
+      this.standardChtmlNode(parent);
       const {linethickness, bevelled} = this.node.attributes.getList('linethickness', 'bevelled');
       const display = this.isDisplay();
       if (bevelled) {

@@ -16,69 +16,69 @@
  */
 
 /**
- * @fileoverview  Implements the SVGMroot wrapper for the MmlMroot object
+ * @fileoverview  Implements the SvgMroot wrapper for the MmlMroot object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {SVG} from '../../svg.js';
-import {SVGWrapper, SVGWrapperClass} from '../Wrapper.js';
-import {SVGWrapperFactory} from '../WrapperFactory.js';
-import {SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass} from '../FontData.js';
+import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
+import {SvgWrapperFactory} from '../WrapperFactory.js';
+import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
 import {CommonMroot, CommonMrootClass, CommonMrootMixin} from '../../common/Wrappers/mroot.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMroot} from '../../../core/MmlTree/MmlNodes/mroot.js';
-import {SVGMsqrt, SVGMsqrtClass, SVGMsqrtNTD} from './msqrt.js';
+import {SvgMsqrt, SvgMsqrtClass, SvgMsqrtNTD} from './msqrt.js';
 import {BBox} from '../../../util/BBox.js';
 
 /*****************************************************************/
 /**
- * The SVGMroot interface for the SVG Mroot wrapper
+ * The SvgMroot interface for the SVG Mroot wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMrootNTD<N, T, D> extends SVGMsqrtNTD<N, T, D>, CommonMroot<
+export interface SvgMrootNTD<N, T, D> extends SvgMsqrtNTD<N, T, D>, CommonMroot<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {}
 
 /**
- * The SVGMrootClass interface for the SVG Mroot wrapper
+ * The SvgMrootClass interface for the SVG Mroot wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMrootClass<N, T, D> extends SVGMsqrtClass<N, T, D>, CommonMrootClass<
+export interface SvgMrootClass<N, T, D> extends SvgMsqrtClass<N, T, D>, CommonMrootClass<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {
-  new(factory: SVGWrapperFactory<N, T, D>, node: MmlNode, parent?: SVGWrapper<N, T, D>): SVGMrootNTD<N, T, D>;
+  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMrootNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The SVGMroot wrapper class for the MmlMroot class
+ * The SvgMroot wrapper class for the MmlMroot class
  */
-export const SVGMroot = (function <N, T, D>(): SVGMrootClass<N, T, D> {
+export const SvgMroot = (function <N, T, D>(): SvgMrootClass<N, T, D> {
 
   const Base = CommonMrootMixin<
       N, T, D,
-      SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-      SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass,
-      SVGMrootClass<N, T, D>
-    >(SVGMsqrt);
+      SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+      SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
+      SvgMrootClass<N, T, D>
+    >(SvgMsqrt);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be SVGWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class SVGMroot extends Base implements SVGMrootNTD<N, T, D> {
+  return class SvgMroot extends Base implements SvgMrootNTD<N, T, D> {
 
     /**
      * @override
@@ -88,7 +88,7 @@ export const SVGMroot = (function <N, T, D>(): SVGMrootClass<N, T, D> {
     /**
      * @override
      */
-    protected addRoot(ROOT: N, root: SVGWrapper<N, T, D>, sbox: BBox, H: number) {
+    protected addRoot(ROOT: N, root: SvgWrapper<N, T, D>, sbox: BBox, H: number) {
       root.toSVG(ROOT);
       const [x, h, dx] = this.getRootDimens(sbox, H);
       const bbox = root.getOuterBBox();

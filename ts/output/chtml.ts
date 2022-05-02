@@ -29,10 +29,10 @@ import {OptionList} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
-import {CHTMLWrapper, CHTMLWrapperClass} from './chtml/Wrapper.js';
-import {CHTMLWrapperFactory} from './chtml/WrapperFactory.js';
-import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
-        CHTMLFontData, CHTMLFontDataClass} from './chtml/FontData.js';
+import {ChtmlWrapper, ChtmlWrapperClass} from './chtml/Wrapper.js';
+import {ChtmlWrapperFactory} from './chtml/WrapperFactory.js';
+import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+        ChtmlFontData, ChtmlFontDataClass} from './chtml/FontData.js';
 import {Usage} from './chtml/Usage.js';
 import {TeXFont} from './chtml/fonts/tex.js';
 import * as LENGTHS from '../util/lengths.js';
@@ -50,8 +50,8 @@ import {unicodeChars} from '../util/string.js';
 export class CHTML<N, T, D> extends
 CommonOutputJax<
   N, T, D,
-  CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
 
   /**
@@ -151,7 +151,7 @@ CommonOutputJax<
    * @constructor
    */
   constructor(options: OptionList = null) {
-    super(options, CHTMLWrapperFactory as any, TeXFont);
+    super(options, ChtmlWrapperFactory as any, TeXFont);
     this.font.adaptiveCSS(this.options.adaptiveCSS);
     this.wrapperUsage = new Usage<string>();
   }
@@ -211,7 +211,7 @@ CommonOutputJax<
    * @override
    */
   protected addClassStyles(wrapper: typeof CommonWrapper, styles: CssStyles) {
-    const CLASS = wrapper as typeof CHTMLWrapper;
+    const CLASS = wrapper as typeof ChtmlWrapper;
     if (CLASS.autoStyle && CLASS.kind !== 'unknown') {
       styles.addStyles({
         ['mjx-' + CLASS.kind]: {

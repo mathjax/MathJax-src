@@ -16,15 +16,15 @@
  */
 
 /**
- * @fileoverview  Implements the SVGmaction wrapper for the MmlMaction object
+ * @fileoverview  Implements the SvgMaction wrapper for the MmlMaction object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {SVG} from '../../svg.js';
-import {SVGWrapper, SVGWrapperClass} from '../Wrapper.js';
-import {SVGWrapperFactory} from '../WrapperFactory.js';
-import {SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass} from '../FontData.js';
+import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
+import {SvgWrapperFactory} from '../WrapperFactory.js';
+import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
 import {CommonMaction, CommonMactionClass, CommonMactionMixin} from '../../common/Wrappers/maction.js';
 import {ActionDef} from '../../common/Wrappers/maction.js';
 import {EventHandler, TooltipData} from '../../common/Wrappers/maction.js';
@@ -34,16 +34,16 @@ import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
- * The SVGMaction interface for the SVG maction wrapper
+ * The SvgMaction interface for the SVG maction wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMactionNTD<N, T, D> extends SVGWrapper<N, T, D>, CommonMaction<
+export interface SvgMactionNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMaction<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {
 
   /**
@@ -60,39 +60,39 @@ export interface SVGMactionNTD<N, T, D> extends SVGWrapper<N, T, D>, CommonMacti
 }
 
 /**
- * The SVGMactionClass interface for the SVG maction wrapper
+ * The SvgMactionClass interface for the SVG maction wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SVGMactionClass<N, T, D> extends SVGWrapperClass<N, T, D>, CommonMactionClass<
+export interface SvgMactionClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonMactionClass<
   N, T, D,
-  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {
-  new(factory: SVGWrapperFactory<N, T, D>, node: MmlNode, parent?: SVGWrapper<N, T, D>): SVGMactionNTD<N, T, D>;
+  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMactionNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The SVGMaction wrapper for the MmlMaction class
+ * The SvgMaction wrapper for the MmlMaction class
  */
-export const SVGMaction = (function <N, T, D>(): SVGMactionClass<N, T, D> {
+export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
 
   const Base = CommonMactionMixin<
       N, T, D,
-      SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-      SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass,
-      SVGMactionClass<N, T, D>
-    >(SVGWrapper);
+      SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+      SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
+      SvgMactionClass<N, T, D>
+    >(SvgWrapper);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be SVGWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class SVGMaction extends Base implements SVGMactionNTD<N, T, D> {
+  return class SvgMaction extends Base implements SvgMactionNTD<N, T, D> {
 
     /**
      * @override
@@ -249,9 +249,9 @@ export const SVGMaction = (function <N, T, D>(): SVGMactionClass<N, T, D> {
       }]]
 
     ] as ActionDef<N, T, D,
-                  SVG<N, T, D>, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGWrapperClass<N, T, D>,
-                  SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontData, SVGFontDataClass,
-                  SVGMactionNTD<N, T, D>>[]);
+                  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+                  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
+                  SvgMactionNTD<N, T, D>>[]);
 
     /*************************************************************/
 
@@ -275,7 +275,7 @@ export const SVGMaction = (function <N, T, D>(): SVGMactionClass<N, T, D> {
      * @override
      */
     public toSVG(parent: N) {
-      const svg = this.standardSVGnode(parent);
+      const svg = this.standardSvgNode(parent);
       const child = this.selected;
       const {h, d, w} = child.getOuterBBox();
       this.adaptor.append(this.dom, this.svg('rect', {

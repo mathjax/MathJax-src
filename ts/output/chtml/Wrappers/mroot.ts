@@ -16,70 +16,70 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLMroot wrapper for the MmlMroot object
+ * @fileoverview  Implements the ChtmlMroot wrapper for the MmlMroot object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {CHTML} from '../../chtml.js';
-import {CHTMLWrapper, CHTMLWrapperClass} from '../Wrapper.js';
-import {CHTMLWrapperFactory} from '../WrapperFactory.js';
-import {CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData,
-        CHTMLFontData, CHTMLFontDataClass} from '../FontData.js';
+import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
+import {ChtmlWrapperFactory} from '../WrapperFactory.js';
+import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
 import {CommonMroot, CommonMrootClass, CommonMrootMixin} from '../../common/Wrappers/mroot.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {CHTMLMsqrt, CHTMLMsqrtClass, CHTMLMsqrtNTD} from './msqrt.js';
+import {ChtmlMsqrt, ChtmlMsqrtClass, ChtmlMsqrtNTD} from './msqrt.js';
 import {BBox} from '../../../util/BBox.js';
 import {MmlMroot} from '../../../core/MmlTree/MmlNodes/mroot.js';
 
 /*****************************************************************/
 /**
- * The CHTMLMroot interface for the CHTML Mroot wrapper
+ * The ChtmlMroot interface for the CHTML Mroot wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMrootNTD<N, T, D> extends CHTMLMsqrtNTD<N, T, D>, CommonMroot<
+export interface ChtmlMrootNTD<N, T, D> extends ChtmlMsqrtNTD<N, T, D>, CommonMroot<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {}
 
 /**
- * The CHTMLMrootClass interface for the CHTML Mroot wrapper
+ * The ChtmlMrootClass interface for the CHTML Mroot wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface CHTMLMrootClass<N, T, D> extends CHTMLMsqrtClass<N, T, D>, CommonMrootClass<
+export interface ChtmlMrootClass<N, T, D> extends ChtmlMsqrtClass<N, T, D>, CommonMrootClass<
   N, T, D,
-  CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-  CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
-  new(factory: CHTMLWrapperFactory<N, T, D>, node: MmlNode, parent?: CHTMLWrapper<N, T, D>): CHTMLMrootNTD<N, T, D>;
+  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMrootNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The CHTMLMroot wrapper class for the MmlMroot class
+ * The ChtmlMroot wrapper class for the MmlMroot class
  */
-export const CHTMLMroot = (function <N, T, D>(): CHTMLMrootClass<N, T, D> {
+export const ChtmlMroot = (function <N, T, D>(): ChtmlMrootClass<N, T, D> {
 
   const Base = CommonMrootMixin<
       N, T, D,
-      CHTML<N, T, D>, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLWrapperClass<N, T, D>,
-      CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontData, CHTMLFontDataClass,
-      CHTMLMrootClass<N, T, D>
-    >(CHTMLMsqrt);
+      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+      ChtmlMrootClass<N, T, D>
+    >(ChtmlMsqrt);
 
   // Avoid message about base constructors not having the same type
-  //   (they should both be CHTMLWrapper<N, T, D>, but are thought of as different by typescript)
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class CHTMLMroot extends Base implements CHTMLMrootNTD<N, T, D> {
+  return class ChtmlMroot extends Base implements ChtmlMrootNTD<N, T, D> {
 
     /**
      * @override
@@ -89,7 +89,7 @@ export const CHTMLMroot = (function <N, T, D>(): CHTMLMrootClass<N, T, D> {
     /**
      * @override
      */
-    protected addRoot(ROOT: N, root: CHTMLWrapper<N, T, D>, sbox: BBox, H: number) {
+    protected addRoot(ROOT: N, root: ChtmlWrapper<N, T, D>, sbox: BBox, H: number) {
       root.toCHTML(ROOT);
       const [x, h, dx] = this.getRootDimens(sbox, H);
       this.adaptor.setStyle(ROOT, 'verticalAlign', this.em(h));
