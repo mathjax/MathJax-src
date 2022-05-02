@@ -157,7 +157,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     if (styles) {
       this.adaptor.setAttribute(this.dom, 'style', styles);
     }
-    BBox.StyleAdjust.forEach(([name, , lr]) => {
+    BBox.StyleAdjust.forEach(([name, , lr]: [string, any, number | null]) => {
       if (lr !== 0) return;
       const x = this.styles.get(name);
       if (x) {

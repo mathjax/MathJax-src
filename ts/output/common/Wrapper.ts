@@ -947,7 +947,7 @@ export class CommonWrapper<
    * @param {(N|T)[]} content  The child nodes for the created HTML node
    * @return {N}               The generated HTML tree
    */
-  public html(type: string, def: OptionList = {}, content: any[] = []): any {
+  public html(type: string, def: OptionList = {}, content: (N | T)[] = []): N {
     return this.jax.html(type, def, content);
   }
 

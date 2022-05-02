@@ -21,18 +21,45 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
+import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wrapper.js';
+import {CommonWrapperFactory} from '../WrapperFactory.js';
+import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
+import {CommonOutputJax} from '../../common.js';
 import {HtmlNode} from '../../../core/MmlTree/MmlNodes/HtmlNode.js';
 import {BBox} from '../../../util/BBox.js';
 import {StyleList} from '../../../util/Styles.js';
-import {ExtendedMetrics, UnknownBBox} from '../../common/OutputJax.js';
+import {ExtendedMetrics, UnknownBBox} from '../../common.js';
 import {split} from '../../../util/string.js';
 
 /*****************************************************************/
 /**
  * The CommonHtmlNode interface
+ *
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export interface CommonHtmlNode<N> extends AnyWrapper {
+export interface CommonHtmlNode<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>
+> extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
 
   /**
    * @return {N}   The HTML for the node
@@ -62,21 +89,69 @@ export interface CommonHtmlNode<N> extends AnyWrapper {
 }
 
 /**
- * Shorthand for the CommonHtmlNode constructor
+ * The CommonHtmlNodeClass interface
+ *
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export type HtmlNodeConstructor<N> = Constructor<CommonHtmlNode<N>>;
-
+export interface CommonHtmlNodeClass<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>
+> extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
 /**
- *  The CommonHtmlNode wrapper mixin for the HtmlNode object
+ * The CommonHtmlNode wrapper mixin for the HtmlNode object
  *
- * @template N  The HTMLElement class
- * @template T  The Wrapper class constructor type
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
+ *
+ * @template B   The Mixin interface to create
  */
-export function CommonHtmlNodeMixin<N, T extends WrapperConstructor>(Base: T): HtmlNodeConstructor<N> & T {
+export function CommonHtmlNodeMixin<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+>(Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
 
-  return class extends Base {
+  return class CommonHtmlNodeMixin extends Base
+  implements CommonHtmlNode<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
 
     /**
      * @override
@@ -102,7 +177,7 @@ export function CommonHtmlNodeMixin<N, T extends WrapperConstructor>(Base: T): H
         styles['font-size'] = jax.fixed(100 / metrics.scale, 1) + '%';
       }
       const parent = adaptor.parent(jax.math.start.node);
-      styles['font-family'] = this.parent.styles?.styles?.['font-family'] ||
+      styles['font-family'] = this.parent.styles?.get('font-family') ||
         metrics.family || adaptor.fontFamily(parent) || 'initial';
       return this.html('mjx-html', {variant: this.parent.variant, style: styles}, [html]);
     }
@@ -158,5 +233,6 @@ export function CommonHtmlNodeMixin<N, T extends WrapperConstructor>(Base: T): H
      */
     protected getVariant() {}
 
-  };
+  } as any as B;
+
 }

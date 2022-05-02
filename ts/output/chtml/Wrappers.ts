@@ -84,6 +84,6 @@ export const ChtmlWrappers: {[kind: string]: ChtmlWrapperClass<any, any, any>} =
   [ChtmlXmlNode.kind]: ChtmlXmlNode,
   [ChtmlTeXAtom.kind]: ChtmlTeXAtom,
   [ChtmlTextNode.kind]: ChtmlTextNode,
-  [ChtmlHtmlNode.kind]: CHTMLHtmlNode,
+  [ChtmlHtmlNode.kind]: ChtmlHtmlNode,
   [ChtmlWrapper.kind]: ChtmlWrapper
 };
