@@ -117,7 +117,7 @@ export const SVGMfrac = (function <N, T, D>(): SVGMfracClass<N, T, D> {
      * @param {number} t         The rule line thickness
      */
     protected makeFraction(display: boolean, t: number) {
-      const svg = this.element;
+      const svg = this.dom;
       const {numalign, denomalign} = this.node.attributes.getList('numalign', 'denomalign');
       const [num, den] = this.childNodes;
       const nbox = num.getOuterBBox();
@@ -150,7 +150,7 @@ export const SVGMfrac = (function <N, T, D>(): SVGMfracClass<N, T, D> {
      * @param {boolean} display  True when fraction is in display mode
      */
     protected makeAtop(display: boolean) {
-      const svg = this.element;
+      const svg = this.dom;
       const {numalign, denomalign} = this.node.attributes.getList('numalign', 'denomalign');
       const [num, den] = this.childNodes;
       const nbox = num.getOuterBBox();
@@ -176,7 +176,7 @@ export const SVGMfrac = (function <N, T, D>(): SVGMfracClass<N, T, D> {
      * @param {boolean} display  True when fraction is in display mode
      */
     protected makeBevelled(display: boolean) {
-      const svg = this.element;
+      const svg = this.dom;
       const [num, den] = this.childNodes;
       const {u, v, delta, nbox, dbox} = this.getBevelData(display);
       const w = (nbox.L + nbox.w + nbox.R) * nbox.rscale;

@@ -298,7 +298,7 @@ export const CHTMLMenclose = (function <N, T, D>(): CHTMLMencloseClass<N, T, D> 
             width: node.Em(W),
             transform: 'translateX(' + node.Em(t) + ') rotate(' + node.fixed(-a) + 'rad)',
           }}));
-          node.adaptor.append(node.chtml, strike);
+          node.adaptor.append(node.dom, strike);
         },
         bbox: (node) => {
           const p = node.padding / 2;
@@ -333,7 +333,7 @@ export const CHTMLMenclose = (function <N, T, D>(): CHTMLMencloseClass<N, T, D> 
         renderer: (node, child) => {
           const adaptor = node.adaptor;
           adaptor.setStyle(child, 'border-top', node.Em(node.thickness) + ' solid');
-          const arc = adaptor.append(node.chtml, node.html('dbox')) as N;
+          const arc = adaptor.append(node.dom, node.html('dbox')) as N;
           const t = node.thickness;
           const p = node.padding;
           if (t !== Notation.THICKNESS) {
@@ -360,7 +360,7 @@ export const CHTMLMenclose = (function <N, T, D>(): CHTMLMencloseClass<N, T, D> 
         renderer: (node, child) => {
           node.msqrt.toCHTML(child);
           const TRBL = node.sqrtTRBL();
-          node.adaptor.setStyle(node.msqrt.chtml, 'margin', TRBL.map(x => node.Em(-x)).join(' '));
+          node.adaptor.setStyle(node.msqrt.dom, 'margin', TRBL.map(x => node.Em(-x)).join(' '));
         },
         //
         //  Create the needed msqrt wrapper

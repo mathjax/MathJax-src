@@ -176,7 +176,7 @@ export const CHTMLMmultiscripts = (function <N, T, D>(): CHTMLMmultiscriptsClass
         this.childNodes[i++].toCHTML(adaptor.append(subRow, this.html('mjx-cell')) as N);
         this.childNodes[i++].toCHTML(adaptor.append(supRow, this.html('mjx-cell')) as N);
       }
-      return adaptor.append(this.chtml, this.html(name, tabledef, [supRow, sepRow, subRow])) as N;
+      return adaptor.append(this.dom, this.html(name, tabledef, [supRow, sepRow, subRow])) as N;
     }
 
   };

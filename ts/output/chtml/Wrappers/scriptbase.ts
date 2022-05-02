@@ -121,15 +121,15 @@ export const CHTMLScriptbase = (function <N, T, D>(): CHTMLScriptbaseClass<N, T,
      * @override
      */
     public toCHTML(parent: N) {
-      this.chtml = this.standardCHTMLnode(parent);
+      this.dom = this.standardCHTMLnode(parent);
       const [x, v] = this.getOffset();
       const dx = x - (this.baseRemoveIc ? this.baseIc : 0);
       const style: StyleData = {'vertical-align': this.em(v)};
       if (dx) {
         style['margin-left'] = this.em(dx);
       }
-      this.baseChild.toCHTML(this.chtml);
-      this.scriptChild.toCHTML(this.adaptor.append(this.chtml, this.html('mjx-script', {style})) as N);
+      this.baseChild.toCHTML(this.dom);
+      this.scriptChild.toCHTML(this.adaptor.append(this.dom, this.html('mjx-script', {style})) as N);
     }
 
     /**

@@ -153,8 +153,8 @@ export const SVGMmultiscripts = (function <N, T, D>(): SVGMmultiscriptsClass<N, 
     protected addScripts(x: number, u: number, v: number, i: number, n: number, align: string): number {
       const adaptor = this.adaptor;
       const alignX = AlignX(align);
-      const supRow = adaptor.append(this.element, this.svg('g')) as N;
-      const subRow = adaptor.append(this.element, this.svg('g')) as N;
+      const supRow = adaptor.append(this.dom, this.svg('g')) as N;
+      const subRow = adaptor.append(this.dom, this.svg('g')) as N;
       this.place(x, u, supRow);
       this.place(x, v, subRow);
       let m = i + 2 * n;

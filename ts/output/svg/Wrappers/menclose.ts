@@ -166,7 +166,7 @@ export const SVGMenclose = (function <N, T, D>(): SVGMencloseClass<N, T, D> {
       ['box', {
         renderer: (node, _child) => {
           const {w, h, d} = node.getBBox();
-          node.adaptor.append(node.element, node.box(w, h, d));
+          node.adaptor.append(node.dom, node.box(w, h, d));
         },
         bbox: Notation.fullBBox,
         border: Notation.fullBorder,
@@ -177,7 +177,7 @@ export const SVGMenclose = (function <N, T, D>(): SVGMencloseClass<N, T, D> {
         renderer: (node, _child) => {
           const {w, h, d} = node.getBBox();
           const r = node.thickness + node.padding;
-          node.adaptor.append(node.element, node.box(w, h, d, r));
+          node.adaptor.append(node.dom, node.box(w, h, d, r));
         },
         bbox: Notation.fullBBox
       }],
@@ -185,7 +185,7 @@ export const SVGMenclose = (function <N, T, D>(): SVGMencloseClass<N, T, D> {
       ['circle', {
         renderer: (node, _child) => {
           const {w, h, d} = node.getBBox();
-          node.adaptor.append(node.element, node.ellipse(w, h, d));
+          node.adaptor.append(node.dom, node.ellipse(w, h, d));
         },
         bbox: Notation.fullBBox
       }],
@@ -201,7 +201,7 @@ export const SVGMenclose = (function <N, T, D>(): SVGMencloseClass<N, T, D> {
           const HD = h + d;
           const cos = Math.cos(a);
           node.adaptor.append(
-            node.element,
+            node.dom,
             node.path('mitre', 'M', w, t - d,  'L', t + cos * t, t - d,  'L' , cos * HD + t, HD - d - t)
           );
         },
@@ -240,7 +240,7 @@ export const SVGMenclose = (function <N, T, D>(): SVGMencloseClass<N, T, D> {
           const t = node.thickness / 2;
           const p = node.padding;
           node.adaptor.append(
-            node.element,
+            node.dom,
             node.path('round',
                       'M', t, t - d,
                       'a', p - t / 2, (h + d) / 2 - 4 * t,  0,  '0,1',  0, h + d - 2 * t,

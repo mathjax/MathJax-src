@@ -144,11 +144,11 @@ export const SVGMath = (function <N, T, D>(): SVGMathClass<N, T, D> {
       if (speech) {
         const id = this.getTitleID();
         const label = this.svg('title', {id}, [this.text(speech)]);
-        adaptor.insert(label, adaptor.firstChild(this.element));
-        adaptor.setAttribute(this.element, 'aria-labeledby', id);
-        adaptor.removeAttribute(this.element, 'aria-label');
+        adaptor.insert(label, adaptor.firstChild(this.dom));
+        adaptor.setAttribute(this.dom, 'aria-labeledby', id);
+        adaptor.removeAttribute(this.dom, 'aria-label');
         for (const child of this.childNodes[0].childNodes) {
-          adaptor.setAttribute(child.element, 'aria-hidden', 'true');
+          adaptor.setAttribute(child.dom, 'aria-hidden', 'true');
         }
       }
     }

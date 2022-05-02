@@ -89,7 +89,7 @@ export const CHTMLMrow = (function <N, T, D>(): CHTMLMrowClass<N, T, D> {
      * @override
      */
     public toCHTML(parent: N) {
-      const chtml = (this.node.isInferred ? (this.chtml = parent) : this.standardCHTMLnode(parent));
+      const chtml = (this.node.isInferred ? (this.dom = parent) : this.standardCHTMLnode(parent));
       let hasNegative = false;
       for (const child of this.childNodes) {
         child.toCHTML(chtml);

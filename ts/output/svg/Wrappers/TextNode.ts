@@ -100,11 +100,11 @@ export const SVGTextNode = (function <N, T, D>(): SVGTextNodeClass<N, T, D> {
       const variant = this.parent.variant;
       if (text.length === 0) return;
       if (variant === '-explicitFont') {
-        this.element = this.adaptor.append(parent, this.jax.unknownText(text, variant)) as N;
+        this.dom = this.adaptor.append(parent, this.jax.unknownText(text, variant)) as N;
       } else {
         const chars = this.remappedText(text, variant);
         if (this.parent.childNodes.length > 1) {
-          parent = this.element = this.adaptor.append(parent, this.svg('g', {'data-mml-node': 'text'})) as N;
+          parent = this.dom = this.adaptor.append(parent, this.svg('g', {'data-mml-node': 'text'})) as N;
         }
         let x = 0;
         for (const n of chars) {

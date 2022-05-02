@@ -198,7 +198,7 @@ export const SVGMo = (function <N, T, D>(): SVGMoClass<N, T, D> {
      * @return {number}          The width of the character placed
      */
     protected addGlyph(n: number, variant: string, x: number, y: number, parent: N = null): number {
-      return this.placeChar(n, x, y, parent || this.element, variant);
+      return this.placeChar(n, x, y, parent || this.dom, variant);
     }
 
     /***********************************************************/
@@ -246,7 +246,7 @@ export const SVGMo = (function <N, T, D>(): SVGMoClass<N, T, D> {
       this.addGlyph(n, v, 0, 0, svg);
       const glyph = adaptor.lastChild(svg);
       adaptor.setAttribute(glyph as N, 'transform', `scale(1,${this.jax.fixed(s)})`);
-      adaptor.append(this.element, svg);
+      adaptor.append(this.dom, svg);
     }
 
     /**
@@ -315,7 +315,7 @@ export const SVGMo = (function <N, T, D>(): SVGMoClass<N, T, D> {
       this.addGlyph(n, v, 0, 0, svg);
       const glyph = adaptor.lastChild(svg);
       adaptor.setAttribute(glyph as N, 'transform', 'scale(' + this.jax.fixed(s) + ',1)');
-      adaptor.append(this.element, svg);
+      adaptor.append(this.dom, svg);
     }
 
     /**

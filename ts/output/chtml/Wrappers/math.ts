@@ -146,10 +146,10 @@ export const CHTMLMath = (function <N, T, D>(): CHTMLMathClass<N, T, D> {
           }
           const W = this.em(Math.max(0, L + w + R));
           adaptor.setStyle(parent, 'min-width', W);
-          adaptor.setStyle(this.jax.table.chtml, 'min-width', W);
+          adaptor.setStyle(this.jax.table.dom, 'min-width', W);
         }
       } else {
-        this.setIndent(this.chtml, align, shift);
+        this.setIndent(this.dom, align, shift);
       }
     }
 
@@ -161,9 +161,9 @@ export const CHTMLMath = (function <N, T, D>(): CHTMLMathClass<N, T, D> {
       // Transfer right margin to container (for things like $x\hskip -2em y$)
       //
       const adaptor = this.adaptor;
-      const margin = adaptor.getStyle(this.chtml, 'margin-right');
+      const margin = adaptor.getStyle(this.dom, 'margin-right');
       if (margin) {
-        adaptor.setStyle(this.chtml, 'margin-right', '');
+        adaptor.setStyle(this.dom, 'margin-right', '');
         adaptor.setStyle(parent, 'margin-right', margin);
         adaptor.setStyle(parent, 'width', '0');
       }
@@ -176,7 +176,7 @@ export const CHTMLMath = (function <N, T, D>(): CHTMLMathClass<N, T, D> {
      */
     public toCHTML(parent: N) {
       super.toCHTML(parent);
-      const chtml = this.chtml;
+      const chtml = this.dom;
       const adaptor = this.adaptor;
       const display = (this.node.attributes.get('display') === 'block');
       if (display) {

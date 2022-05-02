@@ -187,7 +187,7 @@ export const CHTMLXmlNode = (function <N, T, D>(): CHTMLWrapperClass<N, T, D> {
      * @override
      */
     public toCHTML(parent: N) {
-      this.chtml = this.adaptor.append(parent, this.adaptor.clone((this.node as XMLNode).getXML() as N)) as N;
+      this.dom = this.adaptor.append(parent, this.adaptor.clone((this.node as XMLNode).getXML() as N)) as N;
     }
 
     /**

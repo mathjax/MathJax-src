@@ -88,7 +88,7 @@ export const SVGMrow = (function <N, T, D>(): SVGMrowClass<N, T, D> {
      * @override
      */
     public toSVG(parent: N) {
-      const svg = (this.node.isInferred ? (this.element = parent) : this.standardSVGnode(parent));
+      const svg = (this.node.isInferred ? (this.dom = parent) : this.standardSVGnode(parent));
       this.addChildren(svg);
       // FIXME:  handle line breaks
     }

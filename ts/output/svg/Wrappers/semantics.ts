@@ -189,7 +189,7 @@ export const SVGXmlNode = (function <N, T, D>(): SVGWrapperClass<N, T, D> {
       const em = this.jax.math.metrics.em * this.jax.math.metrics.scale;
       const scale = this.fixed(1 / em);
       const {w, h, d} = this.getBBox();
-      this.element = this.adaptor.append(parent, this.svg('foreignObject', {
+      this.dom = this.adaptor.append(parent, this.svg('foreignObject', {
         'data-mjx-xml': true,
         y: this.jax.fixed(-h * em) + 'px',
         width: this.jax.fixed(w * em) + 'px',

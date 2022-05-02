@@ -75,11 +75,6 @@ export class SVGWrapper<N, T, D> extends CommonWrapper<
    */
   public static borderFuzz = 0.005;
 
-  /*
-   * The SVG element generated for this wrapped node
-   */
-  public element: N = null;
-
   /**
    * Offset due to border/padding
    */
@@ -109,7 +104,7 @@ export class SVGWrapper<N, T, D> extends CommonWrapper<
     for (const child of this.childNodes) {
       child.toSVG(parent);
       const bbox = child.getOuterBBox();
-      if (child.element) {
+      if (child.dom) {
         child.place(x + bbox.L * bbox.rscale, 0);
       }
       x += (bbox.L + bbox.w + bbox.R) * bbox.rscale;
@@ -139,18 +134,18 @@ export class SVGWrapper<N, T, D> extends CommonWrapper<
    * @returns {N}  The root of the HTML tree for the wrapped node's output
    */
   protected createSVGnode(parent: N): N {
-    this.element = this.svg('g', {'data-mml-node': this.node.kind});
+    this.dom = this.svg('g', {'data-mml-node': this.node.kind});
     const href = this.node.attributes.get('href');
     if (href) {
       parent = this.adaptor.append(parent, this.svg('a', {href: href})) as N;
       const {h, d, w} = this.getOuterBBox();
-      this.adaptor.append(this.element, this.svg('rect', {
+      this.adaptor.append(this.dom, this.svg('rect', {
         'data-hitbox': true, fill: 'none', stroke: 'none', 'pointer-events': 'all',
         width: this.fixed(w), height: this.fixed(h + d), y: this.fixed(-d)
       }));
     }
-    this.adaptor.append(parent, this.element) as N;
-    return this.element;
+    this.adaptor.append(parent, this.dom) as N;
+    return this.dom;
   }
 
   /**
@@ -160,7 +155,7 @@ export class SVGWrapper<N, T, D> extends CommonWrapper<
     if (!this.styles) return;
     const styles = this.styles.cssText;
     if (styles) {
-      this.adaptor.setAttribute(this.element, 'style', styles);
+      this.adaptor.setAttribute(this.dom, 'style', styles);
     }
     BBox.StyleAdjust.forEach(([name, , lr]) => {
       if (lr !== 0) return;
@@ -177,7 +172,7 @@ export class SVGWrapper<N, T, D> extends CommonWrapper<
   protected handleScale() {
     if (this.bbox.rscale !== 1) {
       const scale = 'scale(' + this.fixed(this.bbox.rscale / 1000, 3) + ')';
-      this.adaptor.setAttribute(this.element, 'transform', scale);
+      this.adaptor.setAttribute(this.dom, 'transform', scale);
     }
   }
 
@@ -195,8 +190,8 @@ export class SVGWrapper<N, T, D> extends CommonWrapper<
     const background = attributes.getExplicit('background') as string;
     const bgcolor = (this.styles?.get('background-color') || '');
     if (mathcolor || color) {
-      adaptor.setAttribute(this.element, 'fill', mathcolor || color);
-      adaptor.setAttribute(this.element, 'stroke', mathcolor || color);
+      adaptor.setAttribute(this.dom, 'fill', mathcolor || color);
+      adaptor.setAttribute(this.dom, 'stroke', mathcolor || color);
     }
     if (mathbackground || background || bgcolor) {
       let {h, d, w} = this.getOuterBBox();
@@ -207,11 +202,11 @@ export class SVGWrapper<N, T, D> extends CommonWrapper<
         height: this.fixed(h + d),
         'data-bgcolor': true
       });
-      let child = adaptor.firstChild(this.element);
+      let child = adaptor.firstChild(this.dom);
       if (child) {
         adaptor.insert(rect, child);
       } else {
-        adaptor.append(this.element, rect);
+        adaptor.append(this.dom, rect);
       }
     }
   }
@@ -250,7 +245,7 @@ export class SVGWrapper<N, T, D> extends CommonWrapper<
       [outerLB, outerLT, innerLT, innerLB]
     ];
     const adaptor = this.adaptor;
-    const child = adaptor.firstChild(this.element) as N;
+    const child = adaptor.firstChild(this.dom) as N;
     for (const i of [0, 1, 2, 3]) {
       if (!width[i]) continue;
       const path = paths[i];
@@ -278,7 +273,7 @@ export class SVGWrapper<N, T, D> extends CommonWrapper<
     if (child) {
       this.adaptor.insert(border, child);
     } else {
-      this.adaptor.append(this.element, border);
+      this.adaptor.append(this.dom, border);
     }
   }
 
@@ -308,11 +303,11 @@ export class SVGWrapper<N, T, D> extends CommonWrapper<
       'stroke-dasharray': dot ? [1, this.fixed(W / n - .002)].join(' ') : [this.fixed(m), this.fixed(3 * m)].join(' ')
     });
     const adaptor = this.adaptor;
-    const child = adaptor.firstChild(this.element);
+    const child = adaptor.firstChild(this.dom);
     if (child) {
       adaptor.insert(line, child);
     } else {
-      adaptor.append(this.element, line);
+      adaptor.append(this.dom, line);
     }
   }
 
@@ -329,14 +324,14 @@ export class SVGWrapper<N, T, D> extends CommonWrapper<
     const skip = SVGWrapper.skipAttributes;
     for (const name of attributes.getExplicitNames()) {
       if (skip[name] === false || (!(name in defaults) && !skip[name] &&
-                                   !this.adaptor.hasAttribute(this.element, name))) {
-        this.adaptor.setAttribute(this.element, name, attributes.getExplicit(name) as string);
+                                   !this.adaptor.hasAttribute(this.dom, name))) {
+        this.adaptor.setAttribute(this.dom, name, attributes.getExplicit(name) as string);
       }
     }
     if (attributes.get('class')) {
       const names = (attributes.get('class') as string).trim().split(/ +/);
       for (const name of names) {
-        this.adaptor.addClass(this.element, name);
+        this.adaptor.addClass(this.dom, name);
       }
     }
   }
@@ -352,7 +347,7 @@ export class SVGWrapper<N, T, D> extends CommonWrapper<
     x += this.dx;
     if (!(x || y)) return;
     if (!element) {
-      element = this.element;
+      element = this.dom;
       y = this.handleId(y);
     }
     const translate = `translate(${this.fixed(x)},${this.fixed(y)})`;
@@ -379,14 +374,14 @@ export class SVGWrapper<N, T, D> extends CommonWrapper<
     //
     //  Remove the element's children and put them into a <g> with transform
     //
-    const children =  adaptor.childNodes(this.element);
+    const children =  adaptor.childNodes(this.dom);
     children.forEach(child => adaptor.remove(child));
     const g = this.svg('g', {'data-idbox': true, transform: `translate(0,${this.fixed(-h)})`}, children);
     //
     //  Add the text element (not transformed) and the transformed <g>
     //
-    adaptor.append(this.element, this.svg('text', {'data-id-align': true} , [this.text('')]));
-    adaptor.append(this.element, g);
+    adaptor.append(this.dom, this.svg('text', {'data-id-align': true} , [this.text('')]));
+    adaptor.append(this.dom, g);
     return y + h;
   }
 
@@ -397,7 +392,7 @@ export class SVGWrapper<N, T, D> extends CommonWrapper<
    */
   public firstChild(): N {
     const adaptor = this.adaptor;
-    let child = adaptor.firstChild(this.element);
+    let child = adaptor.firstChild(this.dom);
     if (child && adaptor.kind(child) === 'text' && adaptor.getAttribute(child as N, 'data-id-align')) {
       child = adaptor.firstChild(adaptor.next(child) as N);
     }
@@ -495,7 +490,7 @@ export class SVGWrapper<N, T, D> extends CommonWrapper<
         y: this.fixed(-d)
       })
     ] as N[]);
-    const node = this.element || this.parent.element;
+    const node = this.dom || this.parent.dom;
     this.adaptor.append(node, box);
   }
 

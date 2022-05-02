@@ -151,7 +151,7 @@ export const CHTMLMaction = (function <N, T, D>(): CHTMLMactionClass<N, T, D> {
         //
         // Mark which child is selected
         //
-        node.adaptor.setAttribute(node.chtml, 'toggle', node.node.attributes.get('selection') as string);
+        node.adaptor.setAttribute(node.dom, 'toggle', node.node.attributes.get('selection') as string);
         //
         // Cache the data needed to select another node
         //
@@ -184,13 +184,13 @@ export const CHTMLMaction = (function <N, T, D>(): CHTMLMactionClass<N, T, D> {
           // Text tooltips are handled through title attributes
           //
           const text = (tip.node as TextNode).getText();
-          node.adaptor.setAttribute(node.chtml, 'title', text);
+          node.adaptor.setAttribute(node.dom, 'title', text);
         } else {
           //
           // Math tooltips are handled through hidden nodes and event handlers
           //
           const adaptor = node.adaptor;
-          const tool = adaptor.append(node.chtml, node.html('mjx-tool', {
+          const tool = adaptor.append(node.dom, node.html('mjx-tool', {
             style: {bottom: node.Em(-node.dy), right: node.Em(-node.dx)}
           }, [node.html('mjx-tip')])) as N;
           tip.toCHTML(adaptor.firstChild(tool) as N);
@@ -218,7 +218,7 @@ export const CHTMLMaction = (function <N, T, D>(): CHTMLMactionClass<N, T, D> {
         if (tip.node.isKind('mtext')) {
           const adaptor = node.adaptor;
           const text = (tip.node as TextNode).getText();
-          adaptor.setAttribute(node.chtml, 'statusline', text);
+          adaptor.setAttribute(node.dom, 'statusline', text);
           //
           // Set up event handlers to change the status window
           //
@@ -252,7 +252,7 @@ export const CHTMLMaction = (function <N, T, D>(): CHTMLMactionClass<N, T, D> {
      * @override
      */
     public setEventHandler(type: string, handler: EventHandler) {
-      (this.chtml as any).addEventListener(type, handler);
+      (this.dom as any).addEventListener(type, handler);
     }
 
     /**

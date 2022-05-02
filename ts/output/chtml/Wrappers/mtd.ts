@@ -146,19 +146,19 @@ export const CHTMLMtd = (function <N, T, D>(): CHTMLMtdClass<N, T, D> {
       const calign = this.node.attributes.get('columnalign') as string;
       const palign = this.parent.node.attributes.get('rowalign') as string;
       if (ralign !== palign) {
-        this.adaptor.setAttribute(this.chtml, 'rowalign', ralign);
+        this.adaptor.setAttribute(this.dom, 'rowalign', ralign);
       }
       if (calign !== 'center' &&
           (this.parent.kind !== 'mlabeledtr' || this !== this.parent.childNodes[0] ||
            calign !== this.parent.parent.node.attributes.get('side'))) {
-        this.adaptor.setStyle(this.chtml, 'textAlign', calign);
+        this.adaptor.setStyle(this.dom, 'textAlign', calign);
       }
       //
       // If we are using minimum row heights,
       //   Include a strut to force minimum height and depth
       //
       if (this.parent.parent.node.getProperty('useHeight')) {
-        this.adaptor.append(this.chtml, this.html('mjx-tstrut'));
+        this.adaptor.append(this.dom, this.html('mjx-tstrut'));
       }
     }
 

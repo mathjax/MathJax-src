@@ -286,6 +286,11 @@ export class CommonWrapper<
   public childNodes: WW[];
 
   /**
+   * The DOM tree generated for this wrapper
+   */
+  public dom: N = null;
+
+  /**
    * Styles that must be handled directly by the wrappers (mostly having to do with fonts)
    */
   protected removedStyles: StringMap = null;

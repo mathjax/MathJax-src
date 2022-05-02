@@ -237,7 +237,7 @@ export const CHTMLMfrac = (function <N, T, D>(): CHTMLMfracClass<N, T, D> {
       // Create the DOM tree
       //
       let num, den;
-      this.adaptor.append(this.chtml, this.html('mjx-frac', fattr, [
+      this.adaptor.append(this.dom, this.html('mjx-frac', fattr, [
         num = this.html('mjx-num', nattr, [this.html('mjx-nstrut', nsattr)]),
         this.html('mjx-dbox', {}, [
           this.html('mjx-dtable', {}, [
@@ -277,7 +277,7 @@ export const CHTMLMfrac = (function <N, T, D>(): CHTMLMfracClass<N, T, D> {
       // Create the DOM tree
       //
       let num, den;
-      this.adaptor.append(this.chtml, this.html('mjx-frac', fattr, [
+      this.adaptor.append(this.dom, this.html('mjx-frac', fattr, [
         num = this.html('mjx-num', nattr),
         den = this.html('mjx-den', dattr)
       ]));
@@ -295,11 +295,11 @@ export const CHTMLMfrac = (function <N, T, D>(): CHTMLMfracClass<N, T, D> {
       //
       //  Create HTML tree
       //
-      adaptor.setAttribute(this.chtml, 'bevelled', 'ture');
-      const num = adaptor.append(this.chtml, this.html('mjx-num')) as N;
+      adaptor.setAttribute(this.dom, 'bevelled', 'ture');
+      const num = adaptor.append(this.dom, this.html('mjx-num')) as N;
       this.childNodes[0].toCHTML(num);
-      this.bevel.toCHTML(this.chtml);
-      const den = adaptor.append(this.chtml, this.html('mjx-den')) as N;
+      this.bevel.toCHTML(this.dom);
+      const den = adaptor.append(this.dom, this.html('mjx-den')) as N;
       this.childNodes[1].toCHTML(den);
       //
       //  Place the parts
@@ -312,8 +312,8 @@ export const CHTMLMfrac = (function <N, T, D>(): CHTMLMfracClass<N, T, D> {
         adaptor.setStyle(den, 'verticalAlign', this.em(v / dbox.scale));
       }
       const dx = this.em(-delta / 2);
-      adaptor.setStyle(this.bevel.chtml, 'marginLeft', dx);
-      adaptor.setStyle(this.bevel.chtml, 'marginRight', dx);
+      adaptor.setStyle(this.bevel.dom, 'marginLeft', dx);
+      adaptor.setStyle(this.bevel.dom, 'marginRight', dx);
     }
 
   };

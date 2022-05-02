@@ -115,16 +115,16 @@ export const CHTMLMunder = (function <N, T, D>(): CHTMLMunderClass<N, T, D> {
     public toCHTML(parent: N) {
       if (this.hasMovableLimits()) {
         super.toCHTML(parent);
-        this.adaptor.setAttribute(this.chtml, 'limits', 'false');
+        this.adaptor.setAttribute(this.dom, 'limits', 'false');
         return;
       }
-      this.chtml = this.standardCHTMLnode(parent);
+      this.dom = this.standardCHTMLnode(parent);
       const base = this.adaptor.append(
-        this.adaptor.append(this.chtml, this.html('mjx-row')) as N,
+        this.adaptor.append(this.dom, this.html('mjx-row')) as N,
         this.html('mjx-base')
       ) as N;
       const under = this.adaptor.append(
-        this.adaptor.append(this.chtml, this.html('mjx-row')) as N,
+        this.adaptor.append(this.dom, this.html('mjx-row')) as N,
         this.html('mjx-under')
       ) as N;
       this.baseChild.toCHTML(base);
@@ -218,12 +218,12 @@ export const CHTMLMover = (function <N, T, D>(): CHTMLMoverClass<N, T, D> {
     public toCHTML(parent: N) {
       if (this.hasMovableLimits()) {
         super.toCHTML(parent);
-        this.adaptor.setAttribute(this.chtml, 'limits', 'false');
+        this.adaptor.setAttribute(this.dom, 'limits', 'false');
         return;
       }
-      this.chtml = this.standardCHTMLnode(parent);
-      const over = this.adaptor.append(this.chtml, this.html('mjx-over')) as N;
-      const base = this.adaptor.append(this.chtml, this.html('mjx-base')) as N;
+      this.dom = this.standardCHTMLnode(parent);
+      const over = this.adaptor.append(this.dom, this.html('mjx-over')) as N;
+      const base = this.adaptor.append(this.dom, this.html('mjx-base')) as N;
       this.scriptChild.toCHTML(over);
       this.baseChild.toCHTML(base);
       const overbox = this.scriptChild.getOuterBBox();
@@ -314,13 +314,13 @@ export const CHTMLMunderover = (function <N, T, D>(): CHTMLMunderoverClass<N, T,
     public toCHTML(parent: N) {
       if (this.hasMovableLimits()) {
         super.toCHTML(parent);
-        this.adaptor.setAttribute(this.chtml, 'limits', 'false');
+        this.adaptor.setAttribute(this.dom, 'limits', 'false');
         return;
       }
-      this.chtml = this.standardCHTMLnode(parent);
-      const over = this.adaptor.append(this.chtml, this.html('mjx-over')) as N;
+      this.dom = this.standardCHTMLnode(parent);
+      const over = this.adaptor.append(this.dom, this.html('mjx-over')) as N;
       const table = this.adaptor.append(
-        this.adaptor.append(this.chtml, this.html('mjx-box')) as N,
+        this.adaptor.append(this.dom, this.html('mjx-box')) as N,
         this.html('mjx-munder')
       ) as N;
       const base = this.adaptor.append(
