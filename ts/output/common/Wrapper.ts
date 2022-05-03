@@ -288,7 +288,7 @@ export class CommonWrapper<
   /**
    * The DOM tree generated for this wrapper
    */
-  public dom: N[] = null;
+//  public dom: N[] = null;
 
   /**
    * Styles that must be handled directly by the wrappers (mostly having to do with fonts)

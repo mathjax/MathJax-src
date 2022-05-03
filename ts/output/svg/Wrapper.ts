@@ -77,6 +77,11 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   public static borderFuzz = 0.005;
 
   /**
+   * FIXME: temporary until CHTML linebreaking is implemented, when it goes to common wrapper again
+   */
+  public dom: N[] = null;
+
+  /**
    * Offset due to border/padding
    */
   public dx: number = 0;

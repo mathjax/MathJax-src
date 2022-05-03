@@ -111,6 +111,12 @@ CommonWrapper<
    */
   public static autoStyle = true;
 
+  /**
+   * FIXME: temporary until CHTML linebreaking is implemented
+   */
+  public dom: N = null;
+
+
   /*******************************************************************/
 
   /**

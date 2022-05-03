@@ -94,7 +94,6 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
         parents = this.standardSvgNodes(parents);
       }
       this.addChildren(parents);
-      // FIXME:  handle line breaks
     }
 
     /**
