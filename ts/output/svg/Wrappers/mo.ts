@@ -102,6 +102,11 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
         this.getStretchedVariant([]);
       }
       let svg = this.standardSvgNodes(parents);
+      if (svg.length > 1) {
+        // FIXME:  handle break before/after
+        this.adaptor.remove(svg[0]);
+        svg[0] = null;
+      }
       if (stretchy && this.size < 0) {
         this.stretchSvg();
       } else {
@@ -110,7 +115,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
         if (u !== '0' || v !== '0') {
           this.adaptor.setAttribute(svg[0], 'transform', `translate(${v} ${u})`);
         }
-        this.addChildren(svg);
+        this.addChildren([svg[1] || svg[0]]);
       }
     }
 

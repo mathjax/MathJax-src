@@ -140,24 +140,30 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @returns {N[]}  The roots of the HTML tree for the wrapped node's output
    */
   protected createSvgNodes(parents: N[]): N[] {
-    this.dom = [this.svg('g', {'data-mml-node': this.node.kind})];
-    const href = this.node.attributes.get('href');
-    if (href) {
-      let i = 0;
-      parents = parents.map(parent => {
-        parent = this.adaptor.append(parent, this.svg('a', {href: href})) as N;
-        const {h, d, w} = this.getOuterBBox();  // FIXME: use segment width if more than one
-        this.adaptor.append(this.dom[i++], this.svg('rect', {
-          'data-hitbox': true, fill: 'none', stroke: 'none', 'pointer-events': 'all',
-          width: this.fixed(w), height: this.fixed(h + d), y: this.fixed(-d)
-        }));
-        return parent;
-      });
-    }
+    this.dom = parents.map(_parent => this.svg('g', {'data-mml-node': this.node.kind})); // FIXME: add segment id
+    parents = this.handleHref(parents);
     for (const i of parents.keys()) {
       this.adaptor.append(parents[i], this.dom[i]);
     }
     return this.dom;
+  }
+
+  /**
+   * Add an anchor for hrefs and insert hot boxes into the DOM containers
+   */
+  protected handleHref(parents: N[]) {
+    const href = this.node.attributes.get('href');
+    if (!href) return parents;
+    let i = 0;
+    return parents.map(parent => {
+      parent = this.adaptor.append(parent, this.svg('a', {href: href})) as N;
+      const {h, d, w} = this.getOuterBBox();  // FIXME: use segment width if more than one
+      this.adaptor.append(this.dom[i++], this.svg('rect', {
+        'data-hitbox': true, fill: 'none', stroke: 'none', 'pointer-events': 'all',
+        width: this.fixed(w), height: this.fixed(h + d), y: this.fixed(-d)
+      }));
+      return parent;
+    });
   }
 
   /**
@@ -205,8 +211,9 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
       });
     }
     if (background) {
+      let i = 0;
       this.dom.forEach(node => {
-        const {h, d, w} = this.getOuterBBox(); // FIXME: use segment width if more than one
+        const [h, d, w] = this.getLinebreakSizes(i++);
         const rect = this.svg('rect', {
           fill: background,
           x: 0, y: this.fixed(-d),

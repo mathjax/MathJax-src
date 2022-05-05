@@ -128,6 +128,13 @@ export function CommonMathMixin<
       return (this.parent ? this.getBBox().w : this.metrics.containerWidth / this.jax.pxPerEm);
     }
 
+    /**
+     * @override
+     */
+    get breakScale() {
+      return false;
+    }
+
   } as any as B;
 
 }

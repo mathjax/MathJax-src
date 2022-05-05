@@ -411,9 +411,6 @@ export function CommonMoMixin<
      * @override
      */
     public computeBBox(bbox: BBox, _recompute: boolean = false) {
-      if (this.node.attributes.get('linebreak') === 'newline') {
-        this.jax.math.outputData.forcedLinebreak = true;
-      }
       this.protoBBox(bbox);
       if (this.node.attributes.get('symmetric') &&
           this.stretch.dir !== DIRECTION.Horizontal) {
@@ -425,6 +422,17 @@ export function CommonMoMixin<
           (this.stretch.dir === DIRECTION.None || this.size >= 0)) {
         bbox.w = 0;
       }
+    }
+
+    /**
+     * @override
+     */
+    public getLinebreakSizes(i: number): [number, number, number] {
+      if (!this.breakCount) return super.getLinebreakSizes(i);
+      if (i === 0) return [0, 0, 0];
+      const {h, d, w, R, rscale} = this.getOuterBBox();
+      this.bbox.L = 0;
+      return [h * rscale, d * rscale, (w + R) * rscale];
     }
 
     /**

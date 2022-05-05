@@ -361,6 +361,13 @@ export class CommonWrapper<
     return (node.arity < 0 && !node.linebreakContainer ? this.childNodes[0].breakCount : 0);
   }
 
+  /**
+   * True if linebreakSizes should be scaled (false for math)
+   */
+  get breakScale(): boolean {
+    return true;
+  }
+
   /*******************************************************************/
 
   /**
@@ -449,6 +456,21 @@ export class CommonWrapper<
     if (this.fixesPWidth && this.setChildPWidths(recompute)) {
       this.computeBBox(bbox, true);
     }
+  }
+
+  /**
+   * @param {number} i                    The number of the segment whose sizes are to be obtained
+   * @return {[number, number, number]}   The height, depth, and width of the specified segment
+   */
+  public getLinebreakSizes(i: number): [number, number, number] {
+    const {h, d, w, L, R, rscale} = this.getOuterBBox();
+    const scale = (this.breakScale ? rscale : 1);
+    const n = this.breakCount;
+    if (n) {
+      const [H, D, W] = this.childNodes[0].getLinebreakSizes(i);
+      return [H * scale, D * scale, (W + (i === 0 ? L : 0) + (i === n ? R : 0)) * scale];
+    }
+    return [h * scale, d * scale, (L + w + R) * scale];
   }
 
   /**
