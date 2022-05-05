@@ -84,6 +84,10 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
      */
     public static kind = MmlMrow.prototype.kind;
 
+    /**
+     * If this is an mrow inside a linebreakContainer, this gives the number
+     *   of breaks, otherwise it is 0
+     */
     protected linebreakCount: number = 0;
 
     /**
@@ -99,8 +103,8 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
         let y = 0;
         for (const i of parents.keys()) {
           this.place(0, y, parents[i]);
-          y -= Math.max(.25, this.linebreakSizes?.[i]?.[1] || 0) + .1 +
-               Math.max(.75, this.linebreakSizes?.[i + 1]?.[0] || 0);
+          y -= Math.max(.25, this.linebreakSizes[i]?.d || 0) + .1 +
+               Math.max(.75, this.linebreakSizes[i + 1]?.h || 0);
         }
       }
     }
@@ -110,14 +114,26 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
      */
     protected createSvgNodes(parents: N[]): N[] {
       if (!this.linebreakCount) return super.createSvgNodes(parents);
+      //
+      // Create a linestack/mrow node for the lines
+      //
       const adaptor = this.adaptor;
       const def = (this.node.isInferred ? {'data-mjx-linestack': true} : {'data-mml-node': this.node.kind});
       this.dom = [adaptor.append(parents[0], this.svg('g', def)) as N];
+      //
+      // Add an href anchor, if needed, and insert the linestack/mrow
+      //
+      this.dom = [adaptor.append(this.handleHref(parents)[0], this.dom[0]) as N];
+      //
+      //  Add the line boxes
+      //
       const svg = Array(this.linebreakCount) as N[];
       for (let i = 0; i <= this.linebreakCount; i++) {
         svg[i] = adaptor.append(this.dom[0], this.svg('g', {'data-mjx-linebox': true, 'data-mjx-lineno': i})) as N;
       }
-      this.handleHref(parents);
+      //
+      //  Return the line boxes as the parent nodes for their contents
+      //
       return svg;
     }
 
@@ -130,19 +146,23 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
       for (const child of this.childNodes) {
         const n = child.breakCount;
         child.toSVG(parents.slice(i, i + n + 1));
-        const bbox = child.getOuterBBox();
-        let dx = bbox.L * bbox.rscale;
         if (child.dom) {
+          let k = 0;
           for (const dom of child.dom) {
             if (dom) {
-              this.place(x + dx, 0, dom);
-              dx = 0;
+              const cbox = child.getLinebreakSizes(k++);
+              x += (cbox.L + child.dx) * cbox.rscale;
+              this.place(x, 0, dom);
+              x += (cbox.w + cbox.R - child.dx) * cbox.rscale;
             }
             if (n) {
               x = 0; // FIXME:  handle shift/align
             }
           }
-          x += child.getLinebreakSizes(n)[2];
+          if (n) {
+            const cbox = child.getLinebreakSizes(n);
+            x += (cbox.w + cbox.R) * cbox.rscale;
+          }
         }
         i += n;
       }

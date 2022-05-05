@@ -427,12 +427,10 @@ export function CommonMoMixin<
     /**
      * @override
      */
-    public getLinebreakSizes(i: number): [number, number, number] {
+    public getLinebreakSizes(i: number): BBox {
       if (!this.breakCount) return super.getLinebreakSizes(i);
-      if (i === 0) return [0, 0, 0];
-      const {h, d, w, R, rscale} = this.getOuterBBox();
       this.bbox.L = 0;
-      return [h * rscale, d * rscale, (w + R) * rscale];
+      return (i === 0 ? BBox.zero() : this.getOuterBBox());
     }
 
     /**

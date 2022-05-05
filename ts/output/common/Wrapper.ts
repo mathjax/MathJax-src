@@ -459,10 +459,12 @@ export class CommonWrapper<
   }
 
   /**
-   * @param {number} i                    The number of the segment whose sizes are to be obtained
-   * @return {[number, number, number]}   The height, depth, and width of the specified segment
+   * @param {number} i   The number of the segment whose sizes are to be obtained
+   * @return {BBox}      The bounding box of the specified segment
    */
-  public getLinebreakSizes(i: number): [number, number, number] {
+  public getLinebreakSizes(i: number): BBox {
+    return (this.breakCount ? this.childNodes[0].getLinebreakSizes(i) : this.getOuterBBox());
+/*
     const {h, d, w, L, R, rscale} = this.getOuterBBox();
     const scale = (this.breakScale ? rscale : 1);
     const n = this.breakCount;
@@ -471,6 +473,7 @@ export class CommonWrapper<
       return [H * scale, D * scale, (W + (i === 0 ? L : 0) + (i === n ? R : 0)) * scale];
     }
     return [h * scale, d * scale, (L + w + R) * scale];
+*/
   }
 
   /**

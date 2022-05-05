@@ -157,7 +157,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     let i = 0;
     return parents.map(parent => {
       parent = this.adaptor.append(parent, this.svg('a', {href: href})) as N;
-      const {h, d, w} = this.getOuterBBox();  // FIXME: use segment width if more than one
+      const {h, d, w} = this.getLinebreakSizes(i);
       this.adaptor.append(this.dom[i++], this.svg('rect', {
         'data-hitbox': true, fill: 'none', stroke: 'none', 'pointer-events': 'all',
         width: this.fixed(w), height: this.fixed(h + d), y: this.fixed(-d)
@@ -203,7 +203,9 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     const adaptor = this.adaptor;
     const attributes = this.node.attributes;
     const color = (attributes.getExplicit('mathcolor') || attributes.getExplicit('color')) as string;
-    const background = (attributes.getExplicit('mathbackground') || attributes.getExplicit('background')) as string;
+    const background = (attributes.getExplicit('mathbackground') ||
+                        attributes.getExplicit('background') ||
+                        this.styles?.get('background-color')) as string;
     if (color) {
       this.dom.forEach(node => {
         adaptor.setAttribute(node, 'fill', color);
@@ -213,7 +215,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     if (background) {
       let i = 0;
       this.dom.forEach(node => {
-        const [h, d, w] = this.getLinebreakSizes(i++);
+        const {h, d, w} = this.getLinebreakSizes(i++);
         const rect = this.svg('rect', {
           fill: background,
           x: 0, y: this.fixed(-d),
@@ -343,18 +345,19 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * Add the class to any other classes already in use.
    */
   protected handleAttributes() {
+    const adaptor = this.adaptor;
     const attributes = this.node.attributes;
     const defaults = attributes.getAllDefaults();
     const skip = SvgWrapper.skipAttributes;
     for (const name of attributes.getExplicitNames()) {
       if (skip[name] === false || (!(name in defaults) && !skip[name] &&
-                                   !this.adaptor.hasAttribute(this.dom[0], name))) {
-        this.dom.forEach(node => this.adaptor.setAttribute(node, name, attributes.getExplicit(name) as string));
+                                   !adaptor.hasAttribute(this.dom[0], name))) {
+        this.dom.forEach(node => adaptor.setAttribute(node, name, attributes.getExplicit(name) as string));
       }
     }
     if (attributes.get('class')) {
       for (const name of split(attributes.get('class') as string)) {
-        this.dom.forEach(node => this.adaptor.addClass(node, name));
+        this.dom.forEach(node => adaptor.addClass(node, name));
       }
     }
   }
@@ -367,7 +370,9 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {N} element  The element to be placed
    */
   public place(x: number, y: number, element: N = null) {
-    x += this.dx;
+    if (!element) {
+      x += this.dx;
+    }
     if (!(x || y)) return;
     if (!element) {
       element = this.dom[0];   // FIXME:  DOM tree

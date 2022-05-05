@@ -60,9 +60,9 @@ export interface CommonMrow<
 > extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
 
   /**
-   * Sizes of lines into which mrow is broken as [h, d, w][]
+   * Sizes of lines into which mrow is broken
    */
-  linebreakSizes: [number, number, number][];
+  linebreakSizes: BBox[];
 
   /**
    * Handle vertical stretching of children to match height of
@@ -140,7 +140,7 @@ export function CommonMrowMixin<
     /**
      * @override
      */
-    public linebreakSizes: [number, number, number][];
+    public linebreakSizes: BBox[];
 
     /**
      * @override
@@ -221,7 +221,7 @@ export function CommonMrowMixin<
      */
     protected computeBBox(bbox: BBox, recompute: boolean = false) {
       const breaks = this.breakCount;
-      this.linebreakSizes = (breaks ? [[.75, .25, this.bbox.L]] : null);
+      this.linebreakSizes = (breaks ? [new BBox({h: .75, d: .25, w: this.bbox.L})] : null);
       bbox.empty();
       for (const child of this.childNodes) {
         bbox.append(child.getOuterBBox());
@@ -240,60 +240,39 @@ export function CommonMrowMixin<
      * @param {BBox} bbox   The bbox to be adjusted
      */
     protected computeLinebreakBBox(bbox: BBox) {
-      const sep = .1 * this.bbox.rscale;
-      const n = this.linebreakSizes.length - 1;
-      bbox.w = 0;
-      bbox.h = this.linebreakSizes[0][0];
-      bbox.d = this.linebreakSizes[n][1];
-      for (let i = 0; i < n; i++) {
-        const [ , d, w] = this.linebreakSizes[i];
-        const h = this.linebreakSizes[i + 1][0];
-        bbox.d += d + sep + h;
-        if (w > bbox.w) {
-          bbox.w = w;
-        }
+      bbox.empty();
+      const lines = this.linebreakSizes;
+      const n = lines.length - 1;
+      let y = lines[0].h + .1;  // start just above the first line
+      lines[0].w += this.bbox.L;
+      lines[n].w += this.bbox.R;
+      for (const line of lines) {
+        bbox.combine(line, 0, y - .1 - line.h);
+        y = -bbox.d;
       }
-      if (this.linebreakSizes[n][2] > bbox.w) {
-        bbox.w = this.linebreakSizes[n][2];
-      }
-      this.linebreakSizes[n][2] += this.bbox.R;
+      bbox.clean();
     }
 
     /**
      * @param {WW} child   The child whose linebreak sizes should be added to those of the mrow
      */
     protected computeLinebreakSizes(child: WW) {
-      this.addToLinebreaks(this.linebreakSizes[this.linebreakSizes.length - 1], child.getLinebreakSizes(0));
+      this.linebreakSizes[this.linebreakSizes.length - 1].append(child.getLinebreakSizes(0));
       const parts = child.breakCount + 1;
       if (parts === 1) return;
       for (let i = 1; i < parts; i++) {
-        const HDW = [.75, .25, 0] as [number, number, number];
-        this.addToLinebreaks(HDW, child.getLinebreakSizes(i));
-        this.linebreakSizes.push(HDW);
+        const bbox = new BBox({h: .75, d: .25, w: 0});
+        bbox.append(child.getLinebreakSizes(i));
+        this.linebreakSizes.push(bbox);
       }
-    }
-
-    /**
-     * @param {[number, number, number]} HDW    The sizes to augment by the child segment size
-     * @param {[number, number, number]} hdw    The child segment size to add into HDW
-     */
-    protected addToLinebreaks(HDW: [number, number, number], hdw: [number, number, number]) {
-      if (hdw[0] > HDW[0]) {
-        HDW[0] = hdw[0];
-      }
-      if (hdw[1] > HDW[1]) {
-        HDW[1] = hdw[1];
-      }
-      HDW[2] += hdw[2];
     }
 
     /**
      * @override
      */
-    public getLinebreakSizes(i: number): [number, number, number] {
-      const rscale = this.bbox.rscale;
-      const [h, d, w] = (this.linebreakSizes ? this.linebreakSizes[i] : super.getLinebreakSizes(i));
-      return [h * rscale, d * rscale, w * rscale];
+    public getLinebreakSizes(i: number): BBox {
+      return (this.dom?.length === 1 ? this.getOuterBBox() :
+              this.linebreakSizes ? this.linebreakSizes[i] : super.getLinebreakSizes(i));
     }
 
   } as any as B;
