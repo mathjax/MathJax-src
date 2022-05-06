@@ -5,8 +5,8 @@ import {Package} from '../../../../js/components/package.js';
 if (MathJax.startup) {
 
   // Combine path with user defined path and resolve it wrt. MathJax path.
-  combineDefaults(MathJax.config.loader, 'paths', {sre: '[mathjax]/sre'});
-  let path = Package.resolvePath('[sre]', false) + '/mathmaps';
+  combineDefaults(MathJax.config.loader, 'paths', {});
+  let path = Package.resolvePath('[sre]', false);
 
   if (typeof window !== 'undefined') {
     window.SREfeature = {json: path};
@@ -19,4 +19,3 @@ if (MathJax.startup) {
     global.SREfeature = {json: path};
   }
 }
-

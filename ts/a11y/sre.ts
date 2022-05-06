@@ -78,6 +78,18 @@ export namespace Sre {
 
 }
 
+/**
+ * A promise that resolves when SRE is loaded and ready, and rejects if
+ * SRE can't be loaded, or does not become ready within the timout period.
+ *
+ * @deprecated
+ */
+export const sreReady = function() {
+  return new Promise<void>((resolve, reject) =>
+    Sre.sreReady().then(() => resolve())
+      .catch((error: Error) => reject(error.message || error)));
+};
+
 // Setting delay stops SRE from setting itself up (and loading locales) when it
 // is not actually being used. As we are not yet sure in which environment we
 // are (browser, node) we can not use a configuration vector.

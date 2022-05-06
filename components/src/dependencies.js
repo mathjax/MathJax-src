@@ -58,7 +58,7 @@ export const dependencies = {
 export const paths = {
   tex: '[mathjax]/input/tex/extensions',
   mml: '[mathjax]/input/mml/extensions',
-  sre: '[mathjax]/sre'
+  sre: '[mathjax]/sre/mathmaps'
 };
 
 const allPackages = Array.from(Object.keys(dependencies))

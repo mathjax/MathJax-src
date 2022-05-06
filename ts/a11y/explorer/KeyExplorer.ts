@@ -223,18 +223,15 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     let options = this.getOptions();
     if (!this.init) {
       this.init = true;
-      SpeechExplorer.updatePromise.then(() => {
-        SpeechExplorer.updatePromise = new Promise((res) => {
-          Sre.sreReady()
-            .then(() => Sre.setupEngine({locale: options.locale}))
-            .then(() => {
-              // Important that both are in the same block so speech explorers
-              // are restarted sequentially.
-              this.Speech(this.walker);
-              this.Start();
-            })
-            .then(() => res());
-        });
+      SpeechExplorer.updatePromise = SpeechExplorer.updatePromise.then(async () => {
+        return Sre.sreReady()
+          .then(() => Sre.setupEngine({locale: options.locale}))
+          .then(() => {
+            // Important that both are in the same block so speech explorers
+            // are restarted sequentially.
+            this.Speech(this.walker);
+            this.Start();
+          });
       })
         .catch((error: Error) => console.log(error.message));
       return;
@@ -260,22 +257,19 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
   public Update(force: boolean = false) {
     super.Update(force);
     let options = this.speechGenerator.getOptions();
-    SpeechExplorer.updatePromise.then(() => {
-      SpeechExplorer.updatePromise = new Promise((res) => {
-        Sre.sreReady()
-          .then(() => Sre.setupEngine({modality: options.modality,
-                                   locale: options.locale}))
-          .then(() => this.region.Update(this.walker.speech()))
-          .then(() => res());
-      });
-      // This is a necessary in case speech options have changed via keypress
-      // during walking.
-      if (options.modality === 'speech') {
-        this.document.options.sre.domain = options.domain;
-        this.document.options.sre.style = options.style;
-        this.document.options.a11y.speechRules =
-          options.domain + '-' + options.style;
-      }
+    // This is a necessary in case speech options have changed via keypress
+    // during walking.
+    if (options.modality === 'speech') {
+      this.document.options.sre.domain = options.domain;
+      this.document.options.sre.style = options.style;
+      this.document.options.a11y.speechRules =
+        options.domain + '-' + options.style;
+    }
+    SpeechExplorer.updatePromise = SpeechExplorer.updatePromise.then(async () => {
+      return Sre.sreReady()
+        .then(() => Sre.setupEngine({modality: options.modality,
+                                     locale: options.locale}))
+        .then(() => this.region.Update(this.walker.speech()));
     });
   }
 
