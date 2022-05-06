@@ -41,6 +41,9 @@ import {Rule} from 'mj-context-menu/js/item_rule.js';
 import {CssStyles} from 'mj-context-menu/js/css_util.js';
 import {Submenu} from 'mj-context-menu/js/item_submenu.js';
 
+import Sre from '../../a11y/sre.js';
+
+
 /*==========================================================================*/
 
 /**
@@ -419,7 +422,7 @@ export class Menu {
         this.a11yVar<boolean>('subtitles'),
         this.a11yVar<boolean>('braille'),
         this.a11yVar<boolean>('viewBraille'),
-        this.a11yVar<string>('locale', value => SRE.setupEngine({locale: value as string})),
+        this.a11yVar<string>('locale', value => Sre.setupEngine({locale: value as string})),
         this.a11yVar<string> ('speechRules', value => {
           const [domain, style] = value.split('-');
           this.document.options.sre.domain = domain;

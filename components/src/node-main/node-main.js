@@ -20,10 +20,9 @@ const path = eval("require('path')");  // use actual node version, not webpack's
 /*
  * Load the needed MathJax components
  */
-require('../startup/lib/startup.js');
+require('../startup/init.js');
 const {Loader, CONFIG} = require('../../../js/components/loader.js');
 const {combineDefaults, combineConfig} = require('../../../js/components/global.js');
-const {dependencies, paths, provides} = require('../dependencies.js');
 
 /*
  * Set up the initial configuration
@@ -32,9 +31,6 @@ combineDefaults(MathJax.config, 'loader', {
   require: eval('require'),      // use node's require() to load files
   failed: (err) => {throw err}   // pass on error message to init()'s catch function
 });
-combineDefaults(MathJax.config.loader, 'dependencies', dependencies);
-combineDefaults(MathJax.config.loader, 'paths', paths);
-combineDefaults(MathJax.config.loader, 'provides', provides);
 
 /*
  * Preload core and liteDOM adaptor (needed for node)
