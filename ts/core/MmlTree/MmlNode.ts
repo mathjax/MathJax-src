@@ -281,7 +281,8 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
    */
   public static alwaysInherit: {[name: string]: boolean} = {
     scriptminsize: true,
-    scriptsizemultiplier: true
+    scriptsizemultiplier: true,
+    infixlinebreakstyle: true
   };
 
   /**

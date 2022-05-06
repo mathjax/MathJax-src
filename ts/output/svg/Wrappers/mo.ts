@@ -102,10 +102,10 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
         this.getStretchedVariant([]);
       }
       let svg = this.standardSvgNodes(parents);
-      if (svg.length > 1) {
-        // FIXME:  handle break before/after
-        this.adaptor.remove(svg[0]);
-        svg[0] = null;
+      if (svg.length > 1 && this.breakStyle !== 'duplicate') {
+        const i = (this.breakStyle === 'after' ? 1 : 0);
+        this.adaptor.remove(svg[i]);
+        svg[i] = null;
       }
       if (stretchy && this.size < 0) {
         this.stretchSvg();
@@ -115,7 +115,8 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
         if (u !== '0' || v !== '0') {
           this.adaptor.setAttribute(svg[0], 'transform', `translate(${v} ${u})`);
         }
-        this.addChildren([svg[1] || svg[0]]);
+        svg[0] && this.addChildren([svg[0]]);
+        svg[1] && ((this.multChar || this) as SvgMo).addChildren([svg[1]]);
       }
     }
 

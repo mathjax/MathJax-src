@@ -82,6 +82,16 @@ export interface CommonMo<
   isAccent: boolean;
 
   /**
+   * The linebreak style
+   */
+  breakStyle: string;
+
+  /**
+   * The linebreakmultchar used for breaking an invisible times
+   */
+  multChar: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+
+  /**
    * Get the (unmodified) bbox of the contents (before centering or setting accents to width 0)
    *
    * @param {BBox} bbox   The bbox to fill
@@ -143,6 +153,13 @@ export interface CommonMo<
    * @return {number}           The final size of the assembly
    */
   checkExtendedHeight(D: number, C: DelimiterData): number;
+
+  /**
+   * Set a breakpoint to the given type
+   *
+   * @param {string} linebreak   The type of linebreak to set
+   */
+  setBreakStyle(linebreak?: string): void;
 
 }
 
@@ -221,8 +238,21 @@ export function CommonMoMixin<
      */
     public isAccent: boolean;
 
+    /**
+     * @override
+     */
+    public breakStyle: string;
+
+    /**
+     * The linebreakmultchar used for breaking an invisible times
+     */
+    public multChar: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+
+    /**
+     * @override
+     */
     get breakCount() {
-      return (this.node.attributes.get('linebreak') === 'newline' ? 1 : 0);
+      return (this.breakStyle ? 1 : 0);
     }
 
     /**
@@ -397,6 +427,29 @@ export function CommonMoMixin<
       return D;
     }
 
+    /**
+     * @override
+     */
+    public setBreakStyle(linebreak: string = '') {
+      const attributes = this.node.attributes;
+      this.breakStyle = ((linebreak || attributes.get('linebreak')) === 'newline' ?
+                         attributes.get('linebreakstyle') as string : '');
+      if (this.breakStyle === 'infixlinebreakstyle') {
+        this.breakStyle = attributes.get(this.breakStyle) as string;
+      }
+      if (!this.breakCount) return;
+      const multChar = attributes.get('linebreakmultchar') as string;
+      if (this.getText() === '\u2062' && multChar && multChar !== '\u2062') {
+        this.multChar = this.createMo(multChar);
+        //
+        //  Update the spacing between the multchar and the next item
+        //
+        const i = this.parent.node.childIndex(this.node);
+        const next = this.parent.node.childNodes[i + 1];
+        next && next.setTeXclass(this.multChar.node);
+      }
+    }
+
     /***************************************************/
 
     /**
@@ -405,6 +458,7 @@ export function CommonMoMixin<
     constructor(factory: WF, node: MmlNode, parent: WW = null) {
       super(factory, node, parent);
       this.isAccent = (this.node as MmlMo).isAccent;
+      this.setBreakStyle();
     }
 
     /**
@@ -429,8 +483,24 @@ export function CommonMoMixin<
      */
     public getLinebreakSizes(i: number): BBox {
       if (!this.breakCount) return super.getLinebreakSizes(i);
-      this.bbox.L = 0;
-      return (i === 0 ? BBox.zero() : this.getOuterBBox());
+      const style = this.breakStyle;
+      if (i === 0 && style === 'before') {
+        this.bbox.L = 0;  // FIXME:  use indentshift
+        return BBox.zero();
+      } else if (i === 1) {
+        if (style === 'after') {
+          this.bbox.R = 0;
+          return BBox.zero();
+        } else if (style === 'duplicate') {
+          const bbox = new BBox();
+          Object.assign(bbox, this.getOuterBBox());
+          bbox.L = 0;  // FIXME:  use indentshift
+          return bbox;
+        } else if (this.multChar) {
+          return this.multChar.getOuterBBox();
+        }
+      }
+      return this.getOuterBBox();
     }
 
     /**
