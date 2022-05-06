@@ -4,8 +4,6 @@ import {Package} from '../../../../js/components/package.js';
 // This sets up the correct link to the mathmaps files.
 if (MathJax.startup) {
 
-  // Combine path with user defined path and resolve it wrt. MathJax path.
-  combineDefaults(MathJax.config.loader, 'paths', {});
   let path = Package.resolvePath('[sre]', false);
 
   if (typeof window !== 'undefined') {
