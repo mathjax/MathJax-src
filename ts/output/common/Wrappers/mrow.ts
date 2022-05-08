@@ -168,7 +168,8 @@ export function CommonMrowMixin<
         for (const child of this.childNodes) {
           const noStretch = (child.stretch.dir === DIRECTION.None);
           if (all || noStretch) {
-            let {h, d, rscale} = child.getOuterBBox(noStretch);
+            const rscale = child.getBBox().rscale;
+            let [h, d] = child.getUnbrokenHD();
             h *= rscale;
             d *= rscale;
             if (h > H) H = h;

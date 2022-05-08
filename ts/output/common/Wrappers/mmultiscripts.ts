@@ -150,6 +150,19 @@ export interface CommonMmultiscripts<
    */
   getScaledWHD(bbox: BBox): void;
 
+  /**
+   * @return {[number, number]}  The vertical shifts for super and subscripts
+   */
+  getCombinedUV(): number[];
+
+  /**
+   * @param {BBox} bbox   The bbox to adjust
+   * @param {number} u    The vertical shift for superscripts
+   * @param {number} v    The vertical shift for subscripts
+   * @return {BBox}       The modified bbox
+   */
+  addPrescripts(bbox: BBox, u: number, v: number): BBox;
+
 }
 
 /**
@@ -331,6 +344,47 @@ export function CommonMmultiscriptsMixin<
       return [w * rscale, h * rscale, d * rscale];
     }
 
+    /**
+     * @override
+     */
+    public getCombinedUV() {
+      //
+      // Get the bounding boxes, and combine the pre- and post-scripts
+      //  to get a common offset for both
+      //
+      const data = this.scriptData;
+      const sub = this.combinePrePost(data.sub, data.psub);
+      const sup = this.combinePrePost(data.sup, data.psup);
+      return this.getUVQ(sub, sup);
+    }
+
+    /**
+     * @override
+     */
+    public addPrescripts(bbox: BBox, u: number, v: number) {
+      const scriptspace = this.font.params.scriptspace;
+      const data = this.scriptData;
+      if (data.numPrescripts) {
+        bbox.combine(data.psup, scriptspace, u);
+        bbox.combine(data.psub, scriptspace, v);
+      }
+      return bbox;
+    }
+
+    /**
+     * @override
+     */
+    public addPostscripts(bbox: BBox, u: number, v: number) {
+      const data = this.scriptData;
+      if (data.numScripts) {
+        const w = bbox.w;
+        bbox.combine(data.sup, w, u);
+        bbox.combine(data.sub, w, v);
+        bbox.w += this.font.params.scriptspace;
+      }
+      return bbox;
+    }
+
     /*************************************************************/
 
     /**
@@ -344,33 +398,32 @@ export function CommonMmultiscriptsMixin<
     /**
      * @override
      */
-    public computeBBox(bbox: BBox, recompute: boolean = false) {
-      //
-      // Get the bounding boxes, and combine the pre- and post-scripts
-      //  to get a common offset for both
-      //
-      const scriptspace = this.font.params.scriptspace;
-      const data = this.scriptData;
-      const sub = this.combinePrePost(data.sub, data.psub);
-      const sup = this.combinePrePost(data.sup, data.psup);
-      const [u, v] = this.getUVQ(sub, sup);
+    public appendScripts(bbox: BBox) {
       //
       //  Lay out the pre-scripts, then the base, then the post-scripts
       //
       bbox.empty();
-      if (data.numPrescripts) {
-        bbox.combine(data.psup, scriptspace, u);
-        bbox.combine(data.psub, scriptspace, v);
-      }
-      bbox.append(data.base);
-      if (data.numScripts) {
-        const w = bbox.w;
-        bbox.combine(data.sup, w, u);
-        bbox.combine(data.sub, w, v);
-        bbox.w += scriptspace;
-      }
+      const [u, v] = this.getCombinedUV();
+      this.addPrescripts(bbox, u, v);
+      bbox.append(this.scriptData.base);
+      this.addPostscripts(bbox, u, v);
       bbox.clean();
-      this.setChildPWidths(recompute);
+      return bbox;
+    }
+
+    /**
+     * @override
+     */
+    public getLinebreakSizes(i: number): BBox {
+      const n = this.baseChild.breakCount;
+      if (!n) return this.getOuterBBox();
+      const cbox = this.baseChild.getLinebreakSizes(i);
+      if (0 < i && i < n) return cbox;
+      const [u, v] = this.getCombinedUV();
+      if (i) return this.addPostscripts(cbox.copy(), u, v);
+      const bbox = this.addPrescripts(BBox.zero(), u, v);
+      bbox.append(cbox);
+      return bbox;
     }
 
     /**

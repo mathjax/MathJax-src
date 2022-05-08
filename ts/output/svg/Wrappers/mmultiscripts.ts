@@ -116,26 +116,21 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<N, 
       //
       const scriptalign = this.node.getProperty('scriptalign') || 'right left';
       const [preAlign, postAlign] = split(scriptalign + ' ' + scriptalign);
-      //
-      //  Combine the bounding boxes of the pre- and post-scripts,
-      //  and get the resulting baseline offsets
-      //
-      const sub = this.combinePrePost(data.sub, data.psub);
-      const sup = this.combinePrePost(data.sup, data.psup);
-      const [u, v] = this.getUVQ(sub, sup);
+      const [u, v] = this.getCombinedUV();
       //
       //  Place the pre-scripts, then the base, then the post-scripts
       //
-      let x = 0;  // scriptspace
+      let x = this.font.params.scriptspace;
       if (data.numPrescripts) {
-        x = this.addScripts(.05, u, v, this.firstPrescript, data.numPrescripts, preAlign);
+        x = this.addScripts(this.dom[0], x, u, v, this.firstPrescript, data.numPrescripts, preAlign);
       }
       const base = this.baseChild;
       base.toSVG(svg);
       base.place(x, 0);
-      x += base.getOuterBBox().w;
+      if (this.breakCount) x = 0;
+      x += base.getLinebreakSizes(base.breakCount).w;
       if (data.numScripts) {
-        this.addScripts(x, u, v, 1, data.numScripts, postAlign);
+        this.addScripts(this.dom[this.dom.length - 1], x, u, v, 1, data.numScripts, postAlign);
       }
     }
 
@@ -150,12 +145,11 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<N, 
      * @param {string} align   The alignment for the scripts
      * @return {number}        The right-hand offset of the scripts
      */
-    protected addScripts(x: number, u: number, v: number, i: number, n: number, align: string): number {
+    protected addScripts(svg: N, x: number, u: number, v: number, i: number, n: number, align: string): number {
       const adaptor = this.adaptor;
       const alignX = AlignX(align);
-      const node = this.dom[this.dom.length - 1];
-      const supRow = adaptor.append(node, this.svg('g')) as N;
-      const subRow = adaptor.append(node, this.svg('g')) as N;
+      const supRow = adaptor.append(svg, this.svg('g')) as N;
+      const subRow = adaptor.append(svg, this.svg('g')) as N;
       this.place(x, u, supRow);
       this.place(x, v, subRow);
       let m = i + 2 * n;

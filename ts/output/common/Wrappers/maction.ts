@@ -342,6 +342,13 @@ export function CommonMactionMixin<
       this.selected.setChildPWidths(recompute);
     }
 
+    /**
+     * @override
+     */
+    get breakCount() {
+      return this.childNodes[0].breakCount;
+    }
+
   } as any as B;
 
 }

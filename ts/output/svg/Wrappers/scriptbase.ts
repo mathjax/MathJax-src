@@ -96,7 +96,7 @@ export const SvgScriptbase = (function <N, T, D>(): SvgScriptbaseClass<N, T, D> 
       const w = this.getBaseWidth();
       const [x, v] = this.getOffset();
       this.baseChild.toSVG(svg);
-      this.scriptChild.toSVG(svg);
+      this.scriptChild.toSVG([svg[svg.length - 1]]);
       this.scriptChild.place(w + x, v);
     }
 

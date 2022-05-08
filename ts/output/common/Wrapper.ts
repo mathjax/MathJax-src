@@ -432,8 +432,8 @@ export class CommonWrapper<
   public getOuterBBox(save: boolean = true): BBox {
     const bbox = this.getBBox(save);
     if (!this.styles) return bbox;
-    const obox = new BBox();
-    Object.assign(obox, bbox);
+
+    const obox = bbox.copy();
     for (const [name, side] of BBox.StyleAdjust) {
       const x = this.styles.get(name);
       if (x) {
@@ -441,6 +441,27 @@ export class CommonWrapper<
       }
     }
     return obox;
+  }
+
+  /**
+   * The height and depth without linebreaks
+   *
+   * @return {[number, number]}   The height and depth
+   */
+  public getUnbrokenHD(): [number, number] {
+    const n = this.breakCount + 1;
+    let H = 0;
+    let D = 0;
+    for (let i = 0; i < n; i++) {
+      const {h, d} = this.getLinebreakSizes(i);
+      if (h > H) {
+        H = h;
+      }
+      if (d > D) {
+        D = d;
+      }
+    }
+    return [H, D];
   }
 
   /**
@@ -464,16 +485,6 @@ export class CommonWrapper<
    */
   public getLinebreakSizes(i: number): BBox {
     return (this.breakCount ? this.childNodes[0].getLinebreakSizes(i) : this.getOuterBBox());
-/*
-    const {h, d, w, L, R, rscale} = this.getOuterBBox();
-    const scale = (this.breakScale ? rscale : 1);
-    const n = this.breakCount;
-    if (n) {
-      const [H, D, W] = this.childNodes[0].getLinebreakSizes(i);
-      return [H * scale, D * scale, (W + (i === 0 ? L : 0) + (i === n ? R : 0)) * scale];
-    }
-    return [h * scale, d * scale, (L + w + R) * scale];
-*/
   }
 
   /**

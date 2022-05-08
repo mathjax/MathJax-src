@@ -171,4 +171,13 @@ export class BBox {
     }
   }
 
+  /**
+   * @return {BBox}   A copy of the current BBox
+   */
+  public copy(): BBox {
+    const bbox = new BBox();
+    Object.assign(bbox, this);
+    return bbox;
+  }
+
 }

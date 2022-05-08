@@ -97,6 +97,8 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
       this.linebreakCount = (this.parent.node.linebreakContainer ? this.breakCount : 0);
       if (this.linebreakCount || !this.node.isInferred) {
         parents = this.standardSvgNodes(parents);
+      } else {
+        this.dom = parents;
       }
       this.addChildren(parents);
       if (this.linebreakCount) {

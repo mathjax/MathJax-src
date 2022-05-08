@@ -581,7 +581,7 @@ export function CommonScriptbaseMixin<
      * @override
      */
     public getBaseWidth(): number {
-      const bbox = this.baseChild.getOuterBBox();
+      const bbox = this.baseChild.getLinebreakSizes(this.baseChild.breakCount);
       return bbox.w * bbox.rscale - (this.baseRemoveIc ? this.baseIc : 0) + this.font.params.extra_ic;
     }
 
@@ -605,7 +605,8 @@ export function CommonScriptbaseMixin<
      * @override
      */
     public getV(): number {
-      const bbox = this.baseCore.getOuterBBox();
+      const base = this.baseCore;
+      const bbox = base.getLinebreakSizes(base.breakCount);
       const sbox = this.scriptChild.getOuterBBox();
       const tex = this.font.params;
       const subscriptshift = this.length2em(this.node.attributes.get('subscriptshift'), tex.sub1);
@@ -620,7 +621,8 @@ export function CommonScriptbaseMixin<
      * @override
      */
     public getU(): number {
-      const bbox = this.baseCore.getOuterBBox();
+      const base = this.baseCore;
+      const bbox = base.getLinebreakSizes(base.breakCount);
       const sbox = this.scriptChild.getOuterBBox();
       const tex = this.font.params;
       const attr = this.node.attributes.getList('displaystyle', 'superscriptshift');
@@ -786,19 +788,49 @@ export function CommonScriptbaseMixin<
     }
 
     /**
-     * This gives the common bbox for msub and msup.  It is overridden
-     * for all the others (msubsup, munder, mover, munderover).
+     * This gives the common bbox for msub, msup, and msubsup.  It is overridden
+     * for all the others (munder, mover, munderover).
      *
      * @override
      */
     public computeBBox(bbox: BBox, recompute: boolean = false) {
-      const w = this.getBaseWidth();
-      const [x, y] = this.getOffset();
+      bbox.empty();
       bbox.append(this.baseChild.getOuterBBox());
-      bbox.combine(this.scriptChild.getOuterBBox(), w + x, y);
-      bbox.w += this.font.params.scriptspace;
+      this.appendScripts(bbox);
       bbox.clean();
       this.setChildPWidths(recompute);
+    }
+
+    /**
+     * Add the scripts into the given bounding box for msub and msup (overridden by msubsup)
+     *
+     * @param {BBox} bbox   The bounding box to augment
+     * @param {BBox}        The modified bounding box
+     */
+    protected appendScripts(bbox: BBox): BBox {
+      const w = this.getBaseWidth();
+      const [x, y] = this.getOffset();
+      bbox.combine(this.scriptChild.getOuterBBox(), w + x, y);
+      bbox.w += this.font.params.scriptspace;
+      return bbox;
+    }
+
+    /**
+     * @override
+     */
+    get breakCount() {
+      return this.childNodes[0].breakCount;
+    }
+
+    /**
+     * @override
+     */
+    public getLinebreakSizes(i: number): BBox {
+      const n = this.baseChild.breakCount;
+      if (!n) return this.getOuterBBox();
+      const cbox = this.baseChild.getLinebreakSizes(i);
+      if (i < n) return cbox;
+      return this.appendScripts(cbox.copy());
     }
 
   } as any as B;
