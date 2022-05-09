@@ -418,9 +418,9 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    *
    * @return {N}   The first "real" child element
    */
-  public firstChild(): N {
+  public firstChild(dom: N = this.dom[0]): N {
     const adaptor = this.adaptor;
-    let child = adaptor.firstChild(this.dom[0]);
+    let child = adaptor.firstChild(dom);
     if (child && adaptor.kind(child) === 'text' && adaptor.getAttribute(child as N, 'data-id-align')) {
       child = adaptor.firstChild(adaptor.next(child) as N);
     }

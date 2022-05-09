@@ -225,7 +225,7 @@ export function CommonMrowMixin<
       this.linebreakSizes = (breaks ? [new BBox({h: .75, d: .25, w: this.bbox.L})] : null);
       bbox.empty();
       for (const child of this.childNodes) {
-        bbox.append(child.getOuterBBox());
+        bbox.append(child.getOuterBBox(recompute));
         breaks && this.computeLinebreakSizes(child);
       }
       bbox.clean();

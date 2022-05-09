@@ -103,8 +103,10 @@ export const SvgMsqrt = (function <N, T, D>(): SvgMsqrtClass<N, T, D> {
      * @param {SvgWrapper} root  The wrapped MML root content
      * @param {BBox} sbox        The bounding box of the surd
      * @param {number} H         The height of the root as a whole
+     * @param {number}           The offset required by the root
      */
-    protected addRoot(_ROOT: N[], _root: SvgWrapper<N, T, D>, _sbox: BBox, _H: number) {
+    protected addRoot(_ROOT: N[], _root: SvgWrapper<N, T, D>, _sbox: BBox, _H: number): number {
+      return 0;
     }
 
     /**************************************************************/
@@ -132,14 +134,14 @@ export const SvgMsqrt = (function <N, T, D>(): SvgMsqrtClass<N, T, D> {
       //
       //  Place the children
       //
-      this.addRoot(SVG, root, sbox, H);
+      const dx = this.addRoot(SVG, root, sbox, H);
       surd.toSVG(SVG);
-      surd.place(this.dx, H - sbox.h);
+      surd.place(dx, H - sbox.h);
       base.toSVG([BASE]);
-      base.place(this.dx + sbox.w, 0);
+      base.place(dx + sbox.w, 0);
       this.adaptor.append(SVG[SVG.length - 1], this.svg('rect', {
         width: this.fixed(bbox.w), height: this.fixed(t),
-        x: this.fixed(this.dx + sbox.w), y: this.fixed(H - t)
+        x: this.fixed(dx + sbox.w), y: this.fixed(H - t)
       }));
     }
 

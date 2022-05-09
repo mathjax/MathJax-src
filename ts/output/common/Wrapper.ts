@@ -432,7 +432,6 @@ export class CommonWrapper<
   public getOuterBBox(save: boolean = true): BBox {
     const bbox = this.getBBox(save);
     if (!this.styles) return bbox;
-
     const obox = bbox.copy();
     for (const [name, side] of BBox.StyleAdjust) {
       const x = this.styles.get(name);
