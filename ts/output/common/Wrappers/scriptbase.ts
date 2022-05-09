@@ -826,11 +826,10 @@ export function CommonScriptbaseMixin<
      * @override
      */
     public getLinebreakSizes(i: number): BBox {
-      const n = this.baseChild.breakCount;
-      if (!n) return this.getOuterBBox();
-      const cbox = this.baseChild.getLinebreakSizes(i);
-      if (i < n) return cbox;
-      return this.appendScripts(cbox.copy());
+      const bbox = super.getLinebreakSizes(i);
+      const n = this.breakCount;
+      i === n && this.appendScripts(bbox);
+      return bbox;
     }
 
   } as any as B;

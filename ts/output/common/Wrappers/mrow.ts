@@ -222,7 +222,7 @@ export function CommonMrowMixin<
      */
     protected computeBBox(bbox: BBox, recompute: boolean = false) {
       const breaks = this.breakCount;
-      this.linebreakSizes = (breaks ? [new BBox({h: .75, d: .25, w: this.bbox.L})] : null);
+      this.linebreakSizes = (breaks ? [new BBox({h: .75, d: .25, w: 0})] : null);
       bbox.empty();
       for (const child of this.childNodes) {
         bbox.append(child.getOuterBBox(recompute));
@@ -245,12 +245,12 @@ export function CommonMrowMixin<
       const lines = this.linebreakSizes;
       const n = lines.length - 1;
       let y = lines[0].h + .1;  // start just above the first line
-      lines[0].w += this.bbox.L;
-      lines[n].w += this.bbox.R;
       for (const line of lines) {
         bbox.combine(line, 0, y - .1 - line.h);
         y = -bbox.d;
       }
+      lines[0].L = this.bbox.L;
+      lines[n].R = this.bbox.R;
       bbox.clean();
     }
 

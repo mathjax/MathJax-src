@@ -483,7 +483,26 @@ export class CommonWrapper<
    * @return {BBox}      The bounding box of the specified segment
    */
   public getLinebreakSizes(i: number): BBox {
-    return (this.breakCount ? this.childNodes[0].getLinebreakSizes(i) : this.getOuterBBox());
+    return this.getChildLinebreakSizes(this.childNodes[0], i);
+  }
+
+  /**
+   * @param {WW} child   The child node whose i-th line bbox is to be obtained
+   * @param {number} i   The number of the segment whose sizes are to be obtained
+   * @return {BBox}      The bounding box of the specified segment
+   */
+  public getChildLinebreakSizes(child: WW, i: number): BBox {
+    const n = this.breakCount;
+    if (!n) return this.getOuterBBox();
+    let bbox = child.getLinebreakSizes(i);
+    if (0 < i && i < n) return bbox;
+    bbox = bbox.copy();
+    if (i) {
+      bbox.R = this.bbox.R;
+    } else {
+      bbox.L = this.bbox.L;
+    }
+    return bbox;
   }
 
   /**

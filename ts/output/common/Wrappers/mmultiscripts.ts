@@ -417,12 +417,17 @@ export function CommonMmultiscriptsMixin<
     public getLinebreakSizes(i: number): BBox {
       const n = this.baseChild.breakCount;
       if (!n) return this.getOuterBBox();
-      const cbox = this.baseChild.getLinebreakSizes(i);
+      let cbox = this.baseChild.getLinebreakSizes(i);
       if (0 < i && i < n) return cbox;
       const [u, v] = this.getCombinedUV();
-      if (i) return this.addPostscripts(cbox.copy(), u, v);
+      if (i) {
+        const bbox = this.addPostscripts(cbox.copy(), u, v);
+        bbox.R = this.bbox.R;
+        return bbox;
+      }
       const bbox = this.addPrescripts(BBox.zero(), u, v);
       bbox.append(cbox);
+      bbox.L = this.bbox.L;
       return bbox;
     }
 
