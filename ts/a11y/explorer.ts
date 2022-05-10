@@ -398,6 +398,12 @@ let allExplorers: {[options: string]: ExplorerInit} = {
     explorer.speechGenerator.setOptions({
       locale: doc.options.sre.locale, domain: doc.options.sre.domain,
       style: doc.options.sre.style, modality: 'speech'});
+    // This weeds out the case of providing a non-existent locale option.
+    let locale = explorer.speechGenerator.getOptions().locale;
+    if (locale !== Sre.engineSetup().locale) {
+      doc.options.sre.locale = Sre.engineSetup().locale;
+      explorer.speechGenerator.setOptions({locale: doc.options.sre.locale});
+    }
     explorer.showRegion = 'subtitles';
     return explorer;
   },
