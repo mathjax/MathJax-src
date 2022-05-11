@@ -268,6 +268,14 @@ export interface CommonScriptbase<
    */
   stretchChildren(): void;
 
+  /**
+   * Add the scripts into the given bounding box for msub and msup (overridden by msubsup)
+   *
+   * @param {BBox} bbox   The bounding box to augment
+   * @param {BBox}        The modified bounding box
+   */
+  appendScripts(bbox: BBox): BBox;
+
 }
 
 /**
@@ -802,12 +810,9 @@ export function CommonScriptbaseMixin<
     }
 
     /**
-     * Add the scripts into the given bounding box for msub and msup (overridden by msubsup)
-     *
-     * @param {BBox} bbox   The bounding box to augment
-     * @param {BBox}        The modified bounding box
+     * @override
      */
-    protected appendScripts(bbox: BBox): BBox {
+    public appendScripts(bbox: BBox): BBox {
       const w = this.getBaseWidth();
       const [x, y] = this.getOffset();
       bbox.combine(this.scriptChild.getOuterBBox(), w + x, y);
@@ -819,16 +824,20 @@ export function CommonScriptbaseMixin<
      * @override
      */
     get breakCount() {
-      return this.childNodes[0].breakCount;
+      return (this.node.linebreakContainer ? 0 : this.childNodes[0].breakCount);
     }
 
     /**
      * @override
      */
     public getLinebreakSizes(i: number): BBox {
-      const bbox = super.getLinebreakSizes(i);
+      if (this.node.linebreakContainer) return this.getOuterBBox();
       const n = this.breakCount;
-      i === n && this.appendScripts(bbox);
+      if (!n || i < n) return super.getLinebreakSizes(i);
+      const bbox = this.baseChild.getLinebreakSizes(i).copy();
+      this.appendScripts(bbox);
+      this.addMiddleBorders(bbox);
+      this.addRightBorders(bbox);
       return bbox;
     }
 

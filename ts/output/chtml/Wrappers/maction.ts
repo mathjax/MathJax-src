@@ -191,7 +191,7 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
           //
           const adaptor = node.adaptor;
           const tool = adaptor.append(node.dom, node.html('mjx-tool', {
-            style: {bottom: node.Em(-node.dy), right: node.Em(-node.dx)}
+            style: {bottom: node.Em(-node.tipDy), right: node.Em(-node.tipDx)}
           }, [node.html('mjx-tip')])) as N;
           tip.toCHTML(adaptor.firstChild(tool) as N);
           //

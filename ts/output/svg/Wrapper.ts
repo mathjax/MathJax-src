@@ -23,7 +23,6 @@
 
 import {OptionList} from '../../util/Options.js';
 import {split} from '../../util/string.js';
-import {BBox} from '../../util/BBox.js';
 import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../common/Wrapper.js';
 import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from './FontData.js';
 import {SVG, XLINKNS} from '../svg.js';
@@ -160,7 +159,8 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
       const {h, d, w} = this.getLinebreakSizes(i);
       this.adaptor.append(this.dom[i++], this.svg('rect', {
         'data-hitbox': true, fill: 'none', stroke: 'none', 'pointer-events': 'all',
-        width: this.fixed(w), height: this.fixed(h + d), y: this.fixed(-d)
+        width: this.fixed(w), height: this.fixed(h + d),
+        x: (i === 1 ? this.fixed(-this.dx) : 0), y: this.fixed(-d)
       }));
       return parent;
     });
@@ -175,13 +175,11 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     if (styles) {
       this.dom.forEach(node => this.adaptor.setAttribute(node, 'style', styles));
     }
-    BBox.StyleAdjust.forEach(([name, , lr]: [string, any, number | null]) => {
-      if (lr !== 0) return;
-      const x = this.styles.get(name);
-      if (x) {
-        this.dx += this.length2em(x, 1, this.bbox.rscale);
-      }
-    });
+    const padding = (this.styleData?.padding || [0, 0, 0, 0])[3];
+    const border = (this.styleData?.border?.width || [0, 0, 0,0])[3];
+    if (padding || border) {
+      this.dx = padding + border;
+    }
   }
 
   /**
@@ -218,7 +216,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
         const {h, d, w} = this.getLinebreakSizes(i++);
         const rect = this.svg('rect', {
           fill: background,
-          x: 0, y: this.fixed(-d),
+          x: (i === 1 ? this.fixed(-this.dx) : 0), y: this.fixed(-d),
           width: this.fixed(w),
           height: this.fixed(h + d),
           'data-bgcolor': true
@@ -237,45 +235,40 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * Create the borders, if any are requested.
    */
   protected handleBorder() {
-    if (!this.styles) return;
-    const width = Array(4).fill(0);
-    const style = Array(4);
-    const color = Array(4);
-    for (const [name, i] of [['Top', 0], ['Right', 1], ['Bottom', 2], ['Left', 3]] as [string, number][]) {
-      const key = 'border' + name;
-      const w = this.styles.get(key + 'Width');
-      if (!w) continue;
-      width[i] = Math.max(0, this.length2em(w, 1, this.bbox.rscale));
-      style[i] = this.styles.get(key + 'Style') || 'solid';
-      color[i] = this.styles.get(key + 'Color') || 'currentColor';
-    }
+    const border = this.styleData?.border;
+    if (!border) return;
     const f = SvgWrapper.borderFuzz;
-    const bbox = this.getOuterBBox();
-    const [h, d, w] = [bbox.h + f, bbox.d + f, bbox.w + f];
-    const outerRT = [w, h];
-    const outerLT = [-f, h];
-    const outerRB = [w, -d];
-    const outerLB = [-f, -d];
-    const innerRT = [w - width[1], h - width[0]];
-    const innerLT = [-f + width[3], h - width[0]];
-    const innerRB = [w - width[1], -d + width[2]];
-    const innerLB = [-f + width[3], -d + width[2]];
-    const paths: number[][][] = [
-      [outerLT, outerRT, innerRT, innerLT],
-      [outerRB, outerRT, innerRT, innerRB],
-      [outerLB, outerRB, innerRB, innerLB],
-      [outerLB, outerLT, innerLT, innerLB]
-    ];
     const adaptor = this.adaptor;
+    let k = 0;
+    const n = this.dom.length - 1;
     for (const dom of this.dom) {
+      const L = (!n || !k ? 1 : 0);
+      const R = (!n || k === n ? 1 : 0);
+      const bbox = this.getLinebreakSizes(k++);
+      const [h, d, w] = [bbox.h + f, bbox.d + f, bbox.w + f];
+      const outerRT = [w, h];
+      const outerLT = [-f, h];
+      const outerRB = [w, -d];
+      const outerLB = [-f, -d];
+      const innerRT = [w - R * border.width[1], h - border.width[0]];
+      const innerLT = [-f + L * border.width[3], h - border.width[0]];
+      const innerRB = [w - R * border.width[1], -d + border.width[2]];
+      const innerLB = [-f + L * border.width[3], -d + border.width[2]];
+      const paths: number[][][] = [
+        [outerLT, outerRT, innerRT, innerLT],
+        [outerRB, outerRT, innerRT, innerRB],
+        [outerLB, outerRB, innerRB, innerLB],
+        [outerLB, outerLT, innerLT, innerLB]
+      ];
       const child = adaptor.firstChild(dom) as N;
+      const dx = L * this.dx;
       for (const i of [0, 1, 2, 3]) {
-        if (!width[i]) continue;
+        if (!border.width[i] || (i === 3 && !L) || (i === 1 && !R)) continue;
         const path = paths[i];
-        if (style[i] === 'dashed' || style[i] === 'dotted') {
-          this.addBorderBroken(path, color[i], style[i], width[i], i, dom);
+        if (border.style[i] === 'dashed' || border.style[i] === 'dotted') {
+          this.addBorderBroken(path, border.color[i], border.style[i], border.width[i], i, dom, dx);
         } else {
-          this.addBorderSolid(path, color[i], child, dom);
+          this.addBorderSolid(path, border.color[i], child, dom, dx);
         }
       }
     }
@@ -287,11 +280,12 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {[number, number][]} path    The points for the border segment
    * @param {string} color               The color to use
    * @param {N} child                    Insert the border before this child, if any
-   * @param {N} parent                  The parent container
+   * @param {N} parent                   The parent container
+   * @param {number} dx                  The offset of the node
    */
-  protected addBorderSolid(path: number[][], color: string, child: N, parent: N) {
+  protected addBorderSolid(path: number[][], color: string, child: N, parent: N, dx: number) {
     const border = this.svg('polygon', {
-      points: path.map(([x, y]) => `${this.fixed(x - this.dx)},${this.fixed(y)}`).join(' '),
+      points: path.map(([x, y]) => `${this.fixed(x - dx)},${this.fixed(y)}`).join(' '),
       stroke: 'none',
       fill: color
     });
@@ -311,14 +305,16 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {number} t                  The thickness for the border line
    * @param {number} i                  The side being drawn
    * @param {N} parent                  The parent container
+   * @param {number} dx                  The offset of the node
    */
-  protected addBorderBroken(path: number[][], color: string, style: string, t: number, i: number, parent: N) {
+  protected addBorderBroken(path: number[][], color: string, style: string,
+                            t: number, i: number, parent: N, dx: number) {
     const dot = (style === 'dotted');
     const t2 = t / 2;
     const [tx1, ty1, tx2, ty2] = [[t2, -t2, -t2, -t2], [-t2, t2, -t2, -t2], [t2, t2, -t2, t2], [t2, t2, t2, -t2]][i];
     const [A, B] = path;
-    const x1 = A[0] + tx1 - this.dx, y1 = A[1] + ty1;
-    const x2 = B[0] + tx2 - this.dx, y2 = B[1] + ty2;
+    const x1 = A[0] + tx1 - dx, y1 = A[1] + ty1;
+    const x2 = B[0] + tx2 - dx, y2 = B[1] + ty2;
     const W = Math.abs(i % 2 ? y2 - y1 : x2 - x1);
     const n = (dot ? Math.ceil(W / (2 * t)) : Math.ceil((W - t) / (4 * t)));
     const m = W / (4 * n + 1);
@@ -371,7 +367,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    */
   public place(x: number, y: number, element: N = null) {
     if (!element) {
-      x += this.dx;
+      x += this.dx * this.bbox.rscale;
     }
     if (!(x || y)) return;
     if (!element) {

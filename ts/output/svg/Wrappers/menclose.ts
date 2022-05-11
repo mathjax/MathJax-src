@@ -410,6 +410,7 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
         this.renderChild(this, block);
       } else {
         this.childNodes[0].toSVG([block]);
+        this.childNodes[0].place(0, 0);
       }
       //
       //  Render all the notations for this menclose element

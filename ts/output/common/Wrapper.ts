@@ -60,6 +60,18 @@ function MathMLSpace(script: boolean, size: number): number {
 }
 
 /**
+ * Padding and border data from the style attribute
+ */
+export type StyleData = {
+  padding: [number, number, number, number];
+  border: {
+    width: [number, number, number, number],
+    style: [string, string, string, string],
+    color: [string, string, string, string]
+  }
+};
+
+/**
  * Generic constructor type
  */
 export type Constructor<T> = new(...args: any[]) => T;
@@ -301,6 +313,11 @@ export class CommonWrapper<
   public styles: Styles = null;
 
   /**
+   * The padding and border information from the style attribute
+   */
+  public styleData: StyleData = null;
+
+  /**
    * The mathvariant for this node
    */
   public variant: string = '';
@@ -379,6 +396,7 @@ export class CommonWrapper<
     this.font = factory.jax.font;
     this.bbox = BBox.zero();
     this.getStyles();
+    this.getStyleData();
     this.getVariant();
     this.getScale();
     this.getSpace();
@@ -431,13 +449,12 @@ export class CommonWrapper<
    */
   public getOuterBBox(save: boolean = true): BBox {
     const bbox = this.getBBox(save);
-    if (!this.styles) return bbox;
+    if (!this.styleData) return bbox;
+    const padding = this.styleData.padding;
+    const border = this.styleData.border?.width || [0, 0, 0, 0];
     const obox = bbox.copy();
-    for (const [name, side] of BBox.StyleAdjust) {
-      const x = this.styles.get(name);
-      if (x) {
-        (obox as any)[side] += this.length2em(x, 1, obox.rscale);
-      }
+    for (const [ , i, side] of BBox.boxSides) {
+      (obox as any)[side] += (padding[i] + border[i]);
     }
     return obox;
   }
@@ -491,18 +508,53 @@ export class CommonWrapper<
    * @param {number} i   The number of the segment whose sizes are to be obtained
    * @return {BBox}      The bounding box of the specified segment
    */
-  public getChildLinebreakSizes(child: WW, i: number): BBox {
+  protected getChildLinebreakSizes(child: WW, i: number): BBox {
     const n = this.breakCount;
     if (!n) return this.getOuterBBox();
-    let bbox = child.getLinebreakSizes(i);
-    if (0 < i && i < n) return bbox;
-    bbox = bbox.copy();
-    if (i) {
-      bbox.R = this.bbox.R;
-    } else {
-      bbox.L = this.bbox.L;
+    let cbox = child.getLinebreakSizes(i);
+    if (this.styleData || this.bbox.L || this.bbox.R) {
+      cbox = cbox.copy();
     }
-    return bbox;
+    this.addMiddleBorders(cbox);
+    if (i === 0) {
+      cbox.L += this.bbox.L;
+      this.addLeftBorders(cbox);
+    } else if (i === n) {
+      cbox.R += this.bbox.R;
+      this.addRightBorders(cbox);
+    }
+    return cbox;
+  }
+
+  /**
+   * @param {BBox} bbox   The bounding box where left borders are to be added
+   */
+  protected addLeftBorders(bbox: BBox) {
+    if (!this.styleData) return;
+    const border = this.styleData.border;
+    const padding = this.styleData.padding;
+    bbox.w += (border?.width?.[3] || 0) + (padding?.[3] || 0);
+  }
+
+  /**
+   * @param {BBox} bbox   The bounding box where top and bottom borders are to be added
+   */
+  protected addMiddleBorders(bbox: BBox) {
+    if (!this.styleData) return;
+    const border = this.styleData.border;
+    const padding = this.styleData.padding;
+    bbox.h += (border?.width?.[0] || 0) + (padding?.[0] || 0);
+    bbox.d += (border?.width?.[2] || 0) + (padding?.[2] || 0);
+  }
+
+  /**
+   * @param {BBox} bbox   The bounding box where right borders are to be added
+   */
+  protected addRightBorders(bbox: BBox) {
+    if (!this.styleData) return;
+    const border = this.styleData.border;
+    const padding = this.styleData.padding;
+    bbox.w += (border?.width?.[1] || 0) + (padding?.[1] || 0);
   }
 
   /**
@@ -582,6 +634,38 @@ export class CommonWrapper<
         style.set(id, '');
       }
     }
+  }
+
+  /**
+   * Gather the data about borders and padding from the styles attribute
+   */
+  protected getStyleData() {
+    if (!this.styles) return;
+    const padding = Array(4).fill(0);
+    const width = Array(4).fill(0);
+    const style = Array(4);
+    const color = Array(4);
+    let hasPadding = false;
+    let hasBorder = false;
+    for (const [name, i] of BBox.boxSides) {
+      const key = 'border' + name;
+      const w = this.styles.get(key + 'Width');
+      if (w) {
+        hasBorder = true;
+        width[i] = Math.max(0, this.length2em(w, 1));
+        style[i] = this.styles.get(key + 'Style') || 'solid';
+        color[i] = this.styles.get(key + 'Color') || 'currentColor';
+      }
+      const p = this.styles.get('padding' + name);
+      if (p) {
+        hasPadding = true;
+        padding[i] = Math.max(0, this.length2em(p, 1));
+      }
+    }
+    this.styleData = (hasPadding || hasBorder) ? {
+      padding,
+      border: (hasBorder ? {width, style, color} : null)
+    } as StyleData : null;
   }
 
   /**

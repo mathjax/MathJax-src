@@ -225,7 +225,7 @@ export function CommonMrowMixin<
       this.linebreakSizes = (breaks ? [new BBox({h: .75, d: .25, w: 0})] : null);
       bbox.empty();
       for (const child of this.childNodes) {
-        bbox.append(child.getOuterBBox(recompute));
+        bbox.append(child.getOuterBBox());
         breaks && this.computeLinebreakSizes(child);
       }
       bbox.clean();
@@ -242,15 +242,26 @@ export function CommonMrowMixin<
      */
     protected computeLinebreakBBox(bbox: BBox) {
       bbox.empty();
+      const isStack = !this.parent.node.linebreakContainer;
       const lines = this.linebreakSizes;
       const n = lines.length - 1;
       let y = lines[0].h + .1;  // start just above the first line
+      let k = 0;
       for (const line of lines) {
+        if (isStack) {
+          this.addMiddleBorders(line);
+          k === 0 && this.addLeftBorders(line);
+          k === n && this.addRightBorders(line);
+        }
         bbox.combine(line, 0, y - .1 - line.h);
         y = -bbox.d;
+        k++;
       }
       lines[0].L = this.bbox.L;
       lines[n].R = this.bbox.R;
+      for (const line of lines.slice(0, lines.length - 1)) {
+        line.w = this.bbox.w;
+      }
       bbox.clean();
     }
 
@@ -272,8 +283,9 @@ export function CommonMrowMixin<
      * @override
      */
     public getLinebreakSizes(i: number): BBox {
-      return (this.dom?.length === 1 ? this.getOuterBBox() :
-              this.linebreakSizes ? this.linebreakSizes[i] : super.getLinebreakSizes(i));
+      return (!this.breakCount || this.parent.node.linebreakContainer ? this.getOuterBBox() :
+              this.linebreakSizes ? this.linebreakSizes[i] :
+              super.getLinebreakSizes(i));
     }
 
   } as any as B;

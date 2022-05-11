@@ -463,7 +463,7 @@ export function CommonMsubsupMixin<
     /**
      * @ override
      */
-    protected appendScripts(bbox: BBox): BBox {
+    public appendScripts(bbox: BBox): BBox {
       const [subbox, supbox] = [this.subChild.getOuterBBox(), this.supChild.getOuterBBox()];
       const w = this.getBaseWidth();
       const x = this.getAdjustedIc();

@@ -362,9 +362,9 @@ export function CommonMmultiscriptsMixin<
      * @override
      */
     public addPrescripts(bbox: BBox, u: number, v: number) {
-      const scriptspace = this.font.params.scriptspace;
       const data = this.scriptData;
       if (data.numPrescripts) {
+        const scriptspace = this.font.params.scriptspace;
         bbox.combine(data.psup, scriptspace, u);
         bbox.combine(data.psub, scriptspace, v);
       }
@@ -377,9 +377,9 @@ export function CommonMmultiscriptsMixin<
     public addPostscripts(bbox: BBox, u: number, v: number) {
       const data = this.scriptData;
       if (data.numScripts) {
-        const w = bbox.w;
-        bbox.combine(data.sup, w, u);
-        bbox.combine(data.sub, w, v);
+        const x = bbox.w;
+        bbox.combine(data.sup, x, u);
+        bbox.combine(data.sub, x, v);
         bbox.w += this.font.params.scriptspace;
       }
       return bbox;
@@ -417,17 +417,20 @@ export function CommonMmultiscriptsMixin<
     public getLinebreakSizes(i: number): BBox {
       const n = this.baseChild.breakCount;
       if (!n) return this.getOuterBBox();
-      let cbox = this.baseChild.getLinebreakSizes(i);
-      if (0 < i && i < n) return cbox;
+      const cbox = this.baseChild.getLinebreakSizes(i).copy();
+      let bbox = cbox;
       const [u, v] = this.getCombinedUV();
-      if (i) {
-        const bbox = this.addPostscripts(cbox.copy(), u, v);
+      if (i === 0) {
+        bbox = this.addPrescripts(BBox.zero(), u, v);
+        bbox.append(cbox);
+        this.addLeftBorders(bbox);
+        bbox.L = this.bbox.L;
+      } else if (i === n) {
+        bbox = this.addPostscripts(bbox, u, v);
+        this.addRightBorders(bbox);
         bbox.R = this.bbox.R;
-        return bbox;
       }
-      const bbox = this.addPrescripts(BBox.zero(), u, v);
-      bbox.append(cbox);
-      bbox.L = this.bbox.L;
+      this.addMiddleBorders(bbox);
       return bbox;
     }
 
@@ -437,12 +440,12 @@ export function CommonMmultiscriptsMixin<
     public getUVQ(subbox: BBox, supbox: BBox) {
       if (!this.UVQ) {
         let [u, v, q] = [0, 0, 0];
-        if (subbox.h === 0 && subbox.d === 0) {
+        if (subbox.w === 0) {
           //
           //  Use placement for superscript only
           //
           u = this.getU();
-        } else if (supbox.h === 0 && supbox.d === 0) {
+        } else if (supbox.w === 0) {
           //
           //  Use placement for subsccript only
           //

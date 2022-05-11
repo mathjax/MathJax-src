@@ -120,9 +120,10 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<N, 
       //
       //  Place the pre-scripts, then the base, then the post-scripts
       //
-      let x = this.font.params.scriptspace;
+      let x = 0;
       if (data.numPrescripts) {
-        x = this.addScripts(this.dom[0], x, u, v, this.firstPrescript, data.numPrescripts, preAlign);
+        x = this.addScripts(this.dom[0], this.font.params.scriptspace, u, v,
+                            this.firstPrescript, data.numPrescripts, preAlign);
       }
       const base = this.baseChild;
       base.toSVG(svg);

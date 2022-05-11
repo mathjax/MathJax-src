@@ -152,10 +152,11 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
           let k = 0;
           for (const dom of child.dom) {
             if (dom) {
+              const dx = (k ? 0 : child.dx);
               const cbox = child.getLinebreakSizes(k++);
-              x += (cbox.L + child.dx) * cbox.rscale;
+              x += (cbox.L + dx) * cbox.rscale;
               this.place(x, 0, dom);
-              x += (cbox.w + cbox.R - child.dx) * cbox.rscale;
+              x += (cbox.w + cbox.R - dx) * cbox.rscale;
             }
             if (n) {
               x = 0; // FIXME:  handle shift/align

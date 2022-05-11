@@ -218,6 +218,7 @@ export const SvgMsubsup = (function <N, T, D>(): SvgMsubsupClass<N, T, D> {
       sup.toSVG(tail);
       sub.toSVG(tail);
 
+      base.place(0, 0);
       sub.place(w, v);
       sup.place(w + x, u);
     }

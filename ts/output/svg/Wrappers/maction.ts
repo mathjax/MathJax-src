@@ -285,7 +285,8 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
       this.dom.forEach(node => {
         const {h, d, w} = child.getLinebreakSizes(i++);
         this.adaptor.append(node, this.svg('rect', {
-          width: this.fixed(w), height: this.fixed(h + d), y: this.fixed(-d),
+          width: this.fixed(w), height: this.fixed(h + d),
+          x: (i === 1 ? this.fixed(-this.dx) : 0), y: this.fixed(-d),
           fill: 'none', 'pointer-events': 'all'
         }));
       });
