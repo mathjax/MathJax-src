@@ -481,8 +481,8 @@ export function CommonMoMixin<
     /**
      * @override
      */
-    public getLinebreakSizes(i: number): BBox {
-      if (!this.breakCount) return super.getLinebreakSizes(i);
+    public getLineBBox(i: number): BBox {
+      if (!this.breakCount) return super.getLineBBox(i);
       const style = this.breakStyle;
       if (i === 0 && style === 'before') {
         this.bbox.L = 0;  // FIXME:  use indentshift

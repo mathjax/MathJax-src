@@ -379,9 +379,9 @@ export class CommonWrapper<
   }
 
   /**
-   * True if linebreakSizes should be scaled (false for math)
+   * True if lineBBoxes should be scaled (false for math)
    */
-  get breakScale(): boolean {
+  get lineScale(): boolean {
     return true;
   }
 
@@ -469,7 +469,7 @@ export class CommonWrapper<
     let H = 0;
     let D = 0;
     for (let i = 0; i < n; i++) {
-      const {h, d} = this.getLinebreakSizes(i);
+      const {h, d} = this.getLineBBox(i);
       if (h > H) {
         H = h;
       }
@@ -499,8 +499,8 @@ export class CommonWrapper<
    * @param {number} i   The number of the segment whose sizes are to be obtained
    * @return {BBox}      The bounding box of the specified segment
    */
-  public getLinebreakSizes(i: number): BBox {
-    return this.getChildLinebreakSizes(this.childNodes[0], i);
+  public getLineBBox(i: number): BBox {
+    return this.getChildLineBBox(this.childNodes[0], i);
   }
 
   /**
@@ -508,10 +508,10 @@ export class CommonWrapper<
    * @param {number} i   The number of the segment whose sizes are to be obtained
    * @return {BBox}      The bounding box of the specified segment
    */
-  protected getChildLinebreakSizes(child: WW, i: number): BBox {
+  protected getChildLineBBox(child: WW, i: number): BBox {
     const n = this.breakCount;
     if (!n) return this.getOuterBBox();
-    let cbox = child.getLinebreakSizes(i);
+    let cbox = child.getLineBBox(i);
     if (this.styleData || this.bbox.L || this.bbox.R) {
       cbox = cbox.copy();
     }

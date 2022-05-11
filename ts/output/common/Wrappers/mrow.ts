@@ -62,7 +62,7 @@ export interface CommonMrow<
   /**
    * Sizes of lines into which mrow is broken
    */
-  linebreakSizes: BBox[];
+  lineBBox: BBox[];
 
   /**
    * Handle vertical stretching of children to match height of
@@ -140,7 +140,7 @@ export function CommonMrowMixin<
     /**
      * @override
      */
-    public linebreakSizes: BBox[];
+    public lineBBox: BBox[];
 
     /**
      * @override
@@ -222,11 +222,11 @@ export function CommonMrowMixin<
      */
     protected computeBBox(bbox: BBox, recompute: boolean = false) {
       const breaks = this.breakCount;
-      this.linebreakSizes = (breaks ? [new BBox({h: .75, d: .25, w: 0})] : null);
+      this.lineBBox = (breaks ? [new BBox({h: .75, d: .25, w: 0})] : null);
       bbox.empty();
       for (const child of this.childNodes) {
         bbox.append(child.getOuterBBox());
-        breaks && this.computeLinebreakSizes(child);
+        breaks && this.computeLineBBox(child);
       }
       bbox.clean();
       breaks && this.computeLinebreakBBox(bbox);
@@ -243,7 +243,7 @@ export function CommonMrowMixin<
     protected computeLinebreakBBox(bbox: BBox) {
       bbox.empty();
       const isStack = !this.parent.node.linebreakContainer;
-      const lines = this.linebreakSizes;
+      const lines = this.lineBBox;
       const n = lines.length - 1;
       let y = lines[0].h + .1;  // start just above the first line
       let k = 0;
@@ -268,24 +268,23 @@ export function CommonMrowMixin<
     /**
      * @param {WW} child   The child whose linebreak sizes should be added to those of the mrow
      */
-    protected computeLinebreakSizes(child: WW) {
-      this.linebreakSizes[this.linebreakSizes.length - 1].append(child.getLinebreakSizes(0));
+    protected computeLineBBox(child: WW) {
+      this.lineBBox[this.lineBBox.length - 1].append(child.getLineBBox(0));
       const parts = child.breakCount + 1;
       if (parts === 1) return;
       for (let i = 1; i < parts; i++) {
         const bbox = new BBox({h: .75, d: .25, w: 0});
-        bbox.append(child.getLinebreakSizes(i));
-        this.linebreakSizes.push(bbox);
+        bbox.append(child.getLineBBox(i));
+        this.lineBBox.push(bbox);
       }
     }
 
     /**
      * @override
      */
-    public getLinebreakSizes(i: number): BBox {
+    public getLineBBox(i: number): BBox {
       return (!this.breakCount || this.parent.node.linebreakContainer ? this.getOuterBBox() :
-              this.linebreakSizes ? this.linebreakSizes[i] :
-              super.getLinebreakSizes(i));
+              this.lineBBox ? this.lineBBox[i] : super.getLineBBox(i));
     }
 
   } as any as B;

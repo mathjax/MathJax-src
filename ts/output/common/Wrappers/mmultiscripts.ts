@@ -414,10 +414,10 @@ export function CommonMmultiscriptsMixin<
     /**
      * @override
      */
-    public getLinebreakSizes(i: number): BBox {
+    public getLineBBox(i: number): BBox {
       const n = this.baseChild.breakCount;
       if (!n) return this.getOuterBBox();
-      const cbox = this.baseChild.getLinebreakSizes(i).copy();
+      const cbox = this.baseChild.getLineBBox(i).copy();
       let bbox = cbox;
       const [u, v] = this.getCombinedUV();
       if (i === 0) {

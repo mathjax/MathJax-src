@@ -105,8 +105,8 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
         let y = 0;
         for (const i of parents.keys()) {
           this.place(0, y, parents[i]);
-          y -= Math.max(.25, this.linebreakSizes[i]?.d || 0) + .1 +
-               Math.max(.75, this.linebreakSizes[i + 1]?.h || 0);
+          y -= Math.max(.25, this.lineBBox[i]?.d || 0) + .1 +
+               Math.max(.75, this.lineBBox[i + 1]?.h || 0);
         }
       }
     }
@@ -153,7 +153,7 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
           for (const dom of child.dom) {
             if (dom) {
               const dx = (k ? 0 : child.dx);
-              const cbox = child.getLinebreakSizes(k++);
+              const cbox = child.getLineBBox(k++);
               x += (cbox.L + dx) * cbox.rscale;
               this.place(x, 0, dom);
               x += (cbox.w + cbox.R - dx) * cbox.rscale;
@@ -163,7 +163,7 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
             }
           }
           if (n) {
-            const cbox = child.getLinebreakSizes(n);
+            const cbox = child.getLineBBox(n);
             x += (cbox.w + cbox.R) * cbox.rscale;
           }
         }

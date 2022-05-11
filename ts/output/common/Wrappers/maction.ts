@@ -352,8 +352,8 @@ export function CommonMactionMixin<
     /**
      * @override
      */
-    public getLinebreakSizes(i: number): BBox {
-      return this.getChildLinebreakSizes(this.selected, i);
+    public getLineBBox(i: number): BBox {
+      return this.getChildLineBBox(this.selected, i);
     }
 
   } as any as B;

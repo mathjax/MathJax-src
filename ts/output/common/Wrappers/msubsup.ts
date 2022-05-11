@@ -419,7 +419,7 @@ export function CommonMsubsupMixin<
       supbox: BBox = this.supChild.getOuterBBox()
     ): number[] {
       const base = this.baseCore;
-      const bbox = base.getLinebreakSizes(base.breakCount);
+      const bbox = base.getLineBBox(base.breakCount);
       if (this.UVQ) return this.UVQ;
       const tex = this.font.params;
       const t = 3 * tex.rule_thickness;
@@ -468,7 +468,7 @@ export function CommonMsubsupMixin<
       const w = this.getBaseWidth();
       const x = this.getAdjustedIc();
       const [u, v] = this.getUVQ();
-      const y = bbox.d - this.baseChild.getLinebreakSizes(this.baseChild.breakCount).d;
+      const y = bbox.d - this.baseChild.getLineBBox(this.baseChild.breakCount).d;
       bbox.combine(subbox, w, v - y);
       bbox.combine(supbox, w + x, u - y);
       bbox.w += this.font.params.scriptspace;

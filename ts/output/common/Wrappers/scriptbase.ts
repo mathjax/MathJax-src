@@ -589,7 +589,7 @@ export function CommonScriptbaseMixin<
      * @override
      */
     public getBaseWidth(): number {
-      const bbox = this.baseChild.getLinebreakSizes(this.baseChild.breakCount);
+      const bbox = this.baseChild.getLineBBox(this.baseChild.breakCount);
       return bbox.w * bbox.rscale - (this.baseRemoveIc ? this.baseIc : 0) + this.font.params.extra_ic;
     }
 
@@ -614,7 +614,7 @@ export function CommonScriptbaseMixin<
      */
     public getV(): number {
       const base = this.baseCore;
-      const bbox = base.getLinebreakSizes(base.breakCount);
+      const bbox = base.getLineBBox(base.breakCount);
       const sbox = this.scriptChild.getOuterBBox();
       const tex = this.font.params;
       const subscriptshift = this.length2em(this.node.attributes.get('subscriptshift'), tex.sub1);
@@ -630,7 +630,7 @@ export function CommonScriptbaseMixin<
      */
     public getU(): number {
       const base = this.baseCore;
-      const bbox = base.getLinebreakSizes(base.breakCount);
+      const bbox = base.getLineBBox(base.breakCount);
       const sbox = this.scriptChild.getOuterBBox();
       const tex = this.font.params;
       const attr = this.node.attributes.getList('displaystyle', 'superscriptshift');
@@ -830,11 +830,11 @@ export function CommonScriptbaseMixin<
     /**
      * @override
      */
-    public getLinebreakSizes(i: number): BBox {
+    public getLineBBox(i: number): BBox {
       if (this.node.linebreakContainer) return this.getOuterBBox();
       const n = this.breakCount;
-      if (!n || i < n) return super.getLinebreakSizes(i);
-      const bbox = this.baseChild.getLinebreakSizes(i).copy();
+      if (!n || i < n) return super.getLineBBox(i);
+      const bbox = this.baseChild.getLineBBox(i).copy();
       this.appendScripts(bbox);
       this.addMiddleBorders(bbox);
       this.addRightBorders(bbox);

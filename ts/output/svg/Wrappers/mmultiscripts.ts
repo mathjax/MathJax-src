@@ -129,7 +129,7 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<N, 
       base.toSVG(svg);
       base.place(x, 0);
       if (this.breakCount) x = 0;
-      x += base.getLinebreakSizes(base.breakCount).w;
+      x += base.getLineBBox(base.breakCount).w;
       if (data.numScripts) {
         this.addScripts(this.dom[this.dom.length - 1], x, u, v, 1, data.numScripts, postAlign);
       }

@@ -156,7 +156,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     let i = 0;
     return parents.map(parent => {
       parent = this.adaptor.append(parent, this.svg('a', {href: href})) as N;
-      const {h, d, w} = this.getLinebreakSizes(i);
+      const {h, d, w} = this.getLineBBox(i);
       this.adaptor.append(this.dom[i++], this.svg('rect', {
         'data-hitbox': true, fill: 'none', stroke: 'none', 'pointer-events': 'all',
         width: this.fixed(w), height: this.fixed(h + d),
@@ -176,7 +176,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
       this.dom.forEach(node => this.adaptor.setAttribute(node, 'style', styles));
     }
     const padding = (this.styleData?.padding || [0, 0, 0, 0])[3];
-    const border = (this.styleData?.border?.width || [0, 0, 0,0])[3];
+    const border = (this.styleData?.border?.width || [0, 0, 0, 0])[3];
     if (padding || border) {
       this.dx = padding + border;
     }
@@ -213,7 +213,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     if (background) {
       let i = 0;
       this.dom.forEach(node => {
-        const {h, d, w} = this.getLinebreakSizes(i++);
+        const {h, d, w} = this.getLineBBox(i++);
         const rect = this.svg('rect', {
           fill: background,
           x: (i === 1 ? this.fixed(-this.dx) : 0), y: this.fixed(-d),
@@ -244,7 +244,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     for (const dom of this.dom) {
       const L = (!n || !k ? 1 : 0);
       const R = (!n || k === n ? 1 : 0);
-      const bbox = this.getLinebreakSizes(k++);
+      const bbox = this.getLineBBox(k++);
       const [h, d, w] = [bbox.h + f, bbox.d + f, bbox.w + f];
       const outerRT = [w, h];
       const outerLT = [-f, h];

@@ -283,7 +283,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
       const child = this.selected;
       let i = 0;
       this.dom.forEach(node => {
-        const {h, d, w} = child.getLinebreakSizes(i++);
+        const {h, d, w} = child.getLineBBox(i++);
         this.adaptor.append(node, this.svg('rect', {
           width: this.fixed(w), height: this.fixed(h + d),
           x: (i === 1 ? this.fixed(-this.dx) : 0), y: this.fixed(-d),
