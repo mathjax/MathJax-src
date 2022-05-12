@@ -65,6 +65,6 @@
     "esm": "^3.2.25",
     "mhchemparser": "^4.1.0",
     "mj-context-menu": "^0.6.1",
-    "speech-rule-engine": "^4.0.4"
+    "speech-rule-engine": "^4.0.5"
   }
 }

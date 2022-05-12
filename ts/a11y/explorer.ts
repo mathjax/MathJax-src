@@ -398,6 +398,12 @@ let allExplorers: {[options: string]: ExplorerInit} = {
     explorer.speechGenerator.setOptions({
       locale: doc.options.sre.locale, domain: doc.options.sre.domain,
       style: doc.options.sre.style, modality: 'speech'});
+    // This weeds out the case of providing a non-existent locale option.
+    let locale = explorer.speechGenerator.getOptions().locale;
+    if (locale !== Sre.engineSetup().locale) {
+      doc.options.sre.locale = Sre.engineSetup().locale;
+      explorer.speechGenerator.setOptions({locale: doc.options.sre.locale});
+    }
     explorer.showRegion = 'subtitles';
     return explorer;
   },
@@ -624,24 +630,6 @@ let csMenu = function(menu: MJContextMenu, sub: Submenu) {
 MJContextMenu.DynamicSubmenus.set('Clearspeak', csMenu);
 
 /**
- * Locale mapping to language names.
- * @type {{[locale: string]: string}}
- */
-const iso: {[locale: string]: string} = {
-  'ca': 'Catalan',
-  'da': 'Danish',
-  'de': 'German',
-  'en': 'English',
-  'es': 'Spanish',
-  'fr': 'French',
-  'hi': 'Hindi',
-  'it': 'Italian',
-  'nb': 'Bokmål',
-  'nn': 'Nynorsk',
-  'sv': 'Swedish'
-};
-
-/**
  * Creates dynamic locale menu.
  * @param {MJContextMenu} menu The context menu.
  * @param {Submenu} sub The submenu to attach.
@@ -649,10 +637,10 @@ const iso: {[locale: string]: string} = {
 let language = function(menu: MJContextMenu, sub: Submenu) {
   let radios: {type: string, id: string,
                content: string, variable: string}[] = [];
-  for (let lang of Sre.locales) {
+  for (let lang of Sre.locales.keys()) {
     if (lang === 'nemeth') continue;
     radios.push({type: 'radio', id: lang,
-                 content: iso[lang] || lang, variable: 'locale'});
+                 content: Sre.locales.get(lang) || lang, variable: 'locale'});
   }
   radios.sort((x, y) => x.content.localeCompare(y.content, 'en'));
   return menu.factory.get('subMenu')(menu.factory, {
