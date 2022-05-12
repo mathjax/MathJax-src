@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wrapper.js';
+import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor, LineBBox} from '../Wrapper.js';
 import {CommonWrapperFactory} from '../WrapperFactory.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
 import {CommonOutputJax} from '../../common.js';
@@ -481,26 +481,25 @@ export function CommonMoMixin<
     /**
      * @override
      */
-    public getLineBBox(i: number): BBox {
-      if (!this.breakCount) return super.getLineBBox(i);
+    public getLineBBox(i: number): LineBBox {
+      if (!this.breakCount) return LineBBox.from(super.getLineBBox(i));
       const style = this.breakStyle;
       if (i === 0 && style === 'before') {
-        this.bbox.L = 0;  // FIXME:  use indentshift
-        return BBox.zero();
-      } else if (i === 1) {
+        this.bbox.L = 0;
+        return LineBBox.from(BBox.zero());
+      }
+      const bbox = LineBBox.from(this.getOuterBBox());
+      if (i === 1) {
         if (style === 'after') {
+          bbox.w = bbox.h = bbox.d = 0;
           this.bbox.R = 0;
-          return BBox.zero();
         } else if (style === 'duplicate') {
-          const bbox = new BBox();
-          Object.assign(bbox, this.getOuterBBox());
-          bbox.L = 0;  // FIXME:  use indentshift
-          return bbox;
+          bbox.L = 0;
         } else if (this.multChar) {
-          return this.multChar.getOuterBBox();
+          return LineBBox.from(this.multChar.getOuterBBox());
         }
       }
-      return this.getOuterBBox();
+      return bbox;
     }
 
     /**

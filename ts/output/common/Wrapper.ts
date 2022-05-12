@@ -23,7 +23,8 @@
 
 import {AbstractWrapper, WrapperClass} from '../../core/Tree/Wrapper.js';
 import {PropertyList} from '../../core/Tree/Node.js';
-import {MmlNode, MmlNodeClass, TextNode, AbstractMmlNode, indentAttributes} from '../../core/MmlTree/MmlNode.js';
+import {MmlNode, MmlNodeClass, TextNode, AbstractMmlNode,
+        indentAttributes, indentMoAttributes} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {Property} from '../../core/Tree/Node.js';
 import {unicodeChars} from '../../util/string.js';
@@ -71,6 +72,36 @@ export type StyleData = {
   }
 };
 
+/**
+ * A BBox with extra data about line breaking
+ */
+export class LineBBox extends BBox {
+
+  /**
+   * Indentation data for the line break
+   */
+  public indentData: [string, number][];
+
+  /**
+   * @param {BBox} bbox      The bbox to extend
+   * @return {ExtendedBBox}  The bbox extended
+   */
+  public static from(bbox: BBox): LineBBox {
+    const nbox = new this();
+    Object.assign(nbox, bbox);
+    nbox.indentData = [['left', 0], ['left', 0]];
+    return nbox;
+  }
+
+  /**
+   * @override
+   */
+  public copy(): LineBBox {
+    return LineBBox.from(this);
+  }
+}
+
+/*********************************************************/
 /**
  * Generic constructor type
  */
@@ -498,20 +529,20 @@ export class CommonWrapper<
 
   /**
    * @param {number} i   The number of the segment whose sizes are to be obtained
-   * @return {BBox}      The bounding box of the specified segment
+   * @return {LineBBox}  The bounding box of the specified segment
    */
-  public getLineBBox(i: number): BBox {
+  public getLineBBox(i: number): LineBBox {
     return this.getChildLineBBox(this.childNodes[0], i);
   }
 
   /**
    * @param {WW} child   The child node whose i-th line bbox is to be obtained
-   * @param {number} i   The number of the segment whose sizes are to be obtained
-   * @return {BBox}      The bounding box of the specified segment
+   * @param {number} i   The number of the line whose bbox is to be obtained
+   * @return {LineBBox}  The bounding box of the specified line
    */
-  protected getChildLineBBox(child: WW, i: number): BBox {
+  protected getChildLineBBox(child: WW, i: number): LineBBox {
     const n = this.breakCount;
-    if (!n) return this.getOuterBBox();
+    if (!n) return LineBBox.from(this.getOuterBBox());
     let cbox = child.getLineBBox(i);
     if (this.styleData || this.bbox.L || this.bbox.R) {
       cbox = cbox.copy();
@@ -900,20 +931,57 @@ export class CommonWrapper<
     if (indentalignfirst !== 'indentalign') {
       indentalign = indentalignfirst;
     }
-    if (indentalign === 'auto') {
-      indentalign = this.jax.options.displayAlign;
-    }
     if (indentshiftfirst !== 'indentshift') {
       indentshift = indentshiftfirst;
     }
+    return this.processIndent(indentalign, indentshift);
+  }
+
+  /**
+   * @param {string} align       The default alignment for 'auto'
+   * @param {string} shift       The default indentshift for 'auto'
+   * @param {number} width       The container width for relative shifts
+   * @return {[string, number]}  The alignment and indentation shift for the expression
+   */
+  protected getIndentData(align: string, shift: string, width: number = null): [string, number][] {
+    let {indentalign, indentshift, indentalignlast, indentshiftlast} =
+      this.node.attributes.getList(...indentMoAttributes) as StringMap;
+    if (indentalignlast === 'indentalign') {
+      indentalignlast = indentalign;
+    }
+    if (indentshiftlast === 'indentshift') {
+      indentshiftlast = indentshift;
+    }
+    return [this.processIndent(indentalign, indentshift, align, shift, width),
+            this.processIndent(indentalignlast, indentshiftlast, align, shift, width)];
+  }
+
+  /**
+   * @param {string} indentalign   The indentalign to process
+   * @param {string} indentshift   The indentshift to process
+   * @param {string} align         The default alignment for 'auto'
+   * @param {string} shift         The default indentshift for 'auto'
+   * @param {number} width         The container width for relative shifts
+   * @return {[string, number][]}  The alignment and indentation shift (normnal and last) for the Mo
+   */
+  protected processIndent(
+    indentalign: string,
+    indentshift: string,
+    align: string = this.jax.options.displayAlign,
+    shift: string = this.jax.options.displayIndent,
+    width: number = this.metrics.containerWidth
+  ): [string, number] {
+    if (indentalign === 'auto') {
+      indentalign = align;
+    }
     if (indentshift === 'auto') {
-      indentshift = this.jax.options.displayIndent;
+      indentshift = shift;
       if (indentalign === 'right' && !indentshift.match(/^\s*0[a-z]*\s*$/)) {
         indentshift = ('-' + indentshift.trim()).replace(/^--/, '');
       }
     }
-    const shift = this.length2em(indentshift, this.metrics.containerWidth);
-    return [indentalign, shift] as [string, number];
+    const indent = this.length2em(indentshift, width);
+    return [indentalign, indent] as [string, number];
   }
 
   /**
@@ -952,7 +1020,7 @@ export class CommonWrapper<
   }
 
   /**
-   * @param {number} i   The index of the child element whose container is needed
+   * @param {number} i   The index of the child element whose alignment is needed
    * @return {string}    The alignment child element
    */
   public getChildAlign(_i: number): string {

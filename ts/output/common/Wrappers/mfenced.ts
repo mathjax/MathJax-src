@@ -226,7 +226,7 @@ export function CommonMfencedMixin<
     /**
      * @override
      */
-    public getLineBBox(i: number): BBox {
+    public getLineBBox(i: number) {
       return this.mrow.getLineBBox(i);
     }
 

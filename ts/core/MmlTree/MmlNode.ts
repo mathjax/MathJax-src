@@ -77,6 +77,14 @@ export const indentAttributes = [
 ];
 
 /**
+ * Attributes used to determine indentation and shifting
+ */
+export const indentMoAttributes = [
+  'indentalign', 'indentalignlast',
+  'indentshift', 'indentshiftlast'
+];
+
+/**
  * The nodes that can be in the internal MathML tree
  */
 export type MMLNODE = MmlNode | TextNode | XMLNode;

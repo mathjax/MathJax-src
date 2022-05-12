@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wrapper.js';
+import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor, LineBBox} from '../Wrapper.js';
 import {CommonWrapperFactory} from '../WrapperFactory.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
 import {CommonOutputJax} from '../../common.js';
@@ -62,7 +62,7 @@ export interface CommonMrow<
   /**
    * Sizes of lines into which mrow is broken
    */
-  lineBBox: BBox[];
+  lineBBox: LineBBox[];
 
   /**
    * Handle vertical stretching of children to match height of
@@ -140,7 +140,7 @@ export function CommonMrowMixin<
     /**
      * @override
      */
-    public lineBBox: BBox[];
+    public lineBBox: LineBBox[];
 
     /**
      * @override
@@ -225,7 +225,7 @@ export function CommonMrowMixin<
      */
     protected computeBBox(bbox: BBox, recompute: boolean = false) {
       const breaks = this.breakCount;
-      this.lineBBox = (breaks ? [new BBox({h: .75, d: .25, w: 0})] : null);
+      this.lineBBox = (breaks ? [new LineBBox({h: .75, d: .25, w: 0})] : null);
       bbox.empty();
       for (const child of this.childNodes) {
         bbox.append(child.getOuterBBox());
@@ -273,7 +273,7 @@ export function CommonMrowMixin<
       const parts = child.breakCount + 1;
       if (parts === 1) return;
       for (let i = 1; i < parts; i++) {
-        const bbox = new BBox({h: .75, d: .25, w: 0});
+        const bbox = new LineBBox({h: .75, d: .25, w: 0});
         bbox.append(child.getLineBBox(i));
         this.lineBBox.push(bbox);
       }
@@ -282,8 +282,8 @@ export function CommonMrowMixin<
     /**
      * @override
      */
-    public getLineBBox(i: number): BBox {
-      return (!this.breakCount || this.parent.node.linebreakContainer ? this.getOuterBBox() :
+    public getLineBBox(i: number) {
+      return (!this.breakCount || this.parent.node.linebreakContainer ? LineBBox.from(this.getOuterBBox()) :
               this.lineBBox ? this.lineBBox[i] : super.getLineBBox(i));
     }
 

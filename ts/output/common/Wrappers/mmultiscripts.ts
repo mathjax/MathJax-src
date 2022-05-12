@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, Constructor} from '../Wrapper.js';
+import {CommonWrapper, CommonWrapperClass, Constructor, LineBBox} from '../Wrapper.js';
 import {CommonWrapperFactory} from '../WrapperFactory.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
 import {CommonOutputJax} from '../../common.js';
@@ -414,19 +414,19 @@ export function CommonMmultiscriptsMixin<
     /**
      * @override
      */
-    public getLineBBox(i: number): BBox {
+    public getLineBBox(i: number) {
       const n = this.baseChild.breakCount;
-      if (!n) return this.getOuterBBox();
+      if (!n) return LineBBox.from(this.getOuterBBox());
       const cbox = this.baseChild.getLineBBox(i).copy();
       let bbox = cbox;
       const [u, v] = this.getCombinedUV();
       if (i === 0) {
-        bbox = this.addPrescripts(BBox.zero(), u, v);
+        bbox = LineBBox.from(this.addPrescripts(BBox.zero(), u, v));
         bbox.append(cbox);
         this.addLeftBorders(bbox);
         bbox.L = this.bbox.L;
       } else if (i === n) {
-        bbox = this.addPostscripts(bbox, u, v);
+        bbox = this.addPostscripts(bbox, u, v) as LineBBox;
         this.addRightBorders(bbox);
         bbox.R = this.bbox.R;
       }
