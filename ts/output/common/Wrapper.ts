@@ -332,6 +332,11 @@ export class CommonWrapper<
   protected bboxComputed: boolean = false;
 
   /**
+   * The cached number opf linebreaks
+   */
+  protected _breakCount: number = -1;
+
+  /**
    * Delimiter data for stretching this node (NOSTRETCH means not yet determined)
    */
   public stretch: DD = NOSTRETCH as DD;
@@ -373,16 +378,12 @@ export class CommonWrapper<
    * The number of breakpoints in the node
    */
   get breakCount(): number {
-    const node = this.node;
-    if (node.isEmbellished) return this.coreMO().breakCount;
-    return (node.arity < 0 && !node.linebreakContainer ? this.childNodes[0].breakCount : 0);
-  }
-
-  /**
-   * True if lineBBoxes should be scaled (false for math)
-   */
-  get lineScale(): boolean {
-    return true;
+    if (this._breakCount < 0) {
+      const node = this.node;
+      this._breakCount = (node.isEmbellished ? this.coreMO().breakCount :
+                          (node.arity < 0 && !node.linebreakContainer ? this.childNodes[0].breakCount : 0));
+    }
+    return this._breakCount;
   }
 
   /*******************************************************************/

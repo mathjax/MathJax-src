@@ -824,7 +824,10 @@ export function CommonScriptbaseMixin<
      * @override
      */
     get breakCount() {
-      return (this.node.linebreakContainer ? 0 : this.childNodes[0].breakCount);
+      if (this._breakCount < 0) {
+        this._breakCount = (this.node.linebreakContainer ? 0 : this.childNodes[0].breakCount);
+      }
+      return this._breakCount;
     }
 
     /**

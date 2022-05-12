@@ -198,8 +198,11 @@ export function CommonMrowMixin<
      * @override
      */
     get breakCount() {
-      if (!this.childNodes.length) return 0;
-      return this.childNodes.reduce((n, child) => n + child.breakCount, 0);
+      if (this._breakCount < 0) {
+        this._breakCount = (!this.childNodes.length ?  0 :
+                            this.childNodes.reduce((n, child) => n + child.breakCount, 0));
+      }
+      return this._breakCount;
     }
 
     /**
@@ -259,9 +262,6 @@ export function CommonMrowMixin<
       }
       lines[0].L = this.bbox.L;
       lines[n].R = this.bbox.R;
-      for (const line of lines.slice(0, lines.length - 1)) {
-        line.w = this.bbox.w;
-      }
       bbox.clean();
     }
 
