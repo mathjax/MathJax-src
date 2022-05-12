@@ -52,6 +52,7 @@ export const MO = {
   ORD21:      OPDEF(2, 1, TEXCLASS.ORD),
   ORD02:      OPDEF(0, 2, TEXCLASS.ORD),
   ORD55:      OPDEF(5, 5, TEXCLASS.ORD),
+  NONE:       OPDEF(0, 0, TEXCLASS.NONE),
   OP:         OPDEF(1, 2, TEXCLASS.OP, {largeop: true, movablelimits: true, symmetric: true}),
   OPFIXED:    OPDEF(1, 2, TEXCLASS.OP, {largeop: true, movablelimits: true}),
   INTEGRAL:   OPDEF(0, 1, TEXCLASS.OP, {largeop: true, symmetric: true}),
@@ -456,10 +457,10 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '\u2026': MO.INNER,      // horizontal ellipsis
     '\u2043': MO.BIN4,       // hyphen bullet
     '\u2044': MO.TALLBIN,    // fraction slash
-    '\u2061': MO.ORD,        // function application
-    '\u2062': MO.ORD,        // invisible times
-    '\u2063': [0, 0, TEXCLASS.ORD, {linebreakstyle: 'after', separator: true}], // invisible separator
-    '\u2064': MO.ORD,        // invisible plus
+    '\u2061': MO.NONE,       // function application
+    '\u2062': MO.NONE,       // invisible times
+    '\u2063': [0, 0, TEXCLASS.NONE, {linebreakstyle: 'after', separator: true}], // invisible separator
+    '\u2064': MO.NONE,       // invisible plus
     '\u20D7': MO.ACCENT,     // \vec
     '\u2111': MO.ORD,        // \Im
     '\u2113': MO.ORD,        // \ell
