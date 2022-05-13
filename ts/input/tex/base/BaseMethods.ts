@@ -587,7 +587,7 @@ BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, s
   NodeUtil.setAttribute(mml, 'stretchy', stretchy ? true : false);
   // @test Vector Op, Vector
   const mo = (NodeUtil.isEmbellished(c) ? NodeUtil.getCoreMO(c) : c);
-  if (NodeUtil.isType(mo, 'mo')) {
+  if (NodeUtil.isType(mo, 'mo') || NodeUtil.getProperty(mo, 'movablelimits')) {
     // @test Vector Op
     NodeUtil.setProperties(mo, {'movablelimits': false});
   }
