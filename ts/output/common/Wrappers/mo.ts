@@ -481,8 +481,7 @@ export function CommonMoMixin<
     /**
      * @override
      */
-    public getLineBBox(i: number): LineBBox {
-      if (!this.breakCount) return LineBBox.from(super.getLineBBox(i));
+    public computeLineBBox(i: number): LineBBox {
       const style = this.breakStyle;
       if (i === 0 && style === 'before') {
         this.bbox.L = 0;

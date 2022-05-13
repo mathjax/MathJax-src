@@ -352,7 +352,7 @@ export function CommonMactionMixin<
     /**
      * @override
      */
-    public getLineBBox(i: number) {
+    public computeLineBBox(i: number) {
       return this.getChildLineBBox(this.selected, i);
     }
 

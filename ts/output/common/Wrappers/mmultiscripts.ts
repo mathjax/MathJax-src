@@ -414,9 +414,8 @@ export function CommonMmultiscriptsMixin<
     /**
      * @override
      */
-    public getLineBBox(i: number) {
+    protected computeLineBBox(i: number) {
       const n = this.baseChild.breakCount;
-      if (!n) return LineBBox.from(this.getOuterBBox());
       const cbox = this.baseChild.getLineBBox(i).copy();
       let bbox = cbox;
       const [u, v] = this.getCombinedUV();

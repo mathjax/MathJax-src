@@ -60,11 +60,6 @@ export interface CommonMrow<
 > extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
 
   /**
-   * Sizes of lines into which mrow is broken
-   */
-  lineBBox: LineBBox[];
-
-  /**
    * Handle vertical stretching of children to match height of
    *  other nodes in the row.
    */
@@ -136,11 +131,6 @@ export function CommonMrowMixin<
 
   return class CommonMrowMixin extends Base
   implements CommonMrow<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
-    /**
-     * @override
-     */
-    public lineBBox: LineBBox[];
 
     /**
      * @override
@@ -225,11 +215,11 @@ export function CommonMrowMixin<
      */
     protected computeBBox(bbox: BBox, recompute: boolean = false) {
       const breaks = this.breakCount;
-      this.lineBBox = (breaks ? [new LineBBox({h: .75, d: .25, w: 0})] : null);
+      this.lineBBox = (breaks ? [new LineBBox({h: .75, d: .25, w: 0})] : []);
       bbox.empty();
       for (const child of this.childNodes) {
         bbox.append(child.getOuterBBox());
-        breaks && this.computeLineBBox(child);
+        breaks && this.computeChildLineBBox(child);
       }
       bbox.clean();
       breaks && this.computeLinebreakBBox(bbox);
@@ -268,7 +258,7 @@ export function CommonMrowMixin<
     /**
      * @param {WW} child   The child whose linebreak sizes should be added to those of the mrow
      */
-    protected computeLineBBox(child: WW) {
+    protected computeChildLineBBox(child: WW) {
       this.lineBBox[this.lineBBox.length - 1].append(child.getLineBBox(0));
       const parts = child.breakCount + 1;
       if (parts === 1) return;
@@ -282,9 +272,8 @@ export function CommonMrowMixin<
     /**
      * @override
      */
-    public getLineBBox(i: number) {
-      return (!this.breakCount || this.parent.node.linebreakContainer ? LineBBox.from(this.getOuterBBox()) :
-              this.lineBBox ? this.lineBBox[i] : super.getLineBBox(i));
+    public computeLineBBox(i: number) {
+      return (this.parent.node.linebreakContainer ? LineBBox.from(this.getOuterBBox()) : super.getLineBBox(i));
     }
 
   } as any as B;

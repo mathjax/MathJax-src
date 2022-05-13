@@ -368,6 +368,11 @@ export class CommonWrapper<
   protected _breakCount: number = -1;
 
   /**
+   * Sizes of lines into which the element is broken
+   */
+  public lineBBox: LineBBox[] = [];
+
+  /**
    * Delimiter data for stretching this node (NOSTRETCH means not yet determined)
    */
   public stretch: DD = NOSTRETCH as DD;
@@ -528,10 +533,27 @@ export class CommonWrapper<
   }
 
   /**
+   * Get the bounding box for the i-th line (first and last may be part of a surrounding line).
+   * Get the bbox from the lineBBox cache, or compute it, as needed.
+   *
    * @param {number} i   The number of the segment whose sizes are to be obtained
    * @return {LineBBox}  The bounding box of the specified segment
    */
   public getLineBBox(i: number): LineBBox {
+    if (!this.lineBBox[i]) {
+      const n = this.breakCount;
+      this.lineBBox[i] = (n ? this.computeLineBBox(i) : LineBBox.from(this.getOuterBBox()));
+    }
+    return this.lineBBox[i];
+  }
+
+  /**
+   * Compute the bounding box for the i-th line (for when it is not in the cache).
+   *
+   * @param {number} i   The number of the segment whose sizes are to be obtained
+   * @return {LineBBox}  The bounding box of the specified segment
+   */
+  protected computeLineBBox(i: number): LineBBox {
     return this.getChildLineBBox(this.childNodes[0], i);
   }
 
@@ -542,7 +564,6 @@ export class CommonWrapper<
    */
   protected getChildLineBBox(child: WW, i: number): LineBBox {
     const n = this.breakCount;
-    if (!n) return LineBBox.from(this.getOuterBBox());
     let cbox = child.getLineBBox(i);
     if (this.styleData || this.bbox.L || this.bbox.R) {
       cbox = cbox.copy();
