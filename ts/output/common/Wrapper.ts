@@ -23,8 +23,7 @@
 
 import {AbstractWrapper, WrapperClass} from '../../core/Tree/Wrapper.js';
 import {PropertyList} from '../../core/Tree/Node.js';
-import {MmlNode, MmlNodeClass, TextNode, AbstractMmlNode,
-        indentAttributes, indentMoAttributes} from '../../core/MmlTree/MmlNode.js';
+import {MmlNode, MmlNodeClass, TextNode, AbstractMmlNode, indentAttributes} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {Property} from '../../core/Tree/Node.js';
 import {unicodeChars} from '../../util/string.js';
@@ -73,6 +72,11 @@ export type StyleData = {
 };
 
 /**
+ * align and indent values
+ */
+export type IndentData = [string, string];
+
+/**
  * A BBox with extra data about line breaking
  */
 export class LineBBox extends BBox {
@@ -80,25 +84,58 @@ export class LineBBox extends BBox {
   /**
    * Indentation data for the line break
    */
-  public indentData: [string, number][];
+  public indentData: IndentData[] = null;
 
   /**
-   * @param {BBox} bbox      The bbox to extend
-   * @return {ExtendedBBox}  The bbox extended
+   * True if this bbox is at the beginning of a line
    */
-  public static from(bbox: BBox): LineBBox {
+  public isFirst: boolean = false;
+
+  /**
+   * @param {BBox} bbox           The bbox to extend
+   * @param {IndentData} indent   The align/shift information
+   * @return {ExtendedBBox}       The bbox extended
+   */
+  public static from(bbox: BBox, indent: IndentData[] = null): LineBBox {
     const nbox = new this();
     Object.assign(nbox, bbox);
-    nbox.indentData = [['left', 0], ['left', 0]];
+    if (indent) {
+      nbox.indentData = indent;
+    }
     return nbox;
   }
 
   /**
    * @override
    */
-  public copy(): LineBBox {
-    return LineBBox.from(this);
+  public append(cbox: LineBBox) {
+    if (this.isFirst) {
+      cbox.L = 0;  // remove spacing after an operator with a linebreak after it
+    }
+    if (cbox.indentData) {
+      this.indentData = cbox.indentData;
+    }
+    super.append(cbox);
+    this.isFirst = cbox.isFirst;
   }
+
+  /**
+   * @override
+   */
+  public copy(): LineBBox {
+    const bbox = LineBBox.from(this);
+    bbox.indentData = this.indentData;
+    return bbox;
+  }
+
+  /**
+   * @param {LineBBox} bbox   The LineBBox whose indentData is to be copied
+   * @return {IndentData[]}   The copied array
+   */
+  protected copyIndent(bbox: LineBBox): IndentData[] {
+    return bbox.indentData.map(([align, indent]) => [align, indent]);
+  }
+
 }
 
 /*********************************************************/
@@ -629,7 +666,7 @@ export class CommonWrapper<
     }
     let changed = false;
     for (const child of this.childNodes) {
-      const cbox = child.getOuterBBox();
+      const cbox = child.getBBox();
       if (cbox.pwidth && child.setChildPWidths(recompute, w === null ? cbox.w : w, clear)) {
         changed = true;
       }
@@ -956,25 +993,6 @@ export class CommonWrapper<
       indentshift = indentshiftfirst;
     }
     return this.processIndent(indentalign, indentshift);
-  }
-
-  /**
-   * @param {string} align       The default alignment for 'auto'
-   * @param {string} shift       The default indentshift for 'auto'
-   * @param {number} width       The container width for relative shifts
-   * @return {[string, number]}  The alignment and indentation shift for the expression
-   */
-  protected getIndentData(align: string, shift: string, width: number = null): [string, number][] {
-    let {indentalign, indentshift, indentalignlast, indentshiftlast} =
-      this.node.attributes.getList(...indentMoAttributes) as StringMap;
-    if (indentalignlast === 'indentalign') {
-      indentalignlast = indentalign;
-    }
-    if (indentshiftlast === 'indentshift') {
-      indentshiftlast = indentshift;
-    }
-    return [this.processIndent(indentalign, indentshift, align, shift, width),
-            this.processIndent(indentalignlast, indentshiftlast, align, shift, width)];
   }
 
   /**

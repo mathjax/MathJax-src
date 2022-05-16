@@ -21,11 +21,12 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor, LineBBox} from '../Wrapper.js';
+import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor,
+        LineBBox, IndentData, StringMap} from '../Wrapper.js';
 import {CommonWrapperFactory} from '../WrapperFactory.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
 import {CommonOutputJax} from '../../common.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
+import {MmlNode, indentMoAttributes} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../../../util/BBox.js';
 import {unicodeChars} from '../../../util/string.js';
@@ -487,18 +488,36 @@ export function CommonMoMixin<
         this.bbox.L = 0;
         return LineBBox.from(BBox.zero());
       }
-      const bbox = LineBBox.from(this.getOuterBBox());
+      let bbox = LineBBox.from(this.getOuterBBox());
       if (i === 1) {
+        const indent = this.getIndentValues();
+        bbox.indentData = indent;
         if (style === 'after') {
           bbox.w = bbox.h = bbox.d = 0;
+          bbox.isFirst = true;
           this.bbox.R = 0;
         } else if (style === 'duplicate') {
           bbox.L = 0;
         } else if (this.multChar) {
-          return LineBBox.from(this.multChar.getOuterBBox());
+          bbox = LineBBox.from(this.multChar.getOuterBBox(), indent);
         }
       }
       return bbox;
+    }
+
+    /**
+     * @return {IndentDatap[]}   The general and last indent values (align and shift)/
+     */
+    protected getIndentValues(): IndentData[] {
+      let {indentalign, indentshift, indentalignlast, indentshiftlast} =
+        this.node.attributes.getList(...indentMoAttributes) as StringMap;
+      if (indentalignlast === 'indentalign') {
+        indentalignlast = indentalign;
+      }
+      if (indentshiftlast === 'indentshift') {
+        indentshiftlast = indentshift;
+      }
+      return [[indentalign, indentshift], [indentalignlast, indentshiftlast]] as IndentData[];
     }
 
     /**

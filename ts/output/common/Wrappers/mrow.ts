@@ -250,8 +250,12 @@ export function CommonMrowMixin<
         y = -bbox.d;
         k++;
       }
-      lines[0].L = this.bbox.L;
-      lines[n].R = this.bbox.R;
+      if (isStack) {
+        lines[0].L = this.bbox.L;
+        lines[n].R = this.bbox.R;
+      } else {
+        bbox. w = this.shiftLines();
+      }
       bbox.clean();
     }
 
@@ -264,6 +268,7 @@ export function CommonMrowMixin<
       if (parts === 1) return;
       for (let i = 1; i < parts; i++) {
         const bbox = new LineBBox({h: .75, d: .25, w: 0});
+        bbox.isFirst = true;
         bbox.append(child.getLineBBox(i));
         this.lineBBox.push(bbox);
       }
@@ -274,6 +279,31 @@ export function CommonMrowMixin<
      */
     public computeLineBBox(i: number) {
       return (this.parent.node.linebreakContainer ? LineBBox.from(this.getOuterBBox()) : super.getLineBBox(i));
+    }
+
+    /**
+     * Handle alignment and shifting if lines
+     */
+    protected shiftLines() {
+      const alignfirst = (this.parent.node.attributes.get('data-align') as string) || 'left';
+      const shiftfirst = (this.parent.node.attributes.get('data-indent') as string) || '0';
+      const W = Math.max(...this.lineBBox.map(bbox => bbox.w));
+      const n = this.lineBBox.length - 1;
+      const align: string[] = [];
+      const shift: number[] = [];
+      for (let i = 0; i <= n; i++) {
+        let [ialign, ishift] = (i === 0 ? [alignfirst, shiftfirst] : this.lineBBox[i].indentData[i === n ? 1 : 0]);
+        [align[i], shift[i]] = this.processIndent(ialign, ishift, alignfirst, shiftfirst, W);
+      }
+      let w = W;
+      for (let i = 0; i <= n; i++) {
+        const bbox = this.lineBBox[i];
+        bbox.L = this.getAlignX(W, bbox, align[i]) + shift[i];
+        if (bbox.L + bbox.w + bbox.R > w) {
+          w = bbox.L + bbox.w + bbox.R;
+        }
+      }
+      return w;
     }
 
   } as any as B;

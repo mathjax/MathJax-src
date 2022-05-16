@@ -104,8 +104,9 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
       if (this.linebreakCount) {
         let y = 0;
         for (const i of parents.keys()) {
-          this.place(0, y, parents[i]);
-          y -= Math.max(.25, this.lineBBox[i]?.d || 0) + .1 +
+          const lbox = this.lineBBox[i];
+          this.place(lbox?.L || 0, y, parents[i]);
+          y -= Math.max(.25, lbox?.d || 0) + .1 +
                Math.max(.75, this.lineBBox[i + 1]?.h || 0);
         }
       }
