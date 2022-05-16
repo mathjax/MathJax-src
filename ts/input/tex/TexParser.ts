@@ -336,10 +336,11 @@ export default class TexParser {
     if (this.GetNext() !== '[') {
       return def;
     }
-    let j = ++this.i, parens = 0;
+    let j = ++this.i, parens = 0, squareParens = 1;
     while (this.i < this.string.length) {
       switch (this.string.charAt(this.i++)) {
       case '{':   parens++; break;
+      case '[':   squareParens++; break;
       case '\\':  this.i++; break;
       case '}':
         if (parens-- <= 0) {
@@ -349,7 +350,8 @@ export default class TexParser {
         }
         break;
       case ']':
-        if (parens === 0) {
+        squareParens--;
+        if (parens === 0 && squareParens === 0) {
           return this.string.slice(j, this.i - 1);
         }
         break;
