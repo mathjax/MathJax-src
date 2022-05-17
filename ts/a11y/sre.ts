@@ -54,6 +54,8 @@ export namespace Sre {
 
   export const toEnriched = Api.toEnriched;
 
+  export const toSpeech = Api.toSpeech;
+
   export const clearspeakPreferences = ClearspeakPreferences;
 
   export const getHighlighter = HighlighterFactory.highlighter;
