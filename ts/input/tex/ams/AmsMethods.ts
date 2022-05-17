@@ -324,17 +324,19 @@ AmsMethods.SideSet = function (parser: TexParser, name: string) {
     mml = postScripts;
   }
   //
-  //  Push the needed pieces onto the stack.
+  //  Put the needed pieces into a TeXAtom of class OP.
   //  Note that the postScripts are in the mml element,
   //    either as part of the mmultiscripts node, or the
   //    msubsup with the base inserted into it.
   //
+  const mrow = parser.create('node', 'TeXAtom', [], {texClass: TEXCLASS.OP, movesupsub: true, movablelimits: true});
   if (preRest) {
-    preScripts && parser.Push(preScripts);
-    parser.Push(preRest);
+    preScripts && mrow.appendChild(preScripts);
+    mrow.appendChild(preRest);
   }
-  parser.Push(mml);
-  postRest && parser.Push(postRest);
+  mrow.appendChild(mml);
+  postRest && mrow.appendChild(postRest);
+  parser.Push(mrow);
 };
 
 /**
