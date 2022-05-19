@@ -129,7 +129,9 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
       if (!this.isEscaped && (document.options.enableEnrichment || force)) {
         if (document.options.sre.speech !== currentSpeech) {
           currentSpeech = document.options.sre.speech;
-          mathjax.retryAfter(Sre.setupEngine(document.options.sre));
+          mathjax.retryAfter(
+            Sre.setupEngine(document.options.sre).then(
+              () => Sre.sreReady()));
         }
         const math = new document.options.MathItem('', MmlJax);
         try {
