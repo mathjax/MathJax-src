@@ -135,6 +135,7 @@ export function CommonMtdMixin<
      */
     public invalidateBBox() {
       this.bboxComputed = false;
+      this.lineBBox = [];
     }
 
     /**

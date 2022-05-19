@@ -680,6 +680,7 @@ export class CommonWrapper<
   public invalidateBBox() {
     if (this.bboxComputed) {
       this.bboxComputed = false;
+      this.lineBBox = [];
       if (this.parent) {
         this.parent.invalidateBBox();
       }

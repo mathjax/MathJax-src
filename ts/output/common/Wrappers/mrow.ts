@@ -254,8 +254,9 @@ export function CommonMrowMixin<
         lines[0].L = this.bbox.L;
         lines[n].R = this.bbox.R;
       } else {
-        bbox. w = this.shiftLines();
+        bbox.w = this.shiftLines();
       }
+      bbox.pwidth = '100%';  // stretch to fill container
       bbox.clean();
     }
 
@@ -284,10 +285,9 @@ export function CommonMrowMixin<
     /**
      * Handle alignment and shifting if lines
      */
-    protected shiftLines() {
+    protected shiftLines(W: number = Math.max(...this.lineBBox.map(bbox => bbox.w))) {
       const alignfirst = (this.parent.node.attributes.get('data-align') as string) || 'left';
       const shiftfirst = (this.parent.node.attributes.get('data-indent') as string) || '0';
-      const W = Math.max(...this.lineBBox.map(bbox => bbox.w));
       const n = this.lineBBox.length - 1;
       const align: string[] = [];
       const shift: number[] = [];
@@ -304,6 +304,15 @@ export function CommonMrowMixin<
         }
       }
       return w;
+    }
+
+    public setChildPWidths(recompute: boolean, w: (number | null) = null, clear: boolean = true): boolean {
+      if (recompute) return false;
+      if (clear) {
+        this.bbox.pwidth = '';
+      }
+      this.bbox.w = this.shiftLines(w);
+      return true;
     }
 
   } as any as B;

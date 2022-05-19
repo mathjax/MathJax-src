@@ -596,7 +596,7 @@ export function CommonMtableMixin<
     /**
      * @override
      */
-    public stretchColumn(i: number, W: number) {
+    public stretchColumn(i: number, W: number | null) {
       let stretchy: WW[] = [];
       //
       //  Locate and count the stretchy children
@@ -613,28 +613,28 @@ export function CommonMtableMixin<
       }
       let count = stretchy.length;
       let nodeCount = this.childNodes.length;
-      if (count && nodeCount > 1) {
-        if (W === null) {
-          W = 0;
-          //
-          //  If all the children are stretchy, find the largest one,
-          //  otherwise, find the width of the non-stretchy children.
-          //
-          let all = (count > 1 && count === nodeCount);
-          for (const row of this.tableRows) {
-            const cell = row.getChild(i);
-            if (cell) {
-              const child = cell.childNodes[0];
-              const noStretch = (child.stretch.dir === DIRECTION.None);
-              if (all || noStretch) {
-                const {w} = child.getBBox(noStretch);
-                if (w > W) {
-                  W = w;
-                }
+      if (count && nodeCount > 1 && W === null) {
+        W = 0;
+        //
+        //  If all the children are stretchy, find the largest one,
+        //  otherwise, find the width of the non-stretchy children.
+        //
+        let all = (count > 1 && count === nodeCount);
+        for (const row of this.tableRows) {
+          const cell = row.getChild(i);
+          if (cell) {
+            const child = cell.childNodes[0];
+            const noStretch = (child.stretch.dir === DIRECTION.None);
+            if (all || noStretch) {
+              const {w} = child.getBBox(noStretch);
+              if (w > W) {
+                W = w;
               }
             }
           }
         }
+      }
+      if (W !== null) {
         //
         //  Stretch the stretchable children
         //
