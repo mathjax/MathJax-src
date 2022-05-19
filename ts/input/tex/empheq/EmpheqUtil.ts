@@ -152,7 +152,7 @@ export const EmpheqUtil = {
     for (const row of table.childNodes.slice(0).reverse()) {
       mtd = parser.create('node', 'mtd');
       row.childNodes.unshift(mtd);
-      row.replaceChild(mtd, mtd);   // make sure parent is set
+      mtd.parent = row;
       if (row.isKind('mlabeledtr')) {
         row.childNodes[0] = row.childNodes[1];
         row.childNodes[1] = mtd;

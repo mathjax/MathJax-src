@@ -549,7 +549,7 @@ namespace ParseUtil {
       options.addNode(n.kind, n);
       const lists = (n.getProperty('in-lists') as string || '').split(/,/);
       for (const list of lists) {
-        options.addNode(list, n);
+        list && options.addNode(list, n);
       }
     });
     return tree;
