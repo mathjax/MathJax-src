@@ -101,7 +101,7 @@ require('mathjax').init({
 }).catch((err) => console.log(err.message));
 ```
 
-**Note:** this technique is for node-based application only, not for
+**Note:** this technique is for node-based applications only, not for
 browser applications.  This method sets up an alternative DOM
 implementation, which you don't need in the browser, and tells MathJax
 to use node's `require()` command to load external modules.  This
