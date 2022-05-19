@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2021 The MathJax Consortium
+ *  Copyright (c) 2009-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@
 
 import {MathDocument} from '../../core/MathDocument.js';
 import {CssStyles} from '../../util/StyleList.js';
-import '../sre.js';
+import Sre from '../sre.js';
 
 export type A11yDocument = MathDocument<HTMLElement, Text, Document>;
 
@@ -44,9 +44,9 @@ export interface Region<T> {
   /**
    * Shows the live region in the document.
    * @param {HTMLElement} node
-   * @param {sre.Highlighter} highlighter
+   * @param {Sre.highlighter} highlighter
    */
-  Show(node: HTMLElement, highlighter: sre.Highlighter): void;
+  Show(node: HTMLElement, highlighter: Sre.highlighter): void;
 
   /**
    * Takes the element out of the document flow.
@@ -151,7 +151,7 @@ export abstract class AbstractRegion<T> implements Region<T> {
   /**
    * @override
    */
-  public Show(node: HTMLElement, highlighter: sre.Highlighter) {
+  public Show(node: HTMLElement, highlighter: Sre.highlighter) {
     this.position(node);
     this.highlight(highlighter);
     this.div.classList.add(this.CLASS.className + '_Show');
@@ -167,9 +167,9 @@ export abstract class AbstractRegion<T> implements Region<T> {
 
   /**
    * Highlights the region.
-   * @param {sre.Highlighter} highlighter The SRE highlighter.
+   * @param {Sre.highlighter} highlighter The Sre highlighter.
    */
-  protected abstract highlight(highlighter: sre.Highlighter): void;
+  protected abstract highlight(highlighter: Sre.highlighter): void;
 
 
   /**
@@ -258,7 +258,7 @@ export class DummyRegion extends AbstractRegion<void> {
   /**
    * @override
    */
-  public highlight(_highlighter: sre.Highlighter) {}
+  public highlight(_highlighter: Sre.highlighter) {}
 }
 
 
@@ -267,7 +267,7 @@ export class StringRegion extends AbstractRegion<string> {
   /**
    * @override
    */
-  public  Clear(): void {
+  public Clear(): void {
     this.Update('');
     this.inner.style.top = '';
     this.inner.style.backgroundColor = '';
@@ -293,7 +293,7 @@ export class StringRegion extends AbstractRegion<string> {
   /**
    * @override
    */
-  protected highlight(highlighter: sre.Highlighter) {
+  protected highlight(highlighter: Sre.highlighter) {
     const color = highlighter.colorString();
     this.inner.style.backgroundColor = color.background;
     this.inner.style.color = color.foreground;
@@ -437,7 +437,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
   /**
    * @override
    */
-  protected highlight(highlighter: sre.Highlighter) {
+  protected highlight(highlighter: Sre.highlighter) {
     // TODO Do this with styles to avoid the interaction of SVG/CHTML.
     if (this.inner.firstChild &&
         !(this.inner.firstChild as HTMLElement).hasAttribute('sre-highlight')) {
@@ -451,7 +451,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
   /**
    * @override
    */
-  public Show(node: HTMLElement, highlighter: sre.Highlighter) {
+  public Show(node: HTMLElement, highlighter: Sre.highlighter) {
     this.div.style.fontSize = this.document.options.a11y.magnify;
     this.Update(node);
     super.Show(node, highlighter);

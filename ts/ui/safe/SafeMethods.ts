@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2020-2021 The MathJax Consortium
+ *  Copyright (c) 2020-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -242,15 +242,15 @@ export const SafeMethods: {[name: string]: FilterFunction<any, any, any>} = {
    *
    * @param {Safe<N,T,D>} safe  The Safe object being used
    * @param {string} size       The script size multiplier to test
-   * @return {number}           The sanitized size
+   * @return {string}           The sanitized size
    *
    * @template N  The HTMLElement node class
    * @template T  The Text node class
    * @template D  The Document class
    */
-  filterSizeMultiplier<N, T, D>(safe: Safe<N, T, D>, size: string): number {
+  filterSizeMultiplier<N, T, D>(safe: Safe<N, T, D>, size: string): string {
     const [m, M] = safe.options.scriptsizemultiplierRange || [-Infinity, Infinity];
-    return Math.min(M, Math.max(m, parseFloat(size)));
+    return Math.min(M, Math.max(m, parseFloat(size))).toString();
   },
 
   /**
@@ -258,15 +258,15 @@ export const SafeMethods: {[name: string]: FilterFunction<any, any, any>} = {
    *
    * @param {Safe<N,T,D>} safe  The Safe object being used
    * @param {string} size       The scriptlevel to test
-   * @return {number|null}      The sanitized scriptlevel or null
+   * @return {string|null}      The sanitized scriptlevel or null
    *
    * @template N  The HTMLElement node class
    * @template T  The Text node class
    * @template D  The Document class
    */
-  filterScriptLevel<N, T, D>(safe: Safe<N, T, D>, level: string): number | null {
+  filterScriptLevel<N, T, D>(safe: Safe<N, T, D>, level: string): string | null {
     const [m, M] = safe.options.scriptlevelRange || [-Infinity, Infinity];
-    return Math.min(M, Math.max(m, parseInt(level)));
+    return Math.min(M, Math.max(m, parseInt(level))).toString();
   },
 
   /**

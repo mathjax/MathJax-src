@@ -48,7 +48,7 @@ function fileSize(file) {
 /**
  * Regular expressions for the components directory and the MathJax .js location
  */
-const compRE = fileRegExp(path.join(path.dirname(__dirname), 'src'));
+const compRE = fileRegExp(path.dirname(__dirname));
 const rootRE = fileRegExp(path.join(path.dirname(path.dirname(__dirname)), 'js'));
 const nodeRE = fileRegExp(path.join(path.dirname(path.dirname(__dirname)), 'node_modules'));
 
@@ -83,7 +83,7 @@ async function webpackLib(dir) {
     //
     // Get js directory from the webpack.config.js file
     //
-    const jsdir = require(path.resolve(dir, 'webpack.config.js')).plugins[0].definitions.jsdir;
+    const jsdir = require(path.resolve(dir, 'webpack.config.js')).plugins[0].definitions.__JSDIR__;
     const jsRE = fileRegExp(jsdir);
     const libRE = fileRegExp(path.resolve(jsdir, '..', 'components'));
 
@@ -103,17 +103,27 @@ async function webpackLib(dir) {
         .replace(/ \+ \d+ modules/, '')
         .replace(dirRE, '.');
     }
-    for (const module of modules.sort((a,b) => a.name < b.name ? -1 : 1)) {
+    const list = [];
+    for (const module of modules) {
       if (module.moduleType.match(/javascript/)) {
-        const name = module.name
-              .replace(compRE, '[components]')
-              .replace(rootRE, '[mathjax]')
-              .replace(nodeRE, '[node]')
-              .replace(jsRE,   '[js]')
-              .replace(libRE,  '[lib]');
-        console.log('  ' + name + fileSize(module));
+        let name = module.name
+            .replace(compRE, '[components]')
+            .replace(rootRE, '[mathjax]')
+            .replace(nodeRE, '[node]')
+            .replace(jsRE,   '[js]')
+            .replace(libRE,  '[lib]');
+        if (name.charAt(0) !== '.' && name.charAt(0) !== '[') {
+          name = path.relative(dir, name);
+        }
+        list.push('  ' + name + fileSize(module));
       }
     }
+    console.log(
+      list
+        .filter(a => a.slice(2, 4) === './').sort()
+        .concat(list.filter(a => a.slice(2, 4) !== './').sort())
+        .join('\n')
+    );
   } catch (err) {
     console.error(err);
   }

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -58,16 +58,19 @@ CommonTextNodeMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
   public toSVG(parent: N) {
     const text = (this.node as TextNode).getText();
     const variant = this.parent.variant;
+    if (text.length === 0) return;
     if (variant === '-explicitFont') {
-      this.adaptor.append(parent, this.jax.unknownText(text, variant));
+      this.element = this.adaptor.append(parent, this.jax.unknownText(text, variant));
     } else {
       const chars = this.remappedText(text, variant);
+      if (this.parent.childNodes.length > 1) {
+        parent = this.element = this.adaptor.append(parent, this.svg('g', {'data-mml-node': 'text'}));
+      }
       let x = 0;
       for (const n of chars) {
         x += this.placeChar(n, x, 0, parent, variant);
       }
     }
-    this.element = this.adaptor.lastChild(parent);
   }
 
 }

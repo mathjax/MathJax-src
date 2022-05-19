@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -315,13 +315,33 @@ export class CommonWrapper<
   }
 
   /**
+   * Return the wrapped node's bounding box that includes borders and padding
+   *
+   * @param {boolean} save  Whether to cache the bbox or not (used for stretchy elements)
+   * @return {BBox}  The computed bounding box
+   */
+  public getOuterBBox(save: boolean = true): BBox {
+    const bbox = this.getBBox(save);
+    if (!this.styles) return bbox;
+    const obox = new BBox();
+    Object.assign(obox, bbox);
+    for (const [name, side] of BBox.StyleAdjust) {
+      const x = this.styles.get(name);
+      if (x) {
+        (obox as any)[side] += this.length2em(x, 1, obox.rscale);
+      }
+    }
+    return obox;
+  }
+
+  /**
    * @param {BBox} bbox           The bounding box to modify (either this.bbox, or an empty one)
    * @param {boolean} recompute   True if we are recomputing due to changes in children that have percentage widths
    */
   protected computeBBox(bbox: BBox, recompute: boolean = false) {
     bbox.empty();
     for (const child of this.childNodes) {
-      bbox.append(child.getBBox());
+      bbox.append(child.getOuterBBox());
     }
     bbox.clean();
     if (this.fixesPWidth && this.setChildPWidths(recompute)) {
@@ -348,7 +368,7 @@ export class CommonWrapper<
     }
     let changed = false;
     for (const child of this.childNodes) {
-      const cbox = child.getBBox();
+      const cbox = child.getOuterBBox();
       if (cbox.pwidth && child.setChildPWidths(recompute, w === null ? cbox.w : w, clear)) {
         changed = true;
       }

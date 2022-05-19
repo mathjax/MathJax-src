@@ -1,5 +1,5 @@
 /*************************************************************
- *  Copyright (c) 2020-2021 MathJax Consortium
+ *  Copyright (c) 2020-2022 MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -282,10 +282,6 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
 
   /**
    * Implements \underbacket and \overbracket.
-   * (Currently only works in CHTML, since we don't yet handle styles properly in SVG.
-   *  This includes a workaround oin CHTML to the fact that the border size is not
-   *  part of MathJax's bbox computations yet.  That will need to be removed when
-   *  we handle borders properly.)
    *
    * @param {TexParser} parser   The calling parser.
    * @param {string} name        The macro name.
@@ -294,27 +290,20 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     const thickness = length2em(parser.GetBrackets(name, '.1em'), .1);
     const height = parser.GetBrackets(name, '.2em');
     const arg = parser.GetArgument(name);
-    const [pos, accent, border, side] = (
+    const [pos, accent, border] = (
       name.charAt(1) === 'o' ?
-        ['over', 'accent', 'bottom', 'height'] :
-        ['under', 'accentunder', 'top', 'depth']
+        ['over', 'accent', 'bottom'] :
+        ['under', 'accentunder', 'top']
     );
     const t = em(thickness);
-    const t2 = em(2 * thickness);
     const base = new TexParser(arg, parser.stack.env, parser.configuration).mml();
     const copy = new TexParser(arg, parser.stack.env, parser.configuration).mml();
     const script = parser.create('node', 'mpadded', [
-      parser.create('node', 'mpadded', [
-        parser.create('node', 'mphantom', [copy])
-      ], {
-        style: `border: ${t} solid; border-${border}: none`,
-        width: `-${t2}`,
-        height: height,
-        depth: 0
-      })
+      parser.create('node', 'mphantom', [copy])
     ], {
-      width: `+${t2}`,
-      [side]: `+${t}`
+      style: `border: ${t} solid; border-${border}: none`,
+      height: height,
+      depth: 0
     });
     const node = ParseUtil.underOver(parser, base, script, pos, true);
     const munderover = NodeUtil.getChildAt(NodeUtil.getChildAt(node, 0), 0);  // TeXAtom.inferredMrow child 0
@@ -480,7 +469,9 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
       for (let i = args.length; i < n; i++) {
         args.push(parser.GetArgument(name));
       }
+      pre  = ParseUtil.substituteArgs(parser, args, pre);
       body = ParseUtil.substituteArgs(parser, args, body);
+      post = ParseUtil.substituteArgs(parser, args, post);
     }
     body = body.replace(/\\delimsize/g, delim);
     parser.string = [pre, left, open, body, right, close, post, parser.string.substr(parser.i)]
@@ -490,12 +481,12 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
   },
 
   /**
-   * Implements \DeclarePairedDelimiters.
+   * Implements \DeclarePairedDelimiter.
    *
    * @param {TexParser} parser   The calling parser.
    * @param {string} name        The macro name.
    */
-  DeclarePairedDelimiters(parser: TexParser, name: string) {
+  DeclarePairedDelimiter(parser: TexParser, name: string) {
     const cs = NewcommandUtil.GetCsNameArgument(parser, name);
     const open = parser.GetArgument(name);
     const close = parser.GetArgument(name);
@@ -503,12 +494,12 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
   },
 
   /**
-   * Implements \DeclarePairedDelimitersX.
+   * Implements \DeclarePairedDelimiterX.
    *
    * @param {TexParser} parser   The calling parser.
    * @param {string} name        The macro name.
    */
-  DeclarePairedDelimitersX(parser: TexParser, name: string) {
+  DeclarePairedDelimiterX(parser: TexParser, name: string) {
     const cs = NewcommandUtil.GetCsNameArgument(parser, name);
     const n = NewcommandUtil.GetArgCount(parser, name);
     const open = parser.GetArgument(name);
@@ -518,12 +509,12 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
   },
 
   /**
-   * Implements \DeclarePairedDelimitersXPP.
+   * Implements \DeclarePairedDelimiterXPP.
    *
    * @param {TexParser} parser   The calling parser.
    * @param {string} name        The macro name.
    */
-  DeclarePairedDelimitersXPP(parser: TexParser, name: string) {
+  DeclarePairedDelimiterXPP(parser: TexParser, name: string) {
     const cs = NewcommandUtil.GetCsNameArgument(parser, name);
     const n = NewcommandUtil.GetArgCount(parser, name);
     const pre = parser.GetArgument(name);

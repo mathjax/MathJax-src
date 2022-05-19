@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -72,6 +72,11 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
     ...FontData.OPTIONS,
     fontURL: 'js/output/chtml/fonts/tex-woff-v2'
   };
+
+  /**
+   * @override
+   */
+  public static JAX = 'CHTML';
 
   /**
    * The default class names to use for each variant
@@ -185,7 +190,11 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
     //
     //  Add the styles for delimiters and characters
     //
-    this.updateStyles(styles);
+    if (this.options.adaptiveCSS) {
+      this.updateStyles(styles);
+    } else {
+      this.allStyles(styles);
+    }
     //
     //  Return the final style sheet
     //
@@ -207,6 +216,35 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
       this.addCharStyles(styles, variant.letter, N, variant.chars[N]);
     }
     return styles;
+  }
+
+  /**
+   * @param {StyleList} styles  The style list to add characters to
+   */
+  protected allStyles(styles: StyleList) {
+    //
+    //  Create styles needed for the delimiters
+    //
+    for (const n of Object.keys(this.delimiters)) {
+      const N = parseInt(n);
+      this.addDelimiterStyles(styles, N, this.delimiters[N]);
+    }
+    //
+    //  Add style for all character data
+    //
+    for (const name of Object.keys(this.variant)) {
+      const variant = this.variant[name];
+      const vletter = variant.letter;
+      for (const n of Object.keys(variant.chars)) {
+        const N = parseInt(n);
+        const char = variant.chars[N];
+        if ((char[3] || {}).smp) continue;
+        if (char.length < 4) {
+          (char as CHTMLCharData)[3] = {};
+        }
+        this.addCharStyles(styles, vletter, N, char);
+      }
+    }
   }
 
   /**

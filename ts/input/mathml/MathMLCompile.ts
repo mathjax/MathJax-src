@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -118,7 +118,7 @@ export class MathMLCompile<N, T, D> {
     }
     let type = texClass && kind === 'mrow' ? 'TeXAtom' : kind;
     for (const name of this.filterClassList(adaptor.allClasses(node))) {
-      if (name.match(/^MJX-TeXAtom-/)) {
+      if (name.match(/^MJX-TeXAtom-/) && kind === 'mrow') {
         texClass = name.substr(12);
         type = 'TeXAtom';
       } else if (name === 'MJX-fixedlimits') {
@@ -156,18 +156,27 @@ export class MathMLCompile<N, T, D> {
         continue;
       }
       if (name.substr(0, 9) === 'data-mjx-') {
-        if (name === 'data-mjx-alternate') {
+        switch (name.substr(9)) {
+        case 'alternate':
           mml.setProperty('variantForm', true);
-        } else if (name === 'data-mjx-variant') {
+          break;
+        case 'variant':
           mml.attributes.set('mathvariant', value);
           ignoreVariant = true;
-        } else if (name === 'data-mjx-smallmatrix') {
+          break;
+        case 'smallmatrix':
           mml.setProperty('scriptlevel', 1);
           mml.setProperty('useHeight', false);
-        } else if (name === 'data-mjx-accent') {
+          break;
+        case 'accent':
           mml.setProperty('mathaccent', value === 'true');
-        } else if (name === 'data-mjx-auto-op') {
+          break;
+        case 'auto-op':
           mml.setProperty('autoOP', value === 'true');
+          break;
+        case 'script-align':
+          mml.setProperty('scriptalign', value);
+          break;
         }
       } else if (name !== 'class') {
         let val = value.toLowerCase();

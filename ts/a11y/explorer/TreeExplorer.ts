@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2021 The MathJax Consortium
+ *  Copyright (c) 2009-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,8 +26,7 @@
 
 import {A11yDocument, Region} from './Region.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
-import '../sre.js';
-
+import Sre from '../sre.js';
 
 export interface TreeExplorer extends Explorer {
 
@@ -87,7 +86,7 @@ export class FlameColorer extends AbstractTreeExplorer {
    */
   public Stop() {
     if (this.active) {
-      this.highlighter.unhighlightAll(this.node);
+      this.highlighter.unhighlightAll();
     }
     this.active = false;
   }
@@ -103,12 +102,13 @@ export class TreeColorer extends AbstractTreeExplorer {
   public Start() {
     if (this.active) return;
     this.active = true;
-    let generator = sre.SpeechGeneratorFactory.generator('Color');
+    let generator = Sre.getSpeechGenerator('Color');
     if (!this.node.hasAttribute('hasforegroundcolor')) {
       generator.generateSpeech(this.node, this.mml);
       this.node.setAttribute('hasforegroundcolor', 'true');
     }
-    this.highlighter.colorizeAll(this.node);
+    // TODO: Make this cleaner in Sre.
+    (this.highlighter as any).colorizeAll(this.node);
   }
 
   /**
@@ -116,7 +116,7 @@ export class TreeColorer extends AbstractTreeExplorer {
    */
   public Stop() {
     if (this.active) {
-      this.highlighter.uncolorizeAll(this.node);
+      (this.highlighter as any).uncolorizeAll(this.node);
     }
     this.active = false;
   }

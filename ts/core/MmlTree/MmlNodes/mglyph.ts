@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ export class MmlMglyph extends AbstractMmlTokenNode {
     ...AbstractMmlTokenNode.defaults,
     alt: '',
     src: '',
+    index: '',
     width: 'auto',
     height: 'auto',
     valign: '0em'
@@ -53,6 +54,18 @@ export class MmlMglyph extends AbstractMmlTokenNode {
    */
   public get kind() {
     return 'mglyph';
+  }
+
+  /**
+   * @override
+   */
+  public verifyAttributes(options: PropertyList) {
+    const {src, fontfamily, index} = this.attributes.getList('src', 'fontfamily', 'index');
+    if (src === '' && (fontfamily === '' || index === '')) {
+      this.mError('mglyph must have either src or fontfamily and index attributes', options, true);
+    } else {
+      super.verifyAttributes(options);
+    }
   }
 
 }

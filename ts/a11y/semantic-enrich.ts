@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2021 The MathJax Consortium
+ *  Copyright (c) 2018-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,13 +29,12 @@ import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {MathML} from '../input/mathml.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {OptionList, expandable} from '../util/Options.js';
-
-import {sreReady} from './sre.js';
+import Sre from './sre.js';
 
 /*==========================================================================*/
 
 /**
- *  The current speech setting for SRE
+ *  The current speech setting for Sre
  */
 let currentSpeech = 'none';
 
@@ -116,7 +115,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
         return div.innerHTML;
       }
       //
-      //  For NodeJS version of SRE
+      //  For NodeJS version of Sre
       //
       return node.toString();
     }
@@ -128,17 +127,16 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
     public enrich(document: MathDocument<N, T, D>, force: boolean = false) {
       if (this.state() >= STATE.ENRICHED) return;
       if (!this.isEscaped && (document.options.enableEnrichment || force)) {
-        if (typeof sre === 'undefined' || !sre.Engine.isReady()) {
-          mathjax.retryAfter(sreReady());
-        }
         if (document.options.sre.speech !== currentSpeech) {
-          SRE.setupEngine(document.options.sre);
           currentSpeech = document.options.sre.speech;
+          mathjax.retryAfter(
+            Sre.setupEngine(document.options.sre).then(
+              () => Sre.sreReady()));
         }
         const math = new document.options.MathItem('', MmlJax);
         try {
           const mml = this.inputData.originalMml = toMathML(this.root);
-          math.math = this.serializeMml(SRE.toEnriched(mml));
+          math.math = this.serializeMml(Sre.toEnriched(mml));
           math.display = this.display;
           math.compile(document);
           this.root = math.root;

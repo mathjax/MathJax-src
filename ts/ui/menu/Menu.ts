@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2021 The MathJax Consortium
+ *  Copyright (c) 2019-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -40,6 +40,9 @@ import {Parser} from 'mj-context-menu/js/parse.js';
 import {Rule} from 'mj-context-menu/js/item_rule.js';
 import {CssStyles} from 'mj-context-menu/js/css_util.js';
 import {Submenu} from 'mj-context-menu/js/item_submenu.js';
+
+import Sre from '../../a11y/sre.js';
+
 
 /*==========================================================================*/
 
@@ -371,6 +374,7 @@ export class Menu {
     this.initSettings();
     this.mergeUserSettings();
     this.initMenu();
+    this.applySettings();
   }
 
   /**
@@ -418,7 +422,7 @@ export class Menu {
         this.a11yVar<boolean>('subtitles'),
         this.a11yVar<boolean>('braille'),
         this.a11yVar<boolean>('viewBraille'),
-        this.a11yVar<string>('locale', value => SRE.setupEngine({locale: value as string})),
+        this.a11yVar<string>('locale', value => Sre.setupEngine({locale: value as string})),
         this.a11yVar<string> ('speechRules', value => {
           const [domain, style] = value.split('-');
           this.document.options.sre.domain = domain;
@@ -671,6 +675,18 @@ export class Menu {
   /*======================================================================*/
 
   /**
+   * Do what is needed to apply the initial user settings
+   */
+  protected applySettings() {
+    this.setTabOrder(this.settings.inTabOrder);
+    this.document.options.enableAssistiveMml = this.settings.assistiveMml;
+    this.document.outputJax.options.scale = parseFloat(this.settings.scale);
+    if (this.settings.renderer !== this.defaultSettings.renderer) {
+      this.setRenderer(this.settings.renderer);
+    }
+  }
+
+  /**
    * @param {string} scale   The new scaling value
    */
   protected setScale(scale: string) {
@@ -765,7 +781,7 @@ export class Menu {
       if (percent.match(/^\s*\d+(\.\d*)?\s*%?\s*$/)) {
         const scale = parseFloat(percent) / 100;
         if (scale) {
-          this.setScale(String(scale));
+          this.menu.pool.lookup('scale').setValue(String(scale));
         } else {
           alert('The scale should not be zero');
         }

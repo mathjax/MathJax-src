@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2021 The MathJax Consortium
+ *  Copyright (c) 2009-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,10 +25,24 @@
 
 import {CheckType, BaseItem, StackItem} from '../StackItem.js';
 import ParseUtil from '../ParseUtil.js';
+import NodeUtil from '../NodeUtil.js';
 import TexParser from '../TexParser.js';
-
+import {AbstractMmlTokenNode} from '../../../core/MmlTree/MmlNode.js';
 
 export class AutoOpen extends BaseItem {
+
+  /**
+   * @override
+   */
+  protected static errors = Object.assign(Object.create(BaseItem.errors), {
+    'stop': ['ExtraOrMissingDelims', 'Extra open or missing close delimiter']
+  });
+
+  /**
+   * The number of unpaired open delimiters that need to be matched before
+   *   a close delimiter will close this item. (#2831)
+   */
+  protected openCount: number = 0;
 
   /**
    * @override
@@ -64,20 +78,36 @@ export class AutoOpen extends BaseItem {
       this.Push(new TexParser(right, parser.stack.env,
                               parser.configuration).mml());
     }
-    let mml = super.toMml();
-    return ParseUtil.fenced(this.factory.configuration,
-                            this.getProperty('open') as string,
-                            mml,
-                            this.getProperty('close') as string,
-                            this.getProperty('big') as string);
+    let mml = ParseUtil.fenced(
+      this.factory.configuration,
+      this.getProperty('open') as string,
+      super.toMml(),
+      this.getProperty('close') as string,
+      this.getProperty('big') as string
+    );
+    //
+    //  Remove fence markers that would cause it to be TeX class INNER,
+    //  so it is treated as a regular mrow when setting the tex class (#2760)
+    //
+    NodeUtil.removeProperties(mml, 'open', 'close', 'texClass');
+    return mml;
   }
 
   /**
    * @override
    */
   public checkItem(item: StackItem): CheckType {
+    //
+    //  Check for nested open delimiters (#2831)
+    //
+    if (item.isKind('mml') && item.Size() === 1) {
+      const mml = item.toMml();
+      if (mml.isKind('mo') && (mml as AbstractMmlTokenNode).getText() === this.getProperty('open')) {
+        this.openCount++;
+      }
+    }
     let close = item.getProperty('autoclose');
-    if (close && close === this.getProperty('close')) {
+    if (close && close === this.getProperty('close') && !this.openCount--) {
       if (this.getProperty('ignore')) {
         this.Clear();
         return [[], true];

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -85,8 +85,8 @@ CommonMunderMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsub<any, any, a
     ) as N;
     this.baseChild.toCHTML(base);
     this.scriptChild.toCHTML(under);
-    const basebox = this.baseChild.getBBox();
-    const underbox = this.scriptChild.getBBox();
+    const basebox = this.baseChild.getOuterBBox();
+    const underbox = this.scriptChild.getOuterBBox();
     const k = this.getUnderKV(basebox, underbox)[0];
     const delta = (this.isLineBelow ? 0 : this.getDelta(true));
     this.adaptor.setStyle(under, 'paddingTop', this.em(k));
@@ -140,8 +140,9 @@ CommonMoverMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsup<any, any, an
     const base = this.adaptor.append(this.chtml, this.html('mjx-base')) as N;
     this.scriptChild.toCHTML(over);
     this.baseChild.toCHTML(base);
-    const overbox = this.scriptChild.getBBox();
-    const basebox = this.baseChild.getBBox();
+    const overbox = this.scriptChild.getOuterBBox();
+    const basebox = this.baseChild.getOuterBBox();
+    this.adjustBaseHeight(base, basebox);
     const k = this.getOverKU(basebox, overbox)[0];
     const delta = (this.isLineAbove ? 0 : this.getDelta());
     this.adaptor.setStyle(over, 'paddingBottom', this.em(k));
@@ -206,9 +207,10 @@ CommonMunderoverMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsubsup<any,
     this.overChild.toCHTML(over);
     this.baseChild.toCHTML(base);
     this.underChild.toCHTML(under);
-    const overbox = this.overChild.getBBox();
-    const basebox = this.baseChild.getBBox();
-    const underbox = this.underChild.getBBox();
+    const overbox = this.overChild.getOuterBBox();
+    const basebox = this.baseChild.getOuterBBox();
+    const underbox = this.underChild.getOuterBBox();
+    this.adjustBaseHeight(base, basebox);
     const ok = this.getOverKU(basebox, overbox)[0];
     const uk = this.getUnderKV(basebox, underbox)[0];
     const delta = this.getDelta();

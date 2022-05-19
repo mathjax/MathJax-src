@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2021 The MathJax Consortium
+ *  Copyright (c) 2018-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -61,6 +61,7 @@ export function Other(parser: TexParser, char: string) {
   // @test Other
   // @test Other Remap
   let mo = parser.create('token', type, def, (remap ? remap.char : char));
+  range[4] && mo.attributes.set('mathvariant', range[4]);
   if (type === 'mo') {
     NodeUtil.setProperty(mo, 'fixStretchy', true);
     parser.configuration.addNode('fixStretchy', mo);

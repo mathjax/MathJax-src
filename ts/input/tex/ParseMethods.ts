@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -40,10 +40,11 @@ namespace ParseMethods {
   export function variable(parser: TexParser, c: string) {
     // @test Identifier Font
     const def = ParseUtil.getFontDef(parser);
-    if (parser.stack.env.multiLetterIdentifiers && parser.stack.env.font !== '') {
-      c = parser.string.substr(parser.i - 1).match(/^[a-z]+/i)[0];
+    const env = parser.stack.env;
+    if (env.multiLetterIdentifiers && env.font !== '') {
+      c = parser.string.substr(parser.i - 1).match(env.multiLetterIdentifiers as any as RegExp)[0];
       parser.i += c.length - 1;
-      if (def.mathvariant === TexConstant.Variant.NORMAL) {
+      if (def.mathvariant === TexConstant.Variant.NORMAL && env.noAutoOP && c.length > 1) {
         def.autoOP = false;
       }
     }

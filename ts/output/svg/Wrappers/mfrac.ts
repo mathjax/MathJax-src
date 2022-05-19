@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2021 The MathJax Consortium
+ *  Copyright (c) 2018-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -77,8 +77,8 @@ export class SVGmfrac<N, T, D> extends CommonMfracMixin<SVGConstructor<any, any,
     const svg = this.element;
     const {numalign, denomalign} = this.node.attributes.getList('numalign', 'denomalign');
     const [num, den] = this.childNodes;
-    const nbox = num.getBBox();
-    const dbox = den.getBBox();
+    const nbox = num.getOuterBBox();
+    const dbox = den.getOuterBBox();
 
     const tex = this.font.params;
     const a = tex.axis_height;
@@ -110,8 +110,8 @@ export class SVGmfrac<N, T, D> extends CommonMfracMixin<SVGConstructor<any, any,
     const svg = this.element;
     const {numalign, denomalign} = this.node.attributes.getList('numalign', 'denomalign');
     const [num, den] = this.childNodes;
-    const nbox = num.getBBox();
-    const dbox = den.getBBox();
+    const nbox = num.getOuterBBox();
+    const dbox = den.getOuterBBox();
 
     const tex = this.font.params;
     const pad = (this.node.getProperty('withDelims') ? 0 : tex.nulldelimiterspace);
@@ -144,7 +144,7 @@ export class SVGmfrac<N, T, D> extends CommonMfracMixin<SVGConstructor<any, any,
 
     num.place(nbox.L * nbox.rscale, u);
     this.bevel.place(w - delta / 2, 0);
-    den.place(w + this.bevel.getBBox().w + dbox.L * dbox.rscale - delta, v);
+    den.place(w + this.bevel.getOuterBBox().w + dbox.L * dbox.rscale - delta, v);
   }
 
 }

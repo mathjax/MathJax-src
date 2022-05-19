@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -159,8 +159,8 @@ export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracCo
      * @param {number} t         The thickness of the line
      */
     public getFractionBBox(bbox: BBox, display: boolean, t: number) {
-      const nbox = this.childNodes[0].getBBox();
-      const dbox = this.childNodes[1].getBBox();
+      const nbox = this.childNodes[0].getOuterBBox();
+      const dbox = this.childNodes[1].getOuterBBox();
       const tex = this.font.params;
       const a = tex.axis_height;
       const {T, u, v} = this.getTUV(display, t);
@@ -204,8 +204,8 @@ export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracCo
      *    the separation between the two, and the bboxes themselves.
      */
     public getUVQ(display: boolean): {u: number, v: number, q: number, nbox: BBox, dbox: BBox} {
-      const nbox = this.childNodes[0].getBBox() as BBox;
-      const dbox = this.childNodes[1].getBBox() as BBox;
+      const nbox = this.childNodes[0].getOuterBBox();
+      const dbox = this.childNodes[1].getOuterBBox();
       const tex = this.font.params;
       //
       //  Initial offsets (u, v)
@@ -234,7 +234,7 @@ export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracCo
      */
     public getBevelledBBox(bbox: BBox, display: boolean) {
       const {u, v, delta, nbox, dbox} = this.getBevelData(display);
-      const lbox = this.bevel.getBBox();
+      const lbox = this.bevel.getOuterBBox();
       bbox.combine(nbox, 0, u);
       bbox.combine(lbox, bbox.w - delta / 2, 0);
       bbox.combine(dbox, bbox.w - delta / 2, v);
@@ -249,8 +249,8 @@ export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracCo
     public getBevelData(display: boolean): {
       H: number, delta: number, u: number, v: number, nbox: BBox, dbox: BBox
     } {
-      const nbox = this.childNodes[0].getBBox() as BBox;
-      const dbox = this.childNodes[1].getBBox() as BBox;
+      const nbox = this.childNodes[0].getOuterBBox();
+      const dbox = this.childNodes[1].getOuterBBox();
       const delta = (display ? .4 : .15);
       const H = Math.max(nbox.scale * (nbox.h + nbox.d), dbox.scale * (dbox.h + dbox.d)) + 2 * delta;
       const a = this.font.params.axis_height;
@@ -282,7 +282,7 @@ export function CommonMfracMixin<T extends WrapperConstructor>(Base: T): MfracCo
     public getWrapWidth(i: number) {
       const attributes = this.node.attributes;
       if (attributes.get('bevelled')) {
-        return this.childNodes[i].getBBox().w;
+        return this.childNodes[i].getOuterBBox().w;
       }
       const w = this.getBBox().w;
       const thickness = this.length2em(attributes.get('linethickness'));

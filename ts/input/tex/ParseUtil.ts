@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2021 The MathJax Consortium
+ *  Copyright (c) 2009-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -549,7 +549,7 @@ namespace ParseUtil {
       options.addNode(n.kind, n);
       const lists = (n.getProperty('in-lists') as string || '').split(/,/);
       for (const list of lists) {
-        options.addNode(list, n);
+        list && options.addNode(list, n);
       }
     });
     return tree;

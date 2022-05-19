@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -137,10 +137,31 @@ export class MmlMtable extends AbstractMmlNode {
    * @override
    */
   protected verifyChildren(options: PropertyList) {
-    if (!options['fixMtables']) {
-      for (const child of this.childNodes) {
-        if (!child.isKind('mtr')) {
-          this.mError('Children of ' + this.kind + ' must be mtr or mlabeledtr', options);
+    let mtr: MmlNode = null;      // all consecutive non-mtr elements are collected into one mtr
+    const factory = this.factory;
+    for (let i = 0; i < this.childNodes.length; i++) {
+      const child = this.childNodes[i];
+      if (child.isKind('mtr')) {
+        mtr = null;               // start a new row if there are non-mtr children
+      } else {
+        const isMtd = child.isKind('mtd');
+        //
+        //  If there is already an mtr for previous children, just remove the child
+        //    otherwise replace the child with a new mtr
+        //
+        if (mtr) {
+          this.removeChild(child);
+          i--;   // there is one fewer child now
+        } else {
+          mtr = this.replaceChild(factory.create('mtr'), child) as MmlNode;
+        }
+        mtr.appendChild(isMtd ? child : factory.create('mtd', {}, [child]));  // Move the child into the mtr
+        if (!options['fixMtables']) {
+          child.parent.removeChild(child);  // remove the child from its mtd or mtr
+          child.parent = this;              // ... and make it think it is a child of the table again
+          isMtd && mtr.appendChild(factory.create('mtd'));  // child will be replaced, so make sure there is an mtd
+          const merror = child.mError('Children of ' + this.kind + ' must be mtr or mlabeledtr', options, isMtd);
+          mtr.childNodes[mtr.childNodes.length - 1].appendChild(merror);   // append the error to the mtd in the mtr
         }
       }
     }

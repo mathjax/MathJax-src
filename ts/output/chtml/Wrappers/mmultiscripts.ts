@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2021 The MathJax Consortium
+ *  Copyright (c) 2018-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import {CommonMmultiscriptsMixin} from '../../common/Wrappers/mmultiscripts.js';
 import {MmlMmultiscripts} from '../../../core/MmlTree/MmlNodes/mmultiscripts.js';
 import {BBox} from '../../../util/BBox.js';
 import {StyleList} from '../../../util/StyleList.js';
+import {split} from '../../../util/string.js';
 
 /*****************************************************************/
 /**
@@ -59,6 +60,15 @@ CommonMmultiscriptsMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsubsup<a
     },
     'mjx-prescripts > mjx-row > mjx-cell': {
       'text-align': 'right'
+    },
+    '[script-align="left"] > mjx-row > mjx-cell': {
+      'text-align': 'left'
+    },
+    '[script-align="center"] > mjx-row > mjx-cell': {
+      'text-align': 'center'
+    },
+    '[script-align="right"] > mjx-row > mjx-cell': {
+      'text-align': 'right'
     }
   };
 
@@ -71,6 +81,11 @@ CommonMmultiscriptsMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsubsup<a
     const chtml = this.standardCHTMLnode(parent);
     const data = this.scriptData;
     //
+    //  Get the alignment for the scripts
+    //
+    const scriptalign = this.node.getProperty('scriptalign') || 'right left';
+    const [preAlign, postAlign] = split(scriptalign + ' ' + scriptalign);
+    //
     //  Combine the bounding boxes of the pre- and post-scripts,
     //  and get the resulting baseline offsets
     //
@@ -81,11 +96,13 @@ CommonMmultiscriptsMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsubsup<a
     //  Place the pre-scripts, then the base, then the post-scripts
     //
     if (data.numPrescripts) {
-      this.addScripts(u, -v, true, data.psub, data.psup, this.firstPrescript, data.numPrescripts);
+      const scripts = this.addScripts(u, -v, true, data.psub, data.psup, this.firstPrescript, data.numPrescripts);
+      preAlign !== 'right' && this.adaptor.setAttribute(scripts, 'script-align', preAlign);
     }
     this.childNodes[0].toCHTML(chtml);
     if (data.numScripts) {
-      this.addScripts(u, -v, false, data.sub, data.sup, 1, data.numScripts);
+      const scripts = this.addScripts(u, -v, false, data.sub, data.sup, 1, data.numScripts);
+      postAlign !== 'left' && this.adaptor.setAttribute(scripts, 'script-align', postAlign);
     }
   }
 
@@ -99,8 +116,9 @@ CommonMmultiscriptsMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsubsup<a
    * @param {BBox} sup       The superscript bounding box
    * @param {number} i       The starting index for the scripts
    * @param {number} n       The number of sub/super-scripts
+   * @return {N}             The script table for these scripts
    */
-  protected addScripts(u: number, v: number, isPre: boolean, sub: BBox, sup: BBox, i: number, n: number) {
+  protected addScripts(u: number, v: number, isPre: boolean, sub: BBox, sup: BBox, i: number, n: number): N {
     const adaptor = this.adaptor;
     const q = (u - sup.d) + (v - sub.h);             // separation of scripts
     const U = (u < 0 && v === 0 ? sub.h + u : u);    // vertical offset of table
@@ -110,12 +128,12 @@ CommonMmultiscriptsMixin<CHTMLWrapper<any, any, any>, Constructor<CHTMLmsubsup<a
     const sepRow = this.html('mjx-row', rowdef);
     const subRow = this.html('mjx-row');
     const name = 'mjx-' + (isPre ? 'pre' : '') + 'scripts';
-    adaptor.append(this.chtml, this.html(name, tabledef, [supRow, sepRow, subRow]));
     let m = i + 2 * n;
     while (i < m) {
       this.childNodes[i++].toCHTML(adaptor.append(subRow, this.html('mjx-cell')) as N);
       this.childNodes[i++].toCHTML(adaptor.append(supRow, this.html('mjx-cell')) as N);
     }
+    return adaptor.append(this.chtml, this.html(name, tabledef, [supRow, sepRow, subRow]));
   }
 
 }

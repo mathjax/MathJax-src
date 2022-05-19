@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2021 The MathJax Consortium
+ *  Copyright (c) 2018-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,28 +16,12 @@
  */
 
 /**
- * @fileoverview  Loads SRE for node and creates the global sre variable
- *                with sre.Engine.isReady(), like in the browser version
+ * @fileoverview  Base imports of sre locales.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
+ * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import * as SRE from 'speech-rule-engine';
+const MathMaps: Map<string, {[path: string]: any}> = new Map();
 
-declare const global: any;
-
-/**
- * The global sre with sre.Engine.isReady() and sre.toEnriched()
- */
-global.SRE = SRE;
-global.sre = Object.create(SRE);
-global.sre.Engine = {
-  /**
-   * @return {boolean}   True when SRE is ready
-   */
-  isReady(): boolean {
-    return SRE.engineReady();
-  }
-};
-
-export {};
+export default MathMaps;

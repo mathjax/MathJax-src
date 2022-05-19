@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -70,6 +70,13 @@ export interface SymbolMap {
 
 }
 
+/**
+ * @param {ParseResult} result    The result to check
+ * @return {ParseResult}          True if result was void, result otherwise
+ */
+export function parseResult(result: ParseResult): ParseResult {
+  return result === void 0 ? true : result;
+}
 
 /**
  * Abstract implementation of symbol maps.
@@ -116,8 +123,7 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
   public parse([env, symbol]: ParseInput) {
     let parser = this.parserFor(symbol);
     let mapped = this.lookup(symbol);
-    return (parser && mapped) ?
-      parser(env, mapped as any) || true as ParseResult : null;
+    return (parser && mapped) ? parseResult(parser(env, mapped as any)) : null;
   }
 
 
@@ -311,7 +317,7 @@ export class MacroMap extends AbstractParseMap<Macro> {
     if (!macro || !parser) {
       return null;
     }
-    return parser(env, macro.symbol, ...macro.args) || true as ParseResult;
+    return parseResult(parser(env, macro.symbol, ...macro.args));
   }
 
 }
@@ -334,14 +340,11 @@ export class CommandMap extends MacroMap {
     if (!macro || !parser) {
       return null;
     }
-    if (!parser) {
-      return null;
-    }
     let saveCommand = env.currentCS;
     env.currentCS = '\\' + symbol;
     let result = parser(env, '\\' + macro.symbol, ...macro.args);
     env.currentCS = saveCommand;
-    return result || true as ParseResult;
+    return parseResult(result);
   }
 
 }
@@ -383,8 +386,7 @@ export class EnvironmentMap extends MacroMap {
     if (!macro || !envParser) {
       return null;
     }
-    this.parser(env, macro.symbol, envParser, macro.args);
-    return true;
+    return parseResult(this.parser(env, macro.symbol, envParser, macro.args));
   }
 
 }

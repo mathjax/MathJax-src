@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2021 The MathJax Consortium
+ *  Copyright (c) 2009-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,8 +24,7 @@
 
 
 import {A11yDocument, Region} from './Region.js';
-import '../sre.js';
-
+import Sre from '../sre.js';
 
 /**
  * A11y explorers.
@@ -112,10 +111,10 @@ export class AbstractExplorer<T> implements Explorer {
   protected events: [string, (x: Event) => void][] = [];
 
   /**
-   * The SRE highlighter associated with the walker.
-   * @type {sre.Highlighter}
+   * The Sre highlighter associated with the walker.
+   * @type {Sre.highlighter}
    */
-  protected highlighter: sre.Highlighter = this.getHighlighter();
+  protected highlighter: Sre.highlighter = this.getHighlighter();
 
   /**
    * Flag if explorer is active.
@@ -257,15 +256,15 @@ export class AbstractExplorer<T> implements Explorer {
 
 
   /**
-   * @return {sre.Highlighter} A highlighter for the explorer.
+   * @return {Sre.Highlighter} A highlighter for the explorer.
    */
-  protected getHighlighter(): sre.Highlighter {
+  protected getHighlighter(): Sre.highlighter {
     let opts = this.document.options.a11y;
     let foreground = {color: opts.foregroundColor.toLowerCase(),
                       alpha: opts.foregroundOpacity / 100};
     let background = {color: opts.backgroundColor.toLowerCase(),
                       alpha: opts.backgroundOpacity / 100};
-    return sre.HighlighterFactory.highlighter(
+    return Sre.getHighlighter(
       background, foreground,
       {renderer: this.document.outputJax.name, browser: 'v3'});
   }

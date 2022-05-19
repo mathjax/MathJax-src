@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2021 The MathJax Consortium
+ *  Copyright (c) 2018-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -398,10 +398,10 @@ export class Styles {
     for (const name of Object.keys(this.styles)) {
       const parent = this.parentName(name);
       if (!this.styles[parent]) {
-        styles.push(name + ': ' + this.styles[name]);
+        styles.push(name + ': ' + this.styles[name] + ';');
       }
     }
-    return styles.join('; ');
+    return styles.join(' ');
   }
 
   /**

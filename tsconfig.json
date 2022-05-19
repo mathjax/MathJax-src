@@ -10,9 +10,12 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "removeComments": true,
+    "resolveJsonModule" : true,
+    "esModuleInterop": true  ,
     "baseUrl": ".",
     "paths": {
-      "mj-context-menu": ["node_modules/mj-context-menu"]
+      "mj-context-menu": ["node_modules/mj-context-menu"],
+      "speech-rule-engine": ["node_modules/speech-rule-engine"]
     },
     "lib": ["es6", "dom"],
     "noLib": false,

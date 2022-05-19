@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -282,7 +282,8 @@ BaseMethods.MathFont = function(parser: TexParser, name: string, variant: string
   let mml = new TexParser(text, {
     ...parser.stack.env,
     font: variant,
-    multiLetterIdentifiers: true
+    multiLetterIdentifiers: /^[a-zA-Z]+/ as any,
+    noAutoOP: true
   }, parser.configuration).mml();
   parser.Push(parser.create('node', 'TeXAtom', [mml]));
 };
@@ -586,7 +587,7 @@ BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, s
   NodeUtil.setAttribute(mml, 'stretchy', stretchy ? true : false);
   // @test Vector Op, Vector
   const mo = (NodeUtil.isEmbellished(c) ? NodeUtil.getCoreMO(c) : c);
-  if (NodeUtil.isType(mo, 'mo')) {
+  if (NodeUtil.isType(mo, 'mo') || NodeUtil.getProperty(mo, 'movablelimits')) {
     // @test Vector Op
     NodeUtil.setProperties(mo, {'movablelimits': false});
   }
@@ -626,6 +627,9 @@ BaseMethods.Overset = function(parser: TexParser, name: string) {
   const top = parser.ParseArg(name);
   const base = parser.ParseArg(name);
   ParseUtil.checkMovableLimits(base);
+  if (top.isKind('mo')) {
+    NodeUtil.setAttribute(top, 'accent', false);
+  }
   const node = parser.create('node', 'mover', [base, top]);
   parser.Push(node);
 };
@@ -641,7 +645,10 @@ BaseMethods.Underset = function(parser: TexParser, name: string) {
   const bot = parser.ParseArg(name);
   const base = parser.ParseArg(name);
   ParseUtil.checkMovableLimits(base);
-  const node = parser.create('node', 'munder', [base, bot]);
+  if (bot.isKind('mo')) {
+    NodeUtil.setAttribute(bot, 'accent', false);
+  }
+  const node = parser.create('node', 'munder', [base, bot], {accentunder: false});
   parser.Push(node);
 };
 
@@ -656,7 +663,13 @@ BaseMethods.Overunderset = function(parser: TexParser, name: string) {
   const bot = parser.ParseArg(name);
   const base = parser.ParseArg(name);
   ParseUtil.checkMovableLimits(base);
-  const node = parser.create('node', 'munderover', [base, bot, top]);
+  if (top.isKind('mo')) {
+    NodeUtil.setAttribute(top, 'accent', false);
+  }
+  if (bot.isKind('mo')) {
+    NodeUtil.setAttribute(bot, 'accent', false);
+  }
+  const node = parser.create('node', 'munderover', [base, bot, top], {accent: false, accentunder: false});
   parser.Push(node);
 };
 
@@ -706,6 +719,7 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
   let attr = parser.GetBrackets(name, '').replace(/^\s+/, '');
   const text = parser.GetArgument(name);
   const def: EnvList = {};
+  const keep: string[] = [];
   let node: MmlNode;
   try {
     node = parser.create('node', kind);
@@ -738,8 +752,12 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
         value = false;
       }
       def[match[1]] = value;
+      keep.push(match[1]);
     }
     attr = attr.substr(match[0].length);
+  }
+  if (keep.length) {
+    def['mjx-keep-attrs'] = keep.join(' ');
   }
   const textNode = parser.create('text', text);
   node.appendChild(textNode);

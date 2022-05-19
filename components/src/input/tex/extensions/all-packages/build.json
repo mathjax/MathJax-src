@@ -1,4 +1,5 @@
 {
+  "id": "[tex]/all-packages",
   "component": "input/tex/extensions/all-packages",
   "targets": [
     "input/tex/AllPackages.ts",

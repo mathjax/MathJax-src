@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -242,6 +242,16 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   public static OPTIONS: OptionList = {
     unknownFamily: 'serif'     // Should use 'monospace' with LiteAdaptor
   };
+
+  /**
+   * The name of the output jax this font data is for (used by extensions)
+   */
+  public static JAX: string = 'common';
+
+  /**
+   * The name of the font that is being defined (used by extensions)
+   */
+  public static NAME: string = '';
 
   /**
    *  The standard variants to define

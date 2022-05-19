@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
+import {VERSION} from './components/version.js';
 import {HandlerList} from './core/HandlerList.js';
 import {handleRetriesFor, retryAfter} from './util/Retries.js';
 import {OptionList} from './util/Options.js';
@@ -34,7 +35,7 @@ export const mathjax = {
   /**
    *  The MathJax version number
    */
-  version: '3.2.0',
+  version: VERSION,
 
   /**
    *  The list of registers document handlers

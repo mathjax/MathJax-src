@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2021 The MathJax Consortium
+ *  Copyright (c) 2018-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -135,7 +135,7 @@ export function CommonMfencedMixin<T extends WrapperConstructor>(Base: T): Mfenc
      * @override
      */
     public computeBBox(bbox: BBox, recompute: boolean = false) {
-      bbox.updateFrom(this.mrow.getBBox());
+      bbox.updateFrom(this.mrow.getOuterBBox());
       this.setChildPWidths(recompute);
     }
 

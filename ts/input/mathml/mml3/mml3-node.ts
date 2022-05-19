@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2021-2021 The MathJax Consortium
+ *  Copyright (c) 2021-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,13 +22,19 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
+import {MathDocument} from '../../../core/MathDocument.js';
+
 /**
  * Create the transform function that uses Saxon-js to perform the
  *   xslt transformation.
  *
- * @return {(mml: string) => string)}   The transformation function
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ *
+ * @return {(node: N, doc: MathDocument<N,T,D>) => N)}   The transformation function
  */
-export function createTransform(): (mml: string) => string {
+export function createTransform<N, T, D>(): (node: N, doc: MathDocument<N, T, D>) => N {
   /* tslint:disable-next-line:no-eval */
   const nodeRequire = eval('require');   // get the actual require from node.
   /* tslint:disable-next-line:no-eval */
@@ -43,24 +49,27 @@ export function createTransform(): (mml: string) => string {
   const fs = nodeRequire('fs');          // use the real version from node.
   const xsltFile = path.resolve(dirname, 'mml3.sef.json');  // load the preprocessed stylesheet.
   const xslt = JSON.parse(fs.readFileSync(xsltFile));       // and parse it.
-  return (mml: string) => {
+  return (node: N, doc: MathDocument<N, T, D>) => {
+    const adaptor = doc.adaptor;
+    let mml = adaptor.outerHTML(node);
     //
     //  Make sure the namespace is present
     //
     if (!mml.match(/ xmlns[=:]/)) {
-        mml = mml.replace(/<(?:(\w+)(:))?math/, '<$1$2math xmlns$2$1="http://www.w3.org/1998/Math/MathML"');
+      mml = mml.replace(/<(?:(\w+)(:))?math/, '<$1$2math xmlns$2$1="http://www.w3.org/1998/Math/MathML"');
     }
-    let result;
     //
     //  Try to run the transform, and if it fails, return the original MathML
+    //
+    let result;
     try {
-      result = Saxon.transform({
+      result = adaptor.firstChild(adaptor.body(adaptor.parse(Saxon.transform({
         stylesheetInternal: xslt,
         sourceText: mml,
         destination: 'serialized'
-      }).principalResult;
+      }).principalResult))) as N;
     } catch (err) {
-      result = mml;
+      result = node;
     }
     return result;
   };

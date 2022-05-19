@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2021 The MathJax Consortium
+ *  Copyright (c) 2018-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -58,14 +58,17 @@ new CommandMap('Physics-automatic-bracing-macros', {
 /**
  * Macros for physics package (section 2.2).
  */
-new CharacterMap('Physics-vector-chars', ParseMethods.mathchar0mi, {
+new CharacterMap('Physics-vector-mo', ParseMethods.mathchar0mo, {
   dotproduct:    ['\u22C5', {mathvariant: TexConstant.Variant.BOLD}],
   vdot:          ['\u22C5', {mathvariant: TexConstant.Variant.BOLD}],
   crossproduct:  '\u00D7',
   cross:         '\u00D7',
   cp:            '\u00D7',
   // This is auxiliary!
-  gradientnabla: ['\u2207', {mathvariant: TexConstant.Variant.BOLD}],
+  gradientnabla: ['\u2207', {mathvariant: TexConstant.Variant.BOLD}]
+});
+
+new CharacterMap('Physics-vector-mi', ParseMethods.mathchar0mi, {
   real:          ['\u211C', {mathvariant: TexConstant.Variant.NORMAL}],
   imaginary:     ['\u2111', {mathvariant: TexConstant.Variant.NORMAL}]
 });

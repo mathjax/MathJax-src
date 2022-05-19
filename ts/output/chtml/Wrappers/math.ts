@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -57,6 +57,7 @@ CommonMathMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
       'font-size': '100%',
       'font-size-adjust': 'none',
       'letter-spacing': 'normal',
+      'border-collapse': 'collapse',
       'word-wrap': 'normal',
       'word-spacing': 'normal',
       'white-space': 'nowrap',
@@ -112,7 +113,7 @@ CommonMathMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
     if (this.bbox.pwidth === BBox.fullWidth) {
       adaptor.setAttribute(parent, 'width', 'full');
       if (this.jax.table) {
-        let {L, w, R} = this.jax.table.getBBox();
+        let {L, w, R} = this.jax.table.getOuterBBox();
         if (align === 'right') {
           R = Math.max(R || -shift, -shift);
         } else if (align === 'left') {
