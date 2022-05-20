@@ -245,17 +245,19 @@ export function CommonMrowMixin<
       const isStack = this.isStack;
       const lines = this.lineBBox;
       const n = lines.length - 1;
-      let y = lines[0].h + .1;  // start just above the first line
-      let k = 0;
-      for (const line of lines) {
-        if (isStack) {
+      if (isStack) {
+        for (const k of lines.keys()) {
+          const line = lines[k];
           this.addMiddleBorders(line);
           k === 0 && this.addLeftBorders(line);
           k === n && this.addRightBorders(line);
         }
-        bbox.combine(line, 0, y - .1 - line.h);
-        y = -bbox.d;
-        k++;
+      }
+      let y = 0;
+      for (const k of lines.keys()) {
+        const line = lines[k];
+        bbox.combine(line, 0, y);
+        y -= Math.max(.25, line.d) + line.lineLeading + Math.max(.75, lines[k + 1]?.h || 0);
       }
       if (isStack) {
         lines[0].L = this.bbox.L;

@@ -102,12 +102,12 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
       }
       this.addChildren(parents);
       if (this.linebreakCount) {
+        const lines = this.lineBBox;
         let y = 0;
-        for (const i of parents.keys()) {
-          const lbox = this.lineBBox[i];
-          this.place(lbox?.L || 0, y, parents[i]);
-          y -= Math.max(.25, lbox?.d || 0) + .1 +
-               Math.max(.75, this.lineBBox[i + 1]?.h || 0);
+        for (const k of lines.keys()) {
+          const lbox = lines[k];
+          this.place(lbox?.L || 0, y, parents[k]);
+          y -= Math.max(.25, lbox.d) + lbox.lineLeading + Math.max(.75, lines[k + 1]?.h || 0);
         }
       }
     }

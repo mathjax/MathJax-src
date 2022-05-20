@@ -53,7 +53,7 @@ export class MmlMo extends AbstractMmlTokenNode {
     movablelimits: false,
     accent: false,
     linebreak: 'auto',
-    lineleading: '1ex',
+    lineleading: '100%',
     linebreakstyle: 'before',
     indentalign: 'auto',
     indentshift: '0',

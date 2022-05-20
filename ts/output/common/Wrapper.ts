@@ -87,18 +87,25 @@ export class LineBBox extends BBox {
   public indentData: IndentData[] = null;
 
   /**
+   * the lineleading for this break
+   */
+  public lineLeading: number;
+
+  /**
    * True if this bbox is at the beginning of a line
    */
   public isFirst: boolean = false;
 
   /**
    * @param {BBox} bbox           The bbox to extend
+   * @param {number} leading      The lineleading value for the break
    * @param {IndentData} indent   The align/shift information
    * @return {ExtendedBBox}       The bbox extended
    */
-  public static from(bbox: BBox, indent: IndentData[] = null): LineBBox {
+  public static from(bbox: BBox, leading: number = .1, indent: IndentData[] = null): LineBBox {
     const nbox = new this();
     Object.assign(nbox, bbox);
+    nbox.lineLeading = leading;
     if (indent) {
       nbox.indentData = indent;
     }
@@ -115,6 +122,7 @@ export class LineBBox extends BBox {
     if (cbox.indentData) {
       this.indentData = cbox.indentData;
     }
+    this.lineLeading = cbox.lineLeading;
     super.append(cbox);
     this.isFirst = cbox.isFirst;
   }
@@ -125,6 +133,7 @@ export class LineBBox extends BBox {
   public copy(): LineBBox {
     const bbox = LineBBox.from(this);
     bbox.indentData = this.indentData;
+    bbox.lineLeading = this.lineLeading;
     return bbox;
   }
 

@@ -191,7 +191,14 @@ export interface CommonMoClass<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>
-> extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
+> extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
+
+  /**
+   * The default line leading
+   */
+  defaultLeading: number;
+
+}
 
 /*****************************************************************/
 /**
@@ -228,6 +235,11 @@ export function CommonMoMixin<
 
   return class CommonMoMixin extends Base
   implements CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
+
+    /**
+     * @override
+     */
+    public static defaultLeading: number = .1;
 
     /**
      * @override
@@ -484,11 +496,13 @@ export function CommonMoMixin<
      */
     public computeLineBBox(i: number): LineBBox {
       const style = this.breakStyle;
+      const leadingString = this.node.attributes.get('lineleading') as string;
+      const leading = this.length2em(leadingString, (this.constructor as typeof CommonMoMixin).defaultLeading);
       if (i === 0 && style === 'before') {
         this.bbox.L = 0;
-        return LineBBox.from(BBox.zero());
+        return LineBBox.from(BBox.zero(), leading);
       }
-      let bbox = LineBBox.from(this.getOuterBBox());
+      let bbox = LineBBox.from(this.getOuterBBox(), leading);
       if (i === 1) {
         const indent = this.getIndentValues();
         bbox.indentData = indent;
@@ -499,7 +513,7 @@ export function CommonMoMixin<
         } else if (style === 'duplicate') {
           bbox.L = 0;
         } else if (this.multChar) {
-          bbox = LineBBox.from(this.multChar.getOuterBBox(), indent);
+          bbox = LineBBox.from(this.multChar.getOuterBBox(), leading, indent);
         }
       }
       return bbox;
