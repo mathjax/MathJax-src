@@ -198,8 +198,8 @@ export function CommonMrowMixin<
     }
 
     get isStack() {
-      return !this.parent.node.linebreakContainer &&
-        !(this.parent.node.isKind('msubsup') && this.parent.node.childIndex(this.node));
+      let parent = this.node.Parent;
+      return !parent.linebreakContainer && !(parent.isKind('msubsup') && this.node.childPosition());
     }
 
     /**
@@ -288,7 +288,7 @@ export function CommonMrowMixin<
      * @override
      */
     public computeLineBBox(i: number) {
-      return (this.parent.node.linebreakContainer ? LineBBox.from(this.getOuterBBox()) : super.getLineBBox(i));
+      return (this.isStack ? super.getLineBBox(i) : LineBBox.from(this.getOuterBBox()));
     }
 
     /**

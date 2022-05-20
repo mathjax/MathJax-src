@@ -21,12 +21,11 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor,
-        LineBBox, IndentData, StringMap} from '../Wrapper.js';
+import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor, LineBBox} from '../Wrapper.js';
 import {CommonWrapperFactory} from '../WrapperFactory.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
 import {CommonOutputJax} from '../../common.js';
-import {MmlNode, indentMoAttributes} from '../../../core/MmlTree/MmlNode.js';
+import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../../../util/BBox.js';
 import {unicodeChars} from '../../../util/string.js';
@@ -191,14 +190,7 @@ export interface CommonMoClass<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>
-> extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
-  /**
-   * The default line leading
-   */
-  defaultLeading: number;
-
-}
+> extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
 /**
@@ -235,11 +227,6 @@ export function CommonMoMixin<
 
   return class CommonMoMixin extends Base
   implements CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
-    /**
-     * @override
-     */
-    public static defaultLeading: number = .1;
 
     /**
      * @override
@@ -445,8 +432,8 @@ export function CommonMoMixin<
      */
     public setBreakStyle(linebreak: string = '') {
       const attributes = this.node.attributes;
-      this.breakStyle = ((linebreak || attributes.get('linebreak')) === 'newline' ?
-                         attributes.get('linebreakstyle') as string : '');
+      this.breakStyle = ((linebreak || (attributes.get('linebreak') === 'newline' ?
+                                        attributes.get('linebreakstyle') as string : '')));
       if (this.breakStyle === 'infixlinebreakstyle') {
         this.breakStyle = attributes.get(this.breakStyle) as string;
       }
@@ -497,15 +484,13 @@ export function CommonMoMixin<
     public computeLineBBox(i: number): LineBBox {
       const style = this.breakStyle;
       const leadingString = this.node.attributes.get('lineleading') as string;
-      const leading = this.length2em(leadingString, (this.constructor as typeof CommonMoMixin).defaultLeading);
+      const leading = this.length2em(leadingString, LineBBox.defaultLeading);
       if (i === 0 && style === 'before') {
         this.bbox.L = 0;
         return LineBBox.from(BBox.zero(), leading);
       }
       let bbox = LineBBox.from(this.getOuterBBox(), leading);
       if (i === 1) {
-        const indent = this.getIndentValues();
-        bbox.indentData = indent;
         if (style === 'after') {
           bbox.w = bbox.h = bbox.d = 0;
           bbox.isFirst = true;
@@ -513,25 +498,11 @@ export function CommonMoMixin<
         } else if (style === 'duplicate') {
           bbox.L = 0;
         } else if (this.multChar) {
-          bbox = LineBBox.from(this.multChar.getOuterBBox(), leading, indent);
+          bbox = LineBBox.from(this.multChar.getOuterBBox(), leading);
         }
+        bbox.getIndentData(this.node);
       }
       return bbox;
-    }
-
-    /**
-     * @return {IndentDatap[]}   The general and last indent values (align and shift)/
-     */
-    protected getIndentValues(): IndentData[] {
-      let {indentalign, indentshift, indentalignlast, indentshiftlast} =
-        this.node.attributes.getList(...indentMoAttributes) as StringMap;
-      if (indentalignlast === 'indentalign') {
-        indentalignlast = indentalign;
-      }
-      if (indentshiftlast === 'indentshift') {
-        indentshiftlast = indentshift;
-      }
-      return [[indentalign, indentshift], [indentalignlast, indentshiftlast]] as IndentData[];
     }
 
     /**

@@ -23,7 +23,8 @@
 
 import {AbstractWrapper, WrapperClass} from '../../core/Tree/Wrapper.js';
 import {PropertyList} from '../../core/Tree/Node.js';
-import {MmlNode, MmlNodeClass, TextNode, AbstractMmlNode, indentAttributes} from '../../core/MmlTree/MmlNode.js';
+import {MmlNode, MmlNodeClass, TextNode, AbstractMmlNode,
+        indentAttributes, indentMoAttributes} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {Property} from '../../core/Tree/Node.js';
 import {unicodeChars} from '../../util/string.js';
@@ -82,6 +83,11 @@ export type IndentData = [string, string];
 export class LineBBox extends BBox {
 
   /**
+   * The default line leading (for mo and mspace)
+   */
+  public static defaultLeading: number = .1;
+
+  /**
    * Indentation data for the line break
    */
   public indentData: IndentData[] = null;
@@ -102,7 +108,7 @@ export class LineBBox extends BBox {
    * @param {IndentData} indent   The align/shift information
    * @return {ExtendedBBox}       The bbox extended
    */
-  public static from(bbox: BBox, leading: number = .1, indent: IndentData[] = null): LineBBox {
+  public static from(bbox: BBox, leading: number = LineBBox.defaultLeading, indent: IndentData[] = null): LineBBox {
     const nbox = new this();
     Object.assign(nbox, bbox);
     nbox.lineLeading = leading;
@@ -138,10 +144,25 @@ export class LineBBox extends BBox {
   }
 
   /**
+   * @param {MmlNode} node    The MmlNode to get attributes from
+   */
+  public getIndentData(node: MmlNode) {
+    let {indentalign, indentshift, indentalignlast, indentshiftlast} =
+      node.attributes.getList(...indentMoAttributes) as StringMap;
+    if (indentalignlast === 'indentalign') {
+      indentalignlast = indentalign;
+    }
+    if (indentshiftlast === 'indentshift') {
+      indentshiftlast = indentshift;
+    }
+    this.indentData = [[indentalign, indentshift], [indentalignlast, indentshiftlast]] as IndentData[];
+  }
+
+  /**
    * @param {LineBBox} bbox   The LineBBox whose indentData is to be copied
    * @return {IndentData[]}   The copied array
    */
-  protected copyIndent(bbox: LineBBox): IndentData[] {
+  protected copyIndentData(bbox: LineBBox): IndentData[] {
     return bbox.indentData.map(([align, indent]) => [align, indent]);
   }
 

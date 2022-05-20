@@ -82,9 +82,12 @@ export class MmlMspace extends AbstractMmlTokenNode {
    * @override
    */
   public get hasNewline() {
-    let attributes = this.attributes;
-    return (attributes.getExplicit('width') == null && attributes.getExplicit('height') == null &&
-            attributes.getExplicit('depth') == null && attributes.get('linebreak') === 'newline');
+    const attributes = this.attributes;
+    const linebreak = attributes.get('linebreak');
+    return (attributes.getExplicit('width') == null &&
+            attributes.getExplicit('height') == null &&
+            attributes.getExplicit('depth') == null &&
+            (linebreak === 'newline' || linebreak === 'indentingnewline'));
   }
 
 }
