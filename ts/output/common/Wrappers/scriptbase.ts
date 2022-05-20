@@ -835,8 +835,8 @@ export function CommonScriptbaseMixin<
      */
     public computeLineBBox(i: number) {
       const n = this.breakCount;
-      if (!n || i < n) return super.getLineBBox(i);
       const bbox = this.baseChild.getLineBBox(i).copy();
+      if (!n || i < n) return bbox;
       this.appendScripts(bbox);
       this.addMiddleBorders(bbox);
       this.addRightBorders(bbox);

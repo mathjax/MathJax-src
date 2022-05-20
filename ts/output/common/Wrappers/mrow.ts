@@ -59,6 +59,8 @@ export interface CommonMrow<
   FC extends FontDataClass<CC, VV, DD>
 > extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
 
+  readonly isStack: boolean;
+
   /**
    * Handle vertical stretching of children to match height of
    *  other nodes in the row.
@@ -195,6 +197,11 @@ export function CommonMrowMixin<
       return this._breakCount;
     }
 
+    get isStack() {
+      return !this.parent.node.linebreakContainer &&
+        !(this.parent.node.isKind('msubsup') && this.parent.node.childIndex(this.node));
+    }
+
     /**
      * @override
      * @constructor
@@ -235,7 +242,7 @@ export function CommonMrowMixin<
      */
     protected computeLinebreakBBox(bbox: BBox) {
       bbox.empty();
-      const isStack = !this.parent.node.linebreakContainer;
+      const isStack = this.isStack;
       const lines = this.lineBBox;
       const n = lines.length - 1;
       let y = lines[0].h + .1;  // start just above the first line
@@ -255,8 +262,8 @@ export function CommonMrowMixin<
         lines[n].R = this.bbox.R;
       } else {
         bbox.w = this.shiftLines();
+        bbox.pwidth = BBox.fullWidth;  // stretch to fill container
       }
-      bbox.pwidth = '100%';  // stretch to fill container
       bbox.clean();
     }
 
@@ -306,6 +313,9 @@ export function CommonMrowMixin<
       return w;
     }
 
+    /**
+     * @override
+     */
     public setChildPWidths(recompute: boolean, w: (number | null) = null, clear: boolean = true): boolean {
       if (recompute) return false;
       if (clear) {
