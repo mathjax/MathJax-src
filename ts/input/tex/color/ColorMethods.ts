@@ -37,7 +37,7 @@ import {ColorModel} from './ColorUtil.js';
  * @param {string} colorPadding: Padding for \colorbox and \fcolorbox.
  * @return {PropertyList} The padding properties.
  */
-function padding(colorPadding: string): PropertyList {
+export function padding(colorPadding: string): PropertyList {
   const pad = `+${colorPadding}`;
   const unit = colorPadding.replace(/^.*?([a-z]*)$/, '$1');
   const pad2 = 2 * parseFloat(pad);
