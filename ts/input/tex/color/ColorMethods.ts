@@ -121,14 +121,13 @@ ColorMethods.DefineColor = function (parser: TexParser, name: string) {
  * @param {string} name The name of the control sequence.
  */
 ColorMethods.ColorBox = function (parser: TexParser, name: string) {
-  const cname = parser.GetArgument(name);
+  const model = parser.GetBrackets(name, "");
+  const cdef = parser.GetArgument(name);
   const math = ParseUtil.internalMath(parser, parser.GetArgument(name));
-  const colorModel: ColorModel = parser.configuration.packageData.get('color').model;
-
-  const node = parser.create('node', 'mpadded', math, {
-    mathbackground: colorModel.getColor('named', cname)
+  const colorModel = parser.configuration.packageData.get("color").model;
+  const node = parser.create("node", "mpadded", math, {
+    mathbackground: colorModel.getColor(model, cdef),
   });
-
   NodeUtil.setProperties(node, padding(parser.options.color.padding));
   parser.Push(node);
 };
