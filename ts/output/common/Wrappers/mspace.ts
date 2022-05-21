@@ -182,8 +182,10 @@ export function CommonMspaceMixin<
      */
     public computeLineBBox(i: number): LineBBox {
       const bbox = LineBBox.from(BBox.zero(), LineBBox.defaultLeading);
-      bbox.getIndentData(this.node);
-      bbox.isFirst = (i === 1);
+      if (i === 1) {
+        bbox.getIndentData(this.node);
+        bbox.isFirst = true;
+      }
       return bbox;
     }
 

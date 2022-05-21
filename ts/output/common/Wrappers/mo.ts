@@ -487,7 +487,8 @@ export function CommonMoMixin<
       const leading = this.length2em(leadingString, LineBBox.defaultLeading);
       if (i === 0 && style === 'before') {
         this.bbox.L = 0;
-        return LineBBox.from(BBox.zero(), leading);
+        const bbox = LineBBox.from(BBox.zero(), leading);
+        return bbox;
       }
       let bbox = LineBBox.from(this.getOuterBBox(), leading);
       if (i === 1) {

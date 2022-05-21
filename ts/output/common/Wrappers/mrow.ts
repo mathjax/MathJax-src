@@ -59,7 +59,10 @@ export interface CommonMrow<
   FC extends FontDataClass<CC, VV, DD>
 > extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
 
-  readonly isStack: boolean;
+  /**
+   * True if this mrow is not the top-level linebreak mrow
+   */
+  isStack: boolean;
 
   /**
    * Handle vertical stretching of children to match height of
@@ -137,6 +140,11 @@ export function CommonMrowMixin<
     /**
      * @override
      */
+    public isStack: boolean;
+
+    /**
+     * @override
+     */
     public stretchChildren() {
       let stretchy: WW[] = [];
       //
@@ -197,9 +205,12 @@ export function CommonMrowMixin<
       return this._breakCount;
     }
 
-    get isStack() {
-      let parent = this.node.Parent;
-      return !parent.linebreakContainer && !(parent.isKind('msubsup') && this.node.childPosition());
+    /**
+     * @override
+     */
+    public breakTop(_mrow: WW, _child: WW): WW {
+      const node = this as any as WW;
+      return (this.isStack ? this.parent.breakTop(node, node) : node);
     }
 
     /**
@@ -208,6 +219,8 @@ export function CommonMrowMixin<
      */
     constructor(factory: WF, node: MmlNode, parent: WW = null) {
       super(factory, node, parent);
+      const self = this as any as WW;
+      this.isStack = (this.parent.node.isInferred || this.parent.breakTop(self, self) !== self);
       this.stretchChildren();
       for (const child of this.childNodes) {
         if (child.bbox.pwidth) {
@@ -287,7 +300,7 @@ export function CommonMrowMixin<
     /**
      * @override
      */
-    public computeLineBBox(i: number) {
+    public getLineBBox(i: number) {
       return (this.isStack ? super.getLineBBox(i) : LineBBox.from(this.getOuterBBox()));
     }
 

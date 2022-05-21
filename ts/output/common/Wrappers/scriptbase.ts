@@ -272,7 +272,7 @@ export interface CommonScriptbase<
    * Add the scripts into the given bounding box for msub and msup (overridden by msubsup)
    *
    * @param {BBox} bbox   The bounding box to augment
-   * @param {BBox}        The modified bounding box
+   * @return {BBox}       The modified bounding box
    */
   appendScripts(bbox: BBox): BBox;
 
@@ -828,6 +828,16 @@ export function CommonScriptbaseMixin<
         this._breakCount = (this.node.linebreakContainer ? 0 : this.childNodes[0].breakCount);
       }
       return this._breakCount;
+    }
+
+    /**
+     * msubsup/mub/msupo is a linebreak container for its scripts
+     *
+     * @override
+     */
+    public breakTop(mrow: WW, child: WW): WW {
+      return (this.node.linebreakContainer || !this.parent ||
+              this.node.childIndex(child.node) ? mrow : this.parent.breakTop(mrow, this as any as WW));
     }
 
     /**

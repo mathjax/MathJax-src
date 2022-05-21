@@ -489,6 +489,15 @@ export class CommonWrapper<
     return this._breakCount;
   }
 
+  /**
+   * @param {WW} mrow     The first mrow below this node
+   * @param {WW} _child   The child containing the mrow
+   * @return {WW}         The linebreak container for the child
+   */
+  public breakTop(mrow: WW, _child: WW): WW {
+    return (this.node.linebreakContainer || !this.parent ? mrow : this.parent.breakTop(mrow, this as any as WW));
+  }
+
   /*******************************************************************/
 
   /**
