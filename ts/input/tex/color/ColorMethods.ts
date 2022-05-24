@@ -139,15 +139,16 @@ ColorMethods.ColorBox = function (parser: TexParser, name: string) {
  * @param {string} name The name of the control sequence.
  */
 ColorMethods.FColorBox = function (parser: TexParser, name: string) {
+  const model = parser.GetBrackets(name, "");
   const fname = parser.GetArgument(name);
   const cname = parser.GetArgument(name);
   const math = ParseUtil.internalMath(parser, parser.GetArgument(name));
   const options = parser.options.color;
-  const colorModel: ColorModel = parser.configuration.packageData.get('color').model;
+  const colorModel = parser.configuration.packageData.get("color").model;
 
   const node = parser.create('node', 'mpadded', math, {
-    mathbackground: colorModel.getColor('named', cname),
-    style: `border: ${options.borderWidth} solid ${colorModel.getColor('named', fname)}`
+    mathbackground: colorModel.getColor(model, cname),
+    style: `border: ${options.borderWidth} solid ${colorModel.getColor(model, fname)}`
   });
 
   NodeUtil.setProperties(node, padding(options.padding));
