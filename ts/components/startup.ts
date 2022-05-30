@@ -99,7 +99,7 @@ export interface MathJaxObject extends MJObject {
     extendHandler(extend: HandlerExtension): void;
     toMML(node: MmlNode): string;
     defaultReady(): void;
-    defaultPageReady(): void,
+    defaultPageReady(): Promise<void>;
     getComponents(): void;
     makeMethods(): void;
     makeTypesetMethods(): void;
