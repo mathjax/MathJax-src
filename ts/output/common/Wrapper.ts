@@ -34,6 +34,7 @@ import {StyleList} from '../../util/StyleList.js';
 import {CommonOutputJax} from '../common.js';
 import {CommonWrapperFactory} from './WrapperFactory.js';
 import {CommonMo} from './Wrappers/mo.js';
+import {CommonMrow} from './Wrappers/mrow.js';
 import {BBox} from '../../util/BBox.js';
 import {FontData, FontDataClass, DelimiterData,
         VariantData, CharData, CharOptions, DIRECTION, NOSTRETCH} from './FontData.js';
@@ -491,8 +492,12 @@ export class CommonWrapper<
   get breakCount(): number {
     if (this._breakCount < 0) {
       const node = this.node;
-      this._breakCount = (node.isEmbellished ? this.coreMO().breakCount :
-                          (node.arity < 0 && !node.linebreakContainer ? this.childNodes[0].breakCount : 0));
+      this._breakCount = (
+        node.isEmbellished ? this.coreMO().breakCount :
+          node.arity < 0 && !node.linebreakContainer &&
+          (this.childNodes[0] as any as CommonMrow<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).isStack ?
+          this.childNodes[0].breakCount : 0
+      );
     }
     return this._breakCount;
   }
