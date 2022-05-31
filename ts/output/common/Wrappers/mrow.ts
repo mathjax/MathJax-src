@@ -276,8 +276,9 @@ export function CommonMrowMixin<
         lines[0].L = this.bbox.L;
         lines[n].R = this.bbox.R;
       } else {
-        bbox.w = this.shiftLines();
         bbox.pwidth = BBox.fullWidth;  // stretch to fill container
+        bbox.w = Math.max(...this.lineBBox.map(bbox => bbox.w));  // natural width
+        this.shiftLines(bbox.w);
       }
       bbox.clean();
     }
@@ -306,26 +307,20 @@ export function CommonMrowMixin<
 
     /**
      * Handle alignment and shifting if lines
+     *
+     * @param {number} W   The width of the container
      */
-    protected shiftLines(W: number = Math.max(...this.lineBBox.map(bbox => bbox.w))) {
-      const alignfirst = (this.parent.node.attributes.get('data-align') as string) || 'left';
-      const shiftfirst = (this.parent.node.attributes.get('data-indent') as string) || '0';
-      const n = this.lineBBox.length - 1;
-      const align: string[] = [];
-      const shift: number[] = [];
-      for (let i = 0; i <= n; i++) {
-        let [ialign, ishift] = (i === 0 ? [alignfirst, shiftfirst] : this.lineBBox[i].indentData[i === n ? 1 : 0]);
-        [align[i], shift[i]] = this.processIndent(ialign, ishift, alignfirst, shiftfirst, W);
+    protected shiftLines(W: number) {
+      const lines = this.lineBBox;
+      const n = lines.length - 1;
+      const [alignfirst, shiftfirst] = lines[1].indentData[0];
+      for (const i of lines.keys()) {
+        const bbox = lines[i];
+        let [indentalign, indentshift] = (i === 0 ? [alignfirst, shiftfirst] : bbox.indentData[i === n ? 2 : 1]);
+        const [align, shift] = this.processIndent(indentalign, indentshift, alignfirst, shiftfirst, W);
+        bbox.L = 0;
+        bbox.L = this.getAlignX(W, bbox, align) + shift;
       }
-      let w = W;
-      for (let i = 0; i <= n; i++) {
-        const bbox = this.lineBBox[i];
-        bbox.L = this.getAlignX(W, bbox, align[i]) + shift[i];
-        if (bbox.L + bbox.w + bbox.R > w) {
-          w = bbox.L + bbox.w + bbox.R;
-        }
-      }
-      return w;
     }
 
     /**
@@ -336,7 +331,10 @@ export function CommonMrowMixin<
       if (clear) {
         this.bbox.pwidth = '';
       }
-      this.bbox.w = this.shiftLines(w);
+      if (this.bbox.w !== w) {
+        this.bbox.w = w;
+        this.shiftLines(w);
+      }
       return true;
     }
 

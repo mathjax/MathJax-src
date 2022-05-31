@@ -39,7 +39,14 @@ export class MmlMspace extends AbstractMmlTokenNode {
     width:  '0em',
     height: '0ex',
     depth:  '0ex',
-    linebreak: 'auto'
+    linebreak: 'auto',
+    indentshift: 'auto',         // Use user configuration
+    indentalign: 'auto',
+    indenttarget: '',
+    indentalignfirst: 'indentalign',
+    indentshiftfirst: 'indentshift',
+    indentalignlast:  'indentalign',
+    indentshiftlast:  'indentshift'
   };
 
   /**

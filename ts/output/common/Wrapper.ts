@@ -147,15 +147,23 @@ export class LineBBox extends BBox {
    * @param {MmlNode} node    The MmlNode to get attributes from
    */
   public getIndentData(node: MmlNode) {
-    let {indentalign, indentshift, indentalignlast, indentshiftlast} =
+    let {indentalign, indentshift, indentalignfirst, indentshiftfirst, indentalignlast, indentshiftlast} =
       node.attributes.getList(...indentMoAttributes) as StringMap;
+    if (indentalignfirst === 'indentalign') {
+      indentalignfirst = indentalign;
+    }
+    if (indentshiftfirst === 'indentshift') {
+      indentshiftfirst = indentshift;
+    }
     if (indentalignlast === 'indentalign') {
       indentalignlast = indentalign;
     }
     if (indentshiftlast === 'indentshift') {
       indentshiftlast = indentshift;
     }
-    this.indentData = [[indentalign, indentshift], [indentalignlast, indentshiftlast]] as IndentData[];
+    this.indentData = [[indentalignfirst, indentshiftfirst],
+                       [indentalign, indentshift],
+                       [indentalignlast, indentshiftlast]] as IndentData[];
   }
 
   /**
@@ -1046,10 +1054,16 @@ export class CommonWrapper<
   protected processIndent(
     indentalign: string,
     indentshift: string,
-    align: string = this.jax.options.displayAlign,
-    shift: string = this.jax.options.displayIndent,
+    align: string = '',
+    shift: string = '',
     width: number = this.metrics.containerWidth
   ): [string, number] {
+    if (!align || align === 'auto') {
+      align = this.jax.options.displayAlign;
+    }
+    if (!shift || shift === 'auto') {
+      shift = this.jax.options.displayIndent;
+    }
     if (indentalign === 'auto') {
       indentalign = align;
     }

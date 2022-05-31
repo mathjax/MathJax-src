@@ -85,6 +85,14 @@ export class MmlMtable extends AbstractMmlNode {
   }
 
   /**
+   * Don't reset indent attributes
+   * @override
+   */
+  public get linebreakAlign() {
+    return '';
+  }
+
+  /**
    * @override
    */
   public setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {

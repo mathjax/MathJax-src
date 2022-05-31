@@ -80,8 +80,8 @@ export const indentAttributes = [
  * Attributes used to determine indentation and shifting
  */
 export const indentMoAttributes = [
-  'indentalign', 'indentalignlast',
-  'indentshift', 'indentshiftlast'
+  'indentalignfirst', 'indentalign', 'indentalignlast',
+  'indentshiftfirst', 'indentshift', 'indentshiftlast'
 ];
 
 /**
@@ -103,6 +103,7 @@ export interface MmlNode extends Node<MmlNode, MmlNodeClass> {
   readonly isEmbellished: boolean;
   readonly isSpacelike: boolean;
   readonly linebreakContainer: boolean;
+  readonly linebreakAlign: string;
 
   /**
    *  The expected number of children (-1 means use inferred mrow)
@@ -443,6 +444,14 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
   }
 
   /**
+   * @return {string}  the attribute used to seed the indentalign value in
+   *                   linebreak containers (overridden in subclasses when needed)
+   */
+  public get linebreakAlign(): string {
+    return 'data-align';
+  }
+
+  /**
    * @return {number}  The number of children allowed, or Infinity for any number,
    *                   or -1 for when an inferred row is needed for the children.
    *                   Special case is 1, meaning at least one (other numbers
@@ -649,6 +658,7 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
    *   If the node doesn't have an explicit scriptstyle, inherit it
    *   If the prime style is true, set it as a property (it is not a MathML attribute)
    *   Check that the number of children is correct
+   *   Reset the indent attributes for linebreak containers
    *   Finally, push any inherited attributes to teh children.
    *
    * @override
@@ -689,6 +699,20 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
         while (this.childNodes.length < arity) {
           this.appendChild(this.factory.create('mrow'));
         }
+      }
+    }
+    //
+    //  If this is a linebreak container, reset the indent attributes
+    //
+    if (this.linebreakContainer) {
+      const align = this.linebreakAlign;
+      if (align) {
+        const indentalign = this.attributes.get(align) || 'left';
+        attributes = this.addInheritedAttributes(attributes, {
+          indentalign, indentshift: '0',
+          indentalignfirst: indentalign, indentshiftfirst: '0',
+          indentalignlast: 'indentalign', indentshiftlast: 'indentshift'
+        });
       }
     }
     this.setChildInheritedAttributes(attributes, display, level, prime);
@@ -1066,6 +1090,13 @@ export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode<MmlNode, Mm
    */
   public get linebreakContainer(): boolean {
     return false;
+  }
+
+  /**
+   * @return {string}  Don't set the indentalign and indentshift attributes in this case
+   */
+  public get linebreakAlign(): string {
+    return '';
   }
 
   /**

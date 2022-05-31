@@ -50,6 +50,9 @@ export class MmlMpadded extends AbstractMmlLayoutNode {
     return 'mpadded';
   }
 
+  /**
+   * @override
+   */
   public get linebreakContainer() {
     return true;
   }

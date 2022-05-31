@@ -82,6 +82,14 @@ export class MmlMath extends AbstractMmlLayoutNode {
   }
 
   /**
+   * Don't reset indent attributes
+   * @override
+   */
+  public get linebreakAlign() {
+    return '';
+  }
+
+  /**
    * The attributes of math nodes are inherited, so add them into the list.
    * The displaystyle attribute comes from the display attribute if not given explicitly
    * The scriptlevel comes from the scriptlevel attribute or default
