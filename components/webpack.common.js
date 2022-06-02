@@ -46,14 +46,12 @@ function quoteRE(string) {
 const PLUGINS = function (js, dir) {
   const mjdir = path.resolve(__dirname, '..', 'js');
   const jsdir = path.resolve(dir, js);
-  const package = path.resolve(__dirname, '..', 'package.json');
 
   //
   //  Record the js directory for the pack command
   //
   return [new webpack.DefinePlugin({
-    __JSDIR__: jsdir,
-    PACKAGE_VERSION: `'${require(package).version}'`
+    __JSDIR__: jsdir
   })];
 };
 
