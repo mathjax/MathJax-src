@@ -90,12 +90,13 @@ export const ChtmlMroot = (function <N, T, D>(): ChtmlMrootClass<N, T, D> {
      * @override
      */
     protected addRoot(ROOT: N, root: ChtmlWrapper<N, T, D>, sbox: BBox, H: number) {
-      root.toCHTML(ROOT);
+      root.toCHTML([ROOT]);
+      const adaptor = this.adaptor;
       const [x, h, dx] = this.getRootDimens(sbox, H);
-      this.adaptor.setStyle(ROOT, 'verticalAlign', this.em(h));
-      this.adaptor.setStyle(ROOT, 'width', this.em(x));
+      adaptor.setStyle(ROOT, 'verticalAlign', this.em(h));
+      adaptor.setStyle(ROOT, 'width', this.em(x));
       if (dx) {
-        this.adaptor.setStyle(this.adaptor.firstChild(ROOT) as N, 'paddingLeft', this.em(dx));
+        adaptor.setStyle(adaptor.firstChild(ROOT) as N, 'paddingLeft', this.em(dx));
       }
     }
 

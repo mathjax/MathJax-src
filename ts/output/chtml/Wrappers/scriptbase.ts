@@ -120,8 +120,8 @@ export const ChtmlScriptbase = (function <N, T, D>(): ChtmlScriptbaseClass<N, T,
      *
      * @override
      */
-    public toCHTML(parent: N) {
-      this.dom = this.standardChtmlNode(parent);
+    public toCHTML(parents: N[]) {
+      this.dom = this.standardChtmlNodes(parents);
       const [x, v] = this.getOffset();
       const dx = x - (this.baseRemoveIc ? this.baseIc : 0);
       const style: StyleData = {'vertical-align': this.em(v)};
@@ -129,7 +129,8 @@ export const ChtmlScriptbase = (function <N, T, D>(): ChtmlScriptbaseClass<N, T,
         style['margin-left'] = this.em(dx);
       }
       this.baseChild.toCHTML(this.dom);
-      this.scriptChild.toCHTML(this.adaptor.append(this.dom, this.html('mjx-script', {style})) as N);
+      const dom = this.dom[this.dom.length - 1];
+      this.scriptChild.toCHTML([this.adaptor.append(dom, this.html('mjx-script', {style})) as N]);
     }
 
     /**

@@ -88,8 +88,8 @@ export const ChtmlMfenced = (function <N, T, D>(): ChtmlMfencedClass<N, T, D> {
     /**
      * @override
      */
-    public toCHTML(parent: N) {
-      const chtml = this.standardChtmlNode(parent);
+    public toCHTML(parents: N[]) {
+      const chtml = this.standardChtmlNodes(parents);
       (this.mrow as ChtmlInferredMrowNTD<N, T, D>).toCHTML(chtml);
     }
 

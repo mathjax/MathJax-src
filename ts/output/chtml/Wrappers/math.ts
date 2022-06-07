@@ -146,10 +146,10 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
           }
           const W = this.em(Math.max(0, L + w + R));
           adaptor.setStyle(parent, 'min-width', W);
-          adaptor.setStyle(this.jax.table.dom, 'min-width', W);
+          adaptor.setStyle(this.jax.table.dom[0], 'min-width', W);
         }
       } else {
-        this.setIndent(this.dom, align, shift);
+        this.setIndent(this.dom[0], align, shift);
       }
     }
 
@@ -161,9 +161,9 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
       // Transfer right margin to container (for things like $x\hskip -2em y$)
       //
       const adaptor = this.adaptor;
-      const margin = adaptor.getStyle(this.dom, 'margin-right');
+      const margin = adaptor.getStyle(this.dom[0], 'margin-right');
       if (margin) {
-        adaptor.setStyle(this.dom, 'margin-right', '');
+        adaptor.setStyle(this.dom[0], 'margin-right', '');
         adaptor.setStyle(parent, 'margin-right', margin);
         adaptor.setStyle(parent, 'width', '0');
       }
@@ -174,19 +174,18 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
     /**
      * @override
      */
-    public toCHTML(parent: N) {
-      super.toCHTML(parent);
-      const chtml = this.dom;
+    public toCHTML(parents: N[]) {
+      super.toCHTML(parents);
       const adaptor = this.adaptor;
       const display = (this.node.attributes.get('display') === 'block');
       if (display) {
-        adaptor.setAttribute(chtml, 'display', 'true');
-        adaptor.setAttribute(parent, 'display', 'true');
-        this.handleDisplay(parent);
+        adaptor.setAttribute(this.dom[0], 'display', 'true');
+        adaptor.setAttribute(parents[0], 'display', 'true');
+        this.handleDisplay(parents[0]);
       } else {
-        this.handleInline(parent);
+        this.handleInline(parents[0]);
       }
-      adaptor.addClass(chtml, 'MJX-TEX');
+      adaptor.addClass(this.dom[0], 'MJX-TEX');
     }
 
     /**

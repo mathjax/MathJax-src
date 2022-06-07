@@ -56,7 +56,7 @@ export interface ChtmlMactionNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonM
   /**
    * Public access to em method (for use in notation functions)
    *
-   * @param {number] m   The number to convert to pixels
+   * @param {number} m   The number to convert to pixels
    * @return {string}    The dimension with "px" units
    */
   Em(m: number): string;
@@ -151,7 +151,9 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
         //
         // Mark which child is selected
         //
-        node.adaptor.setAttribute(node.dom, 'toggle', node.node.attributes.get('selection') as string);
+        node.dom.forEach(dom => {
+          node.adaptor.setAttribute(dom, 'toggle', node.node.attributes.get('selection') as string);
+        });
         //
         // Cache the data needed to select another node
         //
@@ -184,16 +186,16 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
           // Text tooltips are handled through title attributes
           //
           const text = (tip.node as TextNode).getText();
-          node.adaptor.setAttribute(node.dom, 'title', text);
+          node.dom.forEach(dom => node.adaptor.setAttribute(dom, 'title', text));
         } else {
           //
           // Math tooltips are handled through hidden nodes and event handlers
           //
           const adaptor = node.adaptor;
-          const tool = adaptor.append(node.dom, node.html('mjx-tool', {
+          const tool = adaptor.append(node.dom[0], node.html('mjx-tool', {
             style: {bottom: node.Em(-node.tipDy), right: node.Em(-node.tipDx)}
           }, [node.html('mjx-tip')])) as N;
-          tip.toCHTML(adaptor.firstChild(tool) as N);
+          tip.toCHTML([adaptor.firstChild(tool) as N]);
           //
           // Set up the event handlers to display and remove the tooltip
           //
@@ -218,7 +220,7 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
         if (tip.node.isKind('mtext')) {
           const adaptor = node.adaptor;
           const text = (tip.node as TextNode).getText();
-          adaptor.setAttribute(node.dom, 'statusline', text);
+          node.dom.forEach(dom => adaptor.setAttribute(dom, 'statusline', text));
           //
           // Set up event handlers to change the status window
           //
@@ -267,8 +269,8 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
     /**
      * @override
      */
-    public toCHTML(parent: N) {
-      const chtml = this.standardChtmlNode(parent);
+    public toCHTML(parents: N[]) {
+      const chtml = this.standardChtmlNodes(parents);
       const child = this.selected;
       child.toCHTML(chtml);
       this.action(this, this.data);

@@ -85,7 +85,7 @@ export interface ChtmlMencloseNTD<N, T, D> extends ChtmlWrapper<N, T, D>, Common
   /**
    * Public access to em method (for use in notation functions)
    *
-   * @param {number] m   The number to convert to pixels
+   * @param {number} m   The number to convert to pixels
    * @return {string}    The dimension with "px" units
    */
   Em(m: number): string;
@@ -298,7 +298,7 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<N, T, D> 
             width: node.Em(W),
             transform: 'translateX(' + node.Em(t) + ') rotate(' + node.fixed(-a) + 'rad)',
           }}));
-          node.adaptor.append(node.dom, strike);
+          node.adaptor.append(node.dom[0], strike);
         },
         bbox: (node) => {
           const p = node.padding / 2;
@@ -333,7 +333,7 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<N, T, D> 
         renderer: (node, child) => {
           const adaptor = node.adaptor;
           adaptor.setStyle(child, 'border-top', node.Em(node.thickness) + ' solid');
-          const arc = adaptor.append(node.dom, node.html('dbox')) as N;
+          const arc = adaptor.append(node.dom[0], node.html('dbox')) as N;
           const t = node.thickness;
           const p = node.padding;
           if (t !== Notation.THICKNESS) {
@@ -358,9 +358,9 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<N, T, D> 
         //    (it is added in at the end, so other notations overlap the root)
         //
         renderer: (node, child) => {
-          node.msqrt.toCHTML(child);
+          node.msqrt.toCHTML([child]);
           const TRBL = node.sqrtTRBL();
-          node.adaptor.setStyle(node.msqrt.dom, 'margin', TRBL.map(x => node.Em(-x)).join(' '));
+          node.adaptor.setStyle(node.msqrt.dom[0], 'margin', TRBL.map(x => node.Em(-x)).join(' '));
         },
         //
         //  Create the needed msqrt wrapper
@@ -488,18 +488,18 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<N, T, D> 
     /**
      * @override
      */
-    public toCHTML(parent: N) {
+    public toCHTML(parents: N[]) {
       const adaptor = this.adaptor;
-      const chtml = this.standardChtmlNode(parent);
+      const chtml = this.standardChtmlNodes(parents);
       //
       //  Create a box for the child (that can have padding and borders added by the notations)
       //    and add the child HTML into it
       //
-      const block = adaptor.append(chtml, this.html('mjx-box')) as N;
+      const block = adaptor.append(chtml[0], this.html('mjx-box')) as N;
       if (this.renderChild) {
         this.renderChild(this, block);
       } else {
-        this.childNodes[0].toCHTML(block);
+        this.childNodes[0].toCHTML([block]);
       }
       //
       //  Render all the notations for this menclose element

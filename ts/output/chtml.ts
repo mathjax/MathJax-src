@@ -229,7 +229,7 @@ CommonOutputJax<
    * @param {N} parent      The HTML node to contain the HTML
    */
   public processMath(math: MmlNode, parent: N) {
-    this.factory.wrap(math).toCHTML(parent);
+    this.factory.wrap(math).toCHTML([parent]);
   }
 
   /**
