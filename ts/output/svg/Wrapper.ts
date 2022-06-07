@@ -76,11 +76,6 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   public static borderFuzz = 0.005;
 
   /**
-   * FIXME: temporary until CHTML linebreaking is implemented, when it goes to common wrapper again
-   */
-  public dom: N[] = null;
-
-  /**
    * Offset due to border/padding
    */
   public dx: number = 0;
@@ -95,7 +90,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   /**
    * Create the HTML for the wrapped node.
    *
-   * @param {N[]} parents  The HTML node where the output is added
+   * @param {N[]} parents  The HTML nodes where the output is to be added
    */
   public toSVG(parents: N[]) {
     this.addChildren(this.standardSvgNodes(parents));
@@ -121,8 +116,8 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   /**
    * Create the standard SVG element for the given wrapped node.
    *
-   * @param {N[]} parents  The HTML element in which the node is to be created
-   * @returns {N[]}  The root of the HTML tree for the wrapped node's output
+   * @param {N[]} parents  The HTML elements in which the node is to be created
+   * @returns {N[]}  The roots of the HTML trees for the wrapped node's output
    */
   protected standardSvgNodes(parents: N[]): N[] {
     const svg = this.createSvgNodes(parents);
@@ -135,7 +130,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   }
 
   /**
-   * @param {N[]} parents  The HTML element in which the node is to be created
+   * @param {N[]} parents  The HTML elements in which the node is to be created
    * @returns {N[]}  The roots of the HTML tree for the wrapped node's output
    */
   protected createSvgNodes(parents: N[]): N[] {
@@ -149,6 +144,9 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
 
   /**
    * Add an anchor for hrefs and insert hot boxes into the DOM containers
+   *
+   * @param {N[]} parents   The HTML nodes in which the output is to be placed
+   * @return {N[]}          The roots of the HTML tree for the node's output
    */
   protected handleHref(parents: N[]) {
     const href = this.node.attributes.get('href');
@@ -348,7 +346,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     for (const name of attributes.getExplicitNames()) {
       if (skip[name] === false || (!(name in defaults) && !skip[name] &&
                                    !adaptor.hasAttribute(this.dom[0], name))) {
-        this.dom.forEach(node => adaptor.setAttribute(node, name, attributes.getExplicit(name) as string));
+        this.dom.forEach(dom => adaptor.setAttribute(dom, name, attributes.getExplicit(name) as string));
       }
     }
     if (attributes.get('class')) {

@@ -94,21 +94,26 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
      * @override
      */
     public toSVG(parents: N[]) {
-      this.linebreakCount = (this.isStack ? 0 : this.breakCount);
-      if (this.linebreakCount || !this.node.isInferred) {
+      const n = this.linebreakCount = (this.isStack ? 0 : this.breakCount);
+      if (n || !this.node.isInferred) {
         parents = this.standardSvgNodes(parents);
       } else {
         this.dom = parents;
       }
       this.addChildren(parents);
-      if (this.linebreakCount) {
-        const lines = this.lineBBox;
-        let y = 0;
-        for (const k of parents.keys()) {
-          const lbox = lines[k];
-          this.place(lbox.L || 0, y, parents[k]);
-          y -= Math.max(.25, lbox.d) + lbox.lineLeading + Math.max(.75, lines[k + 1]?.h || 0);
-        }
+      n && this.placeLines(parents);
+    }
+
+    /**
+     * @param {N[]} parents  The HTML nodes in which to place the lines
+     */
+    protected placeLines(parents: N[]) {
+      const lines = this.lineBBox;
+      let y = 0;
+      for (const k of parents.keys()) {
+        const lbox = lines[k];
+        this.place(lbox.L || 0, y, parents[k]);
+        y -= Math.max(.25, lbox.d) + lbox.lineLeading + Math.max(.75, lines[k + 1]?.h || 0);
       }
     }
 
@@ -116,7 +121,8 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
      * @override
      */
     protected createSvgNodes(parents: N[]): N[] {
-      if (!this.linebreakCount) return super.createSvgNodes(parents);
+      const n = this.linebreakCount;
+      if (!n) return super.createSvgNodes(parents);
       //
       // Create a linestack/mrow node for the lines
       //
@@ -130,8 +136,8 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
       //
       //  Add the line boxes
       //
-      const svg = Array(this.linebreakCount) as N[];
-      for (let i = 0; i <= this.linebreakCount; i++) {
+      const svg = Array(n) as N[];
+      for (let i = 0; i <= n; i++) {
         svg[i] = adaptor.append(this.dom[0], this.svg('g', {'data-mjx-linebox': true, 'data-mjx-lineno': i})) as N;
       }
       //

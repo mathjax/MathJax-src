@@ -96,11 +96,8 @@ export const SvgMpadded = (function <N, T, D>(): SvgMpaddedClass<N, T, D> {
       //   use relative positioning to move the contents
       //
       if (X || y) {
-        svg = svg.map(node => {
-          this.adaptor.append(node, this.svg('g'));
-          this.place(X, y, node);
-          return node;
-        });
+        svg = [this.adaptor.append(svg[0], this.svg('g')) as N];
+        this.place(X, y, svg[0]);
       }
       this.addChildren(svg);
     }

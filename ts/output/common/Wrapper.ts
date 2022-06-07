@@ -23,8 +23,7 @@
 
 import {AbstractWrapper, WrapperClass} from '../../core/Tree/Wrapper.js';
 import {PropertyList} from '../../core/Tree/Node.js';
-import {MmlNode, MmlNodeClass, TextNode, AbstractMmlNode,
-        indentAttributes, indentMoAttributes} from '../../core/MmlTree/MmlNode.js';
+import {MmlNode, MmlNodeClass, TextNode, AbstractMmlNode} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {Property} from '../../core/Tree/Node.js';
 import {unicodeChars} from '../../util/string.js';
@@ -149,12 +148,12 @@ export class LineBBox extends BBox {
    */
   public getIndentData(node: MmlNode) {
     let {indentalign, indentshift, indentalignfirst, indentshiftfirst, indentalignlast, indentshiftlast} =
-      node.attributes.getList(...indentMoAttributes) as StringMap;
+      node.attributes.getAllAttributes() as StringMap;
     if (indentalignfirst === 'indentalign') {
-      indentalignfirst = indentalign;
+      indentalignfirst = node.attributes.getInherited('indentalign') as string;
     }
     if (indentshiftfirst === 'indentshift') {
-      indentshiftfirst = indentshift;
+      indentshiftfirst = node.attributes.getInherited('indentshift') as string;
     }
     if (indentalignlast === 'indentalign') {
       indentalignlast = indentalign;
@@ -407,7 +406,7 @@ export class CommonWrapper<
   /**
    * The DOM tree generated for this wrapper
    */
-//  public dom: N[] = null;
+  public dom: N[] = null;
 
   /**
    * Styles that must be handled directly by the wrappers (mostly having to do with fonts)
@@ -1038,7 +1037,7 @@ export class CommonWrapper<
    */
   protected getAlignShift(): [string, number] {
     let {indentalign, indentshift, indentalignfirst, indentshiftfirst} =
-      this.node.attributes.getList(...indentAttributes) as StringMap;
+      this.node.attributes.getAllAttributes() as StringMap;
     if (indentalignfirst !== 'indentalign') {
       indentalign = indentalignfirst;
     }

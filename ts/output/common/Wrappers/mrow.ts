@@ -279,6 +279,9 @@ export function CommonMrowMixin<
         bbox.pwidth = BBox.fullWidth;  // stretch to fill container
         bbox.w = Math.max(...this.lineBBox.map(bbox => bbox.w));  // natural width
         this.shiftLines(bbox.w);
+        if (this.node.isInferred) {
+          this.parent.bbox.pwidth = BBox.fullWidth;
+        }
       }
       bbox.clean();
     }
@@ -327,10 +330,8 @@ export function CommonMrowMixin<
      * @override
      */
     public setChildPWidths(recompute: boolean, w: (number | null) = null, clear: boolean = true): boolean {
+      if (!this.breakCount) return super.setChildPWidths(recompute, w, clear);
       if (recompute) return false;
-      if (clear) {
-        this.bbox.pwidth = '';
-      }
       if (this.bbox.w !== w) {
         this.bbox.w = w;
         this.shiftLines(w);
