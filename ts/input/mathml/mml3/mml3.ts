@@ -73,9 +73,10 @@ export class Mml3<N, T, D> {
       const parsed = document.adaptor.parse(Mml3.XSLT, 'text/xml') as any as Node;
       processor.importStylesheet(parsed);
       this.transform = (node: N) => {
-        const div = document.adaptor.node('div', {}, [document.adaptor.clone(node)]);
+        const adaptor = document.adaptor;
+        const div = adaptor.node('div', {}, [adaptor.clone(node)]);
         const mml = processor.transformToDocument(div as any as Node) as any as N;
-        return document.adaptor.firstChild(mml) as N;
+        return adaptor.tags(mml, 'math')[0];
       };
     }
   }
