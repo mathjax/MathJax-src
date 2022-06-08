@@ -216,6 +216,15 @@ export function LazyMathItemMixin<N, T, D, B extends Constructor<HTMLMathItem<N,
     }
 
     /**
+     * Only update the state if restore is true or false (null is used for setting lazy states)
+     * @override
+     */
+    public state(state: number = null, restore: boolean = false) {
+      if (restore !== null) super.state(state, restore);
+      return super.state();
+    }
+
+    /**
      * Initially, just insert a marker for where the math will go, and
      *   track it in the lazy list.  Then, when it comes into view,
      *   typeset it properly.
@@ -616,7 +625,7 @@ B extends MathDocumentConstructor<HTMLDocument<N, T, D>>>(
       let compile = false;
       for (const item of this.math) {
         const earlier = item as LazyMathItem<N, T, D>;
-        if (earlier === math || !earlier?.lazyCompile) {
+        if (earlier === math || !earlier?.lazyCompile || !earlier.lazyTex) {
           break;
         }
         earlier.lazyCompile = false;
