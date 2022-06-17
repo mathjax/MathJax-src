@@ -41,7 +41,7 @@ export const SafeMethods: {[name: string]: FilterFunction<any, any, any>} = {
    * @template D  The Document class
    */
   filterURL<N, T, D>(safe: Safe<N, T, D>, url: string): string | null {
-    const protocol = (url.match(/^\s*([a-z\n\r]+):/i) || [null, ''])[1].toLowerCase();
+    const protocol = (url.match(/^\s*([a-z\n\r]+):/i) || [null, ''])[1].replace(/[\n\r]/g, '').toLowerCase();
     const allow = safe.allow.URLs;
     return (allow === 'all' || (allow === 'safe' &&
                                 (safe.options.safeProtocols[protocol] || !protocol))) ? url : null;
