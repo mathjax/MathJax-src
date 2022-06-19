@@ -305,6 +305,7 @@ export function CommonMrowMixin<
      * @override
      */
     public getLineBBox(i: number) {
+      this.getBBox();  // make sure line bboxes are available
       return (this.isStack ? super.getLineBBox(i) : LineBBox.from(this.getOuterBBox()));
     }
 
@@ -332,7 +333,7 @@ export function CommonMrowMixin<
     public setChildPWidths(recompute: boolean, w: (number | null) = null, clear: boolean = true): boolean {
       if (!this.breakCount) return super.setChildPWidths(recompute, w, clear);
       if (recompute) return false;
-      if (this.bbox.w !== w) {
+      if (w !== null && this.bbox.w !== w) {
         this.bbox.w = w;
         this.shiftLines(w);
       }

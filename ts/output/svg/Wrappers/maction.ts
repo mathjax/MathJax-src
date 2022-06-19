@@ -52,7 +52,7 @@ export interface SvgMactionNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMacti
   setEventHandler(type: string, handler: EventHandler, dom?: N): void;
 
   /**
-   * @param {number] m   The number to convert to pixels
+   * @param {number} m   The number to convert to pixels
    * @return {string}    The dimension with "px" units
    */
   Px(m: number): string;
@@ -180,7 +180,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
           const rect = node.firstChild(dom);
           if (tip.node.isKind('mtext')) {
             //
-            // Text tooltips are handled through title attributes
+            // Text tooltips are handled through title nodes
             //
             const text = (tip.node as TextNode).getText();
             node.adaptor.insert(node.svg('title', {}, [node.text(text)]), rect);

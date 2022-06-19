@@ -51,7 +51,7 @@ export interface ChtmlMactionNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonM
   /**
    * Add an event handler to the output for this maction
    */
-  setEventHandler(type: string, handler: EventHandler): void;
+  setEventHandler(type: string, handler: EventHandler, dom?: N): void;
 
   /**
    * Public access to em method (for use in notation functions)
@@ -192,25 +192,27 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
           // Math tooltips are handled through hidden nodes and event handlers
           //
           const adaptor = node.adaptor;
-          const tool = adaptor.append(node.dom[0], node.html('mjx-tool', {
-            style: {bottom: node.Em(-node.tipDy), right: node.Em(-node.tipDx)}
-          }, [node.html('mjx-tip')])) as N;
-          tip.toCHTML([adaptor.firstChild(tool) as N]);
-          //
-          // Set up the event handlers to display and remove the tooltip
-          //
-          node.setEventHandler('mouseover', (event: Event) => {
-            data.stopTimers(node, data);
-            const timeout = setTimeout(() => adaptor.setStyle(tool, 'display', 'block'), data.postDelay);
-            data.hoverTimer.set(node, timeout);
-            event.stopPropagation();
-          });
-          node.setEventHandler('mouseout',  (event: Event) => {
-            data.stopTimers(node, data);
-            const timeout = setTimeout(() => adaptor.setStyle(tool, 'display', ''), data.clearDelay);
-            data.clearTimer.set(node, timeout);
-            event.stopPropagation();
-          });
+          for (const dom of node.dom) {
+            const tool = adaptor.append(dom, node.html('mjx-tool', {
+              style: {bottom: node.Em(-node.tipDy), right: node.Em(-node.tipDx)}
+            }, [node.html('mjx-tip')])) as N;
+            tip.toCHTML([adaptor.firstChild(tool) as N]);
+            //
+            // Set up the event handlers to display and remove the tooltip
+            //
+            node.setEventHandler('mouseover', (event: Event) => {
+              data.stopTimers(dom, data);
+              const timeout = setTimeout(() => adaptor.setStyle(tool, 'display', 'block'), data.postDelay);
+              data.hoverTimer.set(dom, timeout);
+              event.stopPropagation();
+            }, dom);
+            node.setEventHandler('mouseout',  (event: Event) => {
+              data.stopTimers(dom, data);
+              const timeout = setTimeout(() => adaptor.setStyle(tool, 'display', ''), data.clearDelay);
+              data.clearTimer.set(dom, timeout);
+              event.stopPropagation();
+            }, dom);
+          }
         }
       }, TooltipData]],
 
@@ -253,8 +255,8 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
     /**
      * @override
      */
-    public setEventHandler(type: string, handler: EventHandler) {
-      (this.dom as any).addEventListener(type, handler);
+    public setEventHandler(type: string, handler: EventHandler, dom: N = null) {
+      (dom ? [dom] : this.dom).forEach(node => (node as any).addEventListener(type, handler));
     }
 
     /**
