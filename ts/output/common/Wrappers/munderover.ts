@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -82,8 +82,8 @@ export function CommonMunderMixin<
         return;
       }
       bbox.empty();
-      const basebox = this.baseChild.getBBox();
-      const underbox = this.scriptChild.getBBox();
+      const basebox = this.baseChild.getOuterBBox();
+      const underbox = this.scriptChild.getOuterBBox();
       const v = this.getUnderKV(basebox, underbox)[1];
       const delta = (this.isLineBelow ? 0 : this.getDelta(true));
       const [bw, uw] = this.getDeltaW([basebox, underbox], [0, -delta]);
@@ -153,8 +153,11 @@ export function CommonMoverMixin<
         return;
       }
       bbox.empty();
-      const basebox = this.baseChild.getBBox();
-      const overbox = this.scriptChild.getBBox();
+      const basebox = this.baseChild.getOuterBBox();
+      const overbox = this.scriptChild.getOuterBBox();
+      if (this.node.attributes.get('accent')) {
+        basebox.h = Math.max(basebox.h, this.font.params.x_height * basebox.scale);
+      }
       const u = this.getOverKU(basebox, overbox)[1];
       const delta = (this.isLineAbove ? 0 : this.getDelta());
       const [bw, ow] = this.getDeltaW([basebox, overbox], [0, delta]);
@@ -259,9 +262,12 @@ export function CommonMunderoverMixin<
         return;
       }
       bbox.empty();
-      const overbox = this.overChild.getBBox();
-      const basebox = this.baseChild.getBBox();
-      const underbox = this.underChild.getBBox();
+      const overbox = this.overChild.getOuterBBox();
+      const basebox = this.baseChild.getOuterBBox();
+      const underbox = this.underChild.getOuterBBox();
+      if (this.node.attributes.get('accent')) {
+        basebox.h = Math.max(basebox.h, this.font.params.x_height * basebox.scale);
+      }
       const u = this.getOverKU(basebox, overbox)[1];
       const v = this.getUnderKV(basebox, underbox)[1];
       const delta = this.getDelta();

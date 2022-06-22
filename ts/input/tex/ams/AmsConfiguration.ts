@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2021 The MathJax Consortium
+ *  Copyright (c) 2018-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -51,6 +51,7 @@ let init = function(config: ParserConfiguration) {
 export const AmsConfiguration = Configuration.create(
   'ams', {
     handler: {
+      character: ['AMSmath-operatorLetter'],
       delimiter: ['AMSsymbols-delimiter', 'AMSmath-delimiter'],
       macro: ['AMSsymbols-mathchar0mi', 'AMSsymbols-mathchar0mo',
               'AMSsymbols-delimiter', 'AMSsymbols-macros',

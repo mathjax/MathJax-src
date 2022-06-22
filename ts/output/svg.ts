@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2021 The MathJax Consortium
+ *  Copyright (c) 2018-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -237,9 +237,9 @@ CommonOutputJax<N, T, D, SVGWrapper<N, T, D>, SVGWrapperFactory<N, T, D>, SVGFon
    * @return {[N, N]}              The svg and g nodes for the math
    */
   protected createRoot(wrapper: SVGWrapper<N, T, D>): [N, N] {
-    const {w, h, d, pwidth} = wrapper.getBBox();
+    const {w, h, d, pwidth} = wrapper.getOuterBBox();
     const px = wrapper.metrics.em / 1000;
-    const W = Math.max(w, px); // make sure we are at least one unitpx wide (needed for e.g. \llap)
+    const W = Math.max(w, px); // make sure we are at least one px wide (needed for e.g. \llap)
     const H = Math.max(h + d, px); // make sure we are at least one px tall (needed for e.g., \smash)
     //
     //  The container that flips the y-axis and sets the colors to inherit from the surroundings

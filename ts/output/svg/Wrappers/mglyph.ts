@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2021 The MathJax Consortium
+ *  Copyright (c) 2018-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@
 import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
 import {CommonMglyphMixin} from '../../common/Wrappers/mglyph.js';
 import {MmlMglyph} from '../../../core/MmlTree/MmlNodes/mglyph.js';
+import {SVGTextNode} from './TextNode.js';
 import {OptionList} from '../../../util/Options.js';
 
 /*****************************************************************/
@@ -48,6 +49,10 @@ CommonMglyphMixin<SVGConstructor<any, any, any>>(SVGWrapper) {
    */
   public toSVG(parent: N) {
     const svg = this.standardSVGnode(parent);
+    if (this.charWrapper) {
+      (this.charWrapper as SVGTextNode<N, T, D>).toSVG(svg);
+      return;
+    }
     const {src, alt} = this.node.attributes.getList('src', 'alt');
     const h = this.fixed(this.height);
     const w = this.fixed(this.width);

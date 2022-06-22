@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -217,8 +217,8 @@ export function CommonMsubsupMixin<
      * @override
      */
     public computeBBox(bbox: BBox, recompute: boolean = false) {
-      const basebox = this.baseChild.getBBox();
-      const [subbox, supbox] = [this.subChild.getBBox(), this.supChild.getBBox()];
+      const basebox = this.baseChild.getOuterBBox();
+      const [subbox, supbox] = [this.subChild.getOuterBBox(), this.supChild.getOuterBBox()];
       bbox.empty();
       bbox.append(basebox);
       const w = this.getBaseWidth();
@@ -239,10 +239,10 @@ export function CommonMsubsupMixin<
      * @return {number[]}       The vertical offsets for super and subscripts, and the space between them
      */
     public getUVQ(
-      subbox: BBox = this.subChild.getBBox(),
-      supbox: BBox = this.supChild.getBBox()
+      subbox: BBox = this.subChild.getOuterBBox(),
+      supbox: BBox = this.supChild.getOuterBBox()
     ): number[] {
-      const basebox = this.baseCore.getBBox();
+      const basebox = this.baseCore.getOuterBBox();
       if (this.UVQ) return this.UVQ;
       const tex = this.font.params;
       const t = 3 * tex.rule_thickness;

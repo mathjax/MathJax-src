@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,20 +24,6 @@
 import {BIGDIMEN} from './lengths.js';
 
 /**
- *  CSS styles that affect BBoxes
- */
-export const BBoxStyleAdjust = [
-  ['borderTopWidth', 'h'],
-  ['borderRightWidth', 'w'],
-  ['borderBottomWidth', 'd'],
-  ['borderLeftWidth', 'w', 0],
-  ['paddingTop', 'h'],
-  ['paddingRight', 'w'],
-  ['paddingBottom', 'd'],
-  ['paddingLeft', 'w', 0]
-];
-
-/**
  *  The data used to initialize a BBox
  */
 export type BBoxData = {
@@ -56,6 +42,20 @@ export class BBox {
    * Constant for pwidth of full width box
    */
   public static fullWidth = '100%';
+
+  /**
+   *  CSS styles that affect BBoxes
+   */
+  public static StyleAdjust: [string, string, number?][] = [
+    ['borderTopWidth', 'h'],
+    ['borderRightWidth', 'w'],
+    ['borderBottomWidth', 'd'],
+    ['borderLeftWidth', 'w', 0],
+    ['paddingTop', 'h'],
+    ['paddingRight', 'w'],
+    ['paddingBottom', 'd'],
+    ['paddingLeft', 'w', 0]
+  ];
 
   /**
    *  These are the data stored for a bounding box

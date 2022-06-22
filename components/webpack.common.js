@@ -37,6 +37,25 @@ function quoteRE(string) {
 }
 
 /**
+ * Creates the plugin needed for including jsdir in the output
+ *
+ * @param {string} js          The location of the compiled js files
+ * @param {string} dir         The directory of the component being built
+ * @return {any[]}             The plugin array (empty or with the conversion plugin)
+ */
+const PLUGINS = function (js, dir) {
+  const mjdir = path.resolve(__dirname, '..', 'js');
+  const jsdir = path.resolve(dir, js);
+
+  //
+  //  Record the js directory for the pack command
+  //
+  return [new webpack.DefinePlugin({
+    __JSDIR__: jsdir
+  })];
+};
+
+/**
  * Creates the plugin needed for converting mathjax references to component/lib references
  *
  * @param {string} js          The location of the compiled js files
@@ -44,62 +63,59 @@ function quoteRE(string) {
  * @param {string} dir         The directory of the component being built
  * @return {any[]}             The plugin array (empty or with the conversion plugin)
  */
-const PLUGINS = function (js, libs, dir) {
+const RESOLVE = function (js, libs, dir) {
   const mjdir = path.resolve(__dirname, '..', 'js');
   const jsdir = path.resolve(dir, js);
   const mjRE = new RegExp('^(?:' + quoteRE(jsdir) + '|' + quoteRE(mjdir) + ')' + quoteRE(path.sep));
   const root = path.dirname(mjdir);
-  const rootRE = new RegExp('^' + quoteRE(root + path.sep));
-  const nodeRE = new RegExp('^' + quoteRE(path.dirname(root) + path.sep));
 
   //
-  //  Record the js directory for the pack command
+  //  Add directory names to libraries
   //
-  const plugins = [new webpack.DefinePlugin({jsdir: jsdir})];
+  libs = libs.map(lib => path.join(lib.charAt(0) === '.' ? dir : root, lib) + path.sep);
 
-  if (libs.length) {
-    plugins.push(
-      //
-      // Move mathjax references to component libraries
-      //
-      new webpack.NormalModuleReplacementPlugin(
-        /^[^\/]/,
-        function (resource) {
-          const request = require.resolve(resource.request.charAt(0) === '.' ?
-                                          path.resolve(resource.context, resource.request) :
-                                          resource.request);
-          if (!request.match(mjRE)) return;
-          for (const lib of libs) {
-            const file = request.replace(mjRE, path.join(root, lib) + path.sep);
-            if (fs.existsSync(file)) {
-              resource.request = file;
-              break;
-            }
-          }
-        }
-      )
+  //
+  // Function replace imported files by ones in the specified component lib directories.
+  //
+  const replaceLibs = (resource) => {
+    //
+    // The full file name to check.
+    //
+    const request = require.resolve(
+      resource.request ? 
+        resource.request.charAt(0) === '.' ? path.resolve(resource.path, resource.request) : resource.request :
+      resource.path
     );
-  }
-  plugins.push(
     //
-    // Check for packages that should be rerouted to node_modules
+    // Only check files in the MathJax js directory.
     //
-    new webpack.NormalModuleReplacementPlugin(
-      /^[^\/]$/,
-      function (resource) {
-        const request = require.resolve(resource.request.charAt(0) === '.' ?
-                                        path.resolve(resource.context, resource.request) :
-                                        resource.request);
-        if (request.match(rootRE) || !request.match(nodeRE) || fs.existsSync(request)) return;
-        const file = request.replace(nodeRE, path.join(root, 'node_modules') + path.sep);
-        if (fs.existsSync(file)) {
-          resource.request = file;
-        }
+    if (!request.match(mjRE)) return;
+    //
+    // Loop through the libraries and see if the imported file is there.
+    //   If so, replace the request with the library version and return.
+    //
+    for (const lib of libs) {
+      const file = request.replace(mjRE, lib);
+      if (fs.existsSync(file)) {
+        resource.path = file;
+        resource.request = undefined;
+        return;
       }
-    )
-  );
-  return plugins;
-};
+    }
+  }
+
+  //
+  // A plugin that looks for files and modules to see if they need replacing with library versions.
+  //
+  class ResolveReplacementPlugin {
+    apply(compiler) {
+      compiler.hooks.file.tap(ResolveReplacementPlugin.name, replaceLibs);
+      compiler.hooks.module.tap(ResolveReplacementPlugin.name, replaceLibs);
+    }
+  }
+
+  return {plugins: [new ResolveReplacementPlugin()]};
+}
 
 /**
  * Add babel-loader to appropriate directories
@@ -150,7 +166,8 @@ const PACKAGE = function (name, js, libs, dir, dist) {
       filename: name + (dist === '.' ? '.min.js' : '.js')
     },
     target: ['web', 'es5'],  // needed for IE11 and old browsers
-    plugins: PLUGINS(js, libs, dir),
+    plugins: PLUGINS(js, dir),
+    resolve: RESOLVE(js, libs, dir),
     module: MODULE(dir),
     performance: {
       hints: false

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2021 The MathJax Consortium
+ *  Copyright (c) 2018-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -48,7 +48,7 @@ export class SVGmroot<N, T, D> extends CommonMrootMixin<Constructor<SVGmsqrt<any
   protected addRoot(ROOT: N, root: SVGWrapper<N, T, D>, sbox: BBox, H: number) {
     root.toSVG(ROOT);
     const [x, h, dx] = this.getRootDimens(sbox, H);
-    const bbox = root.getBBox();
+    const bbox = root.getOuterBBox();
     root.place(dx * bbox.rscale, h);
     this.dx = x;
   }

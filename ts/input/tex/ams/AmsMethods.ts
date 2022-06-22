@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2021 The MathJax Consortium
+ *  Copyright (c) 2018-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@
 import {StackItem} from '../StackItem.js';
 import {ParseMethod} from '../Types.js';
 import ParseUtil from '../ParseUtil.js';
+import ParseMethods from '../ParseMethods.js';
 import NodeUtil from '../NodeUtil.js';
 import {TexConstant} from '../TexConstants.js';
 import TexParser from '../TexParser.js';
@@ -37,6 +38,7 @@ import {FlalignItem} from './AmsItems.js';
 import BaseMethods from '../base/BaseMethods.js';
 import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMunderover} from '../../../core/MmlTree/MmlNodes/munderover.js';
+import {MmlNode, AbstractMmlTokenNode} from '../../../core/MmlTree/MmlNode.js';
 
 
 // Namespace
@@ -202,17 +204,14 @@ export const NEW_OPS = 'ams-declare-ops';
  * @param {string} name The macro name.
  */
 AmsMethods.HandleDeclareOp =  function (parser: TexParser, name: string) {
-  let limits = (parser.GetStar() ? '' : '\\nolimits\\SkipLimits');
+  let star = (parser.GetStar() ? '*' : '');
   let cs = ParseUtil.trimSpaces(parser.GetArgument(name));
   if (cs.charAt(0) === '\\') {
     cs = cs.substr(1);
   }
   let op = parser.GetArgument(name);
-  if (!op.match(/\\text/)) {
-    op = op.replace(/\*/g, '\\text{*}').replace(/-/g, '\\text{-}');
-  }
   (parser.configuration.handlers.retrieve(NEW_OPS) as CommandMap).
-    add(cs, new Macro(cs, AmsMethods.Macro, ['\\mathop{\\rm ' + op + '}' + limits]));
+    add(cs, new Macro(cs, AmsMethods.Macro, [`\\operatorname${star}{${op}}`]));
 };
 
 
@@ -223,28 +222,155 @@ AmsMethods.HandleDeclareOp =  function (parser: TexParser, name: string) {
  */
 AmsMethods.HandleOperatorName = function(parser: TexParser, name: string) {
   // @test Operatorname
-  const limits = (parser.GetStar() ? '' : '\\nolimits\\SkipLimits');
+  const star = parser.GetStar();
+  //
+  //  Parse the argument using operator letters and grouping multiple letters.
+  //
   let op = ParseUtil.trimSpaces(parser.GetArgument(name));
-  if (!op.match(/\\text/)) {
-    op = op.replace(/\*/g, '\\text{*}').replace(/-/g, '\\text{-}');
+  let mml = new TexParser(op, {
+    ...parser.stack.env,
+    font: TexConstant.Variant.NORMAL,
+    multiLetterIdentifiers: /^[-*a-z]+/i as any,
+    operatorLetters: true
+  }, parser.configuration).mml();
+  //
+  //  If we get something other than a single mi, wrap in a TeXAtom.
+  //
+  if (!mml.isKind('mi')) {
+    mml = parser.create('node', 'TeXAtom', [mml]);
   }
-  parser.string = '\\mathop{\\rm ' + op + '}' + limits + ' ' +
-    parser.string.slice(parser.i);
-  parser.i = 0;
+  //
+  //  Mark the limit properties and the TeX class.
+  //
+  NodeUtil.setProperties(mml, {movesupsub: star, movablelimits: true, texClass: TEXCLASS.OP});
+  //
+  //  Skip a following \limits macro if not a starred operator
+  //
+  if (!star) {
+    const c = parser.GetNext(), i = parser.i;
+    if (c === '\\' && ++parser.i && parser.GetCS() !== 'limits') {
+      parser.i = i;
+    }
+  }
+  //
+  parser.Push(mml);
 };
 
-
 /**
- * Handle SkipLimits.
+ * Handle sideset.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-AmsMethods.SkipLimits = function(parser: TexParser, _name: string) {
-  // @test Operatorname
-  const c = parser.GetNext(), i = parser.i;
-  if (c === '\\' && ++parser.i && parser.GetCS() !== 'limits') {
-    parser.i = i;
+AmsMethods.SideSet = function (parser: TexParser, name: string) {
+  //
+  //  Get the pre- and post-scripts, and any extra material from the arguments
+  //
+  const [preScripts, preRest] = splitSideSet(parser.ParseArg(name));
+  const [postScripts, postRest] = splitSideSet(parser.ParseArg(name));
+  const base = parser.ParseArg(name);
+  let mml = base;
+  //
+  //  If there are pre-scripts...
+  //
+  if (preScripts) {
+    //
+    //  If there is other material...
+    //
+    if (preRest) {
+      //
+      //  Replace the empty base of the prescripts with a phantom element of the
+      //    original base, with width 0 (but still of the correct height and depth).
+      //    so the scripts will be at the right heights.
+      //
+      preScripts.replaceChild(
+        parser.create('node', 'mphantom', [
+          parser.create('node', 'mpadded', [ParseUtil.copyNode(base, parser)], {width: 0})
+        ]),
+        NodeUtil.getChildAt(preScripts, 0)
+      );
+    } else {
+      //
+      //  If there is no extra meterial, make a mmultiscripts element
+      //
+      mml = parser.create('node', 'mmultiscripts', [base]);
+      //
+      //  Add any postscripts
+      //
+      if (postScripts) {
+        NodeUtil.appendChildren(mml, [
+          NodeUtil.getChildAt(postScripts, 1) || parser.create('node', 'none'),
+          NodeUtil.getChildAt(postScripts, 2) || parser.create('node', 'none')
+        ]);
+      }
+      //
+      //  Add the prescripts (left aligned)
+      //
+      NodeUtil.setProperty(mml, 'scriptalign', 'left');
+      NodeUtil.appendChildren(mml, [
+        parser.create('node', 'mprescripts'),
+        NodeUtil.getChildAt(preScripts, 1) || parser.create('node', 'none'),
+        NodeUtil.getChildAt(preScripts, 2) || parser.create('node', 'none')
+      ]);
+    }
   }
+  //
+  //  If there are postscripts and we didn't make a mmultiscript element above...
+  //
+  if (postScripts && mml === base) {
+    //
+    //  Replace the emtpy base with actual base, and use that as the mml
+    //
+    postScripts.replaceChild(base, NodeUtil.getChildAt(postScripts, 0));
+    mml = postScripts;
+  }
+  //
+  //  Put the needed pieces into a TeXAtom of class OP.
+  //  Note that the postScripts are in the mml element,
+  //    either as part of the mmultiscripts node, or the
+  //    msubsup with the base inserted into it.
+  //
+  const mrow = parser.create('node', 'TeXAtom', [], {texClass: TEXCLASS.OP, movesupsub: true, movablelimits: true});
+  if (preRest) {
+    preScripts && mrow.appendChild(preScripts);
+    mrow.appendChild(preRest);
+  }
+  mrow.appendChild(mml);
+  postRest && mrow.appendChild(postRest);
+  parser.Push(mrow);
+};
+
+/**
+ * Utility for breaking the \sideset scripts from any other material.
+ * @param {MmlNode} mml The node to check.
+ * @return {[MmlNode, MmlNode]} The msubsup with the scripts together with any extra nodes.
+ */
+function splitSideSet(mml: MmlNode): [MmlNode, MmlNode] {
+    if (!mml || (mml.isInferred && mml.childNodes.length === 0)) return [null, null];
+    if (mml.isKind('msubsup') && checkSideSetBase(mml)) return [mml, null];
+    const child = NodeUtil.getChildAt(mml, 0);
+    if (!(mml.isInferred && child && checkSideSetBase(child))) return [null, mml];
+    mml.childNodes.splice(0, 1); // remove first child
+    return [child, mml];
+}
+
+/**
+ * Utility for checking if a \sideset argument has scripts with an empty base.
+ * @param {MmlNode} mml The node to check.
+ * @return {boolean} True if the base is not and empty mi element.
+ */
+function checkSideSetBase(mml: MmlNode): boolean {
+  const base = mml.childNodes[0];
+  return base && base.isKind('mi') && (base as AbstractMmlTokenNode).getText() === '';
+}
+
+
+/**
+ * Handle extra letters in \operatorname (- and *), default to normal otherwise.
+ * @param {TexParser} parser The calling parser.
+ * @param {string} c The letter being checked
+ */
+AmsMethods.operatorLetter = function (parser: TexParser, c: string) {
+  return parser.stack.env.operatorLetters ? ParseMethods.variable(parser, c) : false;
 };
 
 

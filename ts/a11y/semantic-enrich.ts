@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2021 The MathJax Consortium
+ *  Copyright (c) 2018-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {MathML} from '../input/mathml.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {OptionList, expandable} from '../util/Options.js';
-import * as Sre from './sre.js';
+import Sre from './sre.js';
 
 /*==========================================================================*/
 
@@ -129,7 +129,9 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
       if (!this.isEscaped && (document.options.enableEnrichment || force)) {
         if (document.options.sre.speech !== currentSpeech) {
           currentSpeech = document.options.sre.speech;
-          mathjax.retryAfter(Sre.setupEngine(document.options.sre));
+          mathjax.retryAfter(
+            Sre.setupEngine(document.options.sre).then(
+              () => Sre.sreReady()));
         }
         const math = new document.options.MathItem('', MmlJax);
         try {

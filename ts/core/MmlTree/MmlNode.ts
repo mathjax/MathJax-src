@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -193,8 +193,9 @@ export interface MmlNode extends Node {
    * @param {string} message         The error message to use
    * @param {PropertyList} options   The options telling how much to verify
    * @param {boolean} short          True means use just the kind if not using full errors
+   * @return {MmlNode}               The construted merror
    */
-  mError(message: string, options: PropertyList, short?: boolean): void;
+  mError(message: string, options: PropertyList, short?: boolean): MmlNode;
 
   /**
    * Check integrity of MathML structure
@@ -797,12 +798,14 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
    * @param {string} message         The error message to use
    * @param {PropertyList} options   The options telling how much to verify
    * @param {boolean} short          True means use just the kind if not using full errors
+   * @return {MmlNode}               The constructed merror
    */
-  public mError(message: string, options: PropertyList, short: boolean = false) {
+  public mError(message: string, options: PropertyList, short: boolean = false): MmlNode {
     if (this.parent && this.parent.isKind('merror')) {
       return null;
     }
     let merror = this.factory.create('merror');
+    merror.attributes.set('data-mjx-message', message);
     if (options['fullErrors'] || short) {
       let mtext = this.factory.create('mtext');
       let text = this.factory.create('text') as TextNode;
@@ -1189,7 +1192,9 @@ export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode implements 
   /**
    *  @override
    */
-  public mError(_message: string, _options: PropertyList, _short: boolean = false) {}
+  public mError(_message: string, _options: PropertyList, _short: boolean = false) {
+    return null as MmlNode;
+  }
 
 }
 

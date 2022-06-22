@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2021-2021 The MathJax Consortium
+ *  Copyright (c) 2021-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,14 +23,13 @@
 
 /**
  * Class used for tracking usage of font characters or wrappers
- *  (should extend Set<T>, but that doesn't work for compiling to ES2015).
  */
 export class Usage<T> {
 
   /**
    * The used items.
    */
-  protected used: Set<T> = new Set<T>();
+  protected used: Set<string> = new Set<string>();
 
   /**
    * The items marked as used since last update.
@@ -41,10 +40,11 @@ export class Usage<T> {
    * @param {T} item   The item that has been used
    */
   public add(item: T) {
-    if (!this.used.has(item)) {
+    const name = JSON.stringify(item);
+    if (!this.used.has(name)) {
       this.needsUpdate.push(item);
     }
-    this.used.add(item);
+    this.used.add(name);
   }
 
   /**
@@ -52,7 +52,7 @@ export class Usage<T> {
    * @return {boolean}   True if the item has been used
    */
   public has(item: T): boolean {
-    return this.used.has(item);
+    return this.used.has(JSON.stringify(item));
   }
 
   /**

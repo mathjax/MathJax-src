@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -78,7 +78,7 @@ export class CHTMLmsqrt<N, T, D> extends CommonMsqrtMixin<CHTMLConstructor<any, 
     //  Get the parameters for the spacing of the parts
     //
     const sbox = surd.getBBox();
-    const bbox = base.getBBox();
+    const bbox = base.getOuterBBox();
     const [ , q] = this.getPQ(sbox);
     const t = this.font.params.rule_thickness;
     const H = bbox.h + q + t;

@@ -1,4 +1,5 @@
 {
+  "id": "[tex]/mhchem",
   "component": "input/tex/extensions/mhchem",
   "targets": ["input/tex/mhchem"],
   "exclude": ["input/tex/mhchem/mhchem_parser.d.ts"]

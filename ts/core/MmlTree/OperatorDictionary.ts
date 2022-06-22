@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import {TEXCLASS} from './MmlNode.js';
  */
 export type OperatorDef = [number, number, number, PropertyList];
 export type OperatorList = {[name: string]: OperatorDef};
-export type RangeDef = [number, number, number, string];
+export type RangeDef = [number, number, number, string, string?];
 
 /**
  * @param {number} lspace            The operator's MathML left-hand spacing
@@ -52,6 +52,7 @@ export const MO = {
   ORD21:      OPDEF(2, 1, TEXCLASS.ORD),
   ORD02:      OPDEF(0, 2, TEXCLASS.ORD),
   ORD55:      OPDEF(5, 5, TEXCLASS.ORD),
+  NONE:       OPDEF(0, 0, TEXCLASS.NONE),
   OP:         OPDEF(1, 2, TEXCLASS.OP, {largeop: true, movablelimits: true, symmetric: true}),
   OPFIXED:    OPDEF(1, 2, TEXCLASS.OP, {largeop: true, movablelimits: true}),
   INTEGRAL:   OPDEF(0, 1, TEXCLASS.OP, {largeop: true, symmetric: true}),
@@ -108,18 +109,20 @@ export const RANGES: RangeDef[] = [
   [0x2B50, 0x2BFF, TEXCLASS.ORD, 'mo'], //   Rest of above
   [0x2C00, 0x2DE0, TEXCLASS.ORD, 'mi'], // Glagolitic (through) Ethipoc Extended
   [0x2E00, 0x2E7F, TEXCLASS.ORD, 'mo'], // Supplemental Punctuation
-  [0x2E80, 0x2FDF, TEXCLASS.ORD, 'mi'], // CJK Radicals Supplement (through) Kangxi Radicals
+  [0x2E80, 0x2FDF, TEXCLASS.ORD, 'mi', 'normal'], // CJK Radicals Supplement (through) Kangxi Radicals
   [0x2FF0, 0x303F, TEXCLASS.ORD, 'mo'], // Ideographic Desc. Characters, CJK Symbols and Punctuation
-  [0x3040, 0xA82F, TEXCLASS.ORD, 'mi'], // Hiragana (through) Syloti Nagri
+  [0x3040, 0xA49F, TEXCLASS.ORD, 'mi', 'normal'], // Hiragana (through) Yi Radicals
+  [0xA4D0, 0xA82F, TEXCLASS.ORD, 'mi'], // Lisu (through) Syloti Nagri
   [0xA830, 0xA83F, TEXCLASS.ORD, 'mn'], // Common Indic Number FormsArabic Presentation Forms-A
   [0xA840, 0xD7FF, TEXCLASS.ORD, 'mi'], // Phags-pa (though) Hangul Jamo Extended-B
-  [0xF900, 0xFDFF, TEXCLASS.ORD, 'mi'], // CJK Compatibility Ideographs (though) Arabic Presentation Forms-A
+  [0xF900, 0xFAFF, TEXCLASS.ORD, 'mi', 'normal'], // CJK Compatibility Ideographs
+  [0xFB00, 0xFDFF, TEXCLASS.ORD, 'mi'], // Alphabetic Presentation Forms (though) Arabic Presentation Forms-A
   [0xFE00, 0xFE6F, TEXCLASS.ORD, 'mo'], // Variation Selector (through) Small Form Variants
   [0xFE70, 0x100FF, TEXCLASS.ORD, 'mi'], // Arabic Presentation Forms-B (through) Linear B Ideograms
   [0x10100, 0x1018F, TEXCLASS.ORD, 'mn'], // Aegean Numbers, Ancient Greek Numbers
-  [0x10190, 0x123FF, TEXCLASS.ORD, 'mi'], // Ancient Symbols (through) Cuneiform
+  [0x10190, 0x123FF, TEXCLASS.ORD, 'mi', 'normal'], // Ancient Symbols (through) Cuneiform
   [0x12400, 0x1247F, TEXCLASS.ORD, 'mn'], // Cuneiform Numbers and Punctuation
-  [0x12480, 0x1BC9F, TEXCLASS.ORD, 'mi'], // Early Dynastic Cuneiform (through) Duployan
+  [0x12480, 0x1BC9F, TEXCLASS.ORD, 'mi', 'normal'], // Early Dynastic Cuneiform (through) Duployan
   [0x1BCA0, 0x1D25F, TEXCLASS.ORD, 'mo'], // Shorthand Format Controls (through) TaiXuan Jing Symbols
   [0x1D360, 0x1D37F, TEXCLASS.ORD, 'mn'], // Counting Rod Numerals
   [0x1D400, 0x1D7CD, TEXCLASS.ORD, 'mi'], // Math Alphanumeric Symbols
@@ -127,7 +130,7 @@ export const RANGES: RangeDef[] = [
   [0x1DF00, 0x1F7FF, TEXCLASS.ORD, 'mo'], // Mahjong Tiles (through) Geometric Shapes Extended
   [0x1F800, 0x1F8FF, TEXCLASS.REL, 'mo'], // Supplemental Arrows-C
   [0x1F900, 0x1F9FF, TEXCLASS.ORD, 'mo'], // Supplemental Symbols and Pictographs
-  [0x20000, 0x2FA1F, TEXCLASS.ORD, 'mi'], // CJK Unified Ideographs Ext. B (through) CJK Sompatibility Ideographs Supp.
+  [0x20000, 0x2FA1F, TEXCLASS.ORD, 'mi', 'normnal'], // CJK Unified Ideographs Ext. B (through) CJK Sompatibility Ideographs Supp.
 ];
 
 /**
@@ -454,10 +457,10 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '\u2026': MO.INNER,      // horizontal ellipsis
     '\u2043': MO.BIN4,       // hyphen bullet
     '\u2044': MO.TALLBIN,    // fraction slash
-    '\u2061': MO.ORD,        // function application
-    '\u2062': MO.ORD,        // invisible times
-    '\u2063': [0, 0, TEXCLASS.ORD, {linebreakstyle: 'after', separator: true}], // invisible separator
-    '\u2064': MO.ORD,        // invisible plus
+    '\u2061': MO.NONE,       // function application
+    '\u2062': MO.NONE,       // invisible times
+    '\u2063': [0, 0, TEXCLASS.NONE, {linebreakstyle: 'after', separator: true}], // invisible separator
+    '\u2064': MO.NONE,       // invisible plus
     '\u20D7': MO.ACCENT,     // \vec
     '\u2111': MO.ORD,        // \Im
     '\u2113': MO.ORD,        // \ell

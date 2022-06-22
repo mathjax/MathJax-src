@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2021 The MathJax Consortium
+ *  Copyright (c) 2018-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@
  */
 
 import {AbstractDOMAdaptor} from '../core/DOMAdaptor.js';
+import {NodeMixin, Constructor} from './NodeMixin.js';
 import {LiteDocument} from './lite/Document.js';
 import {LiteElement, LiteNode} from './lite/Element.js';
 import {LiteText, LiteComment} from './lite/Text.js';
@@ -29,52 +30,15 @@ import {LiteList} from './lite/List.js';
 import {LiteWindow} from './lite/Window.js';
 import {LiteParser} from './lite/Parser.js';
 import {Styles} from '../util/Styles.js';
-import {userOptions, defaultOptions, OptionList} from '../util/Options.js';
+import {OptionList} from '../util/Options.js';
 
 /************************************************************/
+
+
 /**
  * Implements a lightweight DOMAdaptor on liteweight HTML elements
  */
-export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocument> {
-  /**
-   * The default options
-   */
-  public static OPTIONS: OptionList = {
-    fontSize: 16,          // We can't compute the font size, so always use this
-    fontFamily: 'Times',   // We can't compute the font family, so always use this
-    cjkCharWidth: 1,       // Width (in em units) of full width characters
-    unknownCharWidth: .6,  // Width (in em units) of unknown (non-full-width) characters
-    unknownCharHeight: .8, // Height (in em units) of unknown characters
-  };
-
-  /**
-   * Pattern to identify CJK (.i.e., full-width) characters
-   */
-  public static cjkPattern = new RegExp([
-    '[',
-    '\u1100-\u115F', // Hangul Jamo
-    '\u2329\u232A',  // LEFT-POINTING ANGLE BRACKET, RIGHT-POINTING ANGLE BRACKET
-    '\u2E80-\u303E', // CJK Radicals Supplement ... CJK Symbols and Punctuation
-    '\u3040-\u3247', // Hiragana ... Enclosed CJK Letters and Months
-    '\u3250-\u4DBF', // Enclosed CJK Letters and Months ... CJK Unified Ideographs Extension A
-    '\u4E00-\uA4C6', // CJK Unified Ideographs ... Yi Radicals
-    '\uA960-\uA97C', // Hangul Jamo Extended-A
-    '\uAC00-\uD7A3', // Hangul Syllables
-    '\uF900-\uFAFF', // CJK Compatibility Ideographs
-    '\uFE10-\uFE19', // Vertical Forms
-    '\uFE30-\uFE6B', // CJK Compatibility Forms ... Small Form Variants
-    '\uFF01-\uFF60\uFFE0-\uFFE6', // Halfwidth and Fullwidth Forms
-    '\u{1B000}-\u{1B001}', // Kana Supplement
-    '\u{1F200}-\u{1F251}', // Enclosed Ideographic Supplement
-    '\u{20000}-\u{3FFFD}', // CJK Unified Ideographs Extension B ... Tertiary Ideographic Plane
-    ']'
-  ].join(''), 'gu');
-
-  /**
-   * The options for the instance
-   */
-  public options: OptionList;
-
+export class LiteBase extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocument> {
   /**
    * The document in which the HTML nodes will be created
    */
@@ -94,10 +58,8 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
    * @param {OptionList} options  The options for the lite adaptor (e.g., fontSize)
    * @constructor
    */
-  constructor(options: OptionList = null) {
+  constructor() {
     super();
-    let CLASS = this.constructor as typeof LiteAdaptor;
-    this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
     this.parser = new LiteParser();
     this.window = new LiteWindow();
   }
@@ -105,7 +67,7 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
   /**
    * @override
    */
-  public parse(text: string, format?: string) {
+  public parse(text: string, format?: string): LiteDocument {
     return this.parser.parseFromString(text, format, this);
   }
 
@@ -452,21 +414,21 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
   /**
    * @override
    */
-  public innerHTML(node: LiteElement) {
+  public innerHTML(node: LiteElement): string {
     return this.parser.serializeInner(this, node);
   }
 
   /**
    * @override
    */
-  public outerHTML(node: LiteElement) {
+  public outerHTML(node: LiteElement): string {
     return this.parser.serialize(this, node);
   }
 
   /**
    * @override
    */
-  public serializeXML(node: LiteElement) {
+  public serializeXML(node: LiteElement): string {
     return this.parser.serialize(this, node, true);
   }
 
@@ -589,31 +551,30 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
     node.children = [this.text(rules.join('\n\n') + '\n\n' + this.textContent(node))];
   }
 
+  /*******************************************************************/
+  /*
+   *  The next four methods get overridden by the NodeMixin below
+   */
+
   /**
    * @override
    */
   public fontSize(_node: LiteElement) {
-    return this.options.fontSize;
+    return 0;
   }
 
   /**
    * @override
    */
   public fontFamily(_node: LiteElement) {
-    return this.options.fontFamily;
+    return '';
   }
 
   /**
    * @override
    */
-  public nodeSize(node: LiteElement, _em: number = 1, _local: boolean = null) {
-    const text = this.textContent(node);
-    const non = Array.from(text.replace(LiteAdaptor.cjkPattern, '')).length; // # of non-CJK chars
-    const CJK = Array.from(text).length - non;                               // # of cjk chars
-    return [
-      CJK * this.options.cjkCharWidth + non * this.options.unknownCharWidth,
-      this.options.unknownCharHeight
-    ] as [number, number];
+  public nodeSize(_node: LiteElement, _em: number = 1, _local: boolean = null) {
+    return [0, 0] as [number, number];
   }
 
   /**
@@ -622,7 +583,13 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
   public nodeBBox(_node: LiteElement) {
     return {left: 0, right: 0, top: 0, bottom: 0};
   }
+
 }
+
+/**
+ * The LiteAdaptor class (add in the NodeMixin methods and options)
+ */
+export class LiteAdaptor extends NodeMixin<LiteElement, LiteText, LiteDocument, Constructor<LiteBase>>(LiteBase) {}
 
 /************************************************************/
 /**
@@ -632,5 +599,5 @@ export class LiteAdaptor extends AbstractDOMAdaptor<LiteElement, LiteText, LiteD
  * @return {LiteAdaptor}        The newly created adaptor
  */
 export function liteAdaptor(options: OptionList = null): LiteAdaptor {
-  return new LiteAdaptor(options);
+  return new LiteAdaptor(null, options);
 }

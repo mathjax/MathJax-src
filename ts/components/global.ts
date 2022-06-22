@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2021 The MathJax Consortium
+ *  Copyright (c) 2018-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
+
+import {VERSION} from './version.js';
 
 /**
  * The MathJax variable as a configuration object
@@ -127,7 +129,7 @@ if (typeof global.MathJax === 'undefined') {
  */
 if (!(global.MathJax as MathJaxObject).version) {
   global.MathJax = {
-    version: '3.2.0',
+    version: VERSION,
     _: {},
     config: global.MathJax
   };

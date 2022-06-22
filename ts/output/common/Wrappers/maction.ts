@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2021 The MathJax Consortium
+ *  Copyright (c) 2018-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -184,7 +184,7 @@ export function CommonMactionMixin<
      * @override
      */
     public computeBBox(bbox: BBox, recompute: boolean = false) {
-      bbox.updateFrom(this.selected.getBBox());
+      bbox.updateFrom(this.selected.getOuterBBox());
       this.selected.setChildPWidths(recompute);
     }
 

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2020-2021 The MathJax Consortium
+ *  Copyright (c) 2020-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -102,6 +102,8 @@ new CommandMap('text-macros', {
   Huge:         ['SetSize', 2.49],
 
   Bbb:          ['Macro', '{\\bbFont #1}', 1],
+  textnormal:   ['Macro', '{\\rm #1}', 1],
+  textup:       ['Macro', '{\\rm #1}', 1],
   textrm:       ['Macro', '{\\rm #1}', 1],
   textit:       ['Macro', '{\\it #1}', 1],
   textbf:       ['Macro', '{\\bf #1}', 1],

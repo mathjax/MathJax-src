@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2021-2021 The MathJax Consortium
+ *  Copyright (c) 2021-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -152,7 +152,7 @@ export const EmpheqUtil = {
     for (const row of table.childNodes.slice(0).reverse()) {
       mtd = parser.create('node', 'mtd');
       row.childNodes.unshift(mtd);
-      row.replaceChild(mtd, mtd);   // make sure parent is set
+      mtd.parent = row;
       if (row.isKind('mlabeledtr')) {
         row.childNodes[0] = row.childNodes[1];
         row.childNodes[1] = mtd;

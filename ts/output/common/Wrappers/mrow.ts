@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -102,7 +102,7 @@ export function CommonMrowMixin<T extends WrapperConstructor>(Base: T): MrowCons
         for (const child of this.childNodes) {
           const noStretch = (child.stretch.dir === DIRECTION.None);
           if (all || noStretch) {
-            let {h, d, rscale} = child.getBBox(noStretch);
+            let {h, d, rscale} = child.getOuterBBox(noStretch);
             h *= rscale;
             d *= rscale;
             if (h > H) H = h;

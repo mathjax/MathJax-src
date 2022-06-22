@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -435,15 +435,6 @@ export interface MathDocument<N, T, D> {
    * @return {MathDocument}    The math document instance
    */
   state(state: number, restore?: boolean): MathDocument<N, T, D>;
-
-  /**
-   * Rerender the MathItems on the page
-   *
-   * @param {number=} start    The state to start rerendering at
-   * @param {number=} end      The state to end rerendering at
-   * @return {MathDocument}    The math document instance
-   */
-  rerender(start?: number, end?: number): MathDocument<N, T, D>;
 
   /**
    * Clear the processed values so that the document can be reprocessed

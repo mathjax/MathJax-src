@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -125,7 +125,7 @@ export function CommonMsqrtMixin<T extends WrapperConstructor>(Base: T): MsqrtCo
       super(...args);
       const surd = this.createMo('\u221A');
       surd.canStretch(DIRECTION.Vertical);
-      const {h, d} = this.childNodes[this.base].getBBox();
+      const {h, d} = this.childNodes[this.base].getOuterBBox();
       const t = this.font.params.rule_thickness;
       const p = (this.node.attributes.get('displaystyle') ? this.font.params.x_height : t);
       this.surdH = h + d + 2 * t + p / 4;
@@ -146,7 +146,7 @@ export function CommonMsqrtMixin<T extends WrapperConstructor>(Base: T): MsqrtCo
      */
     public computeBBox(bbox: BBox, recompute: boolean = false) {
       const surdbox = this.childNodes[this.surd].getBBox();
-      const basebox = new BBox(this.childNodes[this.base].getBBox());
+      const basebox = new BBox(this.childNodes[this.base].getOuterBBox());
       const q = this.getPQ(surdbox)[1];
       const t = this.font.params.rule_thickness;
       const H = basebox.h + q + t;

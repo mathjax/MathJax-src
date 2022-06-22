@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2021 The MathJax Consortium
+ *  Copyright (c) 2018-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,7 +33,8 @@ export const PhysicsConfiguration = Configuration.create(
       macro: [
         'Physics-automatic-bracing-macros',
         'Physics-vector-macros',
-        'Physics-vector-chars',
+        'Physics-vector-mo',
+        'Physics-vector-mi',
         'Physics-derivative-macros',
         'Physics-expressions-macros',
         'Physics-quick-quad-macros',

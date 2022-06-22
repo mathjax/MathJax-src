@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2021 The MathJax Consortium
+ *  Copyright (c) 2018-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -121,7 +121,7 @@ export interface DOMAdaptor<N, T, D> {
   getElements(nodes: (string | N | N[])[], document: D): N[];
 
   /**
-   * Determine if a container node contains a given node is somewhere in its DOM tree
+   * Determine if a container node contains a given node somewhere in its DOM tree
    *
    * @param {N} container  The container to search
    * @param {N|T} node     The node to look for

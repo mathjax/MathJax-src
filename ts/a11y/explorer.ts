@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2021 The MathJax Consortium
+ *  Copyright (c) 2018-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ import {LiveRegion, SpeechRegion, ToolTip, HoverRegion} from './explorer/Region.
 
 import {Submenu} from 'mj-context-menu/js/item_submenu.js';
 
-import * as Sre from './sre.js';
+import Sre from './sre.js';
 
 /**
  * Generic constructor for Mixins
@@ -398,6 +398,12 @@ let allExplorers: {[options: string]: ExplorerInit} = {
     explorer.speechGenerator.setOptions({
       locale: doc.options.sre.locale, domain: doc.options.sre.domain,
       style: doc.options.sre.style, modality: 'speech'});
+    // This weeds out the case of providing a non-existent locale option.
+    let locale = explorer.speechGenerator.getOptions().locale;
+    if (locale !== Sre.engineSetup().locale) {
+      doc.options.sre.locale = Sre.engineSetup().locale;
+      explorer.speechGenerator.setOptions({locale: doc.options.sre.locale});
+    }
     explorer.showRegion = 'subtitles';
     return explorer;
   },
@@ -551,8 +557,8 @@ let csPrefsVariables = function(menu: MJContextMenu, prefs: string[]) {
         csPrefsSetting[pref] = value;
           srVariable.setValue(
           'clearspeak-' +
-              Sre.ClearspeakPreferences.addPreference(
-                Sre.EngineConst.DOMAIN_TO_STYLES['clearspeak'], pref, value)
+              Sre.clearspeakPreferences.addPreference(
+                Sre.clearspeakStyle(), pref, value)
         );
       },
       getter: () => { return csPrefsSetting[pref] || 'Auto'; }
@@ -566,7 +572,7 @@ let csPrefsVariables = function(menu: MJContextMenu, prefs: string[]) {
  * @param {string} locale The current locale.
  */
 let csSelectionBox = function(menu: MJContextMenu, locale: string) {
-  let prefs = Sre.ClearspeakPreferences.getLocalePreferences();
+  let prefs = Sre.clearspeakPreferences.getLocalePreferences();
   let props = prefs[locale];
   if (!props) {
     let csEntry = menu.findID('Accessibility', 'Speech', 'Clearspeak');
@@ -607,7 +613,7 @@ let csMenu = function(menu: MJContextMenu, sub: Submenu) {
   const box = csSelectionBox(menu, locale);
   let items: Object[] = [];
   try {
-    items = Sre.ClearspeakPreferences.smartPreferences(
+    items = Sre.clearspeakPreferences.smartPreferences(
       menu.mathItem, locale);
   } catch (e) {
     console.log(e);
@@ -624,19 +630,6 @@ let csMenu = function(menu: MJContextMenu, sub: Submenu) {
 MJContextMenu.DynamicSubmenus.set('Clearspeak', csMenu);
 
 /**
- * Locale mapping to language names.
- * @type {{[locale: string]: string}}
- */
-const iso: {[locale: string]: string} = {
-  'de': 'German',
-  'en': 'English',
-  'es': 'Spanish',
-  'fr': 'French',
-  'hi': 'Hindi',
-  'it': 'Italian'
-};
-
-/**
  * Creates dynamic locale menu.
  * @param {MJContextMenu} menu The context menu.
  * @param {Submenu} sub The submenu to attach.
@@ -644,10 +637,10 @@ const iso: {[locale: string]: string} = {
 let language = function(menu: MJContextMenu, sub: Submenu) {
   let radios: {type: string, id: string,
                content: string, variable: string}[] = [];
-  for (let lang of Sre.Locales) {
+  for (let lang of Sre.locales.keys()) {
     if (lang === 'nemeth') continue;
     radios.push({type: 'radio', id: lang,
-                 content: iso[lang] || lang, variable: 'locale'});
+                 content: Sre.locales.get(lang) || lang, variable: 'locale'});
   }
   radios.sort((x, y) => x.content.localeCompare(y.content, 'en'));
   return menu.factory.get('subMenu')(menu.factory, {

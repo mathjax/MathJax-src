@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2021 The MathJax Consortium
+ *  Copyright (c) 2018-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -116,7 +116,7 @@ AmsCdMethods.arrow = function(parser: TexParser, name: string) {
         a = '\\kern ' + top.getProperty('minw');
       } // minsize needs work
       if (a || b) {
-        let pad: EnvList = {width: '.67em', lspace: '.33em'};
+        let pad: EnvList = {width: '+.67em', lspace: '.33em'};
         mml = parser.create('node', 'munderover', [mml]) as MmlMunderover;
         if (a) {
           let nodeA = new TexParser(a, parser.stack.env, parser.configuration).mml();
@@ -128,28 +128,28 @@ AmsCdMethods.arrow = function(parser: TexParser, name: string) {
           let nodeB = new TexParser(b, parser.stack.env, parser.configuration).mml();
           NodeUtil.setChild(mml, mml.under, parser.create('node', 'mpadded', [nodeB], pad));
         }
-          if (parser.configuration.options.amscd.hideHorizontalLabels) {
-            mml = parser.create('node', 'mpadded', mml, {depth: 0, height: '.67em'});
-          }
+        if (parser.configuration.options.amscd.hideHorizontalLabels) {
+          mml = parser.create('node', 'mpadded', mml, {depth: 0, height: '.67em'});
         }
-      } else {
+      }
+    } else {
       //
       //  Lay out vertical arrows with mrow if there are labels
       //
-        let arrowNode = parser.create('token', 'mo', vdef, arrow);
-        mml = arrowNode;
-        if (a || b) {
-          mml = parser.create('node', 'mrow');
-          if (a) {
-            NodeUtil.appendChildren(
-              mml, [new TexParser('\\scriptstyle\\llap{' + a + '}', parser.stack.env, parser.configuration).mml()]);
-          }
-          arrowNode.texClass = TEXCLASS.ORD;
-          NodeUtil.appendChildren(mml, [arrowNode]);
-          if (b) {
-            NodeUtil.appendChildren(mml, [new TexParser('\\scriptstyle\\rlap{' + b + '}',
-                                                       parser.stack.env, parser.configuration).mml()]);
-          }
+      let arrowNode = parser.create('token', 'mo', vdef, arrow);
+      mml = arrowNode;
+      if (a || b) {
+        mml = parser.create('node', 'mrow');
+        if (a) {
+          NodeUtil.appendChildren(
+            mml, [new TexParser('\\scriptstyle\\llap{' + a + '}', parser.stack.env, parser.configuration).mml()]);
+        }
+        arrowNode.texClass = TEXCLASS.ORD;
+        NodeUtil.appendChildren(mml, [arrowNode]);
+        if (b) {
+          NodeUtil.appendChildren(mml, [new TexParser('\\scriptstyle\\rlap{' + b + '}',
+                                                      parser.stack.env, parser.configuration).mml()]);
+        }
       }
     }
   }

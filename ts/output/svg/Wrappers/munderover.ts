@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2021 The MathJax Consortium
+ *  Copyright (c) 2018-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ CommonMunderMixin<SVGWrapper<any, any, any>, Constructor<SVGmsub<any, any, any>>
 
     const svg = this.standardSVGnode(parent);
     const [base, script] = [this.baseChild, this.scriptChild];
-    const [bbox, sbox] = [base.getBBox(), script.getBBox()];
+    const [bbox, sbox] = [base.getOuterBBox(), script.getOuterBBox()];
 
     base.toSVG(svg);
     script.toSVG(svg);
@@ -99,7 +99,7 @@ CommonMoverMixin<SVGWrapper<any, any, any>, Constructor<SVGmsup<any, any, any>>>
     }
     const svg = this.standardSVGnode(parent);
     const [base, script] = [this.baseChild, this.scriptChild];
-    const [bbox, sbox] = [base.getBBox(), script.getBBox()];
+    const [bbox, sbox] = [base.getOuterBBox(), script.getOuterBBox()];
 
     base.toSVG(svg);
     script.toSVG(svg);
@@ -141,7 +141,7 @@ CommonMunderoverMixin<SVGWrapper<any, any, any>, Constructor<SVGmsubsup<any, any
     }
     const svg = this.standardSVGnode(parent);
     const [base, over, under] = [this.baseChild, this.overChild, this.underChild];
-    const [bbox, obox, ubox] = [base.getBBox(), over.getBBox(), under.getBBox()];
+    const [bbox, obox, ubox] = [base.getOuterBBox(), over.getOuterBBox(), under.getOuterBBox()];
 
     base.toSVG(svg);
     under.toSVG(svg);

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2021 The MathJax Consortium
+ *  Copyright (c) 2018-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -56,9 +56,8 @@ export class SVGmsqrt<N, T, D> extends CommonMsqrtMixin<SVGConstructor<any, any,
     //
     //  Get the parameters for the spacing of the parts
     //
-    const rbox = this.getBBox();
     const sbox = surd.getBBox();
-    const bbox = base.getBBox();
+    const bbox = base.getOuterBBox();
     const q = this.getPQ(sbox)[1];
     const t = this.font.params.rule_thickness * this.bbox.scale;
     const H = bbox.h + q + t;
@@ -72,12 +71,12 @@ export class SVGmsqrt<N, T, D> extends CommonMsqrtMixin<SVGConstructor<any, any,
     //
     this.addRoot(SVG, root, sbox, H);
     surd.toSVG(SVG);
-    surd.place(this.dx, rbox.h - sbox.h - t);
+    surd.place(this.dx, H - sbox.h);
     base.toSVG(BASE);
     base.place(this.dx + sbox.w, 0);
     this.adaptor.append(SVG, this.svg('rect', {
       width: this.fixed(bbox.w), height: this.fixed(t),
-      x: this.fixed(this.dx + sbox.w), y: this.fixed(rbox.h - 2 * t)
+      x: this.fixed(this.dx + sbox.w), y: this.fixed(H - t)
     }));
   }
 

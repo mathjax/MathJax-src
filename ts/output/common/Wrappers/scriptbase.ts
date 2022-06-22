@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@
 import {AnyWrapper, WrapperConstructor, Constructor, AnyWrapperClass} from '../Wrapper.js';
 import {CommonMo} from './mo.js';
 import {CommonMunderover} from './munderover.js';
+import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../../../util/BBox.js';
@@ -368,7 +369,8 @@ export function CommonScriptbaseMixin<
       let core = this.getSemanticBase() || this.childNodes[0];
       while (core &&
              ((core.childNodes.length === 1 &&
-               (core.node.isKind('mrow') || core.node.isKind('TeXAtom') ||
+               (core.node.isKind('mrow') ||
+                (core.node.isKind('TeXAtom') && core.node.texClass !== TEXCLASS.VCENTER) ||
                 core.node.isKind('mstyle') || core.node.isKind('mpadded') ||
                 core.node.isKind('mphantom') || core.node.isKind('semantics'))) ||
               (core.node.isKind('munderover') && core.isMathAccent)))  {
@@ -433,7 +435,7 @@ export function CommonScriptbaseMixin<
       let child = this.baseCore as any;
       let scale = 1;
       while (child && child !== this) {
-        const bbox = child.getBBox();
+        const bbox = child.getOuterBBox();
         scale *= bbox.rscale;
         child = child.parent;
       }
@@ -444,14 +446,14 @@ export function CommonScriptbaseMixin<
      * The base's italic correction (properly scaled)
      */
     public getBaseIc(): number {
-      return this.baseCore.getBBox().ic * this.baseScale;
+      return this.baseCore.getOuterBBox().ic * this.baseScale;
     }
 
     /**
      * An adjusted italic correction (for slightly better results)
      */
     public getAdjustedIc(): number {
-      const bbox = this.baseCore.getBBox();
+      const bbox = this.baseCore.getOuterBBox();
       return (bbox.ic ? 1.05 * bbox.ic + .05 : 0) * this.baseScale;
     }
 
@@ -499,7 +501,7 @@ export function CommonScriptbaseMixin<
      * @return {number}    The base child's width without the base italic correction (if not needed)
      */
     public getBaseWidth(): number {
-      const bbox = this.baseChild.getBBox();
+      const bbox = this.baseChild.getOuterBBox();
       return bbox.w * bbox.rscale - (this.baseRemoveIc ? this.baseIc : 0) + this.font.params.extra_ic;
     }
 
@@ -512,8 +514,8 @@ export function CommonScriptbaseMixin<
     public computeBBox(bbox: BBox, recompute: boolean = false) {
       const w = this.getBaseWidth();
       const [x, y] = this.getOffset();
-      bbox.append(this.baseChild.getBBox());
-      bbox.combine(this.scriptChild.getBBox(), w + x, y);
+      bbox.append(this.baseChild.getOuterBBox());
+      bbox.combine(this.scriptChild.getOuterBBox(), w + x, y);
       bbox.w += this.font.params.scriptspace;
       bbox.clean();
       this.setChildPWidths(recompute);
@@ -544,8 +546,8 @@ export function CommonScriptbaseMixin<
      * @return {number}     The vertical offset for the script
      */
     public getV(): number {
-      const bbox = this.baseCore.getBBox();
-      const sbox = this.scriptChild.getBBox();
+      const bbox = this.baseCore.getOuterBBox();
+      const sbox = this.scriptChild.getOuterBBox();
       const tex = this.font.params;
       const subscriptshift = this.length2em(this.node.attributes.get('subscriptshift'), tex.sub1);
       return Math.max(
@@ -561,8 +563,8 @@ export function CommonScriptbaseMixin<
      * @return {number}     The vertical offset for the script
      */
     public getU(): number {
-      const bbox = this.baseCore.getBBox();
-      const sbox = this.scriptChild.getBBox();
+      const bbox = this.baseCore.getOuterBBox();
+      const sbox = this.scriptChild.getOuterBBox();
       const tex = this.font.params;
       const attr = this.node.attributes.getList('displaystyle', 'superscriptshift');
       const prime = this.node.getProperty('texprimestyle');
@@ -659,7 +661,7 @@ export function CommonScriptbaseMixin<
      */
     public getDelta(noskew: boolean = false): number {
       const accent = this.node.attributes.get('accent');
-      const {sk, ic} = this.baseCore.getBBox();
+      const {sk, ic} = this.baseCore.getOuterBBox();
       return ((accent && !noskew ? sk : 0) + this.font.skewIcFactor * ic) * this.baseScale;
     }
 
@@ -689,7 +691,7 @@ export function CommonScriptbaseMixin<
         for (const child of this.childNodes) {
           const noStretch = (child.stretch.dir === DIRECTION.None);
           if (all || noStretch) {
-            const {w, rscale} = child.getBBox(noStretch);
+            const {w, rscale} = child.getOuterBBox(noStretch);
             if (w * rscale > W) W = w * rscale;
           }
         }

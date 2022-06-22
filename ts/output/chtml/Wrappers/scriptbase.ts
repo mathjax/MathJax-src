@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -99,6 +99,20 @@ CommonScriptbaseMixin<CHTMLWrapper<any, any, any>, CHTMLConstructor<any, any, an
       adaptor.append(box, child);
     }
     adaptor.append(adaptor.firstChild(under) as N, box);
+  }
+
+  /**
+   * @param {N} base        The HTML element for the base
+   * @param {BBox} basebox  The bbox for the base
+   */
+  protected adjustBaseHeight(base: N, basebox: BBox) {
+    if (this.node.attributes.get('accent')) {
+      const minH = this.font.params.x_height * basebox.scale;
+      if (basebox.h < minH) {
+        this.adaptor.setStyle(base, 'paddingTop', this.em(minH - basebox.h));
+        basebox.h = minH;
+      }
+    }
   }
 
 }

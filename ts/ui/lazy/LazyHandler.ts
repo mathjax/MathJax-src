@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2021-2021 The MathJax Consortium
+ *  Copyright (c) 2021-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,17 +22,22 @@
  */
 
 import {MathDocumentConstructor, ContainerList} from '../../core/MathDocument.js';
-import {MathItem, STATE} from '../../core/MathItem.js';
+import {MathItem, STATE, newState} from '../../core/MathItem.js';
 import {HTMLMathItem} from '../../handlers/html/HTMLMathItem.js';
 import {HTMLDocument} from '../../handlers/html/HTMLDocument.js';
 import {HTMLHandler} from '../../handlers/html/HTMLHandler.js';
 import {handleRetriesFor} from '../../util/Retries.js';
+import {OptionList} from '../../util/Options.js';
 
 /**
  * Add the needed function to the window object.
  */
 declare const window: {
   requestIdleCallback: (callback: () => void) => void;
+  addEventListener: ((type: string, handler: (event: Event) => void) => void);
+  matchMedia: (type: string) => {
+    addListener: (handler: (event: Event) => void) => void;
+  };
 };
 
 /**
@@ -96,6 +101,8 @@ export class LazyList<N, T, D> {
 }
 
 /*==========================================================================*/
+
+newState('LAZYALWAYS', STATE.FINDMATH + 3);
 
 /**
  * The attribute to use for the ID on the marker node
@@ -209,6 +216,15 @@ export function LazyMathItemMixin<N, T, D, B extends Constructor<HTMLMathItem<N,
     }
 
     /**
+     * Only update the state if restore is true or false (null is used for setting lazy states)
+     * @override
+     */
+    public state(state: number = null, restore: boolean = false) {
+      if (restore !== null) super.state(state, restore);
+      return super.state();
+    }
+
+    /**
      * Initially, just insert a marker for where the math will go, and
      *   track it in the lazy list.  Then, when it comes into view,
      *   typeset it properly.
@@ -244,16 +260,6 @@ export function LazyMathItemMixin<N, T, D, B extends Constructor<HTMLMathItem<N,
       }
     }
 
-    /**
-     * @override
-     */
-    public state(state: number = undefined, restore: boolean = false) {
-      //
-      // don't set the state if we are lazy processing
-      //
-      return (restore === null ? this._state : super.state(state, restore));
-    }
-
   };
 
 }
@@ -279,6 +285,21 @@ export interface LazyMathDocument<N, T, D> extends HTMLDocument<N, T, D> {
    */
   lazyList: LazyList<N, T, D>;
 
+  /**
+   * The containers whose contents should always be typeset
+   */
+  lazyAlwaysContainers: N[];
+
+  /**
+   * A function that will typeset all the remaining expressions (e.g., for printing)
+   */
+  lazyTypesetAll(): Promise<void>;
+
+  /**
+   * Mark the math items that are to be always typeset
+   */
+  lazyAlways(): void;
+
 }
 
 /**
@@ -300,6 +321,19 @@ B extends MathDocumentConstructor<HTMLDocument<N, T, D>>>(
   return class BaseClass extends BaseDocument {
 
     /**
+     * @override
+     */
+    public static OPTIONS: OptionList = {
+      ...BaseDocument.OPTIONS,
+      lazyMargin: '200px',
+      lazyAlwaysTypeset: null,
+      renderActions: {
+        ...BaseDocument.OPTIONS.renderActions,
+        lazyAlways: [STATE.LAZYALWAYS, 'lazyAlways', '', false]
+      }
+    };
+
+    /**
      * The Intersection Observer used to track the appearance of the expression markers
      */
     public lazyObserver: IntersectionObserver;
@@ -308,6 +342,16 @@ B extends MathDocumentConstructor<HTMLDocument<N, T, D>>>(
      * The mapping of markers to MathItems
      */
     public lazyList: LazyList<N, T, D>;
+
+    /**
+     * The containers whose contents should always be typeset
+     */
+    public lazyAlwaysContainers: N[] = null;
+
+    /**
+     * Index of last container where math was found in lazyAlwaysContainers
+     */
+    public lazyAlwaysIndex: number = 0;
 
     /**
      * A promise to make sure our compiling/typesetting is sequential
@@ -334,21 +378,155 @@ B extends MathDocumentConstructor<HTMLDocument<N, T, D>>>(
      * Augment the MathItem class used for this MathDocument,
      *   then create the intersection observer and lazy list,
      *   and bind the lazyProcessSet function to this instance
-     *   so it can be used as a callback more easily.
+     *   so it can be used as a callback more easily. Add the
+     *   event listeners to typeset everything before printing.
      *
      * @override
      * @constructor
      */
     constructor(...args: any[]) {
       super(...args);
+      //
+      //  Use the LazyMathItem for math items
+      //
       this.options.MathItem =
         LazyMathItemMixin<N, T, D, Constructor<HTMLMathItem<N, T, D>>>(this.options.MathItem);
-      this.lazyObserver = new IntersectionObserver(this.lazyObserve.bind(this));
+      //
+      //  Allocate a process bit for lazyAlways
+      //
+      const ProcessBits = (this.constructor as typeof HTMLDocument).ProcessBits;
+      !ProcessBits.has('lazyAlways') && ProcessBits.allocate('lazyAlways');
+      //
+      //  Set up the lazy observer and other needed data
+      //
+      this.lazyObserver = new IntersectionObserver(this.lazyObserve.bind(this), {rootMargin: this.options.lazyMargin});
       this.lazyList = new LazyList<N, T, D>();
       const callback = this.lazyHandleSet.bind(this);
-      this.lazyProcessSet = (typeof window !== 'undefined' && window.requestIdleCallback ?
-                          () => window.requestIdleCallback(callback) :
-                          () => setTimeout(callback, 10));
+      this.lazyProcessSet = (window && window.requestIdleCallback ?
+                             () => window.requestIdleCallback(callback) :
+                             () => setTimeout(callback, 10));
+      //
+      //  Install print listeners to typeset the rest of the document before printing
+      //
+      if (window) {
+        let done = false;
+        const handler = () => {
+          !done && this.lazyTypesetAll();
+          done = true;
+        };
+        window.matchMedia('print').addListener(handler);  // for Safari
+        window.addEventListener('beforeprint', handler);  // for everyone else
+      }
+    }
+
+    /**
+     * Check all math items for those that should always be typeset
+     */
+    public lazyAlways() {
+      if (!this.lazyAlwaysContainers || this.processed.isSet('lazyAlways')) return;
+      for (const item of this.math) {
+        const math = item as LazyMathItem<N, T, D>;
+        if (math.lazyTypeset && this.lazyIsAlways(math)) {
+          math.lazyCompile = math.lazyTypeset = false;
+        }
+      }
+      this.processed.set('lazyAlways');
+    }
+
+    /**
+     * Check if the MathItem is in one of the containers to always typeset.
+     *  (start looking using the last container where math was found,
+     *   in case the next math is in the same container).
+     *
+     * @param {LazyMathItem<N,T,D>} math   The MathItem to test
+     * @return {boolean}   True if one of the document's containers holds the MathItem
+     */
+    protected lazyIsAlways(math: LazyMathItem<N, T, D>): boolean {
+      if (math.state() < STATE.LAZYALWAYS) {
+        math.state(STATE.LAZYALWAYS);
+        const node = math.start.node;
+        const adaptor = this.adaptor;
+        const start = this.lazyAlwaysIndex;
+        const end = this.lazyAlwaysContainers.length;
+        do {
+          const container = this.lazyAlwaysContainers[this.lazyAlwaysIndex];
+          if (adaptor.contains(container, node)) return true;
+          if (++this.lazyAlwaysIndex >= end) {
+            this.lazyAlwaysIndex = 0;
+          }
+        } while (this.lazyAlwaysIndex !== start);
+      }
+      return false;
+    }
+
+    /**
+     * @override
+     */
+    public state(state: number, restore: boolean = false) {
+      super.state(state, restore);
+      if (state < STATE.LAZYALWAYS) {
+        this.processed.clear('lazyAlways');
+      }
+      return this;
+    }
+
+    /**
+     * Function to typeset all remaining expressions (for printing, etc.)
+     *
+     * @return {Promise}   Promise that is resolved after the typesetting completes.
+     */
+    public async lazyTypesetAll(): Promise<void> {
+      //
+      // The state we need to go back to (COMPILED or TYPESET).
+      //
+      let state = STATE.LAST;
+      //
+      // Loop through all the math...
+      //
+      for (const item of this.math) {
+        const math = item as LazyMathItem<N, T, D>;
+        //
+        // If it is not lazy compile or typeset, skip it.
+        //
+        if (!math.lazyCompile && !math.lazyTypeset) continue;
+        //
+        // Mark the state that we need to start at.
+        //
+        if (math.lazyCompile) {
+          math.state(STATE.COMPILED - 1);
+          state = STATE.COMPILED;
+        } else {
+          math.state(STATE.TYPESET - 1);
+          if (STATE.TYPESET < state) state = STATE.TYPESET;
+        }
+        //
+        // Mark it as not lazy and remove it from the observer.
+        //
+        math.lazyCompile = math.lazyTypeset = false;
+        math.lazyMarker && this.lazyObserver.unobserve(math.lazyMarker as any as Element);
+      }
+      //
+      // If something needs updating
+      //
+      if (state === STATE.LAST) return Promise.resolve();
+      //
+      // Reset the document state to the starting state that we need.
+      //
+      this.state(state - 1, null);
+      //
+      // Save the SVG font cache and set it to "none" temporarily
+      //   (needed by Firefox, which doesn't seem to process the
+      //    xlinks otherwise).
+      //
+      const fontCache = this.outputJax.options.fontCache;
+      if (fontCache) this.outputJax.options.fontCache = 'none';
+      //
+      //  Typeset the math and put back the font cache when done.
+      //
+      this.reset();
+      return handleRetriesFor(() => this.render()).then(() => {
+        if (fontCache) this.outputJax.options.fontCache = fontCache;
+      });
     }
 
     /**
@@ -447,7 +625,7 @@ B extends MathDocumentConstructor<HTMLDocument<N, T, D>>>(
       let compile = false;
       for (const item of this.math) {
         const earlier = item as LazyMathItem<N, T, D>;
-        if (earlier === math || !earlier?.lazyCompile) {
+        if (earlier === math || !earlier?.lazyCompile || !earlier.lazyTex) {
           break;
         }
         earlier.lazyCompile = false;
@@ -493,6 +671,21 @@ B extends MathDocumentConstructor<HTMLDocument<N, T, D>>>(
         }
       }
       return items;
+    }
+
+    /**
+     * @override
+     */
+    public render() {
+      //
+      // Get the containers whose content should always be typeset
+      //
+      const always = this.options.lazyAlwaysTypeset;
+      this.lazyAlwaysContainers = !always ? null :
+        this.adaptor.getElements(Array.isArray(always) ? always : [always], this.document);
+      this.lazyAlwaysIndex = 0;
+      super.render();
+      return this;
     }
 
   };

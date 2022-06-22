@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -69,6 +69,7 @@ CommonTextNodeMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
     const adaptor = this.adaptor;
     const variant = this.parent.variant;
     const text = (this.node as TextNode).getText();
+    if (text.length === 0) return;
     if (variant === '-explicitFont') {
       adaptor.append(parent, this.jax.unknownText(text, variant, this.getBBox().w));
     } else {

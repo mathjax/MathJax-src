@@ -1,7 +1,7 @@
 
 /*************************************************************
  *
- *  Copyright (c) 2017-2021 The MathJax Consortium
+ *  Copyright (c) 2017-2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -39,6 +39,10 @@ new sm.CharacterMap('AMSmath-mathchar0mo', ParseMethods.mathchar0mo, {
   iiiint:     ['\u2A0C', {texClass: TEXCLASS.OP}]
 });
 
+/**
+ * Extra characters that are letters in \operatorname
+ */
+new sm.RegExpMap('AMSmath-operatorLetter', AmsMethods.operatorLetter, /[-*]/i);
 
 /**
  * Macros from the AMS Math package.
@@ -54,8 +58,7 @@ new sm.CommandMap('AMSmath-macros', {
   dddot:      ['Accent', '20DB'],
   ddddot:     ['Accent', '20DC'],
 
-  sideset:    ['Macro', '\\mathop{\\mathop{\\rlap{\\phantom{#3}}}\\nolimits#1' +
-               '\\!\\mathop{#3}\\nolimits#2}', 3],
+  sideset:     'SideSet',
 
   boxed:      ['Macro', '\\fbox{$\\displaystyle{#1}$}', 1],
 
@@ -74,7 +77,6 @@ new sm.CommandMap('AMSmath-macros', {
 
   DeclareMathOperator: 'HandleDeclareOp',
   operatorname:        'HandleOperatorName',
-  SkipLimits:          'SkipLimits',
 
   genfrac:     'Genfrac',
   frac:       ['Genfrac', '', '', '', ''],
