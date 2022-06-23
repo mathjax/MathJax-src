@@ -34,7 +34,7 @@ import {CommonOutputJax} from '../common.js';
 import {CommonWrapperFactory} from './WrapperFactory.js';
 import {CommonMo} from './Wrappers/mo.js';
 import {CommonMrow} from './Wrappers/mrow.js';
-import {BBox} from '../../util/BBox.js';
+import {BBox, BBoxData} from '../../util/BBox.js';
 import {FontData, FontDataClass, DelimiterData,
         VariantData, CharData, CharOptions, DIRECTION, NOSTRETCH} from './FontData.js';
 
@@ -103,6 +103,15 @@ export class LineBBox extends BBox {
   public isFirst: boolean = false;
 
   /**
+   * The index of the child node containing this starting line break and the line within that child
+   */
+  public start: [number, number];
+  /**
+   * The index of the child node containingt the ending line break and the line within that child
+   */
+  public end: [number, number];
+
+  /**
    * @param {BBox} bbox           The bbox to extend
    * @param {number} leading      The lineleading value for the break
    * @param {IndentData} indent   The align/shift information
@@ -117,6 +126,17 @@ export class LineBBox extends BBox {
     }
     return nbox;
   }
+
+  /**
+   * @override
+   */
+  constructor(def?: BBoxData, start: [number, number] = null) {
+    super(def);
+    if (start) {
+      this.start = start;
+    }
+  }
+
 
   /**
    * @override
@@ -479,6 +499,13 @@ export class CommonWrapper<
   }
 
   /**
+   * Easy access to the linebreak visitor
+   */
+  get linebreaks() {
+    return this.factory.jax.linebreaks;
+  }
+
+  /**
    * True if children with percentage widths should be resolved by this container
    */
   get fixesPWidth() {
@@ -507,7 +534,7 @@ export class CommonWrapper<
    * @return {WW}         The linebreak container for the child
    */
   public breakTop(mrow: WW, _child: WW): WW {
-    return (this.node.linebreakContainer || !this.parent ? mrow : this.parent.breakTop(mrow, this as any as WW));
+    return ((this.node.linebreakContainer || !this.parent) ? mrow : this.parent.breakTop(mrow, this as any as WW));
   }
 
   /*******************************************************************/
@@ -630,7 +657,17 @@ export class CommonWrapper<
   public getLineBBox(i: number): LineBBox {
     if (!this.lineBBox[i]) {
       const n = this.breakCount;
-      this.lineBBox[i] = (n ? this.computeLineBBox(i) : LineBBox.from(this.getOuterBBox()));
+      if (n) {
+        const line = this.lineBBox[i] = this.computeLineBBox(i);
+        if (i === 0) {
+          line.L = this.getBBox().L;
+        }
+        if (i === n) {
+          line.R = this.getBBox().R;
+        }
+      } else {
+        this.lineBBox[i] = LineBBox.from(this.getOuterBBox());
+      }
     }
     return this.lineBBox[i];
   }
@@ -726,12 +763,20 @@ export class CommonWrapper<
   }
 
   /**
+   * @param {number} _W   The width to use for linebreaking
+   */
+  public breakToWidth(_W: number) {
+    // implemented in subclasses
+  }
+
+  /**
    * Mark BBox to be computed again (e.g., when an mo has stretched)
    */
   public invalidateBBox() {
     if (this.bboxComputed) {
       this.bboxComputed = false;
       this.lineBBox = [];
+      this._breakCount = -1;
       if (this.parent) {
         this.parent.invalidateBBox();
       }

@@ -29,6 +29,7 @@ import {FontData, FontDataClass, CharOptions, VariantData, DelimiterData, CssFon
 import {OptionList, separateOptions} from '../util/Options.js';
 import {CommonWrapper, CommonWrapperClass} from './common/Wrapper.js';
 import {CommonWrapperFactory} from './common/WrapperFactory.js';
+import {LinebreakVisitor} from './common/LinebreakVisitor.js';
 import {percent} from '../util/lengths.js';
 import {StyleList, Styles} from '../util/Styles.js';
 import {StyleList as CssStyleList, CssStyles} from '../util/StyleList.js';
@@ -158,6 +159,13 @@ export abstract class CommonOutputJax<
   public factory: WF;
 
   /**
+   * The linebreak visitor to use for automatic linebreaks
+   */
+  public linebreaks: LinebreakVisitor<
+    N, T, D, CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>, WW, WF, WC, CC, VV, DD, FD, FC
+  >;
+
+  /**
    * A map from the nodes in the expression currently being processed to the
    * wrapper nodes for them (used by functions like core() to locate the wrappers
    * from the core nodes)
@@ -199,6 +207,9 @@ export abstract class CommonOutputJax<
       new defaultFactory<N, T, D, CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
                          WW, WF, WC, CC, VV, DD, FD, FC>();
     this.factory.jax = this;
+    this.linebreaks = new LinebreakVisitor<
+      N, T, D, CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>, WW, WF, WC, CC, VV, DD, FD, FC
+    >(this.factory);
     this.cssStyles = this.options.cssStyles || new CssStyles();
     this.font = this.options.font || new defaultFont(fontOptions);
     this.unknownCache = new Map();

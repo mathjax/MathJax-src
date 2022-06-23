@@ -235,11 +235,12 @@ export function CommonMrowMixin<
      */
     protected computeBBox(bbox: BBox, recompute: boolean = false) {
       const breaks = this.breakCount;
-      this.lineBBox = (breaks ? [new LineBBox({h: .75, d: .25, w: 0})] : []);
+      this.lineBBox = (breaks ? [new LineBBox({h: .75, d: .25, w: 0}, [0, 0])] : []);
       bbox.empty();
-      for (const child of this.childNodes) {
+      for (const i of this.childNodes.keys()) {
+        const child = this.childNodes[i];
         bbox.append(child.getOuterBBox());
-        breaks && this.computeChildLineBBox(child);
+        breaks && this.computeChildLineBBox(child, i);
       }
       bbox.clean();
       breaks && this.computeLinebreakBBox(bbox);
@@ -288,15 +289,19 @@ export function CommonMrowMixin<
 
     /**
      * @param {WW} child   The child whose linebreak sizes should be added to those of the mrow
+     * @param {number} i   The index of the child in the childNodes array
      */
-    protected computeChildLineBBox(child: WW) {
-      this.lineBBox[this.lineBBox.length - 1].append(child.getLineBBox(0));
+    protected computeChildLineBBox(child: WW, i: number) {
+      const lbox = this.lineBBox[this.lineBBox.length - 1];
+      lbox.end = [i, 0];
+      lbox.append(child.getLineBBox(0));
       const parts = child.breakCount + 1;
       if (parts === 1) return;
-      for (let i = 1; i < parts; i++) {
+      for (let l = 1; l < parts; l++) {
         const bbox = new LineBBox({h: .75, d: .25, w: 0});
+        bbox.start = bbox.end = [i, l];
         bbox.isFirst = true;
-        bbox.append(child.getLineBBox(i));
+        bbox.append(child.getLineBBox(l));
         this.lineBBox.push(bbox);
       }
     }
@@ -338,6 +343,18 @@ export function CommonMrowMixin<
         this.shiftLines(w);
       }
       return true;
+    }
+
+    /**
+     * @override
+     */
+    public breakToWidth(W: number) {
+      const n = this.breakCount;
+      for (let i = 0; i <= n; i++) {
+        const line = this.lineBBox[i] || this.getLineBBox(i);
+        line.w > W && this.linebreaks.breakToWidth(this as any as WW, i, W);
+      }
+      this.invalidateBBox();
     }
 
   } as any as B;

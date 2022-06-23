@@ -154,7 +154,7 @@ export function CommonMspaceMixin<
      * @override
      */
     public setBreakStyle(linebreak: string = '') {
-      this.breakStyle = ((linebreak || ((this.node as MmlMspace).hasNewline ? 'before' : '')));
+      this.breakStyle = (linebreak || ((this.node as MmlMspace).hasNewline ? 'before' : ''));
     }
 
     /***************************************************/

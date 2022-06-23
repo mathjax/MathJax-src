@@ -161,6 +161,18 @@ export interface CommonMo<
    */
   setBreakStyle(linebreak?: string): void;
 
+  /**
+   * Get the breakstyle of the mo
+   *
+   * @param {string} linebreak   Force style to be the given one
+   * @return {string}            The linebreak style of the node
+   */
+  getBreakStyle(linebreak?: string): string;
+
+  /**
+   * Create the mo wrapper for the linebreakmultchar
+   */
+  getMultChar(): void
 }
 
 /**
@@ -431,22 +443,38 @@ export function CommonMoMixin<
      * @override
      */
     public setBreakStyle(linebreak: string = '') {
-      const attributes = this.node.attributes;
-      this.breakStyle = ((linebreak || (attributes.get('linebreak') === 'newline' ?
-                                        attributes.get('linebreakstyle') as string : '')));
-      if (this.breakStyle === 'infixlinebreakstyle') {
-        this.breakStyle = attributes.get(this.breakStyle) as string;
-      }
+      this.breakStyle = this.getBreakStyle(linebreak);
       if (!this.breakCount) return;
-      const multChar = attributes.get('linebreakmultchar') as string;
-      if (this.getText() === '\u2062' && multChar && multChar !== '\u2062') {
-        this.multChar = this.createMo(multChar);
+      if (this.multChar) {
         //
         //  Update the spacing between the multchar and the next item
         //
         const i = this.parent.node.childIndex(this.node);
         const next = this.parent.node.childNodes[i + 1];
         next && next.setTeXclass(this.multChar.node);
+      }
+    }
+
+    /**
+     * @override
+     */
+    public getBreakStyle(linebreak: string = '') {
+      const attributes = this.node.attributes;
+      let style = (linebreak || (attributes.get('linebreak') === 'newline' ?
+                                 attributes.get('linebreakstyle') as string : ''));
+      if (style === 'infixlinebreakstyle') {
+        style = attributes.get(style) as string;
+      }
+      return style;
+    }
+
+    /**
+     * @override
+     */
+    getMultChar() {
+      const multChar = this.node.attributes.get('linebreakmultchar') as string;
+      if (multChar && this.getText() === '\u2062' && multChar !== '\u2062') {
+        this.multChar = this.createMo(multChar);
       }
     }
 
@@ -458,6 +486,7 @@ export function CommonMoMixin<
     constructor(factory: WF, node: MmlNode, parent: WW = null) {
       super(factory, node, parent);
       this.isAccent = (this.node as MmlMo).isAccent;
+      this.getMultChar();
       this.setBreakStyle();
     }
 
