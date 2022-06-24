@@ -369,17 +369,122 @@ export class LiveRegion extends StringRegion {
 
 export class SpeechRegion extends LiveRegion {
 
+  public node: Element = null;
+
+  /**
+   * The highlighter to use.
+   */
+  public highlighter: Sre.highlighter = Sre.getHighlighter(
+    {color: 'red'}, {color: 'black'},
+    {renderer: this.document.outputJax.name, browser: 'v3'}
+  );
+
+  /**
+   * @override
+   */
+  public Show(node: HTMLElement, highlighter: Sre.highlighter) {
+    this.node = node;
+    super.Show(node, highlighter);
+  }
+
   /**
    * @override
    */
   public Update(speech: string, locale: string = 'en') {
     super.Update(speech);
-    let utterance = new SpeechSynthesisUtterance(speech);
-    utterance.lang = locale;
-    speechSynthesis.speak(utterance);
+    let ssml = this.ssmlParsing(speech);
+    this.makeUtterances(ssml, locale);
+  }
+
+
+  private makeUtterances(ssml: any[], locale: string) {
+    let utterance = null;
+    for (let utter of ssml) {
+      if (utter.mark) {
+        if (!utterance) {
+          this.highlightNode(utter.mark);
+          continue;
+        }
+        utterance.addEventListener('end', (_event: Event) => {
+          this.highlightNode(utter.mark);
+        });
+        continue;
+      }
+      if (!utter.text) continue;
+      utterance = new SpeechSynthesisUtterance(utter.text);
+      utterance.lang = locale;
+      speechSynthesis.speak(utterance);
+      console.log(15);
+    }
+  }
+
+
+  private highlightNode(id: string) {
+    this.highlighter.unhighlight();
+    console.log('highlighting ' + id);
+    let nodes = Array.from(this.node.querySelectorAll(`[data-semantic-id="${id}"]`));
+    console.log(nodes);
+    this.highlighter.highlight(nodes as any[]);
+  }
+
+  private ssmlParsing(speech: string) {
+    console.log(speech);
+    let dp = new DOMParser();
+    let xml = dp.parseFromString(speech, 'text/xml');
+    let instr: any[] = [];
+    this.recurseSsml(Array.from(xml.documentElement.childNodes), instr);
+    return instr;
+  }
+
+
+  private recurseSsml(nodes: Node[], instr: any) {
+    // Ignore prosody for now
+    //
+    // type prosody
+    // let oldProsody = {
+    //   pitch = prosody['pitch'],
+    //   rate = prosody['rate']
+    // }
+    // if (node.tagName === 'prosody') {
+    //   if node.hasAttribute()
+    //   prosody['pitch'] = node.getAttribute()
+    // }
+
+    for (let node of nodes) {
+      if (node.nodeType === 3) {
+        let content = node.textContent.trim()
+        if (content) {
+          instr.push({text: content});
+        }
+        continue;
+      }
+      if (node.nodeType === 1) {
+        let element = node as Element;
+        let tag = element.tagName;
+        if (tag === 'prosody' || tag === 'speak') {
+          this.recurseSsml(Array.from(node.childNodes), instr);
+          continue;
+        }
+        switch (tag) {
+          case 'break':
+            instr.push({pause: element.getAttribute('time')});
+            break;
+          case 'mark':
+            instr.push({mark: element.getAttribute('name')});
+            break;
+          case 'say-as':
+            instr.push({text: element.textContent, character: true});
+            break;
+          default:
+            break;
+        }
+      }
+    }
   }
 
 }
+
+
 
 // Region that overlays the current element.
 export class HoverRegion extends AbstractRegion<HTMLElement> {

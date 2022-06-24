@@ -396,6 +396,7 @@ let allExplorers: {[options: string]: ExplorerInit} = {
     let explorer = ke.SpeechExplorer.create(
       doc, doc.explorerRegions.speechRegion, node, ...rest) as ke.SpeechExplorer;
     explorer.speechGenerator.setOptions({
+      automark: true as any, markup: 'ssml_step',
       locale: doc.options.sre.locale, domain: doc.options.sre.domain,
       style: doc.options.sre.style, modality: 'speech'});
     // This weeds out the case of providing a non-existent locale option.
@@ -410,7 +411,8 @@ let allExplorers: {[options: string]: ExplorerInit} = {
   braille: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) => {
     let explorer = ke.SpeechExplorer.create(
       doc, doc.explorerRegions.brailleRegion, node, ...rest) as ke.SpeechExplorer;
-    explorer.speechGenerator.setOptions({locale: 'nemeth', domain: 'default',
+    explorer.speechGenerator.setOptions({automark: false as any, markup: 'none',
+                                         locale: 'nemeth', domain: 'default',
                                          style: 'default', modality: 'braille'});
     explorer.showRegion = 'viewBraille';
     return explorer;
