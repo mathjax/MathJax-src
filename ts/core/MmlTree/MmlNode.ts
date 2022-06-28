@@ -665,6 +665,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
         !AbstractMmlNode.noInherit[node]?.[this.kind]?.[key] && this.attributes.setInherited(key, value);
       }
       if (AbstractMmlNode.stopInherit[this.kind]?.[key]) {
+        attributes = {...attributes};
         delete attributes[key];
       }
     }
