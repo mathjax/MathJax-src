@@ -27,11 +27,22 @@ import {CommonWrapperFactory} from './WrapperFactory.js';
 import {FontData, FontDataClass, DelimiterData, VariantData, CharOptions} from './FontData.js';
 import {CommonWrapper, CommonWrapperClass} from './Wrapper.js';
 import {CommonMo} from './Wrappers/mo.js';
+import {CommonMspace} from './Wrappers/mspace.js';
 import {CommonMsub, CommonMsup, CommonMsubsup} from './Wrappers/msubsup.js';
 import {CommonMmultiscripts} from './Wrappers/mmultiscripts.js';
 import {CommonMfenced} from './Wrappers/mfenced.js';
 import {CommonMaction} from './Wrappers/maction.js';
 import {BBox} from '../../util/BBox.js';
+import {TEXCLASS} from '../../core/MmlTree/MmlNode.js';
+
+/************************************************************************************/
+
+/**
+ * The mo/mspace for a break, its penalty, the width + indent of the node after the break,
+ * the width up to the next break, and the list of breaks that should be undone if this one
+ * is used.
+ */
+export type BreakData<WW> = [WW, number, number, number, WW[]];
 
 /************************************************************************************/
 /*
@@ -66,9 +77,30 @@ export class LinebreakVisitor<
 > extends AbstractVisitor<WW> {
 
   /**
-   * The lsit of best breakpoint so far, their penalties, the width of the break node, and the width up to the next break
+   * Penalties for the various line breaks: [p] for fixed penalty, [ , p] for cumulative penalty
    */
-  protected breaks: [WW, number, number, number][];
+  protected PENALTY: {[key: string]: number[]} = {
+    newline:         [0],
+    nobreak:   [1000000],
+    goodbreak: [ , -200],
+    badbreak:  [ , +200],
+    auto:         [ , 0],
+  };
+
+  /**
+   * Penalties for other factors
+   */
+  protected FACTORS = {
+    widthFactor:   800,
+    nestFactor:    400,
+    open:         -500,
+    close:         500
+  }
+
+  /**
+   * The list of best breakpoints so far
+   */
+  protected breaks: BreakData<WW>[];
 
   /**
    * The maximum width for the lines
@@ -81,6 +113,11 @@ export class LinebreakVisitor<
   protected w: number;
 
   /**
+   * the nesting depth of the active node
+   */
+  protected depth: number;
+
+  /**
    * Break a line to the given width
    *
    * @param {WW} wrapper   The mrow to break
@@ -91,17 +128,23 @@ export class LinebreakVisitor<
     this.breaks = [];
     this.width = W;
     this.w = 0;
+    this.depth = 0;
     this.visitNode(wrapper, i);
   }
 
   /**
-   * @param {BBox} bbox   The BBox of the width to be added
-   * @param {number} w    The width to add (defaults to full wifth of bbox)
+   * @param {BBox} bbox     The BBox of the width to be added
+   * @param {number} w      The width to add (defaults to full wifth of bbox)
+   * @param {boolean} add   True if add width into break array
    */
-  protected addWidth(bbox: BBox, w: number = (bbox.L + bbox.w + bbox.R)) {
+  protected addWidth(bbox: BBox, w: number = null, add: boolean = true) {
+    if (w === null) {
+      w = (bbox.L + bbox.w + bbox.R);
+    }
+    if (!w) return;
     w *= bbox.rscale;
     this.w += w;
-    if (this.breaks.length) {
+    if (this.breaks.length && add) {
       this.breaks[0][3] += w;
     }
     this.processBreak();
@@ -112,12 +155,39 @@ export class LinebreakVisitor<
    */
   protected processBreak() {
     while (this.breaks.length && this.w > this.width) {
-      const [ww, , dw, w] = this.breaks.pop();
+      const [ww, , dw, w, list] = this.breaks.pop();
       (ww as any).setBreakStyle(ww.node.attributes.get('linebreakstyle') || 'before');
       ww.invalidateBBox();
       this.w = this.breaks.reduce((w, brk) => w + brk[3], dw + w);
-      console.log(this.w);
+      this.breaks.forEach(([, , , , list]) => list.push(ww));
+      list.forEach(ww => (ww as any).setBreakStyle(''));
     }
+  }
+
+  /**
+   * Update the break list to inclkude this break
+   * @param {WW} wrapper        The mo/mspace that might be a breakpoint
+   * @param {number} penalty    The penalty for that break
+   * @param {number} w          The width+indent of the node after the break
+   */
+  protected pushBreak(wrapper: WW, penalty: number, w: number) {
+    if (penalty >= this.PENALTY.nobreak[0]) return;
+    while (this.breaks.length && this.breaks[0][1] > penalty) {
+      const data = this.breaks.shift();
+      if (this.breaks.length) {
+        this.breaks[0][3] += data[3];
+      }
+    }
+    this.breaks.unshift([wrapper, penalty, w, 0, []]);
+  }
+
+  /**
+   * @override
+   */
+  public visitNode(wrapper: WW, i: number) {
+    this.depth++;
+    super.visitNode(wrapper, i);
+    this.depth--;
   }
 
   /**
@@ -127,11 +197,40 @@ export class LinebreakVisitor<
   public visitMoNode(wrapper: WW, _i: number) {
     const mo = wrapper as any as CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
     const bbox = mo.getOuterBBox();
-    let w = bbox.rscale * (bbox.L + bbox.w + bbox.R);
     const style = mo.getBreakStyle(mo.node.attributes.get('linebreakstyle') as string);
-    (style !== 'before' || this.w + w <= this.width) && this.addWidth(bbox);
-    w = (style === 'after' ? 0 : mo.multChar ? mo.multChar.getBBox().w : bbox.w);
-    this.breaks = [[wrapper, 0, w, 0]];
+    const w = (style === 'after' ? 0 : mo.multChar ? mo.multChar.getBBox().w : bbox.w);
+    const penalty = this.moPenalty(mo);
+    if (style === 'before') {
+      this.pushBreak(wrapper, penalty, w - (bbox.L + bbox.w + bbox.R));
+      this.addWidth(bbox);
+    } else {
+      this.addWidth(bbox);
+      this.pushBreak(wrapper, penalty, w);
+    }
+//console.log(wrapper.node.toString(), penalty, this.w);
+  }
+
+  /**
+   * @param {CommonMo} mo    The mo whose penalty is to be computed
+   * @return {number}        The computed penalty
+   */
+  protected moPenalty(mo: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): number {
+    const {linebreak, fence, form} = mo.node.attributes.getList('linebreak', 'fence', 'form');
+    const FACTORS = this.FACTORS;
+    let penalty = Math.floor(this.width - this.w / this.width * FACTORS.widthFactor)
+                + this.depth * FACTORS.nestFactor;
+    const isOpen = (fence || mo.node.texClass === TEXCLASS.OPEN) && form === 'prefix';
+    const isClose = (fence || mo.node.texClass === TEXCLASS.CLOSE) && form === 'postfix';
+    if (isOpen) {
+      penalty += FACTORS.open;
+      this.depth++;
+    }
+    if (isClose) {
+      penalty += FACTORS.close - FACTORS.nestFactor;
+      this.depth--;
+    }
+    const lpenalty = this.PENALTY[linebreak as string] || [ , 0];
+    return (lpenalty.length === 1 ? lpenalty[0] : Math.max(1, penalty + lpenalty[1]));
   }
 
   /**
@@ -144,8 +243,23 @@ export class LinebreakVisitor<
     if (attributes.getExplicit('width') === undefined &&
         attributes.getExplicit('height') === undefined &&
         attributes.getExplicit('depth') === undefined) {
-      this.breaks.push([wrapper, 0, 0, 0]);
+      const penalty = this.mspacePenalty(wrapper as any as CommonMspace<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>);
+      this.pushBreak(wrapper, penalty, 0);
+//console.log(wrapper.node.toString(), penalty, this.w);
     }
+  }
+
+  /**
+   * @param {CommonMspace} mspace   The mspace whose penalty is to be computed
+   * @return {number}               The computed penalty
+   */
+  protected mspacePenalty(mspace: CommonMspace<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): number {
+    const linebreak = mspace.node.attributes.get('linebreak');
+    const FACTORS = this.FACTORS;
+    let penalty = Math.floor(this.width - this.w / this.width * FACTORS.widthFactor)
+                + this.depth * FACTORS.nestFactor;
+    const lpenalty = this.PENALTY[linebreak as string] || [ , 0];
+    return (lpenalty.length === 1 ? lpenalty[0] : Math.max(1, penalty + lpenalty[1]));
   }
 
   /**
