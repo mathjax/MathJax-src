@@ -349,12 +349,7 @@ export function CommonMrowMixin<
      * @override
      */
     public breakToWidth(W: number) {
-      const n = this.breakCount;
-      for (let i = 0; i <= n; i++) {
-        const line = this.lineBBox[i] || this.getLineBBox(i);
-        line.w > W && this.linebreaks.breakToWidth(this as any as WW, i, W);
-      }
-      this.invalidateBBox();
+      this.linebreaks.breakToWidth(this as any as WW, W);
     }
 
   } as any as B;

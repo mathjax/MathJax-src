@@ -100,7 +100,12 @@ export class LinebreakVisitor<
   /**
    * The list of best breakpoints so far
    */
-  protected breaks: BreakData<WW>[];
+  protected potential: BreakData<WW>[];
+
+  /**
+   * The breakpoints to use
+   */
+  protected breaks: Set<WW>;
 
   /**
    * The maximum width for the lines
@@ -121,12 +126,31 @@ export class LinebreakVisitor<
    * Break a line to the given width
    *
    * @param {WW} wrapper   The mrow to break
-   * @param {number} i     The line within that node to break
    * @param {number} W     The width to break to
    */
-  public breakToWidth(wrapper: WW, i: number, W: number) {
-    this.breaks = [];
+  public breakToWidth(wrapper: WW, W: number) {
+    this.breaks = new Set();
     this.width = W;
+    const n = wrapper.breakCount;
+    for (let i = 0; i <= n; i++) {
+      const line = wrapper.lineBBox[i] || wrapper.getLineBBox(i);
+      line.w > W && this.breakLineToWidth(wrapper, i);
+    }
+    this.breaks.forEach(ww => {
+      (ww as any).setBreakStyle(ww.node.attributes.get('linebreakstyle') || 'before')
+      ww.invalidateBBox();
+    });
+
+  }
+
+  /**
+   * Break a line to the given width
+   *
+   * @param {WW} wrapper   The mrow to break
+   * @param {number} i     The line within that node to break
+   */
+  public breakLineToWidth(wrapper: WW, i: number) {
+    this.potential = [];
     this.w = 0;
     this.depth = 0;
     this.visitNode(wrapper, i);
@@ -144,8 +168,8 @@ export class LinebreakVisitor<
     if (!w) return;
     w *= bbox.rscale;
     this.w += w;
-    if (this.breaks.length && add) {
-      this.breaks[0][3] += w;
+    if (this.potential.length && add) {
+      this.potential[0][3] += w;
     }
     this.processBreak();
   }
@@ -154,13 +178,12 @@ export class LinebreakVisitor<
    * Mark the breakpoint(s) and get the current width
    */
   protected processBreak() {
-    while (this.breaks.length && this.w > this.width) {
-      const [ww, , dw, w, list] = this.breaks.pop();
-      (ww as any).setBreakStyle(ww.node.attributes.get('linebreakstyle') || 'before');
-      ww.invalidateBBox();
-      this.w = this.breaks.reduce((w, brk) => w + brk[3], dw + w);
-      this.breaks.forEach(([, , , , list]) => list.push(ww));
-      list.forEach(ww => (ww as any).setBreakStyle(''));
+    while (this.potential.length && this.w > this.width) {
+      const [ww, , dw, w, list] = this.potential.pop();
+      this.breaks.add(ww);
+      this.w = this.potential.reduce((w, brk) => w + brk[3], dw + w);
+      this.potential.forEach(([, , , , list]) => list.push(ww));
+      list.forEach(ww => this.breaks.delete(ww));
     }
   }
 
@@ -172,13 +195,13 @@ export class LinebreakVisitor<
    */
   protected pushBreak(wrapper: WW, penalty: number, w: number) {
     if (penalty >= this.PENALTY.nobreak[0]) return;
-    while (this.breaks.length && this.breaks[0][1] > penalty) {
-      const data = this.breaks.shift();
-      if (this.breaks.length) {
-        this.breaks[0][3] += data[3];
+    while (this.potential.length && this.potential[0][1] > penalty) {
+      const data = this.potential.shift();
+      if (this.potential.length) {
+        this.potential[0][3] += data[3];
       }
     }
-    this.breaks.unshift([wrapper, penalty, w, 0, []]);
+    this.potential.unshift([wrapper, penalty, w, 0, []]);
   }
 
   /**
@@ -226,7 +249,7 @@ export class LinebreakVisitor<
       this.depth++;
     }
     if (isClose) {
-      penalty += FACTORS.close - FACTORS.nestFactor;
+      penalty += FACTORS.close;
       this.depth--;
     }
     const lpenalty = this.PENALTY[linebreak as string] || [ , 0];
