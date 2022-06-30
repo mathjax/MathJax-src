@@ -44,6 +44,48 @@ import {TEXCLASS} from '../../core/MmlTree/MmlNode.js';
  */
 export type BreakData<WW> = [WW, number, number, number, WW[]];
 
+
+/**
+ * A do-nothing linebreaker for use when automatic linebreaks are not requested
+ *
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
+ */
+export class Linebreaks<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>
+> extends AbstractVisitor<WW> {
+
+  /**
+   * Break a line to the given width
+   *
+   * @param {WW} _wrapper   The mrow to break
+   * @param {number} _W     The width to break to
+   */
+  breakToWidth(_wrapper: WW, _W: number) {
+  }
+
+}
+
+
 /************************************************************************************/
 /*
  * The basic linebreak visitor for automatic line breaks.
@@ -74,7 +116,7 @@ export class LinebreakVisitor<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>
-> extends AbstractVisitor<WW> {
+> extends Linebreaks<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
 
   /**
    * Penalties for the various line breaks: [p] for fixed penalty, [ , p] for cumulative penalty

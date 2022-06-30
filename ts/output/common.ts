@@ -29,8 +29,9 @@ import {FontData, FontDataClass, CharOptions, VariantData, DelimiterData, CssFon
 import {OptionList, separateOptions} from '../util/Options.js';
 import {CommonWrapper, CommonWrapperClass} from './common/Wrapper.js';
 import {CommonWrapperFactory} from './common/WrapperFactory.js';
-import {LinebreakVisitor} from './common/LinebreakVisitor.js';
+import {Linebreaks, LinebreakVisitor} from './common/LinebreakVisitor.js';
 import {percent} from '../util/lengths.js';
+import {length2em} from '../util/lengths.js';
 import {StyleList, Styles} from '../util/Styles.js';
 import {StyleList as CssStyleList, CssStyles} from '../util/StyleList.js';
 
@@ -110,7 +111,12 @@ export abstract class CommonOutputJax<
     displayIndent: '0',            // default for indentshift when set to 'auto'
     wrapperFactory: null,          // The wrapper factory to use
     font: null,                    // The FontData object to use
-    cssStyles: null                // The CssStyles object to use
+    cssStyles: null,               // The CssStyles object to use
+    linebreaks: {
+      automatic: true,             // true for automatic linebreaking
+      width: '100%',               // a fixed size or a percentage of the container width
+      LinebreakVisitor: null,      // The LinebreakVisitor to use
+    }
   };
 
   /**
@@ -161,9 +167,14 @@ export abstract class CommonOutputJax<
   /**
    * The linebreak visitor to use for automatic linebreaks
    */
-  public linebreaks: LinebreakVisitor<
+  public linebreaks: Linebreaks<
     N, T, D, CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>, WW, WF, WC, CC, VV, DD, FD, FC
   >;
+
+  /**
+   * The container width for linebreaking;
+   */
+  public containerWidth: number;
 
   /**
    * A map from the nodes in the expression currently being processed to the
@@ -207,9 +218,10 @@ export abstract class CommonOutputJax<
       new defaultFactory<N, T, D, CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
                          WW, WF, WC, CC, VV, DD, FD, FC>();
     this.factory.jax = this;
-    this.linebreaks = new LinebreakVisitor<
-      N, T, D, CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>, WW, WF, WC, CC, VV, DD, FD, FC
-    >(this.factory);
+    const linebreaks = (this.options.linebreaks.automatic ?
+                        (this.options.linebreaks.LinebreakVisitor || LinebreakVisitor) :
+                        Linebreaks) as typeof Linebreaks;
+    this.linebreaks = new linebreaks(this.factory);
     this.cssStyles = this.options.cssStyles || new CssStyles();
     this.font = this.options.font || new defaultFont(fontOptions);
     this.unknownCache = new Map();
@@ -251,8 +263,8 @@ export abstract class CommonOutputJax<
   }
 
   /**
-   * Save the math document, if any, and the math item
    * Set the document where HTML nodes will be created via the adaptor
+   * Set up global values
    * Recursively set the TeX classes for the nodes
    * Set the scaling for the DOM node
    * Create the nodeMap (maps MathML nodes to corresponding wrappers)
@@ -267,11 +279,12 @@ export abstract class CommonOutputJax<
   public toDOM(math: MathItem<N, T, D>, node: N, html: MathDocument<N, T, D> = null) {
     this.setDocument(html);
     this.math = math;
+    this.container = node;
     this.pxPerEm = math.metrics.ex / this.font.params.x_height;
+    this.options.linebreaks.automatic && this.getLinebreakWidth();
     math.root.setTeXclass(null);
     this.setScale(node);
     this.nodeMap = new Map<MmlNode, WW>();
-    this.container = node;
     this.processMath(math.root, node);
     this.nodeMap = null;
     this.executeFilters(this.postFilters, math, html, node);
@@ -302,6 +315,14 @@ export abstract class CommonOutputJax<
   }
 
   /*****************************************************************/
+
+  /**
+   * Determine the linebreak width
+   */
+  public getLinebreakWidth() {
+    const W = this.math.metrics.containerWidth / this.pxPerEm;
+    this.containerWidth = length2em(this.options.linebreaks.width, W, 1, this.pxPerEm);
+  }
 
   /**
    * @override

@@ -502,7 +502,7 @@ export class CommonWrapper<
    * Easy access to the container width
    */
   get containerWidth() {
-    return this.metrics.containerWidth / this.jax.pxPerEm;
+    return this.jax.containerWidth;
   }
 
   /**
