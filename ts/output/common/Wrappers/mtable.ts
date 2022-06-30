@@ -590,6 +590,7 @@ export function CommonMtableMixin<
       for (let i = 0; i < this.numCols; i++) {
         const width = (typeof this.cWidths[i] === 'number' ? this.cWidths[i] as number : null);
         this.stretchColumn(i, width);
+        width && this.breakColumn(i, width);
       }
     }
 
@@ -641,6 +642,13 @@ export function CommonMtableMixin<
         for (const child of stretchy) {
           child.coreMO().getStretchedVariant([W]);
         }
+      }
+    }
+
+    public breakColumn(i: number, W: number) {
+      for (const row of this.tableRows) {
+        const cell = row.getChild(i);
+        cell && cell.getBBox().w > W && cell.childNodes[0].breakToWidth(W);
       }
     }
 
@@ -1125,8 +1133,8 @@ export function CommonMtableMixin<
       //
       // Stretch the rows and columns
       //
-      this.stretchRows();
       this.stretchColumns();
+      this.stretchRows();
     }
 
     /**
