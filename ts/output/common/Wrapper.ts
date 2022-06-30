@@ -499,6 +499,13 @@ export class CommonWrapper<
   }
 
   /**
+   * Easy access to the container width
+   */
+  get containerWidth() {
+    return this.metrics.containerWidth / this.jax.pxPerEm;
+  }
+
+  /**
    * Easy access to the linebreak visitor
    */
   get linebreaks() {

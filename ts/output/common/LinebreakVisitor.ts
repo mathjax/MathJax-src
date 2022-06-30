@@ -242,10 +242,10 @@ export class LinebreakVisitor<
     const FACTORS = this.FACTORS;
     let penalty = Math.floor(this.width - this.w / this.width * FACTORS.widthFactor)
                 + this.depth * FACTORS.nestFactor;
-    const isOpen = (fence || mo.node.texClass === TEXCLASS.OPEN) && form === 'prefix';
-    const isClose = (fence || mo.node.texClass === TEXCLASS.CLOSE) && form === 'postfix';
+    const isOpen = (fence && form === 'prefix') || mo.node.texClass === TEXCLASS.OPEN;
+    const isClose = (fence && form === 'prefix') || mo.node.texClass === TEXCLASS.CLOSE;
     if (isOpen) {
-      penalty += FACTORS.open;
+      penalty += FACTORS.open;  // should depend on previous class?
       this.depth++;
     }
     if (isClose) {

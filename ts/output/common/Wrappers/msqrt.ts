@@ -102,6 +102,10 @@ export interface CommonMsqrt<
    */
   getRootDimens(sbox: BBox, H: Number): number[];
 
+  /**
+   * @return {number}   The (approximate) width of the surd with its root
+   */
+  rootWidth(): number
 }
 
 /**
@@ -220,6 +224,13 @@ export function CommonMsqrtMixin<
       return [0, 0, 0, 0];
     }
 
+    /**
+     * @override
+     */
+    public rootWidth() {
+      return 1.25;  // leave some room for the surd
+    }
+
     /*************************************************************/
 
     /**
@@ -229,11 +240,15 @@ export function CommonMsqrtMixin<
      */
     constructor(factory: WF, node: MmlNode, parent: WW = null) {
       super(factory, node, parent);
+      const base = this.childNodes[this.base];
       const surd = this.createMo('\u221A');
       surd.canStretch(DIRECTION.Vertical);
-      const {h, d} = this.childNodes[this.base].getOuterBBox();
       const t = this.font.params.rule_thickness;
       const p = (this.node.attributes.get('displaystyle') ? this.font.params.x_height : t);
+      const W = this.containerWidth;
+      const rw = this.rootWidth();
+      base.getOuterBBox().w + rw > W && base.breakToWidth(W - rw);
+      const {h, d} = base.getOuterBBox();
       this.surdH = h + d + 2 * t + p / 4;
       surd.getStretchedVariant([this.surdH - d, d], true);
     }

@@ -171,6 +171,15 @@ export function CommonMrootMixin<
       return b + Math.max(0, rbox.d * rbox.rscale);
     }
 
+    /**
+     * @override
+     */
+    public rootWidth() {
+      const bbox = this.childNodes[this.root].getOuterBBox();
+      console.log(.4 + bbox.w * bbox.rscale);
+      return .4 + bbox.w * bbox.rscale;
+    }
+
   } as any as B;
 
 }

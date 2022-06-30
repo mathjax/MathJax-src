@@ -208,7 +208,8 @@ export function CommonMpaddedMixin<
      */
     public computeBBox(bbox: BBox, recompute: boolean = false) {
       this.setBBoxDimens(bbox);
-      if (this.childNodes[0].getOuterBBox().w > bbox.w && this.node.attributes.get('data-overflow') === 'linebreak') {
+      const w = this.childNodes[0].getOuterBBox().w;
+      if (w > bbox.w && this.node.attributes.get('data-overflow') === 'linebreak') {
         this.childNodes[0].breakToWidth(bbox.w);
         this.setBBoxDimens(bbox);
       }
