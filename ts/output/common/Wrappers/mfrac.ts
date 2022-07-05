@@ -200,20 +200,14 @@ export function CommonMfracMixin<
      * @override
      */
     public getFractionBBox(bbox: BBox, display: boolean, t: number) {
-      const num = this.childNodes[0];
-      const den = this.childNodes[1];
-      const dw = 2 * this.pad + .2;
-      const W = this.containerWidth - dw;
-      num.getOuterBBox().w > W && num.breakToWidth(W);
-      den.getOuterBBox().w > W && den.breakToWidth(W);
-      const nbox = num.getOuterBBox();
-      const dbox = den.getOuterBBox();
+      const nbox = this.childNodes[0].getOuterBBox();
+      const dbox = this.childNodes[1].getOuterBBox();
       const tex = this.font.params;
       const a = tex.axis_height;
       const {T, u, v} = this.getTUV(display, t);
       bbox.combine(nbox, 0, a + T + Math.max(nbox.d * nbox.rscale, u));
       bbox.combine(dbox, 0, a - T - Math.max(dbox.h * dbox.rscale, v));
-      bbox.w += dw;
+      bbox.w += 2 * this.pad + .2;
     }
 
     /**

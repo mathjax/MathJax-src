@@ -32,6 +32,7 @@ import {CommonMsub, CommonMsup, CommonMsubsup} from './Wrappers/msubsup.js';
 import {CommonMmultiscripts} from './Wrappers/mmultiscripts.js';
 import {CommonMfenced} from './Wrappers/mfenced.js';
 import {CommonMaction} from './Wrappers/maction.js';
+import {CommonMsqrt} from './Wrappers/msqrt.js';
 import {BBox} from '../../util/BBox.js';
 import {TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 
@@ -164,6 +165,7 @@ export class LinebreakVisitor<
    */
   protected depth: number;
 
+  /******************************************************************************/
   /**
    * Break a line to the given width
    *
@@ -182,7 +184,22 @@ export class LinebreakVisitor<
       (ww as any).setBreakStyle(ww.node.attributes.get('linebreakstyle') || 'before')
       ww.invalidateBBox();
     });
+  }
 
+  /******************************************************************************/
+
+  /**
+   * @param {WW} wrapper   The mrow to break
+   * @param {number} W     The width to break to
+   */
+  protected subBreakToWidth(wrapper: WW, W :number) {
+    const data = {breaks: this.breaks, width: this.width, potential: this.potential, w: this.w, depth: this.depth};
+    this.breakToWidth(wrapper, W);
+    this.breaks = data.breaks;
+    this.width = data.width;
+    this.potential = data.potential;
+    this.w = data.w;
+    this.depth = data.depth;
   }
 
   /**
@@ -191,7 +208,7 @@ export class LinebreakVisitor<
    * @param {WW} wrapper   The mrow to break
    * @param {number} i     The line within that node to break
    */
-  public breakLineToWidth(wrapper: WW, i: number) {
+  protected breakLineToWidth(wrapper: WW, i: number) {
     this.potential = [];
     this.w = 0;
     this.depth = 0;
@@ -246,6 +263,8 @@ export class LinebreakVisitor<
     this.potential.unshift([wrapper, penalty, w, 0, []]);
   }
 
+  /******************************************************************************/
+
   /**
    * @override
    */
@@ -254,6 +273,22 @@ export class LinebreakVisitor<
     super.visitNode(wrapper, i);
     this.depth--;
   }
+
+  /**
+   * @override
+   */
+  public visitDefault(wrapper: WW, i: number) {
+    const bbox = wrapper.getLineBBox(i);
+    if (wrapper.node.isToken || wrapper.node.linebreakContainer) {
+      this.addWidth(bbox);
+    } else {
+      i === 0 && this.addWidth(bbox, bbox.L);
+      this.visitNode(wrapper.childNodes[0], i);
+      i === wrapper.breakCount && this.addWidth(bbox, bbox.R);
+    }
+  }
+
+  /******************************************************************************/
 
   /**
    * @param {WW} wrapper   The MmlMo wrapper
@@ -300,6 +335,8 @@ export class LinebreakVisitor<
     return (lpenalty.length === 1 ? lpenalty[0] : Math.max(1, penalty + lpenalty[1]));
   }
 
+  /******************************************************************************/
+
   /**
    * @param {WW} wrapper   The MmlMspace wrapper
    * @param {number} i     The line within that node to break
@@ -332,6 +369,8 @@ export class LinebreakVisitor<
     return (lpenalty.length === 1 ? lpenalty[0] : Math.max(1, penalty + lpenalty[1]));
   }
 
+  /******************************************************************************/
+
   /**
    * @param {WW} wrapper   The MmlMrow wrapper
    * @param {number} i     The line within that node to break
@@ -354,8 +393,50 @@ export class LinebreakVisitor<
     this.visitMrowNode(wrapper, i);
   }
 
+  /******************************************************************************/
+
   /**
-   * @param {WW} wrapper   The MmlNode wrapper
+   * @param {WW} wrapper   The MmlMFrac wrapper
+   * @param {number} i     The line within that node to break
+   */
+  public visitMfracNode(wrapper: WW, i: number) {
+    if (wrapper.getOuterBBox().w > this.width) {
+      this.subBreakToWidth(wrapper.childNodes[0], this.width);
+      this.subBreakToWidth(wrapper.childNodes[1], this.width);
+      wrapper.getBBox();
+    }
+    this.visitDefault(wrapper, i);
+  }
+
+  /******************************************************************************/
+
+  /**
+   * @param {WW} wrapper   The MmlMsqrt wrapper
+   * @param {number} i     The line within that node to break
+   */
+  public visitMsqrtNode(wrapper: WW, i: number) {
+    if (wrapper.getOuterBBox().w > this.width) {
+      const msqrt = wrapper as any as CommonMsqrt<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+      const base = msqrt.childNodes[msqrt.base];
+      this.subBreakToWidth(base, this.width - msqrt.rootWidth());
+      msqrt.getStretchedSurd();
+      wrapper.getBBox();
+    }
+    this.visitDefault(wrapper, i);
+  }
+
+  /**
+   * @param {WW} wrapper   The MmlMroot wrapper
+   * @param {number} i     The line within that node to break
+   */
+  public visitMrootNode(wrapper: WW, i: number) {
+    this.visitMsqrtNode(wrapper, i);
+  }
+
+  /******************************************************************************/
+
+  /**
+   * @param {WW} wrapper   The MmlMsub wrapper
    * @param {number} i     The line within that node to break
    */
   public visitMsubNode(wrapper: WW, i: number) {
@@ -367,7 +448,7 @@ export class LinebreakVisitor<
   }
 
   /**
-   * @param {WW} wrapper   The MmlNode wrapper
+   * @param {WW} wrapper   The MmlMsup wrapper
    * @param {number} i     The line within that node to break
    */
   public visitMsupNode(wrapper: WW, i: number) {
@@ -379,7 +460,7 @@ export class LinebreakVisitor<
   }
 
   /**
-   * @param {WW} wrapper   The MmlNode wrapper
+   * @param {WW} wrapper   The MmlMsubsup wrapper
    * @param {number} i     The line within that node to break
    */
   public visitMsubsupNode(wrapper: WW, i: number) {
@@ -393,7 +474,7 @@ export class LinebreakVisitor<
   }
 
   /**
-   * @param {WW} wrapper   The MmlNode wrapper
+   * @param {WW} wrapper   The MmlMmultiscripts wrapper
    * @param {number} i     The line within that node to break
    */
   public visitMmultiscriptsNode(wrapper: WW, i: number) {
@@ -410,8 +491,10 @@ export class LinebreakVisitor<
     }
   }
 
+  /******************************************************************************/
+
   /**
-   * @param {WW} wrapper   The MmlNode wrapper
+   * @param {WW} wrapper   The MmlMfenced wrapper
    * @param {number} i     The line within that node to break
    */
   public visitMfencedNode(wrapper: WW, i: number) {
@@ -422,8 +505,10 @@ export class LinebreakVisitor<
     i === wrapper.breakCount && this.addWidth(bbox, bbox.R);
   }
 
+  /******************************************************************************/
+
   /**
-   * @param {WW} wrapper   The MmlNode wrapper
+   * @param {WW} wrapper   The MmlMaction wrapper
    * @param {number} i     The line within that node to break
    */
   public visitMactionNode(wrapper: WW, i: number) {
@@ -432,21 +517,6 @@ export class LinebreakVisitor<
     i === 0 && this.addWidth(bbox, bbox.L);
     this.visitNode(maction.selected, i);
     i === wrapper.breakCount && this.addWidth(bbox, bbox.R);
-  }
-
-  /**
-   * @param {WW} wrapper   The MmlNode wrapper
-   * @param {number} i     The line within that node to break
-   */
-  public visitDefault(wrapper: WW, i: number) {
-    const bbox = wrapper.getLineBBox(i);
-    if (wrapper.node.isToken || wrapper.node.linebreakContainer) {
-      this.addWidth(bbox);
-    } else {
-      i === 0 && this.addWidth(bbox, bbox.L);
-      this.visitNode(wrapper.childNodes[0], i);
-      i === wrapper.breakCount && this.addWidth(bbox, bbox.R);
-    }
   }
 
 }

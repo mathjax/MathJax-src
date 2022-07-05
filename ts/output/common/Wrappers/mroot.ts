@@ -176,7 +176,6 @@ export function CommonMrootMixin<
      */
     public rootWidth() {
       const bbox = this.childNodes[this.root].getOuterBBox();
-      console.log(.4 + bbox.w * bbox.rscale);
       return .4 + bbox.w * bbox.rscale;
     }
 

@@ -173,6 +173,7 @@ export interface CommonMo<
    * Create the mo wrapper for the linebreakmultchar
    */
   getMultChar(): void
+
 }
 
 /**

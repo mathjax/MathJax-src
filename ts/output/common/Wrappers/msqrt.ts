@@ -106,6 +106,11 @@ export interface CommonMsqrt<
    * @return {number}   The (approximate) width of the surd with its root
    */
   rootWidth(): number
+
+  /**
+   * Set the size of the surd to enclose the base
+   */
+  getStretchedSurd(): void;
 }
 
 /**
@@ -231,6 +236,18 @@ export function CommonMsqrtMixin<
       return 1.25;  // leave some room for the surd
     }
 
+    /**
+     * @override
+     */
+    public getStretchedSurd() {
+      const surd = this.childNodes[this.surd] as any as CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+      const t = this.font.params.rule_thickness;
+      const p = (this.node.attributes.get('displaystyle') ? this.font.params.x_height : t);
+      const {h, d} = this.childNodes[this.base].getOuterBBox();
+      this.surdH = h + d + 2 * t + p / 4;
+      surd.getStretchedVariant([this.surdH - d, d], true);
+    }
+
     /*************************************************************/
 
     /**
@@ -240,17 +257,8 @@ export function CommonMsqrtMixin<
      */
     constructor(factory: WF, node: MmlNode, parent: WW = null) {
       super(factory, node, parent);
-      const base = this.childNodes[this.base];
-      const surd = this.createMo('\u221A');
-      surd.canStretch(DIRECTION.Vertical);
-      const t = this.font.params.rule_thickness;
-      const p = (this.node.attributes.get('displaystyle') ? this.font.params.x_height : t);
-      const W = this.containerWidth;
-      const rw = this.rootWidth();
-      base.getOuterBBox().w + rw > W && base.breakToWidth(W - rw);
-      const {h, d} = base.getOuterBBox();
-      this.surdH = h + d + 2 * t + p / 4;
-      surd.getStretchedVariant([this.surdH - d, d], true);
+      this.createMo('\u221A').canStretch(DIRECTION.Vertical);
+      this.getStretchedSurd();
     }
 
     /**
@@ -278,6 +286,14 @@ export function CommonMsqrtMixin<
       bbox.combine(basebox, x + surdbox.w, 0);
       bbox.clean();
       this.setChildPWidths(recompute);
+    }
+
+    /**
+     * @override
+     */
+    public invalidateBBox() {
+      super.invalidateBBox();
+      this.childNodes[this.surd].childNodes[0].invalidateBBox();
     }
 
   } as any as B;
