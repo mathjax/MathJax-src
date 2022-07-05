@@ -1105,9 +1105,9 @@ export class CommonWrapper<
    * @param {string} align         The default alignment for 'auto'
    * @param {string} shift         The default indentshift for 'auto'
    * @param {number} width         The container width for relative shifts
-   * @return {[string, number][]}  The alignment and indentation shift (normnal and last) for the Mo
+   * @return {[string, number][]}  The alignment and indentation shift (normal and last) for the Mo
    */
-  protected processIndent(
+  public processIndent(
     indentalign: string,
     indentshift: string,
     align: string = '',

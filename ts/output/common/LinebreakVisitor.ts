@@ -25,7 +25,7 @@ import {AbstractVisitor} from '../../core/Tree/Visitor.js';
 import {CommonOutputJax} from '../common.js';
 import {CommonWrapperFactory} from './WrapperFactory.js';
 import {FontData, FontDataClass, DelimiterData, VariantData, CharOptions} from './FontData.js';
-import {CommonWrapper, CommonWrapperClass} from './Wrapper.js';
+import {CommonWrapper, CommonWrapperClass, LineBBox} from './Wrapper.js';
 import {CommonMo} from './Wrappers/mo.js';
 import {CommonMspace} from './Wrappers/mspace.js';
 import {CommonMsub, CommonMsup, CommonMsubsup} from './Wrappers/msubsup.js';
@@ -261,9 +261,11 @@ export class LinebreakVisitor<
    */
   public visitMoNode(wrapper: WW, _i: number) {
     const mo = wrapper as any as CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
-    const bbox = mo.getOuterBBox();
+    const bbox = LineBBox.from(mo.getOuterBBox());
+    bbox.getIndentData(mo.node);
     const style = mo.getBreakStyle(mo.node.attributes.get('linebreakstyle') as string);
-    const w = (style === 'after' ? 0 : mo.multChar ? mo.multChar.getBBox().w : bbox.w);
+    const dw = mo.processIndent('', bbox.indentData[1][1], '', bbox.indentData[0][1], this.width)[1];
+    const w = (style === 'after' ? 0 : mo.multChar ? mo.multChar.getBBox().w : bbox.w) + dw;
     const penalty = this.moPenalty(mo);
     if (style === 'before') {
       this.pushBreak(wrapper, penalty, w - (bbox.L + bbox.w + bbox.R));
@@ -303,13 +305,16 @@ export class LinebreakVisitor<
    * @param {number} i     The line within that node to break
    */
   public visitMspaceNode(wrapper: WW, i: number) {
-    this.addWidth(wrapper.getLineBBox(i));
+    const bbox = wrapper.getLineBBox(i);
+    this.addWidth(bbox);
     const attributes = wrapper.node.attributes;
     if (attributes.getExplicit('width') === undefined &&
         attributes.getExplicit('height') === undefined &&
         attributes.getExplicit('depth') === undefined) {
       const penalty = this.mspacePenalty(wrapper as any as CommonMspace<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>);
-      this.pushBreak(wrapper, penalty, 0);
+      bbox.getIndentData(wrapper.node);
+      const dw = wrapper.processIndent('', bbox.indentData[1][1], '', bbox.indentData[0][1], this.width)[1];
+      this.pushBreak(wrapper, penalty, dw);
 //console.log(wrapper.node.toString(), penalty, this.w);
     }
   }
