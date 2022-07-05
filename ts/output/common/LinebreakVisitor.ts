@@ -28,6 +28,7 @@ import {FontData, FontDataClass, DelimiterData, VariantData, CharOptions} from '
 import {CommonWrapper, CommonWrapperClass, LineBBox} from './Wrapper.js';
 import {CommonMo} from './Wrappers/mo.js';
 import {CommonMspace} from './Wrappers/mspace.js';
+import {CommonMfrac} from './Wrappers/mfrac.js';
 import {CommonMsub, CommonMsup, CommonMsubsup} from './Wrappers/msubsup.js';
 import {CommonMmultiscripts} from './Wrappers/mmultiscripts.js';
 import {CommonMfenced} from './Wrappers/mfenced.js';
@@ -400,10 +401,10 @@ export class LinebreakVisitor<
    * @param {number} i     The line within that node to break
    */
   public visitMfracNode(wrapper: WW, i: number) {
-    if (wrapper.getOuterBBox().w > this.width) {
-      this.subBreakToWidth(wrapper.childNodes[0], this.width);
-      this.subBreakToWidth(wrapper.childNodes[1], this.width);
-      wrapper.getBBox();
+    const mfrac = wrapper as any as CommonMfrac<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+    if (!mfrac.node.attributes.get('bevelled') && mfrac.getOuterBBox().w > this.width) {
+      this.subBreakToWidth(mfrac.childNodes[0], this.width);
+      this.subBreakToWidth(mfrac.childNodes[1], this.width);
     }
     this.visitDefault(wrapper, i);
   }
@@ -420,7 +421,6 @@ export class LinebreakVisitor<
       const base = msqrt.childNodes[msqrt.base];
       this.subBreakToWidth(base, this.width - msqrt.rootWidth());
       msqrt.getStretchedSurd();
-      wrapper.getBBox();
     }
     this.visitDefault(wrapper, i);
   }
