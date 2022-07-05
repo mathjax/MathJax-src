@@ -66,14 +66,14 @@ export interface CommonMsqrt<
   readonly base: number;
 
   /**
-   * The index of the surd in childNodes
-   */
-  readonly surd: number;
-
-  /**
    * The index of the root in childNodes (or null if none)
    */
   readonly root: number;
+
+  /**
+   * The surd node
+   */
+  surd: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
 
   /**
    * The requested height of the stretched surd character
@@ -111,6 +111,7 @@ export interface CommonMsqrt<
    * Set the size of the surd to enclose the base
    */
   getStretchedSurd(): void;
+
 }
 
 /**
@@ -188,16 +189,14 @@ export function CommonMsqrtMixin<
     /**
      * @override
      */
-    get surd(): number {
-      return 1;
+    get root(): number {
+      return null;
     }
 
     /**
      * @override
      */
-    get root(): number {
-      return null;
-    }
+    public surd: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
 
     /**
      * @override
@@ -240,12 +239,11 @@ export function CommonMsqrtMixin<
      * @override
      */
     public getStretchedSurd() {
-      const surd = this.childNodes[this.surd] as any as CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
       const t = this.font.params.rule_thickness;
       const p = (this.node.attributes.get('displaystyle') ? this.font.params.x_height : t);
       const {h, d} = this.childNodes[this.base].getOuterBBox();
       this.surdH = h + d + 2 * t + p / 4;
-      surd.getStretchedVariant([this.surdH - d, d], true);
+      this.surd.getStretchedVariant([this.surdH - d, d], true);
     }
 
     /*************************************************************/
@@ -257,24 +255,16 @@ export function CommonMsqrtMixin<
      */
     constructor(factory: WF, node: MmlNode, parent: WW = null) {
       super(factory, node, parent);
-      this.createMo('\u221A').canStretch(DIRECTION.Vertical);
+      this.surd = this.createMo('\u221A');
+      this.surd.canStretch(DIRECTION.Vertical);
       this.getStretchedSurd();
     }
 
     /**
      * @override
      */
-    public createMo(text: string): CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-      const node = super.createMo(text);
-      this.childNodes.push(node as any as WW);
-      return node;
-    }
-
-    /**
-     * @override
-     */
     public computeBBox(bbox: BBox, recompute: boolean = false) {
-      const surdbox = this.childNodes[this.surd].getBBox();
+      const surdbox = this.surd.getBBox();
       const basebox = new BBox(this.childNodes[this.base].getOuterBBox());
       const q = this.getPQ(surdbox)[1];
       const t = this.font.params.rule_thickness;
@@ -293,7 +283,7 @@ export function CommonMsqrtMixin<
      */
     public invalidateBBox() {
       super.invalidateBBox();
-      this.childNodes[this.surd].childNodes[0].invalidateBBox();
+      this.surd.childNodes[0].invalidateBBox();
     }
 
   } as any as B;

@@ -176,7 +176,7 @@ export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
     };
 
     /**
-     * An mop element to use for bevelled fractions
+     * An mo element to use for bevelled fractions
      */
     protected bevel: ChtmlMoNTD<N, T, D>;
 
