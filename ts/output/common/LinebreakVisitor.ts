@@ -135,10 +135,11 @@ export class LinebreakVisitor<
    * Penalties for other factors
    */
   protected FACTORS = {
-    widthFactor:   800,
-    nestFactor:    400,
-    open:         -500,
-    close:         500
+    widthFactor:   500,        // multiplier for uncovered width ratio
+    nestFactor:    400,        // multiplier for nesting depth
+    open:         -500,        // boost for an open fence
+    close:         500,        // boost for a close fence
+    fuzzFactor:    1.05        // fuzz factor for comparing penalties
   }
 
   /**
@@ -157,7 +158,7 @@ export class LinebreakVisitor<
   protected width: number;
 
   /**
-   * The accumulated with since the last best breakpoint
+   * The accumulated width since the last best breakpoint
    */
   protected w: number;
 
@@ -217,18 +218,17 @@ export class LinebreakVisitor<
   }
 
   /**
-   * @param {BBox} bbox     The BBox of the width to be added
-   * @param {number} w      The width to add (defaults to full wifth of bbox)
-   * @param {boolean} add   True if add width into break array
+   * @param {BBox} bbox       The BBox of the width to be added
+   * @param {number} w        The width to add (defaults to full width of bbox)
    */
-  protected addWidth(bbox: BBox, w: number = null, add: boolean = true) {
+  protected addWidth(bbox: BBox, w: number = null) {
     if (w === null) {
       w = (bbox.L + bbox.w + bbox.R);
     }
     if (!w) return;
     w *= bbox.rscale;
     this.w += w;
-    if (this.potential.length && add) {
+    if (this.potential.length) {
       this.potential[0][3] += w;
     }
     this.processBreak();
@@ -255,7 +255,7 @@ export class LinebreakVisitor<
    */
   protected pushBreak(wrapper: WW, penalty: number, w: number) {
     if (penalty >= this.PENALTY.nobreak[0]) return;
-    while (this.potential.length && this.potential[0][1] > penalty) {
+    while (this.potential.length && this.potential[0][1] > this.FACTORS.fuzzFactor * penalty) {
       const data = this.potential.shift();
       if (this.potential.length) {
         this.potential[0][3] += data[3];
@@ -333,12 +333,14 @@ export class LinebreakVisitor<
   protected moPenalty(mo: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): number {
     const {linebreak, fence, form} = mo.node.attributes.getList('linebreak', 'fence', 'form');
     const FACTORS = this.FACTORS;
-    let penalty = Math.floor(this.width - this.w / this.width * FACTORS.widthFactor)
+    let penalty = Math.floor((this.width - this.w) / this.width * FACTORS.widthFactor)
                 + this.depth * FACTORS.nestFactor;
     const isOpen = (fence && form === 'prefix') || mo.node.texClass === TEXCLASS.OPEN;
     const isClose = (fence && form === 'prefix') || mo.node.texClass === TEXCLASS.CLOSE;
     if (isOpen) {
-      penalty += FACTORS.open;  // should depend on previous class?
+      if (mo.node.prevClass === TEXCLASS.BIN || mo.node.prevClass === TEXCLASS.REL) {
+        penalty += FACTORS.open;
+      }
       this.depth++;
     }
     if (isClose) {
