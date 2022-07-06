@@ -264,6 +264,18 @@ export class LinebreakVisitor<
     this.potential.unshift([wrapper, penalty, w, 0, []]);
   }
 
+  /**
+   * @param {WW} wrapper          The node whose border/padding is needed
+   * @return {[number, number]}   The left and right border+padding values
+   */
+  protected getBorderLR(wrapper: WW): [number, number] {
+    const data = wrapper.styleData;
+    if (!data) return [0, 0];
+    const border = data?.border?.width || [0, 0, 0, 0];
+    const padding = data?.padding || [0, 0, 0, 0];
+    return [border[3] + padding[3], border[1] + padding[1]];
+  }
+
   /******************************************************************************/
 
   /**
@@ -283,9 +295,10 @@ export class LinebreakVisitor<
     if (wrapper.node.isToken || wrapper.node.linebreakContainer) {
       this.addWidth(bbox);
     } else {
-      i === 0 && this.addWidth(bbox, bbox.L);
+      const [L, R] = this.getBorderLR(wrapper);
+      i === 0 && this.addWidth(bbox, bbox.L + L);
       this.visitNode(wrapper.childNodes[0], i);
-      i === wrapper.breakCount && this.addWidth(bbox, bbox.R);
+      i === wrapper.breakCount && this.addWidth(bbox, bbox.R + R);
     }
   }
 
@@ -380,10 +393,12 @@ export class LinebreakVisitor<
     const line = wrapper.lineBBox[i] || wrapper.getLineBBox(i);
     const [start, startL] = line.start || [0,0];
     const [end, endL]  = line.end || [wrapper.childNodes.length - 1, 0];
-    this.addWidth(line, line.L);
+    const [L, R] = this.getBorderLR(wrapper);
+    this.addWidth(line, line.L + L);
     for (let i = start; i <= end; i++) {
       this.visitNode(wrapper.childNodes[i], i === start ? startL : i === end ? endL : 0);
     }
+    this.addWidth(line, line.R + R);
   }
 
   /**
@@ -444,7 +459,8 @@ export class LinebreakVisitor<
     const msub = wrapper as any as CommonMsub<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
     const x = msub.getOffset()[0];
     const sbox = msub.scriptChild.getOuterBBox();
-    this.addWidth(wrapper.getLineBBox(i), x + sbox.rscale * sbox.w + msub.font.params.scriptspace);
+    const [L, R] = this.getBorderLR(wrapper);
+    this.addWidth(msub.getLineBBox(i), x + L + sbox.rscale * sbox.w + msub.font.params.scriptspace + R);
   }
 
   /**
@@ -456,7 +472,8 @@ export class LinebreakVisitor<
     const msup = wrapper as any as CommonMsup<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
     const x = msup.getOffset()[0];
     const sbox = msup.scriptChild.getOuterBBox();
-    this.addWidth(wrapper.getLineBBox(i), x + sbox.rscale * sbox.w + msup.font.params.scriptspace);
+    const [L, R] = this.getBorderLR(wrapper);
+    this.addWidth(msup.getLineBBox(i), x + L + sbox.rscale * sbox.w + msup.font.params.scriptspace + R);
   }
 
   /**
@@ -470,7 +487,8 @@ export class LinebreakVisitor<
     const supbox = msubsup.supChild.getOuterBBox();
     const x = msubsup.getAdjustedIc();
     const w = Math.max(subbox.rscale * subbox.w, x + supbox.rscale * supbox.w) + msubsup.font.params.scriptspace;
-    this.addWidth(wrapper.getLineBBox(i), w);
+    const [L, R] = this.getBorderLR(wrapper);
+    this.addWidth(wrapper.getLineBBox(i), L + w + R);
   }
 
   /**
@@ -500,9 +518,10 @@ export class LinebreakVisitor<
   public visitMfencedNode(wrapper: WW, i: number) {
     const mfenced = wrapper as any as CommonMfenced<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
     const bbox = wrapper.getLineBBox(i);
-    i === 0 && this.addWidth(bbox, bbox.L);
+    const [L, R] = this.getBorderLR(wrapper);
+    i === 0 && this.addWidth(bbox, bbox.L + L);
     this.visitNode(mfenced.mrow as any as WW, i);
-    i === wrapper.breakCount && this.addWidth(bbox, bbox.R);
+    i === wrapper.breakCount && this.addWidth(bbox, bbox.R + R);
   }
 
   /******************************************************************************/
@@ -514,9 +533,10 @@ export class LinebreakVisitor<
   public visitMactionNode(wrapper: WW, i: number) {
     const maction = wrapper as any as CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
     const bbox = wrapper.getLineBBox(i);
-    i === 0 && this.addWidth(bbox, bbox.L);
+    const [L, R] = this.getBorderLR(wrapper);
+    i === 0 && this.addWidth(bbox, bbox.L + L);
     this.visitNode(maction.selected, i);
-    i === wrapper.breakCount && this.addWidth(bbox, bbox.R);
+    i === wrapper.breakCount && this.addWidth(bbox, bbox.R + R);
   }
 
 }
