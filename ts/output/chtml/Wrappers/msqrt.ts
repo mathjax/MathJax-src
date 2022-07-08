@@ -45,14 +45,7 @@ export interface ChtmlMsqrtNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMsq
   N, T, D,
   CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
   ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {
-
-  /**
-   * @override
-   */
-  surd: ChtmlMoNTD<N, T, D>;
-
-}
+> {}
 
 /**
  * The ChtmlMsqrtClass interface for the CHTML Msqrt wrapper
@@ -123,7 +116,7 @@ export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
      * @override
      */
     public toCHTML(parents: N[]) {
-      const surd = this.surd;
+      const surd = this.surd as ChtmlMoNTD<N, T, D>;
       const base = this.childNodes[this.base];
       //
       //  Get the parameters for the spacing of the parts

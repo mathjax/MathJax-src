@@ -147,8 +147,8 @@ export class LinebreakVisitor<
    * Penalties for the various line breaks: [p] for fixed penalty, [ , p] for cumulative penalty
    */
   protected PENALTY: {[key: string]: (p: number) => number} = {
-    newline:   p => 0,
-    nobreak:   p => NOBREAK,
+    newline:   _p => 0,
+    nobreak:   _p => NOBREAK,
     goodbreak: p => p - 200 * this.state.depth,
     badbreak:  p => p + 200 * this.state.depth,
     auto:      p => p,
@@ -284,7 +284,7 @@ export class LinebreakVisitor<
     const state = this.state;
     while (state.potential.length && state.w > this.state.width) {
       const br = state.potential.pop();
-      const [ww, p, pw, dw, w] = br;
+      const [ww, , pw, dw, w] = br;
       state.breaks.add(ww);
       state.w = state.potential.reduce((w, brk) => w + brk[4], dw + w);
       if (state.prevBreak && state.prevWidth + pw <= state.width) {
@@ -410,9 +410,9 @@ export class LinebreakVisitor<
   }
 
   /**
-   * @param {WW} mo   The mo whose preceeding mo node is needed
+   * @param {CommonMo} mo   The mo whose preceeding mo node is needed
    */
-  protected getPrevious(mo: WW): MmlNode {
+  protected getPrevious(mo: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): MmlNode | null {
     let child = mo.node;
     let parent = child.parent;
     let i = parent.childIndex(child);
@@ -421,7 +421,7 @@ export class LinebreakVisitor<
       parent = child.parent;
       i = parent.childIndex(child);
     }
-    if (!parent || !i) return;
+    if (!parent || !i) return null;
     const prev = parent.childNodes[i - 1];
     return (prev.isEmbellished ? prev.coreMO() : null);
   }

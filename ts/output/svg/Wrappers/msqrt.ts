@@ -50,11 +50,6 @@ export interface SvgMsqrtNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMsqrt<
    */
   dx: number;
 
-  /**
-   * @override
-   */
-  surd: SvgMoNTD<N, T, D>;
-
 }
 
 /**
@@ -121,7 +116,7 @@ export const SvgMsqrt = (function <N, T, D>(): SvgMsqrtClass<N, T, D> {
      * @override
      */
     public toSVG(parents: N[]) {
-      const surd = this.surd;
+      const surd = this.surd as SvgMoNTD<N, T, D>;
       const base = this.childNodes[this.base];
       const root = (this.root ? this.childNodes[this.root] : null);
       //
