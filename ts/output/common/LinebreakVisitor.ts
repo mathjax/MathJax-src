@@ -157,39 +157,67 @@ export class LinebreakVisitor<
   /**
    * Penalties for other factors
    */
-  protected FACTORS: {[key: string]: (p: number) => number} = {
+  protected FACTORS: {
+    [key: string]: (p: number, mo?: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>) => number
+  } = {
     //
     // Adjust for nesting depth
     //
-    depth: (p => p + 800 * this.state.depth),
+    depth: p => p + 800 * this.state.depth,
     //
     // Adjust for width (avoids short lines)
     //
-    width: (p => p + Math.floor((this.state.width - this.state.w) / this.state.width * 2500)),
+    width: p => p + Math.floor((this.state.width - this.state.w) / this.state.width * 2500),
     //
     // Adjust for ratio of width to remainder (avoids short last lines)
     //
-    tail: (p => p + Math.floor(this.state.width / Math.max(.0001, this.state.mathLeft - this.state.w) * 500)),
-    //
-    // Adjust for an open fence following a BIN/REL/OP
-    //
-    openOp: (p => p + 5000),
+    tail: p => p + Math.floor(this.state.width / Math.max(.0001, this.state.mathLeft - this.state.w) * 500),
     //
     // Adjust for an open fence
     //
-    open: (p => p - 500),
+    open: (p, mo) => {
+      const prevClass = mo.node.prevClass;
+      if (prevClass === TEXCLASS.BIN || prevClass === TEXCLASS.REL || prevClass === TEXCLASS.OP) {
+        return p + 5000;
+      }
+      const prev = this.getPrevious(mo);
+      if (prev && (prev.attributes.get('form') !== 'postfix' || prev.attributes.get('linebreak') === 'nobreak')) {
+        return p + 5000;
+      }
+      const parent = mo.node.Parent;
+      if (parent?.isKind('mmultiscripts')) {
+        const prescripts = !!parent.childNodes.filter(node => node.isKind('mprescripts')).length;
+        if (prescripts) return NOBREAK;
+      }
+      return p - 500;
+    },
     //
     // Adjust for a close fence
     //
-    close: (p => p + 500),
+    close: (p, mo) => {
+      const parent = mo.node.Parent;
+      if (parent?.isKind('msubsup') &&
+          !(parent.isKind('mmultiscripts') && parent.childNodes[1]?.isKind('mprescripts'))) {
+        return NOBREAK;
+      }
+      return p + 500;
+    },
     //
     // Adjust for a separator (TeX doesn't break at commas, for example)
     //
-    separator: (p => p + 500),
+    separator: p => p + 500,
     //
     // Fuzz factor for comparing penalties
     //
-    fuzz: (p => p * .99),
+    fuzz: p => p * .99,
+  };
+
+  /**
+   * Penalties for tex classes
+   */
+  protected TEXCLASS: {[key: string]: (p: number) => number} = {
+    [TEXCLASS.BIN]: p => p - 250,  // binary operators are good breakpoints
+    [TEXCLASS.REL]: p => p - 500,  // relations are better breakpoints
   };
 
   /**
@@ -206,7 +234,6 @@ export class LinebreakVisitor<
    */
   public breakToWidth(wrapper: WW, W: number) {
     const state = this.state;
-// state && console.log('----------->');
     this.state = this.createState(wrapper);
     this.state.width = W;
     const n = wrapper.breakCount;
@@ -218,7 +245,6 @@ export class LinebreakVisitor<
       (ww as any).setBreakStyle(ww.node.attributes.get('linebreakstyle') || 'before');
       ww.invalidateBBox();
     });
-// state && console.log('<-----------');
     this.state = state;
   }
 
@@ -389,23 +415,14 @@ export class LinebreakVisitor<
     const isOpen = (fence && form === 'prefix') || mo.node.texClass === TEXCLASS.OPEN;
     const isClose = (fence && form === 'postfix') || mo.node.texClass === TEXCLASS.CLOSE;
     if (isOpen) {
-      const prevClass = mo.node.prevClass;
-      if (prevClass === TEXCLASS.BIN || prevClass === TEXCLASS.REL || prevClass === TEXCLASS.OP) {
-        penalty = FACTORS.openOp(penalty);
-      } else {
-        const prev = this.getPrevious(mo);
-        if (prev && prev.attributes.get('form') !== 'postfix' || prev.attributes.get('linebreak') === 'nobreak') {
-          penalty = FACTORS.openOp(penalty);
-        } else {
-          penalty = FACTORS.open(penalty);
-        }
-      }
+      penalty = FACTORS.open(penalty, mo);
       this.state.depth++;
     }
     if (isClose) {
-      penalty = FACTORS.close(penalty);
+      penalty = FACTORS.close(penalty, mo);
       this.state.depth--;
     }
+    penalty = (this.TEXCLASS[mo.node.texClass] || (p => p))(penalty);
     return (this.PENALTY[linebreak as string] || (p => p))(FACTORS.depth(penalty));
   }
 
