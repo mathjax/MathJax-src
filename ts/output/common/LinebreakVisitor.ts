@@ -42,6 +42,11 @@ import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 /************************************************************************************/
 
 /**
+ * Breaks with penalties above this are ignored
+ */
+export const NOBREAK = 1000000;
+
+/**
  * The mo/mspace for a break, its penalty, the width before the break,
  * the width + indent of the node after the break, and the width up to
  * the next break.
@@ -141,26 +146,50 @@ export class LinebreakVisitor<
   /**
    * Penalties for the various line breaks: [p] for fixed penalty, [ , p] for cumulative penalty
    */
-  protected PENALTY: {[key: string]: number[]} = {
-    newline:         [0],
-    nobreak:   [1000000],
-    goodbreak: [ , -200],
-    badbreak:  [ , +200],
-    auto:         [ , 0],
+  protected PENALTY: {[key: string]: (p: number) => number} = {
+    newline:   p => 0,
+    nobreak:   p => NOBREAK,
+    goodbreak: p => p - 200 * this.state.depth,
+    badbreak:  p => p + 200 * this.state.depth,
+    auto:      p => p,
   };
 
   /**
    * Penalties for other factors
    */
-  protected FACTORS = {
-    widthFactor:  2500,        // multiplier for uncovered width ratio
-    nestFactor:    800,        // multiplier for nesting depth
-    tailFactor:    500,        // multiplier for ratio of width to remainder (avoids short last lines)
-    openOp:       5000,        // boost for an open fence following a BIN/REL/OP
-    open:         -500,        // boost for an open fence
-    close:         500,        // boost for a close fence
-    separator:     500,        // boost for a separator (TeX doesn't break at commas, for example)
-    fuzzFactor:    .99,        // fuzz factor for comparing penalties
+  protected FACTORS: {[key: string]: (p: number) => number} = {
+    //
+    // Adjust for nesting depth
+    //
+    depth: (p => p + 800 * this.state.depth),
+    //
+    // Adjust for width (avoids short lines)
+    //
+    width: (p => p + Math.floor((this.state.width - this.state.w) / this.state.width * 2500)),
+    //
+    // Adjust for ratio of width to remainder (avoids short last lines)
+    //
+    tail: (p => p + Math.floor(this.state.width / Math.max(.0001, this.state.mathLeft - this.state.w) * 500)),
+    //
+    // Adjust for an open fence following a BIN/REL/OP
+    //
+    openOp: (p => p + 5000),
+    //
+    // Adjust for an open fence
+    //
+    open: (p => p - 500),
+    //
+    // Adjust for a close fence
+    //
+    close: (p => p + 500),
+    //
+    // Adjust for a separator (TeX doesn't break at commas, for example)
+    //
+    separator: (p => p + 500),
+    //
+    // Fuzz factor for comparing penalties
+    //
+    fuzz: (p => p * .99),
   };
 
   /**
@@ -278,8 +307,8 @@ export class LinebreakVisitor<
    */
   protected pushBreak(wrapper: WW, penalty: number, w: number) {
     const state = this.state;
-    if (penalty >= this.PENALTY.nobreak[0]) return;
-    while (state.potential.length && state.potential[0][1] > this.FACTORS.fuzzFactor * penalty) {
+    if (penalty >= NOBREAK) return;
+    while (state.potential.length && state.potential[0][1] > this.FACTORS.fuzz(penalty)) {
       const data = state.potential.shift();
       if (state.potential.length) {
         state.potential[0][4] += data[4];
@@ -356,31 +385,28 @@ export class LinebreakVisitor<
   protected moPenalty(mo: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): number {
     const {linebreak, fence, form} = mo.node.attributes.getList('linebreak', 'fence', 'form');
     const FACTORS = this.FACTORS;
-    let penalty = Math.floor((this.state.width - this.state.w) / this.state.width * FACTORS.widthFactor)
-                + this.state.depth * FACTORS.nestFactor;
+    let penalty = FACTORS.tail(FACTORS.width(0));
     const isOpen = (fence && form === 'prefix') || mo.node.texClass === TEXCLASS.OPEN;
     const isClose = (fence && form === 'postfix') || mo.node.texClass === TEXCLASS.CLOSE;
     if (isOpen) {
       const prevClass = mo.node.prevClass;
       if (prevClass === TEXCLASS.BIN || prevClass === TEXCLASS.REL || prevClass === TEXCLASS.OP) {
-        penalty += FACTORS.openOp;
+        penalty = FACTORS.openOp(penalty);
       } else {
         const prev = this.getPrevious(mo);
         if (prev && prev.attributes.get('form') !== 'postfix' || prev.attributes.get('linebreak') === 'nobreak') {
-          penalty += FACTORS.openOp;
+          penalty = FACTORS.openOp(penalty);
         } else {
-          penalty += FACTORS.open;
+          penalty = FACTORS.open(penalty);
         }
       }
       this.state.depth++;
     }
     if (isClose) {
-      penalty += FACTORS.close;
+      penalty = FACTORS.close(penalty);
       this.state.depth--;
     }
-    penalty += this.state.width / Math.max(.0001, this.state.mathLeft - this.state.w) * FACTORS.tailFactor;
-    const lpenalty = this.PENALTY[linebreak as string] || [ , 0];
-    return (lpenalty.length === 1 ? lpenalty[0] : Math.max(1, penalty + lpenalty[1] * this.state.depth));
+    return (this.PENALTY[linebreak as string] || (p => p))(FACTORS.depth(penalty));
   }
 
   /**
@@ -427,10 +453,8 @@ export class LinebreakVisitor<
   protected mspacePenalty(mspace: CommonMspace<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): number {
     const linebreak = mspace.node.attributes.get('linebreak');
     const FACTORS = this.FACTORS;
-    let penalty = Math.floor(this.state.width - this.state.w / this.state.width * FACTORS.widthFactor)
-                + this.state.depth * FACTORS.nestFactor;
-    const lpenalty = this.PENALTY[linebreak as string] || [ , 0];
-    return (lpenalty.length === 1 ? lpenalty[0] : Math.max(1, penalty + lpenalty[1] * this.depth));
+    let penalty = FACTORS.tail(FACTORS.width(0));
+    return (this.PENALTY[linebreak as string] || (p => p))(FACTORS.depth(penalty));
   }
 
   /******************************************************************************/
