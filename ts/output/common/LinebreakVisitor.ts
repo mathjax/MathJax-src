@@ -57,8 +57,10 @@ export interface StateData<WW> {
   width: number;                // The maximum width for the lines
   w: number;                    // The accumulated width since the last best breakpoint
   prevWidth: number;            // The width of the porevious line
-  prevBreak: WW;                // The most recent breakpoint used
+  prevBreak: BreakData<WW>;     // The most recent breakpoint used
   depth: number;                // The nesting depth of the active node
+  mathWidth: number;            // The full width of the unbroken math
+  mathLeft: number;             // The amount of width left after the most recent break
 }
 
 /************************************************************************************/
@@ -153,11 +155,12 @@ export class LinebreakVisitor<
   protected FACTORS = {
     widthFactor:  2500,        // multiplier for uncovered width ratio
     nestFactor:    800,        // multiplier for nesting depth
+    tailFactor:    500,        // multiplier for ratio of width to remainder (avoids short last lines)
     openOp:       5000,        // boost for an open fence following a BIN/REL/OP
     open:         -500,        // boost for an open fence
     close:         500,        // boost for a close fence
     separator:     500,        // boost for a separator (TeX doesn't break at commas, for example)
-    fuzzFactor:    .99         // fuzz factor for comparing penalties
+    fuzzFactor:    .99,        // fuzz factor for comparing penalties
   };
 
   /**
@@ -175,7 +178,7 @@ export class LinebreakVisitor<
   public breakToWidth(wrapper: WW, W: number) {
     const state = this.state;
 // state && console.log('----------->');
-    this.state = this.createState();
+    this.state = this.createState(wrapper);
     this.state.width = W;
     const n = wrapper.breakCount;
     for (let i = 0; i <= n; i++) {
@@ -195,7 +198,8 @@ export class LinebreakVisitor<
   /**
    * @return {StateData<WW>}  The new state object
    */
-  protected createState(): StateData<WW> {
+  protected createState(wrapper: WW): StateData<WW> {
+    const mathWidth = wrapper.getBBox().w;
     return {
       breaks: new Set<WW>(),
       potential: [],
@@ -203,7 +207,9 @@ export class LinebreakVisitor<
       w: 0,
       prevWidth: 0,
       prevBreak: null,
-      depth: 0
+      depth: 0,
+      mathWidth: mathWidth,
+      mathLeft: mathWidth
     };
   }
 
@@ -223,6 +229,8 @@ export class LinebreakVisitor<
     this.visitNode(wrapper, i);
   }
 
+  /******************************************************************************/
+
   /**
    * @param {BBox} bbox       The BBox of the width to be added
    * @param {number} w        The width to add (defaults to full width of bbox)
@@ -235,7 +243,7 @@ export class LinebreakVisitor<
     w *= bbox.rscale;
     this.state.w += w;
     if (this.state.potential.length) {
-      this.state.potential[0][3] += w;
+      this.state.potential[0][4] += w;
     }
     this.processBreak();
   }
@@ -246,21 +254,19 @@ export class LinebreakVisitor<
   protected processBreak() {
     const state = this.state;
     while (state.potential.length && state.w > this.state.width) {
-      const [ww, p, pw, dw, w] = state.potential.pop();
-// console.log('@@ break at', ww.node.toString(), p, pw, state.prevWidth);
+      const br = state.potential.pop();
+      const [ww, p, pw, dw, w] = br;
       state.breaks.add(ww);
-      state.w = state.potential.reduce((w, brk) => w + brk[3], dw + w);
+      state.w = state.potential.reduce((w, brk) => w + brk[4], dw + w);
       if (state.prevBreak && state.prevWidth + pw <= state.width) {
-// console.log('>> unbreak', state.prevBreak ? state.prevBreak.node.toString() : 'none');
-        state.breaks.delete(state.prevBreak);
+        state.breaks.delete(state.prevBreak[0]);
         state.prevWidth += pw;
       } else {
-        state.prevWidth = pw;
+        state.prevWidth = pw + dw;
       }
       state.potential.forEach(data => data[2] -= pw);
-      state.prevBreak = ww;
-// console.log('>> potential', '[' + state.potential.map(data => data[0].node.toString()).reverse().join(', ') + ']');
-// console.log('>> prev width', state.prevWidth);
+      state.prevBreak = br;
+      state.mathLeft -= pw;
     }
   }
 
@@ -272,18 +278,14 @@ export class LinebreakVisitor<
    */
   protected pushBreak(wrapper: WW, penalty: number, w: number) {
     const state = this.state;
-// console.log('**', wrapper.node.toString()
-//            .replace(/[\u2061-\u2064]/g, (c) => '\\u' + c.codePointAt(0).toString(16).toUpperCase()), penalty, state.w);
     if (penalty >= this.PENALTY.nobreak[0]) return;
     while (state.potential.length && state.potential[0][1] > this.FACTORS.fuzzFactor * penalty) {
       const data = state.potential.shift();
-// console.log('-- dropping', data[0].node.toString());
       if (state.potential.length) {
-        state.potential[0][3] += data[3];
+        state.potential[0][4] += data[4];
       }
     }
-// console.log('-- keeping', wrapper.node.toString(), penalty);
-    state.potential.unshift([wrapper, penalty, state.w, w, 0]);
+    state.potential.unshift([wrapper, penalty, state.w - (state.prevBreak?.[3] || 0), w, 0]);
   }
 
   /**
@@ -338,14 +340,13 @@ export class LinebreakVisitor<
     const dw = mo.processIndent('', bbox.indentData[1][1], '', bbox.indentData[0][1], this.state.width)[1];
     const penalty = this.moPenalty(mo);
     if (style === 'before') {
-      this.pushBreak(wrapper, penalty, dw);
+      this.pushBreak(wrapper, penalty, dw - bbox.L);
       this.addWidth(bbox);
     } else {
       this.addWidth(bbox);
       const w = (style === 'after' ? 0 : mo.multChar ? mo.multChar.getBBox().w : bbox.w) + dw;
       this.pushBreak(wrapper, penalty, w);
     }
-// console.log(wrapper.node.toString(), penalty, this.state.w);
   }
 
   /**
@@ -365,7 +366,6 @@ export class LinebreakVisitor<
         penalty += FACTORS.openOp;
       } else {
         const prev = this.getPrevious(mo);
-        console.log(prev.toString(), mo.node.toString(), prev.attributes.get('form'));
         if (prev && prev.attributes.get('form') !== 'postfix' || prev.attributes.get('linebreak') === 'nobreak') {
           penalty += FACTORS.openOp;
         } else {
@@ -378,12 +378,13 @@ export class LinebreakVisitor<
       penalty += FACTORS.close;
       this.state.depth--;
     }
+    penalty += this.state.width / Math.max(.0001, this.state.mathLeft - this.state.w) * FACTORS.tailFactor;
     const lpenalty = this.PENALTY[linebreak as string] || [ , 0];
-    return (lpenalty.length === 1 ? lpenalty[0] : Math.max(1, penalty + lpenalty[1]));
+    return (lpenalty.length === 1 ? lpenalty[0] : Math.max(1, penalty + lpenalty[1] * this.state.depth));
   }
 
   /**
-   * @param {WW} mo   The mo whose previous node is needed
+   * @param {WW} mo   The mo whose preceeding mo node is needed
    */
   protected getPrevious(mo: WW): MmlNode {
     let child = mo.node;
@@ -416,7 +417,6 @@ export class LinebreakVisitor<
       bbox.getIndentData(wrapper.node);
       const dw = wrapper.processIndent('', bbox.indentData[1][1], '', bbox.indentData[0][1], this.state.width)[1];
       this.pushBreak(wrapper, penalty, dw);
-// console.log(wrapper.node.toString(), penalty, this.state.w);
     }
   }
 
@@ -430,7 +430,7 @@ export class LinebreakVisitor<
     let penalty = Math.floor(this.state.width - this.state.w / this.state.width * FACTORS.widthFactor)
                 + this.state.depth * FACTORS.nestFactor;
     const lpenalty = this.PENALTY[linebreak as string] || [ , 0];
-    return (lpenalty.length === 1 ? lpenalty[0] : Math.max(1, penalty + lpenalty[1]));
+    return (lpenalty.length === 1 ? lpenalty[0] : Math.max(1, penalty + lpenalty[1] * this.depth));
   }
 
   /******************************************************************************/
