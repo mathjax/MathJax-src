@@ -37,6 +37,7 @@ import {CommonMsqrt} from './Wrappers/msqrt.js';
 import {BBox} from '../../util/BBox.js';
 import {TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import {OPTABLE} from '../../core/MmlTree/OperatorDictionary.js';
+import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 
 /************************************************************************************/
 
@@ -152,6 +153,7 @@ export class LinebreakVisitor<
   protected FACTORS = {
     widthFactor:  2500,        // multiplier for uncovered width ratio
     nestFactor:    800,        // multiplier for nesting depth
+    openOp:       5000,        // boost for an open fence following a BIN/REL/OP
     open:         -500,        // boost for an open fence
     close:         500,        // boost for a close fence
     separator:     500,        // boost for a separator (TeX doesn't break at commas, for example)
@@ -358,8 +360,17 @@ export class LinebreakVisitor<
     const isOpen = (fence && form === 'prefix') || mo.node.texClass === TEXCLASS.OPEN;
     const isClose = (fence && form === 'postfix') || mo.node.texClass === TEXCLASS.CLOSE;
     if (isOpen) {
-      if (mo.node.prevClass === TEXCLASS.BIN || mo.node.prevClass === TEXCLASS.REL) {
-        penalty += FACTORS.open;
+      const prevClass = mo.node.prevClass;
+      if (prevClass === TEXCLASS.BIN || prevClass === TEXCLASS.REL || prevClass === TEXCLASS.OP) {
+        penalty += FACTORS.openOp;
+      } else {
+        const prev = this.getPrevious(mo);
+        console.log(prev.toString(), mo.node.toString(), prev.attributes.get('form'));
+        if (prev && prev.attributes.get('form') !== 'postfix' || prev.attributes.get('linebreak') === 'nobreak') {
+          penalty += FACTORS.openOp;
+        } else {
+          penalty += FACTORS.open;
+        }
       }
       this.state.depth++;
     }
@@ -369,6 +380,23 @@ export class LinebreakVisitor<
     }
     const lpenalty = this.PENALTY[linebreak as string] || [ , 0];
     return (lpenalty.length === 1 ? lpenalty[0] : Math.max(1, penalty + lpenalty[1]));
+  }
+
+  /**
+   * @param {WW} mo   The mo whose previous node is needed
+   */
+  protected getPrevious(mo: WW): MmlNode {
+    let child = mo.node;
+    let parent = child.parent;
+    let i = parent.childIndex(child);
+    while (parent && (parent.notParent || parent.isKind('mrow')) && i === 0) {
+      child = parent;
+      parent = child.parent;
+      i = parent.childIndex(child);
+    }
+    if (!parent || !i) return;
+    const prev = parent.childNodes[i - 1];
+    return (prev.isEmbellished ? prev.coreMO() : null);
   }
 
   /******************************************************************************/
