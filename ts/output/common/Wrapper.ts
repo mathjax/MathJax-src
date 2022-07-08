@@ -85,7 +85,7 @@ export class LineBBox extends BBox {
   /**
    * The default line leading (for mo and mspace)
    */
-  public static defaultLeading: number = .1;
+  public static defaultLeading: number = .2;
 
   /**
    * Indentation data for the line break
