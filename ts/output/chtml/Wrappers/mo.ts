@@ -161,24 +161,24 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
         display: 'inline-block',
         height: '0px'
       }
-
     };
 
     /**
      * @override
      */
     public toCHTML(parents: N[]) {
+      const adaptor = this.adaptor;
       const attributes = this.node.attributes;
       const symmetric = (attributes.get('symmetric') as boolean) && this.stretch.dir !== DIRECTION.Horizontal;
       const stretchy = this.stretch.dir !== DIRECTION.None;
       if (stretchy && this.size === null) {
         this.getStretchedVariant([]);
       }
-      parents.length > 1 && parents.forEach(dom => this.adaptor.append(dom, this.html('mjx-linestrut')));
+      parents.length > 1 && parents.forEach(dom => adaptor.append(dom, this.html('mjx-linestrut')));
       let chtml = this.standardChtmlNodes(parents);
       if (chtml.length > 1 && this.breakStyle !== 'duplicate') {
         const i = (this.breakStyle === 'after' ? 1 : 0);
-        this.adaptor.remove(chtml[i]);
+        adaptor.remove(chtml[i]);
         chtml[i] = null;
       }
       if (stretchy && this.size < 0) {
@@ -187,13 +187,13 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
         if (symmetric || attributes.get('largeop')) {
           const u = this.em(this.getCenterOffset());
           if (u !== '0') {
-            chtml.forEach(dom => dom && this.adaptor.setStyle(dom, 'verticalAlign', u));
+            chtml.forEach(dom => dom && adaptor.setStyle(dom, 'verticalAlign', u));
           }
         }
         if (this.node.getProperty('mathaccent')) {
           chtml.forEach(dom => {
-            this.adaptor.setStyle(dom, 'width', '0');
-            this.adaptor.setStyle(dom, 'margin-left', this.em(this.getAccentOffset()));
+            adaptor.setStyle(dom, 'width', '0');
+            adaptor.setStyle(dom, 'margin-left', this.em(this.getAccentOffset()));
           });
         }
         chtml[0] && this.addChildren([chtml[0]]);

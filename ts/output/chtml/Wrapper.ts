@@ -243,16 +243,24 @@ CommonWrapper<
    * Add the proper spacing
    */
   protected handleSpace() {
+    const adaptor = this.adaptor;
+    const breakable = !!this.node.getProperty('breakable');
     const n = this.dom.length - 1;
     for (const data of [[this.getLineBBox(0).L, 'space',  'marginLeft', 0],
                         [this.getLineBBox(n).R, 'rspace', 'marginRight', n]]) {
       const [dimen, name, margin, i] = data as [number, string, string, number];
       if (dimen) {
         const space = this.em(dimen);
-        if (SPACE[space]) {
-          this.adaptor.setAttribute(this.dom[i], name, SPACE[space]);
+        if (breakable) {
+          const node = adaptor.node('mjx-break', SPACE[space] ? {size: SPACE[space]} :
+                                    {'font-size': (dimen * 400).toFixed(1) + '%'});
+          adaptor.insert(node, this.dom[i]);
         } else {
-          this.adaptor.setStyle(this.dom[i], margin, space);
+          if (SPACE[space]) {
+            adaptor.setAttribute(this.dom[i], name, SPACE[space]);
+          } else {
+            adaptor.setStyle(this.dom[i], margin, space);
+          }
         }
       }
     }
@@ -323,7 +331,8 @@ CommonWrapper<
     for (const name of attributes.getExplicitNames()) {
       if (skip[name] === false || (!(name in defaults) && !skip[name] &&
                                    !adaptor.hasAttribute(this.dom[0], name))) {
-        this.dom.forEach(dom => adaptor.setAttribute(dom, name, attributes.getExplicit(name) as string));
+        const value = attributes.getExplicit(name) as string;
+        this.dom.forEach(dom => adaptor.setAttribute(dom, name, value));
       }
     }
     if (attributes.get('class')) {
@@ -331,6 +340,9 @@ CommonWrapper<
       for (const name of names) {
         this.dom.forEach(dom => adaptor.addClass(dom, name));
       }
+    }
+    if (this.node.getProperty('breakable')) {
+      this.dom.forEach(dom => adaptor.setAttribute(dom, 'data-mjx-breakable', 'true'));
     }
   }
 

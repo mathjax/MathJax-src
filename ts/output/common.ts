@@ -113,7 +113,8 @@ export abstract class CommonOutputJax<
     font: null,                    // The FontData object to use
     cssStyles: null,               // The CssStyles object to use
     linebreaks: {
-      automatic: true,             // true for automatic linebreaking
+      display: true,               // true for automatic linebreaking of displayed equations
+      inline: true,                // true for browser-based breaking of inline equations
       width: '100%',               // a fixed size or a percentage of the container width
       LinebreakVisitor: null,      // The LinebreakVisitor to use
     }
@@ -218,7 +219,7 @@ export abstract class CommonOutputJax<
       new defaultFactory<N, T, D, CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
                          WW, WF, WC, CC, VV, DD, FD, FC>();
     this.factory.jax = this;
-    const linebreaks = (this.options.linebreaks.automatic ?
+    const linebreaks = (this.options.linebreaks.display ?
                         (this.options.linebreaks.LinebreakVisitor || LinebreakVisitor) :
                         Linebreaks) as typeof Linebreaks;
     this.linebreaks = new linebreaks(this.factory);
@@ -281,7 +282,12 @@ export abstract class CommonOutputJax<
     this.math = math;
     this.container = node;
     this.pxPerEm = math.metrics.ex / this.font.params.x_height;
-    this.options.linebreaks.automatic && this.getLinebreakWidth();
+    const inlineBreaks = this.options.linebreaks.inline;
+    (inlineBreaks || this.options.linebreaks.display) && this.getLinebreakWidth();
+    if (inlineBreaks && math.root.attributes.get('display') === 'inline' && !math.outputData.inlineMarked) {
+      this.markInlineBreaks(math.root.childNodes?.[0]);
+      math.outputData.inlineMarked = true;
+    }
     math.root.setTeXclass(null);
     this.setScale(node);
     this.nodeMap = new Map<MmlNode, WW>();
@@ -322,6 +328,29 @@ export abstract class CommonOutputJax<
   public getLinebreakWidth() {
     const W = this.math.metrics.containerWidth / this.pxPerEm;
     this.containerWidth = length2em(this.options.linebreaks.width, W, 1, this.pxPerEm);
+  }
+
+  /**
+   * @parm {MmlNode} node   The node to check for potential inline breakpoints
+   */
+  public markInlineBreaks(node: MmlNode) {
+    if (!node) return;
+    let marked = false;
+    for (const child of node.childNodes) {
+      if (child.isEmbellished) {
+        if ((child.texClass === 2 || child.texClass === 3) &&
+            child.coreMO().attributes.get('linebreak') !== 'nobreak') {
+          child.setProperty('breakable', true);
+          if (!marked) {
+            node.setProperty('breakable', true);
+            node.parent.setProperty('breakable', true);
+            marked = true;
+          }
+        }
+      } else if (child.notParent || (child.isKind('mstyle') && !child.attributes.get('style'))) {
+        this.markInlineBreaks(child.childNodes[0]);
+      }
+    }
   }
 
   /**

@@ -134,7 +134,8 @@ export function CommonMathMixin<
      */
     protected computeBBox(bbox: BBox, recompute: boolean = false) {
       super.computeBBox(bbox, recompute);
-      if (!this.parent) {
+      const display = (this.node.attributes.get('display') === 'block');
+      if (display && !this.parent && this.jax.options.linebreaks.display) {
         const W = this.containerWidth;
         bbox.w > W && this.childNodes[0].breakToWidth(W);
       }

@@ -121,6 +121,34 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
       },
       'mjx-container[jax="CHTML"][justify="right"]': {
         'text-align': 'right'
+      },
+      //
+      //  For inline breakpoints, use a scaled space and make it breakable
+      //    (The space is .25em, so make everything 4 times the usual.
+      //     This will need to be adjusted when we do other fonts: we will
+      //     need one where the space is 1em)
+      //
+      'mjx-break::after': {
+        content: '" "',
+        'white-space': 'normal'
+      },
+      'mjx-break[size="1"]': {
+        'font-size': '44.4%'
+      },
+      'mjx-break[size="2"]': {
+        'font-size': '66.8%'
+      },
+      'mjx-break[size="3"]': {
+        'font-size': '88.8%'
+      },
+      'mjx-break[size="4"]': {
+        'font-size': '111.2%'
+      },
+      'mjx-break[size="5"]': {
+        'font-size': '133.2%'
+      },
+      'mjx-container[jax="CHTML"] [data-mjx-breakable]': {
+        display: 'inline'
       }
     };
 

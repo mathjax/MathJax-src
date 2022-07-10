@@ -100,6 +100,16 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
         display: 'inline-table',
         width: '100%'
       },
+      'mjx-linestack[data-mjx-breakable]': {
+        display: 'inline',
+        width: 'initial',
+      },
+      'mjx-linestack[data-mjx-breakable] > mjx-linebox': {
+        display: 'inline'
+      },
+      'mjx-break[newline]::after': {
+        display: 'block'
+      },
       'mjx-linebox': {
         display: 'block'
       },
@@ -193,8 +203,10 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
       //  Add the line boxes
       //
       const chtml = Array(n) as N[];
+      const inlineBreaks = this.node.getProperty('breakable');
       for (let i = 0; i <= n; i++) {
         chtml[i] = adaptor.append(this.dom[0], this.html('mjx-linebox', {'lineno': i})) as N;
+        inlineBreaks && adaptor.append(this.dom[0], this.html('mjx-break', {newline: true}));
       }
       //
       //  Return the line boxes as the parent nodes for their contents
