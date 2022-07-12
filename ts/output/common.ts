@@ -24,7 +24,7 @@
 import {AbstractOutputJax} from '../core/OutputJax.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem, Metrics, STATE} from '../core/MathItem.js';
-import {MmlNode} from '../core/MmlTree/MmlNode.js';
+import {MmlNode, TEXCLASS} from '../core/MmlTree/MmlNode.js';
 import {FontData, FontDataClass, CharOptions, VariantData, DelimiterData, CssFontData} from './common/FontData.js';
 import {OptionList, separateOptions} from '../util/Options.js';
 import {CommonWrapper, CommonWrapperClass} from './common/Wrapper.js';
@@ -338,8 +338,9 @@ export abstract class CommonOutputJax<
     let marked = false;
     for (const child of node.childNodes) {
       if (child.isEmbellished) {
-        if ((child.texClass === 2 || child.texClass === 3) &&
-            child.coreMO().attributes.get('linebreak') !== 'nobreak') {
+        const mo = child.coreMO();
+        if ((mo.texClass === TEXCLASS.BIN || mo.texClass === TEXCLASS.REL) &&
+            mo.attributes.get('linebreak') !== 'nobreak') {
           child.setProperty('breakable', true);
           if (!marked) {
             node.setProperty('breakable', true);
