@@ -63,7 +63,7 @@ new CommandMap('text-macros', {
   ' ':          'SelfQuote',
   '&':          'SelfQuote',
   '#':          'SelfQuote',
-  '\\':         'SelfQuote',
+  '\\':         ['Macro', '$\\\\$'],
 
   '\'':         ['Accent', '\u00B4'],
   '\u2019':     ['Accent', '\u00B4'],
