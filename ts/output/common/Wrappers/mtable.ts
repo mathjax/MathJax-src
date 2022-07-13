@@ -152,7 +152,7 @@ export interface CommonMtable<
   data: TableData;
 
   /**
-   * The table cells that have percentage-width content
+   * The table cells that have percentage-width content and the column numbers for them
    */
   pwidthCells: [WW, number][];
 
@@ -193,6 +193,14 @@ export interface CommonMtable<
    * @param {number} W   The computed width of the column (or null of not computed)
    */
   stretchColumn(i: number, W: number): void;
+
+  /**
+   * Do linebreaking on the cells of a column
+   *
+   * @param {number} i   The number of the column to break
+   * @param {number} W   The width to break to
+   */
+  breakColumn(i: number, W: number): void;
 
   /**
    * Determine the row heights and depths, the column widths,
@@ -257,6 +265,16 @@ export interface CommonMtable<
    * @return {number}    The true width of the table (without labels)
    */
   getWidth(): number;
+
+  /**
+   * Adjust column widths for tables that are too wide
+   */
+  adjustWideTable(): void;
+
+  /**
+   * @return {number}   The natural width of the table (without automatic lienbreaks).
+   */
+  getNaturalWidth(): number;
 
   /**
    * @return {number}   The maximum height of a row
@@ -645,10 +663,20 @@ export function CommonMtableMixin<
       }
     }
 
+    /**
+     * @override
+     */
     public breakColumn(i: number, W: number) {
+      if (!this.jax.options.linebreaks.display) return;
+      const {D} = this.getTableData();
+      let j = 0;
       for (const row of this.tableRows) {
         const cell = row.getChild(i);
-        cell && cell.getBBox().w > W && cell.childNodes[0].breakToWidth(W);
+        if (cell && cell.getBBox().w > W) {
+          cell.childNodes[0].breakToWidth(W);
+          D[j] = Math.max(D[j], cell.getBBox().d);
+        }
+        j++;
       }
     }
 
@@ -836,6 +864,27 @@ export function CommonMtableMixin<
     /**
      * @override
      */
+    public adjustWideTable() {
+      if (this.node.attributes.get('width') !== 'auto') return;
+      const sep = this.length2em(this.node.attributes.get('minlabelspacing'));
+      const W = this.containerWidth - this.getTableData().L - sep;
+      if (this.getNaturalWidth() > W) {
+        const swidths = this.getColumnAttributes('columnwidth', 0);
+        this.cWidths = this.getColumnWidthsFixed(swidths, W);
+      }
+    }
+
+    /**
+     * @override
+     */
+    public getNaturalWidth(): number {
+      const CW = this.getComputedWidths();
+      return sum(CW.concat(this.cLines, this.cSpace)) + 2 * (this.fLine + this.fSpace[0]);
+    }
+
+    /**
+     * @override
+     */
     public getEqualRowHeight(): number {
       const {H, D} = this.getTableData();
       const HD = Array.from(H.keys()).map(i => H[i] + D[i]);
@@ -945,7 +994,10 @@ export function CommonMtableMixin<
       //
       // Get the amount of extra space per column, or 0 (fw)
       //
-      const fw = (n && dw > 0 ? dw / n : 0);
+      if (dw < 0 && !this.jax.options.linebreaks.display) {
+        dw = 0;
+      }
+      const fw = (n ? dw / n : 0);
       //
       // Return the column widths (plus extra space for those that are stretching
       //
@@ -1130,6 +1182,7 @@ export function CommonMtableMixin<
       this.cLines = this.getColumnAttributes('columnlines').map(x => (x === 'none' ? 0 : .07));
       this.rLines = this.getRowAttributes('rowlines').map(x => (x === 'none' ? 0 : .07));
       this.cWidths = this.getColumnWidths();
+      this.adjustWideTable();
       //
       // Stretch the rows and columns
       //
@@ -1156,13 +1209,9 @@ export function CommonMtableMixin<
       }
       height += 2 * (this.fLine + this.fSpace[1]);
       //
-      //  Get the widths of all columns
-      //
-      const CW = this.getComputedWidths();
-      //
       //  Get the expected width of the table
       //
-      width = sum(CW.concat(this.cLines, this.cSpace)) + 2 * (this.fLine + this.fSpace[0]);
+      width = this.getNaturalWidth();
       //
       //  If the table width is not 'auto', determine the specified width
       //    and pick the larger of the specified and computed widths.
@@ -1206,8 +1255,7 @@ export function CommonMtableMixin<
                     Array(this.numCols).fill(this.percent(1 / Math.max(1, this.numCols))) :
                     this.getColumnAttributes('columnwidth', 0));
       this.cWidths = this.getColumnWidthsFixed(cols, W);
-      const CW = this.getComputedWidths();
-      this.pWidth = sum(CW.concat(this.cLines, this.cSpace)) + 2 * (this.fLine + this.fSpace[0]);
+      this.pWidth = this.getNaturalWidth();
       if (this.isTop) {
         this.bbox.w = this.pWidth;
       }
