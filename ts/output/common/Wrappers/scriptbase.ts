@@ -24,7 +24,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor, Constructor} from '../Wrapper.js';
+import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor, Constructor, LineBBox} from '../Wrapper.js';
 import {CommonWrapperFactory} from '../WrapperFactory.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
 import {CommonOutputJax} from '../../common.js';
@@ -845,8 +845,9 @@ export function CommonScriptbaseMixin<
      */
     public computeLineBBox(i: number) {
       const n = this.breakCount;
+      if (!n) return LineBBox.from(this.getOuterBBox());
       const bbox = this.baseChild.getLineBBox(i).copy();
-      if (!n || i < n) return bbox;
+      if (i < n) return bbox;
       this.appendScripts(bbox);
       this.addMiddleBorders(bbox);
       this.addRightBorders(bbox);

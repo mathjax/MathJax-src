@@ -461,7 +461,7 @@ export function CommonMoMixin<
      */
     public getBreakStyle(linebreak: string = '') {
       const attributes = this.node.attributes;
-      let style = (linebreak || (attributes.get('linebreak') === 'newline' ?
+      let style = (linebreak || (attributes.get('linebreak') === 'newline' || this.node.getProperty('forcebreak') ?
                                  attributes.get('linebreakstyle') as string : ''));
       if (style === 'infixlinebreakstyle') {
         style = attributes.get(style) as string;
@@ -516,8 +516,9 @@ export function CommonMoMixin<
       const leadingString = this.node.attributes.get('lineleading') as string;
       const leading = this.length2em(leadingString, LineBBox.defaultLeading);
       if (i === 0 && style === 'before') {
-        this.bbox.L = 0;
         const bbox = LineBBox.from(BBox.zero(), leading);
+        bbox.originalL = this.bbox.L;
+        this.bbox.L = 0;
         return bbox;
       }
       let bbox = LineBBox.from(this.getOuterBBox(), leading);

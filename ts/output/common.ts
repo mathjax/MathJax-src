@@ -173,6 +173,13 @@ export abstract class CommonOutputJax<
   >;
 
   /**
+   * True when inkline breaks need to be forced (e.g., for SVG output)
+   */
+  get forceInlineBreaks() {
+    return false;
+  }
+
+  /**
    * The container width for linebreaking;
    */
   public containerWidth: number;
@@ -335,13 +342,19 @@ export abstract class CommonOutputJax<
    */
   public markInlineBreaks(node: MmlNode) {
     if (!node) return;
+    const forcebreak = this.forceInlineBreaks;
     let marked = false;
     for (const child of node.childNodes) {
       if (child.isEmbellished) {
         const mo = child.coreMO();
+        const {linebreak, linebreakstyle} = mo.attributes.getList('linebreak', 'linebreakstyle');
         if ((mo.texClass === TEXCLASS.BIN || mo.texClass === TEXCLASS.REL) &&
-            mo.attributes.get('linebreak') !== 'nobreak') {
+            linebreak !== 'nobreak' && linebreakstyle === 'before') {
           child.setProperty('breakable', true);
+          if (forcebreak && linebreak !== 'newline') {
+            child.setProperty('forcebreak', true);
+            mo.setProperty('forcebreak', true);
+          }
           if (!marked) {
             node.setProperty('breakable', true);
             node.parent.setProperty('breakable', true);

@@ -98,6 +98,11 @@ export class LineBBox extends BBox {
   public lineLeading: number;
 
   /**
+   * The original BBox.L value
+   */
+  public originalL: number;
+
+  /**
    * True if this bbox is at the beginning of a line
    */
   public isFirst: boolean = false;
@@ -132,17 +137,18 @@ export class LineBBox extends BBox {
    */
   constructor(def?: BBoxData, start: [number, number] = null) {
     super(def);
+    this.originalL = this.L;
     if (start) {
       this.start = start;
     }
   }
-
 
   /**
    * @override
    */
   public append(cbox: LineBBox) {
     if (this.isFirst) {
+      cbox.originalL = cbox.L;
       cbox.L = 0;  // remove spacing after an operator with a linebreak after it
     }
     if (cbox.indentData) {
@@ -667,7 +673,11 @@ export class CommonWrapper<
       if (n) {
         const line = this.lineBBox[i] = this.computeLineBBox(i);
         if (i === 0) {
-          line.L = this.getBBox().L;
+          if (!this.node.isKind('mo') && this.node.isEmbellished) {
+            line.originalL = this.getBBox().L;
+          } else {
+            line.L = this.getBBox().L;
+          }
         }
         if (i === n) {
           line.R = this.getBBox().R;
@@ -687,6 +697,19 @@ export class CommonWrapper<
    */
   protected computeLineBBox(i: number): LineBBox {
     return this.getChildLineBBox(this.childNodes[0], i);
+  }
+
+  /**
+   * Find the (embellished) mo or mspace where a break occurs
+   *
+   * @param {LineBBox} bbox    The LinmeBBox for the line whose initial breakpoint is needed
+   * @return {[WW, WW]}        The embellished mo node and its core mo
+   */
+  public getBreakNode(bbox: LineBBox): [WW, WW] {
+    const [i, j] = bbox.start || [0, 0];
+    if (this.node.isEmbellished) return [this, this.coreMO()] as any as [WW, WW];
+    if (this.node.isToken || !this.childNodes[i]) return [this, null] as any as [WW, WW];
+    return this.childNodes[i].getBreakNode(this.childNodes[i].getLineBBox(j));
   }
 
   /**
@@ -1115,10 +1138,10 @@ export class CommonWrapper<
     width: number = this.metrics.containerWidth
   ): [string, number] {
     if (!align || align === 'auto') {
-      align = this.jax.options.displayAlign;
+      align = this.jax.math.outputData.inlineMarked ? 'left' : this.jax.options.displayAlign;
     }
     if (!shift || shift === 'auto') {
-      shift = this.jax.options.displayIndent;
+      shift = this.jax.math.outputData.inlineMarked ? '0' : this.jax.options.displayIndent;
     }
     if (indentalign === 'auto') {
       indentalign = align;

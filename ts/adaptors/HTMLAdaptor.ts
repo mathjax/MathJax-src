@@ -323,8 +323,8 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
   /**
    * @override
    */
-  public clone(node: N) {
-    return node.cloneNode(true) as N;
+  public clone(node: N, deep: boolean = true) {
+    return node.cloneNode(deep) as N;
   }
 
   /**
