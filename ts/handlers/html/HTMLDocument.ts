@@ -68,6 +68,12 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
       ...AbstractMathDocument.OPTIONS.renderActions,
       styles: [STATE.INSERTED + 1, '', 'updateStyleSheet', false]  // update styles on a rerender() call
     }),
+    linebreaks: {
+      display: true,                  // true for automatic linebreaking of displayed equations
+      inline: true,                   // true for browser-based breaking of inline equations
+      width: '100%',                  // a fixed size or a percentage of the container width
+      LinebreakVisitor: null,         // The LinebreakVisitor to use
+    },
     MathList: HTMLMathList,           // Use the HTMLMathList for MathLists
     MathItem: HTMLMathItem,           // Use the HTMLMathItem for MathItem
     DomStrings: null                  // Use the default DomString parser

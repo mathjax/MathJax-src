@@ -27,6 +27,7 @@ from '../../core/MmlTree/MmlNode.js';
 import {userOptions, defaultOptions, OptionList} from '../../util/Options.js';
 import * as Entities from '../../util/Entities.js';
 import {DOMAdaptor} from '../../core/DOMAdaptor.js';
+import {MathDocument} from '../../core/MathDocument.js';
 
 /********************************************************************/
 /**
@@ -91,8 +92,15 @@ export class MathMLCompile<N, T, D> {
    * @param {N} node     The <math> node to convert to MmlNodes
    * @return {MmlNode}   The MmlNode at the root of the converted tree
    */
-  public compile(node: N): MmlNode {
+  public compile(node: N, document: MathDocument<N, T, D>): MmlNode {
     let mml = this.makeNode(node);
+    if (!mml.attributes.getExplicit('overflow')) {
+      if (mml.attributes.get('display') === 'block') {
+        document.options.linebreaks.display && mml.attributes.set('overflow', 'linebreak');
+      } else {
+        document.options.linebreaks.inline && mml.attributes.set('overflow', 'linebreak');
+      }
+    }
     mml.verifyTree(this.options['verify']);
     mml.setInheritedAttributes({}, false, 0, false);
     mml.walkTree(this.markMrows);

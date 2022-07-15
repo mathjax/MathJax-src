@@ -112,12 +112,6 @@ export abstract class CommonOutputJax<
     wrapperFactory: null,          // The wrapper factory to use
     font: null,                    // The FontData object to use
     cssStyles: null,               // The CssStyles object to use
-    linebreaks: {
-      display: true,               // true for automatic linebreaking of displayed equations
-      inline: true,                // true for browser-based breaking of inline equations
-      width: '100%',               // a fixed size or a percentage of the container width
-      LinebreakVisitor: null,      // The LinebreakVisitor to use
-    }
   };
 
   /**
@@ -226,10 +220,6 @@ export abstract class CommonOutputJax<
       new defaultFactory<N, T, D, CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
                          WW, WF, WC, CC, VV, DD, FD, FC>();
     this.factory.jax = this;
-    const linebreaks = (this.options.linebreaks.display ?
-                        (this.options.linebreaks.LinebreakVisitor || LinebreakVisitor) :
-                        Linebreaks) as typeof Linebreaks;
-    this.linebreaks = new linebreaks(this.factory);
     this.cssStyles = this.options.cssStyles || new CssStyles();
     this.font = this.options.font || new defaultFont(fontOptions);
     this.unknownCache = new Map();
@@ -289,9 +279,9 @@ export abstract class CommonOutputJax<
     this.math = math;
     this.container = node;
     this.pxPerEm = math.metrics.ex / this.font.params.x_height;
-    const inlineBreaks = this.options.linebreaks.inline;
-    (inlineBreaks || this.options.linebreaks.display) && this.getLinebreakWidth();
-    if (inlineBreaks && math.root.attributes.get('display') === 'inline' && !math.outputData.inlineMarked) {
+    const linebreak = (math.root.attributes.get('overflow') === 'linebreak');
+    linebreak && this.getLinebreakWidth();
+    if (linebreak && !math.display && !math.outputData.inlineMarked) {
       this.markInlineBreaks(math.root.childNodes?.[0]);
       math.outputData.inlineMarked = true;
     }
@@ -334,7 +324,8 @@ export abstract class CommonOutputJax<
    */
   public getLinebreakWidth() {
     const W = this.math.metrics.containerWidth / this.pxPerEm;
-    this.containerWidth = length2em(this.options.linebreaks.width, W, 1, this.pxPerEm);
+    const width = this.math.root.attributes.get('maxwidth') || this.document.options.linebreaks.width;
+    this.containerWidth = length2em(width, W, 1, this.pxPerEm);
   }
 
   /**
@@ -586,6 +577,12 @@ export abstract class CommonOutputJax<
     if (html) {
       this.document = html;
       this.adaptor.document = html.document;
+      if (!this.linebreaks) {
+        const linebreaks = (html.options.linebreaks.display ?
+                            (html.options.linebreaks.LinebreakVisitor || LinebreakVisitor) :
+                            Linebreaks) as typeof Linebreaks;
+        this.linebreaks = new linebreaks(this.factory);
+      }
     }
   }
 

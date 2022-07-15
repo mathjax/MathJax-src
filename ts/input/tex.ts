@@ -201,6 +201,9 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     }
     if (display) {
       NodeUtil.setAttribute(node, 'display', 'block');
+      document.options.linebreaks.display && NodeUtil.setAttribute(node, 'overflow', 'linebreak');
+    } else {
+      document.options.linebreaks.inline && NodeUtil.setAttribute(node, 'overflow', 'linebreak');
     }
     this.parseOptions.tags.finishEquation(math);
     this.parseOptions.root = node;
