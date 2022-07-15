@@ -251,13 +251,28 @@ export abstract class CommonOutputJax<
   }
 
   /**
-   * @param {N} node   The container whose scale is to be set
+   * @param {N} node         The container whose scale is to be set
+   * @param {WW} wrapper     The wrapper for the math element being scaled
    */
-  protected setScale(node: N) {
-    const scale = this.math.metrics.scale * this.options.scale;
+  protected setScale(node: N, wrapper: WW) {
+    let scale = this.getInitialScale() * this.options.scale;
+    if (wrapper.node.attributes.get('overflow') === 'scale' && this.math.display) {
+      const w = wrapper.getOuterBBox().w;
+      const W = this.math.metrics.containerWidth / this.pxPerEm;
+      if (w > W && w) {
+        scale *= W / w;
+      }
+    }
     if (scale !== 1) {
       this.adaptor.setStyle(node, 'fontSize', percent(scale));
     }
+  }
+
+  /**
+   * The initial scaling value for the math node
+   */
+  protected getInitialScale() {
+    return this.math.metrics.scale;
   }
 
   /**
@@ -279,16 +294,22 @@ export abstract class CommonOutputJax<
     this.math = math;
     this.container = node;
     this.pxPerEm = math.metrics.ex / this.font.params.x_height;
-    const linebreak = (math.root.attributes.get('overflow') === 'linebreak');
+    this.nodeMap = new Map<MmlNode, WW>();
+    const overflow = math.root.attributes.get('overflow');
+    if (math.display) {
+      overflow === 'scroll' && this.adaptor.setStyle(node, 'overflow', 'auto');
+      overflow === 'truncate' && this.adaptor.setStyle(node, 'overflow', 'hidden');
+    }
+    const linebreak = (overflow === 'linebreak');
     linebreak && this.getLinebreakWidth();
     if (linebreak && !math.display && !math.outputData.inlineMarked) {
       this.markInlineBreaks(math.root.childNodes?.[0]);
       math.outputData.inlineMarked = true;
     }
     math.root.setTeXclass(null);
-    this.setScale(node);
-    this.nodeMap = new Map<MmlNode, WW>();
-    this.processMath(math.root, node);
+    const wrapper = this.factory.wrap(math.root);
+    this.setScale(node, wrapper);
+    this.processMath(wrapper, node);
     this.nodeMap = null;
     this.executeFilters(this.postFilters, math, html, node);
   }
@@ -296,10 +317,10 @@ export abstract class CommonOutputJax<
   /**
    * This is the actual typesetting function supplied by the subclass
    *
-   * @param {MmlNode} math   The intenral MathML node of the root math element to process
-   * @param {N} node         The container node where the math is to be typeset
+   * @param {WW} wrapper   The wrapped intenral MathML node of the root math element to process
+   * @param {N} node       The container node where the math is to be typeset
    */
-  public abstract processMath(math: MmlNode, node: N): void;
+  public abstract processMath(wrapper: WW, node: N): void;
 
   /*****************************************************************/
 

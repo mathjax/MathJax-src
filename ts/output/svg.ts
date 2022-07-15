@@ -25,7 +25,6 @@ import {CommonOutputJax, UnknownBBox} from './common.js';
 import {OptionList} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
-import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {SvgWrapper, SvgWrapperClass} from './svg/Wrapper.js';
 import {SvgWrapperFactory} from './svg/WrapperFactory.js';
 import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from './svg/FontData.js';
@@ -157,15 +156,6 @@ CommonOutputJax<
   /**
    * @override
    */
-  protected setScale(node: N) {
-    if (this.options.scale !== 1) {
-      this.adaptor.setStyle(node, 'fontSize', percent(this.options.scale));
-    }
-  }
-
-  /**
-   * @override
-   */
   public escaped(math: MathItem<N, T, D>, html: MathDocument<N, T, D>) {
     this.setDocument(html);
     return this.html('span', {}, [this.text(math.math)]);
@@ -211,23 +201,23 @@ CommonOutputJax<
   }
 
   /**
-   * @param {MmlNode} math  The MML node whose SVG is to be produced
-   * @param {N} parent      The HTML node to contain the SVG
+   * @param {WW} wrapper   The MML node wrapper whose SVG is to be produced
+   * @param {N} parent     The HTML node to contain the SVG
    */
-  public processMath(math: MmlNode, parent: N) {
+  public processMath(wrapper: SvgWrapper<N, T, D>, parent: N) {
     //
     // Cache the container (tooltips process into separate containers)
     //
     const container = this.container;
     this.container = parent;
     //
-    //  Get the wrapped math element and the SVG container
+    //  Get the SVG container
     //  Then typeset the math into the SVG
+    //  Mark the inline breakpoints, if applicable
     //
-    const wrapper = this.factory.wrap(math);
     const [svg, g] = this.createRoot(wrapper);
     this.typesetSvg(wrapper, svg, g);
-    math.getProperty('breakable') && this.handleInlineBreaks(wrapper, svg, g);
+    wrapper.node.getProperty('breakable') && this.handleInlineBreaks(wrapper, svg, g);
     //
     //  Put back the original container
     //
