@@ -34,10 +34,11 @@ import {CommonMmultiscripts} from './Wrappers/mmultiscripts.js';
 import {CommonMfenced} from './Wrappers/mfenced.js';
 import {CommonMaction} from './Wrappers/maction.js';
 import {CommonMsqrt} from './Wrappers/msqrt.js';
+import {CommonMtext} from './Wrappers/mtext.js';
 import {BBox} from '../../util/BBox.js';
 import {TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import {OPTABLE} from '../../core/MmlTree/OperatorDictionary.js';
-import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import {MmlNode, TextNode} from '../../core/MmlTree/MmlNode.js';
 
 /************************************************************************************/
 
@@ -47,25 +48,30 @@ import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 export const NOBREAK = 1000000;
 
 /**
- * The mo/mspace for a break, its penalty, the width before the break,
- * the width + indent of the node after the break, and the width up to
- * the next break.
+ * The child index and character index for a break in an mtext element
  */
-export type BreakData<WW> = [WW, number, number, number, number];
+export type IndexData = [number, number] | null;
+
+/**
+ * The mo/mspace for a break, its penalty, the width before the break,
+ * the width + indent of the node after the break, the width up to
+ * the next break, and the index for the break (for mtext)
+ */
+export type BreakData<WW> = [[WW, IndexData], number, number, number, number];
 
 /**
  * The data used for a line-breaking operation
  */
 export interface StateData<WW> {
-  breaks: Set<WW>;              // The breakpoints to use
-  potential: BreakData<WW>[];   // The list of best breakpoints so far
-  width: number;                // The maximum width for the lines
-  w: number;                    // The accumulated width since the last best breakpoint
-  prevWidth: number;            // The width of the porevious line
-  prevBreak: BreakData<WW>;     // The most recent breakpoint used
-  depth: number;                // The nesting depth of the active node
-  mathWidth: number;            // The full width of the unbroken math
-  mathLeft: number;             // The amount of width left after the most recent break
+  breaks: Set<[WW, IndexData]>;  // The breakpoints to use and the break index (for mtext)
+  potential: BreakData<WW>[];    // The list of best breakpoints so far
+  width: number;                 // The maximum width for the lines
+  w: number;                     // The accumulated width since the last best breakpoint
+  prevWidth: number;             // The width of the porevious line
+  prevBreak: BreakData<WW>;      // The most recent breakpoint used
+  depth: number;                 // The nesting depth of the active node
+  mathWidth: number;             // The full width of the unbroken math
+  mathLeft: number;              // The amount of width left after the most recent break
 }
 
 /************************************************************************************/
@@ -241,10 +247,14 @@ export class LinebreakVisitor<
       const line = wrapper.lineBBox[i] || wrapper.getLineBBox(i);
       line.w > W && this.breakLineToWidth(wrapper, i);
     }
-    this.state.breaks.forEach(ww => {
-      (ww as any).setBreakStyle(ww.node.attributes.get('linebreakstyle') || 'before');
+    for (const [ww, ij] of this.state.breaks) {
+      if (ij === null) {
+        (ww as any).setBreakStyle(ww.node.attributes.get('linebreakstyle') || 'before');
+      } else {
+        (ww as any).setBreakAt(ij);
+      }
       ww.invalidateBBox();
-    });
+    };
     this.state = state;
   }
 
@@ -256,7 +266,7 @@ export class LinebreakVisitor<
   protected createState(wrapper: WW): StateData<WW> {
     const mathWidth = wrapper.getBBox().w;
     return {
-      breaks: new Set<WW>(),
+      breaks: new Set<[WW, IndexData]>(),
       potential: [],
       width: 0,
       w: 0,
@@ -330,8 +340,9 @@ export class LinebreakVisitor<
    * @param {WW} wrapper        The mo/mspace that might be a breakpoint
    * @param {number} penalty    The penalty for that break
    * @param {number} w          The width+indent of the node after the break
+   * @param {IndexData} ij      The child and character index, or null
    */
-  protected pushBreak(wrapper: WW, penalty: number, w: number) {
+  protected pushBreak(wrapper: WW, penalty: number, w: number, ij: IndexData) {
     const state = this.state;
     if (penalty >= NOBREAK) return;
     while (state.potential.length && state.potential[0][1] > this.FACTORS.fuzz(penalty)) {
@@ -340,7 +351,7 @@ export class LinebreakVisitor<
         state.potential[0][4] += data[4];
       }
     }
-    state.potential.unshift([wrapper, penalty, state.w - (state.prevBreak?.[3] || 0), w, 0]);
+    state.potential.unshift([[wrapper, ij], penalty, state.w - (state.prevBreak?.[3] || 0), w, 0]);
   }
 
   /**
@@ -395,12 +406,12 @@ export class LinebreakVisitor<
     const dw = mo.processIndent('', bbox.indentData[1][1], '', bbox.indentData[0][1], this.state.width)[1];
     const penalty = this.moPenalty(mo);
     if (style === 'before') {
-      this.pushBreak(wrapper, penalty, dw - bbox.L);
+      this.pushBreak(wrapper, penalty, dw - bbox.L, null);
       this.addWidth(bbox);
     } else {
       this.addWidth(bbox);
       const w = (style === 'after' ? 0 : mo.multChar ? mo.multChar.getBBox().w : bbox.w) + dw;
-      this.pushBreak(wrapper, penalty, w);
+      this.pushBreak(wrapper, penalty, w, null);
     }
   }
 
@@ -459,7 +470,7 @@ export class LinebreakVisitor<
       const penalty = this.mspacePenalty(wrapper as any as CommonMspace<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>);
       bbox.getIndentData(wrapper.node);
       const dw = wrapper.processIndent('', bbox.indentData[1][1], '', bbox.indentData[0][1], this.state.width)[1];
-      this.pushBreak(wrapper, penalty, dw);
+      this.pushBreak(wrapper, penalty, dw, null);
     }
   }
 
@@ -472,6 +483,58 @@ export class LinebreakVisitor<
     const FACTORS = this.FACTORS;
     let penalty = FACTORS.tail(FACTORS.width(0));
     return (this.PENALTY[linebreak as string] || (p => p))(FACTORS.depth(penalty));
+  }
+
+  /******************************************************************************/
+
+  /**
+   * @param {WW} wrapper   The MmlMspace wrapper
+   * @param {number} i     The line within that node to break
+   */
+  public visitMtextNode(wrapper: WW, i: number) {
+    if (!wrapper.getText().match(/ /)) {
+      this.visitDefault(wrapper, i);
+      return;
+    }
+    const mtext = wrapper as any as CommonMtext<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+    mtext.clearBreakPoints();
+    const space = mtext.textWidth(' ');
+    const bbox = wrapper.getBBox();
+    this.addWidth(bbox, bbox.L);
+    //
+    // Loop through the mtext children...
+    //
+    const children = mtext.childNodes;
+    for (const j of children.keys()) {
+      const child = children[j];
+      //
+      //  If the node is a text node:
+      //    Break it into words and loop thorugh them, adding their width
+      //    and inserting breakpoints for the spaces
+      //  Otherwise (child is mglyph or embedded HTML)
+      //    Add the child's width
+      //
+      if (child.node.isKind('text')) {
+        const words = (child.node as TextNode).getText().split(/ /);
+        const last = words.pop();
+        for (const k of words.keys()) {
+          this.addWidth(bbox, mtext.textWidth(words[k]));
+          this.pushBreak(wrapper, this.mtextPenalty(), -space, [j, k + 1]);
+          this.addWidth(bbox, space);
+        }
+        this.addWidth(bbox, mtext.textWidth(last));
+      } else {
+        this.addWidth(child.getBBox());
+      }
+    }
+  }
+
+  /**
+   * @return {number}   The computed penalty
+   */
+  protected mtextPenalty(): number {
+    const FACTORS = this.FACTORS;
+    return FACTORS.depth(FACTORS.tail(FACTORS.width(0)));
   }
 
   /******************************************************************************/
@@ -634,17 +697,22 @@ export class LinebreakVisitor<
 
 }
 
+/******************************************************************************/
+/******************************************************************************/
 
-/**
- * Make closing fences default to breaking after them (not sure why that isn't the default)
- */
 (function () {
+  //
+  // Make closing fences default to breaking after them (not sure why that isn't the default)
+  //
   for (const op of Object.keys(OPTABLE.postfix)) {
     const data = OPTABLE.postfix[op][3];
     if (data && data.fence) {
       data.linebreakstyle = 'after';
     }
   }
+  //
+  // Make function apply be non-breaking by default
+  //
   OPTABLE.infix['\u2061'] = [...OPTABLE.infix['\u2061']];
   OPTABLE.infix['\u2061'][3] = {linebreak: 'nobreak'};
 })();

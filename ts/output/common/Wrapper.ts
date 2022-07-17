@@ -671,7 +671,8 @@ export class CommonWrapper<
     if (!this.lineBBox[i]) {
       const n = this.breakCount;
       if (n) {
-        const line = this.lineBBox[i] = this.computeLineBBox(i);
+        const line = this.computeLineBBox(i);
+        this.lineBBox[i] = line;
         if (i === 0) {
           if (!this.node.isKind('mo') && this.node.isEmbellished) {
             line.originalL = this.getBBox().L;
@@ -801,13 +802,15 @@ export class CommonWrapper<
 
   /**
    * Mark BBox to be computed again (e.g., when an mo has stretched)
+   *
+   * @param {boolean} bubble   True to invalidate parent BBoxes
    */
-  public invalidateBBox() {
+  public invalidateBBox(bubble: boolean = true) {
     if (this.bboxComputed) {
       this.bboxComputed = false;
       this.lineBBox = [];
       this._breakCount = -1;
-      if (this.parent) {
+      if (this.parent && bubble) {
         this.parent.invalidateBBox();
       }
     }
