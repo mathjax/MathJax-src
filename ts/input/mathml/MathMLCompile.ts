@@ -24,6 +24,7 @@
 import {MmlFactory} from '../../core/MmlTree/MmlFactory.js';
 import {MmlNode, TextNode, XMLNode, AbstractMmlNode, AbstractMmlTokenNode, TEXCLASS}
 from '../../core/MmlTree/MmlNode.js';
+import {MmlMath} from '../../core/MmlTree/MmlNodes/math.js';
 import {userOptions, defaultOptions, OptionList} from '../../util/Options.js';
 import * as Entities from '../../util/Entities.js';
 import {DOMAdaptor} from '../../core/DOMAdaptor.js';
@@ -94,11 +95,17 @@ export class MathMLCompile<N, T, D> {
    */
   public compile(node: N, document: MathDocument<N, T, D>): MmlNode {
     let mml = this.makeNode(node);
-    if (!mml.attributes.getExplicit('overflow')) {
-      if (mml.attributes.get('display') === 'block') {
-        document.options.linebreaks.display && mml.attributes.set('overflow', 'linebreak');
+    const attributes = mml.attributes;
+    if (!attributes.getExplicit('overflow')) {
+      const options = document.options;
+      if (attributes.get('display') === 'block') {
+        if (options.linebreaks.display) {
+          attributes.set('overflow', 'linebreak');
+        } else if (options.overflow !== MmlMath.defaults.overflow) {
+          attributes.set('overflow', options.overflow);
+        }
       } else {
-        document.options.linebreaks.inline && mml.attributes.set('overflow', 'linebreak');
+        options.linebreaks.inline && attributes.set('overflow', 'linebreak');
       }
     }
     mml.verifyTree(this.options['verify']);

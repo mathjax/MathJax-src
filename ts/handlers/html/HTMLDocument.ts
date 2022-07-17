@@ -68,6 +68,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
       ...AbstractMathDocument.OPTIONS.renderActions,
       styles: [STATE.INSERTED + 1, '', 'updateStyleSheet', false]  // update styles on a rerender() call
     }),
+    overflow: 'scroll',               // default for overflow (scroll/scale/truncate/elide/linebreak)
     linebreaks: {
       display: true,                  // true for automatic linebreaking of displayed equations
       inline: true,                   // true for browser-based breaking of inline equations
