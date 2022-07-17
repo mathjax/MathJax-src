@@ -500,7 +500,8 @@ export class LinebreakVisitor<
     mtext.clearBreakPoints();
     const space = mtext.textWidth(' ');
     const bbox = wrapper.getBBox();
-    this.addWidth(bbox, bbox.L);
+    const [L, R] = this.getBorderLR(wrapper);
+    this.addWidth(bbox, bbox.L + L);
     //
     // Loop through the mtext children...
     //
@@ -508,7 +509,7 @@ export class LinebreakVisitor<
     for (const j of children.keys()) {
       const child = children[j];
       //
-      //  If the node is a text node:
+      //  If the child is a text node:
       //    Break it into words and loop thorugh them, adding their width
       //    and inserting breakpoints for the spaces
       //  Otherwise (child is mglyph or embedded HTML)
@@ -527,6 +528,7 @@ export class LinebreakVisitor<
         this.addWidth(child.getBBox());
       }
     }
+    this.addWidth(bbox, bbox.R + R);
   }
 
   /**

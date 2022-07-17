@@ -254,13 +254,15 @@ export function CommonMtextMixin<
     public computeLineBBox(i: number): LineBBox {
       const bbox = LineBBox.from(this.getOuterBBox());
       if (!this.breakCount) return bbox;
+      bbox.w = this.getBreakWidth(i);
       if (i === 0) {
         bbox.R = 0;
+        this.addLeftBorders(bbox);
       } else {
         bbox.L = 0;
         bbox.indentData = [['left', '0'], ['left', '0'], ['left', '0']];  // FIXME: do something better, here
+        i === this.breakCount && this.addRightBorders(bbox);
       }
-      bbox.w = this.getBreakWidth(i);
       return bbox;
     }
 
