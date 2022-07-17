@@ -847,10 +847,14 @@ export function CommonScriptbaseMixin<
       const n = this.breakCount;
       if (!n) return LineBBox.from(this.getOuterBBox());
       const bbox = this.baseChild.getLineBBox(i).copy();
-      if (i < n) return bbox;
-      this.appendScripts(bbox);
-      this.addMiddleBorders(bbox);
-      this.addRightBorders(bbox);
+      if (i < n) {
+        i === 0 && this.addLeftBorders(bbox);
+        this.addMiddleBorders(bbox);
+      } else {
+        this.appendScripts(bbox);
+        this.addMiddleBorders(bbox);
+        this.addRightBorders(bbox);
+      }
       return bbox;
     }
 
