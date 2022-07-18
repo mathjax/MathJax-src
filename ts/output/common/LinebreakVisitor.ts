@@ -191,7 +191,7 @@ export class LinebreakVisitor<
         return p + 5000;
       }
       const parent = mo.node.Parent;
-      if (parent?.isKind('mmultiscripts')) {
+      if (parent?.isKind('mmultiscripts') && mo.node === this.getFirstToken(parent)) {
         const prescripts = !!parent.childNodes.filter(node => node.isKind('mprescripts')).length;
         if (prescripts) return NOBREAK;
       }
@@ -203,7 +203,8 @@ export class LinebreakVisitor<
     close: (p, mo) => {
       const parent = mo.node.Parent;
       if (parent?.isKind('msubsup') &&
-          !(parent.isKind('mmultiscripts') && parent.childNodes[1]?.isKind('mprescripts'))) {
+          !(parent.isKind('mmultiscripts') && parent.childNodes[1]?.isKind('mprescripts')) &&
+          mo.node === this.getLastToken(parent.childNodes[0])) {
         return NOBREAK;
       }
       return p + 500;
@@ -364,6 +365,16 @@ export class LinebreakVisitor<
     const border = data?.border?.width || [0, 0, 0, 0];
     const padding = data?.padding || [0, 0, 0, 0];
     return [border[3] + padding[3], border[1] + padding[1]];
+  }
+
+  /******************************************************************************/
+
+  protected getFirstToken(node:MmlNode): MmlNode {
+    return (node.isToken ? node : this.getFirstToken(node.childNodes[0]));
+  }
+
+  protected getLastToken(node: MmlNode): MmlNode {
+    return (node.isToken ? node : this.getLastToken(node.childNodes[node.childNodes.length - 1]));
   }
 
   /******************************************************************************/
