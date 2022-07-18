@@ -369,10 +369,18 @@ export class LinebreakVisitor<
 
   /******************************************************************************/
 
-  protected getFirstToken(node:MmlNode): MmlNode {
+  /**
+   * @param {MmlNode} node   The node to find the first token child for
+   * @return {MmlNode}       The first token child (at any depth) for the node
+   */
+  protected getFirstToken(node: MmlNode): MmlNode {
     return (node.isToken ? node : this.getFirstToken(node.childNodes[0]));
   }
 
+  /**
+   * @param {MmlNode} node   The node to find the last token child for
+   * @return {MmlNode}       The last token child (at any depth) for the node
+   */
   protected getLastToken(node: MmlNode): MmlNode {
     return (node.isToken ? node : this.getLastToken(node.childNodes[node.childNodes.length - 1]));
   }
