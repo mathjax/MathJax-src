@@ -568,10 +568,10 @@ new sm.CommandMap('macros', {
 
   hskip:              'Hskip',
   hspace:             'Hskip',
-  kern:               'Hskip',
+  kern:              ['Hskip', true],
   mskip:              'Hskip',
   mspace:             'Hskip',
-  mkern:              'Hskip',
+  mkern:             ['Hskip', true],
   rule:               'rule',
   Rule:              ['Rule'],
   Space:             ['Rule', 'blank'],

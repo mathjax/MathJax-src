@@ -95,7 +95,7 @@ export const ChtmlMspace = (function <N, T, D>(): ChtmlMspaceClass<N, T, D> {
         this.adaptor.setStyle(chtml[0], 'marginRight', this.em(w));
         w = 0;
       }
-      if (w) {
+      if (w && !this.breakCount) {
         this.adaptor.setStyle(chtml[0], 'width', this.em(w));
       }
       h = Math.max(0, h + d);

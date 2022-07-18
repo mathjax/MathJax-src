@@ -899,10 +899,11 @@ BaseMethods.MoveLeftRight = function(parser: TexParser, name: string) {
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.Hskip = function(parser: TexParser, name: string) {
+BaseMethods.Hskip = function(parser: TexParser, name: string, nobreak: boolean = false) {
   // @test Modulo
   const node = parser.create('node', 'mspace', [],
                              {width: parser.GetDimen(name)});
+  nobreak && NodeUtil.setAttribute(node, 'linebreak', 'nobreak');
   parser.Push(node);
 };
 

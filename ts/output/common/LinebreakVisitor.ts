@@ -39,6 +39,7 @@ import {BBox} from '../../util/BBox.js';
 import {TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import {OPTABLE} from '../../core/MmlTree/OperatorDictionary.js';
 import {MmlNode, TextNode} from '../../core/MmlTree/MmlNode.js';
+import {MmlMspace} from '../../core/MmlTree/MmlNodes/mspace.js';
 
 /************************************************************************************/
 
@@ -208,6 +209,14 @@ export class LinebreakVisitor<
         return NOBREAK;
       }
       return p + 500;
+    },
+    //
+    // Adjust for mspace width
+    //
+    space: (p, mspace) => {
+      if (mspace.node.attributes.getExplicit('style')) return NOBREAK;
+      const w = mspace.getBBox().w;
+      return (w <= 0 ? NOBREAK : w < 1 ? p : p - 100 * (w + 4));
     },
     //
     // Adjust for a separator (TeX doesn't break at commas, for example)
@@ -481,16 +490,16 @@ export class LinebreakVisitor<
    */
   public visitMspaceNode(wrapper: WW, i: number) {
     const bbox = wrapper.getLineBBox(i);
-    this.addWidth(bbox);
     const attributes = wrapper.node.attributes;
-    if (attributes.getExplicit('width') === undefined &&
+    if (/*attributes.getExplicit('width') === undefined &&*/
         attributes.getExplicit('height') === undefined &&
         attributes.getExplicit('depth') === undefined) {
       const penalty = this.mspacePenalty(wrapper as any as CommonMspace<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>);
       bbox.getIndentData(wrapper.node);
       const dw = wrapper.processIndent('', bbox.indentData[1][1], '', bbox.indentData[0][1], this.state.width)[1];
-      this.pushBreak(wrapper, penalty, dw, null);
+      this.pushBreak(wrapper, penalty, dw - bbox.w, null);
     }
+    this.addWidth(bbox);
   }
 
   /**
@@ -500,7 +509,7 @@ export class LinebreakVisitor<
   protected mspacePenalty(mspace: CommonMspace<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): number {
     const linebreak = mspace.node.attributes.get('linebreak');
     const FACTORS = this.FACTORS;
-    let penalty = FACTORS.tail(FACTORS.width(0));
+    let penalty = FACTORS.space(FACTORS.tail(FACTORS.width(0)), mspace as any);
     return (this.PENALTY[linebreak as string] || (p => p))(FACTORS.depth(penalty));
   }
 
