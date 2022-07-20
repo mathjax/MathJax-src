@@ -193,7 +193,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
             const math = (node.node as AbstractMmlNode).factory.create('math', {}, [node.childNodes[1].node]);
             const tool = node.html('mjx-tool', {}, [node.html('mjx-tip')]);
             const hidden = adaptor.append(rect, node.svg('foreignObject', {style: {display: 'none'}}, [tool])) as N;
-            node.jax.processMath(math, adaptor.firstChild(tool) as N);
+            node.jax.processMath(node.jax.factory.wrap(math), adaptor.firstChild(tool) as N);
             node.childNodes[1].node.parent = node.node;
             //
             // Set up the event handlers to display and remove the tooltip

@@ -32,7 +32,6 @@ import {TeXFont} from './svg/fonts/tex.js';
 import {StyleList as CssStyleList} from '../util/StyleList.js';
 import {FontCache} from './svg/FontCache.js';
 import {unicodeChars} from '../util/string.js';
-import {percent} from '../util/lengths.js';
 
 export const SVGNS = 'http://www.w3.org/2000/svg';
 export const XLINKNS = 'http://www.w3.org/1999/xlink';

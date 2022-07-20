@@ -39,7 +39,6 @@ import {BBox} from '../../util/BBox.js';
 import {TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import {OPTABLE} from '../../core/MmlTree/OperatorDictionary.js';
 import {MmlNode, TextNode} from '../../core/MmlTree/MmlNode.js';
-import {MmlMspace} from '../../core/MmlTree/MmlNodes/mspace.js';
 
 /************************************************************************************/
 
