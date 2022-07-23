@@ -72,7 +72,8 @@ CommonOutputJax<
    */
   public static commonStyles: CssStyleList = {
     'mjx-container[jax="SVG"]': {
-      direction: 'ltr'
+      direction: 'ltr',
+      'white-space': 'nowrap'
     },
     'mjx-container[jax="SVG"] > svg': {
       overflow: 'visible',
@@ -366,7 +367,7 @@ CommonOutputJax<
       const line = lineBBox[i];
       const [mml, mo] = wrapper.childNodes[0].getBreakNode(line);
       const forced = !!(mml && mml.node.getProperty('forcebreak'));
-      if (i || !forced) {
+      if (i || forced) {
         const space = (mml && !newline ? mml.getLineBBox(0).originalL : 0) * 400;
         (space || !forced) && adaptor.insert(
           adaptor.node('mjx-break', forced ? {style: {'font-size': space.toFixed(1) + '%'}} : {newline: true}),

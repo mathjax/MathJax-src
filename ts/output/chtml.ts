@@ -71,7 +71,10 @@ CommonOutputJax<
    *  The default styles for CommonHTML
    */
   public static commonStyles: CssStyleList = {
-    'mjx-container[jax="CHTML"]': {'line-height': 0},
+    'mjx-container[jax="CHTML"]': {
+      'line-height': 0,
+      'white-space': 'nowrap'
+    },
 
     'mjx-container [space="1"]': {'margin-left': '.111em'},
     'mjx-container [space="2"]': {'margin-left': '.167em'},

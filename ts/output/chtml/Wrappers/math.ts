@@ -101,7 +101,6 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
         'letter-spacing': 'normal',
         'word-wrap': 'normal',
         'word-spacing': 'normal',
-        'white-space': 'nowrap',
         'direction': 'ltr',
         'padding': '1px 0'
       },
