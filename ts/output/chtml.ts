@@ -72,7 +72,6 @@ CommonOutputJax<
    */
   public static commonStyles: CssStyleList = {
     'mjx-container[jax="CHTML"]': {
-      'line-height': 0,
       'white-space': 'nowrap'
     },
 
