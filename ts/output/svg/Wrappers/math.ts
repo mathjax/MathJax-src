@@ -92,16 +92,19 @@ export const SvgMath = (function <N, T, D>(): SvgMathClass<N, T, D> {
       'mjx-container[jax="SVG"][display="true"]': {
         display: 'block',
         'text-align': 'center',
+        'justify-content': 'center',
         margin: '1em 0'
       },
       'mjx-container[jax="SVG"][display="true"][width="full"]': {
         display: 'flex'
       },
       'mjx-container[jax="SVG"][justify="left"]': {
-        'text-align': 'left'
+        'text-align': 'left',
+        'justify-content': 'left'
       },
       'mjx-container[jax="SVG"][justify="right"]': {
-        'text-align': 'right'
+        'text-align': 'right',
+        'justify-content': 'right'
       },
       //
       //  For inline breakpoints, use a scaled space and make it breakable

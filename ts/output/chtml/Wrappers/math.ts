@@ -107,19 +107,22 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
       'mjx-container[jax="CHTML"][display="true"]': {
         display: 'block',
         'text-align': 'center',
+        'justify-content': 'center',
         margin: '1em 0'
       },
       'mjx-container[jax="CHTML"][display="true"][width="full"]': {
-        display: 'flex'
+        display: 'flex',
       },
       'mjx-container[jax="CHTML"][display="true"] mjx-math': {
         padding: 0
       },
       'mjx-container[jax="CHTML"][justify="left"]': {
-        'text-align': 'left'
+        'text-align': 'left',
+        'justify-content': 'left'
       },
       'mjx-container[jax="CHTML"][justify="right"]': {
-        'text-align': 'right'
+        'text-align': 'right',
+        'justify-content': 'right'
       },
       //
       //  For inline breakpoints, use a scaled space and make it breakable

@@ -139,6 +139,7 @@ export function CommonMathMixin<
           attributes.get('overflow') === 'linebreak') {
         const W = this.containerWidth;
         bbox.w > W && this.childNodes[0].breakToWidth(W);
+        bbox.updateFrom(this.childNodes[0].getBBox());
       }
     }
 

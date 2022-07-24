@@ -80,6 +80,8 @@ export interface MenuSettings {
   ctrl: boolean;
   shift: boolean;
   scale: string;
+  overflow: string;
+  breakInline: boolean;
   autocollapse: boolean;
   collapsible: boolean;
   inTabOrder: boolean;
@@ -135,6 +137,8 @@ export class Menu {
       ctrl: false,
       shift: false,
       scale: 1,
+      overflow: 'Scroll',
+      breakInline: true,
       autocollapse: false,
       collapsible: false,
       inTabOrder: true,
@@ -407,6 +411,8 @@ export class Menu {
         this.variable<string> ('zoom'),
         this.variable<string> ('zscale'),
         this.variable<string> ('renderer', jax => this.setRenderer(jax)),
+        this.variable<string> ('overflow', overflow => this.setOverflow(overflow)),
+        this.variable<boolean>('breakInline', breaks => this.setInlineBreaks(breaks)),
         this.variable<boolean>('alt'),
         this.variable<boolean>('cmd'),
         this.variable<boolean>('ctrl'),
@@ -453,6 +459,13 @@ export class Menu {
         this.rule(),
         this.submenu('Settings', 'Math Settings', [
           this.submenu('Renderer', 'Math Renderer', this.radioGroup('renderer', [['CHTML'], ['SVG']])),
+          this.submenu('Overflow', 'Wide Expressions', [
+            this.radioGroup('overflow', [
+              ['Scroll'], ['Linebreak'], ['Scale'], ['Truncate'], ['Elide']
+            ]),
+            this.rule(),
+            this.checkbox('BreakInline', 'Allow In-line Breaks', 'breakInline'),
+          ]),
           this.rule(),
           this.submenu('ZoomTrigger', 'Zoom Trigger', [
             this.command('ZoomNow', 'Zoom Once Now', () => this.zoom(null, '', this.menu.mathItem)),
@@ -551,6 +564,7 @@ export class Menu {
       ]
     }) as MJContextMenu;
     const menu = this.menu;
+    menu.findID('Settings', 'Overflow', 'Elide').disable();
     this.about.attachMenu(menu);
     this.help.attachMenu(menu);
     this.originalText.attachMenu(menu);
@@ -684,6 +698,25 @@ export class Menu {
     if (this.settings.renderer !== this.defaultSettings.renderer) {
       this.setRenderer(this.settings.renderer);
     }
+  }
+
+  /**
+   * @param {string} overflow   The new overflow value
+   */
+  protected setOverflow(overflow: string) {
+    this.document.options.overflow = overflow.toLowerCase();
+    if (overflow === 'Linebreak') {
+      this.document.options.linbreaks.display = true;
+    }
+    this.document.rerender();
+  }
+
+  /**
+   * @param {boolean} breaks   The new in-line break value
+   */
+  protected setInlineBreaks(breaks: boolean) {
+    this.document.options.linebreaks.inline = breaks;
+    this.document.rerender();
   }
 
   /**

@@ -94,6 +94,7 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
      * @override
      */
     public toSVG(parents: N[]) {
+      this.getBBox();
       const n = this.linebreakCount = (this.isStack ? 0 : this.breakCount);
       if (n || !this.node.isInferred) {
         parents = this.standardSvgNodes(parents);

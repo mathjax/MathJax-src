@@ -277,11 +277,13 @@ export function CommonMrowMixin<
         lines[0].L = this.bbox.L;
         lines[n].R = this.bbox.R;
       } else {
-        bbox.pwidth = BBox.fullWidth;  // stretch to fill container
         bbox.w = Math.max(...this.lineBBox.map(bbox => bbox.w));  // natural width
         this.shiftLines(bbox.w);
-        if (this.node.isInferred) {
-          this.parent.bbox.pwidth = BBox.fullWidth;
+        if (!this.jax.math.display && !this.jax.document.options.linebreaks.inline) {
+          bbox.pwidth = BBox.fullWidth;
+          if (this.node.isInferred) {
+            this.parent.bbox.pwidth = BBox.fullWidth;
+          }
         }
       }
       bbox.clean();

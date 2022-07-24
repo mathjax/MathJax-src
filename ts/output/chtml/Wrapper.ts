@@ -385,7 +385,7 @@ CommonWrapper<
    */
 
   public drawBBox() {
-    let {w, h, d, R}  = this.getBBox();
+    let {w, h, d, R}  = this.getOuterBBox();
     const box = this.html('mjx-box', {style: {
       opacity: .25, 'margin-left': this.em(-w - R)
     }}, [
