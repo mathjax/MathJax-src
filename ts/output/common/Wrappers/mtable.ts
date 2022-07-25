@@ -685,7 +685,7 @@ export function CommonMtableMixin<
      * @override
      */
     public breakColumn(i: number, W: number) {
-      if (this.jax.math.root.attributes.get('overflow') !== 'linebreak') return;
+      if (this.jax.math.root.attributes.get('overflow') !== 'linebreak' || !this.jax.math.display) return;
       const {D} = this.getTableData();
       let j = 0;
       let w = 0;

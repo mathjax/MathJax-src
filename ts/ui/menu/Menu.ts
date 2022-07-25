@@ -395,6 +395,8 @@ export class Menu {
     }
     this.settings.scale = jax.options.scale;
     this.defaultSettings = Object.assign({}, this.settings);
+    this.settings.overflow = jax.options.overflow;
+    this.settings.breakInline = jax.options.linebreaks.inline;
   }
 
   /**
@@ -704,10 +706,7 @@ export class Menu {
    * @param {string} overflow   The new overflow value
    */
   protected setOverflow(overflow: string) {
-    this.document.options.overflow = overflow.toLowerCase();
-    if (overflow === 'Linebreak') {
-      this.document.options.linbreaks.display = true;
-    }
+    this.document.outputJax.options.overflow = overflow.toLowerCase();
     this.document.rerender();
   }
 
@@ -715,7 +714,7 @@ export class Menu {
    * @param {boolean} breaks   The new in-line break value
    */
   protected setInlineBreaks(breaks: boolean) {
-    this.document.options.linebreaks.inline = breaks;
+    this.document.outputJax.options.linebreaks.inline = breaks;
     this.document.rerender();
   }
 

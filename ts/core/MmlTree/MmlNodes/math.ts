@@ -45,7 +45,7 @@ export class MmlMath extends AbstractMmlLayoutNode {
     displaystyle: false,
     display: 'inline',
     maxwidth: '',
-    overflow: 'scroll',   // should be linebreak, but we set it explicitly in input jax based on user configuration
+    overflow: 'linebreak',
     altimg: '',
     'altimg-width': '',
     'altimg-height': '',

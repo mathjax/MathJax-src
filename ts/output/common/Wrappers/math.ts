@@ -135,8 +135,7 @@ export function CommonMathMixin<
     protected computeBBox(bbox: BBox, recompute: boolean = false) {
       super.computeBBox(bbox, recompute);
       const attributes = this.node.attributes;
-      if (attributes.get('display') === 'block' && !this.parent &&
-          attributes.get('overflow') === 'linebreak') {
+      if (!this.parent && this.jax.math.display && attributes.get('overflow') === 'linebreak') {
         const W = this.containerWidth;
         bbox.w > W && this.childNodes[0].breakToWidth(W);
         bbox.updateFrom(this.childNodes[0].getBBox());

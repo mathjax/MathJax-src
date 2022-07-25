@@ -24,11 +24,9 @@
 import {MmlFactory} from '../../core/MmlTree/MmlFactory.js';
 import {MmlNode, TextNode, XMLNode, AbstractMmlNode, AbstractMmlTokenNode, TEXCLASS}
 from '../../core/MmlTree/MmlNode.js';
-import {MmlMath} from '../../core/MmlTree/MmlNodes/math.js';
 import {userOptions, defaultOptions, OptionList} from '../../util/Options.js';
 import * as Entities from '../../util/Entities.js';
 import {DOMAdaptor} from '../../core/DOMAdaptor.js';
-import {MathDocument} from '../../core/MathDocument.js';
 
 /********************************************************************/
 /**
@@ -93,21 +91,8 @@ export class MathMLCompile<N, T, D> {
    * @param {N} node     The <math> node to convert to MmlNodes
    * @return {MmlNode}   The MmlNode at the root of the converted tree
    */
-  public compile(node: N, document: MathDocument<N, T, D>): MmlNode {
+  public compile(node: N): MmlNode {
     let mml = this.makeNode(node);
-    const attributes = mml.attributes;
-    if (!attributes.getExplicit('overflow')) {
-      const options = document.options;
-      if (attributes.get('display') === 'block') {
-        if (options.linebreaks.display) {
-          attributes.set('overflow', 'linebreak');
-        } else if (options.overflow !== MmlMath.defaults.overflow) {
-          attributes.set('overflow', options.overflow);
-        }
-      } else {
-        options.linebreaks.inline && attributes.set('overflow', 'linebreak');
-      }
-    }
     mml.verifyTree(this.options['verify']);
     mml.setInheritedAttributes({}, false, 0, false);
     mml.walkTree(this.markMrows);

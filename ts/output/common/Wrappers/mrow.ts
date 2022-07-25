@@ -279,7 +279,7 @@ export function CommonMrowMixin<
       } else {
         bbox.w = Math.max(...this.lineBBox.map(bbox => bbox.w));  // natural width
         this.shiftLines(bbox.w);
-        if (!this.jax.math.display && !this.jax.document.options.linebreaks.inline) {
+        if (!this.jax.math.display && !this.jax.options.linebreaks.inline) {
           bbox.pwidth = BBox.fullWidth;
           if (this.node.isInferred) {
             this.parent.bbox.pwidth = BBox.fullWidth;

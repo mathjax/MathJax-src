@@ -109,6 +109,12 @@ export abstract class CommonOutputJax<
     exFactor: .5,                  // default size of ex in em units
     displayAlign: 'center',        // default for indentalign when set to 'auto'
     displayIndent: '0',            // default for indentshift when set to 'auto'
+    displayOverflow: 'scroll',     // default for overflow (scroll/scale/truncate/elide/linebreak)
+    linebreaks: {                  // options for when overflow is linebreak
+      inline: true,                   // true for browser-based breaking of inline equations
+      width: '100%',                  // a fixed size or a percentage of the container width
+      LinebreakVisitor: null,         // The LinebreakVisitor to use
+    },
     wrapperFactory: null,          // The wrapper factory to use
     font: null,                    // The FontData object to use
     cssStyles: null,               // The CssStyles object to use
@@ -223,6 +229,8 @@ export abstract class CommonOutputJax<
     this.cssStyles = this.options.cssStyles || new CssStyles();
     this.font = this.options.font || new defaultFont(fontOptions);
     this.unknownCache = new Map();
+    const linebreaks = (this.options.linebreaks.LinebreakVisitor || LinebreakVisitor) as typeof Linebreaks;
+    this.linebreaks = new linebreaks(this.factory);
   }
 
   /*****************************************************************/
@@ -295,6 +303,7 @@ export abstract class CommonOutputJax<
     this.container = node;
     this.pxPerEm = math.metrics.ex / this.font.params.x_height;
     this.nodeMap = new Map<MmlNode, WW>();
+    math.root.attributes.getAllInherited().overflow = this.options.displayOverflow;
     const overflow = math.root.attributes.get('overflow');
     if (math.display) {
       overflow === 'scroll' && this.adaptor.setStyle(node, 'overflow', 'auto');
@@ -302,7 +311,7 @@ export abstract class CommonOutputJax<
     }
     const linebreak = (overflow === 'linebreak');
     linebreak && this.getLinebreakWidth();
-    if (linebreak && !math.display && !math.outputData.inlineMarked) {
+    if (this.options.linebreaks.inline && !math.display && !math.outputData.inlineMarked) {
       this.markInlineBreaks(math.root.childNodes?.[0]);
       math.outputData.inlineMarked = true;
     }
@@ -345,7 +354,7 @@ export abstract class CommonOutputJax<
    */
   public getLinebreakWidth() {
     const W = this.math.metrics.containerWidth / this.pxPerEm;
-    const width = this.math.root.attributes.get('maxwidth') || this.document.options.linebreaks.width;
+    const width = this.math.root.attributes.get('maxwidth') || this.options.linebreaks.width;
     this.containerWidth = length2em(width, W, 1, this.pxPerEm);
   }
 
@@ -598,12 +607,6 @@ export abstract class CommonOutputJax<
     if (html) {
       this.document = html;
       this.adaptor.document = html.document;
-      if (!this.linebreaks) {
-        const linebreaks = (html.options.linebreaks.display ?
-                            (html.options.linebreaks.LinebreakVisitor || LinebreakVisitor) :
-                            Linebreaks) as typeof Linebreaks;
-        this.linebreaks = new linebreaks(this.factory);
-      }
     }
   }
 

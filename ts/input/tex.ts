@@ -27,7 +27,6 @@ import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {MmlFactory} from '../core/MmlTree/MmlFactory.js';
-import {MmlMath} from '../core/MmlTree/MmlNodes/math.js';
 
 import {FindTeX} from './tex/FindTeX.js';
 
@@ -201,15 +200,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
       NodeUtil.setAttribute(node, 'indentalign', globalEnv.indentalign);
     }
     if (display) {
-      const options = document.options;
       NodeUtil.setAttribute(node, 'display', 'block');
-      if (options.linebreaks.display) {
-        NodeUtil.setAttribute(node, 'overflow', 'linebreak');
-      } else if (options.overflow !== MmlMath.defaults.overflow) {
-        NodeUtil.setAttribute(node, 'overflow', options.overflow);
-      }
-    } else {
-      document.options.linebreaks.inline && NodeUtil.setAttribute(node, 'overflow', 'linebreak');
     }
     this.parseOptions.tags.finishEquation(math);
     this.parseOptions.root = node;
