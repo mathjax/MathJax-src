@@ -1279,13 +1279,10 @@ BaseMethods.CrLaTeX = function(parser: TexParser, name: string, nobrackets: bool
       top.addRowSpacing(n);
     }
   } else {
-    if (n) {
-      // @test Custom Linebreak
-      node = parser.create('node', 'mspace', [], {depth: n});
-      parser.Push(node);
-    }
     // @test Linebreak
     node = parser.create('node', 'mspace', [], {linebreak: TexConstant.LineBreak.NEWLINE});
+    // @test Custom Linebreak
+    if (n) NodeUtil.setAttribute(node, 'data-lineleading', n);
     parser.Push(node);
   }
 };

@@ -181,7 +181,9 @@ export function CommonMspaceMixin<
      * @override
      */
     public computeLineBBox(i: number): LineBBox {
-      const bbox = LineBBox.from(BBox.zero(), LineBBox.defaultLeading);
+      const leadingString = this.node.attributes.get('data-lineleading') as string;
+      const leading = this.length2em(leadingString, LineBBox.defaultLeading);
+      const bbox = LineBBox.from(BBox.zero(), leading);
       if (i === 1) {
         bbox.getIndentData(this.node);
         bbox.isFirst = true;
