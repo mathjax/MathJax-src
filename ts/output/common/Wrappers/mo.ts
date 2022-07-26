@@ -87,14 +87,19 @@ export interface CommonMo<
   breakStyle: string;
 
   /**
-   * Is 1 if this embellished mo is a breakpoint, 0 otherwise
+   * The linebreakmultchar used for breaking an invisible times
+   */
+  multChar: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+
+  /**
+   * Value is 1 if this embellished mo is a breakpoint, 0 otherwise
    */
   embellishedBreakCount: number;
 
   /**
-   * The linebreakmultchar used for breaking an invisible times
+   * The break style as an for embellished operator
    */
-  multChar: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+  embellishedBreakStyle: string;
 
   /**
    * Get the (unmodified) bbox of the contents (before centering or setting accents to width 0)
@@ -284,7 +289,14 @@ export function CommonMoMixin<
      * @override
      */
     get embellishedBreakCount() {
-      return (this.getBreakStyle() ? 1 : 0);
+      return (this.embellishedBreakStyle ? 1 : 0);
+    }
+
+    /**
+     * @override
+     */
+    get embellishedBreakStyle() {
+      return (this.breakStyle || this.getBreakStyle());
     }
 
     /**
@@ -463,7 +475,7 @@ export function CommonMoMixin<
      * @override
      */
     public setBreakStyle(linebreak: string = '') {
-      this.breakStyle = (this.node.parent.isEmbellished ? '' : this.getBreakStyle(linebreak));
+      this.breakStyle = (this.node.parent.isEmbellished && !linebreak ? '' : this.getBreakStyle(linebreak));
       if (!this.breakCount) return;
       if (this.multChar) {
         //

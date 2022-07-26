@@ -696,7 +696,7 @@ export class CommonWrapper<
   protected embellishedBBox(i: number): LineBBox {
     if (!this.node.isEmbellished || this.node.isKind('mo')) return null;
     const mo = this.coreMO();
-    return mo.moLineBBox(i, mo.getBreakStyle(), this.getOuterBBox());
+    return mo.moLineBBox(i, mo.embellishedBreakStyle, this.getOuterBBox());
   }
 
   /**

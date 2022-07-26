@@ -150,7 +150,7 @@ export class LinebreakVisitor<
 > extends Linebreaks<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
 
   /**
-   * Penalties for the various line breaks: [p] for fixed penalty, [ , p] for cumulative penalty
+   * Penalty functions for the various linebreak values
    */
   protected PENALTY: {[key: string]: (p: number) => number} = {
     newline:   _p => 0,
@@ -258,7 +258,8 @@ export class LinebreakVisitor<
     }
     for (const [ww, ij] of this.state.breaks) {
       if (ij === null) {
-        (ww as any).setBreakStyle(ww.node.attributes.get('linebreakstyle') || 'before');
+        const mo = (ww as any).coreMO();
+        mo.setBreakStyle(mo.node.attributes.get('linebreakstyle') || 'before');
       } else {
         (ww as any).setBreakAt(ij);
       }
@@ -400,7 +401,11 @@ export class LinebreakVisitor<
    */
   public visitNode(wrapper: WW, i: number) {
     this.state.depth++;
-    super.visitNode(wrapper, i);
+    if (wrapper.node.isEmbellished && !wrapper.node.isKind('mo')) {
+      this.visitEmbellishedOperator(wrapper, i);
+    } else {
+      super.visitNode(wrapper, i);
+    }
     this.state.depth--;
   }
 
@@ -416,6 +421,23 @@ export class LinebreakVisitor<
       i === 0 && this.addWidth(bbox, bbox.L + L);
       this.visitNode(wrapper.childNodes[0], i);
       i === wrapper.breakCount && this.addWidth(bbox, bbox.R + R);
+    }
+  }
+
+  public visitEmbellishedOperator(wrapper: WW, _i: number) {
+    const mo = wrapper.coreMO();
+    const bbox = LineBBox.from(wrapper.getOuterBBox());
+    bbox.getIndentData(mo.node);
+    const style = mo.getBreakStyle(mo.node.attributes.get('linebreakstyle') as string);
+    const dw = mo.processIndent('', bbox.indentData[1][1], '', bbox.indentData[0][1], this.state.width)[1];
+    const penalty = this.moPenalty(mo);
+    if (style === 'before') {
+      this.pushBreak(wrapper, penalty, dw - bbox.L, null);
+      this.addWidth(bbox);
+    } else {
+      this.addWidth(bbox);
+      const w = (style === 'after' ? 0 : mo.multChar ? mo.multChar.getBBox().w : bbox.w) + dw;
+      this.pushBreak(wrapper, penalty, w, null);
     }
   }
 
