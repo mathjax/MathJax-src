@@ -113,6 +113,7 @@ export const ChtmlMunder = (function <N, T, D>(): ChtmlMunderClass<N, T, D> {
      * @override
      */
     public toCHTML(parents: N[]) {
+      if (this.toEmbellishedCHTML(parents)) return;
       if (this.hasMovableLimits()) {
         super.toCHTML(parents);
         this.adaptor.setAttribute(this.dom[0], 'limits', 'false');
@@ -216,6 +217,7 @@ export const ChtmlMover = (function <N, T, D>(): ChtmlMoverClass<N, T, D> {
      * @override
      */
     public toCHTML(parents: N[]) {
+      if (this.toEmbellishedCHTML(parents)) return;
       if (this.hasMovableLimits()) {
         super.toCHTML(parents);
         this.adaptor.setAttribute(this.dom[0], 'limits', 'false');
@@ -312,6 +314,7 @@ export const ChtmlMunderover = (function <N, T, D>(): ChtmlMunderoverClass<N, T,
      * @override
      */
     public toCHTML(parents: N[]) {
+      if (this.toEmbellishedCHTML(parents)) return;
       if (this.hasMovableLimits()) {
         super.toCHTML(parents);
         this.adaptor.setAttribute(this.dom[0], 'limits', 'false');

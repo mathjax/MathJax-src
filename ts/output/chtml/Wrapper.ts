@@ -119,7 +119,37 @@ CommonWrapper<
    * @param {N[]} parents  The HTML nodes where the output is to be added
    */
   public toCHTML(parents: N[]) {
+    if (this.node.isEmbellished && this.toEmbellishedCHTML(parents)) return;
     this.addChildren(this.standardChtmlNodes(parents));
+  }
+
+  /**
+   * Create the HTML for an embellished mo, if this is one.
+   *
+   * @param {N[]} parents  The HTML nodes where the output is to be added
+   * @return {boolean}     True when embellished output is produced, false if not
+   */
+  public toEmbellishedCHTML(parents: N[]): boolean {
+    if (parents.length <= 1) return false;
+    const adaptor = this.adaptor;
+    parents.forEach(dom => adaptor.append(dom, this.html('mjx-linestrut')));
+    const style = this.coreMO().getBreakStyle();
+    //
+    // At the end of the first line or beginning of the second,
+    //   either typeset the embellished op, or create a placeholder
+    //   and keep track of the created DOM nodes.
+    //
+    const dom = [];
+    for (const [parent, STYLE] of [[parents[0], 'before'], [parents[1], 'after']] as [N, string][]) {
+      if (style !== STYLE) {
+        this.toCHTML([parent]);
+        dom.push(this.dom[0]);
+      } else {
+        dom.push(this.createChtmlNodes([parent])[0]);
+      }
+    }
+    this.dom = dom;
+    return true;
   }
 
   /**
@@ -340,9 +370,6 @@ CommonWrapper<
       for (const name of names) {
         this.dom.forEach(dom => adaptor.addClass(dom, name));
       }
-    }
-    if (this.node.getProperty('breakable')) {
-      this.dom.forEach(dom => adaptor.setAttribute(dom, 'data-mjx-breakable', 'true'));
     }
   }
 

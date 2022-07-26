@@ -87,6 +87,11 @@ export interface CommonMo<
   breakStyle: string;
 
   /**
+   * Is 1 if this embellished mo is a breakpoint, 0 otherwise
+   */
+  embellishedBreakCount: number;
+
+  /**
    * The linebreakmultchar used for breaking an invisible times
    */
   multChar: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
@@ -97,6 +102,13 @@ export interface CommonMo<
    * @param {BBox} bbox   The bbox to fill
    */
   protoBBox(bbox: BBox): void;
+
+  /**
+   * @param {number} i       The line to get the LineBBox for
+   * @param {string} style   The linebreakstyle to use
+   * @param {BBox} obox      The bounding box of the embellished operator that is breaking
+   */
+  moLineBBox(i: number, style: string, obox?: BBox): LineBBox;
 
   /**
    * @return {number}    Offset to the left by half the actual width of the accent
@@ -266,6 +278,13 @@ export function CommonMoMixin<
      */
     get breakCount() {
       return (this.breakStyle ? 1 : 0);
+    }
+
+    /**
+     * @override
+     */
+    get embellishedBreakCount() {
+      return (this.getBreakStyle() ? 1 : 0);
     }
 
     /**
@@ -444,7 +463,7 @@ export function CommonMoMixin<
      * @override
      */
     public setBreakStyle(linebreak: string = '') {
-      this.breakStyle = this.getBreakStyle(linebreak);
+      this.breakStyle = (this.node.parent.isEmbellished ? '' : this.getBreakStyle(linebreak));
       if (!this.breakCount) return;
       if (this.multChar) {
         //
@@ -512,7 +531,13 @@ export function CommonMoMixin<
      * @override
      */
     public computeLineBBox(i: number): LineBBox {
-      const style = this.breakStyle;
+      return this.moLineBBox(i, this.breakStyle);
+    }
+
+    /**
+     * @override
+     */
+    public moLineBBox(i: number, style: string, obox: BBox = null) {
       const leadingString = this.node.attributes.get('lineleading') as string;
       const leading = this.length2em(leadingString, LineBBox.defaultLeading);
       if (i === 0 && style === 'before') {
@@ -521,7 +546,7 @@ export function CommonMoMixin<
         this.bbox.L = 0;
         return bbox;
       }
-      let bbox = LineBBox.from(this.getOuterBBox(), leading);
+      let bbox = LineBBox.from(obox || this.getOuterBBox(), leading);
       if (i === 1) {
         if (style === 'after') {
           bbox.w = bbox.h = bbox.d = 0;

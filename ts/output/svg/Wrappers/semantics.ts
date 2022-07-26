@@ -91,6 +91,7 @@ export const SvgSemantics = (function <N, T, D>(): SvgSemanticsClass<N, T, D> {
      * @override
      */
     public toSVG(parents: N[]) {
+      if (this.toEmbellishedSVG(parents)) return;
       const svg = this.standardSvgNodes(parents);
       if (this.childNodes.length) {
         this.childNodes[0].toSVG(svg);

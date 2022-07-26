@@ -696,7 +696,7 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
     //
     //  If this is a linebreak container, reset the indent attributes
     //
-    if (this.linebreakContainer) {
+    if (this.linebreakContainer && !this.isEmbellished) {
       const align = this.linebreakAlign;
       if (align) {
         const indentalign = this.attributes.get(align) || 'left';

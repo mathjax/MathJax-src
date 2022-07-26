@@ -279,6 +279,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
      * @override
      */
     public toSVG(parents: N[]) {
+      if (this.toEmbellishedSVG(parents)) return;
       const svg = this.standardSvgNodes(parents);
       const child = this.selected;
       let i = 0;

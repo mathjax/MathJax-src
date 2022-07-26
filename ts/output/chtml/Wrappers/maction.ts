@@ -272,6 +272,7 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
      * @override
      */
     public toCHTML(parents: N[]) {
+      if (this.toEmbellishedCHTML(parents)) return;
       const chtml = this.standardChtmlNodes(parents);
       const child = this.selected;
       child.toCHTML(chtml);

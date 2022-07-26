@@ -229,6 +229,7 @@ export const ChtmlMsubsup = (function <N, T, D>(): ChtmlMsubsupClass<N, T, D> {
      * @override
      */
     public toCHTML(parents: N[]) {
+      if (this.toEmbellishedCHTML(parents)) return;
       const adaptor = this.adaptor;
       const chtml = this.standardChtmlNodes(parents);
       const [base, sup, sub] = [this.baseChild, this.supChild, this.subChild];

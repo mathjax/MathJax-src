@@ -532,7 +532,7 @@ export class CommonWrapper<
     if (this._breakCount < 0) {
       const node = this.node;
       this._breakCount = (
-        node.isEmbellished ? this.coreMO().breakCount :
+        node.isEmbellished ? this.coreMO().embellishedBreakCount :
           node.arity < 0 && !node.linebreakContainer &&
           (this.childNodes[0] as any as CommonMrow<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).isStack ?
           this.childNodes[0].breakCount : 0
@@ -671,7 +671,7 @@ export class CommonWrapper<
     if (!this.lineBBox[i]) {
       const n = this.breakCount;
       if (n) {
-        const line = this.computeLineBBox(i);
+        const line = (this.embellishedBBox(i) || this.computeLineBBox(i));
         this.lineBBox[i] = line;
         if (i === 0) {
           if (!this.node.isKind('mo') && this.node.isEmbellished) {
@@ -691,9 +691,18 @@ export class CommonWrapper<
   }
 
   /**
+   * Get the bounding box for the i-th line of an embellished mo
+   */
+  protected embellishedBBox(i: number): LineBBox {
+    if (!this.node.isEmbellished || this.node.isKind('mo')) return null;
+    const mo = this.coreMO();
+    return mo.moLineBBox(i, mo.getBreakStyle(), this.getOuterBBox());
+  }
+
+  /**
    * Compute the bounding box for the i-th line (for when it is not in the cache).
    *
-   * @param {number} i   The number of the segment whose sizes are to be obtained
+   * @param {number} i   The number of the line whose sizes are to be obtained
    * @return {LineBBox}  The bounding box of the specified segment
    */
   protected computeLineBBox(i: number): LineBBox {
@@ -703,7 +712,7 @@ export class CommonWrapper<
   /**
    * Find the (embellished) mo or mspace where a break occurs
    *
-   * @param {LineBBox} bbox    The LinmeBBox for the line whose initial breakpoint is needed
+   * @param {LineBBox} bbox    The LineBBox for the line whose initial breakpoint is needed
    * @return {[WW, WW]}        The embellished mo node and its core mo
    */
   public getBreakNode(bbox: LineBBox): [WW, WW] {

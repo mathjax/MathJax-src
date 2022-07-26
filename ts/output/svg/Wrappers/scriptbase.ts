@@ -92,6 +92,7 @@ export const SvgScriptbase = (function <N, T, D>(): SvgScriptbaseClass<N, T, D> 
      * @override
      */
     public toSVG(parents: N[]) {
+      if (this.toEmbellishedSVG(parents)) return;
       const svg = this.standardSvgNodes(parents);
       const w = this.getBaseWidth();
       const [x, v] = this.getOffset();

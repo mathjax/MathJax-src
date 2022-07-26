@@ -109,6 +109,7 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<N, 
      * @override
      */
     public toSVG(parents: N[]) {
+      if (this.toEmbellishedSVG(parents)) return;
       const svg = this.standardSvgNodes(parents);
       const data = this.scriptData;
       //

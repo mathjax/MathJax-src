@@ -121,6 +121,7 @@ export const ChtmlMmultiscripts = (function <N, T, D>(): ChtmlMmultiscriptsClass
      * @override
      */
     public toCHTML(parents: N[]) {
+      if (this.toEmbellishedCHTML(parents)) return;
       const chtml = this.standardChtmlNodes(parents);
       const data = this.scriptData;
       //

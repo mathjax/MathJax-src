@@ -121,6 +121,7 @@ export const ChtmlScriptbase = (function <N, T, D>(): ChtmlScriptbaseClass<N, T,
      * @override
      */
     public toCHTML(parents: N[]) {
+      if (this.toEmbellishedCHTML(parents)) return;
       this.dom = this.standardChtmlNodes(parents);
       const [x, v] = this.getOffset();
       const dx = x - (this.baseRemoveIc ? this.baseIc : 0);

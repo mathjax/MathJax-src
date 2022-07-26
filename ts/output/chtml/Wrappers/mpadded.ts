@@ -102,6 +102,7 @@ export const ChtmlMpadded = (function <N, T, D>(): ChtmlMpaddedClass<N, T, D> {
      * @override
      */
     public toCHTML(parents: N[]) {
+      if (this.toEmbellishedCHTML(parents)) return;
       let chtml = this.standardChtmlNodes(parents);
       const content: N[] = [];
       const style: StringMap = {};

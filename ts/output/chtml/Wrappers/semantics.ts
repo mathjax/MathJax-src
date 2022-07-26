@@ -92,6 +92,7 @@ export const ChtmlSemantics = (function <N, T, D>(): ChtmlSemanticsClass<N, T, D
      * @override
      */
     public toCHTML(parents: N[]) {
+      if (this.toEmbellishedCHTML(parents)) return;
       const chtml = this.standardChtmlNodes(parents);
       if (this.childNodes.length) {
         this.childNodes[0].toCHTML(chtml);

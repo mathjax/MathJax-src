@@ -131,9 +131,6 @@ export const SvgMath = (function <N, T, D>(): SvgMathClass<N, T, D> {
       'mjx-break[size="5"]': {
         'font-size': '133.2%'
       },
-      'mjx-container[jax="SVG"] [data-mjx-breakable]': {
-        display: 'inline'
-      },
       'mjx-break[newline]::after': {
         display: 'block'
       },

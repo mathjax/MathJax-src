@@ -346,7 +346,7 @@ export function CommonMactionMixin<
      * @override
      */
     get breakCount() {
-      return this.selected.breakCount;
+      return (this.node.isEmbellished ? this.selected.coreMO().embellishedBreakCount : this.selected.breakCount);
     }
 
     /**

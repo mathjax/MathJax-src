@@ -93,7 +93,38 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {N[]} parents  The HTML nodes where the output is to be added
    */
   public toSVG(parents: N[]) {
+    if (this.node.isEmbellished && this.toEmbellishedSVG(parents)) return;
     this.addChildren(this.standardSvgNodes(parents));
+  }
+
+  /**
+   * Create the HTML for an embellished mo, if this is one.
+   *
+   * @param {N[]} parents  The HTML nodes where the output is to be added
+   * @return {boolean}     True when embellished output is produced, false if not
+   */
+  public toEmbellishedSVG(parents: N[]): boolean {
+    if (parents.length <= 1) return false;
+    const adaptor = this.adaptor;
+    parents.forEach(dom => adaptor.append(dom, this.html('mjx-linestrut')));
+    const style = this.coreMO().getBreakStyle();
+    //
+    // At the end of the first line or beginning of the second,
+    //   either typeset the embellished op, or create a placeholder
+    //   and keep track of the created DOM nodes.
+    //
+    const dom = [];
+    for (const [parent, STYLE] of [[parents[0], 'before'], [parents[1], 'after']] as [N, string][]) {
+      if (style !== STYLE) {
+        this.toSVG([parent]);
+        dom.push(this.dom[0]);
+        this.place(0, 0);
+      } else {
+        dom.push(this.createSvgNodes([parent])[0]);
+      }
+    }
+    this.dom = dom;
+    return true;
   }
 
   /**
@@ -152,13 +183,14 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     const href = this.node.attributes.get('href');
     if (!href) return parents;
     let i = 0;
+    const isEmbellished = this.node.isEmbellished && !this.node.isKind('mo');
     return parents.map(parent => {
       parent = this.adaptor.append(parent, this.svg('a', {href: href})) as N;
-      const {h, d, w} = this.getLineBBox(i);
+      const {h, d, w} = (isEmbellished ? this.getOuterBBox() : this.getLineBBox(i));
       this.adaptor.append(this.dom[i++], this.svg('rect', {
         'data-hitbox': true, fill: 'none', stroke: 'none', 'pointer-events': 'all',
         width: this.fixed(w), height: this.fixed(h + d),
-        x: (i === 1 ? this.fixed(-this.dx) : 0), y: this.fixed(-d)
+        x: (i === 1 || isEmbellished ? this.fixed(-this.dx) : 0), y: this.fixed(-d)
       }));
       return parent;
     });
@@ -210,11 +242,12 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     }
     if (background) {
       let i = 0;
+      const isEmbellished = this.node.isEmbellished && !this.node.isKind('mo');
       this.dom.forEach(node => {
-        const {h, d, w} = this.getLineBBox(i++);
+        const {h, d, w} = (isEmbellished ? this.getOuterBBox() : this.getLineBBox(i++));
         const rect = this.svg('rect', {
           fill: background,
-          x: (i === 1 ? this.fixed(-this.dx) : 0), y: this.fixed(-d),
+          x: (i === 1 || isEmbellished ? this.fixed(-this.dx) : 0), y: this.fixed(-d),
           width: this.fixed(w),
           height: this.fixed(h + d),
           'data-bgcolor': true
@@ -239,10 +272,11 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     const adaptor = this.adaptor;
     let k = 0;
     const n = this.dom.length - 1;
+    const isEmbellished = this.node.isEmbellished && !this.node.isKind('mo');
     for (const dom of this.dom) {
       const L = (!n || !k ? 1 : 0);
       const R = (!n || k === n ? 1 : 0);
-      const bbox = this.getLineBBox(k++);
+      const bbox = (isEmbellished ? this.getOuterBBox() : this.getLineBBox(k++));
       const [h, d, w] = [bbox.h + f, bbox.d + f, bbox.w + f];
       const outerRT = [w, h];
       const outerLT = [-f, h];

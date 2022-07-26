@@ -149,7 +149,7 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
       'mjx-break[size="5"]': {
         'font-size': '133.2%'
       },
-      'mjx-container[jax="CHTML"] [data-mjx-breakable]': {
+      'mjx-math[breakable]': {
         display: 'inline'
       }
     };
@@ -223,6 +223,17 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
      */
     public setChildPWidths(recompute: boolean, w: number = null, clear: boolean = true) {
       return (this.parent ? super.setChildPWidths(recompute, w, clear) : false);
+    }
+
+    /**
+     * @override
+     */
+    protected handleAttributes() {
+      super.handleAttributes();
+      const adaptor = this.adaptor;
+      if (this.node.getProperty('breakable')) {
+        this.dom.forEach(dom => adaptor.setAttribute(dom, 'breakable', 'true'));
+      }
     }
 
   };

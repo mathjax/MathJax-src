@@ -95,6 +95,7 @@ export const SvgMfrac = (function <N, T, D>(): SvgMfracClass<N, T, D> {
      * @override
      */
     public toSVG(parents: N[]) {
+      if (this.toEmbellishedSVG(parents)) return;
       this.standardSvgNodes(parents);
       const {linethickness, bevelled} = this.node.attributes.getList('linethickness', 'bevelled');
       const display = this.isDisplay();

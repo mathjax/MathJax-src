@@ -93,6 +93,7 @@ export const SvgMunder = (function <N, T, D>(): SvgMunderClass<N, T, D> {
      * @override
      */
     public toSVG(parents: N[]) {
+      if (this.toEmbellishedSVG(parents)) return;
       if (this.hasMovableLimits()) {
         super.toSVG(parents);
         return;
@@ -178,6 +179,7 @@ export const SvgMover = (function <N, T, D>(): SvgMoverClass<N, T, D> {
      * @override
      */
     public toSVG(parents: N[]) {
+      if (this.toEmbellishedSVG(parents)) return;
       if (this.hasMovableLimits()) {
         super.toSVG(parents);
         return;
@@ -262,6 +264,7 @@ export const SvgMunderover = (function <N, T, D>(): SvgMunderoverClass<N, T, D> 
      * @override
      */
     public toSVG(parents: N[]) {
+      if (this.toEmbellishedSVG(parents)) return;
       if (this.hasMovableLimits()) {
         super.toSVG(parents);
         return;

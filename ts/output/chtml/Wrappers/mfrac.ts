@@ -186,6 +186,7 @@ export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
      * @override
      */
     public toCHTML(parents: N[]) {
+      if (this.toEmbellishedCHTML(parents)) return;
       this.standardChtmlNodes(parents);
       const {linethickness, bevelled} = this.node.attributes.getList('linethickness', 'bevelled');
       const display = this.isDisplay();

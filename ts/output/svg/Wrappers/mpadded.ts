@@ -87,6 +87,7 @@ export const SvgMpadded = (function <N, T, D>(): SvgMpaddedClass<N, T, D> {
      * @override
      */
     public toSVG(parents: N[]) {
+      if (this.toEmbellishedSVG(parents)) return;
       let svg = this.standardSvgNodes(parents);
       const [ , , , , , dw, x, y, dx] = this.getDimens();
       const align = (this.node.attributes.get('data-align') as string) || 'left';

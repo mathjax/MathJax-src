@@ -167,7 +167,7 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
               x += (cbox.w + cbox.R - dx) * cbox.rscale;
             }
             if (n) {
-              x = 0; // FIXME:  handle shift/align
+              x = 0;
             }
           }
           if (n) {

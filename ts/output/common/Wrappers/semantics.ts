@@ -138,7 +138,7 @@ export function CommonSemanticsMixin<
      * @override
      */
     get breakCount() {
-      return this.childNodes[0].breakCount;
+      return (this.node.isEmbellished ? this.coreMO().embellishedBreakCount : this.childNodes[0].breakCount);
     }
 
   } as any as B;
