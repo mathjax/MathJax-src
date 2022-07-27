@@ -342,6 +342,16 @@ BaseMethods.Spacer = function(parser: TexParser, _name: string, space: number) {
   parser.Push(style);
 };
 
+/**
+ * Create a discretionary times operator.
+ *
+ * @param {TexParser} parser The calling parser.
+ * @param {string} _name The macro name.
+ */
+BaseMethods.DiscretionaryTimes = function (parser: TexParser, _name: string) {
+  parser.Push(parser.create('node', 'mo', [parser.create('text', '\u2062')], {linebreakMultChar: '\u00D7'}));
+}
+
 
 /**
  * Parses left/right fenced expressions.

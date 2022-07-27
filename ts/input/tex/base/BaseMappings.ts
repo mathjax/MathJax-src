@@ -566,6 +566,8 @@ new sm.CommandMap('macros', {
   thinspace:         ['Spacer', MATHSPACE.thinmathspace],
   negthinspace:      ['Spacer', MATHSPACE.negativethinmathspace],
 
+  '*':                'DiscretionaryTimes',
+
   hskip:              'Hskip',
   hspace:             'Hskip',
   kern:              ['Hskip', true],
