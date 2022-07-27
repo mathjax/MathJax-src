@@ -24,7 +24,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor, Constructor, LineBBox} from '../Wrapper.js';
+import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor, Constructor} from '../Wrapper.js';
 import {CommonWrapperFactory} from '../WrapperFactory.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
 import {CommonOutputJax} from '../../common.js';
@@ -33,6 +33,7 @@ import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../../../util/BBox.js';
+import {LineBBox} from '../LineBBox.js';
 import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
@@ -846,7 +847,7 @@ export function CommonScriptbaseMixin<
      */
     public computeLineBBox(i: number) {
       const n = this.breakCount;
-      if (!n) return LineBBox.from(this.getOuterBBox());
+      if (!n) return LineBBox.from(this.getOuterBBox(), this.linebreakOptions.lineleading);
       const bbox = this.baseChild.getLineBBox(i).copy();
       if (i < n) {
         i === 0 && this.addLeftBorders(bbox);

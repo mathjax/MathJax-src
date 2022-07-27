@@ -21,13 +21,14 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor, LineBBox} from '../Wrapper.js';
+import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wrapper.js';
 import {CommonWrapperFactory} from '../WrapperFactory.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
 import {CommonOutputJax} from '../../common.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../../../util/BBox.js';
+import {LineBBox} from '../LineBBox.js';
 import {unicodeChars} from '../../../util/string.js';
 import {DIRECTION, NOSTRETCH} from '../FontData.js';
 
@@ -551,7 +552,7 @@ export function CommonMoMixin<
      */
     public moLineBBox(i: number, style: string, obox: BBox = null) {
       const leadingString = this.node.attributes.get('lineleading') as string;
-      const leading = this.length2em(leadingString, LineBBox.defaultLeading);
+      const leading = this.length2em(leadingString, this.linebreakOptions.lineleading);
       if (i === 0 && style === 'before') {
         const bbox = LineBBox.from(BBox.zero(), leading);
         bbox.originalL = this.bbox.L;

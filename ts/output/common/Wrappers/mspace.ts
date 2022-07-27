@@ -21,13 +21,14 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor, LineBBox} from '../Wrapper.js';
+import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wrapper.js';
 import {CommonWrapperFactory} from '../WrapperFactory.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
 import {CommonOutputJax} from '../../common.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMspace} from '../../../core/MmlTree/MmlNodes/mspace.js';
 import {BBox} from '../../../util/BBox.js';
+import {LineBBox} from '../LineBBox.js';
 
 /*****************************************************************/
 /**
@@ -182,7 +183,7 @@ export function CommonMspaceMixin<
      */
     public computeLineBBox(i: number): LineBBox {
       const leadingString = this.node.attributes.get('data-lineleading') as string;
-      const leading = this.length2em(leadingString, LineBBox.defaultLeading);
+      const leading = this.length2em(leadingString, this.linebreakOptions.lineleading);
       const bbox = LineBBox.from(BBox.zero(), leading);
       if (i === 1) {
         bbox.getIndentData(this.node);

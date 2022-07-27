@@ -21,12 +21,13 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor, LineBBox} from '../Wrapper.js';
+import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wrapper.js';
 import {CommonWrapperFactory} from '../WrapperFactory.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
 import {CommonOutputJax} from '../../common.js';
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
 import {IndexData} from '../LinebreakVisitor.js';
+import {LineBBox} from '../LineBBox.js';
 
 /*****************************************************************/
 /**
@@ -252,7 +253,7 @@ export function CommonMtextMixin<
      * @override
      */
     public computeLineBBox(i: number): LineBBox {
-      const bbox = LineBBox.from(this.getOuterBBox());
+      const bbox = LineBBox.from(this.getOuterBBox(), this.linebreakOptions.lineleading);
       if (!this.breakCount) return bbox;
       bbox.w = this.getBreakWidth(i);
       if (i === 0) {

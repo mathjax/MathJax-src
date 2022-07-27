@@ -25,7 +25,7 @@ import {AbstractVisitor} from '../../core/Tree/Visitor.js';
 import {CommonOutputJax} from '../common.js';
 import {CommonWrapperFactory} from './WrapperFactory.js';
 import {FontData, FontDataClass, DelimiterData, VariantData, CharOptions} from './FontData.js';
-import {CommonWrapper, CommonWrapperClass, LineBBox} from './Wrapper.js';
+import {CommonWrapper, CommonWrapperClass} from './Wrapper.js';
 import {CommonMo} from './Wrappers/mo.js';
 import {CommonMspace} from './Wrappers/mspace.js';
 import {CommonMfrac} from './Wrappers/mfrac.js';
@@ -36,6 +36,7 @@ import {CommonMaction} from './Wrappers/maction.js';
 import {CommonMsqrt} from './Wrappers/msqrt.js';
 import {CommonMtext} from './Wrappers/mtext.js';
 import {BBox} from '../../util/BBox.js';
+import {LineBBox} from './LineBBox.js';
 import {TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 import {OPTABLE} from '../../core/MmlTree/OperatorDictionary.js';
 import {MmlNode, TextNode} from '../../core/MmlTree/MmlNode.js';
@@ -426,7 +427,7 @@ export class LinebreakVisitor<
 
   public visitEmbellishedOperator(wrapper: WW, _i: number) {
     const mo = wrapper.coreMO();
-    const bbox = LineBBox.from(wrapper.getOuterBBox());
+    const bbox = LineBBox.from(wrapper.getOuterBBox(), wrapper.linebreakOptions.lineleading);
     bbox.getIndentData(mo.node);
     const style = mo.getBreakStyle(mo.node.attributes.get('linebreakstyle') as string);
     const dw = mo.processIndent('', bbox.indentData[1][1], '', bbox.indentData[0][1], this.state.width)[1];
@@ -449,7 +450,7 @@ export class LinebreakVisitor<
    */
   public visitMoNode(wrapper: WW, _i: number) {
     const mo = wrapper as any as CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
-    const bbox = LineBBox.from(mo.getOuterBBox());
+    const bbox = LineBBox.from(mo.getOuterBBox(), mo.linebreakOptions.lineleading);
     bbox.getIndentData(mo.node);
     const style = mo.getBreakStyle(mo.node.attributes.get('linebreakstyle') as string);
     const dw = mo.processIndent('', bbox.indentData[1][1], '', bbox.indentData[0][1], this.state.width)[1];

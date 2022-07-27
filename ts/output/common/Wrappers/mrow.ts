@@ -21,12 +21,13 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor, LineBBox} from '../Wrapper.js';
+import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wrapper.js';
 import {CommonWrapperFactory} from '../WrapperFactory.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
 import {CommonOutputJax} from '../../common.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../../../util/BBox.js';
+import {LineBBox} from '../LineBBox.js';
 import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
@@ -279,7 +280,7 @@ export function CommonMrowMixin<
       } else {
         bbox.w = Math.max(...this.lineBBox.map(bbox => bbox.w));  // natural width
         this.shiftLines(bbox.w);
-        if (!this.jax.math.display && !this.jax.options.linebreaks.inline) {
+        if (!this.jax.math.display && !this.linebreakOptions.inline) {
           bbox.pwidth = BBox.fullWidth;
           if (this.node.isInferred) {
             this.parent.bbox.pwidth = BBox.fullWidth;
@@ -313,7 +314,8 @@ export function CommonMrowMixin<
      */
     public getLineBBox(i: number) {
       this.getBBox();  // make sure line bboxes are available
-      return (this.isStack ? super.getLineBBox(i) : LineBBox.from(this.getOuterBBox()));
+      return (this.isStack ? super.getLineBBox(i) :
+              LineBBox.from(this.getOuterBBox(), this.linebreakOptions.lineleading));
     }
 
     /**
