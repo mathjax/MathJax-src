@@ -1317,6 +1317,7 @@ export class CommonWrapper<
     const textNode = (mmlFactory.create('text') as TextNode).setText(text);
     const mml = mmlFactory.create('mo', {stretchy: true}, [textNode]);
     mml.inheritAttributesFrom(this.node);
+    mml.parent = this.node.parent;
     const node = this.wrap(mml);
     node.parent = this as any as WW;
     return node as any as CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
