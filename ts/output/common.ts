@@ -109,7 +109,7 @@ export abstract class CommonOutputJax<
     exFactor: .5,                  // default size of ex in em units
     displayAlign: 'center',        // default for indentalign when set to 'auto'
     displayIndent: '0',            // default for indentshift when set to 'auto'
-    displayOverflow: 'scroll',     // default for overflow (scroll/scale/truncate/elide/linebreak)
+    displayOverflow: 'overflow',   // default for overflow (scroll/scale/truncate/elide/linebreak/overflow)
     linebreaks: {                  // options for when overflow is linebreak
       inline: true,                   // true for browser-based breaking of inline equations
       width: '100%',                  // a fixed size or a percentage of the container width
@@ -306,9 +306,10 @@ export abstract class CommonOutputJax<
     this.nodeMap = new Map<MmlNode, WW>();
     math.root.attributes.getAllInherited().overflow = this.options.displayOverflow;
     const overflow = math.root.attributes.get('overflow');
+console.log(overflow, this.options.displayOverflow);
     if (math.display) {
-      overflow === 'scroll' && this.adaptor.setStyle(node, 'overflow', 'auto');
-      overflow === 'truncate' && this.adaptor.setStyle(node, 'overflow', 'hidden');
+      overflow === 'scroll' && this.adaptor.setStyle(node, 'overflow-x', 'auto');
+      overflow === 'truncate' && this.adaptor.setStyle(node, 'overflow-x', 'hidden');
     }
     const linebreak = (overflow === 'linebreak');
     linebreak && this.getLinebreakWidth();

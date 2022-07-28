@@ -395,7 +395,8 @@ export class Menu {
     }
     this.settings.scale = jax.options.scale;
     this.defaultSettings = Object.assign({}, this.settings);
-    this.settings.overflow = jax.options.overflow;
+    this.settings.overflow =
+      jax.options.displayOverflow.substr(0, 1).toUpperCase() + jax.options.displayOverflow.substr(1).toLowerCase();
     this.settings.breakInline = jax.options.linebreaks.inline;
   }
 
@@ -463,7 +464,7 @@ export class Menu {
           this.submenu('Renderer', 'Math Renderer', this.radioGroup('renderer', [['CHTML'], ['SVG']])),
           this.submenu('Overflow', 'Wide Expressions', [
             this.radioGroup('overflow', [
-              ['Scroll'], ['Linebreak'], ['Scale'], ['Truncate'], ['Elide']
+              ['Overflow'], ['Scroll'], ['Linebreak'], ['Scale'], ['Truncate'], ['Elide']
             ]),
             this.rule(),
             this.checkbox('BreakInline', 'Allow In-line Breaks', 'breakInline'),
@@ -700,13 +701,15 @@ export class Menu {
     if (this.settings.renderer !== this.defaultSettings.renderer) {
       this.setRenderer(this.settings.renderer);
     }
+    this.document.outputJax.options.displayOverflow = this.settings.overflow.toLowerCase();
+    this.document.outputJax.options.linebreaks.inline = this.settings.breakInline;
   }
 
   /**
    * @param {string} overflow   The new overflow value
    */
   protected setOverflow(overflow: string) {
-    this.document.outputJax.options.overflow = overflow.toLowerCase();
+    this.document.outputJax.options.displayOverflow = overflow.toLowerCase();
     this.document.rerender();
   }
 
