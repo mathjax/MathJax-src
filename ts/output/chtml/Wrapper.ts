@@ -119,7 +119,7 @@ CommonWrapper<
    * @param {N[]} parents  The HTML nodes where the output is to be added
    */
   public toCHTML(parents: N[]) {
-    if (this.node.isEmbellished && this.toEmbellishedCHTML(parents)) return;
+    if (this.toEmbellishedCHTML(parents)) return;
     this.addChildren(this.standardChtmlNodes(parents));
   }
 
@@ -130,7 +130,7 @@ CommonWrapper<
    * @return {boolean}     True when embellished output is produced, false if not
    */
   public toEmbellishedCHTML(parents: N[]): boolean {
-    if (parents.length <= 1) return false;
+    if (parents.length <= 1 || !this.node.isEmbellished) return false;
     const adaptor = this.adaptor;
     parents.forEach(dom => adaptor.append(dom, this.html('mjx-linestrut')));
     const style = this.coreMO().embellishedBreakStyle;
@@ -284,7 +284,7 @@ CommonWrapper<
         const space = this.em(dimen);
         if (breakable) {
           const node = adaptor.node('mjx-break', SPACE[space] ? {size: SPACE[space]} :
-                                    {'font-size': (dimen * 400).toFixed(1) + '%'});
+                                    {style: {'font-size': (dimen * 400).toFixed(1) + '%'}});
           adaptor.insert(node, this.dom[i]);
         } else {
           if (SPACE[space]) {
@@ -293,6 +293,8 @@ CommonWrapper<
             adaptor.setStyle(this.dom[i], margin, space);
           }
         }
+      } else if (breakable) {
+        adaptor.insert(adaptor.node('mjx-break', {style: {'font-size': 0}}), this.dom[i]);
       }
     }
   }

@@ -93,7 +93,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {N[]} parents  The HTML nodes where the output is to be added
    */
   public toSVG(parents: N[]) {
-    if (this.node.isEmbellished && this.toEmbellishedSVG(parents)) return;
+    if (this.toEmbellishedSVG(parents)) return;
     this.addChildren(this.standardSvgNodes(parents));
   }
 
@@ -104,7 +104,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @return {boolean}     True when embellished output is produced, false if not
    */
   public toEmbellishedSVG(parents: N[]): boolean {
-    if (parents.length <= 1) return false;
+    if (parents.length <= 1 || !this.node.isEmbellished) return false;
     const adaptor = this.adaptor;
     parents.forEach(dom => adaptor.append(dom, this.html('mjx-linestrut')));
     const style = this.coreMO().embellishedBreakStyle;
