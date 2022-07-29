@@ -293,12 +293,23 @@ namespace NodeUtil {
     let mo = node as MmlMo;
     let forms = mo.getForms();
     for (let form of forms) {
-      let symbol = MmlMo.OPTABLE[form][mo.getText()];
+      let symbol = this.getOp(mo, form);
       if (symbol) {
         return symbol;
       }
     }
     return null;
+  }
+
+  /**
+   * Gets the operator definition of an mo node of a particular form.
+   * @param {MmlMo} mo The mo node.
+   * @param {string=} form The form (infix/prefix/postfix) for the mo.
+   * @return {OperatorDef} If node is an MO returns the operator definition. O/w
+   *    null.
+   */
+  export function getOp(mo: MmlMo, form: string = 'infix'): OperatorDef {
+    return MmlMo.OPTABLE[form][mo.getText()] || null;
   }
 
 }

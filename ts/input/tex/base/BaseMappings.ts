@@ -568,6 +568,12 @@ new sm.CommandMap('macros', {
 
   '*':                'DiscretionaryTimes',
 
+  allowbreak:         'AllowBreak',
+  goodbreak:         ['Linebreak', TexConstant.LineBreak.GOODBREAK],
+  badbreak:          ['Linebreak', TexConstant.LineBreak.BADBREAK],
+  nobreak:           ['Linebreak', TexConstant.LineBreak.NOBREAK],
+  break:              'Break',
+
   hskip:              'Hskip',
   hspace:             'Hskip',
   kern:              ['Hskip', true],
@@ -615,6 +621,7 @@ new sm.CommandMap('macros', {
   fbox:               'FBox',
   boxed:              ['Macro', '\\fbox{$\\displaystyle{#1}$}', 1],
   framebox:           'FrameBox',
+  makebox:            'MakeBox',
 
   strut:              'Strut',
   mathstrut:         ['Macro', '\\vphantom{(}'],

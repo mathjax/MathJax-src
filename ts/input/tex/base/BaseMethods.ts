@@ -32,6 +32,7 @@ import TexParser from '../TexParser.js';
 import {TexConstant} from '../TexConstants.js';
 import ParseUtil from '../ParseUtil.js';
 import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
+import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMunderover} from '../../../core/MmlTree/MmlNodes/munderover.js';
 import {Label} from '../Tags.js';
@@ -221,7 +222,7 @@ BaseMethods.Prime = function(parser: TexParser, c: string) {
   let base = parser.stack.Prev();
   if (!base) {
     // @test PrimeSup, PrePrime, Prime on Sup
-    base = parser.create('node', 'mi');
+    base = parser.create('token', 'mi');
   }
   if (NodeUtil.isType(base, 'msubsup') && !NodeUtil.isType(base, 'msup') &&
       NodeUtil.getChildAt(base, (base as MmlMsubsup).sup)) {
@@ -349,7 +350,48 @@ BaseMethods.Spacer = function(parser: TexParser, _name: string, space: number) {
  * @param {string} _name The macro name.
  */
 BaseMethods.DiscretionaryTimes = function (parser: TexParser, _name: string) {
-  parser.Push(parser.create('node', 'mo', [parser.create('text', '\u2062')], {linebreakMultChar: '\u00D7'}));
+  parser.Push(parser.create('token', 'mo', {linebreakmultchar: '\u00D7'}, '\u2062'));
+}
+
+/**
+ * Create a discretionary breakpoint.
+ *
+ * @param {TexParser} parser The calling parser.
+ * @param {string} _name The macro name.
+ */
+BaseMethods.AllowBreak = function (parser: TexParser, _name: string) {
+  parser.Push(parser.create('token', 'mo', {'data-allowbreak': true}));
+}
+
+/**
+ * Create a forced breakpoint.
+ *
+ * @param {TexParser} parser The calling parser.
+ * @param {string} _name The macro name.
+ */
+BaseMethods.Break = function (parser: TexParser, _name: string) {
+  parser.Push(parser.create('token', 'mo', {linebreak: TexConstant.LineBreak.NEWLINE}));
+}
+
+/**
+ * Set surrounding mo linebreak attributes
+ *
+ * @param {TexParser} parser The calling parser.
+ * @param {string} _name The macro name.
+ * @param {string} linebreak The linebreak attribute to use.
+ */
+BaseMethods.Linebreak = function (parser: TexParser, _name: string, linebreak: string) {
+  let insert = true;
+  const prev = parser.stack.Prev(true);
+  if (prev && prev.isKind('mo')) {
+    const style = NodeUtil.getOp(prev as any as MmlMo)?.[3]?.linebreakstyle ||
+                  NodeUtil.getAttribute(prev, 'linebreakstyle');
+    if (style !== TexConstant.LineBreakStyle.BEFORE) {
+      prev.attributes.set('linebreak', linebreak);
+      insert = false;
+    }
+  }
+  parser.Push(parser.itemFactory.create('break', linebreak, insert));
 }
 
 
@@ -1056,6 +1098,24 @@ BaseMethods.FrameBox = function(parser: TexParser, name: string) {
                              [parser.create('node', 'menclose', mml, {notation: 'box'})],
                              {texClass: TEXCLASS.ORD});
   parser.Push(node);
+};
+
+
+/**
+ * Implements \makebox.
+ *
+ * @param {TexParser} parser   The calling parser.
+ * @param {string} name        The macro name.
+ */
+BaseMethods.MakeBox = function (parser: TexParser, name: string) {
+  const width = parser.GetBrackets(name);
+  const pos = parser.GetBrackets(name, 'c');
+  const mml = parser.create('node', 'mpadded', ParseUtil.internalMath(parser, parser.GetArgument(name)));
+  width && NodeUtil.setAttribute(mml, 'width', width);
+  const align = lookup(pos.toLowerCase(), {c: 'center', r: 'right'}, '');
+  align && NodeUtil.setAttribute(mml, 'data-align', align);
+  pos.toLowerCase() !== pos && NodeUtil.setAttribute(mml, 'data-overflow', 'linebreak');
+  parser.Push(mml);
 };
 
 

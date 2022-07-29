@@ -168,6 +168,7 @@ export const BaseConfiguration: Configuration = Configuration.create(
       [bitem.LeftItem.prototype.kind]: bitem.LeftItem,
       [bitem.Middle.prototype.kind]: bitem.Middle,
       [bitem.RightItem.prototype.kind]: bitem.RightItem,
+      [bitem.BreakItem.prototype.kind]: bitem.BreakItem,
       [bitem.BeginItem.prototype.kind]: bitem.BeginItem,
       [bitem.EndItem.prototype.kind]: bitem.EndItem,
       [bitem.StyleItem.prototype.kind]: bitem.StyleItem,

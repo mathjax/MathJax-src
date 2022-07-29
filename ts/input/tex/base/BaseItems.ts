@@ -27,6 +27,7 @@ import {MapHandler} from '../MapHandler.js';
 import {CharacterMap} from '../SymbolMap.js';
 import {entities} from '../../../util/Entities.js';
 import {MmlNode, TextNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
+import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import TexError from '../TexError.js';
 import ParseUtil from '../ParseUtil.js';
@@ -474,6 +475,54 @@ export class RightItem extends BaseItem {
    */
   get isClose() {
     return true;
+  }
+
+}
+
+
+/**
+ * Add linebreak attribute to next meo, if any, or insert an mo with the
+ * given linebreak attribute.
+ */
+export class BreakItem extends BaseItem {
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'break';
+  }
+
+  /**
+   * @override
+   * @param {string} linebreak   The linbreak attribute to use
+   * @param {boolean} insert     Whether to insert an mo if there isn't a following
+   */
+  constructor(factory: StackItemFactory, linebreak: string, insert: boolean) {
+    super(factory);
+    this.setProperty('linebreak', linebreak);
+    this.setProperty('insert', insert);
+  }
+
+  /**
+   * @override
+   */
+  public checkItem(item: StackItem): CheckType {
+    const linebreak = this.getProperty('linebreak') as string;
+    if (item.isKind('mml')) {
+      const mml = item.First;
+      if (mml.isKind('mo')) {
+        const style = NodeUtil.getOp(mml as MmlMo)?.[3]?.linebreakstyle ||
+                      NodeUtil.getAttribute(mml, 'linebreakstyle');
+        if (style !== 'after') {
+          NodeUtil.setAttribute(mml, 'linebreak', linebreak);
+          return [[item], true];
+        }
+        if (!this.getProperty('insert')) return [[item], true];
+      }
+    }
+    const mml = this.create('token', 'mo', {linebreak});
+    return [[this.factory.create('mml', mml), item], true];
   }
 
 }

@@ -306,7 +306,6 @@ export abstract class CommonOutputJax<
     this.nodeMap = new Map<MmlNode, WW>();
     math.root.attributes.getAllInherited().overflow = this.options.displayOverflow;
     const overflow = math.root.attributes.get('overflow');
-console.log(overflow, this.options.displayOverflow);
     if (math.display) {
       overflow === 'scroll' && this.adaptor.setStyle(node, 'overflow-x', 'auto');
       overflow === 'truncate' && this.adaptor.setStyle(node, 'overflow-x', 'hidden');
@@ -371,7 +370,8 @@ console.log(overflow, this.options.displayOverflow);
       if (child.isEmbellished) {
         const mo = child.coreMO();
         const {linebreak, linebreakstyle} = mo.attributes.getList('linebreak', 'linebreakstyle');
-        if ((mo.texClass === TEXCLASS.BIN || mo.texClass === TEXCLASS.REL) &&
+        if ((mo.texClass === TEXCLASS.BIN || mo.texClass === TEXCLASS.REL ||
+             mo.attributes.get('data-allowbreak') || linebreak !== 'auto') &&
             linebreak !== 'nobreak' && linebreakstyle === 'before') {
           child.setProperty('breakable', true);
           if (forcebreak && linebreak !== 'newline') {
