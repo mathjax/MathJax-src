@@ -29,6 +29,7 @@ import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
 import {CommonTeXAtom, CommonTeXAtomClass, CommonTeXAtomMixin} from '../../common/Wrappers/TeXAtom.js';
 import {TeXAtom} from '../../../core/MmlTree/MmlNodes/TeXAtom.js';
 import {MmlNode, TEXCLASS, TEXCLASSNAMES} from '../../../core/MmlTree/MmlNode.js';
+import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
@@ -83,6 +84,18 @@ export const ChtmlTeXAtom = (function <N, T, D>(): ChtmlTeXAtomClass<N, T, D> {
      * @override
      */
     public static kind = TeXAtom.prototype.kind;
+
+    /**
+     * @override
+     */
+    public static styles: StyleList = {
+      'mjx-texatom[texclass="VBOX"] > mjx-linestack': {
+        display: 'inline-block'
+      },
+      'mjx-texatom[texclass="VBOX"] > mjx-mpadded > mjx-block > mjx-linestack': {
+        display: 'inline-block'
+      }
+    };
 
     /**
      * @override

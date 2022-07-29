@@ -90,15 +90,12 @@ export const SvgTeXAtom = (function <N, T, D>(): SvgTeXAtomClass<N, T, D> {
       super.toSVG(parents);
       this.adaptor.setAttribute(this.dom[0], 'data-mjx-texclass', TEXCLASSNAMES[this.node.texClass]);
       //
-      // Center VCENTER atoms vertically
+      // Place VCENTER and VBOX atoms vertically
       //
-      if (this.node.texClass === TEXCLASS.VCENTER) {
-        const bbox = this.childNodes[0].getBBox();  // get unmodified bbox of children
-        const {h, d} = bbox;
-        const a = this.font.params.axis_height;
-        const dh = ((h + d) / 2 + a) - h;  // new height minus old height
-        const translate = 'translate(0 ' + this.fixed(dh) + ')';
+      if (this.dh) {
+        const translate = 'translate(0 ' + this.fixed(this.dh) + ')';
         this.dom.forEach(node => this.adaptor.setAttribute(node, 'transform', translate));
+        return;
       }
     }
 

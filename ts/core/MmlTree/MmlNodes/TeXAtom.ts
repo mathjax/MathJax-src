@@ -64,7 +64,7 @@ export class TeXAtom extends AbstractMmlBaseNode {
    * @override
    */
   public get linebreakContainer(): boolean {
-    return (this.texClass === TEXCLASS.VCENTER);
+    return (this.texClass >= TEXCLASS.VCENTER);
   }
 
   /**
@@ -72,7 +72,7 @@ export class TeXAtom extends AbstractMmlBaseNode {
    * @override
    */
   public get notParent() {
-    return (this.texClass !== TEXCLASS.VCENTER);
+    return (this.texClass < TEXCLASS.VCENTER);
   }
 
   /**
