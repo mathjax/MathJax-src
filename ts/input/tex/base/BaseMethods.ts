@@ -736,7 +736,6 @@ BaseMethods.TeXAtom = function(parser: TexParser, name: string, mclass: number) 
   let def: EnvList = {texClass: mclass};
   let mml: StackItem | MmlNode;
   let node: MmlNode;
-  let parsed: MmlNode;
   if (mclass === TEXCLASS.OP) {
     def['movesupsub'] = def['movablelimits'] = true;
     const arg = parser.GetArgument(name);
@@ -747,17 +746,39 @@ BaseMethods.TeXAtom = function(parser: TexParser, name: string, mclass: number) 
       node = parser.create('token', 'mi', def, match[1]);
     } else {
       // @test Mathop Cal
-      parsed = new TexParser(arg, parser.stack.env, parser.configuration).mml();
+      const parsed = new TexParser(arg, parser.stack.env, parser.configuration).mml();
       node = parser.create('node', 'TeXAtom', [parsed], def);
     }
     mml = parser.itemFactory.create('fn', node);
   } else {
     // @test Mathrel
-    parsed = parser.ParseArg(name);
-    mml = parser.create('node', 'TeXAtom', [parsed], def);
+    mml = parser.create('node', 'TeXAtom', [], def);
+    const arg = new TexParser(parser.GetArgument(name), parser.stack.env, parser.configuration);
+    //
+    //  If \hsize was specified in a \vbox, \vtop, or \vcenter,
+    //    enclose contents in mpadded for linebreaking
+    //
+    if (mclass >= TEXCLASS.VCENTER && arg.stack.env.hsize) {
+      mml.appendChild(parser.create('node', 'mpadded', [arg.mml()], {
+        width: arg.stack.env.hsize,
+        'data-overflow': 'linebreak'
+      }));
+    } else {
+      mml.appendChild(arg.mml());
+    }
   }
   parser.Push(mml);
 };
+
+/**
+ * Sets hsize for \vbox, \vtop, \vcenter boxes
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
+BaseMethods.Hsize = function (parser:TexParser, name: string) {
+  parser.GetNext() === '=' && parser.i++;
+  parser.stack.env.hsize = parser.GetDimen(name);
+}
 
 
 /**

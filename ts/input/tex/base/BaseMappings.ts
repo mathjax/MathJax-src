@@ -614,6 +614,7 @@ new sm.CommandMap('macros', {
   vtop:              ['TeXAtom', TEXCLASS.VTOP],
   vcenter:           ['TeXAtom', TEXCLASS.VCENTER],
   vbox:              ['TeXAtom', TEXCLASS.VBOX],
+  hsize:              'Hsize',
 
   buildrel:           'BuildRel',
 
