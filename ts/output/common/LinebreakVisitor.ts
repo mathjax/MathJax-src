@@ -68,7 +68,7 @@ export interface StateData<WW> {
   potential: BreakData<WW>[];    // The list of best breakpoints so far
   width: number;                 // The maximum width for the lines
   w: number;                     // The accumulated width since the last best breakpoint
-  prevWidth: number;             // The width of the porevious line
+  prevWidth: number;             // The width of the previous line
   prevBreak: BreakData<WW>;      // The most recent breakpoint used
   depth: number;                 // The nesting depth of the active node
   mathWidth: number;             // The full width of the unbroken math
@@ -355,7 +355,7 @@ export class LinebreakVisitor<
    */
   protected pushBreak(wrapper: WW, penalty: number, w: number, ij: IndexData) {
     const state = this.state;
-    if (penalty >= NOBREAK) return;
+    if (penalty >= NOBREAK || (state.w === 0 && state.prevWidth === 0)) return;
     while (state.potential.length && state.potential[0][1] > this.FACTORS.fuzz(penalty)) {
       const data = state.potential.shift();
       if (state.potential.length) {
