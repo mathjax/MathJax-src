@@ -1222,6 +1222,10 @@ export class EqnArrayItem extends ArrayItem {
     this.extendArray('columnalign', this.maxrow);
     this.extendArray('columnwidth', this.maxrow);
     this.extendArray('columnspacing', this.maxrow - 1);
+    //
+    // Add indentshift for left-aligned columns
+    //
+    this.addIndentshift()
   }
 
   /**
@@ -1239,6 +1243,31 @@ export class EqnArrayItem extends ArrayItem {
       this.arraydef[name] = columns.slice(0, max).join(' ');
     }
   }
+
+  /**
+   * Add indentshift to left-aligned columns so that linebreaking will work
+   *   better in alignments.
+   */
+  protected addIndentshift() {
+    if (!this.arraydef.columnalign) return;
+    const align = (this.arraydef.columnalign as string).split(/ /);
+    let prev = '';
+    for (const i of align.keys()) {
+      if (align[i] === 'left') {
+        const indentshift = (prev === 'center' ? '.7em' : '2em');
+        for (const row of this.table) {
+          const cell = row.childNodes[row.isKind('mlabeledtr') ? i + 1 : i];
+          if (cell) {
+            const mstyle = cell.factory.create('mstyle', {indentshift}, cell.childNodes[0].childNodes);
+            cell.childNodes[0].childNodes = [];
+            cell.appendChild(mstyle);
+          }
+        }
+      }
+      prev = align[i];
+    }
+  }
+
 }
 
 
