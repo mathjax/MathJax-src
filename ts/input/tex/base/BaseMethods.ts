@@ -31,6 +31,7 @@ import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import {TexConstant} from '../TexConstants.js';
 import ParseUtil from '../ParseUtil.js';
+import {PropertyList} from '../../../core/Tree/Node.js';
 import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
@@ -1437,7 +1438,7 @@ BaseMethods.HFill = function(parser: TexParser, _name: string) {
 BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
   // @test Array1, Array2, Array Test
   let env = parser.GetArgument(name);
-  if (env.match(/\\/i)) {
+  if (env.match(/\\/)) {
     // @test InvalidEnv
     throw new TexError('InvalidEnv', 'Invalid environment name \'%1\'', env);
   }
@@ -1547,6 +1548,47 @@ BaseMethods.AlignedArray = function(parser: TexParser, begin: StackItem) {
   const align = parser.GetBrackets('\\begin{' + begin.getName() + '}');
   let item = BaseMethods.Array(parser, begin);
   return ParseUtil.setArrayAlign(item as sitem.ArrayItem, align);
+};
+
+
+BaseMethods.IndentAlign = function (parser: TexParser, begin: StackItem) {
+  const name = `\\begin{${begin.getName()}}`;
+  //
+  // Get the indentshift values, if any
+  //
+  const first = parser.GetBrackets(name, '');
+  let shift = parser.GetBrackets(name, '');
+  const last = parser.GetBrackets(name, '');
+  if ((first && !ParseUtil.matchDimen(first)[0]) ||
+      (shift && !ParseUtil.matchDimen(shift)[0]) ||
+      (last && !ParseUtil.matchDimen(last)[0])) {
+    throw new TexError('BracketMustBeDimension', 'Bracket argument to %1 must be a dimension', name);
+  }
+  //
+  // Get the indentalign values, if any
+  //
+  const lcr = parser.GetArgument(name);
+  if (lcr && !lcr.match(/^([lcr]{1,3})?$/)) {
+    throw new TexError('BadAlignment', 'Alignment must be one to three copies of l, c, or r');
+  }
+  const align = [...lcr].map(c => ({l: 'left', c: 'center', r: 'right'})[c]);
+  align.length === 1 && align.push(align[0]);
+  //
+  // Set the properties for the mstyle
+  //
+  const attr: PropertyList = {};
+  for (const [name, value] of [
+    ['indentshiftfirst', first], ['indentshift', shift || first], ['indentshiftlast', last],
+    ['indentalignfirst', align[0]], ['indentalign', align[1]], ['indentalignlast', align[2]]
+  ]) {
+    if (value) {
+      attr[name] = value;
+    }
+  }
+  //
+  // Push the indentalign item on the stack
+  //
+  parser.Push(parser.itemFactory.create('mstyle', attr, begin.getName()));
 };
 
 

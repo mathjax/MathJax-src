@@ -181,7 +181,8 @@ export const BaseConfiguration: Configuration = Configuration.create(
       [bitem.DotsItem.prototype.kind]: bitem.DotsItem,
       [bitem.ArrayItem.prototype.kind]: bitem.ArrayItem,
       [bitem.EqnArrayItem.prototype.kind]: bitem.EqnArrayItem,
-      [bitem.EquationItem.prototype.kind]: bitem.EquationItem
+      [bitem.EquationItem.prototype.kind]: bitem.EquationItem,
+      [bitem.MstyleItem.prototype.kind]: bitem.MstyleItem
     },
     options: {
       maxMacros: 1000,

@@ -32,7 +32,7 @@ import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import TexError from '../TexError.js';
 import ParseUtil from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
-import {Property} from '../../../core/Tree/Node.js';
+import {Property, PropertyList} from '../../../core/Tree/Node.js';
 import StackItemFactory from '../StackItemFactory.js';
 import {CheckType, BaseItem, StackItem, EnvList} from '../StackItem.js';
 
@@ -481,7 +481,7 @@ export class RightItem extends BaseItem {
 
 
 /**
- * Add linebreak attribute to next meo, if any, or insert an mo with the
+ * Add linebreak attribute to next mo, if any, or insert an mo with the
  * given linebreak attribute.
  */
 export class BreakItem extends BaseItem {
@@ -1258,7 +1258,7 @@ export class EqnArrayItem extends ArrayItem {
         for (const row of this.table) {
           const cell = row.childNodes[row.isKind('mlabeledtr') ? i + 1 : i];
           if (cell) {
-            const mstyle = cell.factory.create('mstyle', {indentshift}, cell.childNodes[0].childNodes);
+            const mstyle = this.create('node', 'mstyle', cell.childNodes[0].childNodes, {indentshift});
             cell.childNodes[0].childNodes = [];
             cell.appendChild(mstyle);
           }
@@ -1266,6 +1266,48 @@ export class EqnArrayItem extends ArrayItem {
       }
       prev = align[i];
     }
+  }
+
+}
+
+/**
+ * Item that places an mstyle having given attributes around its contents
+ */
+export class MstyleItem extends BeginItem {
+
+  /**
+   * @override
+   */
+  get kind() {
+    return 'mstyle';
+  }
+
+  /**
+   * The properties to set for the mstyle element
+   */
+  public attrList: PropertyList;
+
+  /**
+   * @param {PropertyList} attr  The properties to set on the mstyle
+   * @param {string} name        The name of the environment being processed
+   * @override
+   * @constructor
+   */
+  constructor(factory: any, attr: PropertyList, name: string) {
+    super(factory);
+    this.attrList = attr;
+    this.setProperty('name', name);
+  }
+
+  /**
+   * @override
+   */
+  public checkItem(item: StackItem): CheckType {
+    if (item.isKind('end') && item.getName() === this.getName()) {
+      const mml = this.create('node', 'mstyle', [this.toMml()], this.attrList);
+      return [[mml], true];
+    }
+    return super.checkItem(item);
   }
 
 }

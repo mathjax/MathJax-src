@@ -716,7 +716,8 @@ new sm.EnvironmentMap('environment', ParseMethods.environment, {
   array:         ['AlignedArray'],
   equation:      ['Equation', null, true],
   eqnarray:      ['EqnArray', null, true, true, 'rcl',
-                  ParseUtil.cols(0, MATHSPACE.thickmathspace), '.5em']
+                  ParseUtil.cols(0, MATHSPACE.thickmathspace), '.5em'],
+  indentalign:   ['IndentAlign']
 }, BaseMethods);
 
 
