@@ -22,6 +22,7 @@
  */
 
 import {ArrayItem} from './base/BaseItems.js';
+import TexParser from './TexParser.js';
 import TexError from './TexError.js';
 import {lookup} from '../../util/Options.js';
 import ParseUtil from './ParseUtil.js';
@@ -33,6 +34,7 @@ import {TEXCLASS} from '../../core/MmlTree/MmlNode.js';
  * The state of the columns analyzed so far.
  */
 export type ColumnState = {
+  parser: TexParser,                    // the current TexParser
   template: string;                     // the template string for the columns
   i: number;                            // the current location in the template
   c: string;                            // the current column identifier
@@ -72,11 +74,14 @@ export class ColumnParser {
     W: (state) => this.getColumn(state, TEXCLASS.VTOP, ''),
     '|': (state) => state.clines[state.j] = 'solid',
     ':': (state) => state.clines[state.j] = 'dashed',
+    '>': (state) => state.cstart[state.j] = (state.cstart[state.j] || '') + this.getBraces(state),
+    '<': (state) => state.cend[state.j - 1] = (state.cend[state.j - 1] || '') + this.getBraces(state),
     //
-    //  Currently unused
+    // Non-standard for math-mode versions
     //
-    '>': (state) => state.cstart[state.j] = this.getBraces(state),
-    '<': (state) => state.cend[state.j - 1] = this.getBraces(state),
+    P: (state) => this.macroColumn(state, '>{$}p{#1}<{$}', 1),
+    M: (state) => this.macroColumn(state, '>{$}m{#1}<{$}', 1),
+    B: (state) => this.macroColumn(state, '>{$}b{#1}<{$}', 1),
     //
     // Ignored
     //
@@ -86,25 +91,35 @@ export class ColumnParser {
   };
 
   /**
+   * The maximum number of column specifiers to process (prevents loops from \newcolumntype).
+   */
+  public MAXCOLUMNS: number = 10000;
+
+  /**
    * Process an array column template
    *
-   * @param {string} template   The alignment template
-   * @param {ArrayItem} array   The ArrayItem for the template
+   * @param {TexParser} parser   The active TexParser
+   * @param {string} template    The alignment template
+   * @param {ArrayItem} array    The ArrayItem for the template
    */
-  public process(template: string, array: ArrayItem) {
+  public process(parser: TexParser, template: string, array: ArrayItem) {
     //
     // Initialize the state
     //
     const state: ColumnState = {
-      template: template, i: 0, j: 0, c: '',
+      parser, template, i: 0, j: 0, c: '',
       cwidth: [], calign: [], clines: [],
-      cstart: [], cend: [],
+      cstart: array.cstart, cend: array.cend,
       ralign: array.ralign
     };
     //
     // Loop through the template to process the column specifiers
     //
+    let n = 0;
     while (state.i < state.template.length) {
+      if (n++ > this.MAXCOLUMNS) {
+        throw new TexError('MaxColumns', 'Too many column specifiers (perhaps looping column definitions?)');
+      }
       const c = state.c = String.fromCodePoint(state.template.codePointAt(state.i));
       state.i += c.length;
       if (!this.columnHandler.hasOwnProperty(c)) {
@@ -169,7 +184,7 @@ export class ColumnParser {
    * @param {ColumnState} state   The current state of the parser
    */
   public getDimen(state: ColumnState) {
-    const dim = this.getBraces(state);
+    const dim = this.getBraces(state) || '';
     if (!ParseUtil.matchDimen(dim)[0]) {
       throw new TexError('MissingColumnDimOrUnits',
                          'Missing dimension or its units for %1 column declaration', state.c);
@@ -213,6 +228,18 @@ export class ColumnParser {
       }
     }
     throw new TexError('MissingCloseBrace', 'Missing close brace');
+  }
+
+  /**
+   * 
+   */
+  public macroColumn(state: ColumnState, macro: string, n: number) {
+    const args: string[] = [];
+    while (n > 0 && n--) {
+      args.push(this.getBraces(state));
+    }
+    state.template = ParseUtil.substituteArgs(state.parser, args, macro) + state.template.slice(state.i);
+    state.i = 0;
   }
 
 }

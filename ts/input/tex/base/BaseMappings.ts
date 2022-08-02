@@ -703,6 +703,8 @@ new sm.CommandMap('macros', {
   ref:                'HandleRef',
   nonumber:           'HandleNoTag',
 
+  newcolumntype:      'NewColumnType',
+
   // Internal use:
   mathchoice:         'MathChoice',
   mmlToken:           'MmlToken'

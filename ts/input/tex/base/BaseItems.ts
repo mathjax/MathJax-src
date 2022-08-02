@@ -941,6 +941,16 @@ export class ArrayItem extends BaseItem {
   public arraydef: {[key: string]: string | number | boolean} = {};
 
   /**
+   * Insertions that go at the beginning of table entries (from >{...})
+   */
+  public cstart: string[] = [];
+
+  /**
+   * Insertions that go at the end of table entries (from <{...})
+   */
+  public cend: string[] = [];
+
+  /**
    * Row alignments to specify on particular columns
    */
   public ralign: [number, string, string][] = [];
@@ -988,6 +998,7 @@ export class ArrayItem extends BaseItem {
         // @test Array dashed column, Array solid column
         this.EndEntry();
         this.clearEnv();
+        this.StartEntry();
         return BaseItem.fail;
       }
       if (item.getProperty('isCR')) {
@@ -995,6 +1006,7 @@ export class ArrayItem extends BaseItem {
         this.EndEntry();
         this.EndRow();
         this.clearEnv();
+        this.StartEntry();
         return BaseItem.fail;
       }
       this.EndTable();
@@ -1053,6 +1065,67 @@ export class ArrayItem extends BaseItem {
                              this.getProperty('close') as string);
     }
     return mml;
+  }
+
+  public StartEntry() {
+    const n = this.row.length;
+    const start = this.cstart[n];
+    const end = this.cend[n];
+    const ralign = this.ralign[n];
+    if (!start && !end && !ralign) return;
+    let [entry, found] = this.getEntry();
+    if (!found) return;
+    const parser = this.parser;
+    if (start) {
+      entry = ParseUtil.addArgs(parser, start, entry);
+    }
+    if (end) {
+      entry = ParseUtil.addArgs(parser, entry, end);
+    }
+    if (ralign) {
+      entry = '\\text{' + entry.trim() + '}';
+    }
+    parser.string = ParseUtil.addArgs(parser, entry, parser.string);
+    parser.i = 0;
+  }
+
+  protected getEntry(): [string, boolean] {
+    const parser = this.parser;
+    const pattern = /^([^]*?)([&{}]|\\\\|\\(?:begin|end)\{array\})/;
+    let braces = 0, envs = 0;
+    let i = parser.i;
+    let match;
+    const fail: [string, boolean] = ['', false];
+    while ((match = parser.string.slice(i).match(pattern)) !== null) {
+      i += match[0].length;
+      switch (match[2]) {
+      case '{':
+        braces++;
+        break;
+      case '}':
+        if (!braces) return fail;
+        braces--;
+        break;
+      case '\\begin{array}':
+        !braces && envs++;
+        break;
+      case '\\end{array}':
+        if (!braces && envs) {
+          envs--;
+          break;
+        }
+        // fall through if not closing a nested array environment
+      default:
+        if (braces || envs) continue;
+        if (match[2] !== '&' && !match[1].trim()) return fail;
+        i -= match[2].length;
+        const entry = parser.string.slice(parser.i, i).trim();
+        parser.string = parser.string.slice(i);
+        parser.i = 0;
+        return [entry, true];
+      }
+    }
+    return fail;
   }
 
   /**

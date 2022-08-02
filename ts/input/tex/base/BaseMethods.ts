@@ -40,6 +40,7 @@ import {Label} from '../Tags.js';
 import {em} from '../../../util/lengths.js';
 import {entities} from '../../../util/Entities.js';
 import {lookup} from '../../../util/Options.js';
+import {ColumnState} from '../ColumnParser.js';
 
 
 // Namespace
@@ -1427,6 +1428,26 @@ BaseMethods.HFill = function(parser: TexParser, _name: string) {
 
 
 /**
+ * Create new column declarations
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
+BaseMethods.NewColumnType = function (parser: TexParser, name: string) {
+  const c = parser.GetArgument(name);
+  const n = parser.GetBrackets(name, '0');
+  const macro = parser.GetArgument(name);
+  if (c.length !== 1) {
+    throw new TexError('BadColumnName', 'Column specifier must be exactly one character: %1', c);
+  }
+  if (!n.match(/^\d+$/)) {
+    throw new TexError('PositiveIntegerArg', 'Argument to %1 must me a positive integer', n);
+  }
+  const cparser = parser.configuration.columnParser;
+  cparser.columnHandler[c] = (state: ColumnState) => cparser.macroColumn(state, macro, parseInt(n));
+}
+
+
+/**
  *   LaTeX environments
  */
 
@@ -1486,7 +1507,7 @@ BaseMethods.Array = function(parser: TexParser, begin: StackItem,
     columnspacing: (spacing || '1em'),
     rowspacing: (vspacing || '4pt')
   };
-  parser.configuration.columnParser.process(align, array);
+  parser.configuration.columnParser.process(parser, align, array);
   if (open)  {
     // @test Cross Product
     array.setProperty('open', parser.convertDelimiter(open));
@@ -1516,6 +1537,7 @@ BaseMethods.Array = function(parser: TexParser, begin: StackItem,
     array.arraydef['useHeight'] = false;
   }
   parser.Push(begin);
+  array.StartEntry();
   return array;
 };
 
