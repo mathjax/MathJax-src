@@ -463,7 +463,7 @@ export function CommonScriptbaseMixin<
       while (core &&
              ((core.childNodes.length === 1 &&
                (core.node.isKind('mrow') ||
-                (core.node.isKind('TeXAtom') && core.node.texClass !== TEXCLASS.VCENTER) ||
+                (core.node.isKind('TeXAtom') && core.node.texClass < TEXCLASS.VCENTER) ||
                 core.node.isKind('mstyle') || core.node.isKind('mpadded') ||
                 core.node.isKind('mphantom') || core.node.isKind('semantics'))) ||
               (core.node.isKind('munderover') &&
