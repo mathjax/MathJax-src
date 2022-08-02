@@ -1480,31 +1480,13 @@ BaseMethods.Array = function(parser: TexParser, begin: StackItem,
     // @test Array Single
     align = parser.GetArgument('\\begin{' + begin.getName() + '}');
   }
-  let lines = ('c' + align).replace(/[^clr|:]/g, '').replace(/[^|:]([|:])+/g, '$1');
-  align = align.replace(/[^clr]/g, '').split('').join(' ');
-  align = align.replace(/l/g, 'left').replace(/r/g, 'right').replace(/c/g, 'center');
   const array = parser.itemFactory.create('array') as sitem.ArrayItem;
+  array.parser = parser;
   array.arraydef = {
-    columnalign: align,
     columnspacing: (spacing || '1em'),
     rowspacing: (vspacing || '4pt')
   };
-  if (lines.match(/[|:]/)) {
-    // @test Enclosed left right
-    if (lines.charAt(0).match(/[|:]/)) {
-      // @test Enclosed left right, Enclosed left
-      array.frame.push('left');
-      array.dashed = lines.charAt(0) === ':';
-    }
-    if (lines.charAt(lines.length - 1).match(/[|:]/)) {
-      // @test Enclosed left right, Enclosed right
-      array.frame.push('right');
-    }
-    // @test Enclosed left right
-    lines = lines.substr(1, lines.length - 2);
-    array.arraydef.columnlines =
-      lines.split('').join(' ').replace(/[^|: ]/g, 'none').replace(/\|/g, 'solid').replace(/:/g, 'dashed');
-  }
+  parser.configuration.columnParser.process(align, array);
   if (open)  {
     // @test Cross Product
     array.setProperty('open', parser.convertDelimiter(open));
@@ -1551,6 +1533,11 @@ BaseMethods.AlignedArray = function(parser: TexParser, begin: StackItem) {
 };
 
 
+/**
+ * Handle indentalign environment
+ * @param {TexParser} parser The calling parser.
+ * @param {StackItem} begin The opening stackitem.
+ */
 BaseMethods.IndentAlign = function (parser: TexParser, begin: StackItem) {
   const name = `\\begin{${begin.getName()}}`;
   //

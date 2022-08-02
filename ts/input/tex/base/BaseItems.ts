@@ -29,6 +29,7 @@ import {entities} from '../../../util/Entities.js';
 import {MmlNode, TextNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
+import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
 import ParseUtil from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
@@ -940,10 +941,20 @@ export class ArrayItem extends BaseItem {
   public arraydef: {[key: string]: string | number | boolean} = {};
 
   /**
+   * Row alignments to specify on particular columns
+   */
+  public ralign: [number, string, string][] = [];
+
+  /**
    * True if separators are dashed.
    * @type {boolean}
    */
   public dashed: boolean = false;
+
+  /**
+   * The TeX parser that created this item
+   */
+  public parser: TexParser;
 
   /**
    * @override
@@ -951,7 +962,6 @@ export class ArrayItem extends BaseItem {
   public get kind() {
     return 'array';
   }
-
 
   /**
    * @override
@@ -1027,7 +1037,7 @@ export class ArrayItem extends BaseItem {
           (this.arraydef['rowlines'] as string).replace(/none( none)+$/, 'none');
       }
       // @test Enclosed left right
-      NodeUtil.setAttribute(mml, 'frame', '');
+      NodeUtil.removeAttribute(mml, 'frame');
       mml = this.create('node', 'menclose', [mml], {notation: this.frame.join(' ')});
       if ((this.arraydef['columnlines'] || 'none') !== 'none' ||
           (this.arraydef['rowlines'] || 'none') !== 'none') {
@@ -1051,6 +1061,9 @@ export class ArrayItem extends BaseItem {
   public EndEntry() {
     // @test Array1, Array2
     const mtd = this.create('node', 'mtd', this.nodes);
+    //
+    // Handle \hfil by setting column alignment
+    //
     if (this.hfill.length) {
       if (this.hfill[0] === 0) {
         NodeUtil.setAttribute(mtd, 'columnalign', 'right');
@@ -1061,6 +1074,25 @@ export class ArrayItem extends BaseItem {
           NodeUtil.getAttribute(mtd, 'columnalign') ? 'center' : 'left');
       }
     }
+    //
+    // Check for row alignment specification, and use
+    //   a TeXAtom with a nested mpadded element to produce the
+    //   aligned content.
+    //
+    const ralign = this.ralign[this.row.length];
+    if (ralign) {
+      const [tclass, cwidth, calign] = ralign;
+      const texatom = this.create('node', 'TeXAtom', [
+        this.create('node', 'mpadded', mtd.childNodes[0].childNodes, {
+          width: cwidth,
+          'data-overflow': 'auto',
+          'data-align': calign
+        })
+      ], {texClass: tclass});
+      mtd.childNodes[0].childNodes = [];
+      mtd.appendChild(texatom);
+    }
+    //
     this.row.push(mtd);
     this.Clear();
     this.hfill = [];

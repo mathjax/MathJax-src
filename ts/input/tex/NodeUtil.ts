@@ -151,11 +151,20 @@ namespace NodeUtil {
   /**
    * Returns the attribute of a node.
    * @param {MmlNode} node The node.
-   * @param {string} attr A attribute name.
+   * @param {string} attr An attribute name.
    * @return {Property} Value of the attribute.
    */
   export function getAttribute(node: MmlNode, attr: string): Property  {
     return node.attributes.get(attr);
+  }
+
+  /**
+   * Removes an attribute of a node.
+   * @param {MmlNode} node The node.
+   * @param {string} attr An attribute name.
+   */
+  export function removeAttribute(node: MmlNode, attr: string): void  {
+    delete (node.attributes.getAllAttributes())[attr];
   }
 
 
