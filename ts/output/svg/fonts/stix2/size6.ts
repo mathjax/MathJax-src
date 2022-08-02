@@ -1,6 +1,6 @@
-import {CharMap, SVGCharOptions} from '../../FontData.js';
+import {CharMap, SvgCharOptions} from '../../FontData.js';
 
-export const size6: CharMap<SVGCharOptions> = {
+export const size6: CharMap<SvgCharOptions> = {
   0x28: [1.462, .922, .496, {p: '73 270C73-260 233-708 436-922L463-900C273-636 174-202 174 270C174 742 273 1176 463 1440L436 1462C233 1248 73 800 73 270'}],
   0x29: [1.462, .922, .496, {p: '423 270C423 800 263 1248 60 1462L33 1440C223 1176 322 742 322 270C322-202 223-636 33-900L60-922C263-708 423-260 423 270'}],
   0x5B: [1.462, .923, .469, {p: '378-923L378-879L211-879L211 1418L378 1418L378 1462L115 1462L115-923'}],

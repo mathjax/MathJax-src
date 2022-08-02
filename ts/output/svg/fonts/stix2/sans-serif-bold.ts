@@ -1,5 +1,5 @@
-import {CharMap, SVGCharOptions} from '../../FontData.js';
+import {CharMap, SvgCharOptions} from '../../FontData.js';
 
-export const sansSerifBold: CharMap<SVGCharOptions> = {
+export const sansSerifBold: CharMap<SvgCharOptions> = {
 
 };

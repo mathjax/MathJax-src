@@ -1,6 +1,6 @@
-import {CharMap, SVGCharOptions} from '../../FontData.js';
+import {CharMap, SvgCharOptions} from '../../FontData.js';
 
-export const smallop: CharMap<SVGCharOptions> = {
+export const smallop: CharMap<SvgCharOptions> = {
   0x28: [.863, .323, .381, {p: '50 270C50-7 165-216 333-323L351-298C197-170 135 19 135 270C135 521 197 710 351 838L333 863C165 756 50 547 50 270'}],
   0x29: [.863, .323, .381, {p: '331 270C331 547 216 756 48 863L30 838C184 710 246 521 246 270C246 19 184-170 30-298L48-323C216-216 331-7 331 270'}],
   0x2F: [1.091, .168, .593, {p: '565 1091L490 1091L25-168L100-168'}],

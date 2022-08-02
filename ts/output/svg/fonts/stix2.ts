@@ -1,4 +1,4 @@
-import {SVGFontData, SVGFontDataClass, SVGCharOptions, SVGVariantData, SVGDelimiterData,
+import {SvgFontData, SvgFontDataClass, SvgCharOptions, SvgVariantData, SvgDelimiterData,
         DelimiterMap, CharMapMap, CssFontMap, RemapMap, FontParameters} from '../FontData.js';
 import {CommonSTIX2FontMixin} from '../../common/fonts/stix2.js';
 
@@ -44,7 +44,7 @@ import {delimiters} from './stix2/delimiters.js';
  *  The STIX2Font class
  */
 export class STIX2Font extends
-CommonSTIX2FontMixin<SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontDataClass>(SVGFontData) {
+CommonSTIX2FontMixin<SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontDataClass>(SvgFontData) {
 
   /**
    *  Remap accents
@@ -69,20 +69,20 @@ CommonSTIX2FontMixin<SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontDa
    *  Remap accents
    */
   public static defaultParams: FontParameters = {
-    ...SVGFontData.defaultParams,
+    ...SvgFontData.defaultParams,
     separation_factor: 1.5
   };
 
   /**
    *  The stretchy delimiter data
    */
-  protected static defaultDelimiters: DelimiterMap<SVGDelimiterData> = delimiters;
+  protected static defaultDelimiters: DelimiterMap<SvgDelimiterData> = delimiters;
 
   /**
    *  The variants to define
    */
   public static defaultVariants: string[][] = [
-    ...SVGFontData.defaultVariants,
+    ...SvgFontData.defaultVariants,
     ['-tex-calligraphic', 'normal'],
     ['-tex-bold-calligraphic', 'normal'],
     ['-tex-oldstyle', 'normal'],
@@ -109,7 +109,7 @@ CommonSTIX2FontMixin<SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontDa
    * The style and weight to use for each variant (for unkown characters)
    */
   public static defaultCssFonts: CssFontMap = {
-    ...SVGFontData.defaultCssFonts,
+    ...SvgFontData.defaultCssFonts,
     '-tex-calligraphic': ['serif', false, false],
     '-tex-bold-calligraphic': ['serif', false, false],
     '-tex-oldstyle': ['serif', false, false],
@@ -135,7 +135,7 @@ CommonSTIX2FontMixin<SVGCharOptions, SVGVariantData, SVGDelimiterData, SVGFontDa
   /**
    *  The character data by variant
    */
-  protected static defaultChars: CharMapMap<SVGCharOptions> = {
+  protected static defaultChars: CharMapMap<SvgCharOptions> = {
     'normal': normal,
     'bold': bold,
     'italic': italic,
