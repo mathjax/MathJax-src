@@ -458,8 +458,11 @@ export class MmlMo extends AbstractMmlTokenNode {
   protected checkMathAccent(mo: string) {
     const parent = this.Parent;
     if (this.getProperty('mathaccent') !== undefined || !parent || !parent.isKind('munderover')) return;
-    const base = parent.childNodes[0];
+    const [base, under, over] = parent.childNodes;
     if (base.isEmbellished && base.coreMO() === this) return;
+    const isUnder = !!(under && under.isEmbellished && under.coreMO() === this);
+    const isOver = !!(over && over.isEmbellished && under.coreMO() === this);
+    if (!isUnder && !isOver) return;
     const MATHACCENT = (this.constructor as typeof MmlMo).mathaccents;
     if (mo.match(MATHACCENT)) {
       this.setProperty('mathaccent', true);
