@@ -384,7 +384,8 @@ export abstract class CommonOutputJax<
             marked = true;
           }
         }
-      } else if (child.notParent || (child.isKind('mstyle') && !child.attributes.get('style'))) {
+      } else if ((child.isKind('mstyle') && !child.attributes.get('style')) ||
+                 child.isKind('semantics') || child.isKind('MathChoice')) {
         this.markInlineBreaks(child.childNodes[0]);
       }
     }
