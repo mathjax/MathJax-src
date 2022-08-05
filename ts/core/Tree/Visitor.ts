@@ -26,15 +26,21 @@ import {NodeFactory} from './NodeFactory.js';
 
 /**
  * The type for the functions associated with each node class
+ *
+ * @template N   The node type being traversed
+ * @template C   The node class for N (the constructor rather than instance of the class)
  */
 export type VisitorFunction<N extends Node<N, C>, C extends NodeClass<N, C>> =
   (visitor: NodeFactory<N, C>, node: N, ...args: any[]) => any;
 
+
 /*****************************************************************/
 /**
  *  Implements the Visitor interface
+ *
+ * @template N   The node type being traversed
+ * @template C   The node class for N (the constructor rather than instance of the class)
  */
-
 export interface Visitor<N extends Node<N, C>, C extends NodeClass<N, C>> {
 
   /**
@@ -86,11 +92,14 @@ export interface Visitor<N extends Node<N, C>, C extends NodeClass<N, C>> {
   [property: string]: any;
 }
 
+
 /*****************************************************************/
 /**
  *  Implements the generic Visitor object
+ *
+ * @template N   The node type being traversed
+ * @template C   The node class for N (the constructor rather than instance of the class)
  */
-
 export abstract class AbstractVisitor<N extends Node<N, C>, C extends NodeClass<N, C>> implements Visitor<N, C> {
   /**
    * Holds the mapping from node kinds to visitor funcitons

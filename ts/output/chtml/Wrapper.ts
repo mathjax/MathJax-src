@@ -72,8 +72,18 @@ export type ChtmlConstructor<N, T, D> = Constructor<ChtmlWrapper<N, T, D>>;
  *  The type of the ChtmlWrapper class (used when creating the wrapper factory for this class)
  */
 export interface ChtmlWrapperClass<N, T, D> extends CommonWrapperClass<
+  //
+  // The HTMLElement, TextNode, and Document classes (for the DOM implementation in use)
+  //
   N, T, D,
+  //
+  // The Wrapper type and its Factory and Class (these need to know N, T, and D)
+  //
   CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  //
+  // These are font-related objects that depend on the output jax; e,g. the character options
+  //   for CHTML and SVG output differ (CHTML contains font information, while SVG has path data)
+  //
   ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
 
