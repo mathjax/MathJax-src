@@ -453,7 +453,8 @@ export function AddCSS(font: ChtmlCharMap, options: CharOptionsMap): ChtmlCharMa
     const n = parseInt(c);
     const data = options[n];
     if (data.c) {
-      data.c = data.c.replace(/\\[0-9A-F]+/ig, (x) => String.fromCodePoint(parseInt(x.substr(1), 16)));
+      data.c = data.c.replace(/\\[0-9A-F]+/ig,
+                              (x) => String.fromCodePoint(parseInt(x.substr(1), 16)));
     }
     Object.assign(FontData.charOptions(font, n), data);
   }
