@@ -262,7 +262,7 @@ CommonOutputJax<
   /**
    * @override
    */
-  public unknownText(text: string, variant: string, width: number = null) {
+  public unknownText(text: string, variant: string, width: number = null, rscale: number = 1) {
     const styles: StyleList = {};
     const scale = 100 / this.math.metrics.scale;
     if (scale !== 100) {
@@ -282,7 +282,7 @@ CommonOutputJax<
     //
     if (width !== null) {
       const metrics = this.math.metrics;
-      styles.width = Math.round(width * metrics.em * metrics.scale) + 'px';
+      styles.width = Math.round(width * metrics.em * metrics.scale * rscale) + 'px';
     }
     //
     return this.html('mjx-utext', {variant: variant, style: styles}, [this.text(text)]);
