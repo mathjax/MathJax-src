@@ -24,7 +24,7 @@
 import {CHTML} from '../../chtml.js';
 import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
 import {ChtmlWrapperFactory} from '../WrapperFactory.js';
-import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+import {ChtmlCharOptions, ChtmlCharData, ChtmlVariantData, ChtmlDelimiterData,
         ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
 import {CommonTextNode, CommonTextNodeClass, CommonTextNodeMixin} from '../../common/Wrappers/TextNode.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
@@ -95,7 +95,8 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<N, T, D> 
      */
     public static styles: StyleList = {
       'mjx-c': {
-        display: 'inline-block'
+        display: 'inline-block',
+        width: 0
       },
       'mjx-utext': {
         display: 'inline-block',
@@ -117,11 +118,11 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<N, T, D> 
       } else {
         const chars = this.remappedText(text, variant);
         for (const n of chars) {
-          const data = this.getVariantChar(variant, n)[3];
+          const data = (this.getVariantChar(variant, n) as ChtmlCharData)[3];
           const font = (data.f ? ' TEX-' + data.f : '');
           const node = (data.unknown ?
                         this.jax.unknownText(String.fromCodePoint(n), variant) :
-                        this.html('mjx-c', {class: this.char(n) + font}));
+                        this.html('mjx-c', {class: this.char(n) + font}, [this.text(data.c || String.fromCodePoint(n))]));
           adaptor.append(parents[0], node);
           !data.unknown && this.font.charUsage.add([variant, n]);
         }
