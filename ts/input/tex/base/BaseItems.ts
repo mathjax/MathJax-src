@@ -1067,6 +1067,10 @@ export class ArrayItem extends BaseItem {
     return mml;
   }
 
+  /**
+   * Check to see if there are column declarations that need
+   * extra content around the cell contents.
+   */
   public StartEntry() {
     const n = this.row.length;
     const start = this.cstart[n];
@@ -1089,6 +1093,9 @@ export class ArrayItem extends BaseItem {
     parser.i = 0;
   }
 
+  /**
+   * Get the TeX string for the contents of the coming cell (if any)
+   */
   protected getEntry(): [string, boolean] {
     const parser = this.parser;
     const pattern = /^([^]*?)([&{}]|\\\\|\\(?:begin|end)\{array\})/;

@@ -39,12 +39,13 @@ export type ColumnState = {
   i: number;                            // the current location in the template
   c: string;                            // the current column identifier
   j: number;                            // the current column number
-  calign: string[],                     // the column alignments
+  calign: string[];                     // the column alignments
   cwidth: string[];                     // the explicit column widths
-  clines: string[],                     // the column lines
-  cstart: string[],                     // the '>' declarations (not currently used)
-  cend:   string[],                     // the '<' declarations (not currently used)
-  ralign: [number, string, string][]    // the row alignment and column width/align when specified
+  cspace: string[];                     // the column spacing
+  clines: string[];                     // the column lines
+  cstart: string[];                     // the '>' declarations (not currently used)
+  cend:   string[];                     // the '<' declarations (not currently used)
+  ralign: [number, string, string][];   // the row alignment and column width/align when specified
 }
 
 /**
@@ -76,6 +77,10 @@ export class ColumnParser {
     ':': (state) => state.clines[state.j] = 'dashed',
     '>': (state) => state.cstart[state.j] = (state.cstart[state.j] || '') + this.getBraces(state),
     '<': (state) => state.cend[state.j - 1] = (state.cend[state.j - 1] || '') + this.getBraces(state),
+    '@': (state) => {
+      state.cstart[state.j] = '\\mathNONE{' + this.getBraces(state) + '}';
+      state.cspace[state.j] = '0';
+    },
     //
     // Non-standard for math-mode versions
     //
@@ -85,7 +90,6 @@ export class ColumnParser {
     //
     // Ignored
     //
-    '@': (state) => this.getBraces(state),
     '!': (state) => this.getBraces(state),
     ' ': (_state) => {},
   };
@@ -108,7 +112,7 @@ export class ColumnParser {
     //
     const state: ColumnState = {
       parser, template, i: 0, j: 0, c: '',
-      cwidth: [], calign: [], clines: [],
+      cwidth: [], calign: [], cspace: [], clines: [],
       cstart: array.cstart, cend: array.cend,
       ralign: array.ralign
     };
@@ -137,10 +141,16 @@ export class ColumnParser {
     //
     if (state.cwidth.length) {
       const cwidth = [...state.cwidth];
-      if (cwidth.length < calign.length) {
-        cwidth.push('auto');
-      }
+      cwidth.length < calign.length && cwidth.push('auto');
       array.arraydef.columnwidth = cwidth.map(w => w || 'auto').join(' ');
+    }
+    //
+    // Set the column spacing
+    //
+    if (state.cspace.length) {
+      const cspace = [...state.cspace];
+      cspace.length < calign.length && cspace.push('1em');
+      array.arraydef.columnspacing = cspace.slice(1).map(d => d || '1em').join(' ');
     }
     //
     // Set the column lines and table frame
