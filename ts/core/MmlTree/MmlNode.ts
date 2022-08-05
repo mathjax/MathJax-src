@@ -274,7 +274,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
   /**
    * This lists the attributes that should not be propagated to child nodes of the
    *   given kind of node (so that table attributes don't bleed through to nested
-   *   tables -- see issue mathjax/MathJax#2890.
+   *   tables -- see issue mathjax/MathJax#2890).
    */
   public static stopInherit: {[node: string]: {[attribute: string]: boolean}} = {
     mtd: {columnalign: true, rowalign: true, groupalign: true}
