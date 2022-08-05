@@ -272,6 +272,15 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
   };
 
   /**
+   * This lists the attributes that should not be propagated to child nodes of the
+   *   given kind of node (so that table attributes don't bleed through to nested
+   *   tables -- see issue mathjax/MathJax#2890).
+   */
+  public static stopInherit: {[node: string]: {[attribute: string]: boolean}} = {
+    mtd: {columnalign: true, rowalign: true, groupalign: true}
+  };
+
+  /**
    * This lists the attributes that should always be inherited,
    *   even when there is no default value for the attribute.
    */
@@ -653,10 +662,11 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
     for (const key of Object.keys(attributes)) {
       if (defaults.hasOwnProperty(key) || AbstractMmlNode.alwaysInherit.hasOwnProperty(key)) {
         let [node, value] = attributes[key];
-        let noinherit = (AbstractMmlNode.noInherit[node] || {})[this.kind] || {};
-        if (!noinherit[key]) {
-          this.attributes.setInherited(key, value);
-        }
+        !AbstractMmlNode.noInherit[node]?.[this.kind]?.[key] && this.attributes.setInherited(key, value);
+      }
+      if (AbstractMmlNode.stopInherit[this.kind]?.[key]) {
+        attributes = {...attributes};
+        delete attributes[key];
       }
     }
     let displaystyle = this.attributes.getExplicit('displaystyle');
