@@ -139,7 +139,7 @@ ColorMethods.ColorBox = function (parser: TexParser, name: string) {
  * @param {string} name The name of the control sequence.
  */
 ColorMethods.FColorBox = function (parser: TexParser, name: string) {
-  const fmodel = parser.GetBrackets(name, 'named');
+  const fmodel = parser.GetBrackets(name, '');
   const fname = parser.GetArgument(name);
   const cmodel = parser.GetBrackets(name, fmodel);
   const cname = parser.GetArgument(name);
