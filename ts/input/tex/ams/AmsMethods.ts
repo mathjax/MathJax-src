@@ -81,7 +81,7 @@ AmsMethods.AlignAt = function(parser: TexParser, begin: StackItem,
   let n, valign, align = '', spacing = [];
   if (!taggable) {
     // @test Alignedat
-    valign = (this.getCodePoint() === '[' ? parser.GetBrackets('\\begin{' + name + '}') : '');
+    valign = (parser.getCodePoint() === '[' ? parser.GetBrackets('\\begin{' + name + '}') : '');
   }
   n = parser.GetArgument('\\begin{' + name + '}');
   if (n.match(/[^0-9]/)) {
