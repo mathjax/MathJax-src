@@ -241,7 +241,11 @@ export class ColumnParser {
   }
 
   /**
-   * 
+   * Handle \newcolumntype declarations
+   *
+   * @param {ColumnState} state   The current state of the parser
+   * @param {string} macro        The replacement string for the column type
+   * @param {number} n            The number of arguments for the column type
    */
   public macroColumn(state: ColumnState, macro: string, n: number) {
     const args: string[] = [];
