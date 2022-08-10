@@ -366,6 +366,7 @@ export class LiveRegion extends StringRegion {
 
 }
 
+type ProsodyElement = {[key: string]: number};
 
 export class SpeechRegion extends LiveRegion {
 
@@ -382,6 +383,14 @@ export class SpeechRegion extends LiveRegion {
   /**
    * @override
    */
+  public Clear(): void {
+    speechSynthesis.cancel();
+    super.Clear();
+  }
+
+  /**
+   * @override
+   */
   public Show(node: HTMLElement, highlighter: Sre.highlighter) {
     this.node = node;
     super.Show(node, highlighter);
@@ -390,10 +399,13 @@ export class SpeechRegion extends LiveRegion {
   /**
    * @override
    */
-  public Update(speech: string, locale: string = 'en') {
-    super.Update(speech);
-    let ssml = this.ssmlParsing(speech);
-    this.makeUtterances(ssml, locale);
+  public Update(speech: string) {
+    let [text, ssml] = this.ssmlParsing(speech);
+    console.log(ssml);
+    super.Update(text);
+    if (text) {
+      this.makeUtterances(ssml, this.document.options.sre.locale);
+    }
   }
 
 
@@ -410,11 +422,36 @@ export class SpeechRegion extends LiveRegion {
         });
         continue;
       }
-      if (!utter.text) continue;
+      // pause?
+      if (utter.pause) {
+        let time = parseInt(utter.pause.match(/^[0-9]+/));
+        if (isNaN(time) || !utterance) {
+          console.warn('Something went wrong with the pause matching.');
+          continue;
+        }
+        // TODO: Ensure pausing does not advance the highlighting.
+        utterance.addEventListener('end', (_event: Event) => {
+          speechSynthesis.pause();
+          setTimeout(() => {
+            speechSynthesis.resume();
+          }, time);
+        });
+        continue;
+      }
       utterance = new SpeechSynthesisUtterance(utter.text);
+      if (utter.rate) {
+        utterance.rate = utter.rate;
+      }
+      if (utter.pitch) {
+        utterance.pitch = utter.pitch;
+      }
       utterance.lang = locale;
       speechSynthesis.speak(utterance);
-      console.log(15);
+    }
+    if (utterance) {
+      utterance.addEventListener('end', (_event: Event) => {
+        this.highlighter.unhighlight();
+      });
     }
   }
 
@@ -423,46 +460,40 @@ export class SpeechRegion extends LiveRegion {
     this.highlighter.unhighlight();
     console.log('highlighting ' + id);
     let nodes = Array.from(this.node.querySelectorAll(`[data-semantic-id="${id}"]`));
+    // Do something with the specials?
     console.log(nodes);
     this.highlighter.highlight(nodes as any[]);
   }
 
-  private ssmlParsing(speech: string) {
-    console.log(speech);
+  private ssmlParsing(speech: string): [string, any[]] {
     let dp = new DOMParser();
     let xml = dp.parseFromString(speech, 'text/xml');
     let instr: any[] = [];
-    this.recurseSsml(Array.from(xml.documentElement.childNodes), instr);
-    return instr;
+    let text: String[] = [];
+    this.recurseSsml(Array.from(xml.documentElement.childNodes), instr, text);
+    return [text.join(' '), instr];
   }
 
-
-  private recurseSsml(nodes: Node[], instr: any) {
-    // Ignore prosody for now
-    //
-    // type prosody
-    // let oldProsody = {
-    //   pitch = prosody['pitch'],
-    //   rate = prosody['rate']
-    // }
-    // if (node.tagName === 'prosody') {
-    //   if node.hasAttribute()
-    //   prosody['pitch'] = node.getAttribute()
-    // }
-
+  private recurseSsml(nodes: Node[], instr: any, text: String[], prosody: ProsodyElement = {}) {
     for (let node of nodes) {
       if (node.nodeType === 3) {
-        let content = node.textContent.trim()
+        let content = node.textContent.trim();
         if (content) {
-          instr.push({text: content});
+          text.push(content);
+          instr.push(Object.assign({text: content}, prosody));
         }
         continue;
       }
       if (node.nodeType === 1) {
         let element = node as Element;
         let tag = element.tagName;
-        if (tag === 'prosody' || tag === 'speak') {
-          this.recurseSsml(Array.from(node.childNodes), instr);
+        if (tag === 'speak') {
+          continue;
+        }
+        if (tag === 'prosody') {
+          this.recurseSsml(
+            Array.from(node.childNodes), instr, text,
+            this.getProsody(element, prosody));
           continue;
         }
         switch (tag) {
@@ -473,13 +504,53 @@ export class SpeechRegion extends LiveRegion {
             instr.push({mark: element.getAttribute('name')});
             break;
           case 'say-as':
-            instr.push({text: element.textContent, character: true});
+            let txt = element.textContent;
+            instr.push(Object.assign({text: txt, character: true}, prosody));
+            text.push(txt);
             break;
           default:
             break;
         }
       }
     }
+  }
+
+
+  // These need to be fixed!
+  private static combinePros: {[key: string]: (x: number, sign: string) => number} = {
+    pitch: (x: number, _sign: string) => 1 * (x / 100),
+    volume: (x: number, _sign: string) => .5 * (x / 100),
+    rate: (x: number, _sign: string) =>  1 * (x / 100) // , ((sign === '-') ? 1 : 10) * (x / 100)
+  };
+
+  private getProsody(element: Element, prosody: ProsodyElement) {
+    let combine: ProsodyElement = {};
+    for (let pros of ['pitch', 'rate', 'volume']) {
+      if (element.hasAttribute(pros)) {
+        let [sign, value] = SpeechRegion.extractProsody(element.getAttribute(pros));
+        if (!sign) {
+          // TODO: Sort out the base value. It is .5 for volume!
+          combine[pros] = (pros === 'volume') ? .5 : 1;
+          continue;
+        }
+        let orig = prosody[pros];
+        orig = orig ? orig : ((pros === 'volume') ? .5 : 1);
+        let relative = SpeechRegion.combinePros[pros](parseInt(value, 10), sign);
+        combine[pros] = (sign === '-') ? orig - relative : orig + relative;
+      }
+    }
+    return combine;
+  }
+
+  private static regexp = /([\+|-]*)([0-9]+)%/;
+
+  private static extractProsody(attr: string) {
+    let match = attr.match(SpeechRegion.regexp);
+    if (!match) {
+      console.warn('Something went wrong with the prosody matching.');
+      return ['', '100'];
+    }
+    return [match[1], match[2]];
   }
 
 }

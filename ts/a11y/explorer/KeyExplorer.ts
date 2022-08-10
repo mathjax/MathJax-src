@@ -162,8 +162,8 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
    */
   public Stop() {
     if (this.active) {
-      this.highlighter.unhighlight();
       this.walker.deactivate();
+      this.highlighter.unhighlight();
     }
     super.Stop();
   }
@@ -255,6 +255,10 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @override
    */
   public Update(force: boolean = false) {
+    // TODO (v4): This is a hack to avoid double voicing on initial startup!
+    // Make that cleaner and remove force as it is not really used!
+    let noUpdate = force;
+    force = false;
     super.Update(force);
     let options = this.speechGenerator.getOptions();
     // This is a necessary in case speech options have changed via keypress
@@ -269,7 +273,11 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
       return Sre.sreReady()
         .then(() => Sre.setupEngine({modality: options.modality,
                                      locale: options.locale}))
-        .then(() => this.region.Update(this.walker.speech()));
+        .then(() => {
+          if (!noUpdate) {
+            this.region.Update(this.walker.speech())
+          }
+        });
     });
   }
 
@@ -282,7 +290,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     SpeechExplorer.updatePromise.then(() => {
       walker.speech();
       this.node.setAttribute('hasspeech', 'true');
-      this.Update();
+      this.Update(true);
       if (this.restarted && this.document.options.a11y[this.showRegion]) {
         this.region.Show(this.node, this.highlighter);
       }
@@ -296,6 +304,10 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
   public KeyDown(event: KeyboardEvent) {
     const code = event.keyCode;
     this.walker.modifier = event.shiftKey;
+    if (code === 17) {
+      speechSynthesis.cancel();
+      return;
+    }
     if (code === 27) {
       this.Stop();
       this.stopEvent(event);
