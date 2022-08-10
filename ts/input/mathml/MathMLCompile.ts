@@ -24,7 +24,7 @@
 import {MmlFactory} from '../../core/MmlTree/MmlFactory.js';
 import {MmlNode, TextNode, XMLNode, AbstractMmlNode, AbstractMmlTokenNode, TEXCLASS}
 from '../../core/MmlTree/MmlNode.js';
-import {HtmlNode} from '../../core/MmlTree/MmlNodes/HTMLNode.js';
+import {HtmlNode} from '../../core/MmlTree/MmlNodes/HtmlNode.js';
 import {userOptions, defaultOptions, OptionList} from '../../util/Options.js';
 import * as Entities from '../../util/Entities.js';
 import {DOMAdaptor} from '../../core/DOMAdaptor.js';

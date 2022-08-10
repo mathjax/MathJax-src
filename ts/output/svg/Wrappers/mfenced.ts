@@ -25,7 +25,7 @@ import {SVG} from '../../svg.js';
 import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
 import {SvgWrapperFactory} from '../WrapperFactory.js';
 import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
-import {CommonMfenced, CommonMfencedClass, CommonMfencedMixin} from '../../common/Wrappers/Mfenced.js';
+import {CommonMfenced, CommonMfencedClass, CommonMfencedMixin} from '../../common/Wrappers/mfenced.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMfenced} from '../../../core/MmlTree/MmlNodes/mfenced.js';
 import {SvgInferredMrowNTD} from './mrow.js';

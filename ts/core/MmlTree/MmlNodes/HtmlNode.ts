@@ -21,9 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AbstractMmlEmptyNode}  from '../../../core/MmlTree/MmlNode.js';
-import {DOMAdaptor} from '../../../core/DOMadaptor.js';
-import {PropertyList} from '../../../core/Tree/Node.js';
+import {AbstractMmlEmptyNode}  from '../MmlNode.js';
+import {DOMAdaptor} from '../../DOMAdaptor.js';
+import {PropertyList} from '../../Tree/Node.js';
 
 
 /******************************************************************/
