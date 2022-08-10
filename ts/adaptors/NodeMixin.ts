@@ -99,6 +99,11 @@ export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
     ].join(''), 'gu');
 
     /**
+     * The node adaptors can't measure DOM node sizes
+     */
+    public canMeasureNodes: boolean = false;
+
+    /**
      * The options for the instance
      */
     public options: OptionList;

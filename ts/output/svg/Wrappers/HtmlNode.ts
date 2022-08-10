@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2022 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMfenced wrapper for the MmlMfenced object
+ * @fileoverview  Implements the SvgHtmlNode wrapper for the HtmlNode object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -25,87 +25,100 @@ import {SVG} from '../../svg.js';
 import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
 import {SvgWrapperFactory} from '../WrapperFactory.js';
 import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
-import {CommonMfenced, CommonMfencedClass, CommonMfencedMixin} from '../../common/Wrappers/mfenced.js';
+import {CommonHtmlNode, CommonHtmlNodeClass, CommonHtmlNodeMixin} from '../../common/Wrappers/HtmlNode.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMfenced} from '../../../core/MmlTree/MmlNodes/mfenced.js';
-import {SvgInferredMrowNTD} from './mrow.js';
+import {HtmlNode} from '../../../core/MmlTree/MmlNodes/HtmlNode.js';
+import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
- * The SvgMfenced interface for the SVG mfenced wrapper
+ * The SvgHtmlNode interface for the SVG HtmlNode wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SvgMfencedNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMfenced<
+export interface SvgHtmlNodeNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonHtmlNode<
   N, T, D,
   SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
   SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {}
 
 /**
- * The SvgMfencedClass interface for the SVG mfenced wrapper
+ * The SvgHtmlNodeClass interface for the SVG HtmlNode wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SvgMfencedClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonMfencedClass<
+export interface SvgHtmlNodeClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonHtmlNodeClass<
   N, T, D,
   SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
   SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {
-  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMfencedNTD<N, T, D>;
+  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgHtmlNodeNTD<N, T, D>;
 }
 
 
 /*****************************************************************/
 
 /**
- * The SvgMfenced wrapper class for the MmlMfenced class
+ * The SvgHtmlNode wrapper class for the MmlHtmlNode class
  */
-export const SvgMfenced = (function <N, T, D>(): SvgMfencedClass<N, T, D> {
+export const SvgHtmlNode = (function <N, T, D>(): SvgHtmlNodeClass<N, T, D> {
 
-  const Base = CommonMfencedMixin<
+  const Base = CommonHtmlNodeMixin<
       N, T, D,
       SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
       SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
-      SvgMfencedClass<N, T, D>
+      SvgHtmlNodeClass<N, T, D>
     >(SvgWrapper);
 
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class SvgMfenced extends Base implements SvgMfencedNTD<N, T, D> {
+  return class SvgHtmlNode extends Base implements SvgHtmlNodeNTD<N, T, D> {
 
     /**
      * @override
      */
-    public static kind = MmlMfenced.prototype.kind;
+    public static kind = HtmlNode.prototype.kind;
 
     /**
-     * An mrow used to render the result
+     * @override
      */
-    public mrow: SvgInferredMrowNTD<N, T, D>;
+    public static styles: StyleList = {
+      'foreignObject[data-mjx-html]': {
+        overflow: 'visible'
+      },
+      'mjx-html': {
+        display: 'inline-block',
+        'line-height': 'normal',
+        'text-align': 'initial',
+      },
+      'mjx-html-holder': {
+        display: 'block',
+        position: 'absolute',
+        width: '100%',
+        height: '100%'
+      }
+    };
 
     /**
      * @override
      */
     public toSVG(parent: N) {
-      const svg = this.standardSvgNode(parent);
-      this.setChildrenParent(this.mrow);  // temporarily change parents to the mrow
-      this.mrow.toSVG(svg);
-      this.setChildrenParent(this);       // put back the correct parents
-    }
-
-    /**
-     * @param {SvgWrapper} parent   The parent to use for the fenced children
-     */
-    protected setChildrenParent(parent: SvgWrapper<N, T, D>) {
-      for (const child of this.childNodes) {
-        child.parent = parent;
-      }
+      const metrics = this.jax.math.metrics;
+      const em = metrics.em * metrics.scale;
+      const scale = this.fixed(1 / em);
+      const {w, h, d} = this.getBBox();
+      this.dom = this.adaptor.append(parent, this.svg('foreignObject', {
+        'data-mjx-html': true,
+        y: this.jax.fixed(-h * em) + 'px',
+        width: this.jax.fixed(w * em) + 'px',
+        height: this.jax.fixed((h + d) * em) + 'px',
+        transform: `scale(${scale}) matrix(1 0 0 -1 0 0)`
+      }, [this.getHTML()])) as N;
     }
 
   };
