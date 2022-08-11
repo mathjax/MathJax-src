@@ -49,9 +49,8 @@ export type VisitorFunction<N extends VisitorNode<N>> =
  * The Visitor interface
  *
  * @template N   The node type being traversed
- * @template C   The node class for N (the constructor rather than instance of the class)
  */
-export interface Visitor<N extends Node<N, C>, C extends NodeClass<N, C>> {
+export interface Visitor<N extends VisitorNode<N>> {
 
   /**
    * Visit the tree rooted at the given node (passing along any needed parameters)
