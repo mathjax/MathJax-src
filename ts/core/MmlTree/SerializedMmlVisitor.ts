@@ -25,7 +25,7 @@
 import {MmlVisitor} from './MmlVisitor.js';
 import {MmlNode, TextNode, XMLNode, TEXCLASS, TEXCLASSNAMES} from './MmlNode.js';
 import {MmlMi} from './MmlNodes/mi.js';
-import {HtmlNode} from './MmlNodes/HTMLNode.js';
+import {HtmlNode} from './MmlNodes/HtmlNode.js';
 
 
 export const DATAMJX = 'data-mjx-';
