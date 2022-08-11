@@ -359,7 +359,7 @@ export class MathMLCompile<N, T, D> {
   }
 
   /**
-   * @param {MmlNode} text  The token node whose leacing/trailing spaces should be removed
+   * @param {MmlNode} mml  The token node whose leading/trailing spaces should be removed
    */
   protected trimSpace(mml: MmlNode) {
     let child = mml.childNodes[0] as TextNode;
