@@ -30,7 +30,7 @@ import ParseOptions from '../ParseOptions.js';
 import TexError from '../TexError.js';
 import {HTMLDocument} from '../../../handlers/html/HTMLDocument.js';
 import {HtmlNode} from '../../../core/MmlTree/MmlNodes/HtmlNode.js';
-import {HTMLDomStrings} from '../../../handlers/HTML/HTMLDomStrings.js';
+import {HTMLDomStrings} from '../../../handlers/html/HTMLDomStrings.js';
 import {DOMAdaptor} from '../../../core/DOMAdaptor.js';
 
 
