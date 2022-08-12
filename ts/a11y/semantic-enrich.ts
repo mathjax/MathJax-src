@@ -181,7 +181,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
       }
       for (let child of node.childNodes) {
         let value = this.getSpeech(child as MmlNode);
-        if (value != null) {
+        if (value) {
           return value;
         }
       }
