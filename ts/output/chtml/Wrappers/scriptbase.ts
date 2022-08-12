@@ -30,6 +30,7 @@ import {ChtmlWrapperFactory} from '../WrapperFactory.js';
 import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
         ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
 import {CommonScriptbase, CommonScriptbaseClass, CommonScriptbaseMixin} from '../../common/Wrappers/scriptbase.js';
+import {ChtmlMsubsup} from './msubsup.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../../../util/BBox.js';
 import {StyleData} from '../../../util/StyleList.js';
@@ -130,6 +131,16 @@ export const ChtmlScriptbase = (function <N, T, D>(): ChtmlScriptbaseClass<N, T,
       }
       this.baseChild.toCHTML(this.dom);
       this.scriptChild.toCHTML(this.adaptor.append(this.dom, this.html('mjx-script', {style})) as N);
+    }
+
+    /**
+     * Make sure styles get output for any script subclass
+     *
+     * @override
+     */
+    public markUsed() {
+      super.markUsed();
+      this.jax.wrapperUsage.add(ChtmlMsubsup.kind);
     }
 
     /**
