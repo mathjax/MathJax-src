@@ -61,9 +61,10 @@ AmsMethods.AmsEqnArray = function(parser: TexParser, begin: StackItem,
                                       align: string, spacing: string,
                                       style: string) {
   // @test Aligned, Gathered
-  const args = (parser.getCodePoint() === '[' ? parser.GetBrackets('\\begin{' + begin.getName() + '}') : '');
+  const i = parser.i;
+  const args = parser.GetBrackets('\\begin{' + begin.getName() + '}');
   const array = BaseMethods.EqnArray(parser, begin, numbered, taggable, align, spacing, style);
-  return ParseUtil.setArrayAlign(array as ArrayItem, args);
+  return ParseUtil.setArrayAlign(array as ArrayItem, args, parser, i);
 };
 
 
@@ -78,16 +79,17 @@ AmsMethods.AmsEqnArray = function(parser: TexParser, begin: StackItem,
 AmsMethods.AlignAt = function(parser: TexParser, begin: StackItem,
                               numbered: boolean, taggable: boolean) {
   const name = begin.getName();
-  let n, valign, align = '', spacing = [];
+  let n, valign, align = '', spacing = [], i;
   if (!taggable) {
     // @test Alignedat
-    valign = (parser.getCodePoint() === '[' ? parser.GetBrackets('\\begin{' + name + '}') : '');
+    i = parser.i;
+    valign = parser.GetBrackets('\\begin{' + name + '}');
   }
   n = parser.GetArgument('\\begin{' + name + '}');
   if (n.match(/[^0-9]/)) {
     // @test PositiveIntegerArg
     throw new TexError('PositiveIntegerArg',
-                        'Argument to %1 must me a positive integer',
+                        'Argument to %1 must be a positive integer',
                         '\\begin{' + name + '}');
   }
   let count = parseInt(n, 10);
@@ -103,7 +105,7 @@ AmsMethods.AlignAt = function(parser: TexParser, begin: StackItem,
   }
   // @test Alignedat
   let array = AmsMethods.EqnArray(parser, begin, numbered, taggable, align, spaceStr);
-  return ParseUtil.setArrayAlign(array as ArrayItem, valign);
+  return ParseUtil.setArrayAlign(array as ArrayItem, valign, !taggable ? parser : null, i);
 };
 
 
@@ -145,7 +147,7 @@ AmsMethods.XalignAt = function(parser: TexParser, begin: StackItem,
   let n = parser.GetArgument('\\begin{' + begin.getName() + '}');
   if (n.match(/[^0-9]/)) {
     throw new TexError('PositiveIntegerArg',
-                       'Argument to %1 must me a positive integer',
+                       'Argument to %1 must be a positive integer',
                        '\\begin{' + begin.getName() + '}');
   }
   const align = (padded ? 'crl' : 'rlc');
