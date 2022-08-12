@@ -64,7 +64,7 @@ export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
     this.findMathNodes(node, set);
     this.findMathPrefixed(node, set);
     const html = this.adaptor.root(this.adaptor.document);
-    if (this.adaptor.kind(html) === 'html' &&  set.size === 0) {
+    if (this.adaptor.kind(html) === 'html' && set.size === 0) {
       this.findMathNS(node, set);
     }
     return this.processMath(set);
@@ -103,7 +103,7 @@ export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
   /**
    * Find namespaced math in XHTML documents (is this really needed?)
    *
-   * @param {N} node  The container to seaerch for math
+   * @param {N} node  The container to search for math
    * @param {NodeSet} set   The set in which to store the math nodes
    */
   protected findMathNS(node: N, set: Set<N>) {
@@ -116,13 +116,15 @@ export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
    *  Produce the array of proto math items from the node set
    */
   protected processMath(set: Set<N>) {
-    let math: ProtoItem<N, T>[] = [];
-    for (const mml of Array.from(set)) {
-      let display = (this.adaptor.getAttribute(mml, 'display') === 'block' ||
-                     this.adaptor.getAttribute(mml, 'mode') === 'display');
-      let start = {node: mml, n: 0, delim: ''};
-      let end   = {node: mml, n: 0, delim: ''};
-      math.push({math: this.adaptor.outerHTML(mml), start, end, display});
+    const adaptor = this.adaptor;
+    const math: ProtoItem<N, T>[] = [];
+    for (const mml of set.values()) {
+      if (adaptor.kind(adaptor.parent(mml)) === 'mjx-assistive-mml') continue;
+      const display = (adaptor.getAttribute(mml, 'display') === 'block' ||
+                      adaptor.getAttribute(mml, 'mode') === 'display');
+      const start = {node: mml, n: 0, delim: ''};
+      const end   = {node: mml, n: 0, delim: ''};
+      math.push({math: adaptor.outerHTML(mml), start, end, display});
     }
     return math;
   }
