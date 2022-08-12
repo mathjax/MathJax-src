@@ -307,7 +307,9 @@ export class AbstractTags implements Tags {
     if (this.currentTag) {
       this.stack.push(this.currentTag);
     }
+    const label = this.label;
     this.currentTag = new TagInfo(env, taggable, defaultTags);
+    this.label = label;
   }
 
   public get env() {
@@ -320,7 +322,11 @@ export class AbstractTags implements Tags {
    */
   public end() {
     this.history.push(this.currentTag);
+    const label = this.label;
     this.currentTag = this.stack.pop();
+    if (label && !this.label) {
+      this.label = label;
+    }
   }
 
 
@@ -402,7 +408,6 @@ export class AbstractTags implements Tags {
    * @override
    */
   public clearTag() {
-    this.label = '';
     this.tag(null, true);
     this.currentTag.tagId = '';
   }
@@ -447,6 +452,7 @@ export class AbstractTags implements Tags {
     this.counter = this.allCounter = offset;
     this.allLabels = {};
     this.allIds = {};
+    this.label = '';
   }
 
   /**
@@ -531,6 +537,7 @@ export class AbstractTags implements Tags {
     this.makeId();
     if (this.label) {
       this.labels[this.label] = new Label(this.currentTag.tag, this.currentTag.tagId);
+      this.label = '';
     }
     let mml = new TexParser('\\text{' + this.currentTag.tagFormat + '}', {},
                             this.configuration).mml();
