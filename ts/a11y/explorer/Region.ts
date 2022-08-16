@@ -371,6 +371,7 @@ type ProsodyElement = {[key: string]: number};
 export class SpeechRegion extends LiveRegion {
 
   public node: Element = null;
+  private clear: boolean = false;
 
   /**
    * The highlighter to use.
@@ -385,6 +386,7 @@ export class SpeechRegion extends LiveRegion {
    */
   public Clear(): void {
     speechSynthesis.cancel();
+    this.clear = true;
     super.Clear();
   }
 
@@ -401,7 +403,6 @@ export class SpeechRegion extends LiveRegion {
    */
   public Update(speech: string) {
     let [text, ssml] = this.ssmlParsing(speech);
-    console.log(ssml);
     super.Update(text);
     if (text) {
       this.makeUtterances(ssml, this.document.options.sre.locale);
@@ -462,7 +463,11 @@ export class SpeechRegion extends LiveRegion {
     let nodes = Array.from(this.node.querySelectorAll(`[data-semantic-id="${id}"]`));
     // Do something with the specials?
     console.log(nodes);
-    this.highlighter.highlight(nodes as any[]);
+    if (this.clear) {
+      this.clear = false;
+    } else {
+      this.highlighter.highlight(nodes as any[]);
+    }
   }
 
   private ssmlParsing(speech: string): [string, any[]] {

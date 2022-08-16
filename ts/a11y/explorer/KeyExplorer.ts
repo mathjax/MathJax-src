@@ -163,6 +163,7 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
   public Stop() {
     if (this.active) {
       this.walker.deactivate();
+      console.log('Unhighlight');
       this.highlighter.unhighlight();
     }
     super.Stop();
@@ -305,6 +306,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     const code = event.keyCode;
     this.walker.modifier = event.shiftKey;
     if (code === 17) {
+      console.log(1);
       speechSynthesis.cancel();
       return;
     }
