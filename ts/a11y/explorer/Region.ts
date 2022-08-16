@@ -385,8 +385,6 @@ export class SpeechRegion extends LiveRegion {
    * @override
    */
   public Clear(): void {
-    speechSynthesis.cancel();
-    this.clear = true;
     super.Clear();
   }
 
@@ -402,6 +400,8 @@ export class SpeechRegion extends LiveRegion {
    * @override
    */
   public Update(speech: string) {
+    speechSynthesis.cancel();
+    this.clear = true;
     let [text, ssml] = this.ssmlParsing(speech);
     super.Update(text);
     if (text) {
@@ -415,7 +415,7 @@ export class SpeechRegion extends LiveRegion {
     for (let utter of ssml) {
       if (utter.mark) {
         if (!utterance) {
-          this.highlightNode(utter.mark);
+          this.highlightNode(utter.mark, true);
           continue;
         }
         utterance.addEventListener('end', (_event: Event) => {
@@ -457,17 +457,14 @@ export class SpeechRegion extends LiveRegion {
   }
 
 
-  private highlightNode(id: string) {
+  private highlightNode(id: string, init: boolean = false) {
     this.highlighter.unhighlight();
-    console.log('highlighting ' + id);
     let nodes = Array.from(this.node.querySelectorAll(`[data-semantic-id="${id}"]`));
     // Do something with the specials?
-    console.log(nodes);
-    if (this.clear) {
-      this.clear = false;
-    } else {
+    if (!this.clear || init) {
       this.highlighter.highlight(nodes as any[]);
     }
+    this.clear = false;
   }
 
   private ssmlParsing(speech: string): [string, any[]] {

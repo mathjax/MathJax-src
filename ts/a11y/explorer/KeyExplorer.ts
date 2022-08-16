@@ -53,6 +53,17 @@ export interface KeyExplorer extends Explorer {
    */
   FocusOut(event: FocusEvent): void;
 
+  /**
+   * Move made on keypress.
+   * @param key The key code of the pressed key.
+   */
+  Move(key: number): void;
+
+  /**
+   * A method that is executed if no move is executed.
+   */
+  NoMove(): void;
+
 }
 
 
@@ -169,6 +180,31 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
     super.Stop();
   }
 
+  /**
+   * @override
+   */
+  public Move(key: number) {
+    let result = this.walker.move(key);
+    // TODO: Add the earcon sound here!
+    if (result) {
+      this.Update();
+    } else {
+      this.NoMove();
+    }
+  }
+
+  /**
+   * @override
+   */
+  public NoMove() {
+    let ac = new AudioContext();
+    let os = ac.createOscillator();
+    os.frequency.value = 300;
+    os.connect(ac.destination);
+    os.start(ac.currentTime);
+    os.stop(ac.currentTime + .05);
+  }
+
 }
 
 
@@ -259,6 +295,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     // TODO (v4): This is a hack to avoid double voicing on initial startup!
     // Make that cleaner and remove force as it is not really used!
     let noUpdate = force;
+    // let noUpdate = false;
     force = false;
     super.Update(force);
     let options = this.speechGenerator.getOptions();
@@ -276,7 +313,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
                                      locale: options.locale}))
         .then(() => {
           if (!noUpdate) {
-            this.region.Update(this.walker.speech())
+            this.region.Update(this.walker.speech());
           }
         });
     });
@@ -306,7 +343,6 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     const code = event.keyCode;
     this.walker.modifier = event.shiftKey;
     if (code === 17) {
-      console.log(1);
       speechSynthesis.cancel();
       return;
     }
@@ -344,14 +380,6 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
       return true;
     }
     return false;
-  }
-
-  /**
-   * @override
-   */
-  public Move(key: number) {
-    this.walker.move(key);
-    this.Update();
   }
 
   /**
@@ -416,7 +444,6 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
     this.showFocus();
   }
 
-
   /**
    * @override
    */
@@ -428,7 +455,6 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
     this.Update();
   }
 
-
   /**
    * Shows the nodes that are currently focused.
    */
@@ -436,18 +462,6 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
     let node = this.walker.getFocus().getNodes()[0] as HTMLElement;
     this.region.Show(node, this.highlighter);
   }
-
-
-  /**
-   * @override
-   */
-  public Move(key: number) {
-    let result = this.walker.move(key);
-    if (result) {
-      this.Update();
-    }
-  }
-
 
   /**
    * @override
