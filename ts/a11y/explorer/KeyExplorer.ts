@@ -133,7 +133,7 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
       this.walker.refocus();
       nodes = this.walker.getFocus().getNodes();
     }
-    this.highlighter.highlight(nodes as HTMLElement[]);
+    this.pool.highlight(nodes as HTMLElement[]);
   }
 
   /**
@@ -144,7 +144,7 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
     this.attached = true;
     this.oldIndex = this.node.tabIndex;
     this.node.tabIndex = 1;
-    this.node.setAttribute('role', 'application');
+    this.node.setAttribute('role', 'tree');
   }
 
   /**

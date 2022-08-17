@@ -86,6 +86,15 @@ type ExplorerInit = (doc: ExplorerMathDocument, pool: ExplorerPool,
  *  Generation methods for all MathJax explorers available via option settings.
  */
 let allExplorers: {[options: string]: ExplorerInit} = {
+  braille: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
+    let explorer = ke.SpeechExplorer.create(
+      doc, pool, doc.explorerRegions.brailleRegion, node, ...rest) as ke.SpeechExplorer;
+    explorer.speechGenerator.setOptions({automark: false as any, markup: 'none',
+                                         locale: 'nemeth', domain: 'default',
+                                         style: 'default', modality: 'braille'});
+    explorer.showRegion = 'viewBraille';
+    return explorer;
+  },
   speech: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
     let explorer = ke.SpeechExplorer.create(
       doc, pool, doc.explorerRegions.speechRegion, node, ...rest) as ke.SpeechExplorer;
@@ -100,15 +109,6 @@ let allExplorers: {[options: string]: ExplorerInit} = {
       explorer.speechGenerator.setOptions({locale: doc.options.sre.locale});
     }
     explorer.showRegion = 'subtitles';
-    return explorer;
-  },
-  braille: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
-    let explorer = ke.SpeechExplorer.create(
-      doc, pool, doc.explorerRegions.brailleRegion, node, ...rest) as ke.SpeechExplorer;
-    explorer.speechGenerator.setOptions({automark: false as any, markup: 'none',
-                                         locale: 'nemeth', domain: 'default',
-                                         style: 'default', modality: 'braille'});
-    explorer.showRegion = 'viewBraille';
     return explorer;
   },
   keyMagnifier: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) =>
@@ -140,7 +140,20 @@ let allExplorers: {[options: string]: ExplorerInit} = {
 export class ExplorerPool {
 
 
-  public highlighter: Sre.highlighter;
+  private _highlighter: Sre.highlighter;
+
+  private _renderer: string = this.document.outputJax.name;
+
+  public get highlighter(): Sre.highlighter {
+    if (this._renderer !== this.document.outputJax.name) {
+      this._renderer = this.document.outputJax.name
+      this.getPrimaryHighlighter();
+      return this._highlighter;
+    }
+    let [foreground, background] = this.colorOptions();
+    Sre.updateHighlighter(background, foreground, this._highlighter);
+    return this._highlighter;
+  }
 
   public secondaryHighlighter: Sre.highlighter;
 
@@ -168,13 +181,13 @@ export class ExplorerPool {
   constructor(public document: ExplorerMathDocument,
               public node: HTMLElement,
               public mml: string) {
-    this.getHighlighter();
+    this.getPrimaryHighlighter();
     for (let key of Object.keys(allExplorers)) {
       this.explorers[key] = allExplorers[key](document, this, node, mml);
     }
     this.getSecondaryHighlighter();
     this.attach();
-  }
+ }
 
   /**
    * Attaches the explorers that are currently meant to be active given
@@ -208,7 +221,6 @@ export class ExplorerPool {
   }
 
   public reattach() {
-    this.getHighlighter();
     for (let key of this.attached) {
       let explorer = this.explorers[key];
       if (explorer.active) {
@@ -223,16 +235,21 @@ export class ExplorerPool {
     this.restart = [];
   }
 
-  /**
-   * @return {Sre.Highlighter} A highlighter for the explorer.
-   */
-  protected getHighlighter() {
+  private colorOptions() {
     let opts = this.document.options.a11y;
     let foreground = {color: opts.foregroundColor.toLowerCase(),
                       alpha: opts.foregroundOpacity / 100};
     let background = {color: opts.backgroundColor.toLowerCase(),
                       alpha: opts.backgroundOpacity / 100};
-    this.highlighter = Sre.getHighlighter(
+    return [foreground, background];
+  }
+
+  /**
+   * @return {Sre.Highlighter} A highlighter for the explorer.
+   */
+  protected getPrimaryHighlighter() {
+    let [foreground, background] = this.colorOptions();
+    this._highlighter = Sre.getHighlighter(
       background, foreground,
       {renderer: this.document.outputJax.name, browser: 'v3'});
   }
@@ -249,9 +266,13 @@ export class ExplorerPool {
       this.secondaryHighlighter;
   }
 
+  public highlight(nodes: HTMLElement[]) {
+    this.highlighter.highlight(nodes);
+  }
+
   public unhighlight() {
     this.secondaryHighlighter.unhighlight();
     this.highlighter.unhighlight();
   }
-  
+
 }
