@@ -26,6 +26,8 @@
 import {A11yDocument, Region} from './Region.js';
 import Sre from '../sre.js';
 
+import type { ExplorerPool } from './ExplorerPool.js';
+
 /**
  * A11y explorers.
  * @interface
@@ -43,6 +45,8 @@ export interface Explorer {
    * @type {boolean}
    */
   stoppable: boolean;
+
+  pool: ExplorerPool;
 
   /**
    * Attaches navigator and its event handlers to a node.
@@ -114,7 +118,9 @@ export class AbstractExplorer<T> implements Explorer {
    * The Sre highlighter associated with the walker.
    * @type {Sre.highlighter}
    */
-  protected highlighter: Sre.highlighter = this.getHighlighter();
+  protected get highlighter(): Sre.highlighter {
+    return this.pool.highlighter;
+  }
 
   /**
    * Flag if explorer is active.
@@ -152,10 +158,11 @@ export class AbstractExplorer<T> implements Explorer {
    */
   public static create<T>(
     document: A11yDocument,
+    pool: ExplorerPool,
     region: Region<T>,
     node: HTMLElement, ...rest: any[]
   ): Explorer {
-    let explorer = new this(document, region, node, ...rest);
+    let explorer = new this(document, pool, region, node, ...rest);
     return explorer;
   }
 
@@ -168,8 +175,10 @@ export class AbstractExplorer<T> implements Explorer {
    */
   protected constructor(
     public document: A11yDocument,
-    protected region: Region<T>,
-    protected node: HTMLElement, ..._rest: any[]
+    public pool: ExplorerPool,
+    public region: Region<T>,
+    protected node: HTMLElement,
+    ..._rest: any[]
   ) {
   }
 
@@ -215,7 +224,6 @@ export class AbstractExplorer<T> implements Explorer {
    * @override
    */
   public Start() {
-    this.highlighter = this.getHighlighter();
     this.active = true;
   }
 
@@ -254,20 +262,6 @@ export class AbstractExplorer<T> implements Explorer {
   // @ts-ignore: unused variable
   public Update(force: boolean = false): void {}
 
-
-  /**
-   * @return {Sre.Highlighter} A highlighter for the explorer.
-   */
-  protected getHighlighter(): Sre.highlighter {
-    let opts = this.document.options.a11y;
-    let foreground = {color: opts.foregroundColor.toLowerCase(),
-                      alpha: opts.foregroundOpacity / 100};
-    let background = {color: opts.backgroundColor.toLowerCase(),
-                      alpha: opts.backgroundOpacity / 100};
-    return Sre.getHighlighter(
-      background, foreground,
-      {renderer: this.document.outputJax.name, browser: 'v3'});
-  }
 
   /**
    * Stops the events of this explorer from bubbling.

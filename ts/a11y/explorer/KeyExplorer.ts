@@ -25,6 +25,7 @@
 
 import {A11yDocument, Region} from './Region.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
+import {ExplorerPool} from './ExplorerPool.js';
 import Sre from '../sre.js';
 
 
@@ -126,7 +127,7 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
    */
   public Update(force: boolean = false) {
     if (!this.active && !force) return;
-    this.highlighter.unhighlight();
+    this.pool.unhighlight();
     let nodes = this.walker.getFocus(true).getNodes();
     if (!nodes.length) {
       this.walker.refocus();
@@ -174,8 +175,7 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
   public Stop() {
     if (this.active) {
       this.walker.deactivate();
-      console.log('Unhighlight');
-      this.highlighter.unhighlight();
+      this.pool.unhighlight();
     }
     super.Stop();
   }
@@ -244,10 +244,11 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @extends {AbstractKeyExplorer}
    */
   constructor(public document: A11yDocument,
-              protected region: Region<string>,
+              public pool: ExplorerPool,
+              public region: Region<string>,
               protected node: HTMLElement,
               private mml: string) {
-    super(document, region, node);
+    super(document, pool, region, node);
     this.initWalker();
   }
 
@@ -308,11 +309,13 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     }
     SpeechExplorer.updatePromise = SpeechExplorer.updatePromise.then(async () => {
       return Sre.sreReady()
-        .then(() => Sre.setupEngine({modality: options.modality,
+        .then(() => Sre.setupEngine({markup: options.markup,
+                                     modality: options.modality,
                                      locale: options.locale}))
         .then(() => {
           if (!noUpdate) {
-            this.region.Update(this.walker.speech());
+            let speech = this.walker.speech();
+            this.region.Update(speech);
           }
         });
     });
@@ -426,10 +429,11 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
    * @extends {AbstractKeyExplorer}
    */
   constructor(public document: A11yDocument,
-              protected region: Region<HTMLElement>,
+              public pool: ExplorerPool,
+              public region: Region<HTMLElement>,
               protected node: HTMLElement,
               private mml: string) {
-    super(document, region, node);
+    super(document, pool, region, node);
     this.walker = Sre.getWalker(
       'table', this.node, Sre.getSpeechGenerator('Dummy'),
       this.highlighter, this.mml);

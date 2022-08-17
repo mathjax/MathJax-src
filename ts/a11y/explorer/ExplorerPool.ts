@@ -79,16 +79,16 @@ export class RegionPool {
  * Type of explorer initialization methods.
  * @type {(ExplorerMathDocument, HTMLElement, any[]): Explorer}
  */
-type ExplorerInit = (doc: ExplorerMathDocument,
+type ExplorerInit = (doc: ExplorerMathDocument, pool: ExplorerPool,
                      node: HTMLElement, ...rest: any[]) => Explorer;
 
 /**
  *  Generation methods for all MathJax explorers available via option settings.
  */
 let allExplorers: {[options: string]: ExplorerInit} = {
-  speech: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) => {
+  speech: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
     let explorer = ke.SpeechExplorer.create(
-      doc, doc.explorerRegions.speechRegion, node, ...rest) as ke.SpeechExplorer;
+      doc, pool, doc.explorerRegions.speechRegion, node, ...rest) as ke.SpeechExplorer;
     explorer.speechGenerator.setOptions({
       automark: true as any, markup: 'ssml_step',
       locale: doc.options.sre.locale, domain: doc.options.sre.domain,
@@ -102,42 +102,47 @@ let allExplorers: {[options: string]: ExplorerInit} = {
     explorer.showRegion = 'subtitles';
     return explorer;
   },
-  braille: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) => {
+  braille: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
     let explorer = ke.SpeechExplorer.create(
-      doc, doc.explorerRegions.brailleRegion, node, ...rest) as ke.SpeechExplorer;
+      doc, pool, doc.explorerRegions.brailleRegion, node, ...rest) as ke.SpeechExplorer;
     explorer.speechGenerator.setOptions({automark: false as any, markup: 'none',
                                          locale: 'nemeth', domain: 'default',
                                          style: 'default', modality: 'braille'});
     explorer.showRegion = 'viewBraille';
     return explorer;
   },
-  keyMagnifier: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
-    ke.Magnifier.create(doc, doc.explorerRegions.magnifier, node, ...rest),
-  mouseMagnifier: (doc: ExplorerMathDocument, node: HTMLElement, ..._rest: any[]) =>
-    me.ContentHoverer.create(doc, doc.explorerRegions.magnifier, node,
+  keyMagnifier: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) =>
+    ke.Magnifier.create(doc, pool, doc.explorerRegions.magnifier, node, ...rest),
+  mouseMagnifier: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ..._rest: any[]) =>
+    me.ContentHoverer.create(doc, pool, doc.explorerRegions.magnifier, node,
                              (x: HTMLElement) => x.hasAttribute('data-semantic-type'),
                              (x: HTMLElement) => x),
-  hover: (doc: ExplorerMathDocument, node: HTMLElement, ..._rest: any[]) =>
-    me.FlameHoverer.create(doc, null, node),
-  infoType: (doc: ExplorerMathDocument, node: HTMLElement, ..._rest: any[]) =>
-    me.ValueHoverer.create(doc, doc.explorerRegions.tooltip1, node,
+  hover: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ..._rest: any[]) =>
+    me.FlameHoverer.create(doc, pool, null, node),
+  infoType: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ..._rest: any[]) =>
+    me.ValueHoverer.create(doc, pool, doc.explorerRegions.tooltip1, node,
                            (x: HTMLElement) => x.hasAttribute('data-semantic-type'),
                            (x: HTMLElement) => x.getAttribute('data-semantic-type')),
-  infoRole: (doc: ExplorerMathDocument, node: HTMLElement, ..._rest: any[]) =>
-    me.ValueHoverer.create(doc, doc.explorerRegions.tooltip2, node,
+  infoRole: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ..._rest: any[]) =>
+    me.ValueHoverer.create(doc, pool, doc.explorerRegions.tooltip2, node,
                            (x: HTMLElement) => x.hasAttribute('data-semantic-role'),
                            (x: HTMLElement) => x.getAttribute('data-semantic-role')),
-  infoPrefix: (doc: ExplorerMathDocument, node: HTMLElement, ..._rest: any[]) =>
-    me.ValueHoverer.create(doc, doc.explorerRegions.tooltip3, node,
+  infoPrefix: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ..._rest: any[]) =>
+    me.ValueHoverer.create(doc, pool, doc.explorerRegions.tooltip3, node,
                            (x: HTMLElement) => x.hasAttribute('data-semantic-prefix'),
                            (x: HTMLElement) => x.getAttribute('data-semantic-prefix')),
-  flame: (doc: ExplorerMathDocument, node: HTMLElement, ..._rest: any[]) =>
-    FlameColorer.create(doc, null, node),
-  treeColoring: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
-    TreeColorer.create(doc, null, node, ...rest)
+  flame: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ..._rest: any[]) =>
+    FlameColorer.create(doc, pool, null, node),
+  treeColoring: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) =>
+    TreeColorer.create(doc, pool, null, node, ...rest)
 };
 
 export class ExplorerPool {
+
+
+  public highlighter: Sre.highlighter;
+
+  public secondaryHighlighter: Sre.highlighter;
 
   /**
    * The currently attached explorers
@@ -148,7 +153,6 @@ export class ExplorerPool {
    * True when a rerendered element should restart these explorers
    */
   protected restart: string[] = [];
-
 
   /**
    * The explorer dictionary.
@@ -161,18 +165,22 @@ export class ExplorerPool {
    * @param  node The node explorers will be attached to.
    * @param  mml The corresponding Mathml node as a string.
    */
-  constructor(document: ExplorerMathDocument, node: HTMLElement, mml: string) {
+  constructor(public document: ExplorerMathDocument,
+              public node: HTMLElement,
+              public mml: string) {
+    this.getHighlighter();
     for (let key of Object.keys(allExplorers)) {
-      this.explorers[key] = allExplorers[key](document, node, mml);
+      this.explorers[key] = allExplorers[key](document, this, node, mml);
     }
+    this.getSecondaryHighlighter();
+    this.attach();
   }
 
   /**
    * Attaches the explorers that are currently meant to be active given
    * the document options. Detaches all others.
-   * @param {ExplorerMathDocument} document The current document.
    */
-  public attach(document: ExplorerMathDocument) {
+  public attach() {
     this.attached = [];
     let keyExplorers = [];
     for (let key of Object.keys(this.explorers)) {
@@ -182,7 +190,7 @@ export class ExplorerPool {
         explorer.stoppable = false;
         keyExplorers.unshift(explorer);
       }
-      if (document.options.a11y[key]) {
+      if (this.document.options.a11y[key]) {
         explorer.Attach();
         this.attached.push(key);
       } else {
@@ -200,6 +208,7 @@ export class ExplorerPool {
   }
 
   public reattach() {
+    this.getHighlighter();
     for (let key of this.attached) {
       let explorer = this.explorers[key];
       if (explorer.active) {
@@ -214,4 +223,35 @@ export class ExplorerPool {
     this.restart = [];
   }
 
+  /**
+   * @return {Sre.Highlighter} A highlighter for the explorer.
+   */
+  protected getHighlighter() {
+    let opts = this.document.options.a11y;
+    let foreground = {color: opts.foregroundColor.toLowerCase(),
+                      alpha: opts.foregroundOpacity / 100};
+    let background = {color: opts.backgroundColor.toLowerCase(),
+                      alpha: opts.backgroundOpacity / 100};
+    this.highlighter = Sre.getHighlighter(
+      background, foreground,
+      {renderer: this.document.outputJax.name, browser: 'v3'});
+  }
+
+  /**
+   * @return {Sre.Highlighter} A highlighter for the explorer.
+   */
+  protected getSecondaryHighlighter() {
+    this.secondaryHighlighter = Sre.getHighlighter(
+      {color: 'red'}, {color: 'black'},
+      {renderer: this.document.outputJax.name, browser: 'v3'}
+    );
+    ((this.explorers['speech'] as ke.SpeechExplorer).region as SpeechRegion).highlighter =
+      this.secondaryHighlighter;
+  }
+
+  public unhighlight() {
+    this.secondaryHighlighter.unhighlight();
+    this.highlighter.unhighlight();
+  }
+  
 }

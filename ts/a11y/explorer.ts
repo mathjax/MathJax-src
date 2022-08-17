@@ -128,11 +128,11 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
         }
         // Init explorers:
         this.explorers = new ExplorerPool(document, node, mml);
-        this.explorers.attach(document);
       }
       this.state(STATE.EXPLORER);
     }
 
+    // TODO: Work this one out after collapse!
     /**
      * @override
      */
@@ -325,7 +325,7 @@ export function setA11yOptions(document: HTMLDOCUMENT, options: {[key: string]: 
   }
   // Reinit explorers
   for (let item of document.math) {
-    (item as ExplorerMathItem).explorers.attach(document as ExplorerMathDocument);
+    (item as ExplorerMathItem).explorers.attach();
   }
 }
 
