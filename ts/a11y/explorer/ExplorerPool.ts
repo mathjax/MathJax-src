@@ -139,6 +139,16 @@ let allExplorers: {[options: string]: ExplorerInit} = {
 
 export class ExplorerPool {
 
+  /**
+   * The currently attached explorers
+   */
+  protected attached: string[] = [];
+
+  /**
+   * True when a rerendered element should restart these explorers
+   */
+  protected restart: string[] = [];
+
 
   /**
    * The explorer dictionary.
@@ -156,4 +166,52 @@ export class ExplorerPool {
       this.explorers[key] = allExplorers[key](document, node, mml);
     }
   }
+
+  /**
+   * Attaches the explorers that are currently meant to be active given
+   * the document options. Detaches all others.
+   * @param {ExplorerMathDocument} document The current document.
+   */
+  public attach(document: ExplorerMathDocument) {
+    this.attached = [];
+    let keyExplorers = [];
+    for (let key of Object.keys(this.explorers)) {
+      let explorer = this.explorers[key];
+      if (explorer instanceof ke.AbstractKeyExplorer) {
+        explorer.AddEvents();
+        explorer.stoppable = false;
+        keyExplorers.unshift(explorer);
+      }
+      if (document.options.a11y[key]) {
+        explorer.Attach();
+        this.attached.push(key);
+      } else {
+        explorer.Detach();
+      }
+    }
+    // Ensure that the last currently attached key explorer stops propagating
+    // key events.
+    for (let explorer of keyExplorers) {
+      if (explorer.attached) {
+        explorer.stoppable = true;
+        break;
+      }
+    }
+  }
+
+  public reattach() {
+    for (let key of this.attached) {
+      let explorer = this.explorers[key];
+      if (explorer.active) {
+        this.restart.push(key);
+        explorer.Stop();
+      }
+    }
+  }
+
+  public Restart() {
+    this.restart.forEach(x => this.explorers[x].Start());
+    this.restart = [];
+  }
+
 }

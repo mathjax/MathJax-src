@@ -31,7 +31,6 @@ import {OptionList, expandable} from '../util/Options.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {MJContextMenu} from '../ui/menu/MJContextMenu.js';
 
-import * as ke from './explorer/KeyExplorer.js';
 import { ExplorerPool, RegionPool } from './explorer/ExplorerPool.js';
 
 import {Submenu} from 'mj-context-menu/js/item_submenu.js';
@@ -64,6 +63,11 @@ newState('EXPLORER', 160);
 export interface ExplorerMathItem extends HTMLMATHITEM {
 
   /**
+   * The Explorer objects for this math item
+   */
+  explorers: ExplorerPool;
+
+  /**
    * @param {HTMLDocument} document  The document where the Explorer is being added
    * @param {boolean} force          True to force the explorer even if enableExplorer is false
    */
@@ -72,7 +76,8 @@ export interface ExplorerMathItem extends HTMLMATHITEM {
   /**
    * @param {HTMLDocument} document  The document where the Explorer is being added
    */
-  attachExplorers(document: HTMLDOCUMENT): void;
+  // attachExplorers(document: HTMLDOCUMENT): void;
+
 }
 
 /**
@@ -92,19 +97,9 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
   return class extends BaseMathItem {
 
     /**
-     * The Explorer objects for this math item
+     * @override
      */
-    protected explorers: ExplorerPool;
-
-    /**
-     * The currently attached explorers
-     */
-    protected attached: string[] = [];
-
-    /**
-     * True when a rerendered element should restart these explorers
-     */
-    protected restart: string[] = [];
+    public explorers: ExplorerPool;
 
     /**
      * True when a rerendered element should regain the focus
@@ -133,41 +128,9 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
         }
         // Init explorers:
         this.explorers = new ExplorerPool(document, node, mml);
-        this.attachExplorers(document);
+        this.explorers.attach(document);
       }
       this.state(STATE.EXPLORER);
-    }
-
-    /**
-     * Attaches the explorers that are currently meant to be active given
-     * the document options. Detaches all others.
-     * @param {ExplorerMathDocument} document The current document.
-     */
-    public attachExplorers(document: ExplorerMathDocument) {
-      this.attached = [];
-      let keyExplorers = [];
-      for (let key of Object.keys(this.explorers.explorers)) {
-        let explorer = this.explorers.explorers[key];
-        if (explorer instanceof ke.AbstractKeyExplorer) {
-          explorer.AddEvents();
-          explorer.stoppable = false;
-          keyExplorers.unshift(explorer);
-        }
-        if (document.options.a11y[key]) {
-          explorer.Attach();
-          this.attached.push(key);
-        } else {
-          explorer.Detach();
-        }
-      }
-      // Ensure that the last currently attached key explorer stops propagating
-      // key events.
-      for (let explorer of keyExplorers) {
-        if (explorer.attached) {
-          explorer.stoppable = true;
-          break;
-        }
-      }
     }
 
     /**
@@ -176,13 +139,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     public rerender(document: ExplorerMathDocument, start: number = STATE.RERENDER) {
       this.savedId = this.typesetRoot.getAttribute('sre-explorer-id');
       this.refocus = (window.document.activeElement === this.typesetRoot);
-      for (let key of this.attached) {
-        let explorer = this.explorers.explorers[key];
-        if (explorer.active) {
-          this.restart.push(key);
-          explorer.Stop();
-        }
-      }
+      this.explorers.reattach();
       super.rerender(document, start);
     }
 
@@ -192,8 +149,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     public updateDocument(document: ExplorerMathDocument) {
       super.updateDocument(document);
       this.refocus && this.typesetRoot.focus();
-      this.restart.forEach(x => this.explorers.explorers[x].Start());
-      this.restart = [];
+      this.explorers.Restart();
       this.refocus = false;
     }
 
@@ -369,7 +325,7 @@ export function setA11yOptions(document: HTMLDOCUMENT, options: {[key: string]: 
   }
   // Reinit explorers
   for (let item of document.math) {
-    (item as ExplorerMathItem).attachExplorers(document as ExplorerMathDocument);
+    (item as ExplorerMathItem).explorers.attach(document as ExplorerMathDocument);
   }
 }
 
