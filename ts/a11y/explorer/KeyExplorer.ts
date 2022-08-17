@@ -295,7 +295,6 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     // TODO (v4): This is a hack to avoid double voicing on initial startup!
     // Make that cleaner and remove force as it is not really used!
     let noUpdate = force;
-    // let noUpdate = false;
     force = false;
     super.Update(force);
     let options = this.speechGenerator.getOptions();
