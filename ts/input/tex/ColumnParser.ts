@@ -45,6 +45,7 @@ export type ColumnState = {
   clines: string[];                     // the column lines
   cstart: string[];                     // the '>' declarations (not currently used)
   cend:   string[];                     // the '<' declarations (not currently used)
+  cextra: boolean[];                    // the extra columns from '@' and '!' declarations
   ralign: [number, string, string][];   // the row alignment and column width/align when specified
 }
 
@@ -78,8 +79,28 @@ export class ColumnParser {
     '>': (state) => state.cstart[state.j] = (state.cstart[state.j] || '') + this.getBraces(state),
     '<': (state) => state.cend[state.j - 1] = (state.cend[state.j - 1] || '') + this.getBraces(state),
     '@': (state) => {
-      state.cstart[state.j] = '\\mathNONE{' + this.getBraces(state) + '}';
-      state.cspace[state.j] = '0';
+      const cstart = state.cstart;
+      const cspace = state.cspace;
+      const j = state.j;
+      state.cextra[j] = true;
+      if (cspace[j] === '.5em' && state.clines[j]) {
+        const i = j - 1;
+        cstart[i] += '\\hspace{.25em}';
+      }
+      cstart[j] = this.getBraces(state);
+      cspace[j] = '0';
+      cspace[++state.j] = '0';
+    },
+    '!': (state) => {
+      const cstart = state.cstart;
+      const cspace = state.cspace;
+      const j = state.j;
+      state.cextra[j] = true;
+      cstart[j] = (cspace[j] === '0' && state.clines[j] ? '\\hspace{.25em}' : '') + this.getBraces(state);
+      if (!cspace[j]) {
+        cspace[j] = '.5em';
+      }
+      cspace[++state.j] = '.5em';
     },
     //
     // Non-standard for math-mode versions
@@ -90,7 +111,6 @@ export class ColumnParser {
     //
     // Ignored
     //
-    '!': (state) => this.getBraces(state),
     ' ': (_state) => {},
   };
 
@@ -114,7 +134,7 @@ export class ColumnParser {
       parser, template, i: 0, j: 0, c: '',
       cwidth: [], calign: [], cspace: [], clines: [],
       cstart: array.cstart, cend: array.cend,
-      ralign: array.ralign
+      ralign: array.ralign, cextra: array.cextra
     };
     //
     // Loop through the template to process the column specifiers
@@ -127,7 +147,7 @@ export class ColumnParser {
       const c = state.c = String.fromCodePoint(state.template.codePointAt(state.i));
       state.i += c.length;
       if (!this.columnHandler.hasOwnProperty(c)) {
-        throw new TexError('BadColumnCharacter', 'Unknown column specifier: %1', c);
+        throw new TexError('BadPreamToken', 'Illegal pream-token (%1)', c);
       }
       this.columnHandler[c](state);
     }

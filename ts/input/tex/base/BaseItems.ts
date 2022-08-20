@@ -951,6 +951,16 @@ export class ArrayItem extends BaseItem {
   public cend: string[] = [];
 
   /**
+   * True for columns from @{...} and !{...}
+   */
+  public cextra: boolean[] = [];
+
+  /**
+   * True if adding extra columns at the end of a row
+   */
+  public atEnd: boolean = false;
+
+  /**
    * Row alignments to specify on particular columns
    */
   public ralign: [number, string, string][] = [];
@@ -1073,22 +1083,58 @@ export class ArrayItem extends BaseItem {
    */
   public StartEntry() {
     const n = this.row.length;
-    const start = this.cstart[n];
+    let start = this.cstart[n];
     const end = this.cend[n];
     const ralign = this.ralign[n];
-    if (!start && !end && !ralign) return;
-    let [entry, found] = this.getEntry();
+    const cextra = this.cextra;
+    if (!start && !end && !ralign && !cextra[n] && !cextra[n + 1]) return;
+    let [prefix, entry, term, found] = this.getEntry();
+    //
+    // Add & to an extra column if it is not at the end of the line
+    //
+    if (cextra[n] && !this.atEnd) {
+      start += '&';
+    }
+    //
+    // Check if there are extra entries at the end of a row to be added
+    //
+    if (term !== '&') {
+      if (cextra[n + 1]) {
+        entry += '&';                 // extra entries follow this one
+        this.atEnd = !cextra[n];
+        found = true;
+      } else if (cextra[n]) {
+        found = true;
+      } else if (!entry.trim()) {
+        found = false;
+      }
+    }
     if (!found) return;
     const parser = this.parser;
+    //
+    //  Add the start, entry, and end values together
+    //
     if (start) {
       entry = ParseUtil.addArgs(parser, start, entry);
     }
     if (end) {
       entry = ParseUtil.addArgs(parser, entry, end);
     }
+    //
+    //  If row aligning, use text mode
+    //
     if (ralign) {
       entry = '\\text{' + entry.trim() + '}';
     }
+    //
+    //  Add any \hline or \hfill macros
+    //
+    if (prefix) {
+      entry = ParseUtil.addArgs(parser, prefix, entry);
+    }
+    //
+    //  Insert the entry into the parser string
+    //
     parser.string = ParseUtil.addArgs(parser, entry, parser.string);
     parser.i = 0;
   }
@@ -1096,13 +1142,13 @@ export class ArrayItem extends BaseItem {
   /**
    * Get the TeX string for the contents of the coming cell (if any)
    */
-  protected getEntry(): [string, boolean] {
+  protected getEntry(): [string, string, string, boolean] {
     const parser = this.parser;
-    const pattern = /^([^]*?)([&{}]|\\\\|\\(?:begin|end)\{array\})/;
+    const pattern = /^([^]*?)([&{}]|\\\\|\\(?:begin|end)\{array\}|\\cr)/;
     let braces = 0, envs = 0;
     let i = parser.i;
     let match;
-    const fail: [string, boolean] = ['', false];
+    const fail: [string, string, string, boolean] = ['', '', '', false];
     while ((match = parser.string.slice(i).match(pattern)) !== null) {
       i += match[0].length;
       switch (match[2]) {
@@ -1125,11 +1171,14 @@ export class ArrayItem extends BaseItem {
       default:
         if (braces || envs) continue;
         i -= match[2].length;
-        const entry = parser.string.slice(parser.i, i).trim();
-        if (match[2] !== '&' && !entry.trim()) return fail;
+        let entry = parser.string.slice(parser.i, i).trim();
+        const prefix = entry.match(/^(?:\s*\\(?:hline|hfil{1,3}|rowcolor\s*\{.*?\}))+/);
+        if (prefix) {
+          entry = entry.slice(prefix[0].length);
+        }
         parser.string = parser.string.slice(i);
         parser.i = 0;
-        return [entry, true];
+        return [prefix?.[0] ||'', entry, match[2], true];
       }
     }
     return fail;
@@ -1195,6 +1244,7 @@ export class ArrayItem extends BaseItem {
     }
     this.table.push(node);
     this.row = [];
+    this.atEnd = false;
   }
 
 
