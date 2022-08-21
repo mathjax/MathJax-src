@@ -1205,6 +1205,7 @@ BaseMethods.Matrix = function(parser: TexParser, _name: string,
   }
   // @test Matrix Braces, Matrix Columns, Matrix Rows.
   const array = parser.itemFactory.create('array').setProperty('requireClose', true) as sitem.ArrayItem;
+  (open || !align) && array.setProperty('arrayPadding', '.2em .125em');
   array.arraydef = {
     rowspacing: (vspacing || '4pt'),
     columnspacing: (spacing || '1em')
@@ -1502,6 +1503,7 @@ BaseMethods.Array = function(parser: TexParser, begin: StackItem,
     align = parser.GetArgument('\\begin{' + begin.getName() + '}');
   }
   const array = parser.itemFactory.create('array') as sitem.ArrayItem;
+  begin.getName() === 'array' && array.setProperty('arrayPadding', '.5em .125em');
   array.parser = parser;
   array.arraydef = {
     columnspacing: (spacing || '1em'),

@@ -358,13 +358,18 @@ export interface CommonMtable<
   getVerticalPosition(i: number, align: string): number;
 
   /**
-   * @param {number} fspace   The frame spacing to use
-   * @param {number[]} space  The array of spacing values to convert to strings
-   * @param {number} scale    A scaling factor to use for the sizes
-   * @return {string[]}       The half-spacing as stings with units of "em"
-   *                           with frame spacing at the beginning and end
+   * @return {number[]}   The x and y frame spacing [left, top-and-bottom, right]
    */
-  getEmHalfSpacing(fspace: number, space: number[], scale?: number): string[];
+  getFrameSpacing(): number[];
+
+  /**
+   * @param {number[]} fspace   The frame spacing to use
+   * @param {number[]} space    The array of spacing values to convert to strings
+   * @param {number} scale      A scaling factor to use for the sizes
+   * @return {string[]}         The half-spacing as stings with units of "em"
+   *                             with frame spacing at the beginning and end
+   */
+  getEmHalfSpacing(fspace: number[], space: number[], scale?: number): string[];
 
   /**
    * @return {number[]}   The half-spacing for rows with frame spacing at the ends
@@ -853,7 +858,7 @@ export function CommonMtableMixin<
         return (align === 'center' && !labels ? [pad, pad] :
                 side === 'left' ? [pad, 0] : [0, pad]);
       }
-      return [0, 0];
+      return [this.bbox?.L || 0, 0];
     }
 
     /**
@@ -905,7 +910,7 @@ export function CommonMtableMixin<
      */
     public naturalWidth(): number {
       const CW = this.getComputedWidths();
-      return sum(CW.concat(this.cLines, this.cSpace)) + 2 * (this.fLine + this.fSpace[0]);
+      return sum(CW.concat(this.cLines, this.cSpace)) + 2 * this.fLine + this.fSpace[0] + this.fSpace[2];
     }
 
     /**
@@ -961,7 +966,7 @@ export function CommonMtableMixin<
       } else if (isPercent(width)) {
         cwidth = this.percent(1 / n);
       } else {
-        const w = sum([].concat(this.cLines, this.cSpace)) + 2 * this.fSpace[0];
+        const w = sum([].concat(this.cLines, this.cSpace)) + this.fSpace[0] + this.fSpace[2];
         cwidth = Math.max(0, this.length2em(width) - w) / n;
       }
       return Array(this.numCols).fill(cwidth);
@@ -1011,7 +1016,7 @@ export function CommonMtableMixin<
       //   separation and lines have been removed (cwidth), and
       //   after the width of the columns have been removed (dw).
       //
-      const cwidth = width - sum([].concat(this.cLines, this.cSpace)) - 2 * this.fSpace[0];
+      const cwidth = width - sum([].concat(this.cLines, this.cSpace)) - this.fSpace[0] - this.fSpace[2];
       let dw = cwidth;
       indices.forEach(i => {
         const x = swidths[i];
@@ -1062,7 +1067,7 @@ export function CommonMtableMixin<
       //   separation and lines have been removed (cwidth), and
       //   after the width of the columns have been removed (dw).
       //
-      const cwidth = width - sum([].concat(this.cLines, this.cSpace)) - 2 * this.fSpace[0];
+      const cwidth = width - sum([].concat(this.cLines, this.cSpace)) - this.fSpace[0] - this.fSpace[2];
       let dw = sum(this.cWidths as number[]) - cwidth;
       //
       // Get the columns needed to get dw as a small enough portion of the total width
@@ -1118,17 +1123,32 @@ export function CommonMtableMixin<
 
     /******************************************************************/
 
+
     /**
      * @override
      */
-    public getEmHalfSpacing(fspace: number, space: number[], scale: number = 1): string[] {
+    public getFrameSpacing(): number[] {
+      const fspace = (this.frame ? this.convertLengths(this.getAttributeArray('framespacing')) : [0, 0]);
+      fspace[2] = fspace[0];
+      const padding = this.node.attributes.get('data-array-padding') as string;
+      if (padding) {
+        const [L, R] = this.convertLengths(split(padding));
+        fspace[0] = L;
+        fspace[2] = R;
+      }
+      return fspace;
+    }
+
+    /**
+     * @override
+     */
+    public getEmHalfSpacing(fspace: number[], space: number[], scale: number = 1): string[] {
       //
       //  Get the column spacing values, and add the frame spacing values at the left and right
       //
-      const fspaceEm = this.em(fspace * scale);
       const spaceEm = this.addEm(space, 2 / scale);
-      spaceEm.unshift(fspaceEm);
-      spaceEm.push(fspaceEm);
+      spaceEm.unshift(this.em(fspace[0] * scale));
+      spaceEm.push(this.em(fspace[1] * scale));
       return spaceEm;
     }
 
@@ -1148,7 +1168,7 @@ export function CommonMtableMixin<
     public getColumnHalfSpacing(): number[] {
       const space = this.cSpace.map(x => x / 2);
       space.unshift(this.fSpace[0]);
-      space.push(this.fSpace[0]);
+      space.push(this.fSpace[2]);
       return space;
     }
 
@@ -1246,7 +1266,7 @@ export function CommonMtableMixin<
       const attributes = this.node.attributes;
       this.frame = attributes.get('frame') !== 'none';
       this.fLine = (this.frame && attributes.get('frame') ? .07 : 0);
-      this.fSpace = (this.frame ? this.convertLengths(this.getAttributeArray('framespacing')) : [0, 0]);
+      this.fSpace = this.getFrameSpacing();
       this.cSpace = this.convertLengths(this.getColumnAttributes('columnspacing'));
       this.rSpace = this.convertLengths(this.getRowAttributes('rowspacing'));
       this.cLines = this.getColumnAttributes('columnlines').map(x => (x === 'none' ? 0 : .07));

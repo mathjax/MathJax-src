@@ -650,7 +650,7 @@ new sm.CommandMap('macros', {
   matrix:             'Matrix',
   array:              'Matrix',
   pmatrix:           ['Matrix', '(', ')'],
-  cases:             ['Matrix', '{', '', 'left left', null, '.1em', null,
+  cases:             ['Matrix', '{', '', 'left left', null, '.2em', null,
                       true],
   eqalign:           ['Matrix', null, null, 'right left',
                       em(MATHSPACE.thickmathspace), '.5em', 'D'],

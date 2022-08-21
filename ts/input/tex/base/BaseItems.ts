@@ -1048,6 +1048,10 @@ export class ArrayItem extends BaseItem {
     if (scriptlevel) {
       mml.setProperty('scriptlevel', scriptlevel);
     }
+    if (this.getProperty('arrayPadding')) {
+      NodeUtil.setAttribute(mml, 'frame', '');   // empty frame forces fspacing to be used in MathJax
+      NodeUtil.setAttribute(mml, 'framespacing', this.getProperty('arrayPadding'));
+    }
     if (this.frame.length === 4) {
       // @test Enclosed frame solid, Enclosed frame dashed
       NodeUtil.setAttribute(mml, 'frame', this.dashed ? 'dashed' : 'solid');
@@ -1059,7 +1063,9 @@ export class ArrayItem extends BaseItem {
           (this.arraydef['rowlines'] as string).replace(/none( none)+$/, 'none');
       }
       // @test Enclosed left right
-      NodeUtil.removeAttribute(mml, 'frame');
+      if (!this.getProperty('arrayPadding')) {
+        NodeUtil.removeAttribute(mml, 'frame');
+      }
       mml = this.create('node', 'menclose', [mml], {notation: this.frame.join(' ')});
       if ((this.arraydef['columnlines'] || 'none') !== 'none' ||
           (this.arraydef['rowlines'] || 'none') !== 'none') {
@@ -1084,7 +1090,7 @@ export class ArrayItem extends BaseItem {
   public StartEntry() {
     const n = this.row.length;
     let start = this.cstart[n];
-    const end = this.cend[n];
+    let end = this.cend[n];
     const ralign = this.ralign[n];
     const cextra = this.cextra;
     if (!start && !end && !ralign && !cextra[n] && !cextra[n + 1]) return;
@@ -1099,32 +1105,36 @@ export class ArrayItem extends BaseItem {
     // Check if there are extra entries at the end of a row to be added
     //
     if (term !== '&') {
-      if (cextra[n + 1]) {
-        entry += '&';                 // extra entries follow this one
-        this.atEnd = !cextra[n];
+      if (cextra[n]) {
         found = true;
-      } else if (cextra[n]) {
-        found = true;
+      } else if (cextra[n + 1]) {
+        found = !!entry.trim();
+        if (found) {
+          end = (end || '') + '&';        // extra entries follow this one
+          this.atEnd = !cextra[n];
+        }
       } else if (!entry.trim()) {
         found = false;
       }
     }
-    if (!found) return;
+    if (!found && !prefix) return;
     const parser = this.parser;
-    //
-    //  Add the start, entry, and end values together
-    //
-    if (start) {
-      entry = ParseUtil.addArgs(parser, start, entry);
-    }
-    if (end) {
-      entry = ParseUtil.addArgs(parser, entry, end);
-    }
-    //
-    //  If row aligning, use text mode
-    //
-    if (ralign) {
-      entry = '\\text{' + entry.trim() + '}';
+    if (found) {
+      //
+      //  Add the start, entry, and end values together
+      //
+      if (start) {
+        entry = ParseUtil.addArgs(parser, start, entry);
+      }
+      if (end) {
+        entry = ParseUtil.addArgs(parser, entry, end);
+      }
+      //
+      //  If row aligning, use text mode
+      //
+      if (ralign) {
+        entry = '\\text{' + entry.trim() + '}';
+      }
     }
     //
     //  Add any \hline or \hfill macros
