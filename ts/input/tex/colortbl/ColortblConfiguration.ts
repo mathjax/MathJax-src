@@ -27,7 +27,6 @@ import {Configuration, ParserConfiguration, ConfigurationHandler} from '../Confi
 import {CommandMap} from '../SymbolMap.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 
 import {TeX} from '../../tex.js';
 
@@ -90,9 +89,9 @@ export class ColorArrayItem extends ArrayItem {
     //   in edge cells extends past their contents.
     //
     const mml = super.createMml();
-    let table = (mml.isKind('mrow') ? mml.childNodes[1] : mml) as MmlNode;
+    let table = (mml.isKind('mrow') ? mml.childNodes[1] : mml);
     if (table.isKind('menclose')) {
-      table = table.childNodes[0].childNodes[0] as MmlNode;
+      table = table.childNodes[0].childNodes[0];
     }
     if (this.hasColor && table.attributes.get('frame') === 'none') {
       table.attributes.set('frame', '');

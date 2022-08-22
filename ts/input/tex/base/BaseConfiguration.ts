@@ -32,7 +32,6 @@ import * as bitem from './BaseItems.js';
 import {AbstractTags} from '../Tags.js';
 import './BaseMappings.js';
 import {getRange} from '../../../core/MmlTree/OperatorDictionary.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import ParseOptions from '../ParseOptions.js';
 
 /**
@@ -116,9 +115,9 @@ function filterNonscript({data}: {data: ParseOptions}) {
       //    the mstyle and mspace from their lists as well.
       //
       if (mml.isKind('mrow')) {
-        const mstyle = mml.childNodes[0] as MmlNode;
+        const mstyle = mml.childNodes[0];
         data.removeFromList('mstyle', [mstyle]);
-        data.removeFromList('mspace', mstyle.childNodes[0].childNodes as MmlNode[]);
+        data.removeFromList('mspace', mstyle.childNodes[0].childNodes);
       }
     } else if (mml.isKind('mrow')) {
       //

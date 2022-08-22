@@ -86,7 +86,7 @@ export type MMLNODE = MmlNode | TextNode | XMLNode;
  *  The MmlNode interface (extends Node interface)
  */
 
-export interface MmlNode extends Node {
+export interface MmlNode extends Node<MmlNode, MmlNodeClass> {
 
   /**
    * Test various properties of MathML nodes
@@ -114,6 +114,11 @@ export interface MmlNode extends Node {
    * The actual parent in the tree
    */
   parent: MmlNode;
+
+  /**
+   * @ override
+   */
+  childNodes: MmlNode[];
 
   /**
    *  values needed for TeX spacing computations
@@ -211,7 +216,7 @@ export interface MmlNode extends Node {
  *  The MmlNode class interface (extends the NodeClass)
  */
 
-export interface MmlNodeClass extends NodeClass {
+export interface MmlNodeClass extends NodeClass<MmlNode, MmlNodeClass> {
 
   /**
    *  The list of default attribute values for nodes of this class
@@ -239,7 +244,7 @@ export interface MmlNodeClass extends NodeClass {
  *  the IMmlNode interface)
  */
 
-export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
+export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass> implements MmlNode {
 
   /**
    * The properties common to all MathML nodes
@@ -818,7 +823,7 @@ export abstract class AbstractMmlNode extends AbstractNode implements MmlNode {
     merror.attributes.set('data-mjx-message', message);
     if (options['fullErrors'] || short) {
       let mtext = this.factory.create('mtext');
-      let text = this.factory.create('text') as TextNode;
+      let text = this.factory.create('text') as any as TextNode;
       text.setText(options['fullErrors'] ? message : this.kind);
       mtext.appendChild(text);
       merror.appendChild(mtext);
@@ -864,6 +869,8 @@ export abstract class AbstractMmlTokenNode extends AbstractMmlNode {
     for (const child of this.childNodes) {
       if (child instanceof TextNode) {
         text += child.getText();
+      } else if ('textContent' in child) {
+        text += (child as any).textContent();
       }
     }
     return text;
@@ -886,7 +893,7 @@ export abstract class AbstractMmlTokenNode extends AbstractMmlNode {
    * Only step into children that are AbstractMmlNodes (not TextNodes)
    * @override
    */
-  public walkTree(func: (node: Node, data?: any) => void, data?: any) {
+  public walkTree(func: (node: MmlNode, data?: any) => void, data?: any) {
     func(this, data);
     for (const child of this.childNodes) {
       if (child instanceof AbstractMmlNode) {
@@ -1032,12 +1039,17 @@ export abstract class AbstractMmlBaseNode extends AbstractMmlNode {
  *  goes with an MmlNode.
  */
 
-export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode implements MmlNode {
+export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode<MmlNode, MmlNodeClass> implements MmlNode {
 
   /**
    *  Parent is an MmlNode
    */
   public parent: MmlNode;
+
+  /**
+   *  @override
+   */
+  public childNodes: MmlNode[];
 
   /**
    * @return {boolean}  Not a token element

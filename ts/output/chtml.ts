@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonOutputJax} from './common/OutputJax.js';
+import {CommonOutputJax} from './common.js';
 import {CommonWrapper} from './common/Wrapper.js';
 import {StyleList} from '../util/Styles.js';
 import {StyleList as CssStyleList, CssStyles} from '../util/StyleList.js';
@@ -29,9 +29,10 @@ import {OptionList} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
-import {CHTMLWrapper} from './chtml/Wrapper.js';
-import {CHTMLWrapperFactory} from './chtml/WrapperFactory.js';
-import {CHTMLFontData} from './chtml/FontData.js';
+import {ChtmlWrapper, ChtmlWrapperClass} from './chtml/Wrapper.js';
+import {ChtmlWrapperFactory} from './chtml/WrapperFactory.js';
+import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+        ChtmlFontData, ChtmlFontDataClass} from './chtml/FontData.js';
 import {Usage} from './chtml/Usage.js';
 import {TeXFont} from './chtml/fonts/tex.js';
 import * as LENGTHS from '../util/lengths.js';
@@ -47,7 +48,21 @@ import {unicodeChars} from '../util/string.js';
  * @template D  The Document class
  */
 export class CHTML<N, T, D> extends
-CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CHTMLFontData, typeof CHTMLFontData> {
+CommonOutputJax<
+  //
+  // The HTMLElement, TextNode, and Document classes (for the DOM implementation in use)
+  //
+  N, T, D,
+  //
+  // The Wrapper type and its Factory and Class (these need to know N, T, and D)
+  //
+  ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  //
+  // These are font-related objects that depend on the output jax; e,g. the character options
+  //   for CHTML and SVG output differ (CHTML contains font information, while SVG has path data)
+  //
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
+> {
 
   /**
    * The name of this output jax
@@ -132,11 +147,6 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
   public static STYLESHEETID = 'MJX-CHTML-styles';
 
   /**
-   *  Used to store the CHTMLWrapper factory.
-   */
-  public factory: CHTMLWrapperFactory<N, T, D>;
-
-  /**
    * The usage information for the wrapper classes
    */
   public wrapperUsage: Usage<string>;
@@ -151,7 +161,7 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
    * @constructor
    */
   constructor(options: OptionList = null) {
-    super(options, CHTMLWrapperFactory as any, TeXFont);
+    super(options, ChtmlWrapperFactory as any, TeXFont);
     this.font.adaptiveCSS(this.options.adaptiveCSS);
     this.wrapperUsage = new Usage<string>();
   }
@@ -211,7 +221,7 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
    * @override
    */
   protected addClassStyles(wrapper: typeof CommonWrapper, styles: CssStyles) {
-    const CLASS = wrapper as typeof CHTMLWrapper;
+    const CLASS = wrapper as typeof ChtmlWrapper;
     if (CLASS.autoStyle && CLASS.kind !== 'unknown') {
       styles.addStyles({
         ['mjx-' + CLASS.kind]: {
@@ -228,7 +238,7 @@ CommonOutputJax<N, T, D, CHTMLWrapper<N, T, D>, CHTMLWrapperFactory<N, T, D>, CH
    * @param {MmlNode} math  The MML node whose HTML is to be produced
    * @param {N} parent      The HTML node to contain the HTML
    */
-  protected processMath(math: MmlNode, parent: N) {
+  public processMath(math: MmlNode, parent: N) {
     this.factory.wrap(math).toCHTML(parent);
   }
 

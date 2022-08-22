@@ -14,10 +14,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {CHTMLCharMap, AddCSS} from '../../FontData.js';
+import {ChtmlCharMap, AddCSS} from '../../FontData.js';
 import {largeop as font} from '../../../common/fonts/tex/largeop.js';
 
-export const largeop: CHTMLCharMap = AddCSS(font, {
+export const largeop: ChtmlCharMap = AddCSS(font, {
     0x2016: {f: 'S1'},
     0x2044: {c: '/'},
     0x2191: {f: 'S1'},

@@ -116,7 +116,10 @@ interface AbstractFactoryClass<N extends FactoryNode, C extends FactoryNodeClass
  * @template N  The node type created by the factory
  * @template C  The class of the node being constructed (for access to static properties)
  */
-export abstract class AbstractFactory<N extends FactoryNode, C extends FactoryNodeClass<N>> implements Factory<N, C> {
+export abstract class AbstractFactory<
+  N extends FactoryNode,
+  C extends FactoryNodeClass<N>
+> implements Factory<N, C> {
 
   /**
    * The default collection of objects to use for the node map

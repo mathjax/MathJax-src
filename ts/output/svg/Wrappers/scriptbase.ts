@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the a base class for SVGmsubsup, SVGmunderover
+ * @fileoverview  Implements the a base class for SvgMsubsup, SvgMunderover
  *                and their relatives.  (Since munderover can become msubsup
  *                when movablelimits is set, munderover needs to be able to
  *                do the same thing as msubsup in some cases.)
@@ -24,40 +24,82 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVGWrapper, SVGConstructor} from '../Wrapper.js';
-import {CommonScriptbaseMixin} from '../../common/Wrappers/scriptbase.js';
+import {SVG} from '../../svg.js';
+import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
+import {SvgWrapperFactory} from '../WrapperFactory.js';
+import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
+import {CommonScriptbase, CommonScriptbaseClass, CommonScriptbaseMixin} from '../../common/Wrappers/scriptbase.js';
+import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /**
- * A base class for msup/msub/msubsup and munder/mover/munderover
- * wrapper implementations
+ * The SvgScriptbase interface for the SVG msub/msup/msubsup/munder/mover/munderover wrappers
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-// @ts-ignore
-export class SVGscriptbase<N, T, D> extends
-CommonScriptbaseMixin<SVGWrapper<any, any, any>, SVGConstructor<any, any, any>>(SVGWrapper) {
+export interface SvgScriptbaseNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonScriptbase<
+  N, T, D,
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
+> {}
 
-  /**
-   * The scriptbase wrapper
-   */
-  public static kind = 'scriptbase';
-
-  /**
-   * This gives the common output for msub and msup.  It is overridden
-   * for all the others (msubsup, munder, mover, munderover).
-   *
-   * @override
-   */
-  public toSVG(parent: N) {
-    const svg = this.standardSVGnode(parent);
-    const w = this.getBaseWidth();
-    const [x, v] = this.getOffset();
-    this.baseChild.toSVG(svg);
-    this.scriptChild.toSVG(svg);
-    this.scriptChild.place(w + x, v);
-  }
-
+/**
+ * The SvgScriptbaseClass interface for the SVG msub/msup/msubsup/munder/mover/munderover wrapper
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export interface SvgScriptbaseClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonScriptbaseClass<
+  N, T, D,
+  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
+> {
+  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgScriptbaseNTD<N, T, D>;
 }
+
+
+/*****************************************************************/
+
+/**
+ * The SvgScriptbase wrapper class for the msub/msup/msubsup/munder/mover/munderover class
+ */
+export const SvgScriptbase = (function <N, T, D>(): SvgScriptbaseClass<N, T, D> {
+
+  const Base = CommonScriptbaseMixin<
+      N, T, D,
+      SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+      SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
+      SvgScriptbaseClass<N, T, D>
+    >(SvgWrapper);
+
+  // Avoid message about base constructors not having the same type
+  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
+  // @ts-ignore
+  return class SvgScriptbase extends Base implements SvgScriptbaseNTD<N, T, D> {
+
+    /**
+     * @override
+     */
+    public static kind = 'scriptbase';
+
+    /**
+     * This gives the common output for msub and msup.  It is overridden
+     * for all the others (msubsup, munder, mover, munderover).
+     *
+     * @override
+     */
+    public toSVG(parent: N) {
+      const svg = this.standardSvgNode(parent);
+      const w = this.getBaseWidth();
+      const [x, v] = this.getOffset();
+      this.baseChild.toSVG(svg);
+      this.scriptChild.toSVG(svg);
+      this.scriptChild.place(w + x, v);
+    }
+
+  };
+
+})<any, any, any>();
