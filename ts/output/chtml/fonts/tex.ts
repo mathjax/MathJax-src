@@ -177,7 +177,7 @@ export class TeXFont extends Base {
   protected static defaultStyles = {
     ...ChtmlFontData.defaultStyles,
 
-    '.MJX-TEX': {
+    '.TEX-N': {
       'font-family': 'MJXZERO, MJXTEX'
     },
 
@@ -377,6 +377,11 @@ export class TeXFont extends Base {
       src: 'url("%%URL%%/MathJax_Vector-Bold.woff") format("woff")'
     },
   };
+
+  /**
+   * @override
+   */
+  public cssFontPrefix: string = 'TEX';
 
   /**
    * @override

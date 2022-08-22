@@ -117,19 +117,19 @@ export const SvgMath = (function <N, T, D>(): SvgMathClass<N, T, D> {
         'white-space': 'normal'
       },
       'mjx-break[size="1"]': {
-        'font-size': '44.4%'
+        'font-size': '11.1%'
       },
       'mjx-break[size="2"]': {
-        'font-size': '66.8%'
+        'font-size': '16.7%'
       },
       'mjx-break[size="3"]': {
-        'font-size': '88.8%'
+        'font-size': '22.2%'
       },
       'mjx-break[size="4"]': {
-        'font-size': '111.2%'
+        'font-size': '27.8%'
       },
       'mjx-break[size="5"]': {
-        'font-size': '133.2%'
+        'font-size': '33.3%'
       },
       'mjx-break[newline]::after': {
         display: 'block'

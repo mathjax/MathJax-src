@@ -227,7 +227,7 @@ CommonWrapper<
       this.dom.forEach(dom => adaptor.setAttribute(dom, 'style', styles));
       const family = this.styles.get('font-family');
       if (family) {
-        this.dom.forEach(dom => adaptor.setStyle(dom, 'font-family', 'MJXZERO, ' + family));
+        this.dom.forEach(dom => adaptor.setStyle(dom, 'font-family', this.font.cssFamilyPrefix + ', ' + family));
       }
     }
   }
@@ -284,7 +284,7 @@ CommonWrapper<
         const space = this.em(dimen);
         if (breakable) {
           const node = adaptor.node('mjx-break', SPACE[space] ? {size: SPACE[space]} :
-                                    {style: {'font-size': (dimen * 400).toFixed(1) + '%'}});
+                                    {style: {'font-size': dimen.toFixed(1) + '%'}});
           adaptor.insert(node, this.dom[i]);
         } else {
           if (SPACE[space]) {

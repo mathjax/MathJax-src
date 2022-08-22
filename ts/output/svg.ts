@@ -368,7 +368,7 @@ CommonOutputJax<
       const [mml, mo] = wrapper.childNodes[0].getBreakNode(line);
       const forced = !!(mml && mml.node.getProperty('forcebreak'));
       if (i || forced) {
-        const space = (mml && !newline ? mml.getLineBBox(0).originalL : 0) * 400;
+        const space = (mml && !newline ? mml.getLineBBox(0).originalL : 0);
         (space || !forced) && adaptor.insert(
           adaptor.node('mjx-break', forced ? {style: {'font-size': space.toFixed(1) + '%'}} : {newline: true}),
           nsvg
