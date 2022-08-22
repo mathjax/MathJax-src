@@ -16,32 +16,41 @@
  */
 
 /**
- * @fileoverview  The generic visitor class for node trees
+ * @fileoverview  The generic visitor class for trees
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Node, NodeClass, AbstractNode} from './Node.js';
-import {NodeFactory} from './NodeFactory.js';
+import {Factory, FactoryNode, FactoryNodeClass} from './Factory.js';
+
+/*****************************************************************/
+
+/**
+ * Visitor nodes can have childNodes that are traversed by the visitor
+ *
+ * @template N   The node type being traversed
+ */
+export interface VisitorNode<N extends VisitorNode<N>> extends FactoryNode {
+  childNodes?: N[];
+}
 
 /**
  * The type for the functions associated with each node class
  *
  * @template N   The node type being traversed
- * @template C   The node class for N (the constructor rather than instance of the class)
  */
-export type VisitorFunction<N extends Node<N, C>, C extends NodeClass<N, C>> =
-  (visitor: NodeFactory<N, C>, node: N, ...args: any[]) => any;
+export type VisitorFunction<N extends VisitorNode<N>> =
+  (visitor: Factory<N, FactoryNodeClass<N>>, node: N, ...args: any[]) => any;
 
 
 /*****************************************************************/
+
 /**
- *  Implements the Visitor interface
+ * The Visitor interface
  *
  * @template N   The node type being traversed
- * @template C   The node class for N (the constructor rather than instance of the class)
  */
-export interface Visitor<N extends Node<N, C>, C extends NodeClass<N, C>> {
+export interface Visitor<N extends VisitorNode<N>> {
 
   /**
    * Visit the tree rooted at the given node (passing along any needed parameters)
@@ -77,7 +86,7 @@ export interface Visitor<N extends Node<N, C>, C extends NodeClass<N, C>> {
    * @param {string} kind              The node kind for which the handler is being defined
    * @param {VisitorFunction} handler  The function to call to handle nodes of this kind
    */
-  setNodeHandler(kind: string, handler: VisitorFunction<N, C>): void;
+  setNodeHandler(kind: string, handler: VisitorFunction<N>): void;
 
   /**
    * Remove the visitor function for a given node kind
@@ -100,11 +109,11 @@ export interface Visitor<N extends Node<N, C>, C extends NodeClass<N, C>> {
  * @template N   The node type being traversed
  * @template C   The node class for N (the constructor rather than instance of the class)
  */
-export abstract class AbstractVisitor<N extends Node<N, C>, C extends NodeClass<N, C>> implements Visitor<N, C> {
+export abstract class AbstractVisitor<N extends VisitorNode<N>> implements Visitor<N> {
   /**
    * Holds the mapping from node kinds to visitor funcitons
    */
-  protected nodeHandlers: Map<string, VisitorFunction<N, C>> = new Map();
+  protected nodeHandlers: Map<string, VisitorFunction<N>> = new Map();
 
   /**
    *  Visitor functions are named "visitKindNode" where "Kind" is replaced by
@@ -124,9 +133,9 @@ export abstract class AbstractVisitor<N extends Node<N, C>, C extends NodeClass<
    * @constructor
    * @param {NodeFactory} factory  The node factory for the kinds of nodes this visitor handles
    */
-  constructor(factory: NodeFactory<N, C>) {
+  constructor(factory: Factory<N, FactoryNodeClass<N>>) {
     for (const kind of factory.getKinds()) {
-      let method = (this as Visitor<N, C>)[AbstractVisitor.methodName(kind)] as VisitorFunction<N, C>;
+      let method = (this as Visitor<N>)[AbstractVisitor.methodName(kind)] as VisitorFunction<N>;
       if (method) {
         this.nodeHandlers.set(kind, method);
       }
@@ -152,7 +161,7 @@ export abstract class AbstractVisitor<N extends Node<N, C>, C extends NodeClass<
    * @override
    */
   public visitDefault(node: N, ...args: any[]) {
-    if (node instanceof AbstractNode) {
+    if ('childNodes' in node) {
       for (const child of node.childNodes) {
         this.visitNode(child, ...args);
       }
@@ -162,7 +171,7 @@ export abstract class AbstractVisitor<N extends Node<N, C>, C extends NodeClass<
   /**
    * @override
    */
-  public setNodeHandler(kind: string, handler: VisitorFunction<N, C>) {
+  public setNodeHandler(kind: string, handler: VisitorFunction<N>) {
     this.nodeHandlers.set(kind, handler);
   }
 

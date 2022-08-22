@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MmlNode, MmlNodeClass, TextNode, XMLNode} from './MmlNode.js';
+import {MmlNode, TextNode, XMLNode} from './MmlNode.js';
 import {MmlFactory} from './MmlFactory.js';
 import {AbstractVisitor} from '../Tree/Visitor.js';
 
@@ -31,7 +31,7 @@ import {AbstractVisitor} from '../Tree/Visitor.js';
  *  for visitors that accept MmlNode trees)
  */
 
-export class MmlVisitor extends AbstractVisitor<MmlNode, MmlNodeClass> {
+export class MmlVisitor extends AbstractVisitor<MmlNode> {
   /**
    * @param {MmlFactory} factory  The MmlNode factory (defaults to MmlFactory if not given)
    *
