@@ -681,7 +681,7 @@ export function CommonMtableMixin<
         //  Stretch the stretchable children
         //
         for (const child of stretchy) {
-          child.coreMO().getStretchedVariant([W]);
+          child.coreMO().getStretchedVariant([Math.max(W, child.getBBox().w) / child.coreRScale()]);
         }
       }
     }

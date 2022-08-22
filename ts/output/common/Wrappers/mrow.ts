@@ -181,7 +181,8 @@ export function CommonMrowMixin<
         //  Stretch the stretchable children
         //
         for (const child of stretchy) {
-          child.coreMO().getStretchedVariant([H, D]);
+          const rscale = child.coreRScale();
+          child.coreMO().getStretchedVariant([H / rscale, D / rscale]);
         }
       }
     }
