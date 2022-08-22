@@ -499,29 +499,3 @@ export function AddCSS(font: ChtmlCharMap, options: CharOptionsMap): ChtmlCharMa
   }
   return font;
 }
-
-
-/**
- * Used by dynamic font extensions to add font identifiers to ranges of characters in given variants
- */
-export function AddFontIds(ranges: {[variant: string]: {[id: string]: ChtmlCharMap}}) {
-  const data: {[variant: string]: ChtmlCharMap} = {};
-  for (const id of Object.keys(ranges)) {
-    const map = ranges[id];
-    for (const variant of Object.keys(map)) {
-      if (!data[variant]) {
-        data[variant] = {};
-      }
-      const chars = map[variant];
-      for (const c of Object.keys(chars)) {
-        const data = chars[parseInt(c)] as ChtmlCharData;
-        if (!data[3]) {
-          data[3] = {};
-        }
-        data[3].f = id;
-      }
-      Object.assign(data[variant], chars);
-    }
-  }
-  return data;
-}
