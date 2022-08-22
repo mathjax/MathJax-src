@@ -1,5 +1,5 @@
-import {CharMap, SVGCharOptions} from '../../FontData.js';
+import {CharMap, SvgCharOptions} from '../../FontData.js';
 
-export const monospace: CharMap<SVGCharOptions> = {
+export const monospace: CharMap<SvgCharOptions> = {
 
 };

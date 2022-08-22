@@ -1,5 +1,5 @@
-import {CharMap, SVGCharOptions} from '../../FontData.js';
+import {CharMap, SvgCharOptions} from '../../FontData.js';
 
-export const fraktur: CharMap<SVGCharOptions> = {
+export const fraktur: CharMap<SvgCharOptions> = {
 
 };

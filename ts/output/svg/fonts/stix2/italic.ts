@@ -1,6 +1,6 @@
-import {CharMap, SVGCharOptions} from '../../FontData.js';
+import {CharMap, SvgCharOptions} from '../../FontData.js';
 
-export const italic: CharMap<SVGCharOptions> = {
+export const italic: CharMap<SvgCharOptions> = {
   0x20: [0, 0, .225, {p: ''}],
   0x21: [.669, .008, .273, {p: '138 170L249 538C261 576 269 607 269 622C269 650 257 669 227 669C185 669 168 640 160 603C157 587 154 566 150 538L103 170ZM97-8C134-8 154 17 154 47C154 78 134 105 98 105C62 105 41 79 41 47C41 15 60-8 97-8'}],
   0x22: [.706, -.504, .334, {ic: .05, p: '292 504L380 688L384 706L295 706L254 504ZM145 504L233 688L237 706L149 706L107 504'}],
