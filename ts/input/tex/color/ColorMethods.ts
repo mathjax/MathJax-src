@@ -37,7 +37,7 @@ import {ColorModel} from './ColorUtil.js';
  * @param {string} colorPadding: Padding for \colorbox and \fcolorbox.
  * @return {PropertyList} The padding properties.
  */
-function padding(colorPadding: string): PropertyList {
+export function padding(colorPadding: string): PropertyList {
   const pad = `+${colorPadding}`;
   const unit = colorPadding.replace(/^.*?([a-z]*)$/, '$1');
   const pad2 = 2 * parseFloat(pad);
@@ -121,14 +121,13 @@ ColorMethods.DefineColor = function (parser: TexParser, name: string) {
  * @param {string} name The name of the control sequence.
  */
 ColorMethods.ColorBox = function (parser: TexParser, name: string) {
-  const cname = parser.GetArgument(name);
+  const model = parser.GetBrackets(name, '');
+  const cdef = parser.GetArgument(name);
   const math = ParseUtil.internalMath(parser, parser.GetArgument(name));
-  const colorModel: ColorModel = parser.configuration.packageData.get('color').model;
-
+  const colorModel = parser.configuration.packageData.get('color').model;
   const node = parser.create('node', 'mpadded', math, {
-    mathbackground: colorModel.getColor('named', cname)
+    mathbackground: colorModel.getColor(model, cdef),
   });
-
   NodeUtil.setProperties(node, padding(parser.options.color.padding));
   parser.Push(node);
 };
@@ -140,15 +139,17 @@ ColorMethods.ColorBox = function (parser: TexParser, name: string) {
  * @param {string} name The name of the control sequence.
  */
 ColorMethods.FColorBox = function (parser: TexParser, name: string) {
+  const fmodel = parser.GetBrackets(name, '');
   const fname = parser.GetArgument(name);
+  const cmodel = parser.GetBrackets(name, fmodel);
   const cname = parser.GetArgument(name);
   const math = ParseUtil.internalMath(parser, parser.GetArgument(name));
   const options = parser.options.color;
-  const colorModel: ColorModel = parser.configuration.packageData.get('color').model;
+  const colorModel = parser.configuration.packageData.get('color').model;
 
   const node = parser.create('node', 'mpadded', math, {
-    mathbackground: colorModel.getColor('named', cname),
-    style: `border: ${options.borderWidth} solid ${colorModel.getColor('named', fname)}`
+    mathbackground: colorModel.getColor(cmodel, cname),
+    style: `border: ${options.borderWidth} solid ${colorModel.getColor(fmodel, fname)}`
   });
 
   NodeUtil.setProperties(node, padding(options.padding));

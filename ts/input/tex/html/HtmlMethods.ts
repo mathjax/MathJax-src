@@ -26,12 +26,43 @@
 import TexParser from '../TexParser.js';
 import {ParseMethod} from '../Types.js';
 import NodeUtil from '../NodeUtil.js';
+import ParseUtil from "../ParseUtil.js";
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
+import TexError from '../TexError.js';
 
 
 // Namespace
 let HtmlMethods: Record<string, ParseMethod> = {};
 
+/**
+ * Implements \data{dataset}{content}
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
+ HtmlMethods.Data = (parser: TexParser, name: string) => {
+  const dataset = parser.GetArgument(name);
+  const arg = GetArgumentMML(parser, name);
+  const data = ParseUtil.keyvalOptions(dataset);
+  for (const key in data) {
+    // remove illegal attribute names
+    if (!isLegalAttributeName(key)) {
+      throw new TexError('InvalidHTMLAttr', 'Invalid HTML attribute: %1', `data-${key}`);
+    }
+    NodeUtil.setAttribute(arg, `data-${key}`, data[key]);
+  }
+  parser.Push(arg);
+};
+
+/** Regexp for matching non-characters as specified by {@link https://infra.spec.whatwg.org/#noncharacter}. */
+const nonCharacterRegexp = /[\u{FDD0}-\u{FDEF}\u{FFFE}\u{FFFF}\u{1FFFE}\u{1FFFF}\u{2FFFE}\u{2FFFF}\u{3FFFE}\u{3FFFF}\u{4FFFE}\u{4FFFF}\u{5FFFE}\u{5FFFF}\u{6FFFE}\u{6FFFF}\u{7FFFE}\u{7FFFF}\u{8FFFE}\u{8FFFF}\u{9FFFE}\u{9FFFF}\u{AFFFE}\u{AFFFF}\u{BFFFE}\u{BFFFF}\u{CFFFE}\u{CFFFF}\u{DFFFE}\u{DFFFF}\u{EFFFE}\u{EFFFF}\u{FFFFE}\u{FFFFF}\u{10FFFE}\u{10FFFF}]/u;
+
+/**
+ * Whether the string is a valid HTML attribute name according to {@link https://html.spec.whatwg.org/multipage/syntax.html#attributes-2}.
+ * @param {string} name String to validate.
+ */
+function isLegalAttributeName(name: string): boolean {
+  return !(name.match(/[\x00-\x1f\x7f-\x9f "'>\/=]/) || name.match(nonCharacterRegexp));
+}
 
 /**
  * Implements \href{url}{math}

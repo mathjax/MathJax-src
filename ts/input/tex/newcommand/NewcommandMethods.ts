@@ -169,7 +169,7 @@ NewcommandMethods.MacroWithTemplate = function (parser: TexParser, name: string,
                                                 ...params: string[]) {
   const argCount = parseInt(n, 10);
   // @test Def Let
-  if (argCount) {
+  if (params.length) {
     // @test Def Let
     let args = [];
     parser.GetNext();
@@ -178,11 +178,13 @@ NewcommandMethods.MacroWithTemplate = function (parser: TexParser, name: string,
       throw new TexError('MismatchUseDef',
                           'Use of %1 doesn\'t match its definition', name);
     }
-    for (let i = 0; i < argCount; i++) {
-      // @test Def Let
-      args.push(NewcommandUtil.GetParameter(parser, name, params[i + 1]));
+    if (argCount) {
+      for (let i = 0; i < argCount; i++) {
+        // @test Def Let
+        args.push(NewcommandUtil.GetParameter(parser, name, params[i + 1]));
+      }
+      text = ParseUtil.substituteArgs(parser, args, text);
     }
-    text = ParseUtil.substituteArgs(parser, args, text);
   }
   parser.string = ParseUtil.addArgs(parser, text,
                                     parser.string.slice(parser.i));
