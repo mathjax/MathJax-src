@@ -777,10 +777,30 @@ BaseMethods.TeXAtom = function(parser: TexParser, name: string, mclass: number) 
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.Hsize = function (parser:TexParser, name: string) {
+BaseMethods.Hsize = function (parser: TexParser, name: string) {
   parser.GetNext() === '=' && parser.i++;
   parser.stack.env.hsize = parser.GetDimen(name);
-}
+};
+
+/**
+ * Handle \parbox[align]{width}{text}
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
+BaseMethods.ParBox = function (parser: TexParser, name: string) {
+  const align = parser.GetBrackets(name, 'c');
+  const width = parser.GetDimen(name);
+  const text = ParseUtil.internalMath(parser, parser.GetArgument(name));
+  const box = lookup(align, {
+    t: TEXCLASS.VTOP,
+    b: TEXCLASS.VBOX,
+    c: TEXCLASS.VCENTER,
+    m: TEXCLASS.VCENTER
+  }, TEXCLASS.VCENTER);
+  parser.Push(parser.create('node', 'TeXAtom', [
+    parser.create('node', 'mpadded', text, {width: width, 'data-overflow': 'linebreak'})
+  ], {texClass: box}));
+};
 
 
 /**

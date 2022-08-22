@@ -610,12 +610,12 @@ new sm.CommandMap('macros', {
   mathrel:           ['TeXAtom', TEXCLASS.REL],
   mathpunct:         ['TeXAtom', TEXCLASS.PUNCT],
   mathinner:         ['TeXAtom', TEXCLASS.INNER],
-  mathNONE:          ['TeXAtom', TEXCLASS.NONE],  // internal use
 
   vtop:              ['TeXAtom', TEXCLASS.VTOP],
   vcenter:           ['TeXAtom', TEXCLASS.VCENTER],
   vbox:              ['TeXAtom', TEXCLASS.VBOX],
   hsize:              'Hsize',
+  parbox:             'ParBox',
 
   buildrel:           'BuildRel',
 
