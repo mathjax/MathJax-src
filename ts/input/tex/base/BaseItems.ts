@@ -1050,7 +1050,7 @@ export class ArrayItem extends BaseItem {
     }
     if (this.getProperty('arrayPadding')) {
       NodeUtil.setAttribute(mml, 'frame', '');   // empty frame forces fspacing to be used in MathJax
-      NodeUtil.setAttribute(mml, 'framespacing', this.getProperty('arrayPadding'));
+      NodeUtil.setAttribute(mml, 'framespacing', this.getProperty('arrayPadding') as string);
     }
     if (this.frame.length === 4) {
       // @test Enclosed frame solid, Enclosed frame dashed
