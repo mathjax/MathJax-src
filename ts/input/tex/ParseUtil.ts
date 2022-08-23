@@ -426,17 +426,23 @@ namespace ParseUtil {
    * Sets alignment in array definitions.
    * @param {ArrayItem} array The array item.
    * @param {string} align The alignment string.
+   * @param {TexParser?} parser The current tex parser.
+   * @param {number?} i The position to return to if the alignment isn't t, b, or c.
    * @return {ArrayItem} The altered array item.
    */
-  export function setArrayAlign(array: ArrayItem, align: string): ArrayItem {
+  export function setArrayAlign(array: ArrayItem, align: string, parser?: TexParser, i?: number): ArrayItem {
     // @test Array1, Array2, Array Test
-    align = ParseUtil.trimSpaces(align || '');
+    if (!parser) {
+      align = ParseUtil.trimSpaces(align || '');
+    }
     if (align === 't') {
       array.arraydef.align = 'baseline 1';
     } else if (align === 'b') {
       array.arraydef.align = 'baseline -1';
     } else if (align === 'c') {
       array.arraydef.align = 'axis';
+    } else if (parser) {
+      parser.i = i;
     } else if (align) {
       array.arraydef.align = align;
     } // FIXME: should be an error?

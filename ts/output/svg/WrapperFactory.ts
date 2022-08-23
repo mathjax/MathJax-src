@@ -37,8 +37,18 @@ import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDa
  */
 export class SvgWrapperFactory<N, T, D> extends
 CommonWrapperFactory<
+  //
+  // The HTMLElement, TextNode, and Document classes (for the DOM implementation in use)
+  //
   N, T, D,
+  //
+  // The Wrapper type and its Factory and Class (these need to know N, T, and D)
+  //
   SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  //
+  // These are font-related objects that depend on the output jax; e,g. the character options
+  //   for CHTML and SVG output differ (CHTML contains font information, while SVG has path data)
+  //
   SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
 > {
 

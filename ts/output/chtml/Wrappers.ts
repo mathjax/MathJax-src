@@ -47,6 +47,7 @@ import {ChtmlMglyph} from './Wrappers/mglyph.js';
 import {ChtmlSemantics, ChtmlAnnotation, ChtmlAnnotationXML, ChtmlXmlNode} from './Wrappers/semantics.js';
 import {ChtmlTeXAtom} from './Wrappers/TeXAtom.js';
 import {ChtmlTextNode} from './Wrappers/TextNode.js';
+import {ChtmlHtmlNode} from './Wrappers/HtmlNode.js';
 
 export const ChtmlWrappers: {[kind: string]: ChtmlWrapperClass<any, any, any>} = {
   [ChtmlMath.kind]: ChtmlMath,
@@ -83,5 +84,6 @@ export const ChtmlWrappers: {[kind: string]: ChtmlWrapperClass<any, any, any>} =
   [ChtmlXmlNode.kind]: ChtmlXmlNode,
   [ChtmlTeXAtom.kind]: ChtmlTeXAtom,
   [ChtmlTextNode.kind]: ChtmlTextNode,
+  [ChtmlHtmlNode.kind]: ChtmlHtmlNode,
   [ChtmlWrapper.kind]: ChtmlWrapper
 };

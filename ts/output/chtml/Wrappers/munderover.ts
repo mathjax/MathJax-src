@@ -353,16 +353,6 @@ export const ChtmlMunderover = (function <N, T, D>(): ChtmlMunderoverClass<N, T,
       this.adjustUnderDepth(under, underbox);
     }
 
-    /**
-     * Make sure styles get output when called from munderover with movable limits
-     *
-     * @override
-     */
-    public markUsed() {
-      super.markUsed();
-      this.jax.wrapperUsage.add(ChtmlMsubsup.kind);
-    }
-
   };
 
 })<any, any, any>();

@@ -33,8 +33,11 @@ export type PropertyList = {[key: string]: Property};
 /*********************************************************/
 /**
  *  The generic Node interface
+ *
+ * @template N   The actual type of node being created (so parent, children, and factory
+ *                  know what they are).  This avoids the need for casting node types later.
+ * @template C   The node class for N (the constructor rather than instance of the class)
  */
-
 export interface Node<N extends Node<N, C>, C extends NodeClass<N, C>> {
   readonly kind: string;
   /**
@@ -70,7 +73,6 @@ export interface Node<N extends Node<N, C>, C extends NodeClass<N, C>> {
    * @param {string[]} names  The names of the properties to be removed
    */
   removeProperty(...names: string[]): void;
-
 
   /**
    * @param {string} kind  The type of node to test for
@@ -126,11 +128,14 @@ export interface Node<N extends Node<N, C>, C extends NodeClass<N, C>> {
   walkTree(func: (node: N, data?: any) => void, data?: any): void;
 }
 
+
 /*********************************************************/
 /**
- *  The generic Node class interface
+ * The generic Node class interface
+ *
+ * @template N   The node type being created
+ * @template C   The node class for N (the constructor rather than instance of the class)
  */
-
 export interface NodeClass<N extends Node<N, C>, C extends NodeClass<N, C>> {
   /**
    * @param {NodeFactory} factory  The NodeFactory to use to create new nodes when needed
@@ -141,11 +146,14 @@ export interface NodeClass<N extends Node<N, C>, C extends NodeClass<N, C>> {
   new (factory: NodeFactory<N, C>, properties?: PropertyList, children?: N[]): N;
 }
 
+
 /*********************************************************/
 /**
- *  The abstract Node class
+ * The abstract Node class
+ *
+ * @template N   The actual type of node being created
+ * @template C   The node class for N (the constructor rather than instance of the class)
  */
-
 export abstract class AbstractNode<N extends Node<N, C>, C extends NodeClass<N, C>> implements Node<N, C> {
 
   /**
@@ -224,14 +232,12 @@ export abstract class AbstractNode<N extends Node<N, C>, C extends NodeClass<N, 
     }
   }
 
-
   /**
    * @override
    */
   public isKind(kind: string): boolean {
     return this.factory.nodeIsKind(this as any, kind);
   }
-
 
   /**
    * @override
@@ -280,7 +286,6 @@ export abstract class AbstractNode<N extends Node<N, C>, C extends NodeClass<N, 
     return child;
   }
 
-
   /**
    * @override
    */
@@ -288,7 +293,6 @@ export abstract class AbstractNode<N extends Node<N, C>, C extends NodeClass<N, 
     let i = this.childNodes.indexOf(node);
     return (i === -1 ? null : i);
   }
-
 
   /**
    * @override
@@ -317,7 +321,6 @@ export abstract class AbstractNode<N extends Node<N, C>, C extends NodeClass<N, 
     return nodes;
   }
 
-
   /**
    * @override
    */
@@ -340,12 +343,18 @@ export abstract class AbstractNode<N extends Node<N, C>, C extends NodeClass<N, 
 
 }
 
+
 /*********************************************************/
 /**
- *  The abstract EmptyNode class
+ * The abstract EmptyNode class
+ *
+ * @template N   The actual type of node being created
+ * @template C   The node class for N (the constructor rather than instance of the class)
  */
-
-export abstract class AbstractEmptyNode<N extends Node<N, C>, C extends NodeClass<N, C>> extends AbstractNode<N, C> {
+export abstract class AbstractEmptyNode<
+  N extends Node<N, C>,
+  C extends NodeClass<N, C>
+> extends AbstractNode<N, C> {
   /**
    *  We don't have children, so ignore these methods
    */

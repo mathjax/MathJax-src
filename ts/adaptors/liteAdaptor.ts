@@ -39,6 +39,7 @@ import {OptionList} from '../util/Options.js';
  * Implements a lightweight DOMAdaptor on liteweight HTML elements
  */
 export class LiteBase extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocument> {
+
   /**
    * The document in which the HTML nodes will be created
    */

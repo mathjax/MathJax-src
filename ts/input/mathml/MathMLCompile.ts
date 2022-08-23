@@ -24,6 +24,7 @@
 import {MmlFactory} from '../../core/MmlTree/MmlFactory.js';
 import {MmlNode, TextNode, XMLNode, AbstractMmlNode, AbstractMmlTokenNode, TEXCLASS}
 from '../../core/MmlTree/MmlNode.js';
+import {HtmlNode} from '../../core/MmlTree/MmlNodes/HtmlNode.js';
 import {userOptions, defaultOptions, OptionList} from '../../util/Options.js';
 import * as Entities from '../../util/Entities.js';
 import {DOMAdaptor} from '../../core/DOMAdaptor.js';
@@ -44,6 +45,7 @@ export class MathMLCompile<N, T, D> {
    */
   public static OPTIONS: OptionList = {
     MmlFactory: null,                   // The MmlFactory to use (defaults to a new MmlFactory)
+    allowHtmlInTokenNodes: false,       // True if HTML is allowed in token nodes
     fixMisplacedChildren: true,         // True if we want to use heuristics to try to fix
                                         //   problems with the tree based on HTML not handling
                                         //   self-closing tags properly
@@ -61,11 +63,11 @@ export class MathMLCompile<N, T, D> {
   /**
    *  The instance of the MmlFactory object and
    */
-  protected factory: MmlFactory;
+  public factory: MmlFactory;
   /**
    *  The options (the defaults with the user options merged in)
    */
-  protected options: OptionList;
+  public options: OptionList;
 
   /**
    *  Merge the user options into the defaults, and save them
@@ -125,7 +127,22 @@ export class MathMLCompile<N, T, D> {
         limits = true;
       }
     }
-    this.factory.getNodeClass(type) || this.error('Unknown node type "' + type + '"');
+    if (!this.factory.getNodeClass(type)) {
+      return this.unknownNode(type, node);
+    }
+    return this.createMml(type, node, texClass, limits);
+  }
+
+  /**
+   * Create an actual MmlNode tree from a given DOM node.
+   *
+   * @param {string} type      The type of MmlNode to create
+   * @param {N} node           The original DOM node that is being transcribed
+   * @param {string} texClass  The texClass specified on the node, if any
+   * @param {boolean} limits   True if fixed limits are to be used
+   * @return {MmlNode}         The final MmlNode tree
+   */
+  protected createMml(type: string, node: N, texClass: string, limits: boolean): MmlNode {
     let mml = this.factory.create(type);
     if (type === 'TeXAtom' && texClass === 'OP' && !limits) {
       mml.setProperty('movesupsub', true);
@@ -139,6 +156,21 @@ export class MathMLCompile<N, T, D> {
     this.checkClass(mml, node);
     this.addChildren(mml, node);
     return mml;
+  }
+
+  /**
+   * Handle unknown node by either creating an HTML node, or throwing an error.
+   *
+   * @param {string} type   The type of node being requested
+   * @param {N} node        The HTML node used to create it.
+   * @return {MmlNode}      The HtmlNode holding the node (or null)
+   */
+  protected unknownNode(type: string, node: N): MmlNode {
+    if (this.factory.getNodeClass('html') && this.options.allowHtmlInTokenNodes) {
+      return (this.factory.create('html') as HtmlNode<N>).setHTML(node, this.adaptor);
+    }
+    this.error('Unknown node type "' + type + '"');
+    return null;
   }
 
   /**
@@ -230,7 +262,7 @@ export class MathMLCompile<N, T, D> {
         mml.appendChild((this.factory.create('XML') as XMLNode).setXML(child, adaptor));
       } else {
         let childMml = mml.appendChild(this.makeNode(child));
-        if (childMml.arity === 0 && adaptor.childNodes(child).length) {
+        if (childMml.arity === 0 && adaptor.childNodes(child).length && !childMml.isKind('html')) {
           if (this.options['fixMisplacedChildren']) {
             this.addChildren(mml, child);
           } else {
@@ -240,6 +272,7 @@ export class MathMLCompile<N, T, D> {
         }
       }
     }
+    mml.isToken && this.trimSpace(mml);
   }
 
   /**
@@ -253,7 +286,7 @@ export class MathMLCompile<N, T, D> {
     if ((mml.isToken || mml.getProperty('isChars')) && mml.arity) {
       if (mml.isToken) {
         text = Entities.translate(text);
-        text = this.trimSpace(text);
+        text = this.normalizeSpace(text);
       }
       mml.appendChild((this.factory.create('text') as TextNode).setText(text));
     } else if (text.match(/\S/)) {
@@ -317,16 +350,24 @@ export class MathMLCompile<N, T, D> {
   }
 
   /**
-   * @param {string} text  The text to have leading/trailing spaced removed
+   * @param {string} text  The text to have spacing normalized
    * @return {string}      The trimmed text
    */
-  protected trimSpace(text: string): string {
+  protected normalizeSpace(text: string): string {
     return text.replace(/[\t\n\r]/g, ' ')    // whitespace to spaces
-               .replace(/^ +/, '')           // initial whitespace
-               .replace(/ +$/, '')           // trailing whitespace
                .replace(/  +/g, ' ');        // internal multiple whitespace
   }
 
+  /**
+   * @param {MmlNode} mml  The token node whose leading/trailing spaces should be removed
+   */
+  protected trimSpace(mml: MmlNode) {
+    let child = mml.childNodes[0] as TextNode;
+    if (!child) return;
+    child.isKind('text') && child.setText(child.getText().replace(/^ +/, ''));
+    child = mml.childNodes[mml.childNodes.length - 1] as TextNode;
+    child.isKind('text') && child.setText(child.getText().replace(/ +$/, ''));
+  }
   /**
    * @param {string} message  The error message to produce
    */

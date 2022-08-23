@@ -25,6 +25,7 @@ import {AbstractOutputJax} from '../core/OutputJax.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem, Metrics, STATE} from '../core/MathItem.js';
 import {MmlNode, TEXCLASS} from '../core/MmlTree/MmlNode.js';
+import {DOMAdaptor} from '../core/DOMAdaptor.js';
 import {FontData, FontDataClass, CharOptions, VariantData, DelimiterData, CssFontData} from './common/FontData.js';
 import {OptionList, separateOptions} from '../util/Options.js';
 import {CommonWrapper, CommonWrapperClass} from './common/Wrapper.js';
@@ -116,6 +117,7 @@ export abstract class CommonOutputJax<
       lineleading: .2,                // the default lineleading in em units
       LinebreakVisitor: null,         // The LinebreakVisitor to use
     },
+    htmlHDW: 'auto',               // 'use', 'force', or 'ignore' data-mjx-hdw attributes
     wrapperFactory: null,          // The wrapper factory to use
     font: null,                    // The FontData object to use
     cssStyles: null,               // The CssStyles object to use
@@ -233,6 +235,20 @@ export abstract class CommonOutputJax<
     const linebreaks = (this.options.linebreaks.LinebreakVisitor || LinebreakVisitor) as typeof Linebreaks;
     this.linebreaks = new linebreaks(this.factory);
   }
+
+  /**
+   * @override
+   */
+  public setAdaptor(adaptor: DOMAdaptor<N, T, D>) {
+    super.setAdaptor(adaptor);
+    //
+    //  Set the htmlHDW option based on the adaptor's ability to measure nodes
+    //
+    if (this.options.htmlHDW === 'auto') {
+      this.options.htmlHDW = (adaptor.canMeasureNodes ? 'ignore' : 'force');
+    }
+  }
+
 
   /*****************************************************************/
 

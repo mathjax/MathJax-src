@@ -130,7 +130,7 @@ export const RANGES: RangeDef[] = [
   [0x1DF00, 0x1F7FF, TEXCLASS.ORD, 'mo'], // Mahjong Tiles (through) Geometric Shapes Extended
   [0x1F800, 0x1F8FF, TEXCLASS.REL, 'mo'], // Supplemental Arrows-C
   [0x1F900, 0x1F9FF, TEXCLASS.ORD, 'mo'], // Supplemental Symbols and Pictographs
-  [0x20000, 0x2FA1F, TEXCLASS.ORD, 'mi', 'normnal'], // CJK Unified Ideographs Ext. B (through) CJK Sompatibility Ideographs Supp.
+  [0x20000, 0x2FA1F, TEXCLASS.ORD, 'mi', 'normal'], // CJK Unified Ideographs Ext. B (through) CJK Sompatibility Ideographs Supp.
 ];
 
 /**

@@ -920,7 +920,9 @@ export class Menu {
       this.document.processed = document.processed;
       if (!Menu._loadingPromise) {
         this.document.outputJax.reset();
-        this.rerender(component === 'complexity' || noEnrich ? STATE.COMPILED : STATE.TYPESET);
+        mathjax.handleRetriesFor(() => {
+          this.rerender(component === 'complexity' || noEnrich ? STATE.COMPILED : STATE.TYPESET);
+        });
       }
     });
   }

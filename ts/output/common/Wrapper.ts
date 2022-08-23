@@ -30,6 +30,7 @@ import {unicodeChars} from '../../util/string.js';
 import * as LENGTHS from '../../util/lengths.js';
 import {Styles} from '../../util/Styles.js';
 import {StyleList} from '../../util/StyleList.js';
+import {OptionList} from '../../util/Options.js';
 import {CommonOutputJax} from '../common.js';
 import {CommonWrapperFactory} from './WrapperFactory.js';
 import {CommonMo} from './Wrappers/mo.js';
@@ -321,7 +322,7 @@ export class CommonWrapper<
   /**
    * Styles that must be handled directly by the wrappers (mostly having to do with fonts)
    */
-  protected removedStyles: StringMap = null;
+  public removedStyles: StringMap = null;
 
   /**
    * The explicit styles set by the node
@@ -1225,6 +1226,21 @@ export class CommonWrapper<
       (char as any)[3] = {};
     }
     return char as [number, number, number, CC];
+  }
+
+  /*******************************************************************/
+  /*
+   * Easy access to some utility routines
+   */
+
+  /**
+   * @param {string} type      The tag name of the HTML node to be created
+   * @param {OptionList} def   The properties to set for the created node
+   * @param {(N|T)[]} content  The child nodes for the created HTML node
+   * @return {N}               The generated HTML tree
+   */
+  public html(type: string, def: OptionList = {}, content: (N | T)[] = []): N {
+    return this.jax.html(type, def, content);
   }
 
 }

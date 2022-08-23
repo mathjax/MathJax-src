@@ -27,6 +27,8 @@ import {Factory, FactoryNode, FactoryNodeClass} from './Factory.js';
 
 /**
  * Visitor nodes can have childNodes that are traversed by the visitor
+ *
+ * @template N   The node type being traversed
  */
 export interface VisitorNode<N extends VisitorNode<N>> extends FactoryNode {
   childNodes?: N[];
@@ -35,17 +37,18 @@ export interface VisitorNode<N extends VisitorNode<N>> extends FactoryNode {
 /**
  * The type for the functions associated with each node class
  *
- * @template N  The node type created by the factory
+ * @template N   The node type being traversed
  */
 export type VisitorFunction<N extends VisitorNode<N>> =
   (visitor: Factory<N, FactoryNodeClass<N>>, node: N, ...args: any[]) => any;
+
 
 /*****************************************************************/
 
 /**
  * The Visitor interface
  *
- * @template N  The node type created by the factory
+ * @template N   The node type being traversed
  */
 export interface Visitor<N extends VisitorNode<N>> {
 
@@ -98,11 +101,14 @@ export interface Visitor<N extends VisitorNode<N>> {
   [property: string]: any;
 }
 
+
 /*****************************************************************/
 /**
  *  Implements the generic Visitor object
+ *
+ * @template N   The node type being traversed
+ * @template C   The node class for N (the constructor rather than instance of the class)
  */
-
 export abstract class AbstractVisitor<N extends VisitorNode<N>> implements Visitor<N> {
   /**
    * Holds the mapping from node kinds to visitor funcitons

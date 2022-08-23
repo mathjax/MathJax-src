@@ -38,8 +38,18 @@ import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
  */
 export class ChtmlWrapperFactory<N, T, D> extends
 CommonWrapperFactory<
+  //
+  // The HTMLElement, TextNode, and Document classes (for the DOM implementation in use)
+  //
   N, T, D,
+  //
+  // The Wrapper type and its Factory and Class (these need to know N, T, and D)
+  //
   CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  //
+  // These are font-related objects that depend on the output jax; e,g. the character options
+  //   for CHTML and SVG output differ (CHTML contains font information, while SVG has path data)
+  //
   ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
 
