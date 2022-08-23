@@ -222,7 +222,8 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
         speech: true,                      // switch on speech output
         subtitles: true,                   // show speech as a subtitle
         treeColoring: false,               // tree color expression
-        viewBraille: false                 // display Braille output as subtitles
+        viewBraille: false,                // display Braille output as subtitles
+        voicing: false,                    // switch on speech output
       }
     };
 

@@ -372,6 +372,7 @@ export class SpeechRegion extends LiveRegion {
 
   public node: Element = null;
   private clear: boolean = false;
+  public active: boolean = false;
 
   /**
    * The highlighter to use.
@@ -392,6 +393,7 @@ export class SpeechRegion extends LiveRegion {
    * @override
    */
   public Show(node: HTMLElement, highlighter: Sre.highlighter) {
+    this.active = this.document.options.a11y.voicing;
     this.node = node;
     super.Show(node, highlighter);
   }
@@ -404,7 +406,7 @@ export class SpeechRegion extends LiveRegion {
     this.clear = true;
     let [text, ssml] = this.ssmlParsing(speech);
     super.Update(text);
-    if (text) {
+    if (this.active && text) {
       this.makeUtterances(ssml, this.document.options.sre.locale);
     }
   }

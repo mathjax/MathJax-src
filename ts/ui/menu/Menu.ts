@@ -103,6 +103,7 @@ export interface MenuSettings {
   subtitles: boolean;
   treeColoring: boolean;
   viewBraille: boolean;
+  voicing: boolean;
 }
 
 export type HTMLMATHITEM = MathItem<HTMLElement, Text, Document>;
@@ -422,6 +423,7 @@ export class Menu {
         this.a11yVar<boolean>('subtitles'),
         this.a11yVar<boolean>('braille'),
         this.a11yVar<boolean>('viewBraille'),
+        this.a11yVar<boolean>('voicing'),
         this.a11yVar<string>('locale', value => Sre.setupEngine({locale: value as string})),
         this.a11yVar<string> ('speechRules', value => {
           const [domain, style] = value.split('-');
@@ -483,6 +485,7 @@ export class Menu {
           this.submenu('Speech', 'Speech', [
             this.checkbox('Speech', 'Speech Output', 'speech'),
             this.checkbox('Subtitles', 'Speech Subtitles', 'subtitles'),
+            this.checkbox('Auto Voicing', 'Auto Voicing', 'voicing'),
             this.checkbox('Braille', 'Braille Output', 'braille'),
             this.checkbox('View Braille', 'Braille Subtitles', 'viewBraille'),
             this.rule(),
