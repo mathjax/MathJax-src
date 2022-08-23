@@ -62,6 +62,19 @@ function MathMLSpace(script: boolean, size: number): number {
 }
 
 /**
+ * The standard space sizes
+ */
+export const SPACE: StringMap = {
+  /* tslint:disable:whitespace */
+  [LENGTHS.em(2/18)]: '1',
+  [LENGTHS.em(3/18)]: '2',
+  [LENGTHS.em(4/18)]: '3',
+  [LENGTHS.em(5/18)]: '4',
+  [LENGTHS.em(6/18)]: '5'
+  /* tslint:enable */
+};
+
+/**
  * Padding and border data from the style attribute
  */
 export type StyleData = {

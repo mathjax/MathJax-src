@@ -32,6 +32,8 @@ import {TeXFont} from './svg/fonts/tex.js';
 import {StyleList as CssStyleList} from '../util/StyleList.js';
 import {FontCache} from './svg/FontCache.js';
 import {unicodeChars} from '../util/string.js';
+import * as LENGTHS from '../util/lengths.js';
+import {SPACE} from './common/Wrapper.js';
 
 export const SVGNS = 'http://www.w3.org/2000/svg';
 export const XLINKNS = 'http://www.w3.org/1999/xlink';
@@ -368,11 +370,15 @@ CommonOutputJax<
       const [mml, mo] = wrapper.childNodes[0].getBreakNode(line);
       const forced = !!(mml && mml.node.getProperty('forcebreak'));
       if (i || forced) {
-        const space = (mml && !newline ? mml.getLineBBox(0).originalL : 0) * 400;
-        (space || !forced) && adaptor.insert(
-          adaptor.node('mjx-break', forced ? {style: {'font-size': space.toFixed(1) + '%'}} : {newline: true}),
-          nsvg
-        );
+        const dimen = (mml && !newline ? mml.getLineBBox(0).originalL : 0);
+        if (dimen || !forced) {
+          const space = LENGTHS.em(dimen);
+          adaptor.insert(
+            adaptor.node('mjx-break', !forced ? {newline: true} :
+                         SPACE[space] ? {size: SPACE[space]} : {style: {'font-size': dimen.toFixed(1) + '%'}}),
+            nsvg
+          );
+        }
       }
       //
       // Don't insert space right after an mo with linebreak="newline"

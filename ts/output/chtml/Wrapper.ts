@@ -22,8 +22,7 @@
  */
 
 import {OptionList} from '../../util/Options.js';
-import * as LENGTHS from '../../util/lengths.js';
-import {CommonWrapper, CommonWrapperClass, Constructor, StringMap} from '../common/Wrapper.js';
+import {CommonWrapper, CommonWrapperClass, Constructor, StringMap, SPACE} from '../common/Wrapper.js';
 import {CHTML} from '../chtml.js';
 import {ChtmlWrapperFactory} from './WrapperFactory.js';
 import {BBox} from '../../util/BBox.js';
@@ -48,16 +47,6 @@ export const FONTSIZE: StringMap = {
   '173%': 'LG',
   '207%': 'hg',
   '249%': 'HG'
-};
-
-export const SPACE: StringMap = {
-  /* tslint:disable:whitespace */
-  [LENGTHS.em(2/18)]: '1',
-  [LENGTHS.em(3/18)]: '2',
-  [LENGTHS.em(4/18)]: '3',
-  [LENGTHS.em(5/18)]: '4',
-  [LENGTHS.em(6/18)]: '5'
-  /* tslint:enable */
 };
 
 /*****************************************************************/
