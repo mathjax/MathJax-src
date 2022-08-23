@@ -104,9 +104,9 @@ export const ChtmlHtmlNode = (function <N, T, D>(): ChtmlHtmlNodeClass<N, T, D> 
     /**
      * @override
      */
-    public toCHTML(parent: N) {
+    public toCHTML(parents: N[]) {
       this.markUsed();
-      this.dom = this.adaptor.append(parent, this.getHTML()) as N;
+      this.dom = [this.adaptor.append(parents[0], this.getHTML()) as N];
     }
 
   };
