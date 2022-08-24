@@ -22,7 +22,7 @@
  */
 
 import {CharMap, CharOptions, CharDataArray, VariantData,
-        DelimiterData, FontData, DIRECTION} from '../common/FontData.js';
+        DelimiterData, FontData, FontExtensionData, DIRECTION} from '../common/FontData.js';
 import {Usage} from './Usage.js';
 import {StringMap} from './Wrapper.js';
 import {StyleList, StyleData} from '../../util/StyleList.js';
@@ -38,6 +38,7 @@ export * from '../common/FontData.js';
 export interface ChtmlCharOptions extends CharOptions {
   c?: string;                   // the content value (for css)
   f?: string;                   // the font postfix (for css)
+  F?: string;                   // the full font css class (for extensions)
 }
 
 /**
@@ -58,6 +59,15 @@ export interface ChtmlVariantData extends VariantData<ChtmlCharOptions> {
  * The extra data needed for a Delimiter in CHTML output
  */
 export interface ChtmlDelimiterData extends DelimiterData {
+}
+
+/**
+ * Includes the data needed for CHTML font extensions
+ */
+export interface ChtmlFontExtensionData<C extends ChtmlCharOptions, D extends ChtmlDelimiterData>
+extends FontExtensionData<C, D> {
+  fonts?: string[];   // the font names to add to the CSS
+  fontURL?: string;   // the URL for the WOFF files
 }
 
 /****************************************************************************/
@@ -99,12 +109,7 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
   /**
    * The default @font-face declarations with %%URL%% where the font path should go
    */
-  protected static defaultFonts = {
-    '@font-face /* 0 */': {
-      'font-family': 'MJXZERO',
-      src: 'url("%%URL%%/MathJax_Zero.woff") format("woff")'
-    }
-  };
+  protected static defaultFonts = {};
 
   /***********************************************************************/
 
@@ -135,6 +140,49 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
    */
   public static charOptions(font: ChtmlCharMap, n: number) {
     return super.charOptions(font, n) as ChtmlCharOptions;
+  }
+
+  /**
+   * @param {StyleList} styles    The style object to add styles to
+   * @param {StyleList} fonts     The default font-face directives with %%URL%% where the url should go
+   * @param {string} url          The actual URL to insert into the src strings
+   */
+  public static addFontURLs(styles: StyleList, fonts: StyleList, url: string) {
+    for (const name of Object.keys(fonts)) {
+      const font = {...fonts[name]};
+      font.src = (font.src as string).replace(/%%URL%%/, url);
+      styles[name] = font;
+    }
+  }
+
+  /**
+   * @param {string[]} fonts   The IDs for the fonts to add CSS for
+   * @param {string} root      The root URL for the fonts (can be set by extensions)
+   */
+  public static addDynamicFontCss(styles: StyleList, fonts: string[], root: string) {
+    const fontStyles: StyleList = {};
+    for (const font of fonts) {
+      const name = font.slice(4);
+      fontStyles[`@font-face /* ${name} */`] = {
+        'font-family': font,
+        src: `url("%%URL%%/${font.toLowerCase()}.woff") format("woff")`,
+      };
+      styles[`.${name}`] = {
+        'font-family': `${this.defaultCssFamilyPrefix}, ${font}`
+      };
+    }
+    this.addFontURLs(styles, fontStyles, root);
+  }
+
+  /**
+   * @override
+   */
+  public static addExtension(
+    data: ChtmlFontExtensionData<ChtmlCharOptions, ChtmlDelimiterData>,
+    prefix: string = ''
+  ) {
+    super.addExtension(data, prefix);
+    data.fonts && this.addDynamicFontCss(this.defaultStyles, data.fonts, data.fontURL);
   }
 
   /***********************************************************************/
@@ -185,22 +233,13 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
   /**
    * @override
    */
-  public addDynamicFontCss(fonts: string[]) {
-    const CLASS = this.constructor as typeof ChtmlFontData;
-    let n = [...Object.keys(CLASS.defaultFonts as StyleList)].length + this.newFonts;
-    const fontStyles: StyleList = {};
-    for (const font of fonts) {
-      fontStyles[`@font-face /* ${++n} */`] = {
-        'font-family': font,
-        src: `url("%%URL%%/${font.toLowerCase()}.woff") format("woff")`,
-      };
-      this.fontUsage[`.${font.slice(4)}`] = {
-        'font-family': font
-      };
-    }
-    this.addFontURLs(this.fontUsage, fontStyles, this.options.fontURL);
+  public addDynamicFontCss(fonts: string[], root: string = this.options.fontURL) {
+    (this.constructor as typeof ChtmlFontData).addDynamicFontCss(this.fontUsage, fonts, root);
   }
 
+  /**
+   * Get the styles for dynamically loaded fonts since the last CSS update
+   */
   public updateDynamicStyles() {
     const styles = this.fontUsage;
     this.fontUsage = {};
@@ -222,8 +261,7 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
     this.fontUsage = {};
     //
     //  Add fonts with proper URL
-    //
-    this.addFontURLs(styles, CLASS.defaultFonts, this.options.fontURL);
+    CLASS.addFontURLs(styles, CLASS.defaultFonts, this.options.fontURL);
     //
     //  Add the styles for delimiters and characters
     //
@@ -281,19 +319,6 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
         }
         this.addCharStyles(styles, vletter, N, char);
       }
-    }
-  }
-
-  /**
-   * @param {StyleList} styles    The style object to add styles to
-   * @param {StyleList} fonts     The default font-face directives with %%URL%% where the url should go
-   * @param {string} url          The actual URL to insert into the src strings
-   */
-  protected addFontURLs(styles: StyleList, fonts: StyleList, url: string) {
-    for (const name of Object.keys(fonts)) {
-      const font = {...fonts[name]};
-      font.src = (font.src as string).replace(/%%URL%%/, url);
-      styles[name] = font;
     }
   }
 
@@ -426,7 +451,8 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
   protected addCharStyles(styles: StyleList, vletter: string, n: number, data: ChtmlCharData) {
     const options = data[3] as ChtmlCharOptions;
     const letter = (options.f !== undefined ? options.f : vletter);
-    const selector = 'mjx-c' + this.charSelector(n) + (letter ? `.${this.cssFontPrefix}-` + letter : '');
+    const font = options.F || (letter ? `${this.cssFontPrefix}-${letter}` : '');
+    const selector = 'mjx-c' + this.charSelector(n) + (font ? '.' + font : '');
     styles[selector] = {padding: this.padding(data, 0, options.ic || 0)};
   }
 

@@ -308,7 +308,7 @@ export type DynamicCharMap = {[name: number]: DynamicFile};
  * @template C  The CharOptions type
  * @template D  The DelimiterData type
  */
-export type FontExtensionData<C extends CharOptions, D extends DelimiterData> = {
+export interface FontExtensionData<C extends CharOptions, D extends DelimiterData> {
   name: string;
   options?: OptionList;
   variants?: string[][] | {'[+]'?: string[][], '[-]'?: string[][]};
@@ -1151,9 +1151,10 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    * Implemented in subclasses
    *
-   * @parap {string[]} _fonts   The IDs for the fonts to add CSS for
+   * @param {string[]} _fonts   The IDs for the fonts to add CSS for
+   * @param {string} _root      The root URL for the fonts (can be set by extensions)
    */
-  public addDynamicFontCss(_fonts: string[]) {
+  public addDynamicFontCss(_fonts: string[], _root?: string) {
   }
 
   /**
