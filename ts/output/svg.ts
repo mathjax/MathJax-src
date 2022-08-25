@@ -348,6 +348,14 @@ CommonOutputJax<
   protected handleInlineBreaks(wrapper: SvgWrapper<N, T, D>, svg: N, g: N) {
     const adaptor = this.adaptor;
     //
+    // Find the math element and the lines that it contains
+    //
+    const math = adaptor.firstChild(g) as N;
+    const lines = adaptor.childNodes(adaptor.firstChild(math) as N) as N[];
+    const n = lines.length;
+    const lineBBox = wrapper.childNodes[0].lineBBox;
+    if (n === 1 || !lineBBox) return;
+    //
     // Remove content from original SVG other than <defs>, if any
     //
     adaptor.setAttribute(svg, 'width', 0);
@@ -355,18 +363,11 @@ CommonOutputJax<
     adaptor.setStyle(svg, 'vertical-align', '');
     adaptor.remove(g);
     //
-    // Find the math element and the lines that it contains
-    //
-    const math = adaptor.firstChild(g) as N;
-    const lines = adaptor.childNodes(adaptor.firstChild(math) as N) as N[];
-    const n = lines.length;
-    const lineBBox = wrapper.childNodes[0].lineBBox;
-    let newline = true;
-    //
     // Make each line a separate SVG containing the line's children
     //
+    let newline = true;
     for (let i = 0; i < n; i++) {
-      const {h, d, w} = lineBBox[i];
+      const {h, d, w} = lineBBox[i] || wrapper.childNodes[0].getLineBBox(i);
       const [nsvg, ng] = this.createSVG(h, d, w);
       const nmath = adaptor.append(ng, adaptor.clone(math, false)) as N;
       for (const child of adaptor.childNodes(lines[i])) {
