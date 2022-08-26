@@ -19,7 +19,7 @@ exports.MathJax = MathJax;
     return obj;
   };
   var CONSTRUCTOR = function () {
-    return function () {return arguments.callee.Init.call(this,arguments)};
+    return function aaa() {return aaa.Init.call(this,arguments)};
   };
 
   BASE.Object = OBJECT({
@@ -177,7 +177,7 @@ exports.MathJax = MathJax;
   //  Create a callback from an associative array
   //
   var CALLBACK = function (data) {
-    var cb = function () {return arguments.callee.execute.apply(arguments.callee,arguments)};
+    var cb = function ccc() {return ccc.execute.apply(ccc,arguments)};
     for (var id in CALLBACK.prototype) {
       if (CALLBACK.prototype.hasOwnProperty(id)) {
         if (typeof(data[id]) !== 'undefined') {cb[id] = data[id]}
