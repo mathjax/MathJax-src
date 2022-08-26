@@ -19,7 +19,7 @@ exports.MathJax = MathJax;
     return obj;
   };
   var CONSTRUCTOR = function () {
-    return function () {return arguments.callee.Init.call(this,arguments)};
+    return function aaa() {return aaa.Init.call(this,Object.assign(arguments,{call:aaa}))};
   };
 
   BASE.Object = OBJECT({
@@ -40,7 +40,7 @@ exports.MathJax = MathJax;
     Init: function (args) {
       var obj = this;
       if (args.length === 1 && args[0] === PROTO) {return obj}
-      if (!(obj instanceof args.callee)) {obj = new args.callee(PROTO)}
+      if (!(obj instanceof args.call)) {obj = new args.call(PROTO)}
       return obj.Init.apply(obj,args) || obj;
     },
     
