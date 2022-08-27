@@ -397,7 +397,7 @@ CommonOutputJax<
     // Move <defs> node (if any) to first line's svg and remove the original svg node
     //
     if (adaptor.childNodes(svg).length) {
-      adaptor.append(adaptor.firstChild(adaptor.parent(svg)), adaptor.firstChild(svg));
+      adaptor.append(adaptor.firstChild(adaptor.parent(svg)) as N, adaptor.firstChild(svg));
     }
     adaptor.remove(svg);
   }
