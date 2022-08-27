@@ -229,7 +229,7 @@ CommonOutputJax<
     //
     const [svg, g] = this.createRoot(wrapper);
     this.typesetSvg(wrapper, svg, g);
-    wrapper.node.getProperty('breakable') && this.handleInlineBreaks(wrapper, svg, g);
+    wrapper.node.getProperty('process-breaks') && this.handleInlineBreaks(wrapper, svg, g);
     //
     //  Put back the original container
     //
@@ -346,28 +346,26 @@ CommonOutputJax<
    * @param {N} g      The group in which the math is typeset
    */
   protected handleInlineBreaks(wrapper: SvgWrapper<N, T, D>, svg: N, g: N) {
-    const adaptor = this.adaptor;
+    const n = wrapper.childNodes[0].breakCount;
+    if (!n) return;
     //
     // Find the math element and the lines that it contains
     //
+    const adaptor = this.adaptor;
     const math = adaptor.firstChild(g) as N;
     const lines = adaptor.childNodes(adaptor.firstChild(math) as N) as N[];
-    const n = lines.length;
     const lineBBox = wrapper.childNodes[0].lineBBox;
-    if (n === 1 || !lineBBox) return;
     //
     // Remove content from original SVG other than <defs>, if any
     //
-    adaptor.setAttribute(svg, 'width', 0);
-    adaptor.setAttribute(svg, 'height', 0);
-    adaptor.setStyle(svg, 'vertical-align', '');
     adaptor.remove(g);
     //
     // Make each line a separate SVG containing the line's children
     //
     let newline = true;
-    for (let i = 0; i < n; i++) {
-      const {h, d, w} = lineBBox[i] || wrapper.childNodes[0].getLineBBox(i);
+    for (let i = 0; i <= n; i++) {
+      const line = lineBBox[i] || wrapper.childNodes[0].getLineBBox(i);
+      const {h, d, w} = line;
       const [nsvg, ng] = this.createSVG(h, d, w);
       const nmath = adaptor.append(ng, adaptor.clone(math, false)) as N;
       for (const child of adaptor.childNodes(lines[i])) {
@@ -377,9 +375,8 @@ CommonOutputJax<
       //
       // If the line is not the first one (or not a forced break), add a break node of the correct size
       //
-      const line = lineBBox[i];
       const [mml, mo] = wrapper.childNodes[0].getBreakNode(line);
-      const forced = !!(mml && mml.node.getProperty('forcebreak'));
+      const forced = !!(mo && mo.node.getProperty('forcebreak'));
       if (i || forced) {
         const dimen = (mml && !newline ? mml.getLineBBox(0).originalL : 0);
         if (dimen || !forced) {
@@ -397,9 +394,12 @@ CommonOutputJax<
       newline = !!(mo && mo.node.attributes.get('linebreak') === 'newline');
     }
     //
-    // Remove the original SVG node, if it doesn't have a <defs> node
+    // Move <defs> node (if any) to first line's svg and remove the original svg node
     //
-    adaptor.childNodes(svg).length === 0 && adaptor.remove(svg);
+    if (adaptor.childNodes(svg).length) {
+      adaptor.append(adaptor.firstChild(adaptor.parent(svg)), adaptor.firstChild(svg));
+    }
+    adaptor.remove(svg);
   }
 
   /**

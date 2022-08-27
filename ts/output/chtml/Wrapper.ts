@@ -292,7 +292,7 @@ CommonWrapper<
             adaptor.setStyle(this.dom[i], margin, space);
           }
         }
-      } else if (breakable) {
+      } else if (breakable && name == 'space') {
         adaptor.insert(adaptor.node('mjx-break', {style: {'font-size': 0}}), this.dom[i]);
       }
     }

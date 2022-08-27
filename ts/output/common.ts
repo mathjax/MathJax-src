@@ -382,7 +382,7 @@ export abstract class CommonOutputJax<
     if (!node) return;
     const forcebreak = this.forceInlineBreaks;
     let marked = false;
-    for (const child of node.childNodes) {
+    for (const child of node.childNodes.slice(1)) {
       if (child.isEmbellished) {
         const mo = child.coreMO();
         const {linebreak, linebreakstyle} = mo.attributes.getList('linebreak', 'linebreakstyle');
@@ -395,8 +395,8 @@ export abstract class CommonOutputJax<
             mo.setProperty('forcebreak', true);
           }
           if (!marked) {
-            node.setProperty('breakable', true);
-            node.parent.setProperty('breakable', true);
+            node.setProperty('process-breaks', true);
+            node.parent.setProperty('process-breaks', true);
             marked = true;
           }
         }
