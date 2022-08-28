@@ -4,6 +4,7 @@ import {combineDefaults} from '../../../../js/components/global.js';
 import {SVG} from '../../../../js/output/svg.js';
 
 if (MathJax.loader) {
+  combineDefaults(MathJax.config, 'svg', MathJax.config.output || {});
   combineDefaults(MathJax.config.loader, 'output/svg', {
     checkReady() {
       let font = (MathJax.config.svg || {}).font || 'tex';
