@@ -174,7 +174,6 @@ CommonWrapper<
     this.markUsed();
     const chtml = this.createChtmlNodes(parents);
     this.handleStyles();
-    this.handleVariant();
     this.handleScale();
     this.handleBorders();
     this.handleColor();
@@ -229,19 +228,6 @@ CommonWrapper<
       if (family) {
         this.dom.forEach(dom => adaptor.setStyle(dom, 'font-family', this.font.cssFamilyPrefix + ', ' + family));
       }
-    }
-  }
-
-  /**
-   * Set the CSS for the math variant
-   */
-  protected handleVariant() {
-    if (this.node.isToken && this.variant !== '-explicitFont') {
-      const adaptor = this.adaptor;
-      this.dom.forEach(
-        dom => adaptor.setAttribute(dom, 'class',
-                                    (this.font.getVariant(this.variant) || this.font.getVariant('normal')).classes)
-      );
     }
   }
 

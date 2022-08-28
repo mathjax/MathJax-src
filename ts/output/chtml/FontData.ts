@@ -51,7 +51,6 @@ export type ChtmlCharData = CharDataArray<ChtmlCharOptions>;
  * The extra data needed for a Variant in CHTML output
  */
 export interface ChtmlVariantData extends VariantData<ChtmlCharOptions> {
-  classes?: string;             // the classes to use for this variant
   letter: string;               // the font letter(s) for the default font for this variant
 }
 
@@ -90,11 +89,6 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
    * @override
    */
   public static JAX = 'CHTML';
-
-  /**
-   * The default class names to use for each variant
-   */
-  protected static defaultVariantClasses: StringMap = {};
 
   /**
    * The default font letter to use for each variant
@@ -209,9 +203,7 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
    */
   public createVariant(name: string, inherit: string = null, link: string = null) {
     super.createVariant(name, inherit, link);
-    let CLASS = (this.constructor as ChtmlFontDataClass);
-    this.variant[name].classes = CLASS.defaultVariantClasses[name];
-    this.variant[name].letter = CLASS.defaultVariantLetters[name];
+    this.variant[name].letter = (this.constructor as ChtmlFontDataClass).defaultVariantLetters[name];
   }
 
   /**
