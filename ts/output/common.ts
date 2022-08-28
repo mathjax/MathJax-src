@@ -228,7 +228,7 @@ export abstract class CommonOutputJax<
     //
     if (options.font && typeof(options.font) !== 'string') {
       options.fontData = options.font;
-      options.font = 'tex';
+      options.font = options.fontData.NAME;
     }
     //
     const [fontClass, font] = (options.fontData instanceof FontData ?

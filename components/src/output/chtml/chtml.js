@@ -9,9 +9,9 @@ if (MathJax.loader) {
       let font = (MathJax.config.chtml || {}).font || 'tex';
       if (typeof(font) !== 'string') {
         MathJax.config.chtml.fontData = font;
-        MathJax.config.chtml.font = font = 'tex';
+        MathJax.config.chtml.font = font = font.NAME;
       }
-      return MathJax.loader.load(font.match(/^[\[\/]|^[a-z]+:/) ? font : 'output/chtml/fonts/' + font);
+      return MathJax.loader.load((font.match(/^[\[\/]|^[a-z]+:/) ? font : 'output/fonts/' + font) + '/chtml');
     }
   });
 }
