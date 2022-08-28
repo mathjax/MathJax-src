@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-import {CharMap, CharOptions} from '../../FontData.js';
+import {CharMap, CharOptions} from '../../../common/FontData.js';
 
 export const texOldstyle: CharMap<CharOptions> = {
     0x30: [.452, .022, .5],

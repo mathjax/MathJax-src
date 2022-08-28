@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-import {CharMap, CharOptions} from '../../FontData.js';
+import {CharMap, CharOptions} from '../../../common/FontData.js';
 
 export const texSize3: CharMap<CharOptions> = {
     0x28: [1.45, .949, .736],

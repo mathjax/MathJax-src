@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-import {CharMap, CharOptions} from '../../FontData.js';
+import {CharMap, CharOptions} from '../../../common/FontData.js';
 
 export const texVariant: CharMap<CharOptions> = {
     0x2C6: [.845, -0.561, 2.333, {ic: .013}],

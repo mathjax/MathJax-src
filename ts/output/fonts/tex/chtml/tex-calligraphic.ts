@@ -14,4 +14,4 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-export {texCalligraphic} from '../../../common/fonts/tex/tex-calligraphic.js';
+export {texCalligraphic} from '../common/tex-calligraphic.js';

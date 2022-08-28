@@ -14,4 +14,4 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-export {texOldstyleBold} from '../../../common/fonts/tex/tex-oldstyle-bold.js';
+export {texOldstyleBold} from '../common/tex-oldstyle-bold.js';

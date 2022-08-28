@@ -14,8 +14,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {ChtmlCharMap, AddCSS} from '../../FontData.js';
-import {largeop as font} from '../../../common/fonts/tex/largeop.js';
+import {ChtmlCharMap, AddCSS} from '../../../chtml/FontData.js';
+import {largeop as font} from '../common/largeop.js';
 
 export const largeop: ChtmlCharMap = AddCSS(font, {
     0x2016: {f: 'S1'},

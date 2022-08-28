@@ -14,8 +14,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {ChtmlCharMap, AddCSS} from '../../FontData.js';
-import {smallop as font} from '../../../common/fonts/tex/smallop.js';
+import {ChtmlCharMap, AddCSS} from '../../../chtml/FontData.js';
+import {smallop as font} from '../common/smallop.js';
 
 export const smallop: ChtmlCharMap = AddCSS(font, {
     0x2044: {c: '/'},

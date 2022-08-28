@@ -33,7 +33,7 @@ import {ChtmlWrapperFactory} from './chtml/WrapperFactory.js';
 import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
         ChtmlFontData, ChtmlFontDataClass} from './chtml/FontData.js';
 import {Usage} from './chtml/Usage.js';
-import {TeXFont} from './chtml/fonts/tex.js';
+import {TeXFont} from './fonts/tex/chtml.js';
 import * as LENGTHS from '../util/lengths.js';
 import {unicodeChars} from '../util/string.js';
 

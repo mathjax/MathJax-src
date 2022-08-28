@@ -14,8 +14,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {ChtmlCharMap, AddCSS} from '../../FontData.js';
-import {bold as font} from '../../../common/fonts/tex/bold.js';
+import {ChtmlCharMap, AddCSS} from '../../../chtml/FontData.js';
+import {bold as font} from '../common/bold.js';
 
 export const bold: ChtmlCharMap = AddCSS(font, {
     0xB7: {c: '\\22C5'},

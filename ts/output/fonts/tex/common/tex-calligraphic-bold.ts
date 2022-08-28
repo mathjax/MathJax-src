@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-import {CharMap, CharOptions} from '../../FontData.js';
+import {CharMap, CharOptions} from '../../../common/FontData.js';
 
 export const texCalligraphicBold: CharMap<CharOptions> = {
     0x41: [.751, .049, .921, {ic: .068, sk: .224}],

@@ -14,8 +14,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {ChtmlCharMap, AddCSS} from '../../FontData.js';
-import {sansSerifItalic as font} from '../../../common/fonts/tex/sans-serif-italic.js';
+import {ChtmlCharMap, AddCSS} from '../../../chtml/FontData.js';
+import {sansSerifItalic as font} from '../common/sans-serif-italic.js';
 
 export const sansSerifItalic: ChtmlCharMap = AddCSS(font, {
     0x391: {c: 'A'},

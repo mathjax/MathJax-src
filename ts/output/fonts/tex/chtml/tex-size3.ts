@@ -14,8 +14,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {ChtmlCharMap, AddCSS} from '../../FontData.js';
-import {texSize3 as font} from '../../../common/fonts/tex/tex-size3.js';
+import {ChtmlCharMap, AddCSS} from '../../../chtml/FontData.js';
+import {texSize3 as font} from '../common/tex-size3.js';
 
 export const texSize3: ChtmlCharMap = AddCSS(font, {
     0x2044: {c: '/'},

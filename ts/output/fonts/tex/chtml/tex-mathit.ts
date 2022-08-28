@@ -14,4 +14,4 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-export {texMathit} from '../../../common/fonts/tex/tex-mathit.js';
+export {texMathit} from '../common/tex-mathit.js';

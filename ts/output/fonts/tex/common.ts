@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {FontDataClass, CharOptions, VariantData, DelimiterData, CssFontMap, RemapMap} from '../FontData.js';
+import {FontDataClass, CharOptions, VariantData, DelimiterData, CssFontMap, RemapMap} from '../../common/FontData.js';
 
 /*****************************************************************/
 /**

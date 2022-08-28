@@ -14,4 +14,4 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-export {texOldstyle} from '../../../common/fonts/tex/tex-oldstyle.js';
+export {texOldstyle} from '../common/tex-oldstyle.js';

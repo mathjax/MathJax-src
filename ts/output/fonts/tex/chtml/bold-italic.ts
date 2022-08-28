@@ -14,8 +14,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {ChtmlCharMap, AddCSS} from '../../FontData.js';
-import {boldItalic as font} from '../../../common/fonts/tex/bold-italic.js';
+import {ChtmlCharMap, AddCSS} from '../../../chtml/FontData.js';
+import {boldItalic as font} from '../common/bold-italic.js';
 
 export const boldItalic: ChtmlCharMap = AddCSS(font, {
     0x131: {f: 'B'},

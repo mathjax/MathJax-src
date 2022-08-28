@@ -14,8 +14,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {ChtmlCharMap, AddCSS} from '../../FontData.js';
-import {texCalligraphicBold as font} from '../../../common/fonts/tex/tex-calligraphic-bold.js';
+import {ChtmlCharMap, AddCSS} from '../../../chtml/FontData.js';
+import {texCalligraphicBold as font} from '../common/tex-calligraphic-bold.js';
 
 export const texCalligraphicBold: ChtmlCharMap = AddCSS(font, {
     0x131: {f: 'B'},

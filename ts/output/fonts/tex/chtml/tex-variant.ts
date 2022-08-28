@@ -14,8 +14,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {ChtmlCharMap, AddCSS} from '../../FontData.js';
-import {texVariant as font} from '../../../common/fonts/tex/tex-variant.js';
+import {ChtmlCharMap, AddCSS} from '../../../chtml/FontData.js';
+import {texVariant as font} from '../common/tex-variant.js';
 
 export const texVariant: ChtmlCharMap = AddCSS(font, {
     0x3F0: {c: '\\E009'},

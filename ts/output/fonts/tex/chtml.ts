@@ -22,36 +22,36 @@
  */
 
 import {ChtmlFontData, ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontDataClass,
-        DelimiterMap, CharMapMap} from '../FontData.js';
-import {CommonTeXFontMixin} from '../../common/fonts/tex.js';
-import {StringMap} from '../Wrapper.js';
+        DelimiterMap, CharMapMap} from '../../chtml/FontData.js';
+import {CommonTeXFontMixin} from './common.js';
+import {StringMap} from '../../chtml/Wrapper.js';
 
-import {boldItalic} from './tex/bold-italic.js';
-import {bold} from './tex/bold.js';
-import {doubleStruck} from './tex/double-struck.js';
-import {frakturBold} from './tex/fraktur-bold.js';
-import {fraktur} from './tex/fraktur.js';
-import {italic} from './tex/italic.js';
-import {largeop} from './tex/largeop.js';
-import {monospace} from './tex/monospace.js';
-import {normal} from './tex/normal.js';
-import {sansSerifBoldItalic} from './tex/sans-serif-bold-italic.js';
-import {sansSerifBold} from './tex/sans-serif-bold.js';
-import {sansSerifItalic} from './tex/sans-serif-italic.js';
-import {sansSerif} from './tex/sans-serif.js';
-import {scriptBold} from './tex/script-bold.js';
-import {script} from './tex/script.js';
-import {smallop} from './tex/smallop.js';
-import {texCalligraphicBold} from './tex/tex-calligraphic-bold.js';
-import {texCalligraphic} from './tex/tex-calligraphic.js';
-import {texMathit} from './tex/tex-mathit.js';
-import {texOldstyleBold} from './tex/tex-oldstyle-bold.js';
-import {texOldstyle} from './tex/tex-oldstyle.js';
-import {texSize3} from './tex/tex-size3.js';
-import {texSize4} from './tex/tex-size4.js';
-import {texVariant} from './tex/tex-variant.js';
+import {boldItalic} from './chtml/bold-italic.js';
+import {bold} from './chtml/bold.js';
+import {doubleStruck} from './chtml/double-struck.js';
+import {frakturBold} from './chtml/fraktur-bold.js';
+import {fraktur} from './chtml/fraktur.js';
+import {italic} from './chtml/italic.js';
+import {largeop} from './chtml/largeop.js';
+import {monospace} from './chtml/monospace.js';
+import {normal} from './chtml/normal.js';
+import {sansSerifBoldItalic} from './chtml/sans-serif-bold-italic.js';
+import {sansSerifBold} from './chtml/sans-serif-bold.js';
+import {sansSerifItalic} from './chtml/sans-serif-italic.js';
+import {sansSerif} from './chtml/sans-serif.js';
+import {scriptBold} from './chtml/script-bold.js';
+import {script} from './chtml/script.js';
+import {smallop} from './chtml/smallop.js';
+import {texCalligraphicBold} from './chtml/tex-calligraphic-bold.js';
+import {texCalligraphic} from './chtml/tex-calligraphic.js';
+import {texMathit} from './chtml/tex-mathit.js';
+import {texOldstyleBold} from './chtml/tex-oldstyle-bold.js';
+import {texOldstyle} from './chtml/tex-oldstyle.js';
+import {texSize3} from './chtml/tex-size3.js';
+import {texSize4} from './chtml/tex-size4.js';
+import {texVariant} from './chtml/tex-variant.js';
 
-import {delimiters} from '../../common/fonts/tex/delimiters.js';
+import {delimiters} from './common/delimiters.js';
 
 /*=================================================================================*/
 /**
