@@ -14,8 +14,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {SvgCharMap, AddPaths} from '../../FontData.js';
-import {sansSerif as font} from '../../../common/fonts/tex/sans-serif.js';
+import {SvgCharMap, AddPaths} from '../../../svg/FontData.js';
+import {sansSerif as font} from '../common/sans-serif.js';
 
 export const sansSerif: SvgCharMap = AddPaths(font, {
     0x21: '120 187Q120 225 115 440T110 693Q110 694 159 694T208 693Q208 655 203 440T198 187Q198 186 159 186T120 187ZM110 0V98H208V0H110',

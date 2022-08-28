@@ -14,8 +14,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {SvgCharMap, AddPaths} from '../../FontData.js';
-import {texCalligraphicBold as font} from '../../../common/fonts/tex/tex-calligraphic-bold.js';
+import {SvgCharMap, AddPaths} from '../../../svg/FontData.js';
+import {texCalligraphicBold as font} from '../common/tex-calligraphic-bold.js';
 
 export const texCalligraphicBold: SvgCharMap = AddPaths(font, {
     0x41: '761 751Q784 751 784 728V711Q784 570 795 417T820 191Q844 76 865 76Q868 76 902 93T962 112H973Q989 104 989 94Q989 92 987 86Q978 47 846 -11Q812 -25 779 -26Q722 -26 708 9Q688 47 669 161H524L379 162L359 136Q286 43 234 -3T142 -49T71 -19T39 55Q39 92 60 131T103 174Q113 174 117 167T124 149T136 128T166 110Q183 105 190 105Q230 105 341 246Q401 322 453 397T531 514T582 601T611 651H640V663Q640 692 676 718T745 750Q747 750 752 750T761 751ZM658 266Q653 312 649 377T644 489T641 541V556L557 415Q500 325 448 253Q467 261 524 261H568H658V266',

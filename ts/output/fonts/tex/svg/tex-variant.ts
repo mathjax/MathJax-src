@@ -14,8 +14,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {SvgCharMap, AddPaths} from '../../FontData.js';
-import {texVariant as font} from '../../../common/fonts/tex/tex-variant.js';
+import {SvgCharMap, AddPaths} from '../../../svg/FontData.js';
+import {texVariant as font} from '../common/tex-variant.js';
 
 export const texVariant: SvgCharMap = AddPaths(font, {
     0x2C6: '1 561Q-3 563 -6 577T-12 604L-14 618Q-14 625 -7 628T23 635Q31 636 36 637Q63 641 621 745Q1148 845 1165 845Q1167 845 1752 739L2338 630Q2346 630 2346 618Q2340 565 2332 561Q2329 561 1749 654Q1617 675 1466 699T1241 736T1167 748Q1165 748 1093 737T867 700T583 654Q3 561 1 561',

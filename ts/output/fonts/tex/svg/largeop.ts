@@ -14,8 +14,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {SvgCharMap, AddPaths} from '../../FontData.js';
-import {largeop as font} from '../../../common/fonts/tex/largeop.js';
+import {SvgCharMap, AddPaths} from '../../../svg/FontData.js';
+import {largeop as font} from '../common/largeop.js';
 
 export const largeop: SvgCharMap = AddPaths(font, {
     0x28: '180 96T180 250T205 541T266 770T353 944T444 1069T527 1150H555Q561 1144 561 1141Q561 1137 545 1120T504 1072T447 995T386 878T330 721T288 513T272 251Q272 133 280 56Q293 -87 326 -209T399 -405T475 -531T536 -609T561 -640Q561 -643 555 -649H527Q483 -612 443 -568T353 -443T266 -270T205 -41',

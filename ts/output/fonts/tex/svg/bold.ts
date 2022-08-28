@@ -14,8 +14,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {SvgCharMap, AddPaths} from '../../FontData.js';
-import {bold as font} from '../../../common/fonts/tex/bold.js';
+import {SvgCharMap, AddPaths} from '../../../svg/FontData.js';
+import {bold as font} from '../common/bold.js';
 
 export const bold: SvgCharMap = AddPaths(font, {
     0x21: '89 629Q89 663 116 684T171 705Q215 705 237 681T260 634Q260 619 233 434T204 244Q201 237 175 237Q150 237 146 244Q144 248 117 433T89 629ZM90 86Q90 125 116 148T177 171Q211 169 235 146T259 86Q259 48 235 25T175 1Q138 1 114 24T90 86',

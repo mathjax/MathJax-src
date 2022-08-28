@@ -14,8 +14,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {SvgCharMap, AddPaths} from '../../FontData.js';
-import {normal as font} from '../../../common/fonts/tex/normal.js';
+import {SvgCharMap, AddPaths} from '../../../svg/FontData.js';
+import {normal as font} from '../common/normal.js';
 
 export const normal: SvgCharMap = AddPaths(font, {
     0x20: '',

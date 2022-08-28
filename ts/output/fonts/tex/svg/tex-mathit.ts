@@ -14,8 +14,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {SvgCharMap, AddPaths} from '../../FontData.js';
-import {texMathit as font} from '../../../common/fonts/tex/tex-mathit.js';
+import {SvgCharMap, AddPaths} from '../../../svg/FontData.js';
+import {texMathit as font} from '../common/tex-mathit.js';
 
 export const texMathit: SvgCharMap = AddPaths(font, {
     0x41: '85 46Q112 48 132 56T161 73T176 92T185 104Q185 106 353 407T524 709Q527 716 551 716Q568 716 572 712Q573 711 574 710Q576 708 594 384Q613 54 617 52H618Q626 46 672 46H689Q696 41 696 36Q696 13 683 0H670Q639 2 557 2Q526 2 500 2T459 2T441 1Q425 1 425 10Q425 12 427 24Q428 27 429 31T430 36T432 40T434 43T437 45T443 46T450 46Q514 46 514 69Q514 74 511 136L506 209H292L260 152Q222 84 222 74Q222 48 264 46Q280 46 280 35Q280 33 278 21Q275 7 272 4T259 0Q256 0 232 1T159 2Q135 2 109 1T78 0Q58 0 58 10Q58 14 61 26T66 40Q68 46 85 46ZM504 260Q503 263 496 407T486 553L466 520Q446 486 402 406L318 256Q318 255 411 255H504V260',

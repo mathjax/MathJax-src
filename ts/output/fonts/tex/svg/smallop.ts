@@ -14,8 +14,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {SvgCharMap, AddPaths} from '../../FontData.js';
-import {smallop as font} from '../../../common/fonts/tex/smallop.js';
+import {SvgCharMap, AddPaths} from '../../../svg/FontData.js';
+import {smallop as font} from '../common/smallop.js';
 
 export const smallop: SvgCharMap = AddPaths(font, {
     0x28: '152 251Q152 646 388 850H416Q422 844 422 841Q422 837 403 816T357 753T302 649T255 482T236 250Q236 124 255 19T301 -147T356 -251T403 -315T422 -340Q422 -343 416 -349H388Q359 -325 332 -296T271 -213T212 -97T170 56T152 251',

@@ -14,8 +14,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {SvgCharMap, AddPaths} from '../../FontData.js';
-import {texOldstyle as font} from '../../../common/fonts/tex/tex-oldstyle.js';
+import {SvgCharMap, AddPaths} from '../../../svg/FontData.js';
+import {texOldstyle as font} from '../common/tex-oldstyle.js';
 
 export const texOldstyle: SvgCharMap = AddPaths(font, {
     0x30: '39 213Q39 274 53 319T89 389T139 429T192 448T242 452Q347 452 400 400Q460 335 460 213Q460 -22 250 -22Q39 -22 39 213ZM364 242Q364 279 363 301T355 348T338 385T306 406T254 415Q250 415 245 415T238 416Q217 416 190 404T150 368Q136 339 136 221Q136 114 146 78T200 23Q219 16 250 16Q280 16 299 23Q341 41 352 77T364 221V242',

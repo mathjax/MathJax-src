@@ -14,8 +14,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {SvgCharMap, AddPaths} from '../../FontData.js';
-import {monospace as font} from '../../../common/fonts/tex/monospace.js';
+import {SvgCharMap, AddPaths} from '../../../svg/FontData.js';
+import {monospace as font} from '../common/monospace.js';
 
 export const monospace: SvgCharMap = AddPaths(font, {
     0x20: '',

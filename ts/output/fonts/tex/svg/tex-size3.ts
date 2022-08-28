@@ -14,8 +14,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {SvgCharMap, AddPaths} from '../../FontData.js';
-import {texSize3 as font} from '../../../common/fonts/tex/tex-size3.js';
+import {SvgCharMap, AddPaths} from '../../../svg/FontData.js';
+import {texSize3 as font} from '../common/tex-size3.js';
 
 export const texSize3: SvgCharMap = AddPaths(font, {
     0x28: '701 -940Q701 -943 695 -949H664Q662 -947 636 -922T591 -879T537 -818T475 -737T412 -636T350 -511T295 -362T250 -186T221 17T209 251Q209 962 573 1361Q596 1386 616 1405T649 1437T664 1450H695Q701 1444 701 1441Q701 1436 681 1415T629 1356T557 1261T476 1118T400 927T340 675T308 359Q306 321 306 250Q306 -139 400 -430T690 -924Q701 -936 701 -940',

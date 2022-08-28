@@ -28,7 +28,7 @@ import {MathItem} from '../core/MathItem.js';
 import {SvgWrapper, SvgWrapperClass} from './svg/Wrapper.js';
 import {SvgWrapperFactory} from './svg/WrapperFactory.js';
 import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from './svg/FontData.js';
-import {TeXFont} from './svg/fonts/tex.js';
+import {TeXFont} from './fonts/tex/svg.js';
 import {StyleList as CssStyleList} from '../util/StyleList.js';
 import {FontCache} from './svg/FontCache.js';
 import {unicodeChars} from '../util/string.js';

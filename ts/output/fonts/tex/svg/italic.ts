@@ -14,8 +14,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {SvgCharMap, AddPaths} from '../../FontData.js';
-import {italic as font} from '../../../common/fonts/tex/italic.js';
+import {SvgCharMap, AddPaths} from '../../../svg/FontData.js';
+import {italic as font} from '../common/italic.js';
 
 export const italic: SvgCharMap = AddPaths(font, {
     0x21: '330 716Q351 716 365 703T380 670V659L304 433Q230 207 227 204Q225 198 205 198Q184 198 184 207T220 439T260 669Q270 694 297 708Q300 709 304 710T311 713T316 714Q324 716 330 716ZM107 51Q110 83 133 102T179 121Q207 121 219 105T231 72Q231 45 209 23T156 0Q138 0 123 11T107 51',
