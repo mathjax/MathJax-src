@@ -7,12 +7,17 @@ if (MathJax.loader) {
   combineDefaults(MathJax.config, 'svg', MathJax.config.output || {});
   combineDefaults(MathJax.config.loader, 'output/svg', {
     checkReady() {
-      let font = (MathJax.config.svg || {}).font || 'tex';
+      let font = MathJax.config.svg.font || 'tex';
       if (typeof(font) !== 'string') {
         MathJax.config.svg.fontData = font;
         MathJax.config.svg.font = font = font.NAME;
       }
-      return MathJax.loader.load((font.match(/^[\[\/]|^[a-z]+:/) ? font : 'output/fonts/' + font) + '/svg');
+      if (font.charAt(0) !== '[') {
+        const name = (font.match(/^[a-z]+:/) ? (font.match(/[^/:\\]*$/) || ['svg-font'])[0] : font);
+        MathJax.config.loader.paths[name] = (name === font ? '[mathjax]/output/fonts/' + font : font);
+        font = `[${name}]`;
+      }
+      return MathJax.loader.load(`${font}/svg`);
     }
   });
 }

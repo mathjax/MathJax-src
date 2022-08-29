@@ -1,4 +1,6 @@
 {
   "component": "output/fonts/tex/chtml",
-  "targets": ["output/fonts/tex/chtml.ts", "output/fonts/tex/chtml", "output/fonts/tex/common"]
+  "targets": ["output/fonts/tex/chtml.ts", "output/fonts/tex/chtml", "output/fonts/tex/common"],
+  "id": "[tex]/chtml",
+  "type": "font"
 }

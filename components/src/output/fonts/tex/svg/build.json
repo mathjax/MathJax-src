@@ -1,4 +1,6 @@
 {
   "component": "output/fonts/tex/svg",
-  "targets": ["output/fonts/tex/svg.ts", "output/fonts/tex/svg", "output/fonts/tex/common"]
+  "targets": ["output/fonts/tex/svg.ts", "output/fonts/tex/svg", "output/fonts/tex/common"],
+  "id": "[tex]/svg",
+  "type": "font"
 }

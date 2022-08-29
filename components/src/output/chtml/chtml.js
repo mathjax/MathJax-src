@@ -7,12 +7,17 @@ if (MathJax.loader) {
   combineDefaults(MathJax.config, 'chtml', MathJax.config.output || {});
   combineDefaults(MathJax.config.loader, 'output/chtml', {
     checkReady() {
-      let font = (MathJax.config.chtml || {}).font || 'tex';
+      let font = MathJax.config.chtml.font || 'tex';
       if (typeof(font) !== 'string') {
         MathJax.config.chtml.fontData = font;
         MathJax.config.chtml.font = font = font.NAME;
       }
-      return MathJax.loader.load((font.match(/^[\[\/]|^[a-z]+:/) ? font : 'output/fonts/' + font) + '/chtml');
+      if (font.charAt(0) !== '[') {
+        const name = (font.match(/^[a-z]+:/) ? (font.match(/[^/:\\]*$/) || ['chtml-font'])[0] : font);
+        MathJax.config.loader.paths[name] = (name === font ? '[mathjax]/output/fonts/' + font : font);
+        font = `[${name}]`;
+      }
+      return MathJax.loader.load(`${font}/chtml`);
     }
   });
 }
