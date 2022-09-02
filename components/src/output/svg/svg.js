@@ -13,9 +13,9 @@ if (MathJax.loader) {
         MathJax.config.svg.font = font = font.NAME;
       }
       if (font.charAt(0) !== '[') {
-        const name = (font.match(/^[a-z]+:/) ? (font.match(/[^/:\\]*$/) || ['svg-font'])[0] : font);
-        MathJax.config.loader.paths[name] = (name === font ? '[mathjax]/output/fonts/' + font : font);
-        font = `[${name}]`;
+        const name = (font.match(/^[a-z]+:/) ? (font.match(/[^/:\\]*$/) || ['svg'])[0] : font);
+        MathJax.config.loader.paths[name + '-font'] = (name === font ? 'output/fonts/' + font : font);
+        font = `[${name}-font]`;
       }
       return MathJax.loader.load(`${font}/svg`);
     }

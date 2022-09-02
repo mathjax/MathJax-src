@@ -3,7 +3,7 @@ import './preload.js';
 import '../core/core.js';
 import '../input/tex-full/tex-full.js';
 import '../output/svg/svg.js';
-import '../output/svg/fonts/tex/tex.js';
+import '../output/fonts/tex/svg/svg.js';
 import '../ui/menu/menu.js';
 import '../a11y/assistive-mml/assistive-mml.js';
 import '../startup/startup.js';

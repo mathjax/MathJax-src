@@ -10,7 +10,7 @@ module.exports = PACKAGE(
 
 module.exports.plugins.push(
   new webpack.NormalModuleReplacementPlugin(
-    /\/fonts\/tex\.js$/,
+    /\/fonts\/tex\/chtml\.js$/,
     function (resource) {
       resource.request = '../../components/src/output/chtml/nofont.js';
     }

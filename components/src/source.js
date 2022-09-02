@@ -62,6 +62,8 @@ export const source = {
   'output/svg': `${src}/output/svg/svg.js`,
   'output/fonts/tex/chtml': `${src}/output/fonts/tex/chtml/chtml.js`,
   'output/fonts/tex/svg': `${src}/output/fonts/tex/svg/svg.js`,
+  '[tex-font]/chtml': `${src}/output/fonts/tex/chtml/chtml.js`,
+  '[tex-font]/svg': `${src}/output/fonts/tex/svg/svg.js`,
   'a11y/assistive-mml': `${src}/a11y/assistive-mml/assistive-mml.js`,
   'a11y/semantic-enrich': `${src}/a11y/semantic-enrich/semantic-enrich.js`,
   'a11y/complexity': `${src}/a11y/complexity/complexity.js`,

@@ -13,9 +13,9 @@ if (MathJax.loader) {
         MathJax.config.chtml.font = font = font.NAME;
       }
       if (font.charAt(0) !== '[') {
-        const name = (font.match(/^[a-z]+:/) ? (font.match(/[^/:\\]*$/) || ['chtml-font'])[0] : font);
-        MathJax.config.loader.paths[name] = (name === font ? '[mathjax]/output/fonts/' + font : font);
-        font = `[${name}]`;
+        const name = (font.match(/^[a-z]+:/) ? (font.match(/[^/:\\]*$/) || ['chtml'])[0] : font);
+        MathJax.config.loader.paths[name + '-font'] = (name === font ? '[mathjax]/output/fonts/' + font : font);
+        font = `[${name}-font]`;
       }
       return MathJax.loader.load(`${font}/chtml`);
     }
