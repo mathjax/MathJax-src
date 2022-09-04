@@ -1098,23 +1098,17 @@ export class ArrayItem extends BaseItem {
     //
     // Add & to an extra column if it is not at the end of the line
     //
-    if (cextra[n] && !this.atEnd) {
+    if (cextra[n] && (!this.atEnd || cextra[n + 1])) {
       start += '&';
     }
     //
     // Check if there are extra entries at the end of a row to be added
     //
     if (term !== '&') {
-      if (cextra[n]) {
-        found = true;
-      } else if (cextra[n + 1]) {
-        found = !!entry.trim();
-        if (found) {
-          end = (end || '') + '&';        // extra entries follow this one
-          this.atEnd = !cextra[n];
-        }
-      } else if (!entry.trim()) {
-        found = false;
+      found = !!entry.trim() || !!(n || term.substr(0, 4) !== '\\end');
+      if (cextra[n + 1] && !cextra[n]) {
+        end = (end || '') + '&';        // extra entries follow this one
+        this.atEnd = true;
       }
     }
     if (!found && !prefix) return;
@@ -1154,7 +1148,7 @@ export class ArrayItem extends BaseItem {
    */
   protected getEntry(): [string, string, string, boolean] {
     const parser = this.parser;
-    const pattern = /^([^]*?)([&{}]|\\\\|\\(?:begin|end)\{array\}|\\cr)/;
+    const pattern = /^([^]*?)([&{}]|\\\\|\\(?:begin|end)\{array\}|\\cr|\\)/;
     let braces = 0, envs = 0;
     let i = parser.i;
     let match;
@@ -1162,6 +1156,9 @@ export class ArrayItem extends BaseItem {
     while ((match = parser.string.slice(i).match(pattern)) !== null) {
       i += match[0].length;
       switch (match[2]) {
+      case '\\':
+        i++;
+        break;
       case '{':
         braces++;
         break;
