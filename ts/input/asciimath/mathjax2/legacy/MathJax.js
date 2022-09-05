@@ -67,7 +67,7 @@ exports.MathJax = MathJax;
   
     prototype: {
       Init: function () {},
-      SUPER: function (fn) {return fn.callee.SUPER},
+      SUPER: function (fncallee) {return fncallee.SUPER},
       can: function (method) {return typeof(this[method]) === "function"},
       has: function (property) {return typeof(this[property]) !== "undefined"},
       isa: function (obj) {return (obj instanceof Object) && (this instanceof obj)}

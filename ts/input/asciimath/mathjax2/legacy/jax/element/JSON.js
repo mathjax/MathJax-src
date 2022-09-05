@@ -56,8 +56,8 @@
   });
   
   MML.msubsup.Augment({
-    toJSON: function () {
-      var json = this.SUPER(arguments).toJSON.call(this);
+    toJSON: function ttt() {
+      var json = this.SUPER(ttt).toJSON.call(this);
       if (this.data[this.sub] == null) {
         json.type = "msup";
         json.children.splice(1,1);
@@ -71,8 +71,8 @@
   });
   
   MML.munderover.Augment({
-    toJSON: function () {
-      var json = this.SUPER(arguments).toJSON.call(this);
+    toJSON: function yyy() {
+      var json = this.SUPER(yyy).toJSON.call(this);
       if (this.data[this.munder] == null) {
         json.type = "mover";
         json.children.splice(1,1);
@@ -86,8 +86,8 @@
   });
   
   MML.TeXAtom.Augment({
-    toJSON: function () {
-      var json = this.SUPER(arguments).toJSON.call(this);
+    toJSON: function uuu() {
+      var json = this.SUPER(uuu).toJSON.call(this);
       json.type = "mrow";
       json.TeXAtom = MML.TEXCLASSNAMES[this.Get("texClass")];
       return json;
