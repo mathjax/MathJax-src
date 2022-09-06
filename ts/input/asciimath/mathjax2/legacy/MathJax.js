@@ -19,7 +19,9 @@ exports.MathJax = MathJax;
     return obj;
   };
   var CONSTRUCTOR = function () {
-    return function () {return arguments.callee.Init.call(this,arguments)};
+
+    return function aaa() {return aaa.Init.call(this,Object.assign(arguments,{call:aaa}))};
+
   };
 
   BASE.Object = OBJECT({
@@ -40,7 +42,7 @@ exports.MathJax = MathJax;
     Init: function (args) {
       var obj = this;
       if (args.length === 1 && args[0] === PROTO) {return obj}
-      if (!(obj instanceof args.callee)) {obj = new args.callee(PROTO)}
+      if (!(obj instanceof args.call)) {obj = new args.call(PROTO)}
       return obj.Init.apply(obj,args) || obj;
     },
     
@@ -65,7 +67,7 @@ exports.MathJax = MathJax;
   
     prototype: {
       Init: function () {},
-      SUPER: function (fn) {return fn.callee.SUPER},
+      SUPER: function (fncall) {return fncall.SUPER},
       can: function (method) {return typeof(this[method]) === "function"},
       has: function (property) {return typeof(this[property]) !== "undefined"},
       isa: function (obj) {return (obj instanceof Object) && (this instanceof obj)}
@@ -177,7 +179,7 @@ exports.MathJax = MathJax;
   //  Create a callback from an associative array
   //
   var CALLBACK = function (data) {
-    var cb = function () {return arguments.callee.execute.apply(arguments.callee,arguments)};
+    var cb = function ccc() {return ccc.execute.apply(ccc,arguments)};
     for (var id in CALLBACK.prototype) {
       if (CALLBACK.prototype.hasOwnProperty(id)) {
         if (typeof(data[id]) !== 'undefined') {cb[id] = data[id]}

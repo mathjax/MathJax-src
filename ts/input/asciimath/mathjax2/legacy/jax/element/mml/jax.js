@@ -813,9 +813,9 @@ MathJax.ElementJax.mml.Augment({
       if (!(this.isEmbellished()) || typeof(this.core) === "undefined") {return this}
       return this.data[this.core].CoreMO();
     },
-    toString: function () {
+    toString: function qqq() {
       if (this.inferred) {return '[' + this.data.join(',') + ']'}
-      return this.SUPER(arguments).toString.call(this);
+      return this.SUPER(qqq).toString.call(this);
     },
     setTeXclass: function (prev) {
       var i, m = this.data.length;
@@ -1196,12 +1196,12 @@ MathJax.ElementJax.mml.Augment({
       }
     },
     linebreakContainer: true,
-    Append: function () {
+    Append: function www() {
       for (var i = 0, m = arguments.length; i < m; i++) {
         if (!((arguments[i] instanceof MML.mtr) ||
               (arguments[i] instanceof MML.mlabeledtr))) {arguments[i] = MML.mtr(arguments[i])}
       }
-      this.SUPER(arguments).Append.apply(this,arguments);
+      this.SUPER(www).Append.apply(this,arguments);
     },
     setTeXclass: MML.mbase.setSeparateTeXclasses
   });
@@ -1221,11 +1221,11 @@ MathJax.ElementJax.mml.Augment({
       mtable: {rowalign: true, columnalign: true, groupalign: true}
     },
     linebreakContainer: true,
-    Append: function () {
+    Append: function eee() {
       for (var i = 0, m = arguments.length; i < m; i++) {
         if (!(arguments[i] instanceof MML.mtd)) {arguments[i] = MML.mtd(arguments[i])}
       }
-      this.SUPER(arguments).Append.apply(this,arguments);
+      this.SUPER(eee).Append.apply(this,arguments);
     },
     setTeXclass: MML.mbase.setSeparateTeXclasses
   });
@@ -1420,9 +1420,9 @@ MathJax.ElementJax.mml.Augment({
   
   MML.xml = MML.mbase.Subclass({
     type: "xml",
-    Init: function () {
+    Init: function rrr() {
       this.div = document.createElement("div");
-      return this.SUPER(arguments).Init.apply(this,arguments);
+      return this.SUPER(rrr).Init.apply(this,arguments);
     },
     Append: function () {
       for (var i = 0, m = arguments.length; i < m; i++) {
