@@ -135,7 +135,11 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
         }
         const math = new document.options.MathItem('', MmlJax);
         try {
-          const mml = this.inputData.originalMml = toMathML(this.root);
+          let mml = toMathML(this.root);
+          if (this.inputData.originalMml) {
+            mml = mml.replace(/data-semantic-\w*=\".*\"/g, '');
+          }
+          this.inputData.originalMml = mml;
           math.math = this.serializeMml(Sre.toEnriched(mml));
           math.display = this.display;
           math.compile(document);

@@ -25,6 +25,7 @@ import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
 import {CommonMactionMixin} from '../../common/Wrappers/maction.js';
 import {ActionDef} from '../../common/Wrappers/maction.js';
 import {EventHandler, TooltipData} from '../../common/Wrappers/maction.js';
+import {STATE} from '../../../core/MathItem.js';
 import {MmlMaction} from '../../../core/MmlTree/MmlNodes/maction.js';
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
 import {StyleList} from '../../../util/StyleList.js';
@@ -114,7 +115,8 @@ CommonMactionMixin<CHTMLWrapper<any, any, any>, CHTMLConstructor<any, any, any>>
           math.start.n = math.end.n = 0;
         }
         mml.nextToggleSelection();
-        math.rerender(document);
+        math.rerender(document, node.node.attributes.get('data-collapsible') ?
+          STATE.RERENDER : STATE.ENRICHED);
         event.stopPropagation();
       });
     }, {}]],
