@@ -93,6 +93,7 @@ let allExplorers: {[options: string]: ExplorerInit} = {
                                          locale: 'nemeth', domain: 'default',
                                          style: 'default', modality: 'braille'});
     explorer.showRegion = 'viewBraille';
+    explorer.sound = true;
     return explorer;
   },
   speech: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
@@ -146,7 +147,7 @@ export class ExplorerPool {
 
   public get highlighter(): Sre.highlighter {
     if (this._renderer !== this.document.outputJax.name) {
-      this._renderer = this.document.outputJax.name
+      this._renderer = this.document.outputJax.name;
       this.getPrimaryHighlighter();
       return this._highlighter;
     }
@@ -155,6 +156,10 @@ export class ExplorerPool {
     return this._highlighter;
   }
 
+  /**
+   * A highlighter that overrides the primary highlighter.
+   * Used for highlighting during speech generation.
+   */
   public secondaryHighlighter: Sre.highlighter;
 
   /**

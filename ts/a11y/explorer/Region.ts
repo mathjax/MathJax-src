@@ -393,7 +393,8 @@ export class SpeechRegion extends LiveRegion {
    * @override
    */
   public Show(node: HTMLElement, highlighter: Sre.highlighter) {
-    this.active = this.document.options.a11y.voicing;
+    this.active = this.document.options.a11y.voicing &&
+      !!speechSynthesis.getVoices().length;
     this.node = node;
     super.Show(node, highlighter);
   }

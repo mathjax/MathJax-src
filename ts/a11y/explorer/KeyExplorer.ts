@@ -82,6 +82,11 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
   public attached: boolean = false;
 
   /**
+   * Switches on or off the use of sound on this explorer.
+   */
+  public sound: boolean = false;
+
+  /**
    * The attached Sre walker.
    * @type {Walker}
    */
@@ -188,7 +193,9 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
     // TODO: Add the earcon sound here!
     if (result) {
       this.Update();
-    } else {
+      return;
+    }
+    if (this.sound) {
       this.NoMove();
     }
   }
