@@ -206,7 +206,7 @@ export class MmlMo extends AbstractMmlTokenNode {
    *                    with this node as its core
    */
   public coreParent(): MmlNode {
-    let embellished = this as MmlNode;
+    let embellished = this;
     let parent = this as MmlNode;
     let math = this.factory.getNodeClass('math');
     while (parent && parent.isEmbellished && parent.coreMO() === this && !(parent instanceof math)) {
@@ -232,7 +232,7 @@ export class MmlMo extends AbstractMmlTokenNode {
               parent.isKind('mstyle') ||
               parent.isKind('mphantom')) && parent.childNodes.length === 1) ||
             parent.isKind('munderover')) && parent.childNodes[0]) {
-      parent = parent.childNodes[0] as MmlNode;
+      parent = parent.childNodes[0];
     }
     return (parent.isToken ? (parent as AbstractMmlTokenNode).getText() : '');
   }
@@ -253,15 +253,15 @@ export class MmlMo extends AbstractMmlTokenNode {
     const node = this.coreParent().parent;
     if (node) {
       const key = (node.isKind('mover') ?
-                   ((node.childNodes[(node as MmlMover).over] as MmlNode).coreMO() ?
+                   (node.childNodes[(node as MmlMover).over].coreMO() ?
                     'accent' : '') :
                    node.isKind('munder') ?
-                   ((node.childNodes[(node as MmlMunder).under] as MmlNode).coreMO() ?
+                   (node.childNodes[(node as MmlMunder).under].coreMO() ?
                     'accentunder' : '') :
                    node.isKind('munderover') ?
-                   (this === (node.childNodes[(node as MmlMunderover).over] as MmlNode).coreMO() ?
+                   (this === node.childNodes[(node as MmlMunderover).over].coreMO() ?
                     'accent' :
-                    this === (node.childNodes[(node as MmlMunderover).under] as MmlNode).coreMO() ?
+                    this === node.childNodes[(node as MmlMunderover).under].coreMO() ?
                     'accentunder' : '') :
                    '');
       if (key) {
@@ -465,7 +465,7 @@ export class MmlMo extends AbstractMmlTokenNode {
   protected checkMathAccent(mo: string) {
     const parent = this.Parent;
     if (this.getProperty('mathaccent') !== undefined || !parent || !parent.isKind('munderover')) return;
-    const base = parent.childNodes[0] as MmlNode;
+    const base = parent.childNodes[0];
     if (base.isEmbellished && base.coreMO() === this) return;
     const MATHACCENT = (this.constructor as typeof MmlMo).mathaccents;
     if (mo.match(MATHACCENT)) {

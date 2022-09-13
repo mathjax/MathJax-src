@@ -247,7 +247,11 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
       }
       const visitor = new SerializedMmlVisitor(this.mmlFactory);
       const toMathML = ((node: MmlNode) => visitor.visitTree(node));
-      this.options.MathItem = ExplorerMathItemMixin(this.options.MathItem, toMathML);
+      const options = this.options;
+      if (!options.a11y.speechRules) {
+        options.a11y.speechRules = `${options.sre.domain}-${options.sre.style}`;
+      }
+      options.MathItem = ExplorerMathItemMixin(options.MathItem, toMathML);
     }
 
     /**

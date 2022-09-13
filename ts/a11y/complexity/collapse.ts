@@ -147,8 +147,8 @@ export class Collapse {
             if (complexity > this.cutoff.fenced && node.attributes.get('data-semantic-role') === 'leftright') {
                 complexity = this.recordCollapse(
                     node, complexity,
-                    this.getText(node.childNodes[0] as MmlNode) +
-                        this.getText(node.childNodes[node.childNodes.length - 1] as MmlNode)
+                    this.getText(node.childNodes[0]) +
+                        this.getText(node.childNodes[node.childNodes.length - 1])
                 );
             }
             return complexity;
@@ -357,9 +357,9 @@ export class Collapse {
     protected canUncollapse(node: MmlNode, n: number, m: number = 1): MmlNode | null {
         if (this.splitAttribute(node, 'children').length === m) {
             const mml = (node.childNodes.length === 1 &&
-                         (node.childNodes[0] as MmlNode).isInferred ? node.childNodes[0] as MmlNode : node);
+                         node.childNodes[0].isInferred ? node.childNodes[0] : node);
             if (mml && mml.childNodes[n]) {
-                const child = mml.childNodes[n] as MmlNode;
+                const child = mml.childNodes[n];
                 if (child.getProperty('collapse-marker')) {
                     return child;
                 }
@@ -424,7 +424,7 @@ export class Collapse {
         if (!node || node.attributes.get('data-semantic-id') === id) return node;
         if (!node.isToken) {
             for (const mml of node.childNodes) {
-                const child = this.findChild(mml as MmlNode, id);
+                const child = this.findChild(mml, id);
                 if (child) return child;
             }
         }
@@ -499,7 +499,7 @@ export class Collapse {
      * @return {MmlNode}      The newly created mrow
      */
     public addMrow(node: MmlNode): MmlNode {
-        const mrow = this.complexity.factory.create('mrow', null, node.childNodes[0].childNodes as MmlNode[]);
+        const mrow = this.complexity.factory.create('mrow', null, node.childNodes[0].childNodes);
         node.childNodes[0].setChildren([mrow]);
 
         const attributes = node.attributes.getAllAttributes();

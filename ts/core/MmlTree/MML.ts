@@ -61,6 +61,8 @@ import {MmlSemantics, MmlAnnotation, MmlAnnotationXML} from './MmlNodes/semantic
 
 import {TeXAtom} from './MmlNodes/TeXAtom.js';
 import {MathChoice} from './MmlNodes/mathchoice.js';
+import {HtmlNode} from './MmlNodes/HtmlNode.js';
+
 
 /************************************************************************/
 /**
@@ -121,5 +123,6 @@ export let MML: {[kind: string]: MmlNodeClass} = {
   [MathChoice.prototype.kind]: MathChoice,
 
   [TextNode.prototype.kind]: TextNode,
-  [XMLNode.prototype.kind]: XMLNode
+  [XMLNode.prototype.kind]: XMLNode,
+  [HtmlNode.prototype.kind]: HtmlNode,
 };

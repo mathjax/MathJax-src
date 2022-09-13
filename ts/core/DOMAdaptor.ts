@@ -57,6 +57,11 @@ export interface DOMAdaptor<N, T, D> {
   document: D;
 
   /**
+   * True when the adaptor can measure DOM node sizes
+   */
+  canMeasureNodes: boolean;
+
+  /**
    * @param {string} text    The serialized document to be parsed
    * @param {string} format  The format (e.g., 'text/html' or 'text/xhtml')
    * @return {D}             The parsed document
@@ -379,6 +384,11 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
    * The document in which the HTML nodes will be created
    */
   public document: D;
+
+  /**
+   * True when the adaptor can measure DOM node sizes
+   */
+  public canMeasureNodes: boolean = true;
 
   /**
    * @param {D} document  The document in which the nodes will be created

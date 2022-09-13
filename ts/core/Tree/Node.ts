@@ -33,16 +33,19 @@ export type PropertyList = {[key: string]: Property};
 /*********************************************************/
 /**
  *  The generic Node interface
+ *
+ * @template N   The actual type of node being created (so parent, children, and factory
+ *                  know what they are).  This avoids the need for casting node types later.
+ * @template C   The node class for N (the constructor rather than instance of the class)
  */
-
-export interface Node {
+export interface Node<N extends Node<N, C>, C extends NodeClass<N, C>> {
   readonly kind: string;
   /**
    * The NodeFactory to use to create additional nodes, as needed
    */
-  readonly factory: NodeFactory<Node, NodeClass>;
-  parent: Node;
-  childNodes: Node[];
+  readonly factory: NodeFactory<N, C>;
+  parent: N;
+  childNodes: N[];
 
   /**
    * @param {string} name     The name of the property to set
@@ -71,7 +74,6 @@ export interface Node {
    */
   removeProperty(...names: string[]): void;
 
-
   /**
    * @param {string} kind  The type of node to test for
    * @return {boolean}     True when the node is of the given type
@@ -79,79 +81,85 @@ export interface Node {
   isKind(kind: string): boolean;
 
   /**
-   * @param {Node[]} children  The child nodes to add to this node
+   * @param {N[]} children  The child nodes to add to this node
    */
-  setChildren(children: Node[]): void;
+  setChildren(children: N[]): void;
 
   /**
-   * @param {Node} child  A node to add to this node's children
-   * @return {Node}       The child node that was added
+   * @param {N} child  A node to add to this node's children
+   * @return {N}       The child node that was added
    */
-  appendChild(child: Node): Node;
+  appendChild(child: N): N;
 
   /**
-   * @param {Node} newChild  A child node to be inserted
-   * @param {Node} oldChild  A child node to be replaced
-   * @return {Node}          The old child node that was removed
+   * @param {N} newChild  A child node to be inserted
+   * @param {N} oldChild  A child node to be replaced
+   * @return {N}          The old child node that was removed
    */
-  replaceChild(newChild: Node, oldChild: Node): Node;
+  replaceChild(newChild: N, oldChild: N): N;
 
   /**
-   * @param {Node} child   Child node to be removed
-   * @return {Node}        The old child node that was removed
+   * @param {N} child   Child node to be removed
+   * @return {N}        The old child node that was removed
    */
-  removeChild(child: Node): Node;
+  removeChild(child: N): N;
 
   /**
-   * @param {Node} child  A child node whose index in childNodes is desired
+   * @param {N} child  A child node whose index in childNodes is desired
    * @return {number}     The index of the child in childNodes, or null if not found
    */
-  childIndex(child: Node): number;
+  childIndex(child: N): number;
 
   /**
    * Make a deep copy of the node (but with no parent).
    */
-  copy(): Node;
+  copy(): N;
 
   /**
    * @param {string} kind  The kind of nodes to be located in the tree
-   * @return {Node[]}      An array of nodes that are children (at any depth) of the given kind
+   * @return {N[]}      An array of nodes that are children (at any depth) of the given kind
    */
-  findNodes(kind: string): Node[];
+  findNodes(kind: string): N[];
 
   /**
    * @param {Function} func  A function to apply to each node in the tree rooted at this node
    * @param {any} data       Data to pass to the function (as state information)
    */
-  walkTree(func: (node: Node, data?: any) => void, data?: any): void;
+  walkTree(func: (node: N, data?: any) => void, data?: any): void;
 }
+
 
 /*********************************************************/
 /**
- *  The generic Node class interface
+ * The generic Node class interface
+ *
+ * @template N   The node type being created
+ * @template C   The node class for N (the constructor rather than instance of the class)
  */
-
-export interface NodeClass {
+export interface NodeClass<N extends Node<N, C>, C extends NodeClass<N, C>> {
   /**
    * @param {NodeFactory} factory  The NodeFactory to use to create new nodes when needed
    * @param {PropertyList} properties  Any properties to be added to the node, if any
-   * @param {Node[]} children  The initial child nodes, if any
-   * @return {Node}  The newly created node
+   * @param {N[]} children  The initial child nodes, if any
+   * @return {N}  The newly created node
    */
-  new (factory: NodeFactory<Node, NodeClass>, properties?: PropertyList, children?: Node[]): Node;
+  new (factory: NodeFactory<N, C>, properties?: PropertyList, children?: N[]): N;
 }
+
 
 /*********************************************************/
 /**
- *  The abstract Node class
+ * The abstract Node class
+ *
+ * @template N   The actual type of node being created
+ * @template C   The node class for N (the constructor rather than instance of the class)
  */
-
-export abstract class AbstractNode implements Node {
+export abstract class AbstractNode<N extends Node<N, C>, C extends NodeClass<N, C>> implements Node<N, C> {
 
   /**
    * The parent node for this one
    */
-  public parent: Node = null;
+  public parent: N = null;
 
   /**
    * The properties for this node
@@ -161,17 +169,17 @@ export abstract class AbstractNode implements Node {
   /**
    * The children for this node
    */
-  public childNodes: Node[] = [];
+  public childNodes: N[] = [];
 
   /**
    * @param {NodeFactory} factory  The NodeFactory to use to create new nodes when needed
    * @param {PropertyList} properties  Any properties to be added to the node, if any
-   * @param {Node[]} children  The initial child nodes, if any
+   * @param {N[]} children  The initial child nodes, if any
    *
    * @constructor
-   * @implements {Node}
+   * @implements {N}
    */
-  constructor(readonly factory: NodeFactory<Node, NodeClass>, properties: PropertyList = {}, children: Node[] = []) {
+  constructor(readonly factory: NodeFactory<N, C>, properties: PropertyList = {}, children: N[] = []) {
     for (const name of Object.keys(properties)) {
       this.setProperty(name, properties[name]);
     }
@@ -224,19 +232,17 @@ export abstract class AbstractNode implements Node {
     }
   }
 
-
   /**
    * @override
    */
   public isKind(kind: string): boolean {
-    return this.factory.nodeIsKind(this, kind);
+    return this.factory.nodeIsKind(this as any, kind);
   }
-
 
   /**
    * @override
    */
-  public setChildren(children: Node[]) {
+  public setChildren(children: N[]) {
     this.childNodes = [];
     for (let child of children) {
       this.appendChild(child);
@@ -246,21 +252,21 @@ export abstract class AbstractNode implements Node {
   /**
    * @override
    */
-  public appendChild(child: Node) {
+  public appendChild(child: N) {
     this.childNodes.push(child);
-    child.parent = this;
+    child.parent = this as any as N;
     return child;
   }
 
   /**
    * @override
    */
-  public replaceChild(newChild: Node, oldChild: Node) {
+  public replaceChild(newChild: N, oldChild: N) {
     let i = this.childIndex(oldChild);
     // If i === null should we error?  return null?  silently fail?
     if (i !== null) {
       this.childNodes[i] = newChild;
-      newChild.parent = this;
+      newChild.parent = this as any as N;
       oldChild.parent = null;
     }
     return newChild;
@@ -269,7 +275,7 @@ export abstract class AbstractNode implements Node {
   /**
    * @override
    */
-  public removeChild(child: Node) {
+  public removeChild(child: N) {
     const i = this.childIndex(child);
     if (i !== null) {
       this.childNodes.splice(i, 1);
@@ -278,36 +284,34 @@ export abstract class AbstractNode implements Node {
     return child;
   }
 
-
   /**
    * @override
    */
-  public childIndex(node: Node) {
+  public childIndex(node: N) {
     let i = this.childNodes.indexOf(node);
     return (i === -1 ? null : i);
   }
-
 
   /**
    * @override
    */
   public copy() {
-    const node = (this as AbstractNode).factory.create(this.kind) as AbstractNode;
+    const node = this.factory.create(this.kind) as any as AbstractNode<N, C>;
     node.properties = {...this.properties};
     for (const child of this.childNodes || []) {
       if (child) {
         node.appendChild(child.copy());
       }
     }
-    return node;
+    return node as any as N;
   }
 
   /**
    * @override
    */
   public findNodes(kind: string) {
-    let nodes: Node[] = [];
-    this.walkTree((node: Node) => {
+    let nodes: N[] = [];
+    this.walkTree((node: N) => {
       if (node.isKind(kind)) {
         nodes.push(node);
       }
@@ -315,12 +319,11 @@ export abstract class AbstractNode implements Node {
     return nodes;
   }
 
-
   /**
    * @override
    */
-  public walkTree(func: (node: Node, data?: any) => void, data?: any) {
-    func(this, data);
+  public walkTree(func: (node: N, data?: any) => void, data?: any) {
+    func(this as any as N, data);
     for (const child of this.childNodes) {
       if (child) {
         child.walkTree(func, data);
@@ -338,12 +341,18 @@ export abstract class AbstractNode implements Node {
 
 }
 
+
 /*********************************************************/
 /**
- *  The abstract EmptyNode class
+ * The abstract EmptyNode class
+ *
+ * @template N   The actual type of node being created
+ * @template C   The node class for N (the constructor rather than instance of the class)
  */
-
-export abstract class AbstractEmptyNode extends AbstractNode {
+export abstract class AbstractEmptyNode<
+  N extends Node<N, C>,
+  C extends NodeClass<N, C>
+> extends AbstractNode<N, C> {
   /**
    *  We don't have children, so ignore these methods
    */
@@ -351,27 +360,27 @@ export abstract class AbstractEmptyNode extends AbstractNode {
   /**
    * @override
    */
-  public setChildren(_children: Node[]) {
+  public setChildren(_children: N[]) {
   }
 
   /**
    * @override
    */
-  public appendChild(child: Node) {
+  public appendChild(child: N) {
     return child;
   }
 
   /**
    * @override
    */
-  public replaceChild(_newChild: Node, oldChild: Node) {
+  public replaceChild(_newChild: N, oldChild: N) {
     return oldChild;
   }
 
   /**
    * @override
    */
-  public childIndex(_node: Node) {
+  public childIndex(_node: N) {
     return null as number;
   }
 
@@ -380,8 +389,8 @@ export abstract class AbstractEmptyNode extends AbstractNode {
    *
    * @override
    */
-  public walkTree(func: (node: Node, data?: any) => void, data?: any) {
-    func(this, data);
+  public walkTree(func: (node: N, data?: any) => void, data?: any) {
+    func(this as any as N, data);
     return data;
   }
 

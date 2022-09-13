@@ -16,61 +16,77 @@
  */
 
 /**
- * @fileoverview  The generic visitor class for node trees
+ * @fileoverview  The generic visitor class for trees
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Node, NodeClass, AbstractNode} from './Node.js';
-import {NodeFactory} from './NodeFactory.js';
+import {Factory, FactoryNode, FactoryNodeClass} from './Factory.js';
+
+/*****************************************************************/
+
+/**
+ * Visitor nodes can have childNodes that are traversed by the visitor
+ *
+ * @template N   The node type being traversed
+ */
+export interface VisitorNode<N extends VisitorNode<N>> extends FactoryNode {
+  childNodes?: N[];
+}
 
 /**
  * The type for the functions associated with each node class
+ *
+ * @template N   The node type being traversed
  */
-export type VisitorFunction = (visitor: NodeFactory<Node, NodeClass>, node: Node, ...args: any[]) => any;
+export type VisitorFunction<N extends VisitorNode<N>> =
+  (visitor: Factory<N, FactoryNodeClass<N>>, node: N, ...args: any[]) => any;
+
 
 /*****************************************************************/
-/**
- *  Implements the Visitor interface
- */
 
-export interface Visitor {
+/**
+ * The Visitor interface
+ *
+ * @template N   The node type being traversed
+ */
+export interface Visitor<N extends VisitorNode<N>> {
 
   /**
    * Visit the tree rooted at the given node (passing along any needed parameters)
    *
-   * @param {Node} tree   The node that is the root of the tree
+   * @param {N} tree      The node that is the root of the tree
    * @param {any[]} args  The arguments to pass to the visitNode functions
    * @return {any}        Whatever the visitNode function returns for the root tree node
    */
-  visitTree(tree: Node, ...args: any[]): any;
+  visitTree(tree: N, ...args: any[]): any;
 
   /**
    * Visit a node by calling the visitor function for the given type of node
    *  (passing along any needed parameters)
    *
-   * @param {Node} node   The node to visit
+   * @param {N} node      The node to visit
    * @param {any[]} args  The arguments to pass to the visitor function for this node
    * @return {any}        Whatever the visitor function returns for this node
    */
-  visitNode(node: Node, ...args: any[]): any;
+  visitNode(node: N, ...args: any[]): any;
 
   /**
    * The default visitor function for when no node-specific function is defined
    *
-   * @param {Node} node   The node to visit
+   * @param {N} node      The node to visit
    * @param {any[]} args  The arguments to pass to the visitor function for this node
    * @return {any}        Whatever the visitor function returns for this node
    */
-  visitDefault(node: Node, ...args: any[]): any;
+  visitDefault(node: N, ...args: any[]): any;
 
   /**
    * Define a visitor function for a given node kind
    *
-   * @param {string} kind  The node kind for which the handler is being defined
+   * @param {string} kind              The node kind for which the handler is being defined
    * @param {VisitorFunction} handler  The function to call to handle nodes of this kind
    */
-  setNodeHandler(kind: string, handler: VisitorFunction): void;
+  setNodeHandler(kind: string, handler: VisitorFunction<N>): void;
 
   /**
    * Remove the visitor function for a given node kind
@@ -85,16 +101,19 @@ export interface Visitor {
   [property: string]: any;
 }
 
+
 /*****************************************************************/
 /**
  *  Implements the generic Visitor object
+ *
+ * @template N   The node type being traversed
+ * @template C   The node class for N (the constructor rather than instance of the class)
  */
-
-export abstract class AbstractVisitor implements Visitor {
+export abstract class AbstractVisitor<N extends VisitorNode<N>> implements Visitor<N> {
   /**
    * Holds the mapping from node kinds to visitor funcitons
    */
-  protected nodeHandlers: Map<string, VisitorFunction> = new Map();
+  protected nodeHandlers: Map<string, VisitorFunction<N>> = new Map();
 
   /**
    *  Visitor functions are named "visitKindNode" where "Kind" is replaced by
@@ -114,9 +133,9 @@ export abstract class AbstractVisitor implements Visitor {
    * @constructor
    * @param {NodeFactory} factory  The node factory for the kinds of nodes this visitor handles
    */
-  constructor(factory: NodeFactory<Node, NodeClass>) {
+  constructor(factory: Factory<N, FactoryNodeClass<N>>) {
     for (const kind of factory.getKinds()) {
-      let method = (this as Visitor)[AbstractVisitor.methodName(kind)] as VisitorFunction;
+      let method = (this as Visitor<N>)[AbstractVisitor.methodName(kind)] as VisitorFunction<N>;
       if (method) {
         this.nodeHandlers.set(kind, method);
       }
@@ -126,14 +145,14 @@ export abstract class AbstractVisitor implements Visitor {
   /**
    * @override
    */
-  public visitTree(tree: Node, ...args: any[]) {
+  public visitTree(tree: N, ...args: any[]) {
     return this.visitNode(tree, ...args);
   }
 
   /**
    * @override
    */
-  public visitNode(node: Node, ...args: any[]) {
+  public visitNode(node: N, ...args: any[]) {
     let handler = this.nodeHandlers.get(node.kind) || this.visitDefault;
     return handler.call(this, node, ...args);
   }
@@ -141,8 +160,8 @@ export abstract class AbstractVisitor implements Visitor {
   /**
    * @override
    */
-  public visitDefault(node: Node, ...args: any[]) {
-    if (node instanceof AbstractNode) {
+  public visitDefault(node: N, ...args: any[]) {
+    if ('childNodes' in node) {
       for (const child of node.childNodes) {
         this.visitNode(child, ...args);
       }
@@ -152,7 +171,7 @@ export abstract class AbstractVisitor implements Visitor {
   /**
    * @override
    */
-  public setNodeHandler(kind: string, handler: VisitorFunction) {
+  public setNodeHandler(kind: string, handler: VisitorFunction<N>) {
     this.nodeHandlers.set(kind, handler);
   }
 

@@ -47,6 +47,7 @@ export const dependencies = {
   '[tex]/require': ['input/tex-base'],
   '[tex]/setoptions': ['input/tex-base'],
   '[tex]/tagformat': ['input/tex-base'],
+  '[tex]/texhtml': ['input/tex-base'],
   '[tex]/textcomp': ['input/tex-base', '[tex]/textmacros'],
   '[tex]/textmacros': ['input/tex-base'],
   '[tex]/unicode': ['input/tex-base'],

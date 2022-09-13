@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLFontData, CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontDataClass,
+import {ChtmlFontData, ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontDataClass,
         DelimiterMap, CharMapMap} from '../FontData.js';
 import {CommonTeXFontMixin} from '../../common/fonts/tex.js';
 import {StringMap} from '../Wrapper.js';
@@ -58,7 +58,7 @@ import {delimiters} from '../../common/fonts/tex/delimiters.js';
  *  The TeXFont class
  */
 export class TeXFont extends
-CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTMLFontDataClass>(CHTMLFontData) {
+CommonTeXFontMixin<ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontDataClass>(ChtmlFontData) {
 
   /**
    * Fonts to prefix any explicit ones
@@ -128,12 +128,12 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
   /**
    *  The stretchy delimiter data
    */
-  protected static defaultDelimiters: DelimiterMap<CHTMLDelimiterData> = delimiters;
+  protected static defaultDelimiters: DelimiterMap<ChtmlDelimiterData> = delimiters;
 
   /**
    *  The character data by variant
    */
-  protected static defaultChars: CharMapMap<CHTMLCharOptions> = {
+  protected static defaultChars: CharMapMap<ChtmlCharOptions> = {
     'normal': normal,
     'bold': bold,
     'italic': italic,
@@ -165,7 +165,7 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
    * The CSS styles needed for this font.
    */
   protected static defaultStyles = {
-    ...CHTMLFontData.defaultStyles,
+    ...ChtmlFontData.defaultStyles,
 
     '.MJX-TEX': {
       'font-family': 'MJXZERO, MJXTEX'
@@ -260,7 +260,7 @@ CommonTeXFontMixin<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData, CHTML
    * The default @font-face declarations with %%URL%% where the font path should go
    */
   protected static defaultFonts = {
-    ...CHTMLFontData.defaultFonts,
+    ...ChtmlFontData.defaultFonts,
 
     '@font-face /* 1 */': {
       'font-family': 'MJXTEX',

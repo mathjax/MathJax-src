@@ -14,10 +14,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {CHTMLCharMap, AddCSS} from '../../FontData.js';
+import {ChtmlCharMap, AddCSS} from '../../FontData.js';
 import {italic as font} from '../../../common/fonts/tex/italic.js';
 
-export const italic: CHTMLCharMap = AddCSS(font, {
+export const italic: ChtmlCharMap = AddCSS(font, {
     0x2F: {f: 'I'},
     0x3DD: {c: '\\E008', f: 'A'},
     0x2015: {c: '\\2014'},

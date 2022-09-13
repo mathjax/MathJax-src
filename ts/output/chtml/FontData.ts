@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLFontData class and AddCSS() function.
+ * @fileoverview  Implements the ChtmlFontData class and AddCSS() function.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -34,7 +34,7 @@ export * from '../common/FontData.js';
 /**
  * Add the extra data needed for CharOptions in CHTML
  */
-export interface CHTMLCharOptions extends CharOptions {
+export interface ChtmlCharOptions extends CharOptions {
   c?: string;                   // the content value (for css)
   f?: string;                   // the font postfix (for css)
 }
@@ -42,13 +42,13 @@ export interface CHTMLCharOptions extends CharOptions {
 /**
  * Shorthands for CHTML char maps and char data
  */
-export type CHTMLCharMap = CharMap<CHTMLCharOptions>;
-export type CHTMLCharData = CharData<CHTMLCharOptions>;
+export type ChtmlCharMap = CharMap<ChtmlCharOptions>;
+export type ChtmlCharData = CharData<ChtmlCharOptions>;
 
 /**
  * The extra data needed for a Variant in CHTML output
  */
-export interface CHTMLVariantData extends VariantData<CHTMLCharOptions> {
+export interface ChtmlVariantData extends VariantData<ChtmlCharOptions> {
   classes?: string;             // the classes to use for this variant
   letter: string;               // the font letter(s) for the default font for this variant
 }
@@ -56,7 +56,7 @@ export interface CHTMLVariantData extends VariantData<CHTMLCharOptions> {
 /**
  * The extra data needed for a Delimiter in CHTML output
  */
-export interface CHTMLDelimiterData extends DelimiterData {
+export interface ChtmlDelimiterData extends DelimiterData {
 }
 
 /****************************************************************************/
@@ -64,7 +64,7 @@ export interface CHTMLDelimiterData extends DelimiterData {
 /**
  * The CHTML FontData class
  */
-export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, CHTMLDelimiterData> {
+export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData> {
   /**
    * Default options
    */
@@ -125,8 +125,8 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
   /**
    * @override
    */
-  public static charOptions(font: CHTMLCharMap, n: number) {
-    return super.charOptions(font, n) as CHTMLCharOptions;
+  public static charOptions(font: ChtmlCharMap, n: number) {
+    return super.charOptions(font, n) as ChtmlCharOptions;
   }
 
   /***********************************************************************/
@@ -153,7 +153,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
    */
   public createVariant(name: string, inherit: string = null, link: string = null) {
     super.createVariant(name, inherit, link);
-    let CLASS = (this.constructor as CHTMLFontDataClass);
+    let CLASS = (this.constructor as ChtmlFontDataClass);
     this.variant[name].classes = CLASS.defaultVariantClasses[name];
     this.variant[name].letter = CLASS.defaultVariantLetters[name];
   }
@@ -161,11 +161,11 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
   /**
    * @override
    */
-  public defineChars(name: string, chars: CHTMLCharMap) {
+  public defineChars(name: string, chars: ChtmlCharMap) {
     super.defineChars(name, chars);
     const letter = this.variant[name].letter;
     for (const n of Object.keys(chars)) {
-      const options = CHTMLFontData.charOptions(chars, parseInt(n));
+      const options = ChtmlFontData.charOptions(chars, parseInt(n));
       if (options.f === undefined) {
         options.f = letter;
       }
@@ -178,7 +178,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
    * @return {StyleList}  The (computed) styles for this font
    */
   get styles(): StyleList {
-    const CLASS = this.constructor as typeof CHTMLFontData;
+    const CLASS = this.constructor as typeof ChtmlFontData;
     //
     //  Include the default styles
     //
@@ -240,7 +240,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
         const char = variant.chars[N];
         if ((char[3] || {}).smp) continue;
         if (char.length < 4) {
-          (char as CHTMLCharData)[3] = {};
+          (char as ChtmlCharData)[3] = {};
         }
         this.addCharStyles(styles, vletter, N, char);
       }
@@ -265,9 +265,9 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
   /**
    * @param {StyleList} styles         The style object to add styles to
    * @param {number} n                 The unicode character number of the delimiter
-   * @param {CHTMLDelimiterData} data  The data for the delimiter whose CSS is to be added
+   * @param {ChtmlDelimiterData} data  The data for the delimiter whose CSS is to be added
    */
-  protected addDelimiterStyles(styles: StyleList, n: number, data: CHTMLDelimiterData) {
+  protected addDelimiterStyles(styles: StyleList, n: number, data: ChtmlDelimiterData) {
     let c = this.charSelector(n);
     if (data.c && data.c !== n) {
       c = this.charSelector(data.c);
@@ -288,10 +288,10 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
   /**
    * @param {StyleList} styles         The style object to add styles to
    * @param {string} c                 The delimiter character string
-   * @param {CHTMLDelimiterData} data  The data for the delimiter whose CSS is to be added
+   * @param {ChtmlDelimiterData} data  The data for the delimiter whose CSS is to be added
    */
-  protected addDelimiterVStyles(styles: StyleList, c: string, data: CHTMLDelimiterData) {
-    const HDW = data.HDW as CHTMLCharData;
+  protected addDelimiterVStyles(styles: StyleList, c: string, data: ChtmlDelimiterData) {
+    const HDW = data.HDW as ChtmlCharData;
     const [beg, ext, end, mid] = data.stretch;
     const Hb = this.addDelimiterVPart(styles, c, 'beg', beg, HDW);
     this.addDelimiterVPart(styles, c, 'ext', ext, HDW);
@@ -325,7 +325,7 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
    * @param {number} HDW        The height-depth-width data for the stretchy delimiter
    * @return {number}           The total height of the character
    */
-  protected addDelimiterVPart(styles: StyleList, c: string, part: string, n: number, HDW: CHTMLCharData): number {
+  protected addDelimiterVPart(styles: StyleList, c: string, part: string, n: number, HDW: ChtmlCharData): number {
     if (!n) return 0;
     const data = this.getDelimiterData(n);
     const dw = (HDW[2] - data[2]) / 2;
@@ -347,11 +347,11 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
   /**
    * @param {StyleList} styles         The style object to add styles to
    * @param {string} c                 The delimiter character string
-   * @param {CHTMLDelimiterData} data  The data for the delimiter whose CSS is to be added
+   * @param {ChtmlDelimiterData} data  The data for the delimiter whose CSS is to be added
    */
-  protected addDelimiterHStyles(styles: StyleList, c: string, data: CHTMLDelimiterData) {
+  protected addDelimiterHStyles(styles: StyleList, c: string, data: ChtmlDelimiterData) {
     const [beg, ext, end, mid] = data.stretch;
-    const HDW = data.HDW as CHTMLCharData;
+    const HDW = data.HDW as ChtmlCharData;
     this.addDelimiterHPart(styles, c, 'beg', beg, HDW);
     this.addDelimiterHPart(styles, c, 'ext', ext, HDW);
     this.addDelimiterHPart(styles, c, 'end', end, HDW);
@@ -366,14 +366,14 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
    * @param {string} c          The vertical character whose part is being added
    * @param {string} part       The name of the part (beg, ext, end, mid) that is being added
    * @param {number} n          The unicode character to use for the part
-   * @param {CHTMLCharData} HDW The height-depth-width data for the stretchy character
+   * @param {ChtmlCharData} HDW The height-depth-width data for the stretchy character
    */
-  protected addDelimiterHPart(styles: StyleList, c: string, part: string, n: number, HDW: CHTMLCharData) {
+  protected addDelimiterHPart(styles: StyleList, c: string, part: string, n: number, HDW: ChtmlCharData) {
     if (!n) return;
     const data = this.getDelimiterData(n);
-    const options = data[3] as CHTMLCharOptions;
+    const options = data[3] as ChtmlCharOptions;
     const css: StyleData = {content: (options && options.c ? '"' + options.c + '"' : this.charContent(n))};
-    css.padding = this.padding(HDW as CHTMLCharData, 0, -HDW[2]);
+    css.padding = this.padding(HDW as ChtmlCharData, 0, -HDW[2]);
     styles['mjx-stretchy-h' + c + ' mjx-' + part + ' mjx-c::before'] = css;
   }
 
@@ -383,10 +383,10 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
    * @param {StyleList} styles  The style object to add styles to
    * @param {string} vletter    The variant class letter (e.g., `B`, `SS`) where this character is being defined
    * @param {number} n          The unicode character being defined
-   * @param {CHTMLCharData} data     The bounding box data and options for the character
+   * @param {ChtmlCharData} data     The bounding box data and options for the character
    */
-  protected addCharStyles(styles: StyleList, vletter: string, n: number, data: CHTMLCharData) {
-    const options = data[3] as CHTMLCharOptions;
+  protected addCharStyles(styles: StyleList, vletter: string, n: number, data: ChtmlCharData) {
+    const options = data[3] as ChtmlCharOptions;
     const letter = (options.f !== undefined ? options.f : vletter);
     const selector = 'mjx-c' + this.charSelector(n) + (letter ? '.TEX-' + letter : '');
     styles[selector + '::before'] = {
@@ -399,9 +399,9 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
 
   /**
    * @param {number} n         The character number to find
-   * @return {CHTMLCharData}   The data for that character to be used for stretchy delimiters
+   * @return {ChtmlCharData}   The data for that character to be used for stretchy delimiters
    */
-  protected getDelimiterData(n: number): CHTMLCharData {
+  protected getDelimiterData(n: number): ChtmlCharData {
     return this.getChar('-smallop', n);
   }
 
@@ -422,12 +422,12 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
   }
 
   /**
-   * @param {CHTMLCharData} data   The [h, d, w] data for the character
+   * @param {ChtmlCharData} data   The [h, d, w] data for the character
    * @param {number} dw            The (optional) left offset of the glyph
    * @param {number} ic            The (optional) italic correction value
    * @return {string}              The padding string for the h, d, w.
    */
-  public padding([h, d, w]: CHTMLCharData, dw: number = 0, ic: number = 0): string {
+  public padding([h, d, w]: ChtmlCharData, dw: number = 0, ic: number = 0): string {
     return [h, w + ic, d, dw].map(this.em0).join(' ');
   }
 
@@ -454,24 +454,24 @@ export class CHTMLFontData extends FontData<CHTMLCharOptions, CHTMLVariantData, 
 }
 
 /**
- * The CHTMLFontData constructor class
+ * The ChtmlFontData constructor class
  */
-export type CHTMLFontDataClass = typeof CHTMLFontData;
+export type ChtmlFontDataClass = typeof ChtmlFontData;
 
 /****************************************************************************/
 
 /**
  * Data needed for AddCSS()
  */
-export type CharOptionsMap = {[name: number]: CHTMLCharOptions};
+export type CharOptionsMap = {[name: number]: ChtmlCharOptions};
 export type CssMap = {[name: number]: number};
 
 /**
- * @param {CHTMLCharMap} font        The font to augment
+ * @param {ChtmlCharMap} font        The font to augment
  * @param {CharOptionsMap} options   Any additional options for characters in the font
- * @return {CHTMLCharMap}            The augmented font
+ * @return {ChtmlCharMap}            The augmented font
  */
-export function AddCSS(font: CHTMLCharMap, options: CharOptionsMap): CHTMLCharMap {
+export function AddCSS(font: ChtmlCharMap, options: CharOptionsMap): ChtmlCharMap {
   for (const c of Object.keys(options)) {
     const n = parseInt(c);
     Object.assign(FontData.charOptions(font, n), options[n]);

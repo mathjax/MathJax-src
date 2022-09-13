@@ -16,34 +16,59 @@
  */
 
 /**
- * @fileoverview  Implements the SVGmphantom wrapper for the MmlMphantom object
+ * @fileoverview  Implements the SvgMphantom wrapper for the MmlMphantom object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVGWrapper} from '../Wrapper.js';
+import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
+import {SvgWrapperFactory} from '../WrapperFactory.js';
+import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMphantom} from '../../../core/MmlTree/MmlNodes/mphantom.js';
 
 /*****************************************************************/
 /**
- *  The SVGmi wrapper for the MmlMi object
+ * The SvgMphantom interface for the SVG Mphantom wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SVGmphantom<N, T, D> extends SVGWrapper<N, T, D> {
+export interface SvgMphantomNTD<N, T, D> extends SvgWrapper<N, T, D> {}
 
-  /**
-   * The mphantom wrapper
-   */
-  public static kind = MmlMphantom.prototype.kind;
-
-  /**
-   * @override
-   */
-  public toSVG(parent: N) {
-    this.standardSVGnode(parent);
-  }
-
+/**
+ * The SvgMphantomClass interface for the SVG Mphantom wrapper
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export interface SvgMphantomClass<N, T, D> extends SvgWrapperClass<N, T, D> {
+  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMphantomNTD<N, T, D>;
 }
+
+
+/*****************************************************************/
+
+/**
+ * The SvgMphantom wrapper class for the MmlMphantom class
+ */
+export const SvgMphantom = (function <N, T, D>(): SvgMphantomClass<N, T, D> {
+
+  return class SvgMphantom extends SvgWrapper<N, T, D> implements SvgMphantomNTD<N, T, D> {
+
+    /**
+     * @override
+     */
+    public static kind = MmlMphantom.prototype.kind;
+
+    /**
+     * @override
+     */
+    public toSVG(parent: N) {
+      this.standardSvgNode(parent);
+    }
+
+  };
+
+})<any, any, any>();

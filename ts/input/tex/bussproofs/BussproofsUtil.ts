@@ -71,11 +71,11 @@ let getRule = function(node: MmlNode): MmlNode {
       return null;
     }
     if (NodeUtil.isType(node, 'mrow')) {
-      node = node.childNodes[0] as MmlNode;
+      node = node.childNodes[0];
       i = 0;
       continue;
     }
-    node = node.parent.childNodes[i] as MmlNode;
+    node = node.parent.childNodes[i];
     i++;
   }
   return node;
@@ -94,7 +94,7 @@ let getRule = function(node: MmlNode): MmlNode {
  */
 let getPremises = function(rule: MmlNode, direction: string): MmlNode {
   return rule.childNodes[direction === 'up' ? 1 : 0].childNodes[0].
-    childNodes[0].childNodes[0].childNodes[0] as MmlNode;
+    childNodes[0].childNodes[0].childNodes[0];
 };
 
 
@@ -105,7 +105,7 @@ let getPremises = function(rule: MmlNode, direction: string): MmlNode {
  * @return {MmlNode} The nth premise.
  */
 let getPremise = function(premises: MmlNode, n: number): MmlNode {
-  return premises.childNodes[n].childNodes[0].childNodes[0] as MmlNode;
+  return premises.childNodes[n].childNodes[0].childNodes[0];
 };
 
 
@@ -115,7 +115,7 @@ let getPremise = function(premises: MmlNode, n: number): MmlNode {
  * @return {MmlNode} The first premise.
  */
 let firstPremise = function(premises: MmlNode): MmlNode {
-  return getPremise(premises, 0) as MmlNode;
+  return getPremise(premises, 0);
 };
 
 
@@ -136,7 +136,7 @@ let lastPremise = function(premises: MmlNode): MmlNode {
  * @return {MmlNode} The conclusion.
  */
 let getConclusion = function(rule: MmlNode, direction: string): MmlNode {
-  return rule.childNodes[direction === 'up' ? 0 : 1].childNodes[0].childNodes[0].childNodes[0] as MmlNode;
+  return rule.childNodes[direction === 'up' ? 0 : 1].childNodes[0].childNodes[0].childNodes[0];
 };
 
 
@@ -148,7 +148,7 @@ let getConclusion = function(rule: MmlNode, direction: string): MmlNode {
  */
 let getColumn = function(inf: MmlNode): MmlNode {
   while (inf && !NodeUtil.isType(inf, 'mtd')) {
-    inf = inf.parent as MmlNode;
+    inf = inf.parent;
   }
   return inf;
 };
@@ -160,7 +160,7 @@ let getColumn = function(inf: MmlNode): MmlNode {
  * @return {MmlNode} The next sibling.
  */
 let nextSibling = function(inf: MmlNode): MmlNode {
-  return inf.parent.childNodes[inf.parent.childNodes.indexOf(inf) + 1] as MmlNode;
+  return inf.parent.childNodes[inf.parent.childNodes.indexOf(inf) + 1];
 };
 
 
@@ -171,7 +171,7 @@ let nextSibling = function(inf: MmlNode): MmlNode {
  */
 // @ts-ignore
 let previousSibling = function(inf: MmlNode): MmlNode {
-  return inf.parent.childNodes[inf.parent.childNodes.indexOf(inf) - 1] as MmlNode;
+  return inf.parent.childNodes[inf.parent.childNodes.indexOf(inf) - 1];
 };
 
 
@@ -182,7 +182,7 @@ let previousSibling = function(inf: MmlNode): MmlNode {
  */
 let getParentInf = function(inf: MmlNode): MmlNode {
   while (inf && getProperty(inf, 'inference') == null) {
-    inf = inf.parent as MmlNode;
+    inf = inf.parent;
   }
   return inf;
 };
@@ -207,7 +207,7 @@ let getSpaces = function(inf: MmlNode, rule: MmlNode, right: boolean = false): n
     return result;
   }
   if (inf !== rule.parent) {
-    let children = inf.childNodes as MmlNode[];
+    let children = inf.childNodes;
     let index = right ? children.length - 1 : 0;
     if (NodeUtil.isType(children[index], 'mspace')) {
       result += getBBox(children[index]);
@@ -217,7 +217,7 @@ let getSpaces = function(inf: MmlNode, rule: MmlNode, right: boolean = false): n
   if (inf === rule) {
     return result;
   }
-  let children = inf.childNodes as MmlNode[];
+  let children = inf.childNodes;
   let index = right ? children.length - 1 : 0;
   if (children[index] !== rule) {
     result += getBBox(children[index]);
@@ -266,7 +266,7 @@ let addSpace = function(config: ParseOptions, inf: MmlNode,
   }
   // TODO: Simplify below as we now have a definite mrow.
   const index = right ? inf.childNodes.length - 1 : 0;
-  let mspace = inf.childNodes[index] as MmlNode;
+  let mspace = inf.childNodes[index];
   if (NodeUtil.isType(mspace, 'mspace')) {
     NodeUtil.setAttribute(
       mspace, 'width',
@@ -340,7 +340,7 @@ let adjustSequents = function(config: ParseOptions) {
         // Otherwise it is a hyp and we have to check the formula itself.
         premise;
       if (getProperty(sequent, 'sequent')) {
-        seq = sequent.childNodes[0] as MmlNode;
+        seq = sequent.childNodes[0];
         collect.push(seq);
         setProperty(seq, 'sequentProcessed', true);
       }
@@ -364,7 +364,7 @@ const addSequentSpace = function(config: ParseOptions, sequent: MmlNode,
   let mspace = config.nodeFactory.create('node', 'mspace', [],
                                          {width: ParseUtil.Em(width)});
   if (direction === 'left') {
-    let row = sequent.childNodes[position].childNodes[0] as MmlNode;
+    let row = sequent.childNodes[position].childNodes[0];
     mspace.parent = row;
     row.childNodes.unshift(mspace);
   } else {
@@ -415,10 +415,10 @@ const adjustSequentPairwise = function(config: ParseOptions, sequents: MmlNode[]
  * @return {[number, number]} The delta for left and right side of the sequents.
  */
 const compareSequents = function(top: MmlNode, bottom: MmlNode): [number, number] {
-  const tr = getBBox(top.childNodes[2] as MmlNode);
-  const br = getBBox(bottom.childNodes[2] as MmlNode);
-  const tl = getBBox(top.childNodes[0] as MmlNode);
-  const bl = getBBox(bottom.childNodes[0] as MmlNode);
+  const tr = getBBox(top.childNodes[2]);
+  const br = getBBox(bottom.childNodes[2]);
+  const tl = getBBox(top.childNodes[0]);
+  const bl = getBBox(bottom.childNodes[0]);
   // Deltas
   const dl = tl - bl;
   const dr = tr - br;

@@ -1,0 +1,4 @@
+{
+  "component": "input/tex/extensions/texhtml",
+  "targets": ["input/tex/texhtml"]
+}
