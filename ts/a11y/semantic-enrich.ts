@@ -176,6 +176,8 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
       const attributes = node.attributes;
       if (!attributes) return '';
       const speech = attributes.getExplicit('data-semantic-speech') as string;
+      // TODO (explorer) For tree role move all speech etc. to container
+      // element.
       if (!attributes.getExplicit('data-semantic-parent') && speech) {
         return speech;
       }

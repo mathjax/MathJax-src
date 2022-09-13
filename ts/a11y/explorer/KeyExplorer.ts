@@ -117,10 +117,7 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
   /**
    * @override
    */
-  public FocusIn(event: FocusEvent) {
-    this.Start();
-    this.stopEvent(event);
-  }
+  public FocusIn(_event: FocusEvent) { }
 
   /**
    * @override
