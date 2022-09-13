@@ -926,7 +926,7 @@ function makeDiagMatrix(elements: string[], anti: boolean) {
  * @param {number} texclass The TeX class.
  */
 PhysicsMethods.AutoClose = function(parser: TexParser, fence: string, _texclass: number) {
-  const mo = parser.create('token', 'mo', {stretchy: false}, fence);
+  const mo = parser.create('token', 'mo', {...ParseUtil.getFontDef(parser), stretchy: false}, fence);
   const item = parser.itemFactory.create('mml', mo).
     setProperties({autoclose: fence});
   parser.Push(item);
