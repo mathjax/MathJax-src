@@ -33,6 +33,7 @@ import {ActionDef} from '../../common/Wrappers/maction.js';
 import {EventHandler, TooltipData} from '../../common/Wrappers/maction.js';
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
 import {StyleList} from '../../../util/StyleList.js';
+import {STATE} from '../../../core/MathItem.js';
 
 /*****************************************************************/
 /**
@@ -171,7 +172,7 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
             math.start.n = math.end.n = 0;
           }
           mml.nextToggleSelection();
-          math.rerender(document);
+          math.rerender(document, mml.attributes.get('data-maction-id') ? STATE.ENRICH : STATE.RERENDER);
           event.stopPropagation();
         });
       }, {}]],

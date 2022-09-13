@@ -124,9 +124,7 @@ export class MmlMaction extends AbstractMmlNode {
    * Select the next child for a toggle action
    */
   public nextToggleSelection() {
-    // This can now be a string when rerendering.
-    let selection = Math.max(
-      1, parseInt(this.attributes.get('selection') as string, 10) + 1);
+    let selection = Math.max(1, parseInt(this.attributes.get('selection') as string) + 1);
     if (selection > this.childNodes.length) {
       selection = 1;
     }
