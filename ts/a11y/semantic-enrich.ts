@@ -261,7 +261,7 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
         attachSpeech: [STATE.ATTACHSPEECH]
       }),
       sre: expandable({
-        structure: true,
+        structure: true,                   // Generates full aria structure
         speech: 'none',                    // by default no speech is included
         domain: 'mathspeak',               // speech rules domain
         style: 'default',                  // speech rules style

@@ -117,7 +117,8 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
   /**
    * @override
    */
-  public FocusIn(_event: FocusEvent) { }
+  public FocusIn(_event: FocusEvent) {
+  }
 
   /**
    * @override
@@ -189,7 +190,6 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
    */
   public Move(key: number) {
     let result = this.walker.move(key);
-    // TODO: Add the earcon sound here!
     if (result) {
       this.Update();
       return;

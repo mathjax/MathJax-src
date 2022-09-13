@@ -157,8 +157,7 @@ export class ExplorerPool {
   }
 
   /**
-   * A highlighter that overrides the primary highlighter.
-   * Used for highlighting during speech generation.
+   * A highlighter that is used to mark nodes during auto voicing.
    */
   public secondaryHighlighter: Sre.highlighter;
 
@@ -260,7 +259,7 @@ export class ExplorerPool {
   }
 
   /**
-   * @return {Sre.Highlighter} A highlighter for the explorer.
+   * Sets the secondary highlighter for marking nodes during autovoicing.
    */
   protected getSecondaryHighlighter() {
     this.secondaryHighlighter = Sre.getHighlighter(

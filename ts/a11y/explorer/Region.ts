@@ -366,13 +366,47 @@ export class LiveRegion extends StringRegion {
 
 }
 
-type ProsodyElement = {[key: string]: number};
 
+const ProsodyKeys = [ 'pitch', 'rate', 'volume' ];
+
+interface ProsodyElement {
+  [propName: string]: string | boolean | number;
+  pitch?: number;
+  rate?: number;
+  volume?: number;
+}
+
+interface SsmlElement extends ProsodyElement {
+  [propName: string]: string | boolean | number;
+  pause?: string;
+  text?: string;
+  mark?: string;
+  character?: boolean;
+  kind?: string;
+}
+
+/**
+ * Region class that enables auto voicing of content via SSML markup.
+ */
 export class SpeechRegion extends LiveRegion {
 
-  public node: Element = null;
-  private clear: boolean = false;
+  /**
+   * Flag to activate auto voicing.
+   */
   public active: boolean = false;
+
+  /**
+   * The math expression that is currently explored. Other regions do not need
+   * this node as the explorer administers both node and region, while only
+   * pushing output into the region. But in the case autovoicing the speech
+   * regions needs to mark elements in the node directly.
+   */
+  public node: Element = null;
+
+  /**
+   * Flag to indicate if a node is marked as being spoken.
+   */
+  private clear: boolean = false;
 
   /**
    * The highlighter to use.
@@ -393,8 +427,6 @@ export class SpeechRegion extends LiveRegion {
    * @override
    */
   public Show(node: HTMLElement, highlighter: Sre.highlighter) {
-    this.active = this.document.options.a11y.voicing &&
-      !!speechSynthesis.getVoices().length;
     this.node = node;
     super.Show(node, highlighter);
   }
@@ -403,6 +435,8 @@ export class SpeechRegion extends LiveRegion {
    * @override
    */
   public Update(speech: string) {
+    this.active = this.document.options.a11y.voicing &&
+      !!speechSynthesis.getVoices().length;
     speechSynthesis.cancel();
     this.clear = true;
     let [text, ssml] = this.ssmlParsing(speech);
@@ -412,8 +446,12 @@ export class SpeechRegion extends LiveRegion {
     }
   }
 
-
-  private makeUtterances(ssml: any[], locale: string) {
+  /**
+   * Generates the utterance chain.
+   * @param {SsmlElement[]} ssml The list of ssml annotations.
+   * @param {string} locale The locale to use.
+   */
+  private makeUtterances(ssml: SsmlElement[], locale: string) {
     let utterance = null;
     for (let utter of ssml) {
       if (utter.mark) {
@@ -426,11 +464,9 @@ export class SpeechRegion extends LiveRegion {
         });
         continue;
       }
-      // pause?
       if (utter.pause) {
-        let time = parseInt(utter.pause.match(/^[0-9]+/));
+        let time = parseInt(utter.pause.match(/^[0-9]+/)[0]);
         if (isNaN(time) || !utterance) {
-          console.warn('Something went wrong with the pause matching.');
           continue;
         }
         // TODO: Ensure pausing does not advance the highlighting.
@@ -459,27 +495,50 @@ export class SpeechRegion extends LiveRegion {
     }
   }
 
-
+  /**
+   * Highlighting the node that is being marked in the SSML.
+   * @param {string} id The id of the node to highlight.
+   * @param {boolean} init
+   */
   private highlightNode(id: string, init: boolean = false) {
     this.highlighter.unhighlight();
-    let nodes = Array.from(this.node.querySelectorAll(`[data-semantic-id="${id}"]`));
-    // Do something with the specials?
+    let nodes = Array.from(
+      this.node.querySelectorAll(`[data-semantic-id="${id}"]`));
+    // TODO: Here we can do something with the
     if (!this.clear || init) {
-      this.highlighter.highlight(nodes as any[]);
+      this.highlighter.highlight(nodes as HTMLElement[]);
     }
     this.clear = false;
   }
 
-  private ssmlParsing(speech: string): [string, any[]] {
+
+  /**
+   * Parses a string containing an ssml structure into a list of text strings
+   * with associated ssml annotation elements.
+   *
+   * @param {string} speech The speech string.
+   * @return {[string, SsmlElement[]]} The annotation structure.
+   */
+  private ssmlParsing(speech: string): [string, SsmlElement[]] {
     let dp = new DOMParser();
     let xml = dp.parseFromString(speech, 'text/xml');
-    let instr: any[] = [];
+    let instr: SsmlElement[] = [];
     let text: String[] = [];
     this.recurseSsml(Array.from(xml.documentElement.childNodes), instr, text);
     return [text.join(' '), instr];
   }
 
-  private recurseSsml(nodes: Node[], instr: any, text: String[], prosody: ProsodyElement = {}) {
+  /**
+   * Tail recursive combination of SSML components.
+   *
+   * @param {Node[]} nodes A list of SSML nodes.
+   * @param {SsmlElement[]} instr Accumulator for collating Ssml annotation
+   *    elements.
+   * @param {String[]} text A list of text elements.
+   * @param {ProsodyElement?} prosody The currently active prosody elements.
+   */
+  private recurseSsml(nodes: Node[], instr: SsmlElement[], text: String[],
+                      prosody: ProsodyElement = {}) {
     for (let node of nodes) {
       if (node.nodeType === 3) {
         let content = node.textContent.trim();
@@ -520,17 +579,24 @@ export class SpeechRegion extends LiveRegion {
     }
   }
 
-
-  // These need to be fixed!
+  /**
+   * Maps prosody types to scaling functions.
+   */
+  // TODO: These should be tweaked after more testing.
   private static combinePros: {[key: string]: (x: number, sign: string) => number} = {
     pitch: (x: number, _sign: string) => 1 * (x / 100),
     volume: (x: number, _sign: string) => .5 * (x / 100),
-    rate: (x: number, _sign: string) =>  1 * (x / 100) // , ((sign === '-') ? 1 : 10) * (x / 100)
+    rate: (x: number, _sign: string) =>  1 * (x / 100)
   };
 
+  /**
+   * Retrieves prosody annotations from and SSML node.
+   * @param {Element} element The SSML node.
+   * @param {ProsodyElement} prosody The prosody annotation.
+   */
   private getProsody(element: Element, prosody: ProsodyElement) {
     let combine: ProsodyElement = {};
-    for (let pros of ['pitch', 'rate', 'volume']) {
+    for (let pros of ProsodyKeys) {
       if (element.hasAttribute(pros)) {
         let [sign, value] = SpeechRegion.extractProsody(element.getAttribute(pros));
         if (!sign) {
@@ -538,7 +604,7 @@ export class SpeechRegion extends LiveRegion {
           combine[pros] = (pros === 'volume') ? .5 : 1;
           continue;
         }
-        let orig = prosody[pros];
+        let orig = prosody[pros] as number;
         orig = orig ? orig : ((pros === 'volume') ? .5 : 1);
         let relative = SpeechRegion.combinePros[pros](parseInt(value, 10), sign);
         combine[pros] = (sign === '-') ? orig - relative : orig + relative;
@@ -547,10 +613,17 @@ export class SpeechRegion extends LiveRegion {
     return combine;
   }
 
-  private static regexp = /([\+|-]*)([0-9]+)%/;
+  /**
+   * Extracts the prosody value from an attribute.
+   */
+  private static prosodyRegexp = /([\+|-]*)([0-9]+)%/;
 
+  /**
+   * Extracts the prosody value from an attribute.
+   * @param {string} attr
+   */
   private static extractProsody(attr: string) {
-    let match = attr.match(SpeechRegion.regexp);
+    let match = attr.match(SpeechRegion.prosodyRegexp);
     if (!match) {
       console.warn('Something went wrong with the prosody matching.');
       return ['', '100'];
