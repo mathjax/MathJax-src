@@ -147,6 +147,37 @@ let allExplorers: {[options: string]: ExplorerInit} = {
 export class ExplorerPool {
 
   /**
+   * A highlighter that is used to mark nodes during auto voicing.
+   */
+  public secondaryHighlighter: Sre.highlighter;
+
+  /**
+   * The explorer dictionary.
+   */
+  public explorers: {[key: string]: Explorer} = {};
+
+  /**
+   * The currently attached explorers
+   */
+  protected attached: string[] = [];
+
+  /**
+   * The target document.
+   */
+  protected document: ExplorerMathDocument;
+
+  /**
+   * The node explorers will be attached to.
+   */
+  protected node: HTMLElement;
+
+  /**
+   * The corresponding Mathml node as a string.
+   */
+  protected mml: string;
+
+  /**
+
    * The primary highlighter shared by all explorers.
    */
   private _highlighter: Sre.highlighter;
@@ -154,7 +185,7 @@ export class ExplorerPool {
   /**
    * The name of the current output jax.
    */
-  private _renderer: string = this.document.outputJax.name;
+  private _renderer: string;
 
   /**
    * All explorers that need to be restarted on a rerendered element.
@@ -176,31 +207,18 @@ export class ExplorerPool {
   }
 
   /**
-   * A highlighter that is used to mark nodes during auto voicing.
-   */
-  public secondaryHighlighter: Sre.highlighter;
-
-  /**
-   * The currently attached explorers
-   */
-  protected attached: string[] = [];
-
-  /**
-   * The explorer dictionary.
-   */
-  public explorers: {[key: string]: Explorer} = {};
-
-  /**
    * @param  document The target document.
    * @param  node The node explorers will be attached to.
    * @param  mml The corresponding Mathml node as a string.
    */
-  constructor(public document: ExplorerMathDocument,
-              public node: HTMLElement,
-              public mml: string) {
+  public init(document: ExplorerMathDocument,
+              node: HTMLElement, mml: string) {
+    this.document = document;
+    this.mml = mml;
+    this.node = node;
     this.setPrimaryHighlighter();
     for (let key of Object.keys(allExplorers)) {
-      this.explorers[key] = allExplorers[key](document, this, node, mml);
+      this.explorers[key] = allExplorers[key](this.document, this, this.node, this.mml);
     }
     this.setSecondaryHighlighter();
     this.attach();
@@ -238,16 +256,17 @@ export class ExplorerPool {
   }
 
   /**
-   * Reattaches explorers after a MathItem is rerendered.
+   * Computes the explorers that need to be reattachedafter a MathItem is
+   * rerendered.
    */
   public reattach() {
-    for (let key of this.attached) {
-      let explorer = this.explorers[key];
-      if (explorer.active) {
+     for (let key of this.attached) {
+       let explorer = this.explorers[key];
+       if (explorer.active) {
         this._restart.push(key);
         explorer.Stop();
       }
-    }
+     }
   }
 
   /**
