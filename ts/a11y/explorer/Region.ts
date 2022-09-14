@@ -504,7 +504,6 @@ export class SpeechRegion extends LiveRegion {
     this.highlighter.unhighlight();
     let nodes = Array.from(
       this.node.querySelectorAll(`[data-semantic-id="${id}"]`));
-    // TODO: Here we can do something with the
     if (!this.clear || init) {
       this.highlighter.highlight(nodes as HTMLElement[]);
     }

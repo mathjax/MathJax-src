@@ -121,7 +121,6 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
           this.typesetRoot.setAttribute('sre-explorer-id', this.savedId);
           this.savedId = null;
         }
-        // Init explorers:
         if (!this.explorers) {
           this.explorers = new ExplorerPool();
         }
@@ -130,7 +129,6 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
       this.state(STATE.EXPLORER);
     }
 
-    // TODO: Work this one out after collapse!
     /**
      * @override
      */
