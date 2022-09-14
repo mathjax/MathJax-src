@@ -62,7 +62,7 @@ export class enrichVisitor<N, T, D> extends SerializedMmlVisitor {
   protected mactionId: number;
 
   public visitTree(node: MmlNode, math?: MathItem<N, T, D>) {
-    this.mactionId = 0;
+    this.mactionId = 1;
     const mml = super.visitTree(node);
     if (this.mactionId) {
       math.inputData.hasMaction = true;

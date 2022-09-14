@@ -73,11 +73,6 @@ export interface ExplorerMathItem extends HTMLMATHITEM {
    */
   explorable(document: HTMLDOCUMENT, force?: boolean): void;
 
-  /**
-   * @param {HTMLDocument} document  The document where the Explorer is being added
-   */
-  // attachExplorers(document: HTMLDOCUMENT): void;
-
 }
 
 /**
@@ -139,7 +134,9 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     public rerender(document: ExplorerMathDocument, start: number = STATE.RERENDER) {
       this.savedId = this.typesetRoot.getAttribute('sre-explorer-id');
       this.refocus = (window.document.activeElement === this.typesetRoot);
-      this.explorers.reattach();
+      if (this.explorers) {
+        this.explorers.reattach();
+      }
       super.rerender(document, start);
     }
 
@@ -149,7 +146,9 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     public updateDocument(document: ExplorerMathDocument) {
       super.updateDocument(document);
       this.refocus && this.typesetRoot.focus();
-      this.explorers.Restart();
+      if (this.explorers) {
+        this.explorers.Restart();
+      }
       this.refocus = false;
     }
 

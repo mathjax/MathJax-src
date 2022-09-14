@@ -167,7 +167,8 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
             math.start.n = math.end.n = 0;
           }
           mml.nextToggleSelection();
-          math.rerender(document, mml.attributes.get('data-maction-id') ? STATE.ENRICHED : STATE.RERENDER);
+          math.rerender(document, mml.attributes.get('data-maction-id') ?
+            STATE.ENRICHED : STATE.RERENDER);
           event.stopPropagation();
         });
       }, {}]],
