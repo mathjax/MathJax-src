@@ -147,7 +147,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
       super.updateDocument(document);
       this.refocus && this.typesetRoot.focus();
       if (this.explorers) {
-        this.explorers.Restart();
+        this.explorers.restart();
       }
       this.refocus = false;
     }

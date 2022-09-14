@@ -138,17 +138,36 @@ let allExplorers: {[options: string]: ExplorerInit} = {
     TreeColorer.create(doc, pool, null, node, ...rest)
 };
 
+
+/**
+ * Class to bundle and handle all explorers on a Math item. This in particular
+ * means that all explorer share the same highlighter, meaning that there is no
+ * uncontrolled interaction between highlighting of different explorers.
+ */
 export class ExplorerPool {
 
-
+  /**
+   * The primary highlighter shared by all explorers.
+   */
   private _highlighter: Sre.highlighter;
 
+  /**
+   * The name of the current output jax.
+   */
   private _renderer: string = this.document.outputJax.name;
 
+  /**
+   * All explorers that need to be restarted on a rerendered element.
+   */
+  private _restart: string[] = [];
+
+  /**
+   * @return {Sre.highlighter} The primary highlighter shared by all explorers.
+   */
   public get highlighter(): Sre.highlighter {
     if (this._renderer !== this.document.outputJax.name) {
       this._renderer = this.document.outputJax.name;
-      this.getPrimaryHighlighter();
+      this.setPrimaryHighlighter();
       return this._highlighter;
     }
     let [foreground, background] = this.colorOptions();
@@ -167,17 +186,11 @@ export class ExplorerPool {
   protected attached: string[] = [];
 
   /**
-   * True when a rerendered element should restart these explorers
-   */
-  protected restart: string[] = [];
-
-  /**
    * The explorer dictionary.
    */
   public explorers: {[key: string]: Explorer} = {};
 
   /**
-   *
    * @param  document The target document.
    * @param  node The node explorers will be attached to.
    * @param  mml The corresponding Mathml node as a string.
@@ -185,13 +198,13 @@ export class ExplorerPool {
   constructor(public document: ExplorerMathDocument,
               public node: HTMLElement,
               public mml: string) {
-    this.getPrimaryHighlighter();
+    this.setPrimaryHighlighter();
     for (let key of Object.keys(allExplorers)) {
       this.explorers[key] = allExplorers[key](document, this, node, mml);
     }
-    this.getSecondaryHighlighter();
+    this.setSecondaryHighlighter();
     this.attach();
- }
+  }
 
   /**
    * Attaches the explorers that are currently meant to be active given
@@ -224,34 +237,31 @@ export class ExplorerPool {
     }
   }
 
+  /**
+   * Reattaches explorers after a MathItem is rerendered.
+   */
   public reattach() {
     for (let key of this.attached) {
       let explorer = this.explorers[key];
       if (explorer.active) {
-        this.restart.push(key);
+        this._restart.push(key);
         explorer.Stop();
       }
     }
   }
 
-  public Restart() {
-    this.restart.forEach(x => this.explorers[x].Start());
-    this.restart = [];
-  }
-
-  private colorOptions() {
-    let opts = this.document.options.a11y;
-    let foreground = {color: opts.foregroundColor.toLowerCase(),
-                      alpha: opts.foregroundOpacity / 100};
-    let background = {color: opts.backgroundColor.toLowerCase(),
-                      alpha: opts.backgroundOpacity / 100};
-    return [foreground, background];
+  /**
+   * Restarts explorers after a MathItem is rerendered.
+   */
+  public restart() {
+    this._restart.forEach(x => this.explorers[x].Start());
+    this._restart = [];
   }
 
   /**
-   * @return {Sre.Highlighter} A highlighter for the explorer.
+   * A highlighter for the explorer.
    */
-  protected getPrimaryHighlighter() {
+  protected setPrimaryHighlighter() {
     let [foreground, background] = this.colorOptions();
     this._highlighter = Sre.getHighlighter(
       background, foreground,
@@ -261,7 +271,7 @@ export class ExplorerPool {
   /**
    * Sets the secondary highlighter for marking nodes during autovoicing.
    */
-  protected getSecondaryHighlighter() {
+  protected setSecondaryHighlighter() {
     this.secondaryHighlighter = Sre.getHighlighter(
       {color: 'red'}, {color: 'black'},
       {renderer: this.document.outputJax.name, browser: 'v3'}
@@ -270,13 +280,36 @@ export class ExplorerPool {
       this.secondaryHighlighter;
   }
 
+  /**
+   * Highlights a set of DOM nodes.
+   * @param {HTMLElement[]} nodes The array of HTML nodes to be highlighted.
+   */
   public highlight(nodes: HTMLElement[]) {
     this.highlighter.highlight(nodes);
   }
 
+  /**
+   * Unhighlights the currently highlighted DOM nodes.
+   */
   public unhighlight() {
     this.secondaryHighlighter.unhighlight();
     this.highlighter.unhighlight();
+  }
+
+  /**
+   * Retrieves color assignment for the document options.
+   *
+   * @return {[foreground, background]} Color assignments for fore and
+   *     background colors.
+   */
+  private colorOptions(): [{color: string, alpha: number},
+                           {color: string, alpha: number}] {
+    let opts = this.document.options.a11y;
+    let foreground = {color: opts.foregroundColor.toLowerCase(),
+                      alpha: opts.foregroundOpacity / 100};
+    let background = {color: opts.backgroundColor.toLowerCase(),
+                      alpha: opts.backgroundOpacity / 100};
+    return [foreground, background];
   }
 
 }
