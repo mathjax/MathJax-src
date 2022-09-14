@@ -16,52 +16,96 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLmspace wrapper for the MmlMspace object
+ * @fileoverview  Implements the ChtmlMspace wrapper for the MmlMspace object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTMLWrapper, CHTMLConstructor} from '../Wrapper.js';
-import {CommonMspaceMixin} from '../../common/Wrappers/mspace.js';
+import {CHTML} from '../../chtml.js';
+import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
+import {ChtmlWrapperFactory} from '../WrapperFactory.js';
+import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
+import {CommonMspace, CommonMspaceClass, CommonMspaceMixin} from '../../common/Wrappers/mspace.js';
+import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMspace} from '../../../core/MmlTree/MmlNodes/mspace.js';
 
 /*****************************************************************/
 /**
- * The CHTMLmspace wrapper for the MmlMspace object
+ * The ChtmlMspace interface for the CHTML Mspace wrapper
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-// @ts-ignore
-export class CHTMLmspace<N, T, D> extends
-CommonMspaceMixin<CHTMLConstructor<any, any, any>>(CHTMLWrapper) {
+export interface ChtmlMspaceNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMspace<
+  N, T, D,
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
+> {}
 
-  /**
-   * The mspace wrapper
-   */
-  public static kind = MmlMspace.prototype.kind;
-
-  /**
-   * @override
-   */
-  public toCHTML(parent: N) {
-    let chtml = this.standardCHTMLnode(parent);
-    let {w, h, d} = this.getBBox();
-    if (w < 0) {
-      this.adaptor.setStyle(chtml, 'marginRight', this.em(w));
-      w = 0;
-    }
-    if (w) {
-      this.adaptor.setStyle(chtml, 'width', this.em(w));
-    }
-    h = Math.max(0, h + d);
-    if (h) {
-      this.adaptor.setStyle(chtml, 'height', this.em(Math.max(0, h)));
-    }
-    if (d) {
-      this.adaptor.setStyle(chtml, 'verticalAlign', this.em(-d));
-    }
-  }
-
+/**
+ * The ChtmlMspaceClass interface for the CHTML Mspace wrapper
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export interface ChtmlMspaceClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonMspaceClass<
+  N, T, D,
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
+> {
+  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMspaceNTD<N, T, D>;
 }
+
+
+/*****************************************************************/
+
+/**
+ * The ChtmlMspace wrapper class for the MmlMspace class
+ */
+export const ChtmlMspace = (function <N, T, D>(): ChtmlMspaceClass<N, T, D> {
+
+  const Base = CommonMspaceMixin<
+      N, T, D,
+      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+      ChtmlMspaceClass<N, T, D>
+    >(ChtmlWrapper);
+
+  // Avoid message about base constructors not having the same type
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
+  // @ts-ignore
+  return class ChtmlMspace extends Base implements ChtmlMspaceNTD<N, T, D> {
+
+    /**
+     * @override
+     */
+    public static kind = MmlMspace.prototype.kind;
+
+    /**
+     * @override
+     */
+    public toCHTML(parent: N) {
+      let chtml = this.standardChtmlNode(parent);
+      let {w, h, d} = this.getBBox();
+      if (w < 0) {
+        this.adaptor.setStyle(chtml, 'marginRight', this.em(w));
+        w = 0;
+      }
+      if (w) {
+        this.adaptor.setStyle(chtml, 'width', this.em(w));
+      }
+      h = Math.max(0, h + d);
+      if (h) {
+        this.adaptor.setStyle(chtml, 'height', this.em(Math.max(0, h)));
+      }
+      if (d) {
+        this.adaptor.setStyle(chtml, 'verticalAlign', this.em(-d));
+      }
+    }
+
+  };
+
+})<any, any, any>();

@@ -16,18 +16,19 @@
  */
 
 /**
- * @fileoverview  Implements the CHTMLWrapper class
+ * @fileoverview  Implements the ChtmlWrapper class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import {OptionList} from '../../util/Options.js';
 import * as LENGTHS from '../../util/lengths.js';
-import {CommonWrapper, AnyWrapperClass, Constructor, StringMap} from '../common/Wrapper.js';
+import {CommonWrapper, CommonWrapperClass, Constructor, StringMap} from '../common/Wrapper.js';
 import {CHTML} from '../chtml.js';
-import {CHTMLWrapperFactory} from './WrapperFactory.js';
+import {ChtmlWrapperFactory} from './WrapperFactory.js';
 import {BBox} from '../../util/BBox.js';
-import {CHTMLFontData, CHTMLCharOptions, CHTMLDelimiterData} from './FontData.js';
+import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
+        ChtmlFontData, ChtmlFontDataClass} from './FontData.js';
 
 export {Constructor, StringMap} from '../common/Wrapper.js';
 
@@ -59,20 +60,32 @@ export const SPACE: StringMap = {
   /* tslint:enable */
 };
 
+/*****************************************************************/
 
 /**
- * Shorthand for making a CHTMLWrapper constructor
+ * Shorthand for making a ChtmlWrapper constructor
  */
-export type CHTMLConstructor<N, T, D> = Constructor<CHTMLWrapper<N, T, D>>;
-
+export type ChtmlConstructor<N, T, D> = Constructor<ChtmlWrapper<N, T, D>>;
 
 /*****************************************************************/
 /**
- *  The type of the CHTMLWrapper class (used when creating the wrapper factory for this class)
+ *  The type of the ChtmlWrapper class (used when creating the wrapper factory for this class)
  */
-export interface CHTMLWrapperClass extends AnyWrapperClass {
-
-  kind: string;
+export interface ChtmlWrapperClass<N, T, D> extends CommonWrapperClass<
+  //
+  // The HTMLElement, TextNode, and Document classes (for the DOM implementation in use)
+  //
+  N, T, D,
+  //
+  // The Wrapper type and its Factory and Class (these need to know N, T, and D)
+  //
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  //
+  // These are font-related objects that depend on the output jax; e,g. the character options
+  //   for CHTML and SVG output differ (CHTML contains font information, while SVG has path data)
+  //
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
+> {
 
   /**
    * If true, this causes a style for the node type to be generated automatically
@@ -84,24 +97,21 @@ export interface CHTMLWrapperClass extends AnyWrapperClass {
 
 /*****************************************************************/
 /**
- *  The base CHTMLWrapper class
+ *  The base ChtmlWrapper class
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTMLWrapper<N, T, D> extends
+export class ChtmlWrapper<N, T, D> extends
 CommonWrapper<
-  CHTML<N, T, D>,
-  CHTMLWrapper<N, T, D>,
-  CHTMLWrapperClass,
-  CHTMLCharOptions,
-  CHTMLDelimiterData,
-  CHTMLFontData
+  N, T, D,
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
 > {
 
   /**
-   * The wrapper type
+   * @override
    */
   public static kind: string = 'unknown';
 
@@ -111,25 +121,6 @@ CommonWrapper<
    */
   public static autoStyle = true;
 
-  /**
-   * @override
-   */
-  protected factory: CHTMLWrapperFactory<N, T, D>;
-
-  /**
-   * @override
-   */
-  public parent: CHTMLWrapper<N, T, D>;
-  /**
-   * @override
-   */
-  public childNodes: CHTMLWrapper<N, T, D>[];
-
-  /**
-   * The HTML element generated for this wrapped node
-   */
-  public chtml: N = null;
-
   /*******************************************************************/
 
   /**
@@ -138,7 +129,7 @@ CommonWrapper<
    * @param {N} parent  The HTML node where the output is added
    */
   public toCHTML(parent: N) {
-    const chtml = this.standardCHTMLnode(parent);
+    const chtml = this.standardChtmlNode(parent);
     for (const child of this.childNodes) {
       child.toCHTML(chtml);
     }
@@ -152,9 +143,9 @@ CommonWrapper<
    * @param {N} parent  The HTML element in which the node is to be created
    * @returns {N}  The root of the HTML tree for the wrapped node's output
    */
-  protected standardCHTMLnode(parent: N): N {
+  protected standardChtmlNode(parent: N): N {
     this.markUsed();
-    const chtml = this.createCHTMLnode(parent);
+    const chtml = this.createChtmlNode(parent);
     this.handleStyles();
     this.handleVariant();
     this.handleScale();
@@ -176,13 +167,13 @@ CommonWrapper<
    * @param {N} parent  The HTML element in which the node is to be created
    * @returns {N}  The root of the HTML tree for the wrapped node's output
    */
-  protected createCHTMLnode(parent: N): N {
+  protected createChtmlNode(parent: N): N {
     const href = this.node.attributes.get('href');
     if (href) {
       parent = this.adaptor.append(parent, this.html('a', {href: href})) as N;
     }
-    this.chtml = this.adaptor.append(parent, this.html('mjx-' + this.node.kind)) as N;
-    return this.chtml;
+    this.dom = this.adaptor.append(parent, this.html('mjx-' + this.node.kind)) as N;
+    return this.dom;
   }
 
   /**
@@ -192,10 +183,10 @@ CommonWrapper<
     if (!this.styles) return;
     const styles = this.styles.cssText;
     if (styles) {
-      this.adaptor.setAttribute(this.chtml, 'style', styles);
+      this.adaptor.setAttribute(this.dom, 'style', styles);
       const family = this.styles.get('font-family');
       if (family) {
-        this.adaptor.setStyle(this.chtml, 'font-family', 'MJXZERO, ' + family);
+        this.adaptor.setStyle(this.dom, 'font-family', 'MJXZERO, ' + family);
       }
     }
   }
@@ -205,7 +196,7 @@ CommonWrapper<
    */
   protected handleVariant() {
     if (this.node.isToken && this.variant !== '-explicitFont') {
-      this.adaptor.setAttribute(this.chtml, 'class',
+      this.adaptor.setAttribute(this.dom, 'class',
                                 (this.font.getVariant(this.variant) || this.font.getVariant('normal')).classes);
     }
   }
@@ -214,7 +205,7 @@ CommonWrapper<
    * Set the (relative) scaling factor for the node
    */
   protected handleScale() {
-    this.setScale(this.chtml, this.bbox.rscale);
+    this.setScale(this.dom, this.bbox.rscale);
   }
 
   /**
@@ -245,9 +236,9 @@ CommonWrapper<
       if (dimen) {
         const space = this.em(dimen);
         if (SPACE[space]) {
-          this.adaptor.setAttribute(this.chtml, name, SPACE[space]);
+          this.adaptor.setAttribute(this.dom, name, SPACE[space]);
         } else {
-          this.adaptor.setStyle(this.chtml, margin, space);
+          this.adaptor.setStyle(this.dom, margin, space);
         }
       }
     }
@@ -265,10 +256,10 @@ CommonWrapper<
     const mathbackground = attributes.getExplicit('mathbackground') as string;
     const background = attributes.getExplicit('background') as string;
     if (mathcolor || color) {
-      this.adaptor.setStyle(this.chtml, 'color', mathcolor || color);
+      this.adaptor.setStyle(this.dom, 'color', mathcolor || color);
     }
     if (mathbackground || background) {
-      this.adaptor.setStyle(this.chtml, 'backgroundColor', mathbackground || background);
+      this.adaptor.setStyle(this.dom, 'backgroundColor', mathbackground || background);
     }
   }
 
@@ -282,17 +273,17 @@ CommonWrapper<
   protected handleAttributes() {
     const attributes = this.node.attributes;
     const defaults = attributes.getAllDefaults();
-    const skip = CHTMLWrapper.skipAttributes;
+    const skip = ChtmlWrapper.skipAttributes;
     for (const name of attributes.getExplicitNames()) {
       if (skip[name] === false || (!(name in defaults) && !skip[name] &&
-                                   !this.adaptor.hasAttribute(this.chtml, name))) {
-        this.adaptor.setAttribute(this.chtml, name, attributes.getExplicit(name) as string);
+                                   !this.adaptor.hasAttribute(this.dom, name))) {
+        this.adaptor.setAttribute(this.dom, name, attributes.getExplicit(name) as string);
       }
     }
     if (attributes.get('class')) {
       const names = (attributes.get('class') as string).trim().split(/ +/);
       for (const name of names) {
-        this.adaptor.addClass(this.chtml, name);
+        this.adaptor.addClass(this.dom, name);
       }
     }
   }
@@ -303,9 +294,9 @@ CommonWrapper<
   protected handlePWidth() {
     if (this.bbox.pwidth) {
       if (this.bbox.pwidth === BBox.fullWidth) {
-        this.adaptor.setAttribute(this.chtml, 'width', 'full');
+        this.adaptor.setAttribute(this.dom, 'width', 'full');
       } else {
-        this.adaptor.setStyle(this.chtml, 'width', this.bbox.pwidth);
+        this.adaptor.setStyle(this.dom, 'width', this.bbox.pwidth);
       }
     }
   }
@@ -352,7 +343,7 @@ CommonWrapper<
         'background-color': 'green'
       }})
     ] as N[]);
-    const node = this.chtml || this.parent.chtml;
+    const node = this.dom || this.parent.dom;
     const size = this.adaptor.getAttribute(node, 'size');
     if (size) {
       this.adaptor.setAttribute(box, 'size', size);

@@ -14,10 +14,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-import {CHTMLCharMap, AddCSS} from '../../FontData.js';
+import {ChtmlCharMap, AddCSS} from '../../FontData.js';
 import {normal as font} from '../../../common/fonts/tex/normal.js';
 
-export const normal: CHTMLCharMap = AddCSS(font, {
+export const normal: ChtmlCharMap = AddCSS(font, {
     0xA3: {f: 'MI'},
     0xA5: {f: 'A'},
     0xAE: {f: 'A'},

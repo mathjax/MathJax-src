@@ -24,10 +24,12 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor, Constructor, AnyWrapperClass} from '../Wrapper.js';
-import {CommonMo} from './mo.js';
+import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor, Constructor} from '../Wrapper.js';
+import {CommonWrapperFactory} from '../WrapperFactory.js';
+import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
+import {CommonOutputJax} from '../../common.js';
 import {CommonMunderover} from './munderover.js';
-import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
+import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../../../util/BBox.js';
@@ -37,19 +39,41 @@ import {DIRECTION} from '../FontData.js';
 /**
  * The CommonScriptbase interface
  *
- * @template W  The child-node Wrapper class
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
+export interface CommonScriptbase<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>
+> extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
 
   /**
    * The core mi or mo of the base (or the base itself if there isn't one)
    */
-  readonly baseCore: W;
+  readonly baseCore: WW;
 
   /**
    * The base element's wrapper
    */
-  readonly baseChild: W;
+  readonly baseChild: WW;
 
   /**
    * The relative scaling of the base compared to the munderover/msubsup
@@ -72,15 +96,21 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
   readonly baseIsChar: boolean;
 
   /**
-   * True if the base has an accent under or over
+   * True if the base has an accent  over
    */
   readonly baseHasAccentOver: boolean;
+  /**
+   * True if the base has an accent under
+   */
   readonly baseHasAccentUnder: boolean;
 
   /**
-   * True if this is an overline or underline
+   * True if this is an overline
    */
   readonly isLineAbove: boolean;
+  /**
+   * True if this is an underline
+   */
   readonly isLineBelow: boolean;
 
   /**
@@ -91,7 +121,7 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
   /**
    * The script element's wrapper (overridden in subclasses)
    */
-  readonly scriptChild: W;
+  readonly scriptChild: WW;
 
   /***************************************************************************/
   /*
@@ -99,23 +129,28 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
    */
 
   /**
-   * @return {W}    The wrapper for the base core mi or mo (or whatever)
+   * @return {WW}    The wrapper for the base core mi or mo (or whatever)
    */
-  getBaseCore(): W;
+  getBaseCore(): WW;
 
   /**
-   * @return {W}    The base fence item or null
+   * @param {WW} core   The element to check for accents
    */
-  getSemanticBase(): W;
+  setBaseAccentsFor(core: WW): void;
 
   /**
-   * Recursively retrieves an element for a given fencepointer.
+   * @return {WW}    The base fence item or null
+   */
+  getSemanticBase(): WW;
+
+  /**
+   * Recursively retrieves an element for a given fencepointer
    *
-   * @param {W} fence The potential fence.
-   * @param {string} id The fencepointer id.
-   * @return {W} The original fence the scripts belong to.
+   * @param {WW} fence    The potential fence
+   * @param {string} id   The fencepointer id
+   * @return {WW}         The original fence the scripts belong to
    */
-  getBaseFence(fence: W, id: string): W;
+  getBaseFence(fence: WW, id: string): WW;
 
   /**
    * @return {number}   The scaling factor for the base core relative to the munderover/msubsup
@@ -144,9 +179,10 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
   checkLineAccents(): void;
 
   /**
-   * @param {W} script   The script node to check for being a line
+   * @param {WW} script   The script node to check for being a line
+   * @return {boolean}    True if the script is U+2015
    */
-  isLineAccent(script: W): boolean;
+  isLineAccent(script: WW): boolean;
 
   /***************************************************************************/
   /*
@@ -234,34 +270,109 @@ export interface CommonScriptbase<W extends AnyWrapper> extends AnyWrapper {
 
 }
 
-export interface CommonScriptbaseClass extends AnyWrapperClass {
+/**
+ * The CommonScriptbaseClass interface
+ *
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
+ */
+export interface CommonScriptbaseClass<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>
+> extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
+
   /**
    * Set to true for munderover/munder/mover/msup (Appendix G 13)
    */
   useIC: boolean;
+
 }
 
 /**
- * Shorthand for the CommonScriptbase constructor
+ *  Shorthand for the CommonScriptbase constructor
  *
- * @template W  The child-node Wrapper class
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
+ *
+ * @template B   The mixin interface being created
  */
-export type ScriptbaseConstructor<W extends AnyWrapper> = Constructor<CommonScriptbase<W>>;
+export type CommonScriptbaseConstructor<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>
+> = Constructor<CommonScriptbase<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>;
 
 /*****************************************************************/
 /**
  * A base class for msup/msub/msubsup and munder/mover/munderover
  * wrapper mixin implementations
  *
- * @template W  The child-node Wrapper class
- * @template T  The Wrapper class constructor type
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
+ *
+ * @template B   The mixin interface to create
  */
 export function CommonScriptbaseMixin<
-  W extends AnyWrapper,
-  T extends WrapperConstructor
->(Base: T): ScriptbaseConstructor<W> & T {
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+>(Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
 
-  return class extends Base {
+  return class CommonScriptbaseMixin extends Base
+  implements CommonScriptbase<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
 
     /**
      * Set to false for msubsup/msub (Appendix G 13)
@@ -269,92 +380,65 @@ export function CommonScriptbaseMixin<
     public static useIC: boolean = true;
 
     /**
-     * The core mi or mo of the base (or the base itself if there isn't one)
+     * @override
      */
-    public baseCore: W;
+    public baseCore: WW;
 
     /**
-     * The base element's wrapper
+     * @override
      */
     public baseScale: number = 1;
 
     /**
-     * The relative scaling of the base compared to the munderover/msubsup
+     * @override
      */
     public baseIc: number = 0;
 
     /**
-     * True if base italic correction should be removed (msub and msubsup or mathaccents)
+     * @override
      */
     public baseRemoveIc: boolean = false;
 
     /**
-     * True if the base is a single character
+     * @override
      */
     public baseIsChar: boolean = false;
 
     /**
-     * True if the base has an accent under or over
+     * @override
      */
     public baseHasAccentOver: boolean = null;
+    /**
+     * @override
+     */
     public baseHasAccentUnder: boolean = null;
 
     /**
-     * True if this is an overline or underline
+     * @override
      */
     public isLineAbove: boolean = false;
+    /**
+     * @override
+     */
     public isLineBelow: boolean = false;
 
     /**
-     * True if this is an msup with script that is a math accent
+     * @override
      */
     public isMathAccent: boolean = false;
 
     /**
-     * @return {W}  The base element's wrapper
+     * @override
      */
-    public get baseChild(): W {
+    public get baseChild(): WW {
       return this.childNodes[(this.node as MmlMsubsup).base];
-    }
-
-    /**
-     * @return {W}  The script element's wrapper (overridden in subclasses)
-     */
-    public get scriptChild(): W {
-      return this.childNodes[1];
     }
 
     /**
      * @override
      */
-    constructor(...args: any[]) {
-      super(...args);
-      //
-      //  Find the base core
-      //
-      const core = this.baseCore = this.getBaseCore();
-      if (!core) return;
-      //
-      // Get information about the base element
-      //
-      this.setBaseAccentsFor(core);
-      this.baseScale = this.getBaseScale();
-      this.baseIc = this.getBaseIc();
-      this.baseIsChar = this.isCharBase();
-      //
-      //  Determine if we are setting a mathaccent
-      //
-      this.isMathAccent = this.baseIsChar &&
-        (this.scriptChild && !!this.scriptChild.coreMO().node.getProperty('mathaccent')) as boolean;
-      //
-      // Check for overline/underline accents
-      //
-      this.checkLineAccents();
-      //
-      //  Check if the base is a mi or mo that needs italic correction removed
-      //
-      this.baseRemoveIc = !this.isLineAbove && !this.isLineBelow &&
-        (!(this.constructor as CommonScriptbaseClass).useIC || this.isMathAccent);
+    public get scriptChild(): WW {
+      return this.childNodes[1];
     }
 
     /***************************************************************************/
@@ -363,9 +447,9 @@ export function CommonScriptbaseMixin<
      */
 
     /**
-     * @return {W}    The wrapper for the base core mi or mo (or whatever)
+     * @override
      */
-    public getBaseCore(): W {
+    public getBaseCore(): WW {
       let core = this.getSemanticBase() || this.childNodes[0];
       while (core &&
              ((core.childNodes.length === 1 &&
@@ -373,7 +457,8 @@ export function CommonScriptbaseMixin<
                 (core.node.isKind('TeXAtom') && core.node.texClass !== TEXCLASS.VCENTER) ||
                 core.node.isKind('mstyle') || core.node.isKind('mpadded') ||
                 core.node.isKind('mphantom') || core.node.isKind('semantics'))) ||
-              (core.node.isKind('munderover') && core.isMathAccent)))  {
+              (core.node.isKind('munderover') &&
+               (core as any as CommonMunderover<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).isMathAccent))) {
         this.setBaseAccentsFor(core);
         core = core.childNodes[0];
       }
@@ -384,9 +469,9 @@ export function CommonScriptbaseMixin<
     }
 
     /**
-     * @param {W} core   The element to check for accents
+     * @override
      */
-    public setBaseAccentsFor(core: W) {
+    public setBaseAccentsFor(core: WW) {
       if (core.node.isKind('munderover')) {
         if (this.baseHasAccentOver === null) {
           this.baseHasAccentOver = !!core.node.attributes.get('accent');
@@ -398,21 +483,17 @@ export function CommonScriptbaseMixin<
     }
 
     /**
-     * @return {W}    The base fence item or null
+     * @override
      */
-    public getSemanticBase(): W {
+    public getSemanticBase(): WW {
       let fence = this.node.attributes.getExplicit('data-semantic-fencepointer') as string;
       return this.getBaseFence(this.baseChild, fence);
     }
 
     /**
-     * Recursively retrieves an element for a given fencepointer.
-     *
-     * @param {W} fence The potential fence.
-     * @param {string} id The fencepointer id.
-     * @return {W} The original fence the scripts belong to.
+     * @override
      */
-    public getBaseFence(fence: W, id: string): W {
+    public getBaseFence(fence: WW, id: string): WW {
       if (!fence || !fence.node.attributes || !id) {
         return null;
       }
@@ -429,7 +510,7 @@ export function CommonScriptbaseMixin<
     }
 
     /**
-     * @return {number}   The scaling factor for the base core relative to the munderover/msubsup
+     * @override
      */
     public getBaseScale(): number {
       let child = this.baseCore as any;
@@ -443,14 +524,14 @@ export function CommonScriptbaseMixin<
     }
 
     /**
-     * The base's italic correction (properly scaled)
+     * @override
      */
     public getBaseIc(): number {
       return this.baseCore.getOuterBBox().ic * this.baseScale;
     }
 
     /**
-     * An adjusted italic correction (for slightly better results)
+     * @override
      */
     public getAdjustedIc(): number {
       const bbox = this.baseCore.getOuterBBox();
@@ -458,7 +539,7 @@ export function CommonScriptbaseMixin<
     }
 
     /**
-     * @return {boolean}  True if the base is an mi, mn, or mo consisting of a single character
+     * @override
      */
     public isCharBase(): boolean {
       let base = this.baseCore;
@@ -468,7 +549,7 @@ export function CommonScriptbaseMixin<
     }
 
     /**
-     * Determine if the under- and overscripts are under- or overlines.
+     * @override
      */
     public checkLineAccents() {
       if (!this.node.isKind('munderover')) return;
@@ -477,17 +558,16 @@ export function CommonScriptbaseMixin<
       } else if (this.node.isKind('munder')) {
         this.isLineBelow = this.isLineAccent(this.scriptChild);
       } else {
-        const mml = this as unknown as CommonMunderover<W>;
+        const mml = this as any as CommonMunderover<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
         this.isLineAbove = this.isLineAccent(mml.overChild);
         this.isLineBelow = this.isLineAccent(mml.underChild);
       }
     }
 
     /**
-     * @param {W} script   The script node to check for being a line
-     * @return {boolean}   True if the script is U+2015
+     * @override
      */
-    public isLineAccent(script: W): boolean {
+    public isLineAccent(script: WW): boolean {
       const node = script.coreMO().node;
       return (node.isToken && (node as MmlMo).getText() === '\u2015');
     }
@@ -498,7 +578,7 @@ export function CommonScriptbaseMixin<
      */
 
     /**
-     * @return {number}    The base child's width without the base italic correction (if not needed)
+     * @override
      */
     public getBaseWidth(): number {
       const bbox = this.baseChild.getOuterBBox();
@@ -506,33 +586,14 @@ export function CommonScriptbaseMixin<
     }
 
     /**
-     * This gives the common bbox for msub and msup.  It is overridden
-     * for all the others (msubsup, munder, mover, munderover).
-     *
      * @override
-     */
-    public computeBBox(bbox: BBox, recompute: boolean = false) {
-      const w = this.getBaseWidth();
-      const [x, y] = this.getOffset();
-      bbox.append(this.baseChild.getOuterBBox());
-      bbox.combine(this.scriptChild.getOuterBBox(), w + x, y);
-      bbox.w += this.font.params.scriptspace;
-      bbox.clean();
-      this.setChildPWidths(recompute);
-    }
-
-    /**
-     * Get the shift for the script (implemented in subclasses)
-     *
-     * @return {[number, number]}   The horizontal and vertical offsets for the script
      */
     public getOffset(): [number, number] {
       return [0, 0];
     }
 
     /**
-     * @param {number} n    The value to use if the base isn't a (non-large-op, unstretched) char
-     * @return {number}     Either n or 0
+     * @override
      */
     public baseCharZero(n: number): number {
       const largeop = !!this.baseCore.node.attributes.get('largeop');
@@ -541,9 +602,7 @@ export function CommonScriptbaseMixin<
     }
 
     /**
-     * Get the shift for a subscript (TeXBook Appendix G 18ab)
-     *
-     * @return {number}     The vertical offset for the script
+     * @override
      */
     public getV(): number {
       const bbox = this.baseCore.getOuterBBox();
@@ -558,9 +617,7 @@ export function CommonScriptbaseMixin<
     }
 
     /**
-     * Get the shift for a superscript (TeXBook Appendix G 18acd)
-     *
-     * @return {number}     The vertical offset for the script
+     * @override
      */
     public getU(): number {
       const bbox = this.baseCore.getOuterBBox();
@@ -583,7 +640,7 @@ export function CommonScriptbaseMixin<
      */
 
     /**
-     * @return {boolean}  True if the base has movablelimits (needed by munderover)
+     * @override
      */
     public hasMovableLimits(): boolean {
       const display = this.node.attributes.get('displaystyle');
@@ -592,11 +649,7 @@ export function CommonScriptbaseMixin<
     }
 
     /**
-     * Get the separation and offset for overscripts (TeXBoox Appendix G 13, 13a)
-     *
-     * @param {BBox} basebox  The bounding box of the base
-     * @param {BBox} overbox  The bounding box of the overscript
-     * @return {[number, number]}     The separation between their boxes, and the offset of the overscript
+     * @override
      */
     public getOverKU(basebox: BBox, overbox: BBox): [number, number] {
       const accent = this.node.attributes.get('accent') as boolean;
@@ -610,11 +663,7 @@ export function CommonScriptbaseMixin<
     }
 
     /**
-     * Get the separation and offset for underscripts (TeXBoox Appendix G 13, 13a)
-     *
-     * @param {BBox} basebox   The bounding box of the base
-     * @param {BBox} underbox  The bounding box of the underscript
-     * @return {[number, number]}      The separation between their boxes, and the offset of the underscript
+     * @override
      */
     public getUnderKV(basebox: BBox, underbox: BBox): [number, number] {
       const accent = this.node.attributes.get('accentunder') as boolean;
@@ -628,9 +677,7 @@ export function CommonScriptbaseMixin<
     }
 
     /**
-     * @param {BBox[]} boxes     The bounding boxes whose offsets are to be computed
-     * @param {number[]=} delta  The initial x offsets of the boxes
-     * @return {number[]}        The actual offsets needed to center the boxes in the stack
+     * @override
      */
     public getDeltaW(boxes: BBox[], delta: number[] = [0, 0, 0]): number[] {
       const align = this.node.attributes.get('align');
@@ -656,8 +703,7 @@ export function CommonScriptbaseMixin<
     }
 
     /**
-     * @param {boolean=} noskew   Whether to ignore the skew amount
-     * @return {number}           The offset for under and over
+     * @override
      */
     public getDelta(noskew: boolean = false): number {
       const accent = this.node.attributes.get('accent');
@@ -666,11 +712,10 @@ export function CommonScriptbaseMixin<
     }
 
     /**
-     * Handle horizontal stretching of children to match greatest width
-     *  of all children
+     * @override
      */
     public stretchChildren() {
-      let stretchy: AnyWrapper[] = [];
+      let stretchy: WW[] = [];
       //
       //  Locate and count the stretchy children
       //
@@ -699,11 +744,63 @@ export function CommonScriptbaseMixin<
         //  Stretch the stretchable children
         //
         for (const child of stretchy) {
-          (child.coreMO() as CommonMo).getStretchedVariant([W / child.bbox.rscale]);
+          child.coreMO().getStretchedVariant([W / child.bbox.rscale]);
         }
       }
     }
 
-  };
+    /***************************************************************************/
+
+    /**
+     * @override
+     */
+    constructor(factory: WF, node: MmlNode, parent: WW = null) {
+      super(factory, node, parent);
+      //
+      //  Find the base core
+      //
+      const core = this.baseCore = this.getBaseCore();
+      if (!core) return;
+      //
+      // Get information about the base element
+      //
+      this.setBaseAccentsFor(core);
+      this.baseScale = this.getBaseScale();
+      this.baseIc = this.getBaseIc();
+      this.baseIsChar = this.isCharBase();
+      //
+      //  Determine if we are setting a mathaccent
+      //
+      this.isMathAccent = this.baseIsChar &&
+        (this.scriptChild && !!this.scriptChild.coreMO().node.getProperty('mathaccent')) as boolean;
+      //
+      // Check for overline/underline accents
+      //
+      this.checkLineAccents();
+      //
+      //  Check if the base is a mi or mo that needs italic correction removed
+      //
+      this.baseRemoveIc = !this.isLineAbove && !this.isLineBelow &&
+        (!(this.constructor as CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).useIC ||
+         this.isMathAccent);
+    }
+
+    /**
+     * This gives the common bbox for msub and msup.  It is overridden
+     * for all the others (msubsup, munder, mover, munderover).
+     *
+     * @override
+     */
+    public computeBBox(bbox: BBox, recompute: boolean = false) {
+      const w = this.getBaseWidth();
+      const [x, y] = this.getOffset();
+      bbox.append(this.baseChild.getOuterBBox());
+      bbox.combine(this.scriptChild.getOuterBBox(), w + x, y);
+      bbox.w += this.font.params.scriptspace;
+      bbox.clean();
+      this.setChildPWidths(recompute);
+    }
+
+  } as any as B;
 
 }

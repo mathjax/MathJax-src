@@ -21,37 +21,126 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, WrapperConstructor, Constructor} from '../Wrapper.js';
+import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wrapper.js';
+import {CommonWrapperFactory} from '../WrapperFactory.js';
+import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
+import {CommonOutputJax} from '../../common.js';
 import {BBox} from '../../../util/BBox.js';
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /**
  * The CommonTextNode interface
+ *
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export interface CommonTextNode extends AnyWrapper {
+export interface CommonTextNode<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>
+> extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
+
   /**
    * @param {string} text     The text to remap
    * @param {string} variant  The variant for the character
    * @return {number[]}       The unicode points for the (remapped) text
    */
   remappedText(text: string, variant: string): number[];
+
 }
 
 /**
- * Shorthand for the CommonTextNode constructor
+ * The CommonTextNodeClass interface
+ *
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export type TextNodeConstructor = Constructor<CommonTextNode>;
+export interface CommonTextNodeClass<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>
+> extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
 /**
- *  The CommonTextNode wrapper mixin for the TextNode object
+ * The CommonTextNode wrapper mixin for the TextNode object
  *
- * @template T  The Wrapper class constructor type
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
+ *
+ * @template B   The mixin interface to create
  */
-export function CommonTextNodeMixin<T extends WrapperConstructor>(Base: T): TextNodeConstructor & T {
+export function CommonTextNodeMixin<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+>(Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
 
-  return class extends Base {
+  return class CommonTextNodeMixin extends Base
+  implements CommonTextNode<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
+
+    /**
+     * @override
+     */
+    public remappedText(text: string, variant: string): number[] {
+      const c = this.parent.stretch.c;
+      return (c ? [c] : this.parent.remapChars(this.unicodeChars(text, variant)));
+    }
+
+    /******************************************************/
 
     /**
      * @override
@@ -102,16 +191,6 @@ export function CommonTextNodeMixin<T extends WrapperConstructor>(Base: T): Text
       }
     }
 
-    /**
-     * @param {string} text     The text to remap
-     * @param {string} variant  The variant for the character
-     * @return {number[]}       The unicode points for the (remapped) text
-     */
-    public remappedText(text: string, variant: string): number[] {
-      const c = this.parent.stretch.c;
-      return (c ? [c] : this.parent.remapChars(this.unicodeChars(text, variant)));
-    }
-
     /******************************************************/
     /*
      * TextNodes don't need these, since these properties
@@ -138,6 +217,6 @@ export function CommonTextNodeMixin<T extends WrapperConstructor>(Base: T): Text
      */
     public getSpace() {}
 
-  };
+  } as any as B;
 
 }

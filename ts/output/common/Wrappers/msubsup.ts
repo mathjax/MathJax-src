@@ -22,8 +22,11 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AnyWrapper, Constructor} from '../Wrapper.js';
-import {CommonScriptbase, ScriptbaseConstructor} from './scriptbase.js';
+import {CommonWrapper, CommonWrapperClass} from '../Wrapper.js';
+import {CommonWrapperFactory} from '../WrapperFactory.js';
+import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
+import {CommonOutputJax} from '../../common.js';
+import {CommonScriptbase, CommonScriptbaseClass, CommonScriptbaseConstructor} from './scriptbase.js';
 import {BBox} from '../../../util/BBox.js';
 import {MmlMsubsup, MmlMsub, MmlMsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 
@@ -31,31 +34,96 @@ import {MmlMsubsup, MmlMsub, MmlMsup} from '../../../core/MmlTree/MmlNodes/msubs
 /**
  * The CommonMsub interface
  *
- * @template W  The child-node Wrapper class
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export interface CommonMsub<W extends AnyWrapper> extends CommonScriptbase<W> {
-}
+export interface CommonMsub<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>
+> extends CommonScriptbase<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /**
- * Shorthand for the CommonMsub constructor
+ * The CommonMsubClass interface
  *
- * @template W  The child-node Wrapper class
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export type MsubConstructor<W extends AnyWrapper> = Constructor<CommonMsub<W>>;
+export interface CommonMsubClass<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>
+> extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
 /**
  * The CommonMsub wrapper mixin for the MmlMsub object
  *
- * @template W  The child-node Wrapper class
- * @template T  The Wrapper class constructor type
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
+ *
+ * @template B   The mixin interface to create
  */
 export function CommonMsubMixin<
-  W extends AnyWrapper,
-  T extends ScriptbaseConstructor<W>
->(Base: T): MsubConstructor<W> & T {
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+  B extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+>(Base: CommonScriptbaseConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
 
-  return class extends Base {
+  return class CommonMsubMixin extends Base
+  implements CommonMsub<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
 
     /**
      * Do not include italic correction
@@ -78,7 +146,7 @@ export function CommonMsubMixin<
       return [0, -this.getV()];
     }
 
-  };
+  } as any as B;
 
 }
 
@@ -86,31 +154,96 @@ export function CommonMsubMixin<
 /**
  * The CommonMsup interface
  *
- * @template W  The child-node Wrapper class
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export interface CommonMsup<W extends AnyWrapper> extends CommonScriptbase<W> {
-}
+export interface CommonMsup<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>
+> extends CommonScriptbase<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /**
- * Shorthand for the CommonMsup constructor
+ * The CommonMsupClass interface
  *
- * @template W  The child-node Wrapper class
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export type MsupConstructor<W extends AnyWrapper> = Constructor<CommonMsup<W>>;
+export interface CommonMsupClass<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>
+> extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
 /**
  * The CommonMsup wrapper mixin for the MmlMsup object
  *
- * @template W  The child-node Wrapper class
- * @template T  The Wrapper class constructor type
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
+ *
+ * @template B   The mixin interface to create
  */
 export function CommonMsupMixin<
-  W extends AnyWrapper,
-  T extends ScriptbaseConstructor<W>
->(Base: T): MsupConstructor<W> & T {
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+  B extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+>(Base: CommonScriptbaseConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
 
-  return class extends Base {
+  return class CommonMsupMixin extends Base
+  implements CommonMsup<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
 
     /**
      * @override
@@ -129,7 +262,7 @@ export function CommonMsupMixin<
       return [x, this.getU()];
     }
 
-  };
+  } as any as B;
 
 }
 
@@ -137,9 +270,31 @@ export function CommonMsupMixin<
 /**
  * The CommonMsubsup interface
  *
- * @template W  The child-node Wrapper class
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export interface CommonMsubsup<W extends AnyWrapper> extends CommonScriptbase<W> {
+export interface CommonMsubsup<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>
+> extends CommonScriptbase<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
 
   /**
    *  Cached values for the script offsets and separation (so if they are
@@ -150,12 +305,12 @@ export interface CommonMsubsup<W extends AnyWrapper> extends CommonScriptbase<W>
   /**
    * The wrapper for the subscript
    */
-  readonly subChild: W;
+  readonly subChild: WW;
 
   /**
    * The wrapper for the superscript
    */
-  readonly supChild: W;
+  readonly supChild: WW;
 
   /**
    * Get the shift for the scripts and their separation (TeXBook Appendix G 18adef)
@@ -168,25 +323,69 @@ export interface CommonMsubsup<W extends AnyWrapper> extends CommonScriptbase<W>
 }
 
 /**
- * Shorthand for the CommonMsubsup constructor
+ * The CommonMsubsupClass interface
  *
- * @template W  The child-node Wrapper class
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
-export type MsubsupConstructor<W extends AnyWrapper> = Constructor<CommonMsubsup<W>>;
+export interface CommonMsubsupClass<
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>
+> extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
 /**
  * The CommomMsubsup wrapper for the MmlMsubsup object
  *
- * @template W  The child-node Wrapper class
- * @template T  The Wrapper class constructor type
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
+ *
+ * @template B   The mixin interface to create
  */
 export function CommonMsubsupMixin<
-  W extends AnyWrapper,
-  T extends ScriptbaseConstructor<W>
->(Base: T): MsubsupConstructor<W> & T {
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  CC extends CharOptions,
+  VV extends VariantData<CC>,
+  DD extends DelimiterData,
+  FD extends FontData<CC, VV, DD>,
+  FC extends FontDataClass<CC, VV, DD>,
+  B extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+>(Base: CommonScriptbaseConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
 
-  return class extends Base {
+  return class CommonMsubsupMixin extends Base
+  implements CommonMsubsup<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
 
     /**
      * Do not include italic correction
@@ -194,49 +393,26 @@ export function CommonMsubsupMixin<
     public static useIC: boolean = false;
 
     /**
-     *  Cached values for the script offsets and separation (so if they are
-     *  computed in computeBBox(), they don't have to be recomputed during output)
+     * @override
      */
     public UVQ: number[] = null;
 
     /**
-     * @return {W}  The wrapper for the subscript
+     * @override
      */
-    public get subChild(): W {
+    public get subChild(): WW {
       return this.childNodes[(this.node as MmlMsubsup).sub];
-    }
-
-    /**
-     * @return {W}  The wrapper for the superscript
-     */
-    public get supChild(): W {
-      return this.childNodes[(this.node as MmlMsubsup).sup];
     }
 
     /**
      * @override
      */
-    public computeBBox(bbox: BBox, recompute: boolean = false) {
-      const basebox = this.baseChild.getOuterBBox();
-      const [subbox, supbox] = [this.subChild.getOuterBBox(), this.supChild.getOuterBBox()];
-      bbox.empty();
-      bbox.append(basebox);
-      const w = this.getBaseWidth();
-      const x = this.getAdjustedIc();
-      const [u, v] = this.getUVQ();
-      bbox.combine(subbox, w, v);
-      bbox.combine(supbox, w + x, u);
-      bbox.w += this.font.params.scriptspace;
-      bbox.clean();
-      this.setChildPWidths(recompute);
+    public get supChild(): WW {
+      return this.childNodes[(this.node as MmlMsubsup).sup];
     }
 
     /**
-     * Get the shift for the scripts and their separation (TeXBook Appendix G 18adef)
-     *
-     * @param {BBox} subbox     The bounding box of the superscript
-     * @param {BBox} supbox     The bounding box of the subscript
-     * @return {number[]}       The vertical offsets for super and subscripts, and the space between them
+     * @override
      */
     public getUVQ(
       subbox: BBox = this.subChild.getOuterBBox(),
@@ -281,6 +457,26 @@ export function CommonMsubsupMixin<
       return this.UVQ;
     }
 
-  };
+    /*********************************************************************/
+
+    /**
+     * @override
+     */
+    public computeBBox(bbox: BBox, recompute: boolean = false) {
+      const basebox = this.baseChild.getOuterBBox();
+      const [subbox, supbox] = [this.subChild.getOuterBBox(), this.supChild.getOuterBBox()];
+      bbox.empty();
+      bbox.append(basebox);
+      const w = this.getBaseWidth();
+      const x = this.getAdjustedIc();
+      const [u, v] = this.getUVQ();
+      bbox.combine(subbox, w, v);
+      bbox.combine(supbox, w + x, u);
+      bbox.w += this.font.params.scriptspace;
+      bbox.clean();
+      this.setChildPWidths(recompute);
+    }
+
+  } as any as B;
 
 }

@@ -297,7 +297,7 @@ export class ComplexityVisitor extends MmlVisitor {
      * @param {boolean} save   True if the complexity is to be saved or just returned
      */
     protected visitMsemanticsNode(node: MmlNode, save: boolean) {
-        const child = node.childNodes[0] as MmlNode;
+        const child = node.childNodes[0];
         let complexity = 0;
         if (child) {
             this.visitNode(child, true);
@@ -370,7 +370,7 @@ export class ComplexityVisitor extends MmlVisitor {
         super.visitDefault(node, true);
         let complexity = 0;
         for (const child of node.childNodes) {
-            complexity += this.getComplexity(child as MmlNode);
+            complexity += this.getComplexity(child);
         }
         if (node.childNodes.length > 1) {
             complexity += node.childNodes.length * this.complexity.child;

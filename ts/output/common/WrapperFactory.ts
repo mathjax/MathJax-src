@@ -21,41 +21,55 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonOutputJax} from './OutputJax.js';
+import {CommonOutputJax} from '../common.js';
 import {AbstractWrapperFactory} from '../../core/Tree/WrapperFactory.js';
 import {CommonWrapper, CommonWrapperClass} from './Wrapper.js';
-import {CharOptions, DelimiterData, FontData} from './FontData.js';
-import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from './FontData.js';
+import {MmlNode, MmlNodeClass} from '../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
+
 /**
  *  The OutputWrapperFactory class for creating OutputWrapper nodes
  *
- * @template J  The OutputJax type
- * @template W  The Wrapper type
- * @template C  The WrapperClass type
- * @template CC The CharOptions type
- * @template FD The FontData type
+ * @template N   The DOM node type
+ * @template T   The DOM text node type
+ * @template D   The DOM document type
+ * @template JX  The OutputJax type
+ * @template WW  The Wrapper type
+ * @template WF  The WrapperFactory type
+ * @template WC  The WrapperClass type
+ * @template CC  The CharOptions type
+ * @template VV  The VariantData type
+ * @template DD  The DelimiterData type
+ * @template FD  The FontData type
+ * @template FC  The FontDataClass type
  */
 export class CommonWrapperFactory<
-  J extends CommonOutputJax<any, any, any, W, CommonWrapperFactory<J, W, C, CC, DD, FD>, FD, any>,
-  W extends CommonWrapper<J, W, C, CC, DD, FD>,
-  C extends CommonWrapperClass<J, W, C, CC, DD, FD>,
+  N, T, D,
+  JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+  WC extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   CC extends CharOptions,
+  VV extends VariantData<CC>,
   DD extends DelimiterData,
-  FD extends FontData<CC, any, DD>
-> extends AbstractWrapperFactory<MmlNode, W, C> {
+  FD extends FontData<CC, any, DD>,
+  FC extends FontDataClass<CC, VV, DD>
+  > extends AbstractWrapperFactory<MmlNode, MmlNodeClass, WW, WC> {
 
   /**
    * The default list of wrapper nodes this factory can create
    *   (filled in by subclasses)
    */
-  public static defaultNodes: {[kind: string]: CommonWrapperClass<any, any, any, any, any, any>} = {};
+  public static defaultNodes: {
+    [kind: string]: CommonWrapperClass<any, any, any, any, any, any, any, any, any, any, any, any>
+  } = {};
 
   /**
    * The output jax associated with this factory
    */
-  public jax: J = null;
+  public jax: JX = null;
 
   /**
    * @return {Object}  The list of node-creation functions
@@ -65,5 +79,3 @@ export class CommonWrapperFactory<
   }
 
 }
-
-export type AnyWrapperFactory = CommonWrapperFactory<any, any, any, any, any, any>;

@@ -65,7 +65,7 @@ namespace FilterUtil {
    * @param {ParseOptions} data The parse options.
    */
   export let cleanAttributes = function(arg: {data: ParseOptions}) {
-    let node = arg.data.root as MmlNode;
+    let node = arg.data.root;
     node.walkTree((mml: MmlNode, _d: any) => {
       let attribs = mml.attributes as any;
       if (!attribs) {
@@ -250,7 +250,7 @@ namespace FilterUtil {
       if (mml.attributes.get('displaystyle')) {
         continue;
       }
-      const base = mml.childNodes[(mml as any).base] as MmlNode;
+      const base = mml.childNodes[(mml as any).base];
       const mo = base.coreMO();
       if (base.getProperty('movablelimits') && !mo.attributes.getExplicit('movablelimits')) {
         let node = options.nodeFactory.create('node', subsup, mml.childNodes);
