@@ -709,6 +709,8 @@ export class Menu {
         if (name in startup.constructors) {
           startup.useOutput(name, true);
           startup.output = startup.getOutputJax();
+          startup.output.setAdaptor(this.document.adaptor);
+          startup.output.initialize();
           this.jax[jax] = startup.output;
           this.setOutputJax(jax);
         }
