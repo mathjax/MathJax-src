@@ -30,6 +30,7 @@ import ParseUtil from '../ParseUtil.js';
 import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MATHSPACE, em} from '../../../util/lengths.js';
 
+const THICKMATHSPACE = em(MATHSPACE.thickmathspace);
 
 /**
  * Letter pattern for parsing identifiers and operators.
@@ -640,7 +641,7 @@ new sm.CommandMap('macros', {
   cases:             ['Matrix', '{', '', 'left left', null, '.1em', null,
                       true],
   eqalign:           ['Matrix', null, null, 'right left',
-                      em(MATHSPACE.thickmathspace), '.5em', 'D'],
+                      THICKMATHSPACE, '.5em', 'D'],
   displaylines:      ['Matrix', null, null, 'center', null, '.5em', 'D'],
   cr:                 'Cr',
   '\\':               'CrLaTeX',
@@ -649,18 +650,18 @@ new sm.CommandMap('macros', {
   hdashline:         ['HLine', 'dashed'],
   //      noalign:            'HandleNoAlign',
   eqalignno:         ['Matrix', null, null, 'right left',
-                      em(MATHSPACE.thickmathspace), '.5em', 'D', null,
+                      THICKMATHSPACE, '.5em', 'D', null,
                       'right'],
   leqalignno:        ['Matrix', null, null, 'right left',
-                      em(MATHSPACE.thickmathspace), '.5em', 'D', null,
+                      THICKMATHSPACE, '.5em', 'D', null,
                       'left'],
   hfill:              'HFill',
   hfil:               'HFill',   // \hfil treated as \hfill for now
   hfilll:             'HFill',   // \hfilll treated as \hfill for now
 
   //  TeX substitution macros
-  bmod:              ['Macro', '\\mmlToken{mo}[lspace="thickmathspace"' +
-                      ' rspace="thickmathspace"]{mod}'],
+  bmod:              ['Macro', '\\mmlToken{mo}[lspace="' + THICKMATHSPACE + '"' +
+                      ' rspace="' + THICKMATHSPACE + '"]{mod}'],
   pmod:              ['Macro', '\\pod{\\mmlToken{mi}{mod}\\kern 6mu #1}', 1],
   mod:               ['Macro', '\\mathchoice{\\kern18mu}{\\kern12mu}' +
                       '{\\kern12mu}{\\kern12mu}\\mmlToken{mi}{mod}\\,\\,#1',
