@@ -96,7 +96,7 @@ function processList(base, dir, list, top = true) {
         if (top || !EXCLUDESUBDIRS) {
           processDir(base, file);
         }
-      } else if (file.match(/\.ts$/)) {
+      } else if (file.match(/(?<!\.d)\.ts$/)) {
         processFile(base, file);
       }
     }
