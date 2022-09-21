@@ -116,7 +116,8 @@ export abstract class CommonOutputJax<
       lineleading: .2,                // the default lineleading in em units
       LinebreakVisitor: null,         // The LinebreakVisitor to use
     },
-    font: 'tex',                   // the font component to load
+    font: '',                      // the font component to load
+    htmlHDW: 'auto',               // 'use', 'force', or 'ignore' data-mjx-hdw attributes
     wrapperFactory: null,          // The wrapper factory to use
     fontData: null,                // The FontData object to use
     cssStyles: null                // The CssStyles object to use
