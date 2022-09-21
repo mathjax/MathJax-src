@@ -102,19 +102,14 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
         display: 'inline-block',
         transform: 'scalex(1.0000001)'      // improves blink positioning
       },
-      'mjx-stretchy-h > * > mjx-c::before': {
-        display: 'inline-block',
-        width: 'initial'
-      },
       'mjx-stretchy-h > mjx-ext': {
         '/* IE */ overflow': 'hidden',
         '/* others */ overflow': 'clip visible',
-        width: '100%'
-      },
-      'mjx-stretchy-h > mjx-ext > mjx-c::before': {
-        transform: 'scalex(500)'
+        width: '100%',
+        'text-align': 'center'
       },
       'mjx-stretchy-h > mjx-ext > mjx-c': {
+        transform: 'scalex(500)',
         width: 0
       },
       'mjx-stretchy-h > mjx-beg > mjx-c': {
@@ -139,7 +134,6 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       'mjx-stretchy-v > * > mjx-c': {
         transform: 'scaley(1.0000001)',       // improves Firefox and blink positioning
         'transform-origin': 'left center',
-        overflow: 'hidden'
       },
       'mjx-stretchy-v > mjx-ext': {
         display: 'block',
@@ -149,17 +143,15 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
         '/* IE */ overflow': 'hidden',
         '/* others */ overflow': 'visible clip',
       },
-      'mjx-stretchy-v > mjx-ext > mjx-c::before': {
-        width: 'initial',
-        'box-sizing': 'border-box'
-      },
       'mjx-stretchy-v > mjx-ext > mjx-c': {
+        width: 'auto',
+        'box-sizing': 'border-box',
         transform: 'scaleY(500) translateY(.075em)',
         overflow: 'visible'
       },
       'mjx-mark': {
         display: 'inline-block',
-        height: '0px'
+        height: 0
       }
     };
 
@@ -204,7 +196,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
     /**
      * Create the HTML for a multi-character stretchy delimiter
      *
-     * @param {N[]} chtml  The parent elements in which to put the delimiter
+     * @param {N} chtml  The parent element in which to put the delimiter
      */
     protected stretchHTML(chtml: N[]) {
       const c = this.getText().codePointAt(0);
@@ -212,26 +204,18 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       this.childNodes[0].markUsed();
       const delim = this.stretch;
       const stretch = delim.stretch;
+      const stretchv = this.font.getStretchVariants(c);
       const content: N[] = [];
       //
       //  Set up the beginning, extension, and end pieces
       //
-      if (stretch[0]) {
-        content.push(this.html('mjx-beg', {}, [this.html('mjx-c')]));
-      }
-      content.push(this.html('mjx-ext', {}, [this.html('mjx-c')]));
+      this.createPart('mjx-beg', stretch[0], stretchv[0], content);
+      this.createPart('mjx-ext', stretch[1], stretchv[1], content);
       if (stretch.length === 4) {
-        //
-        //  Braces have a middle and second extensible piece
-        //
-        content.push(
-          this.html('mjx-mid', {}, [this.html('mjx-c')]),
-          this.html('mjx-ext', {}, [this.html('mjx-c')])
-        );
+        this.createPart('mjx-mid', stretch[3], stretchv[3], content);
+        this.createPart('mjx-ext', stretch[1], stretchv[1], content);
       }
-      if (stretch[2]) {
-        content.push(this.html('mjx-end', {}, [this.html('mjx-c')]));
-      }
+      this.createPart('mjx-end', stretch[2], stretchv[2], content);
       //
       //  Set the styles needed
       //
@@ -257,6 +241,27 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       const adaptor = this.adaptor;
       chtml[0] && adaptor.append(chtml[0], html);
       chtml[1] && adaptor.append(chtml[1], chtml[0] ? adaptor.clone(html) : html);
+    }
+
+    /**
+     * Create an element of a multi-character assembly
+     *
+     * @param {string} part    The part to create
+     * @param {number} n       The unicode character to use
+     * @param {string} v       The variant for the character
+     * @param {N[]} content    The DOM assembly
+     */
+    protected createPart(part: string, n: number, v: string, content: N[]) {
+      if (n) {
+        const options = this.font.getChar(v, n)[3];
+        const letter = options.f || (v === 'normal' ? '' : this.font.getVariant(v).letter);
+        const font = options.F || (letter ? `${this.font.cssFontPrefix}-${letter}` : '');
+        let c = (options.c as string || String.fromCodePoint(n))
+          .replace(/\\[0-9A-F]+/ig, (x) => String.fromCodePoint(parseInt(x.substr(1), 16)));
+        content.push(this.html(part, {}, [
+          this.html('mjx-c', font ? {class: font} : {}, [this.text(c)])
+        ]));
+      }
     }
 
   };

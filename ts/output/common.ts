@@ -56,6 +56,8 @@ export type UnknownBBox = {w: number, h: number, d: number};
 export type UnknownMap = Map<string, UnknownBBox>;
 export type UnknownVariantMap = Map<string, UnknownMap>;
 
+export const FONTPATH = '@mathjax/%%FONT%%-font/es5/output/fonts/%%FONT%%';
+
 /*****************************************************************/
 
 /**
@@ -117,10 +119,12 @@ export abstract class CommonOutputJax<
       lineleading: .2,                // the default lineleading in em units
       LinebreakVisitor: null,         // The LinebreakVisitor to use
     },
+    font: '',                      // the font component to load
     htmlHDW: 'auto',               // 'use', 'force', or 'ignore' data-mjx-hdw attributes
     wrapperFactory: null,          // The wrapper factory to use
-    font: null,                    // The FontData object to use
-    cssStyles: null,               // The CssStyles object to use
+    fontData: null,                // The FontData object to use
+    fontPath: FONTPATH,            // The path to the font definitions
+    cssStyles: null                // The CssStyles object to use
   };
 
   /**
@@ -209,6 +213,7 @@ export abstract class CommonOutputJax<
    */
   protected unknownCache: UnknownVariantMap;
 
+
   /*****************************************************************/
 
   /**
@@ -223,14 +228,25 @@ export abstract class CommonOutputJax<
   constructor(options: OptionList = null,
               defaultFactory: typeof CommonWrapperFactory = null,
               defaultFont: FC = null) {
-    const [jaxOptions, fontOptions] = separateOptions(options, defaultFont.OPTIONS);
+    //
+    // Backward compatibility with old usage of font option
+    //
+    if (options.font && typeof(options.font) !== 'string') {
+      options.fontData = options.font;
+      options.font = options.fontData.NAME;
+    }
+    //
+    const [fontClass, font] = (options.fontData instanceof FontData ?
+                               [options.fontData.constructor as typeof FontData, options.fontData] :
+                               [options.fontData || defaultFont, null]);
+    const [jaxOptions, fontOptions] = separateOptions(options, fontClass.OPTIONS);
     super(jaxOptions);
     this.factory = this.options.wrapperFactory ||
       new defaultFactory<N, T, D, CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
                          WW, WF, WC, CC, VV, DD, FD, FC>();
     this.factory.jax = this;
     this.cssStyles = this.options.cssStyles || new CssStyles();
-    this.font = this.options.font || new defaultFont(fontOptions);
+    this.font = font || new fontClass(fontOptions);
     this.unknownCache = new Map();
     const linebreaks = (this.options.linebreaks.LinebreakVisitor || LinebreakVisitor) as typeof Linebreaks;
     this.linebreaks = new linebreaks(this.factory);

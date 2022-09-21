@@ -35,7 +35,8 @@
     "clean": "npm run --silent clean:js && npm run --silent clean:es5 && npm run --silent clean:lib",
     "copy:mj2": "npx copyfiles -u 1 'ts/input/asciimath/mathjax2/**/*' js",
     "copy:mml3": "npx copyfiles -u 1 'ts/input/mathml/mml3/mml3.sef.json' js",
-    "precompile": "npm run --silent clean:js",
+    "copy:font": "npx copyfiles -u 1 'ts/output/*/DefaultFont.*' js",
+    "precompile": "npm run --silent clean:js && npm run --silent copy:font",
     "compile": "npx tsc",
     "postcompile": "npm run --silent copy:mj2 && npm run --silent copy:mml3",
     "premake-components": "npm run --silent clean:es5 && npm run --silent clean:lib",
@@ -63,6 +64,7 @@
   },
   "dependencies": {
     "esm": "^3.2.25",
+    "mathjax-modern-font": "^1.0.0-alpha.0",
     "mhchemparser": "^4.1.0",
     "mj-context-menu": "^0.6.1",
     "speech-rule-engine": "^4.0.6"

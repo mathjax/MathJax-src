@@ -747,7 +747,7 @@ export class Menu {
           startup.output.setAdaptor(this.document.adaptor);
           startup.output.initialize();
           this.jax[jax] = startup.output;
-          this.setOutputJax(jax);
+          mathjax.handleRetriesFor(() => this.setOutputJax(jax));
         }
       });
     }

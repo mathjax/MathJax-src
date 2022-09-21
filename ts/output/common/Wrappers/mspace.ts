@@ -192,14 +192,6 @@ export function CommonMspaceMixin<
       return bbox;
     }
 
-    /**
-     * No contents, so no need for variant class
-     *
-     * @override
-     */
-    public handleVariant() {
-    }
-
   } as any as B;
 
 }
