@@ -55,6 +55,42 @@ newState('ENRICHED', 30);
  */
 newState('ATTACHSPEECH', 155);
 
+/*==========================================================================*/
+
+export class enrichVisitor<N, T, D> extends SerializedMmlVisitor {
+
+  protected mactionId: number;
+
+  public visitTree(node: MmlNode, math?: MathItem<N, T, D>) {
+    this.mactionId = 1;
+    const mml = super.visitTree(node);
+    if (this.mactionId) {
+      math.inputData.hasMaction = true;
+    }
+    return mml;
+  }
+
+  public visitMactionNode(node: MmlNode, space: string) {
+    let [nl, endspace] = (node.childNodes.length === 0 ? ['', ''] : ['\n', space]);
+    const children = this.childNodeMml(node, space + '  ', nl);
+    let attributes = this.getAttributes(node);
+    if (node.attributes.get('actiontype') === 'toggle') {
+      const id = this.mactionId++;
+      node.setProperty('mactionId', id);
+      //
+      // Add maction id and make sure selection is the next attribute
+      //
+      attributes = ` data-maction-id="${id}" selection="${node.attributes.get('selection')}"`
+        + attributes.replace(/ selection="\d+"/, '');
+    }
+    return space + '<maction' + attributes + '>'
+                 + (children.match(/\S/) ? nl + children + endspace : '')
+                 + '</maction>';
+  }
+}
+
+/*==========================================================================*/
+
 
 /**
  * The functions added to MathItem for enrichment
@@ -93,7 +129,7 @@ export interface EnrichedMathItem<N, T, D> extends MathItem<N, T, D> {
 export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMathItem<N, T, D>>>(
   BaseMathItem: B,
   MmlJax: MathML<N, T, D>,
-  toMathML: (node: MmlNode) => string
+  toMathML: (node: MmlNode, math: MathItem<N, T, D>) => string
 ): Constructor<EnrichedMathItem<N, T, D>> & B {
 
   return class extends BaseMathItem {
@@ -135,17 +171,39 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
         }
         const math = new document.options.MathItem('', MmlJax);
         try {
-          const mml = this.inputData.originalMml = toMathML(this.root);
-          math.math = this.serializeMml(Sre.toEnriched(mml));
+          let mml;
+          if (!this.inputData.originalMml) {
+            mml = this.inputData.originalMml = toMathML(this.root, this);
+          } else {
+            mml = this.adjustSelections();
+          }
+          this.inputData.enrichedMml = math.math = this.serializeMml(Sre.toEnriched(mml));
           math.display = this.display;
           math.compile(document);
           this.root = math.root;
-          this.inputData.enrichedMml = math.math;
         } catch (err) {
           document.options.enrichError(document, this, err);
         }
       }
       this.state(STATE.ENRICHED);
+    }
+
+    /**
+     * Correct the selection values for the maction items from the original MathML
+     */
+    protected adjustSelections() {
+      let mml = this.inputData.originalMml;
+      if (!this.inputData.hasMaction) return mml;
+      const maction = [] as MmlNode[];
+      this.root.walkTree((node: MmlNode) => {
+        if (node.isKind('maction')) {
+          maction[node.attributes.get('data-maction-id') as number] = node;
+        }
+      });
+      return mml.replace(
+        /(data-maction-id="(\d+)" selection=)"\d+"/g,
+        (_match: string, prefix: string, id: number) => `${prefix}"${maction[id].attributes.get('selection')}"`
+      );
     }
 
     /**
@@ -172,10 +230,12 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
      * @param {MmlNode} node The root node to search from.
      * @return {string} The speech content.
      */
-    private getSpeech(node: MmlNode): string {
+    protected getSpeech(node: MmlNode): string {
       const attributes = node.attributes;
       if (!attributes) return '';
       const speech = attributes.getExplicit('data-semantic-speech') as string;
+      // TODO (explorer) For tree role move all speech etc. to container
+      // element.
       if (!attributes.getExplicit('data-semantic-parent') && speech) {
         return speech;
       }
@@ -259,6 +319,7 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
         attachSpeech: [STATE.ATTACHSPEECH]
       }),
       sre: expandable({
+        structure: true,                   // Generates full aria structure
         speech: 'none',                    // by default no speech is included
         domain: 'mathspeak',               // speech rules domain
         style: 'default',                  // speech rules style
@@ -281,8 +342,8 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
         ProcessBits.allocate('enriched');
         ProcessBits.allocate('attach-speech');
       }
-      const visitor = new SerializedMmlVisitor(this.mmlFactory);
-      const toMathML = ((node: MmlNode) => visitor.visitTree(node));
+      const visitor = new enrichVisitor<N, T, D>(this.mmlFactory);
+      const toMathML = ((node: MmlNode, math: MathItem<N, T, D>) => visitor.visitTree(node, math));
       this.options.MathItem =
         EnrichedMathItemMixin<N, T, D, Constructor<AbstractMathItem<N, T, D>>>(
           this.options.MathItem, MmlJax, toMathML

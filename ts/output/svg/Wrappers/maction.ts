@@ -31,6 +31,7 @@ import {EventHandler, TooltipData} from '../../common/Wrappers/maction.js';
 import {MmlMaction} from '../../../core/MmlTree/MmlNodes/maction.js';
 import {MmlNode, TextNode, AbstractMmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {StyleList} from '../../../util/StyleList.js';
+import {STATE} from '../../../core/MathItem.js';
 
 /*****************************************************************/
 /**
@@ -168,7 +169,8 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
             math.start.n = math.end.n = 0;
           }
           mml.nextToggleSelection();
-          math.rerender(document);
+          math.rerender(document, mml.attributes.get('data-maction-id') ?
+            STATE.ENRICHED : STATE.RERENDER);
           event.stopPropagation();
         });
       }, {}]],
