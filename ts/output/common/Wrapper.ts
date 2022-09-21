@@ -23,7 +23,7 @@
 
 import {AbstractWrapper, WrapperClass} from '../../core/Tree/Wrapper.js';
 import {PropertyList} from '../../core/Tree/Node.js';
-import {MmlNode, MmlNodeClass, TextNode, AbstractMmlNode, indentAttributes} from '../../core/MmlTree/MmlNode.js';
+import {MmlNode, MmlNodeClass, TextNode, AbstractMmlNode} from '../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
 import {Property} from '../../core/Tree/Node.js';
 import {unicodeChars} from '../../util/string.js';
@@ -34,7 +34,9 @@ import {OptionList} from '../../util/Options.js';
 import {CommonOutputJax} from '../common.js';
 import {CommonWrapperFactory} from './WrapperFactory.js';
 import {CommonMo} from './Wrappers/mo.js';
+import {CommonMrow} from './Wrappers/mrow.js';
 import {BBox} from '../../util/BBox.js';
+import {LineBBox} from './LineBBox.js';
 import {FontData, FontDataClass, DelimiterData,
         VariantData, CharData, CharOptions, DIRECTION, NOSTRETCH} from './FontData.js';
 
@@ -60,6 +62,32 @@ function MathMLSpace(script: boolean, size: number): number {
   return (script ? size < SMALLSIZE ? 0 : SMALLSIZE : size);
 }
 
+/**
+ * The standard space sizes
+ */
+export const SPACE: StringMap = {
+  /* tslint:disable:whitespace */
+  [LENGTHS.em(2/18)]: '1',
+  [LENGTHS.em(3/18)]: '2',
+  [LENGTHS.em(4/18)]: '3',
+  [LENGTHS.em(5/18)]: '4',
+  [LENGTHS.em(6/18)]: '5'
+  /* tslint:enable */
+};
+
+/**
+ * Padding and border data from the style attribute
+ */
+export type StyleData = {
+  padding: [number, number, number, number];
+  border: {
+    width: [number, number, number, number],
+    style: [string, string, string, string],
+    color: [string, string, string, string]
+  }
+};
+
+/*********************************************************/
 /**
  * Generic constructor type
  */
@@ -289,7 +317,7 @@ export class CommonWrapper<
   /**
    * The DOM tree generated for this wrapper
    */
-  public dom: N = null;
+  public dom: N[] = null;
 
   /**
    * Styles that must be handled directly by the wrappers (mostly having to do with fonts)
@@ -300,6 +328,11 @@ export class CommonWrapper<
    * The explicit styles set by the node
    */
   public styles: Styles = null;
+
+  /**
+   * The padding and border information from the style attribute
+   */
+  public styleData: StyleData = null;
 
   /**
    * The mathvariant for this node
@@ -314,6 +347,16 @@ export class CommonWrapper<
    * Whether the bounding box has been computed yet
    */
   protected bboxComputed: boolean = false;
+
+  /**
+   * The cached number opf linebreaks
+   */
+  protected _breakCount: number = -1;
+
+  /**
+   * Sizes of lines into which the element is broken
+   */
+  public lineBBox: LineBBox[] = [];
 
   /**
    * Delimiter data for stretching this node (NOSTRETCH means not yet determined)
@@ -347,10 +390,56 @@ export class CommonWrapper<
   }
 
   /**
+   * Easy access to the container width
+   */
+  get containerWidth() {
+    return this.jax.containerWidth;
+  }
+
+  /**
+   * Easy access to the linebreak visitor
+   */
+  get linebreaks() {
+    return this.jax.linebreaks;
+  }
+
+  /**
+   * Easy access to the linebreak options
+   */
+  get linebreakOptions() {
+    return this.jax.options.linebreaks;
+  }
+
+  /**
    * True if children with percentage widths should be resolved by this container
    */
   get fixesPWidth() {
     return !this.node.notParent && !this.node.isToken;
+  }
+
+  /**
+   * The number of breakpoints in the node
+   */
+  get breakCount(): number {
+    if (this._breakCount < 0) {
+      const node = this.node;
+      this._breakCount = (
+        node.isEmbellished ? this.coreMO().embellishedBreakCount :
+          node.arity < 0 && !node.linebreakContainer &&
+          (this.childNodes[0] as any as CommonMrow<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).isStack ?
+          this.childNodes[0].breakCount : 0
+      );
+    }
+    return this._breakCount;
+  }
+
+  /**
+   * @param {WW} mrow     The first mrow below this node
+   * @param {WW} _child   The child containing the mrow
+   * @return {WW}         The linebreak container for the child
+   */
+  public breakTop(mrow: WW, _child: WW): WW {
+    return ((this.node.linebreakContainer || !this.parent) ? mrow : this.parent.breakTop(mrow, this as any as WW));
   }
 
   /*******************************************************************/
@@ -364,6 +453,7 @@ export class CommonWrapper<
     this.font = factory.jax.font;
     this.bbox = BBox.zero();
     this.getStyles();
+    this.getStyleData();
     this.getVariant();
     this.getScale();
     this.getSpace();
@@ -416,16 +506,35 @@ export class CommonWrapper<
    */
   public getOuterBBox(save: boolean = true): BBox {
     const bbox = this.getBBox(save);
-    if (!this.styles) return bbox;
-    const obox = new BBox();
-    Object.assign(obox, bbox);
-    for (const [name, side] of BBox.StyleAdjust) {
-      const x = this.styles.get(name);
-      if (x) {
-        (obox as any)[side] += this.length2em(x, 1, obox.rscale);
-      }
+    if (!this.styleData) return bbox;
+    const padding = this.styleData.padding;
+    const border = this.styleData.border?.width || [0, 0, 0, 0];
+    const obox = bbox.copy();
+    for (const [ , i, side] of BBox.boxSides) {
+      (obox as any)[side] += (padding[i] + border[i]);
     }
     return obox;
+  }
+
+  /**
+   * The height and depth without linebreaks
+   *
+   * @return {[number, number]}   The height and depth
+   */
+  public getUnbrokenHD(): [number, number] {
+    const n = this.breakCount + 1;
+    let H = 0;
+    let D = 0;
+    for (let i = 0; i < n; i++) {
+      const {h, d} = this.getLineBBox(i);
+      if (h > H) {
+        H = h;
+      }
+      if (d > D) {
+        D = d;
+      }
+    }
+    return [H, D];
   }
 
   /**
@@ -441,6 +550,121 @@ export class CommonWrapper<
     if (this.fixesPWidth && this.setChildPWidths(recompute)) {
       this.computeBBox(bbox, true);
     }
+  }
+
+  /**
+   * Get the bounding box for the i-th line (first and last may be part of a surrounding line).
+   * Get the bbox from the lineBBox cache, or compute it, as needed.
+   *
+   * @param {number} i   The number of the segment whose sizes are to be obtained
+   * @return {LineBBox}  The bounding box of the specified segment
+   */
+  public getLineBBox(i: number): LineBBox {
+    if (!this.lineBBox[i]) {
+      const n = this.breakCount;
+      if (n) {
+        const line = (this.embellishedBBox(i) || this.computeLineBBox(i));
+        this.lineBBox[i] = line;
+        if (i === 0) {
+          if (!this.node.isKind('mo') && this.node.isEmbellished) {
+            line.originalL = this.getBBox().L;
+          } else {
+            line.L = this.getBBox().L;
+          }
+        }
+        if (i === n) {
+          line.R = this.getBBox().R;
+        }
+      } else {
+        this.lineBBox[i] = LineBBox.from(this.getOuterBBox(), this.linebreakOptions.lineleading);
+      }
+    }
+    return this.lineBBox[i];
+  }
+
+  /**
+   * Get the bounding box for the i-th line of an embellished mo
+   */
+  protected embellishedBBox(i: number): LineBBox {
+    if (!this.node.isEmbellished || this.node.isKind('mo')) return null;
+    const mo = this.coreMO();
+    return mo.moLineBBox(i, mo.embellishedBreakStyle, this.getOuterBBox());
+  }
+
+  /**
+   * Compute the bounding box for the i-th line (for when it is not in the cache).
+   *
+   * @param {number} i   The number of the line whose sizes are to be obtained
+   * @return {LineBBox}  The bounding box of the specified segment
+   */
+  protected computeLineBBox(i: number): LineBBox {
+    return this.getChildLineBBox(this.childNodes[0], i);
+  }
+
+  /**
+   * Find the (embellished) mo or mspace where a break occurs
+   *
+   * @param {LineBBox} bbox    The LineBBox for the line whose initial breakpoint is needed
+   * @return {[WW, WW]}        The embellished mo node and its core mo
+   */
+  public getBreakNode(bbox: LineBBox): [WW, WW] {
+    const [i, j] = bbox.start || [0, 0];
+    if (this.node.isEmbellished) return [this, this.coreMO()] as any as [WW, WW];
+    if (this.node.isToken || !this.childNodes[i]) return [this, null] as any as [WW, WW];
+    return this.childNodes[i].getBreakNode(this.childNodes[i].getLineBBox(j));
+  }
+
+  /**
+   * @param {WW} child   The child node whose i-th line bbox is to be obtained
+   * @param {number} i   The number of the line whose bbox is to be obtained
+   * @return {LineBBox}  The bounding box of the specified line
+   */
+  protected getChildLineBBox(child: WW, i: number): LineBBox {
+    const n = this.breakCount;
+    let cbox = child.getLineBBox(i);
+    if (this.styleData || this.bbox.L || this.bbox.R) {
+      cbox = cbox.copy();
+    }
+    this.addMiddleBorders(cbox);
+    if (i === 0) {
+      cbox.L += this.bbox.L;
+      this.addLeftBorders(cbox);
+    } else if (i === n) {
+      cbox.R += this.bbox.R;
+      this.addRightBorders(cbox);
+    }
+    return cbox;
+  }
+
+  /**
+   * @param {BBox} bbox   The bounding box where left borders are to be added
+   */
+  protected addLeftBorders(bbox: BBox) {
+    if (!this.styleData) return;
+    const border = this.styleData.border;
+    const padding = this.styleData.padding;
+    bbox.w += (border?.width?.[3] || 0) + (padding?.[3] || 0);
+  }
+
+  /**
+   * @param {BBox} bbox   The bounding box where top and bottom borders are to be added
+   */
+  protected addMiddleBorders(bbox: BBox) {
+    if (!this.styleData) return;
+    const border = this.styleData.border;
+    const padding = this.styleData.padding;
+    bbox.h += (border?.width?.[0] || 0) + (padding?.[0] || 0);
+    bbox.d += (border?.width?.[2] || 0) + (padding?.[2] || 0);
+  }
+
+  /**
+   * @param {BBox} bbox   The bounding box where right borders are to be added
+   */
+  protected addRightBorders(bbox: BBox) {
+    if (!this.styleData) return;
+    const border = this.styleData.border;
+    const padding = this.styleData.padding;
+    bbox.w += (border?.width?.[1] || 0) + (padding?.[1] || 0);
   }
 
   /**
@@ -462,7 +686,7 @@ export class CommonWrapper<
     }
     let changed = false;
     for (const child of this.childNodes) {
-      const cbox = child.getOuterBBox();
+      const cbox = child.getBBox();
       if (cbox.pwidth && child.setChildPWidths(recompute, w === null ? cbox.w : w, clear)) {
         changed = true;
       }
@@ -471,12 +695,23 @@ export class CommonWrapper<
   }
 
   /**
-   * Mark BBox to be computed again (e.g., when an mo has stretched)
+   * @param {number} _W   The width to use for linebreaking
    */
-  public invalidateBBox() {
+  public breakToWidth(_W: number) {
+    // implemented in subclasses
+  }
+
+  /**
+   * Mark BBox to be computed again (e.g., when an mo has stretched)
+   *
+   * @param {boolean} bubble   True to invalidate parent BBoxes
+   */
+  public invalidateBBox(bubble: boolean = true) {
     if (this.bboxComputed) {
       this.bboxComputed = false;
-      if (this.parent) {
+      this.lineBBox = [];
+      this._breakCount = -1;
+      if (this.parent && bubble) {
         this.parent.invalidateBBox();
       }
     }
@@ -520,6 +755,38 @@ export class CommonWrapper<
         style.set(id, '');
       }
     }
+  }
+
+  /**
+   * Gather the data about borders and padding from the styles attribute
+   */
+  protected getStyleData() {
+    if (!this.styles) return;
+    const padding = Array(4).fill(0);
+    const width = Array(4).fill(0);
+    const style = Array(4);
+    const color = Array(4);
+    let hasPadding = false;
+    let hasBorder = false;
+    for (const [name, i] of BBox.boxSides) {
+      const key = 'border' + name;
+      const w = this.styles.get(key + 'Width');
+      if (w) {
+        hasBorder = true;
+        width[i] = Math.max(0, this.length2em(w, 1));
+        style[i] = this.styles.get(key + 'Style') || 'solid';
+        color[i] = this.styles.get(key + 'Color') || 'currentColor';
+      }
+      const p = this.styles.get('padding' + name);
+      if (p) {
+        hasPadding = true;
+        padding[i] = Math.max(0, this.length2em(p, 1));
+      }
+    }
+    this.styleData = (hasPadding || hasBorder) ? {
+      padding,
+      border: (hasBorder ? {width, style, color} : null)
+    } as StyleData : null;
   }
 
   /**
@@ -749,24 +1016,48 @@ export class CommonWrapper<
    */
   protected getAlignShift(): [string, number] {
     let {indentalign, indentshift, indentalignfirst, indentshiftfirst} =
-      this.node.attributes.getList(...indentAttributes) as StringMap;
+      this.node.attributes.getAllAttributes() as StringMap;
     if (indentalignfirst !== 'indentalign') {
       indentalign = indentalignfirst;
-    }
-    if (indentalign === 'auto') {
-      indentalign = this.jax.options.displayAlign;
     }
     if (indentshiftfirst !== 'indentshift') {
       indentshift = indentshiftfirst;
     }
+    return this.processIndent(indentalign, indentshift);
+  }
+
+  /**
+   * @param {string} indentalign   The indentalign to process
+   * @param {string} indentshift   The indentshift to process
+   * @param {string} align         The default alignment for 'auto'
+   * @param {string} shift         The default indentshift for 'auto'
+   * @param {number} width         The container width for relative shifts
+   * @return {[string, number][]}  The alignment and indentation shift (normal and last) for the Mo
+   */
+  public processIndent(
+    indentalign: string,
+    indentshift: string,
+    align: string = '',
+    shift: string = '',
+    width: number = this.metrics.containerWidth
+  ): [string, number] {
+    if (!align || align === 'auto') {
+      align = this.jax.math.outputData.inlineMarked ? 'left' : this.jax.options.displayAlign;
+    }
+    if (!shift || shift === 'auto') {
+      shift = this.jax.math.outputData.inlineMarked ? '0' : this.jax.options.displayIndent;
+    }
+    if (indentalign === 'auto') {
+      indentalign = align;
+    }
     if (indentshift === 'auto') {
-      indentshift = this.jax.options.displayIndent;
+      indentshift = shift;
       if (indentalign === 'right' && !indentshift.match(/^\s*0[a-z]*\s*$/)) {
         indentshift = ('-' + indentshift.trim()).replace(/^--/, '');
       }
     }
-    const shift = this.length2em(indentshift, this.metrics.containerWidth);
-    return [indentalign, shift] as [string, number];
+    const indent = this.length2em(indentshift, width);
+    return [indentalign, indent] as [string, number];
   }
 
   /**
@@ -805,7 +1096,7 @@ export class CommonWrapper<
   }
 
   /**
-   * @param {number} i   The index of the child element whose container is needed
+   * @param {number} i   The index of the child element whose alignment is needed
    * @return {string}    The alignment child element
    */
   public getChildAlign(_i: number): string {
@@ -918,6 +1209,7 @@ export class CommonWrapper<
     const textNode = (mmlFactory.create('text') as TextNode).setText(text);
     const mml = mmlFactory.create('mo', {stretchy: true}, [textNode]);
     mml.inheritAttributesFrom(this.node);
+    mml.parent = this.node.parent;
     const node = this.wrap(mml);
     node.parent = this as any as WW;
     return node as any as CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;

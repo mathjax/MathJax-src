@@ -161,45 +161,52 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
         display: 'inline-block',
         height: '0px'
       }
-
     };
 
     /**
      * @override
      */
-    public toCHTML(parent: N) {
+    public toCHTML(parents: N[]) {
+      const adaptor = this.adaptor;
       const attributes = this.node.attributes;
       const symmetric = (attributes.get('symmetric') as boolean) && this.stretch.dir !== DIRECTION.Horizontal;
       const stretchy = this.stretch.dir !== DIRECTION.None;
       if (stretchy && this.size === null) {
         this.getStretchedVariant([]);
       }
-      let chtml = this.standardChtmlNode(parent);
+      parents.length > 1 && parents.forEach(dom => adaptor.append(dom, this.html('mjx-linestrut')));
+      let chtml = this.standardChtmlNodes(parents);
+      if (chtml.length > 1 && this.breakStyle !== 'duplicate') {
+        const i = (this.breakStyle === 'after' ? 1 : 0);
+        adaptor.remove(chtml[i]);
+        chtml[i] = null;
+      }
       if (stretchy && this.size < 0) {
         this.stretchHTML(chtml);
       } else {
         if (symmetric || attributes.get('largeop')) {
           const u = this.em(this.getCenterOffset());
           if (u !== '0') {
-            this.adaptor.setStyle(chtml, 'verticalAlign', u);
+            chtml.forEach(dom => dom && adaptor.setStyle(dom, 'verticalAlign', u));
           }
         }
         if (this.node.getProperty('mathaccent')) {
-          this.adaptor.setStyle(chtml, 'width', '0');
-          this.adaptor.setStyle(chtml, 'margin-left', this.em(this.getAccentOffset()));
+          chtml.forEach(dom => {
+            adaptor.setStyle(dom, 'width', '0');
+            adaptor.setStyle(dom, 'margin-left', this.em(this.getAccentOffset()));
+          });
         }
-        for (const child of this.childNodes) {
-          child.toCHTML(chtml);
-        }
+        chtml[0] && this.addChildren([chtml[0]]);
+        chtml[1] && ((this.multChar || this) as ChtmlMo).addChildren([chtml[1]]);
       }
     }
 
     /**
      * Create the HTML for a multi-character stretchy delimiter
      *
-     * @param {N} chtml  The parent element in which to put the delimiter
+     * @param {N[]} chtml  The parent elements in which to put the delimiter
      */
-    protected stretchHTML(chtml: N) {
+    protected stretchHTML(chtml: N[]) {
       const c = this.getText().codePointAt(0);
       this.font.delimUsage.add(c);
       this.childNodes[0].markUsed();
@@ -247,7 +254,9 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       const dir = DirectionVH[delim.dir];
       const properties = {class: this.char(delim.c || c), style: styles};
       const html = this.html('mjx-stretchy-' + dir, properties, content);
-      this.adaptor.append(chtml, html);
+      const adaptor = this.adaptor;
+      chtml[0] && adaptor.append(chtml[0], html);
+      chtml[1] && adaptor.append(chtml[1], chtml[0] ? adaptor.clone(html) : html);
     }
 
   };

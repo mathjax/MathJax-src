@@ -28,6 +28,7 @@ import {CommonOutputJax} from '../../common.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../../../util/BBox.js';
+import {LineBBox} from '../LineBBox.js';
 import {unicodeChars} from '../../../util/string.js';
 import {DIRECTION, NOSTRETCH} from '../FontData.js';
 
@@ -82,11 +83,38 @@ export interface CommonMo<
   isAccent: boolean;
 
   /**
+   * The linebreak style
+   */
+  breakStyle: string;
+
+  /**
+   * The linebreakmultchar used for breaking an invisible times
+   */
+  multChar: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+
+  /**
+   * Value is 1 if this embellished mo is a breakpoint, 0 otherwise
+   */
+  embellishedBreakCount: number;
+
+  /**
+   * The break style as an for embellished operator
+   */
+  embellishedBreakStyle: string;
+
+  /**
    * Get the (unmodified) bbox of the contents (before centering or setting accents to width 0)
    *
    * @param {BBox} bbox   The bbox to fill
    */
   protoBBox(bbox: BBox): void;
+
+  /**
+   * @param {number} i       The line to get the LineBBox for
+   * @param {string} style   The linebreakstyle to use
+   * @param {BBox} obox      The bounding box of the embellished operator that is breaking
+   */
+  moLineBBox(i: number, style: string, obox?: BBox): LineBBox;
 
   /**
    * @return {number}    Offset to the left by half the actual width of the accent
@@ -143,6 +171,26 @@ export interface CommonMo<
    * @return {number}           The final size of the assembly
    */
   checkExtendedHeight(D: number, C: DelimiterData): number;
+
+  /**
+   * Set a breakpoint to the given type
+   *
+   * @param {string} linebreak   The type of linebreak to set
+   */
+  setBreakStyle(linebreak?: string): void;
+
+  /**
+   * Get the breakstyle of the mo
+   *
+   * @param {string} linebreak   Force style to be the given one
+   * @return {string}            The linebreak style of the node
+   */
+  getBreakStyle(linebreak?: string): string;
+
+  /**
+   * Create the mo wrapper for the linebreakmultchar
+   */
+  getMultChar(): void
 
 }
 
@@ -220,6 +268,37 @@ export function CommonMoMixin<
      * @override
      */
     public isAccent: boolean;
+
+    /**
+     * @override
+     */
+    public breakStyle: string;
+
+    /**
+     * The linebreakmultchar used for breaking an invisible times
+     */
+    public multChar: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+
+    /**
+     * @override
+     */
+    get breakCount() {
+      return (this.breakStyle ? 1 : 0);
+    }
+
+    /**
+     * @override
+     */
+    get embellishedBreakCount() {
+      return (this.embellishedBreakStyle ? 1 : 0);
+    }
+
+    /**
+     * @override
+     */
+    get embellishedBreakStyle() {
+      return (this.breakStyle || this.getBreakStyle());
+    }
 
     /**
      * @override
@@ -393,6 +472,45 @@ export function CommonMoMixin<
       return D;
     }
 
+    /**
+     * @override
+     */
+    public setBreakStyle(linebreak: string = '') {
+      this.breakStyle = (this.node.parent.isEmbellished && !linebreak ? '' : this.getBreakStyle(linebreak));
+      if (!this.breakCount) return;
+      if (this.multChar) {
+        //
+        //  Update the spacing between the multchar and the next item
+        //
+        const i = this.parent.node.childIndex(this.node);
+        const next = this.parent.node.childNodes[i + 1];
+        next && next.setTeXclass(this.multChar.node);
+      }
+    }
+
+    /**
+     * @override
+     */
+    public getBreakStyle(linebreak: string = '') {
+      const attributes = this.node.attributes;
+      let style = (linebreak || (attributes.get('linebreak') === 'newline' || this.node.getProperty('forcebreak') ?
+                                 attributes.get('linebreakstyle') as string : ''));
+      if (style === 'infixlinebreakstyle') {
+        style = attributes.get(style) as string;
+      }
+      return style;
+    }
+
+    /**
+     * @override
+     */
+    getMultChar() {
+      const multChar = this.node.attributes.get('linebreakmultchar') as string;
+      if (multChar && this.getText() === '\u2062' && multChar !== '\u2062') {
+        this.multChar = this.createMo(multChar);
+      }
+    }
+
     /***************************************************/
 
     /**
@@ -401,6 +519,8 @@ export function CommonMoMixin<
     constructor(factory: WF, node: MmlNode, parent: WW = null) {
       super(factory, node, parent);
       this.isAccent = (this.node as MmlMo).isAccent;
+      this.getMultChar();
+      this.setBreakStyle();
     }
 
     /**
@@ -418,6 +538,41 @@ export function CommonMoMixin<
           (this.stretch.dir === DIRECTION.None || this.size >= 0)) {
         bbox.w = 0;
       }
+    }
+
+    /**
+     * @override
+     */
+    public computeLineBBox(i: number): LineBBox {
+      return this.moLineBBox(i, this.breakStyle);
+    }
+
+    /**
+     * @override
+     */
+    public moLineBBox(i: number, style: string, obox: BBox = null) {
+      const leadingString = this.node.attributes.get('lineleading') as string;
+      const leading = this.length2em(leadingString, this.linebreakOptions.lineleading);
+      if (i === 0 && style === 'before') {
+        const bbox = LineBBox.from(BBox.zero(), leading);
+        bbox.originalL = this.bbox.L;
+        this.bbox.L = 0;
+        return bbox;
+      }
+      let bbox = LineBBox.from(obox || this.getOuterBBox(), leading);
+      if (i === 1) {
+        if (style === 'after') {
+          bbox.w = bbox.h = bbox.d = 0;
+          bbox.isFirst = true;
+          this.bbox.R = 0;
+        } else if (style === 'duplicate') {
+          bbox.L = 0;
+        } else if (this.multChar) {
+          bbox = LineBBox.from(this.multChar.getOuterBBox(), leading);
+        }
+        bbox.getIndentData(this.node);
+      }
+      return bbox;
     }
 
     /**

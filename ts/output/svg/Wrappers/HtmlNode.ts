@@ -107,18 +107,18 @@ export const SvgHtmlNode = (function <N, T, D>(): SvgHtmlNodeClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
+    public toSVG(parents: N[]) {
       const metrics = this.jax.math.metrics;
       const em = metrics.em * metrics.scale;
       const scale = this.fixed(1 / em);
       const {w, h, d} = this.getBBox();
-      this.dom = this.adaptor.append(parent, this.svg('foreignObject', {
+      this.dom = [this.adaptor.append(parents[0], this.svg('foreignObject', {
         'data-mjx-html': true,
         y: this.jax.fixed(-h * em) + 'px',
         width: this.jax.fixed(w * em) + 'px',
         height: this.jax.fixed((h + d) * em) + 'px',
         transform: `scale(${scale}) matrix(1 0 0 -1 0 0)`
-      }, [this.getHTML()])) as N;
+      }, [this.getHTML()])) as N];
     }
 
   };

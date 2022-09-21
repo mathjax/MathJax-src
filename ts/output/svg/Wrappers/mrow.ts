@@ -85,12 +85,98 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
     public static kind = MmlMrow.prototype.kind;
 
     /**
+     * If this is an mrow inside a linebreakContainer, this gives the number
+     *   of breaks, otherwise it is 0
+     */
+    protected linebreakCount: number = 0;
+
+    /**
      * @override
      */
-    public toSVG(parent: N) {
-      const svg = (this.node.isInferred ? (this.dom = parent) : this.standardSvgNode(parent));
-      this.addChildren(svg);
-      // FIXME:  handle line breaks
+    public toSVG(parents: N[]) {
+      this.getBBox();
+      const n = this.linebreakCount = (this.isStack ? 0 : this.breakCount);
+      if (n || !this.node.isInferred) {
+        parents = this.standardSvgNodes(parents);
+      } else {
+        this.dom = parents;
+      }
+      this.addChildren(parents);
+      n && this.placeLines(parents);
+    }
+
+    /**
+     * @param {N[]} parents  The HTML nodes in which to place the lines
+     */
+    protected placeLines(parents: N[]) {
+      const lines = this.lineBBox;
+      let y = 0;
+      for (const k of parents.keys()) {
+        const lbox = lines[k];
+        this.place(lbox.L || 0, y, parents[k]);
+        y -= Math.max(.25, lbox.d) + lbox.lineLeading + Math.max(.75, lines[k + 1]?.h || 0);
+      }
+    }
+
+    /**
+     * @override
+     */
+    protected createSvgNodes(parents: N[]): N[] {
+      const n = this.linebreakCount;
+      if (!n) return super.createSvgNodes(parents);
+      //
+      // Create a linestack/mrow node for the lines
+      //
+      const adaptor = this.adaptor;
+      const def = (this.node.isInferred ? {'data-mjx-linestack': true} : {'data-mml-node': this.node.kind});
+      this.dom = [adaptor.append(parents[0], this.svg('g', def)) as N];
+      //
+      // Add an href anchor, if needed, and insert the linestack/mrow
+      //
+      this.dom = [adaptor.append(this.handleHref(parents)[0], this.dom[0]) as N];
+      //
+      //  Add the line boxes
+      //
+      const svg = Array(n) as N[];
+      for (let i = 0; i <= n; i++) {
+        svg[i] = adaptor.append(this.dom[0], this.svg('g', {'data-mjx-linebox': true, 'data-mjx-lineno': i})) as N;
+      }
+      //
+      //  Return the line boxes as the parent nodes for their contents
+      //
+      return svg;
+    }
+
+    /**
+     * @override
+     */
+    public addChildren(parents: N[]) {
+      let x = 0;
+      let i = 0;
+      for (const child of this.childNodes) {
+        const n = child.breakCount;
+        child.toSVG(parents.slice(i, i + n + 1));
+        if (child.dom) {
+          let k = 0;
+          for (const dom of child.dom) {
+            if (dom) {
+              const dx = (k ? 0 : child.dx);
+              const cbox = child.getLineBBox(k++);
+              x += (cbox.L + dx) * cbox.rscale;
+              this.place(x, 0, dom);
+              x += (cbox.w + cbox.R - dx) * cbox.rscale;
+            }
+            if (n) {
+              x = 0;
+            }
+          }
+          if (n) {
+            const cbox = child.getLineBBox(n);
+            x += (cbox.w + cbox.R) * cbox.rscale;
+          }
+        }
+        i += n;
+      }
     }
 
   };

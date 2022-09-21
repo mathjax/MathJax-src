@@ -49,10 +49,10 @@ export interface SvgMactionNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMacti
   /**
    * Add an event handler to the output for this maction
    */
-  setEventHandler(type: string, handler: EventHandler): void;
+  setEventHandler(type: string, handler: EventHandler, dom?: N): void;
 
   /**
-   * @param {number] m   The number to convert to pixels
+   * @param {number} m   The number to convert to pixels
    * @return {string}    The dimension with "px" units
    */
   Px(m: number): string;
@@ -146,7 +146,9 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
         //
         // Mark which child is selected
         //
-        node.adaptor.setAttribute(node.dom, 'data-toggle', node.node.attributes.get('selection') as string);
+        node.dom.forEach(dom => {
+          node.adaptor.setAttribute(dom, 'data-toggle', node.node.attributes.get('selection') as string);
+        });
         //
         // Cache the data needed to select another node
         //
@@ -174,48 +176,50 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
       ['tooltip', [(node, data) => {
         const tip = node.childNodes[1];
         if (!tip) return;
-        const rect = node.firstChild();
-        if (tip.node.isKind('mtext')) {
-          //
-          // Text tooltips are handled through title attributes
-          //
-          const text = (tip.node as TextNode).getText();
-          node.adaptor.insert(node.svg('title', {}, [node.text(text)]), rect);
-        } else {
-          //
-          // Math tooltips are handled through hidden nodes and event handlers
-          //
-          const adaptor = node.adaptor;
-          const container = node.jax.container;
-          const math = (node.node as AbstractMmlNode).factory.create('math', {}, [node.childNodes[1].node]);
-          const tool = node.html('mjx-tool', {}, [node.html('mjx-tip')]);
-          const hidden = adaptor.append(rect, node.svg('foreignObject', {style: {display: 'none'}}, [tool])) as N;
-          node.jax.processMath(math, adaptor.firstChild(tool) as N);
-          node.childNodes[1].node.parent = node.node;
-          //
-          // Set up the event handlers to display and remove the tooltip
-          //
-          node.setEventHandler('mouseover', (event: Event) => {
-            data.stopTimers(node, data);
-            data.hoverTimer.set(node, setTimeout(() => {
-              adaptor.setStyle(tool, 'left', '0');
-              adaptor.setStyle(tool, 'top', '0');
-              adaptor.append(container, tool);
-              const tbox = adaptor.nodeBBox(tool);
-              const nbox = adaptor.nodeBBox(node.dom);
-              const dx = (nbox.right - tbox.left) / node.metrics.em + node.dx;
-              const dy = (nbox.bottom - tbox.bottom) / node.metrics.em + node.dy;
-              adaptor.setStyle(tool, 'left', node.Px(dx));
-              adaptor.setStyle(tool, 'top', node.Px(dy));
-            }, data.postDelay));
-            event.stopPropagation();
-          });
-          node.setEventHandler('mouseout',  (event: Event) => {
-            data.stopTimers(node, data);
-            const timer = setTimeout(() => adaptor.append(hidden, tool), data.clearDelay);
-            data.clearTimer.set(node, timer);
-            event.stopPropagation();
-          });
+        for (const dom of node.dom) {
+          const rect = node.firstChild(dom);
+          if (tip.node.isKind('mtext')) {
+            //
+            // Text tooltips are handled through title nodes
+            //
+            const text = (tip.node as TextNode).getText();
+            node.adaptor.insert(node.svg('title', {}, [node.text(text)]), rect);
+          } else {
+            //
+            // Math tooltips are handled through hidden nodes and event handlers
+            //
+            const adaptor = node.adaptor;
+            const container = node.jax.container;
+            const math = (node.node as AbstractMmlNode).factory.create('math', {}, [node.childNodes[1].node]);
+            const tool = node.html('mjx-tool', {}, [node.html('mjx-tip')]);
+            const hidden = adaptor.append(rect, node.svg('foreignObject', {style: {display: 'none'}}, [tool])) as N;
+            node.jax.processMath(node.jax.factory.wrap(math), adaptor.firstChild(tool) as N);
+            node.childNodes[1].node.parent = node.node;
+            //
+            // Set up the event handlers to display and remove the tooltip
+            //
+            node.setEventHandler('mouseover', (event: Event) => {
+              data.stopTimers(dom, data);
+              data.hoverTimer.set(dom, setTimeout(() => {
+                adaptor.setStyle(tool, 'left', '0');
+                adaptor.setStyle(tool, 'top', '0');
+                adaptor.append(container, tool);
+                const tbox = adaptor.nodeBBox(tool);
+                const nbox = adaptor.nodeBBox(dom);
+                const dx = (nbox.right - tbox.left) / node.metrics.em + node.tipDx;
+                const dy = (nbox.bottom - tbox.bottom) / node.metrics.em + node.tipDy;
+                adaptor.setStyle(tool, 'left', node.Px(dx));
+                adaptor.setStyle(tool, 'top', node.Px(dy));
+              }, data.postDelay));
+              event.stopPropagation();
+            }, dom);
+            node.setEventHandler('mouseout',  (event: Event) => {
+              data.stopTimers(dom, data);
+              const timer = setTimeout(() => adaptor.append(hidden, tool), data.clearDelay);
+              data.clearTimer.set(dom, timer);
+              event.stopPropagation();
+            }, dom);
+          }
         }
       }, TooltipData]],
 
@@ -225,7 +229,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
         if (tip.node.isKind('mtext')) {
           const adaptor = node.adaptor;
           const text = (tip.node as TextNode).getText();
-          adaptor.setAttribute(node.dom, 'data-statusline', text);
+          node.dom.forEach(dom => adaptor.setAttribute(dom, 'data-statusline', text));
           //
           // Set up event handlers to change the status window
           //
@@ -258,8 +262,8 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
     /**
      * Add an event handler to the output for this maction
      */
-    public setEventHandler(type: string, handler: EventHandler) {
-      (this.dom as any).addEventListener(type, handler);
+    public setEventHandler(type: string, handler: EventHandler, dom: N = null) {
+      (dom ? [dom] : this.dom).forEach(node => (node as any).addEventListener(type, handler));
     }
 
     /**
@@ -274,14 +278,19 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
-      const svg = this.standardSvgNode(parent);
+    public toSVG(parents: N[]) {
+      if (this.toEmbellishedSVG(parents)) return;
+      const svg = this.standardSvgNodes(parents);
       const child = this.selected;
-      const {h, d, w} = child.getOuterBBox();
-      this.adaptor.append(this.dom, this.svg('rect', {
-        width: this.fixed(w), height: this.fixed(h + d), y: this.fixed(-d),
-        fill: 'none', 'pointer-events': 'all'
-      }));
+      let i = 0;
+      this.dom.forEach(node => {
+        const {h, d, w} = child.getLineBBox(i++);
+        this.adaptor.append(node, this.svg('rect', {
+          width: this.fixed(w), height: this.fixed(h + d),
+          x: (i === 1 ? this.fixed(-this.dx) : 0), y: this.fixed(-d),
+          fill: 'none', 'pointer-events': 'all'
+        }));
+      });
       child.toSVG(svg);
       const bbox = child.getOuterBBox();
       if (child.dom) {

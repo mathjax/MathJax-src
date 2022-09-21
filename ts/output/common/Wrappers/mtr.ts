@@ -214,30 +214,30 @@ export function CommonMtrMixin<
       }
       let count = stretchy.length;
       let nodeCount = this.childNodes.length;
-      if (count && nodeCount > 1) {
-        if (HD === null) {
-          let H = 0, D = 0;
-          //
-          //  If all the children are stretchy, find the largest one,
-          //  otherwise, find the height and depth of the non-stretchy
-          //  children.
-          //
-          let all = (count > 1 && count === nodeCount);
-          for (const mtd of children) {
-            const child = mtd.childNodes[0];
-            const noStretch = (child.stretch.dir === DIRECTION.None);
-            if (all || noStretch) {
-              const {h, d} = child.getBBox(noStretch);
-              if (h > H) {
-                H = h;
-              }
-              if (d > D) {
-                D = d;
-              }
+      if (count && nodeCount > 1 && !HD) {
+        let H = 0, D = 0;
+        //
+        //  If all the children are stretchy, find the largest one,
+        //  otherwise, find the height and depth of the non-stretchy
+        //  children.
+        //
+        let all = (count > 1 && count === nodeCount);
+        for (const mtd of children) {
+          const child = mtd.childNodes[0];
+          const noStretch = (child.stretch.dir === DIRECTION.None);
+          if (all || noStretch) {
+            const {h, d} = child.getBBox(noStretch);
+            if (h > H) {
+              H = h;
+            }
+            if (d > D) {
+              D = d;
             }
           }
-          HD = [H, D];
         }
+        HD = [H, D];
+      }
+      if (HD) {
         //
         //  Stretch the stretchable children
         //

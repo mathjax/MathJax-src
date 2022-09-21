@@ -566,12 +566,20 @@ new sm.CommandMap('macros', {
   thinspace:         ['Spacer', MATHSPACE.thinmathspace],
   negthinspace:      ['Spacer', MATHSPACE.negativethinmathspace],
 
+  '*':                'DiscretionaryTimes',
+
+  allowbreak:         'AllowBreak',
+  goodbreak:         ['Linebreak', TexConstant.LineBreak.GOODBREAK],
+  badbreak:          ['Linebreak', TexConstant.LineBreak.BADBREAK],
+  nobreak:           ['Linebreak', TexConstant.LineBreak.NOBREAK],
+  break:              'Break',
+
   hskip:              'Hskip',
   hspace:             'Hskip',
-  kern:               'Hskip',
+  kern:              ['Hskip', true],
   mskip:              'Hskip',
   mspace:             'Hskip',
-  mkern:              'Hskip',
+  mkern:             ['Hskip', true],
   rule:               'rule',
   Rule:              ['Rule'],
   Space:             ['Rule', 'blank'],
@@ -603,7 +611,11 @@ new sm.CommandMap('macros', {
   mathpunct:         ['TeXAtom', TEXCLASS.PUNCT],
   mathinner:         ['TeXAtom', TEXCLASS.INNER],
 
+  vtop:              ['TeXAtom', TEXCLASS.VTOP],
   vcenter:           ['TeXAtom', TEXCLASS.VCENTER],
+  vbox:              ['TeXAtom', TEXCLASS.VBOX],
+  hsize:              'Hsize',
+  parbox:             'ParBox',
 
   buildrel:           'BuildRel',
 
@@ -613,6 +625,7 @@ new sm.CommandMap('macros', {
   fbox:               'FBox',
   boxed:              ['Macro', '\\fbox{$\\displaystyle{#1}$}', 1],
   framebox:           'FrameBox',
+  makebox:            'MakeBox',
 
   strut:              'Strut',
   mathstrut:         ['Macro', '\\vphantom{(}'],
@@ -637,7 +650,7 @@ new sm.CommandMap('macros', {
   matrix:             'Matrix',
   array:              'Matrix',
   pmatrix:           ['Matrix', '(', ')'],
-  cases:             ['Matrix', '{', '', 'left left', null, '.1em', null,
+  cases:             ['Matrix', '{', '', 'left left', null, '.2em', null,
                       true],
   eqalign:           ['Matrix', null, null, 'right left',
                       em(MATHSPACE.thickmathspace), '.5em', 'D'],
@@ -691,6 +704,8 @@ new sm.CommandMap('macros', {
   ref:                'HandleRef',
   nonumber:           'HandleNoTag',
 
+  newcolumntype:      'NewColumnType',
+
   // Internal use:
   mathchoice:         'MathChoice',
   mmlToken:           'MmlToken'
@@ -704,7 +719,8 @@ new sm.EnvironmentMap('environment', ParseMethods.environment, {
   array:         ['AlignedArray'],
   equation:      ['Equation', null, true],
   eqnarray:      ['EqnArray', null, true, true, 'rcl',
-                  ParseUtil.cols(0, MATHSPACE.thickmathspace), '.5em']
+                  ParseUtil.cols(0, MATHSPACE.thickmathspace), '.5em'],
+  indentalign:   ['IndentAlign']
 }, BaseMethods);
 
 

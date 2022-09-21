@@ -101,26 +101,56 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
         'letter-spacing': 'normal',
         'word-wrap': 'normal',
         'word-spacing': 'normal',
-        'white-space': 'nowrap',
         'direction': 'ltr',
         'padding': '1px 0'
       },
       'mjx-container[jax="CHTML"][display="true"]': {
         display: 'block',
         'text-align': 'center',
+        'justify-content': 'center',
         margin: '1em 0'
       },
       'mjx-container[jax="CHTML"][display="true"][width="full"]': {
-        display: 'flex'
+        display: 'flex',
       },
       'mjx-container[jax="CHTML"][display="true"] mjx-math': {
         padding: 0
       },
       'mjx-container[jax="CHTML"][justify="left"]': {
-        'text-align': 'left'
+        'text-align': 'left',
+        'justify-content': 'left'
       },
       'mjx-container[jax="CHTML"][justify="right"]': {
-        'text-align': 'right'
+        'text-align': 'right',
+        'justify-content': 'right'
+      },
+      //
+      //  For inline breakpoints, use a scaled space and make it breakable
+      //    (The space is .25em, so make everything 4 times the usual.
+      //     This will need to be adjusted when we do other fonts: we will
+      //     need one where the space is 1em)
+      //
+      'mjx-break::after': {
+        content: '" "',
+        'white-space': 'normal'
+      },
+      'mjx-break[size="1"]': {
+        'font-size': '44.4%'
+      },
+      'mjx-break[size="2"]': {
+        'font-size': '66.8%'
+      },
+      'mjx-break[size="3"]': {
+        'font-size': '88.8%'
+      },
+      'mjx-break[size="4"]': {
+        'font-size': '111.2%'
+      },
+      'mjx-break[size="5"]': {
+        'font-size': '133.2%'
+      },
+      'mjx-math[breakable]': {
+        display: 'inline'
       }
     };
 
@@ -146,10 +176,10 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
           }
           const W = this.em(Math.max(0, L + w + R));
           adaptor.setStyle(parent, 'min-width', W);
-          adaptor.setStyle(this.jax.table.dom, 'min-width', W);
+          adaptor.setStyle(this.jax.table.dom[0], 'min-width', W);
         }
       } else {
-        this.setIndent(this.dom, align, shift);
+        this.setIndent(this.dom[0], align, shift);
       }
     }
 
@@ -161,9 +191,9 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
       // Transfer right margin to container (for things like $x\hskip -2em y$)
       //
       const adaptor = this.adaptor;
-      const margin = adaptor.getStyle(this.dom, 'margin-right');
+      const margin = adaptor.getStyle(this.dom[0], 'margin-right');
       if (margin) {
-        adaptor.setStyle(this.dom, 'margin-right', '');
+        adaptor.setStyle(this.dom[0], 'margin-right', '');
         adaptor.setStyle(parent, 'margin-right', margin);
         adaptor.setStyle(parent, 'width', '0');
       }
@@ -174,19 +204,18 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
     /**
      * @override
      */
-    public toCHTML(parent: N) {
-      super.toCHTML(parent);
-      const chtml = this.dom;
+    public toCHTML(parents: N[]) {
+      super.toCHTML(parents);
       const adaptor = this.adaptor;
       const display = (this.node.attributes.get('display') === 'block');
       if (display) {
-        adaptor.setAttribute(chtml, 'display', 'true');
-        adaptor.setAttribute(parent, 'display', 'true');
-        this.handleDisplay(parent);
+        adaptor.setAttribute(this.dom[0], 'display', 'true');
+        adaptor.setAttribute(parents[0], 'display', 'true');
+        this.handleDisplay(parents[0]);
       } else {
-        this.handleInline(parent);
+        this.handleInline(parents[0]);
       }
-      adaptor.addClass(chtml, 'MJX-TEX');
+      adaptor.addClass(this.dom[0], 'MJX-TEX');
     }
 
     /**
@@ -194,6 +223,17 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
      */
     public setChildPWidths(recompute: boolean, w: number = null, clear: boolean = true) {
       return (this.parent ? super.setChildPWidths(recompute, w, clear) : false);
+    }
+
+    /**
+     * @override
+     */
+    protected handleAttributes() {
+      super.handleAttributes();
+      const adaptor = this.adaptor;
+      if (this.node.getProperty('breakable')) {
+        this.dom.forEach(dom => adaptor.setAttribute(dom, 'breakable', 'true'));
+      }
     }
 
   };

@@ -166,7 +166,7 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
       ['box', {
         renderer: (node, _child) => {
           const {w, h, d} = node.getBBox();
-          node.adaptor.append(node.dom, node.box(w, h, d));
+          node.adaptor.append(node.dom[0], node.box(w, h, d));
         },
         bbox: Notation.fullBBox,
         border: Notation.fullBorder,
@@ -177,7 +177,7 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
         renderer: (node, _child) => {
           const {w, h, d} = node.getBBox();
           const r = node.thickness + node.padding;
-          node.adaptor.append(node.dom, node.box(w, h, d, r));
+          node.adaptor.append(node.dom[0], node.box(w, h, d, r));
         },
         bbox: Notation.fullBBox
       }],
@@ -185,7 +185,7 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
       ['circle', {
         renderer: (node, _child) => {
           const {w, h, d} = node.getBBox();
-          node.adaptor.append(node.dom, node.ellipse(w, h, d));
+          node.adaptor.append(node.dom[0], node.ellipse(w, h, d));
         },
         bbox: Notation.fullBBox
       }],
@@ -201,7 +201,7 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
           const HD = h + d;
           const cos = Math.cos(a);
           node.adaptor.append(
-            node.dom,
+            node.dom[0],
             node.path('mitre', 'M', w, t - d,  'L', t + cos * t, t - d,  'L' , cos * HD + t, HD - d - t)
           );
         },
@@ -240,7 +240,7 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
           const t = node.thickness / 2;
           const p = node.padding;
           node.adaptor.append(
-            node.dom,
+            node.dom[0],
             node.path('round',
                       'M', t, t - d,
                       'a', p - t / 2, (h + d) / 2 - 4 * t,  0,  '0,1',  0, h + d - 2 * t,
@@ -261,7 +261,7 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
         //    (it is added in at the end, so other notations overlap the root)
         //
         renderer: (node, child) => {
-          node.msqrt.toSVG(child);
+          node.msqrt.toSVG([child]);
           const left = node.sqrtTRBL()[3];
           node.place(-left, 0, child);
         },
@@ -395,8 +395,8 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
-      const svg = this.standardSvgNode(parent);
+    public toSVG(parents: N[]) {
+      const svg = this.standardSvgNodes(parents);
       //
       //  Create a box at the correct position and add the children
       //
@@ -405,18 +405,19 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
       if (left > 0) {
         def.transform = 'translate(' + this.fixed(left) + ', 0)';
       }
-      const block = this.adaptor.append(svg, this.svg('g', def)) as N;
+      const block = this.adaptor.append(svg[0], this.svg('g', def)) as N;
       if (this.renderChild) {
         this.renderChild(this, block);
       } else {
-        this.childNodes[0].toSVG(block);
+        this.childNodes[0].toSVG([block]);
+        this.childNodes[0].place(0, 0);
       }
       //
       //  Render all the notations for this menclose element
       //
       for (const name of Object.keys(this.notations)) {
         const notation = this.notations[name];
-        !notation.renderChild && notation.renderer(this, svg);
+        !notation.renderChild && notation.renderer(this, svg[0]);
       }
     }
 

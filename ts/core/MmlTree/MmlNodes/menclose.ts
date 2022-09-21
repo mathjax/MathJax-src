@@ -64,7 +64,7 @@ export class MmlMenclose extends AbstractMmlNode {
    * <menclose> is a linebreak container
    * @override
    */
-  public get linebreakContininer() {
+  public get linebreakContainer() {
     return true;
   }
 

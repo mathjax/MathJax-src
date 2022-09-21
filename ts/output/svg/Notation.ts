@@ -109,7 +109,7 @@ export const lineOffset = function(data: LineData, node: Menclose, offset: strin
 export const RenderLine = function<N, T, D>(line: LineName, offset: string = ''): RENDERER<N, T, D> {
   return ((node, _child) => {
     const L = node.line(lineData(node, line, offset));
-    node.adaptor.append(node.dom, L);
+    node.adaptor.append(node.dom[0], L);
   });
 };
 
@@ -121,7 +121,7 @@ export const RenderLine = function<N, T, D>(line: LineName, offset: string = '')
  */
 export const Border = function<N, T, D>(side: Notation.Side): DEFPAIR<N, T, D> {
   return Notation.CommonBorder<SvgMencloseNTD<N, T, D>, N>((node, _child) => {
-    node.adaptor.append(node.dom, node.line(lineData(node, side)));
+    node.adaptor.append(node.dom[0], node.line(lineData(node, side)));
   })(side);
 };
 
@@ -134,8 +134,8 @@ export const Border = function<N, T, D>(side: Notation.Side): DEFPAIR<N, T, D> {
  */
 export const Border2 = function<N, T, D>(name: string, side1: Notation.Side, side2: Notation.Side): DEFPAIR<N, T, D> {
   return Notation.CommonBorder2<SvgMencloseNTD<N, T, D>, N>((node, _child) => {
-    node.adaptor.append(node.dom, node.line(lineData(node, side1)));
-    node.adaptor.append(node.dom, node.line(lineData(node, side2)));
+    node.adaptor.append(node.dom[0], node.line(lineData(node, side1)));
+    node.adaptor.append(node.dom[0], node.line(lineData(node, side2)));
   })(name, side1, side2);
 };
 
@@ -147,7 +147,7 @@ export const Border2 = function<N, T, D>(name: string, side1: Notation.Side, sid
  */
 export const DiagonalStrike = function<N, T, D>(name: LineName): DEFPAIR<N, T, D> {
   return Notation.CommonDiagonalStrike<SvgMencloseNTD<N, T, D>, N>((_cname: string) => (node, _child) => {
-    node.adaptor.append(node.dom, node.line(lineData(node, name)));
+    node.adaptor.append(node.dom[0], node.line(lineData(node, name)));
   })(name);
 };
 
@@ -159,7 +159,7 @@ export const DiagonalStrike = function<N, T, D>(name: LineName): DEFPAIR<N, T, D
  */
 export const DiagonalArrow = function<N, T, D>(name: string): DEFPAIR<N, T, D> {
   return Notation.CommonDiagonalArrow<SvgMencloseNTD<N, T, D>, N>((node, arrow) => {
-    node.adaptor.append(node.dom, arrow);
+    node.adaptor.append(node.dom[0], arrow);
   })(name);
 };
 
@@ -169,7 +169,7 @@ export const DiagonalArrow = function<N, T, D>(name: string): DEFPAIR<N, T, D> {
  */
 export const Arrow = function<N, T, D>(name: string): DEFPAIR<N, T, D> {
   return Notation.CommonArrow<SvgMencloseNTD<N, T, D>, N>((node, arrow) => {
-    node.adaptor.append(node.dom, arrow);
+    node.adaptor.append(node.dom[0], arrow);
   })(name);
 };
 

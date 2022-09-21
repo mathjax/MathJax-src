@@ -216,6 +216,20 @@ export function CommonMfencedMixin<
       this.setChildPWidths(recompute);
     }
 
+    /**
+     * @override
+     */
+    get breakCount() {
+      return this.mrow.breakCount;
+    }
+
+    /**
+     * @override
+     */
+    public computeLineBBox(i: number) {
+      return this.mrow.getLineBBox(i);
+    }
+
   } as any as B;
 
 }

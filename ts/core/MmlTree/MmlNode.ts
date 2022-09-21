@@ -44,10 +44,12 @@ export const TEXCLASS = {
   PUNCT: 6,
   INNER: 7,
   VCENTER: 8,  // Used in TeXAtom, but not for spacing
+  VTOP: 9,     // Used in TeXAtom, but not for spacing
+  VBOX: 10,    // Used in TeXAtom, but not for spacing
   NONE:   -1
 };
 
-export const TEXCLASSNAMES = ['ORD', 'OP', 'BIN', 'REL', 'OPEN', 'CLOSE', 'PUNCT', 'INNER', 'VCENTER'];
+export const TEXCLASSNAMES = ['ORD', 'OP', 'BIN', 'REL', 'OPEN', 'CLOSE', 'PUNCT', 'INNER', 'VCENTER', 'VTOP', 'VBOX'];
 
 /**
  *  The spacing sizes used by the TeX spacing table below.
@@ -95,7 +97,7 @@ export interface MmlNode extends Node<MmlNode, MmlNodeClass> {
   readonly isEmbellished: boolean;
   readonly isSpacelike: boolean;
   readonly linebreakContainer: boolean;
-  readonly hasNewLine: boolean;
+  readonly linebreakAlign: string;
 
   /**
    *  The expected number of children (-1 means use inferred mrow)
@@ -291,7 +293,8 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
    */
   public static alwaysInherit: {[name: string]: boolean} = {
     scriptminsize: true,
-    scriptsizemultiplier: true
+    scriptsizemultiplier: true,
+    infixlinebreakstyle: true
   };
 
   /**
@@ -444,10 +447,11 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
   }
 
   /**
-   * @return {boolean}  true if this node contains a line break
+   * @return {string}  the attribute used to seed the indentalign value in
+   *                   linebreak containers (overridden in subclasses when needed)
    */
-  public get hasNewLine(): boolean {
-    return false;
+  public get linebreakAlign(): string {
+    return 'data-align';
   }
 
   /**
@@ -627,10 +631,10 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
     if (prevClass === TEXCLASS.NONE || texClass === TEXCLASS.NONE) {
       return '';
     }
-    if (prevClass === TEXCLASS.VCENTER) {
+    if (prevClass >= TEXCLASS.VCENTER) {
       prevClass = TEXCLASS.ORD;
     }
-    if (texClass === TEXCLASS.VCENTER) {
+    if (texClass >= TEXCLASS.VCENTER) {
       texClass = TEXCLASS.ORD;
     }
     let space = TEXSPACE[prevClass][texClass];
@@ -657,6 +661,7 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
    *   If the node doesn't have an explicit scriptstyle, inherit it
    *   If the prime style is true, set it as a property (it is not a MathML attribute)
    *   Check that the number of children is correct
+   *   Reset the indent attributes for linebreak containers
    *   Finally, push any inherited attributes to teh children.
    *
    * @override
@@ -698,6 +703,20 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
         while (this.childNodes.length < arity) {
           this.appendChild(this.factory.create('mrow'));
         }
+      }
+    }
+    //
+    //  If this is a linebreak container, reset the indent attributes
+    //
+    if (this.linebreakContainer && !this.isEmbellished) {
+      const align = this.linebreakAlign;
+      if (align) {
+        const indentalign = this.attributes.get(align) || 'left';
+        attributes = this.addInheritedAttributes(attributes, {
+          indentalign, indentshift: '0',
+          indentalignfirst: indentalign, indentshiftfirst: '0',
+          indentalignlast: 'indentalign', indentshiftlast: 'indentshift'
+        });
       }
     }
     this.setChildInheritedAttributes(attributes, display, level, prime);
@@ -1080,10 +1099,10 @@ export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode<MmlNode, Mm
   }
 
   /**
-   * @return {boolean}  Does not contain new lines
+   * @return {string}  Don't set the indentalign and indentshift attributes in this case
    */
-  public get hasNewLine(): boolean {
-    return false;
+  public get linebreakAlign(): string {
+    return '';
   }
 
   /**

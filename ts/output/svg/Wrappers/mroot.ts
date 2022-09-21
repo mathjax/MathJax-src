@@ -88,12 +88,12 @@ export const SvgMroot = (function <N, T, D>(): SvgMrootClass<N, T, D> {
     /**
      * @override
      */
-    protected addRoot(ROOT: N, root: SvgWrapper<N, T, D>, sbox: BBox, H: number) {
+    protected addRoot(ROOT: N[], root: SvgWrapper<N, T, D>, sbox: BBox, H: number) {
       root.toSVG(ROOT);
       const [x, h, dx] = this.getRootDimens(sbox, H);
       const bbox = root.getOuterBBox();
       root.place(dx * bbox.rscale, h);
-      this.dx = x;
+      return x;
     }
 
   };

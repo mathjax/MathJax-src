@@ -33,6 +33,7 @@ import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../../../util/BBox.js';
+import {LineBBox} from '../LineBBox.js';
 import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
@@ -268,6 +269,14 @@ export interface CommonScriptbase<
    */
   stretchChildren(): void;
 
+  /**
+   * Add the scripts into the given bounding box for msub and msup (overridden by msubsup)
+   *
+   * @param {BBox} bbox   The bounding box to augment
+   * @return {BBox}       The modified bounding box
+   */
+  appendScripts(bbox: BBox): BBox;
+
 }
 
 /**
@@ -454,7 +463,7 @@ export function CommonScriptbaseMixin<
       while (core &&
              ((core.childNodes.length === 1 &&
                (core.node.isKind('mrow') ||
-                (core.node.isKind('TeXAtom') && core.node.texClass !== TEXCLASS.VCENTER) ||
+                (core.node.isKind('TeXAtom') && core.node.texClass < TEXCLASS.VCENTER) ||
                 core.node.isKind('mstyle') || core.node.isKind('mpadded') ||
                 core.node.isKind('mphantom') || core.node.isKind('semantics'))) ||
               (core.node.isKind('munderover') &&
@@ -581,7 +590,7 @@ export function CommonScriptbaseMixin<
      * @override
      */
     public getBaseWidth(): number {
-      const bbox = this.baseChild.getOuterBBox();
+      const bbox = this.baseChild.getLineBBox(this.baseChild.breakCount);
       return bbox.w * bbox.rscale - (this.baseRemoveIc ? this.baseIc : 0) + this.font.params.extra_ic;
     }
 
@@ -605,7 +614,8 @@ export function CommonScriptbaseMixin<
      * @override
      */
     public getV(): number {
-      const bbox = this.baseCore.getOuterBBox();
+      const base = this.baseCore;
+      const bbox = base.getLineBBox(base.breakCount);
       const sbox = this.scriptChild.getOuterBBox();
       const tex = this.font.params;
       const subscriptshift = this.length2em(this.node.attributes.get('subscriptshift'), tex.sub1);
@@ -620,7 +630,8 @@ export function CommonScriptbaseMixin<
      * @override
      */
     public getU(): number {
-      const bbox = this.baseCore.getOuterBBox();
+      const base = this.baseCore;
+      const bbox = base.getLineBBox(base.breakCount);
       const sbox = this.scriptChild.getOuterBBox();
       const tex = this.font.params;
       const attr = this.node.attributes.getList('displaystyle', 'superscriptshift');
@@ -786,19 +797,67 @@ export function CommonScriptbaseMixin<
     }
 
     /**
-     * This gives the common bbox for msub and msup.  It is overridden
-     * for all the others (msubsup, munder, mover, munderover).
+     * This gives the common bbox for msub, msup, and msubsup.  It is overridden
+     * for all the others (munder, mover, munderover).
      *
      * @override
      */
     public computeBBox(bbox: BBox, recompute: boolean = false) {
-      const w = this.getBaseWidth();
-      const [x, y] = this.getOffset();
+      bbox.empty();
       bbox.append(this.baseChild.getOuterBBox());
-      bbox.combine(this.scriptChild.getOuterBBox(), w + x, y);
-      bbox.w += this.font.params.scriptspace;
+      this.appendScripts(bbox);
       bbox.clean();
       this.setChildPWidths(recompute);
+    }
+
+    /**
+     * @override
+     */
+    public appendScripts(bbox: BBox): BBox {
+      const w = this.getBaseWidth();
+      const [x, y] = this.getOffset();
+      bbox.combine(this.scriptChild.getOuterBBox(), w + x, y);
+      bbox.w += this.font.params.scriptspace;
+      return bbox;
+    }
+
+    /**
+     * @override
+     */
+    get breakCount() {
+      if (this._breakCount < 0) {
+        this._breakCount = (this.node.isEmbellished ? this.coreMO().embellishedBreakCount :
+                            !this.node.linebreakContainer ? this.childNodes[0].breakCount : 0);
+      }
+      return this._breakCount;
+    }
+
+    /**
+     * msubsup/mub/msupo is a linebreak container for its scripts
+     *
+     * @override
+     */
+    public breakTop(mrow: WW, child: WW): WW {
+      return (this.node.linebreakContainer || !this.parent ||
+              this.node.childIndex(child.node) ? mrow : this.parent.breakTop(mrow, this as any as WW));
+    }
+
+    /**
+     * @override
+     */
+    public computeLineBBox(i: number) {
+      const n = this.breakCount;
+      if (!n) return LineBBox.from(this.getOuterBBox(), this.linebreakOptions.lineleading);
+      const bbox = this.baseChild.getLineBBox(i).copy();
+      if (i < n) {
+        i === 0 && this.addLeftBorders(bbox);
+        this.addMiddleBorders(bbox);
+      } else {
+        this.appendScripts(bbox);
+        this.addMiddleBorders(bbox);
+        this.addRightBorders(bbox);
+      }
+      return bbox;
     }
 
   } as any as B;

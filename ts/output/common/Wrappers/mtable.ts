@@ -52,6 +52,13 @@ export type TableData = {
  */
 export type ColumnWidths = (string | number | null)[];
 
+/**
+ * The acceptable portion needed to shrink a column for line breaking
+ * (when the needed shrinkage for a collection of columns is less than
+ * this portion of their total width, no smaller columns are broken)
+ */
+export let BREAK_BELOW = .333;
+
 /*****************************************************************/
 /**
  * The CommonMtable interface
@@ -152,7 +159,7 @@ export interface CommonMtable<
   data: TableData;
 
   /**
-   * The table cells that have percentage-width content
+   * The table cells that have percentage-width content and the column numbers for them
    */
   pwidthCells: [WW, number][];
 
@@ -193,6 +200,14 @@ export interface CommonMtable<
    * @param {number} W   The computed width of the column (or null of not computed)
    */
   stretchColumn(i: number, W: number): void;
+
+  /**
+   * Do linebreaking on the cells of a column
+   *
+   * @param {number} i   The number of the column to break
+   * @param {number} W   The width to break to
+   */
+  breakColumn(i: number, W: number): void;
 
   /**
    * Determine the row heights and depths, the column widths,
@@ -259,6 +274,16 @@ export interface CommonMtable<
   getWidth(): number;
 
   /**
+   * Adjust column widths for tables that are too wide
+   */
+  adjustWideTable(): void;
+
+  /**
+   * @return {number}   The natural width of the table (without automatic lienbreaks).
+   */
+  naturalWidth(): number;
+
+  /**
    * @return {number}   The maximum height of a row
    */
   getEqualRowHeight(): number;
@@ -283,6 +308,7 @@ export interface CommonMtable<
   /**
    * For tables with equal columns, get the proper amount per row.
    *
+   * @param {string} width   The width of the table
    * @return {ColumnWidths}  The array of widths
    */
   getEqualColumns(width: string): ColumnWidths;
@@ -292,7 +318,8 @@ export interface CommonMtable<
    * will end up being natural width, so don't need to
    * set those explicitly.
    *
-   * @return {ColumnWidths}  The array of widths
+   * @param {string[]} swidths  Strings giving the widths
+   * @return {ColumnWidths}     The array of widths
    */
   getColumnWidthsAuto(swidths: string[]): ColumnWidths;
 
@@ -302,17 +329,26 @@ export interface CommonMtable<
    * but for 'auto' columns (when there are 'fit' ones), set the size
    * to the natural size of the column.
    *
-   * @param {string[]} widths  Strings giving the widths
-   * @return {ColumnWidths}    The array of widths
+   * @param {string[]} swidths  Strings giving the widths
+   * @return {ColumnWidths}     The array of widths
    */
-  getColumnWidthsPercent(widths: string[]): ColumnWidths;
+  getColumnWidthsPercent(swidths: string[]): ColumnWidths;
 
   /**
    * For fixed-width tables, compute the column widths of all columns.
    *
-   * @return {ColumnWidths}  The array of widths
+   * @param {string[]} swidths  Strings giving the widths
+   * @param {string} width      The width of the table
+   * @return {ColumnWidths}     The array of widths
    */
   getColumnWidthsFixed(swidths: string[], width: number): ColumnWidths;
+
+  /**
+   * For fixed-width tables, compute the column widths of all columns.
+   *
+   * @param {string} width       The width of the table
+   */
+  adjustColumnWidths(width: number): void
 
   /**
    * @param {number} i      The row number (starting at 0)
@@ -322,13 +358,18 @@ export interface CommonMtable<
   getVerticalPosition(i: number, align: string): number;
 
   /**
-   * @param {number} fspace   The frame spacing to use
-   * @param {number[]} space  The array of spacing values to convert to strings
-   * @param {number} scale    A scaling factor to use for the sizes
-   * @return {string[]}       The half-spacing as stings with units of "em"
-   *                           with frame spacing at the beginning and end
+   * @return {number[]}   The x and y frame spacing [left, top-and-bottom, right]
    */
-  getEmHalfSpacing(fspace: number, space: number[], scale?: number): string[];
+  getFrameSpacing(): number[];
+
+  /**
+   * @param {number[]} fspace   The frame spacing to use
+   * @param {number[]} space    The array of spacing values to convert to strings
+   * @param {number} scale      A scaling factor to use for the sizes
+   * @return {string[]}         The half-spacing as stings with units of "em"
+   *                             with frame spacing at the beginning and end
+   */
+  getEmHalfSpacing(fspace: number[], space: number[], scale?: number): string[];
 
   /**
    * @return {number[]}   The half-spacing for rows with frame spacing at the ends
@@ -590,13 +631,14 @@ export function CommonMtableMixin<
       for (let i = 0; i < this.numCols; i++) {
         const width = (typeof this.cWidths[i] === 'number' ? this.cWidths[i] as number : null);
         this.stretchColumn(i, width);
+        width !== null && this.breakColumn(i, width);
       }
     }
 
     /**
      * @override
      */
-    public stretchColumn(i: number, W: number) {
+    public stretchColumn(i: number, W: number | null) {
       let stretchy: WW[] = [];
       //
       //  Locate and count the stretchy children
@@ -613,34 +655,62 @@ export function CommonMtableMixin<
       }
       let count = stretchy.length;
       let nodeCount = this.childNodes.length;
-      if (count && nodeCount > 1) {
-        if (W === null) {
-          W = 0;
-          //
-          //  If all the children are stretchy, find the largest one,
-          //  otherwise, find the width of the non-stretchy children.
-          //
-          let all = (count > 1 && count === nodeCount);
-          for (const row of this.tableRows) {
-            const cell = row.getChild(i);
-            if (cell) {
-              const child = cell.childNodes[0];
-              const noStretch = (child.stretch.dir === DIRECTION.None);
-              if (all || noStretch) {
-                const {w} = child.getBBox(noStretch);
-                if (w > W) {
-                  W = w;
-                }
+      if (count && nodeCount > 1 && W === null) {
+        W = 0;
+        //
+        //  If all the children are stretchy, find the largest one,
+        //  otherwise, find the width of the non-stretchy children.
+        //
+        let all = (count > 1 && count === nodeCount);
+        for (const row of this.tableRows) {
+          const cell = row.getChild(i);
+          if (cell) {
+            const child = cell.childNodes[0];
+            const noStretch = (child.stretch.dir === DIRECTION.None);
+            if (all || noStretch) {
+              const {w} = child.getBBox(noStretch);
+              if (w > W) {
+                W = w;
               }
             }
           }
         }
+      }
+      if (W !== null) {
         //
         //  Stretch the stretchable children
         //
         for (const child of stretchy) {
           child.coreMO().getStretchedVariant([W]);
         }
+      }
+    }
+
+    /**
+     * @override
+     */
+    public breakColumn(i: number, W: number) {
+      if (this.jax.math.root.attributes.get('overflow') !== 'linebreak' || !this.jax.math.display) return;
+      const {D} = this.getTableData();
+      let j = 0;
+      let w = 0;
+      for (const row of this.tableRows) {
+        const cell = row.getChild(i);
+        if (cell && cell.getBBox().w > W) {
+          cell.childNodes[0].breakToWidth(W);
+          const bbox = cell.getBBox();
+          D[j] = Math.max(D[j], bbox.d);
+          if (bbox.w > w) {
+            w = bbox.w;
+          }
+        }
+        j++;
+      }
+      //
+      // Make sure cWidth reflects the size of the broken columns
+      //
+      if (w > this.cWidths[i]) {
+        this.cWidths[i] = w;
       }
     }
 
@@ -788,7 +858,7 @@ export function CommonMtableMixin<
         return (align === 'center' && !labels ? [pad, pad] :
                 side === 'left' ? [pad, 0] : [0, pad]);
       }
-      return [0, 0];
+      return [this.bbox?.L || 0, 0];
     }
 
     /**
@@ -824,6 +894,24 @@ export function CommonMtableMixin<
     }
 
     /******************************************************************/
+
+    /**
+     * @override
+     */
+    public adjustWideTable() {
+      if (this.node.attributes.get('width') !== 'auto') return;
+      const sep = this.length2em(this.node.attributes.get('minlabelspacing'));
+      const W = this.containerWidth - this.getTableData().L - sep;
+      this.naturalWidth() > W && this.adjustColumnWidths(W);
+    }
+
+    /**
+     * @override
+     */
+    public naturalWidth(): number {
+      const CW = this.getComputedWidths();
+      return sum(CW.concat(this.cLines, this.cSpace)) + 2 * this.fLine + this.fSpace[0] + this.fSpace[2];
+    }
 
     /**
      * @override
@@ -878,7 +966,7 @@ export function CommonMtableMixin<
       } else if (isPercent(width)) {
         cwidth = this.percent(1 / n);
       } else {
-        const w = sum([].concat(this.cLines, this.cSpace)) + 2 * this.fSpace[0];
+        const w = sum([].concat(this.cLines, this.cSpace)) + this.fSpace[0] + this.fSpace[2];
         cwidth = Math.max(0, this.length2em(width) - w) / n;
       }
       return Array(this.numCols).fill(cwidth);
@@ -928,7 +1016,7 @@ export function CommonMtableMixin<
       //   separation and lines have been removed (cwidth), and
       //   after the width of the columns have been removed (dw).
       //
-      const cwidth = width - sum([].concat(this.cLines, this.cSpace)) - 2 * this.fSpace[0];
+      const cwidth = width - sum([].concat(this.cLines, this.cSpace)) - this.fSpace[0] - this.fSpace[2];
       let dw = cwidth;
       indices.forEach(i => {
         const x = swidths[i];
@@ -947,6 +1035,53 @@ export function CommonMtableMixin<
         if (x === 'auto') return W[i] + (fit.length === 0 ? fw : 0);
         return this.length2em(x, cwidth);
       });
+    }
+
+    /**
+     * @override
+     */
+    public adjustColumnWidths(width: number) {
+      //
+      // Sort the columns by width, fit first, then auto, then percentage, then fixed.
+      // This is the order in which the columns should break, depending on how much
+      // shrinkage is needed.  This keeps small columns from breaking unnecessarily,
+      // and takes all the shrinkage from fit columns, if possible, then auto, then
+      // percentage widths, and fixed sizes last.
+      //
+      const {W} = this.getTableData();
+      const swidths = this.getColumnAttributes('columnwidth', 0);
+      const indices = Array.from(swidths.keys());
+      const fit = indices.filter(i => swidths[i] === 'fit').sort((a, b) => W[b] - W[a]);
+      const auto = indices.filter(i => swidths[i] === 'auto').sort((a, b) => W[b] - W[a]);
+      const percent = indices.filter(i => isPercent(swidths[i])).sort((a, b) => W[b] - W[a]);
+      const fixed = indices.filter(i => swidths[i] !== 'fit' && swidths[i] !== 'auto' &&
+                                   !isPercent(swidths[i])).sort((a, b) => W[b] - W[a]);
+      const columns = [...fit, ...auto, ...percent, ...fixed];
+      if (!columns.length) return;
+      //
+      //  Get the current widths of all the columns
+      //
+      this.cWidths = indices.map(i => (typeof this.cWidths[i] === 'number' ? this.cWidths[i] as number : W[i]));
+      //
+      // Determine the space remaining from the fixed width after the
+      //   separation and lines have been removed (cwidth), and
+      //   after the width of the columns have been removed (dw).
+      //
+      const cwidth = width - sum([].concat(this.cLines, this.cSpace)) - this.fSpace[0] - this.fSpace[2];
+      let dw = sum(this.cWidths as number[]) - cwidth;
+      //
+      // Get the columns needed to get dw as a small enough portion of the total width
+      //
+      let w = 0, n = 0;
+      while (n < columns.length) {
+        w += W[columns[n++]];
+        if (w && dw / w < BREAK_BELOW) break;
+      }
+      //
+      // Adjust the columns by the proportional amount of dw;
+      //
+      dw = 1 - dw / w;
+      columns.slice(0, n).forEach(i => (this.cWidths[i] as number) *= dw);
     }
 
     /**
@@ -988,17 +1123,32 @@ export function CommonMtableMixin<
 
     /******************************************************************/
 
+
     /**
      * @override
      */
-    public getEmHalfSpacing(fspace: number, space: number[], scale: number = 1): string[] {
+    public getFrameSpacing(): number[] {
+      const fspace = (this.frame ? this.convertLengths(this.getAttributeArray('framespacing')) : [0, 0]);
+      fspace[2] = fspace[0];
+      const padding = this.node.attributes.get('data-array-padding') as string;
+      if (padding) {
+        const [L, R] = this.convertLengths(split(padding));
+        fspace[0] = L;
+        fspace[2] = R;
+      }
+      return fspace;
+    }
+
+    /**
+     * @override
+     */
+    public getEmHalfSpacing(fspace: number[], space: number[], scale: number = 1): string[] {
       //
       //  Get the column spacing values, and add the frame spacing values at the left and right
       //
-      const fspaceEm = this.em(fspace * scale);
       const spaceEm = this.addEm(space, 2 / scale);
-      spaceEm.unshift(fspaceEm);
-      spaceEm.push(fspaceEm);
+      spaceEm.unshift(this.em(fspace[0] * scale));
+      spaceEm.push(this.em(fspace[1] * scale));
       return spaceEm;
     }
 
@@ -1018,7 +1168,7 @@ export function CommonMtableMixin<
     public getColumnHalfSpacing(): number[] {
       const space = this.cSpace.map(x => x / 2);
       space.unshift(this.fSpace[0]);
-      space.push(this.fSpace[0]);
+      space.push(this.fSpace[2]);
       return space;
     }
 
@@ -1116,17 +1266,18 @@ export function CommonMtableMixin<
       const attributes = this.node.attributes;
       this.frame = attributes.get('frame') !== 'none';
       this.fLine = (this.frame && attributes.get('frame') ? .07 : 0);
-      this.fSpace = (this.frame ? this.convertLengths(this.getAttributeArray('framespacing')) : [0, 0]);
+      this.fSpace = this.getFrameSpacing();
       this.cSpace = this.convertLengths(this.getColumnAttributes('columnspacing'));
       this.rSpace = this.convertLengths(this.getRowAttributes('rowspacing'));
       this.cLines = this.getColumnAttributes('columnlines').map(x => (x === 'none' ? 0 : .07));
       this.rLines = this.getRowAttributes('rowlines').map(x => (x === 'none' ? 0 : .07));
       this.cWidths = this.getColumnWidths();
+      this.adjustWideTable();
       //
       // Stretch the rows and columns
       //
-      this.stretchRows();
       this.stretchColumns();
+      this.stretchRows();
     }
 
     /**
@@ -1148,13 +1299,9 @@ export function CommonMtableMixin<
       }
       height += 2 * (this.fLine + this.fSpace[1]);
       //
-      //  Get the widths of all columns
-      //
-      const CW = this.getComputedWidths();
-      //
       //  Get the expected width of the table
       //
-      width = sum(CW.concat(this.cLines, this.cSpace)) + 2 * (this.fLine + this.fSpace[0]);
+      width = this.naturalWidth();
       //
       //  If the table width is not 'auto', determine the specified width
       //    and pick the larger of the specified and computed widths.
@@ -1198,8 +1345,7 @@ export function CommonMtableMixin<
                     Array(this.numCols).fill(this.percent(1 / Math.max(1, this.numCols))) :
                     this.getColumnAttributes('columnwidth', 0));
       this.cWidths = this.getColumnWidthsFixed(cols, W);
-      const CW = this.getComputedWidths();
-      this.pWidth = sum(CW.concat(this.cLines, this.cSpace)) + 2 * (this.fLine + this.fSpace[0]);
+      this.pWidth = this.naturalWidth();
       if (this.isTop) {
         this.bbox.w = this.pWidth;
       }
