@@ -92,26 +92,6 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
   };
 
   /**
-   * The list of attributes that don't get entity translation
-   */
-  public static CDATA_ATTR: {[name: string]: boolean} = {
-    style: true,
-    datafld: true,
-    datasrc: true,
-    href: true,
-    src: true,
-    longdesc: true,
-    usemap: true,
-    cite: true,
-    datetime: true,
-    action: true,
-    axis: true,
-    profile: true,
-    content: true,
-    scheme: true
-  };
-
-  /**
    * @override
    */
   public parseFromString(text: string, _format: string = 'text/html', adaptor: LiteAdaptor = null) {
@@ -230,13 +210,9 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
    *                                as described above.
    */
   protected addAttributes(adaptor: LiteAdaptor, node: LiteElement, attributes: string[]) {
-    const CDATA_ATTR = (this.constructor as typeof LiteParser).CDATA_ATTR;
     while (attributes.length) {
       let [ , name, v1, v2, v3] = attributes.splice(0, 5);
-      let value = v1 || v2 || v3 || '';
-      if (!CDATA_ATTR[name]) {
-        value = Entities.translate(value);
-      }
+      let value = Entities.translate(v1 || v2 || v3 || '');
       adaptor.setAttribute(node, name, value);
     }
   }
@@ -351,10 +327,9 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
    */
   public serialize(adaptor: LiteAdaptor, node: LiteElement, xml: boolean = false): string {
     const SELF_CLOSING = (this.constructor as typeof LiteParser).SELF_CLOSING;
-    const CDATA = (this.constructor as typeof LiteParser).CDATA_ATTR;
     const tag = adaptor.kind(node);
     const attributes = adaptor.allAttributes(node).map(
-      (x: AttributeData) => x.name + '="' + (CDATA[x.name] ? x.value : this.protectAttribute(x.value)) + '"'
+      (x: AttributeData) => x.name + '="' + this.protectAttribute(x.value) + '"'
     ).join(' ');
     const content = this.serializeInner(adaptor, node, xml);
     const html =
@@ -389,7 +364,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     if (typeof text !== 'string') {
       text = String(text);
     }
-    return text.replace(/"/g, '&quot;');
+    return text.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
   }
 
   /**
