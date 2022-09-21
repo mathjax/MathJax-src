@@ -16,4 +16,4 @@ Loader.preLoad(
   'a11y/assistive-mml'
 );
 
-loadFont(startup, true);
+loadFont(startup);
