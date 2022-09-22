@@ -74,6 +74,7 @@ export default class TexParser {
    * @param {ParseOptions} configuration A parser configuration.
    */
   constructor(private _string: string, env: EnvList, public configuration: ParseOptions) {
+    console.log('New Parser');
     const inner = env.hasOwnProperty('isInner');
     const isInner = env['isInner'] as boolean;
     delete env['isInner'];
@@ -89,6 +90,9 @@ export default class TexParser {
     this.Parse();
     this.Push(this.itemFactory.create('stop'));
     this.stack.env = ENV;
+    console.log('Final');
+    console.log(this.string);
+    this.updateResult(this.string, this.i);
   }
 
   /**
@@ -135,9 +139,38 @@ export default class TexParser {
    * @return {ParseResult} The output of the parsing function.
    */
   public parse(kind: HandlerType, input: ParseInput): ParseResult {
-    return this.configuration.handlers.get(kind).parse(input);
+    let oldI = this.i;
+    let result = this.configuration.handlers.get(kind).parse(input);
+    this.updateResult(input[1], oldI);
+    return result;
   }
 
+  // Currently works without environments.
+  private updateResult(input: string, old: number) {
+    console.log('Result Start');
+    console.log(this.stack.toString());
+    let node = this.stack.Prev(true) as MmlNode;
+    console.log(node);
+    if (!node) {
+      return;
+    }
+    console.log('Has already entry: ' + node.attributes.get('latex'));
+    console.log(node.toString());
+    let str = old !== this.i ? this.string.slice(old, this.i) : input;
+    str = str.trim();
+    if (!str) {
+      return;
+    }
+    if (input === '\\') {
+      str = '\\' + str;
+    }
+    console.log('Full String: ' + this.string);
+    console.log('Save: ' + str);
+    console.log('Input: ' + input);
+    console.log('Result End');
+    node.attributes.set('latex', str);
+  }
+  
 
   /**
    * Maps a token to its "parse value" if it exists.
