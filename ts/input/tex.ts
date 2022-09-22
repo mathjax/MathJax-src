@@ -196,6 +196,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
       node = this.options.formatError(this, err);
     }
     node = this.parseOptions.nodeFactory.create('node', 'math', [node]);
+    node.attributes.set('latex', this.latex);
     if (globalEnv?.indentalign) {
       NodeUtil.setAttribute(node, 'indentalign', globalEnv.indentalign);
     }
