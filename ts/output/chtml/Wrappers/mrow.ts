@@ -101,7 +101,7 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
       if (hasNegative) {
         const {w} = this.getBBox();
         if (w) {
-          this.adaptor.setStyle(chtml, 'width', this.em(Math.max(0, w)));
+          this.adaptor.setStyle(chtml, 'width', this.em(Math.max(0, w + .001)));
           if (w < 0) {
             this.adaptor.setStyle(chtml, 'marginRight', this.em(w));
           }
