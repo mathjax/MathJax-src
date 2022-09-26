@@ -77,14 +77,15 @@ export const OutputUtil = {
   },
 
   loadFont(startup, jax, font, preload) {
-    if (MathJax.loader) {
-      if (preload) {
-        MathJax.loader.preLoad(`[${font}]/${jax}`);
-      }
-      const check = MathJax.config.loader[`output/${jax}`];
-      const start = (check && check.checkReady ? check.checkReady().then(startup) : startup());
-      start.catch(err => console.log(err));
+    if (!MathJax.loader) {
+      return Promise.resolve();
     }
+    if (preload) {
+      MathJax.loader.preLoad(`[${font}]/${jax}`);
+    }
+    const check = MathJax.config.loader[`output/${jax}`];
+    const start = (check && check.checkReady ? check.checkReady().then(startup) : startup());
+    return start.catch(err => console.log(err));
   }
 
 };

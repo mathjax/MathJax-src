@@ -7,6 +7,6 @@ import {OutputUtil} from '../util.js';
 OutputUtil.config('svg', SVG, fontName, DefaultFont);
 
 export function loadFont(startup, preload) {
-  OutputUtil.loadFont(startup, 'svg', fontName, preload);
+  return OutputUtil.loadFont(startup, 'svg', fontName, preload);
 }
 
