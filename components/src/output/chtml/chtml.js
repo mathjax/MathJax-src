@@ -7,6 +7,6 @@ import {OutputUtil} from '../util.js';
 OutputUtil.config('chtml', CHTML, fontName, DefaultFont);
 
 export function loadFont(startup, preload) {
-  OutputUtil.loadFont(startup, 'chtml', fontName, preload);
+  return OutputUtil.loadFont(startup, 'chtml', fontName, preload);
 }
 

@@ -11,8 +11,9 @@ combineDefaults(MathJax.config.loader, 'paths', paths);
 combineDefaults(MathJax.config.loader, 'provides', provides);
 combineDefaults(MathJax.config.loader, 'source', compatibility);
 
-export function startup() {
+export function startup(ready) {
   return Loader.load(...CONFIG.load)
+               .then(() => (ready || function () {})())
                .then(() => CONFIG.ready())
                .catch(error => CONFIG.failed(error));
 }
