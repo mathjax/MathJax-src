@@ -143,7 +143,7 @@ export class Menu {
       autocollapse: false,
       collapsible: false,
       inTabOrder: true,
-      assistiveMml: true,
+      assistiveMml: false,
       explorer: false
     },
     jax: {
@@ -700,6 +700,7 @@ export class Menu {
   protected applySettings() {
     this.setTabOrder(this.settings.inTabOrder);
     this.document.options.enableAssistiveMml = this.settings.assistiveMml;
+    this.document.options.enableExplorer = this.settings.explorer;
     this.document.outputJax.options.scale = parseFloat(this.settings.scale);
     if (this.settings.renderer !== this.defaultSettings.renderer) {
       this.setRenderer(this.settings.renderer);
