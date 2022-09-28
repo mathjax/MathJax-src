@@ -27,7 +27,7 @@ import {ChtmlWrapperFactory} from '../WrapperFactory.js';
 import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
         ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
 import {CommonMtext, CommonMtextClass, CommonMtextMixin} from '../../common/Wrappers/mtext.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
+import {MmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMtext} from '../../../core/MmlTree/MmlNodes/mtext.js';
 
 /*****************************************************************/
@@ -83,6 +83,63 @@ export const ChtmlMtext = (function <N, T, D>(): ChtmlMtextClass<N, T, D> {
      * @override
      */
     public static kind = MmlMtext.prototype.kind;
+
+    /**
+     * @override
+     */
+    public toCHTML(parents: N[]) {
+      //
+      // If no breakpoints, do the usual thing
+      //
+      if (!this.breakCount) {
+        super.toCHTML(parents);
+        return;
+      }
+      //
+      // Get the line containers and loop through them
+      //
+      const chtml = this.standardChtmlNodes(parents);
+      const textNode = this.textNode.node as TextNode;
+      const childNodes = this.childNodes;
+      for (const i of chtml.keys()) {
+        const DOM = [chtml[i]];
+        this.adaptor.append(chtml[i], this.html('mjx-linestrut'));
+        //
+        // Get the start and end indices
+        //
+        let [si, sj] = this.breakPoints[i - 1] || [0, 0];
+        let [ei, ej] = this.breakPoints[i] || [childNodes.length, 0];
+        //
+        // Get the words for the start child, and if the start and end
+        //   are in the same child, output the needed words
+        //
+        let words = (childNodes[si].node as TextNode).getText().split(/ /);
+        if (si === ei) {
+          textNode.setText(words.slice(sj, ej).join(' '));
+          this.textNode.toCHTML(DOM);
+          continue;
+        }
+        //
+        // Otherwise, output from the start to the end of the child
+        //
+        textNode.setText(words.slice(sj).join(' '));
+        this.textNode.toCHTML(DOM);
+        //
+        // Add in any additional full children before the end child
+        //
+        while (++si < ei && si < childNodes.length) {
+          childNodes[si].toCHTML(DOM);
+        }
+        //
+        // Add the beginning of the end child up to the end break
+        //
+        if (si < childNodes.length) {
+          words = (childNodes[si].node as TextNode).getText().split(/ /);
+          textNode.setText(words.slice(0, ej).join(' '));
+          this.textNode.toCHTML(DOM);
+        }
+      }
+    }
 
   };
 

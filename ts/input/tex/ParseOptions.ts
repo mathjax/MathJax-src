@@ -31,6 +31,7 @@ import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import TexParser from './TexParser.js';
 import {defaultOptions, OptionList} from '../../util/Options.js';
 import {ParserConfiguration} from './Configuration.js';
+import {ColumnParser} from './ColumnParser.js';
 
 
 /**
@@ -67,6 +68,11 @@ export default class ParseOptions {
    * @type {Tags}
    */
   public tags: Tags;
+
+  /**
+   * The column parser
+   */
+  public columnParser: ColumnParser = new ColumnParser();
 
   /**
    * Storage area for parser-specific package data (indexed by package name)

@@ -56,7 +56,13 @@ export interface CommonTeXAtom<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>
-> extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
+> extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
+
+  /**
+   * The vertical adjustment for VCENTER and VBOX atoms
+   */
+  dh: number;
+}
 
 /**
  * The CommonTeXAtomClass interface
@@ -126,6 +132,11 @@ export function CommonTeXAtomMixin<
     /**
      * @override
      */
+    public dh: number = 0;
+
+    /**
+     * @override
+     */
     public computeBBox(bbox: BBox, recompute: boolean = false) {
       super.computeBBox(bbox, recompute);
       if (this.childNodes[0] && this.childNodes[0].bbox.ic) {
@@ -137,10 +148,23 @@ export function CommonTeXAtomMixin<
       if (this.node.texClass === TEXCLASS.VCENTER) {
         const {h, d} = bbox;
         const a = this.font.params.axis_height;
-        const dh = ((h + d) / 2 + a) - h;  // new height minus old height
-        bbox.h += dh;
-        bbox.d -= dh;
+        this.dh = ((h + d) / 2 + a) - h;  // new height minus old height
+        bbox.h += this.dh;
+        bbox.d -= this.dh;
+      } else if (this.node.texClass === TEXCLASS.VBOX) {
+        if (this.vboxAdjust(this.childNodes[0], bbox) || this.childNodes[0].childNodes.length > 1) return;
+        const child = this.childNodes[0].childNodes[0];
+        (child.node.isKind('mpadded') && this.vboxAdjust(child.childNodes[0], bbox)) || this.vboxAdjust(child, bbox);
       }
+    }
+
+    public vboxAdjust(child: WW, bbox: BBox): boolean {
+      const n = child.lineBBox.length;
+      if (!n) return false;
+      this.dh = bbox.d - child.lineBBox[n - 1].d;
+      bbox.h += this.dh;
+      bbox.d -= this.dh;
+      return true;
     }
 
   } as any as B;

@@ -112,23 +112,24 @@ export const ChtmlMunder = (function <N, T, D>(): ChtmlMunderClass<N, T, D> {
     /**
      * @override
      */
-    public toCHTML(parent: N) {
+    public toCHTML(parents: N[]) {
+      if (this.toEmbellishedCHTML(parents)) return;
       if (this.hasMovableLimits()) {
-        super.toCHTML(parent);
-        this.adaptor.setAttribute(this.dom, 'limits', 'false');
+        super.toCHTML(parents);
+        this.adaptor.setAttribute(this.dom[0], 'limits', 'false');
         return;
       }
-      this.dom = this.standardChtmlNode(parent);
+      this.dom = this.standardChtmlNodes(parents);
       const base = this.adaptor.append(
-        this.adaptor.append(this.dom, this.html('mjx-row')) as N,
+        this.adaptor.append(this.dom[0], this.html('mjx-row')) as N,
         this.html('mjx-base')
       ) as N;
       const under = this.adaptor.append(
-        this.adaptor.append(this.dom, this.html('mjx-row')) as N,
+        this.adaptor.append(this.dom[0], this.html('mjx-row')) as N,
         this.html('mjx-under')
       ) as N;
-      this.baseChild.toCHTML(base);
-      this.scriptChild.toCHTML(under);
+      this.baseChild.toCHTML([base]);
+      this.scriptChild.toCHTML([under]);
       const basebox = this.baseChild.getOuterBBox();
       const underbox = this.scriptChild.getOuterBBox();
       const k = this.getUnderKV(basebox, underbox)[0];
@@ -215,17 +216,18 @@ export const ChtmlMover = (function <N, T, D>(): ChtmlMoverClass<N, T, D> {
     /**
      * @override
      */
-    public toCHTML(parent: N) {
+    public toCHTML(parents: N[]) {
+      if (this.toEmbellishedCHTML(parents)) return;
       if (this.hasMovableLimits()) {
-        super.toCHTML(parent);
-        this.adaptor.setAttribute(this.dom, 'limits', 'false');
+        super.toCHTML(parents);
+        this.adaptor.setAttribute(this.dom[0], 'limits', 'false');
         return;
       }
-      this.dom = this.standardChtmlNode(parent);
-      const over = this.adaptor.append(this.dom, this.html('mjx-over')) as N;
-      const base = this.adaptor.append(this.dom, this.html('mjx-base')) as N;
-      this.scriptChild.toCHTML(over);
-      this.baseChild.toCHTML(base);
+      this.dom = this.standardChtmlNodes(parents);
+      const over = this.adaptor.append(this.dom[0], this.html('mjx-over')) as N;
+      const base = this.adaptor.append(this.dom[0], this.html('mjx-base')) as N;
+      this.scriptChild.toCHTML([over]);
+      this.baseChild.toCHTML([base]);
       const overbox = this.scriptChild.getOuterBBox();
       const basebox = this.baseChild.getOuterBBox();
       this.adjustBaseHeight(base, basebox);
@@ -311,16 +313,17 @@ export const ChtmlMunderover = (function <N, T, D>(): ChtmlMunderoverClass<N, T,
     /**
      * @override
      */
-    public toCHTML(parent: N) {
+    public toCHTML(parents: N[]) {
+      if (this.toEmbellishedCHTML(parents)) return;
       if (this.hasMovableLimits()) {
-        super.toCHTML(parent);
-        this.adaptor.setAttribute(this.dom, 'limits', 'false');
+        super.toCHTML(parents);
+        this.adaptor.setAttribute(this.dom[0], 'limits', 'false');
         return;
       }
-      this.dom = this.standardChtmlNode(parent);
-      const over = this.adaptor.append(this.dom, this.html('mjx-over')) as N;
+      this.dom = this.standardChtmlNodes(parents);
+      const over = this.adaptor.append(this.dom[0], this.html('mjx-over')) as N;
       const table = this.adaptor.append(
-        this.adaptor.append(this.dom, this.html('mjx-box')) as N,
+        this.adaptor.append(this.dom[0], this.html('mjx-box')) as N,
         this.html('mjx-munder')
       ) as N;
       const base = this.adaptor.append(
@@ -331,9 +334,9 @@ export const ChtmlMunderover = (function <N, T, D>(): ChtmlMunderoverClass<N, T,
         this.adaptor.append(table, this.html('mjx-row')) as N,
         this.html('mjx-under')
       ) as N;
-      this.overChild.toCHTML(over);
-      this.baseChild.toCHTML(base);
-      this.underChild.toCHTML(under);
+      this.overChild.toCHTML([over]);
+      this.baseChild.toCHTML([base]);
+      this.underChild.toCHTML([under]);
       const overbox = this.overChild.getOuterBBox();
       const basebox = this.baseChild.getOuterBBox();
       const underbox = this.underChild.getOuterBBox();

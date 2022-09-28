@@ -22,6 +22,7 @@ const path = eval("require('path')");  // use actual node version, not webpack's
  */
 require('../startup/init.js');
 const {Loader, CONFIG} = require('../../../js/components/loader.js');
+const {Package} = require('../../../js/components/package.js');
 const {combineDefaults, combineConfig} = require('../../../js/components/global.js');
 
 /*
@@ -55,7 +56,8 @@ if (path.basename(dir) === 'node-main') {
   const ROOT = path.resolve(dir, '../../../js');
   const REQUIRE = MathJax.config.loader.require;
   MathJax._.mathjax.mathjax.asyncLoad = function (name) {
-    return REQUIRE(name.charAt(0) === '.' ? path.resolve(ROOT, name) : name);
+    return REQUIRE(name.charAt(0) === '.' ? path.resolve(ROOT, name) :
+                   name.charAt(0) === '[' ? Package.resolvePath(name) : name);
   };
 }
 

@@ -55,7 +55,7 @@ export class MmlMath extends AbstractMmlLayoutNode {
     scriptsizemultiplier: 1 / Math.sqrt(2),
     scriptminsize: '8px',        // Should be 8pt, but that's too big
     infixlinebreakstyle: 'before',
-    lineleading: '1ex',
+    lineleading: '100%',
     linebreakmultchar: '\u2062', // Invisible times
     indentshift: 'auto',         // Use user configuration
     indentalign: 'auto',
@@ -79,6 +79,14 @@ export class MmlMath extends AbstractMmlLayoutNode {
    */
   public get linebreakContainer() {
     return true;
+  }
+
+  /**
+   * Don't reset indent attributes
+   * @override
+   */
+  public get linebreakAlign() {
+    return '';
   }
 
   /**

@@ -96,7 +96,7 @@ function processList(base, dir, list, top = true) {
         if (top || !EXCLUDESUBDIRS) {
           processDir(base, file);
         }
-      } else if (file.match(/\.ts$/)) {
+      } else if (file.match(/(?<!\.d)\.ts$/)) {
         processFile(base, file);
       }
     }
@@ -315,7 +315,11 @@ function processPackage(lines, space, dir) {
   // Create the string defining the object that loads all the needed files into the proper places
   //
   if (dir === '.') return packages.join(',\n    ');
-  return path.basename(dir) + ': {\n' + INDENT + space + packages.join(',\n' + INDENT + space) + '\n' + space + '}';
+  let name = path.basename(dir);
+  if (name.match(/[^a-zA-Z0-9]/)) {
+    name = `"${name}"`;
+  }
+  return name + ': {\n' + INDENT + space + packages.join(',\n' + INDENT + space) + '\n' + space + '}';
 }
 
 /**

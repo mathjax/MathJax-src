@@ -120,8 +120,9 @@ export const ChtmlMmultiscripts = (function <N, T, D>(): ChtmlMmultiscriptsClass
     /**
      * @override
      */
-    public toCHTML(parent: N) {
-      const chtml = this.standardChtmlNode(parent);
+    public toCHTML(parents: N[]) {
+      if (this.toEmbellishedCHTML(parents)) return;
+      const chtml = this.standardChtmlNodes(parents);
       const data = this.scriptData;
       //
       //  Get the alignment for the scripts
@@ -132,19 +133,19 @@ export const ChtmlMmultiscripts = (function <N, T, D>(): ChtmlMmultiscriptsClass
       //  Combine the bounding boxes of the pre- and post-scripts,
       //  and get the resulting baseline offsets
       //
-      const sub = this.combinePrePost(data.sub, data.psub);
-      const sup = this.combinePrePost(data.sup, data.psup);
-      const [u, v] = this.getUVQ(sub, sup);
+      const [u, v] = this.getCombinedUV();
       //
       //  Place the pre-scripts, then the base, then the post-scripts
       //
       if (data.numPrescripts) {
-        const scripts = this.addScripts(u, -v, true, data.psub, data.psup, this.firstPrescript, data.numPrescripts);
+        const scripts = this.addScripts(this.dom[0], u, -v, true, data.psub, data.psup,
+                                        this.firstPrescript, data.numPrescripts);
         preAlign !== 'right' && this.adaptor.setAttribute(scripts, 'script-align', preAlign);
       }
       this.childNodes[0].toCHTML(chtml);
       if (data.numScripts) {
-        const scripts = this.addScripts(u, -v, false, data.sub, data.sup, 1, data.numScripts);
+        const scripts = this.addScripts(this.dom[this.dom.length - 1], u, -v, false,
+                                        data.sub, data.sup, 1, data.numScripts);
         postAlign !== 'left' && this.adaptor.setAttribute(scripts, 'script-align', postAlign);
       }
     }
@@ -152,6 +153,7 @@ export const ChtmlMmultiscripts = (function <N, T, D>(): ChtmlMmultiscriptsClass
     /**
      * Create a table with the super and subscripts properly separated and aligned.
      *
+     * @param {N} dom          The HTML node in which the scripts are to be placed
      * @param {number} u       The baseline offset for the superscripts
      * @param {number} v       The baseline offset for the subscripts
      * @param {boolean} isPre  True for prescripts, false for scripts
@@ -161,7 +163,7 @@ export const ChtmlMmultiscripts = (function <N, T, D>(): ChtmlMmultiscriptsClass
      * @param {number} n       The number of sub/super-scripts
      * @return {N}             The script table for these scripts
      */
-    protected addScripts(u: number, v: number, isPre: boolean, sub: BBox, sup: BBox, i: number, n: number): N {
+    protected addScripts(dom: N, u: number, v: number, isPre: boolean, sub: BBox, sup: BBox, i: number, n: number): N {
       const adaptor = this.adaptor;
       const q = (u - sup.d) + (v - sub.h);             // separation of scripts
       const U = (u < 0 && v === 0 ? sub.h + u : u);    // vertical offset of table
@@ -173,10 +175,10 @@ export const ChtmlMmultiscripts = (function <N, T, D>(): ChtmlMmultiscriptsClass
       const name = 'mjx-' + (isPre ? 'pre' : '') + 'scripts';
       let m = i + 2 * n;
       while (i < m) {
-        this.childNodes[i++].toCHTML(adaptor.append(subRow, this.html('mjx-cell')) as N);
-        this.childNodes[i++].toCHTML(adaptor.append(supRow, this.html('mjx-cell')) as N);
+        this.childNodes[i++].toCHTML([adaptor.append(subRow, this.html('mjx-cell')) as N]);
+        this.childNodes[i++].toCHTML([adaptor.append(supRow, this.html('mjx-cell')) as N]);
       }
-      return adaptor.append(this.dom, this.html(name, tabledef, [supRow, sepRow, subRow])) as N;
+      return adaptor.append(dom, this.html(name, tabledef, [supRow, sepRow, subRow])) as N;
     }
 
   };

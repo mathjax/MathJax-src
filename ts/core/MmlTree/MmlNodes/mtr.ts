@@ -59,6 +59,14 @@ export class MmlMtr extends AbstractMmlNode {
   }
 
   /**
+   * Don't reset indent attributes
+   * @override
+   */
+  public get linebreakAlign() {
+    return '';
+  }
+
+  /**
    * Inherit the mtr attributes
    *
    * @override

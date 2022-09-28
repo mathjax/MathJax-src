@@ -28,16 +28,14 @@ import {StyleList as CssStyleList, CssStyles} from '../util/StyleList.js';
 import {OptionList} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
-import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {ChtmlWrapper, ChtmlWrapperClass} from './chtml/Wrapper.js';
 import {ChtmlWrapperFactory} from './chtml/WrapperFactory.js';
 import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
         ChtmlFontData, ChtmlFontDataClass} from './chtml/FontData.js';
 import {Usage} from './chtml/Usage.js';
-import {TeXFont} from './chtml/fonts/tex.js';
 import * as LENGTHS from '../util/lengths.js';
 import {unicodeChars} from '../util/string.js';
-
+import {DefaultFont} from './chtml/DefaultFont.js';
 
 /*****************************************************************/
 /**
@@ -82,7 +80,9 @@ CommonOutputJax<
    *  The default styles for CommonHTML
    */
   public static commonStyles: CssStyleList = {
-    'mjx-container[jax="CHTML"]': {'line-height': 0},
+    'mjx-container[jax="CHTML"]': {
+      'white-space': 'nowrap'
+    },
 
     'mjx-container [space="1"]': {'margin-left': '.111em'},
     'mjx-container [space="2"]': {'margin-left': '.167em'},
@@ -161,7 +161,7 @@ CommonOutputJax<
    * @constructor
    */
   constructor(options: OptionList = null) {
-    super(options, ChtmlWrapperFactory as any, TeXFont);
+    super(options, ChtmlWrapperFactory as any, DefaultFont);
     this.font.adaptiveCSS(this.options.adaptiveCSS);
     this.wrapperUsage = new Usage<string>();
   }
@@ -179,15 +179,16 @@ CommonOutputJax<
    */
   public styleSheet(html: MathDocument<N, T, D>) {
     if (this.chtmlStyles) {
+      const styles = new CssStyles();
       if (this.options.adaptiveCSS) {
         //
         // Update the style sheet rules
         //
-        const styles = new CssStyles();
         this.addWrapperStyles(styles);
         this.updateFontStyles(styles);
-        this.adaptor.insertRules(this.chtmlStyles, styles.getStyleRules());
       }
+      styles.addStyles(this.font.updateDynamicStyles());
+      this.adaptor.insertRules(this.chtmlStyles, styles.getStyleRules());
       return this.chtmlStyles;  // stylesheet is already added to the document
     }
     const sheet = this.chtmlStyles = super.styleSheet(html);
@@ -235,11 +236,11 @@ CommonOutputJax<
   }
 
   /**
-   * @param {MmlNode} math  The MML node whose HTML is to be produced
-   * @param {N} parent      The HTML node to contain the HTML
+   * @param {WW} wrapper   The MML node wrapper whose HTML is to be produced
+   * @param {N} parent     The HTML node to contain the HTML
    */
-  public processMath(math: MmlNode, parent: N) {
-    this.factory.wrap(math).toCHTML(parent);
+  public processMath(wrapper: ChtmlWrapper<N, T, D>, parent: N) {
+    wrapper.toCHTML([parent]);
   }
 
   /**
@@ -259,12 +260,19 @@ CommonOutputJax<
     this.clearCache();
   }
 
+  /**
+   * @override
+   */
+  protected getInitialScale() {
+    return this.math.metrics.scale;
+  }
+
   /*****************************************************************/
 
   /**
    * @override
    */
-  public unknownText(text: string, variant: string, width: number = null) {
+  public unknownText(text: string, variant: string, width: number = null, rscale: number = 1) {
     const styles: StyleList = {};
     const scale = 100 / this.math.metrics.scale;
     if (scale !== 100) {
@@ -284,7 +292,7 @@ CommonOutputJax<
     //
     if (width !== null) {
       const metrics = this.math.metrics;
-      styles.width = Math.round(width * metrics.em * metrics.scale) + 'px';
+      styles.width = Math.round(width * metrics.em * metrics.scale * rscale) + 'px';
     }
     //
     return this.html('mjx-utext', {variant: variant, style: styles}, [this.text(text)]);

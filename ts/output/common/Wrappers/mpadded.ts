@@ -79,6 +79,13 @@ export interface CommonMpadded<
    */
   dimen(length: Property, bbox: BBox, d?: string, m?: number): number;
 
+  /**
+   * Set the BBox dimensions using the node's attributes
+   *
+   * @param {BBox} bbox   The bbox to set
+   */
+  setBBoxDimens(bbox: BBox): void;
+
 }
 
 /**
@@ -151,7 +158,7 @@ export function CommonMpaddedMixin<
      */
     public getDimens(): number[] {
       const values = this.node.attributes.getList('width', 'height', 'depth', 'lspace', 'voffset');
-      const bbox = this.childNodes[0].getBBox();  // get unmodified bbox of children
+      const bbox = this.childNodes[0].getOuterBBox();  // get unmodified bbox of children
       let {w, h, d} = bbox;
       let W = w, H = h, D = d, x = 0, y = 0, dx = 0;
       if (values.width !== '')   w = this.dimen(values.width, bbox, 'w', 0);
@@ -184,16 +191,32 @@ export function CommonMpaddedMixin<
       return dimen;
     }
 
+    /**
+     * @override
+     */
+    public setBBoxDimens(bbox: BBox) {
+      const [H, D, W, dh, dd, dw] = this.getDimens();
+      bbox.w = W + dw;
+      bbox.h = H + dh;
+      bbox.d = D + dd;
+    }
+
     /*****************************************************************/
 
     /**
      * @override
      */
     public computeBBox(bbox: BBox, recompute: boolean = false) {
-      const [H, D, W, dh, dd, dw] = this.getDimens();
-      bbox.w = W + dw;
-      bbox.h = H + dh;
-      bbox.d = D + dd;
+      this.setBBoxDimens(bbox);
+      const w = this.childNodes[0].getOuterBBox().w;
+      if (w > bbox.w) {
+        const overflow = this.node.attributes.get('data-overflow');
+        if (overflow === 'linebreak' ||
+            (overflow === 'auto' && this.jax.math.root.attributes.get('overflow') === 'linebreak')) {
+          this.childNodes[0].breakToWidth(bbox.w);
+          this.setBBoxDimens(bbox);
+        }
+      }
       this.setChildPWidths(recompute, bbox.w);
     }
 

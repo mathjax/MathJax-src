@@ -26,7 +26,6 @@ import {CommonWrapperFactory} from '../WrapperFactory.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
 import {CommonOutputJax} from '../../common.js';
 import {CommonMsqrt, CommonMsqrtClass} from './msqrt.js';
-import {CommonMo} from './mo.js';
 import {BBox} from '../../../util/BBox.js';
 
 /*****************************************************************/
@@ -127,13 +126,6 @@ export function CommonMrootMixin<
     /**
      * @override
      */
-    get surd() {
-      return 2;
-    }
-
-    /**
-     * @override
-     */
     get root(): number {
       return 1;
     }
@@ -151,7 +143,7 @@ export function CommonMrootMixin<
      * @override
      */
     public getRootDimens(sbox: BBox, H: number) {
-      const surd = this.childNodes[this.surd] as any as CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+      const surd = this.surd;
       const bbox = this.childNodes[this.root].getOuterBBox();
       const offset = (surd.size < 0 ? .5 : .6) * sbox.w;
       const {w, rscale} = bbox;
@@ -169,6 +161,14 @@ export function CommonMrootMixin<
       const h = sbox.h + sbox.d;
       const b = (size < 0 ? 1.9 : .55 * h) - (h - H);
       return b + Math.max(0, rbox.d * rbox.rscale);
+    }
+
+    /**
+     * @override
+     */
+    public rootWidth() {
+      const bbox = this.childNodes[this.root].getOuterBBox();
+      return .4 + bbox.w * bbox.rscale;
     }
 
   } as any as B;

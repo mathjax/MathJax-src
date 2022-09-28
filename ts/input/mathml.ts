@@ -148,7 +148,10 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
       }
     }
     mml = this.executeFilters(this.mmlFilters, math, document, mml);
-    return this.executeFilters(this.postFilters, math, document, this.mathml.compile(mml as N));
+    let root = this.mathml.compile(mml as N);
+    root = this.executeFilters(this.postFilters, math, document, root);
+    math.display = root.attributes.get('display') === 'block';
+    return root;
   }
 
   /**

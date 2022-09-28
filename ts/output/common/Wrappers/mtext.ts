@@ -25,6 +25,9 @@ import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wr
 import {CommonWrapperFactory} from '../WrapperFactory.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
 import {CommonOutputJax} from '../../common.js';
+import {TextNode} from '../../../core/MmlTree/MmlNode.js';
+import {IndexData} from '../LinebreakVisitor.js';
+import {LineBBox} from '../LineBBox.js';
 
 /*****************************************************************/
 /**
@@ -54,7 +57,42 @@ export interface CommonMtext<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>
-> extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
+> extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
+
+  /**
+   * The list of breakpoints within the text
+   */
+  breakPoints: IndexData[];
+
+  /**
+   * A fake text node used for measuring text substrings
+   */
+  textNode: WW;
+
+  /**
+   * @param {string} text   The string whose width is needed
+   * @return {number}       The width of the string
+   */
+  textWidth(text: string): number;
+
+
+  /**
+   * @param {IndexData} ij  The child and character indices for the breakpoint
+   */
+  setBreakAt(ij: IndexData): void;
+
+  /**
+   * Clear the breakPoints array
+   */
+  clearBreakPoints(): void;
+
+  /**
+   * @param {number} i   The breakpoint whose line width is needed
+   * @return {number}    The width of the text between that breakpoint and the previous one
+   */
+  getBreakWidth(i: number): number;
+
+}
 
 /**
  * The CommonMtextClass interface
@@ -97,7 +135,7 @@ export interface CommonMtextClass<
 
 /*****************************************************************/
 /**
- *  The CommonMtext wrapper mixin for the MmlMtext object
+b *  The CommonMtext wrapper mixin for the MmlMtext object
  *
  * @template N   The DOM node type
  * @template T   The DOM text node type
@@ -144,6 +182,39 @@ export function CommonMtextMixin<
     /**
      * @override
      */
+    public breakPoints: IndexData[] = [];
+
+    /**
+     * Cached TextNode used for measuring text.
+     */
+    public textNode: WW;
+
+    /**
+     * @override
+     */
+    public textWidth(text: string) {
+      let textNode = this.textNode;
+      if (!textNode) {
+        const text = this.node.factory.create('text');
+        text.parent = this.node;
+        textNode = this.textNode = this.factory.wrap(text);
+        textNode.parent = this as any as WW;
+      }
+      (textNode.node as any as TextNode).setText(text);
+      textNode.invalidateBBox(false);
+      return textNode.getBBox().w;
+    }
+
+    /**
+     * @override
+     */
+    get breakCount() {
+      return this.breakPoints.length;
+    }
+
+    /**
+     * @override
+     */
     protected getVariant() {
       const options = this.jax.options;
       const data = this.jax.math.outputData;
@@ -162,6 +233,58 @@ export function CommonMtextMixin<
         return;
       }
       super.getVariant();
+    }
+
+    /**
+     * @override
+     */
+    public setBreakAt(ij: IndexData) {
+      this.breakPoints.push(ij);
+    }
+
+    /**
+     * @override
+     */
+    public clearBreakPoints() {
+      this.breakPoints = [];
+    }
+
+    /**
+     * @override
+     */
+    public computeLineBBox(i: number): LineBBox {
+      const bbox = LineBBox.from(this.getOuterBBox(), this.linebreakOptions.lineleading);
+      if (!this.breakCount) return bbox;
+      bbox.w = this.getBreakWidth(i);
+      if (i === 0) {
+        bbox.R = 0;
+        this.addLeftBorders(bbox);
+      } else {
+        bbox.L = 0;
+        bbox.indentData = [['left', '0'], ['left', '0'], ['left', '0']];  // FIXME: do something better, here
+        i === this.breakCount && this.addRightBorders(bbox);
+      }
+      return bbox;
+    }
+
+    /**
+     * @override
+     */
+    public getBreakWidth(i: number) {
+      const childNodes = this.childNodes
+      let [si, sj] = this.breakPoints[i - 1] || [0, 0];
+      let [ei, ej] = this.breakPoints[i] || [childNodes.length, 0];
+      let words = (childNodes[si].node as TextNode).getText().split(/ /);
+      if (si === ei) return this.textWidth(words.slice(sj, ej).join(' '));
+      let w = this.textWidth(words.slice(sj).join(' '));
+      while (++si < ei && si < childNodes.length) {
+        w += childNodes[si].getBBox().w;
+      }
+      if (si < childNodes.length) {
+        words = (childNodes[si].node as TextNode).getText().split(/ /);
+        w += this.textWidth(words.slice(0, ej).join(' '));
+      }
+      return w;
     }
 
   } as any as B;

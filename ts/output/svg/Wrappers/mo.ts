@@ -94,23 +94,30 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
+    public toSVG(parents: N[]) {
       const attributes = this.node.attributes;
       const symmetric = (attributes.get('symmetric') as boolean) && this.stretch.dir !== DIRECTION.Horizontal;
       const stretchy = this.stretch.dir !== DIRECTION.None;
       if (stretchy && this.size === null) {
         this.getStretchedVariant([]);
       }
-      let svg = this.standardSvgNode(parent);
+      let svg = this.standardSvgNodes(parents);
+      if (svg.length > 1 && this.breakStyle !== 'duplicate') {
+        const i = (this.breakStyle === 'after' ? 1 : 0);
+        this.adaptor.remove(svg[i]);
+        svg[i] = null;
+      }
       if (stretchy && this.size < 0) {
         this.stretchSvg();
       } else {
         const u = (symmetric || attributes.get('largeop') ? this.fixed(this.getCenterOffset()) : '0');
         const v = (this.node.getProperty('mathaccent') ? this.fixed(this.getAccentOffset()) : '0');
         if (u !== '0' || v !== '0') {
-          this.adaptor.setAttribute(svg, 'transform', `translate(${v} ${u})`);
+          svg[0] && this.adaptor.setAttribute(svg[0], 'transform', `translate(${v} ${u})`);
+          svg[1] && this.adaptor.setAttribute(svg[1], 'transform', `translate(${v} ${u})`);
         }
-        this.addChildren(svg);
+        svg[0] && this.addChildren([svg[0]]);
+        svg[1] && ((this.multChar || this) as SvgMo).addChildren([svg[1]]);
       }
     }
 
@@ -197,8 +204,13 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      * @param {N} parent         The container for the glyph
      * @return {number}          The width of the character placed
      */
-    protected addGlyph(n: number, variant: string, x: number, y: number, parent: N = null): number {
-      return this.placeChar(n, x, y, parent || this.dom, variant);
+      protected addGlyph(n: number, variant: string, x: number, y: number, parent: N = null): number {
+        if (parent) return this.placeChar(n, x, y, parent, variant);
+        if (this.dom[0]) {
+          const dx = this.placeChar(n, x, y, this.dom[0], variant);
+          if (!this.dom[1]) return dx;
+        }
+        return this.placeChar(n, x, y, this.dom[1], variant);
     }
 
     /***********************************************************/
@@ -246,7 +258,8 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
       this.addGlyph(n, v, 0, 0, svg);
       const glyph = adaptor.lastChild(svg);
       adaptor.setAttribute(glyph as N, 'transform', `scale(1,${this.jax.fixed(s)})`);
-      adaptor.append(this.dom, svg);
+      this.dom[0] && adaptor.append(this.dom[0], svg);
+      this.dom[1] && adaptor.append(this.dom[1], this.dom[0] ? adaptor.clone(svg) : svg);
     }
 
     /**
@@ -315,7 +328,8 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
       this.addGlyph(n, v, 0, 0, svg);
       const glyph = adaptor.lastChild(svg);
       adaptor.setAttribute(glyph as N, 'transform', 'scale(' + this.jax.fixed(s) + ',1)');
-      adaptor.append(this.dom, svg);
+      this.dom[0] && adaptor.append(this.dom[0], svg);
+      this.dom[1] && adaptor.append(this.dom[1], this.dom[0] ? adaptor.clone(svg) : svg);
     }
 
     /**

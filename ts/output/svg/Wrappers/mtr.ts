@@ -177,9 +177,9 @@ export const SvgMtr = (function <N, T, D>(): SvgMtrClass<N, T, D> {
     /**
      * Set the location of the cell contents in the row and expand the cell background colors
      *
-     * @param {N} svg   The container for the table
+     * @param {N[]} svg   The containers for the table
      */
-    protected placeCells(svg: N) {
+    protected placeCells(svg: N[]) {
       const parent = this.parent as SvgMtableNTD<N, T, D>;
       const cSpace = parent.getColumnHalfSpacing();
       const cLines = [parent.fLine, ...parent.cLines, parent.fLine];
@@ -218,8 +218,8 @@ export const SvgMtr = (function <N, T, D>(): SvgMtrClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
-      const svg = this.standardSvgNode(parent);
+    public toSVG(parents: N[]) {
+      const svg = this.standardSvgNodes(parents);
       this.placeCells(svg);
       this.placeColor();
     }
@@ -286,11 +286,11 @@ export const SvgMlabeledtr = (function <N, T, D>(): SvgMlabeledtrClass<N, T, D> 
     /**
      * @override
      */
-    public toSVG(parent: N) {
-      super.toSVG(parent);
+    public toSVG(parents: N[]) {
+      super.toSVG(parents);
       const child = this.childNodes[0];
       if (child) {
-        child.toSVG((this.parent as SvgMtableNTD<N, T, D>).labels);
+        child.toSVG([(this.parent as SvgMtableNTD<N, T, D>).labels]);
       }
     }
 

@@ -101,15 +101,16 @@ export const ChtmlMpadded = (function <N, T, D>(): ChtmlMpaddedClass<N, T, D> {
     /**
      * @override
      */
-    public toCHTML(parent: N) {
-      let chtml = this.standardChtmlNode(parent);
+    public toCHTML(parents: N[]) {
+      if (this.toEmbellishedCHTML(parents)) return;
+      let chtml = this.standardChtmlNodes(parents);
       const content: N[] = [];
       const style: StringMap = {};
       const [ , , W, dh, dd, dw, x, y, dx] = this.getDimens();
       //
       // If the width changed, set the width explicitly
       //
-      if (dw) {
+      if (dw || this.childNodes[0].getBBox().pwidth) {
         style.width = this.em(W + dw);
       }
       //
@@ -136,9 +137,9 @@ export const ChtmlMpadded = (function <N, T, D>(): ChtmlMpaddedClass<N, T, D> {
       //
       //  Create the HTML with the proper styles and content
       //
-      chtml = this.adaptor.append(chtml, this.html('mjx-block', {style: style}, content)) as N;
+      chtml = [this.adaptor.append(chtml[0], this.html('mjx-block', {style: style}, content)) as N];
       for (const child of this.childNodes) {
-        child.toCHTML(content[0] || chtml);
+        child.toCHTML([content[0] || chtml[0]]);
       }
     }
 

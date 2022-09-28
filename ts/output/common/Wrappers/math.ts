@@ -25,6 +25,7 @@ import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wr
 import {CommonWrapperFactory} from '../WrapperFactory.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
 import {CommonOutputJax} from '../../common.js';
+import {BBox} from '../../../util/BBox.js';
 
 /*****************************************************************/
 /**
@@ -126,6 +127,19 @@ export function CommonMathMixin<
      */
     public getWrapWidth(_i: number) {
       return (this.parent ? this.getBBox().w : this.metrics.containerWidth / this.jax.pxPerEm);
+    }
+
+    /**
+     * @override
+     */
+    protected computeBBox(bbox: BBox, recompute: boolean = false) {
+      super.computeBBox(bbox, recompute);
+      const attributes = this.node.attributes;
+      if (!this.parent && this.jax.math.display && attributes.get('overflow') === 'linebreak') {
+        const W = this.containerWidth;
+        bbox.w > W && this.childNodes[0].breakToWidth(W);
+        bbox.updateFrom(this.childNodes[0].getBBox());
+      }
     }
 
   } as any as B;

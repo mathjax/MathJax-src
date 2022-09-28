@@ -56,6 +56,7 @@ export interface MathJaxConfig extends MJConfig {
     pageReady?: () => void;  // Function to perform when page is ready
     invalidOption?: 'fatal' | 'warn'; // Do invalid options produce a warning, or throw an error?
     optionError?: (message: string, key: string) => void,  // Function to report invalid options
+    loadAllFontFiles: false; // true means force all dynamic font files to load initially
     [name: string]: any;     // Other configuration blocks
   };
 }
@@ -67,7 +68,7 @@ export type MATHDOCUMENT = MathDocument<any, any, any>;
 export type HANDLER = Handler<any, any, any>;
 export type DOMADAPTOR = DOMAdaptor<any, any, any>;
 export type INPUTJAX = InputJax<any, any, any>;
-export type OUTPUTJAX = OutputJax<any, any, any>;
+export type OUTPUTJAX = OutputJax<any, any, any> & {font: any};
 export type COMMONJAX = CommonOutputJax<any, any, any, any, any, any, any, any, any, any, any>;
 export type TEX = TeX<any, any, any>;
 
@@ -297,7 +298,8 @@ export namespace Startup {
    * Setting Mathjax.startup.pageReady in the configuration will override this.
    */
   export function defaultPageReady() {
-    return (CONFIG.typeset && MathJax.typesetPromise ?
+    return (CONFIG.loadAllFontFiles && output.font ? output.font.loadDynamicFiles() : Promise.resolve())
+      .then(CONFIG.typeset && MathJax.typesetPromise ?
             MathJax.typesetPromise(CONFIG.elements) as Promise<void> :
             Promise.resolve());
   }

@@ -95,20 +95,22 @@ export const SvgTextNode = (function <N, T, D>(): SvgTextNodeClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
+    public toSVG(parents: N[]) {
       const text = (this.node as TextNode).getText();
       const variant = this.parent.variant;
       if (text.length === 0) return;
       if (variant === '-explicitFont') {
-        this.dom = this.adaptor.append(parent, this.jax.unknownText(text, variant)) as N;
+        this.dom = [this.adaptor.append(parents[0], this.jax.unknownText(text, variant)) as N];
       } else {
         const chars = this.remappedText(text, variant);
         if (this.parent.childNodes.length > 1) {
-          parent = this.dom = this.adaptor.append(parent, this.svg('g', {'data-mml-node': 'text'})) as N;
+          parents = this.dom = [this.adaptor.append(parents[0], this.svg('g', {'data-mml-node': 'text'})) as N];
+        } else {
+          this.dom = parents;
         }
         let x = 0;
         for (const n of chars) {
-          x += this.placeChar(n, x, 0, parent, variant);
+          x += this.placeChar(n, x, 0, parents[0], variant);
         }
       }
     }

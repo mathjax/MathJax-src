@@ -10,10 +10,11 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "removeComments": true,
-    "resolveJsonModule" : true,
-    "esModuleInterop": true  ,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
+      "mathjax-modern-font": ["node_modules/mathjax-modern-font"],
       "mj-context-menu": ["node_modules/mj-context-menu"],
       "speech-rule-engine": ["node_modules/speech-rule-engine"]
     },

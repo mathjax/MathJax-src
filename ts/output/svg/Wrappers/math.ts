@@ -92,16 +92,78 @@ export const SvgMath = (function <N, T, D>(): SvgMathClass<N, T, D> {
       'mjx-container[jax="SVG"][display="true"]': {
         display: 'block',
         'text-align': 'center',
+        'justify-content': 'center',
         margin: '1em 0'
       },
       'mjx-container[jax="SVG"][display="true"][width="full"]': {
         display: 'flex'
       },
       'mjx-container[jax="SVG"][justify="left"]': {
-        'text-align': 'left'
+        'text-align': 'left',
+        'justify-content': 'left'
       },
       'mjx-container[jax="SVG"][justify="right"]': {
-        'text-align': 'right'
+        'text-align': 'right',
+        'justify-content': 'right'
+      },
+      //
+      //  For inline breakpoints, use a scaled space and make it breakable
+      //    (The space is .25em, so make everything 4 times the usual.
+      //     This will need to be adjusted when we do other fonts: we will
+      //     need one where the space is 1em)
+      //
+      'mjx-break::after': {
+        content: '" "',
+        'white-space': 'normal',
+      },
+      'mjx-break': {
+        'font-family': 'MJX-ZERO'
+      },
+      'mjx-break[size="1"]': {
+        'font-size': '11.1%'
+      },
+      'mjx-break[size="2"]': {
+        'font-size': '16.7%'
+      },
+      'mjx-break[size="3"]': {
+        'font-size': '22.2%'
+      },
+      'mjx-break[size="4"]': {
+        'font-size': '27.8%'
+      },
+      'mjx-break[size="5"]': {
+        'font-size': '33.3%'
+      },
+      'mjx-break[newline]::after': {
+        display: 'block'
+      },
+      '@font-face /* zero */': {
+        'font-family': 'MJX-ZERO',
+        'src': [
+          'url(data:application/x-font-woff;charset=utf-8;base64,',
+          'T1RUTwAJAIAAAwAQQ0ZGIGnFMZkAAARQAAAAlE9TLzJpUWOBAAABAAAAAGBjbWFwAAwAUwAABAQAAAAs',
+          'aGVhZCFRvpAAAACcAAAANmhoZWEC8AD9AAAA1AAAACRobXR4A+gAAAAABOQAAAAIbWF4cAACUAAAAAD4',
+          'AAAABm5hbWVNb8+2AAABYAAAAqNwb3N0AAMAAAAABDAAAAAgAAEAAAABAABVWOu4Xw889QADA+gAAAAA',
+          '3ym+2AAAAADfKb7YAAAAAAPoAAAAAAADAAIAAAAAAAAAAQAAAu79EgAAA+gAAAAAAAAAAQAAAAAAAAAA',
+          'AAAAAAAAAAIAAFAAAAIAAAADA+gB9AAFAAACigK7AAAAjAKKArsAAAHfADEBAgAAAAAAAAAAAAAAAAAA',
+          'AAEAAAAAAAAAAAAAAABYWFhYAEAAIAAgAu79EgAAAu4C7gAAAAEAAAAAAXcAAAAgACAAAAAAACIBngAB',
+          'AAAAAAAAAAEAQQABAAAAAAABAAsAAAABAAAAAAACAAcAIQABAAAAAAADABUAxgABAAAAAAAEABMANgAB',
+          'AAAAAAAFAAsApQABAAAAAAAGABIAbwABAAAAAAAHAAEAQQABAAAAAAAIAAEAQQABAAAAAAAJAAEAQQAB',
+          'AAAAAAAKAAEAQQABAAAAAAALAAEAQQABAAAAAAAMAAEAQQABAAAAAAANAAEAQQABAAAAAAAOAAEAQQAB',
+          'AAAAAAAQAAsAAAABAAAAAAARAAcAIQADAAEECQAAAAIAXwADAAEECQABABYACwADAAEECQACAA4AKAAD',
+          'AAEECQADACoA2wADAAEECQAEACYASQADAAEECQAFABYAsAADAAEECQAGACQAgQADAAEECQAHAAIAXwAD',
+          'AAEECQAIAAIAXwADAAEECQAJAAIAXwADAAEECQAKAAIAXwADAAEECQALAAIAXwADAAEECQAMAAIAXwAD',
+          'AAEECQANAAIAXwADAAEECQAOAAIAXwADAAEECQAQABYACwADAAEECQARAA4AKG1qeC1sbS16ZXJvAG0A',
+          'agB4AC0AbABtAC0AegBlAHIAb1JlZ3VsYXIAUgBlAGcAdQBsAGEAcm1qeC1sbS16ZXJvIFJlZ3VsYXIA',
+          'bQBqAHgALQBsAG0ALQB6AGUAcgBvACAAUgBlAGcAdQBsAGEAcm1qeC1sbS16ZXJvUmVndWxhcgBtAGoA',
+          'eAAtAGwAbQAtAHoAZQByAG8AUgBlAGcAdQBsAGEAclZlcnNpb24gMC4xAFYAZQByAHMAaQBvAG4AIAAw',
+          'AC4AMSA6bWp4LWxtLXplcm8gUmVndWxhcgAgADoAbQBqAHgALQBsAG0ALQB6AGUAcgBvACAAUgBlAGcA',
+          'dQBsAGEAcgAAAAABAAMAAQAAAAwABAAgAAAABAAEAAEAAAAg//8AAAAg////4QABAAAAAAADAAAAAAAA',
+          'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAEAQABAQETbWp4LWxtLXplcm9SZWd1bGFyAAEBASf4GwD4',
+          'HAL4HQP4HgSLi/mC+nwFHQAAAIYPHQAAAIkRix0AAACUEgAFAQEMHyoxNlZlcnNpb24gMC4xbWp4LWxt',
+          'LXplcm8gUmVndWxhcm1qeC1sbS16ZXJvUmVndWxhcnNwYWNlAAAAAYsAAgEBAwaLDvp8DgAAAAAD6AAA',
+          ') format("woff")'
+        ].join('')
       }
     };
 
@@ -144,11 +206,11 @@ export const SvgMath = (function <N, T, D>(): SvgMathClass<N, T, D> {
       if (speech) {
         const id = this.getTitleID();
         const label = this.svg('title', {id}, [this.text(speech)]);
-        adaptor.insert(label, adaptor.firstChild(this.dom));
-        adaptor.setAttribute(this.dom, 'aria-labeledby', id);
-        adaptor.removeAttribute(this.dom, 'aria-label');
+        adaptor.insert(label, adaptor.firstChild(this.dom[0]));
+        adaptor.setAttribute(this.dom[0], 'aria-labeledby', id);
+        adaptor.removeAttribute(this.dom[0], 'aria-label');
         for (const child of this.childNodes[0].childNodes) {
-          adaptor.setAttribute(child.dom, 'aria-hidden', 'true');
+          child.dom.forEach(node => adaptor.setAttribute(node, 'aria-hidden', 'true'));
         }
       }
     }
@@ -165,8 +227,8 @@ export const SvgMath = (function <N, T, D>(): SvgMathClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
-      super.toSVG(parent);
+    public toSVG(parents: N[]) {
+      super.toSVG(parents);
       const adaptor = this.adaptor;
       const display = (this.node.attributes.get('display') === 'block');
       if (display) {
