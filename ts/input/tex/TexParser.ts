@@ -74,7 +74,6 @@ export default class TexParser {
    * @param {ParseOptions} configuration A parser configuration.
    */
   constructor(private _string: string, env: EnvList, public configuration: ParseOptions) {
-    console.log('New Parser');
     const inner = env.hasOwnProperty('isInner');
     const isInner = env['isInner'] as boolean;
     delete env['isInner'];
@@ -147,15 +146,16 @@ export default class TexParser {
 
   // Currently works without environments.
   private updateResult(input: string, old: number) {
-    console.log('Result Start');
-    console.log(this.stack.toString());
+    // console.log('Updating');
     let node = this.stack.Prev(true) as MmlNode;
-    console.log(node);
     if (!node) {
       return;
     }
-    console.log('Has already entry: ' + node.attributes.get('latex'));
-    console.log(node.toString());
+    let existing = node.attributes.get('latex');
+    // if (node.attributes.get('latex') === '{}') {
+    //   console.log('{}');
+    //   console.log(node);
+    // }
     let str = old !== this.i ? this.string.slice(old, this.i) : input;
     str = str.trim();
     if (!str) {
@@ -164,11 +164,30 @@ export default class TexParser {
     if (input === '\\') {
       str = '\\' + str;
     }
-    console.log('Full String: ' + this.string);
-    console.log('Save: ' + str);
-    console.log('Input: ' + input);
-    console.log('Result End');
+    if (str === '}') {
+      str = this.bracing(this.composeBraces(node));
+    }
+    // if (node.kind === 'msubsup' || node.kind === 'moverunder') {
+    //   this.updateChild(node.childNodes[1]);
+    //   this.updateChild(node.childNodes[2]);
+    // }
     node.attributes.set('latex', str);
+  }
+
+  private bracing(str: string) {
+    return '{' + str + '}';
+  }
+
+  private updateChild(atom: MmlNode) {
+    if (!atom) return;
+    let str = this.composeBraces(atom);
+    atom.attributes.set('latex', this.bracing(str));
+  }
+  
+  private composeBraces(atom: MmlNode) {
+    // TODO: Make this more secure!
+    let children = atom.childNodes[0].childNodes;
+    return children.map(x => x.attributes?.get('latex') || '').join(' ');
   }
   
 
@@ -228,6 +247,10 @@ export default class TexParser {
    * @param {StackItem|MmlNode} arg The new item.
    */
   public Push(arg: StackItem | MmlNode) {
+    console.log(this.string);
+    console.log(this.i);
+    console.log(arg);
+    console.log(this.stack.Prev(true));
     if (arg instanceof AbstractMmlNode && arg.isInferred) {
       this.PushAll(arg.childNodes);
     } else {
