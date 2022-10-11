@@ -61,10 +61,9 @@ AmsMethods.AmsEqnArray = function(parser: TexParser, begin: StackItem,
                                       align: string, spacing: string,
                                       style: string) {
   // @test Aligned, Gathered
-  const i = parser.i;
   const args = parser.GetBrackets('\\begin{' + begin.getName() + '}');
   const array = BaseMethods.EqnArray(parser, begin, numbered, taggable, align, spacing, style);
-  return ParseUtil.setArrayAlign(array as ArrayItem, args, parser, i);
+  return ParseUtil.setArrayAlign(array as ArrayItem, args, parser);
 };
 
 
@@ -79,10 +78,9 @@ AmsMethods.AmsEqnArray = function(parser: TexParser, begin: StackItem,
 AmsMethods.AlignAt = function(parser: TexParser, begin: StackItem,
                               numbered: boolean, taggable: boolean) {
   const name = begin.getName();
-  let n, valign, align = '', spacing = [], i;
+  let n, valign, align = '', spacing = [];
   if (!taggable) {
     // @test Alignedat
-    i = parser.i;
     valign = parser.GetBrackets('\\begin{' + name + '}');
   }
   n = parser.GetArgument('\\begin{' + name + '}');
@@ -105,7 +103,7 @@ AmsMethods.AlignAt = function(parser: TexParser, begin: StackItem,
   }
   // @test Alignedat
   let array = AmsMethods.EqnArray(parser, begin, numbered, taggable, align, spaceStr);
-  return ParseUtil.setArrayAlign(array as ArrayItem, valign, !taggable ? parser : null, i);
+  return ParseUtil.setArrayAlign(array as ArrayItem, valign, !taggable ? parser : null);
 };
 
 

@@ -206,19 +206,20 @@ NewcommandMethods.BeginEnv = function(parser: TexParser, begin: StackItem,
                                       bdef: string, edef: string, n: number, def: string) {
   // @test Newenvironment Empty, Newenvironment Content
   // We have an end item, and we are supposed to close this environment.
-  if (begin.getProperty('end') && parser.stack.env['closing'] === begin.getName()) {
+  const name = begin.getName();
+  if (begin.getProperty('end') && parser.stack.env['closing'] === name) {
     // @test Newenvironment Empty, Newenvironment Content
     delete parser.stack.env['closing'];
-    // Parse the commands in the end environment definition.
-    let rest = parser.string.slice(parser.i);
-    parser.string = edef;
-    parser.i = 0;
-    parser.Parse();
-    // Reset to parsing the remainder of the expression.
-    parser.string = rest;
-    parser.i = 0;
+    if (edef && parser.stack.env['processing'] !== name) {
+      // Parse the commands in the end environment definition, and do the \end again
+      parser.stack.env['processing'] = name;
+      parser.string = ParseUtil.addArgs(parser, `${edef}\\end{${begin.getName()}}`, parser.string.slice(parser.i));
+      parser.i = 0;
+      return null;
+    }
+    delete parser.stack.env['processing'];
     // Close this environment.
-    return parser.itemFactory.create('end').setProperty('name', begin.getName());
+    return parser.itemFactory.create('end').setProperty('name', name);
   }
   if (n) {
     // @test Newenvironment Optional, Newenvironment Arg Optional

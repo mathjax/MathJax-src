@@ -87,10 +87,22 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
    */
   MtMultlined(parser: TexParser, begin: StackItem): ParseResult {
     const name = `\\begin{${begin.getName()}}`;
-    let pos = parser.GetBrackets(name, parser.options.mathtools['multlined-pos'] || 'c');
-    let width = pos ? parser.GetBrackets(name, '') : '';
-    if (pos && !pos.match(/^[cbt]$/)) {
-      [width, pos] = [pos, width];
+    let pos = 'c', width = '';
+    //
+    //  Only process bracket arguments if they follow immediately with no space.
+    //  Note that if [pos] is missing, [width] can still be provided.
+    //
+    if (!parser.nextIsSpace()) {
+      const arg = parser.GetBrackets(name, parser.options.mathtools['multlined-pos'] || 'c');
+      if (arg.match(/^[ctb]$/)) {
+        pos = arg;
+        width = !parser.nextIsSpace() ? parser.GetBrackets(name, '') : '';
+      } else {
+        width = arg;
+      }
+      if (width && !ParseUtil.matchDimen(width)[0]) {
+        throw new TexError('BadWidth', 'Width for %1 must be a dimension', name);
+      }
     }
     parser.Push(begin);
     const item = parser.itemFactory.create('multlined', parser, begin) as ArrayItem;
