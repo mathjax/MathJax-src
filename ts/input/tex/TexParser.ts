@@ -32,7 +32,7 @@ import TexError from './TexError.js';
 import {MmlNode, AbstractMmlNode} from '../../core/MmlTree/MmlNode.js';
 import {ParseInput, ParseResult} from './Types.js';
 import ParseOptions from './ParseOptions.js';
-import {StackItem, EnvList} from './StackItem.js';
+import {BaseItem, StackItem, EnvList} from './StackItem.js';
 import {Symbol} from './Symbol.js';
 import {OptionList} from '../../util/Options.js';
 
@@ -65,6 +65,8 @@ export default class TexParser {
    * @type {string}
    */
   public currentCS: string = '';
+
+  public saveI: number[] = [0];
 
   /**
    * @constructor
@@ -136,24 +138,23 @@ export default class TexParser {
    * @return {ParseResult} The output of the parsing function.
    */
   public parse(kind: HandlerType, input: ParseInput): ParseResult {
-    let oldI = this.i;
+    this.saveI.push(this.i);
     let result = this.configuration.handlers.get(kind).parse(input);
-    this.updateResult(input[1], oldI);
+    this.updateResult(input[1], this.saveI.pop());
     return result;
   }
 
   // Currently works without environments.
   private updateResult(input: string, old: number) {
-    // console.log('Updating');
     let node = this.stack.Prev(true) as MmlNode;
     if (!node) {
       return;
     }
-    let existing = node.attributes.get('latex');
-    // if (node.attributes.get('latex') === '{}') {
-    //   console.log('{}');
-    //   console.log(node);
-    // }
+    let existing = node.attributes.get('itemLatex');
+    if (existing !== undefined) {
+      node.attributes.set('latex', existing);
+      return;
+    }
     let str = old !== this.i ? this.string.slice(old, this.i) : input;
     str = str.trim();
     if (!str) {
@@ -162,13 +163,6 @@ export default class TexParser {
     if (input === '\\') {
       str = '\\' + str;
     }
-    if (str === '}') {
-      str = this.bracing(this.composeBraces(node));
-    }
-    // if (node.kind === 'msubsup' || node.kind === 'moverunder') {
-    //   this.updateChild(node.childNodes[1]);
-    //   this.updateChild(node.childNodes[2]);
-    // }
     node.attributes.set('latex', str);
   }
 
@@ -181,13 +175,13 @@ export default class TexParser {
     let str = this.composeBraces(atom);
     atom.attributes.set('latex', this.bracing(str));
   }
-  
+
   private composeBraces(atom: MmlNode) {
     // TODO: Make this more secure!
     let children = atom.childNodes[0].childNodes;
     return children.map(x => x.attributes?.get('latex') || '').join(' ');
   }
-  
+
 
   /**
    * Maps a symbol to its "parse value" if it exists.
@@ -245,10 +239,12 @@ export default class TexParser {
    * @param {StackItem|MmlNode} arg The new item.
    */
   public Push(arg: StackItem | MmlNode) {
-    console.log(this.string);
-    console.log(this.i);
-    console.log(arg);
-    console.log(this.stack.Prev(true));
+    if (arg instanceof BaseItem) {
+      arg.startI = this.saveI.pop();
+      this.saveI.push(arg.startI);
+      arg.stopI = this.i;
+      arg.startStr = this.string;
+    }
     if (arg instanceof AbstractMmlNode && arg.isInferred) {
       this.PushAll(arg.childNodes);
     } else {
@@ -277,6 +273,7 @@ export default class TexParser {
     }
     let node = this.stack.Top().First;
     this.configuration.popParser();
+    node.attributes.set('latex', this.string);
     return node;
   }
 
