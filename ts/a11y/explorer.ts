@@ -32,6 +32,8 @@ import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {MJContextMenu} from '../ui/menu/MJContextMenu.js';
 
 import { ExplorerPool, RegionPool } from './explorer/ExplorerPool.js';
+import { SpeechExplorer } from './explorer/KeyExplorer.js';
+
 
 import {Submenu} from 'mj-context-menu/js/item_submenu.js';
 
@@ -343,6 +345,11 @@ export function setA11yOptions(document: HTMLDOCUMENT, options: {[key: string]: 
  */
 export function setA11yOption(document: HTMLDOCUMENT, option: string, value: string | boolean) {
   switch (option) {
+  case 'speechRules':
+    const [domain, style] = (value as string).split('-');
+    document.options.sre.domain = domain;
+    document.options.sre.style = style;
+    break;
   case 'magnification':
     switch (value) {
     case 'None':
@@ -396,31 +403,31 @@ let csPrefsSetting: {[pref: string]: string} = {};
  * @param {MJContextMenu} menu The current context menu.
  * @param {string[]} prefs The preferences.
  */
-let csPrefsVariables = function(menu: MJContextMenu, prefs: string[]) {
+function csPrefsVariables(menu: MJContextMenu, prefs: string[]) {
   let srVariable = menu.pool.lookup('speechRules');
+  let previous = Sre.clearspeakPreferences.currentPreference();
+  csPrefsSetting = Sre.clearspeakPreferences.fromPreference(previous);
   for (let pref of prefs) {
-    if (csPrefsSetting[pref]) continue;
     menu.factory.get('variable')(menu.factory, {
       name: 'csprf_' + pref,
       setter: (value: string) => {
         csPrefsSetting[pref] = value;
           srVariable.setValue(
           'clearspeak-' +
-              Sre.clearspeakPreferences.addPreference(
-                Sre.clearspeakStyle(), pref, value)
+              Sre.clearspeakPreferences.toPreference(csPrefsSetting)
         );
       },
       getter: () => { return csPrefsSetting[pref] || 'Auto'; }
     }, menu.pool);
   }
-};
+}
 
 /**
  * Generate the selection box for the Clearspeak Preferences.
  * @param {MJContextMenu} menu The current context menu.
  * @param {string} locale The current locale.
  */
-let csSelectionBox = function(menu: MJContextMenu, locale: string) {
+function csSelectionBox(menu: MJContextMenu, locale: string) {
   let prefs = Sre.clearspeakPreferences.getLocalePreferences();
   let props = prefs[locale];
   if (!props) {
@@ -450,22 +457,84 @@ let csSelectionBox = function(menu: MJContextMenu, locale: string) {
           'id': 'ClearspeakPreferences',
           'content': 'Select Preferences',
           'action': () => sb.post(0, 0)};
-};
+}
+
+/**
+ * Generates the menu items for the base preference menu.
+ *
+ * @param {string} previous The currently set preferences.
+ * @return The menu items.
+ */
+function basePreferences(previous: string) {
+  const items = [
+      {
+        type: 'radio',
+        content: 'No Preferences',
+        id: 'clearspeak-default',
+        variable: 'speechRules'
+      },
+      {
+        type: 'radio',
+        content: 'Current Preferences',
+        id: 'clearspeak-' + previous,
+        variable: 'speechRules'
+      },
+      { type: 'rule' },
+  ];
+  return items;
+}
+
+/**
+ * Generates the items for smart preference choices, depending on the top most
+ *
+ * @param {string} previous The currently set preferences.
+ * @param {string} smart The semantic type of the smart preferences.
+ * @param {string} locale The current locale.
+ * @return The menu of the smart choices.
+ */
+function smartPreferences(previous: string, smart: string, locale: string) {
+  const prefs = Sre.clearspeakPreferences.getLocalePreferences();
+  const loc = prefs[locale];
+  if (!loc) {
+    return [];
+  }
+  const items = [
+    { type: 'label', content: 'Preferences for ' + smart },
+    { type: 'rule' }
+  ];
+  return items.concat(loc[smart].map(function (x) {
+    const [key, value] = x.split('_');
+    return {
+      type: 'MJradio',
+      content: value,
+      id:
+      'clearspeak-' +
+        Sre.clearspeakPreferences.addPreference(previous, key, value),
+      variable: 'speechRules',
+      comparator: (x: string, y: string) => x === y
+    };
+  }));
+}
 
 /**
  * Creates dynamic clearspeak menu.
  * @param {MJContextMenu} menu The context menu.
  * @param {Submenu} sub The submenu to attach.
  */
-let csMenu = function(menu: MJContextMenu, sub: Submenu) {
+function csMenu(menu: MJContextMenu, sub: Submenu) {
   let locale = menu.pool.lookup('locale').getValue() as string;
   const box = csSelectionBox(menu, locale);
   let items: Object[] = [];
-  try {
-    items = Sre.clearspeakPreferences.smartPreferences(
-      menu.mathItem, locale);
-  } catch (e) {
-    console.log(e);
+  let explorer = (menu.mathItem as ExplorerMathItem)?.
+    explorers?.explorers?.speech as SpeechExplorer;
+  if (explorer?.walker) {
+    let semantic = explorer.walker.getFocus()?.getSemanticPrimary();
+    if (semantic) {
+      const previous = Sre.clearspeakPreferences.currentPreference();
+      const smart = Sre.clearspeakPreferences.relevantPreferences(semantic);
+      items = items.concat(basePreferences(previous));
+      items = items.concat(smartPreferences(previous, smart, locale));
+    }
   }
   if (box) {
     items.splice(2, 0, box);
@@ -474,7 +543,7 @@ let csMenu = function(menu: MJContextMenu, sub: Submenu) {
     items: items,
     id: 'Clearspeak'
   }, sub);
-};
+}
 
 MJContextMenu.DynamicSubmenus.set('Clearspeak', csMenu);
 
@@ -483,7 +552,7 @@ MJContextMenu.DynamicSubmenus.set('Clearspeak', csMenu);
  * @param {MJContextMenu} menu The context menu.
  * @param {Submenu} sub The submenu to attach.
  */
-let language = function(menu: MJContextMenu, sub: Submenu) {
+function language(menu: MJContextMenu, sub: Submenu) {
   let radios: {type: string, id: string,
                content: string, variable: string}[] = [];
   for (let lang of Sre.locales.keys()) {
@@ -494,6 +563,6 @@ let language = function(menu: MJContextMenu, sub: Submenu) {
   radios.sort((x, y) => x.content.localeCompare(y.content, 'en'));
   return menu.factory.get('subMenu')(menu.factory, {
     items: radios, id: 'Language'}, sub);
-};
+}
 
 MJContextMenu.DynamicSubmenus.set('A11yLanguage', language);
