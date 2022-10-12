@@ -508,10 +508,19 @@ function smartPreferences(previous: string, smart: string, locale: string) {
       type: 'MJradio',
       content: value,
       id:
-      'clearspeak-' +
-        Sre.clearspeakPreferences.addPreference(previous, key, value),
+      'clearspeak-' + Sre.clearspeakPreferences.addPreference(previous, key, value),
       variable: 'speechRules',
-      comparator: (x: string, y: string) => x === y
+      comparator: (x: string, y: string) => {
+        if (x === y) {
+          return true;
+        }
+        if (value !== 'Auto') {
+          return false;
+        }
+        let [dom1, pref] = x.split('-');
+        let [dom2] = y.split('-');
+        return dom1 === dom2 && !Sre.clearspeakPreferences.fromPreference(pref)[key];
+      }
     };
   }));
 }

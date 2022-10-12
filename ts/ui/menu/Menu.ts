@@ -30,7 +30,7 @@ import {MathJaxObject as StartupObject} from '../../components/startup.js';
 import {MathJaxObject as LoaderObject} from '../../components/loader.js';
 import {OptionList, userOptions, defaultOptions, expandable} from '../../util/Options.js';
 
-import {MJContextMenu} from './MJContextMenu.js';
+import {MJContextMenu, MJRadio} from './MJContextMenu.js';
 import {MmlVisitor} from './MmlVisitor.js';
 import {SelectableInfo} from './SelectableInfo.js';
 import {MenuMathDocument} from './MenuHandler.js';
@@ -398,7 +398,8 @@ export class Menu {
    * Create the menu object, attach the info boxes to it, and output any CSS needed for it
    */
   protected initMenu() {
-    let parser = new Parser([['contextMenu', MJContextMenu.fromJson.bind(MJContextMenu)]]);
+    let parser = new Parser([['contextMenu', MJContextMenu.fromJson.bind(MJContextMenu)],
+                             ['MJradio', MJRadio.fromJson.bind(MJRadio)]]);
     this.menu = parser.parse({
       type: 'contextMenu',
       id: 'MathJax_Menu',

@@ -239,3 +239,56 @@ export class MJContextMenu extends ContextMenu {
   }
 
 }
+
+import {Radio} from 'mj-context-menu/js/item_radio.js';
+import {ParserFactory} from 'mj-context-menu/js/parser_factory.js';
+
+// Extend the radio buttons to work for CS preferences
+export class MJRadio extends Radio {
+
+
+  /**
+   * @override
+   */
+  protected role = 'mjmenuitemradio';
+
+  /**
+   * @override
+   */
+  public static fromJson(
+    _factory: ParserFactory,
+    {content: content, variable: variable, id: id, comparator: comparator}:
+    {content: string, variable: string, id: string,
+     comparator: (variable: string, id: string) => boolean}, menu: Menu): Radio {
+    return new this(menu, content, variable, id, comparator);
+  }
+
+  /**
+   * @override
+   */
+  constructor(menu: Menu, content: string, variable: string, id: string,
+              private comparator: (variable: string, id: string) => boolean) {
+    super(menu, content, variable, id);
+  }
+
+  /**
+   * @override
+   * Toggles the aria checked attribute.
+   */
+  protected updateAria() {
+    this.html.setAttribute(
+      'aria-checked',
+      this.comparator(this.variable.getValue(), this.id) ? 'true' : 'false'
+    );
+  }
+
+  /**
+   * @override
+   * Toggles the checked tick.
+   */
+  protected updateSpan() {
+    this.span.style.display =
+      this.comparator(this.variable.getValue(), this.id) ? '' : 'none';
+  }
+
+}
