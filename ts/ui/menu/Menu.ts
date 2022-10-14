@@ -30,7 +30,8 @@ import {MathJaxObject as StartupObject} from '../../components/startup.js';
 import {MathJaxObject as LoaderObject} from '../../components/loader.js';
 import {OptionList, userOptions, defaultOptions, expandable} from '../../util/Options.js';
 
-import {MJContextMenu, MJRadio} from './MJContextMenu.js';
+import {MJContextMenu} from './MJContextMenu.js';
+import {RadioCompare} from './RadioCompare.js';
 import {MmlVisitor} from './MmlVisitor.js';
 import {SelectableInfo} from './SelectableInfo.js';
 import {MenuMathDocument} from './MenuHandler.js';
@@ -40,6 +41,9 @@ import {Parser} from 'mj-context-menu/js/parse.js';
 import {Rule} from 'mj-context-menu/js/item_rule.js';
 import {CssStyles} from 'mj-context-menu/js/css_util.js';
 import {Submenu} from 'mj-context-menu/js/item_submenu.js';
+
+import * as AnnotationMenu from './AnnotationMenu.js';
+import * as MenuUtil from './MenuUtil.js';
 
 import Sre from '../../a11y/sre.js';
 
@@ -57,12 +61,6 @@ declare namespace window {
  * The global MathJax object
  */
 const MathJax = MJX as StartupObject & LoaderObject;
-
-/**
- * True when platform is a Mac (so we can enable CMD menu item for zoom trigger)
- */
-const isMac = (typeof window !== 'undefined' &&
-               window.navigator && window.navigator.platform.substr(0, 3) === 'Mac');
 
 /*==========================================================================*/
 
@@ -337,8 +335,7 @@ export class Menu {
   protected annotationText = new SelectableInfo(
     'MathJax Annotation Text',
     () => {
-      if (!this.menu.mathItem) return '';
-      const text = this.menu.annotation;
+      const text = AnnotationMenu.annotation;
       return '<pre style="font-size:125%; margin:0">' + this.formatSource(text) + '</pre>';
     },
     ''
@@ -398,8 +395,10 @@ export class Menu {
    * Create the menu object, attach the info boxes to it, and output any CSS needed for it
    */
   protected initMenu() {
-    let parser = new Parser([['contextMenu', MJContextMenu.fromJson.bind(MJContextMenu)],
-                             ['MJradio', MJRadio.fromJson.bind(MJRadio)]]);
+    let parser = new Parser([
+      ['contextMenu', MJContextMenu.fromJson.bind(MJContextMenu)],
+      ['radioCompare', RadioCompare.fromJson.bind(RadioCompare)]
+    ]);
     this.menu = parser.parse({
       type: 'contextMenu',
       id: 'MathJax_Menu',
@@ -446,12 +445,12 @@ export class Menu {
         this.submenu('Show', 'Show Math As', [
           this.command('MathMLcode', 'MathML Code', () => this.mathmlCode.post()),
           this.command('Original', 'Original Form', () => this.originalText.post()),
-          this.submenu('Annotation', 'Annotation')
+          this.submenu('ShowAnnotation', 'Annotation')
         ]),
         this.submenu('Copy', 'Copy to Clipboard', [
           this.command('MathMLcode', 'MathML Code', () => this.copyMathML()),
           this.command('Original', 'Original Form', () => this.copyOriginal()),
-          this.submenu('Annotation', 'Annotation')
+          this.submenu('CopyAnnotation', 'Annotation')
         ]),
         this.rule(),
         this.submenu('Settings', 'Math Settings', [
@@ -465,9 +464,9 @@ export class Menu {
             ]),
             this.rule(),
             this.label('TriggerRequires', 'Trigger Requires:'),
-            this.checkbox((isMac ? 'Option' : 'Alt'), (isMac ? 'Option' : 'Alt'), 'alt'),
-            this.checkbox('Command', 'Command', 'cmd', {hidden: !isMac}),
-            this.checkbox('Control', 'Control', 'ctrl', {hiddne: isMac}),
+            this.checkbox((MenuUtil.isMac ? 'Option' : 'Alt'), (MenuUtil.isMac ? 'Option' : 'Alt'), 'alt'),
+            this.checkbox('Command', 'Command', 'cmd', {hidden: !MenuUtil.isMac}),
+            this.checkbox('Control', 'Control', 'ctrl', {hiddne: MenuUtil.isMac}),
             this.checkbox('Shift', 'Shift', 'shift')
           ]),
           this.submenu('ZoomFactor', 'Zoom Factor', this.radioGroup('zscale', [
@@ -563,9 +562,8 @@ export class Menu {
     this.zoomBox.attachMenu(menu);
     this.checkLoadableItems();
     this.enableExplorerItems(this.settings.explorer);
-    menu.showAnnotation = this.annotationText;
-    menu.copyAnnotation = this.copyAnnotation.bind(this);
-    menu.annotationTypes = this.options.annotationTypes;
+    AnnotationMenu.setAnnotationBox(this.annotationText);
+    AnnotationMenu.setAnnotationTypes(this.options.annotationTypes);
     CssStyles.addInfoStyles(this.document.document as any);
     CssStyles.addMenuStyles(this.document.document as any);
   }
@@ -984,40 +982,22 @@ export class Menu {
    * Copy the serialzied MathML to the clipboard
    */
   protected copyMathML() {
-    this.copyToClipboard(this.toMML(this.menu.mathItem));
+    MenuUtil.copyToClipboard(this.toMML(this.menu.mathItem));
   }
 
   /**
    * Copy the original form to the clipboard
    */
   protected copyOriginal() {
-    this.copyToClipboard(this.menu.mathItem.math.trim());
+    MenuUtil.copyToClipboard(this.menu.mathItem.math.trim());
   }
 
   /**
    * Copy the original annotation text to the clipboard
    */
-  public copyAnnotation() {
-    this.copyToClipboard(this.menu.annotation.trim());
-  }
-
-  /**
-   * @param {string} text   The text to be copied ot the clopboard
-   */
-  protected copyToClipboard(text: string) {
-    const input = document.createElement('textarea');
-    input.value = text;
-    input.setAttribute('readonly', '');
-    input.style.cssText = 'height: 1px; width: 1px; padding: 1px; position: absolute; left: -10px';
-    document.body.appendChild(input);
-    input.select();
-    try {
-      document.execCommand('copy');
-    } catch (error) {
-      alert('Can\'t copy to clipboard: ' + error.message);
-    }
-    document.body.removeChild(input);
-  }
+  // public copyAnnotation() {
+  //   this.copyToClipboard(this.annotation.trim());
+  // }
 
   /*======================================================================*/
 
@@ -1181,3 +1161,6 @@ export class Menu {
   /*======================================================================*/
 
 }
+
+MJContextMenu.DynamicSubmenus.set('ShowAnnotation', AnnotationMenu.showAnnotations);
+MJContextMenu.DynamicSubmenus.set('CopyAnnotation', AnnotationMenu.copyAnnotations);

@@ -22,8 +22,6 @@
  */
 
 import {MathItem} from '../../core/MathItem.js';
-import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import {SelectableInfo} from './SelectableInfo.js';
 
 import {ContextMenu} from 'mj-context-menu/js/context_menu.js';
 import {SubMenu} from 'mj-context-menu/js/sub_menu.js';
@@ -52,26 +50,6 @@ export class MJContextMenu extends ContextMenu {
    */
   public mathItem: MathItem<HTMLElement, Text, Document> = null;
 
-  /**
-   * The annotation selected in the Annotation submenu (neede for the info box to be able to show it)
-   */
-  public annotation: string = '';
-
-  /**
-   * The info box for showing annotations (created by the Menu object that contains this MJContextMenu)
-   */
-  public showAnnotation: SelectableInfo;
-
-  /**
-   * The function to copy the selected annotation (set by the containing Menu item)
-   */
-  public copyAnnotation: () => void;
-
-  /**
-   * The annotation types to look for in a MathItem
-   */
-  public annotationTypes: {[type: string]: string[]} = {};
-
   /*======================================================================*/
 
   /**
@@ -91,7 +69,7 @@ export class MJContextMenu extends ContextMenu {
         clipboard.content = original.content;
         const semantics = this.findID('Settings', 'semantics');
         input === 'MathML' ? semantics.disable() : semantics.enable();
-        this.getAnnotationMenu();
+        // this.getAnnotationMenu();
         this.dynamicSubmenus();
       }
       super.post(x, y);
@@ -116,7 +94,7 @@ export class MJContextMenu extends ContextMenu {
    * @param {string[]} names   The menu IDs to look for
    * @returns {Item}         The menu item (or null if not found)
    */
-  public findID(...names: string[]) {
+  public findID(...names: string[]): Item {
     let menu = this as Menu;
     let item = null as Item;
     for (const name of names) {
@@ -133,99 +111,11 @@ export class MJContextMenu extends ContextMenu {
   /*======================================================================*/
 
   /**
-   * Look up the annotations in the MathItem and set the ShowAs and CopyToClipboard menus
-   */
-  protected getAnnotationMenu() {
-    const annotations = this.getAnnotations(this.getSemanticNode());
-    this.createAnnotationMenu('Show', annotations, () => this.showAnnotation.post());
-    this.createAnnotationMenu('Copy', annotations, () => this.copyAnnotation());
-  }
-
-  /**
-   * Find the top-most semantics element that encloses the contents of the expression (if any)
-   *
-   * @returns {MmlNode | null}   The semantics node that was found (or null)
-   */
-  protected getSemanticNode(): MmlNode | null {
-    let node: MmlNode = this.mathItem.root;
-    while (node && !node.isKind('semantics'))  {
-      if (node.isToken || node.childNodes.length !== 1) return null;
-      node = node.childNodes[0];
-    }
-    return node;
-  }
-
-  /**
-   * @param {MmlNode} node           The semantics node whose annotations are to be obtained
-   * @returns {[string, string][]}   Array of [type, text] where the type is the annotation type
-   *                                   and text is the content of the annotation of that type
-   */
-  protected getAnnotations(node: MmlNode): [string, string][] {
-    const annotations = [] as [string, string][];
-    if (!node) return annotations;
-    for (const child of node.childNodes) {
-      if (child.isKind('annotation')) {
-        const match = this.annotationMatch(child);
-        if (match) {
-          const value = child.childNodes.reduce((text, chars) => text + chars.toString(), '');
-          annotations.push([match, value]);
-        }
-      }
-    }
-    return annotations;
-  }
-
-  /**
-   * @param {MmlNode} child    The annotation node to check if its encoding is one of the displayable ones
-   * @returns {string | null}         The annotation type if it does, or null if it doesn't
-   */
-  protected annotationMatch(child: MmlNode): string | null {
-    const encoding = child.attributes.get('encoding') as string;
-    for (const type of Object.keys(this.annotationTypes)) {
-      if (this.annotationTypes[type].indexOf(encoding) >= 0) {
-        return type;
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Create a submenu from the available annotations and attach it to the proper menu item
-   *
-   * @param {string} id                        The id of the menu to attach to (Show or Copy)
-   * @param {[string, string][]} annotations   The annotations to use for the submenu
-   * @param {() => void} action                The action to perform when the annotation is selected
-   */
-  protected createAnnotationMenu(id: string, annotations: [string, string][], action: () => void) {
-    const menu = this.findID(id, 'Annotation') as Submenu;
-    menu.submenu = this.factory.get('subMenu')(this.factory, {
-      items: annotations.map(([type, value]) => {
-        return {
-          type: 'command',
-          id: type,
-          content: type,
-          action: () => {
-            this.annotation = value;
-            action();
-          }
-        };
-      }),
-      id: 'annotations'
-    }, menu);
-    if (annotations.length) {
-      menu.enable();
-    } else {
-      menu.disable();
-    }
-  }
-
-  /*======================================================================*/
-
-  /**
    * Renews the dynamic submenus.
    */
   public dynamicSubmenus() {
     for (const [id, method] of MJContextMenu.DynamicSubmenus) {
+      console.log(id);
       const menu = this.find(id) as Submenu;
       if (!menu) continue;
       const sub = method(this, menu);
@@ -236,59 +126,6 @@ export class MJContextMenu extends ContextMenu {
         menu.disable();
       }
     }
-  }
-
-}
-
-import {Radio} from 'mj-context-menu/js/item_radio.js';
-import {ParserFactory} from 'mj-context-menu/js/parser_factory.js';
-
-// Extend the radio buttons to work for CS preferences
-export class MJRadio extends Radio {
-
-
-  /**
-   * @override
-   */
-  protected role = 'mjmenuitemradio';
-
-  /**
-   * @override
-   */
-  public static fromJson(
-    _factory: ParserFactory,
-    {content: content, variable: variable, id: id, comparator: comparator}:
-    {content: string, variable: string, id: string,
-     comparator: (variable: string, id: string) => boolean}, menu: Menu): Radio {
-    return new this(menu, content, variable, id, comparator);
-  }
-
-  /**
-   * @override
-   */
-  constructor(menu: Menu, content: string, variable: string, id: string,
-              private comparator: (variable: string, id: string) => boolean) {
-    super(menu, content, variable, id);
-  }
-
-  /**
-   * @override
-   * Toggles the aria checked attribute.
-   */
-  protected updateAria() {
-    this.html.setAttribute(
-      'aria-checked',
-      this.comparator(this.variable.getValue(), this.id) ? 'true' : 'false'
-    );
-  }
-
-  /**
-   * @override
-   * Toggles the checked tick.
-   */
-  protected updateSpan() {
-    this.span.style.display =
-      this.comparator(this.variable.getValue(), this.id) ? '' : 'none';
   }
 
 }
