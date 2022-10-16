@@ -69,7 +69,6 @@ export class MJContextMenu extends ContextMenu {
         clipboard.content = original.content;
         const semantics = this.findID('Settings', 'semantics');
         input === 'MathML' ? semantics.disable() : semantics.enable();
-        // this.getAnnotationMenu();
         this.dynamicSubmenus();
       }
       super.post(x, y);
@@ -115,7 +114,6 @@ export class MJContextMenu extends ContextMenu {
    */
   public dynamicSubmenus() {
     for (const [id, method] of MJContextMenu.DynamicSubmenus) {
-      console.log(id);
       const menu = this.find(id) as Submenu;
       if (!menu) continue;
       const sub = method(this, menu);

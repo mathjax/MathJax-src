@@ -30,20 +30,20 @@ import {MathJaxObject as StartupObject} from '../../components/startup.js';
 import {MathJaxObject as LoaderObject} from '../../components/loader.js';
 import {OptionList, userOptions, defaultOptions, expandable} from '../../util/Options.js';
 
+import * as AnnotationMenu from './AnnotationMenu.js';
 import {MJContextMenu} from './MJContextMenu.js';
 import {RadioCompare} from './RadioCompare.js';
 import {MmlVisitor} from './MmlVisitor.js';
 import {SelectableInfo} from './SelectableInfo.js';
 import {MenuMathDocument} from './MenuHandler.js';
+import * as MenuUtil from './MenuUtil.js';
+
 
 import {Info} from 'mj-context-menu/js/info.js';
 import {Parser} from 'mj-context-menu/js/parse.js';
 import {Rule} from 'mj-context-menu/js/item_rule.js';
 import {CssStyles} from 'mj-context-menu/js/css_util.js';
 import {Submenu} from 'mj-context-menu/js/item_submenu.js';
-
-import * as AnnotationMenu from './AnnotationMenu.js';
-import * as MenuUtil from './MenuUtil.js';
 
 import Sre from '../../a11y/sre.js';
 
@@ -557,7 +557,6 @@ export class Menu {
     this.about.attachMenu(menu);
     this.help.attachMenu(menu);
     this.originalText.attachMenu(menu);
-    this.annotationText.attachMenu(menu);
     this.mathmlCode.attachMenu(menu);
     this.zoomBox.attachMenu(menu);
     this.checkLoadableItems();
@@ -949,7 +948,7 @@ export class Menu {
   }
 
   /**
-   * @param {MouseEvent} Event   The event triggering the zoom action
+   * @param {MouseEvent} event   The event triggering the zoom action
    * @param {string} zoom        The type of event (click, dblclick) that occurred
    * @returns {boolean}          True if the event is the right type and has the needed modifiers
    */
@@ -991,13 +990,6 @@ export class Menu {
   protected copyOriginal() {
     MenuUtil.copyToClipboard(this.menu.mathItem.math.trim());
   }
-
-  /**
-   * Copy the original annotation text to the clipboard
-   */
-  // public copyAnnotation() {
-  //   this.copyToClipboard(this.annotation.trim());
-  // }
 
   /*======================================================================*/
 
@@ -1161,6 +1153,6 @@ export class Menu {
   /*======================================================================*/
 
 }
-
+// Adding dynamic submenus for annotations.
 MJContextMenu.DynamicSubmenus.set('ShowAnnotation', AnnotationMenu.showAnnotations);
 MJContextMenu.DynamicSubmenus.set('CopyAnnotation', AnnotationMenu.copyAnnotations);

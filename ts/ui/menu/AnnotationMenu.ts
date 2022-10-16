@@ -1,49 +1,52 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2019-2022 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  The annotations submenus.
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ * @author v.sorge@mathjax.org (Volker Sorge)
+ */
+
 import {Submenu} from 'mj-context-menu/js/item_submenu.js';
 import {MJContextMenu} from './MJContextMenu.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {SelectableInfo} from './SelectableInfo.js';
 import * as MenuUtil from './MenuUtil.js';
 
-
 /**
- * The annotation selected in the Annotation submenu (neede for the info box to be able to show it)
+ * The annotation types to look for in a MathItem. These are options set in the
+ * Menu object.
  */
-export let annotation: string = '';
+let annotationTypes: {[type: string]: string[]} = {};
 
 /**
- * The annotation types to look for in a MathItem
- */
-export let annotationTypes: {[type: string]: string[]} = {};
-
-export let annotationBox: SelectableInfo = null;
-
-// /**
-//  * The annotation selected in the Annotation submenu (neede for the info box to be able to show it)
-//  */
-// public annotation: string = '';
-
-// /**
-//  * The info box for showing annotations (created by the Menu object that contains this MJContextMenu)
-//  */
-// public showAnnotation: SelectableInfo;
-
-// /**
-//  * The function to copy the selected annotation (set by the containing Menu item)
-//  */
-// public copyAnnotation: () => void;
-
-// /**
-//  * The annotation types to look for in a MathItem
-//  */
-// public annotationTypes: {[type: string]: string[]} = {};
-
-/**
- * Sets the allowed annotation types.
- * @param {{[type: string]: string[]}} types The association list of types.
+ * Sets the connected annotation box.
+ * @param {SelectableInfo} box The info box.
  */
 export function setAnnotationBox(box: SelectableInfo) {
   annotationBox = box;
 }
+
+/**
+ * The info box for showing annotations (created by the Menu object that
+ * contains this MJContextMenu)
+ */
+let annotationBox: SelectableInfo = null;
 
 /**
  * Sets the allowed annotation types.
@@ -56,47 +59,63 @@ export function setAnnotationTypes(types: {[type: string]: string[]}) {
 /*======================================================================*/
 
 /**
- * Look up the annotations in the MathItem and set the ShowAs and CopyToClipboard menus
+ * Creates the dynamic submenu for showing annotations.
+ *
+ * @param {MJContextMenu} menu The context menu for which the submenu is constructed.
+ * @param {Submenu} sub The submenu to attach elements to.
  */
-// function getAnnotationMenu() {
-//   MJContextMenu.DynamicSubmenus.set(
-//     'ShowAnnotation', this.showAnnotations.bind(this));
-//   MJContextMenu.DynamicSubmenus.set(
-//     'CopyAnnotation', this.copyAnnotations.bind(this));
-// }
-
-export function showAnnotations(menu: MJContextMenu, _sub: Submenu) {
-  const annotations = getAnnotations(getSemanticNode(menu));
+export function showAnnotations(menu: MJContextMenu, sub: Submenu) {
+  const annotations = getAnnotations(menu);
   annotationBox.attachMenu(menu);
-  return createAnnotationMenu(menu, _sub, annotations,
+  return createAnnotationMenu(menu, sub, annotations,
                               () => annotationBox.post());
 }
 
 /**
- * 
- * @param {MJContextMenu} menu 
- * @param {Submenu} _sub 
+ * Creates the dynamic submenu for copying annotations.
+ *
+ * @param {MJContextMenu} menu The context menu for which the submenu is constructed.
+ * @param {Submenu} sub The submenu to attach elements to.
  */
-export function copyAnnotations(menu: MJContextMenu, _sub: Submenu) {
-  const annotations = getAnnotations(getSemanticNode(menu));
-  return createAnnotationMenu(menu,  _sub, annotations,
+export function copyAnnotations(menu: MJContextMenu, sub: Submenu) {
+  const annotations = getAnnotations(menu);
+  return createAnnotationMenu(menu,  sub, annotations,
                               () => MenuUtil.copyToClipboard(annotation.trim()));
 }
+
+/**
+ * We cache annotations of a math item, so we only have to compute them once for
+ * the two annotation menus.
+ */
+let cachedAnnotation: [string, string][] = null;
+
+/**
+ * Computes the annotations for the math item the context menu is opened on.
+ *
+ * @param {MJContextMenu} menu The context menu.
+ * @return {[string, string][]} The association list of annotation.
+ */
+function getAnnotations(menu: MJContextMenu): [string, string][] {
+  if (cachedAnnotation) {
+    let save = cachedAnnotation;
+    cachedAnnotation = null;
+    return save;
+  }
+  cachedAnnotation = getAnnotation(getSemanticNode(menu));
+  return cachedAnnotation;
+}
+
 /**
  * Find the top-most semantics element that encloses the contents of the expression (if any)
  *
- * @returns {MmlNode | null}   The semantics node that was found (or null)
+ * @returns {MmlNode | null} The semantics node that was found (or null)
  */
 function getSemanticNode(menu: MJContextMenu): MmlNode | null {
-  console.log(menu);
-  let node: MmlNode = menu.mathItem.root;
-  console.log(menu.mathItem);
-  console.log(menu.mathItem.root);
+  let node: MmlNode = menu.mathItem?.root;
   while (node && !node.isKind('semantics'))  {
     if (node.isToken || node.childNodes.length !== 1) return null;
     node = node.childNodes[0];
   }
-  console.log(node);
   return node;
 }
 
@@ -105,7 +124,7 @@ function getSemanticNode(menu: MJContextMenu): MmlNode | null {
  * @returns {[string, string][]}   Array of [type, text] where the type is the annotation type
  *                                   and text is the content of the annotation of that type
  */
-function getAnnotations(node: MmlNode): [string, string][] {
+function getAnnotation(node: MmlNode): [string, string][] {
   const annotations = [] as [string, string][];
   if (!node) return annotations;
   for (const child of node.childNodes) {
@@ -121,8 +140,9 @@ function getAnnotations(node: MmlNode): [string, string][] {
 }
 
 /**
- * @param {MmlNode} child    The annotation node to check if its encoding is one of the displayable ones
- * @returns {string | null}         The annotation type if it does, or null if it doesn't
+ * @param {MmlNode} child The annotation node to check if its encoding is one
+ *     of the displayable ones.
+ * @returns {string | null} The annotation type if it exists, o/w null.
  */
 function annotationMatch(child: MmlNode): string | null {
   const encoding = child.attributes.get('encoding') as string;
@@ -135,14 +155,22 @@ function annotationMatch(child: MmlNode): string | null {
 }
 
 /**
+ * The annotation selected in the Annotation submenu (needed for the info box to
+ * be able to show it)
+ */
+export let annotation: string = '';
+
+/**
  * Create a submenu from the available annotations and attach it to the proper menu item
  *
- * @param {string} id                        The id of the menu to attach to (Show or Copy)
- * @param {[string, string][]} annotations   The annotations to use for the submenu
- * @param {() => void} action                The action to perform when the annotation is selected
+ * @param {MJContextMenu} menu The context menu for which the submenu is constructed.
+ * @param {Submenu} submenu The submenu to attach elements to.
+ * @param {[string, string][]} annotations The annotations to use for the submenu
+ * @param {() => void} action The action to perform when the annotation is selected
  */
 function createAnnotationMenu(menu: MJContextMenu, submenu: Submenu,
-                              annotations: [string, string][], action: () => void) {
+                              annotations: [string, string][],
+                              action: () => void) {
   return menu.factory.get('subMenu')(menu.factory, {
     items: annotations.map(([type, value]) => {
       return {
@@ -158,4 +186,3 @@ function createAnnotationMenu(menu: MJContextMenu, submenu: Submenu,
     id: 'annotations'
   }, submenu);
 }
-

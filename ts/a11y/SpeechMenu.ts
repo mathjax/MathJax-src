@@ -162,7 +162,7 @@ function smartPreferences(previous: string, smart: string, locale: string) {
 /**
  * Creates dynamic clearspeak menu.
  * @param {MJContextMenu} menu The context menu.
- * @param {Submenu} sub The submenu to attach.
+ * @param {Submenu} sub The submenu to attach elements to.
  */
 export function clearspeakMenu(menu: MJContextMenu, sub: Submenu) {
   let locale = menu.pool.lookup('locale').getValue() as string;
@@ -192,7 +192,7 @@ MJContextMenu.DynamicSubmenus.set('Clearspeak', clearspeakMenu);
 /**
  * Creates dynamic locale menu.
  * @param {MJContextMenu} menu The context menu.
- * @param {Submenu} sub The submenu to attach.
+ * @param {Submenu} sub The submenu to attach elements to.
  */
 export function localeMenu(menu: MJContextMenu, sub: Submenu) {
   let radios: {type: string, id: string,
