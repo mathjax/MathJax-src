@@ -162,6 +162,10 @@ export default class TexParser {
     if (!str) {
       return;
     }
+    if (str === '}') {
+      this.updateChild(node, 0);
+      return;
+    }
     if (input === '\\') {
       str = '\\' + str;
     }
@@ -172,15 +176,15 @@ export default class TexParser {
     return '{' + str + '}';
   }
 
-  private updateChild(atom: MmlNode) {
+  private updateChild(atom: MmlNode, pos: number) {
     if (!atom) return;
-    let str = this.composeBraces(atom);
+    let str = this.composeBraces(atom, pos);
     atom.attributes.set('latex', this.bracing(str));
   }
 
-  private composeBraces(atom: MmlNode) {
+  private composeBraces(atom: MmlNode, pos: number) {
     // TODO: Make this more secure!
-    let children = atom.childNodes[0].childNodes;
+    let children = atom.childNodes[pos].childNodes;
     return children.map(x => x.attributes?.get('latex') || '').join(' ');
   }
 
