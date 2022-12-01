@@ -97,6 +97,14 @@ export class AutoOpen extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem): CheckType {
+    let close = item.getProperty('autoclose');
+    if (close && close === this.getProperty('close') && !this.openCount--) {
+      if (this.getProperty('ignore')) {
+        this.Clear();
+        return [[], true];
+      }
+      return [[this.toMml()], true];
+    }
     //
     //  Check for nested open delimiters (#2831)
     //
@@ -105,14 +113,6 @@ export class AutoOpen extends BaseItem {
       if (mml.isKind('mo') && (mml as AbstractMmlTokenNode).getText() === this.getProperty('open')) {
         this.openCount++;
       }
-    }
-    let close = item.getProperty('autoclose');
-    if (close && close === this.getProperty('close') && !this.openCount--) {
-      if (this.getProperty('ignore')) {
-        this.Clear();
-        return [[], true];
-      }
-      return [[this.toMml()], true];
     }
     return super.checkItem(item);
   }
