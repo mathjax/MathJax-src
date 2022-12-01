@@ -1148,7 +1148,7 @@ export class ArrayItem extends BaseItem {
    */
   protected getEntry(): [string, string, string, boolean] {
     const parser = this.parser;
-    const pattern = /^([^]*?)([&{}]|\\\\|\\(?:begin|end)\{array\}|\\cr|\\)/;
+    const pattern = /^([^]*?)([&{}]|\\\\|\\(?:begin|end)\s*\{array\}|\\cr|\\)/;
     let braces = 0, envs = 0;
     let i = parser.i;
     let match;
