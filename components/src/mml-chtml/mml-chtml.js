@@ -13,5 +13,6 @@ Loader.preLoad(
   'output/chtml',
   'ui/menu', 'a11y/assistive-mml'
 );
+Loader.saveVersion('mml-chtml');
 
 loadFont(startup, true);

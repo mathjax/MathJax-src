@@ -14,5 +14,6 @@ Loader.preLoad(
   'ui/menu',
   'a11y/assistive-mml'
 );
+Loader.saveVersion('mml-svg-nofont');
 
 loadFont(startup);
