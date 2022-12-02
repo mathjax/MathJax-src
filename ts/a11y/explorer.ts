@@ -31,7 +31,7 @@ import {OptionList, expandable} from '../util/Options.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {MJContextMenu} from '../ui/menu/MJContextMenu.js';
 
-import { ExplorerPool, RegionPool } from './explorer/ExplorerPool.js';
+import {ExplorerPool, RegionPool} from './explorer/ExplorerPool.js';
 
 import {Submenu} from 'mj-context-menu/js/item_submenu.js';
 
@@ -49,6 +49,8 @@ export type HANDLER = Handler<HTMLElement, Text, Document>;
 export type HTMLDOCUMENT = EnrichedMathDocument<HTMLElement, Text, Document>;
 export type HTMLMATHITEM = EnrichedMathItem<HTMLElement, Text, Document>;
 export type MATHML = MathML<HTMLElement, Text, Document>;
+
+const hasWindow = (typeof window !== 'undefined');
 
 /*==========================================================================*/
 
@@ -134,7 +136,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      */
     public rerender(document: ExplorerMathDocument, start: number = STATE.RERENDER) {
       this.savedId = this.typesetRoot.getAttribute('sre-explorer-id');
-      this.refocus = (window.document.activeElement === this.typesetRoot);
+      this.refocus = (hasWindow ? window.document.activeElement === this.typesetRoot : false);
       if (this.explorers) {
         this.explorers.reattach();
       }
@@ -193,7 +195,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
      */
     public static OPTIONS: OptionList = {
       ...BaseDocument.OPTIONS,
-      enableExplorer: true,
+      enableExplorer: hasWindow,           // only activate in interactive contexts
       renderActions: expandable({
         ...BaseDocument.OPTIONS.renderActions,
         explorable: [STATE.EXPLORER]
@@ -230,7 +232,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
     /**
      * The objects needed for the explorer
      */
-    public explorerRegions: RegionPool = new RegionPool(this);
+    public explorerRegions: RegionPool = null;
 
     /**
      * Extend the MathItem class used for this MathDocument
@@ -262,6 +264,9 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
     public explorable(): ExplorerMathDocument {
       if (!this.processed.isSet('explorer')) {
         if (this.options.enableExplorer) {
+          if (!this.explorerRegions) {
+            this.explorerRegions = new RegionPool(this);
+          }
           for (const math of this.math) {
             (math as ExplorerMathItem).explorable(this);
           }
