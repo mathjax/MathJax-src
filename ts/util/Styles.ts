@@ -405,6 +405,13 @@ export class Styles {
   }
 
   /**
+   * @return {StyleList} The object to map style names to the values
+   */
+  public get styleList(): StyleList {
+    return {...this.styles};
+  }
+
+  /**
    * @param {string} name   The name of the style to set
    * @param {string|number|boolean} value The value to set it to
    */
