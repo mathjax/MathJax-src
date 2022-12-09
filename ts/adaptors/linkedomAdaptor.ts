@@ -66,6 +66,6 @@ export class LinkedomAdaptor extends NodeMixin<HTMLElement, Text, Document, HTML
  */
 export function linkedomAdaptor(parseHTML: any, options: OptionList = null): LinkedomAdaptor {
   const window = parseHTML('<html></html>');
-  window.constructor.prototype.HTMLCollection = class {};  // add fake class for missing HTMLCollecton
+  window.HTMLCollection = class {};  // add fake class for missing HTMLCollecton
   return new LinkedomAdaptor(window, options);
 }
