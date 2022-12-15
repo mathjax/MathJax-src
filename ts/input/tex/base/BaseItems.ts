@@ -253,12 +253,19 @@ export class SubsupItem extends BaseItem {
           item.First = node;
         }
       }
+      // console.log(JSON.stringify(item.First.attributes));
+      // let first = item.First;
       NodeUtil.setChild(top, position, item.First);
       if (this.getProperty('movesupsub') != null) {
         // @test Limits Subsup (currently does not work! Check again!)
         NodeUtil.setProperty(top, 'movesupsub', this.getProperty('movesupsub') as Property);
       }
       const result = this.factory.create('mml', top);
+      // console.log(38);
+      // console.log(top.attributes.get('latex'));
+      // console.log(first.attributes.get('latex'));
+      // console.log(first);
+      // top.attributes.set('latexItem', top.attributes.get('latex') as string);
       return [[result], true];
     }
     if (super.checkItem(item)[1]) {
@@ -397,10 +404,13 @@ export class LeftItem extends BaseItem {
         item.getProperty('delim') as string, '', item.getProperty('color') as string);
       let left = fenced.childNodes[0];
       let right = fenced.childNodes[fenced.childNodes.length - 1];
+      let mrow = this.factory.create('mml', fenced);
       // TODO: Do we really want to have the left/right/middle prefixes here?
       addLatexItem(left, this, '\\left');
       addLatexItem(right, item, '\\right');
-      return [[this.factory.create('mml', fenced)], true];
+      mrow.Peek()[0].attributes.set(
+        'itemLatex', '\\left' + item.startStr.slice(this.startI, item.stopI));
+      return [[mrow], true];
     }
     if (item.isKind('middle')) {
       //
