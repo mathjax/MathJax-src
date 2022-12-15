@@ -162,20 +162,54 @@ export default class TexParser {
     if (!str) {
       return;
     }
+    if (input === '\\') {
+      str = '\\' + str;
+    }
+    // TODO: Simplify. Add case for sub/sup sup/sub by checking number of children.
+    if (node.attributes.get('latex') === '^' && str !== '^') {
+      // console.log(53);
+      // console.log(node.childNodes.length);
+      node.childNodes.forEach(x => console.log(x));
+      if (str === '}') {
+        this.updateChild(node.childNodes[2], 0);
+        this.composeLatex(node, '^', 0, 2);
+        return;
+      }
+      node.childNodes[2].attributes.set('latex', str);
+      this.composeLatex(node, '^', 0, 2);
+      return;
+    }
+    if (node.attributes.get('latex') === '_' && str !== '_') {
+      // console.log(54);
+      // console.log(node.childNodes.length);
+      node.childNodes.forEach(x => console.log(x));
+      if (str === '}') {
+        this.updateChild(node.childNodes[1], 0);
+        this.composeLatex(node, '_', 0, 1);
+        return;
+      }
+      node.childNodes[1].attributes.set('latex', str);
+      this.composeLatex(node, '_', 0, 1);
+      return;
+    }
     if (str === '}') {
       this.updateChild(node, 0);
       return;
     }
-    if (input === '\\') {
-      str = '\\' + str;
-    }
     node.attributes.set('latex', str);
   }
 
+  private composeLatex(node: MmlNode, comp: string, pos1: number, pos2: number) {
+    const expr = node.childNodes[pos1].attributes.get('latex') + comp +
+      node.childNodes[pos2].attributes.get('latex');
+    node.attributes.set('latex', expr);
+  }
+  
   private bracing(str: string) {
     return '{' + str + '}';
   }
 
+  // TODO: Do we need this position for anything?
   private updateChild(atom: MmlNode, pos: number) {
     if (!atom) return;
     let str = this.composeBraces(atom, pos);
@@ -185,7 +219,17 @@ export default class TexParser {
   private composeBraces(atom: MmlNode, pos: number) {
     // TODO: Make this more secure!
     let children = atom.childNodes[pos].childNodes;
-    return children.map(x => x.attributes?.get('latex') || '').join(' ');
+    // console.log('Braces');
+    // console.log(atom.childNodes[pos]);
+    // children.map(x => console.log(x.attributes?.get('latex')));
+    // TODO: Put those spaces in only if necessary!
+    let expr = '';
+    for (const child of children) {
+      let att = (child.attributes?.get('latex') || '') as string;
+      if (!att) continue;
+      expr += (expr && expr.match(/[a-zA-Z]$/) && att.match(/^[a-zA-Z]/)) ? ' ' + att : att;
+    }
+    return expr;
   }
 
 
