@@ -163,35 +163,38 @@ export default class TexParser {
     if (input === '\\') {
       str = '\\' + str;
     }
-    // TODO: Simplify. Add case for sub/sup sup/sub by checking number of children.
+    // TODO: Simplify.
+    // These are the cases to handle sub and superscripts.
     if (node.attributes.get('latex') === '^' && str !== '^') {
-      // console.log(53);
-      // console.log(node.childNodes.length);
-      node.childNodes.forEach(x => console.log(x));
       if (str === '}') {
-        this.updateChild(node.childNodes[2], 0);
-        this.composeLatex(node, '^', 0, 2);
-        return;
+        this.updateChild(node.childNodes[2]);
+      } else {
+        node.childNodes[2].attributes.set('latex', str);
       }
-      node.childNodes[2].attributes.set('latex', str);
-      this.composeLatex(node, '^', 0, 2);
+      if (node.childNodes[1]) {
+        const sub = node.childNodes[1].attributes.get('latex');
+        this.composeLatex(node, `_${sub}^`, 0, 2);
+      } else {
+        this.composeLatex(node, '^', 0, 2);
+      }
       return;
     }
     if (node.attributes.get('latex') === '_' && str !== '_') {
-      // console.log(54);
-      // console.log(node.childNodes.length);
-      node.childNodes.forEach(x => console.log(x));
       if (str === '}') {
-        this.updateChild(node.childNodes[1], 0);
-        this.composeLatex(node, '_', 0, 1);
-        return;
+        this.updateChild(node.childNodes[1]);
+      } else {
+        node.childNodes[1].attributes.set('latex', str);
       }
-      node.childNodes[1].attributes.set('latex', str);
-      this.composeLatex(node, '_', 0, 1);
+      if (node.childNodes[2]) {
+        const sub = node.childNodes[2].attributes.get('latex');
+        this.composeLatex(node, `^${sub}_`, 0, 1);
+      } else {
+        this.composeLatex(node, '_', 0, 1);
+      }
       return;
     }
     if (str === '}') {
-      this.updateChild(node, 0);
+      this.updateChild(node);
       return;
     }
     node.attributes.set('latex', str);
@@ -207,20 +210,15 @@ export default class TexParser {
     return '{' + str + '}';
   }
 
-  // TODO: Do we need this position for anything?
-  private updateChild(atom: MmlNode, pos: number) {
+  private updateChild(atom: MmlNode) {
     if (!atom) return;
-    let str = this.composeBraces(atom, pos);
+    let str = this.composeBraces(atom);
     atom.attributes.set('latex', this.bracing(str));
   }
 
-  private composeBraces(atom: MmlNode, pos: number) {
+  private composeBraces(atom: MmlNode) {
     // TODO: Make this more secure!
-    let children = atom.childNodes[pos].childNodes;
-    // console.log('Braces');
-    // console.log(atom.childNodes[pos]);
-    // children.map(x => console.log(x.attributes?.get('latex')));
-    // TODO: Put those spaces in only if necessary!
+    let children = atom.childNodes[0].childNodes;
     let expr = '';
     for (const child of children) {
       let att = (child.attributes?.get('latex') || '') as string;
