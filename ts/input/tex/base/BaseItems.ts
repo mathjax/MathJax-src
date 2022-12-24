@@ -333,6 +333,7 @@ export class OverItem extends BaseItem {
                                    this.getProperty('open') as string, mml,
                                    this.getProperty('close') as string);
       }
+      mml.attributes.set('itemLatex', this.getProperty('name') as string);
       return [[this.factory.create('mml', mml), item], true];
     }
     return super.checkItem(item);
