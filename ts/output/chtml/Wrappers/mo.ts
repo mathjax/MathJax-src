@@ -106,6 +106,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
         '/* IE */ overflow': 'hidden',
         '/* others */ overflow': 'clip visible',
         width: '100%',
+        'max-width': '0px',                // allows ext to be smaller than its character's width
         'text-align': 'center'
       },
       'mjx-stretchy-h > mjx-ext > mjx-c': {

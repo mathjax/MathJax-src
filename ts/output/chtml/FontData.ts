@@ -150,8 +150,9 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
   }
 
   /**
-   * @param {string[]} fonts   The IDs for the fonts to add CSS for
-   * @param {string} root      The root URL for the fonts (can be set by extensions)
+   * @param {StyleList} styles   The style object to add styles to
+   * @param {string[]} fonts     The IDs for the fonts to add CSS for
+   * @param {string} root        The root URL for the fonts (can be set by extensions)
    */
   public static addDynamicFontCss(styles: StyleList, fonts: string[], root: string) {
     const fontStyles: StyleList = {};
