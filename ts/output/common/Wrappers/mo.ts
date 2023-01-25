@@ -98,7 +98,7 @@ export interface CommonMo<
   embellishedBreakCount: number;
 
   /**
-   * The break style as an for embellished operator
+   * The break style string for this embellished operator
    */
   embellishedBreakStyle: string;
 

@@ -1154,9 +1154,13 @@ BaseMethods.MakeBox = function (parser: TexParser, name: string) {
   const width = parser.GetBrackets(name);
   const pos = parser.GetBrackets(name, 'c');
   const mml = parser.create('node', 'mpadded', ParseUtil.internalMath(parser, parser.GetArgument(name)));
-  width && NodeUtil.setAttribute(mml, 'width', width);
+  if (width) {
+    NodeUtil.setAttribute(mml, 'width', width);
+  }
   const align = lookup(pos.toLowerCase(), {c: 'center', r: 'right'}, '');
-  align && NodeUtil.setAttribute(mml, 'data-align', align);
+  if (align) {
+    NodeUtil.setAttribute(mml, 'data-align', align);
+  }
   pos.toLowerCase() !== pos && NodeUtil.setAttribute(mml, 'data-overflow', 'linebreak');
   parser.Push(mml);
 };
@@ -1225,7 +1229,9 @@ BaseMethods.Matrix = function(parser: TexParser, _name: string,
   }
   // @test Matrix Braces, Matrix Columns, Matrix Rows.
   const array = parser.itemFactory.create('array').setProperty('requireClose', true) as sitem.ArrayItem;
-  (open || !align) && array.setProperty('arrayPadding', '.2em .125em');
+  if (open || !align) {
+    array.setProperty('arrayPadding', '.2em .125em');
+  }
   array.arraydef = {
     rowspacing: (vspacing || '4pt'),
     columnspacing: (spacing || '1em')
@@ -1396,7 +1402,9 @@ BaseMethods.CrLaTeX = function(parser: TexParser, name: string, nobrackets: bool
     // @test Linebreak
     node = parser.create('node', 'mspace', [], {linebreak: TexConstant.LineBreak.NEWLINE});
     // @test Custom Linebreak
-    if (n) NodeUtil.setAttribute(node, 'data-lineleading', n);
+    if (n) {
+      NodeUtil.setAttribute(node, 'data-lineleading', n);
+    }
     parser.Push(node);
   }
 };

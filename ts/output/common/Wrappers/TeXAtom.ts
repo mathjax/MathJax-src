@@ -154,7 +154,9 @@ export function CommonTeXAtomMixin<
       } else if (this.node.texClass === TEXCLASS.VBOX) {
         if (this.vboxAdjust(this.childNodes[0], bbox) || this.childNodes[0].childNodes.length > 1) return;
         const child = this.childNodes[0].childNodes[0];
-        (child.node.isKind('mpadded') && this.vboxAdjust(child.childNodes[0], bbox)) || this.vboxAdjust(child, bbox);
+        if (!(child.node.isKind('mpadded') && this.vboxAdjust(child.childNodes[0], bbox))) {
+          this.vboxAdjust(child, bbox);
+        }
       }
     }
 

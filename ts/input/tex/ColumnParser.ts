@@ -122,7 +122,8 @@ export class ColumnParser {
       if (n++ > this.MAXCOLUMNS) {
         throw new TexError('MaxColumns', 'Too many column specifiers (perhaps looping column definitions?)');
       }
-      const c = state.c = String.fromCodePoint(state.template.codePointAt(state.i));
+      const code = state.template.codePointAt(state.i);
+      const c = state.c = (code === undefined ? '' : String.fromCodePoint(code));
       state.i += c.length;
       if (!this.columnHandler.hasOwnProperty(c)) {
         throw new TexError('BadPreamToken', 'Illegal pream-token (%1)', c);
@@ -139,7 +140,9 @@ export class ColumnParser {
     //
     if (state.cwidth.length) {
       const cwidth = [...state.cwidth];
-      cwidth.length < calign.length && cwidth.push('auto');
+      if (cwidth.length < calign.length) {
+        cwidth.push('auto');
+      }
       array.arraydef.columnwidth = cwidth.map(w => w || 'auto').join(' ');
     }
     //
@@ -147,7 +150,9 @@ export class ColumnParser {
     //
     if (state.cspace.length) {
       const cspace = [...state.cspace];
-      cspace.length < calign.length && cspace.push('1em');
+      if (cspace.length < calign.length) {
+        cspace.push('1em');
+      }
       array.arraydef.columnspacing = cspace.slice(1).map(d => d || '1em').join(' ');
     }
     //
@@ -168,11 +173,17 @@ export class ColumnParser {
         clines.push('none');
       }
       // @test Enclosed left right
-      array.arraydef.columnlines = clines.slice(1).map(l => l || 'none').join(' ');
+      array.arraydef.columnlines =
+        clines.slice(1)
+              .map(l => l || 'none')
+              .join(' ');
     }
     if (state.cextra[0] || state.cextra[calign.length - 1]) {
       const cspace = state.cspace;
-      array.arraydef['data-array-padding'] = [cspace[0] || '.5em', cspace[calign.length - 1] || '.5em'].join(' ');
+      array.arraydef['data-array-padding'] = [
+        cspace[0] || '.5em',
+        cspace[calign.length - 1] || '.5em'
+      ].join(' ');
     }
   }
 

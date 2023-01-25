@@ -111,7 +111,7 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
         margin: '1em 0'
       },
       'mjx-container[jax="CHTML"][display="true"][width="full"]': {
-        display: 'flex',
+        display: 'flex'
       },
       'mjx-container[jax="CHTML"][display="true"] mjx-math': {
         padding: 0

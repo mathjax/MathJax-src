@@ -207,7 +207,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     this.parseOptions.root = node;
     this.executeFilters(this.postFilters, math, document, this.parseOptions);
     //
-    // Add these here to not lose overlow during filtering attributes in postFilters
+    // Add these here to not lose overflow during filtering attributes in postFilters
     //
     if (parser && parser.stack.env.hsize) {
       NodeUtil.setAttribute(node, 'maxwidth', parser.stack.env.hsize);

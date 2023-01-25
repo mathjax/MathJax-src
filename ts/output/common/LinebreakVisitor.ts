@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  A visitor class for determaining automatic linebreaks
+ * @fileoverview  A visitor class for determaning automatic linebreaks
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

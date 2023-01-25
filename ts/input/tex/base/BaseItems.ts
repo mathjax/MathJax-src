@@ -519,7 +519,9 @@ export class BreakItem extends BaseItem {
           NodeUtil.setAttribute(mml, 'linebreak', linebreak);
           return [[item], true];
         }
-        if (!this.getProperty('insert')) return [[item], true];
+        if (!this.getProperty('insert')) {
+          return [[item], true];
+        }
       }
     }
     const mml = this.create('token', 'mo', {linebreak});

@@ -158,7 +158,11 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
       const [alignfirst, shiftfirst] = lines[1].indentData[0];
       for (const i of parents.keys()) {
         const bbox = lines[i];
-        let [indentalign, indentshift] = (i === 0 ? [alignfirst, shiftfirst] : bbox.indentData[i === n ? 2 : 1]);
+        let [indentalign, indentshift] = (
+          i === 0 ?
+            [alignfirst, shiftfirst] :
+            bbox.indentData[i === n ? 2 : 1]
+        );
         const [align, shift] = this.processIndent(indentalign, indentshift, alignfirst, shiftfirst);
         adaptor.setAttribute(parents[i], 'align', align);
         if (shift) {
@@ -206,7 +210,9 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
       const inlineBreaks = this.node.getProperty('breakable');
       for (let i = 0; i <= n; i++) {
         chtml[i] = adaptor.append(this.dom[0], this.html('mjx-linebox', {'lineno': i})) as N;
-        inlineBreaks && adaptor.append(this.dom[0], this.html('mjx-break', {newline: true}));
+        if (inlineBreaks) {
+          adaptor.append(this.dom[0], this.html('mjx-break', {newline: true}));
+        }
       }
       //
       //  Return the line boxes as the parent nodes for their contents

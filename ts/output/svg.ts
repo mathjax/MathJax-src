@@ -382,8 +382,12 @@ CommonOutputJax<
         if (dimen || !forced) {
           const space = LENGTHS.em(dimen);
           adaptor.insert(
-            adaptor.node('mjx-break', !forced ? {newline: true} :
-                         SPACE[space] ? {size: SPACE[space]} : {style: {'font-size': dimen.toFixed(1) + '%'}}),
+            adaptor.node(
+              'mjx-break',
+              !forced ? {newline: true} :
+              SPACE[space] ? {size: SPACE[space]} :
+              {style: {'font-size': dimen.toFixed(1) + '%'}}
+            ),
             nsvg
           );
         }

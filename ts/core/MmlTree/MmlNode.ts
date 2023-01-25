@@ -662,7 +662,7 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
    *   If the prime style is true, set it as a property (it is not a MathML attribute)
    *   Check that the number of children is correct
    *   Reset the indent attributes for linebreak containers
-   *   Finally, push any inherited attributes to teh children.
+   *   Finally, push any inherited attributes to the children.
    *
    * @override
    */

@@ -63,7 +63,7 @@ export class LineBBox extends BBox {
    */
   public start: [number, number];
   /**
-   * The index of the child node containingt the ending line break and the line within that child
+   * The index of the child node containing the ending line break and the line within that child
    */
   public end: [number, number];
 

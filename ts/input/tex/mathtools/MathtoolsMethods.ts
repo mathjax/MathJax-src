@@ -260,10 +260,16 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     const width = parser.GetBrackets(name);
     const pos = parser.GetBrackets(name, 'c');
     const mml = parser.create('node', 'mpadded', [parser.ParseArg(name)]);
-    width && NodeUtil.setAttribute(mml, 'width', width);
+    if (width) {
+      NodeUtil.setAttribute(mml, 'width', width);
+    }
     const align = lookup(pos.toLowerCase(), {c: 'center', r: 'right'}, '');
-    align && NodeUtil.setAttribute(mml, 'data-align', align);
-    pos.toLowerCase() !== pos && NodeUtil.setAttribute(mml, 'data-overflow', 'linebreak');
+    if (align) {
+      NodeUtil.setAttribute(mml, 'data-align', align);
+    }
+    if (pos.toLowerCase() !== pos) {
+      NodeUtil.setAttribute(mml, 'data-overflow', 'linebreak');
+    }
     parser.Push(mml);
   },
 

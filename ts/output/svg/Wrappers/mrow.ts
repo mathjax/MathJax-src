@@ -102,7 +102,9 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
         this.dom = parents;
       }
       this.addChildren(parents);
-      n && this.placeLines(parents);
+      if (n) {
+        this.placeLines(parents);
+      }
     }
 
     /**

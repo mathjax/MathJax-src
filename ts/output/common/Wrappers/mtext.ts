@@ -275,7 +275,9 @@ export function CommonMtextMixin<
       let [si, sj] = this.breakPoints[i - 1] || [0, 0];
       let [ei, ej] = this.breakPoints[i] || [childNodes.length, 0];
       let words = (childNodes[si].node as TextNode).getText().split(/ /);
-      if (si === ei) return this.textWidth(words.slice(sj, ej).join(' '));
+      if (si === ei) {
+        return this.textWidth(words.slice(sj, ej).join(' '));
+      }
       let w = this.textWidth(words.slice(sj).join(' '));
       while (++si < ei && si < childNodes.length) {
         w += childNodes[si].getBBox().w;

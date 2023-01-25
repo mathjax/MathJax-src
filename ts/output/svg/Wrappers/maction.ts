@@ -213,7 +213,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
               }, data.postDelay));
               event.stopPropagation();
             }, dom);
-            node.setEventHandler('mouseout',  (event: Event) => {
+            node.setEventHandler('mouseout', (event: Event) => {
               data.stopTimers(dom, data);
               const timer = setTimeout(() => adaptor.append(hidden, tool), data.clearDelay);
               data.clearTimer.set(dom, timer);

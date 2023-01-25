@@ -349,7 +349,7 @@ export class CommonWrapper<
   protected bboxComputed: boolean = false;
 
   /**
-   * The cached number opf linebreaks
+   * The cached number of linebreaks
    */
   protected _breakCount: number = -1;
 
