@@ -2,8 +2,8 @@ import {combineDefaults, combineWithMathJax} from '../../../js/components/global
 import {Package} from "../../../js/components/package.js";
 
 export const FONTPATH = (typeof document === 'undefined' ?
-                         '@mathjax/%%FONT%%-font/es5/output/fonts/%%FONT%%' :
-                         'https://cdn.jsdelivr.net/npm/%%FONT%%-font/es5/output/fonts/%%FONT%%');
+                         '@mathjax/%%FONT%%-font/es5' :
+                         'https://cdn.jsdelivr.net/npm/%%FONT%%-font/es5');
 
 export const OutputUtil = {
   config(jax, jaxClass, defaultFont, fontClass) {
