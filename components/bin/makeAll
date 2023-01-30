@@ -71,8 +71,8 @@ function processList(dirs) {
   for (const dir of dirs) {
     const fulldir = path.resolve(dir);
     processDir(fulldir, buildLib);
-    processDir(fulldir, webpackLib);
     processDir(fulldir, copyLib);
+    processDir(fulldir, webpackLib);
   }
 }
 
