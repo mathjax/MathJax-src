@@ -185,7 +185,7 @@ export const ChtmlScriptbase = (function <N, T, D>(): ChtmlScriptbaseClass<N, T,
      */
     public adjustBaseHeight(base: N, basebox: BBox) {
       if (this.node.attributes.get('accent')) {
-        const minH = this.font.params.x_height * basebox.scale;
+        const minH = this.font.params.x_height * this.baseScale;
         if (basebox.h < minH) {
           this.adaptor.setStyle(base, 'paddingTop', this.em(minH - basebox.h));
           basebox.h = minH;

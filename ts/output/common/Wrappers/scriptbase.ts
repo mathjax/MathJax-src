@@ -698,7 +698,7 @@ export function CommonScriptbaseMixin<
           dw[i] += m;
         }
       }
-      [1, 2].map(i => dw[i] += (boxes[i] ? boxes[i].dx * boxes[0].scale : 0));
+      [1, 2].map(i => dw[i] += (boxes[i] ? boxes[i].dx * boxes[0].rscale : 0));
       return dw;
     }
 
