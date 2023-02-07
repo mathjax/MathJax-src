@@ -969,7 +969,7 @@ export class CommonWrapper<
    * @return {number}   The cumulative relative scaling for an embellised mo's core mo
    */
   public coreRScale(): number {
-    let rscale = 1;
+    let rscale = this.bbox.rscale;
     let node = this.coreMO() as any as WW;
     while (node !== (this as any as WW) && node) {
       rscale *= node.bbox.rscale;
