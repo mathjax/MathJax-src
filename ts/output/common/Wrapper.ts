@@ -761,7 +761,7 @@ export class CommonWrapper<
         hasBorder = true;
         width[i] = Math.max(0, this.length2em(w, 1));
         style[i] = this.styles.get(key + 'Style') || 'solid';
-        color[i] = this.styles.get(key + 'Color') || 'currentColor';
+        color[i] = this.styles.get(key + 'Color');
       }
       const p = this.styles.get('padding' + name);
       if (p) {

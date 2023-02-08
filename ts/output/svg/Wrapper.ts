@@ -318,9 +318,11 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   protected addBorderSolid(path: number[][], color: string, child: N, parent: N, dx: number) {
     const border = this.svg('polygon', {
       points: path.map(([x, y]) => `${this.fixed(x - dx)},${this.fixed(y)}`).join(' '),
-      stroke: 'none',
-      fill: color
+      stroke: 'none'
     });
+    if (color) {
+      this.adaptor.setAttribute(border, 'fill', color);
+    }
     if (child) {
       this.adaptor.insert(border, child);
     } else {
