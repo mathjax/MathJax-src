@@ -253,7 +253,7 @@ AmsMethods.HandleOperatorName = function(parser: TexParser, name: string) {
     }
   }
   //
-  parser.Push(mml);
+  parser.Push(parser.itemFactory.create('fn', mml));
 };
 
 /**
