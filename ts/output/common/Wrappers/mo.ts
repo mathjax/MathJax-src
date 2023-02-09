@@ -383,7 +383,7 @@ export function CommonMoMixin<
     }
 
     /**
-     * @param {number} c     The character neing set
+     * @param {number} c     The character being set
      * @param {number} i     The size for that character
      */
     protected setDelimSize(c: number, i: number) {
