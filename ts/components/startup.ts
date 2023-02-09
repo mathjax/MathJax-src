@@ -68,7 +68,7 @@ export type MATHDOCUMENT = MathDocument<any, any, any>;
 export type HANDLER = Handler<any, any, any>;
 export type DOMADAPTOR = DOMAdaptor<any, any, any>;
 export type INPUTJAX = InputJax<any, any, any>;
-export type OUTPUTJAX = OutputJax<any, any, any> & {font: any};
+export type OUTPUTJAX = OutputJax<any, any, any>;
 export type COMMONJAX = CommonOutputJax<any, any, any, any, any, any, any, any, any, any, any>;
 export type TEX = TeX<any, any, any>;
 
@@ -298,7 +298,8 @@ export namespace Startup {
    * Setting Mathjax.startup.pageReady in the configuration will override this.
    */
   export function defaultPageReady() {
-    return (CONFIG.loadAllFontFiles && output.font ? output.font.loadDynamicFiles() : Promise.resolve())
+    return (CONFIG.loadAllFontFiles && (output as COMMONJAX).font ?
+            (output as COMMONJAX).font.loadDynamicFiles() : Promise.resolve())
       .then(CONFIG.typeset && MathJax.typesetPromise ?
             MathJax.typesetPromise(CONFIG.elements) as Promise<void> :
             Promise.resolve());
