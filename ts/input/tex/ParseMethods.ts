@@ -29,6 +29,7 @@ import {TexConstant} from './TexConstants.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import ParseUtil from './ParseUtil.js';
 
+const MATHVARIANT = TexConstant.Variant;
 
 namespace ParseMethods {
 
@@ -44,8 +45,14 @@ namespace ParseMethods {
     if (env.multiLetterIdentifiers && env.font !== '') {
       c = parser.string.substr(parser.i - 1).match(env.multiLetterIdentifiers as any as RegExp)[0];
       parser.i += c.length - 1;
-      if (def.mathvariant === TexConstant.Variant.NORMAL && env.noAutoOP && c.length > 1) {
+      if (def.mathvariant === MATHVARIANT.NORMAL && env.noAutoOP && c.length > 1) {
         def.autoOP = false;
+      }
+    }
+    if (!def.mathvariant && c.normalize('NFD').match(/[a-zA-Z\u0370-\u03F0]/)) {
+      const variant = parser.configuration.mathStyle(c);
+      if (variant) {
+        def.mathvariant = variant;
       }
     }
     // @test Identifier
@@ -89,13 +96,38 @@ namespace ParseMethods {
 
 
   /**
+   * Handle lower-case Greek (as an mi).
+   * @param {TexParser} parser The current tex parser.
+   * @param {Symbol} mchar The parsed symbol.
+   */
+  export function lcGreek(parser: TexParser, mchar: Symbol) {
+    const def = {mathvariant: parser.configuration.mathStyle(mchar.char) || MATHVARIANT.ITALIC};
+    // @test Greek
+    const node = parser.create('token', 'mi', def, mchar.char);
+    parser.Push(node);
+  }
+
+  /**
+   * Handle mathcharupper-case Greek in current family.
+   * @param {TexParser} parser The current tex parser.
+   * @param {Symbol} mchar The parsed symbol.
+   */
+  export function ucGreek(parser: TexParser, mchar: Symbol) {
+    const def = {mathvariant: parser.stack.env['font'] ||
+                 parser.configuration.mathStyle(mchar.char, true) ||
+                 MATHVARIANT.NORMAL};
+    // @test MathChar7 Single, MathChar7 Operator, MathChar7 Multi
+    const node = parser.create('token', 'mi', def, mchar.char);
+    parser.Push(node);
+  }
+
+  /**
    * Handle normal mathchar (as an mi).
    * @param {TexParser} parser The current tex parser.
    * @param {Symbol} mchar The parsed symbol.
    */
   export function mathchar0mi(parser: TexParser, mchar: Symbol) {
-    const def = mchar.attributes || {mathvariant: TexConstant.Variant.ITALIC};
-    // @test Greek
+    const def = mchar.attributes || {mathvariant: MATHVARIANT.ITALIC};
     const node = parser.create('token', 'mi', def, mchar.char);
     parser.Push(node);
   }
@@ -122,7 +154,7 @@ namespace ParseMethods {
    * @param {Symbol} mchar The parsed symbol.
    */
   export function mathchar7(parser: TexParser, mchar: Symbol) {
-    const def = mchar.attributes || {mathvariant: TexConstant.Variant.NORMAL};
+    const def = mchar.attributes || {mathvariant: MATHVARIANT.NORMAL};
     if (parser.stack.env['font']) {
       // @test MathChar7 Single Font
       def['mathvariant'] = parser.stack.env['font'];

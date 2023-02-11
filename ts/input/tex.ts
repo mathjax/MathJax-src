@@ -71,6 +71,8 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     digits: /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
     // Maximum size of TeX string to process.
     maxBuffer: 5 * 1024,
+    // math-style to use for Latin and Greek letters
+    mathStyle: 'TeX',  // one of TeX, ISO, French, or upright
     formatError: (jax: TeX<any, any, any>, err: TexError) => jax.formatError(err)
   };
 
