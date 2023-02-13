@@ -230,8 +230,9 @@ AmsMethods.HandleOperatorName = function(parser: TexParser, name: string) {
   let mml = new TexParser(op, {
     ...parser.stack.env,
     font: TexConstant.Variant.NORMAL,
-    multiLetterIdentifiers: /^[-*a-z]+/i as any,
-    operatorLetters: true
+    multiLetterIdentifiers: /^[-*a-zA-Z]+/ as any,
+    operatorLetters: true,
+    noAutoOP: true
   }, parser.configuration).mml();
   //
   //  If we get something other than a single mi, wrap in a TeXAtom.
