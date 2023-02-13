@@ -264,7 +264,7 @@ new sm.CharacterMap('mathchar0mo', ParseMethods.mathchar0mo, {
   cong:         '\u2245',
   doteq:        '\u2250',
   bowtie:       '\u22C8',
-  models:       '\u22A8',
+  models:       '\u22A7',
 
   notChar:      '\u29F8',
 
