@@ -281,7 +281,11 @@ export const TextMacrosMethods = {
   Hskip: BaseMethods.Hskip,
   rule: BaseMethods.rule,
   Rule: BaseMethods.Rule,
-  HandleRef: BaseMethods.HandleRef
+  HandleRef: BaseMethods.HandleRef,
+  UnderOver: BaseMethods.UnderOver,
+  Lap: BaseMethods.Lap,
+  Phantom: BaseMethods.Phantom,
+  Smash: BaseMethods.Smash,
+  MmlToken: BaseMethods.MmlToken
 
 };
-
