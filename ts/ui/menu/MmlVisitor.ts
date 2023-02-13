@@ -67,7 +67,7 @@ export class MmlVisitor<N, T, D> extends SerializedMmlVisitor {
    */
   public visitTeXAtomNode(node: MmlNode, space: string) {
     if (this.options.texHints) {
-      return super.visitTeXAtomNode(node, space);
+      return super.visitDefault(node, space);
     }
     if (node.childNodes[0] && node.childNodes[0].childNodes.length === 1) {
       return this.visitNode(node.childNodes[0], space);

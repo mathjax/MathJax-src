@@ -23,6 +23,8 @@
 
 import {MmlVisitor} from './MmlVisitor.js';
 import {MmlNode, TextNode, XMLNode} from './MmlNode.js';
+import {HtmlNode} from './MmlNodes/HtmlNode.js';
+
 
 /*****************************************************************/
 /**
@@ -30,6 +32,7 @@ import {MmlNode, TextNode, XMLNode} from './MmlNode.js';
  */
 
 export class MathMLVisitor extends MmlVisitor {
+
   /**
    * The document in which the nodes are being made
    */
@@ -67,6 +70,14 @@ export class MathMLVisitor extends MmlVisitor {
   }
 
   /**
+   * @param {HtmlNode} node  The HTML node to visit
+   * @param {Element} parent  The DOM parent to which this node should be added
+   */
+  public visitHtmlNode(node: HtmlNode<any>, parent: Element) {
+    parent.appendChild((node.getHTML() as Element).cloneNode(true));
+  }
+
+  /**
    * Visit an inferred mrow, but don't add the inferred row itself (since
    * it is supposed to be inferred).
    *
@@ -90,22 +101,22 @@ export class MathMLVisitor extends MmlVisitor {
    * @param {Element} parent  The DOM parent to which this node should be added
    */
   public visitDefault(node: MmlNode, parent: Element) {
-    let mml = this.document.createElement(node.kind);
+    let mml = this.document.createElement(this.getKind(node));
     this.addAttributes(node, mml);
     for (const child of node.childNodes) {
       this.visitNode(child, mml);
     }
     parent.appendChild(mml);
   }
+
   /**
    * @param {MmlNode} node  The node who attributes are to be copied
    * @param {Element} mml  The MathML DOM node to which attributes are being added
    */
   public addAttributes(node: MmlNode, mml: Element) {
-    let attributes = node.attributes;
-    let names = attributes.getExplicitNames();
-    for (const name of names) {
-      mml.setAttribute(name, attributes.getExplicit(name).toString());
+    let attributes = this.getAttributeList(node);
+    for (const name of Object.keys(attributes)) {
+      mml.setAttribute(name, attributes[name].toString());
     }
   }
 
