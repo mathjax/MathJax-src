@@ -358,7 +358,7 @@ namespace ParseUtil {
    */
   export function internalText(parser: TexParser, text: string, def: EnvList): MmlNode {
     // @test Label, Fbox, Hbox
-    text = text.replace(/^\s+/, entities.nbsp).replace(/\s+$/, entities.nbsp);
+    text = text.replace(/\n+/g, ' ').replace(/^\s+/, entities.nbsp).replace(/\s+$/, entities.nbsp);
     let textNode = parser.create('text', text);
     return parser.create('node', 'mtext', [], def, textNode);
   }
