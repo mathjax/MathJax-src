@@ -586,8 +586,6 @@ export class CommonWrapper<
     //
     if (scriptlevel !== 0) {
       scale = Math.pow(attributes.get('scriptsizemultiplier') as number, scriptlevel);
-      let scriptminsize = this.length2em(attributes.get('scriptminsize'), .8, 1);
-      if (scale < scriptminsize) scale = scriptminsize;
     }
     //
     // If there is style="font-size:...", and not fontsize attribute, use that as fontsize
@@ -606,6 +604,13 @@ export class CommonWrapper<
     //
     if (mathsize !== '1') {
       scale *= this.length2em(mathsize, 1, 1);
+    }
+    //
+    // Use scriptminsize as minimum size for scripts
+    //
+    if (scriptlevel !== 0) {
+      let scriptminsize = this.length2em(attributes.get('scriptminsize'), .4, 1);
+      if (scale < scriptminsize) scale = scriptminsize;
     }
     //
     // Record the scaling factors and set the element's CSS

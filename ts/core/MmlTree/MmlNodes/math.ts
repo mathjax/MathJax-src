@@ -53,7 +53,7 @@ export class MmlMath extends AbstractMmlLayoutNode {
     alttext: '',
     cdgroup: '',
     scriptsizemultiplier: 1 / Math.sqrt(2),
-    scriptminsize: '8px',        // Should be 8pt, but that's too big
+    scriptminsize: '.4em',       // Should be 8pt, but that's too big
     infixlinebreakstyle: 'before',
     lineleading: '1ex',
     linebreakmultchar: '\u2062', // Invisible times
