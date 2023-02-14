@@ -33,6 +33,7 @@ import {AbstractTags} from '../Tags.js';
 import './BaseMappings.js';
 import {getRange} from '../../../core/MmlTree/OperatorDictionary.js';
 import ParseOptions from '../ParseOptions.js';
+import ParseUtil from '../ParseUtil.js';
 
 /**
  * Remapping some ASCII characters to their Unicode operator equivalent.
@@ -61,7 +62,8 @@ export function Other(parser: TexParser, char: string) {
   // @test Other
   // @test Other Remap
   let mo = parser.create('token', type, def, (remap ? remap.char : char));
-  const variant = (range?.[4] || parser.configuration.mathStyle(char, true));
+  const variant = (range?.[4] ||
+                   ParseUtil.isLatinOrGreekChar(char) ? parser.configuration.mathStyle(char, true) : '');
   if (variant) {
     mo.attributes.set('mathvariant', variant);
   }

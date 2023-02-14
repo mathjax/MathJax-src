@@ -49,7 +49,7 @@ namespace ParseMethods {
         def.autoOP = false;
       }
     }
-    if (!def.mathvariant && c.normalize('NFD').match(/[a-zA-Z\u0370-\u03F0]/)) {
+    if (!def.mathvariant && ParseUtil.isLatinOrGreekChar(c)) {
       const variant = parser.configuration.mathStyle(c);
       if (variant) {
         def.mathvariant = variant;
