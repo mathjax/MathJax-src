@@ -498,6 +498,12 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     return w;
   }
 
+  /**
+   * @param {number} x         The x-position of the text
+   * @param {number} y         The y-position of the text
+   * @param {N} parent         The container for the text
+   * @param {string} variant   The variant to use for the string
+   */
   protected addUtext(x: number, y: number, parent: N, variant: string): number {
     const c = this.utext;
     if (!c) {
