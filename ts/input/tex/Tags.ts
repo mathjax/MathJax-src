@@ -541,8 +541,10 @@ export class AbstractTags implements Tags {
     }
     let mml = new TexParser('\\text{' + this.currentTag.tagFormat + '}', {},
                             this.configuration).mml();
-    return this.configuration.nodeFactory.create('node', 'mtd', [mml],
-                                                 {id: this.currentTag.tagId});
+    return this.configuration.nodeFactory.create('node', 'mtd', [mml], {
+      id: this.currentTag.tagId,
+      rowalign: this.configuration.options.tagAlign
+    });
   }
 
 }
@@ -629,7 +631,9 @@ export namespace TagsFactory {
     // If false it uses the actual number N that is displayed: mjx-eqn:N
     useLabelIds: true,
     // Set to true in order to prevent error messages for duplicate label ids
-    ignoreDuplicateLabels: false
+    ignoreDuplicateLabels: false,
+    // The rowalign value to use for tag cells.
+    tagAlign: 'baseline'
   };
 
 
