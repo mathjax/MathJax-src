@@ -24,7 +24,7 @@
 
 
 import {CheckType, BaseItem, StackItem} from '../StackItem.js';
-import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
+import {TEXCLASS, MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import ParseUtil from '../ParseUtil.js';
 
 
@@ -50,10 +50,20 @@ export class BraketItem extends BaseItem {
   }
 
   /**
+   * The MathML nodes that appear before the latest bar (so that \over can be handled properly).
+   */
+  public barNodes: MmlNode[] = [];
+
+  /**
    * @override
    */
   public checkItem(item: StackItem): CheckType {
     if (item.isKind('close')) {
+      if (item.getProperty('braketbar')) {
+        this.barNodes.push(...super.toMml(true, true).childNodes);
+        this.Clear();
+        return BaseItem.fail;
+      };
       return [[this.factory.create('mml', this.toMml())], true];
     }
     if (item.isKind('mml')) {
@@ -70,10 +80,20 @@ export class BraketItem extends BaseItem {
   /**
    * @override
    */
-  public toMml() {
-    let inner = super.toMml();
+  public toMml(inferred: boolean = true, forceRow?: boolean) {
+    let inner = super.toMml(inferred, forceRow);
+    if (!inferred) {
+      //
+      // When toMml() is being called from processing an \over item, we don't want to
+      // add the delimiters, so just do the super toMml() method.  (Issue #3000)
+      //
+      return inner;
+    }
     let open = this.getProperty('open') as string;
     let close = this.getProperty('close') as string;
+    if (this.barNodes.length) {
+      inner = this.create('node', 'inferredMrow', [...this.barNodes, inner]);
+    }
     if (this.getProperty('stretchy')) {
       return ParseUtil.fenced(this.factory.configuration, open, inner, close);
     }
