@@ -43,10 +43,11 @@ BraketMethods.Macro = BaseMethods.Macro;
  * @param {string} close Closing delimiter.
  * @param {boolean} stretchy Is it stretchy.
  * @param {number} barmax Maximum number of bars allowed.
+ * @param {boolean} space True to add space inside the delimiters
  */
 BraketMethods.Braket = function(parser: TexParser, _name: string,
                                 open: string, close: string,
-                                stretchy: boolean, barmax: number) {
+                                stretchy: boolean, barmax: number, space: boolean = false) {
   let next = parser.GetNext();
   if (next === '') {
     throw new TexError('MissingArgFor', 'Missing argument for %1', parser.currentCS);
@@ -58,8 +59,7 @@ BraketMethods.Braket = function(parser: TexParser, _name: string,
   }
   parser.Push(
     parser.itemFactory.create('braket')
-      .setProperties({barmax: barmax, barcount: 0, open: open,
-                      close: close, stretchy: stretchy, single: single}));
+      .setProperties({barcount: 0, barmax, open, close, stretchy, single, space}));
 };
 
 
