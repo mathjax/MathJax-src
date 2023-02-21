@@ -133,7 +133,6 @@ const MODULE = function (dir) {
     // NOTE: for babel transpilation
     rules: [{
       test: new RegExp('(?:' + dirRE + '|speech-rule-engine)' + quoteRE(path.sep) + '.*\\.js$'),
-//      test: new RegExp(dirRE + quoteRE(path.sep) + '.*\\.js$'),
       exclude: new RegExp(quoteRE(path.join(path.dirname(__dirname), 'es5') + path.sep)),
       use: {
         loader: 'babel-loader',
