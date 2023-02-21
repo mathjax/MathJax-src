@@ -132,7 +132,8 @@ const MODULE = function (dir) {
   return {
     // NOTE: for babel transpilation
     rules: [{
-      test: new RegExp(dirRE + quoteRE(path.sep) + '.*\\.js$'),
+      test: new RegExp('(?:' + dirRE + '|speech-rule-engine)' + quoteRE(path.sep) + '.*\\.js$'),
+//      test: new RegExp(dirRE + quoteRE(path.sep) + '.*\\.js$'),
       exclude: new RegExp(quoteRE(path.join(path.dirname(__dirname), 'es5') + path.sep)),
       use: {
         loader: 'babel-loader',
@@ -160,7 +161,7 @@ const PACKAGE = function (name, js, libs, dir, dist) {
   name = path.basename(name);
   return {
     name: name,
-    entry: path.join(dir, name + '.js'),
+    entry: ['regenerator-runtime/runtime.js', path.join(dir, name + '.js')],
     output: {
       path: distDir,
       filename: name + (dist === '.' ? '.min.js' : '.js')
