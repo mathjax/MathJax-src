@@ -63,6 +63,7 @@ new sm.MacroMap('special', {
   '~':   'Tilde',
   '^':   'Superscript',
   '_':   'Subscript',
+  '|':   'Bar',
   ' ':   'Space',
   '\t':  'Space',
   '\r':  'Space',
