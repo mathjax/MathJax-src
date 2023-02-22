@@ -48,7 +48,8 @@ export class HTMLDomStrings<N, T, D> {
    * The default options for string processing
    */
   public static OPTIONS: OptionList = {
-    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code', 'annotation', 'annotation-xml'],
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code',
+                   'annotation', 'annotation-xml', 'select', 'option'],
                                         // The names of the tags whose contents will not be
                                         // scanned for math delimiters
 
