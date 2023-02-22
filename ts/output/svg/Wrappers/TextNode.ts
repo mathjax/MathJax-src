@@ -27,7 +27,7 @@ import {SvgWrapperFactory} from '../WrapperFactory.js';
 import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
 import {CommonTextNode, CommonTextNodeClass, CommonTextNodeMixin} from '../../common/Wrappers/TextNode.js';
 import {MmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
-import {StyleList, CssStyles} from '../../../util/StyleList.js';
+import {CssStyles} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
