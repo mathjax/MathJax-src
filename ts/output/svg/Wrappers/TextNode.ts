@@ -27,7 +27,7 @@ import {SvgWrapperFactory} from '../WrapperFactory.js';
 import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
 import {CommonTextNode, CommonTextNodeClass, CommonTextNodeMixin} from '../../common/Wrappers/TextNode.js';
 import {MmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
-import {StyleList} from '../../../util/StyleList.js';
+import {StyleList, CssStyles} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
@@ -86,11 +86,13 @@ export const SvgTextNode = (function <N, T, D>(): SvgTextNodeClass<N, T, D> {
     /**
      * @override
      */
-    public static styles: StyleList = {
-      'mjx-container[jax="SVG"] path[data-c], mjx-container[jax="SVG"] use[data-c]': {
-        'stroke-width': 3
-      }
-    };
+    public static addStyles<JX extends SVG<any, any, any>>(styles: CssStyles, jax: JX) {
+      styles.addStyles({
+        'mjx-container[jax="SVG"] path[data-c], mjx-container[jax="SVG"] use[data-c]': {
+          'stroke-width': jax.options.blacker
+        }
+      });
+    }
 
     /**
      * @override
