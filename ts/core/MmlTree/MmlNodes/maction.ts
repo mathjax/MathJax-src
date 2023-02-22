@@ -22,7 +22,7 @@
  */
 
 import {PropertyList} from '../../Tree/Node.js';
-import {MmlNode, AbstractMmlNode} from '../MmlNode.js';
+import {MmlNode, AbstractMmlNode, AttributeList} from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -129,6 +129,15 @@ export class MmlMaction extends AbstractMmlNode {
       selection = 1;
     }
     this.attributes.set('selection', selection);
+  }
+
+  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+    if ((this.attributes.get('actiontype') as String).toLowerCase() !== 'tooltip') {
+      super.setChildInheritedAttributes(attributes, display, level, prime);
+      return;
+    }
+    this.childNodes[0].setInheritedAttributes(attributes, display, level, prime);
+    this.childNodes[1].setInheritedAttributes(attributes, false, 1, prime);
   }
 
 }

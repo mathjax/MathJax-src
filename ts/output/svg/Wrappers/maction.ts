@@ -114,9 +114,9 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
       },
       'mjx-tool > mjx-tip': {
         display: 'inline-block',
+        'line-height': 0,
         padding: '.2em',
         border: '1px solid #888',
-        'font-size': '70%',
         'background-color': '#F8F8F8',
         color: 'black',
         'box-shadow': '2px 2px 5px #AAAAAA'
