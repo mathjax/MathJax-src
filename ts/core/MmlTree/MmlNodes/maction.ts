@@ -139,8 +139,8 @@ export class MmlMaction extends AbstractMmlNode {
       super.setChildInheritedAttributes(attributes, display, level, prime);
       return;
     }
-    this.childNodes[0].setInheritedAttributes(attributes, display, level, prime);
-    this.childNodes[1].setInheritedAttributes(attributes, false, 1, false);
+    this.childNodes[0]?.setInheritedAttributes(attributes, display, level, prime);
+    this.childNodes[1]?.setInheritedAttributes(attributes, false, 1, false);
   }
 
 }
