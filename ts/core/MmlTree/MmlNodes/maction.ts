@@ -131,13 +131,16 @@ export class MmlMaction extends AbstractMmlNode {
     this.attributes.set('selection', selection);
   }
 
+  /**
+   * @override
+   */
   protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
     if ((this.attributes.get('actiontype') as String).toLowerCase() !== 'tooltip') {
       super.setChildInheritedAttributes(attributes, display, level, prime);
       return;
     }
     this.childNodes[0].setInheritedAttributes(attributes, display, level, prime);
-    this.childNodes[1].setInheritedAttributes(attributes, false, 1, prime);
+    this.childNodes[1].setInheritedAttributes(attributes, false, 1, false);
   }
 
 }
