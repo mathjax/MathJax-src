@@ -261,11 +261,6 @@ export class SubsupItem extends BaseItem {
         NodeUtil.setProperty(top, 'movesupsub', this.getProperty('movesupsub') as Property);
       }
       const result = this.factory.create('mml', top);
-      // console.log(38);
-      // console.log(top.attributes.get('latex'));
-      // console.log(first.attributes.get('latex'));
-      // console.log(first);
-      // top.attributes.set('latexItem', top.attributes.get('latex') as string);
       return [[result], true];
     }
     if (super.checkItem(item)[1]) {
