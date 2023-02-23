@@ -39,6 +39,7 @@ export interface ChtmlCharOptions extends CharOptions {
   c?: string;                   // the content value (for css)
   f?: string;                   // the font postfix (for css)
   F?: string;                   // the full font css class (for extensions)
+  cmb?: boolean;                // true if this is a combining character
 }
 
 /**
@@ -104,6 +105,13 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
    * The default @font-face declarations with %%URL%% where the font path should go
    */
   protected static defaultFonts = {};
+
+  /**
+   * The combining character ranges
+   */
+  protected static combiningChars: [number, number][] = [
+    [0x300, 0x36F] , [0x20D0, 0x20FF]
+  ];
 
   /***********************************************************************/
 
@@ -212,12 +220,19 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
   public defineChars(name: string, chars: ChtmlCharMap) {
     super.defineChars(name, chars);
     const letter = this.variant[name].letter;
+    const CLASS = this.constructor as typeof ChtmlFontData;
     for (const n of Object.keys(chars)) {
       const i = parseInt(n);
       if (!Array.isArray(chars[i])) continue;
-      const options = ChtmlFontData.charOptions(chars, i);
+      const options = CLASS.charOptions(chars, i);
       if (options.f === undefined) {
         options.f = letter;
+      }
+      for (const [m, M] of CLASS.combiningChars) {
+        if (i >= m && i <= M) {
+          options.cmb = true;
+          break;
+        }
       }
     }
   }
@@ -445,7 +460,18 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
     const letter = (options.f !== undefined ? options.f : vletter);
     const font = options.F || (letter ? `${this.cssFontPrefix}-${letter}` : '');
     const selector = 'mjx-c' + this.charSelector(n) + (font ? '.' + font : '');
-    styles[selector] = {padding: this.padding(data, 0, options.ic || 0)};
+    const def = styles[selector] = {padding: this.padding(data, 0, options.ic || 0)} as StyleData;
+    if (options.cmb) {
+      //
+      //  Some browsers now handle combining characters as 0-width even when they aren't, so
+      //  we adjust the CSS to handle both automatic 0-width as well as non-zero width characters.
+      //
+      const pad = (def.padding as string).split(/ /);
+      def.width = pad[1];
+      pad[1] = '0px';
+      def.padding = pad.join(' ');
+      def['text-align'] = 'right';
+    }
   }
 
   /***********************************************************************/
