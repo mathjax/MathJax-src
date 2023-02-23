@@ -6,7 +6,7 @@ import '../a11y/explorer/explorer.js';
 import MathMaps from '../../../js/a11y/mathmaps.js';
 import base from 'speech-rule-engine/lib/mathmaps/base.json';
 import en from 'speech-rule-engine/lib/mathmaps/en.json';
-import nemeth from 'speech-rule-engine/lib/mathmaps/nemeth.json';
+import euro from 'speech-rule-engine/lib/mathmaps/euro.json';
 
 Loader.preLoad(
   'a11y/sre',
@@ -16,7 +16,7 @@ Loader.preLoad(
 
 MathMaps.set('base', base);
 MathMaps.set('en', en);
-MathMaps.set('nemeth', nemeth);
+MathMaps.set('euro', euro);
 
 export function checkSre(startup) {
   return () => startup(() => Sre.sreReady());
