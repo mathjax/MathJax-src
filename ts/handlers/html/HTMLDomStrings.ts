@@ -49,7 +49,8 @@ export class HTMLDomStrings<N, T, D> {
    */
   public static OPTIONS: OptionList = {
     skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code',
-                   'annotation', 'annotation-xml', 'select', 'option'],
+                   'annotation', 'annotation-xml', 'select', 'option',
+                   'mjx-container'],
                                         // The names of the tags whose contents will not be
                                         // scanned for math delimiters
 
