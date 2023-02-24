@@ -1567,7 +1567,7 @@ BaseMethods.HandleRef = function(parser: TexParser, name: string, eqref: boolean
   let tag = ref.tag;
   if (eqref) {
     // @test Eqref
-    tag = parser.tags.formatTag(tag);
+    tag = parser.tags.formatRef(tag);
   }
   let node = parser.create('node', 'mrow', ParseUtil.internalMath(parser, tag), {
     href: parser.tags.formatUrl(ref.id, parser.options.baseURL), 'class': 'MathJax_ref'

@@ -145,6 +145,13 @@ export interface Tags {
   formatTag(tag: string): string;
 
   /**
+   * How to format references to tags.
+   * @param {string} tag The tag string.
+   * @return {string} The formatted numbered tag.
+   */
+  formatRef(tag: string): string;
+
+  /**
    * How to format URLs for references.
    * @param {string} id The reference id.
    * @param {string} base The base URL in the reference.
@@ -372,6 +379,13 @@ export class AbstractTags implements Tags {
    */
   public formatTag(tag: string) {
     return '(' + tag + ')';
+  }
+
+  /**
+   * @override
+   */
+  public formatRef(tag: string) {
+    return this.formatTag(tag);
   }
 
   /**
