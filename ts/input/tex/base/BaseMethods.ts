@@ -1468,8 +1468,8 @@ BaseMethods.AlignedArray = function(parser: TexParser, begin: StackItem) {
  * @param {boolean} numbered True if environment is numbered.
  */
 BaseMethods.Equation = function (parser: TexParser, begin: StackItem, numbered: boolean) {
-  parser.Push(begin);
   ParseUtil.checkEqnEnv(parser);
+  parser.Push(begin);
   return parser.itemFactory.create('equation', numbered).
     setProperty('name', begin.getName());
 };
@@ -1488,13 +1488,15 @@ BaseMethods.EqnArray = function(parser: TexParser, begin: StackItem,
                                 numbered: boolean, taggable: boolean,
                                 align: string, spacing: string) {
   // @test The Lorenz Equations, Maxwell's Equations, Cubic Binomial
-  parser.Push(begin);
+  let name = begin.getName();
+  let isGather = (name === 'gather' || name === 'gather*');
   if (taggable) {
-    ParseUtil.checkEqnEnv(parser);
+    ParseUtil.checkEqnEnv(parser, !isGather);
   }
+  parser.Push(begin);
   align = align.replace(/[^clr]/g, '').split('').join(' ');
   align = align.replace(/l/g, 'left').replace(/r/g, 'right').replace(/c/g, 'center');
-  let newItem = parser.itemFactory.create('eqnarray', begin.getName(),
+  let newItem = parser.itemFactory.create('eqnarray', name,
                                           numbered, taggable, parser.stack.global) as sitem.ArrayItem;
   newItem.arraydef = {
     displaystyle: true,
@@ -1504,6 +1506,9 @@ BaseMethods.EqnArray = function(parser: TexParser, begin: StackItem,
     side: parser.options['tagSide'],
     minlabelspacing: parser.options['tagIndent']
   };
+  if (isGather) {
+    newItem.setProperty('nestable', true);
+  }
   return newItem;
 };
 
