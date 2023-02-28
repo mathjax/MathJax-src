@@ -1027,6 +1027,9 @@ export class CommonWrapper<
     shift: string = '',
     width: number = this.metrics.containerWidth
   ): [string, number] {
+    if (!this.jax.math.display) {
+      return ['left', 0];
+    }
     if (!align || align === 'auto') {
       align = this.jax.math.outputData.inlineMarked ? 'left' : this.jax.options.displayAlign;
     }
