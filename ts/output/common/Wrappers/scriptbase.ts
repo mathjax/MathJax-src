@@ -755,7 +755,10 @@ export function CommonScriptbaseMixin<
         //  Stretch the stretchable children
         //
         for (const child of stretchy) {
-          child.coreMO().getStretchedVariant([W / child.bbox.rscale]);
+          const core = child.coreMO();
+          if (core.size === null) {
+            core.getStretchedVariant([W / child.coreRScale()]);
+          }
         }
       }
     }

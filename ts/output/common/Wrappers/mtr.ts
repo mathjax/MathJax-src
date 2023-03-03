@@ -242,7 +242,8 @@ export function CommonMtrMixin<
         //  Stretch the stretchable children
         //
         for (const child of stretchy) {
-          child.coreMO().getStretchedVariant(HD);
+          const rscale = child.coreRScale();
+          child.coreMO().getStretchedVariant(HD.map(x => x * rscale));
         }
       }
     }
