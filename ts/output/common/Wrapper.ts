@@ -280,10 +280,7 @@ export class CommonWrapper<
   };
 
   /**
-   * Add any styles for this wrapper class
-   *
-   * @param {CssStyles} styles   The styles object to extend
-   * @param {JX} _jax            The output jax whose style sheet is being modified (in case options are needed)
+   * @override
    */
   public static addStyles<JX>(styles: CssStyles, _jax: JX) {
     styles.addStyles(this.styles);
