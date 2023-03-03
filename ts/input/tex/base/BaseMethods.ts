@@ -79,6 +79,15 @@ BaseMethods.Close = function(parser: TexParser, _c: string) {
   parser.Push(parser.itemFactory.create('close'));
 };
 
+/**
+ * Handle |
+ * @param {TexParser} parser The calling parser.
+ * @param {string} c The parsed character.
+ */
+BaseMethods.Bar = function(parser: TexParser, c: string) {
+  parser.Push(parser.create('token', 'mo', {texClass: TEXCLASS.ORD}, c));
+}
+
 
 /**
  * Handle tilde and spaces.
