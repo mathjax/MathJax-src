@@ -170,15 +170,16 @@ CommonOutputJax<
    */
   public styleSheet(html: MathDocument<N, T, D>) {
     if (this.chtmlStyles) {
+      const styles = new CssStyles();
       if (this.options.adaptiveCSS) {
         //
         // Update the style sheet rules
         //
-        const styles = new CssStyles();
         this.addWrapperStyles(styles);
         this.updateFontStyles(styles);
-        this.adaptor.insertRules(this.chtmlStyles, styles.getStyleRules());
       }
+      styles.addStyles(this.font.updateDynamicStyles());
+      this.adaptor.insertRules(this.chtmlStyles, styles.getStyleRules());
       return this.chtmlStyles;  // stylesheet is already added to the document
     }
     const sheet = this.chtmlStyles = super.styleSheet(html);

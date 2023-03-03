@@ -126,8 +126,8 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<N, T, D> 
             utext += String.fromCodePoint(n);
           } else {
             utext = this.addUtext(utext, variant, parent);
-            const font = (data.f ? ' TEX-' + data.f : '');
-            adaptor.append(parent, this.html('mjx-c', {class: this.char(n) + font}, [
+            const font = data.ff || (data.f ? `${this.font.cssFontPrefix}-${data.f}` : '');
+            adaptor.append(parent, this.html('mjx-c', {class: this.char(n) + (font ? ' ' + font : '')}, [
               this.text(data.c || String.fromCodePoint(n))
             ]));
             this.font.charUsage.add([variant, n]);
