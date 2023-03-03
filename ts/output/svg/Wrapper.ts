@@ -530,7 +530,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   protected useNode(variant: string, C: string, path: string): N {
     const use = this.svg('use', {'data-c': C});
     const id = '#' + this.jax.fontCache.cachePath(variant, C, path);
-    this.adaptor.setAttribute(use, 'href', id, XLINKNS);
+    this.adaptor.setAttribute(use, 'href', id, this.jax.options.useXlink ? XLINKNS : null);
     return use;
   }
 

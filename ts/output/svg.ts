@@ -78,6 +78,7 @@ CommonOutputJax<
     titleID: 0,                     // initial id number to use for aria-labeledby titles
     fontCache: 'local',             // or 'global' or 'none'
     localID: null,                  // ID to use for local font cache (for single equation processing)
+    useXlink: true,                 // true to include xlink namespace for <use> hrefs, false to not
   };
 
   /**
@@ -291,7 +292,7 @@ CommonOutputJax<
         adaptor.setStyle(this.container, 'margin-right', this.ex(w));
       }
     }
-    if (this.options.fontCache !== 'none') {
+    if (this.options.fontCache !== 'none' && this.options.useXlink) {
       adaptor.setAttribute(svg, 'xmlns:xlink', XLINKNS);
     }
     return [svg, g];
