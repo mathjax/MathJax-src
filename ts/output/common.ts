@@ -208,7 +208,6 @@ export abstract class CommonOutputJax<
    */
   protected unknownCache: UnknownVariantMap;
 
-
   /*****************************************************************/
 
   /**
