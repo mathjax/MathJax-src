@@ -167,10 +167,11 @@ export interface DOMAdaptor<N, T, D> {
   replace(nnode: N | T, onode: N | T): N | T;
 
   /**
-   * @param {N} node   The HTML node to be cloned
-   * @return {N}       The copied node
+   * @param {N} node         The HTML node to be cloned
+   * @param {boolean} deep   True if children should be cloned
+   * @return {N}             The copied node
    */
-  clone(node: N): N;
+  clone(node: N, deep?: boolean): N;
 
   /**
    * @param {T} node    The HTML text node to be split
@@ -516,7 +517,7 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
   /**
    * @override
    */
-  public abstract clone(node: N):  N;
+  public abstract clone(node: N, deep: boolean):  N;
 
   /**
    * @override

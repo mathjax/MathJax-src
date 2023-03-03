@@ -65,8 +65,8 @@ export const SvgMphantom = (function <N, T, D>(): SvgMphantomClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
-      this.standardSvgNode(parent);
+    public toSVG(parents: N[]) {
+      this.standardSvgNodes(parents);
     }
 
   };

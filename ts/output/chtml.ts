@@ -28,7 +28,6 @@ import {StyleList as CssStyleList, CssStyles} from '../util/StyleList.js';
 import {OptionList} from '../util/Options.js';
 import {MathDocument} from '../core/MathDocument.js';
 import {MathItem} from '../core/MathItem.js';
-import {MmlNode} from '../core/MmlTree/MmlNode.js';
 import {ChtmlWrapper, ChtmlWrapperClass} from './chtml/Wrapper.js';
 import {ChtmlWrapperFactory} from './chtml/WrapperFactory.js';
 import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
@@ -82,7 +81,9 @@ CommonOutputJax<
    *  The default styles for CommonHTML
    */
   public static commonStyles: CssStyleList = {
-    'mjx-container[jax="CHTML"]': {'line-height': 0},
+    'mjx-container[jax="CHTML"]': {
+      'white-space': 'nowrap'
+    },
 
     'mjx-container [space="1"]': {'margin-left': '.111em'},
     'mjx-container [space="2"]': {'margin-left': '.167em'},
@@ -235,11 +236,11 @@ CommonOutputJax<
   }
 
   /**
-   * @param {MmlNode} math  The MML node whose HTML is to be produced
-   * @param {N} parent      The HTML node to contain the HTML
+   * @param {WW} wrapper   The MML node wrapper whose HTML is to be produced
+   * @param {N} parent     The HTML node to contain the HTML
    */
-  public processMath(math: MmlNode, parent: N) {
-    this.factory.wrap(math).toCHTML(parent);
+  public processMath(wrapper: ChtmlWrapper<N, T, D>, parent: N) {
+    wrapper.toCHTML([parent]);
   }
 
   /**
@@ -257,6 +258,13 @@ CommonOutputJax<
    */
   public reset() {
     this.clearCache();
+  }
+
+  /**
+   * @override
+   */
+  protected getInitialScale() {
+    return this.math.metrics.scale;
   }
 
   /*****************************************************************/

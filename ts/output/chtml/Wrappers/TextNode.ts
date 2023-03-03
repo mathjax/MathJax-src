@@ -106,14 +106,14 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<N, T, D> 
     /**
      * @override
      */
-    public toCHTML(parent: N) {
+    public toCHTML(parents: N[]) {
       this.markUsed();
       const adaptor = this.adaptor;
       const variant = this.parent.variant;
       const text = (this.node as TextNode).getText();
       if (text.length === 0) return;
       if (variant === '-explicitFont') {
-        adaptor.append(parent, this.jax.unknownText(text, variant, this.getBBox().w));
+        adaptor.append(parents[0], this.jax.unknownText(text, variant, this.getBBox().w));
       } else {
         const chars = this.remappedText(text, variant);
         for (const n of chars) {
@@ -122,7 +122,7 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<N, T, D> 
           const node = (data.unknown ?
                         this.jax.unknownText(String.fromCodePoint(n), variant) :
                         this.html('mjx-c', {class: this.char(n) + font}));
-          adaptor.append(parent, node);
+          adaptor.append(parents[0], node);
           !data.unknown && this.font.charUsage.add([variant, n]);
         }
       }

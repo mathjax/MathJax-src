@@ -27,6 +27,7 @@ import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '
 import {CommonOutputJax} from '../../common.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {BBox} from '../../../util/BBox.js';
+import {LineBBox} from '../LineBBox.js';
 import {DIRECTION} from '../FontData.js';
 
 /*****************************************************************/
@@ -58,6 +59,11 @@ export interface CommonMrow<
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>
 > extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
+
+  /**
+   * True if this mrow is not the top-level linebreak mrow
+   */
+  isStack: boolean;
 
   /**
    * Handle vertical stretching of children to match height of
@@ -133,8 +139,12 @@ export function CommonMrowMixin<
   implements CommonMrow<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
 
     /**
-     * Handle vertical stretching of children to match height of
-     *  other nodes in the row.
+     * @override
+     */
+    public isStack: boolean;
+
+    /**
+     * @override
      */
     public stretchChildren() {
       let stretchy: WW[] = [];
@@ -159,7 +169,8 @@ export function CommonMrowMixin<
         for (const child of this.childNodes) {
           const noStretch = (child.stretch.dir === DIRECTION.None);
           if (all || noStretch) {
-            let {h, d, rscale} = child.getOuterBBox(noStretch);
+            const rscale = child.getBBox().rscale;
+            let [h, d] = child.getUnbrokenHD();
             h *= rscale;
             d *= rscale;
             if (h > H) H = h;
@@ -186,10 +197,31 @@ export function CommonMrowMixin<
 
     /**
      * @override
+     */
+    get breakCount() {
+      if (this._breakCount < 0) {
+        this._breakCount = (!this.childNodes.length ?  0 :
+                            this.childNodes.reduce((n, child) => n + child.breakCount, 0));
+      }
+      return this._breakCount;
+    }
+
+    /**
+     * @override
+     */
+    public breakTop(_mrow: WW, _child: WW): WW {
+      const node = this as any as WW;
+      return (this.isStack ? this.parent.breakTop(node, node) : node);
+    }
+
+    /**
+     * @override
      * @constructor
      */
     constructor(factory: WF, node: MmlNode, parent: WW = null) {
       super(factory, node, parent);
+      const self = this as any as WW;
+      this.isStack = (this.parent.node.isInferred || this.parent.breakTop(self, self) !== self);
       this.stretchChildren();
       for (const child of this.childNodes) {
         if (child.bbox.pwidth) {
@@ -197,6 +229,131 @@ export function CommonMrowMixin<
           break;
         }
       }
+    }
+
+    /**
+     * @override
+     */
+    protected computeBBox(bbox: BBox, recompute: boolean = false) {
+      const breaks = this.breakCount;
+      this.lineBBox = (breaks ? [new LineBBox({h: .75, d: .25, w: 0}, [0, 0])] : []);
+      bbox.empty();
+      for (const i of this.childNodes.keys()) {
+        const child = this.childNodes[i];
+        bbox.append(child.getOuterBBox());
+        breaks && this.computeChildLineBBox(child, i);
+      }
+      bbox.clean();
+      breaks && this.computeLinebreakBBox(bbox);
+      if (this.fixesPWidth && this.setChildPWidths(recompute)) {
+        this.computeBBox(bbox, true);
+      }
+    }
+
+    /**
+     *  Compute bbox of of all the lines
+     *
+     * @param {BBox} bbox   The bbox to be adjusted
+     */
+    protected computeLinebreakBBox(bbox: BBox) {
+      bbox.empty();
+      const isStack = this.isStack;
+      const lines = this.lineBBox;
+      const n = lines.length - 1;
+      if (isStack) {
+        for (const k of lines.keys()) {
+          const line = lines[k];
+          this.addMiddleBorders(line);
+          k === 0 && this.addLeftBorders(line);
+          k === n && this.addRightBorders(line);
+        }
+      }
+      let y = 0;
+      for (const k of lines.keys()) {
+        const line = lines[k];
+        bbox.combine(line, 0, y);
+        y -= Math.max(.25, line.d) + line.lineLeading + Math.max(.75, lines[k + 1]?.h || 0);
+      }
+      if (isStack) {
+        lines[0].L = this.bbox.L;
+        lines[n].R = this.bbox.R;
+      } else {
+        bbox.w = Math.max(...this.lineBBox.map(bbox => bbox.w));  // natural width
+        this.shiftLines(bbox.w);
+        if (!this.jax.math.display && !this.linebreakOptions.inline) {
+          bbox.pwidth = BBox.fullWidth;
+          if (this.node.isInferred) {
+            this.parent.bbox.pwidth = BBox.fullWidth;
+          }
+        }
+      }
+      bbox.clean();
+    }
+
+    /**
+     * @param {WW} child   The child whose linebreak sizes should be added to those of the mrow
+     * @param {number} i   The index of the child in the childNodes array
+     */
+    protected computeChildLineBBox(child: WW, i: number) {
+      const lbox = this.lineBBox[this.lineBBox.length - 1];
+      lbox.end = [i, 0];
+      lbox.append(child.getLineBBox(0));
+      const parts = child.breakCount + 1;
+      if (parts === 1) return;
+      for (let l = 1; l < parts; l++) {
+        const bbox = new LineBBox({h: .75, d: .25, w: 0});
+        bbox.start = bbox.end = [i, l];
+        bbox.isFirst = true;
+        bbox.append(child.getLineBBox(l));
+        this.lineBBox.push(bbox);
+      }
+    }
+
+    /**
+     * @override
+     */
+    public getLineBBox(i: number) {
+      this.getBBox();  // make sure line bboxes are available
+      return (this.isStack ? super.getLineBBox(i) :
+              LineBBox.from(this.getOuterBBox(), this.linebreakOptions.lineleading));
+    }
+
+    /**
+     * Handle alignment and shifting if lines
+     *
+     * @param {number} W   The width of the container
+     */
+    protected shiftLines(W: number) {
+      const lines = this.lineBBox;
+      const n = lines.length - 1;
+      const [alignfirst, shiftfirst] = lines[1].indentData[0];
+      for (const i of lines.keys()) {
+        const bbox = lines[i];
+        let [indentalign, indentshift] = (i === 0 ? [alignfirst, shiftfirst] : bbox.indentData[i === n ? 2 : 1]);
+        const [align, shift] = this.processIndent(indentalign, indentshift, alignfirst, shiftfirst, W);
+        bbox.L = 0;
+        bbox.L = this.getAlignX(W, bbox, align) + shift;
+      }
+    }
+
+    /**
+     * @override
+     */
+    public setChildPWidths(recompute: boolean, w: (number | null) = null, clear: boolean = true): boolean {
+      if (!this.breakCount) return super.setChildPWidths(recompute, w, clear);
+      if (recompute) return false;
+      if (w !== null && this.bbox.w !== w) {
+        this.bbox.w = w;
+        this.shiftLines(w);
+      }
+      return true;
+    }
+
+    /**
+     * @override
+     */
+    public breakToWidth(W: number) {
+      this.linebreaks.breakToWidth(this as any as WW, W);
     }
 
   } as any as B;

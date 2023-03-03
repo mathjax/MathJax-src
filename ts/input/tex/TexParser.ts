@@ -68,7 +68,7 @@ export default class TexParser {
 
   /**
    * @constructor
-   * @param {string} string The string to parse.
+   * @param {string} _string The string to parse.
    * @param {EnvList} env The intial environment representing the current parse
    *     state of the overall expression translation.
    * @param {ParseOptions} configuration A parser configuration.
@@ -88,6 +88,7 @@ export default class TexParser {
     this.stack = new Stack(this.itemFactory, ENV, inner ? isInner : true);
     this.Parse();
     this.Push(this.itemFactory.create('stop'));
+    this.stack.env = ENV;
   }
 
   /**

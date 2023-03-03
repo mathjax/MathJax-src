@@ -108,34 +108,31 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<N, 
     /**
      * @override
      */
-    public toSVG(parent: N) {
-      const svg = this.standardSvgNode(parent);
+    public toSVG(parents: N[]) {
+      if (this.toEmbellishedSVG(parents)) return;
+      const svg = this.standardSvgNodes(parents);
       const data = this.scriptData;
       //
       //  Get the alignment for the scripts
       //
       const scriptalign = this.node.getProperty('scriptalign') || 'right left';
       const [preAlign, postAlign] = split(scriptalign + ' ' + scriptalign);
-      //
-      //  Combine the bounding boxes of the pre- and post-scripts,
-      //  and get the resulting baseline offsets
-      //
-      const sub = this.combinePrePost(data.sub, data.psub);
-      const sup = this.combinePrePost(data.sup, data.psup);
-      const [u, v] = this.getUVQ(sub, sup);
+      const [u, v] = this.getCombinedUV();
       //
       //  Place the pre-scripts, then the base, then the post-scripts
       //
-      let x = 0;  // scriptspace
+      let x = 0;
       if (data.numPrescripts) {
-        x = this.addScripts(.05, u, v, this.firstPrescript, data.numPrescripts, preAlign);
+        x = this.addScripts(this.dom[0], this.font.params.scriptspace, u, v,
+                            this.firstPrescript, data.numPrescripts, preAlign);
       }
       const base = this.baseChild;
       base.toSVG(svg);
       base.place(x, 0);
-      x += base.getOuterBBox().w;
+      if (this.breakCount) x = 0;
+      x += base.getLineBBox(base.breakCount).w;
       if (data.numScripts) {
-        this.addScripts(x, u, v, 1, data.numScripts, postAlign);
+        this.addScripts(this.dom[this.dom.length - 1], x, u, v, 1, data.numScripts, postAlign);
       }
     }
 
@@ -150,11 +147,11 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<N, 
      * @param {string} align   The alignment for the scripts
      * @return {number}        The right-hand offset of the scripts
      */
-    protected addScripts(x: number, u: number, v: number, i: number, n: number, align: string): number {
+    protected addScripts(svg: N, x: number, u: number, v: number, i: number, n: number, align: string): number {
       const adaptor = this.adaptor;
       const alignX = AlignX(align);
-      const supRow = adaptor.append(this.dom, this.svg('g')) as N;
-      const subRow = adaptor.append(this.dom, this.svg('g')) as N;
+      const supRow = adaptor.append(svg, this.svg('g')) as N;
+      const subRow = adaptor.append(svg, this.svg('g')) as N;
       this.place(x, u, supRow);
       this.place(x, v, subRow);
       let m = i + 2 * n;
@@ -164,8 +161,8 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<N, 
         const [subbox, supbox] = [sub.getOuterBBox(), sup.getOuterBBox()];
         const [subr, supr] = [subbox.rscale, supbox.rscale];
         const w = Math.max(subbox.w * subr, supbox.w * supr);
-        sub.toSVG(subRow);
-        sup.toSVG(supRow);
+        sub.toSVG([subRow]);
+        sup.toSVG([supRow]);
         sub.place(dx + alignX(subbox.w * subr, w), 0);
         sup.place(dx + alignX(supbox.w * supr, w), 0);
         dx += w;

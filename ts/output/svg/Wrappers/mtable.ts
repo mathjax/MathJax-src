@@ -144,7 +144,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
         [row.H, row.D] = this.getRowHD(equal, HD, H[i], D[i]);
         [row.tSpace, row.bSpace] = [rSpace[i], rSpace[i + 1]];
         [row.tLine, row.bLine] = [rLines[i], rLines[i + 1]];
-        row.toSVG(svg);
+        row.toSVG([svg]);
         row.place(0, y - rSpace[i] - row.H);
         y -= rSpace[i] + row.H + row.D + rSpace[i + 1] + rLines[i + 1];
       }
@@ -454,14 +454,14 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
-      const svg = this.standardSvgNode(parent);
+    public toSVG(parents: N[]) {
+      const svg = this.standardSvgNodes(parents)[0];
       this.placeRows(svg);
       this.handleColumnLines(svg);
       this.handleRowLines(svg);
       this.handleFrame(svg);
       const dx = this.handlePWidth(svg);
-      this.handleLabels(svg, parent, dx);
+      this.handleLabels(svg, parents[0], dx);
     }
 
   };

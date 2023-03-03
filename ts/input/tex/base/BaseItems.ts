@@ -27,11 +27,13 @@ import {MapHandler} from '../MapHandler.js';
 import {CharacterMap} from '../SymbolMap.js';
 import {entities} from '../../../util/Entities.js';
 import {MmlNode, TextNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
+import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
+import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
 import ParseUtil from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
-import {Property} from '../../../core/Tree/Node.js';
+import {Property, PropertyList} from '../../../core/Tree/Node.js';
 import StackItemFactory from '../StackItemFactory.js';
 import {CheckType, BaseItem, StackItem, EnvList} from '../StackItem.js';
 
@@ -480,6 +482,56 @@ export class RightItem extends BaseItem {
 
 
 /**
+ * Add linebreak attribute to next mo, if any, or insert an mo with the
+ * given linebreak attribute.
+ */
+export class BreakItem extends BaseItem {
+
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'break';
+  }
+
+  /**
+   * @override
+   * @param {string} linebreak   The linbreak attribute to use
+   * @param {boolean} insert     Whether to insert an mo if there isn't a following
+   */
+  constructor(factory: StackItemFactory, linebreak: string, insert: boolean) {
+    super(factory);
+    this.setProperty('linebreak', linebreak);
+    this.setProperty('insert', insert);
+  }
+
+  /**
+   * @override
+   */
+  public checkItem(item: StackItem): CheckType {
+    const linebreak = this.getProperty('linebreak') as string;
+    if (item.isKind('mml')) {
+      const mml = item.First;
+      if (mml.isKind('mo')) {
+        const style = NodeUtil.getOp(mml as MmlMo)?.[3]?.linebreakstyle ||
+                      NodeUtil.getAttribute(mml, 'linebreakstyle');
+        if (style !== 'after') {
+          NodeUtil.setAttribute(mml, 'linebreak', linebreak);
+          return [[item], true];
+        }
+        if (!this.getProperty('insert')) {
+          return [[item], true];
+        }
+      }
+    }
+    const mml = this.create('token', 'mo', {linebreak});
+    return [[this.factory.create('mml', mml), item], true];
+  }
+
+}
+
+
+/**
  * Item pushed for opening an environment with \\begin{env}.
  */
 export class BeginItem extends BaseItem {
@@ -891,10 +943,40 @@ export class ArrayItem extends BaseItem {
   public arraydef: {[key: string]: string | number | boolean} = {};
 
   /**
+   * Insertions that go at the beginning of table entries (from >{...})
+   */
+  public cstart: string[] = [];
+
+  /**
+   * Insertions that go at the end of table entries (from <{...})
+   */
+  public cend: string[] = [];
+
+  /**
+   * True for columns from @{...} and !{...}
+   */
+  public cextra: boolean[] = [];
+
+  /**
+   * True if adding extra columns at the end of a row
+   */
+  public atEnd: boolean = false;
+
+  /**
+   * Row alignments to specify on particular columns
+   */
+  public ralign: [number, string, string][] = [];
+
+  /**
    * True if separators are dashed.
    * @type {boolean}
    */
   public dashed: boolean = false;
+
+  /**
+   * The TeX parser that created this item
+   */
+  public parser: TexParser;
 
   /**
    * @override
@@ -902,7 +984,6 @@ export class ArrayItem extends BaseItem {
   public get kind() {
     return 'array';
   }
-
 
   /**
    * @override
@@ -929,6 +1010,7 @@ export class ArrayItem extends BaseItem {
         // @test Array dashed column, Array solid column
         this.EndEntry();
         this.clearEnv();
+        this.StartEntry();
         return BaseItem.fail;
       }
       if (item.getProperty('isCR')) {
@@ -936,6 +1018,7 @@ export class ArrayItem extends BaseItem {
         this.EndEntry();
         this.EndRow();
         this.clearEnv();
+        this.StartEntry();
         return BaseItem.fail;
       }
       this.EndTable();
@@ -967,6 +1050,10 @@ export class ArrayItem extends BaseItem {
     if (scriptlevel) {
       mml.setProperty('scriptlevel', scriptlevel);
     }
+    if (this.getProperty('arrayPadding')) {
+      NodeUtil.setAttribute(mml, 'frame', '');   // empty frame forces fspacing to be used in MathJax
+      NodeUtil.setAttribute(mml, 'framespacing', this.getProperty('arrayPadding') as string);
+    }
     if (this.frame.length === 4) {
       // @test Enclosed frame solid, Enclosed frame dashed
       NodeUtil.setAttribute(mml, 'frame', this.dashed ? 'dashed' : 'solid');
@@ -978,7 +1065,9 @@ export class ArrayItem extends BaseItem {
           (this.arraydef['rowlines'] as string).replace(/none( none)+$/, 'none');
       }
       // @test Enclosed left right
-      NodeUtil.setAttribute(mml, 'frame', '');
+      if (!this.getProperty('arrayPadding')) {
+        NodeUtil.removeAttribute(mml, 'frame');
+      }
       mml = this.create('node', 'menclose', [mml], {notation: this.frame.join(' ')});
       if ((this.arraydef['columnlines'] || 'none') !== 'none' ||
           (this.arraydef['rowlines'] || 'none') !== 'none') {
@@ -997,11 +1086,122 @@ export class ArrayItem extends BaseItem {
   }
 
   /**
+   * Check to see if there are column declarations that need
+   * extra content around the cell contents.
+   */
+  public StartEntry() {
+    const n = this.row.length;
+    let start = this.cstart[n];
+    let end = this.cend[n];
+    const ralign = this.ralign[n];
+    const cextra = this.cextra;
+    if (!start && !end && !ralign && !cextra[n] && !cextra[n + 1]) return;
+    let [prefix, entry, term, found] = this.getEntry();
+    //
+    // Add & to an extra column if it is not at the end of the line
+    //
+    if (cextra[n] && (!this.atEnd || cextra[n + 1])) {
+      start += '&';
+    }
+    //
+    // Check if there are extra entries at the end of a row to be added
+    //
+    if (term !== '&') {
+      found = !!entry.trim() || !!(n || term.substr(0, 4) !== '\\end');
+      if (cextra[n + 1] && !cextra[n]) {
+        end = (end || '') + '&';        // extra entries follow this one
+        this.atEnd = true;
+      }
+    }
+    if (!found && !prefix) return;
+    const parser = this.parser;
+    if (found) {
+      //
+      //  Add the start, entry, and end values together
+      //
+      if (start) {
+        entry = ParseUtil.addArgs(parser, start, entry);
+      }
+      if (end) {
+        entry = ParseUtil.addArgs(parser, entry, end);
+      }
+      //
+      //  If row aligning, use text mode
+      //
+      if (ralign) {
+        entry = '\\text{' + entry.trim() + '}';
+      }
+    }
+    //
+    //  Add any \hline or \hfill macros
+    //
+    if (prefix) {
+      entry = ParseUtil.addArgs(parser, prefix, entry);
+    }
+    //
+    //  Insert the entry into the parser string
+    //
+    parser.string = ParseUtil.addArgs(parser, entry, parser.string);
+    parser.i = 0;
+  }
+
+  /**
+   * Get the TeX string for the contents of the coming cell (if any)
+   */
+  protected getEntry(): [string, string, string, boolean] {
+    const parser = this.parser;
+    const pattern = /^([^]*?)([&{}]|\\\\|\\(?:begin|end)\s*\{array\}|\\cr|\\)/;
+    let braces = 0, envs = 0;
+    let i = parser.i;
+    let match;
+    const fail: [string, string, string, boolean] = ['', '', '', false];
+    while ((match = parser.string.slice(i).match(pattern)) !== null) {
+      i += match[0].length;
+      switch (match[2]) {
+      case '\\':
+        i++;
+        break;
+      case '{':
+        braces++;
+        break;
+      case '}':
+        if (!braces) return fail;
+        braces--;
+        break;
+      case '\\begin{array}':
+        !braces && envs++;
+        break;
+      case '\\end{array}':
+        if (!braces && envs) {
+          envs--;
+          break;
+        }
+        // fall through if not closing a nested array environment
+      default:
+        if (braces || envs) continue;
+        i -= match[2].length;
+        let entry = parser.string.slice(parser.i, i).trim();
+        const prefix = entry.match(/^(?:\s*\\(?:hline|hfil{1,3}|rowcolor\s*\{.*?\}))+/);
+        if (prefix) {
+          entry = entry.slice(prefix[0].length);
+        }
+        parser.string = parser.string.slice(i);
+        parser.i = 0;
+        return [prefix?.[0] ||'', entry, match[2], true];
+      }
+    }
+    return fail;
+  }
+
+  /**
    * Finishes a single cell of the array.
    */
   public EndEntry() {
     // @test Array1, Array2
     const mtd = this.create('node', 'mtd', this.nodes);
+    //
+    // Handle \hfil by setting column alignment
+    //
     if (this.hfill.length) {
       if (this.hfill[0] === 0) {
         NodeUtil.setAttribute(mtd, 'columnalign', 'right');
@@ -1012,6 +1212,25 @@ export class ArrayItem extends BaseItem {
           NodeUtil.getAttribute(mtd, 'columnalign') ? 'center' : 'left');
       }
     }
+    //
+    // Check for row alignment specification, and use
+    //   a TeXAtom with a nested mpadded element to produce the
+    //   aligned content.
+    //
+    const ralign = this.ralign[this.row.length];
+    if (ralign) {
+      const [tclass, cwidth, calign] = ralign;
+      const texatom = this.create('node', 'TeXAtom', [
+        this.create('node', 'mpadded', mtd.childNodes[0].childNodes, {
+          width: cwidth,
+          'data-overflow': 'auto',
+          'data-align': calign
+        })
+      ], {texClass: tclass});
+      mtd.childNodes[0].childNodes = [];
+      mtd.appendChild(texatom);
+    }
+    //
     this.row.push(mtd);
     this.Clear();
     this.hfill = [];
@@ -1034,6 +1253,7 @@ export class ArrayItem extends BaseItem {
     }
     this.table.push(node);
     this.row = [];
+    this.atEnd = false;
   }
 
 
@@ -1173,6 +1393,10 @@ export class EqnArrayItem extends ArrayItem {
     this.extendArray('columnalign', this.maxrow);
     this.extendArray('columnwidth', this.maxrow);
     this.extendArray('columnspacing', this.maxrow - 1);
+    //
+    // Add indentshift for left-aligned columns
+    //
+    this.addIndentshift()
   }
 
   /**
@@ -1190,6 +1414,73 @@ export class EqnArrayItem extends ArrayItem {
       this.arraydef[name] = columns.slice(0, max).join(' ');
     }
   }
+
+  /**
+   * Add indentshift to left-aligned columns so that linebreaking will work
+   *   better in alignments.
+   */
+  protected addIndentshift() {
+    if (!this.arraydef.columnalign) return;
+    const align = (this.arraydef.columnalign as string).split(/ /);
+    let prev = '';
+    for (const i of align.keys()) {
+      if (align[i] === 'left') {
+        const indentshift = (prev === 'center' ? '.7em' : '2em');
+        for (const row of this.table) {
+          const cell = row.childNodes[row.isKind('mlabeledtr') ? i + 1 : i];
+          if (cell) {
+            const mstyle = this.create('node', 'mstyle', cell.childNodes[0].childNodes, {indentshift});
+            cell.childNodes[0].childNodes = [];
+            cell.appendChild(mstyle);
+          }
+        }
+      }
+      prev = align[i];
+    }
+  }
+
+}
+
+/**
+ * Item that places an mstyle having given attributes around its contents
+ */
+export class MstyleItem extends BeginItem {
+
+  /**
+   * @override
+   */
+  get kind() {
+    return 'mstyle';
+  }
+
+  /**
+   * The properties to set for the mstyle element
+   */
+  public attrList: PropertyList;
+
+  /**
+   * @param {PropertyList} attr  The properties to set on the mstyle
+   * @param {string} name        The name of the environment being processed
+   * @override
+   * @constructor
+   */
+  constructor(factory: any, attr: PropertyList, name: string) {
+    super(factory);
+    this.attrList = attr;
+    this.setProperty('name', name);
+  }
+
+  /**
+   * @override
+   */
+  public checkItem(item: StackItem): CheckType {
+    if (item.isKind('end') && item.getName() === this.getName()) {
+      const mml = this.create('node', 'mstyle', [this.toMml()], this.attrList);
+      return [[mml], true];
+    }
+    return super.checkItem(item);
+  }
+
 }
 
 

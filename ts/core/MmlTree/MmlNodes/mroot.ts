@@ -59,6 +59,14 @@ export class MmlMroot extends AbstractMmlNode {
   }
 
   /**
+   * <mroot> can contain line breaks
+   * @override
+   */
+  public get linebreakContainer() {
+    return true;
+  }
+
+  /**
    * Set the TeX class for the content of the root and the root separately.
    * Return ourself as the previous item.
    *

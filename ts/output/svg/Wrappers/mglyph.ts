@@ -88,8 +88,8 @@ export const SvgMglyph = (function <N, T, D>(): SvgMglyphClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
-      const svg = this.standardSvgNode(parent);
+    public toSVG(parents: N[]) {
+      const svg = this.standardSvgNodes(parents);
       if (this.charWrapper) {
         (this.charWrapper as SvgTextNodeNTD<N, T, D>).toSVG(svg);
         return;
@@ -106,7 +106,7 @@ export const SvgMglyph = (function <N, T, D>(): SvgMglyphClass<N, T, D> {
         href: src
       };
       const img = this.svg('image', properties);
-      this.adaptor.append(svg, img);
+      this.adaptor.append(svg[0], img);
     }
 
   };

@@ -44,17 +44,10 @@ export class BBox {
   public static fullWidth = '100%';
 
   /**
-   *  CSS styles that affect BBoxes
+   * The side names, indices, and which dimension they affect
    */
-  public static StyleAdjust: [string, string, number?][] = [
-    ['borderTopWidth', 'h'],
-    ['borderRightWidth', 'w'],
-    ['borderBottomWidth', 'd'],
-    ['borderLeftWidth', 'w', 0],
-    ['paddingTop', 'h'],
-    ['paddingRight', 'w'],
-    ['paddingBottom', 'd'],
-    ['paddingLeft', 'w', 0]
+  public static boxSides: [string, number, string][] = [
+    ['Top', 0, 'h'], ['Right', 1, 'w'], ['Bottom', 2, 'd'], ['Left', 3, 'w']
   ];
 
   /**
@@ -169,6 +162,15 @@ export class BBox {
     if (cbox.pwidth) {
       this.pwidth = cbox.pwidth;
     }
+  }
+
+  /**
+   * @return {BBox}   A copy of the current BBox
+   */
+  public copy(): BBox {
+    const bbox = new BBox();
+    Object.assign(bbox, this);
+    return bbox;
   }
 
 }

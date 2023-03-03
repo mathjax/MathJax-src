@@ -87,22 +87,23 @@ export const ChtmlMspace = (function <N, T, D>(): ChtmlMspaceClass<N, T, D> {
     /**
      * @override
      */
-    public toCHTML(parent: N) {
-      let chtml = this.standardChtmlNode(parent);
+    public toCHTML(parents: N[]) {
+      parents.length > 1 && parents.forEach(dom => this.adaptor.append(dom, this.html('mjx-linestrut')));
+      let chtml = this.standardChtmlNodes(parents);
       let {w, h, d} = this.getBBox();
       if (w < 0) {
-        this.adaptor.setStyle(chtml, 'marginRight', this.em(w));
+        this.adaptor.setStyle(chtml[0], 'marginRight', this.em(w));
         w = 0;
       }
-      if (w) {
-        this.adaptor.setStyle(chtml, 'width', this.em(w));
+      if (w && !this.breakCount) {
+        this.adaptor.setStyle(chtml[0], 'width', this.em(w));
       }
       h = Math.max(0, h + d);
       if (h) {
-        this.adaptor.setStyle(chtml, 'height', this.em(Math.max(0, h)));
+        this.adaptor.setStyle(chtml[0], 'height', this.em(Math.max(0, h)));
       }
       if (d) {
-        this.adaptor.setStyle(chtml, 'verticalAlign', this.em(-d));
+        this.adaptor.setStyle(chtml[0], 'verticalAlign', this.em(-d));
       }
     }
 

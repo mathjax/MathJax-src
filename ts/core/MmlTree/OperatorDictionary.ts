@@ -412,7 +412,7 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '-': MO.BIN4,            // hyphen-minus
     '-=': MO.BIN4,           // multiple character operator: -=
     '->': MO.BIN5,           // multiple character operator: ->
-    '.': [0, 3, TEXCLASS.PUNCT, {separator: true}], // \ldotp
+    '.': [0, 3, TEXCLASS.PUNCT, {linebreakstyle: 'after', separator: true}], // \ldotp
     '/': MO.ORD11,           // solidus
     '//': OPDEF(1, 1),       // multiple character operator: //
     '/=': MO.BIN4,           // multiple character operator: /=
