@@ -267,7 +267,9 @@ export abstract class AbstractNode<N extends Node<N, C>, C extends NodeClass<N, 
     if (i !== null) {
       this.childNodes[i] = newChild;
       newChild.parent = this as any as N;
-      oldChild.parent = null;
+      if (oldChild.parent === (this as any as N)) {
+        oldChild.parent = null;
+      }
     }
     return newChild;
   }

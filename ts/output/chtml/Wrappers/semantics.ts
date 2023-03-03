@@ -91,8 +91,9 @@ export const ChtmlSemantics = (function <N, T, D>(): ChtmlSemanticsClass<N, T, D
     /**
      * @override
      */
-    public toCHTML(parent: N) {
-      const chtml = this.standardChtmlNode(parent);
+    public toCHTML(parents: N[]) {
+      if (this.toEmbellishedCHTML(parents)) return;
+      const chtml = this.standardChtmlNodes(parents);
       if (this.childNodes.length) {
         this.childNodes[0].toCHTML(chtml);
       }
@@ -119,9 +120,9 @@ export const ChtmlAnnotation = (function <N, T, D>(): ChtmlWrapperClass<N, T, D>
     /**
      * @override
      */
-    public toCHTML(parent: N) {
+    public toCHTML(parents: N[]) {
       // FIXME:  output as plain text
-      super.toCHTML(parent);
+      super.toCHTML(parents);
     }
 
     /**
@@ -186,8 +187,8 @@ export const ChtmlXmlNode = (function <N, T, D>(): ChtmlWrapperClass<N, T, D> {
     /**
      * @override
      */
-    public toCHTML(parent: N) {
-      this.dom = this.adaptor.append(parent, this.adaptor.clone((this.node as XMLNode).getXML() as N)) as N;
+    public toCHTML(parents: N[]) {
+      this.dom = [this.adaptor.append(parents[0], this.adaptor.clone((this.node as XMLNode).getXML() as N)) as N];
     }
 
     /**

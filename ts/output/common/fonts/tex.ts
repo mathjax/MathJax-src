@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {FontDataClass, CharOptions, VariantData, DelimiterData, CssFontMap} from '../FontData.js';
+import {FontDataClass, CharOptions, VariantData, DelimiterData, CssFontMap, RemapMap} from '../FontData.js';
 
 /*****************************************************************/
 /**
@@ -50,16 +50,8 @@ export function CommonTeXFontMixin<
      */
     protected static defaultVariants = [
       ...Base.defaultVariants,
-      ['-smallop', 'normal'],
-      ['-largeop', 'normal'],
       ['-size3', 'normal'],
-      ['-size4', 'normal'],
-      ['-tex-calligraphic', 'italic'],
-      ['-tex-bold-calligraphic', 'bold-italic'],
-      ['-tex-oldstyle', 'normal'],
-      ['-tex-bold-oldstyle', 'bold'],
-      ['-tex-mathit', 'italic'],
-      ['-tex-variant', 'normal']
+      ['-size4', 'normal']
     ];
 
     /**
@@ -67,15 +59,8 @@ export function CommonTeXFontMixin<
      */
     protected static defaultCssFonts: CssFontMap = {
       ...Base.defaultCssFonts,
-      '-smallop': ['serif', false, false],
-      '-largeop': ['serif', false, false],
       '-size3': ['serif', false, false],
-      '-size4': ['serif', false, false],
-      '-tex-calligraphic': ['cursive', true, false],
-      '-tex-bold-calligraphic': ['cursive', true, true],
-      '-tex-oldstyle': ['serif', false, false],
-      '-tex-bold-oldstyle': ['serif', false, true],
-      '-tex-mathit': ['serif', true, false]
+      '-size4': ['serif', false, false]
     };
 
     /**
@@ -89,13 +74,29 @@ export function CommonTeXFontMixin<
     protected static defaultStretchVariants = ['-size4'];
 
     /**
-     * @override
+     *  The default remappings
      */
-    protected getDelimiterData(n: number) {
-      return this.getChar('-smallop', n) || this.getChar('-size4', n);
-    }
-
+    protected static defaultAccentMap: RemapMap = {
+      ...Base.defaultAccentMap,
+      0x2032: '\'',
+      0x2033: '\'\'',
+      0x2034: '\'\'\'',
+      0x2035: '`',
+      0x2036: '``',
+      0x2037: '```',
+      0x2057: '\'\'\'\'',
+      0x20D0: '\u21BC', // combining left harpoon
+      0x20D1: '\u21C0', // combining right harpoon
+      0x20D6: '\u2190', // combining left arrow
+      0x20E1: '\u2194', // combining left-right arrow
+      0x20F0: '*',      // combining asterisk
+      0x20DB: '...',    // combining three dots above
+      0x20DC: '....',   // combining four dots above
+      0x20EC: '\u21C1', // combining low left harpoon
+      0x20ED: '\u21BD', // combining low right harpoon
+      0x20EE: '\u2190', // combining low left arrows
+      0x20EF: '\u2192'  // combining low right arrows
+    };
   };
 
 }
-

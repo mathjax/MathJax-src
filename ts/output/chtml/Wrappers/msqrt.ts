@@ -115,8 +115,8 @@ export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
     /**
      * @override
      */
-    public toCHTML(parent: N) {
-      const surd = this.childNodes[this.surd] as ChtmlMoNTD<N, T, D>;
+    public toCHTML(parents: N[]) {
+      const surd = this.surd as ChtmlMoNTD<N, T, D>;
       const base = this.childNodes[this.base];
       //
       //  Get the parameters for the spacing of the parts
@@ -129,13 +129,13 @@ export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
       //
       //  Create the HTML structure for the root
       //
-      const CHTML = this.standardChtmlNode(parent);
+      const CHTML = this.standardChtmlNodes(parents);
       let SURD, BASE, ROOT, root;
       if (this.root != null) {
-        ROOT = this.adaptor.append(CHTML, this.html('mjx-root')) as N;
+        ROOT = this.adaptor.append(CHTML[0], this.html('mjx-root')) as N;
         root = this.childNodes[this.root];
       }
-      const SQRT = this.adaptor.append(CHTML, this.html('mjx-sqrt', {}, [
+      const SQRT = this.adaptor.append(CHTML[0], this.html('mjx-sqrt', {}, [
         SURD = this.html('mjx-surd'),
         BASE = this.html('mjx-box', {style: {paddingTop: this.em(q)}})
       ])) as N;
@@ -143,8 +143,8 @@ export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
       //  Add the child content
       //
       this.addRoot(ROOT, root, sbox, H);
-      surd.toCHTML(SURD);
-      base.toCHTML(BASE);
+      surd.toCHTML([SURD]);
+      base.toCHTML([BASE]);
       if (surd.size < 0) {
         //
         // size < 0 means surd is multi-character.  The angle glyph at the
@@ -158,10 +158,10 @@ export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
     /**
      * Add root HTML (overridden in mroot)
      *
-     * @param {N} ROOT             The container for the root
-     * @param {ChtmlWrapper} root  The wrapped MML root content
-     * @param {BBox} sbox          The bounding box of the surd
-     * @param {number} H           The height of the root as a whole
+     * @param {N[]} _ROOT           The container for the root
+     * @param {ChtmlWrapper} _root  The wrapped MML root content
+     * @param {BBox} _sbox          The bounding box of the surd
+     * @param {number} _H           The height of the root as a whole
      */
     protected addRoot(_ROOT: N, _root: ChtmlWrapper<N, T, D>, _sbox: BBox, _H: number) {
     }

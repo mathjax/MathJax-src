@@ -68,6 +68,13 @@ export class MmlMtd extends AbstractMmlBaseNode {
   }
 
   /**
+   * @override
+   */
+  public get linebreakAlign() {
+    return 'columnalign';
+  }
+
+  /**
    * Check that parent is mtr
    *
    * @override

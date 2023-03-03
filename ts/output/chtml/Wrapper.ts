@@ -22,8 +22,7 @@
  */
 
 import {OptionList} from '../../util/Options.js';
-import * as LENGTHS from '../../util/lengths.js';
-import {CommonWrapper, CommonWrapperClass, Constructor, StringMap} from '../common/Wrapper.js';
+import {CommonWrapper, CommonWrapperClass, Constructor, StringMap, SPACE} from '../common/Wrapper.js';
 import {CHTML} from '../chtml.js';
 import {ChtmlWrapperFactory} from './WrapperFactory.js';
 import {BBox} from '../../util/BBox.js';
@@ -48,16 +47,6 @@ export const FONTSIZE: StringMap = {
   '173%': 'LG',
   '207%': 'hg',
   '249%': 'HG'
-};
-
-export const SPACE: StringMap = {
-  /* tslint:disable:whitespace */
-  [LENGTHS.em(2/18)]: '1',
-  [LENGTHS.em(3/18)]: '2',
-  [LENGTHS.em(4/18)]: '3',
-  [LENGTHS.em(5/18)]: '4',
-  [LENGTHS.em(6/18)]: '5'
-  /* tslint:enable */
 };
 
 /*****************************************************************/
@@ -126,29 +115,67 @@ CommonWrapper<
   /**
    * Create the HTML for the wrapped node.
    *
-   * @param {N} parent  The HTML node where the output is added
+   * @param {N[]} parents  The HTML nodes where the output is to be added
    */
-  public toCHTML(parent: N) {
-    const chtml = this.standardChtmlNode(parent);
+  public toCHTML(parents: N[]) {
+    if (this.toEmbellishedCHTML(parents)) return;
+    this.addChildren(this.standardChtmlNodes(parents));
+  }
+
+  /**
+   * Create the HTML for an embellished mo, if this is one.
+   *
+   * @param {N[]} parents  The HTML nodes where the output is to be added
+   * @return {boolean}     True when embellished output is produced, false if not
+   */
+  public toEmbellishedCHTML(parents: N[]): boolean {
+    if (parents.length <= 1 || !this.node.isEmbellished) return false;
+    const adaptor = this.adaptor;
+    parents.forEach(dom => adaptor.append(dom, this.html('mjx-linestrut')));
+    const style = this.coreMO().embellishedBreakStyle;
+    //
+    // At the end of the first line or beginning of the second,
+    //   either typeset the embellished op, or create a placeholder
+    //   and keep track of the created DOM nodes.
+    //
+    const dom = [];
+    for (const [parent, STYLE] of [[parents[0], 'before'], [parents[1], 'after']] as [N, string][]) {
+      if (style !== STYLE) {
+        this.toCHTML([parent]);
+        dom.push(this.dom[0]);
+        STYLE === 'after' && adaptor.removeAttribute(this.dom[0], 'space');
+      } else {
+        dom.push(this.createChtmlNodes([parent])[0]);
+      }
+    }
+    this.dom = dom;
+    return true;
+  }
+
+  /**
+   * @param {N[]} parents  The HTML nodes where the children are to be added
+   */
+  public addChildren(parents: N[]) {
     for (const child of this.childNodes) {
-      child.toCHTML(chtml);
+      child.toCHTML(parents);
     }
   }
 
   /*******************************************************************/
 
   /**
-   * Create the standard CHTML element for the given wrapped node.
+   * Create the standard CHTML elements for the given wrapped node.
    *
-   * @param {N} parent  The HTML element in which the node is to be created
-   * @returns {N}  The root of the HTML tree for the wrapped node's output
+   * @param {N[]} parents  The HTML elements in which the node is to be created
+   * @returns {N[]}  The roots of the HTML tree for the wrapped node's output
    */
-  protected standardChtmlNode(parent: N): N {
+  protected standardChtmlNodes(parents: N[]): N[] {
     this.markUsed();
-    const chtml = this.createChtmlNode(parent);
+    const chtml = this.createChtmlNodes(parents);
     this.handleStyles();
     this.handleVariant();
     this.handleScale();
+    this.handleBorders();
     this.handleColor();
     this.handleSpace();
     this.handleAttributes();
@@ -164,16 +191,28 @@ CommonWrapper<
   }
 
   /**
-   * @param {N} parent  The HTML element in which the node is to be created
-   * @returns {N}  The root of the HTML tree for the wrapped node's output
+   * @param {N[]} parents  The HTML elements in which the node is to be created
+   * @returns {N[]}  The roots of the HTML tree for the wrapped node's output
    */
-  protected createChtmlNode(parent: N): N {
-    const href = this.node.attributes.get('href');
-    if (href) {
-      parent = this.adaptor.append(parent, this.html('a', {href: href})) as N;
+  protected createChtmlNodes(parents: N[]): N[] {
+    this.dom = parents.map(_parent => this.html('mjx-' + this.node.kind));  // FIXME: add segment id
+    parents = this.handleHref(parents);
+    for (const i of parents.keys()) {
+      this.adaptor.append(parents[i], this.dom[i]);
     }
-    this.dom = this.adaptor.append(parent, this.html('mjx-' + this.node.kind)) as N;
     return this.dom;
+  }
+
+  /**
+   * Add an anchor for hrefs and insert hot boxes into the DOM containers
+   *
+   * @param {N[]} parents   The HTML nodes in which the output is to be placed
+   * @return {N[]}          The roots of the HTML tree for the node's output
+   */
+  protected handleHref(parents: N[]): N[] {
+    const href = this.node.attributes.get('href');
+    if (!href) return parents;
+    return parents.map(parent => this.adaptor.append(parent, this.html('a', {href: href})) as N);
   }
 
   /**
@@ -183,10 +222,11 @@ CommonWrapper<
     if (!this.styles) return;
     const styles = this.styles.cssText;
     if (styles) {
-      this.adaptor.setAttribute(this.dom, 'style', styles);
+      const adaptor = this.adaptor;
+      this.dom.forEach(dom => adaptor.setAttribute(dom, 'style', styles));
       const family = this.styles.get('font-family');
       if (family) {
-        this.adaptor.setStyle(this.dom, 'font-family', 'MJXZERO, ' + family);
+        this.dom.forEach(dom => adaptor.setStyle(dom, 'font-family', 'MJXZERO, ' + family));
       }
     }
   }
@@ -196,8 +236,11 @@ CommonWrapper<
    */
   protected handleVariant() {
     if (this.node.isToken && this.variant !== '-explicitFont') {
-      this.adaptor.setAttribute(this.dom, 'class',
-                                (this.font.getVariant(this.variant) || this.font.getVariant('normal')).classes);
+      const adaptor = this.adaptor;
+      this.dom.forEach(
+        dom => adaptor.setAttribute(dom, 'class',
+                                    (this.font.getVariant(this.variant) || this.font.getVariant('normal')).classes)
+      );
     }
   }
 
@@ -205,7 +248,7 @@ CommonWrapper<
    * Set the (relative) scaling factor for the node
    */
   protected handleScale() {
-    this.setScale(this.dom, this.bbox.rscale);
+    this.dom.forEach(dom => this.setScale(dom, this.bbox.rscale));
   }
 
   /**
@@ -230,15 +273,56 @@ CommonWrapper<
    * Add the proper spacing
    */
   protected handleSpace() {
-    for (const data of [[this.bbox.L, 'space',  'marginLeft'],
-                        [this.bbox.R, 'rspace', 'marginRight']]) {
-      const [dimen, name, margin] = data as [number, string, string];
+    const adaptor = this.adaptor;
+    const breakable = !!this.node.getProperty('breakable');
+    const n = this.dom.length - 1;
+    for (const data of [[this.getLineBBox(0).L, 'space',  'marginLeft', 0],
+                        [this.getLineBBox(n).R, 'rspace', 'marginRight', n]]) {
+      const [dimen, name, margin, i] = data as [number, string, string, number];
       if (dimen) {
         const space = this.em(dimen);
-        if (SPACE[space]) {
-          this.adaptor.setAttribute(this.dom, name, SPACE[space]);
+        if (breakable) {
+          const node = adaptor.node('mjx-break', SPACE[space] ? {size: SPACE[space]} :
+                                    {style: {'font-size': (dimen * 400).toFixed(1) + '%'}});
+          adaptor.insert(node, this.dom[i]);
         } else {
-          this.adaptor.setStyle(this.dom, margin, space);
+          if (SPACE[space]) {
+            adaptor.setAttribute(this.dom[i], name, SPACE[space]);
+          } else {
+            adaptor.setStyle(this.dom[i], margin, space);
+          }
+        }
+      } else if (breakable && name == 'space') {
+        adaptor.insert(adaptor.node('mjx-break', {style: {'font-size': 0}}), this.dom[i]);
+      }
+    }
+  }
+
+  /**
+   * Remove sides for multiline rows
+   */
+  protected handleBorders() {
+    const border = this.styleData?.border;
+    const padding = this.styleData?.padding;
+    const n = this.dom.length - 1;
+    if (!border || !n) return;
+    const adaptor = this.adaptor;
+    for (const k of this.dom.keys()) {
+      const dom = this.dom[k];
+      if (k) {
+        if (border.width[3]) {
+          adaptor.setStyle(dom, 'border-left', ' none');
+        }
+        if (padding[3]) {
+          adaptor.setStyle(dom, 'padding-left', '0');
+        }
+      }
+      if (k !== n) {
+        if (border.width[1]) {
+          adaptor.setStyle(dom, 'border-right', 'none');
+        }
+        if (padding[1]) {
+          adaptor.setStyle(dom, 'padding-right', '0');
         }
       }
     }
@@ -250,16 +334,17 @@ CommonWrapper<
    *  be applied to a parent element, and we will inherit from that)
    */
   protected handleColor() {
+    const adaptor = this.adaptor;
     const attributes = this.node.attributes;
-    const mathcolor = attributes.getExplicit('mathcolor') as string;
-    const color = attributes.getExplicit('color') as string;
-    const mathbackground = attributes.getExplicit('mathbackground') as string;
-    const background = attributes.getExplicit('background') as string;
-    if (mathcolor || color) {
-      this.adaptor.setStyle(this.dom, 'color', mathcolor || color);
+    const color = (attributes.getExplicit('mathcolor') || attributes.getExplicit('color')) as string;
+    const background = (attributes.getExplicit('mathbackground') ||
+                        attributes.getExplicit('background') ||
+                        this.styles?.get('background-color')) as string;
+    if (color) {
+      this.dom.forEach(dom => adaptor.setStyle(dom, 'color', color));
     }
-    if (mathbackground || background) {
-      this.adaptor.setStyle(this.dom, 'backgroundColor', mathbackground || background);
+    if (background) {
+      this.dom.forEach(dom => adaptor.setStyle(dom, 'backgroundColor', background));
     }
   }
 
@@ -271,19 +356,21 @@ CommonWrapper<
    * Add the class to any other classes already in use.
    */
   protected handleAttributes() {
+    const adaptor = this.adaptor;
     const attributes = this.node.attributes;
     const defaults = attributes.getAllDefaults();
     const skip = ChtmlWrapper.skipAttributes;
     for (const name of attributes.getExplicitNames()) {
       if (skip[name] === false || (!(name in defaults) && !skip[name] &&
-                                   !this.adaptor.hasAttribute(this.dom, name))) {
-        this.adaptor.setAttribute(this.dom, name, attributes.getExplicit(name) as string);
+                                   !adaptor.hasAttribute(this.dom[0], name))) {
+        const value = attributes.getExplicit(name) as string;
+        this.dom.forEach(dom => adaptor.setAttribute(dom, name, value));
       }
     }
     if (attributes.get('class')) {
       const names = (attributes.get('class') as string).trim().split(/ +/);
       for (const name of names) {
-        this.adaptor.addClass(this.dom, name);
+        this.dom.forEach(dom => adaptor.addClass(dom, name));
       }
     }
   }
@@ -293,10 +380,11 @@ CommonWrapper<
    */
   protected handlePWidth() {
     if (this.bbox.pwidth) {
+      const adaptor = this.adaptor;
       if (this.bbox.pwidth === BBox.fullWidth) {
-        this.adaptor.setAttribute(this.dom, 'width', 'full');
+        this.dom.forEach(dom => adaptor.setAttribute(dom, 'width', 'full'));
       } else {
-        this.adaptor.setStyle(this.dom, 'width', this.bbox.pwidth);
+        this.dom.forEach(dom => adaptor.setStyle(dom, 'width', this.bbox.pwidth));
       }
     }
   }
@@ -326,7 +414,7 @@ CommonWrapper<
    */
 
   public drawBBox() {
-    let {w, h, d, R}  = this.getBBox();
+    let {w, h, d, R}  = this.getOuterBBox();
     const box = this.html('mjx-box', {style: {
       opacity: .25, 'margin-left': this.em(-w - R)
     }}, [
@@ -343,7 +431,7 @@ CommonWrapper<
         'background-color': 'green'
       }})
     ] as N[]);
-    const node = this.dom || this.parent.dom;
+    const node = this.dom[0] || this.parent.dom[0];
     const size = this.adaptor.getAttribute(node, 'size');
     if (size) {
       this.adaptor.setAttribute(box, 'size', size);

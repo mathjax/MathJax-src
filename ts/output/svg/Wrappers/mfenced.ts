@@ -92,8 +92,8 @@ export const SvgMfenced = (function <N, T, D>(): SvgMfencedClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
-      const svg = this.standardSvgNode(parent);
+    public toSVG(parents: N[]) {
+      const svg = this.standardSvgNodes(parents);
       this.setChildrenParent(this.mrow);  // temporarily change parents to the mrow
       this.mrow.toSVG(svg);
       this.setChildrenParent(this);       // put back the correct parents

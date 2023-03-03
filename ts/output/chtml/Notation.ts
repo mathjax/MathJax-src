@@ -48,7 +48,7 @@ export const RenderElement = function<N, T, D>(name: string, offset: string = ''
         node.adaptor.setStyle(shape, 'transform', transform);
       }
     }
-    node.adaptor.append(node.dom, shape);
+    node.adaptor.append(node.dom[0], shape);
   }) as Notation.Renderer<ChtmlMencloseNTD<N, T, D>, N>;
 };
 
@@ -91,7 +91,7 @@ export const DiagonalStrike = function<N, T, D>(name: string, neg: number): DEFP
       width: node.Em(W),
       transform: 'rotate(' + node.fixed(-neg * a) + 'rad) translateY(' + t + 'em)',
     }}));
-    node.adaptor.append(node.dom, strike);
+    node.adaptor.append(node.dom[0], strike);
   })(name);
 };
 
@@ -101,7 +101,7 @@ export const DiagonalStrike = function<N, T, D>(name: string, neg: number): DEFP
  */
 export const DiagonalArrow = function<N, T, D>(name: string): DEFPAIR<N, T, D> {
   return Notation.CommonDiagonalArrow<ChtmlMencloseNTD<N, T, D>, N>((node, arrow) => {
-    node.adaptor.append(node.dom, arrow);
+    node.adaptor.append(node.dom[0], arrow);
   })(name);
 };
 
@@ -111,6 +111,6 @@ export const DiagonalArrow = function<N, T, D>(name: string): DEFPAIR<N, T, D> {
  */
 export const Arrow = function<N, T, D>(name: string): DEFPAIR<N, T, D> {
   return Notation.CommonArrow<ChtmlMencloseNTD<N, T, D>, N>((node, arrow) => {
-    node.adaptor.append(node.dom, arrow);
+    node.adaptor.append(node.dom[0], arrow);
   })(name);
 };

@@ -151,11 +151,20 @@ namespace NodeUtil {
   /**
    * Returns the attribute of a node.
    * @param {MmlNode} node The node.
-   * @param {string} attr A attribute name.
+   * @param {string} attr An attribute name.
    * @return {Property} Value of the attribute.
    */
   export function getAttribute(node: MmlNode, attr: string): Property  {
     return node.attributes.get(attr);
+  }
+
+  /**
+   * Removes an attribute of a node.
+   * @param {MmlNode} node The node.
+   * @param {string} attr An attribute name.
+   */
+  export function removeAttribute(node: MmlNode, attr: string): void  {
+    delete (node.attributes.getAllAttributes())[attr];
   }
 
 
@@ -293,12 +302,23 @@ namespace NodeUtil {
     let mo = node as MmlMo;
     let forms = mo.getForms();
     for (let form of forms) {
-      let symbol = MmlMo.OPTABLE[form][mo.getText()];
+      let symbol = this.getOp(mo, form);
       if (symbol) {
         return symbol;
       }
     }
     return null;
+  }
+
+  /**
+   * Gets the operator definition of an mo node of a particular form.
+   * @param {MmlMo} mo The mo node.
+   * @param {string=} form The form (infix/prefix/postfix) for the mo.
+   * @return {OperatorDef} If node is an MO returns the operator definition. O/w
+   *    null.
+   */
+  export function getOp(mo: MmlMo, form: string = 'infix'): OperatorDef {
+    return MmlMo.OPTABLE[form][mo.getText()] || null;
   }
 
 }

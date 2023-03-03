@@ -418,12 +418,13 @@ export function CommonMsubsupMixin<
       subbox: BBox = this.subChild.getOuterBBox(),
       supbox: BBox = this.supChild.getOuterBBox()
     ): number[] {
-      const basebox = this.baseCore.getOuterBBox();
+      const base = this.baseCore;
+      const bbox = base.getLineBBox(base.breakCount);
       if (this.UVQ) return this.UVQ;
       const tex = this.font.params;
       const t = 3 * tex.rule_thickness;
       const subscriptshift = this.length2em(this.node.attributes.get('subscriptshift'), tex.sub2);
-      const drop = this.baseCharZero(basebox.d * this.baseScale + tex.sub_drop * subbox.rscale);
+      const drop = this.baseCharZero(bbox.d * this.baseScale + tex.sub_drop * subbox.rscale);
       //
       // u and v are the veritcal shifts of the scripts, initially set to minimum values and then adjusted
       //
@@ -460,21 +461,18 @@ export function CommonMsubsupMixin<
     /*********************************************************************/
 
     /**
-     * @override
+     * @ override
      */
-    public computeBBox(bbox: BBox, recompute: boolean = false) {
-      const basebox = this.baseChild.getOuterBBox();
+    public appendScripts(bbox: BBox): BBox {
       const [subbox, supbox] = [this.subChild.getOuterBBox(), this.supChild.getOuterBBox()];
-      bbox.empty();
-      bbox.append(basebox);
       const w = this.getBaseWidth();
       const x = this.getAdjustedIc();
       const [u, v] = this.getUVQ();
-      bbox.combine(subbox, w, v);
-      bbox.combine(supbox, w + x, u);
+      const y = bbox.d - this.baseChild.getLineBBox(this.baseChild.breakCount).d;
+      bbox.combine(subbox, w, v - y);
+      bbox.combine(supbox, w + x, u - y);
       bbox.w += this.font.params.scriptspace;
-      bbox.clean();
-      this.setChildPWidths(recompute);
+      return bbox;
     }
 
   } as any as B;

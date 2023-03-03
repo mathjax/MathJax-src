@@ -66,6 +66,14 @@ export class MmlMfrac extends AbstractMmlBaseNode {
   }
 
   /**
+   * Alignment is handled separately for the child nodes
+   * @override
+   */
+  public get linebreakAlign() {
+    return '';
+  }
+
+  /**
    * Update the children separately
    * @override
    */
@@ -85,8 +93,20 @@ export class MmlMfrac extends AbstractMmlBaseNode {
     if (!display || level > 0) {
       level++;
     }
-    this.childNodes[0].setInheritedAttributes(attributes, false, level, prime);
-    this.childNodes[1].setInheritedAttributes(attributes, false, level, true);
+    const numalign = this.attributes.get('numalign');
+    const denalign = this.attributes.get('denomalign');
+    const numAttributes = this.addInheritedAttributes({...attributes}, {
+      numalign, indentshift: '0',
+      indentalignfirst: numalign, indentshiftfirst: '0',
+      indentalignlast: 'indentalign', indentshiftlast: 'indentshift'
+    });
+    const denAttributes = this.addInheritedAttributes({...attributes}, {
+      denalign, indentshift: '0',
+      indentalignfirst: denalign, indentshiftfirst: '0',
+      indentalignlast: 'indentalign', indentshiftlast: 'indentshift'
+    });
+    this.childNodes[0].setInheritedAttributes(numAttributes, false, level, prime);
+    this.childNodes[1].setInheritedAttributes(denAttributes, false, level, true);
   }
 
 }

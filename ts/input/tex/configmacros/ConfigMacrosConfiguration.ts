@@ -24,11 +24,12 @@
 
 import {Configuration, ParserConfiguration} from '../Configuration.js';
 import {expandable} from '../../../util/Options.js';
-import {CommandMap, EnvironmentMap} from '../SymbolMap.js';
+import {CommandMap, EnvironmentMap, MacroMap} from '../SymbolMap.js';
 import ParseMethods from '../ParseMethods.js';
 import {Macro} from '../Symbol.js';
 import NewcommandMethods from '../newcommand/NewcommandMethods.js';
 import {BeginEnvItem} from '../newcommand/NewcommandItems.js';
+import BaseMethods from '../base/BaseMethods.js';
 import {TeX} from '../../tex.js';
 
 type TEX = TeX<any, any, any>;
@@ -37,6 +38,11 @@ type TEX = TeX<any, any, any>;
  * The name to use for the macros map
  */
 const MACROSMAP = 'configmacros-map';
+
+/**
+ * The name to use for the character map
+ */
+const ACTIVEMAP = 'configmacros-active-map';
 
 /**
  * The name to use for the environment map
@@ -49,10 +55,12 @@ const ENVIRONMENTMAP = 'configmacros-env-map';
  * @param {Configuration} config   The configuration object for the input jax
  */
 function configmacrosInit(config: ParserConfiguration) {
+  new MacroMap(ACTIVEMAP, {}, BaseMethods);
   new CommandMap(MACROSMAP, {}, {});
   new EnvironmentMap(ENVIRONMENTMAP, ParseMethods.environment, {}, {});
   config.append(Configuration.local({
     handler: {
+      character: [ACTIVEMAP],
       macro: [MACROSMAP],
       environment: [ENVIRONMENTMAP]
     },
@@ -67,18 +75,21 @@ function configmacrosInit(config: ParserConfiguration) {
  * @param {TeX} jax                The TeX input jax
  */
 function configmacrosConfig(_config: ParserConfiguration, jax: TEX) {
+  configActives(jax);
   configMacros(jax);
   configEnvironments(jax);
 }
 
 /**
- * Create user-defined macros from the macros option
+ * Common function for defining MacroMap and CommandMap
  *
- * @param {TeX} jax                The TeX input jax
+ * @param {string} name   The name of the option containing the definitions
+ * @param {string} map    The name of the handler map to be augmented
+ * @param {TEX} jax       The TeX jax being configured
  */
-function configMacros(jax: TEX) {
-  const handler = jax.parseOptions.handlers.retrieve(MACROSMAP) as CommandMap;
-  const macros = jax.parseOptions.options.macros;
+function setMacros(name: string, map: string, jax: TEX) {
+  const handler = jax.parseOptions.handlers.retrieve(map) as CommandMap;
+  const macros = jax.parseOptions.options[name];
   for (const cs of Object.keys(macros)) {
     const def = (typeof macros[cs] === 'string' ? [macros[cs]] : macros[cs]);
     const macro = Array.isArray(def[2]) ?
@@ -89,9 +100,27 @@ function configMacros(jax: TEX) {
 }
 
 /**
+ * Create user-defined active characters from the active option
+ *
+ * @param {TeX} jax   The TeX input jax
+ */
+function configActives(jax: TEX) {
+  setMacros('active', ACTIVEMAP, jax);
+}
+
+/**
+ * Create user-defined macros from the macros option
+ *
+ * @param {TeX} jax   The TeX input jax
+ */
+function configMacros(jax: TEX) {
+  setMacros('macros', MACROSMAP, jax);
+}
+
+/**
  * Create user-defined environments from the environments option
  *
- * @param {TeX} jax                The TeX input jax
+ * @param {TeX} jax   The TeX input jax
  */
 function configEnvironments(jax: TEX) {
   const handler = jax.parseOptions.handlers.retrieve(ENVIRONMENTMAP) as EnvironmentMap;
@@ -112,6 +141,7 @@ export const ConfigMacrosConfiguration = Configuration.create(
       [BeginEnvItem.prototype.kind]: BeginEnvItem,
     },
     options: {
+      active: expandable({}),
       macros: expandable({}),
       environments: expandable({})
     }
