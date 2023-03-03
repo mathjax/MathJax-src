@@ -29,7 +29,7 @@ import {Property} from '../../core/Tree/Node.js';
 import {unicodeChars} from '../../util/string.js';
 import * as LENGTHS from '../../util/lengths.js';
 import {Styles} from '../../util/Styles.js';
-import {StyleList} from '../../util/StyleList.js';
+import {StyleList, CssStyles} from '../../util/StyleList.js';
 import {OptionList} from '../../util/Options.js';
 import {CommonOutputJax} from '../common.js';
 import {CommonWrapperFactory} from './WrapperFactory.js';
@@ -190,6 +190,14 @@ export interface CommonWrapperClass<
   ITALICVARIANTS: {[name: string]: StringMap};
 
   /**
+   * Add any styles for this wrapper class
+   *
+   * @param {CssStyles} styles   The styles object to extend
+   * @param {JX} jax             The output jax whose style sheet is being modified (in case options are needed)
+   */
+  addStyles<JX>(styles: CssStyles, jax: JX): void;
+
+  /**
    * override
    */
   new (factory: WF, node: MmlNode, parent?: WW): WW;
@@ -298,6 +306,13 @@ export class CommonWrapper<
       'sans-serif-bold-italic': 'bold-sans-serif'
     }
   };
+
+  /**
+   * @override
+   */
+  public static addStyles<JX>(styles: CssStyles, _jax: JX) {
+    styles.addStyles(this.styles);
+  }
 
   /**
    * The factory used to create more wrappers

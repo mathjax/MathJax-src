@@ -617,7 +617,7 @@ export abstract class CommonOutputJax<
    * @param {CssStyles} styles            The style object to add to.
    */
   protected addClassStyles(CLASS: typeof CommonWrapper, styles: CssStyles) {
-    styles.addStyles(CLASS.styles);
+    CLASS.addStyles<CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>>(styles, this);
   }
 
   /*****************************************************************/
