@@ -131,8 +131,8 @@ new CommandMap('colortbl', {
     //  Check the position of the macro and save the color.
     //
     if (type === 'col') {
-      if (top.table.length) {
-        throw new TexError('ColumnColorNotTop', '%1 must be in the top row', name);
+      if (top.table.length && top.color.col[top.row.length] !== color) {
+        throw new TexError('ColumnColorNotTop', '%1 must be in the top row or preamble', name);
       }
       top.color.col[top.row.length] = color;
       //
