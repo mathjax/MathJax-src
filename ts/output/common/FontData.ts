@@ -51,7 +51,7 @@ export type CharData<C extends CharOptions> =
   [number, number, number, C];
 
 /**
- * An object making character positions to character data
+ * An object mapping character positions to character data
  *
  * @template C  The CharOptions type
  */
@@ -60,7 +60,7 @@ export type CharMap<C extends CharOptions> = {
 };
 
 /**
- * An object making variants to character maps
+ * An object mapping variants to character maps
  *
  * @template C  The CharOptions type
  */
@@ -88,7 +88,7 @@ export interface VariantData<C extends CharOptions> {
 }
 
 /**
- * An object making variants names to variant data
+ * An object mapping variants names to variant data
  *
  * @template C  The CharOptions type
  * @template V  The VariantData type
@@ -257,6 +257,9 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    *  The standard variants to define
    */
   public static defaultVariants = [
+    //
+    //  The MathML variants
+    //
     ['normal'],
     ['bold', 'normal'],
     ['italic', 'normal'],
@@ -270,7 +273,19 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     ['bold-sans-serif', 'bold', 'sans-serif'],
     ['sans-serif-italic', 'italic', 'sans-serif'],
     ['sans-serif-bold-italic', 'bold-italic', 'bold-sans-serif'],
-    ['monospace', 'normal']
+    ['monospace', 'normal'],
+
+    //
+    //  Internal variants needed for TeX input and all output jax
+    //
+    ['-smallop', 'normal'],
+    ['-largeop', 'normal'],
+    ['-tex-calligraphic', 'italic'],
+    ['-tex-bold-calligraphic', 'bold-italic'],
+    ['-tex-oldstyle', 'normal'],
+    ['-tex-bold-oldstyle', 'bold'],
+    ['-tex-mathit', 'italic'],
+    ['-tex-variant', 'normal']
   ];
 
   /**
@@ -291,7 +306,16 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     'bold-sans-serif': ['sans-serif', false, true],
     'sans-serif-italic': ['sans-serif', true, false],
     'sans-serif-bold-italic': ['sans-serif', true, true],
-    monospace: ['monospace', false, false]
+    monospace: ['monospace', false, false],
+
+    '-smallop': ['unknown', false, false],
+    '-largeop': ['unknown', false, false],
+    '-tex-calligraphic': ['cursive', true, false],
+    '-tex-bold-calligraphic': ['cursive', true, true],
+    '-tex-oldstyle': ['unknown', false, false],
+    '-tex-bold-oldstyle': ['unknown', false, true],
+    '-tex-mathit': ['unknown', true, false],
+    '-tex-variant': ['unknown', false, false]
   };
 
   /**
@@ -385,7 +409,9 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    *  The default remappings
    */
-  protected static defaultAccentMap: RemapMap = {
+  public static defaultAccentMap: RemapMap = {
+    0x005E: '\u02C6',  // hat
+    0x007E: '\u02DC',  // tilde
     0x0300: '\u02CB',  // grave accent
     0x0301: '\u02CA',  // acute accent
     0x0302: '\u02C6',  // curcumflex
@@ -396,25 +422,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     0x0308: '\u00A8',  // diaresis
     0x030A: '\u02DA',  // ring above
     0x030C: '\u02C7',  // caron
-    0x2192: '\u20D7',
-    0x2032: '\'',
-    0x2033: '\'\'',
-    0x2034: '\'\'\'',
-    0x2035: '`',
-    0x2036: '``',
-    0x2037: '```',
-    0x2057: '\'\'\'\'',
-    0x20D0: '\u21BC', // combining left harpoon
-    0x20D1: '\u21C0', // combining right harpoon
-    0x20D6: '\u2190', // combining left arrow
-    0x20E1: '\u2194', // combining left-right arrow
-    0x20F0: '*',      // combining asterisk
-    0x20DB: '...',    // combining three dots above
-    0x20DC: '....',   // combining four dots above
-    0x20EC: '\u21C1', // combining low left harpoon
-    0x20ED: '\u21BD', // combining low right harpoon
-    0x20EE: '\u2190', // combining low left arrows
-    0x20EF: '\u2192'  // combining low right arrows
+    0x2192: '\u20D7'
   };
 
   /**
@@ -767,6 +775,14 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   }
 
   /**
+   * @param {number} n   The delimiter character number whose variants are needed
+   * @return {string[]}  The variants for the parts of the delimiter
+   */
+  public getStretchVariants(n: number): string[] {
+    return [0, 1, 2, 3].map(i => this.getStretchVariant(n, i));
+  }
+
+  /**
    * @param {string} name  The variant whose character data is being querried
    * @param {number} n     The unicode number for the character to be found
    * @return {CharData}    The data for the given character (or undefined)
@@ -823,6 +839,7 @@ export interface FontDataClass<C extends CharOptions, V extends VariantData<C>, 
   defaultCssFonts: CssFontMap;
   defaultVariants: string[][];
   defaultParams: FontParameters;
+  defaultAccentMap: RemapMap;
   /* tslint:disable-next-line:jsdoc-require */
   charOptions(font: CharMap<C>, n: number): C;
   new(...args: any[]): FontData<C, V, D>;

@@ -362,11 +362,7 @@ export function CommonMoMixin<
               if (mathaccent && i) {
                 i--;
               }
-              this.variant = this.font.getSizeVariant(c, i);
-              this.size = i;
-              if (delim.schar && delim.schar[i]) {
-                this.stretch = {...this.stretch, c: delim.schar[i]};
-              }
+              this.setDelimSize(c, i);
               return;
             }
             i++;
@@ -381,10 +377,21 @@ export function CommonMoMixin<
           this.invalidateBBox();
           this.getStretchBBox(WH, this.checkExtendedHeight(D, delim), delim);
         } else {
-          this.variant = this.font.getSizeVariant(c, i - 1);
-          this.size = i - 1;
+          this.setDelimSize(c, i - 1);
         }
       }
+    }
+
+    /**
+     * @param {number} c     The character being set
+     * @param {number} i     The size for that character
+     */
+    protected setDelimSize(c: number, i: number) {
+      const delim = this.stretch;
+      this.variant = this.font.getSizeVariant(c, i);
+      this.size = i;
+      const schar = (delim.schar ? delim.schar[Math.min(i, delim.schar.length - 1)] || c : c);
+      this.stretch = {...delim, c: schar};
     }
 
     /**
