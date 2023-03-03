@@ -24,6 +24,9 @@
 
 import {OptionList, defaultOptions, userOptions} from '../../util/Options.js';
 import {StyleList} from '../../util/StyleList.js';
+import {asyncLoad} from '../../util/AsyncLoad.js';
+import {retryAfter} from '../../util/Retries.js';
+import {mathjax} from '../../mathjax.js';
 
 /****************************************************************************/
 
@@ -43,12 +46,17 @@ export interface CharOptions {
 /**
  * Data about a character
  *   [height, depth, width, {italic-correction, skew, options}]
+ */
+export type CharDataArray<C extends CharOptions> =
+  [number, number, number] |
+  [number, number, number, C];
+
+/**
+ * Data about a character or a dynamic file object
  *
  * @template C  The CharOptions type
  */
-export type CharData<C extends CharOptions> =
-  [number, number, number] |
-  [number, number, number, C];
+export type CharData<C extends CharOptions> = DynamicFile | CharDataArray<C>;
 
 /**
  * An object mapping character positions to character data
@@ -148,7 +156,7 @@ export type DelimiterData = {
  * @template D  The DelimiterData type
  */
 export type DelimiterMap<D extends DelimiterData> = {
-  [n: number]: D;
+  [n: number]: D | DynamicFile;
 };
 
 /**
@@ -226,6 +234,51 @@ export type FontParameters = {
 };
 
 /****************************************************************************/
+
+/**
+ * A function for setting up an additional character-data file
+ */
+export type DynamicSetup = ((font: FontData<CharOptions, VariantData<CharOptions>, DelimiterData>) => void);
+
+/**
+ * Character numbers or ranges of numbers that cause a dynamic file to be laoded
+ */
+export type DynamicRanges = (number | [number, number])[];
+
+/**
+ * List of characters (number) or ranges ([number, number]) of characters for
+ *   each variant in a dynamic font file
+ */
+export type DynamicVariants = {[name: string]: DynamicRanges};
+
+/**
+ * Name and variant data for a dynamic font file
+ */
+export type DynamicFileDef = [string, DynamicVariants, DynamicRanges?];
+
+/**
+ * Data stored about a dynamic font
+ */
+export type DynamicFile = {
+  file: string;                   // file containing the character data
+  variants: DynamicVariants;      // characters in each variant in the file
+  delimiters: DynamicRanges;      // delimiters in the file
+  setup: DynamicSetup;            // setup function to call to add the characters to the font
+  promise: Promise<void>;         // promise for when the file is loaded
+  failed: boolean;                // true when loading has failed
+};
+
+/**
+ * Object listing dynamic file data indexed by file name
+ */
+export type DynamicFileList = {[name: string]: DynamicFile};
+
+/**
+ * Map of characters that load a dynamic file
+ */
+export type DynamicCharMap = {[name: number]: DynamicFile};
+
+/****************************************************************************/
 /**
  *  The FontData class (for storing character bounding box data by variant,
  *                      and the stretchy delimiter data).
@@ -240,7 +293,8 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * Options for the font
    */
   public static OPTIONS: OptionList = {
-    unknownFamily: 'serif'     // Should use 'monospace' with LiteAdaptor
+    unknownFamily: 'serif',     // Should use 'monospace' with LiteAdaptor
+    dynamicPrefix: '.'          // Location of dynamically loaded files
   };
 
   /**
@@ -479,6 +533,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     extra_ic:            .033      // extra spacing for scripts (compensate for not having actual ic values)
   };
 
+
   /**
    * The default delimiter data
    */
@@ -498,6 +553,11 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * The default variants for the assembly parts for stretchy delimiters
    */
   protected static defaultStretchVariants: string[] = [];
+
+  /**
+   * The dynamic file data
+   */
+  protected static dynamicFiles: DynamicFileList = {};
 
   /**
    * The font options
@@ -561,10 +621,48 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    */
   public static charOptions(font: CharMap<CharOptions>, n: number): CharOptions {
     const char = font[n];
+    if (!Array.isArray(char)) {
+      throw Error(`Character data hasn't been loaded for 0x${n.toString(16).toUpperCase()}`);
+    }
     if (char.length === 3) {
       (char as any)[3] = {};
     }
     return char[3];
+  }
+
+  /**
+   * Define the dynamic file information.
+   *
+   * @param {DynamicFileDef[]} dynamicFiles   The definitions to make
+   * @return {DynamicFileList}                The object of dynamic file data
+   */
+  public static defineDynamicFiles(dynamicFiles: DynamicFileDef[]): DynamicFileList {
+    const list: DynamicFileList = {};
+    dynamicFiles.map(([file, variants, delimiters]) => {
+      list[file] = {
+        file, variants, delimiters: delimiters || [],
+        promise: null, failed: false, setup: ((_font) => { list[file].failed = true; })
+      } as DynamicFile;
+    });
+    return list;
+  }
+
+  /**
+   * Create the setup function for a given dynamically loaded file
+   *
+   * @param {string} file           The file being loaded
+   * @param {CharMapMap} variants   The character data to be added
+   *
+   * @template C  The CharOptions type
+   * @template D  The DelimiterData type
+   */
+  public static dynamicSetup<C extends CharOptions, D extends DelimiterData>(
+    file: string, variants: CharMapMap<C>, delimiters: DelimiterMap<D> = []
+  ) {
+    this.dynamicFiles[file].setup = (font) => {
+      Object.keys(variants).forEach(name => font.defineChars(name, variants[name]));
+      font.defineDelimiters(delimiters);
+    };
   }
 
   /**
@@ -595,6 +693,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     this.defineRemap('accent', CLASS.defaultAccentMap);
     this.defineRemap('mo', CLASS.defaultMoMap);
     this.defineRemap('mn', CLASS.defaultMnMap);
+    this.defineDynamicCharacters(CLASS.dynamicFiles);
   }
 
   /**
@@ -687,10 +786,10 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   }
 
   /**
-   * @param {number} n      Math Alphanumerics position for this remapping
-   * @return {CharData<C>}  The character data for the remapping
+   * @param {number} n           Math Alphanumerics position for this remapping
+   * @return {CharDataArray<C>}  The character data for the remapping
    */
-  protected smpChar(n: number): CharData<C> {
+  protected smpChar(n: number): CharDataArray<C> {
     return [ , , , {smp: n} as C];
   }
 
@@ -746,11 +845,109 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   }
 
   /**
+   * Set up the dynamic characters to point to the proper dynamic data object
+   *
+   * @param {DynamicFileList[]} dynamicFiles   The data objects to process
+   */
+  public defineDynamicCharacters(dynamicFiles: DynamicFileList) {
+    for (const file of Object.keys(dynamicFiles)) {
+      const dynamic = dynamicFiles[file];
+      for (const name of Object.keys(dynamic.variants)) {
+        this.defineChars(name, this.flattenRanges(dynamic.variants[name], dynamic));
+      }
+      this.defineDelimiters(this.flattenRanges(dynamic.delimiters, dynamic));
+    }
+  }
+
+  /**
+   * Turn a DynamicRange into a mapping of character number to DynamicFile.
+   *
+   * @param {DynamicRanges} ranges   The ranges to be flattened
+   * @param {DynamicFile} dynamic    The DynamicFile to tie to the ranges
+   * @return {DynamicCharMap}        The map from character positions to dynamic file
+   */
+  protected flattenRanges(ranges: DynamicRanges, dynamic: DynamicFile): DynamicCharMap {
+    const chars: DynamicCharMap = {};
+    for (const n of ranges) {
+      if (Array.isArray(n)) {
+        for (let j = n[0]; j <= n[1]; j++) {
+          chars[j] = dynamic;
+        }
+      } else {
+        chars[n] = dynamic;
+      }
+    }
+    return chars;
+  }
+
+  /**
+   * Load the data for the character from the proper file,
+   *   and do any associated setup that needs access to the FontData instance.
+   *
+   * @param {DynamicFile} dynamic   The data for the file to load
+   * @return {Promise<void>}        The promise that is resolved when the file is loaded
+   */
+  public async loadDynamicFile(dynamic: DynamicFile): Promise<void> {
+    if (dynamic.failed) return Promise.resolve();
+    if (!dynamic.promise) {
+      const file = (dynamic.file.match(/^(?:[\/\[]|[a-z]+:\/\/)/) ? dynamic.file :
+                    this.options.dynamicPrefix + '/' + dynamic.file.replace(/\.js$/, ''));
+      dynamic.promise = asyncLoad(file).catch(err => {
+        dynamic.failed = true;
+        console.warn(err);
+      });
+    }
+    return dynamic.promise.then(() => dynamic.setup(this));
+  }
+
+  /**
+   * Load all dynamic files.
+   *
+   * @return {Promise<void[]>}   A promise that is resolved after all the dynamic files are loaded.
+   */
+  public loadDynamicFiles(): Promise<void[]> {
+    const dynamicFiles = (this.constructor as typeof FontData).dynamicFiles;
+    const promises = Object.keys(dynamicFiles).map(name => this.loadDynamicFile(dynamicFiles[name]));
+    return Promise.all(promises);
+  }
+
+  /**
+   * Load all dynamic files synchronously, using mathjax.asyncLoad, when it is set to a
+   *   synchronous loading function, as in util/asyncLoad/node.ts.
+   */
+  public loadDynamicFilesSync() {
+    if (!mathjax.asyncLoad) {
+      throw Error('MathJax(loadDynamicFilesSync): mathjax.asyncLoad must be specified and synchronous');
+    }
+    const dynamicFiles = (this.constructor as typeof FontData).dynamicFiles;
+    for (const name of Object.keys(dynamicFiles)) {
+      const dynamic = dynamicFiles[name];
+      if (!dynamic.promise) {
+        const file = (dynamic.file.match(/^(?:[\/\[]|[a-z]+:\/\/)/) ? dynamic.file :
+                      this.options.dynamicPrefix + '/' + dynamic.file.replace(/\.js$/, ''));
+        dynamic.promise = Promise.resolve();
+        try {
+          mathjax.asyncLoad(file);
+        } catch (err) {
+          dynamic.failed = true;
+          console.warn(err);
+        }
+        dynamic.setup(this);
+      }
+    }
+  }
+
+  /**
    * @param {number} n  The delimiter character number whose data is desired
    * @return {DelimiterData}  The data for that delimiter (or undefined)
    */
   public getDelimiter(n: number): DelimiterData {
-    return this.delimiters[n];
+    const delim = this.delimiters[n];
+    if (delim && !('dir' in delim)) {
+      retryAfter(this.loadDynamicFile(delim));
+      return null;
+    }
+    return delim as DelimiterData;
   }
 
   /**
@@ -759,8 +956,9 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * @return {string}   The variant of the i-th size for delimiter n
    */
   public getSizeVariant(n: number, i: number): string {
-    if (this.delimiters[n].variants) {
-      i = this.delimiters[n].variants[i];
+    const delim = this.getDelimiter(n);
+    if (delim && delim.variants) {
+      i = delim.variants[i];
     }
     return this.sizeVariants[i];
   }
@@ -771,7 +969,8 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * @return {string}   The variant of the i-th part for delimiter n
    */
   public getStretchVariant(n: number, i: number): string {
-    return this.stretchVariants[this.delimiters[n].stretchv ? this.delimiters[n].stretchv[i] : 0];
+    const delim = this.getDelimiter(n);
+    return this.stretchVariants[delim.stretchv ? delim.stretchv[i] : 0];
   }
 
   /**
@@ -783,12 +982,17 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   }
 
   /**
-   * @param {string} name  The variant whose character data is being querried
-   * @param {number} n     The unicode number for the character to be found
-   * @return {CharData}    The data for the given character (or undefined)
+   * @param {string} name       The variant whose character data is being querried
+   * @param {number} n          The unicode number for the character to be found
+   * @return {CharDataArray}    The data for the given character (or undefined)
    */
-  public getChar(name: string, n: number): CharData<C> {
-    return this.variant[name].chars[n];
+  public getChar(name: string, n: number): CharDataArray<C> {
+    const char = this.variant[name].chars[n];
+    if (char && !Array.isArray(char)) {
+      retryAfter(this.loadDynamicFile(char));
+      return null;
+    }
+    return char as CharDataArray<C>;
   }
 
   /**
@@ -842,5 +1046,7 @@ export interface FontDataClass<C extends CharOptions, V extends VariantData<C>, 
   defaultAccentMap: RemapMap;
   /* tslint:disable-next-line:jsdoc-require */
   charOptions(font: CharMap<C>, n: number): C;
+  /* tslint:disable-next-line:jsdoc-require */
+  defineDynamicFiles(dynamicFiles: DynamicFileDef[]): DynamicFileList;
   new(...args: any[]): FontData<C, V, D>;
 }

@@ -97,6 +97,7 @@ export function CommonTeXFontMixin<
       0x20EE: '\u2190', // combining low left arrows
       0x20EF: '\u2192'  // combining low right arrows
     };
+
   };
 
 }
