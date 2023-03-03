@@ -680,11 +680,10 @@ BaseMethods.Overset = function(parser: TexParser, name: string) {
   // @test Overset
   const top = parser.ParseArg(name);
   const base = parser.ParseArg(name);
+  const topMo = top.coreMO();
+  const accent = (topMo.isKind('mo') && NodeUtil.getAttribute(topMo, 'accent') === true);
   ParseUtil.checkMovableLimits(base);
-  if (top.isKind('mo')) {
-    NodeUtil.setAttribute(top, 'accent', false);
-  }
-  const node = parser.create('node', 'mover', [base, top]);
+  const node = parser.create('node', 'mover', [base, top], {accent});
   parser.Push(node);
 };
 
@@ -698,11 +697,10 @@ BaseMethods.Underset = function(parser: TexParser, name: string) {
   // @test Underset
   const bot = parser.ParseArg(name);
   const base = parser.ParseArg(name);
+  const botMo = bot.coreMO();
+  const accentunder = (botMo.isKind('mo') && NodeUtil.getAttribute(botMo, 'accent') === true);
   ParseUtil.checkMovableLimits(base);
-  if (bot.isKind('mo')) {
-    NodeUtil.setAttribute(bot, 'accent', false);
-  }
-  const node = parser.create('node', 'munder', [base, bot], {accentunder: false});
+  const node = parser.create('node', 'munder', [base, bot], {accentunder});
   parser.Push(node);
 };
 
@@ -716,14 +714,12 @@ BaseMethods.Overunderset = function(parser: TexParser, name: string) {
   const top = parser.ParseArg(name);
   const bot = parser.ParseArg(name);
   const base = parser.ParseArg(name);
+  const topMo = top.coreMO();
+  const botMo = bot.coreMO();
+  const accent = (topMo.isKind('mo') && NodeUtil.getAttribute(topMo, 'accent') === true);
+  const accentunder = (botMo.isKind('mo') && NodeUtil.getAttribute(botMo, 'accent') === true);
   ParseUtil.checkMovableLimits(base);
-  if (top.isKind('mo')) {
-    NodeUtil.setAttribute(top, 'accent', false);
-  }
-  if (bot.isKind('mo')) {
-    NodeUtil.setAttribute(bot, 'accent', false);
-  }
-  const node = parser.create('node', 'munderover', [base, bot, top], {accent: false, accentunder: false});
+  const node = parser.create('node', 'munderover', [base, bot, top], {accent, accentunder});
   parser.Push(node);
 };
 
