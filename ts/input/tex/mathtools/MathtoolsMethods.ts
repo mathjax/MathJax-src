@@ -184,6 +184,7 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
       //
       const spread = parser.GetDimen(`\\begin{${begin.getName()}}`);
       begin.setProperty('spread', spread);
+      begin.setProperty('nestable', true);
       parser.Push(begin);
     }
   },
