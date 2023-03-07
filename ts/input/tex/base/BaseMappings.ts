@@ -116,6 +116,7 @@ new sm.CharacterMap('mathchar0mi', ParseMethods.mathchar0mi, {
   varphi:       '\u03C6',
 
   // Ord symbols
+  AA:            '\u212B',
   S:            ['\u00A7', {mathvariant: VARIANT.NORMAL}],
   aleph:        ['\u2135', {mathvariant: VARIANT.NORMAL}],
   hbar:         ['\u210F', {variantForm: true}],
@@ -134,7 +135,7 @@ new sm.CharacterMap('mathchar0mi', ParseMethods.mathchar0mi, {
   bot:          ['\u22A5', {mathvariant: VARIANT.NORMAL}],
   angle:        ['\u2220', {mathvariant: VARIANT.NORMAL}],
   triangle:     ['\u25B3', {mathvariant: VARIANT.NORMAL}],
-  backslash:    ['\u2216', {mathvariant: VARIANT.NORMAL}],
+  backslash:    ['\\', {mathvariant: VARIANT.NORMAL}],
   forall:       ['\u2200', {mathvariant: VARIANT.NORMAL}],
   exists:       ['\u2203', {mathvariant: VARIANT.NORMAL}],
   neg:          ['\u00AC', {mathvariant: VARIANT.NORMAL}],
@@ -156,36 +157,26 @@ new sm.CharacterMap('mathchar0mo', ParseMethods.mathchar0mo, {
   surd:         '\u221A',
 
   // big ops
-  coprod:       ['\u2210', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
-  bigvee:       ['\u22C1', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
-  bigwedge:     ['\u22C0', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
-  biguplus:     ['\u2A04', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
-  bigcap:       ['\u22C2', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
-  bigcup:       ['\u22C3', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
-  'int':        ['\u222B', {texClass: TEXCLASS.OP}],
-  intop:        ['\u222B', {texClass: TEXCLASS.OP,
-                            movesupsub: true, movablelimits: true}],
-  iint:         ['\u222C', {texClass: TEXCLASS.OP}],
-  iiint:        ['\u222D', {texClass: TEXCLASS.OP}],
-  prod:         ['\u220F', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
-  sum:          ['\u2211', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
-  bigotimes:    ['\u2A02', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
-  bigoplus:     ['\u2A01', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
-  bigodot:      ['\u2A00', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
-  oint:         ['\u222E', {texClass: TEXCLASS.OP}],
-  bigsqcup:     ['\u2A06', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
+  coprod:       ['\u2210', {movesupsub: true}],
+  bigvee:       ['\u22C1', {movesupsub: true}],
+  bigwedge:     ['\u22C0', {movesupsub: true}],
+  biguplus:     ['\u2A04', {movesupsub: true}],
+  bigcap:       ['\u22C2', {movesupsub: true}],
+  bigcup:       ['\u22C3', {movesupsub: true}],
+  'int':         '\u222B',
+  intop:        ['\u222B', {movesupsub: true, movablelimits: true}],
+  iint:          '\u222C',
+  iiint:         '\u222D',
+  prod:         ['\u220F', {movesupsub: true}],
+  sum:          ['\u2211', {movesupsub: true}],
+  bigotimes:    ['\u2A02', {movesupsub: true}],
+  bigoplus:     ['\u2A01', {movesupsub: true}],
+  bigodot:      ['\u2A00', {movesupsub: true}],
+  oint:          '\u222E',
+  ointop:       ['\u222E', {movesupsub: true, movablelimits: true}],
+  oiint:         '\u222F',
+  oiiint:        '\u2230',
+  bigsqcup:     ['\u2A06', {movesupsub: true}],
   smallint:     ['\u222B', {largeop: false}],
 
   // binary operations
@@ -307,6 +298,7 @@ new sm.CharacterMap('mathchar0mo', ParseMethods.mathchar0mo, {
   cdots:            '\u22EF',
   vdots:            '\u22EE',
   ddots:            '\u22F1',
+  iddots:           '\u22F0',
   dotsc:            '\u2026',  // dots with commas
   dotsb:            '\u22EF',  // dots with binary ops and relations
   dotsm:            '\u22EF',  // dots with multiplication
@@ -640,6 +632,8 @@ new sm.CommandMap('macros', {
   acute:             ['Accent', '00B4'],  // or 0301 or 02CA
   grave:             ['Accent', '0060'],  // or 0300 or 02CB
   ddot:              ['Accent', '00A8'],  // or 0308
+  dddot:             ['Accent', '20DB'],
+  ddddot:            ['Accent', '20DC'],
   tilde:             ['Accent', '007E'],  // or 0303 or 02DC
   bar:               ['Accent', '00AF'],  // or 0304 or 02C9
   breve:             ['Accent', '02D8'],  // or 0306
@@ -719,7 +713,10 @@ new sm.CommandMap('macros', {
  * Macros for LaTeX environments.
  */
 new sm.EnvironmentMap('environment', ParseMethods.environment, {
+  displaymath:   ['Equation', null, false],
+  math:          ['Equation', null, false, false],
   array:         ['AlignedArray'],
+  darray:        ['AlignedArray', null, 'D'],
   equation:      ['Equation', null, true],
   eqnarray:      ['EqnArray', null, true, true, 'rcl',
                   ParseUtil.cols(0, MATHSPACE.thickmathspace), '.5em'],
