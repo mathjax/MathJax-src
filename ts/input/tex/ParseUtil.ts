@@ -251,7 +251,7 @@ namespace ParseUtil {
     let mathvariant = font || parser.stack.env.font;
     let def = (mathvariant ? {mathvariant} : {});
     let mml: MmlNode[] = [], i = 0, k = 0, c, node, match = '', braces = 0;
-    if (text.match(/\\?[${}\\]|\\\(|\\(eq)?ref\s*\{/)) {
+    if (text.match(/\\?[${}\\]|\\\(|\\(?:eq)?ref\s*\{|\\U/)) {
       while (i < text.length) {
         c = text.charAt(i++);
         if (c === '$') {
@@ -325,6 +325,15 @@ namespace ParseUtil {
               // @test Mbox CR
               i--;
               text = text.substr(0, i - 1) + text.substr(i); // remove \ from \$, \{, \}, or \\
+            } else if (c === 'U') {
+              const arg = text.substr(i).match(/^\s*(?:([0-9A-F])|\{\s*([0-9A-F]+)\s*\})/);
+              if (!arg) {
+                throw new TexError('BadRawUnicode',
+                                   'Argument to %1 must a hexadecimal number with 1 to 6 digits', '\\U');
+              }
+              //  Replace \U{...} with specified character
+              const c = String.fromCodePoint(parseInt(arg[1] || arg[2], 16));
+              text = text.substr(0, i - 2) + c + text.substr(i + arg[0].length);
             }
           }
         }

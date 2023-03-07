@@ -157,7 +157,7 @@ export const AutoloadConfiguration = Configuration.create(
         html: ['data', 'href', 'class', 'style', 'cssId'],
         mhchem: ['ce', 'pu'],
         newcommand: ['newcommand', 'renewcommand', 'newenvironment', 'renewenvironment', 'def', 'let'],
-        unicode: ['unicode'],
+        unicode: ['unicode', 'U', 'char'],
         verb: ['verb']
       })
     },

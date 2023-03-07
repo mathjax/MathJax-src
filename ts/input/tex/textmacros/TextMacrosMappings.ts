@@ -146,6 +146,8 @@ new CommandMap('text-macros', {
   data:         'CheckAutoload',
   cssId:        'CheckAutoload',
   unicode:      'CheckAutoload',
+  U:            'CheckAutoload',
+  char:         'CheckAutoload',
 
   ref:          ['HandleRef', false],
   eqref:        ['HandleRef', true],
