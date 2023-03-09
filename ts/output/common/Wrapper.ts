@@ -591,7 +591,8 @@ export class CommonWrapper<
           line.R = this.getBBox().R;
         }
       } else {
-        this.lineBBox[i] = LineBBox.from(this.getOuterBBox(), this.linebreakOptions.lineleading);
+        const obox = this.getOuterBBox();
+        this.lineBBox[i] = LineBBox.from(obox, this.linebreakOptions.lineleading);
       }
     }
     return this.lineBBox[i];
@@ -722,7 +723,7 @@ export class CommonWrapper<
    * @param {boolean} bubble   True to invalidate parent BBoxes
    */
   public invalidateBBox(bubble: boolean = true) {
-    if (this.bboxComputed) {
+    if (this.bboxComputed || this._breakCount >= 0) {
       this.bboxComputed = false;
       this.lineBBox = [];
       this._breakCount = -1;
