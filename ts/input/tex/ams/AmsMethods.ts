@@ -115,8 +115,8 @@ AmsMethods.AlignAt = function(parser: TexParser, begin: StackItem,
  */
 AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: boolean) {
   // @test Shove*, Multline
-  parser.Push(begin);
   ParseUtil.checkEqnEnv(parser);
+  parser.Push(begin);
   const item = parser.itemFactory.create('multline', numbered, parser.stack) as ArrayItem;
   item.arraydef = {
     displaystyle: true,
@@ -170,8 +170,8 @@ AmsMethods.XalignAt = function(parser: TexParser, begin: StackItem,
 AmsMethods.FlalignArray = function(parser: TexParser, begin: StackItem, numbered: boolean,
                                   padded: boolean, center: boolean, align: string,
                                   width: string, zeroWidthLabel: boolean = false) {
-  parser.Push(begin);
   ParseUtil.checkEqnEnv(parser);
+  parser.Push(begin);
   align = align
     .split('')
     .join(' ')

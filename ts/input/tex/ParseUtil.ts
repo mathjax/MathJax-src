@@ -535,12 +535,18 @@ namespace ParseUtil {
   /**
    *  Check for bad nesting of equation environments
    */
-  export function checkEqnEnv(parser: TexParser) {
-    if (parser.stack.global.eqnenv) {
-      // @test ErroneousNestingEq
+  export function checkEqnEnv(parser: TexParser, nestable: boolean = true) {
+    const top = parser.stack.Top();
+    const first = top.First;
+    //
+    // The gather environment can include align and others, but only one level deep.
+    //
+    if (top.getProperty('nestable') && nestable && !first) {
+      return;
+    }
+    if (!top.isKind('start') || first) {
       throw new TexError('ErroneousNestingEq', 'Erroneous nesting of equation structures');
     }
-    parser.stack.global.eqnenv = true;
   }
 
   /**
