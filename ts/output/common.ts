@@ -222,14 +222,6 @@ export abstract class CommonOutputJax<
   constructor(options: OptionList = null,
               defaultFactory: typeof CommonWrapperFactory = null,
               defaultFont: FC = null) {
-    //
-    // Backward compatibility with old usage of font option
-    //
-    if (options.font && typeof(options.font) !== 'string') {
-      options.fontData = options.font;
-      options.font = 'tex';
-    }
-    //
     const [fontClass, font] = (options.fontData instanceof FontData ?
                                [options.fontData.constructor as typeof FontData, options.fontData] :
                                [options.fontData || defaultFont, null]);
