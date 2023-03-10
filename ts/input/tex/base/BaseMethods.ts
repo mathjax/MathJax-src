@@ -85,7 +85,7 @@ BaseMethods.Close = function(parser: TexParser, _c: string) {
  * @param {string} c The parsed character.
  */
 BaseMethods.Bar = function(parser: TexParser, c: string) {
-  parser.Push(parser.create('token', 'mo', {texClass: TEXCLASS.ORD}, c));
+  parser.Push(parser.create('token', 'mo', {stretchy: false, texClass: TEXCLASS.ORD}, c));
 }
 
 
