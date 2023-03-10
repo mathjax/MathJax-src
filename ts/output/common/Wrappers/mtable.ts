@@ -899,9 +899,10 @@ export function CommonMtableMixin<
      * @override
      */
     public adjustWideTable() {
-      if (this.node.attributes.get('width') !== 'auto') return;
-      const sep = this.length2em(this.node.attributes.get('minlabelspacing'));
-      const W = this.containerWidth - this.getTableData().L - sep;
+      const attributes = this.node.attributes;
+      if (attributes.get('width') !== 'auto') return;
+      const [pad, align] = this.getPadAlignShift(attributes.get('side') as string);
+      const W = Math.max(this.containerWidth / 10, this.containerWidth - pad - (align === 'center' ? pad : 0));
       this.naturalWidth() > W && this.adjustColumnWidths(W);
     }
 
