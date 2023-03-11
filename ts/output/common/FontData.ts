@@ -323,7 +323,7 @@ export type FontExtensionData<C extends CharOptions, D extends DelimiterData> = 
  * Merge options into an object or array.
  */
 export function mergeOptions(dst: OptionList, src: OptionList) {
-  return defaultOptions([dst], [src])[0];
+  return (src ? defaultOptions([dst], [src])[0] : dst);
 }
 
 /****************************************************************************/
@@ -699,7 +699,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    */
   public static defineDynamicFiles(dynamicFiles: DynamicFileDef[], extension: string = ''): DynamicFileList {
     const list: DynamicFileList = {};
-    (dynamicFiles || []).map(([file, variants, delimiters]) => {
+    (dynamicFiles || []).forEach(([file, variants, delimiters]) => {
       list[file] = {
         extension, file, variants, delimiters: delimiters || [],
         promise: null, failed: false, setup: ((_font) => { list[file].failed = true; })
@@ -734,7 +734,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * @param {DelimiterMap<DelimiteData>} delimiters   The delimiter list to modify
    * @param {string[]} keys                           The ids of the delimiters to check
    * @param {number} sizeN                            The original number of size variants
-   * @param {number} stretcN                          The original number ot stretch variants
+   * @param {number} stretchN                         The original number ot stretch variants
    */
   public static adjustDelimiters(delimiters: DelimiterMap<DelimiterData>, keys: string[],
                                  sizeN: number, stretchN: number) {
@@ -752,7 +752,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   }
 
   /**
-   * @param {number[]} list   The list of nunbers to adjust
+   * @param {number[]} list   The list of numbers to adjust
    * @param {number} N        The pivot number
    */
   protected static adjustArrayIndices(list: number[], N: number) {
@@ -786,9 +786,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
       ['sizeVariants', 'defaultSizeVariants'],
       ['stretchVariants', 'defaultStretchVariants']
     ] as [keyof FontExtensionData<CharOptions, DelimiterData>, keyof typeof FontData][]) {
-      if (data[src]) {
-        this[dst] = mergeOptions(this[dst] as OptionList, data[src] as OptionList);
-      }
+      mergeOptions(this[dst] as OptionList, data[src] as OptionList);
     }
     if (data.delimiters) {
       Object.assign(this.defaultDelimiters, data.delimiters);
@@ -837,16 +835,12 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     };
     this.CLASS.dynamicExtensions.set(data.name, dynamicFont);
 
-    data.options && defaultOptions(this.options, data.options);
-    data.parameters && defaultOptions(this.params, data.parameters);
-    if (data.sizeVariants) {
-      this.sizeVariants = mergeOptions(this.sizeVariants, data.sizeVariants);
-    }
-    if (data.stretchVariants) {
-      this.stretchVariants = mergeOptions(this.stretchVariants, data.stretchVariants);
-    }
-    data.cssFonts && this.defineCssFonts(mergeOptions([], data.cssFonts));
-    data.variants && this.createVariants(mergeOptions([], data.variants));
+    defaultOptions(this.options, data.options || {});
+    defaultOptions(this.params, data.parameters || {});
+    this.sizeVariants = mergeOptions(this.sizeVariants, data.sizeVariants);
+    this.stretchVariants = mergeOptions(this.stretchVariants, data.stretchVariants);
+    this.defineCssFonts(mergeOptions([], data.cssFonts));
+    this.createVariants(mergeOptions([], data.variants));
     if (data.delimiters) {
       this.defineDelimiters(mergeOptions([], data.delimiters));
       this.CLASS.adjustDelimiters(this.delimiters, Object.keys(data.delimiters),
@@ -855,9 +849,9 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     for (const name of Object.keys(data.chars || {})) {
       this.defineChars(name, data.chars[name]);
     }
-    data.accentMap && this.defineRemap('accent', data.accentMap);
-    data.moMap && this.defineRemap('mo', data.moMap);
-    data.mnMap && this.defineRemap('mn', data.mnMap);
+    this.defineRemap('accent', data.accentMap);
+    this.defineRemap('mo', data.moMap);
+    this.defineRemap('mn', data.mnMap);
     if (data.ranges) {
       this.defineDynamicCharacters(dynamicFont.files);
     }
@@ -1019,10 +1013,12 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * @param {RemapMap} remap  The characters to remap
    */
   public defineRemap(name: string, remap: RemapMap) {
-    if (!this.remapChars.hasOwnProperty(name)) {
-      this.remapChars[name] = {};
+    if (remap) {
+      if (!this.remapChars.hasOwnProperty(name)) {
+        this.remapChars[name] = {};
+      }
+      Object.assign(this.remapChars[name], remap);
     }
-    Object.assign(this.remapChars[name], remap);
   }
 
   /**
