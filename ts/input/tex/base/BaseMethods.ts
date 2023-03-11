@@ -41,6 +41,7 @@ import {em} from '../../../util/lengths.js';
 import {entities} from '../../../util/Entities.js';
 import {lookup} from '../../../util/Options.js';
 import {ColumnState} from '../ColumnParser.js';
+import {replaceUnicode} from '../../../util/string.js';
 
 
 // Namespace
@@ -859,7 +860,7 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
   if (keep.length) {
     def['mjx-keep-attrs'] = keep.join(' ');
   }
-  const textNode = parser.create('text', text);
+  const textNode = parser.create('text', replaceUnicode(text));
   node.appendChild(textNode);
   NodeUtil.setProperties(node, def);
   parser.Push(node);
