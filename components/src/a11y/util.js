@@ -1,8 +1,8 @@
 import {Loader} from '../../../js/components/loader.js';
 import '../input/mml/init.js';
-import {Sre} from '../a11y/sre/sre.js';
-import '../a11y/semantic-enrich/semantic-enrich.js';
-import '../a11y/explorer/explorer.js';
+import {Sre} from './sre/sre.js';
+import './semantic-enrich/semantic-enrich.js';
+import './explorer/explorer.js';
 import MathMaps from '../../../js/a11y/mathmaps.js';
 import base from 'speech-rule-engine/lib/mathmaps/base.json';
 import en from 'speech-rule-engine/lib/mathmaps/en.json';

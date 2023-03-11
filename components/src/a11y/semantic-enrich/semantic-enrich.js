@@ -5,8 +5,6 @@ import Sre from '../../../../js/a11y/sre.js';
 import {EnrichHandler} from '../../../../js/a11y/semantic-enrich.js';
 import {MathML} from '../../../../js/input/mathml.js';
 
-export {Sre};
-
 if (MathJax.loader) {
   combineDefaults(MathJax.config.loader, 'a11y/semantic-enrich', {checkReady: () => Sre.sreReady()});
 }
