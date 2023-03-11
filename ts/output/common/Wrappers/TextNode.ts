@@ -209,8 +209,12 @@ export function CommonTextNodeMixin<
      */
     protected updateBBox(bbox: BBox, h: number, d: number, w: number) {
       bbox.w += w;
-      if (h > bbox.h) bbox.h = h;
-      if (d > bbox.d) bbox.d = d;
+      if (h > bbox.h) {
+        bbox.h = h;
+      }
+      if (d > bbox.d) {
+        bbox.d = d;
+      }
     }
 
 
