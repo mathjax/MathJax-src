@@ -382,7 +382,7 @@ CommonOutputJax<
       const forced = !!(mo && mo.node.getProperty('forcebreak'));
       if (forced && mo.node.attributes.get('linebreakstyle') === 'after') {
         const k = mml.parent.node.childIndex(mml.node) + 1;
-        const next = mml.parent.childNodes[k+1];
+        const next = mml.parent.childNodes[k + 1];
         const dimen = (next ? next.getLineBBox(0).originalL : 0);
         if (dimen) {
           this.addInlineBreak(nsvg, dimen, forced);
