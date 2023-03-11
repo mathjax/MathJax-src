@@ -1649,7 +1649,6 @@ BaseMethods.Equation = function (
   numbered: boolean,
   display: boolean = true
 ) {
-  ParseUtil.checkEqnEnv(parser);
   parser.configuration.mathItem.display = display;
   parser.stack.env.display = display;
   parser.Push(begin);
@@ -1800,4 +1799,3 @@ BaseMethods.MathChoice = function(parser: TexParser, name: string) {
 
 
 export default BaseMethods;
-
