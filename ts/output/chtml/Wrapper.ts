@@ -281,9 +281,9 @@ CommonWrapper<
       const [dimen, name, margin, i] = data as [number, string, string, number];
       if (dimen) {
         const space = this.em(dimen);
-        if (breakable) {
+        if (breakable && name === 'space') {
           const node = adaptor.node('mjx-break', SPACE[space] ? {size: SPACE[space]} :
-                                    {style: {'font-size': (dimen * 400).toFixed(1) + '%'}});
+                                    {style: `letter-spacing: ${this.em(dimen - 1)}`});
           adaptor.insert(node, this.dom[i]);
         } else {
           if (SPACE[space]) {
@@ -292,8 +292,6 @@ CommonWrapper<
             adaptor.setStyle(this.dom[i], margin, space);
           }
         }
-      } else if (breakable && name == 'space') {
-        adaptor.insert(adaptor.node('mjx-break', {style: {'font-size': 0}}), this.dom[i]);
       }
     }
   }

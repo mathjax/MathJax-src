@@ -108,35 +108,39 @@ export const SvgMath = (function <N, T, D>(): SvgMathClass<N, T, D> {
         'justify-content': 'right'
       },
       //
-      //  For inline breakpoints, use a scaled space and make it breakable
-      //    (The space is .25em, so make everything 4 times the usual.
-      //     This will need to be adjusted when we do other fonts: we will
-      //     need one where the space is 1em)
+      //  For inline breakpoints, use a space that is 1em width, make it breakable,
+      //    and then set the letter-spacing to make the sace the proper size.
       //
-      'mjx-break::after': {
+      'mjx-container[jax="SVG"] mjx-break::after': {
         content: '" "',
         'white-space': 'normal',
-      },
-      'mjx-break': {
+        'line-height': '0',
         'font-family': 'MJX-ZERO'
       },
       'mjx-break[size="1"]': {
-        'font-size': '11.1%'
+        'letter-spacing': (.111 - 1) + 'em'
       },
       'mjx-break[size="2"]': {
-        'font-size': '16.7%'
+        'letter-spacing': (.167 - 1) + 'em'
       },
       'mjx-break[size="3"]': {
-        'font-size': '22.2%'
+        'letter-spacing': (.222 - 1) + 'em'
       },
       'mjx-break[size="4"]': {
-        'font-size': '27.8%'
+        'letter-spacing': (.278 - 1) + 'em'
       },
       'mjx-break[size="5"]': {
-        'font-size': '33.3%'
+        'letter-spacing': (.333 - 1) + 'em'
       },
-      'mjx-break[newline]::after': {
-        display: 'block'
+      'mjx-container[jax="SVG"] mjx-break[newline]::before': {
+        'white-space': 'pre',
+        content: '"\\A"'
+      },
+      'mjx-break[newline] + svg[width="0.054ex"]': {
+        'margin-right': '-1px'
+      },
+      'mjx-break[prebreak]': {
+        'letter-spacing': '-.999em'
       },
       '@font-face /* zero */': {
         'font-family': 'MJX-ZERO',
