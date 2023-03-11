@@ -203,14 +203,14 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
     /**
      * @override
      */
-    public toCHTML(parent: N) {
+    public toCHTML(parents: N[]) {
       //
       //  Create the rows inside an mjx-itable (which will be used to center the table on the math axis)
       //
-      const chtml = this.standardChtmlNode(parent);
-      this.adaptor.append(chtml, this.html('mjx-table', {}, [this.itable]));
+      const chtml = this.standardChtmlNodes(parents);
+      this.adaptor.append(chtml[0], this.html('mjx-table', {}, [this.itable]));
       for (const child of this.childNodes) {
-        child.toCHTML(this.itable);
+        child.toCHTML([this.itable]);
       }
       //
       //  Pad the rows of the table, if needed
@@ -238,9 +238,9 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
      */
     protected shiftColor() {
       const adaptor = this.adaptor;
-      const color = adaptor.getStyle(this.dom, 'backgroundColor');
+      const color = adaptor.getStyle(this.dom[0], 'backgroundColor');
       if (color) {
-        adaptor.setStyle(this.dom, 'backgroundColor', '');
+        adaptor.setStyle(this.dom[0], 'backgroundColor', '');
         adaptor.setStyle(this.itable, 'backgroundColor', color);
       }
     }
@@ -267,7 +267,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
      */
     protected handleColumnSpacing() {
       const scale = (this.childNodes[0] ? 1 / this.childNodes[0].getBBox().rscale : 1);
-      const spacing = this.getEmHalfSpacing(this.fSpace[0], this.cSpace, scale);
+      const spacing = this.getEmHalfSpacing([this.fSpace[0], this.fSpace[2]], this.cSpace, scale);
       const frame = this.frame;
       //
       //  For each row...
@@ -287,7 +287,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
           //  Set the style for the spacing, if it is needed, and isn't the
           //  default already set in the mtd styles
           //
-          const styleNode = (cell ? cell.dom : this.adaptor.childNodes(row.dom)[i] as N);
+          const styleNode = (cell ? cell.dom[0] : this.adaptor.childNodes(row.dom[0])[i] as N);
           if ((i > 1 && lspace !== '0.4em') || (frame && i === 1)) {
             this.adaptor.setStyle(styleNode, 'paddingLeft', lspace);
           }
@@ -306,7 +306,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
       const lines = this.getColumnAttributes('columnlines');
       for (const row of this.childNodes) {
         let i = 0;
-        for (const cell of this.adaptor.childNodes(row.dom).slice(1) as N[]) {
+        for (const cell of this.adaptor.childNodes(row.dom[0]).slice(1) as N[]) {
           const line = lines[i++];
           if (line === 'none') continue;
           this.adaptor.setStyle(cell, 'borderLeft', '.07em ' + line);
@@ -320,7 +320,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
     protected handleColumnWidths() {
       for (const row of this.childNodes) {
         let i = 0;
-        for (const cell of this.adaptor.childNodes(row.dom) as N[]) {
+        for (const cell of this.adaptor.childNodes(row.dom[0]) as N[]) {
           const w = this.cWidths[i++];
           if (w !== null) {
             const width = (typeof w === 'number' ? this.em(w) : w);
@@ -340,7 +340,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
      */
     protected handleRowSpacing() {
       const scale = (this.childNodes[0] ? 1 / this.childNodes[0].getBBox().rscale : 1);
-      const spacing = this.getEmHalfSpacing(this.fSpace[1], this.rSpace, scale);
+      const spacing = this.getEmHalfSpacing([this.fSpace[1], this.fSpace[1]], this.rSpace, scale);
       const frame = this.frame;
       //
       //  For each row...
@@ -361,10 +361,10 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
           //  default already set in the mtd styles
           //
           if ((i > 1 && tspace !== '0.215em') || (frame && i === 1)) {
-            this.adaptor.setStyle(cell.dom, 'paddingTop', tspace);
+            this.adaptor.setStyle(cell.dom[0], 'paddingTop', tspace);
           }
           if ((i < this.numRows && bspace !== '0.215em') || (frame && i === this.numRows)) {
-            this.adaptor.setStyle(cell.dom, 'paddingBottom', bspace);
+            this.adaptor.setStyle(cell.dom[0], 'paddingBottom', bspace);
           }
         }
       }
@@ -380,7 +380,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
       for (const row of this.childNodes.slice(1)) {
         const line = lines[i++];
         if (line === 'none') continue;
-        for (const cell of this.adaptor.childNodes(row.dom) as N[]) {
+        for (const cell of this.adaptor.childNodes(row.dom[0]) as N[]) {
           this.adaptor.setStyle(cell, 'borderTop', '.07em ' + line);
         }
       }
@@ -420,7 +420,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
      * @param {number} HD          The height to be set for the row
      */
     protected setRowHeight(row: ChtmlWrapper<N, T, D>, HD: number) {
-      this.adaptor.setStyle(row.dom, 'height', this.em(HD));
+      this.adaptor.setStyle(row.dom[0], 'height', this.em(HD));
     }
 
     /**
@@ -429,7 +429,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
      *
      * @param {ChtmlWrapper} row   The row to be set
      * @param {number} HD          The total height+depth for the row
-     * @param {number] D           The new depth for the row
+     * @param {number} D           The new depth for the row
      */
     protected setRowBaseline(row: ChtmlWrapper<N, T, D>, HD: number, D: number) {
       const ralign = row.node.attributes.get('rowalign') as string;
@@ -448,14 +448,14 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
      * @param {ChtmlWrapper} cell  The cell to modify
      * @param {string} ralign      The alignment of the row
      * @param {number} HD          The total height+depth for the row
-     * @param {number] D           The new depth for the row
+     * @param {number} D           The new depth for the row
      * @return {boolean}           True if no other cells in this row need to be processed
      */
     protected setCellBaseline(cell: ChtmlWrapper<N, T, D>, ralign: string, HD: number, D: number): boolean {
       const calign = cell.node.attributes.get('rowalign');
       if (calign === 'baseline' || calign === 'axis') {
         const adaptor = this.adaptor;
-        const child = adaptor.lastChild(cell.dom) as N;
+        const child = adaptor.lastChild(cell.dom[0]) as N;
         adaptor.setStyle(child, 'height', this.em(HD));
         adaptor.setStyle(child, 'verticalAlign', this.em(-D));
         const row = cell.parent;
@@ -481,21 +481,22 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
      */
     protected handleWidth() {
       const adaptor = this.adaptor;
+      const dom = this.dom[0]
       const {w, L, R} = this.getBBox();
-      adaptor.setStyle(this.dom, 'minWidth', this.em(L + w + R));
+      adaptor.setStyle(dom, 'minWidth', this.em(L + w + R));
       let W = this.node.attributes.get('width') as string;
       if (isPercent(W)) {
-        adaptor.setStyle(this.dom, 'width', '');
-        adaptor.setAttribute(this.dom, 'width', 'full');
+        adaptor.setStyle(dom, 'width', '');
+        adaptor.setAttribute(dom, 'width', 'full');
       } else if (!this.hasLabels) {
         if (W === 'auto') return;
         W = this.em(this.length2em(W) + 2 * this.fLine);
       }
-      const table = adaptor.firstChild(this.dom) as N;
+      const table = adaptor.firstChild(dom) as N;
       adaptor.setStyle(table, 'width', W);
       adaptor.setStyle(table, 'minWidth', this.em(w));
       if (L || R) {
-        adaptor.setStyle(this.dom, 'margin', '');
+        adaptor.setStyle(dom, 'margin', '');
         const style = (this.node.attributes.get('data-width-includes-label') ? 'padding' : 'margin');
         if (L === R) {
           adaptor.setStyle(table, style, '0 ' + this.em(R));
@@ -511,14 +512,15 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
      */
     protected handleAlign() {
       const [align, row] = this.getAlignmentRow();
+      const dom = this.dom[0];
       if (row === null) {
         if (align !== 'axis') {
-          this.adaptor.setAttribute(this.dom, 'align', align);
+          this.adaptor.setAttribute(dom, 'align', align);
         }
       } else {
         const y = this.getVerticalPosition(row, align);
-        this.adaptor.setAttribute(this.dom, 'align', 'top');
-        this.adaptor.setStyle(this.dom, 'verticalAlign', this.em(y));
+        this.adaptor.setAttribute(dom, 'align', 'top');
+        this.adaptor.setStyle(dom, 'verticalAlign', this.em(y));
       }
     }
 
@@ -528,7 +530,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
     protected handleJustify() {
       const align = this.getAlignShift()[0];
       if (align !== 'center') {
-        this.adaptor.setAttribute(this.dom, 'justify', align);
+        this.adaptor.setAttribute(this.dom[0], 'justify', align);
       }
     }
 
@@ -546,7 +548,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
       //  Set the side for the labels
       //
       const side = attributes.get('side') as string;
-      adaptor.setAttribute(this.dom, 'side', side);
+      adaptor.setAttribute(this.dom[0], 'side', side);
       adaptor.setAttribute(labels, 'align', side);
       adaptor.setStyle(labels, side, '0');
       //
@@ -557,7 +559,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
       //  Handle indentation
       //
       if (shift) {
-        const table = adaptor.firstChild(this.dom) as N;
+        const table = adaptor.firstChild(this.dom[0]) as N;
         this.setIndent(table, align, shift);
       }
       //
@@ -581,7 +583,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
           width: (isPercent(W) ? 'calc(' + W + ' + ' + this.em(L + R) + ')' : this.em(L + w + R))
         };
       }
-      this.adaptor.append(this.dom, this.html('mjx-labels', styles, [this.labels]));
+      this.adaptor.append(this.dom[0], this.html('mjx-labels', styles, [this.labels]));
       return [align, shift] as [string, number];
     }
 

@@ -115,11 +115,11 @@ export const ChtmlMtr = (function <N, T, D>(): ChtmlMtrClass<N, T, D> {
     /**
      * @override
      */
-    public toCHTML(parent: N) {
-      super.toCHTML(parent);
+    public toCHTML(parents: N[]) {
+      super.toCHTML(parents);
       const align = this.node.attributes.get('rowalign') as string;
       if (align !== 'baseline') {
-        this.adaptor.setAttribute(this.dom, 'rowalign', align);
+        this.adaptor.setAttribute(this.dom[0], 'rowalign', align);
       }
     }
 
@@ -209,9 +209,9 @@ export const ChtmlMlabeledtr = (function <N, T, D>(): ChtmlMlabeledtrClass<N, T,
     /**
      * @override
      */
-    public toCHTML(parent: N) {
-      super.toCHTML(parent);
-      const child = this.adaptor.firstChild(this.dom) as N;
+    public toCHTML(parents: N[]) {
+      super.toCHTML(parents);
+      const child = this.adaptor.firstChild(this.dom[0]) as N;
       if (child) {
         //
         // Remove label and put it into the labels box inside a row

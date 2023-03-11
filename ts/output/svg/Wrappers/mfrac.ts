@@ -94,8 +94,9 @@ export const SvgMfrac = (function <N, T, D>(): SvgMfracClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
-      this.standardSvgNode(parent);
+    public toSVG(parents: N[]) {
+      if (this.toEmbellishedSVG(parents)) return;
+      this.standardSvgNodes(parents);
       const {linethickness, bevelled} = this.node.attributes.getList('linethickness', 'bevelled');
       const display = this.isDisplay();
       if (bevelled) {
@@ -138,7 +139,7 @@ export const SvgMfrac = (function <N, T, D>(): SvgMfracClass<N, T, D> {
       den.toSVG(svg);
       den.place(dx, a - T - Math.max(dbox.h * dbox.rscale, v));
 
-      this.adaptor.append(svg, this.svg('rect', {
+      this.adaptor.append(svg[0], this.svg('rect', {
         width: this.fixed(W + 2 * d), height: this.fixed(t),
         x: this.fixed(pad), y: this.fixed(a - t / 2)
       }));

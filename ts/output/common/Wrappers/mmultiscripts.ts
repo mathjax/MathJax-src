@@ -27,6 +27,7 @@ import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '
 import {CommonOutputJax} from '../../common.js';
 import {CommonMsubsup, CommonMsubsupClass} from './msubsup.js';
 import {BBox} from '../../../util/BBox.js';
+import {LineBBox} from '../LineBBox.js';
 
 /*****************************************************************/
 
@@ -149,6 +150,19 @@ export interface CommonMmultiscripts<
    * @param {BBox} bbox  The bounding box from which to get the (scaled) width, height, and depth
    */
   getScaledWHD(bbox: BBox): void;
+
+  /**
+   * @return {[number, number]}  The vertical shifts for super and subscripts
+   */
+  getCombinedUV(): number[];
+
+  /**
+   * @param {BBox} bbox   The bbox to adjust
+   * @param {number} u    The vertical shift for superscripts
+   * @param {number} v    The vertical shift for subscripts
+   * @return {BBox}       The modified bbox
+   */
+  addPrescripts(bbox: BBox, u: number, v: number): BBox;
 
 }
 
@@ -331,6 +345,47 @@ export function CommonMmultiscriptsMixin<
       return [w * rscale, h * rscale, d * rscale];
     }
 
+    /**
+     * @override
+     */
+    public getCombinedUV() {
+      //
+      // Get the bounding boxes, and combine the pre- and post-scripts
+      //  to get a common offset for both
+      //
+      const data = this.scriptData;
+      const sub = this.combinePrePost(data.sub, data.psub);
+      const sup = this.combinePrePost(data.sup, data.psup);
+      return this.getUVQ(sub, sup);
+    }
+
+    /**
+     * @override
+     */
+    public addPrescripts(bbox: BBox, u: number, v: number) {
+      const data = this.scriptData;
+      if (data.numPrescripts) {
+        const scriptspace = this.font.params.scriptspace;
+        bbox.combine(data.psup, scriptspace, u);
+        bbox.combine(data.psub, scriptspace, v);
+      }
+      return bbox;
+    }
+
+    /**
+     * @override
+     */
+    public addPostscripts(bbox: BBox, u: number, v: number) {
+      const data = this.scriptData;
+      if (data.numScripts) {
+        const x = bbox.w;
+        bbox.combine(data.sup, x, u);
+        bbox.combine(data.sub, x, v);
+        bbox.w += this.font.params.scriptspace;
+      }
+      return bbox;
+    }
+
     /*************************************************************/
 
     /**
@@ -344,33 +399,39 @@ export function CommonMmultiscriptsMixin<
     /**
      * @override
      */
-    public computeBBox(bbox: BBox, recompute: boolean = false) {
-      //
-      // Get the bounding boxes, and combine the pre- and post-scripts
-      //  to get a common offset for both
-      //
-      const scriptspace = this.font.params.scriptspace;
-      const data = this.scriptData;
-      const sub = this.combinePrePost(data.sub, data.psub);
-      const sup = this.combinePrePost(data.sup, data.psup);
-      const [u, v] = this.getUVQ(sub, sup);
+    public appendScripts(bbox: BBox) {
       //
       //  Lay out the pre-scripts, then the base, then the post-scripts
       //
       bbox.empty();
-      if (data.numPrescripts) {
-        bbox.combine(data.psup, scriptspace, u);
-        bbox.combine(data.psub, scriptspace, v);
-      }
-      bbox.append(data.base);
-      if (data.numScripts) {
-        const w = bbox.w;
-        bbox.combine(data.sup, w, u);
-        bbox.combine(data.sub, w, v);
-        bbox.w += scriptspace;
-      }
+      const [u, v] = this.getCombinedUV();
+      this.addPrescripts(bbox, u, v);
+      bbox.append(this.scriptData.base);
+      this.addPostscripts(bbox, u, v);
       bbox.clean();
-      this.setChildPWidths(recompute);
+      return bbox;
+    }
+
+    /**
+     * @override
+     */
+    protected computeLineBBox(i: number) {
+      const n = this.baseChild.breakCount;
+      const cbox = this.baseChild.getLineBBox(i).copy();
+      let bbox = cbox;
+      const [u, v] = this.getCombinedUV();
+      if (i === 0) {
+        bbox = LineBBox.from(this.addPrescripts(BBox.zero(), u, v), this.linebreakOptions.lineleading);
+        bbox.append(cbox);
+        this.addLeftBorders(bbox);
+        bbox.L = this.bbox.L;
+      } else if (i === n) {
+        bbox = this.addPostscripts(bbox, u, v) as LineBBox;
+        this.addRightBorders(bbox);
+        bbox.R = this.bbox.R;
+      }
+      this.addMiddleBorders(bbox);
+      return bbox;
     }
 
     /**
@@ -379,12 +440,12 @@ export function CommonMmultiscriptsMixin<
     public getUVQ(subbox: BBox, supbox: BBox) {
       if (!this.UVQ) {
         let [u, v, q] = [0, 0, 0];
-        if (subbox.h === 0 && subbox.d === 0) {
+        if (subbox.w === 0) {
           //
           //  Use placement for superscript only
           //
           u = this.getU();
-        } else if (supbox.h === 0 && supbox.d === 0) {
+        } else if (supbox.w === 0) {
           //
           //  Use placement for subsccript only
           //

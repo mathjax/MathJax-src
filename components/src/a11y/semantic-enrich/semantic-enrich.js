@@ -10,5 +10,5 @@ if (MathJax.loader) {
 }
 
 if (MathJax.startup) {
-  MathJax.startup.extendHandler(handler => EnrichHandler(handler, new MathML()));
+  MathJax.startup.extendHandler(handler => EnrichHandler(handler, new MathML({allowHtmlInTokenNodes: true})));
 }

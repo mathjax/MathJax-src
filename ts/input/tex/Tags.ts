@@ -145,6 +145,13 @@ export interface Tags {
   formatTag(tag: string): string;
 
   /**
+   * How to format references to tags.
+   * @param {string} tag The tag string.
+   * @return {string} The formatted numbered tag.
+   */
+  formatRef(tag: string): string;
+
+  /**
    * How to format URLs for references.
    * @param {string} id The reference id.
    * @param {string} base The base URL in the reference.
@@ -375,6 +382,13 @@ export class AbstractTags implements Tags {
   }
 
   /**
+   * @override
+   */
+  public formatRef(tag: string) {
+    return this.formatTag(tag);
+  }
+
+  /**
    * How to format ids for labelling equations.
    * @param {string} id The unique part of the id (e.g., label or number).
    * @return {string} The formatted id.
@@ -541,8 +555,10 @@ export class AbstractTags implements Tags {
     }
     let mml = new TexParser('\\text{' + this.currentTag.tagFormat + '}', {},
                             this.configuration).mml();
-    return this.configuration.nodeFactory.create('node', 'mtd', [mml],
-                                                 {id: this.currentTag.tagId});
+    return this.configuration.nodeFactory.create('node', 'mtd', [mml], {
+      id: this.currentTag.tagId,
+      rowalign: this.configuration.options.tagAlign
+    });
   }
 
 }
@@ -629,7 +645,9 @@ export namespace TagsFactory {
     // If false it uses the actual number N that is displayed: mjx-eqn:N
     useLabelIds: true,
     // Set to true in order to prevent error messages for duplicate label ids
-    ignoreDuplicateLabels: false
+    ignoreDuplicateLabels: false,
+    // The rowalign value to use for tag cells.
+    tagAlign: 'baseline'
   };
 
 

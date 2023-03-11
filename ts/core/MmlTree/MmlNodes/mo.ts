@@ -53,7 +53,7 @@ export class MmlMo extends AbstractMmlTokenNode {
     movablelimits: false,
     accent: false,
     linebreak: 'auto',
-    lineleading: '1ex',
+    lineleading: '100%',
     linebreakstyle: 'before',
     indentalign: 'auto',
     indentshift: '0',
@@ -195,13 +195,6 @@ export class MmlMo extends AbstractMmlTokenNode {
   }
 
   /**
-   * @return {boolean}  Is <mo> marked as an explicit linebreak?
-   */
-  public get hasNewLine(): boolean {
-    return this.attributes.get('linebreak') === 'newline';
-  }
-
-  /**
    * @return {MmlNode}  The node that is the outermost embellished operator
    *                    with this node as its core
    */
@@ -228,7 +221,7 @@ export class MmlMo extends AbstractMmlTokenNode {
       return (parent.coreMO() as MmlMo).getText();
     }
     while ((((parent.isKind('mrow') ||
-              (parent.isKind('TeXAtom') && parent.texClass !== TEXCLASS.VCENTER) ||
+              (parent.isKind('TeXAtom') && parent.texClass < TEXCLASS.VCENTER) ||
               parent.isKind('mstyle') ||
               parent.isKind('mphantom')) && parent.childNodes.length === 1) ||
             parent.isKind('munderover')) && parent.childNodes[0]) {
@@ -465,8 +458,11 @@ export class MmlMo extends AbstractMmlTokenNode {
   protected checkMathAccent(mo: string) {
     const parent = this.Parent;
     if (this.getProperty('mathaccent') !== undefined || !parent || !parent.isKind('munderover')) return;
-    const base = parent.childNodes[0];
+    const [base, under, over] = parent.childNodes;
     if (base.isEmbellished && base.coreMO() === this) return;
+    const isUnder = !!(under && under.isEmbellished && under.coreMO() === this);
+    const isOver = !!(over && over.isEmbellished && under.coreMO() === this);
+    if (!isUnder && !isOver) return;
     const MATHACCENT = (this.constructor as typeof MmlMo).mathaccents;
     if (mo.match(MATHACCENT)) {
       this.setProperty('mathaccent', true);

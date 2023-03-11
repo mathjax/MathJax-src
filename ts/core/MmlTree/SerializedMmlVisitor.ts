@@ -23,16 +23,11 @@
  */
 
 import {MmlVisitor} from './MmlVisitor.js';
-import {MmlNode, TextNode, XMLNode, TEXCLASS, TEXCLASSNAMES} from './MmlNode.js';
-import {MmlMi} from './MmlNodes/mi.js';
+import {MmlNode, TextNode, XMLNode} from './MmlNode.js';
 import {HtmlNode} from './MmlNodes/HtmlNode.js';
 
 
-export const DATAMJX = 'data-mjx-';
-
 export const toEntity = (c: string) => '&#x' + c.codePointAt(0).toString(16).toUpperCase() + ';';
-
-type PropertyList = {[name: string]: string};
 
 
 /*****************************************************************/
@@ -41,26 +36,6 @@ type PropertyList = {[name: string]: string};
  */
 
 export class SerializedMmlVisitor extends MmlVisitor {
-
-  /**
-   * Translations for the internal mathvariants
-   */
-  public static variants: PropertyList = {
-    '-tex-calligraphic':      'script',
-    '-tex-bold-calligraphic': 'bold-script',
-    '-tex-oldstyle':          'normal',
-    '-tex-bold-oldstyle':     'bold',
-    '-tex-mathit':            'italic'
-  };
-
-  /**
-   * Attributes to include on every element of a given kind
-   */
-  public static defaultAttributes: {[kind: string]: PropertyList} = {
-    math: {
-      xmlns: 'http://www.w3.org/1998/Math/MathML'
-    }
-  };
 
   /**
    * Convert the tree rooted at a particular node into a serialized MathML string
@@ -116,21 +91,6 @@ export class SerializedMmlVisitor extends MmlVisitor {
   }
 
   /**
-   * Visit a TeXAtom node. It is turned into a mrow with the appropriate TeX class
-   * indicator.
-   *
-   * @param {MmlNode} node  The TeXAtom to visit.
-   * @param {string} space  The amount of indenting for this node.
-   * @return {string}       The serialized contents of the mrow, properly indented.
-   */
-  public visitTeXAtomNode(node: MmlNode, space: string): string {
-    let children = this.childNodeMml(node, space + '  ', '\n');
-    let mml = space + '<mrow' + this.getAttributes(node) + '>' +
-      (children.match(/\S/) ? '\n' + children + space : '') + '</mrow>';
-    return mml;
-  }
-
-  /**
    * @param {MmlNode} node    The annotation node to visit
    * @param {string} space    The number of spaces to use for indentation
    * @return {string}         The serializied annotation element
@@ -153,7 +113,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
    * @return {string}         The serialization of the given node
    */
   public visitDefault(node: MmlNode, space: string): string {
-    let kind = node.kind;
+    let kind = this.getKind(node);
     let [nl, endspace] = (node.isToken || node.childNodes.length === 0 ? ['', ''] : ['\n', space]);
     const children = this.childNodeMml(node, space + '  ', nl);
     return space + '<' + kind + this.getAttributes(node) + '>'
@@ -181,61 +141,13 @@ export class SerializedMmlVisitor extends MmlVisitor {
    */
   protected getAttributes(node: MmlNode): string {
     const attr = [];
-    const defaults = (this.constructor as typeof SerializedMmlVisitor).defaultAttributes[node.kind] || {};
-    const attributes = Object.assign({},
-                                     defaults,
-                                     this.getDataAttributes(node),
-                                     node.attributes.getAllAttributes()
-                                    );
-    const variants = (this.constructor as typeof SerializedMmlVisitor).variants;
-    if (attributes.hasOwnProperty('mathvariant') && variants.hasOwnProperty(attributes.mathvariant)) {
-      attributes.mathvariant = variants[attributes.mathvariant];
-    }
+    const attributes = this.getAttributeList(node);
     for (const name of Object.keys(attributes)) {
       const value = String(attributes[name]);
       if (value === undefined) continue;
       attr.push(name + '="' + this.quoteHTML(value) + '"');
     }
     return attr.length ? ' ' + attr.join(' ') : '';
-  }
-
-  /**
-   * Create the list of data-mjx-* attributes
-   *
-   * @param {MmlNode} node        The node whose data list is to be generated
-   * @return {PropertyList}       The final class attribute list
-   */
-  protected getDataAttributes(node: MmlNode): PropertyList {
-    const data = {} as PropertyList;
-    const variant = node.attributes.getExplicit('mathvariant') as string;
-    const variants = (this.constructor as typeof SerializedMmlVisitor).variants;
-    variant && variants.hasOwnProperty(variant) && this.setDataAttribute(data, 'variant', variant);
-    node.getProperty('variantForm') && this.setDataAttribute(data, 'alternate', '1');
-    node.getProperty('pseudoscript') && this.setDataAttribute(data, 'pseudoscript', 'true');
-    node.getProperty('autoOP') === false && this.setDataAttribute(data, 'auto-op', 'false');
-    const scriptalign = node.getProperty('scriptalign') as string;
-    scriptalign && this.setDataAttribute(data, 'script-align', scriptalign);
-    const texclass = node.getProperty('texClass') as number;
-    if (texclass !== undefined) {
-      let setclass = true;
-      if (texclass === TEXCLASS.OP && node.isKind('mi')) {
-        const name = (node as MmlMi).getText();
-        setclass = !(name.length > 1 && name.match(MmlMi.operatorName));
-      }
-      setclass && this.setDataAttribute(data, 'texclass', texclass < 0 ? 'NONE' : TEXCLASSNAMES[texclass]);
-    }
-    node.getProperty('scriptlevel') && node.getProperty('useHeight') === false &&
-      this.setDataAttribute(data, 'smallmatrix', 'true');
-    return data;
-  }
-
-  /**
-   * @param {PropertyList} data  The class attribute list
-   * @param {string} name    The name for the data-mjx-name attribute
-   * @param {string} value   The value of the attribute
-   */
-  protected setDataAttribute(data: PropertyList, name: string, value: string) {
-    data[DATAMJX + name] = value;
   }
 
   /**

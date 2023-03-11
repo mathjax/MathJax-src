@@ -80,6 +80,14 @@ export function tagformatConfig(config: ParserConfiguration, jax: TeX<any, any, 
     /**
      * @override
      */
+    public formatRef(tag: string) {
+      const ref = jax.parseOptions.options.tagformat.ref;
+      return (ref ? ref(tag) : this.formatTag(tag));
+    }
+
+    /**
+     * @override
+     */
     public formatId(id: string) {
       return jax.parseOptions.options.tagformat.id(id);
     }
@@ -116,6 +124,7 @@ export const TagFormatConfiguration = Configuration.create(
       tagformat: {
         number: (n: number) => n.toString(),
         tag:    (tag: string) => '(' + tag + ')',
+        ref:    '',      // means use the tag function
         id:     (id: string) => 'mjx-eqn:' + id.replace(/\s/g, '_'),
         url:    (id: string, base: string) => base + '#' + encodeURIComponent(id),
       }

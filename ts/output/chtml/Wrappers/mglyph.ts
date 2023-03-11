@@ -100,8 +100,8 @@ export const ChtmlMglyph = (function <N, T, D>(): ChtmlMglyphClass<N, T, D> {
     /**
      * @override
      */
-    public toCHTML(parent: N) {
-      const chtml = this.standardChtmlNode(parent);
+    public toCHTML(parents: N[]) {
+      const chtml = this.standardChtmlNodes(parents);
       if (this.charWrapper) {
         (this.charWrapper as ChtmlTextNodeNTD<N, T, D>).toCHTML(chtml);
         return;
@@ -115,7 +115,7 @@ export const ChtmlMglyph = (function <N, T, D>(): ChtmlMglyphClass<N, T, D> {
         styles.verticalAlign = this.em(this.valign);
       }
       const img = this.html('img', {src: src, style: styles, alt: alt, title: alt});
-      this.adaptor.append(chtml, img);
+      this.adaptor.append(chtml[0], img);
     }
 
   };

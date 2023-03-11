@@ -28,6 +28,7 @@ import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDa
 import {CommonMsqrt, CommonMsqrtClass, CommonMsqrtMixin} from '../../common/Wrappers/msqrt.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMsqrt} from '../../../core/MmlTree/MmlNodes/msqrt.js';
+import {SvgMoNTD} from './mo.js';
 import {BBox} from '../../../util/BBox.js';
 
 /*****************************************************************/
@@ -99,12 +100,14 @@ export const SvgMsqrt = (function <N, T, D>(): SvgMsqrtClass<N, T, D> {
     /**
      * Add root HTML (overridden in mroot)
      *
-     * @param {N} ROOT           The container for the root
+     * @param {N[]} ROOT         The container for the root
      * @param {SvgWrapper} root  The wrapped MML root content
      * @param {BBox} sbox        The bounding box of the surd
      * @param {number} H         The height of the root as a whole
+     * @param {number}           The offset required by the root
      */
-    protected addRoot(_ROOT: N, _root: SvgWrapper<N, T, D>, _sbox: BBox, _H: number) {
+    protected addRoot(_ROOT: N[], _root: SvgWrapper<N, T, D>, _sbox: BBox, _H: number): number {
+      return 0;
     }
 
     /**************************************************************/
@@ -112,8 +115,8 @@ export const SvgMsqrt = (function <N, T, D>(): SvgMsqrtClass<N, T, D> {
     /**
      * @override
      */
-    public toSVG(parent: N) {
-      const surd = this.childNodes[this.surd];
+    public toSVG(parents: N[]) {
+      const surd = this.surd as SvgMoNTD<N, T, D>;
       const base = this.childNodes[this.base];
       const root = (this.root ? this.childNodes[this.root] : null);
       //
@@ -127,19 +130,19 @@ export const SvgMsqrt = (function <N, T, D>(): SvgMsqrtClass<N, T, D> {
       //
       //  Create the SVG structure for the root
       //
-      const SVG = this.standardSvgNode(parent);
-      const BASE = this.adaptor.append(SVG, this.svg('g')) as N;
+      const SVG = this.standardSvgNodes(parents);
+      const BASE = this.adaptor.append(SVG[0], this.svg('g')) as N;
       //
       //  Place the children
       //
-      this.addRoot(SVG, root, sbox, H);
+      const dx = this.addRoot(SVG, root, sbox, H);
       surd.toSVG(SVG);
-      surd.place(this.dx, H - sbox.h);
-      base.toSVG(BASE);
-      base.place(this.dx + sbox.w, 0);
-      this.adaptor.append(SVG, this.svg('rect', {
+      surd.place(dx, H - sbox.h);
+      base.toSVG([BASE]);
+      base.place(dx + sbox.w, 0);
+      this.adaptor.append(SVG[SVG.length - 1], this.svg('rect', {
         width: this.fixed(bbox.w), height: this.fixed(t),
-        x: this.fixed(this.dx + sbox.w), y: this.fixed(H - t)
+        x: this.fixed(dx + sbox.w), y: this.fixed(H - t)
       }));
     }
 

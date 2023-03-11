@@ -32,6 +32,7 @@ import TexParser from './TexParser.js';
 import {TexConstant} from './TexConstants.js';
 import {defaultOptions, OptionList} from '../../util/Options.js';
 import {ParserConfiguration} from './Configuration.js';
+import {ColumnParser} from './ColumnParser.js';
 
 const MATHVARIANT = TexConstant.Variant;
 
@@ -84,6 +85,11 @@ export default class ParseOptions {
    * The function returning the math-style variant
    */
   public mathStyle: (c: string, b?: boolean) => string;
+
+  /**
+   * The column parser
+   */
+  public columnParser: ColumnParser = new ColumnParser();
 
   /**
    * Storage area for parser-specific package data (indexed by package name)

@@ -157,30 +157,55 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
     if (!this.processed.isSet('findMath')) {
       this.adaptor.document = this.document;
       options = userOptions({elements: this.options.elements || [this.adaptor.body(this.document)]}, options);
-      for (const container of this.adaptor.getElements(options['elements'], this.document)) {
-        let [strings, nodes] = [null, null] as [string[], HTMLNodeArray<N, T>];
-        for (const jax of this.inputJax) {
-          let list = new (this.options['MathList'])();
-          if (jax.processStrings) {
-            if (strings === null) {
-              [strings, nodes] = this.domStrings.find(container);
-            }
-            for (const math of jax.findMath(strings)) {
-              list.push(this.mathItem(math, jax, nodes));
-            }
-          } else {
-            for (const math of jax.findMath(container)) {
-              let item: HTMLMathItem<N, T, D> =
-                new this.options.MathItem(math.math, jax, math.display, math.start, math.end);
-              list.push(item);
-            }
-          }
-          this.math.merge(list);
-        }
+      const containers = this.adaptor.getElements(options.elements, this.document);
+      for (const jax of this.inputJax) {
+        const list = (jax.processStrings ?
+                      this.findMathFromStrings(jax, containers) :
+                      this.findMathFromDOM(jax, containers));
+        this.math.merge(list);
       }
       this.processed.set('findMath');
     }
     return this;
+  }
+
+  /**
+   * Get the MathItems from the containers by searching DOM strings
+   *
+   * @param {InputJax<N,T,D>} jax    The jax being used
+   * @param {N[]} containers         The containers to be searched in order
+   * @return {HTMLMathList<N,T,D>}   The list of MathItems found
+   */
+  protected findMathFromStrings(jax: InputJax<N, T, D>, containers: N[]): HTMLMathList<N, T, D> {
+    const strings = [] as string[];
+    const nodes = [] as HTMLNodeArray<N, T>;
+    for (const container of containers) {
+      const [slist, nlist] = this.domStrings.find(container);
+      strings.push(...slist);
+      nodes.push(...nlist);
+    }
+    const list = new this.options.MathList() as HTMLMathList<N, T, D>;
+    for (const math of jax.findMath(strings)) {
+      list.push(this.mathItem(math, jax, nodes));
+    }
+    return list;
+  }
+
+  /**
+   * Get the MathItems from the containers by searching DOM elements themselves
+   *
+   * @param {InputJax<N,T,D>} jax    The jax being used
+   * @param {N[]} containers         The containers to be searched in order
+   * @return {HTMLMathList<N,T,D>}   The list of MathItems found
+   */
+  protected findMathFromDOM(jax: InputJax<N, T, D>, containers: N[]): HTMLMathList<N, T, D> {
+    const items = [] as HTMLMathItem<N, T, D>[];
+    for (const container of containers) {
+      for (const math of jax.findMath(container)) {
+        items.push(new this.options.MathItem(math.math, jax, math.display, math.start, math.end));
+      }
+    }
+    return new this.options.MathList(...items) as HTMLMathList<N, T, D>;
   }
 
   /**

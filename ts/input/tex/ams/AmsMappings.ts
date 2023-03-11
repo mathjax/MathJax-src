@@ -299,7 +299,7 @@ new sm.CharacterMap('AMSsymbols-mathchar0mo', ParseMethods.mathchar0mo, {
   unlhd:                  '\u22B4',
   trianglerighteq:        '\u22B5',
   unrhd:                  '\u22B5',
-  vDash:                  ['\u22A8', {variantForm: true}],
+  vDash:                  '\u22A8',
   Vdash:                  '\u22A9',
   Vvdash:                 '\u22AA',
   smallsmile:             ['\u2323', {variantForm: true}],

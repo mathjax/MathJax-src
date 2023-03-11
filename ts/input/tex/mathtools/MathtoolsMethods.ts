@@ -184,6 +184,7 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
       //
       const spread = parser.GetDimen(`\\begin{${begin.getName()}}`);
       begin.setProperty('spread', spread);
+      begin.setProperty('nestable', true);
       parser.Push(begin);
     }
   },
@@ -275,9 +276,12 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     if (width) {
       NodeUtil.setAttribute(mml, 'width', width);
     }
-    const align = lookup(pos, {c: 'center', r: 'right'}, '');
+    const align = lookup(pos.toLowerCase(), {c: 'center', r: 'right'}, '');
     if (align) {
       NodeUtil.setAttribute(mml, 'data-align', align);
+    }
+    if (pos.toLowerCase() !== pos) {
+      NodeUtil.setAttribute(mml, 'data-overflow', 'linebreak');
     }
     parser.Push(mml);
   },

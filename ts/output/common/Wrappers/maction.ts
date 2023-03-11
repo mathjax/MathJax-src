@@ -181,11 +181,11 @@ export interface CommonMaction<
   /**
    * The x-offset for tooltips
    */
-  dx: number;
+  tipDx: number;
   /**
    * The y-offset for tooltips
    */
-  dy: number;
+  tipDy: number;
 
   /**
    * The selected child wrapper
@@ -291,11 +291,11 @@ export function CommonMactionMixin<
     /**
      * @override
      */
-    public dx: number;
+    public tipDx: number;
     /**
      * @override
      */
-    public dy: number;
+    public tipDy: number;
 
     /**
      * @override
@@ -312,8 +312,8 @@ export function CommonMactionMixin<
     public getParameters() {
       const offsets = this.node.attributes.get('data-offsets') as string;
       let [dx, dy] = split(offsets || '');
-      this.dx = this.length2em(dx || TooltipData.dx);
-      this.dy = this.length2em(dy || TooltipData.dy);
+      this.tipDx = this.length2em(dx || TooltipData.dx);
+      this.tipDy = this.length2em(dy || TooltipData.dy);
     }
 
     /*************************************************************/
@@ -340,6 +340,20 @@ export function CommonMactionMixin<
     public computeBBox(bbox: BBox, recompute: boolean = false) {
       bbox.updateFrom(this.selected.getOuterBBox());
       this.selected.setChildPWidths(recompute);
+    }
+
+    /**
+     * @override
+     */
+    get breakCount() {
+      return (this.node.isEmbellished ? this.selected.coreMO().embellishedBreakCount : this.selected.breakCount);
+    }
+
+    /**
+     * @override
+     */
+    public computeLineBBox(i: number) {
+      return this.getChildLineBBox(this.selected, i);
     }
 
   } as any as B;

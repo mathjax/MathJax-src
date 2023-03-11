@@ -71,9 +71,9 @@ export class MmlMmultiscripts extends MmlMsubsup {
         if (!prescripts) {
           prescripts = true;
           if (i % 2 === 0) {
-            let mrow = this.factory.create('mrow');
-            this.childNodes.splice(i, 0, mrow);
-            mrow.parent = this;
+            let none = this.factory.create('none');
+            this.childNodes.splice(i, 0, none);
+            none.parent = this;
             i++;
           }
         }
@@ -84,7 +84,7 @@ export class MmlMmultiscripts extends MmlMsubsup {
       }
     }
     if (this.childNodes.length % 2 === (prescripts ? 1 : 0)) {
-      this.appendChild(this.factory.create('mrow'));
+      this.appendChild(this.factory.create('none'));
       this.childNodes[this.childNodes.length - 1].setInheritedAttributes(attributes, false, level + 1, prime);
     }
   }

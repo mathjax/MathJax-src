@@ -176,7 +176,7 @@ export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
     };
 
     /**
-     * An mop element to use for bevelled fractions
+     * An mo element to use for bevelled fractions
      */
     protected bevel: ChtmlMoNTD<N, T, D>;
 
@@ -185,8 +185,9 @@ export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
     /**
      * @override
      */
-    public toCHTML(parent: N) {
-      this.standardChtmlNode(parent);
+    public toCHTML(parents: N[]) {
+      if (this.toEmbellishedCHTML(parents)) return;
+      this.standardChtmlNodes(parents);
       const {linethickness, bevelled} = this.node.attributes.getList('linethickness', 'bevelled');
       const display = this.isDisplay();
       if (bevelled) {
@@ -237,7 +238,7 @@ export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
       // Create the DOM tree
       //
       let num, den;
-      this.adaptor.append(this.dom, this.html('mjx-frac', fattr, [
+      this.adaptor.append(this.dom[0], this.html('mjx-frac', fattr, [
         num = this.html('mjx-num', nattr, [this.html('mjx-nstrut', nsattr)]),
         this.html('mjx-dbox', {}, [
           this.html('mjx-dtable', {}, [
@@ -248,8 +249,8 @@ export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
           ])
         ])
       ]));
-      this.childNodes[0].toCHTML(num);
-      this.childNodes[1].toCHTML(den);
+      this.childNodes[0].toCHTML([num]);
+      this.childNodes[1].toCHTML([den]);
     }
 
     /************************************************/
@@ -277,12 +278,12 @@ export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
       // Create the DOM tree
       //
       let num, den;
-      this.adaptor.append(this.dom, this.html('mjx-frac', fattr, [
+      this.adaptor.append(this.dom[0], this.html('mjx-frac', fattr, [
         num = this.html('mjx-num', nattr),
         den = this.html('mjx-den', dattr)
       ]));
-      this.childNodes[0].toCHTML(num);
-      this.childNodes[1].toCHTML(den);
+      this.childNodes[0].toCHTML([num]);
+      this.childNodes[1].toCHTML([den]);
     }
 
     /************************************************/
@@ -295,12 +296,12 @@ export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
       //
       //  Create HTML tree
       //
-      adaptor.setAttribute(this.dom, 'bevelled', 'ture');
-      const num = adaptor.append(this.dom, this.html('mjx-num')) as N;
-      this.childNodes[0].toCHTML(num);
+      adaptor.setAttribute(this.dom[0], 'bevelled', 'ture');
+      const num = adaptor.append(this.dom[0], this.html('mjx-num')) as N;
+      this.childNodes[0].toCHTML([num]);
       this.bevel.toCHTML(this.dom);
-      const den = adaptor.append(this.dom, this.html('mjx-den')) as N;
-      this.childNodes[1].toCHTML(den);
+      const den = adaptor.append(this.dom[0], this.html('mjx-den')) as N;
+      this.childNodes[1].toCHTML([den]);
       //
       //  Place the parts
       //
@@ -312,8 +313,8 @@ export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
         adaptor.setStyle(den, 'verticalAlign', this.em(v / dbox.scale));
       }
       const dx = this.em(-delta / 2);
-      adaptor.setStyle(this.bevel.dom, 'marginLeft', dx);
-      adaptor.setStyle(this.bevel.dom, 'marginRight', dx);
+      adaptor.setStyle(this.bevel.dom[0], 'marginLeft', dx);
+      adaptor.setStyle(this.bevel.dom[0], 'marginRight', dx);
     }
 
   };
