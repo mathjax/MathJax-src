@@ -256,7 +256,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       if (n) {
         const options = this.font.getChar(v, n)[3];
         const letter = options.f || (v === 'normal' ? '' : this.font.getVariant(v).letter);
-        const font = options.F || (letter ? `${this.font.cssFontPrefix}-${letter}` : '');
+        const font = options.ff || (letter ? `${this.font.cssFontPrefix}-${letter}` : '');
         let c = (options.c as string || String.fromCodePoint(n))
           .replace(/\\[0-9A-F]+/ig, (x) => String.fromCodePoint(parseInt(x.substr(1), 16)));
         content.push(this.html(part, {}, [

@@ -925,7 +925,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     let variant = {
       linked: [] as CharMap<C>[],
       chars: Object.create(inherit ? this.variant[inherit].chars : {}) as CharMap<C>
-    } as any as V;
+    } as unknown as V;
     if (this.variant[link]) {
       Object.assign(variant.chars, this.variant[link].chars);
       this.variant[link].linked.push(variant.chars);

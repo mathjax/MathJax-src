@@ -38,7 +38,7 @@ export * from '../common/FontData.js';
 export interface ChtmlCharOptions extends CharOptions {
   c?: string;                   // the content value (for css)
   f?: string;                   // the font postfix (for css)
-  F?: string;                   // the full font css class (for extensions)
+  ff?: string;                  // the full font css class (for extensions)
   cmb?: boolean;                // true if this is a combining character
 }
 
@@ -459,7 +459,7 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
   protected addCharStyles(styles: StyleList, vletter: string, n: number, data: ChtmlCharData) {
     const options = data[3] as ChtmlCharOptions;
     const letter = (options.f !== undefined ? options.f : vletter);
-    const font = options.F || (letter ? `${this.cssFontPrefix}-${letter}` : '');
+    const font = options.ff || (letter ? `${this.cssFontPrefix}-${letter}` : '');
     const selector = 'mjx-c' + this.charSelector(n) + (font ? '.' + font : '');
     const def = styles[selector] = {padding: this.padding(data, 0, options.ic || 0)} as StyleData;
     if (options.cmb) {

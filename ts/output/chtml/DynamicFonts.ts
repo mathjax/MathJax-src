@@ -25,14 +25,17 @@ import {ChtmlCharMap, ChtmlCharData} from './FontData.js';
 
 /**
  * Used by dynamic font extensions to add font identifiers to ranges of characters in given variants
+ *
+ * @param {{[variant: string]: {[id: string]: ChtmlCharMap}}} ranges  The variant data to be added
+ * @param {string?} prefix  The prefix for when this is used from a font extension
  */
 export function AddFontIds(ranges: {[variant: string]: {[id: string]: ChtmlCharMap}}, prefix?: string) {
-  const data: {[variant: string]: ChtmlCharMap} = {};
+  const variants: {[variant: string]: ChtmlCharMap} = {};
   for (const id of Object.keys(ranges)) {
     const map = ranges[id];
     for (const variant of Object.keys(map)) {
-      if (!data[variant]) {
-        data[variant] = {};
+      if (!variants[variant]) {
+        variants[variant] = {};
       }
       const chars = map[variant];
       if (id) {
@@ -42,14 +45,14 @@ export function AddFontIds(ranges: {[variant: string]: {[id: string]: ChtmlCharM
             data[3] = {};
           }
           if (prefix) {
-            data[3].F = prefix + '-' + id;
+            data[3].ff = prefix + '-' + id;
           } else {
             data[3].f = id;
           }
         }
       }
-      Object.assign(data[variant], chars);
+      Object.assign(variants[variant], chars);
     }
   }
-  return data;
+  return variants;
 }
