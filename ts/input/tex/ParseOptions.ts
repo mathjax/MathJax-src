@@ -29,15 +29,27 @@ import {NodeFactory} from './NodeFactory.js';
 import NodeUtil from './NodeUtil.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import TexParser from './TexParser.js';
+import {TexConstant} from './TexConstants.js';
 import {defaultOptions, OptionList} from '../../util/Options.js';
 import {ParserConfiguration} from './Configuration.js';
 import {ColumnParser} from './ColumnParser.js';
 
+const MATHVARIANT = TexConstant.Variant;
 
 /**
  * @class
  */
 export default class ParseOptions {
+
+  //
+  // Look up math variant for the current math-style
+  //
+  public static getVariant = new Map<string, (c: string, b?: boolean) => string>([
+    ['TeX', (c, b) => (b ? c.match(/^[\u0391-\u03A9\u03F4]/) ? MATHVARIANT.NORMAL : '' : '')],
+    ['ISO', (_c) => MATHVARIANT.ITALIC],
+    ['French', (c) => (c.normalize('NFD').match(/^[a-z]/) ? MATHVARIANT.ITALIC : MATHVARIANT.NORMAL)],
+    ['upright', (_c) => MATHVARIANT.NORMAL]
+  ]);
 
   /**
    * A set of sub handlers
@@ -68,6 +80,11 @@ export default class ParseOptions {
    * @type {Tags}
    */
   public tags: Tags;
+
+  /**
+   * The function returning the math-style variant
+   */
+  public mathStyle: (c: string, b?: boolean) => string;
 
   /**
    * The column parser
@@ -128,6 +145,8 @@ export default class ParseOptions {
     // Set default options for parser from packages and for tags.
     defaultOptions(this.options, ...options);
     defaultOptions(this.options, configuration.options);
+    this.mathStyle = ParseOptions.getVariant.get(this.options.mathStyle) ||
+                     ParseOptions.getVariant.get('TeX');
   }
 
 

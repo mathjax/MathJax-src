@@ -722,6 +722,14 @@ namespace ParseUtil {
     return [stopCount ? 'true' : removeBraces(value, start), '', text.slice(index)];
   }
 
+  /**
+   * @param {string} c   The character to test.
+   * @return {boolean}   True if the character is Latin or Greek
+   */
+  export function isLatinOrGreekChar(c: string): boolean {
+    return !!c.normalize('NFD').match(/[a-zA-Z\u0370-\u03F0]/);
+  }
+
 }
 
 export default ParseUtil;
