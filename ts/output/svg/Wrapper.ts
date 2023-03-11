@@ -81,6 +81,11 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   public dx: number = 0;
 
   /**
+   * buffered unknown text
+   */
+  protected utext: string = '';
+
+  /**
    * @override
    */
   public font: SvgFontData;
@@ -466,18 +471,22 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {number} y        The y-position of the character
    * @param {N} parent        The container for the character
    * @param {string} variant  The variant to use for the character
+   * @param {boolean} buffer  True to collect unknown characters into one text element
    * @return {number}         The width of the character
    */
-  public placeChar(n: number, x: number, y: number, parent: N, variant: string = null): number {
+  public placeChar(n: number, x: number, y: number, parent: N,
+                   variant: string = null, buffer: boolean = false): number {
     if (variant === null) {
       variant = this.variant;
     }
     const C = n.toString(16).toUpperCase();
     const [ , , w, data] = this.getVariantChar(variant, n);
     if ('p' in data) {
+      x += this.addUtext(x, y, parent, variant);
       const path = (data.p ? 'M' + data.p + 'Z' : '');
       this.place(x, y, this.adaptor.append(parent, this.charNode(variant, C, path)) as N);
     } else if ('c' in data) {
+      x += this.addUtext(x, y, parent, variant);
       const g = this.adaptor.append(parent, this.svg('g', {'data-c': C})) as N;
       this.place(x, y, g);
       x = 0;
@@ -485,12 +494,27 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
         x += this.placeChar(n, x, y, g, variant);
       }
     } else if (data.unknown) {
-      const char = String.fromCodePoint(n);
-      const text = this.adaptor.append(parent, this.jax.unknownText(char, variant)) as N;
-      this.place(x, y, text);
-      return this.jax.measureTextNodeWithCache(text, char, variant).w;
+      this.utext += String.fromCodePoint(n);
+      return (buffer ? 0 : this.addUtext(x, y, parent, variant));
     }
     return w;
+  }
+
+  /**
+   * @param {number} x         The x-position of the text
+   * @param {number} y         The y-position of the text
+   * @param {N} parent         The container for the text
+   * @param {string} variant   The variant to use for the string
+   */
+  protected addUtext(x: number, y: number, parent: N, variant: string): number {
+    const c = this.utext;
+    if (!c) {
+      return 0;
+    }
+    this.utext = '';
+    const text = this.adaptor.append(parent, this.jax.unknownText(c, variant)) as N;
+    this.place(x, y, text);
+    return this.jax.measureTextNodeWithCache(text, c, variant).w;
   }
 
   /**

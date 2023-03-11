@@ -159,6 +159,7 @@ export function CommonTextNodeMixin<
         bbox.w = w;
       } else {
         const chars = this.remappedText(text, variant);
+        let utext = '';
         bbox.empty();
         //
         // Loop through the characters and add them in one by one
@@ -166,30 +167,56 @@ export function CommonTextNodeMixin<
         for (const char of chars) {
           let [h, d, w, data] = this.getVariantChar(variant, char);
           if (data.unknown) {
+            utext += String.fromCodePoint(char);
+          } else {
+            utext = this.addUtextBBox(bbox, utext, variant);
             //
-            // Measure unknown characters using the DOM (if possible)
+            // Update the bounding box
             //
-            const cbox = this.jax.measureText(String.fromCodePoint(char), variant);
-            w = cbox.w;
-            h = cbox.h;
-            d = cbox.d;
+            this.updateBBox(bbox, h, d, w);
+            bbox.ic = data.ic || 0;
+            bbox.sk = data.sk || 0;
+            bbox.dx = data.dx || 0;
           }
-          //
-          // Update the bounding box
-          //
-          bbox.w += w;
-          if (h > bbox.h) bbox.h = h;
-          if (d > bbox.d) bbox.d = d;
-          bbox.ic = data.ic || 0;
-          bbox.sk = data.sk || 0;
-          bbox.dx = data.dx || 0;
         }
+        this.addUtextBBox(bbox, utext, variant);
         if (chars.length > 1) {
           bbox.sk = 0;
         }
         bbox.clean();
       }
     }
+
+    /**
+     * @param {BBox} bbox        The bounding box to update
+     * @param {string} utext     The text whose size is to be added to the bbox
+     * @param {string} variant   The mathvariant for the text
+     * @return {string}          The new utext (blank)
+     */
+    protected addUtextBBox(bbox: BBox, utext: string, variant: string): string {
+      if (utext) {
+        const {h, d, w} = this.jax.measureText(utext, variant);
+        this.updateBBox(bbox, h, d, w);
+      }
+      return '';
+    }
+
+    /**
+     * @param {BBox} bbox        The bounding box to update
+     * @param {number} h         The height to use
+     * @param {nunber} d         The depth to use
+     * @param {number} w         The width to add
+     */
+    protected updateBBox(bbox: BBox, h: number, d: number, w: number) {
+      bbox.w += w;
+      if (h > bbox.h) {
+        bbox.h = h;
+      }
+      if (d > bbox.d) {
+        bbox.d = d;
+      }
+    }
+
 
     /******************************************************/
     /*
