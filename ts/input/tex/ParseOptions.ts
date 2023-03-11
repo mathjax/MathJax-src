@@ -35,7 +35,6 @@ import {ParserConfiguration} from './Configuration.js';
 
 const MATHVARIANT = TexConstant.Variant;
 
-
 /**
  * @class
  */
@@ -140,7 +139,8 @@ export default class ParseOptions {
     // Set default options for parser from packages and for tags.
     defaultOptions(this.options, ...options);
     defaultOptions(this.options, configuration.options);
-    this.mathStyle = ParseOptions.getVariant.get(this.options.mathStyle) || ParseOptions.getVariant.get('TeX');
+    this.mathStyle = ParseOptions.getVariant.get(this.options.mathStyle) ||
+                     ParseOptions.getVariant.get('TeX');
   }
 
 
