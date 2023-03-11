@@ -82,3 +82,14 @@ export function isPercent(x: string): boolean {
 export function split(x: string): string[] {
   return x.trim().split(/\s+/);
 }
+
+/**
+ * Replace \U{...} with the specified unicode character
+ *
+ * @param {srting} text   The string to be scanned for \U{...}
+ * @return {string}       The string with the unicode characters in place of \U{...}
+ */
+export function replaceUnicode(text: string): string {
+  return text.replace(/((?:^|[^\\])(?:\\\\)*)\\U\s*(?:([0-9A-F])|\{\s*([0-9A-F]{1,6})\s*\})/g,
+                      (_m, pre, h1, h2) => pre + String.fromCodePoint(parseInt(h1 || h2, 16)));
+}

@@ -251,7 +251,7 @@ namespace ParseUtil {
     let mathvariant = font || parser.stack.env.font;
     let def = (mathvariant ? {mathvariant} : {});
     let mml: MmlNode[] = [], i = 0, k = 0, c, node, match = '', braces = 0;
-    if (text.match(/\\?[${}\\]|\\\(|\\(eq)?ref\s*\{/)) {
+    if (text.match(/\\?[${}\\]|\\\(|\\(?:eq)?ref\s*\{|\\U/)) {
       while (i < text.length) {
         c = text.charAt(i++);
         if (c === '$') {
@@ -325,6 +325,15 @@ namespace ParseUtil {
               // @test Mbox CR
               i--;
               text = text.substr(0, i - 1) + text.substr(i); // remove \ from \$, \{, \}, or \\
+            } else if (c === 'U') {
+              const arg = text.substr(i).match(/^\s*(?:([0-9A-F])|\{\s*([0-9A-F]+)\s*\})/);
+              if (!arg) {
+                throw new TexError('BadRawUnicode',
+                                   'Argument to %1 must a hexadecimal number with 1 to 6 digits', '\\U');
+              }
+              //  Replace \U{...} with specified character
+              const c = String.fromCodePoint(parseInt(arg[1] || arg[2], 16));
+              text = text.substr(0, i - 2) + c + text.substr(i + arg[0].length);
             }
           }
         }
@@ -535,12 +544,18 @@ namespace ParseUtil {
   /**
    *  Check for bad nesting of equation environments
    */
-  export function checkEqnEnv(parser: TexParser) {
-    if (parser.stack.global.eqnenv) {
-      // @test ErroneousNestingEq
+  export function checkEqnEnv(parser: TexParser, nestable: boolean = true) {
+    const top = parser.stack.Top();
+    const first = top.First;
+    //
+    // The gather environment can include align and others, but only one level deep.
+    //
+    if (top.getProperty('nestable') && nestable && !first) {
+      return;
+    }
+    if (!top.isKind('start') || first) {
       throw new TexError('ErroneousNestingEq', 'Erroneous nesting of equation structures');
     }
-    parser.stack.global.eqnenv = true;
   }
 
   /**
@@ -714,6 +729,14 @@ namespace ParseUtil {
                          'Extra open brace or missing close brace');
     }
     return [stopCount ? 'true' : removeBraces(value, start), '', text.slice(index)];
+  }
+
+  /**
+   * @param {string} c   The character to test.
+   * @return {boolean}   True if the character is Latin or Greek
+   */
+  export function isLatinOrGreekChar(c: string): boolean {
+    return !!c.normalize('NFD').match(/[a-zA-Z\u0370-\u03F0]/);
   }
 
 }

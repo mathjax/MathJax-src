@@ -41,6 +41,7 @@ import {em} from '../../../util/lengths.js';
 import {entities} from '../../../util/Entities.js';
 import {lookup} from '../../../util/Options.js';
 import {ColumnState} from '../ColumnParser.js';
+import {replaceUnicode} from '../../../util/string.js';
 
 
 // Namespace
@@ -85,7 +86,7 @@ BaseMethods.Close = function(parser: TexParser, _c: string) {
  * @param {string} c The parsed character.
  */
 BaseMethods.Bar = function(parser: TexParser, c: string) {
-  parser.Push(parser.create('token', 'mo', {texClass: TEXCLASS.ORD}, c));
+  parser.Push(parser.create('token', 'mo', {stretchy: false, texClass: TEXCLASS.ORD}, c));
 }
 
 
@@ -859,7 +860,7 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
   if (keep.length) {
     def['mjx-keep-attrs'] = keep.join(' ');
   }
-  const textNode = parser.create('text', text);
+  const textNode = parser.create('text', replaceUnicode(text));
   node.appendChild(textNode);
   NodeUtil.setProperties(node, def);
   parser.Push(node);
@@ -1641,8 +1642,6 @@ BaseMethods.IndentAlign = function (parser: TexParser, begin: StackItem) {
  * @param {TexParser} parser The calling parser.
  * @param {StackItem} begin The opening stackitem.
  * @param {boolean} numbered True if environment is numbered.
- * @param {boolean=} display True if environment is a block display.
- */
 BaseMethods.Equation = function (
   parser: TexParser,
   begin: StackItem,
@@ -1653,6 +1652,7 @@ BaseMethods.Equation = function (
   parser.stack.env.display = display;
   parser.Push(begin);
   ParseUtil.checkEqnEnv(parser);
+  parser.Push(begin);
   return parser.itemFactory.create('equation', numbered).
     setProperty('name', begin.getName());
 };
@@ -1671,13 +1671,15 @@ BaseMethods.EqnArray = function(parser: TexParser, begin: StackItem,
                                 numbered: boolean, taggable: boolean,
                                 align: string, spacing: string) {
   // @test The Lorenz Equations, Maxwell's Equations, Cubic Binomial
-  parser.Push(begin);
+  let name = begin.getName();
+  let isGather = (name === 'gather' || name === 'gather*');
   if (taggable) {
-    ParseUtil.checkEqnEnv(parser);
+    ParseUtil.checkEqnEnv(parser, !isGather);
   }
+  parser.Push(begin);
   align = align.replace(/[^clr]/g, '').split('').join(' ');
   align = align.replace(/l/g, 'left').replace(/r/g, 'right').replace(/c/g, 'center');
-  let newItem = parser.itemFactory.create('eqnarray', begin.getName(),
+  let newItem = parser.itemFactory.create('eqnarray', name,
                                           numbered, taggable, parser.stack.global) as sitem.ArrayItem;
   newItem.arraydef = {
     displaystyle: true,
@@ -1687,6 +1689,9 @@ BaseMethods.EqnArray = function(parser: TexParser, begin: StackItem,
     side: parser.options['tagSide'],
     minlabelspacing: parser.options['tagIndent']
   };
+  if (isGather) {
+    newItem.setProperty('nestable', true);
+  }
   return newItem;
 };
 

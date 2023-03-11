@@ -189,7 +189,9 @@ B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>>(
       'mjx-assistive-mml': {
         position: 'absolute !important',
         top: '0px', left: '0px',
+        bottom: '0px', right: '0px',
         clip: 'rect(1px, 1px, 1px, 1px)',
+        'clip-path': 'polygon(0 0, 0 1px, 1px 1px, 1px 0)',
         padding: '1px 0px 0px 0px !important',
         border: '0px !important',
         display: 'block !important',

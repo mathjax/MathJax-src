@@ -82,7 +82,7 @@ new sm.MacroMap('special', {
 /**
  * Macros for identifiers.
  */
-new sm.CharacterMap('mathchar0mi', ParseMethods.mathchar0mi, {
+new sm.CharacterMap('lcGreek', ParseMethods.lcGreek, {
   // Lower-case greek
   alpha:        '\u03B1',
   beta:         '\u03B2',
@@ -113,8 +113,30 @@ new sm.CharacterMap('mathchar0mi', ParseMethods.mathchar0mi, {
   varpi:        '\u03D6',
   varrho:       '\u03F1',
   varsigma:     '\u03C2',
-  varphi:       '\u03C6',
+  varphi:       '\u03C6'
+});
 
+/**
+ * Macros for upper-case Greek
+ */
+new sm.CharacterMap('ucGreek', ParseMethods.ucGreek, {
+  Gamma:        '\u0393',
+  Delta:        '\u0394',
+  Theta:        '\u0398',
+  Lambda:       '\u039B',
+  Xi:           '\u039E',
+  Pi:           '\u03A0',
+  Sigma:        '\u03A3',
+  Upsilon:      '\u03A5',
+  Phi:          '\u03A6',
+  Psi:          '\u03A8',
+  Omega:        '\u03A9'
+});
+
+/**
+ * Macros for identifiers.
+ */
+new sm.CharacterMap('mathchar0mi', ParseMethods.mathchar0mi, {
   // Ord symbols
   AA:            '\u212B',
   S:            ['\u00A7', {mathvariant: VARIANT.NORMAL}],
@@ -315,18 +337,6 @@ new sm.CharacterMap('mathchar0mo', ParseMethods.mathchar0mo, {
  * Macros for special characters and identifiers.
  */
 new sm.CharacterMap('mathchar7', ParseMethods.mathchar7, {
-  Gamma:        '\u0393',
-  Delta:        '\u0394',
-  Theta:        '\u0398',
-  Lambda:       '\u039B',
-  Xi:           '\u039E',
-  Pi:           '\u03A0',
-  Sigma:        '\u03A3',
-  Upsilon:      '\u03A5',
-  Phi:          '\u03A6',
-  Psi:          '\u03A8',
-  Omega:        '\u03A9',
-
   '_':          '\u005F',
   '#':          '\u0023',
   '$':          '\u0024',

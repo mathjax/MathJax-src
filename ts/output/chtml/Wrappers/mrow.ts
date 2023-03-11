@@ -100,15 +100,27 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
         display: 'inline-table',
         width: '100%'
       },
-      'mjx-linestack[data-mjx-breakable]': {
-        display: 'inline',
-        width: 'initial',
-      },
-      'mjx-linestack[data-mjx-breakable] > mjx-linebox': {
+      'mjx-linestack[breakable]': {
         display: 'inline'
       },
-      'mjx-break[newline]::after': {
-        display: 'block'
+      'mjx-linestack[breakable] > mjx-linebox': {
+        display: 'inline'
+      },
+      'mjx-linestack[breakable] > mjx-linebox::before': {
+        'white-space': 'pre',
+        content: '"\\A"'
+      },
+      'mjx-linestack[breakable] > mjx-linebox::after': {
+        'white-space': 'normal',
+        content: '" "',
+        'letter-spacing': '-.999em',
+        'font-family': 'MJX-BRK'
+      },
+      'mjx-linestack[breakable] > mjx-linebox:first-of-type::before': {
+        display: 'none'
+      },
+      'mjx-linestack[breakable] > mjx-linebox:last-of-type::after': {
+        display: 'none'
       },
       'mjx-linebox': {
         display: 'block'
@@ -169,7 +181,9 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
           adaptor.setStyle(parents[i], 'position', 'relative');
           adaptor.setStyle(parents[i], 'left', this.em(shift));
         }
-        i < n && adaptor.setStyle(parents[i], 'margin-bottom', this.em(bbox.lineLeading));
+        if (i < n && this.jax.math.display) {
+          adaptor.setStyle(parents[i], 'margin-bottom', this.em(bbox.lineLeading));
+        }
       }
     }
 
@@ -199,6 +213,9 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
       if (kind === 'mjx-mrow' && !this.isStack) {
         adaptor.setAttribute(this.dom[0], 'break-top', 'true');
       }
+      if (this.node.getProperty('process-breaks')) {
+        adaptor.setAttribute(this.dom[0], 'breakable', 'true');
+      }
       //
       // Add an href anchor, if needed, and insert the linestack/mrow
       //
@@ -207,12 +224,8 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
       //  Add the line boxes
       //
       const chtml = Array(n) as N[];
-      const inlineBreaks = this.node.getProperty('breakable');
       for (let i = 0; i <= n; i++) {
         chtml[i] = adaptor.append(this.dom[0], this.html('mjx-linebox', {'lineno': i})) as N;
-        if (inlineBreaks) {
-          adaptor.append(this.dom[0], this.html('mjx-break', {newline: true}));
-        }
       }
       //
       //  Return the line boxes as the parent nodes for their contents

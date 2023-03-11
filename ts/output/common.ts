@@ -379,35 +379,67 @@ export abstract class CommonOutputJax<
   }
 
   /**
-   * @parm {MmlNode} node   The node to check for potential inline breakpoints
+   * @param {MmlNode} node   The node to check for potential inline breakpoints
    */
   public markInlineBreaks(node: MmlNode) {
     if (!node) return;
     const forcebreak = this.forceInlineBreaks;
     let marked = false;
+    let markNext = null as [MmlNode, string];
     for (const child of node.childNodes.slice(1)) {
-      if (child.isEmbellished) {
+      if (markNext) {
+        marked = this.markInlineBreak(marked, forcebreak, markNext[1], node, child, markNext[0]);
+        markNext = null;
+      } else if (child.isEmbellished) {
         const mo = child.coreMO();
-        const {linebreak, linebreakstyle} = mo.attributes.getList('linebreak', 'linebreakstyle');
-        if ((mo.texClass === TEXCLASS.BIN || mo.texClass === TEXCLASS.REL ||
-             mo.attributes.get('data-allowbreak') || linebreak !== 'auto') &&
-            linebreak !== 'nobreak' && linebreakstyle === 'before') {
-          child.setProperty('breakable', true);
-          if (forcebreak && linebreak !== 'newline') {
-            child.setProperty('forcebreak', true);
-            mo.setProperty('forcebreak', true);
+        const texClass = mo.texClass;
+        const linebreak = mo.attributes.get('linebreak') as string;
+        const linebreakstyle = mo.attributes.get('linebreakstyle') as string;
+        if ((texClass === TEXCLASS.BIN || texClass === TEXCLASS.REL ||
+             (texClass === TEXCLASS.ORD && mo.hasSpacingAttributes()) ||
+             mo.attributes.get('data-allowbreak') || linebreak !== 'auto') && linebreak !== 'nobreak') {
+          if (linebreakstyle === 'before') {
+            marked = this.markInlineBreak(marked, forcebreak, linebreak, node, child, mo);
+          } else {
+            markNext = [mo, linebreak];
           }
-          if (!marked) {
-            node.setProperty('process-breaks', true);
-            node.parent.setProperty('process-breaks', true);
-            marked = true;
-          }
+        }
+      } else if (child.isKind('mspace')) {
+        const linebreak = child.attributes.get('linebreak') as string;
+        if (linebreak !== 'nobreak') {
+          marked = this.markInlineBreak(marked, forcebreak, linebreak, node, child);
         }
       } else if ((child.isKind('mstyle') && !child.attributes.get('style')) ||
                  child.isKind('semantics') || child.isKind('MathChoice')) {
         this.markInlineBreaks(child.childNodes[0]);
       }
     }
+  }
+
+  /**
+   * @param {boolean} marked      Whether the node has already been marked
+   * @param {boolean} forcebreak  Whether the break is to be forced
+   * @param {string} linebreak    The break type
+   * @param {MmlNode} node        The parent node to mark
+   * @param {MmlNode} child       The child node to mark
+   * @param {MmlNode} mo          The core mo to mark
+   * @return {boolean}            The modified marked variable
+   */
+  protected markInlineBreak(marked: boolean, forcebreak: boolean, linebreak: string,
+                             node: MmlNode, child: MmlNode, mo: MmlNode = null): boolean {
+    child.setProperty('breakable', true);
+    if (forcebreak && linebreak !== 'newline') {
+      child.setProperty('forcebreak', true);
+      if (mo) {
+        mo.setProperty('forcebreak', true);
+      }
+    }
+    if (!marked) {
+      node.setProperty('process-breaks', true);
+      node.parent.setProperty('process-breaks', true);
+      marked = true;
+    }
+    return marked;
   }
 
   /**
