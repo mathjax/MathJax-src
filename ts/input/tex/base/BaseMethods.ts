@@ -1513,8 +1513,7 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
   }
   ParseUtil.checkMaxMacros(parser, false);
   parser.parse('environment', [parser, env]);
-};
-
+ };
 
 /**
  * Handle array environment.
@@ -1582,11 +1581,12 @@ BaseMethods.Array = function(parser: TexParser, begin: StackItem,
  * Handle aligned arrays.
  * @param {TexParser} parser The calling parser.
  * @param {StackItem} begin The opening stackitem.
+ * @param {string=} style The display style to use
  */
-BaseMethods.AlignedArray = function(parser: TexParser, begin: StackItem) {
+BaseMethods.AlignedArray = function(parser: TexParser, begin: StackItem, style: string = '') {
   // @test Array1, Array2, Array Test
   const align = parser.GetBrackets('\\begin{' + begin.getName() + '}');
-  let item = BaseMethods.Array(parser, begin);
+  let item = BaseMethods.Array(parser, begin, null, null, null, null, null, style);
   return ParseUtil.setArrayAlign(item as sitem.ArrayItem, align);
 };
 
@@ -1642,8 +1642,15 @@ BaseMethods.IndentAlign = function (parser: TexParser, begin: StackItem) {
  * @param {TexParser} parser The calling parser.
  * @param {StackItem} begin The opening stackitem.
  * @param {boolean} numbered True if environment is numbered.
- */
-BaseMethods.Equation = function (parser: TexParser, begin: StackItem, numbered: boolean) {
+BaseMethods.Equation = function (
+  parser: TexParser,
+  begin: StackItem,
+  numbered: boolean,
+  display: boolean = true
+) {
+  parser.configuration.mathItem.display = display;
+  parser.stack.env.display = display;
+  parser.Push(begin);
   ParseUtil.checkEqnEnv(parser);
   parser.Push(begin);
   return parser.itemFactory.create('equation', numbered).
