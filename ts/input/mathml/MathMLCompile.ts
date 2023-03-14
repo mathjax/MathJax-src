@@ -209,6 +209,9 @@ export class MathMLCompile<N, T, D> {
         case 'script-align':
           mml.setProperty('scriptalign', value);
           break;
+        case 'vbox':
+          mml.setProperty('vbox', value);
+          break;
         }
       } else if (name !== 'class') {
         let val = value.toLowerCase();

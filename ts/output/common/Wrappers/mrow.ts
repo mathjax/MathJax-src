@@ -66,6 +66,11 @@ export interface CommonMrow<
   isStack: boolean;
 
   /**
+   * The vertical adjustment for when the row has linebreaks (e.g., for \vcenter and \vbox)
+   */
+  dh: number;
+
+  /**
    * Handle vertical stretching of children to match height of
    *  other nodes in the row.
    */
@@ -142,6 +147,11 @@ export function CommonMrowMixin<
      * @override
      */
     public isStack: boolean;
+
+    /**
+     * @override
+     */
+    public dh: number = 0;
 
     /**
      * @override
@@ -249,6 +259,7 @@ export function CommonMrowMixin<
       if (this.fixesPWidth && this.setChildPWidths(recompute)) {
         this.computeBBox(bbox, true);
       }
+      this.vboxAdjust(bbox);
     }
 
     /**
@@ -289,6 +300,26 @@ export function CommonMrowMixin<
         }
       }
       bbox.clean();
+    }
+
+    /**
+     * Adjust bbox vertical alignment. (E.g., for \vbox, \vcenter.)
+     */
+    protected vboxAdjust(bbox: BBox) {
+      const n = this.breakCount;
+      const valign = this.parent.node.attributes.get('data-vertical-align');
+      if (valign === 'bottom' && n) {
+        this.dh = (n ? bbox.d - this.lineBBox[n - 1].d : 0);
+      } else if (valign === 'center' || (valign === 'middle' && n)) {
+        const {h, d} = bbox;
+        const a = this.font.params.axis_height;
+        this.dh = ((h + d) / 2 + a) - h;  // new height minus old height
+      } else {
+        this.dh = 0;
+        return;
+      }
+      bbox.h += this.dh;
+      bbox.d -= this.dh;
     }
 
     /**

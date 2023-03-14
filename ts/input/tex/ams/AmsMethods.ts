@@ -36,6 +36,7 @@ import {CommandMap} from '../SymbolMap.js';
 import {ArrayItem} from '../base/BaseItems.js';
 import {FlalignItem} from './AmsItems.js';
 import BaseMethods from '../base/BaseMethods.js';
+import {splitAlignArray} from '../base/BaseMethods.js';
 import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMunderover} from '../../../core/MmlTree/MmlNodes/munderover.js';
 import {MmlNode, AbstractMmlTokenNode} from '../../../core/MmlTree/MmlNode.js';
@@ -53,16 +54,17 @@ export const AmsMethods: Record<string, ParseMethod> = {};
  * @param {boolean} taggable Environment taggable (e.g., align* is taggable,
  *     split is not).
  * @param {string} align Column alignment.
+ * @param {string} balign Column break alignment.
  * @param {string} spacing Column spacing.
  * @param {string} style Display style indicator.
  */
 AmsMethods.AmsEqnArray = function(parser: TexParser, begin: StackItem,
-                                      numbered: boolean, taggable: boolean,
-                                      align: string, spacing: string,
-                                      style: string) {
+                                  numbered: boolean, taggable: boolean,
+                                  align: string, balign: string, spacing: string,
+                                  style: string) {
   // @test Aligned, Gathered
   const args = parser.GetBrackets('\\begin{' + begin.getName() + '}');
-  const array = BaseMethods.EqnArray(parser, begin, numbered, taggable, align, spacing, style);
+  const array = BaseMethods.EqnArray(parser, begin, numbered, taggable, align, balign, spacing, style);
   return ParseUtil.setArrayAlign(array as ArrayItem, args, parser);
 };
 
@@ -78,7 +80,7 @@ AmsMethods.AmsEqnArray = function(parser: TexParser, begin: StackItem,
 AmsMethods.AlignAt = function(parser: TexParser, begin: StackItem,
                               numbered: boolean, taggable: boolean) {
   const name = begin.getName();
-  let n, valign, align = '', spacing = [];
+  let n, valign, align = '', balign = '', spacing = [];
   if (!taggable) {
     // @test Alignedat
     valign = parser.GetBrackets('\\begin{' + name + '}');
@@ -93,16 +95,17 @@ AmsMethods.AlignAt = function(parser: TexParser, begin: StackItem,
   let count = parseInt(n, 10);
   while (count > 0) {
     align  += 'rl';
+    balign += 'bt';
     spacing.push('0em 0em');
     count--;
   }
   let spaceStr = spacing.join(' ');
   if (taggable) {
     // @test Alignat, Alignat Star
-    return AmsMethods.EqnArray(parser, begin, numbered, taggable, align, spaceStr);
+    return AmsMethods.EqnArray(parser, begin, numbered, taggable, align, balign, spaceStr);
   }
   // @test Alignedat
-  let array = AmsMethods.EqnArray(parser, begin, numbered, taggable, align, spaceStr);
+  let array = AmsMethods.EqnArray(parser, begin, numbered, taggable, align, balign, spaceStr);
   return ParseUtil.setArrayAlign(array as ArrayItem, valign, !taggable ? parser : null);
 };
 
@@ -149,8 +152,10 @@ AmsMethods.XalignAt = function(parser: TexParser, begin: StackItem,
                        '\\begin{' + begin.getName() + '}');
   }
   const align = (padded ? 'crl' : 'rlc');
+  const balign = (padded ? 'mbt' : 'btm');
   const width = (padded ? 'fit auto auto' : 'auto auto fit');
-  const item = AmsMethods.FlalignArray(parser, begin, numbered, padded, false, align, width, true) as FlalignItem;
+  const item = AmsMethods.FlalignArray(parser, begin, numbered, padded, false,
+                                       align, balign, width, true) as FlalignItem;
   item.setProperty('xalignat', 2 * parseInt(n));
   return item;
 };
@@ -164,12 +169,13 @@ AmsMethods.XalignAt = function(parser: TexParser, begin: StackItem,
  * @param {boolean} padded Is it padded.
  * @param {boolean} center Is it centered.
  * @param {string} align The horizontal alignment for columns
+ * @param {string} balign The vertical break alignment for columns
  * @param {string} width The column widths of the table
  * @param {boolean} zeroWidthLabel True if the label should be in llap/rlap
  */
 AmsMethods.FlalignArray = function(parser: TexParser, begin: StackItem, numbered: boolean,
-                                  padded: boolean, center: boolean, align: string,
-                                  width: string, zeroWidthLabel: boolean = false) {
+                                   padded: boolean, center: boolean, align: string, balign: string,
+                                   width: string, zeroWidthLabel: boolean = false) {
   ParseUtil.checkEqnEnv(parser);
   parser.Push(begin);
   align = align
@@ -178,6 +184,7 @@ AmsMethods.FlalignArray = function(parser: TexParser, begin: StackItem, numbered
     .replace(/r/g, 'right')
     .replace(/l/g, 'left')
     .replace(/c/g, 'center');
+  balign = splitAlignArray(balign);
   const item = parser.itemFactory.create(
     'flalign', begin.getName(), numbered, padded, center, parser.stack) as FlalignItem;
   item.arraydef = {
@@ -187,6 +194,7 @@ AmsMethods.FlalignArray = function(parser: TexParser, begin: StackItem, numbered
     columnspacing: '0em',
     columnwidth: width,
     rowspacing: '3pt',
+    'data-break-align': balign,
     side: parser.options['tagSide'],
     minlabelspacing: (zeroWidthLabel ? '0' : parser.options['tagIndent']),
     'data-width-includes-label': true,

@@ -100,6 +100,15 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
         display: 'inline-table',
         width: '100%'
       },
+      'mjx-linestack[break-align="bottom"], mjx-mrow[break-top][break-align="bottom"]': {
+        display: 'inline-block'
+      },
+      'mjx-linestack[break-align="middle"], mjx-mrow[break-top][break-align="middle"]': {
+        'vertical-align': 'middle'
+      },
+      'mjx-linestack[break-align="center"], mjx-mrow[break-top][break-align="center"]': {
+        'vertical-align': 'middle'
+      },
       'mjx-linestack[breakable]': {
         display: 'inline'
       },
@@ -155,6 +164,7 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
       if (n) {
         this.placeLines(parents, n);
       } else {
+        this.handleVerticalAlign(parents[0]);
         this.handleNegativeWidth(parents[0]);
       }
     }
@@ -190,6 +200,15 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
     /**
      * @param {N} dom  The HTML element for the mrow
      */
+    protected handleVerticalAlign(dom: N) {
+      if (this.dh) {
+        this.adaptor.setStyle(this.adaptor.parent(dom), 'vertical-align', this.em(this.dh));
+      }
+    }
+
+    /**
+     * @param {N} dom  The HTML element for the mrow
+     */
     protected handleNegativeWidth(dom: N) {
       const {w} = this.getBBox();
       if (w < 0) {
@@ -215,6 +234,12 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
       }
       if (this.node.getProperty('process-breaks')) {
         adaptor.setAttribute(this.dom[0], 'breakable', 'true');
+      }
+      if (this.node.isInferred || !this.isStack) {
+        const valign = (this.parent.node.attributes.get('data-vertical-align') as string);
+        if (valign === 'middle' || valign === 'center' || valign === 'bottom') {
+          adaptor.setAttribute(this.dom[0], 'break-align', valign);
+        }
       }
       //
       // Add an href anchor, if needed, and insert the linestack/mrow

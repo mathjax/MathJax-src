@@ -26,7 +26,6 @@ import TexParser from './TexParser.js';
 import TexError from './TexError.js';
 import {lookup} from '../../util/Options.js';
 import ParseUtil from './ParseUtil.js';
-import {TEXCLASS} from '../../core/MmlTree/MmlNode.js';
 
 /***********************************************************************/
 
@@ -46,7 +45,7 @@ export type ColumnState = {
   cstart: string[];                     // the '>' declarations (not currently used)
   cend:   string[];                     // the '<' declarations (not currently used)
   cextra: boolean[];                    // the extra columns from '@' and '!' declarations
-  ralign: [number, string, string][];   // the row alignment and column width/align when specified
+  ralign: [string, string, string][];   // the row alignment and column width/align when specified
 }
 
 /**
@@ -69,11 +68,11 @@ export class ColumnParser {
     l: (state) => state.calign[state.j++] = 'left',
     c: (state) => state.calign[state.j++] = 'center',
     r: (state) => state.calign[state.j++] = 'right',
-    p: (state) => this.getColumn(state, TEXCLASS.VTOP),
-    m: (state) => this.getColumn(state, TEXCLASS.VCENTER),
-    b: (state) => this.getColumn(state, TEXCLASS.VBOX),
-    w: (state) => this.getColumn(state, TEXCLASS.VTOP, ''),
-    W: (state) => this.getColumn(state, TEXCLASS.VTOP, ''),
+    p: (state) => this.getColumn(state, 'top'),
+    m: (state) => this.getColumn(state, 'middle'),
+    b: (state) => this.getColumn(state, 'bottom'),
+    w: (state) => this.getColumn(state, 'top', ''),
+    W: (state) => this.getColumn(state, 'top', ''),
     '|': (state) => this.addRule(state, 'solid'),
     ':': (state) => this.addRule(state, 'dashed'),
     '>': (state) => state.cstart[state.j] = (state.cstart[state.j] || '') + this.getBraces(state),
@@ -191,10 +190,10 @@ export class ColumnParser {
    * Read a p/m/b/w/W column declaration
    *
    * @param {ColumnState} state   The current state of the parser
-   * @param {number} ralign       The TEXCLASS for vertical alignment
+   * @param {number} ralign       The vertical alignment for the column
    * @param {string=} calign      The column alignment ('' means get it as an argument)
    */
-  public getColumn(state: ColumnState, ralign: number, calign: string = 'left') {
+  public getColumn(state: ColumnState, ralign: string, calign: string = 'left') {
     state.calign[state.j] = calign || this.getAlign(state);
     state.cwidth[state.j] = this.getDimen(state);
     state.ralign[state.j] = [ralign, state.cwidth[state.j], state.calign[state.j]];

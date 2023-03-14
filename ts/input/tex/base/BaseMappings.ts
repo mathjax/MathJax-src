@@ -616,11 +616,13 @@ new sm.CommandMap('macros', {
   mathpunct:         ['TeXAtom', TEXCLASS.PUNCT],
   mathinner:         ['TeXAtom', TEXCLASS.INNER],
 
-  vtop:              ['TeXAtom', TEXCLASS.VTOP],
-  vcenter:           ['TeXAtom', TEXCLASS.VCENTER],
-  vbox:              ['TeXAtom', TEXCLASS.VBOX],
+  vtop:              ['VBox', 'top'],
+  vcenter:           ['VBox', 'center'],
+  vbox:              ['VBox', 'bottom'],
   hsize:              'Hsize',
   parbox:             'ParBox',
+
+  breakAlign:         'BreakAlign',
 
   buildrel:           'BuildRel',
 
@@ -728,7 +730,7 @@ new sm.EnvironmentMap('environment', ParseMethods.environment, {
   array:         ['AlignedArray'],
   darray:        ['AlignedArray', null, 'D'],
   equation:      ['Equation', null, true],
-  eqnarray:      ['EqnArray', null, true, true, 'rcl',
+  eqnarray:      ['EqnArray', null, true, true, 'rcl', 'bmt',
                   ParseUtil.cols(0, MATHSPACE.thickmathspace), '.5em'],
   indentalign:   ['IndentAlign']
 }, BaseMethods);

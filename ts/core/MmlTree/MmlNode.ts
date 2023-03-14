@@ -43,13 +43,10 @@ export const TEXCLASS = {
   CLOSE: 5,
   PUNCT: 6,
   INNER: 7,
-  VCENTER: 8,  // Used in TeXAtom, but not for spacing
-  VTOP: 9,     // Used in TeXAtom, but not for spacing
-  VBOX: 10,    // Used in TeXAtom, but not for spacing
   NONE:   -1
 };
 
-export const TEXCLASSNAMES = ['ORD', 'OP', 'BIN', 'REL', 'OPEN', 'CLOSE', 'PUNCT', 'INNER', 'VCENTER', 'VTOP', 'VBOX'];
+export const TEXCLASSNAMES = ['ORD', 'OP', 'BIN', 'REL', 'OPEN', 'CLOSE', 'PUNCT', 'INNER'];
 
 /**
  *  The spacing sizes used by the TeX spacing table below.
@@ -275,6 +272,14 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
     maligngroup: {
       mrow: {groupalign: true},
       mtable: {groupalign: true}
+    },
+    mtr: {
+      msqrt: {'data-vertical-align': true},
+      mroot: {'data-vertical-align': true}
+    },
+    mlabeledtr: {
+      msqrt: {'data-vertical-align': true},
+      mroot: {'data-vertical-align': true}
     }
   };
 
@@ -630,12 +635,6 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
     let texClass = this.texClass || TEXCLASS.ORD;
     if (prevClass === TEXCLASS.NONE || texClass === TEXCLASS.NONE) {
       return '';
-    }
-    if (prevClass >= TEXCLASS.VCENTER) {
-      prevClass = TEXCLASS.ORD;
-    }
-    if (texClass >= TEXCLASS.VCENTER) {
-      texClass = TEXCLASS.ORD;
     }
     let space = TEXSPACE[prevClass][texClass];
     if ((this.prevLevel > 0 || this.attributes.get('scriptlevel') > 0) && space >= 0) {

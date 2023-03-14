@@ -965,13 +965,22 @@ export class ArrayItem extends BaseItem {
   /**
    * Row alignments to specify on particular columns
    */
-  public ralign: [number, string, string][] = [];
+  public ralign: [string, string, string][] = [];
 
   /**
    * True if separators are dashed.
    * @type {boolean}
    */
   public dashed: boolean = false;
+
+  /**
+   * Data for setting cell/row/table alignment for when there are line breaks
+   */
+  public breakAlign = {
+    cell: '',
+    row: '',
+    table: ''
+  };
 
   /**
    * The TeX parser that created this item
@@ -1049,6 +1058,9 @@ export class ArrayItem extends BaseItem {
     let mml = this.create('node', 'mtable', this.table, this.arraydef);
     if (scriptlevel) {
       mml.setProperty('scriptlevel', scriptlevel);
+    }
+    if (this.breakAlign.table) {
+      NodeUtil.setAttribute(mml, 'data-break-align', this.breakAlign.table);
     }
     if (this.getProperty('arrayPadding')) {
       NodeUtil.setAttribute(mml, 'frame', '');   // empty frame forces fspacing to be used in MathJax
@@ -1214,22 +1226,27 @@ export class ArrayItem extends BaseItem {
     }
     //
     // Check for row alignment specification, and use
-    //   a TeXAtom with a nested mpadded element to produce the
-    //   aligned content.
+    //   an mpadded element to produce the aligned content.
     //
     const ralign = this.ralign[this.row.length];
     if (ralign) {
-      const [tclass, cwidth, calign] = ralign;
-      const texatom = this.create('node', 'TeXAtom', [
-        this.create('node', 'mpadded', mtd.childNodes[0].childNodes, {
-          width: cwidth,
-          'data-overflow': 'auto',
-          'data-align': calign
-        })
-      ], {texClass: tclass});
+      let [valign, cwidth, calign] = ralign;
+      if (this.breakAlign.cell) {
+        valign = this.breakAlign.cell;
+      }
+      const box = this.create('node', 'mpadded', mtd.childNodes[0].childNodes, {
+        width: cwidth,
+        'data-overflow': 'auto',
+        'data-align': calign,
+        'data-vertical-align': valign
+      });
+      box.setProperty('vbox', valign);
       mtd.childNodes[0].childNodes = [];
-      mtd.appendChild(texatom);
+      mtd.appendChild(box);
+    } else if (this.breakAlign.cell) {
+      NodeUtil.setAttribute(mtd, 'data-vertical-align', this.breakAlign.cell);
     }
+    this.breakAlign.cell = '';
     //
     this.row.push(mtd);
     this.Clear();
@@ -1241,15 +1258,21 @@ export class ArrayItem extends BaseItem {
    * Finishes a single row of the array.
    */
   public EndRow() {
-    let node: MmlNode;
+    // @test Array1, Array2
+    let type = 'mtr'
     if (this.getProperty('isNumbered') && this.row.length === 3) {
       // @test Label, Matrix Numbered
       this.row.unshift(this.row.pop());  // move equation number to first
       // position
-      node = this.create('node', 'mlabeledtr', this.row);
-    } else {
-      // @test Array1, Array2
-      node = this.create('node', 'mtr', this.row);
+      type = 'mlabeledtr';
+    } else if (this.getProperty('isLabeled')) {
+      type = 'mlabeledtr';
+      this.setProperty('isLabeled', false);
+    }
+    const node = this.create('node', type, this.row);
+    if (this.breakAlign.row) {
+      NodeUtil.setAttribute(node, 'data-break-align', this.breakAlign.row);
+      this.breakAlign.row = '';
     }
     this.table.push(node);
     this.row = [];
@@ -1354,9 +1377,7 @@ export class EqnArrayItem extends ArrayItem {
     if (this.row.length) {
       ParseUtil.fixInitialMO(this.factory.configuration, this.nodes);
     }
-    const node = this.create('node', 'mtd', this.nodes);
-    this.row.push(node);
-    this.Clear();
+    super.EndEntry();
   }
 
   /**
@@ -1367,16 +1388,13 @@ export class EqnArrayItem extends ArrayItem {
       this.maxrow = this.row.length;
     }
     // @test Cubic Binomial
-    let mtr = 'mtr';
-    let tag = this.factory.configuration.tags.getTag();
+    const tag = this.factory.configuration.tags.getTag();
     if (tag) {
       this.row = [tag].concat(this.row);
-      mtr = 'mlabeledtr';
+      this.setProperty('isLabeled', true);
     }
     this.factory.configuration.tags.clearTag();
-    const node = this.create('node', mtr, this.row);
-    this.table.push(node);
-    this.row = [];
+    super.EndRow();
   }
 
   /**
@@ -1393,6 +1411,7 @@ export class EqnArrayItem extends ArrayItem {
     this.extendArray('columnalign', this.maxrow);
     this.extendArray('columnwidth', this.maxrow);
     this.extendArray('columnspacing', this.maxrow - 1);
+    this.extendArray('data-break-align', this.maxrow);
     //
     // Add indentshift for left-aligned columns
     //
@@ -1424,7 +1443,7 @@ export class EqnArrayItem extends ArrayItem {
     const align = (this.arraydef.columnalign as string).split(/ /);
     let prev = '';
     for (const i of align.keys()) {
-      if (align[i] === 'left') {
+      if (align[i] === 'left' && i > 0) {
         const indentshift = (prev === 'center' ? '.7em' : '2em');
         for (const row of this.table) {
           const cell = row.childNodes[row.isKind('mlabeledtr') ? i + 1 : i];
