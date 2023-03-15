@@ -29,7 +29,6 @@ import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
 import {CommonTeXAtom, CommonTeXAtomClass, CommonTeXAtomMixin} from '../../common/Wrappers/TeXAtom.js';
 import {TeXAtom} from '../../../core/MmlTree/MmlNodes/TeXAtom.js';
 import {MmlNode, TEXCLASSNAMES} from '../../../core/MmlTree/MmlNode.js';
-import {StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**

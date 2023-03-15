@@ -29,7 +29,7 @@ import {CommonWrapperFactory} from '../WrapperFactory.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
 import {CommonOutputJax} from '../../common.js';
 import {CommonMunderover} from './munderover.js';
-import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
+import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../../../util/BBox.js';
@@ -757,6 +757,7 @@ export function CommonScriptbaseMixin<
           const core = child.coreMO();
           if (core.size === null) {
             core.getStretchedVariant([W / child.coreRScale()]);
+console.log(core);
           }
         }
       }
