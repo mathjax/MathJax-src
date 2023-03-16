@@ -315,7 +315,8 @@ export function CommonMoMixin<
       //
       if (bbox.w === 0 && this.node.attributes.getExplicit('fence') &&
           (this.node as MmlMo).getText() === '' &&
-          (this.node.texClass === TEXCLASS.OPEN || this.node.texClass === TEXCLASS.CLOSE)) {
+          (this.node.texClass === TEXCLASS.OPEN || this.node.texClass === TEXCLASS.CLOSE) &&
+          !this.jax.options.mathmlSpacing) {
         bbox.R = this.font.params.nulldelimiterspace;
       }
       this.copySkewIC(bbox);
