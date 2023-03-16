@@ -170,16 +170,15 @@ export class MmlMrow extends AbstractMmlNode {
         this.texClass = TEXCLASS.INNER;
       }
       return this;
-    } else {
-      //
-      //  Normal <mrow>, so treat as though mrow is not there
-      //
-      for (const child of this.childNodes) {
-        prev = child.setTeXclass(prev);
-      }
-      if (this.childNodes[0]) {
-        this.updateTeXclass(this.childNodes[0]);
-      }
+    }
+    //
+    //  Normal <mrow>, so treat as though mrow is not there
+    //
+    for (const child of this.childNodes) {
+      prev = child.setTeXclass(prev);
+    }
+    if (this.childNodes[0]) {
+      this.updateTeXclass(this.childNodes[0]);
     }
     return prev;
   }
