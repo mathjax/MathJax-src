@@ -757,7 +757,6 @@ export function CommonScriptbaseMixin<
           const core = child.coreMO();
           if (core.size === null) {
             core.getStretchedVariant([W / child.coreRScale()]);
-console.log(core);
           }
         }
       }
