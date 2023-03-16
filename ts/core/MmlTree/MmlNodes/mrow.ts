@@ -152,7 +152,7 @@ export class MmlMrow extends AbstractMmlNode {
   /**
    * @override
    */
-  public setTeXclass(prev: MmlNode) {
+  public setTeXclass(prev: MmlNode): MmlNode {
     if (this.getProperty('open') != null || this.getProperty('close') != null) {
       //
       // <mrow> looks like it came from \left...\right
@@ -169,6 +169,7 @@ export class MmlMrow extends AbstractMmlNode {
       if (this.texClass == null) {
         this.texClass = TEXCLASS.INNER;
       }
+      return this;
     } else {
       //
       //  Normal <mrow>, so treat as though mrow is not there
