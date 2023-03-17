@@ -31,6 +31,7 @@ import {BBox} from '../../../util/BBox.js';
 import {DIRECTION} from '../FontData.js';
 import {split, isPercent} from '../../../util/string.js';
 import {sum, max} from '../../../util/numeric.js';
+import {Styles, TRBL} from '../../../util/Styles.js';
 
 /*****************************************************************/
 /**
@@ -1265,8 +1266,10 @@ export function CommonMtableMixin<
       // Get the frame, row, and column parameters
       //
       const attributes = this.node.attributes;
-      this.frame = attributes.get('frame') !== 'none';
-      this.fLine = (this.frame && attributes.get('frame') ? .07 : 0);
+      const frame = attributes.get('frame');
+      const fstyles = attributes.get('data-frame-styles') !== undefined;
+      this.frame = frame !== 'none' || fstyles;
+      this.fLine = (frame && frame !== 'none' || fstyles ? .07 : 0);
       this.fSpace = this.getFrameSpacing();
       this.cSpace = this.convertLengths(this.getColumnAttributes('columnspacing'));
       this.rSpace = this.convertLengths(this.getRowAttributes('rowspacing'));
@@ -1279,6 +1282,26 @@ export function CommonMtableMixin<
       //
       this.stretchColumns();
       this.stretchRows();
+    }
+
+    /**
+     * Turn data-frame-styles into actual border styles
+     *
+     * @override
+     */
+    public getStyles() {
+      super.getStyles();
+      const frame = this.node.attributes.get('data-frame-styles') as string;
+      if (!frame) return;
+      if (!this.styles) {
+        this.styles = new Styles('');
+      }
+      const fstyles = frame.split(/ /);
+      for (const i of TRBL.keys()) {
+        const style = fstyles[i];
+        if (style === 'none') continue;
+        this.styles.set(`border-${TRBL[i]}`, `.07em ${style}`);
+      }
     }
 
     /**

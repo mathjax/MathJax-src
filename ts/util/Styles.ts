@@ -45,8 +45,8 @@ export type connections = {[name: string]: connection};
 /**
  * Some common children arrays
  */
-const TRBL = ['top', 'right', 'bottom', 'left'];
-const WSC = ['width', 'style', 'color'];
+export const TRBL = ['top', 'right', 'bottom', 'left'];
+export const WSC = ['width', 'style', 'color'];
 
 /**
  * Split a style at spaces (taking quotation marks and commas into account)
