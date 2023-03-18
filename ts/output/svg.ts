@@ -390,7 +390,7 @@ CommonOutputJax<
       } else if (forced || i) {
         const dimen = (mml && !newline ? mml.getLineBBox(0).originalL : 0);
         if (dimen || !forced) {
-          this.addInlineBreak(nsvg, dimen, forced);
+          this.addInlineBreak(nsvg, dimen, forced || !!mml.node.getProperty('forcebreak'));
         }
       }
       //
@@ -422,7 +422,7 @@ CommonOutputJax<
       adaptor.node(
         'mjx-break',
         !forced ? {newline: true} :
-        SPACE[space] ? {size: SPACE[space]} : {style: `letter-spacing: ${LENGTHS.em(1 - dimen)}`}
+        SPACE[space] ? {size: SPACE[space]} : {style: `letter-spacing: ${LENGTHS.em(dimen - 1)}`}
       ),
       nsvg
     );

@@ -133,6 +133,9 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
         'white-space': 'normal',
         'font-family': 'MJX-BRK'
       },
+      'mjx-break[size="0"]': {
+        'letter-spacing': (.001 - 1) + 'em'
+      },
       'mjx-break[size="1"]': {
         'letter-spacing': (.111 - 1) + 'em'
       },

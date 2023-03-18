@@ -61,6 +61,11 @@ export interface CommonMspace<
 > extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
 
   /**
+   * True when mspace is allowed to break
+   */
+  canBreak: boolean;
+
+  /**
    * The linebreak style
    */
   breakStyle: string;
@@ -142,6 +147,13 @@ export function CommonMspaceMixin<
     /**
      * @override
      */
+    get canBreak() {
+      return (this.node as MmlMspace).canBreak;
+    }
+
+    /**
+     * @override
+     */
     public breakStyle: string;
 
     /**
@@ -155,7 +167,9 @@ export function CommonMspaceMixin<
      * @override
      */
     public setBreakStyle(linebreak: string = '') {
-      this.breakStyle = (linebreak || ((this.node as MmlMspace).hasNewline ? 'before' : ''));
+      this.breakStyle = (linebreak ||
+                         (((this.node as MmlMspace).hasNewline ||
+                           this.node.getProperty('forcebreak')) ? 'before' : ''));
     }
 
     /***************************************************/
