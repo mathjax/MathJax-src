@@ -812,7 +812,12 @@ export class CommonWrapper<
     if (!this.node.isToken) return;
     const attributes = this.node.attributes;
     let variant = attributes.get('mathvariant') as string;
-    if (!attributes.getExplicit('mathvariant')) {
+    if (attributes.getExplicit('mathvariant')) {
+      if (!this.font.getVariant(variant)) {
+        console.warn(`Invalid variant: ${variant}`);
+        variant = 'normal';
+      }
+    } else {
       const values = attributes.getList('fontfamily', 'fontweight', 'fontstyle') as StringMap;
       if (this.removedStyles) {
         const style = this.removedStyles;
