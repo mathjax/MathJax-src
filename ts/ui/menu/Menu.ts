@@ -1053,7 +1053,7 @@ export class Menu {
     if (!jax) return Promise.resolve('SVG can\'t be produced.<br>Try switching to SVG output first.');
     const adaptor = jax.adaptor;
     const cache = jax.options.fontCache;
-    const breaks = math.root.getProperty('process-breaks');
+    const breaks = !!math.root.getProperty('process-breaks');
     if (cache !== 'global' && (math.display || !breaks) &&
         adaptor.getAttribute(math.typesetRoot, 'jax') === 'SVG') {
       for (const child of adaptor.childNodes(math.typesetRoot)) {
@@ -1071,7 +1071,7 @@ export class Menu {
    * @param {boolean} breaks      True if there are inline breaks
    * @returns {Promise<string>}   A promise returning the serialized SVG
    */
-  protected typesetSVG(math: HTMLMATHITEM, cache: string, breaks: boolean) {
+  protected typesetSVG(math: HTMLMATHITEM, cache: string, breaks: boolean): Promise<string> {
     const jax = this.jax.SVG as SVG<HTMLElement, Text, Document>;
     const div = jax.html('div');
     if (cache === 'global') {
@@ -1095,7 +1095,6 @@ export class Menu {
       jax.options.fontCache = cache;
       return this.formatSvg(jax.adaptor.innerHTML(div));
     })
-      .catch(e => console.warn(e));
   }
 
   /**
