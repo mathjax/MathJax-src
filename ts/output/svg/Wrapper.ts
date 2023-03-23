@@ -540,10 +540,13 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    */
 
   public drawBBox() {
-    let {w, h, d}  = this.getBBox();
-    const box = this.svg('g', {style: {
-      opacity: .25
-    }}, [
+    let {w, h, d} = this.getOuterBBox();
+    const L = (this.styleData?.border?.width || [0, 0, 0, 0])[3];
+    const def = {style: {opacity: .25}} as OptionList;
+    if (L) {
+      def.transform = `translate(${this.fixed(-L)}, 0)`;
+    }
+    const box = this.svg('g', def, [
       this.svg('rect', {
         fill: 'red',
         height: this.fixed(h),

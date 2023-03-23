@@ -1072,7 +1072,10 @@ export class ArrayItem extends BaseItem {
     //   If all four sides are present, use a frame of the correct type
     //   Otherwise, if the given sides are solid, use menclosed (with no padding)
     //
-    const fstyle = this.frame.reduce((fstyle, [, style]) => style === fstyle ? style : '', this.frame[0][1]);
+    const fstyle = this.frame.reduce(
+      (fstyle, [, style]) => style === fstyle ? style : '',
+      this.frame[0][1]
+    );
     if (fstyle) {
       if (this.frame.length === 4) {
         NodeUtil.setAttribute(mml, 'frame', fstyle);
@@ -1080,6 +1083,7 @@ export class ArrayItem extends BaseItem {
         return mml;
       }
       if (fstyle === 'solid') {
+        NodeUtil.setAttribute(mml, 'data-frame-styles', '');
         mml = this.create('node', 'menclose', [mml], {
           notation: Array.from(sides.keys()).join(' '),
           'data-padding': 0
@@ -1193,13 +1197,13 @@ export class ArrayItem extends BaseItem {
         if (braces || envs) continue;
         i -= match[2].length;
         let entry = parser.string.slice(parser.i, i).trim();
-        const prefix = entry.match(/^(?:\s*\\(?:hline|hfil{1,3}|rowcolor\s*\{.*?\}))+/);
+        const prefix = entry.match(/^(?:\s*\\(?:h(?:dash)?line|hfil{1,3}|rowcolor\s*\{.*?\}))+/);
         if (prefix) {
           entry = entry.slice(prefix[0].length);
         }
         parser.string = parser.string.slice(i);
         parser.i = 0;
-        return [prefix?.[0] ||'', entry, match[2], true];
+        return [prefix?.[0] || '', entry, match[2], true];
       }
     }
     return fail;

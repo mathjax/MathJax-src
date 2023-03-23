@@ -126,6 +126,10 @@ export interface CommonMtable<
    */
   frame: boolean;
   /**
+   * True if there is a frame or data-frame-styles
+   */
+  fframe: boolean;
+  /**
    * The size of the frame line (or 0 if none)
    */
   fLine: number;
@@ -530,6 +534,10 @@ export function CommonMtableMixin<
      * @override
      */
     public frame: boolean;
+    /**
+     * @override
+     */
+    public fframe: boolean;
     /**
      * @override
      */
@@ -1130,7 +1138,7 @@ export function CommonMtableMixin<
      * @override
      */
     public getFrameSpacing(): number[] {
-      const fspace = (this.frame ? this.convertLengths(this.getAttributeArray('framespacing')) : [0, 0]);
+      const fspace = (this.fframe ? this.convertLengths(this.getAttributeArray('framespacing')) : [0, 0]);
       fspace[2] = fspace[0];
       const padding = this.node.attributes.get('data-array-padding') as string;
       if (padding) {
@@ -1267,9 +1275,9 @@ export function CommonMtableMixin<
       //
       const attributes = this.node.attributes;
       const frame = attributes.get('frame');
-      const fstyles = attributes.get('data-frame-styles') !== undefined;
-      this.frame = frame !== 'none' || fstyles;
-      this.fLine = (frame && frame !== 'none' || fstyles ? .07 : 0);
+      this.frame = frame !== 'none';
+      this.fframe = this.frame || attributes.get('data-frame-styles') !== undefined;
+      this.fLine = (this.frame ? .07 : 0);
       this.fSpace = this.getFrameSpacing();
       this.cSpace = this.convertLengths(this.getColumnAttributes('columnspacing'));
       this.rSpace = this.convertLengths(this.getRowAttributes('rowspacing'));

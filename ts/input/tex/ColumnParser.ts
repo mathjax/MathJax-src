@@ -43,8 +43,8 @@ export type ColumnState = {
   cwidth: string[];                     // the explicit column widths
   cspace: string[];                     // the column spacing
   clines: string[];                     // the column lines
-  cstart: string[];                     // the '>' declarations (not currently used)
-  cend:   string[];                     // the '<' declarations (not currently used)
+  cstart: string[];                     // the '>' declarations
+  cend:   string[];                     // the '<' declarations
   cextra: boolean[];                    // the extra columns from '@' and '!' declarations
   ralign: [number, string, string][];   // the row alignment and column width/align when specified
 }
@@ -206,11 +206,10 @@ export class ColumnParser {
    */
   protected setPadding(state: ColumnState, array: ArrayItem) {
     if (!state.cextra[0] && !state.cextra[state.calign.length - 1]) return;
+    const i = state.calign.length - 1;
     const cspace = state.cspace;
-    array.arraydef['data-array-padding'] = [
-      cspace[0] || '.5em',
-      cspace[state.calign.length - 1] || '.5em'
-    ].join(' ');
+    const space = (!state.cextra[i] ? null : cspace[i]);
+    array.arraydef['data-array-padding'] = `${cspace[0] || '.5em'} ${space || '.5em'}`;
   }
 
   /**
