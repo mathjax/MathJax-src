@@ -194,6 +194,7 @@ export class MathMLCompile<N, T, D> {
           break;
         case 'variant':
           mml.attributes.set('mathvariant', value);
+          mml.setProperty('ignore-variant', true);
           ignoreVariant = true;
           break;
         case 'smallmatrix':

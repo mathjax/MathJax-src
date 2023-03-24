@@ -828,7 +828,7 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
     }
     if (options.checkMathvariants) {
       const variant = this.attributes.getExplicit('mathvariant') as string;
-      if (variant && !MATHVARIANTS.has(variant)) {
+      if (variant && !MATHVARIANTS.has(variant) && !this.getProperty('ignore-variant')) {
         this.mError(`Invalid mathvariant: ${variant}`, options, true);
       }
     }
