@@ -165,12 +165,12 @@ function processParts(parts) {
  * Create the lines of the lib file using the object names from the file.
  *
  * @param {string} name       The path of the file relative to the root .ts directory
- * @param {string[]} objects  Array of names of the object exported by the file
+ * @param {string[]} objects  Array of names of the objects exported by the file
  * @return {string[]}         Array of lines for the contents of the library file
  */
 function processLines(file, objects) {
   if (objects.length === 0) return [];
-  const dir = path.dirname(file).replace(/^\.$/, '');
+  const dir = path.join(PREFIX, path.dirname(file).replace(/^\.$/, ''));
   const dots = dir.replace(/[^\/]+/g, '..') || '.';
   const relative = path.join(dots, '..', JS, dir, path.basename(file)).replace(/\.ts$/, '.js');
   const name = path.parse(file).name;
@@ -221,7 +221,7 @@ function makeDir(dir) {
  */
 function makeFile(file, lines) {
   if (!lines.length) return;
-  const [dir, name] = [path.dirname(file), path.basename(file)];
+  const [dir, name] = [path.join(PREFIX, path.dirname(file)), path.basename(file)];
   makeDir(dir);
   fs.writeFileSync(path.resolve(LIB, dir, name.replace(/\.ts$/, '.js')), lines.join('\n') + '\n');
 }
