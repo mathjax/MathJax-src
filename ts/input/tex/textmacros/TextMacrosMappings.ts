@@ -149,4 +149,16 @@ new CommandMap('text-macros', {
   ref:          ['HandleRef', false],
   eqref:        ['HandleRef', true],
 
+  underline:    ['UnderOver', '2015'],
+
+  llap:         'Lap',
+  rlap:         'Lap',
+
+  phantom:      'Phantom',
+  vphantom:     ['Phantom', 1, 0],
+  hphantom:     ['Phantom', 0, 1],
+  smash:        'Smash',
+
+  mmlToken:     'MmlToken'
+
 }, TextMacrosMethods);

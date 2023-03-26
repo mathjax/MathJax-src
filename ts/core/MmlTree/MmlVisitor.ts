@@ -111,7 +111,7 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
    */
 
   /**
-   * @param {MmlNode} node  The node whose kind is nedded
+   * @param {MmlNode} node  The node whose kind is needed
    * @return {string}       The MamlML node name for that kind
    */
   protected getKind(node: MmlNode): string {
