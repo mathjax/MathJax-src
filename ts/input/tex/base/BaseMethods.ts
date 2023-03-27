@@ -1542,7 +1542,7 @@ BaseMethods.HandleLabel = function(parser: TexParser, name: string) {
       throw new TexError('MultipleLabel', 'Label \'%1\' multiply defined', label);
     }
     // TODO: This should be set in the tags structure!
-    parser.tags.labels[label] = new Label(); // will be replaced by tag value later
+    parser.tags.labels[label] = new Label(label,"mjx-eqn:" + label); // will be replaced by tag value later
   }
 };
 
