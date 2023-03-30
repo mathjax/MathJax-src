@@ -75,7 +75,7 @@ export class Mml3<N, T, D> {
       this.transform = (node: N) => {
         const adaptor = document.adaptor;
         const div = adaptor.node('div', {}, [adaptor.clone(node)]);
-        const dom = adaptor.parse(adaptor.outerHTML(div).replace(/&nbsp;/g, '&#xA0;'), 'text/xml');
+        const dom = adaptor.parse(adaptor.serializeXML(div), 'text/xml');
         const mml = processor.transformToDocument(dom as any as Node) as any as N;
         return (mml ? adaptor.tags(mml, 'math')[0] : node);
       };
