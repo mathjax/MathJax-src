@@ -1105,7 +1105,8 @@ export class Menu {
     svg = (svg.match(/^<svg.*?><defs>/) ?
            svg.replace(/<defs>/, `<defs><style>${css}</style>`) :
            svg.replace(/^(<svg.*?>)/, `$1<defs><style>${css}</style></defs>`));
-    svg = svg.replace(/ (?:role|focusable)=".*?"/g, '');
+    svg = svg.replace(/ (?:role|focusable)=".*?"/g, '')
+             .replace(/"currentColor"/g, '"black"');
     return `${XMLDECLARATION}\n${svg}`;
   }
 
