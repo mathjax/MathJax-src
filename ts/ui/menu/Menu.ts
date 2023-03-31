@@ -697,12 +697,14 @@ export class Menu {
   protected applySettings() {
     this.setTabOrder(this.settings.inTabOrder);
     this.document.options.enableAssistiveMml = this.settings.assistiveMml;
-    this.document.outputJax.options.scale = parseFloat(this.settings.scale);
-    if (this.settings.renderer !== this.defaultSettings.renderer) {
-      this.setRenderer(this.settings.renderer);
-    }
-    this.document.outputJax.options.displayOverflow = this.settings.overflow.toLowerCase();
-    this.document.outputJax.options.linebreaks.inline = this.settings.breakInline;
+    const promise = (this.settings.renderer !== this.defaultSettings.renderer ?
+                     this.setRenderer(this.settings.renderer, false) :
+                     Promise.resolve());
+    promise.then(() => {
+      this.document.outputJax.options.scale = parseFloat(this.settings.scale);
+      this.document.outputJax.options.displayOverflow = this.settings.overflow.toLowerCase();
+      this.document.outputJax.options.linebreaks.inline = this.settings.breakInline;
+    });
   }
 
   /**
@@ -732,36 +734,46 @@ export class Menu {
   /**
    * If the jax is already on record, just use it, otherwise load the new one
    *
-   * @param {string} jax   The name of the jax to switch to
+   * @param {string} jax         The name of the jax to switch to
+   * @param {boolean} rerender   True if the document should be rerendered
+   * @return {Promise}           A promise that is resolved when the renderer is set
+   *                               and rerendering complete
    */
-  protected setRenderer(jax: string) {
+  protected setRenderer(jax: string, rerender: boolean = true): Promise<void> {
     if (this.jax[jax]) {
-      this.setOutputJax(jax);
-    } else {
-      const name = jax.toLowerCase();
+      return this.setOutputJax(jax, rerender);
+    }
+    const name = jax.toLowerCase();
+    return new Promise<void>((ok, fail) => {
       this.loadComponent('output/' + name, () => {
         const startup = MathJax.startup;
-        if (name in startup.constructors) {
-          startup.useOutput(name, true);
-          startup.output = startup.getOutputJax();
-          startup.output.setAdaptor(this.document.adaptor);
-          startup.output.initialize();
-          this.jax[jax] = startup.output;
-          this.setOutputJax(jax);
+        if (!(name in startup.constructors)) {
+          return fail(new Error(`Component ${name} not loaded`));
         }
+        startup.useOutput(name, true);
+        startup.output = startup.getOutputJax();
+        startup.output.setAdaptor(this.document.adaptor);
+        startup.output.initialize();
+        this.jax[jax] = startup.output;
+        this.setOutputJax(jax, rerender)
+          .then(() => ok())
+          .catch((err) => fail(err));
       });
-    }
+    });
   }
 
   /**
    * Set up the new jax and link it to the document, then rerender the math
    *
-   * @param {string} jax   The name of the jax to switch to
+   * @param {string} jax         The name of the jax to switch to
+   * @param {boolean} rerender   True if the document should be rerendered
+   * @return {Promise}           A promise that is resolved when the renderer is set
+   *                               and rerendering complete
    */
-  protected setOutputJax(jax: string) {
+  protected setOutputJax(jax: string, rerender: boolean = true): Promise<void> {
     this.jax[jax].setAdaptor(this.document.adaptor);
     this.document.outputJax = this.jax[jax];
-    this.rerender();
+    return (rerender ? mathjax.handleRetriesFor(() => this.rerender()) : Promise.resolve());
   }
 
   /**
