@@ -1433,7 +1433,7 @@ BaseMethods.HLine = function(parser: TexParser, _name: string, style: string) {
   }
   if (!top.table.length) {
     // @test Enclosed top, Enclosed top bottom
-    top.frame.push('top');
+    top.frame.push(['top', style]);
   } else {
     // @test Enclosed bottom, Enclosed top bottom
     const lines = (top.arraydef['rowlines'] ? (top.arraydef['rowlines'] as string).split(/ /) : []);
