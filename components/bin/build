@@ -73,7 +73,7 @@ const TS = config.ts || JS.replace(/js$/, 'ts');                            // p
 const GLOBAL = config.global || mjGlobal;                                   // path to the global.js file
 const VERSION = config.version || mjGlobal.replace(/global/, 'version');    // path to the version.js file
 const TYPE = config.type || getType();                                      // the module type
-
+const PREFIX = config.prefix || '';                                         // directories to add to any ts files
 /**
  * The list of files that need to be added to the lib directory
  */
@@ -96,7 +96,7 @@ function processList(base, dir, list, top = true) {
         if (top || !EXCLUDESUBDIRS) {
           processDir(base, file);
         }
-      } else if (file.match(/\.ts$/)) {
+      } else if (file.match(/(?<!\.d)\.ts$/)) {
         processFile(base, file);
       }
     }
@@ -226,6 +226,22 @@ function makeFile(file, lines) {
   fs.writeFileSync(path.resolve(LIB, dir, name.replace(/\.ts$/, '.js')), lines.join('\n') + '\n');
 }
 
+function getExtraDirectories() {
+  if (PREFIX === '') return ['', INDENT, ''];
+  let prefix = '';
+  let indent = INDENT;
+  let postfix = '';
+  for (let name of PREFIX.split(/\//)) {
+    if (name.match(/[^a-zA-Z0-9]/)) {
+      name = `"${name}"`;
+    }
+    prefix += indent + name + ': {\n';
+    postfix = '\n' + indent + '}' + postfix;
+    indent += INDENT;
+  }
+  return [prefix, indent, postfix];
+}
+
 /**
  * Make the library file that adds all the exported objects into the MathJax global object
  */
@@ -236,11 +252,12 @@ function processGlobal() {
     `import {VERSION} from '${VERSION}';`,
     '',
   ];
+  const [prefix, indent, postfix] = getExtraDirectories();
   const packages = [];
   PACKAGE = PACKAGE.sort(sortDir);
   while (PACKAGE.length) {
     const dir = path.dirname(PACKAGE[0]).split(path.sep)[0];
-    packages.push(processPackage(lines, INDENT, dir));
+    packages.push(processPackage(lines, indent, dir));
   }
   const name = (ID.match(/[^a-zA-Z0-9_]/) ? `"${ID}"` : ID);
   lines.push(
@@ -250,7 +267,7 @@ function processGlobal() {
     '}',
     '',
     `combineWithMathJax({_: {`,
-      INDENT + packages.join(',\n' + INDENT),
+      prefix + indent + packages.join(',\n' + indent) + postfix,
     '}});'
   );
   fs.writeFileSync(path.join(LIB, COMPONENT + '.js'), lines.join('\n') + '\n');
@@ -284,7 +301,7 @@ function processPackage(lines, space, dir) {
     // If the current package is in this directory (not a subdirectory)
     //   Get the location of transpiled mathjax file
     //   Get the name to use for the data from that file
-    //   Create an entry for the file in the MathJax global that loads the reuired component
+    //   Create an entry for the file in the MathJax global that loads the required component
     // Otherwise (its in a subdirectory)
     //   Get the subdirectory name
     //   Process the subdirectory using an additional indentation
@@ -315,7 +332,11 @@ function processPackage(lines, space, dir) {
   // Create the string defining the object that loads all the needed files into the proper places
   //
   if (dir === '.') return packages.join(',\n    ');
-  return path.basename(dir) + ': {\n' + INDENT + space + packages.join(',\n' + INDENT + space) + '\n' + space + '}';
+  let name = path.basename(dir);
+  if (name.match(/[^a-zA-Z0-9]/)) {
+    name = `"${name}"`;
+  }
+  return name + ': {\n' + INDENT + space + packages.join(',\n' + INDENT + space) + '\n' + space + '}';
 }
 
 /**

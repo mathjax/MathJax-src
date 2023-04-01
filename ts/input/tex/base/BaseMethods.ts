@@ -675,6 +675,7 @@ BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, s
 BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, stack: boolean) {
   const entity = NodeUtil.createEntity(c);
   const mo = parser.create('token', 'mo', {stretchy: true, accent: true}, entity);
+  mo.setProperty('mathaccent', false);
   const pos = (name.charAt(1) === 'o' ? 'over' : 'under');
   const base = parser.ParseArg(name);
   parser.Push(ParseUtil.underOver(parser, base, mo, pos, stack));
@@ -1432,7 +1433,7 @@ BaseMethods.HLine = function(parser: TexParser, _name: string, style: string) {
   }
   if (!top.table.length) {
     // @test Enclosed top, Enclosed top bottom
-    top.frame.push('top');
+    top.frame.push(['top', style]);
   } else {
     // @test Enclosed bottom, Enclosed top bottom
     const lines = (top.arraydef['rowlines'] ? (top.arraydef['rowlines'] as string).split(/ /) : []);

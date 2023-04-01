@@ -214,7 +214,7 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
       } else {
         this.handleInline(parents[0]);
       }
-      adaptor.addClass(this.dom[0], 'MJX-TEX');
+      adaptor.addClass(this.dom[0], `${this.font.cssFontPrefix}-N`);
     }
 
     /**

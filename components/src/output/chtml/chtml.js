@@ -1,17 +1,12 @@
 import './lib/chtml.js';
 
-import {combineDefaults} from '../../../../js/components/global.js';
 import {CHTML} from '../../../../js/output/chtml.js';
+import {DefaultFont, fontName} from '../../../../js/output/chtml/DefaultFont.js';
+import {OutputUtil} from '../util.js';
 
-if (MathJax.loader) {
-  combineDefaults(MathJax.config.loader, 'output/chtml', {
-    checkReady() {
-      return MathJax.loader.load("output/chtml/fonts/tex");
-    }
-  });
+OutputUtil.config('chtml', CHTML, fontName, DefaultFont);
+
+export function loadFont(startup, preload) {
+  return OutputUtil.loadFont(startup, 'chtml', fontName, preload);
 }
 
-if (MathJax.startup) {
-  MathJax.startup.registerConstructor('chtml', CHTML);
-  MathJax.startup.useOutput('chtml');
-}

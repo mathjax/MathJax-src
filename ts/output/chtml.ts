@@ -33,10 +33,9 @@ import {ChtmlWrapperFactory} from './chtml/WrapperFactory.js';
 import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
         ChtmlFontData, ChtmlFontDataClass} from './chtml/FontData.js';
 import {Usage} from './chtml/Usage.js';
-import {TeXFont} from './chtml/fonts/tex.js';
 import * as LENGTHS from '../util/lengths.js';
 import {unicodeChars} from '../util/string.js';
-
+import {DefaultFont} from './chtml/DefaultFont.js';
 
 /*****************************************************************/
 /**
@@ -162,7 +161,7 @@ CommonOutputJax<
    * @constructor
    */
   constructor(options: OptionList = null) {
-    super(options, ChtmlWrapperFactory as any, TeXFont);
+    super(options, ChtmlWrapperFactory as any, DefaultFont);
     this.font.adaptiveCSS(this.options.adaptiveCSS);
     this.wrapperUsage = new Usage<string>();
   }
@@ -180,15 +179,16 @@ CommonOutputJax<
    */
   public styleSheet(html: MathDocument<N, T, D>) {
     if (this.chtmlStyles) {
+      const styles = new CssStyles();
       if (this.options.adaptiveCSS) {
         //
         // Update the style sheet rules
         //
-        const styles = new CssStyles();
         this.addWrapperStyles(styles);
         this.updateFontStyles(styles);
-        this.adaptor.insertRules(this.chtmlStyles, styles.getStyleRules());
       }
+      styles.addStyles(this.font.updateDynamicStyles());
+      this.adaptor.insertRules(this.chtmlStyles, styles.getStyleRules());
       return this.chtmlStyles;  // stylesheet is already added to the document
     }
     const sheet = this.chtmlStyles = super.styleSheet(html);

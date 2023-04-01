@@ -31,6 +31,7 @@ import {BBox} from '../../../util/BBox.js';
 import {DIRECTION} from '../FontData.js';
 import {split, isPercent} from '../../../util/string.js';
 import {sum, max} from '../../../util/numeric.js';
+import {Styles, TRBL} from '../../../util/Styles.js';
 
 /*****************************************************************/
 /**
@@ -124,6 +125,10 @@ export interface CommonMtable<
    * True if there is a frame
    */
   frame: boolean;
+  /**
+   * True if there is a frame or data-frame-styles
+   */
+  fframe: boolean;
   /**
    * The size of the frame line (or 0 if none)
    */
@@ -529,6 +534,10 @@ export function CommonMtableMixin<
      * @override
      */
     public frame: boolean;
+    /**
+     * @override
+     */
+    public fframe: boolean;
     /**
      * @override
      */
@@ -1129,7 +1138,7 @@ export function CommonMtableMixin<
      * @override
      */
     public getFrameSpacing(): number[] {
-      const fspace = (this.frame ? this.convertLengths(this.getAttributeArray('framespacing')) : [0, 0]);
+      const fspace = (this.fframe ? this.convertLengths(this.getAttributeArray('framespacing')) : [0, 0]);
       fspace[2] = fspace[0];
       const padding = this.node.attributes.get('data-array-padding') as string;
       if (padding) {
@@ -1265,8 +1274,10 @@ export function CommonMtableMixin<
       // Get the frame, row, and column parameters
       //
       const attributes = this.node.attributes;
-      this.frame = attributes.get('frame') !== 'none';
-      this.fLine = (this.frame && attributes.get('frame') ? .07 : 0);
+      const frame = attributes.get('frame');
+      this.frame = frame !== 'none';
+      this.fframe = this.frame || attributes.get('data-frame-styles') !== undefined;
+      this.fLine = (this.frame ? .07 : 0);
       this.fSpace = this.getFrameSpacing();
       this.cSpace = this.convertLengths(this.getColumnAttributes('columnspacing'));
       this.rSpace = this.convertLengths(this.getRowAttributes('rowspacing'));
@@ -1279,6 +1290,26 @@ export function CommonMtableMixin<
       //
       this.stretchColumns();
       this.stretchRows();
+    }
+
+    /**
+     * Turn data-frame-styles into actual border styles
+     *
+     * @override
+     */
+    public getStyles() {
+      super.getStyles();
+      const frame = this.node.attributes.get('data-frame-styles') as string;
+      if (!frame) return;
+      if (!this.styles) {
+        this.styles = new Styles('');
+      }
+      const fstyles = frame.split(/ /);
+      for (const i of TRBL.keys()) {
+        const style = fstyles[i];
+        if (style === 'none') continue;
+        this.styles.set(`border-${TRBL[i]}`, `.07em ${style}`);
+      }
     }
 
     /**

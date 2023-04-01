@@ -152,7 +152,7 @@ export class MmlMrow extends AbstractMmlNode {
   /**
    * @override
    */
-  public setTeXclass(prev: MmlNode) {
+  public setTeXclass(prev: MmlNode): MmlNode {
     if (this.getProperty('open') != null || this.getProperty('close') != null) {
       //
       // <mrow> looks like it came from \left...\right
@@ -169,16 +169,16 @@ export class MmlMrow extends AbstractMmlNode {
       if (this.texClass == null) {
         this.texClass = TEXCLASS.INNER;
       }
-    } else {
-      //
-      //  Normal <mrow>, so treat as though mrow is not there
-      //
-      for (const child of this.childNodes) {
-        prev = child.setTeXclass(prev);
-      }
-      if (this.childNodes[0]) {
-        this.updateTeXclass(this.childNodes[0]);
-      }
+      return this;
+    }
+    //
+    //  Normal <mrow>, so treat as though mrow is not there
+    //
+    for (const child of this.childNodes) {
+      prev = child.setTeXclass(prev);
+    }
+    if (this.childNodes[0]) {
+      this.updateTeXclass(this.childNodes[0]);
     }
     return prev;
   }

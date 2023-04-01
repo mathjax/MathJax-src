@@ -1,17 +1,12 @@
 import './lib/svg.js';
 
-import {combineDefaults} from '../../../../js/components/global.js';
 import {SVG} from '../../../../js/output/svg.js';
+import {DefaultFont, fontName} from '../../../../js/output/svg/DefaultFont.js';
+import {OutputUtil} from '../util.js';
 
-if (MathJax.loader) {
-  combineDefaults(MathJax.config.loader, 'output/svg', {
-    checkReady() {
-      return MathJax.loader.load("output/svg/fonts/tex");
-    }
-  });
+OutputUtil.config('svg', SVG, fontName, DefaultFont);
+
+export function loadFont(startup, preload) {
+  return OutputUtil.loadFont(startup, 'svg', fontName, preload);
 }
 
-if (MathJax.startup) {
-  MathJax.startup.registerConstructor('svg', SVG);
-  MathJax.startup.useOutput('svg');
-}
