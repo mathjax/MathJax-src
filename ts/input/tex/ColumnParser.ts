@@ -42,8 +42,8 @@ export type ColumnState = {
   cwidth: string[];                     // the explicit column widths
   cspace: string[];                     // the column spacing
   clines: string[];                     // the column lines
-  cstart: string[];                     // the '>' declarations (not currently used)
-  cend:   string[];                     // the '<' declarations (not currently used)
+  cstart: string[];                     // the '>' declarations
+  cend:   string[];                     // the '<' declarations
   cextra: boolean[];                    // the extra columns from '@' and '!' declarations
   ralign: [string, string, string][];   // the row alignment and column width/align when specified
 }
@@ -130,60 +130,85 @@ export class ColumnParser {
       this.columnHandler[c](state);
     }
     //
-    // Set the column alignments
+    // Set array definition values
     //
-    const calign = state.calign;
-    array.arraydef.columnalign = calign.join(' ');
-    //
-    // Set the column widths, if needed
-    //
-    if (state.cwidth.length) {
-      const cwidth = [...state.cwidth];
-      if (cwidth.length < calign.length) {
-        cwidth.push('auto');
-      }
-      array.arraydef.columnwidth = cwidth.map(w => w || 'auto').join(' ');
+    this.setColumnAlign(state, array);
+    this.setColumnWidths(state, array);
+    this.setColumnSpacing(state, array);
+    this.setColumnLines(state, array);
+    this.setPadding(state, array);
+  }
+
+  /**
+   * @param {ColumnState} state   The current state of the parser
+   * @param {ArrayItem} array     The array stack item to adjust
+   */
+  protected setColumnAlign(state: ColumnState, array: ArrayItem) {
+    array.arraydef.columnalign = state.calign.join(' ');
+  }
+
+  /**
+   * @param {ColumnState} state   The current state of the parser
+   * @param {ArrayItem} array     The array stack item to adjust
+   */
+  protected setColumnWidths(state: ColumnState, array: ArrayItem) {
+    if (!state.cwidth.length) return;
+    const cwidth = [...state.cwidth];
+    if (cwidth.length < state.calign.length) {
+      cwidth.push('auto');
     }
-    //
-    // Set the column spacing
-    //
-    if (state.cspace.length) {
-      const cspace = [...state.cspace];
-      if (cspace.length < calign.length) {
-        cspace.push('1em');
-      }
-      array.arraydef.columnspacing = cspace.slice(1).map(d => d || '1em').join(' ');
+    array.arraydef.columnwidth = cwidth.map(w => w || 'auto').join(' ');
+  }
+
+  /**
+   * @param {ColumnState} state   The current state of the parser
+   * @param {ArrayItem} array     The array stack item to adjust
+   */
+  protected setColumnSpacing(state: ColumnState, array: ArrayItem) {
+    if (!state.cspace.length) return;
+    const cspace = [...state.cspace];
+    if (cspace.length < state.calign.length) {
+      cspace.push('1em');
     }
-    //
-    // Set the column lines and table frame
-    //
-    if (state.clines.length) {
-      const clines = [...state.clines];
-      if (clines[0]) {
-        // @test Enclosed left right, Enclosed left
-        array.frame.push('left');
-        array.dashed = (clines[0] === 'dashed');
-      }
-      if (clines.length > calign.length) {
-        // @test Enclosed left right, Enclosed right
-        array.frame.push('right');
-        clines.pop();
-      } else if (clines.length < calign.length) {
-        clines.push('none');
-      }
+    array.arraydef.columnspacing = cspace.slice(1).map(d => d || '1em').join(' ');
+  }
+
+  /**
+   * @param {ColumnState} state   The current state of the parser
+   * @param {ArrayItem} array     The array stack item to adjust
+   */
+  protected setColumnLines(state: ColumnState, array: ArrayItem) {
+    if (!state.clines.length) return;
+    const clines = [...state.clines];
+    if (clines[0]) {
+      // @test Enclosed left right, Enclosed left
+      array.frame.push(['left', clines[0]]);
+    }
+    if (clines.length > state.calign.length) {
+      // @test Enclosed left right, Enclosed right
+      array.frame.push(['right', clines.pop()]);
+    } else if (clines.length < state.calign.length) {
+      clines.push('none');
+    }
+    if (clines.length > 1) {
       // @test Enclosed left right
       array.arraydef.columnlines =
         clines.slice(1)
-              .map(l => l || 'none')
-              .join(' ');
+        .map(l => l || 'none')
+        .join(' ');
     }
-    if (state.cextra[0] || state.cextra[calign.length - 1]) {
-      const cspace = state.cspace;
-      array.arraydef['data-array-padding'] = [
-        cspace[0] || '.5em',
-        cspace[calign.length - 1] || '.5em'
-      ].join(' ');
-    }
+  }
+
+  /**
+   * @param {ColumnState} state   The current state of the parser
+   * @param {ArrayItem} array     The array stack item to adjust
+   */
+  protected setPadding(state: ColumnState, array: ArrayItem) {
+    if (!state.cextra[0] && !state.cextra[state.calign.length - 1]) return;
+    const i = state.calign.length - 1;
+    const cspace = state.cspace;
+    const space = (!state.cextra[i] ? null : cspace[i]);
+    array.arraydef['data-array-padding'] = `${cspace[0] || '.5em'} ${space || '.5em'}`;
   }
 
   /**

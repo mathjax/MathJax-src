@@ -28,12 +28,12 @@ import {MathItem} from '../core/MathItem.js';
 import {SvgWrapper, SvgWrapperClass} from './svg/Wrapper.js';
 import {SvgWrapperFactory} from './svg/WrapperFactory.js';
 import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from './svg/FontData.js';
-import {TeXFont} from './svg/fonts/tex.js';
 import {StyleList as CssStyleList} from '../util/StyleList.js';
 import {FontCache} from './svg/FontCache.js';
 import {unicodeChars} from '../util/string.js';
 import * as LENGTHS from '../util/lengths.js';
 import {SPACE} from './common/Wrapper.js';
+import {DefaultFont} from './svg/DefaultFont.js';
 
 export const SVGNS = 'http://www.w3.org/2000/svg';
 export const XLINKNS = 'http://www.w3.org/1999/xlink';
@@ -140,7 +140,7 @@ CommonOutputJax<
    * @constructor
    */
   constructor(options: OptionList = null) {
-    super(options, SvgWrapperFactory as any, TeXFont);
+    super(options, SvgWrapperFactory as any, DefaultFont);
     this.fontCache = new FontCache(this);
   }
 

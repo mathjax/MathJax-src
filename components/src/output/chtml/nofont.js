@@ -1,5 +1,6 @@
-import {FontData} from '../../../../js/output/chtml/FontData.js';
+import {ChtmlFontData} from '../../../../js/output/chtml/FontData.js';
 
-export class TeXFont extends FontData {};
+export class DefaultFont extends ChtmlFontData {};
+export const fontName = 'nofont';
 
-TeXFont.OPTIONS = {fontURL: '.'};
+DefaultFont.OPTIONS = {fontURL: '.'};
