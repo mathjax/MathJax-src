@@ -222,7 +222,8 @@ function makeDir(dir) {
  */
 function makeFile(file, lines) {
   if (!lines.length) return;
-  const [dir, name] = [path.join(PREFIX, path.dirname(file)), path.basename(file)];
+  const basedir = path.dirname(file);
+  const [dir, name] = [PREFIX ? path.join(PREFIX, basedir) : basedir, path.basename(file)];
   makeDir(dir);
   fs.writeFileSync(path.resolve(LIB, dir, name.replace(/\.ts$/, '.js')), lines.join('\n') + '\n');
 }
