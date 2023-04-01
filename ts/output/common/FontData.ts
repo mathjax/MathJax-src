@@ -236,9 +236,14 @@ export type FontParameterList = {
 /****************************************************************************/
 
 /**
+ * Generic Font data
+ */
+export type Font = FontData<CharOptions, VariantData<CharOptions>, DelimiterData>;
+
+/**
  * A function for setting up an additional character-data file
  */
-export type DynamicSetup = ((font: FontData<CharOptions, VariantData<CharOptions>, DelimiterData>) => void);
+export type DynamicSetup = ((font: Font) => void);
 
 /**
  * Character numbers or ranges of numbers that cause a dynamic file to be laoded
@@ -303,7 +308,7 @@ export type DynamicCharMap = {[name: number]: DynamicFile};
  * @template C  The CharOptions type
  * @template D  The DelimiterData type
  */
-export type FontExtensionData<C extends CharOptions, D extends DelimiterData> = {
+export interface FontExtensionData<C extends CharOptions, D extends DelimiterData> {
   name: string;
   options?: OptionList;
   variants?: string[][] | {'[+]'?: string[][], '[-]'?: string[][]};
@@ -648,6 +653,11 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   public cssFamilyPrefix: string;
 
   /**
+   * The prefix to use for font names (e.g., 'TEX')
+   */
+  public cssFontPrefix: string = '';
+
+  /**
    * The character maps
    */
   protected remapChars: RemapMapMap = {};
@@ -719,7 +729,9 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * @template D  The DelimiterData type
    */
   public static dynamicSetup<C extends CharOptions, D extends DelimiterData>(
-    extension: string, file: string, variants: CharMapMap<C>, delimiters: DelimiterMap<D> = {}
+    extension: string, file: string,
+    variants: CharMapMap<C>, delimiters: DelimiterMap<D> = {},
+    fonts: string[] = null
   ) {
     const data = (extension ? this.dynamicExtensions.get(extension) : null);
     const files = (extension ? data.files : this.dynamicFiles);
@@ -727,6 +739,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
       Object.keys(variants).forEach(name => font.defineChars(name, variants[name]));
       font.defineDelimiters(delimiters);
       extension && this.adjustDelimiters(font.delimiters, Object.keys(delimiters), data.sizeN, data.stretchN);
+      fonts && font.addDynamicFontCss(fonts);
     };
   }
 
@@ -905,9 +918,9 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   public createVariant(name: string, inherit: string = null, link: string = null) {
     let variant = {
       linked: [] as CharMap<C>[],
-      chars: (inherit ? Object.create(this.variant[inherit].chars) : {}) as CharMap<C>
-    } as V;
-    if (link && this.variant[link]) {
+      chars: Object.create(inherit ? this.variant[inherit].chars : {}) as CharMap<C>
+    } as unknown as V;
+    if (this.variant[link]) {
       Object.assign(variant.chars, this.variant[link].chars);
       this.variant[link].linked.push(variant.chars);
       variant.chars = Object.create(variant.chars);
@@ -1132,6 +1145,15 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   }
 
   /**
+   * Implemented in subclasses
+   *
+   * @param {string[]} _fonts   The IDs for the fonts to add CSS for
+   * @param {string} _root      The root URL for the fonts (can be set by extensions)
+   */
+  public addDynamicFontCss(_fonts: string[], _root?: string) {
+  }
+
+  /**
    * @param {number} n  The delimiter character number whose data is desired
    * @return {DelimiterData}  The data for that delimiter (or undefined)
    */
@@ -1248,7 +1270,7 @@ export interface FontDataClass<C extends CharOptions, V extends VariantData<C>, 
   defineDynamicFiles(dynamicFiles: DynamicFileDef[], prefix?: string): DynamicFileList;
   /* tslint:disable-next-line:jsdoc-require */
   dynamicSetup<C extends CharOptions, D extends DelimiterData>(
-    font: string, file: string, variants: CharMapMap<C>, delimiters?: DelimiterMap<D>
+    font: string, file: string, variants: CharMapMap<C>, delimiters?: DelimiterMap<D>, fonts?: string[]
   ): void;
   /* tslint:disable-next-line:jsdoc-require */
   addExtension(data: FontExtensionData<C, D>, prefix?: string): void;

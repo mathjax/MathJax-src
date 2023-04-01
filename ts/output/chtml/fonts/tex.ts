@@ -76,36 +76,6 @@ export class TeXFont extends Base {
   protected static defaultCssFamilyPrefix = 'MJXZERO';
 
   /**
-   * The classes to use for each variant
-   */
-  protected static defaultVariantClasses: StringMap = {
-    'normal': 'mjx-n',
-    'bold': 'mjx-b',
-    'italic': 'mjx-i',
-    'bold-italic': 'mjx-b mjx-i',
-    'double-struck': 'mjx-ds mjx-b',
-    'fraktur': 'mjx-fr',
-    'bold-fraktur': 'mjx-fr mjx-b',
-    'script': 'mjx-sc mjx-i',
-    'bold-script': 'mjx-sc mjx-b mjx-i',
-    'sans-serif': 'mjx-ss',
-    'bold-sans-serif': 'mjx-ss mjx-b',
-    'sans-serif-italic': 'mjx-ss mjx-i',
-    'sans-serif-bold-italic': 'mjx-ss mjx-b mjx-i',
-    'monospace': 'mjx-ty',
-    '-smallop': 'mjx-sop',
-    '-largeop': 'mjx-lop',
-    '-size3': 'mjx-s3',
-    '-size4': 'mjx-s4',
-    '-tex-calligraphic': 'mjx-cal mjx-i',
-    '-tex-bold-calligraphic': 'mjx-cal mjx-b',
-    '-tex-mathit': 'mjx-mit mjx-i',
-    '-tex-oldstyle': 'mjx-os',
-    '-tex-bold-oldstyle': 'mjx-os mjx-b',
-    '-tex-variant': 'mjx-var'
-  };
-
-  /**
    * The letters that identify the default font for each varaint
    */
   protected static defaultVariantLetters: StringMap = {
@@ -177,7 +147,7 @@ export class TeXFont extends Base {
   protected static defaultStyles = {
     ...ChtmlFontData.defaultStyles,
 
-    '.MJX-TEX': {
+    '.TEX-N': {
       'font-family': 'MJXZERO, MJXTEX'
     },
 
@@ -377,6 +347,11 @@ export class TeXFont extends Base {
       src: 'url("%%URL%%/MathJax_Vector-Bold.woff") format("woff")'
     },
   };
+
+  /**
+   * @override
+   */
+  public cssFontPrefix: string = 'TEX';
 
   /**
    * @override

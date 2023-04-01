@@ -116,9 +116,10 @@ export abstract class CommonOutputJax<
       lineleading: .2,                // the default lineleading in em units
       LinebreakVisitor: null,         // The LinebreakVisitor to use
     },
+    font: 'tex',                   // the font component to load
     wrapperFactory: null,          // The wrapper factory to use
-    font: null,                    // The FontData object to use
-    cssStyles: null,               // The CssStyles object to use
+    fontData: null,                // The FontData object to use
+    cssStyles: null                // The CssStyles object to use
   };
 
   /**
@@ -221,9 +222,9 @@ export abstract class CommonOutputJax<
   constructor(options: OptionList = null,
               defaultFactory: typeof CommonWrapperFactory = null,
               defaultFont: FC = null) {
-    const [fontClass, font] = (options.font instanceof FontData ?
-                               [options.font.constructor as typeof FontData, options.font] :
-                               [options.font || defaultFont, null]);
+    const [fontClass, font] = (options.fontData instanceof FontData ?
+                               [options.fontData.constructor as typeof FontData, options.fontData] :
+                               [options.fontData || defaultFont, null]);
     const [jaxOptions, fontOptions] = separateOptions(options, fontClass.OPTIONS);
     super(jaxOptions);
     this.factory = this.options.wrapperFactory ||
