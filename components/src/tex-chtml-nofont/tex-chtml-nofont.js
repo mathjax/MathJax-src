@@ -1,18 +1,17 @@
 import {startup} from '../startup/init.js';
 import {Loader} from '../../../js/components/loader.js';
 import '../core/core.js';
-import '../input/tex-full/tex-full.js';
+import '../input/tex/tex.js';
 import {loadFont} from '../output/chtml/chtml.js';
 import '../ui/menu/menu.js';
-import '../a11y/assistive-mml/assistive-mml.js';
+import {checkSre} from '../a11y/util.js';
 
 Loader.preLoad(
-  'loader', 'startup',
   'core',
-  'input/tex-full',
+  'input/tex',
   'output/chtml',
-  'ui/menu',
-  'a11y/assistive-mml'
+  'ui/menu'
 );
+Loader.saveVersion('tex-chtml-nofont');
 
-loadFont(startup, true);
+loadFont(checkSre(startup));

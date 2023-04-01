@@ -36,9 +36,10 @@ export * from '../common/FontData.js';
  * Add the extra data needed for CharOptions in CHTML
  */
 export interface ChtmlCharOptions extends CharOptions {
-  c?: string;    // the content value (for css)
-  f?: string;    // the font postfix (for css)
-  ff?: string;   // the full font css class (for extensions)
+  c?: string;                   // the content value (for css)
+  f?: string;                   // the font postfix (for css)
+  ff?: string;                  // the full font css class (for extensions)
+  cmb?: boolean;                // true if this is a combining character
 }
 
 /**
@@ -105,6 +106,13 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
    */
   protected static defaultFonts = {};
 
+  /**
+   * The combining character ranges
+   */
+  protected static combiningChars: [number, number][] = [
+    [0x300, 0x36F] , [0x20D0, 0x20FF]
+  ];
+
   /***********************************************************************/
 
   /**
@@ -150,8 +158,9 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
   }
 
   /**
-   * @param {string[]} fonts   The IDs for the fonts to add CSS for
-   * @param {string} root      The root URL for the fonts (can be set by extensions)
+   * @param {StyleList} styles   The style object to add styles to
+   * @param {string[]} fonts     The IDs for the fonts to add CSS for
+   * @param {string} root        The root URL for the fonts (can be set by extensions)
    */
   public static addDynamicFontCss(styles: StyleList, fonts: string[], root: string) {
     const fontStyles: StyleList = {};
@@ -212,12 +221,19 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
   public defineChars(name: string, chars: ChtmlCharMap) {
     super.defineChars(name, chars);
     const letter = this.variant[name].letter;
+    const CLASS = this.constructor as typeof ChtmlFontData;
     for (const n of Object.keys(chars)) {
       const i = parseInt(n);
       if (!Array.isArray(chars[i])) continue;
-      const options = ChtmlFontData.charOptions(chars, i);
+      const options = CLASS.charOptions(chars, i);
       if (options.f === undefined) {
         options.f = letter;
+      }
+      for (const [m, M] of CLASS.combiningChars) {
+        if (i >= m && i <= M) {
+          options.cmb = true;
+          break;
+        }
       }
     }
   }
@@ -445,7 +461,18 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
     const letter = (options.f !== undefined ? options.f : vletter);
     const font = options.ff || (letter ? `${this.cssFontPrefix}-${letter}` : '');
     const selector = 'mjx-c' + this.charSelector(n) + (font ? '.' + font : '');
-    styles[selector] = {padding: this.padding(data, 0, options.ic || 0)};
+    const def = styles[selector] = {padding: this.padding(data, 0, options.ic || 0)} as StyleData;
+    if (options.cmb) {
+      //
+      //  Some browsers now handle combining characters as 0-width even when they aren't, so
+      //  we adjust the CSS to handle both automatic 0-width as well as non-zero width characters.
+      //
+      const pad = (def.padding as string).split(/ /);
+      def.width = pad[1];
+      pad[1] = '0px';
+      def.padding = pad.join(' ');
+      def['text-align'] = 'right';
+    }
   }
 
   /***********************************************************************/

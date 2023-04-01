@@ -745,7 +745,7 @@ export class Menu {
           startup.useOutput(name, true);
           startup.output = startup.getOutputJax();
           this.jax[jax] = startup.output;
-          this.setOutputJax(jax);
+          mathjax.handleRetriesFor(() => this.setOutputJax(jax));
         }
       });
     }

@@ -55,6 +55,8 @@ export type UnknownBBox = {w: number, h: number, d: number};
 export type UnknownMap = Map<string, UnknownBBox>;
 export type UnknownVariantMap = Map<string, UnknownMap>;
 
+export const FONTPATH = '@mathjax/%%FONT%%-font/es5';
+
 /*****************************************************************/
 
 /**
@@ -116,9 +118,11 @@ export abstract class CommonOutputJax<
       lineleading: .2,                // the default lineleading in em units
       LinebreakVisitor: null,         // The LinebreakVisitor to use
     },
-    font: 'tex',                   // the font component to load
+    font: '',                      // the font component to load
+    htmlHDW: 'auto',               // 'use', 'force', or 'ignore' data-mjx-hdw attributes
     wrapperFactory: null,          // The wrapper factory to use
     fontData: null,                // The FontData object to use
+    fontPath: FONTPATH,            // The path to the font definitions
     cssStyles: null                // The CssStyles object to use
   };
 

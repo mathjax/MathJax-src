@@ -14,6 +14,6 @@ Loader.preLoad(
   'output/svg',
   'ui/menu'
 );
-Loader.saveVersion('tex-mml-svg');
+Loader.saveVersion('tex-mml-svg-nofont');
 
-loadFont(checkSre(startup), true);
+loadFont(checkSre(startup));
