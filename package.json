@@ -63,6 +63,7 @@
   },
   "dependencies": {
     "esm": "^3.2.25",
+    "mathjax-modern-font": "^1.0.0-alpha.2",
     "mhchemparser": "^4.1.0",
     "mj-context-menu": "^0.6.1",
     "speech-rule-engine": "^4.0.6"

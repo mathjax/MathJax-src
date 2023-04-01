@@ -56,6 +56,8 @@ export type UnknownBBox = {w: number, h: number, d: number};
 export type UnknownMap = Map<string, UnknownBBox>;
 export type UnknownVariantMap = Map<string, UnknownMap>;
 
+export const FONTPATH = '@mathjax/%%FONT%%-font/es5';
+
 /*****************************************************************/
 
 /**
@@ -117,10 +119,12 @@ export abstract class CommonOutputJax<
       lineleading: .2,                // the default lineleading in em units
       LinebreakVisitor: null,         // The LinebreakVisitor to use
     },
+    font: '',                      // the font component to load
     htmlHDW: 'auto',               // 'use', 'force', or 'ignore' data-mjx-hdw attributes
     wrapperFactory: null,          // The wrapper factory to use
-    font: null,                    // The FontData object to use
-    cssStyles: null,               // The CssStyles object to use
+    fontData: null,                // The FontData object to use
+    fontPath: FONTPATH,            // The path to the font definitions
+    cssStyles: null                // The CssStyles object to use
   };
 
   /**
@@ -223,9 +227,9 @@ export abstract class CommonOutputJax<
   constructor(options: OptionList = null,
               defaultFactory: typeof CommonWrapperFactory = null,
               defaultFont: FC = null) {
-    const [fontClass, font] = (options.font instanceof FontData ?
-                               [options.font.constructor as typeof FontData, options.font] :
-                               [options.font || defaultFont, null]);
+    const [fontClass, font] = (options.fontData instanceof FontData ?
+                               [options.fontData.constructor as typeof FontData, options.fontData] :
+                               [options.fontData || defaultFont, null]);
     const [jaxOptions, fontOptions] = separateOptions(options, fontClass.OPTIONS);
     super(jaxOptions);
     this.factory = this.options.wrapperFactory ||

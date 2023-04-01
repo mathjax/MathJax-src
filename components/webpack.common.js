@@ -187,4 +187,19 @@ const PACKAGE = function (name, js, libs, dir, dist) {
   };
 }
 
+PACKAGE.NOFONT = function (name, js, libs, dir, dist) {
+  const package = PACKAGE(name, js, libs, dir, dist);
+  const jax = (name.match(/chtml|svg/) || ['chtml'])[0];
+  const nofont = path.resolve(__dirname, 'src', 'output', jax, 'nofont.js');
+  package.plugins.push(
+    new webpack.NormalModuleReplacementPlugin(
+      /DefaultFont.js/,
+      function (resource) {
+        resource.request = path.relative(resource.context, nofont).replace(/^([^.])/, './$1');
+      }
+    )
+  );
+  return package;
+}
+
 module.exports = PACKAGE;

@@ -419,7 +419,7 @@ AmsMethods.xArrow = function(parser: TexParser, name: string,
   let def = {width: '+' + ParseUtil.Em((l + r) / 18), lspace: ParseUtil.Em(l / 18)};
   let bot = parser.GetBrackets(name);
   let first = parser.ParseArg(name);
-  let dstrut = parser.create('node', 'mspace', [], {depth: '.25em'});
+  let dstrut = parser.create('node', 'mspace', [], {depth: '.2em'});
   let arrow = parser.create('token',
     'mo', {stretchy: true, texClass: TEXCLASS.REL}, String.fromCodePoint(chr));
   arrow = parser.create('node', 'mstyle', [arrow], {scriptlevel: 0});

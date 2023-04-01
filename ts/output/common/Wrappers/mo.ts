@@ -392,6 +392,7 @@ export function CommonMoMixin<
       this.size = i;
       const schar = (delim.schar ? delim.schar[Math.min(i, delim.schar.length - 1)] || c : c);
       this.stretch = {...delim, c: schar};
+      this.childNodes[0].invalidateBBox();
     }
 
     /**
