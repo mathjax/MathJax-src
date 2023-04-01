@@ -25,7 +25,7 @@ import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wr
 import {CommonWrapperFactory} from '../WrapperFactory.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
 import {CommonOutputJax} from '../../common.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
+import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../../../util/BBox.js';
 import {LineBBox} from '../LineBBox.js';
@@ -310,6 +310,15 @@ export function CommonMoMixin<
       }
       if (stretchy && this.size < 0) return;
       super.computeBBox(bbox);
+      //
+      //  Check for a null delimiter and add the null-delimiter space
+      //
+      if (bbox.w === 0 && this.node.attributes.getExplicit('fence') &&
+          (this.node as MmlMo).getText() === '' &&
+          (this.node.texClass === TEXCLASS.OPEN || this.node.texClass === TEXCLASS.CLOSE) &&
+          !this.jax.options.mathmlSpacing) {
+        bbox.R = this.font.params.nulldelimiterspace;
+      }
       this.copySkewIC(bbox);
     }
 
