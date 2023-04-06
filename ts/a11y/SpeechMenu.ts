@@ -46,9 +46,9 @@ function csPrefsVariables(menu: MJContextMenu, prefs: string[]) {
       name: 'csprf_' + pref,
       setter: (value: string) => {
         csPrefsSetting[pref] = value;
-          srVariable.setValue(
+        srVariable.setValue(
           'clearspeak-' +
-              Sre.clearspeakPreferences.toPreference(csPrefsSetting)
+            Sre.clearspeakPreferences.toPreference(csPrefsSetting)
         );
       },
       getter: () => { return csPrefsSetting[pref] || 'Auto'; }
@@ -101,19 +101,21 @@ function csSelectionBox(menu: MJContextMenu, locale: string) {
  */
 function basePreferences(previous: string) {
   const items = [
-      {
-        type: 'radio',
-        content: 'No Preferences',
-        id: 'clearspeak-default',
-        variable: 'speechRules'
-      },
-      {
-        type: 'radio',
-        content: 'Current Preferences',
-        id: 'clearspeak-' + previous,
-        variable: 'speechRules'
-      },
-      { type: 'rule' },
+    {
+      type: 'radio',
+      content: 'No Preferences',
+      id: 'clearspeak-default',
+      variable: 'speechRules'
+    },
+    {
+      type: 'radio',
+      content: 'Current Preferences',
+      id: 'clearspeak-' + previous,
+      variable: 'speechRules'
+    },
+    {
+      type: 'rule'
+    },
   ];
   return items;
 }
@@ -133,8 +135,8 @@ function smartPreferences(previous: string, smart: string, locale: string) {
     return [];
   }
   const items = [
-    { type: 'label', content: 'Preferences for ' + smart },
-    { type: 'rule' }
+    {type: 'label', content: 'Preferences for ' + smart},
+    {type: 'rule'}
   ];
   return items.concat(loc[smart].map(function (x) {
     const [key, value] = x.split('_');

@@ -32,7 +32,8 @@ import * as MenuUtil from './MenuUtil.js';
  * The annotation types to look for in a MathItem. These are options set in the
  * Menu object.
  */
-let annotationTypes: {[type: string]: string[]} = {};
+type ANNOTATIONTYPES = {[type: string]: string[]};
+let annotationTypes: ANNOTATIONTYPES = {};
 
 /**
  * Sets the connected annotation box.
@@ -50,9 +51,9 @@ let annotationBox: SelectableInfo = null;
 
 /**
  * Sets the allowed annotation types.
- * @param {{[type: string]: string[]}} types The association list of types.
+ * @param {ANNOTATIONTYPES} types The association list of types.
  */
-export function setAnnotationTypes(types: {[type: string]: string[]}) {
+export function setAnnotationTypes(types: ANNOTATIONTYPES) {
   annotationTypes = types;
 }
 
