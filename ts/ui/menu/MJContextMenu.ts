@@ -54,7 +54,7 @@ export class MJContextMenu extends ContextMenu {
 
   /**
    * Before posting the menu, set the name for the ShowAs and CopyToClipboard menus,
-   *   enable/disable the semantics check item, and get the annotations for the MathItem
+   *   enable/disable the semantics check item, and set the dynamic submenus.
    *
    * @override
    */

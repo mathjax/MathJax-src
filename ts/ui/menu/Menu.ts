@@ -332,7 +332,7 @@ export class Menu {
   /**
    * The "Show As Annotation" info box
    */
-  protected annotationText = new SelectableInfo(
+  protected annotationBox = new SelectableInfo(
     'MathJax Annotation Text',
     () => {
       const text = AnnotationMenu.annotation;
@@ -561,8 +561,14 @@ export class Menu {
     this.zoomBox.attachMenu(menu);
     this.checkLoadableItems();
     this.enableExplorerItems(this.settings.explorer);
-    AnnotationMenu.setAnnotationBox(this.annotationText);
-    AnnotationMenu.setAnnotationTypes(this.options.annotationTypes);
+    const cache = [];
+    MJContextMenu.DynamicSubmenus.set(
+      'ShowAnnotation',
+      AnnotationMenu.showAnnotations(
+        this.annotationBox, this.options.annotationTypes, cache));
+    MJContextMenu.DynamicSubmenus.set(
+      'CopyAnnotation',
+      AnnotationMenu.copyAnnotations(cache));
     CssStyles.addInfoStyles(this.document.document as any);
     CssStyles.addMenuStyles(this.document.document as any);
   }
@@ -1153,6 +1159,3 @@ export class Menu {
   /*======================================================================*/
 
 }
-// Adding dynamic submenus for annotations.
-MJContextMenu.DynamicSubmenus.set('ShowAnnotation', AnnotationMenu.showAnnotations);
-MJContextMenu.DynamicSubmenus.set('CopyAnnotation', AnnotationMenu.copyAnnotations);
