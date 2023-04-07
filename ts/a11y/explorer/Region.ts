@@ -419,13 +419,6 @@ export class SpeechRegion extends LiveRegion {
   /**
    * @override
    */
-  public Clear(): void {
-    super.Clear();
-  }
-
-  /**
-   * @override
-   */
   public Show(node: HTMLElement, highlighter: Sre.highlighter) {
     this.node = node;
     super.Show(node, highlighter);

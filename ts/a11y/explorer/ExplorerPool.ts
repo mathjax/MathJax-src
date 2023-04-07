@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2022 The MathJax Consortium
+ *  Copyright (c) 2022-2023 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -256,7 +256,7 @@ export class ExplorerPool {
   }
 
   /**
-   * Computes the explorers that need to be reattachedafter a MathItem is
+   * Computes the explorers that need to be reattached after a MathItem is
    * rerendered.
    */
   public reattach() {
