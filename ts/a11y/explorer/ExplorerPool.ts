@@ -100,7 +100,7 @@ let allExplorers: {[options: string]: ExplorerInit} = {
     let explorer = ke.SpeechExplorer.create(
       doc, pool, doc.explorerRegions.speechRegion, node, ...rest) as ke.SpeechExplorer;
     explorer.speechGenerator.setOptions({
-      automark: true as any, markup: 'ssml_step',
+      automark: true as any, markup: 'ssml',
       locale: doc.options.sre.locale, domain: doc.options.sre.domain,
       style: doc.options.sre.style, modality: 'speech'});
     // This weeds out the case of providing a non-existent locale option.
