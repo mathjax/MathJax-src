@@ -60,6 +60,8 @@ export namespace Sre {
 
   export const getHighlighter = HighlighterFactory.highlighter;
 
+  export const updateHighlighter = HighlighterFactory.update;
+
   export const getSpeechGenerator = SpeechGeneratorFactory.generator;
 
   export const getWalker = WalkerFactory.walker;

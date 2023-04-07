@@ -31,11 +31,7 @@ import {OptionList, expandable} from '../util/Options.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {MJContextMenu} from '../ui/menu/MJContextMenu.js';
 
-import {Explorer} from './explorer/Explorer.js';
-import * as ke from './explorer/KeyExplorer.js';
-import * as me from './explorer/MouseExplorer.js';
-import {TreeColorer, FlameColorer} from './explorer/TreeExplorer.js';
-import {LiveRegion, ToolTip, HoverRegion} from './explorer/Region.js';
+import {ExplorerPool, RegionPool} from './explorer/ExplorerPool.js';
 
 import {Submenu} from 'mj-context-menu/js/item_submenu.js';
 
@@ -54,6 +50,8 @@ export type HTMLDOCUMENT = EnrichedMathDocument<HTMLElement, Text, Document>;
 export type HTMLMATHITEM = EnrichedMathItem<HTMLElement, Text, Document>;
 export type MATHML = MathML<HTMLElement, Text, Document>;
 
+const hasWindow = (typeof window !== 'undefined');
+
 /*==========================================================================*/
 
 /**
@@ -67,15 +65,16 @@ newState('EXPLORER', 160);
 export interface ExplorerMathItem extends HTMLMATHITEM {
 
   /**
+   * The Explorer objects for this math item
+   */
+  explorers: ExplorerPool;
+
+  /**
    * @param {HTMLDocument} document  The document where the Explorer is being added
    * @param {boolean} force          True to force the explorer even if enableExplorer is false
    */
   explorable(document: HTMLDOCUMENT, force?: boolean): void;
 
-  /**
-   * @param {HTMLDocument} document  The document where the Explorer is being added
-   */
-  attachExplorers(document: HTMLDOCUMENT): void;
 }
 
 /**
@@ -95,19 +94,9 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
   return class extends BaseMathItem {
 
     /**
-     * The Explorer objects for this math item
+     * @override
      */
-    protected explorers: {[key: string]: Explorer} = {};
-
-    /**
-     * The currently attached explorers
-     */
-    protected attached: string[] = [];
-
-    /**
-     * True when a rerendered element should restart these explorers
-     */
-    protected restart: string[] = [];
+    public explorers: ExplorerPool;
 
     /**
      * True when a rerendered element should regain the focus
@@ -134,43 +123,12 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
           this.typesetRoot.setAttribute('sre-explorer-id', this.savedId);
           this.savedId = null;
         }
-        // Init explorers:
-        this.explorers = initExplorers(document, node, mml);
-        this.attachExplorers(document);
+        if (!this.explorers) {
+          this.explorers = new ExplorerPool();
+        }
+        this.explorers.init(document, node, mml);
       }
       this.state(STATE.EXPLORER);
-    }
-
-    /**
-     * Attaches the explorers that are currently meant to be active given
-     * the document options. Detaches all others.
-     * @param {ExplorerMathDocument} document The current document.
-     */
-    public attachExplorers(document: ExplorerMathDocument) {
-      this.attached = [];
-      let keyExplorers = [];
-      for (let key of Object.keys(this.explorers)) {
-        let explorer = this.explorers[key];
-        if (explorer instanceof ke.AbstractKeyExplorer) {
-          explorer.AddEvents();
-          explorer.stoppable = false;
-          keyExplorers.unshift(explorer);
-        }
-        if (document.options.a11y[key]) {
-          explorer.Attach();
-          this.attached.push(key);
-        } else {
-          explorer.Detach();
-        }
-      }
-      // Ensure that the last currently attached key explorer stops propagating
-      // key events.
-      for (let explorer of keyExplorers) {
-        if (explorer.attached) {
-          explorer.stoppable = true;
-          break;
-        }
-      }
     }
 
     /**
@@ -178,13 +136,9 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      */
     public rerender(document: ExplorerMathDocument, start: number = STATE.RERENDER) {
       this.savedId = this.typesetRoot.getAttribute('sre-explorer-id');
-      this.refocus = (window.document.activeElement === this.typesetRoot);
-      for (let key of this.attached) {
-        let explorer = this.explorers[key];
-        if (explorer.active) {
-          this.restart.push(key);
-          explorer.Stop();
-        }
+      this.refocus = (hasWindow ? window.document.activeElement === this.typesetRoot : false);
+      if (this.explorers) {
+        this.explorers.reattach();
       }
       super.rerender(document, start);
     }
@@ -195,8 +149,9 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     public updateDocument(document: ExplorerMathDocument) {
       super.updateDocument(document);
       this.refocus && this.typesetRoot.focus();
-      this.restart.forEach(x => this.explorers[x].Start());
-      this.restart = [];
+      if (this.explorers) {
+        this.explorers.restart();
+      }
       this.refocus = false;
     }
 
@@ -212,7 +167,7 @@ export interface ExplorerMathDocument extends HTMLDOCUMENT {
   /**
    * The objects needed for the explorer
    */
-  explorerRegions: ExplorerRegions;
+  explorerRegions: RegionPool;
 
   /**
    * Add the Explorer to the MathItems in the MathDocument
@@ -240,7 +195,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
      */
     public static OPTIONS: OptionList = {
       ...BaseDocument.OPTIONS,
-      enableExplorer: true,
+      enableExplorer: hasWindow,           // only activate in interactive contexts
       renderActions: expandable({
         ...BaseDocument.OPTIONS.renderActions,
         explorable: [STATE.EXPLORER]
@@ -269,14 +224,15 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
         speech: true,                      // switch on speech output
         subtitles: true,                   // show speech as a subtitle
         treeColoring: false,               // tree color expression
-        viewBraille: false                 // display Braille output as subtitles
+        viewBraille: false,                // display Braille output as subtitles
+        voicing: false,                    // switch on speech output
       }
     };
 
     /**
      * The objects needed for the explorer
      */
-    public explorerRegions: ExplorerRegions;
+    public explorerRegions: RegionPool = null;
 
     /**
      * Extend the MathItem class used for this MathDocument
@@ -298,8 +254,6 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
         options.a11y.speechRules = `${options.sre.domain}-${options.sre.style}`;
       }
       options.MathItem = ExplorerMathItemMixin(options.MathItem, toMathML);
-      // TODO: set backward compatibility options here.
-      this.explorerRegions = initExplorerRegions(this);
     }
 
     /**
@@ -310,6 +264,9 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
     public explorable(): ExplorerMathDocument {
       if (!this.processed.isSet('explorer')) {
         if (this.options.enableExplorer) {
+          if (!this.explorerRegions) {
+            this.explorerRegions = new RegionPool(this);
+          }
           for (const math of this.math) {
             (math as ExplorerMathItem).explorable(this);
           }
@@ -355,113 +312,6 @@ export function ExplorerHandler(handler: HANDLER, MmlJax: MATHML = null): HANDLE
 
 /*==========================================================================*/
 
-/**
- * The regions objects needed for the explorers.
- */
-export type ExplorerRegions = {
-  speechRegion?: LiveRegion,
-  brailleRegion?: LiveRegion,
-  magnifier?: HoverRegion,
-  tooltip1?: ToolTip,
-  tooltip2?: ToolTip,
-  tooltip3?: ToolTip
-};
-
-
-/**
- * Initializes the regions needed for a document.
- * @param {ExplorerMathDocument} document The current document.
- */
-function initExplorerRegions(document: ExplorerMathDocument) {
-  return {
-    speechRegion: new LiveRegion(document),
-    brailleRegion: new LiveRegion(document),
-    magnifier: new HoverRegion(document),
-    tooltip1: new ToolTip(document),
-    tooltip2: new ToolTip(document),
-    tooltip3: new ToolTip(document)
-  };
-}
-
-
-
-/**
- * Type of explorer initialization methods.
- * @type {(ExplorerMathDocument, HTMLElement, any[]): Explorer}
- */
-type ExplorerInit = (doc: ExplorerMathDocument,
-                     node: HTMLElement, ...rest: any[]) => Explorer;
-
-/**
- *  Generation methods for all MathJax explorers available via option settings.
- */
-let allExplorers: {[options: string]: ExplorerInit} = {
-  speech: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) => {
-    let explorer = ke.SpeechExplorer.create(
-      doc, doc.explorerRegions.speechRegion, node, ...rest) as ke.SpeechExplorer;
-    explorer.speechGenerator.setOptions({
-      locale: doc.options.sre.locale, domain: doc.options.sre.domain,
-      style: doc.options.sre.style, modality: 'speech'});
-    // This weeds out the case of providing a non-existent locale option.
-    let locale = explorer.speechGenerator.getOptions().locale;
-    if (locale !== Sre.engineSetup().locale) {
-      doc.options.sre.locale = Sre.engineSetup().locale;
-      explorer.speechGenerator.setOptions({locale: doc.options.sre.locale});
-    }
-    explorer.showRegion = 'subtitles';
-    return explorer;
-  },
-  braille: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) => {
-    let explorer = ke.SpeechExplorer.create(
-      doc, doc.explorerRegions.brailleRegion, node, ...rest) as ke.SpeechExplorer;
-    explorer.speechGenerator.setOptions({locale: 'nemeth', domain: 'default',
-                                         style: 'default', modality: 'braille'});
-    explorer.showRegion = 'viewBraille';
-    return explorer;
-  },
-  keyMagnifier: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
-    ke.Magnifier.create(doc, doc.explorerRegions.magnifier, node, ...rest),
-  mouseMagnifier: (doc: ExplorerMathDocument, node: HTMLElement, ..._rest: any[]) =>
-    me.ContentHoverer.create(doc, doc.explorerRegions.magnifier, node,
-                             (x: HTMLElement) => x.hasAttribute('data-semantic-type'),
-                             (x: HTMLElement) => x),
-  hover: (doc: ExplorerMathDocument, node: HTMLElement, ..._rest: any[]) =>
-    me.FlameHoverer.create(doc, null, node),
-  infoType: (doc: ExplorerMathDocument, node: HTMLElement, ..._rest: any[]) =>
-    me.ValueHoverer.create(doc, doc.explorerRegions.tooltip1, node,
-                           (x: HTMLElement) => x.hasAttribute('data-semantic-type'),
-                           (x: HTMLElement) => x.getAttribute('data-semantic-type')),
-  infoRole: (doc: ExplorerMathDocument, node: HTMLElement, ..._rest: any[]) =>
-    me.ValueHoverer.create(doc, doc.explorerRegions.tooltip2, node,
-                           (x: HTMLElement) => x.hasAttribute('data-semantic-role'),
-                           (x: HTMLElement) => x.getAttribute('data-semantic-role')),
-  infoPrefix: (doc: ExplorerMathDocument, node: HTMLElement, ..._rest: any[]) =>
-    me.ValueHoverer.create(doc, doc.explorerRegions.tooltip3, node,
-                           (x: HTMLElement) => x.hasAttribute('data-semantic-prefix'),
-                           (x: HTMLElement) => x.getAttribute('data-semantic-prefix')),
-  flame: (doc: ExplorerMathDocument, node: HTMLElement, ..._rest: any[]) =>
-    FlameColorer.create(doc, null, node),
-  treeColoring: (doc: ExplorerMathDocument, node: HTMLElement, ...rest: any[]) =>
-    TreeColorer.create(doc, null, node, ...rest)
-};
-
-
-/**
- * Initialises explorers for a document.
- * @param {ExplorerMathDocument} document The target document.
- * @param {HTMLElement} node The node explorers will be attached to.
- * @param {string} mml The corresponding Mathml node as a string.
- * @return {Explorer[]} A list of initialised explorers.
- */
-function initExplorers(document: ExplorerMathDocument, node: HTMLElement, mml: string): {[key: string]: Explorer} {
-  let explorers: {[key: string]: Explorer} = {};
-  for (let key of Object.keys(allExplorers)) {
-    explorers[key] = allExplorers[key](document, node, mml);
-  }
-  return explorers;
-}
-
-
 /* Context Menu Interactions */
 
 /**
@@ -485,7 +335,7 @@ export function setA11yOptions(document: HTMLDOCUMENT, options: {[key: string]: 
   }
   // Reinit explorers
   for (let item of document.math) {
-    (item as ExplorerMathItem).attachExplorers(document as ExplorerMathDocument);
+    (item as ExplorerMathItem).explorers.attach();
   }
 }
 
