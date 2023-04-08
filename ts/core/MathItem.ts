@@ -52,7 +52,6 @@ export type Metrics = {
   em: number;
   ex: number;
   containerWidth: number;
-  lineWidth: number;
   scale: number;
 };
 
@@ -178,10 +177,9 @@ export interface MathItem<N, T, D> {
    * @param {number} em      The size of 1 em in pixels
    * @param {number} ex      The size of 1 ex in pixels
    * @param {number} cwidth  The container width in pixels
-   * @param {number} lwidth  The line breaking width in pixels
    * @param {number} scale   The scaling factor (unitless)
    */
-  setMetrics(em: number, ex: number, cwidth: number, lwidth: number, scale: number): void;
+  setMetrics(em: number, ex: number, cwidth: number, scale: number): void;
 
   /**
    * Set or return the current processing state of this expression,
@@ -390,11 +388,10 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
   /**
    * @override
    */
-  public setMetrics(em: number, ex: number, cwidth: number, lwidth: number, scale: number) {
+  public setMetrics(em: number, ex: number, cwidth: number, scale: number) {
     this.metrics = {
       em: em, ex: ex,
       containerWidth: cwidth,
-      lineWidth: lwidth,
       scale: scale
     };
   }

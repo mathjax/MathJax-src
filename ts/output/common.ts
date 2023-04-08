@@ -457,8 +457,8 @@ export abstract class CommonOutputJax<
       const parent = adaptor.parent(math.start.node);
       if (math.state() < STATE.METRICS && parent) {
         const map = maps[math.display ? 1 : 0];
-        const {em, ex, containerWidth, lineWidth, scale, family} = map.get(parent);
-        math.setMetrics(em, ex, containerWidth, lineWidth, scale);
+        const {em, ex, containerWidth, scale, family} = map.get(parent);
+        math.setMetrics(em, ex, containerWidth, scale);
         if (this.options.mtextInheritFont) {
           math.outputData.mtextFamily = family;
         }
@@ -596,8 +596,7 @@ export abstract class CommonOutputJax<
                             adaptor.nodeBBox(adaptor.firstChild(node) as N).left - 2);
     const scale = Math.max(this.options.minScale,
                            this.options.matchFontHeight ? ex / this.font.params.x_height / em : 1);
-    const lineWidth = 1000000;      // no linebreaking (otherwise would be a percentage of cwidth)
-    return {em, ex, containerWidth, lineWidth, scale, family};
+    return {em, ex, containerWidth, scale, family};
   }
 
   /*****************************************************************/
