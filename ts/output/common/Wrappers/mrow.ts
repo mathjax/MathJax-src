@@ -308,9 +308,9 @@ export function CommonMrowMixin<
     protected vboxAdjust(bbox: BBox) {
       const n = this.breakCount;
       const valign = this.parent.node.attributes.get('data-vertical-align');
-      if (valign === 'bottom' && n) {
+      if (n && valign === 'bottom') {
         this.dh = (n ? bbox.d - this.lineBBox[n - 1].d : 0);
-      } else if (valign === 'center' || (valign === 'middle' && n)) {
+      } else if (valign === 'center' || (n && valign === 'middle')) {
         const {h, d} = bbox;
         const a = this.font.params.axis_height;
         this.dh = ((h + d) / 2 + a) - h;  // new height minus old height

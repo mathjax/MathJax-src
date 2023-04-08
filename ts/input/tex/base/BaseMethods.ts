@@ -55,16 +55,20 @@ const MmlTokenAllow: {[key: string]: number} = {
 };
 
 
+/**
+ * @param {string} align   The vertical aligment to use (t, b, m or c)
+ * @param {number} n       The number of expected alignment characters
+ */
 export function splitAlignArray(align: string, n: number = Infinity) {
-  const list = align.replace(/\s+/g, '').split('').map((c: string) => {
-    const name = {t: 'top', b: 'bottom', m: 'middle', c: 'center'}[c];
+  const list = align.replace(/\s+/g, '').split('').map((s: string) => {
+    const name = {t: 'top', b: 'bottom', m: 'middle', c: 'center'}[s];
     if (!name) {
-      throw new TexError('BadBreakAlign', 'Invalid alignment character: %1', c);
+      throw new TexError('BadBreakAlign', 'Invalid alignment character: %1', s);
     }
     return name;
   });
   if (list.length > n) {
-    throw new TexError('TooManyAligns', 'There should be only one alignment character: %1', align);
+    throw new TexError('TooManyAligns', 'Too many alignment characters: %1', align);
   }
   return (n === 1 ? list[0] : list.join(' '));
 }
