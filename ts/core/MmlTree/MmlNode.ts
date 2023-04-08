@@ -839,13 +839,16 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
     }
     let merror = this.factory.create('merror');
     merror.attributes.set('data-mjx-message', message);
-    if (options['fullErrors'] || short) {
+    if (options.fullErrors || short) {
       let mtext = this.factory.create('mtext');
       let text = this.factory.create('text') as any as TextNode;
-      text.setText(options['fullErrors'] ? message : this.kind);
+      text.setText(options.fullErrors ? message : this.kind);
       mtext.appendChild(text);
       merror.appendChild(mtext);
       this.parent.replaceChild(merror, this);
+      if (!options.fullErrors) {
+        merror.attributes.set('title', message);
+      }
     } else {
       this.parent.replaceChild(merror, this);
       merror.appendChild(this);
