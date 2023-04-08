@@ -130,14 +130,6 @@ CommonOutputJax<
     },
     'mjx-mphantom': {
       visibility: 'hidden'
-    },
-
-    //
-    //  WebKit-specific CSS to handle bug with clipped characters.
-    //  (test found at https://browserstrangeness.bitbucket.io/css_hacks.html#safari)
-    //
-    '_::-webkit-full-page-media, _:future, :root mjx-container': {
-      'will-change': 'opacity'
     }
   };
 
