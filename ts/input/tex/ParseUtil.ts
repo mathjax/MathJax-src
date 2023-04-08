@@ -243,8 +243,13 @@ namespace ParseUtil {
    * @param {string} font The mathvariant to use
    * @return {MmlNode[]} The nodes corresponding to the internal math expression.
    */
-  export function internalMath(parser: TexParser, text: string,
-                               level?: number | string, font?: string): MmlNode[] {
+  export function internalMath(
+    parser: TexParser,
+    text: string,
+    level?: number | string,
+    font?: string
+  ): MmlNode[] {
+    text = text.replace(/ +/g, ' ');
     if (parser.configuration.options.internalMath) {
       return parser.configuration.options.internalMath(parser, text, level, font);
     }

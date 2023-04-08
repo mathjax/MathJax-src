@@ -696,13 +696,13 @@ new sm.CommandMap('macros', {
   TeX:               ['Macro', 'T\\kern-.14em\\lower.5ex{E}\\kern-.115em X'],
   LaTeX:             ['Macro', 'L\\kern-.325em\\raise.21em' +
                       '{\\scriptstyle{A}}\\kern-.17em\\TeX'],
-  ' ':               ['Macro', '\\text{ }'],
 
   //  Specially handled
   not:                'Not',
   dots:               'Dots',
   space:              'Tilde',
   '\u00A0':           'Tilde',
+  ' ':                'Tilde',
 
 
   //  LaTeX
