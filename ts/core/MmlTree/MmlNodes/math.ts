@@ -109,4 +109,14 @@ export class MmlMath extends AbstractMmlLayoutNode {
     super.setChildInheritedAttributes(attributes, display, level, prime);
   }
 
+  /**
+   * @override
+   */
+  public verifyTree(options: PropertyList = null) {
+    super.verifyTree(options);
+    if (this.parent) {
+      this.mError('Improper nesting of math tags', options, true);
+    }
+  }
+
 }
