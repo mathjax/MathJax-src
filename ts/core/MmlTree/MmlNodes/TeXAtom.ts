@@ -61,18 +61,11 @@ export class TeXAtom extends AbstractMmlBaseNode {
   }
 
   /**
-   * @override
-   */
-  public get linebreakContainer(): boolean {
-    return (this.texClass >= TEXCLASS.VCENTER);
-  }
-
-  /**
    * This element is not considered a MathML container
    * @override
    */
   public get notParent() {
-    return (this.texClass < TEXCLASS.VCENTER);
+    return true;
   }
 
   /**

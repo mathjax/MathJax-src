@@ -35,7 +35,8 @@ export class MmlMsqrt extends AbstractMmlNode {
    * @override
    */
   public static defaults: PropertyList = {
-    ...AbstractMmlNode.defaults
+    ...AbstractMmlNode.defaults,
+    'data-vertical-align': 'bottom'
   };
 
   /**

@@ -40,7 +40,8 @@ export class MmlMtr extends AbstractMmlNode {
     ...AbstractMmlNode.defaults,
     rowalign: INHERIT,
     columnalign: INHERIT,
-    groupalign: INHERIT
+    groupalign: INHERIT,
+    'data-break-align': 'top'     // how the broken cells in this row should be aligned
   };
 
   /**
@@ -79,15 +80,19 @@ export class MmlMtr extends AbstractMmlNode {
       }
     }
     const calign = split(this.attributes.get('columnalign') as string);
+    const balign = split(this.attributes.get('data-break-align') as string);
     if (this.arity === 1) {
       calign.unshift(this.parent.attributes.get('side') as string);
+      balign.unshift('top');
     }
     attributes = this.addInheritedAttributes(attributes, {
       rowalign: this.attributes.get('rowalign'),
-      columnalign: 'center'
+      columnalign: 'center',
+      'data-break-align': 'top'
     });
     for (const child of this.childNodes) {
       attributes.columnalign[1] = calign.shift() || attributes.columnalign[1];
+      attributes['data-vertical-align'] = [this.kind, balign.shift() || attributes['data-break-align'][1]];
       child.setInheritedAttributes(attributes, display, level, prime);
     }
   }

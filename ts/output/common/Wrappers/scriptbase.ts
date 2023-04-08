@@ -29,7 +29,7 @@ import {CommonWrapperFactory} from '../WrapperFactory.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
 import {CommonOutputJax} from '../../common.js';
 import {CommonMunderover} from './munderover.js';
-import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
+import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../../../util/BBox.js';
@@ -462,8 +462,7 @@ export function CommonScriptbaseMixin<
       let core = this.getSemanticBase() || this.childNodes[0];
       while (core &&
              ((core.childNodes.length === 1 &&
-               (core.node.isKind('mrow') ||
-                (core.node.isKind('TeXAtom') && core.node.texClass < TEXCLASS.VCENTER) ||
+               (core.node.isKind('mrow') || core.node.isKind('TeXAtom') ||
                 core.node.isKind('mstyle') || core.node.isKind('mpadded') ||
                 core.node.isKind('mphantom') || core.node.isKind('semantics'))) ||
               (core.node.isKind('munderover') &&
