@@ -130,7 +130,16 @@ export abstract class CommonOutputJax<
   /**
    *  The default styles for the output jax
    */
-  public static commonStyles: CssStyleList = {};
+  public static commonStyles: CssStyleList = {
+    'mjx-container[overflow="scroll"][display]': {
+      'overflow-x': 'auto',
+      'min-width': 'initial !important'
+    },
+    'mjx-container[overflow="truncate"][display]': {
+      'overflow-x': 'hidden',
+      'min-width': 'initial !important'
+    }
+  };
 
   /**
    * Used for collecting styles needed for the output jax
@@ -328,11 +337,8 @@ export abstract class CommonOutputJax<
     this.pxPerEm = math.metrics.ex / this.font.params.x_height;
     this.nodeMap = new Map<MmlNode, WW>();
     math.root.attributes.getAllInherited().overflow = this.options.displayOverflow;
-    const overflow = math.root.attributes.get('overflow');
-    if (math.display) {
-      overflow === 'scroll' && this.adaptor.setStyle(node, 'overflow-x', 'auto');
-      overflow === 'truncate' && this.adaptor.setStyle(node, 'overflow-x', 'hidden');
-    }
+    const overflow = math.root.attributes.get('overflow') as string;
+    this.adaptor.setAttribute(node, 'overflow', overflow);
     const linebreak = (overflow === 'linebreak');
     linebreak && this.getLinebreakWidth();
     if (this.options.linebreaks.inline && !math.display && !math.outputData.inlineMarked) {

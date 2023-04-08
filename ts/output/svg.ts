@@ -85,6 +85,7 @@ CommonOutputJax<
    *  The default styles for SVG
    */
   public static commonStyles: CssStyleList = {
+    ...CommonOutputJax.commonStyles,
     'mjx-container[jax="SVG"]': {
       direction: 'ltr',
       'white-space': 'nowrap'

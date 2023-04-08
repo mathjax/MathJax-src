@@ -80,6 +80,7 @@ CommonOutputJax<
    *  The default styles for CommonHTML
    */
   public static commonStyles: CssStyleList = {
+    ...CommonOutputJax.commonStyles,
     'mjx-container[jax="CHTML"]': {
       'white-space': 'nowrap'
     },
