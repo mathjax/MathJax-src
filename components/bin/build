@@ -49,7 +49,9 @@ const mjGlobal = path.join('..', mjPath, 'components', 'global.js');
 /**
  * Read the configuration for the component
  */
-const config = JSON.parse(fs.readFileSync(process.argv[2] || 'build.json'));
+const build = (process.argv[2] || 'build.json');
+process.chdir(path.dirname(build));
+const config = JSON.parse(fs.readFileSync(path.basename(build)));
 
 function getType() {
   const component = config.component || 'part';

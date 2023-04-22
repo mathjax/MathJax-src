@@ -1,8 +1,6 @@
 const PACKAGE = require('../../webpack.common.js');
 
-module.exports = PACKAGE(
-  'core',                             // the package to build
-  '../../../js',                      // location of the MathJax js library
-  [],                                 // packages to link to
-  __dirname                           // our directory
-);
+module.exports = PACKAGE({
+  name: 'core',
+  dir: __dirname
+});

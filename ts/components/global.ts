@@ -73,7 +73,7 @@ export function combineConfig(dst: any, src: any): any {
     if (isObject(dst[id]) && isObject(src[id]) &&
         !(src[id] instanceof Promise) /* needed for IE polyfill */) {
       combineConfig(dst[id], src[id]);
-    } else if (src[id] !== null && src[id] !== undefined) {
+    } else if (src[id] !== null && src[id] !== undefined && dst[id] !== src[id]) {
       dst[id] = src[id];
     }
   }

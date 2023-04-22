@@ -1,11 +1,10 @@
 const PACKAGE = require('../../../webpack.common.js');
 
-module.exports = PACKAGE(
-  'input/tex-full',                   // the package to build
-  '../../../../js',                   // location of the MathJax js library
-  [                                   // packages to link to
+module.exports = PACKAGE({
+  name: 'input/tex-full',
+  libs: [
     'components/src/startup/lib',
     'components/src/core/lib'
   ],
-  __dirname                           // our directory
-);
+  dir: __dirname
+});

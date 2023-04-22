@@ -13,12 +13,11 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "baseUrl": ".",
-    "lib": ["es6", "dom"],
+    "lib": ["ES6", "DOM", "ES2019"],
     "noLib": false,
     "sourceMap": true,
     "outDir": "js",
     "typeRoots": ["./typings"]
   },
-  "include": ["ts/**/*"],
-  "exclude": ["js", "es5", "components"]
+  "include": ["ts/**/*"]
 }

@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "ES6",
+    "outDir": "js6",
+    "module": "ES6",
+    "moduleResolution": "node"
+  }
+}

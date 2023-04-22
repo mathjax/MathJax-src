@@ -33,9 +33,17 @@ const path = require('path');
 const INDENT = '  ';
 
 /**
+ * The es value (6 or empty)
+ */
+const es = (process.argv[2] || '').replace(/^5$/, '');
+
+/**
  * The configuration data for the copy operation
  */
-const config = JSON.parse(fs.readFileSync(process.argv[2] || 'copy.json'));
+const config = JSON.parse(fs.readFileSync(process.argv[3] || 'copy.json'));
+if (es) {
+  config.to = config.to.replace(/\/es5\//, `/es${es}/`);
+}
 
 /**
  * Get the directory for node modules (either the parent of the MathJax directory,

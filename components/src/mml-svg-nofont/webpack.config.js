@@ -1,8 +1,6 @@
 const PACKAGE = require('../../webpack.common.js');
 
-module.exports = PACKAGE.NOFONT(
-  'mml-svg-nofont',                   // the package to build
-  '../../../js',                      // location of the MathJax js library
-  [],                                 // packages to link to
-  __dirname                           // our directory
-);
+module.exports = PACKAGE.NOFONT({
+  name: 'mml-svg-nofont',
+  dir: __dirname
+});

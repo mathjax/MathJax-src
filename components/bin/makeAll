@@ -29,38 +29,70 @@ const fs = require('fs');
 const path = require('path');
 const {execSync} = require('child_process');
 
+/**
+ *  The default options
+ */
 const options = {
-  recursive: true
+  recursive: true,
+  verbose: true,
+  es: ''
 };
 
 /**
- * Get the directories to process and check for options
+ * Get the directories to process
  */
 const dirs = process.argv.slice(2);
 
-if (dirs[0] === '--no-subdirs') {
-  dirs.shift();
-  options.recursive = false;
+/**
+ * Check for options
+ */
+while (dirs[0].substr(0, 2) === '--') {
+  const option = dirs.shift();
+  if (option === '--') {
+    break;
+  }
+  if (option === '--no-subdirs') {
+    options.recursive = false;
+    continue;
+  }
+  if (option.substr(0, 4) === '--es') {
+    options.es = option.substr(4).replace(/^5$/, '');
+    continue;
+  }
+  if (option === '--terse') {
+    options.verbose = false;
+    continue;
+  }
 }
 
+//
+// Make sure there is at least one directory
+//
 if (dirs.length === 0) {
   dirs.push('.');
 }
 
 /**
- * The commads to runb the bin/build scripts
- *  (on Unix, could be done without the 'node ' prefix, but
- *   for Windows, these are needed.)
+ * The commads to run the various scripts
+ *  (on Unix, could be done without the 'node ' prefix, but for Windows, these are needed.)
  */
 const build = `node '${path.join(__dirname, 'build')}'`;
-const copy = `node '${path.join(__dirname, 'copy')}'`;
-const pack = `node '${path.join(__dirname, 'pack')}'`;
+const copy = `node '${path.join(__dirname, 'copy')}' '${options.es}'`;
+const pack = `node '${path.join(__dirname, 'pack')}' '${options.es}'`;
+
+/**
+ * @param {string} name    The file name to turn into a Regular expression
+ * @return {RegExp}        The regular expression for the name,
+ */
+function fileRegExp(name) {
+  return new RegExp(name.replace(/([\\.{}[\]()?*^$])/g, '\\$1'), 'g');
+}
 
 /**
  * Regular expression for the components directory
  */
-const compRE = new RegExp(path.dirname(__dirname).replace(/([\\.{}[\]()?*^$])/g, '\\$1'));
-const dirRE = new RegExp(process.cwd().replace(/([\\.{}[\]()?*^$])/g, '\\$1'));
+const compRE = fileRegExp(path.dirname(__dirname));
+const dirRE = fileRegExp(process.cwd());
 
 /**
  * Process the contents of an array of directories
@@ -117,7 +149,9 @@ function buildLib(dir) {
   try {
     process.chdir(dir);
     const result = execSync(build);
-    console.info('    ' + String(result).replace(/\n/g, '\n    '));
+    if (options.verbose) {
+      console.info('    ' + String(result).replace(/\n/g, '\n    '));
+    }
   } catch (err) {
     console.info('    ' + err.message);
   }
@@ -137,7 +171,9 @@ function webpackLib(dir) {
   try {
     process.chdir(dir);
     const result = execSync(pack);
-    console.info('    ' + String(result).replace(/\n/g, '\n    '));
+    if (options.verbose) {
+      console.info('    ' + String(result).replace(/\n/g, '\n    '));
+    }
   } catch (err) {
     console.info('    ' + err.message);
   }
@@ -152,11 +188,13 @@ function webpackLib(dir) {
 function copyLib(dir) {
   const file = path.join(dir, 'copy.json');
   if (!fs.existsSync(file)) return;
-  console.info('Copying ' + dir.replace(compRE, ''));
+  console.info('Copying ' + dir.replace(compRE, '').replace(dirRE, '.'));
   try {
     process.chdir(dir);
     const result = execSync(copy);
-    console.info('    ' + String(result).replace(/\n/g, '\n    '));
+    if (options.verbose) {
+      console.info('    ' + String(result).replace(/\n/g, '\n    '));
+    }
   } catch (err) {
     console.info('    ' + err.message);
   }

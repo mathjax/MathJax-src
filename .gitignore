@@ -2,4 +2,6 @@
 node_modules
 components/src/**/lib
 js
+js6
 es5
+es6

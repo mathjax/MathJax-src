@@ -1,6 +1,5 @@
 #! /usr/bin/env node
 
-
 /*************************************************************
  *
  *  Copyright (c) 2018 The MathJax Consortium
@@ -30,6 +29,11 @@ const path = require('path');
 const {spawn} = require('child_process');
 
 /**
+ * The es version (6 or '')
+ */
+const es = (process.argv[2] || '').replace(/^5$/, '');
+
+/**
  * @param {string} name    The file name to turn into a Regular expression
  * @return {RegExp}        The regular expression for the name,
  */
@@ -48,9 +52,12 @@ function fileSize(file) {
 /**
  * Regular expressions for the components directory and the MathJax .js location
  */
+const nodePath = path.join(path.dirname(path.dirname(__dirname)), 'node_modules');
+const jsPath = path.join(path.dirname(path.dirname(__dirname)), 'js' + es);
 const compRE = fileRegExp(path.dirname(__dirname));
-const rootRE = fileRegExp(path.join(path.dirname(path.dirname(__dirname)), 'js'));
-const nodeRE = fileRegExp(path.join(path.dirname(path.dirname(__dirname)), 'node_modules'));
+const rootRE = fileRegExp(jsPath);
+const nodeRE = fileRegExp(nodePath);
+const fontRE = new RegExp(path.join('^.*\\/(mathjax-.*?)(?:-font)?', 'js' + es));
 
 /**
  * @return {JSON}   The parsed JSON from webpack
@@ -58,7 +65,7 @@ const nodeRE = fileRegExp(path.join(path.dirname(path.dirname(__dirname)), 'node
 async function readJSON() {
   return new Promise((ok, fail) => {
     const buffer = [];
-    const child = spawn('npx', ['webpack', '--json']);
+    const child = spawn('npx', ['webpack', '--json', '--env', 'es=' + es]);
     child.stdout.on('data', (data) => buffer.push(String(data)));
     child.stdout.on('close', (code) => {
       const json = JSON.parse(buffer.join(''));
@@ -83,7 +90,11 @@ async function webpackLib(dir) {
     //
     // Get js directory from the webpack.config.js file
     //
-    const jsdir = require(path.resolve(dir, 'webpack.config.js')).plugins[0].definitions.__JSDIR__;
+    let package = require(path.resolve(dir, 'webpack.config.js'));
+    if (typeof package === 'function') {
+      package = package({es});
+    }
+    const jsdir = package.plugins?.[0]?.definitions?.__JSDIR__ || process.cwd();
     const jsRE = fileRegExp(jsdir);
     const libRE = fileRegExp(path.resolve(jsdir, '..', 'components'));
 
@@ -109,6 +120,7 @@ async function webpackLib(dir) {
         let name = module.name
             .replace(compRE, '[components]')
             .replace(rootRE, '[mathjax]')
+            .replace(fontRE, '[$1]')
             .replace(nodeRE, '[node]')
             .replace(jsRE,   '[js]')
             .replace(libRE,  '[lib]');
@@ -129,4 +141,4 @@ async function webpackLib(dir) {
   }
 }
 
-webpackLib(process.argv[2] || '.');
+webpackLib(process.argv[3] || '.');
