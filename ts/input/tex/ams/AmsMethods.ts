@@ -238,7 +238,7 @@ AmsMethods.HandleOperatorName = function(parser: TexParser, name: string) {
   let mml = new TexParser(op, {
     ...parser.stack.env,
     font: TexConstant.Variant.NORMAL,
-    multiLetterIdentifiers: /^[-*a-zA-Z]+/ as any,
+    multiLetterIdentifiers: parser.options.ams.operatornamePattern,
     operatorLetters: true,
     noAutoOP: true
   }, parser.configuration).mml();
