@@ -311,9 +311,9 @@ BaseMethods.Hash = function(_parser: TexParser, _c: string) {
 BaseMethods.MathFont = function(parser: TexParser, name: string, variant: string) {
   const text = parser.GetArgument(name);
   let mml = new TexParser(text, {
+    multiLetterIdentifiers: /^[a-zA-Z]+/ as any,
     ...parser.stack.env,
     font: variant,
-    multiLetterIdentifiers: /^[a-zA-Z]+/ as any,
     noAutoOP: true
   }, parser.configuration).mml();
   parser.Push(parser.create('node', 'TeXAtom', [mml]));
