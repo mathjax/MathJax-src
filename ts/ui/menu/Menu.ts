@@ -561,7 +561,7 @@ export class Menu {
     this.zoomBox.attachMenu(menu);
     this.checkLoadableItems();
     this.enableExplorerItems(this.settings.explorer);
-    const cache = [];
+    const cache: [string, string][] = [];
     MJContextMenu.DynamicSubmenus.set(
       'ShowAnnotation',
       AnnotationMenu.showAnnotations(

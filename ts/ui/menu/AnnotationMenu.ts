@@ -23,6 +23,7 @@
  */
 
 import {Submenu} from 'mj-context-menu/js/item_submenu.js';
+import {SubMenu} from 'mj-context-menu/js/sub_menu.js';
 import {MJContextMenu} from './MJContextMenu.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {SelectableInfo} from './SelectableInfo.js';
@@ -64,7 +65,7 @@ export function copyAnnotations(cache: [string, string][]) {
   return (menu: MJContextMenu, sub: Submenu) => {
     const annotations = cache.slice();
     cache.length = 0;
-    return createAnnotationMenu(menu,  sub, annotations,
+    return createAnnotationMenu(menu, sub, annotations,
                                 () => MenuUtil.copyToClipboard(annotation.trim()));
   };
 }
@@ -137,7 +138,7 @@ export let annotation: string = '';
  */
 function createAnnotationMenu(menu: MJContextMenu, submenu: Submenu,
                               annotations: [string, string][],
-                              action: () => void): Submenu {
+                              action: () => void): SubMenu {
   return menu.factory.get('subMenu')(menu.factory, {
     items: annotations.map(([type, value]) => {
       return {
