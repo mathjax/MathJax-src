@@ -1704,6 +1704,8 @@ BaseMethods.IndentAlign = function (parser: TexParser, begin: StackItem) {
  * @param {TexParser} parser The calling parser.
  * @param {StackItem} begin The opening stackitem.
  * @param {boolean} numbered True if environment is numbered.
+ * @param {boolean} display True if equation is in display mode
+ */
 BaseMethods.Equation = function (
   parser: TexParser,
   begin: StackItem,
