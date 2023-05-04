@@ -22,6 +22,7 @@
  */
 
 import {MathItem} from '../../core/MathItem.js';
+import {JaxList} from './Menu.js';
 
 import {ContextMenu} from 'mj-context-menu/js/context_menu.js';
 import {SubMenu} from 'mj-context-menu/js/sub_menu.js';
@@ -41,14 +42,22 @@ export class MJContextMenu extends ContextMenu {
    * Static map to hold methods for re-computing dynamic submenus.
    * @type {Map<string, (menu: MJContextMenu, sub: Submenu)}
    */
-  public static DynamicSubmenus: Map<string,
-  (menu: MJContextMenu, sub: Submenu) =>
-    SubMenu> = new Map();
+  public static DynamicSubmenus: Map<string, (menu: MJContextMenu, sub: Submenu) => SubMenu> = new Map();
 
   /**
    * The MathItem that has posted the menu
    */
   public mathItem: MathItem<HTMLElement, Text, Document> = null;
+
+  /**
+   * The error message for the current MathItem
+   */
+  public errorMsg: string = '';
+
+  /**
+   * The jax object from the parent menu item
+   */
+  protected jax: JaxList;
 
   /*======================================================================*/
 
@@ -61,14 +70,11 @@ export class MJContextMenu extends ContextMenu {
   public post(x?: any, y?: number) {
     if (this.mathItem) {
       if (y !== undefined) {
-        // FIXME:  handle error output jax
-        const input = this.mathItem.inputJax.name;
-        const original = this.findID('Show', 'Original');
-        original.content = (input === 'MathML' ? 'Original MathML' : input + ' Commands');
-        const clipboard = this.findID('Copy', 'Original');
-        clipboard.content = original.content;
-        const semantics = this.findID('Settings', 'semantics');
-        input === 'MathML' ? semantics.disable() : semantics.enable();
+        this.getOriginalMenu();
+        this.getSemanticsMenu();
+        this.getSpeechMenu();
+        this.getSvgMenu();
+        this.getErrorMessage();
         this.dynamicSubmenus();
       }
       super.post(x, y);
@@ -105,6 +111,70 @@ export class MJContextMenu extends ContextMenu {
       }
     }
     return item;
+  }
+
+  /*======================================================================*/
+
+  /**
+   * @param {JaxList} jax   The jax being maintained by the parent Menu item
+   */
+  public setJax(jax: JaxList) {
+    this.jax = jax;
+  }
+
+  /*======================================================================*/
+
+  /**
+   * Set up original-form menu
+   */
+  protected getOriginalMenu() {
+    const input = this.mathItem.inputJax.name;
+    const original = this.findID('Show', 'Original');
+    original.content = (input === 'MathML' ? 'Original MathML' : input + ' Commands');
+    const clipboard = this.findID('Copy', 'Original');
+    clipboard.content = original.content;
+  }
+
+  /**
+   * Enable/disable the semantics settings item
+   */
+  protected getSemanticsMenu() {
+    const semantics = this.findID('Settings', 'semantics');
+    this.mathItem.inputJax.name === 'MathML' ? semantics.disable() : semantics.enable();
+  }
+
+  /**
+   * Enable/disable the speech menus
+   */
+  protected getSpeechMenu() {
+    const speech = this.mathItem.outputData.speech;
+    this.findID('Show', 'Speech')[speech ? 'enable' : 'disable']();
+    this.findID('Copy', 'Speech')[speech ? 'enable' : 'disable']();
+  }
+
+  /**
+   * Enable/disable the svg menus
+   */
+  protected getSvgMenu() {
+    const svg = this.jax.SVG;
+    this.findID('Show', 'SVG')[svg ? 'enable' : 'disable']();
+    this.findID('Copy', 'SVG')[svg ? 'enable' : 'disable']();
+  }
+
+  /**
+   * Get any error message and enable/disable the menu items for it
+   */
+  protected getErrorMessage() {
+    const children = this.mathItem.root.childNodes[0].childNodes;
+    let disable = true;
+    this.errorMsg = '';
+    if (children.length === 1 && children[0].isKind('merror')) {
+      const attributes = children[0].attributes;
+      this.errorMsg = (attributes.get('data-mjx-error') || attributes.get('data-mjx-message') || '') as string;
+      disable = !this.errorMsg;
+    }
+    this.findID('Show', 'Error')[disable ? 'disable' : 'enable']();
+    this.findID('Copy', 'Error')[disable ? 'disable' : 'enable']();
   }
 
   /*======================================================================*/
