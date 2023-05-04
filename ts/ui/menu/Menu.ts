@@ -1188,7 +1188,7 @@ export class Menu {
   }
 
   /**
-   * Copy the original form to the clipboard
+   * Copy the SVG image to the clipboard
    */
   protected copySvgImage() {
     this.toSVG(this.menu.mathItem).then((svg) => {
@@ -1197,14 +1197,14 @@ export class Menu {
   }
 
   /**
-   * Copy the original form to the clipboard
+   * Copy the speech text to the clipboard
    */
   protected copySpeechText() {
     this.copyToClipboard(this.menu.mathItem.outputData.speech);
   }
 
   /**
-   * Copy the original form to the clipboard
+   * Copy the error message to the clipboard
    */
   protected copyErrorMessage() {
     this.copyToClipboard(this.menu.errorMsg.trim());

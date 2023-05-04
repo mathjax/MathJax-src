@@ -51,7 +51,9 @@ export class SelectableInfo extends Info {
    */
   public selectAll() {
     const selection = document.getSelection();
-    selection.selectAllChildren(this.html.querySelector('.CtxtMenu_InfoContent').firstChild);
+    selection.selectAllChildren(
+      this.html.querySelector('.CtxtMenu_InfoContent').firstChild
+    );
   }
 
   /**
