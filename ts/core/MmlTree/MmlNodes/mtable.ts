@@ -54,7 +54,8 @@ export class MmlMtable extends AbstractMmlNode {
     equalcolumns: false,
     displaystyle: false,
     side: 'right',
-    minlabelspacing: '0.8em'
+    minlabelspacing: '0.8em',
+    'data-break-align': 'top'  // list of top/bottom/center for how broken cells should be aligned by column
   };
 
   /**
@@ -129,7 +130,8 @@ export class MmlMtable extends AbstractMmlNode {
     display = !!(this.attributes.getExplicit('displaystyle') || this.attributes.getDefault('displaystyle'));
     attributes = this.addInheritedAttributes(attributes, {
       columnalign: this.attributes.get('columnalign'),
-      rowalign: 'center'
+      rowalign: 'center',
+      'data-break-align': this.attributes.get('data-break-align')
     });
     const cramped = this.attributes.getExplicit('data-cramped') as boolean;
     const ralign = split(this.attributes.get('rowalign') as string);

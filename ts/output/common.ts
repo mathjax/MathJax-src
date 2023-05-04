@@ -56,6 +56,8 @@ export type UnknownBBox = {w: number, h: number, d: number};
 export type UnknownMap = Map<string, UnknownBBox>;
 export type UnknownVariantMap = Map<string, UnknownMap>;
 
+export const FONTPATH = '@mathjax/%%FONT%%-font/es5';
+
 /*****************************************************************/
 
 /**
@@ -117,16 +119,27 @@ export abstract class CommonOutputJax<
       lineleading: .2,                // the default lineleading in em units
       LinebreakVisitor: null,         // The LinebreakVisitor to use
     },
+    font: '',                      // the font component to load
     htmlHDW: 'auto',               // 'use', 'force', or 'ignore' data-mjx-hdw attributes
     wrapperFactory: null,          // The wrapper factory to use
-    font: null,                    // The FontData object to use
-    cssStyles: null,               // The CssStyles object to use
+    fontData: null,                // The FontData object to use
+    fontPath: FONTPATH,            // The path to the font definitions
+    cssStyles: null                // The CssStyles object to use
   };
 
   /**
    *  The default styles for the output jax
    */
-  public static commonStyles: CssStyleList = {};
+  public static commonStyles: CssStyleList = {
+    'mjx-container[overflow="scroll"][display]': {
+      'overflow-x': 'auto',
+      'min-width': 'initial !important'
+    },
+    'mjx-container[overflow="truncate"][display]': {
+      'overflow-x': 'hidden',
+      'min-width': 'initial !important'
+    }
+  };
 
   /**
    * Used for collecting styles needed for the output jax
@@ -223,9 +236,9 @@ export abstract class CommonOutputJax<
   constructor(options: OptionList = null,
               defaultFactory: typeof CommonWrapperFactory = null,
               defaultFont: FC = null) {
-    const [fontClass, font] = (options.font instanceof FontData ?
-                               [options.font.constructor as typeof FontData, options.font] :
-                               [options.font || defaultFont, null]);
+    const [fontClass, font] = (options.fontData instanceof FontData ?
+                               [options.fontData.constructor as typeof FontData, options.fontData] :
+                               [options.fontData || defaultFont, null]);
     const [jaxOptions, fontOptions] = separateOptions(options, fontClass.OPTIONS);
     super(jaxOptions);
     this.factory = this.options.wrapperFactory ||
@@ -324,11 +337,8 @@ export abstract class CommonOutputJax<
     this.pxPerEm = math.metrics.ex / this.font.params.x_height;
     this.nodeMap = new Map<MmlNode, WW>();
     math.root.attributes.getAllInherited().overflow = this.options.displayOverflow;
-    const overflow = math.root.attributes.get('overflow');
-    if (math.display) {
-      overflow === 'scroll' && this.adaptor.setStyle(node, 'overflow-x', 'auto');
-      overflow === 'truncate' && this.adaptor.setStyle(node, 'overflow-x', 'hidden');
-    }
+    const overflow = math.root.attributes.get('overflow') as string;
+    this.adaptor.setAttribute(node, 'overflow', overflow);
     const linebreak = (overflow === 'linebreak');
     linebreak && this.getLinebreakWidth();
     if (this.options.linebreaks.inline && !math.display && !math.outputData.inlineMarked) {
@@ -397,7 +407,7 @@ export abstract class CommonOutputJax<
         const linebreakstyle = mo.attributes.get('linebreakstyle') as string;
         if ((texClass === TEXCLASS.BIN || texClass === TEXCLASS.REL ||
              (texClass === TEXCLASS.ORD && mo.hasSpacingAttributes()) ||
-             mo.attributes.get('data-allowbreak') || linebreak !== 'auto') && linebreak !== 'nobreak') {
+             linebreak !== 'auto') && linebreak !== 'nobreak') {
           if (linebreakstyle === 'before') {
             marked = this.markInlineBreak(marked, forcebreak, linebreak, node, child, mo);
           } else {
@@ -453,8 +463,8 @@ export abstract class CommonOutputJax<
       const parent = adaptor.parent(math.start.node);
       if (math.state() < STATE.METRICS && parent) {
         const map = maps[math.display ? 1 : 0];
-        const {em, ex, containerWidth, lineWidth, scale, family} = map.get(parent);
-        math.setMetrics(em, ex, containerWidth, lineWidth, scale);
+        const {em, ex, containerWidth, scale, family} = map.get(parent);
+        math.setMetrics(em, ex, containerWidth, scale);
         if (this.options.mtextInheritFont) {
           math.outputData.mtextFamily = family;
         }
@@ -592,8 +602,7 @@ export abstract class CommonOutputJax<
                             adaptor.nodeBBox(adaptor.firstChild(node) as N).left - 2);
     const scale = Math.max(this.options.minScale,
                            this.options.matchFontHeight ? ex / this.font.params.x_height / em : 1);
-    const lineWidth = 1000000;      // no linebreaking (otherwise would be a percentage of cwidth)
-    return {em, ex, containerWidth, lineWidth, scale, family};
+    return {em, ex, containerWidth, scale, family};
   }
 
   /*****************************************************************/

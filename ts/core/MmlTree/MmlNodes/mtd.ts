@@ -41,7 +41,8 @@ export class MmlMtd extends AbstractMmlBaseNode {
     columnspan: 1,
     rowalign: INHERIT,
     columnalign: INHERIT,
-    groupalign: INHERIT
+    groupalign: INHERIT,
+    'data-vertical-align': 'top'
   };
 
   /**

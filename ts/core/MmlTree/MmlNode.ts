@@ -43,13 +43,10 @@ export const TEXCLASS = {
   CLOSE: 5,
   PUNCT: 6,
   INNER: 7,
-  VCENTER: 8,  // Used in TeXAtom, but not for spacing
-  VTOP: 9,     // Used in TeXAtom, but not for spacing
-  VBOX: 10,    // Used in TeXAtom, but not for spacing
   NONE:   -1
 };
 
-export const TEXCLASSNAMES = ['ORD', 'OP', 'BIN', 'REL', 'OPEN', 'CLOSE', 'PUNCT', 'INNER', 'VCENTER', 'VTOP', 'VBOX'];
+export const TEXCLASSNAMES = ['ORD', 'OP', 'BIN', 'REL', 'OPEN', 'CLOSE', 'PUNCT', 'INNER'];
 
 /**
  *  The spacing sizes used by the TeX spacing table below.
@@ -69,6 +66,18 @@ const TEXSPACE = [
   [ 1,  1,  0,  1,  1,  1,  1,  1], // PUNCT
   [ 1, -1,  2,  3,  1,  0,  1,  1]  // INNER
 ];
+
+/**
+ * The valid mathvariants
+ */
+
+export const MATHVARIANTS = new Set([
+  'normal', 'bold', 'italic', 'bold-italic',
+  'double-struck', 'fraktur', 'bold-fraktur', 'script', 'bold-script',
+  'sans-serif', 'bold-sans-serif', 'sans-serif-italic', 'sans-serif-bold-italic',
+  'monospace',
+  'inital', 'tailed', 'looped', 'stretched'
+]);
 
 /**
  * Attributes used to determine indentation and shifting
@@ -283,6 +292,14 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
     maligngroup: {
       mrow: {groupalign: true},
       mtable: {groupalign: true}
+    },
+    mtr: {
+      msqrt: {'data-vertical-align': true},
+      mroot: {'data-vertical-align': true}
+    },
+    mlabeledtr: {
+      msqrt: {'data-vertical-align': true},
+      mroot: {'data-vertical-align': true}
     }
   };
 
@@ -311,6 +328,7 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
   public static verifyDefaults: PropertyList = {
     checkArity: true,
     checkAttributes: false,
+    checkMathvariants: true,
     fullErrors: false,
     fixMmultiscripts: true,
     fixMtables: true
@@ -638,12 +656,6 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
     if (prevClass === TEXCLASS.NONE || texClass === TEXCLASS.NONE) {
       return '';
     }
-    if (prevClass >= TEXCLASS.VCENTER) {
-      prevClass = TEXCLASS.ORD;
-    }
-    if (texClass >= TEXCLASS.VCENTER) {
-      texClass = TEXCLASS.ORD;
-    }
     let space = TEXSPACE[prevClass][texClass];
     if ((this.prevLevel > 0 || this.attributes.get('scriptlevel') > 0) && space >= 0) {
       return '';
@@ -805,7 +817,7 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
    * @param {PropertyList} options   The options telling how much to verify
    */
   protected verifyAttributes(options: PropertyList) {
-    if (options['checkAttributes']) {
+    if (options.checkAttributes) {
       const attributes = this.attributes;
       const bad = [];
       for (const name of attributes.getExplicitNames()) {
@@ -818,6 +830,12 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
       }
       if (bad.length) {
         this.mError('Unknown attributes for ' + this.kind + ' node: ' + bad.join(', '), options);
+      }
+    }
+    if (options.checkMathvariants) {
+      const variant = this.attributes.getExplicit('mathvariant') as string;
+      if (variant && !MATHVARIANTS.has(variant) && !this.getProperty('ignore-variant')) {
+        this.mError(`Invalid mathvariant: ${variant}`, options, true);
       }
     }
   }
@@ -847,13 +865,16 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
     }
     let merror = this.factory.create('merror');
     merror.attributes.set('data-mjx-message', message);
-    if (options['fullErrors'] || short) {
+    if (options.fullErrors || short) {
       let mtext = this.factory.create('mtext');
       let text = this.factory.create('text') as any as TextNode;
-      text.setText(options['fullErrors'] ? message : this.kind);
+      text.setText(options.fullErrors ? message : this.kind);
       mtext.appendChild(text);
       merror.appendChild(mtext);
       this.parent.replaceChild(merror, this);
+      if (!options.fullErrors) {
+        merror.attributes.set('title', message);
+      }
     } else {
       this.parent.replaceChild(merror, this);
       merror.appendChild(this);

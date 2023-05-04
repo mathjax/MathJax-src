@@ -55,6 +55,24 @@ const MmlTokenAllow: {[key: string]: number} = {
 };
 
 
+/**
+ * @param {string} align   The vertical aligment to use (t, b, m or c)
+ * @param {number} n       The number of expected alignment characters
+ */
+export function splitAlignArray(align: string, n: number = Infinity) {
+  const list = align.replace(/\s+/g, '').split('').map((s: string) => {
+    const name = {t: 'top', b: 'bottom', m: 'middle', c: 'center'}[s];
+    if (!name) {
+      throw new TexError('BadBreakAlign', 'Invalid alignment character: %1', s);
+    }
+    return name;
+  });
+  if (list.length > n) {
+    throw new TexError('TooManyAligns', 'Too many alignment characters: %1', align);
+  }
+  return (n === 1 ? list[0] : list.join(' '));
+}
+
 
 /**
  * Handle LaTeX tokens.
@@ -372,7 +390,7 @@ BaseMethods.DiscretionaryTimes = function (parser: TexParser, _name: string) {
  * @param {string} _name The macro name.
  */
 BaseMethods.AllowBreak = function (parser: TexParser, _name: string) {
-  parser.Push(parser.create('token', 'mo', {'data-allowbreak': true}));
+  parser.Push(parser.create('token', 'mspace'));
 }
 
 /**
@@ -382,7 +400,7 @@ BaseMethods.AllowBreak = function (parser: TexParser, _name: string) {
  * @param {string} _name The macro name.
  */
 BaseMethods.Break = function (parser: TexParser, _name: string) {
-  parser.Push(parser.create('token', 'mo', {linebreak: TexConstant.LineBreak.NEWLINE}));
+  parser.Push(parser.create('token', 'mspace', {linebreak: TexConstant.LineBreak.NEWLINE}));
 }
 
 /**
@@ -675,6 +693,7 @@ BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, s
 BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, stack: boolean) {
   const entity = NodeUtil.createEntity(c);
   const mo = parser.create('token', 'mo', {stretchy: true, accent: true}, entity);
+  mo.setProperty('mathaccent', false);
   const pos = (name.charAt(1) === 'o' ? 'over' : 'under');
   const base = parser.ParseArg(name);
   parser.Push(ParseUtil.underOver(parser, base, mo, pos, stack));
@@ -760,21 +779,27 @@ BaseMethods.TeXAtom = function(parser: TexParser, name: string, mclass: number) 
     mml = parser.itemFactory.create('fn', node);
   } else {
     // @test Mathrel
-    mml = parser.create('node', 'TeXAtom', [], def);
-    const arg = new TexParser(parser.GetArgument(name), parser.stack.env, parser.configuration);
-    //
-    //  If \hsize was specified in a \vbox, \vtop, or \vcenter,
-    //    enclose contents in mpadded for linebreaking
-    //
-    if (mclass >= TEXCLASS.VCENTER && arg.stack.env.hsize) {
-      mml.appendChild(parser.create('node', 'mpadded', [arg.mml()], {
-        width: arg.stack.env.hsize,
-        'data-overflow': 'linebreak'
-      }));
-    } else {
-      mml.appendChild(arg.mml());
-    }
+    mml = parser.create('node', 'TeXAtom', [parser.ParseArg(name)], def);
   }
+  parser.Push(mml);
+};
+
+
+/**
+ * Creates vboxes with various vertical alignments
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {string} align The alignment for the box.
+ */
+BaseMethods.VBox = function(parser: TexParser, name: string, align: string) {
+  const arg = new TexParser(parser.GetArgument(name), parser.stack.env, parser.configuration);
+  const def = {'data-vertical-align': align, texClass: TEXCLASS.ORD} as EnvList;
+  if (arg.stack.env.hsize) {
+    def.width = arg.stack.env.hsize;
+    def['data-overflow'] = 'linebreak';
+  }
+  const mml = parser.create('node', 'mpadded', [arg.mml()], def);
+  mml.setProperty('vbox', align);
   parser.Push(mml);
 };
 
@@ -794,20 +819,57 @@ BaseMethods.Hsize = function (parser: TexParser, name: string) {
  * @param {string} name The macro name.
  */
 BaseMethods.ParBox = function (parser: TexParser, name: string) {
-  const align = parser.GetBrackets(name, 'c');
+  const c = parser.GetBrackets(name, 'c');
   const width = parser.GetDimen(name);
   const text = ParseUtil.internalMath(parser, parser.GetArgument(name));
-  const box = lookup(align, {
-    t: TEXCLASS.VTOP,
-    b: TEXCLASS.VBOX,
-    c: TEXCLASS.VCENTER,
-    m: TEXCLASS.VCENTER
-  }, TEXCLASS.VCENTER);
-  parser.Push(parser.create('node', 'TeXAtom', [
-    parser.create('node', 'mpadded', text, {width: width, 'data-overflow': 'linebreak'})
-  ], {texClass: box}));
+  const align = splitAlignArray(c, 1);
+  const mml = parser.create('node', 'mpadded', text, {
+    width: width,
+    'data-overflow': 'linebreak',
+    'data-vertical-align': align
+  });
+  mml.setProperty('vbox', align);
+  parser.Push(mml);
 };
 
+
+/**
+ * Handle \breakAlign{type}{align} for type = c, r, or t
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
+BaseMethods.BreakAlign = function (parser: TexParser, name: string) {
+  const top = parser.stack.Top() as sitem.ArrayItem;
+  if (!(top instanceof sitem.ArrayItem)) {
+    throw new TexError('BreakNotInArray', '%1 must be used in an alignment environment', parser.currentCS);
+  }
+  const type = parser.GetArgument(name).trim();
+  switch (type) {
+  case 'c':
+    if (top.First) {
+      throw new TexError('BreakFirstInEntry',
+                         '%1 must be at the beginning of an alignment entry', parser.currentCS +'{c}');
+    }
+    top.breakAlign.cell = splitAlignArray(parser.GetArgument(name), 1);
+    break;
+  case 'r':
+    if (top.row.length || top.First) {
+      throw new TexError('BreakFirstInRow',
+                         '%1 must be at the beginning of an alignment row', parser.currentCS +'{r}');
+    }
+    top.breakAlign.row = splitAlignArray(parser.GetArgument(name))
+    break;
+  case 't':
+    if (top.table.length || top.row.length || top.First) {
+      throw new TexError('BreakFirstInTable',
+                         '%1 must be at the beginning of an alignment', parser.currentCS + '{t}');
+    }
+    top.breakAlign.table = splitAlignArray(parser.GetArgument(name))
+    break;
+  default:
+    throw new TexError('BreakType', 'First argument to %1 must be one of c, r, or t', parser.currentCS);
+  }
+}
 
 /**
  * Creates mmltoken elements. Used in Macro substitutions.
@@ -1432,7 +1494,7 @@ BaseMethods.HLine = function(parser: TexParser, _name: string, style: string) {
   }
   if (!top.table.length) {
     // @test Enclosed top, Enclosed top bottom
-    top.frame.push('top');
+    top.frame.push(['top', style]);
   } else {
     // @test Enclosed bottom, Enclosed top bottom
     const lines = (top.arraydef['rowlines'] ? (top.arraydef['rowlines'] as string).split(/ /) : []);
@@ -1642,6 +1704,8 @@ BaseMethods.IndentAlign = function (parser: TexParser, begin: StackItem) {
  * @param {TexParser} parser The calling parser.
  * @param {StackItem} begin The opening stackitem.
  * @param {boolean} numbered True if environment is numbered.
+ * @param {boolean} display True if equation is in display mode
+ */
 BaseMethods.Equation = function (
   parser: TexParser,
   begin: StackItem,
@@ -1665,11 +1729,12 @@ BaseMethods.Equation = function (
  * @param {boolean} numbered True if environment is numbered.
  * @param {boolean} taggable True if taggable.
  * @param {string} align Alignment string.
+ * @param {string} balign Vertical alignment string.
  * @param {string} spacing Spacing between columns.
  */
 BaseMethods.EqnArray = function(parser: TexParser, begin: StackItem,
                                 numbered: boolean, taggable: boolean,
-                                align: string, spacing: string) {
+                                align: string, balign: string, spacing: string) {
   // @test The Lorenz Equations, Maxwell's Equations, Cubic Binomial
   let name = begin.getName();
   let isGather = (name === 'gather' || name === 'gather*');
@@ -1679,6 +1744,7 @@ BaseMethods.EqnArray = function(parser: TexParser, begin: StackItem,
   parser.Push(begin);
   align = align.replace(/[^clr]/g, '').split('').join(' ');
   align = align.replace(/l/g, 'left').replace(/r/g, 'right').replace(/c/g, 'center');
+  balign = splitAlignArray(balign);
   let newItem = parser.itemFactory.create('eqnarray', name,
                                           numbered, taggable, parser.stack.global) as sitem.ArrayItem;
   newItem.arraydef = {
@@ -1686,6 +1752,7 @@ BaseMethods.EqnArray = function(parser: TexParser, begin: StackItem,
     columnalign: align,
     columnspacing: (spacing || '1em'),
     rowspacing: '3pt',
+    'data-break-align': balign,
     side: parser.options['tagSide'],
     minlabelspacing: parser.options['tagIndent']
   };

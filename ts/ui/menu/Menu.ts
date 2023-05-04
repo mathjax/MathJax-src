@@ -32,10 +32,14 @@ import {OptionList, userOptions, defaultOptions, expandable} from '../../util/Op
 
 import {SVG} from '../../output/svg.js';
 
+import * as AnnotationMenu from './AnnotationMenu.js';
 import {MJContextMenu} from './MJContextMenu.js';
+import {RadioCompare} from './RadioCompare.js';
 import {MmlVisitor} from './MmlVisitor.js';
 import {SelectableInfo} from './SelectableInfo.js';
 import {MenuMathDocument} from './MenuHandler.js';
+import * as MenuUtil from './MenuUtil.js';
+
 
 import {Info} from 'mj-context-menu/js/info.js';
 import {Parser} from 'mj-context-menu/js/parse.js';
@@ -59,12 +63,6 @@ declare namespace window {
  * The global MathJax object
  */
 const MathJax = MJX as StartupObject & LoaderObject;
-
-/**
- * True when platform is a Mac (so we can enable CMD menu item for zoom trigger)
- */
-const isMac = (typeof window !== 'undefined' &&
-               window.navigator && window.navigator.platform.substr(0, 3) === 'Mac');
 
 /**
  * The XML indentifiaction string
@@ -113,6 +111,7 @@ export interface MenuSettings {
   subtitles: boolean;
   treeColoring: boolean;
   viewBraille: boolean;
+  voicing: boolean;
 }
 
 export type HTMLMATHITEM = MathItem<HTMLElement, Text, Document>;
@@ -361,11 +360,10 @@ export class Menu {
   /**
    * The "Show As Annotation" info box
    */
-  protected annotationText = new SelectableInfo(
+  protected annotationBox = new SelectableInfo(
     'MathJax Annotation Text',
     () => {
-      if (!this.menu.mathItem) return '';
-      const text = this.menu.annotation;
+      const text = AnnotationMenu.annotation;
       return '<pre style="font-size:125%; margin:0">' + this.formatSource(text) + '</pre>';
     },
     ''
@@ -469,7 +467,10 @@ export class Menu {
    * Create the menu object, attach the info boxes to it, and output any CSS needed for it
    */
   protected initMenu() {
-    let parser = new Parser([['contextMenu', MJContextMenu.fromJson.bind(MJContextMenu)]]);
+    let parser = new Parser([
+      ['contextMenu', MJContextMenu.fromJson.bind(MJContextMenu)],
+      ['radioCompare', RadioCompare.fromJson.bind(RadioCompare)]
+    ]);
     this.menu = parser.parse({
       type: 'contextMenu',
       id: 'MathJax_Menu',
@@ -497,6 +498,7 @@ export class Menu {
         this.a11yVar<boolean>('subtitles'),
         this.a11yVar<boolean>('braille'),
         this.a11yVar<boolean>('viewBraille'),
+        this.a11yVar<boolean>('voicing'),
         this.a11yVar<string>('locale', value => Sre.setupEngine({locale: value as string})),
         this.a11yVar<string> ('speechRules', value => {
           const [domain, style] = value.split('-');
@@ -521,7 +523,7 @@ export class Menu {
           this.rule(),
           this.command('Speech', 'Speech Text', () => this.speechText.post(), {disabled: true}),
           this.command('SVG', 'SVG Image', () => this.postSvgImage(), {disabled: true}),
-          this.submenu('Annotation', 'Annotation'),
+          this.submenu('ShowAnnotation', 'Annotation'),
           this.rule(),
           this.command('Error', 'Error Message', () => this.errorMessage.post(), {disabled: true})
         ]),
@@ -531,7 +533,7 @@ export class Menu {
           this.rule(),
           this.command('Speech', 'Speech Text', () => this.copySpeechText(), {disabled: true}),
           this.command('SVG', 'SVG Image', () => this.copySvgImage(), {disabled: true}),
-          this.submenu('Annotation', 'Annotation'),
+          this.submenu('CopyAnnotation', 'Annotation'),
           this.rule(),
           this.command('Error', 'Error Message', () => this.copyErrorMessage(), {disabled: true})
         ]),
@@ -554,9 +556,9 @@ export class Menu {
             ]),
             this.rule(),
             this.label('TriggerRequires', 'Trigger Requires:'),
-            this.checkbox((isMac ? 'Option' : 'Alt'), (isMac ? 'Option' : 'Alt'), 'alt'),
-            this.checkbox('Command', 'Command', 'cmd', {hidden: !isMac}),
-            this.checkbox('Control', 'Control', 'ctrl', {hiddne: isMac}),
+            this.checkbox((MenuUtil.isMac ? 'Option' : 'Alt'), (MenuUtil.isMac ? 'Option' : 'Alt'), 'alt'),
+            this.checkbox('Command', 'Command', 'cmd', {hidden: !MenuUtil.isMac}),
+            this.checkbox('Control', 'Control', 'ctrl', {hiddne: MenuUtil.isMac}),
             this.checkbox('Shift', 'Shift', 'shift')
           ]),
           this.submenu('ZoomFactor', 'Zoom Factor', this.radioGroup('zscale', [
@@ -576,6 +578,7 @@ export class Menu {
           this.submenu('Speech', 'Speech', [
             this.checkbox('Speech', 'Speech Output', 'speech'),
             this.checkbox('Subtitles', 'Speech Subtitles', 'subtitles'),
+            this.checkbox('Auto Voicing', 'Auto Voicing', 'voicing'),
             this.checkbox('Braille', 'Braille Output', 'braille'),
             this.checkbox('View Braille', 'Braille Subtitles', 'viewBraille'),
             this.rule(),
@@ -648,7 +651,7 @@ export class Menu {
     menu.setJax(this.jax);
     this.about.attachMenu(menu);
     this.help.attachMenu(menu);
-    this.annotationText.attachMenu(menu);
+    this.originalText.attachMenu(menu);
     this.mathmlCode.attachMenu(menu);
     this.originalText.attachMenu(menu);
     this.svgImage.attachMenu(menu);
@@ -657,9 +660,14 @@ export class Menu {
     this.zoomBox.attachMenu(menu);
     this.checkLoadableItems();
     this.enableExplorerItems(this.settings.explorer);
-    menu.showAnnotation = this.annotationText;
-    menu.copyAnnotation = this.copyAnnotation.bind(this);
-    menu.annotationTypes = this.options.annotationTypes;
+    const cache: [string, string][] = [];
+    MJContextMenu.DynamicSubmenus.set(
+      'ShowAnnotation',
+      AnnotationMenu.showAnnotations(
+        this.annotationBox, this.options.annotationTypes, cache));
+    MJContextMenu.DynamicSubmenus.set(
+      'CopyAnnotation',
+      AnnotationMenu.copyAnnotations(cache));
     CssStyles.addInfoStyles(this.document.document as any);
     CssStyles.addMenuStyles(this.document.document as any);
   }
@@ -828,7 +836,7 @@ export class Menu {
           startup.output.setAdaptor(this.document.adaptor);
           startup.output.initialize();
           this.jax[jax] = startup.output;
-          this.setOutputJax(jax);
+          mathjax.handleRetriesFor(() => this.setOutputJax(jax));
         }
       });
     }
@@ -1144,7 +1152,7 @@ export class Menu {
   }
 
   /**
-   * @param {MouseEvent} Event   The event triggering the zoom action
+   * @param {MouseEvent} event   The event triggering the zoom action
    * @param {string} zoom        The type of event (click, dblclick) that occurred
    * @returns {boolean}          True if the event is the right type and has the needed modifiers
    */
@@ -1177,14 +1185,14 @@ export class Menu {
    * Copy the serialzied MathML to the clipboard
    */
   protected copyMathML() {
-    this.copyToClipboard(this.toMML(this.menu.mathItem));
+    MenuUtil.copyToClipboard(this.toMML(this.menu.mathItem));
   }
 
   /**
    * Copy the original form to the clipboard
    */
   protected copyOriginal() {
-    this.copyToClipboard(this.menu.mathItem.math.trim());
+    MenuUtil.copyToClipboard(this.menu.mathItem.math.trim());
   }
 
   /**
@@ -1192,7 +1200,7 @@ export class Menu {
    */
   protected copySvgImage() {
     this.toSVG(this.menu.mathItem).then((svg) => {
-      this.copyToClipboard(svg);
+      MenuUtil.copyToClipboard(svg);
     });
   }
 
@@ -1200,39 +1208,21 @@ export class Menu {
    * Copy the speech text to the clipboard
    */
   protected copySpeechText() {
-    this.copyToClipboard(this.menu.mathItem.outputData.speech);
+    MenuUtil.copyToClipboard(this.menu.mathItem.outputData.speech);
   }
 
   /**
    * Copy the error message to the clipboard
    */
   protected copyErrorMessage() {
-    this.copyToClipboard(this.menu.errorMsg.trim());
+    MenuUtil.copyToClipboard(this.menu.errorMsg.trim());
   }
 
   /**
    * Copy the original annotation text to the clipboard
    */
   public copyAnnotation() {
-    this.copyToClipboard(this.menu.annotation.trim());
-  }
-
-  /**
-   * @param {string} text   The text to be copied ot the clopboard
-   */
-  protected copyToClipboard(text: string) {
-    const input = document.createElement('textarea');
-    input.value = text;
-    input.setAttribute('readonly', '');
-    input.style.cssText = 'height: 1px; width: 1px; padding: 1px; position: absolute; left: -10px';
-    document.body.appendChild(input);
-    input.select();
-    try {
-      document.execCommand('copy');
-    } catch (error) {
-      alert('Can\'t copy to clipboard: ' + error.message);
-    }
-    document.body.removeChild(input);
+    MenuUtil.copyToClipboard(this.menu.annotation.trim());
   }
 
   /*======================================================================*/

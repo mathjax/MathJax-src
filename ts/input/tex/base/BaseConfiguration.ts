@@ -63,7 +63,7 @@ export function Other(parser: TexParser, char: string) {
   // @test Other Remap
   let mo = parser.create('token', type, def, (remap ? remap.char : char));
   const variant = (range?.[4] ||
-                   ParseUtil.isLatinOrGreekChar(char) ? parser.configuration.mathStyle(char, true) : '');
+                   (ParseUtil.isLatinOrGreekChar(char) ? parser.configuration.mathStyle(char, true) : ''));
   if (variant) {
     mo.attributes.set('mathvariant', variant);
   }

@@ -96,11 +96,9 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
     public toSVG(parents: N[]) {
       this.getBBox();
       const n = this.linebreakCount = (this.isStack ? 0 : this.breakCount);
-      if (n || !this.node.isInferred) {
-        parents = this.standardSvgNodes(parents);
-      } else {
-        this.dom = parents;
-      }
+      parents = ((n || !this.node.isInferred) ?
+                 this.standardSvgNodes(parents) :
+                 this.getSvgNodes(parents));
       this.addChildren(parents);
       if (n) {
         this.placeLines(parents);
@@ -110,10 +108,22 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
     /**
      * @param {N[]} parents  The HTML nodes in which to place the lines
      */
+    protected getSvgNodes(parents: N[]) {
+      if (this.dh) {
+        const g = this.svg('g', {transform: `translate(0 ${this.fixed(this.dh)})`});
+        parents = [this.adaptor.append(parents[0], g) as N];
+      }
+      this.dom = parents;
+      return parents;
+    }
+
+    /**
+     * @param {N[]} parents  The HTML nodes in which to place the lines
+     */
     protected placeLines(parents: N[]) {
       const lines = this.lineBBox;
       const display = this.jax.math.display;
-      let y = 0;
+      let y = this.dh;
       for (const k of parents.keys()) {
         const lbox = lines[k];
         this.place(lbox.L || 0, y, parents[k]);

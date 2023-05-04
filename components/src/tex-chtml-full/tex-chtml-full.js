@@ -1,9 +1,18 @@
-import '../startup/init.js';
-import './preload.js';
+import {startup} from '../startup/init.js';
+import {Loader} from '../../../js/components/loader.js';
 import '../core/core.js';
 import '../input/tex-full/tex-full.js';
-import '../output/chtml/chtml.js';
-import '../output/chtml/fonts/tex/tex.js';
+import {loadFont} from '../output/chtml/chtml.js';
 import '../ui/menu/menu.js';
 import '../a11y/assistive-mml/assistive-mml.js';
-import '../startup/startup.js';
+
+Loader.preLoad(
+  'loader', 'startup',
+  'core',
+  'input/tex-full',
+  'output/chtml',
+  'ui/menu',
+  'a11y/assistive-mml'
+);
+
+loadFont(startup, true);

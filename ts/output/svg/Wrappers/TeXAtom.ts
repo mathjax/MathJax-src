@@ -89,14 +89,6 @@ export const SvgTeXAtom = (function <N, T, D>(): SvgTeXAtomClass<N, T, D> {
     public toSVG(parents: N[]) {
       super.toSVG(parents);
       this.adaptor.setAttribute(this.dom[0], 'data-mjx-texclass', TEXCLASSNAMES[this.node.texClass]);
-      //
-      // Place VCENTER and VBOX atoms vertically
-      //
-      if (this.dh) {
-        const translate = 'translate(0 ' + this.fixed(this.dh) + ')';
-        this.dom.forEach(node => this.adaptor.setAttribute(node, 'transform', translate));
-        return;
-      }
     }
 
   } as any as SvgTeXAtomClass<N, T, D>;

@@ -133,6 +133,9 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
         'white-space': 'normal',
         'font-family': 'MJX-BRK'
       },
+      'mjx-break[size="0"]': {
+        'letter-spacing': (.001 - 1) + 'em'
+      },
       'mjx-break[size="1"]': {
         'letter-spacing': (.111 - 1) + 'em'
       },
@@ -214,7 +217,7 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
       } else {
         this.handleInline(parents[0]);
       }
-      adaptor.addClass(this.dom[0], 'MJX-TEX');
+      adaptor.addClass(this.dom[0], `${this.font.cssFontPrefix}-N`);
     }
 
     /**

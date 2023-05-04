@@ -101,7 +101,7 @@ export const CasesMethods = {
     } else {
       const left = parser.GetArgument('\\begin{' + begin.getName() + '}');
       begin.setProperty('left', left);
-      const array = BaseMethods.EqnArray(parser, begin, true, true, 'll', ) as EqnArrayItem;
+      const array = BaseMethods.EqnArray(parser, begin, true, true, 'll', 'tt') as EqnArrayItem;
       array.arraydef.displaystyle = false;
       array.arraydef.rowspacing = '.2em';
       array.setProperty('numCases', true);

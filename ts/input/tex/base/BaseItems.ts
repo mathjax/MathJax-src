@@ -36,7 +36,7 @@ import NodeUtil from '../NodeUtil.js';
 import {Property, PropertyList} from '../../../core/Tree/Node.js';
 import StackItemFactory from '../StackItemFactory.js';
 import {CheckType, BaseItem, StackItem, EnvList} from '../StackItem.js';
-
+import {TRBL} from '../../../util/Styles.js';
 
 /**
  * Initial item on the stack. It's pushed when parsing begins.
@@ -524,7 +524,7 @@ export class BreakItem extends BaseItem {
         }
       }
     }
-    const mml = this.create('token', 'mo', {linebreak});
+    const mml = this.create('token', 'mspace', {linebreak});
     return [[this.factory.create('mml', mml), item], true];
   }
 
@@ -925,10 +925,10 @@ export class ArrayItem extends BaseItem {
   public row: MmlNode[] = [];
 
   /**
-   * Frame specification as a list of strings.
-   * @type {string[]}
+   * Frame specification as a list of pairs of strings [side, style].
+   * @type {[string, string][]}
    */
-  public frame: string[] = [];
+  public frame: [string, string][] = [];
 
   /**
    * Hfill value.
@@ -965,13 +965,16 @@ export class ArrayItem extends BaseItem {
   /**
    * Row alignments to specify on particular columns
    */
-  public ralign: [number, string, string][] = [];
+  public ralign: [string, string, string][] = [];
 
   /**
-   * True if separators are dashed.
-   * @type {boolean}
+   * Data for setting cell/row/table alignment for when there are line breaks
    */
-  public dashed: boolean = false;
+  public breakAlign = {
+    cell: '',
+    row: '',
+    table: ''
+  };
 
   /**
    * The TeX parser that created this item
@@ -1050,38 +1053,63 @@ export class ArrayItem extends BaseItem {
     if (scriptlevel) {
       mml.setProperty('scriptlevel', scriptlevel);
     }
+    if (this.breakAlign.table) {
+      NodeUtil.setAttribute(mml, 'data-break-align', this.breakAlign.table);
+    }
     if (this.getProperty('arrayPadding')) {
-      NodeUtil.setAttribute(mml, 'frame', '');   // empty frame forces fspacing to be used in MathJax
+      NodeUtil.setAttribute(mml, 'data-frame-styles', '');   // empty frame-styles forces framespacing to be used
       NodeUtil.setAttribute(mml, 'framespacing', this.getProperty('arrayPadding') as string);
     }
-    if (this.frame.length === 4) {
-      // @test Enclosed frame solid, Enclosed frame dashed
-      NodeUtil.setAttribute(mml, 'frame', this.dashed ? 'dashed' : 'solid');
-    } else if (this.frame.length) {
-      // @test Enclosed left right
-      if (this.arraydef['rowlines']) {
-        // @test Enclosed dashed row, Enclosed solid row,
-        this.arraydef['rowlines'] =
-          (this.arraydef['rowlines'] as string).replace(/none( none)+$/, 'none');
-      }
-      // @test Enclosed left right
-      if (!this.getProperty('arrayPadding')) {
-        NodeUtil.removeAttribute(mml, 'frame');
-      }
-      mml = this.create('node', 'menclose', [mml], {notation: this.frame.join(' ')});
-      if ((this.arraydef['columnlines'] || 'none') !== 'none' ||
-          (this.arraydef['rowlines'] || 'none') !== 'none') {
-        // @test Enclosed dashed row, Enclosed solid row
-        // @test Enclosed dashed column, Enclosed solid column
-        NodeUtil.setAttribute(mml, 'data-padding', 0);
-      }
-    }
+    mml = this.handleFrame(mml);
     if (this.getProperty('open') || this.getProperty('close')) {
       // @test Cross Product Formula
       mml = ParseUtil.fenced(this.factory.configuration,
                              this.getProperty('open') as string, mml,
                              this.getProperty('close') as string);
     }
+    return mml;
+  }
+
+  /**
+   * @param {MmlNode} mml  The mtable to frame
+   */
+  protected handleFrame(mml: MmlNode): MmlNode {
+    if (!this.frame.length) return mml;
+    //
+    // Map sides to their styles
+    //
+    const sides = new Map(this.frame);
+    //
+    // If all style are the same,
+    //   If all four sides are present, use a frame of the correct type
+    //   Otherwise, if the given sides are solid, use menclosed (with no padding)
+    //
+    const fstyle = this.frame.reduce(
+      (fstyle, [, style]) => style === fstyle ? style : '',
+      this.frame[0][1]
+    );
+    if (fstyle) {
+      if (this.frame.length === 4) {
+        NodeUtil.setAttribute(mml, 'frame', fstyle);
+        NodeUtil.removeAttribute(mml, 'data-frame-styles');
+        return mml;
+      }
+      if (fstyle === 'solid') {
+        NodeUtil.setAttribute(mml, 'data-frame-styles', '');
+        mml = this.create('node', 'menclose', [mml], {
+          notation: Array.from(sides.keys()).join(' '),
+          'data-padding': 0
+        });
+        return mml;
+      }
+    }
+    //
+    //  Otherwise (some sides are dashed), use styles, which is implemented in
+    //    the common output jax so that we get the proper line width (it may be
+    //    customizable via output options in the future).
+    //
+    const styles = TRBL.map(side => sides.get(side) || 'none').join(' ');
+    NodeUtil.setAttribute(mml, 'data-frame-styles', styles);
     return mml;
   }
 
@@ -1181,13 +1209,13 @@ export class ArrayItem extends BaseItem {
         if (braces || envs) continue;
         i -= match[2].length;
         let entry = parser.string.slice(parser.i, i).trim();
-        const prefix = entry.match(/^(?:\s*\\(?:hline|hfil{1,3}|rowcolor\s*\{.*?\}))+/);
+        const prefix = entry.match(/^(?:\s*\\(?:h(?:dash)?line|hfil{1,3}|rowcolor\s*\{.*?\}))+/);
         if (prefix) {
           entry = entry.slice(prefix[0].length);
         }
         parser.string = parser.string.slice(i);
         parser.i = 0;
-        return [prefix?.[0] ||'', entry, match[2], true];
+        return [prefix?.[0] || '', entry, match[2], true];
       }
     }
     return fail;
@@ -1214,22 +1242,27 @@ export class ArrayItem extends BaseItem {
     }
     //
     // Check for row alignment specification, and use
-    //   a TeXAtom with a nested mpadded element to produce the
-    //   aligned content.
+    //   an mpadded element to produce the aligned content.
     //
     const ralign = this.ralign[this.row.length];
     if (ralign) {
-      const [tclass, cwidth, calign] = ralign;
-      const texatom = this.create('node', 'TeXAtom', [
-        this.create('node', 'mpadded', mtd.childNodes[0].childNodes, {
-          width: cwidth,
-          'data-overflow': 'auto',
-          'data-align': calign
-        })
-      ], {texClass: tclass});
+      let [valign, cwidth, calign] = ralign;
+      if (this.breakAlign.cell) {
+        valign = this.breakAlign.cell;
+      }
+      const box = this.create('node', 'mpadded', mtd.childNodes[0].childNodes, {
+        width: cwidth,
+        'data-overflow': 'auto',
+        'data-align': calign,
+        'data-vertical-align': valign
+      });
+      box.setProperty('vbox', valign);
       mtd.childNodes[0].childNodes = [];
-      mtd.appendChild(texatom);
+      mtd.appendChild(box);
+    } else if (this.breakAlign.cell) {
+      NodeUtil.setAttribute(mtd, 'data-vertical-align', this.breakAlign.cell);
     }
+    this.breakAlign.cell = '';
     //
     this.row.push(mtd);
     this.Clear();
@@ -1241,15 +1274,21 @@ export class ArrayItem extends BaseItem {
    * Finishes a single row of the array.
    */
   public EndRow() {
-    let node: MmlNode;
+    // @test Array1, Array2
+    let type = 'mtr'
     if (this.getProperty('isNumbered') && this.row.length === 3) {
       // @test Label, Matrix Numbered
       this.row.unshift(this.row.pop());  // move equation number to first
       // position
-      node = this.create('node', 'mlabeledtr', this.row);
-    } else {
-      // @test Array1, Array2
-      node = this.create('node', 'mtr', this.row);
+      type = 'mlabeledtr';
+    } else if (this.getProperty('isLabeled')) {
+      type = 'mlabeledtr';
+      this.setProperty('isLabeled', false);
+    }
+    const node = this.create('node', type, this.row);
+    if (this.breakAlign.row) {
+      NodeUtil.setAttribute(node, 'data-break-align', this.breakAlign.row);
+      this.breakAlign.row = '';
     }
     this.table.push(node);
     this.row = [];
@@ -1273,22 +1312,25 @@ export class ArrayItem extends BaseItem {
    * Finishes line layout if not already given.
    */
   public checkLines() {
-    if (this.arraydef['rowlines']) {
-      const lines = (this.arraydef['rowlines'] as string).split(/ /);
+    if (this.arraydef.rowlines) {
+      const lines = (this.arraydef.rowlines as string).split(/ /);
       if (lines.length === this.table.length) {
-        this.frame.push('bottom');
-        lines.pop();
-        this.arraydef['rowlines'] = lines.join(' ');
+        this.frame.push(['bottom', lines.pop()]);
+        if (lines.length) {
+          this.arraydef.rowlines = lines.join(' ');
+        } else {
+          delete this.arraydef.rowlines;
+        }
       } else if (lines.length < this.table.length - 1) {
-        this.arraydef['rowlines'] += ' none';
+        this.arraydef.rowlines+= ' none';
       }
     }
     if (this.getProperty('rowspacing')) {
-      const rows = (this.arraydef['rowspacing'] as string).split(/ /);
+      const rows = (this.arraydef.rowspacing as string).split(/ /);
       while (rows.length < this.table.length) {
         rows.push(this.getProperty('rowspacing') + 'em');
       }
-      this.arraydef['rowspacing'] = rows.join(' ');
+      this.arraydef.rowspacing = rows.join(' ');
     }
   }
 
@@ -1354,9 +1396,7 @@ export class EqnArrayItem extends ArrayItem {
     if (this.row.length) {
       ParseUtil.fixInitialMO(this.factory.configuration, this.nodes);
     }
-    const node = this.create('node', 'mtd', this.nodes);
-    this.row.push(node);
-    this.Clear();
+    super.EndEntry();
   }
 
   /**
@@ -1367,16 +1407,13 @@ export class EqnArrayItem extends ArrayItem {
       this.maxrow = this.row.length;
     }
     // @test Cubic Binomial
-    let mtr = 'mtr';
-    let tag = this.factory.configuration.tags.getTag();
+    const tag = this.factory.configuration.tags.getTag();
     if (tag) {
       this.row = [tag].concat(this.row);
-      mtr = 'mlabeledtr';
+      this.setProperty('isLabeled', true);
     }
     this.factory.configuration.tags.clearTag();
-    const node = this.create('node', mtr, this.row);
-    this.table.push(node);
-    this.row = [];
+    super.EndRow();
   }
 
   /**
@@ -1393,6 +1430,7 @@ export class EqnArrayItem extends ArrayItem {
     this.extendArray('columnalign', this.maxrow);
     this.extendArray('columnwidth', this.maxrow);
     this.extendArray('columnspacing', this.maxrow - 1);
+    this.extendArray('data-break-align', this.maxrow);
     //
     // Add indentshift for left-aligned columns
     //
@@ -1424,7 +1462,7 @@ export class EqnArrayItem extends ArrayItem {
     const align = (this.arraydef.columnalign as string).split(/ /);
     let prev = '';
     for (const i of align.keys()) {
-      if (align[i] === 'left') {
+      if (align[i] === 'left' && i > 0) {
         const indentshift = (prev === 'center' ? '.7em' : '2em');
         for (const row of this.table) {
           const cell = row.childNodes[row.isKind('mlabeledtr') ? i + 1 : i];

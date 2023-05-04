@@ -264,6 +264,7 @@ export function CommonMsqrtMixin<
      * @override
      */
     public computeBBox(bbox: BBox, recompute: boolean = false) {
+      bbox.empty();
       const surdbox = this.surd.getBBox();
       const basebox = new BBox(this.childNodes[this.base].getOuterBBox());
       const q = this.getPQ(surdbox)[1];

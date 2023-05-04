@@ -1,9 +1,18 @@
-import '../startup/init.js';
-import './preload.js';
+import {startup} from '../startup/init.js';
+import {Loader} from '../../../js/components/loader.js';
 import '../core/core.js';
 import '../input/mml/mml.js';
-import '../output/svg/svg.js';
-import '../output/svg/fonts/tex/tex.js';
+import {loadFont} from '../output/svg/svg.js';
 import '../ui/menu/menu.js';
-import '../a11y/assistive-mml/assistive-mml.js';
-import '../startup/startup.js';
+import {checkSre} from '../a11y/util.js';
+
+Loader.preLoad(
+  'loader', 'startup',
+  'core',
+  'input/mml',
+  'output/svg',
+  'ui/menu'
+);
+Loader.saveVersion('mml-svg');
+
+loadFont(checkSre(startup), true);

@@ -38,7 +38,7 @@ import {CommonMrow} from './Wrappers/mrow.js';
 import {BBox} from '../../util/BBox.js';
 import {LineBBox} from './LineBBox.js';
 import {FontData, FontDataClass, DelimiterData,
-        VariantData, CharData, CharOptions, DIRECTION, NOSTRETCH} from './FontData.js';
+        VariantData, CharOptions, CharDataArray, DIRECTION, NOSTRETCH} from './FontData.js';
 
 /*****************************************************************/
 
@@ -67,6 +67,7 @@ function MathMLSpace(script: boolean, size: number): number {
  */
 export const SPACE: StringMap = {
   /* tslint:disable:whitespace */
+  [LENGTHS.em(0)]:    '0',
   [LENGTHS.em(2/18)]: '1',
   [LENGTHS.em(3/18)]: '2',
   [LENGTHS.em(4/18)]: '3',
@@ -791,7 +792,7 @@ export class CommonWrapper<
         hasBorder = true;
         width[i] = Math.max(0, this.length2em(w, 1));
         style[i] = this.styles.get(key + 'Style') || 'solid';
-        color[i] = this.styles.get(key + 'Color') || 'currentColor';
+        color[i] = this.styles.get(key + 'Color');
       }
       const p = this.styles.get('padding' + name);
       if (p) {
@@ -812,7 +813,12 @@ export class CommonWrapper<
     if (!this.node.isToken) return;
     const attributes = this.node.attributes;
     let variant = attributes.get('mathvariant') as string;
-    if (!attributes.getExplicit('mathvariant')) {
+    if (attributes.getExplicit('mathvariant')) {
+      if (!this.font.getVariant(variant)) {
+        console.warn(`Invalid variant: ${variant}`);
+        variant = 'normal';
+      }
+    } else {
       const values = attributes.getList('fontfamily', 'fontweight', 'fontstyle') as StringMap;
       if (this.removedStyles) {
         const style = this.removedStyles;
@@ -1075,6 +1081,9 @@ export class CommonWrapper<
     shift: string = '',
     width: number = this.metrics.containerWidth
   ): [string, number] {
+    if (!this.jax.math.display) {
+      return ['left', 0];
+    }
     if (!align || align === 'auto') {
       align = this.jax.math.outputData.inlineMarked ? 'left' : this.jax.options.displayAlign;
     }
@@ -1200,7 +1209,7 @@ export class CommonWrapper<
       //    the Math Alphabet mapping for this character.
       //  Otherwise use the original code point, n.
       //
-      chars = chars.map((n) => ((map[n] || [])[3] || {}).smp || n);
+      chars = chars.map((n) => (map[n] as CharDataArray<CC>)?.[3]?.smp || n);
     }
     return chars;
   }
@@ -1254,7 +1263,7 @@ export class CommonWrapper<
    * @param {number} n         The number of the character to look up
    * @return {CharData}        The full CharData object, with CharOptions guaranteed to be defined
    */
-  protected getVariantChar(variant: string, n: number): CharData<CC> {
+  protected getVariantChar(variant: string, n: number): CharDataArray<CC> {
     const char = this.font.getChar(variant, n) || [0, 0, 0, {unknown: true} as CC];
     if (char.length === 3) {
       (char as any)[3] = {};

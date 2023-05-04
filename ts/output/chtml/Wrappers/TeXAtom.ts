@@ -28,8 +28,7 @@ import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
         ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
 import {CommonTeXAtom, CommonTeXAtomClass, CommonTeXAtomMixin} from '../../common/Wrappers/TeXAtom.js';
 import {TeXAtom} from '../../../core/MmlTree/MmlNodes/TeXAtom.js';
-import {MmlNode, TEXCLASS, TEXCLASSNAMES} from '../../../core/MmlTree/MmlNode.js';
-import {StyleList} from '../../../util/StyleList.js';
+import {MmlNode, TEXCLASSNAMES} from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -88,31 +87,9 @@ export const ChtmlTeXAtom = (function <N, T, D>(): ChtmlTeXAtomClass<N, T, D> {
     /**
      * @override
      */
-    public static styles: StyleList = {
-      'mjx-texatom[texclass="VBOX"] > mjx-linestack': {
-        display: 'inline-block'
-      },
-      'mjx-texatom[texclass="VBOX"] > mjx-mpadded > mjx-block > mjx-linestack': {
-        display: 'inline-block'
-      }
-    };
-
-    /**
-     * @override
-     */
     public toCHTML(parents: N[]) {
       super.toCHTML(parents);
       this.dom.forEach(dom => this.adaptor.setAttribute(dom, 'texclass', TEXCLASSNAMES[this.node.texClass]));
-      //
-      // Center VCENTER atoms vertically
-      //
-      if (this.node.texClass === TEXCLASS.VCENTER) {
-        const bbox = this.childNodes[0].getBBox();  // get unmodified bbox of children
-        const {h, d} = bbox;
-        const a = this.font.params.axis_height;
-        const dh = ((h + d) / 2 + a) - h;  // new height minus old height
-        this.adaptor.setStyle(this.dom[0], 'verticalAlign', this.em(dh));
-      }
     }
 
   };

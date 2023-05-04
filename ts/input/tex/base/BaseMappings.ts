@@ -616,11 +616,13 @@ new sm.CommandMap('macros', {
   mathpunct:         ['TeXAtom', TEXCLASS.PUNCT],
   mathinner:         ['TeXAtom', TEXCLASS.INNER],
 
-  vtop:              ['TeXAtom', TEXCLASS.VTOP],
-  vcenter:           ['TeXAtom', TEXCLASS.VCENTER],
-  vbox:              ['TeXAtom', TEXCLASS.VBOX],
+  vtop:              ['VBox', 'top'],
+  vcenter:           ['VBox', 'center'],
+  vbox:              ['VBox', 'bottom'],
   hsize:              'Hsize',
   parbox:             'ParBox',
+
+  breakAlign:         'BreakAlign',
 
   buildrel:           'BuildRel',
 
@@ -694,13 +696,13 @@ new sm.CommandMap('macros', {
   TeX:               ['Macro', 'T\\kern-.14em\\lower.5ex{E}\\kern-.115em X'],
   LaTeX:             ['Macro', 'L\\kern-.325em\\raise.21em' +
                       '{\\scriptstyle{A}}\\kern-.17em\\TeX'],
-  ' ':               ['Macro', '\\text{ }'],
 
   //  Specially handled
   not:                'Not',
   dots:               'Dots',
   space:              'Tilde',
   '\u00A0':           'Tilde',
+  ' ':                'Tilde',
 
 
   //  LaTeX
@@ -728,7 +730,7 @@ new sm.EnvironmentMap('environment', ParseMethods.environment, {
   array:         ['AlignedArray'],
   darray:        ['AlignedArray', null, 'D'],
   equation:      ['Equation', null, true],
-  eqnarray:      ['EqnArray', null, true, true, 'rcl',
+  eqnarray:      ['EqnArray', null, true, true, 'rcl', 'bmt',
                   ParseUtil.cols(0, MATHSPACE.thickmathspace), '.5em'],
   indentalign:   ['IndentAlign']
 }, BaseMethods);
