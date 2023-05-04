@@ -53,13 +53,6 @@ import Sre from '../../a11y/sre.js';
 /*==========================================================================*/
 
 /**
- * Declare the MathJax global and the navigator object (to check platform for MacOS)
- */
-declare namespace window {
-  const navigator: {platform: string};
-}
-
-/**
  * The global MathJax object
  */
 const MathJax = MJX as StartupObject & LoaderObject;
@@ -755,7 +748,7 @@ export class Menu {
 
   /**
    * Merge menu settings into the a11y document options.
-   * @param {[key: string]: any} options The options.
+   * @param {{[key: string]: any}} options The options.
    */
   protected setA11y(options: {[key: string]: any}) {
     if (MathJax._.a11y && MathJax._.a11y.explorer) {
@@ -1216,13 +1209,6 @@ export class Menu {
    */
   protected copyErrorMessage() {
     MenuUtil.copyToClipboard(this.menu.errorMsg.trim());
-  }
-
-  /**
-   * Copy the original annotation text to the clipboard
-   */
-  public copyAnnotation() {
-    MenuUtil.copyToClipboard(this.menu.annotation.trim());
   }
 
   /*======================================================================*/
