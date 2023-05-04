@@ -213,10 +213,11 @@ export class LinebreakVisitor<
     //
     // Adjust for mspace width
     //
-    space: (p, mspace) => {
-      if (mspace.node.attributes.getExplicit('style')) return NOBREAK;
+    space: (p, node) => {
+      const mspace = node as any as CommonMspace<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+      if (!mspace.canBreak) return NOBREAK;
       const w = mspace.getBBox().w;
-      return (w <= 0 ? NOBREAK : w < 1 ? p : p - 100 * (w + 4));
+      return (w < 0 ? NOBREAK : w < 1 ? p : p - 100 * (w + 4));
     },
     //
     // Adjust for a separator (TeX doesn't break at commas, for example)
@@ -512,11 +513,9 @@ export class LinebreakVisitor<
    */
   public visitMspaceNode(wrapper: WW, i: number) {
     const bbox = wrapper.getLineBBox(i);
-    const attributes = wrapper.node.attributes;
-    if (/*attributes.getExplicit('width') === undefined &&*/
-        attributes.getExplicit('height') === undefined &&
-        attributes.getExplicit('depth') === undefined) {
-      const penalty = this.mspacePenalty(wrapper as any as CommonMspace<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>);
+    const mspace = wrapper as any as CommonMspace<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+    if (mspace.canBreak) {
+      const penalty = this.mspacePenalty(mspace);
       bbox.getIndentData(wrapper.node);
       const dw = wrapper.processIndent('', bbox.indentData[1][1], '', bbox.indentData[0][1], this.state.width)[1];
       this.pushBreak(wrapper, penalty, dw - bbox.w, null);
