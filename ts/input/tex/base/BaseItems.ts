@@ -524,7 +524,7 @@ export class BreakItem extends BaseItem {
         }
       }
     }
-    const mml = this.create('token', 'mo', {linebreak});
+    const mml = this.create('token', 'mspace', {linebreak});
     return [[this.factory.create('mml', mml), item], true];
   }
 

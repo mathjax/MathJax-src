@@ -407,7 +407,7 @@ export abstract class CommonOutputJax<
         const linebreakstyle = mo.attributes.get('linebreakstyle') as string;
         if ((texClass === TEXCLASS.BIN || texClass === TEXCLASS.REL ||
              (texClass === TEXCLASS.ORD && mo.hasSpacingAttributes()) ||
-             mo.attributes.get('data-allowbreak') || linebreak !== 'auto') && linebreak !== 'nobreak') {
+             linebreak !== 'auto') && linebreak !== 'nobreak') {
           if (linebreakstyle === 'before') {
             marked = this.markInlineBreak(marked, forcebreak, linebreak, node, child, mo);
           } else {

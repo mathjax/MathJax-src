@@ -89,12 +89,22 @@ export class MmlMspace extends AbstractMmlTokenNode {
    * @override
    */
   public get hasNewline() {
+    const linebreak = this.attributes.get('linebreak');
+    return (this.canBreak && (linebreak === 'newline' || linebreak === 'indentingnewline'));
+  }
+
+  /**
+   * @return {boolean}   True if mspace is allowed to break, i.e.,
+   *                     no height/depth, no styles, and no background color.
+   */
+  public get canBreak(): boolean {
     const attributes = this.attributes;
-    const linebreak = attributes.get('linebreak');
-    return (attributes.getExplicit('width') == null &&
-            attributes.getExplicit('height') == null &&
-            attributes.getExplicit('depth') == null &&
-            (linebreak === 'newline' || linebreak === 'indentingnewline'));
+    return (/*attributes.getExplicit('width') === undefined &&*/  // we break spaces with width ...
+            attributes.getExplicit('height') === undefined &&
+            attributes.getExplicit('depth') === undefined &&
+            attributes.getExplicit('style') === undefined &&      //   ... but not ones with styles
+            attributes.getExplicit('mathbackground') === undefined &&
+            attributes.getExplicit('background') === undefined);
   }
 
 }
