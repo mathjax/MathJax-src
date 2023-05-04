@@ -96,7 +96,8 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<N, T, D> 
     public static styles: StyleList = {
       'mjx-c': {
         display: 'inline-block',
-        width: 0
+        width: 0,
+        'text-align': 'right'
       },
       'mjx-utext': {
         display: 'inline-block',

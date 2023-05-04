@@ -158,8 +158,8 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
       const B = this.addBot(stretch[2], variant[2], d, w);
       if (stretch.length === 4) {
         const [H, D] = this.addMidV(stretch[3], variant[3], w);
-        this.addExtV(stretch[1], variant[1], h, 0, T, H, w);
-        this.addExtV(stretch[1], variant[1], 0, d, D, B, w);
+        this.addExtV(stretch[1], variant[1], h, -H, T, 0, w);
+        this.addExtV(stretch[1], variant[1], -D, d, 0, B, w);
       } else {
         this.addExtV(stretch[1], variant[1], h, d, T, B, w);
       }
@@ -250,8 +250,8 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
       const [h, d, w] = this.getChar(n, v);
       const Y = H + D - T - B;                 // The height of the extender
       const s = 1.5 * Y / (h + d);             // Scale height by 1.5 to avoid bad ends
-      //   (glyphs with rounded or anti-aliased ends don't stretch well,
-      //    so this makes for sharper ends)
+                                               //   (glyphs with rounded or anti-aliased ends don't stretch well,
+                                               //    so this makes for sharper ends)
       const y = (s * (h - d) - Y) / 2;         // The bottom point to clip the extender
       if (Y <= 0) return;
       const svg = this.svg('svg', {
