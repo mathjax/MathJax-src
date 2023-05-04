@@ -440,9 +440,13 @@ export abstract class CommonOutputJax<
     child.setProperty('breakable', true);
     if (forcebreak && linebreak !== 'newline') {
       child.setProperty('forcebreak', true);
-      if (mo) {
-        mo.setProperty('forcebreak', true);
-      }
+      mo?.setProperty('forcebreak', true);
+    } else {
+      //
+      //  If we switched from SVG to CHTML, we need to remove the forcebreak that SVG added
+      //
+      child.removeProperty('forcebreak');
+      mo?.removeProperty('forcebreak');
     }
     if (!marked) {
       node.setProperty('process-breaks', true);
