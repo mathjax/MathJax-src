@@ -25,6 +25,7 @@
 
 import {A11yDocument, DummyRegion, Region} from './Region.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
+import {ExplorerPool} from './ExplorerPool.js';
 import '../sre.js';
 
 
@@ -113,11 +114,12 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
    * @template T
    */
   protected constructor(public document: A11yDocument,
-                        protected region: Region<T>,
+                        public pool: ExplorerPool,
+                        public region: Region<T>,
                         protected node: HTMLElement,
                         protected nodeQuery: (node: HTMLElement) => boolean,
                         protected nodeAccess: (node: HTMLElement) => T) {
-    super(document, region, node);
+    super(document, pool, region, node);
   }
 
 
@@ -214,9 +216,10 @@ export class FlameHoverer extends Hoverer<void> {
    */
   protected constructor(
     public document: A11yDocument,
+    public pool: ExplorerPool,
     _ignore: any,
     protected node: HTMLElement) {
-    super(document, new DummyRegion(document), node,
+    super(document, pool, new DummyRegion(document), node,
           x => this.highlighter.isMactionNode(x),
           () => {});
   }

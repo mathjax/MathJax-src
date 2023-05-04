@@ -22,7 +22,7 @@
  */
 
 import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlLayoutNode} from '../MmlNode.js';
+import {AbstractMmlLayoutNode, TEXCLASS, MmlNode} from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -57,4 +57,15 @@ export class MmlMpadded extends AbstractMmlLayoutNode {
     return true;
   }
 
+  /**
+   * @override
+   */
+  public setTeXclass(prev: MmlNode): MmlNode {
+    if (!this.getProperty('vbox')) {
+      return super.setTeXclass(prev);
+    }
+    this.texClass = TEXCLASS.ORD;
+    this.childNodes[0].setTeXclass(null);
+    return this;
+  }
 }

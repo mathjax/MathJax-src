@@ -64,15 +64,6 @@ export const AmsConfiguration = Configuration.create(
     },
     tags: {'ams': AmsTags},
     init: init,
-    config: (_config: ParserConfiguration, jax: any)  => {
-      //
-      //  Move multlineWidth from old location to ams block (remove in next version)
-      //
-      if (jax.parseOptions.options.multlineWidth) {
-        jax.parseOptions.options.ams.multlineWidth = jax.parseOptions.options.multlineWidth;
-      }
-      delete jax.parseOptions.options.multlineWidth;
-    },
     options: {
       multlineWidth: '',
       ams: {

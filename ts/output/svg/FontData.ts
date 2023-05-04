@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CharMap, CharOptions, CharData, VariantData, DelimiterData, FontData} from '../common/FontData.js';
+import {CharMap, CharOptions, CharDataArray, VariantData, DelimiterData, FontData} from '../common/FontData.js';
 export * from '../common/FontData.js';
 
 export type CharStringMap = {[name: number]: string};
@@ -38,7 +38,7 @@ export interface SvgCharOptions extends CharOptions {
  * Shorthands for SVG char maps and char data
  */
 export type SvgCharMap = CharMap<SvgCharOptions>;
-export type SvgCharData = CharData<SvgCharOptions>;
+export type SvgCharData = CharDataArray<SvgCharOptions>;
 
 /**
  * The extra data needed for a Variant in SVG output

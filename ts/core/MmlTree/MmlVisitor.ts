@@ -158,6 +158,8 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
     node.getProperty('variantForm') && this.setDataAttribute(data, 'alternate', '1');
     node.getProperty('pseudoscript') && this.setDataAttribute(data, 'pseudoscript', 'true');
     node.getProperty('autoOP') === false && this.setDataAttribute(data, 'auto-op', 'false');
+    const vbox = node.getProperty('vbox') as string;
+    vbox && this.setDataAttribute(data, 'vbox', vbox);
     const scriptalign = node.getProperty('scriptalign') as string;
     scriptalign && this.setDataAttribute(data, 'script-align', scriptalign);
     const texclass = node.getProperty('texClass') as number;

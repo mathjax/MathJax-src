@@ -173,7 +173,6 @@ CommonWrapper<
     this.markUsed();
     const chtml = this.createChtmlNodes(parents);
     this.handleStyles();
-    this.handleVariant();
     this.handleScale();
     this.handleBorders();
     this.handleColor();
@@ -226,21 +225,8 @@ CommonWrapper<
       this.dom.forEach(dom => adaptor.setAttribute(dom, 'style', styles));
       const family = this.styles.get('font-family');
       if (family) {
-        this.dom.forEach(dom => adaptor.setStyle(dom, 'font-family', 'MJXZERO, ' + family));
+        this.dom.forEach(dom => adaptor.setStyle(dom, 'font-family', this.font.cssFamilyPrefix + ', ' + family));
       }
-    }
-  }
-
-  /**
-   * Set the CSS for the math variant
-   */
-  protected handleVariant() {
-    if (this.node.isToken && this.variant !== '-explicitFont') {
-      const adaptor = this.adaptor;
-      this.dom.forEach(
-        dom => adaptor.setAttribute(dom, 'class',
-                                    (this.font.getVariant(this.variant) || this.font.getVariant('normal')).classes)
-      );
     }
   }
 
@@ -279,18 +265,16 @@ CommonWrapper<
     for (const data of [[this.getLineBBox(0).L, 'space',  'marginLeft', 0],
                         [this.getLineBBox(n).R, 'rspace', 'marginRight', n]]) {
       const [dimen, name, margin, i] = data as [number, string, string, number];
-      if (dimen) {
-        const space = this.em(dimen);
-        if (breakable && name === 'space') {
-          const node = adaptor.node('mjx-break', SPACE[space] ? {size: SPACE[space]} :
-                                    {style: `letter-spacing: ${this.em(dimen - 1)}`});
-          adaptor.insert(node, this.dom[i]);
+      const space = this.em(dimen);
+      if (breakable && name === 'space') {
+        const node = adaptor.node('mjx-break', SPACE[space] ? {size: SPACE[space]} :
+                                  {style: `letter-spacing: ${this.em(dimen - 1)}`});
+        adaptor.insert(node, this.dom[i]);
+      } else if (dimen) {
+        if (SPACE[space]) {
+          adaptor.setAttribute(this.dom[i], name, SPACE[space]);
         } else {
-          if (SPACE[space]) {
-            adaptor.setAttribute(this.dom[i], name, SPACE[space]);
-          } else {
-            adaptor.setStyle(this.dom[i], margin, space);
-          }
+          adaptor.setStyle(this.dom[i], margin, space);
         }
       }
     }
