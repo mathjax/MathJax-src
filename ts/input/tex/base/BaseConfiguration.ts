@@ -192,7 +192,7 @@ export const BaseConfiguration: Configuration = Configuration.create(
     },
     options: {
       maxMacros: 1000,
-      identifierPattern: /^[a-zA-Z]+/,  // pattern for multLetterIdentifiers in \mathrm, etc.
+      identifierPattern: /^[a-zA-Z]+/,  // pattern for multiLetterIdentifiers in \mathrm, etc.
       baseURL: (typeof(document) === 'undefined' ||
                 document.getElementsByTagName('base').length === 0) ?
                 '' : String(document.location).replace(/#.*$/, '')
