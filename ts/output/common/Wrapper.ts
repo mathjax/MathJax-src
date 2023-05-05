@@ -1178,11 +1178,8 @@ export class CommonWrapper<
       scale = this.bbox.scale;
     }
     const t = this.font.params.rule_thickness;
-    return lookup(length as string, {
-        medium: () => t,
-        thin: () => (2 / 3) * t,
-        thick: () => (5 / 3) * t
-    }, () => LENGTHS.length2em(length as string, size, scale, this.jax.pxPerEm))();
+    const factor = lookup(length as string, {medium: 1, thin: 2 / 3, thick: 5 / 3}, 0);
+    return factor ? factor * t : LENGTHS.length2em(length as string, size, scale, this.jax.pxPerEm);
   }
 
   /**
