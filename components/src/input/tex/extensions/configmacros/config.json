@@ -1,0 +1,16 @@
+{
+  "build": {
+    "id": "[tex]/configmacros",
+    "component": "input/tex/extensions/configmacros",
+    "targets": ["input/tex/configmacros"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/configmacros",
+    "libs": [
+      "components/src/input/tex/extensions/newcommand/lib",
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib",
+      "components/src/startup/lib"
+    ]
+  }
+}

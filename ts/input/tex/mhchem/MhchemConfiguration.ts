@@ -29,7 +29,7 @@ import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import BaseMethods from '../base/BaseMethods.js';
 import {AmsMethods} from '../ams/AmsMethods.js';
-import {mhchemParser} from 'mhchemparser/dist/mhchemParser.js';
+import {mhchemParser} from '#mhchem/mhchemParser.js';
 
 // Namespace
 let MhchemMethods: Record<string, ParseMethod> = {};
@@ -40,7 +40,7 @@ MhchemMethods.xArrow = AmsMethods.xArrow;
 /**
  * @param{TeXParser} parser   The parser for this expression
  * @param{string} name        The macro name being called
- * @param{string} machine     The name of the fininte-state machine to use
+ * @param{string} machine     The name of the finite-state machine to use
  */
 MhchemMethods.Machine = function(parser: TexParser, name: string, machine: 'tex' | 'ce' | 'pu') {
   let arg = parser.GetArgument(name);

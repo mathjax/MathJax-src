@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/setoptions",
+    "component": "input/tex/extensions/setoptions",
+    "targets": ["input/tex/setoptions"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/setoptions",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

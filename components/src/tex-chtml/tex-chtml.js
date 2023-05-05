@@ -16,4 +16,3 @@ Loader.preLoad(
 Loader.saveVersion('tex-chtml');
 
 loadFont(checkSre(startup), true);
-

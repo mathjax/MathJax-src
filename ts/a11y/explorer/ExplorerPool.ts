@@ -30,7 +30,7 @@ import * as ke from './KeyExplorer.js';
 import * as me from './MouseExplorer.js';
 import {TreeColorer, FlameColorer} from './TreeExplorer.js';
 
-import Sre from '../sre.js';
+import {Sre} from '../sre.js';
 
 /**
  * The regions objects needed for the explorers.

@@ -35,23 +35,26 @@ const INDENT = '  ';
 /**
  * The pattern to use when looking for explort commands to process
  */
-const EXPORTPATTERN = /(^export(?:\s+default)?(?:\s+abstract)?\s+[^ {*}]+\s+[a-zA-Z0-9_.$]+)/m;
+const EXPORTPATTERN = /(^export(?:\s+default)?(?:\s+abstract)?\s+[^ {*}]+\s+(?:enum\s+)?[a-zA-Z0-9_.$]+)/m;
 
 const EXPORT_IGNORE = ['type', 'interface'];
 const EXPORT_PROCESS = ['let', 'const', 'var', 'function', 'class', 'namespace'];
+
+
+/**
+ * Read the configuration for the component
+ */
+const json = path.resolve(process.argv[2] || '.', 'config.json');
+const config = require(json).build;
+if (!config) process.exit()
+process.chdir(path.dirname(json));
+
 
 /**
  * The relative path to the MathJax directory
  */
 const mjPath = path.relative(process.cwd(), path.resolve(__dirname, '..', '..', 'js'));
 const mjGlobal = path.join('..', mjPath, 'components', 'global.js');
-
-/**
- * Read the configuration for the component
- */
-const build = (process.argv[2] || 'build.json');
-process.chdir(path.dirname(build));
-const config = JSON.parse(fs.readFileSync(path.basename(build)));
 
 function getType() {
   const component = config.component || 'part';
@@ -68,14 +71,15 @@ const COMPONENT = path.basename(config.component || 'part');                // n
 const ID = config.id || config.component || 'part';                         // the ID of the component
 const TARGETS = config.targets || [];                                       // the files to include in the component
 const EXCLUDE = new Map((config.exclude || []).map(name => [name, true]));  // files to exclude from the component
-const EXCLUDESUBDIRS = config.excludeSubdirs === 'true';                    // exclude subdirectories or not
+const EXCLUDESUBDIRS = !!config.excludeSubdirs;                             // exclude subdirectories or not
 const JS = config.js || config.mathjax || mjPath;                           // path to the compiled .js files
 const LIB = config.lib || './lib';                                          // path to the lib directory to create
-const TS = config.ts || JS.replace(/js$/, 'ts');                            // path to the .ts files
+const TS = config.ts || JS.replace(/js[56]?$/, 'ts');                       // path to the .ts files
 const GLOBAL = config.global || mjGlobal;                                   // path to the global.js file
 const VERSION = config.version || mjGlobal.replace(/global/, 'version');    // path to the version.js file
 const TYPE = config.type || getType();                                      // the module type
 const PREFIX = config.prefix || '';                                         // directories to add to any ts files
+
 /**
  * The list of files that need to be added to the lib directory
  */
@@ -131,8 +135,9 @@ function processFile(base, name) {
   const file = fs.readFileSync(path.resolve(base, name)).toString();
   const parts = file.split(EXPORTPATTERN);
   const objects = processParts(parts);
-  const lines = processLines(name, objects);
-  makeFile(name, lines);
+  const [clines, mlines] = processLines(name, objects);
+  makeFile(name, clines, 'c');
+  makeFile(name, mlines);
   if (objects.length) {
     PACKAGE.push(name);
   }
@@ -149,8 +154,9 @@ function processParts(parts) {
   const objects = [];
   for (let i = 1; i < parts.length; i += 2) {
     const words = parts[i].split(/\s+/);
-    const type = words[words.length - 2];
-    const name = words[words.length - 1];
+    const n = words.length;
+    const type = (words[n - 2] === 'enum' ? words[n - 3] : words[n - 2]);
+    const name = words[n - 1];
 
     if (words[1] === 'default' || type === 'default') {
       objects.push('default');
@@ -168,26 +174,35 @@ function processParts(parts) {
  *
  * @param {string} name       The path of the file relative to the root .ts directory
  * @param {string[]} objects  Array of names of the objects exported by the file
- * @return {string[]}         Array of lines for the contents of the library file
+ * @return {[string[], sgtring[]]}  Array of lines for the contents of the library file (cjs and mjs separately)
  */
 function processLines(file, objects) {
-  if (objects.length === 0) return [];
+  if (objects.length === 0) return [[], []];
   const base = path.dirname(file).replace(/^\.$/, '');
   const dir = (PREFIX ? path.join(PREFIX, base) : base);
   const dots = dir.replace(/[^\/]+/g, '..') || '.';
   const relative = path.join(dots, '..', JS, dir, path.basename(file)).replace(/\.ts$/, '.js');
   const name = path.parse(file).name;
-  const lines = [
-    '"use strict";',
-    `Object.defineProperty(exports, '__esModule', {value: true});`
-  ];
   let source = ((dir.replace(/\//g, '.') + '.' + name).replace(/^\./, '')
                 + (exists(path.resolve(JS, file.replace(/\.ts$/, ''))) ? '_ts' : ''))
       .replace(/\.[^.]*/g, (x) => (x.substr(1).match(/[^a-zA-Z_]/) ? '[\'' + x.substr(1) + '\']' : x));
+  const clines = [
+    '"use strict";',
+    `Object.defineProperty(exports, '__esModule', {value: true});`,
+  ];
+  const mlines = [];
+  const def = (
+    objects.indexOf('MathJax') >= 0 ?
+      `const g = (typeof window !== 'undefined' ? window : global);\nconst def = g.MathJax._.${source};` :
+      `const def = MathJax._.${source};`
+  );
+  clines.push(def);
+  mlines.push(def);
   for (const id of objects) {
-    lines.push(`exports.${id} = MathJax._.${source}.${id};`);
+    clines.push(`exports.${id} = def.${id};`);
+    mlines.push(id === 'default' ? `export default def.${id};` : `export const ${id} = def.${id};`);
   }
-  return lines;
+  return [clines, mlines];
 }
 
 /**
@@ -222,12 +237,12 @@ function makeDir(dir) {
  * @param {string} file     The name of the file relative to the root .ts directory
  * @param {string[]} lines  The contents of the file to create
  */
-function makeFile(file, lines) {
+function makeFile(file, lines, es = '') {
   if (!lines.length) return;
   const basedir = path.dirname(file);
   const [dir, name] = [PREFIX ? path.join(PREFIX, basedir) : basedir, path.basename(file)];
   makeDir(dir);
-  fs.writeFileSync(path.resolve(LIB, dir, name.replace(/\.ts$/, '.js')), lines.join('\n') + '\n');
+  fs.writeFileSync(path.resolve(LIB, dir, name.replace(/\.ts$/, `.${es}js`)), lines.join('\n') + '\n');
 }
 
 function getExtraDirectories() {

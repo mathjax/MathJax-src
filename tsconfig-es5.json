@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig-common.json",
+  "compilerOptions": {
+    "target": "ES5",
+    "outDir": "js5",
+    "module": "CommonJS",
+    "paths": {
+      "#menu/*": ["./node_modules/mj-context-menu/cjs/*"],
+      "#sre/*": ["./node_modules/speech-rule-engine/js/*"],
+      "#mhchem/*": ["./node_modules/mhchemparser/dist/*"],
+      "#default-font/*": ["./node_modules/mathjax-modern-font/js5/*"]
+    }
+  },
+  "exclude": [
+    "ts/**/ts*/*",
+    "ts/util/asyncLoad/esm.ts"
+  ]
+}

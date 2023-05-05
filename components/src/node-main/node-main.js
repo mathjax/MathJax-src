@@ -15,52 +15,54 @@
  *  limitations under the License.
  */
 
-const path = eval("require('path')");  // use actual node version, not webpack's version
-
 /*
  * Load the needed MathJax components
  */
-require('../startup/init.js');
-const {Loader, CONFIG} = require('../../../js/components/loader.js');
-const {Package} = require('../../../js/components/package.js');
-const {combineDefaults, combineConfig} = require('../../../js/components/global.js');
+import '../startup/init.js';
+import {Loader, CONFIG} from '../../../js/components/loader.js';
+import {Package} from '../../../js/components/package.js';
+import {combineDefaults, combineConfig} from '../../../js/components/global.js';
+import '../core/core.js';
+import '../adaptors/liteDOM/liteDOM.js';
+import {source} from '../source.js';
+import path from 'path';
 
 /*
  * Set up the initial configuration
  */
 combineDefaults(MathJax.config, 'loader', {
-  require: eval('require'),      // use node's require() to load files
-  failed: (err) => {throw err}   // pass on error message to init()'s catch function
+  require: (file => import(file)),   // use dynamic imports
+  failed: (err) => {throw err}       // pass on error message to init()'s catch function
 });
 
 /*
- * Preload core and liteDOM adaptor (needed for node)
+ * Mark the preloaded components
  */
 Loader.preLoad('loader', 'startup', 'core', 'adaptors/liteDOM');
-require('../core/core.js');
-require('../adaptors/liteDOM/liteDOM.js');
+
 
 /*
  * Set the mathjax root path to the location where node-main.js was loaded from,
- * using the actual node __dirname, not the webpack one, and removing
- * the directory if we are loaded from components/src/node-main.
+ * and removing the directory if we are loaded from components/src/node-main.
  */
-const dir = CONFIG.paths.mathjax = eval('__dirname');
+const dir = path.dirname(new URL(import.meta.url).pathname);
+
 if (path.basename(dir) === 'node-main') {
+  CONFIG.paths.es6 = CONFIG.paths.mathjax;
+  CONFIG.paths.sre = '[es6]/sre/mathmaps';
   CONFIG.paths.mathjax = path.dirname(dir);
-  combineDefaults(CONFIG, 'source', require('../source.js').source);
+  combineDefaults(CONFIG, 'source', source);
   //
   //  Set the asynchronous loader to use the js directory, so we can load
   //  other files like entity definitions
   //
-  const ROOT = path.resolve(dir, '../../../js');
+  const ROOT = path.resolve(dir, '..', '..', '..', 'js');
   const REQUIRE = MathJax.config.loader.require;
   MathJax._.mathjax.mathjax.asyncLoad = function (name) {
     return REQUIRE(name.charAt(0) === '.' ? path.resolve(ROOT, name) :
                    name.charAt(0) === '[' ? Package.resolvePath(name) : name);
   };
 }
-
 
 /*
  * The initialization function.  Use as:

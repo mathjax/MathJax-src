@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/bbox",
+    "component": "input/tex/extensions/bbox",
+    "targets": ["input/tex/bbox"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/bbox",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

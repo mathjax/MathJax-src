@@ -33,16 +33,20 @@ const path = require('path');
 const INDENT = '  ';
 
 /**
- * The es value (6 or empty)
+ * The es value (5, 6, or '')
  */
-const es = (process.argv[2] || '').replace(/^5$/, '');
+const es = (process.argv[2] || '6');
 
 /**
  * The configuration data for the copy operation
  */
-const config = JSON.parse(fs.readFileSync(process.argv[3] || 'copy.json'));
-if (es) {
-  config.to = config.to.replace(/\/es5\//, `/es${es}/`);
+const json = path.resolve(process.argv[3] || '.', 'config.json');
+const config = require(json).copy;
+if (!config) process.exit();
+process.chdir(path.dirname(json));
+
+if (es !== '6') {
+  config.to = config.to.replace(/\/es6\//, `/es${es}/`);
 }
 
 /**

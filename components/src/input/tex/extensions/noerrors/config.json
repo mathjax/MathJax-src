@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/noerrors",
+    "component": "input/tex/extensions/noerrors",
+    "targets": ["input/tex/noerrors"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/noerrors",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

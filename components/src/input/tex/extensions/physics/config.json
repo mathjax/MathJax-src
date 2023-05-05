@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/physics",
+    "component": "input/tex/extensions/physics",
+    "targets": ["input/tex/physics"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/physics",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

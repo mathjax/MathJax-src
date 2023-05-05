@@ -1,5 +1,0 @@
-{
-  "id": "[tex]/units",
-  "component": "input/tex/extensions/units",
-  "targets": ["input/tex/units"]
-}

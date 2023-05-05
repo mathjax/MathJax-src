@@ -23,6 +23,7 @@
  */
 
 import {MathDocument} from '../../../core/MathDocument.js';
+import {xsltFilename} from './xsltFilename.js';
 
 /**
  * Create the transform function that uses Saxon-js to perform the
@@ -35,10 +36,7 @@ import {MathDocument} from '../../../core/MathDocument.js';
  * @return {(node: N, doc: MathDocument<N,T,D>) => N)}   The transformation function
  */
 export function createTransform<N, T, D>(): (node: N, doc: MathDocument<N, T, D>) => N {
-  /* tslint:disable-next-line:no-eval */
   const nodeRequire = eval('require');   // get the actual require from node.
-  /* tslint:disable-next-line:no-eval */
-  const dirname = eval('__dirname');     // get the actual __dirname
   try {
     nodeRequire.resolve('saxon-js');     // check if saxon-js is installed.
   } catch (err) {
@@ -46,9 +44,7 @@ export function createTransform<N, T, D>(): (node: N, doc: MathDocument<N, T, D>
   }
   const Saxon = nodeRequire('saxon-js'); // dynamically load Saxon-JS.
   const path = nodeRequire('path');      // use the real version from node.
-  const fs = nodeRequire('fs');          // use the real version from node.
-  const xsltFile = path.resolve(dirname, 'mml3.sef.json');  // load the preprocessed stylesheet.
-  const xslt = JSON.parse(fs.readFileSync(xsltFile));       // and parse it.
+  const xslt = nodeRequire(xsltFilename(path));      // load the preprocessed stylesheet.
   return (node: N, doc: MathDocument<N, T, D>) => {
     const adaptor = doc.adaptor;
     let mml = adaptor.outerHTML(node);

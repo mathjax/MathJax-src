@@ -49,7 +49,20 @@ export interface MathJaxObject {
   config: MathJaxConfig;
 }
 
-declare const global: {MathJax: MathJaxObject | MathJaxConfig};
+/**
+ * The node/webpack global object
+ */
+declare const global: typeof globalThis;
+
+/**
+ * Get the global object as the window, global, globalThis, or a separate global
+ */
+export const GLOBAL = (() => {
+  if (typeof window !== 'undefined') return window;
+  if (typeof global !== 'undefined') return global;
+  if (typeof globalThis !== 'undefined') return globalThis;
+  return {};
+})() as any as Window & {MathJax: MathJaxObject | MathJaxConfig};
 
 /**
  * @param {any} x     An item to test if it is an object
@@ -118,8 +131,8 @@ export function combineWithMathJax(config: any): MathJaxObject {
 /**
  * Create the MathJax global, if it doesn't exist
  */
-if (typeof global.MathJax === 'undefined') {
-  global.MathJax = {} as MathJaxConfig;
+if (typeof GLOBAL.MathJax === 'undefined') {
+  GLOBAL.MathJax = {} as MathJaxConfig;
 }
 
 /**
@@ -127,15 +140,15 @@ if (typeof global.MathJax === 'undefined') {
  * MathJaxObject containing the version, class library, and user
  * configuration.
  */
-if (!(global.MathJax as MathJaxObject).version) {
-  global.MathJax = {
+if (!(GLOBAL.MathJax as MathJaxObject).version) {
+  GLOBAL.MathJax = {
     version: VERSION,
     _: {},
-    config: global.MathJax
+    config: GLOBAL.MathJax
   };
 }
 
 /**
  * Export the global MathJax object for convenience
  */
-export const MathJax = global.MathJax as MathJaxObject;
+export const MathJax = GLOBAL.MathJax as MathJaxObject;

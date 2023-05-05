@@ -1,0 +1,15 @@
+{
+  "build": {
+    "id": "[tex]/bussproofs",
+    "component": "input/tex/extensions/bussproofs",
+    "targets": ["input/tex/bussproofs"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/bussproofs",
+    "js": "../../../../../../js",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

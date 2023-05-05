@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/amscd",
+    "component": "input/tex/extensions/amscd",
+    "targets": ["input/tex/amscd"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/amscd",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

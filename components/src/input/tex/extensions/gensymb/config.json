@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/gensymb",
+    "component": "input/tex/extensions/gensymb",
+    "targets": ["input/tex/gensymb"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/gensymb",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

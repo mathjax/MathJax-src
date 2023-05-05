@@ -1,0 +1,16 @@
+{
+  "build": {
+    "id": "[tex]/mhchem",
+    "component": "input/tex/extensions/mhchem",
+    "targets": ["input/tex/mhchem"],
+    "excludeSubdirs": true
+  },
+  "webpack": {
+    "name": "input/tex/extensions/mhchem",
+    "libs": [
+      "components/src/input/tex/extensions/ams/lib",
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

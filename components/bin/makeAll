@@ -35,7 +35,7 @@ const {execSync} = require('child_process');
 const options = {
   recursive: true,
   verbose: true,
-  es: ''
+  es: '6'
 };
 
 /**
@@ -56,7 +56,7 @@ while (dirs[0].substr(0, 2) === '--') {
     continue;
   }
   if (option.substr(0, 4) === '--es') {
-    options.es = option.substr(4).replace(/^5$/, '');
+    options.es = (option.substr(4) || '6');
     continue;
   }
   if (option === '--terse') {
@@ -94,6 +94,11 @@ function fileRegExp(name) {
 const compRE = fileRegExp(path.dirname(__dirname));
 const dirRE = fileRegExp(process.cwd());
 
+function getConfig(dir) {
+  const file = path.join(dir, 'config.json');
+  return fs.existsSync(file) ? JSON.parse(String(fs.readFileSync(file))) : null;
+}
+
 /**
  * Process the contents of an array of directories
  *
@@ -102,9 +107,10 @@ const dirRE = fileRegExp(process.cwd());
 function processList(dirs) {
   for (const dir of dirs) {
     const fulldir = path.resolve(dir);
-    processDir(fulldir, buildLib);
-    processDir(fulldir, copyLib);
-    processDir(fulldir, webpackLib);
+    const config = getConfig(fulldir);
+    processDir(fulldir, buildLib, config);
+    processDir(fulldir, copyLib, config);
+    processDir(fulldir, webpackLib, config);
   }
 }
 
@@ -113,9 +119,12 @@ function processList(dirs) {
  *
  * @param {string} dir        The directory to process
  * @param {Function} action   The action to take
+ * @param {Object} config     The configuration json data
  */
-function processDir(dir, action) {
-  action(dir);
+function processDir(dir, action, config) {
+  if (config) {
+    action(dir, config);
+  }
   if (options.recursive) {
     processSubdirs(dir, action);
   }
@@ -126,12 +135,14 @@ function processDir(dir, action) {
  *
  * @param {string} dir        The directory whose subdirectories are to be processed
  * @param {Function} action   The action to take
+ * @param {Object} config     The configuration json data
  */
-function processSubdirs(dir, action) {
+function processSubdirs(dir, action, config) {
   for (const name of fs.readdirSync(dir)) {
     const file = path.join(dir, name);
     if (fs.lstatSync(file).isDirectory()) {
-      processDir(file, action);
+      const config = getConfig(file);
+      processDir(file, action, config);
     }
   }
 }
@@ -139,11 +150,11 @@ function processSubdirs(dir, action) {
 /**
  * Run bin/build if there is a configuration file for it
  *
- * @param {string} dir   The directory to check
+ * @param {string} dir      The directory to check
+ * @param {Object} config   The configuration json data
  */
-function buildLib(dir) {
-  const file = path.join(dir, 'build.json');
-  if (!fs.existsSync(file)) return;
+function buildLib(dir, config) {
+  if (!config.build) return;
   console.info('Building ' + dir.replace(compRE, '').replace(dirRE, '.'));
   const wd = process.cwd();
   try {
@@ -161,11 +172,11 @@ function buildLib(dir) {
 /**
  * Run webpack if there is a configuration file for it
  *
- * @param {string} dir   The directory to check
+ * @param {string} dir      The directory to check
+ * @param {Object} config   The configuration json data
  */
-function webpackLib(dir) {
-  const file = path.join(dir, 'webpack.config.js');
-  if (!fs.existsSync(file)) return;
+function webpackLib(dir, config) {
+  if (!config.webpack) return;
   console.info('Webpacking ' + dir.replace(compRE, '').replace(dirRE, '.'));
   const wd = process.cwd();
   try {
@@ -183,11 +194,11 @@ function webpackLib(dir) {
 /**
  * Copy the designated files if there is a configurtion file for it
  *
- * @param {string} dir   The directory to check
+ * @param {string} dir      The directory to check
+ * @param {Object} config   The configuration json data
  */
-function copyLib(dir) {
-  const file = path.join(dir, 'copy.json');
-  if (!fs.existsSync(file)) return;
+function copyLib(dir, config) {
+  if (!config.copy) return;
   console.info('Copying ' + dir.replace(compRE, '').replace(dirRE, '.'));
   try {
     process.chdir(dir);

@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/centernot",
+    "component": "input/tex/extensions/centernot",
+    "targets": ["input/tex/centernot"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/centernot",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

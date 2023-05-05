@@ -35,7 +35,7 @@ import {ExplorerPool, RegionPool} from './explorer/ExplorerPool.js';
 
 import {Submenu} from 'mj-context-menu/js/item_submenu.js';
 
-import Sre from './sre.js';
+import {Sre} from './sre.js';
 
 /**
  * Generic constructor for Mixins

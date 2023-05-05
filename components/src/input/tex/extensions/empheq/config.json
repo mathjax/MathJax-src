@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/empheq",
+    "component": "input/tex/extensions/empheq",
+    "targets": ["input/tex/empheq"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/empheq",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

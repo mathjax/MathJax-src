@@ -1,0 +1,53 @@
+#! /usr/bin/env node
+
+/*************************************************************
+ *
+ *  Copyright (c) 2023 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview    Set up (or un set up) links so that the
+ *                  components source can be used in CommonJS files.
+ *
+ * @author dpvc@mathjax.org (Davide Cervone)
+ */
+
+const fs = require("fs");
+const path = require("path");
+
+function rm(file) {
+  fs.existsSync(file) && fs.unlinkSync(file);
+}
+
+rm('js');
+rm('tsconfig.json');
+
+if (process.argv[2] === 'true') {
+  fs.symlinkSync('js5', 'js');
+  fs.symlinkSync('tsconfig-es5.json', 'tsconfig.json');
+  fs.symlinkSync('mathjax-modern-font/js5', 'node_modules/#default-font');
+  fs.symlinkSync('mj-context-menu/js', 'node_modules/#menu');
+  fs.symlinkSync('speech-rule-engine/js', 'node_modules/#sre');
+  fs.symlinkSync('mhchemparser/js', 'node_modules/#mhchem');
+  fs.writeFileSync('components/src/package.json', '{\n  "type": "commonjs"\n}\n');
+} else {
+  fs.symlinkSync('js6', 'js');
+  fs.symlinkSync('tsconfig-es6.json', 'tsconfig.json');
+  rm('node_modules/#default-font');
+  rm('node_modules/#menu');
+  rm('node_modules/#sre');
+  rm('node_modules/#mhchem');
+  rm('components/src/package.json');
+}

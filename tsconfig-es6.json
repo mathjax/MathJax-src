@@ -1,9 +1,15 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "./tsconfig-common.json",
   "compilerOptions": {
     "target": "ES6",
     "outDir": "js6",
-    "module": "ES6",
-    "moduleResolution": "node"
+    "module": "ES2022",
+    "moduleResolution": "node",
+    "paths": {
+      "#menu/*": ["./node_modules/mj-context-menu/js/*"],
+      "#sre/*": ["./modules/es6/speech-rule-engine/js/*"],
+      "#mhchem/*": ["./modules/es6/mhchemparser/js/*"],
+      "#default-font/*": ["./node_modules/mathjax-modern-font/js6/*"]
+    }
   }
 }

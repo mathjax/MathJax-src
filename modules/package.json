@@ -1,0 +1,31 @@
+{
+  "name": "es6-modules",
+  "version": "1.0.0",
+  "description": "Makes ES6 version of modules needed by MathJax v4",
+  "type": "module",
+  "scripts": {
+    "==================================================================== mhchem": "",
+    "premhchem:tsc": "echo '====== Compiling mhchem as ES6 ======'",
+    "mhchem:tsc": "npx tsc --project tsconfig-mhchem.json",
+    "mhchem": "npm run -s mhchem:tsc",
+    "==================================================================== sre": "",
+    "presre:get": "echo && echo '====== Getting speech-rule-engine ======' && echo",
+    "sre:get": "git clone https://github.com/speech-rule-engine/speech-rule-engine.git node_modules/speech-rule-engine",
+    "postsre:get": "npm run -s sre:branch && npm run -s sre:package",
+    "presre:branch": "echo && echo '====== Checking out proper SRE branch ======' && echo",
+    "sre:branch": "cd node_modules/speech-rule-engine && git checkout v4.1.0-beta.3",
+    "sre:package": "ex +g/prepublish/d -cwq node_modules/speech-rule-engine/package.json",
+    "presre:install": "echo && echo '====== Installing SRE dependencies ======' && echo",
+    "sre:install": "cd node_modules/speech-rule-engine && npm install",
+    "presre:tsc": "echo '====== Compiling SRE as ES6 ======'",
+    "sre:tsc": "npx tsc --project tsconfig-sre.json",
+    "postsre:tsc": "node js-imports.js",
+    "sre": "npm run -s sre:get && npm run -s sre:install && npm run -s sre:tsc",
+    "==================================================================== install": "",
+    "install": "npm run -s mhchem && npm run -s sre && npm run -s clean",
+    "clean": "npx rimraf node_modules package-lock.json"
+  },
+  "dependencies": {
+    "mhchemparser": "^4.1.1"
+  }
+}

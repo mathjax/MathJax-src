@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/html",
+    "component": "input/tex/extensions/html",
+    "targets": ["input/tex/html"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/html",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

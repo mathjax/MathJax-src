@@ -1,0 +1,20 @@
+{
+  "build": {
+    "id": "[tex]/all-packages",
+    "component": "input/tex/extensions/all-packages",
+    "targets": [
+      "input/tex/AllPackages.ts",
+      "input/tex/autoload",
+      "input/tex/require"
+    ]
+  }
+  ,
+  "webpack": {
+    "name": "input/tex/extensions/all-packages",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/startup/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

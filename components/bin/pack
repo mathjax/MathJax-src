@@ -29,9 +29,9 @@ const path = require('path');
 const {spawn} = require('child_process');
 
 /**
- * The es version (6 or '')
+ * The es version (5, 6, or '')
  */
-const es = (process.argv[2] || '').replace(/^5$/, '');
+const es = (process.argv[2] || '6')
 
 /**
  * @param {string} name    The file name to turn into a Regular expression
@@ -52,20 +52,27 @@ function fileSize(file) {
 /**
  * Regular expressions for the components directory and the MathJax .js location
  */
-const nodePath = path.join(path.dirname(path.dirname(__dirname)), 'node_modules');
-const jsPath = path.join(path.dirname(path.dirname(__dirname)), 'js' + es);
-const compRE = fileRegExp(path.dirname(__dirname));
-const rootRE = fileRegExp(jsPath);
+const compPath = path.dirname(__dirname);
+const nodePath = path.join(__dirname, '..', '..', 'node_modules');
+const mjPath = path.dirname(compPath);
+const jsPath = path.join(__dirname, '..', '..', 'js' + es);
+const compRE = fileRegExp(path.join(compPath, 'src'));
+const rootRE = fileRegExp(path.dirname(jsPath));
 const nodeRE = fileRegExp(nodePath);
-const fontRE = new RegExp(path.join('^.*\\/(mathjax-.*?)(?:-font)?', 'js' + es));
+const fontRE = new RegExp('^.*\\/(mathjax-[^\/-]*)(?:-font)?\/(build|js.?)');
+const modRE  = fileRegExp(path.join(__dirname, '..', '..', 'modules', 'es6'));
 
 /**
+ * @param {string} dir   The directory to pack
  * @return {JSON}   The parsed JSON from webpack
  */
-async function readJSON() {
+async function readJSON(dir) {
   return new Promise((ok, fail) => {
     const buffer = [];
-    const child = spawn('npx', ['webpack', '--json', '--env', 'es=' + es]);
+    const child = spawn('npx', [
+      'webpack', '--env', `dir=${dir}`, '--json',
+      '-c', path.relative('.', path.join(compPath, 'webpack.config.' + (es === '5' ? 'cjs' : 'mjs')))
+    ]);
     child.stdout.on('data', (data) => buffer.push(String(data)));
     child.stdout.on('close', (code) => {
       const json = JSON.parse(buffer.join(''));
@@ -84,24 +91,21 @@ async function readJSON() {
  */
 async function webpackLib(dir) {
   try {
-    process.chdir(dir);
     const dirRE = fileRegExp(path.resolve(dir));
 
     //
     // Get js directory from the webpack.config.js file
     //
-    let package = require(path.resolve(dir, 'webpack.config.js'));
-    if (typeof package === 'function') {
-      package = package({es});
-    }
-    const jsdir = package.plugins?.[0]?.definitions?.__JSDIR__ || process.cwd();
+    let config = require(path.resolve(dir, 'config.json')).webpack;
+    if (!config) return;
+    const jsdir = (config.js ? path.resolve(dir, config.js) + es : jsPath);
     const jsRE = fileRegExp(jsdir);
     const libRE = fileRegExp(path.resolve(jsdir, '..', 'components'));
 
     //
     // Get the json from webpack and print the asset name and size
     //
-    const json = await readJSON();
+    const json = await readJSON(dir);
     for (const asset of json.assets) {
       console.log(asset.name + fileSize(asset));
     }
@@ -117,11 +121,12 @@ async function webpackLib(dir) {
     const list = [];
     for (const module of modules) {
       if (module.moduleType.match(/javascript/)) {
-        let name = module.name
+        let name = (module.nameForCondition || module.name)
             .replace(compRE, '[components]')
-            .replace(rootRE, '[mathjax]')
-            .replace(fontRE, '[$1]')
+            .replace(modRE,  '[modules]')
             .replace(nodeRE, '[node]')
+            .replace(rootRE, '[mathjax]')
+            .replace(fontRE, '[$1]/$2')
             .replace(jsRE,   '[js]')
             .replace(libRE,  '[lib]');
         if (name.charAt(0) !== '.' && name.charAt(0) !== '[') {

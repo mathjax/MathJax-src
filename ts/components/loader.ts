@@ -25,17 +25,13 @@
 
 import {MathJax as MJGlobal, MathJaxObject as MJObject, MathJaxLibrary,
         MathJaxConfig as MJConfig, combineWithMathJax, combineDefaults} from './global.js';
-
 import {Package, PackageError, PackageReady, PackageFailed} from './package.js';
-export {Package, PackageError, PackageReady, PackageFailed} from './package.js';
-export {MathJaxLibrary} from './global.js';
-
 import {FunctionList} from '../util/FunctionList.js';
+import {esRoot} from './root.js';
 
 /*
- * The current directory (for webpack), and the browser document (if any)
+ * The browser document (if any)
  */
-declare var __dirname: string;
 declare var document: Document;
 
 /**
@@ -218,14 +214,13 @@ export namespace Loader {
    * @returns {string}   The root location (directory for node.js, URL for browser)
    */
   export function getRoot(): string {
-    let root = __dirname + '/../../es5';
     if (typeof document !== 'undefined') {
       const script = document.currentScript || document.getElementById('MathJax-script');
       if (script) {
-        root = (script as HTMLScriptElement).src.replace(/\/[^\/]*$/, '');
+        return (script as HTMLScriptElement).src.replace(/\/[^\/]*$/, '');
       }
     }
-    return root;
+    return esRoot();
   }
 
   /**

@@ -1,0 +1,9 @@
+{
+  "type": "commonjs",
+  "imports": {
+    "#menu/*": "mj-context-menu/cjs/*",
+    "#sre/*": "speech-rule-engine/js/*",
+    "#mhchem/*": "mhchemparser/dist/*",
+    "#default-font/*": "mathjax-modern-font/js5/*"
+  }
+}

@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-const src = __dirname;
+import {src} from 'mathjax-full/components/src/source.cjs';
 
 export const source = {
   'core': `${src}/core/core.js`,
