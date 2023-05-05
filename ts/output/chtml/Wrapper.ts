@@ -265,18 +265,16 @@ CommonWrapper<
     for (const data of [[this.getLineBBox(0).L, 'space',  'marginLeft', 0],
                         [this.getLineBBox(n).R, 'rspace', 'marginRight', n]]) {
       const [dimen, name, margin, i] = data as [number, string, string, number];
-      if (dimen) {
-        const space = this.em(dimen);
-        if (breakable && name === 'space') {
-          const node = adaptor.node('mjx-break', SPACE[space] ? {size: SPACE[space]} :
-                                    {style: `letter-spacing: ${this.em(dimen - 1)}`});
-          adaptor.insert(node, this.dom[i]);
+      const space = this.em(dimen);
+      if (breakable && name === 'space') {
+        const node = adaptor.node('mjx-break', SPACE[space] ? {size: SPACE[space]} :
+                                  {style: `letter-spacing: ${this.em(dimen - 1)}`});
+        adaptor.insert(node, this.dom[i]);
+      } else if (dimen) {
+        if (SPACE[space]) {
+          adaptor.setAttribute(this.dom[i], name, SPACE[space]);
         } else {
-          if (SPACE[space]) {
-            adaptor.setAttribute(this.dom[i], name, SPACE[space]);
-          } else {
-            adaptor.setStyle(this.dom[i], margin, space);
-          }
+          adaptor.setStyle(this.dom[i], margin, space);
         }
       }
     }

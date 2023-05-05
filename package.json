@@ -68,6 +68,6 @@
     "mathjax-modern-font": "^1.0.0-beta.2",
     "mhchemparser": "^4.1.0",
     "mj-context-menu": "^0.6.1",
-    "speech-rule-engine": "^4.1.0-beta.2"
+    "speech-rule-engine": "^4.1.0-beta.3"
   }
 }

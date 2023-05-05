@@ -26,7 +26,6 @@ import * as Api from 'speech-rule-engine/js/common/system.js';
 import {Walker} from 'speech-rule-engine/js/walker/walker.js';
 import * as WalkerFactory from 'speech-rule-engine/js/walker/walker_factory.js';
 import * as SpeechGeneratorFactory from 'speech-rule-engine/js/speech_generator/speech_generator_factory.js';
-import * as EngineConst from 'speech-rule-engine/js/common/engine_const.js';
 import Engine from 'speech-rule-engine/js/common/engine.js';
 import {ClearspeakPreferences} from 'speech-rule-engine/js/speech_rules/clearspeak_preferences.js';
 import {Highlighter} from 'speech-rule-engine/js/highlighter/highlighter.js';
@@ -65,10 +64,6 @@ export namespace Sre {
   export const getSpeechGenerator = SpeechGeneratorFactory.generator;
 
   export const getWalker = WalkerFactory.walker;
-
-  export const clearspeakStyle = () => {
-    return EngineConst.DOMAIN_TO_STYLES['clearspeak'];
-  };
 
   /**
    * Loads locales that are already included in the imported MathMaps. Defaults

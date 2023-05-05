@@ -32,6 +32,7 @@ import {AssistiveMmlMathDocument, AssistiveMmlMathItem} from '../../a11y/assisti
 import {expandable} from '../../util/Options.js';
 
 import {Menu} from './Menu.js';
+import '../../a11y/SpeechMenu.js';
 
 /*==========================================================================*/
 

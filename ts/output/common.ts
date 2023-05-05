@@ -407,7 +407,7 @@ export abstract class CommonOutputJax<
         const linebreakstyle = mo.attributes.get('linebreakstyle') as string;
         if ((texClass === TEXCLASS.BIN || texClass === TEXCLASS.REL ||
              (texClass === TEXCLASS.ORD && mo.hasSpacingAttributes()) ||
-             mo.attributes.get('data-allowbreak') || linebreak !== 'auto') && linebreak !== 'nobreak') {
+             linebreak !== 'auto') && linebreak !== 'nobreak') {
           if (linebreakstyle === 'before') {
             marked = this.markInlineBreak(marked, forcebreak, linebreak, node, child, mo);
           } else {
@@ -440,9 +440,13 @@ export abstract class CommonOutputJax<
     child.setProperty('breakable', true);
     if (forcebreak && linebreak !== 'newline') {
       child.setProperty('forcebreak', true);
-      if (mo) {
-        mo.setProperty('forcebreak', true);
-      }
+      mo?.setProperty('forcebreak', true);
+    } else {
+      //
+      //  If we switched from SVG to CHTML, we need to remove the forcebreak that SVG added
+      //
+      child.removeProperty('forcebreak');
+      mo?.removeProperty('forcebreak');
     }
     if (!marked) {
       node.setProperty('process-breaks', true);

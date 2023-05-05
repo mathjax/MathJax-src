@@ -67,6 +67,7 @@ export const AmsConfiguration = Configuration.create(
     options: {
       multlineWidth: '',
       ams: {
+        operatornamePattern: /^[-*a-zA-Z]+/,  // multiLetterIdentifier for \operatorname
         multlineWidth: '100%',  // The width to use for multline environments.
         multlineIndent: '1em',  // The margin to use on both sides of multline environments.
       }
