@@ -30,7 +30,7 @@ import {unicodeChars} from '../../util/string.js';
 import * as LENGTHS from '../../util/lengths.js';
 import {Styles} from '../../util/Styles.js';
 import {StyleList, CssStyles} from '../../util/StyleList.js';
-import {OptionList} from '../../util/Options.js';
+import {OptionList, lookup} from '../../util/Options.js';
 import {CommonOutputJax} from '../common.js';
 import {CommonWrapperFactory} from './WrapperFactory.js';
 import {CommonMo} from './Wrappers/mo.js';
@@ -1178,16 +1178,11 @@ export class CommonWrapper<
       scale = this.bbox.scale;
     }
     const t = this.font.params.rule_thickness;
-    if (length === 'medium') {
-      return t;
-    }
-    if (length === 'thin') {
-      return (2 / 3) * t;
-    }
-    if (length === 'thick') {
-      return (5 / 3) * t;
-    }
-    return LENGTHS.length2em(length as string, size, scale, this.jax.pxPerEm);
+    return lookup(length as string, {
+        medium: () => t,
+        thin: () => (2 / 3) * t,
+        thick: () => (5 / 3) * t
+    }, () => LENGTHS.length2em(length as string, size, scale, this.jax.pxPerEm))();
   }
 
   /**
