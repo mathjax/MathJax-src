@@ -177,6 +177,10 @@ export function CommonTextNodeMixin<
             bbox.ic = data.ic || 0;
             bbox.sk = data.sk || 0;
             bbox.dx = data.dx || 0;
+            const children = this.parent.childNodes;
+            if (data.oc && this.node === children[children.length - 1].node) {
+              bbox.ic = data.oc;
+            }
           }
         }
         this.addUtextBBox(bbox, utext, variant);

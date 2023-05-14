@@ -37,6 +37,7 @@ export {DIRECTION} from './Direction.js';
  */
 export interface CharOptions {
   ic?: number;                  // italic correction value
+  oc?: number;                  // original ic for -tex-mit font
   sk?: number;                  // skew value
   dx?: number;                  // offset for combining characters
   unknown?: boolean;            // true if not found in the given variant

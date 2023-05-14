@@ -220,7 +220,7 @@ export const SvgMsubsup = (function <N, T, D>(): SvgMsubsupClass<N, T, D> {
       sub.toSVG(tail);
 
       base.place(0, 0);
-      sub.place(w, v);
+      sub.place(w + (this.baseIsChar ? 0 : x), v);
       sup.place(w + x, u);
     }
 
