@@ -438,6 +438,17 @@ export function CommonMoMixin<
         [h, d] = this.getBaseline(WHD, D, C);
       } else {
         w = D;
+        if (this.stretch.hd && !this.jax.options.mathmlSpacing) {
+          //
+          // Interpolate between full character height/depth and that of the extender,
+          //   which is what TeX uses, but TeX's fonts are set up to have extra height
+          //   or depth for some extenders, so this factor helps get spacing that is closer
+          //   to TeX spacing.
+          //
+          const t = this.font.params.extender_factor;
+          h = h * (1 - t) + this.stretch.hd[0] * t;
+          d = d * (1 - t) + this.stretch.hd[1] * t;
+        }
       }
       this.bbox.h = h;
       this.bbox.d = d;

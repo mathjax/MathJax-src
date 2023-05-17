@@ -247,6 +247,7 @@ export abstract class CommonOutputJax<
     this.factory.jax = this;
     this.cssStyles = this.options.cssStyles || new CssStyles();
     this.font = font || new fontClass(fontOptions);
+    this.font.setOptions({mathmlSpacing: this.options.mathmlSpacing});
     this.unknownCache = new Map();
     const linebreaks = (this.options.linebreaks.LinebreakVisitor || LinebreakVisitor) as typeof Linebreaks;
     this.linebreaks = new linebreaks(this.factory);

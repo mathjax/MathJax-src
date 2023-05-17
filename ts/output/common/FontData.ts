@@ -41,6 +41,7 @@ export interface CharOptions {
   dx?: number;                  // offset for combining characters
   unknown?: boolean;            // true if not found in the given variant
   smp?: number;                 // Math Alphanumeric codepoint this char is mapped to
+  hd?: [number, number];        // the original height and depth for an extender
 }
 
 /****************************************************************************/
@@ -137,6 +138,7 @@ export type DelimiterData = {
   stretchv?: number[];  // the variants to use for the stretchy characters (index into variant name array)
   HDW?: number[];       // [h, d, w] (for vertical, h and d are the normal size, w is the multi-character width,
                         //            for horizontal, h and d are the multi-character ones, w is for the normal size).
+  hd?: number[];        // The extender's original [h, d] values
   min?: number;         // The minimum size a multi-character version can be
   c?: number;           // The character number (for aliased delimiters)
   fullExt?: [number, number]  // When present, extenders must be full sized, and the first number is
@@ -223,7 +225,8 @@ export type FontParameters = {
 
   min_rule_thickness: number,
   separation_factor: number,
-  extra_ic: number
+  extra_ic: number,
+  extender_factor: number,
 };
 
 /**
@@ -583,7 +586,8 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
 
     min_rule_thickness:  1.25,     // in pixels
     separation_factor:   1.75,     // expansion factor for spacing e.g. between accents and base
-    extra_ic:            .033      // extra spacing for scripts (compensate for not having actual ic values)
+    extra_ic:            .033,     // extra spacing for scripts (compensate for not having actual ic values)
+    extender_factor:     .333      // factor to adjust between full stretchy height/depth and extender height/depth
   };
 
 
@@ -830,6 +834,13 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     this.defineRemap('mn', CLASS.defaultMnMap);
     this.defineDynamicCharacters(CLASS.dynamicFiles);
     CLASS.dynamicExtensions.forEach(data => this.defineDynamicCharacters(data.files));
+  }
+
+  /**
+   * @param {OptionList} options   The options to merge into the font options
+   */
+  public setOptions(options: OptionList) {
+    mergeOptions(this.options, options);
   }
 
   /**
