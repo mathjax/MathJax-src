@@ -29,6 +29,7 @@ import {CommonWrapperFactory} from '../WrapperFactory.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
 import {CommonOutputJax} from '../../common.js';
 import {CommonMunderover} from './munderover.js';
+import {CommonMo} from './mo.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
@@ -605,8 +606,10 @@ export function CommonScriptbaseMixin<
      */
     public baseCharZero(n: number): number {
       const largeop = !!this.baseCore.node.attributes.get('largeop');
+      const sized = !!(this.baseCore.node.isKind('mo') &&
+                        (this.baseCore as any as CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).size);
       const scale = this.baseScale;
-      return (this.baseIsChar && !largeop && scale === 1 ? 0 : n);
+      return (this.baseIsChar && !largeop && !sized && scale === 1 ? 0 : n);
     }
 
     /**
