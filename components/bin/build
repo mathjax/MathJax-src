@@ -174,7 +174,7 @@ function processParts(parts) {
  *
  * @param {string} name       The path of the file relative to the root .ts directory
  * @param {string[]} objects  Array of names of the objects exported by the file
- * @return {[string[], sgtring[]]}  Array of lines for the contents of the library file (cjs and mjs separately)
+ * @return {[string[], string[]]}  Array of lines for the contents of the library file (cjs and mjs separately)
  */
 function processLines(file, objects) {
   if (objects.length === 0) return [[], []];
@@ -236,6 +236,7 @@ function makeDir(dir) {
  *
  * @param {string} file     The name of the file relative to the root .ts directory
  * @param {string[]} lines  The contents of the file to create
+ * @param {string} es       The prefix for the js extension ('c', 'm', or '')
  */
 function makeFile(file, lines, es = '') {
   if (!lines.length) return;
@@ -245,6 +246,9 @@ function makeFile(file, lines, es = '') {
   fs.writeFileSync(path.resolve(LIB, dir, name.replace(/\.ts$/, `.${es}js`)), lines.join('\n') + '\n');
 }
 
+/**
+ * @return {[string, string, string]}  The needed nesting data for handking extra directories from a prefix
+ */
 function getExtraDirectories() {
   if (PREFIX === '') return ['', INDENT, ''];
   let prefix = '';

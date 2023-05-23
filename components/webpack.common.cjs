@@ -61,21 +61,13 @@ function fullPath(resource) {
  * @return {any[]}             The plugin array (empty or with the conversion plugin)
  */
 const PLUGINS = function (js, dir, es, font, jax, name) {
-  const jsdir = path.resolve(dir, js + es);
-  //
-  //  Record the js directory for the pack command
-  //
-  const plugins = [new webpack.DefinePlugin({
-    __JSDIR__: jsdir
-  })];
-
   //
   // Replace a11y/util with the webpack version
   //
-  plugins.push(new webpack.NormalModuleReplacementPlugin(
+  const plugins = [new webpack.NormalModuleReplacementPlugin(
     /components\/src\/a11y\/util\.js/,
     './util-pack.js'
-  ));
+  )];
 
 
   //
