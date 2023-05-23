@@ -7,8 +7,8 @@
   "main": "components/src/node-main/node-main.js",
   "imports": {
     "#menu/*": "mj-context-menu/js/*",
-    "#sre/*": "./modules/es6/speech-rule-engine/js/*",
-    "#mhchem/*": "./modules/es6/mhchemparser/js/*",
+    "#sre/*": "speech-rule-engine/mjs/*",
+    "#mhchem/*": "mhchemparser/esm/*",
     "#default-font/*": "mathjax-modern-font/js6/*"
   },
   "files": [
@@ -105,8 +105,8 @@
   "dependencies": {
     "esm": "^3.2.25",
     "mathjax-modern-font": "^1.0.0-beta.3",
-    "mhchemparser": "^4.1.0",
+    "mhchemparser": "^4.2.0",
     "mj-context-menu": "^0.8.1",
-    "speech-rule-engine": "^4.1.0-beta.3"
+    "speech-rule-engine": "^4.1.0-beta.4"
   }
 }
