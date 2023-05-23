@@ -16,17 +16,20 @@
  */
 
 /**
- * @fileoverview  ES6 shim for getting the file name for the XSLT transform
+ * @fileoverview  ES5 shim for getting the MathJax root directory
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-export type Path = {
-  resolve: (...parts: string[]) => string;
-  dirname: (file: string) => string;
-};
+/**
+ * The location of this file
+ */
+declare const __dirname: string;
 
-export function xsltFilename(path: Path) {
-  const dirname = path.dirname(new URL(import.meta.url).pathname);
-  return path.resolve(dirname, 'mml3.sef.json');
+/**
+ * @return {string}   The MathJax component root directory
+ */
+export function esRoot(): string {
+  return __dirname.replace(/js(.?)\/components\/cjs$/, (_: string, es: string) => 'es' + (es || 6));
 }
+

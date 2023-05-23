@@ -23,7 +23,7 @@
  */
 
 import {MathDocument} from '../../../core/MathDocument.js';
-import {xsltFilename} from './xsltFilename.js';
+import {xsltFilename} from '#mml3/xsltFilename.js';
 
 /**
  * Create the transform function that uses Saxon-js to perform the

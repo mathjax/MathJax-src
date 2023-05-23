@@ -16,6 +16,5 @@
     "sourceMap": true,
     "typeRoots": []
   },
-  "include": ["ts/**/*"],
-  "exclude": ["ts/**/ts*/*"]
+  "include": ["ts/**/*"]
 }

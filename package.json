@@ -6,6 +6,8 @@
   "type": "module",
   "main": "components/src/node-main/node-main.js",
   "imports": {
+    "#root/*": "mathjax-full/js6/components/mjs/*",
+    "#mml3/*": "mathjax-full/js6/input/mathml/mml3/mjs/*",
     "#menu/*": "mj-context-menu/js/*",
     "#sre/*": "speech-rule-engine/mjs/*",
     "#mhchem/*": "mhchemparser/esm/*",
@@ -44,13 +46,10 @@
     "=============================================================================== copy": "",
     "copy:mj2": "copy() { npx copyfiles -u 1 'ts/input/asciimath/legacy/**/*' js$1; }; copy",
     "copy:mml3": "copy() { npx copyfiles -u 1 ts/input/mathml/mml3/mml3.sef.json js$1; }; copy",
-    "copy:xslt": "copy() { npx copyfiles -u 5 ts/input/mathml/mml3/ts$1/xsltFilename.ts ts/input/mathml/mml3; }; copy",
-    "copy:load": "copy() { npx copyfiles -u 3 ts/components/ts$1/root.ts ts/components; }; copy",
-    "copy:ts": "copy() { npm run -s copy:xslt $1; npm run -s copy:load $1; }; copy",
     "copy:pkg": "npx copyfiles -u 2 components/bin/package.json",
     "=============================================================================== compile": "",
     "_js:pkg5": "npm run -s copy:pkg js5",
-    "_pre_compile": "pre() { npm run -s clean:dir js$1 && npm run -s copy:ts $1; }; pre",
+    "_pre_compile": "pre() { npm run -s clean:dir js$1; }; pre",
     "_compile": "comp() { npx tsc --project tsconfig-es$1.json; }; comp",
     "_post_compile": "post() { npm run -s copy:mj2 $1 && npm run -s copy:mml3 $1 && npm run -s _js:pkg$1; }; post",
     "_compile_": "comp() { npm run -s _pre_compile $1; npm run -s _compile $1; npm run _post_compile $1; }; comp",
@@ -79,9 +78,9 @@
     "postmake-mml3-xslt": "npx rimraf ts/input/mathml/mml3/mml3.xsl",
     "=============================================================================== install": "",
     "link:full": "node -e 'require(\"fs\").symlinkSync(process.cwd(), \"node_modules/mathjax-full\")'",
-    "install": "npm run -s link:full && npm run -s use-es6",
-    "use-es5": "node components/bin/use-es5 true && npm run -s copy:ts 5",
-    "use-es6": "node components/bin/use-es5 false && npm run -s copy:ts 6"
+    "install": "npm run -s link:full; npm run -s use-es6",
+    "use-es5": "node components/bin/use-es5 true",
+    "use-es6": "node components/bin/use-es5 false"
   },
   "devDependencies": {
     "@babel/core": "^7.17.12",

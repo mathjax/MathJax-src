@@ -27,7 +27,7 @@ import {MathJax as MJGlobal, MathJaxObject as MJObject, MathJaxLibrary,
         MathJaxConfig as MJConfig, combineWithMathJax, combineDefaults} from './global.js';
 import {Package, PackageError, PackageReady, PackageFailed} from './package.js';
 import {FunctionList} from '../util/FunctionList.js';
-import {esRoot} from './root.js';
+import {esRoot} from '#root/root.js';
 
 /*
  * The browser document (if any)

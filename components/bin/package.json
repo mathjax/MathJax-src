@@ -1,6 +1,8 @@
 {
   "type": "commonjs",
   "imports": {
+    "#root/*": "mathjax-full/js5/components/cjs/*",
+    "#mml3/*": "mathjax-full/js5/input/mathml/mml3/cjs/*",
     "#menu/*": "mj-context-menu/cjs/*",
     "#sre/*": "speech-rule-engine/js/*",
     "#mhchem/*": "mhchemparser/dist/*",
