@@ -27,6 +27,7 @@ import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '
 import {CommonOutputJax} from '../../common.js';
 import {BBox} from '../../../util/BBox.js';
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
+import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 
 /*****************************************************************/
 /**
@@ -181,8 +182,11 @@ export function CommonTextNodeMixin<
             const children = this.parent.childNodes;
             if (this.node !== children[children.length - 1].node) continue;
             const parent = this.parent.parent.node;
-            const next = (parent.isKind('mrow') || parent.isInferred ?
-                          parent.childNodes[parent.childIndex(this.parent.node) + 1] : null);
+            let next = (parent.isKind('mrow') || parent.isInferred ?
+                        parent.childNodes[parent.childIndex(this.parent.node) + 1] : null);
+            if (next?.isKind('mo') && (next as MmlMo).getText() === '\u2062') {
+              next = parent.childNodes[parent.childIndex(next) + 1];
+            }
             if (!next || next.attributes.get('mathvariant') !== variant) {
               bbox.ic = data.oc;
             } else {
