@@ -90,7 +90,7 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
    * The attached Sre walker.
    * @type {Walker}
    */
-  protected walker: Sre.walker;
+  public walker: Sre.walker;
 
   private eventsAttached: boolean = false;
 

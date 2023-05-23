@@ -26,7 +26,6 @@ import * as Api from '#sre/common/system.js';
 import {Walker} from '#sre/walker/walker.js';
 import * as WalkerFactory from '#sre/walker/walker_factory.js';
 import * as SpeechGeneratorFactory from '#sre/speech_generator/speech_generator_factory.js';
-import * as EngineConst from '#sre/common/engine_const.js';
 import Engine from '#sre/common/engine.js';
 import {ClearspeakPreferences} from '#sre/speech_rules/clearspeak_preferences.js';
 import {Highlighter} from '#sre/highlighter/highlighter.js';
@@ -65,10 +64,6 @@ export namespace Sre {
   export const getSpeechGenerator = SpeechGeneratorFactory.generator;
 
   export const getWalker = WalkerFactory.walker;
-
-  export const clearspeakStyle = () => {
-    return EngineConst.DOMAIN_TO_STYLES['clearspeak'];
-  };
 
   /**
    * Loads locales that are already included in the imported MathMaps. Defaults

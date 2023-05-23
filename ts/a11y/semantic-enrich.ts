@@ -221,6 +221,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
         for (const child of adaptor.childNodes(node) as N[]) {
           adaptor.setAttribute(child, 'aria-hidden', 'true');
         }
+        this.outputData.speech = speech;
       }
       this.state(STATE.ATTACHSPEECH);
     }

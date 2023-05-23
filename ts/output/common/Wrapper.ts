@@ -67,6 +67,7 @@ function MathMLSpace(script: boolean, size: number): number {
  */
 export const SPACE: StringMap = {
   /* tslint:disable:whitespace */
+  [LENGTHS.em(0)]:    '0',
   [LENGTHS.em(2/18)]: '1',
   [LENGTHS.em(3/18)]: '2',
   [LENGTHS.em(4/18)]: '3',

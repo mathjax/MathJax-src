@@ -144,6 +144,14 @@ export interface MmlNode extends Node<MmlNode, MmlNodeClass> {
   attributes: Attributes;
 
   /**
+   * @override
+   *
+   * @param {boolean} keepIds  True if id attributes should be preserved
+   * @return {MmlNode}         A copy of the MmlNode and its children (without inherited attributes)
+   */
+  copy(keepIds?: boolean): MmlNode;
+
+  /**
    * @return {MmlNode}  For embellished operators, the child node that contains the
    *                    core <mo> node.  For non-embellished nodes, the original node.
    */
@@ -392,7 +400,6 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
    * @override
    *
    * @param {boolean} keepIds   True to copy id attributes, false to skip them.
-   *                              (May cause error in the future, since not part of the interface.)
    * @return {AbstractMmlNode}  The copied node tree.
    */
   public copy(keepIds: boolean = false): AbstractMmlNode {

@@ -296,8 +296,19 @@ export namespace Startup {
     return (CONFIG.loadAllFontFiles && (output as COMMONJAX).font ?
             (output as COMMONJAX).font.loadDynamicFiles() : Promise.resolve())
       .then(CONFIG.typeset && MathJax.typesetPromise ?
-            MathJax.typesetPromise(CONFIG.elements) as Promise<void> :
+            typesetPromise(CONFIG.elements) :
             Promise.resolve());
+  }
+
+  /**
+   * Perform the typesetting with handling of retries
+   */
+  export function typesetPromise(elements: any[]) {
+    document.options.elements = elements;
+    document.reset();
+    return mathjax.handleRetriesFor(() => {
+      document.render();
+    });
   }
 
   /**
@@ -360,11 +371,8 @@ export namespace Startup {
       document.render();
     };
     MathJax.typesetPromise = (elements: any[] = null) => {
-      document.options.elements = elements;
-      document.reset();
-      return mathjax.handleRetriesFor(() => {
-        document.render();
-      });
+      promise = promise.then(() => typesetPromise(elements));
+      return promise;
     };
     MathJax.typesetClear = (elements: any[] = null) => {
       if (elements) {
@@ -403,8 +411,11 @@ export namespace Startup {
       };
     MathJax[name + 'Promise'] =
       (math: string, options: OptionList = {}) => {
-        options.format = input.name;
-        return mathjax.handleRetriesFor(() => document.convert(math, options));
+        promise = promise.then(() => {
+          options.format = input.name;
+          return mathjax.handleRetriesFor(() => document.convert(math, options));
+        });
+        return promise;
       };
     MathJax[oname + 'Stylesheet'] = () => output.styleSheet(document);
     if ('getMetricsFor' in output) {
@@ -435,9 +446,12 @@ export namespace Startup {
       };
     MathJax[name + '2mmlPromise'] =
       (math: string, options: OptionList = {}) => {
-        options.end = STATE.CONVERT;
-        options.format = input.name;
-        return mathjax.handleRetriesFor(() => toMML(document.convert(math, options)));
+        promise = promise.then(() => {
+          options.end = STATE.CONVERT;
+          options.format = input.name;
+          return mathjax.handleRetriesFor(() => toMML(document.convert(math, options)));
+        });
+        return promise;
       };
   }
 

@@ -96,7 +96,8 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<N, T, D> 
     public static styles: StyleList = {
       'mjx-c': {
         display: 'inline-block',
-        width: 0
+        width: 0,
+        'text-align': 'right'
       },
       'mjx-utext': {
         display: 'inline-block',
@@ -120,6 +121,7 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<N, T, D> 
       } else {
         let utext = '';
         const chars = this.remappedText(text, variant);
+        const H = (chars.length > 1 ? this.em(this.parent.getBBox().h) : '');
         for (const n of chars) {
           const data = (this.getVariantChar(variant, n) as ChtmlCharData)[3];
           if (data.unknown) {
@@ -127,9 +129,18 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<N, T, D> 
           } else {
             utext = this.addUtext(utext, variant, parent);
             const font = data.ff || (data.f ? `${this.font.cssFontPrefix}-${data.f}` : '');
-            adaptor.append(parent, this.html('mjx-c', {class: this.char(n) + (font ? ' ' + font : '')}, [
+            const node = adaptor.append(parent, this.html('mjx-c', {class: this.char(n) + (font ? ' ' + font : '')}, [
               this.text(data.c || String.fromCodePoint(n))
             ]));
+            if (H) {
+              //
+              //  Work around WebKit alignment bug by making all letters in
+              //  a given MathML node have the same height (the height of
+              //  the parent element).  Only fixes the issue within a given
+              //  MathML node, but that is useful for \text{} in particular.
+              //
+              adaptor.setStyle(node as N, 'padding-top', H);
+            }
             this.font.charUsage.add([variant, n]);
           }
         }

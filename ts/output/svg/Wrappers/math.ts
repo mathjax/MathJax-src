@@ -117,6 +117,9 @@ export const SvgMath = (function <N, T, D>(): SvgMathClass<N, T, D> {
         'line-height': '0',
         'font-family': 'MJX-ZERO'
       },
+      'mjx-break[size="0"]': {
+        'letter-spacing': (.001 - 1) + 'em'
+      },
       'mjx-break[size="1"]': {
         'letter-spacing': (.111 - 1) + 'em'
       },

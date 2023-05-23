@@ -311,9 +311,9 @@ BaseMethods.Hash = function(_parser: TexParser, _c: string) {
 BaseMethods.MathFont = function(parser: TexParser, name: string, variant: string) {
   const text = parser.GetArgument(name);
   let mml = new TexParser(text, {
+    multiLetterIdentifiers: parser.options.identifierPattern,
     ...parser.stack.env,
     font: variant,
-    multiLetterIdentifiers: /^[a-zA-Z]+/ as any,
     noAutoOP: true
   }, parser.configuration).mml();
   parser.Push(parser.create('node', 'TeXAtom', [mml]));
@@ -390,7 +390,7 @@ BaseMethods.DiscretionaryTimes = function (parser: TexParser, _name: string) {
  * @param {string} _name The macro name.
  */
 BaseMethods.AllowBreak = function (parser: TexParser, _name: string) {
-  parser.Push(parser.create('token', 'mo', {'data-allowbreak': true}));
+  parser.Push(parser.create('token', 'mspace'));
 }
 
 /**
@@ -400,7 +400,7 @@ BaseMethods.AllowBreak = function (parser: TexParser, _name: string) {
  * @param {string} _name The macro name.
  */
 BaseMethods.Break = function (parser: TexParser, _name: string) {
-  parser.Push(parser.create('token', 'mo', {linebreak: TexConstant.LineBreak.NEWLINE}));
+  parser.Push(parser.create('token', 'mspace', {linebreak: TexConstant.LineBreak.NEWLINE}));
 }
 
 /**
@@ -1704,6 +1704,8 @@ BaseMethods.IndentAlign = function (parser: TexParser, begin: StackItem) {
  * @param {TexParser} parser The calling parser.
  * @param {StackItem} begin The opening stackitem.
  * @param {boolean} numbered True if environment is numbered.
+ * @param {boolean} display True if equation is in display mode
+ */
 BaseMethods.Equation = function (
   parser: TexParser,
   begin: StackItem,
