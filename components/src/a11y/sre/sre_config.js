@@ -1,5 +1,5 @@
-import {combineDefaults} from '../../../../js/components/global.js';
-import {Package} from '../../../../js/components/package.js';
+import {combineDefaults} from '#js/components/global.js';
+import {Package} from '#js/components/package.js';
 
 // This sets up the correct link to the mathmaps files.
 if (MathJax.startup) {

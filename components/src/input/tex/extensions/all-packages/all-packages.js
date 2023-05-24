@@ -1,8 +1,8 @@
 import './lib/all-packages.js';
 
-import {AllPackages} from '../../../../../../js/input/tex/AllPackages.js';
-import '../../../../../../js/input/tex/autoload/AutoloadConfiguration.js';
-import '../../../../../../js/input/tex/require/RequireConfiguration.js';
+import {AllPackages} from '#js/input/tex/AllPackages.js';
+import '#js/input/tex/autoload/AutoloadConfiguration.js';
+import '#js/input/tex/require/RequireConfiguration.js';
 import {registerTeX} from '../../register.js';
 
 if (MathJax.loader) {

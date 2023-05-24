@@ -5,8 +5,7 @@
       "input/tex.ts",
       "input/tex"
     ]
-  }
-  ,
+  },
   "webpack": {
     "name": "input/tex-full",
     "libs": [

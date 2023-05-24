@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-import {src} from 'mathjax-full/components/src/source.cjs';
+import {src} from './source.cjs';
 
 export const source = {
   'core': `${src}/core/core.js`,

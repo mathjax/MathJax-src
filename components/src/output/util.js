@@ -1,5 +1,5 @@
-import {combineDefaults, combineWithMathJax} from '../../../js/components/global.js';
-import {Package} from "../../../js/components/package.js";
+import {combineDefaults, combineWithMathJax} from '#js/components/global.js';
+import {Package} from "#js/components/package.js";
 
 export const FONTPATH = (typeof document === 'undefined' ?
                          '@mathjax/%%FONT%%-font/es6' :

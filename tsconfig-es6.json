@@ -6,6 +6,7 @@
     "module": "ES2022",
     "moduleResolution": "node",
     "paths": {
+      "#js/*": ["./js6/*"],
       "#root/*": ["./ts/components/mjs/*"],
       "#mml3/*": ["./ts/input/mathml/mml3/mjs/*"],
       "#menu/*": ["./node_modules/mj-context-menu/js/*"],

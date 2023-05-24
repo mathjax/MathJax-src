@@ -31,23 +31,29 @@ function rm(file) {
   fs.existsSync(file) && fs.unlinkSync(file);
 }
 
-rm('js');
 rm('tsconfig.json');
+rm('components/src/package.json');
+rm(node + '/#js');
+rm(node + '/#root');
+rm(node + '/#mml3');
+rm(node + '/#default-font');
+rm(node + '/#menu');
+rm(node + '/#sre');
+rm(node + '/#mhchem');
 
 if (process.argv[2] === 'true') {
-  fs.symlinkSync('js5', 'js');
-  fs.symlinkSync('tsconfig-es5.json', 'tsconfig.json');
-  fs.symlinkSync('mathjax-modern-font/js5', 'node_modules/#default-font');
-  fs.symlinkSync('mj-context-menu/js', 'node_modules/#menu');
-  fs.symlinkSync('speech-rule-engine/js', 'node_modules/#sre');
-  fs.symlinkSync('mhchemparser/js', 'node_modules/#mhchem');
   fs.writeFileSync('components/src/package.json', '{\n  "type": "commonjs"\n}\n');
+  fs.writeFileSync('tsconfig.json', '{\n  "extends": "./tsconfig-es5.json"\n}\n');
+  //
+  // Needed for node -r esm that requires mathjax-full or node-main.js
+  //
+  fs.symlinkSync('mathjax-full/js5', node + '/#js');
+  fs.symlinkSync('mathjax-full/js5/components/cjs', node + '/#root');
+  fs.symlinkSync('mathjax-full/js5/input/mathml/mml3/cjs', node + '/#mml3');
+  fs.symlinkSync('mathjax-modern-font/js5', node + '/#default-font');
+  fs.symlinkSync('mj-context-menu/cjs', node + '/#menu');
+  fs.symlinkSync('speech-rule-engine/js', node + '/#sre');
+  fs.symlinkSync('mhchemparser/dist', node + '/#mhchem');
 } else {
-  fs.symlinkSync('js6', 'js');
-  fs.symlinkSync('tsconfig-es6.json', 'tsconfig.json');
-  rm('node_modules/#default-font');
-  rm('node_modules/#menu');
-  rm('node_modules/#sre');
-  rm('node_modules/#mhchem');
-  rm('components/src/package.json');
+  fs.writeFileSync('tsconfig.json', '{\n  "extends": "./tsconfig-es6.json"\n}\n');
 }

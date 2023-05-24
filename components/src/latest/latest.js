@@ -1,3 +1,3 @@
-import {loadLatest} from '../../../js/components/latest.js';
+import {loadLatest} from '#js/components/latest.js';
 
 loadLatest();

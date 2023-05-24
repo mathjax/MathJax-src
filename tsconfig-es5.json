@@ -5,6 +5,7 @@
     "outDir": "js5",
     "module": "CommonJS",
     "paths": {
+      "#js/*": ["./js5/*"],
       "#root/*": ["./ts/components/cjs/*"],
       "#mml3/*": ["./ts/input/mathml/mml3/cjs/*"],
       "#menu/*": ["./node_modules/mj-context-menu/cjs/*"],

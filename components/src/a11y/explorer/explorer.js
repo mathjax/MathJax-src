@@ -1,7 +1,7 @@
 import './lib/explorer.js';
 
-import {combineDefaults} from '../../../../js/components/global.js';
-import {ExplorerHandler} from '../../../../js/a11y/explorer.js';
+import {combineDefaults} from '#js/components/global.js';
+import {ExplorerHandler} from '#js/a11y/explorer.js';
 
 if (MathJax.startup && typeof window !== 'undefined') {
   if (MathJax.config.options && MathJax.config.options.enableExplorer !== false) {

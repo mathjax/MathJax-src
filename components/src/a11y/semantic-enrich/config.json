@@ -2,8 +2,7 @@
   "build": {
     "component": "a11y/semantic-enrich",
     "targets": ["a11y/semantic-enrich.ts"]
-  }
-  ,
+  },
   "webpack": {
     "name": "a11y/semantic-enrich",
     "libs": [

@@ -8,7 +8,6 @@
       "adaptors/browserAdaptor.ts",
       "components/global.ts"
     ],
-  
     "exclude": [
       "core/MmlTree/JsonMmlVisitor.ts",
       "core/MmlTree/LegacyMmlVisitor.ts",
@@ -16,8 +15,7 @@
       "util/asyncLoad",
       "util/entities"
     ]
-  }
-  ,
+  },
   "webpack": {
     "name": "core"
   }

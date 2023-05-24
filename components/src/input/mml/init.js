@@ -1,6 +1,6 @@
 import './lib/mml.js';
 
-import {MathML} from '../../../../js/input/mathml.js';
+import {MathML} from '#js/input/mathml.js';
 export {MathML};
 
 if (MathJax.loader) {

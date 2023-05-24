@@ -1,7 +1,7 @@
 import './lib/core.js';
 
-import {HTMLHandler} from '../../../js/handlers/html/HTMLHandler.js';
-import {browserAdaptor} from '../../../js/adaptors/browserAdaptor.js';
+import {HTMLHandler} from '#js/handlers/html/HTMLHandler.js';
+import {browserAdaptor} from '#js/adaptors/browserAdaptor.js';
 
 if (MathJax.startup) {
   MathJax.startup.registerConstructor('HTMLHandler', HTMLHandler);

@@ -1,6 +1,7 @@
 {
   "type": "commonjs",
   "imports": {
+    "#js/*": "mathjax-full/js5/*",
     "#root/*": "mathjax-full/js5/components/cjs/*",
     "#mml3/*": "mathjax-full/js5/input/mathml/mml3/cjs/*",
     "#menu/*": "mj-context-menu/cjs/*",

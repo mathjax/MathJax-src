@@ -193,6 +193,7 @@ const RESOLVE = function (js, dir, es, libs) {
   return {
     plugins: [new ResolveReplacementPlugin()],
     alias: {
+      '#js': 'mathjax-full/js' + es,
       [jsd]: jsd + es,
       'mathjax-full/js': 'mathjax-full/js' + es,
       [src]: src + es,   // needed for development environment with symbolic link to mathjax-full
@@ -216,7 +217,6 @@ const MODULE = function (dir) {
                  '(?:' + quoteRE(DIRNAME) + '|' + quoteRE(dir) + ')');
   const es5 = path.join(path.dirname(DIRNAME), 'es5');
   return {
-    // NOTE: for babel transpilation
     rules: [{
       test: new RegExp(dirRE + quoteRE(path.sep) + '.*\\.js$'),
       exclude: new RegExp(quoteRE(es5 + path.sep)),

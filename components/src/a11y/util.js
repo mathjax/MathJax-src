@@ -1,9 +1,9 @@
-import {Loader} from '../../../js/components/loader.js';
+import {Loader} from '#js/components/loader.js';
 import '../input/mml/init.js';
 import {Sre} from './sre/sre.js';
 import './semantic-enrich/semantic-enrich.js';
 import './explorer/explorer.js';
-import {MathMaps} from '../../../js/a11y/mathmaps.js';
+import {MathMaps} from '#js/a11y/mathmaps.js';
 
 const base = require('speech-rule-engine/lib/mathmaps/base.json');
 const en = require('speech-rule-engine/lib/mathmaps/en.json');

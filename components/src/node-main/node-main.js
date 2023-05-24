@@ -19,9 +19,9 @@
  * Load the needed MathJax components
  */
 import '../startup/init.js';
-import {Loader, CONFIG} from '../../../js/components/loader.js';
-import {Package} from '../../../js/components/package.js';
-import {combineDefaults, combineConfig} from '../../../js/components/global.js';
+import {Loader, CONFIG} from '#js/components/loader.js';
+import {Package} from '#js/components/package.js';
+import {combineDefaults, combineConfig} from '#js/components/global.js';
 import '../core/core.js';
 import '../adaptors/liteDOM/liteDOM.js';
 import {source} from '../source.js';

@@ -26,6 +26,6 @@
  */
 export function esRoot(): string {
   return new URL(import.meta.url).pathname
-    .replace(/js(.?)\/components\/ts6\/root.js$/, (_, es) => 'es' + (es || 6));
+    .replace(/js(.?)\/components\/mjs\/root.js$/, (_, es) => 'es' + (es || 6));
 }
 

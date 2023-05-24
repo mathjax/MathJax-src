@@ -2,8 +2,7 @@
   "build": {
     "component": "adaptors/liteDOM",
     "targets": ["adaptors/liteAdaptor.ts", "adaptors/lite"]
-  }
-  ,
+  },
   "webpack": {
     "name": "adaptors/liteDOM",
     "libs": ["components/src/core/lib"]

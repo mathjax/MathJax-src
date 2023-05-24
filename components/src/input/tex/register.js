@@ -1,4 +1,4 @@
-import {insert} from '../../../../js/util/Options.js';
+import {insert} from '#js/util/Options.js';
 
 export function registerTeX(packageList = [], tex = true) {
   if (MathJax.startup) {

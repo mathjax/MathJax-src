@@ -6,7 +6,6 @@
   },
   "webpack": {
     "name": "input/tex/extensions/bussproofs",
-    "js": "../../../../../../js",
     "libs": [
       "components/src/input/tex-base/lib",
       "components/src/core/lib"

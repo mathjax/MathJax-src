@@ -1,9 +1,7 @@
 *~
 node_modules
 components/src/**/lib
-js
 js5
 js6
 es5
 es6
-tsconfig.json

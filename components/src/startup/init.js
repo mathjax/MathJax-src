@@ -1,8 +1,8 @@
 import './lib/startup.js';
 
-import {combineDefaults} from '../../../js/components/global.js';
+import {combineDefaults} from '#js/components/global.js';
 import {dependencies, paths, provides, compatibility} from '../dependencies.js';
-import {Loader, CONFIG} from '../../../js/components/loader.js';
+import {Loader, CONFIG} from '#js/components/loader.js';
 
 Loader.preLoad('loader', 'startup');
 
