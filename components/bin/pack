@@ -56,11 +56,10 @@ const compPath = path.dirname(__dirname);
 const nodePath = path.join(__dirname, '..', '..', 'node_modules');
 const mjPath = path.dirname(compPath);
 const jsPath = path.join(__dirname, '..', '..', 'js' + es);
-const compRE = fileRegExp(path.join(compPath, 'src'));
+const compRE = fileRegExp(compPath);
 const rootRE = fileRegExp(path.dirname(jsPath));
 const nodeRE = fileRegExp(nodePath);
 const fontRE = new RegExp('^.*\\/(mathjax-[^\/-]*)(?:-font)?\/(build|js.?)');
-const modRE  = fileRegExp(path.join(__dirname, '..', '..', 'modules', 'es6'));
 
 /**
  * @param {string} dir   The directory to pack
@@ -123,7 +122,6 @@ async function webpackLib(dir) {
       if (module.moduleType.match(/javascript/)) {
         let name = (module.nameForCondition || module.name)
             .replace(compRE, '[components]')
-            .replace(modRE,  '[modules]')
             .replace(nodeRE, '[node]')
             .replace(rootRE, '[mathjax]')
             .replace(fontRE, '[$1]/$2')

@@ -64,10 +64,12 @@ const PLUGINS = function (js, dir, es, font, jax, name) {
   //
   // Replace a11y/util with the webpack version
   //
-  const plugins = [new webpack.NormalModuleReplacementPlugin(
-    /components\/src\/a11y\/util\.js/,
-    './util-pack.js'
-  )];
+  const plugins = [
+    new webpack.NormalModuleReplacementPlugin(
+      /components\/src[56]\/a11y\/util\.js/,
+      './util-pack.js'
+    )
+  ];
 
 
   //
@@ -75,7 +77,7 @@ const PLUGINS = function (js, dir, es, font, jax, name) {
   //
   if (!font) {
     const jax = (name.match(/chtml|svg/) || ['chtml'])[0];
-    const nofont = path.resolve(DIRNAME, 'src', 'output', jax, 'nofont.js');
+    const nofont = path.resolve(DIRNAME, 'src' + es, 'output', jax, 'nofont.js');
     plugins.push(
       new webpack.NormalModuleReplacementPlugin(
         /DefaultFont.js/,
@@ -120,10 +122,10 @@ const RESOLVE = function (js, dir, es, libs) {
   //
   const sep = quoteRE(path.sep);
   const root = path.dirname(DIRNAME);
-  const mjdir = path.resolve(root, 'js');
+  const mjdir = path.resolve(root, 'js' + es);
   const jsdir = path.resolve(dir, js);
-  const jsRE = new RegExp((es ? quoteRE(jsdir).replace(/^(.*\/js)(\/|$)/, '$1' + es + '?$2') : quoteRE(jsdir)) + sep);
-  const mjRE = new RegExp((es ? quoteRE(mjdir) + es + '?' : quoteRE(mjdir)) + sep);
+  const jsRE = new RegExp(quoteRE(jsdir) + sep);
+  const mjRE = new RegExp(quoteRE(mjdir) + sep);
 
   //
   //  Add directory names to libraries
@@ -148,15 +150,6 @@ const RESOLVE = function (js, dir, es, libs) {
       if (match) {
         const file = lib + request.substr(match[0].length);
         if (fs.existsSync(file)) {
-          //
-          //  Return the proper library file (.cjs or .js as needed)
-          //
-          if (es === 5) {
-            const cfile = file.replace(/\.js$/, '.cjs');
-            if (fs.existsSync(cfile)) {
-              return cfile;
-            }
-          }
           return file;
         }
       }
@@ -188,48 +181,10 @@ const RESOLVE = function (js, dir, es, libs) {
   //
   // The resolve object to use
   //
-  const src = path.join(path.dirname(require.resolve('mathjax-full/package.json')), 'js');
-  const jsd = jsdir.replace(/\/js[56]$/, '/js');
   return {
     plugins: [new ResolveReplacementPlugin()],
-    alias: {
-      '#js': 'mathjax-full/js' + es,
-      [jsd]: jsd + es,
-      'mathjax-full/js': 'mathjax-full/js' + es,
-      [src]: src + es,   // needed for development environment with symbolic link to mathjax-full
-    }
   };
 }
-
-/****************************************************************/
-
-/**
- * Add babel-loader to appropriate directories
- *
- * @param {string} dir    The directory for the component being built
- * @return {any}          The modules specification for the webpack configuration
- */
-const MODULE = function (dir) {
-  //
-  // Only need to transpile our directory and components directory
-  //
-  const dirRE = (dir.substr(0, DIRNAME.length) === DIRNAME ? quoteRE(DIRNAME) :
-                 '(?:' + quoteRE(DIRNAME) + '|' + quoteRE(dir) + ')');
-  const es5 = path.join(path.dirname(DIRNAME), 'es5');
-  return {
-    rules: [{
-      test: new RegExp(dirRE + quoteRE(path.sep) + '.*\\.js$'),
-      exclude: new RegExp(quoteRE(es5 + path.sep)),
-      use: {
-        loader: 'babel-loader',
-        options: {
-          presets: ['@babel/env'],
-          plugins: ['@babel/plugin-syntax-import-assertions']
-        }
-      }
-    }]
-  }
-};
 
 /****************************************************************/
 
@@ -267,7 +222,6 @@ const PACKAGE = function (options) {
     target: ['web', 'es' + es],  // needed for IE11 and old browsers
     plugins: PLUGINS(js, dir, es, font, jax, name),
     resolve: RESOLVE(js, dir, es, libs),
-    module: (es ? MODULE(dir) : undefined),
     performance: {
       hints: false
     },

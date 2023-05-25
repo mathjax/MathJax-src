@@ -33,6 +33,9 @@ const {execSync} = require('child_process');
  *  The default options
  */
 const options = {
+  build: true,
+  copy: true,
+  pack: true,
   recursive: true,
   verbose: true,
   es: '6'
@@ -63,6 +66,33 @@ while (dirs[0].substr(0, 2) === '--') {
     options.verbose = false;
     continue;
   }
+  if (option === '--build') {
+    options.build = 1;
+    if (options.copy === true) {
+      options.copy = false;
+    }
+    if (options.pack === true) {
+      options.pack = false;
+    }
+  }
+  if (option === '--copy') {
+    options.copy = 1;
+    if (options.build === true) {
+      options.build = false;
+    }
+    if (options.pack === true) {
+      options.pack = false;
+    }
+  }
+  if (option === '--pack') {
+    options.pack = 1;
+    if (options.build === true) {
+      options.build = false;
+    }
+    if (options.copy === true) {
+      options.copy = false;
+    }
+  }
 }
 
 //
@@ -76,7 +106,7 @@ if (dirs.length === 0) {
  * The commads to run the various scripts
  *  (on Unix, could be done without the 'node ' prefix, but for Windows, these are needed.)
  */
-const build = `node '${path.join(__dirname, 'build')}'`;
+const build = `node '${path.join(__dirname, 'build')}' '${options.es}'`;
 const copy = `node '${path.join(__dirname, 'copy')}' '${options.es}'`;
 const pack = `node '${path.join(__dirname, 'pack')}' '${options.es}'`;
 
@@ -154,7 +184,7 @@ function processSubdirs(dir, action, config) {
  * @param {Object} config   The configuration json data
  */
 function buildLib(dir, config) {
-  if (!config.build) return;
+  if (!config.build || !options.build) return;
   console.info('Building ' + dir.replace(compRE, '').replace(dirRE, '.'));
   const wd = process.cwd();
   try {
@@ -176,7 +206,7 @@ function buildLib(dir, config) {
  * @param {Object} config   The configuration json data
  */
 function webpackLib(dir, config) {
-  if (!config.webpack) return;
+  if (!config.webpack || !options.pack) return;
   console.info('Webpacking ' + dir.replace(compRE, '').replace(dirRE, '.'));
   const wd = process.cwd();
   try {
@@ -198,7 +228,7 @@ function webpackLib(dir, config) {
  * @param {Object} config   The configuration json data
  */
 function copyLib(dir, config) {
-  if (!config.copy) return;
+  if (!config.copy || !options.copy) return;
   console.info('Copying ' + dir.replace(compRE, '').replace(dirRE, '.'));
   try {
     process.chdir(dir);

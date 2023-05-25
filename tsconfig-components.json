@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig-es5.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "sourceMap": false,
+    "outDir": "components/src5"
+  },
+  "include": [
+    "components/src6/**/*.js"
+  ]
+}

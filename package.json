@@ -4,7 +4,22 @@
   "description": "Beautiful and accessible math in all browsers. MathJax is an open-source JavaScript display engine for LaTeX, MathML, and AsciiMath notation that works in all browsers and in server-side node applications. This package includes the source code as well as the packaged components.",
   "license": "Apache-2.0",
   "type": "module",
-  "main": "components/src/node-main/node-main.js",
+  "main": "components/src6/node-main/node-main.js",
+  "exports": {
+    ".": {
+      "import": "./components/src6/node-main/node-main.js",
+      "require": "./components/src5/node-main/node-main.js"
+    },
+    "./js/*": {
+      "import": "./js6/*",
+      "require": "./js5/*"
+    },
+    "./components/src/*": {
+      "import": "./components/src6/*",
+      "require": "./components/src5/*"
+    },
+    "./*": "./*"
+  },
   "imports": {
     "#js/*": "mathjax-full/js6/*",
     "#root/*": "mathjax-full/js6/components/mjs/*",
@@ -41,14 +56,19 @@
   ],
   "scripts": {
     "clean:dir": "clean() { npx rimraf $1; }; clean",
-    "clean:lib": "npx rimraf 'components/src/**/lib'",
-    "clean:n": "clean() { npm run -s clean:dir js$1 && npm run -s clean:dir es$1 && npm run -s clean:lib; }; clean",
+    "clean:lib": "clean() { npx rimraf components/src$1'/**/lib'; }; clean",
+    "clean:n": "clean() { npm run -s clean:dir js$1 && npm run -s clean:dir es$1 && npm run -s clean:lib $1; }; clean",
     "clean": "npm run -s clean:n 5 && npm run -s clean:n 6",
+    "clean:src5": "npx rimraf components/src5",
     "=============================================================================== copy": "",
     "copy:mj2": "copy() { npx copyfiles -u 1 'ts/input/asciimath/legacy/**/*' js$1; }; copy",
     "copy:mml3": "copy() { npx copyfiles -u 1 ts/input/mathml/mml3/mml3.sef.json js$1; }; copy",
     "copy:pkg": "npx copyfiles -u 2 components/bin/package.json",
+    "copy:src5": "npx copyfiles -u 2 'components/src6/**/*' components/src5",
     "=============================================================================== compile": "",
+    "prets:src5": "npm run -s clean:src5 && npm run -s copy:src5",
+    "ts:src5": "npx tsc --project tsconfig-components.json",
+    "postts:src5": "npm run -s copy:pkg components/src5 && npx rimraf 'components/src5/**/*.d.ts'",
     "_js5:pkg": "npm run -s copy:pkg js5",
     "_pre_compile": "pre() { npm run -s clean:dir js$1; }; pre",
     "_compile": "comp() { npx tsc --project tsconfig-es$1.json; }; comp",
@@ -58,12 +78,12 @@
     "compile6": "npm run -s _compile_ 6",
     "compile": "npm run compile6",
     "=============================================================================== components": "",
-    "make-one": "make() { components/bin/makeAll --es$2 --no-subdirs components/src/$1; }; make",
+    "make-one": "make() { components/bin/makeAll --es$2 --no-subdirs components/src$2/$1; }; make",
     "_es5:pkg": "npm run -s copy:pkg es5",
-    "_pre_make": "pre() { npm run -s clean:dir es$1 && npm run -s clean:lib; }; pre",
-    "_make": "make() { components/bin/makeAll --es$1 --terse components/src; }; make",
+    "_pre_make": "pre() { npm run -s clean:dir es$1 && npm run -s clean:lib $1; }; pre",
+    "_make": "make() { components/bin/makeAll --es$1 --terse components/src$1; }; make",
     "_make_": "make() { npm run -s _pre_make $1 && npm run -s _make $1; npm run -s _es$1:pkg; }; make",
-    "make-components5": "npm run -s _make_ 5",
+    "make-components5": "npm run -s ts:src5 && npm run -s _make_ 5",
     "make-components6": "npm run -s _make_ 6",
     "make-components": "npm run -s make-components6",
     "=============================================================================== build": "",
@@ -79,9 +99,9 @@
     "postmake-mml3-xslt": "npx rimraf ts/input/mathml/mml3/mml3.xsl",
     "=============================================================================== install": "",
     "link:full": "node -e 'require(\"fs\").symlinkSync(process.cwd(), \"node_modules/mathjax-full\")'",
-    "install": "npm run -s link:full; npm run -s use-es6",
-    "use-es5": "node components/bin/use-es5 true",
-    "use-es6": "node components/bin/use-es5 false"
+    "install": "npm run -s link:full",
+    "use-es5": "echo '{\n  \"extends\": \"./tsconfig-es5.json\"\n}' > tsconfig.json",
+    "use-es6": "echo '{\n  \"extends\": \"./tsconfig-es6.json\"\n}' > tsconfig.json"
   },
   "devDependencies": {
     "@babel/core": "^7.17.12",

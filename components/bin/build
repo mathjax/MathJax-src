@@ -40,11 +40,15 @@ const EXPORTPATTERN = /(^export(?:\s+default)?(?:\s+abstract)?\s+[^ {*}]+\s+(?:e
 const EXPORT_IGNORE = ['type', 'interface'];
 const EXPORT_PROCESS = ['let', 'const', 'var', 'function', 'class', 'namespace'];
 
+/**
+ * The ES version to use ('5', '6', or '')
+ */
+const es = (process.argv[2] || '6');
 
 /**
  * Read the configuration for the component
  */
-const json = path.resolve(process.argv[2] || '.', 'config.json');
+const json = path.resolve(process.argv[3] || '.', 'config.json');
 const config = require(json).build;
 if (!config) process.exit()
 process.chdir(path.dirname(json));
@@ -53,7 +57,7 @@ process.chdir(path.dirname(json));
 /**
  * The relative path to the MathJax directory
  */
-const mjPath = path.relative(process.cwd(), path.resolve(__dirname, '..', '..', 'js'));
+const mjPath = path.relative(process.cwd(), path.resolve(__dirname, '..', '..', 'js' + es));
 const mjGlobal = path.join('#js', 'components', 'global.js');
 
 function getType() {
@@ -135,9 +139,8 @@ function processFile(base, name) {
   const file = fs.readFileSync(path.resolve(base, name)).toString();
   const parts = file.split(EXPORTPATTERN);
   const objects = processParts(parts);
-  const [clines, mlines] = processLines(name, objects);
-  makeFile(name, clines, 'c');
-  makeFile(name, mlines);
+  const lines = processLines(name, objects);
+  makeFile(name, lines);
   if (objects.length) {
     PACKAGE.push(name);
   }
@@ -177,7 +180,7 @@ function processParts(parts) {
  * @return {[string[], string[]]}  Array of lines for the contents of the library file (cjs and mjs separately)
  */
 function processLines(file, objects) {
-  if (objects.length === 0) return [[], []];
+  if (objects.length === 0) return [];
   const base = path.dirname(file).replace(/^\.$/, '');
   const dir = (PREFIX ? path.join(PREFIX, base) : base);
   const dots = dir.replace(/[^\/]+/g, '..') || '.';
@@ -186,23 +189,20 @@ function processLines(file, objects) {
   let source = ((dir.replace(/\//g, '.') + '.' + name).replace(/^\./, '')
                 + (exists(path.resolve(JS, file.replace(/\.ts$/, ''))) ? '_ts' : ''))
       .replace(/\.[^.]*/g, (x) => (x.substr(1).match(/[^a-zA-Z_]/) ? '[\'' + x.substr(1) + '\']' : x));
-  const clines = [
+  const lines = (es !== '5' ? [] : [
     '"use strict";',
     `Object.defineProperty(exports, '__esModule', {value: true});`,
-  ];
-  const mlines = [];
-  const def = (
+  ]);
+  lines.push(
     objects.indexOf('MathJax') >= 0 ?
       `const g = (typeof window !== 'undefined' ? window : global);\nconst def = g.MathJax._.${source};` :
       `const def = MathJax._.${source};`
   );
-  clines.push(def);
-  mlines.push(def);
   for (const id of objects) {
-    clines.push(`exports.${id} = def.${id};`);
-    mlines.push(id === 'default' ? `export default def.${id};` : `export const ${id} = def.${id};`);
+    lines.push(es === '5' ? `exports.${id} = def.${id};` :
+               id === 'default' ? `export default def.${id};` : `export const ${id} = def.${id};`);
   }
-  return [clines, mlines];
+  return lines;
 }
 
 /**
@@ -236,14 +236,13 @@ function makeDir(dir) {
  *
  * @param {string} file     The name of the file relative to the root .ts directory
  * @param {string[]} lines  The contents of the file to create
- * @param {string} es       The prefix for the js extension ('c', 'm', or '')
  */
-function makeFile(file, lines, es = '') {
+function makeFile(file, lines) {
   if (!lines.length) return;
   const basedir = path.dirname(file);
   const [dir, name] = [PREFIX ? path.join(PREFIX, basedir) : basedir, path.basename(file)];
   makeDir(dir);
-  fs.writeFileSync(path.resolve(LIB, dir, name.replace(/\.ts$/, `.${es}js`)), lines.join('\n') + '\n');
+  fs.writeFileSync(path.resolve(LIB, dir, name.replace(/\.ts$/, '.js')), lines.join('\n') + '\n');
 }
 
 /**
@@ -270,11 +269,15 @@ function getExtraDirectories() {
  */
 function processGlobal() {
   console.info('  ' + COMPONENT + '.ts');
-  const lines = [
+  const lines = (es === '5' ? [
+    `const {combineWithMathJax} = require('${GLOBAL}')`,
+    `const {VERSION} = require('${VERSION}');`,
+    '',
+  ] : [
     `import {combineWithMathJax} from '${GLOBAL}';`,
     `import {VERSION} from '${VERSION}';`,
     '',
-  ];
+  ]);
   const [prefix, indent, postfix] = getExtraDirectories();
   const packages = [];
   PACKAGE = PACKAGE.sort(sortDir);
@@ -334,10 +337,14 @@ function processPackage(lines, space, dir) {
       const name = path.basename(file);
       let relativefile = path.join('..', JS, dir, name).replace(/\.ts$/, '.js')
       if (relativefile.substr(0, mjPath.length + 3) === '../' + mjPath) {
-        relativefile = relativefile.replace(/(\.\.\/)+js\//, '#js/');
+        relativefile = relativefile.replace(/(\.\.\/)+js[56]\//, '#js/');
       }
       const component = 'module' + (++importCount);
-      lines.push(`import * as ${component} from '${relativefile}';`);
+      lines.push(
+        es === '5' ?
+          `const ${component} = require('${relativefile}');` :
+          `import * as ${component} from '${relativefile}';`
+      );
       let property = name.replace(/\.ts$/, '');
       if (property !== name && exists(path.resolve(JS, file.replace(/\.ts$/, '')))) {
         property += '_ts';

@@ -1,6 +1,7 @@
 *~
 node_modules
-components/src/**/lib
+components/src6/**/lib
+components/src5
 js5
 js6
 es5

@@ -25,7 +25,7 @@ import {combineDefaults, combineConfig} from '#js/components/global.js';
 import '../core/core.js';
 import '../adaptors/liteDOM/liteDOM.js';
 import {source} from '../source.js';
-import path from 'path';
+import {dir, path} from './dir.cjs';
 
 /*
  * Set up the initial configuration
@@ -40,12 +40,6 @@ combineDefaults(MathJax.config, 'loader', {
  */
 Loader.preLoad('loader', 'startup', 'core', 'adaptors/liteDOM');
 
-
-/*
- * Set the mathjax root path to the location where node-main.js was loaded from,
- * and removing the directory if we are loaded from components/src/node-main.
- */
-const dir = path.dirname(new URL(import.meta.url).pathname);
 
 if (path.basename(dir) === 'node-main') {
   CONFIG.paths.es6 = CONFIG.paths.mathjax;
