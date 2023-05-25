@@ -104,10 +104,6 @@
     "use-es6": "echo '{\n  \"extends\": \"./tsconfig-es6.json\"\n}' > tsconfig.json"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.12",
-    "@babel/plugin-syntax-import-assertions": "^7.20.0",
-    "@babel/preset-env": "^7.17.12",
-    "babel-loader": "^8.2.5",
     "copyfiles": "^2.4.1",
     "diff": "^5.0.0",
     "rimraf": "^3.0.2",
@@ -122,9 +118,8 @@
     "webpack-cli": "^4.9.2"
   },
   "dependencies": {
-    "esm": "^3.2.25",
     "mathjax-modern-font": "^1.0.0-beta.3",
-    "mhchemparser": "^4.2.0",
+    "mhchemparser": "^4.2.1",
     "mj-context-menu": "^0.8.1",
     "speech-rule-engine": "^4.1.0-beta.4"
   }
