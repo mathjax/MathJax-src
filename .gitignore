@@ -1,8 +1,8 @@
 *~
 node_modules
-components/src6/**/lib
-components/src5
-js5
-js6
-es5
-es6
+components/mjs/**/lib
+components/cjs
+cjs
+mjs
+bundle
+bundle-cjs

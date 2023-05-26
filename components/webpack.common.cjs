@@ -54,19 +54,19 @@ function fullPath(resource) {
  *
  * @param {string} js          The location of the compiled js files
  * @param {string} dir         The directory of the component being built
- * @param {string} es          The es version (5 or '')
+ * @param {string} target      The module target (cjs or mjs)
  * @param {boolean} font       False to replace font with the no-font file
  * @param {string} jax         The name of jax for a font-based default redirection
  * @param {string} name        The component name
  * @return {any[]}             The plugin array (empty or with the conversion plugin)
  */
-const PLUGINS = function (js, dir, es, font, jax, name) {
+const PLUGINS = function (js, dir, target, font, jax, name) {
   //
   // Replace a11y/util with the webpack version
   //
   const plugins = [
     new webpack.NormalModuleReplacementPlugin(
-      /components\/src[56]\/a11y\/util\.js/,
+      /components\/[cm]js\/a11y\/util\.js/,
       './util-pack.js'
     )
   ];
@@ -77,7 +77,7 @@ const PLUGINS = function (js, dir, es, font, jax, name) {
   //
   if (!font) {
     const jax = (name.match(/chtml|svg/) || ['chtml'])[0];
-    const nofont = path.resolve(DIRNAME, 'src' + es, 'output', jax, 'nofont.js');
+    const nofont = path.resolve(DIRNAME, target, 'output', jax, 'nofont.js');
     plugins.push(
       new webpack.NormalModuleReplacementPlugin(
         /DefaultFont.js/,
@@ -96,7 +96,7 @@ const PLUGINS = function (js, dir, es, font, jax, name) {
       new webpack.NormalModuleReplacementPlugin(
         new RegExp(`#default-font\\/${jax}\\/default\\.js$`),
         function (resource) {
-          resource.request = path.resolve(dir, `../../js${es}/${jax}/default.js`);
+          resource.request = path.resolve(dir, `../../${target}/${jax}/default.js`);
         }
       )
     );
@@ -116,13 +116,13 @@ const PLUGINS = function (js, dir, es, font, jax, name) {
  * @param {string[]} libs      The component library directories to be linked against
  * @return {Object}            The plugin object: {plugins: [...]}
  */
-const RESOLVE = function (js, dir, es, libs) {
+const RESOLVE = function (js, dir, target, libs) {
   //
   // Get directories and regular expressions for them
   //
   const sep = quoteRE(path.sep);
   const root = path.dirname(DIRNAME);
-  const mjdir = path.resolve(root, 'js' + es);
+  const mjdir = path.resolve(root, target);
   const jsdir = path.resolve(dir, js);
   const jsRE = new RegExp(quoteRE(jsdir) + sep);
   const mjRE = new RegExp(quoteRE(mjdir) + sep);
@@ -130,11 +130,11 @@ const RESOLVE = function (js, dir, es, libs) {
   //
   //  Add directory names to libraries
   //
-  const libREs = libs.map(
-    lib => (lib.charAt(0) === '.' ?
-            [jsRE, path.join(dir, lib) + path.sep] :
-            [mjRE, path.join(root, lib) + path.sep])
-  );
+  const libREs = libs
+        .map(lib => lib.replace(/components\/src\//, 'components/' + target + '/'))
+        .map(lib => (lib.charAt(0) === '.' ?
+                     [jsRE, path.join(dir, lib) + path.sep] :
+                     [mjRE, path.join(root, lib) + path.sep]));
 
   //
   // Function to replace imported files by ones in the specified component lib directories.
@@ -204,13 +204,13 @@ const RESOLVE = function (js, dir, es, libs) {
  * @return {object}           The webpack configuration object
  */
 const PACKAGE = function (options) {
-  let {name, js, es = '6', libs = [], dir, dist = '', font = true, jax = ''} = options;
+  let {name, js, target = 'mjs', bundle = 'bundle', libs = [], dir, dist = '', font = true, jax = ''} = options;
   dir = dir.replace(/\/$/, '');
   if (!js) {
-    js = path.relative(dir, path.resolve(DIRNAME, '..', 'js'));
+    js = path.relative(dir, path.resolve(DIRNAME, '..', target));
   }
   const distDir = dist ? path.resolve(dir, dist) :
-                         path.resolve(js, '..', 'es' + es, path.dirname(name));
+                         path.resolve(js, '..', bundle, path.dirname(name));
   const basename = path.basename(name);
   return {
     name: basename,
@@ -219,9 +219,9 @@ const PACKAGE = function (options) {
       path: distDir,
       filename: basename + (dist === '.' ? '.min.js' : '.js')
     },
-    target: ['web', 'es' + es],  // needed for IE11 and old browsers
-    plugins: PLUGINS(js, dir, es, font, jax, name),
-    resolve: RESOLVE(js, dir, es, libs),
+    target: ['web', 'es' + (target === 'mjs' ? '6' : '5')],  // needed for IE11 and old browsers
+    plugins: PLUGINS(js, dir, target, font, jax, name),
+    resolve: RESOLVE(js, dir, target, libs),
     performance: {
       hints: false
     },

@@ -18,6 +18,7 @@
 /*
  * Load the needed MathJax components
  */
+
 import '../startup/init.js';
 import {Loader, CONFIG} from '#js/components/loader.js';
 import {Package} from '#js/components/package.js';
@@ -25,14 +26,16 @@ import {combineDefaults, combineConfig} from '#js/components/global.js';
 import '../core/core.js';
 import '../adaptors/liteDOM/liteDOM.js';
 import {source} from '../source.js';
-import {dir, path} from './dir.cjs';
+
+const path = eval('require("path")');   // get path from node, not webpack
+const dir = (global.MathJax.config.__dirname || path.dirname(new URL(import.meta.url).pathname));
 
 /*
  * Set up the initial configuration
  */
 combineDefaults(MathJax.config, 'loader', {
-  require: (file => import(file)),   // use dynamic imports
-  failed: (err) => {throw err}       // pass on error message to init()'s catch function
+  require: eval("(file) => import(file)"),   // use dynamic imports
+  failed: (err) => {throw err}               // pass on error message to init()'s catch function
 });
 
 /*
@@ -40,17 +43,16 @@ combineDefaults(MathJax.config, 'loader', {
  */
 Loader.preLoad('loader', 'startup', 'core', 'adaptors/liteDOM');
 
-
 if (path.basename(dir) === 'node-main') {
-  CONFIG.paths.es6 = CONFIG.paths.mathjax;
-  CONFIG.paths.sre = '[es6]/sre/mathmaps';
+  CONFIG.paths.esm = CONFIG.paths.mathjax;
+  CONFIG.paths.sre = '[esm]/sre/mathmaps';
   CONFIG.paths.mathjax = path.dirname(dir);
   combineDefaults(CONFIG, 'source', source);
   //
   //  Set the asynchronous loader to use the js directory, so we can load
   //  other files like entity definitions
   //
-  const ROOT = path.resolve(dir, '..', '..', '..', 'js');
+  const ROOT = path.resolve(dir, '..', '..', '..', path.basename(path.dirname(dir)));
   const REQUIRE = MathJax.config.loader.require;
   MathJax._.mathjax.mathjax.asyncLoad = function (name) {
     return REQUIRE(name.charAt(0) === '.' ? path.resolve(ROOT, name) :
@@ -62,6 +64,11 @@ if (path.basename(dir) === 'node-main') {
  * The initialization function.  Use as:
  *
  *   require('mathjax').init({ ... }).then((MathJax) => { ... });
+ *
+ * or
+ *
+ *   import {init} from 'mathjax';
+ *   init({...}).then((MathJax) => {...});
  *
  * where the argument to init() is a MathJax configuration (what would be set as MathJax = {...}).
  * The init() function returns a promise that is resolved when MathJax is loaded and ready, and that

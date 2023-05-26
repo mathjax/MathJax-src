@@ -30,6 +30,5 @@ declare const __dirname: string;
  * @return {string}   The MathJax component root directory
  */
 export function esRoot(): string {
-  return __dirname.replace(/js(.?)\/components\/cjs$/, (_: string, es: string) => 'es' + (es || 6));
+  return __dirname.replace(/.js\/components\/cjs$/, (_) => 'bundle');
 }
-

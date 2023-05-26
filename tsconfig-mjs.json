@@ -2,11 +2,12 @@
   "extends": "./tsconfig-common.json",
   "compilerOptions": {
     "target": "ES6",
-    "outDir": "js6",
+    "outDir": "mjs",
     "module": "ES2022",
     "moduleResolution": "node",
     "paths": {
-      "#js/*": ["./js6/*"],
+      "#js/*": ["./mjs/*"],
+      "#source/*": ["./components/mjs/*"],
       "#root/*": ["./ts/components/mjs/*"],
       "#mml3/*": ["./ts/input/mathml/mml3/mjs/*"],
       "#menu/*": ["./node_modules/mj-context-menu/js/*"],

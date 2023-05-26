@@ -1,11 +1,12 @@
 {
-  "extends": "./tsconfig-es5.json",
+  "extends": "./tsconfig-cjs.json",
   "compilerOptions": {
     "allowJs": true,
     "sourceMap": false,
-    "outDir": "components/src5"
+    "declaration": false,
+    "outDir": "components/cjs"
   },
   "include": [
-    "components/src6/**/*.js"
+    "components/mjs/**/*.js"
   ]
 }

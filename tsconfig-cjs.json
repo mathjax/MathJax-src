@@ -2,10 +2,11 @@
   "extends": "./tsconfig-common.json",
   "compilerOptions": {
     "target": "ES5",
-    "outDir": "js5",
+    "outDir": "cjs",
     "module": "CommonJS",
     "paths": {
-      "#js/*": ["./js5/*"],
+      "#js/*": ["./cjs/*"],
+      "#source/*": ["./components/cjs/*"],
       "#root/*": ["./ts/components/cjs/*"],
       "#mml3/*": ["./ts/input/mathml/mml3/cjs/*"],
       "#menu/*": ["./node_modules/mj-context-menu/cjs/*"],

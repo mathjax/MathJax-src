@@ -29,9 +29,14 @@ const path = require('path');
 const {spawn} = require('child_process');
 
 /**
- * The es version (5, 6, or '')
+ * The module type to use ('cjs' or 'mjs')
  */
-const es = (process.argv[2] || '6')
+const target = (process.argv[2] || 'mjs')
+
+/**
+ * The bundle directory name
+ */
+const bundle = (process.argv[3] || 'bundle');
 
 /**
  * @param {string} name    The file name to turn into a Regular expression
@@ -55,11 +60,11 @@ function fileSize(file) {
 const compPath = path.dirname(__dirname);
 const nodePath = path.join(__dirname, '..', '..', 'node_modules');
 const mjPath = path.dirname(compPath);
-const jsPath = path.join(__dirname, '..', '..', 'js' + es);
+const jsPath = path.join(__dirname, '..', '..', target);
 const compRE = fileRegExp(compPath);
 const rootRE = fileRegExp(path.dirname(jsPath));
 const nodeRE = fileRegExp(nodePath);
-const fontRE = new RegExp('^.*\\/(mathjax-[^\/-]*)(?:-font)?\/(build|js.?)');
+const fontRE = new RegExp('^.*\\/(mathjax-[^\/-]*)(?:-font)?\/(build|[cm]js)');
 
 /**
  * @param {string} dir   The directory to pack
@@ -69,8 +74,8 @@ async function readJSON(dir) {
   return new Promise((ok, fail) => {
     const buffer = [];
     const child = spawn('npx', [
-      'webpack', '--env', `dir=${dir}`, '--json',
-      '-c', path.relative('.', path.join(compPath, 'webpack.config.' + (es === '5' ? 'cjs' : 'mjs')))
+      'webpack', '--env', `dir=${dir}`, '--env', `bundle=${bundle}`, '--json',
+      '-c', path.relative('.', path.join(compPath, 'webpack.config.' + target))
     ]);
     child.stdout.on('data', (data) => buffer.push(String(data)));
     child.stdout.on('close', (code) => {
@@ -97,7 +102,7 @@ async function webpackLib(dir) {
     //
     let config = require(path.resolve(dir, 'config.json')).webpack;
     if (!config) return;
-    const jsdir = (config.js ? path.resolve(dir, config.js) + es : jsPath);
+    const jsdir = (config.js ? path.resolve(dir, config.js).replace(/js$/, target) : jsPath);
     const jsRE = fileRegExp(jsdir);
     const libRE = fileRegExp(path.resolve(jsdir, '..', 'components'));
 
@@ -144,4 +149,4 @@ async function webpackLib(dir) {
   }
 }
 
-webpackLib(process.argv[3] || '.');
+webpackLib(process.argv[4] || '.');

@@ -38,7 +38,8 @@ const options = {
   pack: true,
   recursive: true,
   verbose: true,
-  es: '6'
+  target: 'mjs',
+  bundle: ''
 };
 
 /**
@@ -47,26 +48,15 @@ const options = {
 const dirs = process.argv.slice(2);
 
 /**
- * Check for options
+ * The options and their actions
  */
-while (dirs[0].substr(0, 2) === '--') {
-  const option = dirs.shift();
-  if (option === '--') {
-    break;
-  }
-  if (option === '--no-subdirs') {
-    options.recursive = false;
-    continue;
-  }
-  if (option.substr(0, 4) === '--es') {
-    options.es = (option.substr(4) || '6');
-    continue;
-  }
-  if (option === '--terse') {
-    options.verbose = false;
-    continue;
-  }
-  if (option === '--build') {
+const optionActions = new Map([
+  ['no-subdirs', () => {options.recursive = false}],
+  ['cjs', () => {options.target = 'cjs'}],
+  ['mjs', () => {options.target = 'mjs'}],
+  ['terse', () => {options.verbose = false}],
+  ['bundle-cjs', () => {options.bundle = 'bundle-cjs'}],
+  ['build', () => {
     options.build = 1;
     if (options.copy === true) {
       options.copy = false;
@@ -74,8 +64,8 @@ while (dirs[0].substr(0, 2) === '--') {
     if (options.pack === true) {
       options.pack = false;
     }
-  }
-  if (option === '--copy') {
+  }],
+  ['copy', () => {
     options.copy = 1;
     if (options.build === true) {
       options.build = false;
@@ -83,8 +73,8 @@ while (dirs[0].substr(0, 2) === '--') {
     if (options.pack === true) {
       options.pack = false;
     }
-  }
-  if (option === '--pack') {
+  }],
+  ['pack', () => {
     options.pack = 1;
     if (options.build === true) {
       options.build = false;
@@ -92,7 +82,23 @@ while (dirs[0].substr(0, 2) === '--') {
     if (options.copy === true) {
       options.copy = false;
     }
+  }]
+]);
+
+/**
+ * Check for options
+ */
+while (dirs[0].substr(0, 2) === '--') {
+  const option = dirs.shift().substr(2);
+  if (option === '') {
+    break;
   }
+  const action = optionActions.get(option);
+  if (!action) {
+    console.error(`Invalid option --${option}`);
+    process.exit();
+  }
+  action();
 }
 
 //
@@ -106,9 +112,9 @@ if (dirs.length === 0) {
  * The commads to run the various scripts
  *  (on Unix, could be done without the 'node ' prefix, but for Windows, these are needed.)
  */
-const build = `node '${path.join(__dirname, 'build')}' '${options.es}'`;
-const copy = `node '${path.join(__dirname, 'copy')}' '${options.es}'`;
-const pack = `node '${path.join(__dirname, 'pack')}' '${options.es}'`;
+const build = `node '${path.join(__dirname, 'build')}' '${options.target}'`;
+const copy = `node '${path.join(__dirname, 'copy')}' '${options.target}' '${options.bundle}'`;
+const pack = `node '${path.join(__dirname, 'pack')}' '${options.target}' '${options.bundle}'`;
 
 /**
  * @param {string} name    The file name to turn into a Regular expression

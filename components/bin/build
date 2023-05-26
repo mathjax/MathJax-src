@@ -41,9 +41,9 @@ const EXPORT_IGNORE = ['type', 'interface'];
 const EXPORT_PROCESS = ['let', 'const', 'var', 'function', 'class', 'namespace'];
 
 /**
- * The ES version to use ('5', '6', or '')
+ * The module type to use ('cjs' or 'mjs')
  */
-const es = (process.argv[2] || '6');
+const target = (process.argv[2] || 'mjs');
 
 /**
  * Read the configuration for the component
@@ -57,7 +57,7 @@ process.chdir(path.dirname(json));
 /**
  * The relative path to the MathJax directory
  */
-const mjPath = path.relative(process.cwd(), path.resolve(__dirname, '..', '..', 'js' + es));
+const mjPath = path.relative(process.cwd(), path.resolve(__dirname, '..', '..', target));
 const mjGlobal = path.join('#js', 'components', 'global.js');
 
 function getType() {
@@ -78,7 +78,7 @@ const EXCLUDE = new Map((config.exclude || []).map(name => [name, true]));  // f
 const EXCLUDESUBDIRS = !!config.excludeSubdirs;                             // exclude subdirectories or not
 const JS = config.js || config.mathjax || mjPath;                           // path to the compiled .js files
 const LIB = config.lib || './lib';                                          // path to the lib directory to create
-const TS = config.ts || JS.replace(/js[56]?$/, 'ts');                       // path to the .ts files
+const TS = config.ts || JS.replace(/[cm]js$/, 'ts');                        // path to the .ts files
 const GLOBAL = config.global || mjGlobal;                                   // path to the global.js file
 const VERSION = config.version || mjGlobal.replace(/global/, 'version');    // path to the version.js file
 const TYPE = config.type || getType();                                      // the module type
@@ -189,7 +189,7 @@ function processLines(file, objects) {
   let source = ((dir.replace(/\//g, '.') + '.' + name).replace(/^\./, '')
                 + (exists(path.resolve(JS, file.replace(/\.ts$/, ''))) ? '_ts' : ''))
       .replace(/\.[^.]*/g, (x) => (x.substr(1).match(/[^a-zA-Z_]/) ? '[\'' + x.substr(1) + '\']' : x));
-  const lines = (es !== '5' ? [] : [
+  const lines = (target === 'mjs' ? [] : [
     '"use strict";',
     `Object.defineProperty(exports, '__esModule', {value: true});`,
   ]);
@@ -199,7 +199,7 @@ function processLines(file, objects) {
       `const def = MathJax._.${source};`
   );
   for (const id of objects) {
-    lines.push(es === '5' ? `exports.${id} = def.${id};` :
+    lines.push(target === 'cjs' ? `exports.${id} = def.${id};` :
                id === 'default' ? `export default def.${id};` : `export const ${id} = def.${id};`);
   }
   return lines;
@@ -269,7 +269,7 @@ function getExtraDirectories() {
  */
 function processGlobal() {
   console.info('  ' + COMPONENT + '.ts');
-  const lines = (es === '5' ? [
+  const lines = (target === 'cjs' ? [
     `const {combineWithMathJax} = require('${GLOBAL}')`,
     `const {VERSION} = require('${VERSION}');`,
     '',
@@ -341,7 +341,7 @@ function processPackage(lines, space, dir) {
       }
       const component = 'module' + (++importCount);
       lines.push(
-        es === '5' ?
+        target === 'cjs' ?
           `const ${component} = require('${relativefile}');` :
           `import * as ${component} from '${relativefile}';`
       );

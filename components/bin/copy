@@ -33,20 +33,28 @@ const path = require('path');
 const INDENT = '  ';
 
 /**
- * The es value (5, 6, or '')
+ * The module type to use ('cjs' or 'mjs')
  */
-const es = (process.argv[2] || '6');
+const target = (process.argv[2] || 'mjs');
+
+/**
+ * The bundle directory name
+ */
+const bundle = (process.argv[3] || 'bundle');
 
 /**
  * The configuration data for the copy operation
  */
-const json = path.resolve(process.argv[3] || '.', 'config.json');
+const json = path.resolve(process.argv[4] || '.', 'config.json');
 const config = require(json).copy;
 if (!config) process.exit();
 process.chdir(path.dirname(json));
 
-if (es !== '6') {
-  config.to = config.to.replace(/\/es6\//, `/es${es}/`);
+/**
+ * Redirect the bundle, if not the default
+ */
+if (bundle !== 'bundle') {
+  config.to = config.to.replace(/\/bundle\//, '/' + bundle + '/');
 }
 
 /**

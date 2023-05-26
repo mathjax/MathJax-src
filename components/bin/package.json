@@ -1,9 +1,10 @@
 {
   "type": "commonjs",
   "imports": {
-    "#js/*": "mathjax-full/js5/*",
-    "#root/*": "mathjax-full/js5/components/cjs/*",
-    "#mml3/*": "mathjax-full/js5/input/mathml/mml3/cjs/*",
+    "#js/*": "mathjax-full/cjs/*",
+    "#source/*": "mathjax-full/components/cjs/*",
+    "#root/*": "mathjax-full/cjs/components/cjs/*",
+    "#mml3/*": "mathjax-full/cjs/input/mathml/mml3/cjs/*",
     "#menu/*": "mj-context-menu/cjs/*",
     "#sre/*": "speech-rule-engine/js/*",
     "#mhchem/*": "mhchemparser/dist/*",

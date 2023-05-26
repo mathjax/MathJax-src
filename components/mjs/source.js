@@ -15,7 +15,7 @@
  *  limitations under the License.
  */
 
-import {src} from './source.cjs';
+import {src} from '#source/source.cjs';
 
 export const source = {
   'core': `${src}/core/core.js`,
