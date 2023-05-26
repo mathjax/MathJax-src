@@ -54,7 +54,7 @@ process.chdir(path.dirname(json));
  * Redirect the bundle, if not the default
  */
 if (bundle !== 'bundle') {
-  config.to = config.to.replace(/\/bundle\//, '/' + bundle + '/');
+  config.to = config.to.replace(/\/bundle(\/|$)/, '/' + bundle + '$1');
 }
 
 /**

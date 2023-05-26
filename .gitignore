@@ -1,8 +1,8 @@
 *~
-node_modules
-components/mjs/**/lib
-components/cjs
-cjs
-mjs
-bundle
-bundle-cjs
+/node_modules
+/components/mjs/**/lib
+/components/cjs
+/cjs
+/mjs
+/bundle
+/bundle-cjs

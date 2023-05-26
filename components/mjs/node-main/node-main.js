@@ -27,8 +27,8 @@ import '../core/core.js';
 import '../adaptors/liteDOM/liteDOM.js';
 import {source} from '../source.js';
 
-const path = eval('require("path")');   // get path from node, not webpack
-const dir = (global.MathJax.config.__dirname || path.dirname(new URL(import.meta.url).pathname));
+const path = eval('require("path")');          // get path from node, not webpack
+const dir = global.MathJax.config.__dirname;   // set up by node-main.mjs or node-main.cjs
 
 /*
  * Set up the initial configuration

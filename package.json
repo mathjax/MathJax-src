@@ -7,8 +7,12 @@
   "main": "components/mjs/node-main/node-main.js",
   "exports": {
     ".": {
-      "import": "./components/mjs/node-main/node-main.js",
-      "require": "./components/cjs/node-main/node-main.js"
+      "import": "./bundle/node-main.mjs",
+      "require": "./bundle/node-main.cjs"
+    },
+    "./source": {
+      "import": "./components/mjs/node-main/node-main.mjs",
+      "require": "./components/cjs/node-main/node-main.cjs"
     },
     "./js/*": {
       "import": "./mjs/*",
