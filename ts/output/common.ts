@@ -56,7 +56,7 @@ export type UnknownBBox = {w: number, h: number, d: number};
 export type UnknownMap = Map<string, UnknownBBox>;
 export type UnknownVariantMap = Map<string, UnknownMap>;
 
-export const FONTPATH = '@mathjax/%%FONT%%-font/es6';
+export const FONTPATH = '@mathjax/%%FONT%%-font';
 
 /*****************************************************************/
 

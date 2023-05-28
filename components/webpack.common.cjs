@@ -38,6 +38,10 @@ function quoteRE(string) {
   return string.replace(/([\\.{}[\]()?*^$])/g, '\\$1');
 }
 
+/**
+ * @param {object} resource  The module resource object from webpack
+ * Wreturn {string}  The full path to the module
+ */
 function fullPath(resource) {
   const file = resource.request ?
         (resource.request.charAt(0) === '.' ?
@@ -70,7 +74,6 @@ const PLUGINS = function (js, dir, target, font, jax, name) {
       './util-pack.js'
     )
   ];
-
 
   //
   // Replace default font with the no-font file

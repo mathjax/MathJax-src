@@ -57,12 +57,14 @@ declare const global: typeof globalThis;
 /**
  * Get the global object as the window, global, globalThis, or a separate global
  */
+const defaultGlobal = {};
 export const GLOBAL = (() => {
-  if (typeof window !== 'undefined') return window;
-  if (typeof global !== 'undefined') return global;
+  if (typeof window !== 'undefined') return window;            // for browsers
+  if (typeof global !== 'undefined') return global;            // for node
   if (typeof globalThis !== 'undefined') return globalThis;
-  return {};
+  return defaultGlobal;                                        // fallback shared object
 })() as any as Window & {MathJax: MathJaxObject | MathJaxConfig};
+
 
 /**
  * @param {any} x     An item to test if it is an object
