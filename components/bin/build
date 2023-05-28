@@ -59,7 +59,7 @@ process.chdir(path.dirname(json));
  * The relative path to the MathJax directory
  */
 const mjPath = path.relative(process.cwd(), path.resolve(__dirname, '..', '..', target));
-const mjGlobal = path.join('#js', 'components', 'global.js');
+const mjGlobal = path.join('..', mjPath, 'components', 'global.js');
 
 function getType() {
   const component = config.component || 'part';
@@ -337,9 +337,6 @@ function processPackage(lines, space, dir) {
       const file = PACKAGE.shift();
       const name = path.basename(file);
       let relativefile = path.join('..', JS, dir, name).replace(/\.ts$/, '.js')
-      if (relativefile.substr(0, mjPath.length + 3) === '../' + mjPath) {
-        relativefile = relativefile.replace(/(\.\.\/)+js[56]\//, '#js/');
-      }
       const component = 'module' + (++importCount);
       lines.push(
         target === 'cjs' ?

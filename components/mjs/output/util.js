@@ -2,8 +2,8 @@ import {combineDefaults, combineWithMathJax} from '#js/components/global.js';
 import {Package} from "#js/components/package.js";
 
 export const FONTPATH = (typeof document === 'undefined' ?
-                         '@mathjax/%%FONT%%-font/bundle' :
-                         'https://cdn.jsdelivr.net/npm/%%FONT%%-font/bundle');
+                         '@mathjax/%%FONT%%-font' :
+                         'https://cdn.jsdelivr.net/npm/%%FONT%%-font');
 
 export const OutputUtil = {
   config(jax, jaxClass, defaultFont, fontClass) {

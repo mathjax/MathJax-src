@@ -1,12 +1,12 @@
 {
-  "extends": "./tsconfig-cjs.json",
+  "extends": "./cjs.json",
   "compilerOptions": {
     "allowJs": true,
     "sourceMap": false,
     "declaration": false,
-    "outDir": "components/cjs"
+    "outDir": "../components/cjs"
   },
   "include": [
-    "components/mjs/**/*.js"
+    "../components/mjs/**/*.js"
   ]
 }

@@ -18,8 +18,6 @@
       "import": "./mjs/*",
       "require": "./cjs/*"
     },
-    "./js6/*": "./mjs/*",
-    "./js5/*": "./cjs/*",
     "./components/src/*": {
       "import": "./components/mjs/*",
       "require": "./components/cjs/*"
@@ -35,7 +33,7 @@
     "#menu/*": "mj-context-menu/js/*",
     "#sre/*": "speech-rule-engine/mjs/*",
     "#mhchem/*": "mhchemparser/esm/*",
-    "#default-font/*": "mathjax-modern-font/js6/*"
+    "#default-font/*": "mathjax-modern-font/mjs/*"
   },
   "files": [
     "/bundle",
@@ -46,7 +44,7 @@
     "LICENSE",
     "README.md",
     "CONTRIBUTING.md",
-    "tsconfig*.json"
+    "tsconfig*"
   ],
   "repository": {
     "type": "git",
@@ -74,14 +72,14 @@
     "copy:cjs": "npx copyfiles -u 2 'components/mjs/**/*' components/cjs",
     "=============================================================================== src": "",
     "presrc:cjs": "echo 'Compiling component files' && npm run -s clean:cjs",
-    "src:cjs": "npx tsc --project tsconfig-components.json",
+    "src:cjs": "npx tsc --project tsconfig/components.json",
     "postsrc:cjs": "npm run -s src:copy && npm run -s copy:pkg components/cjs && npm run -s clean:lib cjs",
     "src:copy": "npx copyfiles -u 2 -e 'components/mjs/**/*.js' 'components/mjs/**/*' components/cjs",
     "=============================================================================== compile": "",
     "_cjs:pkg": "npm run -s copy:pkg cjs",
     "_mjs:pkg": "",
     "_pre_compile": "pre() { npm run clean:dir $1; }; pre",
-    "_compile": "comp() { npx tsc --project tsconfig-$1.json; }; comp",
+    "_compile": "comp() { npx tsc --project tsconfig/$1.json; }; comp",
     "_post_compile": "post() { npm run -s copy:mj2 $1 && npm run -s copy:mml3 $1 && npm run -s _$1:pkg; }; post",
     "_compile_": "comp() { npm run _pre_compile $1; npm run _compile $1; npm run _post_compile $1; }; comp",
     "compile-cjs": "npm run -s _compile_ cjs && npm run src:cjs",
@@ -112,8 +110,8 @@
     "=============================================================================== install": "",
     "link:full": "node -e 'require(\"fs\").symlinkSync(process.cwd(), \"node_modules/mathjax-full\")'",
     "install": "npm run -s link:full",
-    "use-es5": "echo '{\n  \"extends\": \"./tsconfig-cjs.json\"\n}' > tsconfig.json",
-    "use-es6": "echo '{\n  \"extends\": \"./tsconfig-mjs.json\"\n}' > tsconfig.json"
+    "use-es5": "echo '{\n  \"extends\": \"./tsconfig/cjs.json\"\n}' > tsconfig.json",
+    "use-es6": "echo '{\n  \"extends\": \"./tsconfig/mjs.json\"\n}' > tsconfig.json"
   },
   "devDependencies": {
     "copyfiles": "^2.4.1",

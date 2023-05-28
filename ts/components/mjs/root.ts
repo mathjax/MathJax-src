@@ -26,6 +26,6 @@
  */
 export function esRoot(): string {
   return new URL(import.meta.url).pathname
-    .replace(/.js\/components\/mjs\/root.js$/, (_) => 'bundle');
+    .replace(/[cm]js\/components\/[cm]js\/root.js$/, (_) => 'bundle');
 }
 
