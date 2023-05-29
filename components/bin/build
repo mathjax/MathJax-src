@@ -178,7 +178,7 @@ function processParts(parts) {
  *
  * @param {string} name       The path of the file relative to the root .ts directory
  * @param {string[]} objects  Array of names of the objects exported by the file
- * @return {[string[], string[]]}  Array of lines for the contents of the library file (cjs and mjs separately)
+ * @return {string[]}         Array of lines for the contents of the library file
  */
 function processLines(file, objects) {
   if (objects.length === 0) return [];
@@ -187,13 +187,13 @@ function processLines(file, objects) {
   const dots = dir.replace(/[^\/]+/g, '..') || '.';
   const relative = path.join(dots, '..', JS, dir, path.basename(file)).replace(/\.ts$/, '.js');
   const name = path.parse(file).name;
-  let source = ((dir.replace(/\//g, '.') + '.' + name).replace(/^\./, '')
-                + (exists(path.resolve(JS, file.replace(/\.ts$/, ''))) ? '_ts' : ''))
-      .replace(/\.[^.]*/g, (x) => (x.substr(1).match(/[^a-zA-Z_]/) ? '[\'' + x.substr(1) + '\']' : x));
   const lines = (target === 'mjs' ? [] : [
     '"use strict";',
     `Object.defineProperty(exports, '__esModule', {value: true});`,
   ]);
+  let source = ((dir.replace(/\//g, '.') + '.' + name).replace(/^\./, '')
+                + (exists(path.resolve(JS, file.replace(/\.ts$/, ''))) ? '_ts' : ''))
+      .replace(/\.[^.]*/g, (x) => (x.substr(1).match(/[^a-zA-Z_]/) ? '[\'' + x.substr(1) + '\']' : x));
   lines.push(
     objects.indexOf('MathJax') >= 0 ?
       `const g = (typeof window !== 'undefined' ? window : global);\nconst def = g.MathJax._.${source};` :

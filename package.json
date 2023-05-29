@@ -110,8 +110,8 @@
     "=============================================================================== install": "",
     "link:full": "node -e 'require(\"fs\").symlinkSync(process.cwd(), \"node_modules/mathjax-full\")'",
     "install": "npm run -s link:full",
-    "use-es5": "echo '{\n  \"extends\": \"./tsconfig/cjs.json\"\n}' > tsconfig.json",
-    "use-es6": "echo '{\n  \"extends\": \"./tsconfig/mjs.json\"\n}' > tsconfig.json"
+    "use-cjs": "echo '{\n  \"extends\": \"./tsconfig/cjs.json\"\n}' > tsconfig.json",
+    "use-mjs": "echo '{\n  \"extends\": \"./tsconfig/mjs.json\"\n}' > tsconfig.json"
   },
   "devDependencies": {
     "copyfiles": "^2.4.1",

@@ -1562,7 +1562,7 @@ MathJax.Message = {
 
 MathJax.Hub = {
   config: {
-    root: "./mathjax2/legacy",
+    root: "./legacy",
     config: [],      // list of configuration files to load
     jax: [],         // list of input and output jax to load
     extensions: [],  // list of extensions to load
