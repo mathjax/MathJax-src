@@ -214,10 +214,11 @@ export function CommonMsqrtMixin<
      */
     public getPQ(sbox: BBox): [number, number] {
       const t = this.font.params.rule_thickness;
+      const s = this.font.params.surd_height;
       const p = (this.node.attributes.get('displaystyle') ? this.font.params.x_height : t);
       const q = (sbox.h + sbox.d > this.surdH ?
-                 ((sbox.h + sbox.d) - (this.surdH - 2 * t - p / 2)) / 2 :
-                 t + p / 4);
+                 ((sbox.h + sbox.d) - (this.surdH - t - s - p / 2)) / 2 :
+                 s + p / 4);
       return [p, q];
     }
 
@@ -240,9 +241,10 @@ export function CommonMsqrtMixin<
      */
     public getStretchedSurd() {
       const t = this.font.params.rule_thickness;
+      const s = this.font.params.surd_height;
       const p = (this.node.attributes.get('displaystyle') ? this.font.params.x_height : t);
       const {h, d} = this.childNodes[this.base].getOuterBBox();
-      this.surdH = h + d + 2 * t + p / 4;
+      this.surdH = h + d + t + s + p / 4;
       this.surd.getStretchedVariant([this.surdH - d, d], true);
     }
 
@@ -269,9 +271,10 @@ export function CommonMsqrtMixin<
       const basebox = new BBox(this.childNodes[this.base].getOuterBBox());
       const q = this.getPQ(surdbox)[1];
       const t = this.font.params.rule_thickness;
+      const s = this.font.params.surd_height;
       const H = basebox.h + q + t;
       const [x] = this.getRootDimens(surdbox, H);
-      bbox.h = H + t;
+      bbox.h = H + s;
       this.combineRootBBox(bbox, surdbox, H);
       bbox.combine(surdbox, x, H - surdbox.h);
       bbox.combine(basebox, x + surdbox.w, 0);

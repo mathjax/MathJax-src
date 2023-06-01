@@ -221,6 +221,7 @@ export type FontParameters = {
   delimiterfactor: number,
   delimitershortfall: number,
 
+  rule_factor: number,
   min_rule_thickness: number,
   separation_factor: number,
   extra_ic: number
@@ -574,13 +575,14 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     big_op_spacing4:  .6,
     big_op_spacing5:  .1,
 
-    surd_height:      .075,
+    surd_height:      .06,
 
     scriptspace:         .05,
     nulldelimiterspace:  .12,
     delimiterfactor:     901,
     delimitershortfall:   .3,
 
+    rule_factor:         1.25,     // multiply surd_height and rule_thickness by this for CHTML
     min_rule_thickness:  1.25,     // in pixels
     separation_factor:   1.75,     // expansion factor for spacing e.g. between accents and base
     extra_ic:            .033      // extra spacing for scripts (compensate for not having actual ic values)

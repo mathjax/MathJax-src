@@ -111,7 +111,8 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       },
 
       'mjx-stretchy-v': {
-        display: 'inline-block'
+        display: 'inline-block',
+        'text-align': 'center'
       },
       'mjx-stretchy-v > *': {
         display: 'block',
