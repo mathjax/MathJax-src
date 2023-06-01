@@ -243,6 +243,9 @@ export const ChtmlMsubsup = (function <N, T, D>(): ChtmlMsubsupClass<N, T, D> {
       const ic = this.getAdjustedIc();
       if (ic) {
         adaptor.setStyle(sup.dom[0], 'marginLeft', this.em(ic / sup.bbox.rscale));
+        if (!this.baseIsChar) {
+          adaptor.setStyle(sub.dom[0], 'marginLeft', this.em(ic / sup.bbox.rscale));
+        }
       }
       if (this.baseRemoveIc) {
         adaptor.setStyle(stack, 'marginLeft', this.em(-this.baseIc));

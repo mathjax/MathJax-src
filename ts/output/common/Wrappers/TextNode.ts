@@ -27,6 +27,7 @@ import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '
 import {CommonOutputJax} from '../../common.js';
 import {BBox} from '../../../util/BBox.js';
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
+import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 
 /*****************************************************************/
 /**
@@ -164,10 +165,10 @@ export function CommonTextNodeMixin<
         //
         // Loop through the characters and add them in one by one
         //
-        for (const char of chars) {
-          let [h, d, w, data] = this.getVariantChar(variant, char);
+        for (let i = 0; i < chars.length; i++) {
+          let [h, d, w, data] = this.getVariantChar(variant, chars[i]);
           if (data.unknown) {
-            utext += String.fromCodePoint(char);
+            utext += String.fromCodePoint(chars[i]);
           } else {
             utext = this.addUtextBBox(bbox, utext, variant);
             //
@@ -177,6 +178,20 @@ export function CommonTextNodeMixin<
             bbox.ic = data.ic || 0;
             bbox.sk = data.sk || 0;
             bbox.dx = data.dx || 0;
+            if (!data.oc || i < chars.length - 1) continue;
+            const children = this.parent.childNodes;
+            if (this.node !== children[children.length - 1].node) continue;
+            const parent = this.parent.parent.node;
+            let next = (parent.isKind('mrow') || parent.isInferred ?
+                        parent.childNodes[parent.childIndex(this.parent.node) + 1] : null);
+            if (next?.isKind('mo') && (next as MmlMo).getText() === '\u2062') {
+              next = parent.childNodes[parent.childIndex(next) + 1];
+            }
+            if (!next || next.attributes.get('mathvariant') !== variant) {
+              bbox.ic = data.oc;
+            } else {
+              bbox.oc = data.oc;
+            }
           }
         }
         this.addUtextBBox(bbox, utext, variant);

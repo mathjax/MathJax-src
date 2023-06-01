@@ -115,14 +115,17 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<N, T, D> 
       const variant = this.parent.variant;
       const text = (this.node as TextNode).getText();
       if (text.length === 0) return;
+      const bbox = this.getBBox();
       if (variant === '-explicitFont') {
         const {scale} = this.parent.getBBox();
-        adaptor.append(parent, this.jax.unknownText(text, variant, this.getBBox().w, scale));
+        adaptor.append(parent, this.jax.unknownText(text, variant, bbox.w, scale));
       } else {
         let utext = '';
         const chars = this.remappedText(text, variant);
         const H = (chars.length > 1 ? this.em(this.parent.getBBox().h) : '');
-        for (const n of chars) {
+        const m = chars.length;
+        for (let i = 0; i < m; i++) {
+          const n = chars[i];
           const data = (this.getVariantChar(variant, n) as ChtmlCharData)[3];
           if (data.unknown) {
             utext += String.fromCodePoint(n);
@@ -132,6 +135,9 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<N, T, D> 
             const node = adaptor.append(parent, this.html('mjx-c', {class: this.char(n) + (font ? ' ' + font : '')}, [
               this.text(data.c || String.fromCodePoint(n))
             ]));
+            if (i < m - 1 || bbox.oc) {
+              adaptor.setAttribute(node as N, 'noic', 'true');
+            }
             if (H) {
               //
               //  Work around WebKit alignment bug by making all letters in

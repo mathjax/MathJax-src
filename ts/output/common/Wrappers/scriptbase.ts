@@ -543,8 +543,7 @@ export function CommonScriptbaseMixin<
      * @override
      */
     public getAdjustedIc(): number {
-      const bbox = this.baseCore.getOuterBBox();
-      return (bbox.ic ? 1.05 * bbox.ic + .05 : 0) * this.baseScale;
+      return (this.baseIc ? 1.05 * this.baseIc + .05 : 0);
     }
 
     /**
