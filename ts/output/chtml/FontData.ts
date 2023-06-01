@@ -496,7 +496,8 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
     const letter = (options.f !== undefined ? options.f : vletter);
     const font = options.ff || (letter ? `${this.cssFontPrefix}-${letter}` : '');
     const selector = 'mjx-c' + this.charSelector(n) + (font ? '.' + font : '');
-    styles[selector] = {padding: this.padding(data, options.oc || options.ic || 0)} as StyleData;
+    const padding = options.oc || options.ic || 0;
+    styles[selector] = {padding: this.padding(data, padding)} as StyleData;
     if (options.oc) {
       styles[selector + '[noic]'] = {'padding-right': this.em(data[2])};
     }
