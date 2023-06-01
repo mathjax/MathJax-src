@@ -435,9 +435,20 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
    * @param {ChtmlDelimiterData} data  The data for the delimiter whose CSS is to be added
    */
   protected addDelimiterHStyles(styles: StyleList, n: number, c: string, data: ChtmlDelimiterData) {
-    const HDW = data.HDW as ChtmlCharData;
+    const HDW = [...data.HDW] as ChtmlCharData;
     const [beg, ext, end, mid] = data.stretch;
     const [begV, extV, endV, midV] = this.getStretchVariants(n);
+    if (data.hd && !this.options.mathmlSpacing) {
+      //
+      // Interpolate between full character height/depth and that of the extender,
+      //   which is what TeX uses, but TeX's fonts are set up to have extra height
+      //   or depth for some extenders, so this factor helps get spacing that is closer
+      //   to TeX spacing.
+      //
+      const t = this.params.extender_factor;
+      HDW[0] = HDW[0] * (1 - t) + data.hd[0] * t;
+      HDW[1] = HDW[1] * (1 - t) + data.hd[1] * t;
+    }
     const Wb = this.addDelimiterHPart(styles, c, 'beg', beg, begV, HDW);
     this.addDelimiterHPart(styles, c, 'ext', ext, extV, HDW);
     const We = this.addDelimiterHPart(styles, c, 'end', end, endV, HDW);
