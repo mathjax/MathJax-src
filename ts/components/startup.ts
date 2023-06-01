@@ -73,6 +73,11 @@ export type COMMONJAX = CommonOutputJax<any, any, any, any, any, any, any, any, 
 export type TEX = TeX<any, any, any>;
 
 /**
+ * Array of InputJax also with keys using name of jax
+ */
+export type JAXARRAY = INPUTJAX[] & {[name: string]: INPUTJAX};
+
+/**
  * A function to extend a handler class
  */
 export type HandlerExtension = (handler: HANDLER) => HANDLER;
@@ -84,7 +89,7 @@ export interface MathJaxObject extends MJObject {
   config: MathJaxConfig;
   startup: {
     constructors: {[name: string]: any};
-    input: INPUTJAX[];
+    input: JAXARRAY;
     output: OUTPUTJAX;
     handler: HANDLER;
     adaptor: DOMADAPTOR;
@@ -107,7 +112,7 @@ export interface MathJaxObject extends MJObject {
     makeOutputMethods(iname: string, oname: string, input: INPUTJAX): void;
     makeMmlMethods(name: string, input: INPUTJAX): void;
     makeResetMethod(name: string, input: INPUTJAX): void;
-    getInputJax(): INPUTJAX[];
+    getInputJax(): JAXARRAY;
     getOutputJax(): OUTPUTJAX;
     getAdaptor(): DOMADAPTOR;
     getHandler(): HANDLER;
@@ -142,7 +147,7 @@ export namespace Startup {
   /**
    * The array of InputJax instances (created after everything is loaded)
    */
-  export let input: INPUTJAX[] = [];
+  export let input: JAXARRAY = [] as JAXARRAY;
 
   /**
    * The OutputJax instance (created after everything is loaded)
@@ -473,14 +478,15 @@ export namespace Startup {
   }
 
   /**
-   * @return {INPUTJAX[]}  The array of instances of the registered input jax
+   * @return {JAXARRAY}  The array of instances of the registered input jax
    */
-  export function getInputJax(): INPUTJAX[] {
-    const jax = [] as INPUTJAX[];
+  export function getInputJax(): JAXARRAY {
+    const jax = [] as JAXARRAY;
     for (const name of CONFIG.input) {
       const inputClass = constructors[name];
       if (inputClass) {
-        jax.push(new inputClass(MathJax.config[name]));
+        jax[name] = new inputClass(MathJax.config[name]);
+        jax.push(jax[name]);
       } else {
         throw Error('Input Jax "' + name + '" is not defined (has it been loaded?)');
       }

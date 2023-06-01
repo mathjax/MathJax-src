@@ -779,8 +779,9 @@ export class Menu {
   protected applySettings() {
     this.setTabOrder(this.settings.inTabOrder);
     this.document.options.enableAssistiveMml = this.settings.assistiveMml;
-    const promise = (this.settings.renderer !== this.defaultSettings.renderer ?
-                     this.setRenderer(this.settings.renderer, false) :
+    const renderer = this.settings.renderer.replace(/[^a-zA-Z0-9]/g, '') || 'CHTML';
+    const promise = (renderer !== this.defaultSettings.renderer ?
+                     this.setRenderer(renderer, false) :
                      Promise.resolve());
     promise.then(() => {
       this.document.outputJax.options.scale = parseFloat(this.settings.scale);
@@ -822,7 +823,7 @@ export class Menu {
    *                               and rerendering complete
    */
   protected setRenderer(jax: string, rerender: boolean = true): Promise<void> {
-    if (this.jax[jax]) {
+    if (this.jax.hasOwnProperty(jax) && this.jax[jax]) {
       return this.setOutputJax(jax, rerender);
     }
     const name = jax.toLowerCase();
