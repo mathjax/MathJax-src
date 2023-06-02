@@ -31,7 +31,7 @@
     "#root/*": "mathjax-full/mjs/components/mjs/*",
     "#mml3/*": "mathjax-full/mjs/input/mathml/mml3/mjs/*",
     "#menu/*": "mj-context-menu/js/*",
-    "#sre/*": "speech-rule-engine/mjs/*",
+    "#sre/*": "speech-rule-engine/js/*",
     "#mhchem/*": "mhchemparser/esm/*",
     "#default-font/*": "mathjax-modern-font/mjs/*"
   },
@@ -131,6 +131,6 @@
     "mathjax-modern-font": "^1.0.0-beta.5",
     "mhchemparser": "^4.2.1",
     "mj-context-menu": "^0.8.1",
-    "speech-rule-engine": "^4.1.0-beta.4"
+    "speech-rule-engine": "^4.1.0-beta.5"
   }
 }
