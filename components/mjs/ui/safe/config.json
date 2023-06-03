@@ -1,0 +1,10 @@
+{
+  "build": {
+    "component": "ui/safe",
+    "targets": ["ui/safe"]
+  },
+  "webpack": {
+    "name": "ui/safe",
+    "libs": ["components/src/core/lib"]
+  }
+}

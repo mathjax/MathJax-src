@@ -1,0 +1,12 @@
+{
+  "extends": "./cjs.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "sourceMap": false,
+    "declaration": false,
+    "outDir": "../components/cjs"
+  },
+  "include": [
+    "../components/mjs/**/*.js"
+  ]
+}

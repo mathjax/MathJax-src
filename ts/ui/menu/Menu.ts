@@ -41,11 +41,7 @@ import {MenuMathDocument} from './MenuHandler.js';
 import * as MenuUtil from './MenuUtil.js';
 
 
-import {Info} from 'mj-context-menu/js/info.js';
-import {Parser} from 'mj-context-menu/js/parse.js';
-import {Rule} from 'mj-context-menu/js/item_rule.js';
-import {CssStyles} from 'mj-context-menu/js/css_util.js';
-import {Submenu} from 'mj-context-menu/js/item_submenu.js';
+import {Info, Parser, Rule, CssStyles, Submenu} from './mj-context-menu.js';
 
 
 /*==========================================================================*/

@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/newcommand",
+    "component": "input/tex/extensions/newcommand",
+    "targets": ["input/tex/newcommand"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/newcommand",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

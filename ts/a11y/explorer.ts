@@ -32,7 +32,7 @@ import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 
 import {ExplorerPool, RegionPool} from './explorer/ExplorerPool.js';
 
-import Sre from './sre.js';
+import {Sre} from './sre.js';
 
 /**
  * Generic constructor for Mixins

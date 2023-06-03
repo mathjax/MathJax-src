@@ -1,0 +1,16 @@
+{
+  "build": {
+    "id": "[tex]/mathtools",
+    "component": "input/tex/extensions/mathtools",
+    "targets": ["input/tex/mathtools"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/mathtools",
+    "libs": [
+      "components/src/input/tex/extensions/ams/lib",
+      "components/src/input/tex/extensions/newcommand/lib",
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

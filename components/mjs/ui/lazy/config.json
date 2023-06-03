@@ -1,0 +1,10 @@
+{
+  "build": {
+    "component": "ui/lazy",
+    "targets": ["ui/lazy"]
+  },
+  "webpack": {
+    "name": "ui/lazy",
+    "libs": ["components/src/core/lib"]
+  }
+}

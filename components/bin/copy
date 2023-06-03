@@ -33,9 +33,29 @@ const path = require('path');
 const INDENT = '  ';
 
 /**
+ * The module type to use ('cjs' or 'mjs')
+ */
+const target = (process.argv[2] || 'mjs');
+
+/**
+ * The bundle directory name
+ */
+const bundle = (process.argv[3] || 'bundle');
+
+/**
  * The configuration data for the copy operation
  */
-const config = JSON.parse(fs.readFileSync(process.argv[2] || 'copy.json'));
+const json = path.resolve(process.argv[4] || '.', 'config.json');
+const config = require(json).copy;
+if (!config) process.exit();
+process.chdir(path.dirname(json));
+
+/**
+ * Redirect the bundle, if not the default
+ */
+if (bundle !== 'bundle') {
+  config.to = config.to.replace(/\/bundle(\/|$)/, '/' + bundle + '$1');
+}
 
 /**
  * Get the directory for node modules (either the parent of the MathJax directory,

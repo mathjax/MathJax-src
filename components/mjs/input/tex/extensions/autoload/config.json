@@ -1,0 +1,16 @@
+{
+  "build": {
+    "id": "[tex]/autoload",
+    "component": "input/tex/extensions/autoload",
+    "targets": ["input/tex/autoload"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/autoload",
+    "libs": [
+      "components/src/input/tex/extensions/require/lib",
+      "components/src/input/tex-base/lib",
+      "components/src/startup/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

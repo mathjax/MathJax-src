@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/action",
+    "component": "input/tex/extensions/action",
+    "targets": ["input/tex/action"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/action",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

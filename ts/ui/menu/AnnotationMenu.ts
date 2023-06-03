@@ -22,8 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Submenu} from 'mj-context-menu/js/item_submenu.js';
-import {SubMenu} from 'mj-context-menu/js/sub_menu.js';
+import {SubMenu, Submenu} from './mj-context-menu.js';
 import {MJContextMenu} from './MJContextMenu.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {SelectableInfo} from './SelectableInfo.js';

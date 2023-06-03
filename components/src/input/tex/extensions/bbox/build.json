@@ -1,5 +1,0 @@
-{
-  "id": "[tex]/bbox",
-  "component": "input/tex/extensions/bbox",
-  "targets": ["input/tex/bbox"]
-}

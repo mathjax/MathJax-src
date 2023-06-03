@@ -25,7 +25,7 @@
  */
 
 import {MathJax as MJGlobal, MathJaxObject as MJObject,
-        MathJaxConfig as MJConfig, combineWithMathJax, combineDefaults} from './global.js';
+        MathJaxConfig as MJConfig, combineWithMathJax, combineDefaults, GLOBAL as global} from './global.js';
 
 import {MathDocument} from '../core/MathDocument.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
@@ -120,11 +120,6 @@ export interface MathJaxObject extends MJObject {
   };
   [name: string]: any;    // Needed for the methods created by the startup module
 }
-
-/*
- * Access to the browser document
- */
-declare var global: {document: Document};
 
 /**
  * The implementation of the startup module

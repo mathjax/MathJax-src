@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/units",
+    "component": "input/tex/extensions/units",
+    "targets": ["input/tex/units"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/units",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

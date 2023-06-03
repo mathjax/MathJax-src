@@ -1,0 +1,16 @@
+{
+  "build": {
+    "component": "input/tex-full",
+    "targets": [
+      "input/tex.ts",
+      "input/tex"
+    ]
+  },
+  "webpack": {
+    "name": "input/tex-full",
+    "libs": [
+      "components/src/startup/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

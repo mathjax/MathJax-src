@@ -24,9 +24,8 @@
 import { SpeechExplorer } from './explorer/KeyExplorer.js';
 import { ExplorerMathItem } from './explorer.js';
 import {MJContextMenu} from '../ui/menu/MJContextMenu.js';
-import {Submenu} from 'mj-context-menu/js/item_submenu.js';
-import {SubMenu} from 'mj-context-menu/js/sub_menu.js';
-import Sre from './sre.js';
+import {SubMenu, Submenu} from '../ui/menu/mj-context-menu.js';
+import {Sre} from './sre.js';
 
 /**
  * Values for the ClearSpeak preference variables.
