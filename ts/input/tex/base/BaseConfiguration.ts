@@ -107,7 +107,7 @@ function filterNonscript({data}: {data: ParseOptions}) {
     //  This is the list of mspace elements or mrow > mstyle > mspace
     //    that followed \nonscript macros to be tested for removal.
     //
-    if (mml.attributes.get('scriptlevel') > 0) {
+    if (mml.attributes.get('scriptlevel') as number > 0) {
       //
       //  The mspace needs to be removed, since we are in a script style.
       //  Remove it from the DOM and from the list of mspace elements.
