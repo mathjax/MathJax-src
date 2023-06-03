@@ -318,12 +318,12 @@ export class OverItem extends BaseItem {
         NodeUtil.setAttribute(mml, 'linethickness',
                               this.getProperty('thickness') as string);
       }
-      if (this.getProperty('open') || this.getProperty('close')) {
+      if (this.getProperty('ldelim') || this.getProperty('rdelim')) {
         // @test Choose
         NodeUtil.setProperty(mml, 'withDelims', true);
         mml = ParseUtil.fixedFence(this.factory.configuration,
-                                   this.getProperty('open') as string, mml,
-                                   this.getProperty('close') as string);
+                                   this.getProperty('ldelim') as string, mml,
+                                   this.getProperty('rdelim') as string);
       }
       return [[this.factory.create('mml', mml), item], true];
     }

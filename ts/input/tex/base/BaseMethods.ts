@@ -524,12 +524,12 @@ BaseMethods.Over = function(parser: TexParser, name: string, open: string, close
   const mml = parser.itemFactory.create('over').setProperty('name', parser.currentCS) ;
   if (open || close) {
     // @test Choose
-    mml.setProperty('open', open);
-    mml.setProperty('close', close);
+    mml.setProperty('ldelim', open);
+    mml.setProperty('rdelim', close);
   } else if (name.match(/withdelims$/)) {
     // @test Over With Delims, Above With Delims
-    mml.setProperty('open', parser.GetDelimiter(name));
-    mml.setProperty('close', parser.GetDelimiter(name));
+    mml.setProperty('ldelim', parser.GetDelimiter(name));
+    mml.setProperty('rdelim', parser.GetDelimiter(name));
   }
   if (name.match(/^\\above/)) {
     // @test Above, Above With Delims

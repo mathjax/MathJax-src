@@ -22,7 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {ParseMethod} from '../Types.js';
+import {ParseMethod, ParseResult} from '../Types.js';
 import BaseMethods from '../base/BaseMethods.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
@@ -31,6 +31,7 @@ import ParseUtil from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import {NodeFactory} from '../NodeFactory.js';
 import {Macro} from '../Symbol.js';
+import {AutoOpen} from './PhysicsItems.js';
 
 
 let PhysicsMethods: Record<string, ParseMethod> = {};
@@ -925,11 +926,27 @@ function makeDiagMatrix(elements: string[], anti: boolean) {
  * @param {string} fence The fence.
  * @param {number} texclass The TeX class.
  */
-PhysicsMethods.AutoClose = function(parser: TexParser, fence: string, _texclass: number) {
-  const mo = parser.create('token', 'mo', {...ParseUtil.getFontDef(parser), stretchy: false}, fence);
-  const item = parser.itemFactory.create('mml', mo).
-    setProperties({autoclose: fence});
-  parser.Push(item);
+PhysicsMethods.AutoClose = function(parser: TexParser, fence: string, texclass: number): ParseResult {
+  //
+  // Get the top item, skipping an \over item, if there is one.
+  //
+  let top = parser.stack.Top();
+  if (top.isKind('over')) {
+    top = parser.stack.Top(2);
+  }
+  //
+  //  If the top isn't an AutoOpen, or this isn't its closing fence,
+  //    then process the fence as a normal character
+  //
+  if (!top.isKind('auto open') || !(top as AutoOpen).closing(fence)) {
+    return false;
+  }
+  //
+  // Close any open \over items, then push the mo for the fence.
+  //
+  const mo = parser.create('token', 'mo', {texClass: texclass}, fence);
+  parser.Push(parser.itemFactory.create('close').setProperties({'pre-autoclose': true}));
+  parser.Push(parser.itemFactory.create('mml', mo).setProperties({autoclose: true}));
 };
 
 
