@@ -143,7 +143,7 @@ export class Menu {
       autocollapse: false,
       collapsible: false,
       inTabOrder: true,
-      assistiveMml: true,
+      assistiveMml: false,
       explorer: false
     },
     jax: {
@@ -784,6 +784,7 @@ export class Menu {
                      this.setRenderer(renderer, false) :
                      Promise.resolve());
     promise.then(() => {
+      this.document.options.enableExplorer = this.settings.explorer;
       this.document.outputJax.options.scale = parseFloat(this.settings.scale);
       this.document.outputJax.options.displayOverflow = this.settings.overflow.toLowerCase();
       this.document.outputJax.options.linebreaks.inline = this.settings.breakInline;

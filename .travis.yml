@@ -6,8 +6,10 @@ sudo: false
 script:
 - components/bin/version
 - npm install
-- npm run compile
-- npm run make-components
+- npm link
+- npm link mathjax-full
+- npm run -s compile
+- npm run -s make-components
 branches:
   only:
   - "/^\\d+\\.\\d+/"
@@ -15,7 +17,8 @@ deploy:
   provider: npm
   email: manager@mathjax.org
   api_key:
-    secure: iiJYaydsd6nypSMgjvQiTYIy+YF/oil5fqfVLmMkAQtykAqE5oS/HcJ6QxQa8DKHQCmNNhmUqMnD7H5jVhXGcbhEcx7dNxr7pXkrY2Vkyj8voYFIfZ05rwfaojQQPlPdrkwiLmAcUnz1v9gP20M6uVJrhVpBSe4bfHxSHbSUBjlRu4md8fXyA9cLJ3hu/QHV2ahjRDHL+axklCH8YFMW2bN7IRYALUaFeN6gZFWQvq6A4gT1zaFo0yTsej5z+PmyvDHYGzI1KfUioNa81KMWvSMIkRooJes2JrDFdo4HYXgYhZ/wb+7FLOJGeLLQejfQiVw+MS+7R+C6Ss/TcxddeBGg+x9+pZY4AvnVjuWfYW7WSh+iMZ1ujFE3xhqjVUI6WpowSfLK2lguY/8AZ1hKuWxnWw/UwCGcy6qOG0HMyE05mkl+VvPMITckkkeM/an4k7PeR+DY9L25Imp0jmpCyfk72KXMAEgVLAjnsy+l0EnZWK7oeYzDwEaw8HdOCmKKraRYFSetbqC+25g1iKc8ylTs1IxN7HXo0e0dTGSxwtU14L26GMHrC2pVsDdeR7+b5ll0C/6kevK794eQpzSEM50Addb1+fUJ3bn1y22H7OaglnJYxfuP44AYTENOn3fDJrIgcVG/yp273MImSYZiXL+xQBK8ZPEG5z36sH5/iAI=
+    secure: tKo38UbinY2eEkrzOqzYskaSQ4MDo9sD6j2i+t+cL6H03uwfPI0l1cx9YXIBDLK0CeJNFvy+aT6KB2IBtwv3/VfxSY14/IlmB2hXSXnwAFmnsv3Okejh73USceb+1kH4UTKIpP1B49tL+qtJPs/y5j4cpCZPGvYAf2BqI/EQyd1ENsj7wnz0+MQ9Bu+86aA9x7uUsDVPKVpl6yr3nx+nlQbwt8NVccGNLCZIzs6Fo+au8uqh3/IEYhstXFU/SxN3vNdJHKHUCWYAQDn2sJPjBVd1jEAmQkdLAr0DfOA73JnYF6R6C3peLy4MkXOSQWv4lo50ODNi+DRns4S97UvnJw9nWOrgey2mVcIkziiMyXQnogQ0Zu6IyMsRohI/wbaqNKkXZnNTmmTxzLZjZAeBl8EEfEStS3stnh8rMsJENuBKN7eNC3Ps0xJKOBaEIZjgVKA8GH6Vot1yzCMG9Ad4vne+EurEkPw/Bk6WAZ0wXBu56vlv1OGSUOOmYWZx7aA1xKtOahSrL+Y1mIyByBAFmZL22y8BUZF8QImaielnnv5rKXjl5ilEpcnSDZX0b6VC2FqEN5EmGwXAN1PyffC++K4Q0eS3VDD0p1ZQxGRL4dpsZE/ue9AKujdNGeNXJkFTaOKXDSD47nFw+dNt0dPvWwHJb9l7sW811Xe2N9YH4bo=
   on:
     tags: true
   skip_cleanup: true
+
