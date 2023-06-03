@@ -4,7 +4,7 @@
     "target": "ES6",
     "outDir": "../mjs",
     "module": "ES2022",
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "paths": {
       "#js/*": ["../mjs/*"],
       "#source/*": ["../components/mjs/*"],
