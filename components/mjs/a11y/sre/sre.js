@@ -4,8 +4,6 @@ import {Sre} from '#js/a11y/sre.js';
 
 export {Sre};
 
-export {Sre};
-
 if (MathJax.startup) {
   ((typeof window !== 'undefined') ? window : global).
     SREfeature.custom = (loc) => Sre.preloadLocales(loc);

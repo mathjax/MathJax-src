@@ -107,7 +107,7 @@ let allExplorers: {[options: string]: ExplorerInit} = {
     let explorer = ke.SpeechExplorer.create(
       doc, pool, doc.explorerRegions.brailleRegion, node, ...rest) as ke.SpeechExplorer;
     explorer.speechGenerator.setOptions({automark: false as any, markup: 'none',
-                                         locale: 'nemeth', domain: 'default',
+                                         locale: 'euro', domain: 'default',
                                          style: 'default', modality: 'braille'});
     explorer.showRegion = 'viewBraille';
     return explorer;
