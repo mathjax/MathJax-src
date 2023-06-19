@@ -86,16 +86,6 @@ type ExplorerInit = (doc: ExplorerMathDocument, pool: ExplorerPool,
  *  Generation methods for all MathJax explorers available via option settings.
  */
 let allExplorers: {[options: string]: ExplorerInit} = {
-  braille: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
-    let explorer = ke.SpeechExplorer.create(
-      doc, pool, doc.explorerRegions.brailleRegion, node, ...rest) as ke.SpeechExplorer;
-    explorer.speechGenerator.setOptions({automark: false as any, markup: 'none',
-                                         locale: 'euro', domain: 'default',
-                                         style: 'default', modality: 'braille'});
-    explorer.showRegion = 'viewBraille';
-    explorer.sound = true;
-    return explorer;
-  },
   speech: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
     let explorer = ke.SpeechExplorer.create(
       doc, pool, doc.explorerRegions.speechRegion, node, ...rest) as ke.SpeechExplorer;
@@ -111,6 +101,15 @@ let allExplorers: {[options: string]: ExplorerInit} = {
     }
     explorer.sound = true;
     explorer.showRegion = 'subtitles';
+    return explorer;
+  },
+  braille: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
+    let explorer = ke.SpeechExplorer.create(
+      doc, pool, doc.explorerRegions.brailleRegion, node, ...rest) as ke.SpeechExplorer;
+    explorer.speechGenerator.setOptions({automark: false as any, markup: 'none',
+                                         locale: 'euro', domain: 'default',
+                                         style: 'default', modality: 'braille'});
+    explorer.showRegion = 'viewBraille';
     return explorer;
   },
   keyMagnifier: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) =>
