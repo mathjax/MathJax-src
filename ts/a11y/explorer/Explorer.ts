@@ -24,9 +24,9 @@
 
 
 import {A11yDocument, Region} from './Region.js';
-import Sre from '../sre.js';
+import {Sre} from '../sre.js';
 
-import type { ExplorerPool } from './ExplorerPool.js';
+import type {ExplorerPool} from './ExplorerPool.js';
 
 /**
  * A11y explorers.
@@ -46,6 +46,11 @@ export interface Explorer {
    */
   stoppable: boolean;
 
+
+  /**
+   * The pool the explorer belongs to.
+   * @type {ExplorerPool}
+   */
   pool: ExplorerPool;
 
   /**

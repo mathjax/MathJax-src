@@ -71,6 +71,8 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     digits: /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
     // Maximum size of TeX string to process.
     maxBuffer: 5 * 1024,
+    // math-style to use for Latin and Greek letters
+    mathStyle: 'TeX',  // one of TeX, ISO, French, or upright
     formatError: (jax: TeX<any, any, any>, err: TexError) => jax.formatError(err)
   };
 
@@ -176,8 +178,8 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    */
   public compile(math: MathItem<N, T, D>, document: MathDocument<N, T, D>): MmlNode {
     this.parseOptions.clear();
+    this.parseOptions.mathItem = math;
     this.executeFilters(this.preFilters, math, document, this.parseOptions);
-    let display = math.display;
     this.latex = math.math;
     let node: MmlNode;
     this.parseOptions.tags.startEquation(math);
@@ -185,7 +187,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     let parser;
     try {
       parser = new TexParser(this.latex,
-                             {display: display, isInner: false},
+                             {display: math.display, isInner: false},
                              this.parseOptions);
       node = parser.mml();
       globalEnv = parser.stack.global;
@@ -201,14 +203,14 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     if (globalEnv?.indentalign) {
       NodeUtil.setAttribute(node, 'indentalign', globalEnv.indentalign);
     }
-    if (display) {
+    if (math.display) {
       NodeUtil.setAttribute(node, 'display', 'block');
     }
     this.parseOptions.tags.finishEquation(math);
     this.parseOptions.root = node;
     this.executeFilters(this.postFilters, math, document, this.parseOptions);
     //
-    // Add these here to not lose overlow during filtering attributes in postFilters
+    // Add these here to not lose overflow during filtering attributes in postFilters
     //
     if (parser && parser.stack.env.hsize) {
       NodeUtil.setAttribute(node, 'maxwidth', parser.stack.env.hsize);

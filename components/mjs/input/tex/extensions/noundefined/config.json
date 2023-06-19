@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/noundefined",
+    "component": "input/tex/extensions/noundefined",
+    "targets": ["input/tex/noundefined"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/noundefined",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

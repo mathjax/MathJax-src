@@ -21,9 +21,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Menu} from 'mj-context-menu/js/menu.js';
-import {Radio} from 'mj-context-menu/js/item_radio.js';
-import {ParserFactory} from 'mj-context-menu/js/parser_factory.js';
+import {Menu, Radio, ParserFactory} from './mj-context-menu.js';
 
 // Extend the radio buttons with a customizable comparator to work for CS
 // preferences
@@ -40,9 +38,19 @@ export class RadioCompare extends Radio {
    */
   public static fromJson(
     _factory: ParserFactory,
-    {content: content, variable: variable, id: id, comparator: comparator}:
-    {content: string, variable: string, id: string,
-     comparator: (variable: string, id: string) => boolean}, menu: Menu): Radio {
+    {
+      content: content,
+      variable: variable,
+      id: id,
+      comparator: comparator,
+    }: {
+      content: string;
+      variable: string;
+      id: string;
+      comparator: (variable: string, id: string) => boolean;
+    },
+    menu: Menu
+  ): Radio {
     return new this(menu, content, variable, id, comparator);
   }
 

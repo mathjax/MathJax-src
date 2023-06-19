@@ -33,6 +33,7 @@ import {AbstractTags} from '../Tags.js';
 import './BaseMappings.js';
 import {getRange} from '../../../core/MmlTree/OperatorDictionary.js';
 import ParseOptions from '../ParseOptions.js';
+import ParseUtil from '../ParseUtil.js';
 
 /**
  * Remapping some ASCII characters to their Unicode operator equivalent.
@@ -42,6 +43,7 @@ new CharacterMap('remap', null, {
   '*':   '\u2217',
   '`':   '\u2018'   // map ` to back quote
 });
+
 
 
 /**
@@ -60,7 +62,11 @@ export function Other(parser: TexParser, char: string) {
   // @test Other
   // @test Other Remap
   let mo = parser.create('token', type, def, (remap ? remap.char : char));
-  range[4] && mo.attributes.set('mathvariant', range[4]);
+  const variant = (range?.[4] ||
+                   (ParseUtil.isLatinOrGreekChar(char) ? parser.configuration.mathStyle(char, true) : ''));
+  if (variant) {
+    mo.attributes.set('mathvariant', variant);
+  }
   if (type === 'mo') {
     NodeUtil.setProperty(mo, 'fixStretchy', true);
     parser.configuration.addNode('fixStretchy', mo);
@@ -148,7 +154,7 @@ export const BaseConfiguration: Configuration = Configuration.create(
       character: ['command', 'special', 'letter', 'digit'],
       delimiter: ['delimiter'],
       // Note, that the position of the delimiters here is important!
-      macro: ['delimiter', 'macros', 'mathchar0mi', 'mathchar0mo', 'mathchar7'],
+      macro: ['delimiter', 'macros', 'lcGreek', 'ucGreek', 'mathchar0mi', 'mathchar0mo', 'mathchar7'],
       environment: ['environment']
     },
     fallback: {
@@ -186,6 +192,7 @@ export const BaseConfiguration: Configuration = Configuration.create(
     },
     options: {
       maxMacros: 1000,
+      identifierPattern: /^[a-zA-Z]+/,  // pattern for multiLetterIdentifiers in \mathrm, etc.
       baseURL: (typeof(document) === 'undefined' ||
                 document.getElementsByTagName('base').length === 0) ?
                 '' : String(document.location).replace(/#.*$/, '')

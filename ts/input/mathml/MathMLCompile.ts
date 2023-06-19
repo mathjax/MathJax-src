@@ -194,6 +194,7 @@ export class MathMLCompile<N, T, D> {
           break;
         case 'variant':
           mml.attributes.set('mathvariant', value);
+          mml.setProperty('ignore-variant', true);
           ignoreVariant = true;
           break;
         case 'smallmatrix':
@@ -208,6 +209,9 @@ export class MathMLCompile<N, T, D> {
           break;
         case 'script-align':
           mml.setProperty('scriptalign', value);
+          break;
+        case 'vbox':
+          mml.setProperty('vbox', value);
           break;
         }
       } else if (name !== 'class') {

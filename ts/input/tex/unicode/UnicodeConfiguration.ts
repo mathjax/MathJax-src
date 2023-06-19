@@ -31,6 +31,7 @@ import {ParseMethod} from '../Types.js';
 import ParseUtil from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import {numeric} from '../../../util/Entities.js';
+import {Other} from '../base/BaseConfiguration.js';
 
 // Namespace
 export let UnicodeMethods: Record<string, ParseMethod> = {};
@@ -57,7 +58,7 @@ UnicodeMethods.Unicode = function(parser: TexParser, name: string) {
   }
   let n = ParseUtil.trimSpaces(parser.GetArgument(name)).replace(/^0x/, 'x');
   if (!n.match(/^(x[0-9A-Fa-f]+|[0-9]+)$/)) {
-    throw new TexError('BadUnicode', 'Argument to \\unicode must be a number');
+    throw new TexError('BadUnicode', 'Argument to %1 must be a number', parser.currentCS);
   }
   let N = parseInt(n.match(/^x/) ? '0' + n : n);
   if (!UnicodeCache[N]) {
@@ -89,8 +90,83 @@ UnicodeMethods.Unicode = function(parser: TexParser, name: string) {
   parser.Push(node);
 };
 
+/**
+ * Create a raw unicode character in TeX input.
+ *
+ * @param {TexParser} parser The current tex parser.
+ * @param {string} name The name of the macro.
+ */
+UnicodeMethods.RawUnicode = function (parser: TexParser, name: string) {
+  const hex = parser.GetArgument(name).trim();
+  if (!hex.match(/^[0-9A-F]{1,6}$/)) {
+    throw new TexError('BadRawUnicode',
+                       'Argument to %1 must a hexadecimal number with 1 to 6 digits', parser.currentCS);
+  }
+  const n = parseInt(hex, 16);
+  parser.string = String.fromCodePoint(n) + parser.string.substr(parser.i);
+  parser.i = 0;
+}
 
-new CommandMap('unicode', {unicode: 'Unicode'}, UnicodeMethods);
+/**
+ * Implements the \char control sequence.
+ *
+ * @param {TexParser} parser The current tex parser.
+ * @param {string} name The name of the macro.
+ */
+UnicodeMethods.Char = function (parser: TexParser, _name: string) {
+  let match;
+  let next = parser.GetNext();
+  let c = '';
+  const text = parser.string.substr(parser.i);
+  if (next === '\'') {
+    match = text.match(/^'(?:([0-7]{1,7}) ?|(\\\S)|(.))/u);
+    if (match) {
+      if (match[1]) {
+        c = String.fromCodePoint(parseInt(match[1], 8));
+      } else if (match[3]) {
+        c = match[3];
+      } else {
+        parser.i += 2;
+        const cs = [...parser.GetCS()];
+        if (cs.length > 1) {
+          throw new TexError('InvalidAlphanumeric', 'Invalid alphanumeric constant for %1', parser.currentCS);
+        }
+        c = cs[0];
+        match = [''];
+
+      }
+    }
+  } else if (next === '"') {
+    match = text.match(/^"([0-9A-F]{1,6}) ?/);
+    if (match) {
+      c = String.fromCodePoint(parseInt(match[1], 16));
+    }
+  } else {
+    match = text.match(/^([0-9]{1,7}) ?/);
+    if (match) {
+      c = String.fromCodePoint(parseInt(match[1]));
+    }
+  }
+  if (!c) {
+    throw new TexError('MissingNumber', 'Missing numeric constant for %1', parser.currentCS);
+  }
+  parser.i += match[0].length;
+  if (c >= '0' && c <= '9') {
+    parser.Push(parser.create('token', 'mn', {}, c));
+  } else if (c.match(/[A-Za-z]/)) {
+    parser.Push(parser.create('token', 'mi', {}, c));
+  } else {
+    Other(parser, c);
+  }
+}
+
+
+
+new CommandMap('unicode', {
+  unicode: 'Unicode',
+  U: 'RawUnicode',
+  char: 'Char'
+}, UnicodeMethods);
 
 
 export const UnicodeConfiguration = Configuration.create(

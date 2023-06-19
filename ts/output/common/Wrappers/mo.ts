@@ -25,7 +25,7 @@ import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wr
 import {CommonWrapperFactory} from '../WrapperFactory.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
 import {CommonOutputJax} from '../../common.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
+import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../../../util/BBox.js';
 import {LineBBox} from '../LineBBox.js';
@@ -98,7 +98,7 @@ export interface CommonMo<
   embellishedBreakCount: number;
 
   /**
-   * The break style as an for embellished operator
+   * The break style string for this embellished operator
    */
   embellishedBreakStyle: string;
 
@@ -310,6 +310,15 @@ export function CommonMoMixin<
       }
       if (stretchy && this.size < 0) return;
       super.computeBBox(bbox);
+      //
+      //  Check for a null delimiter and add the null-delimiter space
+      //
+      if (bbox.w === 0 && this.node.attributes.getExplicit('fence') &&
+          (this.node as MmlMo).getText() === '' &&
+          (this.node.texClass === TEXCLASS.OPEN || this.node.texClass === TEXCLASS.CLOSE) &&
+          !this.jax.options.mathmlSpacing) {
+        bbox.R = this.font.params.nulldelimiterspace;
+      }
       this.copySkewIC(bbox);
     }
 
@@ -383,7 +392,7 @@ export function CommonMoMixin<
     }
 
     /**
-     * @param {number} c     The character neing set
+     * @param {number} c     The character being set
      * @param {number} i     The size for that character
      */
     protected setDelimSize(c: number, i: number) {
@@ -392,6 +401,7 @@ export function CommonMoMixin<
       this.size = i;
       const schar = (delim.schar ? delim.schar[Math.min(i, delim.schar.length - 1)] || c : c);
       this.stretch = {...delim, c: schar};
+      this.childNodes[0].invalidateBBox();
     }
 
     /**
@@ -428,6 +438,17 @@ export function CommonMoMixin<
         [h, d] = this.getBaseline(WHD, D, C);
       } else {
         w = D;
+        if (this.stretch.hd && !this.jax.options.mathmlSpacing) {
+          //
+          // Interpolate between full character height/depth and that of the extender,
+          //   which is what TeX uses, but TeX's fonts are set up to have extra height
+          //   or depth for some extenders, so this factor helps get spacing that is closer
+          //   to TeX spacing.
+          //
+          const t = this.font.params.extender_factor;
+          h = h * (1 - t) + this.stretch.hd[0] * t;
+          d = d * (1 - t) + this.stretch.hd[1] * t;
+        }
       }
       this.bbox.h = h;
       this.bbox.d = d;

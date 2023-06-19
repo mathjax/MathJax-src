@@ -101,28 +101,28 @@ new sm.CommandMap('AMSmath-macros', {
  */
 new sm.EnvironmentMap('AMSmath-environment', ParseMethods.environment, {
   'equation*':   ['Equation', null, false],
-  'eqnarray*':   ['EqnArray', null, false, true, 'rcl',
+  'eqnarray*':   ['EqnArray', null, false, true, 'rcl', 'bmt',
                   ParseUtil.cols(0, MATHSPACE.thickmathspace), '.5em'],
-  align:         ['EqnArray', null, true, true,  'rl',  ParseUtil.cols(0, 2)],
-  'align*':      ['EqnArray', null, false, true, 'rl',  ParseUtil.cols(0, 2)],
+  align:         ['EqnArray', null, true, true,  'rl', 'bt', ParseUtil.cols(0, 2)],
+  'align*':      ['EqnArray', null, false, true, 'rl', 'bt', ParseUtil.cols(0, 2)],
   multline:      ['Multline', null, true],
   'multline*':   ['Multline', null, false],
-  split:         ['EqnArray', null, false, false, 'rl', ParseUtil.cols(0)],
-  gather:        ['EqnArray', null, true, true,  'c'],
-  'gather*':     ['EqnArray', null, false, true, 'c'],
+  split:         ['EqnArray', null, false, false, 'rl', 'bt', ParseUtil.cols(0)],
+  gather:        ['EqnArray', null, true, true,  'c', 'm'],
+  'gather*':     ['EqnArray', null, false, true, 'c', 'm'],
 
   alignat:       ['AlignAt', null, true, true],
   'alignat*':    ['AlignAt', null, false, true],
   alignedat:     ['AlignAt', null, false, false],
 
-  aligned:       ['AmsEqnArray', null, null, null, 'rl', ParseUtil.cols(0, 2), '.5em', 'D'],
-  gathered:      ['AmsEqnArray', null, null, null, 'c', null, '.5em', 'D'],
+  aligned:       ['AmsEqnArray', null, null, null, 'rl', 'bt', ParseUtil.cols(0, 2), '.5em', 'D'],
+  gathered:      ['AmsEqnArray', null, null, null, 'c', 'm', null, '.5em', 'D'],
 
   xalignat:      ['XalignAt', null, true, true],
   'xalignat*':   ['XalignAt', null, false, true],
   xxalignat:     ['XalignAt', null, false, false],
-  flalign:       ['FlalignArray', null, true, false, true, 'rlc', 'auto auto fit'],
-  'flalign*':    ['FlalignArray', null, false, false, true, 'rlc', 'auto auto fit'],
+  flalign:       ['FlalignArray', null, true, false, true, 'rlc', 'btm', 'auto auto fit'],
+  'flalign*':    ['FlalignArray', null, false, false, true, 'rlc', 'btm', 'auto auto fit'],
 
   subarray:      ['Array', null, null, null, null, ParseUtil.cols(0), '0.1em', 'S', 1],
   smallmatrix:   ['Array', null, null, null, 'c', ParseUtil.cols(1 / 3),

@@ -1,0 +1,15 @@
+{
+  "build": {
+    "id": "[tex]/textcomp",
+    "component": "input/tex/extensions/textcomp",
+    "targets": ["input/tex/textcomp"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/textcomp",
+    "libs": [
+      "components/src/input/tex/extensions/textmacros/lib",
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

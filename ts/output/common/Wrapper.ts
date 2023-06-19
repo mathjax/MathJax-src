@@ -29,8 +29,8 @@ import {Property} from '../../core/Tree/Node.js';
 import {unicodeChars} from '../../util/string.js';
 import * as LENGTHS from '../../util/lengths.js';
 import {Styles} from '../../util/Styles.js';
-import {StyleList} from '../../util/StyleList.js';
-import {OptionList} from '../../util/Options.js';
+import {StyleList, CssStyles} from '../../util/StyleList.js';
+import {OptionList, lookup} from '../../util/Options.js';
 import {CommonOutputJax} from '../common.js';
 import {CommonWrapperFactory} from './WrapperFactory.js';
 import {CommonMo} from './Wrappers/mo.js';
@@ -67,6 +67,7 @@ function MathMLSpace(script: boolean, size: number): number {
  */
 export const SPACE: StringMap = {
   /* tslint:disable:whitespace */
+  [LENGTHS.em(0)]:    '0',
   [LENGTHS.em(2/18)]: '1',
   [LENGTHS.em(3/18)]: '2',
   [LENGTHS.em(4/18)]: '3',
@@ -190,6 +191,14 @@ export interface CommonWrapperClass<
   ITALICVARIANTS: {[name: string]: StringMap};
 
   /**
+   * Add any styles for this wrapper class
+   *
+   * @param {CssStyles} styles   The styles object to extend
+   * @param {JX} jax             The output jax whose style sheet is being modified (in case options are needed)
+   */
+  addStyles<JX>(styles: CssStyles, jax: JX): void;
+
+  /**
    * override
    */
   new (factory: WF, node: MmlNode, parent?: WW): WW;
@@ -300,6 +309,13 @@ export class CommonWrapper<
   };
 
   /**
+   * @override
+   */
+  public static addStyles<JX>(styles: CssStyles, _jax: JX) {
+    styles.addStyles(this.styles);
+  }
+
+  /**
    * The factory used to create more wrappers
    */
   public factory: WF;
@@ -349,7 +365,7 @@ export class CommonWrapper<
   protected bboxComputed: boolean = false;
 
   /**
-   * The cached number opf linebreaks
+   * The cached number of linebreaks
    */
   protected _breakCount: number = -1;
 
@@ -576,7 +592,8 @@ export class CommonWrapper<
           line.R = this.getBBox().R;
         }
       } else {
-        this.lineBBox[i] = LineBBox.from(this.getOuterBBox(), this.linebreakOptions.lineleading);
+        const obox = this.getOuterBBox();
+        this.lineBBox[i] = LineBBox.from(obox, this.linebreakOptions.lineleading);
       }
     }
     return this.lineBBox[i];
@@ -707,7 +724,7 @@ export class CommonWrapper<
    * @param {boolean} bubble   True to invalidate parent BBoxes
    */
   public invalidateBBox(bubble: boolean = true) {
-    if (this.bboxComputed) {
+    if (this.bboxComputed || this._breakCount >= 0) {
       this.bboxComputed = false;
       this.lineBBox = [];
       this._breakCount = -1;
@@ -775,7 +792,7 @@ export class CommonWrapper<
         hasBorder = true;
         width[i] = Math.max(0, this.length2em(w, 1));
         style[i] = this.styles.get(key + 'Style') || 'solid';
-        color[i] = this.styles.get(key + 'Color') || 'currentColor';
+        color[i] = this.styles.get(key + 'Color');
       }
       const p = this.styles.get('padding' + name);
       if (p) {
@@ -796,7 +813,12 @@ export class CommonWrapper<
     if (!this.node.isToken) return;
     const attributes = this.node.attributes;
     let variant = attributes.get('mathvariant') as string;
-    if (!attributes.getExplicit('mathvariant')) {
+    if (attributes.getExplicit('mathvariant')) {
+      if (!this.font.getVariant(variant)) {
+        console.warn(`Invalid variant: ${variant}`);
+        variant = 'normal';
+      }
+    } else {
       const values = attributes.getList('fontfamily', 'fontweight', 'fontstyle') as StringMap;
       if (this.removedStyles) {
         const style = this.removedStyles;
@@ -853,8 +875,6 @@ export class CommonWrapper<
     //
     if (scriptlevel !== 0) {
       scale = Math.pow(attributes.get('scriptsizemultiplier') as number, scriptlevel);
-      let scriptminsize = this.length2em(attributes.get('scriptminsize'), .8, 1);
-      if (scale < scriptminsize) scale = scriptminsize;
     }
     //
     // If there is style="font-size:...", and not fontsize attribute, use that as fontsize
@@ -873,6 +893,13 @@ export class CommonWrapper<
     //
     if (mathsize !== '1') {
       scale *= this.length2em(mathsize, 1, 1);
+    }
+    //
+    // Use scriptminsize as minimum size for scripts
+    //
+    if (scriptlevel !== 0) {
+      let scriptminsize = this.length2em(attributes.get('scriptminsize'), .4, 1);
+      if (scale < scriptminsize) scale = scriptminsize;
     }
     //
     // Record the scaling factors and set the element's CSS
@@ -983,7 +1010,7 @@ export class CommonWrapper<
    * @return {number}   The cumulative relative scaling for an embellised mo's core mo
    */
   public coreRScale(): number {
-    let rscale = 1;
+    let rscale = this.bbox.rscale;
     let node = this.coreMO() as any as WW;
     while (node !== (this as any as WW) && node) {
       rscale *= node.bbox.rscale;
@@ -1054,6 +1081,9 @@ export class CommonWrapper<
     shift: string = '',
     width: number = this.metrics.containerWidth
   ): [string, number] {
+    if (!this.jax.math.display) {
+      return ['left', 0];
+    }
     if (!align || align === 'auto') {
       align = this.jax.math.outputData.inlineMarked ? 'left' : this.jax.options.displayAlign;
     }
@@ -1156,7 +1186,9 @@ export class CommonWrapper<
     if (scale === null) {
       scale = this.bbox.scale;
     }
-    return LENGTHS.length2em(length as string, size, scale, this.jax.pxPerEm);
+    const t = this.font.params.rule_thickness;
+    const factor = lookup(length as string, {medium: 1, thin: 2 / 3, thick: 5 / 3}, 0);
+    return factor ? factor * t : LENGTHS.length2em(length as string, size, scale, this.jax.pxPerEm);
   }
 
   /**

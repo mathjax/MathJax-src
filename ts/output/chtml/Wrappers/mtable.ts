@@ -268,7 +268,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
     protected handleColumnSpacing() {
       const scale = (this.childNodes[0] ? 1 / this.childNodes[0].getBBox().rscale : 1);
       const spacing = this.getEmHalfSpacing([this.fSpace[0], this.fSpace[2]], this.cSpace, scale);
-      const frame = this.frame;
+      const frame = this.fframe;
       //
       //  For each row...
       //
@@ -341,7 +341,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
     protected handleRowSpacing() {
       const scale = (this.childNodes[0] ? 1 / this.childNodes[0].getBBox().rscale : 1);
       const spacing = this.getEmHalfSpacing([this.fSpace[1], this.fSpace[1]], this.rSpace, scale);
-      const frame = this.frame;
+      const frame = this.fframe;
       //
       //  For each row...
       //
@@ -472,7 +472,8 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
      */
     protected handleFrame() {
       if (this.frame && this.fLine) {
-        this.adaptor.setStyle(this.itable, 'border', '.07em ' + this.node.attributes.get('frame'));
+        const frame = this.node.attributes.get('frame');
+        this.adaptor.setStyle(this.itable, 'border', `${this.em(this.fLine)} ${frame}`);
       }
     }
 

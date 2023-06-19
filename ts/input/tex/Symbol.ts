@@ -28,7 +28,7 @@ import {Args, Attributes, ParseMethod} from './Types.js';
 /**
  * Symbol class
  */
-export class Symbol {
+class _Symbol {
 
   /**
    * @constructor
@@ -54,6 +54,14 @@ export class Symbol {
 
 }
 
+/**
+ * This export avoids a problem with webpack where it uses the original Symbol
+ *   and the Symbol class was included later in the file, which caused an error
+ *   about the original Symbol being used before it was defined.  This way,
+ *   _Symbol is the class, and that is substituted for Symbol when it is used,
+ *   so there is no problem with the webpacked version.
+ */
+export {_Symbol as Symbol}
 
 export class Macro {
 

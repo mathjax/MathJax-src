@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2022 The MathJax Consortium
+ *  Copyright (c) 2022-2023 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import * as ke from './KeyExplorer.js';
 import * as me from './MouseExplorer.js';
 import {TreeColorer, FlameColorer} from './TreeExplorer.js';
 
-import Sre from '../sre.js';
+import {Sre} from '../sre.js';
 
 /**
  * The regions objects needed for the explorers.
@@ -86,21 +86,11 @@ type ExplorerInit = (doc: ExplorerMathDocument, pool: ExplorerPool,
  *  Generation methods for all MathJax explorers available via option settings.
  */
 let allExplorers: {[options: string]: ExplorerInit} = {
-  braille: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
-    let explorer = ke.SpeechExplorer.create(
-      doc, pool, doc.explorerRegions.brailleRegion, node, ...rest) as ke.SpeechExplorer;
-    explorer.speechGenerator.setOptions({automark: false as any, markup: 'none',
-                                         locale: 'euro', domain: 'default',
-                                         style: 'default', modality: 'braille'});
-    explorer.showRegion = 'viewBraille';
-    explorer.sound = true;
-    return explorer;
-  },
   speech: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
     let explorer = ke.SpeechExplorer.create(
       doc, pool, doc.explorerRegions.speechRegion, node, ...rest) as ke.SpeechExplorer;
     explorer.speechGenerator.setOptions({
-      automark: true as any, markup: 'ssml_step',
+      automark: true as any, markup: 'ssml',
       locale: doc.options.sre.locale, domain: doc.options.sre.domain,
       style: doc.options.sre.style, modality: 'speech'});
     // This weeds out the case of providing a non-existent locale option.
@@ -109,7 +99,17 @@ let allExplorers: {[options: string]: ExplorerInit} = {
       doc.options.sre.locale = Sre.engineSetup().locale;
       explorer.speechGenerator.setOptions({locale: doc.options.sre.locale});
     }
+    explorer.sound = true;
     explorer.showRegion = 'subtitles';
+    return explorer;
+  },
+  braille: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
+    let explorer = ke.SpeechExplorer.create(
+      doc, pool, doc.explorerRegions.brailleRegion, node, ...rest) as ke.SpeechExplorer;
+    explorer.speechGenerator.setOptions({automark: false as any, markup: 'none',
+                                         locale: 'nemeth', domain: 'default',
+                                         style: 'default', modality: 'braille'});
+    explorer.showRegion = 'viewBraille';
     return explorer;
   },
   keyMagnifier: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) =>
@@ -256,7 +256,7 @@ export class ExplorerPool {
   }
 
   /**
-   * Computes the explorers that need to be reattachedafter a MathItem is
+   * Computes the explorers that need to be reattached after a MathItem is
    * rerendered.
    */
   public reattach() {

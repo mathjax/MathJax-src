@@ -63,6 +63,7 @@ export class BBox {
   public R: number;      // extra space on the right
   public pwidth: string; // percentage width (for tables)
   public ic: number;     // italic correction
+  public oc: number;     // alternate italic correction for -tex-mit variant
   public sk: number;     // skew
   public dx: number;     // offset for combining characters as accents
   /* tslint:enable */
@@ -90,7 +91,7 @@ export class BBox {
     this.w = def.w || 0;
     this.h = ('h' in def ? def.h : -BIGDIMEN);
     this.d = ('d' in def ? def.d : -BIGDIMEN);
-    this.L = this.R = this.ic = this.sk = this.dx = 0;
+    this.L = this.R = this.ic = this.oc = this.sk = this.dx = 0;
     this.scale = this.rscale = 1;
     this.pwidth = '';
   }

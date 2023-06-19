@@ -32,6 +32,8 @@ import {MATHSPACE, em} from '../../../util/lengths.js';
 
 const THICKMATHSPACE = em(MATHSPACE.thickmathspace);
 
+const VARIANT = TexConstant.Variant;
+
 /**
  * Letter pattern for parsing identifiers and operators.
  */
@@ -63,6 +65,7 @@ new sm.MacroMap('special', {
   '~':   'Tilde',
   '^':   'Superscript',
   '_':   'Subscript',
+  '|':   'Bar',
   ' ':   'Space',
   '\t':  'Space',
   '\r':  'Space',
@@ -79,7 +82,7 @@ new sm.MacroMap('special', {
 /**
  * Macros for identifiers.
  */
-new sm.CharacterMap('mathchar0mi', ParseMethods.mathchar0mi, {
+new sm.CharacterMap('lcGreek', ParseMethods.lcGreek, {
   // Lower-case greek
   alpha:        '\u03B1',
   beta:         '\u03B2',
@@ -110,39 +113,62 @@ new sm.CharacterMap('mathchar0mi', ParseMethods.mathchar0mi, {
   varpi:        '\u03D6',
   varrho:       '\u03F1',
   varsigma:     '\u03C2',
-  varphi:       '\u03C6',
+  varphi:       '\u03C6'
+});
 
+/**
+ * Macros for upper-case Greek
+ */
+new sm.CharacterMap('ucGreek', ParseMethods.ucGreek, {
+  Gamma:        '\u0393',
+  Delta:        '\u0394',
+  Theta:        '\u0398',
+  Lambda:       '\u039B',
+  Xi:           '\u039E',
+  Pi:           '\u03A0',
+  Sigma:        '\u03A3',
+  Upsilon:      '\u03A5',
+  Phi:          '\u03A6',
+  Psi:          '\u03A8',
+  Omega:        '\u03A9'
+});
+
+/**
+ * Macros for identifiers.
+ */
+new sm.CharacterMap('mathchar0mi', ParseMethods.mathchar0mi, {
   // Ord symbols
-  S:            ['\u00A7', {mathvariant: TexConstant.Variant.NORMAL}],
-  aleph:        ['\u2135', {mathvariant: TexConstant.Variant.NORMAL}],
+  AA:            '\u212B',
+  S:            ['\u00A7', {mathvariant: VARIANT.NORMAL}],
+  aleph:        ['\u2135', {mathvariant: VARIANT.NORMAL}],
   hbar:         ['\u210F', {variantForm: true}],
   imath:        '\u0131',
   jmath:        '\u0237',
   ell:          '\u2113',
-  wp:           ['\u2118', {mathvariant: TexConstant.Variant.NORMAL}],
-  Re:           ['\u211C', {mathvariant: TexConstant.Variant.NORMAL}],
-  Im:           ['\u2111', {mathvariant: TexConstant.Variant.NORMAL}],
-  partial:      ['\u2202', {mathvariant: TexConstant.Variant.ITALIC}],
-  infty:        ['\u221E', {mathvariant: TexConstant.Variant.NORMAL}],
+  wp:           ['\u2118', {mathvariant: VARIANT.NORMAL}],
+  Re:           ['\u211C', {mathvariant: VARIANT.NORMAL}],
+  Im:           ['\u2111', {mathvariant: VARIANT.NORMAL}],
+  partial:      ['\u2202', {mathvariant: VARIANT.ITALIC}],
+  infty:        ['\u221E', {mathvariant: VARIANT.NORMAL}],
   prime:        ['\u2032', {variantForm: true}],
-  emptyset:     ['\u2205', {mathvariant: TexConstant.Variant.NORMAL}],
-  nabla:        ['\u2207', {mathvariant: TexConstant.Variant.NORMAL}],
-  top:          ['\u22A4', {mathvariant: TexConstant.Variant.NORMAL}],
-  bot:          ['\u22A5', {mathvariant: TexConstant.Variant.NORMAL}],
-  angle:        ['\u2220', {mathvariant: TexConstant.Variant.NORMAL}],
-  triangle:     ['\u25B3', {mathvariant: TexConstant.Variant.NORMAL}],
-  backslash:    ['\u2216', {mathvariant: TexConstant.Variant.NORMAL}],
-  forall:       ['\u2200', {mathvariant: TexConstant.Variant.NORMAL}],
-  exists:       ['\u2203', {mathvariant: TexConstant.Variant.NORMAL}],
-  neg:          ['\u00AC', {mathvariant: TexConstant.Variant.NORMAL}],
-  lnot:         ['\u00AC', {mathvariant: TexConstant.Variant.NORMAL}],
-  flat:         ['\u266D', {mathvariant: TexConstant.Variant.NORMAL}],
-  natural:      ['\u266E', {mathvariant: TexConstant.Variant.NORMAL}],
-  sharp:        ['\u266F', {mathvariant: TexConstant.Variant.NORMAL}],
-  clubsuit:     ['\u2663', {mathvariant: TexConstant.Variant.NORMAL}],
-  diamondsuit:  ['\u2662', {mathvariant: TexConstant.Variant.NORMAL}],
-  heartsuit:    ['\u2661', {mathvariant: TexConstant.Variant.NORMAL}],
-  spadesuit:    ['\u2660', {mathvariant: TexConstant.Variant.NORMAL}]
+  emptyset:     ['\u2205', {mathvariant: VARIANT.NORMAL}],
+  nabla:        ['\u2207', {mathvariant: VARIANT.NORMAL}],
+  top:          ['\u22A4', {mathvariant: VARIANT.NORMAL}],
+  bot:          ['\u22A5', {mathvariant: VARIANT.NORMAL}],
+  angle:        ['\u2220', {mathvariant: VARIANT.NORMAL}],
+  triangle:     ['\u25B3', {mathvariant: VARIANT.NORMAL}],
+  backslash:    ['\\', {mathvariant: VARIANT.NORMAL}],
+  forall:       ['\u2200', {mathvariant: VARIANT.NORMAL}],
+  exists:       ['\u2203', {mathvariant: VARIANT.NORMAL}],
+  neg:          ['\u00AC', {mathvariant: VARIANT.NORMAL}],
+  lnot:         ['\u00AC', {mathvariant: VARIANT.NORMAL}],
+  flat:         ['\u266D', {mathvariant: VARIANT.NORMAL}],
+  natural:      ['\u266E', {mathvariant: VARIANT.NORMAL}],
+  sharp:        ['\u266F', {mathvariant: VARIANT.NORMAL}],
+  clubsuit:     ['\u2663', {mathvariant: VARIANT.NORMAL}],
+  diamondsuit:  ['\u2662', {mathvariant: VARIANT.NORMAL}],
+  heartsuit:    ['\u2661', {mathvariant: VARIANT.NORMAL}],
+  spadesuit:    ['\u2660', {mathvariant: VARIANT.NORMAL}]
 });
 
 
@@ -153,36 +179,26 @@ new sm.CharacterMap('mathchar0mo', ParseMethods.mathchar0mo, {
   surd:         '\u221A',
 
   // big ops
-  coprod:       ['\u2210', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
-  bigvee:       ['\u22C1', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
-  bigwedge:     ['\u22C0', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
-  biguplus:     ['\u2A04', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
-  bigcap:       ['\u22C2', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
-  bigcup:       ['\u22C3', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
-  'int':        ['\u222B', {texClass: TEXCLASS.OP}],
-  intop:        ['\u222B', {texClass: TEXCLASS.OP,
-                            movesupsub: true, movablelimits: true}],
-  iint:         ['\u222C', {texClass: TEXCLASS.OP}],
-  iiint:        ['\u222D', {texClass: TEXCLASS.OP}],
-  prod:         ['\u220F', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
-  sum:          ['\u2211', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
-  bigotimes:    ['\u2A02', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
-  bigoplus:     ['\u2A01', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
-  bigodot:      ['\u2A00', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
-  oint:         ['\u222E', {texClass: TEXCLASS.OP}],
-  bigsqcup:     ['\u2A06', {texClass: TEXCLASS.OP,
-                            movesupsub: true}],
+  coprod:       ['\u2210', {movesupsub: true}],
+  bigvee:       ['\u22C1', {movesupsub: true}],
+  bigwedge:     ['\u22C0', {movesupsub: true}],
+  biguplus:     ['\u2A04', {movesupsub: true}],
+  bigcap:       ['\u22C2', {movesupsub: true}],
+  bigcup:       ['\u22C3', {movesupsub: true}],
+  'int':         '\u222B',
+  intop:        ['\u222B', {movesupsub: true, movablelimits: true}],
+  iint:          '\u222C',
+  iiint:         '\u222D',
+  prod:         ['\u220F', {movesupsub: true}],
+  sum:          ['\u2211', {movesupsub: true}],
+  bigotimes:    ['\u2A02', {movesupsub: true}],
+  bigoplus:     ['\u2A01', {movesupsub: true}],
+  bigodot:      ['\u2A00', {movesupsub: true}],
+  oint:          '\u222E',
+  ointop:       ['\u222E', {movesupsub: true, movablelimits: true}],
+  oiint:         '\u222F',
+  oiiint:        '\u2230',
+  bigsqcup:     ['\u2A06', {movesupsub: true}],
   smallint:     ['\u222B', {largeop: false}],
 
   // binary operations
@@ -304,6 +320,7 @@ new sm.CharacterMap('mathchar0mo', ParseMethods.mathchar0mo, {
   cdots:            '\u22EF',
   vdots:            '\u22EE',
   ddots:            '\u22F1',
+  iddots:           '\u22F0',
   dotsc:            '\u2026',  // dots with commas
   dotsb:            '\u22EF',  // dots with binary ops and relations
   dotsm:            '\u22EF',  // dots with multiplication
@@ -320,18 +337,6 @@ new sm.CharacterMap('mathchar0mo', ParseMethods.mathchar0mo, {
  * Macros for special characters and identifiers.
  */
 new sm.CharacterMap('mathchar7', ParseMethods.mathchar7, {
-  Gamma:        '\u0393',
-  Delta:        '\u0394',
-  Theta:        '\u0398',
-  Lambda:       '\u039B',
-  Xi:           '\u039E',
-  Pi:           '\u03A0',
-  Sigma:        '\u03A3',
-  Upsilon:      '\u03A5',
-  Phi:          '\u03A6',
-  Psi:          '\u03A8',
-  Omega:        '\u03A9',
-
   '_':          '\u005F',
   '#':          '\u0023',
   '$':          '\u0024',
@@ -398,70 +403,69 @@ new sm.CommandMap('macros', {
   scriptstyle:       ['SetStyle', 'S', false, 1],
   scriptscriptstyle: ['SetStyle', 'SS', false, 2],
 
-  rm:                ['SetFont', TexConstant.Variant.NORMAL],
-  mit:               ['SetFont', TexConstant.Variant.ITALIC],
-  oldstyle:          ['SetFont', TexConstant.Variant.OLDSTYLE],
-  cal:               ['SetFont', TexConstant.Variant.CALLIGRAPHIC],
-  it:                ['SetFont', TexConstant.Variant.MATHITALIC], // needs special handling
-  bf:                ['SetFont', TexConstant.Variant.BOLD],
-  bbFont:            ['SetFont', TexConstant.Variant.DOUBLESTRUCK],
-  scr:               ['SetFont', TexConstant.Variant.SCRIPT],
-  frak:              ['SetFont', TexConstant.Variant.FRAKTUR],
-  sf:                ['SetFont', TexConstant.Variant.SANSSERIF],
-  tt:                ['SetFont', TexConstant.Variant.MONOSPACE],
+  rm:                ['SetFont', VARIANT.NORMAL],
+  mit:               ['SetFont', VARIANT.ITALIC],
+  oldstyle:          ['SetFont', VARIANT.OLDSTYLE],
+  cal:               ['SetFont', VARIANT.CALLIGRAPHIC],
+  it:                ['SetFont', VARIANT.MATHITALIC], // needs special handling
+  bf:                ['SetFont', VARIANT.BOLD],
+  sf:                ['SetFont', VARIANT.SANSSERIF],
+  tt:                ['SetFont', VARIANT.MONOSPACE],
 
-  mathrm:            ['MathFont', TexConstant.Variant.NORMAL],
-  mathup:            ['MathFont', TexConstant.Variant.NORMAL],
+  frak:              ['MathFont', VARIANT.FRAKTUR],
+  Bbb:               ['MathFont', VARIANT.DOUBLESTRUCK],
+
+  mathrm:            ['MathFont', VARIANT.NORMAL],
+  mathup:            ['MathFont', VARIANT.NORMAL],
   mathnormal:        ['MathFont', ''],
-  mathbf:            ['MathFont', TexConstant.Variant.BOLD],
-  mathbfup:          ['MathFont', TexConstant.Variant.BOLD],
-  mathit:            ['MathFont', TexConstant.Variant.MATHITALIC],
-  mathbfit:          ['MathFont', TexConstant.Variant.BOLDITALIC],
-  mathbb:            ['MathFont', TexConstant.Variant.DOUBLESTRUCK],
-  Bbb:               ['MathFont', TexConstant.Variant.DOUBLESTRUCK],
-  mathfrak:          ['MathFont', TexConstant.Variant.FRAKTUR],
-  mathbffrak:        ['MathFont', TexConstant.Variant.BOLDFRAKTUR],
-  mathscr:           ['MathFont', TexConstant.Variant.SCRIPT],
-  mathbfscr:         ['MathFont', TexConstant.Variant.BOLDSCRIPT],
-  mathsf:            ['MathFont', TexConstant.Variant.SANSSERIF],
-  mathsfup:          ['MathFont', TexConstant.Variant.SANSSERIF],
-  mathbfsf:          ['MathFont', TexConstant.Variant.BOLDSANSSERIF],
-  mathbfsfup:        ['MathFont', TexConstant.Variant.BOLDSANSSERIF],
-  mathsfit:          ['MathFont', TexConstant.Variant.SANSSERIFITALIC],
-  mathbfsfit:        ['MathFont', TexConstant.Variant.SANSSERIFBOLDITALIC],
-  mathtt:            ['MathFont', TexConstant.Variant.MONOSPACE],
-  mathcal:           ['MathFont', TexConstant.Variant.CALLIGRAPHIC],
-  mathbfcal:         ['MathFont', TexConstant.Variant.BOLDCALLIGRAPHIC],
+  mathbf:            ['MathFont', VARIANT.BOLD],
+  mathbfup:          ['MathFont', VARIANT.BOLD],
+  mathit:            ['MathFont', VARIANT.MATHITALIC],
+  mathbfit:          ['MathFont', VARIANT.BOLDITALIC],
+  mathbb:            ['MathFont', VARIANT.DOUBLESTRUCK],
+  mathfrak:          ['MathFont', VARIANT.FRAKTUR],
+  mathbffrak:        ['MathFont', VARIANT.BOLDFRAKTUR],
+  mathscr:           ['MathFont', VARIANT.SCRIPT],
+  mathbfscr:         ['MathFont', VARIANT.BOLDSCRIPT],
+  mathsf:            ['MathFont', VARIANT.SANSSERIF],
+  mathsfup:          ['MathFont', VARIANT.SANSSERIF],
+  mathbfsf:          ['MathFont', VARIANT.BOLDSANSSERIF],
+  mathbfsfup:        ['MathFont', VARIANT.BOLDSANSSERIF],
+  mathsfit:          ['MathFont', VARIANT.SANSSERIFITALIC],
+  mathbfsfit:        ['MathFont', VARIANT.SANSSERIFBOLDITALIC],
+  mathtt:            ['MathFont', VARIANT.MONOSPACE],
+  mathcal:           ['MathFont', VARIANT.CALLIGRAPHIC],
+  mathbfcal:         ['MathFont', VARIANT.BOLDCALLIGRAPHIC],
 
-  symrm:             ['MathFont', TexConstant.Variant.NORMAL],
-  symup:             ['MathFont', TexConstant.Variant.NORMAL],
+  symrm:             ['MathFont', VARIANT.NORMAL],
+  symup:             ['MathFont', VARIANT.NORMAL],
   symnormal:         ['MathFont', ''],
-  symbf:             ['MathFont', TexConstant.Variant.BOLD],
-  symbfup:           ['MathFont', TexConstant.Variant.BOLD],
-  symit:             ['MathFont', TexConstant.Variant.ITALIC],
-  symbfit:           ['MathFont', TexConstant.Variant.BOLDITALIC],
-  symbb:             ['MathFont', TexConstant.Variant.DOUBLESTRUCK],
-  symfrak:           ['MathFont', TexConstant.Variant.FRAKTUR],
-  symbffrak:         ['MathFont', TexConstant.Variant.BOLDFRAKTUR],
-  symscr:            ['MathFont', TexConstant.Variant.SCRIPT],
-  symbfscr:          ['MathFont', TexConstant.Variant.BOLDSCRIPT],
-  symsf:             ['MathFont', TexConstant.Variant.SANSSERIF],
-  symsfup:           ['MathFont', TexConstant.Variant.SANSSERIF],
-  symbfsf:           ['MathFont', TexConstant.Variant.BOLDSANSSERIF],
-  symbfsfup:         ['MathFont', TexConstant.Variant.BOLDSANSSERIF],
-  symsfit:           ['MathFont', TexConstant.Variant.SANSSERIFITALIC],
-  symbfsfit:         ['MathFont', TexConstant.Variant.SANSSERIFBOLDITALIC],
-  symtt:             ['MathFont', TexConstant.Variant.MONOSPACE],
-  symcal:            ['MathFont', TexConstant.Variant.CALLIGRAPHIC],
-  symbfcal:          ['MathFont', TexConstant.Variant.BOLDCALLIGRAPHIC],
+  symbf:             ['MathFont', VARIANT.BOLD],
+  symbfup:           ['MathFont', VARIANT.BOLD],
+  symit:             ['MathFont', VARIANT.ITALIC],
+  symbfit:           ['MathFont', VARIANT.BOLDITALIC],
+  symbb:             ['MathFont', VARIANT.DOUBLESTRUCK],
+  symfrak:           ['MathFont', VARIANT.FRAKTUR],
+  symbffrak:         ['MathFont', VARIANT.BOLDFRAKTUR],
+  symscr:            ['MathFont', VARIANT.SCRIPT],
+  symbfscr:          ['MathFont', VARIANT.BOLDSCRIPT],
+  symsf:             ['MathFont', VARIANT.SANSSERIF],
+  symsfup:           ['MathFont', VARIANT.SANSSERIF],
+  symbfsf:           ['MathFont', VARIANT.BOLDSANSSERIF],
+  symbfsfup:         ['MathFont', VARIANT.BOLDSANSSERIF],
+  symsfit:           ['MathFont', VARIANT.SANSSERIFITALIC],
+  symbfsfit:         ['MathFont', VARIANT.SANSSERIFBOLDITALIC],
+  symtt:             ['MathFont', VARIANT.MONOSPACE],
+  symcal:            ['MathFont', VARIANT.CALLIGRAPHIC],
+  symbfcal:          ['MathFont', VARIANT.BOLDCALLIGRAPHIC],
 
-  textrm:            ['HBox', null, TexConstant.Variant.NORMAL],
-  textup:            ['HBox', null, TexConstant.Variant.NORMAL],
+  textrm:            ['HBox', null, VARIANT.NORMAL],
+  textup:            ['HBox', null, VARIANT.NORMAL],
   textnormal:        ['HBox'],
-  textit:            ['HBox', null, TexConstant.Variant.ITALIC],
-  textbf:            ['HBox', null, TexConstant.Variant.BOLD],
-  textsf:            ['HBox', null, TexConstant.Variant.SANSSERIF],
-  texttt:            ['HBox', null, TexConstant.Variant.MONOSPACE],
+  textit:            ['HBox', null, VARIANT.ITALIC],
+  textbf:            ['HBox', null, VARIANT.BOLD],
+  textsf:            ['HBox', null, VARIANT.SANSSERIF],
+  texttt:            ['HBox', null, VARIANT.MONOSPACE],
 
   tiny:              ['SetSize', 0.5],
   Tiny:              ['SetSize', 0.6],  // non-standard
@@ -612,11 +616,13 @@ new sm.CommandMap('macros', {
   mathpunct:         ['TeXAtom', TEXCLASS.PUNCT],
   mathinner:         ['TeXAtom', TEXCLASS.INNER],
 
-  vtop:              ['TeXAtom', TEXCLASS.VTOP],
-  vcenter:           ['TeXAtom', TEXCLASS.VCENTER],
-  vbox:              ['TeXAtom', TEXCLASS.VBOX],
+  vtop:              ['VBox', 'top'],
+  vcenter:           ['VBox', 'center'],
+  vbox:              ['VBox', 'bottom'],
   hsize:              'Hsize',
   parbox:             'ParBox',
+
+  breakAlign:         'BreakAlign',
 
   buildrel:           'BuildRel',
 
@@ -638,6 +644,8 @@ new sm.CommandMap('macros', {
   acute:             ['Accent', '00B4'],  // or 0301 or 02CA
   grave:             ['Accent', '0060'],  // or 0300 or 02CB
   ddot:              ['Accent', '00A8'],  // or 0308
+  dddot:             ['Accent', '20DB'],
+  ddddot:            ['Accent', '20DC'],
   tilde:             ['Accent', '007E'],  // or 0303 or 02DC
   bar:               ['Accent', '00AF'],  // or 0304 or 02C9
   breve:             ['Accent', '02D8'],  // or 0306
@@ -688,13 +696,13 @@ new sm.CommandMap('macros', {
   TeX:               ['Macro', 'T\\kern-.14em\\lower.5ex{E}\\kern-.115em X'],
   LaTeX:             ['Macro', 'L\\kern-.325em\\raise.21em' +
                       '{\\scriptstyle{A}}\\kern-.17em\\TeX'],
-  ' ':               ['Macro', '\\text{ }'],
 
   //  Specially handled
   not:                'Not',
   dots:               'Dots',
   space:              'Tilde',
   '\u00A0':           'Tilde',
+  ' ':                'Tilde',
 
 
   //  LaTeX
@@ -717,9 +725,12 @@ new sm.CommandMap('macros', {
  * Macros for LaTeX environments.
  */
 new sm.EnvironmentMap('environment', ParseMethods.environment, {
+  displaymath:   ['Equation', null, false],
+  math:          ['Equation', null, false, false],
   array:         ['AlignedArray'],
+  darray:        ['AlignedArray', null, 'D'],
   equation:      ['Equation', null, true],
-  eqnarray:      ['EqnArray', null, true, true, 'rcl',
+  eqnarray:      ['EqnArray', null, true, true, 'rcl', 'bmt',
                   ParseUtil.cols(0, MATHSPACE.thickmathspace), '.5em'],
   indentalign:   ['IndentAlign']
 }, BaseMethods);

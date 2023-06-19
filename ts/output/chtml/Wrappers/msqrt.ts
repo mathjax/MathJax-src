@@ -101,10 +101,12 @@ export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
       },
       'mjx-sqrt': {
         display: 'inline-block',
-        'padding-top': '.07em'
+        'padding-top': '.075em'
       },
       'mjx-sqrt > mjx-box': {
-        'border-top': '.07em solid'
+        'border-top': '.075em solid',
+        'padding-left': '.03em',
+        'margin-left': '-.03em'
       },
       'mjx-sqrt.mjx-tall > mjx-box': {
         'padding-left': '.3em',
@@ -124,21 +126,25 @@ export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
       const sbox = surd.getBBox();
       const bbox = base.getOuterBBox();
       const [ , q] = this.getPQ(sbox);
-      const t = this.font.params.rule_thickness;
+      const t = this.font.params.surd_height;
       const H = bbox.h + q + t;
+      const adaptor = this.adaptor;
       //
       //  Create the HTML structure for the root
       //
       const CHTML = this.standardChtmlNodes(parents);
       let SURD, BASE, ROOT, root;
       if (this.root != null) {
-        ROOT = this.adaptor.append(CHTML[0], this.html('mjx-root')) as N;
+        ROOT = adaptor.append(CHTML[0], this.html('mjx-root')) as N;
         root = this.childNodes[this.root];
       }
-      const SQRT = this.adaptor.append(CHTML[0], this.html('mjx-sqrt', {}, [
+      const SQRT = adaptor.append(CHTML[0], this.html('mjx-sqrt', {}, [
         SURD = this.html('mjx-surd'),
         BASE = this.html('mjx-box', {style: {paddingTop: this.em(q)}})
       ])) as N;
+      if (t !== .06) {
+        adaptor.setStyle(BASE, 'border-top-width', this.em(t * this.font.params.rule_factor));
+      }
       //
       //  Add the child content
       //
@@ -151,7 +157,7 @@ export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
         // top is hard to align with the horizontal line, so overlap them
         // using CSS.
         //
-        this.adaptor.addClass(SQRT, 'mjx-tall');
+        adaptor.addClass(SQRT, 'mjx-tall');
       }
     }
 

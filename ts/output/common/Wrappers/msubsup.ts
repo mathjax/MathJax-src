@@ -143,7 +143,8 @@ export function CommonMsubMixin<
      * @override
      */
     public getOffset() {
-      return [0, -this.getV()];
+      const x = (this.baseIsChar ? 0 : this.getAdjustedIc());
+      return [x, -this.getV()];
     }
 
   } as any as B;
@@ -469,7 +470,7 @@ export function CommonMsubsupMixin<
       const x = this.getAdjustedIc();
       const [u, v] = this.getUVQ();
       const y = bbox.d - this.baseChild.getLineBBox(this.baseChild.breakCount).d;
-      bbox.combine(subbox, w, v - y);
+      bbox.combine(subbox, w + (this.baseIsChar ? 0 : x), v - y);
       bbox.combine(supbox, w + x, u - y);
       bbox.w += this.font.params.scriptspace;
       return bbox;

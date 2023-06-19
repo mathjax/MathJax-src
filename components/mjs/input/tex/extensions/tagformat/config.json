@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/tagformat",
+    "component": "input/tex/extensions/tagformat",
+    "targets": ["input/tex/tagformat"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/tagformat",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

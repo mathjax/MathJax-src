@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/enclose",
+    "component": "input/tex/extensions/enclose",
+    "targets": ["input/tex/enclose"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/enclose",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

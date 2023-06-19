@@ -37,7 +37,7 @@ new CommandMap('Braket-macros', {
   Bra: ['Macro', '{\\left\\langle {#1} \\right\\vert}', 1],
   Ket: ['Macro', '{\\left\\vert {#1} \\right\\rangle}', 1],
   Braket: ['Braket', '\u27E8', '\u27E9', true, Infinity],
-  Set: ['Braket', '{', '}', true, 1],
+  Set: ['Braket', '{', '}', true, 1, true],
   // Not part of the LaTeX package:
   ketbra: ['Macro', '{\\vert {#1} \\rangle\\langle {#2} \\vert}', 2],
   Ketbra: ['Macro', '{\\left\\vert {#1} \\right\\rangle\\left\\langle {#2} \\right\\vert}', 2],

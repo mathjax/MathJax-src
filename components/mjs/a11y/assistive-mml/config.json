@@ -1,0 +1,13 @@
+{
+  "build": {
+    "component": "a11y/assistive-mml",
+    "targets": ["a11y/assistive-mml.ts"]
+  },
+  "webpack": {
+    "name": "a11y/assistive-mml",
+    "libs": [
+      "components/src/input/mml/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

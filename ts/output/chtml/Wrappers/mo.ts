@@ -91,63 +91,39 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
      */
     public static styles: StyleList = {
       'mjx-stretchy-h': {
-        display: 'inline-table',
-        width: '100%'
+        display: 'inline-block',
       },
       'mjx-stretchy-h > *': {
-        display: 'table-cell',
-        width: 0
-      },
-      'mjx-stretchy-h > * > mjx-c': {
         display: 'inline-block',
-        transform: 'scalex(1.0000001)'      // improves blink positioning
+        width: 0
       },
       'mjx-stretchy-h > mjx-ext': {
         '/* IE */ overflow': 'hidden',
         '/* others */ overflow': 'clip visible',
         width: '100%',
+        border: '0px solid transparent',
+        'box-sizing': 'border-box',
         'text-align': 'center'
       },
       'mjx-stretchy-h > mjx-ext > mjx-c': {
         transform: 'scalex(500)',
         width: 0
       },
-      'mjx-stretchy-h > mjx-beg > mjx-c': {
-        'margin-right': '-.1em'
-      },
-      'mjx-stretchy-h > mjx-end > mjx-c': {
-        'margin-left': '-.1em'
-      },
 
       'mjx-stretchy-v': {
-        display: 'inline-block'
+        display: 'inline-block',
+        'text-align': 'center'
       },
       'mjx-stretchy-v > *': {
-        display: 'block'
-      },
-      'mjx-stretchy-v > mjx-beg': {
+        display: 'block',
         height: 0
       },
-      'mjx-stretchy-v > mjx-end > mjx-c': {
-        display: 'block'
-      },
-      'mjx-stretchy-v > * > mjx-c': {
-        transform: 'scaley(1.0000001)',       // improves Firefox and blink positioning
-        'transform-origin': 'left center',
-      },
       'mjx-stretchy-v > mjx-ext': {
-        display: 'block',
-        height: '100%',
-        'box-sizing': 'border-box',
-        border: '0px solid transparent',
         '/* IE */ overflow': 'hidden',
         '/* others */ overflow': 'visible clip',
-      },
-      'mjx-stretchy-v > mjx-ext > mjx-c': {
-        width: 'auto',
-        'box-sizing': 'border-box',
-        transform: 'scaleY(500) translateY(.075em)',
-        overflow: 'visible'
+        height: '100%',
+        border: '0px solid transparent',
+        'box-sizing': 'border-box'
       },
       'mjx-mark': {
         display: 'inline-block',
@@ -255,7 +231,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       if (n) {
         const options = this.font.getChar(v, n)[3];
         const letter = options.f || (v === 'normal' ? '' : this.font.getVariant(v).letter);
-        const font = options.F || (letter ? `${this.font.cssFontPrefix}-${letter}` : '');
+        const font = options.ff || (letter ? `${this.font.cssFontPrefix}-${letter}` : '');
         let c = (options.c as string || String.fromCodePoint(n))
           .replace(/\\[0-9A-F]+/ig, (x) => String.fromCodePoint(parseInt(x.substr(1), 16)));
         content.push(this.html(part, {}, [

@@ -24,8 +24,8 @@
 import { SpeechExplorer } from './explorer/KeyExplorer.js';
 import { ExplorerMathItem } from './explorer.js';
 import {MJContextMenu} from '../ui/menu/MJContextMenu.js';
-import {Submenu} from 'mj-context-menu/js/item_submenu.js';
-import Sre from './sre.js';
+import {SubMenu, Submenu} from '../ui/menu/mj-context-menu.js';
+import {Sre} from './sre.js';
 
 /**
  * Values for the ClearSpeak preference variables.
@@ -46,9 +46,9 @@ function csPrefsVariables(menu: MJContextMenu, prefs: string[]) {
       name: 'csprf_' + pref,
       setter: (value: string) => {
         csPrefsSetting[pref] = value;
-          srVariable.setValue(
+        srVariable.setValue(
           'clearspeak-' +
-              Sre.clearspeakPreferences.toPreference(csPrefsSetting)
+            Sre.clearspeakPreferences.toPreference(csPrefsSetting)
         );
       },
       getter: () => { return csPrefsSetting[pref] || 'Auto'; }
@@ -101,19 +101,21 @@ function csSelectionBox(menu: MJContextMenu, locale: string) {
  */
 function basePreferences(previous: string) {
   const items = [
-      {
-        type: 'radio',
-        content: 'No Preferences',
-        id: 'clearspeak-default',
-        variable: 'speechRules'
-      },
-      {
-        type: 'radio',
-        content: 'Current Preferences',
-        id: 'clearspeak-' + previous,
-        variable: 'speechRules'
-      },
-      { type: 'rule' },
+    {
+      type: 'radio',
+      content: 'No Preferences',
+      id: 'clearspeak-default',
+      variable: 'speechRules'
+    },
+    {
+      type: 'radio',
+      content: 'Current Preferences',
+      id: 'clearspeak-' + previous,
+      variable: 'speechRules'
+    },
+    {
+      type: 'rule'
+    },
   ];
   return items;
 }
@@ -133,8 +135,8 @@ function smartPreferences(previous: string, smart: string, locale: string) {
     return [];
   }
   const items = [
-    { type: 'label', content: 'Preferences for ' + smart },
-    { type: 'rule' }
+    {type: 'label', content: 'Preferences for ' + smart},
+    {type: 'rule'}
   ];
   return items.concat(loc[smart].map(function (x) {
     const [key, value] = x.split('_');
@@ -189,12 +191,16 @@ export function clearspeakMenu(menu: MJContextMenu, sub: Submenu) {
 }
 MJContextMenu.DynamicSubmenus.set('Clearspeak', clearspeakMenu);
 
+let LOCALE_MENU: SubMenu = null;
 /**
  * Creates dynamic locale menu.
  * @param {MJContextMenu} menu The context menu.
  * @param {Submenu} sub The submenu to attach elements to.
  */
 export function localeMenu(menu: MJContextMenu, sub: Submenu) {
+  if (LOCALE_MENU) {
+    return LOCALE_MENU;
+  }
   let radios: {type: string, id: string,
                content: string, variable: string}[] = [];
   for (let lang of Sre.locales.keys()) {
@@ -203,7 +209,8 @@ export function localeMenu(menu: MJContextMenu, sub: Submenu) {
                  content: Sre.locales.get(lang) || lang, variable: 'locale'});
   }
   radios.sort((x, y) => x.content.localeCompare(y.content, 'en'));
-  return menu.factory.get('subMenu')(menu.factory, {
+  LOCALE_MENU = menu.factory.get('subMenu')(menu.factory, {
     items: radios, id: 'Language'}, sub);
+  return LOCALE_MENU;
 }
 MJContextMenu.DynamicSubmenus.set('A11yLanguage', localeMenu);

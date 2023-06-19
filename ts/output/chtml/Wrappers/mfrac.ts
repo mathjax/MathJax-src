@@ -165,7 +165,7 @@ export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
         'box-sizing': 'border-box',
         'min-height': '1px',
         height: '.06em',               // t = rule_thickness
-        'border-top': '.06em solid',   // t
+        'border-top': '.075em solid',  // t * rule_factor (extra thickness as borders tend to be thin)
         margin: '.06em -.1em',         // t
         overflow: 'hidden'
       },
@@ -225,10 +225,11 @@ export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
       const tex = this.font.params;
       if (t !== .06) {
         const a = tex.axis_height;
+        const r = this.font.params.rule_factor;
         const tEm = this.em(t);
         const {T, u, v} = this.getTUV(display, t);
         const m = (display ? this.em(3 * t) : tEm) + ' -.1em';
-        attr.style = {height: tEm, 'border-top': tEm + ' solid', margin: m};
+        attr.style = {height: tEm, 'border-top': this.em(t * r) + ' solid', margin: m};
         const nh = this.em(Math.max(0, u));
         nsattr.style = {height: nh, 'vertical-align': '-' + nh};
         dsattr.style = {height: this.em(Math.max(0, v))};

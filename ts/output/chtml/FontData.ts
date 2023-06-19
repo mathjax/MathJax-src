@@ -38,7 +38,8 @@ export * from '../common/FontData.js';
 export interface ChtmlCharOptions extends CharOptions {
   c?: string;                   // the content value (for css)
   f?: string;                   // the font postfix (for css)
-  F?: string;                   // the full font css class (for extensions)
+  ff?: string;                  // the full font css class (for extensions)
+  cmb?: boolean;                // true if this is a combining character
 }
 
 /**
@@ -105,6 +106,13 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
    */
   protected static defaultFonts = {};
 
+  /**
+   * The combining character ranges
+   */
+  protected static combiningChars: [number, number][] = [
+    [0x300, 0x36F] , [0x20D0, 0x20FF]
+  ];
+
   /***********************************************************************/
 
   /**
@@ -150,8 +158,9 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
   }
 
   /**
-   * @param {string[]} fonts   The IDs for the fonts to add CSS for
-   * @param {string} root      The root URL for the fonts (can be set by extensions)
+   * @param {StyleList} styles   The style object to add styles to
+   * @param {string[]} fonts     The IDs for the fonts to add CSS for
+   * @param {string} root        The root URL for the fonts (can be set by extensions)
    */
   public static addDynamicFontCss(styles: StyleList, fonts: string[], root: string) {
     const fontStyles: StyleList = {};
@@ -212,12 +221,19 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
   public defineChars(name: string, chars: ChtmlCharMap) {
     super.defineChars(name, chars);
     const letter = this.variant[name].letter;
+    const CLASS = this.constructor as typeof ChtmlFontData;
     for (const n of Object.keys(chars)) {
       const i = parseInt(n);
       if (!Array.isArray(chars[i])) continue;
-      const options = ChtmlFontData.charOptions(chars, i);
+      const options = CLASS.charOptions(chars, i);
       if (options.f === undefined) {
         options.f = letter;
+      }
+      for (const [m, M] of CLASS.combiningChars) {
+        if (i >= m && i <= M) {
+          options.cmb = true;
+          break;
+        }
       }
     }
   }
@@ -346,24 +362,21 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
     const Hb = this.addDelimiterVPart(styles, c, 'beg', beg, begV, HDW);
     this.addDelimiterVPart(styles, c, 'ext', ext, extV, HDW);
     const He = this.addDelimiterVPart(styles, c, 'end', end, endV, HDW);
-    const css: StyleData = {};
     if (mid) {
       const Hm = this.addDelimiterVPart(styles, c, 'mid', mid, midV, HDW);
-      css.height = '50%';
-      styles['mjx-stretchy-v' + c + ' > mjx-mid'] = {
-        'margin-top': this.em(-Hm / 2),
-        'margin-bottom': this.em(-Hm / 2)
+      const m = this.em(Hm / 2 - .03);
+      styles[`mjx-stretchy-v${c} > mjx-ext:first-of-type`] = {
+        height: '50%',
+        'border-width': `${this.em0(Hb - .03)} 0 ${m}`
       };
-    }
-    if (Hb) {
-      css['border-top-width'] = this.em0(Hb - .03);
-    }
-    if (He) {
-      css['border-bottom-width'] = this.em0(He - .03);
-      styles['mjx-stretchy-v' + c + ' > mjx-end'] = {'margin-top': this.em(-He)};
-    }
-    if (Object.keys(css).length) {
-      styles['mjx-stretchy-v' + c + ' > mjx-ext'] = css;
+      styles[`mjx-stretchy-v${c} > mjx-ext:last-of-type`] = {
+        height: '50%',
+        'border-width': `${m} 0 ${this.em0(He - .03)}`
+      };
+    } else if (He || Hb) {
+      styles['mjx-stretchy-v' + c + ' > mjx-ext'] = {
+        'border-width': `${this.em0(Hb - .03)} 0 ${this.em0(He - .03)}`
+      };
     }
   }
 
@@ -381,19 +394,36 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
     v: string, HDW: ChtmlCharData
   ): number {
     if (!n) return 0;
-    const data = this.getChar(v, n);
-    const dw = (HDW[2] - data[2]) / 2;
-    const css: StyleData = {};
+    const [h, d, w] = this.getChar(v, n);
+    const css: StyleData = {width: this.em0(w)};
     if (part !== 'ext') {
-      css.padding = this.padding(data, dw);
-    } else {
-      css.width = this.em0(HDW[2]);
-      if (dw) {
-        css['padding-left'] = this.em0(dw);
+      //
+      // If the non-extender is wider than the assembly,
+      //   use negative margins to center over the assembly
+      //
+      if (w > HDW[2]) {
+        css.margin = `0 ${this.em((HDW[2] - w) / 2)}`;
       }
+      //
+      // Non-extenders are 0 height, so place properly
+      //
+      const y = (part === 'beg' ? h : part === 'end' ? -d : (h - d) / 2);
+      if (y > 0) {
+        css['padding-top'] = this.em(y);
+      } else if (y < 0) {
+        css.transform = `translateY(${this.em(y)})`;
+      }
+    } else {
+      //
+      //  Put one fifth above the top of the extender (to avoid ragged ends)
+      //  and then scale with origin at the top of the extender (so most extends down)
+      //
+      const y = h - (h + d) / 5;
+      css.transform = `translateY(${this.em(y)}) scaleY(500)`;
+      css['transform-origin'] = `center ${this.em(.03 - y)}`;
     }
-    styles['mjx-stretchy-v' + c + ' mjx-' + part + ' mjx-c'] = css;
-    return data[0] + data[1];
+    styles[`mjx-stretchy-v${c} mjx-${part} mjx-c`] = css;
+    return h + d;
   }
 
   /*******************************************************/
@@ -405,15 +435,38 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
    * @param {ChtmlDelimiterData} data  The data for the delimiter whose CSS is to be added
    */
   protected addDelimiterHStyles(styles: StyleList, n: number, c: string, data: ChtmlDelimiterData) {
+    const HDW = [...data.HDW] as ChtmlCharData;
     const [beg, ext, end, mid] = data.stretch;
     const [begV, extV, endV, midV] = this.getStretchVariants(n);
-    const HDW = data.HDW as ChtmlCharData;
-    this.addDelimiterHPart(styles, c, 'beg', beg, begV, HDW);
+    if (data.hd && !this.options.mathmlSpacing) {
+      //
+      // Interpolate between full character height/depth and that of the extender,
+      //   which is what TeX uses, but TeX's fonts are set up to have extra height
+      //   or depth for some extenders, so this factor helps get spacing that is closer
+      //   to TeX spacing.
+      //
+      const t = this.params.extender_factor;
+      HDW[0] = HDW[0] * (1 - t) + data.hd[0] * t;
+      HDW[1] = HDW[1] * (1 - t) + data.hd[1] * t;
+    }
+    const Wb = this.addDelimiterHPart(styles, c, 'beg', beg, begV, HDW);
     this.addDelimiterHPart(styles, c, 'ext', ext, extV, HDW);
-    this.addDelimiterHPart(styles, c, 'end', end, endV, HDW);
+    const We = this.addDelimiterHPart(styles, c, 'end', end, endV, HDW);
     if (mid) {
-      this.addDelimiterHPart(styles, c, 'mid', mid, midV, HDW);
-      styles['mjx-stretchy-h' + c + ' > mjx-ext'] = {width: '50%'};
+      const Wm = this.addDelimiterHPart(styles, c, 'mid', mid, midV, HDW);
+      const m = this.em0(Wm / 2 - .03);
+      styles[`mjx-stretchy-h${c} > mjx-ext:first-of-type`] = {
+        width: '50%',
+        'border-width': `0 ${m} 0 ${this.em0(Wb - .03)}`
+      };
+      styles[`mjx-stretchy-h${c} > mjx-ext:last-of-type`] = {
+        width: '50%',
+        'border-width': `0 ${this.em0(We - .03)} 0 ${m}`
+      };
+    } else if (Wb || We) {
+      styles[`mjx-stretchy-h${c} > mjx-ext`] = {
+        'border-width': `0 ${this.em0(We - .03)} 0 ${this.em0(Wb - .03)}`
+      }
     }
   }
 
@@ -426,10 +479,19 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
    * @param {ChtmlCharData} HDW The height-depth-width data for the stretchy character
    */
   protected addDelimiterHPart(styles: StyleList, c: string, part: string, n: number, v: string, HDW: ChtmlCharData) {
-    if (!n) return;
-    const w = this.getChar(v, n)[2];
-    const css: StyleData = {padding: this.padding(HDW as ChtmlCharData, 0, w - HDW[2])};
-    styles['mjx-stretchy-h' + c + ' mjx-' + part + ' mjx-c'] = css;
+    if (!n) return 0;
+    const [ , , w, options] = this.getChar(v, n);
+    const css: StyleData = {
+      padding: this.padding(HDW as ChtmlCharData, w - HDW[2])
+    };
+    if (part === 'end') {
+      css['margin-left'] = this.em(-w);
+    } else if (part === 'mid') {
+      css['margin-left'] = this.em(-w / 2);
+    }
+    this.checkCombiningChar(options, css);
+    styles[`mjx-stretchy-h${c} mjx-${part} mjx-c`] = css;
+    return w;
   }
 
   /*******************************************************/
@@ -443,9 +505,33 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
   protected addCharStyles(styles: StyleList, vletter: string, n: number, data: ChtmlCharData) {
     const options = data[3] as ChtmlCharOptions;
     const letter = (options.f !== undefined ? options.f : vletter);
-    const font = options.F || (letter ? `${this.cssFontPrefix}-${letter}` : '');
+    const font = options.ff || (letter ? `${this.cssFontPrefix}-${letter}` : '');
     const selector = 'mjx-c' + this.charSelector(n) + (font ? '.' + font : '');
-    styles[selector] = {padding: this.padding(data, 0, options.ic || 0)};
+    const padding = options.oc || options.ic || 0;
+    styles[selector] = {padding: this.padding(data, padding)} as StyleData;
+    if (options.oc) {
+      styles[selector + '[noic]'] = {'padding-right': this.em(data[2])};
+    }
+    this.checkCombiningChar(options, styles[selector]);
+  }
+
+  /**
+   * @param {ChtmlCharoptions} options   The character options
+   * @param {StyleData} css              The style object to adjust
+   */
+  protected checkCombiningChar(options: ChtmlCharOptions, css: StyleData) {
+    if (!options.cmb) return;
+    //
+    //  Some browsers now handle combining characters as 0-width even when they aren't, so
+    //  we adjust the CSS to handle both automatic 0-width as well as non-zero width characters.
+    //
+    const pad = (css.padding as string).split(/ /);
+    css.width = pad[1];
+    pad[1] = '0';
+    if (!pad[3]) {
+      pad.pop();
+    }
+    css.padding = pad.join(' ');
   }
 
   /***********************************************************************/
@@ -468,12 +554,11 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
 
   /**
    * @param {ChtmlCharData} data   The [h, d, w] data for the character
-   * @param {number} dw            The (optional) left offset of the glyph
    * @param {number} ic            The (optional) italic correction value
    * @return {string}              The padding string for the h, d, w.
    */
-  public padding([h, d, w]: ChtmlCharData, dw: number = 0, ic: number = 0): string {
-    return [h, w + ic, d, dw].map(this.em0).join(' ');
+  public padding([h, d, w]: ChtmlCharData, ic: number = 0): string {
+    return [h, w + ic, d, 0].map(this.em0).join(' ');
   }
 
   /**

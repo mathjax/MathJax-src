@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/boldsymbol",
+    "component": "input/tex/extensions/boldsymbol",
+    "targets": ["input/tex/boldsymbol"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/boldsymbol",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

@@ -30,6 +30,7 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMath} from '../../../core/MmlTree/MmlNodes/math.js';
 import {StyleList} from '../../../util/StyleList.js';
 import {BBox} from '../../../util/BBox.js';
+import {ZeroFontDataUrl} from './zero.js';
 
 /*****************************************************************/
 /**
@@ -78,7 +79,7 @@ export const SvgMath = (function <N, T, D>(): SvgMathClass<N, T, D> {
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class SvgMath extends Base extends SvgMathNTD<N, T, D> {
+  return class SvgMath extends Base implements SvgMathNTD<N, T, D> {
 
     /**
      * @override
@@ -107,63 +108,46 @@ export const SvgMath = (function <N, T, D>(): SvgMathClass<N, T, D> {
         'justify-content': 'right'
       },
       //
-      //  For inline breakpoints, use a scaled space and make it breakable
-      //    (The space is .25em, so make everything 4 times the usual.
-      //     This will need to be adjusted when we do other fonts: we will
-      //     need one where the space is 1em)
+      //  For inline breakpoints, use a space that is 1em width, make it breakable,
+      //    and then set the letter-spacing to make the sace the proper size.
       //
-      'mjx-break::after': {
+      'mjx-container[jax="SVG"] mjx-break::after': {
         content: '" "',
         'white-space': 'normal',
-      },
-      'mjx-break': {
+        'line-height': '0',
         'font-family': 'MJX-ZERO'
       },
+      'mjx-break[size="0"]': {
+        'letter-spacing': (.001 - 1) + 'em'
+      },
       'mjx-break[size="1"]': {
-        'font-size': '11.1%'
+        'letter-spacing': (.111 - 1) + 'em'
       },
       'mjx-break[size="2"]': {
-        'font-size': '16.7%'
+        'letter-spacing': (.167 - 1) + 'em'
       },
       'mjx-break[size="3"]': {
-        'font-size': '22.2%'
+        'letter-spacing': (.222 - 1) + 'em'
       },
       'mjx-break[size="4"]': {
-        'font-size': '27.8%'
+        'letter-spacing': (.278 - 1) + 'em'
       },
       'mjx-break[size="5"]': {
-        'font-size': '33.3%'
+        'letter-spacing': (.333 - 1) + 'em'
       },
-      'mjx-break[newline]::after': {
-        display: 'block'
+      'mjx-container[jax="SVG"] mjx-break[newline]::before': {
+        'white-space': 'pre',
+        content: '"\\A"'
+      },
+      'mjx-break[newline] + svg[width="0.054ex"]': {
+        'margin-right': '-1px'
+      },
+      'mjx-break[prebreak]': {
+        'letter-spacing': '-.999em'
       },
       '@font-face /* zero */': {
         'font-family': 'MJX-ZERO',
-        'src': [
-          'url(data:application/x-font-woff;charset=utf-8;base64,',
-          'T1RUTwAJAIAAAwAQQ0ZGIGnFMZkAAARQAAAAlE9TLzJpUWOBAAABAAAAAGBjbWFwAAwAUwAABAQAAAAs',
-          'aGVhZCFRvpAAAACcAAAANmhoZWEC8AD9AAAA1AAAACRobXR4A+gAAAAABOQAAAAIbWF4cAACUAAAAAD4',
-          'AAAABm5hbWVNb8+2AAABYAAAAqNwb3N0AAMAAAAABDAAAAAgAAEAAAABAABVWOu4Xw889QADA+gAAAAA',
-          '3ym+2AAAAADfKb7YAAAAAAPoAAAAAAADAAIAAAAAAAAAAQAAAu79EgAAA+gAAAAAAAAAAQAAAAAAAAAA',
-          'AAAAAAAAAAIAAFAAAAIAAAADA+gB9AAFAAACigK7AAAAjAKKArsAAAHfADEBAgAAAAAAAAAAAAAAAAAA',
-          'AAEAAAAAAAAAAAAAAABYWFhYAEAAIAAgAu79EgAAAu4C7gAAAAEAAAAAAXcAAAAgACAAAAAAACIBngAB',
-          'AAAAAAAAAAEAQQABAAAAAAABAAsAAAABAAAAAAACAAcAIQABAAAAAAADABUAxgABAAAAAAAEABMANgAB',
-          'AAAAAAAFAAsApQABAAAAAAAGABIAbwABAAAAAAAHAAEAQQABAAAAAAAIAAEAQQABAAAAAAAJAAEAQQAB',
-          'AAAAAAAKAAEAQQABAAAAAAALAAEAQQABAAAAAAAMAAEAQQABAAAAAAANAAEAQQABAAAAAAAOAAEAQQAB',
-          'AAAAAAAQAAsAAAABAAAAAAARAAcAIQADAAEECQAAAAIAXwADAAEECQABABYACwADAAEECQACAA4AKAAD',
-          'AAEECQADACoA2wADAAEECQAEACYASQADAAEECQAFABYAsAADAAEECQAGACQAgQADAAEECQAHAAIAXwAD',
-          'AAEECQAIAAIAXwADAAEECQAJAAIAXwADAAEECQAKAAIAXwADAAEECQALAAIAXwADAAEECQAMAAIAXwAD',
-          'AAEECQANAAIAXwADAAEECQAOAAIAXwADAAEECQAQABYACwADAAEECQARAA4AKG1qeC1sbS16ZXJvAG0A',
-          'agB4AC0AbABtAC0AegBlAHIAb1JlZ3VsYXIAUgBlAGcAdQBsAGEAcm1qeC1sbS16ZXJvIFJlZ3VsYXIA',
-          'bQBqAHgALQBsAG0ALQB6AGUAcgBvACAAUgBlAGcAdQBsAGEAcm1qeC1sbS16ZXJvUmVndWxhcgBtAGoA',
-          'eAAtAGwAbQAtAHoAZQByAG8AUgBlAGcAdQBsAGEAclZlcnNpb24gMC4xAFYAZQByAHMAaQBvAG4AIAAw',
-          'AC4AMSA6bWp4LWxtLXplcm8gUmVndWxhcgAgADoAbQBqAHgALQBsAG0ALQB6AGUAcgBvACAAUgBlAGcA',
-          'dQBsAGEAcgAAAAABAAMAAQAAAAwABAAgAAAABAAEAAEAAAAg//8AAAAg////4QABAAAAAAADAAAAAAAA',
-          'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAEAQABAQETbWp4LWxtLXplcm9SZWd1bGFyAAEBASf4GwD4',
-          'HAL4HQP4HgSLi/mC+nwFHQAAAIYPHQAAAIkRix0AAACUEgAFAQEMHyoxNlZlcnNpb24gMC4xbWp4LWxt',
-          'LXplcm8gUmVndWxhcm1qeC1sbS16ZXJvUmVndWxhcnNwYWNlAAAAAYsAAgEBAwaLDvp8DgAAAAAD6AAA',
-          ') format("woff")'
-        ].join('')
+        'src': ZeroFontDataUrl
       }
     };
 

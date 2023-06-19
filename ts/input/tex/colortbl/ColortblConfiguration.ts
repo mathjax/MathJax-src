@@ -93,8 +93,12 @@ export class ColorArrayItem extends ArrayItem {
     if (table.isKind('menclose')) {
       table = table.childNodes[0].childNodes[0];
     }
-    if (this.hasColor && table.attributes.get('frame') === 'none') {
-      table.attributes.set('frame', '');
+    if (this.hasColor) {
+      const attributes = table.attributes;
+      if (attributes.get('frame') === 'none' &&
+          attributes.get('data-frame-styles') === undefined) {
+        attributes.set('data-frame-styles', '');
+      }
     }
     return mml;
   }
@@ -131,8 +135,8 @@ new CommandMap('colortbl', {
     //  Check the position of the macro and save the color.
     //
     if (type === 'col') {
-      if (top.table.length) {
-        throw new TexError('ColumnColorNotTop', '%1 must be in the top row', name);
+      if (top.table.length && top.color.col[top.row.length] !== color) {
+        throw new TexError('ColumnColorNotTop', '%1 must be in the top row or preamble', name);
       }
       top.color.col[top.row.length] = color;
       //

@@ -1,0 +1,13 @@
+{
+  "build": {
+    "component": "input/tex/extensions/texhtml",
+    "targets": ["input/tex/texhtml"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/texhtml",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

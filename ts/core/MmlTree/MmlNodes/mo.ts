@@ -221,7 +221,7 @@ export class MmlMo extends AbstractMmlTokenNode {
       return (parent.coreMO() as MmlMo).getText();
     }
     while ((((parent.isKind('mrow') ||
-              (parent.isKind('TeXAtom') && parent.texClass < TEXCLASS.VCENTER) ||
+              parent.isKind('TeXAtom') ||
               parent.isKind('mstyle') ||
               parent.isKind('mphantom')) && parent.childNodes.length === 1) ||
             parent.isKind('munderover')) && parent.childNodes[0]) {
@@ -234,8 +234,7 @@ export class MmlMo extends AbstractMmlTokenNode {
    * @override
    */
   public hasSpacingAttributes() {
-    return this.attributes.isSet('lspace') ||
-      this.attributes.isSet('rspace');
+    return this.attributes.isSet('lspace') || this.attributes.isSet('rspace');
   }
 
   /**
@@ -272,8 +271,7 @@ export class MmlMo extends AbstractMmlTokenNode {
    */
   public setTeXclass(prev: MmlNode): MmlNode {
     let {form, fence} = this.attributes.getList('form', 'fence') as {form: string, fence: string};
-    if (this.getProperty('texClass') === undefined &&
-        (this.attributes.isSet('lspace') || this.attributes.isSet('rspace'))) {
+    if (this.getProperty('texClass') === undefined && this.hasSpacingAttributes()) {
       return null;
     }
     if (fence && this.texClass === TEXCLASS.REL) {

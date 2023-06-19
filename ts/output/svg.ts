@@ -73,16 +73,19 @@ CommonOutputJax<
    */
   public static OPTIONS: OptionList = {
     ...CommonOutputJax.OPTIONS,
+    blacker: 3,                     // the stroke-width to use for SVG character paths
     internalSpeechTitles: true,     // insert <title> tags with speech content
     titleID: 0,                     // initial id number to use for aria-labeledby titles
     fontCache: 'local',             // or 'global' or 'none'
     localID: null,                  // ID to use for local font cache (for single equation processing)
+    useXlink: true,                 // true to include xlink namespace for <use> hrefs, false to not
   };
 
   /**
    *  The default styles for SVG
    */
   public static commonStyles: CssStyleList = {
+    ...CommonOutputJax.commonStyles,
     'mjx-container[jax="SVG"]': {
       direction: 'ltr',
       'white-space': 'nowrap'
@@ -213,8 +216,8 @@ CommonOutputJax<
   }
 
   /**
-   * @param {WW} wrapper   The MML node wrapper whose SVG is to be produced
-   * @param {N} parent     The HTML node to contain the SVG
+   * @param {SvgWrapper<N, T, D>} wrapper   The MML node wrapper whose SVG is to be produced
+   * @param {N} parent                      The HTML node to contain the SVG
    */
   public processMath(wrapper: SvgWrapper<N, T, D>, parent: N) {
     //
@@ -290,7 +293,7 @@ CommonOutputJax<
         adaptor.setStyle(this.container, 'margin-right', this.ex(w));
       }
     }
-    if (this.options.fontCache !== 'none') {
+    if (this.options.fontCache !== 'none' && this.options.useXlink) {
       adaptor.setAttribute(svg, 'xmlns:xlink', XLINKNS);
     }
     return [svg, g];
@@ -342,8 +345,9 @@ CommonOutputJax<
   }
 
   /**
-   * @param {N} svg    The SVG node that is breaking
-   * @param {N} g      The group in which the math is typeset
+   * @param {SvgWrapper<N,T,D>} wrapper   The MML node wrapper whose SVG gets inline breaks
+   * @param {N} svg                       The SVG node that is breaking
+   * @param {N} g                         The group in which the math is typeset
    */
   protected handleInlineBreaks(wrapper: SvgWrapper<N, T, D>, svg: N, g: N) {
     const n = wrapper.childNodes[0].breakCount;
@@ -377,15 +381,17 @@ CommonOutputJax<
       //
       const [mml, mo] = wrapper.childNodes[0].getBreakNode(line);
       const forced = !!(mo && mo.node.getProperty('forcebreak'));
-      if (i || forced) {
+      if (forced && mo.node.attributes.get('linebreakstyle') === 'after') {
+        const k = mml.parent.node.childIndex(mml.node) + 1;
+        const next = mml.parent.childNodes[k + 1];
+        const dimen = (next ? next.getLineBBox(0).originalL : 0);
+        if (dimen) {
+          this.addInlineBreak(nsvg, dimen, forced);
+        }
+      } else if (forced || i) {
         const dimen = (mml && !newline ? mml.getLineBBox(0).originalL : 0);
         if (dimen || !forced) {
-          const space = LENGTHS.em(dimen);
-          adaptor.insert(
-            adaptor.node('mjx-break', !forced ? {newline: true} :
-                         SPACE[space] ? {size: SPACE[space]} : {style: {'font-size': dimen.toFixed(1) + '%'}}),
-            nsvg
-          );
+          this.addInlineBreak(nsvg, dimen, forced || !!mml.node.getProperty('forcebreak'));
         }
       }
       //
@@ -400,6 +406,27 @@ CommonOutputJax<
       adaptor.append(adaptor.firstChild(adaptor.parent(svg)) as N, adaptor.firstChild(svg));
     }
     adaptor.remove(svg);
+  }
+
+  /**
+   * @param {N} nsvg           The svg where the break is to be added
+   * @param {number} dimen     The size of the break
+   * @param {boolean} forced   Whether the break is forced or not
+   */
+  protected addInlineBreak(nsvg: N, dimen: number, forced: boolean) {
+    const adaptor = this.adaptor;
+    const space = LENGTHS.em(dimen);
+    if (!forced) {
+      adaptor.insert(adaptor.node('mjx-break', {prebreak: true}), nsvg);
+    }
+    adaptor.insert(
+      adaptor.node(
+        'mjx-break',
+        !forced ? {newline: true} :
+        SPACE[space] ? {size: SPACE[space]} : {style: `letter-spacing: ${LENGTHS.em(dimen - 1)}`}
+      ),
+      nsvg
+    );
   }
 
   /**

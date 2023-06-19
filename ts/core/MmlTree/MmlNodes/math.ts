@@ -53,7 +53,7 @@ export class MmlMath extends AbstractMmlLayoutNode {
     alttext: '',
     cdgroup: '',
     scriptsizemultiplier: 1 / Math.sqrt(2),
-    scriptminsize: '8px',        // Should be 8pt, but that's too big
+    scriptminsize: '.4em',       // Should be 8pt, but that's too big
     infixlinebreakstyle: 'before',
     lineleading: '100%',
     linebreakmultchar: '\u2062', // Invisible times
@@ -107,6 +107,16 @@ export class MmlMath extends AbstractMmlLayoutNode {
     level = (this.attributes.get('scriptlevel') ||
              (this.constructor as typeof MmlMath).defaults['scriptlevel']) as number;
     super.setChildInheritedAttributes(attributes, display, level, prime);
+  }
+
+  /**
+   * @override
+   */
+  public verifyTree(options: PropertyList = null) {
+    super.verifyTree(options);
+    if (this.parent) {
+      this.mError('Improper nesting of math tags', options, true);
+    }
   }
 
 }

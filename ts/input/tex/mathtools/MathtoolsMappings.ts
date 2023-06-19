@@ -185,8 +185,8 @@ new EnvironmentMap('mathtools-environments', ParseMethods.environment, {
 
   spreadlines: ['SpreadLines', true],
 
-  lgathered: ['AmsEqnArray', null, null, null, 'l', null, '.5em', 'D'],
-  rgathered: ['AmsEqnArray', null, null, null, 'r', null, '.5em', 'D'],
+  lgathered: ['AmsEqnArray', null, null, null, 'l', 't', null, '.5em', 'D'],
+  rgathered: ['AmsEqnArray', null, null, null, 'r', 't', null, '.5em', 'D'],
 
 }, MathtoolsMethods);
 

@@ -25,7 +25,7 @@
 
 import {MathDocument} from '../../core/MathDocument.js';
 import {CssStyles} from '../../util/StyleList.js';
-import Sre from '../sre.js';
+import {Sre} from '../sre.js';
 
 export type A11yDocument = MathDocument<HTMLElement, Text, Document>;
 
@@ -415,13 +415,6 @@ export class SpeechRegion extends LiveRegion {
     {color: 'red'}, {color: 'black'},
     {renderer: this.document.outputJax.name, browser: 'v3'}
   );
-
-  /**
-   * @override
-   */
-  public Clear(): void {
-    super.Clear();
-  }
 
   /**
    * @override

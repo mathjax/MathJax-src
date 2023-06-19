@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/colorv2",
+    "component": "input/tex/extensions/colorv2",
+    "targets": ["input/tex/colorv2"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/colorv2",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

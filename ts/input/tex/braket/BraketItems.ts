@@ -24,9 +24,11 @@
 
 
 import {CheckType, BaseItem, StackItem} from '../StackItem.js';
-import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
+import {TEXCLASS, MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import ParseUtil from '../ParseUtil.js';
+import {MATHSPACE, em} from '../../../util/lengths.js';
 
+const THINSPACE = em(MATHSPACE.thinmathspace);
 
 /**
  * A bra-ket command. Collates elements from the opening brace to the closing
@@ -50,10 +52,20 @@ export class BraketItem extends BaseItem {
   }
 
   /**
+   * The MathML nodes that appear before the latest bar (so that \over can be handled properly).
+   */
+  public barNodes: MmlNode[] = [];
+
+  /**
    * @override
    */
   public checkItem(item: StackItem): CheckType {
     if (item.isKind('close')) {
+      if (item.getProperty('braketbar')) {
+        this.barNodes.push(...super.toMml(true, true).childNodes);
+        this.Clear();
+        return BaseItem.fail;
+      };
       return [[this.factory.create('mml', this.toMml())], true];
     }
     if (item.isKind('mml')) {
@@ -70,19 +82,41 @@ export class BraketItem extends BaseItem {
   /**
    * @override
    */
-  public toMml() {
-    let inner = super.toMml();
+  public toMml(inferred: boolean = true, forceRow?: boolean) {
+    let inner = super.toMml(inferred, forceRow);
+    if (!inferred) {
+      //
+      // When toMml() is being called from processing an \over item, we don't want to
+      // add the delimiters, so just do the super toMml() method.  (Issue #3000)
+      //
+      return inner;
+    }
     let open = this.getProperty('open') as string;
     let close = this.getProperty('close') as string;
+    //
+    // Add any saved bar nodes
+    //
+    if (this.barNodes.length) {
+      inner = this.create('node', 'inferredMrow', [...this.barNodes, inner]);
+    }
     if (this.getProperty('stretchy')) {
+      //
+      //  Add spacing, if requested
+      //
+      if (this.getProperty('space')) {
+        inner = this.create('node', 'inferredMrow', [
+          this.create('token', 'mspace', {width: THINSPACE}),
+          inner,
+          this.create('token', 'mspace', {width: THINSPACE})
+        ]);
+      }
       return ParseUtil.fenced(this.factory.configuration, open, inner, close);
     }
     let attrs = {fence: true, stretchy: false, symmetric: true, texClass: TEXCLASS.OPEN};
     let openNode = this.create('token', 'mo', attrs, open);
     attrs.texClass = TEXCLASS.CLOSE;
     let closeNode = this.create('token', 'mo', attrs, close);
-    let mrow = this.create('node', 'mrow', [openNode, inner, closeNode],
-                         {open: open, close: close, texClass: TEXCLASS.INNER});
+    let mrow = this.create('node', 'mrow', [openNode, inner, closeNode], {open: open, close: close});
     return mrow;
   }
 

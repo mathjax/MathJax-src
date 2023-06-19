@@ -29,7 +29,8 @@ import {CommonWrapperFactory} from '../WrapperFactory.js';
 import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
 import {CommonOutputJax} from '../../common.js';
 import {CommonMunderover} from './munderover.js';
-import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
+import {CommonMo} from './mo.js';
+import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {BBox} from '../../../util/BBox.js';
@@ -462,8 +463,7 @@ export function CommonScriptbaseMixin<
       let core = this.getSemanticBase() || this.childNodes[0];
       while (core &&
              ((core.childNodes.length === 1 &&
-               (core.node.isKind('mrow') ||
-                (core.node.isKind('TeXAtom') && core.node.texClass < TEXCLASS.VCENTER) ||
+               (core.node.isKind('mrow') || core.node.isKind('TeXAtom') ||
                 core.node.isKind('mstyle') || core.node.isKind('mpadded') ||
                 core.node.isKind('mphantom') || core.node.isKind('semantics'))) ||
               (core.node.isKind('munderover') &&
@@ -543,8 +543,7 @@ export function CommonScriptbaseMixin<
      * @override
      */
     public getAdjustedIc(): number {
-      const bbox = this.baseCore.getOuterBBox();
-      return (bbox.ic ? 1.05 * bbox.ic + .05 : 0) * this.baseScale;
+      return (this.baseIc ? 1.05 * this.baseIc + .05 : 0);
     }
 
     /**
@@ -606,8 +605,10 @@ export function CommonScriptbaseMixin<
      */
     public baseCharZero(n: number): number {
       const largeop = !!this.baseCore.node.attributes.get('largeop');
+      const sized = !!(this.baseCore.node.isKind('mo') &&
+                        (this.baseCore as any as CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).size);
       const scale = this.baseScale;
-      return (this.baseIsChar && !largeop && scale === 1 ? 0 : n);
+      return (this.baseIsChar && !largeop && !sized && scale === 1 ? 0 : n);
     }
 
     /**
@@ -755,7 +756,10 @@ export function CommonScriptbaseMixin<
         //  Stretch the stretchable children
         //
         for (const child of stretchy) {
-          child.coreMO().getStretchedVariant([W / child.coreRScale()]);
+          const core = child.coreMO();
+          if (core.size === null) {
+            core.getStretchedVariant([W / child.coreRScale()]);
+          }
         }
       }
     }

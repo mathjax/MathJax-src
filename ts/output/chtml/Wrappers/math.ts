@@ -111,7 +111,7 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
         margin: '1em 0'
       },
       'mjx-container[jax="CHTML"][display="true"][width="full"]': {
-        display: 'flex',
+        display: 'flex'
       },
       'mjx-container[jax="CHTML"][display="true"] mjx-math': {
         padding: 0
@@ -125,29 +125,31 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
         'justify-content': 'right'
       },
       //
-      //  For inline breakpoints, use a scaled space and make it breakable
-      //    (The space is .25em, so make everything 4 times the usual.
-      //     This will need to be adjusted when we do other fonts: we will
-      //     need one where the space is 1em)
+      //  For inline breakpoints, use a space that is 1em width, make it breakable,
+      //    and then set the letter-spacing to make the sace the proper size.
       //
-      'mjx-break::after': {
+      'mjx-container[jax="CHTML"] mjx-break::after': {
         content: '" "',
-        'white-space': 'normal'
+        'white-space': 'normal',
+        'font-family': 'MJX-BRK'
+      },
+      'mjx-break[size="0"]': {
+        'letter-spacing': (.001 - 1) + 'em'
       },
       'mjx-break[size="1"]': {
-        'font-size': '11.1%'
+        'letter-spacing': (.111 - 1) + 'em'
       },
       'mjx-break[size="2"]': {
-        'font-size': '16.7%'
+        'letter-spacing': (.167 - 1) + 'em'
       },
       'mjx-break[size="3"]': {
-        'font-size': '22.2%'
+        'letter-spacing': (.222 - 1) + 'em'
       },
       'mjx-break[size="4"]': {
-        'font-size': '27.8%'
+        'letter-spacing': (.278 - 1) + 'em'
       },
       'mjx-break[size="5"]': {
-        'font-size': '33.3%'
+        'letter-spacing': (.333 - 1) + 'em'
       },
       'mjx-math[breakable]': {
         display: 'inline'
@@ -231,7 +233,7 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
     protected handleAttributes() {
       super.handleAttributes();
       const adaptor = this.adaptor;
-      if (this.node.getProperty('breakable')) {
+      if (this.node.getProperty('process-breaks')) {
         this.dom.forEach(dom => adaptor.setAttribute(dom, 'breakable', 'true'));
       }
     }

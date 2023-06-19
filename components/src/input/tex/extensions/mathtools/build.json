@@ -1,5 +1,0 @@
-{
-  "id": "[tex]/mathtools",
-  "component": "input/tex/extensions/mathtools",
-  "targets": ["input/tex/mathtools"]
-}

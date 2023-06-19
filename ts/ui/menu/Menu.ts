@@ -30,6 +30,8 @@ import {MathJaxObject as StartupObject} from '../../components/startup.js';
 import {MathJaxObject as LoaderObject} from '../../components/loader.js';
 import {OptionList, userOptions, defaultOptions, expandable} from '../../util/Options.js';
 
+import {SVG} from '../../output/svg.js';
+
 import * as AnnotationMenu from './AnnotationMenu.js';
 import {MJContextMenu} from './MJContextMenu.js';
 import {RadioCompare} from './RadioCompare.js';
@@ -39,28 +41,20 @@ import {MenuMathDocument} from './MenuHandler.js';
 import * as MenuUtil from './MenuUtil.js';
 
 
-import {Info} from 'mj-context-menu/js/info.js';
-import {Parser} from 'mj-context-menu/js/parse.js';
-import {Rule} from 'mj-context-menu/js/item_rule.js';
-import {CssStyles} from 'mj-context-menu/js/css_util.js';
-import {Submenu} from 'mj-context-menu/js/item_submenu.js';
-
-import Sre from '../../a11y/sre.js';
+import {Info, Parser, Rule, CssStyles, Submenu} from './mj-context-menu.js';
 
 
 /*==========================================================================*/
 
 /**
- * Declare the MathJax global and the navigator object (to check platform for MacOS)
- */
-declare namespace window {
-  const navigator: {platform: string};
-}
-
-/**
  * The global MathJax object
  */
 const MathJax = MJX as StartupObject & LoaderObject;
+
+/**
+ * The XML indentifiaction string
+ */
+const XMLDECLARATION = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>';
 
 /*==========================================================================*/
 
@@ -68,6 +62,7 @@ const MathJax = MJX as StartupObject & LoaderObject;
  * The various values that are stored in the menu
  */
 export interface MenuSettings {
+  filterSRE: boolean;
   texHints: boolean;
   semantics: boolean;
   zoom: string;
@@ -108,6 +103,8 @@ export interface MenuSettings {
 
 export type HTMLMATHITEM = MathItem<HTMLElement, Text, Document>;
 
+export type JaxList = {[name: string]: OutputJax<HTMLElement, Text, Document>};
+
 /*==========================================================================*/
 
 /**
@@ -126,6 +123,7 @@ export class Menu {
    */
   public static OPTIONS: OptionList = {
     settings: {
+      filterSRE: true,
       texHints: true,
       semantics: false,
       zoom: 'NoZoom',
@@ -156,6 +154,19 @@ export class Menu {
       OpenMath: ['OpenMath']
     })
   };
+
+  /**
+   * The CSS to include in SVG images
+   */
+  public static SvgCss: string = [
+    'svg a{fill:blue;stroke:blue}',
+    '[data-mml-node="merror"]>g{fill:red;stroke:red}',
+    '[data-mml-node="merror"]>rect[data-background]{fill:yellow;stroke:none}',
+    '[data-frame],[data-line]{stroke-width:70px;fill:none}',
+    '.mjx-dashed{stroke-dasharray:140}',
+    '.mjx-dotted{stroke-linecap:round;stroke-dasharray:0,140}',
+    'use[data-c]{stroke-width:3px}'
+  ].join('');
 
   /**
    * The number of startup modules that are currently being loaded
@@ -214,7 +225,7 @@ export class Menu {
   /**
    * Instances of the various output jax that we can switch to
    */
-  protected jax: {[name: string]: OutputJax<HTMLElement, Text, Document>} = {
+  protected jax: JaxList = {
     CHTML: null,
     SVG: null
   };
@@ -336,11 +347,52 @@ export class Menu {
   /**
    * The "Show As Annotation" info box
    */
-  protected annotationText = new SelectableInfo(
+  protected annotationBox = new SelectableInfo(
     'MathJax Annotation Text',
     () => {
       const text = AnnotationMenu.annotation;
       return '<pre style="font-size:125%; margin:0">' + this.formatSource(text) + '</pre>';
+    },
+    ''
+  );
+
+  /**
+   * The "Show As SVG Image" info box
+   */
+  protected svgImage = new SelectableInfo(
+    'MathJax SVG Image',
+    () => {
+      //
+      // SVG image inserted after it is created
+      //
+      return '<div id="svg-image" style="font-family: monospace; font-size:125%; margin:0">' +
+                'Generative SVG Image...</div>';
+    },
+    ''
+  );
+
+  /**
+   * The "Show As Speech Text" info box
+   */
+  protected speechText = new SelectableInfo(
+    'MathJax Speech Text',
+    () => {
+      if (!this.menu.mathItem) return '';
+      return '<div style="font-size:125%; margin:0">'
+        + this.formatSource(this.menu.mathItem.outputData.speech)
+        + '</div>';
+    },
+    ''
+  );
+
+  /**
+   * The "Show As Error Message" info box
+   */
+  protected errorMessage = new SelectableInfo(
+    'MathJax Error Message',
+    () => {
+      if (!this.menu.mathItem) return '';
+      return '<pre style="font-size:125%; margin:0">' + this.formatSource(this.menu.errorMsg) + '</pre>';
     },
     ''
   );
@@ -410,6 +462,7 @@ export class Menu {
       type: 'contextMenu',
       id: 'MathJax_Menu',
       pool: [
+        this.variable<boolean>('filterSRE'),
         this.variable<boolean>('texHints'),
         this.variable<boolean>('semantics'),
         this.variable<string> ('zoom'),
@@ -433,7 +486,9 @@ export class Menu {
         this.a11yVar<boolean>('braille'),
         this.a11yVar<boolean>('viewBraille'),
         this.a11yVar<boolean>('voicing'),
-        this.a11yVar<string>('locale', value => Sre.setupEngine({locale: value as string})),
+        this.a11yVar<string>('locale', value => {
+          MathJax._.a11y.sre.Sre.setupEngine({locale: value as string});
+        }),
         this.a11yVar<string> ('speechRules', value => {
           const [domain, style] = value.split('-');
           this.document.options.sre.domain = domain;
@@ -454,12 +509,22 @@ export class Menu {
         this.submenu('Show', 'Show Math As', [
           this.command('MathMLcode', 'MathML Code', () => this.mathmlCode.post()),
           this.command('Original', 'Original Form', () => this.originalText.post()),
-          this.submenu('ShowAnnotation', 'Annotation')
+          this.rule(),
+          this.command('Speech', 'Speech Text', () => this.speechText.post(), {disabled: true}),
+          this.command('SVG', 'SVG Image', () => this.postSvgImage(), {disabled: true}),
+          this.submenu('ShowAnnotation', 'Annotation'),
+          this.rule(),
+          this.command('Error', 'Error Message', () => this.errorMessage.post(), {disabled: true})
         ]),
         this.submenu('Copy', 'Copy to Clipboard', [
           this.command('MathMLcode', 'MathML Code', () => this.copyMathML()),
           this.command('Original', 'Original Form', () => this.copyOriginal()),
-          this.submenu('CopyAnnotation', 'Annotation')
+          this.rule(),
+          this.command('Speech', 'Speech Text', () => this.copySpeechText(), {disabled: true}),
+          this.command('SVG', 'SVG Image', () => this.copySvgImage(), {disabled: true}),
+          this.submenu('CopyAnnotation', 'Annotation'),
+          this.rule(),
+          this.command('Error', 'Error Message', () => this.copyErrorMessage(), {disabled: true})
         ]),
         this.rule(),
         this.submenu('Settings', 'Math Settings', [
@@ -491,6 +556,7 @@ export class Menu {
           this.rule(),
           this.command('Scale', 'Scale All Math...', () => this.scaleAllMath()),
           this.rule(),
+          this.checkbox('filterSRE', 'Filter semantic annotations', 'filterSRE'),
           this.checkbox('texHints', 'Add TeX hints to MathML', 'texHints'),
           this.checkbox('semantics', 'Add original as annotation', 'semantics'),
           this.rule(),
@@ -571,15 +637,26 @@ export class Menu {
     }) as MJContextMenu;
     const menu = this.menu;
     menu.findID('Settings', 'Overflow', 'Elide').disable();
+    menu.setJax(this.jax);
     this.about.attachMenu(menu);
     this.help.attachMenu(menu);
     this.originalText.attachMenu(menu);
     this.mathmlCode.attachMenu(menu);
+    this.originalText.attachMenu(menu);
+    this.svgImage.attachMenu(menu);
+    this.speechText.attachMenu(menu);
+    this.errorMessage.attachMenu(menu);
     this.zoomBox.attachMenu(menu);
     this.checkLoadableItems();
     this.enableExplorerItems(this.settings.explorer);
-    AnnotationMenu.setAnnotationBox(this.annotationText);
-    AnnotationMenu.setAnnotationTypes(this.options.annotationTypes);
+    const cache: [string, string][] = [];
+    MJContextMenu.DynamicSubmenus.set(
+      'ShowAnnotation',
+      AnnotationMenu.showAnnotations(
+        this.annotationBox, this.options.annotationTypes, cache));
+    MJContextMenu.DynamicSubmenus.set(
+      'CopyAnnotation',
+      AnnotationMenu.copyAnnotations(cache));
     CssStyles.addInfoStyles(this.document.document as any);
     CssStyles.addMenuStyles(this.document.document as any);
   }
@@ -667,7 +744,7 @@ export class Menu {
 
   /**
    * Merge menu settings into the a11y document options.
-   * @param {[key: string]: any} options The options.
+   * @param {{[key: string]: any}} options The options.
    */
   protected setA11y(options: {[key: string]: any}) {
     if (MathJax._.a11y && MathJax._.a11y.explorer) {
@@ -698,13 +775,16 @@ export class Menu {
   protected applySettings() {
     this.setTabOrder(this.settings.inTabOrder);
     this.document.options.enableAssistiveMml = this.settings.assistiveMml;
-    this.document.options.enableExplorer = this.settings.explorer;
-    this.document.outputJax.options.scale = parseFloat(this.settings.scale);
-    if (this.settings.renderer !== this.defaultSettings.renderer) {
-      this.setRenderer(this.settings.renderer);
-    }
-    this.document.outputJax.options.displayOverflow = this.settings.overflow.toLowerCase();
-    this.document.outputJax.options.linebreaks.inline = this.settings.breakInline;
+    const renderer = this.settings.renderer.replace(/[^a-zA-Z0-9]/g, '') || 'CHTML';
+    const promise = (renderer !== this.defaultSettings.renderer ?
+                     this.setRenderer(renderer, false) :
+                     Promise.resolve());
+    promise.then(() => {
+      this.document.options.enableExplorer = this.settings.explorer;
+      this.document.outputJax.options.scale = parseFloat(this.settings.scale);
+      this.document.outputJax.options.displayOverflow = this.settings.overflow.toLowerCase();
+      this.document.outputJax.options.linebreaks.inline = this.settings.breakInline;
+    });
   }
 
   /**
@@ -734,36 +814,46 @@ export class Menu {
   /**
    * If the jax is already on record, just use it, otherwise load the new one
    *
-   * @param {string} jax   The name of the jax to switch to
+   * @param {string} jax         The name of the jax to switch to
+   * @param {boolean} rerender   True if the document should be rerendered
+   * @return {Promise}           A promise that is resolved when the renderer is set
+   *                               and rerendering complete
    */
-  protected setRenderer(jax: string) {
-    if (this.jax[jax]) {
-      this.setOutputJax(jax);
-    } else {
-      const name = jax.toLowerCase();
+  protected setRenderer(jax: string, rerender: boolean = true): Promise<void> {
+    if (this.jax.hasOwnProperty(jax) && this.jax[jax]) {
+      return this.setOutputJax(jax, rerender);
+    }
+    const name = jax.toLowerCase();
+    return new Promise<void>((ok, fail) => {
       this.loadComponent('output/' + name, () => {
         const startup = MathJax.startup;
-        if (name in startup.constructors) {
-          startup.useOutput(name, true);
-          startup.output = startup.getOutputJax();
-          startup.output.setAdaptor(this.document.adaptor);
-          startup.output.initialize();
-          this.jax[jax] = startup.output;
-          mathjax.handleRetriesFor(() => this.setOutputJax(jax));
+        if (!(name in startup.constructors)) {
+          return fail(new Error(`Component ${name} not loaded`));
         }
+        startup.useOutput(name, true);
+        startup.output = startup.getOutputJax();
+        startup.output.setAdaptor(this.document.adaptor);
+        startup.output.initialize();
+        this.jax[jax] = startup.output;
+        this.setOutputJax(jax, rerender)
+          .then(() => ok())
+          .catch((err) => fail(err));
       });
-    }
+    });
   }
 
   /**
    * Set up the new jax and link it to the document, then rerender the math
    *
-   * @param {string} jax   The name of the jax to switch to
+   * @param {string} jax         The name of the jax to switch to
+   * @param {boolean} rerender   True if the document should be rerendered
+   * @return {Promise}           A promise that is resolved when the renderer is set
+   *                               and rerendering complete
    */
-  protected setOutputJax(jax: string) {
+  protected setOutputJax(jax: string, rerender: boolean = true): Promise<void> {
     this.jax[jax].setAdaptor(this.document.adaptor);
     this.document.outputJax = this.jax[jax];
-    this.rerender();
+    return (rerender ? mathjax.handleRetriesFor(() => this.rerender()) : Promise.resolve());
   }
 
   /**
@@ -954,12 +1044,91 @@ export class Menu {
 
   /**
    * @param {HTMLMATHITEM} math   The MathItem to serialize as MathML
-   * @returns {string}        The serialized version of the internal MathML
+   * @returns {string}            The serialized version of the internal MathML
    */
   protected toMML(math: HTMLMATHITEM): string {
-    return this.MmlVisitor.visitTree(math.root, math, {
+    const mml = this.MmlVisitor.visitTree(math.root, math, {
       texHints: this.settings.texHints,
       semantics: (this.settings.semantics && math.inputJax.name !== 'MathML')
+    });
+    return (!this.settings.filterSRE ?  mml :
+            mml.replace(/ (?:data-semantic-.*?|role|aria-(?:level|posinset|setsize))=".*?"/g, ''));
+  }
+
+  /**
+   * @param {HTMLMATHITEM} math   The MathItem to serialize as SVG
+   * @returns {Promise<string>}   A promise returning the serialized SVG
+   */
+  protected toSVG(math: HTMLMATHITEM): Promise<string> {
+    const jax = this.jax.SVG;
+    if (!jax) return Promise.resolve('SVG can\'t be produced.<br>Try switching to SVG output first.');
+    const adaptor = jax.adaptor;
+    const cache = jax.options.fontCache;
+    const breaks = !!math.root.getProperty('process-breaks');
+    if (cache !== 'global' && (math.display || !breaks) &&
+        adaptor.getAttribute(math.typesetRoot, 'jax') === 'SVG') {
+      for (const child of adaptor.childNodes(math.typesetRoot)) {
+        if (adaptor.kind(child) === 'svg') {
+          return Promise.resolve(this.formatSvg(adaptor.outerHTML(child as HTMLElement)));
+        }
+      }
+    }
+    return this.typesetSVG(math, cache, breaks);
+  }
+
+  /**
+   * @param {HTMLMATHITEM} math   The MathItem to serialize as SVG
+   * @param {string} cache        The SVG font cache type
+   * @param {boolean} breaks      True if there are inline breaks
+   * @returns {Promise<string>}   A promise returning the serialized SVG
+   */
+  protected typesetSVG(math: HTMLMATHITEM, cache: string, breaks: boolean): Promise<string> {
+    const jax = this.jax.SVG as SVG<HTMLElement, Text, Document>;
+    const div = jax.html('div');
+    if (cache === 'global') {
+      jax.options.fontCache = 'local';
+    }
+    const root = math.root;
+    math.root = root.copy(true);
+    math.root.setInheritedAttributes({}, math.display, 0, false);
+    if (breaks) {
+      math.root.walkTree((n) => {
+        n.removeProperty('process-breaks');
+        n.removeProperty('forcebreak');
+        n.removeProperty('breakable');
+      });
+    }
+    const promise = mathjax.handleRetriesFor(() => {
+      jax.toDOM(math, div, jax.document);
+    });
+    return promise.then(() => {
+      math.root = root;
+      jax.options.fontCache = cache;
+      return this.formatSvg(jax.adaptor.innerHTML(div));
+    })
+  }
+
+  /**
+   * @param {string} svg   The serialzied SVG to adjust
+   */
+  protected formatSvg(svg: string) {
+    const css = (this.constructor as typeof Menu).SvgCss;
+    svg = (svg.match(/^<svg.*?><defs>/) ?
+           svg.replace(/<defs>/, `<defs><style>${css}</style>`) :
+           svg.replace(/^(<svg.*?>)/, `$1<defs><style>${css}</style></defs>`));
+    svg = svg.replace(/ (?:role|focusable)=".*?"/g, '')
+             .replace(/"currentColor"/g, '"black"');
+    return `${XMLDECLARATION}\n${svg}`;
+  }
+
+  /**
+   * Get the SVG image and post it
+   */
+  public postSvgImage() {
+    this.svgImage.post();
+    this.toSVG(this.menu.mathItem).then((svg) => {
+      const html = this.svgImage.html.querySelector('#svg-image');
+      html.innerHTML = this.formatSource(svg).replace(/\n/g, '<br>');
     });
   }
 
@@ -1027,6 +1196,29 @@ export class Menu {
    */
   protected copyOriginal() {
     MenuUtil.copyToClipboard(this.menu.mathItem.math.trim());
+  }
+
+  /**
+   * Copy the SVG image to the clipboard
+   */
+  protected copySvgImage() {
+    this.toSVG(this.menu.mathItem).then((svg) => {
+      MenuUtil.copyToClipboard(svg);
+    });
+  }
+
+  /**
+   * Copy the speech text to the clipboard
+   */
+  protected copySpeechText() {
+    MenuUtil.copyToClipboard(this.menu.mathItem.outputData.speech);
+  }
+
+  /**
+   * Copy the error message to the clipboard
+   */
+  protected copyErrorMessage() {
+    MenuUtil.copyToClipboard(this.menu.errorMsg.trim());
   }
 
   /*======================================================================*/
@@ -1191,6 +1383,3 @@ export class Menu {
   /*======================================================================*/
 
 }
-// Adding dynamic submenus for annotations.
-MJContextMenu.DynamicSubmenus.set('ShowAnnotation', AnnotationMenu.showAnnotations);
-MJContextMenu.DynamicSubmenus.set('CopyAnnotation', AnnotationMenu.copyAnnotations);

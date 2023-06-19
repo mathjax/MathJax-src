@@ -138,8 +138,11 @@ export const ChtmlMpadded = (function <N, T, D>(): ChtmlMpaddedClass<N, T, D> {
       //  Create the HTML with the proper styles and content
       //
       chtml = [this.adaptor.append(chtml[0], this.html('mjx-block', {style: style}, content)) as N];
-      for (const child of this.childNodes) {
-        child.toCHTML([content[0] || chtml[0]]);
+      if (this.childNodes[0].childNodes.length) {
+        this.childNodes[0].toCHTML([content[0] || chtml[0]]);
+      } else if (dh || dd) {
+        // forces margins to take effect
+        this.adaptor.append(content[0] || chtml[0], this.html('mjx-box'));
       }
     }
 

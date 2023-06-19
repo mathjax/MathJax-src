@@ -29,6 +29,7 @@ import NodeUtil from '../NodeUtil.js';
 import TexParser from '../TexParser.js';
 import {AbstractMmlTokenNode} from '../../../core/MmlTree/MmlNode.js';
 
+
 export class AutoOpen extends BaseItem {
 
   /**
@@ -42,7 +43,7 @@ export class AutoOpen extends BaseItem {
    * The number of unpaired open delimiters that need to be matched before
    *   a close delimiter will close this item. (#2831)
    */
-  protected openCount: number = 0;
+  public openCount: number = 0;
 
   /**
    * @override
@@ -63,7 +64,14 @@ export class AutoOpen extends BaseItem {
   /**
    * @override
    */
-  public toMml() {
+  public toMml(inferred: boolean = true, forceRow?: boolean) {
+    if (!inferred) {
+      //
+      // When toMml() is being called from processing an \over item, we don't want to
+      // add the delimiters, so just do the super toMml() method. (Issue #3000)
+      //
+      return super.toMml(inferred, forceRow);
+    }
     // Smash and right/left
     let parser = this.factory.configuration.parser;
     let right = this.getProperty('right') as string;
@@ -94,11 +102,27 @@ export class AutoOpen extends BaseItem {
   }
 
   /**
+   * Test whether a fence is a closing one for this item,
+   *   decrementing the open count if appropriate.
+   */
+  public closing(fence: string) {
+    return (fence === this.getProperty('close') && !this.openCount--);
+  }
+
+  /**
    * @override
    */
   public checkItem(item: StackItem): CheckType {
-    let close = item.getProperty('autoclose');
-    if (close && close === this.getProperty('close') && !this.openCount--) {
+    //
+    // If we are closing \over items, we are done
+    //
+    if (item.getProperty('pre-autoclose')) {
+      return BaseItem.fail;
+    }
+    //
+    // If this is the closing fence, produce the proper output
+    //
+    if (item.getProperty('autoclose')) {
       if (this.getProperty('ignore')) {
         this.Clear();
         return [[], true];
@@ -114,6 +138,9 @@ export class AutoOpen extends BaseItem {
         this.openCount++;
       }
     }
+    //
+    // Do the default check
+    //
     return super.checkItem(item);
   }
 

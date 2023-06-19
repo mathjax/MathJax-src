@@ -25,7 +25,7 @@
  */
 
 import {MathJax as MJGlobal, MathJaxObject as MJObject,
-        MathJaxConfig as MJConfig, combineWithMathJax, combineDefaults} from './global.js';
+        MathJaxConfig as MJConfig, combineWithMathJax, combineDefaults, GLOBAL as global} from './global.js';
 
 import {MathDocument} from '../core/MathDocument.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
@@ -68,9 +68,14 @@ export type MATHDOCUMENT = MathDocument<any, any, any>;
 export type HANDLER = Handler<any, any, any>;
 export type DOMADAPTOR = DOMAdaptor<any, any, any>;
 export type INPUTJAX = InputJax<any, any, any>;
-export type OUTPUTJAX = OutputJax<any, any, any> & {font: any};
+export type OUTPUTJAX = OutputJax<any, any, any>;
 export type COMMONJAX = CommonOutputJax<any, any, any, any, any, any, any, any, any, any, any>;
 export type TEX = TeX<any, any, any>;
+
+/**
+ * Array of InputJax also with keys using name of jax
+ */
+export type JAXARRAY = INPUTJAX[] & {[name: string]: INPUTJAX};
 
 /**
  * A function to extend a handler class
@@ -84,7 +89,7 @@ export interface MathJaxObject extends MJObject {
   config: MathJaxConfig;
   startup: {
     constructors: {[name: string]: any};
-    input: INPUTJAX[];
+    input: JAXARRAY;
     output: OUTPUTJAX;
     handler: HANDLER;
     adaptor: DOMADAPTOR;
@@ -107,7 +112,7 @@ export interface MathJaxObject extends MJObject {
     makeOutputMethods(iname: string, oname: string, input: INPUTJAX): void;
     makeMmlMethods(name: string, input: INPUTJAX): void;
     makeResetMethod(name: string, input: INPUTJAX): void;
-    getInputJax(): INPUTJAX[];
+    getInputJax(): JAXARRAY;
     getOutputJax(): OUTPUTJAX;
     getAdaptor(): DOMADAPTOR;
     getHandler(): HANDLER;
@@ -115,11 +120,6 @@ export interface MathJaxObject extends MJObject {
   };
   [name: string]: any;    // Needed for the methods created by the startup module
 }
-
-/*
- * Access to the browser document
- */
-declare var global: {document: Document};
 
 /**
  * The implementation of the startup module
@@ -142,7 +142,7 @@ export namespace Startup {
   /**
    * The array of InputJax instances (created after everything is loaded)
    */
-  export let input: INPUTJAX[] = [];
+  export let input: JAXARRAY = [] as JAXARRAY;
 
   /**
    * The OutputJax instance (created after everything is loaded)
@@ -298,10 +298,22 @@ export namespace Startup {
    * Setting Mathjax.startup.pageReady in the configuration will override this.
    */
   export function defaultPageReady() {
-    return (CONFIG.loadAllFontFiles && output.font ? output.font.loadDynamicFiles() : Promise.resolve())
+    return (CONFIG.loadAllFontFiles && (output as COMMONJAX).font ?
+            (output as COMMONJAX).font.loadDynamicFiles() : Promise.resolve())
       .then(CONFIG.typeset && MathJax.typesetPromise ?
-            MathJax.typesetPromise(CONFIG.elements) as Promise<void> :
+            typesetPromise(CONFIG.elements) :
             Promise.resolve());
+  }
+
+  /**
+   * Perform the typesetting with handling of retries
+   */
+  export function typesetPromise(elements: any[]) {
+    document.options.elements = elements;
+    document.reset();
+    return mathjax.handleRetriesFor(() => {
+      document.render();
+    });
   }
 
   /**
@@ -364,11 +376,8 @@ export namespace Startup {
       document.render();
     };
     MathJax.typesetPromise = (elements: any[] = null) => {
-      document.options.elements = elements;
-      document.reset();
-      return mathjax.handleRetriesFor(() => {
-        document.render();
-      });
+      promise = promise.then(() => typesetPromise(elements));
+      return promise;
     };
     MathJax.typesetClear = (elements: any[] = null) => {
       if (elements) {
@@ -407,8 +416,11 @@ export namespace Startup {
       };
     MathJax[name + 'Promise'] =
       (math: string, options: OptionList = {}) => {
-        options.format = input.name;
-        return mathjax.handleRetriesFor(() => document.convert(math, options));
+        promise = promise.then(() => {
+          options.format = input.name;
+          return mathjax.handleRetriesFor(() => document.convert(math, options));
+        });
+        return promise;
       };
     MathJax[oname + 'Stylesheet'] = () => output.styleSheet(document);
     if ('getMetricsFor' in output) {
@@ -439,9 +451,12 @@ export namespace Startup {
       };
     MathJax[name + '2mmlPromise'] =
       (math: string, options: OptionList = {}) => {
-        options.end = STATE.CONVERT;
-        options.format = input.name;
-        return mathjax.handleRetriesFor(() => toMML(document.convert(math, options)));
+        promise = promise.then(() => {
+          options.end = STATE.CONVERT;
+          options.format = input.name;
+          return mathjax.handleRetriesFor(() => toMML(document.convert(math, options)));
+        });
+        return promise;
       };
   }
 
@@ -458,14 +473,15 @@ export namespace Startup {
   }
 
   /**
-   * @return {INPUTJAX[]}  The array of instances of the registered input jax
+   * @return {JAXARRAY}  The array of instances of the registered input jax
    */
-  export function getInputJax(): INPUTJAX[] {
-    const jax = [] as INPUTJAX[];
+  export function getInputJax(): JAXARRAY {
+    const jax = [] as JAXARRAY;
     for (const name of CONFIG.input) {
       const inputClass = constructors[name];
       if (inputClass) {
-        jax.push(new inputClass(MathJax.config[name]));
+        jax[name] = new inputClass(MathJax.config[name]);
+        jax.push(jax[name]);
       } else {
         throw Error('Input Jax "' + name + '" is not defined (has it been loaded?)');
       }

@@ -27,6 +27,8 @@ import {TexConstant} from '../TexConstants.js';
 import {TextMacrosMethods} from './TextMacrosMethods.js';
 import {MATHSPACE} from '../../../util/lengths.js';
 
+const VARIANT = TexConstant.Variant;
+
 //
 //  The special characters in text-mode
 //
@@ -78,17 +80,17 @@ new CommandMap('text-macros', {
   'v':          ['Accent', '\u02C7'],
 
   emph:         'Emph',
-  rm:           ['SetFont', TexConstant.Variant.NORMAL],
-  mit:          ['SetFont', TexConstant.Variant.ITALIC],
-  oldstyle:     ['SetFont', TexConstant.Variant.OLDSTYLE],
-  cal:          ['SetFont', TexConstant.Variant.CALLIGRAPHIC],
+  rm:           ['SetFont', VARIANT.NORMAL],
+  mit:          ['SetFont', VARIANT.ITALIC],
+  oldstyle:     ['SetFont', VARIANT.OLDSTYLE],
+  cal:          ['SetFont', VARIANT.CALLIGRAPHIC],
   it:           ['SetFont', '-tex-mathit'], // needs special handling
-  bf:           ['SetFont', TexConstant.Variant.BOLD],
-  bbFont:       ['SetFont', TexConstant.Variant.DOUBLESTRUCK],
-  scr:          ['SetFont', TexConstant.Variant.SCRIPT],
-  frak:         ['SetFont', TexConstant.Variant.FRAKTUR],
-  sf:           ['SetFont', TexConstant.Variant.SANSSERIF],
-  tt:           ['SetFont', TexConstant.Variant.MONOSPACE],
+  bf:           ['SetFont', VARIANT.BOLD],
+  sf:           ['SetFont', VARIANT.SANSSERIF],
+  tt:           ['SetFont', VARIANT.MONOSPACE],
+
+  frak:         ['TextFont', VARIANT.FRAKTUR],
+  Bbb:          ['TextFont', VARIANT.DOUBLESTRUCK],
 
   tiny:         ['SetSize', 0.5],
   Tiny:         ['SetSize', 0.6],  // non-standard
@@ -101,7 +103,6 @@ new CommandMap('text-macros', {
   huge:         ['SetSize', 2.07],
   Huge:         ['SetSize', 2.49],
 
-  Bbb:          ['Macro', '{\\bbFont #1}', 1],
   textnormal:   ['Macro', '{\\rm #1}', 1],
   textup:       ['Macro', '{\\rm #1}', 1],
   textrm:       ['Macro', '{\\rm #1}', 1],
@@ -145,6 +146,8 @@ new CommandMap('text-macros', {
   data:         'CheckAutoload',
   cssId:        'CheckAutoload',
   unicode:      'CheckAutoload',
+  U:            'CheckAutoload',
+  char:         'CheckAutoload',
 
   ref:          ['HandleRef', false],
   eqref:        ['HandleRef', true],

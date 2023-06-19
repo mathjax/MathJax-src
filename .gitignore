@@ -1,5 +1,8 @@
 *~
-node_modules
-components/src/**/lib
-js
-es5
+/node_modules
+/components/mjs/**/lib
+/components/cjs
+/cjs
+/mjs
+/bundle
+/bundle-cjs

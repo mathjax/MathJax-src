@@ -125,7 +125,7 @@ export const SvgMsqrt = (function <N, T, D>(): SvgMsqrtClass<N, T, D> {
       const sbox = surd.getBBox();
       const bbox = base.getOuterBBox();
       const q = this.getPQ(sbox)[1];
-      const t = this.font.params.rule_thickness * this.bbox.scale;
+      const t = this.font.params.surd_height * this.bbox.scale;
       const H = bbox.h + q + t;
       //
       //  Create the SVG structure for the root

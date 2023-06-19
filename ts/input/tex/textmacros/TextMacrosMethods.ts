@@ -232,6 +232,15 @@ export const TextMacrosMethods = {
   /**
    * @param {TextParser} parser   The text-mode parser
    * @param {string} name         The control sequence that called this function
+   */
+  TextFont(parser: TextParser, name: string, variant: string) {
+    parser.saveText();
+    parser.Push(parser.ParseTextArg(name, {mathvariant: variant}));
+  },
+
+  /**
+   * @param {TextParser} parser   The text-mode parser
+   * @param {string} name         The control sequence that called this function
    * @param {string} variant      The font variant to use from now on
    */
   SetFont(parser: TextParser, _name: string, variant: string) {

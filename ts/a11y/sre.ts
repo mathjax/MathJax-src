@@ -22,16 +22,16 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import * as Api from 'speech-rule-engine/js/common/system.js';
-import {Walker} from 'speech-rule-engine/js/walker/walker.js';
-import * as WalkerFactory from 'speech-rule-engine/js/walker/walker_factory.js';
-import * as SpeechGeneratorFactory from 'speech-rule-engine/js/speech_generator/speech_generator_factory.js';
-import Engine from 'speech-rule-engine/js/common/engine.js';
-import {ClearspeakPreferences} from 'speech-rule-engine/js/speech_rules/clearspeak_preferences.js';
-import {Highlighter} from 'speech-rule-engine/js/highlighter/highlighter.js';
-import * as HighlighterFactory from 'speech-rule-engine/js/highlighter/highlighter_factory.js';
-import {SpeechGenerator} from 'speech-rule-engine/js/speech_generator/speech_generator.js';
-import {Variables} from 'speech-rule-engine/js/common/variables.js';
+import * as Api from '#sre/common/system.js';
+import {Walker} from '#sre/walker/walker.js';
+import * as WalkerFactory from '#sre/walker/walker_factory.js';
+import * as SpeechGeneratorFactory from '#sre/speech_generator/speech_generator_factory.js';
+import Engine from '#sre/common/engine.js';
+import {ClearspeakPreferences} from '#sre/speech_rules/clearspeak_preferences.js';
+import {Highlighter} from '#sre/highlighter/highlighter.js';
+import * as HighlighterFactory from '#sre/highlighter/highlighter_factory.js';
+import {SpeechGenerator} from '#sre/speech_generator/speech_generator.js';
+import {Variables} from '#sre/common/variables.js';
 import MathMaps from './mathmaps.js';
 
 export namespace Sre {

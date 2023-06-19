@@ -158,8 +158,8 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
       const B = this.addBot(stretch[2], variant[2], d, w);
       if (stretch.length === 4) {
         const [H, D] = this.addMidV(stretch[3], variant[3], w);
-        this.addExtV(stretch[1], variant[1], h, 0, T, H, w);
-        this.addExtV(stretch[1], variant[1], 0, d, D, B, w);
+        this.addExtV(stretch[1], variant[1], h, -H, T, 0, w);
+        this.addExtV(stretch[1], variant[1], -D, d, 0, B, w);
       } else {
         this.addExtV(stretch[1], variant[1], h, d, T, B, w);
       }
@@ -205,10 +205,14 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      * @return {number}          The width of the character placed
      */
       protected addGlyph(n: number, variant: string, x: number, y: number, parent: N = null): number {
-        if (parent) return this.placeChar(n, x, y, parent, variant);
+        if (parent) {
+          return this.placeChar(n, x, y, parent, variant);
+        }
         if (this.dom[0]) {
           const dx = this.placeChar(n, x, y, this.dom[0], variant);
-          if (!this.dom[1]) return dx;
+          if (!this.dom[1]) {
+            return dx;
+          }
         }
         return this.placeChar(n, x, y, this.dom[1], variant);
     }
@@ -246,8 +250,8 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
       const [h, d, w] = this.getChar(n, v);
       const Y = H + D - T - B;                 // The height of the extender
       const s = 1.5 * Y / (h + d);             // Scale height by 1.5 to avoid bad ends
-      //   (glyphs with rounded or anti-aliased ends don't stretch well,
-      //    so this makes for sharper ends)
+                                               //   (glyphs with rounded or anti-aliased ends don't stretch well,
+                                               //    so this makes for sharper ends)
       const y = (s * (h - d) - Y) / 2;         // The bottom point to clip the extender
       if (Y <= 0) return;
       const svg = this.svg('svg', {
@@ -258,8 +262,12 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
       this.addGlyph(n, v, 0, 0, svg);
       const glyph = adaptor.lastChild(svg);
       adaptor.setAttribute(glyph as N, 'transform', `scale(1,${this.jax.fixed(s)})`);
-      this.dom[0] && adaptor.append(this.dom[0], svg);
-      this.dom[1] && adaptor.append(this.dom[1], this.dom[0] ? adaptor.clone(svg) : svg);
+      if (this.dom[0]) {
+        adaptor.append(this.dom[0], svg);
+      }
+      if (this.dom[1]) {
+        adaptor.append(this.dom[1], this.dom[0] ? adaptor.clone(svg) : svg);
+      }
     }
 
     /**
@@ -328,8 +336,12 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
       this.addGlyph(n, v, 0, 0, svg);
       const glyph = adaptor.lastChild(svg);
       adaptor.setAttribute(glyph as N, 'transform', 'scale(' + this.jax.fixed(s) + ',1)');
-      this.dom[0] && adaptor.append(this.dom[0], svg);
-      this.dom[1] && adaptor.append(this.dom[1], this.dom[0] ? adaptor.clone(svg) : svg);
+      if (this.dom[0]) {
+        adaptor.append(this.dom[0], svg);
+      }
+      if (this.dom[1]) {
+        adaptor.append(this.dom[1], this.dom[0] ? adaptor.clone(svg) : svg);
+      }
     }
 
     /**

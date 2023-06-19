@@ -26,7 +26,7 @@
 import {A11yDocument, Region} from './Region.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
 import {ExplorerPool} from './ExplorerPool.js';
-import Sre from '../sre.js';
+import {Sre} from '../sre.js';
 
 
 /**

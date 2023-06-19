@@ -100,15 +100,36 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
         display: 'inline-table',
         width: '100%'
       },
-      'mjx-linestack[data-mjx-breakable]': {
-        display: 'inline',
-        width: 'initial',
+      'mjx-linestack[break-align="bottom"], mjx-mrow[break-top][break-align="bottom"]': {
+        display: 'inline-block'
       },
-      'mjx-linestack[data-mjx-breakable] > mjx-linebox': {
+      'mjx-linestack[break-align="middle"], mjx-mrow[break-top][break-align="middle"]': {
+        'vertical-align': 'middle'
+      },
+      'mjx-linestack[break-align="center"], mjx-mrow[break-top][break-align="center"]': {
+        'vertical-align': 'middle'
+      },
+      'mjx-linestack[breakable]': {
         display: 'inline'
       },
-      'mjx-break[newline]::after': {
-        display: 'block'
+      'mjx-linestack[breakable] > mjx-linebox': {
+        display: 'inline'
+      },
+      'mjx-linestack[breakable] > mjx-linebox::before': {
+        'white-space': 'pre',
+        content: '"\\A"'
+      },
+      'mjx-linestack[breakable] > mjx-linebox::after': {
+        'white-space': 'normal',
+        content: '" "',
+        'letter-spacing': '-.999em',
+        'font-family': 'MJX-BRK'
+      },
+      'mjx-linestack[breakable] > mjx-linebox:first-of-type::before': {
+        display: 'none'
+      },
+      'mjx-linestack[breakable] > mjx-linebox:last-of-type::after': {
+        display: 'none'
       },
       'mjx-linebox': {
         display: 'block'
@@ -143,6 +164,7 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
       if (n) {
         this.placeLines(parents, n);
       } else {
+        this.handleVerticalAlign(parents[0]);
         this.handleNegativeWidth(parents[0]);
       }
     }
@@ -158,14 +180,29 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
       const [alignfirst, shiftfirst] = lines[1].indentData[0];
       for (const i of parents.keys()) {
         const bbox = lines[i];
-        let [indentalign, indentshift] = (i === 0 ? [alignfirst, shiftfirst] : bbox.indentData[i === n ? 2 : 1]);
+        let [indentalign, indentshift] = (
+          i === 0 ?
+            [alignfirst, shiftfirst] :
+            bbox.indentData[i === n ? 2 : 1]
+        );
         const [align, shift] = this.processIndent(indentalign, indentshift, alignfirst, shiftfirst);
         adaptor.setAttribute(parents[i], 'align', align);
         if (shift) {
           adaptor.setStyle(parents[i], 'position', 'relative');
           adaptor.setStyle(parents[i], 'left', this.em(shift));
         }
-        i < n && adaptor.setStyle(parents[i], 'margin-bottom', this.em(bbox.lineLeading));
+        if (i < n && this.jax.math.display) {
+          adaptor.setStyle(parents[i], 'margin-bottom', this.em(bbox.lineLeading));
+        }
+      }
+    }
+
+    /**
+     * @param {N} dom  The HTML element for the mrow
+     */
+    protected handleVerticalAlign(dom: N) {
+      if (this.dh) {
+        this.adaptor.setStyle(this.adaptor.parent(dom), 'vertical-align', this.em(this.dh));
       }
     }
 
@@ -195,6 +232,15 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
       if (kind === 'mjx-mrow' && !this.isStack) {
         adaptor.setAttribute(this.dom[0], 'break-top', 'true');
       }
+      if (this.node.getProperty('process-breaks')) {
+        adaptor.setAttribute(this.dom[0], 'breakable', 'true');
+      }
+      if (this.node.isInferred || !this.isStack) {
+        const valign = (this.parent.node.attributes.get('data-vertical-align') as string);
+        if (valign === 'middle' || valign === 'center' || valign === 'bottom') {
+          adaptor.setAttribute(this.dom[0], 'break-align', valign);
+        }
+      }
       //
       // Add an href anchor, if needed, and insert the linestack/mrow
       //
@@ -203,10 +249,8 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
       //  Add the line boxes
       //
       const chtml = Array(n) as N[];
-      const inlineBreaks = this.node.getProperty('breakable');
       for (let i = 0; i <= n; i++) {
         chtml[i] = adaptor.append(this.dom[0], this.html('mjx-linebox', {'lineno': i})) as N;
-        inlineBreaks && adaptor.append(this.dom[0], this.html('mjx-break', {newline: true}));
       }
       //
       //  Return the line boxes as the parent nodes for their contents

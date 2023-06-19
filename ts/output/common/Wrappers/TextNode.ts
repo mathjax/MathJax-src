@@ -27,6 +27,7 @@ import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '
 import {CommonOutputJax} from '../../common.js';
 import {BBox} from '../../../util/BBox.js';
 import {TextNode} from '../../../core/MmlTree/MmlNode.js';
+import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 
 /*****************************************************************/
 /**
@@ -159,37 +160,78 @@ export function CommonTextNodeMixin<
         bbox.w = w;
       } else {
         const chars = this.remappedText(text, variant);
+        let utext = '';
         bbox.empty();
         //
         // Loop through the characters and add them in one by one
         //
-        for (const char of chars) {
-          let [h, d, w, data] = this.getVariantChar(variant, char);
+        for (let i = 0; i < chars.length; i++) {
+          let [h, d, w, data] = this.getVariantChar(variant, chars[i]);
           if (data.unknown) {
+            utext += String.fromCodePoint(chars[i]);
+          } else {
+            utext = this.addUtextBBox(bbox, utext, variant);
             //
-            // Measure unknown characters using the DOM (if possible)
+            // Update the bounding box
             //
-            const cbox = this.jax.measureText(String.fromCodePoint(char), variant);
-            w = cbox.w;
-            h = cbox.h;
-            d = cbox.d;
+            this.updateBBox(bbox, h, d, w);
+            bbox.ic = data.ic || 0;
+            bbox.sk = data.sk || 0;
+            bbox.dx = data.dx || 0;
+            if (!data.oc || i < chars.length - 1) continue;
+            const children = this.parent.childNodes;
+            if (this.node !== children[children.length - 1].node) continue;
+            const parent = this.parent.parent.node;
+            let next = (parent.isKind('mrow') || parent.isInferred ?
+                        parent.childNodes[parent.childIndex(this.parent.node) + 1] : null);
+            if (next?.isKind('mo') && (next as MmlMo).getText() === '\u2062') {
+              next = parent.childNodes[parent.childIndex(next) + 1];
+            }
+            if (!next || next.attributes.get('mathvariant') !== variant) {
+              bbox.ic = data.oc;
+            } else {
+              bbox.oc = data.oc;
+            }
           }
-          //
-          // Update the bounding box
-          //
-          bbox.w += w;
-          if (h > bbox.h) bbox.h = h;
-          if (d > bbox.d) bbox.d = d;
-          bbox.ic = data.ic || 0;
-          bbox.sk = data.sk || 0;
-          bbox.dx = data.dx || 0;
         }
+        this.addUtextBBox(bbox, utext, variant);
         if (chars.length > 1) {
           bbox.sk = 0;
         }
         bbox.clean();
       }
     }
+
+    /**
+     * @param {BBox} bbox        The bounding box to update
+     * @param {string} utext     The text whose size is to be added to the bbox
+     * @param {string} variant   The mathvariant for the text
+     * @return {string}          The new utext (blank)
+     */
+    protected addUtextBBox(bbox: BBox, utext: string, variant: string): string {
+      if (utext) {
+        const {h, d, w} = this.jax.measureText(utext, variant);
+        this.updateBBox(bbox, h, d, w);
+      }
+      return '';
+    }
+
+    /**
+     * @param {BBox} bbox        The bounding box to update
+     * @param {number} h         The height to use
+     * @param {nunber} d         The depth to use
+     * @param {number} w         The width to add
+     */
+    protected updateBBox(bbox: BBox, h: number, d: number, w: number) {
+      bbox.w += w;
+      if (h > bbox.h) {
+        bbox.h = h;
+      }
+      if (d > bbox.d) {
+        bbox.d = d;
+      }
+    }
+
 
     /******************************************************/
     /*

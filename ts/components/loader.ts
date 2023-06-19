@@ -25,17 +25,13 @@
 
 import {MathJax as MJGlobal, MathJaxObject as MJObject, MathJaxLibrary,
         MathJaxConfig as MJConfig, combineWithMathJax, combineDefaults} from './global.js';
-
 import {Package, PackageError, PackageReady, PackageFailed} from './package.js';
-export {Package, PackageError, PackageReady, PackageFailed} from './package.js';
-export {MathJaxLibrary} from './global.js';
-
 import {FunctionList} from '../util/FunctionList.js';
+import {esRoot} from '#root/root.js';
 
 /*
- * The current directory (for webpack), and the browser document (if any)
+ * The browser document (if any)
  */
-declare var __dirname: string;
 declare var document: Document;
 
 /**
@@ -76,6 +72,7 @@ export interface MathJaxObject extends MJObject {
     defaultReady: () => void;                         // The function performed when all packages are loaded
     getRoot: () => string;                            // Find the root URL for the MathJax files
     checkVersion: (name: string, version: string) => boolean;   // Check the version of an extension
+    saveVersion: (name: string) => void;              // Set the version for a combined component
     pathFilters: FunctionList;                        // the filters to use for looking for package paths
   };
   startup?: any;
@@ -217,14 +214,13 @@ export namespace Loader {
    * @returns {string}   The root location (directory for node.js, URL for browser)
    */
   export function getRoot(): string {
-    let root = __dirname + '/../../es5';
     if (typeof document !== 'undefined') {
       const script = document.currentScript || document.getElementById('MathJax-script');
       if (script) {
-        root = (script as HTMLScriptElement).src.replace(/\/[^\/]*$/, '');
+        return (script as HTMLScriptElement).src.replace(/\/[^\/]*$/, '');
       }
     }
-    return root;
+    return esRoot();
   }
 
   /**
@@ -236,12 +232,21 @@ export namespace Loader {
    * @return {boolean}          True if there was a mismatch, false otherwise
    */
   export function checkVersion(name: string, version: string, _type?: string): boolean {
-    versions.set(Package.resolvePath(name), VERSION);
+    saveVersion(name);
     if (CONFIG.versionWarnings && version !== VERSION) {
       console.warn(`Component ${name} uses ${version} of MathJax; version in use is ${VERSION}`);
       return true;
     }
     return false;
+  }
+
+  /**
+   * Set the version of an extension (used for combined components so they can be loaded)
+   *
+   * @param {string} name       The name of the extension being checked
+   */
+  export function saveVersion(name: string) {
+    versions.set(Package.resolvePath(name), VERSION);
   }
 
   /**

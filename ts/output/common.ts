@@ -56,7 +56,7 @@ export type UnknownBBox = {w: number, h: number, d: number};
 export type UnknownMap = Map<string, UnknownBBox>;
 export type UnknownVariantMap = Map<string, UnknownMap>;
 
-export const FONTPATH = '@mathjax/%%FONT%%-font/es5/output/fonts/%%FONT%%';
+export const FONTPATH = '@mathjax/%%FONT%%-font';
 
 /*****************************************************************/
 
@@ -130,7 +130,16 @@ export abstract class CommonOutputJax<
   /**
    *  The default styles for the output jax
    */
-  public static commonStyles: CssStyleList = {};
+  public static commonStyles: CssStyleList = {
+    'mjx-container[overflow="scroll"][display]': {
+      'overflow-x': 'auto',
+      'min-width': 'initial !important'
+    },
+    'mjx-container[overflow="truncate"][display]': {
+      'overflow-x': 'hidden',
+      'min-width': 'initial !important'
+    }
+  };
 
   /**
    * Used for collecting styles needed for the output jax
@@ -213,7 +222,6 @@ export abstract class CommonOutputJax<
    */
   protected unknownCache: UnknownVariantMap;
 
-
   /*****************************************************************/
 
   /**
@@ -228,14 +236,6 @@ export abstract class CommonOutputJax<
   constructor(options: OptionList = null,
               defaultFactory: typeof CommonWrapperFactory = null,
               defaultFont: FC = null) {
-    //
-    // Backward compatibility with old usage of font option
-    //
-    if (options.font && typeof(options.font) !== 'string') {
-      options.fontData = options.font;
-      options.font = options.fontData.NAME;
-    }
-    //
     const [fontClass, font] = (options.fontData instanceof FontData ?
                                [options.fontData.constructor as typeof FontData, options.fontData] :
                                [options.fontData || defaultFont, null]);
@@ -247,6 +247,7 @@ export abstract class CommonOutputJax<
     this.factory.jax = this;
     this.cssStyles = this.options.cssStyles || new CssStyles();
     this.font = font || new fontClass(fontOptions);
+    this.font.setOptions({mathmlSpacing: this.options.mathmlSpacing});
     this.unknownCache = new Map();
     const linebreaks = (this.options.linebreaks.LinebreakVisitor || LinebreakVisitor) as typeof Linebreaks;
     this.linebreaks = new linebreaks(this.factory);
@@ -337,11 +338,8 @@ export abstract class CommonOutputJax<
     this.pxPerEm = math.metrics.ex / this.font.params.x_height;
     this.nodeMap = new Map<MmlNode, WW>();
     math.root.attributes.getAllInherited().overflow = this.options.displayOverflow;
-    const overflow = math.root.attributes.get('overflow');
-    if (math.display) {
-      overflow === 'scroll' && this.adaptor.setStyle(node, 'overflow-x', 'auto');
-      overflow === 'truncate' && this.adaptor.setStyle(node, 'overflow-x', 'hidden');
-    }
+    const overflow = math.root.attributes.get('overflow') as string;
+    this.adaptor.setAttribute(node, 'overflow', overflow);
     const linebreak = (overflow === 'linebreak');
     linebreak && this.getLinebreakWidth();
     if (this.options.linebreaks.inline && !math.display && !math.outputData.inlineMarked) {
@@ -392,35 +390,71 @@ export abstract class CommonOutputJax<
   }
 
   /**
-   * @parm {MmlNode} node   The node to check for potential inline breakpoints
+   * @param {MmlNode} node   The node to check for potential inline breakpoints
    */
   public markInlineBreaks(node: MmlNode) {
     if (!node) return;
     const forcebreak = this.forceInlineBreaks;
     let marked = false;
+    let markNext = null as [MmlNode, string];
     for (const child of node.childNodes.slice(1)) {
-      if (child.isEmbellished) {
+      if (markNext) {
+        marked = this.markInlineBreak(marked, forcebreak, markNext[1], node, child, markNext[0]);
+        markNext = null;
+      } else if (child.isEmbellished) {
         const mo = child.coreMO();
-        const {linebreak, linebreakstyle} = mo.attributes.getList('linebreak', 'linebreakstyle');
-        if ((mo.texClass === TEXCLASS.BIN || mo.texClass === TEXCLASS.REL ||
-             mo.attributes.get('data-allowbreak') || linebreak !== 'auto') &&
-            linebreak !== 'nobreak' && linebreakstyle === 'before') {
-          child.setProperty('breakable', true);
-          if (forcebreak && linebreak !== 'newline') {
-            child.setProperty('forcebreak', true);
-            mo.setProperty('forcebreak', true);
+        const texClass = mo.texClass;
+        const linebreak = mo.attributes.get('linebreak') as string;
+        const linebreakstyle = mo.attributes.get('linebreakstyle') as string;
+        if ((texClass === TEXCLASS.BIN || texClass === TEXCLASS.REL ||
+             (texClass === TEXCLASS.ORD && mo.hasSpacingAttributes()) ||
+             linebreak !== 'auto') && linebreak !== 'nobreak') {
+          if (linebreakstyle === 'before') {
+            marked = this.markInlineBreak(marked, forcebreak, linebreak, node, child, mo);
+          } else {
+            markNext = [mo, linebreak];
           }
-          if (!marked) {
-            node.setProperty('process-breaks', true);
-            node.parent.setProperty('process-breaks', true);
-            marked = true;
-          }
+        }
+      } else if (child.isKind('mspace')) {
+        const linebreak = child.attributes.get('linebreak') as string;
+        if (linebreak !== 'nobreak') {
+          marked = this.markInlineBreak(marked, forcebreak, linebreak, node, child);
         }
       } else if ((child.isKind('mstyle') && !child.attributes.get('style')) ||
                  child.isKind('semantics') || child.isKind('MathChoice')) {
         this.markInlineBreaks(child.childNodes[0]);
       }
     }
+  }
+
+  /**
+   * @param {boolean} marked      Whether the node has already been marked
+   * @param {boolean} forcebreak  Whether the break is to be forced
+   * @param {string} linebreak    The break type
+   * @param {MmlNode} node        The parent node to mark
+   * @param {MmlNode} child       The child node to mark
+   * @param {MmlNode} mo          The core mo to mark
+   * @return {boolean}            The modified marked variable
+   */
+  protected markInlineBreak(marked: boolean, forcebreak: boolean, linebreak: string,
+                             node: MmlNode, child: MmlNode, mo: MmlNode = null): boolean {
+    child.setProperty('breakable', true);
+    if (forcebreak && linebreak !== 'newline') {
+      child.setProperty('forcebreak', true);
+      mo?.setProperty('forcebreak', true);
+    } else {
+      //
+      //  If we switched from SVG to CHTML, we need to remove the forcebreak that SVG added
+      //
+      child.removeProperty('forcebreak');
+      mo?.removeProperty('forcebreak');
+    }
+    if (!marked) {
+      node.setProperty('process-breaks', true);
+      node.parent.setProperty('process-breaks', true);
+      marked = true;
+    }
+    return marked;
   }
 
   /**
@@ -434,8 +468,8 @@ export abstract class CommonOutputJax<
       const parent = adaptor.parent(math.start.node);
       if (math.state() < STATE.METRICS && parent) {
         const map = maps[math.display ? 1 : 0];
-        const {em, ex, containerWidth, lineWidth, scale, family} = map.get(parent);
-        math.setMetrics(em, ex, containerWidth, lineWidth, scale);
+        const {em, ex, containerWidth, scale, family} = map.get(parent);
+        math.setMetrics(em, ex, containerWidth, scale);
         if (this.options.mtextInheritFont) {
           math.outputData.mtextFamily = family;
         }
@@ -573,8 +607,7 @@ export abstract class CommonOutputJax<
                             adaptor.nodeBBox(adaptor.firstChild(node) as N).left - 2);
     const scale = Math.max(this.options.minScale,
                            this.options.matchFontHeight ? ex / this.font.params.x_height / em : 1);
-    const lineWidth = 1000000;      // no linebreaking (otherwise would be a percentage of cwidth)
-    return {em, ex, containerWidth, lineWidth, scale, family};
+    return {em, ex, containerWidth, scale, family};
   }
 
   /*****************************************************************/
@@ -630,7 +663,7 @@ export abstract class CommonOutputJax<
    * @param {CssStyles} styles            The style object to add to.
    */
   protected addClassStyles(CLASS: typeof CommonWrapper, styles: CssStyles) {
-    styles.addStyles(CLASS.styles);
+    CLASS.addStyles<CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>>(styles, this);
   }
 
   /*****************************************************************/

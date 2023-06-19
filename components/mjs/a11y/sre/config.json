@@ -1,0 +1,14 @@
+{
+  "build": {
+    "component": "a11y/sre",
+    "targets": ["a11y/sre.ts"]
+  },
+  "webpack": {
+    "name": "a11y/sre",
+    "libs": [
+      "components/src/input/mml/lib",
+      "components/src/core/lib",
+      "components/src/startup/lib"
+    ]
+  }
+}
