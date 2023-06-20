@@ -86,9 +86,25 @@ export class TextParser extends TexParser {
    * @override
    */
   public mml() {
+    this.copyLists();
+    this.configuration.popParser();
     return (this.level != null ?
             this.create('node', 'mstyle', this.nodes, {displaystyle: false, scriptlevel: this.level}) :
             this.nodes.length === 1 ? this.nodes[0] : this.create('node', 'mrow', this.nodes));
+  }
+
+  /**
+   * Copy the node list from the text parser to the TeX parser
+   */
+  protected copyLists() {
+    const parseOptions = this.texParser.configuration;
+    const lists = this.configuration.nodeLists;
+    for (const name of Object.keys(lists)) {
+      for (const node of lists[name]) {
+        parseOptions.addNode(name, node);
+      }
+    }
+    this.configuration.nodeLists = {};
   }
 
   /**
