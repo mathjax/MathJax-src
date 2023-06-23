@@ -28,6 +28,8 @@ import {Explorer, AbstractExplorer} from './Explorer.js';
 import {ExplorerPool} from './ExplorerPool.js';
 import {Sre} from '../sre.js';
 
+import {click, move} from './Walker.js';
+
 
 /**
  * Interface for keyboard explorers. Adds the necessary keyboard events.
@@ -99,9 +101,13 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
    */
   protected events: [string, (x: Event) => void][] =
     super.Events().concat(
-      [['keydown', this.KeyDown.bind(this)],
-       ['focusin', this.FocusIn.bind(this)],
-       ['focusout', this.FocusOut.bind(this)]]);
+      [
+        // ['keydown', move],
+        ['keydown', this.KeyDown.bind(this)],
+        ['click', ((e: Event) => click(this.node, e)).bind(this)],
+        ['focusin', this.FocusIn.bind(this)],
+        ['focusout', this.FocusOut.bind(this)]
+      ]);
 
   /**
    * The original tabindex value before explorer was attached.
@@ -148,8 +154,10 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
     super.Attach();
     this.attached = true;
     this.oldIndex = this.node.tabIndex;
-    this.node.tabIndex = 1;
-    this.node.setAttribute('role', 'tree');
+    this.node.tabIndex = 0;
+    this.node.setAttribute('role', 'application');
+    // TODO: Get rid of this eventually!
+    this.node.setAttribute('data-shellac', '');
   }
 
   /**
@@ -189,7 +197,8 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
    * @override
    */
   public Move(key: number) {
-    let result = this.walker.move(key);
+    // let result = this.walker.move(key);
+    let result = move(key);
     if (result) {
       this.Update();
       return;
@@ -263,6 +272,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @override
    */
   public Start() {
+    console.log(16);
     if (!this.attached) return;
     let options = this.getOptions();
     if (!this.init) {
@@ -274,6 +284,15 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
             // Important that both are in the same block so speech explorers
             // are restarted sequentially.
             this.Speech(this.walker);
+          })
+          .then(() => Sre.setupEngine({automark: false as any, markup: 'none',
+                                       locale: 'nemeth', domain: 'default',
+                                       style: 'default', modality: 'braille'}))
+          .then(() => {
+            this.speechGenerator.setOptions({automark: false as any, markup: 'none',
+                                       locale: 'nemeth', domain: 'default',
+                                       style: 'default', modality: 'braille'});
+            this.Speech(this.walker);
             this.Start();
           });
       })
@@ -281,17 +300,17 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
       return;
     }
     super.Start();
-    this.speechGenerator = Sre.getSpeechGenerator('Direct');
-    this.speechGenerator.setOptions(options);
-    this.walker = Sre.getWalker(
-      'table', this.node, this.speechGenerator, this.highlighter, this.mml);
-    this.walker.activate();
-    this.Update();
-    if (this.document.options.a11y[this.showRegion]) {
-      SpeechExplorer.updatePromise.then(
-        () => this.region.Show(this.node, this.highlighter));
-    }
-    this.restarted = true;
+    // this.speecGhenerator = Sre.getSpeechGenerator('Direct');
+    // this.speechGenerator.setOptions(options);
+    // this.walker = Sre.getWalker(
+    //   'table', this.node, this.speechGenerator, this.highlighter, this.mml);
+    // this.walker.activate();
+    // this.Update();
+    // if (this.document.options.a11y[this.showRegion]) {
+    //   SpeechExplorer.updatePromise.then(
+    //     () => this.region.Show(this.node, this.highlighter));
+    // }
+    // this.restarted = true;
   }
 
 
@@ -349,6 +368,10 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    */
   public KeyDown(event: KeyboardEvent) {
     const code = event.keyCode;
+    console.log(event);
+    console.log(event.key);
+    console.log(event.code);
+    console.log(code);
     this.walker.modifier = event.shiftKey;
     if (code === 17) {
       speechSynthesis.cancel();
@@ -359,12 +382,11 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
       this.stopEvent(event);
       return;
     }
-    if (this.active) {
-      this.Move(code);
-      if (this.triggerLink(code)) return;
-      this.stopEvent(event);
-      return;
-    }
+    console.log(9);
+    move(event);
+    console.log(13);
+    if (this.triggerLink(code)) return;
+    this.stopEvent(event);
     if (code === 32 && event.shiftKey || code === 13) {
       this.Start();
       this.stopEvent(event);
@@ -376,6 +398,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @param {number} code The keycode of the last key pressed.
    */
   protected triggerLink(code: number) {
+    console.log(15);
     if (code !== 13) {
       return false;
     }
@@ -384,6 +407,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
       getAttribute('data-semantic-postfix')?.
       match(/(^| )link($| )/);
     if (focus) {
+      console.log(14);
       node.parentNode.dispatchEvent(new MouseEvent('click'));
       return true;
     }

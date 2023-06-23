@@ -361,7 +361,7 @@ export class LiveRegion extends StringRegion {
    */
   constructor(public document: A11yDocument) {
     super(document);
-    this.div.setAttribute('aria-live', 'assertive');
+    // this.div.setAttribute('aria-live', 'assertive');
   }
 
 }
