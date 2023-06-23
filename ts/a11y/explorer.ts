@@ -199,7 +199,8 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
       }),
       sre: expandable({
         ...BaseDocument.OPTIONS.sre,
-        speech: 'shallow',                 // overrides option in EnrichedMathDocument
+        speech: 'deep',                    // overrides option in EnrichedMathDocument
+        aria: true,
       }),
       a11y: {
         align: 'top',                      // placement of magnified expression

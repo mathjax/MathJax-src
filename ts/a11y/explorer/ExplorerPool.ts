@@ -103,15 +103,15 @@ let allExplorers: {[options: string]: ExplorerInit} = {
     explorer.showRegion = 'subtitles';
     return explorer;
   },
-  braille: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
-    let explorer = ke.SpeechExplorer.create(
-      doc, pool, doc.explorerRegions.brailleRegion, node, ...rest) as ke.SpeechExplorer;
-    explorer.speechGenerator.setOptions({automark: false as any, markup: 'none',
-                                         locale: 'nemeth', domain: 'default',
-                                         style: 'default', modality: 'braille'});
-    explorer.showRegion = 'viewBraille';
-    return explorer;
-  },
+  // braille: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
+  //   let explorer = ke.SpeechExplorer.create(
+  //     doc, pool, doc.explorerRegions.brailleRegion, node, ...rest) as ke.SpeechExplorer;
+  //   explorer.speechGenerator.setOptions({automark: false as any, markup: 'none',
+  //                                        locale: 'nemeth', domain: 'default',
+  //                                        style: 'default', modality: 'braille'});
+  //   explorer.showRegion = 'viewBraille';
+  //   return explorer;
+  // },
   keyMagnifier: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) =>
     ke.Magnifier.create(doc, pool, doc.explorerRegions.magnifier, node, ...rest),
   mouseMagnifier: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ..._rest: any[]) =>
