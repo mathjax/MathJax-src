@@ -936,7 +936,7 @@ export class CommonWrapper<
     // Get the lspace and rspace
     //
     const attributes = node.attributes;
-    const isScript = (attributes.get('scriptlevel') > 0);
+    const isScript = (attributes.get('scriptlevel') as number > 0);
     this.bbox.L = (attributes.isSet('lspace') ?
                    Math.max(0, this.length2em(attributes.get('lspace'))) :
                    MathMLSpace(isScript, node.lspace));
