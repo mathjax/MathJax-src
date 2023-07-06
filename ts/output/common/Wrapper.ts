@@ -741,14 +741,14 @@ export class CommonWrapper<
    */
   protected copySkewIC(bbox: BBox) {
     const first = this.childNodes[0];
-    if (first?.bbox.sk) {
+    if (first?.bbox?.sk) {
       bbox.sk = first.bbox.sk;
     }
-    if (first?.bbox.dx) {
+    if (first?.bbox?.dx) {
       bbox.dx = first.bbox.dx;
     }
     const last = this.childNodes[this.childNodes.length - 1];
-    if (last?.bbox.ic) {
+    if (last?.bbox?.ic) {
       bbox.ic = last.bbox.ic;
       bbox.w += bbox.ic;
     }
