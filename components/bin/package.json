@@ -6,7 +6,7 @@
     "#root/*": "mathjax-full/cjs/components/cjs/*",
     "#mml3/*": "mathjax-full/cjs/input/mathml/mml3/cjs/*",
     "#menu/*": "mj-context-menu/cjs/*",
-    "#sre/*": "speech-rule-engine/js/*",
+    "#sre/*": "speech-rule-engine/cjs/*",
     "#mhchem/*": "mhchemparser/dist/*",
     "#default-font/*": "mathjax-modern-font/cjs/*"
   }
