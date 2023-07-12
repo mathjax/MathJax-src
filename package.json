@@ -131,6 +131,7 @@
   "dependencies": {
     "mathjax-modern-font": "^1.0.0-beta.5",
     "mhchemparser": "^4.2.1",
-    "speech-rule-engine": "^4.1.0-beta.5"
+    "mj-context-menu": "^0.8.1",
+    "speech-rule-engine": "^4.1.0-beta.7"
   }
 }
