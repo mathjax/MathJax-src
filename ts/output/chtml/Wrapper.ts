@@ -355,6 +355,9 @@ CommonWrapper<
         this.dom.forEach(dom => adaptor.addClass(dom, name));
       }
     }
+    if (this.node.getProperty('inline-breaks')) {
+      this.dom.forEach(dom => adaptor.setAttribute(dom, 'inline-breaks', 'true'));
+    }
   }
 
   /**
