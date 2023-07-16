@@ -232,7 +232,9 @@ export function CommonMrowMixin<
     constructor(factory: WF, node: MmlNode, parent: WW = null) {
       super(factory, node, parent);
       const self = this as any as WW;
-      this.isStack = (this.parent.node.isInferred || this.parent.breakTop(self, self) !== self);
+      this.isStack = (!this.parent ||
+        this.parent.node.isInferred ||
+        this.parent.breakTop(self, self) !== self);
       this.stretchChildren();
       for (const child of this.childNodes) {
         if (child.bbox.pwidth) {
@@ -306,6 +308,7 @@ export function CommonMrowMixin<
      * Adjust bbox vertical alignment. (E.g., for \vbox, \vcenter.)
      */
     protected vboxAdjust(bbox: BBox) {
+      if (!this.parent) return;
       const n = this.breakCount;
       const valign = this.parent.node.attributes.get('data-vertical-align');
       if (n && valign === 'bottom') {
