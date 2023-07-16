@@ -657,7 +657,7 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
       return '';
     }
     let space = TEXSPACE[prevClass][texClass];
-    if ((this.prevLevel > 0 || this.attributes.get('scriptlevel') > 0) && space >= 0) {
+    if ((this.prevLevel > 0 || (this.attributes.get('scriptlevel') as number) > 0) && space >= 0) {
       return '';
     }
     return TEXSPACELENGTH[Math.abs(space)];

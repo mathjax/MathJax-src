@@ -88,6 +88,7 @@ function internalMath(parser: TexParser, text: string, level?: number | string, 
   if (!(parser instanceof TextParser)) {
     config.texParser = parser;
   }
+  config.parseOptions.clear();
   return [(new TextParser(text, mathvariant ? {mathvariant} : {}, config.parseOptions, level)).mml()];
 }
 

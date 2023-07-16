@@ -741,14 +741,14 @@ export class CommonWrapper<
    */
   protected copySkewIC(bbox: BBox) {
     const first = this.childNodes[0];
-    if (first?.bbox.sk) {
+    if (first?.bbox?.sk) {
       bbox.sk = first.bbox.sk;
     }
-    if (first?.bbox.dx) {
+    if (first?.bbox?.dx) {
       bbox.dx = first.bbox.dx;
     }
     const last = this.childNodes[this.childNodes.length - 1];
-    if (last?.bbox.ic) {
+    if (last?.bbox?.ic) {
       bbox.ic = last.bbox.ic;
       bbox.w += bbox.ic;
     }
@@ -936,7 +936,7 @@ export class CommonWrapper<
     // Get the lspace and rspace
     //
     const attributes = node.attributes;
-    const isScript = (attributes.get('scriptlevel') > 0);
+    const isScript = (attributes.get('scriptlevel') as number > 0);
     this.bbox.L = (attributes.isSet('lspace') ?
                    Math.max(0, this.length2em(attributes.get('lspace'))) :
                    MathMLSpace(isScript, node.lspace));

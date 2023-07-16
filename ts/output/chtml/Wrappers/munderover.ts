@@ -133,7 +133,7 @@ export const ChtmlMunder = (function <N, T, D>(): ChtmlMunderClass<N, T, D> {
       const basebox = this.baseChild.getOuterBBox();
       const underbox = this.scriptChild.getOuterBBox();
       const k = this.getUnderKV(basebox, underbox)[0];
-      const delta = (this.isLineBelow ? 0 : this.getDelta(true));
+      const delta = (this.isLineBelow ? 0 : this.getDelta(this.scriptChild, true));
       this.adaptor.setStyle(under, 'paddingTop', this.em(k));
       this.setDeltaW([base, under], this.getDeltaW([basebox, underbox], [0, -delta]));
       this.adjustUnderDepth(under, underbox);
@@ -232,7 +232,7 @@ export const ChtmlMover = (function <N, T, D>(): ChtmlMoverClass<N, T, D> {
       const basebox = this.baseChild.getOuterBBox();
       this.adjustBaseHeight(base, basebox);
       const k = this.getOverKU(basebox, overbox)[0];
-      const delta = (this.isLineAbove ? 0 : this.getDelta());
+      const delta = (this.isLineAbove ? 0 : this.getDelta(this.scriptChild));
       this.adaptor.setStyle(over, 'paddingBottom', this.em(k));
       this.setDeltaW([base, over], this.getDeltaW([basebox, overbox], [0, delta]));
       this.adjustOverDepth(over, overbox);
@@ -343,12 +343,13 @@ export const ChtmlMunderover = (function <N, T, D>(): ChtmlMunderoverClass<N, T,
       this.adjustBaseHeight(base, basebox);
       const ok = this.getOverKU(basebox, overbox)[0];
       const uk = this.getUnderKV(basebox, underbox)[0];
-      const delta = this.getDelta();
+      const odelta = this.getDelta(this.overChild);
+      const udelta = this.getDelta(this.underChild, true);
       this.adaptor.setStyle(over, 'paddingBottom', this.em(ok));
       this.adaptor.setStyle(under, 'paddingTop', this.em(uk));
       this.setDeltaW([base, under, over],
                      this.getDeltaW([basebox, underbox, overbox],
-                                    [0, this.isLineBelow ? 0 : -delta, this.isLineAbove ? 0 : delta]));
+                                    [0, this.isLineBelow ? 0 : -udelta, this.isLineAbove ? 0 : odelta]));
       this.adjustOverDepth(over, overbox);
       this.adjustUnderDepth(under, underbox);
     }

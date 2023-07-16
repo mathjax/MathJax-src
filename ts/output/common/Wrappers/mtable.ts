@@ -718,7 +718,7 @@ export function CommonMtableMixin<
       //
       // Make sure cWidth reflects the size of the broken columns
       //
-      if (w > this.cWidths[i]) {
+      if (w > (this.cWidths[i] as number)) {
         this.cWidths[i] = w;
       }
     }
