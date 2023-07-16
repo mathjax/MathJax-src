@@ -264,7 +264,7 @@ CommonOutputJax<
    * @param {number} h   The height of the SVG to create
    * @param {number} d   The depth of the SVG to create
    * @param {number} w   The width of the SVG to create
-   * @return [N, N]      The svg element and its initial g child
+   * @return {[N, N]}      The svg element and its initial g child
    */
   protected createSVG(h: number, d: number, w: number): [N, N] {
     const px = this.math.metrics.em / 1000;
