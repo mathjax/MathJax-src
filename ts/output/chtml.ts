@@ -115,6 +115,8 @@ CommonOutputJax<
     'mjx-row': {display: 'table-row'},
     'mjx-row > *': {display: 'table-cell'},
 
+    'mjx-container [inline-breaks]': {display: 'inline'},
+
     //
     //  These don't have Wrapper subclasses, so add their styles here
     //

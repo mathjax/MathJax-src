@@ -264,6 +264,7 @@ CommonOutputJax<
    * @param {number} h   The height of the SVG to create
    * @param {number} d   The depth of the SVG to create
    * @param {number} w   The width of the SVG to create
+   * @return {[N, N]}      The svg element and its initial g child
    */
   protected createSVG(h: number, d: number, w: number): [N, N] {
     const px = this.math.metrics.em / 1000;
@@ -366,11 +367,12 @@ CommonOutputJax<
     //
     // Make each line a separate SVG containing the line's children
     //
-    let newline = true;
     for (let i = 0; i <= n; i++) {
       const line = lineBBox[i] || wrapper.childNodes[0].getLineBBox(i);
       const {h, d, w} = line;
-      const [nsvg, ng] = this.createSVG(h, d, w);
+      const [mml, mo] = wrapper.childNodes[0].getBreakNode(line);
+      const {scale} = mml.getBBox();
+      const [nsvg, ng] = this.createSVG(h * scale, d * scale, w * scale);
       const nmath = adaptor.append(ng, adaptor.clone(math, false)) as N;
       for (const child of adaptor.childNodes(lines[i])) {
         adaptor.append(nmath, child);
@@ -379,25 +381,20 @@ CommonOutputJax<
       //
       // If the line is not the first one (or not a forced break), add a break node of the correct size
       //
-      const [mml, mo] = wrapper.childNodes[0].getBreakNode(line);
       const forced = !!(mo && mo.node.getProperty('forcebreak'));
       if (forced && mo.node.attributes.get('linebreakstyle') === 'after') {
         const k = mml.parent.node.childIndex(mml.node) + 1;
-        const next = mml.parent.childNodes[k + 1];
-        const dimen = (next ? next.getLineBBox(0).originalL : 0);
+        const next = mml.parent.childNodes[k];
+        const dimen = (next ? next.getLineBBox(0).originalL : 0) * scale;
         if (dimen) {
           this.addInlineBreak(nsvg, dimen, forced);
         }
       } else if (forced || i) {
-        const dimen = (mml && !newline ? mml.getLineBBox(0).originalL : 0);
+        const dimen = (mml && i ? mml.getLineBBox(0).originalL : 0) * scale;
         if (dimen || !forced) {
           this.addInlineBreak(nsvg, dimen, forced || !!mml.node.getProperty('forcebreak'));
         }
       }
-      //
-      // Don't insert space right after an mo with linebreak="newline"
-      //
-      newline = !!(mo && mo.node.attributes.get('linebreak') === 'newline');
     }
     //
     // Move <defs> node (if any) to first line's svg and remove the original svg node
