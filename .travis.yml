@@ -6,10 +6,7 @@ sudo: false
 script:
 - components/bin/version
 - npm install
-- npm link
-- npm link mathjax-full
-- npm run -s compile
-- npm run -s make-components
+- npm run -s make-all
 branches:
   only:
   - "/^\\d+\\.\\d+/"
