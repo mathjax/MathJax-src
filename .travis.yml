@@ -6,7 +6,7 @@ sudo: false
 script:
 - components/bin/version
 - npm install
-- npm run -s make-all
+- npm run -s build-all
 branches:
   only:
   - "/^\\d+\\.\\d+/"
