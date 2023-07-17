@@ -135,7 +135,7 @@
     "webpack-cli": "^5.1.1"
   },
   "dependencies": {
-    "mathjax-modern-font": "^1.0.0-beta.5",
+    "mathjax-modern-font": "^4.0.0-beta.1",
     "mhchemparser": "^4.2.1",
     "mj-context-menu": "^0.8.1",
     "speech-rule-engine": "^4.1.0-beta.7"
