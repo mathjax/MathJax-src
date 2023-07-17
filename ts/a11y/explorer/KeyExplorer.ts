@@ -104,7 +104,7 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
       [
         // ['keydown', move],
         ['keydown', this.KeyDown.bind(this)],
-        ['click', ((e: Event) => click(this.node, e)).bind(this)],
+        ['click', ((e: MouseEvent) => click(this.node, e)).bind(this)],
         ['focusin', this.FocusIn.bind(this)],
         ['focusout', this.FocusOut.bind(this)]
       ]);
@@ -196,16 +196,10 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
   /**
    * @override
    */
-  public Move(key: number) {
-    // let result = this.walker.move(key);
-    let result = move(key);
-    if (result) {
-      this.Update();
-      return;
-    }
-    if (this.sound) {
-      this.NoMove();
-    }
+  public Move(_key: number) {
+  //   // let result = this.walker.move(key);
+  //   let result = false;
+  //   // let result = move(key);
   }
 
   /**
@@ -272,7 +266,6 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @override
    */
   public Start() {
-    console.log(16);
     if (!this.attached) return;
     let options = this.getOptions();
     if (!this.init) {
@@ -296,7 +289,6 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
             this.Start();
           });
       })
-        .catch((error: Error) => console.log(error.message));
       return;
     }
     super.Start();
@@ -368,10 +360,6 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    */
   public KeyDown(event: KeyboardEvent) {
     const code = event.keyCode;
-    console.log(event);
-    console.log(event.key);
-    console.log(event.code);
-    console.log(code);
     this.walker.modifier = event.shiftKey;
     if (code === 17) {
       speechSynthesis.cancel();
@@ -382,9 +370,17 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
       this.stopEvent(event);
       return;
     }
-    console.log(9);
-    move(event);
-    console.log(13);
+    //
+    let result = move(event);
+    if (result) {
+      this.region.Show(this.node, this.highlighter);
+      this.region.Update('hello');
+      return;
+    }
+    if (this.sound) {
+      this.NoMove();
+    }
+    //
     if (this.triggerLink(code)) return;
     this.stopEvent(event);
     if (code === 32 && event.shiftKey || code === 13) {
@@ -398,7 +394,6 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @param {number} code The keycode of the last key pressed.
    */
   protected triggerLink(code: number) {
-    console.log(15);
     if (code !== 13) {
       return false;
     }
@@ -407,7 +402,6 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
       getAttribute('data-semantic-postfix')?.
       match(/(^| )link($| )/);
     if (focus) {
-      console.log(14);
       node.parentNode.dispatchEvent(new MouseEvent('click'));
       return true;
     }

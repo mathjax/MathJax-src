@@ -27,12 +27,12 @@
 const codeSelector = 'mjx-container[role="application"][data-shellac]';
 const nav = '[role="application"][data-shellac],[role="tree"],[role="group"],[role="treeitem"]';
 
-function isCodeBlock(el) {
+function isCodeBlock(el: HTMLElement) {
   return el.matches(codeSelector);
 }
 
-export function click(snippet, e) {
-  const clicked = e.target.closest(nav);
+export function click(snippet: HTMLElement, e: MouseEvent) {
+  const clicked = (e.target as HTMLElement).closest(nav) as HTMLElement;
   if (snippet.contains(clicked)) {
     const prev = snippet.querySelector('[tabindex="0"][role="tree"],[tabindex="0"][role="group"],[tabindex="0"][role="treeitem"]');
     if (prev) {
@@ -44,16 +44,16 @@ export function click(snippet, e) {
   }
 }
 
-export function move(e) {
+export function move(e: KeyboardEvent) {
   
-  function nextFocus() {
-    function nextSibling(el) {
-      const sib = el.nextElementSibling;
+  function nextFocus(): HTMLElement {
+    function nextSibling(el: HTMLElement): HTMLElement {
+      const sib = el.nextElementSibling as HTMLElement;
       if (sib) {
 	if (sib.matches(nav)) {
           return sib;
 	} else {
-          const sibChild = sib.querySelector(nav);
+          const sibChild = sib.querySelector(nav) as HTMLElement;
           return sibChild ?? nextSibling(sib);
 	}
       } else {
@@ -65,13 +65,13 @@ export function move(e) {
       }
     }
 
-    function prevSibling(el) {
-      const sib = el.previousElementSibling;
+    function prevSibling(el: HTMLElement): HTMLElement {
+      const sib = el.previousElementSibling as HTMLElement;
       if (sib) {
 	if (sib.matches(nav)) {
           return sib;
 	} else {
-          const sibChild = sib.querySelector(nav);
+          const sibChild = sib.querySelector(nav) as HTMLElement;
           return sibChild ?? prevSibling(sib);
 	}
       } else {
@@ -83,31 +83,35 @@ export function move(e) {
       }
     }
 
-    switch (event.key) {
+    const target = e.target as HTMLElement;
+    switch (e.key) {
       case "ArrowDown":
         e.preventDefault();
-        return e.target.querySelector(nav);
+        return target.querySelector(nav);
       case "ArrowUp":
         e.preventDefault();
-        return e.target.parentElement.closest(nav);
+        return target.parentElement.closest(nav);
       case "ArrowLeft":
         e.preventDefault();
-        return prevSibling(e.target);
+        return prevSibling(target);
       case "ArrowRight":
         e.preventDefault();
-        return nextSibling(e.target);
+        return nextSibling(target);
       default:
-        return;
+        return null;
     }
   }
 
   const next = nextFocus();
   
   
+  const target = e.target as HTMLElement;
   if (next) {
-    e.target.removeAttribute("tabindex");
+    target.removeAttribute("tabindex");
     next.setAttribute("tabindex", "0");
     next.focus();
+    console.log(next.getAttribute('data-semantic-speech'));
+    console.log(next.getAttribute('data-semantic-braille'));
     return true;
   }
   return false;
