@@ -122,7 +122,6 @@
   "devDependencies": {
     "copyfiles": "^2.4.1",
     "diff": "^5.1.0",
-    "mj-context-menu": "^0.9.1",
     "rimraf": "^5.0.1",
     "tape": "^5.6.3",
     "terser-webpack-plugin": "^5.3.9",
@@ -137,7 +136,7 @@
   "dependencies": {
     "mathjax-modern-font": "^4.0.0-beta.1",
     "mhchemparser": "^4.2.1",
-    "mj-context-menu": "^0.8.1",
+    "mj-context-menu": "^0.9.1",
     "speech-rule-engine": "^4.1.0-beta.7"
   }
 }
