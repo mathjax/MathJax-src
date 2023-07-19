@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2022-2023 The MathJax Consortium
+ *  Copyright (c) 2023 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,4 +22,4 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-export const VERSION = '4.0.0-beta.1';
+export const VERSION = '4.0.0-beta.3';

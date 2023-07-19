@@ -58,6 +58,8 @@ if (path.basename(dir) === 'node-main') {
     return REQUIRE(name.charAt(0) === '.' ? path.resolve(ROOT, name) :
                    name.charAt(0) === '[' ? Package.resolvePath(name) : name);
   };
+} else {
+  CONFIG.paths.mathjax = dir;
 }
 
 /*
