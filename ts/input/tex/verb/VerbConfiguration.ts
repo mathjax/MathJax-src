@@ -15,56 +15,60 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Configuration file for the verb package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration} from '../Configuration.js';
-import {TexConstant} from '../TexConstants.js';
+import { Configuration } from '../Configuration.js';
+import { TexConstant } from '../TexConstants.js';
 import TexParser from '../TexParser.js';
-import {CommandMap} from '../SymbolMap.js';
-import {ParseMethod} from '../Types.js';
+import { CommandMap } from '../SymbolMap.js';
+import { ParseMethod } from '../Types.js';
 import TexError from '../TexError.js';
-
 
 // Namespace
 export let VerbMethods: Record<string, ParseMethod> = {};
-
 
 /**
  * Implements the verbatim notation \verb|...|.
  * @param {TexParser} parser The current tex parser.
  * @param {string} name The name of the calling macro.
  */
-VerbMethods.Verb = function(parser: TexParser, name: string) {
+VerbMethods.Verb = function (parser: TexParser, name: string) {
   const c = parser.GetNext();
   const start = ++parser.i;
-  if (c === '' ) {
+  if (c === '') {
     throw new TexError('MissingArgFor', 'Missing argument for %1', name);
   }
-  while (parser.i < parser.string.length &&
-         parser.string.charAt(parser.i) !== c) {
+  while (
+    parser.i < parser.string.length &&
+    parser.string.charAt(parser.i) !== c
+  ) {
     parser.i++;
   }
   if (parser.i === parser.string.length) {
-    throw new TexError('NoClosingDelim',
-                       'Can\'t find closing delimiter for %1',
-                       parser.currentCS);
+    throw new TexError(
+      'NoClosingDelim',
+      "Can't find closing delimiter for %1",
+      parser.currentCS,
+    );
   }
   const text = parser.string.slice(start, parser.i).replace(/ /g, '\u00A0');
   parser.i++;
-  parser.Push(parser.create('token', 'mtext',
-                            {mathvariant: TexConstant.Variant.MONOSPACE},
-                            text));
+  parser.Push(
+    parser.create(
+      'token',
+      'mtext',
+      { mathvariant: TexConstant.Variant.MONOSPACE },
+      text,
+    ),
+  );
 };
 
+new CommandMap('verb', { verb: 'Verb' }, VerbMethods);
 
-new CommandMap('verb', {verb: 'Verb'}, VerbMethods);
-
-
-export const VerbConfiguration = Configuration.create(
-  'verb', {handler: {macro: ['verb']}}
-);
+export const VerbConfiguration = Configuration.create('verb', {
+  handler: { macro: ['verb'] },
+});

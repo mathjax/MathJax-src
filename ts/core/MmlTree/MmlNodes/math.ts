@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlLayoutNode, AttributeList} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlLayoutNode, AttributeList } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,7 +30,6 @@ import {AbstractMmlLayoutNode, AttributeList} from '../MmlNode.js';
  */
 
 export class MmlMath extends AbstractMmlLayoutNode {
-
   /**
    *  These are used as the defaults for any attributes marked INHERIT in other classes
    */
@@ -53,17 +52,17 @@ export class MmlMath extends AbstractMmlLayoutNode {
     alttext: '',
     cdgroup: '',
     scriptsizemultiplier: 1 / Math.sqrt(2),
-    scriptminsize: '.4em',       // Should be 8pt, but that's too big
+    scriptminsize: '.4em', // Should be 8pt, but that's too big
     infixlinebreakstyle: 'before',
     lineleading: '100%',
     linebreakmultchar: '\u2062', // Invisible times
-    indentshift: 'auto',         // Use user configuration
+    indentshift: 'auto', // Use user configuration
     indentalign: 'auto',
     indenttarget: '',
     indentalignfirst: 'indentalign',
     indentshiftfirst: 'indentshift',
-    indentalignlast:  'indentalign',
-    indentshiftlast:  'indentshift'
+    indentalignlast: 'indentalign',
+    indentshiftlast: 'indentshift',
   };
 
   /**
@@ -96,16 +95,26 @@ export class MmlMath extends AbstractMmlLayoutNode {
    *
    * @override
    */
-  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+  protected setChildInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    prime: boolean,
+  ) {
     if (this.attributes.get('mode') === 'display') {
       this.attributes.setInherited('display', 'block');
     }
-    attributes = this.addInheritedAttributes(attributes, this.attributes.getAllAttributes());
-    display = (!!this.attributes.get('displaystyle') ||
-               (!this.attributes.get('displaystyle') && this.attributes.get('display') === 'block'));
+    attributes = this.addInheritedAttributes(
+      attributes,
+      this.attributes.getAllAttributes(),
+    );
+    display =
+      !!this.attributes.get('displaystyle') ||
+      (!this.attributes.get('displaystyle') &&
+        this.attributes.get('display') === 'block');
     this.attributes.setInherited('displaystyle', display);
     level = (this.attributes.get('scriptlevel') ||
-             (this.constructor as typeof MmlMath).defaults['scriptlevel']) as number;
+      (this.constructor as typeof MmlMath).defaults['scriptlevel']) as number;
     super.setChildInheritedAttributes(attributes, display, level, prime);
   }
 
@@ -118,5 +127,4 @@ export class MmlMath extends AbstractMmlLayoutNode {
       this.mError('Improper nesting of math tags', options, true);
     }
   }
-
 }

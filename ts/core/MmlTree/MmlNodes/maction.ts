@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {MmlNode, AbstractMmlNode, AttributeList} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { MmlNode, AbstractMmlNode, AttributeList } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,14 +30,13 @@ import {MmlNode, AbstractMmlNode, AttributeList} from '../MmlNode.js';
  */
 
 export class MmlMaction extends AbstractMmlNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
     ...AbstractMmlNode.defaults,
     actiontype: 'toggle',
-    selection: 1
+    selection: 1,
   };
 
   /**
@@ -97,8 +96,10 @@ export class MmlMaction extends AbstractMmlNode {
    */
   protected verifyAttributes(options: PropertyList) {
     super.verifyAttributes(options);
-    if (this.attributes.get('actiontype') !== 'toggle' &&
-        this.attributes.getExplicit('selection') !== undefined) {
+    if (
+      this.attributes.get('actiontype') !== 'toggle' &&
+      this.attributes.getExplicit('selection') !== undefined
+    ) {
       const attributes = this.attributes.getAllAttributes();
       delete attributes.selection;
     }
@@ -124,7 +125,10 @@ export class MmlMaction extends AbstractMmlNode {
    * Select the next child for a toggle action
    */
   public nextToggleSelection() {
-    let selection = Math.max(1, parseInt(this.attributes.get('selection') as string) + 1);
+    let selection = Math.max(
+      1,
+      parseInt(this.attributes.get('selection') as string) + 1,
+    );
     if (selection > this.childNodes.length) {
       selection = 1;
     }
@@ -134,13 +138,24 @@ export class MmlMaction extends AbstractMmlNode {
   /**
    * @override
    */
-  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-    if ((this.attributes.get('actiontype') as String).toLowerCase() !== 'tooltip') {
+  protected setChildInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    prime: boolean,
+  ) {
+    if (
+      (this.attributes.get('actiontype') as String).toLowerCase() !== 'tooltip'
+    ) {
       super.setChildInheritedAttributes(attributes, display, level, prime);
       return;
     }
-    this.childNodes[0]?.setInheritedAttributes(attributes, display, level, prime);
+    this.childNodes[0]?.setInheritedAttributes(
+      attributes,
+      display,
+      level,
+      prime,
+    );
     this.childNodes[1]?.setInheritedAttributes(attributes, false, 1, false);
   }
-
 }

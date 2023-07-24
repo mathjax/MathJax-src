@@ -21,9 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Node, NodeClass} from './Node.js';
-import {Wrapper, WrapperClass} from './Wrapper.js';
-import {Factory, AbstractFactory} from './Factory.js';
+import { Node, NodeClass } from './Node.js';
+import { Wrapper, WrapperClass } from './Wrapper.js';
+import { Factory, AbstractFactory } from './Factory.js';
 
 /*****************************************************************/
 /**
@@ -38,7 +38,7 @@ export interface WrapperFactory<
   N extends Node<N, C>,
   C extends NodeClass<N, C>,
   WW extends Wrapper<N, C, WW>,
-  WC extends WrapperClass<N, C, WW>
+  WC extends WrapperClass<N, C, WW>,
 > extends Factory<WW, WC> {
   /**
    * @template TT The type to use for the wrappedd node
@@ -60,11 +60,14 @@ export interface WrapperFactory<
  * @template WC  The Wrapper class (for static values)
  */
 export abstract class AbstractWrapperFactory<
-  N extends Node<N, C>,
-  C extends NodeClass<N, C>,
-  WW extends Wrapper<N, C, WW>,
-  WC extends WrapperClass<N, C, WW>
-> extends AbstractFactory<WW, WC> implements WrapperFactory<N, C, WW, WC> {
+    N extends Node<N, C>,
+    C extends NodeClass<N, C>,
+    WW extends Wrapper<N, C, WW>,
+    WC extends WrapperClass<N, C, WW>,
+  >
+  extends AbstractFactory<WW, WC>
+  implements WrapperFactory<N, C, WW, WC>
+{
   /**
    * @override
    */

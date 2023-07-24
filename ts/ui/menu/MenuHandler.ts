@@ -21,17 +21,23 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {mathjax} from '../../mathjax.js';
+import { mathjax } from '../../mathjax.js';
 
-import {STATE, newState} from '../../core/MathItem.js';
-import {MathDocumentConstructor} from '../../core/MathDocument.js';
-import {Handler} from '../../core/Handler.js';
-import {ComplexityMathDocument, ComplexityMathItem} from '../../a11y/complexity.js';
-import {ExplorerMathDocument, ExplorerMathItem} from '../../a11y/explorer.js';
-import {AssistiveMmlMathDocument, AssistiveMmlMathItem} from '../../a11y/assistive-mml.js';
-import {expandable} from '../../util/Options.js';
+import { STATE, newState } from '../../core/MathItem.js';
+import { MathDocumentConstructor } from '../../core/MathDocument.js';
+import { Handler } from '../../core/Handler.js';
+import {
+  ComplexityMathDocument,
+  ComplexityMathItem,
+} from '../../a11y/complexity.js';
+import { ExplorerMathDocument, ExplorerMathItem } from '../../a11y/explorer.js';
+import {
+  AssistiveMmlMathDocument,
+  AssistiveMmlMathItem,
+} from '../../a11y/assistive-mml.js';
+import { expandable } from '../../util/Options.js';
 
-import {Menu} from './Menu.js';
+import { Menu } from './Menu.js';
 import '../../a11y/SpeechMenu.js';
 
 /*==========================================================================*/
@@ -39,22 +45,27 @@ import '../../a11y/SpeechMenu.js';
 /**
  * Generic constructor for Mixins
  */
-export type Constructor<T> = new(...args: any[]) => T;
+export type Constructor<T> = new (...args: any[]) => T;
 
 /**
  * Constructor for base MathItem for MenuMathItem
  */
 export type A11yMathItemConstructor = {
-  new(...args: any[]): ComplexityMathItem<HTMLElement, Text, Document> &
-    ExplorerMathItem & AssistiveMmlMathItem<HTMLElement, Text, Document>;
+  new (
+    ...args: any[]
+  ): ComplexityMathItem<HTMLElement, Text, Document> &
+    ExplorerMathItem &
+    AssistiveMmlMathItem<HTMLElement, Text, Document>;
 };
 
 /**
  * Constructor for base document for MenuMathDocument
  */
-export type A11yDocumentConstructor =
-  MathDocumentConstructor<ComplexityMathDocument<HTMLElement, Text, Document> &
-  ExplorerMathDocument & AssistiveMmlMathDocument<HTMLElement, Text, Document>>;
+export type A11yDocumentConstructor = MathDocumentConstructor<
+  ComplexityMathDocument<HTMLElement, Text, Document> &
+    ExplorerMathDocument &
+    AssistiveMmlMathDocument<HTMLElement, Text, Document>
+>;
 
 /*==========================================================================*/
 
@@ -66,8 +77,8 @@ newState('CONTEXT_MENU', 170);
 /**
  * The new function for MathItem that adds the context menu
  */
-export interface MenuMathItem extends ComplexityMathItem<HTMLElement, Text, Document> {
-
+export interface MenuMathItem
+  extends ComplexityMathItem<HTMLElement, Text, Document> {
   /**
    * @param {MenuMathDocument} document   The document where the menu is being added
    * @param {boolean} force               True if menu should be added even if enableMenu is false
@@ -78,7 +89,6 @@ export interface MenuMathItem extends ComplexityMathItem<HTMLElement, Text, Docu
    * @param {MenuMathDocument} document   The document to check for if anything is being loaded
    */
   checkLoading(document: MenuMathDocument): void;
-
 }
 
 /**
@@ -90,11 +100,9 @@ export interface MenuMathItem extends ComplexityMathItem<HTMLElement, Text, Docu
  * @template B  The MathItem class to extend
  */
 export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
-  BaseMathItem: B
+  BaseMathItem: B,
 ): Constructor<MenuMathItem> & B {
-
   return class extends BaseMathItem {
-
     /**
      * @param {MenuMathDocument} document   The document where the menu is being added
      * @param {boolean} force               True if menu should be added even if enableMenu is false
@@ -113,9 +121,7 @@ export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
     public checkLoading(document: MenuMathDocument) {
       document.checkLoading();
     }
-
   };
-
 }
 
 /*==========================================================================*/
@@ -123,8 +129,8 @@ export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
 /**
  * The properties needed in the MathDocument for context menus
  */
-export interface MenuMathDocument extends ComplexityMathDocument<HTMLElement, Text, Document> {
-
+export interface MenuMathDocument
+  extends ComplexityMathDocument<HTMLElement, Text, Document> {
   /**
    * The menu associated with this document
    */
@@ -154,11 +160,9 @@ export interface MenuMathDocument extends ComplexityMathDocument<HTMLElement, Te
  * @template B  The MathDocument class to extend
  */
 export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
-  BaseDocument: B
+  BaseDocument: B,
 ): Constructor<MenuMathDocument> & B {
-
   return class extends BaseDocument {
-
     /**
      * @override
      */
@@ -180,13 +184,13 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
       MenuClass: Menu,
       menuOptions: Menu.OPTIONS,
       enableMenu: true,
-      sre: (BaseDocument.OPTIONS.sre || expandable({})),
-      a11y: (BaseDocument.OPTIONS.a11y || expandable({})),
+      sre: BaseDocument.OPTIONS.sre || expandable({}),
+      a11y: BaseDocument.OPTIONS.a11y || expandable({}),
       renderActions: expandable({
         ...BaseDocument.OPTIONS.renderActions,
         addMenu: [STATE.CONTEXT_MENU],
-        checkLoading: [STATE.UNPROCESSED + 1]
-      })
+        checkLoading: [STATE.UNPROCESSED + 1],
+      }),
     };
 
     /**
@@ -207,7 +211,9 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
       if (!ProcessBits.has('context-menu')) {
         ProcessBits.allocate('context-menu');
       }
-      this.options.MathItem = MenuMathItemMixin<A11yMathItemConstructor>(this.options.MathItem);
+      this.options.MathItem = MenuMathItemMixin<A11yMathItemConstructor>(
+        this.options.MathItem,
+      );
     }
 
     /**
@@ -232,7 +238,9 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
      */
     public checkLoading(): MenuMathDocument {
       if (this.menu.isLoading) {
-        mathjax.retryAfter(this.menu.loadingPromise.catch((err) => console.log(err)));
+        mathjax.retryAfter(
+          this.menu.loadingPromise.catch((err) => console.log(err)),
+        );
       }
       const settings = this.menu.settings;
       if (settings.collapsible) {
@@ -266,9 +274,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
       (this.menu.menu.store as any).sort();
       return this;
     }
-
   };
-
 }
 
 /*==========================================================================*/
@@ -279,7 +285,11 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
  * @param {Handler} handler   The Handler instance to enhance
  * @return {Handler}          The handler that was modified (for purposes of chaining extensions)
  */
-export function MenuHandler(handler: Handler<HTMLElement, Text, Document>): Handler<HTMLElement, Text, Document> {
-  handler.documentClass = MenuMathDocumentMixin<A11yDocumentConstructor>(handler.documentClass as any);
+export function MenuHandler(
+  handler: Handler<HTMLElement, Text, Document>,
+): Handler<HTMLElement, Text, Document> {
+  handler.documentClass = MenuMathDocumentMixin<A11yDocumentConstructor>(
+    handler.documentClass as any,
+  );
   return handler;
 }

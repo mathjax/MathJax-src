@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     HARDcy: '\u042A',
     Hcirc: '\u0124',
     HilbertSpace: '\u210B',
@@ -42,5 +43,7 @@ Entities.add({
     hslash: '\u210F',
     hstrok: '\u0127',
     hybull: '\u2043',
-    hyphen: '\u2010'
-}, 'h');
+    hyphen: '\u2010',
+  },
+  'h',
+);

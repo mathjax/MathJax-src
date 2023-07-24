@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {LiteElement} from './Element.js';
+import { LiteElement } from './Element.js';
 
 /************************************************************/
 /**
@@ -58,8 +58,8 @@ export class LiteDocument {
    */
   constructor() {
     this.root = new LiteElement('html', {}, [
-      this.head = new LiteElement('head'),
-      this.body = new LiteElement('body')
+      (this.head = new LiteElement('head')),
+      (this.body = new LiteElement('body')),
     ]);
     this.type = '';
   }

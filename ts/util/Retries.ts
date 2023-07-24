@@ -21,14 +21,12 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-
 /*****************************************************************/
 /*
  *  The legacy MathJax object  (FIXME: remove this after all v2 code is gone)
  */
 
-declare var MathJax: {Callback: {After: Function}};
-
+declare var MathJax: { Callback: { After: Function } };
 
 /*****************************************************************/
 /**
@@ -73,8 +71,7 @@ export function handleRetriesFor(code: Function): Promise<any> {
       ok(code());
     } catch (err) {
       if (err.retry && err.retry instanceof Promise) {
-        err.retry.then(() => run(ok, fail))
-                 .catch((perr: Error) => fail(perr));
+        err.retry.then(() => run(ok, fail)).catch((perr: Error) => fail(perr));
       } else if (err.restart && err.restart.isCallback) {
         // FIXME: Remove this branch when all legacy code is gone
         MathJax.Callback.After(() => run(ok, fail), err.restart);

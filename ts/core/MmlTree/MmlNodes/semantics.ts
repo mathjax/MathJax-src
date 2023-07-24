@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlNode, AbstractMmlBaseNode} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlNode, AbstractMmlBaseNode } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,14 +30,13 @@ import {AbstractMmlNode, AbstractMmlBaseNode} from '../MmlNode.js';
  */
 
 export class MmlSemantics extends AbstractMmlBaseNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
     ...AbstractMmlBaseNode.defaults,
     definitionUrl: null,
-    encoding: null
+    encoding: null,
   };
 
   /**
@@ -62,7 +61,6 @@ export class MmlSemantics extends AbstractMmlBaseNode {
   public get notParent() {
     return true;
   }
-
 }
 
 /*****************************************************************/
@@ -71,7 +69,6 @@ export class MmlSemantics extends AbstractMmlBaseNode {
  */
 
 export class MmlAnnotationXML extends AbstractMmlNode {
-
   /**
    * @override
    */
@@ -81,7 +78,7 @@ export class MmlAnnotationXML extends AbstractMmlNode {
     encoding: null,
     cd: 'mathmlkeys',
     name: '',
-    src: null
+    src: null,
   };
 
   /**
@@ -96,7 +93,6 @@ export class MmlAnnotationXML extends AbstractMmlNode {
    * @override
    */
   protected setChildInheritedAttributes() {}
-
 }
 
 /*****************************************************************/
@@ -105,19 +101,18 @@ export class MmlAnnotationXML extends AbstractMmlNode {
  */
 
 export class MmlAnnotation extends MmlAnnotationXML {
-
   /**
    * @override
    */
   public static defaults = {
-    ...MmlAnnotationXML.defaults
+    ...MmlAnnotationXML.defaults,
   };
 
   /**
    * Extra properties for this node
    */
   public properties = {
-    isChars: true
+    isChars: true,
   };
 
   /**
@@ -126,5 +121,4 @@ export class MmlAnnotation extends MmlAnnotationXML {
   public get kind() {
     return 'annotation';
   }
-
 }

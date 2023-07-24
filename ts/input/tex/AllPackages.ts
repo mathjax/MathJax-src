@@ -126,5 +126,5 @@ export const AllPackages: string[] = [
   'tagformat',
   'texhtml',
   'textcomp',
-  'textmacros'
+  'textmacros',
 ];

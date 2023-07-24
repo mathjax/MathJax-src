@@ -15,19 +15,16 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Explorers based on mouse events.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-
-import {A11yDocument, DummyRegion, Region} from './Region.js';
-import {Explorer, AbstractExplorer} from './Explorer.js';
-import {ExplorerPool} from './ExplorerPool.js';
+import { A11yDocument, DummyRegion, Region } from './Region.js';
+import { Explorer, AbstractExplorer } from './Explorer.js';
+import { ExplorerPool } from './ExplorerPool.js';
 import '../sre.js';
-
 
 /**
  * Interface for mouse explorers. Adds the necessary mouse events.
@@ -35,7 +32,6 @@ import '../sre.js';
  * @extends {Explorer}
  */
 export interface MouseExplorer extends Explorer {
-
   /**
    * Function to be executed on mouse over.
    * @param {MouseEvent} event The mouse event.
@@ -47,9 +43,7 @@ export interface MouseExplorer extends Explorer {
    * @param {MouseEvent} event The mouse event.
    */
   MouseOut(event: MouseEvent): void;
-
 }
-
 
 /**
  * @constructor
@@ -57,16 +51,17 @@ export interface MouseExplorer extends Explorer {
  *
  * @template T  The type that is consumed by the Region of this explorer.
  */
-export abstract class AbstractMouseExplorer<T> extends AbstractExplorer<T> implements MouseExplorer {
-
+export abstract class AbstractMouseExplorer<T>
+  extends AbstractExplorer<T>
+  implements MouseExplorer
+{
   /**
    * @override
    */
-  protected events: [string, (x: Event) => void][] =
-    super.Events().concat([
-      ['mouseover', this.MouseOver.bind(this)],
-      ['mouseout', this.MouseOut.bind(this)]
-    ]);
+  protected events: [string, (x: Event) => void][] = super.Events().concat([
+    ['mouseover', this.MouseOver.bind(this)],
+    ['mouseout', this.MouseOut.bind(this)],
+  ]);
 
   /**
    * @override
@@ -75,16 +70,13 @@ export abstract class AbstractMouseExplorer<T> extends AbstractExplorer<T> imple
     this.Start();
   }
 
-
   /**
    * @override
    */
   public MouseOut(_event: MouseEvent) {
     this.Stop();
   }
-
 }
-
 
 /**
  * Exploration via hovering.
@@ -92,7 +84,6 @@ export abstract class AbstractMouseExplorer<T> extends AbstractExplorer<T> imple
  * @extends {AbstractMouseExplorer}
  */
 export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
-
   /**
    * Remember the last position to avoid flickering.
    * @type {[number, number]}
@@ -113,29 +104,28 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
    *
    * @template T
    */
-  protected constructor(public document: A11yDocument,
-                        public pool: ExplorerPool,
-                        public region: Region<T>,
-                        protected node: HTMLElement,
-                        protected nodeQuery: (node: HTMLElement) => boolean,
-                        protected nodeAccess: (node: HTMLElement) => T) {
+  protected constructor(
+    public document: A11yDocument,
+    public pool: ExplorerPool,
+    public region: Region<T>,
+    protected node: HTMLElement,
+    protected nodeQuery: (node: HTMLElement) => boolean,
+    protected nodeAccess: (node: HTMLElement) => T,
+  ) {
     super(document, pool, region, node);
   }
-
 
   /**
    * @override
    */
   public MouseOut(event: MouseEvent) {
-    if (event.clientX === this.coord[0] &&
-        event.clientY === this.coord[1]) {
+    if (event.clientX === this.coord[0] && event.clientY === this.coord[1]) {
       return;
     }
     this.highlighter.unhighlight();
     this.region.Hide();
     super.MouseOut(event);
   }
-
 
   /**
    * @override
@@ -153,7 +143,6 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
     this.region.Update(kind);
     this.region.Show(node, this.highlighter);
   }
-
 
   /**
    * Retrieves the closest node on which the node query fires. Thereby closest
@@ -179,30 +168,28 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
         return [node, this.nodeAccess(node)];
       }
       let child = node.childNodes[0] as HTMLElement;
-      node = (child && child.tagName === 'defs') ? // This is for SVG.
-      node.childNodes[1] as HTMLElement : child;
+      node =
+        child && child.tagName === 'defs' // This is for SVG.
+          ? (node.childNodes[1] as HTMLElement)
+          : child;
     }
     return [null, null];
   }
-
 }
-
 
 /**
  * Hoverer that displays information on nodes (e.g., as tooltips).
  * @constructor
  * @extends {Hoverer}
  */
-export class ValueHoverer extends Hoverer<string> { }
-
+export class ValueHoverer extends Hoverer<string> {}
 
 /**
  * Hoverer that displays node content (e.g., for magnification).
  * @constructor
  * @extends {Hoverer}
  */
-export class ContentHoverer extends Hoverer<HTMLElement> { }
-
+export class ContentHoverer extends Hoverer<HTMLElement> {}
 
 /**
  * Highlights maction nodes on hovering.
@@ -210,7 +197,6 @@ export class ContentHoverer extends Hoverer<HTMLElement> { }
  * @extends {Hoverer}
  */
 export class FlameHoverer extends Hoverer<void> {
-
   /**
    * @override
    */
@@ -218,10 +204,15 @@ export class FlameHoverer extends Hoverer<void> {
     public document: A11yDocument,
     public pool: ExplorerPool,
     _ignore: any,
-    protected node: HTMLElement) {
-    super(document, pool, new DummyRegion(document), node,
-          x => this.highlighter.isMactionNode(x),
-          () => {});
+    protected node: HTMLElement,
+  ) {
+    super(
+      document,
+      pool,
+      new DummyRegion(document),
+      node,
+      (x) => this.highlighter.isMactionNode(x),
+      () => {},
+    );
   }
-
 }

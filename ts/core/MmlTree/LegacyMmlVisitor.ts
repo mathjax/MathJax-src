@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MmlVisitor} from './MmlVisitor.js';
-import {MmlNode, TextNode, XMLNode} from './MmlNode.js';
+import { MmlVisitor } from './MmlVisitor.js';
+import { MmlNode, TextNode, XMLNode } from './MmlNode.js';
 
 /**
  *  Get access to legacy MML Element Jax
@@ -36,7 +36,6 @@ let MML = MathJax.ElementJax.mml;
  */
 
 export class LegacyMmlVisitor extends MmlVisitor {
-
   /**
    * Convert the tree rooted at a particular node into the old-style
    * internal format used by MathJax v2.
@@ -124,5 +123,4 @@ export class LegacyMmlVisitor extends MmlVisitor {
       mml[name] = node.getProperty(name);
     }
   }
-
 }

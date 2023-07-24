@@ -25,7 +25,6 @@
  * Class used for tracking usage of font characters or wrappers
  */
 export class Usage<T> {
-
   /**
    * The used items.
    */
@@ -71,6 +70,4 @@ export class Usage<T> {
     this.needsUpdate = [];
     return update;
   }
-
 }
-

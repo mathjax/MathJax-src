@@ -15,7 +15,6 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Tree Explorers allow to switch on effects on the entire
  *     expression tree.
@@ -23,27 +22,24 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import { A11yDocument, Region } from './Region.js';
+import { Explorer, AbstractExplorer } from './Explorer.js';
+import { ExplorerPool } from './ExplorerPool.js';
+import { Sre } from '../sre.js';
 
-import {A11yDocument, Region} from './Region.js';
-import {Explorer, AbstractExplorer} from './Explorer.js';
-import {ExplorerPool} from './ExplorerPool.js';
-import {Sre} from '../sre.js';
-
-export interface TreeExplorer extends Explorer {
-
-}
-
+export interface TreeExplorer extends Explorer {}
 
 export class AbstractTreeExplorer extends AbstractExplorer<void> {
-
   /**
    * @override
    */
-  protected constructor(public document: A11yDocument,
-                        public pool: ExplorerPool,
-                        public region: Region<void>,
-                        protected node: HTMLElement,
-                        protected mml: HTMLElement) {
+  protected constructor(
+    public document: A11yDocument,
+    public pool: ExplorerPool,
+    public region: Region<void>,
+    protected node: HTMLElement,
+    protected mml: HTMLElement,
+  ) {
     super(document, pool, null, node);
   }
 
@@ -51,7 +47,6 @@ export class AbstractTreeExplorer extends AbstractExplorer<void> {
    * @override
    */
   public readonly stoppable = false;
-
 
   /**
    * @override
@@ -68,12 +63,9 @@ export class AbstractTreeExplorer extends AbstractExplorer<void> {
     this.Stop();
     super.Detach();
   }
-
 }
 
-
 export class FlameColorer extends AbstractTreeExplorer {
-
   /**
    * @override
    */
@@ -92,12 +84,9 @@ export class FlameColorer extends AbstractTreeExplorer {
     }
     this.active = false;
   }
-
 }
 
-
 export class TreeColorer extends AbstractTreeExplorer {
-
   /**
    * @override
    */
@@ -122,5 +111,4 @@ export class TreeColorer extends AbstractTreeExplorer {
     }
     this.active = false;
   }
-
 }

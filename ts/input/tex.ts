@@ -21,25 +21,24 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AbstractInputJax} from '../core/InputJax.js';
-import {userOptions, separateOptions, OptionList} from '../util/Options.js';
-import {MathDocument} from '../core/MathDocument.js';
-import {MathItem} from '../core/MathItem.js';
-import {MmlNode} from '../core/MmlTree/MmlNode.js';
-import {MmlFactory} from '../core/MmlTree/MmlFactory.js';
+import { AbstractInputJax } from '../core/InputJax.js';
+import { userOptions, separateOptions, OptionList } from '../util/Options.js';
+import { MathDocument } from '../core/MathDocument.js';
+import { MathItem } from '../core/MathItem.js';
+import { MmlNode } from '../core/MmlTree/MmlNode.js';
+import { MmlFactory } from '../core/MmlTree/MmlFactory.js';
 
-import {FindTeX} from './tex/FindTeX.js';
+import { FindTeX } from './tex/FindTeX.js';
 
 import FilterUtil from './tex/FilterUtil.js';
 import NodeUtil from './tex/NodeUtil.js';
 import TexParser from './tex/TexParser.js';
 import TexError from './tex/TexError.js';
 import ParseOptions from './tex/ParseOptions.js';
-import {TagsFactory} from './tex/Tags.js';
-import {ParserConfiguration} from './tex/Configuration.js';
+import { TagsFactory } from './tex/Tags.js';
+import { ParserConfiguration } from './tex/Configuration.js';
 // Import base as it is the default package loaded.
 import './tex/base/BaseConfiguration.js';
-
 
 /*****************************************************************/
 /*
@@ -52,7 +51,6 @@ import './tex/base/BaseConfiguration.js';
  * @template D  The Document class
  */
 export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
-
   /**
    * Name of input jax.
    * @type {string}
@@ -72,8 +70,9 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     // Maximum size of TeX string to process.
     maxBuffer: 5 * 1024,
     // math-style to use for Latin and Greek letters
-    mathStyle: 'TeX',  // one of TeX, ISO, French, or upright
-    formatError: (jax: TeX<any, any, any>, err: TexError) => jax.formatError(err)
+    mathStyle: 'TeX', // one of TeX, ISO, French, or upright
+    formatError: (jax: TeX<any, any, any>, err: TexError) =>
+      jax.formatError(err),
   };
 
   /**
@@ -106,12 +105,13 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @param {string[]} packages Names of packages.
    * @return {Configuration} The configuration object.
    */
-  protected static configure(packages: (string | [string, number])[]): ParserConfiguration {
+  protected static configure(
+    packages: (string | [string, number])[],
+  ): ParserConfiguration {
     let configuration = new ParserConfiguration(packages, ['tex']);
     configuration.init();
     return configuration;
   }
-
 
   /**
    * Initialises the Tags factory. Add tagging structures from packages and set
@@ -119,25 +119,33 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @param {ParseOptions} options The parse options.
    * @param {Configuration} configuration The configuration.
    */
-  protected static tags(options: ParseOptions, configuration: ParserConfiguration) {
+  protected static tags(
+    options: ParseOptions,
+    configuration: ParserConfiguration,
+  ) {
     TagsFactory.addTags(configuration.tags);
     TagsFactory.setDefault(options.options.tags);
     options.tags = TagsFactory.getDefault();
     options.tags.configuration = options;
   }
 
-
   /**
    * @override
    */
   constructor(options: OptionList = {}) {
-    const [rest, tex, find] = separateOptions(options, TeX.OPTIONS, FindTeX.OPTIONS);
+    const [rest, tex, find] = separateOptions(
+      options,
+      TeX.OPTIONS,
+      FindTeX.OPTIONS,
+    );
     super(tex);
     this.findTeX = this.options['FindTeX'] || new FindTeX(find);
     const packages = this.options.packages;
-    const configuration = this.configuration = TeX.configure(packages);
-    const parseOptions = this._parseOptions =
-      new ParseOptions(configuration, [this.options, TagsFactory.OPTIONS]);
+    const configuration = (this.configuration = TeX.configure(packages));
+    const parseOptions = (this._parseOptions = new ParseOptions(configuration, [
+      this.options,
+      TagsFactory.OPTIONS,
+    ]));
     userOptions(parseOptions.options, rest);
     configuration.config(this);
     TeX.tags(parseOptions, configuration);
@@ -157,7 +165,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     this._parseOptions.nodeFactory.setMmlFactory(mmlFactory);
   }
 
-
   /**
    * @return {ParseOptions} The parse options that configure this JaX instance.
    */
@@ -172,11 +179,13 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     this.parseOptions.tags.reset(tag);
   }
 
-
   /**
    * @override
    */
-  public compile(math: MathItem<N, T, D>, document: MathDocument<N, T, D>): MmlNode {
+  public compile(
+    math: MathItem<N, T, D>,
+    document: MathDocument<N, T, D>,
+  ): MmlNode {
     this.parseOptions.clear();
     this.parseOptions.mathItem = math;
     this.executeFilters(this.preFilters, math, document, this.parseOptions);
@@ -186,9 +195,11 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     let globalEnv;
     let parser;
     try {
-      parser = new TexParser(this.latex,
-                             {display: math.display, isInner: false},
-                             this.parseOptions);
+      parser = new TexParser(
+        this.latex,
+        { display: math.display, isInner: false },
+        this.parseOptions,
+      );
       node = parser.mml();
       globalEnv = parser.stack.global;
     } catch (err) {
@@ -219,7 +230,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     return this.mathNode;
   }
 
-
   /**
    * @override
    */
@@ -236,7 +246,10 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
   public formatError(err: TexError): MmlNode {
     let message = err.message.replace(/\n.*/, '');
     return this.parseOptions.nodeFactory.create(
-      'error', message, err.id, this.latex);
+      'error',
+      message,
+      err.id,
+      this.latex,
+    );
   }
-
 }

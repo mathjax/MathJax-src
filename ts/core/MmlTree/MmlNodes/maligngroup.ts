@@ -21,9 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlLayoutNode, AttributeList} from '../MmlNode.js';
-import {INHERIT} from '../Attributes.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlLayoutNode, AttributeList } from '../MmlNode.js';
+import { INHERIT } from '../Attributes.js';
 
 /*****************************************************************/
 /**
@@ -31,13 +31,12 @@ import {INHERIT} from '../Attributes.js';
  */
 
 export class MmlMaligngroup extends AbstractMmlLayoutNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
     ...AbstractMmlLayoutNode.defaults,
-    groupalign: INHERIT
+    groupalign: INHERIT,
   };
 
   /**
@@ -59,9 +58,16 @@ export class MmlMaligngroup extends AbstractMmlLayoutNode {
    * Children can inherit from <maligngroup>
    * @override
    */
-  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-    attributes = this.addInheritedAttributes(attributes, this.attributes.getAllAttributes());
+  protected setChildInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    prime: boolean,
+  ) {
+    attributes = this.addInheritedAttributes(
+      attributes,
+      this.attributes.getAllAttributes(),
+    );
     super.setChildInheritedAttributes(attributes, display, level, prime);
   }
-
 }

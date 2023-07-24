@@ -15,42 +15,49 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Mappings for TeX parsing of the braket package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {CommandMap, MacroMap} from '../SymbolMap.js';
+import { CommandMap, MacroMap } from '../SymbolMap.js';
 import BraketMethods from './BraketMethods.js';
-
 
 /**
  * Macros for braket package.
  */
-new CommandMap('Braket-macros', {
-  bra: ['Macro', '{\\langle {#1} \\vert}', 1],
-  ket: ['Macro', '{\\vert {#1} \\rangle}', 1],
-  braket: ['Braket', '\u27E8', '\u27E9', false, Infinity],
-  'set': ['Braket', '{', '}', false, 1],
-  Bra: ['Macro', '{\\left\\langle {#1} \\right\\vert}', 1],
-  Ket: ['Macro', '{\\left\\vert {#1} \\right\\rangle}', 1],
-  Braket: ['Braket', '\u27E8', '\u27E9', true, Infinity],
-  Set: ['Braket', '{', '}', true, 1, true],
-  // Not part of the LaTeX package:
-  ketbra: ['Macro', '{\\vert {#1} \\rangle\\langle {#2} \\vert}', 2],
-  Ketbra: ['Macro', '{\\left\\vert {#1} \\right\\rangle\\left\\langle {#2} \\right\\vert}', 2],
-  // Treatment of bar.
-  '|': 'Bar'
-}, BraketMethods);
-
+new CommandMap(
+  'Braket-macros',
+  {
+    bra: ['Macro', '{\\langle {#1} \\vert}', 1],
+    ket: ['Macro', '{\\vert {#1} \\rangle}', 1],
+    braket: ['Braket', '\u27E8', '\u27E9', false, Infinity],
+    set: ['Braket', '{', '}', false, 1],
+    Bra: ['Macro', '{\\left\\langle {#1} \\right\\vert}', 1],
+    Ket: ['Macro', '{\\left\\vert {#1} \\right\\rangle}', 1],
+    Braket: ['Braket', '\u27E8', '\u27E9', true, Infinity],
+    Set: ['Braket', '{', '}', true, 1, true],
+    // Not part of the LaTeX package:
+    ketbra: ['Macro', '{\\vert {#1} \\rangle\\langle {#2} \\vert}', 2],
+    Ketbra: [
+      'Macro',
+      '{\\left\\vert {#1} \\right\\rangle\\left\\langle {#2} \\right\\vert}',
+      2,
+    ],
+    // Treatment of bar.
+    '|': 'Bar',
+  },
+  BraketMethods,
+);
 
 /**
  * Character map for braket package.
  */
-new MacroMap('Braket-characters', {
-  '|': 'Bar'
-}, BraketMethods);
-
-
+new MacroMap(
+  'Braket-characters',
+  {
+    '|': 'Bar',
+  },
+  BraketMethods,
+);

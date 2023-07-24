@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     CHcy: '\u0427',
     COPY: '\u00A9',
     Cacute: '\u0106',
@@ -104,5 +105,7 @@ Entities.add({
     cuwed: '\u22CF',
     cwconint: '\u2232',
     cwint: '\u2231',
-    cylcty: '\u232D'
-}, 'c');
+    cylcty: '\u232D',
+  },
+  'c',
+);

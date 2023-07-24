@@ -15,17 +15,21 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Symbol map classes.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Attributes, Args, ParseMethod, ParseInput, ParseResult} from './Types.js';
-import {Symbol, Macro} from './Symbol.js';
-import {MapHandler} from './MapHandler.js';
-
+import {
+  Attributes,
+  Args,
+  ParseMethod,
+  ParseInput,
+  ParseResult,
+} from './Types.js';
+import { Symbol, Macro } from './Symbol.js';
+import { MapHandler } from './MapHandler.js';
 
 /**
  * SymbolMaps are the base components for the input parsers.
@@ -38,7 +42,6 @@ import {MapHandler} from './MapHandler.js';
  * @interface
  */
 export interface SymbolMap {
-
   /**
    * @return {string} The name of the map.
    */
@@ -67,7 +70,6 @@ export interface SymbolMap {
    * @return {ParseResult} The parsed symbol and the rest of the string.
    */
   parse([env, symbol]: ParseInput): ParseResult;
-
 }
 
 /**
@@ -83,17 +85,18 @@ export function parseResult(result: ParseResult): ParseResult {
  * @template T
  */
 export abstract class AbstractSymbolMap<T> implements SymbolMap {
-
   /**
    * @constructor
    * @implements {SymbolMap}
    * @param {string} name Name of the mapping.
    * @param {ParseMethod} parser The parser for the mappiong.
    */
-  constructor(private _name: string, private _parser: ParseMethod) {
+  constructor(
+    private _name: string,
+    private _parser: ParseMethod,
+  ) {
     MapHandler.register(this);
   }
-
 
   /**
    * @override
@@ -102,12 +105,10 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
     return this._name;
   }
 
-
   /**
    * @override
    */
   public abstract contains(symbol: string): boolean;
-
 
   /**
    * @override
@@ -116,16 +117,14 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
     return this.contains(symbol) ? this.parser : null;
   }
 
-
   /**
    * @override
    */
   public parse([env, symbol]: ParseInput) {
     let parser = this.parserFor(symbol);
     let mapped = this.lookup(symbol);
-    return (parser && mapped) ? parseResult(parser(env, mapped as any)) : null;
+    return parser && mapped ? parseResult(parser(env, mapped as any)) : null;
   }
-
 
   public set parser(parser: ParseMethod) {
     this._parser = parser;
@@ -135,22 +134,17 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
     return this._parser;
   }
 
-
   /**
    * @param {string} symbol
    * @return {T}
    */
   public abstract lookup(symbol: string): T;
-
 }
-
-
 
 /**
  * Regular expressions used for parsing strings.
  */
 export class RegExpMap extends AbstractSymbolMap<string> {
-
   /**
    * @constructor
    * @extends {AbstractSymbolMap}
@@ -158,10 +152,13 @@ export class RegExpMap extends AbstractSymbolMap<string> {
    * @param {ParseMethod} parser The parser for the mappiong.
    * @param {RegExp} regexp The regular expression.
    */
-  constructor(name: string, parser: ParseMethod, private _regExp: RegExp) {
+  constructor(
+    name: string,
+    parser: ParseMethod,
+    private _regExp: RegExp,
+  ) {
     super(name, parser);
   }
-
 
   /**
    * @override
@@ -170,16 +167,13 @@ export class RegExpMap extends AbstractSymbolMap<string> {
     return this._regExp.test(symbol);
   }
 
-
   /**
    * @override
    */
   public lookup(symbol: string): string {
     return this.contains(symbol) ? symbol : null;
   }
-
 }
-
 
 /**
  * Parse maps associate strings with parsing functionality.
@@ -188,7 +182,6 @@ export class RegExpMap extends AbstractSymbolMap<string> {
  * @template K
  */
 export abstract class AbstractParseMap<K> extends AbstractSymbolMap<K> {
-
   private map: Map<string, K> = new Map<string, K>();
 
   /**
@@ -221,9 +214,7 @@ export abstract class AbstractParseMap<K> extends AbstractSymbolMap<K> {
   public remove(symbol: string) {
     this.map.delete(symbol);
   }
-
 }
-
 
 /**
  * Maps symbols that can all be parsed with the same method.
@@ -232,26 +223,26 @@ export abstract class AbstractParseMap<K> extends AbstractSymbolMap<K> {
  * @extends {AbstractParseMap}
  */
 export class CharacterMap extends AbstractParseMap<Symbol> {
-
   /**
    * @constructor
    * @param {string} name Name of the mapping.
    * @param {ParseMethod} parser The parser for the mapping.
    * @param {JSON} json The JSON representation of the character mapping.
    */
-  constructor(name: string, parser: ParseMethod,
-              json: {[index: string]: string | [string, Attributes]}) {
+  constructor(
+    name: string,
+    parser: ParseMethod,
+    json: { [index: string]: string | [string, Attributes] },
+  ) {
     super(name, parser);
     for (const key of Object.keys(json)) {
       let value = json[key];
-      let [char, attrs] = (typeof(value) === 'string') ? [value, null] : value;
+      let [char, attrs] = typeof value === 'string' ? [value, null] : value;
       let character = new Symbol(key, char, attrs);
       this.add(key, character);
     }
   }
-
 }
-
 
 /**
  * Maps symbols that are delimiters, that are all parsed with the same method.
@@ -260,16 +251,13 @@ export class CharacterMap extends AbstractParseMap<Symbol> {
  * @extends {CharacterMap}
  */
 export class DelimiterMap extends CharacterMap {
-
   /**
    * @override
    */
   public parse([env, symbol]: ParseInput) {
     return super.parse([env, '\\' + symbol]);
   }
-
 }
-
 
 /**
  * Maps macros that all bring their own parsing method.
@@ -278,7 +266,6 @@ export class DelimiterMap extends CharacterMap {
  * @extends {AbstractParseMap}
  */
 export class MacroMap extends AbstractParseMap<Macro> {
-
   /**
    * @constructor
    * @param {string} name Name of the mapping.
@@ -286,18 +273,19 @@ export class MacroMap extends AbstractParseMap<Macro> {
    * @param {Record<string, ParseMethod>} functionMap Collection of parse
    *     functions for the single macros.
    */
-  constructor(name: string,
-              json: {[index: string]: string | Args[]},
-              functionMap: Record<string, ParseMethod>) {
+  constructor(
+    name: string,
+    json: { [index: string]: string | Args[] },
+    functionMap: Record<string, ParseMethod>,
+  ) {
     super(name, null);
     for (const key of Object.keys(json)) {
       let value = json[key];
-      let [func, ...attrs] = (typeof(value) === 'string') ? [value] : value;
+      let [func, ...attrs] = typeof value === 'string' ? [value] : value;
       let character = new Macro(key, functionMap[func as string], attrs);
       this.add(key, character);
     }
   }
-
 
   /**
    * @override
@@ -306,7 +294,6 @@ export class MacroMap extends AbstractParseMap<Macro> {
     let macro = this.lookup(symbol);
     return macro ? macro.func : null;
   }
-
 
   /**
    * @override
@@ -319,9 +306,7 @@ export class MacroMap extends AbstractParseMap<Macro> {
     }
     return parseResult(parser(env, macro.symbol, ...macro.args));
   }
-
 }
-
 
 /**
  * Maps macros that all bring their own parsing method.
@@ -330,7 +315,6 @@ export class MacroMap extends AbstractParseMap<Macro> {
  * @extends {MacroMap}
  */
 export class CommandMap extends MacroMap {
-
   /**
    * @override
    */
@@ -346,9 +330,7 @@ export class CommandMap extends MacroMap {
     env.currentCS = saveCommand;
     return parseResult(result);
   }
-
 }
-
 
 /**
  * Maps macros for environments. It has a general parsing method for
@@ -359,7 +341,6 @@ export class CommandMap extends MacroMap {
  * @extends {MacroMap}
  */
 export class EnvironmentMap extends MacroMap {
-
   /**
    * @constructor
    * @param {string} name Name of the mapping.
@@ -368,14 +349,15 @@ export class EnvironmentMap extends MacroMap {
    * @param {Record<string, ParseMethod>} functionMap Collection of parse
    *     functions for the single macros.
    */
-  constructor(name: string,
-              parser: ParseMethod,
-              json: {[index: string]: string | Args[]},
-              functionMap: Record<string, ParseMethod>) {
+  constructor(
+    name: string,
+    parser: ParseMethod,
+    json: { [index: string]: string | Args[] },
+    functionMap: Record<string, ParseMethod>,
+  ) {
     super(name, json, functionMap);
     this.parser = parser;
   }
-
 
   /**
    * @override
@@ -388,5 +370,4 @@ export class EnvironmentMap extends MacroMap {
     }
     return parseResult(this.parser(env, macro.symbol, envParser, macro.args));
   }
-
 }

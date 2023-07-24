@@ -15,21 +15,20 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Configuration file for the mhchem package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration} from '../Configuration.js';
-import {CommandMap} from '../SymbolMap.js';
-import {ParseMethod} from '../Types.js';
+import { Configuration } from '../Configuration.js';
+import { CommandMap } from '../SymbolMap.js';
+import { ParseMethod } from '../Types.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import BaseMethods from '../base/BaseMethods.js';
-import {AmsMethods} from '../ams/AmsMethods.js';
-import {mhchemParser} from '#mhchem/mhchemParser.js';
+import { AmsMethods } from '../ams/AmsMethods.js';
+import { mhchemParser } from '#mhchem/mhchemParser.js';
 
 // Namespace
 let MhchemMethods: Record<string, ParseMethod> = {};
@@ -42,7 +41,11 @@ MhchemMethods.xArrow = AmsMethods.xArrow;
  * @param{string} name        The macro name being called
  * @param{string} machine     The name of the finite-state machine to use
  */
-MhchemMethods.Machine = function(parser: TexParser, name: string, machine: 'tex' | 'ce' | 'pu') {
+MhchemMethods.Machine = function (
+  parser: TexParser,
+  name: string,
+  machine: 'tex' | 'ce' | 'pu',
+) {
   let arg = parser.GetArgument(name);
   let tex;
   try {
@@ -55,41 +58,41 @@ MhchemMethods.Machine = function(parser: TexParser, name: string, machine: 'tex'
 };
 
 new CommandMap(
-  'mhchem', {
+  'mhchem',
+  {
     ce: ['Machine', 'ce'],
     pu: ['Machine', 'pu'],
     longrightleftharpoons: [
       'Macro',
-      '\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}'
+      '\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}',
     ],
     longRightleftharpoons: [
       'Macro',
-      '\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\smash{\\leftharpoondown}}'
+      '\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\smash{\\leftharpoondown}}',
     ],
     longLeftrightharpoons: [
       'Macro',
-      '\\stackrel{\\textstyle\\vphantom{{-}}{\\rightharpoonup}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}'
+      '\\stackrel{\\textstyle\\vphantom{{-}}{\\rightharpoonup}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}',
     ],
     longleftrightarrows: [
       'Macro',
-      '\\stackrel{\\longrightarrow}{\\smash{\\longleftarrow}\\Rule{0px}{.25em}{0px}}'
+      '\\stackrel{\\longrightarrow}{\\smash{\\longleftarrow}\\Rule{0px}{.25em}{0px}}',
     ],
     //
     //  Needed for \bond for the ~ forms
     //
     tripledash: [
       'Macro',
-      '\\vphantom{-}\\raise2mu{\\kern2mu\\tiny\\text{-}\\kern1mu\\text{-}\\kern1mu\\text{-}\\kern2mu}'
+      '\\vphantom{-}\\raise2mu{\\kern2mu\\tiny\\text{-}\\kern1mu\\text{-}\\kern1mu\\text{-}\\kern2mu}',
     ],
-    xleftrightarrow:    ['xArrow', 0x2194, 6, 6],
-    xrightleftharpoons: ['xArrow', 0x21CC, 5, 7],   // FIXME:  doesn't stretch in HTML-CSS output
-    xRightleftharpoons: ['xArrow', 0x21CC, 5, 7],   // FIXME:  how should this be handled?
-    xLeftrightharpoons: ['xArrow', 0x21CC, 5, 7]
+    xleftrightarrow: ['xArrow', 0x2194, 6, 6],
+    xrightleftharpoons: ['xArrow', 0x21cc, 5, 7], // FIXME:  doesn't stretch in HTML-CSS output
+    xRightleftharpoons: ['xArrow', 0x21cc, 5, 7], // FIXME:  how should this be handled?
+    xLeftrightharpoons: ['xArrow', 0x21cc, 5, 7],
   },
-  MhchemMethods
+  MhchemMethods,
 );
 
-
-export const MhchemConfiguration = Configuration.create(
-  'mhchem', {handler: {macro: ['mhchem']}}
-);
+export const MhchemConfiguration = Configuration.create('mhchem', {
+  handler: { macro: ['mhchem'] },
+});

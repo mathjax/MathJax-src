@@ -81,6 +81,11 @@
     "src:cjs": "npx tsc --project tsconfig/components.json",
     "postsrc:cjs": "npm run -s src:copy && npm run -s copy:pkg components/cjs && npm run -s clean:lib cjs",
     "src:copy": "npx copyfiles -u 2 -e 'components/mjs/**/*.js' 'components/mjs/**/*' components/cjs",
+    "=============================================================================== code hygene": "",
+    "lint": "eslint ts/",
+    "lint:fix": "eslint --fix ts/",
+    "format": "prettier --check \"ts/**/*.{ts,tsx}\"",
+    "format:fix": "prettier --write \"ts/**/*.{ts,tsx}\"",
     "=============================================================================== compile": "",
     "_cjs:pkg": "npm run -s copy:pkg cjs",
     "_mjs:pkg": "",
@@ -134,9 +139,14 @@
     "webpack-cli": "^5.1.1"
   },
   "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.1.0",
+    "eslint": "^8.45.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-jsdoc": "^46.4.4",
     "mathjax-modern-font": "^4.0.0-beta.3",
     "mhchemparser": "^4.2.1",
     "mj-context-menu": "^0.9.1",
+    "prettier": "^3.0.0",
     "speech-rule-engine": "^4.1.0-beta.7"
   }
 }

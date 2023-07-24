@@ -21,26 +21,25 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {OptionList} from '../util/Options.js';
+import { OptionList } from '../util/Options.js';
 
 /**
  * The data for an attribute
  */
 export type AttributeData = {
-  name: string,
-  value: string
+  name: string;
+  value: string;
 };
 
 /**
  * The data for an elements page-based bounding box
  */
 export type PageBBox = {
-  left: number,
-  right: number,
-  top: number,
-  bottom: number
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
 };
-
 
 /*****************************************************************/
 /**
@@ -258,7 +257,12 @@ export interface DOMAdaptor<N, T, D> {
    * @param {string} value         The new value of the attribute
    * @param {string=} ns           The namespace to use for the attribute
    */
-  setAttribute(node: N, name: string, value: string | number, ns?: string): void;
+  setAttribute(
+    node: N,
+    name: string,
+    value: string | number,
+    ns?: string,
+  ): void;
 
   /**
    * @param {N} node           The HTML element whose attributes are to be set
@@ -363,7 +367,6 @@ export interface DOMAdaptor<N, T, D> {
    */
   nodeSize(node: N, em?: number, local?: boolean): [number, number];
 
-
   /**
    * @param {N} node            The HTML node whose BBox is to be determined
    * @return {PageBBox}         BBox as {left, right, top, bottom} position on the page (in pixels)
@@ -379,8 +382,9 @@ export interface DOMAdaptor<N, T, D> {
  * @template T  The Text node class
  * @template D  The Document class
  */
-export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D> {
-
+export abstract class AbstractDOMAdaptor<N, T, D>
+  implements DOMAdaptor<N, T, D>
+{
   /**
    * The document in which the HTML nodes will be created
    */
@@ -407,7 +411,12 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
   /**
    * @override
    */
-  public node(kind: string, def: OptionList = {}, children: (N | T)[] = [], ns?: string) {
+  public node(
+    kind: string,
+    def: OptionList = {},
+    children: (N | T)[] = [],
+    ns?: string,
+  ) {
     const node = this.create(kind, ns);
     this.setAttributes(node, def);
     for (const child of children) {
@@ -433,9 +442,13 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
    * @param {OptionList} def   The attributes to set on that node
    */
   public setAttributes(node: N, def: OptionList) {
-    if (def.style && typeof(def.style) !== 'string') {
+    if (def.style && typeof def.style !== 'string') {
       for (let key of Object.keys(def.style)) {
-        this.setStyle(node, key.replace(/-([a-z])/g, (_m, c) => c.toUpperCase()), def.style[key]);
+        this.setStyle(
+          node,
+          key.replace(/-([a-z])/g, (_m, c) => c.toUpperCase()),
+          def.style[key],
+        );
       }
     }
     if (def.properties) {
@@ -444,7 +457,10 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
       }
     }
     for (let key of Object.keys(def)) {
-      if ((key !== 'style' || typeof(def.style) === 'string') && key !== 'properties') {
+      if (
+        (key !== 'style' || typeof def.style === 'string') &&
+        key !== 'properties'
+      ) {
         this.setAttribute(node, key, def[key]);
       }
     }
@@ -517,7 +533,7 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
   /**
    * @override
    */
-  public abstract clone(node: N, deep: boolean):  N;
+  public abstract clone(node: N, deep: boolean): N;
 
   /**
    * @override
@@ -589,7 +605,12 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
   /**
    * @override
    */
-  public abstract setAttribute(node: N, name: string, value: string, ns?: string): void;
+  public abstract setAttribute(
+    node: N,
+    name: string,
+    value: string,
+    ns?: string,
+  ): void;
 
   /**
    * @override
@@ -605,7 +626,6 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
    * @override
    */
   public abstract hasAttribute(node: N, name: string): boolean;
-
 
   /**
    * @override
@@ -632,8 +652,13 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
    */
   public allClasses(node: N) {
     const classes = this.getAttribute(node, 'class');
-    return (!classes ? [] as string[] :
-            classes.replace(/  +/g, ' ').replace(/^ /, '').replace(/ $/, '').split(/ /));
+    return !classes
+      ? ([] as string[])
+      : classes
+          .replace(/  +/g, ' ')
+          .replace(/^ /, '')
+          .replace(/ $/, '')
+          .split(/ /);
   }
 
   /**
@@ -669,11 +694,14 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
   /**
    * @override
    */
-  public abstract nodeSize(node: N, em?: number, local?: boolean): [number, number];
+  public abstract nodeSize(
+    node: N,
+    em?: number,
+    local?: boolean,
+  ): [number, number];
 
   /**
    * @override
    */
   public abstract nodeBBox(node: N): PageBBox;
-
 }

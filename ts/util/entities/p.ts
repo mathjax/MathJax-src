@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     Pcy: '\u041F',
     Poincareplane: '\u210C',
     Pr: '\u2ABB',
@@ -74,5 +75,7 @@ Entities.add({
     propto: '\u221D',
     prsim: '\u227E',
     prurel: '\u22B0',
-    puncsp: '\u2008'
-}, 'p');
+    puncsp: '\u2008',
+  },
+  'p',
+);

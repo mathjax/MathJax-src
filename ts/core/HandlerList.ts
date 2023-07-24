@@ -21,10 +21,10 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PrioritizedList} from '../util/PrioritizedList.js';
-import {OptionList} from '../util/Options.js';
-import {Handler} from './Handler.js';
-import {MathDocument} from './MathDocument.js';
+import { PrioritizedList } from '../util/PrioritizedList.js';
+import { OptionList } from '../util/Options.js';
+import { Handler } from './Handler.js';
+import { MathDocument } from './MathDocument.js';
 
 /*****************************************************************/
 /**
@@ -38,8 +38,7 @@ import {MathDocument} from './MathDocument.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class HandlerList<N, T, D> extends PrioritizedList<Handler<N, T, D>>  {
-
+export class HandlerList<N, T, D> extends PrioritizedList<Handler<N, T, D>> {
   /**
    * @param {Handler} handler  The handler to register
    * @return {Handler}  The list item created for the handler
@@ -74,8 +73,10 @@ export class HandlerList<N, T, D> extends PrioritizedList<Handler<N, T, D>>  {
    * @param {OptionList} options  The options for the handler
    * @return {MathDocument}       The MathDocument created by the handler for this document
    */
-  public document(document: any, options: OptionList = null): MathDocument<N, T, D> {
+  public document(
+    document: any,
+    options: OptionList = null,
+  ): MathDocument<N, T, D> {
     return this.handlesDocument(document).create(document, options);
   }
-
 }

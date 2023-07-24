@@ -21,14 +21,14 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {NodeFactory} from './NodeFactory.js';
+import { NodeFactory } from './NodeFactory.js';
 
 /**
  *  PropertyList and Property are for string data like
  *  attributes and other properties
  */
 export type Property = string | number | boolean;
-export type PropertyList = {[key: string]: Property};
+export type PropertyList = { [key: string]: Property };
 
 /*********************************************************/
 /**
@@ -128,7 +128,6 @@ export interface Node<N extends Node<N, C>, C extends NodeClass<N, C>> {
   walkTree(func: (node: N, data?: any) => void, data?: any): void;
 }
 
-
 /*********************************************************/
 /**
  * The generic Node class interface
@@ -143,9 +142,12 @@ export interface NodeClass<N extends Node<N, C>, C extends NodeClass<N, C>> {
    * @param {N[]} children  The initial child nodes, if any
    * @return {N}  The newly created node
    */
-  new (factory: NodeFactory<N, C>, properties?: PropertyList, children?: N[]): N;
+  new (
+    factory: NodeFactory<N, C>,
+    properties?: PropertyList,
+    children?: N[],
+  ): N;
 }
-
 
 /*********************************************************/
 /**
@@ -154,8 +156,11 @@ export interface NodeClass<N extends Node<N, C>, C extends NodeClass<N, C>> {
  * @template N   The actual type of node being created
  * @template C   The node class for N (the constructor rather than instance of the class)
  */
-export abstract class AbstractNode<N extends Node<N, C>, C extends NodeClass<N, C>> implements Node<N, C> {
-
+export abstract class AbstractNode<
+  N extends Node<N, C>,
+  C extends NodeClass<N, C>,
+> implements Node<N, C>
+{
   /**
    * The parent node for this one
    */
@@ -179,7 +184,11 @@ export abstract class AbstractNode<N extends Node<N, C>, C extends NodeClass<N, 
    * @constructor
    * @implements {N}
    */
-  constructor(readonly factory: NodeFactory<N, C>, properties: PropertyList = {}, children: N[] = []) {
+  constructor(
+    readonly factory: NodeFactory<N, C>,
+    properties: PropertyList = {},
+    children: N[] = [],
+  ) {
     for (const name of Object.keys(properties)) {
       this.setProperty(name, properties[name]);
     }
@@ -291,7 +300,7 @@ export abstract class AbstractNode<N extends Node<N, C>, C extends NodeClass<N, 
    */
   public childIndex(node: N) {
     let i = this.childNodes.indexOf(node);
-    return (i === -1 ? null : i);
+    return i === -1 ? null : i;
   }
 
   /**
@@ -299,7 +308,7 @@ export abstract class AbstractNode<N extends Node<N, C>, C extends NodeClass<N, 
    */
   public copy() {
     const node = this.factory.create(this.kind) as any as AbstractNode<N, C>;
-    node.properties = {...this.properties};
+    node.properties = { ...this.properties };
     for (const child of this.childNodes || []) {
       if (child) {
         node.appendChild(child.copy());
@@ -340,9 +349,7 @@ export abstract class AbstractNode<N extends Node<N, C>, C extends NodeClass<N, 
   public toString() {
     return this.kind + '(' + this.childNodes.join(',') + ')';
   }
-
 }
-
 
 /*********************************************************/
 /**
@@ -353,7 +360,7 @@ export abstract class AbstractNode<N extends Node<N, C>, C extends NodeClass<N, 
  */
 export abstract class AbstractEmptyNode<
   N extends Node<N, C>,
-  C extends NodeClass<N, C>
+  C extends NodeClass<N, C>,
 > extends AbstractNode<N, C> {
   /**
    *  We don't have children, so ignore these methods
@@ -362,8 +369,7 @@ export abstract class AbstractEmptyNode<
   /**
    * @override
    */
-  public setChildren(_children: N[]) {
-  }
+  public setChildren(_children: N[]) {}
 
   /**
    * @override
@@ -402,5 +408,4 @@ export abstract class AbstractEmptyNode<
   public toString() {
     return this.kind;
   }
-
 }

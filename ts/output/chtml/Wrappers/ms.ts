@@ -21,14 +21,23 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTML} from '../../chtml.js';
-import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
-import {ChtmlWrapperFactory} from '../WrapperFactory.js';
-import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
-        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
-import {CommonMs, CommonMsClass, CommonMsMixin} from '../../common/Wrappers/ms.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMs} from '../../../core/MmlTree/MmlNodes/ms.js';
+import { CHTML } from '../../chtml.js';
+import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
+import { ChtmlWrapperFactory } from '../WrapperFactory.js';
+import {
+  ChtmlCharOptions,
+  ChtmlVariantData,
+  ChtmlDelimiterData,
+  ChtmlFontData,
+  ChtmlFontDataClass,
+} from '../FontData.js';
+import {
+  CommonMs,
+  CommonMsClass,
+  CommonMsMixin,
+} from '../../common/Wrappers/ms.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMs } from '../../../core/MmlTree/MmlNodes/ms.js';
 
 /*****************************************************************/
 /**
@@ -38,11 +47,22 @@ import {MmlMs} from '../../../core/MmlTree/MmlNodes/ms.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMsNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMs<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {}
+export interface ChtmlMsNTD<N, T, D>
+  extends ChtmlWrapper<N, T, D>,
+    CommonMs<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {}
 
 /**
  * The ChtmlMsClass interface for the CHTML Ms wrapper
@@ -51,14 +71,28 @@ export interface ChtmlMsNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMs<
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMsClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonMsClass<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {
-  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMsNTD<N, T, D>;
+export interface ChtmlMsClass<N, T, D>
+  extends ChtmlWrapperClass<N, T, D>,
+    CommonMsClass<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {
+  new (
+    factory: ChtmlWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: ChtmlWrapper<N, T, D>,
+  ): ChtmlMsNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
@@ -66,24 +100,29 @@ export interface ChtmlMsClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, Commo
  * The ChtmlMs wrapper class for the MmlMs class
  */
 export const ChtmlMs = (function <N, T, D>(): ChtmlMsClass<N, T, D> {
-
   const Base = CommonMsMixin<
-      N, T, D,
-      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
-      ChtmlMsClass<N, T, D>
-    >(ChtmlWrapper);
+    N,
+    T,
+    D,
+    CHTML<N, T, D>,
+    ChtmlWrapper<N, T, D>,
+    ChtmlWrapperFactory<N, T, D>,
+    ChtmlWrapperClass<N, T, D>,
+    ChtmlCharOptions,
+    ChtmlVariantData,
+    ChtmlDelimiterData,
+    ChtmlFontData,
+    ChtmlFontDataClass,
+    ChtmlMsClass<N, T, D>
+  >(ChtmlWrapper);
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
   return class ChtmlMs extends Base implements ChtmlMsNTD<N, T, D> {
-
     /**
      * @override
      */
     public static kind = MmlMs.prototype.kind;
-
   };
-
 })<any, any, any>();

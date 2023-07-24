@@ -21,8 +21,13 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {OptionList} from '../util/Options.js';
-import {AttributeData, AbstractDOMAdaptor, DOMAdaptor, PageBBox} from '../core/DOMAdaptor.js';
+import { OptionList } from '../util/Options.js';
+import {
+  AttributeData,
+  AbstractDOMAdaptor,
+  DOMAdaptor,
+  PageBBox,
+} from '../core/DOMAdaptor.js';
 
 /*****************************************************************/
 /**
@@ -36,7 +41,7 @@ export interface MinDocument<N, T> {
   head: N;
   body: N;
   title: string;
-  doctype: {name: string};
+  doctype: { name: string };
   /* tslint:disable:jsdoc-require */
   createElement(kind: string): N;
   createElementNS(ns: string, kind: string): N;
@@ -69,18 +74,21 @@ export interface MinHTMLElement<N, T> {
   className: string;
   classList: DOMTokenList;
   style: OptionList;
-  sheet?: {insertRule: (rule: string, index?: number) => void};
+  sheet?: { insertRule: (rule: string, index?: number) => void };
 
   childNodes: (N | T)[] | NodeList;
   firstChild: N | T | Node;
   lastChild: N | T | Node;
   /* tslint:disable:jsdoc-require */
   getElementsByTagName(name: string): N[] | HTMLCollectionOf<Element>;
-  getElementsByTagNameNS(ns: string, name: string): N[] | HTMLCollectionOf<Element>;
+  getElementsByTagNameNS(
+    ns: string,
+    name: string,
+  ): N[] | HTMLCollectionOf<Element>;
   contains(child: N | T): boolean;
   appendChild(child: N | T): N | T | Node;
-  removeChild(child: N | T): N | T  | Node;
-  replaceChild(nnode: N | T, onode: N | T): N | T  | Node;
+  removeChild(child: N | T): N | T | Node;
+  replaceChild(nnode: N | T, onode: N | T): N | T | Node;
   insertBefore(nchild: N | T, ochild: N | T): void;
   cloneNode(deep: boolean): N | Node;
   setAttribute(name: string, value: string): void;
@@ -89,7 +97,7 @@ export interface MinHTMLElement<N, T> {
   removeAttribute(name: string): void;
   hasAttribute(name: string): boolean;
   getBoundingClientRect(): Object;
-  getBBox?(): {x: number, y: number, width: number, height: number};
+  getBBox?(): { x: number; y: number; width: number; height: number };
   /* tslint:endable */
 }
 
@@ -140,10 +148,10 @@ export interface MinXMLSerializer<N> {
 export interface MinWindow<N, D> {
   document: D;
   DOMParser: {
-    new(): MinDOMParser<D>
+    new (): MinDOMParser<D>;
   };
   XMLSerializer: {
-    new(): MinXMLSerializer<N>;
+    new (): MinXMLSerializer<N>;
   };
   NodeList: any;
   HTMLCollection: any;
@@ -178,8 +186,14 @@ export interface MinHTMLAdaptor<N, T, D> extends DOMAdaptor<N, T, D> {
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class HTMLAdaptor<N extends MinHTMLElement<N, T>, T extends MinText<N, T>, D extends MinDocument<N, T>> extends
-AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
+export class HTMLAdaptor<
+    N extends MinHTMLElement<N, T>,
+    T extends MinText<N, T>,
+    D extends MinDocument<N, T>,
+  >
+  extends AbstractDOMAdaptor<N, T, D>
+  implements MinHTMLAdaptor<N, T, D>
+{
   /**
    * The HTML adaptor can measure DOM node sizes
    */
@@ -216,9 +230,9 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    * @override
    */
   protected create(kind: string, ns?: string) {
-    return (ns ?
-            this.document.createElementNS(ns, kind) :
-            this.document.createElement(kind));
+    return ns
+      ? this.document.createElementNS(ns, kind)
+      : this.document.createElement(kind);
   }
 
   /**
@@ -253,14 +267,16 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    * @override
    */
   public doctype(doc: D) {
-    return (doc.doctype ? `<!DOCTYPE ${doc.doctype.name}>` : '');
+    return doc.doctype ? `<!DOCTYPE ${doc.doctype.name}>` : '';
   }
 
   /**
    * @override
    */
   public tags(node: N, name: string, ns: string = null) {
-    let nodes = (ns ? node.getElementsByTagNameNS(ns, name) : node.getElementsByTagName(name));
+    let nodes = ns
+      ? node.getElementsByTagNameNS(ns, name)
+      : node.getElementsByTagName(name);
     return Array.from(nodes as N[]) as N[];
   }
 
@@ -270,11 +286,16 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
   public getElements(nodes: (string | N | N[])[], _document: D) {
     let containers: N[] = [];
     for (const node of nodes) {
-      if (typeof(node) === 'string') {
-        containers = containers.concat(Array.from(this.document.querySelectorAll(node)));
+      if (typeof node === 'string') {
+        containers = containers.concat(
+          Array.from(this.document.querySelectorAll(node)),
+        );
       } else if (Array.isArray(node)) {
         containers = containers.concat(Array.from(node) as N[]);
-      } else if (node instanceof this.window.NodeList || node instanceof this.window.HTMLCollection) {
+      } else if (
+        node instanceof this.window.NodeList ||
+        node instanceof this.window.HTMLCollection
+      ) {
         containers = containers.concat(Array.from(node as any as N[]));
       } else {
         containers.push(node);
@@ -386,7 +407,7 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    */
   public kind(node: N | T) {
     const n = node.nodeType;
-    return (n === 1 || n === 3 || n === 8 ? node.nodeName.toLowerCase() : '');
+    return n === 1 || n === 3 || n === 8 ? node.nodeName.toLowerCase() : '';
   }
 
   /**
@@ -458,11 +479,9 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    * @override
    */
   public allAttributes(node: N) {
-    return Array.from(node.attributes).map(
-      (x: AttributeData) => {
-        return {name: x.name, value: x.value} as AttributeData;
-      }
-    );
+    return Array.from(node.attributes).map((x: AttributeData) => {
+      return { name: x.name, value: x.value } as AttributeData;
+    });
   }
 
   /**
@@ -483,7 +502,10 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
     if (node.classList) {
       node.classList.remove(name);
     } else {
-      node.className = node.className.split(/ /).filter((c) => c !== name).join(' ');
+      node.className = node.className
+        .split(/ /)
+        .filter((c) => c !== name)
+        .join(' ');
     }
   }
 
@@ -552,8 +574,8 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    */
   public nodeSize(node: N, em: number = 1, local: boolean = false) {
     if (local && node.getBBox) {
-      let {width, height} = node.getBBox();
-      return [width / em , height / em] as [number, number];
+      let { width, height } = node.getBBox();
+      return [width / em, height / em] as [number, number];
     }
     return [node.offsetWidth / em, node.offsetHeight / em] as [number, number];
   }
@@ -562,7 +584,8 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    * @override
    */
   public nodeBBox(node: N) {
-    const {left, right, top, bottom} = node.getBoundingClientRect() as PageBBox;
-    return {left, right, top, bottom};
+    const { left, right, top, bottom } =
+      node.getBoundingClientRect() as PageBBox;
+    return { left, right, top, bottom };
   }
 }

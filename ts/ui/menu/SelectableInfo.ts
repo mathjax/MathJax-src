@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Info, HtmlClasses} from './mj-context-menu.js';
+import { Info, HtmlClasses } from './mj-context-menu.js';
 
 /*==========================================================================*/
 
@@ -29,7 +29,6 @@ import {Info, HtmlClasses} from './mj-context-menu.js';
  * The SelectableInfo class definition
  */
 export class SelectableInfo extends Info {
-
   /**
    * Add a keypress event to handle "select all" so that only
    * the info-box's text is selected (not the whole page)
@@ -51,7 +50,7 @@ export class SelectableInfo extends Info {
   public selectAll() {
     const selection = document.getSelection();
     selection.selectAllChildren(
-      this.html.querySelector('.CtxtMenu_InfoContent').firstChild
+      this.html.querySelector('.CtxtMenu_InfoContent').firstChild,
     );
   }
 
@@ -63,7 +62,7 @@ export class SelectableInfo extends Info {
     try {
       document.execCommand('copy');
     } catch (err) {
-      alert('Can\'t copy to clipboard: ' + err.message);
+      alert("Can't copy to clipboard: " + err.message);
     }
     document.getSelection().removeAllRanges();
   }
@@ -73,11 +72,14 @@ export class SelectableInfo extends Info {
    */
   public generateHtml() {
     super.generateHtml();
-    const footer = this.html.querySelector('span.' + HtmlClasses['INFOSIGNATURE']);
+    const footer = this.html.querySelector(
+      'span.' + HtmlClasses['INFOSIGNATURE'],
+    );
     const button = footer.appendChild(document.createElement('input'));
     button.type = 'button';
     button.value = 'Copy to Clipboard';
-    button.addEventListener('click', (_event: MouseEvent) => this.copyToClipboard());
+    button.addEventListener('click', (_event: MouseEvent) =>
+      this.copyToClipboard(),
+    );
   }
-
 }

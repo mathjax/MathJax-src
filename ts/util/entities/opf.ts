@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     Aopf: '\uD835\uDD38',
     Bopf: '\uD835\uDD39',
     Copf: '\u2102',
@@ -69,5 +70,7 @@ Entities.add({
     wopf: '\uD835\uDD68',
     xopf: '\uD835\uDD69',
     yopf: '\uD835\uDD6A',
-    zopf: '\uD835\uDD6B'
-}, 'opf');
+    zopf: '\uD835\uDD6B',
+  },
+  'opf',
+);

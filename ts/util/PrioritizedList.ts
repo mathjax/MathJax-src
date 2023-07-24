@@ -29,7 +29,6 @@
  */
 
 export interface PrioritizedListItem<DataClass> {
-
   /**
    * The priority of this item
    */
@@ -49,7 +48,6 @@ export interface PrioritizedListItem<DataClass> {
  */
 
 export class PrioritizedList<DataClass> {
-
   /**
    * The default priority for items added to the list
    */
@@ -78,8 +76,8 @@ export class PrioritizedList<DataClass> {
     return {
       /* tslint:disable-next-line:jsdoc-require */
       next(): IteratorResult<PrioritizedListItem<DataClass>> {
-        return {value: items[i++], done: (i > items.length)};
-      }
+        return { value: items[i++], done: i > items.length };
+      },
     };
   }
 
@@ -90,12 +88,15 @@ export class PrioritizedList<DataClass> {
    * @param {number} priority  The priority for the item
    * @return {DataClass}       The data itself
    */
-  public add(item: DataClass, priority: number = PrioritizedList.DEFAULTPRIORITY): DataClass {
+  public add(
+    item: DataClass,
+    priority: number = PrioritizedList.DEFAULTPRIORITY,
+  ): DataClass {
     let i = this.items.length;
     do {
       i--;
     } while (i >= 0 && priority < this.items[i].priority);
-    this.items.splice(i + 1, 0, {item: item, priority: priority});
+    this.items.splice(i + 1, 0, { item: item, priority: priority });
     return item;
   }
 

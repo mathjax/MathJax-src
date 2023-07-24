@@ -21,10 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AbstractMmlEmptyNode}  from '../MmlNode.js';
-import {DOMAdaptor} from '../../DOMAdaptor.js';
-import {PropertyList} from '../../Tree/Node.js';
-
+import { AbstractMmlEmptyNode } from '../MmlNode.js';
+import { DOMAdaptor } from '../../DOMAdaptor.js';
+import { PropertyList } from '../../Tree/Node.js';
 
 /******************************************************************/
 /**
@@ -62,7 +61,10 @@ export class HtmlNode<N> extends AbstractMmlEmptyNode {
    * @param {DOMAdaptor} adaptor   DOM adaptor for the content
    * @return {HTMLNode}            The HTML node (for chaining of method calls)
    */
-  public setHTML(html: N, adaptor: DOMAdaptor<any, any, any> = null): HtmlNode<N> {
+  public setHTML(
+    html: N,
+    adaptor: DOMAdaptor<any, any, any> = null,
+  ): HtmlNode<N> {
     //
     // Test if the HTML element has attributes and wrap in a <span> if not
     //
@@ -94,7 +96,9 @@ export class HtmlNode<N> extends AbstractMmlEmptyNode {
    * @override
    */
   public copy(): HtmlNode<N> {
-    return (this.factory.create(this.kind) as HtmlNode<N>).setHTML(this.adaptor.clone(this.html));
+    return (this.factory.create(this.kind) as HtmlNode<N>).setHTML(
+      this.adaptor.clone(this.html),
+    );
   }
 
   /**
@@ -102,7 +106,7 @@ export class HtmlNode<N> extends AbstractMmlEmptyNode {
    */
   public toString() {
     const kind = this.adaptor.kind(this.html);
-    return `HTML=<${kind}>...</${kind}>` ;
+    return `HTML=<${kind}>...</${kind}>`;
   }
 
   /**
@@ -114,5 +118,4 @@ export class HtmlNode<N> extends AbstractMmlEmptyNode {
       return;
     }
   }
-
 }

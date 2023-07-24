@@ -24,18 +24,29 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor, Constructor} from '../Wrapper.js';
-import {CommonWrapperFactory} from '../WrapperFactory.js';
-import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
-import {CommonOutputJax} from '../../common.js';
-import {CommonMunderover} from './munderover.js';
-import {CommonMo} from './mo.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
-import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
-import {BBox} from '../../../util/BBox.js';
-import {LineBBox} from '../LineBBox.js';
-import {DIRECTION} from '../FontData.js';
+import {
+  CommonWrapper,
+  CommonWrapperClass,
+  CommonWrapperConstructor,
+  Constructor,
+} from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { CommonMunderover } from './munderover.js';
+import { CommonMo } from './mo.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMsubsup } from '../../../core/MmlTree/MmlNodes/msubsup.js';
+import { MmlMo } from '../../../core/MmlTree/MmlNodes/mo.js';
+import { BBox } from '../../../util/BBox.js';
+import { LineBBox } from '../LineBBox.js';
+import { DIRECTION } from '../FontData.js';
 
 /*****************************************************************/
 /**
@@ -55,7 +66,9 @@ import {DIRECTION} from '../FontData.js';
  * @template FC  The FontDataClass type
  */
 export interface CommonScriptbase<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -64,9 +77,8 @@ export interface CommonScriptbase<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
   /**
    * The core mi or mo of the base (or the base itself if there isn't one)
    */
@@ -278,7 +290,6 @@ export interface CommonScriptbase<
    * @return {BBox}       The modified bounding box
    */
   appendScripts(bbox: BBox): BBox;
-
 }
 
 /**
@@ -298,7 +309,9 @@ export interface CommonScriptbase<
  * @template FC  The FontDataClass type
  */
 export interface CommonScriptbaseClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -307,14 +320,12 @@ export interface CommonScriptbaseClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
   /**
    * Set to true for munderover/munder/mover/msup (Appendix G 13)
    */
   useIC: boolean;
-
 }
 
 /**
@@ -336,7 +347,9 @@ export interface CommonScriptbaseClass<
  * @template B   The mixin interface being created
  */
 export type CommonScriptbaseConstructor<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -345,7 +358,7 @@ export type CommonScriptbaseConstructor<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > = Constructor<CommonScriptbase<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>;
 
 /*****************************************************************/
@@ -369,7 +382,9 @@ export type CommonScriptbaseConstructor<
  * @template B   The mixin interface to create
  */
 export function CommonScriptbaseMixin<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -379,12 +394,14 @@ export function CommonScriptbaseMixin<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
-
-  return class CommonScriptbaseMixin extends Base
-  implements CommonScriptbase<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+): B {
+  return class CommonScriptbaseMixin
+    extends Base
+    implements CommonScriptbase<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
      * Set to false for msubsup/msub (Appendix G 13)
      */
@@ -462,13 +479,33 @@ export function CommonScriptbaseMixin<
      */
     public getBaseCore(): WW {
       let core = this.getSemanticBase() || this.childNodes[0];
-      while (core &&
-             ((core.childNodes.length === 1 &&
-               (core.node.isKind('mrow') || core.node.isKind('TeXAtom') ||
-                core.node.isKind('mstyle') || core.node.isKind('mpadded') ||
-                core.node.isKind('mphantom') || core.node.isKind('semantics'))) ||
-              (core.node.isKind('munderover') &&
-               (core as any as CommonMunderover<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).isMathAccent))) {
+      while (
+        core &&
+        ((core.childNodes.length === 1 &&
+          (core.node.isKind('mrow') ||
+            core.node.isKind('TeXAtom') ||
+            core.node.isKind('mstyle') ||
+            core.node.isKind('mpadded') ||
+            core.node.isKind('mphantom') ||
+            core.node.isKind('semantics'))) ||
+          (core.node.isKind('munderover') &&
+            (
+              core as any as CommonMunderover<
+                N,
+                T,
+                D,
+                JX,
+                WW,
+                WF,
+                WC,
+                CC,
+                VV,
+                DD,
+                FD,
+                FC
+              >
+            ).isMathAccent))
+      ) {
         this.setBaseAccentsFor(core);
         core = core.childNodes[0];
       }
@@ -496,7 +533,9 @@ export function CommonScriptbaseMixin<
      * @override
      */
     public getSemanticBase(): WW {
-      let fence = this.node.attributes.getExplicit('data-semantic-fencepointer') as string;
+      let fence = this.node.attributes.getExplicit(
+        'data-semantic-fencepointer',
+      ) as string;
       return this.getBaseFence(this.baseChild, fence);
     }
 
@@ -544,7 +583,7 @@ export function CommonScriptbaseMixin<
      * @override
      */
     public getAdjustedIc(): number {
-      return (this.baseIc ? 1.05 * this.baseIc + .05 : 0);
+      return this.baseIc ? 1.05 * this.baseIc + 0.05 : 0;
     }
 
     /**
@@ -552,9 +591,13 @@ export function CommonScriptbaseMixin<
      */
     public isCharBase(): boolean {
       let base = this.baseCore;
-      return (((base.node.isKind('mo') && (base as any).size === null) ||
-               base.node.isKind('mi') || base.node.isKind('mn')) &&
-              base.bbox.rscale === 1 && Array.from(base.getText()).length === 1);
+      return (
+        ((base.node.isKind('mo') && (base as any).size === null) ||
+          base.node.isKind('mi') ||
+          base.node.isKind('mn')) &&
+        base.bbox.rscale === 1 &&
+        Array.from(base.getText()).length === 1
+      );
     }
 
     /**
@@ -567,7 +610,20 @@ export function CommonScriptbaseMixin<
       } else if (this.node.isKind('munder')) {
         this.isLineBelow = this.isLineAccent(this.scriptChild);
       } else {
-        const mml = this as any as CommonMunderover<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+        const mml = this as any as CommonMunderover<
+          N,
+          T,
+          D,
+          JX,
+          WW,
+          WF,
+          WC,
+          CC,
+          VV,
+          DD,
+          FD,
+          FC
+        >;
         this.isLineAbove = this.isLineAccent(mml.overChild);
         this.isLineBelow = this.isLineAccent(mml.underChild);
       }
@@ -578,7 +634,7 @@ export function CommonScriptbaseMixin<
      */
     public isLineAccent(script: WW): boolean {
       const node = script.coreMO().node;
-      return (node.isToken && (node as MmlMo).getText() === '\u2015');
+      return node.isToken && (node as MmlMo).getText() === '\u2015';
     }
 
     /***************************************************************************/
@@ -591,7 +647,11 @@ export function CommonScriptbaseMixin<
      */
     public getBaseWidth(): number {
       const bbox = this.baseChild.getLineBBox(this.baseChild.breakCount);
-      return bbox.w * bbox.rscale - (this.baseRemoveIc ? this.baseIc : 0) + this.font.params.extra_ic;
+      return (
+        bbox.w * bbox.rscale -
+        (this.baseRemoveIc ? this.baseIc : 0) +
+        this.font.params.extra_ic
+      );
     }
 
     /**
@@ -606,10 +666,27 @@ export function CommonScriptbaseMixin<
      */
     public baseCharZero(n: number): number {
       const largeop = !!this.baseCore.node.attributes.get('largeop');
-      const sized = !!(this.baseCore.node.isKind('mo') &&
-                        (this.baseCore as any as CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).size);
+      const sized = !!(
+        this.baseCore.node.isKind('mo') &&
+        (
+          this.baseCore as any as CommonMo<
+            N,
+            T,
+            D,
+            JX,
+            WW,
+            WF,
+            WC,
+            CC,
+            VV,
+            DD,
+            FD,
+            FC
+          >
+        ).size
+      );
       const scale = this.baseScale;
-      return (this.baseIsChar && !largeop && !sized && scale === 1 ? 0 : n);
+      return this.baseIsChar && !largeop && !sized && scale === 1 ? 0 : n;
     }
 
     /**
@@ -620,11 +697,14 @@ export function CommonScriptbaseMixin<
       const bbox = base.getLineBBox(base.breakCount);
       const sbox = this.scriptChild.getOuterBBox();
       const tex = this.font.params;
-      const subscriptshift = this.length2em(this.node.attributes.get('subscriptshift'), tex.sub1);
+      const subscriptshift = this.length2em(
+        this.node.attributes.get('subscriptshift'),
+        tex.sub1,
+      );
       return Math.max(
         this.baseCharZero(bbox.d * this.baseScale + tex.sub_drop * sbox.rscale),
         subscriptshift,
-        sbox.h * sbox.rscale - (4 / 5) * tex.x_height
+        sbox.h * sbox.rscale - (4 / 5) * tex.x_height,
       );
     }
 
@@ -636,14 +716,17 @@ export function CommonScriptbaseMixin<
       const bbox = base.getLineBBox(base.breakCount);
       const sbox = this.scriptChild.getOuterBBox();
       const tex = this.font.params;
-      const attr = this.node.attributes.getList('displaystyle', 'superscriptshift');
+      const attr = this.node.attributes.getList(
+        'displaystyle',
+        'superscriptshift',
+      );
       const prime = this.node.getProperty('texprimestyle');
-      const p = prime ? tex.sup3 : (attr.displaystyle ? tex.sup1 : tex.sup2);
+      const p = prime ? tex.sup3 : attr.displaystyle ? tex.sup1 : tex.sup2;
       const superscriptshift = this.length2em(attr.superscriptshift, p);
       return Math.max(
         this.baseCharZero(bbox.h * this.baseScale - tex.sup_drop * sbox.rscale),
         superscriptshift,
-        sbox.d * sbox.rscale + (1 / 4) * tex.x_height
+        sbox.d * sbox.rscale + (1 / 4) * tex.x_height,
       );
     }
 
@@ -658,7 +741,7 @@ export function CommonScriptbaseMixin<
     public hasMovableLimits(): boolean {
       const display = this.node.attributes.get('displaystyle');
       const mo = this.baseChild.coreMO().node;
-      return (!display && !!mo.attributes.get('movablelimits'));
+      return !display && !!mo.attributes.get('movablelimits');
     }
 
     /**
@@ -669,9 +752,15 @@ export function CommonScriptbaseMixin<
       const tex = this.font.params;
       const d = overbox.d * overbox.rscale;
       const t = tex.rule_thickness * tex.separation_factor;
-      const delta = (this.baseHasAccentOver ? t : 0);
-      const T = (this.isLineAbove ? 3 * tex.rule_thickness : t);
-      const k = (accent ? T : Math.max(tex.big_op_spacing1, tex.big_op_spacing3 - Math.max(0, d))) - delta;
+      const delta = this.baseHasAccentOver ? t : 0;
+      const T = this.isLineAbove ? 3 * tex.rule_thickness : t;
+      const k =
+        (accent
+          ? T
+          : Math.max(
+              tex.big_op_spacing1,
+              tex.big_op_spacing3 - Math.max(0, d),
+            )) - delta;
       return [k, basebox.h * basebox.rscale + k + d];
     }
 
@@ -683,9 +772,11 @@ export function CommonScriptbaseMixin<
       const tex = this.font.params;
       const h = underbox.h * underbox.rscale;
       const t = tex.rule_thickness * tex.separation_factor;
-      const delta = (this.baseHasAccentUnder ? t : 0);
-      const T = (this.isLineBelow ? 3 * tex.rule_thickness : t);
-      const k = (accent ? T : Math.max(tex.big_op_spacing2, tex.big_op_spacing4 - h)) - delta;
+      const delta = this.baseHasAccentUnder ? t : 0;
+      const T = this.isLineBelow ? 3 * tex.rule_thickness : t;
+      const k =
+        (accent ? T : Math.max(tex.big_op_spacing2, tex.big_op_spacing4 - h)) -
+        delta;
       return [k, -(basebox.d * basebox.rscale + k + h)];
     }
 
@@ -694,14 +785,21 @@ export function CommonScriptbaseMixin<
      */
     public getDeltaW(boxes: BBox[], delta: number[] = [0, 0, 0]): number[] {
       const align = this.node.attributes.get('align');
-      const widths = boxes.map(box => box.w * box.rscale);
-      widths[0] -= (this.baseRemoveIc && !this.baseCore.node.attributes.get('largeop') ? this.baseIc : 0);
+      const widths = boxes.map((box) => box.w * box.rscale);
+      widths[0] -=
+        this.baseRemoveIc && !this.baseCore.node.attributes.get('largeop')
+          ? this.baseIc
+          : 0;
       const w = Math.max(...widths);
       const dw = [] as number[];
       let m = 0;
       for (const i of widths.keys()) {
-        dw[i] = (align === 'center' ? (w - widths[i]) / 2 :
-                 align === 'right' ? w - widths[i] : 0) + delta[i];
+        dw[i] =
+          (align === 'center'
+            ? (w - widths[i]) / 2
+            : align === 'right'
+            ? w - widths[i]
+            : 0) + delta[i];
         if (dw[i] < m) {
           m = -dw[i];
         }
@@ -711,7 +809,9 @@ export function CommonScriptbaseMixin<
           dw[i] += m;
         }
       }
-      [1, 2].map(i => dw[i] += (boxes[i] ? boxes[i].dx * boxes[0].rscale : 0));
+      [1, 2].map(
+        (i) => (dw[i] += boxes[i] ? boxes[i].dx * boxes[0].rscale : 0),
+      );
       return dw;
     }
 
@@ -720,11 +820,14 @@ export function CommonScriptbaseMixin<
      */
     public getDelta(script: WW, noskew: boolean = false): number {
       const accent = this.node.attributes.get('accent');
-      let {sk, ic} = this.baseCore.getOuterBBox();
+      let { sk, ic } = this.baseCore.getOuterBBox();
       if (accent) {
         sk -= script.getOuterBBox().sk;
       }
-      return ((accent && !noskew ? sk : 0) + this.font.skewIcFactor * ic) * this.baseScale;
+      return (
+        ((accent && !noskew ? sk : 0) + this.font.skewIcFactor * ic) *
+        this.baseScale
+      );
     }
 
     /**
@@ -748,11 +851,11 @@ export function CommonScriptbaseMixin<
         //  If all the children are stretchy, find the largest one,
         //  otherwise, find the width of the non-stretchy children.
         //
-        let all = (count > 1 && count === nodeCount);
+        let all = count > 1 && count === nodeCount;
         for (const child of this.childNodes) {
-          const noStretch = (child.stretch.dir === DIRECTION.None);
+          const noStretch = child.stretch.dir === DIRECTION.None;
           if (all || noStretch) {
-            const {w, rscale} = child.getOuterBBox(noStretch);
+            const { w, rscale } = child.getOuterBBox(noStretch);
             if (w * rscale > W) W = w * rscale;
           }
         }
@@ -778,7 +881,7 @@ export function CommonScriptbaseMixin<
       //
       //  Find the base core
       //
-      const core = this.baseCore = this.getBaseCore();
+      const core = (this.baseCore = this.getBaseCore());
       if (!core) return;
       //
       // Get information about the base element
@@ -790,8 +893,12 @@ export function CommonScriptbaseMixin<
       //
       //  Determine if we are setting a mathaccent
       //
-      this.isMathAccent = this.baseIsChar &&
-        (this.scriptChild && !!this.scriptChild.coreMO().node.getProperty('mathaccent')) as boolean;
+      this.isMathAccent =
+        this.baseIsChar &&
+        ((this.scriptChild &&
+          !!this.scriptChild
+            .coreMO()
+            .node.getProperty('mathaccent')) as boolean);
       //
       // Check for overline/underline accents
       //
@@ -799,9 +906,26 @@ export function CommonScriptbaseMixin<
       //
       //  Check if the base is a mi or mo that needs italic correction removed
       //
-      this.baseRemoveIc = !this.isLineAbove && !this.isLineBelow &&
-        (!(this.constructor as CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).useIC ||
-         this.isMathAccent);
+      this.baseRemoveIc =
+        !this.isLineAbove &&
+        !this.isLineBelow &&
+        (!(
+          this.constructor as CommonScriptbaseClass<
+            N,
+            T,
+            D,
+            JX,
+            WW,
+            WF,
+            WC,
+            CC,
+            VV,
+            DD,
+            FD,
+            FC
+          >
+        ).useIC ||
+          this.isMathAccent);
     }
 
     /**
@@ -834,8 +958,11 @@ export function CommonScriptbaseMixin<
      */
     get breakCount() {
       if (this._breakCount < 0) {
-        this._breakCount = (this.node.isEmbellished ? this.coreMO().embellishedBreakCount :
-                            !this.node.linebreakContainer ? this.childNodes[0].breakCount : 0);
+        this._breakCount = this.node.isEmbellished
+          ? this.coreMO().embellishedBreakCount
+          : !this.node.linebreakContainer
+          ? this.childNodes[0].breakCount
+          : 0;
       }
       return this._breakCount;
     }
@@ -846,8 +973,11 @@ export function CommonScriptbaseMixin<
      * @override
      */
     public breakTop(mrow: WW, child: WW): WW {
-      return (this.node.linebreakContainer || !this.parent ||
-              this.node.childIndex(child.node) ? mrow : this.parent.breakTop(mrow, this as any as WW));
+      return this.node.linebreakContainer ||
+        !this.parent ||
+        this.node.childIndex(child.node)
+        ? mrow
+        : this.parent.breakTop(mrow, this as any as WW);
     }
 
     /**
@@ -855,7 +985,11 @@ export function CommonScriptbaseMixin<
      */
     public computeLineBBox(i: number) {
       const n = this.breakCount;
-      if (!n) return LineBBox.from(this.getOuterBBox(), this.linebreakOptions.lineleading);
+      if (!n)
+        return LineBBox.from(
+          this.getOuterBBox(),
+          this.linebreakOptions.lineleading,
+        );
       const bbox = this.baseChild.getLineBBox(i).copy();
       if (i < n) {
         i === 0 && this.addLeftBorders(bbox);
@@ -867,7 +1001,5 @@ export function CommonScriptbaseMixin<
       }
       return bbox;
     }
-
   } as any as B;
-
 }

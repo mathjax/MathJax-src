@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {HTMLAdaptor} from './HTMLAdaptor.js';
+import { HTMLAdaptor } from './HTMLAdaptor.js';
 
 //
 //  Let Typescript know about these

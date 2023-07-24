@@ -15,19 +15,16 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Explorers based on keyboard events.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-
-import {A11yDocument, Region} from './Region.js';
-import {Explorer, AbstractExplorer} from './Explorer.js';
-import {ExplorerPool} from './ExplorerPool.js';
-import {Sre} from '../sre.js';
-
+import { A11yDocument, Region } from './Region.js';
+import { Explorer, AbstractExplorer } from './Explorer.js';
+import { ExplorerPool } from './ExplorerPool.js';
+import { Sre } from '../sre.js';
 
 /**
  * Interface for keyboard explorers. Adds the necessary keyboard events.
@@ -35,7 +32,6 @@ import {Sre} from '../sre.js';
  * @extends {Explorer}
  */
 export interface KeyExplorer extends Explorer {
-
   /**
    * Function to be executed on key down.
    * @param {KeyboardEvent} event The keyboard event.
@@ -64,9 +60,7 @@ export interface KeyExplorer extends Explorer {
    * A method that is executed if no move is executed.
    */
   NoMove(): void;
-
 }
-
 
 /**
  * @constructor
@@ -74,8 +68,10 @@ export interface KeyExplorer extends Explorer {
  *
  * @template T  The type that is consumed by the Region of this explorer.
  */
-export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> implements KeyExplorer {
-
+export abstract class AbstractKeyExplorer<T>
+  extends AbstractExplorer<T>
+  implements KeyExplorer
+{
   /**
    * Flag indicating if the explorer is attached to an object.
    */
@@ -97,11 +93,11 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
   /**
    * @override
    */
-  protected events: [string, (x: Event) => void][] =
-    super.Events().concat(
-      [['keydown', this.KeyDown.bind(this)],
-       ['focusin', this.FocusIn.bind(this)],
-       ['focusout', this.FocusOut.bind(this)]]);
+  protected events: [string, (x: Event) => void][] = super.Events().concat([
+    ['keydown', this.KeyDown.bind(this)],
+    ['focusin', this.FocusIn.bind(this)],
+    ['focusout', this.FocusOut.bind(this)],
+  ]);
 
   /**
    * The original tabindex value before explorer was attached.
@@ -117,8 +113,7 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
   /**
    * @override
    */
-  public FocusIn(_event: FocusEvent) {
-  }
+  public FocusIn(_event: FocusEvent) {}
 
   /**
    * @override
@@ -208,11 +203,9 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
     os.frequency.value = 300;
     os.connect(ac.destination);
     os.start(ac.currentTime);
-    os.stop(ac.currentTime + .05);
+    os.stop(ac.currentTime + 0.05);
   }
-
 }
-
 
 /**
  * Explorer that pushes speech to live region.
@@ -220,7 +213,6 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
  * @extends {AbstractKeyExplorer}
  */
 export class SpeechExplorer extends AbstractKeyExplorer<string> {
-
   private static updatePromise = Promise.resolve();
 
   /**
@@ -249,15 +241,16 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @constructor
    * @extends {AbstractKeyExplorer}
    */
-  constructor(public document: A11yDocument,
-              public pool: ExplorerPool,
-              public region: Region<string>,
-              protected node: HTMLElement,
-              private mml: string) {
+  constructor(
+    public document: A11yDocument,
+    public pool: ExplorerPool,
+    public region: Region<string>,
+    protected node: HTMLElement,
+    private mml: string,
+  ) {
     super(document, pool, region, node);
     this.initWalker();
   }
-
 
   /**
    * @override
@@ -267,16 +260,17 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     let options = this.getOptions();
     if (!this.init) {
       this.init = true;
-      SpeechExplorer.updatePromise = SpeechExplorer.updatePromise.then(async () => {
-        return Sre.sreReady()
-          .then(() => Sre.setupEngine({locale: options.locale}))
-          .then(() => {
-            // Important that both are in the same block so speech explorers
-            // are restarted sequentially.
-            this.Speech(this.walker);
-            this.Start();
-          });
-      })
+      SpeechExplorer.updatePromise = SpeechExplorer.updatePromise
+        .then(async () => {
+          return Sre.sreReady()
+            .then(() => Sre.setupEngine({ locale: options.locale }))
+            .then(() => {
+              // Important that both are in the same block so speech explorers
+              // are restarted sequentially.
+              this.Speech(this.walker);
+              this.Start();
+            });
+        })
         .catch((error: Error) => console.log(error.message));
       return;
     }
@@ -284,16 +278,21 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     this.speechGenerator = Sre.getSpeechGenerator('Direct');
     this.speechGenerator.setOptions(options);
     this.walker = Sre.getWalker(
-      'table', this.node, this.speechGenerator, this.highlighter, this.mml);
+      'table',
+      this.node,
+      this.speechGenerator,
+      this.highlighter,
+      this.mml,
+    );
     this.walker.activate();
     this.Update();
     if (this.document.options.a11y[this.showRegion]) {
-      SpeechExplorer.updatePromise.then(
-        () => this.region.Show(this.node, this.highlighter));
+      SpeechExplorer.updatePromise.then(() =>
+        this.region.Show(this.node, this.highlighter),
+      );
     }
     this.restarted = true;
   }
-
 
   /**
    * @override
@@ -313,20 +312,25 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
       this.document.options.a11y.speechRules =
         options.domain + '-' + options.style;
     }
-    SpeechExplorer.updatePromise = SpeechExplorer.updatePromise.then(async () => {
-      return Sre.sreReady()
-        .then(() => Sre.setupEngine({markup: options.markup,
-                                     modality: options.modality,
-                                     locale: options.locale}))
-        .then(() => {
-          if (!noUpdate) {
-            let speech = this.walker.speech();
-            this.region.Update(speech);
-          }
-        });
-    });
+    SpeechExplorer.updatePromise = SpeechExplorer.updatePromise.then(
+      async () => {
+        return Sre.sreReady()
+          .then(() =>
+            Sre.setupEngine({
+              markup: options.markup,
+              modality: options.modality,
+              locale: options.locale,
+            }),
+          )
+          .then(() => {
+            if (!noUpdate) {
+              let speech = this.walker.speech();
+              this.region.Update(speech);
+            }
+          });
+      },
+    );
   }
-
 
   /**
    * Computes the speech for the current expression once Sre is ready.
@@ -342,7 +346,6 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
       }
     });
   }
-
 
   /**
    * @override
@@ -365,7 +368,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
       this.stopEvent(event);
       return;
     }
-    if (code === 32 && event.shiftKey || code === 13) {
+    if ((code === 32 && event.shiftKey) || code === 13) {
       this.Start();
       this.stopEvent(event);
     }
@@ -380,9 +383,9 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
       return false;
     }
     let node = this.walker.getFocus().getNodes()?.[0];
-    let focus = node?.
-      getAttribute('data-semantic-postfix')?.
-      match(/(^| )link($| )/);
+    let focus = node
+      ?.getAttribute('data-semantic-postfix')
+      ?.match(/(^| )link($| )/);
     if (focus) {
       node.parentNode.dispatchEvent(new MouseEvent('click'));
       return true;
@@ -396,7 +399,12 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
   private initWalker() {
     this.speechGenerator = Sre.getSpeechGenerator('Tree');
     let dummy = Sre.getWalker(
-      'dummy', this.node, this.speechGenerator, this.highlighter, this.mml);
+      'dummy',
+      this.node,
+      this.speechGenerator,
+      this.highlighter,
+      this.mml,
+    );
     this.walker = dummy;
   }
 
@@ -405,13 +413,15 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @return {{[key: string]: string}} The options settings for the speech
    *     generator.
    */
-  private getOptions(): {[key: string]: string} {
+  private getOptions(): { [key: string]: string } {
     let options = this.speechGenerator.getOptions();
     let sreOptions = this.document.options.sre;
-    if (options.modality === 'speech' &&
+    if (
+      options.modality === 'speech' &&
       (options.locale !== sreOptions.locale ||
         options.domain !== sreOptions.domain ||
-        options.style !== sreOptions.style)) {
+        options.style !== sreOptions.style)
+    ) {
       options.domain = sreOptions.domain;
       options.style = sreOptions.style;
       options.locale = sreOptions.locale;
@@ -419,9 +429,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     }
     return options;
   }
-
 }
-
 
 /**
  * Explorer that magnifies what is currently explored. Uses a hover region.
@@ -429,20 +437,25 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
  * @extends {AbstractKeyExplorer}
  */
 export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
-
   /**
    * @constructor
    * @extends {AbstractKeyExplorer}
    */
-  constructor(public document: A11yDocument,
-              public pool: ExplorerPool,
-              public region: Region<HTMLElement>,
-              protected node: HTMLElement,
-              private mml: string) {
+  constructor(
+    public document: A11yDocument,
+    public pool: ExplorerPool,
+    public region: Region<HTMLElement>,
+    protected node: HTMLElement,
+    private mml: string,
+  ) {
     super(document, pool, region, node);
     this.walker = Sre.getWalker(
-      'table', this.node, Sre.getSpeechGenerator('Dummy'),
-      this.highlighter, this.mml);
+      'table',
+      this.node,
+      Sre.getSpeechGenerator('Dummy'),
+      this.highlighter,
+      this.mml,
+    );
   }
 
   /**
@@ -488,10 +501,9 @@ export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
       this.stopEvent(event);
       return;
     }
-    if (code === 32 && event.shiftKey || code === 13) {
+    if ((code === 32 && event.shiftKey) || code === 13) {
       this.Start();
       this.stopEvent(event);
     }
   }
-
 }

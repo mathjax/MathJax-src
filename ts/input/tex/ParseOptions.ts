@@ -15,7 +15,6 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Factory generating maps to keep options for the TeX parser.
  *
@@ -23,17 +22,17 @@
  */
 
 import StackItemFactory from './StackItemFactory.js';
-import {Tags} from './Tags.js';
-import {SubHandlers} from './MapHandler.js';
-import {NodeFactory} from './NodeFactory.js';
+import { Tags } from './Tags.js';
+import { SubHandlers } from './MapHandler.js';
+import { NodeFactory } from './NodeFactory.js';
 import NodeUtil from './NodeUtil.js';
-import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import {MathItem} from '../../core/MathItem.js';
+import { MmlNode } from '../../core/MmlTree/MmlNode.js';
+import { MathItem } from '../../core/MathItem.js';
 import TexParser from './TexParser.js';
-import {TexConstant} from './TexConstants.js';
-import {defaultOptions, OptionList} from '../../util/Options.js';
-import {ParserConfiguration} from './Configuration.js';
-import {ColumnParser} from './ColumnParser.js';
+import { TexConstant } from './TexConstants.js';
+import { defaultOptions, OptionList } from '../../util/Options.js';
+import { ParserConfiguration } from './Configuration.js';
+import { ColumnParser } from './ColumnParser.js';
 
 const MATHVARIANT = TexConstant.Variant;
 
@@ -41,15 +40,27 @@ const MATHVARIANT = TexConstant.Variant;
  * @class
  */
 export default class ParseOptions {
-
   //
   // Look up math variant for the current math-style
   //
-  public static getVariant = new Map<string, (c: string, b?: boolean) => string>([
-    ['TeX', (c, b) => (b ? c.match(/^[\u0391-\u03A9\u03F4]/) ? MATHVARIANT.NORMAL : '' : '')],
+  public static getVariant = new Map<
+    string,
+    (c: string, b?: boolean) => string
+  >([
+    [
+      'TeX',
+      (c, b) =>
+        b ? (c.match(/^[\u0391-\u03A9\u03F4]/) ? MATHVARIANT.NORMAL : '') : '',
+    ],
     ['ISO', (_c) => MATHVARIANT.ITALIC],
-    ['French', (c) => (c.normalize('NFD').match(/^[a-z]/) ? MATHVARIANT.ITALIC : MATHVARIANT.NORMAL)],
-    ['upright', (_c) => MATHVARIANT.NORMAL]
+    [
+      'French',
+      (c) =>
+        c.normalize('NFD').match(/^[a-z]/)
+          ? MATHVARIANT.ITALIC
+          : MATHVARIANT.NORMAL,
+    ],
+    ['upright', (_c) => MATHVARIANT.NORMAL],
   ]);
 
   /**
@@ -122,7 +133,7 @@ export default class ParseOptions {
    * List of node lists saved with respect to some property or their kind.
    * @type {{[key: string]: MmlNode[]}}
    */
-  public nodeLists: {[key: string]: MmlNode[]} = {};
+  public nodeLists: { [key: string]: MmlNode[] } = {};
 
   /**
    * Error state of the parser.
@@ -130,15 +141,16 @@ export default class ParseOptions {
    */
   public error: boolean = false;
 
-
-
   /**
    * @constructor
    * @param {Configuration} configuration Configuration object of the current
    *     TeX parser.
    * @param {OptionList[]} options   [TeX options, Tag options, {packages}]
    */
-  public constructor(configuration: ParserConfiguration, options: OptionList[] = []) {
+  public constructor(
+    configuration: ParserConfiguration,
+    options: OptionList[] = [],
+  ) {
     this.handlers = configuration.handlers;
     // Add node factory methods from packages.
     this.nodeFactory = new NodeFactory();
@@ -150,10 +162,10 @@ export default class ParseOptions {
     // Set default options for parser from packages and for tags.
     defaultOptions(this.options, ...options);
     defaultOptions(this.options, configuration.options);
-    this.mathStyle = ParseOptions.getVariant.get(this.options.mathStyle) ||
-                     ParseOptions.getVariant.get('TeX');
+    this.mathStyle =
+      ParseOptions.getVariant.get(this.options.mathStyle) ||
+      ParseOptions.getVariant.get('TeX');
   }
-
 
   // Methods for dealing with ephemeral fields.
   /**
@@ -164,14 +176,12 @@ export default class ParseOptions {
     this.parsers.unshift(parser);
   }
 
-
   /**
    * Pops a parser of the tex parser stack.
    */
   public popParser() {
     this.parsers.shift();
   }
-
 
   /**
    * @return {TexParser} The currently active tex parser.
@@ -191,7 +201,6 @@ export default class ParseOptions {
     this.tags.resetTag();
   }
 
-
   /**
    * Saves a tree node to a list of nodes for post processing.
    * @param {string} property The property name that will be used for
@@ -209,12 +218,13 @@ export default class ParseOptions {
       // If the list is not just for its kind, record that it is in this list
       //   so that if it is copied, the copy can also be added to the list.
       //
-      const inlists = (NodeUtil.getProperty(node, 'in-lists') as string || '');
-      const lists = (inlists ? inlists.split(/,/) : []).concat(property).join(',');
+      const inlists = (NodeUtil.getProperty(node, 'in-lists') as string) || '';
+      const lists = (inlists ? inlists.split(/,/) : [])
+        .concat(property)
+        .join(',');
       NodeUtil.setProperty(node, 'in-lists', lists);
     }
   }
-
 
   /**
    * Gets a saved node list with respect to a given property. It first ensures
@@ -238,7 +248,6 @@ export default class ParseOptions {
     return result;
   }
 
-
   /**
    * Remove a list of nodes from a saved list (e.g., when a filter removes the
    * node from the DOM, like for munderover => munder).
@@ -256,7 +265,6 @@ export default class ParseOptions {
     }
   }
 
-
   /**
    * Tests if the node is in the tree spanned by the current root node.
    * @param {MmlNode} node The node to test.
@@ -267,5 +275,4 @@ export default class ParseOptions {
     }
     return !!node;
   }
-
 }

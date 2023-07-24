@@ -21,12 +21,22 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlTokenNode, MmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
-import {MmlMrow} from './mrow.js';
-import {MmlMover, MmlMunder, MmlMunderover} from './munderover.js';
-import {OperatorList, OPTABLE, getRange, MMLSPACING} from '../OperatorDictionary.js';
-import {unicodeChars, unicodeString} from '../../../util/string.js';
+import { PropertyList } from '../../Tree/Node.js';
+import {
+  AbstractMmlTokenNode,
+  MmlNode,
+  AttributeList,
+  TEXCLASS,
+} from '../MmlNode.js';
+import { MmlMrow } from './mrow.js';
+import { MmlMover, MmlMunder, MmlMunderover } from './munderover.js';
+import {
+  OperatorList,
+  OPTABLE,
+  getRange,
+  MMLSPACING,
+} from '../OperatorDictionary.js';
+import { unicodeChars, unicodeString } from '../../../util/string.js';
 
 /*****************************************************************/
 /**
@@ -34,7 +44,6 @@ import {unicodeChars, unicodeString} from '../../../util/string.js';
  */
 
 export class MmlMo extends AbstractMmlTokenNode {
-
   /**
    * @override
    */
@@ -61,7 +70,7 @@ export class MmlMo extends AbstractMmlTokenNode {
     indentalignfirst: 'indentalign',
     indentshiftfirst: 'indentshift',
     indentalignlast: 'indentalign',
-    indentshiftlast: 'indentshift'
+    indentshiftlast: 'indentshift',
   };
 
   /**
@@ -72,71 +81,77 @@ export class MmlMo extends AbstractMmlTokenNode {
   /**
    * The Operator Dictionary
    */
-  public static OPTABLE: {[form: string]: OperatorList} = OPTABLE;
+  public static OPTABLE: { [form: string]: OperatorList } = OPTABLE;
 
   /**
    * Pattern for matching when the contents is one ore more pseudoscripts
    */
-  public static pseudoScripts = new RegExp([
-    '^["\'*`',
-    '\u00AA',               // FEMININE ORDINAL INDICATOR
-    '\u00B0',               // DEGREE SIGN
-    '\u00B2-\u00B4',        // SUPERSCRIPT 2 and 3, ACUTE ACCENT
-    '\u00B9',               // SUPERSCRIPT ONE
-    '\u00BA',               // MASCULINE ORDINAL INDICATOR
-    '\u2018-\u201F',        // Various double and single quotation marks (up and down)
-    '\u2032-\u2037\u2057',  // Primes and reversed primes (forward and reversed)
-    '\u2070\u2071',         // SUPERSCRIPT 0 and i
-    '\u2074-\u207F',        // SUPERCRIPT 4 through 9, -, =, (, ), and n
-    '\u2080-\u208E',        // SUBSCRIPT 0 through 9, -, =, (, ).
-    ']+$'
-  ].join(''));
+  public static pseudoScripts = new RegExp(
+    [
+      '^["\'*`',
+      '\u00AA', // FEMININE ORDINAL INDICATOR
+      '\u00B0', // DEGREE SIGN
+      '\u00B2-\u00B4', // SUPERSCRIPT 2 and 3, ACUTE ACCENT
+      '\u00B9', // SUPERSCRIPT ONE
+      '\u00BA', // MASCULINE ORDINAL INDICATOR
+      '\u2018-\u201F', // Various double and single quotation marks (up and down)
+      '\u2032-\u2037\u2057', // Primes and reversed primes (forward and reversed)
+      '\u2070\u2071', // SUPERSCRIPT 0 and i
+      '\u2074-\u207F', // SUPERCRIPT 4 through 9, -, =, (, ), and n
+      '\u2080-\u208E', // SUBSCRIPT 0 through 9, -, =, (, ).
+      ']+$',
+    ].join(''),
+  );
 
   /**
    * Pattern for when contents is a collection of primes
    */
-   protected static primes = new RegExp([
-     '^["\'',
-     '\u2018-\u201F',        // Various double and single quotation marks (up and down)
-     ']+$'
-   ].join(''));
+  protected static primes = new RegExp(
+    [
+      '^["\'',
+      '\u2018-\u201F', // Various double and single quotation marks (up and down)
+      ']+$',
+    ].join(''),
+  );
 
-   /**
-    * Default map for remapping prime characters
-    */
-  protected static remapPrimes: {[n: number]: number} = {
-     0x0022: 0x2033,   // double quotes
-     0x0027: 0x2032,   // single quote
-     0x2018: 0x2035,   // open single quote
-     0x2019: 0x2032,   // close single quote
-     0x201A: 0x2032,   // low open single quote
-     0x201B: 0x2035,   // reversed open single quote
-     0x201C: 0x2036,   // open double quote
-     0x201D: 0x2033,   // close double quote
-     0x201E: 0x2033,   // low open double quote
-     0x201F: 0x2036,   // reversed open double quote
+  /**
+   * Default map for remapping prime characters
+   */
+  protected static remapPrimes: { [n: number]: number } = {
+    0x0022: 0x2033, // double quotes
+    0x0027: 0x2032, // single quote
+    0x2018: 0x2035, // open single quote
+    0x2019: 0x2032, // close single quote
+    0x201a: 0x2032, // low open single quote
+    0x201b: 0x2035, // reversed open single quote
+    0x201c: 0x2036, // open double quote
+    0x201d: 0x2033, // close double quote
+    0x201e: 0x2033, // low open double quote
+    0x201f: 0x2036, // reversed open double quote
   };
 
   /**
    * Regular expression matching characters that are marked as math accents
    */
-  protected static mathaccents = new RegExp([
-    '^[',
-    '\u00B4\u0301\u02CA',  // acute
-    '\u0060\u0300\u02CB',  // grave
-    '\u00A8\u0308',        // ddot
-    '\u007E\u0303\u02DC',  // tilde
-    '\u00AF\u0304\u02C9',  // bar
-    '\u02D8\u0306',        // breve
-    '\u02C7\u030C',        // check
-    '\u005E\u0302\u02C6',  // hat
-    '\u2192\u20D7',        // vec
-    '\u02D9\u0307',        // dot
-    '\u02DA\u030A',        // mathring
-    '\u20DB',              // dddot
-    '\u20DC',              // ddddot
-    ']$'
-  ].join(''));
+  protected static mathaccents = new RegExp(
+    [
+      '^[',
+      '\u00B4\u0301\u02CA', // acute
+      '\u0060\u0300\u02CB', // grave
+      '\u00A8\u0308', // ddot
+      '\u007E\u0303\u02DC', // tilde
+      '\u00AF\u0304\u02C9', // bar
+      '\u02D8\u0306', // breve
+      '\u02C7\u030C', // check
+      '\u005E\u0302\u02C6', // hat
+      '\u2192\u20D7', // vec
+      '\u02D9\u0307', // dot
+      '\u02DA\u030A', // mathring
+      '\u20DB', // dddot
+      '\u20DC', // ddddot
+      ']$',
+    ].join(''),
+  );
 
   /**
    * The internal TeX class of the node (for use with getter/setter below)
@@ -170,13 +185,13 @@ export class MmlMo extends AbstractMmlTokenNode {
    * The default MathML spacing on the left
    */
   /* tslint:disable-next-line:whitespace */
-  public lspace = 5/18;
+  public lspace = 5 / 18;
 
   /**
    * The default MathML spacing on the right
    */
   /* tslint:disable-next-line:whitespace */
-  public rspace = 5/18;
+  public rspace = 5 / 18;
 
   /**
    * @override
@@ -201,7 +216,12 @@ export class MmlMo extends AbstractMmlTokenNode {
     let embellished = this;
     let parent = this as MmlNode;
     let math = this.factory.getNodeClass('math');
-    while (parent && parent.isEmbellished && parent.coreMO() === this && !(parent instanceof math)) {
+    while (
+      parent &&
+      parent.isEmbellished &&
+      parent.coreMO() === this &&
+      !(parent instanceof math)
+    ) {
       embellished = parent;
       parent = (parent as MmlNode).parent;
     }
@@ -219,14 +239,18 @@ export class MmlMo extends AbstractMmlTokenNode {
     if (parent.isEmbellished) {
       return (parent.coreMO() as MmlMo).getText();
     }
-    while ((((parent.isKind('mrow') ||
-              parent.isKind('TeXAtom') ||
-              parent.isKind('mstyle') ||
-              parent.isKind('mphantom')) && parent.childNodes.length === 1) ||
-            parent.isKind('munderover')) && parent.childNodes[0]) {
+    while (
+      (((parent.isKind('mrow') ||
+        parent.isKind('TeXAtom') ||
+        parent.isKind('mstyle') ||
+        parent.isKind('mphantom')) &&
+        parent.childNodes.length === 1) ||
+        parent.isKind('munderover')) &&
+      parent.childNodes[0]
+    ) {
       parent = parent.childNodes[0];
     }
-    return (parent.isToken ? (parent as AbstractMmlTokenNode).getText() : '');
+    return parent.isToken ? (parent as AbstractMmlTokenNode).getText() : '';
   }
 
   /**
@@ -243,21 +267,26 @@ export class MmlMo extends AbstractMmlTokenNode {
     let accent = false;
     const node = this.coreParent().parent;
     if (node) {
-      const key = (node.isKind('mover') ?
-                   (node.childNodes[(node as MmlMover).over].coreMO() ?
-                    'accent' : '') :
-                   node.isKind('munder') ?
-                   (node.childNodes[(node as MmlMunder).under].coreMO() ?
-                    'accentunder' : '') :
-                   node.isKind('munderover') ?
-                   (this === node.childNodes[(node as MmlMunderover).over].coreMO() ?
-                    'accent' :
-                    this === node.childNodes[(node as MmlMunderover).under].coreMO() ?
-                    'accentunder' : '') :
-                   '');
+      const key = node.isKind('mover')
+        ? node.childNodes[(node as MmlMover).over].coreMO()
+          ? 'accent'
+          : ''
+        : node.isKind('munder')
+        ? node.childNodes[(node as MmlMunder).under].coreMO()
+          ? 'accentunder'
+          : ''
+        : node.isKind('munderover')
+        ? this === node.childNodes[(node as MmlMunderover).over].coreMO()
+          ? 'accent'
+          : this === node.childNodes[(node as MmlMunderover).under].coreMO()
+          ? 'accentunder'
+          : ''
+        : '';
       if (key) {
         const value = node.attributes.getExplicit(key);
-        accent = (value !== undefined ? accent : this.attributes.get('accent')) as boolean;
+        accent = (
+          value !== undefined ? accent : this.attributes.get('accent')
+        ) as boolean;
       }
     }
     return accent;
@@ -269,8 +298,14 @@ export class MmlMo extends AbstractMmlTokenNode {
    * @override
    */
   public setTeXclass(prev: MmlNode): MmlNode {
-    let {form, fence} = this.attributes.getList('form', 'fence') as {form: string, fence: string};
-    if (this.getProperty('texClass') === undefined && this.hasSpacingAttributes()) {
+    let { form, fence } = this.attributes.getList('form', 'fence') as {
+      form: string;
+      fence: string;
+    };
+    if (
+      this.getProperty('texClass') === undefined &&
+      this.hasSpacingAttributes()
+    ) {
       return null;
     }
     if (fence && this.texClass === TEXCLASS.REL) {
@@ -296,20 +331,33 @@ export class MmlMo extends AbstractMmlTokenNode {
       return prev;
     }
     if (prev) {
-      if (prev.getProperty('autoOP') && (texClass === TEXCLASS.BIN || texClass === TEXCLASS.REL)) {
+      if (
+        prev.getProperty('autoOP') &&
+        (texClass === TEXCLASS.BIN || texClass === TEXCLASS.REL)
+      ) {
         prevClass = prev.texClass = TEXCLASS.ORD;
       }
-      prevClass = this.prevClass = (prev.texClass || TEXCLASS.ORD);
+      prevClass = this.prevClass = prev.texClass || TEXCLASS.ORD;
       this.prevLevel = this.attributes.getInherited('scriptlevel') as number;
     } else {
       prevClass = this.prevClass = TEXCLASS.NONE;
     }
-    if (texClass === TEXCLASS.BIN &&
-        (prevClass === TEXCLASS.NONE || prevClass === TEXCLASS.BIN || prevClass === TEXCLASS.OP ||
-         prevClass === TEXCLASS.REL || prevClass === TEXCLASS.OPEN || prevClass === TEXCLASS.PUNCT)) {
+    if (
+      texClass === TEXCLASS.BIN &&
+      (prevClass === TEXCLASS.NONE ||
+        prevClass === TEXCLASS.BIN ||
+        prevClass === TEXCLASS.OP ||
+        prevClass === TEXCLASS.REL ||
+        prevClass === TEXCLASS.OPEN ||
+        prevClass === TEXCLASS.PUNCT)
+    ) {
       this.texClass = TEXCLASS.ORD;
-    } else if (prevClass === TEXCLASS.BIN &&
-               (texClass === TEXCLASS.REL || texClass === TEXCLASS.CLOSE || texClass === TEXCLASS.PUNCT)) {
+    } else if (
+      prevClass === TEXCLASS.BIN &&
+      (texClass === TEXCLASS.REL ||
+        texClass === TEXCLASS.CLOSE ||
+        texClass === TEXCLASS.PUNCT)
+    ) {
       prev.texClass = this.prevClass = TEXCLASS.ORD;
     } else if (texClass === TEXCLASS.BIN) {
       //
@@ -318,9 +366,13 @@ export class MmlMo extends AbstractMmlTokenNode {
       //
       let child: MmlNode = this;
       let parent = this.parent;
-      while (parent && parent.parent && parent.isEmbellished &&
-             (parent.childNodes.length === 1 ||
-              (!parent.isKind('mrow') && parent.core() === child))) {
+      while (
+        parent &&
+        parent.parent &&
+        parent.isEmbellished &&
+        (parent.childNodes.length === 1 ||
+          (!parent.isKind('mrow') && parent.core() === child))
+      ) {
         child = parent;
         parent = parent.parent;
       }
@@ -337,8 +389,12 @@ export class MmlMo extends AbstractMmlTokenNode {
    *
    * @override
    */
-  public setInheritedAttributes(attributes: AttributeList = {},
-                                display: boolean = false, level: number = 0, prime: boolean = false) {
+  public setInheritedAttributes(
+    attributes: AttributeList = {},
+    display: boolean = false,
+    level: number = 0,
+    prime: boolean = false,
+  ) {
     super.setInheritedAttributes(attributes, display, level, prime);
     let mo = this.getText();
     this.checkOperatorTable(mo);
@@ -393,7 +449,11 @@ export class MmlMo extends AbstractMmlTokenNode {
       parent = Parent.parent;
       Parent = Parent.Parent;
     }
-    if (parent && parent.isKind('mrow') && (parent as MmlMrow).nonSpaceLength() !== 1) {
+    if (
+      parent &&
+      parent.isKind('mrow') &&
+      (parent as MmlMrow).nonSpaceLength() !== 1
+    ) {
       if ((parent as MmlMrow).firstNonSpace() === core) {
         return ['prefix', 'infix', 'postfix'];
       }
@@ -411,7 +471,7 @@ export class MmlMo extends AbstractMmlTokenNode {
   protected handleExplicitForm(forms: string[]): string[] {
     if (this.attributes.isSet('form')) {
       const form = this.attributes.get('form') as string;
-      forms = [form].concat(forms.filter(name => (name !== form)));
+      forms = [form].concat(forms.filter((name) => name !== form));
     }
     return forms;
   }
@@ -426,7 +486,8 @@ export class MmlMo extends AbstractMmlTokenNode {
     const PSEUDOSCRIPTS = (this.constructor as typeof MmlMo).pseudoScripts;
     if (!mo.match(PSEUDOSCRIPTS)) return;
     const parent = this.coreParent().Parent;
-    const isPseudo = !parent || !(parent.isKind('msubsup') && !parent.isKind('msub'));
+    const isPseudo =
+      !parent || !(parent.isKind('msubsup') && !parent.isKind('msub'));
     this.setProperty('pseudoscript', isPseudo);
     if (isPseudo) {
       this.attributes.setInherited('lspace', 0);
@@ -443,7 +504,7 @@ export class MmlMo extends AbstractMmlTokenNode {
     const PRIMES = (this.constructor as typeof MmlMo).primes;
     if (!mo.match(PRIMES)) return;
     const REMAP = (this.constructor as typeof MmlMo).remapPrimes;
-    const primes = unicodeString(unicodeChars(mo).map(c => REMAP[c]));
+    const primes = unicodeString(unicodeChars(mo).map((c) => REMAP[c]));
     this.setProperty('primes', primes);
   }
 
@@ -454,7 +515,12 @@ export class MmlMo extends AbstractMmlTokenNode {
    */
   protected checkMathAccent(mo: string) {
     const parent = this.Parent;
-    if (this.getProperty('mathaccent') !== undefined || !parent || !parent.isKind('munderover')) return;
+    if (
+      this.getProperty('mathaccent') !== undefined ||
+      !parent ||
+      !parent.isKind('munderover')
+    )
+      return;
     const [base, under, over] = parent.childNodes;
     if (base.isEmbellished && base.coreMO() === this) return;
     const isUnder = !!(under && under.isEmbellished && under.coreMO() === this);
@@ -465,5 +531,4 @@ export class MmlMo extends AbstractMmlTokenNode {
       this.setProperty('mathaccent', true);
     }
   }
-
 }
