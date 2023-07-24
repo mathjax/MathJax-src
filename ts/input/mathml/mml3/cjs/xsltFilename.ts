@@ -27,6 +27,6 @@ export type Path = {
 };
 
 export function xsltFilename(path: Path) {
-  const dirname = path.dirname(eval("__dirname"));
+  const dirname = path.dirname(eval('__dirname'));
   return path.resolve(dirname, 'mml3.sef.json');
 }

@@ -21,9 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AbstractNodeFactory} from '../Tree/NodeFactory.js';
-import {MmlNode, MmlNodeClass} from './MmlNode.js';
-import {MML} from './MML.js';
+import { AbstractNodeFactory } from '../Tree/NodeFactory.js';
+import { MmlNode, MmlNodeClass } from './MmlNode.js';
+import { MML } from './MML.js';
 
 /*****************************************************************/
 /**
@@ -31,7 +31,6 @@ import {MML} from './MML.js';
  */
 
 export class MmlFactory extends AbstractNodeFactory<MmlNode, MmlNodeClass> {
-
   /**
    * The default node-creation functions
    */
@@ -44,5 +43,4 @@ export class MmlFactory extends AbstractNodeFactory<MmlNode, MmlNodeClass> {
   get MML(): Object {
     return this.node;
   }
-
 }

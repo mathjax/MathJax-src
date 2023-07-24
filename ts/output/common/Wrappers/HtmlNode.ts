@@ -21,15 +21,25 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wrapper.js';
-import {CommonWrapperFactory} from '../WrapperFactory.js';
-import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
-import {CommonOutputJax} from '../../common.js';
-import {HtmlNode} from '../../../core/MmlTree/MmlNodes/HtmlNode.js';
-import {BBox} from '../../../util/BBox.js';
-import {StyleList} from '../../../util/Styles.js';
-import {ExtendedMetrics, UnknownBBox} from '../../common.js';
-import {split} from '../../../util/string.js';
+import {
+  CommonWrapper,
+  CommonWrapperClass,
+  CommonWrapperConstructor,
+} from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { HtmlNode } from '../../../core/MmlTree/MmlNodes/HtmlNode.js';
+import { BBox } from '../../../util/BBox.js';
+import { StyleList } from '../../../util/Styles.js';
+import { ExtendedMetrics, UnknownBBox } from '../../common.js';
+import { split } from '../../../util/string.js';
 
 /*****************************************************************/
 /**
@@ -49,7 +59,9 @@ import {split} from '../../../util/string.js';
  * @template FC  The FontDataClass type
  */
 export interface CommonHtmlNode<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -58,9 +70,8 @@ export interface CommonHtmlNode<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
   /**
    * @return {N}   The HTML for the node
    */
@@ -85,7 +96,6 @@ export interface CommonHtmlNode<
    * @return {UnknownBBox}   The h, d, w values (in em units) as an object
    */
   splitHDW(hdw: string): UnknownBBox;
-
 }
 
 /**
@@ -105,7 +115,9 @@ export interface CommonHtmlNode<
  * @template FC  The FontDataClass type
  */
 export interface CommonHtmlNodeClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -114,7 +126,7 @@ export interface CommonHtmlNodeClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
@@ -137,7 +149,9 @@ export interface CommonHtmlNodeClass<
  * @template B   The Mixin interface to create
  */
 export function CommonHtmlNodeMixin<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -147,18 +161,26 @@ export function CommonHtmlNodeMixin<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
-
-  return class CommonHtmlNodeMixin extends Base
-  implements CommonHtmlNode<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+): B {
+  return class CommonHtmlNodeMixin
+    extends Base
+    implements CommonHtmlNode<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
      * @override
      */
     public computeBBox(bbox: BBox, _recompute: boolean = false) {
-      const hdw = this.getHDW((this.node as HtmlNode<N>).getHTML() as N, 'use', 'force');
-      const {h, d, w} = (hdw ? this.splitHDW(hdw) : this.jax.measureXMLnode(this.getHTML()));
+      const hdw = this.getHDW(
+        (this.node as HtmlNode<N>).getHTML() as N,
+        'use',
+        'force',
+      );
+      const { h, d, w } = hdw
+        ? this.splitHDW(hdw)
+        : this.jax.measureXMLnode(this.getHTML());
       bbox.w = w;
       bbox.h = h;
       bbox.d = d;
@@ -171,15 +193,25 @@ export function CommonHtmlNodeMixin<
       const adaptor = this.adaptor;
       const jax = this.jax;
       const styles: StyleList = {};
-      const html = this.addHDW(adaptor.clone((this.node as HtmlNode<N>).getHTML() as N), styles);
+      const html = this.addHDW(
+        adaptor.clone((this.node as HtmlNode<N>).getHTML() as N),
+        styles,
+      );
       const metrics = jax.math.metrics as ExtendedMetrics;
       if (metrics.scale !== 1) {
         styles['font-size'] = jax.fixed(100 / metrics.scale, 1) + '%';
       }
       const parent = adaptor.parent(jax.math.start.node);
-      styles['font-family'] = this.parent.styles?.get('font-family') ||
-        metrics.family || adaptor.fontFamily(parent) || 'initial';
-      return this.html('mjx-html', {variant: this.parent.variant, style: styles}, [html]);
+      styles['font-family'] =
+        this.parent.styles?.get('font-family') ||
+        metrics.family ||
+        adaptor.fontFamily(parent) ||
+        'initial';
+      return this.html(
+        'mjx-html',
+        { variant: this.parent.variant, style: styles },
+        [html],
+      );
     }
 
     /**
@@ -189,7 +221,7 @@ export function CommonHtmlNodeMixin<
     public addHDW(html: N, styles: StyleList): N {
       const hdw = this.getHDW(html, 'force');
       if (!hdw) return html;
-      const {h, d, w} = this.splitHDW(hdw);
+      const { h, d, w } = this.splitHDW(hdw);
       styles.height = this.em(h + d);
       styles.width = this.em(w);
       styles['vertical-align'] = this.em(-d);
@@ -206,7 +238,7 @@ export function CommonHtmlNodeMixin<
     public getHDW(html: N, use: string, force: string = use): string {
       const option = this.jax.options.htmlHDW;
       const hdw = this.adaptor.getAttribute(html, 'data-mjx-hdw') as string;
-      return (hdw && (option === use || option === force) ? hdw : null);
+      return hdw && (option === use || option === force) ? hdw : null;
     }
 
     /**
@@ -214,8 +246,8 @@ export function CommonHtmlNodeMixin<
      * @return {UnknownBBox}   The h, d, w values (in em units) as an object
      */
     public splitHDW(hdw: string): UnknownBBox {
-      const [h, d, w] = split(hdw).map(x => this.length2em(x || '0'));
-      return {h, d, w};
+      const [h, d, w] = split(hdw).map((x) => this.length2em(x || '0'));
+      return { h, d, w };
     }
 
     /**
@@ -232,7 +264,5 @@ export function CommonHtmlNodeMixin<
      * @override
      */
     protected getVariant() {}
-
   } as any as B;
-
 }

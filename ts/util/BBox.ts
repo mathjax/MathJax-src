@@ -21,15 +21,15 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {BIGDIMEN} from './lengths.js';
+import { BIGDIMEN } from './lengths.js';
 
 /**
  *  The data used to initialize a BBox
  */
 export type BBoxData = {
-  w?: number,
-  h?: number,
-  d?: number
+  w?: number;
+  h?: number;
+  d?: number;
 };
 
 /*****************************************************************/
@@ -47,7 +47,10 @@ export class BBox {
    * The side names, indices, and which dimension they affect
    */
   public static boxSides: [string, number, string][] = [
-    ['Top', 0, 'h'], ['Right', 1, 'w'], ['Bottom', 2, 'd'], ['Left', 3, 'w']
+    ['Top', 0, 'h'],
+    ['Right', 1, 'w'],
+    ['Bottom', 2, 'd'],
+    ['Left', 3, 'w'],
   ];
 
   /**
@@ -59,20 +62,20 @@ export class BBox {
   public d: number;
   public scale: number;
   public rscale: number; // scale relative to the parent's scale
-  public L: number;      // extra space on the left
-  public R: number;      // extra space on the right
+  public L: number; // extra space on the left
+  public R: number; // extra space on the right
   public pwidth: string; // percentage width (for tables)
-  public ic: number;     // italic correction
-  public oc: number;     // alternate italic correction for -tex-mit variant
-  public sk: number;     // skew
-  public dx: number;     // offset for combining characters as accents
+  public ic: number; // italic correction
+  public oc: number; // alternate italic correction for -tex-mit variant
+  public sk: number; // skew
+  public dx: number; // offset for combining characters as accents
   /* tslint:enable */
 
   /**
    * @return {BBox}  A BBox initialized to zeros
    */
   public static zero(): BBox {
-    return new BBox({h: 0, d: 0, w: 0});
+    return new BBox({ h: 0, d: 0, w: 0 });
   }
 
   /**
@@ -87,10 +90,10 @@ export class BBox {
    *
    * @constructor
    */
-  constructor(def: BBoxData = {w: 0, h: -BIGDIMEN, d: -BIGDIMEN}) {
+  constructor(def: BBoxData = { w: 0, h: -BIGDIMEN, d: -BIGDIMEN }) {
     this.w = def.w || 0;
-    this.h = ('h' in def ? def.h : -BIGDIMEN);
-    this.d = ('d' in def ? def.d : -BIGDIMEN);
+    this.h = 'h' in def ? def.h : -BIGDIMEN;
+    this.d = 'd' in def ? def.d : -BIGDIMEN;
     this.L = this.R = this.ic = this.oc = this.sk = this.dx = 0;
     this.scale = this.rscale = 1;
     this.pwidth = '';
@@ -109,7 +112,7 @@ export class BBox {
   /**
    * Convert any unspecified values into zeros
    */
-  public clean () {
+  public clean() {
     if (this.w === -BIGDIMEN) this.w = 0;
     if (this.h === -BIGDIMEN) this.h = 0;
     if (this.d === -BIGDIMEN) this.d = 0;
@@ -173,5 +176,4 @@ export class BBox {
     Object.assign(bbox, this);
     return bbox;
   }
-
 }

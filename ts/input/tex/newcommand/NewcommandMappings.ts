@@ -15,7 +15,6 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Mappings for TeX parsing for definitorial commands.
  *
@@ -23,19 +22,20 @@
  */
 
 import NewcommandMethods from './NewcommandMethods.js';
-import {CommandMap} from '../SymbolMap.js';
-
+import { CommandMap } from '../SymbolMap.js';
 
 /**
  * Macros for newcommand etc.
  */
-new CommandMap('Newcommand-macros', {
-  newcommand:       'NewCommand',
-  renewcommand:     'NewCommand',
-  newenvironment:   'NewEnvironment',
-  renewenvironment: 'NewEnvironment',
-  def:              'MacroDef',
-  'let':            'Let'
-}, NewcommandMethods);
-
-
+new CommandMap(
+  'Newcommand-macros',
+  {
+    newcommand: 'NewCommand',
+    renewcommand: 'NewCommand',
+    newenvironment: 'NewEnvironment',
+    renewenvironment: 'NewEnvironment',
+    def: 'MacroDef',
+    let: 'Let',
+  },
+  NewcommandMethods,
+);

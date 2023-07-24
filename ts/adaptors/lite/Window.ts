@@ -21,10 +21,10 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {LiteElement} from './Element.js';
-import {LiteDocument} from './Document.js';
-import {LiteList} from './List.js';
-import {LiteParser} from './Parser.js';
+import { LiteElement } from './Element.js';
+import { LiteDocument } from './Document.js';
+import { LiteList } from './List.js';
+import { LiteParser } from './Parser.js';
 
 /************************************************************/
 /**
@@ -54,11 +54,11 @@ export class LiteWindow {
   /**
    * The DocumentFragment class
    */
-  public DocumentFragment: typeof LiteList  = LiteList;
+  public DocumentFragment: typeof LiteList = LiteList;
   /**
    * The Document class
    */
-  public Document: typeof LiteDocument  = LiteDocument;
+  public Document: typeof LiteDocument = LiteDocument;
 
   /**
    * Create the LiteWindow and its LiteDocument

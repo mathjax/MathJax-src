@@ -15,19 +15,17 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Configuration file for the action package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration} from '../Configuration.js';
+import { Configuration } from '../Configuration.js';
 import TexParser from '../TexParser.js';
-import {CommandMap} from '../SymbolMap.js';
-import {ParseMethod} from '../Types.js';
+import { CommandMap } from '../SymbolMap.js';
+import { ParseMethod } from '../Types.js';
 import BaseMethods from '../base/BaseMethods.js';
-
 
 // Namespace
 export let ActionMethods: Record<string, ParseMethod> = {};
@@ -40,17 +38,18 @@ ActionMethods.Macro = BaseMethods.Macro;
  * @param {TexParser} parser The current tex parser.
  * @param {string} name The name of the calling macro.
  */
-ActionMethods.Toggle = function(parser: TexParser, name: string) {
+ActionMethods.Toggle = function (parser: TexParser, name: string) {
   const children = [];
   let arg;
   while ((arg = parser.GetArgument(name)) !== '\\endtoggle') {
     children.push(
-      new TexParser(arg, parser.stack.env, parser.configuration).mml());
+      new TexParser(arg, parser.stack.env, parser.configuration).mml(),
+    );
   }
   parser.Push(
-    parser.create('node', 'maction', children, {actiontype: 'toggle'}));
+    parser.create('node', 'maction', children, { actiontype: 'toggle' }),
+  );
 };
-
 
 /**
  * Implement \mathtip{math}{tip}
@@ -58,21 +57,24 @@ ActionMethods.Toggle = function(parser: TexParser, name: string) {
  * @param {TexParser} parser The current tex parser.
  * @param {string} name The name of the calling macro.
  */
-ActionMethods.Mathtip = function(parser: TexParser, name: string) {
+ActionMethods.Mathtip = function (parser: TexParser, name: string) {
   const arg = parser.ParseArg(name);
   const tip = parser.ParseArg(name);
   parser.Push(
-    parser.create('node', 'maction', [arg, tip], {actiontype: 'tooltip'}));
+    parser.create('node', 'maction', [arg, tip], { actiontype: 'tooltip' }),
+  );
 };
 
-
-new CommandMap('action-macros', {
-  toggle:  'Toggle',
-  mathtip: 'Mathtip',
-  texttip: ['Macro', '\\mathtip{#1}{\\text{#2}}', 2]
-}, ActionMethods);
-
-
-export const ActionConfiguration = Configuration.create(
-  'action', {handler: {macro: ['action-macros']}}
+new CommandMap(
+  'action-macros',
+  {
+    toggle: 'Toggle',
+    mathtip: 'Mathtip',
+    texttip: ['Macro', '\\mathtip{#1}{\\text{#2}}', 2],
+  },
+  ActionMethods,
 );
+
+export const ActionConfiguration = Configuration.create('action', {
+  handler: { macro: ['action-macros'] },
+});

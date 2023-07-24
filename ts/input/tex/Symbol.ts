@@ -15,30 +15,29 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Symbol classes.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Args, Attributes, ParseMethod} from './Types.js';
-
+import { Args, Attributes, ParseMethod } from './Types.js';
 
 /**
  * Symbol class
  */
 class _Symbol {
-
   /**
    * @constructor
    * @param {string} symbol The symbol parsed.
    * @param {string} char The corresponding translation.
    * @param {Attributes} attributes The attributes for the translation.
    */
-  constructor(private _symbol: string, private _char: string,
-              private _attributes: Attributes) {
-  }
+  constructor(
+    private _symbol: string,
+    private _char: string,
+    private _attributes: Attributes,
+  ) {}
 
   public get symbol(): string {
     return this._symbol;
@@ -51,7 +50,6 @@ class _Symbol {
   public get attributes(): Attributes {
     return this._attributes;
   }
-
 }
 
 /**
@@ -61,19 +59,20 @@ class _Symbol {
  *   _Symbol is the class, and that is substituted for Symbol when it is used,
  *   so there is no problem with the webpacked version.
  */
-export {_Symbol as Symbol}
+export { _Symbol as Symbol };
 
 export class Macro {
-
   /**
    * @constructor
    * @param {string} symbol The symbol parsed
    * @param {ParseMethod} func The parsing function for that symbol.
    * @param {Args[]} args Additional arguments for the function.
    */
-  constructor(private _symbol: string, private _func: ParseMethod,
-              private _args: Args[] = []) {
-  }
+  constructor(
+    private _symbol: string,
+    private _func: ParseMethod,
+    private _args: Args[] = [],
+  ) {}
 
   public get symbol(): string {
     return this._symbol;
@@ -86,5 +85,4 @@ export class Macro {
   public get args(): Args[] {
     return this._args;
   }
-
 }

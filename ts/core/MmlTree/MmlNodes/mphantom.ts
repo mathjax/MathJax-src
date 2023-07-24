@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlLayoutNode, TEXCLASS} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlLayoutNode, TEXCLASS } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,12 +30,11 @@ import {AbstractMmlLayoutNode, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMphantom extends AbstractMmlLayoutNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
-    ...AbstractMmlLayoutNode.defaults
+    ...AbstractMmlLayoutNode.defaults,
   };
 
   /**
@@ -49,5 +48,4 @@ export class MmlMphantom extends AbstractMmlLayoutNode {
   public get kind() {
     return 'mphantom';
   }
-
 }

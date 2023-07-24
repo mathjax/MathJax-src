@@ -21,8 +21,14 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {userOptions, defaultOptions, OptionList, makeArray, expandable} from '../../util/Options.js';
-import {DOMAdaptor} from '../../core/DOMAdaptor.js';
+import {
+  userOptions,
+  defaultOptions,
+  OptionList,
+  makeArray,
+  expandable,
+} from '../../util/Options.js';
+import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 
 /**
  *  List of consecutive text nodes and their text lengths
@@ -43,30 +49,39 @@ export type HTMLNodeList<N, T> = [N | T, number][];
  * @template D  The Document class
  */
 export class HTMLDomStrings<N, T, D> {
-
   /**
    * The default options for string processing
    */
   public static OPTIONS: OptionList = {
-    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code',
-                   'annotation', 'annotation-xml', 'select', 'option',
-                   'mjx-container'],
-                                        // The names of the tags whose contents will not be
-                                        // scanned for math delimiters
+    skipHtmlTags: [
+      'script',
+      'noscript',
+      'style',
+      'textarea',
+      'pre',
+      'code',
+      'annotation',
+      'annotation-xml',
+      'select',
+      'option',
+      'mjx-container',
+    ],
+    // The names of the tags whose contents will not be
+    // scanned for math delimiters
 
-    includeHtmlTags: expandable({br: '\n', wbr: '', '#comment': ''}),
-                                        //  tags to be included in the text (and what
-                                        //  text to replace them with)
+    includeHtmlTags: expandable({ br: '\n', wbr: '', '#comment': '' }),
+    //  tags to be included in the text (and what
+    //  text to replace them with)
 
-    ignoreHtmlClass: 'mathjax_ignore',  // the class name of elements whose contents should
-                                        // NOT be processed by tex2jax.  Note that this
-                                        // is a regular expression, so be sure to quote any
-                                        // regexp special characters
+    ignoreHtmlClass: 'mathjax_ignore', // the class name of elements whose contents should
+    // NOT be processed by tex2jax.  Note that this
+    // is a regular expression, so be sure to quote any
+    // regexp special characters
 
-    processHtmlClass: 'mathjax_process' // the class name of elements whose contents SHOULD
-                                        // be processed when they appear inside ones that
-                                        // are ignored.  Note that this is a regular expression,
-                                        // so be sure to quote any regexp special characters
+    processHtmlClass: 'mathjax_process', // the class name of elements whose contents SHOULD
+    // be processed when they appear inside ones that
+    // are ignored.  Note that this is a regular expression,
+    // so be sure to quote any regexp special characters
   };
 
   /**
@@ -149,7 +164,9 @@ export class HTMLDomStrings<N, T, D> {
     let ignore = makeArray(this.options['ignoreHtmlClass']);
     let process = makeArray(this.options['processHtmlClass']);
     this.skipHtmlTags = new RegExp('^(?:' + skip.join('|') + ')$', 'i');
-    this.ignoreHtmlClass = new RegExp('(?:^| )(?:' + ignore.join('|') + ')(?: |$)');
+    this.ignoreHtmlClass = new RegExp(
+      '(?:^| )(?:' + ignore.join('|') + ')(?: |$)',
+    );
     this.processHtmlClass = new RegExp('(?:^| )(?:' + process + ')(?: |$)');
   }
 
@@ -234,8 +251,11 @@ export class HTMLDomStrings<N, T, D> {
     const tname = this.adaptor.kind(node) || '';
     const process = this.processHtmlClass.exec(cname);
     let next = node as N | T;
-    if (this.adaptor.firstChild(node) && !this.adaptor.getAttribute(node, 'data-MJX') &&
-        (process || !this.skipHtmlTags.exec(tname))) {
+    if (
+      this.adaptor.firstChild(node) &&
+      !this.adaptor.getAttribute(node, 'data-MJX') &&
+      (process || !this.skipHtmlTags.exec(tname))
+    ) {
       if (this.adaptor.next(node)) {
         this.stack.push([this.adaptor.next(node), ignore]);
       }
@@ -305,5 +325,4 @@ export class HTMLDomStrings<N, T, D> {
     this.init(); // free up memory
     return result;
   }
-
 }

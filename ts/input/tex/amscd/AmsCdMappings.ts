@@ -15,7 +15,6 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Symbol mappings for the AMScd package.
  *
@@ -26,13 +25,20 @@ import * as sm from '../SymbolMap.js';
 import ParseMethods from '../ParseMethods.js';
 import AmsCdMethods from './AmsCdMethods.js';
 
+new sm.EnvironmentMap(
+  'amscd_environment',
+  ParseMethods.environment,
+  { CD: 'CD' },
+  AmsCdMethods,
+);
 
-new sm.EnvironmentMap('amscd_environment', ParseMethods.environment,
-                      {CD: 'CD'}, AmsCdMethods);
+new sm.CommandMap(
+  'amscd_macros',
+  {
+    minCDarrowwidth: 'minCDarrowwidth',
+    minCDarrowheight: 'minCDarrowheight',
+  },
+  AmsCdMethods,
+);
 
-new sm.CommandMap('amscd_macros', {
-  minCDarrowwidth: 'minCDarrowwidth',
-  minCDarrowheight: 'minCDarrowheight',
-}, AmsCdMethods);
-
-new sm.MacroMap('amscd_special', {'@': 'arrow'}, AmsCdMethods);
+new sm.MacroMap('amscd_special', { '@': 'arrow' }, AmsCdMethods);

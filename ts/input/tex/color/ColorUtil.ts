@@ -21,16 +21,16 @@
  * @author i@omardo.com (Omar Al-Ithawi)
  */
 
-
 import TexError from '../TexError.js';
-import {COLORS} from './ColorConstants.js';
+import { COLORS } from './ColorConstants.js';
 
 type ColorModelProcessor = (def: string) => string;
-const ColorModelProcessors: Map<string, ColorModelProcessor> = new Map<string, ColorModelProcessor>();
-
+const ColorModelProcessors: Map<string, ColorModelProcessor> = new Map<
+  string,
+  ColorModelProcessor
+>();
 
 export class ColorModel {
-
   /**
    * User defined colors.
    *
@@ -57,7 +57,11 @@ export class ColorModel {
       return modelProcessor(def);
     }
 
-    throw new TexError('UndefinedColorModel', 'Color model \'%1\' not defined', model);
+    throw new TexError(
+      'UndefinedColorModel',
+      "Color model '%1' not defined",
+      model,
+    );
   }
 
   /**
@@ -116,7 +120,6 @@ export class ColorModel {
   }
 }
 
-
 /**
  * Get an rgb color.
  *
@@ -129,7 +132,11 @@ ColorModelProcessors.set('rgb', function (rgb: string): string {
   let RGB: string = '#';
 
   if (rgbParts.length !== 3) {
-    throw new TexError('ModelArg1', 'Color values for the %1 model require 3 numbers', 'rgb');
+    throw new TexError(
+      'ModelArg1',
+      'Color values for the %1 model require 3 numbers',
+      'rgb',
+    );
   }
 
   for (const rgbPart of rgbParts) {
@@ -139,9 +146,13 @@ ColorModelProcessors.set('rgb', function (rgb: string): string {
 
     const n = parseFloat(rgbPart);
     if (n < 0 || n > 1) {
-      throw new TexError('ModelArg2',
-                         'Color values for the %1 model must be between %2 and %3',
-                         'rgb', '0', '1');
+      throw new TexError(
+        'ModelArg2',
+        'Color values for the %1 model must be between %2 and %3',
+        'rgb',
+        '0',
+        '1',
+      );
     }
 
     let pn = Math.floor(n * 255).toString(16);
@@ -167,7 +178,11 @@ ColorModelProcessors.set('RGB', function (rgb: string): string {
   let RGB = '#';
 
   if (rgbParts.length !== 3) {
-    throw new TexError('ModelArg1', 'Color values for the %1 model require 3 numbers', 'RGB');
+    throw new TexError(
+      'ModelArg1',
+      'Color values for the %1 model require 3 numbers',
+      'RGB',
+    );
   }
 
   for (const rgbPart of rgbParts) {
@@ -177,9 +192,13 @@ ColorModelProcessors.set('RGB', function (rgb: string): string {
 
     const n = parseInt(rgbPart);
     if (n > 255) {
-      throw new TexError('ModelArg2',
-                         'Color values for the %1 model must be between %2 and %3',
-                         'RGB', '0', '255');
+      throw new TexError(
+        'ModelArg2',
+        'Color values for the %1 model must be between %2 and %3',
+        'RGB',
+        '0',
+        '255',
+      );
     }
 
     let pn = n.toString(16);
@@ -205,9 +224,13 @@ ColorModelProcessors.set('gray', function (gray: string): string {
 
   const n: number = parseFloat(gray);
   if (n < 0 || n > 1) {
-    throw new TexError('ModelArg2',
-                       'Color values for the %1 model must be between %2 and %3',
-                       'gray', '0', '1');
+    throw new TexError(
+      'ModelArg2',
+      'Color values for the %1 model must be between %2 and %3',
+      'gray',
+      '0',
+      '1',
+    );
   }
   let pn = Math.floor(n * 255).toString(16);
   if (pn.length < 2) {

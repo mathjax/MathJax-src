@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Node, PropertyList} from './Node.js';
-import {Factory, FactoryNodeClass, AbstractFactory} from './Factory.js';
+import { Node, PropertyList } from './Node.js';
+import { Factory, FactoryNodeClass, AbstractFactory } from './Factory.js';
 
 /*****************************************************************/
 /**
@@ -31,7 +31,10 @@ import {Factory, FactoryNodeClass, AbstractFactory} from './Factory.js';
  * @template N  The node type created by the factory
  * @template C  The class of the node being constructed (for access to static properties)
  */
-export interface NodeFactory<N extends Node<N, C>, C extends FactoryNodeClass<N>> extends Factory<N, C> {
+export interface NodeFactory<
+  N extends Node<N, C>,
+  C extends FactoryNodeClass<N>,
+> extends Factory<N, C> {
   /**
    * @param {string} kind  The kind of node to create
    * @param {PropertyList} properties  The list of initial properties for the node (if any)
@@ -48,13 +51,18 @@ export interface NodeFactory<N extends Node<N, C>, C extends FactoryNodeClass<N>
  * @template N  The node type created by the factory
  * @template C  The class of the node being constructed (for access to static properties)
  */
-export abstract class AbstractNodeFactory< N extends Node<N, C>,
-C extends FactoryNodeClass<N>> extends AbstractFactory<N, C> {
+export abstract class AbstractNodeFactory<
+  N extends Node<N, C>,
+  C extends FactoryNodeClass<N>,
+> extends AbstractFactory<N, C> {
   /**
    * @override
    */
-  public create(kind: string, properties: PropertyList = {}, children: N[] = []) {
+  public create(
+    kind: string,
+    properties: PropertyList = {},
+    children: N[] = [],
+  ) {
     return this.node[kind](properties, children);
   }
-
 }

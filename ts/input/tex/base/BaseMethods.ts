@@ -15,7 +15,6 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview The Basic Parse methods.
  *
@@ -23,56 +22,71 @@
  */
 
 import * as sitem from './BaseItems.js';
-import {StackItem, EnvList} from '../StackItem.js';
-import {Macro} from '../Symbol.js';
-import {ParseMethod} from '../Types.js';
+import { StackItem, EnvList } from '../StackItem.js';
+import { Macro } from '../Symbol.js';
+import { ParseMethod } from '../Types.js';
 import NodeUtil from '../NodeUtil.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
-import {TexConstant} from '../TexConstants.js';
+import { TexConstant } from '../TexConstants.js';
 import ParseUtil from '../ParseUtil.js';
-import {PropertyList} from '../../../core/Tree/Node.js';
-import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
-import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
-import {MmlMunderover} from '../../../core/MmlTree/MmlNodes/munderover.js';
-import {Label} from '../Tags.js';
-import {em} from '../../../util/lengths.js';
-import {entities} from '../../../util/Entities.js';
-import {lookup} from '../../../util/Options.js';
-import {ColumnState} from '../ColumnParser.js';
-import {replaceUnicode} from '../../../util/string.js';
-
+import { PropertyList } from '../../../core/Tree/Node.js';
+import { MmlNode, TEXCLASS } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMo } from '../../../core/MmlTree/MmlNodes/mo.js';
+import { MmlMsubsup } from '../../../core/MmlTree/MmlNodes/msubsup.js';
+import { MmlMunderover } from '../../../core/MmlTree/MmlNodes/munderover.js';
+import { Label } from '../Tags.js';
+import { em } from '../../../util/lengths.js';
+import { entities } from '../../../util/Entities.js';
+import { lookup } from '../../../util/Options.js';
+import { ColumnState } from '../ColumnParser.js';
+import { replaceUnicode } from '../../../util/string.js';
 
 // Namespace
 let BaseMethods: Record<string, ParseMethod> = {};
 
-const P_HEIGHT = 1.2 / .85;   // cmex10 height plus depth over .85
-const MmlTokenAllow: {[key: string]: number} = {
-  fontfamily: 1, fontsize: 1, fontweight: 1, fontstyle: 1,
-  color: 1, background: 1,
-  id: 1, 'class': 1, href: 1, style: 1
+const P_HEIGHT = 1.2 / 0.85; // cmex10 height plus depth over .85
+const MmlTokenAllow: { [key: string]: number } = {
+  fontfamily: 1,
+  fontsize: 1,
+  fontweight: 1,
+  fontstyle: 1,
+  color: 1,
+  background: 1,
+  id: 1,
+  class: 1,
+  href: 1,
+  style: 1,
 };
-
 
 /**
  * @param {string} align   The vertical aligment to use (t, b, m or c)
  * @param {number} n       The number of expected alignment characters
  */
 export function splitAlignArray(align: string, n: number = Infinity) {
-  const list = align.replace(/\s+/g, '').split('').map((s: string) => {
-    const name = {t: 'top', b: 'bottom', m: 'middle', c: 'center'}[s];
-    if (!name) {
-      throw new TexError('BadBreakAlign', 'Invalid alignment character: %1', s);
-    }
-    return name;
-  });
+  const list = align
+    .replace(/\s+/g, '')
+    .split('')
+    .map((s: string) => {
+      const name = { t: 'top', b: 'bottom', m: 'middle', c: 'center' }[s];
+      if (!name) {
+        throw new TexError(
+          'BadBreakAlign',
+          'Invalid alignment character: %1',
+          s,
+        );
+      }
+      return name;
+    });
   if (list.length > n) {
-    throw new TexError('TooManyAligns', 'Too many alignment characters: %1', align);
+    throw new TexError(
+      'TooManyAligns',
+      'Too many alignment characters: %1',
+      align,
+    );
   }
-  return (n === 1 ? list[0] : list.join(' '));
+  return n === 1 ? list[0] : list.join(' ');
 }
-
 
 /**
  * Handle LaTeX tokens.
@@ -83,7 +97,7 @@ export function splitAlignArray(align: string, n: number = Infinity) {
  * @param {TexParser} parser The calling parser.
  * @param {string} c The parsed character.
  */
-BaseMethods.Open = function(parser: TexParser, _c: string) {
+BaseMethods.Open = function (parser: TexParser, _c: string) {
   // @test Identifier Font, Prime, Prime with subscript
   parser.Push(parser.itemFactory.create('open'));
 };
@@ -93,7 +107,7 @@ BaseMethods.Open = function(parser: TexParser, _c: string) {
  * @param {TexParser} parser The calling parser.
  * @param {string} c The parsed character.
  */
-BaseMethods.Close = function(parser: TexParser, _c: string) {
+BaseMethods.Close = function (parser: TexParser, _c: string) {
   // @test Identifier Font, Prime, Prime with subscript
   parser.Push(parser.itemFactory.create('close'));
 };
@@ -103,17 +117,23 @@ BaseMethods.Close = function(parser: TexParser, _c: string) {
  * @param {TexParser} parser The calling parser.
  * @param {string} c The parsed character.
  */
-BaseMethods.Bar = function(parser: TexParser, c: string) {
-  parser.Push(parser.create('token', 'mo', {stretchy: false, texClass: TEXCLASS.ORD}, c));
-}
-
+BaseMethods.Bar = function (parser: TexParser, c: string) {
+  parser.Push(
+    parser.create(
+      'token',
+      'mo',
+      { stretchy: false, texClass: TEXCLASS.ORD },
+      c,
+    ),
+  );
+};
 
 /**
  * Handle tilde and spaces.
  * @param {TexParser} parser The calling parser.
  * @param {string} c The parsed character.
  */
-BaseMethods.Tilde = function(parser: TexParser, _c: string) {
+BaseMethods.Tilde = function (parser: TexParser, _c: string) {
   // @test Tilde, Tilde2
   parser.Push(parser.create('token', 'mtext', {}, entities.nbsp));
 };
@@ -123,18 +143,20 @@ BaseMethods.Tilde = function(parser: TexParser, _c: string) {
  * @param {TexParser} parser The calling parser.
  * @param {string} c The parsed character.
  */
-BaseMethods.Space = function(_parser: TexParser, _c: string) {};
+BaseMethods.Space = function (_parser: TexParser, _c: string) {};
 
 /**
  * Handle ^
  * @param {TexParser} parser The calling parser.
  * @param {string} c The parsed character.
  */
-BaseMethods.Superscript = function(parser: TexParser, _c: string) {
+BaseMethods.Superscript = function (parser: TexParser, _c: string) {
   if (parser.GetNext().match(/\d/)) {
     // don't treat numbers as a unit
-    parser.string = parser.string.substr(0, parser.i + 1) +
-      ' ' + parser.string.substr(parser.i + 1);
+    parser.string =
+      parser.string.substr(0, parser.i + 1) +
+      ' ' +
+      parser.string.substr(parser.i + 1);
   }
   let primes: MmlNode;
   let base: MmlNode | void;
@@ -152,23 +174,36 @@ BaseMethods.Superscript = function(parser: TexParser, _c: string) {
     }
   }
   const movesupsub = NodeUtil.getProperty(base, 'movesupsub');
-  let position = NodeUtil.isType(base, 'msubsup') ? (base as MmlMsubsup).sup :
-    (base as MmlMunderover).over;
-  if ((NodeUtil.isType(base, 'msubsup') && !NodeUtil.isType(base, 'msup') &&
-       NodeUtil.getChildAt(base, (base as MmlMsubsup).sup)) ||
-      (NodeUtil.isType(base, 'munderover') && !NodeUtil.isType(base, 'mover') &&
-       NodeUtil.getChildAt(base, (base as MmlMunderover).over) &&
-       !NodeUtil.getProperty(base, 'subsupOK'))) {
+  let position = NodeUtil.isType(base, 'msubsup')
+    ? (base as MmlMsubsup).sup
+    : (base as MmlMunderover).over;
+  if (
+    (NodeUtil.isType(base, 'msubsup') &&
+      !NodeUtil.isType(base, 'msup') &&
+      NodeUtil.getChildAt(base, (base as MmlMsubsup).sup)) ||
+    (NodeUtil.isType(base, 'munderover') &&
+      !NodeUtil.isType(base, 'mover') &&
+      NodeUtil.getChildAt(base, (base as MmlMunderover).over) &&
+      !NodeUtil.getProperty(base, 'subsupOK'))
+  ) {
     // @test Double-super-error, Double-over-error
-    throw new TexError('DoubleExponent', 'Double exponent: use braces to clarify');
+    throw new TexError(
+      'DoubleExponent',
+      'Double exponent: use braces to clarify',
+    );
   }
   if (!NodeUtil.isType(base, 'msubsup') || NodeUtil.isType(base, 'msup')) {
     if (movesupsub) {
       // @test Move Superscript, Large Operator
-      if (!NodeUtil.isType(base, 'munderover') || NodeUtil.isType(base, 'mover') ||
-          NodeUtil.getChildAt(base, (base as MmlMunderover).over)) {
+      if (
+        !NodeUtil.isType(base, 'munderover') ||
+        NodeUtil.isType(base, 'mover') ||
+        NodeUtil.getChildAt(base, (base as MmlMunderover).over)
+      ) {
         // @test Large Operator
-        base = parser.create('node', 'munderover', [base], {movesupsub: true});
+        base = parser.create('node', 'munderover', [base], {
+          movesupsub: true,
+        });
       }
       position = (base as MmlMunderover).over;
     } else {
@@ -179,21 +214,24 @@ BaseMethods.Superscript = function(parser: TexParser, _c: string) {
   }
   parser.Push(
     parser.itemFactory.create('subsup', base).setProperties({
-      position: position, primes: primes, movesupsub: movesupsub
-    }) );
+      position: position,
+      primes: primes,
+      movesupsub: movesupsub,
+    }),
+  );
 };
-
 
 /**
  * Handle _
  * @param {TexParser} parser The calling parser.
  * @param {string} c The parsed character.
  */
-BaseMethods.Subscript = function(parser: TexParser, _c: string) {
+BaseMethods.Subscript = function (parser: TexParser, _c: string) {
   if (parser.GetNext().match(/\d/)) {
     // don't treat numbers as a unit
     parser.string =
-      parser.string.substr(0, parser.i + 1) + ' ' +
+      parser.string.substr(0, parser.i + 1) +
+      ' ' +
       parser.string.substr(parser.i + 1);
   }
   let primes, base;
@@ -210,23 +248,36 @@ BaseMethods.Subscript = function(parser: TexParser, _c: string) {
     }
   }
   const movesupsub = NodeUtil.getProperty(base, 'movesupsub');
-  let position = NodeUtil.isType(base, 'msubsup') ?
-    (base as MmlMsubsup).sub : (base as MmlMunderover).under;
-  if ((NodeUtil.isType(base, 'msubsup') && !NodeUtil.isType(base, 'msup') &&
-       NodeUtil.getChildAt(base, (base as MmlMsubsup).sub)) ||
-      (NodeUtil.isType(base, 'munderover') && !NodeUtil.isType(base, 'mover') &&
-       NodeUtil.getChildAt(base, (base as MmlMunderover).under) &&
-       !NodeUtil.getProperty(base, 'subsupOK'))) {
+  let position = NodeUtil.isType(base, 'msubsup')
+    ? (base as MmlMsubsup).sub
+    : (base as MmlMunderover).under;
+  if (
+    (NodeUtil.isType(base, 'msubsup') &&
+      !NodeUtil.isType(base, 'msup') &&
+      NodeUtil.getChildAt(base, (base as MmlMsubsup).sub)) ||
+    (NodeUtil.isType(base, 'munderover') &&
+      !NodeUtil.isType(base, 'mover') &&
+      NodeUtil.getChildAt(base, (base as MmlMunderover).under) &&
+      !NodeUtil.getProperty(base, 'subsupOK'))
+  ) {
     // @test Double-sub-error, Double-under-error
-    throw new TexError('DoubleSubscripts', 'Double subscripts: use braces to clarify');
+    throw new TexError(
+      'DoubleSubscripts',
+      'Double subscripts: use braces to clarify',
+    );
   }
   if (!NodeUtil.isType(base, 'msubsup') || NodeUtil.isType(base, 'msup')) {
     if (movesupsub) {
       // @test Large Operator, Move Superscript
-      if (!NodeUtil.isType(base, 'munderover') || NodeUtil.isType(base, 'mover') ||
-          NodeUtil.getChildAt(base, (base as MmlMunderover).under)) {
+      if (
+        !NodeUtil.isType(base, 'munderover') ||
+        NodeUtil.isType(base, 'mover') ||
+        NodeUtil.getChildAt(base, (base as MmlMunderover).under)
+      ) {
         // @test Move Superscript
-        base = parser.create('node', 'munderover', [base], {movesupsub: true});
+        base = parser.create('node', 'munderover', [base], {
+          movesupsub: true,
+        });
       }
       position = (base as MmlMunderover).under;
     } else {
@@ -237,66 +288,74 @@ BaseMethods.Subscript = function(parser: TexParser, _c: string) {
   }
   parser.Push(
     parser.itemFactory.create('subsup', base).setProperties({
-      position: position, primes: primes, movesupsub: movesupsub
-    }) );
+      position: position,
+      primes: primes,
+      movesupsub: movesupsub,
+    }),
+  );
 };
-
 
 /**
  * Handle '
  * @param {TexParser} parser The calling parser.
  * @param {string} c The parsed character.
  */
-BaseMethods.Prime = function(parser: TexParser, c: string) {
+BaseMethods.Prime = function (parser: TexParser, c: string) {
   // @test Prime
   let base = parser.stack.Prev();
   if (!base) {
     // @test PrimeSup, PrePrime, Prime on Sup
     base = parser.create('token', 'mi');
   }
-  if (NodeUtil.isType(base, 'msubsup') && !NodeUtil.isType(base, 'msup') &&
-      NodeUtil.getChildAt(base, (base as MmlMsubsup).sup)) {
+  if (
+    NodeUtil.isType(base, 'msubsup') &&
+    !NodeUtil.isType(base, 'msup') &&
+    NodeUtil.getChildAt(base, (base as MmlMsubsup).sup)
+  ) {
     // @test Double Prime Error
-    throw new TexError('DoubleExponentPrime',
-                        'Prime causes double exponent: use braces to clarify');
+    throw new TexError(
+      'DoubleExponentPrime',
+      'Prime causes double exponent: use braces to clarify',
+    );
   }
   let sup = '';
   parser.i--;
   do {
     // @test Prime, PrimeSup, Double Prime, PrePrime
-    sup += entities.prime; parser.i++, c = parser.GetNext();
-  } while (c === '\'' || c === entities.rsquo);
+    sup += entities.prime;
+    parser.i++, (c = parser.GetNext());
+  } while (c === "'" || c === entities.rsquo);
   sup = ['', '\u2032', '\u2033', '\u2034', '\u2057'][sup.length] || sup;
-  const node = parser.create('token', 'mo', {variantForm: true}, sup);
-  parser.Push(
-    parser.itemFactory.create('prime', base, node) );
+  const node = parser.create('token', 'mo', { variantForm: true }, sup);
+  parser.Push(parser.itemFactory.create('prime', base, node));
 };
-
 
 /**
  * Handle comments
  * @param {TexParser} parser The calling parser.
  * @param {string} c The parsed character.
  */
-BaseMethods.Comment = function(parser: TexParser, _c: string) {
-  while (parser.i < parser.string.length && parser.string.charAt(parser.i) !== '\n') {
+BaseMethods.Comment = function (parser: TexParser, _c: string) {
+  while (
+    parser.i < parser.string.length &&
+    parser.string.charAt(parser.i) !== '\n'
+  ) {
     parser.i++;
   }
 };
-
 
 /**
  * Handle hash marks outside of definitions
  * @param {TexParser} parser The calling parser.
  * @param {string} c The parsed character.
  */
-BaseMethods.Hash = function(_parser: TexParser, _c: string) {
+BaseMethods.Hash = function (_parser: TexParser, _c: string) {
   // @test Hash Error
-  throw new TexError('CantUseHash1',
-                      'You can\'t use \'macro parameter character #\' in math mode');
+  throw new TexError(
+    'CantUseHash1',
+    "You can't use 'macro parameter character #' in math mode",
+  );
 };
-
-
 
 /**
  *
@@ -304,18 +363,25 @@ BaseMethods.Hash = function(_parser: TexParser, _c: string) {
  *
  */
 
-
 /**
  * Handle \mathrm, \mathbf, etc, allowing for multi-letter runs to be one <mi>.
  */
-BaseMethods.MathFont = function(parser: TexParser, name: string, variant: string) {
+BaseMethods.MathFont = function (
+  parser: TexParser,
+  name: string,
+  variant: string,
+) {
   const text = parser.GetArgument(name);
-  let mml = new TexParser(text, {
-    multiLetterIdentifiers: parser.options.identifierPattern,
-    ...parser.stack.env,
-    font: variant,
-    noAutoOP: true
-  }, parser.configuration).mml();
+  let mml = new TexParser(
+    text,
+    {
+      multiLetterIdentifiers: parser.options.identifierPattern,
+      ...parser.stack.env,
+      font: variant,
+      noAutoOP: true,
+    },
+    parser.configuration,
+  ).mml();
   parser.Push(parser.create('node', 'TeXAtom', [mml]));
 };
 
@@ -325,7 +391,11 @@ BaseMethods.MathFont = function(parser: TexParser, name: string, variant: string
  * @param {string} name The macro name.
  * @param {string} font The font name.
  */
-BaseMethods.SetFont = function(parser: TexParser, _name: string, font: string) {
+BaseMethods.SetFont = function (
+  parser: TexParser,
+  _name: string,
+  font: string,
+) {
   parser.stack.env['font'] = font;
 };
 
@@ -337,16 +407,21 @@ BaseMethods.SetFont = function(parser: TexParser, _name: string, font: string) {
  * @param {boolean} style True if we are in displaystyle.
  * @param {string} level The nesting level for scripts.
  */
-BaseMethods.SetStyle = function(parser: TexParser, _name: string,
-                                texStyle: string, style: boolean,
-                                level: string) {
+BaseMethods.SetStyle = function (
+  parser: TexParser,
+  _name: string,
+  texStyle: string,
+  style: boolean,
+  level: string,
+) {
   parser.stack.env['style'] = texStyle;
   parser.stack.env['level'] = level;
   parser.Push(
-    parser.itemFactory.create('style').setProperty(
-      'styles', {displaystyle: style, scriptlevel: level}));
+    parser.itemFactory
+      .create('style')
+      .setProperty('styles', { displaystyle: style, scriptlevel: level }),
+  );
 };
-
 
 /**
  * Setting size of an expression, e.g., \\small, \\huge.
@@ -354,10 +429,17 @@ BaseMethods.SetStyle = function(parser: TexParser, _name: string,
  * @param {string} name The macro name.
  * @param {number} size The size value.
  */
-BaseMethods.SetSize = function(parser: TexParser, _name: string, size: number) {
+BaseMethods.SetSize = function (
+  parser: TexParser,
+  _name: string,
+  size: number,
+) {
   parser.stack.env['size'] = size;
   parser.Push(
-    parser.itemFactory.create('style').setProperty('styles', {mathsize: em(size)}));
+    parser.itemFactory
+      .create('style')
+      .setProperty('styles', { mathsize: em(size) }),
+  );
 };
 
 /**
@@ -366,10 +448,14 @@ BaseMethods.SetSize = function(parser: TexParser, _name: string, size: number) {
  * @param {string} name The macro name.
  * @param {string} space The space value.
  */
-BaseMethods.Spacer = function(parser: TexParser, _name: string, space: number) {
+BaseMethods.Spacer = function (
+  parser: TexParser,
+  _name: string,
+  space: number,
+) {
   // @test Positive Spacing, Negative Spacing
-  const node = parser.create('node', 'mspace', [], {width: em(space)});
-  const style = parser.create('node', 'mstyle', [node], {scriptlevel: 0});
+  const node = parser.create('node', 'mspace', [], { width: em(space) });
+  const style = parser.create('node', 'mstyle', [node], { scriptlevel: 0 });
   parser.Push(style);
 };
 
@@ -380,8 +466,10 @@ BaseMethods.Spacer = function(parser: TexParser, _name: string, space: number) {
  * @param {string} _name The macro name.
  */
 BaseMethods.DiscretionaryTimes = function (parser: TexParser, _name: string) {
-  parser.Push(parser.create('token', 'mo', {linebreakmultchar: '\u00D7'}, '\u2062'));
-}
+  parser.Push(
+    parser.create('token', 'mo', { linebreakmultchar: '\u00D7' }, '\u2062'),
+  );
+};
 
 /**
  * Create a discretionary breakpoint.
@@ -391,7 +479,7 @@ BaseMethods.DiscretionaryTimes = function (parser: TexParser, _name: string) {
  */
 BaseMethods.AllowBreak = function (parser: TexParser, _name: string) {
   parser.Push(parser.create('token', 'mspace'));
-}
+};
 
 /**
  * Create a forced breakpoint.
@@ -400,8 +488,12 @@ BaseMethods.AllowBreak = function (parser: TexParser, _name: string) {
  * @param {string} _name The macro name.
  */
 BaseMethods.Break = function (parser: TexParser, _name: string) {
-  parser.Push(parser.create('token', 'mspace', {linebreak: TexConstant.LineBreak.NEWLINE}));
-}
+  parser.Push(
+    parser.create('token', 'mspace', {
+      linebreak: TexConstant.LineBreak.NEWLINE,
+    }),
+  );
+};
 
 /**
  * Set surrounding mo linebreak attributes
@@ -410,30 +502,40 @@ BaseMethods.Break = function (parser: TexParser, _name: string) {
  * @param {string} _name The macro name.
  * @param {string} linebreak The linebreak attribute to use.
  */
-BaseMethods.Linebreak = function (parser: TexParser, _name: string, linebreak: string) {
+BaseMethods.Linebreak = function (
+  parser: TexParser,
+  _name: string,
+  linebreak: string,
+) {
   let insert = true;
   const prev = parser.stack.Prev(true);
   if (prev && prev.isKind('mo')) {
-    const style = NodeUtil.getOp(prev as any as MmlMo)?.[3]?.linebreakstyle ||
-                  NodeUtil.getAttribute(prev, 'linebreakstyle');
+    const style =
+      NodeUtil.getOp(prev as any as MmlMo)?.[3]?.linebreakstyle ||
+      NodeUtil.getAttribute(prev, 'linebreakstyle');
     if (style !== TexConstant.LineBreakStyle.BEFORE) {
       prev.attributes.set('linebreak', linebreak);
       insert = false;
     }
   }
   parser.Push(parser.itemFactory.create('break', linebreak, insert));
-}
-
+};
 
 /**
  * Parses left/right fenced expressions.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.LeftRight = function(parser: TexParser, name: string) {
+BaseMethods.LeftRight = function (parser: TexParser, name: string) {
   // @test Fenced, Fenced3
   const first = name.substr(1);
-  parser.Push(parser.itemFactory.create(first, parser.GetDelimiter(name), parser.stack.env.color));
+  parser.Push(
+    parser.itemFactory.create(
+      first,
+      parser.GetDelimiter(name),
+      parser.stack.env.color,
+    ),
+  );
 };
 
 /**
@@ -442,15 +544,14 @@ BaseMethods.LeftRight = function(parser: TexParser, name: string) {
  * @param {string} name The macro name.
  * @param {string} id Alternative string representation of the function.
  */
-BaseMethods.NamedFn = function(parser: TexParser, name: string, id: string) {
+BaseMethods.NamedFn = function (parser: TexParser, name: string, id: string) {
   // @test Named Function
   if (!id) {
     id = name.substr(1);
   }
-  const mml = parser.create('token', 'mi', {texClass: TEXCLASS.OP}, id);
+  const mml = parser.create('token', 'mi', { texClass: TEXCLASS.OP }, id);
   parser.Push(parser.itemFactory.create('fn', mml));
 };
-
 
 /**
  * Handle a named math operator, e.g., \\min, \\lim
@@ -458,18 +559,23 @@ BaseMethods.NamedFn = function(parser: TexParser, name: string, id: string) {
  * @param {string} name The macro name.
  * @param {string} id Alternative string representation of the operator.
  */
-BaseMethods.NamedOp = function(parser: TexParser, name: string, id: string) {
+BaseMethods.NamedOp = function (parser: TexParser, name: string, id: string) {
   // @test Limit
   if (!id) {
     id = name.substr(1);
   }
   id = id.replace(/&thinsp;/, '\u2006');
-  const mml = parser.create('token', 'mo', {
-    movablelimits: true,
-    movesupsub: true,
-    form: TexConstant.Form.PREFIX,
-    texClass: TEXCLASS.OP
-  }, id);
+  const mml = parser.create(
+    'token',
+    'mo',
+    {
+      movablelimits: true,
+      movesupsub: true,
+      form: TexConstant.Form.PREFIX,
+      texClass: TEXCLASS.OP,
+    },
+    id,
+  );
   parser.Push(mml);
 };
 
@@ -479,14 +585,25 @@ BaseMethods.NamedOp = function(parser: TexParser, name: string, id: string) {
  * @param {string} name The macro name.
  * @param {string} limits The limits arguments.
  */
-BaseMethods.Limits = function(parser: TexParser, _name: string, limits: string) {
+BaseMethods.Limits = function (
+  parser: TexParser,
+  _name: string,
+  limits: string,
+) {
   // @test Limits
   let op = parser.stack.Prev(true);
   // Get the texclass for the core operator.
-  if (!op || (NodeUtil.getTexClass(NodeUtil.getCoreMO(op)) !== TEXCLASS.OP &&
-              NodeUtil.getProperty(op, 'movesupsub') == null)) {
+  if (
+    !op ||
+    (NodeUtil.getTexClass(NodeUtil.getCoreMO(op)) !== TEXCLASS.OP &&
+      NodeUtil.getProperty(op, 'movesupsub') == null)
+  ) {
     // @test Limits Error
-    throw new TexError('MisplacedLimits', '%1 is allowed only on operators', parser.currentCS);
+    throw new TexError(
+      'MisplacedLimits',
+      '%1 is allowed only on operators',
+      parser.currentCS,
+    );
   }
   const top = parser.stack.Top();
   let node;
@@ -504,13 +621,14 @@ BaseMethods.Limits = function(parser: TexParser, _name: string, limits: string) 
     op = top.Last = node;
   }
   NodeUtil.setProperty(op, 'movesupsub', limits ? true : false);
-  NodeUtil.setProperties(NodeUtil.getCoreMO(op), {'movablelimits': false});
-  if (NodeUtil.getAttribute(op, 'movablelimits') ||
-      NodeUtil.getProperty(op, 'movablelimits')) {
-    NodeUtil.setProperties(op, {'movablelimits': false});
+  NodeUtil.setProperties(NodeUtil.getCoreMO(op), { movablelimits: false });
+  if (
+    NodeUtil.getAttribute(op, 'movablelimits') ||
+    NodeUtil.getProperty(op, 'movablelimits')
+  ) {
+    NodeUtil.setProperties(op, { movablelimits: false });
   }
 };
-
 
 /**
  * Handle over commands.
@@ -519,9 +637,16 @@ BaseMethods.Limits = function(parser: TexParser, _name: string, limits: string) 
  * @param {string} open The open delimiter in case of a "withdelim" version.
  * @param {string} close The close delimiter.
  */
-BaseMethods.Over = function(parser: TexParser, name: string, open: string, close: string) {
+BaseMethods.Over = function (
+  parser: TexParser,
+  name: string,
+  open: string,
+  close: string,
+) {
   // @test Over
-  const mml = parser.itemFactory.create('over').setProperty('name', parser.currentCS) ;
+  const mml = parser.itemFactory
+    .create('over')
+    .setProperty('name', parser.currentCS);
   if (open || close) {
     // @test Choose
     mml.setProperty('ldelim', open);
@@ -534,8 +659,7 @@ BaseMethods.Over = function(parser: TexParser, name: string, open: string, close
   if (name.match(/^\\above/)) {
     // @test Above, Above With Delims
     mml.setProperty('thickness', parser.GetDimen(name));
-  }
-  else if (name.match(/^\\atop/) || open || close) {
+  } else if (name.match(/^\\atop/) || open || close) {
     // @test Choose
     mml.setProperty('thickness', 0);
   }
@@ -547,7 +671,7 @@ BaseMethods.Over = function(parser: TexParser, name: string, open: string, close
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.Frac = function(parser: TexParser, name: string) {
+BaseMethods.Frac = function (parser: TexParser, name: string) {
   // @test Frac
   const num = parser.ParseArg(name);
   const den = parser.ParseArg(name);
@@ -560,11 +684,11 @@ BaseMethods.Frac = function(parser: TexParser, name: string) {
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.Sqrt = function(parser: TexParser, name: string) {
+BaseMethods.Sqrt = function (parser: TexParser, name: string) {
   const n = parser.GetBrackets(name);
   let arg = parser.GetArgument(name);
   if (arg === '\\frac') {
-    arg  += '{' + parser.GetArgument(arg) + '}{' + parser.GetArgument(arg) + '}';
+    arg += '{' + parser.GetArgument(arg) + '}{' + parser.GetArgument(arg) + '}';
   }
   let mml = new TexParser(arg, parser.stack.env, parser.configuration).mml();
   if (!n) {
@@ -576,7 +700,6 @@ BaseMethods.Sqrt = function(parser: TexParser, name: string) {
   }
   parser.Push(mml);
 };
-
 
 // Utility
 /**
@@ -608,19 +731,17 @@ function parseRoot(parser: TexParser, n: string) {
   return node;
 }
 
-
 /**
  * Parse a general root.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.Root = function(parser: TexParser, name: string) {
+BaseMethods.Root = function (parser: TexParser, name: string) {
   const n = parser.GetUpTo(name, '\\of');
   const arg = parser.ParseArg(name);
   const node = parser.create('node', 'mroot', [arg, parseRoot(parser, n)]);
   parser.Push(node);
 };
-
 
 /**
  * Parses a movable index element in a root, e.g. \\uproot, \\leftroot
@@ -628,28 +749,39 @@ BaseMethods.Root = function(parser: TexParser, name: string) {
  * @param {string} name The macro name.
  * @param {string} id Argument which should be a string representation of an integer.
  */
-BaseMethods.MoveRoot = function(parser: TexParser, name: string, id: string) {
+BaseMethods.MoveRoot = function (parser: TexParser, name: string, id: string) {
   // @test Tweaked Root
   if (!parser.stack.env['inRoot']) {
     // @test Misplaced Move Root
-    throw new TexError('MisplacedMoveRoot', '%1 can appear only within a root', parser.currentCS);
+    throw new TexError(
+      'MisplacedMoveRoot',
+      '%1 can appear only within a root',
+      parser.currentCS,
+    );
   }
   if (parser.stack.global[id]) {
     // @test Multiple Move Root
-    throw new TexError('MultipleMoveRoot', 'Multiple use of %1', parser.currentCS);
+    throw new TexError(
+      'MultipleMoveRoot',
+      'Multiple use of %1',
+      parser.currentCS,
+    );
   }
   let n = parser.GetArgument(name);
   if (!n.match(/-?[0-9]+/)) {
     // @test Incorrect Move Root
-    throw new TexError('IntegerArg', 'The argument to %1 must be an integer', parser.currentCS);
+    throw new TexError(
+      'IntegerArg',
+      'The argument to %1 must be an integer',
+      parser.currentCS,
+    );
   }
-  n = (parseInt(n, 10) / 15) + 'em';
+  n = parseInt(n, 10) / 15 + 'em';
   if (n.substr(0, 1) !== '-') {
     n = '+' + n;
   }
   parser.stack.global[id] = n;
 };
-
 
 /**
  * Handle accents.
@@ -658,20 +790,29 @@ BaseMethods.MoveRoot = function(parser: TexParser, name: string, id: string) {
  * @param {string} accent The accent.
  * @param {boolean} stretchy True if accent is stretchy.
  */
-BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, stretchy: boolean) {
+BaseMethods.Accent = function (
+  parser: TexParser,
+  name: string,
+  accent: string,
+  stretchy: boolean,
+) {
   // @test Vector
   const c = parser.ParseArg(name);
   // @test Vector Font
-  const def = {...ParseUtil.getFontDef(parser), accent: true, mathaccent: true};
+  const def = {
+    ...ParseUtil.getFontDef(parser),
+    accent: true,
+    mathaccent: true,
+  };
   const entity = NodeUtil.createEntity(accent);
   const moNode = parser.create('token', 'mo', def, entity);
   const mml = moNode;
   NodeUtil.setAttribute(mml, 'stretchy', stretchy ? true : false);
   // @test Vector Op, Vector
-  const mo = (NodeUtil.isEmbellished(c) ? NodeUtil.getCoreMO(c) : c);
+  const mo = NodeUtil.isEmbellished(c) ? NodeUtil.getCoreMO(c) : c;
   if (NodeUtil.isType(mo, 'mo') || NodeUtil.getProperty(mo, 'movablelimits')) {
     // @test Vector Op
-    NodeUtil.setProperties(mo, {'movablelimits': false});
+    NodeUtil.setProperties(mo, { movablelimits: false });
   }
   const muoNode = parser.create('node', 'munderover');
   // This is necessary to get the empty element into the children.
@@ -682,7 +823,6 @@ BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, s
   parser.Push(texAtom);
 };
 
-
 /**
  * Handles stacked elements.
  * @param {TexParser} parser The calling parser.
@@ -690,68 +830,81 @@ BaseMethods.Accent = function(parser: TexParser, name: string, accent: string, s
  * @param {string} c Character to stack.
  * @param {boolean} stack True if stacked operator.
  */
-BaseMethods.UnderOver = function(parser: TexParser, name: string, c: string, stack: boolean) {
+BaseMethods.UnderOver = function (
+  parser: TexParser,
+  name: string,
+  c: string,
+  stack: boolean,
+) {
   const entity = NodeUtil.createEntity(c);
-  const mo = parser.create('token', 'mo', {stretchy: true, accent: true}, entity);
+  const mo = parser.create(
+    'token',
+    'mo',
+    { stretchy: true, accent: true },
+    entity,
+  );
   mo.setProperty('mathaccent', false);
-  const pos = (name.charAt(1) === 'o' ? 'over' : 'under');
+  const pos = name.charAt(1) === 'o' ? 'over' : 'under';
   const base = parser.ParseArg(name);
   parser.Push(ParseUtil.underOver(parser, base, mo, pos, stack));
 };
-
 
 /**
  * Handles overset.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.Overset = function(parser: TexParser, name: string) {
+BaseMethods.Overset = function (parser: TexParser, name: string) {
   // @test Overset
   const top = parser.ParseArg(name);
   const base = parser.ParseArg(name);
   const topMo = top.coreMO();
-  const accent = (topMo.isKind('mo') && NodeUtil.getAttribute(topMo, 'accent') === true);
+  const accent =
+    topMo.isKind('mo') && NodeUtil.getAttribute(topMo, 'accent') === true;
   ParseUtil.checkMovableLimits(base);
-  const node = parser.create('node', 'mover', [base, top], {accent});
+  const node = parser.create('node', 'mover', [base, top], { accent });
   parser.Push(node);
 };
-
 
 /**
  * Handles underset.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.Underset = function(parser: TexParser, name: string) {
+BaseMethods.Underset = function (parser: TexParser, name: string) {
   // @test Underset
   const bot = parser.ParseArg(name);
   const base = parser.ParseArg(name);
   const botMo = bot.coreMO();
-  const accentunder = (botMo.isKind('mo') && NodeUtil.getAttribute(botMo, 'accent') === true);
+  const accentunder =
+    botMo.isKind('mo') && NodeUtil.getAttribute(botMo, 'accent') === true;
   ParseUtil.checkMovableLimits(base);
-  const node = parser.create('node', 'munder', [base, bot], {accentunder});
+  const node = parser.create('node', 'munder', [base, bot], { accentunder });
   parser.Push(node);
 };
-
 
 /**
  * Handles overunderset.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.Overunderset = function(parser: TexParser, name: string) {
+BaseMethods.Overunderset = function (parser: TexParser, name: string) {
   const top = parser.ParseArg(name);
   const bot = parser.ParseArg(name);
   const base = parser.ParseArg(name);
   const topMo = top.coreMO();
   const botMo = bot.coreMO();
-  const accent = (topMo.isKind('mo') && NodeUtil.getAttribute(topMo, 'accent') === true);
-  const accentunder = (botMo.isKind('mo') && NodeUtil.getAttribute(botMo, 'accent') === true);
+  const accent =
+    topMo.isKind('mo') && NodeUtil.getAttribute(topMo, 'accent') === true;
+  const accentunder =
+    botMo.isKind('mo') && NodeUtil.getAttribute(botMo, 'accent') === true;
   ParseUtil.checkMovableLimits(base);
-  const node = parser.create('node', 'munderover', [base, bot, top], {accent, accentunder});
+  const node = parser.create('node', 'munderover', [base, bot, top], {
+    accent,
+    accentunder,
+  });
   parser.Push(node);
 };
-
 
 /**
  * Creates TeXAtom, when class of element is changed explicitly.
@@ -759,8 +912,12 @@ BaseMethods.Overunderset = function(parser: TexParser, name: string) {
  * @param {string} name The macro name.
  * @param {number} mclass The new TeX class.
  */
-BaseMethods.TeXAtom = function(parser: TexParser, name: string, mclass: number) {
-  let def: EnvList = {texClass: mclass};
+BaseMethods.TeXAtom = function (
+  parser: TexParser,
+  name: string,
+  mclass: number,
+) {
+  let def: EnvList = { texClass: mclass };
   let mml: StackItem | MmlNode;
   let node: MmlNode;
   if (mclass === TEXCLASS.OP) {
@@ -773,7 +930,11 @@ BaseMethods.TeXAtom = function(parser: TexParser, name: string, mclass: number) 
       node = parser.create('token', 'mi', def, match[1]);
     } else {
       // @test Mathop Cal
-      const parsed = new TexParser(arg, parser.stack.env, parser.configuration).mml();
+      const parsed = new TexParser(
+        arg,
+        parser.stack.env,
+        parser.configuration,
+      ).mml();
       node = parser.create('node', 'TeXAtom', [parsed], def);
     }
     mml = parser.itemFactory.create('fn', node);
@@ -784,16 +945,22 @@ BaseMethods.TeXAtom = function(parser: TexParser, name: string, mclass: number) 
   parser.Push(mml);
 };
 
-
 /**
  * Creates vboxes with various vertical alignments
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  * @param {string} align The alignment for the box.
  */
-BaseMethods.VBox = function(parser: TexParser, name: string, align: string) {
-  const arg = new TexParser(parser.GetArgument(name), parser.stack.env, parser.configuration);
-  const def = {'data-vertical-align': align, texClass: TEXCLASS.ORD} as EnvList;
+BaseMethods.VBox = function (parser: TexParser, name: string, align: string) {
+  const arg = new TexParser(
+    parser.GetArgument(name),
+    parser.stack.env,
+    parser.configuration,
+  );
+  const def = {
+    'data-vertical-align': align,
+    texClass: TEXCLASS.ORD,
+  } as EnvList;
   if (arg.stack.env.hsize) {
     def.width = arg.stack.env.hsize;
     def['data-overflow'] = 'linebreak';
@@ -826,12 +993,11 @@ BaseMethods.ParBox = function (parser: TexParser, name: string) {
   const mml = parser.create('node', 'mpadded', text, {
     width: width,
     'data-overflow': 'linebreak',
-    'data-vertical-align': align
+    'data-vertical-align': align,
   });
   mml.setProperty('vbox', align);
   parser.Push(mml);
 };
-
 
 /**
  * Handle \breakAlign{type}{align} for type = c, r, or t
@@ -841,42 +1007,59 @@ BaseMethods.ParBox = function (parser: TexParser, name: string) {
 BaseMethods.BreakAlign = function (parser: TexParser, name: string) {
   const top = parser.stack.Top() as sitem.ArrayItem;
   if (!(top instanceof sitem.ArrayItem)) {
-    throw new TexError('BreakNotInArray', '%1 must be used in an alignment environment', parser.currentCS);
+    throw new TexError(
+      'BreakNotInArray',
+      '%1 must be used in an alignment environment',
+      parser.currentCS,
+    );
   }
   const type = parser.GetArgument(name).trim();
   switch (type) {
-  case 'c':
-    if (top.First) {
-      throw new TexError('BreakFirstInEntry',
-                         '%1 must be at the beginning of an alignment entry', parser.currentCS +'{c}');
-    }
-    top.breakAlign.cell = splitAlignArray(parser.GetArgument(name), 1);
-    break;
-  case 'r':
-    if (top.row.length || top.First) {
-      throw new TexError('BreakFirstInRow',
-                         '%1 must be at the beginning of an alignment row', parser.currentCS +'{r}');
-    }
-    top.breakAlign.row = splitAlignArray(parser.GetArgument(name))
-    break;
-  case 't':
-    if (top.table.length || top.row.length || top.First) {
-      throw new TexError('BreakFirstInTable',
-                         '%1 must be at the beginning of an alignment', parser.currentCS + '{t}');
-    }
-    top.breakAlign.table = splitAlignArray(parser.GetArgument(name))
-    break;
-  default:
-    throw new TexError('BreakType', 'First argument to %1 must be one of c, r, or t', parser.currentCS);
+    case 'c':
+      if (top.First) {
+        throw new TexError(
+          'BreakFirstInEntry',
+          '%1 must be at the beginning of an alignment entry',
+          parser.currentCS + '{c}',
+        );
+      }
+      top.breakAlign.cell = splitAlignArray(parser.GetArgument(name), 1);
+      break;
+    case 'r':
+      if (top.row.length || top.First) {
+        throw new TexError(
+          'BreakFirstInRow',
+          '%1 must be at the beginning of an alignment row',
+          parser.currentCS + '{r}',
+        );
+      }
+      top.breakAlign.row = splitAlignArray(parser.GetArgument(name));
+      break;
+    case 't':
+      if (top.table.length || top.row.length || top.First) {
+        throw new TexError(
+          'BreakFirstInTable',
+          '%1 must be at the beginning of an alignment',
+          parser.currentCS + '{t}',
+        );
+      }
+      top.breakAlign.table = splitAlignArray(parser.GetArgument(name));
+      break;
+    default:
+      throw new TexError(
+        'BreakType',
+        'First argument to %1 must be one of c, r, or t',
+        parser.currentCS,
+      );
   }
-}
+};
 
 /**
  * Creates mmltoken elements. Used in Macro substitutions.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.MmlToken = function(parser: TexParser, name: string) {
+BaseMethods.MmlToken = function (parser: TexParser, name: string) {
   // @test Modulo
   const kind = parser.GetArgument(name);
   let attr = parser.GetBrackets(name, '').replace(/^\s+/, '');
@@ -894,24 +1077,35 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
     throw new TexError('NotMathMLToken', '%1 is not a token element', kind);
   }
   while (attr !== '') {
-    const match = attr.match(/^([a-z]+)\s*=\s*('[^']*'|"[^"]*"|[^ ,]*)\s*,?\s*/i);
+    const match = attr.match(
+      /^([a-z]+)\s*=\s*('[^']*'|"[^"]*"|[^ ,]*)\s*,?\s*/i,
+    );
     if (!match) {
       // @test Token Invalid Attribute
-      throw new TexError('InvalidMathMLAttr', 'Invalid MathML attribute: %1', attr);
+      throw new TexError(
+        'InvalidMathMLAttr',
+        'Invalid MathML attribute: %1',
+        attr,
+      );
     }
     if (!node.attributes.hasDefault(match[1]) && !MmlTokenAllow[match[1]]) {
       // @test Token Unknown Attribute, Token Wrong Attribute
-      throw new TexError('UnknownAttrForElement',
-                          '%1 is not a recognized attribute for %2',
-                          match[1], kind);
+      throw new TexError(
+        'UnknownAttrForElement',
+        '%1 is not a recognized attribute for %2',
+        match[1],
+        kind,
+      );
     }
     let value: string | boolean = ParseUtil.MmlFilterAttribute(
-      parser, match[1], match[2].replace(/^(['"])(.*)\1$/, '$2'));
+      parser,
+      match[1],
+      match[2].replace(/^(['"])(.*)\1$/, '$2'),
+    );
     if (value) {
       if (value.toLowerCase() === 'true') {
         value = true;
-      }
-      else if (value.toLowerCase() === 'false') {
+      } else if (value.toLowerCase() === 'false') {
         value = false;
       }
       def[match[1]] = value;
@@ -928,17 +1122,19 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
   parser.Push(node);
 };
 
-
 /**
  * Handle strut.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.Strut = function(parser: TexParser, _name: string) {
+BaseMethods.Strut = function (parser: TexParser, _name: string) {
   // @test Strut
   const row = parser.create('node', 'mrow');
-  const padded = parser.create('node', 'mpadded', [row],
-                                                         {height: '8.6pt', depth: '3pt', width: 0});
+  const padded = parser.create('node', 'mpadded', [row], {
+    height: '8.6pt',
+    depth: '3pt',
+    width: 0,
+  });
   parser.Push(padded);
 };
 
@@ -949,7 +1145,12 @@ BaseMethods.Strut = function(parser: TexParser, _name: string) {
  * @param {string} v Vertical size.
  * @param {string} h Horizontal size.
  */
-BaseMethods.Phantom = function(parser: TexParser, name: string, v: string, h: string) {
+BaseMethods.Phantom = function (
+  parser: TexParser,
+  name: string,
+  v: string,
+  h: string,
+) {
   // @test Phantom
   let box = parser.create('node', 'mphantom', [parser.ParseArg(name)]);
   if (v || h) {
@@ -974,17 +1175,21 @@ BaseMethods.Phantom = function(parser: TexParser, name: string, v: string, h: st
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.Smash = function(parser: TexParser, name: string) {
+BaseMethods.Smash = function (parser: TexParser, name: string) {
   // @test Smash, Smash Top, Smash Bottom
   const bt = ParseUtil.trimSpaces(parser.GetBrackets(name, ''));
   const smash = parser.create('node', 'mpadded', [parser.ParseArg(name)]);
   // TEMP: Changes here:
   switch (bt) {
-  case 'b': NodeUtil.setAttribute(smash, 'depth', 0); break;
-  case 't': NodeUtil.setAttribute(smash, 'height', 0); break;
-  default:
-    NodeUtil.setAttribute(smash, 'height', 0);
-    NodeUtil.setAttribute(smash, 'depth', 0);
+    case 'b':
+      NodeUtil.setAttribute(smash, 'depth', 0);
+      break;
+    case 't':
+      NodeUtil.setAttribute(smash, 'height', 0);
+      break;
+    default:
+      NodeUtil.setAttribute(smash, 'height', 0);
+      NodeUtil.setAttribute(smash, 'depth', 0);
   }
   const atom = parser.create('node', 'TeXAtom', [smash]);
   parser.Push(atom);
@@ -995,9 +1200,11 @@ BaseMethods.Smash = function(parser: TexParser, name: string) {
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.Lap = function(parser: TexParser, name: string) {
+BaseMethods.Lap = function (parser: TexParser, name: string) {
   // @test Llap, Rlap
-  const mml = parser.create('node', 'mpadded', [parser.ParseArg(name)], {width: 0});
+  const mml = parser.create('node', 'mpadded', [parser.ParseArg(name)], {
+    width: 0,
+  });
   if (name === '\\llap') {
     // @test Llap
     NodeUtil.setAttribute(mml, 'lspace', '-1width');
@@ -1011,11 +1218,12 @@ BaseMethods.Lap = function(parser: TexParser, name: string) {
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.RaiseLower = function(parser: TexParser, name: string) {
+BaseMethods.RaiseLower = function (parser: TexParser, name: string) {
   // @test Raise, Lower, Raise Negative, Lower Negative
   let h = parser.GetDimen(name);
-  let item =
-    parser.itemFactory.create('position').setProperties({name: parser.currentCS, move: 'vertical'}) ;
+  let item = parser.itemFactory
+    .create('position')
+    .setProperties({ name: parser.currentCS, move: 'vertical' });
   // TEMP: Changes here:
   if (h.charAt(0) === '-') {
     // @test Raise Negative, Lower Negative
@@ -1034,16 +1242,15 @@ BaseMethods.RaiseLower = function(parser: TexParser, name: string) {
   parser.Push(item);
 };
 
-
 /**
  * Handle moveleft, moveright commands
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.MoveLeftRight = function(parser: TexParser, name: string) {
+BaseMethods.MoveLeftRight = function (parser: TexParser, name: string) {
   // @test Move Left, Move Right, Move Left Negative, Move Right Negative
   let h = parser.GetDimen(name);
-  let nh = (h.charAt(0) === '-' ? h.slice(1) : '-' + h);
+  let nh = h.charAt(0) === '-' ? h.slice(1) : '-' + h;
   if (name === '\\moveleft') {
     let tmp = h;
     h = nh;
@@ -1051,35 +1258,40 @@ BaseMethods.MoveLeftRight = function(parser: TexParser, name: string) {
   }
   parser.Push(
     parser.itemFactory.create('position').setProperties({
-      name: parser.currentCS, move: 'horizontal',
-      left:  parser.create('node', 'mspace', [], {width: h}),
-      right: parser.create('node', 'mspace', [], {width: nh})}) );
+      name: parser.currentCS,
+      move: 'horizontal',
+      left: parser.create('node', 'mspace', [], { width: h }),
+      right: parser.create('node', 'mspace', [], { width: nh }),
+    }),
+  );
 };
-
 
 /**
  * Handle horizontal spacing commands.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.Hskip = function(parser: TexParser, name: string, nobreak: boolean = false) {
+BaseMethods.Hskip = function (
+  parser: TexParser,
+  name: string,
+  nobreak: boolean = false,
+) {
   // @test Modulo
-  const node = parser.create('node', 'mspace', [],
-                             {width: parser.GetDimen(name)});
+  const node = parser.create('node', 'mspace', [], {
+    width: parser.GetDimen(name),
+  });
   nobreak && NodeUtil.setAttribute(node, 'linebreak', 'nobreak');
   parser.Push(node);
 };
-
 
 /**
  * Handle removal of spaces in script modes
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.Nonscript = function(parser: TexParser, _name: string) {
+BaseMethods.Nonscript = function (parser: TexParser, _name: string) {
   parser.Push(parser.itemFactory.create('nonscript'));
 };
-
 
 /**
  * Handle Rule and Space command
@@ -1087,35 +1299,36 @@ BaseMethods.Nonscript = function(parser: TexParser, _name: string) {
  * @param {string} name The macro name.
  * @param {string} style The style of the rule spacer.
  */
-BaseMethods.Rule = function(parser: TexParser, name: string, style: string) {
+BaseMethods.Rule = function (parser: TexParser, name: string, style: string) {
   // @test Rule 3D, Space 3D
   const w = parser.GetDimen(name),
-  h = parser.GetDimen(name),
-  d = parser.GetDimen(name);
-  let def: EnvList = {width: w, height: h, depth: d};
+    h = parser.GetDimen(name),
+    d = parser.GetDimen(name);
+  let def: EnvList = { width: w, height: h, depth: d };
   if (style !== 'blank') {
-    def['mathbackground'] = (parser.stack.env['color'] || 'black');
+    def['mathbackground'] = parser.stack.env['color'] || 'black';
   }
   const node = parser.create('node', 'mspace', [], def);
   parser.Push(node);
 };
-
 
 /**
  * Handle rule command.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.rule = function(parser: TexParser, name: string) {
+BaseMethods.rule = function (parser: TexParser, name: string) {
   // @test Rule 2D
   const v = parser.GetBrackets(name),
-  w = parser.GetDimen(name),
-  h = parser.GetDimen(name);
+    w = parser.GetDimen(name),
+    h = parser.GetDimen(name);
   let mml = parser.create('node', 'mspace', [], {
-    width: w, height: h,
-    mathbackground: (parser.stack.env['color'] || 'black') });
+    width: w,
+    height: h,
+    mathbackground: parser.stack.env['color'] || 'black',
+  });
   if (v) {
-    mml = parser.create('node', 'mpadded', [mml], {voffset: v});
+    mml = parser.create('node', 'mpadded', [mml], { voffset: v });
     if (v.match(/^\-/)) {
       NodeUtil.setAttribute(mml, 'height', v);
       NodeUtil.setAttribute(mml, 'depth', '+' + v.substr(1));
@@ -1133,26 +1346,38 @@ BaseMethods.rule = function(parser: TexParser, name: string) {
  * @param {number} mclass The TeX class of the element.
  * @param {number} size The em size.
  */
-BaseMethods.MakeBig = function(parser: TexParser, name: string, mclass: number, size: number) {
+BaseMethods.MakeBig = function (
+  parser: TexParser,
+  name: string,
+  mclass: number,
+  size: number,
+) {
   // @test Choose, Over With Delims, Above With Delims
   size *= P_HEIGHT;
   let sizeStr = String(size).replace(/(\.\d\d\d).+/, '$1') + 'em';
   const delim = parser.GetDelimiter(name, true);
-  const mo = parser.create('token', 'mo', {
-    minsize: sizeStr, maxsize: sizeStr,
-    fence: true, stretchy: true, symmetric: true
-  }, delim);
-  const node = parser.create('node', 'TeXAtom', [mo], {texClass: mclass});
+  const mo = parser.create(
+    'token',
+    'mo',
+    {
+      minsize: sizeStr,
+      maxsize: sizeStr,
+      fence: true,
+      stretchy: true,
+      symmetric: true,
+    },
+    delim,
+  );
+  const node = parser.create('node', 'TeXAtom', [mo], { texClass: mclass });
   parser.Push(node);
 };
-
 
 /**
  * Handle buildrel command.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.BuildRel = function(parser: TexParser, name: string) {
+BaseMethods.BuildRel = function (parser: TexParser, name: string) {
   // @test BuildRel, BuildRel Expression
   const top = parser.ParseUpTo(name, '\\over');
   const bot = parser.ParseArg(name);
@@ -1161,10 +1386,11 @@ BaseMethods.BuildRel = function(parser: TexParser, name: string) {
   NodeUtil.setChild(node, 0, bot);
   NodeUtil.setChild(node, 1, null);
   NodeUtil.setChild(node, 2, top);
-  const atom = parser.create('node', 'TeXAtom', [node], {texClass: TEXCLASS.REL});
+  const atom = parser.create('node', 'TeXAtom', [node], {
+    texClass: TEXCLASS.REL,
+  });
   parser.Push(atom);
 };
-
 
 /**
  * Handle horizontal boxes.
@@ -1173,9 +1399,16 @@ BaseMethods.BuildRel = function(parser: TexParser, name: string) {
  * @param {string} style Box style.
  * @param {string} font The mathvariant to use
  */
-BaseMethods.HBox = function(parser: TexParser, name: string, style: string, font?: string) {
+BaseMethods.HBox = function (
+  parser: TexParser,
+  name: string,
+  style: string,
+  font?: string,
+) {
   // @test Hbox
-  parser.PushAll(ParseUtil.internalMath(parser, parser.GetArgument(name), style, font));
+  parser.PushAll(
+    ParseUtil.internalMath(parser, parser.GetArgument(name), style, font),
+  );
 };
 
 /**
@@ -1183,10 +1416,10 @@ BaseMethods.HBox = function(parser: TexParser, name: string, style: string, font
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.FBox = function(parser: TexParser, name: string) {
+BaseMethods.FBox = function (parser: TexParser, name: string) {
   // @test Fbox
   const internal = ParseUtil.internalMath(parser, parser.GetArgument(name));
-  const node = parser.create('node', 'menclose', internal, {notation: 'box'});
+  const node = parser.create('node', 'menclose', internal, { notation: 'box' });
   parser.Push(node);
 };
 
@@ -1195,22 +1428,26 @@ BaseMethods.FBox = function(parser: TexParser, name: string) {
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.FrameBox = function(parser: TexParser, name: string) {
+BaseMethods.FrameBox = function (parser: TexParser, name: string) {
   const width = parser.GetBrackets(name);
   const pos = parser.GetBrackets(name) || 'c';
   let mml = ParseUtil.internalMath(parser, parser.GetArgument(name));
   if (width) {
-    mml = [parser.create('node', 'mpadded', mml, {
-      width,
-      'data-align': lookup(pos, {l: 'left', r: 'right'}, 'center')
-    })];
+    mml = [
+      parser.create('node', 'mpadded', mml, {
+        width,
+        'data-align': lookup(pos, { l: 'left', r: 'right' }, 'center'),
+      }),
+    ];
   }
-  const node = parser.create('node', 'TeXAtom',
-                             [parser.create('node', 'menclose', mml, {notation: 'box'})],
-                             {texClass: TEXCLASS.ORD});
+  const node = parser.create(
+    'node',
+    'TeXAtom',
+    [parser.create('node', 'menclose', mml, { notation: 'box' })],
+    { texClass: TEXCLASS.ORD },
+  );
   parser.Push(node);
 };
-
 
 /**
  * Implements \makebox.
@@ -1221,49 +1458,52 @@ BaseMethods.FrameBox = function(parser: TexParser, name: string) {
 BaseMethods.MakeBox = function (parser: TexParser, name: string) {
   const width = parser.GetBrackets(name);
   const pos = parser.GetBrackets(name, 'c');
-  const mml = parser.create('node', 'mpadded', ParseUtil.internalMath(parser, parser.GetArgument(name)));
+  const mml = parser.create(
+    'node',
+    'mpadded',
+    ParseUtil.internalMath(parser, parser.GetArgument(name)),
+  );
   if (width) {
     NodeUtil.setAttribute(mml, 'width', width);
   }
-  const align = lookup(pos.toLowerCase(), {c: 'center', r: 'right'}, '');
+  const align = lookup(pos.toLowerCase(), { c: 'center', r: 'right' }, '');
   if (align) {
     NodeUtil.setAttribute(mml, 'data-align', align);
   }
-  pos.toLowerCase() !== pos && NodeUtil.setAttribute(mml, 'data-overflow', 'linebreak');
+  pos.toLowerCase() !== pos &&
+    NodeUtil.setAttribute(mml, 'data-overflow', 'linebreak');
   parser.Push(mml);
 };
-
 
 /**
  * Handle \\not.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.Not = function(parser: TexParser, _name: string) {
+BaseMethods.Not = function (parser: TexParser, _name: string) {
   // @test Negation Simple, Negation Complex, Negation Explicit,
   //       Negation Large
   parser.Push(parser.itemFactory.create('not'));
 };
-
 
 /**
  * Handle dots.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.Dots = function(parser: TexParser, _name: string) {
+BaseMethods.Dots = function (parser: TexParser, _name: string) {
   // @test Operator Dots
   const ldotsEntity = NodeUtil.createEntity('2026');
   const cdotsEntity = NodeUtil.createEntity('22EF');
-  const ldots = parser.create('token', 'mo', {stretchy: false}, ldotsEntity);
-  const cdots = parser.create('token', 'mo', {stretchy: false}, cdotsEntity);
+  const ldots = parser.create('token', 'mo', { stretchy: false }, ldotsEntity);
+  const cdots = parser.create('token', 'mo', { stretchy: false }, cdotsEntity);
   parser.Push(
     parser.itemFactory.create('dots').setProperties({
       ldots: ldots,
-      cdots: cdots
-    }) );
+      cdots: cdots,
+    }),
+  );
 };
-
 
 /**
  * Handle small matrix environments.
@@ -1278,14 +1518,26 @@ BaseMethods.Dots = function(parser: TexParser, _name: string) {
  * @param {boolean} cases Is it a cases environment.
  * @param {boolean} numbered Is it a numbered environment.
  */
-BaseMethods.Matrix = function(parser: TexParser, _name: string,
-                              open: string, close: string, align: string,
-                              spacing: string, vspacing: string, style: string,
-                              cases: boolean, numbered: boolean) {
+BaseMethods.Matrix = function (
+  parser: TexParser,
+  _name: string,
+  open: string,
+  close: string,
+  align: string,
+  spacing: string,
+  vspacing: string,
+  style: string,
+  cases: boolean,
+  numbered: boolean,
+) {
   const c = parser.GetNext();
   if (c === '') {
     // @test Matrix Error
-    throw new TexError('MissingArgFor', 'Missing argument for %1', parser.currentCS);
+    throw new TexError(
+      'MissingArgFor',
+      'Missing argument for %1',
+      parser.currentCS,
+    );
   }
   if (c === '{') {
     // @test Matrix Braces, Matrix Columns, Matrix Rows.
@@ -1296,13 +1548,15 @@ BaseMethods.Matrix = function(parser: TexParser, _name: string,
     parser.i = 0;
   }
   // @test Matrix Braces, Matrix Columns, Matrix Rows.
-  const array = parser.itemFactory.create('array').setProperty('requireClose', true) as sitem.ArrayItem;
+  const array = parser.itemFactory
+    .create('array')
+    .setProperty('requireClose', true) as sitem.ArrayItem;
   if (open || !align) {
     array.setProperty('arrayPadding', '.2em .125em');
   }
   array.arraydef = {
-    rowspacing: (vspacing || '4pt'),
-    columnspacing: (spacing || '1em')
+    rowspacing: vspacing || '4pt',
+    columnspacing: spacing || '1em',
   };
   if (cases) {
     // @test Matrix Cases
@@ -1329,15 +1583,18 @@ BaseMethods.Matrix = function(parser: TexParser, _name: string,
   parser.Push(array);
 };
 
-
 /**
  * Handle array entry.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.Entry = function(parser: TexParser, name: string) {
+BaseMethods.Entry = function (parser: TexParser, name: string) {
   // @test Label, Array, Cross Product Formula
-  parser.Push(parser.itemFactory.create('cell').setProperties({isEntry: true, name: name}));
+  parser.Push(
+    parser.itemFactory
+      .create('cell')
+      .setProperties({ isEntry: true, name: name }),
+  );
   const top = parser.stack.Top();
   const env = top.getProperty('casesEnv') as string;
   const cases = top.getProperty('isCases');
@@ -1347,8 +1604,13 @@ BaseMethods.Entry = function(parser: TexParser, name: string) {
   //  in a \text{...}, for backward compatibility).
   //
   const str = parser.string;
-  let braces = 0, close = -1, i = parser.i, m = str.length;
-  const end = (env ? new RegExp(`^\\\\end\\s*\\{${env.replace(/\*/, '\\*')}\\}`) : null);
+  let braces = 0,
+    close = -1,
+    i = parser.i,
+    m = str.length;
+  const end = env
+    ? new RegExp(`^\\\\end\\s*\\{${env.replace(/\*/, '\\*')}\\}`)
+    : null;
   //
   //  Look through the string character by character...
   //
@@ -1384,7 +1646,10 @@ BaseMethods.Entry = function(parser: TexParser, name: string) {
       //  Extra alignment tabs are not allowed in cases
       //
       // @test ExtraAlignTab
-      throw new TexError('ExtraAlignTab', 'Extra alignment tab in \\cases text');
+      throw new TexError(
+        'ExtraAlignTab',
+        'Extra alignment tab in \\cases text',
+      );
     } else if (c === '\\') {
       //
       //  If the macro is \cr or \\, end the search, otherwise skip the macro
@@ -1410,8 +1675,15 @@ BaseMethods.Entry = function(parser: TexParser, name: string) {
   //    (otherwise process the second column as normal, since it is in \text{}
   //
   const text = str.substr(parser.i, i - parser.i);
-  if (!text.match(/^\s*\\text[^a-zA-Z]/) || close !== text.replace(/\s+$/, '').length - 1) {
-    const internal = ParseUtil.internalMath(parser, ParseUtil.trimSpaces(text), 0);
+  if (
+    !text.match(/^\s*\\text[^a-zA-Z]/) ||
+    close !== text.replace(/\s+$/, '').length - 1
+  ) {
+    const internal = ParseUtil.internalMath(
+      parser,
+      ParseUtil.trimSpaces(text),
+      0,
+    );
     parser.PushAll(internal);
     parser.i = i;
   }
@@ -1422,12 +1694,12 @@ BaseMethods.Entry = function(parser: TexParser, name: string) {
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.Cr = function(parser: TexParser, name: string) {
+BaseMethods.Cr = function (parser: TexParser, name: string) {
   // @test Cr Linebreak, Misplaced Cr
   parser.Push(
-    parser.itemFactory.create('cell').setProperties({isCR: true, name: name}));
+    parser.itemFactory.create('cell').setProperties({ isCR: true, name: name }),
+  );
 };
-
 
 /**
  * Handle newline outside array.
@@ -1436,28 +1708,38 @@ BaseMethods.Cr = function(parser: TexParser, name: string) {
  * @param {boolean} nobrackets Flag indicating if newline is followed by
  *     brackets.
  */
-BaseMethods.CrLaTeX = function(parser: TexParser, name: string, nobrackets: boolean = false) {
+BaseMethods.CrLaTeX = function (
+  parser: TexParser,
+  name: string,
+  nobrackets: boolean = false,
+) {
   let n: string;
   if (!nobrackets) {
     // TODO: spaces before * and [ are not allowed in AMS environments like align, but
     //       should be allowed in array and eqnarray.  This distinction should be honored here.
-    if (parser.string.charAt(parser.i) === '*') {  // The * controls page breaking, so ignore it
+    if (parser.string.charAt(parser.i) === '*') {
+      // The * controls page breaking, so ignore it
       parser.i++;
     }
     if (parser.string.charAt(parser.i) === '[') {
       let dim = parser.GetBrackets(name, '');
-      let [value, unit, ] = ParseUtil.matchDimen(dim);
+      let [value, unit] = ParseUtil.matchDimen(dim);
       // @test Custom Linebreak
       if (dim && !value) {
         // @test Dimension Error
-        throw new TexError('BracketMustBeDimension',
-                           'Bracket argument to %1 must be a dimension', parser.currentCS);
+        throw new TexError(
+          'BracketMustBeDimension',
+          'Bracket argument to %1 must be a dimension',
+          parser.currentCS,
+        );
       }
       n = value + unit;
     }
   }
   parser.Push(
-    parser.itemFactory.create('cell').setProperties({isCR: true, name: name, linebreak: true})
+    parser.itemFactory
+      .create('cell')
+      .setProperties({ isCR: true, name: name, linebreak: true }),
   );
   const top = parser.stack.Top();
   let node: MmlNode;
@@ -1468,7 +1750,9 @@ BaseMethods.CrLaTeX = function(parser: TexParser, name: string, nobrackets: bool
     }
   } else {
     // @test Linebreak
-    node = parser.create('node', 'mspace', [], {linebreak: TexConstant.LineBreak.NEWLINE});
+    node = parser.create('node', 'mspace', [], {
+      linebreak: TexConstant.LineBreak.NEWLINE,
+    });
     // @test Custom Linebreak
     if (n) {
       NodeUtil.setAttribute(node, 'data-lineleading', n);
@@ -1483,7 +1767,7 @@ BaseMethods.CrLaTeX = function(parser: TexParser, name: string, nobrackets: bool
  * @param {string} name The macro name.
  * @param {string} style Style of the line. E.g., dashed.
  */
-BaseMethods.HLine = function(parser: TexParser, _name: string, style: string) {
+BaseMethods.HLine = function (parser: TexParser, _name: string, style: string) {
   if (style == null) {
     style = 'solid';
   }
@@ -1497,7 +1781,9 @@ BaseMethods.HLine = function(parser: TexParser, _name: string, style: string) {
     top.frame.push(['top', style]);
   } else {
     // @test Enclosed bottom, Enclosed top bottom
-    const lines = (top.arraydef['rowlines'] ? (top.arraydef['rowlines'] as string).split(/ /) : []);
+    const lines = top.arraydef['rowlines']
+      ? (top.arraydef['rowlines'] as string).split(/ /)
+      : [];
     while (lines.length < top.table.length) {
       lines.push('none');
     }
@@ -1506,23 +1792,25 @@ BaseMethods.HLine = function(parser: TexParser, _name: string, style: string) {
   }
 };
 
-
 /**
  * Handle hfill commands.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.HFill = function(parser: TexParser, _name: string) {
+BaseMethods.HFill = function (parser: TexParser, _name: string) {
   const top = parser.stack.Top();
   if (top instanceof sitem.ArrayItem) {
     // @test Hfill
     top.hfill.push(top.Size());
   } else {
     // @test UnsupportedHFill
-    throw new TexError('UnsupportedHFill', 'Unsupported use of %1', parser.currentCS);
+    throw new TexError(
+      'UnsupportedHFill',
+      'Unsupported use of %1',
+      parser.currentCS,
+    );
   }
 };
-
 
 /**
  * Create new column declarations
@@ -1534,15 +1822,23 @@ BaseMethods.NewColumnType = function (parser: TexParser, name: string) {
   const n = parser.GetBrackets(name, '0');
   const macro = parser.GetArgument(name);
   if (c.length !== 1) {
-    throw new TexError('BadColumnName', 'Column specifier must be exactly one character: %1', c);
+    throw new TexError(
+      'BadColumnName',
+      'Column specifier must be exactly one character: %1',
+      c,
+    );
   }
   if (!n.match(/^\d+$/)) {
-    throw new TexError('PositiveIntegerArg', 'Argument to %1 must me a positive integer', n);
+    throw new TexError(
+      'PositiveIntegerArg',
+      'Argument to %1 must me a positive integer',
+      n,
+    );
   }
   const cparser = parser.configuration.columnParser;
-  cparser.columnHandler[c] = (state: ColumnState) => cparser.macroColumn(state, macro, parseInt(n));
-}
-
+  cparser.columnHandler[c] = (state: ColumnState) =>
+    cparser.macroColumn(state, macro, parseInt(n));
+};
 
 /**
  *   LaTeX environments
@@ -1553,14 +1849,16 @@ BaseMethods.NewColumnType = function (parser: TexParser, name: string) {
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
+BaseMethods.BeginEnd = function (parser: TexParser, name: string) {
   // @test Array1, Array2, Array Test
   let env = parser.GetArgument(name);
   if (env.match(/\\/)) {
     // @test InvalidEnv
-    throw new TexError('InvalidEnv', 'Invalid environment name \'%1\'', env);
+    throw new TexError('InvalidEnv', "Invalid environment name '%1'", env);
   }
-  let macro = parser.configuration.handlers.get('environment').lookup(env) as Macro;
+  let macro = parser.configuration.handlers
+    .get('environment')
+    .lookup(env) as Macro;
   if (macro && name === '\\end') {
     // If the first argument is true, we have some sort of user defined
     // environment. Otherwise we have a standard LaTeX environment that is
@@ -1575,7 +1873,7 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
   }
   ParseUtil.checkMaxMacros(parser, false);
   parser.parse('environment', [parser, env]);
- };
+};
 
 /**
  * Handle array environment.
@@ -1589,23 +1887,31 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
  * @param {string} style Display or text style.
  * @param {boolean} raggedHeight Does the height need to be adjusted?
  */
-BaseMethods.Array = function(parser: TexParser, begin: StackItem,
-                             open: string, close: string, align: string,
-                             spacing: string, vspacing: string, style: string,
-                             raggedHeight: boolean) {
+BaseMethods.Array = function (
+  parser: TexParser,
+  begin: StackItem,
+  open: string,
+  close: string,
+  align: string,
+  spacing: string,
+  vspacing: string,
+  style: string,
+  raggedHeight: boolean,
+) {
   if (!align) {
     // @test Array Single
     align = parser.GetArgument('\\begin{' + begin.getName() + '}');
   }
   const array = parser.itemFactory.create('array') as sitem.ArrayItem;
-  begin.getName() === 'array' && array.setProperty('arrayPadding', '.5em .125em');
+  begin.getName() === 'array' &&
+    array.setProperty('arrayPadding', '.5em .125em');
   array.parser = parser;
   array.arraydef = {
-    columnspacing: (spacing || '1em'),
-    rowspacing: (vspacing || '4pt')
+    columnspacing: spacing || '1em',
+    rowspacing: vspacing || '4pt',
   };
   parser.configuration.columnParser.process(parser, align, array);
-  if (open)  {
+  if (open) {
     // @test Cross Product
     array.setProperty('open', parser.convertDelimiter(open));
   }
@@ -1613,15 +1919,14 @@ BaseMethods.Array = function(parser: TexParser, begin: StackItem,
     // @test Cross Product
     array.setProperty('close', parser.convertDelimiter(close));
   }
-  if ((style || '').charAt(1) === '\'') {
+  if ((style || '').charAt(1) === "'") {
     array.arraydef['data-cramped'] = true;
     style = style.charAt(0);
   }
   if (style === 'D') {
     // TODO: This case never seems to occur! No test.
     array.arraydef['displaystyle'] = true;
-  }
-  else if (style) {
+  } else if (style) {
     // @test Subarray, Small Matrix
     array.arraydef['displaystyle'] = false;
   }
@@ -1629,7 +1934,7 @@ BaseMethods.Array = function(parser: TexParser, begin: StackItem,
     // @test Subarray, Small Matrix
     array.arraydef['scriptlevel'] = 1;
   }
-  if (raggedHeight)  {
+  if (raggedHeight) {
     // @test Subarray, Small Matrix
     array.arraydef['useHeight'] = false;
   }
@@ -1638,20 +1943,31 @@ BaseMethods.Array = function(parser: TexParser, begin: StackItem,
   return array;
 };
 
-
 /**
  * Handle aligned arrays.
  * @param {TexParser} parser The calling parser.
  * @param {StackItem} begin The opening stackitem.
  * @param {string=} style The display style to use
  */
-BaseMethods.AlignedArray = function(parser: TexParser, begin: StackItem, style: string = '') {
+BaseMethods.AlignedArray = function (
+  parser: TexParser,
+  begin: StackItem,
+  style: string = '',
+) {
   // @test Array1, Array2, Array Test
   const align = parser.GetBrackets('\\begin{' + begin.getName() + '}');
-  let item = BaseMethods.Array(parser, begin, null, null, null, null, null, style);
+  let item = BaseMethods.Array(
+    parser,
+    begin,
+    null,
+    null,
+    null,
+    null,
+    null,
+    style,
+  );
   return ParseUtil.setArrayAlign(item as sitem.ArrayItem, align);
 };
-
 
 /**
  * Handle indentalign environment
@@ -1666,27 +1982,42 @@ BaseMethods.IndentAlign = function (parser: TexParser, begin: StackItem) {
   const first = parser.GetBrackets(name, '');
   let shift = parser.GetBrackets(name, '');
   const last = parser.GetBrackets(name, '');
-  if ((first && !ParseUtil.matchDimen(first)[0]) ||
-      (shift && !ParseUtil.matchDimen(shift)[0]) ||
-      (last && !ParseUtil.matchDimen(last)[0])) {
-    throw new TexError('BracketMustBeDimension', 'Bracket argument to %1 must be a dimension', name);
+  if (
+    (first && !ParseUtil.matchDimen(first)[0]) ||
+    (shift && !ParseUtil.matchDimen(shift)[0]) ||
+    (last && !ParseUtil.matchDimen(last)[0])
+  ) {
+    throw new TexError(
+      'BracketMustBeDimension',
+      'Bracket argument to %1 must be a dimension',
+      name,
+    );
   }
   //
   // Get the indentalign values, if any
   //
   const lcr = parser.GetArgument(name);
   if (lcr && !lcr.match(/^([lcr]{1,3})?$/)) {
-    throw new TexError('BadAlignment', 'Alignment must be one to three copies of l, c, or r');
+    throw new TexError(
+      'BadAlignment',
+      'Alignment must be one to three copies of l, c, or r',
+    );
   }
-  const align = [...lcr].map(c => ({l: 'left', c: 'center', r: 'right'})[c]);
+  const align = [...lcr].map(
+    (c) => ({ l: 'left', c: 'center', r: 'right' })[c],
+  );
   align.length === 1 && align.push(align[0]);
   //
   // Set the properties for the mstyle
   //
   const attr: PropertyList = {};
   for (const [name, value] of [
-    ['indentshiftfirst', first], ['indentshift', shift || first], ['indentshiftlast', last],
-    ['indentalignfirst', align[0]], ['indentalign', align[1]], ['indentalignlast', align[2]]
+    ['indentshiftfirst', first],
+    ['indentshift', shift || first],
+    ['indentshiftlast', last],
+    ['indentalignfirst', align[0]],
+    ['indentalign', align[1]],
+    ['indentalignlast', align[2]],
   ]) {
     if (value) {
       attr[name] = value;
@@ -1697,7 +2028,6 @@ BaseMethods.IndentAlign = function (parser: TexParser, begin: StackItem) {
   //
   parser.Push(parser.itemFactory.create('mstyle', attr, begin.getName()));
 };
-
 
 /**
  * Handle equation environment.
@@ -1710,17 +2040,17 @@ BaseMethods.Equation = function (
   parser: TexParser,
   begin: StackItem,
   numbered: boolean,
-  display: boolean = true
+  display: boolean = true,
 ) {
   parser.configuration.mathItem.display = display;
   parser.stack.env.display = display;
   parser.Push(begin);
   ParseUtil.checkEqnEnv(parser);
   parser.Push(begin);
-  return parser.itemFactory.create('equation', numbered).
-    setProperty('name', begin.getName());
+  return parser.itemFactory
+    .create('equation', numbered)
+    .setProperty('name', begin.getName());
 };
-
 
 /**
  * Handle eqnarray.
@@ -1732,29 +2062,46 @@ BaseMethods.Equation = function (
  * @param {string} balign Vertical alignment string.
  * @param {string} spacing Spacing between columns.
  */
-BaseMethods.EqnArray = function(parser: TexParser, begin: StackItem,
-                                numbered: boolean, taggable: boolean,
-                                align: string, balign: string, spacing: string) {
+BaseMethods.EqnArray = function (
+  parser: TexParser,
+  begin: StackItem,
+  numbered: boolean,
+  taggable: boolean,
+  align: string,
+  balign: string,
+  spacing: string,
+) {
   // @test The Lorenz Equations, Maxwell's Equations, Cubic Binomial
   let name = begin.getName();
-  let isGather = (name === 'gather' || name === 'gather*');
+  let isGather = name === 'gather' || name === 'gather*';
   if (taggable) {
     ParseUtil.checkEqnEnv(parser, !isGather);
   }
   parser.Push(begin);
-  align = align.replace(/[^clr]/g, '').split('').join(' ');
-  align = align.replace(/l/g, 'left').replace(/r/g, 'right').replace(/c/g, 'center');
+  align = align
+    .replace(/[^clr]/g, '')
+    .split('')
+    .join(' ');
+  align = align
+    .replace(/l/g, 'left')
+    .replace(/r/g, 'right')
+    .replace(/c/g, 'center');
   balign = splitAlignArray(balign);
-  let newItem = parser.itemFactory.create('eqnarray', name,
-                                          numbered, taggable, parser.stack.global) as sitem.ArrayItem;
+  let newItem = parser.itemFactory.create(
+    'eqnarray',
+    name,
+    numbered,
+    taggable,
+    parser.stack.global,
+  ) as sitem.ArrayItem;
   newItem.arraydef = {
     displaystyle: true,
     columnalign: align,
-    columnspacing: (spacing || '1em'),
+    columnspacing: spacing || '1em',
     rowspacing: '3pt',
     'data-break-align': balign,
     side: parser.options['tagSide'],
-    minlabelspacing: parser.options['tagIndent']
+    minlabelspacing: parser.options['tagIndent'],
   };
   if (isGather) {
     newItem.setProperty('nestable', true);
@@ -1762,23 +2109,21 @@ BaseMethods.EqnArray = function(parser: TexParser, begin: StackItem,
   return newItem;
 };
 
-
 /**
  * Handles no tag commands.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.HandleNoTag = function(parser: TexParser, _name: string) {
+BaseMethods.HandleNoTag = function (parser: TexParser, _name: string) {
   parser.tags.notag();
 };
-
 
 /**
  * Record a label name for a tag
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.HandleLabel = function(parser: TexParser, name: string) {
+BaseMethods.HandleLabel = function (parser: TexParser, name: string) {
   // @test Label, Label Empty
   let label = parser.GetArgument(name);
   if (label === '') {
@@ -1792,15 +2137,17 @@ BaseMethods.HandleLabel = function(parser: TexParser, name: string) {
       throw new TexError('MultipleCommand', 'Multiple %1', parser.currentCS);
     }
     parser.tags.label = label;
-    if ((parser.tags.allLabels[label] || parser.tags.labels[label]) && !parser.options['ignoreDuplicateLabels']) {
+    if (
+      (parser.tags.allLabels[label] || parser.tags.labels[label]) &&
+      !parser.options['ignoreDuplicateLabels']
+    ) {
       // @ Duplicate Label Error
-      throw new TexError('MultipleLabel', 'Label \'%1\' multiply defined', label);
+      throw new TexError('MultipleLabel', "Label '%1' multiply defined", label);
     }
     // TODO: This should be set in the tags structure!
     parser.tags.labels[label] = new Label(); // will be replaced by tag value later
   }
 };
-
 
 /**
  * Handle a label reference.
@@ -1808,7 +2155,11 @@ BaseMethods.HandleLabel = function(parser: TexParser, name: string) {
  * @param {string} name The macro name.
  * @param {boolean} eqref True if formatted as eqref.
  */
-BaseMethods.HandleRef = function(parser: TexParser, name: string, eqref: boolean) {
+BaseMethods.HandleRef = function (
+  parser: TexParser,
+  name: string,
+  eqref: boolean,
+) {
   // @test Ref, Ref Unknown, Eqref, Ref Default, Ref Named
   let label = parser.GetArgument(name);
   let ref = parser.tags.allLabels[label] || parser.tags.labels[label];
@@ -1824,20 +2175,28 @@ BaseMethods.HandleRef = function(parser: TexParser, name: string, eqref: boolean
     // @test Eqref
     tag = parser.tags.formatRef(tag);
   }
-  let node = parser.create('node', 'mrow', ParseUtil.internalMath(parser, tag), {
-    href: parser.tags.formatUrl(ref.id, parser.options.baseURL), 'class': 'MathJax_ref'
-  });
+  let node = parser.create(
+    'node',
+    'mrow',
+    ParseUtil.internalMath(parser, tag),
+    {
+      href: parser.tags.formatUrl(ref.id, parser.options.baseURL),
+      class: 'MathJax_ref',
+    },
+  );
   parser.Push(node);
 };
-
-
 
 /**
  * Macros
  */
-BaseMethods.Macro = function(parser: TexParser, name: string,
-                             macro: string, argcount: number,
-                             def?: string) {
+BaseMethods.Macro = function (
+  parser: TexParser,
+  name: string,
+  macro: string,
+  argcount: number,
+  def?: string,
+) {
   if (argcount) {
     const args: string[] = [];
     if (def != null) {
@@ -1849,11 +2208,14 @@ BaseMethods.Macro = function(parser: TexParser, name: string,
     }
     macro = ParseUtil.substituteArgs(parser, args, macro);
   }
-  parser.string = ParseUtil.addArgs(parser, macro, parser.string.slice(parser.i));
+  parser.string = ParseUtil.addArgs(
+    parser,
+    macro,
+    parser.string.slice(parser.i),
+  );
   parser.i = 0;
   ParseUtil.checkMaxMacros(parser);
 };
-
 
 /**
  * Handle MathChoice for elements whose exact size/style properties can only be
@@ -1861,13 +2223,12 @@ BaseMethods.Macro = function(parser: TexParser, name: string,
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-BaseMethods.MathChoice = function(parser: TexParser, name: string) {
-  const D  = parser.ParseArg(name);
-  const T  = parser.ParseArg(name);
-  const S  = parser.ParseArg(name);
+BaseMethods.MathChoice = function (parser: TexParser, name: string) {
+  const D = parser.ParseArg(name);
+  const T = parser.ParseArg(name);
+  const S = parser.ParseArg(name);
   const SS = parser.ParseArg(name);
   parser.Push(parser.create('node', 'MathChoice', [D, T, S, SS]));
 };
-
 
 export default BaseMethods;

@@ -21,10 +21,16 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathItem} from '../../core/MathItem.js';
-import {JaxList} from './Menu.js';
+import { MathItem } from '../../core/MathItem.js';
+import { JaxList } from './Menu.js';
 
-import {ContextMenu, SubMenu, Submenu, Menu, Item} from './mj-context-menu.js';
+import {
+  ContextMenu,
+  SubMenu,
+  Submenu,
+  Menu,
+  Item,
+} from './mj-context-menu.js';
 
 /*==========================================================================*/
 
@@ -33,12 +39,14 @@ import {ContextMenu, SubMenu, Submenu, Menu, Item} from './mj-context-menu.js';
  *   contextual menu (in particular, tying it to a MathItem).
  */
 export class MJContextMenu extends ContextMenu {
-
   /**
    * Static map to hold methods for re-computing dynamic submenus.
    * @type {Map<string, (menu: MJContextMenu, sub: Submenu)}
    */
-  public static DynamicSubmenus: Map<string, (menu: MJContextMenu, sub: Submenu) => SubMenu> = new Map();
+  public static DynamicSubmenus: Map<
+    string,
+    (menu: MJContextMenu, sub: Submenu) => SubMenu
+  > = new Map();
 
   /**
    * The MathItem that has posted the menu
@@ -101,7 +109,7 @@ export class MJContextMenu extends ContextMenu {
     for (const name of names) {
       if (menu) {
         item = menu.find(name);
-        menu = (item instanceof Submenu ? item.submenu : null);
+        menu = item instanceof Submenu ? item.submenu : null;
       } else {
         item = null;
       }
@@ -126,7 +134,8 @@ export class MJContextMenu extends ContextMenu {
   protected getOriginalMenu() {
     const input = this.mathItem.inputJax.name;
     const original = this.findID('Show', 'Original');
-    original.content = (input === 'MathML' ? 'Original MathML' : input + ' Commands');
+    original.content =
+      input === 'MathML' ? 'Original MathML' : input + ' Commands';
     const clipboard = this.findID('Copy', 'Original');
     clipboard.content = original.content;
   }
@@ -136,7 +145,9 @@ export class MJContextMenu extends ContextMenu {
    */
   protected getSemanticsMenu() {
     const semantics = this.findID('Settings', 'semantics');
-    this.mathItem.inputJax.name === 'MathML' ? semantics.disable() : semantics.enable();
+    this.mathItem.inputJax.name === 'MathML'
+      ? semantics.disable()
+      : semantics.enable();
   }
 
   /**
@@ -166,7 +177,9 @@ export class MJContextMenu extends ContextMenu {
     this.errorMsg = '';
     if (children.length === 1 && children[0].isKind('merror')) {
       const attributes = children[0].attributes;
-      this.errorMsg = (attributes.get('data-mjx-error') || attributes.get('data-mjx-message') || '') as string;
+      this.errorMsg = (attributes.get('data-mjx-error') ||
+        attributes.get('data-mjx-message') ||
+        '') as string;
       disable = !this.errorMsg;
     }
     this.findID('Show', 'Error')[disable ? 'disable' : 'enable']();
@@ -191,5 +204,4 @@ export class MJContextMenu extends ContextMenu {
       }
     }
   }
-
 }

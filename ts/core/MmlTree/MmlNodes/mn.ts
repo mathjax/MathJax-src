@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlTokenNode, TEXCLASS } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,12 +30,11 @@ import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMn extends AbstractMmlTokenNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
-    ...AbstractMmlTokenNode.defaults
+    ...AbstractMmlTokenNode.defaults,
   };
 
   /**
@@ -49,5 +48,4 @@ export class MmlMn extends AbstractMmlTokenNode {
   public get kind() {
     return 'mn';
   }
-
 }

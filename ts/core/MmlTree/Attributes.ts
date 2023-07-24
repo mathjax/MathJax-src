@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList, Property} from '../Tree/Node.js';
+import { PropertyList, Property } from '../Tree/Node.js';
 
 /**
  * A constant for when a property should be inherited from the global defaults lists
@@ -149,7 +149,10 @@ export class Attributes {
    *                         from an explicit mstyle or math attribute
    */
   public isSet(name: string): boolean {
-    return this.attributes.hasOwnProperty(name) || this.inherited.hasOwnProperty(name);
+    return (
+      this.attributes.hasOwnProperty(name) ||
+      this.inherited.hasOwnProperty(name)
+    );
   }
 
   /**
@@ -157,7 +160,7 @@ export class Attributes {
    * @return {boolean}     True of there is a default for the named attribute, false otherwise
    */
   public hasDefault(name: string): boolean {
-    return (name in this.defaults);
+    return name in this.defaults;
   }
 
   /**
@@ -215,5 +218,4 @@ export class Attributes {
   public getAllGlobals(): PropertyList {
     return this.global;
   }
-
 }

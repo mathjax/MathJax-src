@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {MmlNode, AbstractMmlBaseNode, AttributeList} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { MmlNode, AbstractMmlBaseNode, AttributeList } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,7 +30,6 @@ import {MmlNode, AbstractMmlBaseNode, AttributeList} from '../MmlNode.js';
  */
 
 export class MmlMfrac extends AbstractMmlBaseNode {
-
   /**
    * @override
    */
@@ -39,7 +38,7 @@ export class MmlMfrac extends AbstractMmlBaseNode {
     linethickness: 'medium',
     numalign: 'center',
     denomalign: 'center',
-    bevelled: false
+    bevelled: false,
   };
 
   /**
@@ -89,24 +88,50 @@ export class MmlMfrac extends AbstractMmlBaseNode {
    * Adjust the display level, and use prime style in denominator
    * @override
    */
-  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+  protected setChildInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    prime: boolean,
+  ) {
     if (!display || level > 0) {
       level++;
     }
     const numalign = this.attributes.get('numalign');
     const denalign = this.attributes.get('denomalign');
-    const numAttributes = this.addInheritedAttributes({...attributes}, {
-      numalign, indentshift: '0',
-      indentalignfirst: numalign, indentshiftfirst: '0',
-      indentalignlast: 'indentalign', indentshiftlast: 'indentshift'
-    });
-    const denAttributes = this.addInheritedAttributes({...attributes}, {
-      denalign, indentshift: '0',
-      indentalignfirst: denalign, indentshiftfirst: '0',
-      indentalignlast: 'indentalign', indentshiftlast: 'indentshift'
-    });
-    this.childNodes[0].setInheritedAttributes(numAttributes, false, level, prime);
-    this.childNodes[1].setInheritedAttributes(denAttributes, false, level, true);
+    const numAttributes = this.addInheritedAttributes(
+      { ...attributes },
+      {
+        numalign,
+        indentshift: '0',
+        indentalignfirst: numalign,
+        indentshiftfirst: '0',
+        indentalignlast: 'indentalign',
+        indentshiftlast: 'indentshift',
+      },
+    );
+    const denAttributes = this.addInheritedAttributes(
+      { ...attributes },
+      {
+        denalign,
+        indentshift: '0',
+        indentalignfirst: denalign,
+        indentshiftfirst: '0',
+        indentalignlast: 'indentalign',
+        indentshiftlast: 'indentshift',
+      },
+    );
+    this.childNodes[0].setInheritedAttributes(
+      numAttributes,
+      false,
+      level,
+      prime,
+    );
+    this.childNodes[1].setInheritedAttributes(
+      denAttributes,
+      false,
+      level,
+      true,
+    );
   }
-
 }

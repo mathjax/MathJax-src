@@ -20,24 +20,23 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {EqnArrayItem} from '../base/BaseItems.js';
+import { EqnArrayItem } from '../base/BaseItems.js';
 import ParseUtil from '../ParseUtil.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
-import {CommandMap} from '../SymbolMap.js';
-import {Macro} from '../Symbol.js';
+import { CommandMap } from '../SymbolMap.js';
+import { Macro } from '../Symbol.js';
 import ParseOptions from '../ParseOptions.js';
-import {lookup} from '../../../util/Options.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
+import { lookup } from '../../../util/Options.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 
-import {MathtoolsMethods} from './MathtoolsMethods.js';
-import {PAIREDDELIMS} from './MathtoolsConfiguration.js';
+import { MathtoolsMethods } from './MathtoolsMethods.js';
+import { PAIREDDELIMS } from './MathtoolsConfiguration.js';
 
 /**
  * Utility functions for the Mathtools package.
  */
 export const MathtoolsUtil = {
-
   /**
    * Set the displaystyle and scriptlevel attributes of an mstyle element
    *
@@ -46,12 +45,16 @@ export const MathtoolsUtil = {
    */
   setDisplayLevel(mml: MmlNode, style: string) {
     if (!style) return;
-    const [display, script] = lookup(style, {
-      '\\displaystyle':      [true, 0],
-      '\\textstyle':         [false, 0],
-      '\\scriptstyle':       [false, 1],
-      '\\scriptscriptstyle': [false, 2]
-    }, [null, null]);
+    const [display, script] = lookup(
+      style,
+      {
+        '\\displaystyle': [true, 0],
+        '\\textstyle': [false, 0],
+        '\\scriptstyle': [false, 1],
+        '\\scriptscriptstyle': [false, 2],
+      },
+      [null, null],
+    );
     if (display !== null) {
       mml.attributes.set('displaystyle', display);
       mml.attributes.set('scriptlevel', script);
@@ -68,7 +71,11 @@ export const MathtoolsUtil = {
   checkAlignment(parser: TexParser, name: string): EqnArrayItem {
     const top = parser.stack.Top() as EqnArrayItem;
     if (top.kind !== EqnArrayItem.prototype.kind) {
-      throw new TexError('NotInAlignment', '%1 can only be used in aligment environments', name);
+      throw new TexError(
+        'NotInAlignment',
+        '%1 can only be used in aligment environments',
+        name,
+      );
     }
     return top;
   },
@@ -101,7 +108,7 @@ export const MathtoolsUtil = {
       const add = ParseUtil.dimen2em(spread);
       rowspacing = rowspacing
         .split(/ /)
-        .map(s => ParseUtil.Em(Math.max(0, ParseUtil.dimen2em(s) + add)))
+        .map((s) => ParseUtil.Em(Math.max(0, ParseUtil.dimen2em(s) + add)))
         .join(' ');
     } else {
       rowspacing = spread;
@@ -121,7 +128,7 @@ export const MathtoolsUtil = {
     if (!n.match(/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)$/)) {
       throw new TexError('NotANumber', 'Argument to %1 is not a number', name);
     }
-    return (n.match(/^[-+]/) ? n : '+' + n);
+    return n.match(/^[-+]/) ? n : '+' + n;
   },
 
   /**
@@ -140,6 +147,5 @@ export const MathtoolsUtil = {
     const format = parser.options.mathtools[`prescript-${pos}-format`];
     format && (arg = `${format}{${arg}}`);
     return new TexParser(arg, parser.stack.env, parser.configuration).mml();
-  }
-
+  },
 };

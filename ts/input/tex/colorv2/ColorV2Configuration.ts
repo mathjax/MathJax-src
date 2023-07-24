@@ -21,13 +21,12 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {CommandMap} from '../SymbolMap.js';
-import {Configuration} from '../Configuration.js';
-import {ParseMethod} from '../Types.js';
+import { CommandMap } from '../SymbolMap.js';
+import { Configuration } from '../Configuration.js';
+import { ParseMethod } from '../Types.js';
 import TexParser from '../TexParser.js';
 
 export const ColorV2Methods: Record<string, ParseMethod> = {
-
   /**
    * Implements the v2 color macro
    *
@@ -45,20 +44,19 @@ export const ColorV2Methods: Record<string, ParseMethod> = {
     } else {
       delete parser.stack.env['color'];
     }
-    const node = parser.create('node', 'mstyle', [math], {mathcolor: color});
+    const node = parser.create('node', 'mstyle', [math], { mathcolor: color });
     parser.Push(node);
-  }
-
+  },
 };
 
 /**
  * The color macros
  */
-new CommandMap('colorv2', {color: 'Color'}, ColorV2Methods);
+new CommandMap('colorv2', { color: 'Color' }, ColorV2Methods);
 
 /**
  * The configuration for the color macros
  */
-export const ColorConfiguration = Configuration.create(
-  'colorv2', {handler: {macro: ['colorv2']}}
-);
+export const ColorConfiguration = Configuration.create('colorv2', {
+  handler: { macro: ['colorv2'] },
+});

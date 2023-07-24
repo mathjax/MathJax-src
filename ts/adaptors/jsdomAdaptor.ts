@@ -21,19 +21,26 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {HTMLAdaptor} from './HTMLAdaptor.js';
-import {NodeMixin, Constructor} from './NodeMixin.js';
-import {OptionList} from '../util/Options.js';
+import { HTMLAdaptor } from './HTMLAdaptor.js';
+import { NodeMixin, Constructor } from './NodeMixin.js';
+import { OptionList } from '../util/Options.js';
 
 /**
  * The constructor for an HTMLAdaptor
  */
-export type HTMLAdaptorConstructor = Constructor<HTMLAdaptor<HTMLElement, Text, Document>>;
+export type HTMLAdaptorConstructor = Constructor<
+  HTMLAdaptor<HTMLElement, Text, Document>
+>;
 
 /**
  * The JsdomAdaptor class
  */
-export class JsdomAdaptor extends NodeMixin<HTMLElement, Text, Document, HTMLAdaptorConstructor>(HTMLAdaptor) {}
+export class JsdomAdaptor extends NodeMixin<
+  HTMLElement,
+  Text,
+  Document,
+  HTMLAdaptorConstructor
+>(HTMLAdaptor) {}
 
 /**
  * Function for creating an HTML adaptor using jsdom
@@ -41,6 +48,9 @@ export class JsdomAdaptor extends NodeMixin<HTMLElement, Text, Document, HTMLAda
  * @param {any} JSDOM      The jsdom object to use for this adaptor
  * @return {HTMLAdaptor}   The newly created adaptor
  */
-export function jsdomAdaptor(JSDOM: any, options: OptionList = null): JsdomAdaptor {
+export function jsdomAdaptor(
+  JSDOM: any,
+  options: OptionList = null,
+): JsdomAdaptor {
   return new JsdomAdaptor(new JSDOM().window, options);
 }

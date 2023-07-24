@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AbstractMathList} from '../../core/MathList.js';
+import { AbstractMathList } from '../../core/MathList.js';
 
 /*****************************************************************/
 /**
@@ -31,5 +31,4 @@ import {AbstractMathList} from '../../core/MathList.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class HTMLMathList<N, T, D> extends AbstractMathList<N, T, D> {
-}
+export class HTMLMathList<N, T, D> extends AbstractMathList<N, T, D> {}

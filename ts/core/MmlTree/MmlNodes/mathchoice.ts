@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlBaseNode, AttributeList} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlBaseNode, AttributeList } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -33,12 +33,11 @@ import {AbstractMmlBaseNode, AttributeList} from '../MmlNode.js';
  */
 
 export class MathChoice extends AbstractMmlBaseNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
-    ...AbstractMmlBaseNode.defaults
+    ...AbstractMmlBaseNode.defaults,
   };
 
   /**
@@ -70,11 +69,15 @@ export class MathChoice extends AbstractMmlBaseNode {
    *
    * @override
    */
-  public setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-    const selection = (display ? 0 : Math.max(0, Math.min(level, 2)) + 1);
+  public setInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    prime: boolean,
+  ) {
+    const selection = display ? 0 : Math.max(0, Math.min(level, 2)) + 1;
     const child = this.childNodes[selection] || this.factory.create('mrow');
     this.parent.replaceChild(child, this);
     child.setInheritedAttributes(attributes, display, level, prime);
   }
-
 }

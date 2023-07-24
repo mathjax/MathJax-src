@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     LJcy: '\u0409',
     LT: '\u003C',
     Lacute: '\u0139',
@@ -169,5 +170,7 @@ Entities.add({
     lurdshar: '\u294A',
     luruhar: '\u2966',
     lvertneqq: '\u2268\uFE00',
-    lvnE: '\u2268\uFE00'
-}, 'l');
+    lvnE: '\u2268\uFE00',
+  },
+  'l',
+);

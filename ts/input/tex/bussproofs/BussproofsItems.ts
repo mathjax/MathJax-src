@@ -15,24 +15,19 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Items for TeX parsing of bussproofs.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-
 import TexError from '../TexError.js';
-import {BaseItem, CheckType, StackItem} from '../StackItem.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
+import { BaseItem, CheckType, StackItem } from '../StackItem.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import Stack from '../Stack.js';
 import * as BussproofsUtil from './BussproofsUtil.js';
 
-
 export class ProofTreeItem extends BaseItem {
-
-
   /**
    * The current left label.
    * @type {MmlNode[]}
@@ -54,7 +49,6 @@ export class ProofTreeItem extends BaseItem {
     return 'proofTree';
   }
 
-
   /**
    * @override
    */
@@ -70,7 +64,6 @@ export class ProofTreeItem extends BaseItem {
     this.innerStack.Push(item);
     return BaseItem.fail;
   }
-
 
   /**
    * @override

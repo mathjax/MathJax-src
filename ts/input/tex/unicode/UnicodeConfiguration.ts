@@ -15,41 +15,41 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Configuration file for the unicode package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration} from '../Configuration.js';
-import {EnvList} from '../StackItem.js';
+import { Configuration } from '../Configuration.js';
+import { EnvList } from '../StackItem.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
-import {CommandMap} from '../SymbolMap.js';
-import {ParseMethod} from '../Types.js';
+import { CommandMap } from '../SymbolMap.js';
+import { ParseMethod } from '../Types.js';
 import ParseUtil from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
-import {numeric} from '../../../util/Entities.js';
-import {Other} from '../base/BaseConfiguration.js';
+import { numeric } from '../../../util/Entities.js';
+import { Other } from '../base/BaseConfiguration.js';
 
 // Namespace
 export let UnicodeMethods: Record<string, ParseMethod> = {};
 
-let UnicodeCache: {[key: number]: [number, number, string, number]} = {};
+let UnicodeCache: { [key: number]: [number, number, string, number] } = {};
 
 /**
  * Parse function for unicode macro.
  * @param {TexParser} parser The current tex parser.
  * @param {string} name The name of the macro.
  */
-UnicodeMethods.Unicode = function(parser: TexParser, name: string) {
+UnicodeMethods.Unicode = function (parser: TexParser, name: string) {
   let HD = parser.GetBrackets(name);
   let HDsplit = null;
   let font = null;
   if (HD) {
-    if (HD.replace(/ /g, '').
-        match(/^(\d+(\.\d*)?|\.\d+),(\d+(\.\d*)?|\.\d+)$/)) {
+    if (
+      HD.replace(/ /g, '').match(/^(\d+(\.\d*)?|\.\d+),(\d+(\.\d*)?|\.\d+)$/)
+    ) {
       HDsplit = HD.replace(/ /g, '').split(/,/);
       font = parser.GetBrackets(name);
     } else {
@@ -58,7 +58,11 @@ UnicodeMethods.Unicode = function(parser: TexParser, name: string) {
   }
   let n = ParseUtil.trimSpaces(parser.GetArgument(name)).replace(/^0x/, 'x');
   if (!n.match(/^(x[0-9A-Fa-f]+|[0-9]+)$/)) {
-    throw new TexError('BadUnicode', 'Argument to %1 must be a number', parser.currentCS);
+    throw new TexError(
+      'BadUnicode',
+      'Argument to %1 must be a number',
+      parser.currentCS,
+    );
   }
   let N = parseInt(n.match(/^x/) ? '0' + n : n);
   if (!UnicodeCache[N]) {
@@ -73,7 +77,7 @@ UnicodeMethods.Unicode = function(parser: TexParser, name: string) {
   let variant = parser.stack.env.font as string;
   let def: EnvList = {};
   if (font) {
-    UnicodeCache[N][2] = def.fontfamily = font.replace(/'/g, '\'');
+    UnicodeCache[N][2] = def.fontfamily = font.replace(/'/g, "'");
     if (variant) {
       if (variant.match(/bold/)) {
         def.fontweight = 'bold';
@@ -99,13 +103,16 @@ UnicodeMethods.Unicode = function(parser: TexParser, name: string) {
 UnicodeMethods.RawUnicode = function (parser: TexParser, name: string) {
   const hex = parser.GetArgument(name).trim();
   if (!hex.match(/^[0-9A-F]{1,6}$/)) {
-    throw new TexError('BadRawUnicode',
-                       'Argument to %1 must a hexadecimal number with 1 to 6 digits', parser.currentCS);
+    throw new TexError(
+      'BadRawUnicode',
+      'Argument to %1 must a hexadecimal number with 1 to 6 digits',
+      parser.currentCS,
+    );
   }
   const n = parseInt(hex, 16);
   parser.string = String.fromCodePoint(n) + parser.string.substr(parser.i);
   parser.i = 0;
-}
+};
 
 /**
  * Implements the \char control sequence.
@@ -118,7 +125,7 @@ UnicodeMethods.Char = function (parser: TexParser, _name: string) {
   let next = parser.GetNext();
   let c = '';
   const text = parser.string.substr(parser.i);
-  if (next === '\'') {
+  if (next === "'") {
     match = text.match(/^'(?:([0-7]{1,7}) ?|(\\\S)|(.))/u);
     if (match) {
       if (match[1]) {
@@ -129,11 +136,14 @@ UnicodeMethods.Char = function (parser: TexParser, _name: string) {
         parser.i += 2;
         const cs = [...parser.GetCS()];
         if (cs.length > 1) {
-          throw new TexError('InvalidAlphanumeric', 'Invalid alphanumeric constant for %1', parser.currentCS);
+          throw new TexError(
+            'InvalidAlphanumeric',
+            'Invalid alphanumeric constant for %1',
+            parser.currentCS,
+          );
         }
         c = cs[0];
         match = [''];
-
       }
     }
   } else if (next === '"') {
@@ -148,7 +158,11 @@ UnicodeMethods.Char = function (parser: TexParser, _name: string) {
     }
   }
   if (!c) {
-    throw new TexError('MissingNumber', 'Missing numeric constant for %1', parser.currentCS);
+    throw new TexError(
+      'MissingNumber',
+      'Missing numeric constant for %1',
+      parser.currentCS,
+    );
   }
   parser.i += match[0].length;
   if (c >= '0' && c <= '9') {
@@ -158,17 +172,18 @@ UnicodeMethods.Char = function (parser: TexParser, _name: string) {
   } else {
     Other(parser, c);
   }
-}
+};
 
-
-
-new CommandMap('unicode', {
-  unicode: 'Unicode',
-  U: 'RawUnicode',
-  char: 'Char'
-}, UnicodeMethods);
-
-
-export const UnicodeConfiguration = Configuration.create(
-  'unicode', {handler: {macro: ['unicode']}}
+new CommandMap(
+  'unicode',
+  {
+    unicode: 'Unicode',
+    U: 'RawUnicode',
+    char: 'Char',
+  },
+  UnicodeMethods,
 );
+
+export const UnicodeConfiguration = Configuration.create('unicode', {
+  handler: { macro: ['unicode'] },
+});

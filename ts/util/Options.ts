@@ -21,7 +21,6 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-
 /*****************************************************************/
 /* tslint:disable-next-line:jsdoc-require */
 const OBJECT = {}.constructor;
@@ -30,15 +29,18 @@ const OBJECT = {}.constructor;
  *  Check if an object is an object literal (as opposed to an instance of a class)
  */
 export function isObject(obj: any) {
-  return typeof obj === 'object' && obj !== null &&
-    (obj.constructor === OBJECT || obj.constructor === Expandable);
+  return (
+    typeof obj === 'object' &&
+    obj !== null &&
+    (obj.constructor === OBJECT || obj.constructor === Expandable)
+  );
 }
 
 /*****************************************************************/
 /**
  * Generic list of options
  */
-export type OptionList = {[name: string]: any};
+export type OptionList = { [name: string]: any };
 
 /*****************************************************************/
 /**
@@ -68,12 +70,11 @@ export const APPEND = '[+]';
  */
 export const REMOVE = '[-]';
 
-
 /**
  *  Provides options for the option utlities.
  */
 export const OPTIONS = {
-  invalidOption: 'warn' as ('fatal' | 'warn'),
+  invalidOption: 'warn' as 'fatal' | 'warn',
   /**
    * Function to report messages for invalid options
    *
@@ -85,9 +86,8 @@ export const OPTIONS = {
       throw new Error(message);
     }
     console.warn('MathJax: ' + message);
-  }
+  },
 };
-
 
 /**
  * A Class to use for options that should not produce warnings if an undefined key is used
@@ -138,7 +138,9 @@ export function keys(def: OptionList): (string | symbol)[] {
   if (!def) {
     return [];
   }
-  return (Object.keys(def) as (string | symbol)[]).concat(Object.getOwnPropertySymbols(def));
+  return (Object.keys(def) as (string | symbol)[]).concat(
+    Object.getOwnPropertySymbols(def),
+  );
 }
 
 /*****************************************************************/
@@ -162,7 +164,10 @@ export function copy(def: OptionList): OptionList {
       props[key as string] = prop;
     }
   }
-  return Object.defineProperties(def.constructor === Expandable ? expandable({}) : {}, props);
+  return Object.defineProperties(
+    def.constructor === Expandable ? expandable({}) : {},
+    props,
+  );
 }
 
 /*****************************************************************/
@@ -175,7 +180,11 @@ export function copy(def: OptionList): OptionList {
  * @param {boolean} warn    True if a warning should be issued for a src option that isn't already in dst
  * @return {OptionList}     The modified destination option list (dst)
  */
-export function insert(dst: OptionList, src: OptionList, warn: boolean = true): OptionList {
+export function insert(
+  dst: OptionList,
+  src: OptionList,
+  warn: boolean = true,
+): OptionList {
   for (let key of keys(src) as string[]) {
     //
     // Check if the key is valid (i.e., is in the defaults or in an expandable block)
@@ -190,13 +199,17 @@ export function insert(dst: OptionList, src: OptionList, warn: boolean = true): 
     //
     // Shorthands for the source and destination values
     //
-    let sval = src[key], dval = dst[key];
+    let sval = src[key],
+      dval = dst[key];
     //
     // If the source is an object literal and the destination exists and is either an
     //   object or a function (so can have properties added to it)...
     //
-    if (isObject(sval) && dval !== null &&
-        (typeof dval === 'object' || typeof dval === 'function')) {
+    if (
+      isObject(sval) &&
+      dval !== null &&
+      (typeof dval === 'object' || typeof dval === 'function')
+    ) {
       const ids = keys(sval);
       //
       // Check for APPEND or REMOVE objects:
@@ -206,24 +219,26 @@ export function insert(dst: OptionList, src: OptionList, warn: boolean = true): 
         // If the destination value is an array...
         //
         Array.isArray(dval) &&
-          (
-            //
-            // If there is only one key and it is APPEND or REMOVE and the keys value is an array...
-            //
-            (ids.length === 1 && (ids[0] === APPEND || ids[0] === REMOVE) && Array.isArray(sval[ids[0]])) ||
-              //
-              // Or if there are two keys and they are APPEND and REMOVE and both keys' values
-              //   are arrays...
-              //
-              (ids.length === 2 && ids.sort().join(',') === APPEND + ',' + REMOVE &&
-               Array.isArray(sval[APPEND]) && Array.isArray(sval[REMOVE]))
-          )
+        //
+        // If there is only one key and it is APPEND or REMOVE and the keys value is an array...
+        //
+        ((ids.length === 1 &&
+          (ids[0] === APPEND || ids[0] === REMOVE) &&
+          Array.isArray(sval[ids[0]])) ||
+          //
+          // Or if there are two keys and they are APPEND and REMOVE and both keys' values
+          //   are arrays...
+          //
+          (ids.length === 2 &&
+            ids.sort().join(',') === APPEND + ',' + REMOVE &&
+            Array.isArray(sval[APPEND]) &&
+            Array.isArray(sval[REMOVE])))
       ) {
         //
         // Then remove any values to be removed
         //
         if (sval[REMOVE]) {
-          dval = dst[key] = dval.filter(x => sval[REMOVE].indexOf(x) < 0);
+          dval = dst[key] = dval.filter((x) => sval[REMOVE].indexOf(x) < 0);
         }
         //
         // And append any values to be added (make a copy so as not to modify the original)
@@ -268,8 +283,11 @@ export function insert(dst: OptionList, src: OptionList, warn: boolean = true): 
  * @param {OptionList[]} defs   The option lists to merge into the first one
  * @return {OptionList}         The modified options list
  */
-export function defaultOptions(options: OptionList, ...defs: OptionList[]): OptionList {
-  defs.forEach(def => insert(options, def, false));
+export function defaultOptions(
+  options: OptionList,
+  ...defs: OptionList[]
+): OptionList {
+  defs.forEach((def) => insert(options, def, false));
   return options;
 }
 
@@ -282,8 +300,11 @@ export function defaultOptions(options: OptionList, ...defs: OptionList[]): Opti
  * @param {OptionList[]} defs   The option lists to merge into the first one
  * @return {OptionList}         The modified options list
  */
-export function userOptions(options: OptionList, ...defs: OptionList[]): OptionList {
-  defs.forEach(def => insert(options, def, true));
+export function userOptions(
+  options: OptionList,
+  ...defs: OptionList[]
+): OptionList {
+  defs.forEach((def) => insert(options, def, true));
   return options;
 }
 
@@ -295,7 +316,10 @@ export function userOptions(options: OptionList, ...defs: OptionList[]): OptionL
  * @param {string[]} keys       The names of the options to extract
  * @return {OptionList}         The option list consisting of only the ones whose keys were given
  */
-export function selectOptions(options: OptionList, ...keys: string[]): OptionList {
+export function selectOptions(
+  options: OptionList,
+  ...keys: string[]
+): OptionList {
   let subset: OptionList = {};
   for (const key of keys) {
     if (options.hasOwnProperty(key)) {
@@ -314,7 +338,10 @@ export function selectOptions(options: OptionList, ...keys: string[]): OptionLis
  * @return {OptionList}         The option list consisting of the option values from the first
  *                               list whose keys are those from the second list.
  */
-export function selectOptionsFromKeys(options: OptionList, object: OptionList): OptionList {
+export function selectOptionsFromKeys(
+  options: OptionList,
+  object: OptionList,
+): OptionList {
   return selectOptions(options, ...Object.keys(object));
 }
 
@@ -333,10 +360,14 @@ export function selectOptionsFromKeys(options: OptionList, object: OptionList): 
  *                                 consists of the values not appearing in any of the others
  *                                 (i.e., whose keys were not in any of the others).
  */
-export function separateOptions(options: OptionList, ...objects: OptionList[]): OptionList[] {
+export function separateOptions(
+  options: OptionList,
+  ...objects: OptionList[]
+): OptionList[] {
   let results: OptionList[] = [];
   for (const object of objects) {
-    let exists: OptionList = {}, missing: OptionList = {};
+    let exists: OptionList = {},
+      missing: OptionList = {};
     for (const key of Object.keys(options || {})) {
       (object[key] === undefined ? missing : exists)[key] = options[key];
     }
@@ -346,7 +377,6 @@ export function separateOptions(options: OptionList, ...objects: OptionList[]): 
   results.unshift(options);
   return results;
 }
-
 
 /*****************************************************************/
 /**
@@ -358,6 +388,5 @@ export function separateOptions(options: OptionList, ...objects: OptionList[]): 
  * @param {any} def             The default value if the key isn't found.
  */
 export function lookup(name: string, lookup: OptionList, def: any = null) {
-  return (lookup.hasOwnProperty(name) ? lookup[name] : def);
+  return lookup.hasOwnProperty(name) ? lookup[name] : def;
 }
-

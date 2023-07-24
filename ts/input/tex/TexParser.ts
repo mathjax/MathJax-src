@@ -15,7 +15,6 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview The TexParser. Implements the basic parsing functionality and
  *     administers the global stack and tree objects.
@@ -24,24 +23,22 @@
  */
 
 import ParseUtil from './ParseUtil.js';
-import {HandlerType} from './MapHandler.js';
+import { HandlerType } from './MapHandler.js';
 import Stack from './Stack.js';
 import StackItemFactory from './StackItemFactory.js';
-import {Tags} from './Tags.js';
+import { Tags } from './Tags.js';
 import TexError from './TexError.js';
-import {MmlNode, AbstractMmlNode} from '../../core/MmlTree/MmlNode.js';
-import {ParseInput, ParseResult} from './Types.js';
+import { MmlNode, AbstractMmlNode } from '../../core/MmlTree/MmlNode.js';
+import { ParseInput, ParseResult } from './Types.js';
 import ParseOptions from './ParseOptions.js';
-import {StackItem, EnvList} from './StackItem.js';
-import {Symbol} from './Symbol.js';
-import {OptionList} from '../../util/Options.js';
-
+import { StackItem, EnvList } from './StackItem.js';
+import { Symbol } from './Symbol.js';
+import { OptionList } from '../../util/Options.js';
 
 /**
  * The main Tex Parser class.
  */
 export default class TexParser {
-
   /**
    * Counter for recursive macros.
    * @type {number}
@@ -73,7 +70,11 @@ export default class TexParser {
    *     state of the overall expression translation.
    * @param {ParseOptions} configuration A parser configuration.
    */
-  constructor(private _string: string, env: EnvList, public configuration: ParseOptions) {
+  constructor(
+    private _string: string,
+    env: EnvList,
+    public configuration: ParseOptions,
+  ) {
     const inner = env.hasOwnProperty('isInner');
     const isInner = env['isInner'] as boolean;
     delete env['isInner'];
@@ -127,7 +128,6 @@ export default class TexParser {
     return this._string;
   }
 
-
   /**
    * Parses the input with the specified kind of map.
    * @param {HandlerType} kind Configuration name.
@@ -138,7 +138,6 @@ export default class TexParser {
     return this.configuration.handlers.get(kind).parse(input);
   }
 
-
   /**
    * Maps a symbol to its "parse value" if it exists.
    * @param {HandlerType} kind Configuration name.
@@ -148,7 +147,6 @@ export default class TexParser {
   public lookup(kind: HandlerType, symbol: string): any {
     return this.configuration.handlers.get(kind).lookup(symbol);
   }
-
 
   /**
    * Checks if a symbol is contained in one of the symbol mappings of the
@@ -162,19 +160,20 @@ export default class TexParser {
     return this.configuration.handlers.get(kind).contains(symbol);
   }
 
-
   /**
    * @override
    */
   public toString(): string {
     let str = '';
     for (const config of Array.from(this.configuration.handlers.keys())) {
-      str += config + ': ' +
-        this.configuration.handlers.get(config as HandlerType) + '\n';
+      str +=
+        config +
+        ': ' +
+        this.configuration.handlers.get(config as HandlerType) +
+        '\n';
     }
     return str;
   }
-
 
   /**
    * Parses the current input string.
@@ -187,7 +186,6 @@ export default class TexParser {
       this.parse('character', [this, c]);
     }
   }
-
 
   /**
    * Pushes a new item onto the stack. The item can also be a Mml node,
@@ -202,7 +200,6 @@ export default class TexParser {
     }
   }
 
-
   /**
    * Pushes a list of new items onto the stack.
    * @param {StackItem|MmlNode[]} args The new items.
@@ -212,7 +209,6 @@ export default class TexParser {
       this.stack.Push(arg);
     }
   }
-
 
   /**
    * @return {MmlNode} The internal Mathml structure.
@@ -270,7 +266,9 @@ export default class TexParser {
    * @return {string} Get and return a control-sequence name
    */
   public GetCS(): string {
-    let CS = this.string.slice(this.i).match(/^(([a-z]+) ?|[\uD800-\uDBFF].|.)/i);
+    let CS = this.string
+      .slice(this.i)
+      .match(/^(([a-z]+) ?|[\uD800-\uDBFF].|.)/i);
     if (CS) {
       this.i += CS[0].length;
       return CS[2] || CS[1];
@@ -289,43 +287,53 @@ export default class TexParser {
    */
   public GetArgument(_name: string, noneOK?: boolean): string {
     switch (this.GetNext()) {
-    case '':
-      if (!noneOK) {
-        // @test MissingArgFor
-        throw new TexError('MissingArgFor', 'Missing argument for %1', this.currentCS);
-      }
-      return null;
-    case '}':
-      if (!noneOK) {
-        // @test ExtraCloseMissingOpen
-        throw new TexError('ExtraCloseMissingOpen',
-                            'Extra close brace or missing open brace');
-      }
-      return null;
-    case '\\':
-      this.i++;
-      return '\\' + this.GetCS();
-    case '{':
-      let j = ++this.i, parens = 1;
-      while (this.i < this.string.length) {
-        switch (this.string.charAt(this.i++)) {
-        case '\\':  this.i++; break;
-        case '{':   parens++; break;
-        case '}':
-          if (--parens === 0) {
-            return this.string.slice(j, this.i - 1);
-          }
-          break;
+      case '':
+        if (!noneOK) {
+          // @test MissingArgFor
+          throw new TexError(
+            'MissingArgFor',
+            'Missing argument for %1',
+            this.currentCS,
+          );
         }
-      }
-      // @test MissingCloseBrace
-      throw new TexError('MissingCloseBrace', 'Missing close brace');
+        return null;
+      case '}':
+        if (!noneOK) {
+          // @test ExtraCloseMissingOpen
+          throw new TexError(
+            'ExtraCloseMissingOpen',
+            'Extra close brace or missing open brace',
+          );
+        }
+        return null;
+      case '\\':
+        this.i++;
+        return '\\' + this.GetCS();
+      case '{':
+        let j = ++this.i,
+          parens = 1;
+        while (this.i < this.string.length) {
+          switch (this.string.charAt(this.i++)) {
+            case '\\':
+              this.i++;
+              break;
+            case '{':
+              parens++;
+              break;
+            case '}':
+              if (--parens === 0) {
+                return this.string.slice(j, this.i - 1);
+              }
+              break;
+          }
+        }
+        // @test MissingCloseBrace
+        throw new TexError('MissingCloseBrace', 'Missing close brace');
     }
     const c = this.getCodePoint();
     this.i += c.length;
     return c;
   }
-
 
   /**
    * Get an optional LaTeX argument in brackets.
@@ -337,28 +345,39 @@ export default class TexParser {
     if (this.GetNext() !== '[') {
       return def;
     }
-    let j = ++this.i, parens = 0;
+    let j = ++this.i,
+      parens = 0;
     while (this.i < this.string.length) {
       switch (this.string.charAt(this.i++)) {
-      case '{':   parens++; break;
-      case '\\':  this.i++; break;
-      case '}':
-        if (parens-- <= 0) {
-          // @test ExtraCloseLooking1
-          throw new TexError('ExtraCloseLooking',
-                              'Extra close brace while looking for %1', '\']\'');
-        }
-        break;
-      case ']':
-        if (parens === 0) {
-          return this.string.slice(j, this.i - 1);
-        }
-        break;
+        case '{':
+          parens++;
+          break;
+        case '\\':
+          this.i++;
+          break;
+        case '}':
+          if (parens-- <= 0) {
+            // @test ExtraCloseLooking1
+            throw new TexError(
+              'ExtraCloseLooking',
+              'Extra close brace while looking for %1',
+              "']'",
+            );
+          }
+          break;
+        case ']':
+          if (parens === 0) {
+            return this.string.slice(j, this.i - 1);
+          }
+          break;
       }
     }
     // @test MissingCloseBracket
-    throw new TexError('MissingCloseBracket',
-                        'Could not find closing \']\' for argument to %1', this.currentCS);
+    throw new TexError(
+      'MissingCloseBracket',
+      "Could not find closing ']' for argument to %1",
+      this.currentCS,
+    );
   }
 
   /**
@@ -368,7 +387,8 @@ export default class TexParser {
    * @return {string} The delimiter name.
    */
   public GetDelimiter(name: string, braceOK?: boolean): string {
-    let c = this.GetNext(); this.i += c.length;
+    let c = this.GetNext();
+    this.i += c.length;
     if (this.i <= this.string.length) {
       if (c === '\\') {
         c += this.GetCS();
@@ -381,8 +401,11 @@ export default class TexParser {
       }
     }
     // @test MissingOrUnrecognizedDelim1, MissingOrUnrecognizedDelim2
-    throw new TexError('MissingOrUnrecognizedDelim',
-                        'Missing or unrecognized delimiter for %1', this.currentCS);
+    throw new TexError(
+      'MissingOrUnrecognizedDelim',
+      'Missing or unrecognized delimiter for %1',
+      this.currentCS,
+    );
   }
 
   /**
@@ -408,8 +431,11 @@ export default class TexParser {
       }
     }
     // @test MissingDimOrUnits
-    throw new TexError('MissingDimOrUnits',
-                        'Missing dimension or its units for %1', this.currentCS);
+    throw new TexError(
+      'MissingDimOrUnits',
+      'Missing dimension or its units for %1',
+      this.currentCS,
+    );
   }
 
   /**
@@ -426,26 +452,38 @@ export default class TexParser {
     let parens = 0;
     while (this.i < this.string.length) {
       let k = this.i;
-      let c = this.GetNext(); this.i += c.length;
+      let c = this.GetNext();
+      this.i += c.length;
       switch (c) {
-      case '\\':  c += this.GetCS(); break;
-      case '{':   parens++; break;
-      case '}':
-        if (parens === 0) {
-          // @test ExtraCloseLooking2
-          throw new TexError('ExtraCloseLooking',
-                              'Extra close brace while looking for %1', token);
-        }
-        parens--;
-        break;
+        case '\\':
+          c += this.GetCS();
+          break;
+        case '{':
+          parens++;
+          break;
+        case '}':
+          if (parens === 0) {
+            // @test ExtraCloseLooking2
+            throw new TexError(
+              'ExtraCloseLooking',
+              'Extra close brace while looking for %1',
+              token,
+            );
+          }
+          parens--;
+          break;
       }
       if (parens === 0 && c === token) {
         return this.string.slice(j, k);
       }
     }
     // @test TokenNotFoundForCommand
-    throw new TexError('TokenNotFoundForCommand',
-                        'Could not find %1 for %2', token, this.currentCS);
+    throw new TexError(
+      'TokenNotFoundForCommand',
+      'Could not find %1 for %2',
+      token,
+      this.currentCS,
+    );
   }
 
   /**
@@ -453,9 +491,12 @@ export default class TexParser {
    * @param {string} name Name of the current control sequence.
    * @return {MmlNode} The parsed node.
    */
-  public ParseArg(name: string): MmlNode  {
-    return new TexParser(this.GetArgument(name), this.stack.env,
-                         this.configuration).mml();
+  public ParseArg(name: string): MmlNode {
+    return new TexParser(
+      this.GetArgument(name),
+      this.stack.env,
+      this.configuration,
+    ).mml();
   }
 
   /**
@@ -465,10 +506,12 @@ export default class TexParser {
    * @return {MmlNode} The parsed node.
    */
   public ParseUpTo(name: string, token: string): MmlNode {
-    return new TexParser(this.GetUpTo(name, token), this.stack.env,
-                         this.configuration).mml();
+    return new TexParser(
+      this.GetUpTo(name, token),
+      this.stack.env,
+      this.configuration,
+    ).mml();
   }
-
 
   /**
    * Get a delimiter or empty argument
@@ -484,21 +527,23 @@ export default class TexParser {
       return c;
     }
     // @test MissingOrUnrecognizedDelim
-    throw new TexError('MissingOrUnrecognizedDelim',
-                        'Missing or unrecognized delimiter for %1', this.currentCS);
+    throw new TexError(
+      'MissingOrUnrecognizedDelim',
+      'Missing or unrecognized delimiter for %1',
+      this.currentCS,
+    );
   }
 
   /**
    * @return {boolean} True if a star follows the control sequence name.
    */
   public GetStar(): boolean {
-    let star = (this.GetNext() === '*');
+    let star = this.GetNext() === '*';
     if (star) {
       this.i++;
     }
     return star;
   }
-
 
   /**
    * Convenience method to create nodes with the node factory of the current
@@ -510,6 +555,4 @@ export default class TexParser {
   public create(kind: string, ...rest: any[]): MmlNode {
     return this.configuration.nodeFactory.create(kind, ...rest);
   }
-
-
 }

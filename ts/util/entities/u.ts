@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     Uacute: '\u00DA',
     Uarr: '\u219F',
     Uarrocir: '\u2949',
@@ -82,5 +83,7 @@ Entities.add({
     utrif: '\u25B4',
     uuarr: '\u21C8',
     uuml: '\u00FC',
-    uwangle: '\u29A7'
-}, 'u');
+    uwangle: '\u29A7',
+  },
+  'u',
+);

@@ -21,11 +21,21 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wrapper.js';
-import {CommonWrapperFactory} from '../WrapperFactory.js';
-import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
-import {CommonOutputJax} from '../../common.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
+import {
+  CommonWrapper,
+  CommonWrapperClass,
+  CommonWrapperConstructor,
+} from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -45,7 +55,9 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
  * @template FC  The FontDataClass type
  */
 export interface CommonMs<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -54,9 +66,8 @@ export interface CommonMs<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
   /**
    * Create a text wrapper with the given text;
    *
@@ -64,7 +75,6 @@ export interface CommonMs<
    * @return {WW}           The wrapped text node
    */
   createText(text: string): WW;
-
 }
 
 /**
@@ -84,7 +94,9 @@ export interface CommonMs<
  * @template FC  The FontDataClass type
  */
 export interface CommonMsClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -93,7 +105,7 @@ export interface CommonMsClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
@@ -116,7 +128,9 @@ export interface CommonMsClass<
  * @template B   The mixin interface to create
  */
 export function CommonMsMixin<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -126,12 +140,14 @@ export function CommonMsMixin<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
-
-  return class CommonMsMixin extends Base
-  implements CommonMs<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+): B {
+  return class CommonMsMixin
+    extends Base
+    implements CommonMs<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
      * Create a text wrapper with the given text;
      *
@@ -156,13 +172,13 @@ export function CommonMsMixin<
       const attributes = this.node.attributes;
       let quotes = attributes.getList('lquote', 'rquote');
       if (this.variant !== 'monospace') {
-        if (!attributes.isSet('lquote') && quotes.lquote === '"') quotes.lquote = '\u201C';
-        if (!attributes.isSet('rquote') && quotes.rquote === '"') quotes.rquote = '\u201D';
+        if (!attributes.isSet('lquote') && quotes.lquote === '"')
+          quotes.lquote = '\u201C';
+        if (!attributes.isSet('rquote') && quotes.rquote === '"')
+          quotes.rquote = '\u201D';
       }
       this.childNodes.unshift(this.createText(quotes.lquote as string));
       this.childNodes.push(this.createText(quotes.rquote as string));
     }
-
   } as any as B;
-
 }

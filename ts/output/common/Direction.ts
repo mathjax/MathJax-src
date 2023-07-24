@@ -21,6 +21,10 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-export const enum DIRECTION {None, Vertical, Horizontal}
+export const enum DIRECTION {
+  None,
+  Vertical,
+  Horizontal,
+}
 export const V = DIRECTION.Vertical;
 export const H = DIRECTION.Horizontal;

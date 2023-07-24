@@ -15,20 +15,15 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Configuration file for the textcomp package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration} from '../Configuration.js';
+import { Configuration } from '../Configuration.js';
 import './TextcompMappings.js';
 
-
-export const TextcompConfiguration = Configuration.create(
-  'textcomp', {
-    handler: {macro: ['textcomp-macros']}
-  }
-);
-
+export const TextcompConfiguration = Configuration.create('textcomp', {
+  handler: { macro: ['textcomp-macros'] },
+});

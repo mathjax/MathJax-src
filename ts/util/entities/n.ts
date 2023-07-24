@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     NJcy: '\u040A',
     Nacute: '\u0143',
     Ncaron: '\u0147',
@@ -210,5 +211,7 @@ Entities.add({
     nwArr: '\u21D6',
     nwarhk: '\u2923',
     nwarrow: '\u2196',
-    nwnear: '\u2927'
-}, 'n');
+    nwnear: '\u2927',
+  },
+  'n',
+);

@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     Map: '\u2905',
     Mcy: '\u041C',
     MediumSpace: '\u205F',
@@ -51,5 +52,7 @@ Entities.add({
     models: '\u22A7',
     mp: '\u2213',
     mstpos: '\u223E',
-    mumap: '\u22B8'
-}, 'm');
+    mumap: '\u22B8',
+  },
+  'm',
+);

@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {MmlNode, AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { MmlNode, AbstractMmlTokenNode, TEXCLASS } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,23 +30,22 @@ import {MmlNode, AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMspace extends AbstractMmlTokenNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
     ...AbstractMmlTokenNode.defaults,
-    width:  '0em',
+    width: '0em',
     height: '0ex',
-    depth:  '0ex',
+    depth: '0ex',
     linebreak: 'auto',
-    indentshift: 'auto',         // Use user configuration
+    indentshift: 'auto', // Use user configuration
     indentalign: 'auto',
     indenttarget: '',
     indentalignfirst: 'indentalign',
     indentshiftfirst: 'indentshift',
-    indentalignlast:  'indentalign',
-    indentshiftlast:  'indentshift'
+    indentalignlast: 'indentalign',
+    indentshiftlast: 'indentshift',
   };
 
   /**
@@ -90,7 +89,10 @@ export class MmlMspace extends AbstractMmlTokenNode {
    */
   public get hasNewline() {
     const linebreak = this.attributes.get('linebreak');
-    return (this.canBreak && (linebreak === 'newline' || linebreak === 'indentingnewline'));
+    return (
+      this.canBreak &&
+      (linebreak === 'newline' || linebreak === 'indentingnewline')
+    );
   }
 
   /**
@@ -99,12 +101,13 @@ export class MmlMspace extends AbstractMmlTokenNode {
    */
   public get canBreak(): boolean {
     const attributes = this.attributes;
-    return (/*attributes.getExplicit('width') === undefined &&*/  // we break spaces with width ...
-            attributes.getExplicit('height') === undefined &&
-            attributes.getExplicit('depth') === undefined &&
-            attributes.getExplicit('style') === undefined &&      //   ... but not ones with styles
-            attributes.getExplicit('mathbackground') === undefined &&
-            attributes.getExplicit('background') === undefined);
+    return (
+      /*attributes.getExplicit('width') === undefined &&*/ // we break spaces with width ...
+      attributes.getExplicit('height') === undefined &&
+      attributes.getExplicit('depth') === undefined &&
+      attributes.getExplicit('style') === undefined && //   ... but not ones with styles
+      attributes.getExplicit('mathbackground') === undefined &&
+      attributes.getExplicit('background') === undefined
+    );
   }
-
 }

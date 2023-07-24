@@ -24,16 +24,25 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTML} from '../../chtml.js';
-import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
-import {ChtmlWrapperFactory} from '../WrapperFactory.js';
-import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
-        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
-import {CommonScriptbase, CommonScriptbaseClass, CommonScriptbaseMixin} from '../../common/Wrappers/scriptbase.js';
-import {ChtmlMsubsup} from './msubsup.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {BBox} from '../../../util/BBox.js';
-import {StyleData} from '../../../util/StyleList.js';
+import { CHTML } from '../../chtml.js';
+import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
+import { ChtmlWrapperFactory } from '../WrapperFactory.js';
+import {
+  ChtmlCharOptions,
+  ChtmlVariantData,
+  ChtmlDelimiterData,
+  ChtmlFontData,
+  ChtmlFontDataClass,
+} from '../FontData.js';
+import {
+  CommonScriptbase,
+  CommonScriptbaseClass,
+  CommonScriptbaseMixin,
+} from '../../common/Wrappers/scriptbase.js';
+import { ChtmlMsubsup } from './msubsup.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { BBox } from '../../../util/BBox.js';
+import { StyleData } from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
@@ -43,12 +52,22 @@ import {StyleData} from '../../../util/StyleList.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlScriptbaseNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonScriptbase<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {
-
+export interface ChtmlScriptbaseNTD<N, T, D>
+  extends ChtmlWrapper<N, T, D>,
+    CommonScriptbase<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {
   /**
    * @param {N[]} nodes    The HTML elements to be centered in a stack
    * @param {number[]} dx  The x offsets needed to center the elements
@@ -72,7 +91,6 @@ export interface ChtmlScriptbaseNTD<N, T, D> extends ChtmlWrapper<N, T, D>, Comm
    * @param {BBox} basebox  The bbox for the base
    */
   adjustBaseHeight(base: N, basebox: BBox): void;
-
 }
 
 /**
@@ -82,34 +100,62 @@ export interface ChtmlScriptbaseNTD<N, T, D> extends ChtmlWrapper<N, T, D>, Comm
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlScriptbaseClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonScriptbaseClass<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {
-  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlScriptbaseNTD<N, T, D>;
+export interface ChtmlScriptbaseClass<N, T, D>
+  extends ChtmlWrapperClass<N, T, D>,
+    CommonScriptbaseClass<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {
+  new (
+    factory: ChtmlWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: ChtmlWrapper<N, T, D>,
+  ): ChtmlScriptbaseNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
 /**
  * The ChtmlScriptbase wrapper class for the MmlScriptbase class
  */
-export const ChtmlScriptbase = (function <N, T, D>(): ChtmlScriptbaseClass<N, T, D> {
-
+export const ChtmlScriptbase = (function <N, T, D>(): ChtmlScriptbaseClass<
+  N,
+  T,
+  D
+> {
   const Base = CommonScriptbaseMixin<
-      N, T, D,
-      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
-      ChtmlScriptbaseClass<N, T, D>
-    >(ChtmlWrapper);
+    N,
+    T,
+    D,
+    CHTML<N, T, D>,
+    ChtmlWrapper<N, T, D>,
+    ChtmlWrapperFactory<N, T, D>,
+    ChtmlWrapperClass<N, T, D>,
+    ChtmlCharOptions,
+    ChtmlVariantData,
+    ChtmlDelimiterData,
+    ChtmlFontData,
+    ChtmlFontDataClass,
+    ChtmlScriptbaseClass<N, T, D>
+  >(ChtmlWrapper);
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class ChtmlScriptbase extends Base implements ChtmlScriptbaseNTD<N, T, D> {
-
+  return class ChtmlScriptbase
+    extends Base
+    implements ChtmlScriptbaseNTD<N, T, D>
+  {
     /**
      * @override
      */
@@ -126,13 +172,15 @@ export const ChtmlScriptbase = (function <N, T, D>(): ChtmlScriptbaseClass<N, T,
       this.dom = this.standardChtmlNodes(parents);
       const [x, v] = this.getOffset();
       const dx = x - (this.baseRemoveIc ? this.baseIc : 0);
-      const style: StyleData = {'vertical-align': this.em(v)};
+      const style: StyleData = { 'vertical-align': this.em(v) };
       if (dx) {
         style['margin-left'] = this.em(dx);
       }
       this.baseChild.toCHTML(this.dom);
       const dom = this.dom[this.dom.length - 1];
-      this.scriptChild.toCHTML([this.adaptor.append(dom, this.html('mjx-script', {style})) as N]);
+      this.scriptChild.toCHTML([
+        this.adaptor.append(dom, this.html('mjx-script', { style })) as N,
+      ]);
     }
 
     /**
@@ -163,7 +211,11 @@ export const ChtmlScriptbase = (function <N, T, D>(): ChtmlScriptbaseClass<N, T,
      */
     public adjustOverDepth(over: N, overbox: BBox) {
       if (overbox.d >= 0) return;
-      this.adaptor.setStyle(over, 'marginBottom', this.em(overbox.d * overbox.rscale));
+      this.adaptor.setStyle(
+        over,
+        'marginBottom',
+        this.em(overbox.d * overbox.rscale),
+      );
     }
 
     /**
@@ -174,8 +226,12 @@ export const ChtmlScriptbase = (function <N, T, D>(): ChtmlScriptbaseClass<N, T,
       if (underbox.d >= 0) return;
       const adaptor = this.adaptor;
       const v = this.em(underbox.d);
-      const box = this.html('mjx-box', {style: {'margin-bottom': v, 'vertical-align': v}});
-      for (const child of adaptor.childNodes(adaptor.firstChild(under) as N) as N[]) {
+      const box = this.html('mjx-box', {
+        style: { 'margin-bottom': v, 'vertical-align': v },
+      });
+      for (const child of adaptor.childNodes(
+        adaptor.firstChild(under) as N,
+      ) as N[]) {
         adaptor.append(box, child);
       }
       adaptor.append(adaptor.firstChild(under) as N, box);
@@ -194,7 +250,5 @@ export const ChtmlScriptbase = (function <N, T, D>(): ChtmlScriptbaseClass<N, T,
         }
       }
     }
-
   };
-
 })<any, any, any>();

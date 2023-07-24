@@ -15,38 +15,34 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Configuration file for the enclose package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration} from '../Configuration.js';
+import { Configuration } from '../Configuration.js';
 import TexParser from '../TexParser.js';
-import {CommandMap} from '../SymbolMap.js';
-import {ParseMethod} from '../Types.js';
+import { CommandMap } from '../SymbolMap.js';
+import { ParseMethod } from '../Types.js';
 import ParseUtil from '../ParseUtil.js';
-
 
 /**
  * The attributes allowed in \enclose{notation}[attributes]{math}
  * @type {{[key: string]: number}}
  */
-export const ENCLOSE_OPTIONS: {[key: string]: number} = {
+export const ENCLOSE_OPTIONS: { [key: string]: number } = {
   'data-arrowhead': 1,
   color: 1,
   mathcolor: 1,
   background: 1,
   mathbackground: 1,
   'data-padding': 1,
-  'data-thickness': 1
+  'data-thickness': 1,
 };
-
 
 // Namespace
 export let EncloseMethods: Record<string, ParseMethod> = {};
-
 
 /**
  * Implements \enclose{notation}[attr]{math}
@@ -54,7 +50,7 @@ export let EncloseMethods: Record<string, ParseMethod> = {};
  * @param {TexParser} parser The current tex parser.
  * @param {string} name The name of the calling macro.
  */
-EncloseMethods.Enclose = function(parser: TexParser, name: string) {
+EncloseMethods.Enclose = function (parser: TexParser, name: string) {
   let notation = parser.GetArgument(name).replace(/,/g, ' ');
   const attr = parser.GetBrackets(name, '');
   const math = parser.ParseArg(name);
@@ -63,12 +59,8 @@ EncloseMethods.Enclose = function(parser: TexParser, name: string) {
   parser.Push(parser.create('node', 'menclose', [math], def));
 };
 
+new CommandMap('enclose', { enclose: 'Enclose' }, EncloseMethods);
 
-new CommandMap('enclose', {enclose: 'Enclose'}, EncloseMethods);
-
-
-export const EncloseConfiguration = Configuration.create(
-  'enclose', {handler: {macro: ['enclose']}}
-);
-
-
+export const EncloseConfiguration = Configuration.create('enclose', {
+  handler: { macro: ['enclose'] },
+});

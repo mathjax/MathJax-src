@@ -21,9 +21,12 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {mathjax} from '../../mathjax.js';
+import { mathjax } from '../../mathjax.js';
 
-let root = new URL(import.meta.url).href.replace(/\/util\/asyncLoad\/esm.js$/, '');
+let root = new URL(import.meta.url).href.replace(
+  /\/util\/asyncLoad\/esm.js$/,
+  '',
+);
 
 if (!mathjax.asyncLoad) {
   mathjax.asyncLoad = (name: string) => {

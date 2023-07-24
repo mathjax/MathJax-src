@@ -15,7 +15,6 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Configuration file for the extpfeil package. Note that this is
  *     based on AMS package and Newcommand utilities.
@@ -23,15 +22,14 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration, ParserConfiguration} from '../Configuration.js';
+import { Configuration, ParserConfiguration } from '../Configuration.js';
 import TexParser from '../TexParser.js';
-import {CommandMap} from '../SymbolMap.js';
-import {ParseMethod} from '../Types.js';
-import {AmsMethods} from '../ams/AmsMethods.js';
+import { CommandMap } from '../SymbolMap.js';
+import { ParseMethod } from '../Types.js';
+import { AmsMethods } from '../ams/AmsMethods.js';
 import NewcommandUtil from '../newcommand/NewcommandUtil.js';
-import {NewcommandConfiguration} from '../newcommand/NewcommandConfiguration.js';
+import { NewcommandConfiguration } from '../newcommand/NewcommandConfiguration.js';
 import TexError from '../TexError.js';
-
 
 // Namespace
 export let ExtpfeilMethods: Record<string, ParseMethod> = {};
@@ -43,50 +41,58 @@ ExtpfeilMethods.xArrow = AmsMethods.xArrow;
  * @param {TexParser} parser The current tex parser.
  * @param {string} name The name of the calling macro.
  */
-ExtpfeilMethods.NewExtArrow = function(parser: TexParser, name: string) {
+ExtpfeilMethods.NewExtArrow = function (parser: TexParser, name: string) {
   let cs = parser.GetArgument(name);
   const space = parser.GetArgument(name);
   const chr = parser.GetArgument(name);
   if (!cs.match(/^\\([a-z]+|.)$/i)) {
-    throw new TexError('NewextarrowArg1',
-               'First argument to %1 must be a control sequence name', name);
+    throw new TexError(
+      'NewextarrowArg1',
+      'First argument to %1 must be a control sequence name',
+      name,
+    );
   }
   if (!space.match(/^(\d+),(\d+)$/)) {
     throw new TexError(
       'NewextarrowArg2',
       'Second argument to %1 must be two integers separated by a comma',
-      name);
+      name,
+    );
   }
   if (!chr.match(/^(\d+|0x[0-9A-F]+)$/i)) {
     throw new TexError(
       'NewextarrowArg3',
       'Third argument to %1 must be a unicode character number',
-      name);
+      name,
+    );
   }
   cs = cs.substr(1);
   let spaces = space.split(',');
-  NewcommandUtil.addMacro(parser, cs, ExtpfeilMethods.xArrow,
-                          [parseInt(chr), parseInt(spaces[0]), parseInt(spaces[1])]);
+  NewcommandUtil.addMacro(parser, cs, ExtpfeilMethods.xArrow, [
+    parseInt(chr),
+    parseInt(spaces[0]),
+    parseInt(spaces[1]),
+  ]);
 };
 
+new CommandMap(
+  'extpfeil',
+  {
+    xtwoheadrightarrow: ['xArrow', 0x21a0, 12, 16],
+    xtwoheadleftarrow: ['xArrow', 0x219e, 17, 13],
+    xmapsto: ['xArrow', 0x21a6, 6, 7],
+    xlongequal: ['xArrow', 0x003d, 7, 7],
+    xtofrom: ['xArrow', 0x21c4, 12, 12],
+    Newextarrow: 'NewExtArrow',
+  },
+  ExtpfeilMethods,
+);
 
-new CommandMap('extpfeil', {
-  xtwoheadrightarrow: ['xArrow', 0x21A0, 12, 16],
-  xtwoheadleftarrow:  ['xArrow', 0x219E, 17, 13],
-  xmapsto:            ['xArrow', 0x21A6, 6, 7],
-  xlongequal:         ['xArrow', 0x003D, 7, 7],
-  xtofrom:            ['xArrow', 0x21C4, 12, 12],
-  Newextarrow:        'NewExtArrow'
-}, ExtpfeilMethods);
-
-
-let init = function(config: ParserConfiguration) {
+let init = function (config: ParserConfiguration) {
   NewcommandConfiguration.init(config);
 };
 
-export const ExtpfeilConfiguration = Configuration.create(
-  'extpfeil', {
-    handler: {macro: ['extpfeil']},
-    init: init
-  }
-);
+export const ExtpfeilConfiguration = Configuration.create('extpfeil', {
+  handler: { macro: ['extpfeil'] },
+  init: init,
+});

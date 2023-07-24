@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     SHCHcy: '\u0429',
     SHcy: '\u0428',
     SOFTcy: '\u042C',
@@ -160,5 +161,7 @@ Entities.add({
     swarhk: '\u2926',
     swarrow: '\u2199',
     swnwar: '\u292A',
-    szlig: '\u00DF'
-}, 's');
+    szlig: '\u00DF',
+  },
+  's',
+);

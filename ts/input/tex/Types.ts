@@ -15,15 +15,14 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Basic type definitions.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {StackItem} from './StackItem.js';
-import {Symbol} from './Symbol.js';
+import { StackItem } from './StackItem.js';
+import { Symbol } from './Symbol.js';
 import TexParser from './TexParser.js';
 
 export type Args = boolean | number | string | null;
@@ -35,4 +34,8 @@ export type Environment = Record<string, Args>;
 export type ParseInput = [TexParser, string];
 export type ParseResult = void | boolean | StackItem;
 
-export type ParseMethod = (parser: TexParser, c: string | Symbol | StackItem, ...rest: any[]) => ParseResult;
+export type ParseMethod = (
+  parser: TexParser,
+  c: string | Symbol | StackItem,
+  ...rest: any[]
+) => ParseResult;

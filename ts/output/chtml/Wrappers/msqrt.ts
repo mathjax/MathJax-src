@@ -21,17 +21,26 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTML} from '../../chtml.js';
-import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
-import {ChtmlWrapperFactory} from '../WrapperFactory.js';
-import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
-        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
-import {CommonMsqrt, CommonMsqrtClass, CommonMsqrtMixin} from '../../common/Wrappers/msqrt.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {ChtmlMoNTD} from './mo.js';
-import {BBox} from '../../../util/BBox.js';
-import {MmlMsqrt} from '../../../core/MmlTree/MmlNodes/msqrt.js';
-import {StyleList} from '../../../util/StyleList.js';
+import { CHTML } from '../../chtml.js';
+import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
+import { ChtmlWrapperFactory } from '../WrapperFactory.js';
+import {
+  ChtmlCharOptions,
+  ChtmlVariantData,
+  ChtmlDelimiterData,
+  ChtmlFontData,
+  ChtmlFontDataClass,
+} from '../FontData.js';
+import {
+  CommonMsqrt,
+  CommonMsqrtClass,
+  CommonMsqrtMixin,
+} from '../../common/Wrappers/msqrt.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { ChtmlMoNTD } from './mo.js';
+import { BBox } from '../../../util/BBox.js';
+import { MmlMsqrt } from '../../../core/MmlTree/MmlNodes/msqrt.js';
+import { StyleList } from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
@@ -41,11 +50,22 @@ import {StyleList} from '../../../util/StyleList.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMsqrtNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMsqrt<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {}
+export interface ChtmlMsqrtNTD<N, T, D>
+  extends ChtmlWrapper<N, T, D>,
+    CommonMsqrt<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {}
 
 /**
  * The ChtmlMsqrtClass interface for the CHTML Msqrt wrapper
@@ -54,14 +74,28 @@ export interface ChtmlMsqrtNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMsq
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMsqrtClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonMsqrtClass<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {
-  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMsqrtNTD<N, T, D>;
+export interface ChtmlMsqrtClass<N, T, D>
+  extends ChtmlWrapperClass<N, T, D>,
+    CommonMsqrtClass<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {
+  new (
+    factory: ChtmlWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: ChtmlWrapper<N, T, D>,
+  ): ChtmlMsqrtNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
@@ -69,19 +103,26 @@ export interface ChtmlMsqrtClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, Co
  * The ChtmlMsqrt wrapper class for the MmlMsqrt class
  */
 export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
-
   const Base = CommonMsqrtMixin<
-      N, T, D,
-      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
-      ChtmlMsqrtClass<N, T, D>
-    >(ChtmlWrapper);
+    N,
+    T,
+    D,
+    CHTML<N, T, D>,
+    ChtmlWrapper<N, T, D>,
+    ChtmlWrapperFactory<N, T, D>,
+    ChtmlWrapperClass<N, T, D>,
+    ChtmlCharOptions,
+    ChtmlVariantData,
+    ChtmlDelimiterData,
+    ChtmlFontData,
+    ChtmlFontDataClass,
+    ChtmlMsqrtClass<N, T, D>
+  >(ChtmlWrapper);
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
   return class ChtmlMsqrt extends Base implements ChtmlMsqrtNTD<N, T, D> {
-
     /**
      * @override
      */
@@ -93,25 +134,25 @@ export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
     public static styles: StyleList = {
       'mjx-root': {
         display: 'inline-block',
-        'white-space': 'nowrap'
+        'white-space': 'nowrap',
       },
       'mjx-surd': {
         display: 'inline-block',
-        'vertical-align': 'top'
+        'vertical-align': 'top',
       },
       'mjx-sqrt': {
         display: 'inline-block',
-        'padding-top': '.075em'
+        'padding-top': '.075em',
       },
       'mjx-sqrt > mjx-box': {
         'border-top': '.075em solid',
         'padding-left': '.03em',
-        'margin-left': '-.03em'
+        'margin-left': '-.03em',
       },
       'mjx-sqrt.mjx-tall > mjx-box': {
         'padding-left': '.3em',
-        'margin-left': '-.3em'
-      }
+        'margin-left': '-.3em',
+      },
     };
 
     /**
@@ -125,7 +166,7 @@ export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
       //
       const sbox = surd.getBBox();
       const bbox = base.getOuterBBox();
-      const [ , q] = this.getPQ(sbox);
+      const [, q] = this.getPQ(sbox);
       const t = this.font.params.surd_height;
       const H = bbox.h + q + t;
       const adaptor = this.adaptor;
@@ -138,12 +179,19 @@ export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
         ROOT = adaptor.append(CHTML[0], this.html('mjx-root')) as N;
         root = this.childNodes[this.root];
       }
-      const SQRT = adaptor.append(CHTML[0], this.html('mjx-sqrt', {}, [
-        SURD = this.html('mjx-surd'),
-        BASE = this.html('mjx-box', {style: {paddingTop: this.em(q)}})
-      ])) as N;
-      if (t !== .06) {
-        adaptor.setStyle(BASE, 'border-top-width', this.em(t * this.font.params.rule_factor));
+      const SQRT = adaptor.append(
+        CHTML[0],
+        this.html('mjx-sqrt', {}, [
+          (SURD = this.html('mjx-surd')),
+          (BASE = this.html('mjx-box', { style: { paddingTop: this.em(q) } })),
+        ]),
+      ) as N;
+      if (t !== 0.06) {
+        adaptor.setStyle(
+          BASE,
+          'border-top-width',
+          this.em(t * this.font.params.rule_factor),
+        );
       }
       //
       //  Add the child content
@@ -169,9 +217,11 @@ export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
      * @param {BBox} _sbox          The bounding box of the surd
      * @param {number} _H           The height of the root as a whole
      */
-    protected addRoot(_ROOT: N, _root: ChtmlWrapper<N, T, D>, _sbox: BBox, _H: number) {
-    }
-
+    protected addRoot(
+      _ROOT: N,
+      _root: ChtmlWrapper<N, T, D>,
+      _sbox: BBox,
+      _H: number,
+    ) {}
   };
-
 })<any, any, any>();

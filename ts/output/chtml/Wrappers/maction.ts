@@ -21,19 +21,28 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTML} from '../../chtml.js';
-import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
-import {ChtmlWrapperFactory} from '../WrapperFactory.js';
-import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
-        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
-import {CommonMaction, CommonMactionClass, CommonMactionMixin} from '../../common/Wrappers/maction.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMaction} from '../../../core/MmlTree/MmlNodes/maction.js';
-import {ActionDef} from '../../common/Wrappers/maction.js';
-import {EventHandler, TooltipData} from '../../common/Wrappers/maction.js';
-import {TextNode} from '../../../core/MmlTree/MmlNode.js';
-import {StyleList} from '../../../util/StyleList.js';
-import {STATE} from '../../../core/MathItem.js';
+import { CHTML } from '../../chtml.js';
+import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
+import { ChtmlWrapperFactory } from '../WrapperFactory.js';
+import {
+  ChtmlCharOptions,
+  ChtmlVariantData,
+  ChtmlDelimiterData,
+  ChtmlFontData,
+  ChtmlFontDataClass,
+} from '../FontData.js';
+import {
+  CommonMaction,
+  CommonMactionClass,
+  CommonMactionMixin,
+} from '../../common/Wrappers/maction.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMaction } from '../../../core/MmlTree/MmlNodes/maction.js';
+import { ActionDef } from '../../common/Wrappers/maction.js';
+import { EventHandler, TooltipData } from '../../common/Wrappers/maction.js';
+import { TextNode } from '../../../core/MmlTree/MmlNode.js';
+import { StyleList } from '../../../util/StyleList.js';
+import { STATE } from '../../../core/MathItem.js';
 
 /*****************************************************************/
 /**
@@ -43,12 +52,22 @@ import {STATE} from '../../../core/MathItem.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMactionNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMaction<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {
-
+export interface ChtmlMactionNTD<N, T, D>
+  extends ChtmlWrapper<N, T, D>,
+    CommonMaction<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {
   /**
    * Add an event handler to the output for this maction
    */
@@ -61,7 +80,6 @@ export interface ChtmlMactionNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonM
    * @return {string}    The dimension with "px" units
    */
   Em(m: number): string;
-
 }
 
 /**
@@ -71,14 +89,28 @@ export interface ChtmlMactionNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonM
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMactionClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonMactionClass<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {
-  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMactionNTD<N, T, D>;
+export interface ChtmlMactionClass<N, T, D>
+  extends ChtmlWrapperClass<N, T, D>,
+    CommonMactionClass<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {
+  new (
+    factory: ChtmlWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: ChtmlWrapper<N, T, D>,
+  ): ChtmlMactionNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
@@ -86,19 +118,26 @@ export interface ChtmlMactionClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, 
  * The ChtmlMaction wrapper class for the MmlMaction class
  */
 export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
-
   const Base = CommonMactionMixin<
-      N, T, D,
-      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
-      ChtmlMactionClass<N, T, D>
-    >(ChtmlWrapper);
+    N,
+    T,
+    D,
+    CHTML<N, T, D>,
+    ChtmlWrapper<N, T, D>,
+    ChtmlWrapperFactory<N, T, D>,
+    ChtmlWrapperClass<N, T, D>,
+    ChtmlCharOptions,
+    ChtmlVariantData,
+    ChtmlDelimiterData,
+    ChtmlFontData,
+    ChtmlFontDataClass,
+    ChtmlMactionClass<N, T, D>
+  >(ChtmlWrapper);
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
   return class ChtmlMaction extends Base implements ChtmlMactionNTD<N, T, D> {
-
     /**
      * @override
      */
@@ -109,14 +148,16 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
      */
     public static styles: StyleList = {
       'mjx-maction': {
-        position: 'relative'
+        position: 'relative',
       },
       'mjx-maction > mjx-tool': {
         display: 'none',
         position: 'absolute',
-        bottom: 0, right: 0,
-        width: 0, height: 0,
-        'z-index': 500
+        bottom: 0,
+        right: 0,
+        width: 0,
+        height: 0,
+        'z-index': 500,
       },
       'mjx-tool > mjx-tip': {
         display: 'inline-block',
@@ -125,10 +166,10 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
         border: '1px solid #888',
         'background-color': '#F8F8F8',
         color: 'black',
-        'box-shadow': '2px 2px 5px #AAAAAA'
+        'box-shadow': '2px 2px 5px #AAAAAA',
       },
       'mjx-maction[toggle]': {
-        cursor: 'pointer'
+        cursor: 'pointer',
       },
       'mjx-status': {
         display: 'block',
@@ -140,117 +181,184 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
         border: '1px solid #888',
         'font-size': '90%',
         'background-color': '#F8F8F8',
-        color: 'black'
-      }
+        color: 'black',
+      },
     };
 
     /**
      * @override
      */
     public static actions = new Map([
-      ['toggle', [(node, _data) => {
-        //
-        // Mark which child is selected
-        //
-        node.dom.forEach(dom => {
-          node.adaptor.setAttribute(dom, 'toggle', node.node.attributes.get('selection') as string);
-        });
-        //
-        // Cache the data needed to select another node
-        //
-        const math = node.factory.jax.math;
-        const document = node.factory.jax.document;
-        const mml = node.node as MmlMaction;
-        //
-        // Add a click handler that changes the selection and rerenders the expression
-        //
-        node.setEventHandler('click', (event: Event) => {
-          if (!math.end.node) {
+      [
+        'toggle',
+        [
+          (node, _data) => {
             //
-            // If the MathItem was created by hand, it might not have a node
-            // telling it where to replace the existing math, so set it.
+            // Mark which child is selected
             //
-            math.start.node = math.end.node = math.typesetRoot;
-            math.start.n = math.end.n = 0;
-          }
-          mml.nextToggleSelection();
-          math.rerender(document, mml.attributes.get('data-maction-id') ?
-            STATE.ENRICHED : STATE.RERENDER);
-          event.stopPropagation();
-        });
-      }, {}]],
-
-      ['tooltip', [(node, data) => {
-        const tip = node.childNodes[1];
-        if (!tip) return;
-        if (tip.node.isKind('mtext')) {
-          //
-          // Text tooltips are handled through title attributes
-          //
-          const text = (tip.node as TextNode).getText();
-          node.dom.forEach(dom => node.adaptor.setAttribute(dom, 'title', text));
-        } else {
-          //
-          // Math tooltips are handled through hidden nodes and event handlers
-          //
-          const adaptor = node.adaptor;
-          for (const dom of node.dom) {
-            const tool = adaptor.append(dom, node.html('mjx-tool', {
-              style: {bottom: node.Em(-node.tipDy), right: node.Em(-node.tipDx)}
-            }, [node.html('mjx-tip')])) as N;
-            tip.toCHTML([adaptor.firstChild(tool) as N]);
+            node.dom.forEach((dom) => {
+              node.adaptor.setAttribute(
+                dom,
+                'toggle',
+                node.node.attributes.get('selection') as string,
+              );
+            });
             //
-            // Set up the event handlers to display and remove the tooltip
+            // Cache the data needed to select another node
             //
-            node.setEventHandler('mouseover', (event: Event) => {
-              data.stopTimers(dom, data);
-              const timeout = setTimeout(() => adaptor.setStyle(tool, 'display', 'block'), data.postDelay);
-              data.hoverTimer.set(dom, timeout);
+            const math = node.factory.jax.math;
+            const document = node.factory.jax.document;
+            const mml = node.node as MmlMaction;
+            //
+            // Add a click handler that changes the selection and rerenders the expression
+            //
+            node.setEventHandler('click', (event: Event) => {
+              if (!math.end.node) {
+                //
+                // If the MathItem was created by hand, it might not have a node
+                // telling it where to replace the existing math, so set it.
+                //
+                math.start.node = math.end.node = math.typesetRoot;
+                math.start.n = math.end.n = 0;
+              }
+              mml.nextToggleSelection();
+              math.rerender(
+                document,
+                mml.attributes.get('data-maction-id')
+                  ? STATE.ENRICHED
+                  : STATE.RERENDER,
+              );
               event.stopPropagation();
-            }, dom);
-            node.setEventHandler('mouseout',  (event: Event) => {
-              data.stopTimers(dom, data);
-              const timeout = setTimeout(() => adaptor.setStyle(tool, 'display', ''), data.clearDelay);
-              data.clearTimer.set(dom, timeout);
-              event.stopPropagation();
-            }, dom);
-          }
-        }
-      }, TooltipData]],
+            });
+          },
+          {},
+        ],
+      ],
 
-      ['statusline', [(node, data) => {
-        const tip = node.childNodes[1];
-        if (!tip) return;
-        if (tip.node.isKind('mtext')) {
-          const adaptor = node.adaptor;
-          const text = (tip.node as TextNode).getText();
-          node.dom.forEach(dom => adaptor.setAttribute(dom, 'statusline', text));
-          //
-          // Set up event handlers to change the status window
-          //
-          node.setEventHandler('mouseover', (event: Event) => {
-            if (data.status === null) {
-              const body = adaptor.body(adaptor.document);
-              data.status = adaptor.append(body, node.html('mjx-status', {}, [node.text(text)]));
+      [
+        'tooltip',
+        [
+          (node, data) => {
+            const tip = node.childNodes[1];
+            if (!tip) return;
+            if (tip.node.isKind('mtext')) {
+              //
+              // Text tooltips are handled through title attributes
+              //
+              const text = (tip.node as TextNode).getText();
+              node.dom.forEach((dom) =>
+                node.adaptor.setAttribute(dom, 'title', text),
+              );
+            } else {
+              //
+              // Math tooltips are handled through hidden nodes and event handlers
+              //
+              const adaptor = node.adaptor;
+              for (const dom of node.dom) {
+                const tool = adaptor.append(
+                  dom,
+                  node.html(
+                    'mjx-tool',
+                    {
+                      style: {
+                        bottom: node.Em(-node.tipDy),
+                        right: node.Em(-node.tipDx),
+                      },
+                    },
+                    [node.html('mjx-tip')],
+                  ),
+                ) as N;
+                tip.toCHTML([adaptor.firstChild(tool) as N]);
+                //
+                // Set up the event handlers to display and remove the tooltip
+                //
+                node.setEventHandler(
+                  'mouseover',
+                  (event: Event) => {
+                    data.stopTimers(dom, data);
+                    const timeout = setTimeout(
+                      () => adaptor.setStyle(tool, 'display', 'block'),
+                      data.postDelay,
+                    );
+                    data.hoverTimer.set(dom, timeout);
+                    event.stopPropagation();
+                  },
+                  dom,
+                );
+                node.setEventHandler(
+                  'mouseout',
+                  (event: Event) => {
+                    data.stopTimers(dom, data);
+                    const timeout = setTimeout(
+                      () => adaptor.setStyle(tool, 'display', ''),
+                      data.clearDelay,
+                    );
+                    data.clearTimer.set(dom, timeout);
+                    event.stopPropagation();
+                  },
+                  dom,
+                );
+              }
             }
-            event.stopPropagation();
-          });
-          node.setEventHandler('mouseout', (event: Event) => {
-            if (data.status) {
-              adaptor.remove(data.status);
-              data.status = null;
-            }
-            event.stopPropagation();
-          });
-        }
-      }, {
-        status: null  // cached status line
-      }]]
+          },
+          TooltipData,
+        ],
+      ],
 
-    ] as ActionDef<N, T, D,
-                  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-                  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
-                  ChtmlMactionNTD<N, T, D>>[]);
+      [
+        'statusline',
+        [
+          (node, data) => {
+            const tip = node.childNodes[1];
+            if (!tip) return;
+            if (tip.node.isKind('mtext')) {
+              const adaptor = node.adaptor;
+              const text = (tip.node as TextNode).getText();
+              node.dom.forEach((dom) =>
+                adaptor.setAttribute(dom, 'statusline', text),
+              );
+              //
+              // Set up event handlers to change the status window
+              //
+              node.setEventHandler('mouseover', (event: Event) => {
+                if (data.status === null) {
+                  const body = adaptor.body(adaptor.document);
+                  data.status = adaptor.append(
+                    body,
+                    node.html('mjx-status', {}, [node.text(text)]),
+                  );
+                }
+                event.stopPropagation();
+              });
+              node.setEventHandler('mouseout', (event: Event) => {
+                if (data.status) {
+                  adaptor.remove(data.status);
+                  data.status = null;
+                }
+                event.stopPropagation();
+              });
+            }
+          },
+          {
+            status: null, // cached status line
+          },
+        ],
+      ],
+    ] as ActionDef<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass,
+      ChtmlMactionNTD<N, T, D>
+    >[]);
 
     /*************************************************************/
 
@@ -258,7 +366,9 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
      * @override
      */
     public setEventHandler(type: string, handler: EventHandler, dom: N = null) {
-      (dom ? [dom] : this.dom).forEach(node => (node as any).addEventListener(type, handler));
+      (dom ? [dom] : this.dom).forEach((node) =>
+        (node as any).addEventListener(type, handler),
+      );
     }
 
     /**
@@ -280,7 +390,5 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
       child.toCHTML(chtml);
       this.action(this, this.data);
     }
-
   };
-
 })<any, any, any>();

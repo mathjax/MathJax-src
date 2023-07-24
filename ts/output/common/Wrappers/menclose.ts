@@ -21,15 +21,25 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wrapper.js';
-import {CommonWrapperFactory} from '../WrapperFactory.js';
-import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
-import {CommonOutputJax} from '../../common.js';
-import {CommonMsqrt} from './msqrt.js';
+import {
+  CommonWrapper,
+  CommonWrapperClass,
+  CommonWrapperConstructor,
+} from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { CommonMsqrt } from './msqrt.js';
 import * as Notation from '../Notation.js';
-import {BBox} from '../../../util/BBox.js';
-import {MmlNode, AbstractMmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {split} from '../../../util/string.js';
+import { BBox } from '../../../util/BBox.js';
+import { MmlNode, AbstractMmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { split } from '../../../util/string.js';
 
 /*****************************************************************/
 /**
@@ -51,7 +61,9 @@ import {split} from '../../../util/string.js';
  * @template S   The msqrt wrapper type
  */
 export interface CommonMenclose<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -61,10 +73,8 @@ export interface CommonMenclose<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-
-  S extends CommonMsqrt<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  S extends CommonMsqrt<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 > extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
   /**
    * The notations active on this menclose, if any
    */
@@ -90,7 +100,7 @@ export interface CommonMenclose<
   /**
    * The shape of the arrow head (may be overridden using data-arrowhead attibutes)
    */
-  arrowhead: {x: number, y: number, dx: number};
+  arrowhead: { x: number; y: number; dx: number };
 
   /**
    * The top, right, bottom, and left padding, added by notations
@@ -161,13 +171,19 @@ export interface CommonMenclose<
    * @param {number} trans     Distance to translate in the offset direction
    * @return {N}               The newly created arrow
    */
-  arrow(w: number, a: number, double: boolean, offset?: string, trans?: number): N;
+  arrow(
+    w: number,
+    a: number,
+    double: boolean,
+    offset?: string,
+    trans?: number,
+  ): N;
 
   /**
    * Get the angle and width of a diagonal arrow, plus the x and y extension
    *   past the content bounding box
    */
-  arrowData(): {a: number, W: number, x: number, y: number};
+  arrowData(): { a: number; W: number; x: number; y: number };
 
   /**
    * Get the angle and width for a diagonal arrow
@@ -212,7 +228,9 @@ export interface CommonMenclose<
  * @template FC  The FontDataClass type
  */
 export interface CommonMencloseClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -221,14 +239,12 @@ export interface CommonMencloseClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
   /**
    *  The definitions of the various notations
    */
   notations: Notation.DefList<WW, N>;
-
 }
 
 /*****************************************************************/
@@ -252,7 +268,9 @@ export interface CommonMencloseClass<
  * @template B   The mixin interface to create
  */
 export function CommonMencloseMixin<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -263,12 +281,14 @@ export function CommonMencloseMixin<
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
   S extends CommonMsqrt<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
-
-  return class CommonMencloseMixin extends Base
-  implements CommonMenclose<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC, S> {
-
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+): B {
+  return class CommonMencloseMixin
+    extends Base
+    implements CommonMenclose<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC, S>
+  {
     /**
      * @override
      */
@@ -295,7 +315,11 @@ export function CommonMencloseMixin<
     /**
      * @override
      */
-    public arrowhead = {x: Notation.ARROWX, y: Notation.ARROWY, dx: Notation.ARROWDX};
+    public arrowhead = {
+      x: Notation.ARROWX,
+      y: Notation.ARROWY,
+      dx: Notation.ARROWDX,
+    };
 
     /**
      * @override
@@ -319,9 +343,9 @@ export function CommonMencloseMixin<
       if (arrowhead !== undefined) {
         let [x, y, dx] = split(arrowhead);
         this.arrowhead = {
-          x: (x ? parseFloat(x) : Notation.ARROWX),
-          y: (y ? parseFloat(y) : Notation.ARROWY),
-          dx: (dx ? parseFloat(dx) : Notation.ARROWDX)
+          x: x ? parseFloat(x) : Notation.ARROWX,
+          y: y ? parseFloat(y) : Notation.ARROWY,
+          dx: dx ? parseFloat(dx) : Notation.ARROWDX,
         };
       }
     }
@@ -330,9 +354,25 @@ export function CommonMencloseMixin<
      * @override
      */
     public getNotations() {
-      const Notations =
-        (this.constructor as CommonMencloseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).notations;
-      for (const name of split(this.node.attributes.get('notation') as string)) {
+      const Notations = (
+        this.constructor as CommonMencloseClass<
+          N,
+          T,
+          D,
+          JX,
+          WW,
+          WF,
+          WC,
+          CC,
+          VV,
+          DD,
+          FD,
+          FC
+        >
+      ).notations;
+      for (const name of split(
+        this.node.attributes.get('notation') as string,
+      )) {
         const notation = Notations.get(name);
         if (notation) {
           this.notations[name] = notation;
@@ -391,7 +431,9 @@ export function CommonMencloseMixin<
           this.maximizeEntries(BTRBL, border(this as any));
         }
       }
-      return [0, 1, 2, 3].map(i => this.TRBL[i] - BTRBL[i]) as Notation.PaddingData;
+      return [0, 1, 2, 3].map(
+        (i) => this.TRBL[i] - BTRBL[i],
+      ) as Notation.PaddingData;
     }
 
     /**
@@ -413,7 +455,7 @@ export function CommonMencloseMixin<
     public getOffset(direction: string): number {
       let [T, R, B, L] = this.TRBL;
       const d = (direction === 'X' ? R - L : B - T) / 2;
-      return (Math.abs(d) > .001 ? d : 0);
+      return Math.abs(d) > 0.001 ? d : 0;
     }
 
     /**
@@ -426,30 +468,36 @@ export function CommonMencloseMixin<
     /**
      * @override
      */
-    public arrow(_w: number, _a: number, _double: boolean, _offset: string = '', _dist: number = 0): N {
+    public arrow(
+      _w: number,
+      _a: number,
+      _double: boolean,
+      _offset: string = '',
+      _dist: number = 0,
+    ): N {
       return null as N;
     }
 
     /**
      * @override
      */
-    public arrowData(): {a: number, W: number, x: number, y: number} {
+    public arrowData(): { a: number; W: number; x: number; y: number } {
       const [p, t] = [this.padding, this.thickness];
       const r = t * (this.arrowhead.x + Math.max(1, this.arrowhead.dx));
-      const {h, d, w} = this.childNodes[0].getBBox();
+      const { h, d, w } = this.childNodes[0].getBBox();
       const H = h + d;
       const R = Math.sqrt(H * H + w * w);
-      const x = Math.max(p, r * w / R);
-      const y = Math.max(p, r * H / R);
+      const x = Math.max(p, (r * w) / R);
+      const y = Math.max(p, (r * H) / R);
       const [a, W] = this.getArgMod(w + 2 * x, H + 2 * y);
-      return {a, W, x, y};
+      return { a, W, x, y };
     }
 
     /**
      * @override
      */
     public arrowAW(): [number, number] {
-      const {h, d, w} = this.childNodes[0].getBBox();
+      const { h, d, w } = this.childNodes[0].getBBox();
       const [T, R, B, L] = this.TRBL;
       return this.getArgMod(L + w + R, T + h + d + B);
     }
@@ -508,7 +556,5 @@ export function CommonMencloseMixin<
       bbox.w += R;
       this.setChildPWidths(recompute);
     }
-
   } as any as B;
-
 }

@@ -21,13 +21,19 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, Constructor} from '../Wrapper.js';
-import {CommonWrapperFactory} from '../WrapperFactory.js';
-import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
-import {CommonOutputJax} from '../../common.js';
-import {CommonMsubsup, CommonMsubsupClass} from './msubsup.js';
-import {BBox} from '../../../util/BBox.js';
-import {LineBBox} from '../LineBBox.js';
+import { CommonWrapper, CommonWrapperClass, Constructor } from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { CommonMsubsup, CommonMsubsupClass } from './msubsup.js';
+import { BBox } from '../../../util/BBox.js';
+import { LineBBox } from '../LineBBox.js';
 
 /*****************************************************************/
 
@@ -36,10 +42,10 @@ import {LineBBox} from '../LineBBox.js';
  */
 export type ScriptData = {
   base: BBox;
-  sub: BBox;   // combined bbox for all subscripts
-  sup: BBox;   // combined bbox for all superscripts
-  psub: BBox;  // combined bbox for all presubscripts
-  psup: BBox;  // combined bbox for all presuperscripts
+  sub: BBox; // combined bbox for all subscripts
+  sup: BBox; // combined bbox for all superscripts
+  psub: BBox; // combined bbox for all presubscripts
+  psup: BBox; // combined bbox for all presuperscripts
   numPrescripts: number;
   numScripts: number;
 };
@@ -60,7 +66,7 @@ export type ScriptListName = keyof ScriptLists;
 /**
  * The type of script that follows the given type
  */
-export const NextScript: {[key: string]: ScriptListName} = {
+export const NextScript: { [key: string]: ScriptListName } = {
   base: 'subList',
   subList: 'supList',
   supList: 'subList',
@@ -91,7 +97,9 @@ export const ScriptNames = ['sup', 'sup', 'psup', 'psub'] as ScriptDataName[];
  * @template FC  The FontDataClass type
  */
 export interface CommonMmultiscripts<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -100,9 +108,8 @@ export interface CommonMmultiscripts<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonMsubsup<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
   /**
    *  The cached data for the various bounding boxes
    */
@@ -144,7 +151,12 @@ export interface CommonMmultiscripts<
    * @param {BBox[]} list1  The list of subscripts to combine
    * @param {BBox[]} list2  The list of superscripts to combine
    */
-  combineBBoxLists(bbox1: BBox, bbox2: BBox, list1: BBox[], list2: BBox[]): void;
+  combineBBoxLists(
+    bbox1: BBox,
+    bbox2: BBox,
+    list1: BBox[],
+    list2: BBox[],
+  ): void;
 
   /**
    * @param {BBox} bbox  The bounding box from which to get the (scaled) width, height, and depth
@@ -163,7 +175,6 @@ export interface CommonMmultiscripts<
    * @return {BBox}       The modified bbox
    */
   addPrescripts(bbox: BBox, u: number, v: number): BBox;
-
 }
 
 /**
@@ -183,7 +194,9 @@ export interface CommonMmultiscripts<
  * @template FC  The FontDataClass type
  */
 export interface CommonMmultiscriptsClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -192,7 +205,7 @@ export interface CommonMmultiscriptsClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonMsubsupClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
@@ -215,7 +228,9 @@ export interface CommonMmultiscriptsClass<
  * @template B   The mixin interface to create
  */
 export function CommonMmultiscriptsMixin<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -225,12 +240,14 @@ export function CommonMmultiscriptsMixin<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonMsubsupClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: Constructor<CommonMsubsup<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>): B {
-
-  return class CommonMmultiscriptsMixin extends Base
-  implements CommonMmultiscripts<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
+  B extends CommonMsubsupClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: Constructor<CommonMsubsup<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>,
+): B {
+  return class CommonMmultiscriptsMixin
+    extends Base
+    implements CommonMmultiscripts<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
      * @override
      */
@@ -261,16 +278,26 @@ export function CommonMmultiscriptsMixin<
       //
       //  Initialize the bounding box data
       //
-      const data: ScriptData = this.scriptData = {
-        base: null, sub: BBox.empty(), sup: BBox.empty(), psub: BBox.empty(), psup: BBox.empty(),
-        numPrescripts: 0, numScripts: 0
-      };
+      const data: ScriptData = (this.scriptData = {
+        base: null,
+        sub: BBox.empty(),
+        sup: BBox.empty(),
+        psub: BBox.empty(),
+        psup: BBox.empty(),
+        numPrescripts: 0,
+        numScripts: 0,
+      });
       //
       //  Get the bboxes for all the scripts and combine them into the scriptData
       //
       const lists = this.getScriptBBoxLists();
       this.combineBBoxLists(data.sub, data.sup, lists.subList, lists.supList);
-      this.combineBBoxLists(data.psub, data.psup, lists.psubList, lists.psupList);
+      this.combineBBoxLists(
+        data.psub,
+        data.psup,
+        lists.psubList,
+        lists.psupList,
+      );
       data.base = lists.base[0];
       //
       //  Save the lengths and return the data
@@ -284,7 +311,11 @@ export function CommonMmultiscriptsMixin<
      */
     public getScriptBBoxLists(): ScriptLists {
       const lists: ScriptLists = {
-        base: [], subList: [], supList: [], psubList: [], psupList: []
+        base: [],
+        subList: [],
+        supList: [],
+        psubList: [],
+        psupList: [],
       };
       //
       // The first entry is the base, and then they altername sub- and superscripts.
@@ -323,7 +354,12 @@ export function CommonMmultiscriptsMixin<
     /**
      * @override
      */
-    public combineBBoxLists(bbox1: BBox, bbox2: BBox, list1: BBox[], list2: BBox[]) {
+    public combineBBoxLists(
+      bbox1: BBox,
+      bbox2: BBox,
+      list1: BBox[],
+      list2: BBox[],
+    ) {
       for (let i = 0; i < list1.length; i++) {
         const [w1, h1, d1] = this.getScaledWHD(list1[i]);
         const [w2, h2, d2] = this.getScaledWHD(list2[i]);
@@ -341,7 +377,7 @@ export function CommonMmultiscriptsMixin<
      * @override
      */
     public getScaledWHD(bbox: BBox) {
-      const {w, h, d, rscale} = bbox;
+      const { w, h, d, rscale } = bbox;
       return [w * rscale, h * rscale, d * rscale];
     }
 
@@ -421,7 +457,10 @@ export function CommonMmultiscriptsMixin<
       let bbox = cbox;
       const [u, v] = this.getCombinedUV();
       if (i === 0) {
-        bbox = LineBBox.from(this.addPrescripts(BBox.zero(), u, v), this.linebreakOptions.lineleading);
+        bbox = LineBBox.from(
+          this.addPrescripts(BBox.zero(), u, v),
+          this.linebreakOptions.lineleading,
+        );
         bbox.append(cbox);
         this.addLeftBorders(bbox);
         bbox.L = this.bbox.L;
@@ -460,7 +499,5 @@ export function CommonMmultiscriptsMixin<
       }
       return this.UVQ;
     }
-
   } as any as B;
-
 }

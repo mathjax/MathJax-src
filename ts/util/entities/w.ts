@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     Wcirc: '\u0174',
     wcirc: '\u0175',
     wedbar: '\u2A5F',
@@ -25,5 +26,7 @@ Entities.add({
     wedgeq: '\u2259',
     wp: '\u2118',
     wr: '\u2240',
-    wreath: '\u2240'
-}, 'w');
+    wreath: '\u2240',
+  },
+  'w',
+);

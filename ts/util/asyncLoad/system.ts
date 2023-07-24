@@ -21,9 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {mathjax} from '../../mathjax.js';
+import { mathjax } from '../../mathjax.js';
 
-declare var System: {import: (name: string, url?: string) => any};
+declare var System: { import: (name: string, url?: string) => any };
 declare var __dirname: string;
 
 let root = 'file://' + __dirname.replace(/\/\/[^\/]*$/, '/');

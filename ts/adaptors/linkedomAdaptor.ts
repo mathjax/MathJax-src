@@ -21,20 +21,26 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {HTMLAdaptor} from './HTMLAdaptor.js';
-import {NodeMixin, Constructor} from './NodeMixin.js';
-import {OptionList} from '../util/Options.js';
+import { HTMLAdaptor } from './HTMLAdaptor.js';
+import { NodeMixin, Constructor } from './NodeMixin.js';
+import { OptionList } from '../util/Options.js';
 
 /**
  * The constructor for an HTMLAdaptor
  */
-export type HTMLAdaptorConstructor = Constructor<HTMLAdaptor<HTMLElement, Text, Document>>;
+export type HTMLAdaptorConstructor = Constructor<
+  HTMLAdaptor<HTMLElement, Text, Document>
+>;
 
 /**
  * The LinkedomAdaptor class
  */
-export class LinkedomAdaptor extends NodeMixin<HTMLElement, Text, Document, HTMLAdaptorConstructor>(HTMLAdaptor) {
-
+export class LinkedomAdaptor extends NodeMixin<
+  HTMLElement,
+  Text,
+  Document,
+  HTMLAdaptorConstructor
+>(HTMLAdaptor) {
   /**
    * @override
    */
@@ -55,7 +61,6 @@ export class LinkedomAdaptor extends NodeMixin<HTMLElement, Text, Document, HTML
   public serializeXML(node: HTMLElement) {
     return this.outerHTML(node);
   }
-
 }
 
 /**
@@ -64,8 +69,11 @@ export class LinkedomAdaptor extends NodeMixin<HTMLElement, Text, Document, HTML
  * @param {any} parseHTML       The linkedom HTML parser to use for this adaptor
  * @return {LinkeddomAdaptor}   The newly created adaptor
  */
-export function linkedomAdaptor(parseHTML: any, options: OptionList = null): LinkedomAdaptor {
+export function linkedomAdaptor(
+  parseHTML: any,
+  options: OptionList = null,
+): LinkedomAdaptor {
   const window = parseHTML('<html></html>');
-  window.HTMLCollection = class {};  // add fake class for missing HTMLCollecton
+  window.HTMLCollection = class {}; // add fake class for missing HTMLCollecton
   return new LinkedomAdaptor(window, options);
 }

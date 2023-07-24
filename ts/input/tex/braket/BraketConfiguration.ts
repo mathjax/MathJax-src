@@ -15,28 +15,22 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Configuration file for the Braket package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration} from '../Configuration.js';
-import {BraketItem} from './BraketItems.js';
+import { Configuration } from '../Configuration.js';
+import { BraketItem } from './BraketItems.js';
 import './BraketMappings.js';
 
-
-export const BraketConfiguration = Configuration.create(
-  'braket', {
-    handler: {
-      character: ['Braket-characters'],
-      macro: ['Braket-macros']
-    },
-    items: {
-      [BraketItem.prototype.kind]: BraketItem,
-    }
-  }
-);
-
-
+export const BraketConfiguration = Configuration.create('braket', {
+  handler: {
+    character: ['Braket-characters'],
+    macro: ['Braket-macros'],
+  },
+  items: {
+    [BraketItem.prototype.kind]: BraketItem,
+  },
+});

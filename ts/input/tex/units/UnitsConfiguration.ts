@@ -15,17 +15,16 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Configuration and implementation of the units package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration} from '../Configuration.js';
+import { Configuration } from '../Configuration.js';
 import TexParser from '../TexParser.js';
-import {CommandMap} from '../SymbolMap.js';
-import {ParseMethod} from '../Types.js';
+import { CommandMap } from '../SymbolMap.js';
+import { ParseMethod } from '../Types.js';
 
 // Namespace
 export let UnitsMethods: Record<string, ParseMethod> = {};
@@ -35,8 +34,8 @@ export let UnitsMethods: Record<string, ParseMethod> = {};
  * @param {TexParser} parser The current tex parser.
  * @param {string} name The name of the calling macro.
  */
-UnitsMethods.Unit = function(parser: TexParser, name: string) {
-  let val = parser.GetBrackets(name) ;
+UnitsMethods.Unit = function (parser: TexParser, name: string) {
+  let val = parser.GetBrackets(name);
   let dim = parser.GetArgument(name);
   let macro = `\\mathrm{${dim}}`;
   if (val) {
@@ -51,7 +50,7 @@ UnitsMethods.Unit = function(parser: TexParser, name: string) {
  * @param {TexParser} parser The current tex parser.
  * @param {string} name The name of the calling macro.
  */
-UnitsMethods.UnitFrac = function(parser: TexParser, name: string) {
+UnitsMethods.UnitFrac = function (parser: TexParser, name: string) {
   let val = parser.GetBrackets(name) || '';
   let num = parser.GetArgument(name);
   let den = parser.GetArgument(name);
@@ -68,34 +67,41 @@ UnitsMethods.UnitFrac = function(parser: TexParser, name: string) {
  * @param {TexParser} parser The current tex parser.
  * @param {string} name The name of the calling macro.
  */
-UnitsMethods.NiceFrac = function(parser: TexParser, name: string) {
+UnitsMethods.NiceFrac = function (parser: TexParser, name: string) {
   let font = parser.GetBrackets(name) || '\\mathrm';
   let num = parser.GetArgument(name);
   let den = parser.GetArgument(name);
-  let numMml = new TexParser(`${font}{${num}}`, {...parser.stack.env},
-                             parser.configuration).mml();
-  let denMml = new TexParser(`${font}{${den}}`, {...parser.stack.env},
-                             parser.configuration).mml();
-  const def = parser.options.units.ugly ? {} : {bevelled: true};
+  let numMml = new TexParser(
+    `${font}{${num}}`,
+    { ...parser.stack.env },
+    parser.configuration,
+  ).mml();
+  let denMml = new TexParser(
+    `${font}{${den}}`,
+    { ...parser.stack.env },
+    parser.configuration,
+  ).mml();
+  const def = parser.options.units.ugly ? {} : { bevelled: true };
   const node = parser.create('node', 'mfrac', [numMml, denMml], def);
   parser.Push(node);
 };
 
-new CommandMap('units', {
-  units:    'Unit',
-  unitfrac: 'UnitFrac',
-  nicefrac: 'NiceFrac'
-}, UnitsMethods);
-
-
-export const UnitsConfiguration = Configuration.create(
-  'units', {
-    handler: {macro: ['units']},
-    options: {
-      units: {
-        loose: false,
-        ugly: false
-      }
-    }
-  }
+new CommandMap(
+  'units',
+  {
+    units: 'Unit',
+    unitfrac: 'UnitFrac',
+    nicefrac: 'NiceFrac',
+  },
+  UnitsMethods,
 );
+
+export const UnitsConfiguration = Configuration.create('units', {
+  handler: { macro: ['units'] },
+  options: {
+    units: {
+      loose: false,
+      ugly: false,
+    },
+  },
+});

@@ -21,13 +21,11 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Menu, Radio, ParserFactory} from './mj-context-menu.js';
+import { Menu, Radio, ParserFactory } from './mj-context-menu.js';
 
 // Extend the radio buttons with a customizable comparator to work for CS
 // preferences
 export class RadioCompare extends Radio {
-
-
   /**
    * @override
    */
@@ -49,7 +47,7 @@ export class RadioCompare extends Radio {
       id: string;
       comparator: (variable: string, id: string) => boolean;
     },
-    menu: Menu
+    menu: Menu,
   ): Radio {
     return new this(menu, content, variable, id, comparator);
   }
@@ -57,8 +55,13 @@ export class RadioCompare extends Radio {
   /**
    * @override
    */
-  constructor(menu: Menu, content: string, variable: string, id: string,
-              private comparator: (variable: string, id: string) => boolean) {
+  constructor(
+    menu: Menu,
+    content: string,
+    variable: string,
+    id: string,
+    private comparator: (variable: string, id: string) => boolean,
+  ) {
     super(menu, content, variable, id);
   }
 
@@ -69,7 +72,7 @@ export class RadioCompare extends Radio {
   protected updateAria() {
     this.html.setAttribute(
       'aria-checked',
-      this.comparator(this.variable.getValue(), this.id) ? 'true' : 'false'
+      this.comparator(this.variable.getValue(), this.id) ? 'true' : 'false',
     );
   }
 
@@ -78,8 +81,8 @@ export class RadioCompare extends Radio {
    * Toggles the checked tick.
    */
   protected updateSpan() {
-    this.span.style.display =
-      this.comparator(this.variable.getValue(), this.id) ? '' : 'none';
+    this.span.style.display = this.comparator(this.variable.getValue(), this.id)
+      ? ''
+      : 'none';
   }
-
 }

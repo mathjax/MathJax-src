@@ -15,15 +15,14 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Configuration file for the NoErrors package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration} from '../Configuration.js';
-import {NodeFactory} from '../NodeFactory.js';
+import { Configuration } from '../Configuration.js';
+import { NodeFactory } from '../NodeFactory.js';
 
 /**
  * Generates an error node containing the erroneous expression.
@@ -32,15 +31,20 @@ import {NodeFactory} from '../NodeFactory.js';
  * @param {string} id The error id (which is ignored).
  * @param {string} expr The original LaTeX expression.
  */
-function noErrors(factory: NodeFactory,
-                  message: string, _id: string, expr: string) {
+function noErrors(
+  factory: NodeFactory,
+  message: string,
+  _id: string,
+  expr: string,
+) {
   let mtext = factory.create('token', 'mtext', {}, expr.replace(/\n/g, ' '));
-  let error = factory.create('node', 'merror', [mtext], {'data-mjx-error': message, title: message});
+  let error = factory.create('node', 'merror', [mtext], {
+    'data-mjx-error': message,
+    title: message,
+  });
   return error;
 }
 
-export const NoErrorsConfiguration = Configuration.create(
-  'noerrors', {nodes: {'error': noErrors}}
-);
-
-
+export const NoErrorsConfiguration = Configuration.create('noerrors', {
+  nodes: { error: noErrors },
+});

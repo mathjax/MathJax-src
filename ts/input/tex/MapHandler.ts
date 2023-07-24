@@ -15,28 +15,24 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Singleton class for handling symbol maps.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {AbstractSymbolMap, SymbolMap} from './SymbolMap.js';
-import {ParseInput, ParseResult, ParseMethod} from './Types.js';
+import { AbstractSymbolMap, SymbolMap } from './SymbolMap.js';
+import { ParseInput, ParseResult, ParseMethod } from './Types.js';
 // import {ParserConfiguration} from './Configuration.js';
-import {PrioritizedList} from '../../util/PrioritizedList.js';
-import {FunctionList} from '../../util/FunctionList.js';
-
+import { PrioritizedList } from '../../util/PrioritizedList.js';
+import { FunctionList } from '../../util/FunctionList.js';
 
 export type HandlerType = 'delimiter' | 'macro' | 'character' | 'environment';
 
-export type HandlerConfig = {[P in HandlerType]?: string[]};
-export type FallbackConfig = {[P in HandlerType]?: ParseMethod};
-
+export type HandlerConfig = { [P in HandlerType]?: string[] };
+export type FallbackConfig = { [P in HandlerType]?: ParseMethod };
 
 export namespace MapHandler {
-
   let maps: Map<string, SymbolMap> = new Map();
 
   /**
@@ -45,10 +41,9 @@ export namespace MapHandler {
    *
    * @param {SymbolMap} map Registers a new symbol map.
    */
-  export let register = function(map: SymbolMap): void {
+  export let register = function (map: SymbolMap): void {
     maps.set(map.name, map);
   };
-
 
   /**
    * Looks up a symbol map if it exists.
@@ -56,19 +51,17 @@ export namespace MapHandler {
    * @param {string} name The name of the symbol map.
    * @return {SymbolMap} The symbol map with the given name or null.
    */
-  export let getMap = function(name: string): SymbolMap {
+  export let getMap = function (name: string): SymbolMap {
     return maps.get(name);
   };
-
 }
-
 
 /**
  * Class of symbol mappings that are active in a configuration.
  */
 export class SubHandler {
-
-  private _configuration: PrioritizedList<SymbolMap> = new PrioritizedList<SymbolMap>();
+  private _configuration: PrioritizedList<SymbolMap> =
+    new PrioritizedList<SymbolMap>();
   private _fallback: FunctionList = new FunctionList();
 
   /**
@@ -77,8 +70,11 @@ export class SubHandler {
    * @param {ParseMethod} fallback A fallback method.
    * @param {number} priority Optionally a priority.
    */
-  public add(maps: string[], fallback: ParseMethod,
-             priority: number = PrioritizedList.DEFAULTPRIORITY) {
+  public add(
+    maps: string[],
+    fallback: ParseMethod,
+    priority: number = PrioritizedList.DEFAULTPRIORITY,
+  ) {
     for (const name of maps.slice().reverse()) {
       let map = MapHandler.getMap(name);
       if (!map) {
@@ -98,7 +94,7 @@ export class SubHandler {
    * @return {ParseResult} The output of the parsing function.
    */
   public parse(input: ParseInput): ParseResult {
-    for (let {item: map} of this._configuration) {
+    for (let { item: map } of this._configuration) {
       const result = map.parse(input);
       if (result) {
         return result;
@@ -107,7 +103,6 @@ export class SubHandler {
     let [env, symbol] = input;
     Array.from(this._fallback)[0].item(env, symbol);
   }
-
 
   /**
    * Maps a symbol to its "parse value" if it exists.
@@ -120,7 +115,6 @@ export class SubHandler {
     return map ? map.lookup(symbol) : null;
   }
 
-
   /**
    * Checks if a symbol is contained in one of the symbol mappings of this
    * configuration.
@@ -132,18 +126,16 @@ export class SubHandler {
     return this.applicable(symbol) ? true : false;
   }
 
-
   /**
    * @override
    */
   public toString(): string {
     let names = [];
-    for (let {item: map} of this._configuration) {
+    for (let { item: map } of this._configuration) {
       names.push(map.name);
     }
     return names.join(', ');
   }
-
 
   /**
    * Retrieves the first applicable symbol map in the configuration.
@@ -151,7 +143,7 @@ export class SubHandler {
    * @return {SymbolMap} A map that can parse the symbol.
    */
   public applicable(symbol: string): SymbolMap {
-    for (let {item: map} of this._configuration) {
+    for (let { item: map } of this._configuration) {
       if (map.contains(symbol)) {
         return map;
       }
@@ -159,21 +151,19 @@ export class SubHandler {
     return null;
   }
 
-
   /**
    * Retrieves the map of the given name.
    * @param {string} name Name of the symbol map.
    * @return {SymbolMap} The map if it exists.
    */
   public retrieve(name: string): SymbolMap {
-    for (let {item: map} of this._configuration) {
+    for (let { item: map } of this._configuration) {
       if (map.name === name) {
         return map;
       }
     }
     return null;
   }
-
 
   /**
    * Prints a warning message.
@@ -182,20 +172,20 @@ export class SubHandler {
   private warn(message: string) {
     console.log('TexParser Warning: ' + message);
   }
-
 }
 
-
 export class SubHandlers {
-
   private map = new Map<HandlerType, SubHandler>();
 
   /**
    * Adds a symbol map to the configuration if it exists.
    * @param {string} name of the symbol map.
    */
-  public add(handlers: HandlerConfig, fallbacks: FallbackConfig,
-             priority: number = PrioritizedList.DEFAULTPRIORITY): void {
+  public add(
+    handlers: HandlerConfig,
+    fallbacks: FallbackConfig,
+    priority: number = PrioritizedList.DEFAULTPRIORITY,
+  ): void {
     for (const key of Object.keys(handlers)) {
       let name = key as HandlerType;
       let subHandler = this.get(name);
@@ -207,7 +197,6 @@ export class SubHandlers {
     }
   }
 
-
   /**
    * Setter for subhandlers.
    * @param {HandlerType} name The name of the subhandler.
@@ -217,7 +206,6 @@ export class SubHandlers {
     this.map.set(name, subHandler);
   }
 
-
   /**
    * Getter for subhandler.
    * @param {HandlerType} name Name of the subhandler.
@@ -226,7 +214,6 @@ export class SubHandlers {
   public get(name: HandlerType): SubHandler {
     return this.map.get(name);
   }
-
 
   /**
    * Retrieves a symbol map of the given name.
@@ -243,7 +230,6 @@ export class SubHandlers {
     return null;
   }
 
-
   /**
    * All names of registered subhandlers.
    * @return {IterableIterator<string>} Iterable list of keys.
@@ -251,5 +237,4 @@ export class SubHandlers {
   public keys(): IterableIterator<string> {
     return this.map.keys();
   }
-
 }

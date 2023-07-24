@@ -15,24 +15,22 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Base methods for TeX Parsing.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Symbol} from './Symbol.js';
+import { Symbol } from './Symbol.js';
 import TexParser from './TexParser.js';
 import NodeUtil from './NodeUtil.js';
-import {TexConstant} from './TexConstants.js';
-import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import { TexConstant } from './TexConstants.js';
+import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import ParseUtil from './ParseUtil.js';
 
 const MATHVARIANT = TexConstant.Variant;
 
 namespace ParseMethods {
-
   /**
    * Handle a variable (a single letter or multi-letter if allowed).
    * @param {TexParser} parser The current tex parser.
@@ -43,9 +41,16 @@ namespace ParseMethods {
     const def = ParseUtil.getFontDef(parser);
     const env = parser.stack.env;
     if (env.multiLetterIdentifiers && env.font !== '') {
-      c = parser.string.substr(parser.i - 1).match(env.multiLetterIdentifiers as any as RegExp)?.[0] || c;
+      c =
+        parser.string
+          .substr(parser.i - 1)
+          .match(env.multiLetterIdentifiers as any as RegExp)?.[0] || c;
       parser.i += c.length - 1;
-      if (def.mathvariant === MATHVARIANT.NORMAL && env.noAutoOP && c.length > 1) {
+      if (
+        def.mathvariant === MATHVARIANT.NORMAL &&
+        env.noAutoOP &&
+        c.length > 1
+      ) {
         def.autoOP = false;
       }
     }
@@ -59,7 +64,6 @@ namespace ParseMethods {
     const node = parser.create('token', 'mi', def, c);
     parser.Push(node);
   }
-
 
   /**
    * Handle a number (a sequence of digits, with decimal separator, etc.).
@@ -94,14 +98,16 @@ namespace ParseMethods {
     parser.parse('macro', [parser, name]);
   }
 
-
   /**
    * Handle lower-case Greek (as an mi).
    * @param {TexParser} parser The current tex parser.
    * @param {Symbol} mchar The parsed symbol.
    */
   export function lcGreek(parser: TexParser, mchar: Symbol) {
-    const def = {mathvariant: parser.configuration.mathStyle(mchar.char) || MATHVARIANT.ITALIC};
+    const def = {
+      mathvariant:
+        parser.configuration.mathStyle(mchar.char) || MATHVARIANT.ITALIC,
+    };
     // @test Greek
     const node = parser.create('token', 'mi', def, mchar.char);
     parser.Push(node);
@@ -113,9 +119,12 @@ namespace ParseMethods {
    * @param {Symbol} mchar The parsed symbol.
    */
   export function ucGreek(parser: TexParser, mchar: Symbol) {
-    const def = {mathvariant: parser.stack.env['font'] ||
-                 parser.configuration.mathStyle(mchar.char, true) ||
-                 MATHVARIANT.NORMAL};
+    const def = {
+      mathvariant:
+        parser.stack.env['font'] ||
+        parser.configuration.mathStyle(mchar.char, true) ||
+        MATHVARIANT.NORMAL,
+    };
     // @test MathChar7 Single, MathChar7 Operator, MathChar7 Multi
     const node = parser.create('token', 'mi', def, mchar.char);
     parser.Push(node);
@@ -127,7 +136,7 @@ namespace ParseMethods {
    * @param {Symbol} mchar The parsed symbol.
    */
   export function mathchar0mi(parser: TexParser, mchar: Symbol) {
-    const def = mchar.attributes || {mathvariant: MATHVARIANT.ITALIC};
+    const def = mchar.attributes || { mathvariant: MATHVARIANT.ITALIC };
     const node = parser.create('token', 'mi', def, mchar.char);
     parser.Push(node);
   }
@@ -154,7 +163,7 @@ namespace ParseMethods {
    * @param {Symbol} mchar The parsed symbol.
    */
   export function mathchar7(parser: TexParser, mchar: Symbol) {
-    const def = mchar.attributes || {mathvariant: MATHVARIANT.NORMAL};
+    const def = mchar.attributes || { mathvariant: MATHVARIANT.NORMAL };
     if (parser.stack.env['font']) {
       // @test MathChar7 Single Font
       def['mathvariant'] = parser.stack.env['font'];
@@ -172,11 +181,10 @@ namespace ParseMethods {
   export function delimiter(parser: TexParser, delim: Symbol) {
     let def = delim.attributes || {};
     // @test Fenced2, Delimiter (AMS)
-    def = Object.assign({fence: false, stretchy: false}, def);
+    def = Object.assign({ fence: false, stretchy: false }, def);
     const node = parser.create('token', 'mo', def, delim.char);
     parser.Push(node);
   }
-
 
   /**
    * Parse an environment.
@@ -185,13 +193,19 @@ namespace ParseMethods {
    * @param {Function} func The parse method for the environment.
    * @param {any[]} args A list of additional arguments.
    */
-  export function environment(parser: TexParser, env: string, func: Function, args: any[]) {
+  export function environment(
+    parser: TexParser,
+    env: string,
+    func: Function,
+    args: any[],
+  ) {
     const end = args[0];
-    let mml = parser.itemFactory.create('begin').setProperties({name: env, end: end});
+    let mml = parser.itemFactory
+      .create('begin')
+      .setProperties({ name: env, end: end });
     mml = func(parser, mml, ...args.slice(1));
     parser.Push(mml);
   }
-
 }
 
 export default ParseMethods;

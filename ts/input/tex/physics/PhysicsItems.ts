@@ -15,28 +15,24 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Stack items for the physics package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-
-import {CheckType, BaseItem, StackItem} from '../StackItem.js';
+import { CheckType, BaseItem, StackItem } from '../StackItem.js';
 import ParseUtil from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import TexParser from '../TexParser.js';
-import {AbstractMmlTokenNode} from '../../../core/MmlTree/MmlNode.js';
-
+import { AbstractMmlTokenNode } from '../../../core/MmlTree/MmlNode.js';
 
 export class AutoOpen extends BaseItem {
-
   /**
    * @override
    */
   protected static errors = Object.assign(Object.create(BaseItem.errors), {
-    'stop': ['ExtraOrMissingDelims', 'Extra open or missing close delimiter']
+    stop: ['ExtraOrMissingDelims', 'Extra open or missing close delimiter'],
   });
 
   /**
@@ -52,14 +48,12 @@ export class AutoOpen extends BaseItem {
     return 'auto open';
   }
 
-
   /**
    * @override
    */
   get isOpen() {
     return true;
   }
-
 
   /**
    * @override
@@ -77,21 +71,24 @@ export class AutoOpen extends BaseItem {
     let right = this.getProperty('right') as string;
     if (this.getProperty('smash')) {
       let mml = super.toMml();
-      const smash = parser.create('node', 'mpadded', [mml],
-                                  {height: 0, depth: 0});
+      const smash = parser.create('node', 'mpadded', [mml], {
+        height: 0,
+        depth: 0,
+      });
       this.Clear();
       this.Push(parser.create('node', 'TeXAtom', [smash]));
     }
     if (right) {
-      this.Push(new TexParser(right, parser.stack.env,
-                              parser.configuration).mml());
+      this.Push(
+        new TexParser(right, parser.stack.env, parser.configuration).mml(),
+      );
     }
     let mml = ParseUtil.fenced(
       this.factory.configuration,
       this.getProperty('open') as string,
       super.toMml(),
       this.getProperty('close') as string,
-      this.getProperty('big') as string
+      this.getProperty('big') as string,
     );
     //
     //  Remove fence markers that would cause it to be TeX class INNER,
@@ -106,7 +103,7 @@ export class AutoOpen extends BaseItem {
    *   decrementing the open count if appropriate.
    */
   public closing(fence: string) {
-    return (fence === this.getProperty('close') && !this.openCount--);
+    return fence === this.getProperty('close') && !this.openCount--;
   }
 
   /**
@@ -134,7 +131,10 @@ export class AutoOpen extends BaseItem {
     //
     if (item.isKind('mml') && item.Size() === 1) {
       const mml = item.toMml();
-      if (mml.isKind('mo') && (mml as AbstractMmlTokenNode).getText() === this.getProperty('open')) {
+      if (
+        mml.isKind('mo') &&
+        (mml as AbstractMmlTokenNode).getText() === this.getProperty('open')
+      ) {
         this.openCount++;
       }
     }
@@ -143,5 +143,4 @@ export class AutoOpen extends BaseItem {
     //
     return super.checkItem(item);
   }
-
 }

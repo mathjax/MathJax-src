@@ -21,14 +21,24 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wrapper.js';
-import {CommonWrapperFactory} from '../WrapperFactory.js';
-import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
-import {CommonOutputJax} from '../../common.js';
-import {CommonMo} from './mo.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {BBox} from '../../../util/BBox.js';
-import {DIRECTION} from '../FontData.js';
+import {
+  CommonWrapper,
+  CommonWrapperClass,
+  CommonWrapperConstructor,
+} from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { CommonMo } from './mo.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { BBox } from '../../../util/BBox.js';
+import { DIRECTION } from '../FontData.js';
 
 /*****************************************************************/
 /**
@@ -48,7 +58,9 @@ import {DIRECTION} from '../FontData.js';
  * @template FC  The FontDataClass type
  */
 export interface CommonMsqrt<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -57,9 +69,8 @@ export interface CommonMsqrt<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
   /**
    * The index of the base of the root in childNodes
    */
@@ -105,13 +116,12 @@ export interface CommonMsqrt<
   /**
    * @return {number}   The (approximate) width of the surd with its root
    */
-  rootWidth(): number
+  rootWidth(): number;
 
   /**
    * Set the size of the surd to enclose the base
    */
   getStretchedSurd(): void;
-
 }
 
 /**
@@ -131,7 +141,9 @@ export interface CommonMsqrt<
  * @template FC  The FontDataClass type
  */
 export interface CommonMsqrtClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -140,7 +152,7 @@ export interface CommonMsqrtClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
@@ -163,7 +175,9 @@ export interface CommonMsqrtClass<
  * @template B   The mixin interface to create
  */
 export function CommonMsqrtMixin<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -173,12 +187,14 @@ export function CommonMsqrtMixin<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
-
-  return class CommonMsqrtMixin extends Base
-  implements CommonMsqrt<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+): B {
+  return class CommonMsqrtMixin
+    extends Base
+    implements CommonMsqrt<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
      * @override
      */
@@ -206,8 +222,7 @@ export function CommonMsqrtMixin<
     /**
      * @override
      */
-    public combineRootBBox(_bbox: BBox, _sbox: BBox, _H: number) {
-    }
+    public combineRootBBox(_bbox: BBox, _sbox: BBox, _H: number) {}
 
     /**
      * @override
@@ -215,17 +230,23 @@ export function CommonMsqrtMixin<
     public getPQ(sbox: BBox): [number, number] {
       const t = this.font.params.rule_thickness;
       const s = this.font.params.surd_height;
-      const p = (this.node.attributes.get('displaystyle') ? this.font.params.x_height : t);
-      const q = (sbox.h + sbox.d > this.surdH ?
-                 ((sbox.h + sbox.d) - (this.surdH - t - s - p / 2)) / 2 :
-                 s + p / 4);
+      const p = this.node.attributes.get('displaystyle')
+        ? this.font.params.x_height
+        : t;
+      const q =
+        sbox.h + sbox.d > this.surdH
+          ? (sbox.h + sbox.d - (this.surdH - t - s - p / 2)) / 2
+          : s + p / 4;
       return [p, q];
     }
 
     /**
      * @override
      */
-    public getRootDimens(_sbox: BBox, _H: number): [number, number, number, number] {
+    public getRootDimens(
+      _sbox: BBox,
+      _H: number,
+    ): [number, number, number, number] {
       return [0, 0, 0, 0];
     }
 
@@ -233,7 +254,7 @@ export function CommonMsqrtMixin<
      * @override
      */
     public rootWidth() {
-      return 1.25;  // leave some room for the surd
+      return 1.25; // leave some room for the surd
     }
 
     /**
@@ -242,8 +263,10 @@ export function CommonMsqrtMixin<
     public getStretchedSurd() {
       const t = this.font.params.rule_thickness;
       const s = this.font.params.surd_height;
-      const p = (this.node.attributes.get('displaystyle') ? this.font.params.x_height : t);
-      const {h, d} = this.childNodes[this.base].getOuterBBox();
+      const p = this.node.attributes.get('displaystyle')
+        ? this.font.params.x_height
+        : t;
+      const { h, d } = this.childNodes[this.base].getOuterBBox();
       this.surdH = h + d + t + s + p / 4;
       this.surd.getStretchedVariant([this.surdH - d, d], true);
     }
@@ -289,7 +312,5 @@ export function CommonMsqrtMixin<
       super.invalidateBBox();
       this.surd.childNodes[0].invalidateBBox();
     }
-
   } as any as B;
-
 }

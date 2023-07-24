@@ -21,7 +21,6 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-
 /**
  * Sort strings by length
  *
@@ -30,7 +29,13 @@
  * @return {number}  -1 id a < b, 0 of a === b, 1 if a > b
  */
 export function sortLength(a: string, b: string): number {
-  return a.length !== b.length ? b.length - a.length : a === b ? 0 : a < b ? -1 : 1;
+  return a.length !== b.length
+    ? b.length - a.length
+    : a === b
+    ? 0
+    : a < b
+    ? -1
+    : 1;
 }
 
 /**
@@ -90,6 +95,8 @@ export function split(x: string): string[] {
  * @return {string}       The string with the unicode characters in place of \U{...}
  */
 export function replaceUnicode(text: string): string {
-  return text.replace(/((?:^|[^\\])(?:\\\\)*)\\U\s*(?:([0-9A-F])|\{\s*([0-9A-F]{1,6})\s*\})/g,
-                      (_m, pre, h1, h2) => pre + String.fromCodePoint(parseInt(h1 || h2, 16)));
+  return text.replace(
+    /((?:^|[^\\])(?:\\\\)*)\\U\s*(?:([0-9A-F])|\{\s*([0-9A-F]{1,6})\s*\})/g,
+    (_m, pre, h1, h2) => pre + String.fromCodePoint(parseInt(h1 || h2, 16)),
+  );
 }
