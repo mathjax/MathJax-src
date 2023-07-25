@@ -36,65 +36,65 @@ export function click(snippet: HTMLElement, e: MouseEvent) {
   if (snippet.contains(clicked)) {
     const prev = snippet.querySelector('[tabindex="0"][role="tree"],[tabindex="0"][role="group"],[tabindex="0"][role="treeitem"]');
     if (prev) {
-      prev.removeAttribute("tabindex");
+      prev.removeAttribute('tabindex');
     }
-    clicked.setAttribute("tabindex", "0");
+    clicked.setAttribute('tabindex', '0');
     clicked.focus();
     e.preventDefault();
   }
 }
 
 export function move(e: KeyboardEvent) {
-  
+
   function nextFocus(): HTMLElement {
     function nextSibling(el: HTMLElement): HTMLElement {
       const sib = el.nextElementSibling as HTMLElement;
       if (sib) {
-	if (sib.matches(nav)) {
+        if (sib.matches(nav)) {
           return sib;
-	} else {
+        } else {
           const sibChild = sib.querySelector(nav) as HTMLElement;
           return sibChild ?? nextSibling(sib);
-	}
+        }
       } else {
-	if (!isCodeBlock(el) && !el.parentElement.matches(nav)) {
+        if (!isCodeBlock(el) && !el.parentElement.matches(nav)) {
           return nextSibling(el.parentElement);
-	} else {
+        } else {
           return null;
-	}
+        }
       }
     }
 
     function prevSibling(el: HTMLElement): HTMLElement {
       const sib = el.previousElementSibling as HTMLElement;
       if (sib) {
-	if (sib.matches(nav)) {
+        if (sib.matches(nav)) {
           return sib;
-	} else {
+        } else {
           const sibChild = sib.querySelector(nav) as HTMLElement;
           return sibChild ?? prevSibling(sib);
-	}
+        }
       } else {
-	if (!isCodeBlock(el) && !el.parentElement.matches(nav)) {
+        if (!isCodeBlock(el) && !el.parentElement.matches(nav)) {
           return prevSibling(el.parentElement);
-	} else {
+        } else {
           return null;
-	}
+        }
       }
     }
 
     const target = e.target as HTMLElement;
     switch (e.key) {
-      case "ArrowDown":
+      case 'ArrowDown':
         e.preventDefault();
         return target.querySelector(nav);
-      case "ArrowUp":
+      case 'ArrowUp':
         e.preventDefault();
         return target.parentElement.closest(nav);
-      case "ArrowLeft":
+      case 'ArrowLeft':
         e.preventDefault();
         return prevSibling(target);
-      case "ArrowRight":
+      case 'ArrowRight':
         e.preventDefault();
         return nextSibling(target);
       default:
@@ -103,12 +103,13 @@ export function move(e: KeyboardEvent) {
   }
 
   const next = nextFocus();
-  
-  
+
+
   const target = e.target as HTMLElement;
+  console.log(0);
   if (next) {
-    target.removeAttribute("tabindex");
-    next.setAttribute("tabindex", "0");
+    target.removeAttribute('tabindex');
+    next.setAttribute('tabindex', '0');
     next.focus();
     console.log(next.getAttribute('data-semantic-speech'));
     console.log(next.getAttribute('data-semantic-braille'));
