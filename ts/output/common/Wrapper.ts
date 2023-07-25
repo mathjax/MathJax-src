@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2023 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -626,9 +626,14 @@ export class CommonWrapper<
    */
   public getBreakNode(bbox: LineBBox): [WW, WW] {
     const [i, j] = bbox.start || [0, 0];
-    if (this.node.isEmbellished) return [this, this.coreMO()] as any as [WW, WW];
-    if (this.node.isToken || !this.childNodes[i]) return [this, null] as any as [WW, WW];
-    return this.childNodes[i].getBreakNode(this.childNodes[i].getLineBBox(j));
+    if (this.node.isEmbellished) {
+      return [this, this.coreMO()] as any as [WW, WW];
+    }
+    const childNodes = (this.childNodes[0]?.node?.isInferred ? this.childNodes[0].childNodes : this.childNodes);
+    if (this.node.isToken || !childNodes[i]) {
+      return [this, null] as any as [WW, WW];
+    }
+    return childNodes[i].getBreakNode(childNodes[i].getLineBBox(j));
   }
 
   /**

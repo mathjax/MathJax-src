@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2023 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -177,13 +177,13 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
       this.getBBox(); // make sure we have linebreak information
       const lines = this.lineBBox;
       const adaptor = this.adaptor;
-      const [alignfirst, shiftfirst] = lines[1].indentData[0];
+      const [alignfirst, shiftfirst] = lines[1].indentData?.[0] || ['left', '0'];
       for (const i of parents.keys()) {
         const bbox = lines[i];
         let [indentalign, indentshift] = (
           i === 0 ?
             [alignfirst, shiftfirst] :
-            bbox.indentData[i === n ? 2 : 1]
+            bbox.indentData?.[i === n ? 2 : 1] || ['left', '0']
         );
         const [align, shift] = this.processIndent(indentalign, indentshift, alignfirst, shiftfirst);
         adaptor.setAttribute(parents[i], 'align', align);

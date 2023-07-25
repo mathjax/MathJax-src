@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2023 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -115,6 +115,8 @@ CommonOutputJax<
     'mjx-itable': {display: 'inline-table'},
     'mjx-row': {display: 'table-row'},
     'mjx-row > *': {display: 'table-cell'},
+
+    'mjx-container [inline-breaks]': {display: 'inline'},
 
     //
     //  These don't have Wrapper subclasses, so add their styles here

@@ -1,4 +1,4 @@
-dist: focal
+dist: jammy
 language: node_js
 node_js:
 - stable
@@ -6,10 +6,7 @@ sudo: false
 script:
 - components/bin/version
 - npm install
-- npm link
-- npm link mathjax-full
-- npm run -s compile
-- npm run -s make-components
+- npm run -s build-all
 branches:
   only:
   - "/^\\d+\\.\\d+/"
