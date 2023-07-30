@@ -111,9 +111,11 @@ export function move(e: KeyboardEvent) {
     target.removeAttribute('tabindex');
     next.setAttribute('tabindex', '0');
     next.focus();
-    // console.log(next.getAttribute('data-semantic-speech'));
-    // console.log(next.getAttribute('data-semantic-braille'));
-    return true;
+    console.log(next.getAttribute('data-semantic-speech'));
+    console.log(next.getAttribute('aria-label'));
+    console.log(next.getAttribute('data-semantic-braille'));
+    console.log(next.getAttribute('aria-braillelabel'));
+    return [next];
   }
   return false;
 }
