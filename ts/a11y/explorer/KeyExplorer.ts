@@ -359,7 +359,9 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @override
    */
   public KeyDown(event: KeyboardEvent) {
+    console.log(1);
     const code = event.keyCode;
+    console.log(2);
     this.walker.modifier = event.shiftKey;
     if (code === 17) {
       speechSynthesis.cancel();
@@ -372,7 +374,11 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     }
     //
     let result = move(event);
+    console.log(3);
     if (result) {
+      console.log(4);
+      console.log(result);
+      console.log(this.region);
       this.region.Show(this.node, this.highlighter);
       this.region.Update('hello');
       return;

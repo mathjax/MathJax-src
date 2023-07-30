@@ -31,13 +31,14 @@ import {MathML} from '../input/mathml.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {OptionList, expandable} from '../util/Options.js';
 import {Sre} from './sre.js';
+import { ssmlParsing } from './SpeechUtil.js';
 
 /*==========================================================================*/
 
 /**
  *  The current speech setting for Sre
  */
-let currentSpeech = 'none';
+// let currentSpeech = 'none';
 let currentLocale = 'none';
 let currentBraille = 'none';
 
@@ -299,18 +300,19 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
     }
 
     /**
-     * Retrieves the actual speech element that should be used as aria label.
+     * Retrieve and sets aria and braille labels recursively.
      * @param {MmlNode} node The root node to search from.
-     * @return {string} The speech content.
      */
-    protected setAria(node: MmlNode): string {
+    protected setAria(node: MmlNode) {
       const attributes = node.attributes;
-      if (!attributes) return '';
+      if (!attributes) return;
       const speech = this.getLabel(attributes);
       // TODO (explorer) For tree role move all speech etc. to container
       // element.
       if (speech) {
-        attributes.set('aria-label', speech);
+        console.log(speech);
+        console.log(ssmlParsing(speech));
+        attributes.set('aria-label', ssmlParsing(speech)[0]);
       }
       const braille = attributes.getExplicit('data-semantic-braille') as string;
       if (braille) {
@@ -418,6 +420,8 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
         domain: 'mathspeak',               // speech rules domain
         style: 'default',                  // speech rules style
         modality: 'speech',
+        markup: 'ssml',
+        automark: true,
       }),
     };
 
