@@ -26,12 +26,11 @@ import {Handler} from '../core/Handler.js';
 import {MathDocument, AbstractMathDocument, MathDocumentConstructor} from '../core/MathDocument.js';
 import {MathItem, AbstractMathItem, STATE, newState} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
-import {Attributes} from '../core/MmlTree/Attributes.js';
 import {MathML} from '../input/mathml.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {OptionList, expandable} from '../util/Options.js';
 import {Sre} from './sre.js';
-import { ssmlParsing } from './SpeechUtil.js';
+import { buildSpeech, getLabel } from './SpeechUtil.js';
 
 /*==========================================================================*/
 
@@ -181,8 +180,11 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
           // TODO: Sort out the loading of the locales better
           mathjax.retryAfter(
             Sre.setupEngine(document.options.sre).then(
-              () => Sre.sreReady()));
+              () => {
+                console.log(18);
+                return Sre.sreReady(); }));
         }
+        console.log(Sre.engineSetup());
         if (document.options.sre.braille !== currentBraille) {
           currentBraille = document.options.sre.braille;
           // TODO: Sort out the loading of the locales better
@@ -194,7 +196,9 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
               modality: 'braille',
               markup: 'none',
             })
-              .then(() => Sre.sreReady()));
+              .then(() => {
+                console.log(19);
+                Sre.sreReady();}));
         }
         const math = new document.options.MathItem('', MmlJax);
         try {
@@ -208,7 +212,9 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
           const generator = Sre.getSpeechGenerator('Tree');
           generator.setOptions(document.options.sre);
           // Attach this here?
-          this.label = generator.getSpeech(enriched, enriched);
+          this.label = buildSpeech(
+            generator.getSpeech(enriched, enriched),
+            document.options.sre.locale)[0];
           generator.setOptions({
               locale: document.options.sre.braille,
               domain: 'default',               // speech rules domain
@@ -221,11 +227,14 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
           math.display = this.display;
           math.compile(document);
           this.root = math.root;
+          console.log(11);
         } catch (err) {
           document.options.enrichError(document, this, err);
         }
       }
-      this.setAria(this.root);
+      console.log(this.label);
+      console.log(this.braillelabel);
+      this.setAria(this.root, document.options.sre.locale);
       this.state(STATE.ENRICHED);
     }
 
@@ -303,43 +312,22 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
      * Retrieve and sets aria and braille labels recursively.
      * @param {MmlNode} node The root node to search from.
      */
-    protected setAria(node: MmlNode) {
+    protected setAria(node: MmlNode, locale: string) {
       const attributes = node.attributes;
       if (!attributes) return;
-      const speech = this.getLabel(attributes);
+      const speech = getLabel(node);
       // TODO (explorer) For tree role move all speech etc. to container
       // element.
       if (speech) {
-        console.log(speech);
-        console.log(ssmlParsing(speech));
-        attributes.set('aria-label', ssmlParsing(speech)[0]);
+        attributes.set('aria-label', buildSpeech(speech, locale)[0]);
       }
-      const braille = attributes.getExplicit('data-semantic-braille') as string;
+      const braille = node.attributes.getExplicit('data-semantic-braille') as string;
       if (braille) {
         attributes.set('aria-braillelabel', braille);
       }
       for (let child of node.childNodes) {
-        this.setAria(child);
+        this.setAria(child, locale);
       }
-    }
-
-    private getLabel(attributes: Attributes) {
-      const speech = attributes.getExplicit('data-semantic-speech') as string;
-      if (!speech) {
-        return '';
-      }
-      const label = [speech];
-      const prefix = attributes.getExplicit('data-semantic-prefix') as string;
-      if (prefix) {
-        label.unshift(prefix);
-      }
-      // TODO: check if we need this or if is automatic by the screen readers.
-      const postfix = attributes.getExplicit('data-semantic-postfix') as string;
-      if (postfix) {
-        label.push(postfix);
-      }
-       // TODO: Do we need to merge wrt. locale in SRE.
-      return label.join(' ');
     }
 
   };

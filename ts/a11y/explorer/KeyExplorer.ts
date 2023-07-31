@@ -310,6 +310,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @override
    */
   public Update(force: boolean = false) {
+    console.log(9);
     // TODO (v4): This is a hack to avoid double voicing on initial startup!
     // Make that cleaner and remove force as it is not really used!
     let noUpdate = force;
@@ -330,6 +331,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
                                      modality: options.modality,
                                      locale: options.locale}))
         .then(() => {
+          console.log(10);
           if (!noUpdate) {
             let speech = this.walker.speech();
             this.region.Update(speech);
