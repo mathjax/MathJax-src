@@ -91,7 +91,7 @@ export abstract class AbstractRegion<T> implements Region<T> {
    * The outer div node.
    * @type {HTMLElement}
    */
-  protected div: HTMLElement;
+  public div: HTMLElement;
 
   /**
    * The inner node.
@@ -413,15 +413,19 @@ export class SpeechRegion extends LiveRegion {
    * @override
    */
   public Update(speech: string) {
-    this.active = this.document.options.a11y.voicing &&
-      !!speechSynthesis.getVoices().length;
-    speechSynthesis.cancel();
-    this.clear = true;
-    let [text, ssml] = ssmlParsing(speech);
-    super.Update(text);
-    if (this.active && text) {
-      this.makeUtterances(ssml, this.document.options.sre.locale);
-    }
+    // console.log(speech);
+    // this.active = this.document.options.a11y.voicing &&
+    //   !!speechSynthesis.getVoices().length;
+    // speechSynthesis.cancel();
+    // this.clear = true;
+    // let [text, ssml] = ssmlParsing(speech);
+    // console.log(27);
+    // console.log(text);
+    // super.Update(text);
+    // if (this.active && text) {
+    //   this.makeUtterances(ssml, this.document.options.sre.locale);
+    // }
+    super.Update(speech);
   }
 
   /**

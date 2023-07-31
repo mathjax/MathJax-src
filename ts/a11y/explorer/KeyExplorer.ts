@@ -28,7 +28,7 @@ import {Explorer, AbstractExplorer} from './Explorer.js';
 import {ExplorerPool} from './ExplorerPool.js';
 import {Sre} from '../sre.js';
 
-import {click, move} from './Walker.js';
+import { Walker } from './Walker.js';
 
 
 /**
@@ -78,6 +78,8 @@ export interface KeyExplorer extends Explorer {
  */
 export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> implements KeyExplorer {
 
+  public newWalker = new Walker();
+
   /**
    * Flag indicating if the explorer is attached to an object.
    */
@@ -104,7 +106,7 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
       [
         // ['keydown', move],
         ['keydown', this.KeyDown.bind(this)],
-        ['click', ((e: MouseEvent) => click(this.node, e)).bind(this)],
+        ['click', ((e: MouseEvent) => this.newWalker.click(this.node, e)).bind(this)],
         ['focusin', this.FocusIn.bind(this)],
         ['focusout', this.FocusOut.bind(this)]
       ]);
@@ -310,7 +312,6 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @override
    */
   public Update(force: boolean = false) {
-    console.log(9);
     // TODO (v4): This is a hack to avoid double voicing on initial startup!
     // Make that cleaner and remove force as it is not really used!
     let noUpdate = force;
@@ -331,7 +332,6 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
                                      modality: options.modality,
                                      locale: options.locale}))
         .then(() => {
-          console.log(10);
           if (!noUpdate) {
             let speech = this.walker.speech();
             this.region.Update(speech);
@@ -361,9 +361,8 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @override
    */
   public KeyDown(event: KeyboardEvent) {
-    console.log(1);
     const code = event.keyCode;
-    console.log(2);
+    console.log(event.key);
     this.walker.modifier = event.shiftKey;
     if (code === 17) {
       speechSynthesis.cancel();
@@ -372,17 +371,17 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     if (code === 27) {
       this.Stop();
       this.stopEvent(event);
+      this.newWalker.HideRegions();
       return;
     }
-    //
-    let result = move(event);
-    console.log(3);
+    
+    let result = this.newWalker.move(event);
+    this.newWalker.ShowRegions(this.node, this.highlighter);
     if (result) {
-      console.log(4);
-      console.log(result);
-      console.log(this.region);
-      this.region.Show(this.node, this.highlighter);
-      this.region.Update('hello');
+      // console.log(4);
+      // console.log(result);
+      // console.log(this.region);
+      // this.region.Update('hello');
       return;
     }
     if (this.sound) {
