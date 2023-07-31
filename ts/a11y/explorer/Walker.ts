@@ -106,15 +106,10 @@ export function move(e: KeyboardEvent) {
 
 
   const target = e.target as HTMLElement;
-  console.log(0);
   if (next) {
     target.removeAttribute('tabindex');
     next.setAttribute('tabindex', '0');
     next.focus();
-    console.log(next.getAttribute('data-semantic-speech'));
-    console.log(next.getAttribute('aria-label'));
-    console.log(next.getAttribute('data-semantic-braille'));
-    console.log(next.getAttribute('aria-braillelabel'));
     return [next];
   }
   return false;
