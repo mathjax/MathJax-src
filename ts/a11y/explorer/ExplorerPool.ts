@@ -101,6 +101,8 @@ let allExplorers: {[options: string]: ExplorerInit} = {
     }
     explorer.sound = true;
     explorer.showRegion = 'subtitles';
+    explorer.newWalker.speechRegion = doc.explorerRegions.speechRegion;
+    explorer.newWalker.brailleRegion = doc.explorerRegions.brailleRegion;
     return explorer;
   },
   // braille: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
