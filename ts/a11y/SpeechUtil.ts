@@ -27,8 +27,6 @@ export interface SsmlElement extends ProsodyElement {
  * @return {[string, SsmlElement[]]} The annotation structure.
  */
 export function ssmlParsing(speech: string): [string, SsmlElement[]] {
-  console.log(Sre.engineSetup());
-
   let dp = new DOMParser();
   let xml = dp.parseFromString(speech, 'text/xml');
   let instr: SsmlElement[] = [];

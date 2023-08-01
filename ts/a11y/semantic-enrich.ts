@@ -181,10 +181,8 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
           mathjax.retryAfter(
             Sre.setupEngine(document.options.sre).then(
               () => {
-                console.log(18);
                 return Sre.sreReady(); }));
         }
-        console.log(Sre.engineSetup());
         if (document.options.sre.braille !== currentBraille) {
           currentBraille = document.options.sre.braille;
           // TODO: Sort out the loading of the locales better
@@ -197,7 +195,6 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
               markup: 'none',
             })
               .then(() => {
-                console.log(19);
                 Sre.sreReady();}));
         }
         const math = new document.options.MathItem('', MmlJax);
@@ -227,13 +224,10 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
           math.display = this.display;
           math.compile(document);
           this.root = math.root;
-          console.log(11);
         } catch (err) {
           document.options.enrichError(document, this, err);
         }
       }
-      console.log(this.label);
-      console.log(this.braillelabel);
       this.setAria(this.root, document.options.sre.locale);
       this.state(STATE.ENRICHED);
     }
@@ -440,7 +434,6 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
      * Attach speech from a MathItem to a node
      */
     public attachSpeech() {
-      console.log(this.math);
       if (!this.processed.isSet('attach-speech')) {
         for (const math of this.math) {
           (math as EnrichedMathItem<N, T, D>).attachSpeech(this);

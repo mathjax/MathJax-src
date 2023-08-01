@@ -34,12 +34,49 @@ function isCodeBlock(el: HTMLElement) {
   return el.matches(codeSelector);
 }
 
+type rgbColor = {red: number, green: number, blue: number};
+type channelColor = {name: string, alpha: number};
+
+export class Highlighter {
+
+  public foreground: string;
+  public background: string;
+
+  public static namedColors: { [key: string]: rgbColor } = {
+    red: { red: 255, green: 0, blue: 0 },
+    green: { red: 0, green: 255, blue: 0 },
+    blue: { red: 0, green: 0, blue: 255 },
+    yellow: { red: 255, green: 255, blue: 0 },
+    cyan: { red: 0, green: 255, blue: 255 },
+    magenta: { red: 255, green: 0, blue: 255 },
+    white: { red: 255, green: 255, blue: 255 },
+    black: { red: 0, green: 0, blue: 0 }
+  };
+
+  constructor(foreground: channelColor, background: channelColor) {
+    this.foreground = this.makeColor(foreground);
+    this.background = this.makeColor(background);
+  }
+
+  // public highlight(node: HTMLElement) {
+
+  // }
+
+  private makeColor({name: name, alpha: alpha}: channelColor) {
+    let {red: red, green: green, blue: blue} =
+      Highlighter.namedColors[name] || Highlighter.namedColors['blue'];
+    return `rgba(${red},${green},${blue},${alpha})`;
+  }
+
+}
+
 export class Walker {
 
   public shown: boolean = false;
   public speechRegion: SpeechRegion;
   public brailleRegion: LiveRegion;
-  
+  public highlighter: Sre.highlighter;
+
   public click(snippet: HTMLElement, e: MouseEvent) {
     const clicked = (e.target as HTMLElement).closest(nav) as HTMLElement;
     if (snippet.contains(clicked)) {
@@ -94,7 +131,6 @@ export class Walker {
       }
 
       const target = e.target as HTMLElement;
-      console.log(e.key);
       switch (e.key) {
         case 'ArrowDown':
           e.preventDefault();
@@ -108,9 +144,9 @@ export class Walker {
         case 'ArrowRight':
           e.preventDefault();
           return nextSibling(target);
-        case 'Esc':
-          e.preventDefault();
-          return this.hideRegions();
+        // case 'Esc':
+        //   e.preventDefault();
+        //   return this.hideRegions();
         default:
           return null;
       }
@@ -123,18 +159,23 @@ export class Walker {
       target.removeAttribute('tabindex');
       next.setAttribute('tabindex', '0');
       next.focus();
+      this.UpdateHighlight(target, next);
       this.UpdateRegions(next);
       return [next];
     }
     return false;
   }
 
+  private info: Highlight;
+
+  private UpdateHighlight(_target: HTMLElement, next: HTMLElement) {
+    if (this.info) {
+      (this.highlighter as any).unhighlightNode(this.info);
+    }
+    this.info = (this.highlighter as any).highlightNode(next);
+  }
+
   private UpdateRegions(element: HTMLElement) {
-    console.log(25);
-    console.log(element);
-    console.log(element.getAttribute('aria-label'));
-    console.log(element.getAttribute('aria-braillelabel'));
-    console.log(this.speechRegion);
     this.speechRegion.Update(element.getAttribute('aria-label'));
     this.brailleRegion.Update(element.getAttribute('aria-braillelabel'));
   }
@@ -146,7 +187,7 @@ export class Walker {
     }
     this.shown = true;
   }
-  
+
   public HideRegions() {
     if (this.shown) {
       this.speechRegion.Hide();
@@ -156,3 +197,12 @@ export class Walker {
   }
 }
 
+export interface Highlight {
+  node: HTMLElement;
+  opacity?: string;
+  background?: string;
+  foreground?: string;
+  // The following is for the CSS highlighter
+  box?: HTMLElement;
+  position?: string;
+}
