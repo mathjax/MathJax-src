@@ -32,7 +32,7 @@ import TexError from './TexError.js';
 import {MmlNode, AbstractMmlNode} from '../../core/MmlTree/MmlNode.js';
 import {ParseInput, ParseResult} from './Types.js';
 import ParseOptions from './ParseOptions.js';
-import {StackItem, EnvList} from './StackItem.js';
+import {BaseItem, StackItem, EnvList} from './StackItem.js';
 import {Symbol} from './Symbol.js';
 import {OptionList} from '../../util/Options.js';
 
@@ -66,6 +66,8 @@ export default class TexParser {
    */
   public currentCS: string = '';
 
+  public saveI: number[] = [0];
+
   /**
    * @constructor
    * @param {string} _string The string to parse.
@@ -88,6 +90,7 @@ export default class TexParser {
     this.stack = new Stack(this.itemFactory, ENV, inner ? isInner : true);
     this.Parse();
     this.Push(this.itemFactory.create('stop'));
+    this.updateResult(this.string, this.i);
     this.stack.env = ENV;
   }
 
@@ -135,7 +138,94 @@ export default class TexParser {
    * @return {ParseResult} The output of the parsing function.
    */
   public parse(kind: HandlerType, input: ParseInput): ParseResult {
-    return this.configuration.handlers.get(kind).parse(input);
+    this.saveI.push(this.i);
+    let result = this.configuration.handlers.get(kind).parse(input);
+    this.updateResult(input[1], this.saveI.pop());
+    return result;
+  }
+
+  // Currently works without environments.
+  private updateResult(input: string, old: number) {
+    let node = this.stack.Prev(true) as MmlNode;
+    if (!node) {
+      return;
+    }
+    let existing = node.attributes.get('itemLatex');
+    if (existing !== undefined) {
+      node.attributes.set('latex', existing);
+      return;
+    }
+    let str = old !== this.i ? this.string.slice(old, this.i) : input;
+    str = str.trim();
+    if (!str) {
+      return;
+    }
+    if (input === '\\') {
+      str = '\\' + str;
+    }
+    // TODO: Simplify.
+    // These are the cases to handle sub and superscripts.
+    if (node.attributes.get('latex') === '^' && str !== '^') {
+      if (str === '}') {
+        this.updateChild(node.childNodes[2]);
+      } else {
+        node.childNodes[2].attributes.set('latex', str);
+      }
+      if (node.childNodes[1]) {
+        const sub = node.childNodes[1].attributes.get('latex');
+        this.composeLatex(node, `_${sub}^`, 0, 2);
+      } else {
+        this.composeLatex(node, '^', 0, 2);
+      }
+      return;
+    }
+    if (node.attributes.get('latex') === '_' && str !== '_') {
+      if (str === '}') {
+        this.updateChild(node.childNodes[1]);
+      } else {
+        node.childNodes[1].attributes.set('latex', str);
+      }
+      if (node.childNodes[2]) {
+        const sub = node.childNodes[2].attributes.get('latex');
+        this.composeLatex(node, `^${sub}_`, 0, 1);
+      } else {
+        this.composeLatex(node, '_', 0, 1);
+      }
+      return;
+    }
+    if (str === '}') {
+      this.updateChild(node);
+      return;
+    }
+    node.attributes.set('latex', str);
+  }
+
+  private composeLatex(node: MmlNode, comp: string, pos1: number, pos2: number) {
+    const expr = node.childNodes[pos1].attributes.get('latex') + comp +
+      node.childNodes[pos2].attributes.get('latex');
+    node.attributes.set('latex', expr);
+  }
+  
+  private bracing(str: string) {
+    return '{' + str + '}';
+  }
+
+  private updateChild(atom: MmlNode) {
+    if (!atom) return;
+    let str = this.composeBraces(atom);
+    atom.attributes.set('latex', this.bracing(str));
+  }
+
+  private composeBraces(atom: MmlNode) {
+    // TODO: Make this more secure!
+    let children = atom.childNodes[0].childNodes;
+    let expr = '';
+    for (const child of children) {
+      let att = (child.attributes?.get('latex') || '') as string;
+      if (!att) continue;
+      expr += (expr && expr.match(/[a-zA-Z]$/) && att.match(/^[a-zA-Z]/)) ? ' ' + att : att;
+    }
+    return expr;
   }
 
 
@@ -195,6 +285,12 @@ export default class TexParser {
    * @param {StackItem|MmlNode} arg The new item.
    */
   public Push(arg: StackItem | MmlNode) {
+    if (arg instanceof BaseItem) {
+      arg.startI = this.saveI.pop();
+      this.saveI.push(arg.startI);
+      arg.stopI = this.i;
+      arg.startStr = this.string;
+    }
     if (arg instanceof AbstractMmlNode && arg.isInferred) {
       this.PushAll(arg.childNodes);
     } else {
@@ -223,6 +319,7 @@ export default class TexParser {
     }
     let node = this.stack.Top().First;
     this.configuration.popParser();
+    node.attributes.set('latex', this.string);
     return node;
   }
 

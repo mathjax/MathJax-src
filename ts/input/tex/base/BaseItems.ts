@@ -145,6 +145,7 @@ export class OpenItem extends BaseItem {
       // @test PrimeSup
       let mml = this.toMml();
       const node = this.create('node', 'TeXAtom', [mml]);
+      addLatexItem(node, item);
       return [[this.factory.create('mml', node)], true];
     }
     return super.checkItem(item);
@@ -252,6 +253,8 @@ export class SubsupItem extends BaseItem {
           item.First = node;
         }
       }
+      // console.log(JSON.stringify(item.First.attributes));
+      // let first = item.First;
       NodeUtil.setChild(top, position, item.First);
       if (this.getProperty('movesupsub') != null) {
         // @test Limits Subsup (currently does not work! Check again!)
@@ -325,6 +328,7 @@ export class OverItem extends BaseItem {
                                    this.getProperty('ldelim') as string, mml,
                                    this.getProperty('rdelim') as string);
       }
+      mml.attributes.set('itemLatex', this.getProperty('name') as string);
       return [[this.factory.create('mml', mml), item], true];
     }
     return super.checkItem(item);
@@ -390,10 +394,19 @@ export class LeftItem extends BaseItem {
       //
       //  Create the fenced structure as an mrow
       //
-      return [[this.factory.create('mml', ParseUtil.fenced(
+      let fenced = ParseUtil.fenced(
         this.factory.configuration,
         this.getProperty('delim') as string, this.toMml(),
-        item.getProperty('delim') as string, '', item.getProperty('color') as string))], true];
+        item.getProperty('delim') as string, '', item.getProperty('color') as string);
+      let left = fenced.childNodes[0];
+      let right = fenced.childNodes[fenced.childNodes.length - 1];
+      let mrow = this.factory.create('mml', fenced);
+      // TODO: Do we really want to have the left/right/middle prefixes here?
+      addLatexItem(left, this, '\\left');
+      addLatexItem(right, item, '\\right');
+      mrow.Peek()[0].attributes.set(
+        'itemLatex', '\\left' + item.startStr.slice(this.startI, item.stopI));
+      return [[mrow], true];
     }
     if (item.isKind('middle')) {
       //
@@ -403,9 +416,11 @@ export class LeftItem extends BaseItem {
       if (item.getProperty('color')) {
         def.mathcolor = item.getProperty('color');
       }
+      let middle = this.create('token', 'mo', def, item.getProperty('delim'));
+      addLatexItem(middle, item, '\\middle');
       this.Push(
         this.create('node', 'TeXAtom', [], {texClass: TEXCLASS.CLOSE}),
-        this.create('token', 'mo', def, item.getProperty('delim')),
+        middle,
         this.create('node', 'TeXAtom', [], {texClass: TEXCLASS.OPEN})
       );
       this.env = {};         // Since \middle closes the group, clear the environment
@@ -563,7 +578,9 @@ export class BeginItem extends BaseItem {
       }
       if (!this.getProperty('end')) {
         // @test Hfill
-        return [[this.factory.create('mml', this.toMml())], true];
+        const node = this.toMml();
+        addLatexItem(node, item);
+        return [[this.factory.create('mml', node)], true];
       }
       return BaseItem.fail;  // TODO: This case could probably go!
     }
@@ -1290,6 +1307,7 @@ export class ArrayItem extends BaseItem {
       NodeUtil.setAttribute(node, 'data-break-align', this.breakAlign.row);
       this.breakAlign.row = '';
     }
+    addLatexItem(node, this);
     this.table.push(node);
     this.row = [];
     this.atEnd = false;
@@ -1568,4 +1586,13 @@ export class EquationItem extends BaseItem {
     return super.checkItem(item);
   }
 
+}
+
+
+function addLatexItem(node: MmlNode, item: StackItem, prefix: string = '') {
+  let str = item.startStr.slice(item.startI, item.stopI);
+  if (str) {
+    node.attributes.set('itemLatex', prefix ? prefix + str : str);
+    node.attributes.set('latex', prefix ? prefix + str : str);
+  }
 }
