@@ -132,7 +132,7 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
    * @override
    */
   public FocusOut(_event: FocusEvent) {
-    this.Stop();
+    // this.Stop();
   }
 
   /**
@@ -260,6 +260,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
               protected node: HTMLElement,
               private mml: string) {
     super(document, pool, region, node);
+    this.newWalker.highlighter = this.highlighter;
     this.initWalker();
   }
 
@@ -268,6 +269,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @override
    */
   public Start() {
+    console.log(this.attached);
     if (!this.attached) return;
     let options = this.getOptions();
     if (!this.init) {
@@ -361,36 +363,36 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @override
    */
   public KeyDown(event: KeyboardEvent) {
-    const code = event.keyCode;
-    console.log(event.key);
+    console.log('active: ' + this.active);
+    const code = event.key;
     this.walker.modifier = event.shiftKey;
-    if (code === 17) {
+    if (code === 'Control') {
       speechSynthesis.cancel();
       return;
     }
-    if (code === 27) {
+    if (code === 'Escape') {
       this.Stop();
       this.stopEvent(event);
       this.newWalker.HideRegions();
       return;
     }
-    
-    let result = this.newWalker.move(event);
-    this.newWalker.ShowRegions(this.node, this.highlighter);
+    let result = null;
+    if (this.active) {
+      result = this.newWalker.move(event);
+      this.newWalker.ShowRegions(this.node, this.highlighter);
+      this.stopEvent(event);
+    }
     if (result) {
-      // console.log(4);
-      // console.log(result);
-      // console.log(this.region);
       // this.region.Update('hello');
       return;
     }
-    if (this.sound) {
+    if (!result && this.sound) {
       this.NoMove();
     }
     //
     if (this.triggerLink(code)) return;
-    this.stopEvent(event);
-    if (code === 32 && event.shiftKey || code === 13) {
+    // this.stopEvent(event);
+    if (code === 'Space' && event.shiftKey || code === 'Enter') {
       this.Start();
       this.stopEvent(event);
     }
@@ -400,8 +402,8 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * Programmatically triggers a link if the focused node contains one.
    * @param {number} code The keycode of the last key pressed.
    */
-  protected triggerLink(code: number) {
-    if (code !== 13) {
+  protected triggerLink(code: string) {
+    if (code !== 'Enter') {
       return false;
     }
     let node = this.walker.getFocus().getNodes()?.[0];
