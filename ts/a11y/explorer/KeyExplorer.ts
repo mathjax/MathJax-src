@@ -269,33 +269,32 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @override
    */
   public Start() {
-    console.log(this.attached);
     if (!this.attached) return;
-    let options = this.getOptions();
-    if (!this.init) {
-      this.init = true;
-      SpeechExplorer.updatePromise = SpeechExplorer.updatePromise.then(async () => {
-        return Sre.sreReady()
-          .then(() => Sre.setupEngine({locale: options.locale}))
-          .then(() => {
-            // Important that both are in the same block so speech explorers
-            // are restarted sequentially.
-            this.Speech(this.walker);
-          })
-          .then(() => Sre.setupEngine({automark: false as any, markup: 'none',
-                                       locale: 'nemeth', domain: 'default',
-                                       style: 'default', modality: 'braille'}))
-          .then(() => {
-            this.speechGenerator.setOptions({automark: false as any, markup: 'none',
-                                       locale: 'nemeth', domain: 'default',
-                                       style: 'default', modality: 'braille'});
-            this.Speech(this.walker);
-            this.Start();
-          });
-      })
-      return;
-    }
     super.Start();
+    // let options = this.getOptions();
+    // if (!this.init) {
+    //   this.init = true;
+    //   SpeechExplorer.updatePromise = SpeechExplorer.updatePromise.then(async () => {
+    //     return Sre.sreReady()
+    //       .then(() => Sre.setupEngine({locale: options.locale}))
+    //       .then(() => {
+    //         // Important that both are in the same block so speech explorers
+    //         // are restarted sequentially.
+    //         this.Speech(this.walker);
+    //       })
+    //       .then(() => Sre.setupEngine({automark: false as any, markup: 'none',
+    //                                    locale: 'nemeth', domain: 'default',
+    //                                    style: 'default', modality: 'braille'}))
+    //       .then(() => {
+    //         this.speechGenerator.setOptions({automark: false as any, markup: 'none',
+    //                                    locale: 'nemeth', domain: 'default',
+    //                                    style: 'default', modality: 'braille'});
+    //         this.Speech(this.walker);
+    //         this.Start();
+    //       });
+    //   })
+    //   return;
+    // }
     // this.speecGhenerator = Sre.getSpeechGenerator('Direct');
     // this.speechGenerator.setOptions(options);
     // this.walker = Sre.getWalker(
