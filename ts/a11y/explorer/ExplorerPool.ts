@@ -89,16 +89,16 @@ let allExplorers: {[options: string]: ExplorerInit} = {
   speech: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
     let explorer = ke.SpeechExplorer.create(
       doc, pool, doc.explorerRegions.speechRegion, node, ...rest) as ke.SpeechExplorer;
-    explorer.speechGenerator.setOptions({
-      automark: true as any, markup: 'ssml',
-      locale: doc.options.sre.locale, domain: doc.options.sre.domain,
-      style: doc.options.sre.style, modality: 'speech'});
-    // This weeds out the case of providing a non-existent locale option.
-    let locale = explorer.speechGenerator.getOptions().locale;
-    if (locale !== Sre.engineSetup().locale) {
-      doc.options.sre.locale = Sre.engineSetup().locale;
-      explorer.speechGenerator.setOptions({locale: doc.options.sre.locale});
-    }
+    // explorer.speechGenerator.setOptions({
+    //   automark: true as any, markup: 'ssml',
+    //   locale: doc.options.sre.locale, domain: doc.options.sre.domain,
+    //   style: doc.options.sre.style, modality: 'speech'});
+    // // This weeds out the case of providing a non-existent locale option.
+    // let locale = explorer.speechGenerator.getOptions().locale;
+    // if (locale !== Sre.engineSetup().locale) {
+    //   doc.options.sre.locale = Sre.engineSetup().locale;
+    //   explorer.speechGenerator.setOptions({locale: doc.options.sre.locale});
+    // }
     explorer.sound = true;
     explorer.showRegion = 'subtitles';
     explorer.newWalker.speechRegion = doc.explorerRegions.speechRegion;
