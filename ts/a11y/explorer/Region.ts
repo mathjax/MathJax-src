@@ -279,8 +279,6 @@ export class StringRegion extends AbstractRegion<string> {
    * @override
    */
   public Update(speech: string) {
-    console.log(6);
-    console.log(speech);
     this.inner.textContent = '';
     this.inner.textContent = speech;
   }
@@ -413,10 +411,12 @@ export class SpeechRegion extends LiveRegion {
    * @override
    */
   public Update(speech: string) {
+    console.log('In Speech region: ' + speech);
+    // Temporarily removed!
     // console.log(speech);
     // this.active = this.document.options.a11y.voicing &&
     //   !!speechSynthesis.getVoices().length;
-    // speechSynthesis.cancel();
+   // speechSynthesis.cancel();
     // this.clear = true;
     // let [text, ssml] = ssmlParsing(speech);
     // console.log(27);

@@ -88,7 +88,8 @@ type ExplorerInit = (doc: ExplorerMathDocument, pool: ExplorerPool,
 let allExplorers: {[options: string]: ExplorerInit} = {
   speech: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
     let explorer = ke.SpeechExplorer.create(
-      doc, pool, doc.explorerRegions.speechRegion, node, ...rest) as ke.SpeechExplorer;
+      doc, pool, doc.explorerRegions.speechRegion, node,
+      doc.explorerRegions.brailleRegion, doc.explorerRegions.magnifier, rest[0]) as ke.SpeechExplorer;
     // explorer.speechGenerator.setOptions({
     //   automark: true as any, markup: 'ssml',
     //   locale: doc.options.sre.locale, domain: doc.options.sre.domain,
@@ -100,9 +101,6 @@ let allExplorers: {[options: string]: ExplorerInit} = {
     //   explorer.speechGenerator.setOptions({locale: doc.options.sre.locale});
     // }
     explorer.sound = true;
-    explorer.showRegion = 'subtitles';
-    explorer.newWalker.speechRegion = doc.explorerRegions.speechRegion;
-    explorer.newWalker.brailleRegion = doc.explorerRegions.brailleRegion;
     return explorer;
   },
   // braille: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
@@ -114,8 +112,8 @@ let allExplorers: {[options: string]: ExplorerInit} = {
   //   explorer.showRegion = 'viewBraille';
   //   return explorer;
   // },
-  keyMagnifier: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) =>
-    ke.Magnifier.create(doc, pool, doc.explorerRegions.magnifier, node, ...rest),
+  // keyMagnifier: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) =>
+  //   ke.Magnifier.create(doc, pool, doc.explorerRegions.magnifier, node, ...rest),
   mouseMagnifier: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ..._rest: any[]) =>
     me.ContentHoverer.create(doc, pool, doc.explorerRegions.magnifier, node,
                              (x: HTMLElement) => x.hasAttribute('data-semantic-type'),
@@ -235,7 +233,7 @@ export class ExplorerPool {
     let keyExplorers = [];
     for (let key of Object.keys(this.explorers)) {
       let explorer = this.explorers[key];
-      if (explorer instanceof ke.AbstractKeyExplorer) {
+      if (explorer instanceof ke.SpeechExplorer) {
         explorer.AddEvents();
         explorer.stoppable = false;
         keyExplorers.unshift(explorer);
