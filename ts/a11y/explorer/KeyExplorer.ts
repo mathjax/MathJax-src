@@ -23,12 +23,12 @@
  */
 
 
-import {A11yDocument, Region} from './Region.js';
+import {A11yDocument, Region, HoverRegion, SpeechRegion, LiveRegion} from './Region.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
 import {ExplorerPool} from './ExplorerPool.js';
 import {Sre} from '../sre.js';
 
-import { Walker } from './Walker.js';
+// import { Walker } from './Walker.js';
 
 
 /**
@@ -60,7 +60,7 @@ export interface KeyExplorer extends Explorer {
    * Move made on keypress.
    * @param key The key code of the pressed key.
    */
-  Move(key: number): void;
+  Move(event: KeyboardEvent): void;
 
   /**
    * A method that is executed if no move is executed.
@@ -70,15 +70,22 @@ export interface KeyExplorer extends Explorer {
 }
 
 
+const codeSelector = 'mjx-container[role="application"][data-shellac]';
+const nav = '[role="application"][data-shellac],[role="tree"],[role="group"],[role="treeitem"]';
+
+function isCodeBlock(el: HTMLElement) {
+  return el.matches(codeSelector);
+}
+
 /**
  * @constructor
  * @extends {AbstractExplorer}
  *
  * @template T  The type that is consumed by the Region of this explorer.
  */
-export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> implements KeyExplorer {
+export class SpeechExplorer extends AbstractExplorer<void> implements KeyExplorer {
 
-  public newWalker = new Walker();
+  // public newWalker = new Walker();
 
   /**
    * Flag indicating if the explorer is attached to an object.
@@ -98,6 +105,8 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
 
   private eventsAttached: boolean = false;
 
+  protected current: HTMLElement = null;
+
   /**
    * @override
    */
@@ -106,21 +115,30 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
       [
         // ['keydown', move],
         ['keydown', this.KeyDown.bind(this)],
-        ['click', ((e: MouseEvent) => this.newWalker.click(this.node, e)).bind(this)],
+        ['click', ((e: MouseEvent) => this.click(this.node, e)).bind(this)],
         ['focusin', this.FocusIn.bind(this)],
         ['focusout', this.FocusOut.bind(this)]
       ]);
+
+  public click(snippet: HTMLElement, e: MouseEvent) {
+    const clicked = (e.target as HTMLElement).closest(nav) as HTMLElement;
+    if (snippet.contains(clicked)) {
+      const prev = snippet.querySelector('[tabindex="0"][role="tree"],[tabindex="0"][role="group"],[tabindex="0"][role="treeitem"]');
+      if (prev) {
+        prev.removeAttribute('tabindex');
+      }
+      clicked.setAttribute('tabindex', '0');
+      clicked.focus();
+      this.current = clicked;
+      e.preventDefault();
+    }
+  }
 
   /**
    * The original tabindex value before explorer was attached.
    * @type {boolean}
    */
   private oldIndex: number = null;
-
-  /**
-   * @override
-   */
-  public abstract KeyDown(event: KeyboardEvent): void;
 
   /**
    * @override
@@ -133,20 +151,6 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
    */
   public FocusOut(_event: FocusEvent) {
     // this.Stop();
-  }
-
-  /**
-   * @override
-   */
-  public Update(force: boolean = false) {
-    if (!this.active && !force) return;
-    this.pool.unhighlight();
-    let nodes = this.walker.getFocus(true).getNodes();
-    if (!nodes.length) {
-      this.walker.refocus();
-      nodes = this.walker.getFocus().getNodes();
-    }
-    this.pool.highlight(nodes as HTMLElement[]);
   }
 
   /**
@@ -187,21 +191,77 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
   /**
    * @override
    */
-  public Stop() {
-    if (this.active) {
-      this.walker.deactivate();
-      this.pool.unhighlight();
-    }
-    super.Stop();
-  }
+  public Move(e: KeyboardEvent) {
+    function nextFocus(): HTMLElement {
+      function nextSibling(el: HTMLElement): HTMLElement {
+        const sib = el.nextElementSibling as HTMLElement;
+        if (sib) {
+          if (sib.matches(nav)) {
+            return sib;
+          } else {
+            const sibChild = sib.querySelector(nav) as HTMLElement;
+            return sibChild ?? nextSibling(sib);
+          }
+        } else {
+          if (!isCodeBlock(el) && !el.parentElement.matches(nav)) {
+            return nextSibling(el.parentElement);
+          } else {
+            return null;
+          }
+        }
+      }
 
-  /**
-   * @override
-   */
-  public Move(_key: number) {
-  //   // let result = this.walker.move(key);
-  //   let result = false;
-  //   // let result = move(key);
+      function prevSibling(el: HTMLElement): HTMLElement {
+        const sib = el.previousElementSibling as HTMLElement;
+        if (sib) {
+          if (sib.matches(nav)) {
+            return sib;
+          } else {
+            const sibChild = sib.querySelector(nav) as HTMLElement;
+            return sibChild ?? prevSibling(sib);
+          }
+        } else {
+          if (!isCodeBlock(el) && !el.parentElement.matches(nav)) {
+            return prevSibling(el.parentElement);
+          } else {
+            return null;
+          }
+        }
+      }
+
+      const target = e.target as HTMLElement;
+      switch (e.key) {
+        case 'ArrowDown':
+          e.preventDefault();
+          return target.querySelector(nav);
+        case 'ArrowUp':
+          e.preventDefault();
+          return target.parentElement.closest(nav);
+        case 'ArrowLeft':
+          e.preventDefault();
+          return prevSibling(target);
+        case 'ArrowRight':
+          e.preventDefault();
+          return nextSibling(target);
+        // case 'Esc':
+        //   e.preventDefault();
+        //   return this.hideRegions();
+        default:
+          return null;
+      }
+    }
+
+    const next = nextFocus();
+
+    const target = e.target as HTMLElement;
+    if (next) {
+      target.removeAttribute('tabindex');
+      next.setAttribute('tabindex', '0');
+      next.focus();
+      this.current = next;
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -215,16 +275,6 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
     os.start(ac.currentTime);
     os.stop(ac.currentTime + .05);
   }
-
-}
-
-
-/**
- * Explorer that pushes speech to live region.
- * @constructor
- * @extends {AbstractKeyExplorer}
- */
-export class SpeechExplorer extends AbstractKeyExplorer<string> {
 
   private static updatePromise = Promise.resolve();
 
@@ -256,12 +306,13 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    */
   constructor(public document: A11yDocument,
               public pool: ExplorerPool,
-              public region: Region<string>,
+              public region: SpeechRegion,
               protected node: HTMLElement,
-              private mml: string) {
-    super(document, pool, region, node);
-    this.newWalker.highlighter = this.highlighter;
-    this.initWalker();
+              public brailleRegion: LiveRegion,
+              public magnifyRegion: HoverRegion,
+              private _mml: string) {
+    super(document, pool, null, node);
+    // this.initWalker();
   }
 
 
@@ -270,6 +321,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    */
   public Start() {
     if (!this.attached) return;
+    if (this.active) return;
     super.Start();
     // let options = this.getOptions();
     // if (!this.init) {
@@ -295,16 +347,26 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     //   })
     //   return;
     // }
-    // this.speecGhenerator = Sre.getSpeechGenerator('Direct');
+    // this.speechGenerator = Sre.getSpeechGenerator('Direct');
     // this.speechGenerator.setOptions(options);
     // this.walker = Sre.getWalker(
     //   'table', this.node, this.speechGenerator, this.highlighter, this.mml);
     // this.walker.activate();
-    // this.Update();
-    // if (this.document.options.a11y[this.showRegion]) {
-    //   SpeechExplorer.updatePromise.then(
-    //     () => this.region.Show(this.node, this.highlighter));
-    // }
+    if (this.document.options.a11y.subtitles) {
+      console.log(0);
+      SpeechExplorer.updatePromise.then(
+        () => this.region.Show(this.node, this.highlighter))
+    }
+    if (this.document.options.a11y.viewBraille) {
+      console.log(1);
+      SpeechExplorer.updatePromise.then(
+        () => this.brailleRegion.Show(this.node, this.highlighter))
+    }
+    if (this.document.options.a11y.keyMagnifier) {
+      console.log(2);
+      this.magnifyRegion.Show(this.node, this.highlighter);
+    }
+    this.Update();
     // this.restarted = true;
   }
 
@@ -317,28 +379,40 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     // Make that cleaner and remove force as it is not really used!
     let noUpdate = force;
     force = false;
-    super.Update(force);
-    let options = this.speechGenerator.getOptions();
+    if (!this.active && !force) return;
+    this.pool.unhighlight();
+    // let nodes = this.walker.getFocus(true).getNodes();
+    // if (!nodes.length) {
+    //   this.walker.refocus();
+    //   nodes = this.walker.getFocus().getNodes();
+    // }
+    this.pool.highlight([this.current]);
+    this.region.Update(this.current.getAttribute('aria-label'));
+    this.brailleRegion.Update(this.current.getAttribute('aria-braillelabel'));
+    console.log(this.magnifyRegion);
+    this.magnifyRegion.Update(this.current);
+    // let options = this.speechGenerator.getOptions();
     // This is a necessary in case speech options have changed via keypress
     // during walking.
-    if (options.modality === 'speech') {
-      this.document.options.sre.domain = options.domain;
-      this.document.options.sre.style = options.style;
-      this.document.options.a11y.speechRules =
-        options.domain + '-' + options.style;
-    }
-    SpeechExplorer.updatePromise = SpeechExplorer.updatePromise.then(async () => {
-      return Sre.sreReady()
-        .then(() => Sre.setupEngine({markup: options.markup,
-                                     modality: options.modality,
-                                     locale: options.locale}))
-        .then(() => {
-          if (!noUpdate) {
-            let speech = this.walker.speech();
-            this.region.Update(speech);
-          }
-        });
-    });
+    // if (options.modality === 'speech') {
+    //   this.document.options.sre.domain = options.domain;
+    //   this.document.options.sre.style = options.style;
+    //   this.document.options.a11y.speechRules =
+    //     options.domain + '-' + options.style;
+    // }
+    // Ensure this autovoicing is retained later:
+    // SpeechExplorer.updatePromise = SpeechExplorer.updatePromise.then(async () => {
+    //   return Sre.sreReady()
+    //     .then(() => Sre.setupEngine({markup: options.markup,
+    //                                  modality: options.modality,
+    //                                  locale: options.locale}))
+    //     .then(() => {
+    //       if (!noUpdate) {
+    //         let speech = this.walker.speech();
+    //         this.region.Update(speech);
+    //       }
+    //     });
+    // });
   }
 
 
@@ -362,9 +436,8 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @override
    */
   public KeyDown(event: KeyboardEvent) {
-    console.log('active: ' + this.active);
     const code = event.key;
-    this.walker.modifier = event.shiftKey;
+    // this.walker.modifier = event.shiftKey;
     if (code === 'Control') {
       speechSynthesis.cancel();
       return;
@@ -372,24 +445,26 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     if (code === 'Escape') {
       this.Stop();
       this.stopEvent(event);
-      this.newWalker.HideRegions();
       return;
     }
     let result = null;
     if (this.active) {
-      result = this.newWalker.move(event);
-      this.newWalker.ShowRegions(this.node, this.highlighter);
+      result = this.Move(event);
       this.stopEvent(event);
     }
     if (result) {
-      // this.region.Update('hello');
+      this.Update();
       return;
     }
     if (!result && this.sound) {
       this.NoMove();
     }
     //
-    if (this.triggerLink(code)) return;
+    if (this.triggerLink(code)) {
+      this.Stop()
+      return;
+    }
+
     // this.stopEvent(event);
     if (code === 'Space' && event.shiftKey || code === 'Enter') {
       this.Start();
@@ -402,10 +477,10 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @param {number} code The keycode of the last key pressed.
    */
   protected triggerLink(code: string) {
-    if (code !== 'Enter') {
+    if (code !== 'Enter' || !this.active) {
       return false;
     }
-    let node = this.walker.getFocus().getNodes()?.[0];
+    let node = this.current;
     let focus = node?.
       getAttribute('data-semantic-postfix')?.
       match(/(^| )link($| )/);
@@ -419,12 +494,12 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
   /**
    * Initialises the Sre walker.
    */
-  private initWalker() {
-    this.speechGenerator = Sre.getSpeechGenerator('Tree');
-    let dummy = Sre.getWalker(
-      'dummy', this.node, this.speechGenerator, this.highlighter, this.mml);
-    this.walker = dummy;
-  }
+  // private initWalker() {
+  //   this.speechGenerator = Sre.getSpeechGenerator('Tree');
+  //   let dummy = Sre.getWalker(
+  //     'dummy', this.node, this.speechGenerator, this.highlighter, this.mml);
+  //   this.walker = dummy;
+  // }
 
   /**
    * Retrieves the speech options to sync with document options.
@@ -446,6 +521,21 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     return options;
   }
 
+  /**
+   * @override
+   */
+  public Stop() {
+    if (this.active) {
+      this.pool.unhighlight();
+      this.magnifyRegion.Hide();
+      this.region.Hide();
+      this.brailleRegion.Hide();
+    }
+    super.Stop();
+  }
+
+
+
 }
 
 
@@ -454,70 +544,70 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
  * @constructor
  * @extends {AbstractKeyExplorer}
  */
-export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
+// export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
 
-  /**
-   * @constructor
-   * @extends {AbstractKeyExplorer}
-   */
-  constructor(public document: A11yDocument,
-              public pool: ExplorerPool,
-              public region: Region<HTMLElement>,
-              protected node: HTMLElement,
-              private mml: string) {
-    super(document, pool, region, node);
-    this.walker = Sre.getWalker(
-      'table', this.node, Sre.getSpeechGenerator('Dummy'),
-      this.highlighter, this.mml);
-  }
+//   /**
+//    * @constructor
+//    * @extends {AbstractKeyExplorer}
+//    */
+//   constructor(public document: A11yDocument,
+//               public pool: ExplorerPool,
+//               public region: Region<HTMLElement>,
+//               protected node: HTMLElement,
+//               private mml: string) {
+//     super(document, pool, region, node);
+//     this.walker = Sre.getWalker(
+//       'table', this.node, Sre.getSpeechGenerator('Dummy'),
+//       this.highlighter, this.mml);
+//   }
 
-  /**
-   * @override
-   */
-  public Update(force: boolean = false) {
-    super.Update(force);
-    this.showFocus();
-  }
+//   /**
+//    * @override
+//    */
+//   public Update(force: boolean = false) {
+//     super.Update(force);
+//     this.showFocus();
+//   }
 
-  /**
-   * @override
-   */
-  public Start() {
-    super.Start();
-    if (!this.attached) return;
-    this.region.Show(this.node, this.highlighter);
-    this.walker.activate();
-    this.Update();
-  }
+//   /**
+//    * @override
+//    */
+//   public Start() {
+//     super.Start();
+//     if (!this.attached) return;
+//     this.region.Show(this.node, this.highlighter);
+//     this.walker.activate();
+//     this.Update();
+//   }
 
-  /**
-   * Shows the nodes that are currently focused.
-   */
-  private showFocus() {
-    let node = this.walker.getFocus().getNodes()[0] as HTMLElement;
-    this.region.Show(node, this.highlighter);
-  }
+//   /**
+//    * Shows the nodes that are currently focused.
+//    */
+//   private showFocus() {
+//     let node = this.walker.getFocus().getNodes()[0] as HTMLElement;
+//     this.region.Show(node, this.highlighter);
+//   }
 
-  /**
-   * @override
-   */
-  public KeyDown(event: KeyboardEvent) {
-    const code = event.keyCode;
-    this.walker.modifier = event.shiftKey;
-    if (code === 27) {
-      this.Stop();
-      this.stopEvent(event);
-      return;
-    }
-    if (this.active && code !== 13) {
-      this.Move(code);
-      this.stopEvent(event);
-      return;
-    }
-    if (code === 32 && event.shiftKey || code === 13) {
-      this.Start();
-      this.stopEvent(event);
-    }
-  }
+//   /**
+//    * @override
+//    */
+//   public KeyDown(event: KeyboardEvent) {
+//     const code = event.keyCode;
+//     this.walker.modifier = event.shiftKey;
+//     if (code === 27) {
+//       this.Stop();
+//       this.stopEvent(event);
+//       return;
+//     }
+//     if (this.active && code !== 13) {
+//       this.Move(code);
+//       this.stopEvent(event);
+//       return;
+//     }
+//     if (code === 32 && event.shiftKey || code === 13) {
+//       this.Start();
+//       this.stopEvent(event);
+//     }
+//   }
 
-}
+// }
