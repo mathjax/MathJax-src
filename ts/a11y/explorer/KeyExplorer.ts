@@ -115,21 +115,24 @@ export class SpeechExplorer extends AbstractExplorer<void> implements KeyExplore
       [
         // ['keydown', move],
         ['keydown', this.KeyDown.bind(this)],
-        ['click', ((e: MouseEvent) => this.click(this.node, e)).bind(this)],
+        ['click', this.Click.bind(this)],
         ['focusin', this.FocusIn.bind(this)],
         ['focusout', this.FocusOut.bind(this)]
       ]);
 
-  public click(snippet: HTMLElement, e: MouseEvent) {
+  public Click(e: MouseEvent) {
     const clicked = (e.target as HTMLElement).closest(nav) as HTMLElement;
-    if (snippet.contains(clicked)) {
-      const prev = snippet.querySelector('[tabindex="0"][role="tree"],[tabindex="0"][role="group"],[tabindex="0"][role="treeitem"]');
+    if (this.node.contains(clicked)) {
+      const prev = this.node.querySelector('[tabindex="0"][role="tree"],[tabindex="0"][role="group"],[tabindex="0"][role="treeitem"]');
       if (prev) {
         prev.removeAttribute('tabindex');
       }
       clicked.setAttribute('tabindex', '0');
       clicked.focus();
       this.current = clicked;
+      if (!this.triggerLinkMouse()) {
+        this.Start()
+      }
       e.preventDefault();
     }
   }
@@ -460,7 +463,7 @@ export class SpeechExplorer extends AbstractExplorer<void> implements KeyExplore
       this.NoMove();
     }
     //
-    if (this.triggerLink(code)) {
+    if (this.triggerLinkKeyboard(code)) {
       this.Stop()
       return;
     }
@@ -476,11 +479,15 @@ export class SpeechExplorer extends AbstractExplorer<void> implements KeyExplore
    * Programmatically triggers a link if the focused node contains one.
    * @param {number} code The keycode of the last key pressed.
    */
-  protected triggerLink(code: string) {
+  protected triggerLinkKeyboard(code: string) {
     if (code !== 'Enter' || !this.active) {
       return false;
     }
     let node = this.current;
+    return this.triggerLink(node);
+  }
+
+  protected triggerLink(node: HTMLElement) {
     let focus = node?.
       getAttribute('data-semantic-postfix')?.
       match(/(^| )link($| )/);
@@ -491,6 +498,22 @@ export class SpeechExplorer extends AbstractExplorer<void> implements KeyExplore
     return false;
   }
 
+
+  /**
+   * Programmatically triggers a link if the clicked mouse contains one.
+   */
+  protected triggerLinkMouse() {
+    let node = this.current;
+    while (node && node !== this.node) {
+      if (this.triggerLink(node)) {
+        return true;
+      }
+      node = node.parentNode as HTMLElement;
+    }
+    return false;
+  }
+
+  
   /**
    * Initialises the Sre walker.
    */
