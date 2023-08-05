@@ -71,7 +71,7 @@ export interface KeyExplorer extends Explorer {
 
 
 const codeSelector = 'mjx-container[role="application"][data-shellac]';
-const nav = '[role="application"][data-shellac],[role="tree"],[role="group"],[role="treeitem"]';
+const nav = '[role="tree"],[role="group"],[role="treeitem"]';
 
 function isCodeBlock(el: HTMLElement) {
   return el.matches(codeSelector);
@@ -383,7 +383,9 @@ export class SpeechExplorer extends AbstractExplorer<void> implements KeyExplore
     let noUpdate = force;
     force = false;
     if (!this.active && !force) return;
+    console.log(6);
     this.pool.unhighlight();
+    console.log(7);
     // let nodes = this.walker.getFocus(true).getNodes();
     // if (!nodes.length) {
     //   this.walker.refocus();
@@ -450,43 +452,60 @@ export class SpeechExplorer extends AbstractExplorer<void> implements KeyExplore
       this.stopEvent(event);
       return;
     }
+    if (code === 'Enter') {
+      if (!this.active && event.target instanceof HTMLAnchorElement) {
+        event.target.dispatchEvent(new MouseEvent('click'));
+        this.stopEvent(event);
+        return;
+      }
+      if (this.active && this.triggerLinkKeyboard(event)) {
+        this.Stop()
+        this.stopEvent(event);
+        return;
+      }
+      if (!this.active) {
+        if (!this.current) {
+          this.current = this.node.querySelector('[role="tree"]');
+          this.current.setAttribute('tabindex', '0');
+          this.current.focus();
+        }
+        this.Start();
+        this.stopEvent(event);
+        return;
+      }
+    }
     let result = null;
     if (this.active) {
       result = this.Move(event);
       this.stopEvent(event);
-    }
-    if (result) {
-      this.Update();
-      return;
-    }
-    if (!result && this.sound) {
-      this.NoMove();
-    }
-    //
-    if (this.triggerLinkKeyboard(code)) {
-      this.Stop()
-      return;
-    }
-
-    // this.stopEvent(event);
-    if (code === 'Space' && event.shiftKey || code === 'Enter') {
-      this.Start();
-      this.stopEvent(event);
+      if (result) {
+        this.Update();
+        return;
+      }
+      if (this.sound) {
+        this.NoMove();
+      }
     }
   }
 
   /**
    * Programmatically triggers a link if the focused node contains one.
-   * @param {number} code The keycode of the last key pressed.
+   * @param {KeyboardEvent} event The keyboard event for the last keydown event.
    */
-  protected triggerLinkKeyboard(code: string) {
-    if (code !== 'Enter' || !this.active) {
+  protected triggerLinkKeyboard(event: KeyboardEvent) {
+    if (event.code !== 'Enter') {
       return false;
     }
-    let node = this.current;
-    return this.triggerLink(node);
+    if (!this.current) {
+      if (event.target instanceof HTMLAnchorElement) {
+        event.target.dispatchEvent(new MouseEvent('click'));
+        return true;
+      }
+      return false;
+    }
+    return this.triggerLink(this.current);
   }
-
+  
   protected triggerLink(node: HTMLElement) {
     let focus = node?.
       getAttribute('data-semantic-postfix')?.
