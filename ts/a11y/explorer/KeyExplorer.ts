@@ -23,7 +23,7 @@
  */
 
 
-import {A11yDocument, Region, HoverRegion, SpeechRegion, LiveRegion} from './Region.js';
+import {A11yDocument, HoverRegion, SpeechRegion, LiveRegion} from './Region.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
 import {ExplorerPool} from './ExplorerPool.js';
 import {Sre} from '../sre.js';
@@ -83,7 +83,7 @@ function isCodeBlock(el: HTMLElement) {
  *
  * @template T  The type that is consumed by the Region of this explorer.
  */
-export class SpeechExplorer extends AbstractExplorer<void> implements KeyExplorer {
+export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplorer {
 
   // public newWalker = new Walker();
 
@@ -107,6 +107,8 @@ export class SpeechExplorer extends AbstractExplorer<void> implements KeyExplore
 
   protected current: HTMLElement = null;
 
+  private move = false;
+
   /**
    * @override
    */
@@ -127,8 +129,6 @@ export class SpeechExplorer extends AbstractExplorer<void> implements KeyExplore
       if (prev) {
         prev.removeAttribute('tabindex');
       }
-      clicked.setAttribute('tabindex', '0');
-      clicked.focus();
       this.current = clicked;
       if (!this.triggerLinkMouse()) {
         this.Start()
@@ -153,7 +153,10 @@ export class SpeechExplorer extends AbstractExplorer<void> implements KeyExplore
    * @override
    */
   public FocusOut(_event: FocusEvent) {
-    // this.Stop();
+    console.log(19);
+    if (!this.move) {
+      this.Stop();
+    }
   }
 
   /**
@@ -195,6 +198,7 @@ export class SpeechExplorer extends AbstractExplorer<void> implements KeyExplore
    * @override
    */
   public Move(e: KeyboardEvent) {
+    console.log(22);
     function nextFocus(): HTMLElement {
       function nextSibling(el: HTMLElement): HTMLElement {
         const sib = el.nextElementSibling as HTMLElement;
@@ -254,6 +258,7 @@ export class SpeechExplorer extends AbstractExplorer<void> implements KeyExplore
       }
     }
 
+    this.move = true;
     const next = nextFocus();
 
     const target = e.target as HTMLElement;
@@ -262,8 +267,10 @@ export class SpeechExplorer extends AbstractExplorer<void> implements KeyExplore
       next.setAttribute('tabindex', '0');
       next.focus();
       this.current = next;
+      this.move = false;
       return true;
     }
+    this.move = false;
     return false;
   }
 
@@ -325,6 +332,8 @@ export class SpeechExplorer extends AbstractExplorer<void> implements KeyExplore
   public Start() {
     if (!this.attached) return;
     if (this.active) return;
+    this.current.setAttribute('tabindex', '0');
+    this.current.focus();
     super.Start();
     // let options = this.getOptions();
     // if (!this.init) {
@@ -356,17 +365,14 @@ export class SpeechExplorer extends AbstractExplorer<void> implements KeyExplore
     //   'table', this.node, this.speechGenerator, this.highlighter, this.mml);
     // this.walker.activate();
     if (this.document.options.a11y.subtitles) {
-      console.log(0);
       SpeechExplorer.updatePromise.then(
         () => this.region.Show(this.node, this.highlighter))
     }
     if (this.document.options.a11y.viewBraille) {
-      console.log(1);
       SpeechExplorer.updatePromise.then(
         () => this.brailleRegion.Show(this.node, this.highlighter))
     }
     if (this.document.options.a11y.keyMagnifier) {
-      console.log(2);
       this.magnifyRegion.Show(this.node, this.highlighter);
     }
     this.Update();
@@ -383,9 +389,7 @@ export class SpeechExplorer extends AbstractExplorer<void> implements KeyExplore
     let noUpdate = force;
     force = false;
     if (!this.active && !force) return;
-    console.log(6);
     this.pool.unhighlight();
-    console.log(7);
     // let nodes = this.walker.getFocus(true).getNodes();
     // if (!nodes.length) {
     //   this.walker.refocus();
@@ -394,7 +398,6 @@ export class SpeechExplorer extends AbstractExplorer<void> implements KeyExplore
     this.pool.highlight([this.current]);
     this.region.Update(this.current.getAttribute('aria-label'));
     this.brailleRegion.Update(this.current.getAttribute('aria-braillelabel'));
-    console.log(this.magnifyRegion);
     this.magnifyRegion.Update(this.current);
     // let options = this.speechGenerator.getOptions();
     // This is a necessary in case speech options have changed via keypress
@@ -466,8 +469,6 @@ export class SpeechExplorer extends AbstractExplorer<void> implements KeyExplore
       if (!this.active) {
         if (!this.current) {
           this.current = this.node.querySelector('[role="tree"]');
-          this.current.setAttribute('tabindex', '0');
-          this.current.focus();
         }
         this.Start();
         this.stopEvent(event);
@@ -505,7 +506,7 @@ export class SpeechExplorer extends AbstractExplorer<void> implements KeyExplore
     }
     return this.triggerLink(this.current);
   }
-  
+
   protected triggerLink(node: HTMLElement) {
     let focus = node?.
       getAttribute('data-semantic-postfix')?.
@@ -532,7 +533,7 @@ export class SpeechExplorer extends AbstractExplorer<void> implements KeyExplore
     return false;
   }
 
-  
+
   /**
    * Initialises the Sre walker.
    */
@@ -568,6 +569,7 @@ export class SpeechExplorer extends AbstractExplorer<void> implements KeyExplore
    */
   public Stop() {
     if (this.active) {
+      this.current.removeAttribute('tabindex');
       this.pool.unhighlight();
       this.magnifyRegion.Hide();
       this.region.Hide();
