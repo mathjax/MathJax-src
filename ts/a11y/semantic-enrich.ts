@@ -397,7 +397,7 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
       sre: expandable({
         structure: true,                   // Generates full aria structure
         speech: 'none',                    // by default no speech is included
-        braille: 'nemeth',                 // TODO: Dummy switch for braille 
+        braille: 'nemeth',                 // TODO: Dummy switch for braille
         locale: 'en',                      // switch the locale
         domain: 'mathspeak',               // speech rules domain
         style: 'default',                  // speech rules style
