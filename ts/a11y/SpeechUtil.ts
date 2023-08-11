@@ -1,5 +1,5 @@
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
-import {Sre} from './sre.js';
+// import {Sre} from './sre.js';
 
 const ProsodyKeys = [ 'pitch', 'rate', 'volume' ];
 
@@ -138,7 +138,12 @@ function extractProsody(attr: string) {
   return [match[1], match[2]];
 }
 
-export function getLabel(node: MmlNode, sep: string = ' ') {
+/**
+ * Computes the aria-label from the node.
+ * @param {MmlNode} node The Math element.
+ * @param {string=} sep The speech separator. Defaults to space.
+ */
+function getLabel(node: MmlNode, sep: string = ' ') {
   const attributes = node.attributes;
   const speech = attributes.getExplicit('data-semantic-speech') as string;
   if (!speech) {
@@ -166,4 +171,24 @@ export function buildSpeech(speech: string, locale: string = 'en',
     ` xml:lang="${locale}">` +
     `<prosody rate="${rate}%">${speech}`+
     '</prosody></speak>');
+}
+
+/**
+ * Retrieve and sets aria and braille labels recursively.
+ * @param {MmlNode} node The root node to search from.
+ */
+export function setAria(node: MmlNode, locale: string) {
+  const attributes = node.attributes;
+  if (!attributes) return;
+  const speech = getLabel(node);
+  if (speech) {
+    attributes.set('aria-label', buildSpeech(speech, locale)[0]);
+  }
+  const braille = node.attributes.getExplicit('data-semantic-braille') as string;
+  if (braille) {
+    attributes.set('aria-braillelabel', braille);
+  }
+  for (let child of node.childNodes) {
+    setAria(child, locale);
+  }
 }
