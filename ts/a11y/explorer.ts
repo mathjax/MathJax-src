@@ -199,7 +199,8 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
       }),
       sre: expandable({
         ...BaseDocument.OPTIONS.sre,
-        speech: 'deep',                    // overrides option in EnrichedMathDocument
+        speech: 'none',                    // None as speech is explicitly computed
+        structure: true,                   // Generates full aria structure
         aria: true,
       }),
       a11y: {
