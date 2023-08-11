@@ -30,14 +30,13 @@ import {MathML} from '../input/mathml.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {OptionList, expandable} from '../util/Options.js';
 import {Sre} from './sre.js';
-import { buildSpeech, getLabel } from './SpeechUtil.js';
+import { buildSpeech, setAria } from './SpeechUtil.js';
 
 /*==========================================================================*/
 
 /**
  *  The current speech setting for Sre
  */
-// let currentSpeech = 'none';
 let currentLocale = 'none';
 let currentBraille = 'none';
 
@@ -169,12 +168,6 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
       if (this.state() >= STATE.ENRICHED) return;
       if (!this.isEscaped && (document.options.enableEnrichment || force)) {
           // TODO: Sort out the loading of the locales better
-        // if (document.options.sre.speech !== currentSpeech) {
-        //   currentSpeech = document.options.sre.speech;
-        //   mathjax.retryAfter(
-        //     Sre.setupEngine(document.options.sre).then(
-        //       () => Sre.sreReady()));
-        // }
         if (document.options.sre.locale !== currentLocale) {
           currentLocale = document.options.sre.locale;
           // TODO: Sort out the loading of the locales better
@@ -228,7 +221,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
           document.options.enrichError(document, this, err);
         }
       }
-      this.setAria(this.root, document.options.sre.locale);
+      setAria(this.root, document.options.sre.locale);
       this.state(STATE.ENRICHED);
     }
 
@@ -255,6 +248,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
      * @param {MathDocument} document   The MathDocument for the MathItem
      */
     public attachSpeech(document: MathDocument<N, T, D>) {
+      console.log(0);
       if (this.state() >= STATE.ATTACHSPEECH) return;
       const attributes = this.root.attributes;
       const speech = (attributes.get('aria-label') || this.label);
@@ -300,28 +294,6 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
         }
       }
       return '';
-    }
-
-    /**
-     * Retrieve and sets aria and braille labels recursively.
-     * @param {MmlNode} node The root node to search from.
-     */
-    protected setAria(node: MmlNode, locale: string) {
-      const attributes = node.attributes;
-      if (!attributes) return;
-      const speech = getLabel(node);
-      // TODO (explorer) For tree role move all speech etc. to container
-      // element.
-      if (speech) {
-        attributes.set('aria-label', buildSpeech(speech, locale)[0]);
-      }
-      const braille = node.attributes.getExplicit('data-semantic-braille') as string;
-      if (braille) {
-        attributes.set('aria-braillelabel', braille);
-      }
-      for (let child of node.childNodes) {
-        this.setAria(child, locale);
-      }
     }
 
   };
