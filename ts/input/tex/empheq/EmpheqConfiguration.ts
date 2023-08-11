@@ -24,7 +24,7 @@
 
 
 import {Configuration} from '../Configuration.js';
-import {CommandMap, EnvironmentMap} from '../SymbolMap.js';
+import {CommandMap, EnvironmentMap} from '../TokenMap.js';
 import ParseUtil from '../ParseUtil.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';

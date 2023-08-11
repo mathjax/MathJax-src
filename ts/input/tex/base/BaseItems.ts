@@ -24,7 +24,7 @@
 
 
 import {MapHandler} from '../MapHandler.js';
-import {CharacterMap} from '../SymbolMap.js';
+import {CharacterMap} from '../TokenMap.js';
 import {entities} from '../../../util/Entities.js';
 import {MmlNode, TextNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';

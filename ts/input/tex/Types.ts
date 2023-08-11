@@ -23,7 +23,7 @@
  */
 
 import {StackItem} from './StackItem.js';
-import {Symbol} from './Symbol.js';
+import {Token} from './Token.js';
 import TexParser from './TexParser.js';
 
 export type Args = boolean | number | string | null;
@@ -35,4 +35,4 @@ export type Environment = Record<string, Args>;
 export type ParseInput = [TexParser, string];
 export type ParseResult = void | boolean | StackItem;
 
-export type ParseMethod = (parser: TexParser, c: string | Symbol | StackItem, ...rest: any[]) => ParseResult;
+export type ParseMethod = (parser: TexParser, c: string | Token | StackItem, ...rest: any[]) => ParseResult;

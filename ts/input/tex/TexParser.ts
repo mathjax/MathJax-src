@@ -33,7 +33,7 @@ import {MmlNode, AbstractMmlNode} from '../../core/MmlTree/MmlNode.js';
 import {ParseInput, ParseResult} from './Types.js';
 import ParseOptions from './ParseOptions.js';
 import {StackItem, EnvList} from './StackItem.js';
-import {Symbol} from './Symbol.js';
+import {Token} from './Token.js';
 import {OptionList} from '../../util/Options.js';
 
 
@@ -140,26 +140,26 @@ export default class TexParser {
 
 
   /**
-   * Maps a symbol to its "parse value" if it exists.
+   * Maps a token to its "parse value" if it exists.
    * @param {HandlerType} kind Configuration name.
-   * @param {string} symbol The symbol to parse.
+   * @param {string} token The token to parse.
    * @return {any} A boolean, Character, or Macro.
    */
-  public lookup(kind: HandlerType, symbol: string): any {
-    return this.configuration.handlers.get(kind).lookup(symbol);
+  public lookup(kind: HandlerType, token: string): any {
+    return this.configuration.handlers.get(kind).lookup(token);
   }
 
 
   /**
-   * Checks if a symbol is contained in one of the symbol mappings of the
+   * Checks if a token is contained in one of the token mappings of the
    * specified kind.
    * @param {HandlerType} kind Configuration name.
-   * @param {string} symbol The symbol to parse.
-   * @return {boolean} True if the symbol is contained in the given types of
-   *     symbol mapping.
+   * @param {string} token The token to parse.
+   * @return {boolean} True if the token is contained in the given types of
+   *     token mapping.
    */
-  public contains(kind: HandlerType, symbol: string): boolean {
-    return this.configuration.handlers.get(kind).contains(symbol);
+  public contains(kind: HandlerType, token: string): boolean {
+    return this.configuration.handlers.get(kind).contains(token);
   }
 
 
@@ -237,8 +237,8 @@ export default class TexParser {
    * @return {string} The corresponding character.
    */
   public convertDelimiter(c: string): string {
-    const symbol = this.lookup('delimiter', c) as Symbol;
-    return symbol ? symbol.char : null;
+    const token = this.lookup('delimiter', c) as Token;
+    return token ? token.char : null;
   }
 
   /**

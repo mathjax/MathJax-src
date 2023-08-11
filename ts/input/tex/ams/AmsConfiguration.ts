@@ -27,7 +27,7 @@ import {MultlineItem, FlalignItem} from './AmsItems.js';
 import {AbstractTags} from '../Tags.js';
 import {NEW_OPS} from './AmsMethods.js';
 import './AmsMappings.js';
-import {CommandMap} from '../SymbolMap.js';
+import {CommandMap} from '../TokenMap.js';
 
 
 /**

@@ -26,7 +26,7 @@ import {Configuration} from '../Configuration.js';
 import ParseOptions from '../ParseOptions.js';
 import TexParser from '../TexParser.js';
 import NodeUtil from '../NodeUtil.js';
-import {CommandMap} from '../SymbolMap.js';
+import {CommandMap} from '../TokenMap.js';
 import BaseMethods from '../base/BaseMethods.js';
 
 new CommandMap('centernot', {

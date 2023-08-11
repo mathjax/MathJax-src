@@ -17,7 +17,7 @@
 
 
 /**
- * @fileoverview Symbol classes.
+ * @fileoverview Token classes.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -26,22 +26,22 @@ import {Args, Attributes, ParseMethod} from './Types.js';
 
 
 /**
- * Symbol class
+ * Token class
  */
-class _Symbol {
+export class Token {
 
   /**
    * @constructor
-   * @param {string} symbol The symbol parsed.
+   * @param {string} token The token parsed.
    * @param {string} char The corresponding translation.
    * @param {Attributes} attributes The attributes for the translation.
    */
-  constructor(private _symbol: string, private _char: string,
+  constructor(private _token: string, private _char: string,
               private _attributes: Attributes) {
   }
 
-  public get symbol(): string {
-    return this._symbol;
+  public get token(): string {
+    return this._token;
   }
 
   public get char(): string {
@@ -54,29 +54,20 @@ class _Symbol {
 
 }
 
-/**
- * This export avoids a problem with webpack where it uses the original Symbol
- *   and the Symbol class was included later in the file, which caused an error
- *   about the original Symbol being used before it was defined.  This way,
- *   _Symbol is the class, and that is substituted for Symbol when it is used,
- *   so there is no problem with the webpacked version.
- */
-export {_Symbol as Symbol}
-
 export class Macro {
 
   /**
    * @constructor
-   * @param {string} symbol The symbol parsed
-   * @param {ParseMethod} func The parsing function for that symbol.
+   * @param {string} token The token parsed
+   * @param {ParseMethod} func The parsing function for that token.
    * @param {Args[]} args Additional arguments for the function.
    */
-  constructor(private _symbol: string, private _func: ParseMethod,
+  constructor(private _token: string, private _func: ParseMethod,
               private _args: Args[] = []) {
   }
 
-  public get symbol(): string {
-    return this._symbol;
+  public get token(): string {
+    return this._token;
   }
 
   public get func(): ParseMethod {

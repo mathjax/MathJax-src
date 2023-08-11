@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {CommandMap} from '../SymbolMap.js';
+import {CommandMap} from '../TokenMap.js';
 import {Configuration} from '../Configuration.js';
 import {ParseMethod} from '../Types.js';
 import TexParser from '../TexParser.js';

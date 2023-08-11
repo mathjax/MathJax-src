@@ -22,7 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import *  as sm from '../SymbolMap.js';
+import *  as sm from '../TokenMap.js';
 import {TexConstant} from '../TexConstants.js';
 import BaseMethods from './BaseMethods.js';
 import ParseMethods from '../ParseMethods.js';

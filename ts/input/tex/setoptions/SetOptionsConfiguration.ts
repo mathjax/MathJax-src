@@ -25,10 +25,10 @@
 import {Configuration, ConfigurationHandler, ParserConfiguration} from '../Configuration.js';
 import {TeX} from '../../tex.js';
 import TexParser from '../TexParser.js';
-import {CommandMap} from '../SymbolMap.js';
+import {CommandMap} from '../TokenMap.js';
 import TexError from '../TexError.js';
 import ParseUtil from '../ParseUtil.js';
-import {Macro} from '../Symbol.js';
+import {Macro} from '../Token.js';
 import BaseMethods from '../base/BaseMethods.js';
 import {expandable, isObject} from '../../../util/Options.js';
 

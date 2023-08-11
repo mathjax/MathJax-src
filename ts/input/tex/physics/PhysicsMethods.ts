@@ -30,7 +30,7 @@ import {TEXCLASS, MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import ParseUtil from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import {NodeFactory} from '../NodeFactory.js';
-import {Macro} from '../Symbol.js';
+import {Macro} from '../Token.js';
 import {AutoOpen} from './PhysicsItems.js';
 
 
@@ -539,8 +539,8 @@ PhysicsMethods.Bra = function(parser: TexParser, name: string) {
     parser.i++;
     // This ensures that bra-ket also works if \let bound versions of \ket.
     let cs = parser.GetCS();
-    let symbol = parser.lookup('macro', cs) as Macro;
-    if (symbol && symbol.symbol === 'ket') {
+    let token = parser.lookup('macro', cs) as Macro;
+    if (token && token.token === 'ket') {
       hasKet = true;
       saveI = parser.i;
       starKet = parser.GetStar();

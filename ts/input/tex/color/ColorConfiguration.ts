@@ -22,7 +22,7 @@
  */
 
 
-import {CommandMap} from '../SymbolMap.js';
+import {CommandMap} from '../TokenMap.js';
 import {Configuration, ParserConfiguration} from '../Configuration.js';
 import {ColorMethods} from './ColorMethods.js';
 import {ColorModel} from './ColorUtil.js';
