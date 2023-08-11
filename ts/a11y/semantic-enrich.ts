@@ -62,7 +62,7 @@ newState('ATTACHSPEECH', 155);
 export class enrichVisitor<N, T, D> extends SerializedMmlVisitor {
 
   protected mactionId: number;
-  
+
   public visitTree(node: MmlNode, math?: MathItem<N, T, D>) {
     this.mactionId = 1;
     const mml = super.visitTree(node);
@@ -172,23 +172,15 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
           currentLocale = document.options.sre.locale;
           // TODO: Sort out the loading of the locales better
           mathjax.retryAfter(
-            Sre.setupEngine(document.options.sre).then(
+            Sre.setupEngine({locale: document.options.sre.locale}).then(
               () => {
                 return Sre.sreReady(); }));
         }
         if (document.options.sre.braille !== currentBraille) {
           currentBraille = document.options.sre.braille;
-          // TODO: Sort out the loading of the locales better
           mathjax.retryAfter(
-            Sre.setupEngine({
-              locale: document.options.sre.braille,
-              domain: 'default',               // speech rules domain
-              style: 'default',                  // speech rules style
-              modality: 'braille',
-              markup: 'none',
-            })
-              .then(() => {
-                Sre.sreReady();}));
+            Sre.setupEngine({locale: document.options.sre.braille})
+              .then(() => Sre.sreReady()));
         }
         const math = new document.options.MathItem('', MmlJax);
         try {
@@ -198,19 +190,23 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
           } else {
             mml = this.adjustSelections();
           }
+          Sre.setupEngine(document.options.sre);
           const enriched = Sre.toEnriched(mml);
           const generator = Sre.getSpeechGenerator('Tree');
-          generator.setOptions(document.options.sre);
-          // Attach this here?
+          generator.setOptions(Object.assign(
+            {}, document.options.sre, {
+              markup: 'ssml',
+              automark: true,
+            }));
           this.label = buildSpeech(
             generator.getSpeech(enriched, enriched),
             document.options.sre.locale)[0];
           generator.setOptions({
-              locale: document.options.sre.braille,
-              domain: 'default',               // speech rules domain
-              style: 'default',                  // speech rules style
-              modality: 'braille',
-              markup: 'none',
+            locale: document.options.sre.braille,
+            domain: 'default',
+            style: 'default',
+            modality: 'braille',
+            markup: 'none',
           });
           this.braillelabel = generator.getSpeech(enriched, enriched);
           this.inputData.enrichedMml = math.math = this.serializeMml(enriched);
@@ -248,7 +244,6 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
      * @param {MathDocument} document   The MathDocument for the MathItem
      */
     public attachSpeech(document: MathDocument<N, T, D>) {
-      console.log(0);
       if (this.state() >= STATE.ATTACHSPEECH) return;
       const attributes = this.root.attributes;
       const speech = (attributes.get('aria-label') || this.label);
@@ -367,15 +362,12 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
         attachSpeech: [STATE.ATTACHSPEECH]
       }),
       sre: expandable({
-        structure: true,                   // Generates full aria structure
         speech: 'none',                    // by default no speech is included
-        braille: 'nemeth',                 // TODO: Dummy switch for braille
         locale: 'en',                      // switch the locale
         domain: 'mathspeak',               // speech rules domain
         style: 'default',                  // speech rules style
         modality: 'speech',
-        markup: 'ssml',
-        automark: true,
+        braille: 'nemeth',                 // TODO: Dummy switch for braille
       }),
     };
 

@@ -70,7 +70,7 @@ export interface KeyExplorer extends Explorer {
 }
 
 
-const codeSelector = 'mjx-container[role="application"][data-shellac]';
+const codeSelector = 'mjx-container[role="application"]';
 const nav = '[role="tree"],[role="group"],[role="treeitem"]';
 
 function isCodeBlock(el: HTMLElement) {
@@ -153,7 +153,6 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    * @override
    */
   public FocusOut(_event: FocusEvent) {
-    console.log(19);
     if (!this.move) {
       this.Stop();
     }
@@ -168,8 +167,6 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     this.oldIndex = this.node.tabIndex;
     this.node.tabIndex = 0;
     this.node.setAttribute('role', 'application');
-    // TODO: Get rid of this eventually!
-    this.node.setAttribute('data-shellac', '');
   }
 
   /**
@@ -198,7 +195,6 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    * @override
    */
   public Move(e: KeyboardEvent) {
-    console.log(22);
     function nextFocus(): HTMLElement {
       function nextSibling(el: HTMLElement): HTMLElement {
         const sib = el.nextElementSibling as HTMLElement;
