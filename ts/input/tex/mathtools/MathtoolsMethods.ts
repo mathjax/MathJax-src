@@ -400,7 +400,7 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
    */
   VDotsWithin(parser: TexParser, name: string) {
     const top = parser.stack.Top() as EqnArrayItem;
-    const isFlush = (top.getProperty('flushspaceabove') === top.table.length);
+    const isFlush = (top.table && top.getProperty('flushspaceabove') === top.table.length);
     const arg = '\\mmlToken{mi}{}' + parser.GetArgument(name) + '\\mmlToken{mi}{}';
     const base = new TexParser(arg, parser.stack.env, parser.configuration).mml();
     let mml = parser.create('node', 'mpadded', [
@@ -428,11 +428,15 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
   ShortVDotsWithin(parser: TexParser, _name: string) {
     const top = parser.stack.Top() as EqnArrayItem;
     const star = parser.GetStar();
-    MathtoolsMethods.FlushSpaceAbove(parser, '\\MTFlushSpaceAbove');
-    !star && top.EndEntry();
+    if (top.EndEntry) {
+      MathtoolsMethods.FlushSpaceAbove(parser, '\\MTFlushSpaceAbove');
+      !star && top.EndEntry();
+    }
     MathtoolsMethods.VDotsWithin(parser, '\\vdotswithin');
-    star && top.EndEntry();
-    MathtoolsMethods.FlushSpaceBelow(parser, '\\MTFlushSpaceBelow');
+    if (top.EndEntry) {
+      star && top.EndEntry();
+      MathtoolsMethods.FlushSpaceBelow(parser, '\\MTFlushSpaceBelow');
+    }
   },
 
   /**
@@ -443,8 +447,10 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
    */
   FlushSpaceAbove(parser: TexParser, name: string) {
     const top = MathtoolsUtil.checkAlignment(parser, name);
-    top.setProperty('flushspaceabove', top.table.length);  // marker so \vdotswithin can shorten its height
-    top.addRowSpacing('-' + parser.options.mathtools['shortvdotsadjustabove']);
+    if (top.table) {
+      top.setProperty('flushspaceabove', top.table.length);  // marker so \vdotswithin can shorten its height
+      top.addRowSpacing('-' + parser.options.mathtools['shortvdotsadjustabove']);
+    }
   },
 
   /**
@@ -455,9 +461,11 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
    */
   FlushSpaceBelow(parser: TexParser, name: string) {
     const top = MathtoolsUtil.checkAlignment(parser, name);
-    top.Size() && top.EndEntry();
-    top.EndRow();
-    top.addRowSpacing('-' + parser.options.mathtools['shortvdotsadjustbelow']);
+    if (top.table) {
+      top.Size() && top.EndEntry();
+      top.EndRow();
+      top.addRowSpacing('-' + parser.options.mathtools['shortvdotsadjustbelow']);
+    }
   },
 
   /**
