@@ -98,7 +98,7 @@ export class TextParser extends TexParser {
    */
   protected copyLists() {
     const parseOptions = this.texParser.configuration;
-    for (const [name, list] of Object.keys(this.configuration.nodeLists)) {
+    for (const [name, list] of Object.entries(this.configuration.nodeLists)) {
       for (const node of list) {
         parseOptions.addNode(name, node);
       }
