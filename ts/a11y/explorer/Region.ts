@@ -26,7 +26,7 @@
 import {MathDocument} from '../../core/MathDocument.js';
 import {CssStyles} from '../../util/StyleList.js';
 import {Sre} from '../sre.js';
-import {SsmlElement, ssmlParsing} from '../SpeechUtil.js';
+import {SsmlElement} from '../SpeechUtil.js';
 
 export type A11yDocument = MathDocument<HTMLElement, Text, Document>;
 
@@ -411,7 +411,6 @@ export class SpeechRegion extends LiveRegion {
    * @override
    */
   public Update(speech: string) {
-    console.log('In Speech region: ' + speech);
     // Temporarily removed!
     // console.log(speech);
     // this.active = this.document.options.a11y.voicing &&
@@ -433,7 +432,7 @@ export class SpeechRegion extends LiveRegion {
    * @param {SsmlElement[]} ssml The list of ssml annotations.
    * @param {string} locale The locale to use.
    */
-  private makeUtterances(ssml: SsmlElement[], locale: string) {
+  protected makeUtterances(ssml: SsmlElement[], locale: string) {
     let utterance = null;
     for (let utter of ssml) {
       if (utter.mark) {

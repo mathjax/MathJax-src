@@ -123,7 +123,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
         if (!this.explorers) {
           this.explorers = new ExplorerPool();
         }
-        this.explorers.init(document, node, mml);
+        this.explorers.init(document, node, mml, this);
       }
       this.state(STATE.EXPLORER);
     }
