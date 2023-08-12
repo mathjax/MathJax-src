@@ -136,8 +136,6 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
 
   return class extends BaseMathItem {
 
-    protected label: string;
-    protected braillelabel: string;
     /**
      * @param {any} node  The node to be serialized
      * @return {string}   The serialized version of node
@@ -198,7 +196,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
               markup: 'ssml',
               automark: true,
             }));
-          this.label = buildSpeech(
+          this.outputData.speech = buildSpeech(
             generator.getSpeech(enriched, enriched),
             document.options.sre.locale)[0];
           generator.setOptions({
@@ -208,7 +206,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
             modality: 'braille',
             markup: 'none',
           });
-          this.braillelabel = generator.getSpeech(enriched, enriched);
+          this.outputData.braille = generator.getSpeech(enriched, enriched);
           this.inputData.enrichedMml = math.math = this.serializeMml(enriched);
           math.display = this.display;
           math.compile(document);
@@ -246,8 +244,8 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
     public attachSpeech(document: MathDocument<N, T, D>) {
       if (this.state() >= STATE.ATTACHSPEECH) return;
       const attributes = this.root.attributes;
-      const speech = (attributes.get('aria-label') || this.label);
-      const braille = (attributes.get('aria-braillelabel') || this.braillelabel);
+      const speech = (attributes.get('aria-label') || this.outputData.speech);
+      const braille = (attributes.get('aria-braillelabel') || this.outputData.braille);
       if (!speech && !braille) {
         this.state(STATE.ATTACHSPEECH);
         return;
