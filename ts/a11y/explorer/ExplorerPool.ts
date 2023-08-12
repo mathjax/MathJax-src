@@ -23,7 +23,7 @@
  */
 
 import {LiveRegion, SpeechRegion, ToolTip, HoverRegion} from './Region.js';
-import type { ExplorerMathDocument } from '../explorer.js';
+import type { ExplorerMathDocument, ExplorerMathItem } from '../explorer.js';
 
 import {Explorer} from './Explorer.js';
 import * as ke from './KeyExplorer.js';
@@ -89,7 +89,7 @@ let allExplorers: {[options: string]: ExplorerInit} = {
   speech: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
     let explorer = ke.SpeechExplorer.create(
       doc, pool, doc.explorerRegions.speechRegion, node,
-      doc.explorerRegions.brailleRegion, doc.explorerRegions.magnifier, rest[0]) as ke.SpeechExplorer;
+      doc.explorerRegions.brailleRegion, doc.explorerRegions.magnifier, rest[0], rest[1]) as ke.SpeechExplorer;
     // explorer.speechGenerator.setOptions({
     //   automark: true as any, markup: 'ssml',
     //   locale: doc.options.sre.locale, domain: doc.options.sre.domain,
@@ -212,13 +212,14 @@ export class ExplorerPool {
    * @param  mml The corresponding Mathml node as a string.
    */
   public init(document: ExplorerMathDocument,
-              node: HTMLElement, mml: string) {
+              node: HTMLElement, mml: string,
+              item: ExplorerMathItem) {
     this.document = document;
     this.mml = mml;
     this.node = node;
     this.setPrimaryHighlighter();
     for (let key of Object.keys(allExplorers)) {
-      this.explorers[key] = allExplorers[key](this.document, this, this.node, this.mml);
+      this.explorers[key] = allExplorers[key](this.document, this, this.node, this.mml, item);
     }
     this.setSecondaryHighlighter();
     this.attach();

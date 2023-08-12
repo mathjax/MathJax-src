@@ -24,8 +24,10 @@
 
 
 import {A11yDocument, HoverRegion, SpeechRegion, LiveRegion} from './Region.js';
+import type { ExplorerMathItem } from '../explorer.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
 import {ExplorerPool} from './ExplorerPool.js';
+import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import {Sre} from '../sre.js';
 
 // import { Walker } from './Walker.js';
@@ -191,73 +193,64 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     this.attached = false;
   }
 
+  protected nextSibling(el: HTMLElement): HTMLElement {
+      const sib = el.nextElementSibling as HTMLElement;
+      if (sib) {
+        if (sib.matches(nav)) {
+          return sib;
+        } else {
+          const sibChild = sib.querySelector(nav) as HTMLElement;
+          return sibChild ?? this.nextSibling(sib);
+        }
+      } else {
+        if (!isCodeBlock(el) && !el.parentElement.matches(nav)) {
+          return this.nextSibling(el.parentElement);
+        } else {
+          return null;
+        }
+      }
+    }
+
+  protected prevSibling(el: HTMLElement): HTMLElement {
+      const sib = el.previousElementSibling as HTMLElement;
+      if (sib) {
+        if (sib.matches(nav)) {
+          return sib;
+        } else {
+          const sibChild = sib.querySelector(nav) as HTMLElement;
+          return sibChild ?? this.prevSibling(sib);
+        }
+      } else {
+        if (!isCodeBlock(el) && !el.parentElement.matches(nav)) {
+          return this.prevSibling(el.parentElement);
+        } else {
+          return null;
+        }
+      }
+    }
+
+  protected moves: Map<string, (node: HTMLElement) => HTMLElement | null> = new Map([
+    ['ArrowDown', (node: HTMLElement) => node.querySelector(nav)],
+    ['ArrowUp', (node: HTMLElement) => node.parentElement.closest(nav)],
+    ['ArrowLeft', this.prevSibling],
+    ['ArrowRight', this.nextSibling],
+    ['>', (_node: HTMLElement) => {
+      return null;
+    }],
+  ]);
+  
   /**
    * @override
    */
   public Move(e: KeyboardEvent) {
-    function nextFocus(): HTMLElement {
-      function nextSibling(el: HTMLElement): HTMLElement {
-        const sib = el.nextElementSibling as HTMLElement;
-        if (sib) {
-          if (sib.matches(nav)) {
-            return sib;
-          } else {
-            const sibChild = sib.querySelector(nav) as HTMLElement;
-            return sibChild ?? nextSibling(sib);
-          }
-        } else {
-          if (!isCodeBlock(el) && !el.parentElement.matches(nav)) {
-            return nextSibling(el.parentElement);
-          } else {
-            return null;
-          }
-        }
-      }
-
-      function prevSibling(el: HTMLElement): HTMLElement {
-        const sib = el.previousElementSibling as HTMLElement;
-        if (sib) {
-          if (sib.matches(nav)) {
-            return sib;
-          } else {
-            const sibChild = sib.querySelector(nav) as HTMLElement;
-            return sibChild ?? prevSibling(sib);
-          }
-        } else {
-          if (!isCodeBlock(el) && !el.parentElement.matches(nav)) {
-            return prevSibling(el.parentElement);
-          } else {
-            return null;
-          }
-        }
-      }
-
-      const target = e.target as HTMLElement;
-      switch (e.key) {
-        case 'ArrowDown':
-          e.preventDefault();
-          return target.querySelector(nav);
-        case 'ArrowUp':
-          e.preventDefault();
-          return target.parentElement.closest(nav);
-        case 'ArrowLeft':
-          e.preventDefault();
-          return prevSibling(target);
-        case 'ArrowRight':
-          e.preventDefault();
-          return nextSibling(target);
-        // case 'Esc':
-        //   e.preventDefault();
-        //   return this.hideRegions();
-        default:
-          return null;
-      }
-    }
-
     this.move = true;
-    const next = nextFocus();
-
     const target = e.target as HTMLElement;
+    const move = this.moves.get(e.key);
+    let next = null;
+    if (move) {
+      e.preventDefault();
+      next = move(target);
+    }
     if (next) {
       target.removeAttribute('tabindex');
       next.setAttribute('tabindex', '0');
@@ -296,7 +289,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    */
   public showRegion: string = 'subtitles';
 
-  private init: boolean = false;
+  // private init: boolean = false;
 
   /**
    * Flag in case the start method is triggered before the walker is fully
@@ -316,7 +309,9 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
               protected node: HTMLElement,
               public brailleRegion: LiveRegion,
               public magnifyRegion: HoverRegion,
-              private _mml: string) {
+              _mml: MmlNode,
+              private item: ExplorerMathItem
+             ) {
     super(document, pool, null, node);
     // this.initWalker();
   }
@@ -545,7 +540,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    * @return {{[key: string]: string}} The options settings for the speech
    *     generator.
    */
-  private getOptions(): {[key: string]: string} {
+  protected getOptions(): {[key: string]: string} {
     let options = this.speechGenerator.getOptions();
     let sreOptions = this.document.options.sre;
     if (options.modality === 'speech' &&
