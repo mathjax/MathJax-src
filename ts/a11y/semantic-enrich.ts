@@ -137,6 +137,11 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
   return class extends BaseMathItem {
 
     /**
+     * The speech generator for this math item.
+     */
+    public generator = Sre.getSpeechGenerator('Tree');
+
+    /**
      * @param {any} node  The node to be serialized
      * @return {string}   The serialized version of node
      */
@@ -190,23 +195,22 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
           }
           Sre.setupEngine(document.options.sre);
           const enriched = Sre.toEnriched(mml);
-          const generator = Sre.getSpeechGenerator('Tree');
-          generator.setOptions(Object.assign(
+          this.generator.setOptions(Object.assign(
             {}, document.options.sre, {
               markup: 'ssml',
               automark: true,
             }));
           this.outputData.speech = buildSpeech(
-            generator.getSpeech(enriched, enriched),
+            this.generator.getSpeech(enriched, enriched),
             document.options.sre.locale)[0];
-          generator.setOptions({
+          this.generator.setOptions({
             locale: document.options.sre.braille,
             domain: 'default',
             style: 'default',
             modality: 'braille',
             markup: 'none',
           });
-          this.outputData.braille = generator.getSpeech(enriched, enriched);
+          this.outputData.braille = this.generator.getSpeech(enriched, enriched);
           this.inputData.enrichedMml = math.math = this.serializeMml(enriched);
           math.display = this.display;
           math.compile(document);
