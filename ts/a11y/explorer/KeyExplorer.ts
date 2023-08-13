@@ -380,7 +380,8 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     //   nodes = this.walker.getFocus().getNodes();
     // }
     this.pool.highlight([this.current]);
-    this.region.Update(this.current.getAttribute('aria-label'));
+    this.region.node = this.current;
+    this.region.Update(this.current.getAttribute('data-semantic-speech'));
     this.brailleRegion.Update(this.current.getAttribute('aria-braillelabel'));
     this.magnifyRegion.Update(this.current);
     // let options = this.speechGenerator.getOptions();
@@ -547,6 +548,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     if (this.active) {
       this.current.removeAttribute('tabindex');
       this.pool.unhighlight();
+      this.region.highlighter.unhighlight();
       this.magnifyRegion.Hide();
       this.region.Hide();
       this.brailleRegion.Hide();
