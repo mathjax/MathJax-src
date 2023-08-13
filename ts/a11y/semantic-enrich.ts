@@ -202,7 +202,8 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
             }));
           this.outputData.speech = buildSpeech(
             this.generator.getSpeech(enriched, enriched),
-            document.options.sre.locale)[0];
+            document.options.sre.locale,
+            document.options.sre.rate)[0];
           this.generator.setOptions({
             locale: document.options.sre.braille,
             domain: 'default',

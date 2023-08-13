@@ -26,7 +26,7 @@
 import {MathDocument} from '../../core/MathDocument.js';
 import {CssStyles} from '../../util/StyleList.js';
 import {Sre} from '../sre.js';
-import {SsmlElement} from '../SpeechUtil.js';
+import {SsmlElement, buildSpeech} from '../SpeechUtil.js';
 
 export type A11yDocument = MathDocument<HTMLElement, Text, Document>;
 
@@ -408,23 +408,46 @@ export class SpeechRegion extends LiveRegion {
   }
 
   /**
+   * Have we already requested voices from the browser?
+   */
+  private voiceRequest = false;
+
+  /**
    * @override
    */
   public Update(speech: string) {
-    // Temporarily removed!
-    // console.log(speech);
-    // this.active = this.document.options.a11y.voicing &&
-    //   !!speechSynthesis.getVoices().length;
-   // speechSynthesis.cancel();
-    // this.clear = true;
-    // let [text, ssml] = ssmlParsing(speech);
-    // console.log(27);
-    // console.log(text);
-    // super.Update(text);
-    // if (this.active && text) {
-    //   this.makeUtterances(ssml, this.document.options.sre.locale);
-    // }
-    super.Update(speech);
+    if (this.voiceRequest) {
+      this.makeVoice(speech);
+      return;
+    }
+    speechSynthesis.onvoiceschanged = (() => this.voiceRequest = true).bind(this);
+    super.Update('\u00a0'); // Ensures region shown and cannot be overwritten.
+    const promise = new Promise((resolve) => {
+      setTimeout(() => {
+        if (this.voiceRequest) {
+          resolve(true);
+        }
+      }, 100);
+    });
+    promise.then(
+      () => this.makeVoice(speech)
+    );
+  }
+
+  private makeVoice(speech: string) {
+    this.active = this.document.options.a11y.voicing &&
+      !!speechSynthesis.getVoices().length;
+    speechSynthesis.cancel();
+    this.clear = true;
+    let [text, ssml] = buildSpeech(
+      speech,
+      this.document.options.sre.locale,
+      this.document.options.sre.rate
+    );
+    super.Update(text);
+    if (this.active && text) {
+      this.makeUtterances(ssml, this.document.options.sre.locale);
+    }
   }
 
   /**
