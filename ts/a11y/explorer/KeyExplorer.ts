@@ -194,46 +194,40 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   }
 
   protected nextSibling(el: HTMLElement): HTMLElement {
-      const sib = el.nextElementSibling as HTMLElement;
-      if (sib) {
-        if (sib.matches(nav)) {
-          return sib;
-        } else {
-          const sibChild = sib.querySelector(nav) as HTMLElement;
-          return sibChild ?? this.nextSibling(sib);
-        }
-      } else {
-        if (!isCodeBlock(el) && !el.parentElement.matches(nav)) {
-          return this.nextSibling(el.parentElement);
-        } else {
-          return null;
-        }
-      }
+    const sib = el.nextElementSibling as HTMLElement;
+    if (sib) {
+      if (sib.matches(nav)) {
+        return sib;
+      } 
+      const sibChild = sib.querySelector(nav) as HTMLElement;
+      return sibChild ?? this.nextSibling(sib);
     }
+    if (!isCodeBlock(el) && !el.parentElement.matches(nav)) {
+      return this.nextSibling(el.parentElement);
+    }
+    return null;
+  }
 
   protected prevSibling(el: HTMLElement): HTMLElement {
-      const sib = el.previousElementSibling as HTMLElement;
-      if (sib) {
-        if (sib.matches(nav)) {
-          return sib;
-        } else {
-          const sibChild = sib.querySelector(nav) as HTMLElement;
-          return sibChild ?? this.prevSibling(sib);
-        }
-      } else {
-        if (!isCodeBlock(el) && !el.parentElement.matches(nav)) {
-          return this.prevSibling(el.parentElement);
-        } else {
-          return null;
-        }
+    const sib = el.previousElementSibling as HTMLElement;
+    if (sib) {
+      if (sib.matches(nav)) {
+        return sib;
       }
+      const sibChild = sib.querySelector(nav) as HTMLElement;
+      return sibChild ?? this.prevSibling(sib);
     }
+    if (!isCodeBlock(el) && !el.parentElement.matches(nav)) {
+      return this.prevSibling(el.parentElement);
+    }
+    return null;
+  }
 
   protected moves: Map<string, (node: HTMLElement) => HTMLElement | null> = new Map([
     ['ArrowDown', (node: HTMLElement) => node.querySelector(nav)],
     ['ArrowUp', (node: HTMLElement) => node.parentElement.closest(nav)],
-    ['ArrowLeft', this.prevSibling],
-    ['ArrowRight', this.nextSibling],
+    ['ArrowLeft', this.prevSibling.bind(this)],
+    ['ArrowRight', this.nextSibling.bind(this)],
     ['>', (_node: HTMLElement) => {
       return null;
     }],
@@ -310,10 +304,9 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
               public brailleRegion: LiveRegion,
               public magnifyRegion: HoverRegion,
               _mml: MmlNode,
-              private item: ExplorerMathItem
+              public item: ExplorerMathItem
              ) {
     super(document, pool, null, node);
-    // this.initWalker();
   }
 
 
@@ -524,17 +517,6 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     return false;
   }
 
-
-  /**
-   * Initialises the Sre walker.
-   */
-  // private initWalker() {
-  //   this.speechGenerator = Sre.getSpeechGenerator('Tree');
-  //   let dummy = Sre.getWalker(
-  //     'dummy', this.node, this.speechGenerator, this.highlighter, this.mml);
-  //   this.walker = dummy;
-  // }
-
   /**
    * Retrieves the speech options to sync with document options.
    * @return {{[key: string]: string}} The options settings for the speech
@@ -572,77 +554,3 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
 
 
 }
-
-
-/**
- * Explorer that magnifies what is currently explored. Uses a hover region.
- * @constructor
- * @extends {AbstractKeyExplorer}
- */
-// export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
-
-//   /**
-//    * @constructor
-//    * @extends {AbstractKeyExplorer}
-//    */
-//   constructor(public document: A11yDocument,
-//               public pool: ExplorerPool,
-//               public region: Region<HTMLElement>,
-//               protected node: HTMLElement,
-//               private mml: string) {
-//     super(document, pool, region, node);
-//     this.walker = Sre.getWalker(
-//       'table', this.node, Sre.getSpeechGenerator('Dummy'),
-//       this.highlighter, this.mml);
-//   }
-
-//   /**
-//    * @override
-//    */
-//   public Update(force: boolean = false) {
-//     super.Update(force);
-//     this.showFocus();
-//   }
-
-//   /**
-//    * @override
-//    */
-//   public Start() {
-//     super.Start();
-//     if (!this.attached) return;
-//     this.region.Show(this.node, this.highlighter);
-//     this.walker.activate();
-//     this.Update();
-//   }
-
-//   /**
-//    * Shows the nodes that are currently focused.
-//    */
-//   private showFocus() {
-//     let node = this.walker.getFocus().getNodes()[0] as HTMLElement;
-//     this.region.Show(node, this.highlighter);
-//   }
-
-//   /**
-//    * @override
-//    */
-//   public KeyDown(event: KeyboardEvent) {
-//     const code = event.keyCode;
-//     this.walker.modifier = event.shiftKey;
-//     if (code === 27) {
-//       this.Stop();
-//       this.stopEvent(event);
-//       return;
-//     }
-//     if (this.active && code !== 13) {
-//       this.Move(code);
-//       this.stopEvent(event);
-//       return;
-//     }
-//     if (code === 32 && event.shiftKey || code === 13) {
-//       this.Start();
-//       this.stopEvent(event);
-//     }
-//   }
-
-// }
