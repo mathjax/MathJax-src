@@ -356,16 +356,6 @@ export class LiveRegion extends StringRegion {
       }
     });
 
-
-  /**
-   * @constructor
-   * @param {A11yDocument} document The document the live region is added to.
-   */
-  constructor(public document: A11yDocument) {
-    super(document);
-    // this.div.setAttribute('aria-live', 'assertive');
-  }
-
 }
 
 

@@ -154,7 +154,7 @@ function getLabel(node: MmlNode, sep: string = ' ') {
   if (prefix) {
     label.unshift(prefix);
   }
-  // TODO: check if we need this or if is automatic by the screen readers.
+  // TODO: check if we need this or if it is automatic by the screen readers.
   const postfix = attributes.getExplicit('data-semantic-postfix') as string;
   if (postfix) {
     label.push(postfix);
@@ -163,9 +163,16 @@ function getLabel(node: MmlNode, sep: string = ' ') {
   return label.join(sep);
 }
 
-
+/**
+ * Builds speechs from SSML markup strings.
+ *
+ * @param {string} speech The speech string.
+ * @param {string=} locale An optional locale.
+ * @param {string=} rate The base speech rate.
+ * @return {[string, SsmlElement[]]} The speech with the ssml annotation structure 
+ */
 export function buildSpeech(speech: string, locale: string = 'en',
-                            rate: string = '100') {
+                            rate: string = '100'): [string, SsmlElement[]] {
   return ssmlParsing('<?xml version="1.0"?><speak version="1.1"' +
     ' xmlns="http://www.w3.org/2001/10/synthesis"' +
     ` xml:lang="${locale}">` +
