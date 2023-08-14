@@ -253,8 +253,6 @@ export class SubsupItem extends BaseItem {
           item.First = node;
         }
       }
-      // console.log(JSON.stringify(item.First.attributes));
-      // let first = item.First;
       NodeUtil.setChild(top, position, item.First);
       if (this.getProperty('movesupsub') != null) {
         // @test Limits Subsup (currently does not work! Check again!)
@@ -1588,7 +1586,13 @@ export class EquationItem extends BaseItem {
 
 }
 
-
+/**
+ * Adds auxiliary attributes for LaTeX output to node.
+ *
+ * @param {MmlNode} node The current node.
+ * @param {StackItem} item The stack item.
+ * @param {string=} prefix A prefix for the LaTeX command.
+ */
 function addLatexItem(node: MmlNode, item: StackItem, prefix: string = '') {
   let str = item.startStr.slice(item.startI, item.stopI);
   if (str) {
