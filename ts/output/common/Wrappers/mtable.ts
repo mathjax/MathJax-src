@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2023 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -718,7 +718,7 @@ export function CommonMtableMixin<
       //
       // Make sure cWidth reflects the size of the broken columns
       //
-      if (w > this.cWidths[i]) {
+      if (w > (this.cWidths[i] as number)) {
         this.cWidths[i] = w;
       }
     }

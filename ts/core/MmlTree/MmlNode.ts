@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2023 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -657,7 +657,7 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
       return '';
     }
     let space = TEXSPACE[prevClass][texClass];
-    if ((this.prevLevel > 0 || this.attributes.get('scriptlevel') > 0) && space >= 0) {
+    if ((this.prevLevel > 0 || (this.attributes.get('scriptlevel') as number) > 0) && space >= 0) {
       return '';
     }
     return TEXSPACELENGTH[Math.abs(space)];

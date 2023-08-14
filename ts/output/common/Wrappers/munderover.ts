@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2023 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -153,7 +153,7 @@ export function CommonMunderMixin<
       const basebox = this.baseChild.getOuterBBox();
       const underbox = this.scriptChild.getOuterBBox();
       const v = this.getUnderKV(basebox, underbox)[1];
-      const delta = (this.isLineBelow ? 0 : this.getDelta(true));
+      const delta = (this.isLineBelow ? 0 : this.getDelta(this.scriptChild, true));
       const [bw, uw] = this.getDeltaW([basebox, underbox], [0, -delta]);
       bbox.combine(basebox, bw, 0);
       bbox.combine(underbox, uw, v);
@@ -291,7 +291,7 @@ export function CommonMoverMixin<
         basebox.h = Math.max(basebox.h, this.font.params.x_height * this.baseScale);
       }
       const u = this.getOverKU(basebox, overbox)[1];
-      const delta = (this.isLineAbove ? 0 : this.getDelta());
+      const delta = (this.isLineAbove ? 0 : this.getDelta(this.scriptChild));
       const [bw, ow] = this.getDeltaW([basebox, overbox], [0, delta]);
       bbox.combine(basebox, bw, 0);
       bbox.combine(overbox, ow, u);
@@ -470,9 +470,10 @@ export function CommonMunderoverMixin<
       }
       const u = this.getOverKU(basebox, overbox)[1];
       const v = this.getUnderKV(basebox, underbox)[1];
-      const delta = this.getDelta();
+      const odelta = this.getDelta(this.overChild);
+      const udelta = this.getDelta(this.underChild, true);
       const [bw, uw, ow] = this.getDeltaW([basebox, underbox, overbox],
-                                          [0, this.isLineBelow ? 0 : -delta, this.isLineAbove ? 0 : delta]);
+                                          [0, this.isLineBelow ? 0 : -udelta, this.isLineAbove ? 0 : odelta]);
       bbox.combine(basebox, bw, 0);
       bbox.combine(overbox, ow, u);
       bbox.combine(underbox, uw, v);

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2023 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -232,7 +232,9 @@ export function CommonMrowMixin<
     constructor(factory: WF, node: MmlNode, parent: WW = null) {
       super(factory, node, parent);
       const self = this as any as WW;
-      this.isStack = (this.parent.node.isInferred || this.parent.breakTop(self, self) !== self);
+      this.isStack = (!this.parent ||
+        this.parent.node.isInferred ||
+        this.parent.breakTop(self, self) !== self);
       this.stretchChildren();
       for (const child of this.childNodes) {
         if (child.bbox.pwidth) {
@@ -306,6 +308,7 @@ export function CommonMrowMixin<
      * Adjust bbox vertical alignment. (E.g., for \vbox, \vcenter.)
      */
     protected vboxAdjust(bbox: BBox) {
+      if (!this.parent) return;
       const n = this.breakCount;
       const valign = this.parent.node.attributes.get('data-vertical-align');
       if (n && valign === 'bottom') {
@@ -358,10 +361,11 @@ export function CommonMrowMixin<
     protected shiftLines(W: number) {
       const lines = this.lineBBox;
       const n = lines.length - 1;
-      const [alignfirst, shiftfirst] = lines[1].indentData[0];
+      const [alignfirst, shiftfirst] = lines[1].indentData?.[0] || ['left', '0'];
       for (const i of lines.keys()) {
         const bbox = lines[i];
-        let [indentalign, indentshift] = (i === 0 ? [alignfirst, shiftfirst] : bbox.indentData[i === n ? 2 : 1]);
+        let [indentalign, indentshift] = (i === 0 ? [alignfirst, shiftfirst] :
+                                          bbox.indentData?.[i === n ? 2 : 1] || ['left', '0']);
         const [align, shift] = this.processIndent(indentalign, indentshift, alignfirst, shiftfirst, W);
         bbox.L = 0;
         bbox.L = this.getAlignX(W, bbox, align) + shift;

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2023 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -626,9 +626,14 @@ export class CommonWrapper<
    */
   public getBreakNode(bbox: LineBBox): [WW, WW] {
     const [i, j] = bbox.start || [0, 0];
-    if (this.node.isEmbellished) return [this, this.coreMO()] as any as [WW, WW];
-    if (this.node.isToken || !this.childNodes[i]) return [this, null] as any as [WW, WW];
-    return this.childNodes[i].getBreakNode(this.childNodes[i].getLineBBox(j));
+    if (this.node.isEmbellished) {
+      return [this, this.coreMO()] as any as [WW, WW];
+    }
+    const childNodes = (this.childNodes[0]?.node?.isInferred ? this.childNodes[0].childNodes : this.childNodes);
+    if (this.node.isToken || !childNodes[i]) {
+      return [this, null] as any as [WW, WW];
+    }
+    return childNodes[i].getBreakNode(childNodes[i].getLineBBox(j));
   }
 
   /**
@@ -741,14 +746,14 @@ export class CommonWrapper<
    */
   protected copySkewIC(bbox: BBox) {
     const first = this.childNodes[0];
-    if (first?.bbox.sk) {
+    if (first?.bbox?.sk) {
       bbox.sk = first.bbox.sk;
     }
-    if (first?.bbox.dx) {
+    if (first?.bbox?.dx) {
       bbox.dx = first.bbox.dx;
     }
     const last = this.childNodes[this.childNodes.length - 1];
-    if (last?.bbox.ic) {
+    if (last?.bbox?.ic) {
       bbox.ic = last.bbox.ic;
       bbox.w += bbox.ic;
     }
@@ -936,7 +941,7 @@ export class CommonWrapper<
     // Get the lspace and rspace
     //
     const attributes = node.attributes;
-    const isScript = (attributes.get('scriptlevel') > 0);
+    const isScript = (attributes.get('scriptlevel') as number > 0);
     this.bbox.L = (attributes.isSet('lspace') ?
                    Math.max(0, this.length2em(attributes.get('lspace'))) :
                    MathMLSpace(isScript, node.lspace));

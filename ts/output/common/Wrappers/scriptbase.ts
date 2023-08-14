@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2023 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -259,10 +259,11 @@ export interface CommonScriptbase<
   getDeltaW(boxes: BBox[], delta?: number[]): number[];
 
   /**
+   * @param {WW} script         The child that is above or below the base
    * @param {boolean=} noskew   Whether to ignore the skew amount
    * @return {number}           The offset for under and over
    */
-  getDelta(noskew?: boolean): number;
+  getDelta(script: WW, noskew?: boolean): number;
 
   /**
    * Handle horizontal stretching of children to match greatest width
@@ -717,9 +718,12 @@ export function CommonScriptbaseMixin<
     /**
      * @override
      */
-    public getDelta(noskew: boolean = false): number {
+    public getDelta(script: WW, noskew: boolean = false): number {
       const accent = this.node.attributes.get('accent');
-      const {sk, ic} = this.baseCore.getOuterBBox();
+      let {sk, ic} = this.baseCore.getOuterBBox();
+      if (accent) {
+        sk -= script.getOuterBBox().sk;
+      }
       return ((accent && !noskew ? sk : 0) + this.font.skewIcFactor * ic) * this.baseScale;
     }
 

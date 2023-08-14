@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2020-2022 The MathJax Consortium
+ *  Copyright (c) 2020-2023 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -88,6 +88,7 @@ function internalMath(parser: TexParser, text: string, level?: number | string, 
   if (!(parser instanceof TextParser)) {
     config.texParser = parser;
   }
+  config.parseOptions.clear();
   return [(new TextParser(text, mathvariant ? {mathvariant} : {}, config.parseOptions, level)).mml()];
 }
 

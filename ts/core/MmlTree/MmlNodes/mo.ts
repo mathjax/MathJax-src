@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2023 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -96,7 +96,7 @@ export class MmlMo extends AbstractMmlTokenNode {
    * Pattern for when contents is a collection of primes
    */
    protected static primes = new RegExp([
-     '^["\'`',
+     '^["\'',
      '\u2018-\u201F',        // Various double and single quotation marks (up and down)
      ']+$'
    ].join(''));
@@ -107,7 +107,6 @@ export class MmlMo extends AbstractMmlTokenNode {
   protected static remapPrimes: {[n: number]: number} = {
      0x0022: 0x2033,   // double quotes
      0x0027: 0x2032,   // single quote
-     0x0060: 0x2035,   // back quote
      0x2018: 0x2035,   // open single quote
      0x2019: 0x2032,   // close single quote
      0x201A: 0x2032,   // low open single quote

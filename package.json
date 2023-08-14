@@ -1,8 +1,27 @@
 {
   "name": "mathjax-full",
-  "version": "4.0.0-beta.1",
+  "version": "4.0.0-beta.3",
   "description": "Beautiful and accessible math in all browsers. MathJax is an open-source JavaScript display engine for LaTeX, MathML, and AsciiMath notation that works in all browsers and in server-side node applications. This package includes the source code as well as the packaged components.",
+  "keywords": [
+    "MathJax",
+    "math",
+    "svg",
+    "HTML",
+    "MathML",
+    "TeX",
+    "AsciiMath"
+  ],
   "license": "Apache-2.0",
+  "maintainers": [
+    "MathJax Consortium <info@mathjax.org> (http://www.mathjax.org)"
+  ],
+  "bugs": {
+    "url": "http://github.com/mathjax/MathJax/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mathjax/Mathjax-src/"
+  },
   "type": "module",
   "main": "components/mjs/node-main/node-main.js",
   "exports": {
@@ -46,19 +65,6 @@
     "CONTRIBUTING.md",
     "tsconfig*"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/mathjax/Mathjax-src/"
-  },
-  "keywords": [
-    "MathJax",
-    "math",
-    "svg",
-    "HTML",
-    "MathML",
-    "TeX",
-    "AsciiMath"
-  ],
   "scripts": {
     "clean:dir": "clean() { npx rimraf $1; }; clean",
     "clean:lib": "clean() { npx rimraf components/$1'/**/lib'; }; clean",
@@ -88,16 +94,16 @@
     "=============================================================================== components": "",
     "make-one": "make() { components/bin/makeAll --no-subdirs $3 $4 --$2 components/$2/$1; }; make",
     "_bundle:pkg": "pkg() { echo '{\n  \"type\": \"commonjs\"\n}' > bundle$1/package.json; }; pkg",
-    "_bundle-build:pkg": "",
+    "_bundle--build:pkg": "",
     "_pre_make": "pre() { npm run clean:dir bundle$2 && npm run clean:lib $1; }; pre",
     "_make": "make() { components/bin/makeAll --$1 --terse $2 $3 components/$1; }; make",
-    "_make_": "m() { npm run -- _pre_make $1 $2 && npm run -- _make $1 $3 $4; npm run -- _bundle$4:pkg $2; }; m",
+    "_make_": "m() { npm run -- _pre_make $1 $2 && npm run -- _make $1 $3 $4 && npm run -- _bundle$4:pkg $2; }; m",
     "make-cjs-components": "npm run -s -- _make_ cjs -cjs --bundle-cjs",
     "make-mjs-components": "npm run -s -- _make_ mjs",
     "make-components": "npm run -s make-mjs-components",
     "=============================================================================== build": "",
     "pre_build": "echo 'Compiling typescript files'",
-    "_build": "build() { npm run compile-$1; echo; npm run -- make-$1-components $2; }; build",
+    "_build": "build() { npm run compile-$1 && echo && npm run -- make-$1-components $2; }; build",
     "_build_": "b() { echo '============='; echo Building $1:; echo '============='; npm run -- _build $1 $2; }; b",
     "build-cjs": "npm run -s -- _build_ cjs --build",
     "build-mjs": "npm run -s -- _build_ mjs",
@@ -108,29 +114,29 @@
     "make-mml3-xslt": "cd ts/input/mathml/mml3 && npx xslt3 -t -xsl:mml3.xsl -export:mml3.sef.json -nogo",
     "postmake-mml3-xslt": "npx rimraf ts/input/mathml/mml3/mml3.xsl",
     "=============================================================================== install": "",
-    "link:full": "node -e 'require(\"fs\").symlinkSync(process.cwd(), \"node_modules/mathjax-full\")'",
+    "link:full": "node components/bin/link-full",
     "install": "npm run -s link:full",
     "use-cjs": "echo '{\n  \"extends\": \"./tsconfig/cjs.json\"\n}' > tsconfig.json",
     "use-mjs": "echo '{\n  \"extends\": \"./tsconfig/mjs.json\"\n}' > tsconfig.json"
   },
   "devDependencies": {
     "copyfiles": "^2.4.1",
-    "diff": "^5.0.0",
-    "rimraf": "^3.0.2",
-    "tape": "^5.5.3",
-    "terser-webpack-plugin": "^5.3.1",
+    "diff": "^5.1.0",
+    "rimraf": "^5.0.1",
+    "tape": "^5.6.3",
+    "terser-webpack-plugin": "^5.3.9",
     "tslint": "^6.1.3",
     "tslint-jsdoc-rules": "^0.2.0",
     "tslint-unix-formatter": "^0.2.0",
-    "typescript": "^4.6.4",
+    "typescript": "^5.1.3",
     "typescript-tools": "^0.3.1",
-    "webpack": "^5.72.1",
-    "webpack-cli": "^4.9.2"
+    "webpack": "^5.85.0",
+    "webpack-cli": "^5.1.1"
   },
   "dependencies": {
-    "mathjax-modern-font": "^1.0.0-beta.5",
+    "mathjax-modern-font": "^4.0.0-beta.3",
     "mhchemparser": "^4.2.1",
-    "mj-context-menu": "^0.8.1",
-    "speech-rule-engine": "^4.1.0-beta.5"
+    "mj-context-menu": "^0.9.1",
+    "speech-rule-engine": "^4.1.0-beta.7"
   }
 }

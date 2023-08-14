@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2022 The MathJax Consortium
+ *  Copyright (c) 2018-2023 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -106,7 +106,7 @@ export const SvgMunder = (function <N, T, D>(): SvgMunderClass<N, T, D> {
       base.toSVG(svg);
       script.toSVG(svg);
 
-      const delta = (this.isLineBelow ? 0 : this.getDelta(true));
+      const delta = (this.isLineBelow ? 0 : this.getDelta(this.scriptChild, true));
       const v = this.getUnderKV(bbox, sbox)[1];
       const [bx, sx] = this.getDeltaW([bbox, sbox], [0, -delta]);
 
@@ -191,7 +191,7 @@ export const SvgMover = (function <N, T, D>(): SvgMoverClass<N, T, D> {
       base.toSVG(svg);
       script.toSVG(svg);
 
-      const delta = (this.isLineAbove ? 0 : this.getDelta());
+      const delta = (this.isLineAbove ? 0 : this.getDelta(this.scriptChild));
       const u = this.getOverKU(bbox, sbox)[1];
       const [bx, sx] = this.getDeltaW([bbox, sbox], [0, delta]);
 
@@ -277,11 +277,12 @@ export const SvgMunderover = (function <N, T, D>(): SvgMunderoverClass<N, T, D> 
       under.toSVG(svg);
       over.toSVG(svg);
 
-      const delta = this.getDelta();
+      const odelta = this.getDelta(this.overChild);
+      const udelta = this.getDelta(this.underChild, true);
       const u = this.getOverKU(bbox, obox)[1];
       const v = this.getUnderKV(bbox, ubox)[1];
       const [bx, ux, ox] = this.getDeltaW([bbox, ubox, obox],
-                                          [0, this.isLineBelow ? 0 : -delta, this.isLineAbove ? 0 : delta]);
+                                          [0, this.isLineBelow ? 0 : -udelta, this.isLineAbove ? 0 : odelta]);
 
       base.place(bx, 0);
       under.place(ux, v);

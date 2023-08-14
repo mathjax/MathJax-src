@@ -66,12 +66,16 @@ function fullPath(resource) {
  */
 const PLUGINS = function (js, dir, target, font, jax, name) {
   //
-  // Replace a11y/util with the webpack version
+  // Replace a11y/util and components/mjs/root with the webpack versions
   //
   const plugins = [
     new webpack.NormalModuleReplacementPlugin(
       /components\/[cm]js\/a11y\/util\.js/,
       './util-pack.js'
+    ),
+    new webpack.NormalModuleReplacementPlugin(
+      /mjs\/components\/mjs\/root\.js/,
+      '../../../components/root-pack.js'
     )
   ];
 
@@ -185,7 +189,7 @@ const RESOLVE = function (js, dir, target, libs) {
   // The resolve object to use
   //
   return {
-    plugins: [new ResolveReplacementPlugin()],
+    plugins: [new ResolveReplacementPlugin()]
   };
 }
 
@@ -197,10 +201,12 @@ const RESOLVE = function (js, dir, target, libs) {
  * @param {{
  *          name: string,     // The name of the component to create
  *          js: string,       // The path to the compiled .js files (default is mathjax js directory)
+ *          target: string,   // 'mjs' or 'cjs' (defaults to 'mjs')
+ *          bundle: string,   // name of sub-directory where packed files go (defaults to 'bundle')
  *          libs: string[],   // Array of paths to component lib directories to link against
  *          dir: string,      // The directory of the component being built
  *          dist: string,     // The path to the directory where the component .js file will be placed
- *                                (defaults to es5 or es6 in the same directory as the js directory)
+ *                                (defaults to the bundle directory in the same directory as the js directory)
  *          font: boolean,    // false to replace default font with no font
  *          jax: string,      // the jax whose default font should be redirected
  *        }}  options

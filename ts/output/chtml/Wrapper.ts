@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2023 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -354,6 +354,9 @@ CommonWrapper<
       for (const name of names) {
         this.dom.forEach(dom => adaptor.addClass(dom, name));
       }
+    }
+    if (this.node.getProperty('inline-breaks')) {
+      this.dom.forEach(dom => adaptor.setAttribute(dom, 'inline-breaks', 'true'));
     }
   }
 

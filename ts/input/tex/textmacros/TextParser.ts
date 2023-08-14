@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2020-2022 The MathJax Consortium
+ *  Copyright (c) 2020-2023 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -86,9 +86,24 @@ export class TextParser extends TexParser {
    * @override
    */
   public mml() {
+    this.copyLists();
+    this.configuration.popParser();
     return (this.level != null ?
             this.create('node', 'mstyle', this.nodes, {displaystyle: false, scriptlevel: this.level}) :
             this.nodes.length === 1 ? this.nodes[0] : this.create('node', 'mrow', this.nodes));
+  }
+
+  /**
+   * Copy the node list from the text parser to the TeX parser
+   */
+  protected copyLists() {
+    const parseOptions = this.texParser.configuration;
+    for (const [name, list] of Object.keys(this.configuration.nodeLists)) {
+      for (const node of list) {
+        parseOptions.addNode(name, node);
+      }
+    }
+    this.configuration.nodeLists = {};
   }
 
   /**

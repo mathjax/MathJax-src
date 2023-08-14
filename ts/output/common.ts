@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2022 The MathJax Consortium
+ *  Copyright (c) 2017-2023 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -396,12 +396,15 @@ export abstract class CommonOutputJax<
     if (!node) return;
     const forcebreak = this.forceInlineBreaks;
     let marked = false;
-    let markNext = null as [MmlNode, string];
-    for (const child of node.childNodes.slice(1)) {
+    let markNext = '';
+    for (const child of node.childNodes) {
       if (markNext) {
-        marked = this.markInlineBreak(marked, forcebreak, markNext[1], node, child, markNext[0]);
-        markNext = null;
+        marked = this.markInlineBreak(marked, forcebreak, markNext, node, child);
+        markNext = '';
       } else if (child.isEmbellished) {
+        if (child === node.childNodes[0]) {
+          continue;
+        }
         const mo = child.coreMO();
         const texClass = mo.texClass;
         const linebreak = mo.attributes.get('linebreak') as string;
@@ -412,7 +415,7 @@ export abstract class CommonOutputJax<
           if (linebreakstyle === 'before') {
             marked = this.markInlineBreak(marked, forcebreak, linebreak, node, child, mo);
           } else {
-            markNext = [mo, linebreak];
+            markNext = linebreak;
           }
         }
       } else if (child.isKind('mspace')) {
@@ -420,9 +423,20 @@ export abstract class CommonOutputJax<
         if (linebreak !== 'nobreak') {
           marked = this.markInlineBreak(marked, forcebreak, linebreak, node, child);
         }
-      } else if ((child.isKind('mstyle') && !child.attributes.get('style')) ||
-                 child.isKind('semantics') || child.isKind('MathChoice')) {
+      } else if ((child.isKind('mstyle') && !child.attributes.get('style') &&
+                  !child.attributes.getExplicit('mathbackground')) || child.isKind('semantics')) {
         this.markInlineBreaks(child.childNodes[0]);
+        if (child.getProperty('process-breaks')) {
+          child.setProperty('inline-breaks', true);
+          child.childNodes[0].setProperty('inline-breaks', true);
+          node.parent.setProperty('process-breaks', 'true');
+        }
+      } else if (child.isKind('mrow') && child.attributes.get('data-semantic-added')) {
+        this.markInlineBreaks(child);
+        if (child.getProperty('process-breaks')) {
+          child.setProperty('inline-breaks', true);
+          node.parent.setProperty('process-breaks', 'true');
+        }
       }
     }
   }
