@@ -192,3 +192,15 @@ export function setAria(node: MmlNode, locale: string) {
     setAria(child, locale);
   }
 }
+
+/**
+ * Creates a honking sound.
+ */
+export function honk() {
+  let ac = new AudioContext();
+  let os = ac.createOscillator();
+  os.frequency.value = 300;
+  os.connect(ac.destination);
+  os.start(ac.currentTime);
+  os.stop(ac.currentTime + .05);
+}

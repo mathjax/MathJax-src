@@ -28,6 +28,7 @@ import type { ExplorerMathItem } from '../explorer.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
 import {ExplorerPool} from './ExplorerPool.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import { honk } from '../SpeechUtil.js';
 import {Sre} from '../sre.js';
 
 // import { Walker } from './Walker.js';
@@ -86,8 +87,6 @@ function isCodeBlock(el: HTMLElement) {
  * @template T  The type that is consumed by the Region of this explorer.
  */
 export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplorer {
-
-  // public newWalker = new Walker();
 
   /**
    * Flag indicating if the explorer is attached to an object.
@@ -261,12 +260,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    * @override
    */
   public NoMove() {
-    let ac = new AudioContext();
-    let os = ac.createOscillator();
-    os.frequency.value = 300;
-    os.connect(ac.destination);
-    os.start(ac.currentTime);
-    os.stop(ac.currentTime + .05);
+    honk();
   }
 
   private static updatePromise = Promise.resolve();
@@ -380,7 +374,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     //   nodes = this.walker.getFocus().getNodes();
     // }
     this.pool.highlight([this.current]);
-    this.region.node = this.current;
+    this.region.node = this.node;
     this.region.Update(this.current.getAttribute('data-semantic-speech'));
     this.brailleRegion.Update(this.current.getAttribute('aria-braillelabel'));
     this.magnifyRegion.Update(this.current);
@@ -548,7 +542,6 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     if (this.active) {
       this.current.removeAttribute('tabindex');
       this.pool.unhighlight();
-      this.region.highlighter.unhighlight();
       this.magnifyRegion.Hide();
       this.region.Hide();
       this.brailleRegion.Hide();
