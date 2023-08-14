@@ -242,7 +242,6 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
       );
     }
 
-    // TODO: Simplify as we already have the speech!
     /**
      * @param {MathDocument} document   The MathDocument for the MathItem
      */

@@ -90,30 +90,9 @@ let allExplorers: {[options: string]: ExplorerInit} = {
     let explorer = ke.SpeechExplorer.create(
       doc, pool, doc.explorerRegions.speechRegion, node,
       doc.explorerRegions.brailleRegion, doc.explorerRegions.magnifier, rest[0], rest[1]) as ke.SpeechExplorer;
-    // explorer.speechGenerator.setOptions({
-    //   automark: true as any, markup: 'ssml',
-    //   locale: doc.options.sre.locale, domain: doc.options.sre.domain,
-    //   style: doc.options.sre.style, modality: 'speech'});
-    // // This weeds out the case of providing a non-existent locale option.
-    // let locale = explorer.speechGenerator.getOptions().locale;
-    // if (locale !== Sre.engineSetup().locale) {
-    //   doc.options.sre.locale = Sre.engineSetup().locale;
-    //   explorer.speechGenerator.setOptions({locale: doc.options.sre.locale});
-    // }
     explorer.sound = true;
     return explorer;
   },
-  // braille: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
-  //   let explorer = ke.SpeechExplorer.create(
-  //     doc, pool, doc.explorerRegions.brailleRegion, node, ...rest) as ke.SpeechExplorer;
-  //   explorer.speechGenerator.setOptions({automark: false as any, markup: 'none',
-  //                                        locale: 'nemeth', domain: 'default',
-  //                                        style: 'default', modality: 'braille'});
-  //   explorer.showRegion = 'viewBraille';
-  //   return explorer;
-  // },
-  // keyMagnifier: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) =>
-  //   ke.Magnifier.create(doc, pool, doc.explorerRegions.magnifier, node, ...rest),
   mouseMagnifier: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ..._rest: any[]) =>
     me.ContentHoverer.create(doc, pool, doc.explorerRegions.magnifier, node,
                              (x: HTMLElement) => x.hasAttribute('data-semantic-type'),
