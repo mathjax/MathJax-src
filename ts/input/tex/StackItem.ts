@@ -82,8 +82,20 @@ export interface NodeStack {
    */
   Clear(): void;
 
+
+  /**
+   * The LaTeX string at the moment item is called.
+   */
   startStr: string;
+
+  /**
+   * Parser position in the global LaTeX string when item is called.
+   */
   startI: number;
+
+  /**
+   * Parser position in the global LaTeX string when item is pushed.
+   */
   stopI: number;
 
   /**
@@ -120,7 +132,7 @@ export abstract class MmlStack implements NodeStack {
   /**
    * @constructor
    * @extends {NodeStack}
-   * @param {MmlNode[]} nodes An initial list of nodes to put on the stack.
+   * @param {MmlNode[]} _nodes An initial list of nodes to put on the stack.
    */
   constructor(private _nodes: MmlNode[]) { }
 

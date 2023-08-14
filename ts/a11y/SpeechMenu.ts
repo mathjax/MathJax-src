@@ -204,7 +204,7 @@ export function localeMenu(menu: MJContextMenu, sub: Submenu) {
   let radios: {type: string, id: string,
                content: string, variable: string}[] = [];
   for (let lang of Sre.locales.keys()) {
-    if ((lang === 'euro') || (lang === 'nemeth')) continue;
+    if (lang === 'nemeth' || lang === 'euro') continue;
     radios.push({type: 'radio', id: lang,
                  content: Sre.locales.get(lang) || lang, variable: 'locale'});
   }

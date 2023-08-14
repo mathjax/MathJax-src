@@ -66,7 +66,10 @@ export default class TexParser {
    */
   public currentCS: string = '';
 
-  public saveI: number[] = [0];
+  /**
+   * A stack to save the string positions when we restart the parser.
+   */
+  private saveI: number[] = [0];
 
   /**
    * @constructor
@@ -143,91 +146,6 @@ export default class TexParser {
     this.updateResult(input[1], this.saveI.pop());
     return result;
   }
-
-  // Currently works without environments.
-  private updateResult(input: string, old: number) {
-    let node = this.stack.Prev(true) as MmlNode;
-    if (!node) {
-      return;
-    }
-    let existing = node.attributes.get('itemLatex');
-    if (existing !== undefined) {
-      node.attributes.set('latex', existing);
-      return;
-    }
-    let str = old !== this.i ? this.string.slice(old, this.i) : input;
-    str = str.trim();
-    if (!str) {
-      return;
-    }
-    if (input === '\\') {
-      str = '\\' + str;
-    }
-    // TODO: Simplify.
-    // These are the cases to handle sub and superscripts.
-    if (node.attributes.get('latex') === '^' && str !== '^') {
-      if (str === '}') {
-        this.updateChild(node.childNodes[2]);
-      } else {
-        node.childNodes[2].attributes.set('latex', str);
-      }
-      if (node.childNodes[1]) {
-        const sub = node.childNodes[1].attributes.get('latex');
-        this.composeLatex(node, `_${sub}^`, 0, 2);
-      } else {
-        this.composeLatex(node, '^', 0, 2);
-      }
-      return;
-    }
-    if (node.attributes.get('latex') === '_' && str !== '_') {
-      if (str === '}') {
-        this.updateChild(node.childNodes[1]);
-      } else {
-        node.childNodes[1].attributes.set('latex', str);
-      }
-      if (node.childNodes[2]) {
-        const sub = node.childNodes[2].attributes.get('latex');
-        this.composeLatex(node, `^${sub}_`, 0, 1);
-      } else {
-        this.composeLatex(node, '_', 0, 1);
-      }
-      return;
-    }
-    if (str === '}') {
-      this.updateChild(node);
-      return;
-    }
-    node.attributes.set('latex', str);
-  }
-
-  private composeLatex(node: MmlNode, comp: string, pos1: number, pos2: number) {
-    const expr = node.childNodes[pos1].attributes.get('latex') + comp +
-      node.childNodes[pos2].attributes.get('latex');
-    node.attributes.set('latex', expr);
-  }
-  
-  private bracing(str: string) {
-    return '{' + str + '}';
-  }
-
-  private updateChild(atom: MmlNode) {
-    if (!atom) return;
-    let str = this.composeBraces(atom);
-    atom.attributes.set('latex', this.bracing(str));
-  }
-
-  private composeBraces(atom: MmlNode) {
-    // TODO: Make this more secure!
-    let children = atom.childNodes[0].childNodes;
-    let expr = '';
-    for (const child of children) {
-      let att = (child.attributes?.get('latex') || '') as string;
-      if (!att) continue;
-      expr += (expr && expr.match(/[a-zA-Z]$/) && att.match(/^[a-zA-Z]/)) ? ' ' + att : att;
-    }
-    return expr;
-  }
-
 
   /**
    * Maps a symbol to its "parse value" if it exists.
@@ -608,5 +526,108 @@ export default class TexParser {
     return this.configuration.nodeFactory.create(kind, ...rest);
   }
 
+  /**
+   * Finalizes the LaTeX for the topmost Mml element on the stack after parsing
+   * has been completed.
+   *
+   * @param {string} input The LaTeX input string for the parser.
+   * @param {number} old The last parsing position.
+   */
+  // Currently works without translating environments that generate typesetting.
+  private updateResult(input: string, old: number) {
+    let node = this.stack.Prev(true) as MmlNode;
+    if (!node) {
+      return;
+    }
+    let existing = node.attributes.get('itemLatex');
+    if (existing !== undefined) {
+      node.attributes.set('latex', existing);
+      return;
+    }
+    let str = old !== this.i ? this.string.slice(old, this.i) : input;
+    str = str.trim();
+    if (!str) {
+      return;
+    }
+    if (input === '\\') {
+      str = '\\' + str;
+    }
+    // These are the cases to handle sub and superscripts.
+    if (node.attributes.get('latex') === '^' && str !== '^') {
+      if (str === '}') {
+        this.composeBraces(node.childNodes[2]);
+      } else {
+        node.childNodes[2].attributes.set('latex', str);
+      }
+      if (node.childNodes[1]) {
+        const sub = node.childNodes[1].attributes.get('latex');
+        this.composeLatex(node, `_${sub}^`, 0, 2);
+      } else {
+        this.composeLatex(node, '^', 0, 2);
+      }
+      return;
+    }
+    if (node.attributes.get('latex') === '_' && str !== '_') {
+      if (str === '}') {
+        this.composeBraces(node.childNodes[1]);
+      } else {
+        node.childNodes[1].attributes.set('latex', str);
+      }
+      if (node.childNodes[2]) {
+        const sub = node.childNodes[2].attributes.get('latex');
+        this.composeLatex(node, `^${sub}_`, 0, 1);
+      } else {
+        this.composeLatex(node, '_', 0, 1);
+      }
+      return;
+    }
+    if (str === '}') {
+      this.composeBraces(node);
+      return;
+    }
+    node.attributes.set('latex', str);
+  }
+
+  /**
+   * Composing the LaTeX expression for sub or superscript elements.
+   *
+   * @param {MmlNode} node The Mml node.
+   * @param {string} comp Intermediate string.
+   * @param {number} pos1 Position of child for lefthand side of string.
+   * @param {number} pos2 Position of child for righthand side of string.
+   */
+  private composeLatex(
+    node: MmlNode, comp: string, pos1: number, pos2: number) {
+    const expr = node.childNodes[pos1].attributes.get('latex') + comp +
+      node.childNodes[pos2].attributes.get('latex');
+    node.attributes.set('latex', expr);
+  }
+
+  /**
+   * Adds the LaTeX content for this node as a braced expression.
+   *
+   * @param {MmlNode} atom The current Mml node.
+   */
+  private composeBraces(atom: MmlNode) {
+    if (!atom) return;
+    let str = this.composeBracedContent(atom);
+    atom.attributes.set('latex', `{${str}}`);
+  }
+
+  /**
+   * Composes the content of a braced expression.
+   *
+   * @param {MmlNode} atom The current Mml node.
+   */
+  private composeBracedContent(atom: MmlNode) {
+    let children = atom.childNodes[0]?.childNodes;
+    let expr = '';
+    for (const child of children) {
+      let att = (child.attributes?.get('latex') || '') as string;
+      if (!att) continue;
+      expr += (expr && expr.match(/[a-zA-Z]$/) && att.match(/^[a-zA-Z]/)) ? ' ' + att : att;
+    }
+    return expr;
+  }
 
 }
