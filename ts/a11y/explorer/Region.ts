@@ -211,8 +211,9 @@ export abstract class AbstractRegion<T> implements Region<T> {
         baseLeft = Math.min(region.getBoundingClientRect().left, baseLeft);
       }
     }
-    const bot = (baseBottom ? baseBottom : rect.bottom + 10) + window.pageYOffset;
-    const left = (baseLeft < Number.POSITIVE_INFINITY ? baseLeft : rect.left) + window.pageXOffset;
+
+    const bot = (baseBottom ? baseBottom : rect.bottom + 10) + window.scrollY;
+    const left = (baseLeft < Number.POSITIVE_INFINITY ? baseLeft : rect.left) + window.scrollX;
     this.div.style.top = bot + 'px';
     this.div.style.left = left + 'px';
   }
@@ -460,6 +461,7 @@ export class SpeechRegion extends LiveRegion {
     for (let utter of ssml) {
       if (utter.mark) {
         if (!utterance) {
+          // First utterance, call with init = true.
           this.highlightNode(utter.mark, true);
           continue;
         }
@@ -566,7 +568,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
     const xCenter = nodeRect.left + (nodeRect.width / 2);
     let left = xCenter - (divRect.width / 2);
     left = (left < 0) ? 0 : left;
-    left = left + window.pageXOffset;
+    left = left + window.scrollX;
     let top;
     switch (this.document.options.a11y.align) {
     case 'top':
@@ -580,7 +582,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
       const yCenter = nodeRect.top + (nodeRect.height / 2);
       top = yCenter - (divRect.height / 2);
     }
-    top = top + window.pageYOffset;
+    top = top + window.scrollY;
     top = (top < 0) ? 0 : top;
     this.div.style.top = top + 'px';
     this.div.style.left = left + 'px';
