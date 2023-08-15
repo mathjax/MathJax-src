@@ -268,7 +268,6 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
     protected handleColumnSpacing() {
       const scale = (this.childNodes[0] ? 1 / this.childNodes[0].getBBox().rscale : 1);
       const spacing = this.getEmHalfSpacing([this.fSpace[0], this.fSpace[2]], this.cSpace, scale);
-      const frame = this.fframe;
       //
       //  For each row...
       //
@@ -288,10 +287,10 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
           //  default already set in the mtd styles
           //
           const styleNode = (cell ? cell.dom[0] : this.adaptor.childNodes(row.dom[0])[i] as N);
-          if ((i > 1 && lspace !== '0.4em') || (frame && i === 1)) {
+          if ((i > 1 && lspace !== '0.4em') || (lspace !== '0' && i === 1)) {
             this.adaptor.setStyle(styleNode, 'paddingLeft', lspace);
           }
-          if ((i < this.numCols && rspace !== '0.4em') || (frame && i === this.numCols)) {
+          if ((i < this.numCols && rspace !== '0.4em') || (rspace !== '0' && i === this.numCols)) {
             this.adaptor.setStyle(styleNode, 'paddingRight', rspace);
           }
         }
