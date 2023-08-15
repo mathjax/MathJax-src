@@ -239,8 +239,7 @@ AmsMethods.HandleOperatorName = function(parser: TexParser, name: string) {
     ...parser.stack.env,
     font: TexConstant.Variant.NORMAL,
     multiLetterIdentifiers: parser.options.ams.operatornamePattern,
-    operatorLetters: true,
-    noAutoOP: true
+    operatorLetters: true
   }, parser.configuration).mml();
   //
   //  If we get something other than a single mi, wrap in a TeXAtom.
