@@ -23,7 +23,7 @@
  */
 
 import NewcommandMethods from './NewcommandMethods.js';
-import {CommandMap} from '../SymbolMap.js';
+import {CommandMap} from '../TokenMap.js';
 
 
 /**

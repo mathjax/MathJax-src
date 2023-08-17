@@ -24,9 +24,9 @@
 
 import {Configuration, ParserConfiguration} from '../Configuration.js';
 import {expandable} from '../../../util/Options.js';
-import {CommandMap, EnvironmentMap, MacroMap} from '../SymbolMap.js';
+import {CommandMap, EnvironmentMap, MacroMap} from '../TokenMap.js';
 import ParseMethods from '../ParseMethods.js';
-import {Macro} from '../Symbol.js';
+import {Macro} from '../Token.js';
 import NewcommandMethods from '../newcommand/NewcommandMethods.js';
 import {BeginEnvItem} from '../newcommand/NewcommandItems.js';
 import BaseMethods from '../base/BaseMethods.js';

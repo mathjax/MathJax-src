@@ -24,7 +24,7 @@
 
 import {Configuration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
-import {MacroMap} from '../SymbolMap.js';
+import {MacroMap} from '../TokenMap.js';
 import {ParseMethod} from '../Types.js';
 import ParseOptions from '../ParseOptions.js';
 import TexError from '../TexError.js';

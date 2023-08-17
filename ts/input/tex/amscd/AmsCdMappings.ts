@@ -17,22 +17,22 @@
 
 
 /**
- * @fileoverview Symbol mappings for the AMScd package.
+ * @fileoverview Token mappings for the AMScd package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import * as sm from '../SymbolMap.js';
+import * as tm from '../TokenMap.js';
 import ParseMethods from '../ParseMethods.js';
 import AmsCdMethods from './AmsCdMethods.js';
 
 
-new sm.EnvironmentMap('amscd_environment', ParseMethods.environment,
+new tm.EnvironmentMap('amscd_environment', ParseMethods.environment,
                       {CD: 'CD'}, AmsCdMethods);
 
-new sm.CommandMap('amscd_macros', {
+new tm.CommandMap('amscd_macros', {
   minCDarrowwidth: 'minCDarrowwidth',
   minCDarrowheight: 'minCDarrowheight',
 }, AmsCdMethods);
 
-new sm.MacroMap('amscd_special', {'@': 'arrow'}, AmsCdMethods);
+new tm.MacroMap('amscd_special', {'@': 'arrow'}, AmsCdMethods);

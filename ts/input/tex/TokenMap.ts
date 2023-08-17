@@ -17,27 +17,27 @@
 
 
 /**
- * @fileoverview Symbol map classes.
+ * @fileoverview Token map classes.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
 import {Attributes, Args, ParseMethod, ParseInput, ParseResult} from './Types.js';
-import {Symbol, Macro} from './Symbol.js';
+import {Token, Macro} from './Token.js';
 import {MapHandler} from './MapHandler.js';
 
 
 /**
- * SymbolMaps are the base components for the input parsers.
+ * TokenMaps are the base components for the input parsers.
  *
  * They provide a contains method that checks if a map is applicable (contains)
- * a particular string. Implementing classes then perform the actual symbol
- * parsing, from simple regular expression test, straight forward symbol mapping
+ * a particular string. Implementing classes then perform the actual token
+ * parsing, from simple regular expression test, straight forward token mapping
  * to transformational functionality on the parsed string.
  *
  * @interface
  */
-export interface SymbolMap {
+export interface TokenMap {
 
   /**
    * @return {string} The name of the map.
@@ -50,23 +50,23 @@ export interface SymbolMap {
   parser: ParseMethod;
 
   /**
-   * @param {string} symbol A symbol to parse.
-   * @return {boolean} True if the symbol map applies to the symbol.
+   * @param {string} token A token to parse.
+   * @return {boolean} True if the token map applies to the token.
    */
-  contains(symbol: string): boolean;
+  contains(token: string): boolean;
 
   /**
-   * @param {string} symbol A symbol to parse.
-   * @return {ParseMethod} A parse method for the symbol.
+   * @param {string} token A token to parse.
+   * @return {ParseMethod} A parse method for the token.
    */
-  parserFor(symbol: string): ParseMethod;
+  parserFor(token: string): ParseMethod;
 
   /**
    * @param {TexParser} env The current parser.
-   * @param {string} symbol A symbol to parse.
-   * @return {ParseResult} The parsed symbol and the rest of the string.
+   * @param {string} token A token to parse.
+   * @return {ParseResult} The parsed token and the rest of the string.
    */
-  parse([env, symbol]: ParseInput): ParseResult;
+  parse([env, token]: ParseInput): ParseResult;
 
 }
 
@@ -79,14 +79,14 @@ export function parseResult(result: ParseResult): ParseResult {
 }
 
 /**
- * Abstract implementation of symbol maps.
+ * Abstract implementation of token maps.
  * @template T
  */
-export abstract class AbstractSymbolMap<T> implements SymbolMap {
+export abstract class AbstractTokenMap<T> implements TokenMap {
 
   /**
    * @constructor
-   * @implements {SymbolMap}
+   * @implements {TokenMap}
    * @param {string} name Name of the mapping.
    * @param {ParseMethod} parser The parser for the mappiong.
    */
@@ -106,23 +106,23 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
   /**
    * @override
    */
-  public abstract contains(symbol: string): boolean;
+  public abstract contains(token: string): boolean;
 
 
   /**
    * @override
    */
-  public parserFor(symbol: string) {
-    return this.contains(symbol) ? this.parser : null;
+  public parserFor(token: string) {
+    return this.contains(token) ? this.parser : null;
   }
 
 
   /**
    * @override
    */
-  public parse([env, symbol]: ParseInput) {
-    let parser = this.parserFor(symbol);
-    let mapped = this.lookup(symbol);
+  public parse([env, token]: ParseInput) {
+    let parser = this.parserFor(token);
+    let mapped = this.lookup(token);
     return (parser && mapped) ? parseResult(parser(env, mapped as any)) : null;
   }
 
@@ -137,10 +137,10 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
 
 
   /**
-   * @param {string} symbol
+   * @param {string} token
    * @return {T}
    */
-  public abstract lookup(symbol: string): T;
+  public abstract lookup(token: string): T;
 
 }
 
@@ -149,11 +149,11 @@ export abstract class AbstractSymbolMap<T> implements SymbolMap {
 /**
  * Regular expressions used for parsing strings.
  */
-export class RegExpMap extends AbstractSymbolMap<string> {
+export class RegExpMap extends AbstractTokenMap<string> {
 
   /**
    * @constructor
-   * @extends {AbstractSymbolMap}
+   * @extends {AbstractTokenMap}
    * @param {string} name Name of the mapping.
    * @param {ParseMethod} parser The parser for the mappiong.
    * @param {RegExp} regexp The regular expression.
@@ -166,16 +166,16 @@ export class RegExpMap extends AbstractSymbolMap<string> {
   /**
    * @override
    */
-  public contains(symbol: string) {
-    return this._regExp.test(symbol);
+  public contains(token: string) {
+    return this._regExp.test(token);
   }
 
 
   /**
    * @override
    */
-  public lookup(symbol: string): string {
-    return this.contains(symbol) ? symbol : null;
+  public lookup(token: string): string {
+    return this.contains(token) ? token : null;
   }
 
 }
@@ -184,54 +184,54 @@ export class RegExpMap extends AbstractSymbolMap<string> {
 /**
  * Parse maps associate strings with parsing functionality.
  * @constructor
- * @extends {AbstractSymbolMap}
+ * @extends {AbstractTokenMap}
  * @template K
  */
-export abstract class AbstractParseMap<K> extends AbstractSymbolMap<K> {
+export abstract class AbstractParseMap<K> extends AbstractTokenMap<K> {
 
   private map: Map<string, K> = new Map<string, K>();
 
   /**
    * @override
    */
-  public lookup(symbol: string): K {
-    return this.map.get(symbol);
+  public lookup(token: string): K {
+    return this.map.get(token);
   }
 
   /**
    * @override
    */
-  public contains(symbol: string) {
-    return this.map.has(symbol);
+  public contains(token: string) {
+    return this.map.has(token);
   }
 
   /**
-   * Sets mapping for a symbol.
-   * @param {string} symbol The symbol to map.
-   * @param {K} object The symbols value in the mapping's codomain.
+   * Sets mapping for a token.
+   * @param {string} token The token to map.
+   * @param {K} object The tokens value in the mapping's codomain.
    */
-  public add(symbol: string, object: K) {
-    this.map.set(symbol, object);
+  public add(token: string, object: K) {
+    this.map.set(token, object);
   }
 
   /**
-   * Removes a symbol from the map
-   * @param {string} symbol The symbol to remove
+   * Removes a token from the map
+   * @param {string} token The token to remove
    */
-  public remove(symbol: string) {
-    this.map.delete(symbol);
+  public remove(token: string) {
+    this.map.delete(token);
   }
 
 }
 
 
 /**
- * Maps symbols that can all be parsed with the same method.
+ * Maps tokens that can all be parsed with the same method.
  *
  * @constructor
  * @extends {AbstractParseMap}
  */
-export class CharacterMap extends AbstractParseMap<Symbol> {
+export class CharacterMap extends AbstractParseMap<Token> {
 
   /**
    * @constructor
@@ -245,7 +245,7 @@ export class CharacterMap extends AbstractParseMap<Symbol> {
     for (const key of Object.keys(json)) {
       let value = json[key];
       let [char, attrs] = (typeof(value) === 'string') ? [value, null] : value;
-      let character = new Symbol(key, char, attrs);
+      let character = new Token(key, char, attrs);
       this.add(key, character);
     }
   }
@@ -254,7 +254,7 @@ export class CharacterMap extends AbstractParseMap<Symbol> {
 
 
 /**
- * Maps symbols that are delimiters, that are all parsed with the same method.
+ * Maps tokens that are delimiters, that are all parsed with the same method.
  *
  * @constructor
  * @extends {CharacterMap}
@@ -264,8 +264,8 @@ export class DelimiterMap extends CharacterMap {
   /**
    * @override
    */
-  public parse([env, symbol]: ParseInput) {
-    return super.parse([env, '\\' + symbol]);
+  public parse([env, token]: ParseInput) {
+    return super.parse([env, '\\' + token]);
   }
 
 }
@@ -302,8 +302,8 @@ export class MacroMap extends AbstractParseMap<Macro> {
   /**
    * @override
    */
-  public parserFor(symbol: string) {
-    let macro = this.lookup(symbol);
+  public parserFor(token: string) {
+    let macro = this.lookup(token);
     return macro ? macro.func : null;
   }
 
@@ -311,13 +311,13 @@ export class MacroMap extends AbstractParseMap<Macro> {
   /**
    * @override
    */
-  public parse([env, symbol]: ParseInput) {
-    let macro = this.lookup(symbol);
-    let parser = this.parserFor(symbol);
+  public parse([env, token]: ParseInput) {
+    let macro = this.lookup(token);
+    let parser = this.parserFor(token);
     if (!macro || !parser) {
       return null;
     }
-    return parseResult(parser(env, macro.symbol, ...macro.args));
+    return parseResult(parser(env, macro.token, ...macro.args));
   }
 
 }
@@ -334,15 +334,15 @@ export class CommandMap extends MacroMap {
   /**
    * @override
    */
-  public parse([env, symbol]: ParseInput) {
-    let macro = this.lookup(symbol);
-    let parser = this.parserFor(symbol);
+  public parse([env, token]: ParseInput) {
+    let macro = this.lookup(token);
+    let parser = this.parserFor(token);
     if (!macro || !parser) {
       return null;
     }
     let saveCommand = env.currentCS;
-    env.currentCS = '\\' + symbol;
-    let result = parser(env, '\\' + macro.symbol, ...macro.args);
+    env.currentCS = '\\' + token;
+    let result = parser(env, '\\' + macro.token, ...macro.args);
     env.currentCS = saveCommand;
     return parseResult(result);
   }
@@ -380,13 +380,13 @@ export class EnvironmentMap extends MacroMap {
   /**
    * @override
    */
-  public parse([env, symbol]: ParseInput) {
-    let macro = this.lookup(symbol);
-    let envParser = this.parserFor(symbol);
+  public parse([env, token]: ParseInput) {
+    let macro = this.lookup(token);
+    let envParser = this.parserFor(token);
     if (!macro || !envParser) {
       return null;
     }
-    return parseResult(this.parser(env, macro.symbol, envParser, macro.args));
+    return parseResult(this.parser(env, macro.token, envParser, macro.args));
   }
 
 }

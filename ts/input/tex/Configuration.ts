@@ -103,7 +103,7 @@ export class Configuration {
    * @param {string} name The package name.
    * @param {Object} config The configuration parameters:
    * Configuration for the TexParser consist of the following:
-   *  * _handler_  configuration mapping handler types to lists of symbol mappings.
+   *  * _handler_  configuration mapping handler types to lists of token mappings.
    *  * _fallback_ configuration mapping handler types to fallback methods.
    *  * _items_ for the StackItem factory.
    *  * _tags_ mapping tagging configurations to tagging objects.

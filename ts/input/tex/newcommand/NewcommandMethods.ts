@@ -26,8 +26,8 @@
 import {ParseMethod} from '../Types.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
-import * as sm from '../SymbolMap.js';
-import {Symbol, Macro} from '../Symbol.js';
+import * as sm from '../TokenMap.js';
+import {Token, Macro} from '../Token.js';
 import BaseMethods from '../base/BaseMethods.js';
 import ParseUtil from '../ParseUtil.js';
 import {StackItem} from '../StackItem.js';
@@ -90,8 +90,8 @@ NewcommandMethods.MacroDef = function(parser: TexParser, name: string) {
  * Implements the \let command.
  *
  * All \let commands create either new delimiters or macros in the extension
- * maps. In the latter case if the let binds a symbol we have to generate a
- * macro with the appropriate parse methods from the SymbolMap. Otherwise we
+ * maps. In the latter case if the let binds a token we have to generate a
+ * macro with the appropriate parse methods from the TokenMap. Otherwise we
  * simply copy the macro under a new name.
  *
  * Let does not always work on special characters as TeX does.  For example
@@ -115,7 +115,7 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
   if (c === '\\') {
     // @test Let Bar, Let Brace Equal Stretchy
     name = NewcommandUtil.GetCSname(parser, name);
-    let macro = handlers.get('delimiter').lookup('\\' + name) as Symbol;
+    let macro = handlers.get('delimiter').lookup('\\' + name) as Token;
     if (macro) {
       // @test Let Bar, Let Brace Equal Stretchy
       NewcommandUtil.addDelimiter(parser, '\\' + cs, macro.char, macro.attributes);
@@ -129,14 +129,14 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
     if (map instanceof sm.MacroMap) {
       // @test Def Let, Newcommand Let
       const macro = (map as sm.CommandMap).lookup(name) as Macro;
-      NewcommandUtil.addMacro(parser, cs, macro.func, macro.args, macro.symbol);
+      NewcommandUtil.addMacro(parser, cs, macro.func, macro.args, macro.token);
       return;
     }
-    macro = (map as sm.CharacterMap).lookup(name) as Symbol;
-    const newArgs = NewcommandUtil.disassembleSymbol(cs, macro);
+    macro = (map as sm.CharacterMap).lookup(name) as Token;
+    const newArgs = NewcommandUtil.disassembleToken(cs, macro);
     const method = (p: TexParser, _cs: string, ...rest: any[]) => {
       // @test Let Relet, Let Let, Let Circular Macro
-      const symb = NewcommandUtil.assembleSymbol(rest);
+      const symb = NewcommandUtil.assembleToken(rest);
       return map.parser(p, symb);
     };
     NewcommandUtil.addMacro(parser, cs, method, newArgs);
@@ -144,7 +144,7 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
   }
   // @test Let Brace Equal, Let Caret
   parser.i++;
-  const macro = handlers.get('delimiter').lookup(c) as Symbol;
+  const macro = handlers.get('delimiter').lookup(c) as Token;
   if (macro) {
     // @test Let Paren Delim, Let Paren Stretchy
     NewcommandUtil.addDelimiter(parser, '\\' + cs, macro.char, macro.attributes);

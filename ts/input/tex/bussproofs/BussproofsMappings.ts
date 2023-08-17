@@ -24,7 +24,7 @@
 
 import BussproofsMethods from './BussproofsMethods.js';
 import ParseMethods from '../ParseMethods.js';
-import {CommandMap, EnvironmentMap} from '../SymbolMap.js';
+import {CommandMap, EnvironmentMap} from '../TokenMap.js';
 
 
 /**

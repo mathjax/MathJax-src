@@ -27,7 +27,7 @@ import {MapHandler} from '../MapHandler.js';
 import TexError from '../TexError.js';
 import NodeUtil from '../NodeUtil.js';
 import TexParser from '../TexParser.js';
-import {CharacterMap} from '../SymbolMap.js';
+import {CharacterMap} from '../TokenMap.js';
 import * as bitem from './BaseItems.js';
 import {AbstractTags} from '../Tags.js';
 import './BaseMappings.js';

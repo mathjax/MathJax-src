@@ -24,8 +24,8 @@
 
 import {Configuration, ParserConfiguration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
-import {CommandMap} from '../SymbolMap.js';
-import {Macro} from '../Symbol.js';
+import {CommandMap} from '../TokenMap.js';
+import {Macro} from '../Token.js';
 import {TeX} from '../../tex.js';
 
 import {RequireLoad, RequireConfiguration} from '../require/RequireConfiguration.js';

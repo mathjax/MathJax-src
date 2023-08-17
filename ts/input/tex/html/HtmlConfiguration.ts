@@ -23,7 +23,7 @@
  */
 
 import {Configuration} from '../Configuration.js';
-import {CommandMap} from '../SymbolMap.js';
+import {CommandMap} from '../TokenMap.js';
 import HtmlMethods from './HtmlMethods.js';
 
 

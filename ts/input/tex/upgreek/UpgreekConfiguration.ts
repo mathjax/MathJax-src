@@ -23,8 +23,8 @@
  */
 
 import {Configuration} from '../Configuration.js';
-import {Symbol} from '../Symbol.js';
-import {CharacterMap} from '../SymbolMap.js';
+import {Token} from '../Token.js';
+import {CharacterMap} from '../TokenMap.js';
 import {TexConstant} from '../TexConstants.js';
 import TexParser from '../TexParser.js';
 
@@ -32,9 +32,9 @@ import TexParser from '../TexParser.js';
 /**
  * Handle greek mathchar as mi in normal variant.
  * @param {TexParser} parser The current tex parser.
- * @param {Symbol} mchar The parsed symbol.
+ * @param {Token} mchar The parsed token.
  */
-function mathchar0miNormal(parser: TexParser, mchar: Symbol) {
+function mathchar0miNormal(parser: TexParser, mchar: Token) {
   const def = mchar.attributes || {};
   def.mathvariant = TexConstant.Variant.NORMAL;
   const node = parser.create('token', 'mi', def, mchar.char);

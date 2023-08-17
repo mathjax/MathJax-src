@@ -24,7 +24,7 @@
  */
 
 import {AmsMethods} from './AmsMethods.js';
-import *  as sm from '../SymbolMap.js';
+import *  as sm from '../TokenMap.js';
 import {TexConstant} from '../TexConstants.js';
 import ParseMethods from '../ParseMethods.js';
 import ParseUtil from '../ParseUtil.js';

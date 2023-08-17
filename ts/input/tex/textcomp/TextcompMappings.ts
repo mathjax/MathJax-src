@@ -23,7 +23,7 @@
  */
 
 
-import {CommandMap} from '../SymbolMap.js';
+import {CommandMap} from '../TokenMap.js';
 import {TexConstant} from '../TexConstants.js';
 import {TextMacrosMethods} from '../textmacros/TextMacrosMethods.js';
 import TexParser from '../TexParser.js';

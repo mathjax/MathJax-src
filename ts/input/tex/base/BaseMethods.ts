@@ -24,7 +24,7 @@
 
 import * as sitem from './BaseItems.js';
 import {StackItem, EnvList} from '../StackItem.js';
-import {Macro} from '../Symbol.js';
+import {Macro} from '../Token.js';
 import {ParseMethod} from '../Types.js';
 import NodeUtil from '../NodeUtil.js';
 import TexError from '../TexError.js';
