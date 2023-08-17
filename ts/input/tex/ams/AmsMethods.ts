@@ -120,6 +120,7 @@ AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: b
   // @test Shove*, Multline
   ParseUtil.checkEqnEnv(parser);
   parser.Push(begin);
+  const padding = parser.options.ams['multlineIndent'];
   const item = parser.itemFactory.create('multline', numbered, parser.stack) as ArrayItem;
   item.arraydef = {
     displaystyle: true,
@@ -128,8 +129,7 @@ AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: b
     width: parser.options.ams['multlineWidth'],
     side: parser.options['tagSide'],
     minlabelspacing: parser.options['tagIndent'],
-    framespacing: parser.options.ams['multlineIndent'] + ' 0',
-    frame: '',   // Use frame spacing with no actual frame
+    'data-array-padding': `${padding} ${padding}`,
     'data-width-includes-label': true // take label space out of 100% width
   };
   return item;
