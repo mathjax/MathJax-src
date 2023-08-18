@@ -120,8 +120,6 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    */
   public toEmbellishedSVG(parents: N[]): boolean {
     if (parents.length <= 1 || !this.node.isEmbellished) return false;
-    const adaptor = this.adaptor;
-    parents.forEach(dom => adaptor.append(dom, this.html('mjx-linestrut')));
     const style = this.coreMO().embellishedBreakStyle;
     //
     // At the end of the first line or beginning of the second,
