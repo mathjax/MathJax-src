@@ -1714,7 +1714,6 @@ BaseMethods.Equation = function (
 ) {
   parser.configuration.mathItem.display = display;
   parser.stack.env.display = display;
-  parser.Push(begin);
   ParseUtil.checkEqnEnv(parser);
   parser.Push(begin);
   return parser.itemFactory.create('equation', numbered).
