@@ -136,10 +136,10 @@ export const RANGES: RangeDef[] = [
 /**
  * Get the Unicode range for the first character of a string
  *
- * @param {string} text      The character to check
- * @return {RangeDef|null}   The range containing that character, or null
+ * @param {string} text   The character to check
+ * @return {RangeDef}     The range containing that character, or null
  */
-export function getRange(text: string): RangeDef | null {
+export function getRange(text: string): RangeDef {
   const n = text.codePointAt(0);
   for (const range of RANGES) {
     if (n <= range[1]) {
@@ -149,7 +149,7 @@ export function getRange(text: string): RangeDef | null {
       break;
     }
   }
-  return null;
+  return [0, 0, TEXCLASS.REL, 'mo'];
 }
 
 /**

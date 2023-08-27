@@ -25,7 +25,7 @@ import {PropertyList} from '../../Tree/Node.js';
 import {AbstractMmlTokenNode, MmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
 import {MmlMrow} from './mrow.js';
 import {MmlMover, MmlMunder, MmlMunderover} from './munderover.js';
-import {OperatorList, OPTABLE, getRange, MMLSPACING} from '../OperatorDictionary.js';
+import {OperatorList, OPTABLE, OPDEF, getRange, MMLSPACING} from '../OperatorDictionary.js';
 import {unicodeChars, unicodeString} from '../../../util/string.js';
 
 /*****************************************************************/
@@ -101,6 +101,11 @@ export class MmlMo extends AbstractMmlTokenNode {
      ']+$'
    ].join(''));
 
+  /**
+   * Pattern to use to identify a multiletter operator
+   */
+  protected static opPattern = /^[a-zA-Z]{2,}$/;
+
    /**
     * Default map for remapping prime characters
     */
@@ -150,11 +155,7 @@ export class MmlMo extends AbstractMmlTokenNode {
    */
   public get texClass() {
     if (this._texClass === null) {
-      let mo = this.getText();
-      let [form1, form2, form3] = this.handleExplicitForm(this.getForms());
-      let OPTABLE = (this.constructor as typeof MmlMo).OPTABLE;
-      let def = OPTABLE[form1][mo] || OPTABLE[form2][mo] || OPTABLE[form3][mo];
-      return def ? def[2] : TEXCLASS.REL;
+      return this.getOperatorDef(this.getText())[2];
     }
     return this._texClass;
   }
@@ -348,35 +349,44 @@ export class MmlMo extends AbstractMmlTokenNode {
   }
 
   /**
+   * get the operator definition from the operator table
+   *
+   * @param {string} mo   The text of the mo element
+   */
+  protected getOperatorDef(mo: string) {
+    const [form1, form2, form3] = this.handleExplicitForm(this.getForms());
+    this.attributes.setInherited('form', form1);
+    const CLASS = this.constructor as typeof MmlMo
+    const OPTABLE = CLASS.OPTABLE;
+    const def = OPTABLE[form1][mo] || OPTABLE[form2][mo] || OPTABLE[form3][mo];
+    if (def) {
+      return def;
+    }
+    const limits = this.attributes.get('movablelimits');
+    const isOP = !!mo.match(CLASS.opPattern);
+    if ((isOP || limits) && this.getProperty('texClass') === undefined) {
+      return OPDEF(1, 2, TEXCLASS.OP);
+    }
+    const range = getRange(mo);
+    const [l, r] = CLASS.MMLSPACING[range[2]];
+    return OPDEF(l, r, range[2]);
+  }
+
+  /**
    * Set the attributes from the operator table
    *
-   * @param {string} mo   The test of the mo element
+   * @param {string} mo   The text of the mo element
    */
   protected checkOperatorTable(mo: string) {
-    let [form1, form2, form3] = this.handleExplicitForm(this.getForms());
-    this.attributes.setInherited('form', form1);
-    let OPTABLE = (this.constructor as typeof MmlMo).OPTABLE;
-    let def = OPTABLE[form1][mo] || OPTABLE[form2][mo] || OPTABLE[form3][mo];
-    if (def) {
-      if (this.getProperty('texClass') === undefined) {
-        this.texClass = def[2];
-      }
-      for (const name of Object.keys(def[3] || {})) {
-        this.attributes.setInherited(name, def[3][name]);
-      }
-      this.lspace = (def[0] + 1) / 18;
-      this.rspace = (def[1] + 1) / 18;
-    } else {
-      let range = getRange(mo);
-      if (range) {
-        if (this.getProperty('texClass') === undefined) {
-          this.texClass = range[2];
-        }
-        const spacing = (this.constructor as typeof MmlMo).MMLSPACING[range[2]];
-        this.lspace = (spacing[0] + 1) / 18;
-        this.rspace = (spacing[1] + 1) / 18;
-      }
+    const def = this.getOperatorDef(mo);
+    if (this.getProperty('texClass') === undefined) {
+      this.texClass = def[2];
     }
+    for (const name of Object.keys(def[3] || {})) {
+      this.attributes.setInherited(name, def[3][name]);
+    }
+    this.lspace = (def[0] + 1) / 18;
+    this.rspace = (def[1] + 1) / 18;
   }
 
   /**
