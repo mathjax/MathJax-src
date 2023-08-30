@@ -415,6 +415,13 @@ export function CommonMsubsupMixin<
     /**
      * @override
      */
+    public get scriptChild(): WW {
+      return this.supChild;
+    }
+
+    /**
+     * @override
+     */
     public getUVQ(
       subbox: BBox = this.subChild.getOuterBBox(),
       supbox: BBox = this.supChild.getOuterBBox()
@@ -426,6 +433,8 @@ export function CommonMsubsupMixin<
       const t = 3 * tex.rule_thickness;
       const subscriptshift = this.length2em(this.node.attributes.get('subscriptshift'), tex.sub2);
       const drop = this.baseCharZero(bbox.d * this.baseScale + tex.sub_drop * subbox.rscale);
+      const supd = supbox.d * supbox.rscale;
+      const subh = subbox.h * subbox.rscale;
       //
       // u and v are the veritcal shifts of the scripts, initially set to minimum values and then adjusted
       //
@@ -433,16 +442,17 @@ export function CommonMsubsupMixin<
       //
       // q is the space currently between the super- and subscripts.
       // If it is less than 3 rule thicknesses,
-      //   increase the subscript offset to make the space 3 rule thicknesses
+      //   Increase the subscript offset to make the space 3 rule thicknesses
       //   If the bottom of the superscript is below 4/5 of the x-height
       //     raise both the super- and subscripts by the difference
       //     (make the bottom of the superscript be at 4/5 the x-height, and the
-      //      subscript 3 rule thickness below that).
+      //      subscript 3 rule thickness below that),
+      //     provided we don't move up past the original subscript position.
       //
-      let q = (u - supbox.d * supbox.rscale) - (subbox.h * subbox.rscale - v);
+      let q = (u - supd) - (subh - v);
       if (q < t) {
         v += t - q;
-        const p = (4 / 5) * tex.x_height - (u - supbox.d * supbox.rscale);
+        const p = (4 / 5) * tex.x_height - (u - supd);
         if (p > 0) {
           u += p;
           v -= p;
@@ -454,7 +464,7 @@ export function CommonMsubsupMixin<
       //
       u = Math.max(this.length2em(this.node.attributes.get('superscriptshift'), u), u);
       v = Math.max(this.length2em(this.node.attributes.get('subscriptshift'), v), v);
-      q = (u - supbox.d * supbox.rscale) - (subbox.h * subbox.rscale - v);
+      q = (u - supd) - (subh - v);
       this.UVQ = [u, -v, q];
       return this.UVQ;
     }
