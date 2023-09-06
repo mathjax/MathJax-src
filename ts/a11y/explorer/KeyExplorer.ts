@@ -73,8 +73,10 @@ export interface KeyExplorer extends Explorer {
 }
 
 
-const codeSelector = 'mjx-container[role="application"]';
-const nav = '[role="tree"],[role="group"],[role="treeitem"]';
+const codeSelector = 'mjx-container';
+const roles = ['tree', 'group', 'treeitem'];
+const nav = roles.map(x => `[role="${x}"]`).join(',');
+const prevNav = roles.map(x => `[tabindex="0"][role="${x}"]`).join(',');
 
 function isCodeBlock(el: HTMLElement) {
   return el.matches(codeSelector);
@@ -110,23 +112,36 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
 
   private move = false;
 
+  private mousedown = false;
+
   /**
    * @override
    */
   protected events: [string, (x: Event) => void][] =
     super.Events().concat(
       [
-        // ['keydown', move],
         ['keydown', this.KeyDown.bind(this)],
+        ['mousedown', this.MouseDown.bind(this)],
         ['click', this.Click.bind(this)],
         ['focusin', this.FocusIn.bind(this)],
         ['focusout', this.FocusOut.bind(this)]
       ]);
 
+  /**
+   * Records a mouse down event on the element. This ensures that focus events
+   * only fire if they were not triggered by a mouse click.
+   *
+   * @param e The mouse event.
+   */
+  private MouseDown(e: MouseEvent) {
+    this.mousedown = true;
+    e.preventDefault();
+  }
+
   public Click(e: MouseEvent) {
     const clicked = (e.target as HTMLElement).closest(nav) as HTMLElement;
     if (this.node.contains(clicked)) {
-      const prev = this.node.querySelector('[tabindex="0"][role="tree"],[tabindex="0"][role="group"],[tabindex="0"][role="treeitem"]');
+      const prev = this.node.querySelector(prevNav);
       if (prev) {
         prev.removeAttribute('tabindex');
       }
@@ -147,7 +162,14 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   /**
    * @override
    */
-  public FocusIn(_event: FocusEvent) {
+  public FocusIn(event: FocusEvent) {
+    if (this.mousedown) {
+      this.mousedown = false;
+      return;
+    }
+    this.current = this.current || this.node.querySelector('[role="tree"]');
+    this.Start();
+    event.preventDefault();
   }
 
   /**
@@ -167,7 +189,6 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     this.attached = true;
     this.oldIndex = this.node.tabIndex;
     this.node.tabIndex = 0;
-    this.node.setAttribute('role', 'application');
   }
 
   /**
@@ -197,7 +218,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     if (sib) {
       if (sib.matches(nav)) {
         return sib;
-      } 
+      }
       const sibChild = sib.querySelector(nav) as HTMLElement;
       return sibChild ?? this.nextSibling(sib);
     }
@@ -231,7 +252,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       return null;
     }],
   ]);
-  
+
   /**
    * @override
    */
