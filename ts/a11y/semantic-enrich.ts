@@ -104,6 +104,16 @@ export class enrichVisitor<N, T, D> extends SerializedMmlVisitor {
 export interface EnrichedMathItem<N, T, D> extends MathItem<N, T, D> {
 
   /**
+   * The speech generator for this math item.
+   */
+  speechGenerator: Sre.speechGenerator;
+
+  /**
+   * The braille generator for this math item.
+   */
+  brailleGenerator: Sre.speechGenerator;
+
+  /**
    * @param {MathDocument} document  The document where enrichment is occurring
    * @param {boolean} force          True to force the enrichment even if not enabled
    */
@@ -137,9 +147,14 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
   return class extends BaseMathItem {
 
     /**
-     * The speech generator for this math item.
+     * @override
      */
-    public generator = Sre.getSpeechGenerator('Tree');
+    public speechGenerator = Sre.getSpeechGenerator('Tree');
+
+    /**
+     * @override
+     */
+    public brailleGenerator = Sre.getSpeechGenerator('Tree');
 
     /**
      * @param {any} node  The node to be serialized
@@ -195,23 +210,24 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
           }
           Sre.setupEngine(document.options.sre);
           const enriched = Sre.toEnriched(mml);
-          this.generator.setOptions(Object.assign(
+          this.speechGenerator.setOptions(Object.assign(
             {}, document.options.sre, {
+              modality: 'speech',
               markup: 'ssml',
               automark: true,
             }));
-          this.outputData.speech = buildSpeech(
-            this.generator.getSpeech(enriched, enriched),
-            document.options.sre.locale,
-            document.options.sre.rate)[0];
-          this.generator.setOptions({
+          this.brailleGenerator.setOptions({
             locale: document.options.sre.braille,
             domain: 'default',
             style: 'default',
             modality: 'braille',
             markup: 'none',
           });
-          this.outputData.braille = this.generator.getSpeech(enriched, enriched);
+          this.outputData.speech = buildSpeech(
+            this.speechGenerator.getSpeech(enriched, enriched),
+            document.options.sre.locale,
+            document.options.sre.rate)[0];
+          this.outputData.braille = this.brailleGenerator.getSpeech(enriched, enriched);
           this.inputData.enrichedMml = math.math = this.serializeMml(enriched);
           math.display = this.display;
           math.compile(document);
@@ -368,8 +384,7 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
         locale: 'en',                      // switch the locale
         domain: 'mathspeak',               // speech rules domain
         style: 'default',                  // speech rules style
-        modality: 'speech',
-        braille: 'nemeth',                 // TODO: Dummy switch for braille
+        braille: 'euro',                   // TODO: Dummy switch for braille
       }),
     };
 

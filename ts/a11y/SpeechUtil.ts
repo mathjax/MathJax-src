@@ -201,6 +201,22 @@ export function setAria(node: MmlNode, locale: string) {
 }
 
 /**
+ * Updates Aria labels.
+ * @param {MmlNode} node The root node to search from.
+ */
+export function updateAria(node: HTMLElement, locale: string) {
+  let speech = node.getAttribute('data-semantic-speech');
+  if (speech) {
+    node.setAttribute('aria-label', buildSpeech(speech, locale)[0]);
+  }
+  for (let child of Array.from(node.childNodes)) {
+    if (child instanceof HTMLElement) {
+      updateAria(child, locale);
+    }
+  }
+}
+
+/**
  * Creates a honking sound.
  */
 export function honk() {
