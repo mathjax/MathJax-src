@@ -51,11 +51,18 @@ export class MmlMtext extends AbstractMmlTokenNode {
   }
 
   /**
-   * <mtext> is always space-like according to the spec
+   * <mtext> is always space-like according to the spec,
+   * but we make it so only if it contains only spaces and
+   * doesn't have certain attributes
+   *
    * @override
    */
   public get isSpacelike() {
-    return true;
+    const attributes = this.attributes;
+    const spaces = !!this.getText().match(/^\s*$/);
+    return spaces && (attributes.getExplicit('mathbackground') === undefined &&
+                      attributes.getExplicit('background') === undefined &&
+                      attributes.getExplicit('style') === undefined);
   }
 
 }

@@ -77,10 +77,12 @@ export class MmlMspace extends AbstractMmlTokenNode {
   }
 
   /**
+   * Only make mspace be space-like if it doesn't have certain attributes
+   *
    * @override
    */
   public get isSpacelike() {
-    return true;
+    return this.attributes.getExplicit('linebreak') === undefined && this.canBreak;
   }
 
   /**
