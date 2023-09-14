@@ -28,7 +28,7 @@ import type { ExplorerMathItem } from '../explorer.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
 import {ExplorerPool} from './ExplorerPool.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import { honk } from '../SpeechUtil.js';
+import { buildSpeech, updateAria, honk } from '../SpeechUtil.js';
 import {Sre} from '../sre.js';
 
 // import { Walker } from './Walker.js';
@@ -248,10 +248,38 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     ['ArrowUp', (node: HTMLElement) => node.parentElement.closest(nav)],
     ['ArrowLeft', this.prevSibling.bind(this)],
     ['ArrowRight', this.nextSibling.bind(this)],
-    ['>', (_node: HTMLElement) => {
-      return null;
-    }],
+    ['>', this.nextRuleSet.bind(this)],
+    ['<', this.nextStyle.bind(this)],
+    ['x', this.summary.bind(this)],
   ]);
+
+  public summary(node: HTMLElement): HTMLElement {
+    this.item.speechGenerator.summary(node);
+    const speechGenerator = Sre.getSpeechGenerator('Summary');
+    console.log(speechGenerator.getSpeech(node, node));
+  }
+
+  public nextRuleSet(node: HTMLElement): HTMLElement {
+    this.item.speechGenerator.nextRules();
+    this.recomputeSpeech();
+    return node;
+  }
+
+  public nextStyle(node: HTMLElement): HTMLElement {
+    console.log(node);
+    this.item.speechGenerator.nextStyle(node.getAttribute('data-semantic-id'));
+    this.recomputeSpeech();
+    return node;
+  }
+
+  private recomputeSpeech() {
+    const speech = this.item.speechGenerator.getSpeech(this.item.typesetRoot, this.item.typesetRoot);
+    updateAria(this.item.typesetRoot, this.document.options.sre.locale);
+    this.item.outputData.speech = buildSpeech(speech)[0];
+    this.item.typesetRoot.setAttribute('aria-label', this.item.outputData.speech);
+    this.item.attachSpeech(this.document);
+  }
+
 
   /**
    * @override
@@ -334,35 +362,6 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     this.current.setAttribute('tabindex', '0');
     this.current.focus();
     super.Start();
-    // let options = this.getOptions();
-    // if (!this.init) {
-    //   this.init = true;
-    //   SpeechExplorer.updatePromise = SpeechExplorer.updatePromise.then(async () => {
-    //     return Sre.sreReady()
-    //       .then(() => Sre.setupEngine({locale: options.locale}))
-    //       .then(() => {
-    //         // Important that both are in the same block so speech explorers
-    //         // are restarted sequentially.
-    //         this.Speech(this.walker);
-    //       })
-    //       .then(() => Sre.setupEngine({automark: false as any, markup: 'none',
-    //                                    locale: 'nemeth', domain: 'default',
-    //                                    style: 'default', modality: 'braille'}))
-    //       .then(() => {
-    //         this.speechGenerator.setOptions({automark: false as any, markup: 'none',
-    //                                    locale: 'nemeth', domain: 'default',
-    //                                    style: 'default', modality: 'braille'});
-    //         this.Speech(this.walker);
-    //         this.Start();
-    //       });
-    //   })
-    //   return;
-    // }
-    // this.speechGenerator = Sre.getSpeechGenerator('Direct');
-    // this.speechGenerator.setOptions(options);
-    // this.walker = Sre.getWalker(
-    //   'table', this.node, this.speechGenerator, this.highlighter, this.mml);
-    // this.walker.activate();
     if (this.document.options.a11y.subtitles) {
       SpeechExplorer.updatePromise.then(
         () => this.region.Show(this.node, this.highlighter))
@@ -386,6 +385,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     // TODO (v4): This is a hack to avoid double voicing on initial startup!
     // Make that cleaner and remove force as it is not really used!
     // let noUpdate = force;
+    force = false;
     if (!this.active && !force) return;
     this.pool.unhighlight();
     // let nodes = this.walker.getFocus(true).getNodes();
@@ -445,6 +445,10 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   public KeyDown(event: KeyboardEvent) {
     const code = event.key;
     // this.walker.modifier = event.shiftKey;
+    if (code === 'Tab') {
+      this.Stop()
+      return;
+    }
     if (code === 'Control') {
       speechSynthesis.cancel();
       return;
