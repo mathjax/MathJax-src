@@ -79,20 +79,22 @@ export function isObject(x: any): boolean {
  * from src will replace those in dst.
  *
  * @param {any} dst         The destination config object (to be merged into)
- * @param {any} src         The source configuration object (to replace defaul values in dst}
- * @param {boolean} check   True when combining into MathJax._ to avoid setting getter properties
+ * @param {any} src         The source configuration object (to replace default values in dst}
+ * @param {boolean} check   True when combining into MathJax._ to avoid setting a property with a getter
  * @return {any}            The resulting (modified) config object
  */
 export function combineConfig(dst: any, src: any, check: boolean = false): any {
   for (const id of Object.keys(src)) {
-    if (id === '__esModule' || dst[id] === src[id]) continue;
-    if (isObject(dst[id]) && isObject(src[id]) &&
-        !(src[id] instanceof Promise) /* needed for IE polyfill */) {
+    if (id === '__esModule' ||
+        dst[id] === src[id] ||
+        src[id] === null ||
+        src[id] === undefined) {
+      continue;
+    }
+    if (isObject(dst[id]) && isObject(src[id])) {
       combineConfig(dst[id], src[id], check || id === '_');
-    } else if (src[id] !== null && src[id] !== undefined) {
-      if (!check || !Object.getOwnPropertyDescriptor(dst, id)?.get) {
-        dst[id] = src[id];
-      }
+    } else if (!check || !Object.getOwnPropertyDescriptor(dst, id)?.get) {
+      dst[id] = src[id];
     }
   }
   return dst;
@@ -105,7 +107,7 @@ export function combineConfig(dst: any, src: any, check: boolean = false): any {
  *
  * @param {any} dst      The destination config object (to be merged into)
  * @param {string} name  The id of the configuration block to modify (created if doesn't exist)
- * @param {any} src      The source configuration object (to replace defaul values in dst}
+ * @param {any} src      The source configuration object (to replace default values in dst}
  * @return {any}         The resulting (modified) config object
  */
 export function combineDefaults(dst: any, name: string, src: any): any {
