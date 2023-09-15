@@ -79,7 +79,7 @@ const EXCLUDE = new Map((config.exclude || []).map(name => [name, true]));  // f
 const EXCLUDESUBDIRS = !!config.excludeSubdirs;                             // exclude subdirectories or not
 const JS = config.js || config.mathjax || mjPath;                           // path to the compiled .js files
 const LIB = config.lib || './lib';                                          // path to the lib directory to create
-const TS = config.ts || JS.replace(/[cm]js$/, 'ts');                        // path to the .ts files
+const TS = config.ts || path.join(JS, '..', 'ts');                          // path to the .ts files
 const GLOBAL = config.global || mjGlobal;                                   // path to the global.js file
 const VERSION = config.version || mjGlobal.replace(/global/, 'version');    // path to the version.js file
 const TYPE = config.type || getType();                                      // the module type
