@@ -1393,7 +1393,9 @@ export class EqnArrayItem extends ArrayItem {
    */
   public EndEntry() {
     // @test Cubic Binomial
-    if (this.row.length) {
+    const calign = (this.arraydef.columnalign as string).split(/ /);
+    const align = this.row.length && calign.length ? calign[this.row.length % calign.length] : 'right';
+    if (align !== 'right') {
       ParseUtil.fixInitialMO(this.factory.configuration, this.nodes);
     }
     super.EndEntry();
