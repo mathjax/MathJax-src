@@ -4,7 +4,6 @@
     "#js/*": "mathjax-full/cjs/*",
     "#source/*": "mathjax-full/components/cjs/*",
     "#root/*": "mathjax-full/cjs/components/cjs/*",
-    "#mml3/*": "mathjax-full/cjs/input/mathml/mml3/cjs/*",
     "#menu/*": "mj-context-menu/cjs/*",
     "#sre/*": "speech-rule-engine/cjs/*",
     "#mhchem/*": "mhchemparser/dist/*",
