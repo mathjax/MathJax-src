@@ -93,10 +93,8 @@ export default class TexParser {
     this.stack = new Stack(this.itemFactory, ENV, inner ? isInner : true);
     this.Parse();
     this.Push(this.itemFactory.create('stop'));
-    this.stack.env = ENV;
-    console.log('Final');
-    console.log(this.string);
     this.updateResult(this.string, this.i);
+    this.stack.env = ENV;
   }
 
   /**
