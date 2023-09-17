@@ -818,7 +818,7 @@ export class CommonWrapper<
     if (!this.node.isToken) return;
     const attributes = this.node.attributes;
     let variant = attributes.get('mathvariant') as string;
-    if (attributes.getExplicit('mathvariant')) {
+    if (attributes.hasExplicit('mathvariant')) {
       if (!this.font.getVariant(variant)) {
         console.warn(`Invalid variant: ${variant}`);
         variant = 'normal';
@@ -890,7 +890,7 @@ export class CommonWrapper<
     //
     // If there is a fontsize and no mathsize attribute, is that
     //
-    if (fontsize && !attributes.getExplicit('mathsize')) {
+    if (fontsize && !attributes.hasExplicit('mathsize')) {
       mathsize = fontsize;
     }
     //

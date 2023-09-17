@@ -32,6 +32,15 @@ import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
 export class MmlMtext extends AbstractMmlTokenNode {
 
   /**
+   * Attributes that make an mpsace not spacelike
+   */
+  public static NONSPACELIKE = [
+    'style',
+    'mathbackground',
+    'background'
+  ];
+
+  /**
    * @override
    */
   public static defaults: PropertyList = {
@@ -51,18 +60,15 @@ export class MmlMtext extends AbstractMmlTokenNode {
   }
 
   /**
-   * <mtext> is always space-like according to the spec,
+   * According to the spec, <mtext> is always space-like,
    * but we make it so only if it contains only spaces and
-   * doesn't have certain attributes
+   * doesn't have certain attributes.
    *
    * @override
    */
   public get isSpacelike() {
-    const attributes = this.attributes;
-    const spaces = !!this.getText().match(/^\s*$/);
-    return spaces && (attributes.getExplicit('mathbackground') === undefined &&
-                      attributes.getExplicit('background') === undefined &&
-                      attributes.getExplicit('style') === undefined);
+    return !!this.getText().match(/^\s*$/) &&
+           !this.attributes.hasOneOf(MmlMtext.NONSPACELIKE);
   }
 
 }

@@ -105,8 +105,8 @@ export class MmlMtable extends AbstractMmlNode {
       if (attributes[name]) {
         this.attributes.setInherited(name, attributes[name][1]);
       }
-      if (this.attributes.getExplicit(name) !== undefined) {
-        delete (this.attributes.getAllAttributes())[name];
+      if (this.attributes.hasExplicit(name)) {
+        this.attributes.unset(name);
       }
     }
     super.setInheritedAttributes(attributes, display, level, prime);

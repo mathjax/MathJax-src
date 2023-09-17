@@ -62,20 +62,20 @@ namespace FilterUtil {
    * Visitor that removes superfluous attributes from nodes. I.e., if a node has
    * an attribute, which is also an inherited attribute it will be removed. This
    * is necessary as attributes are set bottom up in the parser.
-   * @param {ParseOptions} data The parse options.
+   * @param {ParseOptions} data   The parse options.
    */
   export let cleanAttributes = function(arg: {data: ParseOptions}) {
     let node = arg.data.root;
     node.walkTree((mml: MmlNode, _d: any) => {
-      let attribs = mml.attributes as any;
+      let attribs = mml.attributes;
       if (!attribs) {
         return;
       }
-      const keep = new Set((attribs.get('mjx-keep-attrs') || '').split(/ /));
-      delete (attribs.getAllAttributes())['mjx-keep-attrs'];
+      const keep = new Set((attribs.get('mjx-keep-attrs') as string || '').split(/ /));
+      attribs.unset('mjx-keep-attrs');
       for (const key of attribs.getExplicitNames()) {
-        if (!keep.has(key) && attribs.attributes[key] === mml.attributes.getInherited(key)) {
-          delete attribs.attributes[key];
+        if (!keep.has(key) && attribs.get(key) === mml.attributes.getInherited(key)) {
+          attribs.unset(key);
         }
       }
     }, {});
@@ -121,11 +121,11 @@ namespace FilterUtil {
           m2.setProperty('relationsCombined', true);
         } else {
           // @test Preset Rspace Lspace
-          if (mo.attributes.getExplicit('rspace') == null) {
+          if (!mo.attributes.hasExplicit('rspace')) {
             // @test Mulitrel Mathvariant 3, Mulitrel Mathvariant 4
             NodeUtil.setAttribute(mo, 'rspace', '0pt');
           }
-          if (m2.attributes.getExplicit('lspace') == null) {
+          if (!m2.attributes.hasExplicit('lspace')) {
             // @test Mulitrel Mathvariant 3, Mulitrel Mathvariant 4
             NodeUtil.setAttribute(m2, 'lspace', '0pt');
           }
@@ -173,7 +173,7 @@ namespace FilterUtil {
       return exp.filter(x => {
         return x !== space &&
           (x !== 'stretchy' ||
-           attr.getExplicit('stretchy'));
+           attr.hasExplicit('stretchy'));
       });
     };
     let attr1 = node1.attributes;
@@ -252,7 +252,7 @@ namespace FilterUtil {
       }
       const base = mml.childNodes[(mml as any).base];
       const mo = base.coreMO();
-      if (base.getProperty('movablelimits') && !mo.attributes.getExplicit('movablelimits')) {
+      if (base.getProperty('movablelimits') && !mo.attributes.hasExplicit('movablelimits')) {
         let node = options.nodeFactory.create('node', subsup, mml.childNodes);
         NodeUtil.copyAttributes(mml, node);
         if (mml.parent) {

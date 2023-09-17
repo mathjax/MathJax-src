@@ -424,7 +424,7 @@ export abstract class CommonOutputJax<
           marked = this.markInlineBreak(marked, forcebreak, linebreak, node, child);
         }
       } else if ((child.isKind('mstyle') && !child.attributes.get('style') &&
-                  !child.attributes.getExplicit('mathbackground')) || child.isKind('semantics')) {
+                  !child.attributes.hasExplicit('mathbackground')) || child.isKind('semantics')) {
         this.markInlineBreaks(child.childNodes[0]);
         if (child.getProperty('process-breaks')) {
           child.setProperty('inline-breaks', true);
