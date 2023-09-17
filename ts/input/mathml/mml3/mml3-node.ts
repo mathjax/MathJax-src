@@ -23,7 +23,7 @@
  */
 
 import {MathDocument} from '../../../core/MathDocument.js';
-import {xsltFilename} from '#mml3/xsltFilename.js';
+import {mjxRoot} from '#root/root.js';
 
 /**
  * Create the transform function that uses Saxon-js to perform the
@@ -44,7 +44,10 @@ export function createTransform<N, T, D>(): (node: N, doc: MathDocument<N, T, D>
   }
   const Saxon = nodeRequire('saxon-js'); // dynamically load Saxon-JS.
   const path = nodeRequire('path');      // use the real version from node.
-  const xslt = nodeRequire(xsltFilename(path));      // load the preprocessed stylesheet.
+  //
+  // Load the XSLT stylesheet
+  //
+  const xslt = nodeRequire(path.resolve(mjxRoot(), 'input', 'mml', 'extensions', 'mml3.sef.json'));
   return (node: N, doc: MathDocument<N, T, D>) => {
     const adaptor = doc.adaptor;
     let mml = adaptor.outerHTML(node);

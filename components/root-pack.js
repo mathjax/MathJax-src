@@ -1,4 +1,6 @@
 //
-//  Do what __dirname does in webpack
+//  Replacement for __dirname for root directory
 //
-export const esRoot = () => '/';
+
+const config = global.MathJax?.config || {};
+export const mjxRoot = () => config?.loader?.paths?.mathjax || config?.__dirname || '/';

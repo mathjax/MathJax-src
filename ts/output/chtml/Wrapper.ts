@@ -260,7 +260,7 @@ CommonWrapper<
    */
   protected handleSpace() {
     const adaptor = this.adaptor;
-    const breakable = !!this.node.getProperty('breakable');
+    const breakable = !!this.node.getProperty('breakable') && !this.node.getProperty('newline');
     const n = this.dom.length - 1;
     for (const data of [[this.getLineBBox(0).L, 'space',  'marginLeft', 0],
                         [this.getLineBBox(n).R, 'rspace', 'marginRight', n]]) {
