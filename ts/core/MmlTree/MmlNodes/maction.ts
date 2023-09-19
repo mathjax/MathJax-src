@@ -98,9 +98,8 @@ export class MmlMaction extends AbstractMmlNode {
   protected verifyAttributes(options: PropertyList) {
     super.verifyAttributes(options);
     if (this.attributes.get('actiontype') !== 'toggle' &&
-        this.attributes.getExplicit('selection') !== undefined) {
-      const attributes = this.attributes.getAllAttributes();
-      delete attributes.selection;
+        this.attributes.hasExplicit('selection')) {
+      this.attributes.unset('selection');
     }
   }
 

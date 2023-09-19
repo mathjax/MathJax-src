@@ -164,7 +164,7 @@ namespace NodeUtil {
    * @param {string} attr An attribute name.
    */
   export function removeAttribute(node: MmlNode, attr: string): void  {
-    delete (node.attributes.getAllAttributes())[attr];
+    node.attributes.unset(attr);
   }
 
 

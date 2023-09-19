@@ -32,6 +32,18 @@ import {MmlNode, AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
 export class MmlMspace extends AbstractMmlTokenNode {
 
   /**
+   * Attributes that make an mpsace not spacelike
+   */
+  public static NONSPACELIKE = [
+    /* 'width' */  // spec says not to allow breaks here, but we allow it
+    'height',
+    'depth',
+    'style',
+    'mathbackground',
+    'background'
+  ];
+
+  /**
    * @override
    */
   public static defaults: PropertyList = {
@@ -77,10 +89,12 @@ export class MmlMspace extends AbstractMmlTokenNode {
   }
 
   /**
+   * Only make mspace be space-like if it doesn't have certain attributes
+   *
    * @override
    */
   public get isSpacelike() {
-    return true;
+    return !this.attributes.hasExplicit('linebreak') && this.canBreak;
   }
 
   /**
@@ -90,7 +104,7 @@ export class MmlMspace extends AbstractMmlTokenNode {
    */
   public get hasNewline() {
     const linebreak = this.attributes.get('linebreak');
-    return (this.canBreak && (linebreak === 'newline' || linebreak === 'indentingnewline'));
+    return this.canBreak && (linebreak === 'newline' || linebreak === 'indentingnewline');
   }
 
   /**
@@ -98,13 +112,7 @@ export class MmlMspace extends AbstractMmlTokenNode {
    *                     no height/depth, no styles, and no background color.
    */
   public get canBreak(): boolean {
-    const attributes = this.attributes;
-    return (/*attributes.getExplicit('width') === undefined &&*/  // we break spaces with width ...
-            attributes.getExplicit('height') === undefined &&
-            attributes.getExplicit('depth') === undefined &&
-            attributes.getExplicit('style') === undefined &&      //   ... but not ones with styles
-            attributes.getExplicit('mathbackground') === undefined &&
-            attributes.getExplicit('background') === undefined);
+    return !this.attributes.hasOneOf(MmlMspace.NONSPACELIKE);
   }
 
 }
