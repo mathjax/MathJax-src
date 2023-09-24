@@ -167,7 +167,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       this.mousedown = false;
       return;
     }
-    this.current = this.current || this.node.querySelector('[role="tree"]');
+    this.current = this.current || this.node.querySelector('[role="treeitem"]');
     this.Start();
     event.preventDefault();
   }
@@ -257,18 +257,20 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     this.item.speechGenerator.summary(node);
     const speechGenerator = Sre.getSpeechGenerator('Summary');
     console.log(speechGenerator.getSpeech(node, node));
+    return node;
   }
 
   public nextRuleSet(node: HTMLElement): HTMLElement {
     this.item.speechGenerator.nextRules();
     this.recomputeSpeech();
+    this.refocus(node);
     return node;
   }
 
   public nextStyle(node: HTMLElement): HTMLElement {
-    console.log(node);
     this.item.speechGenerator.nextStyle(node.getAttribute('data-semantic-id'));
     this.recomputeSpeech();
+    this.refocus(node);
     return node;
   }
 
@@ -280,6 +282,10 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     this.item.attachSpeech(this.document);
   }
 
+  private refocus(node: HTMLElement) {
+    node.blur();
+    node.focus();
+  }
 
   /**
    * @override
