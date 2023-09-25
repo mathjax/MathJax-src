@@ -35,6 +35,7 @@ import ParseOptions from './ParseOptions.js';
 import {BaseItem, StackItem, EnvList} from './StackItem.js';
 import {Token} from './Token.js';
 import {OptionList} from '../../util/Options.js';
+import { TexConstant } from './TexConstants.js';
 
 
 /**
@@ -237,7 +238,7 @@ export default class TexParser {
     }
     let node = this.stack.Top().First;
     this.configuration.popParser();
-    node.attributes.set('latex', this.string);
+    node.attributes.set(TexConstant.Attr.LATEX, this.string);
     return node;
   }
 
@@ -539,9 +540,11 @@ export default class TexParser {
     if (!node) {
       return;
     }
-    let existing = node.attributes.get('itemLatex');
+    // TODO: This can probably be removed once processed. But needs more
+    // testing.
+    let existing = node.attributes.get(TexConstant.Attr.LATEXITEM);
     if (existing !== undefined) {
-      node.attributes.set('latex', existing);
+      node.attributes.set(TexConstant.Attr.LATEX, existing);
       return;
     }
     let str = old !== this.i ? this.string.slice(old, this.i) : input;
@@ -553,28 +556,28 @@ export default class TexParser {
       str = '\\' + str;
     }
     // These are the cases to handle sub and superscripts.
-    if (node.attributes.get('latex') === '^' && str !== '^') {
+    if (node.attributes.get(TexConstant.Attr.LATEX) === '^' && str !== '^') {
       if (str === '}') {
         this.composeBraces(node.childNodes[2]);
       } else {
-        node.childNodes[2].attributes.set('latex', str);
+        node.childNodes[2].attributes.set(TexConstant.Attr.LATEX, str);
       }
       if (node.childNodes[1]) {
-        const sub = node.childNodes[1].attributes.get('latex');
+        const sub = node.childNodes[1].attributes.get(TexConstant.Attr.LATEX);
         this.composeLatex(node, `_${sub}^`, 0, 2);
       } else {
         this.composeLatex(node, '^', 0, 2);
       }
       return;
     }
-    if (node.attributes.get('latex') === '_' && str !== '_') {
+    if (node.attributes.get(TexConstant.Attr.LATEX) === '_' && str !== '_') {
       if (str === '}') {
         this.composeBraces(node.childNodes[1]);
       } else {
-        node.childNodes[1].attributes.set('latex', str);
+        node.childNodes[1].attributes.set(TexConstant.Attr.LATEX, str);
       }
       if (node.childNodes[2]) {
-        const sub = node.childNodes[2].attributes.get('latex');
+        const sub = node.childNodes[2].attributes.get(TexConstant.Attr.LATEX);
         this.composeLatex(node, `^${sub}_`, 0, 1);
       } else {
         this.composeLatex(node, '_', 0, 1);
@@ -585,7 +588,7 @@ export default class TexParser {
       this.composeBraces(node);
       return;
     }
-    node.attributes.set('latex', str);
+    node.attributes.set(TexConstant.Attr.LATEX, str);
   }
 
   /**
@@ -598,9 +601,9 @@ export default class TexParser {
    */
   private composeLatex(
     node: MmlNode, comp: string, pos1: number, pos2: number) {
-    const expr = node.childNodes[pos1].attributes.get('latex') + comp +
-      node.childNodes[pos2].attributes.get('latex');
-    node.attributes.set('latex', expr);
+    const expr = node.childNodes[pos1].attributes.get(TexConstant.Attr.LATEX) + comp +
+      node.childNodes[pos2].attributes.get(TexConstant.Attr.LATEX);
+    node.attributes.set(TexConstant.Attr.LATEX, expr);
   }
 
   /**
@@ -611,7 +614,7 @@ export default class TexParser {
   private composeBraces(atom: MmlNode) {
     if (!atom) return;
     let str = this.composeBracedContent(atom);
-    atom.attributes.set('latex', `{${str}}`);
+    atom.attributes.set(TexConstant.Attr.LATEX, `{${str}}`);
   }
 
   /**
@@ -623,7 +626,7 @@ export default class TexParser {
     let children = atom.childNodes[0]?.childNodes;
     let expr = '';
     for (const child of children) {
-      let att = (child.attributes?.get('latex') || '') as string;
+      let att = (child.attributes?.get(TexConstant.Attr.LATEX) || '') as string;
       if (!att) continue;
       expr += (expr && expr.match(/[a-zA-Z]$/) && att.match(/^[a-zA-Z]/)) ? ' ' + att : att;
     }

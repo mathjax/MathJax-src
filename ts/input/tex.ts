@@ -37,6 +37,7 @@ import TexError from './tex/TexError.js';
 import ParseOptions from './tex/ParseOptions.js';
 import {TagsFactory} from './tex/Tags.js';
 import {ParserConfiguration} from './tex/Configuration.js';
+import { TexConstant } from './tex/TexConstants.js';
 // Import base as it is the default package loaded.
 import './tex/base/BaseConfiguration.js';
 
@@ -199,7 +200,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
       node = this.options.formatError(this, err);
     }
     node = this.parseOptions.nodeFactory.create('node', 'math', [node]);
-    node.attributes.set('latex', this.latex);
+    node.attributes.set(TexConstant.Attr.LATEX, this.latex);
     if (globalEnv?.indentalign) {
       NodeUtil.setAttribute(node, 'indentalign', globalEnv.indentalign);
     }

@@ -37,6 +37,7 @@ import {Property, PropertyList} from '../../../core/Tree/Node.js';
 import StackItemFactory from '../StackItemFactory.js';
 import {CheckType, BaseItem, StackItem, EnvList} from '../StackItem.js';
 import {TRBL} from '../../../util/Styles.js';
+import { TexConstant } from '../TexConstants.js';
 
 /**
  * Initial item on the stack. It's pushed when parsing begins.
@@ -326,7 +327,7 @@ export class OverItem extends BaseItem {
                                    this.getProperty('ldelim') as string, mml,
                                    this.getProperty('rdelim') as string);
       }
-      mml.attributes.set('itemLatex', this.getProperty('name') as string);
+      mml.attributes.set(TexConstant.Attr.LATEXITEM, this.getProperty('name') as string);
       return [[this.factory.create('mml', mml), item], true];
     }
     return super.checkItem(item);
@@ -399,11 +400,10 @@ export class LeftItem extends BaseItem {
       let left = fenced.childNodes[0];
       let right = fenced.childNodes[fenced.childNodes.length - 1];
       let mrow = this.factory.create('mml', fenced);
-      // TODO: Do we really want to have the left/right/middle prefixes here?
       addLatexItem(left, this, '\\left');
       addLatexItem(right, item, '\\right');
       mrow.Peek()[0].attributes.set(
-        'itemLatex', '\\left' + item.startStr.slice(this.startI, item.stopI));
+        TexConstant.Attr.LATEXITEM, '\\left' + item.startStr.slice(this.startI, item.stopI));
       return [[mrow], true];
     }
     if (item.isKind('middle')) {
@@ -1598,7 +1598,7 @@ export class EquationItem extends BaseItem {
 function addLatexItem(node: MmlNode, item: StackItem, prefix: string = '') {
   let str = item.startStr.slice(item.startI, item.stopI);
   if (str) {
-    node.attributes.set('itemLatex', prefix ? prefix + str : str);
-    node.attributes.set('latex', prefix ? prefix + str : str);
+    node.attributes.set(TexConstant.Attr.LATEXITEM, prefix ? prefix + str : str);
+    node.attributes.set(TexConstant.Attr.LATEX, prefix ? prefix + str : str);
   }
 }
