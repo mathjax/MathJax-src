@@ -384,7 +384,7 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
         locale: 'en',                      // switch the locale
         domain: 'mathspeak',               // speech rules domain
         style: 'default',                  // speech rules style
-        braille: 'euro',                   // TODO: Dummy switch for braille
+        braille: 'nemeth',                 // TODO: Dummy switch for braille
       }),
     };
 

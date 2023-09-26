@@ -179,6 +179,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     if (!this.move) {
       this.Stop();
     }
+    this.node.setAttribute('tabindex', '0');
   }
 
   /**
@@ -455,7 +456,6 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     const code = event.key;
     // this.walker.modifier = event.shiftKey;
     if (code === 'Tab') {
-      this.tabout = true;
       this.Stop()
       return;
     }
@@ -582,13 +582,6 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       this.magnifyRegion.Hide();
       this.region.Hide();
       this.brailleRegion.Hide();
-      // Not pretty, but currently the only solution I found.  The issue: if we
-      // shift-tab backwards then settingthe tabindex immediately catches the
-      // focus and we can't leave the expression.
-      setTimeout(
-        () => this.node.setAttribute('tabindex', '0'),
-        50
-      );
     }
     super.Stop();
   }
