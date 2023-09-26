@@ -70,7 +70,7 @@ export default class TexParser {
   /**
    * A stack to save the string positions when we restart the parser.
    */
-  private saveI: number[] = [0];
+  private saveI: number = 0;
 
   /**
    * @constructor
@@ -142,9 +142,11 @@ export default class TexParser {
    * @return {ParseResult} The output of the parsing function.
    */
   public parse(kind: HandlerType, input: ParseInput): ParseResult {
-    this.saveI.push(this.i);
+    const i = this.saveI;
+    this.saveI = this.i;
     let result = this.configuration.handlers.get(kind).parse(input);
-    this.updateResult(input[1], this.saveI.pop());
+    this.updateResult(input[1], i);
+    this.saveI = i;
     return result;
   }
 
@@ -205,8 +207,7 @@ export default class TexParser {
    */
   public Push(arg: StackItem | MmlNode) {
     if (arg instanceof BaseItem) {
-      arg.startI = this.saveI.pop();
-      this.saveI.push(arg.startI);
+      arg.startI = this.saveI;
       arg.stopI = this.i;
       arg.startStr = this.string;
     }
@@ -547,6 +548,7 @@ export default class TexParser {
       node.attributes.set(TexConstant.Attr.LATEX, existing);
       return;
     }
+    old = old < this.saveI ? this.saveI : old;
     let str = old !== this.i ? this.string.slice(old, this.i) : input;
     str = str.trim();
     if (!str) {
