@@ -140,6 +140,10 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
 
   public Click(e: MouseEvent) {
     const clicked = (e.target as HTMLElement).closest(nav) as HTMLElement;
+    if (!this.node.contains(clicked)) {
+      // In case the mjx-container is in a div, we get the click, although it is outside.
+      this.mousedown = false;
+    }
     if (this.node.contains(clicked)) {
       const prev = this.node.querySelector(prevNav);
       if (prev) {
@@ -258,7 +262,6 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   public summary(node: HTMLElement): HTMLElement {
     this.item.speechGenerator.summary(node);
     const speechGenerator = Sre.getSpeechGenerator('Summary');
-    console.log(speechGenerator.getSpeech(node, node));
     return node;
   }
 
@@ -485,7 +488,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       }
       if (!this.active) {
         if (!this.current) {
-          this.current = this.node.querySelector('[role="tree"]');
+          this.current = this.node.querySelector('[role="treeitem"]');
         }
         this.Start();
         this.stopEvent(event);
