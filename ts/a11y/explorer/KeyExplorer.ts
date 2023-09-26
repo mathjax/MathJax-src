@@ -179,6 +179,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     if (!this.move) {
       this.Stop();
     }
+    this.current.removeAttribute('tabindex');
     this.node.setAttribute('tabindex', '0');
   }
 
@@ -575,7 +576,6 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    */
   public Stop() {
     if (this.active) {
-      this.current.removeAttribute('tabindex');
       this.pool.unhighlight();
       this.magnifyRegion.Hide();
       this.region.Hide();
