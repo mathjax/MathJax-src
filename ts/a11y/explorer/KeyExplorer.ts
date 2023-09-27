@@ -460,7 +460,6 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     const code = event.key;
     // this.walker.modifier = event.shiftKey;
     if (code === 'Tab') {
-      this.Stop()
       return;
     }
     if (code === ' ') {
