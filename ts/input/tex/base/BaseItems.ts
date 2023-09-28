@@ -37,6 +37,7 @@ import {Property, PropertyList} from '../../../core/Tree/Node.js';
 import StackItemFactory from '../StackItemFactory.js';
 import {CheckType, BaseItem, StackItem, EnvList} from '../StackItem.js';
 import {TRBL} from '../../../util/Styles.js';
+import { TexConstant } from '../TexConstants.js';
 
 /**
  * Initial item on the stack. It's pushed when parsing begins.
@@ -145,6 +146,7 @@ export class OpenItem extends BaseItem {
       // @test PrimeSup
       let mml = this.toMml();
       const node = this.create('node', 'TeXAtom', [mml]);
+      addLatexItem(node, item);
       return [[this.factory.create('mml', node)], true];
     }
     return super.checkItem(item);
@@ -325,6 +327,7 @@ export class OverItem extends BaseItem {
                                    this.getProperty('ldelim') as string, mml,
                                    this.getProperty('rdelim') as string);
       }
+      mml.attributes.set(TexConstant.Attr.LATEXITEM, this.getProperty('name') as string);
       return [[this.factory.create('mml', mml), item], true];
     }
     return super.checkItem(item);
@@ -390,10 +393,18 @@ export class LeftItem extends BaseItem {
       //
       //  Create the fenced structure as an mrow
       //
-      return [[this.factory.create('mml', ParseUtil.fenced(
+      let fenced = ParseUtil.fenced(
         this.factory.configuration,
         this.getProperty('delim') as string, this.toMml(),
-        item.getProperty('delim') as string, '', item.getProperty('color') as string))], true];
+        item.getProperty('delim') as string, '', item.getProperty('color') as string);
+      let left = fenced.childNodes[0];
+      let right = fenced.childNodes[fenced.childNodes.length - 1];
+      let mrow = this.factory.create('mml', fenced);
+      addLatexItem(left, this, '\\left');
+      addLatexItem(right, item, '\\right');
+      mrow.Peek()[0].attributes.set(
+        TexConstant.Attr.LATEXITEM, '\\left' + item.startStr.slice(this.startI, item.stopI));
+      return [[mrow], true];
     }
     if (item.isKind('middle')) {
       //
@@ -403,9 +414,11 @@ export class LeftItem extends BaseItem {
       if (item.getProperty('color')) {
         def.mathcolor = item.getProperty('color');
       }
+      let middle = this.create('token', 'mo', def, item.getProperty('delim'));
+      addLatexItem(middle, item, '\\middle');
       this.Push(
         this.create('node', 'TeXAtom', [], {texClass: TEXCLASS.CLOSE}),
-        this.create('token', 'mo', def, item.getProperty('delim')),
+        middle,
         this.create('node', 'TeXAtom', [], {texClass: TEXCLASS.OPEN})
       );
       this.env = {};         // Since \middle closes the group, clear the environment
@@ -563,7 +576,9 @@ export class BeginItem extends BaseItem {
       }
       if (!this.getProperty('end')) {
         // @test Hfill
-        return [[this.factory.create('mml', this.toMml())], true];
+        const node = this.toMml();
+        addLatexItem(node, item);
+        return [[this.factory.create('mml', node)], true];
       }
       return BaseItem.fail;  // TODO: This case could probably go!
     }
@@ -1290,6 +1305,7 @@ export class ArrayItem extends BaseItem {
       NodeUtil.setAttribute(node, 'data-break-align', this.breakAlign.row);
       this.breakAlign.row = '';
     }
+    addLatexItem(node, this);
     this.table.push(node);
     this.row = [];
     this.atEnd = false;
@@ -1570,4 +1586,19 @@ export class EquationItem extends BaseItem {
     return super.checkItem(item);
   }
 
+}
+
+/**
+ * Adds auxiliary attributes for LaTeX output to node.
+ *
+ * @param {MmlNode} node The current node.
+ * @param {StackItem} item The stack item.
+ * @param {string=} prefix A prefix for the LaTeX command.
+ */
+function addLatexItem(node: MmlNode, item: StackItem, prefix: string = '') {
+  let str = item.startStr.slice(item.startI, item.stopI);
+  if (str) {
+    node.attributes.set(TexConstant.Attr.LATEXITEM, prefix ? prefix + str : str);
+    node.attributes.set(TexConstant.Attr.LATEX, prefix ? prefix + str : str);
+  }
 }

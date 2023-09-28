@@ -32,9 +32,10 @@ import TexError from './TexError.js';
 import {MmlNode, AbstractMmlNode} from '../../core/MmlTree/MmlNode.js';
 import {ParseInput, ParseResult} from './Types.js';
 import ParseOptions from './ParseOptions.js';
-import {StackItem, EnvList} from './StackItem.js';
+import {BaseItem, StackItem, EnvList} from './StackItem.js';
 import {Token} from './Token.js';
 import {OptionList} from '../../util/Options.js';
+import { TexConstant } from './TexConstants.js';
 
 
 /**
@@ -67,6 +68,11 @@ export default class TexParser {
   public currentCS: string = '';
 
   /**
+   * A stack to save the string positions when we restart the parser.
+   */
+  private saveI: number = 0;
+
+  /**
    * @constructor
    * @param {string} _string The string to parse.
    * @param {EnvList} env The intial environment representing the current parse
@@ -88,6 +94,7 @@ export default class TexParser {
     this.stack = new Stack(this.itemFactory, ENV, inner ? isInner : true);
     this.Parse();
     this.Push(this.itemFactory.create('stop'));
+    this.updateResult(this.string, this.i);
     this.stack.env = ENV;
   }
 
@@ -135,9 +142,13 @@ export default class TexParser {
    * @return {ParseResult} The output of the parsing function.
    */
   public parse(kind: HandlerType, input: ParseInput): ParseResult {
-    return this.configuration.handlers.get(kind).parse(input);
+    const i = this.saveI;
+    this.saveI = this.i;
+    let result = this.configuration.handlers.get(kind).parse(input);
+    this.updateResult(input[1], i);
+    this.saveI = i;
+    return result;
   }
-
 
   /**
    * Maps a token to its "parse value" if it exists.
@@ -195,6 +206,11 @@ export default class TexParser {
    * @param {StackItem|MmlNode} arg The new item.
    */
   public Push(arg: StackItem | MmlNode) {
+    if (arg instanceof BaseItem) {
+      arg.startI = this.saveI;
+      arg.stopI = this.i;
+      arg.startStr = this.string;
+    }
     if (arg instanceof AbstractMmlNode && arg.isInferred) {
       this.PushAll(arg.childNodes);
     } else {
@@ -223,6 +239,7 @@ export default class TexParser {
     }
     let node = this.stack.Top().First;
     this.configuration.popParser();
+    node.attributes.set(TexConstant.Attr.LATEX, this.string);
     return node;
   }
 
@@ -511,5 +528,111 @@ export default class TexParser {
     return this.configuration.nodeFactory.create(kind, ...rest);
   }
 
+  /**
+   * Finalizes the LaTeX for the topmost Mml element on the stack after parsing
+   * has been completed.
+   *
+   * @param {string} input The LaTeX input string for the parser.
+   * @param {number} old The last parsing position.
+   */
+  // Currently works without translating environments that generate typesetting.
+  private updateResult(input: string, old: number) {
+    let node = this.stack.Prev(true) as MmlNode;
+    if (!node) {
+      return;
+    }
+    // TODO: This can probably be removed once processed. But needs more
+    // testing.
+    let existing = node.attributes.get(TexConstant.Attr.LATEXITEM);
+    if (existing !== undefined) {
+      node.attributes.set(TexConstant.Attr.LATEX, existing);
+      return;
+    }
+    old = old < this.saveI ? this.saveI : old;
+    let str = old !== this.i ? this.string.slice(old, this.i) : input;
+    str = str.trim();
+    if (!str) {
+      return;
+    }
+    if (input === '\\') {
+      str = '\\' + str;
+    }
+    // These are the cases to handle sub and superscripts.
+    if (node.attributes.get(TexConstant.Attr.LATEX) === '^' && str !== '^') {
+      if (str === '}') {
+        this.composeBraces(node.childNodes[2]);
+      } else {
+        node.childNodes[2].attributes.set(TexConstant.Attr.LATEX, str);
+      }
+      if (node.childNodes[1]) {
+        const sub = node.childNodes[1].attributes.get(TexConstant.Attr.LATEX);
+        this.composeLatex(node, `_${sub}^`, 0, 2);
+      } else {
+        this.composeLatex(node, '^', 0, 2);
+      }
+      return;
+    }
+    if (node.attributes.get(TexConstant.Attr.LATEX) === '_' && str !== '_') {
+      if (str === '}') {
+        this.composeBraces(node.childNodes[1]);
+      } else {
+        node.childNodes[1].attributes.set(TexConstant.Attr.LATEX, str);
+      }
+      if (node.childNodes[2]) {
+        const sub = node.childNodes[2].attributes.get(TexConstant.Attr.LATEX);
+        this.composeLatex(node, `^${sub}_`, 0, 1);
+      } else {
+        this.composeLatex(node, '_', 0, 1);
+      }
+      return;
+    }
+    if (str === '}') {
+      this.composeBraces(node);
+      return;
+    }
+    node.attributes.set(TexConstant.Attr.LATEX, str);
+  }
+
+  /**
+   * Composing the LaTeX expression for sub or superscript elements.
+   *
+   * @param {MmlNode} node The Mml node.
+   * @param {string} comp Intermediate string.
+   * @param {number} pos1 Position of child for lefthand side of string.
+   * @param {number} pos2 Position of child for righthand side of string.
+   */
+  private composeLatex(
+    node: MmlNode, comp: string, pos1: number, pos2: number) {
+    const expr = node.childNodes[pos1].attributes.get(TexConstant.Attr.LATEX) + comp +
+      node.childNodes[pos2].attributes.get(TexConstant.Attr.LATEX);
+    node.attributes.set(TexConstant.Attr.LATEX, expr);
+  }
+
+  /**
+   * Adds the LaTeX content for this node as a braced expression.
+   *
+   * @param {MmlNode} atom The current Mml node.
+   */
+  private composeBraces(atom: MmlNode) {
+    if (!atom) return;
+    let str = this.composeBracedContent(atom);
+    atom.attributes.set(TexConstant.Attr.LATEX, `{${str}}`);
+  }
+
+  /**
+   * Composes the content of a braced expression.
+   *
+   * @param {MmlNode} atom The current Mml node.
+   */
+  private composeBracedContent(atom: MmlNode) {
+    let children = atom.childNodes[0]?.childNodes;
+    let expr = '';
+    for (const child of children) {
+      let att = (child.attributes?.get(TexConstant.Attr.LATEX) || '') as string;
+      if (!att) continue;
+      expr += (expr && expr.match(/[a-zA-Z]$/) && att.match(/^[a-zA-Z]/)) ? ' ' + att : att;
+    }
+    return expr;
+  }
 
 }
