@@ -166,4 +166,9 @@ export namespace TexConstant {
     PC: 'pc'
   };
 
+  export const Attr = {
+    LATEX: 'data-latex',
+    LATEXITEM: 'data-latex-item'
+  }
+
 }

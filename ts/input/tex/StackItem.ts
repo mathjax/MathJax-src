@@ -82,6 +82,22 @@ export interface NodeStack {
    */
   Clear(): void;
 
+
+  /**
+   * The LaTeX string at the moment item is called.
+   */
+  startStr: string;
+
+  /**
+   * Parser position in the global LaTeX string when item is called.
+   */
+  startI: number;
+
+  /**
+   * Parser position in the global LaTeX string when item is pushed.
+   */
+  stopI: number;
+
   /**
    * Returns nodes on the stack item's node stack as an Mml node. I.e., in case
    * the item contains more than one node, it creates an mrow.
@@ -97,10 +113,26 @@ export interface NodeStack {
 
 export abstract class MmlStack implements NodeStack {
 
+
+  /**
+   * @override
+   */
+  public startStr: string = '';
+
+  /**
+   * @override
+   */
+  public startI: number = 0;
+
+  /**
+   * @override
+   */
+  public stopI: number = 0;
+
   /**
    * @constructor
    * @extends {NodeStack}
-   * @param {MmlNode[]} nodes An initial list of nodes to put on the stack.
+   * @param {MmlNode[]} _nodes An initial list of nodes to put on the stack.
    */
   constructor(private _nodes: MmlNode[]) { }
 
