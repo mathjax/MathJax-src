@@ -472,6 +472,7 @@ export function CommonScriptbaseMixin<
                (core as any as CommonMunderover<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).isMathAccent))) {
         this.setBaseAccentsFor(core);
         core = core.childNodes[0];
+        node = core?.node;
       }
       if (!core) {
         this.baseHasAccentOver = this.baseHasAccentUnder = false;
