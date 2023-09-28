@@ -56,6 +56,9 @@ import './upgreek/UpgreekConfiguration.js';
 import './unicode/UnicodeConfiguration.js';
 import './verb/VerbConfiguration.js';
 
+// IEEE
+import './ieee/IeeeMacrosConfiguration.js';
+
 declare const MathJax: any;
 if (typeof MathJax !== 'undefined' && MathJax.loader) {
   MathJax.loader.preLoad(
@@ -92,6 +95,8 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
     '[tex]/textcomp',
     '[tex]/textmacros',
     '[tex]/setoptions',
+    // IEEE
+    '[tex]/ieee',
   );
 }
 
