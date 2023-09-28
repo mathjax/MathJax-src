@@ -66,7 +66,7 @@
   ],
   "scripts": {
     "clean:dir": "clean() { npx rimraf $1; }; clean",
-    "clean:lib": "clean() { npx rimraf components/$1'/**/lib'; }; clean",
+    "clean:lib": "clean() { npx rimraf -g components/$1'/**/lib'; }; clean",
     "clean:mod": "clean() { npm run -s clean:dir $1 && npm run -s clean:lib $1; }; clean",
     "clean": "npm run -s clean:mod cjs && npm run -s clean:mod mjs && npm run -s clean:dir bundle",
     "clean:cjs": "npx rimraf components/cjs",
