@@ -6,7 +6,6 @@ import {Loader} from '#js/components/loader.js';
 Loader.preLoad(
   'input/tex-base',
   '[tex]/ams',
-  '[tex]/ieee',
   '[tex]/newcommand',
   '[tex]/noundefined',
   '[tex]/require',
@@ -17,7 +16,6 @@ Loader.preLoad(
 registerTeX([
   'base',
   'ams',
-  'ieee',
   'newcommand',
   'noundefined',
   'require',

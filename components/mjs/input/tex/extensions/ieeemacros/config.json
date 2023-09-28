@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/ieeemacros",
+    "component": "input/tex/extensions/ieeemacros",
+    "targets": ["input/tex/ieeemacros"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/ieeemacros",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

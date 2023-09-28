@@ -26,7 +26,7 @@ import {Configuration} from '../Configuration.js';
 import './IeeeMacrosMappings.js';
 
 export const IeeeMacrosConfiguration = Configuration.create(
-  'ieee-macros', {
+  'ieeemacros', {
     handler: {
       macro: ['ieee-macros']
     }

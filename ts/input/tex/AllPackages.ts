@@ -57,7 +57,7 @@ import './unicode/UnicodeConfiguration.js';
 import './verb/VerbConfiguration.js';
 
 // IEEE
-import './ieee/IeeeMacrosConfiguration.js';
+import './ieeemacros/IeeeMacrosConfiguration.js';
 
 declare const MathJax: any;
 if (typeof MathJax !== 'undefined' && MathJax.loader) {
@@ -96,7 +96,7 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
     '[tex]/textmacros',
     '[tex]/setoptions',
     // IEEE
-    '[tex]/ieee',
+    '[tex]/ieeemacros',
   );
 }
 
@@ -119,6 +119,7 @@ export const AllPackages: string[] = [
   'extpfeil',
   'gensymb',
   'html',
+  'ieeemacros',
   'mathtools',
   'mhchem',
   'newcommand',
