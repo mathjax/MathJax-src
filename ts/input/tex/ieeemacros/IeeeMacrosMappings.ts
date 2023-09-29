@@ -30,6 +30,7 @@ let IeeeMacrosMethods: Record<string, ParseMethod> = {};
 
 IeeeMacrosMethods.Macro = BaseMethods.Macro;
 IeeeMacrosMethods.Accent = BaseMethods.Accent;
+IeeeMacrosMethods.UnderOver = BaseMethods.UnderOver;
 
 /**
  * Macros for IEEE macros package.
@@ -147,7 +148,7 @@ new CommandMap('ieee-macros', {
   bm: ['Macro', '\\pmb{#1}', 1],
   bmit: ['Macro', '\\boldsymbol'],
   ssr: ['Macro', '\\sf'],
-  widecheck:['Accent','030C',1],
+  widecheck: ['Accent', '030C', 1],
 
   boldGamma: ['Macro', '\\boldsymbol{\\Gamma}'],
   Deltab: ['Macro', '\\boldsymbol{\\Delta}'],
