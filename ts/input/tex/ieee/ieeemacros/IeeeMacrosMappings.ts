@@ -22,9 +22,9 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {CommandMap} from '../TokenMap.js';
-import BaseMethods from '../base/BaseMethods.js';
-import {ParseMethod} from '../Types.js';
+import {CommandMap} from '../../TokenMap.js';
+import BaseMethods from '../../base/BaseMethods.js';
+import {ParseMethod} from '../../Types.js';
 
 let IeeeMacrosMethods: Record<string, ParseMethod> = {};
 

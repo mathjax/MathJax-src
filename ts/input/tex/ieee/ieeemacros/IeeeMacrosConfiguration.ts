@@ -22,7 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration} from '../Configuration.js';
+import {Configuration} from '../../Configuration.js';
 import './IeeeMacrosMappings.js';
 
 export const IeeeMacrosConfiguration = Configuration.create(

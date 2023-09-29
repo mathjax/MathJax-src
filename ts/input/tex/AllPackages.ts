@@ -57,7 +57,7 @@ import './unicode/UnicodeConfiguration.js';
 import './verb/VerbConfiguration.js';
 
 // IEEE
-import './ieeemacros/IeeeMacrosConfiguration.js';
+import './ieee/ieeemacros/IeeeMacrosConfiguration.js';
 
 declare const MathJax: any;
 if (typeof MathJax !== 'undefined' && MathJax.loader) {
@@ -96,7 +96,7 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
     '[tex]/textmacros',
     '[tex]/setoptions',
     // IEEE
-    '[tex]/ieeemacros',
+    '[tex]/ieee/ieeemacros',
   );
 }
 
