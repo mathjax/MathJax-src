@@ -114,7 +114,6 @@
     "postmake-mml3-xslt": "npx rimraf /tmp/mml3.xsl",
     "=============================================================================== install": "",
     "link:full": "node components/bin/link-full",
-    "install": "npm run -s link:full",
     "use-cjs": "echo '{\n  \"extends\": \"./tsconfig/cjs.json\"\n}' > tsconfig.json",
     "use-mjs": "echo '{\n  \"extends\": \"./tsconfig/mjs.json\"\n}' > tsconfig.json"
   },
