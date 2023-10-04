@@ -22,15 +22,54 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {CommandMap} from '../../TokenMap.js';
+import {CommandMap, EnvironmentMap} from '../../TokenMap.js';
 import BaseMethods from '../../base/BaseMethods.js';
 import {ParseMethod} from '../../Types.js';
+import {TexConstant} from '../../TexConstants.js';
+import TexParser from '../../TexParser.js';
+import NodeUtil from '../../NodeUtil.js';
+import {MmlNode} from '../../../../core/MmlTree/MmlNode.js';
+import ParseMethods from '../../ParseMethods.js';
+import ParseUtil from '../../ParseUtil.js';
+
 
 let IeeeMacrosMethods: Record<string, ParseMethod> = {};
 
 IeeeMacrosMethods.Macro = BaseMethods.Macro;
+IeeeMacrosMethods.Spacer = BaseMethods.Spacer;
 IeeeMacrosMethods.Accent = BaseMethods.Accent;
 IeeeMacrosMethods.UnderOver = BaseMethods.UnderOver;
+
+IeeeMacrosMethods.SetFont = BaseMethods.SetFont;
+IeeeMacrosMethods.Matrix = BaseMethods.Matrix;
+IeeeMacrosMethods.Array = BaseMethods.Array;
+
+IeeeMacrosMethods.Hskip = function(parser: TexParser, name: string) {
+  console.log(5);
+  ParseUtil.UNIT_CASES['pi'] = m => m / 10; // Same as points
+  return BaseMethods.Hskip(parser, name);
+}
+
+IeeeMacrosMethods.IeeeMathFont = function(parser: TexParser, name: string, variant: string, style: string) {
+  // const text = parser.GetArgument(name);
+  // let mml = new TexParser(text, {
+  //   multiLetterIdentifiers: parser.options.identifierPattern,
+  //   ...parser.stack.env,
+  //   font: variant,
+  //   noAutoOP: true,
+  // }, parser.configuration).mml();
+  // parser.Push(parser.create('node', 'TeXAtom', [mml]));
+  BaseMethods.MathFont(parser, name, variant);
+  const top = parser.stack.Top().First as MmlNode;
+  let oldStyle = NodeUtil.getAttribute(top, 'style');
+  if (oldStyle) {
+    if (style.charAt(style.length - 1) !== ';') {
+      style += ';';
+    }
+    style = oldStyle + ' ' + style;
+  }
+  NodeUtil.setAttribute(top, 'style', style);
+}
 
 /**
  * Macros for IEEE macros package.
@@ -538,5 +577,46 @@ new CommandMap('ieee-macros', {
   undertilde: ['Macro', '{\\mathop{#1}\\limits_{\\unicode{x007E}}}', 1],
   underdot: ['Macro', '{{#1}{\\unicode{x0323}}}', 1],
   doublegrave: ['Macro', '{{#1}{\\unicode{x030F}}}', 1],
-  ura: ['Macro', '\\buildrel{#1}\\over{\\rightarrow}', 1]
+  ura: ['Macro', '\\buildrel{#1}\\over{\\rightarrow}', 1],
+
+  dsmath:    ['IeeeMathFont', TexConstant.Variant.DOUBLESTRUCK, 'serif'],
+  mathbbmss: ['IeeeMathFont', TexConstant.Variant.DOUBLESTRUCK, 'sans-serif'],
+}, IeeeMacrosMethods);
+
+
+new CommandMap('ieee-macros-structures', {
+  // eqalignno: 'ieeeEqalignno',
+  // displaylines: 'ieeeMatrix',
+  // matrix: 'ieeeMatrix',
+  // vcenter: 'ieeeVCenter',
+  // vrule: 'ieeeVRule',
+  // halign: 'ieeeHAlign',
+  // hfill: 'ieeeHFill',
+  // noalign: 'ieeeNoAlign',
+  // mathchar: 'ieeeMathChar',
+  // mathaccent: 'ieeeMathAccent',
+  scases: ['Matrix', '', '', 'left left', null, '.1em', null, true],
+  ssi: ['SetFont', TexConstant.Variant.SANSSERIFITALIC],
+  ssb: ['SetFont', TexConstant.Variant.BOLDSANSSERIF],
+  sl:  ['SetFont', TexConstant.Variant.ITALIC]              // not sure what you want this to be
+}, IeeeMacrosMethods);
+
+new CommandMap('ieee-macros-others', {
+  // eqalignno: 'ieeeEqalignno',
+  // displaylines: 'ieeeMatrix',
+  // matrix: 'ieeeMatrix',
+  // vcenter: 'ieeeVCenter',
+  // vrule: 'ieeeVRule',
+  // halign: 'ieeeHAlign',
+  // hfill: 'ieeeHFill',
+  // noalign: 'ieeeNoAlign',
+  // mathchar: 'ieeeMathChar',
+  // mathaccent: 'ieeeMathAccent',
+  hskip: 'Hskip',
+  noindent: ['Spacer', 0]
+}, IeeeMacrosMethods);
+
+
+new EnvironmentMap('ieee-macros-environments',  ParseMethods.environment, {
+  scases: ['Array', null, '', '.', 'll', null, '.2em', 'T']
 }, IeeeMacrosMethods);
