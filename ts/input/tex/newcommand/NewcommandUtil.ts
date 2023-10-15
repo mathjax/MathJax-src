@@ -90,7 +90,7 @@ namespace NewcommandUtil {
                           '%1 must be followed by a control sequence', cmd);
     }
     let cs = ParseUtil.trimSpaces(parser.GetArgument(cmd));
-    return cs.substr(1);
+    return cs.substring(1);
   }
 
   /**
@@ -103,7 +103,7 @@ namespace NewcommandUtil {
     let cs = ParseUtil.trimSpaces(parser.GetArgument(name));
     if (cs.charAt(0) === '\\') {
       // @test Newcommand Simple
-      cs = cs.substr(1);
+      cs = cs.substring(1);
     }
     if (!cs.match(/^(.|[a-z]+)$/i)) {
       // @test Illegal CS

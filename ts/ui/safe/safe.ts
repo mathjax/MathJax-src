@@ -248,7 +248,7 @@ export class Safe<N, T, D> {
   public mmlAttribute(id: string, value: string): string | null {
     if (id === 'class') return null;
     const method = this.filterAttributes.get(id);
-    const filter = (method || (id.substr(0, 5) === 'data-' ? this.filterAttributes.get('data-') : null));
+    const filter = (method || (id.substring(0, 5) === 'data-' ? this.filterAttributes.get('data-') : null));
     if (!filter) {
       return value;
     }

@@ -190,7 +190,7 @@ export const TextMacrosMethods = {
    * @param {string} name         The control sequence that called this function
    */
   SelfQuote(parser: TextParser, name: string) {
-    parser.text += name.substr(1);  // add in the quoted character
+    parser.text += name.substring(1);  // add in the quoted character
   },
 
   /**
