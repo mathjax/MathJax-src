@@ -162,7 +162,7 @@ const RESOLVE = function (js, dir, target, libs) {
     for (const [re, lib] of libREs) {
       const match = request.match(re);
       if (match) {
-        const file = lib + request.substr(match[0].length);
+        const file = lib + request.substring(match[0].length);
         if (fs.existsSync(file)) {
           return file;
         }

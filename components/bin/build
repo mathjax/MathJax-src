@@ -193,7 +193,7 @@ function processLines(file, objects) {
   ]);
   let source = ((dir.replace(/\//g, '.') + '.' + name).replace(/^\./, '')
                 + (exists(path.resolve(JS, file.replace(/\.ts$/, ''))) ? '_ts' : ''))
-      .replace(/\.[^.]*/g, (x) => (x.substr(1).match(/[^a-zA-Z_]/) ? '[\'' + x.substr(1) + '\']' : x));
+      .replace(/\.[^.]*/g, (x) => (x.substring(1).match(/[^a-zA-Z_]/) ? '[\'' + x.substring(1) + '\']' : x));
   lines.push(
     objects.indexOf('MathJax') >= 0 ?
       `const g = (typeof window !== 'undefined' ? window : global);\nconst def = g.MathJax._.${source};` :
@@ -323,7 +323,7 @@ function processPackage(lines, space, dir) {
   //
   //  Loop through the lines that are in the current directory
   //
-  while (PACKAGE.length && (PACKAGE[0].substr(0, dir.length) === dir || dir === '.')) {
+  while (PACKAGE.length && (PACKAGE[0].substring(0, dir.length) === dir || dir === '.')) {
     //
     // If the current package is in this directory (not a subdirectory)
     //   Get the location of transpiled mathjax file
