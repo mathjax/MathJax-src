@@ -175,7 +175,7 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
     let match: RegExpExecArray, braces: number = 0;
     while ((match = pattern.exec(text))) {
       if ((match[1] || match[0]) === close && braces === 0) {
-        return protoItem<N, T>(start[0], text.substr(i, match.index - i), match[0],
+        return protoItem<N, T>(start[0], text.substring(i, match.index), match[0],
                                n, start.index, match.index + match[0].length, display);
       } else if (match[0] === '{') {
         braces++;

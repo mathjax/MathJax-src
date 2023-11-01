@@ -69,7 +69,8 @@ export const TextMacrosMethods = {
         //
         if (braces === 0 && open === c) {
           const config = parser.texParser.configuration;
-          const mml = (new TexParser(parser.string.substr(i, j - i), parser.stack.env, config)).mml();
+          // j > i!
+          const mml = (new TexParser(parser.string.substring(i, j), parser.stack.env, config)).mml();
           parser.PushMath(mml);
           return;
         }

@@ -113,8 +113,9 @@ export class FindAsciiMath<N, T, D> extends AbstractFindMath<N, T, D> {
     let [ , display, pattern] = end;
     let i = pattern.lastIndex = start.index + start[0].length;
     let match = pattern.exec(text);
-    return (!match ? null : protoItem<N, T>(start[0], text.substr(i, match.index - i), match[0],
-                                            n, start.index, match.index + match[0].length, display));
+    return (!match ? null : protoItem<N, T>(
+      start[0], (match.index < i ? '' : text.substring(i, match.index)), match[0],
+      n, start.index, match.index + match[0].length, display));
   }
 
   /**

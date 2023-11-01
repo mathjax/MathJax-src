@@ -1409,7 +1409,8 @@ BaseMethods.Entry = function(parser: TexParser, name: string) {
   //  If not, process the second column as text and continue parsing from there,
   //    (otherwise process the second column as normal, since it is in \text{}
   //
-  const text = str.substr(parser.i, i - parser.i);
+  // i >= parser.i
+  const text = str.substring(parser.i, i);
   if (!text.match(/^\s*\\text[^a-zA-Z]/) || close !== text.replace(/\s+$/, '').length - 1) {
     const internal = ParseUtil.internalMath(parser, ParseUtil.trimSpaces(text), 0);
     parser.PushAll(internal);
