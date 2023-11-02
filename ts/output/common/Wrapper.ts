@@ -1025,6 +1025,19 @@ export class CommonWrapper<
   }
 
   /**
+   * @return {number}   The cumulative relative scale from the root to the current node
+   */
+  public getRScale(): number {
+    let rscale = 1;
+    let node = this as any as WW;
+    while (node) {
+      rscale *= node.bbox.rscale;
+      node = node.parent;
+    }
+    return rscale;
+  }
+
+  /**
    * @return {string}   For a token node, the combined text content of the node's children
    */
   public getText(): string {

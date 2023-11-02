@@ -26,6 +26,7 @@ import {Handler} from '../core/Handler.js';
 import {MathDocument, AbstractMathDocument, MathDocumentConstructor} from '../core/MathDocument.js';
 import {MathItem, AbstractMathItem, STATE, newState} from '../core/MathItem.js';
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
+import {HtmlNode} from '../core/MmlTree/MmlNodes/HtmlNode.js';
 import {MathML} from '../input/mathml.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {OptionList, expandable} from '../util/Options.js';
@@ -68,6 +69,10 @@ export class enrichVisitor<N, T, D> extends SerializedMmlVisitor {
       math.inputData.hasMaction = true;
     }
     return mml;
+  }
+
+  public visitHtmlNode(node: HtmlNode<any>, _space: string): string {
+    return node.getSerializedXML();
   }
 
   public visitMactionNode(node: MmlNode, space: string) {

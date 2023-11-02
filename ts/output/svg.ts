@@ -143,6 +143,7 @@ CommonOutputJax<
   constructor(options: OptionList = null) {
     super(options, SvgWrapperFactory as any, DefaultFont);
     this.fontCache = new FontCache(this);
+    this.options.matchFontHeight = true;
   }
 
   /**
@@ -213,6 +214,13 @@ CommonOutputJax<
       }
     }
     return false;
+  }
+
+  /**
+   * @override
+   */
+  protected getInitialScale() {
+    return 1;
   }
 
   /**
