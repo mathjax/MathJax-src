@@ -68,16 +68,14 @@ export interface CommonXmlNode<
 
   /**
    * @return {N}                 The HTML for the node
-   * @param {boolean?} forBBox   True when the HTML is for computing the bounding box
    */
-  getHTML(forBBox?: boolean): N;
+  getHTML(): N;
 
   /**
    * @param {N} html            The html to adjust if using or forcing HDW
    * @param {Styles} styles     The styles object to add to, as needed
-   * @param {boolean} forBBox   True when the HTML is for computing the bounding box
    */
-  addHDW(html: N, styles: Styles, forBBox: boolean): N;
+  addHDW(html: N, styles: Styles): N;
 
   /**
    * @param {N} xml          The XML tree to check
