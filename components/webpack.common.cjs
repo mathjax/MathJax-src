@@ -38,19 +38,6 @@ function quoteRE(string) {
   return string.replace(/([\\.{}[\]()?*^$])/g, '\\$1');
 }
 
-/**
- * @param {object} resource  The module resource object from webpack
- * Wreturn {string}  The full path to the module
- */
-function fullPath(resource) {
-  const file = resource.request ?
-        (resource.request.charAt(0) === '.' ?
-         path.resolve(resource.path, resource.request) :
-         resource.request) :
-        resource.path;
-  return file.charAt(0) === '/' ? file : require.resolve(file);
-}
-
 /****************************************************************/
 
 /**
@@ -149,6 +136,12 @@ const RESOLVE = function (js, dir, target, libs) {
         .map(lib => (lib.charAt(0) === '.' ?
                      [jsRE, path.join(dir, lib) + path.sep] :
                      [mjRE, path.join(root, lib) + path.sep]));
+
+  //
+  // Function to get full paths using the proper package.json file get the
+  // pseudo-package includes to be correct.
+  //
+  const {fullPath} = require(`./${target}/fullpath.cjs`);
 
   //
   // Function to replace imported files by ones in the specified component lib directories.

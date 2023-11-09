@@ -3,6 +3,7 @@ const path = require('path');
 
 const dir = path.join(__dirname, '..', '..');
 
-if (fs.existsSync(path.join(dir, 'node_modules'))) {
+if (fs.existsSync(path.join(dir, 'node_modules')) &&
+   !fs.existsSync(path.join(dir, 'node_modules', 'mathjax-full'))) {
   fs.symlinkSync(dir, path.join(dir, 'node_modules', 'mathjax-full'));
 }
