@@ -233,7 +233,7 @@ export abstract class CommonOutputJax<
    * @param {FC} defaultFont                       The default FontData constructor
    * @constructor
    */
-  constructor(options: OptionList = null,
+  constructor(options: OptionList = {},
               defaultFactory: typeof CommonWrapperFactory = null,
               defaultFont: FC = null) {
     const [fontClass, font] = (options.fontData instanceof FontData ?

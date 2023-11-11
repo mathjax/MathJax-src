@@ -140,7 +140,7 @@ CommonOutputJax<
    * @override
    * @constructor
    */
-  constructor(options: OptionList = null) {
+  constructor(options: OptionList = {}) {
     super(options, SvgWrapperFactory as any, DefaultFont);
     this.fontCache = new FontCache(this);
   }
