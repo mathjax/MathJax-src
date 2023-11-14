@@ -88,8 +88,8 @@ const optionActions = new Map([
 /**
  * Check for options
  */
-while (dirs[0].substr(0, 2) === '--') {
-  const option = dirs.shift().substr(2);
+while (dirs[0].substring(0, 2) === '--') {
+  const option = dirs.shift().substring(2);
   if (option === '') {
     break;
   }
