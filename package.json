@@ -94,7 +94,7 @@
     "=============================================================================== MJS": "",
     "make:mjs:components": "pnpm -s log:single 'Making mjs components'; components/bin/makeAll --mjs --terse components/mjs",
     "finalize:mjs:bundle": "pnpm -s log:single 'Finalize mjs bundle'; echo '{\n  \"type\": \"commonjs\"\n}' > bundle/package.json;",
-    "compile:mjs": "pnpm -s log:comp 'Compiling mjs typescript files'; pnpm tsc --project tsconfig/mjs.json",
+    "compile:mjs": "pnpm -s log:single 'Compiling mjs typescript files'; pnpm tsc --project tsconfig/mjs.json",
     "build:mjs:components": "pnpm -s log:comp 'Compiling mjs component files'; pnpm clean:lib mjs && pnpm clean:dir bundle && pnpm make:mjs:components && pnpm finalize:mjs:bundle",
     "build:mjs:src": "pnpm -s log:comp 'Building mjs sources'; pnpm -s link:full && pnpm -s clean:dir mjs && pnpm -s compile:mjs && pnpm -s copy:assets mjs",
     "build:mjs": "pnpm -s log:header 'Building mjs'; pnpm -s build:mjs:src && pnpm -s build:mjs:components",
