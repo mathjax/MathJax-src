@@ -114,7 +114,6 @@ if (dirs.length === 0) {
  */
 const build = `node '${path.join(__dirname, 'build')}' '${options.target}'`;
 const copy = `node '${path.join(__dirname, 'copy')}' '${options.target}' '${options.bundle}'`;
-const pack = `node '${path.join(__dirname, 'pack')}' '${options.target}' '${options.bundle}'`;
 
 /**
  * @param {string} name    The file name to turn into a Regular expression
@@ -215,8 +214,9 @@ function webpackLib(dir, config) {
   if (!config.webpack || !options.pack) return;
   console.info('Webpacking ' + dir.replace(compRE, '').replace(dirRE, '.'));
   const wd = process.cwd();
+  const pack = `node '${path.join(__dirname, 'pack')}' '${options.target}' '${options.bundle}' '${dir}'`;
   try {
-    process.chdir(dir);
+    process.chdir(__dirname);
     const result = execSync(pack);
     if (options.verbose) {
       console.info('    ' + String(result).replace(/\n/g, '\n    '));
@@ -236,6 +236,7 @@ function webpackLib(dir, config) {
 function copyLib(dir, config) {
   if (!config.copy || !options.copy) return;
   console.info('Copying ' + dir.replace(compRE, '').replace(dirRE, '.'));
+  const wd = process.cwd();
   try {
     process.chdir(dir);
     const result = execSync(copy);
@@ -245,6 +246,7 @@ function copyLib(dir, config) {
   } catch (err) {
     console.info('    ' + err.message);
   }
+  process.chdir(wd);
 }
 
 /**
