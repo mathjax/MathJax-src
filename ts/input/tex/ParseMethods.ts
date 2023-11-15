@@ -43,7 +43,7 @@ namespace ParseMethods {
     const def = ParseUtil.getFontDef(parser);
     const env = parser.stack.env;
     if (env.multiLetterIdentifiers && env.font !== '') {
-      c = parser.string.substr(parser.i - 1).match(env.multiLetterIdentifiers as any as RegExp)?.[0] || c;
+      c = parser.string.substring(parser.i - 1).match(env.multiLetterIdentifiers as any as RegExp)?.[0] || c;
       parser.i += c.length - 1;
       if (def.mathvariant === MATHVARIANT.NORMAL && env.noAutoOP && c.length > 1) {
         def.autoOP = false;

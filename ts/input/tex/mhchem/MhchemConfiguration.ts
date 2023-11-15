@@ -50,7 +50,7 @@ MhchemMethods.Machine = function(parser: TexParser, name: string, machine: 'tex'
   } catch (err) {
     throw new TexError(err[0], err[1]);
   }
-  parser.string = tex + parser.string.substr(parser.i);
+  parser.string = tex + parser.string.substring(parser.i);
   parser.i = 0;
 };
 

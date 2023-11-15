@@ -69,7 +69,8 @@ export const TextMacrosMethods = {
         //
         if (braces === 0 && open === c) {
           const config = parser.texParser.configuration;
-          const mml = (new TexParser(parser.string.substr(i, j - i), parser.stack.env, config)).mml();
+          // j > i!
+          const mml = (new TexParser(parser.string.substring(i, j), parser.stack.env, config)).mml();
           parser.PushMath(mml);
           return;
         }
@@ -190,7 +191,7 @@ export const TextMacrosMethods = {
    * @param {string} name         The control sequence that called this function
    */
   SelfQuote(parser: TextParser, name: string) {
-    parser.text += name.substr(1);  // add in the quoted character
+    parser.text += name.substring(1);  // add in the quoted character
   },
 
   /**

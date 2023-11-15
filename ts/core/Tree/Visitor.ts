@@ -123,7 +123,7 @@ export abstract class AbstractVisitor<N extends VisitorNode<N>> implements Visit
    *  @return {string}  The name of the visitor method for the given node kind
    */
   protected static methodName(kind: string): string {
-    return 'visit' + (kind.charAt(0).toUpperCase() + kind.substr(1)).replace(/[^a-z0-9_]/ig, '_') + 'Node';
+    return 'visit' + (kind.charAt(0).toUpperCase() + kind.substring(1)).replace(/[^a-z0-9_]/ig, '_') + 'Node';
   }
 
   /**

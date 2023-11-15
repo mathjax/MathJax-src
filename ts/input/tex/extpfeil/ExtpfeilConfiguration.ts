@@ -63,7 +63,7 @@ ExtpfeilMethods.NewExtArrow = function(parser: TexParser, name: string) {
       'Third argument to %1 must be a unicode character number',
       name);
   }
-  cs = cs.substr(1);
+  cs = cs.substring(1);
   let spaces = space.split(',');
   NewcommandUtil.addMacro(parser, cs, ExtpfeilMethods.xArrow,
                           [parseInt(chr), parseInt(spaces[0]), parseInt(spaces[1])]);
