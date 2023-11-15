@@ -233,7 +233,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
         const letter = options.f || (v === 'normal' ? '' : this.font.getVariant(v).letter);
         const font = options.ff || (letter ? `${this.font.cssFontPrefix}-${letter}` : '');
         let c = (options.c as string || String.fromCodePoint(n))
-          .replace(/\\[0-9A-F]+/ig, (x) => String.fromCodePoint(parseInt(x.substr(1), 16)));
+          .replace(/\\[0-9A-F]+/ig, (x) => String.fromCodePoint(parseInt(x.substring(1), 16)));
         content.push(this.html(part, {}, [
           this.html('mjx-c', font ? {class: font} : {}, [this.text(c)])
         ]));

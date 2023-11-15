@@ -298,7 +298,7 @@ namespace ParseUtil {
           }
         } else if (c === '\\') {
           // @test Mbox Eqref, Mbox CR
-          if (match === '' && text.substr(i).match(/^(eq)?ref\s*\{/)) {
+          if (match === '' && text.substring(i).match(/^(eq)?ref\s*\{/)) {
             // @test Mbox Eqref
             let len = ((RegExp as any)['$&'] as string).length;
             if (k < i - 1) {
@@ -329,16 +329,16 @@ namespace ParseUtil {
             } else if (c.match(/[${}\\]/) && match === '')  {
               // @test Mbox CR
               i--;
-              text = text.substr(0, i - 1) + text.substr(i); // remove \ from \$, \{, \}, or \\
+              text = text.substring(0, i - 1) + text.substring(i); // remove \ from \$, \{, \}, or \\
             } else if (c === 'U') {
-              const arg = text.substr(i).match(/^\s*(?:([0-9A-F])|\{\s*([0-9A-F]+)\s*\})/);
+              const arg = text.substring(i).match(/^\s*(?:([0-9A-F])|\{\s*([0-9A-F]+)\s*\})/);
               if (!arg) {
                 throw new TexError('BadRawUnicode',
                                    'Argument to %1 must a hexadecimal number with 1 to 6 digits', '\\U');
               }
               //  Replace \U{...} with specified character
               const c = String.fromCodePoint(parseInt(arg[1] || arg[2], 16));
-              text = text.substr(0, i - 2) + c + text.substr(i + arg[0].length);
+              text = text.substring(0, i - 2) + c + text.substring(i + arg[0].length);
             }
           }
         }

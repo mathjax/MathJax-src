@@ -457,7 +457,7 @@ CommonWrapper<
    * @return {string}   The className for the character
    */
   protected char(n: number): string {
-    return this.font.charSelector(n).substr(1);
+    return this.font.charSelector(n).substring(1);
   }
 
 }

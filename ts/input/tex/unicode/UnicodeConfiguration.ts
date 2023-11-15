@@ -103,7 +103,7 @@ UnicodeMethods.RawUnicode = function (parser: TexParser, name: string) {
                        'Argument to %1 must a hexadecimal number with 1 to 6 digits', parser.currentCS);
   }
   const n = parseInt(hex, 16);
-  parser.string = String.fromCodePoint(n) + parser.string.substr(parser.i);
+  parser.string = String.fromCodePoint(n) + parser.string.substring(parser.i);
   parser.i = 0;
 }
 
@@ -117,7 +117,7 @@ UnicodeMethods.Char = function (parser: TexParser, _name: string) {
   let match;
   let next = parser.GetNext();
   let c = '';
-  const text = parser.string.substr(parser.i);
+  const text = parser.string.substring(parser.i);
   if (next === '\'') {
     match = text.match(/^'(?:([0-7]{1,7}) ?|(\\\S)|(.))/u);
     if (match) {

@@ -821,7 +821,7 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
       const attributes = this.attributes;
       const bad = [];
       for (const name of attributes.getExplicitNames()) {
-        if (name.substr(0, 5) !== 'data-' && attributes.getDefault(name) === undefined &&
+        if (name.substring(0, 5) !== 'data-' && attributes.getDefault(name) === undefined &&
             !name.match(/^(?:class|style|id|(?:xlink:)?href)$/)) {
           // FIXME: provide a configurable checker for names that are OK
           bad.push(name);

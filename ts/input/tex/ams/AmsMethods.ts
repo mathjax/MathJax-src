@@ -215,7 +215,7 @@ AmsMethods.HandleDeclareOp =  function (parser: TexParser, name: string) {
   let star = (parser.GetStar() ? '*' : '');
   let cs = ParseUtil.trimSpaces(parser.GetArgument(name));
   if (cs.charAt(0) === '\\') {
-    cs = cs.substr(1);
+    cs = cs.substring(1);
   }
   let op = parser.GetArgument(name);
   (parser.configuration.handlers.retrieve(NEW_OPS) as CommandMap).

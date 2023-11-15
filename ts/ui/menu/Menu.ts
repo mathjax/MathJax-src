@@ -446,7 +446,7 @@ export class Menu {
     this.settings.scale = jax.options.scale;
     this.defaultSettings = Object.assign({}, this.settings);
     this.settings.overflow =
-      jax.options.displayOverflow.substr(0, 1).toUpperCase() + jax.options.displayOverflow.substr(1).toLowerCase();
+      jax.options.displayOverflow.substring(0, 1).toUpperCase() + jax.options.displayOverflow.substring(1).toLowerCase();
     this.settings.breakInline = jax.options.linebreaks.inline;
   }
 

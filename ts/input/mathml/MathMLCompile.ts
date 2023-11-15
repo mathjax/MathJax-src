@@ -121,7 +121,7 @@ export class MathMLCompile<N, T, D> {
     let type = texClass && kind === 'mrow' ? 'TeXAtom' : kind;
     for (const name of this.filterClassList(adaptor.allClasses(node))) {
       if (name.match(/^MJX-TeXAtom-/) && kind === 'mrow') {
-        texClass = name.substr(12);
+        texClass = name.substring(12);
         type = 'TeXAtom';
       } else if (name === 'MJX-fixedlimits') {
         limits = true;
@@ -187,8 +187,8 @@ export class MathMLCompile<N, T, D> {
       if (value === null || name === 'xmlns') {
         continue;
       }
-      if (name.substr(0, 9) === 'data-mjx-') {
-        switch (name.substr(9)) {
+      if (name.substring(0, 9) === 'data-mjx-') {
+        switch (name.substring(9)) {
         case 'alternate':
           mml.setProperty('variantForm', true);
           break;
@@ -307,11 +307,11 @@ export class MathMLCompile<N, T, D> {
   protected checkClass(mml: MmlNode, node: N) {
     let classList = [];
     for (const name of this.filterClassList(this.adaptor.allClasses(node))) {
-      if (name.substr(0, 4) === 'MJX-') {
+      if (name.substring(0, 4) === 'MJX-') {
         if (name === 'MJX-variant') {
           mml.setProperty('variantForm', true);
-        } else if (name.substr(0, 11) !== 'MJX-TeXAtom') {
-          mml.attributes.set('mathvariant', this.fixCalligraphic(name.substr(3)));
+        } else if (name.substring(0, 11) !== 'MJX-TeXAtom') {
+          mml.attributes.set('mathvariant', this.fixCalligraphic(name.substring(3)));
         }
       } else {
         classList.push(name);
