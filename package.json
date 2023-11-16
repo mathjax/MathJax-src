@@ -108,6 +108,7 @@
     "use-cjs": "echo '{\n  \"extends\": \"./tsconfig/cjs.json\"\n}' > tsconfig.json",
     "use-mjs": "echo '{\n  \"extends\": \"./tsconfig/mjs.json\"\n}' > tsconfig.json",
     "=============================================================================== Aliases": "",
+    "test": "cd tests/; pnpm jest",
     "clean": "pnpm -s clean:mod cjs && pnpm -s clean:mod mjs && pnpm -s clean:dir bundle && pnpm -s clean:cjs:bundle",
     "compile-cjs": "pnpm -s compile:cjs",
     "compile-mjs": "pnpm -s compile:mjs",
