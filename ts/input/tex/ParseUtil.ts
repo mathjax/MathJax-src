@@ -39,21 +39,22 @@ namespace ParseUtil {
   const emPerInch = 7.2;
   const pxPerInch = 72;
   // Note, the following are TeX CM font values.
-  const UNIT_CASES: {[key: string]: ((m: number) => number)}  = {
-    'em': m => m,
-    'ex': m => m * .43,
-    'pt': m => m / 10,                    // 10 pt to an em
-    'pc': m => m * 1.2,                   // 12 pt to a pc
-    'px': m => m * emPerInch / pxPerInch,
-    'in': m => m * emPerInch,
-    'cm': m => m * emPerInch / 2.54, // 2.54 cm to an inch
-    'mm': m => m * emPerInch / 25.4, // 10 mm to a cm
-    'mu': m => m / 18,
-  };
+  export const UNIT_CASES: Map<string, number> = new Map([
+      ['em', 1],
+      ['ex', .43],
+      ['pt', 1 / 10],                // 10 pt to an em
+      ['pc', 1.2],                   // 12 pt to a pc
+      ['px', emPerInch / pxPerInch],
+      ['in', emPerInch],
+      ['cm', emPerInch / 2.54], // 2.54 cm to an inch
+      ['mm', emPerInch / 25.4], // 10 mm to a cm
+      ['mu', 1 / 18],
+  ]);
+
   const num = '([-+]?([.,]\\d+|\\d+([.,]\\d*)?))';
-  const unit = '(pt|em|ex|mu|px|mm|cm|in|pc)';
-  const dimenEnd = RegExp('^\\s*' + num + '\\s*' + unit + '\\s*$');
-  const dimenRest = RegExp('^\\s*' + num + '\\s*' + unit + ' ?');
+  const unit = () => `(${Array.from(UNIT_CASES.keys()).join('|')})`;
+  const dimenEnd = () => RegExp('^\\s*' + num + '\\s*' + unit() + '\\s*$');
+  const dimenRest = () => RegExp('^\\s*' + num + '\\s*' + unit() + ' ?');
 
 
   /**
@@ -66,7 +67,7 @@ namespace ParseUtil {
    */
   export function matchDimen(
     dim: string, rest: boolean = false): [string, string, number] {
-      let match = dim.match(rest ? dimenRest : dimenEnd);
+    let match = dim.match(rest ? dimenRest() : dimenEnd());
       return match ?
         muReplace([match[1].replace(/,/, '.'), match[4], match[0].length]) :
         [null, null, 0];
@@ -82,7 +83,7 @@ namespace ParseUtil {
     if (unit !== 'mu') {
       return [value, unit, length];
     }
-    let em = Em(UNIT_CASES[unit](parseFloat(value || '1')));
+    let em = Em(UNIT_CASES.get(unit) * (parseFloat(value || '1')));
     return [em.slice(0, -2), 'em', length];
   }
 
@@ -95,8 +96,8 @@ namespace ParseUtil {
   export function dimen2em(dim: string): number {
     let [value, unit] = matchDimen(dim);
     let m = parseFloat(value || '1');
-    let func = UNIT_CASES[unit];
-    return func ? func(m) : 0;
+    let func = UNIT_CASES.get(unit);
+    return func ? func * (m) : 0;
   }
 
 
