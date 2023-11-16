@@ -26,7 +26,7 @@
 import {ParseMethod} from '../Types.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
-import ParseUtil from '../ParseUtil.js';
+import * as ParseUtil from '../ParseUtil.js';
 import {StackItem} from '../StackItem.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import * as BussproofsUtil from './BussproofsUtil.js';

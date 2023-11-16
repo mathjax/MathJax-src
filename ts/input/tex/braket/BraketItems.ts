@@ -25,7 +25,7 @@
 
 import {CheckType, BaseItem, StackItem} from '../StackItem.js';
 import {TEXCLASS, MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import ParseUtil from '../ParseUtil.js';
+import * as ParseUtil from '../ParseUtil.js';
 import {MATHSPACE, em} from '../../../util/lengths.js';
 
 const THINSPACE = em(MATHSPACE.thinmathspace);

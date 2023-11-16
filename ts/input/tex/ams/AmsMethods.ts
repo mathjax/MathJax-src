@@ -25,7 +25,7 @@
 
 import {StackItem} from '../StackItem.js';
 import {ParseMethod} from '../Types.js';
-import ParseUtil from '../ParseUtil.js';
+import * as ParseUtil from '../ParseUtil.js';
 import ParseMethods from '../ParseMethods.js';
 import NodeUtil from '../NodeUtil.js';
 import {TexConstant} from '../TexConstants.js';

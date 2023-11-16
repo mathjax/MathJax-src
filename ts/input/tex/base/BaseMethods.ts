@@ -30,7 +30,7 @@ import NodeUtil from '../NodeUtil.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import {TexConstant} from '../TexConstants.js';
-import ParseUtil from '../ParseUtil.js';
+import * as ParseUtil from '../ParseUtil.js';
 import {PropertyList} from '../../../core/Tree/Node.js';
 import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';

@@ -25,7 +25,7 @@
 
 import ParseOptions from '../ParseOptions.js';
 import NodeUtil from '../NodeUtil.js';
-import ParseUtil from '../ParseUtil.js';
+import * as ParseUtil from '../ParseUtil.js';
 
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {Property} from '../../../core/Tree/Node.js';

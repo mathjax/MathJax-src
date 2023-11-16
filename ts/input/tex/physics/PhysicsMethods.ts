@@ -27,7 +27,7 @@ import BaseMethods from '../base/BaseMethods.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
 import {TEXCLASS, MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import ParseUtil from '../ParseUtil.js';
+import * as ParseUtil from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import {NodeFactory} from '../NodeFactory.js';
 import {Macro} from '../Token.js';

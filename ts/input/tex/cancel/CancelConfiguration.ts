@@ -27,7 +27,7 @@ import TexParser from '../TexParser.js';
 import {TexConstant} from '../TexConstants.js';
 import {CommandMap} from '../TokenMap.js';
 import {ParseMethod} from '../Types.js';
-import ParseUtil from '../ParseUtil.js';
+import * as ParseUtil from '../ParseUtil.js';
 import {ENCLOSE_OPTIONS} from '../enclose/EncloseConfiguration.js';
 
 

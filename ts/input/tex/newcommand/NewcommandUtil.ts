@@ -23,7 +23,7 @@
  */
 
 
-import ParseUtil from '../ParseUtil.js';
+import * as ParseUtil from '../ParseUtil.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import {Macro, Token} from '../Token.js';

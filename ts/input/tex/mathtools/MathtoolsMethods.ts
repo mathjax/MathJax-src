@@ -24,7 +24,7 @@
 
 import {ArrayItem, EqnArrayItem} from '../base/BaseItems.js';
 import {StackItem} from '../StackItem.js';
-import ParseUtil from '../ParseUtil.js';
+import * as ParseUtil from '../ParseUtil.js';
 import {ParseMethod, ParseResult} from '../Types.js';
 import {AmsMethods} from '../ams/AmsMethods.js';
 import BaseMethods from '../base/BaseMethods.js';

@@ -25,7 +25,7 @@ import {ArrayItem} from './base/BaseItems.js';
 import TexParser from './TexParser.js';
 import TexError from './TexError.js';
 import {lookup} from '../../util/Options.js';
-import ParseUtil from './ParseUtil.js';
+import * as ParseUtil from './ParseUtil.js';
 
 /***********************************************************************/
 

@@ -33,7 +33,7 @@ import {AbstractTags} from '../Tags.js';
 import './BaseMappings.js';
 import {getRange} from '../../../core/MmlTree/OperatorDictionary.js';
 import ParseOptions from '../ParseOptions.js';
-import ParseUtil from '../ParseUtil.js';
+import * as ParseUtil from '../ParseUtil.js';
 
 /**
  * Remapping some ASCII characters to their Unicode operator equivalent.

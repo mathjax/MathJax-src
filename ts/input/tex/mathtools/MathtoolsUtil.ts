@@ -21,7 +21,7 @@
  */
 
 import {EqnArrayItem} from '../base/BaseItems.js';
-import ParseUtil from '../ParseUtil.js';
+import * as ParseUtil from '../ParseUtil.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
 import {CommandMap} from '../TokenMap.js';

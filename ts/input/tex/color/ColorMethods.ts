@@ -25,7 +25,7 @@
 import NodeUtil from '../NodeUtil.js';
 import {ParseMethod} from '../Types.js';
 import {PropertyList} from '../../../core/Tree/Node.js';
-import ParseUtil from '../ParseUtil.js';
+import * as ParseUtil from '../ParseUtil.js';
 import TexParser from '../TexParser.js';
 
 import {ColorModel} from './ColorUtil.js';

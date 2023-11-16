@@ -23,7 +23,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import ParseUtil from './ParseUtil.js';
+import * as ParseUtil from './ParseUtil.js';
 import {HandlerType} from './MapHandler.js';
 import Stack from './Stack.js';
 import StackItemFactory from './StackItemFactory.js';
