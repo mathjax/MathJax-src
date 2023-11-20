@@ -155,7 +155,7 @@ CommonOutputJax<
    * @override
    * @constructor
    */
-  constructor(options: OptionList = null) {
+  constructor(options: OptionList = {}) {
     super(options, ChtmlWrapperFactory as any, DefaultFont);
     this.font.adaptiveCSS(this.options.adaptiveCSS);
     this.wrapperUsage = new Usage<string>();
