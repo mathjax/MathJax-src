@@ -229,7 +229,7 @@ const FONT: {[name: string]: RegExp} = {
   stretch: new RegExp('^(?:' +
                       ['normal',
                        '(?:(?:ultra|extra|semi)-)?condensed',
-                       '(?:(?:semi|extra|ulta)-)?expanded',
+                       '(?:(?:semi|extra|ultra)-)?expanded',
                        'inherit|initial|unset']. join('|') + ')$'),
   size: new RegExp('^(?:' +
                    ['xx-small|x-small|small|medium|large|x-large|xx-large|larger|smaller',
