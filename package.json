@@ -77,7 +77,7 @@
     "=============================================================================== log": "",
     "log:single": "log() { echo \\\\x1B[34m--$1\\\\x1B[0m; }; log",
     "log:header": "log() { echo '============='; echo $1; echo '============='; }; log",
-    "log:comp": "log() { echo \\\\x1B[32m$1\\x1B[0m\\; }; log",
+    "log:comp": "log() { echo \\\\x1B[32m$1\\x1B[0m; }; log",
     "=============================================================================== cjs": "",
     "cjs:copy:components": "pnpm copyfiles -u 2 -e 'components/mjs/**/*.js' 'components/mjs/**/*' components/cjs",
     "cjs:clean:bundle": "pnpm clean:dir bundle-cjs",
