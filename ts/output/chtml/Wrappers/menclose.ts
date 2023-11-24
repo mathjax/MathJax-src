@@ -229,13 +229,22 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<N, T, D> 
         'border-top': '1px solid transparent',
         'border-bottom': em(Notation.THICKNESS * Notation.ARROWY) + ' solid transparent'
       },
-      'mjx-menclose > dbox': {
+      'mjx-menclose > mjx-dbox-top': {
         position: 'absolute',
-        top: 0, bottom: 0, left: em(-1.5 * Notation.PADDING),
-        width: em(3 * Notation.PADDING),
+        top: 0, bottom: '50%', left: 0,
+        width: em(1.5 * Notation.PADDING),
         border: em(Notation.THICKNESS) + ' solid',
-        'border-radius': '50%',
-        'clip-path': 'inset(0 0 0 ' + em(1.5 * Notation.PADDING) + ')',
+        'border-style': 'solid solid none none',
+        'border-radius': '0 100% 0 0',
+        'box-sizing': 'border-box'
+      },
+      'mjx-menclose > mjx-dbox-bot': {
+        position: 'absolute',
+        top: '50%', bottom: 0, left: 0,
+        width: em(1.5 * Notation.PADDING),
+        'border-width': em(Notation.THICKNESS),
+        'border-style': 'none solid solid none',
+        'border-radius': '0 0 100% 0',
         'box-sizing': 'border-box'
       }
     };
@@ -333,16 +342,17 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<N, T, D> 
         renderer: (node, child) => {
           const adaptor = node.adaptor;
           adaptor.setStyle(child, 'border-top', node.Em(node.thickness) + ' solid');
-          const arc = adaptor.append(node.dom[0], node.html('dbox')) as N;
+          const arc1 = adaptor.append(node.dom[0], node.html('mjx-dbox-top')) as N;
+          const arc2 = adaptor.append(node.dom[0], node.html('mjx-dbox-bot')) as N;
           const t = node.thickness;
           const p = node.padding;
           if (t !== Notation.THICKNESS) {
-            adaptor.setStyle(arc, 'border-width', node.Em(t));
+            adaptor.setStyle(arc1, 'border-width', node.Em(t));
+            adaptor.setStyle(arc2, 'border-width', node.Em(t));
           }
           if (p !== Notation.PADDING) {
-            adaptor.setStyle(arc, 'left', node.Em(-1.5 * p));
-            adaptor.setStyle(arc, 'width', node.Em(3 * p));
-            adaptor.setStyle(arc, 'clip-path', 'inset(0 0 0 ' + node.Em(1.5 * p) + ')');
+            adaptor.setStyle(arc1, 'width', node.Em(1.5 * p));
+            adaptor.setStyle(arc2, 'width', node.Em(1.5 * p));
           }
         },
         bbox: (node) => {
