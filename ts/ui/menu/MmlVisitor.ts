@@ -106,7 +106,8 @@ export class MmlVisitor<N, T, D> extends SerializedMmlVisitor {
   protected getAttributeList(node: MmlNode): PropertyList {
     const list = super.getAttributeList(node);
     if (this.options.filterTex) {
-      delete list['data-latex'], list['data-latex-item'];
+      delete list['data-latex'];
+      delete list['data-latex-item'];
     }
     if (this.options.filterSRE) {
       const keys = Object.keys(list).filter(
