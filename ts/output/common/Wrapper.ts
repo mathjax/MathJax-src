@@ -1040,10 +1040,10 @@ export class CommonWrapper<
   }
 
   /**
-   * @param {DIRECTION} direction  The direction to stretch this node
-   * @return {boolean}             Whether the node can stretch in that direction
+   * @param {string} direction  The direction to stretch this node
+   * @return {boolean}          Whether the node can stretch in that direction
    */
-  public canStretch(direction: DIRECTION): boolean {
+  public canStretch(direction: string): boolean {
     this.stretch = NOSTRETCH as DD;
     if (this.node.isEmbellished) {
       let core = this.core();

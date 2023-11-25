@@ -34,15 +34,6 @@ import {DIRECTION, NOSTRETCH} from '../FontData.js';
 
 /*****************************************************************/
 /**
- * Convert direction to letter
- */
-export const DirectionVH: {[n: number]: string} = {
-  [DIRECTION.Vertical]: 'v',
-  [DIRECTION.Horizontal]: 'h'
-};
-
-/*****************************************************************/
-/**
  * The CommonMo interface
  *
  * @template N   The DOM node type
@@ -606,7 +597,7 @@ export function CommonMoMixin<
     /**
      * @override
      */
-    public canStretch(direction: DIRECTION) {
+    public canStretch(direction: string) {
       if (this.stretch.dir !== DIRECTION.None) {
         return this.stretch.dir === direction;
       }

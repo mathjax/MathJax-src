@@ -348,7 +348,7 @@ export function CommonMfracMixin<
     /**
      * @override
      */
-    public canStretch(_direction: DIRECTION) {
+    public canStretch(_direction: string) {
       return false;
     }
 
