@@ -37,7 +37,7 @@ import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
 const emPerInch = 7.2;
 const pxPerInch = 72;
 // Note, the following are TeX CM font values.
-export const UNIT_CASES: Map<string, number> = new Map([
+const UNIT_CASES: Map<string, number> = new Map([
   ['em', 1],
   ['ex', .43],
   ['pt', 1 / 10],                // 10 pt to an em
@@ -50,10 +50,51 @@ export const UNIT_CASES: Map<string, number> = new Map([
 ]);
 
 const num = '([-+]?([.,]\\d+|\\d+([.,]\\d*)?))';
-const unit = () => `(${Array.from(UNIT_CASES.keys()).join('|')})`;
-const dimenEnd = () => RegExp('^\\s*' + num + '\\s*' + unit() + '\\s*$');
-const dimenRest = () => RegExp('^\\s*' + num + '\\s*' + unit() + ' ?');
+let unit = '';
+let dimenEnd = /./;
+let dimenRest = /./;
+/**
+ * Updates the regular expressions for the unit.
+ */
+function updateDimen() {
+  unit = `(${Array.from(UNIT_CASES.keys()).join('|')})`;
+  dimenEnd = RegExp('^\\s*' + num + '\\s*' + unit + '\\s*$');
+  dimenRest = RegExp('^\\s*' + num + '\\s*' + unit + ' ?');
+}
+updateDimen();
 
+/**
+ * Adds a custom dimension unit.
+ *
+ * @param name The unit name.
+ * @param ems The unit dimension in em units.
+ */
+export function addDimen(name: string, ems: number) {
+  UNIT_CASES.set(name, ems);
+  updateDimen();
+}
+
+/**
+ * Retrieves conversion value for an existing dimension. If the dimension does
+ * not exist, `pt` is used, similar to TeX behaviour. However, no error is thrown.
+ *
+ * @param name The unit name.
+ */
+export function getDimen(name: string) {
+  return UNIT_CASES.get(name) || UNIT_CASES.get('pt');
+}
+
+/**
+ * Removes an existing dimension unit and updates the regular expressions for
+ * the unit.
+ *
+ * @param name The unit name.
+ */
+export function removeDimen(name: string) {
+  if (UNIT_CASES.delete(name)) {
+    updateDimen();
+  };
+}
 
 /**
  * Matches for a dimension argument.
@@ -65,7 +106,7 @@ const dimenRest = () => RegExp('^\\s*' + num + '\\s*' + unit() + ' ?');
  */
 export function matchDimen(
   dim: string, rest: boolean = false): [string, string, number] {
-  let match = dim.match(rest ? dimenRest() : dimenEnd());
+  let match = dim.match(rest ? dimenRest : dimenEnd);
   return match ?
     muReplace([match[1].replace(/,/, '.'), match[4], match[0].length]) :
     [null, null, 0];
@@ -81,7 +122,7 @@ function muReplace([value, unit, length]: [string, string, number]): [string, st
   if (unit !== 'mu') {
     return [value, unit, length];
   }
-  let em = Em(UNIT_CASES.get(unit) * (parseFloat(value || '1')));
+  let em = Em(getDimen(unit) * (parseFloat(value || '1')));
   return [em.slice(0, -2), 'em', length];
 }
 
@@ -94,8 +135,8 @@ function muReplace([value, unit, length]: [string, string, number]): [string, st
 export function dimen2em(dim: string): number {
   let [value, unit] = matchDimen(dim);
   let m = parseFloat(value || '1');
-  let func = UNIT_CASES.get(unit);
-  return func ? func * (m) : 0;
+  let factor = getDimen(unit);
+  return factor ? factor * (m) : 0;
 }
 
 

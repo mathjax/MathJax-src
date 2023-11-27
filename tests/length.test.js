@@ -4,7 +4,7 @@ import * as Length from '../mjs/util/lengths.js';
 
 // These methods will be rewritten into non-ParseUtil ones.
 function convertLength(unit, num) {
-  return ParseUtil.UNIT_CASES.get(unit) * (num);
+  return ParseUtil.getDimen(unit) * (num);
 }
 
 function matchDimension(str) {
@@ -35,7 +35,7 @@ describe('Length conversion', () => {
   it('mu', () => expect(convertLength('mu', 9)).toBe(0.5));
   // Note that we have to pass a function here.
   // it('nix', () => expect(() => convertLength('nix', 9)).toThrow(TypeError));
-  it('nix', () => expect(convertLength('nix', 9)).toBeNaN());
+  it('nix', () => expect(convertLength('nix', 9)).toBe(0.9));
 });
 
 describe('Em conversion', () => {
@@ -79,10 +79,10 @@ describe('Dimension matching', () => {
 });
 
 describe('Dimension conversion', () => {
-  it('9', () => expect(convertDimension('9')).toBe(0));
-  it('9nix', () => expect(convertDimension('9nix')).toBe(0));
-  it('empty', () => expect(convertDimension('')).toBe(0));
-  it('nix', () => expect(convertDimension('nix')).toBe(0));
+  it('9', () => expect(convertDimension('9')).toBe(0.1));
+  it('9nix', () => expect(convertDimension('9nix')).toBe(0.1));
+  it('empty', () => expect(convertDimension('')).toBe(0.1));
+  it('nix', () => expect(convertDimension('nix')).toBe(0.1));
   it('9em', () => expect(convertDimension('9em')).toBe(9));
   it('9ex', () => expect(convertDimension('9ex')).toBe(3.87));
   it('9pt', () => expect(convertDimension('9pt')).toBe(0.9));
@@ -124,9 +124,8 @@ describe.skip('Dimension conversion comparison', () => {
 });
 
 // Useful for the IEEE case.
-ParseUtil.UNIT_CASES.set('pi', 1 / 10);
-
 describe('Adds pi unit', () => {
+  beforeAll(() => ParseUtil.addDimen('pi', 1 / 10));
   it('pi', () => expect(convertLength('pi', 9)).toBe(0.9));
   it('9pi', () => expect(matchDimension('9pi')).toEqual(['9', 'pi', 3]));
   it('10pi', () => expect(matchDimension('10pi')).toEqual(['10', 'pi', 4]));
