@@ -4,7 +4,7 @@ import * as Length from '../mjs/util/lengths.js';
 
 // These methods will be rewritten into non-ParseUtil ones.
 function convertLength(unit, num) {
-  return ParseUtil.getDimen(unit) * (num);
+  return ParseUtil.UNIT_CASES.get(unit) * (num);
 }
 
 function matchDimension(str) {
@@ -125,7 +125,7 @@ describe.skip('Dimension conversion comparison', () => {
 
 // Useful for the IEEE case.
 describe('Adds pi unit', () => {
-  beforeAll(() => ParseUtil.addDimen('pi', 1 / 10));
+  beforeAll(() => ParseUtil.UNIT_CASES.set('pi', 1 / 10));
   it('pi', () => expect(convertLength('pi', 9)).toBe(0.9));
   it('9pi', () => expect(matchDimension('9pi')).toEqual(['9', 'pi', 3]));
   it('10pi', () => expect(matchDimension('10pi')).toEqual(['10', 'pi', 4]));

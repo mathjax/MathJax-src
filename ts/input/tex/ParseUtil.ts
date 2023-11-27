@@ -33,11 +33,66 @@ import {entities} from '../../util/Entities.js';
 import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
 
 
-// TODO (VS): Combine some of this with lengths in util.
+class UnitMap extends Map<string, number> {
+
+  public num = '([-+]?([.,]\\d+|\\d+([.,]\\d*)?))';
+  public unit = '';
+  public dimenEnd = /./;
+  public dimenRest = /./;
+
+  /**
+   * @override
+   */
+  constructor(map: [string, number][]) {
+    super(map);
+    this.updateDimen();
+  }
+
+  /**
+   * Updates the regular expressions for the unit.
+   */
+  private updateDimen() {
+    this.unit = `(${Array.from(this.keys()).join('|')})`;
+    this.dimenEnd = RegExp('^\\s*' + this.num + '\\s*' + this.unit + '\\s*$');
+    this.dimenRest = RegExp('^\\s*' + this.num + '\\s*' + this.unit + ' ?');
+  }
+
+  /**
+   * @override
+   */
+  public set(name: string, ems: number) {
+    super.set(name, ems);
+    this.updateDimen();
+    return this;
+  }
+
+  /**
+   * Retrieves conversion value for an existing dimension. If the dimension does
+   * not exist, `pt` is used, similar to TeX behaviour. However, no error is thrown.
+   *
+   * @override
+   */
+  public get(name: string) {
+    return super.get(name) || super.get('pt');
+  }
+
+  /**
+   * @override
+   */
+  public delete(name: string) {
+    if (super.delete(name)) {
+      this.updateDimen();
+      return true;
+    }
+    return false;
+  }
+
+}
+
 const emPerInch = 7.2;
 const pxPerInch = 72;
 // Note, the following are TeX CM font values.
-const UNIT_CASES: Map<string, number> = new Map([
+export const UNIT_CASES = new UnitMap([
   ['em', 1],
   ['ex', .43],
   ['pt', 1 / 10],                // 10 pt to an em
@@ -49,52 +104,6 @@ const UNIT_CASES: Map<string, number> = new Map([
   ['mu', 1 / 18],
 ]);
 
-const num = '([-+]?([.,]\\d+|\\d+([.,]\\d*)?))';
-let unit = '';
-let dimenEnd = /./;
-let dimenRest = /./;
-/**
- * Updates the regular expressions for the unit.
- */
-function updateDimen() {
-  unit = `(${Array.from(UNIT_CASES.keys()).join('|')})`;
-  dimenEnd = RegExp('^\\s*' + num + '\\s*' + unit + '\\s*$');
-  dimenRest = RegExp('^\\s*' + num + '\\s*' + unit + ' ?');
-}
-updateDimen();
-
-/**
- * Adds a custom dimension unit.
- *
- * @param name The unit name.
- * @param ems The unit dimension in em units.
- */
-export function addDimen(name: string, ems: number) {
-  UNIT_CASES.set(name, ems);
-  updateDimen();
-}
-
-/**
- * Retrieves conversion value for an existing dimension. If the dimension does
- * not exist, `pt` is used, similar to TeX behaviour. However, no error is thrown.
- *
- * @param name The unit name.
- */
-export function getDimen(name: string) {
-  return UNIT_CASES.get(name) || UNIT_CASES.get('pt');
-}
-
-/**
- * Removes an existing dimension unit and updates the regular expressions for
- * the unit.
- *
- * @param name The unit name.
- */
-export function removeDimen(name: string) {
-  if (UNIT_CASES.delete(name)) {
-    updateDimen();
-  };
-}
 
 /**
  * Matches for a dimension argument.
@@ -106,7 +115,7 @@ export function removeDimen(name: string) {
  */
 export function matchDimen(
   dim: string, rest: boolean = false): [string, string, number] {
-  let match = dim.match(rest ? dimenRest : dimenEnd);
+  let match = dim.match(rest ? UNIT_CASES.dimenRest : UNIT_CASES.dimenEnd);
   return match ?
     muReplace([match[1].replace(/,/, '.'), match[4], match[0].length]) :
     [null, null, 0];
@@ -122,7 +131,7 @@ function muReplace([value, unit, length]: [string, string, number]): [string, st
   if (unit !== 'mu') {
     return [value, unit, length];
   }
-  let em = Em(getDimen(unit) * (parseFloat(value || '1')));
+  let em = Em(UNIT_CASES.get(unit) * (parseFloat(value || '1')));
   return [em.slice(0, -2), 'em', length];
 }
 
@@ -135,7 +144,7 @@ function muReplace([value, unit, length]: [string, string, number]): [string, st
 export function dimen2em(dim: string): number {
   let [value, unit] = matchDimen(dim);
   let m = parseFloat(value || '1');
-  let factor = getDimen(unit);
+  let factor = UNIT_CASES.get(unit);
   return factor ? factor * (m) : 0;
 }
 
@@ -152,6 +161,8 @@ export function Em(m: number): string {
   return m.toFixed(3).replace(/\.?0+$/, '') + 'em';
 }
 
+
+// Parse Utililities
 
 /**
  * Takes an array of numbers and returns a space-separated string of em values.
@@ -625,8 +636,8 @@ export function copyNode(node: MmlNode, parser: TexParser): MmlNode  {
 
 /**
  * This is a placeholder for future security filtering of attributes.
- * @param {TexParser} parser The current parser.
- * @param {string} name The attribute name.
+ * @param {TexParser} _parser The current parser.
+ * @param {string} _name The attribute name.
  * @param {string} value The attribute value to filter.
  * @return {string} The filtered value.
  */
@@ -783,3 +794,8 @@ function readValue(text: string, end: string[]): [string, string, string] {
 export function isLatinOrGreekChar(c: string): boolean {
   return !!c.normalize('NFD').match(/[a-zA-Z\u0370-\u03F0]/);
 }
+
+export const ParseUtil = {
+  cols: cols,
+  fenced: fenced,
+};
