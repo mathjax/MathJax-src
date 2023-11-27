@@ -27,7 +27,7 @@ import {AmsMethods} from './AmsMethods.js';
 import *  as sm from '../TokenMap.js';
 import {TexConstant} from '../TexConstants.js';
 import ParseMethods from '../ParseMethods.js';
-import * as ParseUtil from '../ParseUtil.js';
+import {ParseUtil} from '../ParseUtil.js';
 import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MATHSPACE} from '../../../util/lengths.js';
 

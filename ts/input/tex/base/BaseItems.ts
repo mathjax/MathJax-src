@@ -31,7 +31,7 @@ import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
-import * as ParseUtil from '../ParseUtil.js';
+import {ParseUtil} from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import {Property, PropertyList} from '../../../core/Tree/Node.js';
 import StackItemFactory from '../StackItemFactory.js';

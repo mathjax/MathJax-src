@@ -29,7 +29,7 @@ import TexParser from '../TexParser.js';
 import * as sm from '../TokenMap.js';
 import {Token, Macro} from '../Token.js';
 import BaseMethods from '../base/BaseMethods.js';
-import * as ParseUtil from '../ParseUtil.js';
+import {ParseUtil} from '../ParseUtil.js';
 import {StackItem} from '../StackItem.js';
 import NewcommandUtil from './NewcommandUtil.js';
 

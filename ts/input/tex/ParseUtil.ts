@@ -161,8 +161,9 @@ export function Em(m: number): string {
   return m.toFixed(3).replace(/\.?0+$/, '') + 'em';
 }
 
-
-// Parse Utililities
+// Above will move into lenghts
+// 
+// Remainder: Parse Utililities
 
 /**
  * Takes an array of numbers and returns a space-separated string of em values.
@@ -798,4 +799,27 @@ export function isLatinOrGreekChar(c: string): boolean {
 export const ParseUtil = {
   cols: cols,
   fenced: fenced,
+  fixedFence: fixedFence,
+  mathPalette: mathPalette,
+  fixInitialMO: fixInitialMO,
+  internalMath: internalMath,
+  internalText: internalText,
+  underOver: underOver,
+  checkMovableLimits: checkMovableLimits,
+  trimSpaces: trimSpaces,
+  setArrayAlign: setArrayAlign,
+  substituteArgs: substituteArgs,
+  addArgs: addArgs,
+  checkMaxMacros: checkMaxMacros,
+  checkEqnEnv: checkEqnEnv,
+  copyNode: copyNode,
+  MmlFilterAttribute: MmlFilterAttribute,
+  getFontDef: getFontDef,
+  keyvalOptions: keyvalOptions,
+  isLatinOrGreekChar: isLatinOrGreekChar,
+
+  // Temporary before move to lenghts
+  matchDimen: matchDimen,
+  dimen2em: dimen2em,
+  Em: Em,
 };
