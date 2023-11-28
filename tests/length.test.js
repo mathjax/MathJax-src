@@ -1,5 +1,5 @@
 import {jest} from '@jest/globals';
-import * as ParseUtil from '../mjs/input/tex/ParseUtil.js';
+import {ParseUtil} from '../mjs/input/tex/ParseUtil.js';
 import * as Length from '../mjs/util/lengths.js';
 
 // These methods will be rewritten into non-ParseUtil ones.
@@ -20,7 +20,7 @@ function convertLengthDim(str) {
 }
 
 function convertEm(num) {
-  return ParseUtil.Em(num);
+  return ParseUtil.em(num);
 }
 
 describe('Length conversion', () => {

@@ -74,7 +74,7 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
       align = parser.GetBrackets(`\\begin{${begin.getName()}}`, parser.options.mathtools['smallmatrix-align']);
     }
     return MathtoolsMethods.Array(
-      parser, begin, open, close, align, ParseUtil.Em(1 / 3), '.2em', 'S', 1
+      parser, begin, open, close, align, ParseUtil.em(1 / 3), '.2em', 'S', 1
     );
   },
 

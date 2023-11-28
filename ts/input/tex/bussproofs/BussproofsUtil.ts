@@ -270,12 +270,12 @@ let addSpace = function(config: ParseOptions, inf: MmlNode,
   if (NodeUtil.isType(mspace, 'mspace')) {
     NodeUtil.setAttribute(
       mspace, 'width',
-      ParseUtil.Em(ParseUtil.dimen2em(
+      ParseUtil.em(ParseUtil.dimen2em(
         NodeUtil.getAttribute(mspace, 'width') as string) + space));
     return;
   }
   mspace = config.nodeFactory.create('node', 'mspace', [],
-                                     {width: ParseUtil.Em(space)});
+                                     {width: ParseUtil.em(space)});
   if (right) {
     inf.appendChild(mspace);
     return;
@@ -362,7 +362,7 @@ let adjustSequents = function(config: ParseOptions) {
 const addSequentSpace = function(config: ParseOptions, sequent: MmlNode,
                                  position: number, direction: string, width: number) {
   let mspace = config.nodeFactory.create('node', 'mspace', [],
-                                         {width: ParseUtil.Em(width)});
+                                         {width: ParseUtil.em(width)});
   if (direction === 'left') {
     let row = sequent.childNodes[position].childNodes[0];
     mspace.parent = row;

@@ -905,7 +905,7 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
                           '%1 is not a recognized attribute for %2',
                           match[1], kind);
     }
-    let value: string | boolean = ParseUtil.MmlFilterAttribute(
+    let value: string | boolean = ParseUtil.mmlFilterAttribute(
       parser, match[1], match[2].replace(/^(['"])(.*)\1$/, '$2'));
     if (value) {
       if (value.toLowerCase() === 'true') {

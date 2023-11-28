@@ -1365,9 +1365,9 @@ export class ArrayItem extends BaseItem {
       }
       const rowspacing = this.getProperty('rowspacing') as number;
       while (rows.length < this.table.length) {
-        rows.push(ParseUtil.Em(rowspacing));
+        rows.push(ParseUtil.em(rowspacing));
       }
-      rows[this.table.length - 1] = ParseUtil.Em(
+      rows[this.table.length - 1] = ParseUtil.em(
         Math.max(0, rowspacing + ParseUtil.dimen2em(spacing)));
       this.arraydef['rowspacing'] = rows.join(' ');
     }
