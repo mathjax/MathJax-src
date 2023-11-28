@@ -73,7 +73,7 @@ const fontRE = new RegExp('^.*\\/(mathjax-[^\/-]*)(?:-font)?\/(build|[cm]js)');
 async function readJSON(dir) {
   return new Promise((ok, fail) => {
     const buffer = [];
-    const child = spawn('npx', [
+    const child = spawn('pnpm', [
       'webpack', '--env', `dir=${dir}`, '--env', `bundle=${bundle}`, '--json',
       '-c', path.relative('.', path.join(compPath, 'webpack.config.' + target))
     ]);

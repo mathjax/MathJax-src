@@ -216,7 +216,7 @@ const PACKAGE = function (options) {
   let {name, js, target = 'mjs', bundle = 'bundle', libs = [], dir, dist = '', font = true, jax = ''} = options;
   dir = dir.replace(/\/$/, '');
   if (!js) {
-    js = path.relative(dir, path.resolve(DIRNAME, '..', target));
+    js = path.relative(process.cwd(), path.resolve(DIRNAME, '..', target));
   }
   const distDir = dist ? path.resolve(dir, dist) :
                          path.resolve(js, '..', bundle, path.dirname(name));
