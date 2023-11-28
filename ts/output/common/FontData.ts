@@ -131,7 +131,7 @@ export type CssFontMap = {
  * Data needed for stretchy vertical and horizontal characters
  */
 export type DelimiterData = {
-  dir: DIRECTION;       // vertical or horizontal direction
+  dir: string;          // vertical or horizontal direction
   sizes?: number[];     // Array of fixed sizes for this character
   variants?: number[];  // The variants in which the different sizes can be found (if not the default)
   schar?: number[];     // The character number to use for each size (if different from the default)
