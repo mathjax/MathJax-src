@@ -345,7 +345,7 @@ export interface DOMAdaptor<N, T, D> {
 
   /**
    * @param {N} node        The stylesheet node whose rules are to be returned
-   * @return {string}       The string versions of the stylesheet rules
+   * @return {string}       The string version of the stylesheet rules
    */
   cssText(node: N): string;
 
