@@ -62,7 +62,8 @@ const XMLDECLARATION = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>';
  * The various values that are stored in the menu
  */
 export interface MenuSettings {
-  filterSRE: boolean;
+  showSRE: boolean;
+  showTex: boolean;
   texHints: boolean;
   semantics: boolean;
   zoom: string;
@@ -123,7 +124,8 @@ export class Menu {
    */
   public static OPTIONS: OptionList = {
     settings: {
-      filterSRE: true,
+      showSRE: false,
+      showTex: false,
       texHints: true,
       semantics: false,
       zoom: 'NoZoom',
@@ -462,7 +464,8 @@ export class Menu {
       type: 'contextMenu',
       id: 'MathJax_Menu',
       pool: [
-        this.variable<boolean>('filterSRE'),
+        this.variable<boolean>('showSRE'),
+        this.variable<boolean>('showTex'),
         this.variable<boolean>('texHints'),
         this.variable<boolean>('semantics'),
         this.variable<string> ('zoom'),
@@ -537,6 +540,13 @@ export class Menu {
             this.checkbox('BreakInline', 'Allow In-line Breaks', 'breakInline'),
           ]),
           this.rule(),
+          this.submenu('MathmlIncludes', 'MathML Includes', [
+            this.checkbox('showSRE', 'Semantic attributes', 'showSRE'),
+            this.checkbox('showTex', 'LaTeX attributes', 'showTex'),
+            this.checkbox('texHints', 'TeX hints', 'texHints'),
+            this.checkbox('semantics', 'Original as annotation', 'semantics')
+          ]),
+          this.rule(),
           this.submenu('ZoomTrigger', 'Zoom Trigger', [
             this.command('ZoomNow', 'Zoom Once Now', () => this.zoom(null, '', this.menu.mathItem)),
             this.rule(),
@@ -555,10 +565,6 @@ export class Menu {
           ])),
           this.rule(),
           this.command('Scale', 'Scale All Math...', () => this.scaleAllMath()),
-          this.rule(),
-          this.checkbox('filterSRE', 'Filter semantic annotations', 'filterSRE'),
-          this.checkbox('texHints', 'Add TeX hints to MathML', 'texHints'),
-          this.checkbox('semantics', 'Add original as annotation', 'semantics'),
           this.rule(),
           this.command('Reset', 'Reset to defaults', () => this.resetDefaults())
         ]),
@@ -1047,12 +1053,12 @@ export class Menu {
    * @returns {string}            The serialized version of the internal MathML
    */
   protected toMML(math: HTMLMATHITEM): string {
-    const mml = this.MmlVisitor.visitTree(math.root, math, {
+    return this.MmlVisitor.visitTree(math.root, math, {
+      filterSRE: !this.settings.showSRE,
+      filterTex: !this.settings.showTex,
       texHints: this.settings.texHints,
       semantics: (this.settings.semantics && math.inputJax.name !== 'MathML')
     });
-    return (!this.settings.filterSRE ?  mml :
-            mml.replace(/ (?:data-semantic-.*?|role|aria-(?:level|posinset|setsize))=".*?"/g, ''));
   }
 
   /**
