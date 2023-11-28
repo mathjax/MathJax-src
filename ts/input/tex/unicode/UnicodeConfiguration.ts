@@ -46,7 +46,7 @@ let UnicodeCache: {[key: number]: [number, number, string, number]} = {};
 UnicodeMethods.Unicode = function(parser: TexParser, name: string) {
   let HD = parser.GetBrackets(name);
   let HDsplit = null;
-  let font = null;
+  let font = '';
   if (HD) {
     if (HD.replace(/ /g, '').
         match(/^(\d+(\.\d*)?|\.\d+),(\d+(\.\d*)?|\.\d+)$/)) {
@@ -55,6 +55,9 @@ UnicodeMethods.Unicode = function(parser: TexParser, name: string) {
     } else {
       font = HD;
     }
+  }
+  if (font.match(/;/)) {
+    throw new TexError('BadFont', 'Font name for %1 can\'t contain semicolons',  parser.currentCS);
   }
   let n = ParseUtil.trimSpaces(parser.GetArgument(name)).replace(/^0x/, 'x');
   if (!n.match(/^(x[0-9A-Fa-f]+|[0-9]+)$/)) {

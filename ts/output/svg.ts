@@ -140,7 +140,7 @@ CommonOutputJax<
    * @override
    * @constructor
    */
-  constructor(options: OptionList = null) {
+  constructor(options: OptionList = {}) {
     super(options, SvgWrapperFactory as any, DefaultFont);
     this.fontCache = new FontCache(this);
   }
@@ -488,7 +488,7 @@ CommonOutputJax<
     const ex = this.fixed(this.font.params.x_height * 1000, 1);
     const svg = this.svg('svg', {
       position: 'absolute', visibility: 'hidden',
-      width: '1ex', height: '1ex',
+      width: '1ex', height: '1ex', top: 0, left: 0,
       viewBox: [0, 0, ex, ex].join(' ')
     }, [text]);
     adaptor.append(adaptor.body(adaptor.document), svg);
