@@ -69,8 +69,7 @@ export interface MinHTMLElement<N, T> {
   className: string;
   classList: DOMTokenList;
   style: OptionList;
-  sheet?: {insertRule: (rule: string, index?: number) => void};
-
+  sheet?: {insertRule: (rule: string, index?: number) => void, cssRules: Array<{cssText: string}>};
   childNodes: (N | T)[] | NodeList;
   firstChild: N | T | Node;
   lastChild: N | T | Node;
@@ -522,13 +521,23 @@ AbstractDOMAdaptor<N, T, D> implements MinHTMLAdaptor<N, T, D> {
    * @override
    */
   public insertRules(node: N, rules: string[]) {
-    for (const rule of rules.reverse()) {
+    for (const rule of rules) {
       try {
-        node.sheet.insertRule(rule, 0);
+        node.sheet.insertRule(rule, node.sheet.cssRules.length);
       } catch (e) {
         console.warn(`MathJax: can't insert css rule '${rule}': ${e.message}`);
       }
     }
+  }
+
+  /**
+   * @override
+   */
+  public cssText(node: N) {
+    if (this.kind(node) !== 'style') {
+      return '';
+    }
+    return Array.from(node.sheet.cssRules).map(rule => rule.cssText).join('\n');
   }
 
   /**
