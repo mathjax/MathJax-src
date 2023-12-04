@@ -572,7 +572,8 @@ export default class TexParser {
       }
       return;
     }
-    if (node.attributes.get(TexConstant.Attr.LATEX) === '_' && str !== '_') {
+    if (node.attributes.get(TexConstant.Attr.LATEX) === '_' &&
+      str !== '_' && str !== '\\_') {
       if (str === '}') {
         this.composeBraces(node.childNodes[1]);
       } else {
