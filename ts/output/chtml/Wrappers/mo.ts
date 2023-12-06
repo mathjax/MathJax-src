@@ -26,7 +26,7 @@ import {ChtmlWrapper, ChtmlWrapperClass, StringMap} from '../Wrapper.js';
 import {ChtmlWrapperFactory} from '../WrapperFactory.js';
 import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
         ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
-import {CommonMo, CommonMoClass, CommonMoMixin, DirectionVH} from '../../common/Wrappers/mo.js';
+import {CommonMo, CommonMoClass, CommonMoMixin} from '../../common/Wrappers/mo.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {StyleList} from '../../../util/StyleList.js';
@@ -211,9 +211,8 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       //
       //  Make the main element and add it to the parent
       //
-      const dir = DirectionVH[delim.dir];
       const properties = {class: this.char(delim.c || c), style: styles};
-      const html = this.html('mjx-stretchy-' + dir, properties, content);
+      const html = this.html('mjx-stretchy-' + delim.dir, properties, content);
       const adaptor = this.adaptor;
       chtml[0] && adaptor.append(chtml[0], html);
       chtml[1] && adaptor.append(chtml[1], chtml[0] ? adaptor.clone(html) : html);
@@ -233,7 +232,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
         const letter = options.f || (v === 'normal' ? '' : this.font.getVariant(v).letter);
         const font = options.ff || (letter ? `${this.font.cssFontPrefix}-${letter}` : '');
         let c = (options.c as string || String.fromCodePoint(n))
-          .replace(/\\[0-9A-F]+/ig, (x) => String.fromCodePoint(parseInt(x.substr(1), 16)));
+          .replace(/\\[0-9A-F]+/ig, (x) => String.fromCodePoint(parseInt(x.substring(1), 16)));
         content.push(this.html(part, {}, [
           this.html('mjx-c', font ? {class: font} : {}, [this.text(c)])
         ]));

@@ -51,9 +51,12 @@ export default class TexError {
           parts[i] = parts[i].toString();
         }
       } else if (c === '{') {        // %{n} or %{plural:%n|...}
-        c = parts[i].substr(1);
+        c = parts[i].substring(1);
         if (c >= '0' && c <= '9') {  // %{n}
-          parts[i] = args[parseInt(parts[i].substr(1, parts[i].length - 2), 10) - 1];
+          parts[i] = args[parseInt(
+            // parts[i] = %{n}
+            parts[i].substring(1, parts[i].length - 1),
+            10) - 1];
           if (typeof parts[i] === 'number') {
             parts[i] = parts[i].toString();
           }

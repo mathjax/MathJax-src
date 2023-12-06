@@ -301,7 +301,7 @@ export namespace Startup {
     return (CONFIG.loadAllFontFiles && (output as COMMONJAX).font ?
             (output as COMMONJAX).font.loadDynamicFiles() : Promise.resolve())
       .then(CONFIG.typeset && MathJax.typesetPromise ?
-            typesetPromise(CONFIG.elements) :
+            () => typesetPromise(CONFIG.elements) :
             Promise.resolve());
   }
 

@@ -23,6 +23,7 @@
 
 import {MathItem} from '../../core/MathItem.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import {PropertyList} from '../../core/Tree/Node.js';
 import {SerializedMmlVisitor} from '../../core/MmlTree/SerializedMmlVisitor.js';
 import {OptionList, userOptions} from '../../util/Options.js';
 
@@ -41,6 +42,8 @@ export class MmlVisitor<N, T, D> extends SerializedMmlVisitor {
    * The options controlling the serialization
    */
   public options: OptionList = {
+    filterSRE: true,          // True means remove data-semantic, role, and aria attributes
+    filterTex: true,          // True means remove data-latex and data-latexItem attributes
     texHints: true,           // True means include classes for TeXAtom elements
     semantics: false,         // True means include original form as annotation in a semantics element
   };
@@ -97,4 +100,23 @@ export class MmlVisitor<N, T, D> extends SerializedMmlVisitor {
                  + space + '</math>';
   }
 
+  /**
+   * @override
+   */
+  protected getAttributeList(node: MmlNode): PropertyList {
+    const list = super.getAttributeList(node);
+    if (this.options.filterTex) {
+      delete list['data-latex'];
+      delete list['data-latex-item'];
+    }
+    if (this.options.filterSRE) {
+      const keys = Object.keys(list).filter(
+        id => id.match(/^(?:data-semantic-.*?|role|aria-(?:level|posinset|setsize))$/)
+      );
+      for (const key of keys) {
+        delete list[key];
+      }
+    }
+    return list;
+  }
 }

@@ -1150,7 +1150,7 @@ export class ArrayItem extends BaseItem {
     // Check if there are extra entries at the end of a row to be added
     //
     if (term !== '&') {
-      found = !!entry.trim() || !!(n || term.substr(0, 4) !== '\\end');
+      found = !!entry.trim() || !!(n || term.substring(0, 4) !== '\\end');
       if (cextra[n + 1] && !cextra[n]) {
         end = (end || '') + '&';        // extra entries follow this one
         this.atEnd = true;

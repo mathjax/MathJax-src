@@ -113,7 +113,7 @@ export const PathFilters: {[name: string]: PathFilterFunction} = {
     let match;
     while ((match = data.name.match(/^\[([^\]]*)\]/))) {
       if (!CONFIG.paths.hasOwnProperty(match[1])) break;
-      data.name = CONFIG.paths[match[1]] + data.name.substr(match[0].length);
+      data.name = CONFIG.paths[match[1]] + data.name.substring(match[0].length);
     }
     return true;
   }

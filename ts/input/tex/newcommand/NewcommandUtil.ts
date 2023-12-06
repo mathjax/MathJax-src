@@ -90,7 +90,7 @@ namespace NewcommandUtil {
                           '%1 must be followed by a control sequence', cmd);
     }
     let cs = ParseUtil.trimSpaces(parser.GetArgument(cmd));
-    return cs.substr(1);
+    return cs.substring(1);
   }
 
   /**
@@ -103,7 +103,7 @@ namespace NewcommandUtil {
     let cs = ParseUtil.trimSpaces(parser.GetArgument(name));
     if (cs.charAt(0) === '\\') {
       // @test Newcommand Simple
-      cs = cs.substr(1);
+      cs = cs.substring(1);
     }
     if (!cs.match(/^(.|[a-z]+)$/i)) {
       // @test Illegal CS
@@ -154,7 +154,8 @@ namespace NewcommandUtil {
         // @test Def ReDef, Def Let, Def Optional Brace
         if (i !== parser.i) {
           // @test Def Let, Def Optional Brace
-          params[n] = parser.string.substr(i, parser.i - i);
+          // parser.i >= i!
+          params[n] = parser.string.substring(i, parser.i);
         }
         c = parser.string.charAt(++parser.i);
         if (!c.match(/^[1-9]$/)) {
@@ -172,7 +173,8 @@ namespace NewcommandUtil {
         // @test Def Double Let, Def ReDef, Def Let
         if (i !== parser.i) {
           // @test Optional Brace Error
-          params[n] = parser.string.substr(i, parser.i - i);
+          // parser.i >= i!
+          params[n] = parser.string.substring(i, parser.i);
         }
         if (params.length > 0) {
           // @test Def Let, Def Optional Brace
@@ -222,13 +224,13 @@ namespace NewcommandUtil {
           i++;
           j -= 2;
         }
-        return parser.string.substr(i, j);
+        return j < 0 ? '' : parser.string.substring(i, i + j);
       } else if (c === '\\') {
         // @test Def Options CS
         parser.i++;
         j++;
         hasBraces = 0;
-        let match = parser.string.substr(parser.i).match(/[a-z]+|./i);
+        let match = parser.string.substring(parser.i).match(/[a-z]+|./i);
         if (match) {
           // @test Def Options CS
           parser.i += match[0].length;
@@ -256,7 +258,7 @@ namespace NewcommandUtil {
    */
   export function MatchParam(parser: TexParser, param: string): number {
     // @test Def Let, Def Optional Brace, Def Options CS
-    if (parser.string.substr(parser.i, param.length) !== param) {
+    if (parser.string.substring(parser.i, parser.i + param.length) !== param) {
       // @test Def Let, Def Options CS
       return 0;
     }

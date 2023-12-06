@@ -27,7 +27,7 @@ export const OutputUtil = {
         });
         font = `[${name}]`;
       }
-      const name = font.substr(1, font.length - 2);
+      const name = font.substring(1, font.length - 1);
 
       if (name !== defaultFont) {
 

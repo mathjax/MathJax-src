@@ -34,7 +34,6 @@ import {OptionList} from '../util/Options.js';
 
 /************************************************************/
 
-
 /**
  * Implements a lightweight DOMAdaptor on liteweight HTML elements
  */
@@ -549,7 +548,7 @@ export class LiteBase extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocu
    * @override
    */
   public insertRules(node: LiteElement, rules: string[]) {
-    node.children = [this.text(rules.join('\n\n') + '\n\n' + this.textContent(node))];
+    node.children = [this.text(this.textContent(node) + '\n\n' + rules.join('\n\n'))];
   }
 
   /*******************************************************************/

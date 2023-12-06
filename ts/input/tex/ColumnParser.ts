@@ -357,7 +357,7 @@ export class ColumnParser {
     if (String(n) !== num) {
       throw new TexError('ColArgNotNum', 'First argument to %1 column specifier must be a number', '*');
     }
-    state.template = new Array(n).fill(cols).join('') + state.template.substr(state.i);
+    state.template = new Array(n).fill(cols).join('') + state.template.substring(state.i);
     state.i = 0;
   }
 

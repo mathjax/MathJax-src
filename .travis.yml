@@ -5,7 +5,9 @@ node_js:
 sudo: false
 script:
 - components/bin/version
+- npm config fix
 - npm install
+- npm run -s link:full
 - npm run -s build-all
 branches:
   only:

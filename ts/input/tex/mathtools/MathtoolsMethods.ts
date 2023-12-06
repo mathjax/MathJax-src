@@ -346,7 +346,7 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     //  Get the argument and the rest of the TeX string.
     //
     const arg = parser.GetArgument(name);
-    const rest = parser.string.substr(parser.i);
+    const rest = parser.string.substring(parser.i);
     //
     //  Put the argument back, followed by "&&", and a marker that we look for below.
     //
@@ -498,7 +498,7 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
       post = ParseUtil.substituteArgs(parser, args, post);
     }
     body = body.replace(/\\delimsize/g, delim);
-    parser.string = [pre, left, open, body, right, close, post, parser.string.substr(parser.i)]
+    parser.string = [pre, left, open, body, right, close, post, parser.string.substring(parser.i)]
       .reduce((s, part) => ParseUtil.addArgs(parser, s, part), '');
     parser.i = 0;
     ParseUtil.checkMaxMacros(parser);
@@ -585,7 +585,7 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
       parser.Push(parser.create('token', 'mo', {texClass: TEXCLASS.REL}, unicode));
     } else {
       tex = '\\mathrel{' + tex.replace(/:/g, '\\MTThinColon').replace(/-/g, '\\mathrel{-}') + '}';
-      parser.string = ParseUtil.addArgs(parser, tex, parser.string.substr(parser.i));
+      parser.string = ParseUtil.addArgs(parser, tex, parser.string.substring(parser.i));
       parser.i = 0;
     }
   },
