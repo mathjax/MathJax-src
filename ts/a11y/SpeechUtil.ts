@@ -1,5 +1,28 @@
+/*************************************************************
+ *
+ *  Copyright (c) 2018-2023 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * @fileoverview  Provides utility functions for speech handling.
+ *
+ * @author v.sorge@mathjax.org (Volker Sorge)
+ */
+
 import {MmlNode} from '../core/MmlTree/MmlNode.js';
-// import {Sre} from './sre.js';
+import Sre from './sre.js';
 
 const ProsodyKeys = [ 'pitch', 'rate', 'volume' ];
 
@@ -11,7 +34,6 @@ interface ProsodyElement {
 }
 
 export interface SsmlElement extends ProsodyElement {
-  [propName: string]: string | boolean | number;
   pause?: string;
   text?: string;
   mark?: string;
@@ -27,11 +49,10 @@ export interface SsmlElement extends ProsodyElement {
  * @return {[string, SsmlElement[]]} The annotation structure.
  */
 export function ssmlParsing(speech: string): [string, SsmlElement[]] {
-  let dp = new DOMParser();
-  let xml = dp.parseFromString(speech, 'text/xml');
+  let xml = Sre.parseDOM(speech);
   let instr: SsmlElement[] = [];
   let text: String[] = [];
-  recurseSsml(Array.from(xml.documentElement.childNodes), instr, text);
+  recurseSsml(Array.from(xml.childNodes), instr, text);
   return [text.join(' '), instr];
 }
 
@@ -79,8 +100,6 @@ function recurseSsml(nodes: Node[], instr: SsmlElement[], text: String[],
           instr.push(Object.assign({text: txt, character: true}, prosody));
           text.push(txt);
           break;
-        default:
-          break;
       }
     }
   }
@@ -123,7 +142,7 @@ function getProsody(element: Element, prosody: ProsodyElement) {
 /**
  * Extracts the prosody value from an attribute.
  */
-const prosodyRegexp = /([\+|-]*)([0-9]+)%/;
+const prosodyRegexp = /([\+-]?)([0-9]+)%/;
 
 /**
  * Extracts the prosody value from an attribute.

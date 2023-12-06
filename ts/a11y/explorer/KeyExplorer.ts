@@ -385,8 +385,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   public Update(force: boolean = false) {
     // TODO (v4): This is a hack to avoid double voicing on initial startup!
     // Make that cleaner and remove force as it is not really used!
-    let noUpdate = force;
-    force = false;
+    // let noUpdate = force;
     if (!this.active && !force) return;
     this.pool.unhighlight();
     // let nodes = this.walker.getFocus(true).getNodes();
@@ -475,11 +474,9 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
         return;
       }
     }
-    let result = null;
     if (this.active) {
-      result = this.Move(event);
       this.stopEvent(event);
-      if (result) {
+      if (this.Move(event)) {
         this.Update();
         return;
       }

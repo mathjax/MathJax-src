@@ -261,6 +261,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
      * @return {ExplorerMathDocument}   The MathDocument (so calls can be chained)
      */
     public explorable(): ExplorerMathDocument {
+      this.options.enableSpeech = true;
       if (!this.processed.isSet('explorer')) {
         if (this.options.enableExplorer) {
           if (!this.explorerRegions) {

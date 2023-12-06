@@ -170,20 +170,21 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
     public enrich(document: MathDocument<N, T, D>, force: boolean = false) {
       if (this.state() >= STATE.ENRICHED) return;
       if (!this.isEscaped && (document.options.enableEnrichment || force)) {
-          // TODO: Sort out the loading of the locales better
-        if (document.options.sre.locale !== currentLocale) {
-          currentLocale = document.options.sre.locale;
-          // TODO: Sort out the loading of the locales better
-          mathjax.retryAfter(
-            Sre.setupEngine({locale: document.options.sre.locale}).then(
-              () => {
-                return Sre.sreReady(); }));
-        }
-        if (document.options.sre.braille !== currentBraille) {
-          currentBraille = document.options.sre.braille;
-          mathjax.retryAfter(
-            Sre.setupEngine({locale: document.options.sre.braille})
-              .then(() => Sre.sreReady()));
+        // TODO: Sort out the loading of the locales better
+        if (document.options.enableSpeech) {
+          if (document.options.sre.locale !== currentLocale) {
+            currentLocale = document.options.sre.locale;
+            // TODO: Sort out the loading of the locales better
+            mathjax.retryAfter(
+              Sre.setupEngine({locale: document.options.sre.locale})
+                .then(() => Sre.sreReady()));
+          }
+          if (document.options.sre.braille !== currentBraille) {
+            currentBraille = document.options.sre.braille;
+            mathjax.retryAfter(
+              Sre.setupEngine({locale: document.options.sre.braille})
+                .then(() => Sre.sreReady()));
+          }
         }
         const math = new document.options.MathItem('', MmlJax);
         try {
@@ -195,23 +196,25 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
           }
           Sre.setupEngine(document.options.sre);
           const enriched = Sre.toEnriched(mml);
-          this.generator.setOptions(Object.assign(
-            {}, document.options.sre, {
-              markup: 'ssml',
-              automark: true,
-            }));
-          this.outputData.speech = buildSpeech(
-            this.generator.getSpeech(enriched, enriched),
-            document.options.sre.locale,
-            document.options.sre.rate)[0];
-          this.generator.setOptions({
-            locale: document.options.sre.braille,
-            domain: 'default',
-            style: 'default',
-            modality: 'braille',
-            markup: 'none',
-          });
-          this.outputData.braille = this.generator.getSpeech(enriched, enriched);
+          if (document.options.enableSpeech) {
+            this.generator.setOptions(Object.assign(
+              {}, document.options.sre, {
+                markup: 'ssml',
+                automark: true,
+              }));
+            this.outputData.speech = buildSpeech(
+              this.generator.getSpeech(enriched, enriched),
+              document.options.sre.locale,
+              document.options.sre.rate)[0];
+            this.generator.setOptions({
+              locale: document.options.sre.braille,
+              domain: 'default',
+              style: 'default',
+              modality: 'braille',
+              markup: 'none',
+            });
+            this.outputData.braille = this.generator.getSpeech(enriched, enriched);
+          }
           this.inputData.enrichedMml = math.math = this.serializeMml(enriched);
           math.display = this.display;
           math.compile(document);
@@ -220,7 +223,9 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
           document.options.enrichError(document, this, err);
         }
       }
-      setAria(this.root, document.options.sre.locale);
+      if (document.options.enableSpeech) {
+        setAria(this.root, document.options.sre.locale);
+      }
       this.state(STATE.ENRICHED);
     }
 
@@ -355,6 +360,7 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
     public static OPTIONS: OptionList = {
       ...BaseDocument.OPTIONS,
       enableEnrichment: true,
+      enableSpeech: true,
       enrichError: (doc: EnrichedMathDocument<N, T, D>,
                     math: EnrichedMathItem<N, T, D>,
                     err: Error) => doc.enrichError(doc, math, err),
