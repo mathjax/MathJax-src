@@ -30,7 +30,7 @@ import TexParser from '../../TexParser.js';
 import NodeUtil from '../../NodeUtil.js';
 import {MmlNode} from '../../../../core/MmlTree/MmlNode.js';
 import ParseMethods from '../../ParseMethods.js';
-import ParseUtil from '../../ParseUtil.js';
+import { ParseUtil } from '../../ParseUtil.js';
 
 
 let IeeeMacrosMethods: Record<string, ParseMethod> = {};
@@ -45,8 +45,7 @@ IeeeMacrosMethods.Matrix = BaseMethods.Matrix;
 IeeeMacrosMethods.Array = BaseMethods.Array;
 
 IeeeMacrosMethods.Hskip = function(parser: TexParser, name: string) {
-  console.log(5);
-  ParseUtil.UNIT_CASES['pi'] = m => m / 10; // Same as points
+  ParseUtil.UNIT_CASES.set('pi', 1 / 10); // Same as points
   return BaseMethods.Hskip(parser, name);
 }
 
