@@ -31,8 +31,8 @@ import NodeUtil from '../NodeUtil.js';
 import {TexConstant} from '../TexConstants.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
-import {Macro} from '../Symbol.js';
-import {CommandMap} from '../SymbolMap.js';
+import {Macro} from '../Token.js';
+import {CommandMap} from '../TokenMap.js';
 import {ArrayItem} from '../base/BaseItems.js';
 import {FlalignItem} from './AmsItems.js';
 import BaseMethods from '../base/BaseMethods.js';
@@ -120,6 +120,7 @@ AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: b
   // @test Shove*, Multline
   ParseUtil.checkEqnEnv(parser);
   parser.Push(begin);
+  const padding = parser.options.ams['multlineIndent'];
   const item = parser.itemFactory.create('multline', numbered, parser.stack) as ArrayItem;
   item.arraydef = {
     displaystyle: true,
@@ -128,8 +129,7 @@ AmsMethods.Multline = function (parser: TexParser, begin: StackItem, numbered: b
     width: parser.options.ams['multlineWidth'],
     side: parser.options['tagSide'],
     minlabelspacing: parser.options['tagIndent'],
-    framespacing: parser.options.ams['multlineIndent'] + ' 0',
-    frame: '',   // Use frame spacing with no actual frame
+    'data-array-padding': `${padding} ${padding}`,
     'data-width-includes-label': true // take label space out of 100% width
   };
   return item;
@@ -215,7 +215,7 @@ AmsMethods.HandleDeclareOp =  function (parser: TexParser, name: string) {
   let star = (parser.GetStar() ? '*' : '');
   let cs = ParseUtil.trimSpaces(parser.GetArgument(name));
   if (cs.charAt(0) === '\\') {
-    cs = cs.substr(1);
+    cs = cs.substring(1);
   }
   let op = parser.GetArgument(name);
   (parser.configuration.handlers.retrieve(NEW_OPS) as CommandMap).
@@ -239,8 +239,7 @@ AmsMethods.HandleOperatorName = function(parser: TexParser, name: string) {
     ...parser.stack.env,
     font: TexConstant.Variant.NORMAL,
     multiLetterIdentifiers: parser.options.ams.operatornamePattern,
-    operatorLetters: true,
-    noAutoOP: true
+    operatorLetters: true
   }, parser.configuration).mml();
   //
   //  If we get something other than a single mi, wrap in a TeXAtom.

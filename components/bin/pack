@@ -73,7 +73,7 @@ const fontRE = new RegExp('^.*\\/(mathjax-[^\/-]*)(?:-font)?\/(build|[cm]js)');
 async function readJSON(dir) {
   return new Promise((ok, fail) => {
     const buffer = [];
-    const child = spawn('npx', [
+    const child = spawn('pnpm', [
       'webpack', '--env', `dir=${dir}`, '--env', `bundle=${bundle}`, '--json',
       '-c', path.relative('.', path.join(compPath, 'webpack.config.' + target))
     ]);
@@ -104,6 +104,7 @@ async function webpackLib(dir) {
     if (!config) return;
     const jsdir = (config.js ? path.resolve(dir, config.js).replace(/js$/, target) : jsPath);
     const jsRE = fileRegExp(jsdir);
+    const jsRE2 = (config.js ? fileRegExp(path.resolve(dir, config.js)) : /^$/);
     const libRE = fileRegExp(path.resolve(jsdir, '..', 'components'));
 
     //
@@ -131,7 +132,8 @@ async function webpackLib(dir) {
             .replace(rootRE, '[mathjax]')
             .replace(fontRE, '[$1]/$2')
             .replace(jsRE,   '[js]')
-            .replace(libRE,  '[lib]');
+            .replace(jsRE2,  '[js]')
+            .replace(libRE,  '[build]');
         if (name.charAt(0) !== '.' && name.charAt(0) !== '[') {
           name = path.relative(dir, name);
         }

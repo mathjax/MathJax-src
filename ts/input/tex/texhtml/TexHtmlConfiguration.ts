@@ -24,7 +24,7 @@
 
 import {Configuration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
-import {MacroMap} from '../SymbolMap.js';
+import {MacroMap} from '../TokenMap.js';
 import {ParseMethod} from '../Types.js';
 import ParseOptions from '../ParseOptions.js';
 import TexError from '../TexError.js';
@@ -59,7 +59,7 @@ export const HtmlNodeMethods: Record<string, ParseMethod> = {
     if (i < 0) {
       throw new TexError('TokenNotFoundForCommand', 'Could not find %1 for %2', end, '<' + match[0]);
     }
-    const html = parser.string.substr(parser.i, i).trim();
+    const html = parser.string.substring(parser.i, parser.i + i).trim();
     parser.i += i + 11 + (match[1] ? 3 + match[1].length : 0);
     //
     // Parse the HTML and check that there is something there

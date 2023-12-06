@@ -24,7 +24,7 @@
 
 import {ArrayItem} from '../base/BaseItems.js';
 import {Configuration, ParserConfiguration, ConfigurationHandler} from '../Configuration.js';
-import {CommandMap} from '../SymbolMap.js';
+import {CommandMap} from '../TokenMap.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
 

@@ -79,7 +79,7 @@ const EXCLUDE = new Map((config.exclude || []).map(name => [name, true]));  // f
 const EXCLUDESUBDIRS = !!config.excludeSubdirs;                             // exclude subdirectories or not
 const JS = config.js || config.mathjax || mjPath;                           // path to the compiled .js files
 const LIB = config.lib || './lib';                                          // path to the lib directory to create
-const TS = config.ts || JS.replace(/[cm]js$/, 'ts');                        // path to the .ts files
+const TS = config.ts || path.join(JS, '..', 'ts');                          // path to the .ts files
 const GLOBAL = config.global || mjGlobal;                                   // path to the global.js file
 const VERSION = config.version || mjGlobal.replace(/global/, 'version');    // path to the version.js file
 const TYPE = config.type || getType();                                      // the module type
@@ -193,7 +193,7 @@ function processLines(file, objects) {
   ]);
   let source = ((dir.replace(/\//g, '.') + '.' + name).replace(/^\./, '')
                 + (exists(path.resolve(JS, file.replace(/\.ts$/, ''))) ? '_ts' : ''))
-      .replace(/\.[^.]*/g, (x) => (x.substr(1).match(/[^a-zA-Z_]/) ? '[\'' + x.substr(1) + '\']' : x));
+      .replace(/\.[^.]*/g, (x) => (x.substring(1).match(/[^a-zA-Z_]/) ? '[\'' + x.substring(1) + '\']' : x));
   lines.push(
     objects.indexOf('MathJax') >= 0 ?
       `const g = (typeof window !== 'undefined' ? window : global);\nconst def = g.MathJax._.${source};` :
@@ -323,7 +323,7 @@ function processPackage(lines, space, dir) {
   //
   //  Loop through the lines that are in the current directory
   //
-  while (PACKAGE.length && (PACKAGE[0].substr(0, dir.length) === dir || dir === '.')) {
+  while (PACKAGE.length && (PACKAGE[0].substring(0, dir.length) === dir || dir === '.')) {
     //
     // If the current package is in this directory (not a subdirectory)
     //   Get the location of transpiled mathjax file

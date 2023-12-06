@@ -8,7 +8,6 @@
       "#js/*": ["../cjs/*"],
       "#source/*": ["../components/cjs/*"],
       "#root/*": ["../ts/components/cjs/*"],
-      "#mml3/*": ["../ts/input/mathml/mml3/cjs/*"],
       "#menu/*": ["../node_modules/mj-context-menu/cjs/*"],
       "#sre/*": ["../node_modules/speech-rule-engine/cjs/*"],
       "#mhchem/*": ["../node_modules/mhchemparser/dist/*"],

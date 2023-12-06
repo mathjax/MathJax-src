@@ -27,7 +27,7 @@ import {BeginEnvItem} from './NewcommandItems.js';
 import NewcommandUtil from './NewcommandUtil.js';
 import './NewcommandMappings.js';
 import ParseMethods from '../ParseMethods.js';
-import * as sm from '../SymbolMap.js';
+import * as sm from '../TokenMap.js';
 
 
 /**

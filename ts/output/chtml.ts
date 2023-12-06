@@ -156,7 +156,7 @@ CommonOutputJax<
    * @override
    * @constructor
    */
-  constructor(options: OptionList = null) {
+  constructor(options: OptionList = {}) {
     super(options, ChtmlWrapperFactory as any, DefaultFont);
     this.font.adaptiveCSS(this.options.adaptiveCSS);
     this.wrapperUsage = new Usage<string>();
@@ -287,8 +287,7 @@ CommonOutputJax<
     //    and call to getBBox().w in TextNode.ts)
     //
     if (width !== null) {
-      const metrics = this.math.metrics;
-      styles.width = Math.round(width * metrics.em * metrics.scale * rscale) + 'px';
+      styles.width = this.fixed(width * this.math.metrics.scale * rscale) + 'em';
     }
     //
     return this.html('mjx-utext', {variant: variant, style: styles}, [this.text(text)]);
@@ -309,11 +308,16 @@ CommonOutputJax<
     //
     adaptor.setStyle(text, 'font-family', adaptor.getStyle(text, 'font-family').replace(/MJXZERO, /g, ''));
     //
-    const style = {position: 'absolute', 'white-space': 'nowrap'};
+    const em = this.math.metrics.em;
+    const style = {
+      position: 'absolute', top: 0, left: 0,
+      'white-space': 'nowrap',
+      'font-size': this.fixed(em, 3) + 'px'
+    };
     const node = this.html('mjx-measure-text', {style}, [text]);
     adaptor.append(adaptor.parent(this.math.start.node), this.container);
     adaptor.append(this.container, node);
-    let w = adaptor.nodeSize(text, this.math.metrics.em)[0] / this.math.metrics.scale;
+    let w = adaptor.nodeSize(text, em)[0];
     adaptor.remove(this.container);
     adaptor.remove(node);
     return {w: w, h: .75, d: .2};

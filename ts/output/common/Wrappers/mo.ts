@@ -34,15 +34,6 @@ import {DIRECTION, NOSTRETCH} from '../FontData.js';
 
 /*****************************************************************/
 /**
- * Convert direction to letter
- */
-export const DirectionVH: {[n: number]: string} = {
-  [DIRECTION.Vertical]: 'v',
-  [DIRECTION.Horizontal]: 'h'
-};
-
-/*****************************************************************/
-/**
  * The CommonMo interface
  *
  * @template N   The DOM node type
@@ -313,7 +304,7 @@ export function CommonMoMixin<
       //
       //  Check for a null delimiter and add the null-delimiter space
       //
-      if (bbox.w === 0 && this.node.attributes.getExplicit('fence') &&
+      if (bbox.w === 0 && this.node.attributes.hasExplicit('fence') &&
           (this.node as MmlMo).getText() === '' &&
           (this.node.texClass === TEXCLASS.OPEN || this.node.texClass === TEXCLASS.CLOSE) &&
           !this.jax.options.mathmlSpacing) {
@@ -606,7 +597,7 @@ export function CommonMoMixin<
     /**
      * @override
      */
-    public canStretch(direction: DIRECTION) {
+    public canStretch(direction: string) {
       if (this.stretch.dir !== DIRECTION.None) {
         return this.stretch.dir === direction;
       }
@@ -627,7 +618,7 @@ export function CommonMoMixin<
         this.variant = (this.node.attributes.get('displaystyle') ? '-largeop' : '-smallop');
         return;
       }
-      if (!this.node.attributes.getExplicit('mathvariant') &&
+      if (!this.node.attributes.hasExplicit('mathvariant') &&
           this.node.getProperty('pseudoscript') === false) {
         this.variant = '-tex-variant';
         return;

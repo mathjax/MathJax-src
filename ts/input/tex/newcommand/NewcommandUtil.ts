@@ -26,30 +26,30 @@
 import ParseUtil from '../ParseUtil.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
-import {Macro, Symbol} from '../Symbol.js';
+import {Macro, Token} from '../Token.js';
 import {Args, Attributes, ParseMethod} from '../Types.js';
-import * as sm from '../SymbolMap.js';
+import * as sm from '../TokenMap.js';
 
 
 namespace NewcommandUtil {
 
   /**
-   * Transforms the attributes of a symbol into the arguments of a macro. E.g.,
-   * Symbol('ell', 'l', {mathvariant: "italic"}) is turned into Macro arguments:
+   * Transforms the attributes of a token into the arguments of a macro. E.g.,
+   * Token('ell', 'l', {mathvariant: "italic"}) is turned into Macro arguments:
    * ['ell', 'l', 'mathvariant', 'italic'].
    *
-   * @param {string} name The command name for the symbol.
-   * @param {Symbol} symbol The symbol associated with name.
+   * @param {string} name The command name for the token.
+   * @param {Token} token The token associated with name.
    * @return {Args[]} Arguments for a macro.
    */
-  export function disassembleSymbol(name: string, symbol: Symbol): Args[] {
-    let newArgs = [name, symbol.char] as Args[];
+  export function disassembleToken(name: string, token: Token): Args[] {
+    let newArgs = [name, token.char] as Args[];
     // @test Let Relet, Let Let, Let Circular Macro
-    if (symbol.attributes) {
+    if (token.attributes) {
       // @test Let Relet
-      for (let key in symbol.attributes) {
+      for (let key in token.attributes) {
         newArgs.push(key);
-        newArgs.push(symbol.attributes[key] as Args);
+        newArgs.push(token.attributes[key] as Args);
       }
     }
     return newArgs;
@@ -57,13 +57,13 @@ namespace NewcommandUtil {
 
 
   /**
-   * Assembles a symbol from a list of macro arguments. This is the inverse
+   * Assembles a token from a list of macro arguments. This is the inverse
    * method of the one above.
    *
    * @param {Args[]} args The arguments of the macro.
-   * @return {Symbol} The Symbol generated from the arguments..
+   * @return {Token} The Token generated from the arguments..
    */
-  export function assembleSymbol(args: Args[]): Symbol {
+  export function assembleToken(args: Args[]): Token {
     // @test Let Relet, Let Let, Let Circular Macro
     let name = args[0] as string;
     let char = args[1] as string;
@@ -72,7 +72,7 @@ namespace NewcommandUtil {
       // @test Let Relet
       attrs[args[i] as string] = args[i + 1];
     }
-    return new Symbol(name, char, attrs);
+    return new Token(name, char, attrs);
   }
 
   /**
@@ -90,7 +90,7 @@ namespace NewcommandUtil {
                           '%1 must be followed by a control sequence', cmd);
     }
     let cs = ParseUtil.trimSpaces(parser.GetArgument(cmd));
-    return cs.substr(1);
+    return cs.substring(1);
   }
 
   /**
@@ -103,7 +103,7 @@ namespace NewcommandUtil {
     let cs = ParseUtil.trimSpaces(parser.GetArgument(name));
     if (cs.charAt(0) === '\\') {
       // @test Newcommand Simple
-      cs = cs.substr(1);
+      cs = cs.substring(1);
     }
     if (!cs.match(/^(.|[a-z]+)$/i)) {
       // @test Illegal CS
@@ -154,7 +154,8 @@ namespace NewcommandUtil {
         // @test Def ReDef, Def Let, Def Optional Brace
         if (i !== parser.i) {
           // @test Def Let, Def Optional Brace
-          params[n] = parser.string.substr(i, parser.i - i);
+          // parser.i >= i!
+          params[n] = parser.string.substring(i, parser.i);
         }
         c = parser.string.charAt(++parser.i);
         if (!c.match(/^[1-9]$/)) {
@@ -172,7 +173,8 @@ namespace NewcommandUtil {
         // @test Def Double Let, Def ReDef, Def Let
         if (i !== parser.i) {
           // @test Optional Brace Error
-          params[n] = parser.string.substr(i, parser.i - i);
+          // parser.i >= i!
+          params[n] = parser.string.substring(i, parser.i);
         }
         if (params.length > 0) {
           // @test Def Let, Def Optional Brace
@@ -222,13 +224,13 @@ namespace NewcommandUtil {
           i++;
           j -= 2;
         }
-        return parser.string.substr(i, j);
+        return j < 0 ? '' : parser.string.substring(i, i + j);
       } else if (c === '\\') {
         // @test Def Options CS
         parser.i++;
         j++;
         hasBraces = 0;
-        let match = parser.string.substr(parser.i).match(/[a-z]+|./i);
+        let match = parser.string.substring(parser.i).match(/[a-z]+|./i);
         if (match) {
           // @test Def Options CS
           parser.i += match[0].length;
@@ -256,7 +258,7 @@ namespace NewcommandUtil {
    */
   export function MatchParam(parser: TexParser, param: string): number {
     // @test Def Let, Def Optional Brace, Def Options CS
-    if (parser.string.substr(parser.i, param.length) !== param) {
+    if (parser.string.substring(parser.i, parser.i + param.length) !== param) {
       // @test Def Let, Def Options CS
       return 0;
     }
@@ -281,7 +283,7 @@ namespace NewcommandUtil {
   export function addDelimiter(parser: TexParser, cs: string, char: string, attr: Attributes) {
     const handlers = parser.configuration.handlers;
     const handler = handlers.retrieve(NEW_DELIMITER) as sm.DelimiterMap;
-    handler.add(cs, new Symbol(cs, char, attr));
+    handler.add(cs, new Token(cs, char, attr));
   }
 
   /**
@@ -290,14 +292,14 @@ namespace NewcommandUtil {
    * @param {string} cs The control sequence of the delimiter.
    * @param {ParseMethod} func The parse method for this macro.
    * @param {Args[]} attr The attributes needed for parsing.
-   * @param {string=} symbol Optionally original symbol for macro, in case it is
+   * @param {string=} token Optionally original token for macro, in case it is
    *     different from the control sequence.
    */
   export function addMacro(parser: TexParser, cs: string, func: ParseMethod, attr: Args[],
-                           symbol: string = '') {
+                           token: string = '') {
     const handlers = parser.configuration.handlers;
     const handler = handlers.retrieve(NEW_COMMAND) as sm.CommandMap;
-    handler.add(cs, new Macro(symbol ? symbol : cs, func, attr));
+    handler.add(cs, new Macro(token ? token : cs, func, attr));
   }
 
 

@@ -91,8 +91,8 @@ export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
   protected findMathPrefixed(node: N, set: Set<N>) {
     let html = this.adaptor.root(this.adaptor.document);
     for (const attr of this.adaptor.allAttributes(html)) {
-      if (attr.name.substr(0, 6) === 'xmlns:' && attr.value === NAMESPACE) {
-        let prefix = attr.name.substr(6);
+      if (attr.name.substring(0, 6) === 'xmlns:' && attr.value === NAMESPACE) {
+        let prefix = attr.name.substring(6);
         for (const math of this.adaptor.tags(node, prefix + ':math')) {
           set.add(math);
         }

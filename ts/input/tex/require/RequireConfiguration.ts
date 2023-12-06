@@ -24,7 +24,7 @@
 
 import {Configuration, ParserConfiguration, ConfigurationHandler} from '../Configuration.js';
 import TexParser from '../TexParser.js';
-import {CommandMap} from '../SymbolMap.js';
+import {CommandMap} from '../TokenMap.js';
 import {ParseMethod} from '../Types.js';
 import TexError from '../TexError.js';
 import {TeX} from '../../tex.js';
@@ -49,7 +49,7 @@ const MJCONFIG = MathJax.config;
 function RegisterExtension(jax: TeX<any, any, any>, name: string) {
   const require = jax.parseOptions.options.require;
   const required = jax.parseOptions.packageData.get('require').required as string[];
-  const extension = name.substr(require.prefix.length);
+  const extension = name.substring(require.prefix.length);
   if (required.indexOf(extension) < 0) {
     required.push(extension);
     //
@@ -96,7 +96,7 @@ function RegisterExtension(jax: TeX<any, any, any>, name: string) {
 function RegisterDependencies(jax: TeX<any, any, any>, names: string[] = []) {
   const prefix = jax.parseOptions.options.require.prefix;
   for (const name of names) {
-    if (name.substr(0, prefix.length) === prefix) {
+    if (name.substring(0, prefix.length) === prefix) {
       RegisterExtension(jax, name);
     }
   }
@@ -111,7 +111,7 @@ function RegisterDependencies(jax: TeX<any, any, any>, names: string[] = []) {
 export function RequireLoad(parser: TexParser, name: string) {
   const options = parser.options.require;
   const allow = options.allow;
-  const extension = (name.substr(0, 1) === '[' ? '' : options.prefix) + name;
+  const extension = (name.substring(0, 1) === '[' ? '' : options.prefix) + name;
   const allowed = (allow.hasOwnProperty(extension) ? allow[extension] :
                    allow.hasOwnProperty(name) ? allow[name] : options.defaultAllow);
   if (!allowed) {

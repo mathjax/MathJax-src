@@ -22,7 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {CommandMap, MacroMap} from '../SymbolMap.js';
+import {CommandMap, MacroMap} from '../TokenMap.js';
 import BraketMethods from './BraketMethods.js';
 
 

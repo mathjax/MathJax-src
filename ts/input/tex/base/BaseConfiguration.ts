@@ -27,7 +27,7 @@ import {MapHandler} from '../MapHandler.js';
 import TexError from '../TexError.js';
 import NodeUtil from '../NodeUtil.js';
 import TexParser from '../TexParser.js';
-import {CharacterMap} from '../SymbolMap.js';
+import {CharacterMap} from '../TokenMap.js';
 import * as bitem from './BaseItems.js';
 import {AbstractTags} from '../Tags.js';
 import './BaseMappings.js';
@@ -58,11 +58,11 @@ export function Other(parser: TexParser, char: string) {
     {mathvariant: parser.stack.env['font']} : {};
   const remap = (MapHandler.getMap('remap') as CharacterMap).lookup(char);
   const range = getRange(char);
-  const type = (range ? range[3] : 'mo');
+  const type = range[3]
   // @test Other
   // @test Other Remap
   let mo = parser.create('token', type, def, (remap ? remap.char : char));
-  const variant = (range?.[4] ||
+  const variant = (range[4] ||
                    (ParseUtil.isLatinOrGreekChar(char) ? parser.configuration.mathStyle(char, true) : ''));
   if (variant) {
     mo.attributes.set('mathvariant', variant);

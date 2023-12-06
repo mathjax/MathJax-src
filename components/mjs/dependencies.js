@@ -63,7 +63,7 @@ export const paths = {
 };
 
 const allPackages = Array.from(Object.keys(dependencies))
-      .filter(name => name.substr(0,5) === '[tex]' &&
+      .filter(name => name.substring(0,5) === '[tex]' &&
               name !== '[tex]/autoload' &&
               name !== '[tex]/colorv2' &&
               name !== '[tex]/all-packages');

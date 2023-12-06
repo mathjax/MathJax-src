@@ -1,5 +1,5 @@
 import {Configuration} from '../Configuration.js';
-import {EnvironmentMap, MacroMap} from '../SymbolMap.js';
+import {EnvironmentMap, MacroMap} from '../TokenMap.js';
 import ParseUtil from '../ParseUtil.js';
 import BaseMethods from '../base/BaseMethods.js';
 import TexParser from '../TexParser.js';
@@ -175,7 +175,8 @@ export const CasesMethods = {
     //
     //  Process the second column as text and continue parsing from there,
     //
-    const text = tex.substr(parser.i, i - parser.i).replace(/^\s*/, '');
+    // i >= parser.i
+    const text = tex.substring(parser.i, i).replace(/^\s*/, '');
     parser.PushAll(ParseUtil.internalMath(parser, text, 0));
     parser.i = i;
   }

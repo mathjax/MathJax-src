@@ -462,15 +462,17 @@ export function CommonScriptbaseMixin<
      */
     public getBaseCore(): WW {
       let core = this.getSemanticBase() || this.childNodes[0];
+      let node = core?.node;
       while (core &&
              ((core.childNodes.length === 1 &&
-               (core.node.isKind('mrow') || core.node.isKind('TeXAtom') ||
-                core.node.isKind('mstyle') || core.node.isKind('mpadded') ||
-                core.node.isKind('mphantom') || core.node.isKind('semantics'))) ||
-              (core.node.isKind('munderover') &&
+               (node.isKind('mrow') || node.isKind('TeXAtom') ||
+                node.isKind('mstyle') || (node.isKind('mpadded') && !node.getProperty('vbox')) ||
+                node.isKind('mphantom') || node.isKind('semantics'))) ||
+              (node.isKind('munderover') &&
                (core as any as CommonMunderover<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).isMathAccent))) {
         this.setBaseAccentsFor(core);
         core = core.childNodes[0];
+        node = core?.node;
       }
       if (!core) {
         this.baseHasAccentOver = this.baseHasAccentUnder = false;

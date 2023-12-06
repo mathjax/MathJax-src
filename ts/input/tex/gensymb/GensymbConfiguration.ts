@@ -23,18 +23,18 @@
  */
 
 import {Configuration} from '../Configuration.js';
-import {Symbol} from '../Symbol.js';
+import {Token} from '../Token.js';
 import {TexConstant} from '../TexConstants.js';
-import {CharacterMap} from '../SymbolMap.js';
+import {CharacterMap} from '../TokenMap.js';
 import TexParser from '../TexParser.js';
 
 
 /**
  * Handle characters that are known units.
  * @param {TexParser} parser The current tex parser.
- * @param {Symbol} mchar The parsed symbol.
+ * @param {Token} mchar The parsed token.
  */
-function mathcharUnit(parser: TexParser, mchar: Symbol) {
+function mathcharUnit(parser: TexParser, mchar: Token) {
   const def = mchar.attributes || {};
   def.mathvariant = TexConstant.Variant.NORMAL;
   def.class = 'MathML-Unit';

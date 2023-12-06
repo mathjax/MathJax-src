@@ -64,6 +64,7 @@ export class MmlMpadded extends AbstractMmlLayoutNode {
     if (!this.getProperty('vbox')) {
       return super.setTeXclass(prev);
     }
+    this.getPrevClass(prev);
     this.texClass = TEXCLASS.ORD;
     this.childNodes[0].setTeXclass(null);
     return this;

@@ -818,7 +818,7 @@ export class CommonWrapper<
     if (!this.node.isToken) return;
     const attributes = this.node.attributes;
     let variant = attributes.get('mathvariant') as string;
-    if (attributes.getExplicit('mathvariant')) {
+    if (attributes.hasExplicit('mathvariant')) {
       if (!this.font.getVariant(variant)) {
         console.warn(`Invalid variant: ${variant}`);
         variant = 'normal';
@@ -890,7 +890,7 @@ export class CommonWrapper<
     //
     // If there is a fontsize and no mathsize attribute, is that
     //
-    if (fontsize && !attributes.getExplicit('mathsize')) {
+    if (fontsize && !attributes.hasExplicit('mathsize')) {
       mathsize = fontsize;
     }
     //
@@ -1040,10 +1040,10 @@ export class CommonWrapper<
   }
 
   /**
-   * @param {DIRECTION} direction  The direction to stretch this node
-   * @return {boolean}             Whether the node can stretch in that direction
+   * @param {string} direction  The direction to stretch this node
+   * @return {boolean}          Whether the node can stretch in that direction
    */
-  public canStretch(direction: DIRECTION): boolean {
+  public canStretch(direction: string): boolean {
     this.stretch = NOSTRETCH as DD;
     if (this.node.isEmbellished) {
       let core = this.core();

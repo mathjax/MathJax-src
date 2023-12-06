@@ -22,7 +22,7 @@
  */
 
 import ParseMethods from '../ParseMethods.js';
-import {CommandMap, EnvironmentMap, DelimiterMap} from '../SymbolMap.js';
+import {CommandMap, EnvironmentMap, DelimiterMap} from '../TokenMap.js';
 import {TexConstant} from '../TexConstants.js';
 
 import {MathtoolsMethods} from './MathtoolsMethods.js';

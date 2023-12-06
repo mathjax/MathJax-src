@@ -22,7 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Symbol} from './Symbol.js';
+import {Token} from './Token.js';
 import TexParser from './TexParser.js';
 import NodeUtil from './NodeUtil.js';
 import {TexConstant} from './TexConstants.js';
@@ -43,7 +43,7 @@ namespace ParseMethods {
     const def = ParseUtil.getFontDef(parser);
     const env = parser.stack.env;
     if (env.multiLetterIdentifiers && env.font !== '') {
-      c = parser.string.substr(parser.i - 1).match(env.multiLetterIdentifiers as any as RegExp)?.[0] || c;
+      c = parser.string.substring(parser.i - 1).match(env.multiLetterIdentifiers as any as RegExp)?.[0] || c;
       parser.i += c.length - 1;
       if (def.mathvariant === MATHVARIANT.NORMAL && env.noAutoOP && c.length > 1) {
         def.autoOP = false;
@@ -98,9 +98,9 @@ namespace ParseMethods {
   /**
    * Handle lower-case Greek (as an mi).
    * @param {TexParser} parser The current tex parser.
-   * @param {Symbol} mchar The parsed symbol.
+   * @param {Token} mchar The parsed token.
    */
-  export function lcGreek(parser: TexParser, mchar: Symbol) {
+  export function lcGreek(parser: TexParser, mchar: Token) {
     const def = {mathvariant: parser.configuration.mathStyle(mchar.char) || MATHVARIANT.ITALIC};
     // @test Greek
     const node = parser.create('token', 'mi', def, mchar.char);
@@ -110,9 +110,9 @@ namespace ParseMethods {
   /**
    * Handle mathcharupper-case Greek in current family.
    * @param {TexParser} parser The current tex parser.
-   * @param {Symbol} mchar The parsed symbol.
+   * @param {Token} mchar The parsed token.
    */
-  export function ucGreek(parser: TexParser, mchar: Symbol) {
+  export function ucGreek(parser: TexParser, mchar: Token) {
     const def = {mathvariant: parser.stack.env['font'] ||
                  parser.configuration.mathStyle(mchar.char, true) ||
                  MATHVARIANT.NORMAL};
@@ -124,9 +124,9 @@ namespace ParseMethods {
   /**
    * Handle normal mathchar (as an mi).
    * @param {TexParser} parser The current tex parser.
-   * @param {Symbol} mchar The parsed symbol.
+   * @param {Token} mchar The parsed token.
    */
-  export function mathchar0mi(parser: TexParser, mchar: Symbol) {
+  export function mathchar0mi(parser: TexParser, mchar: Token) {
     const def = mchar.attributes || {mathvariant: MATHVARIANT.ITALIC};
     const node = parser.create('token', 'mi', def, mchar.char);
     parser.Push(node);
@@ -135,9 +135,9 @@ namespace ParseMethods {
   /**
    * Handle normal mathchar (as an mo).
    * @param {TexParser} parser The current tex parser.
-   * @param {Symbol} mchar The parsed symbol.
+   * @param {Token} mchar The parsed token.
    */
-  export function mathchar0mo(parser: TexParser, mchar: Symbol) {
+  export function mathchar0mo(parser: TexParser, mchar: Token) {
     const def = mchar.attributes || {};
     def['stretchy'] = false;
     // @test Large Set
@@ -151,9 +151,9 @@ namespace ParseMethods {
   /**
    * Handle mathchar in current family.
    * @param {TexParser} parser The current tex parser.
-   * @param {Symbol} mchar The parsed symbol.
+   * @param {Token} mchar The parsed token.
    */
-  export function mathchar7(parser: TexParser, mchar: Symbol) {
+  export function mathchar7(parser: TexParser, mchar: Token) {
     const def = mchar.attributes || {mathvariant: MATHVARIANT.NORMAL};
     if (parser.stack.env['font']) {
       // @test MathChar7 Single Font
@@ -167,9 +167,9 @@ namespace ParseMethods {
   /**
    * Handle delimiter.
    * @param {TexParser} parser The current tex parser.
-   * @param {Symbol} delim The parsed delimiter symbol.
+   * @param {Token} delim The parsed delimiter token.
    */
-  export function delimiter(parser: TexParser, delim: Symbol) {
+  export function delimiter(parser: TexParser, delim: Token) {
     let def = delim.attributes || {};
     // @test Fenced2, Delimiter (AMS)
     def = Object.assign({fence: false, stretchy: false}, def);

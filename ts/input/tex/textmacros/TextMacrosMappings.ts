@@ -22,7 +22,7 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {MacroMap, CommandMap} from '../SymbolMap.js';
+import {MacroMap, CommandMap} from '../TokenMap.js';
 import {TexConstant} from '../TexConstants.js';
 import {TextMacrosMethods} from './TextMacrosMethods.js';
 import {MATHSPACE} from '../../../util/lengths.js';

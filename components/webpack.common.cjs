@@ -38,19 +38,6 @@ function quoteRE(string) {
   return string.replace(/([\\.{}[\]()?*^$])/g, '\\$1');
 }
 
-/**
- * @param {object} resource  The module resource object from webpack
- * Wreturn {string}  The full path to the module
- */
-function fullPath(resource) {
-  const file = resource.request ?
-        (resource.request.charAt(0) === '.' ?
-         path.resolve(resource.path, resource.request) :
-         resource.request) :
-        resource.path;
-  return file.charAt(0) === '/' ? file : require.resolve(file);
-}
-
 /****************************************************************/
 
 /**
@@ -67,6 +54,7 @@ function fullPath(resource) {
 const PLUGINS = function (js, dir, target, font, jax, name) {
   //
   // Replace a11y/util and components/mjs/root with the webpack versions
+  //   and map mathjax-full/js to mathjax-full/${target}
   //
   const plugins = [
     new webpack.NormalModuleReplacementPlugin(
@@ -76,6 +64,12 @@ const PLUGINS = function (js, dir, target, font, jax, name) {
     new webpack.NormalModuleReplacementPlugin(
       /mjs\/components\/mjs\/root\.js/,
       '../../../components/root-pack.js'
+    ),
+    new webpack.NormalModuleReplacementPlugin(
+      /mathjax-full\/js\//,
+      function (resource) {
+        resource.request = resource.request.replace(/mathjax-full\/js\//, `mathjax-full/${target}/`);
+      }
     )
   ];
 
@@ -144,6 +138,12 @@ const RESOLVE = function (js, dir, target, libs) {
                      [mjRE, path.join(root, lib) + path.sep]));
 
   //
+  // Function to get full paths using the proper package.json file get the
+  // pseudo-package includes to be correct.
+  //
+  const {fullPath} = require(`./${target}/fullpath.cjs`);
+
+  //
   // Function to replace imported files by ones in the specified component lib directories.
   //
   const replaceLibs = (resource) => {
@@ -155,7 +155,7 @@ const RESOLVE = function (js, dir, target, libs) {
     for (const [re, lib] of libREs) {
       const match = request.match(re);
       if (match) {
-        const file = lib + request.substr(match[0].length);
+        const file = lib + request.substring(match[0].length);
         if (fs.existsSync(file)) {
           return file;
         }
@@ -216,7 +216,7 @@ const PACKAGE = function (options) {
   let {name, js, target = 'mjs', bundle = 'bundle', libs = [], dir, dist = '', font = true, jax = ''} = options;
   dir = dir.replace(/\/$/, '');
   if (!js) {
-    js = path.relative(dir, path.resolve(DIRNAME, '..', target));
+    js = path.relative(process.cwd(), path.resolve(DIRNAME, '..', target));
   }
   const distDir = dist ? path.resolve(dir, dist) :
                          path.resolve(js, '..', bundle, path.dirname(name));

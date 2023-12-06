@@ -144,7 +144,7 @@ export class MmlMunderover extends AbstractMmlBaseNode {
   protected setInheritedAccent(n: number, accent: string, display: boolean, level: number,
                                prime: boolean, force: boolean) {
     let node = this.childNodes[n];
-    if (this.attributes.getExplicit(accent) == null && node.isEmbellished) {
+    if (!this.attributes.hasExplicit(accent) && node.isEmbellished) {
       let value = node.coreMO().attributes.get('accent');
       this.attributes.setInherited(accent, value);
       if (value !== this.attributes.getDefault(accent)) {

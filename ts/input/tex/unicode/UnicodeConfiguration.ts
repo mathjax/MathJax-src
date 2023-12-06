@@ -26,7 +26,7 @@ import {Configuration} from '../Configuration.js';
 import {EnvList} from '../StackItem.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
-import {CommandMap} from '../SymbolMap.js';
+import {CommandMap} from '../TokenMap.js';
 import {ParseMethod} from '../Types.js';
 import ParseUtil from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
@@ -46,7 +46,7 @@ let UnicodeCache: {[key: number]: [number, number, string, number]} = {};
 UnicodeMethods.Unicode = function(parser: TexParser, name: string) {
   let HD = parser.GetBrackets(name);
   let HDsplit = null;
-  let font = null;
+  let font = '';
   if (HD) {
     if (HD.replace(/ /g, '').
         match(/^(\d+(\.\d*)?|\.\d+),(\d+(\.\d*)?|\.\d+)$/)) {
@@ -55,6 +55,9 @@ UnicodeMethods.Unicode = function(parser: TexParser, name: string) {
     } else {
       font = HD;
     }
+  }
+  if (font.match(/;/)) {
+    throw new TexError('BadFont', 'Font name for %1 can\'t contain semicolons',  parser.currentCS);
   }
   let n = ParseUtil.trimSpaces(parser.GetArgument(name)).replace(/^0x/, 'x');
   if (!n.match(/^(x[0-9A-Fa-f]+|[0-9]+)$/)) {
@@ -103,7 +106,7 @@ UnicodeMethods.RawUnicode = function (parser: TexParser, name: string) {
                        'Argument to %1 must a hexadecimal number with 1 to 6 digits', parser.currentCS);
   }
   const n = parseInt(hex, 16);
-  parser.string = String.fromCodePoint(n) + parser.string.substr(parser.i);
+  parser.string = String.fromCodePoint(n) + parser.string.substring(parser.i);
   parser.i = 0;
 }
 
@@ -117,7 +120,7 @@ UnicodeMethods.Char = function (parser: TexParser, _name: string) {
   let match;
   let next = parser.GetNext();
   let c = '';
-  const text = parser.string.substr(parser.i);
+  const text = parser.string.substring(parser.i);
   if (next === '\'') {
     match = text.match(/^'(?:([0-7]{1,7}) ?|(\\\S)|(.))/u);
     if (match) {

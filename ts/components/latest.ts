@@ -174,7 +174,7 @@ function checkScript(script: HTMLScriptElement): ScriptData | null {
     const cdn = CDN.get(server);
     const url = cdn.base;
     const src = script.src;
-    if (src && src.substr(0, url.length) === url && src.match(/\/latest\.js(\?|$)/)) {
+    if (src && src.substring(0, url.length) === url && src.match(/\/latest\.js(\?|$)/)) {
       return scriptData(script, cdn);
     }
   }

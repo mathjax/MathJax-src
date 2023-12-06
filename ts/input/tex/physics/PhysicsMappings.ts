@@ -22,7 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {EnvironmentMap, CommandMap, MacroMap, CharacterMap} from '../SymbolMap.js';
+import {EnvironmentMap, CommandMap, MacroMap, CharacterMap} from '../TokenMap.js';
 import PhysicsMethods from './PhysicsMethods.js';
 import {TexConstant} from '../TexConstants.js';
 import ParseMethods from '../ParseMethods.js';

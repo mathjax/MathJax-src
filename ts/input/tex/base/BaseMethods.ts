@@ -24,7 +24,7 @@
 
 import * as sitem from './BaseItems.js';
 import {StackItem, EnvList} from '../StackItem.js';
-import {Macro} from '../Symbol.js';
+import {Macro} from '../Token.js';
 import {ParseMethod} from '../Types.js';
 import NodeUtil from '../NodeUtil.js';
 import TexError from '../TexError.js';
@@ -133,8 +133,8 @@ BaseMethods.Space = function(_parser: TexParser, _c: string) {};
 BaseMethods.Superscript = function(parser: TexParser, _c: string) {
   if (parser.GetNext().match(/\d/)) {
     // don't treat numbers as a unit
-    parser.string = parser.string.substr(0, parser.i + 1) +
-      ' ' + parser.string.substr(parser.i + 1);
+    parser.string = parser.string.substring(0, parser.i + 1) +
+      ' ' + parser.string.substring(parser.i + 1);
   }
   let primes: MmlNode;
   let base: MmlNode | void;
@@ -193,8 +193,8 @@ BaseMethods.Subscript = function(parser: TexParser, _c: string) {
   if (parser.GetNext().match(/\d/)) {
     // don't treat numbers as a unit
     parser.string =
-      parser.string.substr(0, parser.i + 1) + ' ' +
-      parser.string.substr(parser.i + 1);
+      parser.string.substring(0, parser.i + 1) + ' ' +
+      parser.string.substring(parser.i + 1);
   }
   let primes, base;
   const top = parser.stack.Top();
@@ -432,7 +432,7 @@ BaseMethods.Linebreak = function (parser: TexParser, _name: string, linebreak: s
  */
 BaseMethods.LeftRight = function(parser: TexParser, name: string) {
   // @test Fenced, Fenced3
-  const first = name.substr(1);
+  const first = name.substring(1);
   parser.Push(parser.itemFactory.create(first, parser.GetDelimiter(name), parser.stack.env.color));
 };
 
@@ -445,7 +445,7 @@ BaseMethods.LeftRight = function(parser: TexParser, name: string) {
 BaseMethods.NamedFn = function(parser: TexParser, name: string, id: string) {
   // @test Named Function
   if (!id) {
-    id = name.substr(1);
+    id = name.substring(1);
   }
   const mml = parser.create('token', 'mi', {texClass: TEXCLASS.OP}, id);
   parser.Push(parser.itemFactory.create('fn', mml));
@@ -461,7 +461,7 @@ BaseMethods.NamedFn = function(parser: TexParser, name: string, id: string) {
 BaseMethods.NamedOp = function(parser: TexParser, name: string, id: string) {
   // @test Limit
   if (!id) {
-    id = name.substr(1);
+    id = name.substring(1);
   }
   id = id.replace(/&thinsp;/, '\u2006');
   const mml = parser.create('token', 'mo', {
@@ -644,7 +644,7 @@ BaseMethods.MoveRoot = function(parser: TexParser, name: string, id: string) {
     throw new TexError('IntegerArg', 'The argument to %1 must be an integer', parser.currentCS);
   }
   n = (parseInt(n, 10) / 15) + 'em';
-  if (n.substr(0, 1) !== '-') {
+  if (n.substring(0, 1) !== '-') {
     n = '+' + n;
   }
   parser.stack.global[id] = n;
@@ -917,7 +917,7 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
       def[match[1]] = value;
       keep.push(match[1]);
     }
-    attr = attr.substr(match[0].length);
+    attr = attr.substring(match[0].length);
   }
   if (keep.length) {
     def['mjx-keep-attrs'] = keep.join(' ');
@@ -1020,7 +1020,7 @@ BaseMethods.RaiseLower = function(parser: TexParser, name: string) {
   if (h.charAt(0) === '-') {
     // @test Raise Negative, Lower Negative
     h = h.slice(1);
-    name = name.substr(1) === 'raise' ? '\\lower' : '\\raise';
+    name = name.substring(1) === 'raise' ? '\\lower' : '\\raise';
   }
   if (name === '\\lower') {
     // @test Raise, Raise Negative
@@ -1118,7 +1118,7 @@ BaseMethods.rule = function(parser: TexParser, name: string) {
     mml = parser.create('node', 'mpadded', [mml], {voffset: v});
     if (v.match(/^\-/)) {
       NodeUtil.setAttribute(mml, 'height', v);
-      NodeUtil.setAttribute(mml, 'depth', '+' + v.substr(1));
+      NodeUtil.setAttribute(mml, 'depth', '+' + v.substring(1));
     } else {
       NodeUtil.setAttribute(mml, 'height', '+' + v);
     }
@@ -1391,7 +1391,7 @@ BaseMethods.Entry = function(parser: TexParser, name: string) {
       //  (multi-letter names don't matter, as we will skip the rest of the
       //   characters in the main loop)
       //
-      const rest = str.substr(i);
+      const rest = str.substring(i);
       if (rest.match(/^((\\cr)[^a-zA-Z]|\\\\)/) || (end && rest.match(end))) {
         m = 0;
       } else {
@@ -1409,7 +1409,8 @@ BaseMethods.Entry = function(parser: TexParser, name: string) {
   //  If not, process the second column as text and continue parsing from there,
   //    (otherwise process the second column as normal, since it is in \text{}
   //
-  const text = str.substr(parser.i, i - parser.i);
+  // i >= parser.i
+  const text = str.substring(parser.i, i);
   if (!text.match(/^\s*\\text[^a-zA-Z]/) || close !== text.replace(/\s+$/, '').length - 1) {
     const internal = ParseUtil.internalMath(parser, ParseUtil.trimSpaces(text), 0);
     parser.PushAll(internal);
@@ -1714,7 +1715,6 @@ BaseMethods.Equation = function (
 ) {
   parser.configuration.mathItem.display = display;
   parser.stack.env.display = display;
-  parser.Push(begin);
   ParseUtil.checkEqnEnv(parser);
   parser.Push(begin);
   return parser.itemFactory.create('equation', numbered).

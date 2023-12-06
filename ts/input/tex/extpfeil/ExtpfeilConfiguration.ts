@@ -25,7 +25,7 @@
 
 import {Configuration, ParserConfiguration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
-import {CommandMap} from '../SymbolMap.js';
+import {CommandMap} from '../TokenMap.js';
 import {ParseMethod} from '../Types.js';
 import {AmsMethods} from '../ams/AmsMethods.js';
 import NewcommandUtil from '../newcommand/NewcommandUtil.js';
@@ -63,7 +63,7 @@ ExtpfeilMethods.NewExtArrow = function(parser: TexParser, name: string) {
       'Third argument to %1 must be a unicode character number',
       name);
   }
-  cs = cs.substr(1);
+  cs = cs.substring(1);
   let spaces = space.split(',');
   NewcommandUtil.addMacro(parser, cs, ExtpfeilMethods.xArrow,
                           [parseInt(chr), parseInt(spaces[0]), parseInt(spaces[1])]);

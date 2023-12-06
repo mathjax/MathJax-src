@@ -344,6 +344,12 @@ export interface DOMAdaptor<N, T, D> {
   insertRules(node: N, rules: string[]): void;
 
   /**
+   * @param {N} node        The stylesheet node whose rules are to be returned
+   * @return {string}       The string version of the stylesheet rules
+   */
+  cssText(node: N): string;
+
+  /**
    * @param {N} node        The HTML node whose font size is to be determined
    * @return {number}       The font size (in pixels) of the node
    */
@@ -655,6 +661,13 @@ export abstract class AbstractDOMAdaptor<N, T, D> implements DOMAdaptor<N, T, D>
    * @override
    */
   public abstract insertRules(node: N, rules: string[]): void;
+
+  /**
+   * @override
+   */
+  public cssText(node: N) {
+    return (this.kind(node) === 'style' ? this.textContent(node) : '');
+  };
 
   /**
    * @override

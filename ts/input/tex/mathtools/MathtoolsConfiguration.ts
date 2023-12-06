@@ -22,7 +22,7 @@
  */
 
 import {Configuration} from '../Configuration.js';
-import {CommandMap} from '../SymbolMap.js';
+import {CommandMap} from '../TokenMap.js';
 import NodeUtil from '../NodeUtil.js';
 import {expandable} from '../../../util/Options.js';
 import {ParserConfiguration} from '../Configuration.js';

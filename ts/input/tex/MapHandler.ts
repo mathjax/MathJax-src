@@ -22,9 +22,8 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {AbstractSymbolMap, SymbolMap} from './SymbolMap.js';
+import {AbstractTokenMap, TokenMap} from './TokenMap.js';
 import {ParseInput, ParseResult, ParseMethod} from './Types.js';
-// import {ParserConfiguration} from './Configuration.js';
 import {PrioritizedList} from '../../util/PrioritizedList.js';
 import {FunctionList} from '../../util/FunctionList.js';
 
@@ -37,26 +36,26 @@ export type FallbackConfig = {[P in HandlerType]?: ParseMethod};
 
 export namespace MapHandler {
 
-  let maps: Map<string, SymbolMap> = new Map();
+  let maps: Map<string, TokenMap> = new Map();
 
   /**
-   * Adds a new symbol map to the map handler. Might overwrite an existing
-   * symbol map of the same name.
+   * Adds a new token map to the map handler. Might overwrite an existing
+   * token map of the same name.
    *
-   * @param {SymbolMap} map Registers a new symbol map.
+   * @param {TokenMap} map Registers a new token map.
    */
-  export let register = function(map: SymbolMap): void {
+  export let register = function(map: TokenMap): void {
     maps.set(map.name, map);
   };
 
 
   /**
-   * Looks up a symbol map if it exists.
+   * Looks up a token map if it exists.
    *
-   * @param {string} name The name of the symbol map.
-   * @return {SymbolMap} The symbol map with the given name or null.
+   * @param {string} name The name of the token map.
+   * @return {TokenMap} The token map with the given name or null.
    */
-  export let getMap = function(name: string): SymbolMap {
+  export let getMap = function(name: string): TokenMap {
     return maps.get(name);
   };
 
@@ -64,16 +63,16 @@ export namespace MapHandler {
 
 
 /**
- * Class of symbol mappings that are active in a configuration.
+ * Class of token mappings that are active in a configuration.
  */
 export class SubHandler {
 
-  private _configuration: PrioritizedList<SymbolMap> = new PrioritizedList<SymbolMap>();
+  private _configuration: PrioritizedList<TokenMap> = new PrioritizedList<TokenMap>();
   private _fallback: FunctionList = new FunctionList();
 
   /**
-   * Adds a list of symbol maps to the handler.
-   * @param {string[]} maps The names of the symbol maps to add.
+   * Adds a list of token maps to the handler.
+   * @param {string[]} maps The names of the token maps to add.
    * @param {ParseMethod} fallback A fallback method.
    * @param {number} priority Optionally a priority.
    */
@@ -93,7 +92,7 @@ export class SubHandler {
   }
 
   /**
-   * Parses the given input with the first applicable symbol map.
+   * Parses the given input with the first applicable token map.
    * @param {ParseInput} input The input for the parser.
    * @return {ParseResult} The output of the parsing function.
    */
@@ -104,32 +103,32 @@ export class SubHandler {
         return result;
       }
     }
-    let [env, symbol] = input;
-    Array.from(this._fallback)[0].item(env, symbol);
+    let [env, token] = input;
+    Array.from(this._fallback)[0].item(env, token);
   }
 
 
   /**
-   * Maps a symbol to its "parse value" if it exists.
+   * Maps a token to its "parse value" if it exists.
    *
-   * @param {string} symbol The symbol to parse.
+   * @param {string} token The token to parse.
    * @return {T} A boolean, Character, or Macro.
    */
-  public lookup<T>(symbol: string): T {
-    let map = this.applicable(symbol) as AbstractSymbolMap<T>;
-    return map ? map.lookup(symbol) : null;
+  public lookup<T>(token: string): T {
+    let map = this.applicable(token) as AbstractTokenMap<T>;
+    return map ? map.lookup(token) : null;
   }
 
 
   /**
-   * Checks if a symbol is contained in one of the symbol mappings of this
+   * Checks if a token is contained in one of the token mappings of this
    * configuration.
    *
-   * @param {string} symbol The symbol to parse.
-   * @return {boolean} True if the symbol is contained in the mapping.
+   * @param {string} token The token to parse.
+   * @return {boolean} True if the token is contained in the mapping.
    */
-  public contains(symbol: string): boolean {
-    return this.applicable(symbol) ? true : false;
+  public contains(token: string): boolean {
+    return this.applicable(token) ? true : false;
   }
 
 
@@ -146,13 +145,13 @@ export class SubHandler {
 
 
   /**
-   * Retrieves the first applicable symbol map in the configuration.
-   * @param {string} symbol The symbol to parse.
-   * @return {SymbolMap} A map that can parse the symbol.
+   * Retrieves the first applicable token map in the configuration.
+   * @param {string} token The token to parse.
+   * @return {TokenMap} A map that can parse the token.
    */
-  public applicable(symbol: string): SymbolMap {
+  public applicable(token: string): TokenMap {
     for (let {item: map} of this._configuration) {
-      if (map.contains(symbol)) {
+      if (map.contains(token)) {
         return map;
       }
     }
@@ -162,10 +161,10 @@ export class SubHandler {
 
   /**
    * Retrieves the map of the given name.
-   * @param {string} name Name of the symbol map.
-   * @return {SymbolMap} The map if it exists.
+   * @param {string} name Name of the token map.
+   * @return {TokenMap} The map if it exists.
    */
-  public retrieve(name: string): SymbolMap {
+  public retrieve(name: string): TokenMap {
     for (let {item: map} of this._configuration) {
       if (map.name === name) {
         return map;
@@ -191,8 +190,8 @@ export class SubHandlers {
   private map = new Map<HandlerType, SubHandler>();
 
   /**
-   * Adds a symbol map to the configuration if it exists.
-   * @param {string} name of the symbol map.
+   * Adds a token map to the configuration if it exists.
+   * @param {string} name of the token map.
    */
   public add(handlers: HandlerConfig, fallbacks: FallbackConfig,
              priority: number = PrioritizedList.DEFAULTPRIORITY): void {
@@ -229,11 +228,11 @@ export class SubHandlers {
 
 
   /**
-   * Retrieves a symbol map of the given name.
-   * @param {string} name Name of the symbol map.
-   * @return {SymbolMap} The map if it exists. O/w null.
+   * Retrieves a token map of the given name.
+   * @param {string} name Name of the token map.
+   * @return {TokenMap} The map if it exists. O/w null.
    */
-  public retrieve(name: string): SymbolMap {
+  public retrieve(name: string): TokenMap {
     for (const handler of this.map.values()) {
       let map = handler.retrieve(name);
       if (map) {

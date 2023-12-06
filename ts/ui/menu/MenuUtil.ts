@@ -2,7 +2,7 @@
  * True when platform is a Mac (so we can enable CMD menu item for zoom trigger)
  */
 export const isMac = (typeof window !== 'undefined' &&
-  window.navigator && window.navigator.platform.substr(0, 3) === 'Mac');
+  window.navigator && window.navigator.platform.substring(0, 3) === 'Mac');
 
 /**
  * @param {string} text   The text to be copied ot the clopboard

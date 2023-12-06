@@ -98,7 +98,7 @@ export class TextParser extends TexParser {
    */
   protected copyLists() {
     const parseOptions = this.texParser.configuration;
-    for (const [name, list] of Object.keys(this.configuration.nodeLists)) {
+    for (const [name, list] of Object.entries(this.configuration.nodeLists)) {
       for (const node of list) {
         parseOptions.addNode(name, node);
       }
@@ -160,7 +160,7 @@ export class TextParser extends TexParser {
       mml = this.create('node', 'TeXAtom', [mml]);  // make sure the math is an ORD
     }
     for (const name of ['mathsize', 'mathcolor']) {
-      if (env[name] && !mml.attributes.getExplicit(name)) {
+      if (env[name] && !mml.attributes.hasExplicit(name)) {
         if (!mml.isToken && !mml.isKind('mstyle')) {
           mml = this.create('node', 'mstyle', [mml]);
         }
@@ -183,7 +183,7 @@ export class TextParser extends TexParser {
     const env = this.stack.env;
     if (!mml.isToken) return;
     for (const name of ['mathsize', 'mathcolor', 'mathvariant']) {
-      if (env[name] && !mml.attributes.getExplicit(name)) {
+      if (env[name] && !mml.attributes.hasExplicit(name)) {
         NodeUtil.setAttribute(mml, name, env[name]);
       }
     }

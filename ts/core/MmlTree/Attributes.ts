@@ -84,6 +84,13 @@ export class Attributes {
   }
 
   /**
+   * @param {string} name   The name of the attribute to remove
+   */
+  public unset(name: string) {
+    delete this.attributes[name];
+  }
+
+  /**
    * @param {string} name  The name of the attribute whose value is to be returned
    * @return {Property}    The value of the named attribute (including inheritance and defaults)
    */
@@ -101,10 +108,28 @@ export class Attributes {
    *                       node (not inherited or defaulted), null otherwise
    */
   public getExplicit(name: string): Property {
-    if (!this.attributes.hasOwnProperty(name)) {
-      return undefined;
+    return (this.hasExplicit(name) ? this.attributes[name] : undefined);
+  }
+
+  /**
+   * @param {string} name  The value of the attribute whose presence is to be checked
+   * @return {boolean}     True if the attribute is explicitly given on this node
+   */
+  public hasExplicit(name: string): boolean {
+    return this.attributes.hasOwnProperty(name);
+  }
+
+  /**
+   * @param {string[]} names   The attribute names to look for.
+   * @return {boolean}         True if one of the names is an explicit attribute, false otherwise
+   */
+  public hasOneOf(names: string[]): boolean {
+    for (const name of names) {
+      if (this.hasExplicit(name)) {
+        return true;
+      }
     }
-    return this.attributes[name];
+    return false;
   }
 
   /**

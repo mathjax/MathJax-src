@@ -79,6 +79,7 @@ export class ColumnParser {
     '<': (state) => state.cend[state.j - 1] = (state.cend[state.j - 1] || '') + this.getBraces(state),
     '@': (state) => this.addAt(state, this.getBraces(state)),
     '!': (state) => this.addBang(state, this.getBraces(state)),
+    '*': (state) => this.repeat(state),
     //
     // Non-standard for math-mode versions
     //
@@ -342,6 +343,22 @@ export class ColumnParser {
       cspace[j] = '.5em';
     }
     cspace[++state.j] = '.5em';
+  }
+
+  /**
+   * Add a *{n}{...} entry
+   *
+   * @param {ColumnState} state   The current state of the parser
+   */
+  public repeat(state: ColumnState) {
+    const num = this.getBraces(state);
+    const cols = this.getBraces(state);
+    const n = parseInt(num);
+    if (String(n) !== num) {
+      throw new TexError('ColArgNotNum', 'First argument to %1 column specifier must be a number', '*');
+    }
+    state.template = new Array(n).fill(cols).join('') + state.template.substring(state.i);
+    state.i = 0;
   }
 
 }

@@ -88,8 +88,8 @@ const optionActions = new Map([
 /**
  * Check for options
  */
-while (dirs[0].substr(0, 2) === '--') {
-  const option = dirs.shift().substr(2);
+while (dirs[0] && dirs[0].substring(0, 2) === '--') {
+  const option = dirs.shift().substring(2);
   if (option === '') {
     break;
   }
@@ -101,9 +101,9 @@ while (dirs[0].substr(0, 2) === '--') {
   action();
 }
 
-//
-// Make sure there is at least one directory
-//
+/**
+ * Make sure there is at least one directory
+ */
 if (dirs.length === 0) {
   dirs.push('.');
 }
@@ -125,11 +125,21 @@ function fileRegExp(name) {
 }
 
 /**
+ * Get and change the current working directory
+ */
+const root = process.cwd();
+process.chdir(path.dirname(path.dirname(__dirname)));
+
+/**
  * Regular expression for the components directory
  */
 const compRE = fileRegExp(path.dirname(__dirname));
-const dirRE = fileRegExp(process.cwd());
+const dirRE = fileRegExp(root);
 
+
+/**
+ * Read and process a configuration file
+ */
 function getConfig(dir) {
   const file = path.join(dir, 'config.json');
   return fs.existsSync(file) ? JSON.parse(String(fs.readFileSync(file))) : null;
@@ -142,7 +152,7 @@ function getConfig(dir) {
  */
 function processList(dirs) {
   for (const dir of dirs) {
-    const fulldir = path.resolve(dir);
+    const fulldir = path.resolve(root, dir);
     const config = getConfig(fulldir);
     processDir(fulldir, buildLib, config);
     processDir(fulldir, copyLib, config);
@@ -184,6 +194,13 @@ function processSubdirs(dir, action, config) {
 }
 
 /**
+ * Run a command on a given directory
+ */
+function run(cmd, dir) {
+  return execSync(cmd + ` '${path.relative('.', dir).replace(/'/g, '\\\'')}'`);
+}
+
+/**
  * Run bin/build if there is a configuration file for it
  *
  * @param {string} dir      The directory to check
@@ -192,17 +209,14 @@ function processSubdirs(dir, action, config) {
 function buildLib(dir, config) {
   if (!config.build || !options.build) return;
   console.info('Building ' + dir.replace(compRE, '').replace(dirRE, '.'));
-  const wd = process.cwd();
   try {
-    process.chdir(dir);
-    const result = execSync(build);
+    const result = run(build, dir);
     if (options.verbose) {
       console.info('    ' + String(result).replace(/\n/g, '\n    '));
     }
   } catch (err) {
     console.info('    ' + err.message);
   }
-  process.chdir(wd);
 }
 
 /**
@@ -214,17 +228,14 @@ function buildLib(dir, config) {
 function webpackLib(dir, config) {
   if (!config.webpack || !options.pack) return;
   console.info('Webpacking ' + dir.replace(compRE, '').replace(dirRE, '.'));
-  const wd = process.cwd();
   try {
-    process.chdir(dir);
-    const result = execSync(pack);
+    const result = run(pack, dir);
     if (options.verbose) {
       console.info('    ' + String(result).replace(/\n/g, '\n    '));
     }
   } catch (err) {
     console.info('    ' + err.message);
   }
-  process.chdir(wd);
 }
 
 /**
@@ -237,8 +248,7 @@ function copyLib(dir, config) {
   if (!config.copy || !options.copy) return;
   console.info('Copying ' + dir.replace(compRE, '').replace(dirRE, '.'));
   try {
-    process.chdir(dir);
-    const result = execSync(copy);
+    const result = run(copy, dir);
     if (options.verbose) {
       console.info('    ' + String(result).replace(/\n/g, '\n    '));
     }

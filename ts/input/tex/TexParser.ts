@@ -33,8 +33,9 @@ import {MmlNode, AbstractMmlNode} from '../../core/MmlTree/MmlNode.js';
 import {ParseInput, ParseResult} from './Types.js';
 import ParseOptions from './ParseOptions.js';
 import {BaseItem, StackItem, EnvList} from './StackItem.js';
-import {Symbol} from './Symbol.js';
+import {Token} from './Token.js';
 import {OptionList} from '../../util/Options.js';
+import { TexConstant } from './TexConstants.js';
 
 
 /**
@@ -69,7 +70,7 @@ export default class TexParser {
   /**
    * A stack to save the string positions when we restart the parser.
    */
-  private saveI: number[] = [0];
+  private saveI: number = 0;
 
   /**
    * @constructor
@@ -141,33 +142,35 @@ export default class TexParser {
    * @return {ParseResult} The output of the parsing function.
    */
   public parse(kind: HandlerType, input: ParseInput): ParseResult {
-    this.saveI.push(this.i);
+    const i = this.saveI;
+    this.saveI = this.i;
     let result = this.configuration.handlers.get(kind).parse(input);
-    this.updateResult(input[1], this.saveI.pop());
+    this.updateResult(input[1], i);
+    this.saveI = i;
     return result;
   }
 
   /**
-   * Maps a symbol to its "parse value" if it exists.
+   * Maps a token to its "parse value" if it exists.
    * @param {HandlerType} kind Configuration name.
-   * @param {string} symbol The symbol to parse.
+   * @param {string} token The token to parse.
    * @return {any} A boolean, Character, or Macro.
    */
-  public lookup(kind: HandlerType, symbol: string): any {
-    return this.configuration.handlers.get(kind).lookup(symbol);
+  public lookup(kind: HandlerType, token: string): any {
+    return this.configuration.handlers.get(kind).lookup(token);
   }
 
 
   /**
-   * Checks if a symbol is contained in one of the symbol mappings of the
+   * Checks if a token is contained in one of the token mappings of the
    * specified kind.
    * @param {HandlerType} kind Configuration name.
-   * @param {string} symbol The symbol to parse.
-   * @return {boolean} True if the symbol is contained in the given types of
-   *     symbol mapping.
+   * @param {string} token The token to parse.
+   * @return {boolean} True if the token is contained in the given types of
+   *     token mapping.
    */
-  public contains(kind: HandlerType, symbol: string): boolean {
-    return this.configuration.handlers.get(kind).contains(symbol);
+  public contains(kind: HandlerType, token: string): boolean {
+    return this.configuration.handlers.get(kind).contains(token);
   }
 
 
@@ -204,8 +207,7 @@ export default class TexParser {
    */
   public Push(arg: StackItem | MmlNode) {
     if (arg instanceof BaseItem) {
-      arg.startI = this.saveI.pop();
-      this.saveI.push(arg.startI);
+      arg.startI = this.saveI;
       arg.stopI = this.i;
       arg.startStr = this.string;
     }
@@ -237,7 +239,7 @@ export default class TexParser {
     }
     let node = this.stack.Top().First;
     this.configuration.popParser();
-    node.attributes.set('latex', this.string);
+    node.attributes.set(TexConstant.Attr.LATEX, this.string);
     return node;
   }
 
@@ -252,8 +254,8 @@ export default class TexParser {
    * @return {string} The corresponding character.
    */
   public convertDelimiter(c: string): string {
-    const symbol = this.lookup('delimiter', c) as Symbol;
-    return symbol ? symbol.char : null;
+    const token = this.lookup('delimiter', c) as Token;
+    return token ? token.char : null;
   }
 
   /**
@@ -539,11 +541,14 @@ export default class TexParser {
     if (!node) {
       return;
     }
-    let existing = node.attributes.get('itemLatex');
+    // TODO: This can probably be removed once processed. But needs more
+    // testing.
+    let existing = node.attributes.get(TexConstant.Attr.LATEXITEM);
     if (existing !== undefined) {
-      node.attributes.set('latex', existing);
+      node.attributes.set(TexConstant.Attr.LATEX, existing);
       return;
     }
+    old = old < this.saveI ? this.saveI : old;
     let str = old !== this.i ? this.string.slice(old, this.i) : input;
     str = str.trim();
     if (!str) {
@@ -553,28 +558,28 @@ export default class TexParser {
       str = '\\' + str;
     }
     // These are the cases to handle sub and superscripts.
-    if (node.attributes.get('latex') === '^' && str !== '^') {
+    if (node.attributes.get(TexConstant.Attr.LATEX) === '^' && str !== '^') {
       if (str === '}') {
         this.composeBraces(node.childNodes[2]);
       } else {
-        node.childNodes[2].attributes.set('latex', str);
+        node.childNodes[2].attributes.set(TexConstant.Attr.LATEX, str);
       }
       if (node.childNodes[1]) {
-        const sub = node.childNodes[1].attributes.get('latex');
+        const sub = node.childNodes[1].attributes.get(TexConstant.Attr.LATEX);
         this.composeLatex(node, `_${sub}^`, 0, 2);
       } else {
         this.composeLatex(node, '^', 0, 2);
       }
       return;
     }
-    if (node.attributes.get('latex') === '_' && str !== '_') {
+    if (node.attributes.get(TexConstant.Attr.LATEX) === '_' && str !== '_') {
       if (str === '}') {
         this.composeBraces(node.childNodes[1]);
       } else {
-        node.childNodes[1].attributes.set('latex', str);
+        node.childNodes[1].attributes.set(TexConstant.Attr.LATEX, str);
       }
       if (node.childNodes[2]) {
-        const sub = node.childNodes[2].attributes.get('latex');
+        const sub = node.childNodes[2].attributes.get(TexConstant.Attr.LATEX);
         this.composeLatex(node, `^${sub}_`, 0, 1);
       } else {
         this.composeLatex(node, '_', 0, 1);
@@ -585,7 +590,7 @@ export default class TexParser {
       this.composeBraces(node);
       return;
     }
-    node.attributes.set('latex', str);
+    node.attributes.set(TexConstant.Attr.LATEX, str);
   }
 
   /**
@@ -598,9 +603,9 @@ export default class TexParser {
    */
   private composeLatex(
     node: MmlNode, comp: string, pos1: number, pos2: number) {
-    const expr = node.childNodes[pos1].attributes.get('latex') + comp +
-      node.childNodes[pos2].attributes.get('latex');
-    node.attributes.set('latex', expr);
+    const expr = node.childNodes[pos1].attributes.get(TexConstant.Attr.LATEX) + comp +
+      node.childNodes[pos2].attributes.get(TexConstant.Attr.LATEX);
+    node.attributes.set(TexConstant.Attr.LATEX, expr);
   }
 
   /**
@@ -611,7 +616,7 @@ export default class TexParser {
   private composeBraces(atom: MmlNode) {
     if (!atom) return;
     let str = this.composeBracedContent(atom);
-    atom.attributes.set('latex', `{${str}}`);
+    atom.attributes.set(TexConstant.Attr.LATEX, `{${str}}`);
   }
 
   /**
@@ -623,7 +628,7 @@ export default class TexParser {
     let children = atom.childNodes[0]?.childNodes;
     let expr = '';
     for (const child of children) {
-      let att = (child.attributes?.get('latex') || '') as string;
+      let att = (child.attributes?.get(TexConstant.Attr.LATEX) || '') as string;
       if (!att) continue;
       expr += (expr && expr.match(/[a-zA-Z]$/) && att.match(/^[a-zA-Z]/)) ? ' ' + att : att;
     }

@@ -27,7 +27,7 @@ import {MathJax as MJGlobal, MathJaxObject as MJObject, MathJaxLibrary,
         MathJaxConfig as MJConfig, combineWithMathJax, combineDefaults} from './global.js';
 import {Package, PackageError, PackageReady, PackageFailed} from './package.js';
 import {FunctionList} from '../util/FunctionList.js';
-import {esRoot} from '#root/root.js';
+import {mjxRoot} from '#root/root.js';
 
 /*
  * The browser document (if any)
@@ -113,7 +113,7 @@ export const PathFilters: {[name: string]: PathFilterFunction} = {
     let match;
     while ((match = data.name.match(/^\[([^\]]*)\]/))) {
       if (!CONFIG.paths.hasOwnProperty(match[1])) break;
-      data.name = CONFIG.paths[match[1]] + data.name.substr(match[0].length);
+      data.name = CONFIG.paths[match[1]] + data.name.substring(match[0].length);
     }
     return true;
   }
@@ -220,7 +220,7 @@ export namespace Loader {
         return (script as HTMLScriptElement).src.replace(/\/[^\/]*$/, '');
       }
     }
-    return esRoot();
+    return mjxRoot();
   }
 
   /**
