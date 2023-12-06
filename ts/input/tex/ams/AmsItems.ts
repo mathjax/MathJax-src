@@ -24,7 +24,7 @@
 
 
 import {ArrayItem, EqnArrayItem} from '../base/BaseItems.js';
-import ParseUtil from '../ParseUtil.js';
+import {ParseUtil} from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import TexError from '../TexError.js';
 import {TexConstant} from '../TexConstants.js';

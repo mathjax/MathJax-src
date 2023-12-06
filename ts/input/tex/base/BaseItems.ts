@@ -31,7 +31,7 @@ import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
-import ParseUtil from '../ParseUtil.js';
+import {ParseUtil} from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import {Property, PropertyList} from '../../../core/Tree/Node.js';
 import StackItemFactory from '../StackItemFactory.js';
@@ -1365,9 +1365,9 @@ export class ArrayItem extends BaseItem {
       }
       const rowspacing = this.getProperty('rowspacing') as number;
       while (rows.length < this.table.length) {
-        rows.push(ParseUtil.Em(rowspacing));
+        rows.push(ParseUtil.em(rowspacing));
       }
-      rows[this.table.length - 1] = ParseUtil.Em(
+      rows[this.table.length - 1] = ParseUtil.em(
         Math.max(0, rowspacing + ParseUtil.dimen2em(spacing)));
       this.arraydef['rowspacing'] = rows.join(' ');
     }

@@ -25,7 +25,7 @@
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
 import ParseOptions from '../ParseOptions.js';
-import ParseUtil from '../ParseUtil.js';
+import {ParseUtil} from '../ParseUtil.js';
 import {StackItem} from '../StackItem.js';
 import {MmlNode, AbstractMmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {EnvList} from '../StackItem.js';

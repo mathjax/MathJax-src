@@ -23,7 +23,7 @@
  */
 
 
-import ParseUtil from '../ParseUtil.js';
+import {ParseUtil} from '../ParseUtil.js';
 import TexParser from '../TexParser.js';
 import {EnvList} from '../StackItem.js';
 import {AbstractTags} from '../Tags.js';

@@ -1,6 +1,6 @@
 import {Configuration} from '../Configuration.js';
 import {EnvironmentMap, MacroMap} from '../TokenMap.js';
-import ParseUtil from '../ParseUtil.js';
+import {ParseUtil} from '../ParseUtil.js';
 import BaseMethods from '../base/BaseMethods.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';

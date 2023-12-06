@@ -25,7 +25,7 @@
 
 import {StackItem} from '../StackItem.js';
 import {ParseMethod} from '../Types.js';
-import ParseUtil from '../ParseUtil.js';
+import {ParseUtil} from '../ParseUtil.js';
 import ParseMethods from '../ParseMethods.js';
 import NodeUtil from '../NodeUtil.js';
 import {TexConstant} from '../TexConstants.js';
@@ -423,7 +423,7 @@ AmsMethods.MultiIntegral = function(parser: TexParser, name: string,
  */
 AmsMethods.xArrow = function(parser: TexParser, name: string,
                              chr: number, l: number, r: number) {
-  let def = {width: '+' + ParseUtil.Em((l + r) / 18), lspace: ParseUtil.Em(l / 18)};
+  let def = {width: '+' + ParseUtil.em((l + r) / 18), lspace: ParseUtil.em(l / 18)};
   let bot = parser.GetBrackets(name);
   let first = parser.ParseArg(name);
   let dstrut = parser.create('node', 'mspace', [], {depth: '.2em'});

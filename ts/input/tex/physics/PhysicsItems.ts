@@ -24,7 +24,7 @@
 
 
 import {CheckType, BaseItem, StackItem} from '../StackItem.js';
-import ParseUtil from '../ParseUtil.js';
+import {ParseUtil} from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import TexParser from '../TexParser.js';
 import {AbstractMmlTokenNode} from '../../../core/MmlTree/MmlNode.js';

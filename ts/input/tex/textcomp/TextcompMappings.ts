@@ -27,7 +27,7 @@ import {CommandMap} from '../TokenMap.js';
 import {TexConstant} from '../TexConstants.js';
 import {TextMacrosMethods} from '../textmacros/TextMacrosMethods.js';
 import TexParser from '../TexParser.js';
-import ParseUtil from '../ParseUtil.js';
+import {ParseUtil} from '../ParseUtil.js';
 import {TextParser} from '../textmacros/TextParser.js';
 
 
