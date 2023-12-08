@@ -33,13 +33,9 @@ import {OptionList, expandable} from '../util/Options.js';
 import {Sre} from './sre.js';
 import { buildSpeech, setAria } from './speech/SpeechUtil.js';
 
-/*==========================================================================*/
+import { GeneratorPool } from './speech/GeneratorPool.js';
 
-/**
- *  The current speech setting for Sre
- */
-let currentLocale = 'none';
-let currentBraille = 'none';
+/*==========================================================================*/
 
 /**
  * Generic constructor for Mixins
@@ -109,14 +105,9 @@ export class enrichVisitor<N, T, D> extends SerializedMmlVisitor {
 export interface EnrichedMathItem<N, T, D> extends MathItem<N, T, D> {
 
   /**
-   * The speech generator for this math item.
+   * The speech generators for this math item.
    */
-  speechGenerator: Sre.speechGenerator;
-
-  /**
-   * The braille generator for this math item.
-   */
-  brailleGenerator: Sre.speechGenerator;
+  generatorPool: GeneratorPool;
 
   /**
    * @param {MathDocument} document  The document where enrichment is occurring
@@ -154,12 +145,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
     /**
      * @override
      */
-    public speechGenerator = Sre.getSpeechGenerator('Tree');
-
-    /**
-     * @override
-     */
-    public brailleGenerator = Sre.getSpeechGenerator('Tree');
+    public generatorPool = new GeneratorPool();
 
     /**
      * @param {any} node  The node to be serialized
@@ -191,22 +177,20 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
       if (this.state() >= STATE.ENRICHED) return;
       if (!this.isEscaped && (document.options.enableEnrichment || force)) {
         // TODO: Sort out the loading of the locales better
-        if (document.options.enableSpeech) {
-          console.log(document.options.sre.locale);
-          if (document.options.sre.locale !== currentLocale) {
-            currentLocale = document.options.sre.locale;
-            // TODO: Sort out the loading of the locales better
-            mathjax.retryAfter(
-              Sre.setupEngine({locale: document.options.sre.locale})
-                .then(() => Sre.sreReady()));
-          }
-          if (document.options.sre.braille !== currentBraille) {
-            currentBraille = document.options.sre.braille;
-            mathjax.retryAfter(
-              Sre.setupEngine({locale: document.options.sre.braille})
-                .then(() => Sre.sreReady()));
-          }
-        }
+        this.generatorPool.init(document.options);
+          // if (document.options.sre.locale !== currentLocale) {
+          //   currentLocale = document.options.sre.locale;
+          //   // TODO: Sort out the loading of the locales better
+          //   mathjax.retryAfter(
+          //     Sre.setupEngine({locale: document.options.sre.locale})
+          //       .then(() => Sre.sreReady()));
+          // }
+          // if (document.options.sre.braille !== currentBraille) {
+          //   currentBraille = document.options.sre.braille;
+          //   mathjax.retryAfter(
+          //     Sre.setupEngine({locale: document.options.sre.braille})
+          //       .then(() => Sre.sreReady()));
+          // }
         const math = new document.options.MathItem('', MmlJax);
         try {
           let mml;
@@ -217,24 +201,13 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
           }
           Sre.setupEngine(document.options.sre);
           const enriched = Sre.toEnriched(mml);
-          this.speechGenerator.setOptions(Object.assign(
-            {}, document.options.sre, {
-              modality: 'speech',
-              markup: 'ssml',
-              automark: true,
-            }));
-          this.brailleGenerator.setOptions({
-            locale: document.options.sre.braille,
-            domain: 'default',
-            style: 'default',
-            modality: 'braille',
-            markup: 'none',
-          });
-          this.outputData.speech = buildSpeech(
-            this.speechGenerator.getSpeech(enriched, enriched),
-            document.options.sre.locale,
-            document.options.sre.rate)[0];
-          this.outputData.braille = this.brailleGenerator.getSpeech(enriched, enriched);
+          if (document.options.enableSpeech) {
+            this.outputData.speech = buildSpeech(
+              this.generatorPool.speechGenerator.getSpeech(enriched, enriched),
+              document.options.sre.locale,
+              document.options.sre.rate)[0];
+            this.outputData.braille = this.generatorPool.brailleGenerator.getSpeech(enriched, enriched);
+          }
           this.inputData.enrichedMml = math.math = this.serializeMml(enriched);
           math.display = this.display;
           math.compile(document);

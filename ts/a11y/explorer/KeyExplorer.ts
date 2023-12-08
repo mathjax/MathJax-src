@@ -262,7 +262,9 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   public summary(node: HTMLElement): HTMLElement {
     // const summary = this.item.speechGenerator.summary(node);
     // const speechGenerator = Sre.getSpeechGenerator('Summary');
-    // console.log(speechGenerator);
+    console.log(this.item.generatorPool.speechGenerator);
+    console.log(this.item.generatorPool.brailleGenerator);
+    console.log(this.item.generatorPool.summaryGenerator);
     // console.log(this.item);
     // console.log(this.item.inputData.originalMml);
     // console.log(speechGenerator.getSpeech(this.item.inputData.enrichedMml, this.item.inputData.enrichedMml));
@@ -270,21 +272,21 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   }
 
   public nextRuleSet(node: HTMLElement): HTMLElement {
-    this.item.speechGenerator.nextRules();
+    this.item.generatorPool.speechGenerator.nextRules();
     this.recomputeSpeech();
     this.refocus(node);
     return node;
   }
 
   public nextStyle(node: HTMLElement): HTMLElement {
-    this.item.speechGenerator.nextStyle(node.getAttribute('data-semantic-id'));
+    this.item.generatorPool.speechGenerator.nextStyle(node.getAttribute('data-semantic-id'));
     this.recomputeSpeech();
     this.refocus(node);
     return node;
   }
 
   private recomputeSpeech() {
-    const speech = this.item.speechGenerator.getSpeech(this.item.typesetRoot, this.item.typesetRoot);
+    const speech = this.item.generatorPool.speechGenerator.getSpeech(this.item.typesetRoot, this.item.typesetRoot);
     updateAria(this.item.typesetRoot, this.document.options.sre.locale);
     this.item.outputData.speech = buildSpeech(speech)[0];
     this.item.typesetRoot.setAttribute('aria-label', this.item.outputData.speech);
@@ -372,6 +374,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    * @override
    */
   public Start() {
+    // this.item.generatorPool.update(this.document.options);
     if (this.node.hasAttribute('tabindex')) {
       this.node.removeAttribute('tabindex');
     }
