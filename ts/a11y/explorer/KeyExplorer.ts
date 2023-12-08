@@ -416,7 +416,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     // }
     this.pool.highlight([this.current]);
     this.region.node = this.node;
-    this.region.Update(this.current.getAttribute('data-semantic-speech'));
+    this.region.Update(this.current.getAttribute('aria-label'));
     this.brailleRegion.Update(this.current.getAttribute('aria-braillelabel'));
     this.magnifyRegion.Update(this.current);
     // let options = this.speechGenerator.getOptions();
