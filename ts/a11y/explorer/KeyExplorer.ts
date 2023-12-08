@@ -28,7 +28,7 @@ import type { ExplorerMathItem } from '../explorer.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
 import {ExplorerPool} from './ExplorerPool.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import { buildSpeech, updateAria, honk } from '../SpeechUtil.js';
+import { buildSpeech, updateAria, honk } from '../speech/SpeechUtil.js';
 import {Sre} from '../sre.js';
 
 // import { Walker } from './Walker.js';
@@ -260,8 +260,12 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   ]);
 
   public summary(node: HTMLElement): HTMLElement {
-    this.item.speechGenerator.summary(node);
-    const speechGenerator = Sre.getSpeechGenerator('Summary');
+    // const summary = this.item.speechGenerator.summary(node);
+    // const speechGenerator = Sre.getSpeechGenerator('Summary');
+    // console.log(speechGenerator);
+    // console.log(this.item);
+    // console.log(this.item.inputData.originalMml);
+    // console.log(speechGenerator.getSpeech(this.item.inputData.enrichedMml, this.item.inputData.enrichedMml));
     return node;
   }
 

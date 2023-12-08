@@ -31,7 +31,7 @@ import {MathML} from '../input/mathml.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {OptionList, expandable} from '../util/Options.js';
 import {Sre} from './sre.js';
-import { buildSpeech, setAria } from './SpeechUtil.js';
+import { buildSpeech, setAria } from './speech/SpeechUtil.js';
 
 /*==========================================================================*/
 
@@ -192,6 +192,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
       if (!this.isEscaped && (document.options.enableEnrichment || force)) {
         // TODO: Sort out the loading of the locales better
         if (document.options.enableSpeech) {
+          console.log(document.options.sre.locale);
           if (document.options.sre.locale !== currentLocale) {
             currentLocale = document.options.sre.locale;
             // TODO: Sort out the loading of the locales better

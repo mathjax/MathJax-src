@@ -21,8 +21,8 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {MmlNode} from '../core/MmlTree/MmlNode.js';
-import Sre from './sre.js';
+import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import Sre from '../sre.js';
 
 const ProsodyKeys = [ 'pitch', 'rate', 'volume' ];
 
