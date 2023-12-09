@@ -28,7 +28,7 @@ import type { ExplorerMathItem } from '../explorer.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
 import {ExplorerPool} from './ExplorerPool.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import { buildSpeech, updateAria, honk } from '../speech/SpeechUtil.js';
+import { buildLabel, buildSpeech, updateAria, honk } from '../speech/SpeechUtil.js';
 import {Sre} from '../sre.js';
 
 // import { Walker } from './Walker.js';
@@ -416,7 +416,12 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     // }
     this.pool.highlight([this.current]);
     this.region.node = this.node;
-    this.region.Update(this.current.getAttribute('aria-label'));
+    this.region.Update(
+      buildLabel(
+        this.current.getAttribute('data-semantic-speech'),
+        this.current.getAttribute('data-semantic-prefix'),
+        this.current.getAttribute('data-semantic-postfix')
+      ));
     this.brailleRegion.Update(this.current.getAttribute('aria-braillelabel'));
     this.magnifyRegion.Update(this.current);
     // let options = this.speechGenerator.getOptions();

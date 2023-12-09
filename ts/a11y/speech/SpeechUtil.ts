@@ -164,17 +164,32 @@ function extractProsody(attr: string) {
  */
 function getLabel(node: MmlNode, sep: string = ' ') {
   const attributes = node.attributes;
-  const speech = attributes.getExplicit('data-semantic-speech') as string;
+  return buildLabel(
+    attributes.getExplicit('data-semantic-speech') as string,
+    attributes.getExplicit('data-semantic-prefix') as string,
+    // TODO: check if we need this or if it is automatic by the screen readers.
+    attributes.getExplicit('data-semantic-postfix') as string,
+    sep
+  );
+}
+
+/**
+ * Builds a speech label from input components.
+ *
+ * @param speech The speech string.
+ * @param prefix The prefix expression.
+ * @param postfix The postfix expression.
+ * @param sep The separator string. Defaults to space.
+ */
+export function buildLabel(
+  speech: string, prefix: string, postfix: string, sep: string = ' ') {
   if (!speech) {
     return '';
   }
   const label = [speech];
-  const prefix = attributes.getExplicit('data-semantic-prefix') as string;
   if (prefix) {
     label.unshift(prefix);
   }
-  // TODO: check if we need this or if it is automatic by the screen readers.
-  const postfix = attributes.getExplicit('data-semantic-postfix') as string;
   if (postfix) {
     label.push(postfix);
   }
