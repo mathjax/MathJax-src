@@ -109,16 +109,19 @@ function muReplace([value, unit, length]: [string, string, number]): [string, st
  * Implementation of the keyval function from https://www.ctan.org/pkg/keyval
  * @param {string} text The optional parameter string for a package or
  *     command.
+ * @param {boolean?} l3keys If true, use l3key-style parsing (only remove one set of braces)
  * @return {EnvList} Set of options as key/value pairs.
  */
-function readKeyval(text: string): EnvList {
+function readKeyval(text: string, l3keys: boolean = false): EnvList {
   let options: EnvList = {};
   let rest = text;
   let end, key, val;
+  let dropBrace = true;
   while (rest) {
-    [key, end, rest] = readValue(rest, ['=', ',']);
+    [key, end, rest] = readValue(rest, ['=', ','], l3keys, dropBrace);
+    dropBrace = false;
     if (end === '=') {
-      [val, end, rest] = readValue(rest, [',']);
+      [val, end, rest] = readValue(rest, [','], l3keys);
       val = (val === 'false' || val === 'true') ?
         JSON.parse(val) : val;
       options[key] = val;
@@ -150,10 +153,13 @@ function removeBraces(text: string, count: number): string {
  * string is exhausted.
  * @param {string} text The string to process.
  * @param {string[]} end List of possible end characters.
+ * @param {boolean?} l3keys If true, use l3key-style parsing (only remove one set of braces)
+ * @param {boolean?} dropBrace True if the outermost braces should be dropped
  * @return {[string, string, string]} The collected value, the actual end
  *     character, and the rest of the string still to parse.
  */
-function readValue(text: string, end: string[]): [string, string, string] {
+function readValue(text: string, end: string[],
+                   l3keys: boolean = false, dropBrace: boolean = false): [string, string, string] {
   let length = text.length;
   let braces = 0;
   let value = '';
@@ -165,6 +171,10 @@ function readValue(text: string, end: string[]): [string, string, string] {
   while (index < length) {
     let c = text[index++];
     switch (c) {
+      case '\\':               // Handle control sequences (in particular, \{ and \})
+        value += c + text[index++];
+        startCount = stopCount = false;
+        continue;
       case ' ':                // Ignore spaces.
         break;
       case '{':
@@ -172,9 +182,6 @@ function readValue(text: string, end: string[]): [string, string, string] {
           start++;
         } else {
           stopCount = false;
-          if (start > braces) {   // Some start left braces have been closed.
-            start = braces;
-          }
         }
         braces++;
         break;
@@ -192,7 +199,10 @@ function readValue(text: string, end: string[]): [string, string, string] {
         if (!braces && end.indexOf(c) !== -1) {   // End character reached.
           return [stopCount ? 'true' :            // If Stop count is true we
             // have balanced braces, only.
-            removeBraces(value, start), c, text.slice(index)];
+            removeBraces(value, l3keys ? Math.min(1, start) : start), c, text.slice(index)];
+        }
+        if (start > braces) {   // Some start left braces have been closed.
+          start = braces;
         }
         startCount = false;
         stopCount = false;
@@ -203,7 +213,8 @@ function readValue(text: string, end: string[]): [string, string, string] {
     throw new TexError('ExtraOpenMissingClose',
                        'Extra open brace or missing close brace');
   }
-  return [stopCount ? 'true' : removeBraces(value, start), '', text.slice(index)];
+  return (dropBrace && !stopCount && start) ? ['', '', removeBraces(value, 1)] :
+    [stopCount ? 'true' : removeBraces(value, l3keys ? Math.min(1, start) : start), '', text.slice(index)];
 }
 
 export const ParseUtil = {
@@ -770,12 +781,14 @@ export const ParseUtil = {
    *     given only allowed arguments are returned.
    * @param {boolean?} error If true, raises an exception if not allowed options
    *     are found.
+   * @param {boolean?} l3keys If true, use l3key-style parsing (only remove one set of braces)
    * @return {EnvList} The attribute list.
    */
   keyvalOptions: function(attrib: string,
                           allowed: {[key: string]: number} = null,
-                          error: boolean = false): EnvList {
-    let def: EnvList = readKeyval(attrib);
+                          error: boolean = false,
+                          l3keys: boolean = false): EnvList {
+    let def: EnvList = readKeyval(attrib, l3keys);
     if (allowed) {
       for (let key of Object.keys(def)) {
         if (!allowed.hasOwnProperty(key)) {
