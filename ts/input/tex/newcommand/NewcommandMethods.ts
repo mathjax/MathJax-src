@@ -133,13 +133,9 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
       return;
     }
     macro = (map as sm.CharacterMap).lookup(name) as Token;
-    const newArgs = NewcommandUtil.disassembleToken(cs, macro);
-    const method = (p: TexParser, _cs: string, ...rest: any[]) => {
-      // @test Let Relet, Let Let, Let Circular Macro
-      const symb = NewcommandUtil.assembleToken(rest);
-      return map.parser(p, symb);
-    };
-    NewcommandUtil.addMacro(parser, cs, method, newArgs);
+    // @test Let Relet, Let Let, Let Circular Macro
+    const method = (p: TexParser) => map.parser(p, macro);
+    NewcommandUtil.addMacro(parser, cs, method, [cs, macro.char]);
     return;
   }
   // @test Let Brace Equal, Let Caret
