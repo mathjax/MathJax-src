@@ -105,6 +105,71 @@ function muReplace([value, unit, length]: [string, string, number]): [string, st
   return [em.slice(0, -2), 'em', length];
 }
 
+
+/**
+ * The data needed for checking the value of a key-value pair.
+ */
+export type KeyValueType<T> = {
+  name: string;
+  verify: (value: string) => boolean;
+  convert: (value: string) => T;
+}
+
+/**
+ * A function for creating a key-value type checker
+ */
+export function KeyValueTypeDefinition<T>(
+  name: string,
+  verify: (value: string) => boolean,
+  convert: (value: string) => T,
+) {
+  return {name, verify, convert} as KeyValueType<T>;
+}
+
+/**
+ * Predefined value types that can be used to create the list of allowed types.  E.g.
+ *
+ *  const allowed = {
+ *    compact: KeyValueTypes.boolean,
+ *    direction: KeyValueTypes.oneof('up', 'down'),
+ *    'open-brace': KeyValueType.string
+ *  };
+ *
+ *  ParseUtil.keyvalueOptions(options, allowed, true);
+ */
+export const KeyValueTypes: {[name: string]: KeyValueType<any> | ((data: any) => KeyValueType<any>)} = {
+  boolean: KeyValueTypeDefinition<boolean>(
+    'boolean',
+    (value) => value === 'true' || value === 'false',
+    (value) => value === 'true'
+  ),
+  number: KeyValueTypeDefinition<number>(
+    'number',
+    (value) => !!value.match(/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/),
+    (value) => parseFloat(value)
+  ),
+  integer: KeyValueTypeDefinition<number>(
+    'integer',
+    (value) => !!value.match(/^[-+]?\d+$/),
+    (value) => parseInt(value)
+  ),
+  string: KeyValueTypeDefinition<string>(
+    'string',
+    (_value) => true,
+    (value) => value
+  ),
+  oneof: (...values: string[]) => KeyValueTypeDefinition<string>(
+    'oneof',
+    (value) => values.indexOf(value) >= 0,
+    (value) => value
+  ),
+  dimen: KeyValueTypeDefinition<string>(
+    'dimen',
+    (value) => ParseUtil.matchDimen(value)[0] !== null,
+    (value) => value
+  )
+};
+
 /**
  * Implementation of the keyval function from https://www.ctan.org/pkg/keyval
  * @param {string} text The optional parameter string for a package or
@@ -785,13 +850,25 @@ export const ParseUtil = {
    * @return {EnvList} The attribute list.
    */
   keyvalOptions: function(attrib: string,
-                          allowed: {[key: string]: number} = null,
+                          allowed: {[key: string]: number | KeyValueType<any>} = null,
                           error: boolean = false,
                           l3keys: boolean = false): EnvList {
     let def: EnvList = readKeyval(attrib, l3keys);
     if (allowed) {
       for (let key of Object.keys(def)) {
-        if (!allowed.hasOwnProperty(key)) {
+        if (allowed.hasOwnProperty(key)) {
+          //
+          // If allowed[key] is a type definition, check the key value against that
+          //
+          if (typeof allowed[key] === 'object') {
+            const type = allowed[key] as KeyValueType<any>;
+            const value = String(def[key]);
+            if (!type.verify(value)) {
+              throw new TexError('InvalidValue', 'Value for key \'%1\' is not of the expected type', key);
+            }
+            def[key] = type.convert(value);
+          }
+        } else {
           if (error) {
             throw new TexError('InvalidOption', 'Invalid option: %1', key);
           }
