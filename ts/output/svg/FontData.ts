@@ -21,7 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CharMap, CharOptions, CharDataArray, VariantData, DelimiterData, FontData} from '../common/FontData.js';
+import {OptionList} from '../../util/Options.js';
+import {CharMap, CharOptions, CharDataArray, VariantData, DelimiterData,
+        FontData, FontExtensionData, mergeOptions} from '../common/FontData.js';
 export * from '../common/FontData.js';
 
 export type CharStringMap = {[name: number]: string};
@@ -54,6 +56,15 @@ export interface SvgDelimiterData extends DelimiterData {
 }
 
 
+/**
+ * Includes the data needed for SVG font extensions
+ */
+export interface SvgFontExtensionData<C extends SvgCharOptions, D extends SvgDelimiterData>
+extends FontExtensionData<C, D> {
+  cacheIds: {[variant: string]: string}
+}
+
+
 /****************************************************************************/
 
 /**
@@ -79,6 +90,17 @@ export class SvgFontData extends FontData<SvgCharOptions, SvgVariantData, SvgDel
    */
   public static charOptions(font: SvgCharMap, n: number) {
     return super.charOptions(font, n) as SvgCharOptions;
+  }
+
+  /**
+   * @override
+   */
+  public static addExtension(
+    data: SvgFontExtensionData<SvgCharOptions, SvgDelimiterData>,
+    prefix: string = ''
+  ) {
+    super.addExtension(data, prefix);
+    mergeOptions(this, 'variantCacheIds', data.cacheIds);
   }
 
 }
