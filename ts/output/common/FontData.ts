@@ -866,10 +866,10 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     defaultOptions(this.params, data.parameters || {});
     mergeOptions(this, 'sizeVariants', data.sizeVariants);
     mergeOptions(this, 'stretchVariants', data.stretchVariants);
-    this.defineCssFonts(mergeOptions({cssFonts: {}}, 'cssFonts', data.cssFonts).cssFonts);
-    this.createVariants(mergeOptions({variants: []}, 'variants', data.variants).variants);
+    this.defineCssFonts(mergeOptions({cssFonts: {}}, 'cssFonts', data.cssFonts));
+    this.createVariants(mergeOptions({variants: []}, 'variants', data.variants));
     if (data.delimiters) {
-      this.defineDelimiters(mergeOptions({delimiters: {}}, 'delimiters', data.delimiters).delimiters);
+      this.defineDelimiters(mergeOptions({delimiters: {}}, 'delimiters', data.delimiters));
       this.CLASS.adjustDelimiters(this.delimiters, Object.keys(data.delimiters),
                                   dynamicFont.sizeN, dynamicFont.stretchN);
     }
