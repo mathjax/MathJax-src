@@ -21,7 +21,6 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {OptionList} from '../../util/Options.js';
 import {CharMap, CharOptions, CharDataArray, VariantData, DelimiterData,
         FontData, FontExtensionData, mergeOptions} from '../common/FontData.js';
 export * from '../common/FontData.js';
