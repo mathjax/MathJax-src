@@ -393,6 +393,9 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
       if (state < STATE.ENRICHED) {
         this.processed.clear('enriched');
       }
+      if (state < STATE.ATTACHSPEECH) {
+        this.processed.clear('attach-speech');
+      }
       return this;
     }
 
