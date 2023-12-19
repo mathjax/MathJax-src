@@ -254,24 +254,32 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     ['ArrowUp', (node: HTMLElement) => node.parentElement.closest(nav)],
     ['ArrowLeft', this.prevSibling.bind(this)],
     ['ArrowRight', this.nextSibling.bind(this)],
-    ['>', this.nextRuleSet.bind(this)],
+    ['>', this.nextRules.bind(this)],
     ['<', this.nextStyle.bind(this)],
     ['x', this.summary.bind(this)],
   ]);
 
   public summary(node: HTMLElement): HTMLElement {
-    // const summary = this.item.speechGenerator.summary(node);
-    // const speechGenerator = Sre.getSpeechGenerator('Summary');
-    console.log(this.item.generatorPool.speechGenerator);
-    console.log(this.item.generatorPool.brailleGenerator);
-    console.log(this.item.generatorPool.summaryGenerator);
-    // console.log(this.item);
-    // console.log(this.item.inputData.originalMml);
-    // console.log(speechGenerator.getSpeech(this.item.inputData.enrichedMml, this.item.inputData.enrichedMml));
+    const summary = this.item.generatorPool.summary(node);
+    console.log(summary);
+    console.log(buildLabel(
+        this.current.getAttribute('data-semantic-summary'),
+        this.current.getAttribute('data-semantic-prefix'),
+        this.current.getAttribute('data-semantic-postfix')
+      ));
+    console.log(this.region);
+    this.region.Update(
+      buildLabel(
+        this.current.getAttribute('data-semantic-summary'),
+        this.current.getAttribute('data-semantic-prefix'),
+        this.current.getAttribute('data-semantic-postfix')
+      ));
+    node.setAttribute('aria-label', buildSpeech(summary)[0]);
+    this.refocus(node);
     return node;
   }
 
-  public nextRuleSet(node: HTMLElement): HTMLElement {
+  public nextRules(node: HTMLElement): HTMLElement {
     this.item.generatorPool.speechGenerator.nextRules();
     this.recomputeSpeech();
     this.refocus(node);
@@ -416,13 +424,11 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     // }
     this.pool.highlight([this.current]);
     this.region.node = this.node;
-    this.region.Update(
-      buildLabel(
-        this.current.getAttribute('data-semantic-speech'),
-        this.current.getAttribute('data-semantic-prefix'),
-        this.current.getAttribute('data-semantic-postfix')
-      ));
-    this.brailleRegion.Update(this.current.getAttribute('aria-braillelabel'));
+    this.item.generatorPool.UpdateSpeech(
+      this.current,
+      this.region,
+      this.brailleRegion
+    );
     this.magnifyRegion.Update(this.current);
     // let options = this.speechGenerator.getOptions();
     // This is a necessary in case speech options have changed via keypress
@@ -597,7 +603,5 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     }
     super.Stop();
   }
-
-
 
 }

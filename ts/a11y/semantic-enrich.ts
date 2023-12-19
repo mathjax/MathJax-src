@@ -176,21 +176,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
     public enrich(document: MathDocument<N, T, D>, force: boolean = false) {
       if (this.state() >= STATE.ENRICHED) return;
       if (!this.isEscaped && (document.options.enableEnrichment || force)) {
-        // TODO: Sort out the loading of the locales better
         this.generatorPool.init(document.options);
-          // if (document.options.sre.locale !== currentLocale) {
-          //   currentLocale = document.options.sre.locale;
-          //   // TODO: Sort out the loading of the locales better
-          //   mathjax.retryAfter(
-          //     Sre.setupEngine({locale: document.options.sre.locale})
-          //       .then(() => Sre.sreReady()));
-          // }
-          // if (document.options.sre.braille !== currentBraille) {
-          //   currentBraille = document.options.sre.braille;
-          //   mathjax.retryAfter(
-          //     Sre.setupEngine({locale: document.options.sre.braille})
-          //       .then(() => Sre.sreReady()));
-          // }
         const math = new document.options.MathItem('', MmlJax);
         try {
           let mml;
@@ -201,6 +187,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
           }
           Sre.setupEngine(document.options.sre);
           const enriched = Sre.toEnriched(mml);
+          this.generatorPool.node = enriched;
           if (document.options.enableSpeech) {
             this.outputData.speech = buildSpeech(
               this.generatorPool.speechGenerator.getSpeech(enriched, enriched),

@@ -157,6 +157,13 @@ function extractProsody(attr: string) {
   return [match[1], match[2]];
 }
 
+
+/**
+ *
+ * Speech, labels and aria
+ *
+ */
+
 /**
  * Computes the aria-label from the node.
  * @param {MmlNode} node The Math element.
@@ -222,6 +229,7 @@ export function setAria(node: MmlNode, locale: string) {
   const attributes = node.attributes;
   if (!attributes) return;
   const speech = getLabel(node);
+  console.log(speech);
   if (speech) {
     attributes.set('aria-label', buildSpeech(speech, locale)[0]);
   }
@@ -238,8 +246,8 @@ export function setAria(node: MmlNode, locale: string) {
  * Updates Aria labels.
  * @param {MmlNode} node The root node to search from.
  */
-export function updateAria(node: HTMLElement, locale: string) {
-  let speech = node.getAttribute('data-semantic-speech');
+export function updateAria(node: HTMLElement, locale: string) { 
+ let speech = node.getAttribute('data-semantic-speech');
   if (speech) {
     node.setAttribute('aria-label', buildSpeech(speech, locale)[0]);
   }

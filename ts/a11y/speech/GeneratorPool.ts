@@ -18,6 +18,8 @@
 import {mathjax} from '../../mathjax.js';
 import {Sre} from '../sre.js';
 import {OptionList} from '../../util/Options.js';
+import {LiveRegion} from '../explorer/Region.js';
+import { buildLabel, buildSpeech, updateAria, honk } from '../speech/SpeechUtil.js';
 // import { MathItem } from '../../core/MathItem.js';
 
 /**
@@ -27,6 +29,19 @@ import {OptionList} from '../../util/Options.js';
  */
 
 export class GeneratorPool {
+
+  private _node: Element;
+
+  set node(node: Element) {
+    this._node = node;
+    const rebuilt = this.speechGenerator.computeRebuilt(node);
+    this.brailleGenerator.setRebuilt(rebuilt);
+    this.summaryGenerator.setRebuilt(rebuilt);
+  }
+
+  get node() {
+    return this._node;
+  }
 
   /**
    * The speech generator for a math item.
@@ -48,22 +63,24 @@ export class GeneratorPool {
    */
   private currentLocale = 'none';
   private currentBraille = 'none';
+  private _options: OptionList = {};
 
-  public setOptions(options: OptionList) {
+  public set options(options: OptionList) {
+    this._options = options;
     this.speechGenerator.setOptions(Object.assign(
-      {}, options.sre, {
+      {}, options?.sre || {}, {
         modality: 'speech',
         markup: 'ssml',
-        automark: true,
+        automark: true
       }));
     this.summaryGenerator.setOptions(Object.assign(
-      {}, options.sre, {
+      {}, options?.sre || {}, {
         modality: 'summary',
         markup: 'ssml',
         automark: true,
       }));
     this.brailleGenerator.setOptions({
-      locale: options.sre.braille,
+      locale: options?.sre?.braille,
       domain: 'default',
       style: 'default',
       modality: 'braille',
@@ -71,27 +88,55 @@ export class GeneratorPool {
     });
   }
 
+  public get options() {
+    return this._options;
+  }
+
   public init(options: OptionList) {
-    this.setOptions(options);
-    if (this.update(options)) {
+    this.options = options;
+    if (this._update(options)) {
       mathjax.retryAfter(Sre.sreReady());
     }
   }
 
   public update(options: OptionList) {
+    this.options = options;
+    return this._update(options) ? Sre.sreReady() : Promise.resolve();
+  }
+
+  private _update(options: OptionList) {
     let update = false;
-    if (options.sre.locale !== this.currentLocale) {
+    if (options?.sre?.locale !== this.currentLocale) {
       this.currentLocale = options.sre.locale;
       update = true;
       // TODO: Sort out the loading of the locales better
       Sre.setupEngine({locale: options.sre.locale})
     }
-    if (options.sre.braille !== this.currentBraille) {
+    if (options?.sre?.braille !== this.currentBraille) {
       this.currentBraille = options.sre.braille;
       update = true;
       Sre.setupEngine({locale: options.sre.braille})
     }
     return update;
+  }
+
+  public summary(node: Element) {
+    return this.summaryGenerator.getSpeech(node, this.node);
+  }
+
+  public UpdateSpeech(
+    node: Element,
+    speechRegion: LiveRegion,
+    brailleRegion: LiveRegion
+  ) {
+    console.log(0);
+    speechRegion.Update(
+      buildLabel(
+        node.getAttribute('data-semantic-speech'),
+        node.getAttribute('data-semantic-prefix'),
+        node.getAttribute('data-semantic-postfix')
+      ));
+    brailleRegion.Update(node.getAttribute('aria-braillelabel'));
   }
 
 }
