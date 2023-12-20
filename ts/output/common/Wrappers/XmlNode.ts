@@ -155,7 +155,7 @@ export function CommonXmlNodeMixin<
   B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
 >(Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
 
-  return class CommonXmlNodeMixin extends Base
+  abstract class CommonXmlNodeMixin extends Base
   implements CommonXmlNode<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
 
     /**
@@ -227,12 +227,9 @@ export function CommonXmlNodeMixin<
     }
 
     /**
-     * Implemented in subclasses
      * @override
      */
-    public addHDW(html: N, _styles: Styles): N {
-      return html;
-    }
+    abstract addHDW(html: N, _styles: Styles): N;
 
     /**
      * @override
@@ -306,6 +303,8 @@ export function CommonXmlNodeMixin<
      */
     protected getVariant() {}
 
-  } as any as B;
+  };
+
+  return CommonXmlNodeMixin as any as B;
 
 }
