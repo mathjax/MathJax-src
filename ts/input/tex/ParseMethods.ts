@@ -27,7 +27,7 @@ import TexParser from './TexParser.js';
 import NodeUtil from './NodeUtil.js';
 import {TexConstant} from './TexConstants.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import ParseUtil from './ParseUtil.js';
+import {ParseUtil} from './ParseUtil.js';
 
 const MATHVARIANT = TexConstant.Variant;
 

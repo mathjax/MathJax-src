@@ -26,7 +26,7 @@
 import TexParser from '../TexParser.js';
 import {ParseMethod} from '../Types.js';
 import NodeUtil from '../NodeUtil.js';
-import ParseUtil from "../ParseUtil.js";
+import {ParseUtil} from "../ParseUtil.js";
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import TexError from '../TexError.js';
 

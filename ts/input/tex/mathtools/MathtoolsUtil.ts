@@ -21,7 +21,7 @@
  */
 
 import {EqnArrayItem} from '../base/BaseItems.js';
-import ParseUtil from '../ParseUtil.js';
+import {ParseUtil} from '../ParseUtil.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
 import {CommandMap} from '../TokenMap.js';
@@ -101,7 +101,7 @@ export const MathtoolsUtil = {
       const add = ParseUtil.dimen2em(spread);
       rowspacing = rowspacing
         .split(/ /)
-        .map(s => ParseUtil.Em(Math.max(0, ParseUtil.dimen2em(s) + add)))
+        .map(s => ParseUtil.em(Math.max(0, ParseUtil.dimen2em(s) + add)))
         .join(' ');
     } else {
       rowspacing = spread;

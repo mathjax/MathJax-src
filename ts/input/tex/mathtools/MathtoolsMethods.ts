@@ -24,7 +24,7 @@
 
 import {ArrayItem, EqnArrayItem} from '../base/BaseItems.js';
 import {StackItem} from '../StackItem.js';
-import ParseUtil from '../ParseUtil.js';
+import {ParseUtil} from '../ParseUtil.js';
 import {ParseMethod, ParseResult} from '../Types.js';
 import {AmsMethods} from '../ams/AmsMethods.js';
 import BaseMethods from '../base/BaseMethods.js';
@@ -74,7 +74,7 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
       align = parser.GetBrackets(`\\begin{${begin.getName()}}`, parser.options.mathtools['smallmatrix-align']);
     }
     return MathtoolsMethods.Array(
-      parser, begin, open, close, align, ParseUtil.Em(1 / 3), '.2em', 'S', 1
+      parser, begin, open, close, align, ParseUtil.em(1 / 3), '.2em', 'S', 1
     );
   },
 

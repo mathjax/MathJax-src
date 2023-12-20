@@ -30,7 +30,7 @@ import NodeUtil from '../NodeUtil.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import {TexConstant} from '../TexConstants.js';
-import ParseUtil from '../ParseUtil.js';
+import {ParseUtil} from '../ParseUtil.js';
 import {PropertyList} from '../../../core/Tree/Node.js';
 import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
@@ -905,7 +905,7 @@ BaseMethods.MmlToken = function(parser: TexParser, name: string) {
                           '%1 is not a recognized attribute for %2',
                           match[1], kind);
     }
-    let value: string | boolean = ParseUtil.MmlFilterAttribute(
+    let value: string | boolean = ParseUtil.mmlFilterAttribute(
       parser, match[1], match[2].replace(/^(['"])(.*)\1$/, '$2'));
     if (value) {
       if (value.toLowerCase() === 'true') {
