@@ -28,11 +28,13 @@ import {ChtmlWrapperFactory} from '../WrapperFactory.js';
 import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
         ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
 import {CommonSemantics, CommonSemanticsClass, CommonSemanticsMixin} from '../../common/Wrappers/semantics.js';
+import {CommonXmlNode, CommonXmlNodeClass, CommonXmlNodeMixin} from '../../common/Wrappers/XmlNode.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {MmlSemantics, MmlAnnotation, MmlAnnotationXML} from '../../../core/MmlTree/MmlNodes/semantics.js';
 import {XMLNode} from '../../../core/MmlTree/MmlNode.js';
-import {BBox} from '../../../util/BBox.js';
 import {StyleList} from '../../../util/StyleList.js';
+import {StyleList as Styles} from '../../../util/Styles.js';
+
 
 /*****************************************************************/
 /**
@@ -168,11 +170,49 @@ export const ChtmlAnnotationXML = (function <N, T, D>(): ChtmlWrapperClass<N, T,
 
 /*****************************************************************/
 /**
+ * The ChtmlXmlNode interface for the CHTML XmlNode wrapper
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export interface ChtmlXmlNodeNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonXmlNode<
+  N, T, D,
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
+> {}
+
+/**
+ * The ChtmlXmlNodeClass interface for the CHTML XmlNode wrapper
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export interface ChtmlXmlNodeClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonXmlNodeClass<
+  N, T, D,
+  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
+> {
+  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlXmlNodeNTD<N, T, D>;
+}
+
+/**
  * The ChtmlXmlNode wrapper for the XMLNode class
  */
 export const ChtmlXmlNode = (function <N, T, D>(): ChtmlWrapperClass<N, T, D> {
 
-  return class ChtmlXmlNode extends ChtmlWrapper<N, T, D> {
+  const Base = CommonXmlNodeMixin<
+      N, T, D,
+      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
+      ChtmlXmlNodeClass<N, T, D>
+    >(ChtmlWrapper);
+
+  // Avoid message about base constructors not having the same type
+  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
+  // @ts-ignore
+  return class ChtmlXmlNode extends Base implements ChtmlXmlNodeNTD<N, T, D> {
 
     /**
      * @override
@@ -180,41 +220,29 @@ export const ChtmlXmlNode = (function <N, T, D>(): ChtmlWrapperClass<N, T, D> {
     public static kind = XMLNode.prototype.kind;
 
     /**
-     * Don't set up inline-block styles for this
-     */
-    public static autoStyle = false;
-
-    /**
      * @override
      */
     public toCHTML(parents: N[]) {
-      this.dom = [this.adaptor.append(parents[0], this.adaptor.clone((this.node as XMLNode).getXML() as N)) as N];
+      this.markUsed();
+      this.dom = [this.adaptor.append(parents[0], this.getHTML()) as N];
     }
 
     /**
      * @override
      */
-    public computeBBox(bbox: BBox, _recompute: boolean = false) {
-      const {w, h, d} = this.jax.measureXMLnode((this.node as XMLNode).getXML() as N);
-      bbox.w = w;
-      bbox.h = h;
-      bbox.d = d;
+    public addHDW(html: N, styles: Styles): N {
+      const scale = this.jax.options.scale;
+      const {h, d, w} = this.bbox;
+      const rscale = scale * this.metrics.scale;
+      styles.width = this.em(w * rscale);
+      styles.height = this.em((h + d) * rscale);
+      styles['vertical-align'] = this.em(-d * rscale);
+      styles.position = 'relative';
+      return this.html('mjx-html-holder', {style: {
+        transform: `scale(${this.jax.fixed(scale)})`,
+        'transform-origin': 'top left',
+      }}, [html]);
     }
-
-    /**
-     * @override
-     */
-    protected getStyles() {}
-
-    /**
-     * @override
-     */
-    protected getScale() {}
-
-    /**
-     * @override
-     */
-    protected getVariant() {}
 
   };
 

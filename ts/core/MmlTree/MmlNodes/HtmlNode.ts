@@ -21,27 +21,18 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AbstractMmlEmptyNode}  from '../MmlNode.js';
+import {XMLNode}  from '../MmlNode.js';
 import {DOMAdaptor} from '../../DOMAdaptor.js';
 import {PropertyList} from '../../Tree/Node.js';
 
 
 /******************************************************************/
 /**
- * The HtmlNode calss for storing HTML within token elements
+ * The HtmlNode class for storing HTML within token elements
  *
  * @template N   The HTMLElement class
  */
-export class HtmlNode<N> extends AbstractMmlEmptyNode {
-  /**
-   * The HTML content for this node
-   */
-  protected html: N = null;
-
-  /**
-   * DOM adaptor for the content
-   */
-  protected adaptor: DOMAdaptor<any, any, any> = null;
+export class HtmlNode<N> extends XMLNode {
 
   /**
    * @override
@@ -51,14 +42,14 @@ export class HtmlNode<N> extends AbstractMmlEmptyNode {
   }
 
   /**
-   * @return {Object}  Return the node's HTML content
+   * @return {N}  Return the node's HTML content
    */
-  public getHTML(): Object {
-    return this.html;
+  public getHTML(): N {
+    return this.getXML() as any as N;
   }
 
   /**
-   * @param {object} html          The HTML content to be saved
+   * @param {N} html               The HTML content to be saved
    * @param {DOMAdaptor} adaptor   DOM adaptor for the content
    * @return {HTMLNode}            The HTML node (for chaining of method calls)
    */
@@ -71,37 +62,28 @@ export class HtmlNode<N> extends AbstractMmlEmptyNode {
     } catch (error) {
       html = adaptor.node('span', {}, [html]);
     }
-    this.html = html;
-    this.adaptor = adaptor;
-    return this;
+    return this.setXML(html, adaptor) as HtmlNode<N>;
   }
 
   /**
    * @return {string}  The serialized HTML content
    */
   public getSerializedHTML(): string {
-    return this.adaptor.outerHTML(this.html);
+    return this.adaptor.outerHTML(this.xml);
   }
 
   /**
    * @return {string}   The text of the HTML content
    */
   public textContent(): string {
-    return this.adaptor.textContent(this.html);
-  }
-
-  /**
-   * @override
-   */
-  public copy(): HtmlNode<N> {
-    return (this.factory.create(this.kind) as HtmlNode<N>).setHTML(this.adaptor.clone(this.html));
+    return this.adaptor.textContent(this.xml);
   }
 
   /**
    * Just indicate that this is HTML data
    */
   public toString() {
-    const kind = this.adaptor.kind(this.html);
+    const kind = this.adaptor.kind(this.xml);
     return `HTML=<${kind}>...</${kind}>` ;
   }
 

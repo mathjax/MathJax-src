@@ -255,13 +255,6 @@ CommonOutputJax<
     this.clearCache();
   }
 
-  /**
-   * @override
-   */
-  protected getInitialScale() {
-    return this.math.metrics.scale;
-  }
-
   /*****************************************************************/
 
   /**
