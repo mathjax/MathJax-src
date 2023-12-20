@@ -123,7 +123,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
         if (!this.explorers) {
           this.explorers = new ExplorerPool();
         }
-        this.explorers.init(document, node, mml);
+        this.explorers.init(document, node, mml, this);
       }
       this.state(STATE.EXPLORER);
     }
@@ -199,7 +199,9 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
       }),
       sre: expandable({
         ...BaseDocument.OPTIONS.sre,
-        speech: 'shallow',                 // overrides option in EnrichedMathDocument
+        speech: 'none',                    // None as speech is explicitly computed
+        structure: true,                   // Generates full aria structure
+        aria: true,
       }),
       a11y: {
         align: 'top',                      // placement of magnified expression
@@ -259,6 +261,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
      * @return {ExplorerMathDocument}   The MathDocument (so calls can be chained)
      */
     public explorable(): ExplorerMathDocument {
+      this.options.enableSpeech = true;
       if (!this.processed.isSet('explorer')) {
         if (this.options.enableExplorer) {
           if (!this.explorerRegions) {

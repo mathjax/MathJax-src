@@ -97,6 +97,10 @@ CommonOutputJax<
     },
     'mjx-container[jax="SVG"] > svg a': {
       fill: 'blue', stroke: 'blue'
+    },
+    'rect[sre-highlighter-added]': {
+      stroke: 'black',
+      'stroke-width': '40px'
     }
   };
 

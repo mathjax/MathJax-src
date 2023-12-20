@@ -23,7 +23,7 @@
  */
 
 import {LiveRegion, SpeechRegion, ToolTip, HoverRegion} from './Region.js';
-import type { ExplorerMathDocument } from '../explorer.js';
+import type { ExplorerMathDocument, ExplorerMathItem } from '../explorer.js';
 
 import {Explorer} from './Explorer.js';
 import * as ke from './KeyExplorer.js';
@@ -88,32 +88,11 @@ type ExplorerInit = (doc: ExplorerMathDocument, pool: ExplorerPool,
 let allExplorers: {[options: string]: ExplorerInit} = {
   speech: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
     let explorer = ke.SpeechExplorer.create(
-      doc, pool, doc.explorerRegions.speechRegion, node, ...rest) as ke.SpeechExplorer;
-    explorer.speechGenerator.setOptions({
-      automark: true as any, markup: 'ssml',
-      locale: doc.options.sre.locale, domain: doc.options.sre.domain,
-      style: doc.options.sre.style, modality: 'speech'});
-    // This weeds out the case of providing a non-existent locale option.
-    let locale = explorer.speechGenerator.getOptions().locale;
-    if (locale !== Sre.engineSetup().locale) {
-      doc.options.sre.locale = Sre.engineSetup().locale;
-      explorer.speechGenerator.setOptions({locale: doc.options.sre.locale});
-    }
+      doc, pool, doc.explorerRegions.speechRegion, node,
+      doc.explorerRegions.brailleRegion, doc.explorerRegions.magnifier, rest[0], rest[1]) as ke.SpeechExplorer;
     explorer.sound = true;
-    explorer.showRegion = 'subtitles';
     return explorer;
   },
-  braille: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
-    let explorer = ke.SpeechExplorer.create(
-      doc, pool, doc.explorerRegions.brailleRegion, node, ...rest) as ke.SpeechExplorer;
-    explorer.speechGenerator.setOptions({automark: false as any, markup: 'none',
-                                         locale: 'nemeth', domain: 'default',
-                                         style: 'default', modality: 'braille'});
-    explorer.showRegion = 'viewBraille';
-    return explorer;
-  },
-  keyMagnifier: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) =>
-    ke.Magnifier.create(doc, pool, doc.explorerRegions.magnifier, node, ...rest),
   mouseMagnifier: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ..._rest: any[]) =>
     me.ContentHoverer.create(doc, pool, doc.explorerRegions.magnifier, node,
                              (x: HTMLElement) => x.hasAttribute('data-semantic-type'),
@@ -212,13 +191,14 @@ export class ExplorerPool {
    * @param  mml The corresponding Mathml node as a string.
    */
   public init(document: ExplorerMathDocument,
-              node: HTMLElement, mml: string) {
+              node: HTMLElement, mml: string,
+              item: ExplorerMathItem) {
     this.document = document;
     this.mml = mml;
     this.node = node;
     this.setPrimaryHighlighter();
     for (let key of Object.keys(allExplorers)) {
-      this.explorers[key] = allExplorers[key](this.document, this, this.node, this.mml);
+      this.explorers[key] = allExplorers[key](this.document, this, this.node, this.mml, item);
     }
     this.setSecondaryHighlighter();
     this.attach();
@@ -233,7 +213,7 @@ export class ExplorerPool {
     let keyExplorers = [];
     for (let key of Object.keys(this.explorers)) {
       let explorer = this.explorers[key];
-      if (explorer instanceof ke.AbstractKeyExplorer) {
+      if (explorer instanceof ke.SpeechExplorer) {
         explorer.AddEvents();
         explorer.stoppable = false;
         keyExplorers.unshift(explorer);
