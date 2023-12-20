@@ -164,18 +164,25 @@ function extractProsody(attr: string) {
  *
  */
 
+function getAttribute(node: MmlNode | Element, attr: string): string {
+  return (node instanceof Element) ?
+    node.getAttribute(attr) :
+    node.attributes.getExplicit(attr) as string;
+}
+
 /**
  * Computes the aria-label from the node.
  * @param {MmlNode} node The Math element.
  * @param {string=} sep The speech separator. Defaults to space.
  */
-function getLabel(node: MmlNode, sep: string = ' ') {
-  const attributes = node.attributes;
+export function getLabel(node: MmlNode | Element,
+                  center: string = 'data-semantic-speech',
+                  sep: string = ' ') {
   return buildLabel(
-    attributes.getExplicit('data-semantic-speech') as string,
-    attributes.getExplicit('data-semantic-prefix') as string,
+    getAttribute(node, center),
+    getAttribute(node, 'data-semantic-prefix'),
     // TODO: check if we need this or if it is automatic by the screen readers.
-    attributes.getExplicit('data-semantic-postfix') as string,
+    getAttribute(node, 'data-semantic-postfix'),
     sep
   );
 }
@@ -229,11 +236,10 @@ export function setAria(node: MmlNode, locale: string) {
   const attributes = node.attributes;
   if (!attributes) return;
   const speech = getLabel(node);
-  console.log(speech);
   if (speech) {
     attributes.set('aria-label', buildSpeech(speech, locale)[0]);
   }
-  const braille = node.attributes.getExplicit('data-semantic-braille') as string;
+  const braille = getAttribute(node, 'data-semantic-braille');
   if (braille) {
     attributes.set('aria-braillelabel', braille);
   }
@@ -247,7 +253,7 @@ export function setAria(node: MmlNode, locale: string) {
  * @param {MmlNode} node The root node to search from.
  */
 export function updateAria(node: HTMLElement, locale: string) { 
- let speech = node.getAttribute('data-semantic-speech');
+  let speech = node.getAttribute('data-semantic-speech');
   if (speech) {
     node.setAttribute('aria-label', buildSpeech(speech, locale)[0]);
   }

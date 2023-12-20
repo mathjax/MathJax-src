@@ -28,7 +28,7 @@ import type { ExplorerMathItem } from '../explorer.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
 import {ExplorerPool} from './ExplorerPool.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import { buildLabel, buildSpeech, updateAria, honk } from '../speech/SpeechUtil.js';
+import { buildSpeech, updateAria, honk } from '../speech/SpeechUtil.js';
 import {Sre} from '../sre.js';
 
 // import { Walker } from './Walker.js';
@@ -180,6 +180,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    * @override
    */
   public FocusOut(_event: FocusEvent) {
+    this.item.generatorPool.CleanUp(this.current);
     if (!this.move) {
       this.Stop();
     }
@@ -260,21 +261,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   ]);
 
   public summary(node: HTMLElement): HTMLElement {
-    const summary = this.item.generatorPool.summary(node);
-    console.log(summary);
-    console.log(buildLabel(
-        this.current.getAttribute('data-semantic-summary'),
-        this.current.getAttribute('data-semantic-prefix'),
-        this.current.getAttribute('data-semantic-postfix')
-      ));
-    console.log(this.region);
-    this.region.Update(
-      buildLabel(
-        this.current.getAttribute('data-semantic-summary'),
-        this.current.getAttribute('data-semantic-prefix'),
-        this.current.getAttribute('data-semantic-postfix')
-      ));
-    node.setAttribute('aria-label', buildSpeech(summary)[0]);
+    this.item.generatorPool.summary(node);
     this.refocus(node);
     return node;
   }
@@ -424,6 +411,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     // }
     this.pool.highlight([this.current]);
     this.region.node = this.node;
+    console.log(1);
     this.item.generatorPool.UpdateSpeech(
       this.current,
       this.region,

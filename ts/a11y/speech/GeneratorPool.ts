@@ -19,7 +19,7 @@ import {mathjax} from '../../mathjax.js';
 import {Sre} from '../sre.js';
 import {OptionList} from '../../util/Options.js';
 import {LiveRegion} from '../explorer/Region.js';
-import { buildLabel, buildSpeech, updateAria, honk } from '../speech/SpeechUtil.js';
+import { getLabel, buildSpeech, updateAria, honk } from '../speech/SpeechUtil.js';
 // import { MathItem } from '../../core/MathItem.js';
 
 /**
@@ -120,22 +120,40 @@ export class GeneratorPool {
     return update;
   }
 
+  public CleanUp(node: Element) {
+    if (this.lastSummary) {
+      // TODO: Remember the speech.
+      node.setAttribute('aria-label', buildSpeech(getLabel(node))[0]);
+    }
+    this.lastSummary = false;
+  }
+  
+  // Summary computations are very fast, and we recompute in case the rule sets
+  // have changed and there is a different summary.
   public summary(node: Element) {
-    return this.summaryGenerator.getSpeech(node, this.node);
+    let summary = this.summaryGenerator.getSpeech(node, this.node)
+    console.log(summary);
+    if (summary) {
+      this.lastSpeech = 'data-semantic-summary';
+    }
   }
 
+  private lastSpeech = '';
+  private lastSummary = false;
+  
   public UpdateSpeech(
     node: Element,
     speechRegion: LiveRegion,
     brailleRegion: LiveRegion
   ) {
-    console.log(0);
-    speechRegion.Update(
-      buildLabel(
-        node.getAttribute('data-semantic-speech'),
-        node.getAttribute('data-semantic-prefix'),
-        node.getAttribute('data-semantic-postfix')
-      ));
+    let speech = getLabel(node, this.lastSpeech || 'data-semantic-speech');
+    speechRegion.Update(speech);
+    // TODO: See if we can reuse the speech from the speech region.
+    node.setAttribute('aria-label', buildSpeech(speech)[0]);
+    if (this.lastSpeech) {
+      this.lastSummary = true;
+    }
+    this.lastSpeech = '';
     brailleRegion.Update(node.getAttribute('aria-braillelabel'));
   }
 

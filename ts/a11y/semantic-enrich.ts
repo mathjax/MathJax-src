@@ -193,7 +193,8 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
               this.generatorPool.speechGenerator.getSpeech(enriched, enriched),
               document.options.sre.locale,
               document.options.sre.rate)[0];
-            this.outputData.braille = this.generatorPool.brailleGenerator.getSpeech(enriched, enriched);
+            this.outputData.braille =
+              this.generatorPool.brailleGenerator.getSpeech(enriched, enriched);
           }
           this.inputData.enrichedMml = math.math = this.serializeMml(enriched);
           math.display = this.display;
