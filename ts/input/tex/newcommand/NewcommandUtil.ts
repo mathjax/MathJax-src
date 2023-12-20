@@ -34,48 +34,6 @@ import * as sm from '../TokenMap.js';
 namespace NewcommandUtil {
 
   /**
-   * Transforms the attributes of a token into the arguments of a macro. E.g.,
-   * Token('ell', 'l', {mathvariant: "italic"}) is turned into Macro arguments:
-   * ['ell', 'l', 'mathvariant', 'italic'].
-   *
-   * @param {string} name The command name for the token.
-   * @param {Token} token The token associated with name.
-   * @return {Args[]} Arguments for a macro.
-   */
-  export function disassembleToken(name: string, token: Token): Args[] {
-    let newArgs = [name, token.char] as Args[];
-    // @test Let Relet, Let Let, Let Circular Macro
-    if (token.attributes) {
-      // @test Let Relet
-      for (let key in token.attributes) {
-        newArgs.push(key);
-        newArgs.push(token.attributes[key] as Args);
-      }
-    }
-    return newArgs;
-  }
-
-
-  /**
-   * Assembles a token from a list of macro arguments. This is the inverse
-   * method of the one above.
-   *
-   * @param {Args[]} args The arguments of the macro.
-   * @return {Token} The Token generated from the arguments..
-   */
-  export function assembleToken(args: Args[]): Token {
-    // @test Let Relet, Let Let, Let Circular Macro
-    let name = args[0] as string;
-    let char = args[1] as string;
-    let attrs: Attributes = {};
-    for (let i = 2; i < args.length; i = i + 2) {
-      // @test Let Relet
-      attrs[args[i] as string] = args[i + 1];
-    }
-    return new Token(name, char, attrs);
-  }
-
-  /**
    * Get the next CS name or give an error.
    * @param {TexParser} parser The calling parser.
    * @param {string} cmd The string starting with a control sequence.
