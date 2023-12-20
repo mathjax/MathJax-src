@@ -230,7 +230,7 @@ export const ParseUtil = {
    *     unit name, length of matched string. The latter is interesting in the
    *     case of trailing garbage.
    */
-  matchDimen: function(
+  matchDimen(
     dim: string, rest: boolean = false): [string, string, number] {
     let match = dim.match(rest ? ParseUtil.UNIT_CASES.dimenRest : ParseUtil.UNIT_CASES.dimenEnd);
     return match ?
@@ -244,7 +244,7 @@ export const ParseUtil = {
    * @param {string} dim The attribute string.
    * @return {number} The numerical value.
    */
-  dimen2em: function(dim: string): number {
+  dimen2em(dim: string): number {
     let [value, unit] = ParseUtil.matchDimen(dim);
     let m = parseFloat(value || '1');
     let factor = ParseUtil.UNIT_CASES.get(unit);
@@ -257,7 +257,7 @@ export const ParseUtil = {
    * @param {number} m The number.
    * @return {string} The em dimension string.
    */
-  em: function(m: number): string {
+  em(m: number): string {
     if (Math.abs(m) < .0006) {
       return '0em';
     }
@@ -273,7 +273,7 @@ export const ParseUtil = {
    * @param {number[]} W  The widths to be turned into em values
    * @return {string}     The numbers with em units, separated by spaces.
    */
-  cols: function(...W: number[]): string {
+  cols(...W: number[]): string {
     return W.map(n => ParseUtil.em(n)).join(' ');
   },
 
@@ -286,8 +286,8 @@ export const ParseUtil = {
    * @param {string} close The closing fence.
    * @param {string=} big Bigg command.
    */
-  fenced: function(configuration: ParseOptions, open: string, mml: MmlNode,
-                   close: string, big: string = '', color: string = '') {
+  fenced(configuration: ParseOptions, open: string, mml: MmlNode,
+         close: string, big: string = '', color: string = '') {
     // @test Fenced, Fenced3
     let nf = configuration.nodeFactory;
     let mrow = nf.create('node', 'mrow', [],
@@ -324,8 +324,8 @@ export const ParseUtil = {
    * @param {string} close The closing fence.
    * @return {MmlNode} The mrow node.
    */
-  fixedFence: function(configuration: ParseOptions, open: string,
-                       mml: MmlNode, close: string): MmlNode {
+  fixedFence(configuration: ParseOptions, open: string,
+             mml: MmlNode, close: string): MmlNode {
     // @test Choose, Over With Delims, Above with Delims
     let mrow = configuration.nodeFactory.create('node',
                                                 'mrow', [], {open: open, close: close, texClass: TEXCLASS.ORD});
@@ -353,8 +353,8 @@ export const ParseUtil = {
    * @param {string} side The side of the fence (l or r).
    * @return {MmlNode} The mathchoice node.
    */
-  mathPalette: function(configuration: ParseOptions, fence: string,
-                        side: string): MmlNode  {
+  mathPalette(configuration: ParseOptions, fence: string,
+              side: string): MmlNode  {
     if (fence === '{' || fence === '}') {
       fence = '\\' + fence;
     }
@@ -372,7 +372,7 @@ export const ParseUtil = {
    * @param {ParseOptions} configuration The current parse options.
    * @param {MmlNode[]} nodes The row of nodes to scan for an initial <mo>
    */
-  fixInitialMO: function(configuration: ParseOptions, nodes: MmlNode[]) {
+  fixInitialMO(configuration: ParseOptions, nodes: MmlNode[]) {
     for (let i = 0, m = nodes.length; i < m; i++) {
       let child = nodes[i];
       if (child && (!NodeUtil.isType(child, 'mspace') &&
@@ -398,7 +398,7 @@ export const ParseUtil = {
    * @param {string} font The mathvariant to use
    * @return {MmlNode[]} The nodes corresponding to the internal math expression.
    */
-  internalMath: function(
+  internalMath(
     parser: TexParser,
     text: string,
     level?: number | string,
@@ -525,7 +525,7 @@ export const ParseUtil = {
    * @param {EnvList} def The attributes of the text node.
    * @return {MmlNode} The text node.
    */
-  internalText: function(parser: TexParser, text: string, def: EnvList): MmlNode {
+  internalText(parser: TexParser, text: string, def: EnvList): MmlNode {
     // @test Label, Fbox, Hbox
     text = text.replace(/\n+/g, ' ').replace(/^\s+/, entities.nbsp).replace(/\s+$/, entities.nbsp);
     let textNode = parser.create('text', text);
@@ -541,7 +541,7 @@ export const ParseUtil = {
    * @param {boolean} stack      True if super- or sub-scripts should stack.
    * @return {MmlNode}           The generated node (MmlMunderover or TeXAtom)
    */
-  underOver: function(parser: TexParser, base: MmlNode, script: MmlNode, pos: string, stack: boolean): MmlNode {
+  underOver(parser: TexParser, base: MmlNode, script: MmlNode, pos: string, stack: boolean): MmlNode {
     // @test Overline
     ParseUtil.checkMovableLimits(base);
     if (NodeUtil.isType(base, 'munderover') && NodeUtil.isEmbellished(base)) {
@@ -566,7 +566,7 @@ export const ParseUtil = {
    * Set movablelimits to false if necessary.
    * @param {MmlNode} base   The base node being tested.
    */
-  checkMovableLimits: function(base: MmlNode) {
+  checkMovableLimits(base: MmlNode) {
     const symbol = (NodeUtil.isType(base, 'mo') ? NodeUtil.getForm(base) : null);
     if (NodeUtil.getProperty(base, 'movablelimits') || (symbol && symbol[3] && symbol[3].movablelimits)) {
       // @test Overline Sum
@@ -579,7 +579,7 @@ export const ParseUtil = {
    * @param {string} text The string to clean.
    * @return {string} The string with leading and trailing whitespace removed.
    */
-  trimSpaces: function(text: string): string {
+  trimSpaces(text: string): string {
     if (typeof(text) !== 'string') {
       return text;
     }
@@ -598,7 +598,7 @@ export const ParseUtil = {
    * @param {TexParser?} parser The current tex parser.
    * @return {ArrayItem} The altered array item.
    */
-  setArrayAlign: function(array: ArrayItem, align: string, parser?: TexParser): ArrayItem {
+  setArrayAlign(array: ArrayItem, align: string, parser?: TexParser): ArrayItem {
     // @test Array1, Array2, Array Test
     if (!parser) {
       align = ParseUtil.trimSpaces(align || '');
@@ -628,8 +628,7 @@ export const ParseUtil = {
    * @param {string} str The macro parameter string.
    * @return {string} The string with all parameters replaced by arguments.
    */
-  substituteArgs: function(parser: TexParser, args: string[],
-                           str: string): string {
+  substituteArgs(parser: TexParser, args: string[], str: string): string {
     let text = '';
     let newstring = '';
     let i = 0;
@@ -668,7 +667,7 @@ export const ParseUtil = {
    * @param {string} s2 The string to add.
    * @return {string} The combined string.
    */
-  addArgs: function(parser: TexParser, s1: string, s2: string): string {
+  addArgs(parser: TexParser, s1: string, s2: string): string {
     if (s2.match(/^[a-z]/i) && s1.match(/(^|[^\\])(\\\\)*\\[a-z]+$/i)) {
       s1 += ' ';
     }
@@ -685,7 +684,7 @@ export const ParseUtil = {
    * @param {TexParser} parser The current TeX parser.
    * @param {boolean} isMacro  True if we are substituting a macro, false for environment.
    */
-  checkMaxMacros: function(parser: TexParser, isMacro: boolean = true) {
+  checkMaxMacros(parser: TexParser, isMacro: boolean = true) {
     if (++parser.macroCount <= parser.configuration.options['maxMacros']) {
       return;
     }
@@ -704,7 +703,7 @@ export const ParseUtil = {
   /**
    *  Check for bad nesting of equation environments
    */
-  checkEqnEnv: function(parser: TexParser, nestable: boolean = true) {
+  checkEqnEnv(parser: TexParser, nestable: boolean = true) {
     const top = parser.stack.Top();
     const first = top.First;
     //
@@ -725,7 +724,7 @@ export const ParseUtil = {
    * @param {TexParser} parser   The active tex parser
    * @return {MmlNode}           The duplicate tree
    */
-  copyNode: function(node: MmlNode, parser: TexParser): MmlNode  {
+  copyNode(node: MmlNode, parser: TexParser): MmlNode  {
     const tree = node.copy();
     const options = parser.configuration;
     tree.walkTree((n: MmlNode) => {
@@ -745,7 +744,7 @@ export const ParseUtil = {
    * @param {string} value The attribute value to filter.
    * @return {string} The filtered value.
    */
-  mmlFilterAttribute: function(_parser: TexParser, _name: string, value: string): string {
+  mmlFilterAttribute(_parser: TexParser, _name: string, value: string): string {
     // TODO: Implement in security package.
     return value;
   },
@@ -756,7 +755,7 @@ export const ParseUtil = {
    * @param {TexParser} parser The current tex parser.
    * @return {EnvList} The initialised environment list.
    */
-  getFontDef: function(parser: TexParser): EnvList {
+  getFontDef(parser: TexParser): EnvList {
     const font = parser.stack.env['font'];
     return (font ? {mathvariant: font} : {});
   },
@@ -772,7 +771,7 @@ export const ParseUtil = {
    *     are found.
    * @return {EnvList} The attribute list.
    */
-  keyvalOptions: function(attrib: string,
+  keyvalOptions(attrib: string,
                           allowed: {[key: string]: number} = null,
                           error: boolean = false): EnvList {
     let def: EnvList = readKeyval(attrib);
@@ -793,7 +792,7 @@ export const ParseUtil = {
    * @param {string} c   The character to test.
    * @return {boolean}   True if the character is Latin or Greek
    */
-  isLatinOrGreekChar: function(c: string): boolean {
+  isLatinOrGreekChar(c: string): boolean {
     return !!c.normalize('NFD').match(/[a-zA-Z\u0370-\u03F0]/);
   }
 
