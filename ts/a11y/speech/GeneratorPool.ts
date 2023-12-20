@@ -19,8 +19,8 @@ import {mathjax} from '../../mathjax.js';
 import {Sre} from '../sre.js';
 import {OptionList} from '../../util/Options.js';
 import {LiveRegion} from '../explorer/Region.js';
-import { getLabel, buildSpeech, updateAria, honk } from '../speech/SpeechUtil.js';
-// import { MathItem } from '../../core/MathItem.js';
+import { getLabel, buildSpeech } from '../speech/SpeechUtil.js';
+import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 
 /**
  * @fileoverview Speech generator collections for enrichment and explorers.
@@ -30,19 +30,21 @@ import { getLabel, buildSpeech, updateAria, honk } from '../speech/SpeechUtil.js
 
 export class GeneratorPool {
 
-  private _node: Element;
+  private _element: Element;
 
-  set node(node: Element) {
-    this._node = node;
-    const rebuilt = this.speechGenerator.computeRebuilt(node);
+  set element(element: Element) {
+    this._element = element;
+    const rebuilt = this.speechGenerator.computeRebuilt(element);
     this.brailleGenerator.setRebuilt(rebuilt);
     this.summaryGenerator.setRebuilt(rebuilt);
   }
 
-  get node() {
-    return this._node;
+  get element() {
+    return this._element;
   }
 
+  public constructor(public node: MmlNode) {
+  }
   /**
    * The speech generator for a math item.
    */
@@ -92,6 +94,12 @@ export class GeneratorPool {
     return this._options;
   }
 
+  /**
+   * Init method for speech generation. Runs a retry until locales have been
+   * loaded.
+   *
+   * @param {OptionList} options A list of options.
+   */
   public init(options: OptionList) {
     this.options = options;
     if (this._update(options)) {
@@ -99,7 +107,13 @@ export class GeneratorPool {
     }
   }
 
-  public update(options: OptionList) {
+  /**
+   * Update method for speech generation options. Runs a retry until locales have been
+   * loaded.
+   *
+   * @param {OptionList} options A list of options.
+   */
+  public async update(options: OptionList) {
     this.options = options;
     return this._update(options) ? Sre.sreReady() : Promise.resolve();
   }
@@ -131,11 +145,8 @@ export class GeneratorPool {
   // Summary computations are very fast, and we recompute in case the rule sets
   // have changed and there is a different summary.
   public summary(node: Element) {
-    let summary = this.summaryGenerator.getSpeech(node, this.node)
-    console.log(summary);
-    if (summary) {
-      this.lastSpeech = 'data-semantic-summary';
-    }
+    this.lastSpeech = this.summaryGenerator.getSpeech(node, this.element)
+    return this.lastSpeech;
   }
 
   private lastSpeech = '';
@@ -146,7 +157,7 @@ export class GeneratorPool {
     speechRegion: LiveRegion,
     brailleRegion: LiveRegion
   ) {
-    let speech = getLabel(node, this.lastSpeech || 'data-semantic-speech');
+    let speech = getLabel(node, this.lastSpeech);
     speechRegion.Update(speech);
     // TODO: See if we can reuse the speech from the speech region.
     node.setAttribute('aria-label', buildSpeech(speech)[0]);
@@ -155,6 +166,14 @@ export class GeneratorPool {
     }
     this.lastSpeech = '';
     brailleRegion.Update(node.getAttribute('aria-braillelabel'));
+  }
+
+  public nextRules(_node: Element) {
+    this.speechGenerator.nextRules();
+  }
+
+  public nextStyle(node: Element) {
+    this.speechGenerator.nextStyle(node.getAttribute('data-semantic-id'));
   }
 
 }

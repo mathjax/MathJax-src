@@ -170,16 +170,22 @@ function getAttribute(node: MmlNode | Element, attr: string): string {
     node.attributes.getExplicit(attr) as string;
 }
 
+function setAttribute(node: MmlNode | Element, attr: string, value: string) {
+  return (node instanceof Element) ?
+    node.setAttribute(attr, value) :
+    node.attributes.set(attr, value);
+}
+
 /**
  * Computes the aria-label from the node.
  * @param {MmlNode} node The Math element.
  * @param {string=} sep The speech separator. Defaults to space.
  */
 export function getLabel(node: MmlNode | Element,
-                  center: string = 'data-semantic-speech',
+                  center: string = '',
                   sep: string = ' ') {
   return buildLabel(
-    getAttribute(node, center),
+    center || getAttribute(node, 'data-semantic-speech'),
     getAttribute(node, 'data-semantic-prefix'),
     // TODO: check if we need this or if it is automatic by the screen readers.
     getAttribute(node, 'data-semantic-postfix'),
@@ -232,34 +238,19 @@ export function buildSpeech(speech: string, locale: string = 'en',
  * Retrieve and sets aria and braille labels recursively.
  * @param {MmlNode} node The root node to search from.
  */
-export function setAria(node: MmlNode, locale: string) {
-  const attributes = node.attributes;
-  if (!attributes) return;
+export function setAria(node: MmlNode | Element, locale: string) {
   const speech = getLabel(node);
   if (speech) {
-    attributes.set('aria-label', buildSpeech(speech, locale)[0]);
+    setAttribute(node, 'aria-label', buildSpeech(speech, locale)[0]);
   }
   const braille = getAttribute(node, 'data-semantic-braille');
   if (braille) {
-    attributes.set('aria-braillelabel', braille);
+    setAttribute(node, 'aria-braillelabel', braille);
   }
-  for (let child of node.childNodes) {
-    setAria(child, locale);
-  }
-}
-
-/**
- * Updates Aria labels.
- * @param {MmlNode} node The root node to search from.
- */
-export function updateAria(node: HTMLElement, locale: string) { 
-  let speech = node.getAttribute('data-semantic-speech');
-  if (speech) {
-    node.setAttribute('aria-label', buildSpeech(speech, locale)[0]);
-  }
-  for (let child of Array.from(node.childNodes)) {
-    if (child instanceof HTMLElement) {
-      updateAria(child, locale);
+  let children = node.childNodes as (MmlNode | Element)[];
+  for (let child of children) {
+    if (child instanceof Element || child.attributes) {
+      setAria(child, locale);
     }
   }
 }

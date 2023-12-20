@@ -28,7 +28,7 @@ import type { ExplorerMathItem } from '../explorer.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
 import {ExplorerPool} from './ExplorerPool.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import { buildSpeech, updateAria, honk } from '../speech/SpeechUtil.js';
+import { buildSpeech, setAria, honk } from '../speech/SpeechUtil.js';
 import {Sre} from '../sre.js';
 
 // import { Walker } from './Walker.js';
@@ -267,14 +267,14 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   }
 
   public nextRules(node: HTMLElement): HTMLElement {
-    this.item.generatorPool.speechGenerator.nextRules();
+    this.item.generatorPool.nextRules(node);
     this.recomputeSpeech();
     this.refocus(node);
     return node;
   }
 
   public nextStyle(node: HTMLElement): HTMLElement {
-    this.item.generatorPool.speechGenerator.nextStyle(node.getAttribute('data-semantic-id'));
+    this.item.generatorPool.nextStyle(node);
     this.recomputeSpeech();
     this.refocus(node);
     return node;
@@ -282,7 +282,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
 
   private recomputeSpeech() {
     const speech = this.item.generatorPool.speechGenerator.getSpeech(this.item.typesetRoot, this.item.typesetRoot);
-    updateAria(this.item.typesetRoot, this.document.options.sre.locale);
+    setAria(this.item.typesetRoot, this.document.options.sre.locale);
     this.item.outputData.speech = buildSpeech(speech)[0];
     this.item.typesetRoot.setAttribute('aria-label', this.item.outputData.speech);
     this.item.attachSpeech(this.document);
@@ -404,14 +404,8 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     force = false;
     if (!this.active && !force) return;
     this.pool.unhighlight();
-    // let nodes = this.walker.getFocus(true).getNodes();
-    // if (!nodes.length) {
-    //   this.walker.refocus();
-    //   nodes = this.walker.getFocus().getNodes();
-    // }
     this.pool.highlight([this.current]);
     this.region.node = this.node;
-    console.log(1);
     this.item.generatorPool.UpdateSpeech(
       this.current,
       this.region,

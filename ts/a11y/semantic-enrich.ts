@@ -145,7 +145,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
     /**
      * @override
      */
-    public generatorPool = new GeneratorPool();
+    public generatorPool = new GeneratorPool(this.root);
 
     /**
      * @param {any} node  The node to be serialized
@@ -187,7 +187,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
           }
           Sre.setupEngine(document.options.sre);
           const enriched = Sre.toEnriched(mml);
-          this.generatorPool.node = enriched;
+          this.generatorPool.element = enriched;
           if (document.options.enableSpeech) {
             this.outputData.speech = buildSpeech(
               this.generatorPool.speechGenerator.getSpeech(enriched, enriched),
@@ -341,7 +341,7 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
     public static OPTIONS: OptionList = {
       ...BaseDocument.OPTIONS,
       enableEnrichment: true,
-      enableSpeech: true,
+      enableSpeech: false,
       enrichError: (doc: EnrichedMathDocument<N, T, D>,
                     math: EnrichedMathItem<N, T, D>,
                     err: Error) => doc.enrichError(doc, math, err),
@@ -386,7 +386,9 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
      * Attach speech from a MathItem to a node
      */
     public attachSpeech() {
+      console.log(5);
       if (!this.processed.isSet('attach-speech')) {
+        console.log(6);
         for (const math of this.math) {
           (math as EnrichedMathItem<N, T, D>).attachSpeech(this);
         }
