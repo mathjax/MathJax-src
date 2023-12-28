@@ -525,7 +525,13 @@ export default class TexParser {
    * @return {MmlNode} The newly created node.
    */
   public create(kind: string, ...rest: any[]): MmlNode {
-    return this.configuration.nodeFactory.create(kind, ...rest);
+    const node = this.configuration.nodeFactory.create(kind, ...rest);
+    if (node.isToken && node.attributes.hasExplicit('mathvariant')) {
+      if ((node.attributes.get('mathvariant') as string).charAt(0) === '-') {
+        node.setProperty('ignore-variant', true);
+      }
+    }
+    return node;
   }
 
   /**

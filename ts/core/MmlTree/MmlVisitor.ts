@@ -138,8 +138,12 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
       node.attributes.getAllAttributes()
     ) as PropertyList;
     const variants = CLASS.variants;
-    if (attributes.hasOwnProperty('mathvariant') && variants.hasOwnProperty(attributes.mathvariant as string)) {
-      attributes.mathvariant = variants[attributes.mathvariant as string];
+    if (attributes.hasOwnProperty('mathvariant')) {
+      if (variants.hasOwnProperty(attributes.mathvariant as string)) {
+        attributes.mathvariant = variants[attributes.mathvariant as string];
+      } else if (node.getProperty('ignore-variant')) {
+        delete attributes.mathvariant;
+      }
     }
     return attributes;
   }
@@ -154,7 +158,8 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
     const data = {} as PropertyList;
     const variant = node.attributes.getExplicit('mathvariant') as string;
     const variants = (this.constructor as typeof MmlVisitor).variants;
-    variant && variants.hasOwnProperty(variant) && this.setDataAttribute(data, 'variant', variant);
+    variant && (node.getProperty('ignore-variant') || variants.hasOwnProperty(variant)) &&
+      this.setDataAttribute(data, 'variant', variant);
     node.getProperty('variantForm') && this.setDataAttribute(data, 'alternate', '1');
     node.getProperty('pseudoscript') && this.setDataAttribute(data, 'pseudoscript', 'true');
     node.getProperty('autoOP') === false && this.setDataAttribute(data, 'auto-op', 'false');
