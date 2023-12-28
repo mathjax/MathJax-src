@@ -625,7 +625,10 @@ export class CommonWrapper<
    * @return {[WW, WW]}        The embellished mo node and its core mo
    */
   public getBreakNode(bbox: LineBBox): [WW, WW] {
-    const [i, j] = bbox.start || [0, 0];
+    if (!bbox.start) {
+      return [this, null] as any as [WW, WW];
+    }
+    const [i, j] = bbox.start;
     if (this.node.isEmbellished) {
       return [this, this.coreMO()] as any as [WW, WW];
     }
