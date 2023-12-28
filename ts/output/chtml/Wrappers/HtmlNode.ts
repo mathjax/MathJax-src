@@ -21,15 +21,11 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTML} from '../../chtml.js';
-import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
+import {ChtmlWrapper} from '../Wrapper.js';
 import {ChtmlWrapperFactory} from '../WrapperFactory.js';
-import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
-        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
-import {CommonHtmlNode, CommonHtmlNodeClass, CommonHtmlNodeMixin} from '../../common/Wrappers/HtmlNode.js';
+import {ChtmlXmlNode, ChtmlXmlNodeNTD, ChtmlXmlNodeClass} from './semantics.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {HtmlNode} from '../../../core/MmlTree/MmlNodes/HtmlNode.js';
-import {StyleList as StyleList} from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
@@ -39,11 +35,7 @@ import {StyleList as StyleList} from '../../../util/StyleList.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlHtmlNodeNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonHtmlNode<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {}
+export interface ChtmlHtmlNodeNTD<N, T, D> extends ChtmlXmlNodeNTD<N, T, D> {}
 
 /**
  * The ChtmlHtmlNodeClass interface for the CHTML HtmlNode wrapper
@@ -52,11 +44,7 @@ export interface ChtmlHtmlNodeNTD<N, T, D> extends ChtmlWrapper<N, T, D>, Common
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlHtmlNodeClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonHtmlNodeClass<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {
+export interface ChtmlHtmlNodeClass<N, T, D> extends ChtmlXmlNodeClass<N, T, D> {
   new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlHtmlNodeNTD<N, T, D>;
 }
 
@@ -68,46 +56,15 @@ export interface ChtmlHtmlNodeClass<N, T, D> extends ChtmlWrapperClass<N, T, D>,
  */
 export const ChtmlHtmlNode = (function <N, T, D>(): ChtmlHtmlNodeClass<N, T, D> {
 
-  const Base = CommonHtmlNodeMixin<
-      N, T, D,
-      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
-      ChtmlHtmlNodeClass<N, T, D>
-    >(ChtmlWrapper);
-
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class ChtmlHtmlNode extends Base implements ChtmlHtmlNodeNTD<N, T, D> {
+  return class ChtmlHtmlNode extends ChtmlXmlNode implements ChtmlHtmlNodeNTD<N, T, D> {
 
     /**
      * @override
      */
     public static kind = HtmlNode.prototype.kind;
-
-    /**
-     * @override
-     */
-    public static styles: StyleList = {
-      'mjx-html': {
-        'line-height': 'normal',
-        'text-align': 'initial'
-      },
-      'mjx-html-holder': {
-        display: 'block',
-        position: 'absolute',
-        width: '100%',
-        height: '100%'
-      }
-    };
-
-    /**
-     * @override
-     */
-    public toCHTML(parents: N[]) {
-      this.markUsed();
-      this.dom = [this.adaptor.append(parents[0], this.getHTML()) as N];
-    }
 
   };
 

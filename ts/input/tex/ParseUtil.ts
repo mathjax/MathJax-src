@@ -109,16 +109,19 @@ function muReplace([value, unit, length]: [string, string, number]): [string, st
  * Implementation of the keyval function from https://www.ctan.org/pkg/keyval
  * @param {string} text The optional parameter string for a package or
  *     command.
+ * @param {boolean?} l3keys If true, use l3key-style parsing (only remove one set of braces)
  * @return {EnvList} Set of options as key/value pairs.
  */
-function readKeyval(text: string): EnvList {
+function readKeyval(text: string, l3keys: boolean = false): EnvList {
   let options: EnvList = {};
   let rest = text;
   let end, key, val;
+  let dropBrace = true;
   while (rest) {
-    [key, end, rest] = readValue(rest, ['=', ',']);
+    [key, end, rest] = readValue(rest, ['=', ','], l3keys, dropBrace);
+    dropBrace = false;
     if (end === '=') {
-      [val, end, rest] = readValue(rest, [',']);
+      [val, end, rest] = readValue(rest, [','], l3keys);
       val = (val === 'false' || val === 'true') ?
         JSON.parse(val) : val;
       options[key] = val;
@@ -150,10 +153,13 @@ function removeBraces(text: string, count: number): string {
  * string is exhausted.
  * @param {string} text The string to process.
  * @param {string[]} end List of possible end characters.
+ * @param {boolean?} l3keys If true, use l3key-style parsing (only remove one set of braces)
+ * @param {boolean?} dropBrace True if the outermost braces should be dropped
  * @return {[string, string, string]} The collected value, the actual end
  *     character, and the rest of the string still to parse.
  */
-function readValue(text: string, end: string[]): [string, string, string] {
+function readValue(text: string, end: string[],
+                   l3keys: boolean = false, dropBrace: boolean = false): [string, string, string] {
   let length = text.length;
   let braces = 0;
   let value = '';
@@ -165,6 +171,10 @@ function readValue(text: string, end: string[]): [string, string, string] {
   while (index < length) {
     let c = text[index++];
     switch (c) {
+      case '\\':               // Handle control sequences (in particular, \{ and \})
+        value += c + text[index++];
+        startCount = stopCount = false;
+        continue;
       case ' ':                // Ignore spaces.
         break;
       case '{':
@@ -172,9 +182,6 @@ function readValue(text: string, end: string[]): [string, string, string] {
           start++;
         } else {
           stopCount = false;
-          if (start > braces) {   // Some start left braces have been closed.
-            start = braces;
-          }
         }
         braces++;
         break;
@@ -192,7 +199,10 @@ function readValue(text: string, end: string[]): [string, string, string] {
         if (!braces && end.indexOf(c) !== -1) {   // End character reached.
           return [stopCount ? 'true' :            // If Stop count is true we
             // have balanced braces, only.
-            removeBraces(value, start), c, text.slice(index)];
+            removeBraces(value, l3keys ? Math.min(1, start) : start), c, text.slice(index)];
+        }
+        if (start > braces) {   // Some start left braces have been closed.
+          start = braces;
         }
         startCount = false;
         stopCount = false;
@@ -203,7 +213,8 @@ function readValue(text: string, end: string[]): [string, string, string] {
     throw new TexError('ExtraOpenMissingClose',
                        'Extra open brace or missing close brace');
   }
-  return [stopCount ? 'true' : removeBraces(value, start), '', text.slice(index)];
+  return (dropBrace && !stopCount && start) ? ['', '', removeBraces(value, 1)] :
+    [stopCount ? 'true' : removeBraces(value, l3keys ? Math.min(1, start) : start), '', text.slice(index)];
 }
 
 export const ParseUtil = {
@@ -230,7 +241,7 @@ export const ParseUtil = {
    *     unit name, length of matched string. The latter is interesting in the
    *     case of trailing garbage.
    */
-  matchDimen: function(
+  matchDimen(
     dim: string, rest: boolean = false): [string, string, number] {
     let match = dim.match(rest ? ParseUtil.UNIT_CASES.dimenRest : ParseUtil.UNIT_CASES.dimenEnd);
     return match ?
@@ -244,7 +255,7 @@ export const ParseUtil = {
    * @param {string} dim The attribute string.
    * @return {number} The numerical value.
    */
-  dimen2em: function(dim: string): number {
+  dimen2em(dim: string): number {
     let [value, unit] = ParseUtil.matchDimen(dim);
     let m = parseFloat(value || '1');
     let factor = ParseUtil.UNIT_CASES.get(unit);
@@ -257,7 +268,7 @@ export const ParseUtil = {
    * @param {number} m The number.
    * @return {string} The em dimension string.
    */
-  em: function(m: number): string {
+  em(m: number): string {
     if (Math.abs(m) < .0006) {
       return '0em';
     }
@@ -273,7 +284,7 @@ export const ParseUtil = {
    * @param {number[]} W  The widths to be turned into em values
    * @return {string}     The numbers with em units, separated by spaces.
    */
-  cols: function(...W: number[]): string {
+  cols(...W: number[]): string {
     return W.map(n => ParseUtil.em(n)).join(' ');
   },
 
@@ -286,8 +297,8 @@ export const ParseUtil = {
    * @param {string} close The closing fence.
    * @param {string=} big Bigg command.
    */
-  fenced: function(configuration: ParseOptions, open: string, mml: MmlNode,
-                   close: string, big: string = '', color: string = '') {
+  fenced(configuration: ParseOptions, open: string, mml: MmlNode,
+         close: string, big: string = '', color: string = '') {
     // @test Fenced, Fenced3
     let nf = configuration.nodeFactory;
     let mrow = nf.create('node', 'mrow', [],
@@ -324,8 +335,8 @@ export const ParseUtil = {
    * @param {string} close The closing fence.
    * @return {MmlNode} The mrow node.
    */
-  fixedFence: function(configuration: ParseOptions, open: string,
-                       mml: MmlNode, close: string): MmlNode {
+  fixedFence(configuration: ParseOptions, open: string,
+             mml: MmlNode, close: string): MmlNode {
     // @test Choose, Over With Delims, Above with Delims
     let mrow = configuration.nodeFactory.create('node',
                                                 'mrow', [], {open: open, close: close, texClass: TEXCLASS.ORD});
@@ -353,8 +364,8 @@ export const ParseUtil = {
    * @param {string} side The side of the fence (l or r).
    * @return {MmlNode} The mathchoice node.
    */
-  mathPalette: function(configuration: ParseOptions, fence: string,
-                        side: string): MmlNode  {
+  mathPalette(configuration: ParseOptions, fence: string,
+              side: string): MmlNode  {
     if (fence === '{' || fence === '}') {
       fence = '\\' + fence;
     }
@@ -372,7 +383,7 @@ export const ParseUtil = {
    * @param {ParseOptions} configuration The current parse options.
    * @param {MmlNode[]} nodes The row of nodes to scan for an initial <mo>
    */
-  fixInitialMO: function(configuration: ParseOptions, nodes: MmlNode[]) {
+  fixInitialMO(configuration: ParseOptions, nodes: MmlNode[]) {
     for (let i = 0, m = nodes.length; i < m; i++) {
       let child = nodes[i];
       if (child && (!NodeUtil.isType(child, 'mspace') &&
@@ -398,7 +409,7 @@ export const ParseUtil = {
    * @param {string} font The mathvariant to use
    * @return {MmlNode[]} The nodes corresponding to the internal math expression.
    */
-  internalMath: function(
+  internalMath(
     parser: TexParser,
     text: string,
     level?: number | string,
@@ -525,7 +536,7 @@ export const ParseUtil = {
    * @param {EnvList} def The attributes of the text node.
    * @return {MmlNode} The text node.
    */
-  internalText: function(parser: TexParser, text: string, def: EnvList): MmlNode {
+  internalText(parser: TexParser, text: string, def: EnvList): MmlNode {
     // @test Label, Fbox, Hbox
     text = text.replace(/\n+/g, ' ').replace(/^\s+/, entities.nbsp).replace(/\s+$/, entities.nbsp);
     let textNode = parser.create('text', text);
@@ -541,7 +552,7 @@ export const ParseUtil = {
    * @param {boolean} stack      True if super- or sub-scripts should stack.
    * @return {MmlNode}           The generated node (MmlMunderover or TeXAtom)
    */
-  underOver: function(parser: TexParser, base: MmlNode, script: MmlNode, pos: string, stack: boolean): MmlNode {
+  underOver(parser: TexParser, base: MmlNode, script: MmlNode, pos: string, stack: boolean): MmlNode {
     // @test Overline
     ParseUtil.checkMovableLimits(base);
     if (NodeUtil.isType(base, 'munderover') && NodeUtil.isEmbellished(base)) {
@@ -566,7 +577,7 @@ export const ParseUtil = {
    * Set movablelimits to false if necessary.
    * @param {MmlNode} base   The base node being tested.
    */
-  checkMovableLimits: function(base: MmlNode) {
+  checkMovableLimits(base: MmlNode) {
     const symbol = (NodeUtil.isType(base, 'mo') ? NodeUtil.getForm(base) : null);
     if (NodeUtil.getProperty(base, 'movablelimits') || (symbol && symbol[3] && symbol[3].movablelimits)) {
       // @test Overline Sum
@@ -579,7 +590,7 @@ export const ParseUtil = {
    * @param {string} text The string to clean.
    * @return {string} The string with leading and trailing whitespace removed.
    */
-  trimSpaces: function(text: string): string {
+  trimSpaces(text: string): string {
     if (typeof(text) !== 'string') {
       return text;
     }
@@ -598,7 +609,7 @@ export const ParseUtil = {
    * @param {TexParser?} parser The current tex parser.
    * @return {ArrayItem} The altered array item.
    */
-  setArrayAlign: function(array: ArrayItem, align: string, parser?: TexParser): ArrayItem {
+  setArrayAlign(array: ArrayItem, align: string, parser?: TexParser): ArrayItem {
     // @test Array1, Array2, Array Test
     if (!parser) {
       align = ParseUtil.trimSpaces(align || '');
@@ -628,8 +639,7 @@ export const ParseUtil = {
    * @param {string} str The macro parameter string.
    * @return {string} The string with all parameters replaced by arguments.
    */
-  substituteArgs: function(parser: TexParser, args: string[],
-                           str: string): string {
+  substituteArgs(parser: TexParser, args: string[], str: string): string {
     let text = '';
     let newstring = '';
     let i = 0;
@@ -668,7 +678,7 @@ export const ParseUtil = {
    * @param {string} s2 The string to add.
    * @return {string} The combined string.
    */
-  addArgs: function(parser: TexParser, s1: string, s2: string): string {
+  addArgs(parser: TexParser, s1: string, s2: string): string {
     if (s2.match(/^[a-z]/i) && s1.match(/(^|[^\\])(\\\\)*\\[a-z]+$/i)) {
       s1 += ' ';
     }
@@ -685,7 +695,7 @@ export const ParseUtil = {
    * @param {TexParser} parser The current TeX parser.
    * @param {boolean} isMacro  True if we are substituting a macro, false for environment.
    */
-  checkMaxMacros: function(parser: TexParser, isMacro: boolean = true) {
+  checkMaxMacros(parser: TexParser, isMacro: boolean = true) {
     if (++parser.macroCount <= parser.configuration.options['maxMacros']) {
       return;
     }
@@ -704,7 +714,7 @@ export const ParseUtil = {
   /**
    *  Check for bad nesting of equation environments
    */
-  checkEqnEnv: function(parser: TexParser, nestable: boolean = true) {
+  checkEqnEnv(parser: TexParser, nestable: boolean = true) {
     const top = parser.stack.Top();
     const first = top.First;
     //
@@ -725,7 +735,7 @@ export const ParseUtil = {
    * @param {TexParser} parser   The active tex parser
    * @return {MmlNode}           The duplicate tree
    */
-  copyNode: function(node: MmlNode, parser: TexParser): MmlNode  {
+  copyNode(node: MmlNode, parser: TexParser): MmlNode  {
     const tree = node.copy();
     const options = parser.configuration;
     tree.walkTree((n: MmlNode) => {
@@ -745,7 +755,7 @@ export const ParseUtil = {
    * @param {string} value The attribute value to filter.
    * @return {string} The filtered value.
    */
-  mmlFilterAttribute: function(_parser: TexParser, _name: string, value: string): string {
+  mmlFilterAttribute(_parser: TexParser, _name: string, value: string): string {
     // TODO: Implement in security package.
     return value;
   },
@@ -756,7 +766,7 @@ export const ParseUtil = {
    * @param {TexParser} parser The current tex parser.
    * @return {EnvList} The initialised environment list.
    */
-  getFontDef: function(parser: TexParser): EnvList {
+  getFontDef(parser: TexParser): EnvList {
     const font = parser.stack.env['font'];
     return (font ? {mathvariant: font} : {});
   },
@@ -770,12 +780,14 @@ export const ParseUtil = {
    *     given only allowed arguments are returned.
    * @param {boolean?} error If true, raises an exception if not allowed options
    *     are found.
+   * @param {boolean?} l3keys If true, use l3key-style parsing (only remove one set of braces)
    * @return {EnvList} The attribute list.
    */
-  keyvalOptions: function(attrib: string,
+  keyvalOptions(attrib: string,
                           allowed: {[key: string]: number} = null,
-                          error: boolean = false): EnvList {
-    let def: EnvList = readKeyval(attrib);
+                          error: boolean = false,
+                          l3keys: boolean = false): EnvList {
+    let def: EnvList = readKeyval(attrib, l3keys);
     if (allowed) {
       for (let key of Object.keys(def)) {
         if (!allowed.hasOwnProperty(key)) {
@@ -793,7 +805,7 @@ export const ParseUtil = {
    * @param {string} c   The character to test.
    * @return {boolean}   True if the character is Latin or Greek
    */
-  isLatinOrGreekChar: function(c: string): boolean {
+  isLatinOrGreekChar(c: string): boolean {
     return !!c.normalize('NFD').match(/[a-zA-Z\u0370-\u03F0]/);
   }
 

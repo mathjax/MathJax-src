@@ -31,6 +31,7 @@ import {ClearspeakPreferences} from '#sre/speech_rules/clearspeak_preferences.js
 import {Highlighter} from '#sre/highlighter/highlighter.js';
 import * as HighlighterFactory from '#sre/highlighter/highlighter_factory.js';
 import {SpeechGenerator} from '#sre/speech_generator/speech_generator.js';
+import { parseInput } from '#sre/common/dom_util.js';
 import {Variables} from '#sre/common/variables.js';
 import MathMaps from './mathmaps.js';
 
@@ -64,6 +65,8 @@ export namespace Sre {
   export const getSpeechGenerator = SpeechGeneratorFactory.generator;
 
   export const getWalker = WalkerFactory.walker;
+
+  export const parseDOM = parseInput;
 
   /**
    * Loads locales that are already included in the imported MathMaps. Defaults

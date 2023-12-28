@@ -806,35 +806,6 @@ export abstract class CommonOutputJax<
   public abstract measureTextNode(text: N): UnknownBBox;
 
   /**
-   * Measure the width, height and depth of an annotation-xml node's content
-   *
-   * @param{N} xml          The xml content node to be measured
-   * @return {UnknownBBox}  The width, height, and depth of the content
-   */
-  public measureXMLnode(xml: N): UnknownBBox {
-    const adaptor = this.adaptor;
-    const content =  this.html('mjx-xml-block', {style: {display: 'inline-block'}}, [adaptor.clone(xml)]);
-    const base = this.html('mjx-baseline', {style: {display: 'inline-block', width: 0, height: 0}});
-    const style = {
-      position: 'absolute',
-      display: 'inline-block',
-      'font-family': 'initial',
-      'line-height': 'normal'
-    };
-    const node = this.html('mjx-measure-xml', {style}, [base, content]);
-    adaptor.append(adaptor.parent(this.math.start.node), this.container);
-    adaptor.append(this.container, node);
-    const em = this.math.metrics.em * this.math.metrics.scale;
-    const {left, right, bottom, top} = adaptor.nodeBBox(content);
-    const w = (right - left) / em;
-    const h = (adaptor.nodeBBox(base).top - top) / em;
-    const d = (bottom - top) / em - h;
-    adaptor.remove(this.container);
-    adaptor.remove(node);
-    return {w, h, d};
-  }
-
-  /**
    * @param {CssFontData} font   The family, style, and weight for the given font
    * @param {StyleList} styles   The style object to add the font data to
    * @return {StyleList}         The modified (or initialized) style object
