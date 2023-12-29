@@ -309,7 +309,7 @@ export class Menu {
         '</div>',
         '<p><b>Math Zoom</b>: If you are having difficulty reading an',
         ' equation, MathJax can enlarge it to help you see it better, or',
-        ' you can scall all the math on the page to make it larger.',
+        ' you can scale all the math on the page to make it larger.',
         ' Turn these features on in the <b>Math Settings</b> menu.</p>',
         '<p><b>Preferences</b>: MathJax uses your browser\'s localStorage database',
         ' to save the preferences set via this menu locally in your browser.  These',

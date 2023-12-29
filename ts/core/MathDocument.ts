@@ -909,6 +909,9 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
     if (state < STATE.COMPILED) {
       this.processed.clear('compile');
     }
+    if (state < STATE.FINDMATH) {
+      this.processed.clear('findMath');
+    }
     return this;
   }
 
