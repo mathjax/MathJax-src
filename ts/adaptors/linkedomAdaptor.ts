@@ -66,6 +66,22 @@ export class LinkedomAdaptor extends NodeMixin<HTMLElement, Text, Document, HTML
  */
 export function linkedomAdaptor(parseHTML: any, options: OptionList = null): LinkedomAdaptor {
   const window = parseHTML('<html></html>');
-  window.HTMLCollection = class {};  // add fake class for missing HTMLCollecton
+  //
+  // Add fake class for missing HTMLCollection
+  //
+  window.HTMLCollection = class {};
+  //
+  // Add missing splitText() method
+  //
+  window.Text.prototype.splitText = function (offset: number) {
+    const text = this.data;
+    if (offset > text.length) {
+      throw Error('Index Size Error');
+    }
+    const newNode = window.document.createTextNode(text.substring(offset));
+    this.parentNode.insertBefore(newNode, this.nextSibling);
+    this.data = text.substring(0, offset);
+    return newNode;
+  };
   return new LinkedomAdaptor(window, options);
 }
