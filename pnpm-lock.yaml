@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  ieee-euler-font-extension:
+    specifier: 4.0.0-beta.4
+    version: 4.0.0-beta.4
   mathjax-modern-font:
     specifier: ^4.0.0-beta.4
     version: 4.0.0-beta.4
@@ -1052,6 +1055,10 @@ packages:
     dependencies:
       function-bind: 1.1.2
     dev: true
+
+  /ieee-euler-font-extension@4.0.0-beta.4:
+    resolution: {integrity: sha512-qcws3Z+XJ4z/JjrJtfKQAcx8mWzWmRI4/7ZgIDkIBansNdv4RBjZCGMUbP5ZB9uJjwBhURWO+reYnHG89nEVAg==}
+    dev: false
 
   /import-local@3.1.0:
     resolution: {integrity: sha512-ASB07uLtnDs1o6EHjKpX34BKYDSqnFerfTOJL2HvMqF70LnxpjkzDB8J44oT9pu4AMPkQwf8jl6szgvNd2tRIg==}

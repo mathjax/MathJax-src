@@ -138,6 +138,7 @@
     "xslt3": "^2.6.0"
   },
   "dependencies": {
+    "ieee-euler-font-extension": "4.0.0-beta.4",
     "mathjax-modern-font": "^4.0.0-beta.4",
     "mhchemparser": "^4.2.1",
     "mj-context-menu": "^0.9.1",
