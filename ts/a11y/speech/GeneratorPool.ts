@@ -145,6 +145,10 @@ export class GeneratorPool {
   // Summary computations are very fast, and we recompute in case the rule sets
   // have changed and there is a different summary.
   public summary(node: Element) {
+    if (this.lastSummary) {
+      this.CleanUp(node);
+      return this.lastSpeech;
+    }
     this.lastSpeech = this.summaryGenerator.getSpeech(node, this.element)
     return this.lastSpeech;
   }

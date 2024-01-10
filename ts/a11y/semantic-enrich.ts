@@ -386,9 +386,7 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
      * Attach speech from a MathItem to a node
      */
     public attachSpeech() {
-      console.log(5);
       if (!this.processed.isSet('attach-speech')) {
-        console.log(6);
         for (const math of this.math) {
           (math as EnrichedMathItem<N, T, D>).attachSpeech(this);
         }
