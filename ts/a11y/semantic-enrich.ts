@@ -185,7 +185,6 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
           } else {
             mml = this.adjustSelections();
           }
-          Sre.setupEngine(document.options.sre);
           const enriched = Sre.toEnriched(mml);
           this.generatorPool.element = enriched;
           if (document.options.enableSpeech) {

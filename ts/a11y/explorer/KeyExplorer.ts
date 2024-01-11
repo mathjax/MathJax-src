@@ -268,24 +268,16 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
 
   public nextRules(node: HTMLElement): HTMLElement {
     this.item.generatorPool.nextRules(node);
-    this.recomputeSpeech();
+    this.Speech();
     this.refocus(node);
     return node;
   }
 
   public nextStyle(node: HTMLElement): HTMLElement {
     this.item.generatorPool.nextStyle(node);
-    this.recomputeSpeech();
+    this.Speech();
     this.refocus(node);
     return node;
-  }
-
-  private recomputeSpeech() {
-    const speech = this.item.generatorPool.speechGenerator.getSpeech(this.item.typesetRoot, this.item.typesetRoot);
-    setAria(this.item.typesetRoot, this.document.options.sre.locale);
-    this.item.outputData.speech = buildSpeech(speech)[0];
-    this.item.typesetRoot.setAttribute('aria-label', this.item.outputData.speech);
-    this.item.attachSpeech(this.document);
   }
 
   private refocus(node: HTMLElement) {
@@ -324,7 +316,9 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     honk();
   }
 
-  private static updatePromise = Promise.resolve();
+  private static updatePromise() {
+    return Sre.sreReady();
+  } 
 
   /**
    * The Sre speech generator associated with the walker.
@@ -346,7 +340,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    * necessary, as otherwise it leads to incorrect stacking.
    * @type {boolean}
    */
-  private restarted: boolean = false;
+  // private restarted: boolean = false;
 
   /**
    * @constructor
@@ -369,22 +363,27 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    * @override
    */
   public Start() {
-    // this.item.generatorPool.update(this.document.options);
     if (this.node.hasAttribute('tabindex')) {
       this.node.removeAttribute('tabindex');
     }
     if (!this.attached) return;
     if (this.active) return;
+    let promise = SpeechExplorer.updatePromise();
+    if (this.item.generatorPool.update(this.document.options)) {
+      promise = promise.then(
+        () => this.Speech()
+      );
+    };
     this.current.setAttribute('tabindex', '0');
     this.current.focus();
     super.Start();
     if (this.document.options.a11y.subtitles) {
-      SpeechExplorer.updatePromise.then(
-        () => this.region.Show(this.node, this.highlighter))
+      promise.then(
+        () => this.region.Show(this.node, this.highlighter));
     }
     if (this.document.options.a11y.viewBraille) {
-      SpeechExplorer.updatePromise.then(
-        () => this.brailleRegion.Show(this.node, this.highlighter))
+      promise.then(
+        () => this.brailleRegion.Show(this.node, this.highlighter));
     }
     if (this.document.options.a11y.keyMagnifier) {
       this.magnifyRegion.Show(this.node, this.highlighter);
@@ -437,18 +436,14 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
 
 
   /**
-   * Computes the speech for the current expression once Sre is ready.
-   * @param {Walker} walker The sre walker.
+   * Computes the speech for the current expression.
    */
-  public Speech(walker: Sre.walker) {
-    SpeechExplorer.updatePromise.then(() => {
-      walker.speech();
-      this.node.setAttribute('hasspeech', 'true');
-      this.Update(true);
-      if (this.restarted && this.document.options.a11y[this.showRegion]) {
-        this.region.Show(this.node, this.highlighter);
-      }
-    });
+  public Speech() {
+    const speech = this.item.generatorPool.speechGenerator.getSpeech(this.item.typesetRoot, this.item.typesetRoot);
+    setAria(this.item.typesetRoot, this.document.options.sre.locale);
+    this.item.outputData.speech = buildSpeech(speech)[0];
+    this.item.typesetRoot.setAttribute('aria-label', this.item.outputData.speech);
+    this.item.attachSpeech(this.document);
   }
 
 

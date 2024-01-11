@@ -69,6 +69,7 @@ export class GeneratorPool {
 
   public set options(options: OptionList) {
     this._options = options;
+    Sre.setupEngine(options.sre);
     this.speechGenerator.setOptions(Object.assign(
       {}, options?.sre || {}, {
         modality: 'speech',
@@ -94,6 +95,8 @@ export class GeneratorPool {
     return this._options;
   }
 
+  private _init = false;
+
   /**
    * Init method for speech generation. Runs a retry until locales have been
    * loaded.
@@ -101,7 +104,9 @@ export class GeneratorPool {
    * @param {OptionList} options A list of options.
    */
   public init(options: OptionList) {
+    if (this._init) return;
     this.options = options;
+    this._init = true;
     if (this._update(options)) {
       mathjax.retryAfter(Sre.sreReady());
     }
@@ -113,9 +118,9 @@ export class GeneratorPool {
    *
    * @param {OptionList} options A list of options.
    */
-  public async update(options: OptionList) {
+  public update(options: OptionList) {
     this.options = options;
-    return this._update(options) ? Sre.sreReady() : Promise.resolve();
+    return this._update(options);
   }
 
   private _update(options: OptionList) {
