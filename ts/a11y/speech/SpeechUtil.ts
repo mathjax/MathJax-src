@@ -21,7 +21,6 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import Sre from '../sre.js';
 
 const ProsodyKeys = [ 'pitch', 'rate', 'volume' ];
@@ -164,31 +163,19 @@ function extractProsody(attr: string) {
  *
  */
 
-function getAttribute(node: MmlNode | Element, attr: string): string {
-  return (node instanceof Element) ?
-    node.getAttribute(attr) :
-    node.attributes.getExplicit(attr) as string;
-}
-
-function setAttribute(node: MmlNode | Element, attr: string, value: string) {
-  return (node instanceof Element) ?
-    node.setAttribute(attr, value) :
-    node.attributes.set(attr, value);
-}
-
 /**
  * Computes the aria-label from the node.
  * @param {MmlNode} node The Math element.
  * @param {string=} sep The speech separator. Defaults to space.
  */
-export function getLabel(node: MmlNode | Element,
+export function getLabel(node: Element,
                   center: string = '',
                   sep: string = ' ') {
   return buildLabel(
-    center || getAttribute(node, 'data-semantic-speech'),
-    getAttribute(node, 'data-semantic-prefix'),
+    center || node.getAttribute('data-semantic-speech'),
+    node.getAttribute('data-semantic-prefix'),
     // TODO: check if we need this or if it is automatic by the screen readers.
-    getAttribute(node, 'data-semantic-postfix'),
+    node.getAttribute('data-semantic-postfix'),
     sep
   );
 }
@@ -238,18 +225,17 @@ export function buildSpeech(speech: string, locale: string = 'en',
  * Retrieve and sets aria and braille labels recursively.
  * @param {MmlNode} node The root node to search from.
  */
-export function setAria(node: MmlNode | Element, locale: string) {
+export function setAria(node: Element, locale: string) {
   const speech = getLabel(node);
   if (speech) {
-    setAttribute(node, 'aria-label', buildSpeech(speech, locale)[0]);
+    node.setAttribute('aria-label', buildSpeech(speech, locale)[0]);
   }
-  const braille = getAttribute(node, 'data-semantic-braille');
+  const braille = node.getAttribute('data-semantic-braille');
   if (braille) {
-    setAttribute(node, 'aria-braillelabel', braille);
+    node.setAttribute('aria-braillelabel', braille);
   }
-  let children = node.childNodes as (MmlNode | Element)[];
-  for (let child of children) {
-    if (child instanceof Element || child.attributes) {
+  for (let child of Array.from(node.childNodes)) {
+    if (child instanceof Element) {
       setAria(child, locale);
     }
   }

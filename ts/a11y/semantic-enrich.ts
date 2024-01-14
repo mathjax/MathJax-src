@@ -31,7 +31,7 @@ import {MathML} from '../input/mathml.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {OptionList, expandable} from '../util/Options.js';
 import {Sre} from './sre.js';
-import { buildSpeech, setAria } from './speech/SpeechUtil.js';
+import { buildSpeech } from './speech/SpeechUtil.js';
 
 import { GeneratorPool } from './speech/GeneratorPool.js';
 
@@ -107,7 +107,7 @@ export interface EnrichedMathItem<N, T, D> extends MathItem<N, T, D> {
   /**
    * The speech generators for this math item.
    */
-  generatorPool: GeneratorPool;
+  generatorPool: GeneratorPool<N>;
 
   /**
    * @param {MathDocument} document  The document where enrichment is occurring
@@ -145,7 +145,9 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
     /**
      * @override
      */
-    public generatorPool = new GeneratorPool(this.root);
+    public generatorPool = new GeneratorPool<N>();
+
+    public toMathML = toMathML;
 
     /**
      * @param {any} node  The node to be serialized
@@ -177,6 +179,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
       if (this.state() >= STATE.ENRICHED) return;
       if (!this.isEscaped && (document.options.enableEnrichment || force)) {
         this.generatorPool.init(document.options);
+        this.generatorPool.setAttribute = document.adaptor.setAttribute;
         const math = new document.options.MathItem('', MmlJax);
         try {
           let mml;
@@ -186,15 +189,6 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
             mml = this.adjustSelections();
           }
           const enriched = Sre.toEnriched(mml);
-          this.generatorPool.element = enriched;
-          if (document.options.enableSpeech) {
-            this.outputData.speech = buildSpeech(
-              this.generatorPool.speechGenerator.getSpeech(enriched, enriched),
-              document.options.sre.locale,
-              document.options.sre.rate)[0];
-            this.outputData.braille =
-              this.generatorPool.brailleGenerator.getSpeech(enriched, enriched);
-          }
           this.inputData.enrichedMml = math.math = this.serializeMml(enriched);
           math.display = this.display;
           math.compile(document);
@@ -202,9 +196,6 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
         } catch (err) {
           document.options.enrichError(document, this, err);
         }
-      }
-      if (document.options.enableSpeech) {
-        setAria(this.root, document.options.sre.locale);
       }
       this.state(STATE.ENRICHED);
     }
@@ -228,13 +219,39 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
     }
 
     /**
+     * Computes speech and braille label content if the information is already
+     * on the node. In particular it respects existing labels.
+     *
+     * @return {[string, string]} Pair comprising speech and braille.
+     */
+    private existingSpeech(): [string, string] {
+      const attributes = this.root.attributes;
+      let speech = attributes.get('aria-label') as string;
+      if (!speech) {
+        speech = buildSpeech(
+          attributes.get('data-semantic-speech') as string || '')[0];
+      }
+      let braille = (attributes.get('aria-braillelabel') ||
+        attributes.get('data-semantic-braille') || '') as string;
+      return [speech, braille];
+    }
+
+    /**
+     * Attaches the aria labels for speech and braille.
+     *
      * @param {MathDocument} document   The MathDocument for the MathItem
      */
     public attachSpeech(document: MathDocument<N, T, D>) {
       if (this.state() >= STATE.ATTACHSPEECH) return;
-      const attributes = this.root.attributes;
-      const speech = (attributes.get('aria-label') || this.outputData.speech);
-      const braille = (attributes.get('aria-braillelabel') || this.outputData.braille);
+      let [speech, braille] = this.existingSpeech();
+      let [newSpeech, newBraille] = ['', ''];
+      if (!speech || !braille ||
+        document.options.enableSpeech || document.options.enableBraille) {
+        [newSpeech, newBraille] = this.generatorPool.computeSpeech(
+          this.typesetRoot, this.toMathML(this.root, this));
+      }
+      speech = speech || newSpeech;
+      braille = braille || newBraille;
       if (!speech && !braille) {
         this.state(STATE.ATTACHSPEECH);
         return;

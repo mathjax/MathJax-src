@@ -101,11 +101,6 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     protected refocus: boolean = false;
 
     /**
-     * Save explorer id during rerendering.
-     */
-    protected savedId: string = null;
-
-    /**
      * Add the explorer to the output for this math item
      *
      * @param {HTMLDocument} document   The MathDocument for the MathItem
@@ -116,10 +111,6 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
       if (!this.isEscaped && (document.options.enableExplorer || force)) {
         const node = this.typesetRoot;
         const mml = toMathML(this.root);
-        if (this.savedId) {
-          this.typesetRoot.setAttribute('sre-explorer-id', this.savedId);
-          this.savedId = null;
-        }
         if (!this.explorers) {
           this.explorers = new ExplorerPool();
         }
@@ -132,8 +123,8 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      * @override
      */
     public rerender(document: ExplorerMathDocument, start: number = STATE.RERENDER) {
-      this.savedId = this.typesetRoot.getAttribute('sre-explorer-id');
-      this.refocus = (hasWindow ? window.document.activeElement === this.typesetRoot : false);
+      this.refocus = (hasWindow ?
+        window.document.activeElement === this.typesetRoot?.childNodes[0] : false);
       if (this.explorers) {
         this.explorers.reattach();
       }

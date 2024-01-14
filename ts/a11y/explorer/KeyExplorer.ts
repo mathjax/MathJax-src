@@ -31,8 +31,6 @@ import {MmlNode} from '../../core/MmlTree/MmlNode.js';
 import { buildSpeech, setAria, honk } from '../speech/SpeechUtil.js';
 import {Sre} from '../sre.js';
 
-// import { Walker } from './Walker.js';
-
 
 /**
  * Interface for keyboard explorers. Adds the necessary keyboard events.
@@ -363,10 +361,10 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    * @override
    */
   public Start() {
+    if (!this.attached) return;
     if (this.node.hasAttribute('tabindex')) {
       this.node.removeAttribute('tabindex');
     }
-    if (!this.attached) return;
     if (this.active) return;
     let promise = SpeechExplorer.updatePromise();
     if (this.item.generatorPool.update(this.document.options)) {
@@ -399,41 +397,17 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   public Update(force: boolean = false) {
     // TODO (v4): This is a hack to avoid double voicing on initial startup!
     // Make that cleaner and remove force as it is not really used!
-    // let noUpdate = force;
     if (!this.active && !force) return;
     this.pool.unhighlight();
     this.pool.highlight([this.current]);
     this.region.node = this.node;
-    this.item.generatorPool.UpdateSpeech(
+    this.item.generatorPool.updateSpeech(
       this.current,
       this.region,
       this.brailleRegion
     );
     this.magnifyRegion.Update(this.current);
-    // let options = this.speechGenerator.getOptions();
-    // This is a necessary in case speech options have changed via keypress
-    // during walking.
-    // if (options.modality === 'speech') {
-    //   this.document.options.sre.domain = options.domain;
-    //   this.document.options.sre.style = options.style;
-    //   this.document.options.a11y.speechRules =
-    //     options.domain + '-' + options.style;
-    // }
-    // Ensure this autovoicing is retained later:
-    // SpeechExplorer.updatePromise = SpeechExplorer.updatePromise.then(async () => {
-    //   return Sre.sreReady()
-    //     .then(() => Sre.setupEngine({markup: options.markup,
-    //                                  modality: options.modality,
-    //                                  locale: options.locale}))
-    //     .then(() => {
-    //       if (!noUpdate) {
-    //         let speech = this.walker.speech();
-    //         this.region.Update(speech);
-    //       }
-    //     });
-    // });
   }
-
 
   /**
    * Computes the speech for the current expression.
@@ -445,7 +419,6 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     this.item.typesetRoot.setAttribute('aria-label', this.item.outputData.speech);
     this.item.attachSpeech(this.document);
   }
-
 
   /**
    * @override

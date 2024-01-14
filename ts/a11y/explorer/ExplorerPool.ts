@@ -253,7 +253,9 @@ export class ExplorerPool {
    * Restarts explorers after a MathItem is rerendered.
    */
   public restart() {
-    this._restart.forEach(x => this.explorers[x].Start());
+    this._restart.forEach(x => {
+      this.explorers[x].Start(); 
+    });
     this._restart = [];
   }
 

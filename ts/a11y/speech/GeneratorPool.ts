@@ -19,8 +19,9 @@ import {mathjax} from '../../mathjax.js';
 import {Sre} from '../sre.js';
 import {OptionList} from '../../util/Options.js';
 import {LiveRegion} from '../explorer/Region.js';
-import { getLabel, buildSpeech } from '../speech/SpeechUtil.js';
-import { MmlNode } from '../../core/MmlTree/MmlNode.js';
+import { getLabel, setAria, buildSpeech } from '../speech/SpeechUtil.js';
+// import { MmlNode } from '../../core/MmlTree/MmlNode.js';
+// import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 
 /**
  * @fileoverview Speech generator collections for enrichment and explorers.
@@ -28,13 +29,18 @@ import { MmlNode } from '../../core/MmlTree/MmlNode.js';
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-export class GeneratorPool {
+export class GeneratorPool<N> {
 
   private _element: Element;
+  public setAttribute:
+  (node: N, attr: string, value: string|number) => void;
+
 
   set element(element: Element) {
     this._element = element;
-    const rebuilt = this.speechGenerator.computeRebuilt(element);
+    // We always force a rebuild of the semantic tree, in case the element was
+    // re-rendered. Otherwise we might have incorrect maction links etc.
+    const rebuilt = this.speechGenerator.computeRebuilt(element, true);
     this.brailleGenerator.setRebuilt(rebuilt);
     this.summaryGenerator.setRebuilt(rebuilt);
   }
@@ -43,8 +49,8 @@ export class GeneratorPool {
     return this._element;
   }
 
-  public constructor(public node: MmlNode) {
-  }
+  public constructor() { }
+
   /**
    * The speech generator for a math item.
    */
@@ -125,16 +131,15 @@ export class GeneratorPool {
 
   private _update(options: OptionList) {
     let update = false;
-    if (options?.sre?.locale !== this.currentLocale) {
-      this.currentLocale = options.sre.locale;
-      update = true;
-      // TODO: Sort out the loading of the locales better
-      Sre.setupEngine({locale: options.sre.locale})
-    }
     if (options?.sre?.braille !== this.currentBraille) {
       this.currentBraille = options.sre.braille;
       update = true;
       Sre.setupEngine({locale: options.sre.braille})
+    }
+    if (options?.sre?.locale !== this.currentLocale) {
+      this.currentLocale = options.sre.locale;
+      update = true;
+      Sre.setupEngine({locale: options.sre.locale})
     }
     return update;
   }
@@ -158,10 +163,28 @@ export class GeneratorPool {
     return this.lastSpeech;
   }
 
+  public computeSpeech(node: N, mml: string): [string, string] {
+    this.element = Sre.parseDOM(mml);
+    let speech = this.speechGenerator.getSpeech(node as Element, this.element);
+    let braille = this.brailleGenerator.getSpeech(node as Element, this.element);
+    if (this.options.enableSpeech || this.options.enableBraille) {
+      setAria(node as Element, this.options.sre.locale);
+    }
+    return [speech, braille];
+  }
+
   private lastSpeech = '';
   private lastSummary = false;
-  
-  public UpdateSpeech(
+
+  /**
+   * Updates the given speech regions, possibly reinstanting previously saved
+   * speech.
+   *
+   * @param {Element} node 
+   * @param {LiveRegion} speechRegion 
+   * @param {LiveRegion} brailleRegion 
+   */
+  public updateSpeech(
     node: Element,
     speechRegion: LiveRegion,
     brailleRegion: LiveRegion
