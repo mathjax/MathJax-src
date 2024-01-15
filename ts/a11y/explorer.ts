@@ -96,9 +96,9 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     public explorers: ExplorerPool;
 
     /**
-     * True when a rerendered element should regain the focus
+     * Semantic id of the rerendered element that should regain the focus.
      */
-    protected refocus: boolean = false;
+    protected refocus: number = null;
 
     /**
      * Add the explorer to the output for this math item
@@ -123,8 +123,11 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      * @override
      */
     public rerender(document: ExplorerMathDocument, start: number = STATE.RERENDER) {
-      this.refocus = (hasWindow ?
-        window.document.activeElement === this.typesetRoot?.childNodes[0] : false);
+      let speech = this.explorers.speech();
+      if (speech.attached && speech.active) {
+        const focus = speech.semanticFocus();
+        this.refocus = focus ? focus.id : null;
+      }
       if (this.explorers) {
         this.explorers.reattach();
       }
@@ -136,11 +139,11 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      */
     public updateDocument(document: ExplorerMathDocument) {
       super.updateDocument(document);
-      this.refocus && this.typesetRoot.focus();
+      this.explorers.speech().restarted = this.refocus;
+      this.refocus = null;
       if (this.explorers) {
         this.explorers.restart();
       }
-      this.refocus = false;
     }
 
   };

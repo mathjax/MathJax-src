@@ -101,6 +101,18 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   public sound: boolean = false;
 
   /**
+   * Id of the element focused before the restart.
+   */
+  public restarted: number = null;
+
+  /**
+   * Convenience getter for generator pool of the item.
+   */
+  private get generators() {
+    return this.item?.generatorPool;
+  }
+
+  /**
    * The original tabindex value before explorer was attached.
    */
   private oldIndex: number = null;
@@ -192,7 +204,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    * @override
    */
   public FocusOut(_event: FocusEvent) {
-    this.item.generatorPool.CleanUp(this.current);
+    this.generators.CleanUp(this.current);
     if (!this.move) {
       this.Stop();
     }
@@ -292,7 +304,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    * @return {HTMLElement} The refocused targeted node.
    */
   public summary(node: HTMLElement): HTMLElement {
-    this.item.generatorPool.summary(node);
+    this.generators.summary(node);
     this.refocus(node);
     return node;
   }
@@ -305,7 +317,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    * @return {HTMLElement} The refocused targeted node.
    */
   public nextRules(node: HTMLElement): HTMLElement {
-    this.item.generatorPool.nextRules(node);
+    this.generators.nextRules(node);
     this.Speech();
     this.refocus(node);
     return node;
@@ -319,7 +331,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    * @return {HTMLElement} The refocused targeted node.
    */
   public nextStyle(node: HTMLElement): HTMLElement {
-    this.item.generatorPool.nextStyle(node);
+    this.generators.nextStyle(node);
     this.Speech();
     this.refocus(node);
     return node;
@@ -391,8 +403,22 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       this.node.removeAttribute('tabindex');
     }
     if (this.active) return;
+    if (this.restarted !== null) {
+      // Here we refocus after a restart: We either find the previously focused
+      // node or we assume that it is inside the collapsed expression tree and
+      // focus on the collapsed element.
+      this.current =
+        this.node.querySelector(`[data-semantic-id="${this.restarted}"]`) ||
+        this.node.querySelector(`[data-semantic-type="dummy"]`);
+      this.restarted = null;
+    }
+    if (!this.current) {
+      // In case something went wrong when focusing or restarting, we start on
+      // the root node by default.
+      this.current = this.node.childNodes[0] as HTMLElement;
+    }
     let promise = SpeechExplorer.updatePromise();
-    if (this.item.generatorPool.update(this.document.options)) {
+    if (this.generators.update(this.document.options)) {
       promise = promise.then(
         () => this.Speech()
       );
@@ -412,7 +438,6 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       this.magnifyRegion.Show(this.node, this.highlighter);
     }
     this.Update();
-    // this.restarted = true;
   }
 
 
@@ -426,7 +451,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     this.pool.unhighlight();
     this.pool.highlight([this.current]);
     this.region.node = this.node;
-    this.item.generatorPool.updateSpeech(
+    this.generators.updateSpeech(
       this.current,
       this.region,
       this.brailleRegion
@@ -438,7 +463,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    * Computes the speech for the current expression.
    */
   public Speech() {
-    const speech = this.item.generatorPool.speechGenerator.getSpeech(this.item.typesetRoot, this.item.typesetRoot);
+    const speech = this.generators.speechGenerator.getSpeech(this.item.typesetRoot, this.item.typesetRoot);
     setAria(this.item.typesetRoot, this.document.options.sre.locale);
     this.item.outputData.speech = buildSpeech(speech)[0];
     this.item.typesetRoot.setAttribute('aria-label', this.item.outputData.speech);
@@ -530,9 +555,8 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     return false;
   }
 
-
   /**
-   * Programmatically triggers a link if the clicked mouse contains one.
+   * Programmatically triggers a link if the clicked mouse event contains one.
    */
   protected triggerLinkMouse() {
     let node = this.current;
@@ -564,7 +588,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   public semanticFocus() {
     const node = this.current || this.node;
     const id = node.getAttribute('data-semantic-id');
-    const stree = this.item.generatorPool.speechGenerator.getRebuilt().stree;
+    const stree = this.generators.speechGenerator.getRebuilt().stree;
     const snode = stree.root.querySelectorAll((x) => x.id.toString() === id)[0];
     return snode || stree.root;
   }

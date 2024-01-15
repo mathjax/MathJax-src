@@ -21,7 +21,6 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import { SpeechExplorer } from '../explorer/KeyExplorer.js';
 import { ExplorerMathItem } from '../explorer.js';
 import {MJContextMenu} from '../../ui/menu/MJContextMenu.js';
 import {SubMenu, Submenu} from '../../ui/menu/mj-context-menu.js';
@@ -170,12 +169,14 @@ export function clearspeakMenu(menu: MJContextMenu, sub: Submenu) {
   let locale = menu.pool.lookup('locale').getValue() as string;
   const box = csSelectionBox(menu, locale);
   let items: Object[] = [];
-  const explorer = (menu.mathItem as ExplorerMathItem)?.explorers?.explorers?.speech as SpeechExplorer;
-  const semantic = explorer.semanticFocus();
+  const explorer = (menu.mathItem as ExplorerMathItem)?.explorers?.speech();
+  const semantic = explorer?.semanticFocus();
   const previous = Sre.clearspeakPreferences.currentPreference();
-  const smart = Sre.clearspeakPreferences.relevantPreferences(semantic);
   items = items.concat(basePreferences(previous));
-  items = items.concat(smartPreferences(previous, smart, locale));
+  if (semantic) {
+    const smart = Sre.clearspeakPreferences.relevantPreferences(semantic);
+    items = items.concat(smartPreferences(previous, smart, locale));
+  }
   if (box) {
     items.splice(2, 0, box);
   }
