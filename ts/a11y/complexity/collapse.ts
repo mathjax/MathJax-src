@@ -468,7 +468,6 @@ export class Collapse {
    */
   public makeAction(node: MmlNode) {
     if (node.isKind('math')) {
-      // TODO: Move aria attributes from math to mrow?
       node = this.addMrow(node);
     }
     const factory = this.complexity.factory;

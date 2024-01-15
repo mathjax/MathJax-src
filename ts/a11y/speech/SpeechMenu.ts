@@ -170,17 +170,12 @@ export function clearspeakMenu(menu: MJContextMenu, sub: Submenu) {
   let locale = menu.pool.lookup('locale').getValue() as string;
   const box = csSelectionBox(menu, locale);
   let items: Object[] = [];
-  let explorer = (menu.mathItem as ExplorerMathItem)?.
-    explorers?.explorers?.speech as SpeechExplorer;
-  if (explorer?.walker) {
-    let semantic = explorer.walker.getFocus()?.getSemanticPrimary();
-    if (semantic) {
-      const previous = Sre.clearspeakPreferences.currentPreference();
-      const smart = Sre.clearspeakPreferences.relevantPreferences(semantic);
-      items = items.concat(basePreferences(previous));
-      items = items.concat(smartPreferences(previous, smart, locale));
-    }
-  }
+  const explorer = (menu.mathItem as ExplorerMathItem)?.explorers?.explorers?.speech as SpeechExplorer;
+  const semantic = explorer.semanticFocus();
+  const previous = Sre.clearspeakPreferences.currentPreference();
+  const smart = Sre.clearspeakPreferences.relevantPreferences(semantic);
+  items = items.concat(basePreferences(previous));
+  items = items.concat(smartPreferences(previous, smart, locale));
   if (box) {
     items.splice(2, 0, box);
   }
