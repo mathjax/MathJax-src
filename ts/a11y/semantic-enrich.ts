@@ -107,7 +107,7 @@ export interface EnrichedMathItem<N, T, D> extends MathItem<N, T, D> {
   /**
    * The speech generators for this math item.
    */
-  generatorPool: GeneratorPool<N>;
+  generatorPool: GeneratorPool;
 
   /**
    * @param {MathDocument} document  The document where enrichment is occurring
@@ -145,8 +145,11 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
     /**
      * @override
      */
-    public generatorPool = new GeneratorPool<N>();
+    public generatorPool = new GeneratorPool();
 
+    /**
+     *  The MathML adaptor.
+     */
     public toMathML = toMathML;
 
     /**
@@ -179,7 +182,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
       if (this.state() >= STATE.ENRICHED) return;
       if (!this.isEscaped && (document.options.enableEnrichment || force)) {
         this.generatorPool.init(document.options);
-        this.generatorPool.setAttribute = document.adaptor.setAttribute;
+        // this.generatorPool.setAttribute = document.adaptor.setAttribute;
         const math = new document.options.MathItem('', MmlJax);
         try {
           let mml;
@@ -248,7 +251,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
       if (!speech || !braille ||
         document.options.enableSpeech || document.options.enableBraille) {
         [newSpeech, newBraille] = this.generatorPool.computeSpeech(
-          this.typesetRoot, this.toMathML(this.root, this));
+          this.typesetRoot as Element, this.toMathML(this.root, this));
       }
       speech = speech || newSpeech;
       braille = braille || newBraille;

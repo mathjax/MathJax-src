@@ -29,12 +29,9 @@ import { getLabel, setAria, buildSpeech } from '../speech/SpeechUtil.js';
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-export class GeneratorPool<N> {
+export class GeneratorPool {
 
   private _element: Element;
-  public setAttribute:
-  (node: N, attr: string, value: string|number) => void;
-
 
   set element(element: Element) {
     this._element = element;
@@ -48,8 +45,6 @@ export class GeneratorPool<N> {
   get element() {
     return this._element;
   }
-
-  public constructor() { }
 
   /**
    * The speech generator for a math item.
@@ -163,7 +158,7 @@ export class GeneratorPool<N> {
     return this.lastSpeech;
   }
 
-  public computeSpeech(node: N, mml: string): [string, string] {
+  public computeSpeech(node: Element, mml: string): [string, string] {
     this.element = Sre.parseDOM(mml);
     let speech = this.speechGenerator.getSpeech(node as Element, this.element);
     let braille = this.brailleGenerator.getSpeech(node as Element, this.element);

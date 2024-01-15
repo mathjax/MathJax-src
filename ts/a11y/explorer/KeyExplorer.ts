@@ -71,13 +71,15 @@ export interface KeyExplorer extends Explorer {
 }
 
 
-const codeSelector = 'mjx-container';
+/**
+ * Selectors for walking.
+ */
 const roles = ['tree', 'group', 'treeitem'];
 const nav = roles.map(x => `[role="${x}"]`).join(',');
 const prevNav = roles.map(x => `[tabindex="0"][role="${x}"]`).join(',');
 
-function isCodeBlock(el: HTMLElement) {
-  return el.matches(codeSelector);
+function isContainer(el: HTMLElement) {
+  return el.matches('mjx-container');
 }
 
 /**
@@ -99,17 +101,36 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   public sound: boolean = false;
 
   /**
+   * The original tabindex value before explorer was attached.
+   */
+  private oldIndex: number = null;
+
+  /**
    * The attached Sre walker.
    * @type {Walker}
    */
   public walker: Sre.walker;
 
-  private eventsAttached: boolean = false;
-
+  /**
+   * The currently focused elements.
+   */
   protected current: HTMLElement = null;
 
+  /**
+   * Flag registering if events of the explorer are attached.
+   */
+  private eventsAttached: boolean = false;
+
+  /**
+   * Flag to register if the last event was an explorer move. This is important
+   * so the explorer does not stop (by FocusOut) during a focus shift.
+   */
   private move = false;
 
+  /**
+   * Register the mousedown event. Prevent FocusIn executing twice from click
+   * and mousedown.
+   */
   private mousedown = false;
 
   /**
@@ -136,8 +157,13 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     e.preventDefault();
   }
 
-  public Click(e: MouseEvent) {
-    const clicked = (e.target as HTMLElement).closest(nav) as HTMLElement;
+  /**
+   * Moves on mouse click to the closest clicked element.
+   *
+   * @param {MouseEvent} event The mouse click event.
+   */
+  public Click(event: MouseEvent) {
+    const clicked = (event.target as HTMLElement).closest(nav) as HTMLElement;
     if (!this.node.contains(clicked)) {
       // In case the mjx-container is in a div, we get the click, although it is outside.
       this.mousedown = false;
@@ -151,15 +177,9 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       if (!this.triggerLinkMouse()) {
         this.Start()
       }
-      e.preventDefault();
+      event.preventDefault();
     }
   }
-
-  /**
-   * The original tabindex value before explorer was attached.
-   * @type {boolean}
-   */
-  private oldIndex: number = null;
 
   /**
    * @override
@@ -218,6 +238,12 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     this.attached = false;
   }
 
+  /**
+   * Navigate one step to the right on the same level.
+   *
+   * @param {HTMLElement} el The current element.
+   * @return {HTMLElement} The next element.
+   */
   protected nextSibling(el: HTMLElement): HTMLElement {
     const sib = el.nextElementSibling as HTMLElement;
     if (sib) {
@@ -227,12 +253,18 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       const sibChild = sib.querySelector(nav) as HTMLElement;
       return sibChild ?? this.nextSibling(sib);
     }
-    if (!isCodeBlock(el) && !el.parentElement.matches(nav)) {
+    if (!isContainer(el) && !el.parentElement.matches(nav)) {
       return this.nextSibling(el.parentElement);
     }
     return null;
   }
 
+  /**
+   * Navigate one step to the left on the same level.
+   *
+   * @param {HTMLElement} el The current element.
+   * @return {HTMLElement} The next element.
+   */
   protected prevSibling(el: HTMLElement): HTMLElement {
     const sib = el.previousElementSibling as HTMLElement;
     if (sib) {
@@ -242,7 +274,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       const sibChild = sib.querySelector(nav) as HTMLElement;
       return sibChild ?? this.prevSibling(sib);
     }
-    if (!isCodeBlock(el) && !el.parentElement.matches(nav)) {
+    if (!isContainer(el) && !el.parentElement.matches(nav)) {
       return this.prevSibling(el.parentElement);
     }
     return null;
@@ -316,7 +348,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
 
   private static updatePromise() {
     return Sre.sreReady();
-  } 
+  }
 
   /**
    * The Sre speech generator associated with the walker.
