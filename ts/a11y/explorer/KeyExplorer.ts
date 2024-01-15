@@ -284,12 +284,26 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     ['x', this.summary.bind(this)],
   ]);
 
+  /**
+   * Computes the summary for this expression. This is temporary and will be
+   * replaced by the full speech on focus out.
+   *
+   * @param {HTMLElement} node The targeted node.
+   * @return {HTMLElement} The refocused targeted node.
+   */
   public summary(node: HTMLElement): HTMLElement {
     this.item.generatorPool.summary(node);
     this.refocus(node);
     return node;
   }
 
+  /**
+   * Cycles to next speech rule set if possible and recomputes the speech for
+   * the expression.
+   *
+   * @param {HTMLElement} node The targeted node.
+   * @return {HTMLElement} The refocused targeted node.
+   */
   public nextRules(node: HTMLElement): HTMLElement {
     this.item.generatorPool.nextRules(node);
     this.Speech();
@@ -297,6 +311,13 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     return node;
   }
 
+  /**
+   * Cycles to next speech style or preference if possible and recomputes the
+   * speech for the expression.
+   *
+   * @param {HTMLElement} node The targeted node.
+   * @return {HTMLElement} The refocused targeted node.
+   */
   public nextStyle(node: HTMLElement): HTMLElement {
     this.item.generatorPool.nextStyle(node);
     this.Speech();
