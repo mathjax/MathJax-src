@@ -140,11 +140,15 @@ function readKeyval(text: string, l3keys: boolean = false): EnvList {
  * @return {string} The cleaned string.
  */
 function removeBraces(text: string, count: number): string {
+  if (count === 0) {
+    return text.replace(/^\s+/, '')
+               .replace(/([^\\\s]|^)((?:\\\\)*(?:\\\s)?)?\s+$/, '$1$2');
+  }
   while (count > 0) {
     text = text.trim().slice(1, -1);
     count--;
   }
-  return text.trim();
+  return text;
 }
 
 
@@ -165,56 +169,46 @@ function readValue(text: string, end: string[],
   let value = '';
   let index = 0;
   let start = 0;             // Counter for the starting left braces.
-  let startCount = true;     // Flag for counting starting left braces.
-  let stopCount = false;     // If true right braces are found directly
+  let countBraces = true;     // Flag for counting starting left braces.
   // after starting braces, but no other char yet.
   while (index < length) {
     let c = text[index++];
     switch (c) {
       case '\\':               // Handle control sequences (in particular, \{ and \})
-        value += c + text[index++];
-        startCount = stopCount = false;
+        value += c + (text[index++] || '');
+        countBraces = false;
         continue;
       case ' ':                // Ignore spaces.
         break;
       case '{':
-        if (startCount) {      // Count start left braces at start.
+        if (countBraces) {      // Count open left braces at start.
           start++;
-        } else {
-          stopCount = false;
         }
         braces++;
         break;
       case '}':
-        if (braces) {          // Closing braces.
-          braces--;
+        if (!braces) {          // Closing braces.
+          throw new TexError('ExtraCloseMissingOpen', 'Extra close brace or missing open brace');
         }
-        if (startCount || stopCount) {  // Closing braces at the start.
-          start--;
-          stopCount = true;    // Continue to close braces.
-        }
-        startCount = false;    // Stop counting start left braces.
+        braces--;
+        countBraces = false;    // Stop counting start left braces.
         break;
       default:
         if (!braces && end.indexOf(c) !== -1) {   // End character reached.
-          return [stopCount ? 'true' :            // If Stop count is true we
-            // have balanced braces, only.
-            removeBraces(value, l3keys ? Math.min(1, start) : start), c, text.slice(index)];
+          return [removeBraces(value, l3keys ? Math.min(1, start) : start), c, text.slice(index)];
         }
         if (start > braces) {   // Some start left braces have been closed.
           start = braces;
         }
-        startCount = false;
-        stopCount = false;
+        countBraces = false;
     }
     value += c;
   }
   if (braces) {
-    throw new TexError('ExtraOpenMissingClose',
-                       'Extra open brace or missing close brace');
+    throw new TexError('ExtraOpenMissingClose', 'Extra open brace or missing close brace');
   }
-  return (dropBrace && !stopCount && start) ? ['', '', removeBraces(value, 1)] :
-    [stopCount ? 'true' : removeBraces(value, l3keys ? Math.min(1, start) : start), '', text.slice(index)];
+  return (dropBrace && start) ? ['', '', removeBraces(value, 1)] :
+    [removeBraces(value, l3keys ? Math.min(1, start) : start), '', text.slice(index)];
 }
 
 export const ParseUtil = {
