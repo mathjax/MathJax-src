@@ -109,22 +109,14 @@ function muReplace([value, unit, length]: [string, string, number]): [string, st
 /**
  * The data needed for checking the value of a key-value pair.
  */
-export type KeyValueType<T> = {
-  name: string;
-  verify: (value: string) => boolean;
-  convert: (value: string) => T;
+export class KeyValueType<T> {
+  constructor(
+    public name: string,
+    public verify: (value: string) => boolean,
+    public convert: (value: string) => T
+  ) {}
 }
 
-/**
- * A function for creating a key-value type checker
- */
-export function KeyValueTypeDefinition<T>(
-  name: string,
-  verify: (value: string) => boolean,
-  convert: (value: string) => T,
-) {
-  return {name, verify, convert} as KeyValueType<T>;
-}
 
 /**
  * Predefined value types that can be used to create the list of allowed types.  E.g.
@@ -138,37 +130,38 @@ export function KeyValueTypeDefinition<T>(
  *  ParseUtil.keyvalueOptions(options, allowed, true);
  */
 export const KeyValueTypes: {[name: string]: KeyValueType<any> | ((data: any) => KeyValueType<any>)} = {
-  boolean: KeyValueTypeDefinition<boolean>(
+  boolean: new KeyValueType<boolean>(
     'boolean',
     (value) => value === 'true' || value === 'false',
     (value) => value === 'true'
   ),
-  number: KeyValueTypeDefinition<number>(
+  number: new KeyValueType<number>(
     'number',
     (value) => !!value.match(/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/),
     (value) => parseFloat(value)
   ),
-  integer: KeyValueTypeDefinition<number>(
+  integer: new KeyValueType<number>(
     'integer',
     (value) => !!value.match(/^[-+]?\d+$/),
     (value) => parseInt(value)
   ),
-  string: KeyValueTypeDefinition<string>(
+  string: new KeyValueType<string>(
     'string',
     (_value) => true,
     (value) => value
   ),
-  oneof: (...values: string[]) => KeyValueTypeDefinition<string>(
+  oneof: (...values: string[]) => new KeyValueType<string>(
     'oneof',
     (value) => values.indexOf(value) >= 0,
     (value) => value
   ),
-  dimen: KeyValueTypeDefinition<string>(
+  dimen: new KeyValueType<string>(
     'dimen',
     (value) => ParseUtil.matchDimen(value)[0] !== null,
     (value) => value
   )
 };
+
 
 /**
  * Implementation of the keyval function from https://www.ctan.org/pkg/keyval
@@ -860,7 +853,7 @@ export const ParseUtil = {
           //
           // If allowed[key] is a type definition, check the key value against that
           //
-          if (typeof allowed[key] === 'object') {
+          if (allowed[key] instanceof KeyValueType) {
             const type = allowed[key] as KeyValueType<any>;
             const value = String(def[key]);
             if (!type.verify(value)) {
