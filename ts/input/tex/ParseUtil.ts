@@ -842,10 +842,10 @@ export const ParseUtil = {
    * @param {boolean?} l3keys If true, use l3key-style parsing (only remove one set of braces)
    * @return {EnvList} The attribute list.
    */
-  keyvalOptions: function(attrib: string,
-                          allowed: {[key: string]: number | KeyValueType<any>} = null,
-                          error: boolean = false,
-                          l3keys: boolean = false): EnvList {
+  keyvalOptions(attrib: string,
+                allowed: {[key: string]: number | KeyValueType<any>} = null,
+                error: boolean = false,
+                l3keys: boolean = false): EnvList {
     let def: EnvList = readKeyval(attrib, l3keys);
     if (allowed) {
       for (let key of Object.keys(def)) {
