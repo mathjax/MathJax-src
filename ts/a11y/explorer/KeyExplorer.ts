@@ -28,7 +28,7 @@ import type { ExplorerMathItem } from '../explorer.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
 import {ExplorerPool} from './ExplorerPool.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import { buildSpeech, setAria, honk } from '../speech/SpeechUtil.js';
+import { honk } from '../speech/SpeechUtil.js';
 import {Sre} from '../sre.js';
 
 
@@ -451,7 +451,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     this.pool.unhighlight();
     this.pool.highlight([this.current]);
     this.region.node = this.node;
-    this.generators.updateSpeech(
+    this.generators.updateRegions(
       this.current,
       this.region,
       this.brailleRegion
@@ -463,11 +463,8 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    * Computes the speech for the current expression.
    */
   public Speech() {
-    const speech = this.generators.speechGenerator.getSpeech(this.item.typesetRoot, this.item.typesetRoot);
-    setAria(this.item.typesetRoot, this.document.options.sre.locale);
-    this.item.outputData.speech = buildSpeech(speech)[0];
-    this.item.typesetRoot.setAttribute('aria-label', this.item.outputData.speech);
-    this.item.attachSpeech(this.document);
+    this.item.outputData.speech =
+      this.generators.updateSpeech(this.item.typesetRoot);
   }
 
   /**
@@ -589,7 +586,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     const node = this.current || this.node;
     const id = node.getAttribute('data-semantic-id');
     const stree = this.generators.speechGenerator.getRebuilt().stree;
-    const snode = stree.root.querySelectorAll((x) => x.id.toString() === id)[0];
+    const snode = stree.root.querySelectorAll((x: any) => x.id.toString() === id)[0];
     return snode || stree.root;
   }
 

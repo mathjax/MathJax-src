@@ -158,27 +158,8 @@ function extractProsody(attr: string) {
 
 
 /**
- *
  * Speech, labels and aria
- *
  */
-
-/**
- * Computes the aria-label from the node.
- * @param {MmlNode} node The Math element.
- * @param {string=} sep The speech separator. Defaults to space.
- */
-export function getLabel(node: Element,
-                  center: string = '',
-                  sep: string = ' ') {
-  return buildLabel(
-    center || node.getAttribute('data-semantic-speech'),
-    node.getAttribute('data-semantic-prefix'),
-    // TODO: check if we need this or if it is automatic by the screen readers.
-    node.getAttribute('data-semantic-postfix'),
-    sep
-  );
-}
 
 /**
  * Builds a speech label from input components.
@@ -219,26 +200,6 @@ export function buildSpeech(speech: string, locale: string = 'en',
     ` xml:lang="${locale}">` +
     `<prosody rate="${rate}%">${speech}`+
     '</prosody></speak>');
-}
-
-/**
- * Retrieve and sets aria and braille labels recursively.
- * @param {MmlNode} node The root node to search from.
- */
-export function setAria(node: Element, locale: string) {
-  const speech = getLabel(node);
-  if (speech) {
-    node.setAttribute('aria-label', buildSpeech(speech, locale)[0]);
-  }
-  const braille = node.getAttribute('data-semantic-braille');
-  if (braille) {
-    node.setAttribute('aria-braillelabel', braille);
-  }
-  for (let child of Array.from(node.childNodes)) {
-    if (child instanceof Element) {
-      setAria(child, locale);
-    }
-  }
 }
 
 /**
