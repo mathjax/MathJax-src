@@ -558,7 +558,8 @@ export default class TexParser {
       str = '\\' + str;
     }
     // These are the cases to handle sub and superscripts.
-    if (node.attributes.get(TexConstant.Attr.LATEX) === '^' && str !== '^') {
+    if (node.attributes.get(TexConstant.Attr.LATEX) === '^' &&
+      str !== '^' && str !== '\\^') {
       if (str === '}') {
         this.composeBraces(node.childNodes[2]);
       } else {
