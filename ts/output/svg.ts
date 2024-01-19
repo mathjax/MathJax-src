@@ -97,6 +97,10 @@ CommonOutputJax<
     },
     'mjx-container[jax="SVG"] > svg a': {
       fill: 'blue', stroke: 'blue'
+    },
+    'rect[sre-highlighter-added]': {
+      stroke: 'black',
+      'stroke-width': '40px'
     }
   };
 
@@ -143,6 +147,7 @@ CommonOutputJax<
   constructor(options: OptionList = {}) {
     super(options, SvgWrapperFactory as any, DefaultFont);
     this.fontCache = new FontCache(this);
+    this.options.matchFontHeight = true;
   }
 
   /**
@@ -213,6 +218,13 @@ CommonOutputJax<
       }
     }
     return false;
+  }
+
+  /**
+   * @override
+   */
+  protected getInitialScale() {
+    return 1;
   }
 
   /**

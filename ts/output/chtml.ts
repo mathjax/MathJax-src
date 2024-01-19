@@ -85,6 +85,7 @@ CommonOutputJax<
       'white-space': 'nowrap'
     },
 
+    'mjx-container[jax="CHTML"] :focus': {'outline': 'solid 3px'},
     'mjx-container [space="1"]': {'margin-left': '.111em'},
     'mjx-container [space="2"]': {'margin-left': '.167em'},
     'mjx-container [space="3"]': {'margin-left': '.222em'},
@@ -253,13 +254,6 @@ CommonOutputJax<
    */
   public reset() {
     this.clearCache();
-  }
-
-  /**
-   * @override
-   */
-  protected getInitialScale() {
-    return this.math.metrics.scale;
   }
 
   /*****************************************************************/

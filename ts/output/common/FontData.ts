@@ -131,7 +131,7 @@ export type CssFontMap = {
  * Data needed for stretchy vertical and horizontal characters
  */
 export type DelimiterData = {
-  dir: DIRECTION;       // vertical or horizontal direction
+  dir: string;          // vertical or horizontal direction
   sizes?: number[];     // Array of fixed sizes for this character
   variants?: number[];  // The variants in which the different sizes can be found (if not the default)
   schar?: number[];     // The character number to use for each size (if different from the default)
@@ -332,8 +332,8 @@ export interface FontExtensionData<C extends CharOptions, D extends DelimiterDat
 /**
  * Merge options into an object or array.
  */
-export function mergeOptions(dst: OptionList, src: OptionList) {
-  return (src ? defaultOptions([dst], [src])[0] : dst);
+export function mergeOptions(obj: OptionList, dst: string, src: OptionList) {
+  return (src ? defaultOptions(obj, {[dst]: src})[dst] : obj[dst]);
 }
 
 /****************************************************************************/
@@ -806,7 +806,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
       ['sizeVariants', 'defaultSizeVariants'],
       ['stretchVariants', 'defaultStretchVariants']
     ] as [keyof FontExtensionData<CharOptions, DelimiterData>, keyof typeof FontData][]) {
-      mergeOptions(this[dst] as OptionList, data[src] as OptionList);
+      mergeOptions(this, dst, data[src] as OptionList);
     }
     if (data.delimiters) {
       Object.assign(this.defaultDelimiters, data.delimiters);
@@ -843,7 +843,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * @param {OptionList} options   The options to merge into the font options
    */
   public setOptions(options: OptionList) {
-    mergeOptions(this.options, options);
+    defaultOptions(this.options, options);
   }
 
   /**
@@ -864,12 +864,12 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
 
     defaultOptions(this.options, data.options || {});
     defaultOptions(this.params, data.parameters || {});
-    this.sizeVariants = mergeOptions(this.sizeVariants, data.sizeVariants);
-    this.stretchVariants = mergeOptions(this.stretchVariants, data.stretchVariants);
-    this.defineCssFonts(mergeOptions([], data.cssFonts));
-    this.createVariants(mergeOptions([], data.variants));
+    mergeOptions(this, 'sizeVariants', data.sizeVariants);
+    mergeOptions(this, 'stretchVariants', data.stretchVariants);
+    this.defineCssFonts(mergeOptions({cssFonts: {}}, 'cssFonts', data.cssFonts));
+    this.createVariants(mergeOptions({variants: []}, 'variants', data.variants));
     if (data.delimiters) {
-      this.defineDelimiters(mergeOptions([], data.delimiters));
+      this.defineDelimiters(mergeOptions({delimiters: {}}, 'delimiters', data.delimiters));
       this.CLASS.adjustDelimiters(this.delimiters, Object.keys(data.delimiters),
                                   dynamicFont.sizeN, dynamicFont.stretchN);
     }

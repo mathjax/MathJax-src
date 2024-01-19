@@ -625,7 +625,10 @@ export class CommonWrapper<
    * @return {[WW, WW]}        The embellished mo node and its core mo
    */
   public getBreakNode(bbox: LineBBox): [WW, WW] {
-    const [i, j] = bbox.start || [0, 0];
+    if (!bbox.start) {
+      return [this, null] as any as [WW, WW];
+    }
+    const [i, j] = bbox.start;
     if (this.node.isEmbellished) {
       return [this, this.coreMO()] as any as [WW, WW];
     }
@@ -1025,6 +1028,19 @@ export class CommonWrapper<
   }
 
   /**
+   * @return {number}   The cumulative relative scale from the root to the current node
+   */
+  public getRScale(): number {
+    let rscale = 1;
+    let node = this as any as WW;
+    while (node) {
+      rscale *= node.bbox.rscale;
+      node = node.parent;
+    }
+    return rscale;
+  }
+
+  /**
    * @return {string}   For a token node, the combined text content of the node's children
    */
   public getText(): string {
@@ -1040,10 +1056,10 @@ export class CommonWrapper<
   }
 
   /**
-   * @param {DIRECTION} direction  The direction to stretch this node
-   * @return {boolean}             Whether the node can stretch in that direction
+   * @param {string} direction  The direction to stretch this node
+   * @return {boolean}          Whether the node can stretch in that direction
    */
-  public canStretch(direction: DIRECTION): boolean {
+  public canStretch(direction: string): boolean {
     this.stretch = NOSTRETCH as DD;
     if (this.node.isEmbellished) {
       let core = this.core();

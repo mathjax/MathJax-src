@@ -23,10 +23,15 @@
  */
 
 
-import {A11yDocument, Region} from './Region.js';
+import {A11yDocument, HoverRegion, SpeechRegion, LiveRegion} from './Region.js';
+import type { ExplorerMathItem } from '../explorer.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
 import {ExplorerPool} from './ExplorerPool.js';
+import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import { honk } from '../SpeechUtil.js';
 import {Sre} from '../sre.js';
+
+// import { Walker } from './Walker.js';
 
 
 /**
@@ -58,7 +63,7 @@ export interface KeyExplorer extends Explorer {
    * Move made on keypress.
    * @param key The key code of the pressed key.
    */
-  Move(key: number): void;
+  Move(event: KeyboardEvent): void;
 
   /**
    * A method that is executed if no move is executed.
@@ -68,13 +73,22 @@ export interface KeyExplorer extends Explorer {
 }
 
 
+const codeSelector = 'mjx-container';
+const roles = ['tree', 'group', 'treeitem'];
+const nav = roles.map(x => `[role="${x}"]`).join(',');
+const prevNav = roles.map(x => `[tabindex="0"][role="${x}"]`).join(',');
+
+function isCodeBlock(el: HTMLElement) {
+  return el.matches(codeSelector);
+}
+
 /**
  * @constructor
  * @extends {AbstractExplorer}
  *
  * @template T  The type that is consumed by the Region of this explorer.
  */
-export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> implements KeyExplorer {
+export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplorer {
 
   /**
    * Flag indicating if the explorer is attached to an object.
@@ -94,14 +108,50 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
 
   private eventsAttached: boolean = false;
 
+  protected current: HTMLElement = null;
+
+  private move = false;
+
+  private mousedown = false;
+
   /**
    * @override
    */
   protected events: [string, (x: Event) => void][] =
     super.Events().concat(
-      [['keydown', this.KeyDown.bind(this)],
-       ['focusin', this.FocusIn.bind(this)],
-       ['focusout', this.FocusOut.bind(this)]]);
+      [
+        ['keydown', this.KeyDown.bind(this)],
+        ['mousedown', this.MouseDown.bind(this)],
+        ['click', this.Click.bind(this)],
+        ['focusin', this.FocusIn.bind(this)],
+        ['focusout', this.FocusOut.bind(this)]
+      ]);
+
+  /**
+   * Records a mouse down event on the element. This ensures that focus events
+   * only fire if they were not triggered by a mouse click.
+   *
+   * @param e The mouse event.
+   */
+  private MouseDown(e: MouseEvent) {
+    this.mousedown = true;
+    e.preventDefault();
+  }
+
+  public Click(e: MouseEvent) {
+    const clicked = (e.target as HTMLElement).closest(nav) as HTMLElement;
+    if (this.node.contains(clicked)) {
+      const prev = this.node.querySelector(prevNav);
+      if (prev) {
+        prev.removeAttribute('tabindex');
+      }
+      this.current = clicked;
+      if (!this.triggerLinkMouse()) {
+        this.Start()
+      }
+      e.preventDefault();
+    }
+  }
 
   /**
    * The original tabindex value before explorer was attached.
@@ -112,33 +162,23 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
   /**
    * @override
    */
-  public abstract KeyDown(event: KeyboardEvent): void;
-
-  /**
-   * @override
-   */
-  public FocusIn(_event: FocusEvent) {
+  public FocusIn(event: FocusEvent) {
+    if (this.mousedown) {
+      this.mousedown = false;
+      return;
+    }
+    this.current = this.current || this.node.querySelector('[role="tree"]');
+    this.Start();
+    event.preventDefault();
   }
 
   /**
    * @override
    */
   public FocusOut(_event: FocusEvent) {
-    this.Stop();
-  }
-
-  /**
-   * @override
-   */
-  public Update(force: boolean = false) {
-    if (!this.active && !force) return;
-    this.pool.unhighlight();
-    let nodes = this.walker.getFocus(true).getNodes();
-    if (!nodes.length) {
-      this.walker.refocus();
-      nodes = this.walker.getFocus().getNodes();
+    if (!this.move) {
+      this.Stop();
     }
-    this.pool.highlight(nodes as HTMLElement[]);
   }
 
   /**
@@ -148,8 +188,7 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
     super.Attach();
     this.attached = true;
     this.oldIndex = this.node.tabIndex;
-    this.node.tabIndex = 1;
-    this.node.setAttribute('role', 'tree');
+    this.node.tabIndex = 0;
   }
 
   /**
@@ -174,52 +213,76 @@ export abstract class AbstractKeyExplorer<T> extends AbstractExplorer<T> impleme
     this.attached = false;
   }
 
-  /**
-   * @override
-   */
-  public Stop() {
-    if (this.active) {
-      this.walker.deactivate();
-      this.pool.unhighlight();
+  protected nextSibling(el: HTMLElement): HTMLElement {
+    const sib = el.nextElementSibling as HTMLElement;
+    if (sib) {
+      if (sib.matches(nav)) {
+        return sib;
+      }
+      const sibChild = sib.querySelector(nav) as HTMLElement;
+      return sibChild ?? this.nextSibling(sib);
     }
-    super.Stop();
+    if (!isCodeBlock(el) && !el.parentElement.matches(nav)) {
+      return this.nextSibling(el.parentElement);
+    }
+    return null;
   }
+
+  protected prevSibling(el: HTMLElement): HTMLElement {
+    const sib = el.previousElementSibling as HTMLElement;
+    if (sib) {
+      if (sib.matches(nav)) {
+        return sib;
+      }
+      const sibChild = sib.querySelector(nav) as HTMLElement;
+      return sibChild ?? this.prevSibling(sib);
+    }
+    if (!isCodeBlock(el) && !el.parentElement.matches(nav)) {
+      return this.prevSibling(el.parentElement);
+    }
+    return null;
+  }
+
+  protected moves: Map<string, (node: HTMLElement) => HTMLElement | null> = new Map([
+    ['ArrowDown', (node: HTMLElement) => node.querySelector(nav)],
+    ['ArrowUp', (node: HTMLElement) => node.parentElement.closest(nav)],
+    ['ArrowLeft', this.prevSibling.bind(this)],
+    ['ArrowRight', this.nextSibling.bind(this)],
+    ['>', (_node: HTMLElement) => {
+      return null;
+    }],
+  ]);
 
   /**
    * @override
    */
-  public Move(key: number) {
-    let result = this.walker.move(key);
-    if (result) {
-      this.Update();
-      return;
+  public Move(e: KeyboardEvent) {
+    this.move = true;
+    const target = e.target as HTMLElement;
+    const move = this.moves.get(e.key);
+    let next = null;
+    if (move) {
+      e.preventDefault();
+      next = move(target);
     }
-    if (this.sound) {
-      this.NoMove();
+    if (next) {
+      target.removeAttribute('tabindex');
+      next.setAttribute('tabindex', '0');
+      next.focus();
+      this.current = next;
+      this.move = false;
+      return true;
     }
+    this.move = false;
+    return false;
   }
 
   /**
    * @override
    */
   public NoMove() {
-    let ac = new AudioContext();
-    let os = ac.createOscillator();
-    os.frequency.value = 300;
-    os.connect(ac.destination);
-    os.start(ac.currentTime);
-    os.stop(ac.currentTime + .05);
+    honk();
   }
-
-}
-
-
-/**
- * Explorer that pushes speech to live region.
- * @constructor
- * @extends {AbstractKeyExplorer}
- */
-export class SpeechExplorer extends AbstractKeyExplorer<string> {
 
   private static updatePromise = Promise.resolve();
 
@@ -235,7 +298,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    */
   public showRegion: string = 'subtitles';
 
-  private init: boolean = false;
+  // private init: boolean = false;
 
   /**
    * Flag in case the start method is triggered before the walker is fully
@@ -251,11 +314,14 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    */
   constructor(public document: A11yDocument,
               public pool: ExplorerPool,
-              public region: Region<string>,
+              public region: SpeechRegion,
               protected node: HTMLElement,
-              private mml: string) {
-    super(document, pool, region, node);
-    this.initWalker();
+              public brailleRegion: LiveRegion,
+              public magnifyRegion: HoverRegion,
+              _mml: MmlNode,
+              public item: ExplorerMathItem
+             ) {
+    super(document, pool, null, node);
   }
 
 
@@ -264,34 +330,52 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    */
   public Start() {
     if (!this.attached) return;
-    let options = this.getOptions();
-    if (!this.init) {
-      this.init = true;
-      SpeechExplorer.updatePromise = SpeechExplorer.updatePromise.then(async () => {
-        return Sre.sreReady()
-          .then(() => Sre.setupEngine({locale: options.locale}))
-          .then(() => {
-            // Important that both are in the same block so speech explorers
-            // are restarted sequentially.
-            this.Speech(this.walker);
-            this.Start();
-          });
-      })
-        .catch((error: Error) => console.log(error.message));
-      return;
-    }
+    if (this.active) return;
+    this.current.setAttribute('tabindex', '0');
+    this.current.focus();
     super.Start();
-    this.speechGenerator = Sre.getSpeechGenerator('Direct');
-    this.speechGenerator.setOptions(options);
-    this.walker = Sre.getWalker(
-      'table', this.node, this.speechGenerator, this.highlighter, this.mml);
-    this.walker.activate();
-    this.Update();
-    if (this.document.options.a11y[this.showRegion]) {
+    // let options = this.getOptions();
+    // if (!this.init) {
+    //   this.init = true;
+    //   SpeechExplorer.updatePromise = SpeechExplorer.updatePromise.then(async () => {
+    //     return Sre.sreReady()
+    //       .then(() => Sre.setupEngine({locale: options.locale}))
+    //       .then(() => {
+    //         // Important that both are in the same block so speech explorers
+    //         // are restarted sequentially.
+    //         this.Speech(this.walker);
+    //       })
+    //       .then(() => Sre.setupEngine({automark: false as any, markup: 'none',
+    //                                    locale: 'nemeth', domain: 'default',
+    //                                    style: 'default', modality: 'braille'}))
+    //       .then(() => {
+    //         this.speechGenerator.setOptions({automark: false as any, markup: 'none',
+    //                                    locale: 'nemeth', domain: 'default',
+    //                                    style: 'default', modality: 'braille'});
+    //         this.Speech(this.walker);
+    //         this.Start();
+    //       });
+    //   })
+    //   return;
+    // }
+    // this.speechGenerator = Sre.getSpeechGenerator('Direct');
+    // this.speechGenerator.setOptions(options);
+    // this.walker = Sre.getWalker(
+    //   'table', this.node, this.speechGenerator, this.highlighter, this.mml);
+    // this.walker.activate();
+    if (this.document.options.a11y.subtitles) {
       SpeechExplorer.updatePromise.then(
-        () => this.region.Show(this.node, this.highlighter));
+        () => this.region.Show(this.node, this.highlighter))
     }
-    this.restarted = true;
+    if (this.document.options.a11y.viewBraille) {
+      SpeechExplorer.updatePromise.then(
+        () => this.brailleRegion.Show(this.node, this.highlighter))
+    }
+    if (this.document.options.a11y.keyMagnifier) {
+      this.magnifyRegion.Show(this.node, this.highlighter);
+    }
+    this.Update();
+    // this.restarted = true;
   }
 
 
@@ -301,30 +385,41 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
   public Update(force: boolean = false) {
     // TODO (v4): This is a hack to avoid double voicing on initial startup!
     // Make that cleaner and remove force as it is not really used!
-    let noUpdate = force;
-    force = false;
-    super.Update(force);
-    let options = this.speechGenerator.getOptions();
+    // let noUpdate = force;
+    if (!this.active && !force) return;
+    this.pool.unhighlight();
+    // let nodes = this.walker.getFocus(true).getNodes();
+    // if (!nodes.length) {
+    //   this.walker.refocus();
+    //   nodes = this.walker.getFocus().getNodes();
+    // }
+    this.pool.highlight([this.current]);
+    this.region.node = this.node;
+    this.region.Update(this.current.getAttribute('data-semantic-speech'));
+    this.brailleRegion.Update(this.current.getAttribute('aria-braillelabel'));
+    this.magnifyRegion.Update(this.current);
+    // let options = this.speechGenerator.getOptions();
     // This is a necessary in case speech options have changed via keypress
     // during walking.
-    if (options.modality === 'speech') {
-      this.document.options.sre.domain = options.domain;
-      this.document.options.sre.style = options.style;
-      this.document.options.a11y.speechRules =
-        options.domain + '-' + options.style;
-    }
-    SpeechExplorer.updatePromise = SpeechExplorer.updatePromise.then(async () => {
-      return Sre.sreReady()
-        .then(() => Sre.setupEngine({markup: options.markup,
-                                     modality: options.modality,
-                                     locale: options.locale}))
-        .then(() => {
-          if (!noUpdate) {
-            let speech = this.walker.speech();
-            this.region.Update(speech);
-          }
-        });
-    });
+    // if (options.modality === 'speech') {
+    //   this.document.options.sre.domain = options.domain;
+    //   this.document.options.sre.style = options.style;
+    //   this.document.options.a11y.speechRules =
+    //     options.domain + '-' + options.style;
+    // }
+    // Ensure this autovoicing is retained later:
+    // SpeechExplorer.updatePromise = SpeechExplorer.updatePromise.then(async () => {
+    //   return Sre.sreReady()
+    //     .then(() => Sre.setupEngine({markup: options.markup,
+    //                                  modality: options.modality,
+    //                                  locale: options.locale}))
+    //     .then(() => {
+    //       if (!noUpdate) {
+    //         let speech = this.walker.speech();
+    //         this.region.Update(speech);
+    //       }
+    //     });
+    // });
   }
 
 
@@ -348,38 +443,71 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @override
    */
   public KeyDown(event: KeyboardEvent) {
-    const code = event.keyCode;
-    this.walker.modifier = event.shiftKey;
-    if (code === 17) {
+    const code = event.key;
+    // this.walker.modifier = event.shiftKey;
+    if (code === 'Control') {
       speechSynthesis.cancel();
       return;
     }
-    if (code === 27) {
+    if (code === 'Escape') {
       this.Stop();
       this.stopEvent(event);
       return;
     }
-    if (this.active) {
-      this.Move(code);
-      if (this.triggerLink(code)) return;
-      this.stopEvent(event);
-      return;
+    if (code === 'Enter') {
+      if (!this.active && event.target instanceof HTMLAnchorElement) {
+        event.target.dispatchEvent(new MouseEvent('click'));
+        this.stopEvent(event);
+        return;
+      }
+      if (this.active && this.triggerLinkKeyboard(event)) {
+        this.Stop()
+        this.stopEvent(event);
+        return;
+      }
+      if (!this.active) {
+        if (!this.current) {
+          this.current = this.node.querySelector('[role="tree"]');
+        }
+        this.Start();
+        this.stopEvent(event);
+        return;
+      }
     }
-    if (code === 32 && event.shiftKey || code === 13) {
-      this.Start();
+    if (this.active) {
       this.stopEvent(event);
+      if (this.Move(event)) {
+        this.Update();
+        return;
+      }
+      if (event.getModifierState(code)) {
+        return;
+      }
+      if (this.sound) {
+        this.NoMove();
+      }
     }
   }
 
   /**
    * Programmatically triggers a link if the focused node contains one.
-   * @param {number} code The keycode of the last key pressed.
+   * @param {KeyboardEvent} event The keyboard event for the last keydown event.
    */
-  protected triggerLink(code: number) {
-    if (code !== 13) {
+  protected triggerLinkKeyboard(event: KeyboardEvent) {
+    if (event.code !== 'Enter') {
       return false;
     }
-    let node = this.walker.getFocus().getNodes()?.[0];
+    if (!this.current) {
+      if (event.target instanceof HTMLAnchorElement) {
+        event.target.dispatchEvent(new MouseEvent('click'));
+        return true;
+      }
+      return false;
+    }
+    return this.triggerLink(this.current);
+  }
+
+  protected triggerLink(node: HTMLElement) {
     let focus = node?.
       getAttribute('data-semantic-postfix')?.
       match(/(^| )link($| )/);
@@ -390,14 +518,19 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     return false;
   }
 
+
   /**
-   * Initialises the Sre walker.
+   * Programmatically triggers a link if the clicked mouse contains one.
    */
-  private initWalker() {
-    this.speechGenerator = Sre.getSpeechGenerator('Tree');
-    let dummy = Sre.getWalker(
-      'dummy', this.node, this.speechGenerator, this.highlighter, this.mml);
-    this.walker = dummy;
+  protected triggerLinkMouse() {
+    let node = this.current;
+    while (node && node !== this.node) {
+      if (this.triggerLink(node)) {
+        return true;
+      }
+      node = node.parentNode as HTMLElement;
+    }
+    return false;
   }
 
   /**
@@ -405,7 +538,7 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
    * @return {{[key: string]: string}} The options settings for the speech
    *     generator.
    */
-  private getOptions(): {[key: string]: string} {
+  protected getOptions(): {[key: string]: string} {
     let options = this.speechGenerator.getOptions();
     let sreOptions = this.document.options.sre;
     if (options.modality === 'speech' &&
@@ -420,78 +553,20 @@ export class SpeechExplorer extends AbstractKeyExplorer<string> {
     return options;
   }
 
-}
-
-
-/**
- * Explorer that magnifies what is currently explored. Uses a hover region.
- * @constructor
- * @extends {AbstractKeyExplorer}
- */
-export class Magnifier extends AbstractKeyExplorer<HTMLElement> {
-
-  /**
-   * @constructor
-   * @extends {AbstractKeyExplorer}
-   */
-  constructor(public document: A11yDocument,
-              public pool: ExplorerPool,
-              public region: Region<HTMLElement>,
-              protected node: HTMLElement,
-              private mml: string) {
-    super(document, pool, region, node);
-    this.walker = Sre.getWalker(
-      'table', this.node, Sre.getSpeechGenerator('Dummy'),
-      this.highlighter, this.mml);
-  }
-
   /**
    * @override
    */
-  public Update(force: boolean = false) {
-    super.Update(force);
-    this.showFocus();
+  public Stop() {
+    if (this.active) {
+      this.current.removeAttribute('tabindex');
+      this.pool.unhighlight();
+      this.magnifyRegion.Hide();
+      this.region.Hide();
+      this.brailleRegion.Hide();
+    }
+    super.Stop();
   }
 
-  /**
-   * @override
-   */
-  public Start() {
-    super.Start();
-    if (!this.attached) return;
-    this.region.Show(this.node, this.highlighter);
-    this.walker.activate();
-    this.Update();
-  }
 
-  /**
-   * Shows the nodes that are currently focused.
-   */
-  private showFocus() {
-    let node = this.walker.getFocus().getNodes()[0] as HTMLElement;
-    this.region.Show(node, this.highlighter);
-  }
-
-  /**
-   * @override
-   */
-  public KeyDown(event: KeyboardEvent) {
-    const code = event.keyCode;
-    this.walker.modifier = event.shiftKey;
-    if (code === 27) {
-      this.Stop();
-      this.stopEvent(event);
-      return;
-    }
-    if (this.active && code !== 13) {
-      this.Move(code);
-      this.stopEvent(event);
-      return;
-    }
-    if (code === 32 && event.shiftKey || code === 13) {
-      this.Start();
-      this.stopEvent(event);
-    }
-  }
 
 }
