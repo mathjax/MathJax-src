@@ -604,6 +604,9 @@ B extends MathDocumentConstructor<HTMLDocument<N, T, D>>>(
         if (math.lazyCompile) {
           math.state(STATE.COMPILED - 1);
           state = STATE.COMPILED;
+        } else if (!math.metrics.hasOwnProperty('em')) {
+          math.state(STATE.METRICS - 1);
+          state = STATE.METRICS;
         } else {
           math.state(STATE.TYPESET - 1);
         }
