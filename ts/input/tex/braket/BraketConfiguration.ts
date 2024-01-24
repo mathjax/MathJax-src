@@ -35,7 +35,8 @@ export const BraketConfiguration = Configuration.create(
     },
     items: {
       [BraketItem.prototype.kind]: BraketItem,
-    }
+    },
+    priority: 3   // must come before base configuration
   }
 );
 
