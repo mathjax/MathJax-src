@@ -201,7 +201,8 @@ export function CommonMspaceMixin<
       const bbox = LineBBox.from(BBox.zero(), leading);
       if (i === 1) {
         bbox.getIndentData(this.node);
-        bbox.isFirst = true;
+        bbox.w = this.getBBox().w;
+        bbox.isFirst = (bbox.w === 0);
       }
       return bbox;
     }
