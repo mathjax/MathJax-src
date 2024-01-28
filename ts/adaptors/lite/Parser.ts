@@ -328,8 +328,8 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
   public serialize(adaptor: LiteAdaptor, node: LiteElement, xml: boolean = false): string {
     const SELF_CLOSING = (this.constructor as typeof LiteParser).SELF_CLOSING;
     const tag = adaptor.kind(node);
-    const attributes = adaptor.allAttributes(node).map(
-      (x: AttributeData) => x.name + '="' + this.protectAttribute(x.value) + '"'
+    const attributes = this.allAttributes(adaptor, node, xml).map(
+      (x) => x.name + '="' + this.protectAttribute(x.value, xml) + '"'
     ).join(' ');
     const content = this.serializeInner(adaptor, node, xml);
     const html =
@@ -341,6 +341,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
   /**
    * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
    * @param {LiteElement} node     The node whose innerHTML is needed
+   * @param {boolean} xml          True if XML rules should be used (e.g., self-closing tags)
    * @return {string}              The serialized element (like innerHTML)
    */
   public serializeInner(adaptor: LiteAdaptor, node: LiteElement, xml: boolean = false): string {
@@ -357,14 +358,53 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
   }
 
   /**
+   * @param {LiteAdaptor} adaptor  The adaptor for managing nodes
+   * @param {LiteElement} node     The node to serialize
+   * @param {boolean} xml          True when producing XML, false for HTML
+   * @return {AttributeData[]}     The attribute list
+   */
+  protected allAttributes(adaptor: LiteAdaptor, node: LiteElement, xml: boolean): AttributeData[] {
+    let attributes = adaptor.allAttributes(node);
+    const kind = adaptor.kind(node);
+    if (!xml || (kind !== 'svg' && kind !== 'math' && kind !== 'html')) {
+      return attributes;
+    }
+    //
+    // Check for existance of xmlns attribute
+    //
+    for (const {name} of attributes) {
+      if (name === 'xmlns') {
+        return attributes;
+      }
+    }
+    //
+    // Add one of it is missing
+    //
+    attributes.push({
+      name: 'xmlns',
+      value: ({
+        svg:  'http://www.w3.org/2000/svg',
+        math: 'http://www.w3.org/1998/Math/MathML',
+        html: 'http://www.w3.org/1999/xhtml'
+      })[kind]
+    });
+    return attributes;
+  }
+
+  /**
    * @param {string} text  The attribute value to be HTML escaped
+   * @param {boolean} xml  True if XML rules are to be used
    * @return {string}      The string with " replaced by entities
    */
-  public protectAttribute(text: string): string {
+  public protectAttribute(text: string, xml: boolean): string {
     if (typeof text !== 'string') {
       text = String(text);
     }
-    return text.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+    text = text.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+    if (xml) {
+      text = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    return text;
   }
 
   /**
