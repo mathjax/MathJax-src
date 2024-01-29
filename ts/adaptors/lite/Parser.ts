@@ -91,6 +91,12 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     script: true
   };
 
+  public static XMLNS: {[name: string]: string} = {
+    svg:  'http://www.w3.org/2000/svg',
+    math: 'http://www.w3.org/1998/Math/MathML',
+    html: 'http://www.w3.org/1999/xhtml'
+  };
+
   /**
    * @override
    */
@@ -365,8 +371,18 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
    */
   protected allAttributes(adaptor: LiteAdaptor, node: LiteElement, xml: boolean): AttributeData[] {
     let attributes = adaptor.allAttributes(node);
+    //
+    // If we aren't in XML mode, just use the attributes given
+    //
+    if (!xml) {
+      return attributes;
+    }
+    //
+    // Check that we know the namespace for the kind of node
+    //
     const kind = adaptor.kind(node);
-    if (!xml || (kind !== 'svg' && kind !== 'math' && kind !== 'html')) {
+    const xmlns = (this.constructor as typeof LiteParser).XMLNS;
+    if (!xmlns.hasOwnProperty(kind)) {
       return attributes;
     }
     //
@@ -380,14 +396,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     //
     // Add one of it is missing
     //
-    attributes.push({
-      name: 'xmlns',
-      value: ({
-        svg:  'http://www.w3.org/2000/svg',
-        math: 'http://www.w3.org/1998/Math/MathML',
-        html: 'http://www.w3.org/1999/xhtml'
-      })[kind]
-    });
+    attributes.push({name: 'xmlns', value: xmlns[kind]});
     return attributes;
   }
 
