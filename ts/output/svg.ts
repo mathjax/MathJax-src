@@ -397,12 +397,12 @@ CommonOutputJax<
       if (forced && mo.node.attributes.get('linebreakstyle') === 'after') {
         const k = mml.parent.node.childIndex(mml.node) + 1;
         const next = mml.parent.childNodes[k];
-        const dimen = (next ? next.getLineBBox(0).originalL : 0) * scale;
+        const dimen = (next ? next.getLineBBox(0).originalL * scale : 0);
         if (dimen) {
           this.addInlineBreak(nsvg, dimen, forced);
         }
       } else if (forced || i) {
-        const dimen = (mml && i ? mml.getLineBBox(0).originalL : 0) * scale;
+        const dimen = (mml && i ? mml.getLineBBox(0).originalL * scale : 0);
         if (dimen || !forced) {
           this.addInlineBreak(nsvg, dimen, forced || !!mml.node.getProperty('forcebreak'));
         }
