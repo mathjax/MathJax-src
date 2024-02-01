@@ -105,6 +105,64 @@ function muReplace([value, unit, length]: [string, string, number]): [string, st
   return [em.slice(0, -2), 'em', length];
 }
 
+
+/**
+ * The data needed for checking the value of a key-value pair.
+ */
+export class KeyValueType<T> {
+  constructor(
+    public name: string,
+    public verify: (value: string) => boolean,
+    public convert: (value: string) => T
+  ) {}
+}
+
+
+/**
+ * Predefined value types that can be used to create the list of allowed types.  E.g.
+ *
+ *  const allowed = {
+ *    compact: KeyValueTypes.boolean,
+ *    direction: KeyValueTypes.oneof('up', 'down'),
+ *    'open-brace': KeyValueType.string
+ *  };
+ *
+ *  ParseUtil.keyvalueOptions(options, allowed, true);
+ */
+export const KeyValueTypes: {[name: string]: KeyValueType<any> | ((data: any) => KeyValueType<any>)} = {
+  boolean: new KeyValueType<boolean>(
+    'boolean',
+    (value) => value === 'true' || value === 'false',
+    (value) => value === 'true'
+  ),
+  number: new KeyValueType<number>(
+    'number',
+    (value) => !!value.match(/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/),
+    (value) => parseFloat(value)
+  ),
+  integer: new KeyValueType<number>(
+    'integer',
+    (value) => !!value.match(/^[-+]?\d+$/),
+    (value) => parseInt(value)
+  ),
+  string: new KeyValueType<string>(
+    'string',
+    (_value) => true,
+    (value) => value
+  ),
+  oneof: (...values: string[]) => new KeyValueType<string>(
+    'oneof',
+    (value) => values.indexOf(value) >= 0,
+    (value) => value
+  ),
+  dimen: new KeyValueType<string>(
+    'dimen',
+    (value) => ParseUtil.matchDimen(value)[0] !== null,
+    (value) => value
+  )
+};
+
+
 /**
  * Implementation of the keyval function from https://www.ctan.org/pkg/keyval
  * @param {string} text The optional parameter string for a package or
@@ -777,14 +835,28 @@ export const ParseUtil = {
    * @param {boolean?} l3keys If true, use l3key-style parsing (only remove one set of braces)
    * @return {EnvList} The attribute list.
    */
-  keyvalOptions(attrib: string,
-                          allowed: {[key: string]: number} = null,
-                          error: boolean = false,
-                          l3keys: boolean = false): EnvList {
+  keyvalOptions(
+    attrib: string,
+    allowed: {[key: string]: number | KeyValueType<any>} = null,
+    error: boolean = false,
+    l3keys: boolean = false
+  ): EnvList {
     let def: EnvList = readKeyval(attrib, l3keys);
     if (allowed) {
       for (let key of Object.keys(def)) {
-        if (!allowed.hasOwnProperty(key)) {
+        if (allowed.hasOwnProperty(key)) {
+          //
+          // If allowed[key] is a type definition, check the key value against that
+          //
+          if (allowed[key] instanceof KeyValueType) {
+            const type = allowed[key] as KeyValueType<any>;
+            const value = String(def[key]);
+            if (!type.verify(value)) {
+              throw new TexError('InvalidValue', 'Value for key \'%1\' is not of the expected type', key);
+            }
+            def[key] = type.convert(value);
+          }
+        } else {
           if (error) {
             throw new TexError('InvalidOption', 'Invalid option: %1', key);
           }
