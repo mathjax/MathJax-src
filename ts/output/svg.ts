@@ -198,7 +198,11 @@ CommonOutputJax<
    */
   public pageElements(html: MathDocument<N, T, D>) {
     if (this.options.fontCache === 'global' && !this.findCache(html)) {
-      return this.svg('svg', {id: SVG.FONTCACHEID, style: {display: 'none'}}, [this.fontCache.getCache()]);
+      return this.svg('svg', {
+        xmlns: SVGNS,
+        id: SVG.FONTCACHEID,
+        style: {display: 'none'}
+      }, [this.fontCache.getCache()]);
     }
     return null as N;
   }
