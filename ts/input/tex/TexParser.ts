@@ -346,15 +346,16 @@ export default class TexParser {
 
   /**
    * Get an optional LaTeX argument in brackets.
-   * @param {string} name Name of the current control sequence.
-   * @param {string} def? The default value for the optional argument.
+   * @param {string} _name Name of the current control sequence.
+   * @param {string?} def The default value for the optional argument.
+   * @param {boolean=} matchBrackets True if indernal brackets must match.
    * @return {string} The optional argument.
    */
-  public GetBrackets(_name: string, def?: string): string {
+  public GetBrackets(_name: string, def?: string, matchBrackets: boolean = false): string {
     if (this.GetNext() !== '[') {
       return def;
     }
-    let j = ++this.i, parens = 0;
+    let j = ++this.i, parens = 0, brackets = 0;
     while (this.i < this.string.length) {
       switch (this.string.charAt(this.i++)) {
       case '{':   parens++; break;
@@ -366,9 +367,13 @@ export default class TexParser {
                               'Extra close brace while looking for %1', '\']\'');
         }
         break;
+      case '[': if (parens === 0) brackets++; break;
       case ']':
         if (parens === 0) {
-          return this.string.slice(j, this.i - 1);
+          if (!matchBrackets || brackets === 0) {
+            return this.string.slice(j, this.i - 1);
+          }
+          brackets--;
         }
         break;
       }
@@ -564,7 +569,8 @@ export default class TexParser {
       str = '\\' + str;
     }
     // These are the cases to handle sub and superscripts.
-    if (node.attributes.get(TexConstant.Attr.LATEX) === '^' && str !== '^') {
+    if (node.attributes.get(TexConstant.Attr.LATEX) === '^' &&
+      str !== '^' && str !== '\\^') {
       if (str === '}') {
         this.composeBraces(node.childNodes[2]);
       } else {
@@ -578,7 +584,8 @@ export default class TexParser {
       }
       return;
     }
-    if (node.attributes.get(TexConstant.Attr.LATEX) === '_' && str !== '_') {
+    if (node.attributes.get(TexConstant.Attr.LATEX) === '_' &&
+      str !== '_' && str !== '\\_') {
       if (str === '}') {
         this.composeBraces(node.childNodes[1]);
       } else {
