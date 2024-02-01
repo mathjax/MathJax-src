@@ -127,7 +127,7 @@ export default class Stack {
 
 
   /**
-   * Lookup the nth elements on the stack without removing them.
+   * Look up the nth elements on the stack without removing them.
    * @param {number=} n Position of element that should be returned. Default 1.
    * @return {StackItem} Nth item on the stack.
    */
@@ -137,7 +137,7 @@ export default class Stack {
 
 
   /**
-   * Lookup the topmost element on the stack, returning the Mml node in that
+   * Look up the topmost element on the stack, returning the Mml node in that
    * item. Optionally pops the Mml node from that stack item.
    * @param {boolean=} noPop Pop top item if true.
    * @return {MmlNode} The Mml node in the topmost stack item.
@@ -145,6 +145,14 @@ export default class Stack {
   public Prev(noPop?: boolean): MmlNode | void {
     const top = this.Top();
     return noPop ? top.First : top.Pop();
+  }
+
+  /**
+   * Look up the current number of stack items.
+   * @return {number}  The number of items on the stack.
+   */
+  public get height(): number {
+    return this.stack.length;
   }
 
 
