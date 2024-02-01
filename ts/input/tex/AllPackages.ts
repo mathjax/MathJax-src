@@ -58,6 +58,7 @@ import './verb/VerbConfiguration.js';
 
 // IEEE
 import './ieee/ieeemacros/IeeeMacrosConfiguration.js';
+import './ieee/eulerieee/EulerIeeeConfiguration.js';
 
 declare const MathJax: any;
 if (typeof MathJax !== 'undefined' && MathJax.loader) {
@@ -97,6 +98,7 @@ if (typeof MathJax !== 'undefined' && MathJax.loader) {
     '[tex]/setoptions',
     // IEEE
     '[tex]/ieee/ieeemacros',
+    '[tex]/ieee/eulerieee',
   );
 }
 
@@ -119,7 +121,10 @@ export const AllPackages: string[] = [
   'extpfeil',
   'gensymb',
   'html',
+  // IEEE
+  'eulerieee',
   'ieeemacros',
+  // End IEEE
   'mathtools',
   'mhchem',
   'newcommand',

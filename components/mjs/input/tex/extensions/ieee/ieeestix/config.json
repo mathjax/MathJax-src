@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/ieee/ieeestix",
+    "component": "input/tex/extensions/ieee/ieeestix",
+    "targets": ["input/tex/ieee/ieeestix"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/ieeestix",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}

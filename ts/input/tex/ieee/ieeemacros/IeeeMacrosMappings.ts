@@ -570,6 +570,7 @@ new CommandMap('ieee-macros', {
   doublegrave: ['Macro', '{{#1}{\\unicode{x030F}}}', 1],
   ura: ['Macro', '\\buildrel{#1}\\over{\\rightarrow}', 1],
 
+  src: ['MathFont', TexConstant.Variant.SCRIPT],
   // dsmath:    ['IeeeMathFont', TexConstant.Variant.DOUBLESTRUCK, 'serif'],
   // mathbbmss: ['IeeeMathFont', TexConstant.Variant.DOUBLESTRUCK, 'sans-serif'],
 }, IeeeMacrosMethods);
