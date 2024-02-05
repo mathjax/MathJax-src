@@ -23,35 +23,20 @@
  */
 
 import {Configuration} from '../../Configuration.js';
-import {CommandMap} from '../../TokenMap.js';
-import BaseMethods from '../../base/BaseMethods.js';
-import {ParseMethod} from '../../Types.js';
-import TexParser from '../../TexParser.js';
-
-/**
- * The methods that implement the bboldx package.
- */
-let BboldxMethods: Record<string, ParseMethod> = {};
-
-BboldxMethods.MathFont = BaseMethods.MathFont;
-BboldxMethods.ChooseFont = function (parser: TexParser, name: string) {
-  BaseMethods.MathFont(parser, name, parser.options.bboldx.sans ? '-ds-ss' : '-ds-rm');
-}
-
-new CommandMap('bboldx', {
-  mathbbx: ['MathFont', '-bboldx'],
-}, BboldxMethods);
+import './BboldxMappings.js';
 
 //
 //  Define the package configuration, including switch for sans serif.
 //
 export const BboldxConfiguration = Configuration.create('bboldx', {
   handler: {
-    macro: ['bboldx'],
+    macro: ['bboldx', 'bboldx-mathchar0mi', 'bboldx-delimiter'],
+    delimiter: ['bboldx-delimiter'],
   },
   options: {
     bboldx: {
-      symbols: false
+      bfbb: false,
+      light: false
     }
   }
 });
