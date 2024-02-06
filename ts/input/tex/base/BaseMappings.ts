@@ -222,7 +222,6 @@ new sm.CharacterMap('mathchar0mo', ParseMethods.mathchar0mo, {
   bullet:       '\u2219',
   wr:           '\u2240',
   div:          '\u00F7',
-  divsymbol:    '\u00F7',
   odot:         ['\u2299', {largeop: false}],
   oslash:       ['\u2298', {largeop: false}],
   otimes:       ['\u2297', {largeop: false}],
