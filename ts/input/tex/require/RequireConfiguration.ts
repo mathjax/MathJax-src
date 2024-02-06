@@ -41,7 +41,7 @@ import {expandable} from '../../../util/Options.js';
 const MJCONFIG = MathJax.config;
 
 /**
- * Add an extension to the configuration, and configure its user options
+ * Load any dependencies for an extension, and add the extension to the input jax.
  *
  * @param {TeX} jax       The TeX jax whose configuration is to be modified
  * @param {string} name   The name of the extension being added (e.g., '[tex]/amscd')
