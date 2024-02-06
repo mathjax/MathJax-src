@@ -22,79 +22,8 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Token} from '../../Token.js';
 import {CommandMap, CharacterMap, DelimiterMap} from '../../TokenMap.js';
-import BaseMethods from '../../base/BaseMethods.js';
-import {ParseMethod} from '../../Types.js';
-import TexParser from '../../TexParser.js';
-
-/**
- * The methods that implement the bboldx package.
- */
-let BboldxMethods: Record<string, ParseMethod> = {};
-
-BboldxMethods.Macro = BaseMethods.Macro;
-
-function getBbxFont(parser: TexParser, normal: string, light: string, bfbb: string) {
-  if (!parser.options?.bboldx) {
-    return normal;
-  }
-  const options = parser.options?.bboldx;
-  return options.bfbb ? bfbb : (options.light ? light : normal);
-}
-
-BboldxMethods.ChooseFont = function(
-  parser: TexParser, name: string,
-  normal: string, light: string, bfbb: string) {
-  const font = getBbxFont(parser, normal, light, bfbb);
-  BaseMethods.MathFont(parser, name, font);
-}
-
-/**
- * Handle bboldx symbols as mi in normal variant.
- * @param {TexParser} parser The current tex parser.
- * @param {Token} mchar The parsed token.
- */
-BboldxMethods.mathchar0miNormal = function(parser: TexParser, mchar: Token) {
-  const font = getBbxFont(parser, '-bboldx', '-bboldx-light', '-bboldx-bold');
-  const node = parser.create('token', 'mi', {mathvariant: font}, mchar.char);
-  parser.Push(node);
-}
-
-/**
- * Handle bboldx delimiters as mi in normal variant.
- * @param {TexParser} parser The current tex parser.
- * @param {Token} delim The parsed token.
- */
-BboldxMethods.delimiterNormal = function(parser: TexParser, delim: Token) {
-  const font = getBbxFont(parser, '-bboldx', '-bboldx-light', '-bboldx-bold');
-  const def = {fence: false, stretchy: false, mathvariant: font};
-  const node = parser.create('token', 'mo', def, delim.char);
-  parser.Push(node);
-}
-
-/**
- * Handle bboldx symbols as mi in bold variant.
- * @param {TexParser} parser The current tex parser.
- * @param {Token} mchar The parsed token.
- */
-BboldxMethods.mathchar0miBold = function(parser: TexParser, mchar: Token) {
-  const font = getBbxFont(parser, '-bboldx-bold', '-bboldx', '-bboldx-bold');
-  const node = parser.create('token', 'mi', {mathvariant: font}, mchar.char);
-  parser.Push(node);
-}
-
-/**
- * Handle bboldx delimiters as mi in bold variant.
- * @param {TexParser} parser The current tex parser.
- * @param {Token} delim The parsed token.
- */
-BboldxMethods.delimiterBold = function(parser: TexParser, delim: Token) {
-  const font = getBbxFont(parser, '-bboldx-bold', '-bboldx', '-bboldx-bold');
-  const def = {fence: false, stretchy: false, mathvariant: font};
-  const node = parser.create('token', 'mo', def, delim.char);
-  parser.Push(node);
-}
+import {BboldxMethods} from './BboldxMethods.js';
 
 /**
  * Bb symbols macros for bboldx package.
@@ -215,5 +144,128 @@ new CommandMap('bboldx', {
   jmathbb: ['Macro', '\\bbdotlessj'],
   imathbfbb: ['Macro', '\\bfbbdotlessi'],
   jmathbfbb: ['Macro', '\\bfbbdotlessj'],
+}, BboldxMethods);
+
+// Text Macros.
+
+/**
+ * Bb symbols macros for text-bboldx package.
+ */
+new CharacterMap('text-bboldx-mathchar0miNormal', BboldxMethods.mathchar0miNormal, {
+  // Upper Case Greek
+  txtbbGamma: '\u0393',
+  txtbbDelta: '\u2206',
+  txtbbTheta: '\u0398',
+  txtbbLambda: '\u039B',
+  txtbbXi: '\u039E',
+  txtbbPi: '\u03A0',
+  txtbbSigma: '\u03A3',
+  txtbbUpsilon: '\u03A5',
+  txtbbPhi: '\u03A6',
+  txtbbPsi: '\u03A8',
+  txtbbOmega: '\u2126',
+  // Lower Case Greek
+  txtbbalpha: '\u03B1',
+  txtbbbeta: '\u03B2',
+  txtbbgamma: '\u03B3',
+  txtbbdelta: '\u03B4',
+  txtbbepsilon: '\u03B5',
+  txtbbzeta: '\u03B6',
+  txtbbeta: '\u03B7',
+  txtbbtheta: '\u03B8',
+  txtbbiota: '\u03B9',
+  txtbbkappa: '\u03BA',
+  txtbblambda: '\u03BB',
+  txtbbmu: '\u00B5',
+  txtbbnu: '\u03BD',
+  txtbbxi: '\u03BE',
+  txtbbpi: '\u03C0',
+  txtbbrho: '\u03C1',
+  txtbbsigma: '\u03C3',
+  txtbbtau: '\u03C4',
+  txtbbupsilon: '\u03C5',
+  txtbbphi: '\u03C6',
+  txtbbchi: '\u03C7',
+  txtbbpsi: '\u03C8',
+  txtbbomega: '\u03C9',
+  txtbbdotlessi: '\u0131',
+  txtbbdotlessj: '\u0237',
+});
+
+/**
+ * Macros for delimiters.
+ */
+new DelimiterMap('text-bboldx-delimiterNormal', BboldxMethods.delimiterNormal, {
+  '\\txtbbLparen': '\u0028',
+  '\\txtbbRparen': '\u0029',
+  '\\txtbbLbrack': '\u005B',
+  '\\txtbbRbrack': '\u005D',
+  '\\txtbbLangle': '\u2329',
+  '\\txtbbRangle': '\u232A',
+});
+
+/**
+ * Bb symbols macros for text-bboldx package.
+ */
+new CharacterMap('text-bboldx-mathchar0miBold', BboldxMethods.mathchar0miBold, {
+  // Upper Case Greek
+  txtbfbbGamma: '\u0393',
+  txtbfbbDelta: '\u2206',
+  txtbfbbTheta: '\u0398',
+  txtbfbbLambda: '\u039B',
+  txtbfbbXi: '\u039E',
+  txtbfbbPi: '\u03A0',
+  txtbfbbSigma: '\u03A3',
+  txtbfbbUpsilon: '\u03A5',
+  txtbfbbPhi: '\u03A6',
+  txtbfbbPsi: '\u03A8',
+  txtbfbbOmega: '\u2126',
+  // Lower Case Greek
+  txtbfbbalpha: '\u03B1',
+  txtbfbbbeta: '\u03B2',
+  txtbfbbgamma: '\u03B3',
+  txtbfbbdelta: '\u03B4',
+  txtbfbbepsilon: '\u03B5',
+  txtbfbbzeta: '\u03B6',
+  txtbfbbeta: '\u03B7',
+  txtbfbbtheta: '\u03B8',
+  txtbfbbiota: '\u03B9',
+  txtbfbbkappa: '\u03BA',
+  txtbfbblambda: '\u03BB',
+  txtbfbbmu: '\u00B5',
+  txtbfbbnu: '\u03BD',
+  txtbfbbxi: '\u03BE',
+  txtbfbbpi: '\u03C0',
+  txtbfbbrho: '\u03C1',
+  txtbfbbsigma: '\u03C3',
+  txtbfbbtau: '\u03C4',
+  txtbfbbupsilon: '\u03C5',
+  txtbfbbphi: '\u03C6',
+  txtbfbbchi: '\u03C7',
+  txtbfbbpsi: '\u03C8',
+  txtbfbbomega: '\u03C9',
+  txtbfbbdotlessi: '\u0131',
+  txtbfbbdotlessj: '\u0237',
+});
+
+/**
+ * Macros for delimiters.
+ */
+new DelimiterMap('text-bboldx-delimiterBold', BboldxMethods.delimiterBold, {
+  '\\txtbfbbLparen': '\u0028',
+  '\\txtbfbbRparen': '\u0029',
+  '\\txtbfbbLbrack': '\u005B',
+  '\\txtbfbbRbrack': '\u005D',
+  '\\txtbfbbLangle': '\u2329',
+  '\\txtbfbbRangle': '\u232A',
+});
+
+new CommandMap('text-bboldx', {
+  textbb: ['ChooseTextFont', '-bboldx', '-bboldx-light', '-bboldx-bold'],
+  textbfbb: ['ChooseTextFont', '-bboldx-bold', '-bboldx', '-bboldx-bold'],
+  itextbb: ['Macro', '\\txtbbdotlessi'],
+  jtextbb: ['Macro', '\\txtbbdotlessj'],
+  itextbfbb: ['Macro', '\\txtbfbbdotlessi'],
+  jtextbfbb: ['Macro', '\\txtbfbbdotlessj'],
 }, BboldxMethods);
 

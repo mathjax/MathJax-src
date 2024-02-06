@@ -25,8 +25,22 @@
 import {Configuration} from '../../Configuration.js';
 import './BboldxMappings.js';
 
+/**
+ * Configuration for the text macros of this package. They are automatically
+ * available, when the textmacros package is loaded.
+ */
+Configuration.create('text-bboldx', {
+  parser: 'text',
+  handler: {
+    macro: ['text-bboldx', 'text-bboldx-mathchar0miNormal', 'text-bboldx-delimiterNormal',
+            'text-bboldx-mathchar0miBold', 'text-bboldx-delimiterBold'],
+    delimiter: ['text-bboldx-delimiterNormal', 'text-bboldx-delimiterBold'],
+  }
+});
+
 //
-//  Define the package configuration, including switch for sans serif.
+// Define the package configuration, including switches for light and always
+// bold bb.
 //
 export const BboldxConfiguration = Configuration.create('bboldx', {
   handler: {
@@ -38,6 +52,10 @@ export const BboldxConfiguration = Configuration.create('bboldx', {
     bboldx: {
       bfbb: false,
       light: false
+    },
+    // add text macros by default to textmacros
+    textmacros: {
+      packages: {'[+]': ['text-bboldx']}
     }
   }
 });
