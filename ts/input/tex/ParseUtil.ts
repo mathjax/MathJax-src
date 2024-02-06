@@ -557,6 +557,7 @@ export const ParseUtil = {
               //  Replace \U{...} with specified character
               const c = String.fromCodePoint(parseInt(arg[1] || arg[2], 16));
               text = text.substring(0, i - 2) + c + text.substring(i + arg[0].length);
+              i = i - 2 + c.length;;
             }
           }
         }
