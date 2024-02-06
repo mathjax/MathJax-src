@@ -30,8 +30,9 @@ import './BboldxMappings.js';
 //
 export const BboldxConfiguration = Configuration.create('bboldx', {
   handler: {
-    macro: ['bboldx', 'bboldx-mathchar0mi', 'bboldx-delimiter'],
-    delimiter: ['bboldx-delimiter'],
+    macro: ['bboldx', 'bboldx-mathchar0miNormal', 'bboldx-delimiterNormal',
+            'bboldx-mathchar0miBold', 'bboldx-delimiterBold'],
+    delimiter: ['bboldx-delimiterNormal', 'bboldx-delimiterBold'],
   },
   options: {
     bboldx: {
