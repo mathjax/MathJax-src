@@ -169,7 +169,7 @@ export function clearspeakMenu(menu: MJContextMenu, sub: Submenu) {
   let locale = menu.pool.lookup('locale').getValue() as string;
   const box = csSelectionBox(menu, locale);
   let items: Object[] = [];
-  const explorer = (menu.mathItem as ExplorerMathItem)?.explorers?.speech();
+  const explorer = (menu.mathItem as ExplorerMathItem)?.explorers?.speech;
   const semantic = explorer?.semanticFocus();
   const previous = Sre.clearspeakPreferences.currentPreference();
   items = items.concat(basePreferences(previous));

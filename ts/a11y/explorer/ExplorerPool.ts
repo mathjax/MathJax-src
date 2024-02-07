@@ -277,7 +277,7 @@ export class ExplorerPool {
       {color: 'red'}, {color: 'black'},
       {renderer: this.document.outputJax.name, browser: 'v3'}
     );
-    (this.speech().region as SpeechRegion).highlighter =
+    (this.speech.region as SpeechRegion).highlighter =
       this.secondaryHighlighter;
   }
 
@@ -303,7 +303,7 @@ export class ExplorerPool {
    *
    * @return {SpeechExplorer}
    */
-  public speech(): SpeechExplorer {
+  public get speech(): SpeechExplorer {
     return this.explorers['speech'] as SpeechExplorer;
   }
 

@@ -337,13 +337,14 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     return node;
   }
 
+  /**
+   * Refocuses the active elements, mainly to alert screenreaders of changes.
+   *
+   * @param {HTMLElement} node The node to refocus on.
+   */
   private refocus(node: HTMLElement) {
     node.blur();
     node.focus();
-  }
-
-  private static updatePromise() {
-    return Sre.sreReady();
   }
 
   /**
@@ -417,7 +418,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       // the root node by default.
       this.current = this.node.childNodes[0] as HTMLElement;
     }
-    let promise = SpeechExplorer.updatePromise();
+    let promise = Sre.sreReady();
     if (this.generators.update(this.document.options)) {
       promise = promise.then(
         () => this.Speech()

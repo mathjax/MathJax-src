@@ -75,7 +75,7 @@ export class GeneratorPool<N, T, D> {
   /**
    * Option setter that takes care of setting up SRE and assembling the options
    * for the speech generators.
-   * 
+   *
    * @param {OptionList} options The option list.
    */
   public set options(options: OptionList) {
@@ -136,13 +136,14 @@ export class GeneratorPool<N, T, D> {
   }
 
   private _update(options: OptionList) {
+    if (!options || !options.sre) return false;
     let update = false;
-    if (options?.sre?.braille !== this.currentBraille) {
+    if (options.sre.braille !== this.currentBraille) {
       this.currentBraille = options.sre.braille;
       update = true;
       Sre.setupEngine({locale: options.sre.braille})
     }
-    if (options?.sre?.locale !== this.currentLocale) {
+    if (options.sre.locale !== this.currentLocale) {
       this.currentLocale = options.sre.locale;
       update = true;
       Sre.setupEngine({locale: options.sre.locale})
@@ -172,7 +173,7 @@ export class GeneratorPool<N, T, D> {
    * Computes the summary for the current node. Summary computations are very
    * fast, and we recompute in case the rule sets have changed and there is a
    * different summary.
-   * 
+   *
    * @param {N} node The typeset node.
    */
   public summary(node: N) {
@@ -189,7 +190,7 @@ export class GeneratorPool<N, T, D> {
    * Cleans up after an explorer move by replacing the aria-label with the
    * original speech again.
    *
-   * @param {N} node 
+   * @param {N} node
    */
   public CleanUp(node: N) {
     if (this.lastSummary) {
@@ -198,7 +199,7 @@ export class GeneratorPool<N, T, D> {
     }
     this.lastSummary = false;
   }
-  
+
   /**
    * Remembers the last speech element after a summary computation.
    */
@@ -215,7 +216,7 @@ export class GeneratorPool<N, T, D> {
    *
    * @param {N} node The typeset node
    * @param {LiveRegion} speechRegion The speech region.
-   * @param {LiveRegion} brailleRegion The braille region. 
+   * @param {LiveRegion} brailleRegion The braille region.
    */
   public updateRegions(
     node: N,
@@ -294,7 +295,7 @@ export class GeneratorPool<N, T, D> {
 
   /**
    * Computes the speech label from the node combining prefixes and postfixes.
-   *  
+   *
    * @param {N} node The typeset node.
    * @param {string=} center Core speech. Defaults to `data-semantic-speech`.
    * @param {string=} sep The speech separator. Defaults to space.
@@ -311,6 +312,13 @@ export class GeneratorPool<N, T, D> {
     );
   }
 
+  /**
+   * Copies an attribute from the enriched element to the current typeset node.
+   *
+   * @param {Element} xml The enriched XML.
+   * @param {N} node The typeset node.
+   * @param {string} attr The attribute to copy.
+   */
   private copyAttributes(xml: Element, node: N, attr: string) {
     const value = xml.getAttribute(attr);
     if (value !== undefined && value !== null) {
@@ -318,19 +326,39 @@ export class GeneratorPool<N, T, D> {
     }
   }
 
+  /**
+   * Attributes to be copied after updating speech.
+   */
   private attrList: string[] = [
     'data-semantic-prefix',
     'data-semantic-postfix',
     'data-semantic-speech',
     'data-semantic-braille',
   ]
-  
+
+  /**
+   * Attributes to be copied after an element was collapsed.
+   */
+  private dummyList: string[] = [
+    'data-semantic-id',
+    'data-semantic-parent',
+    'data-semantic-type',
+    'data-semantic-role',
+    'role'
+  ]
+
   /**
    * Retrieve and sets aria and braille labels recursively.
    * @param {MmlNode} node The root node to search from.
    */
   public setAria(node: N, xml: Element, locale: string) {
-    this.attrList.forEach(attr => this.copyAttributes(xml, node, attr));
+    const kind = xml.getAttribute('data-semantic-type');
+    if (kind) {
+      this.attrList.forEach(attr => this.copyAttributes(xml, node, attr));
+      if (kind === 'dummy') {
+        this.dummyList.forEach(attr => this.copyAttributes(xml, node, attr));
+      }
+    }
     const speech = this.getLabel(node);
     if (speech) {
       this.adaptor.setAttribute(node, 'aria-label', buildSpeech(speech, locale)[0]);
