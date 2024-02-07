@@ -295,6 +295,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     ['<', this.nextStyle.bind(this)],
     ['x', this.summary.bind(this)],
     ['-', this.expand.bind(this)],
+    ['d', this.depth.bind(this)],
   ]);
 
   /**
@@ -306,6 +307,12 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   private actionable(node: HTMLElement): HTMLElement {
     const parent = node?.parentNode as HTMLElement;
     return parent && this.highlighter.isMactionNode(parent) ? parent : null;
+  }
+
+  public depth(node: HTMLElement): HTMLElement {
+    this.generators.depth(node, !!this.actionable(node));
+    this.refocus(node);
+    return node;
   }
 
   /**

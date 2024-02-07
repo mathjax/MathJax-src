@@ -378,4 +378,19 @@ export class GeneratorPool<N, T, D> {
     );
   }
 
+  public depth(node: N, actionable: boolean) {
+    if (this.lastSummary) {
+      this.CleanUp(node);
+      return this.lastSpeech;
+    }
+    let postfix = this.summaryGenerator.getExpandable(
+      actionable ?
+        (this.adaptor.childNodes(node).length === 0 ? -1 : 1)
+        : 0);
+    const depth = this.summaryGenerator.getLevel(
+      this.adaptor.getAttribute(node, 'aria-level'));
+    this.lastSpeech = `${depth} ${postfix}`;
+    return this.lastSpeech;
+  }
+
 }
