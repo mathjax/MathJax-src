@@ -294,7 +294,31 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     ['>', this.nextRules.bind(this)],
     ['<', this.nextStyle.bind(this)],
     ['x', this.summary.bind(this)],
+    ['-', this.expand.bind(this)],
   ]);
+
+  /**
+   * Checks if a node is actionable, i.e., corresponds to an maction.
+   *
+   * @param {HTMLElement} node The (rendered) node under consideration.
+   * @returns {HTMLElement} The node corresponding to an maction element.
+   */
+  private actionable(node: HTMLElement): HTMLElement {
+    const parent = node?.parentNode as HTMLElement;
+    return parent && this.highlighter.isMactionNode(parent) ? parent : null;
+  }
+
+  /**
+   * Expands or collapses the currently focused node.
+   *
+   * @param {HTMLElement} node The focused node.
+   */
+  public expand(node: HTMLElement) {
+    const expandable = this.actionable(node);
+    if (expandable) {
+      expandable.dispatchEvent(new Event('click'));
+    }
+  }
 
   /**
    * Computes the summary for this expression. This is temporary and will be
