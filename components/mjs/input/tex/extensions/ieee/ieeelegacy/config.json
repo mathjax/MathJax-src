@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/ieee/ieeelegacy",
+    "component": "input/tex/extensions/ieee/ieeelegacy",
+    "targets": ["input/tex/ieee/ieeelegacy"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/ieeelegacy",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}
