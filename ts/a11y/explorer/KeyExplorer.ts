@@ -408,9 +408,22 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       // Here we refocus after a restart: We either find the previously focused
       // node or we assume that it is inside the collapsed expression tree and
       // focus on the collapsed element.
-      this.current =
-        this.node.querySelector(`[data-semantic-id="${this.restarted}"]`) ||
-        this.node.querySelector(`[data-semantic-type="dummy"]`);
+      this.current = this.node.querySelector(`[data-semantic-id="${this.restarted}"]`)
+      if (!this.current) {
+        const dummies = Array.from(
+          this.node.querySelectorAll(`[data-semantic-type="dummy"]`))
+          .map(x => x.getAttribute('data-semantic-id'))
+        let internal = this.generators.element.querySelector(
+          `[data-semantic-id="${this.restarted}"]`);
+        while (internal && internal !== this.generators.element) {
+          let sid = internal.getAttribute('data-semantic-id');
+          if (dummies.indexOf(sid) !== -1) {
+            this.current = this.node.querySelector(`[data-semantic-id="${sid}"]`);
+            break;
+          };
+          internal = internal.parentNode as Element;
+        }
+      }
       this.restarted = null;
     }
     if (!this.current) {
