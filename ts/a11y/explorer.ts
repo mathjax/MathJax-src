@@ -123,12 +123,12 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      * @override
      */
     public rerender(document: ExplorerMathDocument, start: number = STATE.RERENDER) {
-      let speech = this.explorers.speech;
-      if (speech.attached && speech.active) {
-        const focus = speech.semanticFocus();
-        this.refocus = focus ? focus.id : null;
-      }
       if (this.explorers) {
+        let speech = this.explorers.speech;
+        if (speech && speech.attached && speech.active) {
+          const focus = speech.semanticFocus();
+          this.refocus = focus ? focus.id : null;
+        }
         this.explorers.reattach();
       }
       super.rerender(document, start);
