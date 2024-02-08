@@ -28,7 +28,7 @@ import type { ExplorerMathItem } from '../explorer.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
 import {ExplorerPool} from './ExplorerPool.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import { honk } from '../speech/SpeechUtil.js';
+import { honk, InPlace } from '../speech/SpeechUtil.js';
 import {Sre} from '../sre.js';
 
 
@@ -312,6 +312,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   public depth(node: HTMLElement): HTMLElement {
     this.generators.depth(node, !!this.actionable(node));
     this.refocus(node);
+    this.generators.lastMove = InPlace.DEPTH;
     return node;
   }
 
@@ -337,6 +338,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   public summary(node: HTMLElement): HTMLElement {
     this.generators.summary(node);
     this.refocus(node);
+    this.generators.lastMove = InPlace.SUMMARY;
     return node;
   }
 

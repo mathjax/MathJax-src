@@ -213,3 +213,13 @@ export function honk() {
   os.start(ac.currentTime);
   os.stop(ac.currentTime + .05);
 }
+
+/**
+ * In place speech computations.
+ */
+export enum InPlace {
+  NONE,
+  DEPTH,
+  SUMMARY
+}
+
