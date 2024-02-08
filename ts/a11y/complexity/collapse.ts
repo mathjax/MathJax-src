@@ -505,7 +505,9 @@ export class Collapse {
 
     const attributes = node.attributes.getAllAttributes();
     for (const name of Object.keys(attributes)) {
-      if (name.substring(0, 14) === 'data-semantic-') {
+      if (name.substring(0, 14) === 'data-semantic-' ||
+        name.substring(0, 5) === 'aria-' ||
+        name === 'role') {
         mrow.attributes.set(name, attributes[name]);
         delete attributes[name];
       }

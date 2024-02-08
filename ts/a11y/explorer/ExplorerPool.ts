@@ -26,7 +26,7 @@ import {LiveRegion, SpeechRegion, ToolTip, HoverRegion} from './Region.js';
 import type { ExplorerMathDocument, ExplorerMathItem } from '../explorer.js';
 
 import {Explorer} from './Explorer.js';
-import * as ke from './KeyExplorer.js';
+import {SpeechExplorer} from './KeyExplorer.js';
 import * as me from './MouseExplorer.js';
 import {TreeColorer, FlameColorer} from './TreeExplorer.js';
 
@@ -87,9 +87,9 @@ type ExplorerInit = (doc: ExplorerMathDocument, pool: ExplorerPool,
  */
 let allExplorers: {[options: string]: ExplorerInit} = {
   speech: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
-    let explorer = ke.SpeechExplorer.create(
+    let explorer = SpeechExplorer.create(
       doc, pool, doc.explorerRegions.speechRegion, node,
-      doc.explorerRegions.brailleRegion, doc.explorerRegions.magnifier, rest[0], rest[1]) as ke.SpeechExplorer;
+      doc.explorerRegions.brailleRegion, doc.explorerRegions.magnifier, rest[0], rest[1]) as SpeechExplorer;
     explorer.sound = true;
     return explorer;
   },
@@ -213,7 +213,7 @@ export class ExplorerPool {
     let keyExplorers = [];
     for (let key of Object.keys(this.explorers)) {
       let explorer = this.explorers[key];
-      if (explorer instanceof ke.SpeechExplorer) {
+      if (explorer instanceof SpeechExplorer) {
         explorer.AddEvents();
         explorer.stoppable = false;
         keyExplorers.unshift(explorer);
@@ -253,7 +253,9 @@ export class ExplorerPool {
    * Restarts explorers after a MathItem is rerendered.
    */
   public restart() {
-    this._restart.forEach(x => this.explorers[x].Start());
+    this._restart.forEach(x => {
+      this.explorers[x].Start(); 
+    });
     this._restart = [];
   }
 
@@ -275,7 +277,7 @@ export class ExplorerPool {
       {color: 'red'}, {color: 'black'},
       {renderer: this.document.outputJax.name, browser: 'v3'}
     );
-    ((this.explorers['speech'] as ke.SpeechExplorer).region as SpeechRegion).highlighter =
+    (this.speech.region as SpeechRegion).highlighter =
       this.secondaryHighlighter;
   }
 
@@ -293,6 +295,16 @@ export class ExplorerPool {
   public unhighlight() {
     this.secondaryHighlighter.unhighlight();
     this.highlighter.unhighlight();
+  }
+
+  /**
+   * Convenience method to return the speech explorer of the pool with the
+   * correct type.
+   *
+   * @return {SpeechExplorer}
+   */
+  public get speech(): SpeechExplorer {
+    return this.explorers['speech'] as SpeechExplorer;
   }
 
   /**

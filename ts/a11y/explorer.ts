@@ -96,14 +96,9 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     public explorers: ExplorerPool;
 
     /**
-     * True when a rerendered element should regain the focus
+     * Semantic id of the rerendered element that should regain the focus.
      */
-    protected refocus: boolean = false;
-
-    /**
-     * Save explorer id during rerendering.
-     */
-    protected savedId: string = null;
+    protected refocus: number = null;
 
     /**
      * Add the explorer to the output for this math item
@@ -116,10 +111,6 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
       if (!this.isEscaped && (document.options.enableExplorer || force)) {
         const node = this.typesetRoot;
         const mml = toMathML(this.root);
-        if (this.savedId) {
-          this.typesetRoot.setAttribute('sre-explorer-id', this.savedId);
-          this.savedId = null;
-        }
         if (!this.explorers) {
           this.explorers = new ExplorerPool();
         }
@@ -132,9 +123,12 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      * @override
      */
     public rerender(document: ExplorerMathDocument, start: number = STATE.RERENDER) {
-      this.savedId = this.typesetRoot.getAttribute('sre-explorer-id');
-      this.refocus = (hasWindow ? window.document.activeElement === this.typesetRoot : false);
       if (this.explorers) {
+        let speech = this.explorers.speech;
+        if (speech && speech.attached && speech.active) {
+          const focus = speech.semanticFocus();
+          this.refocus = focus ? focus.id : null;
+        }
         this.explorers.reattach();
       }
       super.rerender(document, start);
@@ -145,11 +139,13 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      */
     public updateDocument(document: ExplorerMathDocument) {
       super.updateDocument(document);
-      this.refocus && this.typesetRoot.focus();
+      if (this.explorers?.speech) {
+        this.explorers.speech.restarted = this.refocus;
+      }
+      this.refocus = null;
       if (this.explorers) {
         this.explorers.restart();
       }
-      this.refocus = false;
     }
 
   };

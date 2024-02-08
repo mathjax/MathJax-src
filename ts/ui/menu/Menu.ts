@@ -492,7 +492,7 @@ export class Menu {
         this.a11yVar<string>('locale', value => {
           MathJax._.a11y.sre.Sre.setupEngine({locale: value as string});
         }),
-        this.a11yVar<string> ('speechRules', value => {
+        this.a11yVar<string>('speechRules', value => {
           const [domain, style] = value.split('-');
           this.document.options.sre.domain = domain;
           this.document.options.sre.style = style;

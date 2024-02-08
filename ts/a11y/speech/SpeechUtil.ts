@@ -21,8 +21,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {MmlNode} from '../core/MmlTree/MmlNode.js';
-import Sre from './sre.js';
+import Sre from '../sre.js';
 
 const ProsodyKeys = [ 'pitch', 'rate', 'volume' ];
 
@@ -157,24 +156,28 @@ function extractProsody(attr: string) {
   return [match[1], match[2]];
 }
 
+
 /**
- * Computes the aria-label from the node.
- * @param {MmlNode} node The Math element.
- * @param {string=} sep The speech separator. Defaults to space.
+ * Speech, labels and aria
  */
-function getLabel(node: MmlNode, sep: string = ' ') {
-  const attributes = node.attributes;
-  const speech = attributes.getExplicit('data-semantic-speech') as string;
+
+/**
+ * Builds a speech label from input components.
+ *
+ * @param speech The speech string.
+ * @param prefix The prefix expression.
+ * @param postfix The postfix expression.
+ * @param sep The separator string. Defaults to space.
+ */
+export function buildLabel(
+  speech: string, prefix: string, postfix: string, sep: string = ' ') {
   if (!speech) {
     return '';
   }
   const label = [speech];
-  const prefix = attributes.getExplicit('data-semantic-prefix') as string;
   if (prefix) {
     label.unshift(prefix);
   }
-  // TODO: check if we need this or if it is automatic by the screen readers.
-  const postfix = attributes.getExplicit('data-semantic-postfix') as string;
   if (postfix) {
     label.push(postfix);
   }
@@ -197,26 +200,6 @@ export function buildSpeech(speech: string, locale: string = 'en',
     ` xml:lang="${locale}">` +
     `<prosody rate="${rate}%">${speech}`+
     '</prosody></speak>');
-}
-
-/**
- * Retrieve and sets aria and braille labels recursively.
- * @param {MmlNode} node The root node to search from.
- */
-export function setAria(node: MmlNode, locale: string) {
-  const attributes = node.attributes;
-  if (!attributes) return;
-  const speech = getLabel(node);
-  if (speech) {
-    attributes.set('aria-label', buildSpeech(speech, locale)[0]);
-  }
-  const braille = node.attributes.getExplicit('data-semantic-braille') as string;
-  if (braille) {
-    attributes.set('aria-braillelabel', braille);
-  }
-  for (let child of node.childNodes) {
-    setAria(child, locale);
-  }
 }
 
 /**

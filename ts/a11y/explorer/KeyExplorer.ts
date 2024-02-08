@@ -28,10 +28,8 @@ import type { ExplorerMathItem } from '../explorer.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
 import {ExplorerPool} from './ExplorerPool.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import { honk } from '../SpeechUtil.js';
+import { honk } from '../speech/SpeechUtil.js';
 import {Sre} from '../sre.js';
-
-// import { Walker } from './Walker.js';
 
 
 /**
@@ -73,13 +71,15 @@ export interface KeyExplorer extends Explorer {
 }
 
 
-const codeSelector = 'mjx-container';
+/**
+ * Selectors for walking.
+ */
 const roles = ['tree', 'group', 'treeitem'];
 const nav = roles.map(x => `[role="${x}"]`).join(',');
 const prevNav = roles.map(x => `[tabindex="0"][role="${x}"]`).join(',');
 
-function isCodeBlock(el: HTMLElement) {
-  return el.matches(codeSelector);
+function isContainer(el: HTMLElement) {
+  return el.matches('mjx-container');
 }
 
 /**
@@ -101,17 +101,42 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   public sound: boolean = false;
 
   /**
-   * The attached Sre walker.
-   * @type {Walker}
+   * Id of the element focused before the restart.
    */
-  public walker: Sre.walker;
+  public restarted: number = null;
 
-  private eventsAttached: boolean = false;
+  /**
+   * Convenience getter for generator pool of the item.
+   */
+  private get generators() {
+    return this.item?.generatorPool;
+  }
 
+  /**
+   * The original tabindex value before explorer was attached.
+   */
+  private oldIndex: number = null;
+
+  /**
+   * The currently focused elements.
+   */
   protected current: HTMLElement = null;
 
+  /**
+   * Flag registering if events of the explorer are attached.
+   */
+  private eventsAttached: boolean = false;
+
+  /**
+   * Flag to register if the last event was an explorer move. This is important
+   * so the explorer does not stop (by FocusOut) during a focus shift.
+   */
   private move = false;
 
+  /**
+   * Register the mousedown event. Prevent FocusIn executing twice from click
+   * and mousedown.
+   */
   private mousedown = false;
 
   /**
@@ -138,8 +163,17 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     e.preventDefault();
   }
 
-  public Click(e: MouseEvent) {
-    const clicked = (e.target as HTMLElement).closest(nav) as HTMLElement;
+  /**
+   * Moves on mouse click to the closest clicked element.
+   *
+   * @param {MouseEvent} event The mouse click event.
+   */
+  public Click(event: MouseEvent) {
+    const clicked = (event.target as HTMLElement).closest(nav) as HTMLElement;
+    if (!this.node.contains(clicked)) {
+      // In case the mjx-container is in a div, we get the click, although it is outside.
+      this.mousedown = false;
+    }
     if (this.node.contains(clicked)) {
       const prev = this.node.querySelector(prevNav);
       if (prev) {
@@ -149,15 +183,9 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       if (!this.triggerLinkMouse()) {
         this.Start()
       }
-      e.preventDefault();
+      event.preventDefault();
     }
   }
-
-  /**
-   * The original tabindex value before explorer was attached.
-   * @type {boolean}
-   */
-  private oldIndex: number = null;
 
   /**
    * @override
@@ -167,7 +195,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       this.mousedown = false;
       return;
     }
-    this.current = this.current || this.node.querySelector('[role="tree"]');
+    this.current = this.current || this.node.querySelector('[role="treeitem"]');
     this.Start();
     event.preventDefault();
   }
@@ -176,9 +204,12 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    * @override
    */
   public FocusOut(_event: FocusEvent) {
+    this.generators.CleanUp(this.current);
     if (!this.move) {
       this.Stop();
     }
+    this.current?.removeAttribute('tabindex');
+    this.node.setAttribute('tabindex', '0');
   }
 
   /**
@@ -213,6 +244,12 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     this.attached = false;
   }
 
+  /**
+   * Navigate one step to the right on the same level.
+   *
+   * @param {HTMLElement} el The current element.
+   * @return {HTMLElement} The next element.
+   */
   protected nextSibling(el: HTMLElement): HTMLElement {
     const sib = el.nextElementSibling as HTMLElement;
     if (sib) {
@@ -222,12 +259,18 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       const sibChild = sib.querySelector(nav) as HTMLElement;
       return sibChild ?? this.nextSibling(sib);
     }
-    if (!isCodeBlock(el) && !el.parentElement.matches(nav)) {
+    if (!isContainer(el) && !el.parentElement.matches(nav)) {
       return this.nextSibling(el.parentElement);
     }
     return null;
   }
 
+  /**
+   * Navigate one step to the left on the same level.
+   *
+   * @param {HTMLElement} el The current element.
+   * @return {HTMLElement} The next element.
+   */
   protected prevSibling(el: HTMLElement): HTMLElement {
     const sib = el.previousElementSibling as HTMLElement;
     if (sib) {
@@ -237,7 +280,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       const sibChild = sib.querySelector(nav) as HTMLElement;
       return sibChild ?? this.prevSibling(sib);
     }
-    if (!isCodeBlock(el) && !el.parentElement.matches(nav)) {
+    if (!isContainer(el) && !el.parentElement.matches(nav)) {
       return this.prevSibling(el.parentElement);
     }
     return null;
@@ -248,10 +291,61 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     ['ArrowUp', (node: HTMLElement) => node.parentElement.closest(nav)],
     ['ArrowLeft', this.prevSibling.bind(this)],
     ['ArrowRight', this.nextSibling.bind(this)],
-    ['>', (_node: HTMLElement) => {
-      return null;
-    }],
+    ['>', this.nextRules.bind(this)],
+    ['<', this.nextStyle.bind(this)],
+    ['x', this.summary.bind(this)],
   ]);
+
+  /**
+   * Computes the summary for this expression. This is temporary and will be
+   * replaced by the full speech on focus out.
+   *
+   * @param {HTMLElement} node The targeted node.
+   * @return {HTMLElement} The refocused targeted node.
+   */
+  public summary(node: HTMLElement): HTMLElement {
+    this.generators.summary(node);
+    this.refocus(node);
+    return node;
+  }
+
+  /**
+   * Cycles to next speech rule set if possible and recomputes the speech for
+   * the expression.
+   *
+   * @param {HTMLElement} node The targeted node.
+   * @return {HTMLElement} The refocused targeted node.
+   */
+  public nextRules(node: HTMLElement): HTMLElement {
+    this.generators.nextRules(node);
+    this.Speech();
+    this.refocus(node);
+    return node;
+  }
+
+  /**
+   * Cycles to next speech style or preference if possible and recomputes the
+   * speech for the expression.
+   *
+   * @param {HTMLElement} node The targeted node.
+   * @return {HTMLElement} The refocused targeted node.
+   */
+  public nextStyle(node: HTMLElement): HTMLElement {
+    this.generators.nextStyle(node);
+    this.Speech();
+    this.refocus(node);
+    return node;
+  }
+
+  /**
+   * Refocuses the active elements, mainly to alert screenreaders of changes.
+   *
+   * @param {HTMLElement} node The node to refocus on.
+   */
+  private refocus(node: HTMLElement) {
+    node.blur();
+    node.focus();
+  }
 
   /**
    * @override
@@ -284,30 +378,6 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     honk();
   }
 
-  private static updatePromise = Promise.resolve();
-
-  /**
-   * The Sre speech generator associated with the walker.
-   * @type {SpeechGenerator}
-   */
-  public speechGenerator: Sre.speechGenerator;
-
-  /**
-   * The name of the option used to control when this is being shown
-   * @type {string}
-   */
-  public showRegion: string = 'subtitles';
-
-  // private init: boolean = false;
-
-  /**
-   * Flag in case the start method is triggered before the walker is fully
-   * initialised. I.e., we have to wait for Sre. Then region is re-shown if
-   * necessary, as otherwise it leads to incorrect stacking.
-   * @type {boolean}
-   */
-  private restarted: boolean = false;
-
   /**
    * @constructor
    * @extends {AbstractKeyExplorer}
@@ -330,52 +400,45 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    */
   public Start() {
     if (!this.attached) return;
+    if (this.node.hasAttribute('tabindex')) {
+      this.node.removeAttribute('tabindex');
+    }
     if (this.active) return;
+    if (this.restarted !== null) {
+      // Here we refocus after a restart: We either find the previously focused
+      // node or we assume that it is inside the collapsed expression tree and
+      // focus on the collapsed element.
+      this.current =
+        this.node.querySelector(`[data-semantic-id="${this.restarted}"]`) ||
+        this.node.querySelector(`[data-semantic-type="dummy"]`);
+      this.restarted = null;
+    }
+    if (!this.current) {
+      // In case something went wrong when focusing or restarting, we start on
+      // the root node by default.
+      this.current = this.node.childNodes[0] as HTMLElement;
+    }
+    let promise = Sre.sreReady();
+    if (this.generators.update(this.document.options)) {
+      promise = promise.then(
+        () => this.Speech()
+      );
+    };
     this.current.setAttribute('tabindex', '0');
     this.current.focus();
     super.Start();
-    // let options = this.getOptions();
-    // if (!this.init) {
-    //   this.init = true;
-    //   SpeechExplorer.updatePromise = SpeechExplorer.updatePromise.then(async () => {
-    //     return Sre.sreReady()
-    //       .then(() => Sre.setupEngine({locale: options.locale}))
-    //       .then(() => {
-    //         // Important that both are in the same block so speech explorers
-    //         // are restarted sequentially.
-    //         this.Speech(this.walker);
-    //       })
-    //       .then(() => Sre.setupEngine({automark: false as any, markup: 'none',
-    //                                    locale: 'nemeth', domain: 'default',
-    //                                    style: 'default', modality: 'braille'}))
-    //       .then(() => {
-    //         this.speechGenerator.setOptions({automark: false as any, markup: 'none',
-    //                                    locale: 'nemeth', domain: 'default',
-    //                                    style: 'default', modality: 'braille'});
-    //         this.Speech(this.walker);
-    //         this.Start();
-    //       });
-    //   })
-    //   return;
-    // }
-    // this.speechGenerator = Sre.getSpeechGenerator('Direct');
-    // this.speechGenerator.setOptions(options);
-    // this.walker = Sre.getWalker(
-    //   'table', this.node, this.speechGenerator, this.highlighter, this.mml);
-    // this.walker.activate();
     if (this.document.options.a11y.subtitles) {
-      SpeechExplorer.updatePromise.then(
-        () => this.region.Show(this.node, this.highlighter))
+      promise.then(
+        () => this.region.Show(this.node, this.highlighter));
     }
     if (this.document.options.a11y.viewBraille) {
-      SpeechExplorer.updatePromise.then(
-        () => this.brailleRegion.Show(this.node, this.highlighter))
+      promise.then(
+        () => this.brailleRegion.Show(this.node, this.highlighter));
     }
     if (this.document.options.a11y.keyMagnifier) {
       this.magnifyRegion.Show(this.node, this.highlighter);
     }
     this.Update();
-    // this.restarted = true;
   }
 
 
@@ -385,59 +448,25 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   public Update(force: boolean = false) {
     // TODO (v4): This is a hack to avoid double voicing on initial startup!
     // Make that cleaner and remove force as it is not really used!
-    // let noUpdate = force;
     if (!this.active && !force) return;
     this.pool.unhighlight();
-    // let nodes = this.walker.getFocus(true).getNodes();
-    // if (!nodes.length) {
-    //   this.walker.refocus();
-    //   nodes = this.walker.getFocus().getNodes();
-    // }
     this.pool.highlight([this.current]);
     this.region.node = this.node;
-    this.region.Update(this.current.getAttribute('data-semantic-speech'));
-    this.brailleRegion.Update(this.current.getAttribute('aria-braillelabel'));
+    this.generators.updateRegions(
+      this.current,
+      this.region,
+      this.brailleRegion
+    );
     this.magnifyRegion.Update(this.current);
-    // let options = this.speechGenerator.getOptions();
-    // This is a necessary in case speech options have changed via keypress
-    // during walking.
-    // if (options.modality === 'speech') {
-    //   this.document.options.sre.domain = options.domain;
-    //   this.document.options.sre.style = options.style;
-    //   this.document.options.a11y.speechRules =
-    //     options.domain + '-' + options.style;
-    // }
-    // Ensure this autovoicing is retained later:
-    // SpeechExplorer.updatePromise = SpeechExplorer.updatePromise.then(async () => {
-    //   return Sre.sreReady()
-    //     .then(() => Sre.setupEngine({markup: options.markup,
-    //                                  modality: options.modality,
-    //                                  locale: options.locale}))
-    //     .then(() => {
-    //       if (!noUpdate) {
-    //         let speech = this.walker.speech();
-    //         this.region.Update(speech);
-    //       }
-    //     });
-    // });
   }
-
 
   /**
-   * Computes the speech for the current expression once Sre is ready.
-   * @param {Walker} walker The sre walker.
+   * Computes the speech for the current expression.
    */
-  public Speech(walker: Sre.walker) {
-    SpeechExplorer.updatePromise.then(() => {
-      walker.speech();
-      this.node.setAttribute('hasspeech', 'true');
-      this.Update(true);
-      if (this.restarted && this.document.options.a11y[this.showRegion]) {
-        this.region.Show(this.node, this.highlighter);
-      }
-    });
+  public Speech() {
+    this.item.outputData.speech =
+      this.generators.updateSpeech(this.item.typesetRoot);
   }
-
 
   /**
    * @override
@@ -445,6 +474,12 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   public KeyDown(event: KeyboardEvent) {
     const code = event.key;
     // this.walker.modifier = event.shiftKey;
+    if (code === 'Tab') {
+      return;
+    }
+    if (code === ' ') {
+      return;
+    }
     if (code === 'Control') {
       speechSynthesis.cancel();
       return;
@@ -467,7 +502,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       }
       if (!this.active) {
         if (!this.current) {
-          this.current = this.node.querySelector('[role="tree"]');
+          this.current = this.node.querySelector('[role="treeitem"]');
         }
         this.Start();
         this.stopEvent(event);
@@ -518,9 +553,8 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     return false;
   }
 
-
   /**
-   * Programmatically triggers a link if the clicked mouse contains one.
+   * Programmatically triggers a link if the clicked mouse event contains one.
    */
   protected triggerLinkMouse() {
     let node = this.current;
@@ -534,31 +568,10 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   }
 
   /**
-   * Retrieves the speech options to sync with document options.
-   * @return {{[key: string]: string}} The options settings for the speech
-   *     generator.
-   */
-  protected getOptions(): {[key: string]: string} {
-    let options = this.speechGenerator.getOptions();
-    let sreOptions = this.document.options.sre;
-    if (options.modality === 'speech' &&
-      (options.locale !== sreOptions.locale ||
-        options.domain !== sreOptions.domain ||
-        options.style !== sreOptions.style)) {
-      options.domain = sreOptions.domain;
-      options.style = sreOptions.style;
-      options.locale = sreOptions.locale;
-      this.walker.update(options);
-    }
-    return options;
-  }
-
-  /**
    * @override
    */
   public Stop() {
     if (this.active) {
-      this.current.removeAttribute('tabindex');
       this.pool.unhighlight();
       this.magnifyRegion.Hide();
       this.region.Hide();
@@ -567,6 +580,15 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     super.Stop();
   }
 
-
+  /**
+   * @return The semantic node that is currently focused.
+   */
+  public semanticFocus() {
+    const node = this.current || this.node;
+    const id = node.getAttribute('data-semantic-id');
+    const stree = this.generators.speechGenerator.getRebuilt().stree;
+    const snode = stree.root.querySelectorAll((x: any) => x.id.toString() === id)[0];
+    return snode || stree.root;
+  }
 
 }
