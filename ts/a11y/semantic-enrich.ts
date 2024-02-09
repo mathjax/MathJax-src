@@ -244,10 +244,8 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
      */
     public attachSpeech(document: MathDocument<N, T, D>) {
       if (this.state() >= STATE.ATTACHSPEECH) return;
-      if (this.isEscaped || !document.options.enableEnrichment) {
-        this.state(STATE.ATTACHSPEECH);
-        return;
-      }
+      this.state(STATE.ATTACHSPEECH);
+      if (this.isEscaped || !document.options.enableEnrichment) return;
       let [speech, braille] = this.existingSpeech();
       let [newSpeech, newBraille] = ['', ''];
       if ((!speech && document.options.enableSpeech) ||
@@ -262,10 +260,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
       }
       speech = speech || newSpeech;
       braille = braille || newBraille;
-      if (!speech && !braille) {
-        this.state(STATE.ATTACHSPEECH);
-        return;
-      }
+      if (!speech && !braille) return;
       const adaptor = document.adaptor;
       const node = this.typesetRoot;
       if (speech) {
@@ -279,7 +274,6 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
       }
       this.outputData.speech = speech;
       this.outputData.braille = braille;
-      this.state(STATE.ATTACHSPEECH);
     }
 
   };
