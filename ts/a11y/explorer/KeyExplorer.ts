@@ -330,9 +330,11 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    */
   public expand(node: HTMLElement) {
     const expandable = this.actionable(node);
-    if (expandable) {
-      expandable.dispatchEvent(new Event('click'));
+    if (!expandable) {
+      return null;
     }
+    expandable.dispatchEvent(new Event('click'));
+    return node;
   }
 
   /**
