@@ -394,7 +394,7 @@ export class GeneratorPool<N, T, D> {
       this.CleanUp(node);
       return this.lastSpeech;
     }
-    let postfix = this.summaryGenerator.getExpandable(
+    let postfix = this.summaryGenerator.getActionable(
       actionable ?
         (this.adaptor.childNodes(node).length === 0 ? -1 : 1)
         : 0);
