@@ -294,7 +294,31 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     ['>', this.nextRules.bind(this)],
     ['<', this.nextStyle.bind(this)],
     ['x', this.summary.bind(this)],
+    ['-', this.expand.bind(this)],
   ]);
+
+  /**
+   * Checks if a node is actionable, i.e., corresponds to an maction.
+   *
+   * @param {HTMLElement} node The (rendered) node under consideration.
+   * @returns {HTMLElement} The node corresponding to an maction element.
+   */
+  private actionable(node: HTMLElement): HTMLElement {
+    const parent = node?.parentNode as HTMLElement;
+    return parent && this.highlighter.isMactionNode(parent) ? parent : null;
+  }
+
+  /**
+   * Expands or collapses the currently focused node.
+   *
+   * @param {HTMLElement} node The focused node.
+   */
+  public expand(node: HTMLElement) {
+    const expandable = this.actionable(node);
+    if (expandable) {
+      expandable.dispatchEvent(new Event('click'));
+    }
+  }
 
   /**
    * Computes the summary for this expression. This is temporary and will be
@@ -408,9 +432,22 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       // Here we refocus after a restart: We either find the previously focused
       // node or we assume that it is inside the collapsed expression tree and
       // focus on the collapsed element.
-      this.current =
-        this.node.querySelector(`[data-semantic-id="${this.restarted}"]`) ||
-        this.node.querySelector(`[data-semantic-type="dummy"]`);
+      this.current = this.node.querySelector(`[data-semantic-id="${this.restarted}"]`)
+      if (!this.current) {
+        const dummies = Array.from(
+          this.node.querySelectorAll(`[data-semantic-type="dummy"]`))
+          .map(x => x.getAttribute('data-semantic-id'))
+        let internal = this.generators.element.querySelector(
+          `[data-semantic-id="${this.restarted}"]`);
+        while (internal && internal !== this.generators.element) {
+          let sid = internal.getAttribute('data-semantic-id');
+          if (dummies.indexOf(sid) !== -1) {
+            this.current = this.node.querySelector(`[data-semantic-id="${sid}"]`);
+            break;
+          };
+          internal = internal.parentNode as Element;
+        }
+      }
       this.restarted = null;
     }
     if (!this.current) {
