@@ -19,7 +19,7 @@ import {mathjax} from '../../mathjax.js';
 import {Sre} from '../sre.js';
 import {OptionList} from '../../util/Options.js';
 import {LiveRegion} from '../explorer/Region.js';
-import { buildLabel, buildSpeech } from '../speech/SpeechUtil.js';
+import { buildLabel, buildSpeech, InPlace } from '../speech/SpeechUtil.js';
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 
 /**
@@ -177,7 +177,7 @@ export class GeneratorPool<N, T, D> {
    * @param {N} node The typeset node.
    */
   public summary(node: N) {
-    if (this.lastSummary) {
+    if (this.lastMove === InPlace.SUMMARY) {
       this.CleanUp(node);
       return this.lastSpeech;
     }
@@ -193,11 +193,11 @@ export class GeneratorPool<N, T, D> {
    * @param {N} node
    */
   public CleanUp(node: N) {
-    if (this.lastSummary) {
+    if (this.lastMove) {
       // TODO: Remember the speech.
       this.adaptor.setAttribute(node, 'aria-label', buildSpeech(this.getLabel(node))[0]);
     }
-    this.lastSummary = false;
+    this.lastMove = InPlace.NONE;
   }
 
   /**
@@ -206,9 +206,24 @@ export class GeneratorPool<N, T, D> {
   private lastSpeech = '';
 
   /**
-   * Remembers that the last speech computation was a summary.
+   * Remembers whether the last speech computation was in-place, i.e., a summary
+   * or depth computation.
    */
-  private lastSummary = false;
+  private lastMove_ = InPlace.NONE;
+
+  /**
+   * Getter for last move.
+   */
+  public get lastMove() {
+    return this.lastMove_;
+  }
+
+  /**
+   * Setter for last move.
+   */
+  public set lastMove(move: InPlace) {
+    this.lastMove_ = this.lastSpeech ? move : InPlace.NONE;
+  }
 
   /**
    * Updates the given speech regions, possibly reinstanting previously saved
@@ -225,11 +240,7 @@ export class GeneratorPool<N, T, D> {
   ) {
     let speech = this.getLabel(node, this.lastSpeech);
     speechRegion.Update(speech);
-    // TODO: See if we can reuse the speech from the speech region.
     this.adaptor.setAttribute(node, 'aria-label', buildSpeech(speech)[0]);
-    if (this.lastSpeech) {
-      this.lastSummary = true;
-    }
     this.lastSpeech = '';
     brailleRegion.Update(
       this.adaptor.getAttribute(node, 'aria-braillelabel'));
@@ -376,6 +387,21 @@ export class GeneratorPool<N, T, D> {
         }
       }
     );
+  }
+
+  public depth(node: N, actionable: boolean) {
+    if (this.lastMove === InPlace.DEPTH) {
+      this.CleanUp(node);
+      return this.lastSpeech;
+    }
+    let postfix = this.summaryGenerator.getExpandable(
+      actionable ?
+        (this.adaptor.childNodes(node).length === 0 ? -1 : 1)
+        : 0);
+    const depth = this.summaryGenerator.getLevel(
+      this.adaptor.getAttribute(node, 'aria-level'));
+    this.lastSpeech = `${depth} ${postfix}`;
+    return this.lastSpeech;
   }
 
 }
