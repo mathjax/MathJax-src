@@ -294,7 +294,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     ['>', this.nextRules.bind(this)],
     ['<', this.nextStyle.bind(this)],
     ['x', this.summary.bind(this)],
-    ['-', this.expand.bind(this)],
+    ['Enter', this.expand.bind(this)],
     ['d', this.depth.bind(this)],
   ]);
 
