@@ -309,6 +309,13 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     return parent && this.highlighter.isMactionNode(parent) ? parent : null;
   }
 
+  /**
+   * Computes the nesting depth announcement for the currently focused sub
+   * expression.
+   *
+   * @param {HTMLElement} node The current node.
+   * @return {HTMLElement} The refocused node.
+   */
   public depth(node: HTMLElement): HTMLElement {
     this.generators.depth(node, !!this.actionable(node));
     this.refocus(node);
