@@ -204,6 +204,9 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    * @override
    */
   public FocusOut(_event: FocusEvent) {
+    // This guard is to FF and Safari, where focus in fires only once on
+    // keyboard.
+    if (!this.active) return;
     this.generators.CleanUp(this.current);
     if (!this.move) {
       this.Stop();
