@@ -172,6 +172,8 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
       //
       enableEnrichment: true,
       enableComplexity: true,
+      enableSpeech: true,
+      enableBraille: true,
       enableExplorer: true,
       enrichSpeech: 'none',
       enrichError: (_doc: MenuMathDocument, _math: MenuMathItem, err: Error) =>
@@ -203,11 +205,20 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
     constructor(...args: any[]) {
       super(...args);
       this.menu = new this.options.MenuClass(this, this.options.menuOptions);
+
       const ProcessBits = (this.constructor as typeof BaseDocument).ProcessBits;
       if (!ProcessBits.has('context-menu')) {
         ProcessBits.allocate('context-menu');
       }
       this.options.MathItem = MenuMathItemMixin<A11yMathItemConstructor>(this.options.MathItem);
+
+      const settings = this.menu.settings;
+      const options = this.options;
+      const enrich = options.enableEnrichment = settings.enrich;
+      options.enableSpeech = settings.speech && enrich;
+      options.enableBraille = settings.braille && enrich;
+      options.enableComplexity = settings.collapsible && enrich;
+      options.enableExplorer = enrich;
     }
 
     /**
@@ -234,14 +245,10 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
       if (this.menu.isLoading) {
         mathjax.retryAfter(this.menu.loadingPromise.catch((err) => console.log(err)));
       }
-      const settings = this.menu.settings;
-      if (settings.collapsible) {
-        this.options.enableComplexity = true;
+      if (this.options.enableComplexity) {
         this.menu.checkComponent('a11y/complexity');
       }
-      if (settings.explorer) {
-        this.options.enableEnrichment = true;
-        this.options.enableExplorer = true;
+      if (this.options.enableExplorer) {
         this.menu.checkComponent('a11y/explorer');
       }
       return this;

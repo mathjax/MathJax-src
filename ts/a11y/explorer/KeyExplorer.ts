@@ -486,11 +486,11 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     this.current.setAttribute('tabindex', '0');
     this.current.focus();
     super.Start();
-    if (this.document.options.a11y.subtitles) {
+    if (this.document.options.a11y.subtitles && this.document.options.enableSpeech) {
       promise.then(
         () => this.region.Show(this.node, this.highlighter));
     }
-    if (this.document.options.a11y.viewBraille) {
+    if (this.document.options.a11y.viewBraille && this.document.options.enableBraille) {
       promise.then(
         () => this.brailleRegion.Show(this.node, this.highlighter));
     }
