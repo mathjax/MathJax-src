@@ -67,6 +67,7 @@ ExtpfeilMethods.NewExtArrow = function(parser: TexParser, name: string) {
   let spaces = space.split(',');
   NewcommandUtil.addMacro(parser, cs, ExtpfeilMethods.xArrow,
                           [parseInt(chr), parseInt(spaces[0]), parseInt(spaces[1])]);
+  parser.Push(parser.itemFactory.create('null'));
 };
 
 

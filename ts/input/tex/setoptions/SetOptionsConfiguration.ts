@@ -113,6 +113,7 @@ const setOptionsMap = new CommandMap('setoptions', {
           config.filterValue(parser, extension, key, options[key]);
       }
     }
+    parser.Push(parser.itemFactory.create('null'));
   }
 });
 

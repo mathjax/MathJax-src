@@ -414,7 +414,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
   /**
    * @return {string} The type of the stack item.
    */
-    public get kind(): string {
+  public get kind(): string {
     return 'base';
   }
 

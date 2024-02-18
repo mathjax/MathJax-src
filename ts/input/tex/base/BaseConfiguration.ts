@@ -168,6 +168,7 @@ export const BaseConfiguration: Configuration = Configuration.create(
       [bitem.StopItem.prototype.kind]: bitem.StopItem,
       [bitem.OpenItem.prototype.kind]: bitem.OpenItem,
       [bitem.CloseItem.prototype.kind]: bitem.CloseItem,
+      [bitem.NullItem.prototype.kind]: bitem.NullItem,
       [bitem.PrimeItem.prototype.kind]: bitem.PrimeItem,
       [bitem.SubsupItem.prototype.kind]: bitem.SubsupItem,
       [bitem.OverItem.prototype.kind]: bitem.OverItem,

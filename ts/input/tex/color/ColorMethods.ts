@@ -112,6 +112,7 @@ ColorMethods.DefineColor = function (parser: TexParser, name: string) {
 
   const colorModel: ColorModel = parser.configuration.packageData.get('color').model;
   colorModel.defineColor(model, cname, def);
+  parser.Push(parser.itemFactory.create('null'));
 };
 
 /**

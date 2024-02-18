@@ -49,6 +49,7 @@ NewcommandMethods.NewCommand = function(parser: TexParser, name: string) {
   let opt = parser.GetBrackets(name);
   let def = parser.GetArgument(name);
   NewcommandUtil.addMacro(parser, cs, NewcommandMethods.Macro, [def, n, opt]);
+  parser.Push(parser.itemFactory.create('null'));
 };
 
 
@@ -65,6 +66,7 @@ NewcommandMethods.NewEnvironment = function(parser: TexParser, name: string) {
   let bdef = parser.GetArgument(name);
   let edef = parser.GetArgument(name);
   NewcommandUtil.addEnvironment(parser, env, NewcommandMethods.BeginEnv, [true, bdef, edef, n, opt]);
+  parser.Push(parser.itemFactory.create('null'));
 };
 
 
@@ -83,6 +85,7 @@ NewcommandMethods.MacroDef = function(parser: TexParser, name: string) {
     NewcommandUtil.addMacro(parser, cs, NewcommandMethods.Macro, [def, params]) :
     // @test Def Let
     NewcommandUtil.addMacro(parser, cs, NewcommandMethods.MacroWithTemplate, [def].concat(params));
+  parser.Push(parser.itemFactory.create('null'));
 };
 
 
@@ -112,6 +115,7 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
     c = parser.GetNext();
   }
   const handlers = parser.configuration.handlers;
+  parser.Push(parser.itemFactory.create('null'));
   if (c === '\\') {
     // @test Let Bar, Let Brace Equal Stretchy
     name = NewcommandUtil.GetCSname(parser, name);
