@@ -34,6 +34,9 @@ import './BaseMappings.js';
 import {getRange} from '../../../core/MmlTree/OperatorDictionary.js';
 import ParseOptions from '../ParseOptions.js';
 import {ParseUtil} from '../ParseUtil.js';
+import {TexConstant} from '../TexConstants.js';
+
+const MATHVARIANT = TexConstant.Variant;
 
 /**
  * Remapping some ASCII characters to their Unicode operator equivalent.
@@ -53,17 +56,17 @@ new CharacterMap('remap', null, {
  */
 export function Other(parser: TexParser, char: string) {
   const font = parser.stack.env['font'];
-  let def = font ?
-    // @test Other Font
-    {mathvariant: parser.stack.env['font']} : {};
+  const ifont = parser.stack.env['italicFont'];
+  // @test Other Font
+  let def = font ? {mathvariant: font} : {};
   const remap = (MapHandler.getMap('remap') as CharacterMap).lookup(char);
   const range = getRange(char);
   const type = range[3]
   // @test Other
   // @test Other Remap
   let mo = parser.create('token', type, def, (remap ? remap.char : char));
-  const variant = (range[4] ||
-                   (ParseUtil.isLatinOrGreekChar(char) ? parser.configuration.mathStyle(char, true) : ''));
+  const style = (ParseUtil.isLatinOrGreekChar(char) ? parser.configuration.mathStyle(char, true) || ifont : '');
+  const variant = (range[4] || (font && style === MATHVARIANT.NORMAL? '' : style));
   if (variant) {
     mo.attributes.set('mathvariant', variant);
   }
