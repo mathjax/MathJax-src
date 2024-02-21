@@ -145,7 +145,8 @@ export class Menu {
       assistiveMml: false,
       speech: true,
       braille: true,
-      brailleCode: 'nemeth'
+      brailleCode: 'nemeth',
+      speechRules: 'mathspeek-default'
     },
     jax: {
       CHTML: null,
@@ -595,8 +596,6 @@ export class Menu {
           this.checkbox('Subtitles', 'Show Subtitles', 'subtitles'),
           this.checkbox('Auto Voicing', 'Auto Voicing', 'voicing'),
           this.rule(),
-          this.submenu('A11yLanguage', 'Language'),
-          this.rule(),
           this.label('Rules', 'Rules:'),
           this.submenu('Mathspeak', 'Mathspeak', this.radioGroup('speechRules', [
             ['mathspeak-default', 'Verbose'],
@@ -610,6 +609,8 @@ export class Menu {
             ['chromevox-default', 'Standard'],
             ['chromevox-alternative', 'Alternative']
           ])),
+          this.rule(),
+          this.submenu('A11yLanguage', 'Language')
         ]),
         this.submenu('Braille', '\xA0 \xA0 Braille', [
           this.checkbox('Generate', 'Generate', 'braille'),
