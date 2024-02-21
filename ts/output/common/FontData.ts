@@ -184,7 +184,7 @@ export type SmpMap = {
  * Data for Math Alphanumeric conversion:  starting positions for
  *  [Alpha, alpha, Greek, greek, Numbers]
  */
-export type SmpData = [number, number, number?, number?, number?];
+export type SmpData = [number, number, number?, number?, number?, {[n: number]: number}?];
 
 
 /****************************************************************************/
@@ -317,6 +317,7 @@ export interface FontExtensionData<C extends CharOptions, D extends DelimiterDat
   name: string;
   options?: OptionList;
   variants?: string[][] | {'[+]'?: string[][], '[-]'?: string[][]};
+  variantSmp?: {[name: string]: SmpData | string};
   cssFonts?: CssFontMap;
   accentMap?: RemapMap;
   moMap?: RemapMap;
@@ -439,8 +440,8 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * Variant locations in the Math Alphabnumerics block:
    *  [upper-alpha, lower-alpha, upper-Greek, lower-Greek, numbers]
    */
-  public static VariantSmp: {[name: string]: SmpData} = {
-    bold: [0x1D400, 0x1D41A, 0x1D6A8, 0x1D6C2, 0x1D7CE],
+  public static VariantSmp: {[name: string]: SmpData | string} = {
+    bold: [0x1D400, 0x1D41A, 0x1D6A8, 0x1D6C2, 0x1D7CE, {0x3DC: 0x1D7CA, 0x3DD: 0x1D7CB}],
     italic: [0x1D434, 0x1D44E, 0x1D6E2, 0x1D6FC],
     'bold-italic': [0x1D468, 0x1D482, 0x1D71C, 0x1D736],
     script: [0x1D49C, 0x1D4B6],
@@ -797,6 +798,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     for (const [src, dst] of [
       ['options', 'OPTIONS'],
       ['variants', 'defaultVariants'],
+      ['variantSmp', 'VariantSmp'],
       ['cssFonts', 'defaultCssFonts'],
       ['accentMap', 'defaultAccentMap'],
       ['moMap', 'defaultMoMap'],
@@ -866,6 +868,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     defaultOptions(this.params, data.parameters || {});
     mergeOptions(this, 'sizeVariants', data.sizeVariants);
     mergeOptions(this, 'stretchVariants', data.stretchVariants);
+    mergeOptions(this.constructor, 'VariantSmp', data.variantSmp);
     this.defineCssFonts(mergeOptions({cssFonts: {}}, 'cssFonts', data.cssFonts));
     this.createVariants(mergeOptions({variants: []}, 'variants', data.variants));
     if (data.delimiters) {
@@ -949,27 +952,30 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    */
   protected remapSmpChars(chars: CharMap<C>, name: string) {
     const CLASS = this.CLASS;
-    if (CLASS.VariantSmp[name]) {
-      const SmpRemap = CLASS.SmpRemap;
-      const SmpGreek = [null, null, CLASS.SmpRemapGreekU, CLASS.SmpRemapGreekL];
-      for (const [i, lo, hi] of CLASS.SmpRanges) {
-        const base = CLASS.VariantSmp[name][i];
-        if (!base) continue;
-        for (let n = lo; n <= hi; n++) {
-          if (n === 0x3A2) continue;
-          const smp = base + n - lo;
-          chars[n] = this.smpChar(SmpRemap[smp] || smp);
-        }
-        if (SmpGreek[i]) {
-          for (const n of Object.keys(SmpGreek[i]).map((x) => parseInt(x))) {
-            chars[n] = this.smpChar(base + SmpGreek[i][n]);
-          }
+    let remap = CLASS.VariantSmp[name];
+    if (typeof remap === 'string') {
+      remap = CLASS.VariantSmp[remap] as SmpData;
+    }
+    if (!remap) return;
+    const SmpRemap = CLASS.SmpRemap;
+    const SmpGreek = [null, null, CLASS.SmpRemapGreekU, CLASS.SmpRemapGreekL];
+    for (const [i, lo, hi] of CLASS.SmpRanges) {
+      const base = remap[i] as number;
+      if (!base) continue;
+      for (let n = lo; n <= hi; n++) {
+        if (n === 0x3A2) continue;
+        const smp = base + n - lo;
+        chars[n] = this.smpChar(SmpRemap[smp] || smp);
+      }
+      if (SmpGreek[i]) {
+        for (const n of Object.keys(SmpGreek[i]).map((x) => parseInt(x))) {
+          chars[n] = this.smpChar(base + SmpGreek[i][n]);
         }
       }
     }
-    if (name === 'bold') {
-      chars[0x3DC] = this.smpChar(0x1D7CA);
-      chars[0x3DD] = this.smpChar(0x1D7CB);
+    const extra = remap[5] || {};
+    for (const n of Object.keys(extra)) {
+      chars[n as any] = this.smpChar(remap[5][n as any]);
     }
   }
 
