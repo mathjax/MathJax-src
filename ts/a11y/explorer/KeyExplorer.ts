@@ -178,6 +178,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       const prev = this.node.querySelector(prevNav);
       if (prev) {
         prev.removeAttribute('tabindex');
+        this.FocusOut(null);
       }
       this.current = clicked;
       if (!this.triggerLinkMouse()) {
@@ -477,8 +478,9 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       // the root node by default.
       this.current = this.node.childNodes[0] as HTMLElement;
     }
+    const options = this.document.options;
     let promise = Sre.sreReady();
-    if (this.generators.update(this.document.options)) {
+    if (this.generators.update(options)) {
       promise = promise.then(
         () => this.Speech()
       );
@@ -486,15 +488,15 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     this.current.setAttribute('tabindex', '0');
     this.current.focus();
     super.Start();
-    if (this.document.options.a11y.subtitles && this.document.options.enableSpeech) {
+    if (options.a11y.subtitles && options.a11y.speech && options.enableSpeech) {
       promise.then(
         () => this.region.Show(this.node, this.highlighter));
     }
-    if (this.document.options.a11y.viewBraille && this.document.options.enableBraille) {
+    if (options.a11y.viewBraille && options.a11y.braille && options.enableBraille) {
       promise.then(
         () => this.brailleRegion.Show(this.node, this.highlighter));
     }
-    if (this.document.options.a11y.keyMagnifier) {
+    if (options.a11y.keyMagnifier) {
       this.magnifyRegion.Show(this.node, this.highlighter);
     }
     this.Update();

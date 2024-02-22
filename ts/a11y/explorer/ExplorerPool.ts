@@ -211,6 +211,7 @@ export class ExplorerPool {
   public attach() {
     this.attached = [];
     let keyExplorers = [];
+    const a11y = this.document.options.a11y;
     for (let key of Object.keys(this.explorers)) {
       let explorer = this.explorers[key];
       if (explorer instanceof SpeechExplorer) {
@@ -218,7 +219,7 @@ export class ExplorerPool {
         explorer.stoppable = false;
         keyExplorers.unshift(explorer);
       }
-      if (this.document.options.a11y[key]) {
+      if (a11y[key] || (key === 'speech' && (a11y.braille || a11y.keyMagnifier))) {
         explorer.Attach();
         this.attached.push(key);
       } else {
