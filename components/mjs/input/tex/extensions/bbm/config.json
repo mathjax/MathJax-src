@@ -1,8 +1,8 @@
 {
   "build": {
-    "id": "[tex]//bbm",
-    "component": "input/tex/extensions//bbm",
-    "targets": ["input/tex//bbm"]
+    "id": "[tex]/bbm",
+    "component": "input/tex/extensions/bbm",
+    "targets": ["input/tex/bbm"]
   },
   "webpack": {
     "name": "input/tex/extensions/bbm",
