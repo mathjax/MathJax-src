@@ -917,7 +917,7 @@ function AMparseSexpr(str) { //parses str and returns [node,tailstr]
 		(result[0].nodeName=="mrow" && result[0].childNodes.length==1
 			&& result[0].firstChild.firstChild.nodeValue !== null
 			&& result[0].firstChild.firstChild.nodeValue.length==1) ||
-		(result[0].firstChild.nodeValue !== null
+		(result[0].firstChild && result[0].firstChild.nodeValue !== null
 			&& result[0].firstChild.nodeValue.length==1) )) {
 			accnode.setAttribute("stretchy",false);
         }
