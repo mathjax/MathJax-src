@@ -263,10 +263,10 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
       if (!speech && !braille) return;
       const adaptor = document.adaptor;
       const node = this.typesetRoot;
-      if (speech) {
+      if (speech && document.options.enableSpeech) {
         adaptor.setAttribute(node, 'aria-label', speech as string);
       }
-      if (braille) {
+      if (braille && document.options.enableBraille) {
         adaptor.setAttribute(node, 'aria-braillelabel', braille as string);
       }
       for (const child of adaptor.childNodes(node) as N[]) {

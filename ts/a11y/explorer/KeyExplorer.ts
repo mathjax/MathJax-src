@@ -178,6 +178,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       const prev = this.node.querySelector(prevNav);
       if (prev) {
         prev.removeAttribute('tabindex');
+        this.FocusOut(null);
       }
       this.current = clicked;
       if (!this.triggerLinkMouse()) {
@@ -486,11 +487,13 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     this.current.setAttribute('tabindex', '0');
     this.current.focus();
     super.Start();
-    if (this.document.options.a11y.subtitles) {
+    if (this.document.options.a11y.speech &&
+      this.document.options.a11y.subtitles) {
       promise.then(
         () => this.region.Show(this.node, this.highlighter));
     }
-    if (this.document.options.a11y.viewBraille) {
+    if (this.document.options.a11y.braille &&
+      this.document.options.a11y.viewBraille) {
       promise.then(
         () => this.brailleRegion.Show(this.node, this.highlighter));
     }
@@ -645,7 +648,8 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   public semanticFocus() {
     const node = this.current || this.node;
     const id = node.getAttribute('data-semantic-id');
-    const stree = this.generators.speechGenerator.getRebuilt().stree;
+    const stree = this.generators.speechGenerator.getRebuilt()?.stree;
+    if (!stree) return null;
     const snode = stree.root.querySelectorAll((x: any) => x.id.toString() === id)[0];
     return snode || stree.root;
   }
