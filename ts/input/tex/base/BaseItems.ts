@@ -29,6 +29,7 @@ import {entities} from '../../../util/Entities.js';
 import {MmlNode, TextNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
 import {MmlMsubsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
+import {MmlMunderover} from '../../../core/MmlTree/MmlNodes/munderover.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
 import {ParseUtil} from '../ParseUtil.js';
@@ -194,12 +195,15 @@ export class PrimeItem extends BaseItem {
    */
   public checkItem(item: StackItem): CheckType {
     let [top0, top1] = this.Peek(2);
-    if (!NodeUtil.isType(top0, 'msubsup') || NodeUtil.isType(top0, 'msup')) {
+    const isSup = NodeUtil.isType(top0, 'msubsup') && !NodeUtil.getChildAt(top0, (top0 as MmlMsubsup).sup);
+    const isOver = NodeUtil.isType(top0, 'munderover') && !NodeUtil.getChildAt(top0, (top0 as MmlMunderover).over);
+    if (!isSup && !isOver) {
       // @test Prime, Double Prime
-      const node = this.create('node', 'msup', [top0, top1]);
+      const node = this.create('node', top0.getProperty('movesupsub') ? 'mover' : 'msup', [top0, top1]);
       return [[node, item], true];
     }
-    NodeUtil.setChild(top0, (top0 as MmlMsubsup).sup, top1);
+    const pos = isSup ? (top0 as MmlMsubsup).sup : (top0 as MmlMunderover).over;
+    NodeUtil.setChild(top0, pos, top1);
     return [[top0, item], true];
   }
 }
