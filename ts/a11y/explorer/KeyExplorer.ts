@@ -572,8 +572,8 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       }
     }
     if (this.active) {
-      this.stopEvent(event);
       if (this.Move(event)) {
+        this.stopEvent(event);
         this.Update();
         return;
       }
