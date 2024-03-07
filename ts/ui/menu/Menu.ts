@@ -658,7 +658,7 @@ export class Menu {
           ], true)
         ]),
         this.submenu('Options', '\xA0 \xA0 Options', [
-          this.checkbox('Enrich', 'Enriched Math', 'enrich'),
+          this.checkbox('Enrich', 'Semantic Enrichment', 'enrich'),
           this.checkbox('Collapsible', 'Collapsible Math', 'collapsible'),
           this.checkbox('AutoCollapse', 'Auto Collapse', 'autocollapse', {disabled: true}),
           this.rule(),
