@@ -1,8 +1,8 @@
 {
   "build": {
-    "id": "[tex]//dsfont",
-    "component": "input/tex/extensions//dsfont",
-    "targets": ["input/tex//dsfont"]
+    "id": "[tex]/dsfont",
+    "component": "input/tex/extensions/dsfont",
+    "targets": ["input/tex/dsfont"]
   },
   "webpack": {
     "name": "input/tex/extensions/dsfont",
