@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/dsfont",
+    "component": "input/tex/extensions/dsfont",
+    "targets": ["input/tex/dsfont"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/dsfont",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}
