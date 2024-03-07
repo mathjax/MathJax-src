@@ -1,0 +1,14 @@
+{
+  "build": {
+    "id": "[tex]/bbm",
+    "component": "input/tex/extensions/bbm",
+    "targets": ["input/tex/bbm"]
+  },
+  "webpack": {
+    "name": "input/tex/extensions/bbm",
+    "libs": [
+      "components/src/input/tex-base/lib",
+      "components/src/core/lib"
+    ]
+  }
+}
