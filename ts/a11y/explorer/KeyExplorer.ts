@@ -294,7 +294,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     ['>', this.nextRules.bind(this)],
     ['<', this.nextStyle.bind(this)],
     ['x', this.summary.bind(this)],
-    ['-', this.expand.bind(this)],
+    ['Enter', this.expand.bind(this)],
     ['d', this.depth.bind(this)],
   ]);
 
@@ -327,12 +327,15 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    * Expands or collapses the currently focused node.
    *
    * @param {HTMLElement} node The focused node.
+   * @return {HTMLElement} The node if action was successful. O/w null.
    */
-  public expand(node: HTMLElement) {
+  public expand(node: HTMLElement): HTMLElement {
     const expandable = this.actionable(node);
-    if (expandable) {
-      expandable.dispatchEvent(new Event('click'));
+    if (!expandable) {
+      return null;
     }
+    expandable.dispatchEvent(new Event('click'));
+    return node;
   }
 
   /**

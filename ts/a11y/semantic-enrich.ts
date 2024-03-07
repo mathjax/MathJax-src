@@ -83,7 +83,7 @@ export class enrichVisitor<N, T, D> extends SerializedMmlVisitor {
       // Add maction id and make sure selection is the next attribute
       //
       attributes = ` data-maction-id="${id}" selection="${node.attributes.get('selection')}"`
-        + attributes.replace(/ selection="\d+"/, '');
+        + attributes.replace(/ selection="\d+"/, '').replace(/ data-maction-id="\d+"/, '');
     }
     return space + '<maction' + attributes + '>'
                  + (children.match(/\S/) ? nl + children + endspace : '')
