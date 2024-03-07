@@ -21,7 +21,6 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {mathjax} from '../mathjax.js';
 import {Handler} from '../core/Handler.js';
 import {MathDocument, AbstractMathDocument, MathDocumentConstructor} from '../core/MathDocument.js';
 import {MathItem, AbstractMathItem, STATE, newState} from '../core/MathItem.js';
@@ -31,15 +30,11 @@ import {MathML} from '../input/mathml.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {OptionList, expandable} from '../util/Options.js';
 import {Sre} from './sre.js';
-import { buildSpeech, setAria } from './SpeechUtil.js';
+import { buildSpeech } from './speech/SpeechUtil.js';
+
+import { GeneratorPool } from './speech/GeneratorPool.js';
 
 /*==========================================================================*/
-
-/**
- *  The current speech setting for Sre
- */
-let currentLocale = 'none';
-let currentBraille = 'none';
 
 /**
  * Generic constructor for Mixins
@@ -88,7 +83,7 @@ export class enrichVisitor<N, T, D> extends SerializedMmlVisitor {
       // Add maction id and make sure selection is the next attribute
       //
       attributes = ` data-maction-id="${id}" selection="${node.attributes.get('selection')}"`
-        + attributes.replace(/ selection="\d+"/, '');
+        + attributes.replace(/ selection="\d+"/, '').replace(/ data-maction-id="\d+"/, '');
     }
     return space + '<maction' + attributes + '>'
                  + (children.match(/\S/) ? nl + children + endspace : '')
@@ -107,6 +102,11 @@ export class enrichVisitor<N, T, D> extends SerializedMmlVisitor {
  * @template D  The Document class
  */
 export interface EnrichedMathItem<N, T, D> extends MathItem<N, T, D> {
+
+  /**
+   * The speech generators for this math item.
+   */
+  generatorPool: GeneratorPool<N, T, D>;
 
   /**
    * @param {MathDocument} document  The document where enrichment is occurring
@@ -142,9 +142,14 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
   return class extends BaseMathItem {
 
     /**
-     * The speech generator for this math item.
+     * @override
      */
-    public generator = Sre.getSpeechGenerator('Tree');
+    public generatorPool = new GeneratorPool<N, T, D>();
+
+    /**
+     *  The MathML adaptor.
+     */
+    public toMathML = toMathML;
 
     /**
      * @param {any} node  The node to be serialized
@@ -175,22 +180,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
     public enrich(document: MathDocument<N, T, D>, force: boolean = false) {
       if (this.state() >= STATE.ENRICHED) return;
       if (!this.isEscaped && (document.options.enableEnrichment || force)) {
-        // TODO: Sort out the loading of the locales better
-        if (document.options.enableSpeech) {
-          if (document.options.sre.locale !== currentLocale) {
-            currentLocale = document.options.sre.locale;
-            // TODO: Sort out the loading of the locales better
-            mathjax.retryAfter(
-              Sre.setupEngine({locale: document.options.sre.locale})
-                .then(() => Sre.sreReady()));
-          }
-          if (document.options.sre.braille !== currentBraille) {
-            currentBraille = document.options.sre.braille;
-            mathjax.retryAfter(
-              Sre.setupEngine({locale: document.options.sre.braille})
-                .then(() => Sre.sreReady()));
-          }
-        }
+        this.generatorPool.init(document.options, document.adaptor);
         const math = new document.options.MathItem('', MmlJax);
         try {
           let mml;
@@ -199,27 +189,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
           } else {
             mml = this.adjustSelections();
           }
-          Sre.setupEngine(document.options.sre);
           const enriched = Sre.toEnriched(mml);
-          if (document.options.enableSpeech) {
-            this.generator.setOptions(Object.assign(
-              {}, document.options.sre, {
-                markup: 'ssml',
-                automark: true,
-              }));
-            this.outputData.speech = buildSpeech(
-              this.generator.getSpeech(enriched, enriched),
-              document.options.sre.locale,
-              document.options.sre.rate)[0];
-            this.generator.setOptions({
-              locale: document.options.sre.braille,
-              domain: 'default',
-              style: 'default',
-              modality: 'braille',
-              markup: 'none',
-            });
-            this.outputData.braille = this.generator.getSpeech(enriched, enriched);
-          }
           this.inputData.enrichedMml = math.math = this.serializeMml(enriched);
           math.display = this.display;
           math.compile(document);
@@ -227,9 +197,6 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
         } catch (err) {
           document.options.enrichError(document, this, err);
         }
-      }
-      if (document.options.enableSpeech) {
-        setAria(this.root, document.options.sre.locale);
       }
       this.state(STATE.ENRICHED);
     }
@@ -253,17 +220,47 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
     }
 
     /**
+     * Computes speech and braille label content if the information is already
+     * on the node. In particular it respects existing labels.
+     *
+     * @return {[string, string]} Pair comprising speech and braille.
+     */
+    private existingSpeech(): [string, string] {
+      const attributes = this.root.attributes;
+      let speech = attributes.get('aria-label') as string;
+      if (!speech) {
+        speech = buildSpeech(
+          attributes.get('data-semantic-speech') as string || '')[0];
+      }
+      let braille = (attributes.get('aria-braillelabel') ||
+        attributes.get('data-semantic-braille') || '') as string;
+      return [speech, braille];
+    }
+
+    /**
+     * Attaches the aria labels for speech and braille.
+     *
      * @param {MathDocument} document   The MathDocument for the MathItem
      */
     public attachSpeech(document: MathDocument<N, T, D>) {
       if (this.state() >= STATE.ATTACHSPEECH) return;
-      const attributes = this.root.attributes;
-      const speech = (attributes.get('aria-label') || this.outputData.speech);
-      const braille = (attributes.get('aria-braillelabel') || this.outputData.braille);
-      if (!speech && !braille) {
-        this.state(STATE.ATTACHSPEECH);
-        return;
+      this.state(STATE.ATTACHSPEECH);
+      if (this.isEscaped || !document.options.enableEnrichment) return;
+      let [speech, braille] = this.existingSpeech();
+      let [newSpeech, newBraille] = ['', ''];
+      if ((!speech && document.options.enableSpeech) ||
+        (!braille && document.options.enableBraille)) {
+        try {
+          [newSpeech, newBraille] = this.generatorPool.computeSpeech(
+            this.typesetRoot, this.toMathML(this.root, this));
+          if (newSpeech) {
+            newSpeech = buildSpeech(newSpeech)[0];
+          }
+        } catch (_e) { }
       }
+      speech = speech || newSpeech;
+      braille = braille || newBraille;
+      if (!speech && !braille) return;
       const adaptor = document.adaptor;
       const node = this.typesetRoot;
       if (speech) {
@@ -277,30 +274,6 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
       }
       this.outputData.speech = speech;
       this.outputData.braille = braille;
-      this.state(STATE.ATTACHSPEECH);
-    }
-
-    /**
-     * Retrieves the actual speech element that should be used as aria label.
-     * @param {MmlNode} node The root node to search from.
-     * @return {string} The speech content.
-     */
-    protected getSpeech(node: MmlNode): string {
-      const attributes = node.attributes;
-      if (!attributes) return '';
-      const speech = attributes.getExplicit('data-semantic-speech') as string;
-      // TODO (explorer) For tree role move all speech etc. to container
-      // element.
-      if (!attributes.hasExplicit('data-semantic-parent') && speech) {
-        return speech;
-      }
-      for (let child of node.childNodes) {
-        let value = this.getSpeech(child);
-        if (value) {
-          return value;
-        }
-      }
-      return '';
     }
 
   };
@@ -366,6 +339,7 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
       ...BaseDocument.OPTIONS,
       enableEnrichment: true,
       enableSpeech: true,
+      enableBraille: true,
       enrichError: (doc: EnrichedMathDocument<N, T, D>,
                     math: EnrichedMathItem<N, T, D>,
                     err: Error) => doc.enrichError(doc, math, err),
@@ -379,7 +353,6 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
         locale: 'en',                      // switch the locale
         domain: 'mathspeak',               // speech rules domain
         style: 'default',                  // speech rules style
-        modality: 'speech',
         braille: 'nemeth',                 // TODO: Dummy switch for braille
       }),
     };
@@ -412,8 +385,10 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
      */
     public attachSpeech() {
       if (!this.processed.isSet('attach-speech')) {
-        for (const math of this.math) {
-          (math as EnrichedMathItem<N, T, D>).attachSpeech(this);
+        if (this.options.enableSpeech || this.options.enableBraille) {
+          for (const math of this.math) {
+            (math as EnrichedMathItem<N, T, D>).attachSpeech(this);
+          }
         }
         this.processed.set('attach-speech');
       }

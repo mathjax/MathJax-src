@@ -21,11 +21,10 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import { SpeechExplorer } from './explorer/KeyExplorer.js';
-import { ExplorerMathItem } from './explorer.js';
-import {MJContextMenu} from '../ui/menu/MJContextMenu.js';
-import {SubMenu, Submenu} from '../ui/menu/mj-context-menu.js';
-import {Sre} from './sre.js';
+import { ExplorerMathItem } from '../explorer.js';
+import {MJContextMenu} from '../../ui/menu/MJContextMenu.js';
+import {SubMenu, Submenu} from '../../ui/menu/mj-context-menu.js';
+import {Sre} from '../sre.js';
 
 /**
  * Values for the ClearSpeak preference variables.
@@ -170,16 +169,13 @@ export function clearspeakMenu(menu: MJContextMenu, sub: Submenu) {
   let locale = menu.pool.lookup('locale').getValue() as string;
   const box = csSelectionBox(menu, locale);
   let items: Object[] = [];
-  let explorer = (menu.mathItem as ExplorerMathItem)?.
-    explorers?.explorers?.speech as SpeechExplorer;
-  if (explorer?.walker) {
-    let semantic = explorer.walker.getFocus()?.getSemanticPrimary();
-    if (semantic) {
-      const previous = Sre.clearspeakPreferences.currentPreference();
-      const smart = Sre.clearspeakPreferences.relevantPreferences(semantic);
-      items = items.concat(basePreferences(previous));
-      items = items.concat(smartPreferences(previous, smart, locale));
-    }
+  const explorer = (menu.mathItem as ExplorerMathItem)?.explorers?.speech;
+  const semantic = explorer?.semanticFocus();
+  const previous = Sre.clearspeakPreferences.currentPreference();
+  items = items.concat(basePreferences(previous));
+  if (semantic) {
+    const smart = Sre.clearspeakPreferences.relevantPreferences(semantic);
+    items = items.concat(smartPreferences(previous, smart, locale));
   }
   if (box) {
     items.splice(2, 0, box);

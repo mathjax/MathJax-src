@@ -57,9 +57,10 @@ BraketMethods.Braket = function(parser: TexParser, _name: string,
     parser.i++;
     single = false;
   }
-  parser.Push(
-    parser.itemFactory.create('braket')
-      .setProperties({barcount: 0, barmax, open, close, stretchy, single, space}));
+  const node = parser.itemFactory.create('braket');
+  node.setProperties({barcount: 0, barmax, open, close, stretchy, single, space});
+  parser.Push(node);
+  node.env.braketItem = parser.stack.height - 1;
 };
 
 
@@ -71,20 +72,16 @@ BraketMethods.Braket = function(parser: TexParser, _name: string,
  */
 BraketMethods.Bar = function(parser: TexParser, name: string): ParseResult {
   let c = name === '|' ? '|' : '\u2016';
-  let top = parser.stack.Top() as BraketItem;
-  if (top.isKind('over')) {
-    // If the top item is from \over, use the previous one
-    top = parser.stack.Top(2) as BraketItem;
-  }
-  if (!top.isKind('braket') || top.getProperty('barcount') >= top.getProperty('barmax')) {
+  let n = parser.stack.height - (parser.stack.env.braketItem as number);
+  let top = parser.stack.Top(n) as BraketItem;
+  if (!top || !top.isKind('braket') || top.getProperty('barcount') >= top.getProperty('barmax')) {
     return false;
   }
   if (c === '|' && parser.GetNext() === '|') {
     parser.i++;
     c = '\u2016';
   }
-  let stretchy = top.getProperty('stretchy');
-  if (!stretchy) {
+  if (!top.getProperty('stretchy')) {
     let node = parser.create('token', 'mo', {stretchy: false, 'data-braketbar': true, texClass: TEXCLASS.ORD}, c);
     parser.Push(node);
     return;
@@ -97,7 +94,7 @@ BraketMethods.Bar = function(parser: TexParser, name: string): ParseResult {
   //
   // Push a CLOSE atom, the bar as a BIN, and an OPEN atom onto the barNodes,
   //  which will be added into the toMml() output.  This allows \over to be used
-  //  after any bars
+  //  before, between, or after any bars
   //
   top.barNodes.push(
     parser.create('node', 'TeXAtom', [], {texClass: TEXCLASS.CLOSE}),

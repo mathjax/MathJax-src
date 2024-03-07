@@ -492,7 +492,7 @@ export class Menu {
         this.a11yVar<string>('locale', value => {
           MathJax._.a11y.sre.Sre.setupEngine({locale: value as string});
         }),
-        this.a11yVar<string> ('speechRules', value => {
+        this.a11yVar<string>('speechRules', value => {
           const [domain, style] = value.split('-');
           this.document.options.sre.domain = domain;
           this.document.options.sre.style = style;
@@ -1175,18 +1175,23 @@ export class Menu {
 
   /**
    * Rerender the output if we aren't in the middle of loading a new component
-   *   (in which case, we will rerender in the callback performed  after it is loaded)
+   *   (in which case, we will rerender in the callback performed after it is loaded)
    *
    * @param {number=} start   The state at which to start rerendering
    */
   protected rerender(start: number = STATE.TYPESET) {
     this.rerenderStart = Math.min(start, this.rerenderStart);
-    if (!Menu.loading) {
-      if (this.rerenderStart <= STATE.COMPILED) {
-        this.document.reset({inputJax: []});
-      }
-      this.document.rerender(this.rerenderStart);
-      this.rerenderStart = STATE.LAST;
+    const startup = MathJax.startup;
+    if (!Menu.loading && startup.rerenderPromise) {
+      startup.rerenderPromise = startup.promise = startup.rerenderPromise.then(
+        () => mathjax.handleRetriesFor(() => {
+          if (this.rerenderStart <= STATE.COMPILED) {
+            this.document.reset({inputJax: []});
+          }
+          this.document.rerender(this.rerenderStart);
+          this.rerenderStart = STATE.LAST;
+        })
+      );
     }
   }
 

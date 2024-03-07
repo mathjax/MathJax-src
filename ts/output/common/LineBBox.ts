@@ -99,7 +99,7 @@ export class LineBBox extends BBox {
    */
   public append(cbox: LineBBox) {
     if (this.isFirst) {
-      cbox.originalL = cbox.L;
+      cbox.originalL += cbox.L;
       cbox.L = 0;  // remove spacing after an operator with a linebreak after it
     }
     if (cbox.indentData) {

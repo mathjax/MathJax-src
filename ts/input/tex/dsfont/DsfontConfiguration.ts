@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2023 The MathJax Consortium
+ *  Copyright (c) 2017-2023 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,27 +17,41 @@
 
 
 /**
- * @fileoverview Configuration file for the Braket package.
+ * @fileoverview The dsfont package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
 import {Configuration} from '../Configuration.js';
-import {BraketItem} from './BraketItems.js';
-import './BraketMappings.js';
+import {CommandMap} from '../TokenMap.js';
+import BaseMethods from '../base/BaseMethods.js';
+import TexParser from '../TexParser.js';
 
+/**
+ * The methods that implement the dsfont package.
+ */
 
-export const BraketConfiguration = Configuration.create(
-  'braket', {
-    handler: {
-      character: ['Braket-characters'],
-      macro: ['Braket-macros']
-    },
-    items: {
-      [BraketItem.prototype.kind]: BraketItem,
-    },
-    priority: 3   // must come before base configuration
+new CommandMap('dsfont', {
+  mathds: 'ChooseFont',
+}, {
+  ChooseFont: function (parser: TexParser, name: string) {
+    BaseMethods.MathFont(
+      parser, name,
+      parser.options.dsfont.sans ? '-ds-ss' : '-ds-rm');
   }
-);
+});
 
+//
+//  Define the package configuration, including switch for sans serif.
+//
+export const DsfontConfiguration = Configuration.create('dsfont', {
+  handler: {
+    macro: ['dsfont'],
+  },
+  options: {
+    dsfont: {
+      sans: false
+    }
+  }
+});
 

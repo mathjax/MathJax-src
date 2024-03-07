@@ -96,6 +96,7 @@ export interface MathJaxObject extends MJObject {
     elements: any[];
     document: MATHDOCUMENT;
     promise: Promise<void>;
+    rerenderPromise: Promise<void>;
     /* tslint:disable:jsdoc-require */
     registerConstructor(name: string, constructor: any): void;
     useHandler(name: string, force?: boolean): void;
@@ -184,7 +185,7 @@ export namespace Startup {
 
   /**
    * The promise for the startup process (the initial typesetting).
-   * It is resolves or rejected in the ready() function.
+   * It is resolved or rejected in the ready() function.
    */
   export let promise = new Promise<void>((resolve, reject) => {
     promiseResolve = resolve;
@@ -205,6 +206,13 @@ export namespace Startup {
       doc.defaultView.addEventListener('DOMContentLoaded', listener, true);
     }
   });
+
+  /**
+   * Non-null when MathJax.typeset() or MathJax.typesetPromise() have been performed
+   * (so the menu code can tell whether a rerender is needed when components are loaded)
+   * and then is equal to a promise after which rerendering can occur.
+   */
+  export let rerenderPromise: Promise<void> = null;
 
   /**
    * @param {MmlNode} node   The root of the tree to convert to serialized MathML
@@ -374,9 +382,12 @@ export namespace Startup {
       document.options.elements = elements;
       document.reset();
       document.render();
+      if (!rerenderPromise) {
+        rerenderPromise = promise;
+      }
     };
     MathJax.typesetPromise = (elements: any[] = null) => {
-      promise = promise.then(() => typesetPromise(elements));
+      rerenderPromise = promise = promise.then(() => typesetPromise(elements));
       return promise;
     };
     MathJax.typesetClear = (elements: any[] = null) => {

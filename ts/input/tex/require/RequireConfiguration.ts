@@ -41,7 +41,7 @@ import {expandable} from '../../../util/Options.js';
 const MJCONFIG = MathJax.config;
 
 /**
- * Add an extension to the configuration, and configure its user options
+ * Load any dependencies for an extension, and add the extension to the input jax.
  *
  * @param {TeX} jax       The TeX jax whose configuration is to be modified
  * @param {string} name   The name of the extension being added (e.g., '[tex]/amscd')
@@ -53,36 +53,57 @@ function RegisterExtension(jax: TeX<any, any, any>, name: string) {
   if (required.indexOf(extension) < 0) {
     required.push(extension);
     //
-    //  Register any dependencies that were loaded to handle this one
+    //  Register any dependencies that were loaded to handle this one,
+    //  and save the retry promise, if any, for when the dependencies need
+    //  to restart the expression (due to preprocessors, see below).
     //
-    RegisterDependencies(jax, LOADERCONFIG.dependencies[name]);
+    let retry = RegisterDependencies(jax, LOADERCONFIG.dependencies[name]);
     //
-    //  If the required file loaded an extension...
+    // If we need to restart the expression due to the dependencies,
+    //   Wait for the dependencies to load, process this extension, then retry,
+    // Otherwise, process the extension now.
     //
-    const handler = ConfigurationHandler.get(extension);
-    if (handler) {
-      //
-      //  Check if there are user-supplied options
-      //    (place them in a block for the extension, if needed)
-      //
-      let options = MJCONFIG[name] || {};
-      if (handler.options && Object.keys(handler.options).length === 1 && handler.options[extension]) {
-        options = {[extension]: options};
-      }
-      //
-      //  Register the extension with the jax's configuration
-      //
-      (jax as any).configuration.add(extension, jax, options);
-      //
-      // If there are preprocessors, restart so that they run
-      // (we don't have access to the document or MathItem needed to call
-      //  the preprocessors from here)
-      //
-      const configured = jax.parseOptions.packageData.get('require').configured;
-      if (handler.preprocessors.length && !configured.has(extension)) {
-        configured.set(extension, true);
-        mathjax.retryAfter(Promise.resolve());
-      }
+    if (retry) {
+      mathjax.retryAfter(retry.then(() => ProcessExtension(jax, name, extension)));
+    } else {
+      ProcessExtension(jax, name, extension);
+    }
+  }
+}
+
+/**
+ * Add an extension to the configuration, and configure its user options
+ *
+ * @param {TeX} jax       The TeX jax whose configuration is to be modified
+ * @param {string} name   The name of the extension being added (e.g., '[tex]/amscd')
+ */
+function ProcessExtension(jax: TeX<any, any, any>, name: string, extension: string) {
+  //
+  //  If the required file loaded an extension...
+  //
+  const handler = ConfigurationHandler.get(extension);
+  if (handler) {
+    //
+    //  Check if there are user-supplied options
+    //    (place them in a block for the extension, if needed)
+    //
+    let options = MJCONFIG[name] || {};
+    if (handler.options && Object.keys(handler.options).length === 1 && handler.options[extension]) {
+      options = {[extension]: options};
+    }
+    //
+    //  Register the extension with the jax's configuration
+    //
+    (jax as any).configuration.add(extension, jax, options);
+    //
+    //  If there are preprocessors, restart the typesetting so that they run
+    //  (we don't have access to the document or MathItem needed to call
+    //   the preprocessors from here)
+    //
+    const configured = jax.parseOptions.packageData.get('require').configured;
+    if (handler.preprocessors.length && !configured.has(extension)) {
+      configured.set(extension, true);
+      mathjax.retryAfter(Promise.resolve());
     }
   }
 }
@@ -92,14 +113,23 @@ function RegisterExtension(jax: TeX<any, any, any>, name: string) {
  *
  * @param {TeX} jax          The jax whose configuration is being modified
  * @param {string[]} names   The names of the dependencies to register
+ * @return {Promise<any>}    A promise resolved when all dependency's retries
+ *                             are complete (or null if no retries)
  */
-function RegisterDependencies(jax: TeX<any, any, any>, names: string[] = []) {
+function RegisterDependencies(jax: TeX<any, any, any>, names: string[] = []): Promise<any> {
   const prefix = jax.parseOptions.options.require.prefix;
+  const retries = [];
   for (const name of names) {
     if (name.substring(0, prefix.length) === prefix) {
-      RegisterExtension(jax, name);
+      try {
+        RegisterExtension(jax, name);
+      } catch (err) {
+        if (!err.retry) throw err;
+        retries.push(err.retry);
+      }
     }
   }
+  return (retries.length ? Promise.all(retries) : null);
 }
 
 /**

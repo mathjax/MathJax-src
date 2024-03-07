@@ -23,8 +23,6 @@
  */
 
 import * as Api from '#sre/common/system.js';
-import {Walker} from '#sre/walker/walker.js';
-import * as WalkerFactory from '#sre/walker/walker_factory.js';
 import * as SpeechGeneratorFactory from '#sre/speech_generator/speech_generator_factory.js';
 import { Engine } from '#sre/common/engine.js';
 import {ClearspeakPreferences} from '#sre/speech_rules/clearspeak_preferences.js';
@@ -40,9 +38,6 @@ export namespace Sre {
   export type highlighter = Highlighter;
 
   export type speechGenerator = SpeechGenerator;
-
-  export type walker = Walker;
-
 
   export const locales = Variables.LOCALES;
 
@@ -63,8 +58,6 @@ export namespace Sre {
   export const updateHighlighter = HighlighterFactory.update;
 
   export const getSpeechGenerator = SpeechGeneratorFactory.generator;
-
-  export const getWalker = WalkerFactory.walker;
 
   export const parseDOM = parseInput;
 

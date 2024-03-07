@@ -65,7 +65,10 @@ new CharacterMap('Physics-vector-mo', ParseMethods.mathchar0mo, {
   cross:         '\u00D7',
   cp:            '\u00D7',
   // This is auxiliary!
-  gradientnabla: ['\u2207', {mathvariant: TexConstant.Variant.BOLD}]
+  gradientnabla: ['\u2207', {mathvariant: TexConstant.Variant.BOLD}],
+  // Replacements for original latex \div (physics2, and physics versions)
+  divsymbol:     '\u00F7',
+  divisionsymbol: '\u00F7'
 });
 
 new CharacterMap('Physics-vector-mi', ParseMethods.mathchar0mi, {
