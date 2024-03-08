@@ -486,7 +486,8 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
                    pre: string = '',  post: string = '') {
     const star = parser.GetStar();
     const size = (star ? '' : parser.GetBrackets(name));
-    const [left, right] = (star ? ['\\left', '\\right'] : size ? [size + 'l' , size + 'r'] : ['', '']);
+    const [left, right, after] = (star ? ['\\mathopen{\\left', '\\right', '}\\mathclose{}'] :
+                                 size ? [size + 'l' , size + 'r', ''] : ['', '', '']);
     const delim = (star ? '\\middle' : size || '');
     if (n) {
       const args: string[] = [];
@@ -498,7 +499,7 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
       post = ParseUtil.substituteArgs(parser, args, post);
     }
     body = body.replace(/\\delimsize/g, delim);
-    parser.string = [pre, left, open, body, right, close, post, parser.string.substring(parser.i)]
+    parser.string = [pre, left, open, body, right, close, after, post, parser.string.substring(parser.i)]
       .reduce((s, part) => ParseUtil.addArgs(parser, s, part), '');
     parser.i = 0;
     ParseUtil.checkMaxMacros(parser);
