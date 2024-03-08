@@ -28,7 +28,7 @@ import './IeeeMacrosMappings.js';
 export const IeeeMacrosConfiguration = Configuration.create(
   'ieeemacros', {
     handler: {
-      macro: ['ieee-macros', 'ieee-macros-structures', 'ieee-macros-others'],
+      macro: ['ieee-macros', 'ieee-macros-ignore', 'ieee-macros-structures', 'ieee-macros-others'],
       environment: ['ieee-macros-environments']
     }
   }

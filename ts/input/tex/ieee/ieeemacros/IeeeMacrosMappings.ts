@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2023 The MathJax Consortium
+ *  Copyright (c) 2023-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,35 +23,17 @@
  */
 
 import {CommandMap, EnvironmentMap} from '../../TokenMap.js';
-import BaseMethods from '../../base/BaseMethods.js';
-import {ParseMethod} from '../../Types.js';
 import {TexConstant} from '../../TexConstants.js';
-import TexParser from '../../TexParser.js';
 import ParseMethods from '../../ParseMethods.js';
-import { ParseUtil } from '../../ParseUtil.js';
+import IeeeMacrosMethods from './IeeeMacrosMethods.js';
 
-
-let IeeeMacrosMethods: Record<string, ParseMethod> = {};
-
-IeeeMacrosMethods.Macro = BaseMethods.Macro;
-IeeeMacrosMethods.Spacer = BaseMethods.Spacer;
-IeeeMacrosMethods.Accent = BaseMethods.Accent;
-IeeeMacrosMethods.UnderOver = BaseMethods.UnderOver;
-
-IeeeMacrosMethods.SetFont = BaseMethods.SetFont;
-IeeeMacrosMethods.Matrix = BaseMethods.Matrix;
-IeeeMacrosMethods.Array = BaseMethods.Array;
-
-IeeeMacrosMethods.Hskip = function(parser: TexParser, name: string) {
-  ParseUtil.UNIT_CASES.set('pi', 1 / 10); // Same as points
-  return BaseMethods.Hskip(parser, name);
-}
 
 /**
  * Macros for IEEE macros package.
  */
 new CommandMap('ieee-macros', {
   // Rewrite to \U{}
+  // Table 2
   circone: ['Macro', '\\unicode{x2460}'],
   circtwo: ['Macro', '\\unicode{x2461}'],
   circthree: ['Macro', '\\unicode{x2462}'],
@@ -111,6 +93,7 @@ new CommandMap('ieee-macros', {
   circit: ['Macro', '\\bigcirc \\kern-17mu{\\scriptstyle{#1}}\\hskip4pt', 1],
   textcircled: ['Macro', '\\bigcirc \\kern-17mu{\\scriptstyle{#1}}\\hskip4pt', 1],
 
+  // Table 3
   Alpha: ['Macro', '{\\rm A}'],
   Beta: ['Macro', '{\\rm B}'],
   Deltab: ['Macro', '\\boldsymbol{\\Delta}'],
@@ -160,57 +143,60 @@ new CommandMap('ieee-macros', {
   varsigmab: ['Macro', '\\boldsymbol{\\varsigma}'],
   varthetab: ['Macro', '\\boldsymbol{\\vartheta}'],
 
+  // Table 4
   // These are in upgreek. REMOVE!
-  upalpha: ['Macro', '\\unicode{x03B1}'],
-  upbeta: ['Macro', '\\unicode{x03B2}'],
-  upchi: ['Macro', '\\unicode{x03C7}'],
-  updelta: ['Macro', '\\unicode{x03B4}'],
-  upepsilon: ['Macro', '\\unicode{x03F5}'],
-  upeta: ['Macro', '\\unicode{x03B7}'],
-  upgamma: ['Macro', '\\unicode{x03B3}'],
-  upiota: ['Macro', '\\unicode{x03B9}'],
-  upkappa: ['Macro', '\\unicode{x03BA}'],
-  uplambda: ['Macro', '\\unicode{x03BB}'],
-  upmu: ['Macro', '\\unicode{x03BC}'],
-  upnu: ['Macro', '\\unicode{x03BD}'],
-  upomega: ['Macro', '\\unicode{x03C9}'],
-  upphi: ['Macro', '\\unicode{x03C6}'],
-  uppi: ['Macro', '\\unicode{x03C0}'],
-  uppsi: ['Macro', '\\unicode{x03C8}'],
-  uprho: ['Macro', '\\unicode{x03C1}'],
-  upsigma: ['Macro', '\\unicode{x03C3}'],
-  uptau: ['Macro', '\\unicode{x03C4}'],
-  uptheta: ['Macro', '\\unicode{x03B8}'],
-  upupsilon: ['Macro', '\\unicode{x028A}'],
-  upvarepsilon: ['Macro', '\\unicode{x03F5}'],
-  upvarphi: ['Macro', '\\unicode{x03C6}'],
-  upvarpi: ['Macro', '\\unicode{x03D6}'],
-  upvarrho: ['Macro', '\\unicode{x03F1}'],
-  upvarsigma: ['Macro', '\\unicode{x03C2}'],
-  upvartheta: ['Macro', '\\unicode{x03D1}'],
-  upxi: ['Macro', '\\unicode{x03BE}'],
-  upzeta: ['Macro', '\\unicode{x03B6}'],
+  // upalpha: ['Macro', '\\unicode{x03B1}'],
+  // upbeta: ['Macro', '\\unicode{x03B2}'],
+  // upchi: ['Macro', '\\unicode{x03C7}'],
+  // updelta: ['Macro', '\\unicode{x03B4}'],
+  // upepsilon: ['Macro', '\\unicode{x03F5}'],
+  // upeta: ['Macro', '\\unicode{x03B7}'],
+  // upgamma: ['Macro', '\\unicode{x03B3}'],
+  // upiota: ['Macro', '\\unicode{x03B9}'],
+  // upkappa: ['Macro', '\\unicode{x03BA}'],
+  // uplambda: ['Macro', '\\unicode{x03BB}'],
+  // upmu: ['Macro', '\\unicode{x03BC}'],
+  // upnu: ['Macro', '\\unicode{x03BD}'],
+  // upomega: ['Macro', '\\unicode{x03C9}'],
+  // upphi: ['Macro', '\\unicode{x03C6}'],
+  // uppi: ['Macro', '\\unicode{x03C0}'],
+  // uppsi: ['Macro', '\\unicode{x03C8}'],
+  // uprho: ['Macro', '\\unicode{x03C1}'],
+  // upsigma: ['Macro', '\\unicode{x03C3}'],
+  // uptau: ['Macro', '\\unicode{x03C4}'],
+  // uptheta: ['Macro', '\\unicode{x03B8}'],
+  // upupsilon: ['Macro', '\\unicode{x028A}'],
+  // upvarepsilon: ['Macro', '\\unicode{x03F5}'],
+  // upvarphi: ['Macro', '\\unicode{x03C6}'],
+  // upvarpi: ['Macro', '\\unicode{x03D6}'],
+  // upvarrho: ['Macro', '\\unicode{x03F1}'],
+  // upvarsigma: ['Macro', '\\unicode{x03C2}'],
+  // upvartheta: ['Macro', '\\unicode{x03D1}'],
+  // upxi: ['Macro', '\\unicode{x03BE}'],
+  // upzeta: ['Macro', '\\unicode{x03B6}'],
 
   // These are the same as in textcomp. REMOVE!
-  textbackslash: ['Macro', '\\unicode{x005C}'],
-  textbullet: ['Macro', '\\unicode{x00A5}'],
-  textcent: ['Macro', '\\unicode{x00A2}'],
-  textcurrency: ['Macro', '\\unicode{x00A4}'],
-  textdegree: ['Macro', '\\unicode{x00B0}'],
-  textdollar: ['Macro', '\\unicode{x0024}'],
-  textexclamdown: ['Macro', '\\unicode{x00A1}'],
-  textgreater: ['Macro', '\\unicode{x003E}'],
-  textlbrackdbl: ['Macro', '\\unicode{x27E6}'],
-  textless: ['Macro', '\\unicode{x003C}'],
-  textnumero: ['Macro', '\\unicode{x2116}'],
-  textperthousand: ['Macro', '\\unicode{x2030}'],
-  textquestiondown: ['Macro', '\\unicode{x00BF}'],
+  // textbackslash: ['Macro', '\\unicode{x005C}'],
+  // textbullet: ['Macro', '\\unicode{x00A5}'],
+  // textcent: ['Macro', '\\unicode{x00A2}'],
+  // textcurrency: ['Macro', '\\unicode{x00A4}'],
+  // textdegree: ['Macro', '\\unicode{x00B0}'],
+  // textdollar: ['Macro', '\\unicode{x0024}'],
+  // textexclamdown: ['Macro', '\\unicode{x00A1}'],
+  // textgreater: ['Macro', '\\unicode{x003E}'],
+  // textlbrackdbl: ['Macro', '\\unicode{x27E6}'],
+  // textless: ['Macro', '\\unicode{x003C}'],
+  // textnumero: ['Macro', '\\unicode{x2116}'],
+  // textperthousand: ['Macro', '\\unicode{x2030}'],
+  // textquestiondown: ['Macro', '\\unicode{x00BF}'],
+  // textquotedblleft: ['Macro', '\\unicode{x201C}'],
+  // textquotedblright: ['Macro', '\\unicode{x201D}'],
+  // textrbrackdbl: ['Macro', '\\unicode{x27E7}'],
+  // textregistered: ['Macro', '\\unicode{x00AE}'],
+  // textyen: ['Macro', '\\unicode{x00A5}'],
+
+  // Table 6 in the CLSL. Not in textcomp!
   textquotedbl: ['Macro', '\\unicode{x0022}'],
-  textquotedblleft: ['Macro', '\\unicode{x201C}'],
-  textquotedblright: ['Macro', '\\unicode{x201D}'],
-  textrbrackdbl: ['Macro', '\\unicode{x27E7}'],
-  textregistered: ['Macro', '\\unicode{x00AE}'],
-  textyen: ['Macro', '\\unicode{x00A5}'],
 
   // Table 9: Rewrite?
   REALE: ['Macro', '{\\rm I\\kern-.20em E}'],
@@ -236,10 +222,10 @@ new CommandMap('ieee-macros', {
   mathtilde: ['Macro', '\\tilde'],
 
   // Table 11
-  // REPLACE with bboldx!
-  bbalpha: ['Macro', '\\shortmid\\kern -.57em\\unicode{x3B1}'],
-  bbbeta: ['Macro', '|\\kern -.30em\\unicode{x3B2}'],
-  bblambda: ['Macro', '\\unicode{x3BB}\\kern -.20em\\unicode{x005C}'],
+  // REPLACED with bboldx!
+  // bbalpha: ['Macro', '\\shortmid\\kern -.57em\\unicode{x3B1}'],
+  // bbbeta: ['Macro', '|\\kern -.30em\\unicode{x3B2}'],
+  // bblambda: ['Macro', '\\unicode{x3BB}\\kern -.20em\\unicode{x005C}'],
   
   bla: ['Macro', '\\buildrel \\longrightarrow \\over {#1}', 1],
   boxaround: ['Macro', '{\\boxed{#1}}', 1],
@@ -298,7 +284,8 @@ new CommandMap('ieee-macros', {
   oiiint: ['Macro', '{\\LARGE{\\unicode{x2230}}}'],
   oiint: ['Macro', '{\\LARGE{\\unicode{x222F}}}'],
   operatornamewithlimits: ['Macro', '\\mathop{#1}', 1],
-  overparen: ['UnderOver','23DC'],
+  // Can be removed as it is in the base macros
+  // overparen: ['UnderOver','23DC'],
   pound: ['Macro', '\\unicode[serif]{x00A3}'],
   pounds: ['Macro', '\\unicode[serif]{x00A3}'],
   reallongarrow: ['Macro', '\\longrightarrow'],
@@ -393,7 +380,7 @@ new CommandMap('ieee-macros', {
   mmb: ['Macro', '{\\boldsymbol #1}', 1],
   sc: ['Macro', '\\scriptsize{#1}\\normalsize', 1],
   schmi: ['Macro', '\\boldsymbol'],
-  scr: ['MathFont', TexConstant.Variant.SCRIPT],
+  scr: ['SetFont', TexConstant.Variant.SCRIPT],
   sl:  ['SetFont', TexConstant.Variant.ITALIC],              // not sure what you want this to be
   ssr: ['Macro', '\\sf'],
   ssi: ['SetFont', TexConstant.Variant.SANSSERIFITALIC],
@@ -401,8 +388,30 @@ new CommandMap('ieee-macros', {
   textsc: ['Macro', '\\scriptsize{#1}\\normalsize', 1],
   textsl: ['Macro', '{\\tt\\textit{#1}}', 1],
   texttt: ['Macro', '{\\tt\\text{#1}}', 1],
+  // table 6
   // dsmath:    ['IeeeMathFont', TexConstant.Variant.DOUBLESTRUCK, 'serif'],
+  // table 5
   // mathbbmss: ['IeeeMathFont', TexConstant.Variant.DOUBLESTRUCK, 'sans-serif'],
+
+  // Table 15
+  // This needs HtmlMethods package!
+  nuparrow: ['Macro', '\\style{transform:matrix(1,0,0,-1,0,0) rotate(90deg); transform-origin:left baseline;}{\\unicode{x219B}}'],
+  ndownarrow: ['Macro', '\\style{transform:matrix(1,0,0,-1,0,0) rotate(-90deg); transform-origin:left baseline;}{\\unicode{x219B}}'],
+  blackboxfill: ['Macro', '\\style{float:right; padding-right:1em}{\\blackbox}'],
+
+  // Rest
+  // This needs HtmlMethods package!
+  rotatebox: 'RotateBox',
+
+}, IeeeMacrosMethods);
+
+
+new CommandMap('ieee-macros-ignore', {
+    // Things to fix
+  pgtag: ['Ignore', 0],
+  setcounter: ['Ignore', 2],
+  '-': ['Ignore', 0],
+  hbox:               ['HBox', 0],
 }, IeeeMacrosMethods);
 
 

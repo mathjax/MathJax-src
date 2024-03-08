@@ -30,6 +30,7 @@ import {Configuration} from '../../Configuration.js';
  * Obsolete macros from the former IEEE extension package.
  */
 new CommandMap('ieee-legacy', {
+  // Table 1
   BBA: ['Macro', '{\\Bbb A}'],
   BBB: ['Macro', '{\\Bbb B}'],
   BBC: ['Macro', '{\\Bbb C}'],
@@ -57,6 +58,7 @@ new CommandMap('ieee-legacy', {
   BBY: ['Macro', '{\\Bbb Y}'],
   BBZ: ['Macro', '{\\Bbb Z}'],
   
+  // Table 17
   /* Needs dsfont package */
   /* Don't use dsmath macros, use correct syntax \mathds{x} */
   dsmathA: ['Macro', '\\mathds{A}'],
@@ -123,6 +125,7 @@ new CommandMap('ieee-legacy', {
   dsmathzero: ['Macro', '\\mathds{0}'],
   dsmath: ['Macro', '\\mathds{#1}', 1],
 
+  // Table 16
   /* Needs bbm package */
   /* Don't use bbmssmath, use correct syntax \mathbbmss{x} */
   bbmssmathA: ['Macro', '\\mathbbmss{A}'],
