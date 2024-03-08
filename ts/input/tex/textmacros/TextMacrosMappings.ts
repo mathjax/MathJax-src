@@ -114,6 +114,9 @@ new CommandMap('text-macros', {
   dagger:       ['Insert', '\u2020'],
   ddagger:      ['Insert', '\u2021'],
   S:            ['Insert', '\u00A7'],
+  AA:           ['Insert', '\u212B'],
+  ldots:        ['Insert', '\u2026'],
+  vdots:        ['Insert', '\u22EE'],
 
   ',':          ['Spacer', MATHSPACE.thinmathspace],
   ':':          ['Spacer', MATHSPACE.mediummathspace],
