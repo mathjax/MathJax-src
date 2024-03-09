@@ -39,6 +39,7 @@ import './TextMacrosMappings.js';
  */
 export const TextBaseConfiguration = Configuration.create('text-base', {
   parser: 'text',
+  priority: 1,
   handler: {
     character: ['command', 'text-special'],
     macro: ['text-macros']
@@ -96,6 +97,7 @@ function internalMath(parser: TexParser, text: string, level?: number | string, 
 //  The textmacros package configuration
 //
 export const TextMacrosConfiguration = Configuration.create('textmacros', {
+  priority: 1,
   /**
    * @param {ParserConfiguration} config   The configuration object we are being configured within
    * @param {TeX<any,any,any>} jax         The TeX input jax in which we are running
@@ -120,7 +122,7 @@ export const TextMacrosConfiguration = Configuration.create('textmacros', {
     //   and replace the internalMath function with our own.
     //
     parseOptions.packageData = jax.parseOptions.packageData;
-    parseOptions.packageData.set('textmacros', {parseOptions, jax, texParser: null});
+    parseOptions.packageData.set('textmacros', {textConf, parseOptions, jax, texParser: null});
     parseOptions.options.internalMath = internalMath;
   },
   preprocessors: [(data: {data: ParseOptions}) => {
