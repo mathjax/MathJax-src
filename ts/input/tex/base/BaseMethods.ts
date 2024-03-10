@@ -1516,9 +1516,7 @@ BaseMethods.HLine = function(parser: TexParser, _name: string, style: string) {
 BaseMethods.HFill = function(parser: TexParser, _name: string) {
   const top = parser.stack.Top();
   if (top instanceof sitem.ArrayItem) {
-    console.log(4);
     // @test Hfill
-    console.log(top.Size());
     top.hfill.push(top.Size());
   } else {
     // @test UnsupportedHFill

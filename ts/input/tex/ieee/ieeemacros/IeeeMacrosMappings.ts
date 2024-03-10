@@ -417,15 +417,15 @@ new CommandMap('ieee-macros-ignore', {
 
 new CommandMap('ieee-macros-structures', {
   // eqalignno: 'ieeeEqalignno',
-  // displaylines: 'ieeeMatrix',
-  // matrix: 'ieeeMatrix',
+  displaylines: 'ieeeMatrix',
+  matrix: 'ieeeMatrix',
   // vcenter: 'ieeeVCenter',
   // vrule: 'ieeeVRule',
   // halign: 'ieeeHAlign',
-  // hfill: 'ieeeHFill',
+  hfill: 'ieeeHFill',
   // noalign: 'ieeeNoAlign',
-  // mathchar: 'ieeeMathChar',
-  // mathaccent: 'ieeeMathAccent',
+  mathchar: 'ieeeMathChar',
+  mathaccent: 'ieeeMathAccent',
   scases: ['Matrix', '', '', 'left left', null, '.1em', null, true],
 }, IeeeMacrosMethods);
 

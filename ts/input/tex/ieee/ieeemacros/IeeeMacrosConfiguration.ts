@@ -23,6 +23,7 @@
  */
 
 import {Configuration} from '../../Configuration.js';
+import {IeeeArrayItem} from './IeeeMacrosItems.js';
 import './IeeeMacrosMappings.js';
 
 export const IeeeMacrosConfiguration = Configuration.create(
@@ -30,6 +31,10 @@ export const IeeeMacrosConfiguration = Configuration.create(
     handler: {
       macro: ['ieee-macros', 'ieee-macros-ignore', 'ieee-macros-structures', 'ieee-macros-others'],
       environment: ['ieee-macros-environments']
+    },
+    items: {
+      // BaseItems
+      [IeeeArrayItem.prototype.kind]: IeeeArrayItem,
     }
   }
-)
+);
