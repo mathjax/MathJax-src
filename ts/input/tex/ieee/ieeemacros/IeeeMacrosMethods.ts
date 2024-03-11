@@ -28,8 +28,9 @@ import TexParser from '../../TexParser.js';
 import { ParseUtil } from '../../ParseUtil.js';
 import NodeUtil from '../../NodeUtil.js';
 import TexError from '../../TexError.js';
-import {TEXCLASS} from '../../../../core/MmlTree/MmlNode.js';
+import {TEXCLASS, MmlNode} from '../../../../core/MmlTree/MmlNode.js';
 import {IeeeArrayItem} from './IeeeMacrosItems.js';
+import {EnvList} from '../../StackItem.js';
 
 
 let IeeeMacrosMethods: Record<string, ParseMethod> = {};
@@ -49,6 +50,18 @@ IeeeMacrosMethods.Hskip = function(parser: TexParser, name: string) {
   return BaseMethods.Hskip(parser, name);
 }
 
+const save = ParseUtil.internalText;
+const NBSP = "\u00A0";
+ParseUtil.internalText = function(
+  parser: TexParser, text: string, def: EnvList): MmlNode {
+  text = text.replace(
+    /\\hfill?|\\hskip *[0-9.]+(pt|ex|pc)/g,
+    NBSP + NBSP + NBSP + NBSP + NBSP + NBSP + NBSP + NBSP
+  );
+  text = text.replace(/(\\kern|\\hskip) *-[0-9.]+(pt|pc|ex)/g, '');
+  return save(parser, text, def);
+}
+
 IeeeMacrosMethods.RotateBox = function(parser: TexParser, name: string) {
   // We currently ignoring optional arguments.
   parser.GetBrackets(name);
@@ -62,7 +75,8 @@ IeeeMacrosMethods.RotateBox = function(parser: TexParser, name: string) {
   parser.Push(mrow);
 }
 
-IeeeMacrosMethods.Ignore = function(parser: TexParser, name: string, ignore: number) {
+IeeeMacrosMethods.Ignore = function(
+  parser: TexParser, name: string, ignore: number) {
   const start = parser.i - name.length; // includes the \
   while (ignore) {
     parser.GetArgument(name);
@@ -72,39 +86,9 @@ IeeeMacrosMethods.Ignore = function(parser: TexParser, name: string, ignore: num
   parser.i = start;
 }
 
-// Some of these might not be necessary.
-
-//
-//  Override \eqalignno to provide support for \hfill by using
-//  the ieeeEqalignno stack item defined below
-//
-
 /**
- *
- * @param {TexParser} parser The calling parser.
- * @param {string} name The macro name.
- */
-// IeeeMacrosMethods.ieeeEqalignno = function(parser: TexParser, name: string) {
-//   var c = parser.GetNext();
-//   if (c === '') {throw new TexError('MissingArgFor', 'Missing argument for %1', parser.currentCS)}
-//   if (c === '{') {parser.i++} else {parser.string = c+'}'+parser.string.slice(parser.i+1); parser.i = 0}
-//   var array = STACKITEM.ieeeEqalignno().With({
-//     requireClose: true,
-//     arraydef: {
-//       rowspacing: '.5em',
-//       columnspacing: MML.LENGTH.THICKMATHSPACE,
-//       columnalign: 'right left',
-//       displaystyle: true
-//     }
-//   });
-//   parser.Push(array);
-// }
-
-//
-//  Override Matrix to support vertical and horizontal rules by
-//  using the ieeeMatrix stack item defined below
-//
-/**
+ *  Override Matrix to support vertical and horizontal rules by
+ *  using the ieeeMatrix stack item defined below
  *
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
@@ -135,94 +119,99 @@ IeeeMacrosMethods.ieeeMatrix = function(parser: TexParser, name: string) {
   parser.Push(array);
 }
 
-//
-//  Override \vcenter to look for its special use as vertical lines
-//  (solid or dashed) in tables, and for special matrix layout that
-//  uses \halign.
-//
+const LEADERS = /^to *[0-9.,]*\\baselineskip\{[^}]*?\\vtop to *([0-9.,]+) *ex *\{(?:[^}]*?height *([0-9.,]+) *(ex|pt)[^{]*?|\\vss\\hbox\{\}\\vss)\} *\\vfill\}/;
 
 /**
+ *  Override \vcenter to look for its special use as vertical lines
+ *  (solid or dashed) in tables, and for special matrix layout that
+ *  uses \halign.
  *
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-// IeeeMacrosMethods.ieeeVCenter = function(parser: TexParser, name: string) {
-//   var c = parser.GetNext(), match, top;
-//   var string = parser.string.slice(parser.i).replace(/\n+/g,' ');
-//   if (c === 't' && (match = string.match(LEADERS))) {
-//     //
-//     //  This is a vertical line (dahsed or solid or empty)
-//     //  so determine which from the sizes of the parts
-//     //
-//     parser.i += match[0].length; top = parser.stack.Top();
-//     if (match[1] != 0 && match[2] != 0 && top.type === 'ieeeArray') {
-//       top.vRules[top.row.length] = 
-//         (match[1] > match[2] || match[3] === 'pt' ? 'dashed' : 'solid');
-//     }
-//   } else if (c === '{' && string.match(/^\{[^{]*\\halign/)) {
-//     //
-//     //  This is a table using \halign, so remove the \halign
-//     //  and push the contents back onto the input string.
-//     //  If we aren't already in a matrix, add one around it.
-//     //  Check for \vrule in the template for the \hrule
-//     //
-//     string = parser.GetArgument(name).replace(/.*?\\halign/,'');
-//     parser.string = string + parser.string.slice(parser.i); parser.i = 0;
-//     string = parser.GetArgument('\\halign');
-//     match = string.match(/(.*?)\\cr/);
-//     string = string.slice(match[0].length).replace(/ *\\crcr */,'');
-//     top = parser.stack.Top();
-//     var needsMatrix = (top.type !== 'ieeeArray');
-//     if (needsMatrix) string = '{'+string+'}';
-//     parser.string = string + parser.string.slice(parser.i); parser.i = 0;
-//     if (needsMatrix) {parser.ieeeMatrix('\\halign'); top = parser.stack.Top()}
-//     top.cRules = CRULES(match[1]);
-//   } else {
-//     //
-//     // Just to a regular old \vcenter
-//     //
-//     parser.TeXAtom(name,MML.TEXCLASS.VCENTER);
-//   }
-// }
-
-//
-//  If there is a raw \halign (not in a \vcenter) remove the template
-//  and add a matrix around the content.  Check the template for
-//  \vrules.
-//  
+IeeeMacrosMethods.ieeeVCenter = function(parser: TexParser, name: string) {
+  var c = parser.GetNext(), match, top;
+  var str = parser.string.slice(parser.i).replace(/\n+/g,' ');
+  if (c === 't' && (match = str.match(LEADERS))) {
+    //
+    //  This is a vertical line (dahsed or solid or empty)
+    //  so determine which from the sizes of the parts
+    //
+    console.log(match[0]);
+    console.log(match[1]);
+    console.log(match[2]);
+    parser.i += match[0].length; top = parser.stack.Top();
+    if (match[1] !== '0' && match[2] !== '0' &&
+      top instanceof IeeeArrayItem) {
+      console.log('HERE???');
+      top.vRules[top.row.length] =
+        (match[1] > match[2] || match[3] === 'pt' ? 'dashed' : 'solid');
+      console.log(top.vRules);
+    }
+  } else if (c === '{' && str.match(/^\{[^{]*\\halign/)) {
+    //
+    //  This is a table using \halign, so remove the \halign
+    //  and push the contents back onto the input string.
+    //  If we aren't already in a matrix, add one around it.
+    //  Check for \vrule in the template for the \hrule
+    //
+    str = parser.GetArgument(name).replace(/.*?\\halign/,'');
+    parser.string = str + parser.string.slice(parser.i); parser.i = 0;
+    str = parser.GetArgument('\\halign');
+    match = str.match(/(.*?)\\cr/);
+    str = str.slice(match[0].length).replace(/ *\\crcr */,'');
+    top = parser.stack.Top();
+    const needsMatrix = top instanceof IeeeArrayItem;
+    if (needsMatrix) {
+      str = `{${str}}`;
+    }
+    parser.string = str + parser.string.slice(parser.i);
+    parser.i = 0;
+    if (needsMatrix) {
+      IeeeMacrosMethods.ieeeMatrix(parser, 'halign');
+      top = parser.stack.Top();
+    }
+    (top as IeeeArrayItem).cRules = CRULES(match[1]);
+  } else {
+    //
+    // Just do a regular old \vcenter
+    //
+    BaseMethods.VBox(parser, name, 'center');
+  }
+}
 
 /**
+ *  If there is a raw \halign (not in a \vcenter) remove the template
+ *  and add a matrix around the content.  Check the template for
+ *  \vrules.
  *
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */
-// IeeeMacrosMethods.ieeeHAlign = function(parser: TexParser, name: string) {
-//   console.log('HAlign!');
-//   var arg = parser.GetArgument(name);
-//   var match = arg.match(/(.*)\\cr/);
-//   arg = arg.replace(/.*?\\cr */,'').replace(/\\crcr/,'');
-//   parser.string = '{'+arg+'}' + parser.string.slice(parser.i); parser.i= 0;
-//   parser.ieeeMatrix(name);
-//   parser.stack.Top().cRules = CRULES(match[1]);
-// }
+IeeeMacrosMethods.ieeeHAlign = function(parser: TexParser, name: string) {
+  console.log('HAlign!');
+  var arg = parser.GetArgument(name);
+  var match = arg.match(/(.*)\\cr/);
+  arg = arg.replace(/.*?\\cr */,'').replace(/\\crcr/,'');
+  parser.string = '{'+arg+'}' + parser.string.slice(parser.i); parser.i= 0;
+  IeeeMacrosMethods.ieeeMatrix(parser, name);
+  (parser.stack.Top() as IeeeArrayItem).cRules = CRULES(match[1]);
+}
 
-//
-//  Handle \hfill at the beginning or end of a table cell by listing
-//  all the \hfill's in the current cell.  This data is used by the
-//  EndEntry method of the stack items below.
-//  
 /**
- *
+ *  Handle \hfill at the beginning or end of a table cell by listing
+ *  all the \hfill's in the current cell.  This data is used by the
+ *  EndEntry method of the stack items below.
+ *  
  * @param {TexParser} parser The calling parser.
  * @param {string} _name The macro name.
  */
 IeeeMacrosMethods.ieeeHFill = function(parser: TexParser, _name: string) {
   console.log('ieeeHFill');
   var top = parser.stack.Top();
-  console.log(top.kind);
-  console.log(top.Size());
   // if (top.isKind('ieeeArray')) {
   if (top instanceof IeeeArrayItem) {
+    console.log(15);
     top.hFill.push(top.Size());
   }
 }
@@ -308,12 +297,29 @@ IeeeMacrosMethods.ieeeMathAccent = function(parser: TexParser, name: string) {
   const arg = parser.ParseArg(name);
   const accent = parser.create('token', def[0], {}, def[1]);
   parser.Push(parser.create('node', 'mover', [arg, accent], {accent:true}));
-},
+}
+
+/**
+ *  Implement \noalign to insert a new row with the noalign content
+ *  (Note that most special cases are handled in the prefilter below).
+ *
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ */
+IeeeMacrosMethods.ieeeNoAlign = function(parser: TexParser, name: string) {
+  console.log('ieeeNoAlign');
+  var arg = parser.GetArgument(name);
+  if (arg.match(/ *\\hbox/)) {
+    arg += "\\cr ";
+  }
+  parser.string = arg + parser.string.slice(parser.i);
+  parser.i = 0;
+}
 
 //
 //  Look for \vrule in \halign templates
 //
-function CRULES(cols: string) {
+export function CRULES(cols: string) {
   const rules = [];
   const columns = cols.split(/&/);
   for (var i = 0, m = columns.length; i < m; i++) {

@@ -25,13 +25,12 @@
 import {ArrayItem} from '../../base/BaseItems.js';
 import NodeUtil from '../../NodeUtil.js';
 
-  //
-  //  Subclass of array stack item to handle vertical rules and \hfill for
-  //  alignment of cells.  Also, remove negative skips at the edges of
-  //  cells (mostly thes are used to adjust for the column spaces used by
-  //  vertical lines, but not always, so this can remove useful space as
-  //  well).
-  //
+//
+//  Subclass of array stack item to handle vertical rules and \hfill for
+//  alignment of cells.  Also, remove negative skips at the edges of cells
+//  (mostly these are used to adjust for the column spaces used by vertical
+//  lines, but not always, so this can remove useful space as well).
+//
 export class IeeeArrayItem extends ArrayItem {
 
   /**
@@ -45,12 +44,6 @@ export class IeeeArrayItem extends ArrayItem {
   public cRules: string[] = [];
   public hFill: number[] = [];
 
-  // Init: function () {
-  //   console.log('Init');
-  //   this.vRules = []; this.cRules = []; this.hFill = [];
-  //   this.SUPER(arguments).Init.call(this);
-  // },
-
   /**
    * @override
    */
@@ -60,31 +53,21 @@ export class IeeeArrayItem extends ArrayItem {
     //  Remove negative space at the end and beginning of the cells
     //
     for (let i = this.Size() - 1; i >= 0; i--) {
-      console.log(12);
       const cell = this.nodes[i];
-      console.log(NodeUtil.getProperty(cell, 'width'));
-      console.log(NodeUtil.getAttribute(cell, 'width'));
       const w = (cell ? NodeUtil.getProperty(cell, 'width') : 0) as number;
-      console.log(w);
-      console.log(cell);
       if (cell && cell.isKind('mspace') &&
         (w < 0 || String(w).substring(0, 8) === 'negative')) {
         this.Pop();
-        console.log(this.Size());
       } else {
         i = 0
       }
     }
     for (let i = 0, m = this.Size(); i < m; i++) {
-      console.log(13);
       const cell = this.nodes[i];
       const w = (cell ? NodeUtil.getProperty(cell, 'width') : 0) as number;
-      console.log(w);
-      console.log(cell);
       if (cell && cell.isKind('mspace') &&
         (w < 0 || String(w).substring(0, 8) === 'negative')) {
         this.nodes.shift()
-        console.log(this.Size());
       } else {
         i = m
       }
@@ -111,11 +94,11 @@ export class IeeeArrayItem extends ArrayItem {
 
   public checkLines() {
     console.log('checkLines');
-    let i, j, m, row, cell, M = 0;
+    let M = 0;
     //
     //  Find the longest row
     //
-    for (j = this.table.length - 1; j >= 0; j--) {
+    for (let j = this.table.length - 1; j >= 0; j--) {
       M = Math.max(M, this.table[j].childNodes.length);
       //
       //  If there are vertical rules ...
@@ -125,10 +108,10 @@ export class IeeeArrayItem extends ArrayItem {
         //  Remove tailing blank cells from each row.
         //  If the row is empty, remove it.
         //
-        for (j = this.table.length-1; j >= 0; j--) {
-          row = this.table[j];
-          for (i = row.childNodes.length-1; i >= 0; i--) {
-            cell = row.childNodes[i];
+        for (let j = this.table.length-1; j >= 0; j--) {
+          const row = this.table[j];
+          for (let i = row.childNodes.length-1; i >= 0; i--) {
+            const cell = row.childNodes[i];
             if (cell && cell.childNodes[0] && cell.childNodes[0].childNodes.length) break;
             row.childNodes.pop();
           }
@@ -151,15 +134,20 @@ export class IeeeArrayItem extends ArrayItem {
         //  Check for blank columns and remove them
         //  Record table rules inot the column array
         //
-        for (i = M-1; i >= 0; i--) {
+        for (let i = M - 1; i >= 0; i--) {
           var blank = true;
-          for (j = this.table.length-1; blank && j >= 0; j--) {
-            cell = this.table[j].childNodes[i];
-            if (cell && cell.childNodes[0] && cell.childNodes[0].childNodes.length) blank = false;
+          for (let j = this.table.length-1; blank && j >= 0; j--) {
+            const cell = this.table[j].childNodes[i];
+            if (cell && cell.childNodes[0] && cell.childNodes[0].childNodes.length) {
+              blank = false;
+            }
           }
           if (blank) {
-            for (j = this.table.length-1; j>= 0; j--) this.table[j].childNodes.splice(i,1);
-            this.cRules.splice(i,1); M--;
+            for (let j = this.table.length - 1; j >= 0; j--) {
+              this.table[j].childNodes.splice(i,1);
+            }
+            this.cRules.splice(i,1); 
+            M--;
           }
           if (this.vRules[i]) this.cRules[i-1] = this.vRules[i];
         }
@@ -168,8 +156,11 @@ export class IeeeArrayItem extends ArrayItem {
       //  Create the columnlines attribute for the table
       //
       if (this.cRules.length) {
-        for (i = 0, m = this.cRules.length; i< m; i++)
-        {if (this.cRules[i] == null) this.cRules[i] = 'none'}
+        for (let i = 0, m = this.cRules.length; i < m; i++) {
+          if (this.cRules[i] == null) {
+            this.cRules[i] = 'none';
+          }
+        }
       }
       if (this.cRules[-1]) {
         this.frame.push(['left', this.cRules[-1]]);

@@ -416,30 +416,19 @@ new CommandMap('ieee-macros-ignore', {
 
 
 new CommandMap('ieee-macros-structures', {
-  // eqalignno: 'ieeeEqalignno',
   displaylines: 'ieeeMatrix',
   matrix: 'ieeeMatrix',
-  // vcenter: 'ieeeVCenter',
-  // vrule: 'ieeeVRule',
-  // halign: 'ieeeHAlign',
+  vcenter: 'ieeeVCenter',
+  vrule: 'ieeeVRule',
+  halign: 'ieeeHAlign',
   hfill: 'ieeeHFill',
-  // noalign: 'ieeeNoAlign',
+  noalign: 'ieeeNoAlign',
   mathchar: 'ieeeMathChar',
   mathaccent: 'ieeeMathAccent',
   scases: ['Matrix', '', '', 'left left', null, '.1em', null, true],
 }, IeeeMacrosMethods);
 
 new CommandMap('ieee-macros-others', {
-  // eqalignno: 'ieeeEqalignno',
-  // displaylines: 'ieeeMatrix',
-  // matrix: 'ieeeMatrix',
-  // vcenter: 'ieeeVCenter',
-  // vrule: 'ieeeVRule',
-  // halign: 'ieeeHAlign',
-  // hfill: 'ieeeHFill',
-  // noalign: 'ieeeNoAlign',
-  // mathchar: 'ieeeMathChar',
-  // mathaccent: 'ieeeMathAccent',
   hskip: 'Hskip',
   noindent: ['Spacer', 0]
 }, IeeeMacrosMethods);
