@@ -94,7 +94,6 @@ IeeeMacrosMethods.Ignore = function(
  * @param {string} name The macro name.
  */
 IeeeMacrosMethods.ieeeMatrix = function(parser: TexParser, name: string) {
-  console.log('ieeeMatrix');
   var c = parser.GetNext();
   if (c === '') {
     throw new TexError('MissingArgFor', 'Missing argument for %1', parser.currentCS);
@@ -112,7 +111,6 @@ IeeeMacrosMethods.ieeeMatrix = function(parser: TexParser, name: string) {
       columnspacing: '1em'
   });
   if (name === '\\displaylines') {
-    console.log(11);
     array.arraydef.rowspacing = '.5em';
     array.arraydef.displaystyle = true;
   }
@@ -137,16 +135,11 @@ IeeeMacrosMethods.ieeeVCenter = function(parser: TexParser, name: string) {
     //  This is a vertical line (dahsed or solid or empty)
     //  so determine which from the sizes of the parts
     //
-    console.log(match[0]);
-    console.log(match[1]);
-    console.log(match[2]);
     parser.i += match[0].length; top = parser.stack.Top();
     if (match[1] !== '0' && match[2] !== '0' &&
       top instanceof IeeeArrayItem) {
-      console.log('HERE???');
       top.vRules[top.row.length] =
         (match[1] > match[2] || match[3] === 'pt' ? 'dashed' : 'solid');
-      console.log(top.vRules);
     }
   } else if (c === '{' && str.match(/^\{[^{]*\\halign/)) {
     //
@@ -189,7 +182,6 @@ IeeeMacrosMethods.ieeeVCenter = function(parser: TexParser, name: string) {
  * @param {string} name The macro name.
  */
 IeeeMacrosMethods.ieeeHAlign = function(parser: TexParser, name: string) {
-  console.log('HAlign!');
   var arg = parser.GetArgument(name);
   var match = arg.match(/(.*)\\cr/);
   arg = arg.replace(/.*?\\cr */,'').replace(/\\crcr/,'');
@@ -207,11 +199,9 @@ IeeeMacrosMethods.ieeeHAlign = function(parser: TexParser, name: string) {
  * @param {string} _name The macro name.
  */
 IeeeMacrosMethods.ieeeHFill = function(parser: TexParser, _name: string) {
-  console.log('ieeeHFill');
   var top = parser.stack.Top();
   // if (top.isKind('ieeeArray')) {
   if (top instanceof IeeeArrayItem) {
-    console.log(15);
     top.hFill.push(top.Size());
   }
 }
@@ -224,7 +214,6 @@ IeeeMacrosMethods.ieeeHFill = function(parser: TexParser, _name: string) {
  * @param {string} name The macro name.
  */
 IeeeMacrosMethods.ieeeVRule = function(parser: TexParser, _name: string) {
-  console.log('ieeeVRule');
   const top = parser.stack.Top();
   const match = parser.string.slice(parser.i).match(/^ *((height|width|depth) *([0-9.,]+pt) *)+/);
   if (match) parser.i += match[0].length;
@@ -307,7 +296,6 @@ IeeeMacrosMethods.ieeeMathAccent = function(parser: TexParser, name: string) {
  * @param {string} name The macro name.
  */
 IeeeMacrosMethods.ieeeNoAlign = function(parser: TexParser, name: string) {
-  console.log('ieeeNoAlign');
   var arg = parser.GetArgument(name);
   if (arg.match(/ *\\hbox/)) {
     arg += "\\cr ";

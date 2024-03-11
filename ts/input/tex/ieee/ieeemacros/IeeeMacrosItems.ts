@@ -48,7 +48,6 @@ export class IeeeArrayItem extends ArrayItem {
    * @override
    */
   public EndEntry() {
-    console.log('EndEntry');
     //
     //  Remove negative space at the end and beginning of the cells
     //
@@ -93,7 +92,6 @@ export class IeeeArrayItem extends ArrayItem {
   }
 
   public checkLines() {
-    console.log('checkLines');
     let M = 0;
     //
     //  Find the longest row

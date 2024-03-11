@@ -27,9 +27,7 @@ import {IeeeArrayItem} from './IeeeMacrosItems.js';
 import './IeeeMacrosMappings.js';
 
 function ieeeCleanup(arg: any) {
-  console.log(16);
   let math = arg.math.math;
-  console.log(math);
   //
   //  Look for constructs that should be \hline or \hdashline
   //  (mostly \noalign{\hrule}, \multispan\xleaders or \multispan\hrulefill constructs)
