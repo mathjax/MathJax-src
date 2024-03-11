@@ -37,7 +37,7 @@ export const dependencies = {
   '[tex]/colorv2': ['input/tex-base'],
   '[tex]/colortbl': ['input/tex-base', '[tex]/color'],
   '[tex]/configmacros': ['input/tex-base', '[tex]/newcommand'],
-  '[tex]/dsfont': ['input/tex/tex-base'],
+  '[tex]/dsfont': ['input/tex-base'],
   '[tex]/enclose': ['input/tex-base'],
   '[tex]/extpfeil': ['input/tex-base', '[tex]/newcommand', '[tex]/ams'],
   '[tex]/html': ['input/tex-base'],
