@@ -52,11 +52,13 @@ export const BboldxConfiguration = Configuration.create('bboldx', {
     bboldx: {
       bfbb: false,
       light: false
-    },
-    // add text macros by default to textmacros
-    textmacros: {
-      packages: {'[+]': ['text-bboldx']}
     }
-  }
+  },
+  config(_config, jax) {
+    const {textConf, parseOptions} = jax.parseOptions.packageData.get('textmacros');
+    parseOptions.options.textmacros.packages.push('text-bboldx');
+    textConf.add('text-bboldx', jax, {});
+  },
+  priority: 3   // load before base, since we override \mathbb
 });
 

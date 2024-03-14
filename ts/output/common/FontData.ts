@@ -293,6 +293,7 @@ export type DynamicFont = {
   files: DynamicFileList;
   sizeN: number;
   stretchN: number;
+  data: FontExtensionData<any, any>
 };
 
 /**
@@ -623,7 +624,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    * The font extension dynamic data
    */
-  protected static dynamicExtensions: DynamicFontMap = new Map();
+  public static dynamicExtensions: DynamicFontMap = new Map();
 
   /**
    * The font options
@@ -792,7 +793,8 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
       prefix: prefix,
       files: this.defineDynamicFiles(data.ranges, data.name),
       sizeN: this.defaultSizeVariants.length,
-      stretchN: this.defaultStretchVariants.length
+      stretchN: this.defaultStretchVariants.length,
+      data: data
     };
     this.dynamicExtensions.set(data.name, extension);
     for (const [src, dst] of [
@@ -853,14 +855,16 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    *
    * @param {FontExtensionData} data    The data for the font extension to merge into this font.
    * @param {string} prefix             The [prefix] to add to all component names
+   * @return {string[]}                 The new CSS rules needed for this extension
    */
-  public addExtension(data: FontExtensionData<C, D>, prefix: string = '') {
+  public addExtension(data: FontExtensionData<C, D>, prefix: string = ''): string[] {
     const dynamicFont = {
       name: data.name,
       prefix: prefix,
       files: this.CLASS.defineDynamicFiles(data.ranges, prefix),
       sizeN: this.sizeVariants.length,
-      stretchN: this.stretchVariants.length
+      stretchN: this.stretchVariants.length,
+      data: data
     };
     this.CLASS.dynamicExtensions.set(data.name, dynamicFont);
 
@@ -885,6 +889,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     if (data.ranges) {
       this.defineDynamicCharacters(dynamicFont.files);
     }
+    return [];
   }
 
   /**

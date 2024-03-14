@@ -165,6 +165,17 @@ CommonOutputJax<
   /**
    * @override
    */
+  public addExtension(name: string): string[] {
+    const css = super.addExtension(name);
+    if (css.length && this.options.adaptiveCSS && this.chtmlStyles) {
+      this.adaptor.insertRules(this.chtmlStyles, css);
+    }
+    return [];
+  }
+
+  /**
+   * @override
+   */
   public escaped(math: MathItem<N, T, D>, html: MathDocument<N, T, D>) {
     this.setDocument(html);
     return this.html('span', {}, [this.text(math.math)]);

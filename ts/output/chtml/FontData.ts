@@ -25,7 +25,7 @@ import {CharMap, CharOptions, CharDataArray, VariantData,
         DelimiterData, FontData, FontExtensionData, DIRECTION} from '../common/FontData.js';
 import {Usage} from './Usage.js';
 import {StringMap} from './Wrapper.js';
-import {StyleList, StyleData} from '../../util/StyleList.js';
+import {StyleList, StyleData, CssStyles} from '../../util/StyleList.js';
 import {em} from '../../util/lengths.js';
 
 export * from '../common/FontData.js';
@@ -186,6 +186,24 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
   ) {
     super.addExtension(data, prefix);
     data.fonts && this.addDynamicFontCss(this.defaultStyles, data.fonts, data.fontURL);
+  }
+
+  /**
+   * @override
+   */
+  public addExtension(
+    data: ChtmlFontExtensionData<ChtmlCharOptions, ChtmlDelimiterData>,
+    prefix: string = ''
+  ): string[] {
+    super.addExtension(data, prefix);
+    if (data.fonts && this.options.adaptiveCSS) {
+      const css = {};
+      const styles = new CssStyles();
+      (this.constructor as typeof ChtmlFontData).addDynamicFontCss(css, data.fonts, data.fontURL);
+      styles.addStyles(css);
+      return styles.getStyleRules();
+    }
+    return [];
   }
 
   /***********************************************************************/
