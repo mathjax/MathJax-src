@@ -176,6 +176,18 @@ export class CloseItem extends BaseItem {
 
 }
 
+/**
+ * Item pushed when a macro doesn't produce any output.
+ */
+export class NullItem extends BaseItem {
+  /**
+   * @override
+   */
+  public get kind() {
+    return 'null';
+  }
+}
+
 
 /**
  * Item indicating an we are currently dealing with a prime mark.

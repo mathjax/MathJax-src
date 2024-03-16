@@ -99,7 +99,9 @@ export default class Stack {
         this.Push(...top);
         continue;
       }
-      this.stack.push(item);
+      if (!item.isKind('null')) {
+        this.stack.push(item);
+      }
       if (item.env) {
         if (item.copyEnv) {
           Object.assign(item.env, this.env);

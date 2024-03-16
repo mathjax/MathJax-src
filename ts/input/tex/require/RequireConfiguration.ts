@@ -192,6 +192,7 @@ export const RequireMethods: Record<string, ParseMethod> = {
       throw new TexError('BadPackageName', 'Argument for %1 is not a valid package name', name);
     }
     RequireLoad(parser, required);
+    parser.Push(parser.itemFactory.create('null'));
   }
 
 };

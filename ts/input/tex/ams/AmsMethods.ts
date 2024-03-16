@@ -220,6 +220,7 @@ AmsMethods.HandleDeclareOp =  function (parser: TexParser, name: string) {
   let op = parser.GetArgument(name);
   (parser.configuration.handlers.retrieve(NEW_OPS) as CommandMap).
     add(cs, new Macro(cs, AmsMethods.Macro, [`\\operatorname${star}{${op}}`]));
+  parser.Push(parser.itemFactory.create('null'));
 };
 
 
@@ -586,6 +587,7 @@ AmsMethods.HandleTag = function(parser: TexParser, name: string) {
   let star = parser.GetStar();
   let tagId = ParseUtil.trimSpaces(parser.GetArgument(name));
   parser.tags.tag(tagId, star);
+  parser.Push(parser.itemFactory.create('null'));
 };
 
 

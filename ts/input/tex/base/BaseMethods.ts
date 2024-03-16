@@ -268,8 +268,7 @@ BaseMethods.Prime = function(parser: TexParser, c: string) {
   } while (c === '\'' || c === entities.rsquo);
   sup = ['', '\u2032', '\u2033', '\u2034', '\u2057'][sup.length] || sup;
   const node = parser.create('token', 'mo', {variantForm: true}, sup);
-  parser.Push(
-    parser.itemFactory.create('prime', base, node) );
+  parser.Push(parser.itemFactory.create('prime', base, node));
 };
 
 
@@ -327,6 +326,7 @@ BaseMethods.MathFont = function(parser: TexParser, name: string, variant: string
  */
 BaseMethods.SetFont = function(parser: TexParser, _name: string, font: string) {
   parser.stack.env['font'] = font;
+  parser.Push(parser.itemFactory.create('null'));
 };
 
 /**
@@ -811,6 +811,7 @@ BaseMethods.VBox = function(parser: TexParser, name: string, align: string) {
 BaseMethods.Hsize = function (parser: TexParser, name: string) {
   parser.GetNext() === '=' && parser.i++;
   parser.stack.env.hsize = parser.GetDimen(name);
+  parser.Push(parser.itemFactory.create('null'));
 };
 
 /**
@@ -1538,10 +1539,11 @@ BaseMethods.NewColumnType = function (parser: TexParser, name: string) {
     throw new TexError('BadColumnName', 'Column specifier must be exactly one character: %1', c);
   }
   if (!n.match(/^\d+$/)) {
-    throw new TexError('PositiveIntegerArg', 'Argument to %1 must me a positive integer', n);
+    throw new TexError('PositiveIntegerArg', 'Argument to %1 must be a positive integer', n);
   }
   const cparser = parser.configuration.columnParser;
   cparser.columnHandler[c] = (state: ColumnState) => cparser.macroColumn(state, macro, parseInt(n));
+  parser.Push(parser.itemFactory.create('null'));
 }
 
 

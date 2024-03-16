@@ -570,11 +570,13 @@ export default class TexParser {
     }
     // These are the cases to handle sub and superscripts.
     if (node.attributes.get(TexConstant.Attr.LATEX) === '^' &&
-      str !== '^' && str !== '\\^') {
-      if (str === '}') {
-        this.composeBraces(node.childNodes[2]);
-      } else {
-        node.childNodes[2].attributes.set(TexConstant.Attr.LATEX, str);
+        str !== '^' && str !== '\\^') {
+      if (node.childNodes[2]) {
+        if (str === '}') {
+          this.composeBraces(node.childNodes[2]);
+        } else {
+          node.childNodes[2].attributes.set(TexConstant.Attr.LATEX, str);
+        }
       }
       if (node.childNodes[1]) {
         const sub = node.childNodes[1].attributes.get(TexConstant.Attr.LATEX);
@@ -585,11 +587,13 @@ export default class TexParser {
       return;
     }
     if (node.attributes.get(TexConstant.Attr.LATEX) === '_' &&
-      str !== '_' && str !== '\\_') {
-      if (str === '}') {
-        this.composeBraces(node.childNodes[1]);
-      } else {
-        node.childNodes[1].attributes.set(TexConstant.Attr.LATEX, str);
+        str !== '_' && str !== '\\_') {
+      if (node.childNodes[1]) {
+        if (str === '}') {
+          this.composeBraces(node.childNodes[1]);
+        } else {
+          node.childNodes[1].attributes.set(TexConstant.Attr.LATEX, str);
+        }
       }
       if (node.childNodes[2]) {
         const sub = node.childNodes[2].attributes.get(TexConstant.Attr.LATEX);
@@ -616,6 +620,7 @@ export default class TexParser {
    */
   private composeLatex(
     node: MmlNode, comp: string, pos1: number, pos2: number) {
+    if (!node.childNodes[pos1] || !node.childNodes[pos2]) return;
     const expr = node.childNodes[pos1].attributes.get(TexConstant.Attr.LATEX) + comp +
       node.childNodes[pos2].attributes.get(TexConstant.Attr.LATEX);
     node.attributes.set(TexConstant.Attr.LATEX, expr);

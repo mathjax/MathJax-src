@@ -516,6 +516,7 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     const open = parser.GetArgument(name);
     const close = parser.GetArgument(name);
     MathtoolsUtil.addPairedDelims(parser.configuration, cs, [open, close]);
+    parser.Push(parser.itemFactory.create('null'));
   },
 
   /**
@@ -531,6 +532,7 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     const close = parser.GetArgument(name);
     const body = parser.GetArgument(name);
     MathtoolsUtil.addPairedDelims(parser.configuration, cs, [open, close, body, n]);
+    parser.Push(parser.itemFactory.create('null'));
   },
 
   /**
@@ -548,6 +550,7 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     const post = parser.GetArgument(name);
     const body = parser.GetArgument(name);
     MathtoolsUtil.addPairedDelims(parser.configuration, cs, [open, close, body, n, pre, post]);
+    parser.Push(parser.itemFactory.create('null'));
   },
 
   /**
@@ -711,6 +714,7 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
       throw new TexError('DuplicateTagForm', 'Duplicate tag form: %1', id);
     }
     tags.mtFormats.set(id, [left, right, format]);
+    parser.Push(parser.itemFactory.create('null'));
   },
 
   /**
@@ -727,12 +731,14 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     const id = parser.GetArgument(name).trim();
     if (!id) {
       tags.mtCurrent = null;
+      parser.Push(parser.itemFactory.create('null'));
       return;
     }
     if (!tags.mtFormats.has(id)) {
       throw new TexError('UndefinedTagForm', 'Undefined tag form: %1', id);
     }
     tags.mtCurrent = tags.mtFormats.get(id);
+    parser.Push(parser.itemFactory.create('null'));
   },
 
   /**
@@ -757,6 +763,7 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
     for (const id of Object.keys(keys)) {
       options[id] = keys[id];
     }
+    parser.Push(parser.itemFactory.create('null'));
   },
 
   /**
