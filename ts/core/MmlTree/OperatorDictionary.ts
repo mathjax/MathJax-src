@@ -140,6 +140,10 @@ export const RANGES: RangeDef[] = [
  * @return {RangeDef}     The range containing that character, or null
  */
 export function getRange(text: string): RangeDef {
+  const def = OPTABLE.infix[text] || OPTABLE.prefix[text] || OPTABLE.postfix[text];
+  if (def) {
+    return [0, 0, def[2], 'mo'];
+  }
   const n = text.codePointAt(0);
   for (const range of RANGES) {
     if (n <= range[1]) {
