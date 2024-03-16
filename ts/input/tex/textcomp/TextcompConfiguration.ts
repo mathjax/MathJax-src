@@ -25,10 +25,19 @@
 import {Configuration} from '../Configuration.js';
 import './TextcompMappings.js';
 
+Configuration.create('text-textcomp', {
+  parser: 'text',
+  handler: {macro: ['textcomp-macros']}
+});
 
 export const TextcompConfiguration = Configuration.create(
   'textcomp', {
-    handler: {macro: ['textcomp-macros']}
+    handler: {macro: ['textcomp-macros']},
+    config(_config, jax) {
+      const {textConf, parseOptions} = jax.parseOptions.packageData.get('textmacros');
+      parseOptions.options.textmacros.packages.push('text-textcomp');
+      textConf.add('text-textcomp', jax, {});
+    }
   }
 );
 
