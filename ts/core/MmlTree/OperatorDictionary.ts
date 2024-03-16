@@ -321,13 +321,13 @@ export const OPTABLE: {[form: string]: OperatorList} = {
     '\u201E': MO.ACCENT,     // double low-9 quotation mark
     '\u201F': MO.ACCENT,     // double high-reversed-9 quotation mark
     '\u2032': MO.ORD,        // prime
-    '\u2033': MO.ACCENT,     // double prime
-    '\u2034': MO.ACCENT,     // triple prime
-    '\u2035': MO.ACCENT,     // reversed prime
-    '\u2036': MO.ACCENT,     // reversed double prime
-    '\u2037': MO.ACCENT,     // reversed triple prime
+    '\u2033': MO.ORD,        // double prime
+    '\u2034': MO.ORD,        // triple prime
+    '\u2035': MO.ORD,        // reversed prime
+    '\u2036': MO.ORD,        // reversed double prime
+    '\u2037': MO.ORD,        // reversed triple prime
     '\u203E': MO.WIDEACCENT, // overline
-    '\u2057': MO.ACCENT,     // quadruple prime
+    '\u2057': MO.ORD,        // quadruple prime
     '\u20DB': MO.ACCENT,     // combining three dots above
     '\u20DC': MO.ACCENT,     // combining four dots above
     '\u2309': MO.CLOSE,      // right ceiling

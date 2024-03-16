@@ -254,8 +254,10 @@ BaseMethods.Prime = function(parser: TexParser, c: string) {
     // @test PrimeSup, PrePrime, Prime on Sup
     base = parser.create('token', 'mi');
   }
-  if (NodeUtil.isType(base, 'msubsup') && !NodeUtil.isType(base, 'msup') &&
-      NodeUtil.getChildAt(base, (base as MmlMsubsup).sup)) {
+  if ((NodeUtil.isType(base, 'msubsup') && !NodeUtil.isType(base, 'msup') &&
+       NodeUtil.getChildAt(base, (base as MmlMsubsup).sup)) ||
+      (NodeUtil.isType(base, 'munderover') && !NodeUtil.isType(base, 'mover') &&
+       NodeUtil.getChildAt(base, (base as MmlMunderover).over))) {
     // @test Double Prime Error
     throw new TexError('DoubleExponentPrime',
                         'Prime causes double exponent: use braces to clarify');
