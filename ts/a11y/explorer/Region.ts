@@ -317,13 +317,13 @@ export class ToolTip extends StringRegion {
   protected static style: CssStyles =
     new CssStyles({
       ['.' + ToolTip.className]: {
-        position: 'absolute', display: 'inline-block',
-        height: '1px', width: '1px'
+        display: 'none',
       },
       ['.' + ToolTip.className + '_Show']: {
         width: 'auto', height: 'auto', opacity: 1, 'text-align': 'center',
-        'border-radius': '6px', padding: '0px 0px',
-        'border-bottom': '1px dotted black', position: 'absolute',
+        'border-radius': '6px', padding: 0,
+        'border-bottom': '1px dotted black',
+        position: 'absolute', display: 'inline-block',
         'z-index': 202
       }
     });
@@ -344,12 +344,12 @@ export class LiveRegion extends StringRegion {
   protected static style: CssStyles =
     new CssStyles({
       ['.' + LiveRegion.className]: {
-        position: 'absolute', top: '0', height: '1px', width: '1px',
-        padding: '1px', overflow: 'hidden'
+        display: 'none'
       },
       ['.' + LiveRegion.className + '_Show']: {
-        top: '0', position: 'absolute', width: 'auto', height: 'auto',
-        padding: '0px 0px', opacity: 1, 'z-index': '202',
+        position: 'absolute', top: 0,
+        display: 'block', width: 'auto', height: 'auto',
+        padding: 0, opacity: 1, 'z-index': '202',
         left: 0, right: 0, 'margin': '0 auto',
         'background-color': 'rgba(0, 0, 255, 0.2)', 'box-shadow': '0px 5px 20px #888',
         border: '2px solid #CCCCCC'
@@ -525,12 +525,12 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
   protected static style: CssStyles =
     new CssStyles({
       ['.' + HoverRegion.className]: {
-        position: 'absolute', height: '1px', width: '1px',
-        padding: '1px', overflow: 'hidden'
+        display: 'none'
       },
       ['.' + HoverRegion.className + '_Show']: {
-        position: 'absolute', width: 'max-content', height: 'auto',
-        padding: '0px 0px', opacity: 1, 'z-index': '202', 'margin': '0 auto',
+        display: 'block', position: 'absolute',
+        width: 'max-content', height: 'auto',
+        padding: 0, opacity: 1, 'z-index': '202', 'margin': '0 auto',
         'background-color': 'rgba(0, 0, 255, 0.2)',
         'box-shadow': '0px 10px 20px #888', border: '2px solid #CCCCCC'
       }
