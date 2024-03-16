@@ -307,12 +307,13 @@ BaseMethods.Hash = function(_parser: TexParser, _c: string) {
 /**
  * Handle \mathrm, \mathbf, etc, allowing for multi-letter runs to be one <mi>.
  */
-BaseMethods.MathFont = function(parser: TexParser, name: string, variant: string) {
+BaseMethods.MathFont = function(parser: TexParser, name: string, variant: string, italic: string = '') {
   const text = parser.GetArgument(name);
   let mml = new TexParser(text, {
     multiLetterIdentifiers: parser.options.identifierPattern,
     ...parser.stack.env,
     font: variant,
+    italicFont: italic,
     noAutoOP: true
   }, parser.configuration).mml();
   parser.Push(parser.create('node', 'TeXAtom', [mml]));
