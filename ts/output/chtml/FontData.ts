@@ -196,14 +196,14 @@ export class ChtmlFontData extends FontData<ChtmlCharOptions, ChtmlVariantData, 
     prefix: string = ''
   ): string[] {
     super.addExtension(data, prefix);
-    if (data.fonts && this.options.adaptiveCSS) {
-      const css = {};
-      const styles = new CssStyles();
-      (this.constructor as typeof ChtmlFontData).addDynamicFontCss(css, data.fonts, data.fontURL);
-      styles.addStyles(css);
-      return styles.getStyleRules();
+    if (!data.fonts || !this.options.adaptiveCSS) {
+      return [];
     }
-    return [];
+    const css = {};
+    const styles = new CssStyles();
+    (this.constructor as typeof ChtmlFontData).addDynamicFontCss(css, data.fonts, data.fontURL);
+    styles.addStyles(css);
+    return styles.getStyleRules();
   }
 
   /***********************************************************************/
