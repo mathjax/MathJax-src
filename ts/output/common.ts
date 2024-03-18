@@ -266,6 +266,17 @@ export abstract class CommonOutputJax<
     }
   }
 
+  /**
+   * Add a registered font extension to the output jax's font.
+   *
+   * @param {string} name   The name of the extension to add to this output jax's font
+   * @return {string[]}     New CSS rules needed for the font
+   */
+  public addExtension(name: string): string[] {
+    const font = this.font.CLASS.dynamicExtensions.get(name);
+    return this.font.addExtension(font.data);
+  }
+
 
   /*****************************************************************/
 
