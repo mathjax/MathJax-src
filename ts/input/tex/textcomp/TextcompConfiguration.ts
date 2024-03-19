@@ -34,9 +34,11 @@ export const TextcompConfiguration = Configuration.create(
   'textcomp', {
     handler: {macro: ['textcomp-macros']},
     config(_config, jax) {
-      const {textConf, parseOptions} = jax.parseOptions.packageData.get('textmacros');
-      parseOptions.options.textmacros.packages.push('text-textcomp');
-      textConf.add('text-textcomp', jax, {});
+      const textmacros = jax.parseOptions.packageData.get('textmacros');
+      if (textmacros) {
+        textmacros.parseOptions.options.textmacros.packages.push('text-textcomp');
+        textmacros.textConf.add('text-textcomp', jax, {});
+      }
     }
   }
 );
