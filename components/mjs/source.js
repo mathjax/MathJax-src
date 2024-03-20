@@ -45,7 +45,7 @@ export const source = {
   '[tex]/empheq': `${src}/input/tex/extensions/empheq/empheq.js`,
   '[tex]/enclose': `${src}/input/tex/extensions/enclose/enclose.js`,
   '[tex]/extpfeil': `${src}/input/tex/extensions/extpfeil/extpfeil.js`,
-  '[tex]/gensym': `${src}/input/tex/extensions/gensym/gensym.js`,
+  '[tex]/gensymb': `${src}/input/tex/extensions/gensymb/gensymb.js`,
   '[tex]/html': `${src}/input/tex/extensions/html/html.js`,
   '[tex]/mathtools': `${src}/input/tex/extensions/mathtools/mathtools.js`,
   '[tex]/mhchem': `${src}/input/tex/extensions/mhchem/mhchem.js`,

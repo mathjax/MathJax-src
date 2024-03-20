@@ -39,10 +39,10 @@ export const dependencies = {
   '[tex]/colorv2': ['input/tex-base'],
   '[tex]/configmacros': ['input/tex-base', '[tex]/newcommand'],
   '[tex]/dsfont': ['input/tex-base'],
-  '[tex]/empheq': ['input/tex-base', '[tex]/ams']
+  '[tex]/empheq': ['input/tex-base', '[tex]/ams'],
   '[tex]/enclose': ['input/tex-base'],
   '[tex]/extpfeil': ['input/tex-base', '[tex]/newcommand', '[tex]/ams'],
-  '[tex]/gensym': ['input/tex-base'],
+  '[tex]/gensymb': ['input/tex-base'],
   '[tex]/html': ['input/tex-base'],
   '[tex]/mathtools': ['input/tex-base', '[tex]/newcommand', '[tex]/ams'],
   '[tex]/mhchem': ['input/tex-base', '[tex]/ams'],
@@ -59,7 +59,7 @@ export const dependencies = {
   '[tex]/unicode': ['input/tex-base'],
   '[tex]/units': ['input/tex-base'],
   '[tex]/upgreek': ['input/tex-base'],
-  '[tex]/verb': ['input/tex-base'],
+  '[tex]/verb': ['input/tex-base']
 };
 
 export const paths = {
