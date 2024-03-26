@@ -370,13 +370,17 @@ export class GeneratorPool<N, T, D> {
         this.dummyList.forEach(attr => this.copyAttributes(xml, node, attr));
       }
     }
-    const speech = this.getLabel(node);
-    if (speech) {
-      this.adaptor.setAttribute(node, 'aria-label', buildSpeech(speech, locale)[0]);
+    if (this.options.a11y.speech) {
+      const speech = this.getLabel(node);
+      if (speech) {
+        this.adaptor.setAttribute(node, 'aria-label', buildSpeech(speech, locale)[0]);
+      }
     }
-    const braille = this.adaptor.getAttribute(node, 'data-semantic-braille');
-    if (braille) {
-      this.adaptor.setAttribute(node, 'aria-braillelabel', braille);
+    if (this.options.a11y.braille) {
+      const braille = this.adaptor.getAttribute(node, 'data-semantic-braille');
+      if (braille) {
+        this.adaptor.setAttribute(node, 'aria-braillelabel', braille);
+      }
     }
     const xmlChildren = Array.from(xml.childNodes);
     Array.from(this.adaptor.childNodes(node)).forEach(

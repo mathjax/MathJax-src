@@ -417,6 +417,12 @@ export class SpeechRegion extends LiveRegion {
       setTimeout(() => {
         if (this.voiceRequest) {
           resolve(true);
+        } else {
+          // This case is to make FF and Safari work.
+          setTimeout(() => {
+            this.voiceRequest = true;
+            resolve(true);
+          }, 100);
         }
       }, 100);
     });

@@ -22,6 +22,7 @@
  */
 
 import {MathItem} from '../../core/MathItem.js';
+import {OptionList} from '../../util/Options.js';
 import {JaxList} from './Menu.js';
 
 import {ContextMenu, SubMenu, Submenu, Menu, Item} from './mj-context-menu.js';
@@ -38,12 +39,17 @@ export class MJContextMenu extends ContextMenu {
    * Static map to hold methods for re-computing dynamic submenus.
    * @type {Map<string, (menu: MJContextMenu, sub: Submenu)}
    */
-  public static DynamicSubmenus: Map<string, (menu: MJContextMenu, sub: Submenu) => SubMenu> = new Map();
+  public static DynamicSubmenus: Map<string, [(menu: MJContextMenu, sub: Submenu) => SubMenu, string]> = new Map();
 
   /**
    * The MathItem that has posted the menu
    */
   public mathItem: MathItem<HTMLElement, Text, Document> = null;
+
+  /**
+   * The document options
+   */
+  public settings: OptionList;
 
   /**
    * The error message for the current MathItem
@@ -69,6 +75,7 @@ export class MJContextMenu extends ContextMenu {
         this.getOriginalMenu();
         this.getSemanticsMenu();
         this.getSpeechMenu();
+        this.getBrailleMenu();
         this.getSvgMenu();
         this.getErrorMessage();
         this.dynamicSubmenus();
@@ -99,11 +106,13 @@ export class MJContextMenu extends ContextMenu {
     let menu = this as Menu;
     let item = null as Item;
     for (const name of names) {
-      if (menu) {
-        item = menu.find(name);
-        menu = (item instanceof Submenu ? item.submenu : null);
-      } else {
-        item = null;
+      if (!menu) return null;
+      for (item of menu.items) {
+        if (item.id === name) {
+          menu = (item instanceof Submenu ? item.submenu : null);
+          break;
+        }
+        menu = item = null;
       }
     }
     return item;
@@ -135,7 +144,7 @@ export class MJContextMenu extends ContextMenu {
    * Enable/disable the semantics settings item
    */
   protected getSemanticsMenu() {
-    const semantics = this.findID('Settings', 'semantics');
+    const semantics = this.findID('Settings', 'MathmlIncludes', 'semantics');
     this.mathItem.inputJax.name === 'MathML' ? semantics.disable() : semantics.enable();
   }
 
@@ -146,6 +155,15 @@ export class MJContextMenu extends ContextMenu {
     const speech = this.mathItem.outputData.speech;
     this.findID('Show', 'Speech')[speech ? 'enable' : 'disable']();
     this.findID('Copy', 'Speech')[speech ? 'enable' : 'disable']();
+  }
+
+  /**
+   * Enable/disable the Braille menus
+   */
+  protected getBrailleMenu() {
+    const braille = this.mathItem.outputData.braille;
+    this.findID('Show', 'Braille')[braille ? 'enable' : 'disable']();
+    this.findID('Copy', 'Braille')[braille ? 'enable' : 'disable']();
   }
 
   /**
@@ -179,12 +197,12 @@ export class MJContextMenu extends ContextMenu {
    * Renews the dynamic submenus.
    */
   public dynamicSubmenus() {
-    for (const [id, method] of MJContextMenu.DynamicSubmenus) {
+    for (const [id, [method, option]] of MJContextMenu.DynamicSubmenus) {
       const menu = this.find(id) as Submenu;
       if (!menu) continue;
       const sub = method(this, menu);
       menu.submenu = sub;
-      if (sub.items.length) {
+      if (sub.items.length && (!option || this.settings[option])) {
         menu.enable();
       } else {
         menu.disable();

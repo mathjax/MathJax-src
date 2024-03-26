@@ -118,6 +118,11 @@ export interface EnrichedMathItem<N, T, D> extends MathItem<N, T, D> {
    * @param {MathDocument} document  The document where enrichment is occurring
    */
   attachSpeech(document: MathDocument<N, T, D>): void;
+
+  /**
+   * @param {MathDocument} document   The MathDocument for the MathItem
+   */
+  unEnrich(document: MathDocument<N, T, D>): void;
 }
 
 /**
@@ -202,6 +207,19 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
     }
 
     /**
+     * @param {MathDocument} document   The MathDocument for the MathItem
+     */
+    public unEnrich(document: MathDocument<N, T, D>) {
+      const mml = this.inputData.originalMml;
+      if (!mml) return;
+      const math = new document.options.MathItem('', MmlJax);
+      math.math = mml;
+      math.display = this.display;
+      math.compile(document);
+      this.root = math.root;
+    }
+
+    /**
      * Correct the selection values for the maction items from the original MathML
      */
     protected adjustSelections() {
@@ -248,25 +266,28 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
       if (this.isEscaped || !document.options.enableEnrichment) return;
       let [speech, braille] = this.existingSpeech();
       let [newSpeech, newBraille] = ['', ''];
-      if ((!speech && document.options.enableSpeech) ||
-        (!braille && document.options.enableBraille)) {
+      const options = document.options;
+      if ((!speech && options.enableSpeech) ||
+          (!braille && options.enableBraille)) {
         try {
           [newSpeech, newBraille] = this.generatorPool.computeSpeech(
             this.typesetRoot, this.toMathML(this.root, this));
           if (newSpeech) {
             newSpeech = buildSpeech(newSpeech)[0];
           }
-        } catch (_e) { }
+        } catch (err) {
+          document.options.speechError(document, this, err);
+        }
       }
       speech = speech || newSpeech;
       braille = braille || newBraille;
       if (!speech && !braille) return;
       const adaptor = document.adaptor;
       const node = this.typesetRoot;
-      if (speech) {
+      if (speech && options.enableSpeech) {
         adaptor.setAttribute(node, 'aria-label', speech as string);
       }
-      if (braille) {
+      if (braille && options.enableBraille) {
         adaptor.setAttribute(node, 'aria-braillelabel', braille as string);
       }
       for (const child of adaptor.childNodes(node) as N[]) {
@@ -311,6 +332,13 @@ export interface EnrichedMathDocument<N, T, D> extends AbstractMathDocument<N, T
    * @param {Error} err                  The error being processed
    */
   enrichError(doc: EnrichedMathDocument<N, T, D>, math: EnrichedMathItem<N, T, D>, err: Error): void;
+
+  /**
+   * @param {EnrichedMathDocument} doc   The MathDocument for the error
+   * @paarm {EnrichedMathItem} math      The MathItem causing the error
+   * @param {Error} err                  The error being processed
+   */
+  speechError(doc: EnrichedMathDocument<N, T, D>, math: EnrichedMathItem<N, T, D>, err: Error): void;
 }
 
 /**
@@ -343,6 +371,9 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
       enrichError: (doc: EnrichedMathDocument<N, T, D>,
                     math: EnrichedMathItem<N, T, D>,
                     err: Error) => doc.enrichError(doc, math, err),
+      speechError: (doc: EnrichedMathDocument<N, T, D>,
+                    math: EnrichedMathItem<N, T, D>,
+                    err: Error) => doc.speechError(doc, math, err),
       renderActions: expandable({
         ...BaseDocument.OPTIONS.renderActions,
         enrich:       [STATE.ENRICHED],
@@ -417,12 +448,23 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
     }
 
     /**
+     */
+    public speechError(_doc: EnrichedMathDocument<N, T, D>, _math: EnrichedMathItem<N, T, D>, err: Error) {
+      console.warn('Speech generation error:', err);
+    }
+
+    /**
      * @override
      */
     public state(state: number, restore: boolean = false) {
       super.state(state, restore);
       if (state < STATE.ENRICHED) {
         this.processed.clear('enriched');
+        if (state >= STATE.COMPILED) {
+          for (const item of this.math) {
+            (item as EnrichedMathItem<N, T, D>).unEnrich(this);
+          }
+        }
       }
       if (state < STATE.ATTACHSPEECH) {
         this.processed.clear('attach-speech');

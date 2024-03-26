@@ -169,23 +169,25 @@ export function clearspeakMenu(menu: MJContextMenu, sub: Submenu) {
   let locale = menu.pool.lookup('locale').getValue() as string;
   const box = csSelectionBox(menu, locale);
   let items: Object[] = [];
-  const explorer = (menu.mathItem as ExplorerMathItem)?.explorers?.speech;
-  const semantic = explorer?.semanticFocus();
-  const previous = Sre.clearspeakPreferences.currentPreference();
-  items = items.concat(basePreferences(previous));
-  if (semantic) {
-    const smart = Sre.clearspeakPreferences.relevantPreferences(semantic);
-    items = items.concat(smartPreferences(previous, smart, locale));
-  }
-  if (box) {
-    items.splice(2, 0, box);
+  if (menu.settings.speech) {
+    const explorer = (menu.mathItem as ExplorerMathItem)?.explorers?.speech;
+    const semantic = explorer?.semanticFocus();
+    const previous = Sre.clearspeakPreferences.currentPreference();
+    items = items.concat(basePreferences(previous));
+    if (semantic) {
+      const smart = Sre.clearspeakPreferences.relevantPreferences(semantic);
+      items = items.concat(smartPreferences(previous, smart, locale));
+    }
+    if (box) {
+      items.splice(2, 0, box);
+    }
   }
   return menu.factory.get('subMenu')(menu.factory, {
     items: items,
     id: 'Clearspeak'
   }, sub);
 }
-MJContextMenu.DynamicSubmenus.set('Clearspeak', clearspeakMenu);
+MJContextMenu.DynamicSubmenus.set('Clearspeak', [clearspeakMenu, 'speech']);
 
 let LOCALE_MENU: SubMenu = null;
 /**
@@ -209,4 +211,4 @@ export function localeMenu(menu: MJContextMenu, sub: Submenu) {
     items: radios, id: 'Language'}, sub);
   return LOCALE_MENU;
 }
-MJContextMenu.DynamicSubmenus.set('A11yLanguage', localeMenu);
+MJContextMenu.DynamicSubmenus.set('A11yLanguage', [localeMenu, 'speech']);
