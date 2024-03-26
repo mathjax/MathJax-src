@@ -55,9 +55,11 @@ export const BboldxConfiguration = Configuration.create('bboldx', {
     }
   },
   config(_config, jax) {
-    const {textConf, parseOptions} = jax.parseOptions.packageData.get('textmacros');
-    parseOptions.options.textmacros.packages.push('text-bboldx');
-    textConf.add('text-bboldx', jax, {});
+    const textmacros = jax.parseOptions.packageData.get('textmacros')
+    if (textmacros) {
+      textmacros.parseOptions.options.textmacros.packages.push('text-bboldx');
+      textmacros.textConf.add('text-bboldx', jax, {});
+    }
   },
   priority: 3   // load before base, since we override \mathbb
 });
