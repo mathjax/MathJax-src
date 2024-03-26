@@ -203,7 +203,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
         align: 'top',                      // placement of magnified expression
         backgroundColor: 'Blue',           // color for background of selected sub-expression
         backgroundOpacity: 20,             // opacity for background of selected sub-expression
-        braille: false,                    // switch on Braille output
+        braille: true,                     // switch on Braille output
         flame: false,                      // color collapsible sub-expressions
         foregroundColor: 'Black',          // color to use for text of selected sub-expression
         foregroundOpacity: 100,            // opacity for text of selected sub-expression
@@ -219,7 +219,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
         speech: true,                      // switch on speech output
         subtitles: true,                   // show speech as a subtitle
         treeColoring: false,               // tree color expression
-        viewBraille: false,                // display Braille output as subtitles
+        viewBraille: true,                 // display Braille output as subtitles
         voicing: false,                    // switch on speech output
       }
     };
@@ -257,12 +257,6 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
      * @return {ExplorerMathDocument}   The MathDocument (so calls can be chained)
      */
     public explorable(): ExplorerMathDocument {
-      if (this.options.a11y.speech) {
-        this.options.enableSpeech = true;
-      }
-      if (this.options.a11y.braille) {
-        this.options.enableBraille = true;
-      }
       if (!this.processed.isSet('explorer')) {
         if (this.options.enableExplorer) {
           if (!this.explorerRegions) {
@@ -325,18 +319,13 @@ export function setA11yOptions(document: HTMLDOCUMENT, options: {[key: string]: 
   for (let key in options) {
     if (document.options.a11y[key] !== undefined) {
       setA11yOption(document, key, options[key]);
-      if (key === 'locale') {
-        document.options.sre[key] = options[key];
-      }
-      continue;
-    }
-    if (sreOptions[key] !== undefined) {
+    } else if (sreOptions[key] !== undefined) {
       document.options.sre[key] = options[key];
     }
   }
   // Reinit explorers
   for (let item of document.math) {
-    (item as ExplorerMathItem).explorers.attach();
+    (item as ExplorerMathItem)?.explorers?.attach();
   }
 }
 
@@ -391,6 +380,10 @@ export function setA11yOption(document: HTMLDOCUMENT, option: string, value: str
       document.options.a11y.flame = true;
       break;
     }
+    break;
+  case 'locale':
+    document.options.sre.locale = value;
+    document.options.a11y.locale = value;
     break;
   default:
     document.options.a11y[option] = value;

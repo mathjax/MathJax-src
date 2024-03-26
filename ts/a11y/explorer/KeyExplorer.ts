@@ -478,8 +478,9 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       // the root node by default.
       this.current = this.node.childNodes[0] as HTMLElement;
     }
+    const options = this.document.options;
     let promise = Sre.sreReady();
-    if (this.generators.update(this.document.options)) {
+    if (this.generators.update(options)) {
       promise = promise.then(
         () => this.Speech()
       );
@@ -487,17 +488,15 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     this.current.setAttribute('tabindex', '0');
     this.current.focus();
     super.Start();
-    if (this.document.options.a11y.speech &&
-      this.document.options.a11y.subtitles) {
+    if (options.a11y.subtitles && options.a11y.speech && options.enableSpeech) {
       promise.then(
         () => this.region.Show(this.node, this.highlighter));
     }
-    if (this.document.options.a11y.braille &&
-      this.document.options.a11y.viewBraille) {
+    if (options.a11y.viewBraille && options.a11y.braille && options.enableBraille) {
       promise.then(
         () => this.brailleRegion.Show(this.node, this.highlighter));
     }
-    if (this.document.options.a11y.keyMagnifier) {
+    if (options.a11y.keyMagnifier) {
       this.magnifyRegion.Show(this.node, this.highlighter);
     }
     this.Update();
