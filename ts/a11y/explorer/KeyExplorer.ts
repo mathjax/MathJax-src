@@ -571,8 +571,8 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       }
     }
     if (this.active) {
-      this.stopEvent(event);
       if (this.Move(event)) {
+        this.stopEvent(event);
         this.Update();
         return;
       }
@@ -647,7 +647,8 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   public semanticFocus() {
     const node = this.current || this.node;
     const id = node.getAttribute('data-semantic-id');
-    const stree = this.generators.speechGenerator.getRebuilt().stree;
+    const stree = this.generators.speechGenerator.getRebuilt()?.stree;
+    if (!stree) return null;
     const snode = stree.root.querySelectorAll((x: any) => x.id.toString() === id)[0];
     return snode || stree.root;
   }
