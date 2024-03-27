@@ -111,7 +111,7 @@ export class MmlVisitor<N, T, D> extends SerializedMmlVisitor {
     }
     if (this.options.filterSRE) {
       const keys = Object.keys(list).filter(
-        id => id.match(/^(?:data-semantic-.*?|role|aria-(?:level|posinset|setsize))$/)
+        id => id.match(/^(?:data-semantic-.*?|role|aria-(?:level|posinset|setsize|owns))$/)
       );
       for (const key of keys) {
         delete list[key];
