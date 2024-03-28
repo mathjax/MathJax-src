@@ -506,9 +506,7 @@ export class Menu {
         this.a11yVar<boolean>('subtitles'),
         this.a11yVar<boolean>('viewBraille'),
         this.a11yVar<boolean>('voicing'),
-        this.a11yVar<string>('locale', value => {
-          MathJax._.a11y.sre.Sre.setupEngine({locale: value as string});
-        }),
+        this.a11yVar<string>('locale', locale => this.setLocale(locale)),
         this.a11yVar<string>('speechRules', value => {
           const [domain, style] = value.split('-');
           this.document.options.sre.domain = domain;
@@ -979,6 +977,14 @@ export class Menu {
    */
   protected setBrailleCode(code: string) {
     this.document.options.sre.braille = code;
+    this.rerender(STATE.COMPILED);
+  }
+
+  /**
+   * @param {string} locale  The speech locale
+   */
+  protected setLocale(locale: string) {
+    this.document.options.sre.locale = locale;
     this.rerender(STATE.COMPILED);
   }
 
