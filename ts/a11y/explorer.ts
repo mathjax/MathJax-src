@@ -383,7 +383,6 @@ export function setA11yOption(document: HTMLDOCUMENT, option: string, value: str
     break;
   case 'locale':
     document.options.sre.locale = value;
-    document.options.a11y.locale = value;
     break;
   default:
     document.options.a11y[option] = value;

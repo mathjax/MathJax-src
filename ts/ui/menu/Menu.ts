@@ -146,7 +146,7 @@ export class Menu {
       speech: true,
       braille: true,
       brailleCode: 'nemeth',
-      speechRules: 'mathspeek-default'
+      speechRules: 'clearspeak-default'
     },
     jax: {
       CHTML: null,
@@ -507,11 +507,20 @@ export class Menu {
         this.a11yVar<boolean>('viewBraille'),
         this.a11yVar<boolean>('voicing'),
         this.a11yVar<string>('locale', locale => this.setLocale(locale)),
-        this.a11yVar<string>('speechRules', value => {
-          const [domain, style] = value.split('-');
-          this.document.options.sre.domain = domain;
-          this.document.options.sre.style = style;
-        }),
+        {
+          name: 'speechRules',
+          getter: () => {
+            return this.settings['speechRules'];
+          },
+          setter: (value: string) => {
+            const [domain, style] = value.split('-');
+            this.settings['speechRules'] = value;
+            this.document.options.sre.domain = domain;
+            this.document.options.sre.style = style;
+            this.rerender(STATE.COMPILED);
+            this.saveUserSettings();
+          }
+        },
         this.a11yVar<string> ('magnification'),
         this.a11yVar<string> ('magnify'),
         this.a11yVar<boolean>('treeColoring'),
@@ -840,7 +849,7 @@ export class Menu {
       options.linebreaks.inline = settings.breakInline;
       if (!settings.speechRules) {
         const sre = this.document.options.sre;
-        settings.speechRules = `${sre.domain || 'mathspeak'}-${sre.style || 'default'}`;
+        settings.speechRules = `${sre.domain || 'clearspeak'}-${sre.style || 'default'}`;
       }
     });
   }

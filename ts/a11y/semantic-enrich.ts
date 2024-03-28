@@ -382,7 +382,7 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
       sre: expandable({
         speech: 'none',                    // by default no speech is included
         locale: 'en',                      // switch the locale
-        domain: 'mathspeak',               // speech rules domain
+        domain: 'clearspeak',               // speech rules domain
         style: 'default',                  // speech rules style
         braille: 'nemeth',                 // TODO: Dummy switch for braille
       }),
