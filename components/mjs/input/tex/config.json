@@ -12,7 +12,6 @@
       "input/tex/autoload",
       "input/tex/configmacros"
     ],
-    "exclude": ["input/tex/AllPackages.ts"],
     "excludeSubdirs": true
   },
   "webpack": {
