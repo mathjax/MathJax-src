@@ -293,7 +293,6 @@ export type DynamicFont = {
   files: DynamicFileList;
   sizeN: number;
   stretchN: number;
-  data: FontExtensionData<any, any>
 };
 
 /**
@@ -790,11 +789,10 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   public static addExtension(data: FontExtensionData<CharOptions, DelimiterData>, prefix: string = '') {
     const extension = {
       name: data.name,
-      prefix: prefix,
+      prefix: prefix || `[${data.name}-extension]/${this.JAX.toLowerCase()}/dynamic`,
       files: this.defineDynamicFiles(data.ranges, data.name),
       sizeN: this.defaultSizeVariants.length,
-      stretchN: this.defaultStretchVariants.length,
-      data: data
+      stretchN: this.defaultStretchVariants.length
     };
     this.dynamicExtensions.set(data.name, extension);
     for (const [src, dst] of [
@@ -858,13 +856,13 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * @return {string[]}                 The new CSS rules needed for this extension
    */
   public addExtension(data: FontExtensionData<C, D>, prefix: string = ''): string[] {
+    const jax = (this.constructor as typeof FontData<C, V, D>).JAX.toLowerCase();
     const dynamicFont = {
       name: data.name,
-      prefix: prefix,
+      prefix: prefix || `[${data.name}-extension]/${jax}/dynamic`,
       files: this.CLASS.defineDynamicFiles(data.ranges, prefix),
       sizeN: this.sizeVariants.length,
-      stretchN: this.stretchVariants.length,
-      data: data
+      stretchN: this.stretchVariants.length
     };
     this.CLASS.dynamicExtensions.set(data.name, dynamicFont);
 

@@ -5,10 +5,6 @@
       "output/svg.ts",
       "output/svg",
       "output/common"
-    ],
-    "exclude": [
-      "output/svg/ts5",
-      "output/svg/ts6"
     ]
   },
   "webpack": {

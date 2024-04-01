@@ -31,7 +31,7 @@ import {MathItem} from '../core/MathItem.js';
 import {ChtmlWrapper, ChtmlWrapperClass} from './chtml/Wrapper.js';
 import {ChtmlWrapperFactory} from './chtml/WrapperFactory.js';
 import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
-        ChtmlFontData, ChtmlFontDataClass} from './chtml/FontData.js';
+        ChtmlFontData, ChtmlFontDataClass, FontExtensionData} from './chtml/FontData.js';
 import {Usage} from './chtml/Usage.js';
 import * as LENGTHS from '../util/lengths.js';
 import {unicodeChars} from '../util/string.js';
@@ -165,8 +165,11 @@ CommonOutputJax<
   /**
    * @override
    */
-  public addExtension(name: string): string[] {
-    const css = super.addExtension(name);
+  public addExtension(
+    font: FontExtensionData<ChtmlCharOptions, ChtmlDelimiterData>,
+    prefix: string = ''
+  ): string[] {
+    const css = super.addExtension(font, prefix);
     if (css.length && this.options.adaptiveCSS && this.chtmlStyles) {
       this.adaptor.insertRules(this.chtmlStyles, css);
     }

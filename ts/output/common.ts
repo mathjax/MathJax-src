@@ -26,7 +26,8 @@ import {MathDocument} from '../core/MathDocument.js';
 import {MathItem, Metrics, STATE} from '../core/MathItem.js';
 import {MmlNode, TEXCLASS} from '../core/MmlTree/MmlNode.js';
 import {DOMAdaptor} from '../core/DOMAdaptor.js';
-import {FontData, FontDataClass, CharOptions, VariantData, DelimiterData, CssFontData} from './common/FontData.js';
+import {FontData, FontDataClass, CharOptions, VariantData, DelimiterData,
+        CssFontData, FontExtensionData} from './common/FontData.js';
 import {OptionList, separateOptions} from '../util/Options.js';
 import {CommonWrapper, CommonWrapperClass} from './common/Wrapper.js';
 import {CommonWrapperFactory} from './common/WrapperFactory.js';
@@ -269,12 +270,12 @@ export abstract class CommonOutputJax<
   /**
    * Add a registered font extension to the output jax's font.
    *
-   * @param {string} name   The name of the extension to add to this output jax's font
-   * @return {string[]}     New CSS rules needed for the font
+   * @param {FontExtensionData} font   The name of the extension to add to this output jax's font
+   * @param {string} prefix            The prefix for dynamically loaded files for this extension
+   * @return {string[]}                New CSS rules needed for the font
    */
-  public addExtension(name: string): string[] {
-    const font = this.font.CLASS.dynamicExtensions.get(name);
-    return this.font.addExtension(font.data);
+  public addExtension(font: FontExtensionData<CC, DD>, prefix: string = ''): string[] {
+    return this.font.addExtension(font, prefix);
   }
 
 
