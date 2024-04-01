@@ -74,7 +74,6 @@ export interface MathJaxObject extends MJObject {
     checkVersion: (name: string, version: string) => boolean;   // Check the version of an extension
     saveVersion: (name: string) => void;              // Set the version for a combined component
     pathFilters: FunctionList;                        // The filters to use for looking for package paths
-    addExtraLoads: (name: string, ...extra: string[]) => void;  // Add packages to be loaded after a given one
     addPackageData: (name: string, data: PackageConfig) => void;  // Add more package data for a package
   };
   startup?: any;
