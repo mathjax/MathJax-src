@@ -507,20 +507,12 @@ export class Menu {
         this.a11yVar<boolean>('viewBraille'),
         this.a11yVar<boolean>('voicing'),
         this.a11yVar<string>('locale', locale => this.setLocale(locale)),
-        {
-          name: 'speechRules',
-          getter: () => {
-            return this.settings['speechRules'];
-          },
-          setter: (value: string) => {
-            const [domain, style] = value.split('-');
-            this.settings['speechRules'] = value;
-            this.document.options.sre.domain = domain;
-            this.document.options.sre.style = style;
-            this.rerender(STATE.COMPILED);
-            this.saveUserSettings();
-          }
-        },
+        this.variable<string>('speechRules', value => {
+          const [domain, style] = value.split('-');
+          this.document.options.sre.domain = domain;
+          this.document.options.sre.style = style;
+          this.rerender(STATE.COMPILED);
+        }),
         this.a11yVar<string> ('magnification'),
         this.a11yVar<string> ('magnify'),
         this.a11yVar<boolean>('treeColoring'),
