@@ -498,7 +498,7 @@ export class Menu {
         this.a11yVar<boolean>('speech', speech => this.setSpeech(speech)),
         this.a11yVar<boolean>('braille', braille => this.setBraille(braille)),
         this.variable<string>('brailleCode', code => this.setBrailleCode(code)),
-        this.a11yVar<string> ('highlight'),
+        this.a11yVar<string> ('highlight', value => this.setHighlight(value)),
         this.a11yVar<string> ('backgroundColor'),
         this.a11yVar<string> ('backgroundOpacity'),
         this.a11yVar<string> ('foregroundColor'),
@@ -1015,8 +1015,11 @@ export class Menu {
   protected setCollapsible(collapse: boolean) {
     this.document.options.enableComplexity = collapse;
     if (collapse && !this.settings.enrich) {
-      this.settings.enrich = true;
-      this.setEnrichment(true);
+      this.settings.enrich = this.document.options.enableEnrichment = true;
+      this.setAccessibilityMenus();
+    }
+    if (!collapse) {
+      this.menu.pool.lookup('highlight').setValue('None');
     }
     if (!collapse || MathJax._?.a11y?.complexity) {
       this.rerender(STATE.COMPILED);
@@ -1025,6 +1028,21 @@ export class Menu {
       if (!MathJax._?.a11y?.explorer) {
         this.loadA11y('explorer');
       }
+    }
+  }
+
+  /**
+   * @param {string} value   The value that highlighting should have
+   */
+  protected setHighlight(value: string) {
+    if (value === 'None') return;
+    if (!this.settings.collapsible) {
+      //
+      //  Turn on collapsible math if it isn't already
+      //
+      const variable = this.menu.pool.lookup('collapsible');
+      variable.setValue(true);
+      (variable as any).items[0]?.executeCallbacks_?.();
     }
   }
 
