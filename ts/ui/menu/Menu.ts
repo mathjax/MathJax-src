@@ -43,7 +43,6 @@ import * as MenuUtil from './MenuUtil.js';
 
 import {Info, Parser, Rule, CssStyles, Submenu} from './mj-context-menu.js';
 
-
 /*==========================================================================*/
 
 /**
@@ -78,20 +77,21 @@ export interface MenuSettings {
   breakInline: boolean;
   autocollapse: boolean;
   collapsible: boolean;
+  enrich: boolean;
   inTabOrder: boolean;
   assistiveMml: boolean;
   // A11y settings
   backgroundColor: string;
   backgroundOpacity: string;
   braille: boolean;
-  explorer: boolean;
+  brailleCode: string;
   foregroundColor: string;
   foregroundOpacity: string;
   highlight: string;
-  locale: string;
   infoPrefix: boolean;
   infoRole: boolean;
   infoType: boolean;
+  locale: string;
   magnification: string;
   magnify: string;
   speech: boolean;
@@ -140,9 +140,13 @@ export class Menu {
       breakInline: true,
       autocollapse: false,
       collapsible: false,
+      enrich: true,
       inTabOrder: true,
       assistiveMml: false,
-      explorer: false
+      speech: true,
+      braille: true,
+      brailleCode: 'nemeth',
+      speechRules: 'mathspeek-default'
     },
     jax: {
       CHTML: null,
@@ -298,14 +302,15 @@ export class Menu {
         ' as MathML or in its original format, to the clipboard',
         ' (in browsers that support that).</p>',
         '<p><b>Math Settings:</b> These give you control over features of MathJax,',
-        ' such the size of the mathematics, and the mechanism used',
-        ' to display equations.</p>',
+        ' such the size of the mathematics, the mechanism used to display equations,',
+        ' how to handle equations that are too wide, and the language to use for',
+        ' MathJax\'s menus and error messages (not yet implemented in v4).',
+        '</p>',
         '<p><b>Accessibility</b>: MathJax can work with screen',
         ' readers to make mathematics accessible to the visually impaired.',
-        ' Turn on the explorer to enable generation of speech strings',
-        ' and the ability to investigate expressions interactively.</p>',
-        '<p><b>Language</b>: This menu lets you select the language used by MathJax',
-        ' for its menus and warning messages. (Not yet implemented in version 3.)</p>',
+        ' Turn on speech or braille generation to enable creation of speech strings',
+        ' and the ability to investigate expressions interactively.  You can control',
+        ' the style of the explorer in its menu.</p>',
         '</div>',
         '<p><b>Math Zoom</b>: If you are having difficulty reading an',
         ' equation, MathJax can enlarge it to help you see it better, or',
@@ -388,6 +393,20 @@ export class Menu {
   );
 
   /**
+   * The "Show As Speech Text" info box
+   */
+  protected brailleText = new SelectableInfo(
+    'MathJax Braille Code',
+    () => {
+      if (!this.menu.mathItem) return '';
+      return '<div style="font-size:125%; margin:0">'
+        + this.formatSource(this.menu.mathItem.outputData.braille)
+        + '</div>';
+    },
+    ''
+  );
+
+  /**
    * The "Show As Error Message" info box
    */
   protected errorMessage = new SelectableInfo(
@@ -442,13 +461,11 @@ export class Menu {
     const jax = this.document.outputJax;
     this.jax[jax.name] = jax;
     this.settings.renderer = jax.name;
-    if (MathJax._.a11y && MathJax._.a11y.explorer) {
-      Object.assign(this.settings, this.document.options.a11y);
-    }
     this.settings.scale = jax.options.scale;
     this.defaultSettings = Object.assign({}, this.settings);
     this.settings.overflow =
-      jax.options.displayOverflow.substring(0, 1).toUpperCase() + jax.options.displayOverflow.substring(1).toLowerCase();
+      jax.options.displayOverflow.substring(0, 1).toUpperCase() +
+      jax.options.displayOverflow.substring(1).toLowerCase();
     this.settings.breakInline = jax.options.linebreaks.inline;
   }
 
@@ -478,20 +495,18 @@ export class Menu {
         this.variable<boolean>('ctrl'),
         this.variable<boolean>('shift'),
         this.variable<string> ('scale', scale => this.setScale(scale)),
-        this.variable<boolean>('explorer', explore => this.setExplorer(explore)),
+        this.a11yVar<boolean>('speech', speech => this.setSpeech(speech)),
+        this.a11yVar<boolean>('braille', braille => this.setBraille(braille)),
+        this.variable<string>('brailleCode', code => this.setBrailleCode(code)),
         this.a11yVar<string> ('highlight'),
         this.a11yVar<string> ('backgroundColor'),
         this.a11yVar<string> ('backgroundOpacity'),
         this.a11yVar<string> ('foregroundColor'),
         this.a11yVar<string> ('foregroundOpacity'),
-        this.a11yVar<boolean>('speech'),
         this.a11yVar<boolean>('subtitles'),
-        this.a11yVar<boolean>('braille'),
         this.a11yVar<boolean>('viewBraille'),
         this.a11yVar<boolean>('voicing'),
-        this.a11yVar<string>('locale', value => {
-          MathJax._.a11y.sre.Sre.setupEngine({locale: value as string});
-        }),
+        this.a11yVar<string>('locale', locale => this.setLocale(locale)),
         this.a11yVar<string>('speechRules', value => {
           const [domain, style] = value.split('-');
           this.document.options.sre.domain = domain;
@@ -505,6 +520,7 @@ export class Menu {
         this.a11yVar<boolean>('infoPrefix'),
         this.variable<boolean>('autocollapse'),
         this.variable<boolean>('collapsible', collapse => this.setCollapsible(collapse)),
+        this.variable<boolean>('enrich', enrich => this.setEnrichment(enrich)),
         this.variable<boolean>('inTabOrder', tab => this.setTabOrder(tab)),
         this.variable<boolean>('assistiveMml', mml => this.setAssistiveMml(mml))
       ],
@@ -514,6 +530,7 @@ export class Menu {
           this.command('Original', 'Original Form', () => this.originalText.post()),
           this.rule(),
           this.command('Speech', 'Speech Text', () => this.speechText.post(), {disabled: true}),
+          this.command('Braille', 'Braille Code', () => this.brailleText.post(), {disabled: true}),
           this.command('SVG', 'SVG Image', () => this.postSvgImage(), {disabled: true}),
           this.submenu('ShowAnnotation', 'Annotation'),
           this.rule(),
@@ -524,6 +541,7 @@ export class Menu {
           this.command('Original', 'Original Form', () => this.copyOriginal()),
           this.rule(),
           this.command('Speech', 'Speech Text', () => this.copySpeechText(), {disabled: true}),
+          this.command('Braille', 'Braille Code', () => this.copyBrailleText(), {disabled: true}),
           this.command('SVG', 'SVG Image', () => this.copySvgImage(), {disabled: true}),
           this.submenu('CopyAnnotation', 'Annotation'),
           this.rule(),
@@ -546,6 +564,7 @@ export class Menu {
             this.checkbox('texHints', 'TeX hints', 'texHints'),
             this.checkbox('semantics', 'Original as annotation', 'semantics')
           ]),
+          this.submenu('Language', 'Language'),
           this.rule(),
           this.submenu('ZoomTrigger', 'Zoom Trigger', [
             this.command('ZoomNow', 'Zoom Once Now', () => this.zoom(null, '', this.menu.mathItem)),
@@ -568,30 +587,37 @@ export class Menu {
           this.rule(),
           this.command('Reset', 'Reset to defaults', () => this.resetDefaults())
         ]),
-        this.submenu('Accessibility', 'Accessibility', [
-          this.checkbox('Activate', 'Activate', 'explorer'),
-          this.submenu('Speech', 'Speech', [
-            this.checkbox('Speech', 'Speech Output', 'speech'),
-            this.checkbox('Subtitles', 'Speech Subtitles', 'subtitles'),
-            this.checkbox('Auto Voicing', 'Auto Voicing', 'voicing'),
-            this.checkbox('Braille', 'Braille Output', 'braille'),
-            this.checkbox('View Braille', 'Braille Subtitles', 'viewBraille'),
-            this.rule(),
-            this.submenu('A11yLanguage', 'Language'),
-            this.rule(),
-            this.submenu('Mathspeak', 'Mathspeak Rules', this.radioGroup('speechRules', [
-              ['mathspeak-default', 'Verbose'],
-              ['mathspeak-brief', 'Brief'],
-              ['mathspeak-sbrief', 'Superbrief']
-            ])),
-            this.submenu('Clearspeak', 'Clearspeak Rules', this.radioGroup('speechRules', [
-              ['clearspeak-default', 'Auto']
-            ])),
-            this.submenu('ChromeVox', 'ChromeVox Rules', this.radioGroup('speechRules', [
-              ['chromevox-default', 'Standard'],
-              ['chromevox-alternative', 'Alternative']
-            ]))
-          ]),
+        this.rule(),
+        this.label('Accessibility', '\xA0\xA0 Accessibility:'),
+        this.submenu('Speech', '\xA0 \xA0 Speech', [
+          this.checkbox('Generate', 'Generate', 'speech'),
+          this.checkbox('Subtitles', 'Show Subtitles', 'subtitles'),
+          this.checkbox('Auto Voicing', 'Auto Voicing', 'voicing'),
+          this.rule(),
+          this.label('Rules', 'Rules:'),
+          this.submenu('Mathspeak', 'Mathspeak', this.radioGroup('speechRules', [
+            ['mathspeak-default', 'Verbose'],
+            ['mathspeak-brief', 'Brief'],
+            ['mathspeak-sbrief', 'Superbrief']
+          ])),
+          this.submenu('Clearspeak', 'Clearspeak', this.radioGroup('speechRules', [
+            ['clearspeak-default', 'Auto']
+          ])),
+          this.submenu('ChromeVox', 'ChromeVox', this.radioGroup('speechRules', [
+            ['chromevox-default', 'Standard'],
+            ['chromevox-alternative', 'Alternative']
+          ])),
+          this.rule(),
+          this.submenu('A11yLanguage', 'Language')
+        ]),
+        this.submenu('Braille', '\xA0 \xA0 Braille', [
+          this.checkbox('Generate', 'Generate', 'braille'),
+          this.checkbox('Subtitles', 'Show Subtitles', 'viewBraille'),
+          this.rule(),
+          this.label('Code', 'Code Format:'),
+          this.radioGroup('brailleCode', [['nemeth', 'Nemeth'], ['ueb', 'UEB'], ['euro', 'Euro']])
+        ]),
+        this.submenu('Explorer', '\xA0 \xA0 Explorer', [
           this.submenu('Highlight', 'Highlight', [
             this.submenu('Background', 'Background', this.radioGroup('backgroundColor', [
               ['Blue'], ['Red'], ['Green'], ['Yellow'], ['Cyan'], ['Magenta'], ['White'], ['Black']
@@ -627,23 +653,47 @@ export class Menu {
             this.checkbox('Type', 'Type', 'infoType'),
             this.checkbox('Role', 'Role', 'infoRole'),
             this.checkbox('Prefix', 'Prefix', 'infoPrefix')
-          ], true),
-          this.rule(),
+          ], true)
+        ]),
+        this.submenu('Options', '\xA0 \xA0 Options', [
+          this.checkbox('Enrich', 'Semantic Enrichment', 'enrich'),
           this.checkbox('Collapsible', 'Collapsible Math', 'collapsible'),
           this.checkbox('AutoCollapse', 'Auto Collapse', 'autocollapse', {disabled: true}),
           this.rule(),
           this.checkbox('InTabOrder', 'Include in Tab Order', 'inTabOrder'),
           this.checkbox('AssistiveMml', 'Include Hidden MathML', 'assistiveMml')
         ]),
-        this.submenu('Language', 'Language'),
         this.rule(),
         this.command('About', 'About MathJax', () => this.about.post()),
         this.command('Help', 'MathJax Help', () => this.help.post())
       ]
     }) as MJContextMenu;
     const menu = this.menu;
+    menu.settings = this.settings;
     menu.findID('Settings', 'Overflow', 'Elide').disable();
+    menu.findID('Braille', 'ueb').hide();
     menu.setJax(this.jax);
+    this.attachDialogMenus(menu);
+    this.checkLoadableItems();
+    this.enableAccessibilityItems('Speech', this.settings.speech);
+    this.enableAccessibilityItems('Braille', this.settings.braille);
+    this.setAccessibilityMenus();
+    const cache: [string, string][] = [];
+    MJContextMenu.DynamicSubmenus.set(
+      'ShowAnnotation',
+      [AnnotationMenu.showAnnotations(
+        this.annotationBox, this.options.annotationTypes, cache), '']);
+    MJContextMenu.DynamicSubmenus.set(
+      'CopyAnnotation',
+      [AnnotationMenu.copyAnnotations(cache), '']);
+    CssStyles.addInfoStyles(this.document.document as any);
+    CssStyles.addMenuStyles(this.document.document as any);
+  }
+
+  /**
+   * @param {MJContextMenu} menu   The menu to attach
+   */
+  protected attachDialogMenus(menu: MJContextMenu) {
     this.about.attachMenu(menu);
     this.help.attachMenu(menu);
     this.originalText.attachMenu(menu);
@@ -651,20 +701,9 @@ export class Menu {
     this.originalText.attachMenu(menu);
     this.svgImage.attachMenu(menu);
     this.speechText.attachMenu(menu);
+    this.brailleText.attachMenu(menu);
     this.errorMessage.attachMenu(menu);
     this.zoomBox.attachMenu(menu);
-    this.checkLoadableItems();
-    this.enableExplorerItems(this.settings.explorer);
-    const cache: [string, string][] = [];
-    MJContextMenu.DynamicSubmenus.set(
-      'ShowAnnotation',
-      AnnotationMenu.showAnnotations(
-        this.annotationBox, this.options.annotationTypes, cache));
-    MJContextMenu.DynamicSubmenus.set(
-      'CopyAnnotation',
-      AnnotationMenu.copyAnnotations(cache));
-    CssStyles.addInfoStyles(this.document.document as any);
-    CssStyles.addMenuStyles(this.document.document as any);
   }
 
   /**
@@ -675,13 +714,11 @@ export class Menu {
    */
   protected checkLoadableItems() {
     if (MathJax && MathJax._ && MathJax.loader && MathJax.startup) {
-      if (this.settings.collapsible && (!MathJax._.a11y || !MathJax._.a11y.complexity)) {
-        this.loadA11y('complexity');
-      }
-      if (this.settings.explorer && (!MathJax._.a11y || !MathJax._.a11y.explorer)) {
+      if ((this.settings.enrich || this.settings.collapsible || this.settings.speech || this.settings.braille) &&
+          (!MathJax._?.a11y?.['semantic-enrich'])) {
         this.loadA11y('explorer');
       }
-      if (this.settings.assistiveMml && (!MathJax._.a11y || !MathJax._.a11y['assistive-mml'])) {
+      if (this.settings.assistiveMml && !MathJax._?.a11y?.['assistive-mml']) {
         this.loadA11y('assistive-mml');
       }
     } else {
@@ -691,22 +728,26 @@ export class Menu {
           menu.findID('Settings', 'Renderer', name).disable();
         }
       }
-      menu.findID('Accessibility', 'Activate').disable();
-      menu.findID('Accessibility', 'AutoCollapse').disable();
-      menu.findID('Accessibility', 'Collapsible').disable();
+      menu.findID('Speech').disable();
+      menu.findID('Braille').disable();
+      menu.findID('Explorer').disable();
+      menu.findID('Options', 'AutoCollapse').disable();
+      menu.findID('Options', 'Collapsible').disable();
+      menu.findID('Options', 'Enrich').disable();
+      menu.findID('Options', 'AssistiveMml').disable();
     }
   }
 
   /**
-   * Enable/disable the Explorer submenu items
+   * Enable/disable an assistive submenu's items
    *
    * @param {boolean} enable  True to enable, false to disable
    */
-  protected enableExplorerItems(enable: boolean) {
-    const menu = (this.menu.findID('Accessibility', 'Activate') as Submenu).menu;
+  protected enableAccessibilityItems(name: string, enable: boolean) {
+    const menu = (this.menu.findID(name) as Submenu).submenu;
     for (const item of menu.items.slice(1)) {
-      if (item instanceof Rule) break;
-      enable ? item.enable() : item.disable();
+      if (item instanceof Rule) continue;
+      enable && (!(item instanceof Submenu) || item.submenu.items.length) ? item.enable() : item.disable();
     }
 
   }
@@ -753,7 +794,7 @@ export class Menu {
    * @param {{[key: string]: any}} options The options.
    */
   protected setA11y(options: {[key: string]: any}) {
-    if (MathJax._.a11y && MathJax._.a11y.explorer) {
+    if (MathJax._?.a11y?.explorer) {
       MathJax._.a11y.explorer_ts.setA11yOptions(this.document, options);
     }
   }
@@ -764,7 +805,7 @@ export class Menu {
    * @return {any}            The value of the option
    */
   protected getA11y(option: string): any {
-    if (MathJax._.a11y && MathJax._.a11y.explorer) {
+    if (MathJax._?.a11y?.explorer) {
       if (this.document.options.a11y[option] !== undefined) {
         return this.document.options.a11y[option];
       }
@@ -780,16 +821,27 @@ export class Menu {
    */
   protected applySettings() {
     this.setTabOrder(this.settings.inTabOrder);
-    this.document.options.enableAssistiveMml = this.settings.assistiveMml;
+    const options = this.document.options;
+    options.enableAssistiveMml = this.settings.assistiveMml;
+    options.enableSpeech = this.settings.speech;
+    options.enableBraille = this.settings.braille;
+    options.enableExplorer = this.settings.enrich;
     const renderer = this.settings.renderer.replace(/[^a-zA-Z0-9]/g, '') || 'CHTML';
-    const promise = (renderer !== this.defaultSettings.renderer ?
-                     this.setRenderer(renderer, false) :
-                     Promise.resolve());
+    const promise = (Menu._loadingPromise || Promise.resolve()).then(
+      () => (renderer !== this.defaultSettings.renderer ?
+             this.setRenderer(renderer, false) :
+             Promise.resolve())
+    );
     promise.then(() => {
-      this.document.options.enableExplorer = this.settings.explorer;
-      this.document.outputJax.options.scale = parseFloat(this.settings.scale);
-      this.document.outputJax.options.displayOverflow = this.settings.overflow.toLowerCase();
-      this.document.outputJax.options.linebreaks.inline = this.settings.breakInline;
+      const settings = this.settings;
+      const options = this.document.outputJax.options;
+      options.scale = parseFloat(settings.scale);
+      options.displayOverflow = settings.overflow.toLowerCase();
+      options.linebreaks.inline = settings.breakInline;
+      if (!settings.speechRules) {
+        const sre = this.document.options.sre;
+        settings.speechRules = `${sre.domain || 'mathspeak'}-${sre.style || 'default'}`;
+      }
     });
   }
 
@@ -874,7 +926,7 @@ export class Menu {
    */
   protected setAssistiveMml(mml: boolean) {
     this.document.options.enableAssistiveMml = mml;
-    if (!mml || (MathJax._.a11y && MathJax._.a11y['assistive-mml'])) {
+    if (!mml || MathJax._?.a11y?.['assistive-mml']) {
       this.rerender();
     } else {
       this.loadA11y('assistive-mml');
@@ -882,13 +934,68 @@ export class Menu {
   }
 
   /**
-   * @param {boolean} explore   True to enable the explorer, false to not
+   * Enable/disable assistive menus based on enrichment setting
    */
-  protected setExplorer(explore: boolean) {
-    this.enableExplorerItems(explore);
-    this.document.options.enableExplorer = explore;
-    if (!explore || (MathJax._.a11y && MathJax._.a11y.explorer)) {
-      this.rerender(this.settings.collapsible ? STATE.RERENDER : STATE.COMPILED);
+  protected setAccessibilityMenus() {
+    const enable = this.settings.enrich;
+    const method = (enable ? 'enable' : 'disable');
+    ['Speech', 'Braille', 'Explorer'].forEach(id => this.menu.findID(id)[method]());
+    if (!enable) {
+      this.settings.collapsible = false;
+      this.document.options.enableCollapsible = false;
+    }
+  }
+
+  /**
+   * @param {boolean} speech   True to enable speech, false to not
+   */
+  protected setSpeech(speech: boolean) {
+    this.enableAccessibilityItems('Speech', speech);
+    this.document.options.enableSpeech = speech;
+    if (!speech || MathJax._?.a11y?.['semantic-enrich']) {
+      this.rerender(STATE.COMPILED);
+    } else {
+      this.loadA11y('explorer');
+    }
+  }
+
+  /**
+   * @param {boolean} braille   True to enable braille, false to not
+   */
+  protected setBraille(braille: boolean) {
+    this.enableAccessibilityItems('Braille', braille);
+    this.document.options.enableBraille = braille;
+    if (!braille || MathJax._?.a11y?.['semantic-enrich']) {
+      this.rerender(STATE.COMPILED);
+    } else {
+      this.loadA11y('explorer');
+    }
+  }
+
+  /**
+   * @param {string} code  The Braille code format (nemeth or euro)
+   */
+  protected setBrailleCode(code: string) {
+    this.document.options.sre.braille = code;
+    this.rerender(STATE.COMPILED);
+  }
+
+  /**
+   * @param {string} locale  The speech locale
+   */
+  protected setLocale(locale: string) {
+    this.document.options.sre.locale = locale;
+    this.rerender(STATE.COMPILED);
+  }
+
+  /**
+   * @param {boolean} enrich   True to enable enriched math, false to not
+   */
+  protected setEnrichment(enrich: boolean) {
+    this.document.options.enableEnrichment = this.document.options.enableExplorer = enrich;
+    this.setAccessibilityMenus();
+    if (!enrich || MathJax._?.a11y?.['semantic-enrich']) {
+      this.rerender(STATE.COMPILED);
     } else {
       this.loadA11y('explorer');
     }
@@ -899,10 +1006,17 @@ export class Menu {
    */
   protected setCollapsible(collapse: boolean) {
     this.document.options.enableComplexity = collapse;
-    if (!collapse || (MathJax._.a11y && MathJax._.a11y.complexity)) {
+    if (collapse && !this.settings.enrich) {
+      this.settings.enrich = true;
+      this.setEnrichment(true);
+    }
+    if (!collapse || MathJax._?.a11y?.complexity) {
       this.rerender(STATE.COMPILED);
     } else {
       this.loadA11y('complexity');
+      if (!MathJax._?.a11y?.explorer) {
+        this.loadA11y('explorer');
+      }
     }
   }
 
@@ -1015,6 +1129,7 @@ export class Menu {
       const document = this.document;
       this.document = startup.document = startup.getDocument();
       this.document.menu = this;
+      this.setA11y(this.settings);
       this.document.outputJax.reset();
       this.transferMathList(document);
       this.document.processed = document.processed;
@@ -1026,7 +1141,6 @@ export class Menu {
       }
     });
   }
-
 
   /**
    * @param {MenuMathDocument} document  The original document whose list is to be transferred
@@ -1088,7 +1202,7 @@ export class Menu {
    * @param {boolean} breaks      True if there are inline breaks
    * @returns {Promise<string>}   A promise returning the serialized SVG
    */
-  protected typesetSVG(math: HTMLMATHITEM, cache: string, breaks: boolean): Promise<string> {
+  protected async typesetSVG(math: HTMLMATHITEM, cache: string, breaks: boolean): Promise<string> {
     const jax = this.jax.SVG as SVG<HTMLElement, Text, Document>;
     const div = jax.html('div');
     if (cache === 'global') {
@@ -1111,7 +1225,7 @@ export class Menu {
       math.root = root;
       jax.options.fontCache = cache;
       return this.formatSvg(jax.adaptor.innerHTML(div));
-    })
+    });
   }
 
   /**
@@ -1226,6 +1340,13 @@ export class Menu {
   }
 
   /**
+   * Copy the speech text to the clipboard
+   */
+  protected copyBrailleText() {
+    MenuUtil.copyToClipboard(this.menu.mathItem.outputData.braille);
+  }
+
+  /**
    * Copy the error message to the clipboard
    */
   protected copyErrorMessage() {
@@ -1290,9 +1411,7 @@ export class Menu {
       getter: () => this.getA11y(name),
       setter: (value: T) => {
         (this.settings as any)[name] = value;
-        let options: {[key: string]: any} = {};
-        options[name] = value;
-        this.setA11y(options);
+        this.setA11y({[name]: value});
         action && action(value);
         this.saveUserSettings();
       }
