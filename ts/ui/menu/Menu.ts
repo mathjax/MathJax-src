@@ -684,9 +684,6 @@ export class Menu {
     menu.setJax(this.jax);
     this.attachDialogMenus(menu);
     this.checkLoadableItems();
-    this.enableAccessibilityItems('Speech', this.settings.speech);
-    this.enableAccessibilityItems('Braille', this.settings.braille);
-    this.setAccessibilityMenus();
     const cache: [string, string][] = [];
     MJContextMenu.DynamicSubmenus.set(
       'ShowAnnotation',
@@ -832,9 +829,9 @@ export class Menu {
     this.setTabOrder(this.settings.inTabOrder);
     const options = this.document.options;
     options.enableAssistiveMml = this.settings.assistiveMml;
-    options.enableSpeech = this.settings.speech;
-    options.enableBraille = this.settings.braille;
-    options.enableExplorer = this.settings.enrich;
+    this.enableAccessibilityItems('Speech', this.settings.speech);
+    this.enableAccessibilityItems('Braille', this.settings.braille);
+    this.setAccessibilityMenus();
     const renderer = this.settings.renderer.replace(/[^a-zA-Z0-9]/g, '') || 'CHTML';
     const promise = (Menu._loadingPromise || Promise.resolve()).then(
       () => (renderer !== this.defaultSettings.renderer ?
@@ -949,6 +946,8 @@ export class Menu {
     const enable = this.settings.enrich;
     const method = (enable ? 'enable' : 'disable');
     ['Speech', 'Braille', 'Explorer'].forEach(id => this.menu.findID(id)[method]());
+    const options = this.document.options;
+    options.enableSpeech = options.enableBraille = options.enableExplorer = enable;
     if (!enable) {
       this.settings.collapsible = false;
       this.document.options.enableCollapsible = false;
@@ -1001,7 +1000,7 @@ export class Menu {
    * @param {boolean} enrich   True to enable enriched math, false to not
    */
   protected setEnrichment(enrich: boolean) {
-    this.document.options.enableEnrichment = this.document.options.enableExplorer = enrich;
+    this.document.options.enableEnrichment = enrich;
     this.setAccessibilityMenus();
     if (!enrich || MathJax._?.a11y?.['semantic-enrich']) {
       this.rerender(STATE.COMPILED);
