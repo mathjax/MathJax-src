@@ -498,7 +498,7 @@ export class Menu {
         this.a11yVar<boolean>('speech', speech => this.setSpeech(speech)),
         this.a11yVar<boolean>('braille', braille => this.setBraille(braille)),
         this.variable<string>('brailleCode', code => this.setBrailleCode(code)),
-        this.a11yVar<string> ('highlight'),
+        this.a11yVar<string> ('highlight', value => this.setHighlight(value)),
         this.a11yVar<string> ('backgroundColor'),
         this.a11yVar<string> ('backgroundOpacity'),
         this.a11yVar<string> ('foregroundColor'),
@@ -507,20 +507,12 @@ export class Menu {
         this.a11yVar<boolean>('viewBraille'),
         this.a11yVar<boolean>('voicing'),
         this.a11yVar<string>('locale', locale => this.setLocale(locale)),
-        {
-          name: 'speechRules',
-          getter: () => {
-            return this.settings['speechRules'];
-          },
-          setter: (value: string) => {
-            const [domain, style] = value.split('-');
-            this.settings['speechRules'] = value;
-            this.document.options.sre.domain = domain;
-            this.document.options.sre.style = style;
-            this.rerender(STATE.COMPILED);
-            this.saveUserSettings();
-          }
-        },
+        this.variable<string>('speechRules', value => {
+          const [domain, style] = value.split('-');
+          this.document.options.sre.domain = domain;
+          this.document.options.sre.style = style;
+          this.rerender(STATE.COMPILED);
+        }),
         this.a11yVar<string> ('magnification'),
         this.a11yVar<string> ('magnify'),
         this.a11yVar<boolean>('treeColoring'),
@@ -684,9 +676,6 @@ export class Menu {
     menu.setJax(this.jax);
     this.attachDialogMenus(menu);
     this.checkLoadableItems();
-    this.enableAccessibilityItems('Speech', this.settings.speech);
-    this.enableAccessibilityItems('Braille', this.settings.braille);
-    this.setAccessibilityMenus();
     const cache: [string, string][] = [];
     MJContextMenu.DynamicSubmenus.set(
       'ShowAnnotation',
@@ -832,9 +821,9 @@ export class Menu {
     this.setTabOrder(this.settings.inTabOrder);
     const options = this.document.options;
     options.enableAssistiveMml = this.settings.assistiveMml;
-    options.enableSpeech = this.settings.speech;
-    options.enableBraille = this.settings.braille;
-    options.enableExplorer = this.settings.enrich;
+    this.enableAccessibilityItems('Speech', this.settings.speech);
+    this.enableAccessibilityItems('Braille', this.settings.braille);
+    this.setAccessibilityMenus();
     const renderer = this.settings.renderer.replace(/[^a-zA-Z0-9]/g, '') || 'CHTML';
     const promise = (Menu._loadingPromise || Promise.resolve()).then(
       () => (renderer !== this.defaultSettings.renderer ?
@@ -949,6 +938,8 @@ export class Menu {
     const enable = this.settings.enrich;
     const method = (enable ? 'enable' : 'disable');
     ['Speech', 'Braille', 'Explorer'].forEach(id => this.menu.findID(id)[method]());
+    const options = this.document.options;
+    options.enableSpeech = options.enableBraille = options.enableExplorer = enable;
     if (!enable) {
       this.settings.collapsible = false;
       this.document.options.enableCollapsible = false;
@@ -1001,7 +992,7 @@ export class Menu {
    * @param {boolean} enrich   True to enable enriched math, false to not
    */
   protected setEnrichment(enrich: boolean) {
-    this.document.options.enableEnrichment = this.document.options.enableExplorer = enrich;
+    this.document.options.enableEnrichment = enrich;
     this.setAccessibilityMenus();
     if (!enrich || MathJax._?.a11y?.['semantic-enrich']) {
       this.rerender(STATE.COMPILED);
@@ -1016,8 +1007,11 @@ export class Menu {
   protected setCollapsible(collapse: boolean) {
     this.document.options.enableComplexity = collapse;
     if (collapse && !this.settings.enrich) {
-      this.settings.enrich = true;
-      this.setEnrichment(true);
+      this.settings.enrich = this.document.options.enableEnrichment = true;
+      this.setAccessibilityMenus();
+    }
+    if (!collapse) {
+      this.menu.pool.lookup('highlight').setValue('None');
     }
     if (!collapse || MathJax._?.a11y?.complexity) {
       this.rerender(STATE.COMPILED);
@@ -1026,6 +1020,21 @@ export class Menu {
       if (!MathJax._?.a11y?.explorer) {
         this.loadA11y('explorer');
       }
+    }
+  }
+
+  /**
+   * @param {string} value   The value that highlighting should have
+   */
+  protected setHighlight(value: string) {
+    if (value === 'None') return;
+    if (!this.settings.collapsible) {
+      //
+      //  Turn on collapsible math if it isn't already
+      //
+      const variable = this.menu.pool.lookup('collapsible');
+      variable.setValue(true);
+      (variable as any).items[0]?.executeCallbacks_?.();
     }
   }
 
