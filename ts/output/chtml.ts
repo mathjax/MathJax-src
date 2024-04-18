@@ -291,7 +291,7 @@ CommonOutputJax<
     //    and call to getBBox().w in TextNode.ts)
     //
     if (width !== null) {
-      styles.width = this.fixed(width * this.math.metrics.scale * rscale) + 'em';
+      styles.width = this.fixed(width * this.math.metrics.scale) + 'em';
     }
     //
     return this.html('mjx-utext', {variant: variant, style: styles}, [this.text(text)]);
