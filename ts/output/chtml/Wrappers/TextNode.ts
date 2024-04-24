@@ -117,8 +117,7 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<N, T, D> 
       if (text.length === 0) return;
       const bbox = this.getBBox();
       if (variant === '-explicitFont') {
-        const {scale} = this.parent.getBBox();
-        adaptor.append(parent, this.jax.unknownText(text, variant, bbox.w, scale));
+        adaptor.append(parent, this.jax.unknownText(text, variant, bbox.w));
       } else {
         let utext = '';
         const chars = this.remappedText(text, variant);

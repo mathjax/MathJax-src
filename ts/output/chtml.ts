@@ -272,7 +272,7 @@ CommonOutputJax<
   /**
    * @override
    */
-  public unknownText(text: string, variant: string, width: number = null, rscale: number = 1) {
+  public unknownText(text: string, variant: string, width: number = null) {
     const styles: StyleList = {};
     const scale = 100 / this.math.metrics.scale;
     if (scale !== 100) {
