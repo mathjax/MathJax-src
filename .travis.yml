@@ -1,17 +1,29 @@
-dist: jammy
-language: node_js
-node_js:
-- stable
-sudo: false
-script:
-- components/bin/version
-- npm config fix
-- npm install
-- npm run -s link:full
-- npm run -s build-all
 branches:
   only:
   - "/^\\d+\\.\\d+/"
+
+dist: jammy
+
+language: node_js
+
+node_js:
+  - stable
+
+sudo: false
+
+before_install:
+  - npm install -g pnpm
+  - pnpm --version
+
+install:
+  - pnpm install
+
+script:
+  - npm config fix
+  - components/bin/version
+  - pnpm -s link:full
+  - pnpm -s build-all
+
 deploy:
   provider: npm
   email: manager@mathjax.org
