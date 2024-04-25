@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       mathjax-modern-font:
-        specifier: ^4.0.0-beta.4
-        version: 4.0.0-beta.4
+        specifier: ^4.0.0-beta.5
+        version: 4.0.0-beta.5
       mhchemparser:
         specifier: ^4.2.1
         version: 4.2.1
@@ -762,8 +762,8 @@ packages:
     resolution: {integrity: sha512-IJ4uwUTi2qCccrioU6g9g/5rvvVl13bsdczUUcqbciD9iLr095yj8DQKdObriEvuNSx325N1rV1O0sJFszx75g==}
     engines: {node: 14 || >=16.14}
 
-  mathjax-modern-font@4.0.0-beta.4:
-    resolution: {integrity: sha512-xYZz9/bEudc6Ire4UCFgBFqtfRpAiseh55MYHkqYSBhmaIjf5LYiveYDbCh+S+aRqkU/sMeMN+7qY7re06lEgw==}
+  mathjax-modern-font@4.0.0-beta.5:
+    resolution: {integrity: sha512-+OiJ6czV4cNRnIAIyqvrwjfetTvWeOMN25jFxihiK+PNrqWjltNbx2+adBwngsEETIzymzIS6Qve0irSxkcR4w==}
 
   merge-stream@2.0.0:
     resolution: {integrity: sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==}
@@ -2024,7 +2024,7 @@ snapshots:
 
   lru-cache@10.0.1: {}
 
-  mathjax-modern-font@4.0.0-beta.4: {}
+  mathjax-modern-font@4.0.0-beta.5: {}
 
   merge-stream@2.0.0: {}
 
