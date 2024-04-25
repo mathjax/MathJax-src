@@ -19,10 +19,13 @@ install:
   - pnpm install
 
 script:
-  - npm config fix
   - components/bin/version
   - pnpm -s link:full
   - pnpm -s build-all
+
+before_deplay:
+  - npm install -g npm@9
+  - npm config fix
 
 deploy:
   provider: npm
