@@ -60,7 +60,7 @@ export interface SvgDelimiterData extends DelimiterData {
  */
 export interface SvgFontExtensionData<C extends SvgCharOptions, D extends SvgDelimiterData>
 extends FontExtensionData<C, D> {
-  cacheIds: {[variant: string]: string}
+  cacheIds?: {[variant: string]: string}
 }
 
 
