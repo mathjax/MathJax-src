@@ -33,6 +33,7 @@ import {MmlMunderover} from '../../../core/MmlTree/MmlNodes/munderover.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
 import {ParseUtil} from '../ParseUtil.js';
+import { UnitUtil } from '../UnitUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import {Property, PropertyList} from '../../../core/Tree/Node.js';
 import StackItemFactory from '../StackItemFactory.js';
@@ -1376,15 +1377,15 @@ export class ArrayItem extends BaseItem {
       const rows = (this.arraydef['rowspacing'] as string).split(/ /);
       if (!this.getProperty('rowspacing')) {
         // @test Array Custom Linebreak
-        let dimem = ParseUtil.dimen2em(rows[0]);
+        let dimem = UnitUtil.dimen2em(rows[0]);
         this.setProperty('rowspacing', dimem);
       }
       const rowspacing = this.getProperty('rowspacing') as number;
       while (rows.length < this.table.length) {
-        rows.push(ParseUtil.em(rowspacing));
+        rows.push(UnitUtil.em(rowspacing));
       }
-      rows[this.table.length - 1] = ParseUtil.em(
-        Math.max(0, rowspacing + ParseUtil.dimen2em(spacing)));
+      rows[this.table.length - 1] = UnitUtil.em(
+        Math.max(0, rowspacing + UnitUtil.dimen2em(spacing)));
       this.arraydef['rowspacing'] = rows.join(' ');
     }
   }

@@ -27,6 +27,7 @@ import {ParseMethod} from '../Types.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import {ParseUtil} from '../ParseUtil.js';
+import {UnitUtil} from '../UnitUtil.js';
 import {StackItem} from '../StackItem.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import * as BussproofsUtil from './BussproofsUtil.js';
@@ -80,7 +81,7 @@ BussproofsMethods.Axiom = function(parser: TexParser, name: string) {
  */
 const paddedContent = function(parser: TexParser, content: string): MmlNode {
   // Add padding on either site.
-  let nodes = ParseUtil.internalMath(parser, ParseUtil.trimSpaces(content), 0);
+  let nodes = ParseUtil.internalMath(parser, UnitUtil.trimSpaces(content), 0);
   if (!nodes[0].childNodes[0].childNodes.length) {
     return parser.create('node', 'mrow', []);
   }

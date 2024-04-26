@@ -26,6 +26,7 @@ import TexParser from './TexParser.js';
 import TexError from './TexError.js';
 import {lookup} from '../../util/Options.js';
 import {ParseUtil} from './ParseUtil.js';
+import { UnitUtil } from './UnitUtil.js';
 
 /***********************************************************************/
 
@@ -233,7 +234,7 @@ export class ColumnParser {
    */
   public getDimen(state: ColumnState) {
     const dim = this.getBraces(state) || '';
-    if (!ParseUtil.matchDimen(dim)[0]) {
+    if (!UnitUtil.matchDimen(dim)[0]) {
       throw new TexError('MissingColumnDimOrUnits',
                          'Missing dimension or its units for %1 column declaration', state.c);
     }

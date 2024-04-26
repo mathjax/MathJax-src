@@ -25,6 +25,7 @@
 import {ArrayItem, EqnArrayItem} from '../base/BaseItems.js';
 import {StackItem} from '../StackItem.js';
 import {ParseUtil} from '../ParseUtil.js';
+import {UnitUtil} from '../UnitUtil.js';
 import {ParseMethod, ParseResult} from '../Types.js';
 import {AmsMethods} from '../ams/AmsMethods.js';
 import BaseMethods from '../base/BaseMethods.js';
@@ -74,7 +75,7 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
       align = parser.GetBrackets(`\\begin{${begin.getName()}}`, parser.options.mathtools['smallmatrix-align']);
     }
     return MathtoolsMethods.Array(
-      parser, begin, open, close, align, ParseUtil.em(1 / 3), '.2em', 'S', 1
+      parser, begin, open, close, align, UnitUtil.em(1 / 3), '.2em', 'S', 1
     );
   },
 
@@ -100,7 +101,7 @@ export const MathtoolsMethods: Record<string, ParseMethod> = {
       } else {
         width = arg;
       }
-      if (width && !ParseUtil.matchDimen(width)[0]) {
+      if (width && !UnitUtil.matchDimen(width)[0]) {
         throw new TexError('BadWidth', 'Width for %1 must be a dimension', name);
       }
     }

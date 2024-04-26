@@ -31,6 +31,7 @@ import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import {TexConstant} from '../TexConstants.js';
 import {ParseUtil} from '../ParseUtil.js';
+import {UnitUtil} from '../UnitUtil.js';
 import {PropertyList} from '../../../core/Tree/Node.js';
 import {MmlNode, TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
 import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
@@ -980,7 +981,7 @@ BaseMethods.Phantom = function(parser: TexParser, name: string, v: string, h: st
  */
 BaseMethods.Smash = function(parser: TexParser, name: string) {
   // @test Smash, Smash Top, Smash Bottom
-  const bt = ParseUtil.trimSpaces(parser.GetBrackets(name, ''));
+  const bt = UnitUtil.trimSpaces(parser.GetBrackets(name, ''));
   const smash = parser.create('node', 'mpadded', [parser.ParseArg(name)]);
   // TEMP: Changes here:
   switch (bt) {
@@ -1416,7 +1417,7 @@ BaseMethods.Entry = function(parser: TexParser, name: string) {
   // i >= parser.i
   const text = str.substring(parser.i, i);
   if (!text.match(/^\s*\\text[^a-zA-Z]/) || close !== text.replace(/\s+$/, '').length - 1) {
-    const internal = ParseUtil.internalMath(parser, ParseUtil.trimSpaces(text), 0);
+    const internal = ParseUtil.internalMath(parser, UnitUtil.trimSpaces(text), 0);
     parser.PushAll(internal);
     parser.i = i;
   }
@@ -1451,7 +1452,7 @@ BaseMethods.CrLaTeX = function(parser: TexParser, name: string, nobrackets: bool
     }
     if (parser.string.charAt(parser.i) === '[') {
       let dim = parser.GetBrackets(name, '');
-      let [value, unit, ] = ParseUtil.matchDimen(dim);
+      let [value, unit, ] = UnitUtil.matchDimen(dim);
       // @test Custom Linebreak
       if (dim && !value) {
         // @test Dimension Error
@@ -1672,9 +1673,9 @@ BaseMethods.IndentAlign = function (parser: TexParser, begin: StackItem) {
   const first = parser.GetBrackets(name, '');
   let shift = parser.GetBrackets(name, '');
   const last = parser.GetBrackets(name, '');
-  if ((first && !ParseUtil.matchDimen(first)[0]) ||
-      (shift && !ParseUtil.matchDimen(shift)[0]) ||
-      (last && !ParseUtil.matchDimen(last)[0])) {
+  if ((first && !UnitUtil.matchDimen(first)[0]) ||
+      (shift && !UnitUtil.matchDimen(shift)[0]) ||
+      (last && !UnitUtil.matchDimen(last)[0])) {
     throw new TexError('BracketMustBeDimension', 'Bracket argument to %1 must be a dimension', name);
   }
   //

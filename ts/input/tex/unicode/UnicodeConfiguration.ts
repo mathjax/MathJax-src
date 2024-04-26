@@ -28,7 +28,7 @@ import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
 import {CommandMap} from '../TokenMap.js';
 import {ParseMethod} from '../Types.js';
-import {ParseUtil} from '../ParseUtil.js';
+import {UnitUtil} from '../UnitUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import {numeric} from '../../../util/Entities.js';
 import {Other} from '../base/BaseConfiguration.js';
@@ -59,7 +59,7 @@ UnicodeMethods.Unicode = function(parser: TexParser, name: string) {
   if (font.match(/;/)) {
     throw new TexError('BadFont', 'Font name for %1 can\'t contain semicolons',  parser.currentCS);
   }
-  let n = ParseUtil.trimSpaces(parser.GetArgument(name)).replace(/^0x/, 'x');
+  let n = UnitUtil.trimSpaces(parser.GetArgument(name)).replace(/^0x/, 'x');
   if (!n.match(/^(x[0-9A-Fa-f]+|[0-9]+)$/)) {
     throw new TexError('BadUnicode', 'Argument to %1 must be a number', parser.currentCS);
   }

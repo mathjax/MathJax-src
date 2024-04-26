@@ -30,6 +30,7 @@ import * as sm from '../TokenMap.js';
 import {Token, Macro} from '../Token.js';
 import BaseMethods from '../base/BaseMethods.js';
 import {ParseUtil} from '../ParseUtil.js';
+import {UnitUtil} from '../UnitUtil.js';
 import {StackItem} from '../StackItem.js';
 import NewcommandUtil from './NewcommandUtil.js';
 
@@ -60,7 +61,7 @@ NewcommandMethods.NewCommand = function(parser: TexParser, name: string) {
  */
 NewcommandMethods.NewEnvironment = function(parser: TexParser, name: string) {
   // @test Newenvironment Empty, Newenvironment Content
-  let env = ParseUtil.trimSpaces(parser.GetArgument(name));
+  let env = UnitUtil.trimSpaces(parser.GetArgument(name));
   let n = NewcommandUtil.GetArgCount(parser, name);
   let opt = parser.GetBrackets(name);
   let bdef = parser.GetArgument(name);
