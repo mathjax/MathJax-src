@@ -200,10 +200,10 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
         aria: true,
       }),
       a11y: {
+        ...BaseDocument.OPTIONS.a11y,
         align: 'top',                      // placement of magnified expression
         backgroundColor: 'Blue',           // color for background of selected sub-expression
         backgroundOpacity: 20,             // opacity for background of selected sub-expression
-        braille: true,                     // switch on Braille output
         flame: false,                      // color collapsible sub-expressions
         foregroundColor: 'Black',          // color to use for text of selected sub-expression
         foregroundOpacity: 100,            // opacity for text of selected sub-expression
@@ -216,7 +216,6 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
         magnification: 'None',             // type of magnification
         magnify: '400%',                   // percentage of magnification of zoomed expressions
         mouseMagnifier: false,             // switch on magnification via mouse hovering
-        speech: true,                      // switch on speech output
         subtitles: true,                   // show speech as a subtitle
         treeColoring: false,               // tree color expression
         viewBraille: true,                 // display Braille output as subtitles
