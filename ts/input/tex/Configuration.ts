@@ -77,12 +77,12 @@ export class Configuration {
                                   parser?: string,
                                  } = {}): Configuration {
     let priority = config.priority || PrioritizedList.DEFAULTPRIORITY;
-    let init = config.init ? this.makeProcessor(config.init, priority) : null;
-    let conf = config.config ? this.makeProcessor(config.config, priority) : null;
+    let init = config.init ? Configuration.makeProcessor(config.init, priority) : null;
+    let conf = config.config ? Configuration.makeProcessor(config.config, priority) : null;
     let preprocessors = (config.preprocessors || []).map(
-      pre => this.makeProcessor(pre, priority));
+      pre => Configuration.makeProcessor(pre, priority));
     let postprocessors = (config.postprocessors || []).map(
-      post => this.makeProcessor(post, priority));
+      post => Configuration.makeProcessor(post, priority));
     let parser = config.parser || 'tex';
     return new Configuration(
       name,
