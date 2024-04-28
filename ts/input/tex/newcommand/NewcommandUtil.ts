@@ -23,7 +23,7 @@
  */
 
 
-import {ParseUtil} from '../ParseUtil.js';
+import {UnitUtil} from '../UnitUtil.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import {Macro, Token} from '../Token.js';
@@ -47,7 +47,7 @@ namespace NewcommandUtil {
       throw new TexError('MissingCS',
                           '%1 must be followed by a control sequence', cmd);
     }
-    let cs = ParseUtil.trimSpaces(parser.GetArgument(cmd));
+    let cs = UnitUtil.trimSpaces(parser.GetArgument(cmd));
     return cs.substring(1);
   }
 
@@ -58,7 +58,7 @@ namespace NewcommandUtil {
    * @return {string} The control sequence.
    */
   export function GetCsNameArgument(parser: TexParser, name: string): string {
-    let cs = ParseUtil.trimSpaces(parser.GetArgument(name));
+    let cs = UnitUtil.trimSpaces(parser.GetArgument(name));
     if (cs.charAt(0) === '\\') {
       // @test Newcommand Simple
       cs = cs.substring(1);
@@ -82,7 +82,7 @@ namespace NewcommandUtil {
     if (n) {
       // @test Newcommand Optional, Newcommand Arg, Newcommand Arg Optional
       // @test Newenvironment Optional, Newenvironment Arg Optional
-      n = ParseUtil.trimSpaces(n);
+      n = UnitUtil.trimSpaces(n);
       if (!n.match(/^[0-9]+$/)) {
         // @test Illegal Argument Number
         throw new TexError('IllegalParamNumber',

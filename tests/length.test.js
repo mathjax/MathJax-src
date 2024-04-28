@@ -1,18 +1,18 @@
 import {jest} from '@jest/globals';
-import {ParseUtil} from '../mjs/input/tex/ParseUtil.js';
+import {UnitUtil} from '../mjs/input/tex/UnitUtil.js';
 import * as Length from '../mjs/util/lengths.js';
 
 // These methods will be rewritten into non-ParseUtil ones.
 function convertLength(unit, num) {
-  return ParseUtil.UNIT_CASES.get(unit) * (num);
+  return UnitUtil.UNIT_CASES.get(unit) * (num);
 }
 
 function matchDimension(str) {
-  return ParseUtil.matchDimen(str);
+  return UnitUtil.matchDimen(str);
 }
 
 function convertDimension(str) {
-  return ParseUtil.dimen2em(str);
+  return UnitUtil.dimen2em(str);
 }
 
 function convertLengthDim(str) {
@@ -20,7 +20,7 @@ function convertLengthDim(str) {
 }
 
 function convertEm(num) {
-  return ParseUtil.em(num);
+  return UnitUtil.em(num);
 }
 
 describe('Length conversion', () => {
@@ -125,7 +125,7 @@ describe.skip('Dimension conversion comparison', () => {
 
 // Useful for the IEEE case.
 describe('Adds pi unit', () => {
-  beforeAll(() => ParseUtil.UNIT_CASES.set('pi', 1 / 10));
+  beforeAll(() => UnitUtil.UNIT_CASES.set('pi', 1 / 10));
   it('pi', () => expect(convertLength('pi', 9)).toBe(0.9));
   it('9pi', () => expect(matchDimension('9pi')).toEqual(['9', 'pi', 3]));
   it('10pi', () => expect(matchDimension('10pi')).toEqual(['10', 'pi', 4]));

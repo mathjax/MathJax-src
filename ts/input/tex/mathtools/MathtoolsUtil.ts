@@ -21,7 +21,7 @@
  */
 
 import {EqnArrayItem} from '../base/BaseItems.js';
-import {ParseUtil} from '../ParseUtil.js';
+import {UnitUtil} from '../UnitUtil.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
 import {CommandMap} from '../TokenMap.js';
@@ -98,10 +98,10 @@ export const MathtoolsUtil = {
     if (!mtable.isKind('mtable')) return;
     let rowspacing = mtable.attributes.get('rowspacing') as string;
     if (rowspacing) {
-      const add = ParseUtil.dimen2em(spread);
+      const add = UnitUtil.dimen2em(spread);
       rowspacing = rowspacing
         .split(/ /)
-        .map(s => ParseUtil.em(Math.max(0, ParseUtil.dimen2em(s) + add)))
+        .map(s => UnitUtil.em(Math.max(0, UnitUtil.dimen2em(s) + add)))
         .join(' ');
     } else {
       rowspacing = spread;
@@ -133,7 +133,7 @@ export const MathtoolsUtil = {
    * @return {MmlNode}           The parsed MML version of the argument.
    */
   getScript(parser: TexParser, name: string, pos: string): MmlNode {
-    let arg = ParseUtil.trimSpaces(parser.GetArgument(name));
+    let arg = UnitUtil.trimSpaces(parser.GetArgument(name));
     if (arg === '') {
       return parser.create('node', 'none');
     }

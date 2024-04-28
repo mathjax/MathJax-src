@@ -31,79 +31,7 @@ import TexParser from './TexParser.js';
 import TexError from './TexError.js';
 import {entities} from '../../util/Entities.js';
 import {MmlMunderover} from '../../core/MmlTree/MmlNodes/munderover.js';
-
-
-class UnitMap extends Map<string, number> {
-
-  public num = '([-+]?([.,]\\d+|\\d+([.,]\\d*)?))';
-  public unit = '';
-  public dimenEnd = /./;
-  public dimenRest = /./;
-
-  /**
-   * @override
-   */
-  constructor(map: [string, number][]) {
-    super(map);
-    this.updateDimen();
-  }
-
-  /**
-   * Updates the regular expressions for the unit.
-   */
-  private updateDimen() {
-    this.unit = `(${Array.from(this.keys()).join('|')})`;
-    this.dimenEnd = RegExp('^\\s*' + this.num + '\\s*' + this.unit + '\\s*$');
-    this.dimenRest = RegExp('^\\s*' + this.num + '\\s*' + this.unit + ' ?');
-  }
-
-  /**
-   * @override
-   */
-  public set(name: string, ems: number) {
-    super.set(name, ems);
-    this.updateDimen();
-    return this;
-  }
-
-  /**
-   * Retrieves conversion value for an existing dimension. If the dimension does
-   * not exist, `pt` is used, similar to TeX behaviour. However, no error is thrown.
-   *
-   * @override
-   */
-  public get(name: string) {
-    return super.get(name) || super.get('pt');
-  }
-
-  /**
-   * @override
-   */
-  public delete(name: string) {
-    if (super.delete(name)) {
-      this.updateDimen();
-      return true;
-    }
-    return false;
-  }
-
-}
-
-const emPerInch = 7.2;
-const pxPerInch = 72;
-
-/**
- * Transforms mu dimension to em if necessary.
- * @param {[string, string, number]} [value, unit, length] The dimension triple.
- * @return {[string, string, number]} [value, unit, length] The transformed triple.
- */
-function muReplace([value, unit, length]: [string, string, number]): [string, string, number] {
-  if (unit !== 'mu') {
-    return [value, unit, length];
-  }
-  let em = ParseUtil.em(ParseUtil.UNIT_CASES.get(unit) * (parseFloat(value || '1')));
-  return [em.slice(0, -2), 'em', length];
-}
+import { UnitUtil } from './UnitUtil.js';
 
 
 /**
@@ -157,7 +85,7 @@ export const KeyValueTypes: {[name: string]: KeyValueType<any> | ((data: any) =>
   ),
   dimen: new KeyValueType<string>(
     'dimen',
-    (value) => ParseUtil.matchDimen(value)[0] !== null,
+    (value) => UnitUtil.matchDimen(value)[0] !== null,
     (value) => value
   )
 };
@@ -271,62 +199,6 @@ function readValue(text: string, end: string[],
 
 export const ParseUtil = {
 
-  // Note, the following are TeX CM font values.
-  UNIT_CASES: new UnitMap([
-    ['em', 1],
-    ['ex', .43],
-    ['pt', 1 / 10],                // 10 pt to an em
-    ['pc', 1.2],                   // 12 pt to a pc
-    ['px', emPerInch / pxPerInch],
-    ['in', emPerInch],
-    ['cm', emPerInch / 2.54], // 2.54 cm to an inch
-    ['mm', emPerInch / 25.4], // 10 mm to a cm
-    ['mu', 1 / 18],
-  ]),
-
-
-  /**
-   * Matches for a dimension argument.
-   * @param {string} dim The argument.
-   * @param {boolean} rest Allow for trailing garbage in the dimension string.
-   * @return {[string, string, number]} The match result as (Anglosaxon) value,
-   *     unit name, length of matched string. The latter is interesting in the
-   *     case of trailing garbage.
-   */
-  matchDimen(
-    dim: string, rest: boolean = false): [string, string, number] {
-    let match = dim.match(rest ? ParseUtil.UNIT_CASES.dimenRest : ParseUtil.UNIT_CASES.dimenEnd);
-    return match ?
-      muReplace([match[1].replace(/,/, '.'), match[4], match[0].length]) :
-      [null, null, 0];
-  },
-
-
-  /**
-   * Convert a dimension string into standard em dimension.
-   * @param {string} dim The attribute string.
-   * @return {number} The numerical value.
-   */
-  dimen2em(dim: string): number {
-    let [value, unit] = ParseUtil.matchDimen(dim);
-    let m = parseFloat(value || '1');
-    let factor = ParseUtil.UNIT_CASES.get(unit);
-    return factor ? factor * (m) : 0;
-  },
-
-
-  /**
-   * Turns a number into an em value.
-   * @param {number} m The number.
-   * @return {string} The em dimension string.
-   */
-  em(m: number): string {
-    if (Math.abs(m) < .0006) {
-      return '0em';
-    }
-    return m.toFixed(3).replace(/\.?0+$/, '') + 'em';
-  },
-
   // Above will move into lenghts
   //
   // Remainder: Parse Utililities
@@ -337,7 +209,7 @@ export const ParseUtil = {
    * @return {string}     The numbers with em units, separated by spaces.
    */
   cols(...W: number[]): string {
-    return W.map(n => ParseUtil.em(n)).join(' ');
+    return W.map(n => UnitUtil.em(n)).join(' ');
   },
 
 
@@ -639,23 +511,6 @@ export const ParseUtil = {
   },
 
   /**
-   * Trim spaces from a string.
-   * @param {string} text The string to clean.
-   * @return {string} The string with leading and trailing whitespace removed.
-   */
-  trimSpaces(text: string): string {
-    if (typeof(text) !== 'string') {
-      return text;
-    }
-    let TEXT = text.trim();
-    if (TEXT.match(/\\$/) && text.match(/ $/)) {
-      TEXT += ' ';
-    }
-    return TEXT;
-  },
-
-
-  /**
    * Sets alignment in array definitions.
    * @param {ArrayItem} array The array item.
    * @param {string} align The alignment string.
@@ -665,7 +520,7 @@ export const ParseUtil = {
   setArrayAlign(array: ArrayItem, align: string, parser?: TexParser): ArrayItem {
     // @test Array1, Array2, Array Test
     if (!parser) {
-      align = ParseUtil.trimSpaces(align || '');
+      align = UnitUtil.trimSpaces(align || '');
     }
     if (align === 't') {
       array.arraydef.align = 'baseline 1';

@@ -26,6 +26,7 @@
 import {StackItem} from '../StackItem.js';
 import {ParseMethod} from '../Types.js';
 import {ParseUtil} from '../ParseUtil.js';
+import { UnitUtil } from '../UnitUtil.js';
 import ParseMethods from '../ParseMethods.js';
 import NodeUtil from '../NodeUtil.js';
 import {TexConstant} from '../TexConstants.js';
@@ -213,7 +214,7 @@ export const NEW_OPS = 'ams-declare-ops';
  */
 AmsMethods.HandleDeclareOp =  function (parser: TexParser, name: string) {
   let star = (parser.GetStar() ? '*' : '');
-  let cs = ParseUtil.trimSpaces(parser.GetArgument(name));
+  let cs = UnitUtil.trimSpaces(parser.GetArgument(name));
   if (cs.charAt(0) === '\\') {
     cs = cs.substring(1);
   }
@@ -235,7 +236,7 @@ AmsMethods.HandleOperatorName = function(parser: TexParser, name: string) {
   //
   //  Parse the argument using operator letters and grouping multiple letters.
   //
-  let op = ParseUtil.trimSpaces(parser.GetArgument(name));
+  let op = UnitUtil.trimSpaces(parser.GetArgument(name));
   let mml = new TexParser(op, {
     ...parser.stack.env,
     font: TexConstant.Variant.NORMAL,
@@ -424,7 +425,7 @@ AmsMethods.MultiIntegral = function(parser: TexParser, name: string,
  */
 AmsMethods.xArrow = function(parser: TexParser, name: string,
                              chr: number, l: number, r: number) {
-  let def = {width: '+' + ParseUtil.em((l + r) / 18), lspace: ParseUtil.em(l / 18)};
+  let def = {width: '+' + UnitUtil.em((l + r) / 18), lspace: UnitUtil.em(l / 18)};
   let bot = parser.GetBrackets(name);
   let first = parser.ParseArg(name);
   let dstrut = parser.create('node', 'mspace', [], {depth: '.2em'});
@@ -483,7 +484,7 @@ AmsMethods.HandleShove = function(parser: TexParser, _name: string,
  * @param {string} name The macro name.
  */
 AmsMethods.CFrac = function(parser: TexParser, name: string) {
-  let lr  = ParseUtil.trimSpaces(parser.GetBrackets(name, ''));
+  let lr  = UnitUtil.trimSpaces(parser.GetBrackets(name, ''));
   let num = parser.GetArgument(name);
   let den = parser.GetArgument(name);
   let lrMap: {[key: string]: string} = {
@@ -528,7 +529,7 @@ AmsMethods.Genfrac = function(parser: TexParser, name: string, left: string,
     thick = parser.GetArgument(name);
   }
   if (style == null) { // @test Genfrac
-    style = ParseUtil.trimSpaces(parser.GetArgument(name));
+    style = UnitUtil.trimSpaces(parser.GetArgument(name));
   }
   let num = parser.ParseArg(name);
   let den = parser.ParseArg(name);
@@ -585,7 +586,7 @@ AmsMethods.HandleTag = function(parser: TexParser, name: string) {
     throw new TexError('MultipleCommand', 'Multiple %1', parser.currentCS);
   }
   let star = parser.GetStar();
-  let tagId = ParseUtil.trimSpaces(parser.GetArgument(name));
+  let tagId = UnitUtil.trimSpaces(parser.GetArgument(name));
   parser.tags.tag(tagId, star);
   parser.Push(parser.itemFactory.create('null'));
 };
