@@ -68,8 +68,8 @@ export class GeneratorPool<N, T, D> {
   /**
    *  The current speech setting for Sre
    */
-  private currentLocale = 'none';
-  private currentBraille = 'none';
+  private static currentLocale = 'none';
+  private static currentBraille = 'none';
   private _options: OptionList = {};
 
   /**
@@ -138,13 +138,13 @@ export class GeneratorPool<N, T, D> {
   private _update(options: OptionList) {
     if (!options || !options.sre) return false;
     let update = false;
-    if (options.sre.braille !== this.currentBraille) {
-      this.currentBraille = options.sre.braille;
+    if (options.sre.braille !== GeneratorPool.currentBraille) {
+      GeneratorPool.currentBraille = options.sre.braille;
       update = true;
       Sre.setupEngine({locale: options.sre.braille})
     }
-    if (options.sre.locale !== this.currentLocale) {
-      this.currentLocale = options.sre.locale;
+    if (options.sre.locale !== GeneratorPool.currentLocale) {
+      GeneratorPool.currentLocale = options.sre.locale;
       update = true;
       Sre.setupEngine({locale: options.sre.locale})
     }

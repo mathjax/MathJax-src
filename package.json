@@ -67,7 +67,7 @@
   "scripts": {
     "=============================================================================== clean": "",
     "clean:dir": "clean() { pnpm -s log:single \"Cleaning $1 directory\"; pnpm rimraf $1; }; clean",
-    "clean:lib": "clean() { pnpm -s log:single \"Cleaning $1 components\"; pnpm rimraf -g components/$1'/**/lib'; }; clean",
+    "clean:lib": "clean() { pnpm -s log:single \"Cleaning $1 component libs\"; pnpm rimraf -g components/$1'/**/lib'; }; clean",
     "clean:mod": "clean() { pnpm -s log:comp \"Cleaning $1 module\"; pnpm -s clean:dir $1 && pnpm -s clean:lib $1; }; clean",
     "=============================================================================== copy": "",
     "copy:assets": "pnpm -s log:comp 'Copying assets'; copy() { pnpm -s copy:mj2 $1 && pnpm -s copy:mml3 $1; }; copy",
@@ -84,7 +84,7 @@
     "cjs:bundle:finalize": "pnpm -s log:single 'Finalize cjs bundle'; echo '{\n  \"type\": \"commonjs\"\n}' > bundle-cjs/package.json;",
     "cjs:compile": "pnpm -s log:single 'Compiling cjs typescript files' && pnpm tsc --project tsconfig/cjs.json",
     "cjs:components:build": "pnpm -s log:comp 'Building cjs components'; pnpm -s cjs:components:src:build && pnpm clean:dir bundle-cjs && pnpm -s cjs:components:make --build",
-    "cjs:components:clean": "pnpm -s log:single \"Cleaning cjs components\" pnpm rimraf components/cjs",
+    "cjs:components:clean": "pnpm -s log:single \"Cleaning cjs components\"; pnpm rimraf components/cjs",
     "cjs:components:compile": "pnpm -s log:single 'Compiling component files'; pnpm tsc --project tsconfig/components.json",
     "cjs:components:copy": "pnpm copyfiles -u 2 -e 'components/mjs/**/*.js' 'components/mjs/**/*' components/cjs",
     "cjs:components:finalize": "pnpm -s log:comp 'Finalize cjs components'; pnpm -s cjs:components:copy && pnpm -s copy:pkg components/cjs && pnpm -s clean:lib cjs",
@@ -138,9 +138,12 @@
     "xslt3": "^2.6.0"
   },
   "dependencies": {
+    "@xmldom/xmldom": "^0.8.10",
+    "commander": "^12.0.0",
     "mathjax-modern-font": "^4.0.0-beta.5",
     "mhchemparser": "^4.2.1",
     "mj-context-menu": "^0.9.1",
-    "speech-rule-engine": "^4.1.0-beta.9"
+    "speech-rule-engine": "^4.1.0-beta.9",
+    "wicked-good-xpath": "^1.3.0"
   }
 }
