@@ -1,25 +1,20 @@
-import {jest} from '@jest/globals';
-import {UnitUtil} from '../mjs/input/tex/UnitUtil.js';
-import * as Length from '../mjs/util/lengths.js';
+import {describe, it, expect, beforeAll} from '@jest/globals';
+import {UnitUtil} from '../../../ts/input/tex/UnitUtil';
 
 // These methods will be rewritten into non-ParseUtil ones.
-function convertLength(unit, num) {
+function convertLength(unit: string, num: number) {
   return UnitUtil.UNIT_CASES.get(unit) * (num);
 }
 
-function matchDimension(str) {
+function matchDimension(str: string) {
   return UnitUtil.matchDimen(str);
 }
 
-function convertDimension(str) {
+function convertDimension(str: string) {
   return UnitUtil.dimen2em(str);
 }
 
-function convertLengthDim(str) {
-  return Length.length2em(str);
-}
-
-function convertEm(num) {
+function convertEm(num: number) {
   return UnitUtil.em(num);
 }
 
@@ -92,35 +87,6 @@ describe('Dimension conversion', () => {
   it('9cm', () => expect(convertDimension('9cm')).toBe(25.511811023622045));
   it('9mm', () => expect(convertDimension('9mm')).toBe(2.5511811023622046));
   it('9mu', () => expect(convertDimension('9mu')).toBe(0.5));
-});
-
-
-describe.skip('Dimension conversion from length', () => {
-  it('9', () => expect(convertLengthDim('9')).toBe(0));
-  it('9nix', () => expect(convertLengthDim('9nix')).toBe(0));
-  it('empty', () => expect(convertLengthDim('')).toBe(0));
-  it('nix', () => expect(convertLengthDim('nix')).toBe(0));
-  it('9em', () => expect(convertLengthDim('9em')).toBe(9));
-  it('9ex', () => expect(convertLengthDim('9ex')).toBe(3.87));
-  it('9pt', () => expect(convertLengthDim('9pt')).toBe(0.9));
-  it('9pc', () => expect(convertLengthDim('9pc')).toBe(10.799999999999999));
-  it('9px', () => expect(convertLengthDim('9px')).toBe(0.8999999999999999));
-  it('9in', () => expect(convertLengthDim('9in')).toBe(64.8));
-  it('9cm', () => expect(convertLengthDim('9cm')).toBe(25.511811023622045));
-  it('9mm', () => expect(convertLengthDim('9mm')).toBe(2.5511811023622046));
-  it('9mu', () => expect(convertLengthDim('9mu')).toBe(0.5));
-});
-
-describe.skip('Dimension conversion comparison', () => {
-  it('1em', () => expect(convertDimension('1em')).toBe(convertLengthDim('1em')));
-  it('1ex', () => expect(convertDimension('1ex')).toBe(convertLengthDim('1ex')));
-  it('1pt', () => expect(convertDimension('1pt')).toBe(convertLengthDim('1pt')));
-  it('1pc', () => expect(convertDimension('1pc')).toBe(convertLengthDim('1pc')));
-  it('1px', () => expect(convertDimension('1px')).toBe(convertLengthDim('1px')));
-  it('1in', () => expect(convertDimension('1in')).toBe(convertLengthDim('1in')));
-  it('1cm', () => expect(convertDimension('1cm')).toBe(convertLengthDim('1cm')));
-  it('1mm', () => expect(convertDimension('1mm')).toBe(convertLengthDim('1mm')));
-  it('1mu', () => expect(convertDimension('1mu')).toBe(convertLengthDim('1mu')));
 });
 
 // Useful for the IEEE case.

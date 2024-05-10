@@ -3,16 +3,25 @@
  * https://jestjs.io/docs/configuration
  */
 
-const config = {
+import type {Config} from 'jest';
+
+const config: Config = {
   clearMocks: true,
   collectCoverage: true,
   coverageDirectory: "coverage",
   coverageProvider: "v8",
   testEnvironment: "node",
   verbose: true,
+  preset: 'ts-jest',
+  testMatch: [
+    "**/tests/**/*.test.ts"
+  ],
+  // moduleFileExtensions: [
+  //   "js", "ts"
+  // ],
   transform: {
-    "^.+\\.jsx?$": "babel-jest",
-  },
+    "^.+\\.tsx?$": "ts-jest",
+  }
 };
 
 export default config;
