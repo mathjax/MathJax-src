@@ -2,7 +2,7 @@ import { beforeAll, describe, it } from '@jest/globals';
 import { toXmlMatch } from '../../src/xmlMatch';
 import { setupTex, tex2mml } from '../../src/setupTex';
 
-beforeAll(() => setupTex(["ams","base","verb"]));
+beforeAll(() => setupTex(["base","verb"]));
 
 describe('Verb', () => {
   it('Verb Plus ', () => toXmlMatch(tex2mml("\\verb+{a}+"),
