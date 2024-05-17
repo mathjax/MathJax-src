@@ -751,6 +751,186 @@ describe('Array', () => {
   ));
 })
 
+describe('Moving limits', () => {
+  it('Limits SubSup', () => toXmlMatch(tex2mml("\\int^2\\limits_3"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\int^2\\limits_3\" display=\"block\">\n  <munderover data-latex=\"\\int^2 \\limits_3 \">\n    <mo data-latex=\"\\int\">&#x222B;</mo>\n    <mn data-latex=\"3\">3</mn>\n    <mn data-latex=\"2\">2</mn>\n  </munderover>\n</math>"
+  ));
+  it('Limits UnderOver', () => toXmlMatch(tex2mml("\\lim_3\\nolimits^2"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\lim_3\\nolimits^2\" display=\"block\">\n  <msubsup data-latex=\"\\lim_3 \\nolimits^2 \">\n    <mo data-mjx-texclass=\"OP\" data-latex=\"\\lim\">lim</mo>\n    <mn data-latex=\"3\">3</mn>\n    <mn data-latex=\"2\">2</mn>\n  </msubsup>\n</math>"
+  ));
+  it('Limits', () => toXmlMatch(tex2mml("\\sum\\limits^2_3"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\sum\\limits^2_3\" display=\"block\">\n  <munderover data-latex=\"\\sum\\limits^2 _3 \">\n    <mo data-latex=\"\\limits\" movablelimits=\"false\">&#x2211;</mo>\n    <mn data-latex=\"3\">3</mn>\n    <mn data-latex=\"2\">2</mn>\n  </munderover>\n</math>"
+  ));
+  it('Vector Op', () => toXmlMatch(tex2mml("\\vec{+}"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\vec{+}\" display=\"block\">\n  <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\vec{+}\">\n    <mover>\n      <mo data-latex=\"+\">+</mo>\n      <mo stretchy=\"false\">&#x2192;</mo>\n    </mover>\n  </mrow>\n</math>"
+  ));
+  it('Overline', () => toXmlMatch(tex2mml("\\overline{a}"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\overline{a}\" display=\"block\">\n  <mover data-latex=\"\\overline{a}\">\n    <mi data-latex=\"a\">a</mi>\n    <mo accent=\"true\">&#x2015;</mo>\n  </mover>\n</math>"
+  ));
+  it('Overline Limits', () => toXmlMatch(tex2mml("\\overline{\\int\\limits^2}"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\overline{\\int\\limits^2}\" display=\"block\">\n  <mover data-latex=\"\\overline{\\int\\limits^2}\">\n    <mrow>\n      <mo rspace=\"0\"></mo>\n      <mover data-latex=\"\\int\\limits^2 \">\n        <mo data-latex=\"\\limits\" lspace=\"0\" rspace=\"0\">&#x222B;</mo>\n        <mn data-latex=\"2\">2</mn>\n      </mover>\n    </mrow>\n    <mo accent=\"true\">&#x2015;</mo>\n  </mover>\n</math>"
+  ));
+  it('Overline Sum', () => toXmlMatch(tex2mml("\\overline{\\sum}"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\overline{\\sum}\" display=\"block\">\n  <mover data-latex=\"\\overline{\\sum}\">\n    <mo data-latex=\"\\sum\" movablelimits=\"false\">&#x2211;</mo>\n    <mo accent=\"true\">&#x2015;</mo>\n  </mover>\n</math>"
+  ));
+  it('Overline 1', () => toXmlMatch(tex2mml("\\overline{\\sum}"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\overline{\\sum}\" display=\"block\">\n  <mover data-latex=\"\\overline{\\sum}\">\n    <mo data-latex=\"\\sum\" movablelimits=\"false\">&#x2211;</mo>\n    <mo accent=\"true\">&#x2015;</mo>\n  </mover>\n</math>"
+  ));
+  it('Overline 2', () => toXmlMatch(tex2mml("\\overline{\\mathop{a}}"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\overline{\\mathop{a}}\" display=\"block\">\n  <mover data-latex=\"\\overline{\\mathop{a}}\">\n    <mrow data-mjx-texclass=\"OP\" data-latex=\"\\mathop{a}\">\n      <mi data-latex=\"a\">a</mi>\n    </mrow>\n    <mo accent=\"true\">&#x2015;</mo>\n  </mover>\n</math>"
+  ));
+  it('Overline 3', () => toXmlMatch(tex2mml("\\overline{\\mathop{a}}^2"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\overline{\\mathop{a}}^2\" display=\"block\">\n  <msup data-latex=\"\\overline{\\mathop{a}}^2 \">\n    <mover data-latex=\"\\overline{\\mathop{a}}\">\n      <mrow data-mjx-texclass=\"OP\" data-latex=\"\\mathop{a}\">\n        <mi data-latex=\"a\">a</mi>\n      </mrow>\n      <mo accent=\"true\">&#x2015;</mo>\n    </mover>\n    <mn data-latex=\"2\">2</mn>\n  </msup>\n</math>"
+  ));
+  it('Overline 4', () => toXmlMatch(tex2mml("\\overline{\\sum^2_3}"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\overline{\\sum^2_3}\" display=\"block\">\n  <mover data-latex=\"\\overline{\\sum^2_3}\">\n    <mrow>\n      <mo rspace=\"0\"></mo>\n      <munderover data-latex=\"\\sum^2 _3 \">\n        <mo data-latex=\"\\sum\" lspace=\"0\" rspace=\"0\">&#x2211;</mo>\n        <mn data-latex=\"3\">3</mn>\n        <mn data-latex=\"2\">2</mn>\n      </munderover>\n    </mrow>\n    <mo accent=\"true\">&#x2015;</mo>\n  </mover>\n</math>"
+  ));
+  it('Overline 5', () => toXmlMatch(tex2mml("\\overline{\\sum}^2_3"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\overline{\\sum}^2_3\" display=\"block\">\n  <msubsup data-latex=\"\\overline{\\sum}^2 _3 \">\n    <mover data-latex=\"\\overline{\\sum}\">\n      <mo data-latex=\"\\sum\" movablelimits=\"false\">&#x2211;</mo>\n      <mo accent=\"true\">&#x2015;</mo>\n    </mover>\n    <mn data-latex=\"3\">3</mn>\n    <mn data-latex=\"2\">2</mn>\n  </msubsup>\n</math>"
+  ));
+  it('Overline 6', () => toXmlMatch(tex2mml("\\overline{\\underline{\\sum}}"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\overline{\\underline{\\sum}}\" display=\"block\">\n  <mover data-latex=\"\\overline{\\underline{\\sum}}\">\n    <mrow>\n      <mo rspace=\"0\"></mo>\n      <munder data-latex=\"\\underline{\\sum}\">\n        <mo data-latex=\"\\sum\" movablelimits=\"false\" lspace=\"0\" rspace=\"0\">&#x2211;</mo>\n        <mo accent=\"true\">&#x2015;</mo>\n      </munder>\n    </mrow>\n    <mo accent=\"true\">&#x2015;</mo>\n  </mover>\n</math>"
+  ));
+  it('Overbrace 1', () => toXmlMatch(tex2mml("\\overbrace{abc}"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\overbrace{abc}\" display=\"block\">\n  <mrow data-mjx-texclass=\"OP\" data-latex=\"\\overbrace{abc}\">\n    <mover>\n      <mrow data-latex=\"abc\">\n        <mi data-latex=\"a\">a</mi>\n        <mi data-latex=\"b\">b</mi>\n        <mi data-latex=\"c\">c</mi>\n      </mrow>\n      <mo>&#x23DE;</mo>\n    </mover>\n  </mrow>\n</math>"
+  ));
+  it('Underbrace', () => toXmlMatch(tex2mml("\\underbrace{abc}"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\underbrace{abc}\" display=\"block\">\n  <mrow data-mjx-texclass=\"OP\" data-latex=\"\\underbrace{abc}\">\n    <munder>\n      <mrow data-latex=\"abc\">\n        <mi data-latex=\"a\">a</mi>\n        <mi data-latex=\"b\">b</mi>\n        <mi data-latex=\"c\">c</mi>\n      </mrow>\n      <mo>&#x23DF;</mo>\n    </munder>\n  </mrow>\n</math>"
+  ));
+  it('Overbrace Op 1', () => toXmlMatch(tex2mml("\\overbrace{\\mathop{a}}"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\overbrace{\\mathop{a}}\" display=\"block\">\n  <mrow data-mjx-texclass=\"OP\" data-latex=\"\\overbrace{\\mathop{a}}\">\n    <mover>\n      <mrow data-mjx-texclass=\"OP\" data-latex=\"\\mathop{a}\">\n        <mi data-latex=\"a\">a</mi>\n      </mrow>\n      <mo>&#x23DE;</mo>\n    </mover>\n  </mrow>\n</math>"
+  ));
+  it('Overbrace Op 2', () => toXmlMatch(tex2mml("\\overbrace{\\mathop{a}}^2"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\overbrace{\\mathop{a}}^2\" display=\"block\">\n  <mover data-latex=\"\\overbrace{\\mathop{a}}^2 \">\n    <mrow data-mjx-texclass=\"OP\" data-latex=\"\\overbrace{\\mathop{a}}\">\n      <mover>\n        <mrow data-mjx-texclass=\"OP\" data-latex=\"\\mathop{a}\">\n          <mi data-latex=\"a\">a</mi>\n        </mrow>\n        <mo>&#x23DE;</mo>\n      </mover>\n    </mrow>\n    <mn data-latex=\"2\">2</mn>\n  </mover>\n</math>"
+  ));
+  it('Overbrace 2', () => toXmlMatch(tex2mml("\\overbrace{\\sum}"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\overbrace{\\sum}\" display=\"block\">\n  <mrow data-mjx-texclass=\"OP\" data-latex=\"\\overbrace{\\sum}\">\n    <mover>\n      <mo data-latex=\"\\sum\" movablelimits=\"false\">&#x2211;</mo>\n      <mo>&#x23DE;</mo>\n    </mover>\n  </mrow>\n</math>"
+  ));
+  it('Overbrace 3', () => toXmlMatch(tex2mml("\\overbrace{\\sum}^2"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\overbrace{\\sum}^2\" display=\"block\">\n  <mover data-latex=\"\\overbrace{\\sum}^2 \">\n    <mrow data-mjx-texclass=\"OP\" data-latex=\"\\overbrace{\\sum}\">\n      <mover>\n        <mo data-latex=\"\\sum\" movablelimits=\"false\">&#x2211;</mo>\n        <mo>&#x23DE;</mo>\n      </mover>\n    </mrow>\n    <mn data-latex=\"2\">2</mn>\n  </mover>\n</math>"
+  ));
+})
+
+describe('Multirel', () => {
+  it('Shift Left', () => toXmlMatch(tex2mml("a<<b"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a&lt;&lt;b\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo data-latex=\"&lt;\">&lt;&lt;</mo>\n  <mi data-latex=\"b\">b</mi>\n</math>"
+  ));
+  it('Less Equal', () => toXmlMatch(tex2mml("a<=b"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a&lt;=b\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo data-latex=\"&lt;\" rspace=\"0pt\">&lt;</mo>\n  <mo data-latex=\"=\" lspace=\"0pt\">=</mo>\n  <mi data-latex=\"b\">b</mi>\n</math>"
+  ));
+  it('Infix Op Op', () => toXmlMatch(tex2mml("a++b"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a++b\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo data-latex=\"+\">+</mo>\n  <mo data-latex=\"+\">+</mo>\n  <mi data-latex=\"b\">b</mi>\n</math>"
+  ));
+  it('Infix Op Rel', () => toXmlMatch(tex2mml("a+=b"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a+=b\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo data-latex=\"+\">+</mo>\n  <mo data-latex=\"=\">=</mo>\n  <mi data-latex=\"b\">b</mi>\n</math>"
+  ));
+  it('Postfix Op Op', () => toXmlMatch(tex2mml("a++"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a++\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo data-latex=\"+\">+</mo>\n  <mo data-latex=\"+\">+</mo>\n</math>"
+  ));
+  it('Postfix Rel Rel', () => toXmlMatch(tex2mml("a=="),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a==\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo data-latex=\"=\">==</mo>\n</math>"
+  ));
+  it('Infix Bars', () => toXmlMatch(tex2mml("a||b"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a||b\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo data-mjx-texclass=\"ORD\" stretchy=\"false\" data-latex=\"|\">|</mo>\n  <mo data-mjx-texclass=\"ORD\" stretchy=\"false\" data-latex=\"|\">|</mo>\n  <mi data-latex=\"b\">b</mi>\n</math>"
+  ));
+  it('Infix Fences', () => toXmlMatch(tex2mml("a))b"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a))b\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo data-latex=\")\" stretchy=\"false\">)</mo>\n  <mo data-latex=\")\" stretchy=\"false\">)</mo>\n  <mi data-latex=\"b\">b</mi>\n</math>"
+  ));
+  it('Infix Rel Rel', () => toXmlMatch(tex2mml("a\\rightarrow=b"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\rightarrow=b\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo stretchy=\"false\" data-latex=\"\\rightarrow\" rspace=\"0pt\">&#x2192;</mo>\n  <mo data-latex=\"=\" lspace=\"0pt\">=</mo>\n  <mi data-latex=\"b\">b</mi>\n</math>"
+  ));
+  it('Infix 4Rel', () => toXmlMatch(tex2mml("a=<>=b"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a=&lt;&gt;=b\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo data-latex=\"=\" rspace=\"0pt\">=</mo>\n  <mo data-latex=\"&lt;\" lspace=\"0pt\" rspace=\"0pt\">&lt;</mo>\n  <mo data-latex=\"&gt;\" lspace=\"0pt\" rspace=\"0pt\">&gt;</mo>\n  <mo data-latex=\"=\" lspace=\"0pt\">=</mo>\n  <mi data-latex=\"b\">b</mi>\n</math>"
+  ));
+  it('Prefix Rel Rel', () => toXmlMatch(tex2mml("==a"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"==a\" display=\"block\">\n  <mo data-latex=\"=\">==</mo>\n  <mi data-latex=\"a\">a</mi>\n</math>"
+  ));
+  it('Prefix Op Op', () => toXmlMatch(tex2mml("++a"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"++a\" display=\"block\">\n  <mo data-latex=\"+\">+</mo>\n  <mo data-latex=\"+\">+</mo>\n  <mi data-latex=\"a\">a</mi>\n</math>"
+  ));
+  it('Multirel Font 1', () => toXmlMatch(tex2mml("a <=\\mathrm{>} b"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a &lt;=\\mathrm{&gt;} b\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo data-latex=\"&lt;\" rspace=\"0pt\">&lt;</mo>\n  <mo data-latex=\"=\" lspace=\"0pt\">=</mo>\n  <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathrm{&gt;}\">\n    <mo data-latex=\"&gt;\">&gt;</mo>\n  </mrow>\n  <mi data-latex=\"b\">b</mi>\n</math>"
+  ));
+  it('Multirel Font 2', () => toXmlMatch(tex2mml("a <=\\mathrm{=>} b"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a &lt;=\\mathrm{=&gt;} b\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo data-latex=\"&lt;\" rspace=\"0pt\">&lt;</mo>\n  <mo data-latex=\"=\" lspace=\"0pt\">=</mo>\n  <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathrm{=&gt;}\">\n    <mo data-latex=\"=\" rspace=\"0pt\">=</mo>\n    <mo data-latex=\"&gt;\" lspace=\"0pt\">&gt;</mo>\n  </mrow>\n  <mi data-latex=\"b\">b</mi>\n</math>"
+  ));
+  it('Multirel Font 3', () => toXmlMatch(tex2mml("a <=\\mathrm{=}\\mathrm{>} b"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a &lt;=\\mathrm{=}\\mathrm{&gt;} b\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo data-latex=\"&lt;\" rspace=\"0pt\">&lt;</mo>\n  <mo data-latex=\"=\" lspace=\"0pt\">=</mo>\n  <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathrm{=}\">\n    <mo data-latex=\"=\">=</mo>\n  </mrow>\n  <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathrm{&gt;}\">\n    <mo data-latex=\"&gt;\">&gt;</mo>\n  </mrow>\n  <mi data-latex=\"b\">b</mi>\n</math>"
+  ));
+  it('Simple Shadow Rel', () => toXmlMatch(tex2mml("a \\sim b"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a \\sim b\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo data-latex=\"\\sim\">&#x223C;</mo>\n  <mi data-latex=\"b\">b</mi>\n</math>"
+  ));
+  it('Extra Attribute Rel 1', () => toXmlMatch(tex2mml("a =\\sim b"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a =\\sim b\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo data-latex=\"=\" rspace=\"0pt\">=</mo>\n  <mo data-latex=\"\\sim\" lspace=\"0pt\">&#x223C;</mo>\n  <mi data-latex=\"b\">b</mi>\n</math>"
+  ));
+  it('Extra Attribute Rel 2', () => toXmlMatch(tex2mml("a \\sim\\simeq b"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a \\sim\\simeq b\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo data-latex=\"\\sim\" rspace=\"0pt\">&#x223C;</mo>\n  <mo data-latex=\"\\simeq\" lspace=\"0pt\">&#x2243;</mo>\n  <mi data-latex=\"b\">b</mi>\n</math>"
+  ));
+  it('Extra Attribute Rel 3', () => toXmlMatch(tex2mml("a \\sim\\asymp b"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a \\sim\\asymp b\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo data-latex=\"\\sim\" rspace=\"0pt\">&#x223C;</mo>\n  <mo data-latex=\"\\asymp\" lspace=\"0pt\">&#x224D;</mo>\n  <mi data-latex=\"b\">b</mi>\n</math>"
+  ));
+  it('Extra Attribute Rel 4', () => toXmlMatch(tex2mml("a \\sim\\simeq\\asymp b"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a \\sim\\simeq\\asymp b\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo data-latex=\"\\sim\" rspace=\"0pt\">&#x223C;</mo>\n  <mo data-latex=\"\\simeq\" lspace=\"0pt\" rspace=\"0pt\">&#x2243;</mo>\n  <mo data-latex=\"\\asymp\" lspace=\"0pt\">&#x224D;</mo>\n  <mi data-latex=\"b\">b</mi>\n</math>"
+  ));
+  it('Extra Attribute Rel 5', () => toXmlMatch(tex2mml("a \\sim\\asymp\\simeq b"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a \\sim\\asymp\\simeq b\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo data-latex=\"\\sim\" rspace=\"0pt\">&#x223C;</mo>\n  <mo data-latex=\"\\asymp\" lspace=\"0pt\" rspace=\"0pt\">&#x224D;</mo>\n  <mo data-latex=\"\\simeq\" lspace=\"0pt\">&#x2243;</mo>\n  <mi data-latex=\"b\">b</mi>\n</math>"
+  ));
+  it('Extra Attribute Rel 6', () => toXmlMatch(tex2mml("a \\sim\\cong b"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a \\sim\\cong b\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo data-latex=\"\\sim\" rspace=\"0pt\">&#x223C;</mo>\n  <mo data-latex=\"\\cong\" lspace=\"0pt\">&#x2245;</mo>\n  <mi data-latex=\"b\">b</mi>\n</math>"
+  ));
+  it('Infix Stretchy Right', () => toXmlMatch(tex2mml("a=\\rightarrow b"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a=\\rightarrow b\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo data-latex=\"=\" rspace=\"0pt\">=</mo>\n  <mo stretchy=\"false\" data-latex=\"\\rightarrow\" lspace=\"0pt\">&#x2192;</mo>\n  <mi data-latex=\"b\">b</mi>\n</math>"
+  ));
+})
+
+describe('Other', () => {
+  it('Other', () => toXmlMatch(tex2mml("+"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"+\" display=\"block\">\n  <mo data-latex=\"+\">+</mo>\n</math>"
+  ));
+  it('Other Remap', () => toXmlMatch(tex2mml("-"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"-\" display=\"block\">\n  <mo data-latex=\"-\">&#x2212;</mo>\n</math>"
+  ));
+  it('Other Font', () => toXmlMatch(tex2mml("\\mathbf{+}"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mathbf{+}\" display=\"block\">\n  <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathbf{+}\">\n    <mo mathvariant=\"bold\" data-latex=\"+\">+</mo>\n  </mrow>\n</math>"
+  ));
+  it('Other Delimiter', () => toXmlMatch(tex2mml("("),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"(\" display=\"block\">\n  <mo data-latex=\"(\" stretchy=\"false\">(</mo>\n</math>"
+  ));
+  it('Other Dollar', () => toXmlMatch(tex2mml("$"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"$\" display=\"block\">\n  <mrow data-mjx-texclass=\"ORD\">\n    <mo data-latex=\"$\">$</mo>\n  </mrow>\n</math>"
+  ));
+  it('Other Unicode', () => toXmlMatch(tex2mml("˦"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"&#x2E6;\" display=\"block\">\n  <mrow data-mjx-texclass=\"ORD\">\n    <mo data-latex=\"&#x2E6;\">&#x2E6;</mo>\n  </mrow>\n</math>"
+  ));
+  it('Other Surrogate', () => toXmlMatch(tex2mml("𝐀"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"&#x1D400;\" display=\"block\">\n  <mi data-latex=\"&#x1D400;\">&#x1D400;</mi>\n</math>"
+  ));
+  it('Other Arrow Range', () => toXmlMatch(tex2mml("⤡"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"&#x2921;\" display=\"block\">\n  <mo data-latex=\"&#x2921;\" stretchy=\"false\">&#x2921;</mo>\n</math>"
+  ));
+  it('Other Arrow Infix', () => toXmlMatch(tex2mml("a⤡b"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a&#x2921;b\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo data-latex=\"&#x2921;\" stretchy=\"false\">&#x2921;</mo>\n  <mi data-latex=\"b\">b</mi>\n</math>"
+  ));
+  it('Other Arrow Prefix', () => toXmlMatch(tex2mml("⤡b"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"&#x2921;b\" display=\"block\">\n  <mo data-latex=\"&#x2921;\" stretchy=\"false\">&#x2921;</mo>\n  <mi data-latex=\"b\">b</mi>\n</math>"
+  ));
+  it('Other Arrow Postfix', () => toXmlMatch(tex2mml("b⤡"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"b&#x2921;\" display=\"block\">\n  <mi data-latex=\"b\">b</mi>\n  <mo data-latex=\"&#x2921;\" stretchy=\"false\">&#x2921;</mo>\n</math>"
+  ));
+  it('Vertical Bar Alone', () => toXmlMatch(tex2mml("|"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"|\" display=\"block\">\n  <mo data-mjx-texclass=\"ORD\" stretchy=\"false\" data-latex=\"|\">|</mo>\n</math>"
+  ));
+  it('Vertical Bar Infix', () => toXmlMatch(tex2mml("a|b"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a|b\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo data-mjx-texclass=\"ORD\" stretchy=\"false\" data-latex=\"|\">|</mo>\n  <mi data-latex=\"b\">b</mi>\n</math>"
+  ));
+  it('Vertical Bar Postfix', () => toXmlMatch(tex2mml("a|"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a|\" display=\"block\">\n  <mi data-latex=\"a\">a</mi>\n  <mo data-mjx-texclass=\"ORD\" stretchy=\"false\" data-latex=\"|\">|</mo>\n</math>"
+  ));
+  it('Vertical Bar Prefix', () => toXmlMatch(tex2mml("|b"),
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"|b\" display=\"block\">\n  <mo data-mjx-texclass=\"ORD\" stretchy=\"false\" data-latex=\"|\">|</mo>\n  <mi data-latex=\"b\">b</mi>\n</math>"
+  ));
+})
+
 describe('Base Complex', () => {
   it('Square Root Complex', () => toXmlMatch(tex2mml("\\sqrt{3x-1}+(1+x)^2"),
     "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\sqrt{3x-1}+(1+x)^2\" display=\"block\">\n  <msqrt data-latex=\"\\sqrt{3x-1}\">\n    <mn data-latex=\"3\">3</mn>\n    <mi data-latex=\"x\">x</mi>\n    <mo data-latex=\"-\">&#x2212;</mo>\n    <mn data-latex=\"1\">1</mn>\n  </msqrt>\n  <mo data-latex=\"+\">+</mo>\n  <mo data-latex=\"(\" stretchy=\"false\">(</mo>\n  <mn data-latex=\"1\">1</mn>\n  <mo data-latex=\"+\">+</mo>\n  <mi data-latex=\"x\">x</mi>\n  <msup data-latex=\")^2\">\n    <mo data-latex=\")\" stretchy=\"false\">)</mo>\n    <mn data-latex=\"2\">2</mn>\n  </msup>\n</math>"
