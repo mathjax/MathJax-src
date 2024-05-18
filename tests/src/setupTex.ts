@@ -8,8 +8,9 @@ import '../../cjs/input/tex/AllPackages.js';
 
 let convert: (tex: string) => string;
 
-export function setupTex(packages: string[] = ['base']) {
-  const tex = new TeX({packages: packages});
+export function setupTex(packages: string[] = ['base'], options = {}) {
+  const parserOptions = Object.assign({}, {packages: packages}, options);
+  const tex = new TeX(parserOptions);
   const html = new HTMLDocument('', liteAdaptor(), {InputJax: tex});
   const visitor = new SerializedMmlVisitor();
   const toMathML = ((node: MmlNode) => visitor.visitTree(node));
