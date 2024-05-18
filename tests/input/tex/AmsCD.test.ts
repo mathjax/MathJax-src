@@ -1,8 +1,8 @@
-import { beforeAll, describe, it } from '@jest/globals';
+import { beforeEach, describe, it } from '@jest/globals';
 import { toXmlMatch } from '../../src/xmlMatch';
 import { setupTex, tex2mml } from '../../src/setupTex';
 
-beforeAll(() => setupTex(["base","amscd"]));
+beforeEach(() => setupTex(["base","amscd"]));
 
 describe('AmsCD', () => {
   it('AmsCD-1', () => toXmlMatch(tex2mml("\\begin{CD}A @>a>> B\\\\@VVbV @VVcV\\\\C @>d>> D\\end{CD}"),

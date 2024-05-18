@@ -1,8 +1,8 @@
-import { beforeAll, describe, it } from '@jest/globals';
+import { beforeEach, describe, it } from '@jest/globals';
 import { toXmlMatch } from '../../src/xmlMatch';
 import { setupTex, tex2mml } from '../../src/setupTex';
 
-beforeAll(() => setupTex(["base","enclose"]));
+beforeEach(() => setupTex(["base","enclose"]));
 
 describe('Enclose', () => {
   it('Enclose 1', () => toXmlMatch(tex2mml("\\enclose{updiagonalstrike}{x}"),

@@ -1,8 +1,8 @@
-import { beforeAll, describe, it } from '@jest/globals';
+import { beforeEach, describe, it } from '@jest/globals';
 import { toXmlMatch } from '../../src/xmlMatch';
 import { setupTex, tex2mml } from '../../src/setupTex';
 
-beforeAll(() => setupTex(["base","action"]));
+beforeEach(() => setupTex(["base","action"]));
 
 describe('Action', () => {
   it('TextTip', () => toXmlMatch(tex2mml("\\texttip{A}{B}"),

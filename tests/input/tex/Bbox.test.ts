@@ -1,8 +1,8 @@
-import { beforeAll, describe, it } from '@jest/globals';
+import { beforeEach, describe, it } from '@jest/globals';
 import { toXmlMatch } from '../../src/xmlMatch';
 import { setupTex, tex2mml } from '../../src/setupTex';
 
-beforeAll(() => setupTex(["base","bbox"]));
+beforeEach(() => setupTex(["base","bbox"]));
 
 describe('Bbox', () => {
   it('Bbox-Background', () => toXmlMatch(tex2mml("\\bbox[yellow]{a}"),

@@ -1,8 +1,8 @@
-import { beforeAll, describe, it } from '@jest/globals';
+import { beforeEach, describe, it } from '@jest/globals';
 import { toXmlMatch } from '../../src/xmlMatch';
 import { setupTex, tex2mml } from '../../src/setupTex';
 
-beforeAll(() => setupTex(["base","noundefined"]));
+beforeEach(() => setupTex(["base","noundefined"]));
 
 describe('Noundefined', () => {
   it('Noundefined Single', () => toXmlMatch(tex2mml("\\a"),

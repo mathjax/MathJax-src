@@ -1,8 +1,8 @@
-import { beforeAll, describe, it } from '@jest/globals';
+import { beforeEach, describe, it } from '@jest/globals';
 import { toXmlMatch } from '../../src/xmlMatch';
 import { setupTex, tex2mml } from '../../src/setupTex';
 
-beforeAll(() => setupTex(["base","extpfeil"]));
+beforeEach(() => setupTex(["base","extpfeil"]));
 
 describe('Extpfeil', () => {
   it('Xtwoheadrightarrow', () => toXmlMatch(tex2mml("\\xtwoheadrightarrow{abcxyz}"),

@@ -1,4 +1,4 @@
-import {describe, it, expect, beforeAll} from '@jest/globals';
+import {describe, it, expect, beforeEach} from '@jest/globals';
 import {UnitUtil} from '../../../ts/input/tex/UnitUtil';
 
 // These methods will be rewritten into non-ParseUtil ones.
@@ -91,7 +91,7 @@ describe('Dimension conversion', () => {
 
 // Useful for the IEEE case.
 describe('Adds pi unit', () => {
-  beforeAll(() => UnitUtil.UNIT_CASES.set('pi', 1 / 10));
+  beforeEach(() => UnitUtil.UNIT_CASES.set('pi', 1 / 10));
   it('pi', () => expect(convertLength('pi', 9)).toBe(0.9));
   it('9pi', () => expect(matchDimension('9pi')).toEqual(['9', 'pi', 3]));
   it('10pi', () => expect(matchDimension('10pi')).toEqual(['10', 'pi', 4]));
