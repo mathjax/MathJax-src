@@ -1,0 +1,11 @@
+{
+  "imports": {
+    "#js/*": "mathjax-full/cjs/*",
+    "#source/*": "mathjax-full/components/cjs/*",
+    "#root/*": "mathjax-full/mjs/components/cjs/*",
+    "#menu/*": "mj-context-menu/cjs/*",
+    "#sre/*": "speech-rule-engine/cjs/*",
+    "#mhchem/*": "mhchemparser/dist/*",
+    "#default-font/*": "mathjax-modern-font/cjs/*"
+  }
+}
