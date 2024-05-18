@@ -18,6 +18,18 @@ export function setupTex(packages: string[] = ['base'], options = {}) {
     toMathML(html.convert(expr, {display: true, end: STATE.CONVERT}));
 }
 
+import {SVG} from '../../cjs/output/svg.js';
+
+export function setupTexWithOutput(packages: string[] = ['base'], options = {}) {
+  const parserOptions = Object.assign({}, {packages: packages}, options);
+  const tex = new TeX(parserOptions);
+  const html = new HTMLDocument('', liteAdaptor(), {InputJax: tex, OutputJax: new SVG()});
+  const visitor = new SerializedMmlVisitor();
+  const toMathML = ((node: MmlNode) => visitor.visitTree(node));
+  convert = (expr: string) =>
+    toMathML(html.convert(expr, {display: true, end: STATE.CONVERT}));
+}
+
 export function tex2mml(tex: string) {
   return convert(tex);
 };
