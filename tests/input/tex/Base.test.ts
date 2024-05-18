@@ -1,8 +1,8 @@
-import { beforeAll, describe, it } from '@jest/globals';
+import { beforeEach, describe, it } from '@jest/globals';
 import { toXmlMatch } from '../../src/xmlMatch';
 import { setupTex, tex2mml } from '../../src/setupTex';
 
-beforeAll(() => setupTex(["base"]));
+beforeEach(() => setupTex(["base"]));
 
 describe('Base', () => {
   it('Identifier', () => toXmlMatch(tex2mml("x"),
@@ -335,20 +335,21 @@ describe('Digits', () => {
 })
 
 describe('DigitsEuropean', () => {
+  beforeEach(() => setupTex(["base"], {digits: '^(?:[0-9]+(?:\\{\\.\\}[0-9]{3})*(?:,[0-9]*)?|,[0-9]+)'}));
   it('Integer European', () => toXmlMatch(tex2mml("2"),
     "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"2\" display=\"block\">\n  <mn data-latex=\"2\">2</mn>\n</math>"
   ));
   it('Number European', () => toXmlMatch(tex2mml("3,14"),
-    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"3,14\" display=\"block\">\n  <mn data-latex=\"3\">3</mn>\n  <mo data-latex=\",\">,</mo>\n  <mn data-latex=\"4\">14</mn>\n</math>"
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"3,14\" display=\"block\">\n  <mn data-latex=\"3,14\">3,14</mn>\n</math>"
   ));
   it('Thousands European', () => toXmlMatch(tex2mml("1{.}000,10"),
-    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"1{.}000,10\" display=\"block\">\n  <mn data-latex=\"1\">1</mn>\n  <mrow data-mjx-texclass=\"ORD\" data-latex=\"{.}\">\n    <mo data-latex=\".\">.</mo>\n  </mrow>\n  <mn data-latex=\"00\">000</mn>\n  <mo data-latex=\",\">,</mo>\n  <mn data-latex=\"0\">10</mn>\n</math>"
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"1{.}000,10\" display=\"block\">\n  <mn data-latex=\"1{.}000,10\">1.000,10</mn>\n</math>"
   ));
   it('Wrong Thousands European', () => toXmlMatch(tex2mml("1{.}0000,10"),
-    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"1{.}0000,10\" display=\"block\">\n  <mn data-latex=\"1\">1</mn>\n  <mrow data-mjx-texclass=\"ORD\" data-latex=\"{.}\">\n    <mo data-latex=\".\">.</mo>\n  </mrow>\n  <mn data-latex=\"000\">0000</mn>\n  <mo data-latex=\",\">,</mo>\n  <mn data-latex=\"0\">10</mn>\n</math>"
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"1{.}0000,10\" display=\"block\">\n  <mn data-latex=\"{.}000\">1.000</mn>\n  <mn data-latex=\",10\">0,10</mn>\n</math>"
   ));
   it('Decimal European', () => toXmlMatch(tex2mml(",14"),
-    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\",14\" display=\"block\">\n  <mo data-latex=\",\">,</mo>\n  <mn data-latex=\"4\">14</mn>\n</math>"
+    "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\",14\" display=\"block\">\n  <mn data-latex=\",14\">,14</mn>\n</math>"
   ));
   it('Decimal Point European', () => toXmlMatch(tex2mml(","),
     "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\",\" display=\"block\">\n  <mo data-latex=\",\">,</mo>\n</math>"
