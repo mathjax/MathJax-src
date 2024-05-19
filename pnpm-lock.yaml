@@ -11,9 +11,6 @@ importers:
       '@xmldom/xmldom':
         specifier: ^0.8.10
         version: 0.8.10
-      commander:
-        specifier: ^12.0.0
-        version: 12.0.0
       mathjax-modern-font:
         specifier: ^4.0.0-beta.5
         version: 4.0.0-beta.5
@@ -24,8 +21,8 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1
       speech-rule-engine:
-        specifier: ^4.1.0-beta.9
-        version: 4.1.0-beta.9
+        specifier: ^4.1.0-beta.10
+        version: 4.1.0-beta.10
       wicked-good-xpath:
         specifier: ^1.3.0
         version: 1.3.0
@@ -796,10 +793,6 @@ packages:
   commander@11.1.0:
     resolution: {integrity: sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ==}
     engines: {node: '>=16'}
-
-  commander@12.0.0:
-    resolution: {integrity: sha512-MwVNWlYjDTtOjX5PiD7o5pK0UrFU/OYgcJfjjK4RaHZETNtjJqrZa9Y9ds88+A+f+d5lv+561eZ+yCKoS3gbAA==}
-    engines: {node: '>=18'}
 
   commander@2.20.3:
     resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}
@@ -1845,8 +1838,8 @@ packages:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
     engines: {node: '>=0.10.0'}
 
-  speech-rule-engine@4.1.0-beta.9:
-    resolution: {integrity: sha512-t/h1RIw5Xv+IbSn5E9dgjqOddo/VQBh2hdqJPERzvUDMm6HRutNmdoGTU/Mj8QEWwp7GbuwKkbRfaAcKYNINhg==}
+  speech-rule-engine@4.1.0-beta.10:
+    resolution: {integrity: sha512-SPqPF4YPdqvg0+VvQKpOi68SFFMCyvGI3zNfWPJx0faxh/eHjH3ATbRu4GjoWWnHGWKY8uSqXjz/1UnFVI6NmQ==}
     hasBin: true
 
   sprintf-js@1.0.3:
@@ -3118,8 +3111,6 @@ snapshots:
 
   commander@11.1.0: {}
 
-  commander@12.0.0: {}
-
   commander@2.20.3: {}
 
   concat-map@0.0.1: {}
@@ -4366,7 +4357,7 @@ snapshots:
 
   source-map@0.6.1: {}
 
-  speech-rule-engine@4.1.0-beta.9:
+  speech-rule-engine@4.1.0-beta.10:
     dependencies:
       '@xmldom/xmldom': 0.9.0-beta.8
       commander: 11.1.0
