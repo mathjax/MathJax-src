@@ -402,6 +402,7 @@ export class LinebreakVisitor<
    * @override
    */
   public visitNode(wrapper: WW, i: number) {
+    if (!wrapper) return;
     this.state.depth++;
     if (wrapper.node.isEmbellished && !wrapper.node.isKind('mo')) {
       this.visitEmbellishedOperator(wrapper, i);
@@ -416,7 +417,7 @@ export class LinebreakVisitor<
    */
   public visitDefault(wrapper: WW, i: number) {
     const bbox = wrapper.getLineBBox(i);
-    if (wrapper.node.isToken || wrapper.node.linebreakContainer) {
+    if (wrapper.node.isToken || wrapper.node.linebreakContainer || !wrapper.childNodes?.[0]) {
       this.addWidth(bbox);
     } else {
       const [L, R] = this.getBorderLR(wrapper);
