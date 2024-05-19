@@ -1,9 +1,9 @@
-import {describe, it, expect, beforeEach} from '@jest/globals';
-import {UnitUtil} from '../../../ts/input/tex/UnitUtil';
+import { describe, it, expect, beforeEach } from '@jest/globals';
+import { UnitUtil } from '../../../ts/input/tex/UnitUtil';
 
 // These methods will be rewritten into non-ParseUtil ones.
 function convertLength(unit: string, num: number) {
-  return UnitUtil.UNIT_CASES.get(unit) * (num);
+  return UnitUtil.UNIT_CASES.get(unit) * num;
 }
 
 function matchDimension(str: string) {
@@ -36,14 +36,15 @@ describe('Length conversion', () => {
 describe('Em conversion', () => {
   it('9', () => expect(convertEm(9)).toBe('9em'));
   it('10', () => expect(convertEm(10)).toBe('10em'));
-  it('1e+25', () => expect(convertEm(1e+25)).toBe('1e+25em'));
+  it('1e+25', () => expect(convertEm(1e25)).toBe('1e+25em'));
   it('10000', () => expect(convertEm(10000)).toBe('10000em'));
   it('0.001', () => expect(convertEm(0.001)).toBe('0.001em'));
   it('0.0001', () => expect(convertEm(0.0001)).toBe('0em'));
   it('0.0005', () => expect(convertEm(0.0005)).toBe('0em'));
   it('0.0006', () => expect(convertEm(0.0006)).toBe('0.001em'));
   it('0.0007', () => expect(convertEm(0.0007)).toBe('0.001em'));
-  it('25.511811023622045', () => expect(convertEm(25.511811023622045)).toBe('25.512em'));
+  it('25.511811023622045', () =>
+    expect(convertEm(25.511811023622045)).toBe('25.512em'));
 });
 
 describe('Dimension matching', () => {
