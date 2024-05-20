@@ -1134,6 +1134,36 @@ describe('Ams Environments', () => {
   </mtable>
 </math>`
     ));
+  it('XAlignat', () =>
+    toXmlMatch(
+      tex2mml('\\begin{xalignat} a&=b \\\\ c&=d \\end{xalignat}'),
+      ``
+    ));
+  it('XAlignat Star', () =>
+    toXmlMatch(
+      tex2mml('\\begin{xalignat*} a&=b \\\\ c&=d \\end{xalignat*}'),
+      ``
+    ));
+  it('Xxalignat', () =>
+    toXmlMatch(
+      tex2mml('\\begin{xxalignat} a&=b \\\\ c&=d \\end{xxalignat}'),
+      ``
+    ));
+  it('Flalign', () =>
+    toXmlMatch(
+      tex2mml('\\begin{flalign} a&=b \\\\ c&=d \\end{flalign}'),
+      ``
+    ));
+  it('Flalign Star', () =>
+    toXmlMatch(
+      tex2mml('\\begin{flalign*} a&=b \\\\ c&=d \\end{flalign*}'),
+      ``
+    ));
+  it('Flalign Single', () =>
+    toXmlMatch(
+      tex2mml('\\begin{flalign} a&=b \\end{flalign}'),
+      ``
+    ));
 });
 
 describe('Ams Labelled Environments', () => {
