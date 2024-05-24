@@ -793,7 +793,7 @@ export function CommonScriptbaseMixin<
       //  Determine if we are setting a mathaccent
       //
       this.isMathAccent = this.baseIsChar &&
-        (this.scriptChild && !!this.scriptChild.coreMO().node.getProperty('mathaccent')) as boolean;
+        (this.scriptChild && this.scriptChild.coreMO().node.getProperty('mathaccent') !== undefined);
       //
       // Check for overline/underline accents
       //
