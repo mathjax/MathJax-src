@@ -258,7 +258,8 @@ BaseMethods.Prime = function(parser: TexParser, c: string) {
   if ((NodeUtil.isType(base, 'msubsup') && !NodeUtil.isType(base, 'msup') &&
        NodeUtil.getChildAt(base, (base as MmlMsubsup).sup)) ||
       (NodeUtil.isType(base, 'munderover') && !NodeUtil.isType(base, 'mover') &&
-       NodeUtil.getChildAt(base, (base as MmlMunderover).over))) {
+       NodeUtil.getChildAt(base, (base as MmlMunderover).over) &&
+       !NodeUtil.getProperty(base, 'subsupOK'))) {
     // @test Double Prime Error
     throw new TexError('DoubleExponentPrime',
                         'Prime causes double exponent: use braces to clarify');
@@ -481,9 +482,9 @@ BaseMethods.NamedOp = function(parser: TexParser, name: string, id: string) {
  * Handle a limits command for math operators.
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
- * @param {string} limits The limits arguments.
+ * @param {boolean} limits True for \limits, false for \nolimits.
  */
-BaseMethods.Limits = function(parser: TexParser, _name: string, limits: string) {
+BaseMethods.Limits = function(parser: TexParser, _name: string, limits: boolean) {
   // @test Limits
   let op = parser.stack.Prev(true);
   // Get the texclass for the core operator.

@@ -510,13 +510,13 @@ new sm.CommandMap('macros', {
   tan:                'NamedFn',
   tanh:               'NamedFn',
 
-  limits:            ['Limits', 1],
-  nolimits:          ['Limits', 0],
+  limits:            ['Limits', true],
+  nolimits:          ['Limits', false],
 
   overline:            ['UnderOver', '2015'],
   underline:           ['UnderOver', '2015'],
-  overbrace:           ['UnderOver', '23DE', 1],
-  underbrace:          ['UnderOver', '23DF', 1],
+  overbrace:           ['UnderOver', '23DE', true],
+  underbrace:          ['UnderOver', '23DF', true],
   overparen:           ['UnderOver', '23DC'],
   underparen:          ['UnderOver', '23DD'],
   overrightarrow:      ['UnderOver', '2192'],
