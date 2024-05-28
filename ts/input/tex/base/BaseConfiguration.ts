@@ -22,7 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {ConfigHandler, ConfigElement} from '../ConfigEnums.js';
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import {MapHandler} from '../MapHandler.js';
 import TexError from '../TexError.js';
@@ -154,19 +154,19 @@ export class BaseTags extends AbstractTags { }
  */
 export const BaseConfiguration: Configuration = Configuration.create(
   'base',  {
-    [ConfigElement.HANDLER]: {
-      [ConfigHandler.CHARACTER]: ['command', 'special', 'letter', 'digit'],
-      [ConfigHandler.DELIMITER]: ['delimiter'],
+    [ConfigurationType.HANDLER]: {
+      [HandlerType.CHARACTER]: ['command', 'special', 'letter', 'digit'],
+      [HandlerType.DELIMITER]: ['delimiter'],
       // Note, that the position of the delimiters here is important!
-      [ConfigHandler.MACRO]: ['delimiter', 'macros', 'lcGreek', 'ucGreek', 'mathchar0mi', 'mathchar0mo', 'mathchar7'],
-      [ConfigHandler.ENVIRONMENT]: ['environment']
+      [HandlerType.MACRO]: ['delimiter', 'macros', 'lcGreek', 'ucGreek', 'mathchar0mi', 'mathchar0mo', 'mathchar7'],
+      [HandlerType.ENVIRONMENT]: ['environment']
     },
-    [ConfigElement.FALLBACK]: {
-      [ConfigHandler.CHARACTER]: Other,
-      [ConfigHandler.MACRO]: csUndefined,
-      [ConfigHandler.ENVIRONMENT]: envUndefined
+    [ConfigurationType.FALLBACK]: {
+      [HandlerType.CHARACTER]: Other,
+      [HandlerType.MACRO]: csUndefined,
+      [HandlerType.ENVIRONMENT]: envUndefined
     },
-    [ConfigElement.ITEMS]: {
+    [ConfigurationType.ITEMS]: {
       // BaseItems
       [bitem.StartItem.prototype.kind]: bitem.StartItem,
       [bitem.StopItem.prototype.kind]: bitem.StopItem,
@@ -195,16 +195,16 @@ export const BaseConfiguration: Configuration = Configuration.create(
       [bitem.EquationItem.prototype.kind]: bitem.EquationItem,
       [bitem.MstyleItem.prototype.kind]: bitem.MstyleItem
     },
-    [ConfigElement.OPTIONS]: {
+    [ConfigurationType.OPTIONS]: {
       maxMacros: 1000,
       identifierPattern: /^[a-zA-Z]+/,  // pattern for multiLetterIdentifiers in \mathrm, etc.
       baseURL: (typeof(document) === 'undefined' ||
                 document.getElementsByTagName('base').length === 0) ?
                 '' : String(document.location).replace(/#.*$/, '')
     },
-    [ConfigElement.TAGS]: {
+    [ConfigurationType.TAGS]: {
       base: BaseTags
     },
-    [ConfigElement.POSTPROCESSORS]: [[filterNonscript, -4]]
+    [ConfigurationType.POSTPROCESSORS]: [[filterNonscript, -4]]
   }
 );

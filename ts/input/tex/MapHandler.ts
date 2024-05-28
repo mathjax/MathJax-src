@@ -22,18 +22,12 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {ConfigHandler} from './ConfigEnums.js';
+import {HandlerType} from './HandlerTypes.js';
 import {AbstractTokenMap, TokenMap} from './TokenMap.js';
 import {ParseInput, ParseResult, ParseMethod} from './Types.js';
 import {PrioritizedList} from '../../util/PrioritizedList.js';
 import {FunctionList} from '../../util/FunctionList.js';
 
-
-export type HandlerType =
-  ConfigHandler.DELIMITER |
-  ConfigHandler.MACRO |
-  ConfigHandler.CHARACTER |
-  ConfigHandler.ENVIRONMENT;
 
 export type HandlerConfig = {[P in HandlerType]?: string[]};
 export type FallbackConfig = {[P in HandlerType]?: ParseMethod};

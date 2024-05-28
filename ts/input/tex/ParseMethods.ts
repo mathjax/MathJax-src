@@ -22,7 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {ConfigHandler} from './ConfigEnums.js';
+import {HandlerType} from './HandlerTypes.js';
 import {Token} from './Token.js';
 import TexParser from './TexParser.js';
 import NodeUtil from './NodeUtil.js';
@@ -92,7 +92,7 @@ namespace ParseMethods {
    */
   export function controlSequence(parser: TexParser, _c: string) {
     const name = parser.GetCS();
-    parser.parse(ConfigHandler.MACRO, [parser, name]);
+    parser.parse(HandlerType.MACRO, [parser, name]);
   }
 
 

@@ -22,7 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {ConfigHandler} from '../ConfigEnums.js';
+import {HandlerType} from '../HandlerTypes.js';
 import {ParseMethod, ParseResult} from '../Types.js';
 import BaseMethods from '../base/BaseMethods.js';
 import TexParser from '../TexParser.js';
@@ -540,7 +540,7 @@ PhysicsMethods.Bra = function(parser: TexParser, name: string) {
     parser.i++;
     // This ensures that bra-ket also works if \let bound versions of \ket.
     let cs = parser.GetCS();
-    let token = parser.lookup(ConfigHandler.MACRO, cs) as Macro;
+    let token = parser.lookup(HandlerType.MACRO, cs) as Macro;
     if (token && token.token === 'ket') {
       hasKet = true;
       saveI = parser.i;

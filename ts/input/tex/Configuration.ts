@@ -22,7 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {ConfigHandler, ConfigElement} from './ConfigEnums.js';
+import {HandlerType, ConfigurationType} from './HandlerTypes.js';
 import {HandlerConfig, FallbackConfig} from './MapHandler.js';
 import {StackItemClass} from './StackItem.js';
 import {TagsClass} from './Tags.js';
@@ -87,12 +87,12 @@ export class Configuration {
     let parser = config.parser || 'tex';
     return new Configuration(
       name,
-      config[ConfigElement.HANDLER] || {},
-      config[ConfigElement.FALLBACK] || {},
-      config[ConfigElement.ITEMS] || {},
-      config[ConfigElement.TAGS] || {},
-      config[ConfigElement.OPTIONS] || {},
-      config[ConfigElement.NODES] || {},
+      config[ConfigurationType.HANDLER] || {},
+      config[ConfigurationType.FALLBACK] || {},
+      config[ConfigurationType.ITEMS] || {},
+      config[ConfigurationType.TAGS] || {},
+      config[ConfigurationType.OPTIONS] || {},
+      config[ConfigurationType.NODES] || {},
       preprocessors, postprocessors, init, conf, priority,
       parser
     );
@@ -180,10 +180,10 @@ export class Configuration {
                       readonly parser: string
                      ) {
     this.handler = Object.assign(
-      {[ConfigHandler.CHARACTER]: [],
-       [ConfigHandler.DELIMITER]: [],
-       [ConfigHandler.MACRO]: [],
-       [ConfigHandler.ENVIRONMENT]: []}, handler);
+      {[HandlerType.CHARACTER]: [],
+       [HandlerType.DELIMITER]: [],
+       [HandlerType.MACRO]: [],
+       [HandlerType.ENVIRONMENT]: []}, handler);
   }
 
   /**
