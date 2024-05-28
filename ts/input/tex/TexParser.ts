@@ -23,6 +23,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {ConfigHandler} from './ConfigEnums.js';
 import {UnitUtil} from './UnitUtil.js';
 import {HandlerType} from './MapHandler.js';
 import Stack from './Stack.js';
@@ -195,7 +196,7 @@ export default class TexParser {
     while (this.i < this.string.length) {
       c = this.getCodePoint();
       this.i += c.length;
-      this.parse('character', [this, c]);
+      this.parse(ConfigHandler.CHARACTER, [this, c]);
     }
   }
 
@@ -254,7 +255,7 @@ export default class TexParser {
    * @return {string} The corresponding character.
    */
   public convertDelimiter(c: string): string {
-    const token = this.lookup('delimiter', c) as Token;
+    const token = this.lookup(ConfigHandler.DELIMITER, c) as Token;
     return token ? token.char : null;
   }
 
@@ -398,7 +399,7 @@ export default class TexParser {
         this.i--;
         c = this.GetArgument(name).trim();
       }
-      if (this.contains('delimiter', c)) {
+      if (this.contains(ConfigHandler.DELIMITER, c)) {
         return this.convertDelimiter(c);
       }
     }
@@ -502,7 +503,7 @@ export default class TexParser {
     if (c === '') {
       return null;
     }
-    if (this.contains('delimiter', c)) {
+    if (this.contains(ConfigHandler.DELIMITER, c)) {
       return c;
     }
     // @test MissingOrUnrecognizedDelim

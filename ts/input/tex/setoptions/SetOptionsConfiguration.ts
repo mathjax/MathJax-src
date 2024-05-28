@@ -22,6 +22,7 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
+import {ConfigHandler} from '../ConfigEnums.js';
 import {Configuration, ConfigurationHandler, ParserConfiguration} from '../Configuration.js';
 import {TeX} from '../../tex.js';
 import TexParser from '../TexParser.js';
@@ -126,7 +127,7 @@ const setOptionsMap = new CommandMap('setoptions', {
  * @param {TeX} jax                     The active tex input jax.
  */
 function setoptionsConfig(_config: ParserConfiguration, jax: TeX<any, any, any>) {
-  const require = jax.parseOptions.handlers.get('macro').lookup('require') as any;
+  const require = jax.parseOptions.handlers.get(ConfigHandler.MACRO).lookup('require') as any;
   if (require) {
     setOptionsMap.add('Require', new Macro('Require', require._func));
     setOptionsMap.add('require', new Macro('require', BaseMethods.Macro,

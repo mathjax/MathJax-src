@@ -23,6 +23,7 @@
  */
 
 
+import {ConfigHandler} from '../ConfigEnums.js';
 import {ParseMethod} from '../Types.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
@@ -120,13 +121,13 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
   if (c === '\\') {
     // @test Let Bar, Let Brace Equal Stretchy
     name = NewcommandUtil.GetCSname(parser, name);
-    let macro = handlers.get('delimiter').lookup('\\' + name) as Token;
+    let macro = handlers.get(ConfigHandler.DELIMITER).lookup('\\' + name) as Token;
     if (macro) {
       // @test Let Bar, Let Brace Equal Stretchy
       NewcommandUtil.addDelimiter(parser, '\\' + cs, macro.char, macro.attributes);
       return;
     }
-    const map = handlers.get('macro').applicable(name);
+    const map = handlers.get(ConfigHandler.MACRO).applicable(name);
     if (!map) {
       // @test Let Undefined CS
       return;
@@ -145,7 +146,7 @@ NewcommandMethods.Let = function(parser: TexParser, name: string) {
   }
   // @test Let Brace Equal, Let Caret
   parser.i++;
-  const macro = handlers.get('delimiter').lookup(c) as Token;
+  const macro = handlers.get(ConfigHandler.DELIMITER).lookup(c) as Token;
   if (macro) {
     // @test Let Paren Delim, Let Paren Stretchy
     NewcommandUtil.addDelimiter(parser, '\\' + cs, macro.char, macro.attributes);

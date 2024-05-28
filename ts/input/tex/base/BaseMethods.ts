@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {ConfigHandler} from '../ConfigEnums.js';
 import * as sitem from './BaseItems.js';
 import {StackItem, EnvList} from '../StackItem.js';
 import {Macro} from '../Token.js';
@@ -1567,7 +1568,7 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
     // @test InvalidEnv
     throw new TexError('InvalidEnv', 'Invalid environment name \'%1\'', env);
   }
-  let macro = parser.configuration.handlers.get('environment').lookup(env) as Macro;
+  let macro = parser.configuration.handlers.get(ConfigHandler.ENVIRONMENT).lookup(env) as Macro;
   if (macro && name === '\\end') {
     // If the first argument is true, we have some sort of user defined
     // environment. Otherwise we have a standard LaTeX environment that is
@@ -1581,7 +1582,7 @@ BaseMethods.BeginEnd = function(parser: TexParser, name: string) {
     parser.stack.env['closing'] = env;
   }
   ParseUtil.checkMaxMacros(parser, false);
-  parser.parse('environment', [parser, env]);
+  parser.parse(ConfigHandler.ENVIRONMENT, [parser, env]);
  };
 
 /**
