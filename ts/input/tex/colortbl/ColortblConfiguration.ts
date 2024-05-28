@@ -22,6 +22,7 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {ArrayItem} from '../base/BaseItems.js';
 import {Configuration, ParserConfiguration, ConfigurationHandler} from '../Configuration.js';
 import {CommandMap} from '../TokenMap.js';
@@ -173,8 +174,8 @@ const config = function (config: ParserConfiguration, jax: TeX<any, any, any>) {
 //  Create the color-table configuration.
 //
 export const ColortblConfiguration = Configuration.create('colortbl', {
-  handler: {macro: ['colortbl']},
-  items: {'array': ColorArrayItem},  // overrides original array class
-  priority: 10,                      // make sure we are processed after the base package (to override its array)
-  config: [config, 10]               // make sure we configure after the color package, if it is used.
+  [ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['colortbl']},
+  [ConfigurationType.ITEMS]: {'array': ColorArrayItem},  // overrides original array class
+  [ConfigurationType.PRIORITY]: 10,                      // make sure we are processed after the base package (to override its array)
+  [ConfigurationType.CONFIG]: [config, 10]               // make sure we configure after the color package, if it is used.
 });

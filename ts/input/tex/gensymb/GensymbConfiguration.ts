@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import {Token} from '../Token.js';
 import {TexConstant} from '../TexConstants.js';
@@ -57,7 +58,7 @@ new CharacterMap('gensymb-symbols', mathcharUnit, {
 
 export const GensymbConfiguration = Configuration.create(
   'gensymb', {
-    handler: {macro: ['gensymb-symbols']},
+    [ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['gensymb-symbols']},
   }
 );
 

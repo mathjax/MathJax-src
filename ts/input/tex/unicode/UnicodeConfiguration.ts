@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import {EnvList} from '../StackItem.js';
 import TexParser from '../TexParser.js';
@@ -173,5 +174,5 @@ new CommandMap('unicode', {
 
 
 export const UnicodeConfiguration = Configuration.create(
-  'unicode', {handler: {macro: ['unicode']}}
+  'unicode', {[ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['unicode']}}
 );

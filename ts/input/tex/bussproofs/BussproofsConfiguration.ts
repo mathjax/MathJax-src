@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import {ProofTreeItem} from './BussproofsItems.js';
 import {saveDocument, clearDocument, balanceRules, makeBsprAttributes} from './BussproofsUtil.js';
@@ -30,17 +31,17 @@ import './BussproofsMappings.js';
 
 export const BussproofsConfiguration = Configuration.create(
   'bussproofs', {
-    handler: {
-      macro: ['Bussproofs-macros'],
-      environment: ['Bussproofs-environments']
+    [ConfigurationType.HANDLER]: {
+      [HandlerType.MACRO]: ['Bussproofs-macros'],
+      [HandlerType.ENVIRONMENT]: ['Bussproofs-environments']
     },
-    items: {
+    [ConfigurationType.ITEMS]: {
       [ProofTreeItem.prototype.kind]: ProofTreeItem,
     },
-    preprocessors: [
+    [ConfigurationType.PREPROCESSORS]: [
       [saveDocument, 1]
     ],
-    postprocessors: [
+    [ConfigurationType.POSTPROCESSORS]: [
       [clearDocument, 3],
       [makeBsprAttributes, 2],
       [balanceRules, 1]

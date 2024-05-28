@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import {CommandMap} from '../TokenMap.js';
@@ -119,5 +120,5 @@ new CommandMap('bbox', {bbox: 'BBox'}, BboxMethods);
 
 
 export const BboxConfiguration = Configuration.create(
-  'bbox', {handler: {macro: ['bbox']}}
+  'bbox', {[ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['bbox']}}
 );

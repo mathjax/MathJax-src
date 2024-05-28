@@ -22,6 +22,8 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {
+  HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import {CommandMap} from '../TokenMap.js';
 import {ParseMethod} from '../Types.js';
@@ -91,5 +93,5 @@ new CommandMap(
 
 
 export const MhchemConfiguration = Configuration.create(
-  'mhchem', {handler: {macro: ['mhchem']}}
+  'mhchem', {[ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['mhchem']}}
 );

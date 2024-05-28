@@ -22,7 +22,7 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {HandlerType} from '../HandlerTypes.js';
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration, ConfigurationHandler, ParserConfiguration} from '../Configuration.js';
 import {TeX} from '../../tex.js';
 import TexParser from '../TexParser.js';
@@ -137,10 +137,10 @@ function setoptionsConfig(_config: ParserConfiguration, jax: TeX<any, any, any>)
 
 export const SetOptionsConfiguration = Configuration.create(
   'setoptions', {
-    handler: {macro: ['setoptions']},
-    config: setoptionsConfig,
-    priority: 3,  // must be less than the priority of the require package (which is 5).
-    options: {
+    [ConfigurationType.HANDLER]: {macro: ['setoptions']},
+    [ConfigurationType.CONFIG]: setoptionsConfig,
+    [ConfigurationType.PRIORITY]: 3,  // must be less than the priority of the require package (which is 5).
+    [ConfigurationType.OPTIONS]: {
       setoptions: {
         filterPackage: SetOptionsUtil.filterPackage,  // filter for whether a package can be configured
         filterOption: SetOptionsUtil.filterOption,    // filter for whether an option can be set

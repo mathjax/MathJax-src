@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import {TexConstant} from '../TexConstants.js';
 import TexParser from '../TexParser.js';
@@ -66,5 +67,5 @@ new CommandMap('verb', {verb: 'Verb'}, VerbMethods);
 
 
 export const VerbConfiguration = Configuration.create(
-  'verb', {handler: {macro: ['verb']}}
+  'verb', {[ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['verb']}}
 );

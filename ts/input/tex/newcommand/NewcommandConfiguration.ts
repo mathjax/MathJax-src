@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration, ParserConfiguration} from '../Configuration.js';
 import {BeginEnvItem} from './NewcommandItems.js';
 import NewcommandUtil from './NewcommandUtil.js';
@@ -41,26 +42,26 @@ let init = function(config: ParserConfiguration) {
   new sm.EnvironmentMap(NewcommandUtil.NEW_ENVIRONMENT,
                         ParseMethods.environment, {}, {});
   config.append(Configuration.local(
-    {handler: {character: [],
-               delimiter: [NewcommandUtil.NEW_DELIMITER],
-               macro: [NewcommandUtil.NEW_DELIMITER,
-                       NewcommandUtil.NEW_COMMAND],
-               environment: [NewcommandUtil.NEW_ENVIRONMENT]
-              },
-     priority: -1}));
+    {[ConfigurationType.HANDLER]: {[HandlerType.CHARACTER]: [],
+                                   [HandlerType.DELIMITER]: [NewcommandUtil.NEW_DELIMITER],
+                                   [HandlerType.MACRO]: [NewcommandUtil.NEW_DELIMITER,
+                                           NewcommandUtil.NEW_COMMAND],
+                                   [HandlerType.ENVIRONMENT]: [NewcommandUtil.NEW_ENVIRONMENT]
+                                  },
+     [ConfigurationType.PRIORITY]: -1}));
 };
 
 
 export const NewcommandConfiguration = Configuration.create(
   'newcommand', {
-    handler: {
+    [ConfigurationType.HANDLER]: {
       macro: ['Newcommand-macros']
     },
-    items: {
+    [ConfigurationType.ITEMS]: {
       [BeginEnvItem.prototype.kind]: BeginEnvItem,
     },
-    options: {maxMacros: 1000},
-    init: init
+    [ConfigurationType.OPTIONS]: {maxMacros: 1000},
+    [ConfigurationType.INIT]: init
   }
 );
 

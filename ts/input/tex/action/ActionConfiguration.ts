@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import {CommandMap} from '../TokenMap.js';
@@ -74,5 +75,5 @@ new CommandMap('action-macros', {
 
 
 export const ActionConfiguration = Configuration.create(
-  'action', {handler: {macro: ['action-macros']}}
+  'action', {[ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['action-macros']}}
 );

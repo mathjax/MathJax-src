@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import {CommandMap} from '../TokenMap.js';
@@ -68,7 +69,7 @@ new CommandMap('enclose', {enclose: 'Enclose'}, EncloseMethods);
 
 
 export const EncloseConfiguration = Configuration.create(
-  'enclose', {handler: {macro: ['enclose']}}
+  'enclose', {[ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['enclose']}}
 );
 
 

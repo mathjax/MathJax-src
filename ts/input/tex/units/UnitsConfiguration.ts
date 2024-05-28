@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import {CommandMap} from '../TokenMap.js';
@@ -90,8 +91,8 @@ new CommandMap('units', {
 
 export const UnitsConfiguration = Configuration.create(
   'units', {
-    handler: {macro: ['units']},
-    options: {
+    [ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['units']},
+    [ConfigurationType.OPTIONS]: {
       units: {
         loose: false,
         ugly: false

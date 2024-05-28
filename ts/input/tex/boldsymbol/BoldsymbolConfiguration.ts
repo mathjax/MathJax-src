@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import {Configuration} from '../Configuration.js';
 import NodeUtil from '../NodeUtil.js';
@@ -106,8 +107,8 @@ export function rewriteBoldTokens(arg: {data: ParseOptions}) {
 
 export const BoldsymbolConfiguration = Configuration.create(
     'boldsymbol', {
-        handler: {macro: ['boldsymbol']},
-        nodes: {'token': createBoldToken},
-        postprocessors: [rewriteBoldTokens]
+      [ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['boldsymbol']},
+      [ConfigurationType.NODES]: {'token': createBoldToken},
+      [ConfigurationType.POSTPROCESSORS]: [rewriteBoldTokens]
     }
 );

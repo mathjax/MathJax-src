@@ -23,6 +23,7 @@
  */
 
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import {CommandMap, EnvironmentMap} from '../TokenMap.js';
 import {ParseUtil} from '../ParseUtil.js';
@@ -170,11 +171,11 @@ new CommandMap('empheq-macros', {
 //  Define the package for our new environment
 //
 export const EmpheqConfiguration = Configuration.create('empheq', {
-  handler: {
-    macro: ['empheq-macros'],
-    environment: ['empheq-env'],
+  [ConfigurationType.HANDLER]: {
+    [HandlerType.MACRO]: ['empheq-macros'],
+    [HandlerType.ENVIRONMENT]: ['empheq-env'],
   },
-  items: {
+  [ConfigurationType.ITEMS]: {
     [EmpheqBeginItem.prototype.kind]: EmpheqBeginItem
   }
 });

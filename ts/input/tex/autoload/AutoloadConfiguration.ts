@@ -134,7 +134,7 @@ export const AutoloadConfiguration = Configuration.create(
   'autoload', {
     handler: {
       macro: ['autoload-macros'],
-      environment: ['autoload-environments']
+      [HandlerType.ENVIRONMENT]: ['autoload-environments']
     },
     options: {
       //

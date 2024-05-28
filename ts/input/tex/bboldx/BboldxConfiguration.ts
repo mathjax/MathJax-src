@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import './BboldxMappings.js';
 
@@ -34,7 +35,7 @@ Configuration.create('text-bboldx', {
   handler: {
     macro: ['text-bboldx', 'text-bboldx-mathchar0miNormal', 'text-bboldx-delimiterNormal',
             'text-bboldx-mathchar0miBold', 'text-bboldx-delimiterBold'],
-    delimiter: ['text-bboldx-delimiterNormal', 'text-bboldx-delimiterBold'],
+    [HandlerType.DELIMITER]: ['text-bboldx-delimiterNormal', 'text-bboldx-delimiterBold'],
   }
 });
 
@@ -43,12 +44,12 @@ Configuration.create('text-bboldx', {
 // bold bb.
 //
 export const BboldxConfiguration = Configuration.create('bboldx', {
-  handler: {
-    macro: ['bboldx', 'bboldx-mathchar0miNormal', 'bboldx-delimiterNormal',
+  [ConfigurationType.HANDLER]: {
+    [HandlerType.MACRO]: ['bboldx', 'bboldx-mathchar0miNormal', 'bboldx-delimiterNormal',
             'bboldx-mathchar0miBold', 'bboldx-delimiterBold'],
-    delimiter: ['bboldx-delimiterNormal', 'bboldx-delimiterBold'],
+    [HandlerType.DELIMITER]: ['bboldx-delimiterNormal', 'bboldx-delimiterBold'],
   },
-  options: {
+  [ConfigurationType.OPTIONS]: {
     bboldx: {
       bfbb: false,
       light: false

@@ -22,6 +22,7 @@
  */
 
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {CommandMap} from '../TokenMap.js';
 import {Configuration, ParserConfiguration} from '../Configuration.js';
 import {ColorMethods} from './ColorMethods.js';
@@ -54,15 +55,15 @@ const config = function(_config: ParserConfiguration, jax: TeX<any, any, any>) {
  */
 export const ColorConfiguration = Configuration.create(
   'color', {
-    handler: {
-      macro: ['color'],
+    [ConfigurationType.HANDLER]: {
+      [HandlerType.MACRO]: ['color'],
     },
-    options: {
+    [ConfigurationType.OPTIONS]: {
       color: {
         padding: '5px',
         borderWidth: '2px'
       }
     },
-    config: config
+    [ConfigurationType.CONFIG]: config
   }
 );

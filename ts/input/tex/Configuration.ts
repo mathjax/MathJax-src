@@ -64,18 +64,18 @@ export class Configuration {
    * @return {Configuration} The newly generated configuration.
    */
   private static _create(name: string,
-                         config: {handler?: HandlerConfig,
-                                  fallback?: FallbackConfig,
-                                  items?: StackItemConfig,
-                                  tags?: TagsConfig,
-                                  options?: OptionList,
-                                  nodes?: {[key: string]: any},
-                                  preprocessors?: ProtoProcessor<Function>[],
-                                  postprocessors?: ProtoProcessor<Function>[],
-                                  init?: ProtoProcessor<InitMethod>,
-                                  config?: ProtoProcessor<ConfigMethod>,
-                                  priority?: number,
-                                  parser?: string,
+                         config: {[ConfigurationType.HANDLER]?: HandlerConfig,
+                                  [ConfigurationType.FALLBACK]?: FallbackConfig,
+                                  [ConfigurationType.ITEMS]?: StackItemConfig,
+                                  [ConfigurationType.TAGS]?: TagsConfig,
+                                  [ConfigurationType.OPTIONS]?: OptionList,
+                                  [ConfigurationType.NODES]?: {[key: string]: any},
+                                  [ConfigurationType.PREPROCESSORS]?: ProtoProcessor<Function>[],
+                                  [ConfigurationType.POSTPROCESSORS]?: ProtoProcessor<Function>[],
+                                  [ConfigurationType.INIT]?: ProtoProcessor<InitMethod>,
+                                  [ConfigurationType.CONFIG]?: ProtoProcessor<ConfigMethod>,
+                                  [ConfigurationType.PRIORITY]?: number,
+                                  [ConfigurationType.PARSER]?: string,
                                  } = {}): Configuration {
     let priority = config.priority || PrioritizedList.DEFAULTPRIORITY;
     let init = config.init ? this.makeProcessor(config.init, priority) : null;
@@ -121,18 +121,18 @@ export class Configuration {
    * @return {Configuration} The newly generated configuration.
    */
   public static create(name: string,
-                       config: {handler?: HandlerConfig,
-                                fallback?: FallbackConfig,
-                                items?: StackItemConfig,
-                                tags?: TagsConfig,
-                                options?: OptionList,
-                                nodes?: {[key: string]: any},
-                                preprocessors?: ProtoProcessor<Function>[],
-                                postprocessors?: ProtoProcessor<Function>[],
-                                init?: ProtoProcessor<InitMethod>,
-                                config?: ProtoProcessor<ConfigMethod>,
-                                priority?: number,
-                                parser?: string,
+                       config: {[ConfigurationType.HANDLER]?: HandlerConfig,
+                                [ConfigurationType.FALLBACK]?: FallbackConfig,
+                                [ConfigurationType.ITEMS]?: StackItemConfig,
+                                [ConfigurationType.TAGS]?: TagsConfig,
+                                [ConfigurationType.OPTIONS]?: OptionList,
+                                [ConfigurationType.NODES]?: {[key: string]: any},
+                                [ConfigurationType.PREPROCESSORS]?: ProtoProcessor<Function>[],
+                                [ConfigurationType.POSTPROCESSORS]?: ProtoProcessor<Function>[],
+                                [ConfigurationType.INIT]?: ProtoProcessor<InitMethod>,
+                                [ConfigurationType.CONFIG]?: ProtoProcessor<ConfigMethod>,
+                                [ConfigurationType.PRIORITY]?: number,
+                                [ConfigurationType.PARSER]?: string,
                                } = {}): Configuration {
     let configuration = Configuration._create(name, config);
     ConfigurationHandler.set(name, configuration);
@@ -145,19 +145,19 @@ export class Configuration {
    * @param {Object} config See `create` method.
    * @return {Configuration} The ephemeral package configuration.
    */
-  public static local(config: {handler?: HandlerConfig,
-                              fallback?: FallbackConfig,
-                              items?: StackItemConfig,
-                              tags?: TagsConfig,
-                              options?: OptionList,
-                              nodes?: {[key: string]: any},
-                              preprocessors?: ProtoProcessor<Function>[],
-                              postprocessors?: ProtoProcessor<Function>[],
-                              init?: ProtoProcessor<InitMethod>,
-                              config?: ProtoProcessor<ConfigMethod>,
-                              priority?: number,
-                              parser?: string,
-                             } = {}): Configuration {
+  public static local(config: {[ConfigurationType.HANDLER]?: HandlerConfig,
+                               [ConfigurationType.FALLBACK]?: FallbackConfig,
+                               [ConfigurationType.ITEMS]?: StackItemConfig,
+                               [ConfigurationType.TAGS]?: TagsConfig,
+                               [ConfigurationType.OPTIONS]?: OptionList,
+                               [ConfigurationType.NODES]?: {[key: string]: any},
+                               [ConfigurationType.PREPROCESSORS]?: ProtoProcessor<Function>[],
+                               [ConfigurationType.POSTPROCESSORS]?: ProtoProcessor<Function>[],
+                               [ConfigurationType.INIT]?: ProtoProcessor<InitMethod>,
+                               [ConfigurationType.CONFIG]?: ProtoProcessor<ConfigMethod>,
+                               [ConfigurationType.PRIORITY]?: number,
+                               [ConfigurationType.PARSER]?: string,
+                              } = {}): Configuration {
     return Configuration._create('', config);
   }
 

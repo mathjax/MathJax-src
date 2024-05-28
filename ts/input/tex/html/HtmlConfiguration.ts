@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import {CommandMap} from '../TokenMap.js';
 import HtmlMethods from './HtmlMethods.js';
@@ -36,5 +37,5 @@ new CommandMap('html_macros', {
 }, HtmlMethods);
 
 export const HtmlConfiguration = Configuration.create(
-  'html', {handler: { macro: ['html_macros']}}
+  'html', {[ConfigurationType.HANDLER]: { [HandlerType.MACRO]: ['html_macros']}}
 );

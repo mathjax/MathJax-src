@@ -23,6 +23,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration, ParserConfiguration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import {CommandMap} from '../TokenMap.js';
@@ -87,7 +88,7 @@ let init = function(config: ParserConfiguration) {
 
 export const ExtpfeilConfiguration = Configuration.create(
   'extpfeil', {
-    handler: {macro: ['extpfeil']},
-    init: init
+    [ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['extpfeil']},
+    [ConfigurationType.INIT]: init
   }
 );

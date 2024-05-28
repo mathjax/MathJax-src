@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import {BraketItem} from './BraketItems.js';
 import './BraketMappings.js';
@@ -29,14 +30,14 @@ import './BraketMappings.js';
 
 export const BraketConfiguration = Configuration.create(
   'braket', {
-    handler: {
-      character: ['Braket-characters'],
-      macro: ['Braket-macros']
+    [ConfigurationType.HANDLER]: {
+      [HandlerType.CHARACTER]: ['Braket-characters'],
+      [HandlerType.MACRO]: ['Braket-macros']
     },
-    items: {
+    [ConfigurationType.ITEMS]: {
       [BraketItem.prototype.kind]: BraketItem,
     },
-    priority: 3   // must come before base configuration
+    [ConfigurationType.PRIORITY]: 3   // must come before base configuration
   }
 );
 

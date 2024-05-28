@@ -21,6 +21,7 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import {CommandMap} from '../TokenMap.js';
 import NodeUtil from '../NodeUtil.js';
@@ -45,7 +46,7 @@ export const PAIREDDELIMS = 'mathtools-paired-delims';
  */
 function initMathtools(config: ParserConfiguration) {
   new CommandMap(PAIREDDELIMS, {}, {});
-  config.append(Configuration.local({handler: {macro: [PAIREDDELIMS]}, priority: -5}));
+  config.append(Configuration.local({[ConfigurationType.HANDLER]: {[HandlerType.MACRO]: [PAIREDDELIMS]}, priority: -5}));
 }
 
 /**
@@ -93,19 +94,19 @@ export function fixPrescripts({data}: {data: ParseOptions}) {
  */
 export const MathtoolsConfiguration = Configuration.create(
   'mathtools', {
-    handler: {
+    [ConfigurationType.HANDLER]: {
       macro: ['mathtools-macros', 'mathtools-delimiters'],
-      environment: ['mathtools-environments'],
-      delimiter: ['mathtools-delimiters'],
-      character: ['mathtools-characters']
+      [HandlerType.ENVIRONMENT]: ['mathtools-environments'],
+      [HandlerType.DELIMITER]: ['mathtools-delimiters'],
+      [HandlerType.CHARACTER]: ['mathtools-characters']
     },
-    items: {
+    [ConfigurationType.ITEMS]: {
       [MultlinedItem.prototype.kind]: MultlinedItem
     },
-    init: initMathtools,
-    config: configMathtools,
-    postprocessors: [[fixPrescripts, -6]],
-    options: {
+    [ConfigurationType.INIT]: initMathtools,
+    [ConfigurationType.CONFIG]: configMathtools,
+    [ConfigurationType.POSTPROCESSORS]: [[fixPrescripts, -6]],
+    [ConfigurationType.OPTIONS]: {
       mathtools: {
         'multlinegap': '1em',                   // horizontal space for multlined environments
         'multlined-pos': 'c',                   // default alignment for multlined environments

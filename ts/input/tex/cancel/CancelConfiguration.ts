@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import {TexConstant} from '../TexConstants.js';
@@ -81,7 +82,7 @@ new CommandMap('cancel', {
 
 
 export const CancelConfiguration = Configuration.create(
-  'cancel', {handler: {macro: ['cancel']}}
+  'cancel', {[ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['cancel']}}
 );
 
 

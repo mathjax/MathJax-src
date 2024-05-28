@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import {NodeFactory} from '../NodeFactory.js';
 
@@ -40,7 +41,7 @@ function noErrors(factory: NodeFactory,
 }
 
 export const NoErrorsConfiguration = Configuration.create(
-  'noerrors', {nodes: {'error': noErrors}}
+  'noerrors', {[ConfigurationType.NODES]: {'error': noErrors}}
 );
 
 

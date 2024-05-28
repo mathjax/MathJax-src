@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import {MacroMap} from '../TokenMap.js';
@@ -81,13 +82,13 @@ new MacroMap('tex-html', {'<': 'TexHTML'}, HtmlNodeMethods);
 
 export const TexHtmlConfiguration = Configuration.create(
   'texhtml', {
-    handler: {
-      character: ['tex-html']
+    [ConfigurationType.HANDLER]: {
+      [HandlerType.CHARACTER]: ['tex-html']
     },
-    options: {
+    [ConfigurationType.OPTIONS]: {
       allowTexHTML: false    // Must turn this on explicitly, since it allows unfiltered HTML insertion.
     },
-    config: () => {
+    [ConfigurationType.CONFIG]: () => {
       if (HTMLDomStrings) {
         //
         //  Add the needed includeHtmlTags definition to handle <tex-html> tags
@@ -110,10 +111,10 @@ export const TexHtmlConfiguration = Configuration.create(
         }
       }
     },
-    preprocessors: [(data: {document: HTMLDocument<any, any, any>, data: ParseOptions}) => {
+    [ConfigurationType.PREPROCESSORS]: [(data: {document: HTMLDocument<any, any, any>, data: ParseOptions}) => {
       data.data.packageData.set('texhtml', {adaptor: data.document.adaptor});  // save the DOMadaptor
     }],
-    postprocessors: [(data: {data: ParseOptions}) => {
+    [ConfigurationType.POSTPROCESSORS]: [(data: {data: ParseOptions}) => {
       data.data.packageData.set('texhtml', {adaptor: null});                   // clear the DOMadaptor
     }]
   }
