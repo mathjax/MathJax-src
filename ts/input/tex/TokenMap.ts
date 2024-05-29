@@ -283,12 +283,12 @@ export class MacroMap extends AbstractParseMap<Macro> {
    * @constructor
    * @param {string} name Name of the mapping.
    * @param {JSON} json The JSON representation of the macro map.
-   * @param {Record<string, ParseMethod>} functionMap Collection of parse
+   * @param {{[key: string]: ParseMethod}} functionMap Collection of parse
    *     functions for the single macros.
    */
   constructor(name: string,
               json: {[index: string]: string | Args[]},
-              functionMap: Record<string, ParseMethod>) {
+              functionMap: {[key: string]: ParseMethod}) {
     super(name, null);
     for (const key of Object.keys(json)) {
       let value = json[key];
@@ -365,13 +365,13 @@ export class EnvironmentMap extends MacroMap {
    * @param {string} name Name of the mapping.
    * @param {ParseMethod} parser The parser for the environments.
    * @param {JSON} json The JSON representation of the macro map.
-   * @param {Record<string, ParseMethod>} functionMap Collection of parse
+   * @param {{[key: string]: ParseMethod}} functionMap Collection of parse
    *     functions for the single macros.
    */
   constructor(name: string,
               parser: ParseMethod,
               json: {[index: string]: string | Args[]},
-              functionMap: Record<string, ParseMethod>) {
+              functionMap: {[key: string]: ParseMethod}) {
     super(name, json, functionMap);
     this.parser = parser;
   }

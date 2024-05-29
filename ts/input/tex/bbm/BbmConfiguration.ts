@@ -32,18 +32,21 @@ import TexParser from '../TexParser.js';
 /**
  * The methods that implement the bbm package.
  */
-let BbmMethods: Record<string, ParseMethod> = {};
+export const BbmMethods: {[key: string]: ParseMethod} = {
+
+  ChooseFont(parser: TexParser, name: string,
+             regular: string, bold: string) {
+    BaseMethods.MathFont(parser, name, parser.options.bbm.bold ? bold : regular);
+  },
+  
+  ChangeBold(parser: TexParser, name: string) {
+    const font = parser.GetArgument(name);
+    parser.options.bbm.bold = (font === 'bold' ? true : false);
+  }
+
+};
 
 BbmMethods.MathFont = BaseMethods.MathFont;
-BbmMethods.ChooseFont = function(parser: TexParser, name: string,
-                                 regular: string, bold: string) {
-  BaseMethods.MathFont(parser, name, parser.options.bbm.bold ? bold : regular);
-}
-BbmMethods.ChangeBold = function(parser: TexParser, name: string) {
-  const font = parser.GetArgument(name);
-  parser.options.bbm.bold = (font === 'bold' ? true : false);
-}
-
 
 new CommandMap('bbm', {
   mathversion: 'ChangeBold',

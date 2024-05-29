@@ -35,12 +35,13 @@ import {HTMLDomStrings} from '../../../handlers/html/HTMLDomStrings.js';
 import {DOMAdaptor} from '../../../core/DOMAdaptor.js';
 
 
-export const HtmlNodeMethods: Record<string, ParseMethod> = {
+export const HtmlNodeMethods: {[key: string]: ParseMethod} = {
+
   /**
    * Handle a serialized <tex-html> tag
    *
    * @param {TexParser} parser  The active TeX parser
-   * @param {string} name       The name of the macro
+   * @param {string} _name       The name of the macro
    */
   TexHTML(parser: TexParser, _name: string) {
     //

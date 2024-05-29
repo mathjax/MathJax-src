@@ -33,50 +33,51 @@ import {ENCLOSE_OPTIONS} from '../enclose/EncloseConfiguration.js';
 
 
 // Namespace
-export let CancelMethods: Record<string, ParseMethod> = {};
+export const CancelMethods: {[key: string]: ParseMethod} = {
+
+  /**
+   * Parse function for cancel macros of the form \(b|x)?cancel[attributes]{math}
+   * @param {TexParser} parser The current tex parser.
+   * @param {string} name The name of the calling macro.
+   * @param {string} notation The type of cancel notation to use.
+   */
+  Cancel(parser: TexParser, name: string, notation: string) {
+    const attr = parser.GetBrackets(name, '');
+    const math = parser.ParseArg(name);
+    const def = ParseUtil.keyvalOptions(attr, ENCLOSE_OPTIONS);
+    def['notation'] = notation;
+    parser.Push(parser.create('node', 'menclose', [math], def));
+  },
 
 
-/**
- * Parse function for cancel macros of the form \(b|x)?cancel[attributes]{math}
- * @param {TexParser} parser The current tex parser.
- * @param {string} name The name of the calling macro.
- * @param {string} notation The type of cancel notation to use.
- */
-CancelMethods.Cancel = function(parser: TexParser, name: string, notation: string) {
-  const attr = parser.GetBrackets(name, '');
-  const math = parser.ParseArg(name);
-  const def = ParseUtil.keyvalOptions(attr, ENCLOSE_OPTIONS);
-  def['notation'] = notation;
-  parser.Push(parser.create('node', 'menclose', [math], def));
-};
+  /**
+   * Parse function implementing \cancelto{value}[attributes]{math}
+   * @param {TexParser} parser The current tex parser.
+   * @param {string} name The name of the calling macro.
+   */
 
+  CancelTo(parser: TexParser, name: string) {
+    const attr = parser.GetBrackets(name, '');
+    let value = parser.ParseArg(name);
+    const math = parser.ParseArg(name);
+    const def = ParseUtil.keyvalOptions(attr, ENCLOSE_OPTIONS);
+    def ['notation'] = [TexConstant.Notation.UPDIAGONALSTRIKE,
+                        TexConstant.Notation.UPDIAGONALARROW,
+                        TexConstant.Notation.NORTHEASTARROW].join(' ');
+    value = parser.create('node', 'mpadded', [value],
+                          {depth: '-.1em', height: '+.1em', voffset: '.1em'});
+    parser.Push(parser.create('node', 'msup',
+                              [parser.create('node', 'menclose', [math], def), value]));
+  },
 
-/**
- * Parse function implementing \cancelto{value}[attributes]{math}
- * @param {TexParser} parser The current tex parser.
- * @param {string} name The name of the calling macro.
- */
-
-CancelMethods.CancelTo = function(parser: TexParser, name: string) {
-  const attr = parser.GetBrackets(name, '');
-  let value = parser.ParseArg(name);
-  const math = parser.ParseArg(name);
-  const def = ParseUtil.keyvalOptions(attr, ENCLOSE_OPTIONS);
-  def ['notation'] = [TexConstant.Notation.UPDIAGONALSTRIKE,
-                      TexConstant.Notation.UPDIAGONALARROW,
-                      TexConstant.Notation.NORTHEASTARROW].join(' ');
-  value = parser.create('node', 'mpadded', [value],
-                        {depth: '-.1em', height: '+.1em', voffset: '.1em'});
-  parser.Push(parser.create('node', 'msup',
-                            [parser.create('node', 'menclose', [math], def), value]));
-};
+}
 
 
 new CommandMap('cancel', {
   cancel:   ['Cancel', TexConstant.Notation.UPDIAGONALSTRIKE],
   bcancel:  ['Cancel', TexConstant.Notation.DOWNDIAGONALSTRIKE],
   xcancel:  ['Cancel', TexConstant.Notation.UPDIAGONALSTRIKE + ' ' +
-             TexConstant.Notation.DOWNDIAGONALSTRIKE],
+    TexConstant.Notation.DOWNDIAGONALSTRIKE],
   cancelto: 'CancelTo'
 }, CancelMethods);
 
@@ -84,5 +85,3 @@ new CommandMap('cancel', {
 export const CancelConfiguration = Configuration.create(
   'cancel', {[ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['cancel']}}
 );
-
-

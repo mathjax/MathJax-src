@@ -31,41 +31,43 @@ import BaseMethods from '../base/BaseMethods.js';
 
 
 // Namespace
-export let ActionMethods: Record<string, ParseMethod> = {};
+export const ActionMethods: {[key: string]: ParseMethod} = {
+
+
+  /**
+   * Implement \toggle {math1} {math2} ... \endtoggle
+   *    (as an <maction actiontype="toggle">)
+   * @param {TexParser} parser The current tex parser.
+   * @param {string} name The name of the calling macro.
+   */
+  Toggle(parser: TexParser, name: string) {
+    const children = [];
+    let arg;
+    while ((arg = parser.GetArgument(name)) !== '\\endtoggle') {
+      children.push(
+        new TexParser(arg, parser.stack.env, parser.configuration).mml());
+    }
+    parser.Push(
+      parser.create('node', 'maction', children, {actiontype: 'toggle'}));
+  },
+
+
+  /**
+   * Implement \mathtip{math}{tip}
+   *   (an an <maction actiontype="tooltip">)
+   * @param {TexParser} parser The current tex parser.
+   * @param {string} name The name of the calling macro.
+   */
+  Mathtip(parser: TexParser, name: string) {
+    const arg = parser.ParseArg(name);
+    const tip = parser.ParseArg(name);
+    parser.Push(
+      parser.create('node', 'maction', [arg, tip], {actiontype: 'tooltip'}));
+  },
+  
+}
 
 ActionMethods.Macro = BaseMethods.Macro;
-
-/**
- * Implement \toggle {math1} {math2} ... \endtoggle
- *    (as an <maction actiontype="toggle">)
- * @param {TexParser} parser The current tex parser.
- * @param {string} name The name of the calling macro.
- */
-ActionMethods.Toggle = function(parser: TexParser, name: string) {
-  const children = [];
-  let arg;
-  while ((arg = parser.GetArgument(name)) !== '\\endtoggle') {
-    children.push(
-      new TexParser(arg, parser.stack.env, parser.configuration).mml());
-  }
-  parser.Push(
-    parser.create('node', 'maction', children, {actiontype: 'toggle'}));
-};
-
-
-/**
- * Implement \mathtip{math}{tip}
- *   (an an <maction actiontype="tooltip">)
- * @param {TexParser} parser The current tex parser.
- * @param {string} name The name of the calling macro.
- */
-ActionMethods.Mathtip = function(parser: TexParser, name: string) {
-  const arg = parser.ParseArg(name);
-  const tip = parser.ParseArg(name);
-  parser.Push(
-    parser.create('node', 'maction', [arg, tip], {actiontype: 'tooltip'}));
-};
-
 
 new CommandMap('action-macros', {
   toggle:  'Toggle',

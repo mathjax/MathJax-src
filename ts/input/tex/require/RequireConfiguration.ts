@@ -180,7 +180,7 @@ function config(_config: ParserConfiguration, jax: TeX<any, any, any>) {
 /**
  * Namespace for \require methods
  */
-export const RequireMethods: Record<string, ParseMethod> = {
+export const RequireMethods: {[key: string]: ParseMethod} = {
 
   /**
    * Implements \require macro to load TeX extensions

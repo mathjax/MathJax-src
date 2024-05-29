@@ -27,7 +27,7 @@ import {Configuration} from '../Configuration.js';
 import {ParseMethod} from '../Types.js';
 import TexParser from '../TexParser.js';
 
-export const ColorV2Methods: Record<string, ParseMethod> = {
+const ColorV2Methods: {[key: string]: ParseMethod} = {
 
   /**
    * Implements the v2 color macro

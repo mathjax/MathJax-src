@@ -45,7 +45,7 @@ BOLDVARIANT['-tex-mathit']         = TexConstant.Variant.BOLDITALIC;
 
 
 // Namespace
-export let BoldsymbolMethods: Record<string, ParseMethod> = {};
+export const BoldsymbolMethods: {[key: string]: ParseMethod} = {
 
 
 /**
@@ -53,13 +53,15 @@ export let BoldsymbolMethods: Record<string, ParseMethod> = {};
  * @param {TexParser} parser The current tex parser.
  * @param {string} name The name of the macro.
  */
-BoldsymbolMethods.Boldsymbol = function(parser: TexParser, name: string) {
+Boldsymbol(parser: TexParser, name: string) {
   let boldsymbol = parser.stack.env['boldsymbol'];
   parser.stack.env['boldsymbol'] = true;
   let mml = parser.ParseArg(name);
   parser.stack.env['boldsymbol'] = boldsymbol;
   parser.Push(mml);
-};
+},
+
+}
 
 
 new CommandMap('boldsymbol', {boldsymbol: 'Boldsymbol'}, BoldsymbolMethods);
