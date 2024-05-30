@@ -38,9 +38,9 @@ import * as sm from '../TokenMap.js';
 let init = function(config: ParserConfiguration) {
   new sm.DelimiterMap(NewcommandUtil.NEW_DELIMITER,
                       ParseMethods.delimiter, {});
-  new sm.CommandMap(NewcommandUtil.NEW_COMMAND, {}, {});
+  new sm.CommandMap(NewcommandUtil.NEW_COMMAND, {});
   new sm.EnvironmentMap(NewcommandUtil.NEW_ENVIRONMENT,
-                        ParseMethods.environment, {}, {});
+                        ParseMethods.environment, {});
   config.append(Configuration.local(
     {[ConfigurationType.HANDLER]: {[HandlerType.CHARACTER]: [],
                                    [HandlerType.DELIMITER]: [NewcommandUtil.NEW_DELIMITER],

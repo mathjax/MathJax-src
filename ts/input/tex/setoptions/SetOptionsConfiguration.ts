@@ -94,28 +94,28 @@ export const SetOptionsUtil = {
 
 };
 
-const setOptionsMap = new CommandMap('setoptions', {
-  setOptions: 'SetOptions'
-}, {
-  /**
-   * Implements \setOptions[package]{option-values}
-   *
-   * @param {TexParser} parser   The active tex parser.
-   * @param {string} name        The name of the macro being processed.
-   */
-  SetOptions(parser: TexParser, name: string) {
-    const extension = parser.GetBrackets(name) || 'tex';
-    const options = ParseUtil.keyvalOptions(parser.GetArgument(name));
-    const config = parser.options.setoptions;
-    if (!config.filterPackage(parser, extension)) return;
-    for (const key of Object.keys(options)) {
-      if (config.filterOption(parser, extension, key)) {
-        (extension === 'tex' ? parser.options : parser.options[extension])[key] =
-          config.filterValue(parser, extension, key, options[key]);
-      }
+/**
+ * Implements \setOptions[package]{option-values}
+ *
+ * @param {TexParser} parser   The active tex parser.
+ * @param {string} name        The name of the macro being processed.
+ */
+function SetOptions(parser: TexParser, name: string) {
+  const extension = parser.GetBrackets(name) || 'tex';
+  const options = ParseUtil.keyvalOptions(parser.GetArgument(name));
+  const config = parser.options.setoptions;
+  if (!config.filterPackage(parser, extension)) return;
+  for (const key of Object.keys(options)) {
+    if (config.filterOption(parser, extension, key)) {
+      (extension === 'tex' ? parser.options : parser.options[extension])[key] =
+        config.filterValue(parser, extension, key, options[key]);
     }
-    parser.Push(parser.itemFactory.create('null'));
   }
+  parser.Push(parser.itemFactory.create('null'));
+}
+
+const setOptionsMap = new CommandMap('setoptions', {
+  setOptions: SetOptions
 });
 
 /**

@@ -68,7 +68,7 @@ export const EncloseMethods: {[key: string]: ParseMethod} = {
 
 
 
-new CommandMap('enclose', {enclose: 'Enclose'}, EncloseMethods);
+new CommandMap('enclose', {enclose: EncloseMethods.Enclose});
 
 
 export const EncloseConfiguration = Configuration.create(

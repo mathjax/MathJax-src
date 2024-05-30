@@ -138,13 +138,13 @@ new DelimiterMap('bboldx-delimiterBold', BboldxMethods.delimiterBold, {
 });
 
 new CommandMap('bboldx', {
-  mathbb: ['ChooseFont', '-bboldx', '-bboldx-light', '-bboldx-bold'],
-  mathbfbb: ['ChooseFont', '-bboldx-bold', '-bboldx', '-bboldx-bold'],
-  imathbb: ['Macro', '\\bbdotlessi'],
-  jmathbb: ['Macro', '\\bbdotlessj'],
-  imathbfbb: ['Macro', '\\bfbbdotlessi'],
-  jmathbfbb: ['Macro', '\\bfbbdotlessj'],
-}, BboldxMethods);
+  mathbb: [BboldxMethods.ChooseFont, '-bboldx', '-bboldx-light', '-bboldx-bold'],
+  mathbfbb: [BboldxMethods.ChooseFont, '-bboldx-bold', '-bboldx', '-bboldx-bold'],
+  imathbb: [BboldxMethods.Macro, '\\bbdotlessi'],
+  jmathbb: [BboldxMethods.Macro, '\\bbdotlessj'],
+  imathbfbb: [BboldxMethods.Macro, '\\bfbbdotlessi'],
+  jmathbfbb: [BboldxMethods.Macro, '\\bfbbdotlessj'],
+});
 
 // Text Macros.
 /**
@@ -260,11 +260,11 @@ new DelimiterMap('text-bboldx-delimiterBold', BboldxMethods.delimiterBold, {
 });
 
 new CommandMap('text-bboldx', {
-  textbb: ['ChooseTextFont', '-bboldx', '-bboldx-light', '-bboldx-bold'],
-  textbfbb: ['ChooseTextFont', '-bboldx-bold', '-bboldx', '-bboldx-bold'],
-  itextbb: ['Macro', '\\txtbbdotlessi'],
-  jtextbb: ['Macro', '\\txtbbdotlessj'],
-  itextbfbb: ['Macro', '\\txtbfbbdotlessi'],
-  jtextbfbb: ['Macro', '\\txtbfbbdotlessj'],
-}, BboldxMethods);
+  textbb: [BboldxMethods.ChooseTextFont, '-bboldx', '-bboldx-light', '-bboldx-bold'],
+  textbfbb: [BboldxMethods.ChooseTextFont, '-bboldx-bold', '-bboldx', '-bboldx-bold'],
+  itextbb: [BboldxMethods.Macro, '\\txtbbdotlessi'],
+  jtextbb: [BboldxMethods.Macro, '\\txtbbdotlessj'],
+  itextbfbb: [BboldxMethods.Macro, '\\txtbfbbdotlessi'],
+  jtextbfbb: [BboldxMethods.Macro, '\\txtbfbbdotlessj'],
+});
 

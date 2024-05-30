@@ -31,15 +31,14 @@ import TexParser from '../TexParser.js';
 /**
  * The methods that implement the dsfont package.
  */
-
-new CommandMap('dsfont', {
-  mathds: 'ChooseFont',
-}, {
-  ChooseFont: function (parser: TexParser, name: string) {
+function ChooseFont(parser: TexParser, name: string) {
     BaseMethods.MathFont(
       parser, name,
       parser.options.dsfont.sans ? '-ds-ss' : '-ds-rm');
   }
+
+new CommandMap('dsfont', {
+  mathds: ChooseFont,
 });
 
 //

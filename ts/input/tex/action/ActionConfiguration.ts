@@ -70,10 +70,10 @@ export const ActionMethods: {[key: string]: ParseMethod} = {
 ActionMethods.Macro = BaseMethods.Macro;
 
 new CommandMap('action-macros', {
-  toggle:  'Toggle',
-  mathtip: 'Mathtip',
-  texttip: ['Macro', '\\mathtip{#1}{\\text{#2}}', 2]
-}, ActionMethods);
+  toggle:  ActionMethods.Toggle,
+  mathtip: ActionMethods.Mathtip,
+  texttip: [ActionMethods.Macro, '\\mathtip{#1}{\\text{#2}}', 2]
+});
 
 
 export const ActionConfiguration = Configuration.create(
