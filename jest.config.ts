@@ -16,9 +16,6 @@ const config: Config = {
   testMatch: [
     "**/tests/**/*.test.ts"
   ],
-  // moduleFileExtensions: [
-  //   "js", "ts"
-  // ],
   extensionsToTreatAsEsm: ['.ts'],
   transform: {
     "^.+\\.tsx?$": [
