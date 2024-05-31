@@ -19,8 +19,14 @@ const config: Config = {
   // moduleFileExtensions: [
   //   "js", "ts"
   // ],
+  extensionsToTreatAsEsm: ['.ts'],
   transform: {
-    "^.+\\.tsx?$": "ts-jest",
+    "^.+\\.tsx?$": [
+      "ts-jest",
+      {
+        useESM: true,
+      },
+    ],
   }
 };
 

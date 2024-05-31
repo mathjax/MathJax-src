@@ -1,10 +1,10 @@
-import {TeX} from '../../cjs/input/tex.js';
-import {HTMLDocument} from '../../cjs/handlers/html/HTMLDocument.js';
-import {liteAdaptor} from '../../cjs/adaptors/liteAdaptor.js';
-import {STATE} from '../../cjs/core/MathItem.js';
-import {SerializedMmlVisitor} from '../../cjs/core/MmlTree/SerializedMmlVisitor.js';
-import {MmlNode} from '../../cjs/core/MmlTree/MmlNode.js';
-import '../../cjs/input/tex/AllPackages.js';
+import {TeX} from '#js/input/tex.js';
+import {HTMLDocument} from '#js/handlers/html/HTMLDocument.js';
+import {liteAdaptor} from '#js/adaptors/liteAdaptor.js';
+import {STATE} from '#js/core/MathItem.js';
+import {SerializedMmlVisitor} from '#js/core/MmlTree/SerializedMmlVisitor.js';
+import {MmlNode} from '#js/core/MmlTree/MmlNode.js';
+import '#js/input/tex/AllPackages.js';
 
 let convert: (tex: string) => string;
 
@@ -18,7 +18,7 @@ export function setupTex(packages: string[] = ['base'], options = {}) {
     toMathML(html.convert(expr, {display: true, end: STATE.CONVERT}));
 }
 
-import {SVG} from '../../cjs/output/svg.js';
+import {SVG} from '#js/output/svg.js';
 
 export function setupTexWithOutput(packages: string[] = ['base'], options = {}) {
   const parserOptions = Object.assign({}, {packages: packages}, options);
