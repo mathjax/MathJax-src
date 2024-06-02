@@ -364,7 +364,6 @@ CommonWrapper<
    * @param {N} element  The element to be placed
    */
   public place(x: number, y: number, element: N = null) {
-    x += this.dx;
     if (!(x || y)) return;
     if (!element) {
       element = this.element;
