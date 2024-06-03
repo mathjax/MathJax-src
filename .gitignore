@@ -6,4 +6,5 @@
 /mjs
 /bundle
 /bundle-cjs
-/coverage
+/jest/coverage
+/jest/node_modules

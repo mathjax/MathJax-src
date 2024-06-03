@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
-import { UnitUtil } from '../../../ts/input/tex/UnitUtil';
+import { UnitUtil } from '#js/input/tex/UnitUtil.js';
 
 // These methods will be rewritten into non-ParseUtil ones.
 function convertLength(unit: string, num: number) {
