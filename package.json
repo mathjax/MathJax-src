@@ -126,7 +126,6 @@
     "copyfiles": "^2.4.1",
     "diff": "^5.2.0",
     "rimraf": "^5.0.5",
-    "tape": "^5.7.5",
     "terser-webpack-plugin": "^5.3.10",
     "tslint": "^6.1.3",
     "tslint-jsdoc-rules": "^0.2.0",

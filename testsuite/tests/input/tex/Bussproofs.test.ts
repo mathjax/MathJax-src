@@ -1,6 +1,5 @@
 import { beforeEach, describe, it } from '@jest/globals';
-import { toXmlMatch } from '../../src/xmlMatch';
-import { setupTexWithOutput, tex2mml } from '../../src/setupTex';
+import { toXmlMatch, setupTexWithOutput, tex2mml } from '#helpers';
 
 beforeEach(() => setupTexWithOutput(['base', 'ams', 'bussproofs']));
 
