@@ -22,64 +22,66 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import {CommandMap} from '../TokenMap.js';
 import {ParseMethod} from '../Types.js';
 
 // Namespace
-export let UnitsMethods: Record<string, ParseMethod> = {};
+export let UnitsMethods: {[key: string]: ParseMethod} = {
 
-/**
- * Implements the basic \units macro.
- * @param {TexParser} parser The current tex parser.
- * @param {string} name The name of the calling macro.
- */
-UnitsMethods.Unit = function(parser: TexParser, name: string) {
-  let val = parser.GetBrackets(name) ;
-  let dim = parser.GetArgument(name);
-  let macro = `\\mathrm{${dim}}`;
-  if (val) {
-    macro = val + (parser.options.units.loose ? '~' : '\\,') + macro;
-  }
-  parser.string = macro + parser.string.slice(parser.i);
-  parser.i = 0;
-};
+  /**
+   * Implements the basic \units macro.
+   * @param {TexParser} parser The current tex parser.
+   * @param {string} name The name of the calling macro.
+   */
+  Unit(parser: TexParser, name: string) {
+    let val = parser.GetBrackets(name) ;
+    let dim = parser.GetArgument(name);
+    let macro = `\\mathrm{${dim}}`;
+    if (val) {
+      macro = val + (parser.options.units.loose ? '~' : '\\,') + macro;
+    }
+    parser.string = macro + parser.string.slice(parser.i);
+    parser.i = 0;
+  },
 
-/**
- * The \unitfrac macro.
- * @param {TexParser} parser The current tex parser.
- * @param {string} name The name of the calling macro.
- */
-UnitsMethods.UnitFrac = function(parser: TexParser, name: string) {
-  let val = parser.GetBrackets(name) || '';
-  let num = parser.GetArgument(name);
-  let den = parser.GetArgument(name);
-  let macro = `\\nicefrac[\\mathrm]{${num}}{${den}}`;
-  if (val) {
-    macro = val + (parser.options.units.loose ? '~' : '\\,') + macro;
-  }
-  parser.string = macro + parser.string.slice(parser.i);
-  parser.i = 0;
-};
+  /**
+   * The \unitfrac macro.
+   * @param {TexParser} parser The current tex parser.
+   * @param {string} name The name of the calling macro.
+   */
+  UnitFrac(parser: TexParser, name: string) {
+    let val = parser.GetBrackets(name) || '';
+    let num = parser.GetArgument(name);
+    let den = parser.GetArgument(name);
+    let macro = `\\nicefrac[\\mathrm]{${num}}{${den}}`;
+    if (val) {
+      macro = val + (parser.options.units.loose ? '~' : '\\,') + macro;
+    }
+    parser.string = macro + parser.string.slice(parser.i);
+    parser.i = 0;
+  },
 
-/**
- * The \nicefrac macro.
- * @param {TexParser} parser The current tex parser.
- * @param {string} name The name of the calling macro.
- */
-UnitsMethods.NiceFrac = function(parser: TexParser, name: string) {
-  let font = parser.GetBrackets(name) || '\\mathrm';
-  let num = parser.GetArgument(name);
-  let den = parser.GetArgument(name);
-  let numMml = new TexParser(`${font}{${num}}`, {...parser.stack.env},
-                             parser.configuration).mml();
-  let denMml = new TexParser(`${font}{${den}}`, {...parser.stack.env},
-                             parser.configuration).mml();
-  const def = parser.options.units.ugly ? {} : {bevelled: true};
-  const node = parser.create('node', 'mfrac', [numMml, denMml], def);
-  parser.Push(node);
-};
+  /**
+   * The \nicefrac macro.
+   * @param {TexParser} parser The current tex parser.
+   * @param {string} name The name of the calling macro.
+   */
+  NiceFrac(parser: TexParser, name: string) {
+    let font = parser.GetBrackets(name) || '\\mathrm';
+    let num = parser.GetArgument(name);
+    let den = parser.GetArgument(name);
+    let numMml = new TexParser(`${font}{${num}}`, {...parser.stack.env},
+                               parser.configuration).mml();
+    let denMml = new TexParser(`${font}{${den}}`, {...parser.stack.env},
+                               parser.configuration).mml();
+    const def = parser.options.units.ugly ? {} : {bevelled: true};
+    const node = parser.create('node', 'mfrac', [numMml, denMml], def);
+    parser.Push(node);
+  },
+}
 
 new CommandMap('units', {
   units:    'Unit',
@@ -90,8 +92,8 @@ new CommandMap('units', {
 
 export const UnitsConfiguration = Configuration.create(
   'units', {
-    handler: {macro: ['units']},
-    options: {
+    [ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['units']},
+    [ConfigurationType.OPTIONS]: {
       units: {
         loose: false,
         ugly: false

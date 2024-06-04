@@ -22,6 +22,7 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration, ParserConfiguration} from '../Configuration.js';
 import {expandable} from '../../../util/Options.js';
 import {CommandMap, EnvironmentMap, MacroMap} from '../TokenMap.js';
@@ -60,9 +61,9 @@ function configmacrosInit(config: ParserConfiguration) {
   new EnvironmentMap(ENVIRONMENTMAP, ParseMethods.environment, {}, {});
   config.append(Configuration.local({
     handler: {
-      character: [ACTIVEMAP],
-      macro: [MACROSMAP],
-      environment: [ENVIRONMENTMAP]
+      [HandlerType.CHARACTER]: [ACTIVEMAP],
+      [HandlerType.MACRO]: [MACROSMAP],
+      [HandlerType.ENVIRONMENT]: [ENVIRONMENTMAP]
     },
     priority: 3
   }));
@@ -135,12 +136,12 @@ function configEnvironments(jax: TEX) {
  */
 export const ConfigMacrosConfiguration = Configuration.create(
   'configmacros', {
-    init: configmacrosInit,
-    config: configmacrosConfig,
-    items: {
+    [ConfigurationType.INIT]: configmacrosInit,
+    [ConfigurationType.CONFIG]: configmacrosConfig,
+    [ConfigurationType.ITEMS]: {
       [BeginEnvItem.prototype.kind]: BeginEnvItem,
     },
-    options: {
+    [ConfigurationType.OPTIONS]: {
       active: expandable({}),
       macros: expandable({}),
       environments: expandable({})

@@ -44,7 +44,7 @@ import {MathtoolsUtil} from './MathtoolsUtil.js';
 /**
  * The implementations for the macros and environments for the mathtools package.
  */
-export const MathtoolsMethods: Record<string, ParseMethod> = {
+export const MathtoolsMethods: {[key: string]: ParseMethod} = {
 
   /**
    * Handle a mathtools matrix environment, with optional alignment.

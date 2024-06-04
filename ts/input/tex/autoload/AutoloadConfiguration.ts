@@ -22,6 +22,7 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
+import {HandlerType} from '../HandlerTypes.js';
 import {Configuration, ParserConfiguration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import {CommandMap} from '../TokenMap.js';
@@ -84,8 +85,8 @@ function initAutoload(config: ParserConfiguration) {
  */
 function configAutoload(config: ParserConfiguration, jax: TeX<any, any, any>) {
   const parser = jax.parseOptions;
-  const macros = parser.handlers.get('macro');
-  const environments = parser.handlers.get('environment');
+  const macros = parser.handlers.get(HandlerType.MACRO);
+  const environments = parser.handlers.get(HandlerType.ENVIRONMENT);
   const autoload = parser.options.autoload;
   parser.packageData.set('autoload', {Autoload});  // used by textmacros to tell if a macro is autoloading
   //
@@ -133,7 +134,7 @@ export const AutoloadConfiguration = Configuration.create(
   'autoload', {
     handler: {
       macro: ['autoload-macros'],
-      environment: ['autoload-environments']
+      [HandlerType.ENVIRONMENT]: ['autoload-environments']
     },
     options: {
       //

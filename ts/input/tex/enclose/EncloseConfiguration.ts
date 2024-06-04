@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import {CommandMap} from '../TokenMap.js';
@@ -45,30 +46,31 @@ export const ENCLOSE_OPTIONS: {[key: string]: number} = {
 
 
 // Namespace
-export let EncloseMethods: Record<string, ParseMethod> = {};
+export const EncloseMethods: {[key: string]: ParseMethod} = {
 
 
-/**
- * Implements \enclose{notation}[attr]{math}
- * (create <menclose notation="notation">math</menclose>)
- * @param {TexParser} parser The current tex parser.
- * @param {string} name The name of the calling macro.
- */
-EncloseMethods.Enclose = function(parser: TexParser, name: string) {
-  let notation = parser.GetArgument(name).replace(/,/g, ' ');
-  const attr = parser.GetBrackets(name, '');
-  const math = parser.ParseArg(name);
-  const def = ParseUtil.keyvalOptions(attr, ENCLOSE_OPTIONS);
-  def.notation = notation;
-  parser.Push(parser.create('node', 'menclose', [math], def));
-};
+  /**
+   * Implements \enclose{notation}[attr]{math}
+   * (create <menclose notation="notation">math</menclose>)
+   * @param {TexParser} parser The current tex parser.
+   * @param {string} name The name of the calling macro.
+   */
+  Enclose(parser: TexParser, name: string) {
+    let notation = parser.GetArgument(name).replace(/,/g, ' ');
+    const attr = parser.GetBrackets(name, '');
+    const math = parser.ParseArg(name);
+    const def = ParseUtil.keyvalOptions(attr, ENCLOSE_OPTIONS);
+    def.notation = notation;
+    parser.Push(parser.create('node', 'menclose', [math], def));
+  },
+  
+}
+
 
 
 new CommandMap('enclose', {enclose: 'Enclose'}, EncloseMethods);
 
 
 export const EncloseConfiguration = Configuration.create(
-  'enclose', {handler: {macro: ['enclose']}}
+  'enclose', {[ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['enclose']}}
 );
-
-

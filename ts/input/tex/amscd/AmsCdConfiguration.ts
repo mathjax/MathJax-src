@@ -22,18 +22,19 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import './AmsCdMappings.js';
 
 
 export const AmsCdConfiguration = Configuration.create(
   'amscd', {
-    handler: {
-      character: ['amscd_special'],
-      macro: ['amscd_macros'],
-      environment: ['amscd_environment']
+    [ConfigurationType.HANDLER]: {
+      [HandlerType.CHARACTER]: ['amscd_special'],
+      [HandlerType.MACRO]: ['amscd_macros'],
+      [HandlerType.ENVIRONMENT]: ['amscd_environment']
     },
-    options: {
+    [ConfigurationType.OPTIONS]: {
       amscd: {
         colspace: '5pt',
         rowspace: '5pt',

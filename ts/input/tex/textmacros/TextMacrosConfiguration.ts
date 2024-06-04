@@ -22,6 +22,7 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {TeX} from '../../tex.js';
 import TexParser from '../TexParser.js';
 import {Configuration, ParserConfiguration} from '../Configuration.js';
@@ -38,17 +39,17 @@ import './TextMacrosMappings.js';
  *  The base text macro configuration (used in the TextParser)
  */
 export const TextBaseConfiguration = Configuration.create('text-base', {
-  parser: 'text',
-  priority: 1,
-  handler: {
-    character: ['command', 'text-special'],
-    macro: ['text-macros']
+  [ConfigurationType.PARSER]: 'text',
+  [ConfigurationType.PRIORITY]: 1,
+  [ConfigurationType.HANDLER]: {
+    [HandlerType.CHARACTER]: ['command', 'text-special'],
+    [HandlerType.MACRO]: ['text-macros']
   },
-  fallback: {
+  [ConfigurationType.FALLBACK]: {
     //
     // Unknown characters are added to the text verbatim
     //
-    character: (parser: TextParser, c: string) => {
+    [HandlerType.CHARACTER]: (parser: TextParser, c: string) => {
       parser.text += c;
     },
     //
@@ -97,7 +98,7 @@ function internalMath(parser: TexParser, text: string, level?: number | string, 
 //  The textmacros package configuration
 //
 export const TextMacrosConfiguration = Configuration.create('textmacros', {
-  priority: 1,
+  [ConfigurationType.PRIORITY]: 1,
   /**
    * @param {ParserConfiguration} config   The configuration object we are being configured within
    * @param {TeX<any,any,any>} jax         The TeX input jax in which we are running
@@ -125,7 +126,7 @@ export const TextMacrosConfiguration = Configuration.create('textmacros', {
     parseOptions.packageData.set('textmacros', {textConf, parseOptions, jax, texParser: null});
     parseOptions.options.internalMath = internalMath;
   },
-  preprocessors: [(data: {data: ParseOptions}) => {
+  [ConfigurationType.PREPROCESSORS]: [(data: {data: ParseOptions}) => {
     //
     //  Set the MmlFactory for the nodeFactory, since it was not available
     //  durring configuration above.
@@ -133,7 +134,7 @@ export const TextMacrosConfiguration = Configuration.create('textmacros', {
     const config = data.data.packageData.get('textmacros');
     config.parseOptions.nodeFactory.setMmlFactory(config.jax.mmlFactory);
   }],
-  options: {
+  [ConfigurationType.OPTIONS]: {
     textmacros: {
       packages: ['text-base']    // textmacro packages to load
     }

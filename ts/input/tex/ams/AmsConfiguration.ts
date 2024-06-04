@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration, ParserConfiguration} from '../Configuration.js';
 import {MultlineItem, FlalignItem} from './AmsItems.js';
 import {AbstractTags} from '../Tags.js';
@@ -50,21 +51,21 @@ let init = function(config: ParserConfiguration) {
 
 export const AmsConfiguration = Configuration.create(
   'ams', {
-    handler: {
-      character: ['AMSmath-operatorLetter'],
-      delimiter: ['AMSsymbols-delimiter', 'AMSmath-delimiter'],
-      macro: ['AMSsymbols-mathchar0mi', 'AMSsymbols-mathchar0mo',
+    [ConfigurationType.HANDLER]: {
+      [HandlerType.CHARACTER]: ['AMSmath-operatorLetter'],
+      [HandlerType.DELIMITER]: ['AMSsymbols-delimiter', 'AMSmath-delimiter'],
+      [HandlerType.MACRO]: ['AMSsymbols-mathchar0mi', 'AMSsymbols-mathchar0mo',
               'AMSsymbols-delimiter', 'AMSsymbols-macros',
               'AMSmath-mathchar0mo', 'AMSmath-macros', 'AMSmath-delimiter'],
-      environment: ['AMSmath-environment']
+      [HandlerType.ENVIRONMENT]: ['AMSmath-environment']
     },
-    items: {
+    [ConfigurationType.ITEMS]: {
       [MultlineItem.prototype.kind]: MultlineItem,
       [FlalignItem.prototype.kind]: FlalignItem,
     },
-    tags: {'ams': AmsTags},
-    init: init,
-    options: {
+    [ConfigurationType.TAGS]: {'ams': AmsTags},
+    [ConfigurationType.INIT]: init,
+    [ConfigurationType.OPTIONS]: {
       multlineWidth: '',
       ams: {
         operatornamePattern: /^[-*a-zA-Z]+/,  // multiLetterIdentifier for \operatorname

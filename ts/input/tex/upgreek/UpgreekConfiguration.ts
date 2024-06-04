@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import {Token} from '../Token.js';
 import {CharacterMap} from '../TokenMap.js';
@@ -92,7 +93,7 @@ new CharacterMap('upgreek', mathchar0miNormal, {
 
 export const UpgreekConfiguration = Configuration.create(
   'upgreek', {
-    handler: {macro: ['upgreek']},
+    [ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['upgreek']},
   }
 );
 

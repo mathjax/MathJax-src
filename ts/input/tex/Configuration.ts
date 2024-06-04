@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from './HandlerTypes.js';
 import {HandlerConfig, FallbackConfig} from './MapHandler.js';
 import {StackItemClass} from './StackItem.js';
 import {TagsClass} from './Tags.js';
@@ -63,18 +64,18 @@ export class Configuration {
    * @return {Configuration} The newly generated configuration.
    */
   private static _create(name: string,
-                         config: {handler?: HandlerConfig,
-                                  fallback?: FallbackConfig,
-                                  items?: StackItemConfig,
-                                  tags?: TagsConfig,
-                                  options?: OptionList,
-                                  nodes?: {[key: string]: any},
-                                  preprocessors?: ProtoProcessor<Function>[],
-                                  postprocessors?: ProtoProcessor<Function>[],
-                                  init?: ProtoProcessor<InitMethod>,
-                                  config?: ProtoProcessor<ConfigMethod>,
-                                  priority?: number,
-                                  parser?: string,
+                         config: {[ConfigurationType.HANDLER]?: HandlerConfig,
+                                  [ConfigurationType.FALLBACK]?: FallbackConfig,
+                                  [ConfigurationType.ITEMS]?: StackItemConfig,
+                                  [ConfigurationType.TAGS]?: TagsConfig,
+                                  [ConfigurationType.OPTIONS]?: OptionList,
+                                  [ConfigurationType.NODES]?: {[key: string]: any},
+                                  [ConfigurationType.PREPROCESSORS]?: ProtoProcessor<Function>[],
+                                  [ConfigurationType.POSTPROCESSORS]?: ProtoProcessor<Function>[],
+                                  [ConfigurationType.INIT]?: ProtoProcessor<InitMethod>,
+                                  [ConfigurationType.CONFIG]?: ProtoProcessor<ConfigMethod>,
+                                  [ConfigurationType.PRIORITY]?: number,
+                                  [ConfigurationType.PARSER]?: string,
                                  } = {}): Configuration {
     let priority = config.priority || PrioritizedList.DEFAULTPRIORITY;
     let init = config.init ? this.makeProcessor(config.init, priority) : null;
@@ -86,12 +87,12 @@ export class Configuration {
     let parser = config.parser || 'tex';
     return new Configuration(
       name,
-      config.handler || {},
-      config.fallback || {},
-      config.items || {},
-      config.tags || {},
-      config.options || {},
-      config.nodes || {},
+      config[ConfigurationType.HANDLER] || {},
+      config[ConfigurationType.FALLBACK] || {},
+      config[ConfigurationType.ITEMS] || {},
+      config[ConfigurationType.TAGS] || {},
+      config[ConfigurationType.OPTIONS] || {},
+      config[ConfigurationType.NODES] || {},
       preprocessors, postprocessors, init, conf, priority,
       parser
     );
@@ -120,18 +121,18 @@ export class Configuration {
    * @return {Configuration} The newly generated configuration.
    */
   public static create(name: string,
-                       config: {handler?: HandlerConfig,
-                                fallback?: FallbackConfig,
-                                items?: StackItemConfig,
-                                tags?: TagsConfig,
-                                options?: OptionList,
-                                nodes?: {[key: string]: any},
-                                preprocessors?: ProtoProcessor<Function>[],
-                                postprocessors?: ProtoProcessor<Function>[],
-                                init?: ProtoProcessor<InitMethod>,
-                                config?: ProtoProcessor<ConfigMethod>,
-                                priority?: number,
-                                parser?: string,
+                       config: {[ConfigurationType.HANDLER]?: HandlerConfig,
+                                [ConfigurationType.FALLBACK]?: FallbackConfig,
+                                [ConfigurationType.ITEMS]?: StackItemConfig,
+                                [ConfigurationType.TAGS]?: TagsConfig,
+                                [ConfigurationType.OPTIONS]?: OptionList,
+                                [ConfigurationType.NODES]?: {[key: string]: any},
+                                [ConfigurationType.PREPROCESSORS]?: ProtoProcessor<Function>[],
+                                [ConfigurationType.POSTPROCESSORS]?: ProtoProcessor<Function>[],
+                                [ConfigurationType.INIT]?: ProtoProcessor<InitMethod>,
+                                [ConfigurationType.CONFIG]?: ProtoProcessor<ConfigMethod>,
+                                [ConfigurationType.PRIORITY]?: number,
+                                [ConfigurationType.PARSER]?: string,
                                } = {}): Configuration {
     let configuration = Configuration._create(name, config);
     ConfigurationHandler.set(name, configuration);
@@ -144,19 +145,19 @@ export class Configuration {
    * @param {Object} config See `create` method.
    * @return {Configuration} The ephemeral package configuration.
    */
-  public static local(config: {handler?: HandlerConfig,
-                              fallback?: FallbackConfig,
-                              items?: StackItemConfig,
-                              tags?: TagsConfig,
-                              options?: OptionList,
-                              nodes?: {[key: string]: any},
-                              preprocessors?: ProtoProcessor<Function>[],
-                              postprocessors?: ProtoProcessor<Function>[],
-                              init?: ProtoProcessor<InitMethod>,
-                              config?: ProtoProcessor<ConfigMethod>,
-                              priority?: number,
-                              parser?: string,
-                             } = {}): Configuration {
+  public static local(config: {[ConfigurationType.HANDLER]?: HandlerConfig,
+                               [ConfigurationType.FALLBACK]?: FallbackConfig,
+                               [ConfigurationType.ITEMS]?: StackItemConfig,
+                               [ConfigurationType.TAGS]?: TagsConfig,
+                               [ConfigurationType.OPTIONS]?: OptionList,
+                               [ConfigurationType.NODES]?: {[key: string]: any},
+                               [ConfigurationType.PREPROCESSORS]?: ProtoProcessor<Function>[],
+                               [ConfigurationType.POSTPROCESSORS]?: ProtoProcessor<Function>[],
+                               [ConfigurationType.INIT]?: ProtoProcessor<InitMethod>,
+                               [ConfigurationType.CONFIG]?: ProtoProcessor<ConfigMethod>,
+                               [ConfigurationType.PRIORITY]?: number,
+                               [ConfigurationType.PARSER]?: string,
+                              } = {}): Configuration {
     return Configuration._create('', config);
   }
 
@@ -179,7 +180,10 @@ export class Configuration {
                       readonly parser: string
                      ) {
     this.handler = Object.assign(
-      {character: [], delimiter: [], macro: [], environment: []}, handler);
+      {[HandlerType.CHARACTER]: [],
+       [HandlerType.DELIMITER]: [],
+       [HandlerType.MACRO]: [],
+       [HandlerType.ENVIRONMENT]: []}, handler);
   }
 
   /**
@@ -201,9 +205,10 @@ export class Configuration {
 }
 
 
-export namespace ConfigurationHandler {
+let maps: Map<string, Configuration> = new Map();
 
-  let maps: Map<string, Configuration> = new Map();
+export const ConfigurationHandler = {
+
 
   /**
    * Adds a new configuration to the handler overwriting old ones.
@@ -211,9 +216,9 @@ export namespace ConfigurationHandler {
    * @param {string} name The name of the configuration.
    * @param {Configuration} map The configuration mapping.
    */
-  export let set = function(name: string, map: Configuration): void {
+  set(name: string, map: Configuration): void {
     maps.set(name, map);
-  };
+  },
 
 
   /**
@@ -222,16 +227,16 @@ export namespace ConfigurationHandler {
    * @param {string} name The name of the configuration.
    * @return {Configuration} The configuration with the given name or null.
    */
-  export let get = function(name: string): Configuration {
+   get(name: string): Configuration {
     return maps.get(name);
-  };
+   },
 
   /**
    * @return {string[]} All configurations in the handler.
    */
-  export let keys = function(): IterableIterator<string> {
+   keys(): IterableIterator<string> {
     return maps.keys();
-  };
+   },
 
 }
 

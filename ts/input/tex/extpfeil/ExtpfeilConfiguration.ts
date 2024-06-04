@@ -23,6 +23,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration, ParserConfiguration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import {CommandMap} from '../TokenMap.js';
@@ -34,42 +35,43 @@ import TexError from '../TexError.js';
 
 
 // Namespace
-export let ExtpfeilMethods: Record<string, ParseMethod> = {};
+const ExtpfeilMethods: {[key: string]: ParseMethod} = {
 
-ExtpfeilMethods.xArrow = AmsMethods.xArrow;
+  /**
+   * Implements \Newextarrow to define a new arrow.
+   * @param {TexParser} parser The current tex parser.
+   * @param {string} name The name of the calling macro.
+   */
+  NewExtArrow(parser: TexParser, name: string) {
+    let cs = parser.GetArgument(name);
+    const space = parser.GetArgument(name);
+    const chr = parser.GetArgument(name);
+    if (!cs.match(/^\\([a-z]+|.)$/i)) {
+      throw new TexError('NewextarrowArg1',
+                         'First argument to %1 must be a control sequence name', name);
+    }
+    if (!space.match(/^(\d+),(\d+)$/)) {
+      throw new TexError(
+        'NewextarrowArg2',
+        'Second argument to %1 must be two integers separated by a comma',
+        name);
+    }
+    if (!chr.match(/^(\d+|0x[0-9A-F]+)$/i)) {
+      throw new TexError(
+        'NewextarrowArg3',
+        'Third argument to %1 must be a unicode character number',
+        name);
+    }
+    cs = cs.substring(1);
+    let spaces = space.split(',');
+    NewcommandUtil.addMacro(parser, cs, ExtpfeilMethods.xArrow,
+                            [parseInt(chr), parseInt(spaces[0]), parseInt(spaces[1])]);
+    parser.Push(parser.itemFactory.create('null'));
+  },
 
-/**
- * Implements \Newextarrow to define a new arrow.
- * @param {TexParser} parser The current tex parser.
- * @param {string} name The name of the calling macro.
- */
-ExtpfeilMethods.NewExtArrow = function(parser: TexParser, name: string) {
-  let cs = parser.GetArgument(name);
-  const space = parser.GetArgument(name);
-  const chr = parser.GetArgument(name);
-  if (!cs.match(/^\\([a-z]+|.)$/i)) {
-    throw new TexError('NewextarrowArg1',
-               'First argument to %1 must be a control sequence name', name);
-  }
-  if (!space.match(/^(\d+),(\d+)$/)) {
-    throw new TexError(
-      'NewextarrowArg2',
-      'Second argument to %1 must be two integers separated by a comma',
-      name);
-  }
-  if (!chr.match(/^(\d+|0x[0-9A-F]+)$/i)) {
-    throw new TexError(
-      'NewextarrowArg3',
-      'Third argument to %1 must be a unicode character number',
-      name);
-  }
-  cs = cs.substring(1);
-  let spaces = space.split(',');
-  NewcommandUtil.addMacro(parser, cs, ExtpfeilMethods.xArrow,
-                          [parseInt(chr), parseInt(spaces[0]), parseInt(spaces[1])]);
-  parser.Push(parser.itemFactory.create('null'));
+  xArrow: AmsMethods.xArrow,
+
 };
-
 
 new CommandMap('extpfeil', {
   xtwoheadrightarrow: ['xArrow', 0x21A0, 12, 16],
@@ -87,7 +89,7 @@ let init = function(config: ParserConfiguration) {
 
 export const ExtpfeilConfiguration = Configuration.create(
   'extpfeil', {
-    handler: {macro: ['extpfeil']},
-    init: init
+    [ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['extpfeil']},
+    [ConfigurationType.INIT]: init
   }
 );

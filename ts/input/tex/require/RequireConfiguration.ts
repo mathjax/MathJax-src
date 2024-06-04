@@ -22,6 +22,8 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
+import {
+  HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration, ParserConfiguration, ConfigurationHandler} from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import {CommandMap} from '../TokenMap.js';
@@ -178,7 +180,7 @@ function config(_config: ParserConfiguration, jax: TeX<any, any, any>) {
 /**
  * Namespace for \require methods
  */
-export const RequireMethods: Record<string, ParseMethod> = {
+export const RequireMethods: {[key: string]: ParseMethod} = {
 
   /**
    * Implements \require macro to load TeX extensions
@@ -237,5 +239,5 @@ new CommandMap('require', {require: 'Require'}, RequireMethods);
  * The configuration for the \require macro
  */
 export const RequireConfiguration = Configuration.create(
-  'require', {handler: {macro: ['require']}, config, options}
+  'require', {[ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['require']}, config, options}
 );

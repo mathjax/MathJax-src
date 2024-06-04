@@ -22,6 +22,7 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import ParseOptions from '../ParseOptions.js';
 import TexParser from '../TexParser.js';
@@ -53,7 +54,7 @@ new CommandMap('centernot', {
     parser.configuration.addNode('centerOver', base);
     parser.Push(mml);
   },
-  Macro: BaseMethods.Macro
+  [HandlerType.MACRO]: BaseMethods.Macro
 });
 
 /**
@@ -74,7 +75,7 @@ export function filterCenterOver({data}: {data: ParseOptions}) {
 
 export const CenternotConfiguration = Configuration.create(
   'centernot', {
-    handler: {macro: ['centernot']},
-    postprocessors: [filterCenterOver]
+    [ConfigurationType.HANDLER]: {macro: ['centernot']},
+    [ConfigurationType.POSTPROCESSORS]: [filterCenterOver]
   }
 );

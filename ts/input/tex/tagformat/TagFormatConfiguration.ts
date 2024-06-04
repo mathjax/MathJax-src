@@ -22,6 +22,7 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
+import {ConfigurationType} from '../HandlerTypes.js';
 import {Configuration, ParserConfiguration} from '../Configuration.js';
 import {TeX} from '../../tex.js';
 import {AbstractTags, TagsFactory} from '../Tags.js';
@@ -119,8 +120,8 @@ export function tagformatConfig(config: ParserConfiguration, jax: TeX<any, any, 
  */
 export const TagFormatConfiguration = Configuration.create(
   'tagformat', {
-    config: [tagformatConfig, 10],
-    options: {
+    [ConfigurationType.CONFIG]: [tagformatConfig, 10],
+    [ConfigurationType.OPTIONS]: {
       tagformat: {
         number: (n: number) => n.toString(),
         tag:    (tag: string) => '(' + tag + ')',

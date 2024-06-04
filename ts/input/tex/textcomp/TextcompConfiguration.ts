@@ -22,17 +22,18 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import './TextcompMappings.js';
 
 Configuration.create('text-textcomp', {
-  parser: 'text',
-  handler: {macro: ['textcomp-macros']}
+  [ConfigurationType.PARSER]: 'text',
+  [ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['textcomp-macros']}
 });
 
 export const TextcompConfiguration = Configuration.create(
   'textcomp', {
-    handler: {macro: ['textcomp-macros']},
+    [ConfigurationType.HANDLER]: {macro: ['textcomp-macros']},
     config(_config, jax) {
       const textmacros = jax.parseOptions.packageData.get('textmacros');
       if (textmacros) {

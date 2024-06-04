@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import {CommandMap} from '../TokenMap.js';
@@ -30,41 +31,42 @@ import BaseMethods from '../base/BaseMethods.js';
 
 
 // Namespace
-export let ActionMethods: Record<string, ParseMethod> = {};
-
-ActionMethods.Macro = BaseMethods.Macro;
-
-/**
- * Implement \toggle {math1} {math2} ... \endtoggle
- *    (as an <maction actiontype="toggle">)
- * @param {TexParser} parser The current tex parser.
- * @param {string} name The name of the calling macro.
- */
-ActionMethods.Toggle = function(parser: TexParser, name: string) {
-  const children = [];
-  let arg;
-  while ((arg = parser.GetArgument(name)) !== '\\endtoggle') {
-    children.push(
-      new TexParser(arg, parser.stack.env, parser.configuration).mml());
-  }
-  parser.Push(
-    parser.create('node', 'maction', children, {actiontype: 'toggle'}));
-};
+export const ActionMethods: {[key: string]: ParseMethod} = {
 
 
-/**
- * Implement \mathtip{math}{tip}
- *   (an an <maction actiontype="tooltip">)
- * @param {TexParser} parser The current tex parser.
- * @param {string} name The name of the calling macro.
- */
-ActionMethods.Mathtip = function(parser: TexParser, name: string) {
-  const arg = parser.ParseArg(name);
-  const tip = parser.ParseArg(name);
-  parser.Push(
-    parser.create('node', 'maction', [arg, tip], {actiontype: 'tooltip'}));
-};
+  /**
+   * Implement \toggle {math1} {math2} ... \endtoggle
+   *    (as an <maction actiontype="toggle">)
+   * @param {TexParser} parser The current tex parser.
+   * @param {string} name The name of the calling macro.
+   */
+  Toggle(parser: TexParser, name: string) {
+    const children = [];
+    let arg;
+    while ((arg = parser.GetArgument(name)) !== '\\endtoggle') {
+      children.push(
+        new TexParser(arg, parser.stack.env, parser.configuration).mml());
+    }
+    parser.Push(
+      parser.create('node', 'maction', children, {actiontype: 'toggle'}));
+  },
 
+
+  /**
+   * Implement \mathtip{math}{tip}
+   *   (an an <maction actiontype="tooltip">)
+   * @param {TexParser} parser The current tex parser.
+   * @param {string} name The name of the calling macro.
+   */
+  Mathtip(parser: TexParser, name: string) {
+    const arg = parser.ParseArg(name);
+    const tip = parser.ParseArg(name);
+    parser.Push(
+      parser.create('node', 'maction', [arg, tip], {actiontype: 'tooltip'}));
+  },
+
+  Macro: BaseMethods.Macro,
+}
 
 new CommandMap('action-macros', {
   toggle:  'Toggle',
@@ -74,5 +76,5 @@ new CommandMap('action-macros', {
 
 
 export const ActionConfiguration = Configuration.create(
-  'action', {handler: {macro: ['action-macros']}}
+  'action', {[ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['action-macros']}}
 );

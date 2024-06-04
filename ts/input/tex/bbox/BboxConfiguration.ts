@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import {CommandMap} from '../TokenMap.js';
@@ -30,14 +31,14 @@ import TexError from '../TexError.js';
 
 
 // Namespace
-export let BboxMethods: Record<string, ParseMethod> = {};
+const BboxMethods: {[key: string]: ParseMethod} = {
 
 /**
  * Implements MathJax Bbox macro to pad and colorize background boxes.
  * @param {TexParser} parser The current tex parser.
  * @param {string} name The name of the calling macro.
  */
-BboxMethods.BBox = function(parser: TexParser, name: string) {
+BBox(parser: TexParser, name: string) {
   const bbox = parser.GetBrackets(name, '');
   let math = parser.ParseArg(name);
   const parts = bbox.split(/,/);
@@ -102,8 +103,9 @@ BboxMethods.BBox = function(parser: TexParser, name: string) {
     math = parser.create('node', 'mstyle', [math], def);
   }
   parser.Push(math);
-};
+},
 
+}
 
 // Dummy methods. Need to be made Safe with security check.
 let BBoxStyle = function(styles: string) {
@@ -119,5 +121,5 @@ new CommandMap('bbox', {bbox: 'BBox'}, BboxMethods);
 
 
 export const BboxConfiguration = Configuration.create(
-  'bbox', {handler: {macro: ['bbox']}}
+  'bbox', {[ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['bbox']}}
 );

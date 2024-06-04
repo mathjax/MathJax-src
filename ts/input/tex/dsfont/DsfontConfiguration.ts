@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import {CommandMap} from '../TokenMap.js';
 import BaseMethods from '../base/BaseMethods.js';
@@ -45,10 +46,10 @@ new CommandMap('dsfont', {
 //  Define the package configuration, including switch for sans serif.
 //
 export const DsfontConfiguration = Configuration.create('dsfont', {
-  handler: {
-    macro: ['dsfont'],
+  [ConfigurationType.HANDLER]: {
+    [HandlerType.MACRO]: ['dsfont'],
   },
-  options: {
+  [ConfigurationType.OPTIONS]: {
     dsfont: {
       sans: false
     }

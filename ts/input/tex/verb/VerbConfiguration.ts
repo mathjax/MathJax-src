@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import {TexConstant} from '../TexConstants.js';
 import TexParser from '../TexParser.js';
@@ -31,7 +32,7 @@ import TexError from '../TexError.js';
 
 
 // Namespace
-export let VerbMethods: Record<string, ParseMethod> = {};
+const VerbMethods: {[key: string]: ParseMethod} = {
 
 
 /**
@@ -39,7 +40,7 @@ export let VerbMethods: Record<string, ParseMethod> = {};
  * @param {TexParser} parser The current tex parser.
  * @param {string} name The name of the calling macro.
  */
-VerbMethods.Verb = function(parser: TexParser, name: string) {
+Verb(parser: TexParser, name: string) {
   const c = parser.GetNext();
   const start = ++parser.i;
   if (c === '' ) {
@@ -59,12 +60,13 @@ VerbMethods.Verb = function(parser: TexParser, name: string) {
   parser.Push(parser.create('token', 'mtext',
                             {mathvariant: TexConstant.Variant.MONOSPACE},
                             text));
-};
+},
 
+};
 
 new CommandMap('verb', {verb: 'Verb'}, VerbMethods);
 
 
 export const VerbConfiguration = Configuration.create(
-  'verb', {handler: {macro: ['verb']}}
+  'verb', {[ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['verb']}}
 );

@@ -1,3 +1,4 @@
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import {EnvironmentMap, MacroMap} from '../TokenMap.js';
 import {ParseUtil} from '../ParseUtil.js';
@@ -202,12 +203,12 @@ new MacroMap('cases-macros', {
 //  Define the package for our new environment
 //
 export const CasesConfiguration = Configuration.create('cases', {
-  handler: {
-    environment: ['cases-env'],
-    character: ['cases-macros']
+  [ConfigurationType.HANDLER]: {
+    [HandlerType.ENVIRONMENT]: ['cases-env'],
+    [HandlerType.CHARACTER]: ['cases-macros']
   },
-  items: {
+  [ConfigurationType.ITEMS]: {
     [CasesBeginItem.prototype.kind]: CasesBeginItem
   },
-  tags: {'cases': CasesTags}
+  [ConfigurationType.TAGS]: {'cases': CasesTags}
 });

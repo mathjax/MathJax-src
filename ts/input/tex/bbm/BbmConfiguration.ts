@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import {CommandMap} from '../TokenMap.js';
 import BaseMethods from '../base/BaseMethods.js';
@@ -31,17 +32,21 @@ import TexParser from '../TexParser.js';
 /**
  * The methods that implement the bbm package.
  */
-let BbmMethods: Record<string, ParseMethod> = {};
+export const BbmMethods: {[key: string]: ParseMethod} = {
 
-BbmMethods.MathFont = BaseMethods.MathFont;
-BbmMethods.ChooseFont = function(parser: TexParser, name: string,
-                                 regular: string, bold: string) {
-  BaseMethods.MathFont(parser, name, parser.options.bbm.bold ? bold : regular);
-}
-BbmMethods.ChangeBold = function(parser: TexParser, name: string) {
-  const font = parser.GetArgument(name);
-  parser.options.bbm.bold = (font === 'bold' ? true : false);
-}
+  ChooseFont(parser: TexParser, name: string,
+             regular: string, bold: string) {
+    BaseMethods.MathFont(parser, name, parser.options.bbm.bold ? bold : regular);
+  },
+  
+  ChangeBold(parser: TexParser, name: string) {
+    const font = parser.GetArgument(name);
+    parser.options.bbm.bold = (font === 'bold' ? true : false);
+  },
+
+  MathFont: BaseMethods.MathFont,
+
+};
 
 
 new CommandMap('bbm', {
@@ -55,10 +60,10 @@ new CommandMap('bbm', {
 //  Define the package configuration, including switch for sans serif.
 //
 export const BbmConfiguration = Configuration.create('bbm', {
-  handler: {
-    macro: ['bbm'],
+  [ConfigurationType.HANDLER]: {
+    [HandlerType.MACRO]: ['bbm'],
   },
-  options: {
+  [ConfigurationType.OPTIONS]: {
     bbm: {
       bold: false
     }

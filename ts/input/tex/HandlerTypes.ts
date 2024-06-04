@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2017-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,28 +17,30 @@
 
 
 /**
- * @fileoverview Configuration file for the Braket package.
+ * @fileoverview Basic enum types for map and configuration handlers.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
-import {Configuration} from '../Configuration.js';
-import {BraketItem} from './BraketItems.js';
-import './BraketMappings.js';
+export enum ConfigurationType {
+  HANDLER = 'handler',
+  FALLBACK = 'fallback',
+  ITEMS = 'items',
+  TAGS = 'tags',
+  OPTIONS = 'options',
+  NODES = 'nodes',
+  PREPROCESSORS = 'preprocessors',
+  POSTPROCESSORS = 'postprocessors',
+  INIT = 'init',
+  CONFIG = 'config',
+  PRIORITY = 'priority',
+  PARSER = 'parser',
+}
 
 
-export const BraketConfiguration = Configuration.create(
-  'braket', {
-    [ConfigurationType.HANDLER]: {
-      [HandlerType.CHARACTER]: ['Braket-characters'],
-      [HandlerType.MACRO]: ['Braket-macros']
-    },
-    [ConfigurationType.ITEMS]: {
-      [BraketItem.prototype.kind]: BraketItem,
-    },
-    [ConfigurationType.PRIORITY]: 3   // must come before base configuration
-  }
-);
-
-
+export enum HandlerType {
+  DELIMITER = 'delimiter',
+  MACRO = 'macro',
+  CHARACTER = 'character',
+  ENVIRONMENT = 'environment',
+}

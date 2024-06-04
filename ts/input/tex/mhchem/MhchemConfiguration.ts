@@ -22,6 +22,8 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {
+  HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import {CommandMap} from '../TokenMap.js';
 import {ParseMethod} from '../Types.js';
@@ -32,27 +34,30 @@ import {AmsMethods} from '../ams/AmsMethods.js';
 import {mhchemParser} from '#mhchem/mhchemParser.js';
 
 // Namespace
-let MhchemMethods: Record<string, ParseMethod> = {};
+const MhchemMethods: {[key: string]: ParseMethod} = {
 
-MhchemMethods.Macro = BaseMethods.Macro;
-MhchemMethods.xArrow = AmsMethods.xArrow;
+  /**
+   * @param{TeXParser} parser   The parser for this expression
+   * @param{string} name        The macro name being called
+   * @param{string} machine     The name of the finite-state machine to use
+   */
+  Machine(parser: TexParser, name: string, machine: 'tex' | 'ce' | 'pu') {
+    let arg = parser.GetArgument(name);
+    let tex;
+    try {
+      tex = mhchemParser.toTex(arg, machine);
+    } catch (err) {
+      throw new TexError(err[0], err[1]);
+    }
+    parser.string = tex + parser.string.substring(parser.i);
+    parser.i = 0;
+  },
 
-/**
- * @param{TeXParser} parser   The parser for this expression
- * @param{string} name        The macro name being called
- * @param{string} machine     The name of the finite-state machine to use
- */
-MhchemMethods.Machine = function(parser: TexParser, name: string, machine: 'tex' | 'ce' | 'pu') {
-  let arg = parser.GetArgument(name);
-  let tex;
-  try {
-    tex = mhchemParser.toTex(arg, machine);
-  } catch (err) {
-    throw new TexError(err[0], err[1]);
-  }
-  parser.string = tex + parser.string.substring(parser.i);
-  parser.i = 0;
-};
+  Macro: BaseMethods.Macro,
+  xArrow: AmsMethods.xArrow,
+
+}
+
 
 new CommandMap(
   'mhchem', {
@@ -91,5 +96,5 @@ new CommandMap(
 
 
 export const MhchemConfiguration = Configuration.create(
-  'mhchem', {handler: {macro: ['mhchem']}}
+  'mhchem', {[ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['mhchem']}}
 );

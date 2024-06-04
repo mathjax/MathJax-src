@@ -30,29 +30,6 @@ import {ParseUtil} from "../ParseUtil.js";
 import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
 import TexError from '../TexError.js';
 
-
-// Namespace
-let HtmlMethods: Record<string, ParseMethod> = {};
-
-/**
- * Implements \data{dataset}{content}
- * @param {TexParser} parser The calling parser.
- * @param {string} name The macro name.
- */
- HtmlMethods.Data = (parser: TexParser, name: string) => {
-  const dataset = parser.GetArgument(name);
-  const arg = GetArgumentMML(parser, name);
-  const data = ParseUtil.keyvalOptions(dataset);
-  for (const key in data) {
-    // remove illegal attribute names
-    if (!isLegalAttributeName(key)) {
-      throw new TexError('InvalidHTMLAttr', 'Invalid HTML attribute: %1', `data-${key}`);
-    }
-    NodeUtil.setAttribute(arg, `data-${key}`, data[key]);
-  }
-  parser.Push(arg);
-};
-
 /** Regexp for matching non-characters as specified by {@link https://infra.spec.whatwg.org/#noncharacter}. */
 const nonCharacterRegexp = /[\u{FDD0}-\u{FDEF}\u{FFFE}\u{FFFF}\u{1FFFE}\u{1FFFF}\u{2FFFE}\u{2FFFF}\u{3FFFE}\u{3FFFF}\u{4FFFE}\u{4FFFF}\u{5FFFE}\u{5FFFF}\u{6FFFE}\u{6FFFF}\u{7FFFE}\u{7FFFF}\u{8FFFE}\u{8FFFF}\u{9FFFE}\u{9FFFF}\u{AFFFE}\u{AFFFF}\u{BFFFE}\u{BFFFF}\u{CFFFE}\u{CFFFF}\u{DFFFE}\u{DFFFF}\u{EFFFE}\u{EFFFF}\u{FFFFE}\u{FFFFF}\u{10FFFE}\u{10FFFF}]/u;
 
@@ -64,69 +41,92 @@ function isLegalAttributeName(name: string): boolean {
   return !(name.match(/[\x00-\x1f\x7f-\x9f "'>\/=]/) || name.match(nonCharacterRegexp));
 }
 
-/**
- * Implements \href{url}{math}
- * @param {TexParser} parser The calling parser.
- * @param {string} name The macro name.
- */
-HtmlMethods.Href = function(parser: TexParser, name: string) {
-  const url = parser.GetArgument(name);
-  const arg = GetArgumentMML(parser, name);
-  NodeUtil.setAttribute(arg, 'href', url);
-  parser.Push(arg);
-};
+// Namespace
+const HtmlMethods: {[key: string]: ParseMethod} = {
 
-
-/**
- * Implements \class{name}{math}
- * @param {TexParser} parser The calling parser.
- * @param {string} name The macro name.
- */
-HtmlMethods.Class = function(parser: TexParser, name: string) {
-  let CLASS = parser.GetArgument(name);
-  const arg = GetArgumentMML(parser, name);
-  let oldClass = NodeUtil.getAttribute(arg, 'class');
-  if (oldClass) {
-    CLASS = oldClass + ' ' + CLASS;
-  }
-  NodeUtil.setAttribute(arg, 'class', CLASS);
-  parser.Push(arg);
-};
-
-
-/**
- * Implements \style{style-string}{math}
- * @param {TexParser} parser The calling parser.
- * @param {string} name The macro name.
- */
-HtmlMethods.Style = function(parser: TexParser, name: string) {
-  let style = parser.GetArgument(name);
-  const arg = GetArgumentMML(parser, name);
-  // check that it looks like a style string
-  let oldStyle = NodeUtil.getAttribute(arg, 'style');
-  if (oldStyle) {
-    if (style.charAt(style.length - 1) !== ';') {
-      style += ';';
+  /**
+   * Implements \data{dataset}{content}
+   * @param {TexParser} parser The calling parser.
+   * @param {string} name The macro name.
+   */
+  Data(parser: TexParser, name: string) {
+    const dataset = parser.GetArgument(name);
+    const arg = GetArgumentMML(parser, name);
+    const data = ParseUtil.keyvalOptions(dataset);
+    for (const key in data) {
+      // remove illegal attribute names
+      if (!isLegalAttributeName(key)) {
+        throw new TexError('InvalidHTMLAttr', 'Invalid HTML attribute: %1', `data-${key}`);
+      }
+      NodeUtil.setAttribute(arg, `data-${key}`, data[key]);
     }
-    style = oldStyle + ' ' + style;
-  }
-  NodeUtil.setAttribute(arg, 'style', style);
-  parser.Push(arg);
-};
+    parser.Push(arg);
+  },
+
+  /**
+   * Implements \href{url}{math}
+   * @param {TexParser} parser The calling parser.
+   * @param {string} name The macro name.
+   */
+  Href(parser: TexParser, name: string) {
+    const url = parser.GetArgument(name);
+    const arg = GetArgumentMML(parser, name);
+    NodeUtil.setAttribute(arg, 'href', url);
+    parser.Push(arg);
+  },
 
 
-/**
- * Implements \cssId{id}{math}
- * @param {TexParser} parser The calling parser.
- * @param {string} name The macro name.
- */
-HtmlMethods.Id = function(parser: TexParser, name: string) {
-  const ID  = parser.GetArgument(name);
-  const arg = GetArgumentMML(parser, name);
-  NodeUtil.setAttribute(arg, 'id', ID);
-  parser.Push(arg);
-};
+  /**
+   * Implements \class{name}{math}
+   * @param {TexParser} parser The calling parser.
+   * @param {string} name The macro name.
+   */
+  Class(parser: TexParser, name: string) {
+    let CLASS = parser.GetArgument(name);
+    const arg = GetArgumentMML(parser, name);
+    let oldClass = NodeUtil.getAttribute(arg, 'class');
+    if (oldClass) {
+      CLASS = oldClass + ' ' + CLASS;
+    }
+    NodeUtil.setAttribute(arg, 'class', CLASS);
+    parser.Push(arg);
+  },
 
+
+  /**
+   * Implements \style{style-string}{math}
+   * @param {TexParser} parser The calling parser.
+   * @param {string} name The macro name.
+   */
+  Style(parser: TexParser, name: string) {
+    let style = parser.GetArgument(name);
+    const arg = GetArgumentMML(parser, name);
+    // check that it looks like a style string
+    let oldStyle = NodeUtil.getAttribute(arg, 'style');
+    if (oldStyle) {
+      if (style.charAt(style.length - 1) !== ';') {
+        style += ';';
+      }
+      style = oldStyle + ' ' + style;
+    }
+    NodeUtil.setAttribute(arg, 'style', style);
+    parser.Push(arg);
+  },
+
+
+  /**
+   * Implements \cssId{id}{math}
+   * @param {TexParser} parser The calling parser.
+   * @param {string} name The macro name.
+   */
+  Id(parser: TexParser, name: string) {
+    const ID  = parser.GetArgument(name);
+    const arg = GetArgumentMML(parser, name);
+    NodeUtil.setAttribute(arg, 'id', ID);
+    parser.Push(arg);
+  },
+
+}
 
 /**
  * Parses the math argument of the above commands and returns it as single

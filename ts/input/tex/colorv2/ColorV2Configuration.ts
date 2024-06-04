@@ -21,12 +21,13 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {CommandMap} from '../TokenMap.js';
 import {Configuration} from '../Configuration.js';
 import {ParseMethod} from '../Types.js';
 import TexParser from '../TexParser.js';
 
-export const ColorV2Methods: Record<string, ParseMethod> = {
+const ColorV2Methods: {[key: string]: ParseMethod} = {
 
   /**
    * Implements the v2 color macro
@@ -60,5 +61,5 @@ new CommandMap('colorv2', {color: 'Color'}, ColorV2Methods);
  * The configuration for the color macros
  */
 export const ColorConfiguration = Configuration.create(
-  'colorv2', {handler: {macro: ['colorv2']}}
+  'colorv2', {[ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['colorv2']}}
 );

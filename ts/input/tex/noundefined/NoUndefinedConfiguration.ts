@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import TexParser from '../TexParser.js';
 
@@ -45,15 +46,15 @@ function noUndefined(parser: TexParser, name: string) {
 
 export const NoUndefinedConfiguration = Configuration.create(
   'noundefined', {
-    fallback: {macro: noUndefined},
-    options: {
+    [ConfigurationType.FALLBACK]: {[HandlerType.MACRO]: noUndefined},
+    [ConfigurationType.OPTIONS]: {
       noundefined: {
         color: 'red',
         background: '',
         size: ''
       }
     },
-    priority: 3
+    [ConfigurationType.PRIORITY]: 3
   }
 );
 

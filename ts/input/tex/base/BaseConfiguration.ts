@@ -22,6 +22,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import {MapHandler} from '../MapHandler.js';
 import TexError from '../TexError.js';
@@ -153,19 +154,19 @@ export class BaseTags extends AbstractTags { }
  */
 export const BaseConfiguration: Configuration = Configuration.create(
   'base',  {
-    handler: {
-      character: ['command', 'special', 'letter', 'digit'],
-      delimiter: ['delimiter'],
+    [ConfigurationType.HANDLER]: {
+      [HandlerType.CHARACTER]: ['command', 'special', 'letter', 'digit'],
+      [HandlerType.DELIMITER]: ['delimiter'],
       // Note, that the position of the delimiters here is important!
-      macro: ['delimiter', 'macros', 'lcGreek', 'ucGreek', 'mathchar0mi', 'mathchar0mo', 'mathchar7'],
-      environment: ['environment']
+      [HandlerType.MACRO]: ['delimiter', 'macros', 'lcGreek', 'ucGreek', 'mathchar0mi', 'mathchar0mo', 'mathchar7'],
+      [HandlerType.ENVIRONMENT]: ['environment']
     },
-    fallback: {
-      character: Other,
-      macro: csUndefined,
-      environment: envUndefined
+    [ConfigurationType.FALLBACK]: {
+      [HandlerType.CHARACTER]: Other,
+      [HandlerType.MACRO]: csUndefined,
+      [HandlerType.ENVIRONMENT]: envUndefined
     },
-    items: {
+    [ConfigurationType.ITEMS]: {
       // BaseItems
       [bitem.StartItem.prototype.kind]: bitem.StartItem,
       [bitem.StopItem.prototype.kind]: bitem.StopItem,
@@ -194,16 +195,16 @@ export const BaseConfiguration: Configuration = Configuration.create(
       [bitem.EquationItem.prototype.kind]: bitem.EquationItem,
       [bitem.MstyleItem.prototype.kind]: bitem.MstyleItem
     },
-    options: {
+    [ConfigurationType.OPTIONS]: {
       maxMacros: 1000,
       identifierPattern: /^[a-zA-Z]+/,  // pattern for multiLetterIdentifiers in \mathrm, etc.
       baseURL: (typeof(document) === 'undefined' ||
                 document.getElementsByTagName('base').length === 0) ?
                 '' : String(document.location).replace(/#.*$/, '')
     },
-    tags: {
+    [ConfigurationType.TAGS]: {
       base: BaseTags
     },
-    postprocessors: [[filterNonscript, -4]]
+    [ConfigurationType.POSTPROCESSORS]: [[filterNonscript, -4]]
   }
 );
