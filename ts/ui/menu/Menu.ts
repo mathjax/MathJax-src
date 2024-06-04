@@ -1207,7 +1207,7 @@ export class Menu {
         adaptor.getAttribute(math.typesetRoot, 'jax') === 'SVG') {
       for (const child of adaptor.childNodes(math.typesetRoot)) {
         if (adaptor.kind(child) === 'svg') {
-          return Promise.resolve(this.formatSvg(adaptor.outerHTML(child as HTMLElement)));
+          return Promise.resolve(this.formatSvg(adaptor.serializeXML(child as HTMLElement)));
         }
       }
     }
