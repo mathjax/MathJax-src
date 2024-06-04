@@ -42,11 +42,12 @@ export const BbmMethods: {[key: string]: ParseMethod} = {
   ChangeBold(parser: TexParser, name: string) {
     const font = parser.GetArgument(name);
     parser.options.bbm.bold = (font === 'bold' ? true : false);
-  }
+  },
+
+  MathFont: BaseMethods.MathFont,
 
 };
 
-BbmMethods.MathFont = BaseMethods.MathFont;
 
 new CommandMap('bbm', {
   mathversion: 'ChangeBold',
