@@ -1,5 +1,5 @@
 import { describe, it, expect } from '@jest/globals';
-import * as Length from '../../ts/util/lengths';
+import * as Length from '#js/util/lengths.js';
 
 function convertLengthDim(str: string) {
   return Length.length2em(str);
