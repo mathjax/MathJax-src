@@ -69,9 +69,9 @@ const ExtpfeilMethods: {[key: string]: ParseMethod} = {
     parser.Push(parser.itemFactory.create('null'));
   },
 
-};
+  xArrow: AmsMethods.xArrow,
 
-ExtpfeilMethods.xArrow = AmsMethods.xArrow;
+};
 
 new CommandMap('extpfeil', {
   xtwoheadrightarrow: ['xArrow', 0x21A0, 12, 16],
