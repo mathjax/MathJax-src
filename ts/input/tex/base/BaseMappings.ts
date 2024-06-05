@@ -510,13 +510,13 @@ new sm.CommandMap('macros', {
   tan:                'NamedFn',
   tanh:               'NamedFn',
 
-  limits:            ['Limits', 1],
-  nolimits:          ['Limits', 0],
+  limits:            ['Limits', true],
+  nolimits:          ['Limits', false],
 
   overline:            ['UnderOver', '2015'],
   underline:           ['UnderOver', '2015'],
-  overbrace:           ['UnderOver', '23DE', 1],
-  underbrace:          ['UnderOver', '23DF', 1],
+  overbrace:           ['UnderOver', '23DE', true],
+  underbrace:          ['UnderOver', '23DF', true],
   overparen:           ['UnderOver', '23DC'],
   underparen:          ['UnderOver', '23DD'],
   overrightarrow:      ['UnderOver', '2192'],
@@ -650,10 +650,10 @@ new sm.CommandMap('macros', {
   breve:             ['Accent', '02D8'],  // or 0306
   check:             ['Accent', '02C7'],  // or 030C
   hat:               ['Accent', '005E'],  // or 0302 or 02C6
-  vec:               ['Accent', '2192'],  // or 20D7
+  vec:               ['Accent', '2192', false],  // or 20D7
   dot:               ['Accent', '02D9'],  // or 0307
-  widetilde:         ['Accent', '007E', 1], // or 0303 or 02DC
-  widehat:           ['Accent', '005E', 1], // or 0302 or 02C6
+  widetilde:         ['Accent', '007E', true], // or 0303 or 02DC
+  widehat:           ['Accent', '005E', true], // or 0302 or 02C6
 
   matrix:             'Matrix',
   array:              'Matrix',

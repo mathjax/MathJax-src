@@ -154,6 +154,7 @@ export class MmlMo extends AbstractMmlTokenNode {
     '\u2015',              // overline and underline
     '\u2190\u2192\u2194',  // arrows
     '\u23DC\u23DD',        // over and under parens
+    '\u23DE\u23DF',        // over and under braces
     ']$'
   ].join(''));
 
