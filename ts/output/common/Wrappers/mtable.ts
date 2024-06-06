@@ -209,10 +209,11 @@ export interface CommonMtable<
   /**
    * Do linebreaking on the cells of a column
    *
-   * @param {number} i   The number of the column to break
-   * @param {number} W   The width to break to
+   * @param {number} i      The number of the column to break
+   * @param {number} W      The width to break to
+   * @param {string} type   The column width type (fit, auto, dimen, percentage)
    */
-  breakColumn(i: number, W: number): void;
+  breakColumn(i: number, W: number, type: string): void;
 
   /**
    * Determine the row heights and depths, the column widths,
@@ -637,10 +638,11 @@ export function CommonMtableMixin<
      * @override
      */
     public stretchColumns() {
+      const swidths = this.getColumnAttributes('columnwidth', 0);
       for (let i = 0; i < this.numCols; i++) {
         const width = (typeof this.cWidths[i] === 'number' ? this.cWidths[i] as number : null);
         this.stretchColumn(i, width);
-        width !== null && this.breakColumn(i, width);
+        width !== null && this.breakColumn(i, width, swidths[i]);
       }
     }
 
@@ -698,7 +700,7 @@ export function CommonMtableMixin<
     /**
      * @override
      */
-    public breakColumn(i: number, W: number) {
+    public breakColumn(i: number, W: number, type: string) {
       if (this.jax.math.root.attributes.get('overflow') !== 'linebreak' || !this.jax.math.display) return;
       const {D} = this.getTableData();
       let j = 0;
@@ -718,7 +720,7 @@ export function CommonMtableMixin<
       //
       // Make sure cWidth reflects the size of the broken columns
       //
-      if (w > (this.cWidths[i] as number)) {
+      if (type === 'fit' || type === 'auto' || isPercent(type) || w > (this.cWidths[i] as number)) {
         this.cWidths[i] = w;
       }
     }
