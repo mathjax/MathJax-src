@@ -8,7 +8,8 @@
   },
   "imports": {
     "#js/*": "../mjs/*",
-    "#source/*": "../components/mjs/*"
+    "#source/*": "../components/mjs/*",
+    "#helpers": "./src/index.ts"
   },
   "dependencies": {
     "@jest/globals": "^29.7.0",
