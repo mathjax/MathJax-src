@@ -24,11 +24,12 @@
 
 
 import {A11yDocument, HoverRegion, SpeechRegion, LiveRegion} from './Region.js';
+import {STATE} from '../../core/MathItem.js';
 import type { ExplorerMathItem } from '../explorer.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
 import {ExplorerPool} from './ExplorerPool.js';
 import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import { honk, InPlace } from '../speech/SpeechUtil.js';
+import { honk, InPlace, Timing } from '../speech/SpeechUtil.js';
 import {Sre} from '../sre.js';
 
 
@@ -446,6 +447,11 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    * @override
    */
   public Start() {
+    // In case the speech is not attached yet, we restart the explorer after a
+    // fashion.
+    if (this.item.state() < STATE.ATTACHSPEECH) {
+      setTimeout(() => this.Start(), Timing.INITIAL);
+    };
     if (!this.attached) return;
     if (this.node.hasAttribute('tabindex')) {
       this.node.removeAttribute('tabindex');

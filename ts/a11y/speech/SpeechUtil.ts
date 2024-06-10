@@ -223,3 +223,12 @@ export enum InPlace {
   SUMMARY
 }
 
+/**
+ * Some timing constants for asynchronous speech computation.
+ */
+export const Timing = {
+  THRESHOLD: 250,
+  INITIAL: 100,
+  INTERMEDIATE: 10
+};
+

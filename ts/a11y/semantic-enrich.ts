@@ -30,8 +30,7 @@ import {MathML} from '../input/mathml.js';
 import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
 import {OptionList, expandable} from '../util/Options.js';
 import {Sre} from './sre.js';
-import { buildSpeech } from './speech/SpeechUtil.js';
-
+import { buildSpeech, Timing } from './speech/SpeechUtil.js';
 import { GeneratorPool } from './speech/GeneratorPool.js';
 
 /*==========================================================================*/
@@ -51,7 +50,7 @@ newState('ENRICHED', 30);
 /**
  * Add STATE value for adding speech (after TYPESET)
  */
-newState('ATTACHSPEECH', 155);
+newState('ATTACHSPEECH', 205);
 
 /*==========================================================================*/
 
@@ -415,19 +414,47 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
         );
     }
 
+    private DELAY: number = Timing.INITIAL;
+    private awaitingSpeech: MathItem<N, T, D>[] = [];
+
     /**
      * Attach speech from a MathItem to a node
      */
     public attachSpeech() {
       if (!this.processed.isSet('attach-speech')) {
         if (this.options.enableSpeech || this.options.enableBraille) {
-          for (const math of this.math) {
-            (math as EnrichedMathItem<N, T, D>).attachSpeech(this);
-          }
+          this.awaitingSpeech = Array.from(this.math);
+          this.attachSpeechStart();
         }
-        this.processed.set('attach-speech');
       }
       return this;
+    }
+
+    /**
+     * Start attaching speech to nodes.
+     */
+    private attachSpeechStart() {
+      if (this.awaitingSpeech.length) {
+        setTimeout(
+          () => this.attachSpeechLoop(),
+          this.DELAY);
+      } else {
+        this.processed.set('attach-speech');
+      }
+    }
+
+    /**
+     * Loops through math items to attach speech until the timeout threshold is reached.
+     */
+    private attachSpeechLoop() {
+      const timeStart = new Date().getTime();
+      const timeEnd = timeStart + Timing.THRESHOLD;
+      while (this.awaitingSpeech.length && new Date().getTime() < timeEnd) {
+        const math = this.awaitingSpeech.shift();
+        (math as EnrichedMathItem<N, T, D>).attachSpeech(this);
+      }
+      this.DELAY = Timing.INTERMEDIATE;
+      this.attachSpeechStart();
     }
 
     /**
