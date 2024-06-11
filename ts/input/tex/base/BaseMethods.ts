@@ -282,9 +282,10 @@ const BaseMethods: {[key: string]: ParseMethod} = {
       base = parser.create('token', 'mi');
     }
     if ((NodeUtil.isType(base, 'msubsup') && !NodeUtil.isType(base, 'msup') &&
-      NodeUtil.getChildAt(base, (base as MmlMsubsup).sup)) ||
-      (NodeUtil.isType(base, 'munderover') && !NodeUtil.isType(base, 'mover') &&
-        NodeUtil.getChildAt(base, (base as MmlMunderover).over))) {
+         NodeUtil.getChildAt(base, (base as MmlMsubsup).sup)) ||
+        (NodeUtil.isType(base, 'munderover') && !NodeUtil.isType(base, 'mover') &&
+         NodeUtil.getChildAt(base, (base as MmlMunderover).over) &&
+         !NodeUtil.getProperty(base, 'subsupOK'))) {
       // @test Double Prime Error
       throw new TexError('DoubleExponentPrime',
                          'Prime causes double exponent: use braces to clarify');
@@ -496,10 +497,10 @@ const BaseMethods: {[key: string]: ParseMethod} = {
   /**
    * Handle a limits command for math operators.
    * @param {TexParser} parser The calling parser.
-   * @param {string} name The macro name.
-   * @param {string} limits The limits arguments.
+   * @param {string} _name The macro name.
+   * @param {boolean} limits True for \limits, false for \nolimits.
    */
-  Limits(parser: TexParser, _name: string, limits: string) {
+  Limits(parser: TexParser, _name: string, limits: boolean) {
     // @test Limits
     let op = parser.stack.Prev(true);
     // Get the texclass for the core operator.
@@ -645,13 +646,17 @@ const BaseMethods: {[key: string]: ParseMethod} = {
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    * @param {string} accent The accent.
-   * @param {boolean} stretchy True if accent is stretchy.
+   * @param {boolean} stretchy True if accent is stretchy, false if mathaccent should be false.
    */
   Accent(parser: TexParser, name: string, accent: string, stretchy: boolean) {
     // @test Vector
     const c = parser.ParseArg(name);
     // @test Vector Font
-    const def = {...ParseUtil.getFontDef(parser), accent: true, mathaccent: true};
+    const def = {
+        ...ParseUtil.getFontDef(parser),
+      accent: true,
+      mathaccent: stretchy === undefined ? true : stretchy
+    };
     const entity = NodeUtil.createEntity(accent);
     const moNode = parser.create('token', 'mo', def, entity);
     const mml = moNode;
