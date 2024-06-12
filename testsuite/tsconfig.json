@@ -1,11 +1,14 @@
 {
   "extends": "../tsconfig/mjs.json",
   "compilerOptions": {
+    "rootDir": ".",
     "outDir": "./js",
+    "moduleResolution": "bundler",
     "paths": {
       "#js/*": ["../mjs/*"],
-      "#source/*": ["../components/mjs/*"]
+      "#source/*": ["../components/mjs/*"],
+      "#helpers": ["./src/index.js"]
     }
   },
-  "include": ["./tests/**/*.ts"]
+  "include": ["./tests/**/*.ts", "./src/*.ts"]
 }
