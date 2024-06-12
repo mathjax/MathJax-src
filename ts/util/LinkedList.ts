@@ -179,8 +179,9 @@ export class LinkedList<DataClass> {
    * Remove items from the list
    *
    * @param {DataClass[]} items   The items to remove
+   * @return {LinkedList}  The LinkedList object (for chaining)
    */
-  public remove(...items: DataClass[]) {
+  public remove(...items: DataClass[]): LinkedList<DataClass> {
     const map = new Map<DataClass, boolean>();
     for (const item of items) {
       map.set(item, true);
@@ -195,6 +196,7 @@ export class LinkedList<DataClass> {
       }
       item = next;
     }
+    return this;
   }
 
   /**

@@ -23,11 +23,11 @@
 
 import {mathjax} from '../../mathjax.js';
 
-let root = new URL(import.meta.url).href.replace(/\/util\/asyncLoad\/esm.js$/, '');
+let root = new URL(import.meta.url).href.replace(/\/util\/asyncLoad\/esm.js$/, '/');
 
 if (!mathjax.asyncLoad) {
-  mathjax.asyncLoad = (name: string) => {
-    return import(new URL(name, root).href);
+  mathjax.asyncLoad = async (name: string) => {
+    return import(new URL(name, root).href).then((result) => result?.default || result);
   };
 }
 
