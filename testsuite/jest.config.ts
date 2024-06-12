@@ -14,6 +14,7 @@ const config: Config = {
   collectCoverage: true,
   coverageDirectory: "coverage",
   coverageProvider: "v8",
+  coveragePathIgnorePatterns: ["node_modules", "testsuite", "mjs/util/entities"],
   testEnvironment: "node",
   verbose: true,
   preset: tsjest,
