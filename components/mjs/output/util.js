@@ -31,13 +31,14 @@ export const OutputUtil = {
 
       if (name !== defaultFont) {
 
-        combineDefaults(MathJax.config.loader, `output/${jax}`, {
-          checkReady() {
-            return MathJax.loader.load(`${font}/${jax}`).catch(err => console.log(err));
-          }
-        });
+        MathJax.loader.addPackageData(`output/${jax}`, {extraLoads: [`${font}/${jax}`]});
 
       } else {
+
+        const extraLoads = MathJax.config.loader[`${font}/${jax}`]?.extraLoads;
+        if (extraLoads) {
+          MathJax.loader.addPackageData(`output/${jax}`, {extraLoads});
+        }
 
         combineWithMathJax({_: {
           output: {
@@ -78,14 +79,12 @@ export const OutputUtil = {
 
   loadFont(startup, jax, font, preload) {
     if (!MathJax.loader) {
-      return Promise.resolve();
+      return startup;
     }
     if (preload) {
       MathJax.loader.preLoad(`[${font}]/${jax}`);
     }
-    const check = MathJax.config.loader[`output/${jax}`];
-    const start = (check && check.checkReady ? check.checkReady().then(startup) : startup());
-    return start.catch(err => console.log(err));
+    return Package.loadPromise(`output/${jax}`).then(startup);
   }
 
 };

@@ -62,6 +62,8 @@ export interface PackageConfig {
   failed?: PackageFailed;              // Function to call when package fails to load
   checkReady?: () => Promise<void>;    // Function called to see if package is fully loaded
                                        //   (may cause additional packages to load, for example)
+  extraLoads?: string[];               // Extra packages to load after this one
+  rendererExtensions?: string[];       // Font extensions to load when renderer changes
 }
 
 /**
@@ -141,6 +143,16 @@ export class Package {
    */
   get canLoad(): boolean {
     return this.dependencyCount === 0 && !this.noLoad && !this.isLoading && !this.hasFailed;
+  }
+
+  /**
+   * @param {string} name   A promise for when extra files and checkReady have been fulfilled
+   */
+  public static loadPromise(name: string): Promise<void> {
+    const config = (CONFIG[name] || {}) as PackageConfig;
+    const promise = Promise.all((config.extraLoads || []).map((name) => Loader.load(name)));
+    const checkReady = config.checkReady || (() => Promise.resolve());
+    return promise.then(() => checkReady()) as Promise<void>;
   }
 
   /**
@@ -344,18 +356,16 @@ export class Package {
   /**
    * Check if a package is really ready to be marked as loaded
    * (When it is loaded, it may set its own checkReady() function
-   *  as a means of loading additional packages.  E.g., an output
-   *  jax may load a font package, dependent on its configuration.)
+   *  or extraLoads array as a means of loading additional packages.
+   *  E.g., an output jax may load a font package, dependent on its
+   *  configuration.)
    *
    *  The configuration's checkReady() function returns a promise
    *  that allows the loader to wait for addition actions to finish
    *  before marking the file as loaded (or failing to load).
    */
   protected checkLoad() {
-    const config = (CONFIG[this.name] || {}) as PackageConfig;
-    const checkReady = config.checkReady || (() => Promise.resolve());
-    checkReady().then(() => this.loaded())
-      .catch((message) => this.failed(message));
+    Package.loadPromise(this.name).then(() => this.loaded()).catch((message) => this.failed(message));
   }
 
   /**

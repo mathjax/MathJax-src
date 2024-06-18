@@ -25,7 +25,7 @@
 
 import {MathJax as MJGlobal, MathJaxObject as MJObject, MathJaxLibrary,
         MathJaxConfig as MJConfig, combineWithMathJax, combineDefaults} from './global.js';
-import {Package, PackageError, PackageReady, PackageFailed} from './package.js';
+import {Package, PackageError, PackageReady, PackageFailed, PackageConfig} from './package.js';
 import {FunctionList} from '../util/FunctionList.js';
 import {mjxRoot} from '#root/root.js';
 
@@ -73,7 +73,8 @@ export interface MathJaxObject extends MJObject {
     getRoot: () => string;                            // Find the root URL for the MathJax files
     checkVersion: (name: string, version: string) => boolean;   // Check the version of an extension
     saveVersion: (name: string) => void;              // Set the version for a combined component
-    pathFilters: FunctionList;                        // the filters to use for looking for package paths
+    pathFilters: FunctionList;                        // The filters to use for looking for package paths
+    addPackageData: (name: string, data: PackageConfig) => void;  // Add more package data for a package
   };
   startup?: any;
 }
@@ -196,6 +197,30 @@ export namespace Loader {
         extension.provides(CONFIG.provides[name]);
       }
       extension.loaded();
+    }
+  }
+
+  /**
+   * Insert options into a package configuration
+   *
+   * @param {string} name         The package whose configuration is being augmented
+   * @param {PackageConfig} data  The extra configuraiton information to add
+   */
+  export function addPackageData(name: string, data: PackageConfig) {
+    let config = CONFIG[name];
+    if (!config) {
+      config = CONFIG[name] = {};
+    }
+    for (const [key, value] of Object.entries(data)) {
+      if (Array.isArray(value)) {
+        if (!config[key]) {
+          config[key] = [];
+        }
+        const set = new Set([...config[key], ...value]);
+        config[key] = [...set];
+      } else {
+        config[key] = value;
+      }
     }
   }
 
