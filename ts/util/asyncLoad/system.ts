@@ -26,11 +26,11 @@ import {mathjax} from '../../mathjax.js';
 declare var System: {import: (name: string, url?: string) => any};
 declare var __dirname: string;
 
-let root = 'file://' + __dirname.replace(/\/\/[^\/]*$/, '/');
+let root = 'file://' + __dirname.replace(/\/[^\/]*\/[^\/]*$/, '/');
 
 if (!mathjax.asyncLoad && typeof System !== 'undefined' && System.import) {
   mathjax.asyncLoad = (name: string) => {
-    return System.import(name, root);
+    return System.import(name, root).then((result: any) => result?.default || result);
   };
 }
 

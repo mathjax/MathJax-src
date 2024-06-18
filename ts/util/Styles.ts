@@ -185,7 +185,7 @@ function splitWSC(name: string) {
 }
 
 /**
- * Combine with-style-color border definition from children
+ * Combine width-style-color border definition from children
  *
  * @param {string} name   The style to be processed
  */
@@ -228,14 +228,13 @@ const FONT: {[name: string]: RegExp} = {
   weight: /^(?:normal|bold|bolder|lighter|[1-9]00|inherit|initial|unset)$/,
   stretch: new RegExp('^(?:' +
                       ['normal',
-                       '(?:(?:ultra|extra|semi)-)?condensed',
-                       '(?:(?:semi|extra|ultra)-)?expanded',
+                       '(?:(?:ultra|extra|semi)-)?(?:condensed|expanded)',
                        'inherit|initial|unset']. join('|') + ')$'),
   size: new RegExp('^(?:' +
                    ['xx-small|x-small|small|medium|large|x-large|xx-large|larger|smaller',
-                    '[\d.]+%|[\d.]+[a-z]+',
+                    '[\\d.]+%|[\\d.]+[a-z]+',
                     'inherit|initial|unset'].join('|') + ')' +
-                   '(?:\/(?:normal|[\d.\+](?:%|[a-z]+)?))?$')
+                   '(?:\/(?:normal|[\\d.]+(?:%|[a-z]+)?))?$')
 };
 
 /**
@@ -253,9 +252,14 @@ function splitFont(name: string) {
     size: '', family: '', 'line-height': ''
   } as {[name: string]: string | string[]};
   for (const part of parts) {
-    value.family = part; // assume it is family unless otherwise (family must be present)
+    if (!value.family) {
+      value.family = part; // assume it is family unless otherwise (family must be present)
+    }
     for (const name of Object.keys(FONT)) {
       if ((Array.isArray(value[name]) || value[name] === '') && part.match(FONT[name])) {
+        if (value.family === part) {
+          value.family = '';
+        }
         if (name === 'size') {
           //
           // Handle size/line-height
@@ -271,14 +275,14 @@ function splitFont(name: string) {
           //
           if (Array.isArray(value[name])) {
             (value[name] as string[]).push(part);
-          } else {
+          } else if (value[name] === '') {
             value[name] = part;
           }
         }
       }
     }
   }
-  saveFontParts(name, value);
+  saveFontParts.call(this, name, value);
   delete this.styles[name]; // only use the parts, not the font declaration itself
 }
 
@@ -419,7 +423,7 @@ export class Styles {
     name = this.normalizeName(name);
     this.setStyle(name, value as string);
     //
-    // If there is no combine function ,the children combine to
+    // If there is no combine function, the children combine to
     // a separate parent (e.g., border-width sets border-top-width, etc.
     // and combines to border-top)
     //

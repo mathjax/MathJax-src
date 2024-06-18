@@ -40,7 +40,7 @@ export function sortLength(a: string, b: string): number {
  * @return {string}  The quoted string
  */
 export function quotePattern(text: string): string {
-  return text.replace(/([\^$(){}+*?\-|\[\]\:\\])/g, '\\$1');
+  return text.replace(/([\^$(){}.+*?\-|\[\]\:\\])/g, '\\$1');
 }
 
 /**
@@ -90,6 +90,6 @@ export function split(x: string): string[] {
  * @return {string}       The string with the unicode characters in place of \U{...}
  */
 export function replaceUnicode(text: string): string {
-  return text.replace(/((?:^|[^\\])(?:\\\\)*)\\U\s*(?:([0-9A-F])|\{\s*([0-9A-F]{1,6})\s*\})/g,
-                      (_m, pre, h1, h2) => pre + String.fromCodePoint(parseInt(h1 || h2, 16)));
+  return text.replace(/((?:^|[^\\])(?:\\\\)*)\\U(?:([0-9A-Fa-f]{4})|\{\s*([0-9A-Fa-f]{1,6})\s*\})/g,
+                     (_m, pre, h1, h2) => pre + String.fromCodePoint(parseInt(h1 || h2, 16)));
 }

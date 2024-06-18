@@ -73,7 +73,7 @@ export class FunctionList extends PrioritizedList<Function> {
    *                       depending on whether some function returned
    *                       false or not).
    */
-  public asyncExecute(...data: any[]): Promise<void> {
+  public asyncExecute(...data: any[]): Promise<boolean> {
     let i = -1;
     let items = this.items;
     return new Promise((ok: Function, fail: Function) => {

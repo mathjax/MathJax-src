@@ -98,7 +98,7 @@ export function length2em(length: string | number, size: number = 0, scale: numb
     return MATHSPACE[length];
   }
   let match = length.match(/^\s*([-+]?(?:\.\d+|\d+(?:\.\d*)?))?(pt|em|ex|mu|px|pc|in|mm|cm|%)?/);
-  if (!match) {
+  if (!match || match[0] === '') {
     return size;
   }
   let m = parseFloat(match[1] || '1'), unit = match[2];
@@ -130,18 +130,6 @@ export function em(m: number): string {
   if (Math.abs(m) < .001) return '0';
   return (m.toFixed(3).replace(/\.?0+$/, '')) + 'em';
 }
-
-/**
- * @param {number} m   A number to be shown in ems, but rounded to pixel boundaries
- * @param {number} em  The number of pixels in an em
- * @return {string}    The number with units of em
- */
-export function emRounded(m: number, em: number = 16): string {
-  m = (Math.round(m * em) + .05) / em;
-  if (Math.abs(m) < .001) return '0em';
-  return m.toFixed(3).replace(/\.?0+$/, '') + 'em';
-}
-
 
 /**
  * @param {number} m   A number of em's to be shown as pixels
