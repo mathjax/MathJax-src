@@ -3,12 +3,13 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "./js",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "paths": {
       "#js/*": ["../mjs/*"],
       "#source/*": ["../components/mjs/*"],
       "#helpers": ["./src/index.js"]
-    }
+    },
+    "lib": ["es2017"]
   },
   "include": ["./tests/**/*.ts", "./src/*.ts"]
 }

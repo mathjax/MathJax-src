@@ -1,5 +1,5 @@
-import { beforeEach, describe, it } from '@jest/globals';
-import { toXmlMatch, setupTex, tex2mml } from '#helpers';
+import { afterAll, beforeEach, describe, it } from '@jest/globals';
+import { toXmlMatch, setupTex, tex2mml, getTokens } from '#helpers';
 
 beforeEach(() => setupTex(['base']));
 
@@ -4415,3 +4415,5 @@ describe('Base Complex', () => {
 </math>`
     ));
 });
+
+afterAll(() => getTokens('base'));
