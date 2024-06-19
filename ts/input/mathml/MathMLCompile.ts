@@ -201,7 +201,7 @@ export class MathMLCompile<N, T, D> {
           mml.setProperty('scriptlevel', 1);
           mml.setProperty('useHeight', false);
           break;
-        case 'accent':
+        case 'mathaccent':
           mml.setProperty('mathaccent', value === 'true');
           break;
         case 'auto-op':

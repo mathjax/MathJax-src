@@ -64,10 +64,9 @@ export const ActionMethods: {[key: string]: ParseMethod} = {
     parser.Push(
       parser.create('node', 'maction', [arg, tip], {actiontype: 'tooltip'}));
   },
-  
-}
 
-ActionMethods.Macro = BaseMethods.Macro;
+  Macro: BaseMethods.Macro,
+}
 
 new CommandMap('action-macros', {
   toggle:  ActionMethods.Toggle,

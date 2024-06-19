@@ -208,8 +208,11 @@ export class PrimeItem extends BaseItem {
    */
   public checkItem(item: StackItem): CheckType {
     let [top0, top1] = this.Peek(2);
-    const isSup = NodeUtil.isType(top0, 'msubsup') && !NodeUtil.getChildAt(top0, (top0 as MmlMsubsup).sup);
-    const isOver = NodeUtil.isType(top0, 'munderover') && !NodeUtil.getChildAt(top0, (top0 as MmlMunderover).over);
+    const isSup = NodeUtil.isType(top0, 'msubsup') &&
+      !NodeUtil.getChildAt(top0, (top0 as MmlMsubsup).sup);
+    const isOver = NodeUtil.isType(top0, 'munderover') &&
+      !NodeUtil.getChildAt(top0, (top0 as MmlMunderover).over) &&
+      !NodeUtil.getProperty(top0, 'subsupOK');
     if (!isSup && !isOver) {
       // @test Prime, Double Prime
       const node = this.create('node', top0.getProperty('movesupsub') ? 'mover' : 'msup', [top0, top1]);

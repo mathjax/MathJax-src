@@ -102,9 +102,10 @@ export class PrioritizedList<DataClass> {
   /**
    * Remove an item from the list
    *
-   * @param {DataClass} item   The data for the item to be removed
+   * @param {DataClass} item    The data for the item to be removed
+   * @return {PrioritizedList}  The list (for chaining of calls)
    */
-  public remove(item: DataClass) {
+  public remove(item: DataClass): PrioritizedList<DataClass> {
     let i = this.items.length;
     do {
       i--;
@@ -112,5 +113,6 @@ export class PrioritizedList<DataClass> {
     if (i >= 0) {
       this.items.splice(i, 1);
     }
+    return this;
   }
 }

@@ -242,6 +242,11 @@ export class Menu {
   protected rerenderStart: number = STATE.LAST;
 
   /**
+   * List of font extensions that were loaded via \require
+   */
+  public requiredExtensions: string[] = [];
+
+  /**
    * @returns {boolean}   true when the menu is loading some component
    */
   public get isLoading(): boolean {
@@ -899,7 +904,8 @@ export class Menu {
   }
 
   /**
-   * Set up the new jax and link it to the document, then rerender the math
+   * Set up the new jax and link it to the document,
+   * load any needed extensions, and then rerender the math, if needed
    *
    * @param {string} jax         The name of the jax to switch to
    * @param {boolean} rerender   True if the document should be rerendered
@@ -909,7 +915,31 @@ export class Menu {
   protected setOutputJax(jax: string, rerender: boolean = true): Promise<void> {
     this.jax[jax].setAdaptor(this.document.adaptor);
     this.document.outputJax = this.jax[jax];
-    return (rerender ? mathjax.handleRetriesFor(() => this.rerender()) : Promise.resolve());
+    const promise = this.loadRequiredExtensions();
+    return (rerender ? promise.then(() => mathjax.handleRetriesFor(() => this.rerender())) : promise);
+  }
+
+  /**
+   * Load the required extensions into the new output jax
+   */
+  protected loadRequiredExtensions() {
+    let jax = this.document.outputJax.name.toLowerCase();
+    let promises = [];
+    for (const path of this.requiredExtensions) {
+      promises.push(MathJax.loader.load(`[${path}]/${jax}`));
+    }
+    this.requiredExtensions = [];
+    return Promise.all(promises);
+  }
+
+  /**
+   * Add extensions that need to be loaded when the renderer changes
+   */
+  public addRequiredExtensions(extensions: string[]) {
+    if (extensions) {
+      const set = new Set<string>([...this.requiredExtensions, ...extensions]);
+      this.requiredExtensions = [...set];
+    }
   }
 
   /**
@@ -1207,7 +1237,7 @@ export class Menu {
         adaptor.getAttribute(math.typesetRoot, 'jax') === 'SVG') {
       for (const child of adaptor.childNodes(math.typesetRoot)) {
         if (adaptor.kind(child) === 'svg') {
-          return Promise.resolve(this.formatSvg(adaptor.outerHTML(child as HTMLElement)));
+          return Promise.resolve(this.formatSvg(adaptor.serializeXML(child as HTMLElement)));
         }
       }
     }

@@ -101,9 +101,7 @@ const BraketMethods: {[key: string]: ParseMethod} = {
     top.setProperty('barcount', top.getProperty('barcount') as number + 1);
   },
 
+  Macro: BaseMethods.Macro
 }
-
-
-BraketMethods.Macro = BaseMethods.Macro;
 
 export default BraketMethods;

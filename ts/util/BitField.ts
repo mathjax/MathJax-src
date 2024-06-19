@@ -115,7 +115,7 @@ export class BitField {
  * @return {typeof AbstractBitField}  The bit-field class with names allocated
  */
 export function BitFieldClass(...names: string[]): typeof BitField {
-  const Bits = class extends BitField {};
-  Bits.allocate(...names);
-  return Bits;
+  const bits = class extends BitField {};
+  bits.allocate(...names);
+  return bits;
 }

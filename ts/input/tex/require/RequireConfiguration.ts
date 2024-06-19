@@ -31,11 +31,12 @@ import {ParseMethod} from '../Types.js';
 import TexError from '../TexError.js';
 import {TeX} from '../../tex.js';
 
-import {MathJax} from '../../../components/global.js';
+import {MathJax} from '../../../components/startup.js';
 import {Package} from '../../../components/package.js';
 import {Loader, CONFIG as LOADERCONFIG} from '../../../components/loader.js';
 import {mathjax} from '../../../mathjax.js';
 import {expandable} from '../../../util/Options.js';
+import {MenuMathDocument} from '../../../ui/menu/MenuHandler.js';
 
 /**
  * The MathJax configuration block (for looking up user-defined package options)
@@ -149,11 +150,12 @@ export function RequireLoad(parser: TexParser, name: string) {
   if (!allowed) {
     throw new TexError('BadRequire', 'Extension "%1" is not allowed to be loaded', extension);
   }
-  if (Package.packages.has(extension)) {
-    RegisterExtension(parser.configuration.packageData.get('require').jax, extension);
-  } else {
+  if (!Package.packages.has(extension)) {
     mathjax.retryAfter(Loader.load(extension));
   }
+  const require = LOADERCONFIG[extension]?.rendererExtensions;
+  (MathJax.startup.document as MenuMathDocument)?.menu?.addRequiredExtensions?.(require);
+  RegisterExtension(parser.configuration.packageData.get('require').jax, extension);
 }
 
 /**

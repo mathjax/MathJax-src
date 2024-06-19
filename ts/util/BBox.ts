@@ -98,7 +98,7 @@ export class BBox {
 
   /**
    * Set up a bbox for append() and combine() operations
-   * @return {BBox}  the boox itself (for chaining calls)
+   * @return {BBox}  the bbox itself (for chaining calls)
    */
   public empty(): BBox {
     this.w = 0;

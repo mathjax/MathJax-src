@@ -591,24 +591,15 @@ export const AmsMethods: {[key: string]: ParseMethod} = {
     parser.Push(parser.itemFactory.create('null'));
   },
 
+  HandleNoTag: BaseMethods.HandleNoTag,
+  HandleRef: BaseMethods.HandleRef,
+  Macro: BaseMethods.Macro,
+  Accent: BaseMethods.Accent,
+  Tilde: BaseMethods.Tilde,
+  Array: BaseMethods.Array,
+  Spacer: BaseMethods.Spacer,
+  NamedOp: BaseMethods.NamedOp,
+  EqnArray: BaseMethods.EqnArray,
+  Equation: BaseMethods.Equation,
+
 };
-
-AmsMethods.HandleNoTag = BaseMethods.HandleNoTag;
-
-AmsMethods.HandleRef = BaseMethods.HandleRef;
-
-AmsMethods.Macro = BaseMethods.Macro;
-
-AmsMethods.Accent = BaseMethods.Accent;
-
-AmsMethods.Tilde = BaseMethods.Tilde;
-
-AmsMethods.Array = BaseMethods.Array;
-
-AmsMethods.Spacer = BaseMethods.Spacer;
-
-AmsMethods.NamedOp = BaseMethods.NamedOp;
-
-AmsMethods.EqnArray = BaseMethods.EqnArray;
-
-AmsMethods.Equation = BaseMethods.Equation;

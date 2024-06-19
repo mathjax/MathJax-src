@@ -22,6 +22,7 @@
  */
 
 import {MmlNode, TextNode, XMLNode, TEXCLASS, TEXCLASSNAMES} from './MmlNode.js';
+import {MmlMo} from './MmlNodes/mo.js';
 import {MmlMi} from './MmlNodes/mi.js';
 import {HtmlNode} from './MmlNodes/HtmlNode.js';
 import {MmlFactory} from './MmlFactory.js';
@@ -167,6 +168,13 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
     vbox && this.setDataAttribute(data, 'vbox', vbox);
     const scriptalign = node.getProperty('scriptalign') as string;
     scriptalign && this.setDataAttribute(data, 'script-align', scriptalign);
+    const accent = node.getProperty('mathaccent') as boolean;
+    if (accent !== undefined) {
+      if ((accent && !(node as MmlMo).isMathAccent()) ||
+          (!accent && !(node as MmlMo).isMathAccentWithWidth())) {
+        this.setDataAttribute(data, 'mathaccent', accent.toString());
+      }
+    }
     const texclass = node.getProperty('texClass') as number;
     if (texclass !== undefined) {
       let setclass = true;

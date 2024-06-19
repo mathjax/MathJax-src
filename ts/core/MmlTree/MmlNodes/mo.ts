@@ -124,6 +124,7 @@ export class MmlMo extends AbstractMmlTokenNode {
 
   /**
    * Regular expression matching characters that are marked as math accents
+   *  (property mathaccent = true)
    */
   protected static mathaccents = new RegExp([
     '^[',
@@ -135,11 +136,25 @@ export class MmlMo extends AbstractMmlTokenNode {
     '\u02D8\u0306',        // breve
     '\u02C7\u030C',        // check
     '\u005E\u0302\u02C6',  // hat
-    '\u2192\u20D7',        // vec
+    '\u20D0\u20D1',        // harpoons
+    '\u20D6\u20D7\u20E1',  // vec (backward, forward, double)
     '\u02D9\u0307',        // dot
     '\u02DA\u030A',        // mathring
     '\u20DB',              // dddot
     '\u20DC',              // ddddot
+    ']$'
+  ].join(''));
+
+  /**
+   * Regular expression matching characters that are marked as math accents
+   *   whose widths are to be respected (property mathaccent = false)
+   */
+  protected static mathaccentsWithWidth = new RegExp([
+    '^[',
+    '\u2015',              // overline and underline
+    '\u2190\u2192\u2194',  // arrows
+    '\u23DC\u23DD',        // over and under parens
+    '\u23DE\u23DF',        // over and under braces
     ']$'
   ].join(''));
 
@@ -470,10 +485,33 @@ export class MmlMo extends AbstractMmlTokenNode {
     const isUnder = !!(under && under.isEmbellished && under.coreMO() === this);
     const isOver = !!(over && over.isEmbellished && under.coreMO() === this);
     if (!isUnder && !isOver) return;
-    const MATHACCENT = (this.constructor as typeof MmlMo).mathaccents;
-    if (mo.match(MATHACCENT)) {
-      this.setProperty('mathaccent', true);
+    if (this.isMathAccent(mo)) {
+      this.setProperty('mathaccent', true);   // math accent whose width is replaced by 0
+    } else if (this.isMathAccentWithWidth(mo)) {
+      this.setProperty('mathaccent', false);  // math accent whose width is normal
     }
+  }
+
+  /**
+   * Check a string for being a mathaccent
+   *
+   * @param {string} mo   The string to check
+   * @return {boolean}    True if the string should be a mathaccent
+   */
+  public isMathAccent(mo: string = this.getText()): boolean {
+    const MATHACCENT = (this.constructor as typeof MmlMo).mathaccents;
+    return !!mo.match(MATHACCENT);
+  }
+
+  /**
+   * Check a string for being a mathaccent with non-zero width
+   *
+   * @param {string} mo   The string to check
+   * @return {boolean}    True if the string should be a mathaccent
+   */
+  public isMathAccentWithWidth(mo: string = this.getText()): boolean {
+    const MATHACCENT = (this.constructor as typeof MmlMo).mathaccentsWithWidth;
+    return !!mo.match(MATHACCENT);
   }
 
 }

@@ -5,10 +5,6 @@
       "output/chtml.ts",
       "output/chtml",
       "output/common"
-    ],
-    "exclude": [
-      "output/chtml/ts5",
-      "output/chtml/ts6"
     ]
   },
   "webpack": {

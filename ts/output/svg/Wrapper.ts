@@ -489,21 +489,25 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     }
     const C = n.toString(16).toUpperCase();
     const [ , , w, data] = this.getVariantChar(variant, n);
+    if (data.unknown) {
+      this.utext += String.fromCodePoint(n);
+      return (buffer ? 0 : this.addUtext(x, y, parent, variant));
+    }
+    const dx = this.addUtext(x, y, parent, variant);
     if ('p' in data) {
-      x += this.addUtext(x, y, parent, variant);
+      x += dx;
       const path = (data.p ? 'M' + data.p + 'Z' : '');
       this.place(x, y, this.adaptor.append(parent, this.charNode(variant, C, path)) as N);
-    } else if ('c' in data) {
-      x += this.addUtext(x, y, parent, variant);
+      return w + dx;
+    }
+    if ('c' in data) {
       const g = this.adaptor.append(parent, this.svg('g', {'data-c': C})) as N;
-      this.place(x, y, g);
+      this.place(x + dx, y, g);
       x = 0;
       for (const n of this.unicodeChars(data.c, variant)) {
         x += this.placeChar(n, x, y, g, variant);
       }
-    } else if (data.unknown) {
-      this.utext += String.fromCodePoint(n);
-      return (buffer ? 0 : this.addUtext(x, y, parent, variant));
+      return x + dx;
     }
     return w;
   }

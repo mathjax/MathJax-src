@@ -510,13 +510,13 @@ new sm.CommandMap('macros', {
   tan:                BaseMethods.NamedFn,
   tanh:               BaseMethods.NamedFn,
 
-  limits:            [BaseMethods.Limits, 1],
-  nolimits:          [BaseMethods.Limits, 0],
+  limits:            [BaseMethods.Limits, true],
+  nolimits:          [BaseMethods.Limits, false],
 
   overline:            [BaseMethods.UnderOver, '2015'],
   underline:           [BaseMethods.UnderOver, '2015'],
-  overbrace:           [BaseMethods.UnderOver, '23DE', 1],
-  underbrace:          [BaseMethods.UnderOver, '23DF', 1],
+  overbrace:           [BaseMethods.UnderOver, '23DE', true],
+  underbrace:          [BaseMethods.UnderOver, '23DF', true],
   overparen:           [BaseMethods.UnderOver, '23DC'],
   underparen:          [BaseMethods.UnderOver, '23DD'],
   overrightarrow:      [BaseMethods.UnderOver, '2192'],
@@ -650,10 +650,10 @@ new sm.CommandMap('macros', {
   breve:             [BaseMethods.Accent, '02D8'],  // or 0306
   check:             [BaseMethods.Accent, '02C7'],  // or 030C
   hat:               [BaseMethods.Accent, '005E'],  // or 0302 or 02C6
-  vec:               [BaseMethods.Accent, '2192'],  // or 20D7
+  vec:               [BaseMethods.Accent, '2192', false],  // or 20D7
   dot:               [BaseMethods.Accent, '02D9'],  // or 0307
-  widetilde:         [BaseMethods.Accent, '007E', 1], // or 0303 or 02DC
-  widehat:           [BaseMethods.Accent, '005E', 1], // or 0302 or 02C6
+  widetilde:         [BaseMethods.Accent, '007E', true], // or 0303 or 02DC
+  widehat:           [BaseMethods.Accent, '005E', true], // or 0302 or 02C6
 
   matrix:             BaseMethods.Matrix,
   array:              BaseMethods.Matrix,

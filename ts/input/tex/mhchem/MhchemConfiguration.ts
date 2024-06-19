@@ -51,12 +51,13 @@ const MhchemMethods: {[key: string]: ParseMethod} = {
     }
     parser.string = tex + parser.string.substring(parser.i);
     parser.i = 0;
-  }
+  },
+
+  Macro: BaseMethods.Macro,
+  xArrow: AmsMethods.xArrow,
 
 }
 
-MhchemMethods.Macro = BaseMethods.Macro;
-MhchemMethods.xArrow = AmsMethods.xArrow;
 
 new CommandMap(
   'mhchem', {

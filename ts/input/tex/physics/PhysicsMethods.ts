@@ -963,18 +963,14 @@ const PhysicsMethods: {[key: string]: ParseMethod} = {
     return parser.Push(new TexParser(argument, parser.stack.env,
                                      parser.configuration).mml());
   },
-  
+
+  Macro: BaseMethods.Macro,
+  NamedFn: BaseMethods.NamedFn,
+  Array: BaseMethods.Array,
+
 };
 
 
-/**
- *  Methods taken from Base package.
- */
-PhysicsMethods.Macro = BaseMethods.Macro;
-
-PhysicsMethods.NamedFn = BaseMethods.NamedFn;
-
-PhysicsMethods.Array = BaseMethods.Array;
 
 
 export default PhysicsMethods;

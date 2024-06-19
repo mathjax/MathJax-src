@@ -29,7 +29,7 @@ import {mathjax} from '../mathjax.js';
  * @param {string} name  The name of the file to load
  * @return {Promise}     The promise that is satisfied when the file is loaded
  */
-export function asyncLoad(name: string): Promise<void> {
+export function asyncLoad(name: string): Promise<any> {
   if (!mathjax.asyncLoad) {
     return Promise.reject(`Can't load '${name}': No asyncLoad method specified`);
   }
