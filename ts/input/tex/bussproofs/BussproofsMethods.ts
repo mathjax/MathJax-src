@@ -113,13 +113,13 @@ function parseFCenterLine(parser: TexParser, name: string): MmlNode {
   let dollar = parser.GetNext();
   if (dollar !== '$') {
     throw new TexError('IllegalUseOfCommand',
-                       'Use of %1 does not match it\'s definition.', name);
+                       'Use of %1 does not match its definition.', name);
   }
   parser.i++;
   let axiom = parser.GetUpTo(name, '$');
   if (axiom.indexOf('\\fCenter') === -1) {
-    throw new TexError('IllegalUseOfCommand',
-                       'Missing \\fCenter in %1.', name);
+    throw new TexError('MissingProofCommand',
+                       'Missing %1 in %2.', '\\fCenter', name);
   }
   // Check for fCenter and throw error?
   let [prem, conc] = axiom.split('\\fCenter');

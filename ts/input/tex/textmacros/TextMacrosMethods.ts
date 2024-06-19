@@ -88,7 +88,7 @@ export const TextMacrosMethods = {
         break;
       }
     }
-    parser.Error('MathNotTerminated', 'Math-mode is not properly terminated');
+    parser.Error('MathNotTerminated', 'Math mode is not properly terminated');
   },
 
   /**
@@ -104,7 +104,7 @@ export const TextMacrosMethods = {
    * @param {string} c            The character that called this function
    */
   Misplaced(parser: TextParser, c: string) {
-    parser.Error('Misplaced', '\'%1\' can not be used here', c);
+    parser.Error('Misplaced', 'Misplaced \'%1\'', c);
   },
 
   /**
