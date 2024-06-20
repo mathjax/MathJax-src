@@ -191,7 +191,7 @@ export function buildLabel(
  * @param {string} speech The speech string.
  * @param {string=} locale An optional locale.
  * @param {string=} rate The base speech rate.
- * @return {[string, SsmlElement[]]} The speech with the ssml annotation structure 
+ * @return {[string, SsmlElement[]]} The speech with the ssml annotation structure
  */
 export function buildSpeech(speech: string, locale: string = 'en',
                             rate: string = '100'): [string, SsmlElement[]] {
@@ -222,13 +222,4 @@ export enum InPlace {
   DEPTH,
   SUMMARY
 }
-
-/**
- * Some timing constants for asynchronous speech computation.
- */
-export const Timing = {
-  THRESHOLD: 250,
-  INITIAL: 100,
-  INTERMEDIATE: 10
-};
 
