@@ -1,5 +1,5 @@
-import { beforeEach, describe, it } from '@jest/globals';
-import { toXmlMatch, setupTex, tex2mml } from '#helpers';
+import { afterAll, beforeEach, describe, it } from '@jest/globals';
+import { getTokens, toXmlMatch, setupTex, tex2mml } from '#helpers';
 
 beforeEach(() => setupTex(['base', 'html']));
 
@@ -113,3 +113,5 @@ describe('Html', () => {
 </math>`
     ));
 });
+
+afterAll(() => getTokens('html'));

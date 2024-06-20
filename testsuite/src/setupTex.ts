@@ -130,7 +130,7 @@ export function getTokens(configuration: string) {
     }
   });
   fs.appendFile(tmpJsonFile, ',' + JSON.stringify(outJSON, null, 2), (_err) => {
-    console.warn('could not write file test.json');
+    console.warn(`could not write file ${tmpJsonFile}`);
   });
 }
 
