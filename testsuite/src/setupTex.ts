@@ -9,6 +9,7 @@ import {STATE} from '#js/core/MathItem';
 import {SerializedMmlVisitor} from '#js/core/MmlTree/SerializedMmlVisitor';
 import {MmlNode} from '#js/core/MmlTree/MmlNode';
 import '#js/input/tex/AllPackages';
+import {tmpJsonFile} from './constants';
 import * as fs from 'fs';
 
 
@@ -44,6 +45,11 @@ export function tex2mml(tex: string) {
 
 const tokens: Map<string, Set<string>> = new Map();
 
+/**
+ * Adds a token to the token set.
+ * @param {string} name Table name.
+ * @param {string} token Token string.
+ */
 function addToken(name: string, token: string) {
   let tokenSet = tokens.get(name);
   if (!tokenSet) {
@@ -53,11 +59,22 @@ function addToken(name: string, token: string) {
   tokenSet.add(token);
 }
 
-export function setdifference(exp: Set<string>, act: Set<string>): Set<string> {
+/**
+ * Set difference.
+ * @param {Set<string>} exp Expected elements.
+ * @param {Set<string>} act Actual elements.
+ * @return {Set<string>} Expected setminus actual.
+ */
+function setdifference(exp: Set<string>, act: Set<string>): Set<string> {
   act.forEach(x => exp.delete(x));
   return exp;
 }
 
+/**
+ * Diff between macros
+ * @param {string} handler
+ * @return {[Set<string>, number, number]}
+ */
 function diffMacros(handler: string): [Set<string>, number, number] {
   const expected = MapHandler.getMap(handler);
   if (!expected || expected instanceof RegExpMap) {
@@ -72,14 +89,19 @@ function diffMacros(handler: string): [Set<string>, number, number] {
   return [setdifference(expSet, actual), expSize, actual.size];
 }
 
-declare const global: any;
 interface tables {
   table: string,
   size: number,
-  rest: number,
+  actual: number,
   missing: string[]
 }
 
+/**
+ * Gets tested tokens for a configuration and pushes them to the intermediary
+ * test file.
+ *
+ * @param {string} configuration The name of the configuration.
+ */
 export function getTokens(configuration: string) {
   const config = ConfigurationHandler.get(configuration);
   if (!config) {
@@ -102,18 +124,17 @@ export function getTokens(configuration: string) {
       tables.push({
         table: handler,
         size: exp,
-        rest: act,
+        actual: act,
         missing: Array.from(diff)
       })
     }
   });
-  fs.appendFile('/tmp/test.json', ',' + JSON.stringify(outJSON, null, 2), (_err) => {
+  fs.appendFile(tmpJsonFile, ',' + JSON.stringify(outJSON, null, 2), (_err) => {
     console.warn('could not write file test.json');
   });
-  return tokens;
 }
 
-// A prototype extension!
+// A prototype extension for the macro table lookups.
 AbstractParseMap.prototype.lookup = function(token: string) {
   const result = this.map.get(token);
   if (result && !token.match(/^\s$/)) {
@@ -121,4 +142,3 @@ AbstractParseMap.prototype.lookup = function(token: string) {
   }
   return result;
 }
-
