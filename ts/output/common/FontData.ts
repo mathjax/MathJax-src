@@ -22,11 +22,11 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
+import {mathjax} from '../../mathjax.js';
 import {OptionList, defaultOptions, userOptions} from '../../util/Options.js';
 import {StyleList} from '../../util/StyleList.js';
 import {asyncLoad} from '../../util/AsyncLoad.js';
 import {retryAfter} from '../../util/Retries.js';
-import {mathjax} from '../../mathjax.js';
 import {DIRECTION} from './Direction.js';
 export {DIRECTION} from './Direction.js';
 
@@ -1101,7 +1101,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     const prefix = (!dynamic.extension ? this.options.dynamicPrefix :
                     this.CLASS.dynamicExtensions.get(dynamic.extension).prefix);
     return (dynamic.file.match(/^(?:[\/\[]|[a-z]+:\/\/|[a-z]:)/i) ? dynamic.file :
-      prefix + '/' + dynamic.file.replace(/\.js$/, ''));
+      prefix + '/' + dynamic.file.replace(/(?<!\.js)$/, '.js'));
   }
 
   /**
@@ -1141,8 +1141,9 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    *   synchronous loading function, as in util/asyncLoad/node.ts.
    */
   public loadDynamicFilesSync() {
-    if (!mathjax.asyncLoad) {
-      throw Error('MathJax(loadDynamicFilesSync): mathjax.asyncLoad must be specified and synchronous');
+    if (!mathjax.asyncIsSynchronous) {
+      throw Error('MathJax(loadDynamicFilesSync): mathjax.asyncLoad must be specified and synchronous\n' +
+                 '    Try importing #js/../components/require.mjs and #js/util/asyncLoad/node.js');
     }
     const dynamicFiles = this.CLASS.dynamicFiles;
     Object.keys(dynamicFiles).forEach(name => this.loadDynamicFileSync(dynamicFiles[name]));

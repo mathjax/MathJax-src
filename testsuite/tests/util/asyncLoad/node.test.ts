@@ -1,6 +1,7 @@
 import { describe, test, expect } from '@jest/globals';
 import './dirname.mjs';
 import '#source/../require.mjs';
+import {mathjax} from '#js/mathjax.js';
 import {asyncLoad} from '#js/util/AsyncLoad.js';
 import {setBaseURL} from '#js/util/asyncLoad/node.js';
 import * as path from 'path';
@@ -22,10 +23,16 @@ describe('asyncLoad() for node', () => {
     await expect(asyncLoad(absFile)).resolves.toEqual({loaded: true});          // absolute file found
     await expect(asyncLoad(absUnknown).catch(() => true)).resolves.toBe(true);  // absolute file not found
 
+    await expect(asyncLoad('#js/../cjs/components/version.js')                  // load using package exports
+                 .then((result: any) => result.VERSION)).resolves.toBe(mathjax.version);
+    await expect(asyncLoad('mathjax-full/js/components/version.js')             // load from module
+                 .then((result: any) => result.VERSION)).resolves.toBe(mathjax.version);
+
     await expect(asyncLoad(mjsFile).catch(() => true)).resolves.toBe(true);     // mjs file fails
+    expect(mathjax.asyncIsSynchronous).toBe(true);                              // node.js is synchronous
   });
 
-  test('serBaseURL() for node', async () => {
+  test('setBaseURL() for node', async () => {
     setBaseURL(lib);
     const relFile = './AsyncLoad.child.cjs';
     const relUnknown = './AsyncLoad.unknown.cjs';
