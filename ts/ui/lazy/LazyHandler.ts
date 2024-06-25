@@ -23,9 +23,9 @@
 
 import {MathDocumentConstructor, ContainerList} from '../../core/MathDocument.js';
 import {MathItem, STATE, newState} from '../../core/MathItem.js';
-import {HTMLMathItem} from '../../handlers/html/HTMLMathItem.js';
 import {HTMLDocument} from '../../handlers/html/HTMLDocument.js';
 import {HTMLHandler} from '../../handlers/html/HTMLHandler.js';
+import {EnrichedMathItem} from '../../a11y/semantic-enrich.js';
 import {handleRetriesFor} from '../../util/Retries.js';
 import {OptionList} from '../../util/Options.js';
 
@@ -44,13 +44,6 @@ declare const window: {
  * Generic constructor for Mixins
  */
 export type Constructor<T> = new(...args: any[]) => T;
-
-/**
- * The MathItem constructor class (with attachSpeech method)
- */
-type MATHITEM<N, T, D> = Constructor<HTMLMathItem<N, T, D> & {
-  attachSpeech?: (doc: HTMLDocument<N, T, D>) => void
-}>;
 
 /**
  * A set of lazy MathItems
@@ -158,7 +151,7 @@ export interface LazyMathItem<N, T, D> extends MathItem<N, T, D> {
  * @template D  The Document class
  * @template B  The MathItem class to extend
  */
-export function LazyMathItemMixin<N, T, D, B extends MATHITEM<N, T, D>>(
+export function LazyMathItemMixin<N, T, D, B extends Constructor<EnrichedMathItem<N, T, D>>>(
   BaseMathItem: B
 ): Constructor<LazyMathItem<N, T, D>> & B {
 
@@ -276,9 +269,8 @@ export function LazyMathItemMixin<N, T, D, B extends MATHITEM<N, T, D>>(
       if (this.state() >= STATE.ATTACHSPEECH) return;
       if (!this.lazyTypeset) {
         super.attachSpeech?.(document);
-      } else {
-        this.state(STATE.ATTACHSPEECH);
       }
+      this.state(STATE.ATTACHSPEECH);
     }
 
   };
@@ -417,7 +409,7 @@ B extends MathDocumentConstructor<HTMLDocument<N, T, D>>>(
       //  Use the LazyMathItem for math items
       //
       this.options.MathItem =
-        LazyMathItemMixin<N, T, D, MATHITEM<N, T, D>>(this.options.MathItem);
+        LazyMathItemMixin<N, T, D, Constructor<EnrichedMathItem<N, T, D>>>(this.options.MathItem);
       //
       //  Allocate a process bit for lazyAlways
       //
