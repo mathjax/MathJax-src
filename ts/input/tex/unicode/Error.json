@@ -1,0 +1,6 @@
+'MissingNumber': 'Missing numeric constant for %1',
+'InvalidAlphanumeric': 'Invalid alphanumeric constant for %1',
+'BadRawUnicode': 'Argument to %1 must a hexadecimal number with 1 to 6 digits',
+'BadUnicode': 'Argument to %1 must be a number',
+'BadFont': 'Font name for %1 can\'t contain semicolons',
+'BadFont': 'Font name for %1 can\'t contain semicolons',
