@@ -83,7 +83,7 @@ export function MathtoolsTagFormat(config: ParserConfiguration, jax: TeX<any, an
       for (const form of Object.keys(forms)) {
         if (!Array.isArray(forms[form]) || forms[form].length !== 3) {
           throw new TexError('InvalidTagFormDef',
-                             'The tag form definition for "%1" should be an array fo three strings', form);
+                             , form);
         }
         this.mtFormats.set(form, forms[form]);
       }

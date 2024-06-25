@@ -503,7 +503,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
         return BaseItem.fail;
       }
       // @test Ampersand-error
-      throw new TexError('Misplaced', 'Misplaced %1', item.getName());
+      throw new TexError('Misplaced', item.getName());
     }
     if (item.isClose && this.getErrors(item.kind)) {
       // @test ExtraOpenMissingClose, ExtraCloseMissingOpen,

@@ -65,7 +65,7 @@ export class ProofTreeItem extends BaseItem {
       return [[this.factory.create('mml', node), item], true];
     }
     if (item.isKind('stop')) {
-      throw new TexError('EnvMissingEnd', 'Missing \\end{%1}', this.getName());
+      throw new TexError('EnvMissingEnd', this.getName());
     }
     this.innerStack.Push(item);
     return BaseItem.fail;

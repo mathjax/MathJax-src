@@ -45,7 +45,7 @@ namespace NewcommandUtil {
     if (c !== '\\') {
       // @test No CS
       throw new TexError('MissingCS',
-                          '%1 must be followed by a control sequence', cmd);
+                          , cmd);
     }
     let cs = UnitUtil.trimSpaces(parser.GetArgument(cmd));
     return cs.substring(1);
@@ -66,7 +66,7 @@ namespace NewcommandUtil {
     if (!cs.match(/^(.|[a-z]+)$/i)) {
       // @test Illegal CS
       throw new TexError('IllegalControlSequenceName',
-                         'Illegal control sequence name for %1', name);
+                         , name);
     }
     return cs;
   }
@@ -86,7 +86,7 @@ namespace NewcommandUtil {
       if (!n.match(/^[0-9]+$/)) {
         // @test Illegal Argument Number
         throw new TexError('IllegalParamNumber',
-                           'Illegal number of parameters specified in %1', name);
+                           , name);
       }
     }
     return n;
@@ -119,12 +119,12 @@ namespace NewcommandUtil {
         if (!c.match(/^[1-9]$/)) {
           // @test Illegal Hash
           throw new TexError('CantUseHash2',
-                              'Illegal use of # in template for %1', cs);
+                              , cs);
         }
         if (parseInt(c) !== ++n) {
           // @test No Sequence
           throw new TexError('SequentialParam',
-                              'Parameters for %1 must be numbered sequentially', cs);
+                              , cs);
         }
         i = parser.i + 1;
       } else if (c === '{') {
@@ -146,7 +146,7 @@ namespace NewcommandUtil {
     }
     // @test No Replacement
     throw new TexError('MissingReplacementString',
-                        'Missing replacement string for definition of %1', cmd);
+                        , cmd);
   }
 
 
@@ -202,7 +202,7 @@ namespace NewcommandUtil {
       }
     }
     // @test Runaway Argument
-    throw new TexError('RunawayArgument', 'Runaway argument for %1?', name);
+    throw new TexError('RunawayArgument', name);
   }
 
 

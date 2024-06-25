@@ -44,7 +44,7 @@ Verb(parser: TexParser, name: string) {
   const c = parser.GetNext();
   const start = ++parser.i;
   if (c === '' ) {
-    throw new TexError('MissingArgFor', 'Missing argument for %1', name);
+    throw new TexError('MissingArgFor', name);
   }
   while (parser.i < parser.string.length &&
          parser.string.charAt(parser.i) !== c) {
@@ -52,7 +52,7 @@ Verb(parser: TexParser, name: string) {
   }
   if (parser.i === parser.string.length) {
     throw new TexError('NoClosingDelim',
-                       'Can\'t find closing delimiter for %1',
+                       ,
                        parser.currentCS);
   }
   const text = parser.string.slice(start, parser.i).replace(/ /g, '\u00A0');

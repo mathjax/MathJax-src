@@ -153,7 +153,7 @@ export const CasesMethods = {
         //
         //  Extra alignment tabs are not allowed in cases
         //
-        throw new TexError('ExtraCasesAlignTab', 'Extra alignment tab in text for numcase environment');
+        throw new TexError('ExtraCasesAlignTab', );
       } else if (c === '\\' && braces === 0) {
         //
         //  If the macro is \cr or \\, end the search, otherwise skip the macro

@@ -116,9 +116,7 @@ export const AmsMethods: {[key: string]: ParseMethod} = {
     n = parser.GetArgument('\\begin{' + name + '}');
     if (n.match(/[^0-9]/)) {
       // @test PositiveIntegerArg
-      throw new TexError('PositiveIntegerArg',
-                         'Argument to %1 must be a positive integer',
-                         '\\begin{' + name + '}');
+      throw new TexError('PositiveIntegerArg');
     }
     let count = parseInt(n, 10);
     while (count > 0) {
@@ -175,9 +173,7 @@ export const AmsMethods: {[key: string]: ParseMethod} = {
                       numbered: boolean, padded: boolean) {
     let n = parser.GetArgument('\\begin{' + begin.getName() + '}');
     if (n.match(/[^0-9]/)) {
-      throw new TexError('PositiveIntegerArg',
-                         'Argument to %1 must be a positive integer',
-                         '\\begin{' + begin.getName() + '}');
+      throw new TexError('PositiveIntegerArg');
     }
     const align = (padded ? 'crl' : 'rlc');
     const balign = (padded ? 'mbt' : 'btm');
@@ -466,13 +462,11 @@ export const AmsMethods: {[key: string]: ParseMethod} = {
     if (top.kind !== 'multline') {
       // @test Shove Error Environment
       throw new TexError('CommandOnlyAllowedInEnv',
-                         '%1 only allowed in %2 environment',
-                         parser.currentCS, 'multline');
+                         parser.currentCS);
     }
     if (top.Size()) {
       // @test Shove Error (Top|Middle|Bottom)
-      throw new TexError('CommandAtTheBeginingOfLine',
-                         '%1 must come at the beginning of the line', parser.currentCS);
+      throw new TexError('CommandAtTheBeginingOfLine');
     }
     top.setProperty('shove', shove);
   },
@@ -497,7 +491,7 @@ export const AmsMethods: {[key: string]: ParseMethod} = {
     lr = lrMap[lr];
     if (lr == null) {
       // @test Center Fraction Error
-      throw new TexError('IllegalAlign', 'Illegal alignment specified in %1', parser.currentCS);
+      throw new TexError('IllegalAlign', parser.currentCS);
     }
     if (lr) {
       // @test Right Fraction, Left Fraction
@@ -548,7 +542,7 @@ export const AmsMethods: {[key: string]: ParseMethod} = {
       let styleAlpha = ['D', 'T', 'S', 'SS'][styleDigit];
       if (styleAlpha == null) {
         // @test Genfrac Error
-        throw new TexError('BadMathStyleFor', 'Bad math style for %1', parser.currentCS);
+        throw new TexError('BadMathStyleFor', parser.currentCS);
       }
       frac = parser.create('node', 'mstyle', [frac]);
       if (styleAlpha === 'D') {
@@ -578,12 +572,11 @@ export const AmsMethods: {[key: string]: ParseMethod} = {
     if (!parser.tags.currentTag.taggable && parser.tags.env) {
       // @test Illegal Tag Error
       throw new TexError('CommandNotAllowedInEnv',
-                         '%1 not allowed in %2 environment',
-                         parser.currentCS, parser.tags.env);
+                         parser.currentCS);
     }
     if (parser.tags.currentTag.tag) {
       // @test Double Tag Error
-      throw new TexError('MultipleCommand', 'Multiple %1', parser.currentCS);
+      throw new TexError('MultipleCommand', parser.currentCS);
     }
     let star = parser.GetStar();
     let tagId = UnitUtil.trimSpaces(parser.GetArgument(name));

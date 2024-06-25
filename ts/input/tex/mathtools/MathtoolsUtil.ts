@@ -68,7 +68,7 @@ export const MathtoolsUtil = {
   checkAlignment(parser: TexParser, name: string): EqnArrayItem {
     const top = parser.stack.Top() as EqnArrayItem;
     if (top.kind !== EqnArrayItem.prototype.kind) {
-      throw new TexError('NotInAlignment', '%1 can only be used in aligment environments', name);
+      throw new TexError('NotInAlignment', name);
     }
     return top;
   },
@@ -119,7 +119,7 @@ export const MathtoolsUtil = {
   plusOrMinus(name: string, n: string): string {
     n = n.trim();
     if (!n.match(/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)$/)) {
-      throw new TexError('NotANumber', 'Argument to %1 is not a number', name);
+      throw new TexError('NotANumber', name);
     }
     return (n.match(/^[-+]/) ? n : '+' + n);
   },

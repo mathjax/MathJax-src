@@ -47,7 +47,7 @@ const BraketMethods: {[key: string]: ParseMethod} = {
          stretchy: boolean, barmax: number, space: boolean = false) {
     let next = parser.GetNext();
     if (next === '') {
-      throw new TexError('MissingArgFor', 'Missing argument for %1', parser.currentCS);
+      throw new TexError('MissingArgFor', parser.currentCS);
     }
     let single = true;
     if (next === '{') {

@@ -141,7 +141,7 @@ new CommandMap('mathtools-macros', {
   adjustlimits: [
     'MacroWithTemplate',
     '\\mathop{{#1}\\vphantom{{#3}}}_{{#2}\\vphantom{{#4}}}\\mathop{{#3}\\vphantom{{#1}}}_{{#4}\\vphantom{{#2}}}',
-    4, , '_', , '_'
+    4, '_', , '_'
   ],
 
   mathtoolsset: 'SetOptions'

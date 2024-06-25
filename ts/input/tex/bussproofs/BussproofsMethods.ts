@@ -112,14 +112,12 @@ function createRule(parser: TexParser, premise: MmlNode,
 function parseFCenterLine(parser: TexParser, name: string): MmlNode {
   let dollar = parser.GetNext();
   if (dollar !== '$') {
-    throw new TexError('IllegalUseOfCommand',
-                       'Use of %1 does not match its definition.', name);
+    throw new TexError('IllegalUseOfCommand', name);
   }
   parser.i++;
   let axiom = parser.GetUpTo(name, '$');
   if (axiom.indexOf('\\fCenter') === -1) {
-    throw new TexError('MissingProofCommand',
-                       'Missing %1 in %2.', '\\fCenter', name);
+    throw new TexError('MissingProofCommand', name);
   }
   // Check for fCenter and throw error?
   let [prem, conc] = axiom.split('\\fCenter');
@@ -168,7 +166,7 @@ const BussproofsMethods: {[key: string]: ParseMethod} = {
     // TODO: Label error
     if (top.kind !== 'proofTree') {
       throw new TexError('IllegalProofCommand',
-                         'Proof commands only allowed in prooftree environment.');
+                         );
     }
     let content = paddedContent(parser, parser.GetArgument(name));
     BussproofsUtil.setProperty(content, 'axiom', true);
@@ -186,10 +184,10 @@ const BussproofsMethods: {[key: string]: ParseMethod} = {
     let top = parser.stack.Top();
     if (top.kind !== 'proofTree') {
       throw new TexError('IllegalProofCommand',
-                         'Proof commands only allowed in prooftree environment.');
+                         );
     }
     if (top.Size() < n) {
-      throw new TexError('BadProofTree', 'Proof tree badly specified.');
+      throw new TexError('BadProofTree', );
     }
     const rootAtTop = top.getProperty('rootAtTop') as boolean;
     const childCount = (n === 1 && !top.Peek()[0].childNodes.length) ? 0 : n;
@@ -232,7 +230,7 @@ const BussproofsMethods: {[key: string]: ParseMethod} = {
     // Label error
     if (top.kind !== 'proofTree') {
       throw new TexError('IllegalProofCommand',
-                         'Proof commands only allowed in prooftree environment.');
+                         );
     }
     let content = ParseUtil.internalMath(parser, parser.GetArgument(name), 0);
     let label = (content.length > 1) ?
@@ -253,7 +251,7 @@ const BussproofsMethods: {[key: string]: ParseMethod} = {
     // Label error
     if (top.kind !== 'proofTree') {
       throw new TexError('IllegalProofCommand',
-                         'Proof commands only allowed in prooftree environment.');
+                         );
     }
     top.setProperty('currentLine', style);
     if (always) {
@@ -272,7 +270,7 @@ const BussproofsMethods: {[key: string]: ParseMethod} = {
     let top = parser.stack.Top();
     if (top.kind !== 'proofTree') {
       throw new TexError('IllegalProofCommand',
-                         'Proof commands only allowed in prooftree environment.');
+                         );
     }
     top.setProperty('rootAtTop', where);
   },
@@ -287,7 +285,7 @@ const BussproofsMethods: {[key: string]: ParseMethod} = {
     let top = parser.stack.Top();
     if (top.kind !== 'proofTree') {
       throw new TexError('IllegalProofCommand',
-                         'Proof commands only allowed in prooftree environment.');
+                         );
     }
     let line = parseFCenterLine(parser, name);
     BussproofsUtil.setProperty(line, 'axiom', true);
@@ -312,10 +310,10 @@ const BussproofsMethods: {[key: string]: ParseMethod} = {
     let top = parser.stack.Top();
     if (top.kind !== 'proofTree') {
       throw new TexError('IllegalProofCommand',
-                         'Proof commands only allowed in prooftree environment.');
+                         );
     }
     if (top.Size() < n) {
-      throw new TexError('BadProofTree', 'Proof tree badly specified.');
+      throw new TexError('BadProofTree', );
     }
     const rootAtTop = top.getProperty('rootAtTop') as boolean;
     const childCount = (n === 1 && !top.Peek()[0].childNodes.length) ? 0 : n;

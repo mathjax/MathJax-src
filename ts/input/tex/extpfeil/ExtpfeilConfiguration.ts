@@ -48,18 +48,18 @@ const ExtpfeilMethods: {[key: string]: ParseMethod} = {
     const chr = parser.GetArgument(name);
     if (!cs.match(/^\\([a-z]+|.)$/i)) {
       throw new TexError('NewextarrowArg1',
-                         'First argument to %1 must be a control sequence name', name);
+                         , name);
     }
     if (!space.match(/^(\d+),(\d+)$/)) {
       throw new TexError(
         'NewextarrowArg2',
-        'Second argument to %1 must be two integers separated by a comma',
+        ,
         name);
     }
     if (!chr.match(/^(\d+|0x[0-9A-F]+)$/i)) {
       throw new TexError(
         'NewextarrowArg3',
-        'Third argument to %1 must be a unicode character number',
+        ,
         name);
     }
     cs = cs.substring(1);

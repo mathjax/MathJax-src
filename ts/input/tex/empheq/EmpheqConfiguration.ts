@@ -81,7 +81,7 @@ export const EmpheqMethods = {
       const opts = parser.GetBrackets('\\begin{' + begin.getName() + '}') || '';
       const [env, n] = (parser.GetArgument('\\begin{' + begin.getName() + '}') || '').split(/=/);
       if (!EmpheqUtil.checkEnv(env)) {
-        throw new TexError('UnknownEnv', 'Unknown environment "%1"', env);
+        throw new TexError('UnknownEnv', env);
       }
       begin.setProperty('nestable', true);
       if (opts) {

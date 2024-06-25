@@ -50,7 +50,7 @@ BBox(parser: TexParser, name: string) {
       // @test Bbox-Padding
       if (def) {
         // @test Bbox-Padding-Error
-        throw new TexError('MultipleBBoxProperty', '%1 specified twice in %2', 'Padding', name);
+        throw new TexError('MultipleBBoxProperty', name);
       }
       const pad = BBoxPadding(match[1] + match[3]);
       if (pad) {
@@ -66,7 +66,7 @@ BBox(parser: TexParser, name: string) {
       // @test Bbox-Background
       if (background) {
         // @test Bbox-Background-Error
-        throw new TexError('MultipleBBoxProperty', '%1 specified twice in %2',
+        throw new TexError('MultipleBBoxProperty',
                            'Background', name);
       }
       background = part;
@@ -74,16 +74,14 @@ BBox(parser: TexParser, name: string) {
       // @test Bbox-Frame
       if (style) {
         // @test Bbox-Frame-Error
-        throw new TexError('MultipleBBoxProperty', '%1 specified twice in %2',
+        throw new TexError('MultipleBBoxProperty',
                            'Style', name);
       }
       style = BBoxStyle(part);
     } else if (part !== '') {
       // @test Bbox-General-Error
       throw new TexError(
-        'InvalidBBoxProperty',
-        '"%1" doesn\'t look like a color, a padding dimension, or a style',
-        part);
+        'InvalidBBoxProperty');
     }
   }
   if (def) {

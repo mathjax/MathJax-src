@@ -178,7 +178,7 @@ const NewcommandMethods: {[key: string]: ParseMethod} = {
       if (params[0] && !NewcommandUtil.MatchParam(parser, params[0])) {
         // @test Missing Arguments
         throw new TexError('MismatchUseDef',
-                           'Use of %1 doesn\'t match its definition', name);
+                           , name);
       }
       if (argCount) {
         for (let i = 0; i < argCount; i++) {

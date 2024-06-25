@@ -57,7 +57,7 @@ export class ColorModel {
       return modelProcessor(def);
     }
 
-    throw new TexError('UndefinedColorModel', 'Color model \'%1\' not defined', model);
+    throw new TexError('UndefinedColorModel', model);
   }
 
   /**
@@ -129,19 +129,17 @@ ColorModelProcessors.set('rgb', function (rgb: string): string {
   let RGB: string = '#';
 
   if (rgbParts.length !== 3) {
-    throw new TexError('ModelArg1', 'Color values for the %1 model require 3 numbers', 'rgb');
+    throw new TexError('ModelArg1', );
   }
 
   for (const rgbPart of rgbParts) {
     if (!rgbPart.match(/^(\d+(\.\d*)?|\.\d+)$/)) {
-      throw new TexError('InvalidDecimalNumber', 'Invalid decimal number');
+      throw new TexError('InvalidDecimalNumber', );
     }
 
     const n = parseFloat(rgbPart);
     if (n < 0 || n > 1) {
-      throw new TexError('ModelArg2',
-                         'Color values for the %1 model must be between %2 and %3',
-                         'rgb', '0', '1');
+      throw new TexError('ModelArg2', 'rgb', '0', '1');
     }
 
     let pn = Math.floor(n * 255).toString(16);
@@ -167,19 +165,17 @@ ColorModelProcessors.set('RGB', function (rgb: string): string {
   let RGB = '#';
 
   if (rgbParts.length !== 3) {
-    throw new TexError('ModelArg1', 'Color values for the %1 model require 3 numbers', 'RGB');
+    throw new TexError('ModelArg1', );
   }
 
   for (const rgbPart of rgbParts) {
     if (!rgbPart.match(/^\d+$/)) {
-      throw new TexError('InvalidNumber', 'Invalid number');
+      throw new TexError('InvalidNumber', );
     }
 
     const n = parseInt(rgbPart);
     if (n > 255) {
-      throw new TexError('ModelArg2',
-                         'Color values for the %1 model must be between %2 and %3',
-                         'RGB', '0', '255');
+      throw new TexError('ModelArg2', 'RGB', '0', '255');
     }
 
     let pn = n.toString(16);
@@ -200,14 +196,12 @@ ColorModelProcessors.set('RGB', function (rgb: string): string {
  */
 ColorModelProcessors.set('gray', function (gray: string): string {
   if (!gray.match(/^\s*(\d+(\.\d*)?|\.\d+)\s*$/)) {
-    throw new TexError('InvalidDecimalNumber', 'Invalid decimal number');
+    throw new TexError('InvalidDecimalNumber', );
   }
 
   const n: number = parseFloat(gray);
   if (n < 0 || n > 1) {
-    throw new TexError('ModelArg2',
-                       'Color values for the %1 model must be between %2 and %3',
-                       'gray', '0', '1');
+    throw new TexError('ModelArg2', 'gray', '0', '1');
   }
   let pn = Math.floor(n * 255).toString(16);
   if (pn.length < 2) {

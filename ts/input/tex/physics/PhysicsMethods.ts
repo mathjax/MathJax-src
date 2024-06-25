@@ -201,7 +201,7 @@ const PhysicsMethods: {[key: string]: ParseMethod} = {
     }
     let right = pairs[next];
     if (arg && next !== '{') {
-      throw new TexError('MissingArgFor', 'Missing argument for %1', parser.currentCS);
+      throw new TexError('MissingArgFor', parser.currentCS);
     }
     if (!right) {
       let empty = parser.create('node', 'mrow');
@@ -265,7 +265,7 @@ const PhysicsMethods: {[key: string]: ParseMethod} = {
            smash: star, right: '\\vphantom{\\int}'}));
       return;
     }
-    throw new TexError('MissingArgFor', 'Missing argument for %1', parser.currentCS);
+    throw new TexError('MissingArgFor', parser.currentCS);
   },
 
 
@@ -286,12 +286,12 @@ const PhysicsMethods: {[key: string]: ParseMethod} = {
       big = parser.GetCS();
       if (!big.match(biggs)) {
         // Actually a commutator error arg1 error.
-        throw new TexError('MissingArgFor', 'Missing argument for %1', parser.currentCS);
+        throw new TexError('MissingArgFor', parser.currentCS);
       }
       next = parser.GetNext();
     }
     if (next !== '{') {
-      throw new TexError('MissingArgFor', 'Missing argument for %1', parser.currentCS);
+      throw new TexError('MissingArgFor', parser.currentCS);
     }
     let arg1 = parser.GetArgument(name);
     let arg2 = parser.GetArgument(name);
@@ -762,7 +762,7 @@ const PhysicsMethods: {[key: string]: ParseMethod} = {
     const arg = parser.GetArgument(name);
     const size = parseInt(arg, 10);
     if (isNaN(size)) {
-      throw new TexError('InvalidNumber', 'Invalid number');
+      throw new TexError('InvalidNumber', );
     }
     if (size <= 1) {
       parser.string = '1' + parser.string.slice(parser.i);
@@ -794,7 +794,7 @@ const PhysicsMethods: {[key: string]: ParseMethod} = {
     let n = parseInt(arg2, 10);
     let m = parseInt(arg3, 10);
     if (isNaN(n) || isNaN(m) || m.toString() !== arg3 || n.toString() !== arg2) {
-      throw new TexError('InvalidNumber', 'Invalid number');
+      throw new TexError('InvalidNumber', );
     }
     n = n < 1 ? 1 : n;
     m = m < 1 ? 1 : m;

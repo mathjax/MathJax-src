@@ -44,12 +44,12 @@ export const SetOptionsUtil = {
    */
   filterPackage(parser: TexParser, extension: string): boolean {
     if (extension !== 'tex' && !ConfigurationHandler.get(extension)) {
-      throw new TexError('NotAPackage', 'Not a defined package: %1', extension);
+      throw new TexError('NotAPackage', extension);
     }
     const config = parser.options.setoptions;
     const options = config.allowOptions[extension];
     if ((options === undefined && !config.allowPackageDefault) || options === false) {
-      throw new TexError('PackageNotSettable', 'Options can\'t be set for package "%1"', extension);
+      throw new TexError('PackageNotSettable', extension);
     }
     return true;
   },
@@ -67,13 +67,13 @@ export const SetOptionsUtil = {
     const options = config.allowOptions[extension] || {};
     const allow = (options.hasOwnProperty(option) && !isObject(options[option]) ? options[option] : null);
     if (allow === false || (allow === null && !config.allowOptionsDefault)) {
-      throw new TexError('OptionNotSettable', 'Option "%1" is not allowed to be set', option);
+      throw new TexError('OptionNotSettable', option);
     }
     if (!(extension === 'tex' ? parser.options : parser.options[extension])?.hasOwnProperty(option)) {
       if (extension === 'tex') {
-        throw new TexError('InvalidTexOption', 'Invalid TeX option "%1"', option);
+        throw new TexError('InvalidTexOption', option);
       } else {
-        throw new TexError('InvalidOptionKey', 'Invalid option "%1" for package "%2"', option, extension);
+        throw new TexError('InvalidOptionKey', option, extension);
       }
     }
     return true;

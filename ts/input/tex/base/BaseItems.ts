@@ -303,7 +303,7 @@ export class OverItem extends BaseItem {
    */
   constructor(factory: StackItemFactory) {
     super(factory);
-    this.setProperty('name', '\\over');
+    this.setProperty('name', );
   }
 
   /**
@@ -329,7 +329,7 @@ export class OverItem extends BaseItem {
     if (item.isKind('over')) {
       // @test Double Over
       throw new TexError(
-        'AmbiguousUseOf', 'Ambiguous use of %1', item.getName());
+        'AmbiguousUseOf', item.getName());
     }
     if (item.isClose) {
       // @test Over
@@ -591,7 +591,7 @@ export class BeginItem extends BaseItem {
     if (item.isKind('end')) {
       if (item.getName() !== this.getName()) {
         // @test EnvBadEnd
-        throw new TexError('EnvBadEnd', '\\begin{%1} ended with \\end{%2}',
+        throw new TexError('EnvBadEnd',
                            this.getName(), item.getName());
       }
       if (!this.getProperty('end')) {
@@ -604,7 +604,7 @@ export class BeginItem extends BaseItem {
     }
     if (item.isKind('stop')) {
       // @test EnvMissingEnd Array
-      throw new TexError('EnvMissingEnd', 'Missing \\end{%1}', this.getName());
+      throw new TexError('EnvMissingEnd', this.getName());
     }
     return super.checkItem(item);
   }
@@ -683,7 +683,7 @@ export class PositionItem extends BaseItem {
   public checkItem(item: StackItem): CheckType {
     if (item.isClose) {
       // @test MissingBoxFor
-      throw new TexError('MissingBoxFor', 'Missing box for %1', this.getName());
+      throw new TexError('MissingBoxFor', this.getName());
     }
     if (item.isFinal) {
       let mml = item.toMml();
@@ -1069,7 +1069,7 @@ export class ArrayItem extends BaseItem {
           return [[newItem], true];
         }
         // @test MissingCloseBrace2
-        throw new TexError('MissingCloseBrace', 'Missing close brace');
+        throw new TexError('MissingCloseBrace', );
       }
       return [[newItem, item], true];
     }
@@ -1601,7 +1601,7 @@ export class EquationItem extends BaseItem {
     }
     if (item.isKind('stop')) {
       // @test EnvMissingEnd Equation
-      throw new TexError('EnvMissingEnd', 'Missing \\end{%1}', this.getName());
+      throw new TexError('EnvMissingEnd', this.getName());
     }
     return super.checkItem(item);
   }

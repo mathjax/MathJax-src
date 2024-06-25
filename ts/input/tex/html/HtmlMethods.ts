@@ -56,7 +56,7 @@ const HtmlMethods: {[key: string]: ParseMethod} = {
     for (const key in data) {
       // remove illegal attribute names
       if (!isLegalAttributeName(key)) {
-        throw new TexError('InvalidHTMLAttr', 'Invalid HTML attribute: %1', `data-${key}`);
+        throw new TexError('InvalidHTMLAttr', `data-${key}`);
       }
       NodeUtil.setAttribute(arg, `data-${key}`, data[key]);
     }

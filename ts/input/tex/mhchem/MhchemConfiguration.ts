@@ -61,7 +61,7 @@ const MhchemMethods: {[key: string]: ParseMethod} = {
 
 new CommandMap(
   'mhchem', {
-    ce: ['Machine', 'ce'],
+    ce: [],
     pu: ['Machine', 'pu'],
     longrightleftharpoons: [
       'Macro',
