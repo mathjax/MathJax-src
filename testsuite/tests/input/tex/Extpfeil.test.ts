@@ -122,3 +122,51 @@ describe('Extpfeil', () => {
 </math>`
     ));
 });
+
+describe('Extpfeil Errors', () => {
+  it('NewextarrowArg1', () =>
+    toXmlMatch(
+      tex2mml('\\Newextarrow{ab}{10,20}{8672}\\ab{xyz}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Newextarrow{ab}{10,20}{8672}\\ab{xyz}\" display=\"block\">
+      <merror data-mjx-error=\"First argument to \\Newextarrow must be a control sequence name\">
+        <mtext>First argument to \\Newextarrow must be a control sequence name</mtext>
+      </merror>
+    </math>`
+    ));
+  it('NewextarrowArg2 One', () =>
+    toXmlMatch(
+      tex2mml('\\Newextarrow{\\ab}{10}{8672}\\ab{xyz}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Newextarrow{\\ab}{10}{8672}\\ab{xyz}\" display=\"block\">
+      <merror data-mjx-error=\"Second argument to \\Newextarrow must be two integers separated by a comma\">
+        <mtext>Second argument to \\Newextarrow must be two integers separated by a comma</mtext>
+      </merror>
+    </math>`
+    ));
+  it('NewextarrowArg2 Two', () =>
+    toXmlMatch(
+      tex2mml('\\Newextarrow{\\ab}{10 20}{8672}\\ab{xyz}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Newextarrow{\\ab}{10 20}{8672}\\ab{xyz}\" display=\"block\">
+      <merror data-mjx-error=\"Second argument to \\Newextarrow must be two integers separated by a comma\">
+        <mtext>Second argument to \\Newextarrow must be two integers separated by a comma</mtext>
+      </merror>
+    </math>`
+    ));
+  it('NewextarrowArg2 Three', () =>
+    toXmlMatch(
+      tex2mml('\\Newextarrow{\\ab}{aa}{8672}\\ab{xyz}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Newextarrow{\\ab}{aa}{8672}\\ab{xyz}\" display=\"block\">
+      <merror data-mjx-error=\"Second argument to \\Newextarrow must be two integers separated by a comma\">
+        <mtext>Second argument to \\Newextarrow must be two integers separated by a comma</mtext>
+      </merror>
+    </math>`
+    ));
+  it('NewextarrowArg3', () =>
+    toXmlMatch(
+      tex2mml('\\Newextarrow{\\ab}{10,20}{AG}\\ab{xyz}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Newextarrow{\\ab}{10,20}{AG}\\ab{xyz}\" display=\"block\">
+      <merror data-mjx-error=\"Third argument to \\Newextarrow must be a unicode character number\">
+        <mtext>Third argument to \\Newextarrow must be a unicode character number</mtext>
+      </merror>
+    </math>`
+    ));
+});
