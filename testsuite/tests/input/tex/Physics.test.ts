@@ -11695,3 +11695,87 @@ describe('Physics7_9', () => {
 </math>`
     ));
 });
+
+describe('Physics Errors', () => {
+  it('MissingArgFor Quantity', () =>
+    toXmlMatch(
+      tex2mml('\\pqty'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\pqty\" display=\"block\">
+      <merror data-mjx-error=\"Missing argument for \\pqty\">
+        <mtext>Missing argument for \\pqty</mtext>
+      </merror>
+    </math>`
+    ));
+  it('MissingArgFor Eval', () =>
+    toXmlMatch(
+      tex2mml('\\eval'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\eval\" display=\"block\">
+      <merror data-mjx-error=\"Missing argument for \\eval\">
+        <mtext>Missing argument for \\eval</mtext>
+      </merror>
+    </math>`
+    ));
+  it('MissingArgFor Commutator 1', () =>
+    toXmlMatch(
+      tex2mml('\\commutator\\nix'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\commutator\\nix\" display=\"block\">
+      <merror data-mjx-error=\"Missing argument for \\commutator\">
+        <mtext>Missing argument for \\commutator</mtext>
+      </merror>
+    </math>`
+    ));
+  it('MissingArgFor Commutator 2', () =>
+    toXmlMatch(
+      tex2mml('\\commutator'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\commutator\" display=\"block\">
+      <merror data-mjx-error=\"Missing argument for \\commutator\">
+        <mtext>Missing argument for \\commutator</mtext>
+      </merror>
+    </math>`
+    ));
+  it('InvalidNumber IdentityMatrix', () =>
+    toXmlMatch(
+      tex2mml('\\smqty(\\identitymatrix{a})'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\smqty(\\identitymatrix{a})\" display=\"block\">
+      <merror data-mjx-error=\"Invalid number\">
+        <mtext>Invalid number</mtext>
+      </merror>
+    </math>`
+    ));
+  it('InvalidNumber XMatrix n', () =>
+    toXmlMatch(
+      tex2mml('\\smqty(\\xmatrix{a}{a}{2})'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\smqty(\\xmatrix{a}{a}{2})\" display=\"block\">
+      <merror data-mjx-error=\"Invalid number\">
+        <mtext>Invalid number</mtext>
+      </merror>
+    </math>`
+    ));
+  it('InvalidNumber XMatrix m', () =>
+    toXmlMatch(
+      tex2mml('\\smqty(\\xmatrix{a}{2}{a})'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\smqty(\\xmatrix{a}{2}{a})\" display=\"block\">
+      <merror data-mjx-error=\"Invalid number\">
+        <mtext>Invalid number</mtext>
+      </merror>
+    </math>`
+    ));
+  it('InvalidNumber XMatrix n+', () =>
+    toXmlMatch(
+      tex2mml('\\smqty(\\xmatrix{a}{2.0}{2})'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\smqty(\\xmatrix{a}{2.0}{2})\" display=\"block\">
+      <merror data-mjx-error=\"Invalid number\">
+        <mtext>Invalid number</mtext>
+      </merror>
+    </math>`
+    ));
+  it('InvalidNumber XMatrix m+', () =>
+    toXmlMatch(
+      tex2mml('\\smqty(\\xmatrix{a}{2}{2.0})'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\smqty(\\xmatrix{a}{2}{2.0})\" display=\"block\">
+      <merror data-mjx-error=\"Invalid number\">
+        <mtext>Invalid number</mtext>
+      </merror>
+    </math>`
+    ));
+});
