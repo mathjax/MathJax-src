@@ -90,3 +90,51 @@ describe('Unicode', () => {
 </math>`
     ));
 });
+
+describe('Unicode Errors', () => {
+  it('Unicode BadFont', () =>
+    toXmlMatch(
+      tex2mml('\\unicode[arial;]{8922}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\unicode[arial;]{8922}\" display=\"block\">
+      <merror data-mjx-error=\"Font name for \\unicode can't contain semicolons\">
+        <mtext>Font name for \\unicode can't contain semicolons</mtext>
+      </merror>
+    </math>`
+    ));
+  it('Unicode BadUnicode', () =>
+    toXmlMatch(
+      tex2mml('\\unicode{4A}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\unicode{4A}\" display=\"block\">
+      <merror data-mjx-error=\"Argument to \\unicode must be a number\">
+        <mtext>Argument to \\unicode must be a number</mtext>
+      </merror>
+    </math>`
+    ));
+  it('Unicode BadRawUnicode', () =>
+    toXmlMatch(
+      tex2mml('\\U{892G}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\U{892G}\" display=\"block\">
+      <merror data-mjx-error=\"Argument to \\U must a hexadecimal number with 1 to 6 digits\">
+        <mtext>Argument to \\U must a hexadecimal number with 1 to 6 digits</mtext>
+      </merror>
+    </math>`
+    ));
+  it('Unicode InvalidAlphanumeric', () =>
+    toXmlMatch(
+      tex2mml('\\char\'\\nix'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\char'\\nix\" display=\"block\">
+      <merror data-mjx-error=\"Invalid alphanumeric constant for \\char\">
+        <mtext>Invalid alphanumeric constant for \\char</mtext>
+      </merror>
+    </math>`
+    ));
+  it('Unicode MissingNumber', () =>
+    toXmlMatch(
+      tex2mml('\\char {40}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\char {40}\" display=\"block\">
+      <merror data-mjx-error=\"Missing numeric constant for \\char\">
+        <mtext>Missing numeric constant for \\char</mtext>
+      </merror>
+    </math>`
+    ));
+});
