@@ -76,7 +76,10 @@ const UnicodeMethods: {[key: string]: ParseMethod} = {
     }
     let variant = parser.stack.env.font as string;
     let def: EnvList = {};
+    console.log(variant);
+    console.log(font);
     if (font) {
+      console.log(13);
       UnicodeCache[N][2] = def.fontfamily = font.replace(/'/g, '\'');
       if (variant) {
         if (variant.match(/bold/)) {
@@ -87,6 +90,7 @@ const UnicodeMethods: {[key: string]: ParseMethod} = {
         }
       }
     } else if (variant) {
+      console.log(12);
       def.mathvariant = variant;
     }
     let node = parser.create('token', 'mtext', def, numeric(n));
