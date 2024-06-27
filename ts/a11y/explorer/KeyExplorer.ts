@@ -24,6 +24,7 @@
 
 
 import {A11yDocument, HoverRegion, SpeechRegion, LiveRegion} from './Region.js';
+import {STATE} from '../../core/MathItem.js';
 import type { ExplorerMathItem } from '../explorer.js';
 import {Explorer, AbstractExplorer} from './Explorer.js';
 import {ExplorerPool} from './ExplorerPool.js';
@@ -446,6 +447,10 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    * @override
    */
   public Start() {
+    // In case the speech is not attached yet, we generate it
+    if (this.item.state() < STATE.ATTACHSPEECH) {
+      this.item.attachSpeech(this.document);
+    };
     if (!this.attached) return;
     if (this.node.hasAttribute('tabindex')) {
       this.node.removeAttribute('tabindex');
@@ -458,7 +463,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       this.current = this.node.querySelector(`[data-semantic-id="${this.restarted}"]`)
       if (!this.current) {
         const dummies = Array.from(
-          this.node.querySelectorAll(`[data-semantic-type="dummy"]`))
+          this.node.querySelectorAll('[data-semantic-type="dummy"]'))
           .map(x => x.getAttribute('data-semantic-id'))
         let internal = this.generators.element.querySelector(
           `[data-semantic-id="${this.restarted}"]`);
