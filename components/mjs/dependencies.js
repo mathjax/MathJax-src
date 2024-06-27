@@ -21,7 +21,6 @@ export const dependencies = {
   'a11y/explorer': ['a11y/semantic-enrich'],
   '[mml]/mml3': ['input/mml'],
   '[tex]/action': ['input/tex-base', '[tex]/newcommand'],
-  '[tex]/all-packages': ['input/tex-base'],
   '[tex]/ams': ['input/tex-base'],
   '[tex]/amscd': ['input/tex-base'],
   '[tex]/autoload': ['input/tex-base', '[tex]/require'],
@@ -68,12 +67,6 @@ export const paths = {
   sre: '[mathjax]/sre/mathmaps'
 };
 
-const allPackages = Array.from(Object.keys(dependencies))
-      .filter(name => name.substring(0,5) === '[tex]' &&
-              name !== '[tex]/autoload' &&
-              name !== '[tex]/colorv2' &&
-              name !== '[tex]/all-packages');
-
 export const provides = {
   'startup': ['loader'],
   'input/tex': [
@@ -84,13 +77,7 @@ export const provides = {
     '[tex]/require',
     '[tex]/autoload',
     '[tex]/configmacros'
-  ],
-  'input/tex-full': [
-    'input/tex-base',
-    '[tex]/all-packages',
-    ...allPackages
-  ],
-  '[tex]/all-packages': allPackages
+  ]
 };
 
 //
