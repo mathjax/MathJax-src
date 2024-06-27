@@ -504,4 +504,13 @@ describe('Braket', () => {
   </mrow>
 </math>`
     ));
+  it('Braket-error', () =>
+    toXmlMatch(
+      tex2mml('\\braket'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\braket" display="block">
+      <merror data-mjx-error="Missing argument for \\braket">
+        <mtext>Missing argument for \\braket</mtext>
+      </merror>
+    </math>`
+    ));
 });
