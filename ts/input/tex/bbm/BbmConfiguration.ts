@@ -50,11 +50,11 @@ export const BbmMethods: {[key: string]: ParseMethod} = {
 
 
 new CommandMap('bbm', {
-  mathversion: 'ChangeBold',
-  mathbbm: ['ChooseFont', '-bbm-normal', '-bbm-bold'],
-  mathbbmss: ['ChooseFont', '-bbm-sans-serif', '-bbm-sans-serif-bold'],
-  mathbbmtt: ['MathFont', '-bbm-monospace']
-}, BbmMethods);
+  mathversion: BbmMethods.ChangeBold,
+  mathbbm: [BbmMethods.ChooseFont, '-bbm-normal', '-bbm-bold'],
+  mathbbmss: [BbmMethods.ChooseFont, '-bbm-sans-serif', '-bbm-sans-serif-bold'],
+  mathbbmtt: [BbmMethods.MathFont, '-bbm-monospace']
+});
 
 //
 //  Define the package configuration, including switch for sans serif.

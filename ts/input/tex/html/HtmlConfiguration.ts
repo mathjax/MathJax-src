@@ -29,12 +29,12 @@ import HtmlMethods from './HtmlMethods.js';
 
 
 new CommandMap('html_macros', {
-  data:    'Data',
-  href:    'Href',
-  'class': 'Class',
-  style:   'Style',
-  cssId:   'Id'
-}, HtmlMethods);
+  data:    HtmlMethods.Data,
+  href:    HtmlMethods.Href,
+  'class': HtmlMethods.Class,
+  style:   HtmlMethods.Style,
+  cssId:   HtmlMethods.Id
+});
 
 export const HtmlConfiguration = Configuration.create(
   'html', {[ConfigurationType.HANDLER]: { [HandlerType.MACRO]: ['html_macros']}}

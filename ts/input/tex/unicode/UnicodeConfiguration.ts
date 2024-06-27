@@ -173,10 +173,10 @@ const UnicodeMethods: {[key: string]: ParseMethod} = {
 
 
 new CommandMap('unicode', {
-  unicode: 'Unicode',
-  U: 'RawUnicode',
-  char: 'Char'
-}, UnicodeMethods);
+  unicode: UnicodeMethods.Unicode,
+  U: UnicodeMethods.RawUnicode,
+  char: UnicodeMethods.Char
+});
 
 
 export const UnicodeConfiguration = Configuration.create(

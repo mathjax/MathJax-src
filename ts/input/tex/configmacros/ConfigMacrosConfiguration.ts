@@ -30,7 +30,6 @@ import ParseMethods from '../ParseMethods.js';
 import {Macro} from '../Token.js';
 import NewcommandMethods from '../newcommand/NewcommandMethods.js';
 import {BeginEnvItem} from '../newcommand/NewcommandItems.js';
-import BaseMethods from '../base/BaseMethods.js';
 import {TeX} from '../../tex.js';
 
 type TEX = TeX<any, any, any>;
@@ -56,9 +55,9 @@ const ENVIRONMENTMAP = 'configmacros-env-map';
  * @param {Configuration} config   The configuration object for the input jax
  */
 function configmacrosInit(config: ParserConfiguration) {
-  new MacroMap(ACTIVEMAP, {}, BaseMethods);
-  new CommandMap(MACROSMAP, {}, {});
-  new EnvironmentMap(ENVIRONMENTMAP, ParseMethods.environment, {}, {});
+  new MacroMap(ACTIVEMAP, {});
+  new CommandMap(MACROSMAP, {});
+  new EnvironmentMap(ENVIRONMENTMAP, ParseMethods.environment, {});
   config.append(Configuration.local({
     handler: {
       [HandlerType.CHARACTER]: [ACTIVEMAP],

@@ -44,7 +44,7 @@ export class AmsTags extends AbstractTags { }
  * @param {ParserConfiguration} config The current configuration.
  */
 let init = function(config: ParserConfiguration) {
-  new CommandMap(NEW_OPS, {}, {});
+  new CommandMap(NEW_OPS, {});
   config.append(Configuration.local({handler: {macro: [NEW_OPS]},
                                     priority: -1}));
 };

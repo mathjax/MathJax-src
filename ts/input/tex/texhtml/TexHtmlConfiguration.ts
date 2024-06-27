@@ -79,7 +79,7 @@ export const HtmlNodeMethods: {[key: string]: ParseMethod} = {
   }
 };
 
-new MacroMap('tex-html', {'<': 'TexHTML'}, HtmlNodeMethods);
+new MacroMap('tex-html', {'<': HtmlNodeMethods.TexHTML});
 
 export const TexHtmlConfiguration = Configuration.create(
   'texhtml', {
