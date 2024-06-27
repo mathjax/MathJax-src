@@ -235,7 +235,7 @@ export const options = {
 /**
  * The command map for the \require macro
  */
-new CommandMap('require', {require: 'Require'}, RequireMethods);
+new CommandMap('require', {require: RequireMethods.Require});
 
 /**
  * The configuration for the \require macro

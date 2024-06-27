@@ -33,17 +33,17 @@ import {TeX} from '../../tex.js';
  * The color macros
  */
 new CommandMap('color', {
-  color: 'Color',
-  textcolor: 'TextColor',
-  definecolor: 'DefineColor',
-  colorbox: 'ColorBox',
-  fcolorbox: 'FColorBox'
-}, ColorMethods);
+  color: ColorMethods.Color,
+  textcolor: ColorMethods.TextColor,
+  definecolor: ColorMethods.DefineColor,
+  colorbox: ColorMethods.ColorBox,
+  fcolorbox: ColorMethods.FColorBox
+});
 
 /**
  * Config method for Color package.
  *
- * @param {Configuration} config The current configuration.
+ * @param {Configuration} _config The current configuration.
  * @param {TeX} jax              The TeX jax having that configuration
  */
 const config = function(_config: ParserConfiguration, jax: TeX<any, any, any>) {

@@ -123,8 +123,8 @@ function configAutoload(config: ParserConfiguration, jax: TeX<any, any, any>) {
 /**
  * The command and environment maps for the macros that autoload extensions
  */
-const AutoloadMacros = new CommandMap('autoload-macros', {}, {});
-const AutoloadEnvironments = new CommandMap('autoload-environments', {}, {});
+const AutoloadMacros = new CommandMap('autoload-macros', {});
+const AutoloadEnvironments = new CommandMap('autoload-environments', {});
 
 
 /**

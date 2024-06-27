@@ -106,53 +106,53 @@ export class ColorArrayItem extends ArrayItem {
 
 }
 
+/**
+ * Add color to a column, row, or cell.
+ *
+ * @param {TexParser} parser       The active TeX parser
+ * @param {string} name            The name of the macro that is being processed
+ * @param {keyof ColorData} type   The type (col, row, cell) of color being added
+ */
+function TableColor(parser: TexParser, name: string, type: keyof ColorData) {
+  const lookup = parser.configuration.packageData.get('color').model;  // use the color extension's color model
+  const model = parser.GetBrackets(name, '');
+  const color = lookup.getColor(model, parser.GetArgument(name));
+  //
+  // Check that we are in a colorable array.
+  //
+  const top = parser.stack.Top() as ColorArrayItem;
+  if (!(top instanceof ColorArrayItem)) {
+    throw new TexError('UnsupportedTableColor', 'Unsupported use of %1', parser.currentCS);
+  }
+  //
+  //  Check the position of the macro and save the color.
+  //
+  if (type === 'col') {
+    if (top.table.length && top.color.col[top.row.length] !== color) {
+      throw new TexError('ColumnColorNotTop', '%1 must be in the top row or preamble', name);
+    }
+    top.color.col[top.row.length] = color;
+    //
+    // Ignore the left and right overlap options.
+    //
+    if (parser.GetBrackets(name, '')) {
+      parser.GetBrackets(name, '');
+    }
+  } else {
+    top.color[type] = color;
+    if (type === 'row' && (top.Size() || top.row.length)) {
+      throw new TexError('RowColorNotFirst', '%1 must be at the beginning of a row', name);
+    }
+  }
+}
+
 //
 //  Define macros for table coloring.
 //
 new CommandMap('colortbl', {
-  cellcolor: ['TableColor', 'cell'],
-  rowcolor:  ['TableColor', 'row'],
-  columncolor: ['TableColor', 'col']
-}, {
-  /**
-   * Add color to a column, row, or cell.
-   *
-   * @param {TexParser} parser       The active TeX parser
-   * @param {string} name            The name of the macro that is being processed
-   * @param {keyof ColorData} type   The type (col, row, cell) of color being added
-   */
-  TableColor(parser: TexParser, name: string, type: keyof ColorData) {
-    const lookup = parser.configuration.packageData.get('color').model;  // use the color extension's color model
-    const model = parser.GetBrackets(name, '');
-    const color = lookup.getColor(model, parser.GetArgument(name));
-    //
-    // Check that we are in a colorable array.
-    //
-    const top = parser.stack.Top() as ColorArrayItem;
-    if (!(top instanceof ColorArrayItem)) {
-      throw new TexError('UnsupportedTableColor', 'Unsupported use of %1', parser.currentCS);
-    }
-    //
-    //  Check the position of the macro and save the color.
-    //
-    if (type === 'col') {
-      if (top.table.length && top.color.col[top.row.length] !== color) {
-        throw new TexError('ColumnColorNotTop', '%1 must be in the top row or preamble', name);
-      }
-      top.color.col[top.row.length] = color;
-      //
-      // Ignore the left and right overlap options.
-      //
-      if (parser.GetBrackets(name, '')) {
-        parser.GetBrackets(name, '');
-      }
-    } else {
-      top.color[type] = color;
-      if (type === 'row' && (top.Size() || top.row.length)) {
-        throw new TexError('RowColorNotFirst', '%1 must be at the beginning of a row', name);
-      }
-    }
-  }
+  cellcolor: [TableColor, 'cell'],
+  rowcolor:  [TableColor, 'row'],
+  columncolor: [TableColor, 'col']
 });
 
 /**

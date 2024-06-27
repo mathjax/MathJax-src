@@ -30,12 +30,12 @@ import {CommandMap} from '../TokenMap.js';
  * Macros for newcommand etc.
  */
 new CommandMap('Newcommand-macros', {
-  newcommand:       'NewCommand',
-  renewcommand:     'NewCommand',
-  newenvironment:   'NewEnvironment',
-  renewenvironment: 'NewEnvironment',
-  def:              'MacroDef',
-  'let':            'Let'
-}, NewcommandMethods);
+  newcommand:       NewcommandMethods.NewCommand,
+  renewcommand:     NewcommandMethods.NewCommand,
+  newenvironment:   NewcommandMethods.NewEnvironment,
+  renewenvironment: NewcommandMethods.NewEnvironment,
+  def:              NewcommandMethods.MacroDef,
+  'let':            NewcommandMethods.Let
+});
 
 

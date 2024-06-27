@@ -47,93 +47,93 @@ new sm.RegExpMap('AMSmath-operatorLetter', AmsMethods.operatorLetter, /[-*]/i);
  * Macros from the AMS Math package.
  */
 new sm.CommandMap('AMSmath-macros', {
-  mathring:   ['Accent', '02DA'],  // or 0x30A
-  nobreakspace: 'Tilde',
-  negmedspace:    ['Spacer', MATHSPACE.negativemediummathspace],
-  negthickspace:  ['Spacer', MATHSPACE.negativethickmathspace],
+  mathring:   [AmsMethods.Accent, '02DA'],  // or 0x30A
+  nobreakspace: AmsMethods.Tilde,
+  negmedspace:    [AmsMethods.Spacer, MATHSPACE.negativemediummathspace],
+  negthickspace:  [AmsMethods.Spacer, MATHSPACE.negativethickmathspace],
 
-  idotsint:   ['MultiIntegral', '\\int\\cdots\\int'],
+  idotsint:   [AmsMethods.MultiIntegral, '\\int\\cdots\\int'],
 
-  dddot:      ['Accent', '20DB'],
-  ddddot:     ['Accent', '20DC'],
+  dddot:      [AmsMethods.Accent, '20DB'],
+  ddddot:     [AmsMethods.Accent, '20DC'],
 
-  sideset:     'SideSet',
+  sideset:     AmsMethods.SideSet,
 
-  boxed:      ['Macro', '\\fbox{$\\displaystyle{#1}$}', 1],
+  boxed:      [AmsMethods.Macro, '\\fbox{$\\displaystyle{#1}$}', 1],
 
-  tag:         'HandleTag',
-  notag:       'HandleNoTag',
-  eqref:       ['HandleRef', true],
+  tag:         AmsMethods.HandleTag,
+  notag:       AmsMethods.HandleNoTag,
+  eqref:       [AmsMethods.HandleRef, true],
 
-  substack:   ['Macro', '\\begin{subarray}{c}#1\\end{subarray}', 1],
+  substack:   [AmsMethods.Macro, '\\begin{subarray}{c}#1\\end{subarray}', 1],
 
-  injlim:     ['NamedOp', 'inj&thinsp;lim'],
-  projlim:    ['NamedOp', 'proj&thinsp;lim'],
-  varliminf:  ['Macro', '\\mathop{\\underline{\\mmlToken{mi}{lim}}}'],
-  varlimsup:  ['Macro', '\\mathop{\\overline{\\mmlToken{mi}{lim}}}'],
-  varinjlim:  ['Macro', '\\mathop{\\underrightarrow{\\mmlToken{mi}{lim}}}'],
-  varprojlim: ['Macro', '\\mathop{\\underleftarrow{\\mmlToken{mi}{lim}}}'],
+  injlim:     [AmsMethods.NamedOp, 'inj&thinsp;lim'],
+  projlim:    [AmsMethods.NamedOp, 'proj&thinsp;lim'],
+  varliminf:  [AmsMethods.Macro, '\\mathop{\\underline{\\mmlToken{mi}{lim}}}'],
+  varlimsup:  [AmsMethods.Macro, '\\mathop{\\overline{\\mmlToken{mi}{lim}}}'],
+  varinjlim:  [AmsMethods.Macro, '\\mathop{\\underrightarrow{\\mmlToken{mi}{lim}}}'],
+  varprojlim: [AmsMethods.Macro, '\\mathop{\\underleftarrow{\\mmlToken{mi}{lim}}}'],
 
-  DeclareMathOperator: 'HandleDeclareOp',
-  operatorname:        'HandleOperatorName',
+  DeclareMathOperator: AmsMethods.HandleDeclareOp,
+  operatorname:        AmsMethods.HandleOperatorName,
 
-  genfrac:     'Genfrac',
-  frac:       ['Genfrac', '', '', '', ''],
-  tfrac:      ['Genfrac', '', '', '', '1'],
-  dfrac:      ['Genfrac', '', '', '', '0'],
-  binom:      ['Genfrac', '(', ')', '0', ''],
-  tbinom:     ['Genfrac', '(', ')', '0', '1'],
-  dbinom:     ['Genfrac', '(', ')', '0', '0'],
+  genfrac:     AmsMethods.Genfrac,
+  frac:       [AmsMethods.Genfrac, '', '', '', ''],
+  tfrac:      [AmsMethods.Genfrac, '', '', '', '1'],
+  dfrac:      [AmsMethods.Genfrac, '', '', '', '0'],
+  binom:      [AmsMethods.Genfrac, '(', ')', '0', ''],
+  tbinom:     [AmsMethods.Genfrac, '(', ')', '0', '1'],
+  dbinom:     [AmsMethods.Genfrac, '(', ')', '0', '0'],
 
-  cfrac:       'CFrac',
+  cfrac:       AmsMethods.CFrac,
 
-  shoveleft:  ['HandleShove', TexConstant.Align.LEFT],
-  shoveright: ['HandleShove', TexConstant.Align.RIGHT],
+  shoveleft:  [AmsMethods.HandleShove, TexConstant.Align.LEFT],
+  shoveright: [AmsMethods.HandleShove, TexConstant.Align.RIGHT],
 
-  xrightarrow: ['xArrow', 0x2192, 5, 10],
-  xleftarrow:  ['xArrow', 0x2190, 10, 5]
-}, AmsMethods);
+  xrightarrow: [AmsMethods.xArrow, 0x2192, 5, 10],
+  xleftarrow:  [AmsMethods.xArrow, 0x2190, 10, 5]
+});
 
 
 /**
  * Environments from the AMS Math package.
  */
 new sm.EnvironmentMap('AMSmath-environment', ParseMethods.environment, {
-  'equation*':   ['Equation', null, false],
-  'eqnarray*':   ['EqnArray', null, false, true, 'rcl', 'bmt',
+  'equation*':   [AmsMethods.Equation, null, false],
+  'eqnarray*':   [AmsMethods.EqnArray, null, false, true, 'rcl', 'bmt',
                   ParseUtil.cols(0, MATHSPACE.thickmathspace), '.5em'],
-  align:         ['EqnArray', null, true, true,  'rl', 'bt', ParseUtil.cols(0, 2)],
-  'align*':      ['EqnArray', null, false, true, 'rl', 'bt', ParseUtil.cols(0, 2)],
-  multline:      ['Multline', null, true],
-  'multline*':   ['Multline', null, false],
-  split:         ['EqnArray', null, false, false, 'rl', 'bt', ParseUtil.cols(0)],
-  gather:        ['EqnArray', null, true, true,  'c', 'm'],
-  'gather*':     ['EqnArray', null, false, true, 'c', 'm'],
+  align:         [AmsMethods.EqnArray, null, true, true,  'rl', 'bt', ParseUtil.cols(0, 2)],
+  'align*':      [AmsMethods.EqnArray, null, false, true, 'rl', 'bt', ParseUtil.cols(0, 2)],
+  multline:      [AmsMethods.Multline, null, true],
+  'multline*':   [AmsMethods.Multline, null, false],
+  split:         [AmsMethods.EqnArray, null, false, false, 'rl', 'bt', ParseUtil.cols(0)],
+  gather:        [AmsMethods.EqnArray, null, true, true,  'c', 'm'],
+  'gather*':     [AmsMethods.EqnArray, null, false, true, 'c', 'm'],
 
-  alignat:       ['AlignAt', null, true, true],
-  'alignat*':    ['AlignAt', null, false, true],
-  alignedat:     ['AlignAt', null, false, false],
+  alignat:       [AmsMethods.AlignAt, null, true, true],
+  'alignat*':    [AmsMethods.AlignAt, null, false, true],
+  alignedat:     [AmsMethods.AlignAt, null, false, false],
 
-  aligned:       ['AmsEqnArray', null, null, null, 'rl', 'bt', ParseUtil.cols(0, 2), '.5em', 'D'],
-  gathered:      ['AmsEqnArray', null, null, null, 'c', 'm', null, '.5em', 'D'],
+  aligned:       [AmsMethods.AmsEqnArray, null, null, null, 'rl', 'bt', ParseUtil.cols(0, 2), '.5em', 'D'],
+  gathered:      [AmsMethods.AmsEqnArray, null, null, null, 'c', 'm', null, '.5em', 'D'],
 
-  xalignat:      ['XalignAt', null, true, true],
-  'xalignat*':   ['XalignAt', null, false, true],
-  xxalignat:     ['XalignAt', null, false, false],
-  flalign:       ['FlalignArray', null, true, false, true, 'rlc', 'btm', 'auto auto fit'],
-  'flalign*':    ['FlalignArray', null, false, false, true, 'rlc', 'btm', 'auto auto fit'],
+  xalignat:      [AmsMethods.XalignAt, null, true, true],
+  'xalignat*':   [AmsMethods.XalignAt, null, false, true],
+  xxalignat:     [AmsMethods.XalignAt, null, false, false],
+  flalign:       [AmsMethods.FlalignArray, null, true, false, true, 'rlc', 'btm', 'auto auto fit'],
+  'flalign*':    [AmsMethods.FlalignArray, null, false, false, true, 'rlc', 'btm', 'auto auto fit'],
 
-  subarray:      ['Array', null, null, null, null, ParseUtil.cols(0), '0.1em', 'S', 1],
-  smallmatrix:   ['Array', null, null, null, 'c', ParseUtil.cols(1 / 3),
+  subarray:      [AmsMethods.Array, null, null, null, null, ParseUtil.cols(0), '0.1em', 'S', 1],
+  smallmatrix:   [AmsMethods.Array, null, null, null, 'c', ParseUtil.cols(1 / 3),
                   '.2em', 'S', 1],
-  matrix:       ['Array', null, null, null, 'c'],
-  pmatrix:      ['Array', null, '(', ')', 'c'],
-  bmatrix:      ['Array', null, '[', ']', 'c'],
-  Bmatrix:      ['Array', null, '\\{', '\\}', 'c'],
-  vmatrix:      ['Array', null, '\\vert', '\\vert', 'c'],
-  Vmatrix:      ['Array', null, '\\Vert', '\\Vert', 'c'],
-  cases:        ['Array', null, '\\{', '.', 'll', null, '.2em', 'T']
-}, AmsMethods);
+  matrix:       [AmsMethods.Array, null, null, null, 'c'],
+  pmatrix:      [AmsMethods.Array, null, '(', ')', 'c'],
+  bmatrix:      [AmsMethods.Array, null, '[', ']', 'c'],
+  Bmatrix:      [AmsMethods.Array, null, '\\{', '\\}', 'c'],
+  vmatrix:      [AmsMethods.Array, null, '\\vert', '\\vert', 'c'],
+  Vmatrix:      [AmsMethods.Array, null, '\\Vert', '\\Vert', 'c'],
+  cases:        [AmsMethods.Array, null, '\\{', '.', 'll', null, '.2em', 'T']
+});
 
 
 /**
@@ -437,6 +437,6 @@ new sm.DelimiterMap('AMSsymbols-delimiter', ParseMethods.delimiter, {
  * Macros from the AMS Symbols package.
  */
 new sm.CommandMap('AMSsymbols-macros', {
-  implies:    ['Macro', '\\;\\Longrightarrow\\;'],
-  impliedby:  ['Macro', '\\;\\Longleftarrow\\;']
-}, AmsMethods);
+  implies:    [AmsMethods.Macro, '\\;\\Longrightarrow\\;'],
+  impliedby:  [AmsMethods.Macro, '\\;\\Longleftarrow\\;']
+});
