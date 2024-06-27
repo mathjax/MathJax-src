@@ -151,7 +151,7 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
     public generatorPool = new GeneratorPool<N, T, D>();
 
     /**
-     *  The MathML adaptor.
+     *  The MathML serializer
      */
     public toMathML = toMathML;
 
@@ -407,6 +407,11 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
     protected speechTimeout: number = 0;
 
     /**
+     * The function to resolve when the speech loop finishes
+     */
+    protected attachSpeechDone: () => void;
+
+    /**
      * Enrich the MathItem class used for this MathDocument, and create the
      *   temporary MathItem used for enrchment
      *
@@ -438,8 +443,12 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
           if (this.speechTimeout) {
             clearTimeout(this.speechTimeout);
             this.speechTimeout = 0;
+            this.attachSpeechDone();
           }
           this.awaitingSpeech = Array.from(this.math);
+          this.renderPromises.push(new Promise<void>((ok, _fail) => {
+            this.attachSpeechDone = ok;
+          }));
           this.speechTimeout = setTimeout(
             () => this.attachSpeechLoop(),
             this.options.speechTiming.initial
@@ -462,8 +471,12 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
         const math = awaitingSpeech.shift();
         (math as EnrichedMathItem<N, T, D>).attachSpeech(this);
       } while (awaitingSpeech.length && new Date().getTime() < timeEnd);
-      this.speechTimeout = awaitingSpeech.length ?
-        setTimeout(() => this.attachSpeechLoop(), timing.intermediate) : 0;
+      if (awaitingSpeech.length) {
+        this.speechTimeout = setTimeout(() => this.attachSpeechLoop(), timing.intermediate);
+      } else {
+        this.speechTimeout = 0;
+        this.attachSpeechDone();
+      }
     }
 
     /**
