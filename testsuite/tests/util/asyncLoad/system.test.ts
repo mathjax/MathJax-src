@@ -1,12 +1,13 @@
 import { describe, test, expect } from '@jest/globals';
 import './dirname.mjs';
 import './system.cjs';
+import {mathjax} from '#js/mathjax.js';
 import {asyncLoad} from '#js/util/AsyncLoad.js';
 import {setBaseURL} from '#js/util/asyncLoad/system.js';
 import * as path from 'path';
 
-const root = new URL(path.resolve('..', 'mjs'), 'file://').href;
-const lib = new URL(path.resolve('lib'), 'file://').href;
+const root = path.resolve('..', 'mjs');
+const lib = path.resolve('lib');
 
 describe('asyncLoad() for node', () => {
 
@@ -22,10 +23,16 @@ describe('asyncLoad() for node', () => {
     await expect(asyncLoad(absFile)).resolves.toEqual({loaded: true});          // absolute file found
     await expect(asyncLoad(absUnknown).catch(() => true)).resolves.toBe(true);  // absolute file not found
 
+    await expect(asyncLoad('#js/components/version.js')                         // can't load using package exports
+                 .catch(() => true)).resolves.toBe(true);
+    await expect(asyncLoad('mathjax-full/js/components/version.js')             // can't load from module
+                 .catch(() => true)).resolves.toBe(true);
+
     await expect(asyncLoad(mjsFile).then((result: any) => result.loaded)).resolves.toBe(true);  // mjs file loads
+    expect(mathjax.asyncIsSynchronous).toBe(false);                             // system.js is asynchronous
   });
 
-  test('serBaseURL() for node', async () => {
+  test('setBaseURL() for node', async () => {
     setBaseURL(lib);
     const relFile = './AsyncLoad.child.cjs';
     const relUnknown = './AsyncLoad.unknown.cjs';
