@@ -257,7 +257,9 @@ export function CommonMrowMixin<
         breaks && this.computeChildLineBBox(child, i);
       }
       bbox.clean();
-      breaks && this.computeLinebreakBBox(bbox);
+      if (breaks && !this.coreMO().node.isEmbellished) {
+        this.computeLinebreakBBox(bbox);
+      }
       if (this.fixesPWidth && this.setChildPWidths(recompute)) {
         this.computeBBox(bbox, true);
       }
