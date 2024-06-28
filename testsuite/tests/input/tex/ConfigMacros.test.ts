@@ -13,19 +13,19 @@ function runMacroTests(
   toXmlMatch(tex2mml(macro), expected.replace('PH', macro));
 }
 
-// describe('Config Macros Active', () => {
-//   it('Macros Simple', () =>
-//     runMacroTests(
-//       {active: {"@": "Tilde"}},
-//       `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"PH\" display=\"block\">
-//       <mi data-latex=\"A\">A</mi>
-//       <mtext data-latex=\"~\">&#xA0;</mtext>
-//       <mi data-latex=\"a\">a</mi>
-//     </math>`,
-//       'A~a',
-//       'A@a'
-//     ));
-// });
+describe('Config Macros Active', () => {
+  it('Macros Simple', () =>
+    runMacroTests(
+      {active: {"@": "~"}},
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"PH\" display=\"block\">
+      <mi data-latex=\"A\">A</mi>
+      <mtext data-latex=\"~\">&#xA0;</mtext>
+      <mi data-latex=\"a\">a</mi>
+    </math>`,
+      'A~a',
+      'A@a'
+    ));
+});
 
 describe('Config Macros Commands', () => {
   it('Commands Simple', () => 
@@ -73,20 +73,16 @@ describe('Config Macros Commands', () => {
       '\\foo[hi]{there}'));
 });
 
-// describe('Config Macros Environment', () => {
-//   it('Environment Simple', () =>
-//     runMacroTests(
-//       {environment: {"persarr": "array"}},
-//       `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"PH\" display=\"block\">
-//       <mtable columnspacing=\"1em\" rowspacing=\"4pt\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\begin{array}{c}a\\end{array}\">
-//         <mtr data-latex-item=\"{c}\" data-latex=\"{c}\">
-//           <mtd>
-//             <mi data-latex=\"a\">a</mi>
-//           </mtd>
-//         </mtr>
-//       </mtable>
-//     </math>`,
-//       '\\begin{array}{c}a\\end{array}',
-//       '\\begin{persarr}{c}a\\end{persarr}'
-//     ));
-// });
+describe('Config Macros Environment', () => {
+  it('Environment Simple', () =>
+    runMacroTests(
+      {environments: {"myHeartEnv": ["\\heartsuit", "\\spadesuit"]}},
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{myHeartEnv}a\\end{myHeartEnv}\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\heartsuit\">&#x2661;</mi>
+      <mi data-latex=\"a\">a</mi>
+      <mi mathvariant=\"normal\" data-latex=\"\\spadesuit\">&#x2660;</mi>
+    </math>`,
+      '\\begin{myHeartEnv}a\\end{myHeartEnv}',
+      '\\begin{myHeartEnv}a\\end{myHeartEnv}'
+    ));
+});
