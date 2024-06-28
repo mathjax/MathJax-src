@@ -285,9 +285,11 @@ export function EnrichedMathItemMixin<N, T, D, B extends Constructor<AbstractMat
       const node = this.typesetRoot;
       if (speech && options.enableSpeech) {
         adaptor.setAttribute(node, 'aria-label', speech as string);
+        this.root.attributes.set('aria-label', speech);
       }
       if (braille && options.enableBraille) {
         adaptor.setAttribute(node, 'aria-braillelabel', braille as string);
+        this.root.attributes.set('aria-braillelabel', braille);
       }
       for (const child of adaptor.childNodes(node) as N[]) {
         adaptor.setAttribute(child, 'aria-hidden', 'true');
@@ -379,6 +381,7 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
         attachSpeech: [STATE.ATTACHSPEECH]
       }),
       speechTiming: {
+        asynchronous: true,                // true to allow screen updates while adding speech, false to not
         initial: 100,                      // initial delay until starting to add speech
         threshold: 250,                    // time (in milliseconds) to process speech before letting screen update
         intermediate: 10                   // delay after processing speech reaches the threshold
@@ -440,23 +443,44 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
     public attachSpeech() {
       if (!this.processed.isSet('attach-speech')) {
         if (this.options.enableSpeech || this.options.enableBraille) {
-          if (this.speechTimeout) {
-            clearTimeout(this.speechTimeout);
-            this.speechTimeout = 0;
-            this.attachSpeechDone();
+          if (this.options.speechTiming.asynchronous) {
+            this.attachSpeechAsync();
+          } else {
+            this.attachSpeechSync();
           }
-          this.awaitingSpeech = Array.from(this.math);
-          this.renderPromises.push(new Promise<void>((ok, _fail) => {
-            this.attachSpeechDone = ok;
-          }));
-          this.speechTimeout = setTimeout(
-            () => this.attachSpeechLoop(),
-            this.options.speechTiming.initial
-          );
         }
         this.processed.set('attach-speech');
       }
       return this;
+    }
+
+    /**
+     * Add speech synchronously (e.g., for use in node applications on the server)
+     */
+    protected attachSpeechSync() {
+      for (const math of this.math) {
+        (math as EnrichedMathItem<N, T, D>).attachSpeech(this);
+      }
+    }
+
+    /**
+     * Add speech in small chunks, allowing screen updates in between
+     * (e.g., helpful with lazy typesetting)
+     */
+    protected attachSpeechAsync() {
+      if (this.speechTimeout) {
+        clearTimeout(this.speechTimeout);
+        this.speechTimeout = 0;
+        this.attachSpeechDone();
+      }
+      this.awaitingSpeech = Array.from(this.math);
+      this.renderPromises.push(new Promise<void>((ok, _fail) => {
+        this.attachSpeechDone = ok;
+      }));
+      this.speechTimeout = setTimeout(
+        () => this.attachSpeechLoop(),
+        this.options.speechTiming.initial
+      );
     }
 
     /**
