@@ -106,9 +106,8 @@
     (other-window 1)
     (let* ((fail (jest-find-fail))
            (actual (car (fourth fail)))
-           (str (subseq actual 1 -1))
+           (str (subseq actual 1))
            )
       (other-window 1)
       (insert str)
       )))
-
