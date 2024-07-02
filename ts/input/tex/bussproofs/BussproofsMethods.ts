@@ -76,13 +76,13 @@ function createRule(parser: TexParser, premise: MmlNode,
   if (left) {
     leftLabel = parser.create(
       'node', 'mpadded', [left],
-      {height: '+.5em', width: '+.5em', voffset: '-.15em'});
+      {height: '.25em', depth: '+.25em', width: '+.5ex', voffset: '-.25em'});
     BussproofsUtil.setProperty(leftLabel, 'prooflabel', 'left');
   }
   if (right) {
     rightLabel = parser.create(
       'node', 'mpadded', [right],
-      {height: '+.5em', width: '+.5em', voffset: '-.15em'});
+      {height: '-.25em', depth: '+.25em', width: '+.5ex', voffset: '-.25em', lspace: '.5ex'});
     BussproofsUtil.setProperty(rightLabel, 'prooflabel', 'right');
   }
   let children, label;
