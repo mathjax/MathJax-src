@@ -430,13 +430,14 @@ CommonOutputJax<
     const adaptor = this.adaptor;
     const space = LENGTHS.em(dimen);
     if (!forced) {
-      adaptor.insert(adaptor.node('mjx-break', {prebreak: true}), nsvg);
+      adaptor.insert(adaptor.node('mjx-break', {prebreak: true}, [adaptor.text(' ')]), nsvg);
     }
     adaptor.insert(
       adaptor.node(
         'mjx-break',
         !forced ? {newline: true} :
-        SPACE[space] ? {size: SPACE[space]} : {style: `letter-spacing: ${LENGTHS.em(dimen - 1)}`}
+        SPACE[space] ? {size: SPACE[space]} : {style: `letter-spacing: ${LENGTHS.em(dimen - 1)}`},
+        [adaptor.text(' ')]
       ),
       nsvg
     );
