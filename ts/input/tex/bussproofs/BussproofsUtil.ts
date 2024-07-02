@@ -492,7 +492,7 @@ export let balanceRules = function(arg: FilterData) {
     let rule = getRule(inf);
     let premises = getPremises(rule, getProperty(rule, 'inferenceRule') as string);
     let premiseF = firstPremise(premises);
-    let leftAdjust;
+    let leftAdjust = 0;
     if (getProperty(premiseF, 'inference')) {
       let adjust = adjustValue(premiseF);
       if (adjust) {
