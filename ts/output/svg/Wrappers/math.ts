@@ -111,8 +111,7 @@ export const SvgMath = (function <N, T, D>(): SvgMathClass<N, T, D> {
       //  For inline breakpoints, use a space that is 1em width, make it breakable,
       //    and then set the letter-spacing to make the sace the proper size.
       //
-      'mjx-container[jax="SVG"] mjx-break::after': {
-        content: '" "',
+      'mjx-container[jax="SVG"] mjx-break': {
         'white-space': 'normal',
         'line-height': '0',
         'font-family': 'MJX-ZERO'

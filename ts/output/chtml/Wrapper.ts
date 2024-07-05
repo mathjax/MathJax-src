@@ -268,7 +268,7 @@ CommonWrapper<
       const space = this.em(dimen);
       if (breakable && name === 'space') {
         const node = adaptor.node('mjx-break', SPACE[space] ? {size: SPACE[space]} :
-                                  {style: `letter-spacing: ${this.em(dimen - 1)}`});
+                                  {style: `letter-spacing: ${this.em(dimen - 1)}`}, [adaptor.text(' ')]);
         adaptor.insert(node, this.dom[i]);
       } else if (dimen) {
         if (SPACE[space]) {
