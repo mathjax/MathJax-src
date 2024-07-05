@@ -141,7 +141,7 @@
     "mathjax-modern-font": "^4.0.0-beta.5",
     "mhchemparser": "^4.2.1",
     "mj-context-menu": "^0.9.1",
-    "speech-rule-engine": "^4.1.0-beta.10",
+    "speech-rule-engine": "^4.1.0-beta.11",
     "wicked-good-xpath": "^1.3.0"
   }
 }
