@@ -502,7 +502,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
         () => this.brailleRegion.Show(this.node, this.highlighter));
     }
     if (options.a11y.keyMagnifier) {
-      this.magnifyRegion.Show(this.node, this.highlighter);
+      this.magnifyRegion.Show(this.current, this.highlighter);
     }
     this.Update();
   }

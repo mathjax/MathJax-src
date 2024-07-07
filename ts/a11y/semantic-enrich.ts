@@ -474,6 +474,10 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
         this.attachSpeechDone();
       }
       this.awaitingSpeech = Array.from(this.math);
+      if (this.awaitingSpeech.length === 0) {
+        this.awaitingSpeech = null;
+        return;
+      }
       this.renderPromises.push(new Promise<void>((ok, _fail) => {
         this.attachSpeechDone = ok;
       }));
