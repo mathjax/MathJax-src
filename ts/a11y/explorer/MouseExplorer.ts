@@ -94,12 +94,6 @@ export abstract class AbstractMouseExplorer<T> extends AbstractExplorer<T> imple
 export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
 
   /**
-   * Remember the last position to avoid flickering.
-   * @type {[number, number]}
-   */
-  protected coord: [number, number];
-
-  /**
    * @constructor
    * @extends {AbstractMouseExplorer<T>}
    *
@@ -127,10 +121,6 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
    * @override
    */
   public MouseOut(event: MouseEvent) {
-    if (event.clientX === this.coord[0] &&
-        event.clientY === this.coord[1]) {
-      return;
-    }
     this.highlighter.unhighlight();
     this.region.Hide();
     super.MouseOut(event);
@@ -143,7 +133,6 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
   public MouseOver(event: MouseEvent) {
     super.MouseOver(event);
     let target = event.target as HTMLElement;
-    this.coord = [event.clientX, event.clientY];
     let [node, kind] = this.getNode(target);
     if (!node) {
       return;
