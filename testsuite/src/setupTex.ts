@@ -129,9 +129,7 @@ export function getTokens(configuration: string) {
       })
     }
   });
-  fs.appendFile(tmpJsonFile, ',' + JSON.stringify(outJSON, null, 2), (_err) => {
-    console.warn(`could not write file ${tmpJsonFile}`);
-  });
+  fs.appendFileSync(tmpJsonFile, ',' + JSON.stringify(outJSON, null, 2));
 }
 
 // A prototype extension for the macro table lookups.
