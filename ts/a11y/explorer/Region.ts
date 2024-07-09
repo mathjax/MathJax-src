@@ -545,7 +545,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
         'box-shadow': '0px 10px 20px #888', border: '2px solid #CCCCCC'
       },
       ['.' + HoverRegion.className + ' > div']: {
-        'clip-path': 'rect(100% 0 0 100%)'
+        overflow: 'hidden'
       }
     });
 
