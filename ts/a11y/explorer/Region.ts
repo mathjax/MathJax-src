@@ -112,7 +112,6 @@ export abstract class AbstractRegion<T> implements Region<T> {
   constructor(public document: A11yDocument) {
     this.CLASS = this.constructor as typeof AbstractRegion;
     this.AddStyles();
-    this.AddElement();
   }
 
 
@@ -136,9 +135,9 @@ export abstract class AbstractRegion<T> implements Region<T> {
    * @override
    */
   public AddElement() {
+    if (this.div) return;
     let element = this.document.adaptor.node('div');
     element.classList.add(this.CLASS.className);
-    element.style.backgroundColor = 'white';
     this.div = element;
     this.inner = this.document.adaptor.node('div');
     this.div.appendChild(this.inner);
@@ -153,6 +152,7 @@ export abstract class AbstractRegion<T> implements Region<T> {
    * @override
    */
   public Show(node: HTMLElement, highlighter: Sre.highlighter) {
+    this.AddElement();
     this.position(node);
     this.highlight(highlighter);
     this.div.classList.add(this.CLASS.className + '_Show');
@@ -177,7 +177,10 @@ export abstract class AbstractRegion<T> implements Region<T> {
    * @override
    */
   public Hide() {
-    this.div.classList.remove(this.CLASS.className + '_Show');
+    if (!this.div) return;
+    this.div.parentNode.removeChild(this.div);
+    this.div = null;
+    this.inner = null;
   }
 
 
@@ -198,6 +201,7 @@ export abstract class AbstractRegion<T> implements Region<T> {
    * @param {HTMLElement} node The reference node.
    */
   protected stackRegions(node: HTMLElement) {
+    this.AddElement();
     // TODO: This could be made more efficient by caching regions of a class.
     const rect = node.getBoundingClientRect();
     let baseBottom = 0;
@@ -270,6 +274,7 @@ export class StringRegion extends AbstractRegion<string> {
    * @override
    */
   public Clear(): void {
+    if (!this.div) return;
     this.Update('');
     this.inner.style.top = '';
     this.inner.style.backgroundColor = '';
@@ -280,8 +285,13 @@ export class StringRegion extends AbstractRegion<string> {
    * @override
    */
   public Update(speech: string) {
-    this.inner.textContent = '';
-    this.inner.textContent = speech;
+    if (speech) {
+      this.AddElement();
+    }
+    if (this.inner) {
+      this.inner.textContent = '';
+      this.inner.textContent = speech;
+    }
   }
 
   /**
@@ -296,6 +306,7 @@ export class StringRegion extends AbstractRegion<string> {
    * @override
    */
   protected highlight(highlighter: Sre.highlighter) {
+    if (!this.div) return;
     const color = highlighter.colorString();
     this.inner.style.backgroundColor = color.background;
     this.inner.style.color = color.foreground;
@@ -317,13 +328,11 @@ export class ToolTip extends StringRegion {
   protected static style: CssStyles =
     new CssStyles({
       ['.' + ToolTip.className]: {
-        display: 'none',
-      },
-      ['.' + ToolTip.className + '_Show']: {
         width: 'auto', height: 'auto', opacity: 1, 'text-align': 'center',
         'border-radius': '6px', padding: 0,
         'border-bottom': '1px dotted black',
         position: 'absolute', display: 'inline-block',
+        'background-color': 'white',
         'z-index': 202
       }
     });
@@ -344,14 +353,12 @@ export class LiveRegion extends StringRegion {
   protected static style: CssStyles =
     new CssStyles({
       ['.' + LiveRegion.className]: {
-        display: 'none'
-      },
-      ['.' + LiveRegion.className + '_Show']: {
         position: 'absolute', top: 0,
         display: 'block', width: 'auto', height: 'auto',
         padding: 0, opacity: 1, 'z-index': '202',
         left: 0, right: 0, 'margin': '0 auto',
-        'background-color': 'rgba(0, 0, 255, 0.2)', 'box-shadow': '0px 5px 20px #888',
+        'background-color': 'white',
+        'box-shadow': '0px 5px 20px #888',
         border: '2px solid #CCCCCC'
       }
     });
@@ -531,26 +538,16 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
   protected static style: CssStyles =
     new CssStyles({
       ['.' + HoverRegion.className]: {
-        display: 'none'
-      },
-      ['.' + HoverRegion.className + '_Show']: {
         display: 'block', position: 'absolute',
         width: 'max-content', height: 'auto',
         padding: 0, opacity: 1, 'z-index': '202', 'margin': '0 auto',
-        'background-color': 'rgba(0, 0, 255, 0.2)',
+        'background-color': 'white', 'line-height': 0,
         'box-shadow': '0px 10px 20px #888', border: '2px solid #CCCCCC'
+      },
+      ['.' + HoverRegion.className + ' > div']: {
+        overflow: 'hidden'
       }
     });
-
-
-  /**
-   * @constructor
-   * @param {A11yDocument} document The document the live region is added to.
-   */
-  constructor(public document: A11yDocument) {
-    super(document);
-    this.inner.style.lineHeight = '0';
-  }
 
   /**
    * Sets the position of the region with respect to align parameter.  There are
@@ -568,7 +565,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
     let top;
     switch (this.document.options.a11y.align) {
     case 'top':
-      top = nodeRect.top - divRect.height - 10 ;
+      top = nodeRect.top - divRect.height - 10;
       break;
     case 'bottom':
       top = nodeRect.bottom + 10;
@@ -588,6 +585,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
    * @override
    */
   protected highlight(highlighter: Sre.highlighter) {
+    if (!this.div) return;
     // TODO Do this with styles to avoid the interaction of SVG/CHTML.
     if (this.inner.firstChild &&
         !(this.inner.firstChild as HTMLElement).hasAttribute('sre-highlight')) {
@@ -602,6 +600,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
    * @override
    */
   public Show(node: HTMLElement, highlighter: Sre.highlighter) {
+    this.AddElement();
     this.div.style.fontSize = this.document.options.a11y.magnify;
     this.Update(node);
     super.Show(node, highlighter);
@@ -611,6 +610,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
    * @override
    */
   public Clear() {
+    if (!this.div) return;
     this.inner.textContent = '';
     this.inner.style.top = '';
     this.inner.style.backgroundColor = '';
@@ -620,9 +620,11 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
    * @override
    */
   public Update(node: HTMLElement) {
+    if (!this.div) return;
     this.Clear();
     let mjx = this.cloneNode(node);
     this.inner.appendChild(mjx);
+    this.position(node);
   }
 
   /**
