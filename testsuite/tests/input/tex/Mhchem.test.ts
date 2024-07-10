@@ -1,5 +1,7 @@
 import { beforeEach, describe, it } from '@jest/globals';
 import { toXmlMatch, setupTex, tex2mml } from '#helpers';
+import '#js/input/tex/mhchem/MhchemConfiguration';
+import '#js/input/tex/ams/AmsConfiguration';
 
 beforeEach(() => setupTex(['base', 'mhchem']));
 
