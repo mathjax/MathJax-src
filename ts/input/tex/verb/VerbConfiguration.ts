@@ -64,7 +64,7 @@ Verb(parser: TexParser, name: string) {
 
 };
 
-new CommandMap('verb', {verb: 'Verb'}, VerbMethods);
+new CommandMap('verb', {verb: VerbMethods.Verb});
 
 
 export const VerbConfiguration = Configuration.create(

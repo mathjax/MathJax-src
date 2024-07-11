@@ -1,5 +1,6 @@
 import { afterAll, beforeEach, describe, it } from '@jest/globals';
 import { getTokens, toXmlMatch, setupTex, tex2mml } from '#helpers';
+import '#js/input/tex/ams/AmsConfiguration';
 
 beforeEach(() => setupTex(['ams', 'base']));
 
@@ -2510,5 +2511,88 @@ describe('Ams Complex', () => {
     ));
 });
 
+describe('Ams SideSet', () => {
+  it('Sideset Empty', () =>
+    toXmlMatch(
+      tex2mml('\\sideset{}{}{}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\sideset{}{}{}\" display=\"block\">
+      <mrow data-mjx-texclass=\"OP\" data-latex=\"\\sideset{}{}{}\"></mrow>
+    </math>`
+    ));
+  it('Sideset Simple', () =>
+    toXmlMatch(
+      tex2mml('\\sideset{}{}{a}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\sideset{}{}{a}\" display=\"block\">
+      <mrow data-mjx-texclass=\"OP\" data-latex=\"\\sideset{}{}{a}\">
+        <mi data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('Sideset Simple Right', () =>
+    toXmlMatch(
+      tex2mml('\\sideset{}{\'}{a}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\sideset{}{'}{a}\" display=\"block\">
+      <mrow data-mjx-texclass=\"OP\" data-latex=\"\\sideset{}{'}{a}\">
+        <msup data-latex=\"'\">
+          <mi data-latex=\"a\">a</mi>
+          <mo data-mjx-alternate=\"1\" data-latex=\"'\">&#x2032;</mo>
+        </msup>
+      </mrow>
+    </math>`
+    ));
+  it('Sideset Simple Left', () =>
+    toXmlMatch(
+      tex2mml('\\sideset{\'}{}{a}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\sideset{'}{}{a}\" display=\"block\">
+      <mrow data-mjx-texclass=\"OP\" data-latex=\"\\sideset{'}{}{a}\">
+        <mmultiscripts data-mjx-script-align=\"left\">
+          <mi data-latex=\"a\">a</mi>
+          <mprescripts></mprescripts>
+          <mo data-mjx-alternate=\"1\" data-latex=\"'\">&#x2032;</mo>
+          <none></none>
+        </mmultiscripts>
+      </mrow>
+    </math>`
+    ));
+  it('Sideset Simple Left Right', () =>
+    toXmlMatch(
+      tex2mml('\\sideset{\'}{\'}{a}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\sideset{'}{'}{a}\" display=\"block\">
+      <mrow data-mjx-texclass=\"OP\" data-latex=\"\\sideset{'}{'}{a}\">
+        <mmultiscripts data-mjx-script-align=\"left\">
+          <mi data-latex=\"a\">a</mi>
+          <mo data-mjx-alternate=\"1\" data-latex=\"'\">&#x2032;</mo>
+          <none></none>
+          <mprescripts></mprescripts>
+          <mo data-mjx-alternate=\"1\" data-latex=\"'\">&#x2032;</mo>
+          <none></none>
+        </mmultiscripts>
+      </mrow>
+    </math>`
+    ));
+  it('Sideset Simple Sum', () =>
+    toXmlMatch(
+      tex2mml('\\sideset{}{\'}\\sum_{n=0}^{k}n'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\sideset{}{'}\\sum_{n=0}^{k}n\" display=\"block\">
+      <munderover data-latex=\"\\sideset{}{'}\\sum_{n=0}^{k}\">
+        <mrow data-mjx-texclass=\"OP\" data-latex=\"\\sideset{}{'}\\sum\">
+          <msup data-latex=\"'\">
+            <mo data-latex=\"\\sum\">&#x2211;</mo>
+            <mo data-mjx-alternate=\"1\" data-latex=\"'\">&#x2032;</mo>
+          </msup>
+        </mrow>
+        <mrow data-mjx-texclass=\"ORD\" data-latex=\"{n=0}\">
+          <mi data-latex=\"n\">n</mi>
+          <mo data-latex=\"=\">=</mo>
+          <mn data-latex=\"0\">0</mn>
+        </mrow>
+        <mrow data-mjx-texclass=\"ORD\" data-latex=\"{k}\">
+          <mi data-latex=\"k\">k</mi>
+        </mrow>
+      </munderover>
+      <mi data-latex=\"n\">n</mi>
+    </math>`
+    ));
+});
 
 afterAll(() => getTokens('ams'));

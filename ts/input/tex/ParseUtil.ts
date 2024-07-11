@@ -436,7 +436,7 @@ export const ParseUtil = {
       }
       if (match !== '') {
         // @test Internal Math Error
-        throw new TexError('MathNotTerminated', 'Math not terminated in text box');
+        throw new TexError('MathNotTerminated', 'Math mode is not properly terminated');
       }
     }
     if (k < text.length) {

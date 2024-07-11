@@ -1,5 +1,6 @@
 import { afterAll, beforeEach, describe, it } from '@jest/globals';
 import { getTokens, toXmlMatch, setupTex, tex2mml } from '#helpers';
+import '#js/input/tex/enclose/EncloseConfiguration';
 
 beforeEach(() => setupTex(['base', 'enclose']));
 

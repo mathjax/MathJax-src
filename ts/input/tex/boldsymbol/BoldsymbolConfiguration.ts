@@ -64,7 +64,7 @@ Boldsymbol(parser: TexParser, name: string) {
 }
 
 
-new CommandMap('boldsymbol', {boldsymbol: 'Boldsymbol'}, BoldsymbolMethods);
+new CommandMap('boldsymbol', {boldsymbol: BoldsymbolMethods.Boldsymbol});
 
 
 /**

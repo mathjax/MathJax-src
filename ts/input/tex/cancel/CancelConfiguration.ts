@@ -74,12 +74,12 @@ export const CancelMethods: {[key: string]: ParseMethod} = {
 
 
 new CommandMap('cancel', {
-  cancel:   ['Cancel', TexConstant.Notation.UPDIAGONALSTRIKE],
-  bcancel:  ['Cancel', TexConstant.Notation.DOWNDIAGONALSTRIKE],
-  xcancel:  ['Cancel', TexConstant.Notation.UPDIAGONALSTRIKE + ' ' +
+  cancel:   [CancelMethods.Cancel, TexConstant.Notation.UPDIAGONALSTRIKE],
+  bcancel:  [CancelMethods.Cancel, TexConstant.Notation.DOWNDIAGONALSTRIKE],
+  xcancel:  [CancelMethods.Cancel, TexConstant.Notation.UPDIAGONALSTRIKE + ' ' +
     TexConstant.Notation.DOWNDIAGONALSTRIKE],
-  cancelto: 'CancelTo'
-}, CancelMethods);
+  cancelto: CancelMethods.CancelTo
+});
 
 
 export const CancelConfiguration = Configuration.create(

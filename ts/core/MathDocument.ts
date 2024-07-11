@@ -30,7 +30,6 @@ import {MmlNode, TextNode} from './MmlTree/MmlNode.js';
 import {MmlFactory} from '../core/MmlTree/MmlFactory.js';
 import {DOMAdaptor} from '../core/DOMAdaptor.js';
 import {BitField, BitFieldClass} from '../util/BitField.js';
-
 import {PrioritizedList} from '../util/PrioritizedList.js';
 
 /*****************************************************************/
@@ -320,6 +319,11 @@ export interface MathDocument<N, T, D> {
   renderActions: RenderList<N, T, D>;
 
   /**
+   * The promises that indicate when rendering is fully complete
+   */
+  renderPromises: Promise<void>[];
+
+  /**
    * This object tracks what operations have been performed, so that (when
    *  asynchronous operations are used), the ones that have already been
    *  completed won't be performed again.
@@ -603,6 +607,11 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
   public renderActions: RenderList<N, T, D>;
 
   /**
+   * The render action promise list
+   */
+  public renderPromises: Promise<void>[];
+
+  /**
    * The bit-field used to tell what steps have been taken on the document (for retries)
    */
   public processed: BitField;
@@ -640,6 +649,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
     this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
     this.math = new (this.options['MathList'] || DefaultMathList)();
     this.renderActions = RenderList.create<N, T, D>(this.options['renderActions']);
+    this.renderPromises = [];
     this.processed = new AbstractMathDocument.ProcessBits();
     this.outputJax = this.options['OutputJax'] || new DefaultOutputJax<N, T, D>();
     let inputJax = this.options['InputJax'] || [new DefaultInputJax<N, T, D>()];
@@ -694,6 +704,7 @@ export abstract class AbstractMathDocument<N, T, D> implements MathDocument<N, T
    * @override
    */
   public render() {
+    this.renderPromises = [];
     this.renderActions.renderDoc(this);
     return this;
   }

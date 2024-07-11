@@ -23,17 +23,19 @@
 
 import {mathjax} from '../../mathjax.js';
 import * as path from 'path';
+import {src} from '#source/source.cjs';
 
 declare var require: (name: string) => any;
-declare var __dirname: string;
 
-let root = path.dirname(path.dirname(__dirname));
+let root = path.resolve(src, '..', '..', 'cjs');
 
 if (!mathjax.asyncLoad && typeof require !== 'undefined') {
   mathjax.asyncLoad = (name: string) => {
     return require(name.charAt(0) === '.' ? path.resolve(root, name) : name);
   };
+  mathjax.asyncIsSynchronous = true;
 }
+
 
 /**
  * @param {string} URL   the base URL to use for loading relative paths

@@ -1687,10 +1687,10 @@ describe('Error', () => {
     ));
   it('EnvMissingEnd Array', () =>
     toXmlMatch(
-      tex2mml('\\begin{array}a'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}a" display="block">
-  <merror data-mjx-error="Illegal pream-token (a)">
-    <mtext>Illegal pream-token (a)</mtext>
+      tex2mml('\\begin{array}{c}a'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{c}a" display="block">
+  <merror data-mjx-error="Missing \\end{array}">
+    <mtext>Missing \\end{array}</mtext>
   </merror>
 </math>`
     ));
@@ -2752,10 +2752,10 @@ describe('InternalMath', () => {
     toXmlMatch(
       tex2mml('a\\mbox{$}} c'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\mbox{$}} c" display="block">
-  <merror data-mjx-error="Math not terminated in text box">
-    <mtext>Math not terminated in text box</mtext>
-  </merror>
-</math>`
+      <merror data-mjx-error="Math mode is not properly terminated">
+        <mtext>Math mode is not properly terminated</mtext>
+      </merror>
+    </math>`
     ));
   it('Mbox Internal Display', () =>
     toXmlMatch(
@@ -4412,6 +4412,18 @@ describe('Base Complex', () => {
       <mn data-latex="2">2</mn>
     </msup>
   </msqrt>
+</math>`
+    ));
+});
+
+describe('Column Parser', () => {
+  it('BadPreamToken', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}a'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}a" display="block">
+  <merror data-mjx-error="Illegal pream-token (a)">
+    <mtext>Illegal pream-token (a)</mtext>
+  </merror>
 </math>`
     ));
 });

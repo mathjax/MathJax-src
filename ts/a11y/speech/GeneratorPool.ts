@@ -161,9 +161,9 @@ export class GeneratorPool<N, T, D> {
   public computeSpeech(node: N, mml: string): [string, string] {
     this.element = Sre.parseDOM(mml);
     const xml = this.prepareXml(node);
-    const speech = this.speechGenerator.getSpeech(xml, this.element);
-    const braille = this.brailleGenerator.getSpeech(xml, this.element);
-    if (this.options.enableSpeech || this.options.enableBraille) {
+    const speech = this.options.enableSpeech ? this.speechGenerator.getSpeech(xml, this.element) : '';
+    const braille = this.options.enableBraille ? this.brailleGenerator.getSpeech(xml, this.element) : '';
+    if (speech || braille) {
       this.setAria(node, xml, this.options.sre.locale);
     }
     return [speech, braille];

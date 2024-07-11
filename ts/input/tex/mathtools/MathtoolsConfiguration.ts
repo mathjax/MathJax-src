@@ -45,7 +45,7 @@ export const PAIREDDELIMS = 'mathtools-paired-delims';
  * @param {ParserConfiguration} config   The current configuration.
  */
 function initMathtools(config: ParserConfiguration) {
-  new CommandMap(PAIREDDELIMS, {}, {});
+  new CommandMap(PAIREDDELIMS, {});
   config.append(Configuration.local({[ConfigurationType.HANDLER]: {[HandlerType.MACRO]: [PAIREDDELIMS]}, priority: -5}));
 }
 

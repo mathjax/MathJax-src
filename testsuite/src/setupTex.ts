@@ -8,10 +8,8 @@ import {liteAdaptor} from '#js/adaptors/liteAdaptor';
 import {STATE} from '#js/core/MathItem';
 import {SerializedMmlVisitor} from '#js/core/MmlTree/SerializedMmlVisitor';
 import {MmlNode} from '#js/core/MmlTree/MmlNode';
-import '#js/input/tex/AllPackages';
 import {tmpJsonFile} from './constants';
 import * as fs from 'fs';
-
 
 let convert: (tex: string) => string;
 

@@ -76,13 +76,13 @@ function createRule(parser: TexParser, premise: MmlNode,
   if (left) {
     leftLabel = parser.create(
       'node', 'mpadded', [left],
-      {height: '+.5em', width: '+.5em', voffset: '-.15em'});
+      {height: '.25em', depth: '+.25em', width: '+.5ex', voffset: '-.25em'});
     BussproofsUtil.setProperty(leftLabel, 'prooflabel', 'left');
   }
   if (right) {
     rightLabel = parser.create(
       'node', 'mpadded', [right],
-      {height: '+.5em', width: '+.5em', voffset: '-.15em'});
+      {height: '-.25em', depth: '+.25em', width: '+.5ex', voffset: '-.25em', lspace: '.5ex'});
     BussproofsUtil.setProperty(rightLabel, 'prooflabel', 'right');
   }
   let children, label;
@@ -113,13 +113,13 @@ function parseFCenterLine(parser: TexParser, name: string): MmlNode {
   let dollar = parser.GetNext();
   if (dollar !== '$') {
     throw new TexError('IllegalUseOfCommand',
-                       'Use of %1 does not match it\'s definition.', name);
+                       'Use of %1 does not match its definition.', name);
   }
   parser.i++;
   let axiom = parser.GetUpTo(name, '$');
   if (axiom.indexOf('\\fCenter') === -1) {
-    throw new TexError('IllegalUseOfCommand',
-                       'Missing \\fCenter in %1.', name);
+    throw new TexError('MissingProofCommand',
+                       'Missing %1 in %2.', '\\fCenter', name);
   }
   // Check for fCenter and throw error?
   let [prem, conc] = axiom.split('\\fCenter');
