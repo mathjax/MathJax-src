@@ -84,10 +84,10 @@ export let UnitsMethods: {[key: string]: ParseMethod} = {
 }
 
 new CommandMap('units', {
-  units:    'Unit',
-  unitfrac: 'UnitFrac',
-  nicefrac: 'NiceFrac'
-}, UnitsMethods);
+  units:    UnitsMethods.Unit,
+  unitfrac: UnitsMethods.UnitFrac,
+  nicefrac: UnitsMethods.NiceFrac
+});
 
 
 export const UnitsConfiguration = Configuration.create(

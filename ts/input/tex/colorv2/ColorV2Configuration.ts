@@ -55,7 +55,7 @@ const ColorV2Methods: {[key: string]: ParseMethod} = {
 /**
  * The color macros
  */
-new CommandMap('colorv2', {color: 'Color'}, ColorV2Methods);
+new CommandMap('colorv2', {color: ColorV2Methods.Color});
 
 /**
  * The configuration for the color macros

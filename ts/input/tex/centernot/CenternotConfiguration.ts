@@ -22,7 +22,7 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
+import {ConfigurationType} from '../HandlerTypes.js';
 import {Configuration} from '../Configuration.js';
 import ParseOptions from '../ParseOptions.js';
 import TexParser from '../TexParser.js';
@@ -30,31 +30,30 @@ import NodeUtil from '../NodeUtil.js';
 import {CommandMap} from '../TokenMap.js';
 import BaseMethods from '../base/BaseMethods.js';
 
+/**
+ * Implements \centerOver{base}{symbol}
+ *
+ * @param {TexParser} parser   The active tex parser.
+ * @param {string} name        The name of the macro being processed.
+ */
+function CenterOver(parser: TexParser, name: string) {
+  const arg = '{' + parser.GetArgument(name) + '}';
+  const over = parser.ParseArg(name);
+  const base = new TexParser(arg, parser.stack.env, parser.configuration).mml();
+  let mml = parser.create('node', 'TeXAtom', [
+    new TexParser(arg, parser.stack.env, parser.configuration).mml(),
+    parser.create('node', 'mpadded', [
+      parser.create('node', 'mpadded', [over], {width: 0, lspace: '-.5width'}),
+      parser.create('node', 'mphantom', [base])
+    ], {width: 0, lspace: '-.5width'})
+  ]);
+  parser.configuration.addNode('centerOver', base);
+  parser.Push(mml);
+}
+
 new CommandMap('centernot', {
-  centerOver: 'CenterOver',
-  centernot: ['Macro', '\\centerOver{#1}{{\u29F8}}', 1]
-}, {
-  /**
-   * Implements \centerOver{base}{symbol}
-   *
-   * @param {TexParser} parser   The active tex parser.
-   * @param {string} name        The name of the macro being processed.
-   */
-  CenterOver(parser: TexParser, name: string) {
-    const arg = '{' + parser.GetArgument(name) + '}';
-    const over = parser.ParseArg(name);
-    const base = new TexParser(arg, parser.stack.env, parser.configuration).mml();
-    let mml = parser.create('node', 'TeXAtom', [
-      new TexParser(arg, parser.stack.env, parser.configuration).mml(),
-      parser.create('node', 'mpadded', [
-        parser.create('node', 'mpadded', [over], {width: 0, lspace: '-.5width'}),
-        parser.create('node', 'mphantom', [base])
-      ], {width: 0, lspace: '-.5width'})
-    ]);
-    parser.configuration.addNode('centerOver', base);
-    parser.Push(mml);
-  },
-  [HandlerType.MACRO]: BaseMethods.Macro
+  centerOver: CenterOver,
+  centernot: [BaseMethods.Macro, '\\centerOver{#1}{{\u29F8}}', 1]
 });
 
 /**

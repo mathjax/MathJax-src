@@ -122,50 +122,50 @@ export const EmpheqMethods = {
 //  Define an environment map to add the new empheq environment
 //
 new EnvironmentMap('empheq-env', EmpheqUtil.environment, {
-  empheq: ['Empheq', 'empheq'],
-}, EmpheqMethods);
+  empheq: [EmpheqMethods.Empheq, 'empheq'],
+});
 
 //
 //  Define the empheq characters
 //
 new CommandMap('empheq-macros', {
-  empheqlbrace:    ['EmpheqMO', '{'],
-  empheqrbrace:    ['EmpheqMO', '}'],
-  empheqlbrack:    ['EmpheqMO', '['],
-  empheqrbrack:    ['EmpheqMO', ']'],
-  empheqlangle:    ['EmpheqMO', '\u27E8'],
-  empheqrangle:    ['EmpheqMO', '\u27E9'],
-  empheqlparen:    ['EmpheqMO', '('],
-  empheqrparen:    ['EmpheqMO', ')'],
-  empheqlvert:     ['EmpheqMO', '|'],
-  empheqrvert:     ['EmpheqMO', '|'],
-  empheqlVert:     ['EmpheqMO', '\u2016'],
-  empheqrVert:     ['EmpheqMO', '\u2016'],
-  empheqlfloor:    ['EmpheqMO', '\u230A'],
-  empheqrfloor:    ['EmpheqMO', '\u230B'],
-  empheqlceil:     ['EmpheqMO', '\u2308'],
-  empheqrceil:     ['EmpheqMO', '\u2309'],
-  empheqbiglbrace: ['EmpheqMO', '{'],
-  empheqbigrbrace: ['EmpheqMO', '}'],
-  empheqbiglbrack: ['EmpheqMO', '['],
-  empheqbigrbrack: ['EmpheqMO', ']'],
-  empheqbiglangle: ['EmpheqMO', '\u27E8'],
-  empheqbigrangle: ['EmpheqMO', '\u27E9'],
-  empheqbiglparen: ['EmpheqMO', '('],
-  empheqbigrparen: ['EmpheqMO', ')'],
-  empheqbiglvert:  ['EmpheqMO', '|'],
-  empheqbigrvert:  ['EmpheqMO', '|'],
-  empheqbiglVert:  ['EmpheqMO', '\u2016'],
-  empheqbigrVert:  ['EmpheqMO', '\u2016'],
-  empheqbiglfloor: ['EmpheqMO', '\u230A'],
-  empheqbigrfloor: ['EmpheqMO', '\u230B'],
-  empheqbiglceil:  ['EmpheqMO', '\u2308'],
-  empheqbigrceil:  ['EmpheqMO', '\u2309'],
-  empheql:          'EmpheqDelim',
-  empheqr:          'EmpheqDelim',
-  empheqbigl:       'EmpheqDelim',
-  empheqbigr:       'EmpheqDelim'
-}, EmpheqMethods);
+  empheqlbrace:    [EmpheqMethods.EmpheqMO, '{'],
+  empheqrbrace:    [EmpheqMethods.EmpheqMO, '}'],
+  empheqlbrack:    [EmpheqMethods.EmpheqMO, '['],
+  empheqrbrack:    [EmpheqMethods.EmpheqMO, ']'],
+  empheqlangle:    [EmpheqMethods.EmpheqMO, '\u27E8'],
+  empheqrangle:    [EmpheqMethods.EmpheqMO, '\u27E9'],
+  empheqlparen:    [EmpheqMethods.EmpheqMO, '('],
+  empheqrparen:    [EmpheqMethods.EmpheqMO, ')'],
+  empheqlvert:     [EmpheqMethods.EmpheqMO, '|'],
+  empheqrvert:     [EmpheqMethods.EmpheqMO, '|'],
+  empheqlVert:     [EmpheqMethods.EmpheqMO, '\u2016'],
+  empheqrVert:     [EmpheqMethods.EmpheqMO, '\u2016'],
+  empheqlfloor:    [EmpheqMethods.EmpheqMO, '\u230A'],
+  empheqrfloor:    [EmpheqMethods.EmpheqMO, '\u230B'],
+  empheqlceil:     [EmpheqMethods.EmpheqMO, '\u2308'],
+  empheqrceil:     [EmpheqMethods.EmpheqMO, '\u2309'],
+  empheqbiglbrace: [EmpheqMethods.EmpheqMO, '{'],
+  empheqbigrbrace: [EmpheqMethods.EmpheqMO, '}'],
+  empheqbiglbrack: [EmpheqMethods.EmpheqMO, '['],
+  empheqbigrbrack: [EmpheqMethods.EmpheqMO, ']'],
+  empheqbiglangle: [EmpheqMethods.EmpheqMO, '\u27E8'],
+  empheqbigrangle: [EmpheqMethods.EmpheqMO, '\u27E9'],
+  empheqbiglparen: [EmpheqMethods.EmpheqMO, '('],
+  empheqbigrparen: [EmpheqMethods.EmpheqMO, ')'],
+  empheqbiglvert:  [EmpheqMethods.EmpheqMO, '|'],
+  empheqbigrvert:  [EmpheqMethods.EmpheqMO, '|'],
+  empheqbiglVert:  [EmpheqMethods.EmpheqMO, '\u2016'],
+  empheqbigrVert:  [EmpheqMethods.EmpheqMO, '\u2016'],
+  empheqbiglfloor: [EmpheqMethods.EmpheqMO, '\u230A'],
+  empheqbigrfloor: [EmpheqMethods.EmpheqMO, '\u230B'],
+  empheqbiglceil:  [EmpheqMethods.EmpheqMO, '\u2308'],
+  empheqbigrceil:  [EmpheqMethods.EmpheqMO, '\u2309'],
+  empheql:          EmpheqMethods.EmpheqDelim,
+  empheqr:          EmpheqMethods.EmpheqDelim,
+  empheqbigl:       EmpheqMethods.EmpheqDelim,
+  empheqbigr:       EmpheqMethods.EmpheqDelim
+});
 
 //
 //  Define the package for our new environment

@@ -198,7 +198,7 @@ let getParentInf = function(inf: MmlNode): MmlNode {
  * left: left space + left label
  * @param {MmlNode} inf The overall proof tree.
  * @param {MmlNode} rule The particular inference rule.
- * @param {boolean = false} right True for right, o/w left.
+ * @param {boolean=} right True for right, o/w left.
  * @return {number} The spacing next to the rule.
  */
 let getSpaces = function(inf: MmlNode, rule: MmlNode, right: boolean = false): number {
@@ -231,9 +231,9 @@ let getSpaces = function(inf: MmlNode, rule: MmlNode, right: boolean = false): n
 // - w: Preceding/following space/label.
 // - (x - y)/2: Distance from left boundary to middle of C.
 /**
- * Computes an space adjustment value to move the inference rule.
+ * Computes a space adjustment value to move the inference rule.
  * @param {MmlNode} inf The inference rule.
- * @param {boolean = false} right True if adjustments are on the right.
+ * @param {boolean=} right True if adjustments are on the right.
  * @return {number} The adjustment value.
  */
 let adjustValue = function(inf: MmlNode, right: boolean = false): number {
@@ -252,10 +252,11 @@ let adjustValue = function(inf: MmlNode, right: boolean = false): number {
  * @param {ParseOptions} config The parser configuration.
  * @param {MmlNode} inf The inference rule to place.
  * @param {number} space The space to be added.
- * @param {boolean = false} right True if adjustment is on the right.
+ * @param {boolean=} right True if adjustment is on the right.
  */
 let addSpace = function(config: ParseOptions, inf: MmlNode,
                         space: number, right: boolean = false) {
+  if (space === 0) return;
   if (getProperty(inf, 'inferenceRule') ||
       getProperty(inf, 'labelledRule')) {
     const mrow = config.nodeFactory.create('node', 'mrow');
@@ -274,8 +275,7 @@ let addSpace = function(config: ParseOptions, inf: MmlNode,
         NodeUtil.getAttribute(mspace, 'width') as string) + space));
     return;
   }
-  mspace = config.nodeFactory.create('node', 'mspace', [],
-                                     {width: UnitUtil.em(space)});
+  mspace = config.nodeFactory.create('node', 'mspace', [], {width: UnitUtil.em(space)});
   if (right) {
     inf.appendChild(mspace);
     return;
@@ -291,7 +291,7 @@ let addSpace = function(config: ParseOptions, inf: MmlNode,
  * @param {MmlNode} dest The destination node.
  */
 let moveProperties = function(src: MmlNode, dest: MmlNode) {
-  let props = ['inference', 'proof', 'maxAdjust', 'labelledRule'];
+  let props = ['inference', 'proof', 'labelledRule'];
   props.forEach(x => {
     let value = getProperty(src, x);
     if (value != null) {
@@ -485,18 +485,21 @@ export let balanceRules = function(arg: FilterData) {
   let config = arg.data;
   adjustSequents(config);
   let inferences = config.nodeLists['inference'] || [];
+  let maxAdjust = 0;  // accumulated adjsutment for complete proof
   for (let inf of inferences) {
     let isProof = getProperty(inf, 'proof');
     // This currently only works with downwards rules.
     let rule = getRule(inf);
     let premises = getPremises(rule, getProperty(rule, 'inferenceRule') as string);
     let premiseF = firstPremise(premises);
+    let leftAdjust = 0;
     if (getProperty(premiseF, 'inference')) {
       let adjust = adjustValue(premiseF);
       if (adjust) {
         addSpace(config, premiseF, -adjust);
         let w = getSpaces(inf, rule, false);
         addSpace(config, inf, adjust - w);
+        leftAdjust = adjust - w;
       }
     }
     // Right adjust:
@@ -507,10 +510,9 @@ export let balanceRules = function(arg: FilterData) {
     let adjust = adjustValue(premiseL, true);
     addSpace(config, premiseL, -adjust, true);
     let w = getSpaces(inf, rule, true);
-    let maxAdjust = getProperty(inf, 'maxAdjust') as number;
-    if (maxAdjust != null) {
-      adjust = Math.max(adjust, maxAdjust);
-    }
+    const delta = (getBBox(rule) - getBBox(premises.parent))/ 2; // offset from position above rule to end of rule
+    addSpace(config, inf, delta < leftAdjust ? -delta : -leftAdjust);
+    maxAdjust = Math.max(0, Math.max(0, maxAdjust + adjust - w) - delta);
     let column: MmlNode;
     if (isProof || !(column = getColumn(inf))) {
       // After the tree we add a space with the accumulated max value.
@@ -518,28 +520,21 @@ export let balanceRules = function(arg: FilterData) {
       // proof is an mrow around the final inference.
       addSpace(config,
                // in case the rule has been moved into an mrow in Left Adjust.
-               getProperty(inf, 'proof') ? inf : inf.parent, adjust - w, true);
+               getProperty(inf, 'proof') ? inf : inf.parent, maxAdjust, true);
       continue;
     }
     let sibling = nextSibling(column);
     if (sibling) {
       // If there is a next column, it is the empty one and we make it wider by
       // the accumulated max value.
-      const pos = config.nodeFactory.create('node', 'mspace', [],
-                                            {width: adjust - w + 'em'});
+      const pos = config.nodeFactory.create('node', 'mspace', [],  {width: UnitUtil.em(maxAdjust)});
       sibling.appendChild(pos);
-      inf.removeProperty('maxAdjust');
+      maxAdjust = 0;
       continue;
     }
-    let parentRule = getParentInf(column);
-    if (!parentRule) {
+    if (!getParentInf(column)) {
       continue;
     }
-    // We are currently in rightmost inference, so we propagate the max
-    // correction value up in the tree.
-    adjust = getProperty(parentRule, 'maxAdjust') ?
-      Math.max(getProperty(parentRule, 'maxAdjust') as number, adjust) : adjust;
-    setProperty(parentRule, 'maxAdjust', adjust);
   }
 };
 
@@ -548,11 +543,8 @@ export let balanceRules = function(arg: FilterData) {
  * Facilities for semantically relevant properties. These are used by SRE and
  * are always prefixed with bspr_.
  */
-let property_prefix = 'bspr_';
-let blacklistedProperties = {
-  [property_prefix + 'maxAdjust']: true
-};
-
+const property_prefix = 'bspr_';
+const prefix_pattern = RegExp('^' + property_prefix);
 
 /**
  * Sets a bussproofs property used for postprocessing and to convey
@@ -588,15 +580,14 @@ export let removeProperty = function(node: MmlNode, property: string) {
 
 
 /**
- * Postprocessor that adds properties as attributes to the nodes, unless they
- * are blacklisted.
+ * Postprocessor that adds properties as attributes to the nodes.
  * @param {FilterData} arg The object to post-process.
  */
 export let makeBsprAttributes = function(arg: FilterData) {
   arg.data.root.walkTree((mml: MmlNode, _data?: any) => {
     let attr: string[] = [];
     mml.getPropertyNames().forEach(x => {
-      if (!blacklistedProperties[x] && x.match(RegExp('^' + property_prefix))) {
+      if (x.match(prefix_pattern)) {
         attr.push(x + ':' + mml.getProperty(x));
       }
     });

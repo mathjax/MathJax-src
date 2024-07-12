@@ -301,7 +301,8 @@ export namespace Startup {
 
   /**
    * The default pageReady() function called when the page is ready to be processed,
-   * which returns the function that performs the initial typesetting, if needed.
+   * which returns a promise that does any initial font loading, plus the initial
+   * typesetting, if needed.
    *
    * Setting Mathjax.startup.pageReady in the configuration will override this.
    */
@@ -310,7 +311,8 @@ export namespace Startup {
             (output as COMMONJAX).font.loadDynamicFiles() : Promise.resolve())
       .then(CONFIG.typeset && MathJax.typesetPromise ?
             () => typesetPromise(CONFIG.elements) :
-            Promise.resolve());
+            Promise.resolve())
+      .then(() => promiseResolve());
   }
 
   /**
@@ -321,6 +323,9 @@ export namespace Startup {
     document.reset();
     return mathjax.handleRetriesFor(() => {
       document.render();
+      const promise = Promise.all(document.renderPromises);
+      document.renderPromises = [];
+      return promise;
     });
   }
 

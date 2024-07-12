@@ -115,7 +115,7 @@ let BBoxPadding = function(pad: string) {
 };
 
 
-new CommandMap('bbox', {bbox: 'BBox'}, BboxMethods);
+new CommandMap('bbox', {bbox: BboxMethods.BBox});
 
 
 export const BboxConfiguration = Configuration.create(

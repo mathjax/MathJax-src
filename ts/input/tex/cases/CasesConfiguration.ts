@@ -188,16 +188,16 @@ export const CasesMethods = {
  * The environments for this package
  */
 new EnvironmentMap('cases-env', EmpheqUtil.environment, {
-  numcases: ['NumCases', 'cases'],
-  subnumcases: ['NumCases', 'cases']
-}, CasesMethods);
+  numcases: [CasesMethods.NumCases, 'cases'],
+  subnumcases: [CasesMethods.NumCases, 'cases']
+});
 
 /**
  * The macros for this package
  */
 new MacroMap('cases-macros', {
-  '&': 'Entry'
-}, CasesMethods);
+  '&': CasesMethods.Entry
+});
 
 //
 //  Define the package for our new environment

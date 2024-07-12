@@ -23,9 +23,9 @@
 
 import {MathDocumentConstructor, ContainerList} from '../../core/MathDocument.js';
 import {MathItem, STATE, newState} from '../../core/MathItem.js';
-import {HTMLMathItem} from '../../handlers/html/HTMLMathItem.js';
 import {HTMLDocument} from '../../handlers/html/HTMLDocument.js';
 import {HTMLHandler} from '../../handlers/html/HTMLHandler.js';
+import {EnrichedMathItem} from '../../a11y/semantic-enrich.js';
 import {handleRetriesFor} from '../../util/Retries.js';
 import {OptionList} from '../../util/Options.js';
 
@@ -151,7 +151,7 @@ export interface LazyMathItem<N, T, D> extends MathItem<N, T, D> {
  * @template D  The Document class
  * @template B  The MathItem class to extend
  */
-export function LazyMathItemMixin<N, T, D, B extends Constructor<HTMLMathItem<N, T, D>>>(
+export function LazyMathItemMixin<N, T, D, B extends Constructor<EnrichedMathItem<N, T, D>>>(
   BaseMathItem: B
 ): Constructor<LazyMathItem<N, T, D>> & B {
 
@@ -260,6 +260,19 @@ export function LazyMathItemMixin<N, T, D, B extends Constructor<HTMLMathItem<N,
       }
     }
 
+    /**
+     * Only add speech when we are actually typesetting
+     *
+     * @override
+     */
+    public attachSpeech = (document: LazyMathDocument<N, T, D>) => {
+      if (this.state() >= STATE.ATTACHSPEECH) return;
+      if (!this.lazyTypeset) {
+        super.attachSpeech?.(document);
+      }
+      this.state(STATE.ATTACHSPEECH);
+    }
+
   };
 
 }
@@ -325,8 +338,14 @@ B extends MathDocumentConstructor<HTMLDocument<N, T, D>>>(
      */
     public static OPTIONS: OptionList = {
       ...BaseDocument.OPTIONS,
-      lazyMargin: '200px',
+      lazyMargin: '500px',
       lazyAlwaysTypeset: null,
+      speechTiming: {
+        ...(BaseDocument.OPTIONS.speechTiming || {}),
+        initial: 150,
+        threshold: 100,
+        intermediate: 10
+      },
       renderActions: {
         ...BaseDocument.OPTIONS.renderActions,
         lazyAlways: [STATE.LAZYALWAYS, 'lazyAlways', '', false]
@@ -390,7 +409,7 @@ B extends MathDocumentConstructor<HTMLDocument<N, T, D>>>(
       //  Use the LazyMathItem for math items
       //
       this.options.MathItem =
-        LazyMathItemMixin<N, T, D, Constructor<HTMLMathItem<N, T, D>>>(this.options.MathItem);
+        LazyMathItemMixin<N, T, D, Constructor<EnrichedMathItem<N, T, D>>>(this.options.MathItem);
       //
       //  Allocate a process bit for lazyAlways
       //

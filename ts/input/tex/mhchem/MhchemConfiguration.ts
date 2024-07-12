@@ -61,37 +61,36 @@ const MhchemMethods: {[key: string]: ParseMethod} = {
 
 new CommandMap(
   'mhchem', {
-    ce: [],
-    pu: ['Machine', 'pu'],
+    ce: [MhchemMethods.Machine, 'ce'],
+    pu: [MhchemMethods.Machine, 'pu'],
     longrightleftharpoons: [
-      'Macro',
+      MhchemMethods.Macro,
       '\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}'
     ],
     longRightleftharpoons: [
-      'Macro',
+      MhchemMethods.Macro,
       '\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\smash{\\leftharpoondown}}'
     ],
     longLeftrightharpoons: [
-      'Macro',
+      MhchemMethods.Macro,
       '\\stackrel{\\textstyle\\vphantom{{-}}{\\rightharpoonup}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}'
     ],
     longleftrightarrows: [
-      'Macro',
+      MhchemMethods.Macro,
       '\\stackrel{\\longrightarrow}{\\smash{\\longleftarrow}\\Rule{0px}{.25em}{0px}}'
     ],
     //
     //  Needed for \bond for the ~ forms
     //
     tripledash: [
-      'Macro',
+      MhchemMethods.Macro,
       '\\vphantom{-}\\raise2mu{\\kern2mu\\tiny\\text{-}\\kern1mu\\text{-}\\kern1mu\\text{-}\\kern2mu}'
     ],
-    xleftrightarrow:    ['xArrow', 0x2194, 6, 6],
-    xrightleftharpoons: ['xArrow', 0x21CC, 5, 7],   // FIXME:  doesn't stretch in HTML-CSS output
-    xRightleftharpoons: ['xArrow', 0x21CC, 5, 7],   // FIXME:  how should this be handled?
-    xLeftrightharpoons: ['xArrow', 0x21CC, 5, 7]
-  },
-  MhchemMethods
+    xleftrightarrow:    [MhchemMethods.xArrow, 0x2194, 6, 6],
+    xrightleftharpoons: [MhchemMethods.xArrow, 0x21CC, 5, 7],   // FIXME:  doesn't stretch in HTML-CSS output
+    xRightleftharpoons: [MhchemMethods.xArrow, 0x21CC, 5, 7],   // FIXME:  how should this be handled?
+    xLeftrightharpoons: [MhchemMethods.xArrow, 0x21CC, 5, 7]
+  }
 );
 
 

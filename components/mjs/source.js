@@ -24,7 +24,6 @@ export const source = {
   'input/tex-base': `${src}/input/tex-base/tex-base.js`,
   'input/tex-full': `${src}/input/tex-full/tex-full.js`,
   '[tex]/action': `${src}/input/tex/extensions/action/action.js`,
-  '[tex]/all-packages': `${src}/input/tex/extensions/all-packages/all-packages.js`,
   '[tex]/ams': `${src}/input/tex/extensions/ams/ams.js`,
   '[tex]/amscd': `${src}/input/tex/extensions/amscd/amscd.js`,
   '[tex]/autoload': `${src}/input/tex/extensions/autoload/autoload.js`,

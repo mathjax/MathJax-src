@@ -1,5 +1,6 @@
 import { beforeEach, describe, it } from '@jest/globals';
 import { toXmlMatch, setupTex, tex2mml } from '#helpers';
+import '#js/input/tex/braket/BraketConfiguration';
 
 beforeEach(() => setupTex(['base', 'braket']));
 
@@ -503,5 +504,14 @@ describe('Braket', () => {
     <mo data-mjx-texclass="CLOSE" stretchy="false">&#x27E9;</mo>
   </mrow>
 </math>`
+    ));
+  it('Braket-error', () =>
+    toXmlMatch(
+      tex2mml('\\braket'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\braket" display="block">
+      <merror data-mjx-error="Missing argument for \\braket">
+        <mtext>Missing argument for \\braket</mtext>
+      </merror>
+    </math>`
     ));
 });

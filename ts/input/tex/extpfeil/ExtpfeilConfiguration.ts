@@ -74,13 +74,13 @@ const ExtpfeilMethods: {[key: string]: ParseMethod} = {
 };
 
 new CommandMap('extpfeil', {
-  xtwoheadrightarrow: ['xArrow', 0x21A0, 12, 16],
-  xtwoheadleftarrow:  ['xArrow', 0x219E, 17, 13],
-  xmapsto:            ['xArrow', 0x21A6, 6, 7],
-  xlongequal:         ['xArrow', 0x003D, 7, 7],
-  xtofrom:            ['xArrow', 0x21C4, 12, 12],
-  Newextarrow:        'NewExtArrow'
-}, ExtpfeilMethods);
+  xtwoheadrightarrow: [ExtpfeilMethods.xArrow, 0x21A0, 12, 16],
+  xtwoheadleftarrow:  [ExtpfeilMethods.xArrow, 0x219E, 17, 13],
+  xmapsto:            [ExtpfeilMethods.xArrow, 0x21A6, 6, 7],
+  xlongequal:         [ExtpfeilMethods.xArrow, 0x003D, 7, 7],
+  xtofrom:            [ExtpfeilMethods.xArrow, 0x21C4, 12, 12],
+  Newextarrow:        ExtpfeilMethods.NewExtArrow
+});
 
 
 let init = function(config: ParserConfiguration) {

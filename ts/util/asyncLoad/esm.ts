@@ -27,15 +27,16 @@ let root = new URL(import.meta.url).href.replace(/\/util\/asyncLoad\/esm.js$/, '
 
 if (!mathjax.asyncLoad) {
   mathjax.asyncLoad = async (name: string) => {
-    return import(new URL(name, root).href).then((result) => result?.default || result);
+    const file = (name.charAt(0) === '.' ? new URL(name, root).pathname : name);
+    return import(file).then((result) => result?.default || result);
   };
 }
 
 /**
- * @param {string} URL   the base URL to use for loading relative paths
+ * @param {string} url   the base URL to use for loading relative paths
  */
-export function setBaseURL(URL: string) {
-  root = URL;
+export function setBaseURL(url: string) {
+  root = new URL(url, 'file://').href;
   if (!root.match(/\/$/)) {
     root += '/';
   }

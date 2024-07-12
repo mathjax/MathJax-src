@@ -248,6 +248,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
         options.a11y.speechRules = `${options.sre.domain}-${options.sre.style}`;
       }
       options.MathItem = ExplorerMathItemMixin(options.MathItem, toMathML);
+      this.explorerRegions = new RegionPool(this);
     }
 
     /**
@@ -258,9 +259,6 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
     public explorable(): ExplorerMathDocument {
       if (!this.processed.isSet('explorer')) {
         if (this.options.enableExplorer) {
-          if (!this.explorerRegions) {
-            this.explorerRegions = new RegionPool(this);
-          }
           for (const math of this.math) {
             (math as ExplorerMathItem).explorable(this);
           }
