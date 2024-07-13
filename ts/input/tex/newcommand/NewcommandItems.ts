@@ -58,13 +58,13 @@ export class BeginEnvItem extends BaseItem {
       // @test Newenvironment Empty, Newenvironment Align
       if (item.getName() !== this.getName()) {
         // @test (missing) \newenvironment{env}{aa}{bb}\begin{env}cc\end{equation}
-        throw new TexError('EnvBadEnd'                            this.getName(), item.getName());
+        throw new TexError('EnvBadEnd', this.getName(), item.getName());
       }
       return [[this.factory.create('mml', this.toMml())], true];
     }
     if (item.isKind('stop')) {
       // @test (missing) \newenvironment{env}{aa}{bb}\begin{env}cc
-      throw new TexError('EnvMissingEnd'this.getName());
+      throw new TexError('EnvMissingEnd', this.getName());
     }
     // @test Newenvironment Empty, Newenvironment Align
     return super.checkItem(item);

@@ -315,8 +315,7 @@ export default class TexParser {
     case '}':
       if (!noneOK) {
         // @test ExtraCloseMissingOpen
-        throw new TexError('ExtraCloseMissingOpen',
-                            );
+        throw new TexError('ExtraCloseMissingOpen');
       }
       return null;
     case '\\':
@@ -336,7 +335,7 @@ export default class TexParser {
         }
       }
       // @test MissingCloseBrace
-      throw new TexError('MissingCloseBrace', );
+      throw new TexError('MissingCloseBrace');
     }
     const c = this.getCodePoint();
     this.i += c.length;
@@ -361,17 +360,17 @@ export default class TexParser {
       case '{':   parens++; break;
       case '\\':  this.i++; break;
       case '}':
-        if (parens-- <= 0) {
-          // @test ExtraCloseLooking1
-          throw new TexError('ExtraCloseLooking',
-                              );
-        }
-        break;
-      case '[': if (parens === 0) brackets++; break;
-      case ']':
         if (parens === 0) {
           if (!matchBrackets || brackets === 0) {
-            return this.string.slice(j, this.currentCS);
+            return this.string.slice(j, this.i - 1);
+          }
+          brackets--;
+        }
+        break;
+      }
+    }
+    // @test MissingCloseBracket
+    throw new TexError('MissingCloseBracket', this.currentCS);
   }
 
   /**

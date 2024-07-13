@@ -23,6 +23,8 @@
  */
 
 
+export const TexErrorMessages: Map<string, string> = new Map();
+
 export default class TexError {
 
   private static pattern =
@@ -78,10 +80,10 @@ export default class TexError {
   /**
    * @constructor
    * @param{string} id        message id (for localization)
-   * @param{string} message   text of English message
    * @param{string[]=} rest   any substitution arguments
    */
-  constructor(public id: string, message: string, ...rest: string[]) {
+  constructor(public id: string, ...rest: string[]) {
+    const message = TexErrorMessages.get(id) || '';
     this.message = TexError.processString(message, rest);
   }
 

@@ -51,9 +51,7 @@ Verb(parser: TexParser, name: string) {
     parser.i++;
   }
   if (parser.i === parser.string.length) {
-    throw new TexError('NoClosingDelim',
-                       ,
-                       parser.currentCS);
+    throw new TexError('NoClosingDelim', parser.currentCS);
   }
   const text = parser.string.slice(start, parser.i).replace(/ /g, '\u00A0');
   parser.i++;

@@ -47,20 +47,13 @@ const ExtpfeilMethods: {[key: string]: ParseMethod} = {
     const space = parser.GetArgument(name);
     const chr = parser.GetArgument(name);
     if (!cs.match(/^\\([a-z]+|.)$/i)) {
-      throw new TexError('NewextarrowArg1',
-                         , name);
+      throw new TexError('NewextarrowArg1', name);
     }
     if (!space.match(/^(\d+),(\d+)$/)) {
-      throw new TexError(
-        'NewextarrowArg2',
-        ,
-        name);
+      throw new TexError('NewextarrowArg2', name);
     }
     if (!chr.match(/^(\d+|0x[0-9A-F]+)$/i)) {
-      throw new TexError(
-        'NewextarrowArg3',
-        ,
-        name);
+      throw new TexError('NewextarrowArg3', name);
     }
     cs = cs.substring(1);
     let spaces = space.split(',');

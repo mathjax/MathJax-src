@@ -82,8 +82,7 @@ export function MathtoolsTagFormat(config: ParserConfiguration, jax: TeX<any, an
       const forms = jax.parseOptions.options.mathtools.tagforms;
       for (const form of Object.keys(forms)) {
         if (!Array.isArray(forms[form]) || forms[form].length !== 3) {
-          throw new TexError('InvalidTagFormDef',
-                             , form);
+          throw new TexError('InvalidTagFormDef', form);
         }
         this.mtFormats.set(form, forms[form]);
       }

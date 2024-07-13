@@ -36,6 +36,7 @@ import {getRange} from '../../../core/MmlTree/OperatorDictionary.js';
 import ParseOptions from '../ParseOptions.js';
 import {ParseUtil} from '../ParseUtil.js';
 import {TexConstant} from '../TexConstants.js';
+import errors from './Error.json' assert { type: 'json' };
 
 const MATHVARIANT = TexConstant.Variant;
 
@@ -86,8 +87,7 @@ export function Other(parser: TexParser, char: string) {
  */
 function csUndefined(_parser: TexParser, name: string) {
   // @test Undefined-CS
-  throw new TexError('UndefinedControlSequence',
-                       + name);
+  throw new TexError('UndefinedControlSequence', '\\' + name);
 }
 
 
@@ -205,6 +205,7 @@ export const BaseConfiguration: Configuration = Configuration.create(
     [ConfigurationType.TAGS]: {
       base: BaseTags
     },
+    [ConfigurationType.ERRORS]: errors as {[key :string] : string},
     [ConfigurationType.POSTPROCESSORS]: [[filterNonscript, -4]]
   }
 );

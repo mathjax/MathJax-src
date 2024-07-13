@@ -35,6 +35,7 @@ export enum ConfigurationType {
   CONFIG = 'config',
   PRIORITY = 'priority',
   PARSER = 'parser',
+  ERRORS = 'errors',
 }
 
 

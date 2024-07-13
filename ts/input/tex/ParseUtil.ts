@@ -423,8 +423,7 @@ export const ParseUtil = {
             } else if (c === 'U') {
               const arg = text.substring(i).match(/^\s*(?:([0-9A-F])|\{\s*([0-9A-F]+)\s*\})/);
               if (!arg) {
-                throw new TexError('BadRawUnicode',
-                                   'Argument to %1 must a hexadecimal number with 1 to 6 digits', '\\U');
+                throw new TexError('BadRawUnicode', '\\U');
               }
               //  Replace \U{...} with specified character
               const c = String.fromCodePoint(parseInt(arg[1] || arg[2], 16));

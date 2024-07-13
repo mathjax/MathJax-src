@@ -303,7 +303,7 @@ export class OverItem extends BaseItem {
    */
   constructor(factory: StackItemFactory) {
     super(factory);
-    this.setProperty('name', );
+    this.setProperty('name', '\\over');
   }
 
   /**
@@ -1069,7 +1069,7 @@ export class ArrayItem extends BaseItem {
           return [[newItem], true];
         }
         // @test MissingCloseBrace2
-        throw new TexError('MissingCloseBrace', );
+        throw new TexError('MissingCloseBrace');
       }
       return [[newItem, item], true];
     }

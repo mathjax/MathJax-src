@@ -44,8 +44,7 @@ namespace NewcommandUtil {
     let c = parser.GetNext();
     if (c !== '\\') {
       // @test No CS
-      throw new TexError('MissingCS',
-                          , cmd);
+      throw new TexError('MissingCS', cmd);
     }
     let cs = UnitUtil.trimSpaces(parser.GetArgument(cmd));
     return cs.substring(1);
@@ -65,8 +64,7 @@ namespace NewcommandUtil {
     }
     if (!cs.match(/^(.|[a-z]+)$/i)) {
       // @test Illegal CS
-      throw new TexError('IllegalControlSequenceName',
-                         , name);
+      throw new TexError('IllegalControlSequenceName', name);
     }
     return cs;
   }
@@ -85,8 +83,7 @@ namespace NewcommandUtil {
       n = UnitUtil.trimSpaces(n);
       if (!n.match(/^[0-9]+$/)) {
         // @test Illegal Argument Number
-        throw new TexError('IllegalParamNumber',
-                           , name);
+        throw new TexError('IllegalParamNumber', name);
       }
     }
     return n;
@@ -118,13 +115,11 @@ namespace NewcommandUtil {
         c = parser.string.charAt(++parser.i);
         if (!c.match(/^[1-9]$/)) {
           // @test Illegal Hash
-          throw new TexError('CantUseHash2',
-                              , cs);
+          throw new TexError('CantUseHash2', cs);
         }
         if (parseInt(c) !== ++n) {
           // @test No Sequence
-          throw new TexError('SequentialParam',
-                              , cs);
+          throw new TexError('SequentialParam', cs);
         }
         i = parser.i + 1;
       } else if (c === '{') {
@@ -145,8 +140,7 @@ namespace NewcommandUtil {
       parser.i++;
     }
     // @test No Replacement
-    throw new TexError('MissingReplacementString',
-                        , cmd);
+    throw new TexError('MissingReplacementString', cmd);
   }
 
 

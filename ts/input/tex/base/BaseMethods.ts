@@ -187,7 +187,7 @@ const BaseMethods: {[key: string]: ParseMethod} = {
         NodeUtil.getChildAt(base, (base as MmlMunderover).over) &&
         !NodeUtil.getProperty(base, 'subsupOK'))) {
       // @test Double-super-error, Double-over-error
-      throw new TexError('DoubleExponent', );
+      throw new TexError('DoubleExponent');
     }
     if (!NodeUtil.isType(base, 'msubsup') || NodeUtil.isType(base, 'msup')) {
       if (movesupsub) {
@@ -245,7 +245,7 @@ const BaseMethods: {[key: string]: ParseMethod} = {
         NodeUtil.getChildAt(base, (base as MmlMunderover).under) &&
         !NodeUtil.getProperty(base, 'subsupOK'))) {
       // @test Double-sub-error, Double-under-error
-      throw new TexError('DoubleSubscripts', );
+      throw new TexError('DoubleSubscripts');
     }
     if (!NodeUtil.isType(base, 'msubsup') || NodeUtil.isType(base, 'msup')) {
       if (movesupsub) {
@@ -287,8 +287,7 @@ const BaseMethods: {[key: string]: ParseMethod} = {
          NodeUtil.getChildAt(base, (base as MmlMunderover).over) &&
          !NodeUtil.getProperty(base, 'subsupOK'))) {
       // @test Double Prime Error
-      throw new TexError('DoubleExponentPrime',
-                         );
+      throw new TexError('DoubleExponentPrime');
     }
     let sup = '';
     parser.i--;
@@ -321,8 +320,7 @@ const BaseMethods: {[key: string]: ParseMethod} = {
    */
   Hash(_parser: TexParser, _c: string) {
     // @test Hash Error
-    throw new TexError('CantUseHash1',
-                       );
+    throw new TexError('CantUseHash1');
   },
 
   /**
@@ -842,22 +840,19 @@ const BaseMethods: {[key: string]: ParseMethod} = {
     switch (type) {
       case 'c':
         if (top.First) {
-          throw new TexError('BreakFirstInEntry',
-                             );
+          throw new TexError('BreakFirstInEntry', parser.currentCS + '{t}');
         }
         top.breakAlign.cell = splitAlignArray(parser.GetArgument(name), 1);
         break;
       case 'r':
         if (top.row.length || top.First) {
-          throw new TexError('BreakFirstInRow',
-                             );
+          throw new TexError('BreakFirstInRow', parser.currentCS +'{r}');
         }
         top.breakAlign.row = splitAlignArray(parser.GetArgument(name))
         break;
       case 't':
         if (top.table.length || top.row.length || top.First) {
-          throw new TexError('BreakFirstInTable',
-                             );
+          throw new TexError('BreakFirstInTable', parser.currentCS +'{c}');
         }
         top.breakAlign.table = splitAlignArray(parser.GetArgument(name))
         break;
@@ -896,8 +891,7 @@ const BaseMethods: {[key: string]: ParseMethod} = {
       }
       if (!node.attributes.hasDefault(match[1]) && !MmlTokenAllow[match[1]]) {
         // @test Token Unknown Attribute, Token Wrong Attribute
-        throw new TexError('UnknownAttrForElement',
-                           match[1]);
+        throw new TexError('UnknownAttrForElement', match[1]);
       }
       let value: string | boolean = ParseUtil.mmlFilterAttribute(
         parser, match[1], match[2].replace(/^(['"])(.*)\1$/, '$2'));
@@ -1378,7 +1372,7 @@ const BaseMethods: {[key: string]: ParseMethod} = {
         //  Extra alignment tabs are not allowed in cases
         //
         // @test ExtraAlignTab
-        throw new TexError('ExtraAlignTab', );
+        throw new TexError('ExtraAlignTab');
       } else if (c === '\\') {
         //
         //  If the macro is \cr or \\, end the search, otherwise skip the macro
@@ -1671,7 +1665,7 @@ const BaseMethods: {[key: string]: ParseMethod} = {
     //
     const lcr = parser.GetArgument(name);
     if (lcr && !lcr.match(/^([lcr]{1,3})?$/)) {
-      throw new TexError('BadAlignment', );
+      throw new TexError('BadAlignment');
     }
     const align = [...lcr].map(c => ({l: 'left', c: 'center', r: 'right'})[c]);
     align.length === 1 && align.push(align[0]);

@@ -126,16 +126,10 @@ export const MathtoolsMethods: {[key: string]: ParseMethod} = {
   HandleShove(parser: TexParser, name: string, shove: string) {
     let top = parser.stack.Top();
     if (top.kind !== 'multline' && top.kind !== 'multlined') {
-      throw new TexError(
-        'CommandInMultlined',
-        ,
-        name);
+      throw new TexError('CommandInMultlined', name);
     }
     if (top.Size()) {
-      throw new TexError(
-        'CommandAtTheBeginingOfLine',
-        ,
-        name);
+      throw new TexError('CommandAtTheBeginingOfLine', name);
     }
     top.setProperty('shove', shove);
     let shift = parser.GetBrackets(name);
@@ -706,7 +700,7 @@ export const MathtoolsMethods: {[key: string]: ParseMethod} = {
     }
     const id = parser.GetArgument(name).trim();
     if (!id) {
-      throw new TexError('InvalidTagFormID', );
+      throw new TexError('InvalidTagFormID');
     }
     const format = parser.GetBrackets(name, '');
     const left = parser.GetArgument(name);

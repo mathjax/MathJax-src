@@ -103,8 +103,7 @@ const UnicodeMethods: {[key: string]: ParseMethod} = {
   RawUnicode(parser: TexParser, name: string) {
     const hex = parser.GetArgument(name).trim();
     if (!hex.match(/^[0-9A-F]{1,6}$/)) {
-      throw new TexError('BadRawUnicode',
-                         , parser.currentCS);
+      throw new TexError('BadRawUnicode', parser.currentCS);
     }
     const n = parseInt(hex, 16);
     parser.string = String.fromCodePoint(n) + parser.string.substring(parser.i);

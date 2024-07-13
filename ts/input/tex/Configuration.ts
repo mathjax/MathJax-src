@@ -32,6 +32,7 @@ import {FunctionList} from '../../util/FunctionList.js';
 import {TeX} from '../tex.js';
 import {PrioritizedList} from '../../util/PrioritizedList.js';
 import {TagsFactory} from './Tags.js';
+import {TexErrorMessages} from './TexError.js';
 
 
 export type StackItemConfig = {[kind: string]: StackItemClass};
@@ -76,6 +77,7 @@ export class Configuration {
                                   [ConfigurationType.CONFIG]?: ProtoProcessor<ConfigMethod>,
                                   [ConfigurationType.PRIORITY]?: number,
                                   [ConfigurationType.PARSER]?: string,
+                                  [ConfigurationType.ERRORS]?: {[key: string]: string},
                                  } = {}): Configuration {
     let priority = config.priority || PrioritizedList.DEFAULTPRIORITY;
     let init = config.init ? this.makeProcessor(config.init, priority) : null;
@@ -85,6 +87,10 @@ export class Configuration {
     let postprocessors = (config.postprocessors || []).map(
       post => this.makeProcessor(post, priority));
     let parser = config.parser || 'tex';
+    console.log(config[ConfigurationType.ERRORS]);
+    for (let [key, value] of Object.entries(config[ConfigurationType.ERRORS] || {})) {
+      TexErrorMessages.set(key, value)
+    }
     return new Configuration(
       name,
       config[ConfigurationType.HANDLER] || {},
@@ -133,6 +139,7 @@ export class Configuration {
                                 [ConfigurationType.CONFIG]?: ProtoProcessor<ConfigMethod>,
                                 [ConfigurationType.PRIORITY]?: number,
                                 [ConfigurationType.PARSER]?: string,
+                                [ConfigurationType.ERRORS]?: {[key: string]: string},
                                } = {}): Configuration {
     let configuration = Configuration._create(name, config);
     ConfigurationHandler.set(name, configuration);
@@ -157,6 +164,7 @@ export class Configuration {
                                [ConfigurationType.CONFIG]?: ProtoProcessor<ConfigMethod>,
                                [ConfigurationType.PRIORITY]?: number,
                                [ConfigurationType.PARSER]?: string,
+                               [ConfigurationType.ERRORS]?: {[key: string]: string},
                               } = {}): Configuration {
     return Configuration._create('', config);
   }

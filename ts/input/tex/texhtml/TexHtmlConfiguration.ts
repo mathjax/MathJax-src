@@ -59,7 +59,7 @@ export const HtmlNodeMethods: {[key: string]: ParseMethod} = {
     const end = (match[1] ? `<!${match[1]}>` : '') + '</tex-html>';
     const i = parser.string.slice(parser.i).indexOf(end);
     if (i < 0) {
-      throw new TexError('TokenNotFoundForCommand',  + match[0]);
+      throw new TexError('TokenNotFoundForCommand', end, '<' + match[0]);
     }
     const html = parser.string.substring(parser.i, parser.i + i).trim();
     parser.i += i + 11 + (match[1] ? 3 + match[1].length : 0);
