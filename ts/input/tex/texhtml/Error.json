@@ -1,1 +1,3 @@
-'TokenNotFoundForCommand': 'Could not find %1 for %2', end, '<',
+{
+  "TokenNotFoundForCommand": "Could not find %1 for %2",
+}

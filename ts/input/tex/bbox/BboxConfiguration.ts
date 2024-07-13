@@ -50,7 +50,7 @@ BBox(parser: TexParser, name: string) {
       // @test Bbox-Padding
       if (def) {
         // @test Bbox-Padding-Error
-        throw new TexError('MultipleBBoxProperty', name);
+        throw new TexError('MultipleBBoxProperty', 'Padding', name);
       }
       const pad = BBoxPadding(match[1] + match[3]);
       if (pad) {

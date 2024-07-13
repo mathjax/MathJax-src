@@ -1,1 +1,3 @@
-'InvalidHTMLAttr': 'Invalid HTML attribute: %1',
+{
+  "InvalidHTMLAttr": "Invalid HTML attribute: %1"
+}

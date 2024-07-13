@@ -121,7 +121,7 @@ export class ColumnParser {
     let n = 0;
     while (state.i < state.template.length) {
       if (n++ > this.MAXCOLUMNS) {
-        throw new TexError('MaxColumns', );
+        throw new TexError('MaxColumns');
       }
       const code = state.template.codePointAt(state.i);
       const c = state.c = (code === undefined ? '' : String.fromCodePoint(code));
@@ -275,7 +275,7 @@ export class ColumnParser {
         break;
       }
     }
-    throw new TexError('MissingCloseBrace', );
+    throw new TexError('MissingCloseBrace');
   }
 
   /**
@@ -355,7 +355,7 @@ export class ColumnParser {
     const cols = this.getBraces(state);
     const n = parseInt(num);
     if (String(n) !== num) {
-      throw new TexError('ColArgNotNum', );
+      throw new TexError('ColArgNotNum', '*');
     }
     state.template = new Array(n).fill(cols).join('') + state.template.substring(state.i);
     state.i = 0;

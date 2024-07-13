@@ -1,1 +1,3 @@
-'UnknownEnv': 'Unknown environment "%1"',
+{
+  "UnknownEnv": "Unknown environment "%1""
+}

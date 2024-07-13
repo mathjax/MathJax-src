@@ -1,2 +1,4 @@
-'BadPackageName': 'Argument for %1 is not a valid package name',
-'BadRequire': 'Extension "%1" is not allowed to be loaded',
+{
+  "BadPackageName": "Argument for %1 is not a valid package name",
+  "BadRequire": "Extension "%1" is not allowed to be loaded"
+}

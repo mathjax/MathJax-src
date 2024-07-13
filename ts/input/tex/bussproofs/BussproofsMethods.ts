@@ -117,7 +117,7 @@ function parseFCenterLine(parser: TexParser, name: string): MmlNode {
   parser.i++;
   let axiom = parser.GetUpTo(name, '$');
   if (axiom.indexOf('\\fCenter') === -1) {
-    throw new TexError('MissingProofCommand', name);
+    throw new TexError('MissingProofCommand', '\\fCenter', name);
   }
   // Check for fCenter and throw error?
   let [prem, conc] = axiom.split('\\fCenter');
@@ -165,8 +165,7 @@ const BussproofsMethods: {[key: string]: ParseMethod} = {
     let top = parser.stack.Top();
     // TODO: Label error
     if (top.kind !== 'proofTree') {
-      throw new TexError('IllegalProofCommand',
-                         );
+      throw new TexError('IllegalProofCommand');
     }
     let content = paddedContent(parser, parser.GetArgument(name));
     BussproofsUtil.setProperty(content, 'axiom', true);
@@ -183,11 +182,10 @@ const BussproofsMethods: {[key: string]: ParseMethod} = {
   Inference(parser: TexParser, name: string, n: number) {
     let top = parser.stack.Top();
     if (top.kind !== 'proofTree') {
-      throw new TexError('IllegalProofCommand',
-                         );
+      throw new TexError('IllegalProofCommand');
     }
     if (top.Size() < n) {
-      throw new TexError('BadProofTree', );
+      throw new TexError('BadProofTree');
     }
     const rootAtTop = top.getProperty('rootAtTop') as boolean;
     const childCount = (n === 1 && !top.Peek()[0].childNodes.length) ? 0 : n;
@@ -229,8 +227,7 @@ const BussproofsMethods: {[key: string]: ParseMethod} = {
     let top = parser.stack.Top();
     // Label error
     if (top.kind !== 'proofTree') {
-      throw new TexError('IllegalProofCommand',
-                         );
+      throw new TexError('IllegalProofCommand');
     }
     let content = ParseUtil.internalMath(parser, parser.GetArgument(name), 0);
     let label = (content.length > 1) ?
@@ -250,8 +247,7 @@ const BussproofsMethods: {[key: string]: ParseMethod} = {
     let top = parser.stack.Top();
     // Label error
     if (top.kind !== 'proofTree') {
-      throw new TexError('IllegalProofCommand',
-                         );
+      throw new TexError('IllegalProofCommand');
     }
     top.setProperty('currentLine', style);
     if (always) {
@@ -269,8 +265,7 @@ const BussproofsMethods: {[key: string]: ParseMethod} = {
   RootAtTop(parser: TexParser, _name: string, where: boolean) {
     let top = parser.stack.Top();
     if (top.kind !== 'proofTree') {
-      throw new TexError('IllegalProofCommand',
-                         );
+      throw new TexError('IllegalProofCommand');
     }
     top.setProperty('rootAtTop', where);
   },
@@ -284,8 +279,7 @@ const BussproofsMethods: {[key: string]: ParseMethod} = {
   AxiomF(parser: TexParser, name: string) {
     let top = parser.stack.Top();
     if (top.kind !== 'proofTree') {
-      throw new TexError('IllegalProofCommand',
-                         );
+      throw new TexError('IllegalProofCommand');
     }
     let line = parseFCenterLine(parser, name);
     BussproofsUtil.setProperty(line, 'axiom', true);
@@ -309,11 +303,10 @@ const BussproofsMethods: {[key: string]: ParseMethod} = {
   InferenceF(parser: TexParser, name: string, n: number) {
     let top = parser.stack.Top();
     if (top.kind !== 'proofTree') {
-      throw new TexError('IllegalProofCommand',
-                         );
+      throw new TexError('IllegalProofCommand');
     }
     if (top.Size() < n) {
-      throw new TexError('BadProofTree', );
+      throw new TexError('BadProofTree');
     }
     const rootAtTop = top.getProperty('rootAtTop') as boolean;
     const childCount = (n === 1 && !top.Peek()[0].childNodes.length) ? 0 : n;

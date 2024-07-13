@@ -1,9 +1,11 @@
-'ModelArg2': 'Color values for the %1 model must be between %2 and %3',
-'InvalidDecimalNumber': 'Invalid decimal number',
-'ModelArg2': 'Color values for the %1 model must be between %2 and %3',
-'InvalidNumber': 'Invalid number',
-'ModelArg1': 'Color values for the %1 model require 3 numbers', 'RGB',
-'ModelArg2': 'Color values for the %1 model must be between %2 and %3',
-'InvalidDecimalNumber': 'Invalid decimal number',
-'ModelArg1': 'Color values for the %1 model require 3 numbers', 'rgb',
-'UndefinedColorModel': 'Color model \'%1\' not defined',
+{
+  "ModelArg2": "Color values for the %1 model must be between %2 and %3",
+  "InvalidDecimalNumber": "Invalid decimal number",
+  "ModelArg2": "Color values for the %1 model must be between %2 and %3",
+  "InvalidNumber": "Invalid number",
+  "ModelArg1": "Color values for the %1 model require 3 numbers",
+  "ModelArg2": "Color values for the %1 model must be between %2 and %3",
+  "InvalidDecimalNumber": "Invalid decimal number",
+  "ModelArg1": "Color values for the %1 model require 3 numbers",
+  "UndefinedColorModel": "Color model \'%1\' not defined"
+}

@@ -129,12 +129,12 @@ ColorModelProcessors.set('rgb', function (rgb: string): string {
   let RGB: string = '#';
 
   if (rgbParts.length !== 3) {
-    throw new TexError('ModelArg1', );
+    throw new TexError('ModelArg1', 'rgb');
   }
 
   for (const rgbPart of rgbParts) {
     if (!rgbPart.match(/^(\d+(\.\d*)?|\.\d+)$/)) {
-      throw new TexError('InvalidDecimalNumber', );
+      throw new TexError('InvalidDecimalNumber');
     }
 
     const n = parseFloat(rgbPart);
@@ -165,12 +165,12 @@ ColorModelProcessors.set('RGB', function (rgb: string): string {
   let RGB = '#';
 
   if (rgbParts.length !== 3) {
-    throw new TexError('ModelArg1', );
+    throw new TexError('ModelArg1', 'RGB');
   }
 
   for (const rgbPart of rgbParts) {
     if (!rgbPart.match(/^\d+$/)) {
-      throw new TexError('InvalidNumber', );
+      throw new TexError('InvalidNumber');
     }
 
     const n = parseInt(rgbPart);
@@ -196,7 +196,7 @@ ColorModelProcessors.set('RGB', function (rgb: string): string {
  */
 ColorModelProcessors.set('gray', function (gray: string): string {
   if (!gray.match(/^\s*(\d+(\.\d*)?|\.\d+)\s*$/)) {
-    throw new TexError('InvalidDecimalNumber', );
+    throw new TexError('InvalidDecimalNumber');
   }
 
   const n: number = parseFloat(gray);

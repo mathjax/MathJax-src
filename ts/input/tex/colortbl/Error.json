@@ -1,3 +1,5 @@
-'RowColorNotFirst': '%1 must be at the beginning of a row',
-'ColumnColorNotTop': '%1 must be in the top row or preamble',
-'UnsupportedTableColor': 'Unsupported use of %1',
+{
+  "RowColorNotFirst": "%1 must be at the beginning of a row",
+  "ColumnColorNotTop": "%1 must be in the top row or preamble",
+  "UnsupportedTableColor": "Unsupported use of %1"
+}

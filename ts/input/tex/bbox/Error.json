@@ -1,4 +1,6 @@
-'InvalidBBoxProperty': '"%1" doesn\'t look like a color, a padding dimension, or a style',
-'MultipleBBoxProperty': '%1 specified twice in %2',
-'MultipleBBoxProperty': '%1 specified twice in %2',
-'MultipleBBoxProperty': '%1 specified twice in %2', 'Padding',
+{
+  "InvalidBBoxProperty": ""%1" doesn\'t look like a color, a padding dimension, or a style",
+  "MultipleBBoxProperty": "%1 specified twice in %2",
+  "MultipleBBoxProperty": "%1 specified twice in %2",
+  "MultipleBBoxProperty": "%1 specified twice in %2"
+}

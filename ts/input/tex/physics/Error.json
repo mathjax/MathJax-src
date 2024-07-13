@@ -1,6 +1,8 @@
-'InvalidNumber': 'Invalid number',
-'InvalidNumber': 'Invalid number',
-'MissingArgFor': 'Missing argument for %1',
-'MissingArgFor': 'Missing argument for %1',
-'MissingArgFor': 'Missing argument for %1',
-'MissingArgFor': 'Missing argument for %1',
+{
+  "InvalidNumber": "Invalid number",
+  "InvalidNumber": "Invalid number",
+  "MissingArgFor": "Missing argument for %1",
+  "MissingArgFor": "Missing argument for %1",
+  "MissingArgFor": "Missing argument for %1",
+  "MissingArgFor": "Missing argument for %1"
+}
