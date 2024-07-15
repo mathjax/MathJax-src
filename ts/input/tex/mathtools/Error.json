@@ -3,7 +3,7 @@
 'UndefinedTagForm': 'Undefined tag form: %1',
 'TagsNotMT': '%1 can only be used with ams or mathtools tags',
 'DuplicateTagForm': 'Duplicate tag form: %1',
-'InvalidTagFormID': 'Tag form name can\'t be empty',
+'InvalidTagFormID': 'Tag form name can't be empty',
 'TagsNotMT': '%1 can only be used with ams or mathtools tags',
 'BetweenLines': '%1 must be on a row by itself',
 'CommandAtTheBeginingOfLine': '%1 must come at the beginning of the line',

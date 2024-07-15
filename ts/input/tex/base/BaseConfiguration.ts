@@ -36,7 +36,7 @@ import {getRange} from '../../../core/MmlTree/OperatorDictionary.js';
 import ParseOptions from '../ParseOptions.js';
 import {ParseUtil} from '../ParseUtil.js';
 import {TexConstant} from '../TexConstants.js';
-import errors from './Error.json' assert { type: 'json' };
+import errors from './Error.json' with { type: 'json' };
 
 const MATHVARIANT = TexConstant.Variant;
 

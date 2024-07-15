@@ -891,7 +891,7 @@ const BaseMethods: {[key: string]: ParseMethod} = {
       }
       if (!node.attributes.hasDefault(match[1]) && !MmlTokenAllow[match[1]]) {
         // @test Token Unknown Attribute, Token Wrong Attribute
-        throw new TexError('UnknownAttrForElement', match[1]);
+        throw new TexError('UnknownAttrForElement', match[1], kind);
       }
       let value: string | boolean = ParseUtil.mmlFilterAttribute(
         parser, match[1], match[2].replace(/^(['"])(.*)\1$/, '$2'));
@@ -1439,7 +1439,7 @@ const BaseMethods: {[key: string]: ParseMethod} = {
         // @test Custom Linebreak
         if (dim && !value) {
           // @test Dimension Error
-          throw new TexError('BracketMustBeDimension');
+          throw new TexError('BracketMustBeDimension', name);
         }
         n = value + unit;
       }

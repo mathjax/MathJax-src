@@ -121,8 +121,7 @@ export class OpenItem extends BaseItem {
    */
   protected static errors = Object.assign(Object.create(BaseItem.errors), {
     // @test ExtraOpenMissingClose
-    'stop': ['ExtraOpenMissingClose',
-             'Extra open brace or missing close brace']
+    'stop': 'ExtraOpenMissingClose'
   });
 
   /**
@@ -236,14 +235,11 @@ export class SubsupItem extends BaseItem {
    */
   protected static errors = Object.assign(Object.create(BaseItem.errors), {
     // @test MissingScript Sub, MissingScript Sup
-    'stop': ['MissingScript',
-             'Missing superscript or subscript argument'],
+    'stop': 'MissingScript',
     // @test MissingOpenForSup
-    'sup': ['MissingOpenForSup',
-            'Missing open brace for superscript'],
+    'sup': 'MissingOpenForSup',
     // @test MissingOpenForSub
-    'sub': ['MissingOpenForSub',
-            'Missing open brace for subscript']
+    'sub': 'MissingOpenForSub'
   });
 
   /**
@@ -285,7 +281,7 @@ export class SubsupItem extends BaseItem {
     if (super.checkItem(item)[1]) {
       // @test Brace Superscript Error, MissingOpenForSup, MissingOpenForSub
       const error = this.getErrors(['', 'sub', 'sup'][position]);
-      throw new TexError(error[0], error[1], ...error.splice(2));
+      throw new TexError(error);
     }
     return null;
   }
@@ -375,8 +371,7 @@ export class LeftItem extends BaseItem {
    */
   protected static errors = Object.assign(Object.create(BaseItem.errors), {
     // @test ExtraLeftMissingRight
-    'stop': ['ExtraLeftMissingRight',
-             'Extra \\left or missing \\right']
+    'stop': 'ExtraLeftMissingRight'
   });
 
 

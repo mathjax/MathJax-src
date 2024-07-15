@@ -87,7 +87,6 @@ export class Configuration {
     let postprocessors = (config.postprocessors || []).map(
       post => this.makeProcessor(post, priority));
     let parser = config.parser || 'tex';
-    console.log(config[ConfigurationType.ERRORS]);
     for (let [key, value] of Object.entries(config[ConfigurationType.ERRORS] || {})) {
       TexErrorMessages.set(key, value)
     }

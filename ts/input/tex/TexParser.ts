@@ -36,7 +36,8 @@ import {BaseItem, StackItem, EnvList} from './StackItem.js';
 import {Token} from './Token.js';
 import {OptionList} from '../../util/Options.js';
 import { TexConstant } from './TexConstants.js';
-
+import { TexErrorMessages } from './TexError.js';
+import errors from './Error.json' with { type: 'json' };
 
 /**
  * The main Tex Parser class.
@@ -80,6 +81,9 @@ export default class TexParser {
    * @param {ParseOptions} configuration A parser configuration.
    */
   constructor(private _string: string, env: EnvList, public configuration: ParseOptions) {
+    for (let [key, value] of Object.entries(errors)) {
+      TexErrorMessages.set(key, value)
+    }
     const inner = env.hasOwnProperty('isInner');
     const isInner = env['isInner'] as boolean;
     delete env['isInner'];
@@ -360,6 +364,13 @@ export default class TexParser {
       case '{':   parens++; break;
       case '\\':  this.i++; break;
       case '}':
+        if (parens-- <= 0) {
+          // @test ExtraCloseLooking1
+          throw new TexError('ExtraCloseLooking', '\']\'');
+        }
+        break;
+      case '[': if (parens === 0) brackets++; break;
+      case ']':
         if (parens === 0) {
           if (!matchBrackets || brackets === 0) {
             return this.string.slice(j, this.i - 1);

@@ -174,7 +174,7 @@ function readValue(text: string, end: string[],
         break;
       case '}':
         if (!braces) {          // Closing braces.
-          throw new TexError('ExtraCloseMissingOpen', 'Extra close brace or missing open brace');
+          throw new TexError('ExtraCloseMissingOpen');
         }
         braces--;
         countBraces = false;    // Stop counting start left braces.
@@ -191,7 +191,7 @@ function readValue(text: string, end: string[],
     value += c;
   }
   if (braces) {
-    throw new TexError('ExtraOpenMissingClose', 'Extra open brace or missing close brace');
+    throw new TexError('ExtraOpenMissingClose');
   }
   return (dropBrace && start) ? ['', '', removeBraces(value, 1)] :
     [removeBraces(value, l3keys ? Math.min(1, start) : start), '', text.slice(index)];
@@ -435,7 +435,7 @@ export const ParseUtil = {
       }
       if (match !== '') {
         // @test Internal Math Error
-        throw new TexError('MathNotTerminated', 'Math mode is not properly terminated');
+        throw new TexError('MathNotTerminated');
       }
     }
     if (k < text.length) {
@@ -561,8 +561,7 @@ export const ParseUtil = {
           text += c;
         } else {
           if (!c.match(/[1-9]/) || parseInt(c, 10) > args.length) {
-            throw new TexError('IllegalMacroParam',
-                               'Illegal macro parameter reference');
+            throw new TexError('IllegalMacroParam');
           }
           newstring = ParseUtil.addArgs(parser, ParseUtil.addArgs(parser, newstring, text),
                               args[parseInt(c, 10) - 1]);
@@ -590,9 +589,7 @@ export const ParseUtil = {
       s1 += ' ';
     }
     if (s1.length + s2.length > parser.configuration.options['maxBuffer']) {
-      throw new TexError('MaxBufferSize',
-                         'MathJax internal buffer size exceeded; is there a' +
-        ' recursive macro call?');
+      throw new TexError('MaxBufferSize');
     }
     return s1 + s2;
   },
@@ -607,13 +604,9 @@ export const ParseUtil = {
       return;
     }
     if (isMacro) {
-      throw new TexError('MaxMacroSub1',
-                         'MathJax maximum macro substitution count exceeded; ' +
-        'is here a recursive macro call?');
+      throw new TexError('MaxMacroSub1');
     } else {
-      throw new TexError('MaxMacroSub2',
-                         'MathJax maximum substitution count exceeded; ' +
-        'is there a recursive latex environment?');
+      throw new TexError('MaxMacroSub2');
     }
   },
 
@@ -631,7 +624,7 @@ export const ParseUtil = {
       return;
     }
     if (!top.isKind('start') || first) {
-      throw new TexError('ErroneousNestingEq', 'Erroneous nesting of equation structures');
+      throw new TexError('ErroneousNestingEq');
     }
   },
 
@@ -707,13 +700,13 @@ export const ParseUtil = {
             const type = allowed[key] as KeyValueType<any>;
             const value = String(def[key]);
             if (!type.verify(value)) {
-              throw new TexError('InvalidValue', 'Value for key \'%1\' is not of the expected type', key);
+              throw new TexError('InvalidValue', key);
             }
             def[key] = type.convert(value);
           }
         } else {
           if (error) {
-            throw new TexError('InvalidOption', 'Invalid option: %1', key);
+            throw new TexError('InvalidOption', key);
           }
           delete def[key];
         }

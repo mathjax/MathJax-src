@@ -1,5 +1,5 @@
 {
-  "MismatchUseDef": "Use of %1 doesn\'t match its definition",
+  "MismatchUseDef": "Use of %1 doesn't match its definition",
   "EnvMissingEnd": "Missing \\end{%1}",
   "EnvBadEnd": "\\begin{%1} ended with \\end{%2}",
   "RunawayArgument": "Runaway argument for %1?",
