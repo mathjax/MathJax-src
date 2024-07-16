@@ -319,7 +319,9 @@ export class Styles {
    * Patterns for style values and comments
    */
   public static pattern: {[name: string]: RegExp} = {
-    style: /([-a-z]+)[\s\n]*:[\s\n]*((?:'[^']*'|"[^"]*"|\n|.)*?)[\s\n]*(?:;|$)/g,
+    sanitize: /['";]/,
+    value: /^((:?'(?:\\.|[^'])*(?:'|$)|"(?:\\.|[^"])*(?:"|$)|\n|\\.|[^'";])*?)(?:;|$).*/,
+    style: /([-a-z]+)[\s\n]*:[\s\n]*((?:'(?:\\.|[^'])*(?:'|$)|"(?:\\.|[^"])*(?:"|$)|\n|\\.|[^';])*?)[\s\n]*(?:;|$)/g,
     comment: /\/\*[^]*?\*\//g
   };
 
@@ -395,6 +397,23 @@ export class Styles {
   }
 
   /**
+   * @param {string} text  The value to be sanitized
+   * @return {string}      The sanitized value (removes ; and anything past that, and balances quotation marks)
+   */
+  protected sanitizeValue(text: string): string {
+    let PATTERN = (this.constructor as typeof Styles).pattern;
+    if (!text.match(PATTERN.sanitize)) {
+      return text;
+    }
+    text = text.replace(PATTERN.value, '$1');
+    const test = text.replace(/\\./g, '').replace(/(['"]).*?\1/g, '').replace(/[^'"]/g, '');
+    if (test.length) {
+      text += test.charAt(0);
+    }
+    return text;
+  }
+
+  /**
    * @return {string}  The CSS string for the styles currently defined
    */
   public get cssText(): string {
@@ -402,7 +421,7 @@ export class Styles {
     for (const name of Object.keys(this.styles)) {
       const parent = this.parentName(name);
       if (!this.styles[parent]) {
-        styles.push(name + ': ' + this.styles[name] + ';');
+        styles.push(name + ': ' + this.sanitizeValue(this.styles[name]) + ';');
       }
     }
     return styles.join(' ');
@@ -524,10 +543,10 @@ export class Styles {
   protected parse(cssText: string = '') {
     let PATTERN = (this.constructor as typeof Styles).pattern;
     this.styles = {};
-    const parts = cssText.replace(PATTERN.comment, '').split(PATTERN.style);
+    const parts = cssText.replace(/\n/g, ' ').replace(PATTERN.comment, '').split(PATTERN.style);
     while (parts.length > 1) {
       let [space, name, value] = parts.splice(0, 3);
-      if (space.match(/[^\s\n]/)) return;
+      if (space.match(/[^\s\n;]/)) return;
       this.set(name, value);
     }
   }
