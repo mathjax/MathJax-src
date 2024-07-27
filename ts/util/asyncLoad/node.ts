@@ -22,6 +22,7 @@
  */
 
 import {mathjax} from '../../mathjax.js';
+import {resolvePath} from '../AsyncLoad.js';
 import * as path from 'path';
 import {src} from '#source/source.cjs';
 
@@ -31,7 +32,7 @@ let root = path.resolve(src, '..', '..', 'cjs');
 
 if (!mathjax.asyncLoad && typeof require !== 'undefined') {
   mathjax.asyncLoad = (name: string) => {
-    return require(name.charAt(0) === '.' ? path.resolve(root, name) : name);
+    return require(resolvePath(name, (name) => path.resolve(root, name)));
   };
   mathjax.asyncIsSynchronous = true;
 }

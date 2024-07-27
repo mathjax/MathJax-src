@@ -21,14 +21,15 @@
 
 import '../startup/init.js';
 import {Loader, CONFIG} from '#js/components/loader.js';
-import {Package} from '#js/components/package.js';
-import {combineDefaults, combineConfig} from '#js/components/global.js';
+import {MathJax, combineDefaults, combineConfig} from '#js/components/global.js';
+import {resolvePath} from '#js/util/AsyncLoad.js';
 import '../core/core.js';
 import '../adaptors/liteDOM/liteDOM.js';
 import {source} from '../source.js';
 
 const path = eval('require("path")');          // get path from node, not webpack
-const dir = global.MathJax.config.__dirname;   // set up by node-main.mjs or node-main.cjs
+const fs = eval('require("fs").promises');
+const dir = MathJax.config.__dirname;   // set up by node-main.mjs or node-main.cjs
 
 /*
  * Set up the initial configuration
@@ -45,24 +46,27 @@ combineDefaults(MathJax.config, 'output', {font: 'mathjax-modern'});
  */
 Loader.preLoad('loader', 'startup', 'core', 'adaptors/liteDOM');
 
+/*
+ * Set the paths.
+ */
 if (path.basename(dir) === 'node-main') {
   CONFIG.paths.esm = CONFIG.paths.mathjax;
   CONFIG.paths.sre = '[esm]/sre/mathmaps';
-  CONFIG.paths.mathjax = path.dirname(dir);
+  CONFIG.paths.mathjax = path.resolve(dir, '..', '..', '..', MathJax.config.__js);
   combineDefaults(CONFIG, 'source', source);
-  //
-  //  Set the asynchronous loader to use the js directory, so we can load
-  //  other files like entity definitions
-  //
-  const ROOT = path.resolve(dir, '..', '..', '..', path.basename(path.dirname(dir)));
-  const REQUIRE = MathJax.config.loader.require;
-  MathJax._.mathjax.mathjax.asyncLoad = function (name) {
-    return REQUIRE(name.charAt(0) === '.' ? path.resolve(ROOT, name) :
-                   name.charAt(0) === '[' ? Package.resolvePath(name) : name);
-  };
 } else {
   CONFIG.paths.mathjax = dir;
 }
+
+/*
+ * Set the asynchronous loader to handle json files
+ */
+MathJax._.mathjax.mathjax.asyncLoad = function (name) {
+  const file = resolvePath(name, (name) => path.resolve(CONFIG.paths.mathjax, name));
+  return file.match(/\.json$/) ?
+    fs.readFile(file).then((json) => JSON.parse(json)) :
+    MathJax.config.loader.require(file);
+};
 
 /*
  * The initialization function.  Use as:

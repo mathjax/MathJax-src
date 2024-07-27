@@ -1,6 +1,6 @@
 {
   "copy": {
-    "to": "../../../bundle",
+    "to": "[bundle]",
     "from": ".",
     "copy": [
       "node-main.mjs",

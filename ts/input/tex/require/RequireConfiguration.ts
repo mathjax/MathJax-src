@@ -22,8 +22,7 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {
-  HandlerType, ConfigurationType} from '../HandlerTypes.js';
+import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
 import {Configuration, ParserConfiguration, ConfigurationHandler} from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import {CommandMap} from '../TokenMap.js';
@@ -37,6 +36,7 @@ import {Loader, CONFIG as LOADERCONFIG} from '../../../components/loader.js';
 import {mathjax} from '../../../mathjax.js';
 import {expandable} from '../../../util/Options.js';
 import {MenuMathDocument} from '../../../ui/menu/MenuHandler.js';
+import {Locale} from '../../../util/Locale.js';
 
 /**
  * The MathJax configuration block (for looking up user-defined package options)
@@ -151,7 +151,7 @@ export function RequireLoad(parser: TexParser, name: string) {
     throw new TexError('BadRequire', 'Extension "%1" is not allowed to be loaded', extension);
   }
   if (!Package.packages.has(extension)) {
-    mathjax.retryAfter(Loader.load(extension));
+    mathjax.retryAfter(Loader.load(extension).then(() => Locale.setLocale()));
   }
   const require = LOADERCONFIG[extension]?.rendererExtensions;
   (MathJax.startup.document as MenuMathDocument)?.menu?.addRequiredExtensions?.(require);

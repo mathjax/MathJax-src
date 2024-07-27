@@ -51,18 +51,18 @@ if (!config) process.exit();
 process.chdir(path.dirname(json));
 
 /**
- * Redirect the bundle, if not the default
- */
-if (bundle !== 'bundle') {
-  config.to = config.to.replace(/\/bundle(\/|$)/, '/' + bundle + '$1');
-}
-
-/**
  * Get the directory for node modules (either the parent of the MathJax directory,
  * or the MathJax node_modules directory, if it exists).
  */
 const parent = path.resolve(__dirname, '..', '..');
 const nodeDir = (dir => (fs.existsSync(dir) ? dir : path.resolve(parent, '..')))(path.join(parent, 'node_modules'));
+
+/**
+ * Other top-level directories
+ */
+const tsDir = path.resolve(parent, 'ts');
+const jsDir = path.resolve(parent, target);
+const bundleDir = path.resolve(parent, bundle);
 
 /**
  * Copy a file or directory tree
@@ -87,12 +87,21 @@ function copyFile(from, to, name, space) {
   }
 }
 
+function resolvePaths(name) {
+  return path.resolve(
+    process.cwd(),
+    name.replace(/^\[node\]/, nodeDir)
+      .replace(/^\[ts\]/, tsDir)
+      .replace(/^\[js\]/, jsDir)
+      .replace(/^\[bundle\]/, bundleDir)
+  );
+}
+
 /**
  * Copy the given files
  */
-const wd = process.cwd();
-const to = path.resolve(wd, config.to);
-const from = path.resolve(wd, config.from.replace(/\[node\]/, nodeDir));
+const to = resolvePaths(config.to);
+const from = resolvePaths(config.from);
 for (const name of config.copy) {
   copyFile(from, to, name, '');
 }

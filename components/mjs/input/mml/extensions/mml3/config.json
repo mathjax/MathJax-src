@@ -6,8 +6,8 @@
     "excludeSubdirs": true
   },
   "copy": {
-    "to": "../../../../../../bundle/input/mml/extensions",
-    "from": "../../../../../../ts/input/mathml/mml3",
+    "to": "[bundle]/input/mml/extensions",
+    "from": "[ts]/input/mathml/mml3",
     "copy": [
       "mml3.sef.json"
     ]

@@ -1,6 +1,6 @@
 {
   "copy": {
-    "to": "../../../bundle/sre",
+    "to": "[bundle]/sre",
     "from": "[node]/speech-rule-engine/lib",
     "copy": [
       "mathmaps"
