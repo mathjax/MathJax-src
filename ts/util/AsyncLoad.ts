@@ -61,7 +61,7 @@ export function resolvePath(
   relative: (name: string) => string,
   absolute: (name: string) => string = (name) => name
 ): string {
-  const Package = MathJax?._?.components?.package?.Package;
+  const Package = typeof MathJax === 'undefined' ? null : MathJax?._?.components?.package?.Package;
   return name.charAt(0) === '[' && Package ? Package.resolvePath(name) :
          name.charAt(0) === '.' ? relative(name) : absolute(name);
 }
