@@ -36,6 +36,7 @@ import {CommonOutputJax} from '../output/common.js';
 import {DOMAdaptor} from '../core/DOMAdaptor.js';
 import {PrioritizedList} from '../util/PrioritizedList.js';
 import {OptionList, OPTIONS} from '../util/Options.js';
+import {Locale} from '../util/Locale.js';
 
 import {TeX} from '../input/tex.js';
 
@@ -107,6 +108,7 @@ export interface MathJaxObject extends MJObject {
     toMML(node: MmlNode): string;
     defaultReady(): void;
     defaultPageReady(): Promise<void>;
+    setLocale(): Promise<void>;
     getComponents(): void;
     makeMethods(): void;
     makeTypesetMethods(): void;
@@ -293,7 +295,8 @@ export namespace Startup {
   export function defaultReady() {
     getComponents();
     makeMethods();
-    pagePromise
+    setLocale()
+      .then(() => pagePromise)
       .then(() => CONFIG.pageReady())  // usually the initial typesetting call
       .then(() => promiseResolve())
       .catch((err) => promiseReject(err));
@@ -313,6 +316,13 @@ export namespace Startup {
             () => typesetPromise(CONFIG.elements) :
             Promise.resolve())
       .then(() => promiseResolve());
+  }
+
+  /**
+   * Set the locale and load any needed locale data files.
+   */
+  export function setLocale() {
+    return Locale.setLocale(MathJax.config.locale || 'en');
   }
 
   /**
