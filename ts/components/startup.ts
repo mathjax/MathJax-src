@@ -43,6 +43,7 @@ import {TeX} from '../input/tex.js';
 /**
  * Update the configuration structure to include the startup configuration
  */
+/* prettier-ignore */
 export interface MathJaxConfig extends MJConfig {
   startup?: {
     input?: string[];        // The names of the input jax to use

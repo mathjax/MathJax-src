@@ -186,6 +186,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
     /**
      * @override
      */
+    /* prettier-ignore */
     public static OPTIONS: OptionList = {
       ...BaseDocument.OPTIONS,
       enableExplorer: hasWindow,           // only activate in interactive contexts

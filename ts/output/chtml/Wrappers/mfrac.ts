@@ -90,6 +90,7 @@ export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
     /**
      * @override
      */
+    /* prettier-ignore */
     public static styles: StyleList = {
       'mjx-frac': {
         display: 'inline-block',

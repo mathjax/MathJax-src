@@ -59,6 +59,7 @@ export type RenderMath<N, T, D> = (math: MathItem<N, T, D>, document: MathDocume
  * @template T  The Text node class
  * @template D  The Document class
  */
+/* prettier-ignore */
 export type RenderData<N, T, D> = {
   id: string,                           //  The name for the action
   renderDoc: RenderDoc<N, T, D>,        //  The action to take during a render() call
@@ -76,6 +77,7 @@ export type RenderData<N, T, D> = {
  * @template T  The Text node class
  * @template D  The Document class
  */
+/* prettier-ignore */
 export type RenderAction<N, T, D> =
   [number] |                                                     // id (i.e., key) is method name to use
   [number, string] |                                             // string is method to call

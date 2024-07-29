@@ -162,6 +162,7 @@ export function RequireLoad(parser: TexParser, name: string) {
  * Save the jax so that it can be used when \require{} is processed.
  */
 function config(_config: ParserConfiguration, jax: TeX<any, any, any>) {
+  /* prettier-ignore */
   jax.parseOptions.packageData.set('require', {
     jax: jax,                             // \require needs access to this
     required: [...jax.options.packages],  // stores the names of the packages that have been added

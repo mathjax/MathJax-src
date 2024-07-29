@@ -154,9 +154,10 @@ function readValue(text: string, end: string[],
   let braces = 0;
   let value = '';
   let index = 0;
-  let start = 0;             // Counter for the starting left braces.
+  let start = 0;              // Counter for the starting left braces.
   let countBraces = true;     // Flag for counting starting left braces.
   // after starting braces, but no other char yet.
+  /* prettier-ignore */
   while (index < length) {
     let c = text[index++];
     switch (c) {
@@ -167,17 +168,17 @@ function readValue(text: string, end: string[],
       case ' ':                // Ignore spaces.
         break;
       case '{':
-        if (countBraces) {      // Count open left braces at start.
+        if (countBraces) {     // Count open left braces at start.
           start++;
         }
         braces++;
         break;
       case '}':
-        if (!braces) {          // Closing braces.
+        if (!braces) {         // Closing braces.
           throw new TexError('ExtraCloseMissingOpen', 'Extra close brace or missing open brace');
         }
         braces--;
-        countBraces = false;    // Stop counting start left braces.
+        countBraces = false;   // Stop counting start left braces.
         break;
       default:
         if (!braces && end.indexOf(c) !== -1) {   // End character reached.

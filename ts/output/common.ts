@@ -100,6 +100,7 @@ export abstract class CommonOutputJax<
   /**
    * @override
    */
+  /* prettier-ignore */
   public static OPTIONS: OptionList = {
       ...AbstractOutputJax.OPTIONS,
     scale: 1,                      // global scaling factor for all expressions
@@ -115,10 +116,10 @@ export abstract class CommonOutputJax<
     displayIndent: '0',            // default for indentshift when set to 'auto'
     displayOverflow: 'overflow',   // default for overflow (scroll/scale/truncate/elide/linebreak/overflow)
     linebreaks: {                  // options for when overflow is linebreak
-      inline: true,                   // true for browser-based breaking of inline equations
-      width: '100%',                  // a fixed size or a percentage of the container width
-      lineleading: .2,                // the default lineleading in em units
-      LinebreakVisitor: null,         // The LinebreakVisitor to use
+      inline: true,                // true for browser-based breaking of inline equations
+      width: '100%',               // a fixed size or a percentage of the container width
+      lineleading: .2,             // the default lineleading in em units
+      LinebreakVisitor: null,      // The LinebreakVisitor to use
     },
     font: '',                      // the font component to load
     htmlHDW: 'auto',               // 'use', 'force', or 'ignore' data-mjx-hdw attributes

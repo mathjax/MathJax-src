@@ -34,6 +34,7 @@ import {LineBBox} from '../LineBBox.js';
 /**
  * The data about the scripts and base
  */
+/* prettier-ignore */
 export type ScriptData = {
   base: BBox;
   sub: BBox;   // combined bbox for all subscripts

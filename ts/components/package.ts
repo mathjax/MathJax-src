@@ -57,6 +57,7 @@ export type PackagePromise = (resolve: PackageReady, reject: PackageFailed) => v
 /**
  * The configuration data for a package
  */
+/* prettier-ignore */
 export interface PackageConfig {
   ready?: PackageReady;                // Function to call when package is loaded successfully
   failed?: PackageFailed;              // Function to call when package fails to load

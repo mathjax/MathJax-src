@@ -49,6 +49,7 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
   /**
    * @type {OptionList}
    */
+  /* prettier-ignore */
   public static OPTIONS: OptionList = {
     inlineMath: [              // The start/end delimiter pairs for in-line math
       //  ['$', '$'],              //  (comment out any you don't want, or add your own, but

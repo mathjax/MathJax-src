@@ -41,6 +41,7 @@ export class ComplexityVisitor extends MmlVisitor {
     /**
      * The options for handling collapsing
      */
+    /* prettier-ignore */
     public static OPTIONS: OptionList = {
         identifyCollapsible: true,    // mark elements that should be collapsed
         makeCollapsible: true,        // insert maction to allow collapsing
@@ -50,6 +51,7 @@ export class ComplexityVisitor extends MmlVisitor {
     /**
      * Values used to compute complexities
      */
+    /* prettier-ignore */
     public complexity: {[name: string]: number} = {
       text: .5,           // each character of a token element adds this to complexity
       token: .5,          // each token element gets this additional complexity

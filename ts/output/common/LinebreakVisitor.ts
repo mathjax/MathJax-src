@@ -63,6 +63,7 @@ export type BreakData<WW> = [[WW, IndexData], number, number, number, number];
 /**
  * The data used for a line-breaking operation
  */
+/* prettier-ignore */
 export interface StateData<WW> {
   breaks: Set<[WW, IndexData]>;  // The breakpoints to use and the break index (for mtext)
   potential: BreakData<WW>[];    // The list of best breakpoints so far

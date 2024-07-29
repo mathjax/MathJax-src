@@ -77,6 +77,7 @@ export class MmlMo extends AbstractMmlTokenNode {
   /**
    * Pattern for matching when the contents is one ore more pseudoscripts
    */
+  /* prettier-ignore */
   public static pseudoScripts = new RegExp([
     '^["\'*`',
     '\u00AA',               // FEMININE ORDINAL INDICATOR
@@ -126,6 +127,7 @@ export class MmlMo extends AbstractMmlTokenNode {
    * Regular expression matching characters that are marked as math accents
    *  (property mathaccent = true)
    */
+  /* prettier-ignore */
   protected static mathaccents = new RegExp([
     '^[',
     '\u00B4\u0301\u02CA',  // acute
@@ -149,6 +151,7 @@ export class MmlMo extends AbstractMmlTokenNode {
    * Regular expression matching characters that are marked as math accents
    *   whose widths are to be respected (property mathaccent = false)
    */
+  /* prettier-ignore */
   protected static mathaccentsWithWidth = new RegExp([
     '^[',
     '\u2015',              // overline and underline

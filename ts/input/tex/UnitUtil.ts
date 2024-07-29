@@ -100,11 +100,12 @@ function muReplace([value, unit, length]: [string, string, number]): [string, st
 export const UnitUtil = {
   
   // Note, the following are TeX CM font values.
+  /* prettier-ignore */
   UNIT_CASES: new UnitMap([
     ['em', 1],
     ['ex', .43],
-    ['pt', 1 / 10],                // 10 pt to an em
-    ['pc', 1.2],                   // 12 pt to a pc
+    ['pt', 1 / 10],           // 10 pt to an em
+    ['pc', 1.2],              // 12 pt to a pc
     ['px', emPerInch / pxPerInch],
     ['in', emPerInch],
     ['cm', emPerInch / 2.54], // 2.54 cm to an inch

@@ -106,6 +106,7 @@ export const MathtoolsConfiguration = Configuration.create(
     [ConfigurationType.INIT]: initMathtools,
     [ConfigurationType.CONFIG]: configMathtools,
     [ConfigurationType.POSTPROCESSORS]: [[fixPrescripts, -6]],
+    /* prettier-ignore */
     [ConfigurationType.OPTIONS]: {
       mathtools: {
         'multlinegap': '1em',                   // horizontal space for multlined environments

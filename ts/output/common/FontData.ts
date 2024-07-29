@@ -35,6 +35,7 @@ export {DIRECTION} from './Direction.js';
 /**
  * The extra options allowed in a CharData array
  */
+/* prettier-ignore */
 export interface CharOptions {
   ic?: number;                  // italic correction value
   oc?: number;                  // original ic for -tex-mit font
@@ -130,6 +131,7 @@ export type CssFontMap = {
 /**
  * Data needed for stretchy vertical and horizontal characters
  */
+/* prettier-ignore */
 export type DelimiterData = {
   dir: string;          // vertical or horizontal direction
   sizes?: number[];     // Array of fixed sizes for this character
@@ -269,6 +271,7 @@ export type DynamicFileDef = [string, DynamicVariants, DynamicRanges?];
 /**
  * Data stored about a dynamic font
  */
+/* prettier-ignore */
 export type DynamicFile = {
   extension: string;              // name of the extension for this file (or blank)
   file: string;                   // file containing the character data
@@ -351,6 +354,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    * Options for the font
    */
+  /* prettier-ignore */
   public static OPTIONS: OptionList = {
     unknownFamily: 'serif',     // Should use 'monospace' with LiteAdaptor
     dynamicPrefix: '.'          // Location of dynamically loaded files
@@ -459,6 +463,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    * Character ranges to remap into Math Alphanumerics
    */
+  /* prettier-ignore */
   public static SmpRanges = [
     [0, 0x41, 0x5A],   // Upper-case alpha
     [1, 0x61, 0x7A],   // Lower-case alpha
@@ -471,6 +476,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * Characters to map back top other Unicode positions
    * (holes in the Math Alphanumeric ranges)
    */
+  /* prettier-ignore */
   public static SmpRemap: SmpMap = {
     0x1D455: 0x210E,   // PLANCK CONSTANT
     0x1D49D: 0x212C,   // SCRIPT CAPITAL B
@@ -501,6 +507,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    * Greek upper-case variants
    */
+  /* prettier-ignore */
   public static SmpRemapGreekU: SmpMap = {
     0x2207: 0x19,  // nabla
     0x03F4: 0x11   // theta symbol
@@ -509,6 +516,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    * Greek lower-case variants
    */
+  /* prettier-ignore */
   public static SmpRemapGreekL: SmpMap = {
     0x3D1: 0x1B,  // theta symbol
     0x3D5: 0x1D,  // phi symbol
@@ -522,6 +530,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    *  The default remappings
    */
+  /* prettier-ignore */
   public static defaultAccentMap: RemapMap = {
     0x005E: '\u02C6',  // hat
     0x007E: '\u02DC',  // tilde
@@ -555,6 +564,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    *  The default font parameters for the font
    */
+  /* prettier-ignore */
   public static defaultParams: FontParameters = {
     x_height:         .442,
     quad:             1,

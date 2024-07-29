@@ -41,6 +41,7 @@ export type AdaptorConstructor<N, T, D> = Constructor<DOMAdaptor<N, T, D>>;
 /**
  * The options to the NodeMixin
  */
+/* prettier-ignore */
 export const NodeMixinOptions: OptionList = {
   badCSS: true,     // getComputedStyles() is not implemented in the DOM
   badSizes: true,   // element sizes (e.g., ClientWidth, etc.) are not implemented in the DOM
@@ -63,6 +64,7 @@ export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
     /**
      * The default options
      */
+    /* prettier-ignore */
     public static OPTIONS: OptionList = {
       ...(options.badCSS ? {
         fontSize: 16,          // We can't compute the font size, so always use this

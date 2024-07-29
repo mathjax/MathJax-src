@@ -34,6 +34,7 @@ export type AttributeList = {[attribute: string]: [string, Property]};
 /**
  *  These are the TeX classes for spacing computations
  */
+/* prettier-ignore */
 export const TEXCLASS = {
   ORD:   0,
   OP:    1,
@@ -43,7 +44,7 @@ export const TEXCLASS = {
   CLOSE: 5,
   PUNCT: 6,
   INNER: 7,
-  NONE:   -1
+  NONE: -1,
 };
 
 export const TEXCLASSNAMES = ['ORD', 'OP', 'BIN', 'REL', 'OPEN', 'CLOSE', 'PUNCT', 'INNER'];
@@ -56,6 +57,7 @@ const TEXSPACELENGTH = ['', 'thinmathspace', 'mediummathspace', 'thickmathspace'
 /**
  * See TeXBook Chapter 18 (p. 170)
  */
+/* prettier-ignore */
 const TEXSPACE = [
   [ 0, -1,  2,  3,  0,  0,  0,  1], // ORD
   [-1, -1,  0,  3,  0,  0,  0,  1], // OP

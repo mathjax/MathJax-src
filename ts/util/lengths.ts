@@ -29,6 +29,7 @@ export const BIGDIMEN = 1000000;
 /**
  *  Sizes of various units in pixels
  */
+/* prettier-ignore */
 export const UNITS: {[unit: string]: number} = {
   px: 1,
   'in': 96,            // 96 px to an inch
@@ -39,6 +40,7 @@ export const UNITS: {[unit: string]: number} = {
 /**
  *  Sizes of various relative units in em's
  */
+/* prettier-ignore */
 export const RELUNITS: {[unit: string]: number} = {
   em: 1,
   ex: .431,        // this.TEX.x_height;
@@ -50,8 +52,8 @@ export const RELUNITS: {[unit: string]: number} = {
 /**
  *  The various named spaces
  */
+/* prettier-ignore */
 export const MATHSPACE: {[name: string]: number} = {
-  /* tslint:disable:whitespace */
   veryverythinmathspace:           1/18,
   verythinmathspace:               2/18,
   thinmathspace:                   3/18,

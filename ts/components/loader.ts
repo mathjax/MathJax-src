@@ -43,6 +43,7 @@ export type PathFilterList = (PathFilterFunction | [PathFilterFunction, number])
 /**
  * Update the configuration structure to include the loader configuration
  */
+/* prettier-ignore */
 export interface MathJaxConfig extends MJConfig {
   loader?: {
     paths?: {[name: string]: string};          // The path prefixes for use in locations

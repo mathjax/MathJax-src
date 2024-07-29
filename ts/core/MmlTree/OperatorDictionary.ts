@@ -172,6 +172,7 @@ export const MMLSPACING = [
 /**
  *  The operator dictionary, with sections for the three forms:  prefix, postfix, and infix
  */
+/* prettier-ignore */
 export const OPTABLE: {[form: string]: OperatorList} = {
   prefix: {
     '(': MO.OPEN,            // left parenthesis

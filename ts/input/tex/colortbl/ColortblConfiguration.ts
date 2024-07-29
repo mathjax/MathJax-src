@@ -173,6 +173,7 @@ const config = function (config: ParserConfiguration, jax: TeX<any, any, any>) {
 //
 //  Create the color-table configuration.
 //
+/* prettier-ignore */
 export const ColortblConfiguration = Configuration.create('colortbl', {
   [ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['colortbl']},
   [ConfigurationType.ITEMS]: {'array': ColorArrayItem},  // overrides original array class

@@ -62,6 +62,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
   /**
    * The default options for HTMLDocument
    */
+  /* prettier-ignore */
   public static OPTIONS: OptionList = {
     ...AbstractMathDocument.OPTIONS,
     renderActions: expandable({

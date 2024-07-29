@@ -242,6 +242,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      * @param {number} B    The height of the bottom glyph in the delimiter
      * @param {number} W    The width of the stretched delimiter
      */
+    /* prettier-ignore */
     protected addExtV(n: number, v: string, H: number, D: number, T: number, B: number, W: number) {
       if (!n) return;
       T = Math.max(0, T - VFUZZ);              // A little overlap on top

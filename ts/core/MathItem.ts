@@ -214,6 +214,7 @@ export interface MathItem<N, T, D> {
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  */
+/* prettier-ignore */
 export type ProtoItem<N, T> = {
   math: string;            // The math expression itself
   start: Location<N, T>;   // The starting location of the math

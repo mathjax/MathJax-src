@@ -33,6 +33,7 @@ import { UnitUtil } from './UnitUtil.js';
 /**
  * The state of the columns analyzed so far.
  */
+/* prettier-ignore */
 export type ColumnState = {
   parser: TexParser,                    // the current TexParser
   template: string;                     // the template string for the columns

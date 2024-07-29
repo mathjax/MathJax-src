@@ -50,6 +50,7 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
   /**
    * @override
    */
+  /* prettier-ignore */
   public static OPTIONS: OptionList = defaultOptions({
     parseAs: 'html',         // Whether to use HTML or XML parsing for the MathML string
     forceReparse: false,     // Whether to force the string to be reparsed, or use the one from the document DOM

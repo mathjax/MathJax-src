@@ -18,6 +18,7 @@
 /**
  * The data for a CDN
  */
+/* prettier-ignore */
 type CdnData = {
   api: string,         // URL for JSON containing version number
   key: string,         // key for versionb string in JSON data
@@ -32,6 +33,7 @@ type CdnList = Map<string, CdnData>;
 /**
  * The data from a script tag for latest.js
  */
+/* prettier-ignore */
 type ScriptData = {
   tag: HTMLScriptElement,   // the script DOM element
   src: string,              // the script's (possibly modified) source attribute

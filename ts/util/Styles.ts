@@ -30,6 +30,7 @@ export type StyleList = {[name: string]: string};
 /**
  * Data for how to map a combined style (like border) to its children
  */
+/* prettier-ignore */
 export type connection = {
   children: string[],               // suffix names to add to the base name
   split: (name: string) => void,    // function to split the value for the children

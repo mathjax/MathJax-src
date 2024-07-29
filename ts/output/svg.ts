@@ -71,6 +71,7 @@ CommonOutputJax<
   /**
    * @override
    */
+  /* prettier-ignore */
   public static OPTIONS: OptionList = {
     ...CommonOutputJax.OPTIONS,
     blacker: 3,                     // the stroke-width to use for SVG character paths

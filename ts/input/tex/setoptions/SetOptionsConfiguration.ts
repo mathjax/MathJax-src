@@ -140,6 +140,7 @@ export const SetOptionsConfiguration = Configuration.create(
     [ConfigurationType.HANDLER]: {macro: ['setoptions']},
     [ConfigurationType.CONFIG]: setoptionsConfig,
     [ConfigurationType.PRIORITY]: 3,  // must be less than the priority of the require package (which is 5).
+    /* prettier-ignore */
     [ConfigurationType.OPTIONS]: {
       setoptions: {
         filterPackage: SetOptionsUtil.filterPackage,  // filter for whether a package can be configured

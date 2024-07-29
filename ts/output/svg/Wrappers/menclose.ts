@@ -351,6 +351,7 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
     /**
      * @override
      */
+    /* prettier-ignore */
     public arrow(W: number, a: number, double: boolean, offset: string = '', dist: number = 0): N {
       const {w, h, d} = this.getBBox();
       const dw = (W - w) / 2;

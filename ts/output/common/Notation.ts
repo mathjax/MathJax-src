@@ -66,6 +66,7 @@ export type Initializer<W extends AnyWrapper> = (node: W) => void;
  * @template W  The menclose wrapper class
  * @templare N  The DOM node class
  */
+/* prettier-ignore */
 export type NotationDef<W extends AnyWrapper, N> = {
   renderer: Renderer<W, N>;  // renders the DOM nodes for the notation
   bbox: BBoxExtender<W>;     // gives the offsets to the child bounding box: [top, right, bottom, left]

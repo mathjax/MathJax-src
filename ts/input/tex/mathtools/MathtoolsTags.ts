@@ -29,6 +29,7 @@ import {AbstractTags, TagsFactory} from '../Tags.js';
 /**
  * The type for the Mathtools tags (including their data).
  */
+/* prettier-ignore */
 export type MathtoolsTags = AbstractTags & {
   mtFormats: Map<string, [string, string, string]>;  // name -> [left, right, format]
   mtCurrent: [string, string, string];               // [left, right, format]

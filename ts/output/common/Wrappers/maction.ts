@@ -112,6 +112,7 @@ export type EventHandler = (event: Event) => void;
 /**
  * Data used for tooltip actions
  */
+/* prettier-ignore */
 export const TooltipData = {
   dx: '.2em',          // x-offset of tooltip from right side of maction bbox
   dy: '.1em',          // y-offset of tooltip from bottom of maction bbox

@@ -380,12 +380,14 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
         enrich:       [STATE.ENRICHED],
         attachSpeech: [STATE.ATTACHSPEECH]
       }),
+      /* prettier-ignore */
       speechTiming: {
         asynchronous: true,                // true to allow screen updates while adding speech, false to not
         initial: 100,                      // initial delay until starting to add speech
         threshold: 250,                    // time (in milliseconds) to process speech before letting screen update
         intermediate: 10                   // delay after processing speech reaches the threshold
       },
+      /* prettier-ignore */
       sre: expandable({
         speech: 'none',                    // by default no speech is included
         locale: 'en',                      // switch the locale
@@ -393,6 +395,7 @@ export function EnrichedMathDocumentMixin<N, T, D, B extends MathDocumentConstru
         style: 'default',                  // speech rules style
         braille: 'nemeth',                 // TODO: Dummy switch for braille
       }),
+      /* prettier-ignore */
       a11y: expandable({
         speech: true,                      // switch on speech output
         braille: true,                     // switch on Braille output

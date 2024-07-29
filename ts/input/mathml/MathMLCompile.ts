@@ -43,6 +43,7 @@ export class MathMLCompile<N, T, D> {
   /**
    *  The default options for this object
    */
+  /* prettier-ignore */
   public static OPTIONS: OptionList = {
     MmlFactory: null,                   // The MmlFactory to use (defaults to a new MmlFactory)
     allowHtmlInTokenNodes: false,       // True if HTML is allowed in token nodes

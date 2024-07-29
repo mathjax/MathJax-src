@@ -47,6 +47,7 @@ export class HTMLDomStrings<N, T, D> {
   /**
    * The default options for string processing
    */
+  /* prettier-ignore */
   public static OPTIONS: OptionList = {
     skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code',
                    'annotation', 'annotation-xml', 'select', 'option',

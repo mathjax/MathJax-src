@@ -35,6 +35,7 @@ export * from '../common/FontData.js';
 /**
  * Add the extra data needed for CharOptions in CHTML
  */
+/* prettier-ignore */
 export interface ChtmlCharOptions extends CharOptions {
   c?: string;                   // the content value (for css)
   f?: string;                   // the font postfix (for css)
