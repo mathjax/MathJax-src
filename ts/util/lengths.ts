@@ -103,7 +103,8 @@ export function length2em(length: string | number, size: number = 0, scale: numb
   if (!match || match[0] === '') {
     return size;
   }
-  let m = parseFloat(match[1] || '1'), unit = match[2];
+  let m = parseFloat(match[1] || '1');
+  let unit = match[2];
   if (UNITS.hasOwnProperty(unit)) {
     return m * UNITS[unit] / em / scale;
   }
