@@ -65,15 +65,14 @@ function MathMLSpace(script: boolean, size: number): number {
 /**
  * The standard space sizes
  */
+/* prettier-ignore */
 export const SPACE: StringMap = {
-  /* tslint:disable:whitespace */
   [LENGTHS.em(0)]:    '0',
   [LENGTHS.em(2/18)]: '1',
   [LENGTHS.em(3/18)]: '2',
   [LENGTHS.em(4/18)]: '3',
   [LENGTHS.em(5/18)]: '4',
   [LENGTHS.em(6/18)]: '5'
-  /* tslint:enable */
 };
 
 /**
@@ -121,8 +120,10 @@ export type CommonWrapperConstructor<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  CW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> =
-             CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  /* prettier-ignore */
+  CW extends CommonWrapper<
+    N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
+  > = CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
 > = new(factory: WF, node: MmlNode, parent?: WW) => CW;
 
 /*********************************************************/
@@ -442,7 +443,10 @@ export class CommonWrapper<
       this._breakCount = (
         node.isEmbellished ? this.coreMO().embellishedBreakCount :
           node.arity < 0 && !node.linebreakContainer &&
-          (this.childNodes[0] as any as CommonMrow<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).isStack ?
+          (this.childNodes[0] as any as
+           /* prettier-ignore */
+           CommonMrow<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+          ).isStack ?
           this.childNodes[0].breakCount : 0
       );
     }
@@ -1011,7 +1015,10 @@ export class CommonWrapper<
    * @return {CommonMo}   The wrapper for this node's core <mo> node
    */
   public coreMO(): CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-    return this.jax.nodeMap.get(this.node.coreMO()) as any as CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+    /* prettier-ignore */
+    return this.jax.nodeMap.get(this.node.coreMO()) as any as CommonMo<
+      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
+    >;
   }
 
   /**

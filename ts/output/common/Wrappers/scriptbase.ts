@@ -469,7 +469,9 @@ export function CommonScriptbaseMixin<
                 node.isKind('mstyle') || (node.isKind('mpadded') && !node.getProperty('vbox')) ||
                 node.isKind('mphantom') || node.isKind('semantics'))) ||
               (node.isKind('munderover') &&
-               (core as any as CommonMunderover<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).isMathAccent))) {
+                (core as any as
+                 /* prettier-ignore */
+                 CommonMunderover<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).isMathAccent))) {
         this.setBaseAccentsFor(core);
         core = core.childNodes[0];
         node = core?.node;
@@ -569,7 +571,9 @@ export function CommonScriptbaseMixin<
       } else if (this.node.isKind('munder')) {
         this.isLineBelow = this.isLineAccent(this.scriptChild);
       } else {
-        const mml = this as any as CommonMunderover<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+        /* prettier-ignore */
+        const mml = this as any as CommonMunderover<
+          N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
         this.isLineAbove = this.isLineAccent(mml.overChild);
         this.isLineBelow = this.isLineAccent(mml.underChild);
       }
@@ -609,7 +613,9 @@ export function CommonScriptbaseMixin<
     public baseCharZero(n: number): number {
       const largeop = !!this.baseCore.node.attributes.get('largeop');
       const sized = !!(this.baseCore.node.isKind('mo') &&
-                        (this.baseCore as any as CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).size);
+        /* prettier-ignore */
+        (this.baseCore as any as CommonMo<
+          N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).size);
       const scale = this.baseScale;
       return (this.baseIsChar && !largeop && !sized && scale === 1 ? 0 : n);
     }
@@ -802,8 +808,13 @@ export function CommonScriptbaseMixin<
       //  Check if the base is a mi or mo that needs italic correction removed
       //
       this.baseRemoveIc = !this.isLineAbove && !this.isLineBelow &&
-        (!(this.constructor as CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).useIC ||
-         this.isMathAccent);
+        (!(
+          /* prettier-ignore */
+          this.constructor as CommonScriptbaseClass<
+            N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
+          >
+        ).useIC ||
+          this.isMathAccent);
     }
 
     /**

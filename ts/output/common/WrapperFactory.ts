@@ -63,6 +63,7 @@ export class CommonWrapperFactory<
    *   (filled in by subclasses)
    */
   public static defaultNodes: {
+    /* prettier-ignore */
     [kind: string]: CommonWrapperClass<any, any, any, any, any, any, any, any, any, any, any, any>
   } = {};
 

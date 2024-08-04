@@ -172,8 +172,10 @@ export interface CommonMaction<
   /**
    * The handler for the specified actiontype
    */
-  action: ActionHandler<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
-                        CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>;
+  /* prettier-ignore */
+  action: ActionHandler<
+    N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
+    CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>;
   /**
    * The data for the specified actiontype
    */
@@ -232,8 +234,10 @@ export interface CommonMactionClass<
   /**
    * The valid action types and their handlers
    */
-  actions: ActionMap<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
-                     CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>;
+  /* prettier-ignore */
+  actions: ActionMap<
+    N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
+    CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>;
 
 }
 
@@ -276,13 +280,17 @@ export function CommonMactionMixin<
     /**
      * @override
      */
-    public static actions: ActionMap<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
+    /* prettier-ignore */
+    public static actions: ActionMap<
+      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
       CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>;
 
     /**
      * @override
      */
-    public action: ActionHandler<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
+    /* prettier-ignore */
+    public action: ActionHandler<
+      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
       CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>;
     /**
      * @override
@@ -324,12 +332,20 @@ export function CommonMactionMixin<
      */
     constructor(factory: WF, node: MmlNode, parent: WW = null) {
       super(factory, node, parent);
-      const actions = (this.constructor as CommonMactionClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).actions;
+      const actions = (
+        /* prettier-ignore */
+        this.constructor as CommonMactionClass<
+          N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).actions;
       const action = this.node.attributes.get('actiontype') as string;
       const [handler, data] =
-        actions.get(action) || [((_node, _data) => {}) as
-                                ActionHandler<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
-                                              CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>, {}];
+        /* prettier-ignore */
+        actions.get(action) || [
+          ((_node, _data) => {}) as ActionHandler<
+            N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
+            CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+          >,
+          {},
+        ];
       this.action = handler;
       this.data = data;
       this.getParameters();

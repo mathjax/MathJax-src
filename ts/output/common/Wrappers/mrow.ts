@@ -489,10 +489,13 @@ export function CommonInferredMrowMixin<
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
   B extends CommonMrowClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: CommonWrapperConstructor<
-  N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
-  CommonMrow<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->): B {
+>(
+  /* prettier-ignore */
+  Base: CommonWrapperConstructor<
+    N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
+    CommonMrow<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  >
+): B {
 
   return class CommonInferredMrowMixin extends Base
   implements CommonInferredMrow<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {

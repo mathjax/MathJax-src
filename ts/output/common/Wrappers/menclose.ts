@@ -330,8 +330,12 @@ export function CommonMencloseMixin<
      * @override
      */
     public getNotations() {
-      const Notations =
-        (this.constructor as CommonMencloseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).notations;
+      /* prettier-ignore */
+      const Notations = (
+        this.constructor as CommonMencloseClass<
+          N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
+        >
+      ).notations;
       for (const name of split(this.node.attributes.get('notation') as string)) {
         const notation = Notations.get(name);
         if (notation) {

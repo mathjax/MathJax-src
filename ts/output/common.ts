@@ -79,12 +79,24 @@ export const FONTPATH = '@mathjax/%%FONT%%-font';
  */
 export abstract class CommonOutputJax<
   N, T, D,
-  WW extends CommonWrapper<N, T, D, CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-                           WW, WF, WC, CC, VV, DD, FD, FC>,
-  WF extends CommonWrapperFactory<N, T, D, CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-                                  WW, WF, WC, CC, VV, DD, FD, FC>,
-  WC extends CommonWrapperClass<N, T, D, CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-                                WW, WF, WC, CC, VV, DD, FD, FC>,
+  /* prettier-ignore */
+  WW extends CommonWrapper<
+    N, T, D, 
+    CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+    WW, WF, WC, CC, VV, DD, FD, FC
+  >,
+  /* prettier-ignore */
+  WF extends CommonWrapperFactory<
+    N, T, D, 
+    CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+    WW, WF, WC, CC, VV, DD, FD, FC
+  >,
+  /* prettier-ignore */
+  WC extends CommonWrapperClass<
+    N, T, D, 
+    CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+    WW, WF, WC, CC, VV, DD, FD, FC
+  >,
   CC extends CharOptions,
   VV extends VariantData<CC>,
   DD extends DelimiterData,
@@ -186,8 +198,11 @@ export abstract class CommonOutputJax<
   /**
    * The linebreak visitor to use for automatic linebreaks
    */
+  /* prettier-ignore */
   public linebreaks: Linebreaks<
-    N, T, D, CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>, WW, WF, WC, CC, VV, DD, FD, FC
+    N, T, D,
+    CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+    WW, WF, WC, CC, VV, DD, FD, FC
   >;
 
   /**
@@ -244,8 +259,12 @@ export abstract class CommonOutputJax<
     const [jaxOptions, fontOptions] = separateOptions(options, fontClass.OPTIONS);
     super(jaxOptions);
     this.factory = this.options.wrapperFactory ||
-      new defaultFactory<N, T, D, CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
-                         WW, WF, WC, CC, VV, DD, FD, FC>();
+      /* prettier-ignore */
+      new defaultFactory<
+        N, T, D, 
+        CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+        WW, WF, WC, CC, VV, DD, FD, FC
+      >();
     this.factory.jax = this;
     this.cssStyles = this.options.cssStyles || new CssStyles();
     this.font = font || new fontClass(fontOptions);

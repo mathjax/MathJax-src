@@ -169,7 +169,9 @@ export function CommonMglyphMixin<
     /**
      * @override
      */
-    public charWrapper: CommonTextNode<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+    /* prettier-ignore */
+    public charWrapper: CommonTextNode<
+      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
 
     /**
      * @override

@@ -215,7 +215,10 @@ export class LinebreakVisitor<
     // Adjust for mspace width
     //
     space: (p, node) => {
-      const mspace = node as any as CommonMspace<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+      /* prettier-ignore */
+      const mspace = node as any as CommonMspace<
+        N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
+      >;
       if (!mspace.canBreak) return NOBREAK;
       const w = mspace.getBBox().w;
       return (w < 0 ? NOBREAK : w < 1 ? p : p - 100 * (w + 4));
@@ -452,7 +455,10 @@ export class LinebreakVisitor<
    * @param {number} _i    The line within that node to break
    */
   public visitMoNode(wrapper: WW, _i: number) {
-    const mo = wrapper as any as CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+    /* prettier-ignore */
+    const mo = wrapper as any as CommonMo<
+      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
+    >;
     const bbox = LineBBox.from(mo.getOuterBBox(), mo.linebreakOptions.lineleading);
     bbox.getIndentData(mo.node);
     const style = mo.getBreakStyle(mo.node.attributes.get('linebreakstyle') as string);
@@ -515,7 +521,10 @@ export class LinebreakVisitor<
    */
   public visitMspaceNode(wrapper: WW, i: number) {
     const bbox = wrapper.getLineBBox(i);
-    const mspace = wrapper as any as CommonMspace<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+    /* prettier-ignore */
+    const mspace = wrapper as any as CommonMspace<
+      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
+    >;
     if (mspace.canBreak) {
       const penalty = this.mspacePenalty(mspace);
       bbox.getIndentData(wrapper.node);
@@ -547,7 +556,10 @@ export class LinebreakVisitor<
       this.visitDefault(wrapper, i);
       return;
     }
-    const mtext = wrapper as any as CommonMtext<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+    /* prettier-ignore */
+    const mtext = wrapper as any as CommonMtext<
+      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
+    >;
     mtext.clearBreakPoints();
     const space = mtext.textWidth(' ');
     const bbox = wrapper.getBBox();
@@ -625,7 +637,10 @@ export class LinebreakVisitor<
    * @param {number} i     The line within that node to break
    */
   public visitMfracNode(wrapper: WW, i: number) {
-    const mfrac = wrapper as any as CommonMfrac<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+    /* prettier-ignore */
+    const mfrac = wrapper as any as CommonMfrac<
+      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
+    >;
     if (!mfrac.node.attributes.get('bevelled') && mfrac.getOuterBBox().w > this.state.width) {
       this.breakToWidth(mfrac.childNodes[0], this.state.width);
       this.breakToWidth(mfrac.childNodes[1], this.state.width);
@@ -641,7 +656,10 @@ export class LinebreakVisitor<
    */
   public visitMsqrtNode(wrapper: WW, i: number) {
     if (wrapper.getOuterBBox().w > this.state.width) {
-      const msqrt = wrapper as any as CommonMsqrt<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+      /* prettier-ignore */
+      const msqrt = wrapper as any as CommonMsqrt<
+        N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
+      >;
       const base = msqrt.childNodes[msqrt.base];
       this.breakToWidth(base, this.state.width - msqrt.rootWidth());
       msqrt.getStretchedSurd();
@@ -665,7 +683,10 @@ export class LinebreakVisitor<
    */
   public visitMsubNode(wrapper: WW, i: number) {
     this.visitDefault(wrapper, i);
-    const msub = wrapper as any as CommonMsub<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+    /* prettier-ignore */
+    const msub = wrapper as any as CommonMsub<
+      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
+    >;
     const x = msub.getOffset()[0];
     const sbox = msub.scriptChild.getOuterBBox();
     const [L, R] = this.getBorderLR(wrapper);
@@ -678,7 +699,10 @@ export class LinebreakVisitor<
    */
   public visitMsupNode(wrapper: WW, i: number) {
     this.visitDefault(wrapper, i);
-    const msup = wrapper as any as CommonMsup<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+    /* prettier-ignore */
+    const msup = wrapper as any as CommonMsup<
+      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
+    >;
     const x = msup.getOffset()[0];
     const sbox = msup.scriptChild.getOuterBBox();
     const [L, R] = this.getBorderLR(wrapper);
@@ -691,7 +715,10 @@ export class LinebreakVisitor<
    */
   public visitMsubsupNode(wrapper: WW, i: number) {
     this.visitDefault(wrapper, i);
-    const msubsup = wrapper as any as CommonMsubsup<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+    /* prettier-ignore */
+    const msubsup = wrapper as any as CommonMsubsup<
+      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
+    >;
     const subbox = msubsup.subChild.getOuterBBox();
     const supbox = msubsup.supChild.getOuterBBox();
     const x = msubsup.getAdjustedIc();
@@ -705,7 +732,10 @@ export class LinebreakVisitor<
    * @param {number} i     The line within that node to break
    */
   public visitMmultiscriptsNode(wrapper: WW, i: number) {
-    const mmultiscripts = wrapper as any as CommonMmultiscripts<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+    /* prettier-ignore */
+    const mmultiscripts = wrapper as any as CommonMmultiscripts<
+      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
+    >;
     const data = mmultiscripts.scriptData;
     if (data.numPrescripts) {
       const w = Math.max(data.psup.rscale * data.psup.w, data.psub.rscale * data.psub.w);
@@ -725,7 +755,10 @@ export class LinebreakVisitor<
    * @param {number} i     The line within that node to break
    */
   public visitMfencedNode(wrapper: WW, i: number) {
-    const mfenced = wrapper as any as CommonMfenced<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+    /* prettier-ignore */
+    const mfenced = wrapper as any as CommonMfenced<
+      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
+    >;
     const bbox = wrapper.getLineBBox(i);
     const [L, R] = this.getBorderLR(wrapper);
     i === 0 && this.addWidth(bbox, bbox.L + L);
@@ -740,7 +773,10 @@ export class LinebreakVisitor<
    * @param {number} i     The line within that node to break
    */
   public visitMactionNode(wrapper: WW, i: number) {
-    const maction = wrapper as any as CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+    /* prettier-ignore */
+    const maction = wrapper as any as CommonMaction<
+      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
+    >;
     const bbox = wrapper.getLineBBox(i);
     const [L, R] = this.getBorderLR(wrapper);
     i === 0 && this.addWidth(bbox, bbox.L + L);
