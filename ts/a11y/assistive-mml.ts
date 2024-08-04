@@ -83,7 +83,7 @@ export interface AssistiveMmlMathItem<N, T, D> extends MathItem<N, T, D> {
  * The mixin for adding assistive MathML to MathItems
  *
  * @param {B} BaseMathItem      The MathItem class to be extended
- * @returns {AssistiveMathItem}  The augmented MathItem class
+ * @returns {AssistiveMmlMathItem}  The augmented MathItem class
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
@@ -278,6 +278,8 @@ export function AssistiveMmlMathDocumentMixin<
 
     /**
      * Add assistive MathML to the MathItems in this MathDocument
+     *
+     * @returns The  assistive mml document.
      */
     public assistiveMml() {
       if (!this.processed.isSet('assistive-mml')) {
