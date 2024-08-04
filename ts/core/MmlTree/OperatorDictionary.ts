@@ -42,7 +42,7 @@ export function OPDEF(
   lspace: number,
   rspace: number,
   texClass: number = TEXCLASS.BIN,
-  properties: PropertyList = null
+  properties: PropertyList = null,
 ): OperatorDef {
   return [lspace, rspace, texClass, properties] as OperatorDef;
 }

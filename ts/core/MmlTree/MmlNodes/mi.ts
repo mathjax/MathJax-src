@@ -74,7 +74,7 @@ export class MmlMi extends AbstractMmlTokenNode {
     attributes: AttributeList = {},
     display: boolean = false,
     level: number = 0,
-    prime: boolean = false
+    prime: boolean = false,
   ) {
     super.setInheritedAttributes(attributes, display, level, prime);
     let text = this.getText();

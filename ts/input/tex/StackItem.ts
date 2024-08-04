@@ -215,7 +215,7 @@ export abstract class MmlStack implements NodeStack {
       'node',
       inferred ? 'inferredMrow' : 'mrow',
       this._nodes,
-      {}
+      {},
     );
   }
 

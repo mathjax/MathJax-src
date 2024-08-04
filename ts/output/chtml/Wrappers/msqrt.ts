@@ -93,7 +93,7 @@ export interface ChtmlMsqrtClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlMsqrtNTD<N, T, D>;
 }
 
@@ -184,13 +184,13 @@ export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
         this.html('mjx-sqrt', {}, [
           (SURD = this.html('mjx-surd')),
           (BASE = this.html('mjx-box', { style: { paddingTop: this.em(q) } })),
-        ])
+        ]),
       ) as N;
       if (t !== 0.06) {
         adaptor.setStyle(
           BASE,
           'border-top-width',
-          this.em(t * this.font.params.rule_factor)
+          this.em(t * this.font.params.rule_factor),
         );
       }
       //
@@ -221,7 +221,7 @@ export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
       _ROOT: N,
       _root: ChtmlWrapper<N, T, D>,
       _sbox: BBox,
-      _H: number
+      _H: number,
     ) {}
   };
 })<any, any, any>();

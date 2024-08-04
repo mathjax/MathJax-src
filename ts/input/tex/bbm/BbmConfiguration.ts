@@ -36,7 +36,7 @@ export const BbmMethods: { [key: string]: ParseMethod } = {
     BaseMethods.MathFont(
       parser,
       name,
-      parser.options.bbm.bold ? bold : regular
+      parser.options.bbm.bold ? bold : regular,
     );
   },
 

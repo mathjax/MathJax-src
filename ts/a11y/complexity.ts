@@ -90,7 +90,7 @@ export interface ComplexityMathItem<N, T, D> extends EnrichedMathItem<N, T, D> {
  */
 export function ComplexityMathItemMixin<N, T, D, B extends EMItemC<N, T, D>>(
   BaseMathItem: B,
-  computeComplexity: (node: MmlNode) => void
+  computeComplexity: (node: MmlNode) => void,
 ): CMItemC<N, T, D> & B {
   return class extends BaseMathItem {
     /**
@@ -99,7 +99,7 @@ export function ComplexityMathItemMixin<N, T, D, B extends EMItemC<N, T, D>>(
      */
     public complexity(
       document: ComplexityMathDocument<N, T, D>,
-      force: boolean = false
+      force: boolean = false,
     ) {
       if (this.state() >= STATE.COMPLEXITY) return;
       if (!this.isEscaped && (document.options.enableComplexity || force)) {
@@ -142,7 +142,7 @@ export interface ComplexityMathDocument<N, T, D>
  * @template B  The MathDocument class to extend
  */
 export function ComplexityMathDocumentMixin<N, T, D, B extends EMDocC<N, T, D>>(
-  BaseDocument: B
+  BaseDocument: B,
 ): CMDocC<N, T, D> & B {
   return class extends BaseDocument {
     /**
@@ -178,11 +178,11 @@ export function ComplexityMathDocumentMixin<N, T, D, B extends EMDocC<N, T, D>>(
       }
       const visitorOptions = selectOptionsFromKeys(
         this.options,
-        this.options.ComplexityVisitor.OPTIONS
+        this.options.ComplexityVisitor.OPTIONS,
       );
       this.complexityVisitor = new this.options.ComplexityVisitor(
         this.mmlFactory,
-        visitorOptions
+        visitorOptions,
       );
       const computeComplexity = (node: MmlNode) =>
         this.complexityVisitor.visitTree(node);
@@ -237,13 +237,13 @@ export function ComplexityMathDocumentMixin<N, T, D, B extends EMDocC<N, T, D>>(
  */
 export function ComplexityHandler<N, T, D>(
   handler: Handler<N, T, D>,
-  MmlJax: MathML<N, T, D> = null
+  MmlJax: MathML<N, T, D> = null,
 ): Handler<N, T, D> {
   if (!handler.documentClass.prototype.enrich && MmlJax) {
     handler = EnrichHandler(handler, MmlJax);
   }
   handler.documentClass = ComplexityMathDocumentMixin<N, T, D, EMDocC<N, T, D>>(
-    handler.documentClass as any
+    handler.documentClass as any,
   );
   return handler;
 }

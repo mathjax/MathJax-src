@@ -51,7 +51,7 @@ export const mathjax = {
    */
   document: function (
     document: any,
-    options: OptionList
+    options: OptionList,
   ): MathDocument<any, any, any> {
     return mathjax.handlers.document(document, options);
   },

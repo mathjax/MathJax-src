@@ -100,7 +100,7 @@ export interface MenuMathItem
  * @template B  The MathItem class to extend
  */
 export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
-  BaseMathItem: B
+  BaseMathItem: B,
 ): Constructor<MenuMathItem> & B {
   return class extends BaseMathItem {
     /**
@@ -160,7 +160,7 @@ export interface MenuMathDocument
  * @template B  The MathDocument class to extend
  */
 export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
-  BaseDocument: B
+  BaseDocument: B,
 ): Constructor<MenuMathDocument> & B {
   return class extends BaseDocument {
     /**
@@ -215,7 +215,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
         ProcessBits.allocate('context-menu');
       }
       this.options.MathItem = MenuMathItemMixin<A11yMathItemConstructor>(
-        this.options.MathItem
+        this.options.MathItem,
       );
 
       const settings = this.menu.settings;
@@ -250,7 +250,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
     public checkLoading(): MenuMathDocument {
       if (this.menu.isLoading) {
         mathjax.retryAfter(
-          this.menu.loadingPromise.catch((err) => console.log(err))
+          this.menu.loadingPromise.catch((err) => console.log(err)),
         );
       }
       if (this.options.enableComplexity) {
@@ -293,10 +293,10 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
  * @return {Handler}          The handler that was modified (for purposes of chaining extensions)
  */
 export function MenuHandler(
-  handler: Handler<HTMLElement, Text, Document>
+  handler: Handler<HTMLElement, Text, Document>,
 ): Handler<HTMLElement, Text, Document> {
   handler.documentClass = MenuMathDocumentMixin<A11yDocumentConstructor>(
-    handler.documentClass as any
+    handler.documentClass as any,
   );
   return handler;
 }

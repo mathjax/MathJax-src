@@ -127,7 +127,7 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
             let nodeA = new TexParser(
               a,
               parser.stack.env,
-              parser.configuration
+              parser.configuration,
             ).mml();
             let mpadded = parser.create('node', 'mpadded', [nodeA], pad);
             NodeUtil.setAttribute(mpadded, 'voffset', '.1em');
@@ -137,12 +137,12 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
             let nodeB = new TexParser(
               b,
               parser.stack.env,
-              parser.configuration
+              parser.configuration,
             ).mml();
             NodeUtil.setChild(
               mml,
               mml.under,
-              parser.create('node', 'mpadded', [nodeB], pad)
+              parser.create('node', 'mpadded', [nodeB], pad),
             );
           }
           if (parser.configuration.options.amscd.hideHorizontalLabels) {
@@ -165,7 +165,7 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
               new TexParser(
                 '\\scriptstyle\\llap{' + a + '}',
                 parser.stack.env,
-                parser.configuration
+                parser.configuration,
               ).mml(),
             ]);
           }
@@ -176,7 +176,7 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
               new TexParser(
                 '\\scriptstyle\\rlap{' + b + '}',
                 parser.stack.env,
-                parser.configuration
+                parser.configuration,
               ).mml(),
             ]);
           }
@@ -202,13 +202,13 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
       // better spacing of arrow rows.
       //
       parser.Push(
-        parser.create('node', 'mpadded', [], { height: '8.5pt', depth: '2pt' })
+        parser.create('node', 'mpadded', [], { height: '8.5pt', depth: '2pt' }),
       );
     }
     parser.Push(
       parser.itemFactory
         .create('cell')
-        .setProperties({ isEntry: true, name: name })
+        .setProperties({ isEntry: true, name: name }),
     );
   },
 

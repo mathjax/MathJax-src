@@ -73,7 +73,7 @@ export class TeXAtom extends AbstractMmlBaseNode {
   constructor(
     factory: MmlFactory,
     attributes: PropertyList,
-    children: MmlNode[]
+    children: MmlNode[],
   ) {
     super(factory, attributes, children);
     this.setProperty('texClass', this.texClass); // needed for serialization to include the texClass

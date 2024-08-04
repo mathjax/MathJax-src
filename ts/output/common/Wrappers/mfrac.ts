@@ -208,7 +208,7 @@ export function CommonMfracMixin<
   FC extends FontDataClass<CC, VV, DD>,
   B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 >(
-  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 ): B {
   return class CommonMfracMixin
     extends Base
@@ -245,7 +245,7 @@ export function CommonMfracMixin<
      */
     public getTUV(
       display: boolean,
-      t: number
+      t: number,
     ): { T: number; u: number; v: number } {
       const tex = this.font.params;
       const a = tex.axis_height;
@@ -331,7 +331,7 @@ export function CommonMfracMixin<
       const H =
         Math.max(
           nbox.scale * (nbox.h + nbox.d),
-          dbox.scale * (dbox.h + dbox.d)
+          dbox.scale * (dbox.h + dbox.d),
         ) +
         2 * delta;
       const a = this.font.params.axis_height;
@@ -348,7 +348,7 @@ export function CommonMfracMixin<
     public isDisplay(): boolean {
       const { displaystyle, scriptlevel } = this.node.attributes.getList(
         'displaystyle',
-        'scriptlevel'
+        'scriptlevel',
       );
       return displaystyle && scriptlevel === 0;
     }
@@ -383,7 +383,7 @@ export function CommonMfracMixin<
       bbox.empty();
       const { linethickness, bevelled } = this.node.attributes.getList(
         'linethickness',
-        'bevelled'
+        'bevelled',
       );
       const display = this.isDisplay();
       let w = null as number | null;

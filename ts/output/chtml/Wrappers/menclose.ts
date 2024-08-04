@@ -138,7 +138,7 @@ export interface ChtmlMencloseClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlMencloseNTD<N, T, D>;
 }
 
@@ -363,7 +363,7 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
               node.adaptor.setStyle(
                 child,
                 'border',
-                node.Em(node.thickness) + ' solid'
+                node.Em(node.thickness) + ' solid',
               );
             },
             bbox: Notation.fullBBox,
@@ -401,7 +401,7 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
               node.adaptor.setStyle(
                 child,
                 'border-bottom',
-                node.Em(node.thickness) + ' solid'
+                node.Em(node.thickness) + ' solid',
               );
               const strike = node.adjustBorder(
                 node.html('mjx-ustrike', {
@@ -414,7 +414,7 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
                       node.fixed(-a) +
                       'rad)',
                   },
-                })
+                }),
               );
               node.adaptor.append(node.dom[0], strike);
             },
@@ -456,15 +456,15 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
               adaptor.setStyle(
                 child,
                 'border-top',
-                node.Em(node.thickness) + ' solid'
+                node.Em(node.thickness) + ' solid',
               );
               const arc1 = adaptor.append(
                 node.dom[0],
-                node.html('mjx-dbox-top')
+                node.html('mjx-dbox-top'),
               ) as N;
               const arc2 = adaptor.append(
                 node.dom[0],
-                node.html('mjx-dbox-bot')
+                node.html('mjx-dbox-bot'),
               ) as N;
               const t = node.thickness;
               const p = node.padding;
@@ -498,7 +498,7 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
               node.adaptor.setStyle(
                 node.msqrt.dom[0],
                 'margin',
-                TRBL.map((x) => node.Em(-x)).join(' ')
+                TRBL.map((x) => node.Em(-x)).join(' '),
               );
             },
             //
@@ -538,7 +538,7 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
       const [x, y] = [t * head.x, t * head.y].map((x) => this.em(x));
       const a = Angle(head.dx, head.y);
       const [line, rthead, rbhead, lthead, lbhead] = this.adaptor.childNodes(
-        arrow
+        arrow,
       ) as N[];
       this.adjustHead(rthead, [y, '0', '1px', x], a);
       this.adjustHead(rbhead, ['1px', '0', y, x], '-' + a);
@@ -585,7 +585,7 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
       this.adaptor.setStyle(
         arrow,
         'transform',
-        `translate${offset}(${this.em(-d)})${transform ? ' ' + transform : ''}`
+        `translate${offset}(${this.em(-d)})${transform ? ' ' + transform : ''}`,
       );
     }
 
@@ -675,7 +675,7 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
       a: number,
       double: boolean,
       offset: string = '',
-      dist: number = 0
+      dist: number = 0,
     ): N {
       const W = this.getBBox().w;
       const style = { width: this.em(w) } as OptionList;

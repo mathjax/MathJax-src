@@ -93,7 +93,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
           parser,
           cs,
           NewcommandMethods.MacroWithTemplate,
-          [def].concat(params)
+          [def].concat(params),
         );
     parser.Push(parser.itemFactory.create('null'));
   },
@@ -137,7 +137,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
           parser,
           '\\' + cs,
           macro.char,
-          macro.attributes
+          macro.attributes,
         );
         return;
       }
@@ -154,7 +154,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
           cs,
           macro.func,
           macro.args,
-          macro.token
+          macro.token,
         );
         return;
       }
@@ -173,7 +173,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
         parser,
         '\\' + cs,
         macro.char,
-        macro.attributes
+        macro.attributes,
       );
       return;
     }
@@ -208,7 +208,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
         throw new TexError(
           'MismatchUseDef',
           "Use of %1 doesn't match its definition",
-          name
+          name,
         );
       }
       if (argCount) {
@@ -222,7 +222,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
     parser.string = ParseUtil.addArgs(
       parser,
       text,
-      parser.string.slice(parser.i)
+      parser.string.slice(parser.i),
     );
     parser.i = 0;
     ParseUtil.checkMaxMacros(parser);
@@ -243,7 +243,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
     bdef: string,
     edef: string,
     n: number,
-    def: string
+    def: string,
   ) {
     // @test Newenvironment Empty, Newenvironment Content
     // We have an end item, and we are supposed to close this environment.
@@ -257,7 +257,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
         parser.string = ParseUtil.addArgs(
           parser,
           `${edef}\\end{${begin.getName()}}`,
-          parser.string.slice(parser.i)
+          parser.string.slice(parser.i),
         );
         parser.i = 0;
         return null;
@@ -284,7 +284,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
     parser.string = ParseUtil.addArgs(
       parser,
       bdef,
-      parser.string.slice(parser.i)
+      parser.string.slice(parser.i),
     );
     parser.i = 0;
     return parser.itemFactory

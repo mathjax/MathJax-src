@@ -105,5 +105,5 @@ Entities.add(
     dzcy: '\u045F',
     dzigrarr: '\u27FF',
   },
-  'd'
+  'd',
 );

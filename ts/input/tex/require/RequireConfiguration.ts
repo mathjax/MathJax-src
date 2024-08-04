@@ -71,7 +71,7 @@ function RegisterExtension(jax: TeX<any, any, any>, name: string) {
     //
     if (retry) {
       mathjax.retryAfter(
-        retry.then(() => ProcessExtension(jax, name, extension))
+        retry.then(() => ProcessExtension(jax, name, extension)),
       );
     } else {
       ProcessExtension(jax, name, extension);
@@ -88,7 +88,7 @@ function RegisterExtension(jax: TeX<any, any, any>, name: string) {
 function ProcessExtension(
   jax: TeX<any, any, any>,
   name: string,
-  extension: string
+  extension: string,
 ) {
   //
   //  If the required file loaded an extension...
@@ -134,7 +134,7 @@ function ProcessExtension(
  */
 function RegisterDependencies(
   jax: TeX<any, any, any>,
-  names: string[] = []
+  names: string[] = [],
 ): Promise<any> {
   const prefix = jax.parseOptions.options.require.prefix;
   const retries = [];
@@ -170,7 +170,7 @@ export function RequireLoad(parser: TexParser, name: string) {
     throw new TexError(
       'BadRequire',
       'Extension "%1" is not allowed to be loaded',
-      extension
+      extension,
     );
   }
   if (!Package.packages.has(extension)) {
@@ -178,11 +178,11 @@ export function RequireLoad(parser: TexParser, name: string) {
   }
   const require = LOADERCONFIG[extension]?.rendererExtensions;
   (MathJax.startup.document as MenuMathDocument)?.menu?.addRequiredExtensions?.(
-    require
+    require,
   );
   RegisterExtension(
     parser.configuration.packageData.get('require').jax,
-    extension
+    extension,
   );
 }
 
@@ -223,7 +223,7 @@ export const RequireMethods: { [key: string]: ParseMethod } = {
       throw new TexError(
         'BadPackageName',
         'Argument for %1 is not a valid package name',
-        name
+        name,
       );
     }
     RequireLoad(parser, required);

@@ -93,7 +93,7 @@ export interface ChtmlMfracClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlMfracNTD<N, T, D>;
 }
 
@@ -232,7 +232,7 @@ export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
       this.standardChtmlNodes(parents);
       const { linethickness, bevelled } = this.node.attributes.getList(
         'linethickness',
-        'bevelled'
+        'bevelled',
       );
       const display = this.isDisplay();
       if (bevelled) {
@@ -256,7 +256,7 @@ export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
     protected makeFraction(display: boolean, t: number) {
       const { numalign, denomalign } = this.node.attributes.getList(
         'numalign',
-        'denomalign'
+        'denomalign',
       );
       const withDelims = this.node.getProperty('withDelims');
       //
@@ -314,7 +314,7 @@ export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
               ]),
             ]),
           ]),
-        ])
+        ]),
       );
       this.childNodes[0].toCHTML([num]);
       this.childNodes[1].toCHTML([den]);
@@ -328,7 +328,7 @@ export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
     protected makeAtop(display: boolean) {
       const { numalign, denomalign } = this.node.attributes.getList(
         'numalign',
-        'denomalign'
+        'denomalign',
       );
       const withDelims = this.node.getProperty('withDelims');
       //
@@ -361,7 +361,7 @@ export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
         this.html('mjx-frac', fattr, [
           (num = this.html('mjx-num', nattr)),
           (den = this.html('mjx-den', dattr)),
-        ])
+        ]),
       );
       this.childNodes[0].toCHTML([num]);
       this.childNodes[1].toCHTML([den]);

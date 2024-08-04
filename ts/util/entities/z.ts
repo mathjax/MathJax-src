@@ -35,5 +35,5 @@ Entities.add(
     zwj: '\u200D',
     zwnj: '\u200C',
   },
-  'z'
+  'z',
 );

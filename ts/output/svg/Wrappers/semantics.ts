@@ -103,7 +103,7 @@ export interface SvgSemanticsClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgSemanticsNTD<N, T, D>;
 }
 
@@ -259,7 +259,7 @@ export interface SvgXmlNodeClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgXmlNodeNTD<N, T, D>;
 }
 
@@ -323,8 +323,8 @@ export const SvgXmlNode = (function <N, T, D>(): SvgXmlNodeClass<N, T, D> {
               height: this.jax.fixed((h + d) * em) + 'px',
               transform: `scale(${scale}) matrix(1 0 0 -1 0 0)`,
             },
-            [this.getHTML()]
-          )
+            [this.getHTML()],
+          ),
         ) as N,
       ];
     }

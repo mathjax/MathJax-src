@@ -65,7 +65,7 @@ function configmacrosInit(config: ParserConfiguration) {
         [HandlerType.ENVIRONMENT]: [ENVIRONMENTMAP],
       },
       priority: 3,
-    })
+    }),
   );
 }
 
@@ -97,7 +97,7 @@ function setMacros(name: string, map: string, jax: TEX) {
       ? new Macro(
           cs,
           NewcommandMethods.MacroWithTemplate,
-          def.slice(0, 2).concat(def[2])
+          def.slice(0, 2).concat(def[2]),
         )
       : new Macro(cs, NewcommandMethods.Macro, def);
     handler.add(cs, macro);
@@ -129,7 +129,7 @@ function configMacros(jax: TEX) {
  */
 function configEnvironments(jax: TEX) {
   const handler = jax.parseOptions.handlers.retrieve(
-    ENVIRONMENTMAP
+    ENVIRONMENTMAP,
   ) as EnvironmentMap;
   const environments = jax.parseOptions.options.environments;
   for (const env of Object.keys(environments)) {
@@ -138,8 +138,8 @@ function configEnvironments(jax: TEX) {
       new Macro(
         env,
         NewcommandMethods.BeginEnv,
-        [true].concat(environments[env])
-      )
+        [true].concat(environments[env]),
+      ),
     );
   }
 }

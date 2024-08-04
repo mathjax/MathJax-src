@@ -163,7 +163,7 @@ export function CommonMglyphMixin<
   FC extends FontDataClass<CC, VV, DD>,
   B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 >(
-  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 ): B {
   return class CommonMglyphMixin
     extends Base
@@ -208,7 +208,7 @@ export function CommonMglyphMixin<
           'height',
           'valign',
           'src',
-          'index'
+          'index',
         );
       if (src) {
         this.width = width === 'auto' ? 1 : this.length2em(width);
@@ -218,7 +218,7 @@ export function CommonMglyphMixin<
         const text = String.fromCodePoint(parseInt(index as string));
         const mmlFactory = this.node.factory;
         this.charWrapper = this.wrap(
-          (mmlFactory.create('text') as TextNode).setText(text)
+          (mmlFactory.create('text') as TextNode).setText(text),
         );
         this.charWrapper.parent = this as any as WW;
       }

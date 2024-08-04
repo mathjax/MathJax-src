@@ -31,7 +31,7 @@ import { ChtmlCharMap, ChtmlCharData } from './FontData.js';
  */
 export function AddFontIds(
   ranges: { [variant: string]: { [id: string]: ChtmlCharMap } },
-  prefix?: string
+  prefix?: string,
 ) {
   const variants: { [variant: string]: ChtmlCharMap } = {};
   for (const id of Object.keys(ranges)) {

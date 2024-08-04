@@ -109,7 +109,7 @@ export interface SvgMactionClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgMactionNTD<N, T, D>;
 }
 
@@ -200,7 +200,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
               node.adaptor.setAttribute(
                 dom,
                 'data-toggle',
-                node.node.attributes.get('selection') as string
+                node.node.attributes.get('selection') as string,
               );
             });
             //
@@ -226,7 +226,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
                 document,
                 mml.attributes.get('data-maction-id')
                   ? STATE.ENRICHED
-                  : STATE.RERENDER
+                  : STATE.RERENDER,
               );
               event.stopPropagation();
             });
@@ -250,7 +250,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
                 const text = (tip.node as TextNode).getText();
                 node.adaptor.insert(
                   node.svg('title', {}, [node.text(text)]),
-                  rect
+                  rect,
                 );
               } else {
                 //
@@ -261,18 +261,18 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
                 const math = (node.node as AbstractMmlNode).factory.create(
                   'math',
                   {},
-                  [node.childNodes[1].node]
+                  [node.childNodes[1].node],
                 );
                 const tool = node.html('mjx-tool', {}, [node.html('mjx-tip')]);
                 const hidden = adaptor.append(
                   rect,
                   node.svg('foreignObject', { style: { display: 'none' } }, [
                     tool,
-                  ])
+                  ]),
                 ) as N;
                 node.jax.processMath(
                   node.jax.factory.wrap(math),
-                  adaptor.firstChild(tool) as N
+                  adaptor.firstChild(tool) as N,
                 );
                 node.childNodes[1].node.parent = node.node;
                 //
@@ -298,11 +298,11 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
                           node.tipDy;
                         adaptor.setStyle(tool, 'left', node.Px(dx));
                         adaptor.setStyle(tool, 'top', node.Px(dy));
-                      }, data.postDelay)
+                      }, data.postDelay),
                     );
                     event.stopPropagation();
                   },
-                  dom
+                  dom,
                 );
                 node.setEventHandler(
                   'mouseout',
@@ -310,12 +310,12 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
                     data.stopTimers(dom, data);
                     const timer = setTimeout(
                       () => adaptor.append(hidden, tool),
-                      data.clearDelay
+                      data.clearDelay,
                     );
                     data.clearTimer.set(dom, timer);
                     event.stopPropagation();
                   },
-                  dom
+                  dom,
                 );
               }
             }
@@ -334,7 +334,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
               const adaptor = node.adaptor;
               const text = (tip.node as TextNode).getText();
               node.dom.forEach((dom) =>
-                adaptor.setAttribute(dom, 'data-statusline', text)
+                adaptor.setAttribute(dom, 'data-statusline', text),
               );
               //
               // Set up event handlers to change the status window
@@ -344,7 +344,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
                   const body = adaptor.body(adaptor.document);
                   data.status = adaptor.append(
                     body,
-                    node.html('mjx-status', {}, [node.text(text)])
+                    node.html('mjx-status', {}, [node.text(text)]),
                   );
                 }
                 event.stopPropagation();
@@ -386,7 +386,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
      */
     public setEventHandler(type: string, handler: EventHandler, dom: N = null) {
       (dom ? [dom] : this.dom).forEach((node) =>
-        (node as any).addEventListener(type, handler)
+        (node as any).addEventListener(type, handler),
       );
     }
 
@@ -418,7 +418,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
             y: this.fixed(-d),
             fill: 'none',
             'pointer-events': 'all',
-          })
+          }),
         );
       });
       child.toSVG(svg);

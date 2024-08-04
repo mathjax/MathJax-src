@@ -111,7 +111,7 @@ export class MmlMo extends AbstractMmlTokenNode {
       '^["\'',
       '\u2018-\u201F', // Various double and single quotation marks (up and down)
       ']+$',
-    ].join('')
+    ].join(''),
   );
 
   /**
@@ -409,7 +409,7 @@ export class MmlMo extends AbstractMmlTokenNode {
     attributes: AttributeList = {},
     display: boolean = false,
     level: number = 0,
-    prime: boolean = false
+    prime: boolean = false,
   ) {
     super.setInheritedAttributes(attributes, display, level, prime);
     let mo = this.getText();

@@ -79,5 +79,5 @@ Entities.add(
     twoheadleftarrow: '\u219E',
     twoheadrightarrow: '\u21A0',
   },
-  't'
+  't',
 );

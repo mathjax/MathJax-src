@@ -161,7 +161,7 @@ export function CommonMfencedMixin<
   FC extends FontDataClass<CC, VV, DD>,
   B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 >(
-  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 ): B {
   return class CommonMfencedMixin
     extends Base

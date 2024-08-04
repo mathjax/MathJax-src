@@ -230,7 +230,7 @@ const FONT: { [name: string]: RegExp } = {
         'full-width|proportional-width',
         'ruby',
       ].join('|') +
-      ')$'
+      ')$',
   ),
   weight: /^(?:normal|bold|bolder|lighter|[1-9]00|inherit|initial|unset)$/,
   stretch: new RegExp(
@@ -240,7 +240,7 @@ const FONT: { [name: string]: RegExp } = {
         '(?:(?:ultra|extra|semi)-)?(?:condensed|expanded)',
         'inherit|initial|unset',
       ].join('|') +
-      ')$'
+      ')$',
   ),
   size: new RegExp(
     '^(?:' +
@@ -250,7 +250,7 @@ const FONT: { [name: string]: RegExp } = {
         'inherit|initial|unset',
       ].join('|') +
       ')' +
-      '(?:/(?:normal|[\\d.]+(?:%|[a-z]+)?))?$'
+      '(?:/(?:normal|[\\d.]+(?:%|[a-z]+)?))?$',
   ),
 };
 
@@ -317,7 +317,7 @@ function splitFont(name: string) {
  */
 function saveFontParts(
   name: string,
-  value: { [name: string]: string | string[] }
+  value: { [name: string]: string | string[] },
 ) {
   for (const child of Styles.connect[name].children) {
     const cname = this.childName(name, child);

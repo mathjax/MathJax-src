@@ -163,5 +163,5 @@ Entities.add(
     swnwar: '\u292A',
     szlig: '\u00DF',
   },
-  's'
+  's',
 );

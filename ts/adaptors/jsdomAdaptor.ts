@@ -50,7 +50,7 @@ export class JsdomAdaptor extends NodeMixin<
  */
 export function jsdomAdaptor(
   JSDOM: any,
-  options: OptionList = null
+  options: OptionList = null,
 ): JsdomAdaptor {
   return new JsdomAdaptor(new JSDOM().window, options);
 }

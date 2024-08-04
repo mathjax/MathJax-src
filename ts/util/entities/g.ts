@@ -76,5 +76,5 @@ Entities.add(
     gvertneqq: '\u2269\uFE00',
     gvnE: '\u2269\uFE00',
   },
-  'g'
+  'g',
 );

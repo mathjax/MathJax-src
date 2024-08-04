@@ -150,7 +150,7 @@ export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
     return new this.documentClass(
       document,
       this.adaptor,
-      options
+      options,
     ) as MathDocument<N, T, D>;
   }
 }

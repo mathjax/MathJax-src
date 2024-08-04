@@ -70,7 +70,7 @@ export class NodeFactory {
     kind: string,
     children: MmlNode[] = [],
     def: any = {},
-    text?: TextNode
+    text?: TextNode,
   ): MmlNode {
     const node = factory.mmlFactory.create(kind);
     node.setChildren(children);
@@ -93,7 +93,7 @@ export class NodeFactory {
     factory: NodeFactory,
     kind: string,
     def: any = {},
-    text: string = ''
+    text: string = '',
   ): MmlNode {
     const textNode = factory.create('text', text);
     return factory.create('node', kind, [], def, textNode);

@@ -59,7 +59,7 @@ const HtmlMethods: { [key: string]: ParseMethod } = {
         throw new TexError(
           'InvalidHTMLAttr',
           'Invalid HTML attribute: %1',
-          `data-${key}`
+          `data-${key}`,
         );
       }
       NodeUtil.setAttribute(arg, `data-${key}`, data[key]);

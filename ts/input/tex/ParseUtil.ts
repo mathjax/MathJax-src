@@ -39,7 +39,7 @@ export class KeyValueType<T> {
   constructor(
     public name: string,
     public verify: (value: string) => boolean,
-    public convert: (value: string) => T
+    public convert: (value: string) => T,
   ) {}
 }
 
@@ -60,33 +60,33 @@ export const KeyValueTypes: {
   boolean: new KeyValueType<boolean>(
     'boolean',
     (value) => value === 'true' || value === 'false',
-    (value) => value === 'true'
+    (value) => value === 'true',
   ),
   number: new KeyValueType<number>(
     'number',
     (value) => !!value.match(/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/),
-    (value) => parseFloat(value)
+    (value) => parseFloat(value),
   ),
   integer: new KeyValueType<number>(
     'integer',
     (value) => !!value.match(/^[-+]?\d+$/),
-    (value) => parseInt(value)
+    (value) => parseInt(value),
   ),
   string: new KeyValueType<string>(
     'string',
     (_value) => true,
-    (value) => value
+    (value) => value,
   ),
   oneof: (...values: string[]) =>
     new KeyValueType<string>(
       'oneof',
       (value) => values.indexOf(value) >= 0,
-      (value) => value
+      (value) => value,
     ),
   dimen: new KeyValueType<string>(
     'dimen',
     (value) => UnitUtil.matchDimen(value)[0] !== null,
-    (value) => value
+    (value) => value,
   ),
 };
 
@@ -149,7 +149,7 @@ function readValue(
   text: string,
   end: string[],
   l3keys: boolean = false,
-  dropBrace: boolean = false
+  dropBrace: boolean = false,
 ): [string, string, string] {
   let length = text.length;
   let braces = 0;
@@ -195,7 +195,7 @@ function readValue(
   if (braces) {
     throw new TexError(
       'ExtraOpenMissingClose',
-      'Extra open brace or missing close brace'
+      'Extra open brace or missing close brace',
     );
   }
   return dropBrace && start
@@ -235,7 +235,7 @@ export const ParseUtil = {
     mml: MmlNode,
     close: string,
     big: string = '',
-    color: string = ''
+    color: string = '',
   ) {
     // @test Fenced, Fenced3
     let nf = configuration.nodeFactory;
@@ -249,7 +249,7 @@ export const ParseUtil = {
       mo = new TexParser(
         '\\' + big + 'l' + open,
         configuration.parser.stack.env,
-        configuration
+        configuration,
       ).mml();
     } else {
       let openNode = nf.create('text', open);
@@ -263,7 +263,7 @@ export const ParseUtil = {
           symmetric: true,
           texClass: TEXCLASS.OPEN,
         },
-        openNode
+        openNode,
       );
     }
     NodeUtil.appendChildren(mrow, [mo, mml]);
@@ -271,7 +271,7 @@ export const ParseUtil = {
       mo = new TexParser(
         '\\' + big + 'r' + close,
         configuration.parser.stack.env,
-        configuration
+        configuration,
       ).mml();
     } else {
       let closeNode = nf.create('text', close);
@@ -285,7 +285,7 @@ export const ParseUtil = {
           symmetric: true,
           texClass: TEXCLASS.CLOSE,
         },
-        closeNode
+        closeNode,
       );
     }
     color && mo.attributes.set('mathcolor', color);
@@ -305,7 +305,7 @@ export const ParseUtil = {
     configuration: ParseOptions,
     open: string,
     mml: MmlNode,
-    close: string
+    close: string,
   ): MmlNode {
     // @test Choose, Over With Delims, Above with Delims
     let mrow = configuration.nodeFactory.create('node', 'mrow', [], {
@@ -343,7 +343,7 @@ export const ParseUtil = {
   mathPalette(
     configuration: ParseOptions,
     fence: string,
-    side: string
+    side: string,
   ): MmlNode {
     if (fence === '{' || fence === '}') {
       fence = '\\' + fence;
@@ -353,7 +353,7 @@ export const ParseUtil = {
     return new TexParser(
       '\\mathchoice' + D + T + T + T,
       {},
-      configuration
+      configuration,
     ).mml();
   },
 
@@ -400,7 +400,7 @@ export const ParseUtil = {
     parser: TexParser,
     text: string,
     level?: number | string,
-    font?: string
+    font?: string,
   ): MmlNode[] {
     text = text.replace(/ +/g, ' ');
     if (parser.configuration.options.internalMath) {
@@ -408,7 +408,7 @@ export const ParseUtil = {
         parser,
         text,
         level,
-        font
+        font,
       );
     }
     let mathvariant = font || parser.stack.env.font;
@@ -430,7 +430,7 @@ export const ParseUtil = {
               new TexParser(
                 text.slice(k, i - 1),
                 {},
-                parser.configuration
+                parser.configuration,
               ).mml(),
             ]);
             mml.push(node);
@@ -441,7 +441,7 @@ export const ParseUtil = {
             if (k < i - 1) {
               // @test Interspersed Text
               mml.push(
-                ParseUtil.internalText(parser, text.slice(k, i - 1), def)
+                ParseUtil.internalText(parser, text.slice(k, i - 1), def),
               );
             }
             match = '$';
@@ -457,7 +457,7 @@ export const ParseUtil = {
             let atom = new TexParser(
               text.slice(k, i),
               {},
-              parser.configuration
+              parser.configuration,
             ).mml();
             node = parser.create('node', 'TeXAtom', [atom], def);
             mml.push(node);
@@ -478,7 +478,7 @@ export const ParseUtil = {
             if (k < i - 1) {
               // @test Mbox Eqref
               mml.push(
-                ParseUtil.internalText(parser, text.slice(k, i - 1), def)
+                ParseUtil.internalText(parser, text.slice(k, i - 1), def),
               );
             }
             match = '}';
@@ -492,7 +492,7 @@ export const ParseUtil = {
               if (k < i - 2) {
                 // @test Mbox Internal Display
                 mml.push(
-                  ParseUtil.internalText(parser, text.slice(k, i - 2), def)
+                  ParseUtil.internalText(parser, text.slice(k, i - 2), def),
                 );
               }
               match = ')';
@@ -503,7 +503,7 @@ export const ParseUtil = {
                 new TexParser(
                   text.slice(k, i - 2),
                   {},
-                  parser.configuration
+                  parser.configuration,
                 ).mml(),
               ]);
               mml.push(node);
@@ -521,7 +521,7 @@ export const ParseUtil = {
                 throw new TexError(
                   'BadRawUnicode',
                   'Argument to %1 must a hexadecimal number with 1 to 6 digits',
-                  '\\U'
+                  '\\U',
                 );
               }
               //  Replace \U{...} with specified character
@@ -539,7 +539,7 @@ export const ParseUtil = {
         // @test Internal Math Error
         throw new TexError(
           'MathNotTerminated',
-          'Math mode is not properly terminated'
+          'Math mode is not properly terminated',
         );
       }
     }
@@ -593,7 +593,7 @@ export const ParseUtil = {
     base: MmlNode,
     script: MmlNode,
     pos: string,
-    stack: boolean
+    stack: boolean,
   ): MmlNode {
     // @test Overline
     ParseUtil.checkMovableLimits(base);
@@ -646,7 +646,7 @@ export const ParseUtil = {
   setArrayAlign(
     array: ArrayItem,
     align: string,
-    parser?: TexParser
+    parser?: TexParser,
   ): ArrayItem {
     // @test Array1, Array2, Array Test
     if (!parser) {
@@ -692,13 +692,13 @@ export const ParseUtil = {
           if (!c.match(/[1-9]/) || parseInt(c, 10) > args.length) {
             throw new TexError(
               'IllegalMacroParam',
-              'Illegal macro parameter reference'
+              'Illegal macro parameter reference',
             );
           }
           newstring = ParseUtil.addArgs(
             parser,
             ParseUtil.addArgs(parser, newstring, text),
-            args[parseInt(c, 10) - 1]
+            args[parseInt(c, 10) - 1],
           );
           text = '';
         }
@@ -726,7 +726,7 @@ export const ParseUtil = {
       throw new TexError(
         'MaxBufferSize',
         'MathJax internal buffer size exceeded; is there a' +
-          ' recursive macro call?'
+          ' recursive macro call?',
       );
     }
     return s1 + s2;
@@ -745,13 +745,13 @@ export const ParseUtil = {
       throw new TexError(
         'MaxMacroSub1',
         'MathJax maximum macro substitution count exceeded; ' +
-          'is here a recursive macro call?'
+          'is here a recursive macro call?',
       );
     } else {
       throw new TexError(
         'MaxMacroSub2',
         'MathJax maximum substitution count exceeded; ' +
-          'is there a recursive latex environment?'
+          'is there a recursive latex environment?',
       );
     }
   },
@@ -771,7 +771,7 @@ export const ParseUtil = {
     if (!top.isKind('start') || first) {
       throw new TexError(
         'ErroneousNestingEq',
-        'Erroneous nesting of equation structures'
+        'Erroneous nesting of equation structures',
       );
     }
   },
@@ -833,7 +833,7 @@ export const ParseUtil = {
     attrib: string,
     allowed: { [key: string]: number | KeyValueType<any> } = null,
     error: boolean = false,
-    l3keys: boolean = false
+    l3keys: boolean = false,
   ): EnvList {
     let def: EnvList = readKeyval(attrib, l3keys);
     if (allowed) {
@@ -849,7 +849,7 @@ export const ParseUtil = {
               throw new TexError(
                 'InvalidValue',
                 "Value for key '%1' is not of the expected type",
-                key
+                key,
               );
             }
             def[key] = type.convert(value);

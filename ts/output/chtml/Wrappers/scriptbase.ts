@@ -119,7 +119,7 @@ export interface ChtmlScriptbaseClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlScriptbaseNTD<N, T, D>;
 }
 
@@ -214,7 +214,7 @@ export const ChtmlScriptbase = (function <N, T, D>(): ChtmlScriptbaseClass<
       this.adaptor.setStyle(
         over,
         'marginBottom',
-        this.em(overbox.d * overbox.rscale)
+        this.em(overbox.d * overbox.rscale),
       );
     }
 
@@ -230,7 +230,7 @@ export const ChtmlScriptbase = (function <N, T, D>(): ChtmlScriptbaseClass<
         style: { 'margin-bottom': v, 'vertical-align': v },
       });
       for (const child of adaptor.childNodes(
-        adaptor.firstChild(under) as N
+        adaptor.firstChild(under) as N,
       ) as N[]) {
         adaptor.append(box, child);
       }

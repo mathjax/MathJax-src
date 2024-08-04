@@ -69,13 +69,13 @@ export const EmpheqMethods = {
       parser.Push(
         parser.itemFactory
           .create('end')
-          .setProperty('name', parser.stack.global.empheq)
+          .setProperty('name', parser.stack.global.empheq),
       );
       parser.stack.global.empheq = '';
       const empheq = parser.stack.Top() as EmpheqBeginItem;
       EmpheqUtil.adjustTable(empheq, parser);
       parser.Push(
-        parser.itemFactory.create('end').setProperty('name', 'empheq')
+        parser.itemFactory.create('end').setProperty('name', 'empheq'),
       );
     } else {
       ParseUtil.checkEqnEnv(parser);
@@ -89,7 +89,7 @@ export const EmpheqMethods = {
       begin.setProperty('nestable', true);
       if (opts) {
         begin.setProperties(
-          EmpheqUtil.splitOptions(opts, { left: 1, right: 1 })
+          EmpheqUtil.splitOptions(opts, { left: 1, right: 1 }),
         );
       }
       parser.stack.global.empheq = env;
@@ -124,7 +124,7 @@ export const EmpheqMethods = {
   EmpheqDelim(parser: TexParser, name: string) {
     const c = parser.GetDelimiter(name);
     parser.Push(
-      parser.create('token', 'mo', { stretchy: true, symmetric: true }, c)
+      parser.create('token', 'mo', { stretchy: true, symmetric: true }, c),
     );
   },
 };

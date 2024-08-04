@@ -242,7 +242,7 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
     if (!href) return parents;
     return parents.map(
       (parent) =>
-        this.adaptor.append(parent, this.html('a', { href: href })) as N
+        this.adaptor.append(parent, this.html('a', { href: href })) as N,
     );
   }
 
@@ -261,8 +261,8 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
           adaptor.setStyle(
             dom,
             'font-family',
-            this.font.cssFamilyPrefix + ', ' + family
-          )
+            this.font.cssFamilyPrefix + ', ' + family,
+          ),
         );
       }
     }
@@ -313,7 +313,7 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
           SPACE[space]
             ? { size: SPACE[space] }
             : { style: `letter-spacing: ${this.em(dimen - 1)}` },
-          [adaptor.text(' ')]
+          [adaptor.text(' ')],
         );
         adaptor.insert(node, this.dom[i]);
       } else if (dimen) {
@@ -374,7 +374,7 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
     }
     if (background) {
       this.dom.forEach((dom) =>
-        adaptor.setStyle(dom, 'backgroundColor', background)
+        adaptor.setStyle(dom, 'backgroundColor', background),
       );
     }
   }
@@ -410,7 +410,7 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
     }
     if (this.node.getProperty('inline-breaks')) {
       this.dom.forEach((dom) =>
-        adaptor.setAttribute(dom, 'inline-breaks', 'true')
+        adaptor.setAttribute(dom, 'inline-breaks', 'true'),
       );
     }
   }
@@ -425,7 +425,7 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
         this.dom.forEach((dom) => adaptor.setAttribute(dom, 'width', 'full'));
       } else {
         this.dom.forEach((dom) =>
-          adaptor.setStyle(dom, 'width', this.bbox.pwidth)
+          adaptor.setStyle(dom, 'width', this.bbox.pwidth),
         );
       }
     }
@@ -482,7 +482,7 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
             'background-color': 'green',
           },
         }),
-      ] as N[]
+      ] as N[],
     );
     const node = this.dom[0] || this.parent.dom[0];
     const size = this.adaptor.getAttribute(node, 'size');

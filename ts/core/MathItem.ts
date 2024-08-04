@@ -238,7 +238,7 @@ export function protoItem<N, T>(
   n: number,
   start: number,
   end: number,
-  display: boolean = null
+  display: boolean = null,
 ) {
   let item: ProtoItem<N, T> = {
     open: open,
@@ -335,7 +335,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
     jax: InputJax<N, T, D>,
     display: boolean = true,
     start: Location<N, T> = { i: 0, n: 0, delim: '' },
-    end: Location<N, T> = { i: 0, n: 0, delim: '' }
+    end: Location<N, T> = { i: 0, n: 0, delim: '' },
   ) {
     this.math = math;
     this.inputJax = jax;
@@ -361,7 +361,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
    */
   public rerender(
     document: MathDocument<N, T, D>,
-    start: number = STATE.RERENDER
+    start: number = STATE.RERENDER,
   ) {
     if (this.state() >= start) {
       this.state(start - 1);

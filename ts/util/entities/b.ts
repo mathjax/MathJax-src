@@ -109,5 +109,5 @@ Entities.add(
     bumpe: '\u224F',
     bumpeq: '\u224F',
   },
-  'b'
+  'b',
 );

@@ -72,7 +72,7 @@ export function createBoldToken(
   factory: NodeFactory,
   kind: string,
   def: any,
-  text: string
+  text: string,
 ): MmlNode {
   let token = NodeFactory.createToken(factory, kind, def, text);
   if (
@@ -99,7 +99,7 @@ export function rewriteBoldTokens(arg: { data: ParseOptions }) {
         NodeUtil.setAttribute(
           node,
           'mathvariant',
-          BOLDVARIANT[variant] || variant
+          BOLDVARIANT[variant] || variant,
         );
       }
       NodeUtil.removeProperties(node, 'fixBold');

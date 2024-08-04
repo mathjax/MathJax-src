@@ -71,7 +71,7 @@ export const CancelMethods: { [key: string]: ParseMethod } = {
       parser.create('node', 'msup', [
         parser.create('node', 'menclose', [math], def),
         value,
-      ])
+      ]),
     );
   },
 };

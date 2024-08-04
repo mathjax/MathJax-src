@@ -36,7 +36,7 @@ export class Token {
   constructor(
     private _token: string,
     private _char: string,
-    private _attributes: Attributes
+    private _attributes: Attributes,
   ) {}
 
   public get token(): string {
@@ -62,7 +62,7 @@ export class Macro {
   constructor(
     private _token: string,
     private _func: ParseMethod,
-    private _args: Args[] = []
+    private _args: Args[] = [],
   ) {}
 
   public get token(): string {

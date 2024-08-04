@@ -40,7 +40,7 @@ export type DEFPAIR<N, T, D> = Notation.DefPair<ChtmlMencloseNTD<N, T, D>, N>;
  */
 export const RenderElement = function <N, T, D>(
   name: string,
-  offset: string = ''
+  offset: string = '',
 ): RENDERER<N, T, D> {
   return ((node, _child) => {
     const shape = node.adjustBorder(node.html('mjx-' + name));
@@ -60,13 +60,13 @@ export const RenderElement = function <N, T, D>(
  * @return {DEFPAIR}      The notation definition for the notation having a line on the given side
  */
 export const Border = function <N, T, D>(
-  side: Notation.Side
+  side: Notation.Side,
 ): DEFPAIR<N, T, D> {
   return Notation.CommonBorder<ChtmlMencloseNTD<N, T, D>, N>((node, child) => {
     node.adaptor.setStyle(
       child,
       'border-' + side,
-      node.Em(node.thickness) + ' solid'
+      node.Em(node.thickness) + ' solid',
     );
   })(side);
 };
@@ -80,7 +80,7 @@ export const Border = function <N, T, D>(
 export const Border2 = function <N, T, D>(
   name: string,
   side1: Notation.Side,
-  side2: Notation.Side
+  side2: Notation.Side,
 ): DEFPAIR<N, T, D> {
   return Notation.CommonBorder2<ChtmlMencloseNTD<N, T, D>, N>((node, child) => {
     const border = node.Em(node.thickness) + ' solid';
@@ -96,7 +96,7 @@ export const Border2 = function <N, T, D>(
  */
 export const DiagonalStrike = function <N, T, D>(
   name: string,
-  neg: number
+  neg: number,
 ): DEFPAIR<N, T, D> {
   return Notation.CommonDiagonalStrike<ChtmlMencloseNTD<N, T, D>, N>(
     (cname: string) => (node, _child) => {
@@ -110,10 +110,10 @@ export const DiagonalStrike = function <N, T, D>(
             transform:
               'rotate(' + node.fixed(-neg * a) + 'rad) translateY(' + t + 'em)',
           },
-        })
+        }),
       );
       node.adaptor.append(node.dom[0], strike);
-    }
+    },
   )(name);
 };
 
@@ -122,12 +122,12 @@ export const DiagonalStrike = function <N, T, D>(
  * @return {DEFPAIR}      The notation definition for the diagonal arrow
  */
 export const DiagonalArrow = function <N, T, D>(
-  name: string
+  name: string,
 ): DEFPAIR<N, T, D> {
   return Notation.CommonDiagonalArrow<ChtmlMencloseNTD<N, T, D>, N>(
     (node, arrow) => {
       node.adaptor.append(node.dom[0], arrow);
-    }
+    },
   )(name);
 };
 

@@ -163,7 +163,7 @@ export function CommonMpaddedMixin<
   FC extends FontDataClass<CC, VV, DD>,
   B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 >(
-  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 ): B {
   return class CommonMpaddedMixin
     extends Base
@@ -178,7 +178,7 @@ export function CommonMpaddedMixin<
         'height',
         'depth',
         'lspace',
-        'voffset'
+        'voffset',
       );
       const bbox = this.childNodes[0].getOuterBBox(); // get unmodified bbox of children
       let { w, h, d } = bbox;
@@ -207,7 +207,7 @@ export function CommonMpaddedMixin<
       length: Property,
       bbox: BBox,
       d: string = '',
-      m: number = null
+      m: number = null,
     ): number {
       length = String(length);
       const match = length.match(/width|height|depth/);

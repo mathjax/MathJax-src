@@ -113,7 +113,7 @@ export interface ChtmlMunderClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlMunderNTD<N, T, D>;
 }
 
@@ -179,11 +179,11 @@ export const ChtmlMunder = (function <N, T, D>(): ChtmlMunderClass<N, T, D> {
       this.dom = this.standardChtmlNodes(parents);
       const base = this.adaptor.append(
         this.adaptor.append(this.dom[0], this.html('mjx-row')) as N,
-        this.html('mjx-base')
+        this.html('mjx-base'),
       ) as N;
       const under = this.adaptor.append(
         this.adaptor.append(this.dom[0], this.html('mjx-row')) as N,
-        this.html('mjx-under')
+        this.html('mjx-under'),
       ) as N;
       this.baseChild.toCHTML([base]);
       this.scriptChild.toCHTML([under]);
@@ -196,7 +196,7 @@ export const ChtmlMunder = (function <N, T, D>(): ChtmlMunderClass<N, T, D> {
       this.adaptor.setStyle(under, 'paddingTop', this.em(k));
       this.setDeltaW(
         [base, under],
-        this.getDeltaW([basebox, underbox], [0, -delta])
+        this.getDeltaW([basebox, underbox], [0, -delta]),
       );
       this.adjustUnderDepth(under, underbox);
     }
@@ -256,7 +256,7 @@ export interface ChtmlMoverClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlMoverNTD<N, T, D>;
 }
 
@@ -327,7 +327,7 @@ export const ChtmlMover = (function <N, T, D>(): ChtmlMoverClass<N, T, D> {
       this.adaptor.setStyle(over, 'paddingBottom', this.em(k));
       this.setDeltaW(
         [base, over],
-        this.getDeltaW([basebox, overbox], [0, delta])
+        this.getDeltaW([basebox, overbox], [0, delta]),
       );
       this.adjustOverDepth(over, overbox);
     }
@@ -387,7 +387,7 @@ export interface ChtmlMunderoverClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlMunderoverNTD<N, T, D>;
 }
 
@@ -455,15 +455,15 @@ export const ChtmlMunderover = (function <N, T, D>(): ChtmlMunderoverClass<
       const over = this.adaptor.append(this.dom[0], this.html('mjx-over')) as N;
       const table = this.adaptor.append(
         this.adaptor.append(this.dom[0], this.html('mjx-box')) as N,
-        this.html('mjx-munder')
+        this.html('mjx-munder'),
       ) as N;
       const base = this.adaptor.append(
         this.adaptor.append(table, this.html('mjx-row')) as N,
-        this.html('mjx-base')
+        this.html('mjx-base'),
       ) as N;
       const under = this.adaptor.append(
         this.adaptor.append(table, this.html('mjx-row')) as N,
-        this.html('mjx-under')
+        this.html('mjx-under'),
       ) as N;
       this.overChild.toCHTML([over]);
       this.baseChild.toCHTML([base]);
@@ -482,8 +482,8 @@ export const ChtmlMunderover = (function <N, T, D>(): ChtmlMunderoverClass<
         [base, under, over],
         this.getDeltaW(
           [basebox, underbox, overbox],
-          [0, this.isLineBelow ? 0 : -udelta, this.isLineAbove ? 0 : odelta]
-        )
+          [0, this.isLineBelow ? 0 : -udelta, this.isLineAbove ? 0 : odelta],
+        ),
       );
       this.adjustOverDepth(over, overbox);
       this.adjustUnderDepth(under, underbox);

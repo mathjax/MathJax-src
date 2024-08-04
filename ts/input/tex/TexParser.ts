@@ -79,7 +79,7 @@ export default class TexParser {
   constructor(
     private _string: string,
     env: EnvList,
-    public configuration: ParseOptions
+    public configuration: ParseOptions,
   ) {
     const inner = env.hasOwnProperty('isInner');
     const isInner = env['isInner'] as boolean;
@@ -311,7 +311,7 @@ export default class TexParser {
           throw new TexError(
             'MissingArgFor',
             'Missing argument for %1',
-            this.currentCS
+            this.currentCS,
           );
         }
         return null;
@@ -320,7 +320,7 @@ export default class TexParser {
           // @test ExtraCloseMissingOpen
           throw new TexError(
             'ExtraCloseMissingOpen',
-            'Extra close brace or missing open brace'
+            'Extra close brace or missing open brace',
           );
         }
         return null;
@@ -363,7 +363,7 @@ export default class TexParser {
   public GetBrackets(
     _name: string,
     def?: string,
-    matchBrackets: boolean = false
+    matchBrackets: boolean = false,
   ): string {
     if (this.GetNext() !== '[') {
       return def;
@@ -385,7 +385,7 @@ export default class TexParser {
             throw new TexError(
               'ExtraCloseLooking',
               'Extra close brace while looking for %1',
-              "']'"
+              "']'",
             );
           }
           break;
@@ -406,7 +406,7 @@ export default class TexParser {
     throw new TexError(
       'MissingCloseBracket',
       "Could not find closing ']' for argument to %1",
-      this.currentCS
+      this.currentCS,
     );
   }
 
@@ -434,7 +434,7 @@ export default class TexParser {
     throw new TexError(
       'MissingOrUnrecognizedDelim',
       'Missing or unrecognized delimiter for %1',
-      this.currentCS
+      this.currentCS,
     );
   }
 
@@ -464,7 +464,7 @@ export default class TexParser {
     throw new TexError(
       'MissingDimOrUnits',
       'Missing dimension or its units for %1',
-      this.currentCS
+      this.currentCS,
     );
   }
 
@@ -497,7 +497,7 @@ export default class TexParser {
             throw new TexError(
               'ExtraCloseLooking',
               'Extra close brace while looking for %1',
-              token
+              token,
             );
           }
           parens--;
@@ -512,7 +512,7 @@ export default class TexParser {
       'TokenNotFoundForCommand',
       'Could not find %1 for %2',
       token,
-      this.currentCS
+      this.currentCS,
     );
   }
 
@@ -525,7 +525,7 @@ export default class TexParser {
     return new TexParser(
       this.GetArgument(name),
       this.stack.env,
-      this.configuration
+      this.configuration,
     ).mml();
   }
 
@@ -539,7 +539,7 @@ export default class TexParser {
     return new TexParser(
       this.GetUpTo(name, token),
       this.stack.env,
-      this.configuration
+      this.configuration,
     ).mml();
   }
 
@@ -560,7 +560,7 @@ export default class TexParser {
     throw new TexError(
       'MissingOrUnrecognizedDelim',
       'Missing or unrecognized delimiter for %1',
-      this.currentCS
+      this.currentCS,
     );
   }
 
@@ -681,7 +681,7 @@ export default class TexParser {
     node: MmlNode,
     comp: string,
     pos1: number,
-    pos2: number
+    pos2: number,
   ) {
     if (!node.childNodes[pos1] || !node.childNodes[pos2]) return;
     const expr =

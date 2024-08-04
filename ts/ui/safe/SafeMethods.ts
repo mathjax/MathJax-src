@@ -175,7 +175,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
   filterStyle<N, T, D>(
     safe: Safe<N, T, D>,
     style: string,
-    div: N
+    div: N,
   ): string | null {
     const value = safe.adaptor.getStyle(div, style);
     if (
@@ -211,7 +211,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
     safe: Safe<N, T, D>,
     style: string,
     value: string,
-    div: N
+    div: N,
   ): string | null {
     const name = safe.options.styleLengths[style];
     if (!name) {
@@ -223,7 +223,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
     const length = this.filterStyleLength(
       safe,
       name,
-      safe.adaptor.getStyle(div, name)
+      safe.adaptor.getStyle(div, name),
     );
     if (!length) {
       return null;
@@ -247,7 +247,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
   filterStyleLength<N, T, D>(
     safe: Safe<N, T, D>,
     style: string,
-    value: string
+    value: string,
   ): string | null {
     if (!value.match(/^(.+)(em|ex|ch|rem|px|mm|cm|in|pt|pc|%)$/)) return null;
     const em = length2em(value, 1);
@@ -307,7 +307,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
    */
   filterScriptLevel<N, T, D>(
     safe: Safe<N, T, D>,
-    level: string
+    level: string,
   ): string | null {
     const [m, M] = safe.options.scriptlevelRange || [-Infinity, Infinity];
     return Math.min(M, Math.max(m, parseInt(level))).toString();
@@ -328,7 +328,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
   filterData<N, T, D>(
     safe: Safe<N, T, D>,
     value: string,
-    id: string
+    id: string,
   ): string | null {
     return id.match(safe.options.dataPattern) ? value : null;
   },

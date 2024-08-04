@@ -219,7 +219,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
           id: SVG.FONTCACHEID,
           style: { display: 'none' },
         },
-        [this.fontCache.getCache()]
+        [this.fontCache.getCache()],
       );
     }
     return null as N;
@@ -291,12 +291,12 @@ export class SVG<N, T, D> extends CommonOutputJax<
       adaptor.removeAttribute(svg, 'viewBox');
       const scale = this.fixed(
         wrapper.metrics.ex / (this.font.params.x_height * 1000),
-        6
+        6,
       );
       adaptor.setAttribute(
         g,
         'transform',
-        `scale(${scale},-${scale}) translate(0, ${this.fixed(-h * 1000, 1)})`
+        `scale(${scale},-${scale}) translate(0, ${this.fixed(-h * 1000, 1)})`,
       );
     }
     return [svg, g];
@@ -343,8 +343,8 @@ export class SVG<N, T, D> extends CommonOutputJax<
             this.fixed(H * 1000, 1),
           ].join(' '),
         },
-        [g]
-      )
+        [g],
+      ),
     ) as N;
     if (W === 0.001) {
       adaptor.setAttribute(svg, 'preserveAspectRatio', 'xMidYMid slice');
@@ -453,7 +453,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
           this.addInlineBreak(
             nsvg,
             dimen,
-            forced || !!mml.node.getProperty('forcebreak')
+            forced || !!mml.node.getProperty('forcebreak'),
           );
         }
       }
@@ -464,7 +464,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
     if (adaptor.childNodes(svg).length) {
       adaptor.append(
         adaptor.firstChild(adaptor.parent(svg)) as N,
-        adaptor.firstChild(svg)
+        adaptor.firstChild(svg),
       );
     }
     adaptor.remove(svg);
@@ -481,7 +481,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
     if (!forced) {
       adaptor.insert(
         adaptor.node('mjx-break', { prebreak: true }, [adaptor.text(' ')]),
-        nsvg
+        nsvg,
       );
     }
     adaptor.insert(
@@ -492,9 +492,9 @@ export class SVG<N, T, D> extends CommonOutputJax<
           : SPACE[space]
             ? { size: SPACE[space] }
             : { style: `letter-spacing: ${LENGTHS.em(dimen - 1)}` },
-        [adaptor.text(' ')]
+        [adaptor.text(' ')],
       ),
-      nsvg
+      nsvg,
     );
   }
 
@@ -518,7 +518,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
   public svg(
     kind: string,
     properties: OptionList = {},
-    children: (N | T)[] = []
+    children: (N | T)[] = [],
   ): N {
     return this.html(kind, properties, children, SVGNS);
   }
@@ -538,7 +538,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
         transform: 'scale(1,-1)',
         'font-size': this.fixed(scale, 1) + 'px',
       },
-      [this.text(text)]
+      [this.text(text)],
     );
     const adaptor = this.adaptor;
     if (variant !== '-explicitFont') {
@@ -580,7 +580,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
         left: 0,
         viewBox: [0, 0, ex, ex].join(' '),
       },
-      [text]
+      [text],
     );
     adaptor.append(adaptor.body(adaptor.document), svg);
     let w = adaptor.nodeSize(text, 1000, true)[0];

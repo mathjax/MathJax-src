@@ -179,7 +179,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<
    */
   public addExtension(
     font: FontExtensionData<ChtmlCharOptions, ChtmlDelimiterData>,
-    prefix: string = ''
+    prefix: string = '',
   ): string[] {
     const css = super.addExtension(font, prefix);
     if (css.length && this.options.adaptiveCSS && this.chtmlStyles) {
@@ -236,7 +236,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<
     }
     for (const kind of this.wrapperUsage.update()) {
       const wrapper = this.factory.getNodeClass(
-        kind
+        kind,
       ) as any as typeof CommonWrapper;
       wrapper && this.addClassStyles(wrapper, styles);
     }
@@ -333,7 +333,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<
     adaptor.setStyle(
       text,
       'font-family',
-      adaptor.getStyle(text, 'font-family').replace(/MJXZERO, /g, '')
+      adaptor.getStyle(text, 'font-family').replace(/MJXZERO, /g, ''),
     );
     //
     const em = this.math.metrics.em;

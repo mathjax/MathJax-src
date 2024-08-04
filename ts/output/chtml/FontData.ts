@@ -179,7 +179,7 @@ export class ChtmlFontData extends FontData<
   public static addDynamicFontCss(
     styles: StyleList,
     fonts: string[],
-    root: string
+    root: string,
   ) {
     const fontStyles: StyleList = {};
     for (const font of fonts) {
@@ -200,7 +200,7 @@ export class ChtmlFontData extends FontData<
    */
   public static addExtension(
     data: ChtmlFontExtensionData<ChtmlCharOptions, ChtmlDelimiterData>,
-    prefix: string = ''
+    prefix: string = '',
   ) {
     super.addExtension(data, prefix);
     data.fonts &&
@@ -212,7 +212,7 @@ export class ChtmlFontData extends FontData<
    */
   public addExtension(
     data: ChtmlFontExtensionData<ChtmlCharOptions, ChtmlDelimiterData>,
-    prefix: string = ''
+    prefix: string = '',
   ): string[] {
     super.addExtension(data, prefix);
     if (!data.fonts || !this.options.adaptiveCSS) {
@@ -223,7 +223,7 @@ export class ChtmlFontData extends FontData<
     (this.constructor as typeof ChtmlFontData).addDynamicFontCss(
       css,
       data.fonts,
-      data.fontURL
+      data.fontURL,
     );
     styles.addStyles(css);
     return styles.getStyleRules();
@@ -254,7 +254,7 @@ export class ChtmlFontData extends FontData<
   public createVariant(
     name: string,
     inherit: string = null,
-    link: string = null
+    link: string = null,
   ) {
     super.createVariant(name, inherit, link);
     this.variant[name].letter = (
@@ -290,12 +290,12 @@ export class ChtmlFontData extends FontData<
    */
   public addDynamicFontCss(
     fonts: string[],
-    root: string = this.options.fontURL
+    root: string = this.options.fontURL,
   ) {
     (this.constructor as typeof ChtmlFontData).addDynamicFontCss(
       this.fontUsage,
       fonts,
-      root
+      root,
     );
   }
 
@@ -354,7 +354,7 @@ export class ChtmlFontData extends FontData<
         styles,
         variant.letter,
         N,
-        variant.chars[N] as ChtmlCharData
+        variant.chars[N] as ChtmlCharData,
       );
     }
     return styles;
@@ -372,7 +372,7 @@ export class ChtmlFontData extends FontData<
       this.addDelimiterStyles(
         styles,
         N,
-        this.delimiters[N] as ChtmlDelimiterData
+        this.delimiters[N] as ChtmlDelimiterData,
       );
     }
     //
@@ -403,7 +403,7 @@ export class ChtmlFontData extends FontData<
   protected addDelimiterStyles(
     styles: StyleList,
     n: number,
-    data: ChtmlDelimiterData
+    data: ChtmlDelimiterData,
   ) {
     if (!data.stretch) return;
     const c =
@@ -427,7 +427,7 @@ export class ChtmlFontData extends FontData<
     styles: StyleList,
     n: number,
     c: string,
-    data: ChtmlDelimiterData
+    data: ChtmlDelimiterData,
   ) {
     const HDW = data.HDW as ChtmlCharData;
     const [beg, ext, end, mid] = data.stretch;
@@ -468,7 +468,7 @@ export class ChtmlFontData extends FontData<
     part: string,
     n: number,
     v: string,
-    HDW: ChtmlCharData
+    HDW: ChtmlCharData,
   ): number {
     if (!n) return 0;
     const [h, d, w] = this.getChar(v, n);
@@ -515,7 +515,7 @@ export class ChtmlFontData extends FontData<
     styles: StyleList,
     n: number,
     c: string,
-    data: ChtmlDelimiterData
+    data: ChtmlDelimiterData,
   ) {
     const HDW = [...data.HDW] as ChtmlCharData;
     const [beg, ext, end, mid] = data.stretch;
@@ -566,7 +566,7 @@ export class ChtmlFontData extends FontData<
     part: string,
     n: number,
     v: string,
-    HDW: ChtmlCharData
+    HDW: ChtmlCharData,
   ) {
     if (!n) return 0;
     const [, , w, options] = this.getChar(v, n);
@@ -595,7 +595,7 @@ export class ChtmlFontData extends FontData<
     styles: StyleList,
     vletter: string,
     n: number,
-    data: ChtmlCharData
+    data: ChtmlCharData,
   ) {
     const options = data[3] as ChtmlCharOptions;
     const letter = options.f !== undefined ? options.f : vletter;
@@ -686,14 +686,14 @@ export type CssMap = { [name: number]: number };
  */
 export function AddCSS(
   font: ChtmlCharMap,
-  options: CharOptionsMap
+  options: CharOptionsMap,
 ): ChtmlCharMap {
   for (const c of Object.keys(options)) {
     const n = parseInt(c);
     const data = options[n];
     if (data.c) {
       data.c = data.c.replace(/\\[0-9A-F]+/gi, (x) =>
-        String.fromCodePoint(parseInt(x.substring(1), 16))
+        String.fromCodePoint(parseInt(x.substring(1), 16)),
       );
     }
     Object.assign(FontData.charOptions(font, n), data);

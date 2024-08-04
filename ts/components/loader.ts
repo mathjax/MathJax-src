@@ -195,10 +195,10 @@ export namespace Loader {
           if (!CONFIG.versionWarnings) return;
           if (extension.isLoaded && !versions.has(Package.resolvePath(name))) {
             console.warn(
-              `No version information available for component ${name}`
+              `No version information available for component ${name}`,
             );
           }
-        }) as Promise<null>
+        }) as Promise<null>,
       );
     }
     Package.loadAll();
@@ -281,12 +281,12 @@ export namespace Loader {
   export function checkVersion(
     name: string,
     version: string,
-    _type?: string
+    _type?: string,
   ): boolean {
     saveVersion(name);
     if (CONFIG.versionWarnings && version !== VERSION) {
       console.warn(
-        `Component ${name} uses ${version} of MathJax; version in use is ${VERSION}`
+        `Component ${name} uses ${version} of MathJax; version in use is ${VERSION}`,
       );
       return true;
     }

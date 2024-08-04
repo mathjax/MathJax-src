@@ -90,7 +90,7 @@ export class PrioritizedList<DataClass> {
    */
   public add(
     item: DataClass,
-    priority: number = PrioritizedList.DEFAULTPRIORITY
+    priority: number = PrioritizedList.DEFAULTPRIORITY,
   ): DataClass {
     let i = this.items.length;
     do {

@@ -39,7 +39,7 @@ export class Label {
    */
   constructor(
     public tag: string = '???',
-    public id: string = ''
+    public id: string = '',
   ) {}
 }
 
@@ -69,7 +69,7 @@ export class TagInfo {
     public tagId: string = '',
     public tagFormat: string = '',
     public noTag: boolean = false,
-    public labelId: string = ''
+    public labelId: string = '',
   ) {}
 }
 
@@ -527,7 +527,7 @@ export class AbstractTags implements Tags {
     this.currentTag.tagId = this.formatId(
       this.configuration.options['useLabelIds']
         ? this.label || this.currentTag.tag
-        : this.currentTag.tag
+        : this.currentTag.tag,
     );
   }
 
@@ -539,14 +539,14 @@ export class AbstractTags implements Tags {
     if (this.label) {
       this.labels[this.label] = new Label(
         this.currentTag.tag,
-        this.currentTag.tagId
+        this.currentTag.tagId,
       );
       this.label = '';
     }
     let mml = new TexParser(
       '\\text{' + this.currentTag.tagFormat + '}',
       {},
-      this.configuration
+      this.configuration,
     ).mml();
     return this.configuration.nodeFactory.create('node', 'mtd', [mml], {
       id: this.currentTag.tagId,

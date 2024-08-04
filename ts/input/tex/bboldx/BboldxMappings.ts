@@ -201,7 +201,7 @@ new CharacterMap(
     txtbbomega: '\u03C9',
     txtbbdotlessi: '\u0131',
     txtbbdotlessj: '\u0237',
-  }
+  },
 );
 
 /**

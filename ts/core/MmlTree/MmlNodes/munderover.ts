@@ -101,14 +101,14 @@ export class MmlMunderover extends AbstractMmlBaseNode {
     attributes: AttributeList,
     display: boolean,
     level: number,
-    prime: boolean
+    prime: boolean,
   ) {
     let nodes = this.childNodes;
     nodes[0].setInheritedAttributes(
       attributes,
       display,
       level,
-      prime || !!nodes[this.over]
+      prime || !!nodes[this.over],
     );
     let force = !!(
       !display && nodes[0].coreMO().attributes.get('movablelimits')
@@ -118,7 +118,7 @@ export class MmlMunderover extends AbstractMmlBaseNode {
       attributes,
       false,
       this.getScriptlevel(ACCENTS[1], force, level),
-      prime || this.under === 1
+      prime || this.under === 1,
     );
     this.setInheritedAccent(1, ACCENTS[1], display, level, prime, force);
     if (!nodes[2]) {
@@ -128,7 +128,7 @@ export class MmlMunderover extends AbstractMmlBaseNode {
       attributes,
       false,
       this.getScriptlevel(ACCENTS[2], force, level),
-      prime || this.under === 2
+      prime || this.under === 2,
     );
     this.setInheritedAccent(2, ACCENTS[2], display, level, prime, force);
   }
@@ -142,7 +142,7 @@ export class MmlMunderover extends AbstractMmlBaseNode {
   protected getScriptlevel(
     accent: string,
     force: boolean,
-    level: number
+    level: number,
   ): number {
     if (force || !this.attributes.get(accent)) {
       level++;
@@ -168,7 +168,7 @@ export class MmlMunderover extends AbstractMmlBaseNode {
     display: boolean,
     level: number,
     prime: boolean,
-    force: boolean
+    force: boolean,
   ) {
     let node = this.childNodes[n];
     if (!this.attributes.hasExplicit(accent) && node.isEmbellished) {
@@ -179,7 +179,7 @@ export class MmlMunderover extends AbstractMmlBaseNode {
           {},
           display,
           this.getScriptlevel(accent, force, level),
-          prime
+          prime,
         );
       }
     }

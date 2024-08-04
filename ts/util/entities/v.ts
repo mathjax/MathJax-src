@@ -66,5 +66,5 @@ Entities.add(
     vsupne: '\u228B\uFE00',
     vzigzag: '\u299A',
   },
-  'v'
+  'v',
 );

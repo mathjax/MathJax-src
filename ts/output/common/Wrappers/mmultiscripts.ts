@@ -156,7 +156,7 @@ export interface CommonMmultiscripts<
     bbox1: BBox,
     bbox2: BBox,
     list1: BBox[],
-    list2: BBox[]
+    list2: BBox[],
   ): void;
 
   /**
@@ -243,7 +243,7 @@ export function CommonMmultiscriptsMixin<
   FC extends FontDataClass<CC, VV, DD>,
   B extends CommonMsubsupClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 >(
-  Base: Constructor<CommonMsubsup<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>
+  Base: Constructor<CommonMsubsup<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>,
 ): B {
   return class CommonMmultiscriptsMixin
     extends Base
@@ -297,7 +297,7 @@ export function CommonMmultiscriptsMixin<
         data.psub,
         data.psup,
         lists.psubList,
-        lists.psupList
+        lists.psupList,
       );
       data.base = lists.base[0];
       //
@@ -359,7 +359,7 @@ export function CommonMmultiscriptsMixin<
       bbox1: BBox,
       bbox2: BBox,
       list1: BBox[],
-      list2: BBox[]
+      list2: BBox[],
     ) {
       for (let i = 0; i < list1.length; i++) {
         const [w1, h1, d1] = this.getScaledWHD(list1[i]);
@@ -460,7 +460,7 @@ export function CommonMmultiscriptsMixin<
       if (i === 0) {
         bbox = LineBBox.from(
           this.addPrescripts(BBox.zero(), u, v),
-          this.linebreakOptions.lineleading
+          this.linebreakOptions.lineleading,
         );
         bbox.append(cbox);
         this.addLeftBorders(bbox);

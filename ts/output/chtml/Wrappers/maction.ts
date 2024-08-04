@@ -108,7 +108,7 @@ export interface ChtmlMactionClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlMactionNTD<N, T, D>;
 }
 
@@ -200,7 +200,7 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
               node.adaptor.setAttribute(
                 dom,
                 'toggle',
-                node.node.attributes.get('selection') as string
+                node.node.attributes.get('selection') as string,
               );
             });
             //
@@ -226,7 +226,7 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
                 document,
                 mml.attributes.get('data-maction-id')
                   ? STATE.ENRICHED
-                  : STATE.RERENDER
+                  : STATE.RERENDER,
               );
               event.stopPropagation();
             });
@@ -247,7 +247,7 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
               //
               const text = (tip.node as TextNode).getText();
               node.dom.forEach((dom) =>
-                node.adaptor.setAttribute(dom, 'title', text)
+                node.adaptor.setAttribute(dom, 'title', text),
               );
             } else {
               //
@@ -265,8 +265,8 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
                         right: node.Em(-node.tipDx),
                       },
                     },
-                    [node.html('mjx-tip')]
-                  )
+                    [node.html('mjx-tip')],
+                  ),
                 ) as N;
                 tip.toCHTML([adaptor.firstChild(tool) as N]);
                 //
@@ -278,12 +278,12 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
                     data.stopTimers(dom, data);
                     const timeout = setTimeout(
                       () => adaptor.setStyle(tool, 'display', 'block'),
-                      data.postDelay
+                      data.postDelay,
                     );
                     data.hoverTimer.set(dom, timeout);
                     event.stopPropagation();
                   },
-                  dom
+                  dom,
                 );
                 node.setEventHandler(
                   'mouseout',
@@ -291,12 +291,12 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
                     data.stopTimers(dom, data);
                     const timeout = setTimeout(
                       () => adaptor.setStyle(tool, 'display', ''),
-                      data.clearDelay
+                      data.clearDelay,
                     );
                     data.clearTimer.set(dom, timeout);
                     event.stopPropagation();
                   },
-                  dom
+                  dom,
                 );
               }
             }
@@ -315,7 +315,7 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
               const adaptor = node.adaptor;
               const text = (tip.node as TextNode).getText();
               node.dom.forEach((dom) =>
-                adaptor.setAttribute(dom, 'statusline', text)
+                adaptor.setAttribute(dom, 'statusline', text),
               );
               //
               // Set up event handlers to change the status window
@@ -325,7 +325,7 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
                   const body = adaptor.body(adaptor.document);
                   data.status = adaptor.append(
                     body,
-                    node.html('mjx-status', {}, [node.text(text)])
+                    node.html('mjx-status', {}, [node.text(text)]),
                   );
                 }
                 event.stopPropagation();
@@ -367,7 +367,7 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
      */
     public setEventHandler(type: string, handler: EventHandler, dom: N = null) {
       (dom ? [dom] : this.dom).forEach((node) =>
-        (node as any).addEventListener(type, handler)
+        (node as any).addEventListener(type, handler),
       );
     }
 

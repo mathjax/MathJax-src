@@ -88,7 +88,7 @@ export const CasesMethods = {
     if (parser.stack.env.closing === begin.getName()) {
       delete parser.stack.env.closing;
       parser.Push(
-        parser.itemFactory.create('end').setProperty('name', begin.getName())
+        parser.itemFactory.create('end').setProperty('name', begin.getName()),
       ); // finish eqnarray
       const cases = parser.stack.Top();
       const table = cases.Last as MmlMtable;
@@ -99,10 +99,10 @@ export const CasesMethods = {
         original,
         left + '\\empheqlbrace\\,',
         parser,
-        'numcases-left'
+        'numcases-left',
       );
       parser.Push(
-        parser.itemFactory.create('end').setProperty('name', begin.getName())
+        parser.itemFactory.create('end').setProperty('name', begin.getName()),
       );
       return null;
     } else {
@@ -114,7 +114,7 @@ export const CasesMethods = {
         true,
         true,
         'll',
-        'tt'
+        'tt',
       ) as EqnArrayItem;
       array.arraydef.displaystyle = false;
       array.arraydef.rowspacing = '.2em';
@@ -134,7 +134,7 @@ export const CasesMethods = {
     parser.Push(
       parser.itemFactory
         .create('cell')
-        .setProperties({ isEntry: true, name: name })
+        .setProperties({ isEntry: true, name: name }),
     );
     //
     //  Make second column be in \text{...}
@@ -174,7 +174,7 @@ export const CasesMethods = {
         //
         throw new TexError(
           'ExtraCasesAlignTab',
-          'Extra alignment tab in text for numcase environment'
+          'Extra alignment tab in text for numcase environment',
         );
       } else if (c === '\\' && braces === 0) {
         //

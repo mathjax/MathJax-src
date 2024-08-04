@@ -168,7 +168,7 @@ export function CommonXmlNodeMixin<
   FC extends FontDataClass<CC, VV, DD>,
   B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 >(
-  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 ): B {
   abstract class CommonXmlNodeMixin
     extends Base
@@ -246,7 +246,7 @@ export function CommonXmlNodeMixin<
       return this.html(
         'mjx-html',
         { variant: this.parent.variant, style: styles },
-        [html]
+        [html],
       );
     }
 
@@ -300,7 +300,7 @@ export function CommonXmlNodeMixin<
       const content = this.html(
         'mjx-xml-block',
         { style: { display: 'inline-block' } },
-        [adaptor.clone(xml)]
+        [adaptor.clone(xml)],
       );
       const base = this.html('mjx-baseline', {
         style: { display: 'inline-block', width: 0, height: 0 },

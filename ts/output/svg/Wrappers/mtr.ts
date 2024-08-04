@@ -141,7 +141,7 @@ export interface SvgMtrClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgMtrNTD<N, T, D>;
 }
 
@@ -215,7 +215,7 @@ export const SvgMtr = (function <N, T, D>(): SvgMtrClass<N, T, D> {
         -(dx + lSpace + lLine / 2),
         -(d + b + dy),
         W + (lLine + rLine) / 2,
-        h + d + t + b
+        h + d + t + b,
       );
       return W + rLine;
     }
@@ -266,12 +266,12 @@ export const SvgMtr = (function <N, T, D>(): SvgMtrClass<N, T, D> {
         adaptor.setAttribute(
           child,
           'width',
-          this.fixed((this.parent as SvgMtableNTD<N, T, D>).getWidth() * scale)
+          this.fixed((this.parent as SvgMtableNTD<N, T, D>).getWidth() * scale),
         );
         adaptor.setAttribute(
           child,
           'height',
-          this.fixed(TL + TS + H + D + BS + BL)
+          this.fixed(TL + TS + H + D + BS + BL),
         );
       }
     }
@@ -340,7 +340,7 @@ export interface SvgMlabeledtrClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgMlabeledtrNTD<N, T, D>;
 }
 

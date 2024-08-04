@@ -65,13 +65,13 @@ export class MmlMmultiscripts extends MmlMsubsup {
     attributes: AttributeList,
     display: boolean,
     level: number,
-    prime: boolean
+    prime: boolean,
   ) {
     this.childNodes[0].setInheritedAttributes(
       attributes,
       display,
       level,
-      prime
+      prime,
     );
     let prescripts = false;
     for (let i = 1, n = 0; i < this.childNodes.length; i++) {
@@ -98,7 +98,7 @@ export class MmlMmultiscripts extends MmlMsubsup {
         attributes,
         false,
         level + 1,
-        prime
+        prime,
       );
     }
   }
@@ -118,14 +118,14 @@ export class MmlMmultiscripts extends MmlMsubsup {
           child.mError(
             child.kind + ' can only appear once in ' + this.kind,
             options,
-            true
+            true,
           );
         } else {
           prescripts = true;
           if (i % 2 === 0 && !fix) {
             this.mError(
               'There must be an equal number of prescripts of each type',
-              options
+              options,
             );
           }
         }
@@ -134,7 +134,7 @@ export class MmlMmultiscripts extends MmlMsubsup {
     if (this.childNodes.length % 2 === (prescripts ? 1 : 0) && !fix) {
       this.mError(
         'There must be an equal number of scripts of each type',
-        options
+        options,
       );
     }
     super.verifyChildren(options);
@@ -179,7 +179,7 @@ export class MmlMprescripts extends AbstractMmlNode {
       this.mError(
         this.kind + ' must be a child of mmultiscripts',
         options,
-        true
+        true,
       );
     }
   }
@@ -223,7 +223,7 @@ export class MmlNone extends AbstractMmlNode {
       this.mError(
         this.kind + ' must be a child of mmultiscripts',
         options,
-        true
+        true,
       );
     }
   }

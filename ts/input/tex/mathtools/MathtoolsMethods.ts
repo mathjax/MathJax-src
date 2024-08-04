@@ -57,7 +57,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
     parser: TexParser,
     begin: StackItem,
     open: string,
-    close: string
+    close: string,
   ): ParseResult {
     const align = parser.GetBrackets(`\\begin{${begin.getName()}}`, 'c');
     return MathtoolsMethods.Array(parser, begin, open, close, align);
@@ -78,12 +78,12 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
     begin: StackItem,
     open: string,
     close: string,
-    align?: string
+    align?: string,
   ): ParseResult {
     if (!align) {
       align = parser.GetBrackets(
         `\\begin{${begin.getName()}}`,
-        parser.options.mathtools['smallmatrix-align']
+        parser.options.mathtools['smallmatrix-align'],
       );
     }
     return MathtoolsMethods.Array(
@@ -95,7 +95,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
       UnitUtil.em(1 / 3),
       '.2em',
       'S',
-      1
+      1,
     );
   },
 
@@ -117,7 +117,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
     if (!parser.nextIsSpace()) {
       const arg = parser.GetBrackets(
         name,
-        parser.options.mathtools['multlined-pos'] || 'c'
+        parser.options.mathtools['multlined-pos'] || 'c',
       );
       if (arg.match(/^[ctb]$/)) {
         pos = arg;
@@ -129,7 +129,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
         throw new TexError(
           'BadWidth',
           'Width for %1 must be a dimension',
-          name
+          name,
         );
       }
     }
@@ -137,7 +137,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
     const item = parser.itemFactory.create(
       'multlined',
       parser,
-      begin
+      begin,
     ) as ArrayItem;
     item.arraydef = {
       displaystyle: true,
@@ -161,14 +161,14 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
       throw new TexError(
         'CommandInMultlined',
         '%1 can only appear within the multline or multlined environments',
-        name
+        name,
       );
     }
     if (top.Size()) {
       throw new TexError(
         'CommandAtTheBeginingOfLine',
         '%1 must come at the beginning of the line',
-        name
+        name,
       );
     }
     top.setProperty('shove', shove);
@@ -239,7 +239,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
     begin: StackItem,
     open: string,
     close: string,
-    style: string
+    style: string,
   ): ArrayItem {
     const array = parser.itemFactory
       .create('array')
@@ -278,7 +278,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
             : { lspace: pos === 'l' ? '-1width' : '-.5width' }),
         }),
       ],
-      { 'data-cramped': cramped }
+      { 'data-cramped': cramped },
     );
     MathtoolsUtil.setDisplayLevel(mml, style);
     parser.Push(parser.create('node', 'TeXAtom', [mml]));
@@ -314,7 +314,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
       NodeUtil.setAttribute(
         mml,
         'lspace',
-        pos === 'l' ? '-1width' : '-.5width'
+        pos === 'l' ? '-1width' : '-.5width',
       );
     }
     parser.Push(mml);
@@ -371,12 +371,12 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
     const base = new TexParser(
       arg,
       parser.stack.env,
-      parser.configuration
+      parser.configuration,
     ).mml();
     const copy = new TexParser(
       arg,
       parser.stack.env,
-      parser.configuration
+      parser.configuration,
     ).mml();
     const script = parser.create(
       'node',
@@ -386,7 +386,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
         style: `border: ${t} solid; border-${border}: none`,
         height: height,
         depth: 0,
-      }
+      },
     );
     const node = ParseUtil.underOver(parser, base, script, pos, true);
     const munderover = NodeUtil.getChildAt(NodeUtil.getChildAt(node, 0), 0); // TeXAtom.inferredMrow child 0
@@ -431,7 +431,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
     const tex = ParseUtil.substituteArgs(
       parser,
       [left, right],
-      '\\rlap{\\boxed{#1{}#2}}\\kern.267em\\phantom{#1}&\\phantom{{}#2}\\kern.267em'
+      '\\rlap{\\boxed{#1{}#2}}\\kern.267em\\phantom{#1}&\\phantom{{}#2}\\kern.267em',
     );
     parser.string = tex + rest;
     parser.i = 0;
@@ -458,7 +458,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
     const mml = new TexParser(
       tex,
       parser.stack.env,
-      parser.configuration
+      parser.configuration,
     ).mml();
     parser.Push(mml);
     top.EndEntry();
@@ -480,7 +480,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
     const base = new TexParser(
       arg,
       parser.stack.env,
-      parser.configuration
+      parser.configuration,
     ).mml();
     let mml = parser.create(
       'node',
@@ -494,13 +494,13 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
             width: 0,
             lspace: '-.5width',
             ...(isFlush ? { height: '-.6em', voffset: '-.18em' } : {}),
-          }
+          },
         ),
         parser.create('node', 'mphantom', [base]),
       ],
       {
         lspace: '.5width',
-      }
+      },
     );
     parser.Push(mml);
   },
@@ -536,7 +536,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
     if (top.table) {
       top.setProperty('flushspaceabove', top.table.length); // marker so \vdotswithin can shorten its height
       top.addRowSpacing(
-        '-' + parser.options.mathtools['shortvdotsadjustabove']
+        '-' + parser.options.mathtools['shortvdotsadjustabove'],
       );
     }
   },
@@ -553,7 +553,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
       top.Size() && top.EndEntry();
       top.EndRow();
       top.addRowSpacing(
-        '-' + parser.options.mathtools['shortvdotsadjustbelow']
+        '-' + parser.options.mathtools['shortvdotsadjustbelow'],
       );
     }
   },
@@ -578,7 +578,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
     body: string = '#1',
     n: number = 1,
     pre: string = '',
-    post: string = ''
+    post: string = '',
   ) {
     const star = parser.GetStar();
     const size = star ? '' : parser.GetBrackets(name);
@@ -687,7 +687,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
     _name: string,
     center: boolean,
     force: boolean = false,
-    thin: boolean = false
+    thin: boolean = false,
   ) {
     const options = parser.options.mathtools;
     let mml = parser.create('token', 'mo', {}, ':');
@@ -717,7 +717,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
     const options = parser.options.mathtools;
     if (options['use-unicode'] && unicode) {
       parser.Push(
-        parser.create('token', 'mo', { texClass: TEXCLASS.REL }, unicode)
+        parser.create('token', 'mo', { texClass: TEXCLASS.REL }, unicode),
       );
     } else {
       tex =
@@ -727,7 +727,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
       parser.string = ParseUtil.addArgs(
         parser,
         tex,
-        parser.string.substring(parser.i)
+        parser.string.substring(parser.i),
       );
       parser.i = 0;
     }
@@ -770,20 +770,20 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
                       notation: 'updiagonalstrike',
                       'data-thickness': '.05em',
                       'data-padding': 0,
-                    }
+                    },
                   ),
                 ],
-                { width: 0, lspace: '-.5width', voffset: dy }
+                { width: 0, lspace: '-.5width', voffset: dy },
               ),
               parser.create('node', 'mphantom', [
                 parser.create('token', 'mtext', {}, c),
               ]),
             ],
-            { width: 0, lspace: '-.5width' }
+            { width: 0, lspace: '-.5width' },
           ),
         ],
-        { texClass: TEXCLASS.REL }
-      )
+        { texClass: TEXCLASS.REL },
+      ),
     );
   },
 
@@ -814,7 +814,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
                   parser.create('token', 'mi'),
                   parser.create('token', 'mspace', { width: '1em' }), // no parameter for this in mathtools.  Should we add one?
                 ],
-                { scriptlevel: 0 }
+                { scriptlevel: 0 },
               ),
               parser.create(
                 'node',
@@ -824,14 +824,14 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
                   parser.create('token', 'mi'),
                   den,
                 ],
-                { scriptlevel: 0 }
+                { scriptlevel: 0 },
               ),
             ],
-            { linethickness: 0, numalign: 'left', denomalign: 'right' }
+            { linethickness: 0, numalign: 'left', denomalign: 'right' },
           ),
         ],
-        { displaystyle: display, scriptlevel: 0 }
-      )
+        { displaystyle: display, scriptlevel: 0 },
+      ),
     );
   },
 
@@ -859,11 +859,11 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
                 parser.create('token', 'mo', { stretchy: false }, '('),
               ]),
             ],
-            { width: 0, height: dh + 'height', depth: dd + 'depth' }
+            { width: 0, height: dh + 'height', depth: dd + 'depth' },
           ),
         ],
-        { texClass: TEXCLASS.ORD }
-      )
+        { texClass: TEXCLASS.ORD },
+      ),
     );
   },
 
@@ -905,7 +905,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
       throw new TexError(
         'TagsNotMT',
         '%1 can only be used with ams or mathtools tags',
-        name
+        name,
       );
     }
     const id = parser.GetArgument(name).trim();
@@ -934,7 +934,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
       throw new TexError(
         'TagsNotMT',
         '%1 can only be used with ams or mathtools tags',
-        name
+        name,
       );
     }
     const id = parser.GetArgument(name).trim();

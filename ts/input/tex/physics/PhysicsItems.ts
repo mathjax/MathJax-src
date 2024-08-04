@@ -80,7 +80,7 @@ export class AutoOpen extends BaseItem {
     }
     if (right) {
       this.Push(
-        new TexParser(right, parser.stack.env, parser.configuration).mml()
+        new TexParser(right, parser.stack.env, parser.configuration).mml(),
       );
     }
     let mml = ParseUtil.fenced(
@@ -88,7 +88,7 @@ export class AutoOpen extends BaseItem {
       this.getProperty('open') as string,
       super.toMml(),
       this.getProperty('close') as string,
-      this.getProperty('big') as string
+      this.getProperty('big') as string,
     );
     //
     //  Remove fence markers that would cause it to be TeX class INNER,

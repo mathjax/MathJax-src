@@ -63,7 +63,7 @@ export class MultlineItem extends ArrayItem {
       'node',
       'mtd',
       this.nodes,
-      shove ? { columnalign: shove } : {}
+      shove ? { columnalign: shove } : {},
     );
     this.setProperty('shove', null);
     this.row.push(mtd);
@@ -79,7 +79,7 @@ export class MultlineItem extends ArrayItem {
       throw new TexError(
         'MultlineRowsOneCol',
         'The rows within the %1 environment must have exactly one column',
-        'multline'
+        'multline',
       );
     }
     let row = this.create('node', 'mtr', this.row);
@@ -98,25 +98,25 @@ export class MultlineItem extends ArrayItem {
       if (
         !NodeUtil.getAttribute(
           NodeUtil.getChildren(this.table[0])[0],
-          'columnalign'
+          'columnalign',
         )
       ) {
         NodeUtil.setAttribute(
           NodeUtil.getChildren(this.table[0])[0],
           'columnalign',
-          TexConstant.Align.LEFT
+          TexConstant.Align.LEFT,
         );
       }
       if (
         !NodeUtil.getAttribute(
           NodeUtil.getChildren(this.table[m])[0],
-          'columnalign'
+          'columnalign',
         )
       ) {
         NodeUtil.setAttribute(
           NodeUtil.getChildren(this.table[m])[0],
           'columnalign',
-          TexConstant.Align.RIGHT
+          TexConstant.Align.RIGHT,
         );
       }
       let tag = this.factory.configuration.tags.getTag();
@@ -129,7 +129,7 @@ export class MultlineItem extends ArrayItem {
         const mlabel = this.create(
           'node',
           'mlabeledtr',
-          [tag].concat(NodeUtil.getChildren(mtr))
+          [tag].concat(NodeUtil.getChildren(mtr)),
         );
         NodeUtil.copyAttributes(mtr, mlabel);
         this.table[label] = mlabel;
@@ -158,7 +158,7 @@ export class FlalignItem extends EqnArrayItem {
     public name: string,
     public numbered: boolean,
     public padded: boolean,
-    public center: boolean
+    public center: boolean,
   ) {
     super(factory);
     this.factory.configuration.tags.start(name, numbered, numbered);
@@ -176,7 +176,7 @@ export class FlalignItem extends EqnArrayItem {
         'XalignOverflow',
         'Extra %1 in row of %2',
         '&',
-        this.name
+        this.name,
       );
     }
   }
@@ -231,7 +231,7 @@ export class FlalignItem extends EqnArrayItem {
         'node',
         'mpadded',
         NodeUtil.getChildren(mtd),
-        def
+        def,
       );
       mtd.setChildren([mpadded]);
     }

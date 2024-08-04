@@ -210,7 +210,7 @@ export class LiteBase extends AbstractDOMAdaptor<
    */
   public getElements(
     nodes: (string | LiteElement | LiteElement[])[],
-    document: LiteDocument
+    document: LiteDocument,
   ) {
     let containers = [] as LiteElement[];
     const body = this.body(document);
@@ -223,7 +223,7 @@ export class LiteBase extends AbstractDOMAdaptor<
           }
         } else if (node.charAt(0) === '.') {
           containers = containers.concat(
-            this.elementsByClass(body, node.slice(1))
+            this.elementsByClass(body, node.slice(1)),
           );
         } else if (node.match(/^[-a-z][-a-z0-9]*$/i)) {
           containers = containers.concat(this.tags(body, node));
@@ -461,7 +461,7 @@ export class LiteBase extends AbstractDOMAdaptor<
     node: LiteElement,
     name: string,
     value: string | number,
-    ns: string = null
+    ns: string = null,
   ) {
     if (typeof value !== 'string') {
       value = String(value);

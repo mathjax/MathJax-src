@@ -28,5 +28,5 @@ Entities.add(
     wr: '\u2240',
     wreath: '\u2240',
   },
-  'w'
+  'w',
 );

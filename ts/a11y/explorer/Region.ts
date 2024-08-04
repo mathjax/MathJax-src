@@ -193,14 +193,14 @@ export abstract class AbstractRegion<T> implements Region<T> {
     let baseBottom = 0;
     let baseLeft = Number.POSITIVE_INFINITY;
     let regions = this.document.adaptor.document.getElementsByClassName(
-      this.CLASS.className + '_Show'
+      this.CLASS.className + '_Show',
     );
     // Get all the shown regions (one is this element!) and append at bottom.
     for (let i = 0, region; (region = regions[i]); i++) {
       if (region !== this.div) {
         baseBottom = Math.max(
           region.getBoundingClientRect().bottom,
-          baseBottom
+          baseBottom,
         );
         baseLeft = Math.min(region.getBoundingClientRect().left, baseLeft);
       }
@@ -382,7 +382,7 @@ export class SpeechRegion extends LiveRegion {
   public highlighter: Sre.highlighter = Sre.getHighlighter(
     { color: 'red' },
     { color: 'black' },
-    { renderer: this.document.outputJax.name, browser: 'v3' }
+    { renderer: this.document.outputJax.name, browser: 'v3' },
   );
 
   /**
@@ -407,7 +407,7 @@ export class SpeechRegion extends LiveRegion {
       return;
     }
     speechSynthesis.onvoiceschanged = (() => (this.voiceRequest = true)).bind(
-      this
+      this,
     );
     super.Update('\u00a0'); // Ensures region shown and cannot be overwritten.
     const promise = new Promise((resolve) => {
@@ -435,7 +435,7 @@ export class SpeechRegion extends LiveRegion {
     let [text, ssml] = buildSpeech(
       speech,
       this.document.options.sre.locale,
-      this.document.options.sre.rate
+      this.document.options.sre.rate,
     );
     super.Update(text);
     if (this.active && text) {
@@ -501,7 +501,7 @@ export class SpeechRegion extends LiveRegion {
   private highlightNode(id: string, init: boolean = false) {
     this.highlighter.unhighlight();
     let nodes = Array.from(
-      this.node.querySelectorAll(`[data-semantic-id="${id}"]`)
+      this.node.querySelectorAll(`[data-semantic-id="${id}"]`),
     );
     if (!this.clear || init) {
       this.highlighter.highlight(nodes as HTMLElement[]);
@@ -645,14 +645,14 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
         if (mjx.nodeName === 'svg') {
           (mjx.firstChild as HTMLElement).setAttribute(
             'transform',
-            'matrix(1 0 0 -1 0 0)'
+            'matrix(1 0 0 -1 0 0)',
           );
           const W = parseFloat(mjx.getAttribute('viewBox').split(/ /)[2]);
           const w = parseFloat(mjx.getAttribute('width'));
           const { x, y, width, height } = (node as any).getBBox();
           mjx.setAttribute(
             'viewBox',
-            [x, -(y + height), width, height].join(' ')
+            [x, -(y + height), width, height].join(' '),
           );
           mjx.removeAttribute('style');
           mjx.setAttribute('width', (w / W) * width + 'ex');

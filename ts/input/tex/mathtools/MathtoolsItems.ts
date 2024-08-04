@@ -54,7 +54,7 @@ export class MultlinedItem extends MultlineItem {
         NodeUtil.getAttribute(first, 'columnalign') !== TexConstant.Align.RIGHT
       ) {
         first.appendChild(
-          this.create('node', 'mspace', [], { width: firstskip })
+          this.create('node', 'mspace', [], { width: firstskip }),
         );
       }
       const last = NodeUtil.getChildren(this.table[this.table.length - 1])[0];

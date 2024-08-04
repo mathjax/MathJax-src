@@ -97,6 +97,6 @@ export function split(x: string): string[] {
 export function replaceUnicode(text: string): string {
   return text.replace(
     /((?:^|[^\\])(?:\\\\)*)\\U(?:([0-9A-Fa-f]{4})|\{\s*([0-9A-Fa-f]{1,6})\s*\})/g,
-    (_m, pre, h1, h2) => pre + String.fromCodePoint(parseInt(h1 || h2, 16))
+    (_m, pre, h1, h2) => pre + String.fromCodePoint(parseInt(h1 || h2, 16)),
   );
 }

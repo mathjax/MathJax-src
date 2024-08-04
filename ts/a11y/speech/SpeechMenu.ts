@@ -49,14 +49,14 @@ function csPrefsVariables(menu: MJContextMenu, prefs: string[]) {
           csPrefsSetting[pref] = value;
           srVariable.setValue(
             'clearspeak-' +
-              Sre.clearspeakPreferences.toPreference(csPrefsSetting)
+              Sre.clearspeakPreferences.toPreference(csPrefsSetting),
           );
         },
         getter: () => {
           return csPrefsSetting[pref] || 'Auto';
         },
       },
-      menu.pool
+      menu.pool,
     );
   }
 }
@@ -94,7 +94,7 @@ function csSelectionBox(menu: MJContextMenu, locale: string) {
       grid: 'square',
       selections: items,
     },
-    menu
+    menu,
   );
   return {
     type: 'command',
@@ -174,7 +174,7 @@ function smartPreferences(previous: string, smart: string, locale: string) {
           );
         },
       };
-    })
+    }),
   );
 }
 
@@ -206,7 +206,7 @@ export function clearspeakMenu(menu: MJContextMenu, sub: Submenu) {
       items: items,
       id: 'Clearspeak',
     },
-    sub
+    sub,
   );
 }
 MJContextMenu.DynamicSubmenus.set('Clearspeak', [clearspeakMenu, 'speech']);
@@ -243,7 +243,7 @@ export function localeMenu(menu: MJContextMenu, sub: Submenu) {
       items: radios,
       id: 'Language',
     },
-    sub
+    sub,
   );
   return LOCALE_MENU;
 }

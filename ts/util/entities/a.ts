@@ -82,5 +82,5 @@ Entities.add(
     awconint: '\u2233',
     awint: '\u2A11',
   },
-  'a'
+  'a',
 );

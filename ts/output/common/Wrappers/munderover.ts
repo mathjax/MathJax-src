@@ -141,7 +141,20 @@ export function CommonMunderMixin<
   FC extends FontDataClass<CC, VV, DD>,
   B extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 >(
-  Base: CommonScriptbaseConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  Base: CommonScriptbaseConstructor<
+    N,
+    T,
+    D,
+    JX,
+    WW,
+    WF,
+    WC,
+    CC,
+    VV,
+    DD,
+    FD,
+    FC
+  >,
 ): B {
   return class CommonMunderMixin
     extends Base
@@ -284,7 +297,20 @@ export function CommonMoverMixin<
   FC extends FontDataClass<CC, VV, DD>,
   B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 >(
-  Base: CommonScriptbaseConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  Base: CommonScriptbaseConstructor<
+    N,
+    T,
+    D,
+    JX,
+    WW,
+    WF,
+    WC,
+    CC,
+    VV,
+    DD,
+    FD,
+    FC
+  >,
 ): B {
   return class CommonMoverMixin
     extends Base
@@ -320,7 +346,7 @@ export function CommonMoverMixin<
       if (this.node.attributes.get('accent')) {
         basebox.h = Math.max(
           basebox.h,
-          this.font.params.x_height * this.baseScale
+          this.font.params.x_height * this.baseScale,
         );
       }
       const u = this.getOverKU(basebox, overbox)[1];
@@ -441,7 +467,20 @@ export function CommonMunderoverMixin<
   FC extends FontDataClass<CC, VV, DD>,
   B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 >(
-  Base: CommonScriptbaseConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  Base: CommonScriptbaseConstructor<
+    N,
+    T,
+    D,
+    JX,
+    WW,
+    WF,
+    WC,
+    CC,
+    VV,
+    DD,
+    FD,
+    FC
+  >,
 ): B {
   return class CommonMunderoverMixin
     extends Base
@@ -505,7 +544,7 @@ export function CommonMunderoverMixin<
       if (this.node.attributes.get('accent')) {
         basebox.h = Math.max(
           basebox.h,
-          this.font.params.x_height * this.baseScale
+          this.font.params.x_height * this.baseScale,
         );
       }
       const u = this.getOverKU(basebox, overbox)[1];
@@ -514,7 +553,7 @@ export function CommonMunderoverMixin<
       const udelta = this.getDelta(this.underChild, true);
       const [bw, uw, ow] = this.getDeltaW(
         [basebox, underbox, overbox],
-        [0, this.isLineBelow ? 0 : -udelta, this.isLineAbove ? 0 : odelta]
+        [0, this.isLineBelow ? 0 : -udelta, this.isLineAbove ? 0 : odelta],
       );
       bbox.combine(basebox, bw, 0);
       bbox.combine(overbox, ow, u);

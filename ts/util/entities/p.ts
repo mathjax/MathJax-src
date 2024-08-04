@@ -77,5 +77,5 @@ Entities.add(
     prurel: '\u22B0',
     puncsp: '\u2008',
   },
-  'p'
+  'p',
 );

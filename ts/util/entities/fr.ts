@@ -72,5 +72,5 @@ Entities.add(
     yfr: '\uD835\uDD36',
     zfr: '\uD835\uDD37',
   },
-  'fr'
+  'fr',
 );

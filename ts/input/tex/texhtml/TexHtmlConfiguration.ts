@@ -62,7 +62,7 @@ export const HtmlNodeMethods: { [key: string]: ParseMethod } = {
         'TokenNotFoundForCommand',
         'Could not find %1 for %2',
         end,
-        '<' + match[0]
+        '<' + match[0],
       );
     }
     const html = parser.string.substring(parser.i, parser.i + i).trim();
@@ -79,7 +79,7 @@ export const HtmlNodeMethods: { [key: string]: ParseMethod } = {
     const DOM = nodes.length === 1 ? nodes[0] : adaptor.node('div', {}, nodes);
     const node = (parser.create('node', 'html') as HtmlNode<any>).setHTML(
       DOM,
-      adaptor
+      adaptor,
     );
     parser.Push(parser.create('node', 'mtext', [node]));
     return true;
@@ -104,7 +104,7 @@ export const TexHtmlConfiguration = Configuration.create('texhtml', {
       if (!include['tex-html']) {
         include['tex-html'] = (
           node: any,
-          adaptor: DOMAdaptor<any, any, any>
+          adaptor: DOMAdaptor<any, any, any>,
         ) => {
           //
           // Use the node's serialized contents, and check if there are

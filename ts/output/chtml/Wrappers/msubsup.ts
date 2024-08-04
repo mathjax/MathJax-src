@@ -107,7 +107,7 @@ export interface ChtmlMsubClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlMsubNTD<N, T, D>;
 }
 
@@ -197,7 +197,7 @@ export interface ChtmlMsupClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlMsupNTD<N, T, D>;
 }
 
@@ -287,7 +287,7 @@ export interface ChtmlMsubsupClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlMsubsupNTD<N, T, D>;
 }
 
@@ -349,12 +349,12 @@ export const ChtmlMsubsup = (function <N, T, D>(): ChtmlMsubsupClass<N, T, D> {
       base.toCHTML(chtml);
       const stack = adaptor.append(
         chtml[chtml.length - 1],
-        this.html('mjx-script', { style })
+        this.html('mjx-script', { style }),
       ) as N;
       sup.toCHTML([stack]);
       adaptor.append(
         stack,
-        this.html('mjx-spacer', { style: { 'margin-top': this.em(q) } })
+        this.html('mjx-spacer', { style: { 'margin-top': this.em(q) } }),
       );
       sub.toCHTML([stack]);
       const ic = this.getAdjustedIc();
@@ -362,13 +362,13 @@ export const ChtmlMsubsup = (function <N, T, D>(): ChtmlMsubsupClass<N, T, D> {
         adaptor.setStyle(
           sup.dom[0],
           'marginLeft',
-          this.em(ic / sup.bbox.rscale)
+          this.em(ic / sup.bbox.rscale),
         );
         if (!this.baseIsChar) {
           adaptor.setStyle(
             sub.dom[0],
             'marginLeft',
-            this.em(ic / sup.bbox.rscale)
+            this.em(ic / sup.bbox.rscale),
           );
         }
       }

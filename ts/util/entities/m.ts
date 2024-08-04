@@ -54,5 +54,5 @@ Entities.add(
     mstpos: '\u223E',
     mumap: '\u22B8',
   },
-  'm'
+  'm',
 );

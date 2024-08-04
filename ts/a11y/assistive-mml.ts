@@ -103,7 +103,7 @@ export function AssistiveMmlMathItemMixin<
      */
     public assistiveMml(
       document: AssistiveMmlMathDocument<N, T, D>,
-      force: boolean = false
+      force: boolean = false,
     ) {
       if (this.state() >= STATE.ASSISTIVEMML) return;
       if (!this.isEscaped && (document.options.enableAssistiveMml || force)) {
@@ -119,7 +119,7 @@ export function AssistiveMmlMathItemMixin<
         // Parse is as HTML and retrieve the <math> element
         //
         const mmlNodes = adaptor.firstChild(
-          adaptor.body(adaptor.parse(mml, 'text/html'))
+          adaptor.body(adaptor.parse(mml, 'text/html')),
         );
         //
         // Create a container for the hidden MathML
@@ -130,7 +130,7 @@ export function AssistiveMmlMathItemMixin<
             unselectable: 'on',
             display: this.display ? 'block' : 'inline',
           },
-          [mmlNodes]
+          [mmlNodes],
         );
         //
         // Hide the typeset math from assistive technology and append the MathML that is visually
@@ -139,7 +139,7 @@ export function AssistiveMmlMathItemMixin<
         adaptor.setAttribute(
           adaptor.firstChild(this.typesetRoot) as N,
           'aria-hidden',
-          'true'
+          'true',
         );
         adaptor.setStyle(this.typesetRoot, 'position', 'relative');
         adaptor.append(this.typesetRoot, node);
@@ -191,7 +191,7 @@ export function AssistiveMmlMathDocumentMixin<
   D,
   B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>,
 >(
-  BaseDocument: B
+  BaseDocument: B,
 ): MathDocumentConstructor<AssistiveMmlMathDocument<N, T, D>> & B {
   return class BaseClass extends BaseDocument {
     /**
@@ -315,7 +315,7 @@ export function AssistiveMmlMathDocumentMixin<
  * @template D  The Document class
  */
 export function AssistiveMmlHandler<N, T, D>(
-  handler: Handler<N, T, D>
+  handler: Handler<N, T, D>,
 ): Handler<N, T, D> {
   handler.documentClass = AssistiveMmlMathDocumentMixin<
     N,

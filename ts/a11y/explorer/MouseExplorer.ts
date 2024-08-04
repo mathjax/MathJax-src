@@ -104,7 +104,7 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
     public region: Region<T>,
     protected node: HTMLElement,
     protected nodeQuery: (node: HTMLElement) => boolean,
-    protected nodeAccess: (node: HTMLElement) => T
+    protected nodeAccess: (node: HTMLElement) => T,
   ) {
     super(document, pool, region, node);
   }
@@ -194,7 +194,7 @@ export class FlameHoverer extends Hoverer<void> {
     public document: A11yDocument,
     public pool: ExplorerPool,
     _ignore: any,
-    protected node: HTMLElement
+    protected node: HTMLElement,
   ) {
     super(
       document,
@@ -202,7 +202,7 @@ export class FlameHoverer extends Hoverer<void> {
       new DummyRegion(document),
       node,
       (x) => this.highlighter.isMactionNode(x),
-      () => {}
+      () => {},
     );
   }
 }

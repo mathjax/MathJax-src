@@ -64,25 +64,25 @@ function createRule(
   left: MmlNode | null,
   right: MmlNode | null,
   style: string,
-  rootAtTop: boolean
+  rootAtTop: boolean,
 ) {
   const upper = parser.create(
     'node',
     'mtr',
     [parser.create('node', 'mtd', [premise], {})],
-    {}
+    {},
   );
   const lower = parser.create(
     'node',
     'mtr',
     [parser.create('node', 'mtd', conclusions, {})],
-    {}
+    {},
   );
   let rule = parser.create(
     'node',
     'mtable',
     rootAtTop ? [lower, upper] : [upper, lower],
-    { align: 'top 2', rowlines: style, framespacing: '0 0' }
+    { align: 'top 2', rowlines: style, framespacing: '0 0' },
   );
   BussproofsUtil.setProperty(rule, 'inferenceRule', rootAtTop ? 'up' : 'down');
   let leftLabel, rightLabel;
@@ -135,7 +135,7 @@ function parseFCenterLine(parser: TexParser, name: string): MmlNode {
     throw new TexError(
       'IllegalUseOfCommand',
       'Use of %1 does not match its definition.',
-      name
+      name,
     );
   }
   parser.i++;
@@ -145,7 +145,7 @@ function parseFCenterLine(parser: TexParser, name: string): MmlNode {
       'MissingProofCommand',
       'Missing %1 in %2.',
       '\\fCenter',
-      name
+      name,
     );
   }
   // Check for fCenter and throw error?
@@ -153,17 +153,17 @@ function parseFCenterLine(parser: TexParser, name: string): MmlNode {
   let premise = new TexParser(
     prem,
     parser.stack.env,
-    parser.configuration
+    parser.configuration,
   ).mml();
   let conclusion = new TexParser(
     conc,
     parser.stack.env,
-    parser.configuration
+    parser.configuration,
   ).mml();
   let fcenter = new TexParser(
     '\\fCenter',
     parser.stack.env,
-    parser.configuration
+    parser.configuration,
   ).mml();
   const left = parser.create('node', 'mtd', [premise], {});
   const middle = parser.create('node', 'mtd', [fcenter], {});
@@ -212,7 +212,7 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
     if (top.kind !== 'proofTree') {
       throw new TexError(
         'IllegalProofCommand',
-        'Proof commands only allowed in prooftree environment.'
+        'Proof commands only allowed in prooftree environment.',
       );
     }
     let content = paddedContent(parser, parser.GetArgument(name));
@@ -231,7 +231,7 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
     if (top.kind !== 'proofTree') {
       throw new TexError(
         'IllegalProofCommand',
-        'Proof commands only allowed in prooftree environment.'
+        'Proof commands only allowed in prooftree environment.',
       );
     }
     if (top.Size() < n) {
@@ -247,7 +247,7 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
       children.unshift(
         parser.create('node', 'mtd', [top.Pop()], {
           rowalign: rootAtTop ? 'top' : 'bottom',
-        })
+        }),
       );
       n--;
     } while (n > 0);
@@ -265,7 +265,7 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
       top.getProperty('left') as MmlNode,
       top.getProperty('right') as MmlNode,
       style,
-      rootAtTop
+      rootAtTop,
     );
     top.setProperty('left', null);
     top.setProperty('right', null);
@@ -286,7 +286,7 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
     if (top.kind !== 'proofTree') {
       throw new TexError(
         'IllegalProofCommand',
-        'Proof commands only allowed in prooftree environment.'
+        'Proof commands only allowed in prooftree environment.',
       );
     }
     let content = ParseUtil.internalMath(parser, parser.GetArgument(name), 0);
@@ -310,7 +310,7 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
     if (top.kind !== 'proofTree') {
       throw new TexError(
         'IllegalProofCommand',
-        'Proof commands only allowed in prooftree environment.'
+        'Proof commands only allowed in prooftree environment.',
       );
     }
     top.setProperty('currentLine', style);
@@ -330,7 +330,7 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
     if (top.kind !== 'proofTree') {
       throw new TexError(
         'IllegalProofCommand',
-        'Proof commands only allowed in prooftree environment.'
+        'Proof commands only allowed in prooftree environment.',
       );
     }
     top.setProperty('rootAtTop', where);
@@ -346,7 +346,7 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
     if (top.kind !== 'proofTree') {
       throw new TexError(
         'IllegalProofCommand',
-        'Proof commands only allowed in prooftree environment.'
+        'Proof commands only allowed in prooftree environment.',
       );
     }
     let line = parseFCenterLine(parser, name);
@@ -372,7 +372,7 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
     if (top.kind !== 'proofTree') {
       throw new TexError(
         'IllegalProofCommand',
-        'Proof commands only allowed in prooftree environment.'
+        'Proof commands only allowed in prooftree environment.',
       );
     }
     if (top.Size() < n) {
@@ -388,7 +388,7 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
       children.unshift(
         parser.create('node', 'mtd', [top.Pop()], {
           rowalign: rootAtTop ? 'top' : 'bottom',
-        })
+        }),
       );
       n--;
     } while (n > 0);
@@ -407,7 +407,7 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
       top.getProperty('left') as MmlNode,
       top.getProperty('right') as MmlNode,
       style,
-      rootAtTop
+      rootAtTop,
     );
     top.setProperty('left', null);
     top.setProperty('right', null);

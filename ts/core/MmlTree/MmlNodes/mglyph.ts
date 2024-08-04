@@ -62,13 +62,13 @@ export class MmlMglyph extends AbstractMmlTokenNode {
     const { src, fontfamily, index } = this.attributes.getList(
       'src',
       'fontfamily',
-      'index'
+      'index',
     );
     if (src === '' && (fontfamily === '' || index === '')) {
       this.mError(
         'mglyph must have either src or fontfamily and index attributes',
         options,
-        true
+        true,
       );
     } else {
       super.verifyAttributes(options);

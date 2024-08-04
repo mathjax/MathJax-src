@@ -198,7 +198,7 @@ namespace ParseMethods {
     parser: TexParser,
     env: string,
     func: Function,
-    args: any[]
+    args: any[],
   ) {
     const end = args[0];
     let mml = parser.itemFactory

@@ -176,7 +176,7 @@ export interface CommonMenclose<
     a: number,
     double: boolean,
     offset?: string,
-    trans?: number
+    trans?: number,
   ): N;
 
   /**
@@ -283,7 +283,7 @@ export function CommonMencloseMixin<
   S extends CommonMsqrt<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 >(
-  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 ): B {
   return class CommonMencloseMixin
     extends Base
@@ -361,7 +361,7 @@ export function CommonMencloseMixin<
         >
       ).notations;
       for (const name of split(
-        this.node.attributes.get('notation') as string
+        this.node.attributes.get('notation') as string,
       )) {
         const notation = Notations.get(name);
         if (notation) {
@@ -422,7 +422,7 @@ export function CommonMencloseMixin<
         }
       }
       return [0, 1, 2, 3].map(
-        (i) => this.TRBL[i] - BTRBL[i]
+        (i) => this.TRBL[i] - BTRBL[i],
       ) as Notation.PaddingData;
     }
 
@@ -463,7 +463,7 @@ export function CommonMencloseMixin<
       _a: number,
       _double: boolean,
       _offset: string = '',
-      _dist: number = 0
+      _dist: number = 0,
     ): N {
       return null as N;
     }

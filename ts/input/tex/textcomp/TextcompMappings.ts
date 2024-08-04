@@ -37,7 +37,7 @@ function Insert(parser: TexParser, name: string, c: string, font: string) {
     parser.saveText();
   }
   parser.Push(
-    ParseUtil.internalText(parser, c, font ? { mathvariant: font } : {})
+    ParseUtil.internalText(parser, c, font ? { mathvariant: font } : {}),
   );
 }
 

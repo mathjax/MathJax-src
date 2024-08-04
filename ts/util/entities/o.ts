@@ -83,5 +83,5 @@ Entities.add(
     ouml: '\u00F6',
     ovbar: '\u233D',
   },
-  'o'
+  'o',
 );

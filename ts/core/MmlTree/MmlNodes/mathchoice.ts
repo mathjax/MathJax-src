@@ -73,7 +73,7 @@ export class MathChoice extends AbstractMmlBaseNode {
     attributes: AttributeList,
     display: boolean,
     level: number,
-    prime: boolean
+    prime: boolean,
   ) {
     const selection = display ? 0 : Math.max(0, Math.min(level, 2)) + 1;
     const child = this.childNodes[selection] || this.factory.create('mrow');

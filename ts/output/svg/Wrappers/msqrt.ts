@@ -97,7 +97,7 @@ export interface SvgMsqrtClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgMsqrtNTD<N, T, D>;
 }
 
@@ -150,7 +150,7 @@ export const SvgMsqrt = (function <N, T, D>(): SvgMsqrtClass<N, T, D> {
       _ROOT: N[],
       _root: SvgWrapper<N, T, D>,
       _sbox: BBox,
-      _H: number
+      _H: number,
     ): number {
       return 0;
     }
@@ -192,7 +192,7 @@ export const SvgMsqrt = (function <N, T, D>(): SvgMsqrtClass<N, T, D> {
           height: this.fixed(t),
           x: this.fixed(dx + sbox.w),
           y: this.fixed(H - t),
-        })
+        }),
       );
     }
   };

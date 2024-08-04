@@ -153,7 +153,7 @@ export const fullBorder = ((node) =>
 export const arrowHead = (node: Menclose) => {
   return Math.max(
     node.padding,
-    node.thickness * (node.arrowhead.x + node.arrowhead.dx + 1)
+    node.thickness * (node.arrowhead.x + node.arrowhead.dx + 1),
   );
 };
 
@@ -165,7 +165,7 @@ export const arrowBBoxHD = (node: Menclose, TRBL: PaddingData) => {
     const { h, d } = node.childNodes[0].getBBox();
     TRBL[0] = TRBL[2] = Math.max(
       0,
-      node.thickness * node.arrowhead.y - (h + d) / 2
+      node.thickness * node.arrowhead.y - (h + d) / 2,
     );
   }
   return TRBL;
@@ -240,7 +240,7 @@ export const arrowBBox = {
  *                              for the notation having a line on the given side
  */
 export const CommonBorder = function <W extends Menclose, N>(
-  render: Renderer<W, N>
+  render: Renderer<W, N>,
 ): DefPairF<Side, W, N> {
   /**
    * @param {string} side   The side on which a border should appear
@@ -282,7 +282,7 @@ export const CommonBorder = function <W extends Menclose, N>(
  *                                             for the notation having lines on two sides
  */
 export const CommonBorder2 = function <W extends Menclose, N>(
-  render: Renderer<W, N>
+  render: Renderer<W, N>,
 ): (name: string, side1: Side, side2: Side) => DefPair<W, N> {
   /**
    * @param {string} name    The name of the notation to define
@@ -333,7 +333,7 @@ export const CommonBorder2 = function <W extends Menclose, N>(
  * @return {string => DefPair}   The function returning the notation definition for the diagonal strike
  */
 export const CommonDiagonalStrike = function <W extends Menclose, N>(
-  render: (sname: string) => Renderer<W, N>
+  render: (sname: string) => Renderer<W, N>,
 ): DefPairF<string, W, N> {
   /**
    * @param {string} name  The name of the diagonal strike to define
@@ -364,7 +364,7 @@ export const CommonDiagonalStrike = function <W extends Menclose, N>(
  * @return {string => DefPair}  The funciton returning the notation definition for the diagonal arrow
  */
 export const CommonDiagonalArrow = function <W extends Menclose, N>(
-  render: Renderer<W, N>
+  render: Renderer<W, N>,
 ): DefPairF<string, W, N> {
   /**
    * @param {string} name   The name of the diagonal arrow to define
@@ -417,7 +417,7 @@ export const CommonDiagonalArrow = function <W extends Menclose, N>(
  * @return {string => DefPair}  The function returning the notation definition for the arrow
  */
 export const CommonArrow = function <W extends Menclose, N>(
-  render: Renderer<W, N>
+  render: Renderer<W, N>,
 ): DefPairF<string, W, N> {
   /**
    * @param {string} name   The name of the horizontal or vertical arrow to define

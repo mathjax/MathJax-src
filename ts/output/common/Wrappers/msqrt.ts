@@ -189,7 +189,7 @@ export function CommonMsqrtMixin<
   FC extends FontDataClass<CC, VV, DD>,
   B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 >(
-  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 ): B {
   return class CommonMsqrtMixin
     extends Base
@@ -245,7 +245,7 @@ export function CommonMsqrtMixin<
      */
     public getRootDimens(
       _sbox: BBox,
-      _H: number
+      _H: number,
     ): [number, number, number, number] {
       return [0, 0, 0, 0];
     }

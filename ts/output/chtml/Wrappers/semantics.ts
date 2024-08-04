@@ -103,7 +103,7 @@ export interface ChtmlSemanticsClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlSemanticsNTD<N, T, D>;
 }
 
@@ -269,7 +269,7 @@ export interface ChtmlXmlNodeClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlXmlNodeNTD<N, T, D>;
 }
 
@@ -329,7 +329,7 @@ export const ChtmlXmlNode = (function <N, T, D>(): ChtmlWrapperClass<N, T, D> {
             'transform-origin': 'top left',
           },
         },
-        [html]
+        [html],
       );
     }
   };

@@ -284,13 +284,14 @@ export class Menu {
     () => {
       const lines = [] as string[];
       lines.push(
-        'Input Jax: ' + this.document.inputJax.map((jax) => jax.name).join(', ')
+        'Input Jax: ' +
+          this.document.inputJax.map((jax) => jax.name).join(', '),
       );
       lines.push('Output Jax: ' + this.document.outputJax.name);
       lines.push('Document Type: ' + this.document.kind);
       return lines.join('<br/>');
     },
-    '<a href="https://www.mathjax.org">www.mathjax.org</a>'
+    '<a href="https://www.mathjax.org">www.mathjax.org</a>',
   );
 
   /**
@@ -334,7 +335,7 @@ export class Menu {
         ' MathJax in any way.</p>',
       ].join('\n');
     },
-    '<a href="https://www.mathjax.org">www.mathjax.org</a>'
+    '<a href="https://www.mathjax.org">www.mathjax.org</a>',
   );
 
   /**
@@ -347,7 +348,7 @@ export class Menu {
       const text = this.toMML(this.menu.mathItem);
       return '<pre>' + this.formatSource(text) + '</pre>';
     },
-    ''
+    '',
   );
 
   /**
@@ -364,7 +365,7 @@ export class Menu {
         '</pre>'
       );
     },
-    ''
+    '',
   );
 
   /**
@@ -380,7 +381,7 @@ export class Menu {
         '</pre>'
       );
     },
-    ''
+    '',
   );
 
   /**
@@ -397,7 +398,7 @@ export class Menu {
         'Generative SVG Image...</div>'
       );
     },
-    ''
+    '',
   );
 
   /**
@@ -413,7 +414,7 @@ export class Menu {
         '</div>'
       );
     },
-    ''
+    '',
   );
 
   /**
@@ -429,7 +430,7 @@ export class Menu {
         '</div>'
       );
     },
-    ''
+    '',
   );
 
   /**
@@ -445,7 +446,7 @@ export class Menu {
         '</pre>'
       );
     },
-    ''
+    '',
   );
 
   /**
@@ -456,7 +457,7 @@ export class Menu {
     () => {
       if (!this.menu.mathItem) return '';
       const element = (this.menu.mathItem.typesetRoot as any).cloneNode(
-        true
+        true,
       ) as HTMLElement;
       element.style.margin = '0';
       const scale = 1.25 * parseFloat(this.settings.zscale); // 1.25 is to reverse the default 80% font-size
@@ -464,7 +465,7 @@ export class Menu {
         '<div style="font-size: ' + scale + '%">' + element.outerHTML + '</div>'
       );
     },
-    ''
+    '',
   );
 
   /*======================================================================*/
@@ -481,7 +482,7 @@ export class Menu {
     this.document = document;
     this.options = userOptions(
       defaultOptions({}, (this.constructor as typeof Menu).OPTIONS),
-      options
+      options,
     );
     this.initSettings();
     this.mergeUserSettings();
@@ -526,10 +527,10 @@ export class Menu {
         this.variable<string>('zscale'),
         this.variable<string>('renderer', (jax) => this.setRenderer(jax)),
         this.variable<string>('overflow', (overflow) =>
-          this.setOverflow(overflow)
+          this.setOverflow(overflow),
         ),
         this.variable<boolean>('breakInline', (breaks) =>
-          this.setInlineBreaks(breaks)
+          this.setInlineBreaks(breaks),
         ),
         this.variable<boolean>('alt'),
         this.variable<boolean>('cmd'),
@@ -539,7 +540,7 @@ export class Menu {
         this.a11yVar<boolean>('speech', (speech) => this.setSpeech(speech)),
         this.a11yVar<boolean>('braille', (braille) => this.setBraille(braille)),
         this.variable<string>('brailleCode', (code) =>
-          this.setBrailleCode(code)
+          this.setBrailleCode(code),
         ),
         this.a11yVar<string>('highlight', (value) => this.setHighlight(value)),
         this.a11yVar<string>('backgroundColor'),
@@ -564,23 +565,23 @@ export class Menu {
         this.a11yVar<boolean>('infoPrefix'),
         this.variable<boolean>('autocollapse'),
         this.variable<boolean>('collapsible', (collapse) =>
-          this.setCollapsible(collapse)
+          this.setCollapsible(collapse),
         ),
         this.variable<boolean>('enrich', (enrich) =>
-          this.setEnrichment(enrich)
+          this.setEnrichment(enrich),
         ),
         this.variable<boolean>('inTabOrder', (tab) => this.setTabOrder(tab)),
         this.variable<boolean>('assistiveMml', (mml) =>
-          this.setAssistiveMml(mml)
+          this.setAssistiveMml(mml),
         ),
       ],
       items: [
         this.submenu('Show', 'Show Math As', [
           this.command('MathMLcode', 'MathML Code', () =>
-            this.mathmlCode.post()
+            this.mathmlCode.post(),
           ),
           this.command('Original', 'Original Form', () =>
-            this.originalText.post()
+            this.originalText.post(),
           ),
           this.rule(),
           this.command('Speech', 'Speech Text', () => this.speechText.post(), {
@@ -590,7 +591,7 @@ export class Menu {
             'Braille',
             'Braille Code',
             () => this.brailleText.post(),
-            { disabled: true }
+            { disabled: true },
           ),
           this.command('SVG', 'SVG Image', () => this.postSvgImage(), {
             disabled: true,
@@ -601,7 +602,7 @@ export class Menu {
             'Error',
             'Error Message',
             () => this.errorMessage.post(),
-            { disabled: true }
+            { disabled: true },
           ),
         ]),
         this.submenu('Copy', 'Copy to Clipboard', [
@@ -615,7 +616,7 @@ export class Menu {
             'Braille',
             'Braille Code',
             () => this.copyBrailleText(),
-            { disabled: true }
+            { disabled: true },
           ),
           this.command('SVG', 'SVG Image', () => this.copySvgImage(), {
             disabled: true,
@@ -626,7 +627,7 @@ export class Menu {
             'Error',
             'Error Message',
             () => this.copyErrorMessage(),
-            { disabled: true }
+            { disabled: true },
           ),
         ]),
         this.rule(),
@@ -634,7 +635,7 @@ export class Menu {
           this.submenu(
             'Renderer',
             'Math Renderer',
-            this.radioGroup('renderer', [['CHTML'], ['SVG']])
+            this.radioGroup('renderer', [['CHTML'], ['SVG']]),
           ),
           this.submenu('Overflow', 'Wide Expressions', [
             this.radioGroup('overflow', [
@@ -659,7 +660,7 @@ export class Menu {
           this.rule(),
           this.submenu('ZoomTrigger', 'Zoom Trigger', [
             this.command('ZoomNow', 'Zoom Once Now', () =>
-              this.zoom(null, '', this.menu.mathItem)
+              this.zoom(null, '', this.menu.mathItem),
             ),
             this.rule(),
             this.radioGroup('zoom', [
@@ -672,7 +673,7 @@ export class Menu {
             this.checkbox(
               MenuUtil.isMac ? 'Option' : 'Alt',
               MenuUtil.isMac ? 'Option' : 'Alt',
-              'alt'
+              'alt',
             ),
             this.checkbox('Command', 'Command', 'cmd', {
               hidden: !MenuUtil.isMac,
@@ -692,13 +693,13 @@ export class Menu {
               ['250%'],
               ['300%'],
               ['400%'],
-            ])
+            ]),
           ),
           this.rule(),
           this.command('Scale', 'Scale All Math...', () => this.scaleAllMath()),
           this.rule(),
           this.command('Reset', 'Reset to defaults', () =>
-            this.resetDefaults()
+            this.resetDefaults(),
           ),
         ]),
         this.rule(),
@@ -716,12 +717,12 @@ export class Menu {
               ['mathspeak-default', 'Verbose'],
               ['mathspeak-brief', 'Brief'],
               ['mathspeak-sbrief', 'Superbrief'],
-            ])
+            ]),
           ),
           this.submenu(
             'Clearspeak',
             'Clearspeak',
-            this.radioGroup('speechRules', [['clearspeak-default', 'Auto']])
+            this.radioGroup('speechRules', [['clearspeak-default', 'Auto']]),
           ),
           this.submenu(
             'ChromeVox',
@@ -729,7 +730,7 @@ export class Menu {
             this.radioGroup('speechRules', [
               ['chromevox-default', 'Standard'],
               ['chromevox-alternative', 'Alternative'],
-            ])
+            ]),
           ),
           this.rule(),
           this.submenu('A11yLanguage', 'Language'),
@@ -759,7 +760,7 @@ export class Menu {
                 ['Magenta'],
                 ['White'],
                 ['Black'],
-              ])
+              ]),
             ),
             { type: 'slider', variable: 'backgroundOpacity', content: ' ' },
             this.submenu(
@@ -774,7 +775,7 @@ export class Menu {
                 ['Green'],
                 ['Red'],
                 ['Blue'],
-              ])
+              ]),
             ),
             { type: 'slider', variable: 'foregroundOpacity', content: ' ' },
             this.rule(),
@@ -804,7 +805,7 @@ export class Menu {
               this.checkbox('Role', 'Role', 'infoRole'),
               this.checkbox('Prefix', 'Prefix', 'infoPrefix'),
             ],
-            true
+            true,
           ),
         ]),
         this.submenu('Options', '\xA0 \xA0 Options', [
@@ -818,7 +819,7 @@ export class Menu {
           this.checkbox(
             'AssistiveMml',
             'Include Hidden MathML',
-            'assistiveMml'
+            'assistiveMml',
           ),
         ]),
         this.rule(),
@@ -838,7 +839,7 @@ export class Menu {
       AnnotationMenu.showAnnotations(
         this.annotationBox,
         this.options.annotationTypes,
-        cache
+        cache,
       ),
       '',
     ]);
@@ -996,7 +997,7 @@ export class Menu {
     const promise = (Menu._loadingPromise || Promise.resolve()).then(() =>
       renderer !== this.defaultSettings.renderer
         ? this.setRenderer(renderer, false)
-        : Promise.resolve()
+        : Promise.resolve(),
     );
     promise.then(() => {
       const settings = this.settings;
@@ -1133,7 +1134,7 @@ export class Menu {
     const enable = this.settings.enrich;
     const method = enable ? 'enable' : 'disable';
     ['Speech', 'Braille', 'Explorer'].forEach((id) =>
-      this.menu.findID(id)[method]()
+      this.menu.findID(id)[method](),
     );
     const options = this.document.options;
     options.enableSpeech =
@@ -1247,7 +1248,7 @@ export class Menu {
       .replace(/.0$/, '');
     const percent = prompt(
       'Scale all mathematics (compared to surrounding text) by',
-      scale + '%'
+      scale + '%',
     );
     if (percent) {
       if (percent.match(/^\s*\d+(\.\d*)?\s*%?\s*$/)) {
@@ -1365,7 +1366,7 @@ export class Menu {
           this.rerender(
             component === 'complexity' || noEnrich
               ? STATE.COMPILED
-              : STATE.TYPESET
+              : STATE.TYPESET,
           );
         });
       }
@@ -1417,7 +1418,7 @@ export class Menu {
     const jax = this.jax.SVG;
     if (!jax)
       return Promise.resolve(
-        "SVG can't be produced.<br>Try switching to SVG output first."
+        "SVG can't be produced.<br>Try switching to SVG output first.",
       );
     const adaptor = jax.adaptor;
     const cache = jax.options.fontCache;
@@ -1430,7 +1431,7 @@ export class Menu {
       for (const child of adaptor.childNodes(math.typesetRoot)) {
         if (adaptor.kind(child) === 'svg') {
           return Promise.resolve(
-            this.formatSvg(adaptor.serializeXML(child as HTMLElement))
+            this.formatSvg(adaptor.serializeXML(child as HTMLElement)),
           );
         }
       }
@@ -1447,7 +1448,7 @@ export class Menu {
   protected async typesetSVG(
     math: HTMLMATHITEM,
     cache: string,
-    breaks: boolean
+    breaks: boolean,
   ): Promise<string> {
     const jax = this.jax.SVG as SVG<HTMLElement, Text, Document>;
     const div = jax.html('div');
@@ -1554,7 +1555,7 @@ export class Menu {
             }
             this.document.rerender(this.rerenderStart);
             this.rerenderStart = STATE.LAST;
-          })
+          }),
       );
     }
   }
@@ -1613,22 +1614,22 @@ export class Menu {
     element.addEventListener(
       'contextmenu',
       () => (this.menu.mathItem = math),
-      true
+      true,
     );
     element.addEventListener(
       'keydown',
       () => (this.menu.mathItem = math),
-      true
+      true,
     );
     element.addEventListener(
       'click',
       (event) => this.zoom(event, 'Click', math),
-      true
+      true,
     );
     element.addEventListener(
       'dblclick',
       (event) => this.zoom(event, 'DoubleClick', math),
-      true
+      true,
     );
     this.menu.store.insert(element);
   }
@@ -1653,7 +1654,7 @@ export class Menu {
    */
   public variable<T extends string | boolean>(
     name: keyof MenuSettings,
-    action?: (value: T) => void
+    action?: (value: T) => void,
   ): Object {
     return {
       name: name,
@@ -1676,7 +1677,7 @@ export class Menu {
    */
   public a11yVar<T extends string | boolean>(
     name: keyof MenuSettings,
-    action?: (value: T) => void
+    action?: (value: T) => void,
   ): Object {
     return {
       name: name,
@@ -1703,7 +1704,7 @@ export class Menu {
     id: string,
     content: string,
     entries: any[] = [],
-    disabled: boolean = false
+    disabled: boolean = false,
   ): Object {
     let items = [] as Array<Object>;
     for (const entry of entries) {
@@ -1735,7 +1736,7 @@ export class Menu {
     id: string,
     content: string,
     action: () => void,
-    other: Object = {}
+    other: Object = {},
   ): Object {
     return Object.assign({ type: 'command', id, content, action }, other);
   }
@@ -1753,7 +1754,7 @@ export class Menu {
     id: string,
     content: string,
     variable: string,
-    other: Object = {}
+    other: Object = {},
   ): Object {
     return Object.assign({ type: 'checkbox', id, content, variable }, other);
   }
@@ -1783,7 +1784,7 @@ export class Menu {
     id: string,
     content: string,
     variable: string,
-    other: Object = {}
+    other: Object = {},
   ): Object {
     return Object.assign({ type: 'radio', id, content, variable }, other);
   }

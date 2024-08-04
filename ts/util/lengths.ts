@@ -91,7 +91,7 @@ export function length2em(
   length: string | number,
   size: number = 0,
   scale: number = 1,
-  em: number = 16
+  em: number = 16,
 ): number {
   if (typeof length !== 'string') {
     length = String(length);
@@ -103,7 +103,7 @@ export function length2em(
     return MATHSPACE[length];
   }
   let match = length.match(
-    /^\s*([-+]?(?:\.\d+|\d+(?:\.\d*)?))?(pt|em|ex|mu|px|pc|in|mm|cm|%)?/
+    /^\s*([-+]?(?:\.\d+|\d+(?:\.\d*)?))?(pt|em|ex|mu|px|pc|in|mm|cm|%)?/,
   );
   if (!match || match[0] === '') {
     return size;

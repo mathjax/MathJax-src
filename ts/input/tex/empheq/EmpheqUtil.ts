@@ -56,7 +56,7 @@ export const EmpheqUtil = {
    */
   splitOptions(
     text: string,
-    allowed: { [key: string]: number } = null
+    allowed: { [key: string]: number } = null,
   ): EnvList {
     return ParseUtil.keyvalOptions(text, allowed, true);
   },
@@ -91,7 +91,7 @@ export const EmpheqUtil = {
     tex: string,
     table: MmlMtable,
     parser: TexParser,
-    env: string
+    env: string,
   ): MmlNode {
     const mpadded = parser.create('node', 'mpadded', [], {
       height: 0,
@@ -110,7 +110,7 @@ export const EmpheqUtil = {
     mpadded.appendChild(
       parser.create('node', 'mphantom', [
         parser.create('node', 'mpadded', [table], { width: 0 }),
-      ])
+      ]),
     );
     return mpadded;
   },
@@ -147,7 +147,7 @@ export const EmpheqUtil = {
     tex: string,
     table: MmlMtable,
     parser: TexParser,
-    env: string
+    env: string,
   ) {
     mtd.appendChild(
       parser.create(
@@ -157,8 +157,8 @@ export const EmpheqUtil = {
           this.cellBlock(tex, ParseUtil.copyNode(table, parser), parser, env),
           this.topRowTable(table, parser),
         ],
-        { height: 0, depth: 0, voffset: 'height' }
-      )
+        { height: 0, depth: 0, voffset: 'height' },
+      ),
     );
   },
 
@@ -176,15 +176,15 @@ export const EmpheqUtil = {
     original: MmlMtable,
     left: string,
     parser: TexParser,
-    env: string = ''
+    env: string = '',
   ) {
     table.attributes.set(
       'columnalign',
-      'right ' + (table.attributes.get('columnalign') || '')
+      'right ' + (table.attributes.get('columnalign') || ''),
     );
     table.attributes.set(
       'columnspacing',
-      '0em ' + (table.attributes.get('columnspacing') || '')
+      '0em ' + (table.attributes.get('columnspacing') || ''),
     );
     let mtd;
     for (const row of table.childNodes.slice(0).reverse()) {
@@ -213,7 +213,7 @@ export const EmpheqUtil = {
     original: MmlMtable,
     right: string,
     parser: TexParser,
-    env: string = ''
+    env: string = '',
   ) {
     if (table.childNodes.length === 0) {
       table.appendChild(parser.create('node', 'mtr'));
@@ -229,14 +229,14 @@ export const EmpheqUtil = {
       ((table.attributes.get('columnalign') as string) || '')
         .split(/ /)
         .slice(0, m)
-        .join(' ') + ' left'
+        .join(' ') + ' left',
     );
     table.attributes.set(
       'columnspacing',
       ((table.attributes.get('columnspacing') as string) || '')
         .split(/ /)
         .slice(0, m - 1)
-        .join(' ') + ' 0em'
+        .join(' ') + ' 0em',
     );
   },
 

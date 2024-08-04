@@ -74,7 +74,7 @@ export class Mml3<N, T, D> {
       const processor = new XSLTProcessor();
       const parsed = document.adaptor.parse(
         Mml3.XSLT,
-        'text/xml'
+        'text/xml',
       ) as any as Node;
       processor.importStylesheet(parsed);
       this.transform = (node: N) => {
@@ -82,7 +82,7 @@ export class Mml3<N, T, D> {
         const div = adaptor.node('div', {}, [adaptor.clone(node)]);
         const dom = adaptor.parse(adaptor.serializeXML(div), 'text/xml');
         const mml = processor.transformToDocument(
-          dom as any as Node
+          dom as any as Node,
         ) as any as N;
         return mml ? adaptor.tags(mml, 'math')[0] : node;
       };
@@ -105,7 +105,7 @@ export class Mml3<N, T, D> {
  *  Add Mml3 support into the handler.
  */
 export function Mml3Handler<N, T, D>(
-  handler: Handler<N, T, D>
+  handler: Handler<N, T, D>,
 ): Handler<N, T, D> {
   handler.documentClass = class extends handler.documentClass {
     /**

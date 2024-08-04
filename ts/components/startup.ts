@@ -299,7 +299,7 @@ export namespace Startup {
    */
   export function extendHandler(
     extend: HandlerExtension,
-    priority: number = 10
+    priority: number = 10,
   ) {
     extensions.add(extend, priority);
   }
@@ -340,7 +340,7 @@ export namespace Startup {
       .then(
         CONFIG.typeset && MathJax.typesetPromise
           ? () => typesetPromise(CONFIG.elements)
-          : Promise.resolve()
+          : Promise.resolve(),
       )
       .then(() => promiseResolve());
   }
@@ -457,7 +457,7 @@ export namespace Startup {
   export function makeOutputMethods(
     iname: string,
     oname: string,
-    input: INPUTJAX
+    input: INPUTJAX,
   ) {
     const name = iname + '2' + oname;
     MathJax[name] = (math: string, options: OptionList = {}) => {
@@ -499,13 +499,13 @@ export namespace Startup {
     };
     MathJax[name + '2mmlPromise'] = (
       math: string,
-      options: OptionList = {}
+      options: OptionList = {},
     ) => {
       promise = promise.then(() => {
         options.end = STATE.CONVERT;
         options.format = input.name;
         return mathjax.handleRetriesFor(() =>
-          toMML(document.convert(math, options))
+          toMML(document.convert(math, options)),
         );
       });
       return promise;
@@ -536,7 +536,7 @@ export namespace Startup {
         jax.push(jax[name]);
       } else {
         throw Error(
-          'Input Jax "' + name + '" is not defined (has it been loaded?)'
+          'Input Jax "' + name + '" is not defined (has it been loaded?)',
         );
       }
     }
@@ -552,7 +552,7 @@ export namespace Startup {
     const outputClass = constructors[name];
     if (!outputClass) {
       throw Error(
-        'Output Jax "' + name + '" is not defined (has it been loaded?)'
+        'Output Jax "' + name + '" is not defined (has it been loaded?)',
       );
     }
     return new outputClass(MathJax.config[name]);
@@ -568,7 +568,7 @@ export namespace Startup {
     const adaptor = constructors[name];
     if (!adaptor) {
       throw Error(
-        'DOMAdaptor "' + name + '" is not defined (has it been loaded?)'
+        'DOMAdaptor "' + name + '" is not defined (has it been loaded?)',
       );
     }
     return adaptor(MathJax.config[name]);
@@ -583,7 +583,7 @@ export namespace Startup {
     const handlerClass = constructors[name];
     if (!handlerClass) {
       throw Error(
-        'Handler "' + name + '" is not defined (has it been loaded?)'
+        'Handler "' + name + '" is not defined (has it been loaded?)',
       );
     }
     let handler = new handlerClass(adaptor, 5);

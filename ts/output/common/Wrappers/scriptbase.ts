@@ -396,7 +396,7 @@ export function CommonScriptbaseMixin<
   FC extends FontDataClass<CC, VV, DD>,
   B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 >(
-  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 ): B {
   return class CommonScriptbaseMixin
     extends Base
@@ -525,7 +525,7 @@ export function CommonScriptbaseMixin<
      */
     public getSemanticBase(): WW {
       let fence = this.node.attributes.getExplicit(
-        'data-semantic-fencepointer'
+        'data-semantic-fencepointer',
       ) as string;
       return this.getBaseFence(this.baseChild, fence);
     }
@@ -666,12 +666,12 @@ export function CommonScriptbaseMixin<
       const tex = this.font.params;
       const subscriptshift = this.length2em(
         this.node.attributes.get('subscriptshift'),
-        tex.sub1
+        tex.sub1,
       );
       return Math.max(
         this.baseCharZero(bbox.d * this.baseScale + tex.sub_drop * sbox.rscale),
         subscriptshift,
-        sbox.h * sbox.rscale - (4 / 5) * tex.x_height
+        sbox.h * sbox.rscale - (4 / 5) * tex.x_height,
       );
     }
 
@@ -685,7 +685,7 @@ export function CommonScriptbaseMixin<
       const tex = this.font.params;
       const attr = this.node.attributes.getList(
         'displaystyle',
-        'superscriptshift'
+        'superscriptshift',
       );
       const prime = this.node.getProperty('texprimestyle');
       const p = prime ? tex.sup3 : attr.displaystyle ? tex.sup1 : tex.sup2;
@@ -693,7 +693,7 @@ export function CommonScriptbaseMixin<
       return Math.max(
         this.baseCharZero(bbox.h * this.baseScale - tex.sup_drop * sbox.rscale),
         superscriptshift,
-        sbox.d * sbox.rscale + (1 / 4) * tex.x_height
+        sbox.d * sbox.rscale + (1 / 4) * tex.x_height,
       );
     }
 
@@ -726,7 +726,7 @@ export function CommonScriptbaseMixin<
           ? T
           : Math.max(
               tex.big_op_spacing1,
-              tex.big_op_spacing3 - Math.max(0, d)
+              tex.big_op_spacing3 - Math.max(0, d),
             )) - delta;
       return [k, basebox.h * basebox.rscale + k + d];
     }
@@ -777,7 +777,7 @@ export function CommonScriptbaseMixin<
         }
       }
       [1, 2].map(
-        (i) => (dw[i] += boxes[i] ? boxes[i].dx * boxes[0].rscale : 0)
+        (i) => (dw[i] += boxes[i] ? boxes[i].dx * boxes[0].rscale : 0),
       );
       return dw;
     }
@@ -944,7 +944,7 @@ export function CommonScriptbaseMixin<
       if (!n)
         return LineBBox.from(
           this.getOuterBBox(),
-          this.linebreakOptions.lineleading
+          this.linebreakOptions.lineleading,
         );
       const bbox = this.baseChild.getLineBBox(i).copy();
       if (i < n) {

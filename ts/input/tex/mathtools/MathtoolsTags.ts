@@ -45,7 +45,7 @@ let tagID = 0;
  */
 export function MathtoolsTagFormat(
   config: ParserConfiguration,
-  jax: TeX<any, any, any>
+  jax: TeX<any, any, any>,
 ) {
   /**
    * If the tag format is being added by one of the other extensions,
@@ -88,7 +88,7 @@ export function MathtoolsTagFormat(
           throw new TexError(
             'InvalidTagFormDef',
             'The tag form definition for "%1" should be an array fo three strings',
-            form
+            form,
           );
         }
         this.mtFormats.set(form, forms[form]);

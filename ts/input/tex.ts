@@ -107,7 +107,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * @return {Configuration} The configuration object.
    */
   protected static configure(
-    packages: (string | [string, number])[]
+    packages: (string | [string, number])[],
   ): ParserConfiguration {
     let configuration = new ParserConfiguration(packages, ['tex']);
     configuration.init();
@@ -122,7 +122,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    */
   protected static tags(
     options: ParseOptions,
-    configuration: ParserConfiguration
+    configuration: ParserConfiguration,
   ) {
     TagsFactory.addTags(configuration.tags);
     TagsFactory.setDefault(options.options.tags);
@@ -137,7 +137,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     const [rest, tex, find] = separateOptions(
       options,
       TeX.OPTIONS,
-      FindTeX.OPTIONS
+      FindTeX.OPTIONS,
     );
     super(tex);
     this.findTeX = this.options['FindTeX'] || new FindTeX(find);
@@ -185,7 +185,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    */
   public compile(
     math: MathItem<N, T, D>,
-    document: MathDocument<N, T, D>
+    document: MathDocument<N, T, D>,
   ): MmlNode {
     this.parseOptions.clear();
     this.parseOptions.mathItem = math;
@@ -199,7 +199,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
       parser = new TexParser(
         this.latex,
         { display: math.display, isInner: false },
-        this.parseOptions
+        this.parseOptions,
       );
       node = parser.mml();
       globalEnv = parser.stack.global;
@@ -251,7 +251,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
       'error',
       message,
       err.id,
-      this.latex
+      this.latex,
     );
   }
 }

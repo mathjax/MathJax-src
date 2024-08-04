@@ -50,7 +50,7 @@ function initMathtools(config: ParserConfiguration) {
     Configuration.local({
       [ConfigurationType.HANDLER]: { [HandlerType.MACRO]: [PAIREDDELIMS] },
       priority: -5,
-    })
+    }),
   );
 }
 

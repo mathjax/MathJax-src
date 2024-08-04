@@ -90,7 +90,7 @@ export interface SvgTeXAtomClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgTeXAtomNTD<N, T, D>;
 }
 
@@ -133,7 +133,7 @@ export const SvgTeXAtom = (function <N, T, D>(): SvgTeXAtomClass<N, T, D> {
       this.adaptor.setAttribute(
         this.dom[0],
         'data-mjx-texclass',
-        TEXCLASSNAMES[this.node.texClass]
+        TEXCLASSNAMES[this.node.texClass],
       );
     }
   } as any as SvgTeXAtomClass<N, T, D>;

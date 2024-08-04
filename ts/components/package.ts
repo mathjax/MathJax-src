@@ -54,7 +54,7 @@ export type PackageReady = (name: string) => string | void;
 export type PackageFailed = (message: PackageError) => void;
 export type PackagePromise = (
   resolve: PackageReady,
-  reject: PackageFailed
+  reject: PackageFailed,
 ) => void;
 
 /**
@@ -160,7 +160,7 @@ export class Package {
   public static loadPromise(name: string): Promise<void> {
     const config = (CONFIG[name] || {}) as PackageConfig;
     const promise = Promise.all(
-      (config.extraLoads || []).map((name) => Loader.load(name))
+      (config.extraLoads || []).map((name) => Loader.load(name)),
     );
     const checkReady = config.checkReady || (() => Promise.resolve());
     return promise.then(() => checkReady()) as Promise<void>;
@@ -175,7 +175,7 @@ export class Package {
    */
   public static resolvePath(
     name: string,
-    addExtension: boolean = true
+    addExtension: boolean = true,
   ): string {
     const data = { name, original: name, addExtension };
     Loader.pathFilters.execute(data);
@@ -265,7 +265,7 @@ export class Package {
     const config = (CONFIG[this.name] || {}) as PackageConfig;
     if (config.ready) {
       promise = promise.then((_name: string) =>
-        config.ready(this.name)
+        config.ready(this.name),
       ) as Promise<string>;
     }
     //
@@ -276,7 +276,7 @@ export class Package {
     if (promises.length) {
       promises.push(promise);
       promise = Promise.all(promises).then((names: string[]) =>
-        names.join(', ')
+        names.join(', '),
       );
     }
     //
@@ -285,7 +285,7 @@ export class Package {
     //
     if (config.failed) {
       promise.catch((message: string) =>
-        config.failed(new PackageError(message, this.name))
+        config.failed(new PackageError(message, this.name)),
       );
     }
     //
@@ -319,7 +319,7 @@ export class Package {
         result
           .then(() => this.checkLoad())
           .catch((err) =>
-            this.failed('Can\'t load "' + url + '"\n' + err.message.trim())
+            this.failed('Can\'t load "' + url + '"\n' + err.message.trim()),
           );
       } else {
         this.checkLoad();

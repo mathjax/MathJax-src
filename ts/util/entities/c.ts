@@ -107,5 +107,5 @@ Entities.add(
     cwint: '\u2231',
     cylcty: '\u232D',
   },
-  'c'
+  'c',
 );

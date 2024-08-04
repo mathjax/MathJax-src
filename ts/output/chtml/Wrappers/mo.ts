@@ -92,7 +92,7 @@ export interface ChtmlMoClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlMoNTD<N, T, D>;
 }
 
@@ -187,7 +187,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       }
       parents.length > 1 &&
         parents.forEach((dom) =>
-          adaptor.append(dom, this.html('mjx-linestrut'))
+          adaptor.append(dom, this.html('mjx-linestrut')),
         );
       let chtml = this.standardChtmlNodes(parents);
       if (chtml.length > 1 && this.breakStyle !== 'duplicate') {
@@ -202,7 +202,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
           const u = this.em(this.getCenterOffset());
           if (u !== '0') {
             chtml.forEach(
-              (dom) => dom && adaptor.setStyle(dom, 'verticalAlign', u)
+              (dom) => dom && adaptor.setStyle(dom, 'verticalAlign', u),
             );
           }
         }
@@ -212,7 +212,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
             adaptor.setStyle(
               dom,
               'margin-left',
-              this.em(this.getAccentOffset())
+              this.em(this.getAccentOffset()),
             );
           });
         }
@@ -289,12 +289,12 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
           options.ff || (letter ? `${this.font.cssFontPrefix}-${letter}` : '');
         let c = ((options.c as string) || String.fromCodePoint(n)).replace(
           /\\[0-9A-F]+/gi,
-          (x) => String.fromCodePoint(parseInt(x.substring(1), 16))
+          (x) => String.fromCodePoint(parseInt(x.substring(1), 16)),
         );
         content.push(
           this.html(part, {}, [
             this.html('mjx-c', font ? { class: font } : {}, [this.text(c)]),
-          ])
+          ]),
         );
       }
     }

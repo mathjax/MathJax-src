@@ -65,7 +65,7 @@ export const TextBaseConfiguration = Configuration.create('text-base', {
         parser.Error(
           'MathMacro',
           '%1 is only supported in math mode',
-          '\\' + name
+          '\\' + name,
         );
       }
       texParser.parse('macro', [parser, name]);
@@ -92,7 +92,7 @@ function internalMath(
   parser: TexParser,
   text: string,
   level?: number | string,
-  mathvariant?: string
+  mathvariant?: string,
 ): MmlNode[] {
   const config = parser.configuration.packageData.get('textmacros');
   if (!(parser instanceof TextParser)) {
@@ -104,7 +104,7 @@ function internalMath(
       text,
       mathvariant ? { mathvariant } : {},
       config.parseOptions,
-      level
+      level,
     ).mml(),
   ];
 }
@@ -125,7 +125,7 @@ export const TextMacrosConfiguration = Configuration.create('textmacros', {
     //
     const textConf = new ParserConfiguration(
       jax.parseOptions.options.textmacros.packages,
-      ['tex', 'text']
+      ['tex', 'text'],
     );
     textConf.init();
     const parseOptions = new ParseOptions(textConf, []);

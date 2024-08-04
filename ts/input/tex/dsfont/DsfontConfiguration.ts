@@ -34,7 +34,7 @@ function ChooseFont(parser: TexParser, name: string) {
   BaseMethods.MathFont(
     parser,
     name,
-    parser.options.dsfont.sans ? '-ds-ss' : '-ds-rm'
+    parser.options.dsfont.sans ? '-ds-ss' : '-ds-rm',
   );
 }
 

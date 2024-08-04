@@ -185,7 +185,7 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
    */
   public abstract typeset(
     math: MathItem<N, T, D>,
-    document?: MathDocument<N, T, D>
+    document?: MathDocument<N, T, D>,
   ): N;
 
   /**
@@ -193,7 +193,7 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
    */
   public abstract escaped(
     math: MathItem<N, T, D>,
-    document?: MathDocument<N, T, D>
+    document?: MathDocument<N, T, D>,
   ): N;
 
   /**
@@ -229,7 +229,7 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
     filters: FunctionList,
     math: MathItem<N, T, D>,
     document: MathDocument<N, T, D>,
-    data: any
+    data: any,
   ): any {
     let args = { math, document, data };
     filters.execute(args);

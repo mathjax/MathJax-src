@@ -51,7 +51,7 @@ function Autoload(
   parser: TexParser,
   name: string,
   extension: string,
-  isMacro: boolean
+  isMacro: boolean,
 ) {
   if (Package.packages.has(parser.options.require.prefix + extension)) {
     const def = parser.options.autoload[extension];
@@ -120,7 +120,7 @@ function configAutoload(config: ParserConfiguration, jax: TeX<any, any, any>) {
       if (!environments.lookup(name)) {
         AutoloadEnvironments.add(
           name,
-          new Macro(name, Autoload, [extension, false])
+          new Macro(name, Autoload, [extension, false]),
         );
       }
     }

@@ -74,7 +74,7 @@ export class LiteElement {
   constructor(
     kind: string,
     attributes: LiteAttributeList = {},
-    children: LiteNode[] = []
+    children: LiteNode[] = [],
   ) {
     this.kind = kind;
     this.attributes = { ...attributes };

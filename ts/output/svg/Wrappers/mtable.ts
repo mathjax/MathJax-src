@@ -102,7 +102,7 @@ export interface SvgMtableClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgMtableNTD<N, T, D>;
 }
 
@@ -205,7 +205,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
       equal: boolean,
       HD: number,
       H: number,
-      D: number
+      D: number,
     ): [number, number] {
       return equal ? [(HD + H - D) / 2, (HD - H + D) / 2] : [H, D];
     }
@@ -296,7 +296,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
       const CW =
         Math.max(
           this.isTop ? W : 0,
-          this.container.getWrapWidth(this.containerI)
+          this.container.getWrapWidth(this.containerI),
         ) -
         L -
         R;
@@ -338,7 +338,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
           height: this.fixed(h + d - t),
           x: this.fixed(t / 2),
           y: this.fixed(t / 2 - d),
-        })
+        }),
       );
     }
 
@@ -361,7 +361,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
           y1: this.fixed(dt - d),
           x2: X,
           y2: this.fixed(h - dt),
-        })
+        }),
       );
     }
 
@@ -384,7 +384,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
           y1: Y,
           x2: this.fixed(w - dt),
           y2: Y,
-        })
+        }),
       );
     }
 
@@ -397,7 +397,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
     protected setLineThickness(
       t: number,
       style: string,
-      properties: OptionList
+      properties: OptionList,
     ) {
       if (t !== 0.07) {
         properties['stroke-thickness'] = this.fixed(t);
@@ -504,10 +504,10 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
                 ? 'xMaxYMid'
                 : 'xMidYMid',
           viewBox: [this.fixed(-dx), this.fixed(-h), 1, this.fixed(h + d)].join(
-            ' '
+            ' ',
           ),
         },
-        [this.svg('g', { transform: matrix }, adaptor.childNodes(svg))]
+        [this.svg('g', { transform: matrix }, adaptor.childNodes(svg))],
       );
       labels = this.svg(
         'svg',
@@ -521,11 +521,11 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
             this.fixed(h + d),
           ].join(' '),
         },
-        [labels]
+        [labels],
       );
       adaptor.append(
         svg,
-        this.svg('g', { transform: transform }, [table, labels])
+        this.svg('g', { transform: transform }, [table, labels]),
       );
       this.place(-L, 0, svg); // remove spacing for L, which is added by the parent during appending
     }
@@ -558,7 +558,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
               L -
               labelW,
         0,
-        labels
+        labels,
       );
       adaptor.append(svg, labels);
     }
@@ -569,7 +569,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
     constructor(
       factory: SvgWrapperFactory<N, T, D>,
       node: MmlNode,
-      parent: SvgWrapper<N, T, D> = null
+      parent: SvgWrapper<N, T, D> = null,
     ) {
       super(factory, node, parent);
       const def: OptionList = { 'data-labels': true };

@@ -89,7 +89,7 @@ export class MmlMsqrt extends AbstractMmlNode {
     attributes: AttributeList,
     display: boolean,
     level: number,
-    _prime: boolean
+    _prime: boolean,
   ) {
     this.childNodes[0].setInheritedAttributes(attributes, display, level, true);
   }

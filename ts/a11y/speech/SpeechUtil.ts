@@ -68,7 +68,7 @@ function recurseSsml(
   nodes: Node[],
   instr: SsmlElement[],
   text: String[],
-  prosody: ProsodyElement = {}
+  prosody: ProsodyElement = {},
 ) {
   for (let node of nodes) {
     if (node.nodeType === 3) {
@@ -90,7 +90,7 @@ function recurseSsml(
           Array.from(node.childNodes),
           instr,
           text,
-          getProsody(element, prosody)
+          getProsody(element, prosody),
         );
         continue;
       }
@@ -179,7 +179,7 @@ export function buildLabel(
   speech: string,
   prefix: string,
   postfix: string,
-  sep: string = ' '
+  sep: string = ' ',
 ) {
   if (!speech) {
     return '';
@@ -206,14 +206,14 @@ export function buildLabel(
 export function buildSpeech(
   speech: string,
   locale: string = 'en',
-  rate: string = '100'
+  rate: string = '100',
 ): [string, SsmlElement[]] {
   return ssmlParsing(
     '<?xml version="1.0"?><speak version="1.1"' +
       ' xmlns="http://www.w3.org/2001/10/synthesis"' +
       ` xml:lang="${locale}">` +
       `<prosody rate="${rate}%">${speech}` +
-      '</prosody></speak>'
+      '</prosody></speak>',
   );
 }
 

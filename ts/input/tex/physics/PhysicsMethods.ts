@@ -80,7 +80,7 @@ function createVectorToken(
   factory: NodeFactory,
   kind: string,
   def: any,
-  text: string
+  text: string,
 ): MmlNode {
   let parser = factory.configuration.parser;
   let token = NodeFactory.createToken(factory, kind, def, text);
@@ -115,12 +115,12 @@ function vectorApplication(
   kind: string,
   name: string,
   operator: string,
-  fences: string[]
+  fences: string[],
 ) {
   let op = new TexParser(
     operator,
     parser.stack.env,
-    parser.configuration
+    parser.configuration,
   ).mml();
   parser.Push(parser.itemFactory.create(kind, op));
   let left = parser.GetNext();
@@ -148,7 +148,7 @@ function vectorApplication(
   parser.Push(
     parser.itemFactory
       .create('auto open')
-      .setProperties({ open: left, close: right })
+      .setProperties({ open: left, close: right }),
   );
 }
 
@@ -162,7 +162,7 @@ function vectorApplication(
 function outputBraket(
   [arg1, arg2, arg3]: [string, string, string],
   star1: boolean,
-  star2: boolean
+  star2: boolean,
 ) {
   return star1 && star2
     ? `\\left\\langle{${arg1}}\\middle\\vert{${arg2}}\\middle\\vert{${arg3}}\\right\\rangle`
@@ -181,7 +181,10 @@ function makeDiagMatrix(elements: string[], anti: boolean) {
   let matrix = [];
   for (let i = 0; i < length; i++) {
     matrix.push(
-      Array(anti ? length - i : i + 1).join('&') + '\\mqty{' + elements[i] + '}'
+      Array(anti ? length - i : i + 1).join('&') +
+        '\\mqty{' +
+        elements[i] +
+        '}',
     );
   }
   return matrix.join('\\\\ ');
@@ -210,7 +213,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     close: string = ')',
     arg: boolean = false,
     named: string = '',
-    variant: string = ''
+    variant: string = '',
   ) {
     let star = arg ? parser.GetStar() : false;
     let next = parser.GetNext();
@@ -233,7 +236,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       throw new TexError(
         'MissingArgFor',
         'Missing argument for %1',
-        parser.currentCS
+        parser.currentCS,
       );
     }
     if (!right) {
@@ -248,7 +251,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
         'token',
         'mi',
         { texClass: TEXCLASS.OP },
-        named
+        named,
       );
       if (variant) {
         NodeUtil.setAttribute(mml, 'mathvariant', variant);
@@ -276,7 +279,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
             right
           : '\\left' + next + ' ' + argument + ' ' + '\\right' + right;
       parser.Push(
-        new TexParser(argument, parser.stack.env, parser.configuration).mml()
+        new TexParser(argument, parser.stack.env, parser.configuration).mml(),
       );
       return;
     }
@@ -288,7 +291,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     parser.Push(
       parser.itemFactory
         .create('auto open')
-        .setProperties({ open: next, close: right, big: big })
+        .setProperties({ open: next, close: right, big: big }),
     );
   },
 
@@ -321,14 +324,14 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
           close: '|',
           smash: star,
           right: '\\vphantom{\\int}',
-        })
+        }),
       );
       return;
     }
     throw new TexError(
       'MissingArgFor',
       'Missing argument for %1',
-      parser.currentCS
+      parser.currentCS,
     );
   },
 
@@ -343,7 +346,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     parser: TexParser,
     name: string,
     open: string = '[',
-    close: string = ']'
+    close: string = ']',
   ) {
     let star = parser.GetStar();
     let next = parser.GetNext();
@@ -356,7 +359,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
         throw new TexError(
           'MissingArgFor',
           'Missing argument for %1',
-          parser.currentCS
+          parser.currentCS,
         );
       }
       next = parser.GetNext();
@@ -365,7 +368,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       throw new TexError(
         'MissingArgFor',
         'Missing argument for %1',
-        parser.currentCS
+        parser.currentCS,
       );
     }
     let arg1 = parser.GetArgument(name);
@@ -387,7 +390,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
           close
         : '\\left' + open + ' ' + argument + ' ' + '\\right' + close;
     parser.Push(
-      new TexParser(argument, parser.stack.env, parser.configuration).mml()
+      new TexParser(argument, parser.stack.env, parser.configuration).mml(),
     );
   },
 
@@ -446,7 +449,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     parser.string = ParseUtil.addArgs(
       parser,
       macro,
-      parser.string.slice(parser.i)
+      parser.string.slice(parser.i),
     );
     parser.i = 0;
     ParseUtil.checkMaxMacros(parser);
@@ -506,7 +509,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     parser: TexParser,
     name: string,
     opt: boolean = true,
-    id: string = ''
+    id: string = '',
   ) {
     id = id || name.slice(1);
     const exp = opt ? parser.GetBrackets(name) : null;
@@ -515,7 +518,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       const sup = new TexParser(
         exp,
         parser.stack.env,
-        parser.configuration
+        parser.configuration,
       ).mml();
       mml = parser.create('node', 'msup', [mml, sup]);
     }
@@ -527,7 +530,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     parser.Push(
       parser.itemFactory
         .create('auto open')
-        .setProperties({ open: '(', close: ')' })
+        .setProperties({ open: '(', close: ')' }),
     );
   },
 
@@ -574,7 +577,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       let mml = new TexParser(
         macro,
         parser.stack.env,
-        parser.configuration
+        parser.configuration,
       ).mml();
       parser.Push(mml);
       return;
@@ -584,21 +587,21 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       const mml = new TexParser(
         macro,
         parser.stack.env,
-        parser.configuration
+        parser.configuration,
       ).mml();
       parser.Push(
-        parser.create('node', 'TeXAtom', [mml], { texClass: TEXCLASS.OP })
+        parser.create('node', 'TeXAtom', [mml], { texClass: TEXCLASS.OP }),
       );
       return;
     }
     parser.Push(
-      new TexParser(macro, parser.stack.env, parser.configuration).mml()
+      new TexParser(macro, parser.stack.env, parser.configuration).mml(),
     );
     parser.i++;
     parser.Push(
       parser.itemFactory
         .create('auto open')
-        .setProperties({ open: '(', close: ')' })
+        .setProperties({ open: '(', close: ')' }),
     );
   },
 
@@ -661,14 +664,14 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       rest +
       '}';
     parser.Push(
-      new TexParser(macro, parser.stack.env, parser.configuration).mml()
+      new TexParser(macro, parser.stack.env, parser.configuration).mml(),
     );
     if (parser.GetNext() === '(') {
       parser.i++;
       parser.Push(
         parser.itemFactory
           .create('auto open')
-          .setProperties({ open: '(', close: ')', ignore: ignore })
+          .setProperties({ open: '(', close: ')', ignore: ignore }),
       );
     }
   },
@@ -722,7 +725,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
           : `\\left\\langle{${bra}}\\right\\vert{${ket}}`;
     }
     parser.Push(
-      new TexParser(macro, parser.stack.env, parser.configuration).mml()
+      new TexParser(macro, parser.stack.env, parser.configuration).mml(),
     );
   },
 
@@ -738,7 +741,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       ? `\\vert{${ket}}\\rangle`
       : `\\left\\vert{${ket}}\\right\\rangle`;
     parser.Push(
-      new TexParser(macro, parser.stack.env, parser.configuration).mml()
+      new TexParser(macro, parser.stack.env, parser.configuration).mml(),
     );
   },
 
@@ -765,7 +768,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
         : `\\left\\langle{${bra}}\\middle\\vert{${ket}}\\right\\rangle`;
     }
     parser.Push(
-      new TexParser(macro, parser.stack.env, parser.configuration).mml()
+      new TexParser(macro, parser.stack.env, parser.configuration).mml(),
     );
   },
 
@@ -792,7 +795,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
         : `\\left\\vert{${ket}}\\middle\\rangle\\!\\middle\\langle{${bra}}\\right\\vert`;
     }
     parser.Push(
-      new TexParser(macro, parser.stack.env, parser.configuration).mml()
+      new TexParser(macro, parser.stack.env, parser.configuration).mml(),
     );
   },
 
@@ -817,7 +820,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
           ? `\\langle {${arg1}} \\rangle`
           : `\\left\\langle {${arg1}} \\right\\rangle`;
     parser.Push(
-      new TexParser(macro, parser.stack.env, parser.configuration).mml()
+      new TexParser(macro, parser.stack.env, parser.configuration).mml(),
     );
   },
 
@@ -834,7 +837,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     const arg3 = parser.GetArgument(name);
     const macro = outputBraket([arg1, arg2, arg3], star1, star2);
     parser.Push(
-      new TexParser(macro, parser.stack.env, parser.configuration).mml()
+      new TexParser(macro, parser.stack.env, parser.configuration).mml(),
     );
   },
 
@@ -895,7 +898,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       (open ? '\\right' : '') +
       close;
     parser.Push(
-      new TexParser(macro, parser.stack.env, parser.configuration).mml()
+      new TexParser(macro, parser.stack.env, parser.configuration).mml(),
     );
   },
 
@@ -1085,10 +1088,10 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     parser.Push(
       parser.itemFactory
         .create('close')
-        .setProperties({ 'pre-autoclose': true })
+        .setProperties({ 'pre-autoclose': true }),
     );
     parser.Push(
-      parser.itemFactory.create('mml', mo).setProperties({ autoclose: true })
+      parser.itemFactory.create('mml', mo).setProperties({ autoclose: true }),
     );
   },
 
@@ -1102,7 +1105,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       ? '\\vec{\\gradientnabla}'
       : '{\\gradientnabla}';
     return parser.Push(
-      new TexParser(argument, parser.stack.env, parser.configuration).mml()
+      new TexParser(argument, parser.stack.env, parser.configuration).mml(),
     );
   },
 
@@ -1114,7 +1117,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
   DiffD(parser: TexParser, _name: string) {
     let argument = parser.options.physics.italicdiff ? 'd' : '{\\rm d}';
     return parser.Push(
-      new TexParser(argument, parser.stack.env, parser.configuration).mml()
+      new TexParser(argument, parser.stack.env, parser.configuration).mml(),
     );
   },
 

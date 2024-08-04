@@ -96,7 +96,7 @@ export interface SvgMrowClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgMrowNTD<N, T, D>;
 }
 
@@ -211,7 +211,7 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
       for (let i = 0; i <= n; i++) {
         svg[i] = adaptor.append(
           this.dom[0],
-          this.svg('g', { 'data-mjx-linebox': true, 'data-mjx-lineno': i })
+          this.svg('g', { 'data-mjx-linebox': true, 'data-mjx-lineno': i }),
         ) as N;
       }
       //
@@ -307,7 +307,7 @@ export interface SvgInferredMrowClass<N, T, D>
   new (
     factory: SvgWrapper<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgInferredMrowNTD<N, T, D>;
 }
 

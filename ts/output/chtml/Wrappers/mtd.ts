@@ -91,7 +91,7 @@ export interface ChtmlMtdClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlMtdNTD<N, T, D>;
 }
 

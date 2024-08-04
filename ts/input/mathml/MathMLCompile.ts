@@ -152,7 +152,7 @@ export class MathMLCompile<N, T, D> {
     type: string,
     node: N,
     texClass: string,
-    limits: boolean
+    limits: boolean,
   ): MmlNode {
     let mml = this.factory.create(type);
     if (type === 'TeXAtom' && texClass === 'OP' && !limits) {
@@ -183,7 +183,7 @@ export class MathMLCompile<N, T, D> {
     ) {
       return (this.factory.create('html') as HtmlNode<N>).setHTML(
         node,
-        this.adaptor
+        this.adaptor,
       );
     }
     this.error('Unknown node type "' + type + '"');
@@ -281,7 +281,7 @@ export class MathMLCompile<N, T, D> {
         this.addText(mml, child);
       } else if (mml.isKind('annotation-xml')) {
         mml.appendChild(
-          (this.factory.create('XML') as XMLNode).setXML(child, adaptor)
+          (this.factory.create('XML') as XMLNode).setXML(child, adaptor),
         );
       } else {
         let childMml = mml.appendChild(this.makeNode(child));
@@ -296,7 +296,7 @@ export class MathMLCompile<N, T, D> {
             childMml.mError(
               'There should not be children for ' + childMml.kind + ' nodes',
               this.options['verify'],
-              true
+              true,
             );
           }
         }
@@ -339,7 +339,7 @@ export class MathMLCompile<N, T, D> {
         } else if (name.substring(0, 11) !== 'MJX-TeXAtom') {
           mml.attributes.set(
             'mathvariant',
-            this.fixCalligraphic(name.substring(3))
+            this.fixCalligraphic(name.substring(3)),
           );
         }
       } else {

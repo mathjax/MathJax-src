@@ -46,14 +46,14 @@ const BraketMethods: { [key: string]: ParseMethod } = {
     close: string,
     stretchy: boolean,
     barmax: number,
-    space: boolean = false
+    space: boolean = false,
   ) {
     let next = parser.GetNext();
     if (next === '') {
       throw new TexError(
         'MissingArgFor',
         'Missing argument for %1',
-        parser.currentCS
+        parser.currentCS,
       );
     }
     let single = true;
@@ -101,7 +101,7 @@ const BraketMethods: { [key: string]: ParseMethod } = {
         'token',
         'mo',
         { stretchy: false, 'data-braketbar': true, texClass: TEXCLASS.ORD },
-        c
+        c,
       );
       parser.Push(node);
       return;
@@ -124,9 +124,9 @@ const BraketMethods: { [key: string]: ParseMethod } = {
         'token',
         'mo',
         { stretchy: true, 'data-braketbar': true, texClass: TEXCLASS.BIN },
-        c
+        c,
       ),
-      parser.create('node', 'TeXAtom', [], { texClass: TEXCLASS.OPEN })
+      parser.create('node', 'TeXAtom', [], { texClass: TEXCLASS.OPEN }),
     );
     top.setProperty('barcount', (top.getProperty('barcount') as number) + 1);
   },

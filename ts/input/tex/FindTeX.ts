@@ -113,10 +113,10 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
     this.env = this.sub = 0;
     let i = 1;
     options['inlineMath'].forEach((delims: Delims) =>
-      this.addPattern(starts, delims, false)
+      this.addPattern(starts, delims, false),
     );
     options['displayMath'].forEach((delims: Delims) =>
-      this.addPattern(starts, delims, true)
+      this.addPattern(starts, delims, true),
     );
     if (starts.length) {
       parts.push(starts.sort(sortLength).join('|'));
@@ -163,7 +163,7 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
   protected endPattern(end: string, endp?: string): RegExp {
     return new RegExp(
       (endp || quotePattern(end)) + '|\\\\(?:[a-zA-Z]|.)|[{}]',
-      'g'
+      'g',
     );
   }
 
@@ -182,7 +182,7 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
     text: string,
     n: number,
     start: RegExpExecArray,
-    end: EndItem
+    end: EndItem,
   ): ProtoItem<N, T> {
     let [close, display, pattern] = end;
     let i = (pattern.lastIndex = start.index + start[0].length);
@@ -197,7 +197,7 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
           n,
           start.index,
           match.index + match[0].length,
-          display
+          display,
         );
       } else if (match[0] === '{') {
         braces++;
@@ -241,7 +241,7 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
             '',
             n,
             start.index,
-            end
+            end,
           );
         } else {
           match = protoItem<N, T>('', math, '', n, start.index, end, false);

@@ -43,7 +43,7 @@ namespace NewcommandUtil {
       throw new TexError(
         'MissingCS',
         '%1 must be followed by a control sequence',
-        cmd
+        cmd,
       );
     }
     let cs = UnitUtil.trimSpaces(parser.GetArgument(cmd));
@@ -67,7 +67,7 @@ namespace NewcommandUtil {
       throw new TexError(
         'IllegalControlSequenceName',
         'Illegal control sequence name for %1',
-        name
+        name,
       );
     }
     return cs;
@@ -90,7 +90,7 @@ namespace NewcommandUtil {
         throw new TexError(
           'IllegalParamNumber',
           'Illegal number of parameters specified in %1',
-          name
+          name,
         );
       }
     }
@@ -108,7 +108,7 @@ namespace NewcommandUtil {
   export function GetTemplate(
     parser: TexParser,
     cmd: string,
-    cs: string
+    cs: string,
   ): number | string[] {
     // @test Def Double Let, Def ReDef, Def Let
     let c = parser.GetNext();
@@ -130,7 +130,7 @@ namespace NewcommandUtil {
           throw new TexError(
             'CantUseHash2',
             'Illegal use of # in template for %1',
-            cs
+            cs,
           );
         }
         if (parseInt(c) !== ++n) {
@@ -138,7 +138,7 @@ namespace NewcommandUtil {
           throw new TexError(
             'SequentialParam',
             'Parameters for %1 must be numbered sequentially',
-            cs
+            cs,
           );
         }
         i = parser.i + 1;
@@ -163,7 +163,7 @@ namespace NewcommandUtil {
     throw new TexError(
       'MissingReplacementString',
       'Missing replacement string for definition of %1',
-      cmd
+      cmd,
     );
   }
 
@@ -259,7 +259,7 @@ namespace NewcommandUtil {
     parser: TexParser,
     cs: string,
     char: string,
-    attr: Attributes
+    attr: Attributes,
   ) {
     const handlers = parser.configuration.handlers;
     const handler = handlers.retrieve(NEW_DELIMITER) as sm.DelimiterMap;
@@ -280,7 +280,7 @@ namespace NewcommandUtil {
     cs: string,
     func: ParseMethod,
     attr: Args[],
-    token: string = ''
+    token: string = '',
   ) {
     const handlers = parser.configuration.handlers;
     const handler = handlers.retrieve(NEW_COMMAND) as sm.CommandMap;
@@ -298,7 +298,7 @@ namespace NewcommandUtil {
     parser: TexParser,
     env: string,
     func: ParseMethod,
-    attr: Args[]
+    attr: Args[],
   ) {
     const handlers = parser.configuration.handlers;
     const handler = handlers.retrieve(NEW_ENVIRONMENT) as sm.EnvironmentMap;

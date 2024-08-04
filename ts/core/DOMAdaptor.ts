@@ -261,7 +261,7 @@ export interface DOMAdaptor<N, T, D> {
     node: N,
     name: string,
     value: string | number,
-    ns?: string
+    ns?: string,
   ): void;
 
   /**
@@ -421,7 +421,7 @@ export abstract class AbstractDOMAdaptor<N, T, D>
     kind: string,
     def: OptionList = {},
     children: (N | T)[] = [],
-    ns?: string
+    ns?: string,
   ) {
     const node = this.create(kind, ns);
     this.setAttributes(node, def);
@@ -453,7 +453,7 @@ export abstract class AbstractDOMAdaptor<N, T, D>
         this.setStyle(
           node,
           key.replace(/-([a-z])/g, (_m, c) => c.toUpperCase()),
-          def.style[key]
+          def.style[key],
         );
       }
     }
@@ -615,7 +615,7 @@ export abstract class AbstractDOMAdaptor<N, T, D>
     node: N,
     name: string,
     value: string,
-    ns?: string
+    ns?: string,
   ): void;
 
   /**
@@ -710,7 +710,7 @@ export abstract class AbstractDOMAdaptor<N, T, D>
   public abstract nodeSize(
     node: N,
     em?: number,
-    local?: boolean
+    local?: boolean,
   ): [number, number];
 
   /**

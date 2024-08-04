@@ -91,7 +91,7 @@ export interface SvgMfracClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgMfracNTD<N, T, D>;
 }
 
@@ -141,7 +141,7 @@ export const SvgMfrac = (function <N, T, D>(): SvgMfracClass<N, T, D> {
       this.standardSvgNodes(parents);
       const { linethickness, bevelled } = this.node.attributes.getList(
         'linethickness',
-        'bevelled'
+        'bevelled',
       );
       const display = this.isDisplay();
       if (bevelled) {
@@ -166,7 +166,7 @@ export const SvgMfrac = (function <N, T, D>(): SvgMfracClass<N, T, D> {
       const svg = this.dom;
       const { numalign, denomalign } = this.node.attributes.getList(
         'numalign',
-        'denomalign'
+        'denomalign',
       );
       const [num, den] = this.childNodes;
       const nbox = num.getOuterBBox();
@@ -180,7 +180,7 @@ export const SvgMfrac = (function <N, T, D>(): SvgMfracClass<N, T, D> {
         : tex.nulldelimiterspace;
       const W = Math.max(
         (nbox.L + nbox.w + nbox.R) * nbox.rscale,
-        (dbox.L + dbox.w + dbox.R) * dbox.rscale
+        (dbox.L + dbox.w + dbox.R) * dbox.rscale,
       );
       const nx = this.getAlignX(W, nbox, numalign as string) + d + pad;
       const dx = this.getAlignX(W, dbox, denomalign as string) + d + pad;
@@ -198,7 +198,7 @@ export const SvgMfrac = (function <N, T, D>(): SvgMfracClass<N, T, D> {
           height: this.fixed(t),
           x: this.fixed(pad),
           y: this.fixed(a - t / 2),
-        })
+        }),
       );
     }
 
@@ -211,7 +211,7 @@ export const SvgMfrac = (function <N, T, D>(): SvgMfracClass<N, T, D> {
       const svg = this.dom;
       const { numalign, denomalign } = this.node.attributes.getList(
         'numalign',
-        'denomalign'
+        'denomalign',
       );
       const [num, den] = this.childNodes;
       const nbox = num.getOuterBBox();
@@ -223,7 +223,7 @@ export const SvgMfrac = (function <N, T, D>(): SvgMfracClass<N, T, D> {
         : tex.nulldelimiterspace;
       const W = Math.max(
         (nbox.L + nbox.w + nbox.R) * nbox.rscale,
-        (dbox.L + dbox.w + dbox.R) * dbox.rscale
+        (dbox.L + dbox.w + dbox.R) * dbox.rscale,
       );
       const nx = this.getAlignX(W, nbox, numalign as string) + pad;
       const dx = this.getAlignX(W, dbox, denomalign as string) + pad;
@@ -254,7 +254,7 @@ export const SvgMfrac = (function <N, T, D>(): SvgMfracClass<N, T, D> {
       this.bevel.place(w - delta / 2, 0);
       den.place(
         w + this.bevel.getOuterBBox().w + dbox.L * dbox.rscale - delta,
-        v
+        v,
       );
     }
   };

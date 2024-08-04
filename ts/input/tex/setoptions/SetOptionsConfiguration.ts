@@ -57,7 +57,7 @@ export const SetOptionsUtil = {
       throw new TexError(
         'PackageNotSettable',
         'Options can\'t be set for package "%1"',
-        extension
+        extension,
       );
     }
     return true;
@@ -82,7 +82,7 @@ export const SetOptionsUtil = {
       throw new TexError(
         'OptionNotSettable',
         'Option "%1" is not allowed to be set',
-        option
+        option,
       );
     }
     if (
@@ -94,14 +94,14 @@ export const SetOptionsUtil = {
         throw new TexError(
           'InvalidTexOption',
           'Invalid TeX option "%1"',
-          option
+          option,
         );
       } else {
         throw new TexError(
           'InvalidOptionKey',
           'Invalid option "%1" for package "%2"',
           option,
-          extension
+          extension,
         );
       }
     }
@@ -121,7 +121,7 @@ export const SetOptionsUtil = {
     _parser: TexParser,
     _extension: string,
     _option: string,
-    value: string
+    value: string,
   ): string {
     return value;
   },
@@ -161,7 +161,7 @@ const setOptionsMap = new CommandMap('setoptions', {
  */
 function setoptionsConfig(
   _config: ParserConfiguration,
-  jax: TeX<any, any, any>
+  jax: TeX<any, any, any>,
 ) {
   const require = jax.parseOptions.handlers
     .get(HandlerType.MACRO)
@@ -174,7 +174,7 @@ function setoptionsConfig(
         '\\Require{#2}\\setOptions[#2]{#1}',
         2,
         '',
-      ])
+      ]),
     );
   }
 }

@@ -217,7 +217,7 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
    */
   public abstract compile(
     math: MathItem<N, T, D>,
-    document: MathDocument<N, T, D>
+    document: MathDocument<N, T, D>,
   ): MmlNode;
 
   /**
@@ -234,7 +234,7 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
     filters: FunctionList,
     math: MathItem<N, T, D>,
     document: MathDocument<N, T, D>,
-    data: any
+    data: any,
   ): any {
     let args = { math: math, document: document, data: data };
     filters.execute(args);

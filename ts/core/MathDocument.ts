@@ -57,7 +57,7 @@ export type RenderDoc<N, T, D> = (document: MathDocument<N, T, D>) => boolean;
  */
 export type RenderMath<N, T, D> = (
   math: MathItem<N, T, D>,
-  document: MathDocument<N, T, D>
+  document: MathDocument<N, T, D>,
 ) => boolean;
 
 /**
@@ -121,7 +121,7 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
    * @returns {RenderList}    The newly created prioritied list
    */
   public static create<N, T, D>(
-    actions: RenderActions<N, T, D>
+    actions: RenderActions<N, T, D>,
   ): RenderList<N, T, D> {
     const list = new this<N, T, D>();
     for (const id of Object.keys(actions)) {
@@ -143,7 +143,7 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
    */
   public static action<N, T, D>(
     id: string,
-    action: RenderAction<N, T, D>
+    action: RenderAction<N, T, D>,
   ): [RenderData<N, T, D>, number] {
     let renderDoc, renderMath;
     let convert = true;
@@ -201,7 +201,7 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
    */
   public renderDoc(
     document: MathDocument<N, T, D>,
-    start: number = STATE.UNPROCESSED
+    start: number = STATE.UNPROCESSED,
   ) {
     for (const item of this.items) {
       if (item.priority >= start) {
@@ -220,7 +220,7 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
   public renderMath(
     math: MathItem<N, T, D>,
     document: MathDocument<N, T, D>,
-    start: number = STATE.UNPROCESSED
+    start: number = STATE.UNPROCESSED,
   ) {
     for (const item of this.items) {
       if (item.priority >= start) {
@@ -239,7 +239,7 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
   public renderConvert(
     math: MathItem<N, T, D>,
     document: MathDocument<N, T, D>,
-    end: number = STATE.LAST
+    end: number = STATE.LAST,
   ) {
     for (const item of this.items) {
       if (item.priority > end) return;
@@ -551,7 +551,7 @@ class DefaultOutputJax<N, T, D> extends AbstractOutputJax<N, T, D> {
    */
   public typeset(
     _math: MathItem<N, T, D>,
-    _document: MathDocument<N, T, D> = null
+    _document: MathDocument<N, T, D> = null,
   ) {
     return null as N;
   }
@@ -609,14 +609,14 @@ export abstract class AbstractMathDocument<N, T, D>
     compileError: (
       doc: AbstractMathDocument<any, any, any>,
       math: MathItem<any, any, any>,
-      err: Error
+      err: Error,
     ) => {
       doc.compileError(math, err);
     },
     typesetError: (
       doc: AbstractMathDocument<any, any, any>,
       math: MathItem<any, any, any>,
-      err: Error
+      err: Error,
     ) => {
       doc.typesetError(math, err);
     },
@@ -637,7 +637,7 @@ export abstract class AbstractMathDocument<N, T, D>
     'compile',
     'getMetrics',
     'typeset',
-    'updateDocument'
+    'updateDocument',
   );
 
   /**
@@ -701,7 +701,7 @@ export abstract class AbstractMathDocument<N, T, D>
     this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
     this.math = new (this.options['MathList'] || DefaultMathList)();
     this.renderActions = RenderList.create<N, T, D>(
-      this.options['renderActions']
+      this.options['renderActions'],
     );
     this.renderPromises = [];
     this.processed = new AbstractMathDocument.ProcessBits();
@@ -743,7 +743,7 @@ export abstract class AbstractMathDocument<N, T, D>
   public addRenderAction(id: string, ...action: any[]) {
     const [fn, p] = RenderList.action<N, T, D>(
       id,
-      action as RenderAction<N, T, D>
+      action as RenderAction<N, T, D>,
     );
     this.renderActions.add(fn, p);
   }
@@ -792,14 +792,14 @@ export abstract class AbstractMathDocument<N, T, D>
           scale: 1,
           family: '',
         },
-        options
+        options,
       );
     if (containerWidth === null) {
       containerWidth = 80 * ex;
     }
     const jax = this.inputJax.reduce(
       (jax, ijax) => (ijax.name === format ? ijax : jax),
-      null
+      null,
     );
     const mitem = new this.options.MathItem(math, jax, display);
     mitem.start.node = this.adaptor.body(this.document);
@@ -881,10 +881,10 @@ export abstract class AbstractMathDocument<N, T, D>
         [
           this.mmlFactory.create('mtext', null, [
             (this.mmlFactory.create('text') as TextNode).setText(
-              'Math input error'
+              'Math input error',
             ),
           ]),
-        ]
+        ],
       ),
     ]);
     if (math.display) {
@@ -939,9 +939,9 @@ export abstract class AbstractMathDocument<N, T, D>
               'line-height': 'normal',
             },
           },
-          [this.adaptor.text('Math output error')]
+          [this.adaptor.text('Math output error')],
         ),
-      ]
+      ],
     );
     if (math.display) {
       this.adaptor.setAttributes(math.typesetRoot, {

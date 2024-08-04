@@ -114,7 +114,7 @@ export interface SvgMmultiscriptsClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgMmultiscriptsNTD<N, T, D>;
 }
 
@@ -181,7 +181,7 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<
           v,
           this.firstPrescript,
           data.numPrescripts,
-          preAlign
+          preAlign,
         );
       }
       const base = this.baseChild;
@@ -197,7 +197,7 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<
           v,
           1,
           data.numScripts,
-          postAlign
+          postAlign,
         );
       }
     }
@@ -220,7 +220,7 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<
       v: number,
       i: number,
       n: number,
-      align: string
+      align: string,
     ): number {
       const adaptor = this.adaptor;
       const alignX = AlignX(align);

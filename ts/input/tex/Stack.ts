@@ -47,7 +47,7 @@ export default class Stack {
   constructor(
     private _factory: StackItemFactory,
     private _env: EnvList,
-    inner: boolean
+    inner: boolean,
   ) {
     this.global = { isInner: inner };
     this.stack = [this._factory.create('start', this.global)];

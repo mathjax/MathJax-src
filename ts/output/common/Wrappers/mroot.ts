@@ -131,7 +131,7 @@ export function CommonMrootMixin<
   FC extends FontDataClass<CC, VV, DD>,
   B extends CommonMsqrtClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 >(
-  Base: Constructor<CommonMsqrt<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>
+  Base: Constructor<CommonMsqrt<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>,
 ): B {
   return class CommonMrootMixin
     extends Base

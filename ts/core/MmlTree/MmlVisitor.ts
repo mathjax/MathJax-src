@@ -141,7 +141,7 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
       {},
       defaults,
       this.getDataAttributes(node),
-      node.attributes.getAllAttributes()
+      node.attributes.getAllAttributes(),
     ) as PropertyList;
     const variants = CLASS.variants;
     if (attributes.hasOwnProperty('mathvariant')) {
@@ -198,7 +198,7 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
         this.setDataAttribute(
           data,
           'texclass',
-          texclass < 0 ? 'NONE' : TEXCLASSNAMES[texclass]
+          texclass < 0 ? 'NONE' : TEXCLASSNAMES[texclass],
         );
     }
     node.getProperty('scriptlevel') &&

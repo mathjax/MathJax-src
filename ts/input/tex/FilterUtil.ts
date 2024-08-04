@@ -68,7 +68,7 @@ namespace FilterUtil {
         return;
       }
       const keep = new Set(
-        ((attribs.get('mjx-keep-attrs') as string) || '').split(/ /)
+        ((attribs.get('mjx-keep-attrs') as string) || '').split(/ /),
       );
       attribs.unset('mjx-keep-attrs');
       for (const key of attribs.getExplicitNames()) {
@@ -154,7 +154,7 @@ namespace FilterUtil {
   let _copyExplicit = function (
     attrs: string[],
     node1: MmlNode,
-    node2: MmlNode
+    node2: MmlNode,
   ) {
     let attr1 = node1.attributes;
     let attr2 = node2.attributes;
@@ -260,7 +260,7 @@ namespace FilterUtil {
   let _moveLimits = function (
     options: ParseOptions,
     underover: string,
-    subsup: string
+    subsup: string,
   ) {
     const remove: MmlNode[] = [];
     for (const mml of options.getList(underover)) {

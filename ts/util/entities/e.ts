@@ -85,5 +85,5 @@ Entities.add(
     expectation: '\u2130',
     exponentiale: '\u2147',
   },
-  'e'
+  'e',
 );

@@ -71,7 +71,7 @@ export class LinkedomAdaptor extends NodeMixin<
  */
 export function linkedomAdaptor(
   parseHTML: any,
-  options: OptionList = null
+  options: OptionList = null,
 ): LinkedomAdaptor {
   const window = parseHTML('<html></html>');
   //

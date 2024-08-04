@@ -60,7 +60,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
       throw new TexError(
         'BadFont',
         "Font name for %1 can't contain semicolons",
-        parser.currentCS
+        parser.currentCS,
       );
     }
     let n = UnitUtil.trimSpaces(parser.GetArgument(name)).replace(/^0x/, 'x');
@@ -68,7 +68,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
       throw new TexError(
         'BadUnicode',
         'Argument to %1 must be a number',
-        parser.currentCS
+        parser.currentCS,
       );
     }
     let N = parseInt(n.match(/^x/) ? '0' + n : n);
@@ -113,7 +113,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
       throw new TexError(
         'BadRawUnicode',
         'Argument to %1 must a hexadecimal number with 1 to 6 digits',
-        parser.currentCS
+        parser.currentCS,
       );
     }
     const n = parseInt(hex, 16);
@@ -146,7 +146,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
             throw new TexError(
               'InvalidAlphanumeric',
               'Invalid alphanumeric constant for %1',
-              parser.currentCS
+              parser.currentCS,
             );
           }
           c = cs[0];
@@ -168,7 +168,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
       throw new TexError(
         'MissingNumber',
         'Missing numeric constant for %1',
-        parser.currentCS
+        parser.currentCS,
       );
     }
     parser.i += match[0].length;

@@ -97,7 +97,7 @@ export interface SvgMoClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgMoNTD<N, T, D>;
 }
 
@@ -165,13 +165,13 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
             this.adaptor.setAttribute(
               svg[0],
               'transform',
-              `translate(${v} ${u})`
+              `translate(${v} ${u})`,
             );
           svg[1] &&
             this.adaptor.setAttribute(
               svg[1],
               'transform',
-              `translate(${v} ${u})`
+              `translate(${v} ${u})`,
             );
         }
         svg[0] && this.addChildren([svg[0]]);
@@ -213,7 +213,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
     protected stretchVertical(
       stretch: number[],
       variant: string[],
-      bbox: BBox
+      bbox: BBox,
     ) {
       const { h, d, w } = bbox;
       const T = this.addTop(stretch[0], variant[0], h, w);
@@ -235,7 +235,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
     protected stretchHorizontal(
       stretch: number[],
       variant: string[],
-      bbox: BBox
+      bbox: BBox,
     ) {
       const w = bbox.w;
       const L = this.addLeft(stretch[0], variant[0]);
@@ -280,7 +280,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
       variant: string,
       x: number,
       y: number,
-      parent: N = null
+      parent: N = null,
     ): number {
       if (parent) {
         return this.placeChar(n, x, y, parent, variant);
@@ -401,7 +401,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
       W: number,
       L: number,
       R: number,
-      x: number = 0
+      x: number = 0,
     ) {
       if (!n) return;
       R = Math.max(0, R - HFUZZ); // A little less than the width of the right glyph
@@ -425,7 +425,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
       adaptor.setAttribute(
         glyph as N,
         'transform',
-        'scale(' + this.jax.fixed(s) + ',1)'
+        'scale(' + this.jax.fixed(s) + ',1)',
       );
       if (this.dom[0]) {
         adaptor.append(this.dom[0], svg);

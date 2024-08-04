@@ -172,5 +172,5 @@ Entities.add(
     lvertneqq: '\u2268\uFE00',
     lvnE: '\u2268\uFE00',
   },
-  'l'
+  'l',
 );

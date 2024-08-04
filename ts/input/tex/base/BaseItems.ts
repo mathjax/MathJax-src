@@ -48,7 +48,7 @@ export class StartItem extends BaseItem {
    */
   constructor(
     factory: StackItemFactory,
-    public global: EnvList
+    public global: EnvList,
   ) {
     super(factory);
   }
@@ -202,7 +202,7 @@ export class PrimeItem extends BaseItem {
       const node = this.create(
         'node',
         top0.getProperty('movesupsub') ? 'mover' : 'msup',
-        [top0, top1]
+        [top0, top1],
       );
       return [[node, item], true];
     }
@@ -255,7 +255,7 @@ export class SubsupItem extends BaseItem {
           NodeUtil.setProperty(
             this.getProperty('primes') as MmlNode,
             'variantForm',
-            true
+            true,
           );
           const node = this.create('node', 'mrow', [
             this.getProperty('primes') as MmlNode,
@@ -270,7 +270,7 @@ export class SubsupItem extends BaseItem {
         NodeUtil.setProperty(
           top,
           'movesupsub',
-          this.getProperty('movesupsub') as Property
+          this.getProperty('movesupsub') as Property,
         );
       }
       const result = this.factory.create('mml', top);
@@ -320,7 +320,7 @@ export class OverItem extends BaseItem {
       throw new TexError(
         'AmbiguousUseOf',
         'Ambiguous use of %1',
-        item.getName()
+        item.getName(),
       );
     }
     if (item.isClose) {
@@ -334,7 +334,7 @@ export class OverItem extends BaseItem {
         NodeUtil.setAttribute(
           mml,
           'linethickness',
-          this.getProperty('thickness') as string
+          this.getProperty('thickness') as string,
         );
       }
       if (this.getProperty('ldelim') || this.getProperty('rdelim')) {
@@ -344,12 +344,12 @@ export class OverItem extends BaseItem {
           this.factory.configuration,
           this.getProperty('ldelim') as string,
           mml,
-          this.getProperty('rdelim') as string
+          this.getProperty('rdelim') as string,
         );
       }
       mml.attributes.set(
         TexConstant.Attr.LATEXITEM,
-        this.getProperty('name') as string
+        this.getProperty('name') as string,
       );
       return [[this.factory.create('mml', mml), item], true];
     }
@@ -415,7 +415,7 @@ export class LeftItem extends BaseItem {
         this.toMml(),
         item.getProperty('delim') as string,
         '',
-        item.getProperty('color') as string
+        item.getProperty('color') as string,
       );
       let left = fenced.childNodes[0];
       let right = fenced.childNodes[fenced.childNodes.length - 1];
@@ -426,7 +426,7 @@ export class LeftItem extends BaseItem {
         .Peek()[0]
         .attributes.set(
           TexConstant.Attr.LATEXITEM,
-          '\\left' + item.startStr.slice(this.startI, item.stopI)
+          '\\left' + item.startStr.slice(this.startI, item.stopI),
         );
       return [[mrow], true];
     }
@@ -443,7 +443,7 @@ export class LeftItem extends BaseItem {
       this.Push(
         this.create('node', 'TeXAtom', [], { texClass: TEXCLASS.CLOSE }),
         middle,
-        this.create('node', 'TeXAtom', [], { texClass: TEXCLASS.OPEN })
+        this.create('node', 'TeXAtom', [], { texClass: TEXCLASS.OPEN }),
       );
       this.env = {}; // Since \middle closes the group, clear the environment
       return [[this], true]; // this will reset the environment to its initial state
@@ -587,7 +587,7 @@ export class BeginItem extends BaseItem {
           'EnvBadEnd',
           '\\begin{%1} ended with \\end{%2}',
           this.getName(),
-          item.getName()
+          item.getName(),
         );
       }
       if (!this.getProperty('end')) {
@@ -650,7 +650,7 @@ export class StyleItem extends BaseItem {
       'node',
       'mstyle',
       this.nodes,
-      this.getProperty('styles')
+      this.getProperty('styles'),
     );
     return [[this.factory.create('mml', mml), item], true];
   }
@@ -792,7 +792,7 @@ export class FnItem extends BaseItem {
         'token',
         'mo',
         { texClass: TEXCLASS.NONE },
-        entities.ApplyFunction
+        entities.ApplyFunction,
       );
       return [[top, node, item], true];
     }
@@ -1096,7 +1096,7 @@ export class ArrayItem extends BaseItem {
       NodeUtil.setAttribute(
         mml,
         'framespacing',
-        this.getProperty('arrayPadding') as string
+        this.getProperty('arrayPadding') as string,
       );
     }
     mml = this.handleFrame(mml);
@@ -1106,7 +1106,7 @@ export class ArrayItem extends BaseItem {
         this.factory.configuration,
         this.getProperty('open') as string,
         mml,
-        this.getProperty('close') as string
+        this.getProperty('close') as string,
       );
     }
     return mml;
@@ -1128,7 +1128,7 @@ export class ArrayItem extends BaseItem {
     //
     const fstyle = this.frame.reduce(
       (fstyle, [, style]) => (style === fstyle ? style : ''),
-      this.frame[0][1]
+      this.frame[0][1],
     );
     if (fstyle) {
       if (this.frame.length === 4) {
@@ -1253,7 +1253,7 @@ export class ArrayItem extends BaseItem {
           i -= match[2].length;
           let entry = parser.string.slice(parser.i, i).trim();
           const prefix = entry.match(
-            /^(?:\s*\\(?:h(?:dash)?line|hfil{1,3}|rowcolor\s*\{.*?\}))+/
+            /^(?:\s*\\(?:h(?:dash)?line|hfil{1,3}|rowcolor\s*\{.*?\}))+/,
           );
           if (prefix) {
             entry = entry.slice(prefix[0].length);
@@ -1283,7 +1283,7 @@ export class ArrayItem extends BaseItem {
         NodeUtil.setAttribute(
           mtd,
           'columnalign',
-          NodeUtil.getAttribute(mtd, 'columnalign') ? 'center' : 'left'
+          NodeUtil.getAttribute(mtd, 'columnalign') ? 'center' : 'left',
         );
       }
     }
@@ -1397,7 +1397,7 @@ export class ArrayItem extends BaseItem {
         rows.push(UnitUtil.em(rowspacing));
       }
       rows[this.table.length - 1] = UnitUtil.em(
-        Math.max(0, rowspacing + UnitUtil.dimen2em(spacing))
+        Math.max(0, rowspacing + UnitUtil.dimen2em(spacing)),
       );
       this.arraydef['rowspacing'] = rows.join(' ');
     }
@@ -1517,7 +1517,7 @@ export class EqnArrayItem extends ArrayItem {
               'node',
               'mstyle',
               cell.childNodes[0].childNodes,
-              { indentshift }
+              { indentshift },
             );
             cell.childNodes[0].childNodes = [];
             cell.appendChild(mstyle);
@@ -1629,7 +1629,7 @@ function addLatexItem(node: MmlNode, item: StackItem, prefix: string = '') {
   if (str) {
     node.attributes.set(
       TexConstant.Attr.LATEXITEM,
-      prefix ? prefix + str : str
+      prefix ? prefix + str : str,
     );
     node.attributes.set(TexConstant.Attr.LATEX, prefix ? prefix + str : str);
   }

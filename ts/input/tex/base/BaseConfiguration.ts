@@ -88,7 +88,7 @@ function csUndefined(_parser: TexParser, name: string) {
   throw new TexError(
     'UndefinedControlSequence',
     'Undefined control sequence %1',
-    '\\' + name
+    '\\' + name,
   );
 }
 

@@ -89,7 +89,7 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
     let [mml, find, compile] = separateOptions(
       options,
       FindMathML.OPTIONS,
-      MathMLCompile.OPTIONS
+      MathMLCompile.OPTIONS,
     );
     super(mml);
     this.findMathML =
@@ -155,13 +155,13 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
         this.preFilters,
         math,
         document,
-        (math.math || '<math></math>').trim()
+        (math.math || '<math></math>').trim(),
       );
       if (this.options['parseAs'] === 'html') {
         mathml = `<html><head></head><body>${mathml}</body></html>`;
       }
       let doc = this.checkForErrors(
-        this.adaptor.parse(mathml, 'text/' + this.options['parseAs'])
+        this.adaptor.parse(mathml, 'text/' + this.options['parseAs']),
       );
       let body = this.adaptor.body(doc);
       if (this.adaptor.childNodes(body).length !== 1) {
@@ -172,7 +172,7 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
         this.error(
           'MathML must be formed by a <math> element, not <' +
             this.adaptor.kind(mml) +
-            '>'
+            '>',
         );
       }
     }

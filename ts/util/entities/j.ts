@@ -28,5 +28,5 @@ Entities.add(
     jsercy: '\u0458',
     jukcy: '\u0454',
   },
-  'j'
+  'j',
 );

@@ -53,7 +53,7 @@ export class HtmlNode<N> extends XMLNode {
    */
   public setHTML(
     html: N,
-    adaptor: DOMAdaptor<any, any, any> = null
+    adaptor: DOMAdaptor<any, any, any> = null,
   ): HtmlNode<N> {
     //
     // Test if the HTML element has attributes and wrap in a <span> if not

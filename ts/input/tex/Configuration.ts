@@ -39,7 +39,7 @@ export type ProtoProcessor<T> = Processor<T> | T;
 export type ProcessorList = Processor<Function>[];
 export type ConfigMethod = (
   c: ParserConfiguration,
-  j: TeX<any, any, any>
+  j: TeX<any, any, any>,
 ) => void;
 export type InitMethod = (c: ParserConfiguration) => void;
 
@@ -53,7 +53,7 @@ export class Configuration {
    */
   private static makeProcessor<T>(
     func: ProtoProcessor<T>,
-    priority: number
+    priority: number,
   ): Processor<T> {
     return Array.isArray(func) ? func : [func, priority];
   }
@@ -79,7 +79,7 @@ export class Configuration {
       [ConfigurationType.CONFIG]?: ProtoProcessor<ConfigMethod>;
       [ConfigurationType.PRIORITY]?: number;
       [ConfigurationType.PARSER]?: string;
-    } = {}
+    } = {},
   ): Configuration {
     let priority = config.priority || PrioritizedList.DEFAULTPRIORITY;
     let init = config.init ? this.makeProcessor(config.init, priority) : null;
@@ -87,10 +87,10 @@ export class Configuration {
       ? this.makeProcessor(config.config, priority)
       : null;
     let preprocessors = (config.preprocessors || []).map((pre) =>
-      this.makeProcessor(pre, priority)
+      this.makeProcessor(pre, priority),
     );
     let postprocessors = (config.postprocessors || []).map((post) =>
-      this.makeProcessor(post, priority)
+      this.makeProcessor(post, priority),
     );
     let parser = config.parser || 'tex';
     return new Configuration(
@@ -106,7 +106,7 @@ export class Configuration {
       init,
       conf,
       priority,
-      parser
+      parser,
     );
   }
 
@@ -147,7 +147,7 @@ export class Configuration {
       [ConfigurationType.CONFIG]?: ProtoProcessor<ConfigMethod>;
       [ConfigurationType.PRIORITY]?: number;
       [ConfigurationType.PARSER]?: string;
-    } = {}
+    } = {},
   ): Configuration {
     let configuration = Configuration._create(name, config);
     ConfigurationHandler.set(name, configuration);
@@ -174,7 +174,7 @@ export class Configuration {
       [ConfigurationType.CONFIG]?: ProtoProcessor<ConfigMethod>;
       [ConfigurationType.PRIORITY]?: number;
       [ConfigurationType.PARSER]?: string;
-    } = {}
+    } = {},
   ): Configuration {
     return Configuration._create('', config);
   }
@@ -195,7 +195,7 @@ export class Configuration {
     readonly initMethod: Processor<InitMethod> = null,
     readonly configMethod: Processor<ConfigMethod> = null,
     public priority: number,
-    readonly parser: string
+    readonly parser: string,
   ) {
     this.handler = Object.assign(
       {
@@ -204,7 +204,7 @@ export class Configuration {
         [HandlerType.MACRO]: [],
         [HandlerType.ENVIRONMENT]: [],
       },
-      handler
+      handler,
     );
   }
 
@@ -324,7 +324,7 @@ export class ParserConfiguration {
    */
   constructor(
     packages: (string | [string, number])[],
-    parsers: string[] = ['tex']
+    parsers: string[] = ['tex'],
   ) {
     this.parsers = parsers;
     for (const pkg of packages.slice().reverse()) {
@@ -363,7 +363,7 @@ export class ParserConfiguration {
     conf &&
       this.configurations.add(
         conf,
-        typeof pkg === 'string' ? conf.priority : pkg[1]
+        typeof pkg === 'string' ? conf.priority : pkg[1],
       );
   }
 

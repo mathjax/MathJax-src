@@ -47,7 +47,7 @@ export class RadioCompare extends Radio {
       id: string;
       comparator: (variable: string, id: string) => boolean;
     },
-    menu: Menu
+    menu: Menu,
   ): Radio {
     return new this(menu, content, variable, id, comparator);
   }
@@ -60,7 +60,7 @@ export class RadioCompare extends Radio {
     content: string,
     variable: string,
     id: string,
-    private comparator: (variable: string, id: string) => boolean
+    private comparator: (variable: string, id: string) => boolean,
   ) {
     super(menu, content, variable, id);
   }
@@ -72,7 +72,7 @@ export class RadioCompare extends Radio {
   protected updateAria() {
     this.html.setAttribute(
       'aria-checked',
-      this.comparator(this.variable.getValue(), this.id) ? 'true' : 'false'
+      this.comparator(this.variable.getValue(), this.id) ? 'true' : 'false',
     );
   }
 

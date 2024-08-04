@@ -261,7 +261,7 @@ export abstract class CommonOutputJax<
   constructor(
     options: OptionList = {},
     defaultFactory: typeof CommonWrapperFactory = null,
-    defaultFont: FC = null
+    defaultFont: FC = null,
   ) {
     const [fontClass, font] =
       options.fontData instanceof FontData
@@ -269,7 +269,7 @@ export abstract class CommonOutputJax<
         : [options.fontData || defaultFont, null];
     const [jaxOptions, fontOptions] = separateOptions(
       options,
-      fontClass.OPTIONS
+      fontClass.OPTIONS,
     );
     super(jaxOptions);
     this.factory =
@@ -312,7 +312,7 @@ export abstract class CommonOutputJax<
    */
   public addExtension(
     font: FontExtensionData<CC, DD>,
-    prefix: string = ''
+    prefix: string = '',
   ): string[] {
     return this.font.addExtension(font, prefix);
   }
@@ -387,7 +387,7 @@ export abstract class CommonOutputJax<
   public toDOM(
     math: MathItem<N, T, D>,
     node: N,
-    html: MathDocument<N, T, D> = null
+    html: MathDocument<N, T, D> = null,
   ) {
     this.setDocument(html);
     this.math = math;
@@ -469,7 +469,7 @@ export abstract class CommonOutputJax<
           forcebreak,
           markNext,
           node,
-          child
+          child,
         );
         markNext = '';
         postbreak = false;
@@ -496,7 +496,7 @@ export abstract class CommonOutputJax<
                 linebreak,
                 node,
                 child,
-                mo
+                mo,
               );
             }
           } else {
@@ -512,7 +512,7 @@ export abstract class CommonOutputJax<
             forcebreak,
             linebreak,
             node,
-            child
+            child,
           );
         }
         postbreak = linebreak === 'newline';
@@ -559,7 +559,7 @@ export abstract class CommonOutputJax<
     linebreak: string,
     node: MmlNode,
     child: MmlNode,
-    mo: MmlNode = null
+    mo: MmlNode = null,
   ): boolean {
     child.setProperty('breakable', true);
     if (forcebreak && linebreak !== 'newline') {
@@ -720,7 +720,7 @@ export abstract class CommonOutputJax<
               float: 'right',
             },
           }),
-        ]
+        ],
       );
       this.testDisplay = adaptor.clone(this.testInline);
       adaptor.setStyle(this.testDisplay, 'display', 'table');
@@ -728,7 +728,7 @@ export abstract class CommonOutputJax<
       adaptor.setStyle(
         adaptor.firstChild(this.testDisplay) as N,
         'display',
-        'none'
+        'none',
       );
       const right = adaptor.lastChild(this.testDisplay) as N;
       adaptor.setStyle(right, 'display', 'table-cell');
@@ -737,7 +737,7 @@ export abstract class CommonOutputJax<
     }
     return adaptor.append(
       node,
-      adaptor.clone(display ? this.testDisplay : this.testInline) as N
+      adaptor.clone(display ? this.testDisplay : this.testInline) as N,
     ) as N;
   }
 
@@ -761,7 +761,7 @@ export abstract class CommonOutputJax<
           2;
     const scale = Math.max(
       this.options.minScale,
-      this.options.matchFontHeight ? ex / this.font.params.x_height / em : 1
+      this.options.matchFontHeight ? ex / this.font.params.x_height / em : 1,
     );
     return { em, ex, containerWidth, scale, family };
   }
@@ -778,7 +778,7 @@ export abstract class CommonOutputJax<
     //
     this.cssStyles.clear();
     this.cssStyles.addStyles(
-      (this.constructor as typeof CommonOutputJax).commonStyles
+      (this.constructor as typeof CommonOutputJax).commonStyles,
     );
     //
     // Add document-specific styles
@@ -825,7 +825,7 @@ export abstract class CommonOutputJax<
   protected addClassStyles(CLASS: typeof CommonWrapper, styles: CssStyles) {
     CLASS.addStyles<CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>>(
       styles,
-      this
+      this,
     );
   }
 
@@ -852,7 +852,7 @@ export abstract class CommonOutputJax<
     type: string,
     def: OptionList = {},
     content: (N | T)[] = [],
-    ns?: string
+    ns?: string,
   ): N {
     return this.adaptor.node(type, def, content, ns);
   }
@@ -904,7 +904,7 @@ export abstract class CommonOutputJax<
   public measureText(
     text: string,
     variant: string,
-    font: CssFontData = ['', false, false]
+    font: CssFontData = ['', false, false],
   ): UnknownBBox {
     const node = this.unknownText(text, variant);
     if (variant === '-explicitFont') {
@@ -928,11 +928,11 @@ export abstract class CommonOutputJax<
     text: N,
     chars: string,
     variant: string,
-    font: CssFontData = ['', false, false]
+    font: CssFontData = ['', false, false],
   ): UnknownBBox {
     if (variant === '-explicitFont') {
       variant = [font[0], font[1] ? 'T' : 'F', font[2] ? 'T' : 'F', ''].join(
-        '-'
+        '-',
       );
     }
     if (!this.unknownCache.has(variant)) {

@@ -130,7 +130,7 @@ function TableColor(parser: TexParser, name: string, type: keyof ColorData) {
     throw new TexError(
       'UnsupportedTableColor',
       'Unsupported use of %1',
-      parser.currentCS
+      parser.currentCS,
     );
   }
   //
@@ -141,7 +141,7 @@ function TableColor(parser: TexParser, name: string, type: keyof ColorData) {
       throw new TexError(
         'ColumnColorNotTop',
         '%1 must be in the top row or preamble',
-        name
+        name,
       );
     }
     top.color.col[top.row.length] = color;
@@ -157,7 +157,7 @@ function TableColor(parser: TexParser, name: string, type: keyof ColorData) {
       throw new TexError(
         'RowColorNotFirst',
         '%1 must be at the beginning of a row',
-        name
+        name,
       );
     }
   }

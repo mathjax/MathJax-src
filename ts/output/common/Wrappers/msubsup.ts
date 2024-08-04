@@ -141,7 +141,20 @@ export function CommonMsubMixin<
   FC extends FontDataClass<CC, VV, DD>,
   B extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 >(
-  Base: CommonScriptbaseConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  Base: CommonScriptbaseConstructor<
+    N,
+    T,
+    D,
+    JX,
+    WW,
+    WF,
+    WC,
+    CC,
+    VV,
+    DD,
+    FD,
+    FC
+  >,
 ): B {
   return class CommonMsubMixin
     extends Base
@@ -268,7 +281,20 @@ export function CommonMsupMixin<
   FC extends FontDataClass<CC, VV, DD>,
   B extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 >(
-  Base: CommonScriptbaseConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  Base: CommonScriptbaseConstructor<
+    N,
+    T,
+    D,
+    JX,
+    WW,
+    WF,
+    WC,
+    CC,
+    VV,
+    DD,
+    FD,
+    FC
+  >,
 ): B {
   return class CommonMsupMixin
     extends Base
@@ -415,7 +441,20 @@ export function CommonMsubsupMixin<
   FC extends FontDataClass<CC, VV, DD>,
   B extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 >(
-  Base: CommonScriptbaseConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  Base: CommonScriptbaseConstructor<
+    N,
+    T,
+    D,
+    JX,
+    WW,
+    WF,
+    WC,
+    CC,
+    VV,
+    DD,
+    FD,
+    FC
+  >,
 ): B {
   return class CommonMsubsupMixin
     extends Base
@@ -457,7 +496,7 @@ export function CommonMsubsupMixin<
      */
     public getUVQ(
       subbox: BBox = this.subChild.getOuterBBox(),
-      supbox: BBox = this.supChild.getOuterBBox()
+      supbox: BBox = this.supChild.getOuterBBox(),
     ): number[] {
       const base = this.baseCore;
       const bbox = base.getLineBBox(base.breakCount);
@@ -466,10 +505,10 @@ export function CommonMsubsupMixin<
       const t = 3 * tex.rule_thickness;
       const subscriptshift = this.length2em(
         this.node.attributes.get('subscriptshift'),
-        tex.sub2
+        tex.sub2,
       );
       const drop = this.baseCharZero(
-        bbox.d * this.baseScale + tex.sub_drop * subbox.rscale
+        bbox.d * this.baseScale + tex.sub_drop * subbox.rscale,
       );
       const supd = supbox.d * supbox.rscale;
       const subh = subbox.h * subbox.rscale;
@@ -502,11 +541,11 @@ export function CommonMsubsupMixin<
       //
       u = Math.max(
         this.length2em(this.node.attributes.get('superscriptshift'), u),
-        u
+        u,
       );
       v = Math.max(
         this.length2em(this.node.attributes.get('subscriptshift'), v),
-        v
+        v,
       );
       q = u - supd - (subh - v);
       this.UVQ = [u, -v, q];

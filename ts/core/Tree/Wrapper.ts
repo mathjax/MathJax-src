@@ -141,7 +141,7 @@ export class AbstractWrapper<
    */
   constructor(
     factory: WrapperFactory<N, C, W, WrapperClass<N, C, W>>,
-    node: N
+    node: N,
   ) {
     this.factory = factory;
     this.node = node;

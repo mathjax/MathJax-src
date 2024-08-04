@@ -56,7 +56,7 @@ export class BeginEnvItem extends BaseItem {
           'EnvBadEnd',
           '\\begin{%1} ended with \\end{%2}',
           this.getName(),
-          item.getName()
+          item.getName(),
         );
       }
       return [[this.factory.create('mml', this.toMml())], true];

@@ -90,7 +90,7 @@ export interface ChtmlMiClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlMiNTD<N, T, D>;
 }
 

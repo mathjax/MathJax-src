@@ -141,7 +141,7 @@ export interface SvgMencloseClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgMencloseNTD<N, T, D>;
 }
 
@@ -268,8 +268,8 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
                 t - d,
                 'L',
                 cos * HD + t,
-                HD - d - t
-              )
+                HD - d - t,
+              ),
             );
           },
           bbox: (node) => {
@@ -325,8 +325,8 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
                 h + d - 2 * t,
                 'L',
                 w - t,
-                h - t
-              )
+                h - t,
+              ),
             );
           },
           bbox: (node) => {

@@ -93,14 +93,14 @@ export class MmlMroot extends AbstractMmlNode {
     attributes: AttributeList,
     display: boolean,
     level: number,
-    prime: boolean
+    prime: boolean,
   ) {
     this.childNodes[0].setInheritedAttributes(attributes, display, level, true);
     this.childNodes[1].setInheritedAttributes(
       attributes,
       false,
       level + 2,
-      prime
+      prime,
     );
   }
 }

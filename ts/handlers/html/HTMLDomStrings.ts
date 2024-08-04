@@ -156,7 +156,7 @@ export class HTMLDomStrings<N, T, D> {
     let process = makeArray(this.options['processHtmlClass']);
     this.skipHtmlTags = new RegExp('^(?:' + skip.join('|') + ')$', 'i');
     this.ignoreHtmlClass = new RegExp(
-      '(?:^| )(?:' + ignore.join('|') + ')(?: |$)'
+      '(?:^| )(?:' + ignore.join('|') + ')(?: |$)',
     );
     this.processHtmlClass = new RegExp('(?:^| )(?:' + process + ')(?: |$)');
   }

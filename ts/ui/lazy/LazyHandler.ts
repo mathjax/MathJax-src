@@ -422,7 +422,7 @@ export function LazyMathDocumentMixin<
       //
       this.lazyObserver = new IntersectionObserver(
         this.lazyObserve.bind(this),
-        { rootMargin: this.options.lazyMargin }
+        { rootMargin: this.options.lazyMargin },
       );
       this.lazyList = new LazyList<N, T, D>();
       const callback = this.lazyHandleSet.bind(this);
@@ -723,7 +723,7 @@ export function LazyMathDocumentMixin<
         ? null
         : this.adaptor.getElements(
             Array.isArray(always) ? always : [always],
-            this.document
+            this.document,
           );
       this.lazyAlwaysIndex = 0;
       super.render();
@@ -745,7 +745,7 @@ export function LazyMathDocumentMixin<
  * @template D  The Document class
  */
 export function LazyHandler<N, T, D>(
-  handler: HTMLHandler<N, T, D>
+  handler: HTMLHandler<N, T, D>,
 ): HTMLHandler<N, T, D> {
   //
   // Only update the document class if we can handle IntersectionObservers

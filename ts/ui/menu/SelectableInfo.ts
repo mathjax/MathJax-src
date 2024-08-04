@@ -50,7 +50,7 @@ export class SelectableInfo extends Info {
   public selectAll() {
     const selection = document.getSelection();
     selection.selectAllChildren(
-      this.html.querySelector('.CtxtMenu_InfoContent').firstChild
+      this.html.querySelector('.CtxtMenu_InfoContent').firstChild,
     );
   }
 
@@ -73,13 +73,13 @@ export class SelectableInfo extends Info {
   public generateHtml() {
     super.generateHtml();
     const footer = this.html.querySelector(
-      'span.' + HtmlClasses['INFOSIGNATURE']
+      'span.' + HtmlClasses['INFOSIGNATURE'],
     );
     const button = footer.appendChild(document.createElement('input'));
     button.type = 'button';
     button.value = 'Copy to Clipboard';
     button.addEventListener('click', (_event: MouseEvent) =>
-      this.copyToClipboard()
+      this.copyToClipboard(),
     );
   }
 }

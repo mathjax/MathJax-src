@@ -27,5 +27,5 @@ Entities.add(
     quest: '\u003F',
     questeq: '\u225F',
   },
-  'q'
+  'q',
 );

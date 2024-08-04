@@ -53,5 +53,5 @@ Entities.add(
     frac78: '\u215E',
     frasl: '\u2044',
   },
-  'f'
+  'f',
 );

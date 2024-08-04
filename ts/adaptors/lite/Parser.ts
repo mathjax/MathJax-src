@@ -119,7 +119,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
   public parseFromString(
     text: string,
     _format: string = 'text/html',
-    adaptor: LiteAdaptor = null
+    adaptor: LiteAdaptor = null,
   ) {
     const root = adaptor.createDocument();
     let node = adaptor.body(root);
@@ -157,7 +157,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
   protected addText(
     adaptor: LiteAdaptor,
     node: LiteElement,
-    text: string
+    text: string,
   ): LiteText {
     text = Entities.translate(text);
     return adaptor.append(node, adaptor.text(text)) as LiteText;
@@ -172,7 +172,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
   protected addComment(
     adaptor: LiteAdaptor,
     node: LiteElement,
-    comment: string
+    comment: string,
   ): LiteComment {
     return adaptor.append(node, new LiteComment(comment)) as LiteComment;
   }
@@ -186,7 +186,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
   protected closeTag(
     adaptor: LiteAdaptor,
     node: LiteElement,
-    tag: string
+    tag: string,
   ): LiteElement {
     const kind = tag.slice(2, tag.length - 1).toLowerCase();
     while (adaptor.parent(node) && adaptor.kind(node) !== kind) {
@@ -206,7 +206,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     adaptor: LiteAdaptor,
     node: LiteElement,
     tag: string,
-    parts: string[]
+    parts: string[],
   ): LiteElement {
     const PCDATA = (this.constructor as typeof LiteParser).PCDATA;
     const SELF_CLOSING = (this.constructor as typeof LiteParser).SELF_CLOSING;
@@ -257,7 +257,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
   protected addAttributes(
     adaptor: LiteAdaptor,
     node: LiteElement,
-    attributes: string[]
+    attributes: string[],
   ) {
     while (attributes.length) {
       let [, name, v1, v2, v3] = attributes.splice(0, 5);
@@ -276,7 +276,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     adaptor: LiteAdaptor,
     node: LiteElement,
     kind: string,
-    parts: string[]
+    parts: string[],
   ) {
     const pcdata = [] as string[];
     const etag = '</' + kind + '>';
@@ -382,7 +382,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
   public serialize(
     adaptor: LiteAdaptor,
     node: LiteElement,
-    xml: boolean = false
+    xml: boolean = false,
   ): string {
     const SELF_CLOSING = (this.constructor as typeof LiteParser).SELF_CLOSING;
     const tag = adaptor.kind(node);
@@ -411,7 +411,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
   public serializeInner(
     adaptor: LiteAdaptor,
     node: LiteElement,
-    xml: boolean = false
+    xml: boolean = false,
   ): string {
     const PCDATA = (this.constructor as typeof LiteParser).PCDATA;
     if (PCDATA.hasOwnProperty(node.kind)) {
@@ -442,7 +442,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
   protected allAttributes(
     adaptor: LiteAdaptor,
     node: LiteElement,
-    xml: boolean
+    xml: boolean,
   ): AttributeData[] {
     let attributes = adaptor.allAttributes(node);
     //

@@ -47,7 +47,7 @@ new CommandMap('color', {
  */
 const config = function (
   _config: ParserConfiguration,
-  jax: TeX<any, any, any>
+  jax: TeX<any, any, any>,
 ) {
   jax.parseOptions.packageData.set('color', { model: new ColorModel() });
 };

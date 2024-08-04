@@ -96,7 +96,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
   constructor(
     document: any,
     adaptor: DOMAdaptor<N, T, D>,
-    options: OptionList
+    options: OptionList,
   ) {
     let [html, dom] = separateOptions(options, HTMLDomStrings.OPTIONS);
     super(document, adaptor, html);
@@ -121,7 +121,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
     N: number,
     index: number,
     delim: string,
-    nodes: HTMLNodeArray<N, T>
+    nodes: HTMLNodeArray<N, T>,
   ): Location<N, T> {
     const adaptor = this.adaptor;
     for (const list of nodes[N]) {
@@ -146,7 +146,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
   protected mathItem(
     item: ProtoItem<N, T>,
     jax: InputJax<N, T, D>,
-    nodes: HTMLNodeArray<N, T>
+    nodes: HTMLNodeArray<N, T>,
   ): HTMLMathItem<N, T, D> {
     let math = item.math;
     let start = this.findPosition(item.n, item.start.n, item.open, nodes);
@@ -156,7 +156,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
       jax,
       item.display,
       start,
-      end
+      end,
     ) as HTMLMathItem<N, T, D>;
   }
 
@@ -184,11 +184,11 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
         {
           elements: this.options.elements || [this.adaptor.body(this.document)],
         },
-        options
+        options,
       );
       const containers = this.adaptor.getElements(
         options.elements,
-        this.document
+        this.document,
       );
       for (const jax of this.inputJax) {
         const list = jax.processStrings
@@ -210,7 +210,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
    */
   protected findMathFromStrings(
     jax: InputJax<N, T, D>,
-    containers: N[]
+    containers: N[],
   ): HTMLMathList<N, T, D> {
     const strings = [] as string[];
     const nodes = [] as HTMLNodeArray<N, T>;
@@ -235,7 +235,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
    */
   protected findMathFromDOM(
     jax: InputJax<N, T, D>,
-    containers: N[]
+    containers: N[],
   ): HTMLMathList<N, T, D> {
     const items = [] as HTMLMathItem<N, T, D>[];
     for (const container of containers) {
@@ -246,8 +246,8 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
             jax,
             math.display,
             math.start,
-            math.end
-          )
+            math.end,
+          ),
         );
       }
     }

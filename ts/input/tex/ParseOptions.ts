@@ -149,7 +149,7 @@ export default class ParseOptions {
    */
   public constructor(
     configuration: ParserConfiguration,
-    options: OptionList[] = []
+    options: OptionList[] = [],
   ) {
     this.handlers = configuration.handlers;
     // Add node factory methods from packages.

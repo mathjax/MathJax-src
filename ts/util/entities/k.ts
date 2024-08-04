@@ -30,5 +30,5 @@ Entities.add(
     khcy: '\u0445',
     kjcy: '\u045C',
   },
-  'k'
+  'k',
 );

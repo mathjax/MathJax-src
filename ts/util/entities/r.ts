@@ -131,5 +131,5 @@ Entities.add(
     ruluhar: '\u2968',
     rx: '\u211E',
   },
-  'r'
+  'r',
 );

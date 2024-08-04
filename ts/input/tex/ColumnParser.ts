@@ -135,7 +135,7 @@ export class ColumnParser {
       if (n++ > this.MAXCOLUMNS) {
         throw new TexError(
           'MaxColumns',
-          'Too many column specifiers (perhaps looping column definitions?)'
+          'Too many column specifiers (perhaps looping column definitions?)',
         );
       }
       const code = state.template.codePointAt(state.i);
@@ -243,7 +243,7 @@ export class ColumnParser {
   public getColumn(
     state: ColumnState,
     ralign: string,
-    calign: string = 'left'
+    calign: string = 'left',
   ) {
     state.calign[state.j] = calign || this.getAlign(state);
     state.cwidth[state.j] = this.getDimen(state);
@@ -266,7 +266,7 @@ export class ColumnParser {
       throw new TexError(
         'MissingColumnDimOrUnits',
         'Missing dimension or its units for %1 column declaration',
-        state.c
+        state.c,
       );
     }
     return dim;
@@ -282,7 +282,7 @@ export class ColumnParser {
     return lookup(
       align.toLowerCase(),
       { l: 'left', c: 'center', r: 'right' },
-      ''
+      '',
     );
   }
 
@@ -297,7 +297,7 @@ export class ColumnParser {
       throw new TexError(
         'MissingArgForColumn',
         'Missing argument for %1 column declaration',
-        state.c
+        state.c,
       );
     }
     if (state.template[state.i] !== '{') {
@@ -406,7 +406,7 @@ export class ColumnParser {
       throw new TexError(
         'ColArgNotNum',
         'First argument to %1 column specifier must be a number',
-        '*'
+        '*',
       );
     }
     state.template =

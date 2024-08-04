@@ -75,7 +75,7 @@ export class FontCache<N, T, D> {
       this.cache.set(id, path);
       this.jax.adaptor.append(
         this.defs,
-        this.jax.svg('path', { id: id, d: path })
+        this.jax.svg('path', { id: id, d: path }),
       );
     }
     return id;

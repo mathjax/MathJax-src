@@ -40,7 +40,7 @@ let tagID = 0;
  */
 export function tagformatConfig(
   config: ParserConfiguration,
-  jax: TeX<any, any, any>
+  jax: TeX<any, any, any>,
 ) {
   /**
    * If the tag format is being added by one of the other extensions,

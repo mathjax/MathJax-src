@@ -63,7 +63,7 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
     let [, find, am] = separateOptions(
       options,
       FindAsciiMath.OPTIONS,
-      AsciiMath.OPTIONS
+      AsciiMath.OPTIONS,
     );
     super(am);
     this.findAsciiMath =

@@ -194,7 +194,7 @@ let getParentInf = function (inf: MmlNode): MmlNode {
 let getSpaces = function (
   inf: MmlNode,
   rule: MmlNode,
-  right: boolean = false
+  right: boolean = false,
 ): number {
   let result = 0;
   if (inf === rule) {
@@ -250,7 +250,7 @@ let addSpace = function (
   config: ParseOptions,
   inf: MmlNode,
   space: number,
-  right: boolean = false
+  right: boolean = false,
 ) {
   if (space === 0) return;
   if (getProperty(inf, 'inferenceRule') || getProperty(inf, 'labelledRule')) {
@@ -269,8 +269,8 @@ let addSpace = function (
       'width',
       UnitUtil.em(
         UnitUtil.dimen2em(NodeUtil.getAttribute(mspace, 'width') as string) +
-          space
-      )
+          space,
+      ),
     );
     return;
   }
@@ -332,13 +332,13 @@ let adjustSequents = function (config: ParseOptions) {
       // In case we have a table with a label.
       inf = getRule(inf);
       let premise = firstPremise(
-        getPremises(inf, getProperty(inf, 'inferenceRule') as string)
+        getPremises(inf, getProperty(inf, 'inferenceRule') as string),
       );
       let sequent = getProperty(premise, 'inferenceRule')
         ? // If the first premise is an inference rule, check the conclusions for a sequent.
           getConclusion(
             premise,
-            getProperty(premise, 'inferenceRule') as string
+            getProperty(premise, 'inferenceRule') as string,
           )
         : // Otherwise it is a hyp and we have to check the formula itself.
           premise;
@@ -366,7 +366,7 @@ const addSequentSpace = function (
   sequent: MmlNode,
   position: number,
   direction: string,
-  width: number
+  width: number,
 ) {
   let mspace = config.nodeFactory.create('node', 'mspace', [], {
     width: UnitUtil.em(width),
@@ -399,7 +399,7 @@ const addSequentSpace = function (
  */
 const adjustSequentPairwise = function (
   config: ParseOptions,
-  sequents: MmlNode[]
+  sequents: MmlNode[],
 ) {
   let top = sequents.pop();
   while (sequents.length) {
@@ -411,14 +411,14 @@ const adjustSequentPairwise = function (
         left < 0 ? top : bottom,
         0,
         'left',
-        Math.abs(left)
+        Math.abs(left),
       );
       addSequentSpace(
         config,
         right < 0 ? top : bottom,
         2,
         'right',
-        Math.abs(right)
+        Math.abs(right),
       );
     }
     top = bottom;
@@ -437,7 +437,7 @@ const adjustSequentPairwise = function (
  */
 const compareSequents = function (
   top: MmlNode,
-  bottom: MmlNode
+  bottom: MmlNode,
 ): [number, number] {
   const tr = getBBox(top.childNodes[2]);
   const br = getBBox(bottom.childNodes[2]);
@@ -516,7 +516,7 @@ export let balanceRules = function (arg: FilterData) {
     let rule = getRule(inf);
     let premises = getPremises(
       rule,
-      getProperty(rule, 'inferenceRule') as string
+      getProperty(rule, 'inferenceRule') as string,
     );
     let premiseF = firstPremise(premises);
     let leftAdjust = 0;
@@ -550,7 +550,7 @@ export let balanceRules = function (arg: FilterData) {
         // in case the rule has been moved into an mrow in Left Adjust.
         getProperty(inf, 'proof') ? inf : inf.parent,
         maxAdjust,
-        true
+        true,
       );
       continue;
     }
@@ -588,7 +588,7 @@ const prefix_pattern = RegExp('^' + property_prefix);
 export let setProperty = function (
   node: MmlNode,
   property: string,
-  value: Property
+  value: Property,
 ) {
   NodeUtil.setProperty(node, property_prefix + property, value);
 };
@@ -638,7 +638,7 @@ export let saveDocument = function (arg: FilterData) {
   doc = arg.document;
   if (!('getBBox' in doc.outputJax)) {
     throw Error(
-      'The bussproofs extension requires an output jax with a getBBox() method'
+      'The bussproofs extension requires an output jax with a getBBox() method',
     );
   }
 };

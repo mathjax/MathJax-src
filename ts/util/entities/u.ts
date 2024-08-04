@@ -85,5 +85,5 @@ Entities.add(
     uuml: '\u00FC',
     uwangle: '\u29A7',
   },
-  'u'
+  'u',
 );

@@ -253,7 +253,7 @@ export interface CommonMtable<
     H: number[],
     D: number[],
     W: number[],
-    M: number
+    M: number,
   ): number;
 
   /**
@@ -522,7 +522,7 @@ export function CommonMtableMixin<
   R extends CommonMtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 >(
-  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 ): B {
   return class CommonMtableMixin
     extends Base
@@ -819,7 +819,7 @@ export function CommonMtableMixin<
       H: number[],
       D: number[],
       W: number[],
-      M: number
+      M: number,
     ): number {
       let { h, d, w } = cell.getBBox();
       const scale = cell.parent.bbox.rscale;
@@ -946,7 +946,7 @@ export function CommonMtableMixin<
         pad = Math.max(
           pad,
           this.length2em(lpad || '0'),
-          this.length2em(rpad || '0')
+          this.length2em(rpad || '0'),
         );
       }
       //
@@ -978,11 +978,11 @@ export function CommonMtableMixin<
       const attributes = this.node.attributes;
       if (attributes.get('width') !== 'auto') return;
       const [pad, align] = this.getPadAlignShift(
-        attributes.get('side') as string
+        attributes.get('side') as string,
       );
       const W = Math.max(
         this.containerWidth / 10,
-        this.containerWidth - pad - (align === 'center' ? pad : 0)
+        this.containerWidth - pad - (align === 'center' ? pad : 0),
       );
       this.naturalWidth() > W && this.adjustColumnWidths(W);
     }
@@ -1095,7 +1095,7 @@ export function CommonMtableMixin<
      */
     public getColumnWidthsFixed(
       swidths: string[],
-      width: number
+      width: number,
     ): ColumnWidths {
       //
       // Get the indices of the fit and auto columns, and the number of fit or auto entries.
@@ -1164,7 +1164,7 @@ export function CommonMtableMixin<
           (i) =>
             swidths[i] !== 'fit' &&
             swidths[i] !== 'auto' &&
-            !isPercent(swidths[i])
+            !isPercent(swidths[i]),
         )
         .sort((a, b) => W[b] - W[a]);
       const columns = [...fit, ...auto, ...percent, ...fixed];
@@ -1173,7 +1173,9 @@ export function CommonMtableMixin<
       //  Get the current widths of all the columns
       //
       this.cWidths = indices.map((i) =>
-        typeof this.cWidths[i] === 'number' ? (this.cWidths[i] as number) : W[i]
+        typeof this.cWidths[i] === 'number'
+          ? (this.cWidths[i] as number)
+          : W[i],
       );
       //
       // Determine the space remaining from the fixed width after the
@@ -1267,7 +1269,7 @@ export function CommonMtableMixin<
     public getEmHalfSpacing(
       fspace: number[],
       space: number[],
-      scale: number = 1
+      scale: number = 1,
     ): string[] {
       //
       //  Get the column spacing values, and add the frame spacing values at the left and right
@@ -1381,7 +1383,7 @@ export function CommonMtableMixin<
       this.numRows = this.childNodes.length;
       this.hasLabels = this.childNodes.reduce(
         (value, row) => value || row.node.isKind('mlabeledtr'),
-        false
+        false,
       );
       this.findContainer();
       this.isTop =
@@ -1402,14 +1404,14 @@ export function CommonMtableMixin<
       this.fLine = this.frame ? 0.07 : 0;
       this.fSpace = this.getFrameSpacing();
       this.cSpace = this.convertLengths(
-        this.getColumnAttributes('columnspacing')
+        this.getColumnAttributes('columnspacing'),
       );
       this.rSpace = this.convertLengths(this.getRowAttributes('rowspacing'));
       this.cLines = this.getColumnAttributes('columnlines').map((x) =>
-        x === 'none' ? 0 : 0.07
+        x === 'none' ? 0 : 0.07,
       );
       this.rLines = this.getRowAttributes('rowlines').map((x) =>
-        x === 'none' ? 0 : 0.07
+        x === 'none' ? 0 : 0.07,
       );
       this.cWidths = this.getColumnWidths();
       this.adjustWideTable();
@@ -1494,7 +1496,7 @@ export function CommonMtableMixin<
     public setChildPWidths(
       _recompute: boolean,
       cwidth: number,
-      _clear: boolean
+      _clear: boolean,
     ) {
       const width = this.node.attributes.get('width') as string;
       if (!isPercent(width)) return false;
@@ -1504,7 +1506,7 @@ export function CommonMtableMixin<
       }
       const { w, L, R } = this.bbox;
       const labelInWidth = this.node.attributes.get(
-        'data-width-includes-label'
+        'data-width-includes-label',
       ) as boolean;
       const W =
         Math.max(w, this.length2em(width, Math.max(cwidth, L + w + R))) -

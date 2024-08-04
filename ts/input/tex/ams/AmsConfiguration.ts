@@ -43,7 +43,7 @@ export class AmsTags extends AbstractTags {}
 let init = function (config: ParserConfiguration) {
   new CommandMap(NEW_OPS, {});
   config.append(
-    Configuration.local({ handler: { macro: [NEW_OPS] }, priority: -1 })
+    Configuration.local({ handler: { macro: [NEW_OPS] }, priority: -1 }),
   );
 };
 

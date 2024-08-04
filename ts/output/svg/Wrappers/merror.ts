@@ -48,7 +48,7 @@ export interface SvgMerrorClass<N, T, D> extends SvgWrapperClass<N, T, D> {
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgMerrorNTD<N, T, D>;
 }
 
@@ -94,13 +94,13 @@ export const SvgMerror = (function <N, T, D>(): SvgMerrorClass<N, T, D> {
           width: this.fixed(w),
           height: this.fixed(h + d),
           y: this.fixed(-d),
-        })
+        }),
       );
       const title = this.node.attributes.get('title') as string;
       if (title) {
         this.adaptor.append(
           this.dom[0],
-          this.svg('title', {}, [this.adaptor.text(title)])
+          this.svg('title', {}, [this.adaptor.text(title)]),
         );
       }
       this.addChildren(svg);

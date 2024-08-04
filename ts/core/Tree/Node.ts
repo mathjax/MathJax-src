@@ -145,7 +145,7 @@ export interface NodeClass<N extends Node<N, C>, C extends NodeClass<N, C>> {
   new (
     factory: NodeFactory<N, C>,
     properties?: PropertyList,
-    children?: N[]
+    children?: N[],
   ): N;
 }
 
@@ -187,7 +187,7 @@ export abstract class AbstractNode<
   constructor(
     readonly factory: NodeFactory<N, C>,
     properties: PropertyList = {},
-    children: N[] = []
+    children: N[] = [],
   ) {
     for (const name of Object.keys(properties)) {
       this.setProperty(name, properties[name]);

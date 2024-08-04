@@ -43,7 +43,7 @@ const BboxMethods: { [key: string]: ParseMethod } = {
     for (let i = 0, m = parts.length; i < m; i++) {
       const part = parts[i].trim();
       const match = part.match(
-        /^(\.\d+|\d+(\.\d*)?)(pt|em|ex|mu|px|in|cm|mm)$/
+        /^(\.\d+|\d+(\.\d*)?)(pt|em|ex|mu|px|in|cm|mm)$/,
       );
       if (match) {
         // @test Bbox-Padding
@@ -53,7 +53,7 @@ const BboxMethods: { [key: string]: ParseMethod } = {
             'MultipleBBoxProperty',
             '%1 specified twice in %2',
             'Padding',
-            name
+            name,
           );
         }
         const pad = BBoxPadding(match[1] + match[3]);
@@ -74,7 +74,7 @@ const BboxMethods: { [key: string]: ParseMethod } = {
             'MultipleBBoxProperty',
             '%1 specified twice in %2',
             'Background',
-            name
+            name,
           );
         }
         background = part;
@@ -86,7 +86,7 @@ const BboxMethods: { [key: string]: ParseMethod } = {
             'MultipleBBoxProperty',
             '%1 specified twice in %2',
             'Style',
-            name
+            name,
           );
         }
         style = BBoxStyle(part);
@@ -95,7 +95,7 @@ const BboxMethods: { [key: string]: ParseMethod } = {
         throw new TexError(
           'InvalidBBoxProperty',
           '"%1" doesn\'t look like a color, a padding dimension, or a style',
-          part
+          part,
         );
       }
     }

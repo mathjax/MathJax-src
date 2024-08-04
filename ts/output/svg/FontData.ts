@@ -106,7 +106,7 @@ export class SvgFontData extends FontData<
    */
   public static addExtension(
     data: SvgFontExtensionData<SvgCharOptions, SvgDelimiterData>,
-    prefix: string = ''
+    prefix: string = '',
   ) {
     super.addExtension(data, prefix);
     mergeOptions(this, 'variantCacheIds', data.cacheIds);
@@ -126,7 +126,7 @@ export type SvgFontDataClass = typeof SvgFontData;
 export function AddPaths(
   font: SvgCharMap,
   paths: CharStringMap,
-  content: CharStringMap
+  content: CharStringMap,
 ): SvgCharMap {
   for (const c of Object.keys(paths)) {
     const n = parseInt(c);

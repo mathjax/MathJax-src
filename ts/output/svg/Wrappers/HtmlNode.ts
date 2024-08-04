@@ -48,7 +48,7 @@ export interface SvgHtmlNodeClass<N, T, D> extends SvgXmlNodeClass<N, T, D> {
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgHtmlNodeNTD<N, T, D>;
 }
 

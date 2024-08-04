@@ -153,7 +153,7 @@ export function CommonMrowMixin<
   FC extends FontDataClass<CC, VV, DD>,
   B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 >(
-  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 ): B {
   return class CommonMrowMixin
     extends Base
@@ -403,7 +403,7 @@ export function CommonMrowMixin<
           indentshift,
           alignfirst,
           shiftfirst,
-          W
+          W,
         );
         bbox.L = 0;
         bbox.L = this.getAlignX(W, bbox, align) + shift;
@@ -416,7 +416,7 @@ export function CommonMrowMixin<
     public setChildPWidths(
       recompute: boolean,
       w: number | null = null,
-      clear: boolean = true
+      clear: boolean = true,
     ): boolean {
       if (!this.breakCount) return super.setChildPWidths(recompute, w, clear);
       if (recompute) return false;
@@ -538,7 +538,7 @@ export function CommonInferredMrowMixin<
   Base: CommonWrapperConstructor<
     N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
     CommonMrow<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
-  >
+  >,
 ): B {
   return class CommonInferredMrowMixin
     extends Base

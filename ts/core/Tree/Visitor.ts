@@ -129,7 +129,7 @@ export abstract class AbstractVisitor<N extends VisitorNode<N>>
       'visit' +
       (kind.charAt(0).toUpperCase() + kind.substring(1)).replace(
         /[^a-z0-9_]/gi,
-        '_'
+        '_',
       ) +
       'Node'
     );

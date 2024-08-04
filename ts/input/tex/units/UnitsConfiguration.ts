@@ -74,12 +74,12 @@ export let UnitsMethods: { [key: string]: ParseMethod } = {
     let numMml = new TexParser(
       `${font}{${num}}`,
       { ...parser.stack.env },
-      parser.configuration
+      parser.configuration,
     ).mml();
     let denMml = new TexParser(
       `${font}{${den}}`,
       { ...parser.stack.env },
-      parser.configuration
+      parser.configuration,
     ).mml();
     const def = parser.options.units.ugly ? {} : { bevelled: true };
     const node = parser.create('node', 'mfrac', [numMml, denMml], def);

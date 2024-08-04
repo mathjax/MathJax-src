@@ -311,7 +311,7 @@ export class LinkedList<DataClass> {
    */
   public merge(
     list: LinkedList<DataClass>,
-    isBefore: SortFn<DataClass> = null
+    isBefore: SortFn<DataClass> = null,
   ): LinkedList<DataClass> {
     if (isBefore === null) {
       isBefore = this.isBefore.bind(this);

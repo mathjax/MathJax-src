@@ -92,7 +92,7 @@ export interface SvgMrootClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgMrootNTD<N, T, D>;
 }
 
@@ -134,7 +134,7 @@ export const SvgMroot = (function <N, T, D>(): SvgMrootClass<N, T, D> {
       ROOT: N[],
       root: SvgWrapper<N, T, D>,
       sbox: BBox,
-      H: number
+      H: number,
     ) {
       root.toSVG(ROOT);
       const [x, h, dx] = this.getRootDimens(sbox, H);

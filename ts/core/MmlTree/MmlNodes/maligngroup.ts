@@ -62,11 +62,11 @@ export class MmlMaligngroup extends AbstractMmlLayoutNode {
     attributes: AttributeList,
     display: boolean,
     level: number,
-    prime: boolean
+    prime: boolean,
   ) {
     attributes = this.addInheritedAttributes(
       attributes,
-      this.attributes.getAllAttributes()
+      this.attributes.getAllAttributes(),
     );
     super.setChildInheritedAttributes(attributes, display, level, prime);
   }

@@ -79,5 +79,5 @@ Entities.add(
     iukcy: '\u0456',
     iuml: '\u00EF',
   },
-  'i'
+  'i',
 );

@@ -99,7 +99,7 @@ export interface ChtmlMrowClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlMrowNTD<N, T, D>;
 }
 
@@ -242,7 +242,7 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
           indentalign,
           indentshift,
           alignfirst,
-          shiftfirst
+          shiftfirst,
         );
         adaptor.setAttribute(parents[i], 'align', align);
         if (shift) {
@@ -253,7 +253,7 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
           adaptor.setStyle(
             parents[i],
             'margin-bottom',
-            this.em(bbox.lineLeading)
+            this.em(bbox.lineLeading),
           );
         }
       }
@@ -267,7 +267,7 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
         this.adaptor.setStyle(
           this.adaptor.parent(dom),
           'vertical-align',
-          this.em(this.dh)
+          this.em(this.dh),
         );
       }
     }
@@ -305,7 +305,7 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
       }
       if (this.node.isInferred || !this.isStack) {
         const valign = this.parent.node.attributes.get(
-          'data-vertical-align'
+          'data-vertical-align',
         ) as string;
         if (valign === 'middle' || valign === 'center' || valign === 'bottom') {
           adaptor.setAttribute(this.dom[0], 'break-align', valign);
@@ -324,7 +324,7 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
       for (let i = 0; i <= n; i++) {
         chtml[i] = adaptor.append(
           this.dom[0],
-          this.html('mjx-linebox', { lineno: i })
+          this.html('mjx-linebox', { lineno: i }),
         ) as N;
       }
       //
@@ -400,7 +400,7 @@ export interface ChtmlInferredMrowClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlInferredMrowNTD<N, T, D>;
 }
 

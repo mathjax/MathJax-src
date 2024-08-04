@@ -100,7 +100,7 @@ let allExplorers: { [options: string]: ExplorerInit } = {
       doc.explorerRegions.brailleRegion,
       doc.explorerRegions.magnifier,
       rest[0],
-      rest[1]
+      rest[1],
     ) as SpeechExplorer;
     explorer.sound = true;
     return explorer;
@@ -117,7 +117,7 @@ let allExplorers: { [options: string]: ExplorerInit } = {
       doc.explorerRegions.magnifier,
       node,
       (x: HTMLElement) => x.hasAttribute('data-semantic-type'),
-      (x: HTMLElement) => x
+      (x: HTMLElement) => x,
     ),
   hover: (
     doc: ExplorerMathDocument,
@@ -137,7 +137,7 @@ let allExplorers: { [options: string]: ExplorerInit } = {
       doc.explorerRegions.tooltip1,
       node,
       (x: HTMLElement) => x.hasAttribute('data-semantic-type'),
-      (x: HTMLElement) => x.getAttribute('data-semantic-type')
+      (x: HTMLElement) => x.getAttribute('data-semantic-type'),
     ),
   infoRole: (
     doc: ExplorerMathDocument,
@@ -151,7 +151,7 @@ let allExplorers: { [options: string]: ExplorerInit } = {
       doc.explorerRegions.tooltip2,
       node,
       (x: HTMLElement) => x.hasAttribute('data-semantic-role'),
-      (x: HTMLElement) => x.getAttribute('data-semantic-role')
+      (x: HTMLElement) => x.getAttribute('data-semantic-role'),
     ),
   infoPrefix: (
     doc: ExplorerMathDocument,
@@ -165,7 +165,7 @@ let allExplorers: { [options: string]: ExplorerInit } = {
       doc.explorerRegions.tooltip3,
       node,
       (x: HTMLElement) => x.hasAttribute('data-semantic-prefix'),
-      (x: HTMLElement) => x.getAttribute('data-semantic-prefix')
+      (x: HTMLElement) => x.getAttribute('data-semantic-prefix'),
     ),
   flame: (
     doc: ExplorerMathDocument,
@@ -256,7 +256,7 @@ export class ExplorerPool {
     document: ExplorerMathDocument,
     node: HTMLElement,
     mml: string,
-    item: ExplorerMathItem
+    item: ExplorerMathItem,
   ) {
     this.document = document;
     this.mml = mml;
@@ -268,7 +268,7 @@ export class ExplorerPool {
         this,
         this.node,
         this.mml,
-        item
+        item,
       );
     }
     this.setSecondaryHighlighter();
@@ -295,7 +295,7 @@ export class ExplorerPool {
         keyExplorers.unshift(explorer);
         if (
           this.speechExplorerKeys.some(
-            (exKey) => this.document.options.a11y[exKey]
+            (exKey) => this.document.options.a11y[exKey],
           )
         ) {
           explorer.Attach();
@@ -367,7 +367,7 @@ export class ExplorerPool {
     this.secondaryHighlighter = Sre.getHighlighter(
       { color: 'red' },
       { color: 'black' },
-      { renderer: this.document.outputJax.name, browser: 'v3' }
+      { renderer: this.document.outputJax.name, browser: 'v3' },
     );
     (this.speech.region as SpeechRegion).highlighter =
       this.secondaryHighlighter;

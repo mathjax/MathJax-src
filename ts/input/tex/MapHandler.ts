@@ -71,7 +71,7 @@ export class SubHandler {
   public add(
     maps: string[],
     fallback: ParseMethod,
-    priority: number = PrioritizedList.DEFAULTPRIORITY
+    priority: number = PrioritizedList.DEFAULTPRIORITY,
   ) {
     for (const name of maps.slice().reverse()) {
       let map = MapHandler.getMap(name);
@@ -182,7 +182,7 @@ export class SubHandlers {
   public add(
     handlers: HandlerConfig,
     fallbacks: FallbackConfig,
-    priority: number = PrioritizedList.DEFAULTPRIORITY
+    priority: number = PrioritizedList.DEFAULTPRIORITY,
   ): void {
     for (const key of Object.keys(handlers)) {
       let name = key as HandlerType;

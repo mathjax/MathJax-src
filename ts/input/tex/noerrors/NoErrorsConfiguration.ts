@@ -36,7 +36,7 @@ function noErrors(
   factory: NodeFactory,
   message: string,
   _id: string,
-  expr: string
+  expr: string,
 ) {
   let mtext = factory.create('token', 'mtext', {}, expr.replace(/\n/g, ' '));
   let error = factory.create('node', 'merror', [mtext], {

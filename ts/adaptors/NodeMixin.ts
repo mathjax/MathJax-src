@@ -54,7 +54,7 @@ export const NodeMixinOptions: OptionList = {
  */
 export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
   Base: A,
-  options: typeof NodeMixinOptions = {}
+  options: typeof NodeMixinOptions = {},
 ): A {
   options = userOptions(defaultOptions({}, NodeMixinOptions), options);
 
@@ -98,7 +98,7 @@ export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
         '\u{20000}-\u{3FFFD}', // CJK Unified Ideographs Extension B ... Tertiary Ideographic Plane
         ']',
       ].join(''),
-      'gu'
+      'gu',
     );
 
     /**

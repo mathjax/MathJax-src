@@ -110,7 +110,7 @@ export class MmlMfenced extends AbstractMmlNode {
     attributes: AttributeList,
     display: boolean,
     level: number,
-    prime: boolean
+    prime: boolean,
   ) {
     this.addFakeNodes();
     for (const child of [this.open, this.close].concat(this.separators)) {
@@ -128,7 +128,7 @@ export class MmlMfenced extends AbstractMmlNode {
     let { open, close, separators } = this.attributes.getList(
       'open',
       'close',
-      'separators'
+      'separators',
     ) as { open: string; close: string; separators: string };
     open = open.replace(/[ \t\n\r]/g, '');
     close = close.replace(/[ \t\n\r]/g, '');
@@ -140,7 +140,7 @@ export class MmlMfenced extends AbstractMmlNode {
       this.open = this.fakeNode(
         open,
         { fence: true, form: 'prefix' },
-        TEXCLASS.OPEN
+        TEXCLASS.OPEN,
       );
     }
     //
@@ -164,7 +164,7 @@ export class MmlMfenced extends AbstractMmlNode {
       this.close = this.fakeNode(
         close,
         { fence: true, form: 'postfix' },
-        TEXCLASS.CLOSE
+        TEXCLASS.CLOSE,
       );
     }
   }
@@ -178,7 +178,7 @@ export class MmlMfenced extends AbstractMmlNode {
   protected fakeNode(
     c: string,
     properties: PropertyList = {},
-    texClass: number = null
+    texClass: number = null,
   ): MmlNode {
     let text = (this.factory.create('text') as TextNode).setText(c);
     let node = this.factory.create('mo', properties, [text]);

@@ -77,7 +77,7 @@ export const computeLineData = {
 export const lineData = function (
   node: Menclose,
   kind: LineName,
-  offset: string = ''
+  offset: string = '',
 ): LineData {
   const { h, d, w } = node.getBBox();
   const t = node.thickness / 2;
@@ -94,7 +94,7 @@ export const lineData = function (
 export const lineOffset = function (
   data: LineData,
   node: Menclose,
-  offset: string
+  offset: string,
 ): LineData {
   if (offset) {
     const d = node.getOffset(offset);
@@ -119,7 +119,7 @@ export const lineOffset = function (
  */
 export const RenderLine = function <N, T, D>(
   line: LineName,
-  offset: string = ''
+  offset: string = '',
 ): RENDERER<N, T, D> {
   return (node, _child) => {
     const L = node.line(lineData(node, line, offset));
@@ -134,7 +134,7 @@ export const RenderLine = function <N, T, D>(
  * @return {DEFPAIR}      The notation definition for the notation having a line on the given side
  */
 export const Border = function <N, T, D>(
-  side: Notation.Side
+  side: Notation.Side,
 ): DEFPAIR<N, T, D> {
   return Notation.CommonBorder<SvgMencloseNTD<N, T, D>, N>((node, _child) => {
     node.adaptor.append(node.dom[0], node.line(lineData(node, side)));
@@ -150,7 +150,7 @@ export const Border = function <N, T, D>(
 export const Border2 = function <N, T, D>(
   name: string,
   side1: Notation.Side,
-  side2: Notation.Side
+  side2: Notation.Side,
 ): DEFPAIR<N, T, D> {
   return Notation.CommonBorder2<SvgMencloseNTD<N, T, D>, N>((node, _child) => {
     node.adaptor.append(node.dom[0], node.line(lineData(node, side1)));
@@ -165,12 +165,12 @@ export const Border2 = function <N, T, D>(
  * @return {DEFPAIR}       The notation definition for the diagonal strike
  */
 export const DiagonalStrike = function <N, T, D>(
-  name: LineName
+  name: LineName,
 ): DEFPAIR<N, T, D> {
   return Notation.CommonDiagonalStrike<SvgMencloseNTD<N, T, D>, N>(
     (_cname: string) => (node, _child) => {
       node.adaptor.append(node.dom[0], node.line(lineData(node, name)));
-    }
+    },
   )(name);
 };
 
@@ -181,12 +181,12 @@ export const DiagonalStrike = function <N, T, D>(
  * @return {DEFPAIR}      The notation definition for the diagonal arrow
  */
 export const DiagonalArrow = function <N, T, D>(
-  name: string
+  name: string,
 ): DEFPAIR<N, T, D> {
   return Notation.CommonDiagonalArrow<SvgMencloseNTD<N, T, D>, N>(
     (node, arrow) => {
       node.adaptor.append(node.dom[0], arrow);
-    }
+    },
   )(name);
 };
 

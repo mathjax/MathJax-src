@@ -72,5 +72,5 @@ Entities.add(
     yscr: '\uD835\uDCCE',
     zscr: '\uD835\uDCCF',
   },
-  'scr'
+  'scr',
 );

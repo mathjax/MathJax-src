@@ -173,7 +173,7 @@ export function CommonMtrMixin<
   FC extends FontDataClass<CC, VV, DD>,
   B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 >(
-  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 ): B {
   return class CommonMtrMixin
     extends Base
@@ -374,7 +374,7 @@ export function CommonMlabeledtrMixin<
   FC extends FontDataClass<CC, VV, DD>,
   B extends CommonMtrClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 >(
-  Base: Constructor<CommonMtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>
+  Base: Constructor<CommonMtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>,
 ): B {
   return class CommonMlabeledtrMixin
     extends Base

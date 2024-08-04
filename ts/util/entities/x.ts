@@ -40,5 +40,5 @@ Entities.add(
     xvee: '\u22C1',
     xwedge: '\u22C0',
   },
-  'x'
+  'x',
 );

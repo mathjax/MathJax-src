@@ -72,5 +72,5 @@ Entities.add(
     yopf: '\uD835\uDD6A',
     zopf: '\uD835\uDD6B',
   },
-  'opf'
+  'opf',
 );

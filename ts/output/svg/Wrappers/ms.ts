@@ -90,7 +90,7 @@ export interface SvgMsClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgMsNTD<N, T, D>;
 }
 

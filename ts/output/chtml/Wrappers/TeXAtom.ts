@@ -90,7 +90,7 @@ export interface ChtmlTeXAtomClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlTeXAtomNTD<N, T, D>;
 }
 
@@ -134,8 +134,8 @@ export const ChtmlTeXAtom = (function <N, T, D>(): ChtmlTeXAtomClass<N, T, D> {
         this.adaptor.setAttribute(
           dom,
           'texclass',
-          TEXCLASSNAMES[this.node.texClass]
-        )
+          TEXCLASSNAMES[this.node.texClass],
+        ),
       );
     }
   };

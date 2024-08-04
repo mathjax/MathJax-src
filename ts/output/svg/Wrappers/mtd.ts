@@ -76,7 +76,7 @@ export interface SvgMtdNTD<N, T, D>
     y: number,
     W: number,
     H: number,
-    D: number
+    D: number,
   ): [number, number];
 
   /**
@@ -114,7 +114,7 @@ export interface SvgMtdClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgMtdNTD<N, T, D>;
 }
 
@@ -157,7 +157,7 @@ export const SvgMtd = (function <N, T, D>(): SvgMtdClass<N, T, D> {
       y: number,
       W: number,
       H: number,
-      D: number
+      D: number,
     ): [number, number] {
       const bbox = this.getBBox();
       const h = Math.max(bbox.h, 0.75);

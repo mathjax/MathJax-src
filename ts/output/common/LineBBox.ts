@@ -74,7 +74,7 @@ export class LineBBox extends BBox {
   public static from(
     bbox: BBox,
     leading: number,
-    indent: IndentData[] = null
+    indent: IndentData[] = null,
   ): LineBBox {
     const nbox = new this();
     Object.assign(nbox, bbox);

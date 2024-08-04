@@ -93,7 +93,7 @@ export interface SvgMathClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgMathNTD<N, T, D>;
 }
 
@@ -237,7 +237,7 @@ export const SvgMath = (function <N, T, D>(): SvgMathClass<N, T, D> {
         adaptor.removeAttribute(this.dom[0], 'aria-label');
         for (const child of this.childNodes[0].childNodes) {
           child.dom.forEach((node) =>
-            adaptor.setAttribute(node, 'aria-hidden', 'true')
+            adaptor.setAttribute(node, 'aria-hidden', 'true'),
           );
         }
       }
@@ -274,12 +274,12 @@ export const SvgMath = (function <N, T, D>(): SvgMathClass<N, T, D> {
     public setChildPWidths(
       recompute: boolean,
       w: number = null,
-      _clear: boolean = true
+      _clear: boolean = true,
     ) {
       return super.setChildPWidths(
         recompute,
         this.parent ? w : this.metrics.containerWidth / this.jax.pxPerEm,
-        false
+        false,
       );
     }
   };

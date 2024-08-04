@@ -75,7 +75,7 @@ export class HandlerList<N, T, D> extends PrioritizedList<Handler<N, T, D>> {
    */
   public document(
     document: any,
-    options: OptionList = null
+    options: OptionList = null,
   ): MathDocument<N, T, D> {
     return this.handlesDocument(document).create(document, options);
   }

@@ -38,7 +38,7 @@ export const BboldxMethods = {
     name: string,
     normal: string,
     light: string,
-    bfbb: string
+    bfbb: string,
   ) {
     const font = getBbxFont(parser, normal, light, bfbb);
     BaseMethods.MathFont(parser, name, font);
@@ -49,7 +49,7 @@ export const BboldxMethods = {
     name: string,
     normal: string,
     light: string,
-    bfbb: string
+    bfbb: string,
   ) {
     const font = getBbxFont(parser, normal, light, bfbb);
     TextMacrosMethods.TextFont(parser, name, font);
@@ -66,7 +66,7 @@ export const BboldxMethods = {
       'token',
       'mi',
       { mathvariant: font },
-      mchar.char
+      mchar.char,
     );
     parser.Push(node);
   },
@@ -94,7 +94,7 @@ export const BboldxMethods = {
       'token',
       'mi',
       { mathvariant: font },
-      mchar.char
+      mchar.char,
     );
     parser.Push(node);
   },
@@ -125,7 +125,7 @@ function getBbxFont(
   parser: TexParser,
   normal: string,
   light: string,
-  bfbb: string
+  bfbb: string,
 ) {
   if (!parser.options?.bboldx) {
     return normal;

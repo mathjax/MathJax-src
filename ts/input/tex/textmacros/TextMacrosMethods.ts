@@ -73,7 +73,7 @@ export const TextMacrosMethods = {
             const mml = new TexParser(
               parser.string.substring(i, j),
               parser.stack.env,
-              config
+              config,
             ).mml();
             parser.PushMath(mml);
             return;
@@ -88,7 +88,7 @@ export const TextMacrosMethods = {
           if (braces === 0) {
             parser.Error(
               'ExtraCloseMissingOpen',
-              'Extra close brace or missing open brace'
+              'Extra close brace or missing open brace',
             );
           }
           braces--;
@@ -142,7 +142,7 @@ export const TextMacrosMethods = {
     } else {
       parser.Error(
         'ExtraCloseMissingOpen',
-        'Extra close brace or missing open brace'
+        'Extra close brace or missing open brace',
       );
     }
   },

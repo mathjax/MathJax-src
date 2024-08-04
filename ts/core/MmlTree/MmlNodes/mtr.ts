@@ -75,7 +75,7 @@ export class MmlMtr extends AbstractMmlNode {
     attributes: AttributeList,
     display: boolean,
     level: number,
-    prime: boolean
+    prime: boolean,
   ) {
     for (const child of this.childNodes) {
       if (!child.isKind('mtd')) {
@@ -113,7 +113,7 @@ export class MmlMtr extends AbstractMmlNode {
       this.mError(
         this.kind + ' can only be a child of an mtable',
         options,
-        true
+        true,
       );
       return;
     }

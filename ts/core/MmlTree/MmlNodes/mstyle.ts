@@ -69,7 +69,7 @@ export class MmlMstyle extends AbstractMmlLayoutNode {
     attributes: AttributeList,
     display: boolean,
     level: number,
-    prime: boolean
+    prime: boolean,
   ) {
     let scriptlevel = this.attributes.getExplicit('scriptlevel');
     if (scriptlevel != null) {
@@ -92,13 +92,13 @@ export class MmlMstyle extends AbstractMmlLayoutNode {
     }
     attributes = this.addInheritedAttributes(
       attributes,
-      this.attributes.getAllAttributes()
+      this.attributes.getAllAttributes(),
     );
     this.childNodes[0].setInheritedAttributes(
       attributes,
       display,
       level,
-      prime
+      prime,
     );
   }
 }

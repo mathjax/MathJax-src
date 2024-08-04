@@ -84,7 +84,7 @@ export class MmlMsubsup extends AbstractMmlBaseNode {
     attributes: AttributeList,
     display: boolean,
     level: number,
-    prime: boolean
+    prime: boolean,
   ) {
     let nodes = this.childNodes;
     nodes[0].setInheritedAttributes(attributes, display, level, prime);
@@ -92,7 +92,7 @@ export class MmlMsubsup extends AbstractMmlBaseNode {
       attributes,
       false,
       level + 1,
-      prime || this.sub === 1
+      prime || this.sub === 1,
     );
     if (!nodes[2]) {
       return;
@@ -101,7 +101,7 @@ export class MmlMsubsup extends AbstractMmlBaseNode {
       attributes,
       false,
       level + 1,
-      prime || this.sub === 2
+      prime || this.sub === 2,
     );
   }
 }

@@ -96,7 +96,7 @@ export interface ChtmlMtrClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlMtrNTD<N, T, D>;
 }
 
@@ -219,7 +219,7 @@ export interface ChtmlMlabeledtrClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlMlabeledtrNTD<N, T, D>;
 }
 
@@ -302,7 +302,7 @@ export const ChtmlMlabeledtr = (function <N, T, D>(): ChtmlMlabeledtrClass<
         const row = this.html('mjx-mtr', attr, [child]);
         this.adaptor.append(
           (this.parent as ChtmlMtableNTD<N, T, D>).labels,
-          row
+          row,
         );
       }
     }

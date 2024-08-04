@@ -39,7 +39,7 @@ let init = function (config: ParserConfiguration) {
   new sm.EnvironmentMap(
     NewcommandUtil.NEW_ENVIRONMENT,
     ParseMethods.environment,
-    {}
+    {},
   );
   config.append(
     Configuration.local({
@@ -53,7 +53,7 @@ let init = function (config: ParserConfiguration) {
         [HandlerType.ENVIRONMENT]: [NewcommandUtil.NEW_ENVIRONMENT],
       },
       [ConfigurationType.PRIORITY]: -1,
-    })
+    }),
   );
 };
 

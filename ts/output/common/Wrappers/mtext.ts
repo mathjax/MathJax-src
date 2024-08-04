@@ -176,7 +176,7 @@ export function CommonMtextMixin<
   FC extends FontDataClass<CC, VV, DD>,
   B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 >(
-  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 ): B {
   return class CommonMtextMixin
     extends Base
@@ -253,7 +253,7 @@ export function CommonMtextMixin<
         this.variant = this.explicitVariant(
           family,
           font[2] ? 'bold' : '',
-          font[1] ? 'italic' : ''
+          font[1] ? 'italic' : '',
         );
         return;
       }
@@ -280,7 +280,7 @@ export function CommonMtextMixin<
     public computeLineBBox(i: number): LineBBox {
       const bbox = LineBBox.from(
         this.getOuterBBox(),
-        this.linebreakOptions.lineleading
+        this.linebreakOptions.lineleading,
       );
       if (!this.breakCount) return bbox;
       bbox.w = this.getBreakWidth(i);

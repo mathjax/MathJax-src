@@ -34,5 +34,5 @@ Entities.add(
     yucy: '\u044E',
     yuml: '\u00FF',
   },
-  'y'
+  'y',
 );

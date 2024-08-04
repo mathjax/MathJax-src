@@ -139,7 +139,7 @@ export function keys(def: OptionList): (string | symbol)[] {
     return [];
   }
   return (Object.keys(def) as (string | symbol)[]).concat(
-    Object.getOwnPropertySymbols(def)
+    Object.getOwnPropertySymbols(def),
   );
 }
 
@@ -166,7 +166,7 @@ export function copy(def: OptionList): OptionList {
   }
   return Object.defineProperties(
     def.constructor === Expandable ? expandable({}) : {},
-    props
+    props,
   );
 }
 
@@ -183,7 +183,7 @@ export function copy(def: OptionList): OptionList {
 export function insert(
   dst: OptionList,
   src: OptionList,
-  warn: boolean = true
+  warn: boolean = true,
 ): OptionList {
   for (let key of keys(src) as string[]) {
     //
@@ -340,7 +340,7 @@ export function selectOptions(
  */
 export function selectOptionsFromKeys(
   options: OptionList,
-  object: OptionList
+  object: OptionList,
 ): OptionList {
   return selectOptions(options, ...Object.keys(object));
 }

@@ -220,7 +220,7 @@ export class ComplexityVisitor extends MmlVisitor {
     let complexity =
       Math.max(
         sub ? this.getComplexity(sub) : 0,
-        sup ? this.getComplexity(sup) : 0
+        sup ? this.getComplexity(sup) : 0,
       ) * this.complexity.script;
     complexity += this.complexity.child * ((sub ? 1 : 0) + (sup ? 1 : 0));
     complexity += base ? this.getComplexity(base) + this.complexity.child : 0;
@@ -259,7 +259,7 @@ export class ComplexityVisitor extends MmlVisitor {
     let complexity =
       Math.max(
         under ? this.getComplexity(under) : 0,
-        over ? this.getComplexity(over) : 0
+        over ? this.getComplexity(over) : 0,
       ) * this.complexity.script;
     if (base) {
       complexity = Math.max(this.getComplexity(base), complexity);

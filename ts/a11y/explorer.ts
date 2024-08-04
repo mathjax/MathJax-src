@@ -87,7 +87,7 @@ export interface ExplorerMathItem extends HTMLMATHITEM {
  */
 export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
   BaseMathItem: B,
-  toMathML: (node: MmlNode) => string
+  toMathML: (node: MmlNode) => string,
 ): Constructor<ExplorerMathItem> & B {
   return class extends BaseMathItem {
     /**
@@ -124,7 +124,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      */
     public rerender(
       document: ExplorerMathDocument,
-      start: number = STATE.RERENDER
+      start: number = STATE.RERENDER,
     ) {
       if (this.explorers) {
         let speech = this.explorers.speech;
@@ -290,13 +290,13 @@ export function ExplorerMathDocumentMixin<
  */
 export function ExplorerHandler(
   handler: HANDLER,
-  MmlJax: MATHML = null
+  MmlJax: MATHML = null,
 ): HANDLER {
   if (!handler.documentClass.prototype.enrich && MmlJax) {
     handler = EnrichHandler(handler, MmlJax);
   }
   handler.documentClass = ExplorerMathDocumentMixin(
-    handler.documentClass as any
+    handler.documentClass as any,
   );
   return handler;
 }
@@ -312,7 +312,7 @@ export function ExplorerHandler(
  */
 export function setA11yOptions(
   document: HTMLDOCUMENT,
-  options: { [key: string]: any }
+  options: { [key: string]: any },
 ) {
   let sreOptions = Sre.engineSetup() as { [name: string]: string };
   for (let key in options) {
@@ -337,7 +337,7 @@ export function setA11yOptions(
 export function setA11yOption(
   document: HTMLDOCUMENT,
   option: string,
-  value: string | boolean
+  value: string | boolean,
 ) {
   switch (option) {
     case 'speechRules':

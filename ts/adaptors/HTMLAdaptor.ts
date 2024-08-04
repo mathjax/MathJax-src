@@ -85,7 +85,7 @@ export interface MinHTMLElement<N, T> {
   getElementsByTagName(name: string): N[] | HTMLCollectionOf<Element>;
   getElementsByTagNameNS(
     ns: string,
-    name: string
+    name: string,
   ): N[] | HTMLCollectionOf<Element>;
   contains(child: N | T): boolean;
   appendChild(child: N | T): N | T | Node;
@@ -290,7 +290,7 @@ export class HTMLAdaptor<
     for (const node of nodes) {
       if (typeof node === 'string') {
         containers = containers.concat(
-          Array.from(this.document.querySelectorAll(node))
+          Array.from(this.document.querySelectorAll(node)),
         );
       } else if (Array.isArray(node)) {
         containers = containers.concat(Array.from(node) as N[]);

@@ -105,7 +105,7 @@ export interface ChtmlMtableClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlMtableNTD<N, T, D>;
 }
 
@@ -225,7 +225,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
     constructor(
       factory: ChtmlWrapperFactory<N, T, D>,
       node: MmlNode,
-      parent: ChtmlWrapper<N, T, D> = null
+      parent: ChtmlWrapper<N, T, D> = null,
     ) {
       super(factory, node, parent);
       this.itable = this.html('mjx-itable');
@@ -315,7 +315,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
       const spacing = this.getEmHalfSpacing(
         [this.fSpace[0], this.fSpace[2]],
         this.cSpace,
-        scale
+        scale,
       );
       //
       //  For each row...
@@ -400,7 +400,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
       const spacing = this.getEmHalfSpacing(
         [this.fSpace[1], this.fSpace[1]],
         this.rSpace,
-        scale
+        scale,
       );
       const frame = this.fframe;
       //
@@ -498,7 +498,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
     protected setRowBaseline(
       row: ChtmlWrapper<N, T, D>,
       HD: number,
-      D: number
+      D: number,
     ) {
       const ralign = row.node.attributes.get('rowalign') as string;
       //
@@ -523,7 +523,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
       cell: ChtmlWrapper<N, T, D>,
       ralign: string,
       HD: number,
-      D: number
+      D: number,
     ): boolean {
       const calign = cell.node.attributes.get('rowalign');
       if (calign === 'baseline' || calign === 'axis') {
@@ -551,7 +551,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
         this.adaptor.setStyle(
           this.itable,
           'border',
-          `${this.em(this.fLine)} ${frame}`
+          `${this.em(this.fLine)} ${frame}`,
         );
       }
     }
@@ -586,7 +586,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
           adaptor.setStyle(
             table,
             style,
-            '0 ' + this.em(R) + ' 0 ' + this.em(L)
+            '0 ' + this.em(R) + ' 0 ' + this.em(L),
           );
         }
       }
@@ -676,7 +676,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
       }
       this.adaptor.append(
         this.dom[0],
-        this.html('mjx-labels', styles, [this.labels])
+        this.html('mjx-labels', styles, [this.labels]),
       );
       return [align, shift] as [string, number];
     }
@@ -692,7 +692,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
         const row = this.childNodes[i];
         this.setRowHeight(
           row,
-          H[i] + D[i] + space[i] + space[i + 1] + this.rLines[i]
+          H[i] + D[i] + space[i] + space[i + 1] + this.rLines[i],
         );
         if (H[i] !== NH[i] || D[i] !== ND[i]) {
           this.setRowBaseline(row, H[i] + D[i], D[i]);
@@ -723,12 +723,12 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
           h &&
             adaptor.insert(
               this.html('mjx-mtr', { style: { height: this.em(h) } }),
-              current
+              current,
             );
           adaptor.setStyle(
             current,
             'height',
-            this.em((equal ? HD : H[i] + D[i]) + space[i] + space[i + 1])
+            this.em((equal ? HD : H[i] + D[i]) + space[i] + space[i + 1]),
           );
           current = adaptor.next(current) as N;
           h = this.rLines[i];

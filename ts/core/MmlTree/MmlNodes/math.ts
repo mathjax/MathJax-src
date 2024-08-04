@@ -99,14 +99,14 @@ export class MmlMath extends AbstractMmlLayoutNode {
     attributes: AttributeList,
     display: boolean,
     level: number,
-    prime: boolean
+    prime: boolean,
   ) {
     if (this.attributes.get('mode') === 'display') {
       this.attributes.setInherited('display', 'block');
     }
     attributes = this.addInheritedAttributes(
       attributes,
-      this.attributes.getAllAttributes()
+      this.attributes.getAllAttributes(),
     );
     display =
       !!this.attributes.get('displaystyle') ||

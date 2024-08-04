@@ -85,14 +85,14 @@ export class GeneratorPool<N, T, D> {
         modality: 'speech',
         markup: 'ssml',
         automark: true,
-      })
+      }),
     );
     this.summaryGenerator.setOptions(
       Object.assign({}, options?.sre || {}, {
         modality: 'summary',
         markup: 'ssml',
         automark: true,
-      })
+      }),
     );
     this.brailleGenerator.setOptions({
       locale: options?.sre?.braille,
@@ -203,7 +203,7 @@ export class GeneratorPool<N, T, D> {
       this.adaptor.setAttribute(
         node,
         'aria-label',
-        buildSpeech(this.getLabel(node))[0]
+        buildSpeech(this.getLabel(node))[0],
       );
     }
     this.lastMove = InPlace.NONE;
@@ -245,7 +245,7 @@ export class GeneratorPool<N, T, D> {
   public updateRegions(
     node: N,
     speechRegion: LiveRegion,
-    brailleRegion: LiveRegion
+    brailleRegion: LiveRegion,
   ) {
     let speech = this.getLabel(node, this.lastSpeech);
     speechRegion.Update(speech);
@@ -285,7 +285,7 @@ export class GeneratorPool<N, T, D> {
    */
   public nextStyle(node: N) {
     this.speechGenerator.nextStyle(
-      this.adaptor.getAttribute(node, 'data-semantic-id')
+      this.adaptor.getAttribute(node, 'data-semantic-id'),
     );
     this.updateSummaryGenerator();
   }
@@ -326,7 +326,7 @@ export class GeneratorPool<N, T, D> {
       this.adaptor.getAttribute(node, 'data-semantic-prefix'),
       // TODO: check if we need this or if it is automatic by the screen readers.
       this.adaptor.getAttribute(node, 'data-semantic-postfix'),
-      sep
+      sep,
     );
   }
 
@@ -383,7 +383,7 @@ export class GeneratorPool<N, T, D> {
         this.adaptor.setAttribute(
           node,
           'aria-label',
-          buildSpeech(speech, locale)[0]
+          buildSpeech(speech, locale)[0],
         );
       }
     }
@@ -410,10 +410,10 @@ export class GeneratorPool<N, T, D> {
       return this.lastSpeech;
     }
     let postfix = this.summaryGenerator.getActionable(
-      actionable ? (this.adaptor.childNodes(node).length === 0 ? -1 : 1) : 0
+      actionable ? (this.adaptor.childNodes(node).length === 0 ? -1 : 1) : 0,
     );
     const depth = this.summaryGenerator.getLevel(
-      this.adaptor.getAttribute(node, 'aria-level')
+      this.adaptor.getAttribute(node, 'aria-level'),
     );
     this.lastSpeech = `${depth} ${postfix}`;
     return this.lastSpeech;

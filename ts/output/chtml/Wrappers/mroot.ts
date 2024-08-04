@@ -92,7 +92,7 @@ export interface ChtmlMrootClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlMrootNTD<N, T, D>;
 }
 
@@ -134,7 +134,7 @@ export const ChtmlMroot = (function <N, T, D>(): ChtmlMrootClass<N, T, D> {
       ROOT: N,
       root: ChtmlWrapper<N, T, D>,
       sbox: BBox,
-      H: number
+      H: number,
     ) {
       root.toCHTML([ROOT]);
       const adaptor = this.adaptor;
@@ -145,7 +145,7 @@ export const ChtmlMroot = (function <N, T, D>(): ChtmlMrootClass<N, T, D> {
         adaptor.setStyle(
           adaptor.firstChild(ROOT) as N,
           'paddingLeft',
-          this.em(dx)
+          this.em(dx),
         );
       }
     }

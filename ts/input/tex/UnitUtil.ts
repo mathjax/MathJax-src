@@ -94,7 +94,7 @@ function muReplace([value, unit, length]: [string, string, number]): [
     return [value, unit, length];
   }
   let em = UnitUtil.em(
-    UnitUtil.UNIT_CASES.get(unit) * parseFloat(value || '1')
+    UnitUtil.UNIT_CASES.get(unit) * parseFloat(value || '1'),
   );
   return [em.slice(0, -2), 'em', length];
 }
@@ -124,7 +124,7 @@ export const UnitUtil = {
    */
   matchDimen(dim: string, rest: boolean = false): [string, string, number] {
     let match = dim.match(
-      rest ? UnitUtil.UNIT_CASES.dimenRest : UnitUtil.UNIT_CASES.dimenEnd
+      rest ? UnitUtil.UNIT_CASES.dimenRest : UnitUtil.UNIT_CASES.dimenEnd,
     );
     return match
       ? muReplace([match[1].replace(/,/, '.'), match[4], match[0].length])

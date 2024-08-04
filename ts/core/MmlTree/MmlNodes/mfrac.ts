@@ -92,7 +92,7 @@ export class MmlMfrac extends AbstractMmlBaseNode {
     attributes: AttributeList,
     display: boolean,
     level: number,
-    prime: boolean
+    prime: boolean,
   ) {
     if (!display || level > 0) {
       level++;
@@ -108,7 +108,7 @@ export class MmlMfrac extends AbstractMmlBaseNode {
         indentshiftfirst: '0',
         indentalignlast: 'indentalign',
         indentshiftlast: 'indentshift',
-      }
+      },
     );
     const denAttributes = this.addInheritedAttributes(
       { ...attributes },
@@ -119,19 +119,19 @@ export class MmlMfrac extends AbstractMmlBaseNode {
         indentshiftfirst: '0',
         indentalignlast: 'indentalign',
         indentshiftlast: 'indentshift',
-      }
+      },
     );
     this.childNodes[0].setInheritedAttributes(
       numAttributes,
       false,
       level,
-      prime
+      prime,
     );
     this.childNodes[1].setInheritedAttributes(
       denAttributes,
       false,
       level,
-      true
+      true,
     );
   }
 }

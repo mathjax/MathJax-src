@@ -58,7 +58,7 @@ export default class TexError {
               parseInt(
                 // parts[i] = %{n}
                 parts[i].substring(1, parts[i].length - 1),
-                10
+                10,
               ) - 1
             ];
           if (typeof parts[i] === 'number') {

@@ -47,7 +47,7 @@ type AnnotationTypes = { [type: string]: string[] };
 export function showAnnotations(
   box: SelectableInfo,
   types: AnnotationTypes,
-  cache: [string, string][]
+  cache: [string, string][],
 ) {
   return (menu: MJContextMenu, sub: Submenu) => {
     getAnnotation(getSemanticNode(menu), types, cache);
@@ -67,7 +67,7 @@ export function copyAnnotations(cache: [string, string][]) {
     const annotations = cache.slice();
     cache.length = 0;
     return createAnnotationMenu(menu, sub, annotations, () =>
-      MenuUtil.copyToClipboard(annotation.trim())
+      MenuUtil.copyToClipboard(annotation.trim()),
     );
   };
 }
@@ -98,7 +98,7 @@ function getSemanticNode(menu: MJContextMenu): MmlNode | null {
 function getAnnotation(
   node: MmlNode,
   types: AnnotationTypes,
-  annotations: [string, string][]
+  annotations: [string, string][],
 ) {
   if (!node) return;
   for (const child of node.childNodes) {
@@ -107,7 +107,7 @@ function getAnnotation(
       if (match) {
         const value = child.childNodes.reduce(
           (text, chars) => text + chars.toString(),
-          ''
+          '',
         );
         annotations.push([match, value]);
       }
@@ -122,7 +122,7 @@ function getAnnotation(
  */
 function annotationMatch(
   child: MmlNode,
-  types: AnnotationTypes
+  types: AnnotationTypes,
 ): string | null {
   const encoding = child.attributes.get('encoding') as string;
   for (const type of Object.keys(types)) {
@@ -152,7 +152,7 @@ function createAnnotationMenu(
   menu: MJContextMenu,
   submenu: Submenu,
   annotations: [string, string][],
-  action: () => void
+  action: () => void,
 ): SubMenu {
   return menu.factory.get('subMenu')(
     menu.factory,
@@ -170,6 +170,6 @@ function createAnnotationMenu(
       }),
       id: 'annotations',
     },
-    submenu
+    submenu,
   );
 }

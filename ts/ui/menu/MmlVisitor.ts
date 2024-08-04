@@ -61,7 +61,7 @@ export class MmlVisitor<N, T, D> extends SerializedMmlVisitor {
   public visitTree(
     node: MmlNode,
     math: MathItem<N, T, D> = null,
-    options: OptionList = {}
+    options: OptionList = {},
   ) {
     this.mathItem = math;
     userOptions(this.options, options);
@@ -133,8 +133,8 @@ export class MmlVisitor<N, T, D> extends SerializedMmlVisitor {
     if (this.options.filterSRE) {
       const keys = Object.keys(list).filter((id) =>
         id.match(
-          /^(?:data-semantic-.*?|role|aria-(?:level|posinset|setsize|owns))$/
-        )
+          /^(?:data-semantic-.*?|role|aria-(?:level|posinset|setsize|owns))$/,
+        ),
       );
       for (const key of keys) {
         delete list[key];

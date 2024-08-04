@@ -61,7 +61,7 @@ export abstract class AbstractNodeFactory<
   public create(
     kind: string,
     properties: PropertyList = {},
-    children: N[] = []
+    children: N[] = [],
   ) {
     return this.node[kind](properties, children);
   }

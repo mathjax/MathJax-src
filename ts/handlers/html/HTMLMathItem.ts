@@ -49,7 +49,7 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
     jax: InputJax<N, T, D>,
     display: boolean = true,
     start: Location<N, T> = { node: null, n: 0, delim: '' },
-    end: Location<N, T> = { node: null, n: 0, delim: '' }
+    end: Location<N, T> = { node: null, n: 0, delim: '' },
   ) {
     super(math, jax, display, start, end);
   }

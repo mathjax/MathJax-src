@@ -90,10 +90,10 @@ export function SafeMathDocumentMixin<
       for (const jax of this.inputJax) {
         if (jax.name.match(/MathML/)) {
           (jax as any).mathml.filterAttribute = this.safe.mmlAttribute.bind(
-            this.safe
+            this.safe,
           );
           (jax as any).mathml.filterClassList = this.safe.mmlClassList.bind(
-            this.safe
+            this.safe,
           );
         } else if (jax.name.match(/TeX/)) {
           jax.postFilters.add(this.sanitize.bind(jax), -5.5);
@@ -124,7 +124,7 @@ export function SafeMathDocumentMixin<
  * @return {Handler}          The handler that was modified (for purposes of chaining extensions)
  */
 export function SafeHandler<N, T, D>(
-  handler: Handler<N, T, D>
+  handler: Handler<N, T, D>,
 ): Handler<N, T, D> {
   handler.documentClass = SafeMathDocumentMixin(handler.documentClass);
   return handler;

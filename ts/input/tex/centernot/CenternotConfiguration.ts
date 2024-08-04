@@ -51,7 +51,7 @@ function CenterOver(parser: TexParser, name: string) {
         }),
         parser.create('node', 'mphantom', [base]),
       ],
-      { width: 0, lspace: '-.5width' }
+      { width: 0, lspace: '-.5width' },
     ),
   ]);
   parser.configuration.addNode('centerOver', base);

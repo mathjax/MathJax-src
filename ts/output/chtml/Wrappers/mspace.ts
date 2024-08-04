@@ -90,7 +90,7 @@ export interface ChtmlMspaceClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlMspaceNTD<N, T, D>;
 }
 
@@ -131,7 +131,7 @@ export const ChtmlMspace = (function <N, T, D>(): ChtmlMspaceClass<N, T, D> {
     public toCHTML(parents: N[]) {
       parents.length > 1 &&
         parents.forEach((dom) =>
-          this.adaptor.append(dom, this.html('mjx-linestrut'))
+          this.adaptor.append(dom, this.html('mjx-linestrut')),
         );
       let chtml = this.standardChtmlNodes(parents);
       let { w, h, d } = this.getBBox();

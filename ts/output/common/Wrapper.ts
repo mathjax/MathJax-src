@@ -628,7 +628,7 @@ export class CommonWrapper<
         const obox = this.getOuterBBox();
         this.lineBBox[i] = LineBBox.from(
           obox,
-          this.linebreakOptions.lineleading
+          this.linebreakOptions.lineleading,
         );
       }
     }
@@ -743,7 +743,7 @@ export class CommonWrapper<
   public setChildPWidths(
     recompute: boolean,
     w: number | null = null,
-    clear: boolean = true
+    clear: boolean = true,
   ): boolean {
     if (recompute) {
       return false;
@@ -878,7 +878,7 @@ export class CommonWrapper<
       const values = attributes.getList(
         'fontfamily',
         'fontweight',
-        'fontstyle'
+        'fontstyle',
       ) as StringMap;
       if (this.removedStyles) {
         const style = this.removedStyles;
@@ -896,7 +896,7 @@ export class CommonWrapper<
         variant = this.explicitVariant(
           values.family,
           values.weight,
-          values.style
+          values.style,
         );
       } else {
         if (this.node.getProperty('variantForm')) variant = '-tex-variant';
@@ -920,7 +920,7 @@ export class CommonWrapper<
   protected explicitVariant(
     fontFamily: string,
     fontWeight: string,
-    fontStyle: string
+    fontStyle: string,
   ) {
     let style = this.styles;
     if (!style) style = this.styles = new Styles();
@@ -950,7 +950,7 @@ export class CommonWrapper<
     if (scriptlevel !== 0) {
       scale = Math.pow(
         attributes.get('scriptsizemultiplier') as number,
-        scriptlevel
+        scriptlevel,
       );
     }
     //
@@ -978,7 +978,7 @@ export class CommonWrapper<
       let scriptminsize = this.length2em(
         attributes.get('scriptminsize'),
         0.4,
-        1
+        1,
       );
       if (scale < scriptminsize) scale = scriptminsize;
     }
@@ -1179,7 +1179,7 @@ export class CommonWrapper<
     indentshift: string,
     align: string = '',
     shift: string = '',
-    width: number = this.metrics.containerWidth
+    width: number = this.metrics.containerWidth,
   ): [string, number] {
     if (!this.jax.math.display) {
       return ['left', 0];
@@ -1234,7 +1234,7 @@ export class CommonWrapper<
     D: number,
     h: number,
     d: number,
-    align: string
+    align: string,
   ): number {
     return align === 'top'
       ? H - h
@@ -1300,7 +1300,7 @@ export class CommonWrapper<
   protected length2em(
     length: Property,
     size: number = 1,
-    scale: number = null
+    scale: number = null,
   ): number {
     if (scale === null) {
       scale = this.bbox.scale;
@@ -1309,7 +1309,7 @@ export class CommonWrapper<
     const factor = lookup(
       length as string,
       { medium: 1, thin: 2 / 3, thick: 5 / 3 },
-      0
+      0,
     );
     return factor
       ? factor * t
@@ -1368,12 +1368,12 @@ export class CommonWrapper<
   public mmlNode(
     kind: string,
     properties: PropertyList = {},
-    children: MmlNode[] = []
+    children: MmlNode[] = [],
   ): MmlNode {
     return (this.node as AbstractMmlNode).factory.create(
       kind,
       properties,
-      children
+      children,
     );
   }
 
@@ -1385,7 +1385,7 @@ export class CommonWrapper<
    * @return {CommonMO}     The wrapped MmlMo node
    */
   protected createMo(
-    text: string
+    text: string,
   ): CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
     const mmlFactory = (this.node as AbstractMmlNode).factory;
     const textNode = (mmlFactory.create('text') as TextNode).setText(text);

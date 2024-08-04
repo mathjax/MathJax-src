@@ -94,7 +94,7 @@ export interface ChtmlMmultiscriptsClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlMmultiscriptsNTD<N, T, D>;
 }
 
@@ -193,7 +193,7 @@ export const ChtmlMmultiscripts = (function <
           data.psub,
           data.psup,
           this.firstPrescript,
-          data.numPrescripts
+          data.numPrescripts,
         );
         preAlign !== 'right' &&
           this.adaptor.setAttribute(scripts, 'script-align', preAlign);
@@ -208,7 +208,7 @@ export const ChtmlMmultiscripts = (function <
           data.sub,
           data.sup,
           1,
-          data.numScripts
+          data.numScripts,
         );
         postAlign !== 'left' &&
           this.adaptor.setAttribute(scripts, 'script-align', postAlign);
@@ -236,7 +236,7 @@ export const ChtmlMmultiscripts = (function <
       sub: BBox,
       sup: BBox,
       i: number,
-      n: number
+      n: number,
     ): N {
       const adaptor = this.adaptor;
       const q = u - sup.d + (v - sub.h); // separation of scripts
@@ -258,7 +258,7 @@ export const ChtmlMmultiscripts = (function <
       }
       return adaptor.append(
         dom,
-        this.html(name, tabledef, [supRow, sepRow, subRow])
+        this.html(name, tabledef, [supRow, sepRow, subRow]),
       ) as N;
     }
   };

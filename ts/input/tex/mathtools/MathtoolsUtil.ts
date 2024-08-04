@@ -53,7 +53,7 @@ export const MathtoolsUtil = {
         '\\scriptstyle': [false, 1],
         '\\scriptscriptstyle': [false, 2],
       },
-      [null, null]
+      [null, null],
     );
     if (display !== null) {
       mml.attributes.set('displaystyle', display);
@@ -74,7 +74,7 @@ export const MathtoolsUtil = {
       throw new TexError(
         'NotInAlignment',
         '%1 can only be used in aligment environments',
-        name
+        name,
       );
     }
     return top;

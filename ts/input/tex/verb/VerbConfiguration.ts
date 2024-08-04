@@ -52,7 +52,7 @@ const VerbMethods: { [key: string]: ParseMethod } = {
       throw new TexError(
         'NoClosingDelim',
         "Can't find closing delimiter for %1",
-        parser.currentCS
+        parser.currentCS,
       );
     }
     const text = parser.string.slice(start, parser.i).replace(/ /g, '\u00A0');
@@ -62,8 +62,8 @@ const VerbMethods: { [key: string]: ParseMethod } = {
         'token',
         'mtext',
         { mathvariant: TexConstant.Variant.MONOSPACE },
-        text
-      )
+        text,
+      ),
     );
   },
 };

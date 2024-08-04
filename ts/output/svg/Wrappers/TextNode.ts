@@ -90,7 +90,7 @@ export interface SvgTextNodeClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgTextNodeNTD<N, T, D>;
 }
 
@@ -130,7 +130,7 @@ export const SvgTextNode = (function <N, T, D>(): SvgTextNodeClass<N, T, D> {
      */
     public static addStyles<JX extends SVG<any, any, any>>(
       styles: CssStyles,
-      jax: JX
+      jax: JX,
     ) {
       styles.addStyles({
         'mjx-container[jax="SVG"] path[data-c], mjx-container[jax="SVG"] use[data-c]':
@@ -158,7 +158,7 @@ export const SvgTextNode = (function <N, T, D>(): SvgTextNodeClass<N, T, D> {
           parents = this.dom = [
             adaptor.append(
               parents[0],
-              this.svg('g', { 'data-mml-node': 'text' })
+              this.svg('g', { 'data-mml-node': 'text' }),
             ) as N,
           ];
         } else {

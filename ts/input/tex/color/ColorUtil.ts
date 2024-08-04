@@ -60,7 +60,7 @@ export class ColorModel {
     throw new TexError(
       'UndefinedColorModel',
       "Color model '%1' not defined",
-      model
+      model,
     );
   }
 
@@ -135,7 +135,7 @@ ColorModelProcessors.set('rgb', function (rgb: string): string {
     throw new TexError(
       'ModelArg1',
       'Color values for the %1 model require 3 numbers',
-      'rgb'
+      'rgb',
     );
   }
 
@@ -151,7 +151,7 @@ ColorModelProcessors.set('rgb', function (rgb: string): string {
         'Color values for the %1 model must be between %2 and %3',
         'rgb',
         '0',
-        '1'
+        '1',
       );
     }
 
@@ -181,7 +181,7 @@ ColorModelProcessors.set('RGB', function (rgb: string): string {
     throw new TexError(
       'ModelArg1',
       'Color values for the %1 model require 3 numbers',
-      'RGB'
+      'RGB',
     );
   }
 
@@ -197,7 +197,7 @@ ColorModelProcessors.set('RGB', function (rgb: string): string {
         'Color values for the %1 model must be between %2 and %3',
         'RGB',
         '0',
-        '255'
+        '255',
       );
     }
 
@@ -229,7 +229,7 @@ ColorModelProcessors.set('gray', function (gray: string): string {
       'Color values for the %1 model must be between %2 and %3',
       'gray',
       '0',
-      '1'
+      '1',
     );
   }
   let pn = Math.floor(n * 255).toString(16);

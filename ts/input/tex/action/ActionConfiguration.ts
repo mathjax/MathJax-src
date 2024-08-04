@@ -41,11 +41,11 @@ export const ActionMethods: { [key: string]: ParseMethod } = {
     let arg;
     while ((arg = parser.GetArgument(name)) !== '\\endtoggle') {
       children.push(
-        new TexParser(arg, parser.stack.env, parser.configuration).mml()
+        new TexParser(arg, parser.stack.env, parser.configuration).mml(),
       );
     }
     parser.Push(
-      parser.create('node', 'maction', children, { actiontype: 'toggle' })
+      parser.create('node', 'maction', children, { actiontype: 'toggle' }),
     );
   },
 
@@ -59,7 +59,7 @@ export const ActionMethods: { [key: string]: ParseMethod } = {
     const arg = parser.ParseArg(name);
     const tip = parser.ParseArg(name);
     parser.Push(
-      parser.create('node', 'maction', [arg, tip], { actiontype: 'tooltip' })
+      parser.create('node', 'maction', [arg, tip], { actiontype: 'tooltip' }),
     );
   },
 

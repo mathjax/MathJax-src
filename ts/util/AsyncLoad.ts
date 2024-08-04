@@ -32,7 +32,7 @@ import { mathjax } from '../mathjax.js';
 export function asyncLoad(name: string): Promise<any> {
   if (!mathjax.asyncLoad) {
     return Promise.reject(
-      `Can't load '${name}': No mathjax.asyncLoad method specified`
+      `Can't load '${name}': No mathjax.asyncLoad method specified`,
     );
   }
   return new Promise((ok, fail) => {

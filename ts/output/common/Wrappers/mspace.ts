@@ -154,7 +154,7 @@ export function CommonMspaceMixin<
   FC extends FontDataClass<CC, VV, DD>,
   B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 >(
-  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 ): B {
   return class CommonMspaceMixin
     extends Base
@@ -216,11 +216,11 @@ export function CommonMspaceMixin<
      */
     public computeLineBBox(i: number): LineBBox {
       const leadingString = this.node.attributes.get(
-        'data-lineleading'
+        'data-lineleading',
       ) as string;
       const leading = this.length2em(
         leadingString,
-        this.linebreakOptions.lineleading
+        this.linebreakOptions.lineleading,
       );
       const bbox = LineBBox.from(BBox.zero(), leading);
       if (i === 1) {

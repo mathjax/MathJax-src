@@ -91,7 +91,7 @@ export interface ChtmlMpaddedClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlMpaddedNTD<N, T, D>;
 }
 
@@ -185,7 +185,7 @@ export const ChtmlMpadded = (function <N, T, D>(): ChtmlMpaddedClass<N, T, D> {
       chtml = [
         this.adaptor.append(
           chtml[0],
-          this.html('mjx-block', { style: style }, content)
+          this.html('mjx-block', { style: style }, content),
         ) as N,
       ];
       if (this.childNodes[0].childNodes.length) {

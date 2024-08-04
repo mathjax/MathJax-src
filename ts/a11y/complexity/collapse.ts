@@ -156,7 +156,7 @@ export class Collapse {
             node,
             complexity,
             this.getText(node.childNodes[0]) +
-              this.getText(node.childNodes[node.childNodes.length - 1])
+              this.getText(node.childNodes[node.childNodes.length - 1]),
           );
         }
         return complexity;
@@ -194,7 +194,7 @@ export class Collapse {
           complexity = this.recordCollapse(
             node,
             complexity,
-            this.marker.sqrt as string
+            this.marker.sqrt as string,
           );
         }
         return complexity;
@@ -208,7 +208,7 @@ export class Collapse {
           complexity = this.recordCollapse(
             node,
             complexity,
-            this.marker.sqrt as string
+            this.marker.sqrt as string,
           );
         }
         return complexity;
@@ -229,7 +229,7 @@ export class Collapse {
             complexity = this.recordCollapse(
               node,
               this.complexity.visitNode(node, false),
-              marker
+              marker,
             );
           }
         }
@@ -303,7 +303,7 @@ export class Collapse {
           complexity = this.recordCollapse(
             node,
             complexity,
-            this.marker.superscript as string
+            this.marker.superscript as string,
           );
         }
         return complexity;
@@ -317,7 +317,7 @@ export class Collapse {
           complexity = this.recordCollapse(
             node,
             complexity,
-            this.marker.subscript as string
+            this.marker.subscript as string,
           );
         }
         return complexity;
@@ -331,7 +331,7 @@ export class Collapse {
           complexity = this.recordCollapse(
             node,
             complexity,
-            this.marker.subsup as string
+            this.marker.subsup as string,
           );
         }
         return complexity;
@@ -382,7 +382,7 @@ export class Collapse {
   protected defaultCheck(
     node: MmlNode,
     complexity: number,
-    type: string
+    type: string,
   ): number {
     const role = node.attributes.get('data-semantic-role') as string;
     const check = this.cutoff[type];
@@ -406,7 +406,7 @@ export class Collapse {
   protected recordCollapse(
     node: MmlNode,
     complexity: number,
-    text: string
+    text: string,
   ): number {
     text = '\u25C2' + text + '\u25B8';
     node.setProperty('collapse-marker', text);
@@ -437,7 +437,7 @@ export class Collapse {
   protected canUncollapse(
     node: MmlNode,
     n: number,
-    m: number = 1
+    m: number = 1,
   ): MmlNode | null {
     if (this.splitAttribute(node, 'children').length === m) {
       const mml =
@@ -465,7 +465,7 @@ export class Collapse {
     complexity: number,
     node: MmlNode,
     n: number,
-    m: number = 1
+    m: number = 1,
   ): number {
     const child = this.canUncollapse(node, n, m);
     if (child) {
@@ -485,7 +485,7 @@ export class Collapse {
    */
   protected splitAttribute(node: MmlNode, id: string): string[] {
     return ((node.attributes.get('data-semantic-' + id) as string) || '').split(
-      /,/
+      /,/,
     );
   }
 
@@ -573,19 +573,19 @@ export class Collapse {
         'data-collapsible': true,
         id: this.makeId(),
         'data-semantic-complexity': node.attributes.get(
-          'data-semantic-complexity'
+          'data-semantic-complexity',
         ),
       },
       [
         factory.create('mtext', { mathcolor: 'blue' }, [
           (factory.create('text') as TextNode).setText(marker),
         ]),
-      ]
+      ],
     );
     maction.inheritAttributesFrom(node);
     node.attributes.set(
       'data-semantic-complexity',
-      node.getProperty('collapse-complexity')
+      node.getProperty('collapse-complexity'),
     );
     node.removeProperty('collapse-marker');
     node.removeProperty('collapse-complexity');
@@ -604,7 +604,7 @@ export class Collapse {
     const mrow = this.complexity.factory.create(
       'mrow',
       null,
-      node.childNodes[0].childNodes
+      node.childNodes[0].childNodes,
     );
     node.childNodes[0].setChildren([mrow]);
 
@@ -623,7 +623,7 @@ export class Collapse {
     mrow.setProperty('collapse-marker', node.getProperty('collapse-marker'));
     mrow.setProperty(
       'collapse-complexity',
-      node.getProperty('collapse-complexity')
+      node.getProperty('collapse-complexity'),
     );
     node.removeProperty('collapse-marker');
     node.removeProperty('collapse-complexity');

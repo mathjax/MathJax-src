@@ -163,7 +163,7 @@ function Error(message: string) {
  */
 function scriptData(
   script: HTMLScriptElement,
-  cdn: CdnData = null
+  cdn: CdnData = null,
 ): ScriptData {
   script.parentNode.removeChild(script);
   let src = script.src;
@@ -310,7 +310,7 @@ function loadVersion(version: string) {
   }
   loadMathJax(
     script.cdn.base + version + script.dir + '/' + script.file,
-    script.id
+    script.id,
   );
 }
 
@@ -364,7 +364,7 @@ function getXMLHttpRequest(): XMLHttpRequest {
 function requestXML(
   cdn: CdnData,
   action: (json: JSON | JSON[]) => boolean,
-  failure: () => void
+  failure: () => void,
 ) {
   const request = getXMLHttpRequest();
   if (request) {
@@ -375,7 +375,7 @@ function requestXML(
           !action(JSON.parse(request.responseText)) && failure();
         } else {
           Error(
-            'Problem acquiring MathJax version: status = ' + request.status
+            'Problem acquiring MathJax version: status = ' + request.status,
           );
           failure();
         }
@@ -406,7 +406,7 @@ function loadLatestGitVersion() {
       }
       return false;
     },
-    loadDefaultMathJax
+    loadDefaultMathJax,
   );
 }
 
@@ -429,7 +429,7 @@ function loadLatestCdnVersion() {
       }
       return true;
     },
-    loadDefaultMathJax
+    loadDefaultMathJax,
   );
 }
 

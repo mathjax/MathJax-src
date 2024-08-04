@@ -106,7 +106,7 @@ export interface SvgMsubClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgMsubNTD<N, T, D>;
 }
 
@@ -194,7 +194,7 @@ export interface SvgMsupClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgMsupNTD<N, T, D>;
 }
 
@@ -282,7 +282,7 @@ export interface SvgMsubsupClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgMsubsupNTD<N, T, D>;
 }
 

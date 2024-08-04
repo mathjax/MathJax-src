@@ -105,7 +105,7 @@ export class MmlMtable extends AbstractMmlNode {
     attributes: AttributeList,
     display: boolean,
     level: number,
-    prime: boolean
+    prime: boolean,
   ) {
     //
     // Force inheritance of shift and align values (since they are needed to output tables with labels)
@@ -133,7 +133,7 @@ export class MmlMtable extends AbstractMmlNode {
     attributes: AttributeList,
     display: boolean,
     level: number,
-    _prime: boolean
+    _prime: boolean,
   ) {
     for (const child of this.childNodes) {
       if (!child.isKind('mtr')) {
@@ -190,7 +190,7 @@ export class MmlMtable extends AbstractMmlNode {
           const merror = child.mError(
             'Children of ' + this.kind + ' must be mtr or mlabeledtr',
             options,
-            isMtd
+            isMtd,
           );
           mtr.childNodes[mtr.childNodes.length - 1].appendChild(merror); // append the error to the mtd in the mtr
         }

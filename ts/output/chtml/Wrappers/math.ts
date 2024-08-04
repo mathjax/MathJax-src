@@ -92,7 +92,7 @@ export interface ChtmlMathClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlMathNTD<N, T, D>;
 }
 
@@ -267,7 +267,7 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
     public setChildPWidths(
       recompute: boolean,
       w: number = null,
-      clear: boolean = true
+      clear: boolean = true,
     ) {
       return this.parent ? super.setChildPWidths(recompute, w, clear) : false;
     }
@@ -280,7 +280,7 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
       const adaptor = this.adaptor;
       if (this.node.getProperty('process-breaks')) {
         this.dom.forEach((dom) =>
-          adaptor.setAttribute(dom, 'breakable', 'true')
+          adaptor.setAttribute(dom, 'breakable', 'true'),
         );
       }
     }

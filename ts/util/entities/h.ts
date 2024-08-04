@@ -45,5 +45,5 @@ Entities.add(
     hybull: '\u2043',
     hyphen: '\u2010',
   },
-  'h'
+  'h',
 );

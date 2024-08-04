@@ -93,7 +93,7 @@ export abstract class AbstractTokenMap<T> implements TokenMap {
    */
   constructor(
     private _name: string,
-    private _parser: ParseMethod
+    private _parser: ParseMethod,
   ) {
     MapHandler.register(this);
   }
@@ -155,7 +155,7 @@ export class RegExpMap extends AbstractTokenMap<string> {
   constructor(
     name: string,
     parser: ParseMethod,
-    private _regExp: RegExp
+    private _regExp: RegExp,
   ) {
     super(name, parser);
   }
@@ -232,7 +232,7 @@ export class CharacterMap extends AbstractParseMap<Token> {
   constructor(
     name: string,
     parser: ParseMethod,
-    json: { [index: string]: string | [string, Attributes] }
+    json: { [index: string]: string | [string, Attributes] },
   ) {
     super(name, parser);
     for (const key of Object.keys(json)) {
@@ -278,7 +278,7 @@ export class MacroMap extends AbstractParseMap<Macro> {
   constructor(
     name: string,
     json: { [index: string]: ParseFunction | [ParseFunction, ...Args[]] },
-    functionMap: { [key: string]: ParseMethod } = {}
+    functionMap: { [key: string]: ParseMethod } = {},
   ) {
     super(name, null);
     const getMethod = (func: ParseFunction) =>
@@ -364,7 +364,7 @@ export class EnvironmentMap extends MacroMap {
     name: string,
     parser: ParseMethod,
     json: { [index: string]: ParseFunction | [ParseFunction, ...Args[]] },
-    functionMap: { [key: string]: ParseMethod } = {}
+    functionMap: { [key: string]: ParseMethod } = {},
   ) {
     super(name, json, functionMap);
     this.parser = parser;

@@ -242,7 +242,7 @@ export interface MmlNode extends Node<MmlNode, MmlNodeClass> {
     attributes: AttributeList,
     display: boolean,
     level: number,
-    prime: boolean
+    prime: boolean,
   ): void;
 
   /**
@@ -295,7 +295,7 @@ export interface MmlNodeClass extends NodeClass<MmlNode, MmlNodeClass> {
   new (
     factory: MmlFactory,
     attributes?: PropertyList,
-    children?: MmlNode[]
+    children?: MmlNode[],
   ): MmlNode;
 }
 
@@ -439,7 +439,7 @@ export abstract class AbstractMmlNode
   constructor(
     factory: MmlFactory,
     attributes: PropertyList = {},
-    children: MmlNode[] = []
+    children: MmlNode[] = [],
   ) {
     super(factory);
     if (this.arity < 0) {
@@ -449,7 +449,7 @@ export abstract class AbstractMmlNode
     this.setChildren(children);
     this.attributes = new Attributes(
       factory.getNodeClass(this.kind).defaults,
-      factory.getNodeClass('math').defaults
+      factory.getNodeClass('math').defaults,
     );
     this.attributes.setList(attributes);
   }
@@ -751,7 +751,7 @@ export abstract class AbstractMmlNode
     attributes: AttributeList = {},
     display: boolean = false,
     level: number = 0,
-    prime: boolean = false
+    prime: boolean = false,
   ) {
     let defaults = this.attributes.getAllDefaults();
     for (const key of Object.keys(attributes)) {
@@ -831,7 +831,7 @@ export abstract class AbstractMmlNode
     attributes: AttributeList,
     display: boolean,
     level: number,
-    prime: boolean
+    prime: boolean,
   ) {
     for (const child of this.childNodes) {
       child.setInheritedAttributes(attributes, display, level, prime);
@@ -846,7 +846,7 @@ export abstract class AbstractMmlNode
    */
   protected addInheritedAttributes(
     current: AttributeList,
-    attributes: PropertyList
+    attributes: PropertyList,
   ) {
     let updated: AttributeList = { ...current };
     for (const name of Object.keys(attributes)) {
@@ -902,7 +902,7 @@ export abstract class AbstractMmlNode
         this.mError(
           'Wrong number of children for "' + this.kind + '" node',
           options,
-          true
+          true,
         );
       }
     }
@@ -932,7 +932,7 @@ export abstract class AbstractMmlNode
       if (bad.length) {
         this.mError(
           'Unknown attributes for ' + this.kind + ' node: ' + bad.join(', '),
-          options
+          options,
         );
       }
     }
@@ -970,7 +970,7 @@ export abstract class AbstractMmlNode
   public mError(
     message: string,
     options: PropertyList,
-    short: boolean = false
+    short: boolean = false,
   ): MmlNode {
     if (this.parent && this.parent.isKind('merror')) {
       return null;
@@ -1042,7 +1042,7 @@ export abstract class AbstractMmlTokenNode extends AbstractMmlNode {
     attributes: AttributeList,
     display: boolean,
     level: number,
-    prime: boolean
+    prime: boolean,
   ) {
     for (const child of this.childNodes) {
       if (child instanceof AbstractMmlNode) {
@@ -1359,7 +1359,7 @@ export abstract class AbstractMmlEmptyNode
     _attributes: AttributeList,
     _display: boolean,
     _level: number,
-    _prime: boolean
+    _prime: boolean,
   ) {}
 
   /**
@@ -1382,7 +1382,7 @@ export abstract class AbstractMmlEmptyNode
   public mError(
     _message: string,
     _options: PropertyList,
-    _short: boolean = false
+    _short: boolean = false,
   ) {
     return null as MmlNode;
   }
@@ -1474,7 +1474,7 @@ export class XMLNode extends AbstractMmlEmptyNode {
    */
   public setXML(
     xml: Object,
-    adaptor: DOMAdaptor<any, any, any> = null
+    adaptor: DOMAdaptor<any, any, any> = null,
   ): XMLNode {
     this.xml = xml;
     this.adaptor = adaptor;
@@ -1493,7 +1493,7 @@ export class XMLNode extends AbstractMmlEmptyNode {
    */
   public copy(): XMLNode {
     return (this.factory.create(this.kind) as XMLNode).setXML(
-      this.adaptor.clone(this.xml)
+      this.adaptor.clone(this.xml),
     );
   }
 

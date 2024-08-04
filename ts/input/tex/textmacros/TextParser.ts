@@ -77,7 +77,7 @@ export class TextParser extends TexParser {
     text: string,
     env: EnvList,
     configuration: ParseOptions,
-    level?: number | string
+    level?: number | string,
   ) {
     super(text, env, configuration);
     this.level = level;
@@ -133,7 +133,7 @@ export class TextParser extends TexParser {
       const text = ParseUtil.internalText(
         this,
         this.text,
-        mathvariant ? { mathvariant } : {}
+        mathvariant ? { mathvariant } : {},
       );
       this.text = '';
       this.Push(text);
@@ -222,7 +222,7 @@ export class TextParser extends TexParser {
     return new TextParser(
       this.GetArgument(name),
       this.stack.env,
-      this.configuration
+      this.configuration,
     ).mml();
   }
 

@@ -84,7 +84,7 @@ export class MmlMtd extends AbstractMmlBaseNode {
       this.mError(
         this.kind + ' can only be a child of an mtr or mlabeledtr',
         options,
-        true
+        true,
       );
       return;
     }

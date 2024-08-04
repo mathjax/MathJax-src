@@ -92,7 +92,7 @@ export interface ChtmlTextNodeClass<N, T, D>
   new (
     factory: ChtmlWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: ChtmlWrapper<N, T, D>
+    parent?: ChtmlWrapper<N, T, D>,
   ): ChtmlTextNodeNTD<N, T, D>;
 }
 
@@ -183,8 +183,8 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<
               this.html(
                 'mjx-c',
                 { class: this.char(n) + (font ? ' ' + font : '') },
-                [this.text(data.c || String.fromCodePoint(n))]
-              )
+                [this.text(data.c || String.fromCodePoint(n))],
+              ),
             );
             if (i < m - 1 || bbox.oc) {
               adaptor.setAttribute(node as N, 'noic', 'true');

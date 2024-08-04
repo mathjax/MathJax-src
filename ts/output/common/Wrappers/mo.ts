@@ -260,7 +260,7 @@ export function CommonMoMixin<
   FC extends FontDataClass<CC, VV, DD>,
   B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 >(
-  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 ): B {
   return class CommonMoMixin
     extends Base
@@ -481,7 +481,7 @@ export function CommonMoMixin<
     public getBaseline(
       WHD: number[],
       HD: number,
-      C: DelimiterData
+      C: DelimiterData,
     ): [number, number] {
       const hasWHD = WHD.length === 2 && WHD[0] + WHD[1] === HD;
       const symmetric = this.node.attributes.get('symmetric');
@@ -617,7 +617,7 @@ export function CommonMoMixin<
       const leadingString = this.node.attributes.get('lineleading') as string;
       const leading = this.length2em(
         leadingString,
-        this.linebreakOptions.lineleading
+        this.linebreakOptions.lineleading,
       );
       if (i === 0 && style === 'before') {
         const bbox = LineBBox.from(BBox.zero(), leading);

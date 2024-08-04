@@ -173,7 +173,7 @@ export class LinebreakVisitor<
   protected FACTORS: {
     [key: string]: (
       p: number,
-      mo?: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+      mo?: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
     ) => number;
   } = {
     //
@@ -194,7 +194,7 @@ export class LinebreakVisitor<
       Math.floor(
         (this.state.width /
           Math.max(0.0001, this.state.mathLeft - this.state.w)) *
-          500
+          500,
       ),
     //
     // Adjust for an open fence
@@ -222,7 +222,7 @@ export class LinebreakVisitor<
         mo.node === this.getFirstToken(parent)
       ) {
         const prescripts = !!parent.childNodes.filter((node) =>
-          node.isKind('mprescripts')
+          node.isKind('mprescripts'),
         ).length;
         if (prescripts) return NOBREAK;
       }
@@ -484,18 +484,18 @@ export class LinebreakVisitor<
     const mo = wrapper.coreMO();
     const bbox = LineBBox.from(
       wrapper.getOuterBBox(),
-      wrapper.linebreakOptions.lineleading
+      wrapper.linebreakOptions.lineleading,
     );
     bbox.getIndentData(mo.node);
     const style = mo.getBreakStyle(
-      mo.node.attributes.get('linebreakstyle') as string
+      mo.node.attributes.get('linebreakstyle') as string,
     );
     const dw = mo.processIndent(
       '',
       bbox.indentData[1][1],
       '',
       bbox.indentData[0][1],
-      this.state.width
+      this.state.width,
     )[1];
     const penalty = this.moPenalty(mo);
     if (style === 'before') {
@@ -526,18 +526,18 @@ export class LinebreakVisitor<
     >;
     const bbox = LineBBox.from(
       mo.getOuterBBox(),
-      mo.linebreakOptions.lineleading
+      mo.linebreakOptions.lineleading,
     );
     bbox.getIndentData(mo.node);
     const style = mo.getBreakStyle(
-      mo.node.attributes.get('linebreakstyle') as string
+      mo.node.attributes.get('linebreakstyle') as string,
     );
     const dw = mo.processIndent(
       '',
       bbox.indentData[1][1],
       '',
       bbox.indentData[0][1],
-      this.state.width
+      this.state.width,
     )[1];
     const penalty = this.moPenalty(mo);
     if (style === 'before') {
@@ -560,12 +560,12 @@ export class LinebreakVisitor<
    * @return {number}        The computed penalty
    */
   protected moPenalty(
-    mo: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+    mo: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   ): number {
     const { linebreak, fence, form } = mo.node.attributes.getList(
       'linebreak',
       'fence',
-      'form'
+      'form',
     );
     const FACTORS = this.FACTORS;
     let penalty = FACTORS.tail(FACTORS.width(0));
@@ -583,7 +583,7 @@ export class LinebreakVisitor<
     }
     penalty = (this.TEXCLASS[mo.node.texClass] || ((p) => p))(penalty);
     return (this.PENALTY[linebreak as string] || ((p) => p))(
-      FACTORS.depth(penalty)
+      FACTORS.depth(penalty),
     );
   }
 
@@ -591,7 +591,7 @@ export class LinebreakVisitor<
    * @param {CommonMo} mo   The mo whose preceeding mo node is needed
    */
   protected getPrevious(
-    mo: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+    mo: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   ): MmlNode | null {
     let child = mo.node;
     let parent = child.parent;
@@ -626,7 +626,7 @@ export class LinebreakVisitor<
         bbox.indentData[1][1],
         '',
         bbox.indentData[0][1],
-        this.state.width
+        this.state.width,
       )[1];
       this.pushBreak(wrapper, penalty, dw - bbox.w, null);
     }
@@ -638,13 +638,13 @@ export class LinebreakVisitor<
    * @return {number}               The computed penalty
    */
   protected mspacePenalty(
-    mspace: CommonMspace<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+    mspace: CommonMspace<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   ): number {
     const linebreak = mspace.node.attributes.get('linebreak');
     const FACTORS = this.FACTORS;
     let penalty = FACTORS.space(FACTORS.tail(FACTORS.width(0)), mspace as any);
     return (this.PENALTY[linebreak as string] || ((p) => p))(
-      FACTORS.depth(penalty)
+      FACTORS.depth(penalty),
     );
   }
 
@@ -720,7 +720,7 @@ export class LinebreakVisitor<
     for (let i = start; i <= end; i++) {
       this.visitNode(
         wrapper.childNodes[i],
-        i === start ? startL : i === end ? endL : 0
+        i === start ? startL : i === end ? endL : 0,
       );
     }
     this.addWidth(line, line.R + R);
@@ -801,7 +801,7 @@ export class LinebreakVisitor<
     const [L, R] = this.getBorderLR(wrapper);
     this.addWidth(
       msub.getLineBBox(i),
-      x + L + sbox.rscale * sbox.w + msub.font.params.scriptspace + R
+      x + L + sbox.rscale * sbox.w + msub.font.params.scriptspace + R,
     );
   }
 
@@ -820,7 +820,7 @@ export class LinebreakVisitor<
     const [L, R] = this.getBorderLR(wrapper);
     this.addWidth(
       msup.getLineBBox(i),
-      x + L + sbox.rscale * sbox.w + msup.font.params.scriptspace + R
+      x + L + sbox.rscale * sbox.w + msup.font.params.scriptspace + R,
     );
   }
 
@@ -857,22 +857,22 @@ export class LinebreakVisitor<
     if (data.numPrescripts) {
       const w = Math.max(
         data.psup.rscale * data.psup.w,
-        data.psub.rscale * data.psub.w
+        data.psub.rscale * data.psub.w,
       );
       this.addWidth(
         wrapper.getLineBBox(i),
-        w + mmultiscripts.font.params.scriptspace
+        w + mmultiscripts.font.params.scriptspace,
       );
     }
     this.visitDefault(wrapper, i);
     if (data.numScripts) {
       const w = Math.max(
         data.sup.rscale * data.sup.w,
-        data.sub.rscale * data.sub.w
+        data.sub.rscale * data.sub.w,
       );
       this.addWidth(
         wrapper.getLineBBox(i),
-        w + mmultiscripts.font.params.scriptspace
+        w + mmultiscripts.font.params.scriptspace,
       );
     }
   }

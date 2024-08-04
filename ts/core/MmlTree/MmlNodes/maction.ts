@@ -126,7 +126,7 @@ export class MmlMaction extends AbstractMmlNode {
   public nextToggleSelection() {
     let selection = Math.max(
       1,
-      parseInt(this.attributes.get('selection') as string) + 1
+      parseInt(this.attributes.get('selection') as string) + 1,
     );
     if (selection > this.childNodes.length) {
       selection = 1;
@@ -141,7 +141,7 @@ export class MmlMaction extends AbstractMmlNode {
     attributes: AttributeList,
     display: boolean,
     level: number,
-    prime: boolean
+    prime: boolean,
   ) {
     if (
       (this.attributes.get('actiontype') as String).toLowerCase() !== 'tooltip'
@@ -153,7 +153,7 @@ export class MmlMaction extends AbstractMmlNode {
       attributes,
       display,
       level,
-      prime
+      prime,
     );
     this.childNodes[1]?.setInheritedAttributes(attributes, false, 1, false);
   }

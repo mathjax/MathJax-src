@@ -219,7 +219,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    */
   protected createSvgNodes(parents: N[]): N[] {
     this.dom = parents.map((_parent) =>
-      this.svg('g', { 'data-mml-node': this.node.kind })
+      this.svg('g', { 'data-mml-node': this.node.kind }),
     ); // FIXME: add segment id
     parents = this.handleHref(parents);
     for (const i of parents.keys()) {
@@ -255,7 +255,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
           height: this.fixed(h + d),
           x: i === 1 || isEmbellished ? this.fixed(-this.dx) : 0,
           y: this.fixed(-d),
-        })
+        }),
       );
       return parent;
     });
@@ -269,7 +269,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     const styles = this.styles.cssText;
     if (styles) {
       this.dom.forEach((node) =>
-        this.adaptor.setAttribute(node, 'style', styles)
+        this.adaptor.setAttribute(node, 'style', styles),
       );
     }
     const padding = (this.styleData?.padding || [0, 0, 0, 0])[3];
@@ -286,7 +286,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     if (this.bbox.rscale !== 1) {
       const scale = 'scale(' + this.fixed(this.bbox.rscale / 1000, 3) + ')';
       this.dom.forEach((node) =>
-        this.adaptor.setAttribute(node, 'transform', scale)
+        this.adaptor.setAttribute(node, 'transform', scale),
       );
     }
   }
@@ -378,7 +378,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
             border.width[i],
             i,
             dom,
-            dx
+            dx,
           );
         } else {
           this.addBorderSolid(path, border.color[i], child, dom, dx);
@@ -401,7 +401,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     color: string,
     child: N,
     parent: N,
-    dx: number
+    dx: number,
   ) {
     const border = this.svg('polygon', {
       points: path
@@ -437,7 +437,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     t: number,
     i: number,
     parent: N,
-    dx: number
+    dx: number,
   ) {
     const dot = style === 'dotted';
     const t2 = t / 2;
@@ -499,8 +499,8 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
           adaptor.setAttribute(
             dom,
             name,
-            attributes.getExplicit(name) as string
-          )
+            attributes.getExplicit(name) as string,
+          ),
         );
       }
     }
@@ -532,7 +532,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     this.adaptor.setAttribute(
       element,
       'transform',
-      translate + (transform ? ' ' + transform : '')
+      translate + (transform ? ' ' + transform : ''),
     );
   }
 
@@ -560,14 +560,14 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     const g = this.svg(
       'g',
       { 'data-idbox': true, transform: `translate(0,${this.fixed(-h)})` },
-      children
+      children,
     );
     //
     //  Add the text element (not transformed) and the transformed <g>
     //
     adaptor.append(
       this.dom[0],
-      this.svg('text', { 'data-id-align': true }, [this.text('')])
+      this.svg('text', { 'data-id-align': true }, [this.text('')]),
     );
     adaptor.append(this.dom[0], g);
     return y + h;
@@ -613,7 +613,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     y: number,
     parent: N,
     variant: string = null,
-    buffer: boolean = false
+    buffer: boolean = false,
   ): number {
     if (variant === null) {
       variant = this.variant;
@@ -631,14 +631,14 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
       this.place(
         x,
         y,
-        this.adaptor.append(parent, this.charNode(variant, C, path)) as N
+        this.adaptor.append(parent, this.charNode(variant, C, path)) as N,
       );
       return w + dx;
     }
     if ('c' in data) {
       const g = this.adaptor.append(
         parent,
-        this.svg('g', { 'data-c': C })
+        this.svg('g', { 'data-c': C }),
       ) as N;
       this.place(x + dx, y, g);
       x = 0;
@@ -664,7 +664,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
     this.utext = '';
     const text = this.adaptor.append(
       parent,
-      this.jax.unknownText(c, variant)
+      this.jax.unknownText(c, variant),
     ) as N;
     this.place(x, y, text);
     return this.jax.measureTextNodeWithCache(text, c, variant).w;
@@ -705,7 +705,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
       use,
       'href',
       id,
-      this.jax.options.useXlink ? XLINKNS : null
+      this.jax.options.useXlink ? XLINKNS : null,
     );
     return use;
   }

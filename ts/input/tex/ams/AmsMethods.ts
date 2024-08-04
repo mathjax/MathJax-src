@@ -94,7 +94,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     align: string,
     balign: string,
     spacing: string,
-    style: string
+    style: string,
   ) {
     // @test Aligned, Gathered
     const args = parser.GetBrackets('\\begin{' + begin.getName() + '}');
@@ -106,7 +106,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       align,
       balign,
       spacing,
-      style
+      style,
     );
     return ParseUtil.setArrayAlign(array as ArrayItem, args, parser);
   },
@@ -123,7 +123,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     parser: TexParser,
     begin: StackItem,
     numbered: boolean,
-    taggable: boolean
+    taggable: boolean,
   ) {
     const name = begin.getName();
     let n,
@@ -141,7 +141,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       throw new TexError(
         'PositiveIntegerArg',
         'Argument to %1 must be a positive integer',
-        '\\begin{' + name + '}'
+        '\\begin{' + name + '}',
       );
     }
     let count = parseInt(n, 10);
@@ -161,7 +161,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
         taggable,
         align,
         balign,
-        spaceStr
+        spaceStr,
       );
     }
     // @test Alignedat
@@ -172,12 +172,12 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       taggable,
       align,
       balign,
-      spaceStr
+      spaceStr,
     );
     return ParseUtil.setArrayAlign(
       array as ArrayItem,
       valign,
-      !taggable ? parser : null
+      !taggable ? parser : null,
     );
   },
 
@@ -195,7 +195,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     const item = parser.itemFactory.create(
       'multline',
       numbered,
-      parser.stack
+      parser.stack,
     ) as ArrayItem;
     item.arraydef = {
       displaystyle: true,
@@ -221,14 +221,14 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     parser: TexParser,
     begin: StackItem,
     numbered: boolean,
-    padded: boolean
+    padded: boolean,
   ) {
     let n = parser.GetArgument('\\begin{' + begin.getName() + '}');
     if (n.match(/[^0-9]/)) {
       throw new TexError(
         'PositiveIntegerArg',
         'Argument to %1 must be a positive integer',
-        '\\begin{' + begin.getName() + '}'
+        '\\begin{' + begin.getName() + '}',
       );
     }
     const align = padded ? 'crl' : 'rlc';
@@ -243,7 +243,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       align,
       balign,
       width,
-      true
+      true,
     ) as FlalignItem;
     item.setProperty('xalignat', 2 * parseInt(n));
     return item;
@@ -270,7 +270,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     align: string,
     balign: string,
     width: string,
-    zeroWidthLabel: boolean = false
+    zeroWidthLabel: boolean = false,
   ) {
     ParseUtil.checkEqnEnv(parser);
     parser.Push(begin);
@@ -287,7 +287,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       numbered,
       padded,
       center,
-      parser.stack
+      parser.stack,
     ) as FlalignItem;
     item.arraydef = {
       width: '100%',
@@ -319,7 +319,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     let op = parser.GetArgument(name);
     (parser.configuration.handlers.retrieve(NEW_OPS) as CommandMap).add(
       cs,
-      new Macro(cs, AmsMethods.Macro, [`\\operatorname${star}{${op}}`])
+      new Macro(cs, AmsMethods.Macro, [`\\operatorname${star}{${op}}`]),
     );
     parser.Push(parser.itemFactory.create('null'));
   },
@@ -344,7 +344,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
         multiLetterIdentifiers: parser.options.ams.operatornamePattern,
         operatorLetters: true,
       },
-      parser.configuration
+      parser.configuration,
     ).mml();
     //
     //  If we get something other than a single mi, wrap in a TeXAtom.
@@ -406,10 +406,10 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
               'node',
               'mpadded',
               [ParseUtil.copyNode(base, parser)],
-              { width: 0 }
+              { width: 0 },
             ),
           ]),
-          NodeUtil.getChildAt(preScripts, 0)
+          NodeUtil.getChildAt(preScripts, 0),
         );
       } else {
         //
@@ -527,7 +527,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       'token',
       'mo',
       { stretchy: true, texClass: TEXCLASS.REL },
-      String.fromCodePoint(chr)
+      String.fromCodePoint(chr),
     );
     arrow = parser.create('node', 'mstyle', [arrow], { scriptlevel: 0 });
     let mml = parser.create('node', 'munderover', [arrow]) as MmlMunderover;
@@ -540,7 +540,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       let bottom = new TexParser(
         bot,
         parser.stack.env,
-        parser.configuration
+        parser.configuration,
       ).mml();
       let bstrut = parser.create('node', 'mspace', [], { height: '.75em' });
       mpadded = parser.create('node', 'mpadded', [bottom, bstrut], def);
@@ -569,7 +569,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
         'CommandOnlyAllowedInEnv',
         '%1 only allowed in %2 environment',
         parser.currentCS,
-        'multline'
+        'multline',
       );
     }
     if (top.Size()) {
@@ -577,7 +577,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       throw new TexError(
         'CommandAtTheBeginingOfLine',
         '%1 must come at the beginning of the line',
-        parser.currentCS
+        parser.currentCS,
       );
     }
     top.setProperty('shove', shove);
@@ -600,12 +600,12 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     let numNode = new TexParser(
       '\\strut\\textstyle{' + num + '}',
       parser.stack.env,
-      parser.configuration
+      parser.configuration,
     ).mml();
     let denNode = new TexParser(
       '\\strut\\textstyle{' + den + '}',
       parser.stack.env,
-      parser.configuration
+      parser.configuration,
     ).mml();
     let frac = parser.create('node', 'mfrac', [numNode, denNode]);
     lr = lrMap[lr];
@@ -614,7 +614,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       throw new TexError(
         'IllegalAlign',
         'Illegal alignment specified in %1',
-        parser.currentCS
+        parser.currentCS,
       );
     }
     if (lr) {
@@ -640,7 +640,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     left: string,
     right: string,
     thick: string,
-    style: string
+    style: string,
   ) {
     if (left == null) {
       // @test Genfrac
@@ -678,7 +678,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
         throw new TexError(
           'BadMathStyleFor',
           'Bad math style for %1',
-          parser.currentCS
+          parser.currentCS,
         );
       }
       frac = parser.create('node', 'mstyle', [frac]);
@@ -711,7 +711,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
         'CommandNotAllowedInEnv',
         '%1 not allowed in %2 environment',
         parser.currentCS,
-        parser.tags.env
+        parser.tags.env,
       );
     }
     if (parser.tags.currentTag.tag) {

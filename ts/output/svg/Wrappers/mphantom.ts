@@ -47,7 +47,7 @@ export interface SvgMphantomClass<N, T, D> extends SvgWrapperClass<N, T, D> {
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgMphantomNTD<N, T, D>;
 }
 

@@ -213,5 +213,5 @@ Entities.add(
     nwarrow: '\u2196',
     nwnear: '\u2927',
   },
-  'n'
+  'n',
 );

@@ -66,7 +66,7 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
           texClass: node.texClass,
         },
         '{',
-        '}'
+        '}',
       ) +
       '>' +
       nl;
@@ -111,7 +111,7 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
   protected attributeString(
     attributes: PropertyList,
     open: string,
-    close: string
+    close: string,
   ): string {
     let ATTR = '';
     for (const name of Object.keys(attributes)) {

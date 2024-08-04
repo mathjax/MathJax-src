@@ -160,7 +160,7 @@ export function EnrichedMathItemMixin<
 >(
   BaseMathItem: B,
   MmlJax: MathML<N, T, D>,
-  toMathML: (node: MmlNode, math: MathItem<N, T, D>) => string
+  toMathML: (node: MmlNode, math: MathItem<N, T, D>) => string,
 ): Constructor<EnrichedMathItem<N, T, D>> & B {
   return class extends BaseMathItem {
     /**
@@ -255,7 +255,7 @@ export function EnrichedMathItemMixin<
       return mml.replace(
         /(data-maction-id="(\d+)" selection=)"\d+"/g,
         (_match: string, prefix: string, id: number) =>
-          `${prefix}"${maction[id].attributes.get('selection')}"`
+          `${prefix}"${maction[id].attributes.get('selection')}"`,
       );
     }
 
@@ -270,7 +270,7 @@ export function EnrichedMathItemMixin<
       let speech = attributes.get('aria-label') as string;
       if (!speech) {
         speech = buildSpeech(
-          (attributes.get('data-semantic-speech') as string) || ''
+          (attributes.get('data-semantic-speech') as string) || '',
         )[0];
       }
       let braille = (attributes.get('aria-braillelabel') ||
@@ -298,7 +298,7 @@ export function EnrichedMathItemMixin<
         try {
           [newSpeech, newBraille] = this.generatorPool.computeSpeech(
             this.typesetRoot,
-            this.toMathML(this.root, this)
+            this.toMathML(this.root, this),
           );
           if (newSpeech) {
             newSpeech = buildSpeech(newSpeech)[0];
@@ -362,7 +362,7 @@ export interface EnrichedMathDocument<N, T, D>
   enrichError(
     doc: EnrichedMathDocument<N, T, D>,
     math: EnrichedMathItem<N, T, D>,
-    err: Error
+    err: Error,
   ): void;
 
   /**
@@ -373,7 +373,7 @@ export interface EnrichedMathDocument<N, T, D>
   speechError(
     doc: EnrichedMathDocument<N, T, D>,
     math: EnrichedMathItem<N, T, D>,
-    err: Error
+    err: Error,
   ): void;
 }
 
@@ -396,7 +396,7 @@ export function EnrichedMathDocumentMixin<
   B extends MathDocumentConstructor<AbstractMathDocument<N, T, D>>,
 >(
   BaseDocument: B,
-  MmlJax: MathML<N, T, D>
+  MmlJax: MathML<N, T, D>,
 ): MathDocumentConstructor<EnrichedMathDocument<N, T, D>> & B {
   return class extends BaseDocument {
     /**
@@ -410,12 +410,12 @@ export function EnrichedMathDocumentMixin<
       enrichError: (
         doc: EnrichedMathDocument<N, T, D>,
         math: EnrichedMathItem<N, T, D>,
-        err: Error
+        err: Error,
       ) => doc.enrichError(doc, math, err),
       speechError: (
         doc: EnrichedMathDocument<N, T, D>,
         math: EnrichedMathItem<N, T, D>,
-        err: Error
+        err: Error,
       ) => doc.speechError(doc, math, err),
       renderActions: expandable({
         ...BaseDocument.OPTIONS.renderActions,
@@ -530,11 +530,11 @@ export function EnrichedMathDocumentMixin<
       this.renderPromises.push(
         new Promise<void>((ok, _fail) => {
           this.attachSpeechDone = ok;
-        })
+        }),
       );
       this.speechTimeout = setTimeout(
         () => this.attachSpeechLoop(),
-        this.options.speechTiming.initial
+        this.options.speechTiming.initial,
       );
     }
 
@@ -553,7 +553,7 @@ export function EnrichedMathDocumentMixin<
       if (awaitingSpeech.length) {
         this.speechTimeout = setTimeout(
           () => this.attachSpeechLoop(),
-          timing.intermediate
+          timing.intermediate,
         );
       } else {
         this.speechTimeout = 0;
@@ -581,7 +581,7 @@ export function EnrichedMathDocumentMixin<
     public enrichError(
       _doc: EnrichedMathDocument<N, T, D>,
       _math: EnrichedMathItem<N, T, D>,
-      err: Error
+      err: Error,
     ) {
       console.warn('Enrichment error:', err);
     }
@@ -591,7 +591,7 @@ export function EnrichedMathDocumentMixin<
     public speechError(
       _doc: EnrichedMathDocument<N, T, D>,
       _math: EnrichedMathItem<N, T, D>,
-      err: Error
+      err: Error,
     ) {
       console.warn('Speech generation error:', err);
     }
@@ -632,7 +632,7 @@ export function EnrichedMathDocumentMixin<
  */
 export function EnrichHandler<N, T, D>(
   handler: Handler<N, T, D>,
-  MmlJax: MathML<N, T, D>
+  MmlJax: MathML<N, T, D>,
 ): Handler<N, T, D> {
   MmlJax.setAdaptor(handler.adaptor);
   handler.documentClass = EnrichedMathDocumentMixin<

@@ -438,7 +438,7 @@ export class SpeechExplorer
     public brailleRegion: LiveRegion,
     public magnifyRegion: HoverRegion,
     _mml: MmlNode,
-    public item: ExplorerMathItem
+    public item: ExplorerMathItem,
   ) {
     super(document, pool, null, node);
   }
@@ -461,20 +461,20 @@ export class SpeechExplorer
       // node or we assume that it is inside the collapsed expression tree and
       // focus on the collapsed element.
       this.current = this.node.querySelector(
-        `[data-semantic-id="${this.restarted}"]`
+        `[data-semantic-id="${this.restarted}"]`,
       );
       if (!this.current) {
         const dummies = Array.from(
-          this.node.querySelectorAll('[data-semantic-type="dummy"]')
+          this.node.querySelectorAll('[data-semantic-type="dummy"]'),
         ).map((x) => x.getAttribute('data-semantic-id'));
         let internal = this.generators.element.querySelector(
-          `[data-semantic-id="${this.restarted}"]`
+          `[data-semantic-id="${this.restarted}"]`,
         );
         while (internal && internal !== this.generators.element) {
           let sid = internal.getAttribute('data-semantic-id');
           if (dummies.indexOf(sid) !== -1) {
             this.current = this.node.querySelector(
-              `[data-semantic-id="${sid}"]`
+              `[data-semantic-id="${sid}"]`,
             );
             break;
           }
@@ -525,7 +525,7 @@ export class SpeechExplorer
     this.generators.updateRegions(
       this.current,
       this.region,
-      this.brailleRegion
+      this.brailleRegion,
     );
     this.magnifyRegion.Update(this.current);
   }
@@ -535,7 +535,7 @@ export class SpeechExplorer
    */
   public Speech() {
     this.item.outputData.speech = this.generators.updateSpeech(
-      this.item.typesetRoot
+      this.item.typesetRoot,
     );
   }
 
@@ -660,7 +660,7 @@ export class SpeechExplorer
     const stree = this.generators.speechGenerator.getRebuilt()?.stree;
     if (!stree) return null;
     const snode = stree.root.querySelectorAll(
-      (x: any) => x.id.toString() === id
+      (x: any) => x.id.toString() === id,
     )[0];
     return snode || stree.root;
   }

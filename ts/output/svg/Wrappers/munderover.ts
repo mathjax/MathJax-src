@@ -112,7 +112,7 @@ export interface SvgMunderClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgMunderNTD<N, T, D>;
 }
 
@@ -229,7 +229,7 @@ export interface SvgMoverClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgMoverNTD<N, T, D>;
 }
 
@@ -343,7 +343,7 @@ export interface SvgMunderoverClass<N, T, D>
   new (
     factory: SvgWrapperFactory<N, T, D>,
     node: MmlNode,
-    parent?: SvgWrapper<N, T, D>
+    parent?: SvgWrapper<N, T, D>,
   ): SvgMunderoverNTD<N, T, D>;
 }
 
@@ -413,7 +413,7 @@ export const SvgMunderover = (function <N, T, D>(): SvgMunderoverClass<
       const v = this.getUnderKV(bbox, ubox)[1];
       const [bx, ux, ox] = this.getDeltaW(
         [bbox, ubox, obox],
-        [0, this.isLineBelow ? 0 : -udelta, this.isLineAbove ? 0 : odelta]
+        [0, this.isLineBelow ? 0 : -udelta, this.isLineAbove ? 0 : odelta],
       );
 
       base.place(bx, 0);
