@@ -490,8 +490,9 @@ export function CommonScriptbaseMixin<
             node.isKind('mphantom') ||
             node.isKind('semantics'))) ||
           (node.isKind('munderover') &&
+            /* prettier-ignore */
             (
-              core as any as /* prettier-ignore */
+              core as any as
               CommonMunderover<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
             ).isMathAccent))
       ) {
@@ -873,11 +874,13 @@ export function CommonScriptbaseMixin<
       this.baseRemoveIc =
         !this.isLineAbove &&
         !this.isLineBelow &&
-        (!/* prettier-ignore */
-        (this.constructor as CommonScriptbaseClass<
+        (!(
+          /* prettier-ignore */
+          (this.constructor as CommonScriptbaseClass<
             N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
           >)
-          .useIC ||
+          .useIC
+        ) ||
           this.isMathAccent);
     }
 
