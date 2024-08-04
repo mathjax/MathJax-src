@@ -21,16 +21,15 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AbstractFindMath} from '../../core/FindMath.js';
-import {DOMAdaptor} from '../../core/DOMAdaptor.js';
-import {OptionList} from '../../util/Options.js';
-import {ProtoItem} from '../../core/MathItem.js';
+import { AbstractFindMath } from '../../core/FindMath.js';
+import { DOMAdaptor } from '../../core/DOMAdaptor.js';
+import { OptionList } from '../../util/Options.js';
+import { ProtoItem } from '../../core/MathItem.js';
 
 /**
  * The MathML namespace
  */
 const NAMESPACE = 'http://www.w3.org/1998/Math/MathML';
-
 
 /*****************************************************************/
 /**
@@ -41,7 +40,6 @@ const NAMESPACE = 'http://www.w3.org/1998/Math/MathML';
  * @template D  The Document class
  */
 export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
-
   /**
    * @override
    */
@@ -120,13 +118,13 @@ export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
     const math: ProtoItem<N, T>[] = [];
     for (const mml of set.values()) {
       if (adaptor.kind(adaptor.parent(mml)) === 'mjx-assistive-mml') continue;
-      const display = (adaptor.getAttribute(mml, 'display') === 'block' ||
-                      adaptor.getAttribute(mml, 'mode') === 'display');
-      const start = {node: mml, n: 0, delim: ''};
-      const end   = {node: mml, n: 0, delim: ''};
-      math.push({math: adaptor.outerHTML(mml), start, end, display});
+      const display =
+        adaptor.getAttribute(mml, 'display') === 'block' ||
+        adaptor.getAttribute(mml, 'mode') === 'display';
+      const start = { node: mml, n: 0, delim: '' };
+      const end = { node: mml, n: 0, delim: '' };
+      math.push({ math: adaptor.outerHTML(mml), start, end, display });
     }
     return math;
   }
-
 }

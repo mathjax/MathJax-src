@@ -21,15 +21,22 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Attributes, INHERIT} from './Attributes.js';
-import {Property, PropertyList, Node, AbstractNode, AbstractEmptyNode, NodeClass} from '../Tree/Node.js';
-import {MmlFactory} from './MmlFactory.js';
-import {DOMAdaptor} from '../DOMAdaptor.js';
+import { Attributes, INHERIT } from './Attributes.js';
+import {
+  Property,
+  PropertyList,
+  Node,
+  AbstractNode,
+  AbstractEmptyNode,
+  NodeClass,
+} from '../Tree/Node.js';
+import { MmlFactory } from './MmlFactory.js';
+import { DOMAdaptor } from '../DOMAdaptor.js';
 
 /**
  *  Used in setInheritedAttributes() to pass originating node kind as well as property value
  */
-export type AttributeList = {[attribute: string]: [string, Property]};
+export type AttributeList = { [attribute: string]: [string, Property] };
 
 /**
  *  These are the TeX classes for spacing computations
@@ -47,12 +54,26 @@ export const TEXCLASS = {
   NONE: -1,
 };
 
-export const TEXCLASSNAMES = ['ORD', 'OP', 'BIN', 'REL', 'OPEN', 'CLOSE', 'PUNCT', 'INNER'];
+export const TEXCLASSNAMES = [
+  'ORD',
+  'OP',
+  'BIN',
+  'REL',
+  'OPEN',
+  'CLOSE',
+  'PUNCT',
+  'INNER',
+];
 
 /**
  *  The spacing sizes used by the TeX spacing table below.
  */
-const TEXSPACELENGTH = ['', 'thinmathspace', 'mediummathspace', 'thickmathspace'];
+const TEXSPACELENGTH = [
+  '',
+  'thinmathspace',
+  'mediummathspace',
+  'thickmathspace',
+];
 
 /**
  * See TeXBook Chapter 18 (p. 170)
@@ -74,19 +95,34 @@ const TEXSPACE = [
  */
 
 export const MATHVARIANTS = new Set([
-  'normal', 'bold', 'italic', 'bold-italic',
-  'double-struck', 'fraktur', 'bold-fraktur', 'script', 'bold-script',
-  'sans-serif', 'bold-sans-serif', 'sans-serif-italic', 'sans-serif-bold-italic',
+  'normal',
+  'bold',
+  'italic',
+  'bold-italic',
+  'double-struck',
+  'fraktur',
+  'bold-fraktur',
+  'script',
+  'bold-script',
+  'sans-serif',
+  'bold-sans-serif',
+  'sans-serif-italic',
+  'sans-serif-bold-italic',
   'monospace',
-  'inital', 'tailed', 'looped', 'stretched'
+  'inital',
+  'tailed',
+  'looped',
+  'stretched',
 ]);
 
 /**
  * Attributes used to determine indentation and shifting
  */
 export const indentAttributes = [
-  'indentalign', 'indentalignfirst',
-  'indentshift', 'indentshiftfirst'
+  'indentalign',
+  'indentalignfirst',
+  'indentshift',
+  'indentshiftfirst',
 ];
 
 /**
@@ -100,7 +136,6 @@ export type MMLNODE = MmlNode | TextNode | XMLNode;
  */
 
 export interface MmlNode extends Node<MmlNode, MmlNodeClass> {
-
   /**
    * Test various properties of MathML nodes
    */
@@ -203,7 +238,12 @@ export interface MmlNode extends Node<MmlNode, MmlNodeClass> {
    * @param {number} level              The scriptlevel to inherit
    * @param {boolean} prime             The TeX prime style to inherit (T vs. T', etc).
    */
-  setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean): void;
+  setInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    prime: boolean
+  ): void;
 
   /**
    * Set the nodes inherited attributes based on the attributes of the given node
@@ -231,14 +271,12 @@ export interface MmlNode extends Node<MmlNode, MmlNodeClass> {
   verifyTree(options?: PropertyList): void;
 }
 
-
 /*****************************************************************/
 /**
  *  The MmlNode class interface (extends the NodeClass)
  */
 
 export interface MmlNodeClass extends NodeClass<MmlNode, MmlNodeClass> {
-
   /**
    *  The list of default attribute values for nodes of this class
    */
@@ -254,10 +292,12 @@ export interface MmlNodeClass extends NodeClass<MmlNode, MmlNodeClass> {
    * @param {PropertyList} attributes  The list of initial attributes for the node
    * @param {MmlNode[]} children       The initial child nodes (more can be added later)
    */
-  new (factory: MmlFactory, attributes?: PropertyList, children?: MmlNode[]): MmlNode;
-
+  new (
+    factory: MmlFactory,
+    attributes?: PropertyList,
+    children?: MmlNode[]
+  ): MmlNode;
 }
-
 
 /*****************************************************************/
 /**
@@ -265,17 +305,19 @@ export interface MmlNodeClass extends NodeClass<MmlNode, MmlNodeClass> {
  *  the IMmlNode interface)
  */
 
-export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass> implements MmlNode {
-
+export abstract class AbstractMmlNode
+  extends AbstractNode<MmlNode, MmlNodeClass>
+  implements MmlNode
+{
   /**
    * The properties common to all MathML nodes
    */
   public static defaults: PropertyList = {
     mathbackground: INHERIT,
     mathcolor: INHERIT,
-    mathsize: INHERIT,  // technically only for token elements, but <mstyle mathsize="..."> should
+    mathsize: INHERIT, // technically only for token elements, but <mstyle mathsize="..."> should
     //    scale all spaces, fractions, etc.
-    dir: INHERIT
+    dir: INHERIT,
   };
 
   /**
@@ -286,23 +328,31 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
    *
    *  For example, an mpadded element will not inherit a width attribute from an mstyle node.
    */
-  public static noInherit: {[node1: string]: {[node2: string]: {[attribute: string]: boolean}}} = {
+  public static noInherit: {
+    [node1: string]: { [node2: string]: { [attribute: string]: boolean } };
+  } = {
     mstyle: {
-      mpadded: {width: true, height: true, depth: true, lspace: true, voffset: true},
-      mtable:  {width: true, height: true, depth: true, align: true}
+      mpadded: {
+        width: true,
+        height: true,
+        depth: true,
+        lspace: true,
+        voffset: true,
+      },
+      mtable: { width: true, height: true, depth: true, align: true },
     },
     maligngroup: {
-      mrow: {groupalign: true},
-      mtable: {groupalign: true}
+      mrow: { groupalign: true },
+      mtable: { groupalign: true },
     },
     mtr: {
-      msqrt: {'data-vertical-align': true},
-      mroot: {'data-vertical-align': true}
+      msqrt: { 'data-vertical-align': true },
+      mroot: { 'data-vertical-align': true },
     },
     mlabeledtr: {
-      msqrt: {'data-vertical-align': true},
-      mroot: {'data-vertical-align': true}
-    }
+      msqrt: { 'data-vertical-align': true },
+      mroot: { 'data-vertical-align': true },
+    },
   };
 
   /**
@@ -310,18 +360,20 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
    *   given kind of node (so that table attributes don't bleed through to nested
    *   tables -- see issue mathjax/MathJax#2890).
    */
-  public static stopInherit: {[node: string]: {[attribute: string]: boolean}} = {
-    mtd: {columnalign: true, rowalign: true, groupalign: true}
+  public static stopInherit: {
+    [node: string]: { [attribute: string]: boolean };
+  } = {
+    mtd: { columnalign: true, rowalign: true, groupalign: true },
   };
 
   /**
    * This lists the attributes that should always be inherited,
    *   even when there is no default value for the attribute.
    */
-  public static alwaysInherit: {[name: string]: boolean} = {
+  public static alwaysInherit: { [name: string]: boolean } = {
     scriptminsize: true,
     scriptsizemultiplier: true,
-    infixlinebreakstyle: true
+    infixlinebreakstyle: true,
   };
 
   /**
@@ -333,7 +385,7 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
     checkMathvariants: true,
     fullErrors: false,
     fixMmultiscripts: true,
-    fixMtables: true
+    fixMtables: true,
   };
 
   /*
@@ -384,7 +436,11 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
    *
    *  @override
    */
-  constructor(factory: MmlFactory, attributes: PropertyList = {}, children: MmlNode[] = []) {
+  constructor(
+    factory: MmlFactory,
+    attributes: PropertyList = {},
+    children: MmlNode[] = []
+  ) {
     super(factory);
     if (this.arity < 0) {
       this.childNodes = [factory.create('inferredMrow')];
@@ -406,7 +462,7 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
    */
   public copy(keepIds: boolean = false): AbstractMmlNode {
     const node = this.factory.create(this.kind) as AbstractMmlNode;
-    node.properties = {...this.properties};
+    node.properties = { ...this.properties };
     if (this.attributes) {
       const attributes = this.attributes.getAllAttributes();
       for (const name of Object.keys(attributes)) {
@@ -622,7 +678,7 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
    */
   public setTeXclass(prev: MmlNode): MmlNode {
     this.getPrevClass(prev);
-    return (this.texClass != null ? this : prev);
+    return this.texClass != null ? this : prev;
   }
   /**
    * For embellished operators, get the data from the core and clear the core
@@ -653,13 +709,17 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
    * @return {string}  returns the spacing to use before this node
    */
   public texSpacing(): string {
-    let prevClass = (this.prevClass != null ? this.prevClass : TEXCLASS.NONE);
+    let prevClass = this.prevClass != null ? this.prevClass : TEXCLASS.NONE;
     let texClass = this.texClass || TEXCLASS.ORD;
     if (prevClass === TEXCLASS.NONE || texClass === TEXCLASS.NONE) {
       return '';
     }
     let space = TEXSPACE[prevClass][texClass];
-    if ((this.prevLevel > 0 || (this.attributes.get('scriptlevel') as number) > 0) && space >= 0) {
+    if (
+      (this.prevLevel > 0 ||
+        (this.attributes.get('scriptlevel') as number) > 0) &&
+      space >= 0
+    ) {
       return '';
     }
     return TEXSPACELENGTH[Math.abs(space)];
@@ -687,16 +747,24 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
    *
    * @override
    */
-  public setInheritedAttributes(attributes: AttributeList = {},
-                                display: boolean = false, level: number = 0, prime: boolean = false) {
+  public setInheritedAttributes(
+    attributes: AttributeList = {},
+    display: boolean = false,
+    level: number = 0,
+    prime: boolean = false
+  ) {
     let defaults = this.attributes.getAllDefaults();
     for (const key of Object.keys(attributes)) {
-      if (defaults.hasOwnProperty(key) || AbstractMmlNode.alwaysInherit.hasOwnProperty(key)) {
+      if (
+        defaults.hasOwnProperty(key) ||
+        AbstractMmlNode.alwaysInherit.hasOwnProperty(key)
+      ) {
         let [node, value] = attributes[key];
-        !AbstractMmlNode.noInherit[node]?.[this.kind]?.[key] && this.attributes.setInherited(key, value);
+        !AbstractMmlNode.noInherit[node]?.[this.kind]?.[key] &&
+          this.attributes.setInherited(key, value);
       }
       if (AbstractMmlNode.stopInherit[this.kind]?.[key]) {
-        attributes = {...attributes};
+        attributes = { ...attributes };
         delete attributes[key];
       }
     }
@@ -712,8 +780,12 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
       this.setProperty('texprimestyle', prime);
     }
     let arity = this.arity;
-    if (arity >= 0 && arity !== Infinity && ((arity === 1 && this.childNodes.length === 0) ||
-                                             (arity !== 1 && this.childNodes.length !== arity))) {
+    if (
+      arity >= 0 &&
+      arity !== Infinity &&
+      ((arity === 1 && this.childNodes.length === 0) ||
+        (arity !== 1 && this.childNodes.length !== arity))
+    ) {
       //
       //  Make sure there are the right number of child nodes
       //  (trim them or add empty mrows)
@@ -734,9 +806,12 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
       if (align) {
         const indentalign = this.attributes.get(align) || 'left';
         attributes = this.addInheritedAttributes(attributes, {
-          indentalign, indentshift: '0',
-          indentalignfirst: indentalign, indentshiftfirst: '0',
-          indentalignlast: 'indentalign', indentshiftlast: 'indentshift'
+          indentalign,
+          indentshift: '0',
+          indentalignfirst: indentalign,
+          indentshiftfirst: '0',
+          indentalignlast: 'indentalign',
+          indentshiftlast: 'indentshift',
         });
       }
     }
@@ -752,7 +827,12 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
    * @param {number} level              The scriptlevel to inherit
    * @param {boolean} prime             The TeX prime style to inherit (T vs. T', etc).
    */
-  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+  protected setChildInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    prime: boolean
+  ) {
     for (const child of this.childNodes) {
       child.setInheritedAttributes(attributes, display, level, prime);
     }
@@ -764,10 +844,17 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
    * @param {AttributeList} current    The current list of inherited attributes
    * @param {PropertyList} attributes  The new attributes to add into the list
    */
-  protected addInheritedAttributes(current: AttributeList, attributes: PropertyList) {
-    let updated: AttributeList = {...current};
+  protected addInheritedAttributes(
+    current: AttributeList,
+    attributes: PropertyList
+  ) {
+    let updated: AttributeList = { ...current };
     for (const name of Object.keys(attributes)) {
-      if (name !== 'displaystyle' && name !== 'scriptlevel' && name !== 'style') {
+      if (
+        name !== 'displaystyle' &&
+        name !== 'scriptlevel' &&
+        name !== 'style'
+      ) {
         updated[name] = [this.kind, attributes[name]];
       }
     }
@@ -784,10 +871,12 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
     const attributes = node.attributes;
     const display = attributes.get('displaystyle') as boolean;
     const scriptlevel = attributes.get('scriptlevel') as number;
-    const defaults: AttributeList = (!attributes.isSet('mathsize') ? {} : {
-      mathsize: ['math', attributes.get('mathsize')]
-    });
-    const prime = node.getProperty('texprimestyle') as boolean || false;
+    const defaults: AttributeList = !attributes.isSet('mathsize')
+      ? {}
+      : {
+          mathsize: ['math', attributes.get('mathsize')],
+        };
+    const prime = (node.getProperty('texprimestyle') as boolean) || false;
     this.setInheritedAttributes(defaults, display, scriptlevel, prime);
   }
 
@@ -804,10 +893,17 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
     this.verifyAttributes(options);
     let arity = this.arity;
     if (options['checkArity']) {
-      if (arity >= 0 && arity !== Infinity &&
-          ((arity === 1 && this.childNodes.length === 0) ||
-           (arity !== 1 && this.childNodes.length !== arity))) {
-        this.mError('Wrong number of children for "' + this.kind + '" node', options, true);
+      if (
+        arity >= 0 &&
+        arity !== Infinity &&
+        ((arity === 1 && this.childNodes.length === 0) ||
+          (arity !== 1 && this.childNodes.length !== arity))
+      ) {
+        this.mError(
+          'Wrong number of children for "' + this.kind + '" node',
+          options,
+          true
+        );
       }
     }
     this.verifyChildren(options);
@@ -823,20 +919,30 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
       const attributes = this.attributes;
       const bad = [];
       for (const name of attributes.getExplicitNames()) {
-        if (name.substring(0, 5) !== 'data-' && attributes.getDefault(name) === undefined &&
-            !name.match(/^(?:class|style|id|(?:xlink:)?href)$/)) {
+        if (
+          name.substring(0, 5) !== 'data-' &&
+          attributes.getDefault(name) === undefined &&
+          !name.match(/^(?:class|style|id|(?:xlink:)?href)$/)
+        ) {
           // FIXME: provide a configurable checker for names that are OK
           bad.push(name);
         }
         // FIXME: add ability to check attribute values?
       }
       if (bad.length) {
-        this.mError('Unknown attributes for ' + this.kind + ' node: ' + bad.join(', '), options);
+        this.mError(
+          'Unknown attributes for ' + this.kind + ' node: ' + bad.join(', '),
+          options
+        );
       }
     }
     if (options.checkMathvariants) {
       const variant = this.attributes.getExplicit('mathvariant') as string;
-      if (variant && !MATHVARIANTS.has(variant) && !this.getProperty('ignore-variant')) {
+      if (
+        variant &&
+        !MATHVARIANTS.has(variant) &&
+        !this.getProperty('ignore-variant')
+      ) {
         this.mError(`Invalid mathvariant: ${variant}`, options, true);
       }
     }
@@ -861,7 +967,11 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
    * @param {boolean} short          True means use just the kind if not using full errors
    * @return {MmlNode}               The constructed merror
    */
-  public mError(message: string, options: PropertyList, short: boolean = false): MmlNode {
+  public mError(
+    message: string,
+    options: PropertyList,
+    short: boolean = false
+  ): MmlNode {
     if (this.parent && this.parent.isKind('merror')) {
       return null;
     }
@@ -883,7 +993,6 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
     }
     return merror;
   }
-
 }
 
 /*****************************************************************/
@@ -892,14 +1001,13 @@ export abstract class AbstractMmlNode extends AbstractNode<MmlNode, MmlNodeClass
  */
 
 export abstract class AbstractMmlTokenNode extends AbstractMmlNode {
-
   /**
    * Add the attributes common to all token nodes
    */
   public static defaults: PropertyList = {
-      ...AbstractMmlNode.defaults,
+    ...AbstractMmlNode.defaults,
     mathvariant: 'normal',
-    mathsize: INHERIT
+    mathsize: INHERIT,
   };
 
   /**
@@ -930,7 +1038,12 @@ export abstract class AbstractMmlTokenNode extends AbstractMmlNode {
    *
    * @override
    */
-  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+  protected setChildInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    prime: boolean
+  ) {
     for (const child of this.childNodes) {
       if (child instanceof AbstractMmlNode) {
         child.setInheritedAttributes(attributes, display, level, prime);
@@ -951,9 +1064,7 @@ export abstract class AbstractMmlTokenNode extends AbstractMmlNode {
     }
     return data;
   }
-
 }
-
 
 /*****************************************************************/
 /**
@@ -964,7 +1075,6 @@ export abstract class AbstractMmlTokenNode extends AbstractMmlNode {
  */
 
 export abstract class AbstractMmlLayoutNode extends AbstractMmlNode {
-
   /**
    * Use the same defaults as AbstractMmlNodes
    */
@@ -1025,7 +1135,6 @@ export abstract class AbstractMmlLayoutNode extends AbstractMmlNode {
  */
 
 export abstract class AbstractMmlBaseNode extends AbstractMmlNode {
-
   /**
    * Use the same defaults as AbstractMmlNodes
    */
@@ -1088,8 +1197,10 @@ export abstract class AbstractMmlBaseNode extends AbstractMmlNode {
  *  goes with an MmlNode.
  */
 
-export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode<MmlNode, MmlNodeClass> implements MmlNode {
-
+export abstract class AbstractMmlEmptyNode
+  extends AbstractEmptyNode<MmlNode, MmlNodeClass>
+  implements MmlNode
+{
   /**
    *  Parent is an MmlNode
    */
@@ -1244,7 +1355,12 @@ export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode<MmlNode, Mm
    *
    * @override
    */
-  public setInheritedAttributes(_attributes: AttributeList, _display: boolean, _level: number, _prime: boolean) {}
+  public setInheritedAttributes(
+    _attributes: AttributeList,
+    _display: boolean,
+    _level: number,
+    _prime: boolean
+  ) {}
 
   /**
    * No children or attributes, so ignore this call.
@@ -1263,10 +1379,13 @@ export abstract class AbstractMmlEmptyNode extends AbstractEmptyNode<MmlNode, Mm
   /**
    *  @override
    */
-  public mError(_message: string, _options: PropertyList, _short: boolean = false) {
+  public mError(
+    _message: string,
+    _options: PropertyList,
+    _short: boolean = false
+  ) {
     return null as MmlNode;
   }
-
 }
 
 /*****************************************************************/
@@ -1316,9 +1435,7 @@ export class TextNode extends AbstractMmlEmptyNode {
   public toString() {
     return this.text;
   }
-
 }
-
 
 /*****************************************************************/
 /**
@@ -1355,7 +1472,10 @@ export class XMLNode extends AbstractMmlEmptyNode {
    * @param {DOMAdaptor} adaptor DOM adaptor for the content
    * @return {XMLNode}  The XML node (for chaining of method calls)
    */
-  public setXML(xml: Object, adaptor: DOMAdaptor<any, any, any> = null): XMLNode {
+  public setXML(
+    xml: Object,
+    adaptor: DOMAdaptor<any, any, any> = null
+  ): XMLNode {
     this.xml = xml;
     this.adaptor = adaptor;
     return this;
@@ -1372,7 +1492,9 @@ export class XMLNode extends AbstractMmlEmptyNode {
    * @override
    */
   public copy(): XMLNode {
-    return (this.factory.create(this.kind) as XMLNode).setXML(this.adaptor.clone(this.xml));
+    return (this.factory.create(this.kind) as XMLNode).setXML(
+      this.adaptor.clone(this.xml)
+    );
   }
 
   /**
@@ -1381,5 +1503,4 @@ export class XMLNode extends AbstractMmlEmptyNode {
   public toString() {
     return 'XML data';
   }
-
 }

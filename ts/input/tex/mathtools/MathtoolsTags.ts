@@ -21,10 +21,9 @@
  */
 
 import TexError from '../TexError.js';
-import {ParserConfiguration} from '../Configuration.js';
-import {TeX} from '../../tex.js';
-import {AbstractTags, TagsFactory} from '../Tags.js';
-
+import { ParserConfiguration } from '../Configuration.js';
+import { TeX } from '../../tex.js';
+import { AbstractTags, TagsFactory } from '../Tags.js';
 
 /**
  * The type for the Mathtools tags (including their data).
@@ -44,7 +43,10 @@ let tagID = 0;
  * Creates and registers a subclass of the currently configured tag class
  * that handles the formats created by the \newtagform macro.
  */
-export function MathtoolsTagFormat(config: ParserConfiguration, jax: TeX<any, any, any>) {
+export function MathtoolsTagFormat(
+  config: ParserConfiguration,
+  jax: TeX<any, any, any>
+) {
   /**
    * If the tag format is being added by one of the other extensions,
    *   as is done for the 'ams' tags, make sure it is defined so we can create it.
@@ -57,13 +59,13 @@ export function MathtoolsTagFormat(config: ParserConfiguration, jax: TeX<any, an
   /**
    * The original tag class to be extended (none, ams, or all)
    */
-  const TagClass = TagsFactory.create(jax.parseOptions.options.tags).constructor as typeof AbstractTags;
+  const TagClass = TagsFactory.create(jax.parseOptions.options.tags)
+    .constructor as typeof AbstractTags;
 
   /**
    * A Tags object that uses \newtagform to define the formatting
    */
   class TagFormat extends TagClass {
-
     /**
      * The defined tag formats
      */
@@ -83,8 +85,11 @@ export function MathtoolsTagFormat(config: ParserConfiguration, jax: TeX<any, an
       const forms = jax.parseOptions.options.mathtools.tagforms;
       for (const form of Object.keys(forms)) {
         if (!Array.isArray(forms[form]) || forms[form].length !== 3) {
-          throw new TexError('InvalidTagFormDef',
-                             'The tag form definition for "%1" should be an array fo three strings', form);
+          throw new TexError(
+            'InvalidTagFormDef',
+            'The tag form definition for "%1" should be an array fo three strings',
+            form
+          );
         }
         this.mtFormats.set(form, forms[form]);
       }
@@ -96,7 +101,9 @@ export function MathtoolsTagFormat(config: ParserConfiguration, jax: TeX<any, an
     public formatTag(tag: string) {
       if (this.mtCurrent) {
         const [left, right, format] = this.mtCurrent;
-        return (format ? `${left}${format}{${tag}}${right}` : `${left}${tag}${right}`);
+        return format
+          ? `${left}${format}{${tag}}${right}`
+          : `${left}${tag}${right}`;
       }
       return super.formatTag(tag);
     }

@@ -39,7 +39,7 @@ export interface FactoryNodeClass<N extends FactoryNode> {
    * @param {any[]} args  Any additional arguments needed by the node
    * @return {N}  The newly created node
    */
-  new(factory: Factory<N, FactoryNodeClass<N>>, ...args: any[]): N;
+  new (factory: Factory<N, FactoryNodeClass<N>>, ...args: any[]): N;
 }
 
 /*****************************************************************/
@@ -95,7 +95,6 @@ export interface Factory<N extends FactoryNode, C extends FactoryNodeClass<N>> {
   getKinds(): string[];
 }
 
-
 /*****************************************************************/
 /**
  * The generic AbstractFactoryClass interface
@@ -104,10 +103,12 @@ export interface Factory<N extends FactoryNode, C extends FactoryNodeClass<N>> {
  * @template N  The node type created by the factory
  * @template C  The class of the node being constructed (for access to static properties)
  */
-interface AbstractFactoryClass<N extends FactoryNode, C extends FactoryNodeClass<N>> extends Function {
-  defaultNodes: {[kind: string]: C};
+interface AbstractFactoryClass<
+  N extends FactoryNode,
+  C extends FactoryNodeClass<N>,
+> extends Function {
+  defaultNodes: { [kind: string]: C };
 }
-
 
 /*****************************************************************/
 /**
@@ -118,9 +119,9 @@ interface AbstractFactoryClass<N extends FactoryNode, C extends FactoryNodeClass
  */
 export abstract class AbstractFactory<
   N extends FactoryNode,
-  C extends FactoryNodeClass<N>
-> implements Factory<N, C> {
-
+  C extends FactoryNodeClass<N>,
+> implements Factory<N, C>
+{
   /**
    * The default collection of objects to use for the node map
    */
@@ -139,12 +140,12 @@ export abstract class AbstractFactory<
   /**
    * An object containing functions for creating the various node kinds
    */
-  protected node: {[kind: string]: (...args: any[]) => N} = {};
+  protected node: { [kind: string]: (...args: any[]) => N } = {};
 
   /**
    * @override
    */
-  constructor(nodes: {[kind: string]: C} = null) {
+  constructor(nodes: { [kind: string]: C } = null) {
     if (nodes === null) {
       nodes = (this.constructor as AbstractFactoryClass<N, C>).defaultNodes;
     }
@@ -190,7 +191,7 @@ export abstract class AbstractFactory<
    * @override
    */
   public nodeIsKind(node: N, kind: string) {
-    return (node instanceof this.getNodeClass(kind));
+    return node instanceof this.getNodeClass(kind);
   }
 
   /**
@@ -199,5 +200,4 @@ export abstract class AbstractFactory<
   public getKinds() {
     return Array.from(this.nodeMap.keys());
   }
-
 }

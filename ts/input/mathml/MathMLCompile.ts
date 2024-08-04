@@ -21,13 +21,19 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MmlFactory} from '../../core/MmlTree/MmlFactory.js';
-import {MmlNode, TextNode, XMLNode, AbstractMmlNode, AbstractMmlTokenNode, TEXCLASS}
-from '../../core/MmlTree/MmlNode.js';
-import {HtmlNode} from '../../core/MmlTree/MmlNodes/HtmlNode.js';
-import {userOptions, defaultOptions, OptionList} from '../../util/Options.js';
+import { MmlFactory } from '../../core/MmlTree/MmlFactory.js';
+import {
+  MmlNode,
+  TextNode,
+  XMLNode,
+  AbstractMmlNode,
+  AbstractMmlTokenNode,
+  TEXCLASS,
+} from '../../core/MmlTree/MmlNode.js';
+import { HtmlNode } from '../../core/MmlTree/MmlNodes/HtmlNode.js';
+import { userOptions, defaultOptions, OptionList } from '../../util/Options.js';
 import * as Entities from '../../util/Entities.js';
-import {DOMAdaptor} from '../../core/DOMAdaptor.js';
+import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 
 /********************************************************************/
 /**
@@ -39,7 +45,6 @@ import {DOMAdaptor} from '../../core/DOMAdaptor.js';
  * @template D  The Document class
  */
 export class MathMLCompile<N, T, D> {
-
   /**
    *  The default options for this object
    */
@@ -143,14 +148,19 @@ export class MathMLCompile<N, T, D> {
    * @param {boolean} limits   True if fixed limits are to be used
    * @return {MmlNode}         The final MmlNode tree
    */
-  protected createMml(type: string, node: N, texClass: string, limits: boolean): MmlNode {
+  protected createMml(
+    type: string,
+    node: N,
+    texClass: string,
+    limits: boolean
+  ): MmlNode {
     let mml = this.factory.create(type);
     if (type === 'TeXAtom' && texClass === 'OP' && !limits) {
       mml.setProperty('movesupsub', true);
       mml.attributes.setInherited('movablelimits', true);
     }
     if (texClass) {
-      mml.texClass = (TEXCLASS as {[name: string]: number})[texClass];
+      mml.texClass = (TEXCLASS as { [name: string]: number })[texClass];
       mml.setProperty('texClass', mml.texClass);
     }
     this.addAttributes(mml, node);
@@ -167,8 +177,14 @@ export class MathMLCompile<N, T, D> {
    * @return {MmlNode}      The HtmlNode holding the node (or null)
    */
   protected unknownNode(type: string, node: N): MmlNode {
-    if (this.factory.getNodeClass('html') && this.options.allowHtmlInTokenNodes) {
-      return (this.factory.create('html') as HtmlNode<N>).setHTML(node, this.adaptor);
+    if (
+      this.factory.getNodeClass('html') &&
+      this.options.allowHtmlInTokenNodes
+    ) {
+      return (this.factory.create('html') as HtmlNode<N>).setHTML(
+        node,
+        this.adaptor
+      );
     }
     this.error('Unknown node type "' + type + '"');
     return null;
@@ -190,30 +206,30 @@ export class MathMLCompile<N, T, D> {
       }
       if (name.substring(0, 9) === 'data-mjx-') {
         switch (name.substring(9)) {
-        case 'alternate':
-          mml.setProperty('variantForm', true);
-          break;
-        case 'variant':
-          mml.attributes.set('mathvariant', value);
-          mml.setProperty('ignore-variant', true);
-          ignoreVariant = true;
-          break;
-        case 'smallmatrix':
-          mml.setProperty('scriptlevel', 1);
-          mml.setProperty('useHeight', false);
-          break;
-        case 'mathaccent':
-          mml.setProperty('mathaccent', value === 'true');
-          break;
-        case 'auto-op':
-          mml.setProperty('autoOP', value === 'true');
-          break;
-        case 'script-align':
-          mml.setProperty('scriptalign', value);
-          break;
-        case 'vbox':
-          mml.setProperty('vbox', value);
-          break;
+          case 'alternate':
+            mml.setProperty('variantForm', true);
+            break;
+          case 'variant':
+            mml.attributes.set('mathvariant', value);
+            mml.setProperty('ignore-variant', true);
+            ignoreVariant = true;
+            break;
+          case 'smallmatrix':
+            mml.setProperty('scriptlevel', 1);
+            mml.setProperty('useHeight', false);
+            break;
+          case 'mathaccent':
+            mml.setProperty('mathaccent', value === 'true');
+            break;
+          case 'auto-op':
+            mml.setProperty('autoOP', value === 'true');
+            break;
+          case 'script-align':
+            mml.setProperty('scriptalign', value);
+            break;
+          case 'vbox':
+            mml.setProperty('vbox', value);
+            break;
         }
       } else if (name !== 'class') {
         let val = value.toLowerCase();
@@ -264,15 +280,24 @@ export class MathMLCompile<N, T, D> {
       if (name === '#text') {
         this.addText(mml, child);
       } else if (mml.isKind('annotation-xml')) {
-        mml.appendChild((this.factory.create('XML') as XMLNode).setXML(child, adaptor));
+        mml.appendChild(
+          (this.factory.create('XML') as XMLNode).setXML(child, adaptor)
+        );
       } else {
         let childMml = mml.appendChild(this.makeNode(child));
-        if (childMml.arity === 0 && adaptor.childNodes(child).length && !childMml.isKind('html')) {
+        if (
+          childMml.arity === 0 &&
+          adaptor.childNodes(child).length &&
+          !childMml.isKind('html')
+        ) {
           if (this.options['fixMisplacedChildren']) {
             this.addChildren(mml, child);
           } else {
-            childMml.mError('There should not be children for ' + childMml.kind + ' nodes',
-                            this.options['verify'], true);
+            childMml.mError(
+              'There should not be children for ' + childMml.kind + ' nodes',
+              this.options['verify'],
+              true
+            );
           }
         }
       }
@@ -312,7 +337,10 @@ export class MathMLCompile<N, T, D> {
         if (name === 'MJX-variant') {
           mml.setProperty('variantForm', true);
         } else if (name.substring(0, 11) !== 'MJX-TeXAtom') {
-          mml.attributes.set('mathvariant', this.fixCalligraphic(name.substring(3)));
+          mml.attributes.set(
+            'mathvariant',
+            this.fixCalligraphic(name.substring(3))
+          );
         }
       } else {
         classList.push(name);
@@ -342,8 +370,14 @@ export class MathMLCompile<N, T, D> {
     if (mml.isKind('mrow') && !mml.isInferred && mml.childNodes.length >= 2) {
       let first = mml.childNodes[0];
       let last = mml.childNodes[mml.childNodes.length - 1];
-      if (first.isKind('mo') && first.attributes.get('fence') && first.attributes.get('stretchy') &&
-          last.isKind('mo') && last.attributes.get('fence') && last.attributes.get('stretchy')) {
+      if (
+        first.isKind('mo') &&
+        first.attributes.get('fence') &&
+        first.attributes.get('stretchy') &&
+        last.isKind('mo') &&
+        last.attributes.get('fence') &&
+        last.attributes.get('stretchy')
+      ) {
         if (first.childNodes.length) {
           mml.setProperty('open', (first as AbstractMmlTokenNode).getText());
         }
@@ -359,8 +393,9 @@ export class MathMLCompile<N, T, D> {
    * @return {string}      The trimmed text
    */
   protected normalizeSpace(text: string): string {
-    return text.replace(/[\t\n\r]/g, ' ')    // whitespace to spaces
-               .replace(/  +/g, ' ');        // internal multiple whitespace
+    return text
+      .replace(/[\t\n\r]/g, ' ') // whitespace to spaces
+      .replace(/  +/g, ' '); // internal multiple whitespace
   }
 
   /**

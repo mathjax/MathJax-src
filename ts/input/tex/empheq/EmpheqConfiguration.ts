@@ -15,29 +15,26 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Configuration file for the empheq package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-
-import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
-import {Configuration} from '../Configuration.js';
-import {CommandMap, EnvironmentMap} from '../TokenMap.js';
-import {ParseUtil} from '../ParseUtil.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration } from '../Configuration.js';
+import { CommandMap, EnvironmentMap } from '../TokenMap.js';
+import { ParseUtil } from '../ParseUtil.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
-import {BeginItem} from '../base/BaseItems.js';
-import {StackItem} from '../StackItem.js';
-import {EmpheqUtil} from './EmpheqUtil.js';
+import { BeginItem } from '../base/BaseItems.js';
+import { StackItem } from '../StackItem.js';
+import { EmpheqUtil } from './EmpheqUtil.js';
 
 /**
  * A StackItem for empheq environments.
  */
 export class EmpheqBeginItem extends BeginItem {
-
   /**
    * @override
    */
@@ -54,14 +51,12 @@ export class EmpheqBeginItem extends BeginItem {
     }
     return super.checkItem(item);
   }
-
 }
 
 /**
  * The methods that implement the empheq package.
  */
 export const EmpheqMethods = {
-
   /**
    * Handle an empheq environment.
    *
@@ -71,24 +66,39 @@ export const EmpheqMethods = {
   Empheq(parser: TexParser, begin: EmpheqBeginItem) {
     if (parser.stack.env.closing === begin.getName()) {
       delete parser.stack.env.closing;
-      parser.Push(parser.itemFactory.create('end').setProperty('name', parser.stack.global.empheq));
+      parser.Push(
+        parser.itemFactory
+          .create('end')
+          .setProperty('name', parser.stack.global.empheq)
+      );
       parser.stack.global.empheq = '';
       const empheq = parser.stack.Top() as EmpheqBeginItem;
       EmpheqUtil.adjustTable(empheq, parser);
-      parser.Push(parser.itemFactory.create('end').setProperty('name', 'empheq'));
+      parser.Push(
+        parser.itemFactory.create('end').setProperty('name', 'empheq')
+      );
     } else {
       ParseUtil.checkEqnEnv(parser);
       const opts = parser.GetBrackets('\\begin{' + begin.getName() + '}') || '';
-      const [env, n] = (parser.GetArgument('\\begin{' + begin.getName() + '}') || '').split(/=/);
+      const [env, n] = (
+        parser.GetArgument('\\begin{' + begin.getName() + '}') || ''
+      ).split(/=/);
       if (!EmpheqUtil.checkEnv(env)) {
         throw new TexError('UnknownEnv', 'Unknown environment "%1"', env);
       }
       begin.setProperty('nestable', true);
       if (opts) {
-        begin.setProperties(EmpheqUtil.splitOptions(opts, {left: 1, right: 1}));
+        begin.setProperties(
+          EmpheqUtil.splitOptions(opts, { left: 1, right: 1 })
+        );
       }
       parser.stack.global.empheq = env;
-      parser.string = '\\begin{' + env + '}' + (n ? '{' + n + '}' : '') + parser.string.slice(parser.i);
+      parser.string =
+        '\\begin{' +
+        env +
+        '}' +
+        (n ? '{' + n + '}' : '') +
+        parser.string.slice(parser.i);
       parser.i = 0;
       parser.Push(begin);
     }
@@ -113,9 +123,10 @@ export const EmpheqMethods = {
    */
   EmpheqDelim(parser: TexParser, name: string) {
     const c = parser.GetDelimiter(name);
-    parser.Push(parser.create('token', 'mo', {stretchy: true, symmetric: true}, c));
-  }
-
+    parser.Push(
+      parser.create('token', 'mo', { stretchy: true, symmetric: true }, c)
+    );
+  },
 };
 
 //
@@ -129,22 +140,22 @@ new EnvironmentMap('empheq-env', EmpheqUtil.environment, {
 //  Define the empheq characters
 //
 new CommandMap('empheq-macros', {
-  empheqlbrace:    [EmpheqMethods.EmpheqMO, '{'],
-  empheqrbrace:    [EmpheqMethods.EmpheqMO, '}'],
-  empheqlbrack:    [EmpheqMethods.EmpheqMO, '['],
-  empheqrbrack:    [EmpheqMethods.EmpheqMO, ']'],
-  empheqlangle:    [EmpheqMethods.EmpheqMO, '\u27E8'],
-  empheqrangle:    [EmpheqMethods.EmpheqMO, '\u27E9'],
-  empheqlparen:    [EmpheqMethods.EmpheqMO, '('],
-  empheqrparen:    [EmpheqMethods.EmpheqMO, ')'],
-  empheqlvert:     [EmpheqMethods.EmpheqMO, '|'],
-  empheqrvert:     [EmpheqMethods.EmpheqMO, '|'],
-  empheqlVert:     [EmpheqMethods.EmpheqMO, '\u2016'],
-  empheqrVert:     [EmpheqMethods.EmpheqMO, '\u2016'],
-  empheqlfloor:    [EmpheqMethods.EmpheqMO, '\u230A'],
-  empheqrfloor:    [EmpheqMethods.EmpheqMO, '\u230B'],
-  empheqlceil:     [EmpheqMethods.EmpheqMO, '\u2308'],
-  empheqrceil:     [EmpheqMethods.EmpheqMO, '\u2309'],
+  empheqlbrace: [EmpheqMethods.EmpheqMO, '{'],
+  empheqrbrace: [EmpheqMethods.EmpheqMO, '}'],
+  empheqlbrack: [EmpheqMethods.EmpheqMO, '['],
+  empheqrbrack: [EmpheqMethods.EmpheqMO, ']'],
+  empheqlangle: [EmpheqMethods.EmpheqMO, '\u27E8'],
+  empheqrangle: [EmpheqMethods.EmpheqMO, '\u27E9'],
+  empheqlparen: [EmpheqMethods.EmpheqMO, '('],
+  empheqrparen: [EmpheqMethods.EmpheqMO, ')'],
+  empheqlvert: [EmpheqMethods.EmpheqMO, '|'],
+  empheqrvert: [EmpheqMethods.EmpheqMO, '|'],
+  empheqlVert: [EmpheqMethods.EmpheqMO, '\u2016'],
+  empheqrVert: [EmpheqMethods.EmpheqMO, '\u2016'],
+  empheqlfloor: [EmpheqMethods.EmpheqMO, '\u230A'],
+  empheqrfloor: [EmpheqMethods.EmpheqMO, '\u230B'],
+  empheqlceil: [EmpheqMethods.EmpheqMO, '\u2308'],
+  empheqrceil: [EmpheqMethods.EmpheqMO, '\u2309'],
   empheqbiglbrace: [EmpheqMethods.EmpheqMO, '{'],
   empheqbigrbrace: [EmpheqMethods.EmpheqMO, '}'],
   empheqbiglbrack: [EmpheqMethods.EmpheqMO, '['],
@@ -153,18 +164,18 @@ new CommandMap('empheq-macros', {
   empheqbigrangle: [EmpheqMethods.EmpheqMO, '\u27E9'],
   empheqbiglparen: [EmpheqMethods.EmpheqMO, '('],
   empheqbigrparen: [EmpheqMethods.EmpheqMO, ')'],
-  empheqbiglvert:  [EmpheqMethods.EmpheqMO, '|'],
-  empheqbigrvert:  [EmpheqMethods.EmpheqMO, '|'],
-  empheqbiglVert:  [EmpheqMethods.EmpheqMO, '\u2016'],
-  empheqbigrVert:  [EmpheqMethods.EmpheqMO, '\u2016'],
+  empheqbiglvert: [EmpheqMethods.EmpheqMO, '|'],
+  empheqbigrvert: [EmpheqMethods.EmpheqMO, '|'],
+  empheqbiglVert: [EmpheqMethods.EmpheqMO, '\u2016'],
+  empheqbigrVert: [EmpheqMethods.EmpheqMO, '\u2016'],
   empheqbiglfloor: [EmpheqMethods.EmpheqMO, '\u230A'],
   empheqbigrfloor: [EmpheqMethods.EmpheqMO, '\u230B'],
-  empheqbiglceil:  [EmpheqMethods.EmpheqMO, '\u2308'],
-  empheqbigrceil:  [EmpheqMethods.EmpheqMO, '\u2309'],
-  empheql:          EmpheqMethods.EmpheqDelim,
-  empheqr:          EmpheqMethods.EmpheqDelim,
-  empheqbigl:       EmpheqMethods.EmpheqDelim,
-  empheqbigr:       EmpheqMethods.EmpheqDelim
+  empheqbiglceil: [EmpheqMethods.EmpheqMO, '\u2308'],
+  empheqbigrceil: [EmpheqMethods.EmpheqMO, '\u2309'],
+  empheql: EmpheqMethods.EmpheqDelim,
+  empheqr: EmpheqMethods.EmpheqDelim,
+  empheqbigl: EmpheqMethods.EmpheqDelim,
+  empheqbigr: EmpheqMethods.EmpheqDelim,
 });
 
 //
@@ -176,6 +187,6 @@ export const EmpheqConfiguration = Configuration.create('empheq', {
     [HandlerType.ENVIRONMENT]: ['empheq-env'],
   },
   [ConfigurationType.ITEMS]: {
-    [EmpheqBeginItem.prototype.kind]: EmpheqBeginItem
-  }
+    [EmpheqBeginItem.prototype.kind]: EmpheqBeginItem,
+  },
 });

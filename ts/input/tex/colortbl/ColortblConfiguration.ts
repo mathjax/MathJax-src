@@ -15,21 +15,24 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview    Configuration file for the colortbl package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
-import {ArrayItem} from '../base/BaseItems.js';
-import {Configuration, ParserConfiguration, ConfigurationHandler} from '../Configuration.js';
-import {CommandMap} from '../TokenMap.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { ArrayItem } from '../base/BaseItems.js';
+import {
+  Configuration,
+  ParserConfiguration,
+  ConfigurationHandler,
+} from '../Configuration.js';
+import { CommandMap } from '../TokenMap.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
 
-import {TeX} from '../../tex.js';
+import { TeX } from '../../tex.js';
 
 /**
  * Information about table colors.
@@ -50,7 +53,7 @@ export class ColorArrayItem extends ArrayItem {
   public color: ColorData = {
     cell: '',
     row: '',
-    col: []
+    col: [],
   };
 
   /**
@@ -64,7 +67,8 @@ export class ColorArrayItem extends ArrayItem {
   public EndEntry() {
     super.EndEntry();
     const cell = this.row[this.row.length - 1];
-    const color = this.color.cell || this.color.row || this.color.col[this.row.length - 1];
+    const color =
+      this.color.cell || this.color.row || this.color.col[this.row.length - 1];
     if (color) {
       cell.attributes.set('mathbackground', color);
       this.color.cell = '';
@@ -90,20 +94,21 @@ export class ColorArrayItem extends ArrayItem {
     //   in edge cells extends past their contents.
     //
     const mml = super.createMml();
-    let table = (mml.isKind('mrow') ? mml.childNodes[1] : mml);
+    let table = mml.isKind('mrow') ? mml.childNodes[1] : mml;
     if (table.isKind('menclose')) {
       table = table.childNodes[0].childNodes[0];
     }
     if (this.hasColor) {
       const attributes = table.attributes;
-      if (attributes.get('frame') === 'none' &&
-          attributes.get('data-frame-styles') === undefined) {
+      if (
+        attributes.get('frame') === 'none' &&
+        attributes.get('data-frame-styles') === undefined
+      ) {
         attributes.set('data-frame-styles', '');
       }
     }
     return mml;
   }
-
 }
 
 /**
@@ -114,7 +119,7 @@ export class ColorArrayItem extends ArrayItem {
  * @param {keyof ColorData} type   The type (col, row, cell) of color being added
  */
 function TableColor(parser: TexParser, name: string, type: keyof ColorData) {
-  const lookup = parser.configuration.packageData.get('color').model;  // use the color extension's color model
+  const lookup = parser.configuration.packageData.get('color').model; // use the color extension's color model
   const model = parser.GetBrackets(name, '');
   const color = lookup.getColor(model, parser.GetArgument(name));
   //
@@ -122,14 +127,22 @@ function TableColor(parser: TexParser, name: string, type: keyof ColorData) {
   //
   const top = parser.stack.Top() as ColorArrayItem;
   if (!(top instanceof ColorArrayItem)) {
-    throw new TexError('UnsupportedTableColor', 'Unsupported use of %1', parser.currentCS);
+    throw new TexError(
+      'UnsupportedTableColor',
+      'Unsupported use of %1',
+      parser.currentCS
+    );
   }
   //
   //  Check the position of the macro and save the color.
   //
   if (type === 'col') {
     if (top.table.length && top.color.col[top.row.length] !== color) {
-      throw new TexError('ColumnColorNotTop', '%1 must be in the top row or preamble', name);
+      throw new TexError(
+        'ColumnColorNotTop',
+        '%1 must be in the top row or preamble',
+        name
+      );
     }
     top.color.col[top.row.length] = color;
     //
@@ -141,7 +154,11 @@ function TableColor(parser: TexParser, name: string, type: keyof ColorData) {
   } else {
     top.color[type] = color;
     if (type === 'row' && (top.Size() || top.row.length)) {
-      throw new TexError('RowColorNotFirst', '%1 must be at the beginning of a row', name);
+      throw new TexError(
+        'RowColorNotFirst',
+        '%1 must be at the beginning of a row',
+        name
+      );
     }
   }
 }
@@ -151,8 +168,8 @@ function TableColor(parser: TexParser, name: string, type: keyof ColorData) {
 //
 new CommandMap('colortbl', {
   cellcolor: [TableColor, 'cell'],
-  rowcolor:  [TableColor, 'row'],
-  columncolor: [TableColor, 'col']
+  rowcolor: [TableColor, 'row'],
+  columncolor: [TableColor, 'col'],
 });
 
 /**

@@ -22,13 +22,27 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass} from '../Wrapper.js';
-import {CommonWrapperFactory} from '../WrapperFactory.js';
-import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
-import {CommonOutputJax} from '../../common.js';
-import {CommonScriptbase, CommonScriptbaseClass, CommonScriptbaseConstructor} from './scriptbase.js';
-import {BBox} from '../../../util/BBox.js';
-import {MmlMsubsup, MmlMsub, MmlMsup} from '../../../core/MmlTree/MmlNodes/msubsup.js';
+import { CommonWrapper, CommonWrapperClass } from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import {
+  CommonScriptbase,
+  CommonScriptbaseClass,
+  CommonScriptbaseConstructor,
+} from './scriptbase.js';
+import { BBox } from '../../../util/BBox.js';
+import {
+  MmlMsubsup,
+  MmlMsub,
+  MmlMsup,
+} from '../../../core/MmlTree/MmlNodes/msubsup.js';
 
 /*****************************************************************/
 /**
@@ -48,7 +62,9 @@ import {MmlMsubsup, MmlMsub, MmlMsup} from '../../../core/MmlTree/MmlNodes/msubs
  * @template FC  The FontDataClass type
  */
 export interface CommonMsub<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -57,7 +73,7 @@ export interface CommonMsub<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonScriptbase<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /**
@@ -77,7 +93,9 @@ export interface CommonMsub<
  * @template FC  The FontDataClass type
  */
 export interface CommonMsubClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -86,7 +104,7 @@ export interface CommonMsubClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
@@ -109,7 +127,9 @@ export interface CommonMsubClass<
  * @template B   The mixin interface to create
  */
 export function CommonMsubMixin<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -119,12 +139,14 @@ export function CommonMsubMixin<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: CommonScriptbaseConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
-
-  return class CommonMsubMixin extends Base
-  implements CommonMsub<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
+  B extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonScriptbaseConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+): B {
+  return class CommonMsubMixin
+    extends Base
+    implements CommonMsub<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
      * Do not include italic correction
      */
@@ -143,12 +165,10 @@ export function CommonMsubMixin<
      * @override
      */
     public getOffset() {
-      const x = (this.baseIsChar ? 0 : this.getAdjustedIc());
+      const x = this.baseIsChar ? 0 : this.getAdjustedIc();
       return [x, -this.getV()];
     }
-
   } as any as B;
-
 }
 
 /*****************************************************************/
@@ -169,7 +189,9 @@ export function CommonMsubMixin<
  * @template FC  The FontDataClass type
  */
 export interface CommonMsup<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -178,7 +200,7 @@ export interface CommonMsup<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonScriptbase<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /**
@@ -198,7 +220,9 @@ export interface CommonMsup<
  * @template FC  The FontDataClass type
  */
 export interface CommonMsupClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -207,7 +231,7 @@ export interface CommonMsupClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
@@ -230,7 +254,9 @@ export interface CommonMsupClass<
  * @template B   The mixin interface to create
  */
 export function CommonMsupMixin<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -240,12 +266,14 @@ export function CommonMsupMixin<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: CommonScriptbaseConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
-
-  return class CommonMsupMixin extends Base
-  implements CommonMsup<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
+  B extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonScriptbaseConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+): B {
+  return class CommonMsupMixin
+    extends Base
+    implements CommonMsup<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
      * @override
      */
@@ -262,9 +290,7 @@ export function CommonMsupMixin<
       const x = this.getAdjustedIc() - (this.baseRemoveIc ? 0 : this.baseIc);
       return [x, this.getU()];
     }
-
   } as any as B;
-
 }
 
 /*****************************************************************/
@@ -285,7 +311,9 @@ export function CommonMsupMixin<
  * @template FC  The FontDataClass type
  */
 export interface CommonMsubsup<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -294,9 +322,8 @@ export interface CommonMsubsup<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonScriptbase<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
   /**
    *  Cached values for the script offsets and separation (so if they are
    *  computed in computeBBox(), they don't have to be recomputed during output)
@@ -340,7 +367,9 @@ export interface CommonMsubsup<
  * @template FC  The FontDataClass type
  */
 export interface CommonMsubsupClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -349,7 +378,7 @@ export interface CommonMsubsupClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
@@ -372,7 +401,9 @@ export interface CommonMsubsupClass<
  * @template B   The mixin interface to create
  */
 export function CommonMsubsupMixin<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -382,12 +413,14 @@ export function CommonMsubsupMixin<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: CommonScriptbaseConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
-
-  return class CommonMsubsupMixin extends Base
-  implements CommonMsubsup<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
+  B extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonScriptbaseConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+): B {
+  return class CommonMsubsupMixin
+    extends Base
+    implements CommonMsubsup<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
      * Do not include italic correction
      */
@@ -431,8 +464,13 @@ export function CommonMsubsupMixin<
       if (this.UVQ) return this.UVQ;
       const tex = this.font.params;
       const t = 3 * tex.rule_thickness;
-      const subscriptshift = this.length2em(this.node.attributes.get('subscriptshift'), tex.sub2);
-      const drop = this.baseCharZero(bbox.d * this.baseScale + tex.sub_drop * subbox.rscale);
+      const subscriptshift = this.length2em(
+        this.node.attributes.get('subscriptshift'),
+        tex.sub2
+      );
+      const drop = this.baseCharZero(
+        bbox.d * this.baseScale + tex.sub_drop * subbox.rscale
+      );
       const supd = supbox.d * supbox.rscale;
       const subh = subbox.h * subbox.rscale;
       //
@@ -449,7 +487,7 @@ export function CommonMsubsupMixin<
       //      subscript 3 rule thickness below that),
       //     provided we don't move up past the original subscript position.
       //
-      let q = (u - supd) - (subh - v);
+      let q = u - supd - (subh - v);
       if (q < t) {
         v += t - q;
         const p = (4 / 5) * tex.x_height - (u - supd);
@@ -462,9 +500,15 @@ export function CommonMsubsupMixin<
       // Make sure the shifts are at least the minimum amounts and
       // return the shifts and the space between the scripts
       //
-      u = Math.max(this.length2em(this.node.attributes.get('superscriptshift'), u), u);
-      v = Math.max(this.length2em(this.node.attributes.get('subscriptshift'), v), v);
-      q = (u - supd) - (subh - v);
+      u = Math.max(
+        this.length2em(this.node.attributes.get('superscriptshift'), u),
+        u
+      );
+      v = Math.max(
+        this.length2em(this.node.attributes.get('subscriptshift'), v),
+        v
+      );
+      q = u - supd - (subh - v);
       this.UVQ = [u, -v, q];
       return this.UVQ;
     }
@@ -475,17 +519,19 @@ export function CommonMsubsupMixin<
      * @ override
      */
     public appendScripts(bbox: BBox): BBox {
-      const [subbox, supbox] = [this.subChild.getOuterBBox(), this.supChild.getOuterBBox()];
+      const [subbox, supbox] = [
+        this.subChild.getOuterBBox(),
+        this.supChild.getOuterBBox(),
+      ];
       const w = this.getBaseWidth();
       const x = this.getAdjustedIc();
       const [u, v] = this.getUVQ();
-      const y = bbox.d - this.baseChild.getLineBBox(this.baseChild.breakCount).d;
+      const y =
+        bbox.d - this.baseChild.getLineBBox(this.baseChild.breakCount).d;
       bbox.combine(subbox, w + (this.baseIsChar ? 0 : x), v - y);
       bbox.combine(supbox, w + x, u - y);
       bbox.w += this.font.params.scriptspace;
       return bbox;
     }
-
   } as any as B;
-
 }

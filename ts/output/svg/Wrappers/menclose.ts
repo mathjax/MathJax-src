@@ -21,16 +21,26 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVG} from '../../svg.js';
-import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
-import {SvgWrapperFactory} from '../WrapperFactory.js';
-import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
-import {CommonMenclose, CommonMencloseClass, CommonMencloseMixin} from '../../common/Wrappers/menclose.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMenclose} from '../../../core/MmlTree/MmlNodes/menclose.js';
+import { SVG } from '../../svg.js';
+import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
+import { SvgWrapperFactory } from '../WrapperFactory.js';
+import {
+  SvgCharOptions,
+  SvgVariantData,
+  SvgDelimiterData,
+  SvgFontData,
+  SvgFontDataClass,
+} from '../FontData.js';
+import {
+  CommonMenclose,
+  CommonMencloseClass,
+  CommonMencloseMixin,
+} from '../../common/Wrappers/menclose.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMenclose } from '../../../core/MmlTree/MmlNodes/menclose.js';
 import * as Notation from '../Notation.js';
-import {SvgMsqrtNTD} from './msqrt.js';
-import {OptionList} from '../../../util/Options.js';
+import { SvgMsqrtNTD } from './msqrt.js';
+import { OptionList } from '../../../util/Options.js';
 
 /*****************************************************************/
 /**
@@ -40,13 +50,23 @@ import {OptionList} from '../../../util/Options.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SvgMencloseNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMenclose<
-  N, T, D,
-  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
-  SvgMsqrtNTD<N, T, D>
-> {
-
+export interface SvgMencloseNTD<N, T, D>
+  extends SvgWrapper<N, T, D>,
+    CommonMenclose<
+      N,
+      T,
+      D,
+      SVG<N, T, D>,
+      SvgWrapper<N, T, D>,
+      SvgWrapperFactory<N, T, D>,
+      SvgWrapperClass<N, T, D>,
+      SvgCharOptions,
+      SvgVariantData,
+      SvgDelimiterData,
+      SvgFontData,
+      SvgFontDataClass,
+      SvgMsqrtNTD<N, T, D>
+    > {
   /**
    * Create a line element
    *
@@ -93,7 +113,6 @@ export interface SvgMencloseNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMenc
    * @return {N}                    The newly created path
    */
   fill(...P: (string | number)[]): N;
-
 }
 
 /**
@@ -103,14 +122,28 @@ export interface SvgMencloseNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMenc
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SvgMencloseClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonMencloseClass<
-  N, T, D,
-  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
-> {
-  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMencloseNTD<N, T, D>;
+export interface SvgMencloseClass<N, T, D>
+  extends SvgWrapperClass<N, T, D>,
+    CommonMencloseClass<
+      N,
+      T,
+      D,
+      SVG<N, T, D>,
+      SvgWrapper<N, T, D>,
+      SvgWrapperFactory<N, T, D>,
+      SvgWrapperClass<N, T, D>,
+      SvgCharOptions,
+      SvgVariantData,
+      SvgDelimiterData,
+      SvgFontData,
+      SvgFontDataClass
+    > {
+  new (
+    factory: SvgWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: SvgWrapper<N, T, D>
+  ): SvgMencloseNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
@@ -118,20 +151,27 @@ export interface SvgMencloseClass<N, T, D> extends SvgWrapperClass<N, T, D>, Com
  * The SvgMenclose wrapper for the MmlMenclose class
  */
 export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
-
   const Base = CommonMencloseMixin<
-      N, T, D,
-      SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-      SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
-      SvgMsqrtNTD<N, T, D>,
-      SvgMencloseClass<N, T, D>
-    >(SvgWrapper);
+    N,
+    T,
+    D,
+    SVG<N, T, D>,
+    SvgWrapper<N, T, D>,
+    SvgWrapperFactory<N, T, D>,
+    SvgWrapperClass<N, T, D>,
+    SvgCharOptions,
+    SvgVariantData,
+    SvgDelimiterData,
+    SvgFontData,
+    SvgFontDataClass,
+    SvgMsqrtNTD<N, T, D>,
+    SvgMencloseClass<N, T, D>
+  >(SvgWrapper);
 
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
   return class SvgMenclose extends Base implements SvgMencloseNTD<N, T, D> {
-
     /**
      * @override
      */
@@ -141,7 +181,6 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
      *  The definitions of the various notations
      */
     public static notations: Notation.DefList<SvgMenclose, N> = new Map([
-
       Notation.Border('top'),
       Notation.Border('right'),
       Notation.Border('bottom'),
@@ -153,66 +192,95 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
       Notation.DiagonalStrike('up'),
       Notation.DiagonalStrike('down'),
 
-      ['horizontalstrike', {
-        renderer: Notation.RenderLine('horizontal', 'Y'),
-        bbox: (node) => [0, node.padding, 0, node.padding]
-      }],
-
-      ['verticalstrike', {
-        renderer: Notation.RenderLine('vertical', 'X'),
-        bbox: (node) => [node.padding, 0, node.padding, 0]
-      }],
-
-      ['box', {
-        renderer: (node, _child) => {
-          const {w, h, d} = node.getBBox();
-          node.adaptor.append(node.dom[0], node.box(w, h, d));
+      [
+        'horizontalstrike',
+        {
+          renderer: Notation.RenderLine('horizontal', 'Y'),
+          bbox: (node) => [0, node.padding, 0, node.padding],
         },
-        bbox: Notation.fullBBox,
-        border: Notation.fullBorder,
-        remove: 'left right top bottom'
-      }],
+      ],
 
-      ['roundedbox', {
-        renderer: (node, _child) => {
-          const {w, h, d} = node.getBBox();
-          const r = node.thickness + node.padding;
-          node.adaptor.append(node.dom[0], node.box(w, h, d, r));
+      [
+        'verticalstrike',
+        {
+          renderer: Notation.RenderLine('vertical', 'X'),
+          bbox: (node) => [node.padding, 0, node.padding, 0],
         },
-        bbox: Notation.fullBBox
-      }],
+      ],
 
-      ['circle', {
-        renderer: (node, _child) => {
-          const {w, h, d} = node.getBBox();
-          node.adaptor.append(node.dom[0], node.ellipse(w, h, d));
+      [
+        'box',
+        {
+          renderer: (node, _child) => {
+            const { w, h, d } = node.getBBox();
+            node.adaptor.append(node.dom[0], node.box(w, h, d));
+          },
+          bbox: Notation.fullBBox,
+          border: Notation.fullBorder,
+          remove: 'left right top bottom',
         },
-        bbox: Notation.fullBBox
-      }],
+      ],
 
-      ['phasorangle', {
-        //
-        // Use a bottom border and an upward strike properly angled
-        //
-        renderer: (node, _child) => {
-          const {w, h, d} = node.getBBox();
-          const a = node.getArgMod(1.75 * node.padding, h + d)[0];
-          const t = node.thickness / 2;
-          const HD = h + d;
-          const cos = Math.cos(a);
-          node.adaptor.append(
-            node.dom[0],
-            node.path('mitre', 'M', w, t - d,  'L', t + cos * t, t - d,  'L' , cos * HD + t, HD - d - t)
-          );
+      [
+        'roundedbox',
+        {
+          renderer: (node, _child) => {
+            const { w, h, d } = node.getBBox();
+            const r = node.thickness + node.padding;
+            node.adaptor.append(node.dom[0], node.box(w, h, d, r));
+          },
+          bbox: Notation.fullBBox,
         },
-        bbox: (node) => {
-          const p = node.padding / 2;
-          const t = node.thickness;
-          return [2 * p, p, p + t, 3 * p + t];
+      ],
+
+      [
+        'circle',
+        {
+          renderer: (node, _child) => {
+            const { w, h, d } = node.getBBox();
+            node.adaptor.append(node.dom[0], node.ellipse(w, h, d));
+          },
+          bbox: Notation.fullBBox,
         },
-        border: (node) => [0, 0, node.thickness, 0],
-        remove: 'bottom'
-      }],
+      ],
+
+      [
+        'phasorangle',
+        {
+          //
+          // Use a bottom border and an upward strike properly angled
+          //
+          renderer: (node, _child) => {
+            const { w, h, d } = node.getBBox();
+            const a = node.getArgMod(1.75 * node.padding, h + d)[0];
+            const t = node.thickness / 2;
+            const HD = h + d;
+            const cos = Math.cos(a);
+            node.adaptor.append(
+              node.dom[0],
+              node.path(
+                'mitre',
+                'M',
+                w,
+                t - d,
+                'L',
+                t + cos * t,
+                t - d,
+                'L',
+                cos * HD + t,
+                HD - d - t
+              )
+            );
+          },
+          bbox: (node) => {
+            const p = node.padding / 2;
+            const t = node.thickness;
+            return [2 * p, p, p + t, 3 * p + t];
+          },
+          border: (node) => [0, 0, node.thickness, 0],
+          remove: 'bottom',
+        },
+      ],
 
       Notation.Arrow('up'),
       Notation.Arrow('down'),
@@ -222,7 +290,7 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
       Notation.Arrow('updown'),
       Notation.Arrow('leftright'),
 
-      Notation.DiagonalArrow('updiagonal'),  // backward compatibility
+      Notation.DiagonalArrow('updiagonal'), // backward compatibility
       Notation.DiagonalArrow('northeast'),
       Notation.DiagonalArrow('southeast'),
       Notation.DiagonalArrow('northwest'),
@@ -231,56 +299,72 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
       Notation.DiagonalArrow('northeastsouthwest'),
       Notation.DiagonalArrow('northwestsoutheast'),
 
-      ['longdiv', {
-        //
-        // Use a line along the top followed by a half ellipse at the left
-        //
-        renderer: (node, _child) => {
-          const {w, h, d} = node.getBBox();
-          const t = node.thickness / 2;
-          const p = node.padding;
-          node.adaptor.append(
-            node.dom[0],
-            node.path('round',
-                      'M', t, t - d,
-                      'a', p - t / 2, (h + d) / 2 - 4 * t,  0,  '0,1',  0, h + d - 2 * t,
-                      'L', w - t, h - t
-                     )
-          );
+      [
+        'longdiv',
+        {
+          //
+          // Use a line along the top followed by a half ellipse at the left
+          //
+          renderer: (node, _child) => {
+            const { w, h, d } = node.getBBox();
+            const t = node.thickness / 2;
+            const p = node.padding;
+            node.adaptor.append(
+              node.dom[0],
+              node.path(
+                'round',
+                'M',
+                t,
+                t - d,
+                'a',
+                p - t / 2,
+                (h + d) / 2 - 4 * t,
+                0,
+                '0,1',
+                0,
+                h + d - 2 * t,
+                'L',
+                w - t,
+                h - t
+              )
+            );
+          },
+          bbox: (node) => {
+            const p = node.padding;
+            const t = node.thickness;
+            return [p + t, p, p, 2 * p + t / 2];
+          },
         },
-        bbox: (node) => {
-          const p = node.padding;
-          const t = node.thickness;
-          return [p + t, p, p, 2 * p + t / 2];
-        }
-      }],
+      ],
 
-      ['radical', {
-        //
-        //  Use the msqrt rendering, but remove the extra space due to the radical
-        //    (it is added in at the end, so other notations overlap the root)
-        //
-        renderer: (node, child) => {
-          node.msqrt.toSVG([child]);
-          const left = node.sqrtTRBL()[3];
-          node.place(-left, 0, child);
+      [
+        'radical',
+        {
+          //
+          //  Use the msqrt rendering, but remove the extra space due to the radical
+          //    (it is added in at the end, so other notations overlap the root)
+          //
+          renderer: (node, child) => {
+            node.msqrt.toSVG([child]);
+            const left = node.sqrtTRBL()[3];
+            node.place(-left, 0, child);
+          },
+          //
+          //  Create the needed msqrt wrapper
+          //
+          init: (node) => {
+            node.msqrt = node.createMsqrt(node.childNodes[0]);
+          },
+          //
+          //  Add back in the padding for the square root
+          //
+          bbox: (node) => node.sqrtTRBL(),
+          //
+          //  This notation replaces the child
+          //
+          renderChild: true,
         },
-        //
-        //  Create the needed msqrt wrapper
-        //
-        init: (node) => {
-          node.msqrt = node.createMsqrt(node.childNodes[0]);
-        },
-        //
-        //  Add back in the padding for the square root
-        //
-        bbox: (node) => node.sqrtTRBL(),
-        //
-        //  This notation replaces the child
-        //
-        renderChild: true
-      }]
-
+      ],
     ] as Notation.DefPair<SvgMenclose, N>[]);
 
     /********************************************************/
@@ -291,9 +375,11 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
     public line(pq: [number, number, number, number]): N {
       const [x1, y1, x2, y2] = pq;
       return this.svg('line', {
-        x1: this.fixed(x1), y1: this.fixed(y1),
-        x2: this.fixed(x2), y2: this.fixed(y2),
-        'stroke-width': this.fixed(this.thickness)
+        x1: this.fixed(x1),
+        y1: this.fixed(y1),
+        x2: this.fixed(x2),
+        y2: this.fixed(y2),
+        'stroke-width': this.fixed(this.thickness),
       });
     }
 
@@ -303,9 +389,12 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
     public box(w: number, h: number, d: number, r: number = 0): N {
       const t = this.thickness;
       const def: OptionList = {
-        x: this.fixed(t / 2), y: this.fixed(t / 2 - d),
-        width: this.fixed(w - t), height: this.fixed(h + d - t),
-        fill: 'none', 'stroke-width': this.fixed(t)
+        x: this.fixed(t / 2),
+        y: this.fixed(t / 2 - d),
+        width: this.fixed(w - t),
+        height: this.fixed(h + d - t),
+        fill: 'none',
+        'stroke-width': this.fixed(t),
       };
       if (r) {
         def.rx = this.fixed(r);
@@ -319,9 +408,12 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
     public ellipse(w: number, h: number, d: number): N {
       const t = this.thickness;
       return this.svg('ellipse', {
-        rx: this.fixed((w - t) / 2), ry: this.fixed((h + d - t) / 2),
-        cx: this.fixed(w / 2), cy: this.fixed((h - d) / 2),
-        'fill': 'none', 'stroke-width': this.fixed(t)
+        rx: this.fixed((w - t) / 2),
+        ry: this.fixed((h + d - t) / 2),
+        cx: this.fixed(w / 2),
+        cy: this.fixed((h - d) / 2),
+        fill: 'none',
+        'stroke-width': this.fixed(t),
       });
     }
 
@@ -330,10 +422,11 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
      */
     public path(join: string, ...P: (string | number)[]): N {
       return this.svg('path', {
-        d: P.map(x => (typeof x === 'string' ? x : this.fixed(x))).join(' '),
-        style: {'stroke-width': this.fixed(this.thickness)},
-        'stroke-linecap': 'round', 'stroke-linejoin': join,
-        fill: 'none'
+        d: P.map((x) => (typeof x === 'string' ? x : this.fixed(x))).join(' '),
+        style: { 'stroke-width': this.fixed(this.thickness) },
+        'stroke-linecap': 'round',
+        'stroke-linejoin': join,
+        fill: 'none',
       });
     }
 
@@ -342,7 +435,7 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
      */
     public fill(...P: (string | number)[]): N {
       return this.svg('path', {
-        d: P.map(x => (typeof x === 'string' ? x : this.fixed(x))).join(' ')
+        d: P.map((x) => (typeof x === 'string' ? x : this.fixed(x))).join(' '),
       });
     }
 
@@ -421,7 +514,5 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
         !notation.renderChild && notation.renderer(this, svg[0]);
       }
     }
-
   };
-
 })<any, any, any>();

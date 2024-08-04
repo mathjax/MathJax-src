@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     VDash: '\u22AB',
     Vbar: '\u2AEB',
     Vcy: '\u0412',
@@ -63,5 +64,7 @@ Entities.add({
     vsubne: '\u228A\uFE00',
     vsupnE: '\u2ACC\uFE00',
     vsupne: '\u228B\uFE00',
-    vzigzag: '\u299A'
-}, 'v');
+    vzigzag: '\u299A',
+  },
+  'v'
+);

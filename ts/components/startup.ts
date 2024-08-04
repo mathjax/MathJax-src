@@ -24,21 +24,26 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathJax as MJGlobal, MathJaxObject as MJObject,
-        MathJaxConfig as MJConfig, combineWithMathJax, combineDefaults, GLOBAL as global} from './global.js';
+import {
+  MathJax as MJGlobal,
+  MathJaxObject as MJObject,
+  MathJaxConfig as MJConfig,
+  combineWithMathJax,
+  combineDefaults,
+  GLOBAL as global,
+} from './global.js';
 
-import {MathDocument} from '../core/MathDocument.js';
-import {MmlNode} from '../core/MmlTree/MmlNode.js';
-import {Handler} from '../core/Handler.js';
-import {InputJax} from '../core/InputJax.js';
-import {OutputJax} from '../core/OutputJax.js';
-import {CommonOutputJax} from '../output/common.js';
-import {DOMAdaptor} from '../core/DOMAdaptor.js';
-import {PrioritizedList} from '../util/PrioritizedList.js';
-import {OptionList, OPTIONS} from '../util/Options.js';
+import { MathDocument } from '../core/MathDocument.js';
+import { MmlNode } from '../core/MmlTree/MmlNode.js';
+import { Handler } from '../core/Handler.js';
+import { InputJax } from '../core/InputJax.js';
+import { OutputJax } from '../core/OutputJax.js';
+import { CommonOutputJax } from '../output/common.js';
+import { DOMAdaptor } from '../core/DOMAdaptor.js';
+import { PrioritizedList } from '../util/PrioritizedList.js';
+import { OptionList, OPTIONS } from '../util/Options.js';
 
-import {TeX} from '../input/tex.js';
-
+import { TeX } from '../input/tex.js';
 
 /**
  * Update the configuration structure to include the startup configuration
@@ -70,13 +75,25 @@ export type HANDLER = Handler<any, any, any>;
 export type DOMADAPTOR = DOMAdaptor<any, any, any>;
 export type INPUTJAX = InputJax<any, any, any>;
 export type OUTPUTJAX = OutputJax<any, any, any>;
-export type COMMONJAX = CommonOutputJax<any, any, any, any, any, any, any, any, any, any, any>;
+export type COMMONJAX = CommonOutputJax<
+  any,
+  any,
+  any,
+  any,
+  any,
+  any,
+  any,
+  any,
+  any,
+  any,
+  any
+>;
 export type TEX = TeX<any, any, any>;
 
 /**
  * Array of InputJax also with keys using name of jax
  */
-export type JAXARRAY = INPUTJAX[] & {[name: string]: INPUTJAX};
+export type JAXARRAY = INPUTJAX[] & { [name: string]: INPUTJAX };
 
 /**
  * A function to extend a handler class
@@ -89,7 +106,7 @@ export type HandlerExtension = (handler: HANDLER) => HANDLER;
 export interface MathJaxObject extends MJObject {
   config: MathJaxConfig;
   startup: {
-    constructors: {[name: string]: any};
+    constructors: { [name: string]: any };
     input: JAXARRAY;
     output: OUTPUTJAX;
     handler: HANDLER;
@@ -120,26 +137,25 @@ export interface MathJaxObject extends MJObject {
     getHandler(): HANDLER;
     /* tslint:enable */
   };
-  [name: string]: any;    // Needed for the methods created by the startup module
+  [name: string]: any; // Needed for the methods created by the startup module
 }
 
 /**
  * The implementation of the startup module
  */
 export namespace Startup {
-
   /**
    * The array of handler extensions
    */
   const extensions = new PrioritizedList<HandlerExtension>();
 
-  let visitor: any;  // the visitor for toMML();
-  let mathjax: any;  // the mathjax variable from mathjax.js
+  let visitor: any; // the visitor for toMML();
+  let mathjax: any; // the mathjax variable from mathjax.js
 
   /**
    * The constructors (or other data) registered by the loaded packages
    */
-  export const constructors: {[name: string]: any} = {};
+  export const constructors: { [name: string]: any } = {};
 
   /**
    * The array of InputJax instances (created after everything is loaded)
@@ -199,7 +215,12 @@ export namespace Startup {
    */
   export let pagePromise = new Promise<void>((resolve, _reject) => {
     const doc = global.document;
-    if (!doc || !doc.readyState || doc.readyState === 'complete' || doc.readyState === 'interactive') {
+    if (
+      !doc ||
+      !doc.readyState ||
+      doc.readyState === 'complete' ||
+      doc.readyState === 'interactive'
+    ) {
       resolve();
     } else {
       const listener = () => resolve();
@@ -276,7 +297,10 @@ export namespace Startup {
    * @param {HandlerExtension} extend    A function to extend the handler class
    * @param {number} priority            The priority of the extension
    */
-  export function extendHandler(extend: HandlerExtension, priority: number = 10) {
+  export function extendHandler(
+    extend: HandlerExtension,
+    priority: number = 10
+  ) {
     extensions.add(extend, priority);
   }
 
@@ -295,7 +319,7 @@ export namespace Startup {
     getComponents();
     makeMethods();
     pagePromise
-      .then(() => CONFIG.pageReady())  // usually the initial typesetting call
+      .then(() => CONFIG.pageReady()) // usually the initial typesetting call
       .then(() => promiseResolve())
       .catch((err) => promiseReject(err));
   }
@@ -308,11 +332,16 @@ export namespace Startup {
    * Setting Mathjax.startup.pageReady in the configuration will override this.
    */
   export function defaultPageReady() {
-    return (CONFIG.loadAllFontFiles && (output as COMMONJAX).font ?
-            (output as COMMONJAX).font.loadDynamicFiles() : Promise.resolve())
-      .then(CONFIG.typeset && MathJax.typesetPromise ?
-            () => typesetPromise(CONFIG.elements) :
-            Promise.resolve())
+    return (
+      CONFIG.loadAllFontFiles && (output as COMMONJAX).font
+        ? (output as COMMONJAX).font.loadDynamicFiles()
+        : Promise.resolve()
+    )
+      .then(
+        CONFIG.typeset && MathJax.typesetPromise
+          ? () => typesetPromise(CONFIG.elements)
+          : Promise.resolve()
+      )
       .then(() => promiseResolve());
   }
 
@@ -334,7 +363,8 @@ export namespace Startup {
    * Create the instances of the registered components
    */
   export function getComponents() {
-    visitor = new MathJax._.core.MmlTree.SerializedMmlVisitor.SerializedMmlVisitor();
+    visitor =
+      new MathJax._.core.MmlTree.SerializedMmlVisitor.SerializedMmlVisitor();
     mathjax = MathJax._.mathjax.mathjax;
     input = getInputJax();
     output = getOutputJax();
@@ -364,7 +394,7 @@ export namespace Startup {
     if (input && output) {
       makeTypesetMethods();
     }
-    const oname = (output ? output.name.toLowerCase() : '');
+    const oname = output ? output.name.toLowerCase() : '';
     for (const jax of input) {
       const iname = jax.name.toLowerCase();
       makeMmlMethods(iname, jax);
@@ -424,21 +454,23 @@ export namespace Startup {
    * @param {string} oname     The name of the output jax
    * @param {INPUTJAX} input   The input jax instance
    */
-  export function makeOutputMethods(iname: string, oname: string, input: INPUTJAX) {
+  export function makeOutputMethods(
+    iname: string,
+    oname: string,
+    input: INPUTJAX
+  ) {
     const name = iname + '2' + oname;
-    MathJax[name] =
-      (math: string, options: OptionList = {}) => {
+    MathJax[name] = (math: string, options: OptionList = {}) => {
+      options.format = input.name;
+      return document.convert(math, options);
+    };
+    MathJax[name + 'Promise'] = (math: string, options: OptionList = {}) => {
+      promise = promise.then(() => {
         options.format = input.name;
-        return document.convert(math, options);
-      };
-    MathJax[name + 'Promise'] =
-      (math: string, options: OptionList = {}) => {
-        promise = promise.then(() => {
-          options.format = input.name;
-          return mathjax.handleRetriesFor(() => document.convert(math, options));
-        });
-        return promise;
-      };
+        return mathjax.handleRetriesFor(() => document.convert(math, options));
+      });
+      return promise;
+    };
     MathJax[oname + 'Stylesheet'] = () => output.styleSheet(document);
     if ('getMetricsFor' in output) {
       MathJax.getMetricsFor = (node: any, display: boolean) => {
@@ -460,21 +492,24 @@ export namespace Startup {
    */
   export function makeMmlMethods(name: string, input: INPUTJAX) {
     const STATE = MathJax._.core.MathItem.STATE;
-    MathJax[name + '2mml'] =
-      (math: string, options: OptionList = {}) => {
+    MathJax[name + '2mml'] = (math: string, options: OptionList = {}) => {
+      options.end = STATE.CONVERT;
+      options.format = input.name;
+      return toMML(document.convert(math, options));
+    };
+    MathJax[name + '2mmlPromise'] = (
+      math: string,
+      options: OptionList = {}
+    ) => {
+      promise = promise.then(() => {
         options.end = STATE.CONVERT;
         options.format = input.name;
-        return toMML(document.convert(math, options));
-      };
-    MathJax[name + '2mmlPromise'] =
-      (math: string, options: OptionList = {}) => {
-        promise = promise.then(() => {
-          options.end = STATE.CONVERT;
-          options.format = input.name;
-          return mathjax.handleRetriesFor(() => toMML(document.convert(math, options)));
-        });
-        return promise;
-      };
+        return mathjax.handleRetriesFor(() =>
+          toMML(document.convert(math, options))
+        );
+      });
+      return promise;
+    };
   }
 
   /**
@@ -500,7 +535,9 @@ export namespace Startup {
         jax[name] = new inputClass(MathJax.config[name]);
         jax.push(jax[name]);
       } else {
-        throw Error('Input Jax "' + name + '" is not defined (has it been loaded?)');
+        throw Error(
+          'Input Jax "' + name + '" is not defined (has it been loaded?)'
+        );
       }
     }
     return jax;
@@ -514,7 +551,9 @@ export namespace Startup {
     if (!name) return null;
     const outputClass = constructors[name];
     if (!outputClass) {
-      throw Error('Output Jax "' + name + '" is not defined (has it been loaded?)');
+      throw Error(
+        'Output Jax "' + name + '" is not defined (has it been loaded?)'
+      );
     }
     return new outputClass(MathJax.config[name]);
   }
@@ -528,7 +567,9 @@ export namespace Startup {
     if (!name || name === 'none') return null;
     const adaptor = constructors[name];
     if (!adaptor) {
-      throw Error('DOMAdaptor "' + name + '" is not defined (has it been loaded?)');
+      throw Error(
+        'DOMAdaptor "' + name + '" is not defined (has it been loaded?)'
+      );
     }
     return adaptor(MathJax.config[name]);
   }
@@ -541,7 +582,9 @@ export namespace Startup {
     if (!name || name === 'none' || !adaptor) return null;
     const handlerClass = constructors[name];
     if (!handlerClass) {
-      throw Error('Handler "' + name + '" is not defined (has it been loaded?)');
+      throw Error(
+        'Handler "' + name + '" is not defined (has it been loaded?)'
+      );
     }
     let handler = new handlerClass(adaptor, 5);
     for (const extend of extensions) {
@@ -558,9 +601,9 @@ export namespace Startup {
    */
   export function getDocument(root: any = null): MathDocument<any, any, any> {
     return mathjax.document(root || CONFIG.document, {
-        ...MathJax.config.options,
+      ...MathJax.config.options,
       InputJax: input,
-      OutputJax: output
+      OutputJax: output,
     });
   }
 }
@@ -576,21 +619,20 @@ export const MathJax = MJGlobal as MathJaxObject;
  *   set the method for handling invalid options, if provided.
  */
 if (typeof MathJax._.startup === 'undefined') {
-
   combineDefaults(MathJax.config, 'startup', {
     input: [],
     output: '',
     handler: null,
     adaptor: null,
-    document: (typeof document === 'undefined' ? '' : document),
+    document: typeof document === 'undefined' ? '' : document,
     elements: null,
     typeset: true,
     ready: Startup.defaultReady.bind(Startup),
-    pageReady: Startup.defaultPageReady.bind(Startup)
+    pageReady: Startup.defaultPageReady.bind(Startup),
   });
   combineWithMathJax({
     startup: Startup,
-    options: {}
+    options: {},
   });
 
   if (MathJax.config.startup.invalidOption) {
@@ -599,14 +641,12 @@ if (typeof MathJax._.startup === 'undefined') {
   if (MathJax.config.startup.optionError) {
     OPTIONS.optionError = MathJax.config.startup.optionError;
   }
-
 }
 
 /**
  * Export the startup configuration for convenience
  */
 export const CONFIG = MathJax.config.startup;
-
 
 /*
  * Tells if the user configuration included input jax or not

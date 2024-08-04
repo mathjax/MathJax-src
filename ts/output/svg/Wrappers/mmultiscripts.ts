@@ -21,16 +21,25 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVG} from '../../svg.js';
-import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
-import {SvgWrapperFactory} from '../WrapperFactory.js';
-import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
-import {CommonMmultiscripts, CommonMmultiscriptsClass,
-        CommonMmultiscriptsMixin} from '../../common/Wrappers/mmultiscripts.js';
-import {SvgMsubsup, SvgMsubsupNTD, SvgMsubsupClass} from './msubsup.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMmultiscripts} from '../../../core/MmlTree/MmlNodes/mmultiscripts.js';
-import {split} from '../../../util/string.js';
+import { SVG } from '../../svg.js';
+import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
+import { SvgWrapperFactory } from '../WrapperFactory.js';
+import {
+  SvgCharOptions,
+  SvgVariantData,
+  SvgDelimiterData,
+  SvgFontData,
+  SvgFontDataClass,
+} from '../FontData.js';
+import {
+  CommonMmultiscripts,
+  CommonMmultiscriptsClass,
+  CommonMmultiscriptsMixin,
+} from '../../common/Wrappers/mmultiscripts.js';
+import { SvgMsubsup, SvgMsubsupNTD, SvgMsubsupClass } from './msubsup.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMmultiscripts } from '../../../core/MmlTree/MmlNodes/mmultiscripts.js';
+import { split } from '../../../util/string.js';
 
 /*****************************************************************/
 
@@ -43,11 +52,15 @@ export type AlignFunction = (w: number, W: number) => number;
  * Get the function for aligning scripts horizontally (left, center, right)
  */
 export function AlignX(align: string) {
-  return ({
-    left: (_w, _W) => 0,
-    center: (w, W) => (W - w) / 2,
-    right: (w, W) => W - w
-  } as {[name: string]: AlignFunction})[align] || ((_w, _W) => 0) as AlignFunction;
+  return (
+    (
+      {
+        left: (_w, _W) => 0,
+        center: (w, W) => (W - w) / 2,
+        right: (w, W) => W - w,
+      } as { [name: string]: AlignFunction }
+    )[align] || (((_w, _W) => 0) as AlignFunction)
+  );
 }
 
 /*****************************************************************/
@@ -58,11 +71,22 @@ export function AlignX(align: string) {
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SvgMmultiscriptsNTD<N, T, D> extends SvgMsubsupNTD<N, T, D>, CommonMmultiscripts<
-  N, T, D,
-  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
-> {}
+export interface SvgMmultiscriptsNTD<N, T, D>
+  extends SvgMsubsupNTD<N, T, D>,
+    CommonMmultiscripts<
+      N,
+      T,
+      D,
+      SVG<N, T, D>,
+      SvgWrapper<N, T, D>,
+      SvgWrapperFactory<N, T, D>,
+      SvgWrapperClass<N, T, D>,
+      SvgCharOptions,
+      SvgVariantData,
+      SvgDelimiterData,
+      SvgFontData,
+      SvgFontDataClass
+    > {}
 
 /**
  * The SvgMmultiscriptsClass interface for the SVG Mmultiscripts wrapper
@@ -71,35 +95,62 @@ export interface SvgMmultiscriptsNTD<N, T, D> extends SvgMsubsupNTD<N, T, D>, Co
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SvgMmultiscriptsClass<N, T, D> extends SvgMsubsupClass<N, T, D>, CommonMmultiscriptsClass<
-  N, T, D,
-  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
-> {
-  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMmultiscriptsNTD<N, T, D>;
+export interface SvgMmultiscriptsClass<N, T, D>
+  extends SvgMsubsupClass<N, T, D>,
+    CommonMmultiscriptsClass<
+      N,
+      T,
+      D,
+      SVG<N, T, D>,
+      SvgWrapper<N, T, D>,
+      SvgWrapperFactory<N, T, D>,
+      SvgWrapperClass<N, T, D>,
+      SvgCharOptions,
+      SvgVariantData,
+      SvgDelimiterData,
+      SvgFontData,
+      SvgFontDataClass
+    > {
+  new (
+    factory: SvgWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: SvgWrapper<N, T, D>
+  ): SvgMmultiscriptsNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
 /**
  * The SvgMmultiscripts wrapper class for the MmlMmultiscripts class
  */
-export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<N, T, D> {
-
-
+export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<
+  N,
+  T,
+  D
+> {
   const Base = CommonMmultiscriptsMixin<
-      N, T, D,
-      SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-      SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
-      SvgMmultiscriptsClass<N, T, D>
-    >(SvgMsubsup);
+    N,
+    T,
+    D,
+    SVG<N, T, D>,
+    SvgWrapper<N, T, D>,
+    SvgWrapperFactory<N, T, D>,
+    SvgWrapperClass<N, T, D>,
+    SvgCharOptions,
+    SvgVariantData,
+    SvgDelimiterData,
+    SvgFontData,
+    SvgFontDataClass,
+    SvgMmultiscriptsClass<N, T, D>
+  >(SvgMsubsup);
 
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class SvgMmultiscripts extends Base implements SvgMmultiscriptsNTD<N, T, D> {
-
+  return class SvgMmultiscripts
+    extends Base
+    implements SvgMmultiscriptsNTD<N, T, D>
+  {
     /**
      * @override
      */
@@ -123,8 +174,15 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<N, 
       //
       let x = 0;
       if (data.numPrescripts) {
-        x = this.addScripts(this.dom[0], this.font.params.scriptspace, u, v,
-                            this.firstPrescript, data.numPrescripts, preAlign);
+        x = this.addScripts(
+          this.dom[0],
+          this.font.params.scriptspace,
+          u,
+          v,
+          this.firstPrescript,
+          data.numPrescripts,
+          preAlign
+        );
       }
       const base = this.baseChild;
       base.toSVG(svg);
@@ -132,7 +190,15 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<N, 
       if (this.breakCount) x = 0;
       x += base.getLineBBox(base.breakCount).w;
       if (data.numScripts) {
-        this.addScripts(this.dom[this.dom.length - 1], x, u, v, 1, data.numScripts, postAlign);
+        this.addScripts(
+          this.dom[this.dom.length - 1],
+          x,
+          u,
+          v,
+          1,
+          data.numScripts,
+          postAlign
+        );
       }
     }
 
@@ -147,7 +213,15 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<N, 
      * @param {string} align   The alignment for the scripts
      * @return {number}        The right-hand offset of the scripts
      */
-    protected addScripts(svg: N, x: number, u: number, v: number, i: number, n: number, align: string): number {
+    protected addScripts(
+      svg: N,
+      x: number,
+      u: number,
+      v: number,
+      i: number,
+      n: number,
+      align: string
+    ): number {
       const adaptor = this.adaptor;
       const alignX = AlignX(align);
       const supRow = adaptor.append(svg, this.svg('g')) as N;
@@ -169,7 +243,5 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<N, 
       }
       return x + dx;
     }
-
   };
-
 })<any, any, any>();

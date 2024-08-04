@@ -15,32 +15,28 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Configuration file for the textcomp package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
-import {Configuration} from '../Configuration.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration } from '../Configuration.js';
 import './TextcompMappings.js';
 
 Configuration.create('text-textcomp', {
   [ConfigurationType.PARSER]: 'text',
-  [ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['textcomp-macros']}
+  [ConfigurationType.HANDLER]: { [HandlerType.MACRO]: ['textcomp-macros'] },
 });
 
-export const TextcompConfiguration = Configuration.create(
-  'textcomp', {
-    [ConfigurationType.HANDLER]: {macro: ['textcomp-macros']},
-    config(_config, jax) {
-      const textmacros = jax.parseOptions.packageData.get('textmacros');
-      if (textmacros) {
-        textmacros.parseOptions.options.textmacros.packages.push('text-textcomp');
-        textmacros.textConf.add('text-textcomp', jax, {});
-      }
+export const TextcompConfiguration = Configuration.create('textcomp', {
+  [ConfigurationType.HANDLER]: { macro: ['textcomp-macros'] },
+  config(_config, jax) {
+    const textmacros = jax.parseOptions.packageData.get('textmacros');
+    if (textmacros) {
+      textmacros.parseOptions.options.textmacros.packages.push('text-textcomp');
+      textmacros.textConf.add('text-textcomp', jax, {});
     }
-  }
-);
-
+  },
+});

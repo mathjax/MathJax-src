@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     IEcy: '\u0415',
     IJlig: '\u0132',
     IOcy: '\u0401',
@@ -76,5 +77,7 @@ Entities.add({
     it: '\u2062',
     itilde: '\u0129',
     iukcy: '\u0456',
-    iuml: '\u00EF'
-}, 'i');
+    iuml: '\u00EF',
+  },
+  'i'
+);

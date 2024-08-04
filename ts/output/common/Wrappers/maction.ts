@@ -21,14 +21,24 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wrapper.js';
-import {CommonWrapperFactory} from '../WrapperFactory.js';
-import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
-import {CommonOutputJax} from '../../common.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMaction} from '../../../core/MmlTree/MmlNodes/maction.js';
-import {BBox} from '../../../util/BBox.js';
-import {split} from '../../../util/string.js';
+import {
+  CommonWrapper,
+  CommonWrapperClass,
+  CommonWrapperConstructor,
+} from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMaction } from '../../../core/MmlTree/MmlNodes/maction.js';
+import { BBox } from '../../../util/BBox.js';
+import { split } from '../../../util/string.js';
 
 /*****************************************************************/
 /**
@@ -49,10 +59,12 @@ import {split} from '../../../util/string.js';
  *
  * @template MA  The Maction type
  */
-export type ActionData = {[name: string]: any};
+export type ActionData = { [name: string]: any };
 
 export type ActionHandler<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -62,11 +74,13 @@ export type ActionHandler<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  MA extends CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  MA extends CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 > = (node: MA, data?: ActionData) => void;
 
 export type ActionPair<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -76,11 +90,16 @@ export type ActionPair<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  MA extends CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
-> = [ActionHandler<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC, MA>, ActionData];
+  MA extends CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+> = [
+  ActionHandler<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC, MA>,
+  ActionData,
+];
 
 export type ActionMap<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -90,11 +109,13 @@ export type ActionMap<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  MA extends CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  MA extends CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 > = Map<string, ActionPair<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC, MA>>;
 
 export type ActionDef<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -104,8 +125,11 @@ export type ActionDef<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  MA extends CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
-> = [string, [ActionHandler<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC, MA>, ActionData]];
+  MA extends CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+> = [
+  string,
+  [ActionHandler<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC, MA>, ActionData],
+];
 
 export type EventHandler = (event: Event) => void;
 
@@ -157,7 +181,9 @@ export const TooltipData = {
  * @template FC  The FontDataClass type
  */
 export interface CommonMaction<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -168,7 +194,6 @@ export interface CommonMaction<
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
   /**
    * The handler for the specified actiontype
    */
@@ -199,7 +224,6 @@ export interface CommonMaction<
    * Look up attribute parameters
    */
   getParameters(): void;
-
 }
 
 /**
@@ -219,7 +243,9 @@ export interface CommonMaction<
  * @template FC  The FontDataClass type
  */
 export interface CommonMactionClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -228,9 +254,8 @@ export interface CommonMactionClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
   /**
    * The valid action types and their handlers
    */
@@ -238,7 +263,6 @@ export interface CommonMactionClass<
   actions: ActionMap<
     N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
     CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>;
-
 }
 
 /*****************************************************************/
@@ -261,7 +285,9 @@ export interface CommonMactionClass<
  * @template B   The mixin interface to create
  */
 export function CommonMactionMixin<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -271,12 +297,14 @@ export function CommonMactionMixin<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
-
-  return class CommonMactionMixin extends Base
-  implements CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+): B {
+  return class CommonMactionMixin
+    extends Base
+    implements CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
      * @override
      */
@@ -312,7 +340,9 @@ export function CommonMactionMixin<
     public get selected(): WW {
       const selection = this.node.attributes.get('selection') as number;
       const i = Math.max(1, Math.min(this.childNodes.length, selection)) - 1;
-      return this.childNodes[i] || this.wrap((this.node as MmlMaction).selected);
+      return (
+        this.childNodes[i] || this.wrap((this.node as MmlMaction).selected)
+      );
     }
 
     /**
@@ -332,10 +362,10 @@ export function CommonMactionMixin<
      */
     constructor(factory: WF, node: MmlNode, parent: WW = null) {
       super(factory, node, parent);
-      const actions = (
-        /* prettier-ignore */
-        this.constructor as CommonMactionClass<
-          N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).actions;
+      const actions = /* prettier-ignore */
+      (this.constructor as CommonMactionClass<
+          N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>)
+        .actions;
       const action = this.node.attributes.get('actiontype') as string;
       const [handler, data] =
         /* prettier-ignore */
@@ -363,7 +393,9 @@ export function CommonMactionMixin<
      * @override
      */
     get breakCount() {
-      return (this.node.isEmbellished ? this.selected.coreMO().embellishedBreakCount : this.selected.breakCount);
+      return this.node.isEmbellished
+        ? this.selected.coreMO().embellishedBreakCount
+        : this.selected.breakCount;
     }
 
     /**
@@ -372,7 +404,5 @@ export function CommonMactionMixin<
     public computeLineBBox(i: number) {
       return this.getChildLineBBox(this.selected, i);
     }
-
   } as any as B;
-
 }

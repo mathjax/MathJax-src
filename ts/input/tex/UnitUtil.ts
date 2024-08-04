@@ -15,7 +15,6 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Utilities for units.
  *
@@ -23,13 +22,12 @@
  */
 
 class UnitMap {
-
   public num = '([-+]?([.,]\\d+|\\d+([.,]\\d*)?))';
   public unit = '';
   public dimenEnd = /./;
   public dimenRest = /./;
 
-  private map:Map<string, number>;
+  private map: Map<string, number>;
 
   /**
    * @override
@@ -77,7 +75,6 @@ class UnitMap {
     }
     return false;
   }
-
 }
 
 const emPerInch = 7.2;
@@ -88,17 +85,21 @@ const pxPerInch = 72;
  * @param {[string, string, number]} [value, unit, length] The dimension triple.
  * @return {[string, string, number]} [value, unit, length] The transformed triple.
  */
-function muReplace([value, unit, length]: [string, string, number]): [string, string, number] {
+function muReplace([value, unit, length]: [string, string, number]): [
+  string,
+  string,
+  number,
+] {
   if (unit !== 'mu') {
     return [value, unit, length];
   }
-  let em = UnitUtil.em(UnitUtil.UNIT_CASES.get(unit) * (parseFloat(value || '1')));
+  let em = UnitUtil.em(
+    UnitUtil.UNIT_CASES.get(unit) * parseFloat(value || '1')
+  );
   return [em.slice(0, -2), 'em', length];
 }
 
-
 export const UnitUtil = {
-  
   // Note, the following are TeX CM font values.
   /* prettier-ignore */
   UNIT_CASES: new UnitMap([
@@ -113,7 +114,6 @@ export const UnitUtil = {
     ['mu', 1 / 18],
   ]),
 
-
   /**
    * Matches for a dimension argument.
    * @param {string} dim The argument.
@@ -122,14 +122,14 @@ export const UnitUtil = {
    *     unit name, length of matched string. The latter is interesting in the
    *     case of trailing garbage.
    */
-  matchDimen(
-    dim: string, rest: boolean = false): [string, string, number] {
-    let match = dim.match(rest ? UnitUtil.UNIT_CASES.dimenRest : UnitUtil.UNIT_CASES.dimenEnd);
-    return match ?
-      muReplace([match[1].replace(/,/, '.'), match[4], match[0].length]) :
-      [null, null, 0];
+  matchDimen(dim: string, rest: boolean = false): [string, string, number] {
+    let match = dim.match(
+      rest ? UnitUtil.UNIT_CASES.dimenRest : UnitUtil.UNIT_CASES.dimenEnd
+    );
+    return match
+      ? muReplace([match[1].replace(/,/, '.'), match[4], match[0].length])
+      : [null, null, 0];
   },
-
 
   /**
    * Convert a dimension string into standard em dimension.
@@ -140,9 +140,8 @@ export const UnitUtil = {
     let [value, unit] = UnitUtil.matchDimen(dim);
     let m = parseFloat(value || '1');
     let factor = UnitUtil.UNIT_CASES.get(unit);
-    return factor ? factor * (m) : 0;
+    return factor ? factor * m : 0;
   },
-
 
   /**
    * Turns a number into an em value.
@@ -150,10 +149,10 @@ export const UnitUtil = {
    * @return {string} The em dimension string.
    */
   em(m: number): string {
-    if (Math.abs(m) < .0006) {
+    if (Math.abs(m) < 0.0006) {
       return '0em';
     }
-     return m.toFixed(3).replace(/\.?0+$/, '') + 'em';
+    return m.toFixed(3).replace(/\.?0+$/, '') + 'em';
   },
 
   /**
@@ -162,7 +161,7 @@ export const UnitUtil = {
    * @return {string} The string with leading and trailing whitespace removed.
    */
   trimSpaces(text: string): string {
-    if (typeof(text) !== 'string') {
+    if (typeof text !== 'string') {
       return text;
     }
     let TEXT = text.trim();
@@ -170,6 +169,5 @@ export const UnitUtil = {
       TEXT += ' ';
     }
     return TEXT;
-  }
-
-}
+  },
+};

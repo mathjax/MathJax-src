@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Node, NodeClass} from './Node.js';
-import {WrapperFactory} from './WrapperFactory.js';
+import { Node, NodeClass } from './Node.js';
+import { WrapperFactory } from './WrapperFactory.js';
 
 /*********************************************************/
 /**
@@ -34,8 +34,11 @@ import {WrapperFactory} from './WrapperFactory.js';
  * @template C  The NodeClass for the nodes being created
  * @template W  The Wrapper type being produced
  */
-export interface Wrapper<N extends Node<N, C>, C extends NodeClass<N, C>, W extends Wrapper<N, C, W>> {
-
+export interface Wrapper<
+  N extends Node<N, C>,
+  C extends NodeClass<N, C>,
+  W extends Wrapper<N, C, W>,
+> {
   /**
    * The kind of this wrapper
    */
@@ -65,7 +68,6 @@ export interface Wrapper<N extends Node<N, C>, C extends NodeClass<N, C>, W exte
    * @param {any} data       Data to pass to the function (as state information)
    */
   walkTree(func: (node: W, data?: any) => void, data?: any): void;
-
 }
 
 /*********************************************************/
@@ -76,16 +78,22 @@ export interface Wrapper<N extends Node<N, C>, C extends NodeClass<N, C>, W exte
  * @template C  The NodeClass for the nodes being created
  * @template W  The Wrapper type being produced
  */
-export interface WrapperClass<N extends Node<N, C>, C extends NodeClass<N, C>, W extends Wrapper<N, C, W>> {
-
+export interface WrapperClass<
+  N extends Node<N, C>,
+  C extends NodeClass<N, C>,
+  W extends Wrapper<N, C, W>,
+> {
   /**
    * @param {WrapperFactory} factory  The factory used to create more wrappers
    * @param {N} node  The node to be wrapped
    * @param {any[]} args  Any additional arguments needed when creating the wrapper
    * @return {W}  The wrapped node
    */
-  new(factory: WrapperFactory<N, C, W, WrapperClass<N, C, W>>, node: N, ...args: any[]): W;
-
+  new (
+    factory: WrapperFactory<N, C, W, WrapperClass<N, C, W>>,
+    node: N,
+    ...args: any[]
+  ): W;
 }
 
 /*********************************************************/
@@ -99,9 +107,9 @@ export interface WrapperClass<N extends Node<N, C>, C extends NodeClass<N, C>, W
 export class AbstractWrapper<
   N extends Node<N, C>,
   C extends NodeClass<N, C>,
-  W extends Wrapper<N, C, W>
-> implements Wrapper<N, C, W> {
-
+  W extends Wrapper<N, C, W>,
+> implements Wrapper<N, C, W>
+{
   /**
    * @override
    */
@@ -131,7 +139,10 @@ export class AbstractWrapper<
    * @constructor
    * @implements {Wrapper}
    */
-  constructor(factory: WrapperFactory<N, C, W, WrapperClass<N, C, W>>, node: N) {
+  constructor(
+    factory: WrapperFactory<N, C, W, WrapperClass<N, C, W>>,
+    node: N
+  ) {
     this.factory = factory;
     this.node = node;
   }
@@ -157,5 +168,4 @@ export class AbstractWrapper<
     }
     return data;
   }
-
 }

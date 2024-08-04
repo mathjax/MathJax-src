@@ -15,7 +15,6 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Node factory for creating MmlNodes. This allows extension
  *     packages to add node constructors or overwrite existing ones.
@@ -23,22 +22,23 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {TextNode, MmlNode} from '../../core/MmlTree/MmlNode.js';
-import {MmlFactory} from '../../core/MmlTree/MmlFactory.js';
+import { TextNode, MmlNode } from '../../core/MmlTree/MmlNode.js';
+import { MmlFactory } from '../../core/MmlTree/MmlFactory.js';
 import ParseOptions from './ParseOptions.js';
 import NodeUtil from './NodeUtil.js';
 
-
-export type NodeFactoryMethod = (factory: NodeFactory, kind: string, ...rest: any[]) => MmlNode;
+export type NodeFactoryMethod = (
+  factory: NodeFactory,
+  kind: string,
+  ...rest: any[]
+) => MmlNode;
 
 export class NodeFactory {
-
   /**
    * Parser configuration that can be used to pass information between node methods.
    * @type {ParseOption}
    */
   public configuration: ParseOptions;
-
 
   /**
    * The external node factory.
@@ -46,16 +46,15 @@ export class NodeFactory {
    */
   protected mmlFactory: MmlFactory = null;
 
-
   /**
    * The factory table populated with some default methods.
    */
-  private factory: {[kind: string]: NodeFactoryMethod} =
-    {'node': NodeFactory.createNode,
-     'token': NodeFactory.createToken,
-     'text': NodeFactory.createText,
-     'error': NodeFactory.createError
-    };
+  private factory: { [kind: string]: NodeFactoryMethod } = {
+    node: NodeFactory.createNode,
+    token: NodeFactory.createToken,
+    text: NodeFactory.createText,
+    error: NodeFactory.createError,
+  };
 
   /**
    * Default node generation function.
@@ -66,9 +65,13 @@ export class NodeFactory {
    * @param {TextNode=} text An optional text node if this is a token.
    * @return {MmlNode} The newly created Mml node.
    */
-  public static createNode(factory: NodeFactory, kind: string,
-                           children: MmlNode[] = [], def: any = {},
-                           text?: TextNode): MmlNode {
+  public static createNode(
+    factory: NodeFactory,
+    kind: string,
+    children: MmlNode[] = [],
+    def: any = {},
+    text?: TextNode
+  ): MmlNode {
     const node = factory.mmlFactory.create(kind);
     node.setChildren(children);
     if (text) {
@@ -78,7 +81,6 @@ export class NodeFactory {
     return node;
   }
 
-
   /**
    * Default token generation function.
    * @param {NodeFactory} factory The current node factory.
@@ -87,12 +89,15 @@ export class NodeFactory {
    * @param {string} text Text of the token.
    * @return {MmlNode} The newly created token node.
    */
-  public static createToken(factory: NodeFactory, kind: string,
-                            def: any = {}, text: string = ''): MmlNode  {
+  public static createToken(
+    factory: NodeFactory,
+    kind: string,
+    def: any = {},
+    text: string = ''
+  ): MmlNode {
     const textNode = factory.create('text', text);
     return factory.create('node', kind, [], def, textNode);
   }
-
 
   /**
    * Default text node generation function.
@@ -100,13 +105,12 @@ export class NodeFactory {
    * @param {string} text The text for the new node.
    * @return {TextNode} The newly created text node.
    */
-  public static createText(factory: NodeFactory, text: string): TextNode  {
+  public static createText(factory: NodeFactory, text: string): TextNode {
     if (text == null) {
       return null;
     }
     return (factory.mmlFactory.create('text') as TextNode).setText(text);
   }
-
 
   /**
    * Default error node generation function.
@@ -114,13 +118,14 @@ export class NodeFactory {
    * @param {string} message The error message.
    * @return {MmlNode} The newly created error node.
    */
-  public static createError(factory: NodeFactory, message: string): MmlNode  {
+  public static createError(factory: NodeFactory, message: string): MmlNode {
     let text = factory.create('text', message);
     let mtext = factory.create('node', 'mtext', [], {}, text);
-    let error = factory.create('node', 'merror', [mtext], {'data-mjx-error': message});
+    let error = factory.create('node', 'merror', [mtext], {
+      'data-mjx-error': message,
+    });
     return error;
   }
-
 
   /**
    * @param {MmlFactory} mmlFactory   The MmlFactory for the TeX jax to use
@@ -138,17 +143,15 @@ export class NodeFactory {
     this.factory[kind] = func;
   }
 
-
   /**
    * Adds a set of node creators to the factory.
    * @param {Object.<NodeFactoryMethod>} maps The set of functions.
    */
-  public setCreators(maps: {[kind: string]: NodeFactoryMethod}) {
+  public setCreators(maps: { [kind: string]: NodeFactoryMethod }) {
     for (let kind in maps) {
       this.set(kind, maps[kind]);
     }
   }
-
 
   /**
    * Creates a node for the internal data structure from the factory.
@@ -165,12 +168,10 @@ export class NodeFactory {
     return node;
   }
 
-
   /**
    * @param {string} kind The method for generating a node of given kind.
    */
   public get(kind: string) {
     return this.factory[kind];
   }
-
 }

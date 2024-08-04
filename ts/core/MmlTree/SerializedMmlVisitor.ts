@@ -22,13 +22,12 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MmlVisitor} from './MmlVisitor.js';
-import {MmlNode, TextNode, XMLNode} from './MmlNode.js';
-import {HtmlNode} from './MmlNodes/HtmlNode.js';
+import { MmlVisitor } from './MmlVisitor.js';
+import { MmlNode, TextNode, XMLNode } from './MmlNode.js';
+import { HtmlNode } from './MmlNodes/HtmlNode.js';
 
-
-export const toEntity = (c: string) => '&#x' + c.codePointAt(0).toString(16).toUpperCase() + ';';
-
+export const toEntity = (c: string) =>
+  '&#x' + c.codePointAt(0).toString(16).toUpperCase() + ';';
 
 /*****************************************************************/
 /**
@@ -36,7 +35,6 @@ export const toEntity = (c: string) => '&#x' + c.codePointAt(0).toString(16).toU
  */
 
 export class SerializedMmlVisitor extends MmlVisitor {
-
   /**
    * Convert the tree rooted at a particular node into a serialized MathML string
    *
@@ -96,9 +94,14 @@ export class SerializedMmlVisitor extends MmlVisitor {
    * @return {string}         The serializied annotation element
    */
   public visitAnnotationNode(node: MmlNode, space: string): string {
-    return space + '<annotation' + this.getAttributes(node) + '>'
-      + this.childNodeMml(node, '', '')
-      + '</annotation>';
+    return (
+      space +
+      '<annotation' +
+      this.getAttributes(node) +
+      '>' +
+      this.childNodeMml(node, '', '') +
+      '</annotation>'
+    );
   }
 
   /**
@@ -114,11 +117,20 @@ export class SerializedMmlVisitor extends MmlVisitor {
    */
   public visitDefault(node: MmlNode, space: string): string {
     let kind = this.getKind(node);
-    let [nl, endspace] = (node.isToken || node.childNodes.length === 0 ? ['', ''] : ['\n', space]);
+    let [nl, endspace] =
+      node.isToken || node.childNodes.length === 0 ? ['', ''] : ['\n', space];
     const children = this.childNodeMml(node, space + '  ', nl);
-    return space + '<' + kind + this.getAttributes(node) + '>'
-                 + (children.match(/\S/) ? nl + children + endspace : '')
-                 + '</' + kind + '>';
+    return (
+      space +
+      '<' +
+      kind +
+      this.getAttributes(node) +
+      '>' +
+      (children.match(/\S/) ? nl + children + endspace : '') +
+      '</' +
+      kind +
+      '>'
+    );
   }
 
   /**
@@ -161,10 +173,10 @@ export class SerializedMmlVisitor extends MmlVisitor {
   protected quoteHTML(value: string): string {
     return value
       .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
       .replace(/\"/g, '&quot;')
       .replace(/[\uD800-\uDBFF]./g, toEntity)
       .replace(/[\u0080-\uD7FF\uE000-\uFFFF]/g, toEntity);
   }
-
 }

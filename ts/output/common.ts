@@ -21,26 +21,33 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AbstractOutputJax} from '../core/OutputJax.js';
-import {MathDocument} from '../core/MathDocument.js';
-import {MathItem, Metrics, STATE} from '../core/MathItem.js';
-import {MmlNode, TEXCLASS} from '../core/MmlTree/MmlNode.js';
-import {DOMAdaptor} from '../core/DOMAdaptor.js';
-import {FontData, FontDataClass, CharOptions, VariantData, DelimiterData,
-        CssFontData, FontExtensionData} from './common/FontData.js';
-import {OptionList, separateOptions} from '../util/Options.js';
-import {CommonWrapper, CommonWrapperClass} from './common/Wrapper.js';
-import {CommonWrapperFactory} from './common/WrapperFactory.js';
-import {Linebreaks, LinebreakVisitor} from './common/LinebreakVisitor.js';
-import {percent} from '../util/lengths.js';
-import {length2em} from '../util/lengths.js';
-import {StyleList, Styles} from '../util/Styles.js';
-import {StyleList as CssStyleList, CssStyles} from '../util/StyleList.js';
+import { AbstractOutputJax } from '../core/OutputJax.js';
+import { MathDocument } from '../core/MathDocument.js';
+import { MathItem, Metrics, STATE } from '../core/MathItem.js';
+import { MmlNode, TEXCLASS } from '../core/MmlTree/MmlNode.js';
+import { DOMAdaptor } from '../core/DOMAdaptor.js';
+import {
+  FontData,
+  FontDataClass,
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  CssFontData,
+  FontExtensionData,
+} from './common/FontData.js';
+import { OptionList, separateOptions } from '../util/Options.js';
+import { CommonWrapper, CommonWrapperClass } from './common/Wrapper.js';
+import { CommonWrapperFactory } from './common/WrapperFactory.js';
+import { Linebreaks, LinebreakVisitor } from './common/LinebreakVisitor.js';
+import { percent } from '../util/lengths.js';
+import { length2em } from '../util/lengths.js';
+import { StyleList, Styles } from '../util/Styles.js';
+import { StyleList as CssStyleList, CssStyles } from '../util/StyleList.js';
 
 /*****************************************************************/
 
 export interface ExtendedMetrics extends Metrics {
-  family: string;     // the font family for the surrounding text
+  family: string; // the font family for the surrounding text
 }
 
 /**
@@ -53,7 +60,7 @@ type MetricDomMap<N> = Map<N, N>;
 /**
  * Maps for unknown characters
  */
-export type UnknownBBox = {w: number, h: number, d: number};
+export type UnknownBBox = { w: number; h: number; d: number };
 export type UnknownMap = Map<string, UnknownBBox>;
 export type UnknownVariantMap = Map<string, UnknownMap>;
 
@@ -78,7 +85,9 @@ export const FONTPATH = '@mathjax/%%FONT%%-font';
  * @template FC  The FontDataClass type
  */
 export abstract class CommonOutputJax<
-  N, T, D,
+  N,
+  T,
+  D,
   /* prettier-ignore */
   WW extends CommonWrapper<
     N, T, D, 
@@ -101,9 +110,8 @@ export abstract class CommonOutputJax<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends AbstractOutputJax<N, T, D> {
-
   /**
    * The name of this output jax
    */
@@ -147,12 +155,12 @@ export abstract class CommonOutputJax<
   public static commonStyles: CssStyleList = {
     'mjx-container[overflow="scroll"][display]': {
       'overflow-x': 'auto',
-      'min-width': 'initial !important'
+      'min-width': 'initial !important',
     },
     'mjx-container[overflow="truncate"][display]': {
       'overflow-x': 'hidden',
-      'min-width': 'initial !important'
-    }
+      'min-width': 'initial !important',
+    },
   };
 
   /**
@@ -250,15 +258,22 @@ export abstract class CommonOutputJax<
    * @param {FC} defaultFont                       The default FontData constructor
    * @constructor
    */
-  constructor(options: OptionList = {},
-              defaultFactory: typeof CommonWrapperFactory = null,
-              defaultFont: FC = null) {
-    const [fontClass, font] = (options.fontData instanceof FontData ?
-                               [options.fontData.constructor as typeof FontData, options.fontData] :
-                               [options.fontData || defaultFont, null]);
-    const [jaxOptions, fontOptions] = separateOptions(options, fontClass.OPTIONS);
+  constructor(
+    options: OptionList = {},
+    defaultFactory: typeof CommonWrapperFactory = null,
+    defaultFont: FC = null
+  ) {
+    const [fontClass, font] =
+      options.fontData instanceof FontData
+        ? [options.fontData.constructor as typeof FontData, options.fontData]
+        : [options.fontData || defaultFont, null];
+    const [jaxOptions, fontOptions] = separateOptions(
+      options,
+      fontClass.OPTIONS
+    );
     super(jaxOptions);
-    this.factory = this.options.wrapperFactory ||
+    this.factory =
+      this.options.wrapperFactory ||
       /* prettier-ignore */
       new defaultFactory<
         N, T, D, 
@@ -268,9 +283,10 @@ export abstract class CommonOutputJax<
     this.factory.jax = this;
     this.cssStyles = this.options.cssStyles || new CssStyles();
     this.font = font || new fontClass(fontOptions);
-    this.font.setOptions({mathmlSpacing: this.options.mathmlSpacing});
+    this.font.setOptions({ mathmlSpacing: this.options.mathmlSpacing });
     this.unknownCache = new Map();
-    const linebreaks = (this.options.linebreaks.LinebreakVisitor || LinebreakVisitor) as typeof Linebreaks;
+    const linebreaks = (this.options.linebreaks.LinebreakVisitor ||
+      LinebreakVisitor) as typeof Linebreaks;
     this.linebreaks = new linebreaks(this.factory);
   }
 
@@ -283,7 +299,7 @@ export abstract class CommonOutputJax<
     //  Set the htmlHDW option based on the adaptor's ability to measure nodes
     //
     if (this.options.htmlHDW === 'auto') {
-      this.options.htmlHDW = (adaptor.canMeasureNodes ? 'ignore' : 'force');
+      this.options.htmlHDW = adaptor.canMeasureNodes ? 'ignore' : 'force';
     }
   }
 
@@ -294,10 +310,12 @@ export abstract class CommonOutputJax<
    * @param {string} prefix            The prefix for dynamically loaded files for this extension
    * @return {string[]}                New CSS rules needed for the font
    */
-  public addExtension(font: FontExtensionData<CC, DD>, prefix: string = ''): string[] {
+  public addExtension(
+    font: FontExtensionData<CC, DD>,
+    prefix: string = ''
+  ): string[] {
     return this.font.addExtension(font, prefix);
   }
-
 
   /*****************************************************************/
 
@@ -321,7 +339,7 @@ export abstract class CommonOutputJax<
    */
   protected createNode(): N {
     const jax = (this.constructor as typeof CommonOutputJax).NAME;
-    return this.html('mjx-container', {'class': 'MathJax', jax: jax});
+    return this.html('mjx-container', { class: 'MathJax', jax: jax });
   }
 
   /**
@@ -330,7 +348,10 @@ export abstract class CommonOutputJax<
    */
   protected setScale(node: N, wrapper: WW) {
     let scale = this.getInitialScale() * this.options.scale;
-    if (wrapper.node.attributes.get('overflow') === 'scale' && this.math.display) {
+    if (
+      wrapper.node.attributes.get('overflow') === 'scale' &&
+      this.math.display
+    ) {
       const w = wrapper.getOuterBBox().w;
       const W = this.math.metrics.containerWidth / this.pxPerEm;
       if (w > W && w) {
@@ -363,18 +384,27 @@ export abstract class CommonOutputJax<
    * @param {N} node             The contaier to place the result into
    * @param {MathDocument} html  The document containing the math
    */
-  public toDOM(math: MathItem<N, T, D>, node: N, html: MathDocument<N, T, D> = null) {
+  public toDOM(
+    math: MathItem<N, T, D>,
+    node: N,
+    html: MathDocument<N, T, D> = null
+  ) {
     this.setDocument(html);
     this.math = math;
     this.container = node;
     this.pxPerEm = math.metrics.ex / this.font.params.x_height;
     this.nodeMap = new Map<MmlNode, WW>();
-    math.root.attributes.getAllInherited().overflow = this.options.displayOverflow;
+    math.root.attributes.getAllInherited().overflow =
+      this.options.displayOverflow;
     const overflow = math.root.attributes.get('overflow') as string;
     this.adaptor.setAttribute(node, 'overflow', overflow);
-    const linebreak = (overflow === 'linebreak');
+    const linebreak = overflow === 'linebreak';
     linebreak && this.getLinebreakWidth();
-    if (this.options.linebreaks.inline && !math.display && !math.outputData.inlineMarked) {
+    if (
+      this.options.linebreaks.inline &&
+      !math.display &&
+      !math.outputData.inlineMarked
+    ) {
       this.markInlineBreaks(math.root.childNodes?.[0]);
       math.outputData.inlineMarked = true;
     }
@@ -417,7 +447,9 @@ export abstract class CommonOutputJax<
    */
   public getLinebreakWidth() {
     const W = this.math.metrics.containerWidth / this.pxPerEm;
-    const width = this.math.root.attributes.get('maxwidth') || this.options.linebreaks.width;
+    const width =
+      this.math.root.attributes.get('maxwidth') ||
+      this.options.linebreaks.width;
     this.containerWidth = length2em(width, W, 1, this.pxPerEm);
   }
 
@@ -432,7 +464,13 @@ export abstract class CommonOutputJax<
     let markNext = '';
     for (const child of node.childNodes) {
       if (markNext) {
-        marked = this.markInlineBreak(marked, forcebreak, markNext, node, child);
+        marked = this.markInlineBreak(
+          marked,
+          forcebreak,
+          markNext,
+          node,
+          child
+        );
         markNext = '';
         postbreak = false;
       } else if (child.isEmbellished) {
@@ -443,35 +481,59 @@ export abstract class CommonOutputJax<
         const texClass = mo.texClass;
         const linebreak = mo.attributes.get('linebreak') as string;
         const linebreakstyle = mo.attributes.get('linebreakstyle') as string;
-        if ((texClass === TEXCLASS.BIN || texClass === TEXCLASS.REL ||
-             (texClass === TEXCLASS.ORD && mo.hasSpacingAttributes()) ||
-             linebreak !== 'auto') && linebreak !== 'nobreak') {
+        if (
+          (texClass === TEXCLASS.BIN ||
+            texClass === TEXCLASS.REL ||
+            (texClass === TEXCLASS.ORD && mo.hasSpacingAttributes()) ||
+            linebreak !== 'auto') &&
+          linebreak !== 'nobreak'
+        ) {
           if (linebreakstyle === 'before') {
             if (!postbreak || linebreak !== 'auto') {
-              marked = this.markInlineBreak(marked, forcebreak, linebreak, node, child, mo);
+              marked = this.markInlineBreak(
+                marked,
+                forcebreak,
+                linebreak,
+                node,
+                child,
+                mo
+              );
             }
           } else {
             markNext = linebreak;
           }
         }
-        postbreak = (linebreak === 'newline' && linebreakstyle === 'after');
+        postbreak = linebreak === 'newline' && linebreakstyle === 'after';
       } else if (child.isKind('mspace')) {
         const linebreak = child.attributes.get('linebreak') as string;
         if (linebreak !== 'nobreak') {
-          marked = this.markInlineBreak(marked, forcebreak, linebreak, node, child);
+          marked = this.markInlineBreak(
+            marked,
+            forcebreak,
+            linebreak,
+            node,
+            child
+          );
         }
-        postbreak = (linebreak === 'newline');
+        postbreak = linebreak === 'newline';
       } else {
         postbreak = false;
-        if ((child.isKind('mstyle') && !child.attributes.get('style') &&
-             !child.attributes.hasExplicit('mathbackground')) || child.isKind('semantics')) {
+        if (
+          (child.isKind('mstyle') &&
+            !child.attributes.get('style') &&
+            !child.attributes.hasExplicit('mathbackground')) ||
+          child.isKind('semantics')
+        ) {
           this.markInlineBreaks(child.childNodes[0]);
           if (child.getProperty('process-breaks')) {
             child.setProperty('inline-breaks', true);
             child.childNodes[0].setProperty('inline-breaks', true);
             node.parent.setProperty('process-breaks', 'true');
           }
-        } else if (child.isKind('mrow') && child.attributes.get('data-semantic-added')) {
+        } else if (
+          child.isKind('mrow') &&
+          child.attributes.get('data-semantic-added')
+        ) {
           this.markInlineBreaks(child);
           if (child.getProperty('process-breaks')) {
             child.setProperty('inline-breaks', true);
@@ -491,8 +553,14 @@ export abstract class CommonOutputJax<
    * @param {MmlNode} mo          The core mo to mark
    * @return {boolean}            The modified marked variable
    */
-  protected markInlineBreak(marked: boolean, forcebreak: boolean, linebreak: string,
-                             node: MmlNode, child: MmlNode, mo: MmlNode = null): boolean {
+  protected markInlineBreak(
+    marked: boolean,
+    forcebreak: boolean,
+    linebreak: string,
+    node: MmlNode,
+    child: MmlNode,
+    mo: MmlNode = null
+  ): boolean {
     child.setProperty('breakable', true);
     if (forcebreak && linebreak !== 'newline') {
       child.setProperty('forcebreak', true);
@@ -526,7 +594,7 @@ export abstract class CommonOutputJax<
       const parent = adaptor.parent(math.start.node);
       if (math.state() < STATE.METRICS && parent) {
         const map = maps[math.display ? 1 : 0];
-        const {em, ex, containerWidth, scale, family} = map.get(parent);
+        const { em, ex, containerWidth, scale, family } = map.get(parent);
         math.setMetrics(em, ex, containerWidth, scale);
         if (this.options.mtextInheritFont) {
           math.outputData.mtextFamily = family;
@@ -545,7 +613,8 @@ export abstract class CommonOutputJax<
    * @return {Metrics}          Object containing em, ex, containerWidth, etc.
    */
   public getMetricsFor(node: N, display: boolean): ExtendedMetrics {
-    const getFamily = (this.options.mtextInheritFont || this.options.merrorInheritFont);
+    const getFamily =
+      this.options.mtextInheritFont || this.options.merrorInheritFont;
     const test = this.getTestElement(node, display);
     const metrics = this.measureMetrics(test, getFamily);
     this.adaptor.remove(test);
@@ -560,7 +629,10 @@ export abstract class CommonOutputJax<
    */
   protected getMetricMaps(html: MathDocument<N, T, D>): MetricMap<N>[] {
     const adaptor = this.adaptor;
-    const domMaps = [new Map() as MetricDomMap<N>, new Map() as MetricDomMap<N>];
+    const domMaps = [
+      new Map() as MetricDomMap<N>,
+      new Map() as MetricDomMap<N>,
+    ];
     //
     // Add the test elements all at once (so only one reflow)
     // Currently, we do one test for each container element for in-line and one for display math
@@ -580,7 +652,8 @@ export abstract class CommonOutputJax<
     //
     // Measure the metrics for all the mapped elements
     //
-    const getFamily = this.options.mtextInheritFont || this.options.merrorInheritFont;
+    const getFamily =
+      this.options.mtextInheritFont || this.options.merrorInheritFont;
     const maps = [new Map() as MetricMap<N>, new Map() as MetricMap<N>];
     for (const i of maps.keys()) {
       for (const node of domMaps[i].keys()) {
@@ -605,47 +678,67 @@ export abstract class CommonOutputJax<
   protected getTestElement(node: N, display: boolean): N {
     const adaptor = this.adaptor;
     if (!this.testInline) {
-      this.testInline = this.html('mjx-test', {style: {
-        display:            'inline-block',
-        width:              '100%',
-        'font-style':       'normal',
-        'font-weight':      'normal',
-        'font-size':        '100%',
-        'font-size-adjust': 'none',
-        'text-indent':      0,
-        'text-transform':   'none',
-        'letter-spacing':   'normal',
-        'word-spacing':     'normal',
-        overflow:           'hidden',
-        height:             '1px',
-        'margin-right':     '-1px'
-      }}, [
-        this.html('mjx-left-box', {style: {
-          display: 'inline-block',
-          width: 0,
-          'float': 'left'
-        }}),
-        this.html('mjx-ex-box', {style: {
-          position: 'absolute',
-          overflow: 'hidden',
-          width: '1px', height: '60ex'
-        }}),
-        this.html('mjx-right-box', {style: {
-          display: 'inline-block',
-          width: 0,
-          'float': 'right'
-        }})
-      ]);
+      this.testInline = this.html(
+        'mjx-test',
+        {
+          style: {
+            display: 'inline-block',
+            width: '100%',
+            'font-style': 'normal',
+            'font-weight': 'normal',
+            'font-size': '100%',
+            'font-size-adjust': 'none',
+            'text-indent': 0,
+            'text-transform': 'none',
+            'letter-spacing': 'normal',
+            'word-spacing': 'normal',
+            overflow: 'hidden',
+            height: '1px',
+            'margin-right': '-1px',
+          },
+        },
+        [
+          this.html('mjx-left-box', {
+            style: {
+              display: 'inline-block',
+              width: 0,
+              float: 'left',
+            },
+          }),
+          this.html('mjx-ex-box', {
+            style: {
+              position: 'absolute',
+              overflow: 'hidden',
+              width: '1px',
+              height: '60ex',
+            },
+          }),
+          this.html('mjx-right-box', {
+            style: {
+              display: 'inline-block',
+              width: 0,
+              float: 'right',
+            },
+          }),
+        ]
+      );
       this.testDisplay = adaptor.clone(this.testInline);
       adaptor.setStyle(this.testDisplay, 'display', 'table');
       adaptor.setStyle(this.testDisplay, 'margin-right', '');
-      adaptor.setStyle(adaptor.firstChild(this.testDisplay) as N, 'display', 'none');
+      adaptor.setStyle(
+        adaptor.firstChild(this.testDisplay) as N,
+        'display',
+        'none'
+      );
       const right = adaptor.lastChild(this.testDisplay) as N;
       adaptor.setStyle(right, 'display', 'table-cell');
       adaptor.setStyle(right, 'width', '10000em');
       adaptor.setStyle(right, 'float', '');
     }
-    return adaptor.append(node, adaptor.clone(display ? this.testDisplay : this.testInline) as N) as N;
+    return adaptor.append(
+      node,
+      adaptor.clone(display ? this.testDisplay : this.testInline) as N
+    ) as N;
   }
 
   /**
@@ -655,17 +748,22 @@ export abstract class CommonOutputJax<
    */
   protected measureMetrics(node: N, getFamily: boolean): ExtendedMetrics {
     const adaptor = this.adaptor;
-    const family = (getFamily ? adaptor.fontFamily(node) : '');
+    const family = getFamily ? adaptor.fontFamily(node) : '';
     const em = adaptor.fontSize(node);
     const [w, h] = adaptor.nodeSize(adaptor.childNode(node, 1) as N);
-    const ex = (w ? h / 60 : em * this.options.exFactor);
-    const containerWidth = (!w ? 1000000 : adaptor.getStyle(node, 'display') === 'table' ?
-                            adaptor.nodeSize(adaptor.lastChild(node) as N)[0] - 1 :
-                            adaptor.nodeBBox(adaptor.lastChild(node) as N).left -
-                            adaptor.nodeBBox(adaptor.firstChild(node) as N).left - 2);
-    const scale = Math.max(this.options.minScale,
-                           this.options.matchFontHeight ? ex / this.font.params.x_height / em : 1);
-    return {em, ex, containerWidth, scale, family};
+    const ex = w ? h / 60 : em * this.options.exFactor;
+    const containerWidth = !w
+      ? 1000000
+      : adaptor.getStyle(node, 'display') === 'table'
+        ? adaptor.nodeSize(adaptor.lastChild(node) as N)[0] - 1
+        : adaptor.nodeBBox(adaptor.lastChild(node) as N).left -
+          adaptor.nodeBBox(adaptor.firstChild(node) as N).left -
+          2;
+    const scale = Math.max(
+      this.options.minScale,
+      this.options.matchFontHeight ? ex / this.font.params.x_height / em : 1
+    );
+    return { em, ex, containerWidth, scale, family };
   }
 
   /*****************************************************************/
@@ -679,12 +777,14 @@ export abstract class CommonOutputJax<
     // Start with the common styles
     //
     this.cssStyles.clear();
-    this.cssStyles.addStyles((this.constructor as typeof CommonOutputJax).commonStyles);
+    this.cssStyles.addStyles(
+      (this.constructor as typeof CommonOutputJax).commonStyles
+    );
     //
     // Add document-specific styles
     //
     if ('getStyles' in html) {
-      for (const styles of ((html as any).getStyles() as CssStyleList[])) {
+      for (const styles of (html as any).getStyles() as CssStyleList[]) {
         this.cssStyles.addStyles(styles);
       }
     }
@@ -696,7 +796,9 @@ export abstract class CommonOutputJax<
     //
     // Create the stylesheet for the CSS
     //
-    const sheet = this.html('style', {id: 'MJX-styles'}, [this.text('\n' + this.cssStyles.cssText + '\n')]);
+    const sheet = this.html('style', { id: 'MJX-styles' }, [
+      this.text('\n' + this.cssStyles.cssText + '\n'),
+    ]);
     return sheet as N;
   }
 
@@ -721,7 +823,10 @@ export abstract class CommonOutputJax<
    * @param {CssStyles} styles            The style object to add to.
    */
   protected addClassStyles(CLASS: typeof CommonWrapper, styles: CssStyles) {
-    CLASS.addStyles<CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>>(styles, this);
+    CLASS.addStyles<CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>>(
+      styles,
+      this
+    );
   }
 
   /*****************************************************************/
@@ -743,7 +848,12 @@ export abstract class CommonOutputJax<
    * @param {string} ns        The namespace for the element
    * @return {N}               The newly created DOM tree
    */
-  public html(type: string, def: OptionList = {}, content: (N | T)[] = [], ns?: string): N {
+  public html(
+    type: string,
+    def: OptionList = {},
+    content: (N | T)[] = [],
+    ns?: string
+  ): N {
     return this.adaptor.node(type, def, content, ns);
   }
 
@@ -762,7 +872,7 @@ export abstract class CommonOutputJax<
    * @return {string}     The formatted number
    */
   public fixed(m: number, n: number = 3): string {
-    if (Math.abs(m) < .0006) {
+    if (Math.abs(m) < 0.0006) {
       return '0';
     }
     return m.toFixed(n).replace(/\.?0+$/, '');
@@ -791,11 +901,15 @@ export abstract class CommonOutputJax<
    * @param {CssFontData} font   The family, italic, and bold data for explicit fonts
    * @return {UnknownBBox}       The width, height, and depth of the text (in ems)
    */
-  public measureText(text: string, variant: string, font: CssFontData = ['', false, false]): UnknownBBox {
+  public measureText(
+    text: string,
+    variant: string,
+    font: CssFontData = ['', false, false]
+  ): UnknownBBox {
     const node = this.unknownText(text, variant);
     if (variant === '-explicitFont') {
       const styles = this.cssFontStyles(font);
-      this.adaptor.setAttributes(node, {style: styles});
+      this.adaptor.setAttributes(node, { style: styles });
     }
     return this.measureTextNodeWithCache(node, text, variant, font);
   }
@@ -811,11 +925,15 @@ export abstract class CommonOutputJax<
    * @return {UnknownBBox}       The width, height and depth for the text
    */
   public measureTextNodeWithCache(
-    text: N, chars: string, variant: string,
+    text: N,
+    chars: string,
+    variant: string,
     font: CssFontData = ['', false, false]
   ): UnknownBBox {
     if (variant === '-explicitFont') {
-      variant = [font[0], font[1] ? 'T' : 'F', font[2] ? 'T' : 'F', ''].join('-');
+      variant = [font[0], font[1] ? 'T' : 'F', font[2] ? 'T' : 'F', ''].join(
+        '-'
+      );
     }
     if (!this.unknownCache.has(variant)) {
       this.unknownCache.set(variant, new Map());
@@ -858,9 +976,10 @@ export abstract class CommonOutputJax<
     if (!styles) {
       styles = new Styles();
     }
-    return [this.font.getFamily(styles.get('font-family')),
-            styles.get('font-style') === 'italic',
-            styles.get('font-weight') === 'bold'] as CssFontData;
+    return [
+      this.font.getFamily(styles.get('font-family')),
+      styles.get('font-style') === 'italic',
+      styles.get('font-weight') === 'bold',
+    ] as CssFontData;
   }
-
 }

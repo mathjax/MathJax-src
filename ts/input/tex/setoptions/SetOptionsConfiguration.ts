@@ -15,26 +15,28 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Configuration file for the setoptions package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
-import {Configuration, ConfigurationHandler, ParserConfiguration} from '../Configuration.js';
-import {TeX} from '../../tex.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import {
+  Configuration,
+  ConfigurationHandler,
+  ParserConfiguration,
+} from '../Configuration.js';
+import { TeX } from '../../tex.js';
 import TexParser from '../TexParser.js';
-import {CommandMap} from '../TokenMap.js';
+import { CommandMap } from '../TokenMap.js';
 import TexError from '../TexError.js';
-import {ParseUtil} from '../ParseUtil.js';
-import {Macro} from '../Token.js';
+import { ParseUtil } from '../ParseUtil.js';
+import { Macro } from '../Token.js';
 import BaseMethods from '../base/BaseMethods.js';
-import {expandable, isObject} from '../../../util/Options.js';
+import { expandable, isObject } from '../../../util/Options.js';
 
 export const SetOptionsUtil = {
-
   /**
    * Check if options can be set for a given pacakge, and error otherwise.
    *
@@ -48,8 +50,15 @@ export const SetOptionsUtil = {
     }
     const config = parser.options.setoptions;
     const options = config.allowOptions[extension];
-    if ((options === undefined && !config.allowPackageDefault) || options === false) {
-      throw new TexError('PackageNotSettable', 'Options can\'t be set for package "%1"', extension);
+    if (
+      (options === undefined && !config.allowPackageDefault) ||
+      options === false
+    ) {
+      throw new TexError(
+        'PackageNotSettable',
+        'Options can\'t be set for package "%1"',
+        extension
+      );
     }
     return true;
   },
@@ -65,15 +74,35 @@ export const SetOptionsUtil = {
   filterOption(parser: TexParser, extension: string, option: string): boolean {
     const config = parser.options.setoptions;
     const options = config.allowOptions[extension] || {};
-    const allow = (options.hasOwnProperty(option) && !isObject(options[option]) ? options[option] : null);
+    const allow =
+      options.hasOwnProperty(option) && !isObject(options[option])
+        ? options[option]
+        : null;
     if (allow === false || (allow === null && !config.allowOptionsDefault)) {
-      throw new TexError('OptionNotSettable', 'Option "%1" is not allowed to be set', option);
+      throw new TexError(
+        'OptionNotSettable',
+        'Option "%1" is not allowed to be set',
+        option
+      );
     }
-    if (!(extension === 'tex' ? parser.options : parser.options[extension])?.hasOwnProperty(option)) {
+    if (
+      !(
+        extension === 'tex' ? parser.options : parser.options[extension]
+      )?.hasOwnProperty(option)
+    ) {
       if (extension === 'tex') {
-        throw new TexError('InvalidTexOption', 'Invalid TeX option "%1"', option);
+        throw new TexError(
+          'InvalidTexOption',
+          'Invalid TeX option "%1"',
+          option
+        );
       } else {
-        throw new TexError('InvalidOptionKey', 'Invalid option "%1" for package "%2"', option, extension);
+        throw new TexError(
+          'InvalidOptionKey',
+          'Invalid option "%1" for package "%2"',
+          option,
+          extension
+        );
       }
     }
     return true;
@@ -88,10 +117,14 @@ export const SetOptionsUtil = {
    * @param {string} value       The value to give to the option.
    * @return {string}            The (possibly modified) value for the option
    */
-  filterValue(_parser: TexParser, _extension: string, _option: string, value: string): string {
+  filterValue(
+    _parser: TexParser,
+    _extension: string,
+    _option: string,
+    value: string
+  ): string {
     return value;
-  }
-
+  },
 };
 
 /**
@@ -115,7 +148,7 @@ function SetOptions(parser: TexParser, name: string) {
 }
 
 const setOptionsMap = new CommandMap('setoptions', {
-  setOptions: SetOptions
+  setOptions: SetOptions,
 });
 
 /**
@@ -126,22 +159,32 @@ const setOptionsMap = new CommandMap('setoptions', {
  * @param {ParserConfiguration} config  The current configuration.
  * @param {TeX} jax                     The active tex input jax.
  */
-function setoptionsConfig(_config: ParserConfiguration, jax: TeX<any, any, any>) {
-  const require = jax.parseOptions.handlers.get(HandlerType.MACRO).lookup('require') as any;
+function setoptionsConfig(
+  _config: ParserConfiguration,
+  jax: TeX<any, any, any>
+) {
+  const require = jax.parseOptions.handlers
+    .get(HandlerType.MACRO)
+    .lookup('require') as any;
   if (require) {
     setOptionsMap.add('Require', new Macro('Require', require._func));
-    setOptionsMap.add('require', new Macro('require', BaseMethods.Macro,
-                                           ['\\Require{#2}\\setOptions[#2]{#1}', 2, '']));
+    setOptionsMap.add(
+      'require',
+      new Macro('require', BaseMethods.Macro, [
+        '\\Require{#2}\\setOptions[#2]{#1}',
+        2,
+        '',
+      ])
+    );
   }
 }
 
-export const SetOptionsConfiguration = Configuration.create(
-  'setoptions', {
-    [ConfigurationType.HANDLER]: {macro: ['setoptions']},
-    [ConfigurationType.CONFIG]: setoptionsConfig,
-    [ConfigurationType.PRIORITY]: 3,  // must be less than the priority of the require package (which is 5).
-    /* prettier-ignore */
-    [ConfigurationType.OPTIONS]: {
+export const SetOptionsConfiguration = Configuration.create('setoptions', {
+  [ConfigurationType.HANDLER]: { macro: ['setoptions'] },
+  [ConfigurationType.CONFIG]: setoptionsConfig,
+  [ConfigurationType.PRIORITY]: 3, // must be less than the priority of the require package (which is 5).
+  /* prettier-ignore */
+  [ConfigurationType.OPTIONS]: {
       setoptions: {
         filterPackage: SetOptionsUtil.filterPackage,  // filter for whether a package can be configured
         filterOption: SetOptionsUtil.filterOption,    // filter for whether an option can be set
@@ -174,6 +217,5 @@ export const SetOptionsConfiguration = Configuration.create(
           tagformat: false
         })
       }
-    }
-  }
-);
+    },
+});

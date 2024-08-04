@@ -21,13 +21,12 @@
  * @author i@omardo.com (Omar Al-Ithawi)
  */
 
-
-import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
-import {CommandMap} from '../TokenMap.js';
-import {Configuration, ParserConfiguration} from '../Configuration.js';
-import {ColorMethods} from './ColorMethods.js';
-import {ColorModel} from './ColorUtil.js';
-import {TeX} from '../../tex.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { CommandMap } from '../TokenMap.js';
+import { Configuration, ParserConfiguration } from '../Configuration.js';
+import { ColorMethods } from './ColorMethods.js';
+import { ColorModel } from './ColorUtil.js';
+import { TeX } from '../../tex.js';
 
 /**
  * The color macros
@@ -37,7 +36,7 @@ new CommandMap('color', {
   textcolor: ColorMethods.TextColor,
   definecolor: ColorMethods.DefineColor,
   colorbox: ColorMethods.ColorBox,
-  fcolorbox: ColorMethods.FColorBox
+  fcolorbox: ColorMethods.FColorBox,
 });
 
 /**
@@ -46,24 +45,25 @@ new CommandMap('color', {
  * @param {Configuration} _config The current configuration.
  * @param {TeX} jax              The TeX jax having that configuration
  */
-const config = function(_config: ParserConfiguration, jax: TeX<any, any, any>) {
-  jax.parseOptions.packageData.set('color', {model: new ColorModel()});
+const config = function (
+  _config: ParserConfiguration,
+  jax: TeX<any, any, any>
+) {
+  jax.parseOptions.packageData.set('color', { model: new ColorModel() });
 };
 
 /**
  * The configuration for the color macros
  */
-export const ColorConfiguration = Configuration.create(
-  'color', {
-    [ConfigurationType.HANDLER]: {
-      [HandlerType.MACRO]: ['color'],
+export const ColorConfiguration = Configuration.create('color', {
+  [ConfigurationType.HANDLER]: {
+    [HandlerType.MACRO]: ['color'],
+  },
+  [ConfigurationType.OPTIONS]: {
+    color: {
+      padding: '5px',
+      borderWidth: '2px',
     },
-    [ConfigurationType.OPTIONS]: {
-      color: {
-        padding: '5px',
-        borderWidth: '2px'
-      }
-    },
-    [ConfigurationType.CONFIG]: config
-  }
-);
+  },
+  [ConfigurationType.CONFIG]: config,
+});

@@ -15,7 +15,6 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Constant definitions for the TeX Parser. These should
  *     eventually be combined with the MathML structure.
@@ -24,7 +23,6 @@
  */
 
 export namespace TexConstant {
-
   export const Variant = {
     NORMAL: 'normal',
     BOLD: 'bold',
@@ -48,13 +46,13 @@ export namespace TexConstant {
     BOLDCALLIGRAPHIC: '-tex-bold-calligraphic',
     OLDSTYLE: '-tex-oldstyle',
     BOLDOLDSTYLE: '-tex-bold-oldstyle',
-    MATHITALIC: '-tex-mathit'
+    MATHITALIC: '-tex-mathit',
   };
 
   export const Form = {
     PREFIX: 'prefix',
     INFIX: 'infix',
-    POSTFIX: 'postfix'
+    POSTFIX: 'postfix',
   };
 
   export const LineBreak = {
@@ -62,14 +60,14 @@ export namespace TexConstant {
     NEWLINE: 'newline',
     NOBREAK: 'nobreak',
     GOODBREAK: 'goodbreak',
-    BADBREAK: 'badbreak'
+    BADBREAK: 'badbreak',
   };
 
   export const LineBreakStyle = {
     BEFORE: 'before',
     AFTER: 'after',
     DUPLICATE: 'duplicate',
-    INFIXLINBREAKSTYLE: 'infixlinebreakstyle'
+    INFIXLINBREAKSTYLE: 'infixlinebreakstyle',
   };
 
   export const IndentAlign = {
@@ -78,17 +76,17 @@ export namespace TexConstant {
     RIGHT: 'right',
     AUTO: 'auto',
     ID: 'id',
-    INDENTALIGN: 'indentalign'
+    INDENTALIGN: 'indentalign',
   };
 
   export const IndentShift = {
-    INDENTSHIFT: 'indentshift'
+    INDENTSHIFT: 'indentshift',
   };
 
   export const LineThickness = {
     THIN: 'thin',
     MEDIUM: 'medium',
-    THICK: 'thick'
+    THICK: 'thick',
   };
 
   export const Notation = {
@@ -109,7 +107,7 @@ export namespace TexConstant {
     HORIZONTALSTRIKE: 'horizontalstrike',
     NORTHEASTARROW: 'northeastarrow',
     MADRUWB: 'madruwb',
-    UPDIAGONALARROW: 'updiagonalarrow'
+    UPDIAGONALARROW: 'updiagonalarrow',
   };
 
   export const Align = {
@@ -119,32 +117,32 @@ export namespace TexConstant {
     BASELINE: 'baseline',
     AXIS: 'axis',
     LEFT: 'left',
-    RIGHT: 'right'
+    RIGHT: 'right',
   };
 
   export const Lines = {
     NONE: 'none',
     SOLID: 'solid',
-    DASHED: 'dashed'
+    DASHED: 'dashed',
   };
 
   export const Side = {
     LEFT: 'left',
     RIGHT: 'right',
     LEFTOVERLAP: 'leftoverlap',
-    RIGHTOVERLAP: 'rightoverlap'
+    RIGHTOVERLAP: 'rightoverlap',
   };
 
   export const Width = {
     AUTO: 'auto',
-    FIT: 'fit'
+    FIT: 'fit',
   };
 
   export const Actiontype = {
     TOGGLE: 'toggle',
     STATUSLINE: 'statusline',
     TOOLTIP: 'tooltip',
-    INPUT: 'input'
+    INPUT: 'input',
   };
 
   export const Overflow = {
@@ -152,7 +150,7 @@ export namespace TexConstant {
     SCROLL: 'scroll',
     ELIDE: 'elide',
     TRUNCATE: 'truncate',
-    SCALE: 'scale'
+    SCALE: 'scale',
   };
 
   export const Unit = {
@@ -163,12 +161,11 @@ export namespace TexConstant {
     CM: 'cm',
     MM: 'mm',
     PT: 'pt',
-    PC: 'pc'
+    PC: 'pc',
   };
 
   export const Attr = {
     LATEX: 'data-latex',
-    LATEXITEM: 'data-latex-item'
-  }
-
+    LATEXITEM: 'data-latex-item',
+  };
 }

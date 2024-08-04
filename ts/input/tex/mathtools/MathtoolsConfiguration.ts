@@ -21,19 +21,19 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
-import {Configuration} from '../Configuration.js';
-import {CommandMap} from '../TokenMap.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration } from '../Configuration.js';
+import { CommandMap } from '../TokenMap.js';
 import NodeUtil from '../NodeUtil.js';
-import {expandable} from '../../../util/Options.js';
-import {ParserConfiguration} from '../Configuration.js';
-import {TeX} from '../../tex.js';
+import { expandable } from '../../../util/Options.js';
+import { ParserConfiguration } from '../Configuration.js';
+import { TeX } from '../../tex.js';
 import ParseOptions from '../ParseOptions.js';
 
 import './MathtoolsMappings.js';
-import {MathtoolsUtil} from './MathtoolsUtil.js';
-import {MathtoolsTagFormat} from './MathtoolsTags.js';
-import {MultlinedItem} from './MathtoolsItems.js';
+import { MathtoolsUtil } from './MathtoolsUtil.js';
+import { MathtoolsTagFormat } from './MathtoolsTags.js';
+import { MultlinedItem } from './MathtoolsItems.js';
 
 /**
  * The name of the paried-delimiters command map.
@@ -46,7 +46,12 @@ export const PAIREDDELIMS = 'mathtools-paired-delims';
  */
 function initMathtools(config: ParserConfiguration) {
   new CommandMap(PAIREDDELIMS, {});
-  config.append(Configuration.local({[ConfigurationType.HANDLER]: {[HandlerType.MACRO]: [PAIREDDELIMS]}, priority: -5}));
+  config.append(
+    Configuration.local({
+      [ConfigurationType.HANDLER]: { [HandlerType.MACRO]: [PAIREDDELIMS] },
+      priority: -5,
+    })
+  );
 }
 
 /**
@@ -67,7 +72,7 @@ function configMathtools(config: ParserConfiguration, jax: TeX<any, any, any>) {
  * A filter to fix up mmultiscripts elements.
  * @param {ParseOptions} data   The parse options.
  */
-export function fixPrescripts({data}: {data: ParseOptions}) {
+export function fixPrescripts({ data }: { data: ParseOptions }) {
   for (const node of data.getList('mmultiscripts')) {
     if (!node.getProperty('fixPrescript')) continue;
     const childNodes = NodeUtil.getChildren(node);
@@ -79,7 +84,10 @@ export function fixPrescripts({data}: {data: ParseOptions}) {
       }
     }
     for (const i of [4, 5]) {
-      if (NodeUtil.isType(childNodes[i], 'mrow') && NodeUtil.getChildren(childNodes[i]).length === 0) {
+      if (
+        NodeUtil.isType(childNodes[i], 'mrow') &&
+        NodeUtil.getChildren(childNodes[i]).length === 0
+      ) {
         NodeUtil.setChild(node, i, data.nodeFactory.create('node', 'none'));
       }
     }
@@ -92,22 +100,21 @@ export function fixPrescripts({data}: {data: ParseOptions}) {
 /**
  * The configuration for the mathtools package
  */
-export const MathtoolsConfiguration = Configuration.create(
-  'mathtools', {
-    [ConfigurationType.HANDLER]: {
-      macro: ['mathtools-macros', 'mathtools-delimiters'],
-      [HandlerType.ENVIRONMENT]: ['mathtools-environments'],
-      [HandlerType.DELIMITER]: ['mathtools-delimiters'],
-      [HandlerType.CHARACTER]: ['mathtools-characters']
-    },
-    [ConfigurationType.ITEMS]: {
-      [MultlinedItem.prototype.kind]: MultlinedItem
-    },
-    [ConfigurationType.INIT]: initMathtools,
-    [ConfigurationType.CONFIG]: configMathtools,
-    [ConfigurationType.POSTPROCESSORS]: [[fixPrescripts, -6]],
-    /* prettier-ignore */
-    [ConfigurationType.OPTIONS]: {
+export const MathtoolsConfiguration = Configuration.create('mathtools', {
+  [ConfigurationType.HANDLER]: {
+    macro: ['mathtools-macros', 'mathtools-delimiters'],
+    [HandlerType.ENVIRONMENT]: ['mathtools-environments'],
+    [HandlerType.DELIMITER]: ['mathtools-delimiters'],
+    [HandlerType.CHARACTER]: ['mathtools-characters'],
+  },
+  [ConfigurationType.ITEMS]: {
+    [MultlinedItem.prototype.kind]: MultlinedItem,
+  },
+  [ConfigurationType.INIT]: initMathtools,
+  [ConfigurationType.CONFIG]: configMathtools,
+  [ConfigurationType.POSTPROCESSORS]: [[fixPrescripts, -6]],
+  /* prettier-ignore */
+  [ConfigurationType.OPTIONS]: {
       mathtools: {
         'multlinegap': '1em',                   // horizontal space for multlined environments
         'multlined-pos': 'c',                   // default alignment for multlined environments
@@ -131,6 +138,5 @@ export const MathtoolsConfiguration = Configuration.create(
         tagforms: expandable({}),               // tag form definitions
                                                 //     name: [left, right, format]
        }
-    }
-  }
-);
+    },
+});

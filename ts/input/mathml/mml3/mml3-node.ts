@@ -22,8 +22,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathDocument} from '../../../core/MathDocument.js';
-import {mjxRoot} from '#root/root.js';
+import { MathDocument } from '../../../core/MathDocument.js';
+import { mjxRoot } from '#root/root.js';
 
 /**
  * Create the transform function that uses Saxon-js to perform the

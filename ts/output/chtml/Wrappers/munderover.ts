@@ -22,20 +22,45 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTML} from '../../chtml.js';
-import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
-import {ChtmlWrapperFactory} from '../WrapperFactory.js';
-import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
-        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
-import {CommonMunder, CommonMunderClass, CommonMunderMixin,
-        CommonMover, CommonMoverClass, CommonMoverMixin,
-        CommonMunderover, CommonMunderoverClass, CommonMunderoverMixin} from '../../common/Wrappers/munderover.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMunderover, MmlMunder, MmlMover} from '../../../core/MmlTree/MmlNodes/munderover.js';
-import {ChtmlMsub, ChtmlMsubClass, ChtmlMsubNTD,
-        ChtmlMsup, ChtmlMsupClass, ChtmlMsupNTD,
-        ChtmlMsubsup, ChtmlMsubsupClass, ChtmlMsubsupNTD} from './msubsup.js';
-import {StyleList} from '../../../util/StyleList.js';
+import { CHTML } from '../../chtml.js';
+import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
+import { ChtmlWrapperFactory } from '../WrapperFactory.js';
+import {
+  ChtmlCharOptions,
+  ChtmlVariantData,
+  ChtmlDelimiterData,
+  ChtmlFontData,
+  ChtmlFontDataClass,
+} from '../FontData.js';
+import {
+  CommonMunder,
+  CommonMunderClass,
+  CommonMunderMixin,
+  CommonMover,
+  CommonMoverClass,
+  CommonMoverMixin,
+  CommonMunderover,
+  CommonMunderoverClass,
+  CommonMunderoverMixin,
+} from '../../common/Wrappers/munderover.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import {
+  MmlMunderover,
+  MmlMunder,
+  MmlMover,
+} from '../../../core/MmlTree/MmlNodes/munderover.js';
+import {
+  ChtmlMsub,
+  ChtmlMsubClass,
+  ChtmlMsubNTD,
+  ChtmlMsup,
+  ChtmlMsupClass,
+  ChtmlMsupNTD,
+  ChtmlMsubsup,
+  ChtmlMsubsupClass,
+  ChtmlMsubsupNTD,
+} from './msubsup.js';
+import { StyleList } from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
@@ -45,11 +70,22 @@ import {StyleList} from '../../../util/StyleList.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMunderNTD<N, T, D> extends ChtmlMsubNTD<N, T, D>, CommonMunder<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {}
+export interface ChtmlMunderNTD<N, T, D>
+  extends ChtmlMsubNTD<N, T, D>,
+    CommonMunder<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {}
 
 /**
  * The ChtmlMunderClass interface for the CHTML Munder wrapper
@@ -58,14 +94,28 @@ export interface ChtmlMunderNTD<N, T, D> extends ChtmlMsubNTD<N, T, D>, CommonMu
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMunderClass<N, T, D> extends ChtmlMsubClass<N, T, D>, CommonMunderClass<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {
-  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMunderNTD<N, T, D>;
+export interface ChtmlMunderClass<N, T, D>
+  extends ChtmlMsubClass<N, T, D>,
+    CommonMunderClass<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {
+  new (
+    factory: ChtmlWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: ChtmlWrapper<N, T, D>
+  ): ChtmlMunderNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
@@ -73,19 +123,26 @@ export interface ChtmlMunderClass<N, T, D> extends ChtmlMsubClass<N, T, D>, Comm
  * The ChtmlMunder wrapper class for the MmlMunder class
  */
 export const ChtmlMunder = (function <N, T, D>(): ChtmlMunderClass<N, T, D> {
-
   const Base = CommonMunderMixin<
-      N, T, D,
-      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
-      ChtmlMunderClass<N, T, D>
-    >(ChtmlMsub);
+    N,
+    T,
+    D,
+    CHTML<N, T, D>,
+    ChtmlWrapper<N, T, D>,
+    ChtmlWrapperFactory<N, T, D>,
+    ChtmlWrapperClass<N, T, D>,
+    ChtmlCharOptions,
+    ChtmlVariantData,
+    ChtmlDelimiterData,
+    ChtmlFontData,
+    ChtmlFontDataClass,
+    ChtmlMunderClass<N, T, D>
+  >(ChtmlMsub);
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
   return class ChtmlMunder extends Base implements ChtmlMunderNTD<N, T, D> {
-
     /**
      * @override
      */
@@ -96,17 +153,17 @@ export const ChtmlMunder = (function <N, T, D>(): ChtmlMunderClass<N, T, D> {
      */
     public static styles: StyleList = {
       'mjx-over': {
-        'text-align': 'left'
+        'text-align': 'left',
       },
       'mjx-munder:not([limits="false"])': {
         display: 'inline-table',
       },
       'mjx-munder > mjx-row': {
-        'text-align': 'left'
+        'text-align': 'left',
       },
       'mjx-under': {
-        'padding-bottom': '.1em'           // big_op_spacing5
-      }
+        'padding-bottom': '.1em', // big_op_spacing5
+      },
     };
 
     /**
@@ -133,16 +190,18 @@ export const ChtmlMunder = (function <N, T, D>(): ChtmlMunderClass<N, T, D> {
       const basebox = this.baseChild.getOuterBBox();
       const underbox = this.scriptChild.getOuterBBox();
       const k = this.getUnderKV(basebox, underbox)[0];
-      const delta = (this.isLineBelow ? 0 : this.getDelta(this.scriptChild, true));
+      const delta = this.isLineBelow
+        ? 0
+        : this.getDelta(this.scriptChild, true);
       this.adaptor.setStyle(under, 'paddingTop', this.em(k));
-      this.setDeltaW([base, under], this.getDeltaW([basebox, underbox], [0, -delta]));
+      this.setDeltaW(
+        [base, under],
+        this.getDeltaW([basebox, underbox], [0, -delta])
+      );
       this.adjustUnderDepth(under, underbox);
     }
-
   };
-
 })<any, any, any>();
-
 
 /*****************************************************************/
 /*****************************************************************/
@@ -154,11 +213,22 @@ export const ChtmlMunder = (function <N, T, D>(): ChtmlMunderClass<N, T, D> {
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMoverNTD<N, T, D> extends ChtmlMsupNTD<N, T, D>, CommonMover<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {}
+export interface ChtmlMoverNTD<N, T, D>
+  extends ChtmlMsupNTD<N, T, D>,
+    CommonMover<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {}
 
 /**
  * The ChtmlMoverClass interface for the CHTML Mover wrapper
@@ -167,14 +237,28 @@ export interface ChtmlMoverNTD<N, T, D> extends ChtmlMsupNTD<N, T, D>, CommonMov
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMoverClass<N, T, D> extends ChtmlMsupClass<N, T, D>, CommonMoverClass<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {
-  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMoverNTD<N, T, D>;
+export interface ChtmlMoverClass<N, T, D>
+  extends ChtmlMsupClass<N, T, D>,
+    CommonMoverClass<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {
+  new (
+    factory: ChtmlWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: ChtmlWrapper<N, T, D>
+  ): ChtmlMoverNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
@@ -182,19 +266,26 @@ export interface ChtmlMoverClass<N, T, D> extends ChtmlMsupClass<N, T, D>, Commo
  * The ChtmlMover wrapper class for the MmlMover class
  */
 export const ChtmlMover = (function <N, T, D>(): ChtmlMoverClass<N, T, D> {
-
   const Base = CommonMoverMixin<
-      N, T, D,
-      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
-      ChtmlMoverClass<N, T, D>
-    >(ChtmlMsup);
+    N,
+    T,
+    D,
+    CHTML<N, T, D>,
+    ChtmlWrapper<N, T, D>,
+    ChtmlWrapperFactory<N, T, D>,
+    ChtmlWrapperClass<N, T, D>,
+    ChtmlCharOptions,
+    ChtmlVariantData,
+    ChtmlDelimiterData,
+    ChtmlFontData,
+    ChtmlFontDataClass,
+    ChtmlMoverClass<N, T, D>
+  >(ChtmlMsup);
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
   return class ChtmlMover extends Base implements ChtmlMoverNTD<N, T, D> {
-
     /**
      * @override
      */
@@ -205,12 +296,12 @@ export const ChtmlMover = (function <N, T, D>(): ChtmlMoverClass<N, T, D> {
      */
     public static styles: StyleList = {
       'mjx-mover:not([limits="false"])': {
-        'padding-top': '.1em'        // big_op_spacing5
+        'padding-top': '.1em', // big_op_spacing5
       },
       'mjx-mover:not([limits="false"]) > *': {
         display: 'block',
-        'text-align': 'left'
-      }
+        'text-align': 'left',
+      },
     };
 
     /**
@@ -232,14 +323,15 @@ export const ChtmlMover = (function <N, T, D>(): ChtmlMoverClass<N, T, D> {
       const basebox = this.baseChild.getOuterBBox();
       this.adjustBaseHeight(base, basebox);
       const k = this.getOverKU(basebox, overbox)[0];
-      const delta = (this.isLineAbove ? 0 : this.getDelta(this.scriptChild));
+      const delta = this.isLineAbove ? 0 : this.getDelta(this.scriptChild);
       this.adaptor.setStyle(over, 'paddingBottom', this.em(k));
-      this.setDeltaW([base, over], this.getDeltaW([basebox, overbox], [0, delta]));
+      this.setDeltaW(
+        [base, over],
+        this.getDeltaW([basebox, overbox], [0, delta])
+      );
       this.adjustOverDepth(over, overbox);
     }
-
   };
-
 })<any, any, any>();
 
 /*****************************************************************/
@@ -252,11 +344,22 @@ export const ChtmlMover = (function <N, T, D>(): ChtmlMoverClass<N, T, D> {
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMunderoverNTD<N, T, D> extends ChtmlMsubsupNTD<N, T, D>, CommonMunderover<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {}
+export interface ChtmlMunderoverNTD<N, T, D>
+  extends ChtmlMsubsupNTD<N, T, D>,
+    CommonMunderover<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {}
 
 /**
  * The ChtmlMunderoverClass interface for the CHTML Munderover wrapper
@@ -265,34 +368,62 @@ export interface ChtmlMunderoverNTD<N, T, D> extends ChtmlMsubsupNTD<N, T, D>, C
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMunderoverClass<N, T, D> extends ChtmlMsubsupClass<N, T, D>, CommonMunderoverClass<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {
-  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMunderoverNTD<N, T, D>;
+export interface ChtmlMunderoverClass<N, T, D>
+  extends ChtmlMsubsupClass<N, T, D>,
+    CommonMunderoverClass<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {
+  new (
+    factory: ChtmlWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: ChtmlWrapper<N, T, D>
+  ): ChtmlMunderoverNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
 /**
  * The ChtmlMunderover wrapper class for the MmlMunderover class
  */
-export const ChtmlMunderover = (function <N, T, D>(): ChtmlMunderoverClass<N, T, D> {
-
+export const ChtmlMunderover = (function <N, T, D>(): ChtmlMunderoverClass<
+  N,
+  T,
+  D
+> {
   const Base = CommonMunderoverMixin<
-      N, T, D,
-      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
-      ChtmlMunderoverClass<N, T, D>
-    >(ChtmlMsubsup);
+    N,
+    T,
+    D,
+    CHTML<N, T, D>,
+    ChtmlWrapper<N, T, D>,
+    ChtmlWrapperFactory<N, T, D>,
+    ChtmlWrapperClass<N, T, D>,
+    ChtmlCharOptions,
+    ChtmlVariantData,
+    ChtmlDelimiterData,
+    ChtmlFontData,
+    ChtmlFontDataClass,
+    ChtmlMunderoverClass<N, T, D>
+  >(ChtmlMsubsup);
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   // @ts-ignore
-  return class ChtmlMunderover extends Base implements ChtmlMunderoverNTD<N, T, D> {
-
+  return class ChtmlMunderover
+    extends Base
+    implements ChtmlMunderoverNTD<N, T, D>
+  {
     /**
      * @override
      */
@@ -303,10 +434,10 @@ export const ChtmlMunderover = (function <N, T, D>(): ChtmlMunderoverClass<N, T,
      */
     public static styles: StyleList = {
       'mjx-munderover:not([limits="false"])': {
-        'padding-top': '.1em'        // big_op_spacing5
+        'padding-top': '.1em', // big_op_spacing5
       },
       'mjx-munderover:not([limits="false"]) > *': {
-        display: 'block'
+        display: 'block',
       },
     };
 
@@ -347,13 +478,15 @@ export const ChtmlMunderover = (function <N, T, D>(): ChtmlMunderoverClass<N, T,
       const udelta = this.getDelta(this.underChild, true);
       this.adaptor.setStyle(over, 'paddingBottom', this.em(ok));
       this.adaptor.setStyle(under, 'paddingTop', this.em(uk));
-      this.setDeltaW([base, under, over],
-                     this.getDeltaW([basebox, underbox, overbox],
-                                    [0, this.isLineBelow ? 0 : -udelta, this.isLineAbove ? 0 : odelta]));
+      this.setDeltaW(
+        [base, under, over],
+        this.getDeltaW(
+          [basebox, underbox, overbox],
+          [0, this.isLineBelow ? 0 : -udelta, this.isLineAbove ? 0 : odelta]
+        )
+      );
       this.adjustOverDepth(over, overbox);
       this.adjustUnderDepth(under, underbox);
     }
-
   };
-
 })<any, any, any>();

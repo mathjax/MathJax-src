@@ -21,30 +21,30 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../Tree/Node.js';
-import {MmlVisitor} from './MmlVisitor.js';
-import {MmlNode, TextNode, XMLNode} from './MmlNode.js';
+import { PropertyList } from '../Tree/Node.js';
+import { MmlVisitor } from './MmlVisitor.js';
+import { MmlNode, TextNode, XMLNode } from './MmlNode.js';
 
 export type MmlNodeJSON = {
-  kind: string,
-  texClass: number
-  isEmbellished?: boolean,
-  isSpacelike?: boolean,
-  isInferred?: boolean,
-  childNodes: MmlJSON[],
-  attributes: PropertyList,
-  inherited: PropertyList,
-  properties: PropertyList
+  kind: string;
+  texClass: number;
+  isEmbellished?: boolean;
+  isSpacelike?: boolean;
+  isInferred?: boolean;
+  childNodes: MmlJSON[];
+  attributes: PropertyList;
+  inherited: PropertyList;
+  properties: PropertyList;
 };
 
 export type MmlTextJSON = {
-  kind: string,
-  text: string
+  kind: string;
+  text: string;
 };
 
 export type MmlXmlJSON = {
-  kind: string,
-  xml: any
+  kind: string;
+  xml: any;
 };
 
 export type MmlJSON = MmlNodeJSON | MmlTextJSON | MmlXmlJSON;
@@ -70,7 +70,7 @@ export class JsonMmlVisitor extends MmlVisitor {
    * @return {MmlJSON}        The JSON for the text element
    */
   public visitTextNode(node: TextNode): MmlTextJSON {
-    return {kind: node.kind, text: node.getText()};
+    return { kind: node.kind, text: node.getText() };
   }
 
   /**
@@ -78,7 +78,7 @@ export class JsonMmlVisitor extends MmlVisitor {
    * @return {MmlJSON}      The JSON for the XML node
    */
   public visitXMLNode(node: XMLNode): MmlXmlJSON {
-    return {kind: node.kind, xml: node.getXML()};
+    return { kind: node.kind, xml: node.getXML() };
   }
 
   /**
@@ -98,7 +98,7 @@ export class JsonMmlVisitor extends MmlVisitor {
       attributes: this.getAttributes(node),
       inherited: this.getInherited(node),
       properties: this.getProperties(node),
-      childNodes: this.getChildren(node)
+      childNodes: this.getChildren(node),
     };
     if (node.isInferred) {
       json.isInferred = true;
@@ -147,5 +147,4 @@ export class JsonMmlVisitor extends MmlVisitor {
   public getProperties(node: MmlNode): PropertyList {
     return Object.assign({}, node.getAllProperties());
   }
-
 }

@@ -15,20 +15,18 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Configuration file for the gensymb package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
-import {Configuration} from '../Configuration.js';
-import {Token} from '../Token.js';
-import {TexConstant} from '../TexConstants.js';
-import {CharacterMap} from '../TokenMap.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration } from '../Configuration.js';
+import { Token } from '../Token.js';
+import { TexConstant } from '../TexConstants.js';
+import { CharacterMap } from '../TokenMap.js';
 import TexParser from '../TexParser.js';
-
 
 /**
  * Handle characters that are known units.
@@ -43,22 +41,17 @@ function mathcharUnit(parser: TexParser, mchar: Token) {
   parser.Push(node);
 }
 
-
 /**
  * gensymb units.
  */
 new CharacterMap('gensymb-symbols', mathcharUnit, {
-  ohm:            '\u2126',
-  degree:         '\u00B0',
-  celsius:        '\u2103',
-  perthousand:    '\u2030',
-  micro:          '\u00B5'
+  ohm: '\u2126',
+  degree: '\u00B0',
+  celsius: '\u2103',
+  perthousand: '\u2030',
+  micro: '\u00B5',
 });
 
-
-export const GensymbConfiguration = Configuration.create(
-  'gensymb', {
-    [ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['gensymb-symbols']},
-  }
-);
-
+export const GensymbConfiguration = Configuration.create('gensymb', {
+  [ConfigurationType.HANDLER]: { [HandlerType.MACRO]: ['gensymb-symbols'] },
+});

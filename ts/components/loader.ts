@@ -23,11 +23,23 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathJax as MJGlobal, MathJaxObject as MJObject, MathJaxLibrary,
-        MathJaxConfig as MJConfig, combineWithMathJax, combineDefaults} from './global.js';
-import {Package, PackageError, PackageReady, PackageFailed, PackageConfig} from './package.js';
-import {FunctionList} from '../util/FunctionList.js';
-import {mjxRoot} from '#root/root.js';
+import {
+  MathJax as MJGlobal,
+  MathJaxObject as MJObject,
+  MathJaxLibrary,
+  MathJaxConfig as MJConfig,
+  combineWithMathJax,
+  combineDefaults,
+} from './global.js';
+import {
+  Package,
+  PackageError,
+  PackageReady,
+  PackageFailed,
+  PackageConfig,
+} from './package.js';
+import { FunctionList } from '../util/FunctionList.js';
+import { mjxRoot } from '#root/root.js';
 
 /*
  * The browser document (if any)
@@ -37,8 +49,15 @@ declare var document: Document;
 /**
  * Function used to determine path to a given package.
  */
-export type PathFilterFunction = (data: {name: string, original: string, addExtension: boolean}) => boolean;
-export type PathFilterList = (PathFilterFunction | [PathFilterFunction, number])[];
+export type PathFilterFunction = (data: {
+  name: string;
+  original: string;
+  addExtension: boolean;
+}) => boolean;
+export type PathFilterList = (
+  | PathFilterFunction
+  | [PathFilterFunction, number]
+)[];
 
 /**
  * Update the configuration structure to include the loader configuration
@@ -68,14 +87,14 @@ export interface MathJaxObject extends MJObject {
   config: MathJaxConfig;
   loader: {
     ready: (...names: string[]) => Promise<string[]>; // Get a promise for when all the named packages are loaded
-    load: (...names: string[]) => Promise<string>;    // Load the packages and return a promise for when ready
-    preLoad: (...names: string[]) => void;            // Indicate that packages are already loaded by hand
-    defaultReady: () => void;                         // The function performed when all packages are loaded
-    getRoot: () => string;                            // Find the root URL for the MathJax files
-    checkVersion: (name: string, version: string) => boolean;   // Check the version of an extension
-    saveVersion: (name: string) => void;              // Set the version for a combined component
-    pathFilters: FunctionList;                        // The filters to use for looking for package paths
-    addPackageData: (name: string, data: PackageConfig) => void;  // Add more package data for a package
+    load: (...names: string[]) => Promise<string>; // Load the packages and return a promise for when ready
+    preLoad: (...names: string[]) => void; // Indicate that packages are already loaded by hand
+    defaultReady: () => void; // The function performed when all packages are loaded
+    getRoot: () => string; // Find the root URL for the MathJax files
+    checkVersion: (name: string, version: string) => boolean; // Check the version of an extension
+    saveVersion: (name: string) => void; // Set the version for a combined component
+    pathFilters: FunctionList; // The filters to use for looking for package paths
+    addPackageData: (name: string, data: PackageConfig) => void; // Add more package data for a package
   };
   startup?: any;
 }
@@ -83,7 +102,7 @@ export interface MathJaxObject extends MJObject {
 /**
  * Functions used to filter the path to a package
  */
-export const PathFilters: {[name: string]: PathFilterFunction} = {
+export const PathFilters: { [name: string]: PathFilterFunction } = {
   /**
    * Look up the path in the configuration's source list
    */
@@ -118,16 +137,13 @@ export const PathFilters: {[name: string]: PathFilterFunction} = {
       data.name = CONFIG.paths[match[1]] + data.name.substring(match[0].length);
     }
     return true;
-  }
-
+  },
 };
-
 
 /**
  * The implementation of the dynamic loader
  */
 export namespace Loader {
-
   /**
    * The version of MathJax that is running.
    */
@@ -174,12 +190,16 @@ export namespace Loader {
         extension.provides(CONFIG.provides[name]);
       }
       extension.checkNoLoad();
-      promises.push(extension.promise.then(() => {
-        if (!CONFIG.versionWarnings) return;
-        if (extension.isLoaded && !versions.has(Package.resolvePath(name))) {
-          console.warn(`No version information available for component ${name}`);
-        }
-      }) as Promise<null>);
+      promises.push(
+        extension.promise.then(() => {
+          if (!CONFIG.versionWarnings) return;
+          if (extension.isLoaded && !versions.has(Package.resolvePath(name))) {
+            console.warn(
+              `No version information available for component ${name}`
+            );
+          }
+        }) as Promise<null>
+      );
     }
     Package.loadAll();
     return Promise.all(promises);
@@ -241,7 +261,8 @@ export namespace Loader {
    */
   export function getRoot(): string {
     if (typeof document !== 'undefined') {
-      const script = document.currentScript || document.getElementById('MathJax-script');
+      const script =
+        document.currentScript || document.getElementById('MathJax-script');
       if (script) {
         return (script as HTMLScriptElement).src.replace(/\/[^\/]*$/, '');
       }
@@ -257,10 +278,16 @@ export namespace Loader {
    * @param {string} type       The type of extension (future code may use this to check ranges of versions)
    * @return {boolean}          True if there was a mismatch, false otherwise
    */
-  export function checkVersion(name: string, version: string, _type?: string): boolean {
+  export function checkVersion(
+    name: string,
+    version: string,
+    _type?: string
+  ): boolean {
     saveVersion(name);
     if (CONFIG.versionWarnings && version !== VERSION) {
-      console.warn(`Component ${name} uses ${version} of MathJax; version in use is ${VERSION}`);
+      console.warn(
+        `Component ${name} uses ${version} of MathJax; version in use is ${VERSION}`
+      );
       return true;
     }
     return false;
@@ -299,23 +326,23 @@ export const MathJax = MJGlobal as MathJaxObject;
  *   Add any path filters from the configuration.
  */
 if (typeof MathJax.loader === 'undefined') {
-
   combineDefaults(MathJax.config, 'loader', {
     paths: {
-      mathjax: Loader.getRoot()
+      mathjax: Loader.getRoot(),
     },
     source: {},
     dependencies: {},
     provides: {},
     load: [],
     ready: Loader.defaultReady.bind(Loader),
-    failed: (error: PackageError) => console.log(`MathJax(${error.package || '?'}): ${error.message}`),
+    failed: (error: PackageError) =>
+      console.log(`MathJax(${error.package || '?'}): ${error.message}`),
     require: null,
     pathFilters: [],
-    versionWarnings: true
+    versionWarnings: true,
   });
   combineWithMathJax({
-    loader: Loader
+    loader: Loader,
   });
 
   //

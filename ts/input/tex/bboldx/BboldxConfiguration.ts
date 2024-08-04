@@ -15,15 +15,14 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview The bboldx package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
-import {Configuration} from '../Configuration.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration } from '../Configuration.js';
 import './BboldxMappings.js';
 
 /**
@@ -33,10 +32,18 @@ import './BboldxMappings.js';
 Configuration.create('text-bboldx', {
   parser: 'text',
   handler: {
-    macro: ['text-bboldx', 'text-bboldx-mathchar0miNormal', 'text-bboldx-delimiterNormal',
-            'text-bboldx-mathchar0miBold', 'text-bboldx-delimiterBold'],
-    [HandlerType.DELIMITER]: ['text-bboldx-delimiterNormal', 'text-bboldx-delimiterBold'],
-  }
+    macro: [
+      'text-bboldx',
+      'text-bboldx-mathchar0miNormal',
+      'text-bboldx-delimiterNormal',
+      'text-bboldx-mathchar0miBold',
+      'text-bboldx-delimiterBold',
+    ],
+    [HandlerType.DELIMITER]: [
+      'text-bboldx-delimiterNormal',
+      'text-bboldx-delimiterBold',
+    ],
+  },
 });
 
 //
@@ -45,23 +52,27 @@ Configuration.create('text-bboldx', {
 //
 export const BboldxConfiguration = Configuration.create('bboldx', {
   [ConfigurationType.HANDLER]: {
-    [HandlerType.MACRO]: ['bboldx', 'bboldx-mathchar0miNormal', 'bboldx-delimiterNormal',
-            'bboldx-mathchar0miBold', 'bboldx-delimiterBold'],
+    [HandlerType.MACRO]: [
+      'bboldx',
+      'bboldx-mathchar0miNormal',
+      'bboldx-delimiterNormal',
+      'bboldx-mathchar0miBold',
+      'bboldx-delimiterBold',
+    ],
     [HandlerType.DELIMITER]: ['bboldx-delimiterNormal', 'bboldx-delimiterBold'],
   },
   [ConfigurationType.OPTIONS]: {
     bboldx: {
       bfbb: false,
-      light: false
-    }
+      light: false,
+    },
   },
   config(_config, jax) {
-    const textmacros = jax.parseOptions.packageData.get('textmacros')
+    const textmacros = jax.parseOptions.packageData.get('textmacros');
     if (textmacros) {
       textmacros.parseOptions.options.textmacros.packages.push('text-bboldx');
       textmacros.textConf.add('text-bboldx', jax, {});
     }
   },
-  priority: 3   // load before base, since we override \mathbb
+  priority: 3, // load before base, since we override \mathbb
 });
-

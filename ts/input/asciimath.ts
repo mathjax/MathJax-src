@@ -21,13 +21,13 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AbstractInputJax} from '../core/InputJax.js';
-import {LegacyAsciiMath} from './asciimath/legacy.js';
-import {separateOptions, OptionList} from '../util/Options.js';
-import {MathDocument} from '../core/MathDocument.js';
-import {MathItem} from '../core/MathItem.js';
+import { AbstractInputJax } from '../core/InputJax.js';
+import { LegacyAsciiMath } from './asciimath/legacy.js';
+import { separateOptions, OptionList } from '../util/Options.js';
+import { MathDocument } from '../core/MathDocument.js';
+import { MathItem } from '../core/MathItem.js';
 
-import {FindAsciiMath} from './asciimath/FindAsciiMath.js';
+import { FindAsciiMath } from './asciimath/FindAsciiMath.js';
 
 /*****************************************************************/
 /**
@@ -38,7 +38,6 @@ import {FindAsciiMath} from './asciimath/FindAsciiMath.js';
  * @template D  The Document class
  */
 export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
-
   /**
    * The name of the input jax
    */
@@ -49,7 +48,7 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
    */
   public static OPTIONS: OptionList = {
     ...AbstractInputJax.OPTIONS,
-    FindAsciiMath: null
+    FindAsciiMath: null,
   };
 
   /**
@@ -61,9 +60,14 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
    * @override
    */
   constructor(options: OptionList) {
-    let [ , find, am] = separateOptions(options, FindAsciiMath.OPTIONS, AsciiMath.OPTIONS);
+    let [, find, am] = separateOptions(
+      options,
+      FindAsciiMath.OPTIONS,
+      AsciiMath.OPTIONS
+    );
     super(am);
-    this.findAsciiMath = this.options['FindAsciiMath'] || new FindAsciiMath(find);
+    this.findAsciiMath =
+      this.options['FindAsciiMath'] || new FindAsciiMath(find);
   }
 
   /**
@@ -81,5 +85,4 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
   public findMath(strings: string[]) {
     return this.findAsciiMath.findMath(strings);
   }
-
 }

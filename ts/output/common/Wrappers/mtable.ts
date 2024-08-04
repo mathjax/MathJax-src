@@ -21,17 +21,27 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wrapper.js';
-import {CommonWrapperFactory} from '../WrapperFactory.js';
-import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
-import {CommonOutputJax} from '../../common.js';
-import {CommonMtr} from './mtr.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {BBox} from '../../../util/BBox.js';
-import {DIRECTION} from '../FontData.js';
-import {split, isPercent} from '../../../util/string.js';
-import {sum, max} from '../../../util/numeric.js';
-import {Styles, TRBL} from '../../../util/Styles.js';
+import {
+  CommonWrapper,
+  CommonWrapperClass,
+  CommonWrapperConstructor,
+} from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { CommonMtr } from './mtr.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { BBox } from '../../../util/BBox.js';
+import { DIRECTION } from '../FontData.js';
+import { split, isPercent } from '../../../util/string.js';
+import { sum, max } from '../../../util/numeric.js';
+import { Styles, TRBL } from '../../../util/Styles.js';
 
 /*****************************************************************/
 /**
@@ -58,7 +68,7 @@ export type ColumnWidths = (string | number | null)[];
  * (when the needed shrinkage for a collection of columns is less than
  * this portion of their total width, no smaller columns are broken)
  */
-export let BREAK_BELOW = .333;
+export let BREAK_BELOW = 0.333;
 
 /*****************************************************************/
 /**
@@ -80,7 +90,9 @@ export let BREAK_BELOW = .333;
  * @template R   The class for table rows
  */
 export interface CommonMtable<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -90,9 +102,8 @@ export interface CommonMtable<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  R extends CommonMtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  R extends CommonMtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
 > extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
   /**
    * The number of columns in the table
    */
@@ -234,7 +245,16 @@ export interface CommonMtable<
    * @param {number} M       The current height for items aligned top and bottom
    * @return {number}        The updated value for M
    */
-  updateHDW(cell: WW, i: number, j: number, align: string, H: number[], D: number[], W: number[], M: number): number;
+  updateHDW(
+    cell: WW,
+    i: number,
+    j: number,
+    align: string,
+    H: number[],
+    D: number[],
+    W: number[],
+    M: number
+  ): number;
 
   /**
    * Extend the H and D of a row to cover the maximum height needed by top/bottom aligned items
@@ -354,7 +374,7 @@ export interface CommonMtable<
    *
    * @param {string} width       The width of the table
    */
-  adjustColumnWidths(width: number): void
+  adjustColumnWidths(width: number): void;
 
   /**
    * @param {number} i      The row number (starting at 0)
@@ -433,7 +453,6 @@ export interface CommonMtable<
    * @return {number[]}       The array of values converted to em's
    */
   convertLengths(list: string[]): number[];
-
 }
 
 /**
@@ -453,7 +472,9 @@ export interface CommonMtable<
  * @template FC  The FontDataClass type
  */
 export interface CommonMtableClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -462,7 +483,7 @@ export interface CommonMtableClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
@@ -486,7 +507,9 @@ export interface CommonMtableClass<
  * @template B   The mixin interface to create
  */
 export function CommonMtableMixin<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -497,12 +520,14 @@ export function CommonMtableMixin<
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
   R extends CommonMtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
-  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
-
-  return class CommonMtableMixin extends Base
-  implements CommonMtable<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC, R> {
-
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+): B {
+  return class CommonMtableMixin
+    extends Base
+    implements CommonMtable<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC, R>
+  {
     /**
      * @override
      */
@@ -625,11 +650,13 @@ export function CommonMtableMixin<
      */
     public stretchRows() {
       const equal = this.node.attributes.get('equalrows') as boolean;
-      const HD = (equal ? this.getEqualRowHeight() : 0);
-      const {H, D} = (equal ? this.getTableData() : {H: [0], D: [0]});
+      const HD = equal ? this.getEqualRowHeight() : 0;
+      const { H, D } = equal ? this.getTableData() : { H: [0], D: [0] };
       const rows = this.tableRows;
       for (let i = 0; i < this.numRows; i++) {
-        const hd = (equal ? [(HD + H[i] - D[i]) / 2, (HD - H[i] + D[i]) / 2] : null);
+        const hd = equal
+          ? [(HD + H[i] - D[i]) / 2, (HD - H[i] + D[i]) / 2]
+          : null;
         rows[i].stretchChildren(hd);
       }
     }
@@ -640,7 +667,10 @@ export function CommonMtableMixin<
     public stretchColumns() {
       const swidths = this.getColumnAttributes('columnwidth', 0);
       for (let i = 0; i < this.numCols; i++) {
-        const width = (typeof this.cWidths[i] === 'number' ? this.cWidths[i] as number : null);
+        const width =
+          typeof this.cWidths[i] === 'number'
+            ? (this.cWidths[i] as number)
+            : null;
         this.stretchColumn(i, width);
         width !== null && this.breakColumn(i, width, swidths[i]);
       }
@@ -658,8 +688,10 @@ export function CommonMtableMixin<
         const cell = row.getChild(i);
         if (cell) {
           const child = cell.childNodes[0];
-          if (child.stretch.dir === DIRECTION.None &&
-              child.canStretch(DIRECTION.Horizontal)) {
+          if (
+            child.stretch.dir === DIRECTION.None &&
+            child.canStretch(DIRECTION.Horizontal)
+          ) {
             stretchy.push(child);
           }
         }
@@ -672,14 +704,14 @@ export function CommonMtableMixin<
         //  If all the children are stretchy, find the largest one,
         //  otherwise, find the width of the non-stretchy children.
         //
-        let all = (count > 1 && count === nodeCount);
+        let all = count > 1 && count === nodeCount;
         for (const row of this.tableRows) {
           const cell = row.getChild(i);
           if (cell) {
             const child = cell.childNodes[0];
-            const noStretch = (child.stretch.dir === DIRECTION.None);
+            const noStretch = child.stretch.dir === DIRECTION.None;
             if (all || noStretch) {
-              const {w} = child.getBBox(noStretch);
+              const { w } = child.getBBox(noStretch);
               if (w > W) {
                 W = w;
               }
@@ -692,7 +724,11 @@ export function CommonMtableMixin<
         //  Stretch the stretchable children
         //
         for (const child of stretchy) {
-          child.coreMO().getStretchedVariant([Math.max(W, child.getBBox().w) / child.coreRScale()]);
+          child
+            .coreMO()
+            .getStretchedVariant([
+              Math.max(W, child.getBBox().w) / child.coreRScale(),
+            ]);
         }
       }
     }
@@ -701,8 +737,12 @@ export function CommonMtableMixin<
      * @override
      */
     public breakColumn(i: number, W: number, type: string) {
-      if (this.jax.math.root.attributes.get('overflow') !== 'linebreak' || !this.jax.math.display) return;
-      const {D} = this.getTableData();
+      if (
+        this.jax.math.root.attributes.get('overflow') !== 'linebreak' ||
+        !this.jax.math.display
+      )
+        return;
+      const { D } = this.getTableData();
       let j = 0;
       let w = 0;
       for (const row of this.tableRows) {
@@ -720,7 +760,12 @@ export function CommonMtableMixin<
       //
       // Make sure cWidth reflects the size of the broken columns
       //
-      if (type === 'fit' || type === 'auto' || isPercent(type) || w > (this.cWidths[i] as number)) {
+      if (
+        type === 'fit' ||
+        type === 'auto' ||
+        isPercent(type) ||
+        w > (this.cWidths[i] as number)
+      ) {
         this.cWidths[i] = w;
       }
     }
@@ -759,7 +804,7 @@ export function CommonMtableMixin<
         this.extendHD(j, NH, ND, M);
       }
       const L = LW[0];
-      this.data = {H, D, W, NH, ND, L};
+      this.data = { H, D, W, NH, ND, L };
       return this.data;
     }
 
@@ -767,9 +812,16 @@ export function CommonMtableMixin<
      * @override
      */
     public updateHDW(
-      cell: WW, i: number, j: number, align: string, H: number[], D: number[], W: number[], M: number
+      cell: WW,
+      i: number,
+      j: number,
+      align: string,
+      H: number[],
+      D: number[],
+      W: number[],
+      M: number
     ): number {
-      let {h, d, w} = cell.getBBox();
+      let { h, d, w } = cell.getBBox();
       const scale = cell.parent.bbox.rscale;
       if (cell.parent.bbox.rscale !== 1) {
         h *= scale;
@@ -777,11 +829,11 @@ export function CommonMtableMixin<
         w *= scale;
       }
       if (this.node.getProperty('useHeight')) {
-        if (h < .75) h = .75;
-        if (d < .25) d = .25;
+        if (h < 0.75) h = 0.75;
+        if (d < 0.25) d = 0.25;
       }
       let m = 0;
-      align = cell.node.attributes.get('rowalign') as string || align;
+      align = (cell.node.attributes.get('rowalign') as string) || align;
       if (align !== 'baseline' && align !== 'axis') {
         m = h + d;
         h = d = 0;
@@ -798,7 +850,7 @@ export function CommonMtableMixin<
      */
     public extendHD(i: number, H: number[], D: number[], M: number) {
       const d = (M - (H[i] + D[i])) / 2;
-      if (d < .00001) return;
+      if (d < 0.00001) return;
       H[i] += d;
       D[i] += d;
     }
@@ -833,12 +885,12 @@ export function CommonMtableMixin<
       if (row === null) {
         const a = this.font.params.axis_height;
         const h2 = height / 2;
-        const HD: {[key: string]: [number, number]} = {
+        const HD: { [key: string]: [number, number] } = {
           top: [0, height],
           center: [h2, h2],
           bottom: [height, 0],
           baseline: [h2, h2],
-          axis: [h2 + a, h2 - a]
+          axis: [h2 + a, h2 - a],
         };
         return HD[align] || [h2, h2];
       } else {
@@ -862,12 +914,16 @@ export function CommonMtableMixin<
         //   there is no extra space reserved for the label on the opposite side,
         //   (as there usually is to center the equation).
         //
-        const labels = this.hasLabels && !!attributes.get('data-width-includes-label');
+        const labels =
+          this.hasLabels && !!attributes.get('data-width-includes-label');
         if (labels && this.frame && this.fSpace[0]) {
           pad -= this.fSpace[0];
         }
-        return (align === 'center' && !labels ? [pad, pad] :
-                side === 'left' ? [pad, 0] : [0, pad]);
+        return align === 'center' && !labels
+          ? [pad, pad]
+          : side === 'left'
+            ? [pad, 0]
+            : [0, pad];
       }
       return [this.bbox?.L || 0, 0];
     }
@@ -879,20 +935,29 @@ export function CommonMtableMixin<
       //
       //  Make sure labels don't overlap table
       //
-      const {L} = this.getTableData();
+      const { L } = this.getTableData();
       const sep = this.length2em(this.node.attributes.get('minlabelspacing'));
       let pad = L + sep;
-      const [lpad, rpad] = (this.styles == null ? ['', ''] :
-                            [this.styles.get('padding-left'), this.styles.get('padding-right')]);
+      const [lpad, rpad] =
+        this.styles == null
+          ? ['', '']
+          : [this.styles.get('padding-left'), this.styles.get('padding-right')];
       if (lpad || rpad) {
-        pad = Math.max(pad, this.length2em(lpad || '0'), this.length2em(rpad || '0'));
+        pad = Math.max(
+          pad,
+          this.length2em(lpad || '0'),
+          this.length2em(rpad || '0')
+        );
       }
       //
       //  Handle indentation
       //
       let [align, shift] = this.getAlignShift();
       if (align === side) {
-        shift = (side === 'left' ? Math.max(pad, shift) - pad : Math.min(-pad, shift) + pad);
+        shift =
+          side === 'left'
+            ? Math.max(pad, shift) - pad
+            : Math.min(-pad, shift) + pad;
       }
       return [pad, align, shift] as [number, string, number];
     }
@@ -912,8 +977,13 @@ export function CommonMtableMixin<
     public adjustWideTable() {
       const attributes = this.node.attributes;
       if (attributes.get('width') !== 'auto') return;
-      const [pad, align] = this.getPadAlignShift(attributes.get('side') as string);
-      const W = Math.max(this.containerWidth / 10, this.containerWidth - pad - (align === 'center' ? pad : 0));
+      const [pad, align] = this.getPadAlignShift(
+        attributes.get('side') as string
+      );
+      const W = Math.max(
+        this.containerWidth / 10,
+        this.containerWidth - pad - (align === 'center' ? pad : 0)
+      );
       this.naturalWidth() > W && this.adjustColumnWidths(W);
     }
 
@@ -922,15 +992,20 @@ export function CommonMtableMixin<
      */
     public naturalWidth(): number {
       const CW = this.getComputedWidths();
-      return sum(CW.concat(this.cLines, this.cSpace)) + 2 * this.fLine + this.fSpace[0] + this.fSpace[2];
+      return (
+        sum(CW.concat(this.cLines, this.cSpace)) +
+        2 * this.fLine +
+        this.fSpace[0] +
+        this.fSpace[2]
+      );
     }
 
     /**
      * @override
      */
     public getEqualRowHeight(): number {
-      const {H, D} = this.getTableData();
-      const HD = Array.from(H.keys()).map(i => H[i] + D[i]);
+      const { H, D } = this.getTableData();
+      const HD = Array.from(H.keys()).map((i) => H[i] + D[i]);
       return Math.max.apply(Math, HD);
     }
 
@@ -939,8 +1014,10 @@ export function CommonMtableMixin<
      */
     public getComputedWidths(): number[] {
       const W = this.getTableData().W;
-      let CW = Array.from(W.keys()).map(i => {
-        return (typeof this.cWidths[i] === 'number' ? this.cWidths[i] as number : W[i]);
+      let CW = Array.from(W.keys()).map((i) => {
+        return typeof this.cWidths[i] === 'number'
+          ? (this.cWidths[i] as number)
+          : W[i];
       });
       if (this.node.attributes.get('equalcolumns') as boolean) {
         CW = Array(CW.length).fill(max(CW));
@@ -973,12 +1050,15 @@ export function CommonMtableMixin<
       const n = Math.max(1, this.numCols);
       let cwidth;
       if (width === 'auto') {
-        const {W} = this.getTableData();
+        const { W } = this.getTableData();
         cwidth = max(W);
       } else if (isPercent(width)) {
         cwidth = this.percent(1 / n);
       } else {
-        const w = sum([].concat(this.cLines, this.cSpace)) + this.fSpace[0] + this.fSpace[2];
+        const w =
+          sum([].concat(this.cLines, this.cSpace)) +
+          this.fSpace[0] +
+          this.fSpace[2];
         cwidth = Math.max(0, this.length2em(width) - w) / n;
       }
       return Array(this.numCols).fill(cwidth);
@@ -988,7 +1068,7 @@ export function CommonMtableMixin<
      * @override
      */
     public getColumnWidthsAuto(swidths: string[]): ColumnWidths {
-      return swidths.map(x => {
+      return swidths.map((x) => {
         if (x === 'auto' || x === 'fit') return null;
         if (isPercent(x)) return x;
         return this.length2em(x);
@@ -1000,11 +1080,11 @@ export function CommonMtableMixin<
      */
     public getColumnWidthsPercent(swidths: string[]): ColumnWidths {
       const hasFit = swidths.indexOf('fit') >= 0;
-      const {W} = (hasFit ? this.getTableData() : {W: null});
-      return Array.from(swidths.keys()).map(i => {
+      const { W } = hasFit ? this.getTableData() : { W: null };
+      return Array.from(swidths.keys()).map((i) => {
         const x = swidths[i];
         if (x === 'fit') return null;
-        if (x === 'auto') return (hasFit ? W[i] : null);
+        if (x === 'auto') return hasFit ? W[i] : null;
         if (isPercent(x)) return x;
         return this.length2em(x);
       });
@@ -1013,35 +1093,42 @@ export function CommonMtableMixin<
     /**
      * @override
      */
-    public getColumnWidthsFixed(swidths: string[], width: number): ColumnWidths {
+    public getColumnWidthsFixed(
+      swidths: string[],
+      width: number
+    ): ColumnWidths {
       //
       // Get the indices of the fit and auto columns, and the number of fit or auto entries.
       // If there are fit or auto columns, get the column widths.
       //
       const indices = Array.from(swidths.keys());
-      const fit = indices.filter(i => swidths[i] === 'fit');
-      const auto = indices.filter(i => swidths[i] === 'auto');
+      const fit = indices.filter((i) => swidths[i] === 'fit');
+      const auto = indices.filter((i) => swidths[i] === 'auto');
       const n = fit.length || auto.length;
-      const {W} = (n ? this.getTableData() : {W: null});
+      const { W } = n ? this.getTableData() : { W: null };
       //
       // Determine the space remaining from the fixed width after the
       //   separation and lines have been removed (cwidth), and
       //   after the width of the columns have been removed (dw).
       //
-      const cwidth = width - sum([].concat(this.cLines, this.cSpace)) - this.fSpace[0] - this.fSpace[2];
+      const cwidth =
+        width -
+        sum([].concat(this.cLines, this.cSpace)) -
+        this.fSpace[0] -
+        this.fSpace[2];
       let dw = cwidth;
-      indices.forEach(i => {
+      indices.forEach((i) => {
         const x = swidths[i];
-        dw -= (x === 'fit' || x === 'auto' ? W[i] : this.length2em(x, cwidth));
+        dw -= x === 'fit' || x === 'auto' ? W[i] : this.length2em(x, cwidth);
       });
       //
       // Get the amount of extra space per column, or 0 (fw)
       //
-      const fw = (n && dw > 0 ? dw / n : 0);
+      const fw = n && dw > 0 ? dw / n : 0;
       //
       // Return the column widths (plus extra space for those that are stretching
       //
-      return indices.map(i => {
+      return indices.map((i) => {
         const x = swidths[i];
         if (x === 'fit') return W[i] + fw;
         if (x === 'auto') return W[i] + (fit.length === 0 ? fw : 0);
@@ -1060,31 +1147,50 @@ export function CommonMtableMixin<
       // and takes all the shrinkage from fit columns, if possible, then auto, then
       // percentage widths, and fixed sizes last.
       //
-      const {W} = this.getTableData();
+      const { W } = this.getTableData();
       const swidths = this.getColumnAttributes('columnwidth', 0);
       const indices = Array.from(swidths.keys());
-      const fit = indices.filter(i => swidths[i] === 'fit').sort((a, b) => W[b] - W[a]);
-      const auto = indices.filter(i => swidths[i] === 'auto').sort((a, b) => W[b] - W[a]);
-      const percent = indices.filter(i => isPercent(swidths[i])).sort((a, b) => W[b] - W[a]);
-      const fixed = indices.filter(i => swidths[i] !== 'fit' && swidths[i] !== 'auto' &&
-                                   !isPercent(swidths[i])).sort((a, b) => W[b] - W[a]);
+      const fit = indices
+        .filter((i) => swidths[i] === 'fit')
+        .sort((a, b) => W[b] - W[a]);
+      const auto = indices
+        .filter((i) => swidths[i] === 'auto')
+        .sort((a, b) => W[b] - W[a]);
+      const percent = indices
+        .filter((i) => isPercent(swidths[i]))
+        .sort((a, b) => W[b] - W[a]);
+      const fixed = indices
+        .filter(
+          (i) =>
+            swidths[i] !== 'fit' &&
+            swidths[i] !== 'auto' &&
+            !isPercent(swidths[i])
+        )
+        .sort((a, b) => W[b] - W[a]);
       const columns = [...fit, ...auto, ...percent, ...fixed];
       if (!columns.length) return;
       //
       //  Get the current widths of all the columns
       //
-      this.cWidths = indices.map(i => (typeof this.cWidths[i] === 'number' ? this.cWidths[i] as number : W[i]));
+      this.cWidths = indices.map((i) =>
+        typeof this.cWidths[i] === 'number' ? (this.cWidths[i] as number) : W[i]
+      );
       //
       // Determine the space remaining from the fixed width after the
       //   separation and lines have been removed (cwidth), and
       //   after the width of the columns have been removed (dw).
       //
-      const cwidth = width - sum([].concat(this.cLines, this.cSpace)) - this.fSpace[0] - this.fSpace[2];
+      const cwidth =
+        width -
+        sum([].concat(this.cLines, this.cSpace)) -
+        this.fSpace[0] -
+        this.fSpace[2];
       let dw = sum(this.cWidths as number[]) - cwidth;
       //
       // Get the columns needed to get dw as a small enough portion of the total width
       //
-      let w = 0, n = 0;
+      let w = 0,
+        n = 0;
       while (n < columns.length) {
         w += W[columns[n++]];
         if (w && dw / w < BREAK_BELOW) break;
@@ -1093,7 +1199,7 @@ export function CommonMtableMixin<
       // Adjust the columns by the proportional amount of dw;
       //
       dw = 1 - dw / w;
-      columns.slice(0, n).forEach(i => (this.cWidths[i] as number) *= dw);
+      columns.slice(0, n).forEach((i) => ((this.cWidths[i] as number) *= dw));
     }
 
     /**
@@ -1101,8 +1207,8 @@ export function CommonMtableMixin<
      */
     public getVerticalPosition(i: number, align: string): number {
       const equal = this.node.attributes.get('equalrows') as boolean;
-      const {H, D} = this.getTableData();
-      const HD = (equal ? this.getEqualRowHeight() : 0);
+      const { H, D } = this.getTableData();
+      const HD = equal ? this.getEqualRowHeight() : 0;
       const space = this.getRowHalfSpacing();
       //
       //  Start with frame size and add in spacing, height and depth,
@@ -1110,21 +1216,24 @@ export function CommonMtableMixin<
       //
       let y = this.fLine;
       for (let j = 0; j < i; j++) {
-        y += space[j] + (equal ? HD : H[j] + D[j]) + space[j + 1] + this.rLines[j];
+        y +=
+          space[j] + (equal ? HD : H[j] + D[j]) + space[j + 1] + this.rLines[j];
       }
       //
       //  For equal rows, get updated height and depth
       //
-      const [h, d] = (equal ? [(HD + H[i] - D[i]) / 2, (HD - H[i] + D[i]) / 2] : [H[i], D[i]]);
+      const [h, d] = equal
+        ? [(HD + H[i] - D[i]) / 2, (HD - H[i] + D[i]) / 2]
+        : [H[i], D[i]];
       //
       //  Add the offset into the specified row
       //
-      const offset: {[name: string]: number} = {
+      const offset: { [name: string]: number } = {
         top: 0,
         center: space[i] + (h + d) / 2,
         bottom: space[i] + h + d + space[i + 1],
         baseline: space[i] + h,
-        axis: space[i] + h - .25
+        axis: space[i] + h - 0.25,
       };
       y += offset[align] || 0;
       //
@@ -1135,12 +1244,13 @@ export function CommonMtableMixin<
 
     /******************************************************************/
 
-
     /**
      * @override
      */
     public getFrameSpacing(): number[] {
-      const fspace = (this.fframe ? this.convertLengths(this.getAttributeArray('framespacing')) : [0, 0]);
+      const fspace = this.fframe
+        ? this.convertLengths(this.getAttributeArray('framespacing'))
+        : [0, 0];
       fspace[2] = fspace[0];
       const padding = this.node.attributes.get('data-array-padding') as string;
       if (padding) {
@@ -1154,7 +1264,11 @@ export function CommonMtableMixin<
     /**
      * @override
      */
-    public getEmHalfSpacing(fspace: number[], space: number[], scale: number = 1): string[] {
+    public getEmHalfSpacing(
+      fspace: number[],
+      space: number[],
+      scale: number = 1
+    ): string[] {
       //
       //  Get the column spacing values, and add the frame spacing values at the left and right
       //
@@ -1168,7 +1282,7 @@ export function CommonMtableMixin<
      * @override
      */
     public getRowHalfSpacing(): number[] {
-      const space = this.rSpace.map(x => x / 2);
+      const space = this.rSpace.map((x) => x / 2);
       space.unshift(this.fSpace[1]);
       space.push(this.fSpace[1]);
       return space;
@@ -1178,7 +1292,7 @@ export function CommonMtableMixin<
      * @override
      */
     public getColumnHalfSpacing(): number[] {
-      const space = this.cSpace.map(x => x / 2);
+      const space = this.cSpace.map((x) => x / 2);
       space.unshift(this.fSpace[0]);
       space.push(this.fSpace[2]);
       return space;
@@ -1241,7 +1355,7 @@ export function CommonMtableMixin<
      */
     public addEm(list: number[], n: number = 1): string[] | null {
       if (!list) return null;
-      return list.map(x => this.em(x / n));
+      return list.map((x) => this.em(x / n));
     }
 
     /**
@@ -1249,7 +1363,7 @@ export function CommonMtableMixin<
      */
     public convertLengths(list: string[]): number[] | null {
       if (!list) return null;
-      return list.map(x => this.length2em(x));
+      return list.map((x) => this.length2em(x));
     }
 
     /*****************************************************/
@@ -1263,11 +1377,16 @@ export function CommonMtableMixin<
       //
       // Determine the number of columns and rows, and whether the table is stretchy
       //
-      this.numCols = max(this.tableRows.map(row => row.numCells));
+      this.numCols = max(this.tableRows.map((row) => row.numCells));
       this.numRows = this.childNodes.length;
-      this.hasLabels = this.childNodes.reduce((value, row) => value || row.node.isKind('mlabeledtr'), false);
+      this.hasLabels = this.childNodes.reduce(
+        (value, row) => value || row.node.isKind('mlabeledtr'),
+        false
+      );
       this.findContainer();
-      this.isTop = !this.container || (this.container.node.isKind('math') && !this.container.parent);
+      this.isTop =
+        !this.container ||
+        (this.container.node.isKind('math') && !this.container.parent);
       if (this.isTop) {
         this.jax.table = this as any as WW;
       }
@@ -1278,13 +1397,20 @@ export function CommonMtableMixin<
       const attributes = this.node.attributes;
       const frame = attributes.get('frame');
       this.frame = frame !== 'none';
-      this.fframe = this.frame || attributes.get('data-frame-styles') !== undefined;
-      this.fLine = (this.frame ? .07 : 0);
+      this.fframe =
+        this.frame || attributes.get('data-frame-styles') !== undefined;
+      this.fLine = this.frame ? 0.07 : 0;
       this.fSpace = this.getFrameSpacing();
-      this.cSpace = this.convertLengths(this.getColumnAttributes('columnspacing'));
+      this.cSpace = this.convertLengths(
+        this.getColumnAttributes('columnspacing')
+      );
       this.rSpace = this.convertLengths(this.getRowAttributes('rowspacing'));
-      this.cLines = this.getColumnAttributes('columnlines').map(x => (x === 'none' ? 0 : .07));
-      this.rLines = this.getRowAttributes('rowlines').map(x => (x === 'none' ? 0 : .07));
+      this.cLines = this.getColumnAttributes('columnlines').map((x) =>
+        x === 'none' ? 0 : 0.07
+      );
+      this.rLines = this.getRowAttributes('rowlines').map((x) =>
+        x === 'none' ? 0 : 0.07
+      );
       this.cWidths = this.getColumnWidths();
       this.adjustWideTable();
       //
@@ -1318,7 +1444,7 @@ export function CommonMtableMixin<
      * @override
      */
     public computeBBox(bbox: BBox, _recompute: boolean = false) {
-      const {H, D} = this.getTableData();
+      const { H, D } = this.getTableData();
       let height, width;
       //
       // For equal rows, use the common height and depth for all rows
@@ -1365,19 +1491,27 @@ export function CommonMtableMixin<
     /**
      * @override
      */
-    public setChildPWidths(_recompute: boolean, cwidth: number, _clear: boolean) {
+    public setChildPWidths(
+      _recompute: boolean,
+      cwidth: number,
+      _clear: boolean
+    ) {
       const width = this.node.attributes.get('width') as string;
       if (!isPercent(width)) return false;
       if (!this.hasLabels) {
         this.bbox.pwidth = '';
         this.container.bbox.pwidth = '';
       }
-      const {w, L, R} = this.bbox;
-      const labelInWidth = this.node.attributes.get('data-width-includes-label') as boolean;
-      const W = Math.max(w, this.length2em(width, Math.max(cwidth, L + w + R))) - (labelInWidth ? L + R : 0);
-      const cols = (this.node.attributes.get('equalcolumns') as boolean ?
-                    Array(this.numCols).fill(this.percent(1 / Math.max(1, this.numCols))) :
-                    this.getColumnAttributes('columnwidth', 0));
+      const { w, L, R } = this.bbox;
+      const labelInWidth = this.node.attributes.get(
+        'data-width-includes-label'
+      ) as boolean;
+      const W =
+        Math.max(w, this.length2em(width, Math.max(cwidth, L + w + R))) -
+        (labelInWidth ? L + R : 0);
+      const cols = (this.node.attributes.get('equalcolumns') as boolean)
+        ? Array(this.numCols).fill(this.percent(1 / Math.max(1, this.numCols)))
+        : this.getColumnAttributes('columnwidth', 0);
       this.cWidths = this.getColumnWidthsFixed(cols, W);
       this.pWidth = this.naturalWidth();
       if (this.isTop) {
@@ -1394,10 +1528,12 @@ export function CommonMtableMixin<
      * @override
      */
     public getAlignShift() {
-      return (this.isTop ? super.getAlignShift() :
-              [this.container.getChildAlign(this.containerI), 0] as [string, number]);
+      return this.isTop
+        ? super.getAlignShift()
+        : ([this.container.getChildAlign(this.containerI), 0] as [
+            string,
+            number,
+          ]);
     }
-
   } as any as B;
-
 }

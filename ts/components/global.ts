@@ -22,7 +22,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {VERSION} from './version.js';
+import { VERSION } from './version.js';
 
 /**
  * The MathJax variable as a configuration object
@@ -59,12 +59,11 @@ declare const global: typeof globalThis;
  */
 const defaultGlobal = {};
 export const GLOBAL = (() => {
-  if (typeof window !== 'undefined') return window;            // for browsers
-  if (typeof global !== 'undefined') return global;            // for node
+  if (typeof window !== 'undefined') return window; // for browsers
+  if (typeof global !== 'undefined') return global; // for node
   if (typeof globalThis !== 'undefined') return globalThis;
-  return defaultGlobal;                                        // fallback shared object
-})() as any as Window & {MathJax: MathJaxObject | MathJaxConfig};
-
+  return defaultGlobal; // fallback shared object
+})() as any as Window & { MathJax: MathJaxObject | MathJaxConfig };
 
 /**
  * @param {any} x     An item to test if it is an object
@@ -85,10 +84,12 @@ export function isObject(x: any): boolean {
  */
 export function combineConfig(dst: any, src: any, check: boolean = false): any {
   for (const id of Object.keys(src)) {
-    if (id === '__esModule' ||
-        dst[id] === src[id] ||
-        src[id] === null ||
-        src[id] === undefined) {
+    if (
+      id === '__esModule' ||
+      dst[id] === src[id] ||
+      src[id] === null ||
+      src[id] === undefined
+    ) {
       continue;
     }
     if (isObject(dst[id]) && isObject(src[id])) {
@@ -134,7 +135,6 @@ export function combineWithMathJax(config: any): MathJaxObject {
   return combineConfig(MathJax, config);
 }
 
-
 /**
  * Create the MathJax global, if it doesn't exist
  */
@@ -151,7 +151,7 @@ if (!(GLOBAL.MathJax as MathJaxObject).version) {
   GLOBAL.MathJax = {
     version: VERSION,
     _: {},
-    config: GLOBAL.MathJax
+    config: GLOBAL.MathJax,
   };
 }
 

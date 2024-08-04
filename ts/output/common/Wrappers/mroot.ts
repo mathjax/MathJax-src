@@ -21,12 +21,18 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, Constructor} from '../Wrapper.js';
-import {CommonWrapperFactory} from '../WrapperFactory.js';
-import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
-import {CommonOutputJax} from '../../common.js';
-import {CommonMsqrt, CommonMsqrtClass} from './msqrt.js';
-import {BBox} from '../../../util/BBox.js';
+import { CommonWrapper, CommonWrapperClass, Constructor } from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { CommonMsqrt, CommonMsqrtClass } from './msqrt.js';
+import { BBox } from '../../../util/BBox.js';
 
 /*****************************************************************/
 /**
@@ -46,7 +52,9 @@ import {BBox} from '../../../util/BBox.js';
  * @template FC  The FontDataClass type
  */
 export interface CommonMroot<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -55,7 +63,7 @@ export interface CommonMroot<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonMsqrt<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /**
@@ -75,7 +83,9 @@ export interface CommonMroot<
  * @template FC  The FontDataClass type
  */
 export interface CommonMrootClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -84,7 +94,7 @@ export interface CommonMrootClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonMsqrtClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
@@ -107,7 +117,9 @@ export interface CommonMrootClass<
  * @template B   The mixin interface to create
  */
 export function CommonMrootMixin<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -117,12 +129,14 @@ export function CommonMrootMixin<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonMsqrtClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: Constructor<CommonMsqrt<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>): B {
-
-  return class CommonMrootMixin extends Base
-  implements CommonMroot<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
+  B extends CommonMsqrtClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: Constructor<CommonMsqrt<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>
+): B {
+  return class CommonMrootMixin
+    extends Base
+    implements CommonMroot<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
      * @override
      */
@@ -145,8 +159,8 @@ export function CommonMrootMixin<
     public getRootDimens(sbox: BBox, H: number) {
       const surd = this.surd;
       const bbox = this.childNodes[this.root].getOuterBBox();
-      const offset = (surd.size < 0 ? .5 : .6) * sbox.w;
-      const {w, rscale} = bbox;
+      const offset = (surd.size < 0 ? 0.5 : 0.6) * sbox.w;
+      const { w, rscale } = bbox;
       const W = Math.max(w, offset / rscale);
       const dx = Math.max(0, W - w);
       const h = this.rootHeight(bbox, sbox, surd.size, H);
@@ -159,7 +173,7 @@ export function CommonMrootMixin<
      */
     public rootHeight(rbox: BBox, sbox: BBox, size: number, H: number): number {
       const h = sbox.h + sbox.d;
-      const b = (size < 0 ? 1.9 : .55 * h) - (h - H);
+      const b = (size < 0 ? 1.9 : 0.55 * h) - (h - H);
       return b + Math.max(0, rbox.d * rbox.rscale);
     }
 
@@ -168,9 +182,7 @@ export function CommonMrootMixin<
      */
     public rootWidth() {
       const bbox = this.childNodes[this.root].getOuterBBox();
-      return .4 + bbox.w * bbox.rscale;
+      return 0.4 + bbox.w * bbox.rscale;
     }
-
   } as any as B;
-
 }

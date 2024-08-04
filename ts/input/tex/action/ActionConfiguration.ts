@@ -15,25 +15,21 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Configuration file for the action package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
-import {Configuration} from '../Configuration.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration } from '../Configuration.js';
 import TexParser from '../TexParser.js';
-import {CommandMap} from '../TokenMap.js';
-import {ParseMethod} from '../Types.js';
+import { CommandMap } from '../TokenMap.js';
+import { ParseMethod } from '../Types.js';
 import BaseMethods from '../base/BaseMethods.js';
 
-
 // Namespace
-export const ActionMethods: {[key: string]: ParseMethod} = {
-
-
+export const ActionMethods: { [key: string]: ParseMethod } = {
   /**
    * Implement \toggle {math1} {math2} ... \endtoggle
    *    (as an <maction actiontype="toggle">)
@@ -45,12 +41,13 @@ export const ActionMethods: {[key: string]: ParseMethod} = {
     let arg;
     while ((arg = parser.GetArgument(name)) !== '\\endtoggle') {
       children.push(
-        new TexParser(arg, parser.stack.env, parser.configuration).mml());
+        new TexParser(arg, parser.stack.env, parser.configuration).mml()
+      );
     }
     parser.Push(
-      parser.create('node', 'maction', children, {actiontype: 'toggle'}));
+      parser.create('node', 'maction', children, { actiontype: 'toggle' })
+    );
   },
-
 
   /**
    * Implement \mathtip{math}{tip}
@@ -62,19 +59,19 @@ export const ActionMethods: {[key: string]: ParseMethod} = {
     const arg = parser.ParseArg(name);
     const tip = parser.ParseArg(name);
     parser.Push(
-      parser.create('node', 'maction', [arg, tip], {actiontype: 'tooltip'}));
+      parser.create('node', 'maction', [arg, tip], { actiontype: 'tooltip' })
+    );
   },
 
   Macro: BaseMethods.Macro,
-}
+};
 
 new CommandMap('action-macros', {
-  toggle:  ActionMethods.Toggle,
+  toggle: ActionMethods.Toggle,
   mathtip: ActionMethods.Mathtip,
-  texttip: [ActionMethods.Macro, '\\mathtip{#1}{\\text{#2}}', 2]
+  texttip: [ActionMethods.Macro, '\\mathtip{#1}{\\text{#2}}', 2],
 });
 
-
-export const ActionConfiguration = Configuration.create(
-  'action', {[ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['action-macros']}}
-);
+export const ActionConfiguration = Configuration.create('action', {
+  [ConfigurationType.HANDLER]: { [HandlerType.MACRO]: ['action-macros'] },
+});
