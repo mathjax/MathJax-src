@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMroot wrapper for the MmlMroot object
+ * @file  Implements the SvgMroot wrapper for the MmlMroot object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

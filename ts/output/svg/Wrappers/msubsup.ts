@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMsubsup wrapper for the MmlMsubsup object
+ * @file  Implements the SvgMsubsup wrapper for the MmlMsubsup object
  *                and the special cases SvgMsub and SvgMsup
  *
  * @author dpvc@mathjax.org (Davide Cervone)

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  An object listing all the ChtmlWrapper classes
+ * @file  An object listing all the ChtmlWrapper classes
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

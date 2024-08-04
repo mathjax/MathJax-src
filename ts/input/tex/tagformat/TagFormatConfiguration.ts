@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview    Configuration file for the tagformat package.
+ * @file    Configuration file for the tagformat package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
@@ -34,7 +34,8 @@ let tagID = 0;
 
 /**
  * Configure a class to use for the tag handler that uses the input jax's options
- *   to control the formatting of the tags
+ * to control the formatting of the tags
+ *
  * @param {Configuration} config   The configuration for the input jax
  * @param {TeX} jax                The TeX input jax
  */

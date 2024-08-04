@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements a lightweight HTML Element replacement
+ * @file  Implements a lightweight HTML Element replacement
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -69,7 +69,7 @@ export class LiteElement {
    * @param {string} kind  The type of node to create
    * @param {LiteAttributeList} attributes  The list of attributes to set (if any)
    * @param {LiteNode[]} children  The children for the node (if any)
-   * @constructor
+   * @class
    */
   constructor(
     kind: string,

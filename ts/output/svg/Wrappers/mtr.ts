@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMtr wrapper for the MmlMtr object
+ * @file  Implements the SvgMtr wrapper for the MmlMtr object
  *                and SVGmlabeledtr for MmlMlabeledtr
  *
  * @author dpvc@mathjax.org (Davide Cervone)
@@ -110,7 +110,7 @@ export interface SvgMtrNTD<N, T, D>
   /**
    * @param {Svgmtd} cell      The cell to place
    * @param {SizeData} sizes   The positioning information
-   * @return {number}          The new x position
+   * @returns {number}          The new x position
    */
   placeCell(cell: SvgMtdNTD<N, T, D>, sizes: SizeData): number;
 }

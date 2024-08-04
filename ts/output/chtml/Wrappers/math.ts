@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMath wrapper for the MmlMath object
+ * @file  Implements the ChtmlMath wrapper for the MmlMath object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -198,6 +198,8 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
 
     /**
      *  Handle displayed equations (set min-width, and so on).
+     *
+     * @param parent
      */
     protected handleDisplay(parent: N) {
       const adaptor = this.adaptor;
@@ -227,6 +229,8 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
 
     /**
      * Handle in-line expressions
+     *
+     * @param parent
      */
     protected handleInline(parent: N) {
       //

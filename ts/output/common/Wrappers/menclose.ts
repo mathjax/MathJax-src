@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMenclose wrapper mixin for the MmlMenclose object
+ * @file  Implements the CommonMenclose wrapper mixin for the MmlMenclose object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -129,12 +129,12 @@ export interface CommonMenclose<
   initializeNotations(): void;
 
   /**
-   * @return {Notation.PaddingData}  Array of the maximum extra space from the notations along each side
+   * @returns {Notation.PaddingData}  Array of the maximum extra space from the notations along each side
    */
   getBBoxExtenders(): Notation.PaddingData;
 
   /**
-   * @return {Notation.PaddingData}  Array of padding (i.e., BBox minus border) along each side
+   * @returns {Notation.PaddingData}  Array of padding (i.e., BBox minus border) along each side
    */
   getPadding(): Notation.PaddingData;
 
@@ -150,14 +150,14 @@ export interface CommonMenclose<
    * Get the offset amount for the given direction for vertical and horizontal centering
    *
    * @param {string} direction    The direction 'X' or 'Y' for the offset
-   * @return {number}             The amount of offset in that direction
+   * @returns {number}             The amount of offset in that direction
    */
   getOffset(direction: string): number;
 
   /**
    * @param {number} w    The width of the box whose diagonal is needed
    * @param {number} h    The height of the box whose diagonal is needed
-   * @return {number[]}   The angle and width of the diagonal of the box
+   * @returns {number[]}   The angle and width of the diagonal of the box
    */
   getArgMod(w: number, h: number): [number, number];
 
@@ -169,7 +169,7 @@ export interface CommonMenclose<
    * @param {boolean} double   True if this is a double-headed arrow
    * @param {string} offset    'X' for vertical arrow, 'Y' for horizontal
    * @param {number} trans     Distance to translate in the offset direction
-   * @return {N}               The newly created arrow
+   * @returns {N}               The newly created arrow
    */
   arrow(
     w: number,
@@ -188,7 +188,7 @@ export interface CommonMenclose<
   /**
    * Get the angle and width for a diagonal arrow
    *
-   * @return {[number, number]}   The angle and width
+   * @returns {[number, number]}   The angle and width
    */
   arrowAW(): [number, number];
 
@@ -199,12 +199,12 @@ export interface CommonMenclose<
    *   the menclose (which would desrtoy the original MathML tree).
    *
    * @param {WW} child   The inferred mrow that is the child of this menclose
-   * @return {S}         The newly created (but detached) msqrt wrapper
+   * @returns {S}         The newly created (but detached) msqrt wrapper
    */
   createMsqrt(child: WW): S;
 
   /**
-   * @return {number[]}  The differences between the msqrt bounding box
+   * @returns {number[]}  The differences between the msqrt bounding box
    *                     and its child bounding box (i.e., the extra space
    *                     created by the radical symbol).
    */
@@ -251,6 +251,7 @@ export interface CommonMencloseClass<
 /**
  * The CommonMenclose wrapper mixin for the MmlMenclose object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -341,7 +342,7 @@ export function CommonMencloseMixin<
       }
       const arrowhead = attributes.get('data-arrowhead') as string;
       if (arrowhead !== undefined) {
-        let [x, y, dx] = split(arrowhead);
+        const [x, y, dx] = split(arrowhead);
         this.arrowhead = {
           x: x ? parseFloat(x) : Notation.ARROWX,
           y: y ? parseFloat(y) : Notation.ARROWY,
@@ -403,7 +404,7 @@ export function CommonMencloseMixin<
      * @override
      */
     public getBBoxExtenders(): Notation.PaddingData {
-      let TRBL = [0, 0, 0, 0] as Notation.PaddingData;
+      const TRBL = [0, 0, 0, 0] as Notation.PaddingData;
       for (const name of Object.keys(this.notations)) {
         this.maximizeEntries(TRBL, this.notations[name].bbox(this as any));
       }
@@ -414,7 +415,7 @@ export function CommonMencloseMixin<
      * @override
      */
     public getPadding(): Notation.PaddingData {
-      let BTRBL = [0, 0, 0, 0] as Notation.PaddingData;
+      const BTRBL = [0, 0, 0, 0] as Notation.PaddingData;
       for (const name of Object.keys(this.notations)) {
         const border = this.notations[name].border;
         if (border) {
@@ -443,7 +444,7 @@ export function CommonMencloseMixin<
      * @override
      */
     public getOffset(direction: string): number {
-      let [T, R, B, L] = this.TRBL;
+      const [T, R, B, L] = this.TRBL;
       const d = (direction === 'X' ? R - L : B - T) / 2;
       return Math.abs(d) > 0.001 ? d : 0;
     }
@@ -520,7 +521,7 @@ export function CommonMencloseMixin<
 
     /**
      * @override
-     * @constructor
+     * @class
      */
     constructor(factory: WF, node: MmlNode, parent: WW = null) {
       super(factory, node, parent);
@@ -538,7 +539,7 @@ export function CommonMencloseMixin<
       //
       //  Combine the BBox from the child and add the extenders
       //
-      let [T, R, B, L] = this.TRBL;
+      const [T, R, B, L] = this.TRBL;
       const child = this.childNodes[0].getBBox();
       bbox.combine(child, L, 0);
       bbox.h += T;

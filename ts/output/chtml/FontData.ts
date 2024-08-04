@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlFontData class and AddCSS() function.
+ * @file  Implements the ChtmlFontData class and AddCSS() function.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -312,7 +312,7 @@ export class ChtmlFontData extends FontData<
   /***********************************************************************/
 
   /**
-   * @return {StyleList}  The (computed) styles for this font
+   * @returns {StyleList}  The (computed) styles for this font
    */
   get styles(): StyleList {
     const CLASS = this.constructor as typeof ChtmlFontData;
@@ -342,7 +342,7 @@ export class ChtmlFontData extends FontData<
    * Get the styles for any newly used characters and delimiters
    *
    * @param {StyleList} styles  The style list to add delimiter styles to.
-   * @return {StyleList}        The modified style list.
+   * @returns {StyleList}        The modified style list.
    */
   public updateStyles(styles: StyleList): StyleList {
     for (const N of this.delimUsage.update()) {
@@ -460,7 +460,7 @@ export class ChtmlFontData extends FontData<
    * @param {number} n          The unicode character to use for the part
    * @param {string} v          The variant for the character
    * @param {number} HDW        The height-depth-width data for the stretchy delimiter
-   * @return {number}           The total height of the character
+   * @returns {number}           The total height of the character
    */
   protected addDelimiterVPart(
     styles: StyleList,
@@ -633,7 +633,7 @@ export class ChtmlFontData extends FontData<
 
   /**
    * @param {number} n  The number of ems
-   * @return {string}   The string representing the number with units of "em"
+   * @returns {string}   The string representing the number with units of "em"
    */
   public em(n: number): string {
     return em(n);
@@ -641,7 +641,7 @@ export class ChtmlFontData extends FontData<
 
   /**
    * @param {number} n  The number of ems (will be restricted to non-negative values)
-   * @return {string}   The string representing the number with units of "em"
+   * @returns {string}   The string representing the number with units of "em"
    */
   public em0(n: number): string {
     return em(Math.max(0, n));
@@ -650,7 +650,7 @@ export class ChtmlFontData extends FontData<
   /**
    * @param {ChtmlCharData} data   The [h, d, w] data for the character
    * @param {number} ic            The (optional) italic correction value
-   * @return {string}              The padding string for the h, d, w.
+   * @returns {string}              The padding string for the h, d, w.
    */
   public padding([h, d, w]: ChtmlCharData, ic: number = 0): string {
     return [h, w + ic, d, 0].map(this.em0).join(' ');
@@ -659,7 +659,7 @@ export class ChtmlFontData extends FontData<
   /**
    * @param {number} n  A unicode code point to be converted to a selector for use with the
    *                    CSS rules for fonts
-   * @return {string}   The character as a selector value.
+   * @returns {string}   The character as a selector value.
    */
   public charSelector(n: number): string {
     return '.mjx-c' + n.toString(16).toUpperCase();
@@ -682,7 +682,7 @@ export type CssMap = { [name: number]: number };
 /**
  * @param {ChtmlCharMap} font        The font to augment
  * @param {CharOptionsMap} options   Any additional options for characters in the font
- * @return {ChtmlCharMap}            The augmented font
+ * @returns {ChtmlCharMap}            The augmented font
  */
 export function AddCSS(
   font: ChtmlCharMap,

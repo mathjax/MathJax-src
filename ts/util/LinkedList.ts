@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implement a generic LinkedList object.
+ * @file  Implement a generic LinkedList object.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -61,7 +61,7 @@ export class ListItem<DataClass> {
 
   /**
    * @param {any} data  The data to be stored in the list item
-   * @constructor
+   * @class
    */
   constructor(data: any = null) {
     this.data = data;
@@ -90,7 +90,7 @@ export class LinkedList<DataClass> {
    *    cases.
    *
    * @param {DataClass[]} args  The data items that form the initial list
-   * @constructor
+   * @class
    */
   constructor(...args: DataClass[]) {
     this.list = new ListItem<DataClass>(END);
@@ -103,7 +103,7 @@ export class LinkedList<DataClass> {
    *
    * @param {DataClass} a   The first item to compare
    * @param {DataClass} b   The second item to compare
-   * @return {boolean}      True if a is before b, false otherwise
+   * @returns {boolean}      True if a is before b, false otherwise
    */
   public isBefore(a: DataClass, b: DataClass): boolean {
     return a < b;
@@ -113,11 +113,11 @@ export class LinkedList<DataClass> {
    * Push items on the end of the list
    *
    * @param {DataClass[]} args   The list of data items to be pushed
-   * @return {LinkedList}        The LinkedList object (for chaining)
+   * @returns {LinkedList}        The LinkedList object (for chaining)
    */
   public push(...args: DataClass[]): LinkedList<DataClass> {
     for (const data of args) {
-      let item = new ListItem<DataClass>(data);
+      const item = new ListItem<DataClass>(data);
       item.next = this.list;
       item.prev = this.list.prev;
       this.list.prev = item;
@@ -129,10 +129,10 @@ export class LinkedList<DataClass> {
   /**
    * Pop the end item off the list and return its data
    *
-   * @return {DataClass}  The data from the last item in the list
+   * @returns {DataClass}  The data from the last item in the list
    */
   public pop(): DataClass {
-    let item = this.list.prev;
+    const item = this.list.prev;
     if (item.data === END) {
       return null;
     }
@@ -146,11 +146,11 @@ export class LinkedList<DataClass> {
    * Push items at the head of the list
    *
    * @param {DataClass[]} args   The list of data items to inserted
-   * @return {LinkedList}        The LinkedList object (for chaining)
+   * @returns {LinkedList}        The LinkedList object (for chaining)
    */
   public unshift(...args: DataClass[]): LinkedList<DataClass> {
     for (const data of args.slice(0).reverse()) {
-      let item = new ListItem<DataClass>(data);
+      const item = new ListItem<DataClass>(data);
       item.next = this.list.next;
       item.prev = this.list;
       this.list.next = item;
@@ -162,10 +162,10 @@ export class LinkedList<DataClass> {
   /**
    * Remove an item from the head of the list and return its data
    *
-   * @return {DataClass}  The data from the first item in the list
+   * @returns {DataClass}  The data from the first item in the list
    */
   public shift(): DataClass {
-    let item = this.list.next;
+    const item = this.list.next;
     if (item.data === END) {
       return null;
     }
@@ -179,7 +179,7 @@ export class LinkedList<DataClass> {
    * Remove items from the list
    *
    * @param {DataClass[]} items   The items to remove
-   * @return {LinkedList}  The LinkedList object (for chaining)
+   * @returns {LinkedList}  The LinkedList object (for chaining)
    */
   public remove(...items: DataClass[]): LinkedList<DataClass> {
     const map = new Map<DataClass, boolean>();
@@ -202,7 +202,7 @@ export class LinkedList<DataClass> {
   /**
    * Empty the list
    *
-   * @return {LinkedList}  The LinkedList object (for chaining)
+   * @returns {LinkedList}  The LinkedList object (for chaining)
    */
   public clear(): LinkedList<DataClass> {
     this.list.next.prev = this.list.prev.next = null;
@@ -213,7 +213,7 @@ export class LinkedList<DataClass> {
   /**
    * An iterator for the list in forward order
    *
-   * @yield {DataClass} The next item in the iteration sequence
+   * @yields {DataClass} The next item in the iteration sequence
    */
   public *[Symbol.iterator](): IterableIterator<DataClass> {
     let current = this.list.next;
@@ -227,7 +227,7 @@ export class LinkedList<DataClass> {
   /**
    * An iterator for the list in reverse order
    *
-   * @yield {DataClass} The previous item in the iteration sequence
+   * @yields {DataClass} The previous item in the iteration sequence
    */
   public *reversed(): IterableIterator<DataClass> {
     let current = this.list.prev;
@@ -249,7 +249,7 @@ export class LinkedList<DataClass> {
     if (isBefore === null) {
       isBefore = this.isBefore.bind(this);
     }
-    let item = new ListItem<DataClass>(data);
+    const item = new ListItem<DataClass>(data);
     let cur = this.list.next;
     while (
       cur.data !== END &&
@@ -267,7 +267,7 @@ export class LinkedList<DataClass> {
    * Sort the list using an optional sort function
    *
    * @param {SortFn} isBefore  The function used to order the data
-   * @return {LinkedList}      The LinkedList object (for chaining)
+   * @returns {LinkedList}      The LinkedList object (for chaining)
    */
   public sort(isBefore: SortFn<DataClass> = null): LinkedList<DataClass> {
     if (isBefore === null) {
@@ -276,7 +276,7 @@ export class LinkedList<DataClass> {
     //
     //  Make an array of singleton lists
     //
-    let lists: LinkedList<DataClass>[] = [];
+    const lists: LinkedList<DataClass>[] = [];
     for (const item of this) {
       lists.push(new LinkedList<DataClass>(item as DataClass));
     }
@@ -288,8 +288,8 @@ export class LinkedList<DataClass> {
     //  Merge pairs of lists until there is only one left
     //
     while (lists.length > 1) {
-      let l1 = lists.shift();
-      let l2 = lists.shift();
+      const l1 = lists.shift();
+      const l2 = lists.shift();
       l1.merge(l2, isBefore);
       lists.push(l1);
     }
@@ -307,7 +307,7 @@ export class LinkedList<DataClass> {
    *
    * @param {LinkedList} list  The list to merge into this instance's list
    * @param {SortFn} isBefore  The function used to order the data
-   * @return {LinkedList}      The LinkedList instance (for chaining)
+   * @returns {LinkedList}      The LinkedList instance (for chaining)
    */
   public merge(
     list: LinkedList<DataClass>,

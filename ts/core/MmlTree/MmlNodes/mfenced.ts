@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMfenced node
+ * @file  Implements the MmlMfenced node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -173,15 +173,15 @@ export class MmlMfenced extends AbstractMmlNode {
    * @param {string} c                 The character for the text of the node
    * @param {PropertyList} properties  The attributes for the node
    * @param {number} texClass          The TeX class for the node
-   * @return {MmlNode}                 The generated <mo> node
+   * @returns {MmlNode}                 The generated <mo> node
    */
   protected fakeNode(
     c: string,
     properties: PropertyList = {},
     texClass: number = null
   ): MmlNode {
-    let text = (this.factory.create('text') as TextNode).setText(c);
-    let node = this.factory.create('mo', properties, [text]);
+    const text = (this.factory.create('text') as TextNode).setText(c);
+    const node = this.factory.create('mo', properties, [text]);
     node.texClass = texClass;
     node.parent = this;
     return node;

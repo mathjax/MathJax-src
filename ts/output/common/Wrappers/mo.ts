@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMo wrapper mixin for the MmlMo object
+ * @file  Implements the CommonMo wrapper mixin for the MmlMo object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -119,13 +119,13 @@ export interface CommonMo<
   moLineBBox(i: number, style: string, obox?: BBox): LineBBox;
 
   /**
-   * @return {number}    Offset to the left by half the actual width of the accent
+   * @returns {number}    Offset to the left by half the actual width of the accent
    */
   getAccentOffset(): number;
 
   /**
    * @param {BBox} bbox   The bbox to center, or null to compute the bbox
-   * @return {number}     The offset to move the glyph to center it
+   * @returns {number}     The offset to move the glyph to center it
    */
   getCenterOffset(bbox?: BBox): number;
 
@@ -140,13 +140,13 @@ export interface CommonMo<
   /**
    * @param {string} name   The name of the attribute to get
    * @param {number} value  The default value to use
-   * @return {number}       The size in em's of the attribute (or the default value)
+   * @returns {number}       The size in em's of the attribute (or the default value)
    */
   getSize(name: string, value: number): number;
 
   /**
    * @param {number[]} WH  Either [W] for width, [H, D] for height and depth, or [] for min/max size
-   * @return {number}      Either the width or the total height of the character
+   * @returns {number}      Either the width or the total height of the character
    */
   getWH(WH: number[]): number;
 
@@ -161,7 +161,7 @@ export interface CommonMo<
    * @param {number[]} WHD     The [H, D] being requested from the parent mrow
    * @param {number} HD        The full height (including symmetry, etc)
    * @param {DelimiterData} C  The delimiter data for the stretchy character
-   * @return {number[]}        The height and depth for the vertically stretched delimiter
+   * @returns {number[]}        The height and depth for the vertically stretched delimiter
    */
   getBaseline(WHD: number[], HD: number, C: DelimiterData): number[];
 
@@ -170,7 +170,7 @@ export interface CommonMo<
    *
    * @param {number} D          The requested size of the delimiter
    * @param {DelimiterData} C   The data for the delimiter
-   * @return {number}           The final size of the assembly
+   * @returns {number}           The final size of the assembly
    */
   checkExtendedHeight(D: number, C: DelimiterData): number;
 
@@ -185,7 +185,7 @@ export interface CommonMo<
    * Get the breakstyle of the mo
    *
    * @param {string} linebreak   Force style to be the given one
-   * @return {string}            The linebreak style of the node
+   * @returns {string}            The linebreak style of the node
    */
   getBreakStyle(linebreak?: string): string;
 
@@ -230,6 +230,7 @@ export interface CommonMoClass<
 /**
  * The CommomMo wrapper mixin for the MmlMo object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -426,7 +427,7 @@ export function CommonMoMixin<
      * @override
      */
     public getSize(name: string, value: number): number {
-      let attributes = this.node.attributes;
+      const attributes = this.node.attributes;
       if (attributes.isSet(name)) {
         value = this.length2em(attributes.get(name), 1, 1); // FIXME: should use height of actual character
       }
@@ -439,7 +440,7 @@ export function CommonMoMixin<
     public getWH(WH: number[]): number {
       if (WH.length === 0) return 0;
       if (WH.length === 1) return WH[0];
-      let [H, D] = WH;
+      const [H, D] = WH;
       const a = this.font.params.axis_height;
       return this.node.attributes.get('symmetric')
         ? 2 * Math.max(H - a, D + a)
@@ -506,7 +507,7 @@ export function CommonMoMixin<
         //  Use depth proportional to the normal-size character
         //  (when stretching for minsize or maxsize by itself)
         //
-        let [ch, cd] = C.HDW || [0.75, 0.25];
+        const [ch, cd] = C.HDW || [0.75, 0.25];
         d = cd * (h / (ch + cd));
       }
       return [h - d, d];

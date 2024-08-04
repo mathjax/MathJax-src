@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Stack items hold information on the TexParser stack.
+ * @file Stack items hold information on the TexParser stack.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -41,36 +41,40 @@ export type CheckType = [(MmlNode | StackItem)[], boolean];
 export interface NodeStack {
   /**
    * Get or set the topmost element on the node stack without removing it.
-   * @return {MmlNode} The topmost node on the stack.
+   *
+   * @returns {MmlNode} The topmost node on the stack.
    */
   First: MmlNode;
 
   /**
    * Get or set the last element on the node stack without removing it.
-   * @return {MmlNode} The last node on the stack.
+   *
+   * @returns {MmlNode} The last node on the stack.
    */
   Last: MmlNode;
 
   /**
-   * @return {MmlNode} The topmost node on the item's node stack.
+   * @returns {MmlNode} The topmost node on the item's node stack.
    */
   Pop(): MmlNode | void;
 
   /**
    * Pushes new nodes onto the items node stack.
+   *
    * @param {MmlNode[]} ...nodes A list of nodes.
    */
   Push(...nodes: MmlNode[]): void;
 
   /**
    * Get the top n elements on the node stack without removing them.
+   *
    * @param {number=} n Number of elements that should be returned.
-   * @return {MmlNode[]} List of nodes on top of stack.
+   * @returns {MmlNode[]} List of nodes on top of stack.
    */
   Peek(n?: number): MmlNode[];
 
   /**
-   * @return {number} The size of the stack.
+   * @returns {number} The size of the stack.
    */
   Size(): number;
 
@@ -97,10 +101,11 @@ export interface NodeStack {
   /**
    * Returns nodes on the stack item's node stack as an Mml node. I.e., in case
    * the item contains more than one node, it creates an mrow.
+   *
    * @param {boolean=} inferred If set the mrow will be an inferred mrow.
    * @param {boolean=} forceRow If set an mrow will be created, regardless of
    *     how many nodes the item contains.
-   * @return {MmlNode} The topmost Mml node.
+   * @returns {MmlNode} The topmost Mml node.
    */
   toMml(inferred?: boolean, forceRow?: boolean): MmlNode;
 }
@@ -122,14 +127,14 @@ export abstract class MmlStack implements NodeStack {
   public stopI: number = 0;
 
   /**
-   * @constructor
-   * @extends {NodeStack}
+   * @class
+   * @augments {NodeStack}
    * @param {MmlNode[]} _nodes An initial list of nodes to put on the stack.
    */
   constructor(private _nodes: MmlNode[]) {}
 
   /**
-   * @return {MmlNode[]} The nodes on the stack.
+   * @returns {MmlNode[]} The nodes on the stack.
    */
   protected get nodes(): MmlNode[] {
     return this._nodes;
@@ -221,9 +226,11 @@ export abstract class MmlStack implements NodeStack {
 
   /**
    * Convenience method to create nodes with the node factory on this stack.
+   *
    * @param {string} kind The kind of node to create.
    * @param {any[]} ...rest The remaining arguments for the creation method.
-   * @return {MmlNode} The newly created node.
+   * @param {...any} rest
+   * @returns {MmlNode} The newly created node.
    */
   public create(kind: string, ...rest: any[]): MmlNode {
     return this.factory.configuration.nodeFactory.create(kind, ...rest);
@@ -233,78 +240,90 @@ export abstract class MmlStack implements NodeStack {
 export interface StackItem extends NodeStack {
   /**
    * Type of stack item.
+   *
    * @type {string}
    */
   kind: string;
 
   /**
    * Is this a closing item, e.g., end.
+   *
    * @type {boolean}
    */
   isClose: boolean;
 
   /**
    * Is this an opening item, e.g., begin.
+   *
    * @type {boolean}
    */
   isOpen: boolean;
 
   /**
    * Is this a finalising item, i.e., one that only collects nodes.
+   *
    * @type {boolean}
    */
   isFinal: boolean;
 
   /**
    * Global properties of the parser.
+   *
    * @type {EnvList}
    */
   global: EnvList;
 
   /**
    * Local properties of the stack item.
+   *
    * @type {EnvList}
    */
   env: EnvList;
 
   /**
    * Copy local properties when pushed to stack?
+   *
    * @type {boolean}
    */
   copyEnv: boolean;
 
   /**
    * Tests if item is of the given type.
+   *
    * @param {string} kind The type.
-   * @return {boolean} True if item is of that type.
+   * @returns {boolean} True if item is of that type.
    */
   isKind(kind: string): boolean;
 
   /**
    * Get a property of the item.
+   *
    * @param {string} key Property name.
-   * @return {Prop} Property value if it exists.
+   * @returns {Prop} Property value if it exists.
    */
   getProperty(key: string): Prop;
 
   /**
    * Set a property.
+   *
    * @param {string} key Property name.
    * @param {Prop} value Property value.
-   * @return {StackItem} The item for pipelining.
+   * @returns {StackItem} The item for pipelining.
    */
   setProperty(key: string, value: Prop): StackItem;
 
   /**
    * Sets a list of properties.
+   *
    * @param {PropList} def The properties to set.
-   * @return {StackItem} Returns the stack item object for pipelining.
+   * @returns {StackItem} Returns the stack item object for pipelining.
    */
   setProperties(def: PropList): StackItem;
 
   /**
    * Convenience method for returning the string property "name".
-   * @return {string} The value for the name property.
+   *
+   * @returns {string} The value for the name property.
    */
   getName(): string;
 
@@ -329,7 +348,7 @@ export interface StackItem extends NodeStack {
    * for 'foo' or does not exist an error is thrown.
    *
    * @param {StackItem} item The pushed item.
-   * @return {CheckType} True/false or an item or node.
+   * @returns {CheckType} True/false or an item or node.
    */
   checkItem(item: StackItem): CheckType;
 }
@@ -345,18 +364,21 @@ export interface StackItemClass extends FactoryNodeClass<StackItem> {
 export abstract class BaseItem extends MmlStack implements StackItem {
   /**
    * The fail value.
+   *
    * @type {CheckType}
    */
   protected static fail: CheckType = [null, false];
 
   /**
    * The success value.
+   *
    * @type {CheckType}
    */
   protected static success: CheckType = [null, true];
 
   /**
    * A list of basic errors.
+   *
    * @type {{[key: string]: string[]}}
    */
   protected static errors: { [key: string]: string[] } = {
@@ -379,8 +401,10 @@ export abstract class BaseItem extends MmlStack implements StackItem {
   private _properties: PropList = {};
 
   /**
-   * @constructor
-   * @extends {MmlStack}
+   * @param factory
+   * @param {...any} nodes
+   * @class
+   * @augments {MmlStack}
    */
   constructor(
     protected factory: StackItemFactory,
@@ -393,14 +417,14 @@ export abstract class BaseItem extends MmlStack implements StackItem {
   }
 
   /**
-   * @return {string} The type of the stack item.
+   * @returns {string} The type of the stack item.
    */
   public get kind(): string {
     return 'base';
   }
 
   /**
-   * @return {EnvList} Get the private environment
+   * @returns {EnvList} Get the private environment
    */
   public get env(): EnvList {
     return this._env;
@@ -408,6 +432,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
 
   /**
    * Set the private environment
+   *
    * @param {EnvList} value New private environemt.
    */
   public set env(value: EnvList) {
@@ -437,7 +462,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
   }
 
   /**
-   * @return {boolean} True if item is an opening entity, i.e., it expects a
+   * @returns {boolean} True if item is an opening entity, i.e., it expects a
    *     closing counterpart on the stack later.
    */
   get isOpen(): boolean {
@@ -445,7 +470,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
   }
 
   /**
-   * @return {boolean} True if item is an closing entity, i.e., it needs an
+   * @returns {boolean} True if item is an closing entity, i.e., it needs an
    *     opening counterpart already on the stack.
    */
   get isClose(): boolean {
@@ -453,7 +478,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
   }
 
   /**
-   * @return {boolean} True if item is final, i.e., it contains one or multiple
+   * @returns {boolean} True if item is final, i.e., it contains one or multiple
    *      finished parsed nodes.
    */
   get isFinal(): boolean {
@@ -530,8 +555,9 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    * Get error messages for a particular types of stack items. This reads error
    * messages from the static errors object, which can be extended in
    * subclasses.
+   *
    * @param {string} kind The stack item type.
-   * @return {string[]} The list of arguments for the TeXError.
+   * @returns {string[]} The list of arguments for the TeXError.
    */
   public getErrors(kind: string): string[] {
     const CLASS = this.constructor as typeof BaseItem;

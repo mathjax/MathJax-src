@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMrow wrapper for the MmlMrow object
+ * @file  Implements the SvgMrow wrapper for the MmlMrow object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

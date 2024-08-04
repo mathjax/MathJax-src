@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration options for the TexParser.
+ * @file Configuration options for the TexParser.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -46,9 +46,10 @@ export type InitMethod = (c: ParserConfiguration) => void;
 export class Configuration {
   /**
    * Creates a function priority pair.
+   *
    * @param {ProtoProcessor<T>} func The function or processor.
    * @param {number} priority The default priority.
-   * @return {Processor} The processor pair.
+   * @returns {Processor} The processor pair.
    * @template T
    */
   private static makeProcessor<T>(
@@ -60,9 +61,10 @@ export class Configuration {
 
   /**
    * Creates a configuration for a package.
+   *
    * @param {string} name The package name or empty string.
-   * @param {Object} config See `create` method.
-   * @return {Configuration} The newly generated configuration.
+   * @param {object} config See `create` method.
+   * @returns {Configuration} The newly generated configuration.
    */
   private static _create(
     name: string,
@@ -81,18 +83,18 @@ export class Configuration {
       [ConfigurationType.PARSER]?: string;
     } = {}
   ): Configuration {
-    let priority = config.priority || PrioritizedList.DEFAULTPRIORITY;
-    let init = config.init ? this.makeProcessor(config.init, priority) : null;
-    let conf = config.config
+    const priority = config.priority || PrioritizedList.DEFAULTPRIORITY;
+    const init = config.init ? this.makeProcessor(config.init, priority) : null;
+    const conf = config.config
       ? this.makeProcessor(config.config, priority)
       : null;
-    let preprocessors = (config.preprocessors || []).map((pre) =>
+    const preprocessors = (config.preprocessors || []).map((pre) =>
       this.makeProcessor(pre, priority)
     );
-    let postprocessors = (config.postprocessors || []).map((post) =>
+    const postprocessors = (config.postprocessors || []).map((post) =>
       this.makeProcessor(post, priority)
     );
-    let parser = config.parser || 'tex';
+    const parser = config.parser || 'tex';
     return new Configuration(
       name,
       config[ConfigurationType.HANDLER] || {},
@@ -113,24 +115,25 @@ export class Configuration {
   /**
    * Creator pattern for creating a named package configuration. This will be
    * administered in the configuration handler and can be retrieved again.
+   *
    * @param {string} name The package name.
-   * @param {Object} config The configuration parameters:
+   * @param {object} config The configuration parameters:
    * Configuration for the TexParser consist of the following:
-   *  * _handler_  configuration mapping handler types to lists of token mappings.
-   *  * _fallback_ configuration mapping handler types to fallback methods.
-   *  * _items_ for the StackItem factory.
-   *  * _tags_ mapping tagging configurations to tagging objects.
-   *  * _options_ parse options for the packages.
-   *  * _nodes_ for the Node factory.
-   *  * _preprocessors_ list of functions for preprocessing the LaTeX
+   *  _handler_  configuration mapping handler types to lists of token mappings.
+   *  _fallback_ configuration mapping handler types to fallback methods.
+   *  _items_ for the StackItem factory.
+   *  _tags_ mapping tagging configurations to tagging objects.
+   *  _options_ parse options for the packages.
+   *  _nodes_ for the Node factory.
+   *  _preprocessors_ list of functions for preprocessing the LaTeX
    *      string wrt. to given parse options. Can contain a priority.
-   *  * _postprocessors_ list of functions for postprocessing the MmlNode
+   *  _postprocessors_ list of functions for postprocessing the MmlNode
    *      wrt. to given parse options. Can contain a priority.
-   *  * _init_ init method and optionally its priority.
-   *  * _config_ config method and optionally its priority.
-   *  * _priority_ default priority of the configuration.
-   *  * _parser_ the name of the parser that this configuration targets.
-   * @return {Configuration} The newly generated configuration.
+   *  _init_ init method and optionally its priority.
+   *  _config_ config method and optionally its priority.
+   *  _priority_ default priority of the configuration.
+   *  _parser_ the name of the parser that this configuration targets.
+   * @returns {Configuration} The newly generated configuration.
    */
   public static create(
     name: string,
@@ -149,7 +152,7 @@ export class Configuration {
       [ConfigurationType.PARSER]?: string;
     } = {}
   ): Configuration {
-    let configuration = Configuration._create(name, config);
+    const configuration = Configuration._create(name, config);
     ConfigurationHandler.set(name, configuration);
     return configuration;
   }
@@ -157,8 +160,9 @@ export class Configuration {
   /**
    * Creates an unnamed, ephemeral package configuration. It will not added to
    * the configuration handler.
-   * @param {Object} config See `create` method.
-   * @return {Configuration} The ephemeral package configuration.
+   *
+   * @param {object} config See `create` method.
+   * @returns {Configuration} The ephemeral package configuration.
    */
   public static local(
     config: {
@@ -180,7 +184,19 @@ export class Configuration {
   }
 
   /**
-   * @constructor
+   * @param name
+   * @param handler
+   * @param fallback
+   * @param items
+   * @param tags
+   * @param options
+   * @param preprocessors
+   * @param postprocessors
+   * @param initMethod
+   * @param configMethod
+   * @param priority
+   * @param parser
+   * @class
    */
   private constructor(
     readonly name: string,
@@ -210,6 +226,7 @@ export class Configuration {
 
   /**
    * The init method.
+   *
    * @type {Function}
    */
   public get init(): InitMethod {
@@ -218,6 +235,7 @@ export class Configuration {
 
   /**
    * The config method to call once jax is ready.
+   *
    * @type {FunctionList}
    */
   public get config(): ConfigMethod {
@@ -225,7 +243,7 @@ export class Configuration {
   }
 }
 
-let maps: Map<string, Configuration> = new Map();
+const maps: Map<string, Configuration> = new Map();
 
 export const ConfigurationHandler = {
   /**
@@ -242,14 +260,14 @@ export const ConfigurationHandler = {
    * Looks up a configuration.
    *
    * @param {string} name The name of the configuration.
-   * @return {Configuration} The configuration with the given name or null.
+   * @returns {Configuration} The configuration with the given name or null.
    */
   get(name: string): Configuration {
     return maps.get(name);
   },
 
   /**
-   * @return {string[]} All configurations in the handler.
+   * @returns {string[]} All configurations in the handler.
    */
   keys(): IterableIterator<string> {
     return maps.keys();
@@ -259,23 +277,27 @@ export const ConfigurationHandler = {
 /**
  * Parser configuration combines the configurations of the currently selected
  * packages.
- * @constructor
+ *
+ * @class
  */
 export class ParserConfiguration {
   /**
    * Priority list of init methods.
+   *
    * @type {FunctionList}
    */
   protected initMethod: FunctionList = new FunctionList();
 
   /**
    * Priority list of init methods to call once jax is ready.
+   *
    * @type {FunctionList}
    */
   protected configMethod: FunctionList = new FunctionList();
 
   /**
    * An ordered list of cofigurations.
+   *
    * @type {PrioritizedList<Configuration>}
    */
   protected configurations: PrioritizedList<Configuration> =
@@ -288,38 +310,44 @@ export class ParserConfiguration {
 
   /**
    * The subhandlers for this configuration.
+   *
    * @type {SubHandlers}
    */
   public handlers: SubHandlers = new SubHandlers();
 
   /**
    * The collated stack items.
+   *
    * @type {StackItemConfig}
    */
   public items: StackItemConfig = {};
 
   /**
    * The collated tag configurations.
+   *
    * @type {TagsConfig}
    */
   public tags: TagsConfig = {};
 
   /**
    * The collated options.
+   *
    * @type {OptionList}
    */
   public options: OptionList = {};
 
   /**
    * The collated node creators.
+   *
    * @type {{[key: string]: any}}
    */
   public nodes: { [key: string]: any } = {};
 
   /**
-   * @constructor
+   * @class
    * @param {(string|[string,number])[]} packages A list of packages with
    *     optional priorities.
+   * @param parsers
    * @parm {string[]} parsers   The names of the parsers this package targets
    */
   constructor(
@@ -330,7 +358,7 @@ export class ParserConfiguration {
     for (const pkg of packages.slice().reverse()) {
       this.addPackage(pkg);
     }
-    for (let { item: config, priority: priority } of this.configurations) {
+    for (const { item: config, priority: priority } of this.configurations) {
       this.append(config, priority);
     }
   }
@@ -344,6 +372,7 @@ export class ParserConfiguration {
 
   /**
    * Init method for when the jax is ready
+   *
    * @param {TeX} jax The TeX jax for this configuration
    */
   public config(jax: TeX<any, any, any>) {
@@ -355,6 +384,7 @@ export class ParserConfiguration {
 
   /**
    * Retrieves and adds configuration for a package with priority.
+   *
    * @param {(string | [string, number]} pkg Package with priority.
    */
   public addPackage(pkg: string | [string, number]) {
@@ -398,7 +428,7 @@ export class ParserConfiguration {
    * Find a package and check that it is for the targeted parser
    *
    * @param {string} name       The name of the package to check
-   * @return {Configuration}    The configuration for the package
+   * @returns {Configuration}    The configuration for the package
    */
   protected getPackage(name: string): Configuration {
     const config = ConfigurationHandler.get(name);
@@ -410,6 +440,7 @@ export class ParserConfiguration {
 
   /**
    * Appends a configuration to the overall configuration object.
+   *
    * @param {Configuration} config A configuration.
    * @param {number} priority The configurations optional priority.
    */
@@ -430,6 +461,7 @@ export class ParserConfiguration {
 
   /**
    * Adds pre- and postprocessor as filters to the jax.
+   *
    * @param {TeX<any} jax The TeX Jax.
    * @param {Configuration} config The configuration whose processors are added.
    */

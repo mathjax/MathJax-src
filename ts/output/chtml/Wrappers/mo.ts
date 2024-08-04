@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMo wrapper for the MmlMo object
+ * @file  Implements the ChtmlMo wrapper for the MmlMo object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -189,7 +189,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
         parents.forEach((dom) =>
           adaptor.append(dom, this.html('mjx-linestrut'))
         );
-      let chtml = this.standardChtmlNodes(parents);
+      const chtml = this.standardChtmlNodes(parents);
       if (chtml.length > 1 && this.breakStyle !== 'duplicate') {
         const i = this.breakStyle === 'after' ? 1 : 0;
         adaptor.remove(chtml[i]);
@@ -287,7 +287,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
           options.f || (v === 'normal' ? '' : this.font.getVariant(v).letter);
         const font =
           options.ff || (letter ? `${this.font.cssFontPrefix}-${letter}` : '');
-        let c = ((options.c as string) || String.fromCodePoint(n)).replace(
+        const c = ((options.c as string) || String.fromCodePoint(n)).replace(
           /\\[0-9A-F]+/gi,
           (x) => String.fromCodePoint(parseInt(x.substring(1), 16))
         );

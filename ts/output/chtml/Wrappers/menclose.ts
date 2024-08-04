@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMenclose wrapper for the MmlMenclose object
+ * @file  Implements the ChtmlMenclose wrapper for the MmlMenclose object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -48,6 +48,9 @@ import { em } from '../../../util/lengths.js';
 
 /**
  *  The skew angle needed for the arrow head pieces
+ *
+ * @param x
+ * @param y
  */
 function Angle(x: number, y: number) {
   return Math.atan2(x, y)
@@ -85,21 +88,21 @@ export interface ChtmlMencloseNTD<N, T, D>
   /**
    * @param {N} node   The HTML element whose border width must be
    *                   adjusted if the thickness isn't the default
-   * @return {N}       The adjusted element
+   * @returns {N}       The adjusted element
    */
   adjustBorder(node: N): N;
 
   /**
    * @param {N} shape   The svg element whose stroke-thickness must be
    *                    adjusted if the thickness isn't the default
-   * @return {N}        The adjusted element
+   * @returns {N}        The adjusted element
    */
   adjustThickness(shape: N): N;
 
   /**
    * @param {number} m    A number to be shown with a fixed number of digits
    * @param {number=} n   The number of digits to use
-   * @return {string}     The formatted number
+   * @returns {string}     The formatted number
    */
   fixed(m: number, n?: number): string;
 
@@ -107,7 +110,7 @@ export interface ChtmlMencloseNTD<N, T, D>
    * Public access to em method (for use in notation functions)
    *
    * @param {number} m   The number to convert to pixels
-   * @return {string}    The dimension with "px" units
+   * @returns {string}    The dimension with "px" units
    */
   Em(m: number): string;
 }

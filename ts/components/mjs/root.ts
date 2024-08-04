@@ -16,13 +16,13 @@
  */
 
 /**
- * @fileoverview  ES6 shim for getting the MathJax root directory
+ * @file  ES6 shim for getting the MathJax root directory
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 /**
- * @return {string}   The MathJax component root directory
+ * @returns {string}   The MathJax component root directory
  */
 export function mjxRoot(): string {
   return new URL(import.meta.url).pathname.replace(

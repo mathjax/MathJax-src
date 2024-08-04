@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMunderover wrapper for the MmlMunderover object
+ * @file  Implements the ChtmlMunderover wrapper for the MmlMunderover object
  *                and the special cases ChtmlMunder and ChtmlMsup
  *
  * @author dpvc@mathjax.org (Davide Cervone)

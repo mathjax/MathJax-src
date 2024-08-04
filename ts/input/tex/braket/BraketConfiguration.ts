@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the Braket package.
+ * @file Configuration file for the Braket package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */

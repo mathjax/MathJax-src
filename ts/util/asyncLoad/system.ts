@@ -16,15 +16,15 @@
  */
 
 /**
- * @fileoverview  Implements asynchronous loading for use with SystemJS
+ * @file  Implements asynchronous loading for use with SystemJS
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import { mathjax } from '../../mathjax.js';
 
-declare var System: { import: (name: string, url?: string) => any };
-declare var __dirname: string;
+declare let System: { import: (name: string, url?: string) => any };
+declare let __dirname: string;
 
 let root = 'file://' + __dirname.replace(/\/[^\/]*\/[^\/]*$/, '/');
 

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Mixin that computes complexity of the internal MathML
+ * @file  Mixin that computes complexity of the internal MathML
  *                and optionally marks collapsible items
  *
  * @author dpvc@mathjax.org (Davide Cervone)
@@ -81,7 +81,7 @@ export interface ComplexityMathItem<N, T, D> extends EnrichedMathItem<N, T, D> {
  *
  * @param {B} BaseMathItem       The MathItem class to be extended
  * @param {function(MmlNode): void} computeComplexity Method of complexity computation.
- * @return {ComplexityMathItem}  The complexity MathItem class
+ * @returns {ComplexityMathItem}  The complexity MathItem class
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
@@ -125,7 +125,7 @@ export interface ComplexityMathDocument<N, T, D>
   /**
    * Perform complexity computations on the MathItems in the MathDocument
    *
-   * @return {ComplexityMathDocument}   The MathDocument (so calls can be chained)
+   * @returns {ComplexityMathDocument}   The MathDocument (so calls can be chained)
    */
   complexity(): ComplexityMathDocument<N, T, D>;
 }
@@ -134,7 +134,7 @@ export interface ComplexityMathDocument<N, T, D>
  * The mixin for adding complexity to MathDocuments
  *
  * @param {B} BaseDocument     The MathDocument class to be extended
- * @return {EnrichedMathDocument}  The enriched MathDocument class
+ * @returns {EnrichedMathDocument}  The enriched MathDocument class
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
@@ -168,7 +168,7 @@ export function ComplexityMathDocumentMixin<N, T, D, B extends EMDocC<N, T, D>>(
      * Extend the MathItem class used for this MathDocument
      *
      * @override
-     * @constructor
+     * @class
      */
     constructor(...args: any[]) {
       super(...args);
@@ -229,7 +229,7 @@ export function ComplexityMathDocumentMixin<N, T, D, B extends EMDocC<N, T, D>>(
  *
  * @param {Handler} handler   The Handler instance to enhance
  * @param {MathML} MmlJax     The MathML input jax to use for reading the enriched MathML
- * @return {Handler}          The handler that was modified (for purposes of chainging extensions)
+ * @returns {Handler}          The handler that was modified (for purposes of chainging extensions)
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class

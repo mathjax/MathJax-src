@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonTextNode wrapper mixin for the TextNode object
+ * @file  Implements the CommonTextNode wrapper mixin for the TextNode object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -73,7 +73,7 @@ export interface CommonTextNode<
   /**
    * @param {string} text     The text to remap
    * @param {string} variant  The variant for the character
-   * @return {number[]}       The unicode points for the (remapped) text
+   * @returns {number[]}       The unicode points for the (remapped) text
    */
   remappedText(text: string, variant: string): number[];
 }
@@ -113,6 +113,7 @@ export interface CommonTextNodeClass<
 /**
  * The CommonTextNode wrapper mixin for the TextNode object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -182,7 +183,7 @@ export function CommonTextNodeMixin<
         // Loop through the characters and add them in one by one
         //
         for (let i = 0; i < chars.length; i++) {
-          let [h, d, w, data] = this.getVariantChar(variant, chars[i]);
+          const [h, d, w, data] = this.getVariantChar(variant, chars[i]);
           if (data.unknown) {
             utext += String.fromCodePoint(chars[i]);
           } else {
@@ -224,7 +225,7 @@ export function CommonTextNodeMixin<
      * @param {BBox} bbox        The bounding box to update
      * @param {string} utext     The text whose size is to be added to the bbox
      * @param {string} variant   The mathvariant for the text
-     * @return {string}          The new utext (blank)
+     * @returns {string}          The new utext (blank)
      */
     protected addUtextBBox(bbox: BBox, utext: string, variant: string): string {
       if (utext) {

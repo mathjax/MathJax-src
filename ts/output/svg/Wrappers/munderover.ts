@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMunderover wrapper for the MmlMunderover object
+ * @file  Implements the SvgMunderover wrapper for the MmlMunderover object
  *                and the special cases SvgMunder and SvgMsup
  *
  * @author dpvc@mathjax.org (Davide Cervone)

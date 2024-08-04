@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMrow wrapper for the MmlMrow object
+ * @file  Implements the ChtmlMrow wrapper for the MmlMrow object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -234,7 +234,7 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
       ];
       for (const i of parents.keys()) {
         const bbox = lines[i];
-        let [indentalign, indentshift] =
+        const [indentalign, indentshift] =
           i === 0
             ? [alignfirst, shiftfirst]
             : bbox.indentData?.[i === n ? 2 : 1] || ['left', '0'];

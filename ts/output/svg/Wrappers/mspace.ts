@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMspace wrapper for the MmlMspace object
+ * @file  Implements the SvgMspace wrapper for the MmlMspace object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

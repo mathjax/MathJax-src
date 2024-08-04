@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Exports the needed pieces of mj-context-menu so that we
+ * @file  Exports the needed pieces of mj-context-menu so that we
  *                can have ES5 and ES6 versions
  *
  * @author dpvc@mathjax.org (Davide Cervone)

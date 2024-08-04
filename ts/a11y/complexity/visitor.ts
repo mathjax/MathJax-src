@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements a class that computes complexities for enriched math
+ * @file  Implements a class that computes complexities for enriched math
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -96,7 +96,7 @@ export class ComplexityVisitor extends MmlVisitor {
    */
   constructor(factory: MmlFactory, options: OptionList) {
     super(factory);
-    let CLASS = this.constructor as typeof ComplexityVisitor;
+    const CLASS = this.constructor as typeof ComplexityVisitor;
     this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
     this.collapse = new this.options.Collapse(this);
     this.factory = factory;
@@ -358,7 +358,7 @@ export class ComplexityVisitor extends MmlVisitor {
 
   /**
    * @param {MmlNode} node   The node whose complixity is needed
-   * @return {number}        The complexity fof the node (if collapsable, then the collapsed complexity)
+   * @returns {number}        The complexity fof the node (if collapsable, then the collapsed complexity)
    */
   public getComplexity(node: MmlNode): number {
     const collapsed = node.getProperty('collapsedComplexity');
@@ -372,6 +372,7 @@ export class ComplexityVisitor extends MmlVisitor {
   /**
    * @param {MmlNode} node       The node whose complixity is being set
    * @param {complexity} number  The complexity for the node
+   * @param complexity
    * @param {boolean} save       True if complexity is to be set or just reported
    */
   protected setComplexity(node: MmlNode, complexity: number, save: boolean) {
@@ -386,7 +387,7 @@ export class ComplexityVisitor extends MmlVisitor {
 
   /**
    * @param {MmlNode} node   The node whose children complexities are to be added
-   * @return {number}        The sum of the complexities, plus child complexity for each one
+   * @returns {number}        The sum of the complexities, plus child complexity for each one
    */
   protected childrenComplexity(node: MmlNode): number {
     super.visitDefault(node, true);

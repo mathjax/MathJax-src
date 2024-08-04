@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMfenced wrapper for the MmlMfenced object
+ * @file  Implements the SvgMfenced wrapper for the MmlMfenced object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

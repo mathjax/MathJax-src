@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Chooses between jdsom and browser DOM adaptors
+ * @file  Chooses between jdsom and browser DOM adaptors
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

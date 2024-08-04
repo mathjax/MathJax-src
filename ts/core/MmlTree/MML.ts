@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  An object listing all the MathML node types
+ * @file  An object listing all the MathML node types
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -79,7 +79,7 @@ import { HtmlNode } from './MmlNodes/HtmlNode.js';
  *  classes as necessary.
  */
 
-export let MML: { [kind: string]: MmlNodeClass } = {
+export const MML: { [kind: string]: MmlNodeClass } = {
   [MmlMath.prototype.kind]: MmlMath,
 
   [MmlMi.prototype.kind]: MmlMi,

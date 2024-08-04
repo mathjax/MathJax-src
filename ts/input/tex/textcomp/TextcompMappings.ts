@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Mappings for the textcomp package.
+ * @file Mappings for the textcomp package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -28,6 +28,13 @@ import TexParser from '../TexParser.js';
 import { ParseUtil } from '../ParseUtil.js';
 import { TextParser } from '../textmacros/TextParser.js';
 
+/**
+ *
+ * @param parser
+ * @param name
+ * @param c
+ * @param font
+ */
 function Insert(parser: TexParser, name: string, c: string, font: string) {
   if (parser instanceof TextParser) {
     if (!font) {

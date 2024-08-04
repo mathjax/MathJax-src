@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMglyph wrapper for the MmlMglyph object
+ * @file  Implements the SvgMglyph wrapper for the MmlMglyph object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

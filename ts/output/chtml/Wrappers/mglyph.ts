@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMglyph wrapper for the MmlMglyph object
+ * @file  Implements the ChtmlMglyph wrapper for the MmlMglyph object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

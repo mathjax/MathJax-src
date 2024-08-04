@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMfrac wrapper mixin for the MmlMfrac object
+ * @file  Implements the CommonMfrac wrapper mixin for the MmlMfrac object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -91,7 +91,7 @@ export interface CommonMfrac<
   /**
    * @param {boolean} display  True for display-mode fractions
    * @param {number} t         The thickness of the line
-   * @return {Object}          The expanded rule thickness (T), and baseline offsets
+   * @returns {object}          The expanded rule thickness (T), and baseline offsets
    *                             for numerator and denomunator (u and v)
    */
   getTUV(display: boolean, t: number): { T: number; u: number; v: number };
@@ -104,7 +104,7 @@ export interface CommonMfrac<
 
   /**
    * @param {boolean} display  True for diplay-mode fractions
-   * @return {Object}
+   * @returns {object}
    *    The vertical offsets of the numerator (u), the denominator (v),
    *    the separation between the two, and the bboxes themselves.
    */
@@ -124,7 +124,7 @@ export interface CommonMfrac<
 
   /**
    * @param {boolean} display  True for display-style fractions
-   * @return {Object}          The height (H) of the bevel, horizontal offest (delta)
+   * @returns {object}          The height (H) of the bevel, horizontal offest (delta)
    *                             vertical offsets (u and v) of the parts, and
    *                             bounding boxes of the parts.
    */
@@ -138,7 +138,7 @@ export interface CommonMfrac<
   };
 
   /**
-   * @return {boolean}   True if in display mode, false otherwise
+   * @returns {boolean}   True if in display mode, false otherwise
    */
   isDisplay(): boolean;
 }
@@ -178,6 +178,7 @@ export interface CommonMfracClass<
 /**
  * The CommonMfrac wrapper mixin for the MmlMfrac object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -288,7 +289,7 @@ export function CommonMfracMixin<
       //  Actual separation with initial positions (q)
       //
       let [u, v] = display ? [tex.num1, tex.denom1] : [tex.num3, tex.denom2];
-      let p = (display ? 7 : 3) * tex.rule_thickness;
+      const p = (display ? 7 : 3) * tex.rule_thickness;
       let q = u - nbox.d * nbox.scale - (dbox.h * dbox.scale - v);
       //
       //  If actual separation is less than minimum, move them farther apart
@@ -357,7 +358,7 @@ export function CommonMfracMixin<
 
     /**
      * @override
-     * @constructor
+     * @class
      */
     constructor(factory: WF, node: MmlNode, parent: WW = null) {
       super(factory, node, parent);

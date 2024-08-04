@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview    Configuration file for the colortbl package.
+ * @file    Configuration file for the colortbl package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */

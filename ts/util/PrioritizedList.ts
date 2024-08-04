@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements a list sorted by a numeric priority
+ * @file  Implements a list sorted by a numeric priority
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -59,7 +59,7 @@ export class PrioritizedList<DataClass> {
   protected items: PrioritizedListItem<DataClass>[] = [];
 
   /**
-   * @constructor
+   * @class
    */
   constructor() {
     this.items = [];
@@ -68,11 +68,11 @@ export class PrioritizedList<DataClass> {
   /**
    * Make the list iterable, and return the data for the items in the list
    *
-   * @return {{next: Function}}  The object containing the iterator's next() function
+   * @returns {{next: Function}}  The object containing the iterator's next() function
    */
   public [Symbol.iterator](): Iterator<PrioritizedListItem<DataClass>> {
     let i = 0;
-    let items = this.items;
+    const items = this.items;
     return {
       /* tslint:disable-next-line:jsdoc-require */
       next(): IteratorResult<PrioritizedListItem<DataClass>> {
@@ -86,7 +86,7 @@ export class PrioritizedList<DataClass> {
    *
    * @param {DataClass} item   The data for the item to be added
    * @param {number} priority  The priority for the item
-   * @return {DataClass}       The data itself
+   * @returns {DataClass}       The data itself
    */
   public add(
     item: DataClass,
@@ -104,7 +104,7 @@ export class PrioritizedList<DataClass> {
    * Remove an item from the list
    *
    * @param {DataClass} item    The data for the item to be removed
-   * @return {PrioritizedList}  The list (for chaining of calls)
+   * @returns {PrioritizedList}  The list (for chaining of calls)
    */
   public remove(item: DataClass): PrioritizedList<DataClass> {
     let i = this.items.length;

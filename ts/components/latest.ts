@@ -159,7 +159,7 @@ function Error(message: string) {
  *
  * @param {HTMLScriptElement} script   The script tag whose data is desired
  * @param {CdnData} cdn                The CDN data already obtained for the script (or null)
- * @return {ScriptData}                The data for the given script
+ * @returns {ScriptData}                The data for the given script
  */
 function scriptData(
   script: HTMLScriptElement,
@@ -192,7 +192,7 @@ function scriptData(
  * Check if a script refers to MathJax on one of the CDNs
  *
  * @param {HTMLScriptElement} script   The script tag to check
- * @return {ScriptData | null}         Non-null if the script is from a MathJax CDN
+ * @returns {ScriptData | null}         Non-null if the script is from a MathJax CDN
  */
 function checkScript(script: HTMLScriptElement): ScriptData | null {
   for (const server of CDN.keys()) {
@@ -211,7 +211,7 @@ function checkScript(script: HTMLScriptElement): ScriptData | null {
 }
 
 /**
- * @return {ScriptData}   The data for the script tag that loaded latest.js
+ * @returns {ScriptData}   The data for the script tag that loaded latest.js
  */
 function getScript(): ScriptData {
   if (document.currentScript) {
@@ -249,7 +249,7 @@ function saveVersion(version: string) {
 /**
  * Get the version from localStorage, and make sure it is fresh enough to use
  *
- * @return {string|null}   The version string (if one has been saved) or null (if not)
+ * @returns {string|null}   The version string (if one has been saved) or null (if not)
  */
 function getSavedVersion(): string | null {
   try {
@@ -318,7 +318,7 @@ function loadVersion(version: string) {
  * Check if the given version is acceptable and load it if it is.
  *
  * @param {string} version   The version to check if it is the latest (valid) one
- * @return {boolean}         True if it is the latest version, false if not
+ * @returns {boolean}         True if it is the latest version, false if not
  */
 function checkVersion(version: string): boolean {
   const major = parseInt(version.split(/\./)[0]);
@@ -335,7 +335,7 @@ function checkVersion(version: string): boolean {
 /**
  * Create an XMLHttpRequest object, if possible
  *
- * @return {XMLHttpRequest}   The XMLHttpRequest instance
+ * @returns {XMLHttpRequest}   The XMLHttpRequest instance
  */
 function getXMLHttpRequest(): XMLHttpRequest {
   if (window.XMLHttpRequest) {

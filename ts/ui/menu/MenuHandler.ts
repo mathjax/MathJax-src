@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Mixin that adds a context-menu to MathJax output
+ * @file  Mixin that adds a context-menu to MathJax output
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -95,7 +95,7 @@ export interface MenuMathItem
  * The mixin for adding context menus to MathItems
  *
  * @param {B} BaseMathItem   The MathItem class to be extended
- * @return {MathMathItem}    The extended MathItem class
+ * @returns {MathMathItem}    The extended MathItem class
  *
  * @template B  The MathItem class to extend
  */
@@ -139,14 +139,14 @@ export interface MenuMathDocument
   /**
    * Add context menus to the MathItems in the MathDocument
    *
-   * @return {MenuMathDocument}   The MathDocument (so calls can be chained)
+   * @returns {MenuMathDocument}   The MathDocument (so calls can be chained)
    */
   addMenu(): MenuMathDocument;
 
   /**
    * Checks if there are files being loaded by the menu, and restarts the typesetting if so
    *
-   * @return {MenuMathDocument}   The MathDocument (so calls can be chained)
+   * @returns {MenuMathDocument}   The MathDocument (so calls can be chained)
    */
   checkLoading(): MenuMathDocument;
 }
@@ -155,7 +155,7 @@ export interface MenuMathDocument
  * The mixin for adding context menus to MathDocuments
  *
  * @param {B} BaseDocument     The MathDocument class to be extended
- * @return {MenuMathDocument}      The extended MathDocument class
+ * @returns {MenuMathDocument}      The extended MathDocument class
  *
  * @template B  The MathDocument class to extend
  */
@@ -204,7 +204,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
      * Extend the MathItem class used for this MathDocument
      *
      * @override
-     * @constructor
+     * @class
      */
     constructor(...args: any[]) {
       super(...args);
@@ -230,7 +230,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
     /**
      * Add context menus to the MathItems in the MathDocument
      *
-     * @return {MenuMathDocument}   The MathDocument (so calls can be chained)
+     * @returns {MenuMathDocument}   The MathDocument (so calls can be chained)
      */
     public addMenu(): MenuMathDocument {
       if (!this.processed.isSet('context-menu')) {
@@ -245,7 +245,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
     /**
      * Checks if there are files being loaded by the menu, and restarts the typesetting if so
      *
-     * @return {MenuMathDocument}   The MathDocument (so calls can be chained)
+     * @returns {MenuMathDocument}   The MathDocument (so calls can be chained)
      */
     public checkLoading(): MenuMathDocument {
       if (this.menu.isLoading) {
@@ -290,7 +290,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
  * Add context-menu support to a Handler instance
  *
  * @param {Handler} handler   The Handler instance to enhance
- * @return {Handler}          The handler that was modified (for purposes of chaining extensions)
+ * @returns {Handler}          The handler that was modified (for purposes of chaining extensions)
  */
 export function MenuHandler(
   handler: Handler<HTMLElement, Text, Document>

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements a lightweight DOM adaptor
+ * @file  Implements a lightweight DOM adaptor
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -59,7 +59,7 @@ export class LiteBase extends AbstractDOMAdaptor<
 
   /**
    * @param {OptionList} options  The options for the lite adaptor (e.g., fontSize)
-   * @constructor
+   * @class
    */
   constructor() {
     super();
@@ -90,14 +90,14 @@ export class LiteBase extends AbstractDOMAdaptor<
 
   /**
    * @param {string} text   The text of the comment
-   * @return {LiteComment}  The comment node
+   * @returns {LiteComment}  The comment node
    */
   public comment(text: string): LiteComment {
     return new LiteComment(text);
   }
 
   /**
-   * @return {LiteDocument}  A new document element
+   * @returns {LiteDocument}  A new document element
    */
   public createDocument(): LiteDocument {
     return new LiteDocument();
@@ -136,13 +136,13 @@ export class LiteBase extends AbstractDOMAdaptor<
    */
   public tags(node: LiteElement, name: string, ns: string = null) {
     let stack = [] as LiteNode[];
-    let tags = [] as LiteElement[];
+    const tags = [] as LiteElement[];
     if (ns) {
       return tags; // we don't have namespaces
     }
     let n: LiteNode = node;
     while (n) {
-      let kind = n.kind;
+      const kind = n.kind;
       if (kind !== '#text' && kind !== '#comment') {
         n = n as LiteElement;
         if (kind === name) {
@@ -160,7 +160,7 @@ export class LiteBase extends AbstractDOMAdaptor<
   /**
    * @param {LiteElement} node   The node to be searched
    * @param {string} id          The id of the node to look for
-   * @return {LiteElement}       The child node having the given id
+   * @returns {LiteElement}       The child node having the given id
    */
   public elementById(node: LiteElement, id: string): LiteElement {
     let stack = [] as LiteNode[];
@@ -183,11 +183,11 @@ export class LiteBase extends AbstractDOMAdaptor<
   /**
    * @param {LiteElement} node   The node to be searched
    * @param {string} name        The name of the class to find
-   * @return {LiteElement[]}     The nodes with the given class
+   * @returns {LiteElement[]}     The nodes with the given class
    */
   public elementsByClass(node: LiteElement, name: string): LiteElement[] {
     let stack = [] as LiteNode[];
-    let tags = [] as LiteElement[];
+    const tags = [] as LiteElement[];
     let n: LiteNode = node;
     while (n) {
       if (n.kind !== '#text' && n.kind !== '#comment') {
@@ -261,7 +261,7 @@ export class LiteBase extends AbstractDOMAdaptor<
 
   /**
    * @param {LiteNode} node  The node whose index is needed
-   * @return {number}        The index of the node it its parent's children array
+   * @returns {number}        The index of the node it its parent's children array
    */
   public childIndex(node: LiteNode): number {
     return node.parent ? node.parent.children.findIndex((n) => n === node) : -1;
@@ -629,7 +629,7 @@ export class LiteAdaptor extends NodeMixin<
  * The function to call to obtain a LiteAdaptor
  *
  * @param {OptionList} options  The options for the adaptor
- * @return {LiteAdaptor}        The newly created adaptor
+ * @returns {LiteAdaptor}        The newly created adaptor
  */
 export function liteAdaptor(options: OptionList = null): LiteAdaptor {
   return new LiteAdaptor(null, options);

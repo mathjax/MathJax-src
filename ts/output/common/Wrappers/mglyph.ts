@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMglyph wrapper mixin for the MmlMglyph object
+ * @file  Implements the CommonMglyph wrapper mixin for the MmlMglyph object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -133,6 +133,7 @@ export interface CommonMglyphClass<
 /**
  * The CommonMglyph wrapper mixin for the MmlMglyph object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -191,7 +192,7 @@ export function CommonMglyphMixin<
 
     /**
      * @override
-     * @constructor
+     * @class
      */
     constructor(factory: WF, node: MmlNode, parent: WW = null) {
       super(factory, node, parent);

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview A namespace for utility functions for the TeX Parser.
+ * @file A namespace for utility functions for the TeX Parser.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -92,13 +92,14 @@ export const KeyValueTypes: {
 
 /**
  * Implementation of the keyval function from https://www.ctan.org/pkg/keyval
+ *
  * @param {string} text The optional parameter string for a package or
  *     command.
  * @param {boolean?} l3keys If true, use l3key-style parsing (only remove one set of braces)
- * @return {EnvList} Set of options as key/value pairs.
+ * @returns {EnvList} Set of options as key/value pairs.
  */
 function readKeyval(text: string, l3keys: boolean = false): EnvList {
-  let options: EnvList = {};
+  const options: EnvList = {};
   let rest = text;
   let end, key, val;
   let dropBrace = true;
@@ -118,9 +119,10 @@ function readKeyval(text: string, l3keys: boolean = false): EnvList {
 
 /**
  * Removes pairs of outer braces.
+ *
  * @param {string} text The string to clean.
  * @param {number} count The number of outer braces to slice off.
- * @return {string} The cleaned string.
+ * @returns {string} The cleaned string.
  */
 function removeBraces(text: string, count: number): string {
   if (count === 0) {
@@ -138,11 +140,12 @@ function removeBraces(text: string, count: number): string {
 /**
  * Read a value from the given string until an end parameter is reached or
  * string is exhausted.
+ *
  * @param {string} text The string to process.
  * @param {string[]} end List of possible end characters.
  * @param {boolean?} l3keys If true, use l3key-style parsing (only remove one set of braces)
  * @param {boolean?} dropBrace True if the outermost braces should be dropped
- * @return {[string, string, string]} The collected value, the actual end
+ * @returns {[string, string, string]} The collected value, the actual end
  *     character, and the rest of the string still to parse.
  */
 function readValue(
@@ -151,7 +154,7 @@ function readValue(
   l3keys: boolean = false,
   dropBrace: boolean = false
 ): [string, string, string] {
-  let length = text.length;
+  const length = text.length;
   let braces = 0;
   let value = '';
   let index = 0;
@@ -160,7 +163,7 @@ function readValue(
   // after starting braces, but no other char yet.
   /* prettier-ignore */
   while (index < length) {
-    let c = text[index++];
+    const c = text[index++];
     switch (c) {
       case '\\':               // Handle control sequences (in particular, \{ and \})
         value += c + (text[index++] || '');
@@ -214,8 +217,9 @@ export const ParseUtil = {
 
   /**
    * Takes an array of numbers and returns a space-separated string of em values.
+   *
    * @param {number[]} W  The widths to be turned into em values
-   * @return {string}     The numbers with em units, separated by spaces.
+   * @returns {string}     The numbers with em units, separated by spaces.
    */
   cols(...W: number[]): string {
     return W.map((n) => UnitUtil.em(n)).join(' ');
@@ -223,11 +227,13 @@ export const ParseUtil = {
 
   /**
    * Create an mrow that has stretchy delimiters at either end, as needed
+   *
    * @param {ParseOptions} configuration Current parse options.
    * @param {string} open The opening fence.
    * @param {MmlNode} mml The enclosed node.
    * @param {string} close The closing fence.
    * @param {string=} big Bigg command.
+   * @param color
    */
   fenced(
     configuration: ParseOptions,
@@ -238,8 +244,8 @@ export const ParseUtil = {
     color: string = ''
   ) {
     // @test Fenced, Fenced3
-    let nf = configuration.nodeFactory;
-    let mrow = nf.create('node', 'mrow', [], {
+    const nf = configuration.nodeFactory;
+    const mrow = nf.create('node', 'mrow', [], {
       open: open,
       close: close,
       texClass: TEXCLASS.INNER,
@@ -252,7 +258,7 @@ export const ParseUtil = {
         configuration
       ).mml();
     } else {
-      let openNode = nf.create('text', open);
+      const openNode = nf.create('text', open);
       mo = nf.create(
         'node',
         'mo',
@@ -274,7 +280,7 @@ export const ParseUtil = {
         configuration
       ).mml();
     } else {
-      let closeNode = nf.create('text', close);
+      const closeNode = nf.create('text', close);
       mo = nf.create(
         'node',
         'mo',
@@ -295,11 +301,12 @@ export const ParseUtil = {
 
   /**
    *  Create an mrow that has \\mathchoice using \\bigg and \\big for the delimiters.
+   *
    * @param {ParseOptions} configuration The current parse options.
    * @param {string} open The opening fence.
    * @param {MmlNode} mml The enclosed node.
    * @param {string} close The closing fence.
-   * @return {MmlNode} The mrow node.
+   * @returns {MmlNode} The mrow node.
    */
   fixedFence(
     configuration: ParseOptions,
@@ -308,7 +315,7 @@ export const ParseUtil = {
     close: string
   ): MmlNode {
     // @test Choose, Over With Delims, Above with Delims
-    let mrow = configuration.nodeFactory.create('node', 'mrow', [], {
+    const mrow = configuration.nodeFactory.create('node', 'mrow', [], {
       open: open,
       close: close,
       texClass: TEXCLASS.ORD,
@@ -335,10 +342,11 @@ export const ParseUtil = {
    * Generates a mathchoice element for fences. These will be resolved later,
    * once the position, and therefore size, of the of the fenced expression is
    * known.
+   *
    * @param {ParseOptions} configuration The current parse otpions.
    * @param {string} fence The fence.
    * @param {string} side The side of the fence (l or r).
-   * @return {MmlNode} The mathchoice node.
+   * @returns {MmlNode} The mathchoice node.
    */
   mathPalette(
     configuration: ParseOptions,
@@ -348,8 +356,8 @@ export const ParseUtil = {
     if (fence === '{' || fence === '}') {
       fence = '\\' + fence;
     }
-    let D = '{\\bigg' + side + ' ' + fence + '}';
-    let T = '{\\big' + side + ' ' + fence + '}';
+    const D = '{\\bigg' + side + ' ' + fence + '}';
+    const T = '{\\big' + side + ' ' + fence + '}';
     return new TexParser(
       '\\mathchoice' + D + T + T + T,
       {},
@@ -362,12 +370,13 @@ export const ParseUtil = {
    * empty braces (TeXAtom with child being an empty inferred row),
    * is an <mo>, precede it by an empty <mi> to force the <mo> to
    * be infix.
+   *
    * @param {ParseOptions} configuration The current parse options.
    * @param {MmlNode[]} nodes The row of nodes to scan for an initial <mo>
    */
   fixInitialMO(configuration: ParseOptions, nodes: MmlNode[]) {
     for (let i = 0, m = nodes.length; i < m; i++) {
-      let child = nodes[i];
+      const child = nodes[i];
       if (
         child &&
         !NodeUtil.isType(child, 'mspace') &&
@@ -380,7 +389,7 @@ export const ParseUtil = {
           (NodeUtil.isType(child, 'TeXAtom') &&
             NodeUtil.getTexClass(child) === TEXCLASS.REL)
         ) {
-          let mi = configuration.nodeFactory.create('node', 'mi');
+          const mi = configuration.nodeFactory.create('node', 'mi');
           nodes.unshift(mi);
         }
         break;
@@ -390,11 +399,12 @@ export const ParseUtil = {
 
   /**
    * Break up a string into text and math blocks.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} text The text in the math expression to parse.
    * @param {number|string=} level The scriptlevel.
    * @param {string} font The mathvariant to use
-   * @return {MmlNode[]} The nodes corresponding to the internal math expression.
+   * @returns {MmlNode[]} The nodes corresponding to the internal math expression.
    */
   internalMath(
     parser: TexParser,
@@ -411,8 +421,8 @@ export const ParseUtil = {
         font
       );
     }
-    let mathvariant = font || parser.stack.env.font;
-    let def = mathvariant ? { mathvariant } : {};
+    const mathvariant = font || parser.stack.env.font;
+    const def = mathvariant ? { mathvariant } : {};
     let mml: MmlNode[] = [],
       i = 0,
       k = 0,
@@ -454,7 +464,7 @@ export const ParseUtil = {
           // @test Mbox Mbox, Mbox Math
           if (match === '}' && braces === 0) {
             // @test Mbox Eqref, Mbox Math
-            let atom = new TexParser(
+            const atom = new TexParser(
               text.slice(k, i),
               {},
               parser.configuration
@@ -474,7 +484,7 @@ export const ParseUtil = {
           // @test Mbox Eqref, Mbox CR
           if (match === '' && text.substring(i).match(/^(eq)?ref\s*\{/)) {
             // @test Mbox Eqref
-            let len = ((RegExp as any)['$&'] as string).length;
+            const len = ((RegExp as any)['$&'] as string).length;
             if (k < i - 1) {
               // @test Mbox Eqref
               mml.push(
@@ -564,10 +574,11 @@ export const ParseUtil = {
 
   /**
    * Parses text internal to boxes or labels.
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {string} text The text to parse.
    * @param {EnvList} def The attributes of the text node.
-   * @return {MmlNode} The text node.
+   * @returns {MmlNode} The text node.
    */
   internalText(parser: TexParser, text: string, def: EnvList): MmlNode {
     // @test Label, Fbox, Hbox
@@ -575,18 +586,19 @@ export const ParseUtil = {
       .replace(/\n+/g, ' ')
       .replace(/^\s+/, entities.nbsp)
       .replace(/\s+$/, entities.nbsp);
-    let textNode = parser.create('text', text);
+    const textNode = parser.create('text', text);
     return parser.create('node', 'mtext', [], def, textNode);
   },
 
   /**
    * Create an munderover node with the given script position.
+   *
    * @param {TexParser} parser   The current TeX parser.
    * @param {MmlNode} base       The base node.
    * @param {MmlNode} script     The under- or over-script.
    * @param {string} pos         Either 'over' or 'under'.
    * @param {boolean} stack      True if super- or sub-scripts should stack.
-   * @return {MmlNode}           The generated node (MmlMunderover or TeXAtom)
+   * @returns {MmlNode}           The generated node (MmlMunderover or TeXAtom)
    */
   underOver(
     parser: TexParser,
@@ -623,6 +635,7 @@ export const ParseUtil = {
 
   /**
    * Set movablelimits to false if necessary.
+   *
    * @param {MmlNode} base   The base node being tested.
    */
   checkMovableLimits(base: MmlNode) {
@@ -638,10 +651,11 @@ export const ParseUtil = {
 
   /**
    * Sets alignment in array definitions.
+   *
    * @param {ArrayItem} array The array item.
    * @param {string} align The alignment string.
    * @param {TexParser?} parser The current tex parser.
-   * @return {ArrayItem} The altered array item.
+   * @returns {ArrayItem} The altered array item.
    */
   setArrayAlign(
     array: ArrayItem,
@@ -671,10 +685,11 @@ export const ParseUtil = {
 
   /**
    * Replace macro parameters with their values.
+   *
    * @param {TexParser} parser The current TeX parser.
    * @param {string[]} args A list of arguments for macro parameters.
    * @param {string} str The macro parameter string.
-   * @return {string} The string with all parameters replaced by arguments.
+   * @returns {string} The string with all parameters replaced by arguments.
    */
   substituteArgs(parser: TexParser, args: string[], str: string): string {
     let text = '';
@@ -713,10 +728,11 @@ export const ParseUtil = {
    * Adds a new expanded argument to an already macro parameter string.  Makes
    * sure that macros are followed by a space if their names could accidentally
    * be continued into the following text.
+   *
    * @param {TexParser} parser The current TeX parser.
    * @param {string} s1 The already expanded string.
    * @param {string} s2 The string to add.
-   * @return {string} The combined string.
+   * @returns {string} The combined string.
    */
   addArgs(parser: TexParser, s1: string, s2: string): string {
     if (s2.match(/^[a-z]/i) && s1.match(/(^|[^\\])(\\\\)*\\[a-z]+$/i)) {
@@ -734,6 +750,7 @@ export const ParseUtil = {
 
   /**
    * Report an error if there are too many macro substitutions.
+   *
    * @param {TexParser} parser The current TeX parser.
    * @param {boolean} isMacro  True if we are substituting a macro, false for environment.
    */
@@ -758,6 +775,9 @@ export const ParseUtil = {
 
   /**
    *  Check for bad nesting of equation environments
+   *
+   * @param parser
+   * @param nestable
    */
   checkEqnEnv(parser: TexParser, nestable: boolean = true) {
     const top = parser.stack.Top();
@@ -781,7 +801,7 @@ export const ParseUtil = {
    *
    * @param {MmlNode} node       The MmlNode to copy
    * @param {TexParser} parser   The active tex parser
-   * @return {MmlNode}           The duplicate tree
+   * @returns {MmlNode}           The duplicate tree
    */
   copyNode(node: MmlNode, parser: TexParser): MmlNode {
     const tree = node.copy();
@@ -798,10 +818,11 @@ export const ParseUtil = {
 
   /**
    * This is a placeholder for future security filtering of attributes.
+   *
    * @param {TexParser} _parser The current parser.
    * @param {string} _name The attribute name.
    * @param {string} value The attribute value to filter.
-   * @return {string} The filtered value.
+   * @returns {string} The filtered value.
    */
   mmlFilterAttribute(_parser: TexParser, _name: string, value: string): string {
     // TODO: Implement in security package.
@@ -810,8 +831,9 @@ export const ParseUtil = {
 
   /**
    * Initialises an stack environment with current font definition in the parser.
+   *
    * @param {TexParser} parser The current tex parser.
-   * @return {EnvList} The initialised environment list.
+   * @returns {EnvList} The initialised environment list.
    */
   getFontDef(parser: TexParser): EnvList {
     const font = parser.stack.env['font'];
@@ -821,13 +843,14 @@ export const ParseUtil = {
   /**
    * Splits a package option list of the form [x=y,z=1] into an attribute list
    * of the form {x: y, z: 1}.
+   *
    * @param {string} attrib The attributes of the package.
    * @param {{[key: string]: number}?} allowed A list of allowed options. If
    *     given only allowed arguments are returned.
    * @param {boolean?} error If true, raises an exception if not allowed options
    *     are found.
    * @param {boolean?} l3keys If true, use l3key-style parsing (only remove one set of braces)
-   * @return {EnvList} The attribute list.
+   * @returns {EnvList} The attribute list.
    */
   keyvalOptions(
     attrib: string,
@@ -835,9 +858,9 @@ export const ParseUtil = {
     error: boolean = false,
     l3keys: boolean = false
   ): EnvList {
-    let def: EnvList = readKeyval(attrib, l3keys);
+    const def: EnvList = readKeyval(attrib, l3keys);
     if (allowed) {
-      for (let key of Object.keys(def)) {
+      for (const key of Object.keys(def)) {
         if (allowed.hasOwnProperty(key)) {
           //
           // If allowed[key] is a type definition, check the key value against that
@@ -867,7 +890,7 @@ export const ParseUtil = {
 
   /**
    * @param {string} c   The character to test.
-   * @return {boolean}   True if the character is Latin or Greek
+   * @returns {boolean}   True if the character is Latin or Greek
    */
   isLatinOrGreekChar(c: string): boolean {
     return !!c.normalize('NFD').match(/[a-zA-Z\u0370-\u03F0]/);

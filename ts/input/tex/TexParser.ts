@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview The TexParser. Implements the basic parsing functionality and
+ * @file The TexParser. Implements the basic parsing functionality and
  *     administers the global stack and tree objects.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
@@ -42,24 +42,28 @@ import { TexConstant } from './TexConstants.js';
 export default class TexParser {
   /**
    * Counter for recursive macros.
+   *
    * @type {number}
    */
   public macroCount: number = 0;
 
   /**
    * The stack for items and created nodes.
+   *
    * @type {Stack}
    */
   public stack: Stack;
 
   /**
    * Current position in the string that is parsed.
+   *
    * @type {number}
    */
   public i: number = 0;
 
   /**
    * The last command sequence
+   *
    * @type {string}
    */
   public currentCS: string = '';
@@ -70,7 +74,7 @@ export default class TexParser {
   private saveI: number = 0;
 
   /**
-   * @constructor
+   * @class
    * @param {string} _string The string to parse.
    * @param {EnvList} env The intial environment representing the current parse
    *     state of the overall expression translation.
@@ -100,21 +104,21 @@ export default class TexParser {
   }
 
   /**
-   * @return {OptionList} The configuration options.
+   * @returns {OptionList} The configuration options.
    */
   get options(): OptionList {
     return this.configuration.options;
   }
 
   /**
-   * @return {StackItemFactory} The factory for stack items.
+   * @returns {StackItemFactory} The factory for stack items.
    */
   get itemFactory(): StackItemFactory {
     return this.configuration.itemFactory;
   }
 
   /**
-   * @return {Tags} The tags style of this configuration.
+   * @returns {Tags} The tags style of this configuration.
    */
   get tags(): Tags {
     return this.configuration.tags;
@@ -122,6 +126,7 @@ export default class TexParser {
 
   /**
    * Sets the string that should be parsed.
+   *
    * @param {string} str The new string to parse.
    */
   set string(str: string) {
@@ -129,7 +134,7 @@ export default class TexParser {
   }
 
   /**
-   * @return {string} The string that is currently parsed.
+   * @returns {string} The string that is currently parsed.
    */
   get string(): string {
     return this._string;
@@ -137,14 +142,15 @@ export default class TexParser {
 
   /**
    * Parses the input with the specified kind of map.
+   *
    * @param {HandlerType} kind Configuration name.
    * @param {ParseInput} input Input to be parsed.
-   * @return {ParseResult} The output of the parsing function.
+   * @returns {ParseResult} The output of the parsing function.
    */
   public parse(kind: HandlerType, input: ParseInput): ParseResult {
     const i = this.saveI;
     this.saveI = this.i;
-    let result = this.configuration.handlers.get(kind).parse(input);
+    const result = this.configuration.handlers.get(kind).parse(input);
     this.updateResult(input[1], i);
     this.saveI = i;
     return result;
@@ -152,9 +158,10 @@ export default class TexParser {
 
   /**
    * Maps a token to its "parse value" if it exists.
+   *
    * @param {HandlerType} kind Configuration name.
    * @param {string} token The token to parse.
-   * @return {any} A boolean, Character, or Macro.
+   * @returns {any} A boolean, Character, or Macro.
    */
   public lookup(kind: HandlerType, token: string): any {
     return this.configuration.handlers.get(kind).lookup(token);
@@ -163,9 +170,10 @@ export default class TexParser {
   /**
    * Checks if a token is contained in one of the token mappings of the
    * specified kind.
+   *
    * @param {HandlerType} kind Configuration name.
    * @param {string} token The token to parse.
-   * @return {boolean} True if the token is contained in the given types of
+   * @returns {boolean} True if the token is contained in the given types of
    *     token mapping.
    */
   public contains(kind: HandlerType, token: string): boolean {
@@ -201,7 +209,8 @@ export default class TexParser {
 
   /**
    * Pushes a new item onto the stack. The item can also be a Mml node,
-   *   but if the mml item is an inferred row, push its children instead.
+   * but if the mml item is an inferred row, push its children instead.
+   *
    * @param {StackItem|MmlNode} arg The new item.
    */
   public Push(arg: StackItem | MmlNode) {
@@ -219,6 +228,7 @@ export default class TexParser {
 
   /**
    * Pushes a list of new items onto the stack.
+   *
    * @param {StackItem|MmlNode[]} args The new items.
    */
   public PushAll(args: (StackItem | MmlNode)[]) {
@@ -228,13 +238,13 @@ export default class TexParser {
   }
 
   /**
-   * @return {MmlNode} The internal Mathml structure.
+   * @returns {MmlNode} The internal Mathml structure.
    */
   public mml(): MmlNode {
     if (!this.stack.Top().isKind('mml')) {
       return null;
     }
-    let node = this.stack.Top().First;
+    const node = this.stack.Top().First;
     this.configuration.popParser();
     node.attributes.set(TexConstant.Attr.LATEX, this.string);
     return node;
@@ -247,8 +257,9 @@ export default class TexParser {
 
   /**
    * Convert delimiter to character.
+   *
    * @param {string} c The delimiter name.
-   * @return {string} The corresponding character.
+   * @returns {string} The corresponding character.
    */
   public convertDelimiter(c: string): string {
     const token = this.lookup(HandlerType.DELIMITER, c) as Token;
@@ -256,7 +267,7 @@ export default class TexParser {
   }
 
   /**
-   * @return {string}   Get the next unicode character in the string
+   * @returns {string}   Get the next unicode character in the string
    */
   public getCodePoint(): string {
     const code = this.string.codePointAt(this.i);
@@ -264,14 +275,14 @@ export default class TexParser {
   }
 
   /**
-   * @return {boolean} True if the next character to parse is a space.
+   * @returns {boolean} True if the next character to parse is a space.
    */
   public nextIsSpace(): boolean {
     return !!this.string.charAt(this.i).match(/\s/);
   }
 
   /**
-   * @return {string} Get the next non-space character.
+   * @returns {string} Get the next non-space character.
    */
   public GetNext(): string {
     while (this.nextIsSpace()) {
@@ -281,10 +292,10 @@ export default class TexParser {
   }
 
   /**
-   * @return {string} Get and return a control-sequence name
+   * @returns {string} Get and return a control-sequence name
    */
   public GetCS(): string {
-    let CS = this.string
+    const CS = this.string
       .slice(this.i)
       .match(/^(([a-z]+) ?|[\uD800-\uDBFF].|.)/i);
     if (CS) {
@@ -298,10 +309,13 @@ export default class TexParser {
 
   /**
    * Get and return a TeX argument (either a single character or control
-   *     sequence, or the contents of the next set of braces).
+   * sequence, or the contents of the next set of braces).
+   *
    * @param {string} name Name of the current control sequence.
    * @param {boolean} noneOK? True if no argument is OK.
-   * @return {string} The next argument.
+   * @param _name
+   * @param noneOK
+   * @returns {string} The next argument.
    */
   public GetArgument(_name: string, noneOK?: boolean): string {
     switch (this.GetNext()) {
@@ -355,10 +369,11 @@ export default class TexParser {
 
   /**
    * Get an optional LaTeX argument in brackets.
+   *
    * @param {string} _name Name of the current control sequence.
    * @param {string?} def The default value for the optional argument.
    * @param {boolean=} matchBrackets True if indernal brackets must match.
-   * @return {string} The optional argument.
+   * @returns {string} The optional argument.
    */
   public GetBrackets(
     _name: string,
@@ -412,9 +427,11 @@ export default class TexParser {
 
   /**
    *  Get the name of a delimiter (check it in the delimiter list).
+   *
    * @param {string} name Name of the current control sequence.
    * @param {boolean} braceOK? Are braces around the delimiter OK.
-   * @return {string} The delimiter name.
+   * @param braceOK
+   * @returns {string} The delimiter name.
    */
   public GetDelimiter(name: string, braceOK?: boolean): string {
     let c = this.GetNext();
@@ -440,21 +457,22 @@ export default class TexParser {
 
   /**
    * Get a dimension (including its units).
+   *
    * @param {string} name Name of the current control sequence.
-   * @return {string} The dimension string.
+   * @returns {string} The dimension string.
    */
   public GetDimen(name: string): string {
     if (this.GetNext() === '{') {
-      let dimen = this.GetArgument(name);
-      let [value, unit] = UnitUtil.matchDimen(dimen);
+      const dimen = this.GetArgument(name);
+      const [value, unit] = UnitUtil.matchDimen(dimen);
       if (value) {
         // @test Raise In Line, Lower 2, (Raise|Lower) Negative
         return value + unit;
       }
     } else {
       // @test Above, Raise, Lower, Modulo, Above With Delims
-      let dimen = this.string.slice(this.i);
-      let [value, unit, length] = UnitUtil.matchDimen(dimen, true);
+      const dimen = this.string.slice(this.i);
+      const [value, unit, length] = UnitUtil.matchDimen(dimen, true);
       if (value) {
         this.i += length;
         return value + unit;
@@ -470,18 +488,20 @@ export default class TexParser {
 
   /**
    *  Get everything up to the given control sequence (token)
+   *
    * @param {string} name Name of the current control sequence.
+   * @param _name
    * @param {string} token The element until where to parse.
-   * @return {string} The text between the current position and the given token.
+   * @returns {string} The text between the current position and the given token.
    */
   public GetUpTo(_name: string, token: string): string {
     while (this.nextIsSpace()) {
       this.i++;
     }
-    let j = this.i;
+    const j = this.i;
     let parens = 0;
     while (this.i < this.string.length) {
-      let k = this.i;
+      const k = this.i;
       let c = this.GetNext();
       this.i += c.length;
       switch (c) {
@@ -518,8 +538,9 @@ export default class TexParser {
 
   /**
    * Parse the arguments of a control sequence in a new parser instance.
+   *
    * @param {string} name Name of the current control sequence.
-   * @return {MmlNode} The parsed node.
+   * @returns {MmlNode} The parsed node.
    */
   public ParseArg(name: string): MmlNode {
     return new TexParser(
@@ -531,9 +552,10 @@ export default class TexParser {
 
   /**
    * Parses a given string up to a given token in a new parser instance.
+   *
    * @param {string} name Name of the current control sequence.
    * @param {string} token A Token at which to end parsing.
-   * @return {MmlNode} The parsed node.
+   * @returns {MmlNode} The parsed node.
    */
   public ParseUpTo(name: string, token: string): MmlNode {
     return new TexParser(
@@ -545,11 +567,12 @@ export default class TexParser {
 
   /**
    * Get a delimiter or empty argument
+   *
    * @param {string} name Name of the current control sequence.
-   * @return {string} The delimiter.
+   * @returns {string} The delimiter.
    */
   public GetDelimiterArg(name: string): string {
-    let c = UnitUtil.trimSpaces(this.GetArgument(name));
+    const c = UnitUtil.trimSpaces(this.GetArgument(name));
     if (c === '') {
       return null;
     }
@@ -565,10 +588,10 @@ export default class TexParser {
   }
 
   /**
-   * @return {boolean} True if a star follows the control sequence name.
+   * @returns {boolean} True if a star follows the control sequence name.
    */
   public GetStar(): boolean {
-    let star = this.GetNext() === '*';
+    const star = this.GetNext() === '*';
     if (star) {
       this.i++;
     }
@@ -578,9 +601,11 @@ export default class TexParser {
   /**
    * Convenience method to create nodes with the node factory of the current
    * configuration.
+   *
    * @param {string} kind The kind of node to create.
    * @param {any[]} ...rest The remaining arguments for the creation method.
-   * @return {MmlNode} The newly created node.
+   * @param {...any} rest
+   * @returns {MmlNode} The newly created node.
    */
   public create(kind: string, ...rest: any[]): MmlNode {
     const node = this.configuration.nodeFactory.create(kind, ...rest);
@@ -601,13 +626,13 @@ export default class TexParser {
    */
   // Currently works without translating environments that generate typesetting.
   private updateResult(input: string, old: number) {
-    let node = this.stack.Prev(true) as MmlNode;
+    const node = this.stack.Prev(true) as MmlNode;
     if (!node) {
       return;
     }
     // TODO: This can probably be removed once processed. But needs more
     // testing.
-    let existing = node.attributes.get(TexConstant.Attr.LATEXITEM);
+    const existing = node.attributes.get(TexConstant.Attr.LATEXITEM);
     if (existing !== undefined) {
       node.attributes.set(TexConstant.Attr.LATEX, existing);
       return;
@@ -698,7 +723,7 @@ export default class TexParser {
    */
   private composeBraces(atom: MmlNode) {
     if (!atom) return;
-    let str = this.composeBracedContent(atom);
+    const str = this.composeBracedContent(atom);
     atom.attributes.set(TexConstant.Attr.LATEX, `{${str}}`);
   }
 
@@ -708,10 +733,10 @@ export default class TexParser {
    * @param {MmlNode} atom The current Mml node.
    */
   private composeBracedContent(atom: MmlNode) {
-    let children = atom.childNodes[0]?.childNodes;
+    const children = atom.childNodes[0]?.childNodes;
     let expr = '';
     for (const child of children) {
-      let att = (child.attributes?.get(TexConstant.Attr.LATEX) || '') as string;
+      const att = (child.attributes?.get(TexConstant.Attr.LATEX) || '') as string;
       if (!att) continue;
       expr +=
         expr && expr.match(/[a-zA-Z]$/) && att.match(/^[a-zA-Z]/)

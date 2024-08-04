@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the verb package.
+ * @file Configuration file for the verb package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -33,6 +33,7 @@ import TexError from '../TexError.js';
 const VerbMethods: { [key: string]: ParseMethod } = {
   /**
    * Implements the verbatim notation \verb|...|.
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {string} name The name of the calling macro.
    */

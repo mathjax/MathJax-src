@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  A visitor that produces MathML DOM nodes from the iternal nodes
+ * @file  A visitor that produces MathML DOM nodes from the iternal nodes
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -41,11 +41,11 @@ export class MathMLVisitor extends MmlVisitor {
    *
    * @param {MmlNode} node  The node to use as the root of the tree to traverse
    * @param {Document} document  The document in which the nodes are created
-   * @return {Node}  The MathML DOM nodes representing the internal tree
+   * @returns {Node}  The MathML DOM nodes representing the internal tree
    */
   public visitTree(node: MmlNode, document: Document): Node {
     this.document = document;
-    let root = document.createElement('top');
+    const root = document.createElement('top');
     this.visitNode(node, root);
     this.document = null;
     return root.firstChild;
@@ -99,7 +99,7 @@ export class MathMLVisitor extends MmlVisitor {
    * @param {Element} parent  The DOM parent to which this node should be added
    */
   public visitDefault(node: MmlNode, parent: Element) {
-    let mml = this.document.createElement(this.getKind(node));
+    const mml = this.document.createElement(this.getKind(node));
     this.addAttributes(node, mml);
     for (const child of node.childNodes) {
       this.visitNode(child, mml);
@@ -112,7 +112,7 @@ export class MathMLVisitor extends MmlVisitor {
    * @param {Element} mml  The MathML DOM node to which attributes are being added
    */
   public addAttributes(node: MmlNode, mml: Element) {
-    let attributes = this.getAttributeList(node);
+    const attributes = this.getAttributeList(node);
     for (const name of Object.keys(attributes)) {
       mml.setAttribute(name, attributes[name].toString());
     }

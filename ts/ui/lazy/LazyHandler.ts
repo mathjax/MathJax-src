@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Mixin that implements lazy typesetting
+ * @file  Mixin that implements lazy typesetting
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -73,7 +73,7 @@ export class LazyList<N, T, D> {
    * Add a MathItem to the list and return its ID
    *
    * @param {LazyMathItem} math   The item to add
-   * @return {string}             The id for the newly added item
+   * @returns {string}             The id for the newly added item
    */
   public add(math: LazyMathItem<N, T, D>): string {
     const id = String(this.id++);
@@ -85,7 +85,7 @@ export class LazyList<N, T, D> {
    * Get the MathItem with the given ID
    *
    * @param {string} id       The ID of the MathItem to get
-   * @return {LazyMathItem}   The MathItem having that ID (if any)
+   * @returns {LazyMathItem}   The MathItem having that ID (if any)
    */
   public get(id: string): LazyMathItem<N, T, D> {
     return this.items.get(id);
@@ -143,7 +143,7 @@ export interface LazyMathItem<N, T, D> extends MathItem<N, T, D> {
  * The mixin for adding lazy typesetting to MathItems
  *
  * @param {B} BaseMathItem      The MathItem class to be extended
- * @return {AssistiveMathItem}  The augmented MathItem class
+ * @returns {AssistiveMathItem}  The augmented MathItem class
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
@@ -217,6 +217,7 @@ export function LazyMathItemMixin<
 
     /**
      * Only update the state if restore is true or false (null is used for setting lazy states)
+     *
      * @override
      */
     public state(state: number = null, restore: boolean = false) {
@@ -317,7 +318,7 @@ export interface LazyMathDocument<N, T, D> extends HTMLDocument<N, T, D> {
  * The mixin for adding lazy typesetting to MathDocuments
  *
  * @param {B} BaseDocument        The MathDocument class to be extended
- * @return {LazyMathDocument}     The Lazy MathDocument class
+ * @returns {LazyMathDocument}     The Lazy MathDocument class
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
@@ -399,7 +400,7 @@ export function LazyMathDocumentMixin<
      *   event listeners to typeset everything before printing.
      *
      * @override
-     * @constructor
+     * @class
      */
     constructor(...args: any[]) {
       super(...args);
@@ -465,7 +466,7 @@ export function LazyMathDocumentMixin<
      *   in case the next math is in the same container).
      *
      * @param {LazyMathItem<N,T,D>} math   The MathItem to test
-     * @return {boolean}   True if one of the document's containers holds the MathItem
+     * @returns {boolean}   True if one of the document's containers holds the MathItem
      */
     protected lazyIsAlways(math: LazyMathItem<N, T, D>): boolean {
       if (math.state() < STATE.LAZYALWAYS) {
@@ -499,7 +500,7 @@ export function LazyMathDocumentMixin<
     /**
      * Function to typeset all remaining expressions (for printing, etc.)
      *
-     * @return {Promise}   Promise that is resolved after the typesetting completes.
+     * @returns {Promise}   Promise that is resolved after the typesetting completes.
      */
     public async lazyTypesetAll(): Promise<void> {
       //
@@ -625,7 +626,7 @@ export function LazyMathDocumentMixin<
      *
      * @param {LazySet} set    The set of math items to update
      * @param {number} state   The state needed for the items
-     * @return {number}        The updated state based on the items
+     * @returns {number}        The updated state based on the items
      */
     protected resetStates(set: LazySet, state: number): number {
       for (const id of set.values()) {
@@ -650,10 +651,10 @@ export function LazyMathDocumentMixin<
      * Mark any TeX items (earlier than the ones in the set) to be compiled.
      *
      * @param {LazySet} set   The set of items that are newly visible
-     * @return {boolean}      True if there are TeX items to be typeset
+     * @returns {boolean}      True if there are TeX items to be typeset
      */
     protected compileEarlierItems(set: LazySet): boolean {
-      let math = this.earliestTex(set);
+      const math = this.earliestTex(set);
       if (!math) return false;
       let compile = false;
       for (const item of this.math) {
@@ -674,7 +675,7 @@ export function LazyMathDocumentMixin<
      * Find the earliest TeX math item in the set, if any.
      *
      * @param {LazySet} set     The set of newly visble math items
-     * @return {LazyMathItem}   The earliest TeX math item in the set, if any
+     * @returns {LazyMathItem}   The earliest TeX math item in the set, if any
      */
     protected earliestTex(set: LazySet): LazyMathItem<N, T, D> {
       let min: number = null;
@@ -738,7 +739,7 @@ export function LazyMathDocumentMixin<
  * Add lazy typesetting support to a Handler instance
  *
  * @param {Handler} handler   The Handler instance to enhance
- * @return {Handler}          The handler that was modified (for purposes of chaining extensions)
+ * @returns {Handler}          The handler that was modified (for purposes of chaining extensions)
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class

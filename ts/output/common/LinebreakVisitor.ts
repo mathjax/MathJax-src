@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  A visitor class for determaning automatic linebreaks
+ * @file  A visitor class for determaning automatic linebreaks
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -311,7 +311,8 @@ export class LinebreakVisitor<
   /******************************************************************************/
 
   /**
-   * @return {StateData<WW>}  The new state object
+   * @param wrapper
+   * @returns {StateData<WW>}  The new state object
    */
   protected createState(wrapper: WW): StateData<WW> {
     const mathWidth = wrapper.getBBox().w;
@@ -387,6 +388,7 @@ export class LinebreakVisitor<
 
   /**
    * Update the break list to include this break
+   *
    * @param {WW} wrapper        The mo/mspace that might be a breakpoint
    * @param {number} penalty    The penalty for that break
    * @param {number} w          The width+indent of the node after the break
@@ -415,7 +417,7 @@ export class LinebreakVisitor<
 
   /**
    * @param {WW} wrapper          The node whose border/padding is needed
-   * @return {[number, number]}   The left and right border+padding values
+   * @returns {[number, number]}   The left and right border+padding values
    */
   protected getBorderLR(wrapper: WW): [number, number] {
     const data = wrapper.styleData;
@@ -429,7 +431,7 @@ export class LinebreakVisitor<
 
   /**
    * @param {MmlNode} node   The node to find the first token child for
-   * @return {MmlNode}       The first token child (at any depth) for the node
+   * @returns {MmlNode}       The first token child (at any depth) for the node
    */
   protected getFirstToken(node: MmlNode): MmlNode {
     return node.isToken ? node : this.getFirstToken(node.childNodes[0]);
@@ -437,7 +439,7 @@ export class LinebreakVisitor<
 
   /**
    * @param {MmlNode} node   The node to find the last token child for
-   * @return {MmlNode}       The last token child (at any depth) for the node
+   * @returns {MmlNode}       The last token child (at any depth) for the node
    */
   protected getLastToken(node: MmlNode): MmlNode {
     return node.isToken
@@ -557,7 +559,7 @@ export class LinebreakVisitor<
 
   /**
    * @param {CommonMo} mo    The mo whose penalty is to be computed
-   * @return {number}        The computed penalty
+   * @returns {number}        The computed penalty
    */
   protected moPenalty(
     mo: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
@@ -635,14 +637,14 @@ export class LinebreakVisitor<
 
   /**
    * @param {CommonMspace} mspace   The mspace whose penalty is to be computed
-   * @return {number}               The computed penalty
+   * @returns {number}               The computed penalty
    */
   protected mspacePenalty(
     mspace: CommonMspace<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
   ): number {
     const linebreak = mspace.node.attributes.get('linebreak');
     const FACTORS = this.FACTORS;
-    let penalty = FACTORS.space(FACTORS.tail(FACTORS.width(0)), mspace as any);
+    const penalty = FACTORS.space(FACTORS.tail(FACTORS.width(0)), mspace as any);
     return (this.PENALTY[linebreak as string] || ((p) => p))(
       FACTORS.depth(penalty)
     );
@@ -698,7 +700,7 @@ export class LinebreakVisitor<
   }
 
   /**
-   * @return {number}   The computed penalty
+   * @returns {number}   The computed penalty
    */
   protected mtextPenalty(): number {
     const FACTORS = this.FACTORS;

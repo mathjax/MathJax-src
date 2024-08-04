@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Generic Node classes for node trees
+ * @file Generic Node classes for node trees
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -55,17 +55,17 @@ export interface Node<N extends Node<N, C>, C extends NodeClass<N, C>> {
 
   /**
    * @param {string} name  The name of the property to get
-   * @return {Property}   The value of the named property
+   * @returns {Property}   The value of the named property
    */
   getProperty(name: string): Property;
 
   /**
-   * @return {string[]}  An array of the names of every property currently defined
+   * @returns {string[]}  An array of the names of every property currently defined
    */
   getPropertyNames(): string[];
 
   /**
-   * @return {PropertyList}  The propery list containing all the properties of the node
+   * @returns {PropertyList}  The propery list containing all the properties of the node
    */
   getAllProperties(): PropertyList;
 
@@ -76,7 +76,7 @@ export interface Node<N extends Node<N, C>, C extends NodeClass<N, C>> {
 
   /**
    * @param {string} kind  The type of node to test for
-   * @return {boolean}     True when the node is of the given type
+   * @returns {boolean}     True when the node is of the given type
    */
   isKind(kind: string): boolean;
 
@@ -87,26 +87,26 @@ export interface Node<N extends Node<N, C>, C extends NodeClass<N, C>> {
 
   /**
    * @param {N} child  A node to add to this node's children
-   * @return {N}       The child node that was added
+   * @returns {N}       The child node that was added
    */
   appendChild(child: N): N;
 
   /**
    * @param {N} newChild  A child node to be inserted
    * @param {N} oldChild  A child node to be replaced
-   * @return {N}          The old child node that was removed
+   * @returns {N}          The old child node that was removed
    */
   replaceChild(newChild: N, oldChild: N): N;
 
   /**
    * @param {N} child   Child node to be removed
-   * @return {N}        The old child node that was removed
+   * @returns {N}        The old child node that was removed
    */
   removeChild(child: N): N;
 
   /**
    * @param {N} child  A child node whose index in childNodes is desired
-   * @return {number}     The index of the child in childNodes, or null if not found
+   * @returns {number}     The index of the child in childNodes, or null if not found
    */
   childIndex(child: N): number;
 
@@ -117,7 +117,7 @@ export interface Node<N extends Node<N, C>, C extends NodeClass<N, C>> {
 
   /**
    * @param {string} kind  The kind of nodes to be located in the tree
-   * @return {N[]}      An array of nodes that are children (at any depth) of the given kind
+   * @returns {N[]}      An array of nodes that are children (at any depth) of the given kind
    */
   findNodes(kind: string): N[];
 
@@ -140,7 +140,7 @@ export interface NodeClass<N extends Node<N, C>, C extends NodeClass<N, C>> {
    * @param {NodeFactory} factory  The NodeFactory to use to create new nodes when needed
    * @param {PropertyList} properties  Any properties to be added to the node, if any
    * @param {N[]} children  The initial child nodes, if any
-   * @return {N}  The newly created node
+   * @returns {N}  The newly created node
    */
   new (
     factory: NodeFactory<N, C>,
@@ -181,7 +181,7 @@ export abstract class AbstractNode<
    * @param {PropertyList} properties  Any properties to be added to the node, if any
    * @param {N[]} children  The initial child nodes, if any
    *
-   * @constructor
+   * @class
    * @implements {N}
    */
   constructor(
@@ -253,7 +253,7 @@ export abstract class AbstractNode<
    */
   public setChildren(children: N[]) {
     this.childNodes = [];
-    for (let child of children) {
+    for (const child of children) {
       this.appendChild(child);
     }
   }
@@ -271,7 +271,7 @@ export abstract class AbstractNode<
    * @override
    */
   public replaceChild(newChild: N, oldChild: N) {
-    let i = this.childIndex(oldChild);
+    const i = this.childIndex(oldChild);
     // If i === null should we error?  return null?  silently fail?
     if (i !== null) {
       this.childNodes[i] = newChild;
@@ -299,7 +299,7 @@ export abstract class AbstractNode<
    * @override
    */
   public childIndex(node: N) {
-    let i = this.childNodes.indexOf(node);
+    const i = this.childNodes.indexOf(node);
     return i === -1 ? null : i;
   }
 
@@ -321,7 +321,7 @@ export abstract class AbstractNode<
    * @override
    */
   public findNodes(kind: string) {
-    let nodes: N[] = [];
+    const nodes: N[] = [];
     this.walkTree((node: N) => {
       if (node.isKind(kind)) {
         nodes.push(node);

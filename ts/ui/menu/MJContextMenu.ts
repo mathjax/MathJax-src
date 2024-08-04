@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements a subclass of ContextMenu specific to MathJax
+ * @file  Implements a subclass of ContextMenu specific to MathJax
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -42,6 +42,7 @@ import {
 export class MJContextMenu extends ContextMenu {
   /**
    * Static map to hold methods for re-computing dynamic submenus.
+   *
    * @type {Map<string, (menu: MJContextMenu, sub: Submenu)}
    */
   public static DynamicSubmenus: Map<

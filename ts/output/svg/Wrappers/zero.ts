@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Exports the data URL for the MJX-ZERO font.
+ * @file  Exports the data URL for the MJX-ZERO font.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Utilities file for the empheq package.
+ * @file Utilities file for the empheq package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
@@ -52,7 +52,7 @@ export const EmpheqUtil = {
    *
    * @param {string} text                   The string to parse.
    * @param {{[key:string]:number} allowed  Object containing options to allow
-   * @return {EnvList}                      The parsed keys
+   * @returns {EnvList}                      The parsed keys
    */
   splitOptions(
     text: string,
@@ -65,7 +65,7 @@ export const EmpheqUtil = {
    * Find the number of columns in the table.
    *
    * @param {MmlMtable} table   The table whose columns to count.
-   * @return {number}           The number of columns in the table.
+   * @returns {number}           The number of columns in the table.
    */
   columnCount(table: MmlMtable): number {
     let m = 0;
@@ -85,7 +85,7 @@ export const EmpheqUtil = {
    * @param {MmlTable} table    The table used to size the box.
    * @param {TexParser} parser  The active tex parser.
    * @param {string} env        The name of the current environment.
-   * @return {MmlNode}          The mpadded element.
+   * @returns {MmlNode}          The mpadded element.
    */
   cellBlock(
     tex: string,
@@ -121,7 +121,7 @@ export const EmpheqUtil = {
    *
    * @param {MmlMtable} original   The original table.
    * @param {TexParser} parser     The active tex parser.
-   * @return {MmlNode}             The resulting mphantom element.
+   * @returns {MmlNode}             The resulting mphantom element.
    */
   topRowTable(original: MmlMtable, parser: TexParser): MmlNode {
     const table = ParseUtil.copyNode(original, parser);
@@ -242,6 +242,9 @@ export const EmpheqUtil = {
 
   /**
    * Add the left- and right-hand material to the table.
+   *
+   * @param empheq
+   * @param parser
    */
   adjustTable(empheq: EmpheqBeginItem, parser: TexParser) {
     const left = empheq.getProperty('left');
@@ -270,7 +273,7 @@ export const EmpheqUtil = {
    * Checks to see if the given environment is one of the allowed ones.
    *
    * @param {string} env   The environment to check.
-   * @return {boolean}     True if the environment is allowed.
+   * @returns {boolean}     True if the environment is allowed.
    */
   checkEnv(env: string): boolean {
     return this.allowEnv.hasOwnProperty(env.replace(/\*$/, '')) || false;

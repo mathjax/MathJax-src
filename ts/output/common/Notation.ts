@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements utilities for notations for menclose elements
+ * @file  Implements utilities for notations for menclose elements
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -137,6 +137,8 @@ export const sideNames = Object.keys(sideIndex) as Side[];
 
 /**
  * Common BBox and Border functions
+ *
+ * @param node
  */
 export const fullBBox = ((node) =>
   new Array(4).fill(node.thickness + node.padding)) as BBoxExtender<Menclose>;
@@ -149,6 +151,8 @@ export const fullBorder = ((node) =>
 
 /**
  * The length of an arrowhead
+ *
+ * @param node
  */
 export const arrowHead = (node: Menclose) => {
   return Math.max(
@@ -159,6 +163,9 @@ export const arrowHead = (node: Menclose) => {
 
 /**
  * Adjust short bbox for tall arrow heads
+ *
+ * @param node
+ * @param TRBL
  */
 export const arrowBBoxHD = (node: Menclose, TRBL: PaddingData) => {
   if (node.childNodes[0]) {
@@ -173,6 +180,9 @@ export const arrowBBoxHD = (node: Menclose, TRBL: PaddingData) => {
 
 /**
  * Adjust thin bbox for wide arrow heads
+ *
+ * @param node
+ * @param TRBL
  */
 export const arrowBBoxW = (node: Menclose, TRBL: PaddingData) => {
   if (node.childNodes[0]) {
@@ -236,7 +246,7 @@ export const arrowBBox = {
 
 /**
  * @param {Renderer} render     The function for adding the border to the node
- * @return {string => DefPair}  The function returingn the notation definition
+ * @returns {string => DefPair}  The function returingn the notation definition
  *                              for the notation having a line on the given side
  */
 export const CommonBorder = function <W extends Menclose, N>(
@@ -244,7 +254,7 @@ export const CommonBorder = function <W extends Menclose, N>(
 ): DefPairF<Side, W, N> {
   /**
    * @param {string} side   The side on which a border should appear
-   * @return {DefPair}      The notation definition for the notation having a line on the given side
+   * @returns {DefPair}      The notation definition for the notation having a line on the given side
    */
   return (side: Side) => {
     const i = sideIndex[side];
@@ -278,7 +288,7 @@ export const CommonBorder = function <W extends Menclose, N>(
 
 /**
  * @param {Renderer} render                    The function for adding the borders to the node
- * @return {(sring, Side, Side) => DefPair}    The function returning the notation definition
+ * @returns {(sring, Side, Side) => DefPair}    The function returning the notation definition
  *                                             for the notation having lines on two sides
  */
 export const CommonBorder2 = function <W extends Menclose, N>(
@@ -288,7 +298,7 @@ export const CommonBorder2 = function <W extends Menclose, N>(
    * @param {string} name    The name of the notation to define
    * @param {Side} side1   The first side to get a border
    * @param {Side} side2   The second side to get a border
-   * @return {DefPair}       The notation definition for the notation having lines on two sides
+   * @returns {DefPair}       The notation definition for the notation having lines on two sides
    */
   return (name: string, side1: Side, side2: Side) => {
     const i1 = sideIndex[side1];
@@ -330,14 +340,14 @@ export const CommonBorder2 = function <W extends Menclose, N>(
 
 /**
  * @param {string => Renderer} render      The function for adding the strike to the node
- * @return {string => DefPair}   The function returning the notation definition for the diagonal strike
+ * @returns {string => DefPair}   The function returning the notation definition for the diagonal strike
  */
 export const CommonDiagonalStrike = function <W extends Menclose, N>(
   render: (sname: string) => Renderer<W, N>
 ): DefPairF<string, W, N> {
   /**
    * @param {string} name  The name of the diagonal strike to define
-   * @return {DefPair}     The notation definition for the diagonal strike
+   * @returns {DefPair}     The notation definition for the diagonal strike
    */
   return (name: string) => {
     const cname = 'mjx-' + name.charAt(0) + 'strike';
@@ -361,14 +371,14 @@ export const CommonDiagonalStrike = function <W extends Menclose, N>(
 
 /**
  * @param {Renderer} render     The function to add the arrow to the node
- * @return {string => DefPair}  The funciton returning the notation definition for the diagonal arrow
+ * @returns {string => DefPair}  The funciton returning the notation definition for the diagonal arrow
  */
 export const CommonDiagonalArrow = function <W extends Menclose, N>(
   render: Renderer<W, N>
 ): DefPairF<string, W, N> {
   /**
    * @param {string} name   The name of the diagonal arrow to define
-   * @return {DefPair}      The notation definition for the diagonal arrow
+   * @returns {DefPair}      The notation definition for the diagonal arrow
    */
   return (name: string) => {
     const [c, pi, double, remove] = diagonalArrowDef[name];
@@ -414,14 +424,14 @@ export const CommonDiagonalArrow = function <W extends Menclose, N>(
 
 /**
  * @param {Renderer} render     The function to add the arrow to the node
- * @return {string => DefPair}  The function returning the notation definition for the arrow
+ * @returns {string => DefPair}  The function returning the notation definition for the arrow
  */
 export const CommonArrow = function <W extends Menclose, N>(
   render: Renderer<W, N>
 ): DefPairF<string, W, N> {
   /**
    * @param {string} name   The name of the horizontal or vertical arrow to define
-   * @return {DefPair}      The notation definition for the arrow
+   * @returns {DefPair}      The notation definition for the arrow
    */
   return (name: string) => {
     const [angle, double, isVertical, remove] = arrowDef[name];

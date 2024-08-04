@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgHtmlNode wrapper for the HtmlNode object
+ * @file  Implements the SvgHtmlNode wrapper for the HtmlNode object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

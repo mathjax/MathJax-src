@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMmultiscripts wrapper for the MmlMmultiscripts object
+ * @file  Implements the ChtmlMmultiscripts wrapper for the MmlMmultiscripts object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -226,7 +226,7 @@ export const ChtmlMmultiscripts = (function <
      * @param {BBox} sup       The superscript bounding box
      * @param {number} i       The starting index for the scripts
      * @param {number} n       The number of sub/super-scripts
-     * @return {N}             The script table for these scripts
+     * @returns {N}             The script table for these scripts
      */
     protected addScripts(
       dom: N,
@@ -247,7 +247,7 @@ export const ChtmlMmultiscripts = (function <
       const sepRow = this.html('mjx-row', rowdef);
       const subRow = this.html('mjx-row');
       const name = 'mjx-' + (isPre ? 'pre' : '') + 'scripts';
-      let m = i + 2 * n;
+      const m = i + 2 * n;
       while (i < m) {
         this.childNodes[i++].toCHTML([
           adaptor.append(subRow, this.html('mjx-cell')) as N,

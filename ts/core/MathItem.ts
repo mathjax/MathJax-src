@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the interface and abstract class for MathItem objects
+ * @file  Implements the interface and abstract class for MathItem objects
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -228,6 +228,13 @@ export type ProtoItem<N, T> = {
 /**
  *  Produce a proto math item that can be turned into a MathItem
  *
+ * @param open
+ * @param math
+ * @param close
+ * @param n
+ * @param start
+ * @param end
+ * @param display
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  */
@@ -240,7 +247,7 @@ export function protoItem<N, T>(
   end: number,
   display: boolean = null
 ) {
-  let item: ProtoItem<N, T> = {
+  const item: ProtoItem<N, T> = {
     open: open,
     math: math,
     close: close,
@@ -316,7 +323,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
   protected _state: number = STATE.UNPROCESSED;
 
   /**
-   * @return {boolean}   True when this item is an escaped delimiter
+   * @returns {boolean}   True when this item is an escaped delimiter
    */
   public get isEscaped(): boolean {
     return this.display === null;
@@ -328,7 +335,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
    * @param {boolean} display  True if display mode, false if inline
    * @param {Location} start   The starting position of the math in the document
    * @param {Location} end     The ending position of the math in the document
-   * @constructor
+   * @class
    */
   constructor(
     math: string,

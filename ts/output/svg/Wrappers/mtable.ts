@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMtable wrapper for the MmlMtable object
+ * @file  Implements the SvgMtable wrapper for the MmlMtable object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -284,6 +284,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
     }
 
     /**
+     * @param svg
      * @returns {number}   The x-adjustement needed to handle the true size of percentage-width tables
      */
     protected handlePWidth(svg: N): number {
@@ -416,6 +417,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      *
      * @param {N} svg       The container for the table contents
      * @param {N} parent    The parent containing the the table
+     * @param _parent
      * @param {number} dx   The adjustement for percentage width tables
      */
     protected handleLabels(svg: N, _parent: N, dx: number) {
@@ -493,7 +495,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
       const matrix = 'matrix(1 0 0 -1 0 0)';
       const scale = `scale(${this.jax.fixed((this.font.params.x_height * 1000) / this.metrics.ex, 2)})`;
       const transform = `translate(0 ${this.fixed(h)}) ${matrix} ${scale}`;
-      let table = this.svg(
+      const table = this.svg(
         'svg',
         {
           'data-table': true,

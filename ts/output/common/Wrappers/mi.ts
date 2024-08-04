@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMi wrapper mixin for the MmlMi object
+ * @file  Implements the CommonMi wrapper mixin for the MmlMi object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -104,6 +104,7 @@ export interface CommonMiClass<
 /**
  * The CommonMi wrapper mixin for the MmlMi object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type

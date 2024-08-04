@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMtr wrapper for the MmlMtr object
+ * @file  Implements the ChtmlMtr wrapper for the MmlMtr object
  *                and ChtmlMlabeledtr for MmlMlabeledtr
  *
  * @author dpvc@mathjax.org (Davide Cervone)

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgTextNode wrapper for the TextNode object
+ * @file  Implements the SvgTextNode wrapper for the TextNode object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

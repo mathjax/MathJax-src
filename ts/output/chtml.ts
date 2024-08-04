@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CHTML OutputJax object
+ * @file  Implements the CHTML OutputJax object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -166,7 +166,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<
 
   /**
    * @override
-   * @constructor
+   * @class
    */
   constructor(options: OptionList = {}) {
     super(options, ChtmlWrapperFactory as any, DefaultFont);
@@ -347,7 +347,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<
     const node = this.html('mjx-measure-text', { style }, [text]);
     adaptor.append(adaptor.parent(this.math.start.node), this.container);
     adaptor.append(this.container, node);
-    let w = adaptor.nodeSize(text, em)[0];
+    const w = adaptor.nodeSize(text, em)[0];
     adaptor.remove(this.container);
     adaptor.remove(node);
     return { w: w, h: 0.75, d: 0.2 };

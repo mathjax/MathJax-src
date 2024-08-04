@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMtd wrapper for the MmlMtd object
+ * @file  Implements the ChtmlMtd wrapper for the MmlMtd object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

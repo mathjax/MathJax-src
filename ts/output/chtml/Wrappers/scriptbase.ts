@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the a base class for ChtmlMsubsup, ChtmlMunderover
+ * @file  Implements the a base class for ChtmlMsubsup, ChtmlMunderover
  *                and their relatives.  (Since munderover can become msubsup
  *                when movablelimits is set, munderover needs to be able to
  *                do the same thing as msubsup in some cases.)

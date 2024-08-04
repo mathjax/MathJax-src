@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements utilities for notations for menclose elements
+ * @file  Implements utilities for notations for menclose elements
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -72,7 +72,7 @@ export const computeLineData = {
  * @param {Menclose} node   The node whose line is to be drawn
  * @param {LineName} kind   The type of line to draw for the node
  * @param {string} offset   The offset direction, if any
- * @return {LineData}       The coordinates of the two endpoints
+ * @returns {LineData}       The coordinates of the two endpoints
  */
 export const lineData = function (
   node: Menclose,
@@ -115,7 +115,8 @@ export const lineOffset = function (
 
 /**
  * @param {LineName} line  The name of the line to create
- * @return {RENDERER}      The renderer function for the given line
+ * @param offset
+ * @returns {RENDERER}      The renderer function for the given line
  */
 export const RenderLine = function <N, T, D>(
   line: LineName,
@@ -131,7 +132,7 @@ export const RenderLine = function <N, T, D>(
 
 /**
  * @param {Notation.Side} side   The kind of line (side, diagonal, etc.)
- * @return {DEFPAIR}      The notation definition for the notation having a line on the given side
+ * @returns {DEFPAIR}      The notation definition for the notation having a line on the given side
  */
 export const Border = function <N, T, D>(
   side: Notation.Side
@@ -145,7 +146,7 @@ export const Border = function <N, T, D>(
  * @param {string} name    The name of the notation to define
  * @param {Notation.Side} side1   The first side to get a border
  * @param {Notation.Side} side2   The second side to get a border
- * @return {DEFPAIR}       The notation definition for the notation having lines on two sides
+ * @returns {DEFPAIR}       The notation definition for the notation having lines on two sides
  */
 export const Border2 = function <N, T, D>(
   name: string,
@@ -162,7 +163,7 @@ export const Border2 = function <N, T, D>(
 
 /**
  * @param {LineName} name  The name of the diagonal strike to define
- * @return {DEFPAIR}       The notation definition for the diagonal strike
+ * @returns {DEFPAIR}       The notation definition for the diagonal strike
  */
 export const DiagonalStrike = function <N, T, D>(
   name: LineName
@@ -178,7 +179,7 @@ export const DiagonalStrike = function <N, T, D>(
 
 /**
  * @param {string} name   The name of the diagonal arrow to define
- * @return {DEFPAIR}      The notation definition for the diagonal arrow
+ * @returns {DEFPAIR}      The notation definition for the diagonal arrow
  */
 export const DiagonalArrow = function <N, T, D>(
   name: string
@@ -192,7 +193,7 @@ export const DiagonalArrow = function <N, T, D>(
 
 /**
  * @param {string} name   The name of the horizontal or vertical arrow to define
- * @return {DEFPAIR}      The notation definition for the arrow
+ * @returns {DEFPAIR}      The notation definition for the arrow
  */
 export const Arrow = function <N, T, D>(name: string): DEFPAIR<N, T, D> {
   return Notation.CommonArrow<SvgMencloseNTD<N, T, D>, N>((node, arrow) => {

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Class for handling all explorers on a single Math Item.
+ * @file Class for handling all explorers on a single Math Item.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -73,6 +73,7 @@ export class RegionPool {
 
 /**
  * Type of explorer initialization methods.
+ *
  * @type {(ExplorerMathDocument, HTMLElement, any[]): Explorer}
  */
 type ExplorerInit = (
@@ -85,14 +86,14 @@ type ExplorerInit = (
 /**
  *  Generation methods for all MathJax explorers available via option settings.
  */
-let allExplorers: { [options: string]: ExplorerInit } = {
+const allExplorers: { [options: string]: ExplorerInit } = {
   speech: (
     doc: ExplorerMathDocument,
     pool: ExplorerPool,
     node: HTMLElement,
     ...rest: any[]
   ) => {
-    let explorer = SpeechExplorer.create(
+    const explorer = SpeechExplorer.create(
       doc,
       pool,
       doc.explorerRegions.speechRegion,
@@ -218,7 +219,7 @@ export class ExplorerPool {
   protected mml: string;
 
   /**
-
+   
    * The primary highlighter shared by all explorers.
    */
   private _highlighter: Sre.highlighter;
@@ -234,7 +235,7 @@ export class ExplorerPool {
   private _restart: string[] = [];
 
   /**
-   * @return {Sre.highlighter} The primary highlighter shared by all explorers.
+   * @returns {Sre.highlighter} The primary highlighter shared by all explorers.
    */
   public get highlighter(): Sre.highlighter {
     if (this._renderer !== this.document.outputJax.name) {
@@ -242,7 +243,7 @@ export class ExplorerPool {
       this.setPrimaryHighlighter();
       return this._highlighter;
     }
-    let [foreground, background] = this.colorOptions();
+    const [foreground, background] = this.colorOptions();
     Sre.updateHighlighter(background, foreground, this._highlighter);
     return this._highlighter;
   }
@@ -251,6 +252,7 @@ export class ExplorerPool {
    * @param  document The target document.
    * @param  node The node explorers will be attached to.
    * @param  mml The corresponding Mathml node as a string.
+   * @param item
    */
   public init(
     document: ExplorerMathDocument,
@@ -262,7 +264,7 @@ export class ExplorerPool {
     this.mml = mml;
     this.node = node;
     this.setPrimaryHighlighter();
-    for (let key of Object.keys(allExplorers)) {
+    for (const key of Object.keys(allExplorers)) {
       this.explorers[key] = allExplorers[key](
         this.document,
         this,
@@ -286,9 +288,9 @@ export class ExplorerPool {
    */
   public attach() {
     this.attached = [];
-    let keyExplorers = [];
+    const keyExplorers = [];
     const a11y = this.document.options.a11y;
-    for (let [key, explorer] of Object.entries(this.explorers)) {
+    for (const [key, explorer] of Object.entries(this.explorers)) {
       if (explorer instanceof SpeechExplorer) {
         explorer.AddEvents();
         explorer.stoppable = false;
@@ -317,7 +319,7 @@ export class ExplorerPool {
     }
     // Ensure that the last currently attached key explorer stops propagating
     // key events.
-    for (let explorer of keyExplorers) {
+    for (const explorer of keyExplorers) {
       if (explorer.attached) {
         explorer.stoppable = true;
         break;
@@ -330,8 +332,8 @@ export class ExplorerPool {
    * rerendered.
    */
   public reattach() {
-    for (let key of this.attached) {
-      let explorer = this.explorers[key];
+    for (const key of this.attached) {
+      const explorer = this.explorers[key];
       if (explorer.active) {
         this._restart.push(key);
         explorer.Stop();
@@ -353,7 +355,7 @@ export class ExplorerPool {
    * A highlighter for the explorer.
    */
   protected setPrimaryHighlighter() {
-    let [foreground, background] = this.colorOptions();
+    const [foreground, background] = this.colorOptions();
     this._highlighter = Sre.getHighlighter(background, foreground, {
       renderer: this.document.outputJax.name,
       browser: 'v3',
@@ -375,6 +377,7 @@ export class ExplorerPool {
 
   /**
    * Highlights a set of DOM nodes.
+   *
    * @param {HTMLElement[]} nodes The array of HTML nodes to be highlighted.
    */
   public highlight(nodes: HTMLElement[]) {
@@ -393,7 +396,7 @@ export class ExplorerPool {
    * Convenience method to return the speech explorer of the pool with the
    * correct type.
    *
-   * @return {SpeechExplorer}
+   * @returns {SpeechExplorer}
    */
   public get speech(): SpeechExplorer {
     return this.explorers['speech'] as SpeechExplorer;
@@ -402,19 +405,19 @@ export class ExplorerPool {
   /**
    * Retrieves color assignment for the document options.
    *
-   * @return {[foreground, background]} Color assignments for fore and
+   * @returns {[foreground, background]} Color assignments for fore and
    *     background colors.
    */
   private colorOptions(): [
     { color: string; alpha: number },
     { color: string; alpha: number },
   ] {
-    let opts = this.document.options.a11y;
-    let foreground = {
+    const opts = this.document.options.a11y;
+    const foreground = {
       color: opts.foregroundColor.toLowerCase(),
       alpha: opts.foregroundOpacity / 100,
     };
-    let background = {
+    const background = {
       color: opts.backgroundColor.toLowerCase(),
       alpha: opts.backgroundOpacity / 100,
     };

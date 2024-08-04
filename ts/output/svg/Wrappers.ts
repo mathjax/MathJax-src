@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  An object listing all the SvgWrapper classes
+ * @file  An object listing all the SvgWrapper classes
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMaction wrapper for the MmlMaction object
+ * @file  Implements the SvgMaction wrapper for the MmlMaction object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -78,7 +78,7 @@ export interface SvgMactionNTD<N, T, D>
 
   /**
    * @param {number} m   The number to convert to pixels
-   * @return {string}    The dimension with "px" units
+   * @returns {string}    The dimension with "px" units
    */
   Px(m: number): string;
 }
@@ -383,6 +383,10 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
 
     /**
      * Add an event handler to the output for this maction
+     *
+     * @param type
+     * @param handler
+     * @param dom
      */
     public setEventHandler(type: string, handler: EventHandler, dom: N = null) {
       (dom ? [dom] : this.dom).forEach((node) =>

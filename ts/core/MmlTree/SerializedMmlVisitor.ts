@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  A visitor that produces a serilaied MathML string
+ * @file  A visitor that produces a serilaied MathML string
  *                (replacement for toMathML() output from v2)
  *
  * @author dpvc@mathjax.org (Davide Cervone)
@@ -39,7 +39,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
    * Convert the tree rooted at a particular node into a serialized MathML string
    *
    * @param {MmlNode} node  The node to use as the root of the tree to traverse
-   * @return {string}       The MathML string representing the internal tree
+   * @returns {string}       The MathML string representing the internal tree
    */
   public visitTree(node: MmlNode): string {
     return this.visitNode(node, '');
@@ -48,7 +48,8 @@ export class SerializedMmlVisitor extends MmlVisitor {
   /**
    * @param {TextNode} node  The text node to visit
    * @param {string} space   The amount of indenting for this node
-   * @return {string}        The (HTML-quoted) text of the node
+   * @param _space
+   * @returns {string}        The (HTML-quoted) text of the node
    */
   public visitTextNode(node: TextNode, _space: string): string {
     return this.quoteHTML(node.getText());
@@ -57,7 +58,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
   /**
    * @param {XMLNode} node  The XML node to visit
    * @param {string} space  The amount of indenting for this node
-   * @return {string}       The serialization of the XML node
+   * @returns {string}       The serialization of the XML node
    */
   public visitXMLNode(node: XMLNode, space: string): string {
     return space + node.getSerializedXML();
@@ -66,7 +67,8 @@ export class SerializedMmlVisitor extends MmlVisitor {
   /**
    * @param {HtmlNode} node  The HTML node to visit
    * @param {string} space   The amount of indenting for this node
-   * @return {string}        The serialization of the HTML
+   * @param _space
+   * @returns {string}        The serialization of the HTML
    */
   public visitHtmlNode(node: HtmlNode<any>, _space: string): string {
     return node.getSerializedHTML();
@@ -78,10 +80,10 @@ export class SerializedMmlVisitor extends MmlVisitor {
    *
    * @param {MmlNode} node  The inferred mrow to visit
    * @param {string} space  The amount of indenting for this node
-   * @return {string}       The serialized contents of the mrow, properly indented
+   * @returns {string}       The serialized contents of the mrow, properly indented
    */
   public visitInferredMrowNode(node: MmlNode, space: string): string {
-    let mml = [];
+    const mml = [];
     for (const child of node.childNodes) {
       mml.push(this.visitNode(child, space));
     }
@@ -91,7 +93,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
   /**
    * @param {MmlNode} node    The annotation node to visit
    * @param {string} space    The number of spaces to use for indentation
-   * @return {string}         The serializied annotation element
+   * @returns {string}         The serializied annotation element
    */
   public visitAnnotationNode(node: MmlNode, space: string): string {
     return (
@@ -113,11 +115,11 @@ export class SerializedMmlVisitor extends MmlVisitor {
    *
    * @param {MmlNode} node    The node to visit
    * @param {string} space    The number of spaces to use for indentation
-   * @return {string}         The serialization of the given node
+   * @returns {string}         The serialization of the given node
    */
   public visitDefault(node: MmlNode, space: string): string {
-    let kind = this.getKind(node);
-    let [nl, endspace] =
+    const kind = this.getKind(node);
+    const [nl, endspace] =
       node.isToken || node.childNodes.length === 0 ? ['', ''] : ['\n', space];
     const children = this.childNodeMml(node, space + '  ', nl);
     return (
@@ -137,7 +139,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
    * @param {MmlNode} node    The node whose children are to be added
    * @param {string} space    The spaces to use for indentation
    * @param {string} nl       The newline character (or empty)
-   * @return {string}         The serializied children
+   * @returns {string}         The serializied children
    */
   protected childNodeMml(node: MmlNode, space: string, nl: string): string {
     let mml = '';
@@ -149,7 +151,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
 
   /**
    * @param {MmlNode} node  The node whose attributes are to be produced
-   * @return {string}       The attribute list as a string
+   * @returns {string}       The attribute list as a string
    */
   protected getAttributes(node: MmlNode): string {
     const attr = [];
@@ -168,7 +170,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
    *  Convert non-ASCII characters to entities.
    *
    * @param {string} value  The string to be made HTML escaped
-   * @return {string}       The string with escaping performed
+   * @returns {string}       The string with escaping performed
    */
   protected quoteHTML(value: string): string {
     return value

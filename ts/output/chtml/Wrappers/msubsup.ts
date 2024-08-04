@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMsubsup wrapper for the MmlMsubsup object
+ * @file  Implements the ChtmlMsubsup wrapper for the MmlMsubsup object
  *                and the special cases ChtmlMsub and ChtmlMsup
  *
  * @author dpvc@mathjax.org (Davide Cervone)

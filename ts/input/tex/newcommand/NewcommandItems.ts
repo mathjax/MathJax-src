@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Items for TeX parsing of new environments.
+ * @file Items for TeX parsing of new environments.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */

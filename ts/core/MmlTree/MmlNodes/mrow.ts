@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMrow node
+ * @file  Implements the MmlMrow node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -110,7 +110,7 @@ export class MmlMrow extends AbstractMmlNode {
   }
 
   /**
-   * @return {number}  The number of non-spacelike child nodes
+   * @returns {number}  The number of non-spacelike child nodes
    */
   public nonSpaceLength(): number {
     let n = 0;
@@ -123,7 +123,7 @@ export class MmlMrow extends AbstractMmlNode {
   }
 
   /**
-   * @return {MmlNode|null}  The first non-space-like child node
+   * @returns {MmlNode|null}  The first non-space-like child node
    */
   public firstNonSpace(): MmlNode | null {
     for (const child of this.childNodes) {
@@ -135,12 +135,12 @@ export class MmlMrow extends AbstractMmlNode {
   }
 
   /**
-   * @return {MmlNode|null}  The last non-space-like child node
+   * @returns {MmlNode|null}  The last non-space-like child node
    */
   public lastNonSpace(): MmlNode | null {
     let i = this.childNodes.length;
     while (--i >= 0) {
-      let child = this.childNodes[i];
+      const child = this.childNodes[i];
       if (child && !child.isSpacelike) {
         return child;
       }
@@ -195,14 +195,14 @@ export class MmlInferredMrow extends MmlMrow {
   public static defaults: PropertyList = MmlMrow.defaults;
 
   /**
-   * @return {string}  The inferred-mrow kind
+   * @returns {string}  The inferred-mrow kind
    */
   public get kind(): string {
     return 'inferredMrow';
   }
 
   /**
-   * @return {boolean}  This is inferred
+   * @returns {boolean}  This is inferred
    */
   public get isInferred(): boolean {
     return true;

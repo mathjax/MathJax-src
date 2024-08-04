@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMaction wrapper for the MmlMaction object
+ * @file  Implements the ChtmlMaction wrapper for the MmlMaction object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -77,7 +77,7 @@ export interface ChtmlMactionNTD<N, T, D>
    * Public access to em method (for use in notation functions)
    *
    * @param {number} m   The number to convert to pixels
-   * @return {string}    The dimension with "px" units
+   * @returns {string}    The dimension with "px" units
    */
   Em(m: number): string;
 }

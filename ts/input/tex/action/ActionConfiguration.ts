@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the action package.
+ * @file Configuration file for the action package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -32,7 +32,8 @@ import BaseMethods from '../base/BaseMethods.js';
 export const ActionMethods: { [key: string]: ParseMethod } = {
   /**
    * Implement \toggle {math1} {math2} ... \endtoggle
-   *    (as an <maction actiontype="toggle">)
+   * (as an <maction actiontype="toggle">)
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {string} name The name of the calling macro.
    */
@@ -51,7 +52,8 @@ export const ActionMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Implement \mathtip{math}{tip}
-   *   (an an <maction actiontype="tooltip">)
+   * (an an <maction actiontype="tooltip">)
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {string} name The name of the calling macro.
    */

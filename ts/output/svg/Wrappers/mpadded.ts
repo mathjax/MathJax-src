@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMpadded wrapper for the MmlMpadded object
+ * @file  Implements the SvgMpadded wrapper for the MmlMpadded object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

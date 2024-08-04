@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMalignmark node
+ * @file  Implements the MmlMalignmark node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -47,6 +47,7 @@ export class MmlMalignmark extends AbstractMmlNode {
 
   /**
    * No children allowed
+   *
    * @override
    */
   public get arity() {
@@ -55,6 +56,7 @@ export class MmlMalignmark extends AbstractMmlNode {
 
   /**
    * <malignmark> is space-like
+   *
    * @override
    */
   public get isSpacelike() {

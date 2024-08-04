@@ -15,7 +15,7 @@
  */
 
 /**
- * @fileoverview    Implementation of items for the mathtools package.
+ * @file    Implementation of items for the mathtools package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  * @author dpvc@mathjax.org (Davide P. Cervone)

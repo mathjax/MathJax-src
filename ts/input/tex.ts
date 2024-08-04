@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the TeX InputJax object
+ * @file  Implements the TeX InputJax object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -54,12 +54,14 @@ import './tex/base/BaseConfiguration.js';
 export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
   /**
    * Name of input jax.
+   *
    * @type {string}
    */
   public static NAME: string = 'TeX';
 
   /**
    * Default options for the jax.
+   *
    * @type {OptionList}
    */
   public static OPTIONS: OptionList = {
@@ -83,18 +85,21 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
 
   /**
    * The configuration of the TeX jax.
+   *
    * @type {ParserConfiguration}
    */
   protected configuration: ParserConfiguration;
 
   /**
    * The LaTeX code that is parsed.
+   *
    * @type {string}
    */
   protected latex: string;
 
   /**
    * The Math node that results from parsing.
+   *
    * @type {MmlNode}
    */
   protected mathNode: MmlNode;
@@ -103,13 +108,14 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
 
   /**
    * Initialises the configurations.
+   *
    * @param {string[]} packages Names of packages.
-   * @return {Configuration} The configuration object.
+   * @returns {Configuration} The configuration object.
    */
   protected static configure(
     packages: (string | [string, number])[]
   ): ParserConfiguration {
-    let configuration = new ParserConfiguration(packages, ['tex']);
+    const configuration = new ParserConfiguration(packages, ['tex']);
     configuration.init();
     return configuration;
   }
@@ -117,6 +123,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
   /**
    * Initialises the Tags factory. Add tagging structures from packages and set
    * tagging to given default.
+   *
    * @param {ParseOptions} options The parse options.
    * @param {Configuration} configuration The configuration.
    */
@@ -167,7 +174,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
   }
 
   /**
-   * @return {ParseOptions} The parse options that configure this JaX instance.
+   * @returns {ParseOptions} The parse options that configure this JaX instance.
    */
   public get parseOptions(): ParseOptions {
     return this._parseOptions;
@@ -241,12 +248,13 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
 
   /**
    * Default formatter for error messages:
-   *   wrap an error into a node for output.
+   * wrap an error into a node for output.
+   *
    * @param {TeXError} err The TexError.
-   * @return {Node} The merror node.
+   * @returns {Node} The merror node.
    */
   public formatError(err: TexError): MmlNode {
-    let message = err.message.replace(/\n.*/, '');
+    const message = err.message.replace(/\n.*/, '');
     return this.parseOptions.nodeFactory.create(
       'error',
       message,

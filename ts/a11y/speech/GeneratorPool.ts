@@ -23,7 +23,7 @@ import { buildLabel, buildSpeech, InPlace } from '../speech/SpeechUtil.js';
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 
 /**
- * @fileoverview Speech generator collections for enrichment and explorers.
+ * @file Speech generator collections for enrichment and explorers.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -114,6 +114,7 @@ export class GeneratorPool<N, T, D> {
    * loaded.
    *
    * @param {OptionList} options A list of options.
+   * @param adaptor
    */
   public init(options: OptionList, adaptor: DOMAdaptor<N, T, D>) {
     if (this._init) return;
@@ -157,7 +158,7 @@ export class GeneratorPool<N, T, D> {
    *
    * @param {N} node The typeset node.
    * @param {string} mml The serialized mml node.
-   * @return {[string, string]} Speech and Braille expression pair.
+   * @returns {[string, string]} Speech and Braille expression pair.
    */
   public computeSpeech(node: N, mml: string): [string, string] {
     this.element = Sre.parseDOM(mml);
@@ -247,7 +248,7 @@ export class GeneratorPool<N, T, D> {
     speechRegion: LiveRegion,
     brailleRegion: LiveRegion
   ) {
-    let speech = this.getLabel(node, this.lastSpeech);
+    const speech = this.getLabel(node, this.lastSpeech);
     speechRegion.Update(speech);
     this.adaptor.setAttribute(node, 'aria-label', buildSpeech(speech)[0]);
     this.lastSpeech = '';
@@ -367,7 +368,10 @@ export class GeneratorPool<N, T, D> {
 
   /**
    * Retrieve and sets aria and braille labels recursively.
+   *
    * @param {MmlNode} node The root node to search from.
+   * @param xml
+   * @param locale
    */
   public setAria(node: N, xml: Element, locale: string) {
     const kind = xml.getAttribute('data-semantic-type');
@@ -409,7 +413,7 @@ export class GeneratorPool<N, T, D> {
       this.CleanUp(node);
       return this.lastSpeech;
     }
-    let postfix = this.summaryGenerator.getActionable(
+    const postfix = this.summaryGenerator.getActionable(
       actionable ? (this.adaptor.childNodes(node).length === 0 ? -1 : 1) : 0
     );
     const depth = this.summaryGenerator.getLevel(

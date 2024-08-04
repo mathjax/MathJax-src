@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the AMS package.
+ * @file Configuration file for the AMS package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -28,6 +28,7 @@ import TexParser from '../TexParser.js';
 /**
  * Generates a red version of the undefined control sequence, instead of
  * throwing an error.
+ *
  * @param {TexParser} parser The calling parser.
  * @param {string} name The macro name.
  */

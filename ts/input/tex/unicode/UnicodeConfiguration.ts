@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the unicode package.
+ * @file Configuration file for the unicode package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -33,17 +33,18 @@ import NodeUtil from '../NodeUtil.js';
 import { numeric } from '../../../util/Entities.js';
 import { Other } from '../base/BaseConfiguration.js';
 
-let UnicodeCache: { [key: number]: [number, number, string, number] } = {};
+const UnicodeCache: { [key: number]: [number, number, string, number] } = {};
 
 // Namespace
 const UnicodeMethods: { [key: string]: ParseMethod } = {
   /**
    * Parse function for unicode macro.
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {string} name The name of the macro.
    */
   Unicode(parser: TexParser, name: string) {
-    let HD = parser.GetBrackets(name);
+    const HD = parser.GetBrackets(name);
     let HDsplit = null;
     let font = '';
     if (HD) {
@@ -63,7 +64,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
         parser.currentCS
       );
     }
-    let n = UnitUtil.trimSpaces(parser.GetArgument(name)).replace(/^0x/, 'x');
+    const n = UnitUtil.trimSpaces(parser.GetArgument(name)).replace(/^0x/, 'x');
     if (!n.match(/^(x[0-9A-Fa-f]+|[0-9]+)$/)) {
       throw new TexError(
         'BadUnicode',
@@ -71,7 +72,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
         parser.currentCS
       );
     }
-    let N = parseInt(n.match(/^x/) ? '0' + n : n);
+    const N = parseInt(n.match(/^x/) ? '0' + n : n);
     if (!UnicodeCache[N]) {
       UnicodeCache[N] = [800, 200, font, N];
     } else if (!font) {
@@ -81,8 +82,8 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
       UnicodeCache[N][0] = Math.floor(parseFloat(HDsplit[0]) * 1000);
       UnicodeCache[N][1] = Math.floor(parseFloat(HDsplit[1]) * 1000);
     }
-    let variant = parser.stack.env.font as string;
-    let def: EnvList = {};
+    const variant = parser.stack.env.font as string;
+    const def: EnvList = {};
     if (font) {
       UnicodeCache[N][2] = def.fontfamily = font.replace(/'/g, "'");
       if (variant) {
@@ -96,7 +97,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
     } else if (variant) {
       def.mathvariant = variant;
     }
-    let node = parser.create('token', 'mtext', def, numeric(n));
+    const node = parser.create('token', 'mtext', def, numeric(n));
     NodeUtil.setProperty(node, 'unicode', true);
     parser.Push(node);
   },
@@ -129,7 +130,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
    */
   Char(parser: TexParser, _name: string) {
     let match;
-    let next = parser.GetNext();
+    const next = parser.GetNext();
     let c = '';
     const text = parser.string.substring(parser.i);
     if (next === "'") {

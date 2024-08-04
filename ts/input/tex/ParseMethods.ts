@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Base methods for TeX Parsing.
+ * @file Base methods for TeX Parsing.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -34,6 +34,7 @@ const MATHVARIANT = TexConstant.Variant;
 namespace ParseMethods {
   /**
    * Handle a variable (a single letter or multi-letter if allowed).
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {string} c The letter to transform into an mi.
    */
@@ -68,6 +69,7 @@ namespace ParseMethods {
 
   /**
    * Handle a number (a sequence of digits, with decimal separator, etc.).
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {string} c The first character of a number than can be parsed with
    *     the digits pattern.
@@ -91,8 +93,10 @@ namespace ParseMethods {
 
   /**
    * Lookup a control-sequence and process it.
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {string} c The string '\'.
+   * @param _c
    */
   export function controlSequence(parser: TexParser, _c: string) {
     const name = parser.GetCS();
@@ -101,6 +105,7 @@ namespace ParseMethods {
 
   /**
    * Handle lower-case Greek (as an mi).
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {Token} mchar The parsed token.
    */
@@ -116,6 +121,7 @@ namespace ParseMethods {
 
   /**
    * Handle mathcharupper-case Greek in current family.
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {Token} mchar The parsed token.
    */
@@ -133,6 +139,7 @@ namespace ParseMethods {
 
   /**
    * Handle normal mathchar (as an mi).
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {Token} mchar The parsed token.
    */
@@ -144,6 +151,7 @@ namespace ParseMethods {
 
   /**
    * Handle normal mathchar (as an mo).
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {Token} mchar The parsed token.
    */
@@ -160,6 +168,7 @@ namespace ParseMethods {
 
   /**
    * Handle mathchar in current family.
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {Token} mchar The parsed token.
    */
@@ -176,6 +185,7 @@ namespace ParseMethods {
 
   /**
    * Handle delimiter.
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {Token} delim The parsed delimiter token.
    */
@@ -189,6 +199,7 @@ namespace ParseMethods {
 
   /**
    * Parse an environment.
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {string} env The name of the environment.
    * @param {Function} func The parse method for the environment.

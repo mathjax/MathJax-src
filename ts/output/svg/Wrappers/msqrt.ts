@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMsqrt wrapper for the MmlMsqrt object
+ * @file  Implements the SvgMsqrt wrapper for the MmlMsqrt object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -145,6 +145,10 @@ export const SvgMsqrt = (function <N, T, D>(): SvgMsqrtClass<N, T, D> {
      * @param {BBox} sbox        The bounding box of the surd
      * @param {number} H         The height of the root as a whole
      * @param {number}           The offset required by the root
+     * @param _ROOT
+     * @param _root
+     * @param _sbox
+     * @param _H
      */
     protected addRoot(
       _ROOT: N[],

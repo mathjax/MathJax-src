@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements a startup module that allows dynamically
+ * @file  Implements a startup module that allows dynamically
  *                loaded components to register themselves, and then
  *                creates MathJax methods for typesetting and converting
  *                math based on the registered components.
@@ -180,7 +180,7 @@ export namespace Startup {
   /**
    * The elements to process (set when typeset or conversion method is called)
    */
-  export let elements: any[] = null;
+  export const elements: any[] = null;
 
   /**
    * The MathDocument instance being used (based on the browser DOM or configuration value)
@@ -213,7 +213,7 @@ export namespace Startup {
    * A promise that is resolved when the page contents are available
    * for processing.
    */
-  export let pagePromise = new Promise<void>((resolve, _reject) => {
+  export const pagePromise = new Promise<void>((resolve, _reject) => {
     const doc = global.document;
     if (
       !doc ||
@@ -238,7 +238,7 @@ export namespace Startup {
 
   /**
    * @param {MmlNode} node   The root of the tree to convert to serialized MathML
-   * @return {string}        The serialized MathML from the tree
+   * @returns {string}        The serialized MathML from the tree
    */
   export function toMML(node: MmlNode): string {
     return visitor.visitTree(node, document);
@@ -347,6 +347,8 @@ export namespace Startup {
 
   /**
    * Perform the typesetting with handling of retries
+   *
+   * @param elements
    */
   export function typesetPromise(elements: any[]) {
     document.options.elements = elements;
@@ -525,7 +527,7 @@ export namespace Startup {
   }
 
   /**
-   * @return {JAXARRAY}  The array of instances of the registered input jax
+   * @returns {JAXARRAY}  The array of instances of the registered input jax
    */
   export function getInputJax(): JAXARRAY {
     const jax = [] as JAXARRAY;
@@ -544,7 +546,7 @@ export namespace Startup {
   }
 
   /**
-   * @return {OUTPUTJAX}   The instance of the registered output jax
+   * @returns {OUTPUTJAX}   The instance of the registered output jax
    */
   export function getOutputJax(): OUTPUTJAX {
     const name = CONFIG.output;
@@ -559,7 +561,7 @@ export namespace Startup {
   }
 
   /**
-   * @return {DOMADAPTOR}  The instance of the registered DOMAdator (the registered constructor
+   * @returns {DOMADAPTOR}  The instance of the registered DOMAdator (the registered constructor
    *                         in this case is a function that creates the adaptor, not a class)
    */
   export function getAdaptor(): DOMADAPTOR {
@@ -575,7 +577,7 @@ export namespace Startup {
   }
 
   /**
-   * @return {HANDLER}  The instance of the registered Handler, extended by the registered extensions
+   * @returns {HANDLER}  The instance of the registered Handler, extended by the registered extensions
    */
   export function getHandler(): HANDLER {
     const name = CONFIG.handler;

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the OutputWrapperFactory class
+ * @file  Implements the OutputWrapperFactory class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -80,9 +80,9 @@ export class CommonWrapperFactory<
   public jax: JX = null;
 
   /**
-   * @return {Object}  The list of node-creation functions
+   * @returns {object}  The list of node-creation functions
    */
-  get Wrappers(): Object {
+  get Wrappers(): object {
     return this.node;
   }
 }

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Keeps track of usage of font characters and wrappers
+ * @file  Keeps track of usage of font characters and wrappers
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -48,7 +48,7 @@ export class Usage<T> {
 
   /**
    * @param {T} item     The item to check for being used
-   * @return {boolean}   True if the item has been used
+   * @returns {boolean}   True if the item has been used
    */
   public has(item: T): boolean {
     return this.used.has(JSON.stringify(item));

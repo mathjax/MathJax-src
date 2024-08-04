@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Utility functions for handling dimensions (lengths)
+ * @file  Utility functions for handling dimensions (lengths)
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -85,7 +85,7 @@ export const MATHSPACE: {[name: string]: number} = {
  * @param {number} size           The default size of the dimension (for percentage values)
  * @param {number} scale          The current scaling factor (to handle absolute units)
  * @param {number} em             The size of an em in pixels
- * @return {number}               The dimension converted to ems
+ * @returns {number}               The dimension converted to ems
  */
 export function length2em(
   length: string | number,
@@ -102,14 +102,14 @@ export function length2em(
   if (MATHSPACE[length]) {
     return MATHSPACE[length];
   }
-  let match = length.match(
+  const match = length.match(
     /^\s*([-+]?(?:\.\d+|\d+(?:\.\d*)?))?(pt|em|ex|mu|px|pc|in|mm|cm|%)?/
   );
   if (!match || match[0] === '') {
     return size;
   }
-  let m = parseFloat(match[1] || '1');
-  let unit = match[2];
+  const m = parseFloat(match[1] || '1');
+  const unit = match[2];
   if (UNITS.hasOwnProperty(unit)) {
     return (m * UNITS[unit]) / em / scale;
   }
@@ -124,7 +124,7 @@ export function length2em(
 
 /**
  * @param {number} m  A number to be shown as a percent
- * @return {string}   The number m as a percent
+ * @returns {string}   The number m as a percent
  */
 export function percent(m: number): string {
   return (100 * m).toFixed(1).replace(/\.?0+$/, '') + '%';
@@ -132,7 +132,7 @@ export function percent(m: number): string {
 
 /**
  * @param {number} m  A number to be shown in ems
- * @return {string}   The number with units of ems
+ * @returns {string}   The number with units of ems
  */
 export function em(m: number): string {
   if (Math.abs(m) < 0.001) return '0';
@@ -143,7 +143,7 @@ export function em(m: number): string {
  * @param {number} m   A number of em's to be shown as pixels
  * @param {number} M   The minimum number of pixels to allow
  * @param {number} em  The number of pixels in an em
- * @return {string}    The number with units of px
+ * @returns {string}    The number with units of px
  */
 export function px(m: number, M: number = -BIGDIMEN, em: number = 16): string {
   m *= em;

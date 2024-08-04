@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Methods for TeX parsing of the physics package.
+ * @file Methods for TeX parsing of the physics package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -35,6 +35,7 @@ import { AutoOpen } from './PhysicsItems.js';
 
 /**
  * Pairs open and closed fences.
+ *
  * @type {{[fence: string]: string}}
  */
 const pairs: { [fence: string]: string } = {
@@ -46,18 +47,20 @@ const pairs: { [fence: string]: string } = {
 
 /**
  * Regular expression for matching big fence arguments.
+ *
  * @type {RegExp}
  */
 const biggs: RegExp = /^(b|B)i(g{1,2})$/;
 
-let latinCap: [number, number] = [0x41, 0x5a];
-let latinSmall: [number, number] = [0x61, 0x7a];
-let greekCap: [number, number] = [0x391, 0x3a9];
-let greekSmall: [number, number] = [0x3b1, 0x3c9];
-let digits: [number, number] = [0x30, 0x39];
+const latinCap: [number, number] = [0x41, 0x5a];
+const latinSmall: [number, number] = [0x61, 0x7a];
+const greekCap: [number, number] = [0x391, 0x3a9];
+const greekSmall: [number, number] = [0x3b1, 0x3c9];
+const digits: [number, number] = [0x30, 0x39];
 
 /**
  * Checks if a value is in a given numerical interval.
+ *
  * @param {number} value The value.
  * @param {[number, number]} range The closed interval.
  */
@@ -70,11 +73,12 @@ function inRange(value: number, range: [number, number]) {
  * with the specific vector font (e.g., bold) in case it is a Latin or capital
  * Greek character, accent or small Greek character if command is starred. This
  * is a replacement for the original token method in the node factory.
+ *
  * @param {NodeFactory} factory The current node factory.
  * @param {string} kind The type of token to create.
  * @param {any} def The attributes for the node.
  * @param {string} text The text contained in the token node.
- * @return {MmlNode} The newly create token node.
+ * @returns {MmlNode} The newly create token node.
  */
 function createVectorToken(
   factory: NodeFactory,
@@ -82,9 +86,9 @@ function createVectorToken(
   def: any,
   text: string
 ): MmlNode {
-  let parser = factory.configuration.parser;
-  let token = NodeFactory.createToken(factory, kind, def, text);
-  let code: number = text.codePointAt(0);
+  const parser = factory.configuration.parser;
+  const token = NodeFactory.createToken(factory, kind, def, text);
+  const code: number = text.codePointAt(0);
   if (
     text.length === 1 &&
     !parser.stack.env.font &&
@@ -103,12 +107,14 @@ function createVectorToken(
 
 /**
  * Computes the application of a vector operation.
+ *
  * @param {TexParser} parser The calling parser.
  * @param {string} kind The type of stack item to parse the operator into.
  * @param {string} name The macro name.
  * @param {string} operator The operator expression.
  * @param {string[]} ...fences List of opening fences that should be
  *     automatically sized and paired to its corresponding closing fence.
+ * @param fences
  */
 function vectorApplication(
   parser: TexParser,
@@ -117,26 +123,26 @@ function vectorApplication(
   operator: string,
   fences: string[]
 ) {
-  let op = new TexParser(
+  const op = new TexParser(
     operator,
     parser.stack.env,
     parser.configuration
   ).mml();
   parser.Push(parser.itemFactory.create(kind, op));
-  let left = parser.GetNext();
-  let right = pairs[left];
+  const left = parser.GetNext();
+  const right = pairs[left];
   if (!right) {
     return;
   }
   let lfence = '',
     rfence = '',
     arg = '';
-  let enlarge = fences.indexOf(left) !== -1;
+  const enlarge = fences.indexOf(left) !== -1;
   if (left === '{') {
     arg = parser.GetArgument(name);
     lfence = enlarge ? '\\left\\{' : '';
     rfence = enlarge ? '\\right\\}' : '';
-    let macro = lfence + ' ' + arg + ' ' + rfence;
+    const macro = lfence + ' ' + arg + ' ' + rfence;
     parser.string = macro + parser.string.slice(parser.i);
     parser.i = 0;
     return;
@@ -154,6 +160,7 @@ function vectorApplication(
 
 /**
  * Generates the expanded braket LaTeX code for matrix operations.
+ *
  * @param {[string, string, string]} [arg1, arg2, arg3] The three arguments
  *     <arg1|arg2|arg3>.
  * @param {boolean} star1 No automatic sizing of fences.
@@ -173,12 +180,13 @@ function outputBraket(
 
 /**
  * Creates the a (anti)diagonal matrix string.
+ *
  * @param {string[]} elements The elements on the diagonal.
  * @param {boolean} anti True if constructing anti-diagonal matrix.
  */
 function makeDiagMatrix(elements: string[], anti: boolean) {
-  let length = elements.length;
-  let matrix = [];
+  const length = elements.length;
+  const matrix = [];
   for (let i = 0; i < length; i++) {
     matrix.push(
       Array(anti ? length - i : i + 1).join('&') + '\\mqty{' + elements[i] + '}'
@@ -195,6 +203,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Automatic sizing of fences, e.g., \\qty(x). Some with content.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    * @param {string=} open Opening fence.
@@ -212,16 +221,16 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     named: string = '',
     variant: string = ''
   ) {
-    let star = arg ? parser.GetStar() : false;
+    const star = arg ? parser.GetStar() : false;
     let next = parser.GetNext();
-    let position = parser.i;
+    const position = parser.i;
     let big = null;
     if (next === '\\') {
       parser.i++;
       big = parser.GetCS();
       if (!big.match(biggs)) {
         // empty
-        let empty = parser.create('node', 'mrow');
+        const empty = parser.create('node', 'mrow');
         parser.Push(ParseUtil.fenced(parser.configuration, open, empty, close));
         parser.i = position;
         return;
@@ -237,7 +246,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       );
     }
     if (!right) {
-      let empty = parser.create('node', 'mrow');
+      const empty = parser.create('node', 'mrow');
       parser.Push(ParseUtil.fenced(parser.configuration, open, empty, close));
       parser.i = position;
       return;
@@ -294,15 +303,16 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * The evaluate macro.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
   Eval(parser: TexParser, name: string) {
-    let star = parser.GetStar();
-    let next = parser.GetNext();
+    const star = parser.GetStar();
+    const next = parser.GetNext();
     if (next === '{') {
-      let arg = parser.GetArgument(name);
-      let replace =
+      const arg = parser.GetArgument(name);
+      const replace =
         '\\left. ' +
         (star ? '\\smash{' + arg + '}' : arg) +
         ' ' +
@@ -334,6 +344,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * The anti/commutator and poisson macros.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    * @param {string=} open Opening fence.
@@ -345,7 +356,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     open: string = '[',
     close: string = ']'
   ) {
-    let star = parser.GetStar();
+    const star = parser.GetStar();
     let next = parser.GetNext();
     let big = null;
     if (next === '\\') {
@@ -368,8 +379,8 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
         parser.currentCS
       );
     }
-    let arg1 = parser.GetArgument(name);
-    let arg2 = parser.GetArgument(name);
+    const arg1 = parser.GetArgument(name);
+    const arg2 = parser.GetArgument(name);
     let argument = arg1 + ',' + arg2;
     argument = star
       ? open + ' ' + argument + ' ' + close
@@ -398,19 +409,20 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Bold vector notation.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
   VectorBold(parser: TexParser, name: string) {
-    let star = parser.GetStar();
-    let arg = parser.GetArgument(name);
-    let oldToken = parser.configuration.nodeFactory.get('token');
-    let oldFont = parser.stack.env.font;
+    const star = parser.GetStar();
+    const arg = parser.GetArgument(name);
+    const oldToken = parser.configuration.nodeFactory.get('token');
+    const oldFont = parser.stack.env.font;
     delete parser.stack.env.font;
     parser.configuration.nodeFactory.set('token', createVectorToken);
     parser.stack.env.vectorFont = star ? 'bold-italic' : 'bold';
     parser.stack.env.vectorStar = star;
-    let node = new TexParser(arg, parser.stack.env, parser.configuration).mml();
+    const node = new TexParser(arg, parser.stack.env, parser.configuration).mml();
     if (oldFont) {
       parser.stack.env.font = oldFont;
     }
@@ -422,11 +434,13 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Macros that can have an optional star which is propagated.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    * @param {number} argcount Number of arguments.
    * @param {string[]} ...parts List of parts from which to assemble the macro.
    *     If the original command is starred, a star will be injected at each part.
+   * @param {...any} parts
    */
   StarMacro(
     parser: TexParser,
@@ -434,7 +448,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     argcount: number,
     ...parts: string[]
   ) {
-    let star = parser.GetStar();
+    const star = parser.GetStar();
     const args: string[] = [];
     if (argcount) {
       for (let i = args.length; i < argcount; i++) {
@@ -456,11 +470,13 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
    * An operator that needs to be parsed (e.g., a Greek letter or nabla) and
    * applied to a possibly fenced expression. By default automatic fences are
    * parentheses and brakets, with braces being ignored.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    * @param {string} operator The operator expression.
    * @param {string[]} ...fences List of opening fences that should be
    *     automatically sized and paired to its corresponding closing fence.
+   * @param {...any} fences
    */
   OperatorApplication(
     parser: TexParser,
@@ -475,11 +491,13 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
    * A vector operator that needs to be parsed (e.g., a Greek letter or nabla with
    * a crossproduct) and connected to a possibly fenced expression. By default
    * automatic fences are parentheses and brakets.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    * @param {string} operator The operator expression.
    * @param {string[]} ...fences List of opening fences that should be
    *     automatically sized and paired to its corresponding closing fence.
+   * @param {...any} fences
    */
   VectorOperator(
     parser: TexParser,
@@ -497,6 +515,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Operator expression with automatic fences and optional exponent.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    * @param {boolean=} opt Set to false if no optional exponent is allowed.
@@ -538,14 +557,15 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Quad text macros.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    * @param {string} text The text that is to be padded with quad spaces.
    */
   Qqtext(parser: TexParser, name: string, text: string) {
-    let star = parser.GetStar();
-    let arg = text ? text : parser.GetArgument(name);
-    let replace = (star ? '' : '\\quad') + '\\text{' + arg + '}\\quad ';
+    const star = parser.GetStar();
+    const arg = text ? text : parser.GetArgument(name);
+    const replace = (star ? '' : '\\quad') + '\\text{' + arg + '}\\quad ';
     parser.string =
       parser.string.slice(0, parser.i) +
       replace +
@@ -559,6 +579,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * The differential and variation macros.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    * @param {string} op The operator. It will be parsed.
@@ -571,7 +592,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     let macro = op + power;
     if (!(parens || braces)) {
       macro += parser.GetArgument(name, true) || '';
-      let mml = new TexParser(
+      const mml = new TexParser(
         macro,
         parser.stack.env,
         parser.configuration
@@ -608,8 +629,9 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
    * 1 argument: will be part of the denominator.
    * 2 arguments: argument one is numerator, argument two is denominator.
    * 3+ arguments: arguments above 2 will be part of the denominator and the
-   *   exponent of the enumerator will depend on the number of denominator
-   *   arguments. In particular, the optional exponent argument will be ignored!
+   * exponent of the enumerator will depend on the number of denominator
+   * arguments. In particular, the optional exponent argument will be ignored!
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    * @param {number} argMax The maximum number of arguments for the macro.
@@ -680,12 +702,13 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * The bra macro.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
   Bra(parser: TexParser, name: string) {
-    let starBra = parser.GetStar();
-    let bra = parser.GetArgument(name);
+    const starBra = parser.GetStar();
+    const bra = parser.GetArgument(name);
     let ket = '';
     let hasKet = false;
     let starKet = false;
@@ -693,8 +716,8 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       let saveI = parser.i;
       parser.i++;
       // This ensures that bra-ket also works if \let bound versions of \ket.
-      let cs = parser.GetCS();
-      let token = parser.lookup(HandlerType.MACRO, cs) as Macro;
+      const cs = parser.GetCS();
+      const token = parser.lookup(HandlerType.MACRO, cs) as Macro;
       if (token && token.token === 'ket') {
         hasKet = true;
         saveI = parser.i;
@@ -728,13 +751,14 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * The ket macro.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
   Ket(parser: TexParser, name: string) {
-    let star = parser.GetStar();
-    let ket = parser.GetArgument(name);
-    let macro = star
+    const star = parser.GetStar();
+    const ket = parser.GetArgument(name);
+    const macro = star
       ? `\\vert{${ket}}\\rangle`
       : `\\left\\vert{${ket}}\\right\\rangle`;
     parser.Push(
@@ -744,12 +768,13 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * The braket macro.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
   BraKet(parser: TexParser, name: string) {
-    let star = parser.GetStar();
-    let bra = parser.GetArgument(name);
+    const star = parser.GetStar();
+    const bra = parser.GetArgument(name);
     let ket = null;
     if (parser.GetNext() === '{') {
       ket = parser.GetArgument(name, true);
@@ -771,12 +796,13 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * The ketbra macro.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
   KetBra(parser: TexParser, name: string) {
-    let star = parser.GetStar();
-    let ket = parser.GetArgument(name);
+    const star = parser.GetStar();
+    const ket = parser.GetArgument(name);
     let bra = null;
     if (parser.GetNext() === '{') {
       bra = parser.GetArgument(name, true);
@@ -798,18 +824,19 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * The expectation value macro.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
   Expectation(parser: TexParser, name: string) {
-    let star1 = parser.GetStar();
-    let star2 = star1 && parser.GetStar();
-    let arg1 = parser.GetArgument(name);
+    const star1 = parser.GetStar();
+    const star2 = star1 && parser.GetStar();
+    const arg1 = parser.GetArgument(name);
     let arg2 = null;
     if (parser.GetNext() === '{') {
       arg2 = parser.GetArgument(name, true);
     }
-    let macro =
+    const macro =
       arg1 && arg2
         ? outputBraket([arg2, arg1, arg2], star1, star2)
         : // Braces for semantics, similar to braket package.
@@ -823,6 +850,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * The matrix element macro.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
@@ -844,6 +872,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
    */
   /**
    * The matrix quantity macro.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    * @param {boolean=} small Use small matrix.
@@ -901,6 +930,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Generation of identity matrices.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
@@ -915,10 +945,10 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       parser.i = 0;
       return;
     }
-    let zeros = Array(size).fill('0');
-    let columns = [];
+    const zeros = Array(size).fill('0');
+    const columns = [];
     for (let i = 0; i < size; i++) {
-      let row = zeros.slice();
+      const row = zeros.slice();
       row[i] = '1';
       columns.push(row.join(' & '));
     }
@@ -928,6 +958,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Generation of matrices with fixed value.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
@@ -962,23 +993,23 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       matrix = arg1;
     } else if (n === 1) {
       // Case 2: n=1, row vector, single index.
-      let row = [];
+      const row = [];
       for (let i = 1; i <= m; i++) {
         row.push(`${arg1}_{${i}}`);
       }
       matrix = row.join(' & ');
     } else if (m === 1) {
       // Case 3: m=1, column vector, single index.
-      let row = [];
+      const row = [];
       for (let i = 1; i <= n; i++) {
         row.push(`${arg1}_{${i}}`);
       }
       matrix = row.join('\\\\ ');
     } else {
       // Case 4: matrix, double index. Note the extra mrows for indices.
-      let rows = [];
+      const rows = [];
       for (let i = 1; i <= n; i++) {
-        let row = [];
+        const row = [];
         for (let j = 1; j <= m; j++) {
           row.push(`${arg1}_{{${i}}{${j}}}`);
         }
@@ -993,6 +1024,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Generation of Pauli matrices. Matrix 0 is the 2x2 identity.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
@@ -1023,6 +1055,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Generation of anti/diagonal matrices.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    * @param {boolean=} anti True if constructing anti-diagonal matrix.
@@ -1031,11 +1064,11 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     if (parser.GetNext() !== '{') {
       return;
     }
-    let startI = parser.i;
+    const startI = parser.i;
     /* let arg =*/ parser.GetArgument(name);
-    let endI = parser.i;
+    const endI = parser.i;
     parser.i = startI + 1;
-    let elements = [];
+    const elements = [];
     let element = '';
     let currentI = parser.i;
     while (currentI < endI) {
@@ -1059,6 +1092,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Closes an automatic fence if one was opened.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} fence The fence.
    * @param {number} texclass The TeX class.
@@ -1094,11 +1128,13 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Generates the vector nabla depending on the arrowdel option.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
+   * @param _name
    */
   Vnabla(parser: TexParser, _name: string) {
-    let argument = parser.options.physics.arrowdel
+    const argument = parser.options.physics.arrowdel
       ? '\\vec{\\gradientnabla}'
       : '{\\gradientnabla}';
     return parser.Push(
@@ -1108,11 +1144,13 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Generates the differential d depending on the italicdiff option.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
+   * @param _name
    */
   DiffD(parser: TexParser, _name: string) {
-    let argument = parser.options.physics.italicdiff ? 'd' : '{\\rm d}';
+    const argument = parser.options.physics.italicdiff ? 'd' : '{\\rm d}';
     return parser.Push(
       new TexParser(argument, parser.stack.env, parser.configuration).mml()
     );

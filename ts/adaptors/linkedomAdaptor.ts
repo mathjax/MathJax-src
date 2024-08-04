@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the linkedom DOM adaptor
+ * @file  Implements the linkedom DOM adaptor
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -67,7 +67,8 @@ export class LinkedomAdaptor extends NodeMixin<
  * Function for creating an HTML adaptor using linkedom
  *
  * @param {any} parseHTML       The linkedom HTML parser to use for this adaptor
- * @return {LinkeddomAdaptor}   The newly created adaptor
+ * @param options
+ * @returns {LinkeddomAdaptor}   The newly created adaptor
  */
 export function linkedomAdaptor(
   parseHTML: any,

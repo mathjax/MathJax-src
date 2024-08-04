@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMsqrt wrapper for the MmlMsqrt object
+ * @file  Implements the ChtmlMsqrt wrapper for the MmlMsqrt object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

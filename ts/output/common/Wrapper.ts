@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonWrapper class
+ * @file  Implements the CommonWrapper class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -69,7 +69,7 @@ const SMALLSIZE = 2/18;
 /**
  * @param {boolean} script   The scriptlevel
  * @param {number} size      The space size
- * @return {number}          The size clamped to SMALLSIZE when scriptlevel > 0
+ * @returns {number}          The size clamped to SMALLSIZE when scriptlevel > 0
  */
 function MathMLSpace(script: boolean, size: number): number {
   return script ? (size < SMALLSIZE ? 0 : SMALLSIZE) : size;
@@ -483,7 +483,7 @@ export class CommonWrapper<
   /**
    * @param {WW} mrow     The first mrow below this node
    * @param {WW} _child   The child containing the mrow
-   * @return {WW}         The linebreak container for the child
+   * @returns {WW}         The linebreak container for the child
    */
   public breakTop(mrow: WW, _child: WW): WW {
     return this.node.linebreakContainer || !this.parent
@@ -518,7 +518,7 @@ export class CommonWrapper<
   /**
    * @param {MmlNode} node  The node to the wrapped
    * @param {WW} parent     The wrapped parent node
-   * @return {WW}           The newly wrapped node
+   * @returns {WW}           The newly wrapped node
    */
   public wrap<TT = WW>(node: MmlNode, parent: WW = null): TT {
     const wrapped = this.factory.wrap(node, parent || this);
@@ -535,7 +535,7 @@ export class CommonWrapper<
    *   or computed directly if not.
    *
    * @param {boolean} save   Whether to cache the bbox or not (used for stretchy elements)
-   * @return {BBox}          The computed bounding box
+   * @returns {BBox}          The computed bounding box
    */
   public getBBox(save: boolean = true): BBox {
     if (this.bboxComputed) {
@@ -551,7 +551,7 @@ export class CommonWrapper<
    * Return the wrapped node's bounding box that includes borders and padding
    *
    * @param {boolean} save  Whether to cache the bbox or not (used for stretchy elements)
-   * @return {BBox}  The computed bounding box
+   * @returns {BBox}  The computed bounding box
    */
   public getOuterBBox(save: boolean = true): BBox {
     const bbox = this.getBBox(save);
@@ -568,7 +568,7 @@ export class CommonWrapper<
   /**
    * The height and depth without linebreaks
    *
-   * @return {[number, number]}   The height and depth
+   * @returns {[number, number]}   The height and depth
    */
   public getUnbrokenHD(): [number, number] {
     const n = this.breakCount + 1;
@@ -606,7 +606,7 @@ export class CommonWrapper<
    * Get the bbox from the lineBBox cache, or compute it, as needed.
    *
    * @param {number} i   The number of the segment whose sizes are to be obtained
-   * @return {LineBBox}  The bounding box of the specified segment
+   * @returns {LineBBox}  The bounding box of the specified segment
    */
   public getLineBBox(i: number): LineBBox {
     if (!this.lineBBox[i]) {
@@ -637,6 +637,8 @@ export class CommonWrapper<
 
   /**
    * Get the bounding box for the i-th line of an embellished mo
+   *
+   * @param i
    */
   protected embellishedBBox(i: number): LineBBox {
     if (!this.node.isEmbellished || this.node.isKind('mo')) return null;
@@ -648,7 +650,7 @@ export class CommonWrapper<
    * Compute the bounding box for the i-th line (for when it is not in the cache).
    *
    * @param {number} i   The number of the line whose sizes are to be obtained
-   * @return {LineBBox}  The bounding box of the specified segment
+   * @returns {LineBBox}  The bounding box of the specified segment
    */
   protected computeLineBBox(i: number): LineBBox {
     return this.getChildLineBBox(this.childNodes[0], i);
@@ -658,7 +660,7 @@ export class CommonWrapper<
    * Find the (embellished) mo or mspace where a break occurs
    *
    * @param {LineBBox} bbox    The LineBBox for the line whose initial breakpoint is needed
-   * @return {[WW, WW]}        The embellished mo node and its core mo
+   * @returns {[WW, WW]}        The embellished mo node and its core mo
    */
   public getBreakNode(bbox: LineBBox): [WW, WW] {
     if (!bbox.start) {
@@ -680,7 +682,7 @@ export class CommonWrapper<
   /**
    * @param {WW} child   The child node whose i-th line bbox is to be obtained
    * @param {number} i   The number of the line whose bbox is to be obtained
-   * @return {LineBBox}  The bounding box of the specified line
+   * @returns {LineBBox}  The bounding box of the specified line
    */
   protected getChildLineBBox(child: WW, i: number): LineBBox {
     const n = this.breakCount;
@@ -738,7 +740,7 @@ export class CommonWrapper<
    * @param {boolean} recompute  True if we are recomputing due to changes in children
    * @param {(number|null)=} w   The width of the container (from which percentages are computed)
    * @param {boolean=} clear     True if pwidth marker is to be cleared
-   * @return {boolean}           True if a percentage width was found
+   * @returns {boolean}           True if a percentage width was found
    */
   public setChildPWidths(
     recompute: boolean,
@@ -936,9 +938,9 @@ export class CommonWrapper<
   protected getScale() {
     let scale = 1,
       parent = this.parent;
-    let pscale = parent ? parent.bbox.scale : 1;
-    let attributes = this.node.attributes;
-    let scriptlevel = Math.min(attributes.get('scriptlevel') as number, 2);
+    const pscale = parent ? parent.bbox.scale : 1;
+    const attributes = this.node.attributes;
+    const scriptlevel = Math.min(attributes.get('scriptlevel') as number, 2);
     let fontsize = attributes.get('fontsize');
     let mathsize =
       this.node.isToken || this.node.isKind('mstyle')
@@ -975,7 +977,7 @@ export class CommonWrapper<
     // Use scriptminsize as minimum size for scripts
     //
     if (scriptlevel !== 0) {
-      let scriptminsize = this.length2em(
+      const scriptminsize = this.length2em(
         attributes.get('scriptminsize'),
         0.4,
         1
@@ -1042,7 +1044,9 @@ export class CommonWrapper<
   /**
    * Get the spacing using the TeX rules
    *
+   * @param isTop
    * @parm {boolean} isTop       True when this is a top-level embellished operator
+   * @param hasSpacing
    * @parm {boolean} hasSpacing  True when there is an explicit or inherited 'form' attribute
    */
   protected getTeXSpacing(isTop: boolean, hasSpacing: boolean) {
@@ -1064,7 +1068,7 @@ export class CommonWrapper<
   }
 
   /**
-   * @return {boolean}   True if this is the top-most container of an embellished operator that is
+   * @returns {boolean}   True if this is the top-most container of an embellished operator that is
    *                       itself an embellished operator (the maximal embellished operator for its core)
    */
   protected isTopEmbellished(): boolean {
@@ -1077,14 +1081,14 @@ export class CommonWrapper<
   /*******************************************************************/
 
   /**
-   * @return {WW}   The wrapper for this node's core node
+   * @returns {WW}   The wrapper for this node's core node
    */
   public core(): WW {
     return this.jax.nodeMap.get(this.node.core());
   }
 
   /**
-   * @return {CommonMo}   The wrapper for this node's core <mo> node
+   * @returns {CommonMo}   The wrapper for this node's core <mo> node
    */
   public coreMO(): CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
     /* prettier-ignore */
@@ -1094,7 +1098,7 @@ export class CommonWrapper<
   }
 
   /**
-   * @return {number}   The cumulative relative scaling for an embellised mo's core mo
+   * @returns {number}   The cumulative relative scaling for an embellised mo's core mo
    */
   public coreRScale(): number {
     let rscale = this.bbox.rscale;
@@ -1107,7 +1111,7 @@ export class CommonWrapper<
   }
 
   /**
-   * @return {number}   The cumulative relative scale from the root to the current node
+   * @returns {number}   The cumulative relative scale from the root to the current node
    */
   public getRScale(): number {
     let rscale = 1;
@@ -1120,7 +1124,7 @@ export class CommonWrapper<
   }
 
   /**
-   * @return {string}   For a token node, the combined text content of the node's children
+   * @returns {string}   For a token node, the combined text content of the node's children
    */
   public getText(): string {
     let text = '';
@@ -1136,12 +1140,12 @@ export class CommonWrapper<
 
   /**
    * @param {string} direction  The direction to stretch this node
-   * @return {boolean}          Whether the node can stretch in that direction
+   * @returns {boolean}          Whether the node can stretch in that direction
    */
   public canStretch(direction: string): boolean {
     this.stretch = NOSTRETCH as DD;
     if (this.node.isEmbellished) {
-      let core = this.core();
+      const core = this.core();
       if (core && core.node !== this.node) {
         if (core.canStretch(direction)) {
           this.stretch = core.stretch;
@@ -1152,7 +1156,7 @@ export class CommonWrapper<
   }
 
   /**
-   * @return {[string, number]}  The alignment and indentation shift for the expression
+   * @returns {[string, number]}  The alignment and indentation shift for the expression
    */
   protected getAlignShift(): [string, number] {
     let { indentalign, indentshift, indentalignfirst, indentshiftfirst } =
@@ -1172,7 +1176,7 @@ export class CommonWrapper<
    * @param {string} align         The default alignment for 'auto'
    * @param {string} shift         The default indentshift for 'auto'
    * @param {number} width         The container width for relative shifts
-   * @return {[string, number][]}  The alignment and indentation shift (normal and last) for the Mo
+   * @returns {[string, number][]}  The alignment and indentation shift (normal and last) for the Mo
    */
   public processIndent(
     indentalign: string,
@@ -1211,7 +1215,7 @@ export class CommonWrapper<
    * @param {number} W       The total width
    * @param {BBox} bbox      The bbox to be aligned
    * @param {string} align   How to align (left, center, right)
-   * @return {number}        The x position of the aligned width
+   * @returns {number}        The x position of the aligned width
    */
   protected getAlignX(W: number, bbox: BBox, align: string): number {
     return align === 'right'
@@ -1227,7 +1231,7 @@ export class CommonWrapper<
    * @param {number} h        The height to be aligned
    * @param {number} d        The depth to be aligned
    * @param {string} align    How to align (top, bottom, center, axis, baseline)
-   * @return {number}         The y position of the aligned baseline
+   * @returns {number}         The y position of the aligned baseline
    */
   protected getAlignY(
     H: number,
@@ -1247,7 +1251,7 @@ export class CommonWrapper<
 
   /**
    * @param {number} i   The index of the child element whose container is needed
-   * @return {number}    The inner width as a container (for percentage widths)
+   * @returns {number}    The inner width as a container (for percentage widths)
    */
   public getWrapWidth(i: number): number {
     return this.childNodes[i].getBBox().w;
@@ -1255,7 +1259,8 @@ export class CommonWrapper<
 
   /**
    * @param {number} i   The index of the child element whose alignment is needed
-   * @return {string}    The alignment child element
+   * @param _i
+   * @returns {string}    The alignment child element
    */
   public getChildAlign(_i: number): string {
     return 'left';
@@ -1268,7 +1273,7 @@ export class CommonWrapper<
 
   /**
    * @param {number} m  A number to be shown as a percent
-   * @return {string}   The number m as a percent
+   * @returns {string}   The number m as a percent
    */
   protected percent(m: number): string {
     return LENGTHS.percent(m);
@@ -1276,7 +1281,7 @@ export class CommonWrapper<
 
   /**
    * @param {number} m  A number to be shown in ems
-   * @return {string}   The number with units of ems
+   * @returns {string}   The number with units of ems
    */
   protected em(m: number): string {
     return LENGTHS.em(m);
@@ -1285,7 +1290,7 @@ export class CommonWrapper<
   /**
    * @param {number} m   A number of em's to be shown as pixels
    * @param {number} M   The minimum number of pixels to allow
-   * @return {string}    The number with units of px
+   * @returns {string}    The number with units of px
    */
   protected px(m: number, M: number = -LENGTHS.BIGDIMEN): string {
     return LENGTHS.px(m, M, this.metrics.em);
@@ -1295,7 +1300,7 @@ export class CommonWrapper<
    * @param {Property} length  A dimension (giving number and units) or number to be converted to ems
    * @param {number} size      The default size of the dimension (for percentage values)
    * @param {number} scale     The current scaling factor (to handle absolute units)
-   * @return {number}          The dimension converted to ems
+   * @returns {number}          The dimension converted to ems
    */
   protected length2em(
     length: Property,
@@ -1319,7 +1324,7 @@ export class CommonWrapper<
   /**
    * @param {string} text   The text to turn into unicode locations
    * @param {string} name   The name of the variant for the characters
-   * @return {number[]}     Array of numbers represeting the string's unicode character positions
+   * @returns {number[]}     Array of numbers represeting the string's unicode character positions
    */
   protected unicodeChars(text: string, name: string = this.variant): number[] {
     let chars = unicodeChars(text);
@@ -1343,7 +1348,7 @@ export class CommonWrapper<
 
   /**
    * @param {number[]} chars    The array of unicode character numbers to remap
-   * @return {number[]}         The converted array
+   * @returns {number[]}         The converted array
    */
   public remapChars(chars: number[]): number[] {
     return chars;
@@ -1351,7 +1356,7 @@ export class CommonWrapper<
 
   /**
    * @param {string} text   The text from which to create a TextNode object
-   * @return {TextNode}     The TextNode with the given text
+   * @returns {TextNode}     The TextNode with the given text
    */
   public mmlText(text: string): TextNode {
     return (
@@ -1363,7 +1368,7 @@ export class CommonWrapper<
    * @param {string} kind             The kind of MmlNode to create
    * @param {ProperyList} properties  The properties to set initially
    * @param {MmlNode[]} children      The child nodes to add to the created node
-   * @return {MmlNode}                The newly created MmlNode
+   * @returns {MmlNode}                The newly created MmlNode
    */
   public mmlNode(
     kind: string,
@@ -1382,7 +1387,7 @@ export class CommonWrapper<
    *   link it in, and give it the right defaults.
    *
    * @param {string} text   The text for the wrapped element
-   * @return {CommonMO}     The wrapped MmlMo node
+   * @returns {CommonMO}     The wrapped MmlMo node
    */
   protected createMo(
     text: string
@@ -1400,7 +1405,7 @@ export class CommonWrapper<
   /**
    * @param {string} variant   The variant in which to look for the character
    * @param {number} n         The number of the character to look up
-   * @return {CharData}        The full CharData object, with CharOptions guaranteed to be defined
+   * @returns {CharData}        The full CharData object, with CharOptions guaranteed to be defined
    */
   protected getVariantChar(variant: string, n: number): CharDataArray<CC> {
     const char = this.font.getChar(variant, n) || [
@@ -1424,7 +1429,7 @@ export class CommonWrapper<
    * @param {string} type      The tag name of the HTML node to be created
    * @param {OptionList} def   The properties to set for the created node
    * @param {(N|T)[]} content  The child nodes for the created HTML node
-   * @return {N}               The generated HTML tree
+   * @returns {N}               The generated HTML tree
    */
   public html(type: string, def: OptionList = {}, content: (N | T)[] = []): N {
     return this.jax.html(type, def, content);

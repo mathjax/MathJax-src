@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MathML version of the FindMath object
+ * @file  Implements the MathML version of the FindMath object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -58,7 +58,7 @@ export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
    * @override
    */
   public findMath(node: N) {
-    let set = new Set<N>();
+    const set = new Set<N>();
     this.findMathNodes(node, set);
     this.findMathPrefixed(node, set);
     const html = this.adaptor.root(this.adaptor.document);
@@ -87,10 +87,10 @@ export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
    * @param {NodeSet} set   The set in which to store the math nodes
    */
   protected findMathPrefixed(node: N, set: Set<N>) {
-    let html = this.adaptor.root(this.adaptor.document);
+    const html = this.adaptor.root(this.adaptor.document);
     for (const attr of this.adaptor.allAttributes(html)) {
       if (attr.name.substring(0, 6) === 'xmlns:' && attr.value === NAMESPACE) {
-        let prefix = attr.name.substring(6);
+        const prefix = attr.name.substring(6);
         for (const math of this.adaptor.tags(node, prefix + ':math')) {
           set.add(math);
         }
@@ -112,6 +112,8 @@ export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
 
   /**
    *  Produce the array of proto math items from the node set
+   *
+   * @param set
    */
   protected processMath(set: Set<N>) {
     const adaptor = this.adaptor;

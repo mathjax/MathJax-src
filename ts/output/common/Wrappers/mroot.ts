@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMroot wrapper mixin for the MmlMroot object
+ * @file  Implements the CommonMroot wrapper mixin for the MmlMroot object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -101,6 +101,7 @@ export interface CommonMrootClass<
 /**
  * The CommonMroot wrapper mixin for the MmlMroot object (extends CommonMsqrt)
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type

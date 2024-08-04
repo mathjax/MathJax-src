@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the upgreek package.
+ * @file Configuration file for the upgreek package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -30,6 +30,7 @@ import TexParser from '../TexParser.js';
 
 /**
  * Handle greek mathchar as mi in normal variant.
+ *
  * @param {TexParser} parser The current tex parser.
  * @param {Token} mchar The parsed token.
  */

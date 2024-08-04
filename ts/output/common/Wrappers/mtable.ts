@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMtable wrapper mixin for the MmlMtable object
+ * @file  Implements the CommonMtable wrapper mixin for the MmlMtable object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -68,7 +68,7 @@ export type ColumnWidths = (string | number | null)[];
  * (when the needed shrinkage for a collection of columns is less than
  * this portion of their total width, no smaller columns are broken)
  */
-export let BREAK_BELOW = 0.333;
+export const BREAK_BELOW = 0.333;
 
 /*****************************************************************/
 /**
@@ -230,7 +230,7 @@ export interface CommonMtable<
    * Determine the row heights and depths, the column widths,
    * and the natural width and height of the table.
    *
-   * @return {TableData}  The dimensions of the rows and columns
+   * @returns {TableData}  The dimensions of the rows and columns
    */
   getTableData(): TableData;
 
@@ -243,7 +243,7 @@ export interface CommonMtable<
    * @param {number[]} D     The maximum depth for each of the rows
    * @param {number[]} W     The maximum width for each column
    * @param {number} M       The current height for items aligned top and bottom
-   * @return {number}        The updated value for M
+   * @returns {number}        The updated value for M
    */
   updateHDW(
     cell: WW,
@@ -279,7 +279,7 @@ export interface CommonMtable<
 
   /**
    * @param {number} height   The total height of the table
-   * @return {number[]}       The [height, depth] for the aligned table
+   * @returns {number[]}       The [height, depth] for the aligned table
    */
   getBBoxHD(height: number): number[];
 
@@ -290,12 +290,12 @@ export interface CommonMtable<
 
   /**
    * @param {string} side                 The side for the labels
-   * @return {[number, string, number]}   The padding, alignment, and shift amounts
+   * @returns {[number, string, number]}   The padding, alignment, and shift amounts
    */
   getPadAlignShift(side: string): [number, string, number];
 
   /**
-   * @return {number}    The true width of the table (without labels)
+   * @returns {number}    The true width of the table (without labels)
    */
   getWidth(): number;
 
@@ -305,17 +305,17 @@ export interface CommonMtable<
   adjustWideTable(): void;
 
   /**
-   * @return {number}   The natural width of the table (without automatic lienbreaks).
+   * @returns {number}   The natural width of the table (without automatic lienbreaks).
    */
   naturalWidth(): number;
 
   /**
-   * @return {number}   The maximum height of a row
+   * @returns {number}   The maximum height of a row
    */
   getEqualRowHeight(): number;
 
   /**
-   * @return {number[]}   The array of computed widths
+   * @returns {number[]}   The array of computed widths
    */
   getComputedWidths(): number[];
 
@@ -327,7 +327,7 @@ export interface CommonMtable<
    * Depending on the width specified for the table, different column
    *  values can be determined.
    *
-   * @return {ColumnWidths}  The array of widths
+   * @returns {ColumnWidths}  The array of widths
    */
   getColumnWidths(): ColumnWidths;
 
@@ -335,7 +335,7 @@ export interface CommonMtable<
    * For tables with equal columns, get the proper amount per row.
    *
    * @param {string} width   The width of the table
-   * @return {ColumnWidths}  The array of widths
+   * @returns {ColumnWidths}  The array of widths
    */
   getEqualColumns(width: string): ColumnWidths;
 
@@ -345,7 +345,7 @@ export interface CommonMtable<
    * set those explicitly.
    *
    * @param {string[]} swidths  Strings giving the widths
-   * @return {ColumnWidths}     The array of widths
+   * @returns {ColumnWidths}     The array of widths
    */
   getColumnWidthsAuto(swidths: string[]): ColumnWidths;
 
@@ -356,7 +356,7 @@ export interface CommonMtable<
    * to the natural size of the column.
    *
    * @param {string[]} swidths  Strings giving the widths
-   * @return {ColumnWidths}     The array of widths
+   * @returns {ColumnWidths}     The array of widths
    */
   getColumnWidthsPercent(swidths: string[]): ColumnWidths;
 
@@ -365,7 +365,7 @@ export interface CommonMtable<
    *
    * @param {string[]} swidths  Strings giving the widths
    * @param {string} width      The width of the table
-   * @return {ColumnWidths}     The array of widths
+   * @returns {ColumnWidths}     The array of widths
    */
   getColumnWidthsFixed(swidths: string[], width: number): ColumnWidths;
 
@@ -379,12 +379,12 @@ export interface CommonMtable<
   /**
    * @param {number} i      The row number (starting at 0)
    * @param {string} align  The alignment on that row
-   * @return {number}       The offest of the alignment position from the top of the table
+   * @returns {number}       The offest of the alignment position from the top of the table
    */
   getVerticalPosition(i: number, align: string): number;
 
   /**
-   * @return {number[]}   The x and y frame spacing [left, top-and-bottom, right]
+   * @returns {number[]}   The x and y frame spacing [left, top-and-bottom, right]
    */
   getFrameSpacing(): number[];
 
@@ -392,30 +392,30 @@ export interface CommonMtable<
    * @param {number[]} fspace   The frame spacing to use
    * @param {number[]} space    The array of spacing values to convert to strings
    * @param {number} scale      A scaling factor to use for the sizes
-   * @return {string[]}         The half-spacing as stings with units of "em"
+   * @returns {string[]}         The half-spacing as stings with units of "em"
    *                             with frame spacing at the beginning and end
    */
   getEmHalfSpacing(fspace: number[], space: number[], scale?: number): string[];
 
   /**
-   * @return {number[]}   The half-spacing for rows with frame spacing at the ends
+   * @returns {number[]}   The half-spacing for rows with frame spacing at the ends
    */
   getRowHalfSpacing(): number[];
 
   /**
-   * @return {number[]}   The half-spacing for columns with frame spacing at the ends
+   * @returns {number[]}   The half-spacing for columns with frame spacing at the ends
    */
   getColumnHalfSpacing(): number[];
 
   /**
-   * @return {[string,number|null]}  The alignment and row number (based at 0) or null
+   * @returns {[string,number|null]}  The alignment and row number (based at 0) or null
    */
   getAlignmentRow(): [string, number | null];
 
   /**
    * @param {string} name           The name of the attribute to get as an array
    * @param {number=} i             Return this many fewer than numCols entries
-   * @return {string[]}             The array of values in the given attribute, split at spaces,
+   * @returns {string[]}             The array of values in the given attribute, split at spaces,
    *                                 padded to the number of table columns (minus 1) by repeating the last entry
    */
   getColumnAttributes(name: string, i?: number): string[];
@@ -423,14 +423,14 @@ export interface CommonMtable<
   /**
    * @param {string} name           The name of the attribute to get as an array
    * @param {number=} i             Return this many fewer than numRows entries
-   * @return {string[]}             The array of values in the given attribute, split at spaces,
+   * @returns {string[]}             The array of values in the given attribute, split at spaces,
    *                                 padded to the number of table rows (minus 1) by repeating the last entry
    */
   getRowAttributes(name: string, i?: number): string[];
 
   /**
    * @param {string} name           The name of the attribute to get as an array
-   * @return {string[]}             The array of values in the given attribute, split at spaces
+   * @returns {string[]}             The array of values in the given attribute, split at spaces
    *                                 (after leading and trailing spaces are removed, and multiple
    *                                  spaces have been collapsed to one).
    */
@@ -441,7 +441,7 @@ export interface CommonMtable<
    *
    * @param {string[]} list   The array of dimensions (in em's)
    * @param {nunber=} n       The number to divide each dimension by after converted
-   * @return {string[]}       The array of values with "em" added
+   * @returns {string[]}       The array of values with "em" added
    */
   addEm(list: number[], n?: number): string[];
 
@@ -450,7 +450,7 @@ export interface CommonMtable<
    *   representing the dimensions in units of em's.
    *
    * @param {string[]} list   The array of dimensions to be turned into em's
-   * @return {number[]}       The array of values converted to em's
+   * @returns {number[]}       The array of values converted to em's
    */
   convertLengths(list: string[]): number[];
 }
@@ -490,6 +490,7 @@ export interface CommonMtableClass<
 /**
  * The CommonMtable wrapper mixin for the MmlMtable object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -680,7 +681,7 @@ export function CommonMtableMixin<
      * @override
      */
     public stretchColumn(i: number, W: number | null) {
-      let stretchy: WW[] = [];
+      const stretchy: WW[] = [];
       //
       //  Locate and count the stretchy children
       //
@@ -696,15 +697,15 @@ export function CommonMtableMixin<
           }
         }
       }
-      let count = stretchy.length;
-      let nodeCount = this.childNodes.length;
+      const count = stretchy.length;
+      const nodeCount = this.childNodes.length;
       if (count && nodeCount > 1 && W === null) {
         W = 0;
         //
         //  If all the children are stretchy, find the largest one,
         //  otherwise, find the width of the non-stretchy children.
         //
-        let all = count > 1 && count === nodeCount;
+        const all = count > 1 && count === nodeCount;
         for (const row of this.tableRows) {
           const cell = row.getChild(i);
           if (cell) {
@@ -1370,7 +1371,7 @@ export function CommonMtableMixin<
 
     /**
      * @override
-     * @constructor
+     * @class
      */
     constructor(factory: WF, node: MmlNode, parent: WW = null) {
       super(factory, node, parent);
@@ -1473,11 +1474,11 @@ export function CommonMtableMixin<
       //
       //  Return the bounding box information
       //
-      let [h, d] = this.getBBoxHD(height);
+      const [h, d] = this.getBBoxHD(height);
       bbox.h = h;
       bbox.d = d;
       bbox.w = width;
-      let [L, R] = this.getBBoxLR();
+      const [L, R] = this.getBBoxLR();
       bbox.L = L;
       bbox.R = R;
       //

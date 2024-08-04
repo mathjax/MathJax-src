@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMtext wrapper for the MmlMtext object
+ * @file  Implements the SvgMtext wrapper for the MmlMtext object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -148,7 +148,7 @@ export const SvgMtext = (function <N, T, D>(): SvgMtextClass<N, T, D> {
         // Get the start and end indices
         //
         let [si, sj] = this.breakPoints[i - 1] || [0, 0];
-        let [ei, ej] = this.breakPoints[i] || [childNodes.length, 0];
+        const [ei, ej] = this.breakPoints[i] || [childNodes.length, 0];
         //
         // Get the words for the start child, and if the start and end
         //   are in the same child, output the needed words

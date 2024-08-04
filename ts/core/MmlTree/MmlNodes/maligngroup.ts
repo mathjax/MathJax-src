@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMaligngroup node
+ * @file  Implements the MmlMaligngroup node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -48,6 +48,7 @@ export class MmlMaligngroup extends AbstractMmlLayoutNode {
 
   /**
    * <maligngroup> is space-like
+   *
    * @override
    */
   public get isSpacelike() {
@@ -56,6 +57,7 @@ export class MmlMaligngroup extends AbstractMmlLayoutNode {
 
   /**
    * Children can inherit from <maligngroup>
+   *
    * @override
    */
   protected setChildInheritedAttributes(

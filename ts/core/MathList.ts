@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the interface and abstract class for MathList objects
+ * @file  Implements the interface and abstract class for MathList objects
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

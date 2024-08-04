@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMfrac node
+ * @file  Implements the MmlMfrac node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -50,6 +50,7 @@ export class MmlMfrac extends AbstractMmlBaseNode {
 
   /**
    * <mfrac> requires two children
+   *
    * @override
    */
   public get arity() {
@@ -58,6 +59,7 @@ export class MmlMfrac extends AbstractMmlBaseNode {
 
   /**
    * The children of <mfrac> can include line breaks
+   *
    * @override
    */
   public get linebreakContainer() {
@@ -66,6 +68,7 @@ export class MmlMfrac extends AbstractMmlBaseNode {
 
   /**
    * Alignment is handled separately for the child nodes
+   *
    * @override
    */
   public get linebreakAlign() {
@@ -74,6 +77,7 @@ export class MmlMfrac extends AbstractMmlBaseNode {
 
   /**
    * Update the children separately
+   *
    * @override
    */
   public setTeXclass(prev: MmlNode) {
@@ -86,6 +90,7 @@ export class MmlMfrac extends AbstractMmlBaseNode {
 
   /**
    * Adjust the display level, and use prime style in denominator
+   *
    * @override
    */
   protected setChildInheritedAttributes(

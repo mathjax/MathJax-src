@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgSemantics wrapper for the MmlSemantics object
+ * @file  Implements the SvgSemantics wrapper for the MmlSemantics object
  *                and the associated wrappers for annotations
  *
  * @author dpvc@mathjax.org (Davide Cervone)

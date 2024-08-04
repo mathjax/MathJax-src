@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMi node
+ * @file  Implements the MmlMi node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -77,7 +77,7 @@ export class MmlMi extends AbstractMmlTokenNode {
     prime: boolean = false
   ) {
     super.setInheritedAttributes(attributes, display, level, prime);
-    let text = this.getText();
+    const text = this.getText();
     if (text.match(MmlMi.singleCharacter) && !attributes.mathvariant) {
       this.attributes.setInherited('mathvariant', 'italic');
     }
@@ -90,7 +90,7 @@ export class MmlMi extends AbstractMmlTokenNode {
    */
   public setTeXclass(prev: AbstractMmlNode) {
     this.getPrevClass(prev);
-    let name = this.getText();
+    const name = this.getText();
     if (
       name.length > 1 &&
       name.match(MmlMi.operatorName) &&

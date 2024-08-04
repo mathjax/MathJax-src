@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMunderover node
+ * @file  Implements the MmlMunderover node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -54,6 +54,7 @@ export class MmlMunderover extends AbstractMmlBaseNode {
 
   /**
    * <munderover> requires three children
+   *
    * @override
    */
   public get arity() {
@@ -61,21 +62,21 @@ export class MmlMunderover extends AbstractMmlBaseNode {
   }
 
   /**
-   * @return {number}  The base is child 0
+   * @returns {number}  The base is child 0
    */
   public get base(): number {
     return 0;
   }
 
   /**
-   * @return {number}  Child 1 goes under (overridden by mover below)
+   * @returns {number}  Child 1 goes under (overridden by mover below)
    */
   public get under(): number {
     return 1;
   }
 
   /**
-   * @return {number}  Child 2 goes over (overridden by mover below)
+   * @returns {number}  Child 2 goes over (overridden by mover below)
    */
   public get over(): number {
     return 2;
@@ -83,6 +84,7 @@ export class MmlMunderover extends AbstractMmlBaseNode {
 
   /**
    * <munderover> can contain line breaks
+   *
    * @override
    */
   public get linebreakContainer() {
@@ -103,17 +105,17 @@ export class MmlMunderover extends AbstractMmlBaseNode {
     level: number,
     prime: boolean
   ) {
-    let nodes = this.childNodes;
+    const nodes = this.childNodes;
     nodes[0].setInheritedAttributes(
       attributes,
       display,
       level,
       prime || !!nodes[this.over]
     );
-    let force = !!(
+    const force = !!(
       !display && nodes[0].coreMO().attributes.get('movablelimits')
     );
-    let ACCENTS = (this.constructor as typeof MmlMunderover).ACCENTS;
+    const ACCENTS = (this.constructor as typeof MmlMunderover).ACCENTS;
     nodes[1].setInheritedAttributes(
       attributes,
       false,
@@ -137,7 +139,7 @@ export class MmlMunderover extends AbstractMmlBaseNode {
    * @param {string} accent  The name of the accent attribute to check ("accent" or "accentunder")
    * @param {boolean} force  True if the scriptlevel change is to be forced to occur
    * @param {number} level   The current scriptlevel
-   * @return {number}        The new script level based on the accent attribute
+   * @returns {number}        The new script level based on the accent attribute
    */
   protected getScriptlevel(
     accent: string,
@@ -170,9 +172,9 @@ export class MmlMunderover extends AbstractMmlBaseNode {
     prime: boolean,
     force: boolean
   ) {
-    let node = this.childNodes[n];
+    const node = this.childNodes[n];
     if (!this.attributes.hasExplicit(accent) && node.isEmbellished) {
-      let value = node.coreMO().attributes.get('accent');
+      const value = node.coreMO().attributes.get('accent');
       this.attributes.setInherited(accent, value);
       if (value !== this.attributes.getDefault(accent)) {
         node.setInheritedAttributes(
@@ -208,6 +210,7 @@ export class MmlMunder extends MmlMunderover {
 
   /**
    * <munder> has only two children
+   *
    * @override
    */
   public get arity() {
@@ -241,6 +244,7 @@ export class MmlMover extends MmlMunderover {
 
   /**
    * <mover> has only two children
+   *
    * @override
    */
   get arity() {
@@ -249,6 +253,7 @@ export class MmlMover extends MmlMunderover {
 
   /**
    * Child 1 is the over node
+   *
    * @override
    */
   public get over() {
@@ -257,6 +262,7 @@ export class MmlMover extends MmlMunderover {
 
   /**
    * Child 2 is the null (the under node)
+   *
    * @override
    */
   public get under() {

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview A factory for stack items. This allows particular items to be
+ * @file A factory for stack items. This allows particular items to be
  *     overwritten later.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
@@ -32,8 +32,8 @@ class DummyItem extends BaseItem {}
  * The StackItemFactory is initially populated with the default stack item
  * classes. They can be changed, deleted or added to, if and when necessary.
  *
- * @constructor
- * @extends {AbstractFactory}
+ * @class
+ * @augments {AbstractFactory}
  */
 export default class StackItemFactory extends AbstractFactory<
   StackItem,
@@ -53,6 +53,7 @@ export default class StackItemFactory extends AbstractFactory<
 
   /**
    * The parser configuration.
+   *
    * @type {ParseOptions}
    */
   public configuration: ParseOptions = null;

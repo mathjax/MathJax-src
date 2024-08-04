@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgFontData class for font data in SVG output.
+ * @file  Implements the SvgFontData class for font data in SVG output.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -121,7 +121,7 @@ export type SvgFontDataClass = typeof SvgFontData;
  * @param {CharMap} font        The font to augment
  * @param {CharStringMap} paths     The path data to use for each character
  * @param {CharStringMap} content   The string to use for remapped characters
- * @return {SvgCharMap}            The augmented font
+ * @returns {SvgCharMap}            The augmented font
  */
 export function AddPaths(
   font: SvgCharMap,

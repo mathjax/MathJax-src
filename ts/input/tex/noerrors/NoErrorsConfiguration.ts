@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the NoErrors package.
+ * @file Configuration file for the NoErrors package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -27,9 +27,12 @@ import { NodeFactory } from '../NodeFactory.js';
 
 /**
  * Generates an error node containing the erroneous expression.
+ *
  * @param {TexParser} parser The node factory.
+ * @param factory
  * @param {string} message The error message (which is ignored).
  * @param {string} id The error id (which is ignored).
+ * @param _id
  * @param {string} expr The original LaTeX expression.
  */
 function noErrors(
@@ -38,8 +41,8 @@ function noErrors(
   _id: string,
   expr: string
 ) {
-  let mtext = factory.create('token', 'mtext', {}, expr.replace(/\n/g, ' '));
-  let error = factory.create('node', 'merror', [mtext], {
+  const mtext = factory.create('token', 'mtext', {}, expr.replace(/\n/g, ' '));
+  const error = factory.create('node', 'merror', [mtext], {
     'data-mjx-error': message,
     title: message,
   });

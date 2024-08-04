@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements a radio button with customizable comparator.
+ * @file  Implements a radio button with customizable comparator.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */

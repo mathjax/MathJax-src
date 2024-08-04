@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the HTMLMathItem class
+ * @file  Implements the HTMLMathItem class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -88,7 +88,7 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
             node = this.adaptor.split(node, this.start.n);
           }
           while (node !== this.end.node) {
-            let next = this.adaptor.next(node) as T;
+            const next = this.adaptor.next(node) as T;
             this.adaptor.remove(node);
             node = next;
           }
@@ -125,10 +125,10 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
   public removeFromDocument(restore: boolean = false) {
     if (this.state() >= STATE.TYPESET) {
       const adaptor = this.adaptor;
-      let node = this.start.node;
+      const node = this.start.node;
       let math: N | T = adaptor.text('');
       if (restore) {
-        let text = this.start.delim + this.math + this.end.delim;
+        const text = this.start.delim + this.math + this.end.delim;
         if (this.inputJax.processStrings) {
           math = adaptor.text(text);
         } else {

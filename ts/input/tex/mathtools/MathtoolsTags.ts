@@ -15,7 +15,7 @@
  */
 
 /**
- * @fileoverview    Tags implementation for the mathtools package.
+ * @file    Tags implementation for the mathtools package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
@@ -42,6 +42,9 @@ let tagID = 0;
 /**
  * Creates and registers a subclass of the currently configured tag class
  * that handles the formats created by the \newtagform macro.
+ *
+ * @param config
+ * @param jax
  */
 export function MathtoolsTagFormat(
   config: ParserConfiguration,
@@ -78,7 +81,7 @@ export function MathtoolsTagFormat(
 
     /**
      * @override
-     * @constructor
+     * @class
      */
     constructor() {
       super();

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview    Configuration file for the autoload package.
+ * @file    Configuration file for the autoload package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
@@ -77,9 +77,11 @@ function Autoload(
 /**
  * Check if the require extension has been initialized
  * (If autoload has been included in the TeX packages, but require isn't, then we need
- *  to set up the options here and configure the require package in configAutoload below.
- *  the priorities of the initialization and configuration are set so that autoload
- *  will run after require when both are used.)
+ * to set up the options here and configure the require package in configAutoload below.
+ * the priorities of the initialization and configuration are set so that autoload
+ * will run after require when both are used.)
+ *
+ * @param config
  */
 function initAutoload(config: ParserConfiguration) {
   if (!config.options.require) {
@@ -90,7 +92,10 @@ function initAutoload(config: ParserConfiguration) {
 /**
  * Create the macros and environments for the extensions that need to be loaded.
  * Only ones that aren't already defined are made to autoload
- *   (except for \color, which is overridden if present)
+ * (except for \color, which is overridden if present)
+ *
+ * @param config
+ * @param jax
  */
 function configAutoload(config: ParserConfiguration, jax: TeX<any, any, any>) {
   const parser = jax.parseOptions;

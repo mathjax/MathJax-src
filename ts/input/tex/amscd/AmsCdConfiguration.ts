@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the AMScd package.
+ * @file Configuration file for the AMScd package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */

@@ -15,7 +15,7 @@
  */
 
 /**
- * @fileoverview    Macro and environment implementations for the mathtools package.
+ * @file    Macro and environment implementations for the mathtools package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  * @author dpvc@mathjax.org (Davide P. Cervone)
@@ -51,7 +51,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
    * @param {StackItem} begin    The BeginItem for the environment.
    * @param {string} open        The open delimiter for the matrix.
    * @param {string} close       The close delimiter for the matrix.
-   * @return {ParserResult}      The ArrayItem for the matrix.
+   * @returns {ParserResult}      The ArrayItem for the matrix.
    */
   MtMatrix(
     parser: TexParser,
@@ -71,7 +71,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
    * @param {string} open        The open delimiter for the matrix.
    * @param {string} close       The close delimiter for the matrix.
    * @param {string} align       The (optional) alignment.  If not given, use a bracket argument for it.
-   * @return {ParseResult}       The ArrayItem for the matrix.
+   * @returns {ParseResult}       The ArrayItem for the matrix.
    */
   MtSmallMatrix(
     parser: TexParser,
@@ -104,7 +104,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
    *
    * @param {TexParser} parser   The active tex parser.
    * @param {StackItem} begin    The BeginItem for the environment.
-   * @return {ParseResult}       The MultlinedItem.
+   * @returns {ParseResult}       The MultlinedItem.
    */
   MtMultlined(parser: TexParser, begin: StackItem): ParseResult {
     const name = `\\begin{${begin.getName()}}`;
@@ -156,7 +156,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
    * @param {string} shove       Which way to shove the result.
    */
   HandleShove(parser: TexParser, name: string, shove: string) {
-    let top = parser.stack.Top();
+    const top = parser.stack.Top();
     if (top.kind !== 'multline' && top.kind !== 'multlined') {
       throw new TexError(
         'CommandInMultlined',
@@ -172,11 +172,11 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
       );
     }
     top.setProperty('shove', shove);
-    let shift = parser.GetBrackets(name);
+    const shift = parser.GetBrackets(name);
     let mml = parser.ParseArg(name);
     if (shift) {
-      let mrow = parser.create('node', 'mrow', []);
-      let mspace = parser.create('node', 'mspace', [], { width: shift });
+      const mrow = parser.create('node', 'mrow', []);
+      const mspace = parser.create('node', 'mspace', [], { width: shift });
       if (shove === 'left') {
         mrow.appendChild(mspace);
         mrow.appendChild(mml);
@@ -232,7 +232,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
    * @param {string} open        The open delimiter for the matrix.
    * @param {string} close       The close delimiter for the matrix.
    * @param {string} style       The style (D, T, S, SS) for the contents of the array
-   * @return {ArrayItem}         The ArrayItem for the environment
+   * @returns {ArrayItem}         The ArrayItem for the environment
    */
   Cases(
     parser: TexParser,
@@ -267,7 +267,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
    */
   MathLap(parser: TexParser, name: string, pos: string, cramped: boolean) {
     const style = parser.GetBrackets(name, '').trim();
-    let mml = parser.create(
+    const mml = parser.create(
       'node',
       'mstyle',
       [
@@ -309,7 +309,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
    */
   MtLap(parser: TexParser, name: string, pos: string) {
     const content = ParseUtil.internalMath(parser, parser.GetArgument(name), 0);
-    let mml = parser.create('node', 'mpadded', content, { width: 0 });
+    const mml = parser.create('node', 'mpadded', content, { width: 0 });
     if (pos !== 'r') {
       NodeUtil.setAttribute(
         mml,
@@ -482,7 +482,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
       parser.stack.env,
       parser.configuration
     ).mml();
-    let mml = parser.create(
+    const mml = parser.create(
       'node',
       'mpadded',
       [
@@ -510,6 +510,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
    *
    * @param {TexParser} parser   The calling parser.
    * @param {string} name        The macro name.
+   * @param _name
    */
   ShortVDotsWithin(parser: TexParser, _name: string) {
     const top = parser.stack.Top() as EqnArrayItem;
@@ -678,6 +679,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
    *
    * @param {TexParser} parser   The calling parser.
    * @param {string} name        The macro name.
+   * @param _name
    * @param {boolean} center     True if colon should be centered
    * @param {boolean} force      True menas always center (don't use centercolon option).
    * @param {boolean} thin       True if this is a thin color (for \coloneqq, etc).
@@ -710,6 +712,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
    *
    * @param {TexParser} parser   The calling parser.
    * @param {string} name        The macro name.
+   * @param _name
    * @param {string} tex         The tex string to use (if not using unicode versions or if there isn't one).
    * @param {string} unicode     The unicode character (if there is one).
    */
@@ -738,6 +741,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
    *
    * @param {TexParser} parser   The calling parser.
    * @param {string} name        The macro name.
+   * @param _name
    * @param {string} c           The base arrow for the slashed version
    * @param {string} dy          A vertical offset for the slash
    */

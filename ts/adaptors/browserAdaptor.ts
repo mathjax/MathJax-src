@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the browser DOM adaptor
+ * @file  Implements the browser DOM adaptor
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -41,7 +41,7 @@ declare global {
 /**
  * Function to create an HTML adpator for browsers
  *
- * @return {HTMLAdaptor}  The newly created adaptor
+ * @returns {HTMLAdaptor}  The newly created adaptor
  */
 export function browserAdaptor(): HTMLAdaptor<HTMLElement, Text, Document> {
   return new HTMLAdaptor<HTMLElement, Text, Document>(window);

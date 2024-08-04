@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlTextNode wrapper for the TextNode object
+ * @file  Implements the ChtmlTextNode wrapper for the TextNode object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -211,7 +211,7 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<
      * @param {string} utext     The text to add
      * @param {string} variant   The mathvariant for the text
      * @param {N} parent         The parent node where the text is being added
-     * @return {string}          The new value for utext
+     * @returns {string}          The new value for utext
      */
     protected addUtext(utext: string, variant: string, parent: N): string {
       if (utext) {

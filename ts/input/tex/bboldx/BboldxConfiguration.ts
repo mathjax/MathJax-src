@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview The bboldx package.
+ * @file The bboldx package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */

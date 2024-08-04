@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  The annotations submenus.
+ * @file  The annotations submenus.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  * @author v.sorge@mathjax.org (Volker Sorge)
@@ -75,6 +75,7 @@ export function copyAnnotations(cache: [string, string][]) {
 /**
  * Find the top-most semantics element that encloses the contents of the expression (if any)
  *
+ * @param menu
  * @returns {MmlNode | null} The semantics node that was found (or null)
  */
 function getSemanticNode(menu: MJContextMenu): MmlNode | null {
@@ -118,6 +119,7 @@ function getAnnotation(
 /**
  * @param {MmlNode} child The annotation node to check if its encoding is one
  *     of the displayable ones.
+ * @param types
  * @returns {string | null} The annotation type if it exists, o/w null.
  */
 function annotationMatch(
@@ -146,7 +148,7 @@ export let annotation: string = '';
  * @param {Submenu} submenu The submenu to attach elements to.
  * @param {[string, string][]} annotations The annotations to use for the submenu.
  * @param {() => void} action The action to perform when the annotation is selected.
- * @return {Submenu} The newly created submenu.
+ * @returns {Submenu} The newly created submenu.
  */
 function createAnnotationMenu(
   menu: MJContextMenu,

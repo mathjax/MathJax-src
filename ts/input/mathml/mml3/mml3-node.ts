@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Auxiliary function for elementary MathML3 support (experimental)
+ * @file  Auxiliary function for elementary MathML3 support (experimental)
  *                using David Carlisle's XLST transform.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
@@ -33,9 +33,12 @@ import { mjxRoot } from '#root/root.js';
  * @template T  The Text node class
  * @template D  The Document class
  *
- * @return {(node: N, doc: MathDocument<N,T,D>) => N)}   The transformation function
+ * @returns {(node: N, doc: MathDocument<N,T,D>) => N)}   The transformation function
  */
 /* prettier-ignore */
+/**
+ *
+ */
 export function createTransform<N, T, D>(): (node: N, doc: MathDocument<N, T, D>) => N {
   const nodeRequire = eval('require');   // get the actual require from node.
   try {

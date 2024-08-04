@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlSemantics wrapper for the MmlSemantics object
+ * @file  Implements the ChtmlSemantics wrapper for the MmlSemantics object
  *                and the associated wrappers for annotations
  *
  * @author dpvc@mathjax.org (Davide Cervone)

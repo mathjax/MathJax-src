@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements a subclass of ContextMenu specific to MathJax
+ * @file  Implements a subclass of ContextMenu specific to MathJax
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -510,7 +510,7 @@ export class Menu {
    * Create the menu object, attach the info boxes to it, and output any CSS needed for it
    */
   protected initMenu() {
-    let parser = new Parser([
+    const parser = new Parser([
       ['contextMenu', MJContextMenu.fromJson.bind(MJContextMenu)],
       ['radioCompare', RadioCompare.fromJson.bind(RadioCompare)],
     ]);
@@ -906,6 +906,7 @@ export class Menu {
   /**
    * Enable/disable an assistive submenu's items
    *
+   * @param name
    * @param {boolean} enable  True to enable, false to disable
    */
   protected enableAccessibilityItems(name: string, enable: boolean) {
@@ -957,6 +958,7 @@ export class Menu {
 
   /**
    * Merge menu settings into the a11y document options.
+   *
    * @param {{[key: string]: any}} options The options.
    */
   protected setA11y(options: { [key: string]: any }) {
@@ -967,8 +969,9 @@ export class Menu {
 
   /**
    * Get the the value of an a11y option
+   *
    * @param {string} option   The name of the ptions to get
-   * @return {any}            The value of the option
+   * @returns {any}            The value of the option
    */
   protected getA11y(option: string): any {
     if (MathJax._?.a11y?.explorer) {
@@ -1040,7 +1043,7 @@ export class Menu {
    *
    * @param {string} jax         The name of the jax to switch to
    * @param {boolean} rerender   True if the document should be rerendered
-   * @return {Promise}           A promise that is resolved when the renderer is set
+   * @returns {Promise}           A promise that is resolved when the renderer is set
    *                               and rerendering complete
    */
   protected setRenderer(jax: string, rerender: boolean = true): Promise<void> {
@@ -1072,7 +1075,7 @@ export class Menu {
    *
    * @param {string} jax         The name of the jax to switch to
    * @param {boolean} rerender   True if the document should be rerendered
-   * @return {Promise}           A promise that is resolved when the renderer is set
+   * @returns {Promise}           A promise that is resolved when the renderer is set
    *                               and rerendering complete
    */
   protected setOutputJax(jax: string, rerender: boolean = true): Promise<void> {
@@ -1088,8 +1091,8 @@ export class Menu {
    * Load the required extensions into the new output jax
    */
   protected loadRequiredExtensions() {
-    let jax = this.document.outputJax.name.toLowerCase();
-    let promises = [];
+    const jax = this.document.outputJax.name.toLowerCase();
+    const promises = [];
     for (const path of this.requiredExtensions) {
       promises.push(MathJax.loader.load(`[${path}]/${jax}`));
     }
@@ -1099,6 +1102,8 @@ export class Menu {
 
   /**
    * Add extensions that need to be loaded when the renderer changes
+   *
+   * @param extensions
    */
   public addRequiredExtensions(extensions: string[]) {
     if (extensions) {
@@ -1302,6 +1307,9 @@ export class Menu {
 
   /**
    * Attempt to load a component and perform a callback when done
+   *
+   * @param name
+   * @param callback
    */
   protected loadComponent(name: string, callback: () => void) {
     if (Menu.loadingPromises.has(name)) return;
@@ -1647,14 +1655,14 @@ export class Menu {
    *
    * @param {keyof MenuSettings} name   The setting for which to make a variable
    * @param {(T) => void} action        Optional function to perform after setting the value
-   * @returns {Object}                  The JSON for the variable
+   * @returns {object}                  The JSON for the variable
    *
    * @tempate T    The type of variable being defined
    */
   public variable<T extends string | boolean>(
     name: keyof MenuSettings,
     action?: (value: T) => void
-  ): Object {
+  ): object {
     return {
       name: name,
       getter: () => this.settings[name],
@@ -1670,14 +1678,15 @@ export class Menu {
    * Create JSON for an a11y specific variable.
    *
    * @param {keyof MenuSettings} name   The setting for which to make a variable
-   * @returns {Object}                  The JSON for the variable
+   * @param action
+   * @returns {object}                  The JSON for the variable
    *
    * @tempate T    The type of variable being defined
    */
   public a11yVar<T extends string | boolean>(
     name: keyof MenuSettings,
     action?: (value: T) => void
-  ): Object {
+  ): object {
     return {
       name: name,
       getter: () => this.getA11y(name),
@@ -1697,15 +1706,15 @@ export class Menu {
    * @param {string} content      The content for the item
    * @param {any[]} entries       The JSON for the entries
    * @param {boolean=} disabled   True if this item is diabled initially
-   * @returns {Object}            The JSON for the submenu item
+   * @returns {object}            The JSON for the submenu item
    */
   public submenu(
     id: string,
     content: string,
     entries: any[] = [],
     disabled: boolean = false
-  ): Object {
-    let items = [] as Array<Object>;
+  ): object {
+    let items = [] as Array<object>;
     for (const entry of entries) {
       if (Array.isArray(entry)) {
         items = items.concat(entry);
@@ -1728,15 +1737,15 @@ export class Menu {
    * @param {string} id           The id for the item
    * @param {string} content      The content for the item
    * @param {() => void} action   The action function for the command
-   * @param {Object} other        Other values to include in the generated JSON object
-   * @returns {Object}            The JSON for the command item
+   * @param {object} other        Other values to include in the generated JSON object
+   * @returns {object}            The JSON for the command item
    */
   public command(
     id: string,
     content: string,
     action: () => void,
-    other: Object = {}
-  ): Object {
+    other: object = {}
+  ): object {
     return Object.assign({ type: 'command', id, content, action }, other);
   }
 
@@ -1746,15 +1755,15 @@ export class Menu {
    * @param {string} id           The id for the item
    * @param {string} content      The content for the item
    * @param {string} variable     The (pool) variable to attach to this checkbox
-   * @param {Object} other        Other values to include in the generated JSON object
-   * @returns {Object}            The JSON for the checkbox item
+   * @param {object} other        Other values to include in the generated JSON object
+   * @returns {object}            The JSON for the checkbox item
    */
   public checkbox(
     id: string,
     content: string,
     variable: string,
-    other: Object = {}
-  ): Object {
+    other: object = {}
+  ): object {
     return Object.assign({ type: 'checkbox', id, content, variable }, other);
   }
 
@@ -1764,9 +1773,9 @@ export class Menu {
    * @param {string} variable     The (pool) variable to attach to each radio button
    * @param {string[][]} radios   An array of [string] or [string, string], giving the id and content
    *                                for each radio button (if only one string is given it is used for both)
-   * @returns {Object[]}          An array of JSON objects for radion buttons
+   * @returns {object[]}          An array of JSON objects for radion buttons
    */
-  public radioGroup(variable: string, radios: string[][]): Object[] {
+  public radioGroup(variable: string, radios: string[][]): object[] {
     return radios.map((def) => this.radio(def[0], def[1] || def[0], variable));
   }
 
@@ -1776,15 +1785,15 @@ export class Menu {
    * @param {string} id           The id for the item
    * @param {string} content      The content for the item
    * @param {string} variable     The (pool) variable to attach to this radio button
-   * @param {Object} other        Other values to include in the generated JSON object
-   * @returns {Object}            The JSON for the radio button item
+   * @param {object} other        Other values to include in the generated JSON object
+   * @returns {object}            The JSON for the radio button item
    */
   public radio(
     id: string,
     content: string,
     variable: string,
-    other: Object = {}
-  ): Object {
+    other: object = {}
+  ): object {
     return Object.assign({ type: 'radio', id, content, variable }, other);
   }
 
@@ -1793,18 +1802,18 @@ export class Menu {
    *
    * @param {string} id           The id for the item
    * @param {string} content      The content for the item
-   * @returns {Object}            The JSON for the label item
+   * @returns {object}            The JSON for the label item
    */
-  public label(id: string, content: string): Object {
+  public label(id: string, content: string): object {
     return { type: 'label', id, content };
   }
 
   /**
    * Create JSON for a menu rule
    *
-   * @returns {Object}            The JSON for the rule item
+   * @returns {object}            The JSON for the rule item
    */
-  public rule(): Object {
+  public rule(): object {
     return { type: 'rule' };
   }
 

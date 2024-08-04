@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Utility functions and classes for the color package.
+ * @file Utility functions and classes for the color package.
  *
  * @author i@omardo.com (Omar Al-Ithawi)
  */
@@ -44,7 +44,7 @@ export class ColorModel {
    *
    * @param {string} model The coloring model type: `rgb` `RGB` or `gray`.
    * @param {string} def The color definition: `0.5,0,1`, `128,0,255`, `0.5`.
-   * @return {string} The color definition in CSS format e.g. `#44ff00`.
+   * @returns {string} The color definition in CSS format e.g. `#44ff00`.
    */
   private normalizeColor(model: string, def: string): string {
     if (!model || model === 'named') {
@@ -69,7 +69,7 @@ export class ColorModel {
    *
    * @param {string} model The coloring model type: `named`, `rgb` `RGB` or `gray`.
    * @param {string} def The color definition: `red, `0.5,0,1`, `128,0,255`, `0.5`.
-   * @return {string} The color definition in CSS format e.g. `#44ff00`.
+   * @returns {string} The color definition in CSS format e.g. `#44ff00`.
    */
   public getColor(model: string, def: string): string {
     if (!model || model === 'named') {
@@ -83,7 +83,7 @@ export class ColorModel {
    * Get a named color.
    *
    * @param {string} name The color name e.g. `darkblue`.
-   * @return {string} The color definition in CSS format e.g. `#44ff00`.
+   * @returns {string} The color definition in CSS format e.g. `#44ff00`.
    *
    * To retain backward compatilbity with MathJax v2 this method returns
    * unknown as-is, this is useful for both passing through CSS format colors like `#ff0`,
@@ -125,7 +125,7 @@ export class ColorModel {
  *
  * @param {OptionList} parserOptions The parser options object.
  * @param {string} rgb The color definition in rgb: `0.5,0,1`.
- * @return {string} The color definition in CSS format e.g. `#44ff00`.
+ * @returns {string} The color definition in CSS format e.g. `#44ff00`.
  */
 ColorModelProcessors.set('rgb', function (rgb: string): string {
   const rgbParts: string[] = rgb.trim().split(/\s*,\s*/);
@@ -171,7 +171,7 @@ ColorModelProcessors.set('rgb', function (rgb: string): string {
  *
  * @param {OptionList} parserOptions The parser options object.
  * @param {string} rgb The color definition in RGB: `128,0,255`.
- * @return {string} The color definition in CSS format e.g. `#44ff00`.
+ * @returns {string} The color definition in CSS format e.g. `#44ff00`.
  */
 ColorModelProcessors.set('RGB', function (rgb: string): string {
   const rgbParts: string[] = rgb.trim().split(/\s*,\s*/);
@@ -215,7 +215,7 @@ ColorModelProcessors.set('RGB', function (rgb: string): string {
  *
  * @param {OptionList} parserOptions The parser options object.
  * @param {string} gray The color definition in RGB: `0.5`.
- * @return {string} The color definition in CSS format e.g. `#808080`.
+ * @returns {string} The color definition in CSS format e.g. `#808080`.
  */
 ColorModelProcessors.set('gray', function (gray: string): string {
   if (!gray.match(/^\s*(\d+(\.\d*)?|\.\d+)\s*$/)) {

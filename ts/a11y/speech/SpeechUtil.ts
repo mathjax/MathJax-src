@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Provides utility functions for speech handling.
+ * @file  Provides utility functions for speech handling.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -45,12 +45,12 @@ export interface SsmlElement extends ProsodyElement {
  * with associated ssml annotation elements.
  *
  * @param {string} speech The speech string.
- * @return {[string, SsmlElement[]]} The annotation structure.
+ * @returns {[string, SsmlElement[]]} The annotation structure.
  */
 export function ssmlParsing(speech: string): [string, SsmlElement[]] {
-  let xml = Sre.parseDOM(speech);
-  let instr: SsmlElement[] = [];
-  let text: String[] = [];
+  const xml = Sre.parseDOM(speech);
+  const instr: SsmlElement[] = [];
+  const text: string[] = [];
   recurseSsml(Array.from(xml.childNodes), instr, text);
   return [text.join(' '), instr];
 }
@@ -61,18 +61,18 @@ export function ssmlParsing(speech: string): [string, SsmlElement[]] {
  * @param {Node[]} nodes A list of SSML nodes.
  * @param {SsmlElement[]} instr Accumulator for collating Ssml annotation
  *    elements.
- * @param {String[]} text A list of text elements.
+ * @param {string[]} text A list of text elements.
  * @param {ProsodyElement?} prosody The currently active prosody elements.
  */
 function recurseSsml(
   nodes: Node[],
   instr: SsmlElement[],
-  text: String[],
+  text: string[],
   prosody: ProsodyElement = {}
 ) {
-  for (let node of nodes) {
+  for (const node of nodes) {
     if (node.nodeType === 3) {
-      let content = node.textContent.trim();
+      const content = node.textContent.trim();
       if (content) {
         text.push(content);
         instr.push(Object.assign({ text: content }, prosody));
@@ -80,8 +80,8 @@ function recurseSsml(
       continue;
     }
     if (node.nodeType === 1) {
-      let element = node as Element;
-      let tag = element.tagName;
+      const element = node as Element;
+      const tag = element.tagName;
       if (tag === 'speak') {
         continue;
       }
@@ -102,7 +102,7 @@ function recurseSsml(
           instr.push({ mark: element.getAttribute('name') });
           break;
         case 'say-as':
-          let txt = element.textContent;
+          const txt = element.textContent;
           instr.push(Object.assign({ text: txt, character: true }, prosody));
           text.push(txt);
           break;
@@ -123,14 +123,15 @@ const combinePros: { [key: string]: (x: number, sign: string) => number } = {
 
 /**
  * Retrieves prosody annotations from and SSML node.
+ *
  * @param {Element} element The SSML node.
  * @param {ProsodyElement} prosody The prosody annotation.
  */
 function getProsody(element: Element, prosody: ProsodyElement) {
-  let combine: ProsodyElement = {};
-  for (let pros of ProsodyKeys) {
+  const combine: ProsodyElement = {};
+  for (const pros of ProsodyKeys) {
     if (element.hasAttribute(pros)) {
-      let [sign, value] = extractProsody(element.getAttribute(pros));
+      const [sign, value] = extractProsody(element.getAttribute(pros));
       if (!sign) {
         // TODO: Sort out the base value. It is .5 for volume!
         combine[pros] = pros === 'volume' ? 0.5 : 1;
@@ -138,7 +139,7 @@ function getProsody(element: Element, prosody: ProsodyElement) {
       }
       let orig = prosody[pros] as number;
       orig = orig ? orig : pros === 'volume' ? 0.5 : 1;
-      let relative = combinePros[pros](parseInt(value, 10), sign);
+      const relative = combinePros[pros](parseInt(value, 10), sign);
       combine[pros] = sign === '-' ? orig - relative : orig + relative;
     }
   }
@@ -152,10 +153,11 @@ const prosodyRegexp = /([\+-]?)([0-9]+)%/;
 
 /**
  * Extracts the prosody value from an attribute.
+ *
  * @param {string} attr
  */
 function extractProsody(attr: string) {
-  let match = attr.match(prosodyRegexp);
+  const match = attr.match(prosodyRegexp);
   if (!match) {
     console.warn('Something went wrong with the prosody matching.');
     return ['', '100'];
@@ -201,7 +203,7 @@ export function buildLabel(
  * @param {string} speech The speech string.
  * @param {string=} locale An optional locale.
  * @param {string=} rate The base speech rate.
- * @return {[string, SsmlElement[]]} The speech with the ssml annotation structure
+ * @returns {[string, SsmlElement[]]} The speech with the ssml annotation structure
  */
 export function buildSpeech(
   speech: string,
@@ -221,8 +223,8 @@ export function buildSpeech(
  * Creates a honking sound.
  */
 export function honk() {
-  let ac = new AudioContext();
-  let os = ac.createOscillator();
+  const ac = new AudioContext();
+  const os = ac.createOscillator();
   os.frequency.value = 300;
   os.connect(ac.destination);
   os.start(ac.currentTime);

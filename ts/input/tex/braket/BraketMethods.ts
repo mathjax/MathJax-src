@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Methods for TeX parsing of the braket package.
+ * @file Methods for TeX parsing of the braket package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -31,8 +31,10 @@ import { BraketItem } from './BraketItems.js';
 const BraketMethods: { [key: string]: ParseMethod } = {
   /**
    * Generate a bra-ket expression.
+   *
    * @param {TexParser} parser The current TeX parser.
    * @param {string} name Name of the current control sequence.
+   * @param _name
    * @param {string} open Opening delimiter.
    * @param {string} close Closing delimiter.
    * @param {boolean} stretchy Is it stretchy.
@@ -48,7 +50,7 @@ const BraketMethods: { [key: string]: ParseMethod } = {
     barmax: number,
     space: boolean = false
   ) {
-    let next = parser.GetNext();
+    const next = parser.GetNext();
     if (next === '') {
       throw new TexError(
         'MissingArgFor',
@@ -77,14 +79,15 @@ const BraketMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Generate a bar. If inside a bra-ket expressions it's handled accordingly.
+   *
    * @param {TexParser} parser The current TeX parser.
    * @param {string} name Name of the current control sequence.
-   * @return {ParseResult} False if the bar isn't to be processed here.
+   * @returns {ParseResult} False if the bar isn't to be processed here.
    */
   Bar(parser: TexParser, name: string): ParseResult {
     let c = name === '|' ? '|' : '\u2016';
-    let n = parser.stack.height - (parser.stack.env.braketItem as number);
-    let top = parser.stack.Top(n) as BraketItem;
+    const n = parser.stack.height - (parser.stack.env.braketItem as number);
+    const top = parser.stack.Top(n) as BraketItem;
     if (
       !top ||
       !top.isKind('braket') ||
@@ -97,7 +100,7 @@ const BraketMethods: { [key: string]: ParseMethod } = {
       c = '\u2016';
     }
     if (!top.getProperty('stretchy')) {
-      let node = parser.create(
+      const node = parser.create(
         'token',
         'mo',
         { stretchy: false, 'data-braketbar': true, texClass: TEXCLASS.ORD },
@@ -109,7 +112,7 @@ const BraketMethods: { [key: string]: ParseMethod } = {
     //
     // Close any pending \over constructs using a specially marked CloseItem
     //
-    let close = parser.itemFactory
+    const close = parser.itemFactory
       .create('close')
       .setProperty('braketbar', true);
     parser.Push(close);
