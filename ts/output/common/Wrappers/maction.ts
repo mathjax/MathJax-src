@@ -362,8 +362,9 @@ export function CommonMactionMixin<
      */
     constructor(factory: WF, node: MmlNode, parent: WW = null) {
       super(factory, node, parent);
-      const actions = /* prettier-ignore */
-      (this.constructor as CommonMactionClass<
+      const actions =
+        /* prettier-ignore */
+        (this.constructor as CommonMactionClass<
           N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>)
         .actions;
       const action = this.node.attributes.get('actiontype') as string;
