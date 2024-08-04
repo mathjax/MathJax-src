@@ -118,9 +118,9 @@ export const SvgMroot = (function <N, T, D>(): SvgMrootClass<N, T, D> {
     SvgMrootClass<N, T, D>
   >(SvgMsqrt);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class SvgMroot extends Base implements SvgMrootNTD<N, T, D> {
     /**
      * @override

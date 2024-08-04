@@ -113,7 +113,7 @@ export class AbstractExplorer<T> implements Explorer {
   /**
    * Named events and their functions.
    *
-   * @type {[string, function(x: Event)][]}
+   * @type {[string, (x: Event) => void][]}
    */
   protected events: [string, (x: Event) => void][] = [];
 
@@ -156,9 +156,10 @@ export class AbstractExplorer<T> implements Explorer {
    * Creator pattern for explorers.
    *
    * @param {A11yDocument} document The current document.
+   * @param {ExplorerPool} pool The explorer pool.
    * @param {Region<T>} region A region to display results.
    * @param {HTMLElement} node The node on which the explorer works.
-   * @param {any[]} ...rest Remaining information.
+   * @param {any[]} rest Remaining information.
    * @returns {Explorer} An object of the particular explorer class.
    *
    * @template T
@@ -177,9 +178,10 @@ export class AbstractExplorer<T> implements Explorer {
   /**
    * @class
    * @param {A11yDocument} document The current document.
+   * @param {ExplorerPool} pool The explorer pool.
    * @param {Region<T>} region A region to display results.
    * @param {HTMLElement} node The node on which the explorer works.
-   * @param {any[]} ...rest Remaining information.
+   * @param {any[]} _rest Remaining information.
    */
   protected constructor(
     public document: A11yDocument,
@@ -264,8 +266,7 @@ export class AbstractExplorer<T> implements Explorer {
   /**
    * @override
    */
-  // @ts-expect-error: unused variable
-  public Update(force: boolean = false): void {}
+  public Update(_force: boolean = false): void {}
 
   /**
    * Stops the events of this explorer from bubbling.

@@ -118,9 +118,9 @@ export const ChtmlMroot = (function <N, T, D>(): ChtmlMrootClass<N, T, D> {
     ChtmlMrootClass<N, T, D>
   >(ChtmlMsqrt);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class ChtmlMroot extends Base implements ChtmlMrootNTD<N, T, D> {
     /**
      * @override

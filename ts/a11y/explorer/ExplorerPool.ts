@@ -74,7 +74,11 @@ export class RegionPool {
 /**
  * Type of explorer initialization methods.
  *
- * @type {(ExplorerMathDocument, HTMLElement, any[]): Explorer}
+ * @type {(doc: ExplorerMathDocument,
+ *         pool: ExplorerPool,
+ *         node: HTMLElement,
+ *         ...rest: any[]
+ *        ) => Explorer}
  */
 type ExplorerInit = (
   doc: ExplorerMathDocument,
@@ -252,7 +256,7 @@ export class ExplorerPool {
    * @param  document The target document.
    * @param  node The node explorers will be attached to.
    * @param  mml The corresponding Mathml node as a string.
-   * @param item
+   * @param item The current math item.
    */
   public init(
     document: ExplorerMathDocument,
@@ -396,7 +400,7 @@ export class ExplorerPool {
    * Convenience method to return the speech explorer of the pool with the
    * correct type.
    *
-   * @returns {SpeechExplorer}
+   * @returns {SpeechExplorer} The speech explorer.
    */
   public get speech(): SpeechExplorer {
     return this.explorers['speech'] as SpeechExplorer;
@@ -405,8 +409,8 @@ export class ExplorerPool {
   /**
    * Retrieves color assignment for the document options.
    *
-   * @returns {[foreground, background]} Color assignments for fore and
-   *     background colors.
+   * @returns {[ { color: string; alpha: number }, { color: string; alpha:
+   *             number } ]} Color assignments for fore and background colors.
    */
   private colorOptions(): [
     { color: string; alpha: number },

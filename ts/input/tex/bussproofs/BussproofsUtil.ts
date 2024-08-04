@@ -50,6 +50,7 @@ let item: MATHITEM = null;
  * Get the bounding box of a node.
  *
  * @param {MmlNode} node The target node.
+ * @returns {number} Width of the proof node.
  */
 const getBBox = function (node: MmlNode) {
   item.root = node;
@@ -170,7 +171,7 @@ const nextSibling = function (inf: MmlNode): MmlNode {
  * @param {MmlNode} inf The inference rule.
  * @returns {MmlNode} The previous sibling.
  */
-// @ts-expect-error
+// eslint-disable-next-line
 const previousSibling = function (inf: MmlNode): MmlNode {
   return inf.parent.childNodes[inf.parent.childNodes.indexOf(inf) - 1];
 };
@@ -625,8 +626,8 @@ export const getProperty = function (node: MmlNode, property: string): Property 
 /**
  * Removes a bussproofs property.
  *
- * @param {MmlNode} node
- * @param {string} property
+ * @param {MmlNode} node The proof node.
+ * @param {string} property The property name. 
  */
 export const removeProperty = function (node: MmlNode, property: string) {
   node.removeProperty(property_prefix + property);
@@ -668,8 +669,7 @@ export const saveDocument = function (arg: FilterData) {
 /**
  * Clear the document when we are done
  *
- * @param {FilterData} arg The object to pre-process.
- * @param _arg
+ * @param {FilterData} _arg The object to pre-process.
  */
 export const clearDocument = function (_arg: FilterData) {
   doc = null;

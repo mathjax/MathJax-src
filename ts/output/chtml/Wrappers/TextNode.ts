@@ -122,9 +122,9 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<
     ChtmlTextNodeClass<N, T, D>
   >(ChtmlWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class ChtmlTextNode extends Base implements ChtmlTextNodeNTD<N, T, D> {
     /**
      * The TextNode wrapper

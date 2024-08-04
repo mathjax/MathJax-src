@@ -146,10 +146,10 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<
     SvgMmultiscriptsClass<N, T, D>
   >(SvgMsubsup);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
   return class SvgMmultiscripts
-    // @ts-expect-error
+    // @ts-expect-error Avoid message about base constructors not having the
+    // same type (they should both be SvgWrapper<N, T, D>, but are thought of as
+    // different by typescript)
     extends Base
     implements SvgMmultiscriptsNTD<N, T, D>
   {
