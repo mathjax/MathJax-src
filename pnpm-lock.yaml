@@ -39,6 +39,9 @@ importers:
       eslint:
         specifier: ^9.7.0
         version: 9.7.0
+      eslint-formatter-unix:
+        specifier: ^8.40.0
+        version: 8.40.0
       eslint-plugin-jsdoc:
         specifier: ^48.8.3
         version: 48.8.3(eslint@9.7.0)
@@ -524,6 +527,10 @@ packages:
   escape-string-regexp@4.0.0:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
     engines: {node: '>=10'}
+
+  eslint-formatter-unix@8.40.0:
+    resolution: {integrity: sha512-gfsmFZ/cb1MobrMfYl2IPFLZEz2tWQVO/tnmziNQdhWJMN85GfZD64dcPsEgaEoeVKgAtK6W9LWLlOxhJWZvDw==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
   eslint-plugin-jsdoc@48.8.3:
     resolution: {integrity: sha512-AtIvwwW9D17MRkM0Z0y3/xZYaa9mdAvJrkY6fU/HNUwGbmMtHVvK4qRM9CDixGVtfNrQitb8c6zQtdh6cTOvLg==}
@@ -1777,6 +1784,8 @@ snapshots:
   escalade@3.1.1: {}
 
   escape-string-regexp@4.0.0: {}
+
+  eslint-formatter-unix@8.40.0: {}
 
   eslint-plugin-jsdoc@48.8.3(eslint@9.7.0):
     dependencies:

@@ -132,6 +132,7 @@
     "copyfiles": "^2.4.1",
     "diff": "^5.2.0",
     "eslint": "^9.7.0",
+    "eslint-formatter-unix": "^8.40.0",
     "eslint-plugin-jsdoc": "^48.8.3",
     "eslint-plugin-prettier": "^5.2.1",
     "prettier": "^3.3.3",

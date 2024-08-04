@@ -91,7 +91,7 @@ export function split(x: string): string[] {
 /**
  * Replace \U{...} with the specified unicode character
  *
- * @param {srting} text   The string to be scanned for \U{...}
+ * @param {string} text   The string to be scanned for \U{...}
  * @return {string}       The string with the unicode characters in place of \U{...}
  */
 export function replaceUnicode(text: string): string {
