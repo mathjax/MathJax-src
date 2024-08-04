@@ -191,14 +191,12 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
   Prooftree(parser: TexParser, begin: StackItem): StackItem {
     parser.Push(begin);
     // TODO: Check if opening a proof tree is legal.
-    let newItem = parser.itemFactory
-      .create('proofTree')
-      .setProperties({
-        name: begin.getName(),
-        line: 'solid',
-        currentLine: 'solid',
-        rootAtTop: false,
-      });
+    let newItem = parser.itemFactory.create('proofTree').setProperties({
+      name: begin.getName(),
+      line: 'solid',
+      currentLine: 'solid',
+      rootAtTop: false,
+    });
     // parser.Push(item);
     return newItem;
   },
