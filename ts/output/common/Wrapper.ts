@@ -470,10 +470,10 @@ export class CommonWrapper<
         ? this.coreMO().embellishedBreakCount
         : node.arity < 0 &&
             !node.linebreakContainer &&
-            (
-              this.childNodes[0] as any as /* prettier-ignore */
-              CommonMrow<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
-            ).isStack
+            /* prettier-ignore */
+            (this.childNodes[0] as any as
+              CommonMrow<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>)
+              .isStack
           ? this.childNodes[0].breakCount
           : 0;
     }
