@@ -50,7 +50,7 @@ export type StringMap = {[key: string]: string};
 /**
  * MathML spacing rules
  */
-/* tslint:disable-next-line:whitespace */
+/* prettier-ignore */
 const SMALLSIZE = 2/18;
 
 /**

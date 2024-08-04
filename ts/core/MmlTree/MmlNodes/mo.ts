@@ -188,13 +188,13 @@ export class MmlMo extends AbstractMmlTokenNode {
   /**
    * The default MathML spacing on the left
    */
-  /* tslint:disable-next-line:whitespace */
+  /* prettier-ignore */
   public lspace = 5/18;
 
   /**
    * The default MathML spacing on the right
    */
-  /* tslint:disable-next-line:whitespace */
+  /* prettier-ignore */
   public rspace = 5/18;
 
   /**

@@ -68,7 +68,6 @@ export const MATHSPACE: {[name: string]: number} = {
   negativethickmathspace:         -5/18,
   negativeverythickmathspace:     -6/18,
   negativeveryverythickmathspace: -7/18,
-  /* tslint:enable */
 
   thin:   .04,
   medium: .06,
