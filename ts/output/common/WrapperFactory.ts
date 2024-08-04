@@ -69,8 +69,8 @@ export class CommonWrapperFactory<
    * The default list of wrapper nodes this factory can create
    *   (filled in by subclasses)
    */
+  /* prettier-ignore */
   public static defaultNodes: {
-    /* prettier-ignore */
     [kind: string]: CommonWrapperClass<any, any, any, any, any, any, any, any, any, any, any, any>;
   } = {};
 
