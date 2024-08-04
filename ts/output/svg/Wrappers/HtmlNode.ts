@@ -60,8 +60,8 @@ export interface SvgHtmlNodeClass<N, T, D> extends SvgXmlNodeClass<N, T, D> {
 export const SvgHtmlNode = (function <N, T, D>(): SvgHtmlNodeClass<N, T, D> {
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
   return class SvgHtmlNode
+    // @ts-expect-error
     extends SvgXmlNode
     implements SvgHtmlNodeNTD<N, T, D>
   {

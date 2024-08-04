@@ -135,7 +135,7 @@ export const ChtmlMsub = (function <N, T, D>(): ChtmlMsubClass<N, T, D> {
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class ChtmlMsub extends Base implements ChtmlMsubNTD<N, T, D> {
     /**
      * @override
@@ -225,7 +225,7 @@ export const ChtmlMsup = (function <N, T, D>(): ChtmlMsupClass<N, T, D> {
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class ChtmlMsup extends Base implements ChtmlMsupNTD<N, T, D> {
     /**
      * @override
@@ -315,7 +315,7 @@ export const ChtmlMsubsup = (function <N, T, D>(): ChtmlMsubsupClass<N, T, D> {
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class ChtmlMsubsup extends Base implements ChtmlMsubsupNTD<N, T, D> {
     /**
      * @override

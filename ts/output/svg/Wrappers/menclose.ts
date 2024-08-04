@@ -170,7 +170,7 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
 
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class SvgMenclose extends Base implements SvgMencloseNTD<N, T, D> {
     /**
      * @override

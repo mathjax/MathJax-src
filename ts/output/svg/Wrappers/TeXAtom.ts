@@ -118,7 +118,6 @@ export const SvgTeXAtom = (function <N, T, D>(): SvgTeXAtomClass<N, T, D> {
 
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
   return class SvgTeXAtom extends Base implements SvgTeXAtomNTD<N, T, D> {
     /**
      * @override

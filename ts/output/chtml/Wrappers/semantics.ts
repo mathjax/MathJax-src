@@ -135,7 +135,6 @@ export const ChtmlSemantics = (function <N, T, D>(): ChtmlSemanticsClass<
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
   return class ChtmlSemantics
     extends Base
     implements ChtmlSemanticsNTD<N, T, D>
@@ -295,7 +294,7 @@ export const ChtmlXmlNode = (function <N, T, D>(): ChtmlWrapperClass<N, T, D> {
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class ChtmlXmlNode extends Base implements ChtmlXmlNodeNTD<N, T, D> {
     /**
      * @override

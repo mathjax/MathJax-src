@@ -131,7 +131,6 @@ export const SvgSemantics = (function <N, T, D>(): SvgSemanticsClass<N, T, D> {
 
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
   return class SvgSemantics extends Base implements SvgSemanticsNTD<N, T, D> {
     /**
      * @override
@@ -286,7 +285,7 @@ export const SvgXmlNode = (function <N, T, D>(): SvgXmlNodeClass<N, T, D> {
 
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class SvgXmlNode extends Base implements SvgXmlNodeNTD<N, T, D> {
     /**
      * The XMLNode wrapper

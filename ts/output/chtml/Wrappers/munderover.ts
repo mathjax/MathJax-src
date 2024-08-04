@@ -141,7 +141,7 @@ export const ChtmlMunder = (function <N, T, D>(): ChtmlMunderClass<N, T, D> {
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class ChtmlMunder extends Base implements ChtmlMunderNTD<N, T, D> {
     /**
      * @override
@@ -284,7 +284,7 @@ export const ChtmlMover = (function <N, T, D>(): ChtmlMoverClass<N, T, D> {
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class ChtmlMover extends Base implements ChtmlMoverNTD<N, T, D> {
     /**
      * @override
@@ -419,8 +419,8 @@ export const ChtmlMunderover = (function <N, T, D>(): ChtmlMunderoverClass<
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
   return class ChtmlMunderover
+    // @ts-expect-error
     extends Base
     implements ChtmlMunderoverNTD<N, T, D>
   {

@@ -169,7 +169,7 @@ export const SvgMtr = (function <N, T, D>(): SvgMtrClass<N, T, D> {
 
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class SvgMtr extends Base implements SvgMtrNTD<N, T, D> {
     /**
      * @override
@@ -372,7 +372,7 @@ export const SvgMlabeledtr = (function <N, T, D>(): SvgMlabeledtrClass<
 
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class SvgMlabeledtr extends Base implements SvgMlabeledtrNTD<N, T, D> {
     /**
      * @override

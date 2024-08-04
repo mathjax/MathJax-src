@@ -118,7 +118,7 @@ export const ChtmlMtext = (function <N, T, D>(): ChtmlMtextClass<N, T, D> {
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class ChtmlMtext extends Base implements ChtmlMtextNTD<N, T, D> {
     /**
      * @override

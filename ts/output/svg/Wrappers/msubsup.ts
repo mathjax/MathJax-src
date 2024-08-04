@@ -134,7 +134,7 @@ export const SvgMsub = (function <N, T, D>(): SvgMsubClass<N, T, D> {
 
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class SvgMsub extends Base implements SvgMsubNTD<N, T, D> {
     /**
      * @override
@@ -222,7 +222,7 @@ export const SvgMsup = (function <N, T, D>(): SvgMsupClass<N, T, D> {
 
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class SvgMsup extends Base implements SvgMsupNTD<N, T, D> {
     /**
      * @override
@@ -310,7 +310,7 @@ export const SvgMsubsup = (function <N, T, D>(): SvgMsubsupClass<N, T, D> {
 
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class SvgMsubsup extends Base implements SvgMsubsupNTD<N, T, D> {
     /**
      * @override

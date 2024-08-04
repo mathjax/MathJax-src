@@ -254,7 +254,7 @@ export class AbstractExplorer<T> implements Explorer {
   /**
    * @override
    */
-  // @ts-ignore: unused variable
+  // @ts-expect-error: unused variable
   public Update(force: boolean = false): void {}
 
   /**

@@ -137,7 +137,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
 
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class SvgMaction extends Base implements SvgMactionNTD<N, T, D> {
     /**
      * @override

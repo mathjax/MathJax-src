@@ -118,7 +118,6 @@ export const SvgMi = (function <N, T, D>(): SvgMiClass<N, T, D> {
 
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
   return class SvgMi extends Base implements SvgMiNTD<N, T, D> {
     /**
      * @override

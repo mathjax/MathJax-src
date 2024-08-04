@@ -120,7 +120,7 @@ export const ChtmlMglyph = (function <N, T, D>(): ChtmlMglyphClass<N, T, D> {
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class ChtmlMglyph extends Base implements ChtmlMglyphNTD<N, T, D> {
     /**
      * @override

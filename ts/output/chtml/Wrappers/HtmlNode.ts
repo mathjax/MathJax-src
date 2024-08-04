@@ -69,7 +69,7 @@ export const ChtmlHtmlNode = (function <N, T, D>(): ChtmlHtmlNodeClass<
 > {
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class ChtmlHtmlNode
     extends ChtmlXmlNode
     implements ChtmlHtmlNodeNTD<N, T, D>

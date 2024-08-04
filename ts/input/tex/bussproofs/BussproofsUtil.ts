@@ -161,7 +161,7 @@ let nextSibling = function (inf: MmlNode): MmlNode {
  * @param {MmlNode} inf The inference rule.
  * @return {MmlNode} The previous sibling.
  */
-// @ts-ignore
+// @ts-expect-error
 let previousSibling = function (inf: MmlNode): MmlNode {
   return inf.parent.childNodes[inf.parent.childNodes.indexOf(inf) - 1];
 };

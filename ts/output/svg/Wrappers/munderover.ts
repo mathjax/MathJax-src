@@ -140,7 +140,7 @@ export const SvgMunder = (function <N, T, D>(): SvgMunderClass<N, T, D> {
 
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class SvgMunder extends Base implements SvgMunderNTD<N, T, D> {
     /**
      * @override
@@ -257,7 +257,7 @@ export const SvgMover = (function <N, T, D>(): SvgMoverClass<N, T, D> {
 
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class SvgMover extends Base implements SvgMoverNTD<N, T, D> {
     /**
      * @override
@@ -375,7 +375,7 @@ export const SvgMunderover = (function <N, T, D>(): SvgMunderoverClass<
 
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class SvgMunderover extends Base implements SvgMunderoverNTD<N, T, D> {
     /**
      * @override

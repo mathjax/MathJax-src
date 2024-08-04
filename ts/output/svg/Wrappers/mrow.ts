@@ -124,7 +124,7 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
 
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class SvgMrow extends Base implements SvgMrowNTD<N, T, D> {
     /**
      * @override
@@ -339,9 +339,10 @@ export const SvgInferredMrow = (function <N, T, D>(): SvgInferredMrowClass<
 
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
   return class SvgInferredMrowNTD
+    // @ts-expect-error
     extends Base
+    // @ts-expect-error
     implements SvgInferredMrow<N, T, D>
   {
     /**

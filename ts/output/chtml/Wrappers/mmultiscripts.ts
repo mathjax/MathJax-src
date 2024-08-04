@@ -126,8 +126,8 @@ export const ChtmlMmultiscripts = (function <
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
   return class ChtmlMmultiscripts
+    // @ts-expect-error
     extends Base
     implements ChtmlMmultiscriptsNTD<N, T, D>
   {

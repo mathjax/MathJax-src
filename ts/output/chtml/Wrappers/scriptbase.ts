@@ -151,8 +151,8 @@ export const ChtmlScriptbase = (function <N, T, D>(): ChtmlScriptbaseClass<
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
   return class ChtmlScriptbase
+    // @ts-expect-error
     extends Base
     implements ChtmlScriptbaseNTD<N, T, D>
   {
