@@ -316,14 +316,12 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     if (next === '(' || next === '[') {
       parser.i++;
       parser.Push(
-        parser.itemFactory
-          .create('auto open')
-          .setProperties({
-            open: next,
-            close: '|',
-            smash: star,
-            right: '\\vphantom{\\int}',
-          })
+        parser.itemFactory.create('auto open').setProperties({
+          open: next,
+          close: '|',
+          smash: star,
+          right: '\\vphantom{\\int}',
+        })
       );
       return;
     }
