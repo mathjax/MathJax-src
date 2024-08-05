@@ -243,7 +243,7 @@ function saveVersion(version: string) {
   try {
     const data = version + ' ' + Date.now();
     localStorage.setItem(MJX_LATEST, data);
-  } catch (err) {
+  } catch (_err) {
     // continue regardless of error
   }
 }
@@ -259,7 +259,7 @@ function getSavedVersion(): string | null {
     if (date && Date.now() - parseInt(date) < SAVE_TIME) {
       return version;
     }
-  } catch (err) {
+  } catch (_err) {
     // continue regardless of error
   }
   return null;
@@ -348,12 +348,12 @@ function getXMLHttpRequest(): XMLHttpRequest {
   if (window.ActiveXObject) {
     try {
       return new window.ActiveXObject('Msxml2.XMLHTTP');
-    } catch (err) {
+    } catch (_err) {
       // continue regardless of error
     }
     try {
       return new window.ActiveXObject('Microsoft.XMLHTTP');
-    } catch (err) {
+    } catch (_err) {
       // continue regardless of error
     }
   }
