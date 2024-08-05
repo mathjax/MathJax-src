@@ -49,7 +49,7 @@ export class HtmlNode<N> extends XMLNode {
   /**
    * @param {N} html               The HTML content to be saved
    * @param {DOMAdaptor} adaptor   DOM adaptor for the content
-   * @returns {HTMLNode}            The HTML node (for chaining of method calls)
+   * @returns {HtmlNode}            The HTML node (for chaining of method calls)
    */
   public setHTML(
     html: N,

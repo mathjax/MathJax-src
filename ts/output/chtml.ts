@@ -260,7 +260,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<
   }
 
   /**
-   * @param {WW} wrapper   The MML node wrapper whose HTML is to be produced
+   * @param {ChtmlWrapper} wrapper   The MML node wrapper whose HTML is to be produced
    * @param {N} parent     The HTML node to contain the HTML
    */
   public processMath(wrapper: ChtmlWrapper<N, T, D>, parent: N) {

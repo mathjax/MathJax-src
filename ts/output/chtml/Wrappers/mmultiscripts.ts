@@ -102,6 +102,10 @@ export interface ChtmlMmultiscriptsClass<N, T, D>
 
 /**
  * The ChtmlMmultiscripts wrapper class for the MmlMmultiscripts class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const ChtmlMmultiscripts = (function <
   N,

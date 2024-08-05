@@ -111,9 +111,7 @@ function envUndefined(_parser: TexParser, env: string) {
 /**
  * Filter for removing spacing following \nonscript
  *
- * @param root0
- * @param root0.data
- * @param{ParseOptions} data The active tex parser.
+ * @param {ParseOptions} root0.data The active tex parser.
  */
 function filterNonscript({ data }: { data: ParseOptions }) {
   for (const mml of data.getList('nonscript')) {

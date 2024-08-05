@@ -110,6 +110,10 @@ export interface SvgMtableClass<N, T, D>
 
 /**
  * The SvgMtable wrapper class for the MmlMtable class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
   const Base = CommonMtableMixin<

@@ -37,7 +37,7 @@ export class NodeFactory {
   /**
    * Parser configuration that can be used to pass information between node methods.
    *
-   * @type {ParseOption}
+   * @type {ParseOptions}
    */
   public configuration: ParseOptions;
 

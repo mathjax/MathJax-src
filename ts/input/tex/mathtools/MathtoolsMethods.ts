@@ -51,7 +51,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
    * @param {StackItem} begin    The BeginItem for the environment.
    * @param {string} open        The open delimiter for the matrix.
    * @param {string} close       The close delimiter for the matrix.
-   * @returns {ParserResult}      The ArrayItem for the matrix.
+   * @returns {ParseResult}      The ArrayItem for the matrix.
    */
   MtMatrix(
     parser: TexParser,

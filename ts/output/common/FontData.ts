@@ -814,7 +814,7 @@ export class FontData<
   }
 
   /**
-   * @param {DelimiterMap<DelimiteData>} delimiters   The delimiter list to modify
+   * @param {DelimiterMap<DelimiterData>} delimiters  The delimiter list to modify
    * @param {string[]} keys                           The ids of the delimiters to check
    * @param {number} sizeN                            The original number of size variants
    * @param {number} stretchN                         The original number ot stretch variants

@@ -23,6 +23,8 @@
 
 /**
  * Class used for tracking usage of font characters or wrappers
+ *
+ * @template T
  */
 export class Usage<T> {
   /**

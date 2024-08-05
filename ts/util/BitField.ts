@@ -110,7 +110,7 @@ export class BitField {
 
 /**
  * @param {string[]} names    The name of the positions to allocate initially
- * @returns {typeof AbstractBitField}  The bit-field class with names allocated
+ * @returns {typeof BitField}  The bit-field class with names allocated
  */
 export function BitFieldClass(...names: string[]): typeof BitField {
   const bits = class extends BitField {};

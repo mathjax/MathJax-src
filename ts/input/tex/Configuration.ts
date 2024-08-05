@@ -347,8 +347,7 @@ export class ParserConfiguration {
    * @class
    * @param {(string|[string,number])[]} packages A list of packages with
    *     optional priorities.
-   * @param parsers
-   * @parm {string[]} parsers   The names of the parsers this package targets
+   * @param {string[]} parsers   The names of the parsers this package targets
    */
   constructor(
     packages: (string | [string, number])[],

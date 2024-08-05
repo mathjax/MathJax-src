@@ -331,7 +331,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
 
   /**
    * @param {string} math      The math expression for this item
-   * @param {Inputjax} jax     The input jax to use for this item
+   * @param {InputJax} jax     The input jax to use for this item
    * @param {boolean} display  True if display mode, false if inline
    * @param {Location} start   The starting position of the math in the document
    * @param {Location} end     The ending position of the math in the document

@@ -509,7 +509,8 @@ export class SpeechRegion extends LiveRegion {
    * Highlighting the node that is being marked in the SSML.
    *
    * @param {string} id The id of the node to highlight.
-   * @param {boolean} init
+   * @param {boolean} init Flag to indicate the very first utterance where there
+   *     is no need for unhighlighting.
    */
   private highlightNode(id: string, init: boolean = false) {
     this.highlighter.unhighlight();
@@ -575,9 +576,10 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
         top = nodeRect.bottom + 10;
         break;
       case 'center':
-      default:
+      default: {
         const yCenter = nodeRect.top + nodeRect.height / 2;
         top = yCenter - divRect.height / 2;
+      }
     }
     top = top + window.scrollY;
     top = top < 0 ? 0 : top;

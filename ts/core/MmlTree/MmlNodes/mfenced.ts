@@ -37,7 +37,7 @@ import {
 
 export class MmlMfenced extends AbstractMmlNode {
   /**
-   * @overeride
+   * @override
    */
   public static defaults: PropertyList = {
     ...AbstractMmlNode.defaults,

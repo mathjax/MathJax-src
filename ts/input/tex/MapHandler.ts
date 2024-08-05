@@ -109,6 +109,8 @@ export class SubHandler {
    *
    * @param {string} token The token to parse.
    * @returns {T} A boolean, Character, or Macro.
+   *
+   * @template T
    */
   public lookup<T>(token: string): T {
     const map = this.applicable(token) as AbstractTokenMap<T>;

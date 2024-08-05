@@ -105,6 +105,10 @@ export interface SvgMsqrtClass<N, T, D>
 
 /**
  * The SvgMsqrt wrapper for the MmlMsqrt class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const SvgMsqrt = (function <N, T, D>(): SvgMsqrtClass<N, T, D> {
   const Base = CommonMsqrtMixin<

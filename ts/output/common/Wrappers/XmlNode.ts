@@ -293,8 +293,7 @@ export function CommonXmlNodeMixin<
     /**
      * Measure the width, height and depth of an annotation-xml node's content
      *
-     * @param xml
-     * @param{N} xml          The xml content node to be measured
+     * @param {N} xml          The xml content node to be measured
      * @returns {UnknownBBox}  The width, height, and depth of the content
      */
     public measureXmlNode(xml: N): UnknownBBox {

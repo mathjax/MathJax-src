@@ -121,7 +121,7 @@ export const MathtoolsUtil = {
    *
    * @param {string} name   The name of the macro doing the checking.
    * @param {string} n      The string to test as a number.
-   * @returns {srtring}      The number with an explicit sign.
+   * @returns {string}      The number with an explicit sign.
    */
   plusOrMinus(name: string, n: string): string {
     n = n.trim();

@@ -356,7 +356,7 @@ export interface EnrichedMathDocument<N, T, D>
 
   /**
    * @param {EnrichedMathDocument} doc   The MathDocument for the error
-   * @paarm {EnrichedMathItem} math      The MathItem causing the error
+   * @param {EnrichedMathItem} math      The MathItem causing the error
    * @param {Error} err                  The error being processed
    */
   enrichError(
@@ -367,7 +367,7 @@ export interface EnrichedMathDocument<N, T, D>
 
   /**
    * @param {EnrichedMathDocument} doc   The MathDocument for the error
-   * @paarm {EnrichedMathItem} math      The MathItem causing the error
+   * @param {EnrichedMathItem} math      The MathItem causing the error
    * @param {Error} err                  The error being processed
    */
   speechError(

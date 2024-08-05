@@ -95,7 +95,7 @@ export interface MenuMathItem
  * The mixin for adding context menus to MathItems
  *
  * @param {B} BaseMathItem   The MathItem class to be extended
- * @returns {MathMathItem}    The extended MathItem class
+ * @returns {MenuMathItem}    The extended MathItem class
  *
  * @template B  The MathItem class to extend
  */

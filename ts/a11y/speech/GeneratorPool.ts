@@ -28,6 +28,12 @@ import { DOMAdaptor } from '../../core/DOMAdaptor.js';
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+
+/**
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export class GeneratorPool<N, T, D> {
   private _element: Element;
 
@@ -369,7 +375,7 @@ export class GeneratorPool<N, T, D> {
   /**
    * Retrieve and sets aria and braille labels recursively.
    *
-   * @param {MmlNode} node The root node to search from.
+   * @param {N} node The root node to search from.
    * @param xml
    * @param locale
    */

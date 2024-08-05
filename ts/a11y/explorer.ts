@@ -165,7 +165,7 @@ export interface ExplorerMathDocument extends HTMLDOCUMENT {
   /**
    * Add the Explorer to the MathItems in the MathDocument
    *
-   * @returns {MathDocument}   The MathDocument (so calls can be chained)
+   * @returns {HTMLDocument}   The MathDocument (so calls can be chained)
    */
   explorable(): HTMLDOCUMENT;
 }
@@ -175,6 +175,8 @@ export interface ExplorerMathDocument extends HTMLDOCUMENT {
  *
  * @param {B} BaseDocument      The MathDocument class to be extended
  * @returns {ExplorerMathDocument}  The extended MathDocument class
+ *
+ * @template B  The MathItem class to extend
  */
 export function ExplorerMathDocumentMixin<
   B extends MathDocumentConstructor<HTMLDOCUMENT>,
@@ -342,11 +344,12 @@ export function setA11yOption(
   value: string | boolean
 ) {
   switch (option) {
-    case 'speechRules':
+    case 'speechRules': {
       const [domain, style] = (value as string).split('-');
       document.options.sre.domain = domain;
       document.options.sre.style = style;
       break;
+    }
     case 'magnification':
       switch (value) {
         case 'None':

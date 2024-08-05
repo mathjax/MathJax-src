@@ -54,7 +54,7 @@ export class MmlMtd extends AbstractMmlBaseNode {
   /**
    * <mtd> has an inferred mrow
    *
-   * @overrride
+   * @override
    */
   public get arity() {
     return -1;

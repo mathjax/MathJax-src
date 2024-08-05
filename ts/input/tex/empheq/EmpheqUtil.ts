@@ -82,7 +82,7 @@ export const EmpheqUtil = {
    *   depth of the given table.
    *
    * @param {string} tex        The TeX code to put in the box.
-   * @param {MmlTable} table    The table used to size the box.
+   * @param {MmlMtable} table    The table used to size the box.
    * @param {TexParser} parser  The active tex parser.
    * @param {string} env        The name of the current environment.
    * @returns {MmlNode}          The mpadded element.
@@ -140,7 +140,7 @@ export const EmpheqUtil = {
    * @param {string} tex         The TeX string to put into the cell.
    * @param {MmlMtable} table    The reference table used for its various heights.
    * @param {TexParser} parser   The active tex parser.
-   * @param {srting} env         The current environment.
+   * @param {string} env         The current environment.
    */
   rowspanCell(
     mtd: MmlMtd,

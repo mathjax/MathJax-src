@@ -166,17 +166,6 @@ const nextSibling = function (inf: MmlNode): MmlNode {
 };
 
 /**
- * Gets the previous sibling of an inference rule.
- *
- * @param {MmlNode} inf The inference rule.
- * @returns {MmlNode} The previous sibling.
- */
-// eslint-disable-next-line
-const previousSibling = function (inf: MmlNode): MmlNode {
-  return inf.parent.childNodes[inf.parent.childNodes.indexOf(inf) - 1];
-};
-
-/**
  * Get the parent inference rule.
  *
  * @param {MmlNode} inf The inference rule.

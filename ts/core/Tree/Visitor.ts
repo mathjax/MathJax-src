@@ -140,7 +140,7 @@ export abstract class AbstractVisitor<N extends VisitorNode<N>>
    *   based on the node kinds available from the factory.
    *
    * @class
-   * @param {NodeFactory} factory  The node factory for the kinds of nodes this visitor handles
+   * @param {Factory} factory  The node factory for the kinds of nodes this visitor handles
    */
   constructor(factory: Factory<N, FactoryNodeClass<N>>) {
     for (const kind of factory.getKinds()) {

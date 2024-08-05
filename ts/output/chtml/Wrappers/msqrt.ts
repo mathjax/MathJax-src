@@ -101,6 +101,10 @@ export interface ChtmlMsqrtClass<N, T, D>
 
 /**
  * The ChtmlMsqrt wrapper class for the MmlMsqrt class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
   const Base = CommonMsqrtMixin<

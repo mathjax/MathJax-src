@@ -104,6 +104,10 @@ export interface SvgMrowClass<N, T, D>
 
 /**
  * The SvgMrow wrapper for the MmlMrow type
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
   const Base = CommonMrowMixin<

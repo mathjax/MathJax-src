@@ -494,7 +494,7 @@ export class Collapse {
 
   /**
    * @param {MmlNode} node   The node whose text content is needed
-   * @return{string}         The text of the node (and its children), combined
+   * @returns {string}       The text of the node (and its children), combined
    */
   protected getText(node: MmlNode): string {
     if (node.isToken) return (node as AbstractMmlTokenNode).getText();
@@ -531,7 +531,7 @@ export class Collapse {
    * Add maction nodes to the nodes in the tree that can collapse
    *
    * @param node
-   * @paramn {MmlNode} node   The root of the tree to check
+   * @param {MmlNode} node   The root of the tree to check
    */
   public makeCollapse(node: MmlNode) {
     const nodes: MmlNode[] = [];

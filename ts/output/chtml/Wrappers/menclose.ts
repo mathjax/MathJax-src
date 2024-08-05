@@ -149,6 +149,10 @@ export interface ChtmlMencloseClass<N, T, D>
 
 /**
  * The ChtmlMenclose wrapper class for the MmlMenclose class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
   N,
@@ -627,9 +631,9 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
     }
 
     /**
-     * @override
-     * (make it public so it can be called by the notation functions)
+     * @override 
      */
+    // (make it public so it can be called by the notation functions)
     public Em(m: number) {
       return super.em(m);
     }

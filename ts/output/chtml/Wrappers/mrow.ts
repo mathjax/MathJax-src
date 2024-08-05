@@ -107,6 +107,10 @@ export interface ChtmlMrowClass<N, T, D>
 
 /**
  * The ChtmlMrow wrapper class for the MmlMrow class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
   const Base = CommonMrowMixin<

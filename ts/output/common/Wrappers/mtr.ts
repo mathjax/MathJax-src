@@ -88,7 +88,7 @@ export interface CommonMtr<
 
   /**
    * @param {number} i   The index of the child to get (skipping labels)
-   * @returns {C}         The ith child node wrapper
+   * @returns {WW}       The ith child node wrapper
    */
   getChild(i: number): WW;
 

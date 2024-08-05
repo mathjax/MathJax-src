@@ -87,8 +87,7 @@ export class MathMLCompile<N, T, D> {
   }
 
   /**
-   * @param mmlFactory
-   * @param{MmlFactory} mmlFactory   The MathML factory to use for new nodes
+   * @param {MmlFactory} mmlFactory   The MathML factory to use for new nodes
    */
   public setMmlFactory(mmlFactory: MmlFactory) {
     this.factory = mmlFactory;

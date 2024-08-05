@@ -110,7 +110,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * Initialises the configurations.
    *
    * @param {string[]} packages Names of packages.
-   * @returns {Configuration} The configuration object.
+   * @returns {ParserConfiguration} The configuration object.
    */
   protected static configure(
     packages: (string | [string, number])[]
@@ -125,7 +125,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * tagging to given default.
    *
    * @param {ParseOptions} options The parse options.
-   * @param {Configuration} configuration The configuration.
+   * @param {ParserConfiguration} configuration The configuration.
    */
   protected static tags(
     options: ParseOptions,
@@ -250,7 +250,7 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
    * Default formatter for error messages:
    * wrap an error into a node for output.
    *
-   * @param {TeXError} err The TexError.
+   * @param {TexError} err The TexError.
    * @returns {Node} The merror node.
    */
   public formatError(err: TexError): MmlNode {

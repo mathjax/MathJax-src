@@ -108,9 +108,9 @@ export interface SvgMtrNTD<N, T, D>
   bLine: number;
 
   /**
-   * @param {Svgmtd} cell      The cell to place
+   * @param {SvgMtdNTD} cell   The cell to place
    * @param {SizeData} sizes   The positioning information
-   * @returns {number}          The new x position
+   * @returns {number}         The new x position
    */
   placeCell(cell: SvgMtdNTD<N, T, D>, sizes: SizeData): number;
 }
@@ -149,6 +149,10 @@ export interface SvgMtrClass<N, T, D>
 
 /**
  * The SvgMtr wrapper class for the MmlMtr class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const SvgMtr = (function <N, T, D>(): SvgMtrClass<N, T, D> {
   const Base = CommonMtrMixin<

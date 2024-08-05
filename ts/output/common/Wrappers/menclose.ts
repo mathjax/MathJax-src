@@ -265,7 +265,7 @@ export interface CommonMencloseClass<
  * @template FD  The FontData type
  * @template FC  The FontDataClass type
  *
- * @templare S   The msqrt wrapper class
+ * @template S   The msqrt wrapper class
  * @template B   The mixin interface to create
  */
 export function CommonMencloseMixin<

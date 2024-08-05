@@ -69,7 +69,7 @@ export class LineBBox extends BBox {
    * @param {BBox} bbox           The bbox to extend
    * @param {number} leading      The lineleading value for the break
    * @param {IndentData} indent   The align/shift information
-   * @returns {ExtendedBBox}       The bbox extended
+   * @returns {LineBBox}          The extended bbox
    */
   public static from(
     bbox: BBox,

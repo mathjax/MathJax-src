@@ -440,7 +440,7 @@ export interface CommonMtable<
    * Adds "em" to a list of dimensions, after dividing by n (defaults to 1).
    *
    * @param {string[]} list   The array of dimensions (in em's)
-   * @param {nunber=} n       The number to divide each dimension by after converted
+   * @param {number=} n       The number to divide each dimension by after converted
    * @returns {string[]}       The array of values with "em" added
    */
   addEm(list: number[], n?: number): string[];
@@ -504,7 +504,7 @@ export interface CommonMtableClass<
  * @template FD  The FontData type
  * @template FC  The FontDataClass type
  *
- * @temlpate R   The table row class
+ * @template R   The table row class
  * @template B   The mixin interface to create
  */
 export function CommonMtableMixin<

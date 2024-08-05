@@ -28,11 +28,9 @@ import { NodeFactory } from '../NodeFactory.js';
 /**
  * Generates an error node containing the erroneous expression.
  *
- * @param {TexParser} parser The node factory.
- * @param factory
- * @param {string} message The error message (which is ignored).
- * @param {string} id The error id (which is ignored).
- * @param _id
+ * @param {NodeFactory} factory The node factory.
+ * @param {string} message The error message.
+ * @param {string} _id The error id (which is ignored).
  * @param {string} expr The original LaTeX expression.
  */
 function noErrors(

@@ -123,7 +123,6 @@ export class ColorModel {
 /**
  * Get an rgb color.
  *
- * @param {OptionList} parserOptions The parser options object.
  * @param {string} rgb The color definition in rgb: `0.5,0,1`.
  * @returns {string} The color definition in CSS format e.g. `#44ff00`.
  */
@@ -169,7 +168,6 @@ ColorModelProcessors.set('rgb', function (rgb: string): string {
 /**
  * Get an RGB color.
  *
- * @param {OptionList} parserOptions The parser options object.
  * @param {string} rgb The color definition in RGB: `128,0,255`.
  * @returns {string} The color definition in CSS format e.g. `#44ff00`.
  */
@@ -213,7 +211,6 @@ ColorModelProcessors.set('RGB', function (rgb: string): string {
 /**
  * Get a gray-scale value.
  *
- * @param {OptionList} parserOptions The parser options object.
  * @param {string} gray The color definition in RGB: `0.5`.
  * @returns {string} The color definition in CSS format e.g. `#808080`.
  */

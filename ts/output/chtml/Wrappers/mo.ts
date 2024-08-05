@@ -100,6 +100,10 @@ export interface ChtmlMoClass<N, T, D>
 
 /**
  * The ChtmlMo wrapper class for the MmlMo class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
   const Base = CommonMoMixin<

@@ -68,7 +68,7 @@ export class LinkedomAdaptor extends NodeMixin<
  *
  * @param {any} parseHTML       The linkedom HTML parser to use for this adaptor
  * @param options
- * @returns {LinkeddomAdaptor}   The newly created adaptor
+ * @returns {LinkedomAdaptor}   The newly created adaptor
  */
 export function linkedomAdaptor(
   parseHTML: any,

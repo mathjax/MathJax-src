@@ -143,7 +143,7 @@ export interface LazyMathItem<N, T, D> extends MathItem<N, T, D> {
  * The mixin for adding lazy typesetting to MathItems
  *
  * @param {B} BaseMathItem      The MathItem class to be extended
- * @returns {AssistiveMathItem}  The augmented MathItem class
+ * @returns {LazyMathItem}  The augmented MathItem class
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
@@ -738,8 +738,8 @@ export function LazyMathDocumentMixin<
 /**
  * Add lazy typesetting support to a Handler instance
  *
- * @param {Handler} handler   The Handler instance to enhance
- * @returns {Handler}          The handler that was modified (for purposes of chaining extensions)
+ * @param {HTMLHandler} handler   The Handler instance to enhance
+ * @returns {HTMLHandler}          The handler that was modified (for purposes of chaining extensions)
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class

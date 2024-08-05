@@ -1654,10 +1654,10 @@ export class Menu {
    * Create JSON for a variable controlling a menu setting
    *
    * @param {keyof MenuSettings} name   The setting for which to make a variable
-   * @param {(T) => void} action        Optional function to perform after setting the value
+   * @param {(value: T) => void} action Optional function to perform after setting the value
    * @returns {object}                  The JSON for the variable
    *
-   * @tempate T    The type of variable being defined
+   * @template T    The type of variable being defined
    */
   public variable<T extends string | boolean>(
     name: keyof MenuSettings,
@@ -1681,7 +1681,7 @@ export class Menu {
    * @param action
    * @returns {object}                  The JSON for the variable
    *
-   * @tempate T    The type of variable being defined
+   * @template T    The type of variable being defined
    */
   public a11yVar<T extends string | boolean>(
     name: keyof MenuSettings,

@@ -153,7 +153,7 @@ export default class ParseOptions {
 
   /**
    * @class
-   * @param {Configuration} configuration Configuration object of the current
+   * @param {ParserConfiguration} configuration Configuration object of the current
    *     TeX parser.
    * @param {OptionList[]} options   [TeX options, Tag options, {packages}]
    */

@@ -39,7 +39,7 @@ export type Delims = [string, string];
  *  Locates TeX expressions within strings
  */
 
-/*
+/**
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class

@@ -66,7 +66,7 @@ export interface KeyExplorer extends Explorer {
   /**
    * Move made on keypress.
    *
-   * @param key The key code of the pressed key.
+   * @param event The keyboard event when a key is pressed.
    */
   Move(event: KeyboardEvent): void;
 
@@ -84,8 +84,10 @@ const nav = roles.map((x) => `[role="${x}"]`).join(',');
 const prevNav = roles.map((x) => `[tabindex="0"][role="${x}"]`).join(',');
 
 /**
+ * Predicate to check if element is a MJX container.
  *
- * @param el
+ * @param el The HTML element.
+ * @returns True if the element is an mjx-container.
  */
 function isContainer(el: HTMLElement) {
   return el.matches('mjx-container');
@@ -118,6 +120,8 @@ export class SpeechExplorer
 
   /**
    * Convenience getter for generator pool of the item.
+   *
+   * @returns The item's generator pool.
    */
   private get generators() {
     return this.item?.generatorPool;
@@ -436,16 +440,16 @@ export class SpeechExplorer
   }
 
   /**
-   * @param document
-   * @param pool
-   * @param region
-   * @param node
-   * @param brailleRegion
-   * @param magnifyRegion
-   * @param _mml
-   * @param item
+   * @param document The accessible math document.
+   * @param pool The explorer pool.
+   * @param region The speech region for the explorer.
+   * @param node The node the explorer is assigned to.
+   * @param brailleRegion The braille region.
+   * @param magnifyRegion The magnification region.
+   * @param _mml The internal math node.
+   * @param item The math item.
    * @class
-   * @augments {AbstractKeyExplorer}
+   * @augments {AbstractExplorer}
    */
   constructor(
     public document: A11yDocument,
@@ -616,8 +620,9 @@ export class SpeechExplorer
    * Programmatically triggers a link if the focused node contains one.
    *
    * @param {KeyboardEvent} event The keyboard event for the last keydown event.
+   * @returns {boolean} True if link was successfully triggered.
    */
-  protected triggerLinkKeyboard(event: KeyboardEvent) {
+  protected triggerLinkKeyboard(event: KeyboardEvent): boolean {
     if (event.code !== 'Enter') {
       return false;
     }
@@ -644,8 +649,10 @@ export class SpeechExplorer
 
   /**
    * Programmatically triggers a link if the clicked mouse event contains one.
+   * 
+   * @returns {boolean} True if link was successfully triggered.
    */
-  protected triggerLinkMouse() {
+  protected triggerLinkMouse(): boolean {
     let node = this.current;
     while (node && node !== this.node) {
       if (this.triggerLink(node)) {

@@ -46,7 +46,6 @@ export interface PrioritizedListItem<DataClass> {
  *
  * @template DataClass   The class of data stored in the list
  */
-
 export class PrioritizedList<DataClass> {
   /**
    * The default priority for items added to the list

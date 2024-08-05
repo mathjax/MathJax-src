@@ -611,7 +611,7 @@ export class ChtmlFontData extends FontData<
   }
 
   /**
-   * @param {ChtmlCharoptions} options   The character options
+   * @param {ChtmlCharOptions} options   The character options
    * @param {StyleData} css              The style object to adjust
    */
   protected checkCombiningChar(options: ChtmlCharOptions, css: StyleData) {

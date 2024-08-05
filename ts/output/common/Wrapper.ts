@@ -1044,10 +1044,8 @@ export class CommonWrapper<
   /**
    * Get the spacing using the TeX rules
    *
-   * @param isTop
-   * @parm {boolean} isTop       True when this is a top-level embellished operator
-   * @param hasSpacing
-   * @parm {boolean} hasSpacing  True when there is an explicit or inherited 'form' attribute
+   * @param {boolean} isTop       True when this is a top-level embellished operator
+   * @param {boolean} hasSpacing  True when there is an explicit or inherited 'form' attribute
    */
   protected getTeXSpacing(isTop: boolean, hasSpacing: boolean) {
     if (!hasSpacing) {
@@ -1366,7 +1364,7 @@ export class CommonWrapper<
 
   /**
    * @param {string} kind             The kind of MmlNode to create
-   * @param {ProperyList} properties  The properties to set initially
+   * @param {PropertyList} properties The properties to set initially
    * @param {MmlNode[]} children      The child nodes to add to the created node
    * @returns {MmlNode}                The newly created MmlNode
    */
@@ -1387,7 +1385,7 @@ export class CommonWrapper<
    *   link it in, and give it the right defaults.
    *
    * @param {string} text   The text for the wrapped element
-   * @returns {CommonMO}     The wrapped MmlMo node
+   * @returns {CommonMo}     The wrapped MmlMo node
    */
   protected createMo(
     text: string
@@ -1405,7 +1403,7 @@ export class CommonWrapper<
   /**
    * @param {string} variant   The variant in which to look for the character
    * @param {number} n         The number of the character to look up
-   * @returns {CharData}        The full CharData object, with CharOptions guaranteed to be defined
+   * @returns {CharDataArray}  The full CharData object, with CharOptions guaranteed to be defined
    */
   protected getVariantChar(variant: string, n: number): CharDataArray<CC> {
     const char = this.font.getChar(variant, n) || [

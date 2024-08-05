@@ -74,7 +74,6 @@ export class ListItem<DataClass> {
  *
  * @template DataClass   The type of data stored in the list
  */
-
 export class LinkedList<DataClass> {
   /**
    * The linked list
@@ -242,8 +241,8 @@ export class LinkedList<DataClass> {
    * Insert a new item into a sorted list in the correct locations
    *
    * @param {DataClass} data   The data item to add
-   * @param {SortFn} isBefore   The function used to order the data
-   * @param {LinkedList}        The LinkedList object (for chaining)
+   * @param {SortFn} isBefore  The function used to order the data
+   * @returns {LinkedList}     The LinkedList object (for chaining)
    */
   public insert(data: DataClass, isBefore: SortFn<DataClass> = null) {
     if (isBefore === null) {

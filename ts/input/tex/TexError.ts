@@ -84,12 +84,9 @@ export default class TexError {
 
   /**
    * @class
-   * @param id
-   * @param{string} id        message id (for localization)
-   * @param message
-   * @param{string} message   text of English message
-   * @param {...any} rest
-   * @param{string[]=} rest   any substitution arguments
+   * @param {string} id        message id (for localization)
+   * @param {string} message   text of English message
+   * @param {string[]=} rest   any substitution arguments
    */
   constructor(
     public id: string,

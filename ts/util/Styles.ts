@@ -553,7 +553,7 @@ export class Styles {
   /**
    * @param {string} name   The name of the parent style
    * @param {string} child  The suffix to be added to the parent
-   * @preturn {string}      The combined name
+   * @returns {string}      The combined name
    */
   protected childName(name: string, child: string) {
     //

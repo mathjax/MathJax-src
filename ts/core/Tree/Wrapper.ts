@@ -59,7 +59,7 @@ export interface Wrapper<
    *
    * @param {Node} node   A node to be wrapped
    * @param {any[]} args  Any additional arguments needed when creating the wrapper
-   * @returns {TT}         The wrapped node
+   * @returns {T}         The wrapped node
    */
   wrap<T extends W = W>(node: N, ...args: any[]): T;
 

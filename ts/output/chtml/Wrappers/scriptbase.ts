@@ -127,6 +127,10 @@ export interface ChtmlScriptbaseClass<N, T, D>
 
 /**
  * The ChtmlScriptbase wrapper class for the MmlScriptbase class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const ChtmlScriptbase = (function <N, T, D>(): ChtmlScriptbaseClass<
   N,

@@ -238,7 +238,7 @@ export function CommonTextNodeMixin<
     /**
      * @param {BBox} bbox        The bounding box to update
      * @param {number} h         The height to use
-     * @param {nunber} d         The depth to use
+     * @param {number} d         The depth to use
      * @param {number} w         The width to add
      */
     protected updateBBox(bbox: BBox, h: number, d: number, w: number) {

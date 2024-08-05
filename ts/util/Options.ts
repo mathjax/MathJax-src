@@ -138,7 +138,7 @@ export function makeArray(x: any): any[] {
 /**
  * Get all keys and symbols from an object
  *
- * @param {Optionlist} def        The object whose keys are to be returned
+ * @param {OptionList} def        The object whose keys are to be returned
  * @returns {(string | symbol)[]}  The list of keys for the object
  */
 export function keys(def: OptionList): (string | symbol)[] {

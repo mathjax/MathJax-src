@@ -65,8 +65,7 @@ export interface TokenMap {
   parserFor(token: string): ParseMethod;
 
   /**
-   * @param {TexParser} env The current parser.
-   * @param {string} token A token to parse.
+   * @param {ParseInput} [env, token] The current parser.
    * @returns {ParseResult} The parsed token and the rest of the string.
    */
   parse([env, token]: ParseInput): ParseResult;

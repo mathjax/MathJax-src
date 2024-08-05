@@ -86,6 +86,8 @@ export abstract class AbstractMouseExplorer<T>
  *
  * @class
  * @augments {AbstractMouseExplorer}
+ *
+ * @template T
  */
 export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
   /**
@@ -93,15 +95,13 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
    * @augments {AbstractMouseExplorer<T>}
    *
    * @param {A11yDocument} document The current document.
-   * @param pool
+   * @param {ExplorerPool} pool The explorer pool.
    * @param {Region<T>} region A region to display results.
    * @param {HTMLElement} node The node on which the explorer works.
    * @param {(node: HTMLElement) => boolean} nodeQuery Predicate on nodes that
    *    will fire the hoverer.
    * @param {(node: HTMLElement) => T} nodeAccess Accessor to extract node value
    *    that is passed to the region.
-   *
-   * @template T
    */
   protected constructor(
     public document: A11yDocument,

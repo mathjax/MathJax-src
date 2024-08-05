@@ -105,6 +105,10 @@ export interface SvgMoClass<N, T, D>
 
 /**
  * The SvgMo wrapper class for the MmlMo class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
   const Base = CommonMoMixin<

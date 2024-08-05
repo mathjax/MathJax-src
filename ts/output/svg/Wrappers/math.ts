@@ -128,7 +128,7 @@ export const SvgMath = (function <N, T, D>(): SvgMathClass<N, T, D> {
     public static kind = MmlMath.prototype.kind;
 
     /**
-     * @overreide
+     * @override
      */
     public static styles: StyleList = {
       'mjx-container[jax="SVG"][display="true"]': {

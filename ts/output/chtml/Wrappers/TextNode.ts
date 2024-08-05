@@ -100,6 +100,10 @@ export interface ChtmlTextNodeClass<N, T, D>
 
 /**
  * The ChtmlTextNode wrapper class for the MmlTextNode class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<
   N,

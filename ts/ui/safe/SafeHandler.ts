@@ -54,6 +54,11 @@ export interface SafeMathDocument<N, T, D> extends MathDocument<N, T, D> {
  *
  * @param {B} BaseDocument             The MathDocument class to be extended
  * @returns {SafeMathDocument<N,T,D>}   The extended MathDocument class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ * @template B  The Base document
  */
 export function SafeMathDocumentMixin<
   N,
@@ -102,7 +107,7 @@ export function SafeMathDocumentMixin<
     }
 
     /**
-     * @param {{document:SafeDocument<N,T,D>}} data   The document to use for the filter
+     * @param {{document:SafeMathDocument<N,T,D>}} data   The document to use for the filter
      *                                                (note: this has been bound to the input jax)
      * @param data.math
      * @param data.document
