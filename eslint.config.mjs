@@ -22,7 +22,7 @@ export default tseslint.config({
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-empty-function": "off",
-    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_", "caughtErrorsIgnorePattern": "^_" }],
+    "@typescript-eslint/no-unused-vars": ["error", { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_", "caughtErrorsIgnorePattern": "^_" }],
     "@typescript-eslint/no-empty-object-type": ["error", {"allowInterfaces": "with-single-extends"}],
     "no-inner-declarations": "off",
     "prefer-const": ["error", {"destructuring": "all"}],

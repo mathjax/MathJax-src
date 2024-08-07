@@ -1074,7 +1074,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     while (currentI < endI) {
       try {
         element = parser.GetUpTo(name, ',');
-      } catch (e) {
+      } catch (_e) {
         parser.i = endI;
         elements.push(parser.string.slice(currentI, endI - 1));
         break;

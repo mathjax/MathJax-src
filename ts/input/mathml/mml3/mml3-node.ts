@@ -43,7 +43,7 @@ export function createTransform<N, T, D>(): (node: N, doc: MathDocument<N, T, D>
   const nodeRequire = eval('require');   // get the actual require from node.
   try {
     nodeRequire.resolve('saxon-js');     // check if saxon-js is installed.
-  } catch (err) {
+  } catch (_err) {
     throw Error('Saxon-js not found.  Run the command:\n    npm install saxon-js\nand try again.');
   }
   const Saxon = nodeRequire('saxon-js'); // dynamically load Saxon-JS.
@@ -71,7 +71,7 @@ export function createTransform<N, T, D>(): (node: N, doc: MathDocument<N, T, D>
         sourceText: mml,
         destination: 'serialized'
       }).principalResult))) as N;
-    } catch (err) {
+    } catch (_err) {
       result = node;
     }
     return result;

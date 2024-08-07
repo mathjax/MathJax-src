@@ -61,7 +61,7 @@ export interface NodeStack {
   /**
    * Pushes new nodes onto the items node stack.
    *
-   * @param {MmlNode[]} ...nodes A list of nodes.
+   * @param {MmlNode[]} nodes A list of nodes.
    */
   Push(...nodes: MmlNode[]): void;
 
@@ -228,8 +228,7 @@ export abstract class MmlStack implements NodeStack {
    * Convenience method to create nodes with the node factory on this stack.
    *
    * @param {string} kind The kind of node to create.
-   * @param {any[]} ...rest The remaining arguments for the creation method.
-   * @param {...any} rest
+   * @param {...any} rest The remaining arguments for the creation method.
    * @returns {MmlNode} The newly created node.
    */
   public create(kind: string, ...rest: any[]): MmlNode {

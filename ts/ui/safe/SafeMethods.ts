@@ -154,7 +154,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
       //  Return the div2 style string
       //
       styles = adaptor.allStyles(div2);
-    } catch (err) {
+    } catch (_err) {
       styles = '';
     }
     return styles;

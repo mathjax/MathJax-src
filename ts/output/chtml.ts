@@ -22,7 +22,7 @@
  */
 
 import { CommonOutputJax } from './common.js';
-import { CommonWrapper } from './common/Wrapper.js';
+import { CommonWrapper as _CommonWrapper } from './common/Wrapper.js';
 import { StyleList } from '../util/Styles.js';
 import { StyleList as CssStyleList, CssStyles } from '../util/StyleList.js';
 import { OptionList } from '../util/Options.js';
@@ -237,7 +237,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<
     for (const kind of this.wrapperUsage.update()) {
       const wrapper = this.factory.getNodeClass(
         kind
-      ) as any as typeof CommonWrapper;
+      ) as any as typeof _CommonWrapper;
       wrapper && this.addClassStyles(wrapper, styles);
     }
   }
@@ -245,7 +245,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<
   /**
    * @override
    */
-  protected addClassStyles(wrapper: typeof CommonWrapper, styles: CssStyles) {
+  protected addClassStyles(wrapper: typeof _CommonWrapper, styles: CssStyles) {
     const CLASS = wrapper as typeof ChtmlWrapper;
     if (CLASS.autoStyle && CLASS.kind !== 'unknown') {
       styles.addStyles({

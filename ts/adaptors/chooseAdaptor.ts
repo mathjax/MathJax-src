@@ -29,7 +29,7 @@ let choose;
 try {
   document; // errors if not in browser
   choose = browserAdaptor;
-} catch (e) {
+} catch (_e) {
   choose = liteAdaptor;
 }
 

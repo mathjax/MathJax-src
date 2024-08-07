@@ -60,7 +60,7 @@ export class HtmlNode<N> extends XMLNode {
     //
     try {
       adaptor.getAttribute(html, 'data-mjx-hdw');
-    } catch (error) {
+    } catch (_error) {
       html = adaptor.node('span', {}, [html]);
     }
     return this.setXML(html, adaptor) as HtmlNode<N>;

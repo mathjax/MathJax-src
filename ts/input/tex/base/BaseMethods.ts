@@ -1088,7 +1088,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     let node: MmlNode;
     try {
       node = parser.create('node', kind);
-    } catch (e) {
+    } catch (_e) {
       node = null;
     }
     if (!node || !node.isToken) {

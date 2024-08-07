@@ -53,7 +53,7 @@ export class HTMLHandler<N, T, D> extends AbstractHandler<N, T, D> {
     if (typeof document === 'string') {
       try {
         document = adaptor.parse(document, 'text/html');
-      } catch (err) {
+      } catch (_err) {
         // continue regardless of error
       }
     }
