@@ -36,7 +36,8 @@ export type StackItemConfig = { [kind: string]: StackItemClass };
 export type TagsConfig = { [kind: string]: TagsClass };
 export type Processor<T> = [T, number];
 export type ProtoProcessor<T> = Processor<T> | T;
-export type ProcessorList = Processor<Function>[];
+type ProcessorMethod = (data: any) => void;
+export type ProcessorList = Processor<ProcessorMethod>[];
 export type ConfigMethod = (
   c: ParserConfiguration,
   j: TeX<any, any, any>
@@ -75,8 +76,8 @@ export class Configuration {
       [ConfigurationType.TAGS]?: TagsConfig;
       [ConfigurationType.OPTIONS]?: OptionList;
       [ConfigurationType.NODES]?: { [key: string]: any };
-      [ConfigurationType.PREPROCESSORS]?: ProtoProcessor<Function>[];
-      [ConfigurationType.POSTPROCESSORS]?: ProtoProcessor<Function>[];
+      [ConfigurationType.PREPROCESSORS]?: ProtoProcessor<ProcessorMethod>[];
+      [ConfigurationType.POSTPROCESSORS]?: ProtoProcessor<ProcessorMethod>[];
       [ConfigurationType.INIT]?: ProtoProcessor<InitMethod>;
       [ConfigurationType.CONFIG]?: ProtoProcessor<ConfigMethod>;
       [ConfigurationType.PRIORITY]?: number;
@@ -144,8 +145,8 @@ export class Configuration {
       [ConfigurationType.TAGS]?: TagsConfig;
       [ConfigurationType.OPTIONS]?: OptionList;
       [ConfigurationType.NODES]?: { [key: string]: any };
-      [ConfigurationType.PREPROCESSORS]?: ProtoProcessor<Function>[];
-      [ConfigurationType.POSTPROCESSORS]?: ProtoProcessor<Function>[];
+      [ConfigurationType.PREPROCESSORS]?: ProtoProcessor<ProcessorMethod>[];
+      [ConfigurationType.POSTPROCESSORS]?: ProtoProcessor<ProcessorMethod>[];
       [ConfigurationType.INIT]?: ProtoProcessor<InitMethod>;
       [ConfigurationType.CONFIG]?: ProtoProcessor<ConfigMethod>;
       [ConfigurationType.PRIORITY]?: number;
@@ -172,8 +173,8 @@ export class Configuration {
       [ConfigurationType.TAGS]?: TagsConfig;
       [ConfigurationType.OPTIONS]?: OptionList;
       [ConfigurationType.NODES]?: { [key: string]: any };
-      [ConfigurationType.PREPROCESSORS]?: ProtoProcessor<Function>[];
-      [ConfigurationType.POSTPROCESSORS]?: ProtoProcessor<Function>[];
+      [ConfigurationType.PREPROCESSORS]?: ProtoProcessor<ProcessorMethod>[];
+      [ConfigurationType.POSTPROCESSORS]?: ProtoProcessor<ProcessorMethod>[];
       [ConfigurationType.INIT]?: ProtoProcessor<InitMethod>;
       [ConfigurationType.CONFIG]?: ProtoProcessor<ConfigMethod>;
       [ConfigurationType.PRIORITY]?: number;
@@ -184,18 +185,21 @@ export class Configuration {
   }
 
   /**
-   * @param name
-   * @param handler
-   * @param fallback
-   * @param items
-   * @param tags
-   * @param options
-   * @param preprocessors
-   * @param postprocessors
-   * @param initMethod
-   * @param configMethod
-   * @param priority
-   * @param parser
+   * @param name package name for the configuration
+   * @param handler  configuration mapping handler types to lists of token mappings.
+   * @param fallback configuration mapping handler types to fallback methods.
+   * @param items for the StackItem factory.
+   * @param tags mapping tagging configurations to tagging objects.
+   * @param options parse options for the packages.
+   * @param nodes for the Node factory.
+   * @param preprocessors list of functions for preprocessing the LaTeX
+   *      string wrt. to given parse options. Can contain a priority.
+   * @param postprocessors list of functions for postprocessing the MmlNode
+   *      wrt. to given parse options. Can contain a priority.
+   * @param initMethod init method and optionally its priority.
+   * @param configMethod config method and optionally its priority.
+   * @param priority default priority of the configuration.
+   * @param parser the name of the parser that this configuration targets.
    * @class
    */
   private constructor(
@@ -227,7 +231,7 @@ export class Configuration {
   /**
    * The init method.
    *
-   * @type {Function}
+   * @type {ProcessorMethod}
    */
   public get init(): InitMethod {
     return this.initMethod ? this.initMethod[0] : null;
@@ -384,7 +388,7 @@ export class ParserConfiguration {
   /**
    * Retrieves and adds configuration for a package with priority.
    *
-   * @param {(string | [string, number]} pkg Package with priority.
+   * @param {string | [string, number]} pkg Package with priority.
    */
   public addPackage(pkg: string | [string, number]) {
     const name = typeof pkg === 'string' ? pkg : pkg[0];
@@ -461,7 +465,7 @@ export class ParserConfiguration {
   /**
    * Adds pre- and postprocessor as filters to the jax.
    *
-   * @param {TeX<any} jax The TeX Jax.
+   * @param {TeX} jax The TeX Jax.
    * @param {Configuration} config The configuration whose processors are added.
    */
   private addFilters(jax: TeX<any, any, any>, config: Configuration) {
