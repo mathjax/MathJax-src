@@ -1373,8 +1373,7 @@ export abstract class AbstractMmlEmptyNode
   /**
    * No children or attributes, so ignore this call.
    *
-   * @param {PropertyList} options  The options for the check
-   * @param _options
+   * @param {PropertyList} _options  The options for the check
    */
   public verifyTree(_options: PropertyList) {}
 
@@ -1433,6 +1432,7 @@ export class TextNode extends AbstractMmlEmptyNode {
 
   /**
    * Just use the text
+   * @override
    */
   public toString() {
     return this.text;
@@ -1501,6 +1501,7 @@ export class XMLNode extends AbstractMmlEmptyNode {
 
   /**
    * Just indicate that this is XML data
+   * @override
    */
   public toString() {
     return 'XML data';

@@ -312,7 +312,7 @@ export class Package {
   /**
    * Load using a custom require method (usually the one from node.js)
    *
-   * @param url
+   * @param {string} url The URL to load from
    */
   protected loadCustom(url: string) {
     try {
@@ -334,7 +334,7 @@ export class Package {
   /**
    * Load in a browser by inserting a script to load the proper URL
    *
-   * @param url
+   * @param {string} url The URL to load from
    */
   protected loadScript(url: string) {
     const script = document.createElement('script');

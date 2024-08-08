@@ -1130,8 +1130,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
    * Generates the vector nabla depending on the arrowdel option.
    *
    * @param {TexParser} parser The calling parser.
-   * @param {string} name The macro name.
-   * @param _name
+   * @param {string} _name The macro name.
    */
   Vnabla(parser: TexParser, _name: string) {
     const argument = parser.options.physics.arrowdel
@@ -1146,8 +1145,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
    * Generates the differential d depending on the italicdiff option.
    *
    * @param {TexParser} parser The calling parser.
-   * @param {string} name The macro name.
-   * @param _name
+   * @param {string} _name The macro name.
    */
   DiffD(parser: TexParser, _name: string) {
     const argument = parser.options.physics.italicdiff ? 'd' : '{\\rm d}';

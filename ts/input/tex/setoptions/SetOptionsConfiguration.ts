@@ -111,12 +111,9 @@ export const SetOptionsUtil = {
   /**
    * Verify an option's value before setting it.
    *
-   * @param {TexParser} parser   The active tex parser.
-   * @param {string} extension   The name of the package whose option this is.
-   * @param {string} option      The name of the option being set.
-   * @param _parser
-   * @param _extension
-   * @param _option
+   * @param {TexParser} _parser   The active tex parser.
+   * @param {string} _extension   The name of the package whose option this is.
+   * @param {string} _option      The name of the option being set.
    * @param {string} value       The value to give to the option.
    * @returns {string}            The (possibly modified) value for the option
    */
@@ -159,8 +156,7 @@ const setOptionsMap = new CommandMap('setoptions', {
  *   and define a macro that loads the extension and sets
  *   its options, if any.
  *
- * @param {ParserConfiguration} config  The current configuration.
- * @param _config
+ * @param {ParserConfiguration} _config The current configuration.
  * @param {TeX} jax                     The active tex input jax.
  */
 function setoptionsConfig(

@@ -48,8 +48,7 @@ export class HandlerList<N, T, D> extends PrioritizedList<Handler<N, T, D>> {
   }
 
   /**
-   * @param {Handler} Handler  The handler to remove from the list
-   * @param handler
+   * @param {Handler} handler  The handler to remove from the list
    */
   public unregister(handler: Handler<N, T, D>) {
     this.remove(handler);

@@ -245,8 +245,7 @@ export class MathMLCompile<N, T, D> {
   /**
    * Provide a hook for the Safe extension to filter attribute values.
    *
-   * @param {string} name   The name of an attribute to filter
-   * @param _name
+   * @param {string} _name  The name of an attribute to filter
    * @param {string} value  The value to filter
    */
   protected filterAttribute(_name: string, value: string) {

@@ -29,12 +29,9 @@ import { Args, Attributes, ParseMethod } from './Types.js';
 export class Token {
   /**
    * @class
-   * @param {string} token The token parsed.
-   * @param {string} char The corresponding translation.
-   * @param _token
-   * @param _char
-   * @param _attributes
-   * @param {Attributes} attributes The attributes for the translation.
+   * @param {string} _token The token parsed.
+   * @param {string} _char The corresponding translation.
+   * @param {Attributes} _attributes The attributes for the translation.
    */
   constructor(
     private _token: string,
@@ -58,12 +55,9 @@ export class Token {
 export class Macro {
   /**
    * @class
-   * @param {string} token The token parsed
-   * @param {ParseMethod} func The parsing function for that token.
-   * @param _token
-   * @param _func
-   * @param _args
-   * @param {Args[]} args Additional arguments for the function.
+   * @param {string} _token The token parsed
+   * @param {ParseMethod} _func The parsing function for that token.
+   * @param {Args[]} _args Additional arguments for the function.
    */
   constructor(
     private _token: string,

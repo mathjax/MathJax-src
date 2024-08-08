@@ -125,8 +125,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * Handle {
    *
    * @param {TexParser} parser The calling parser.
-   * @param {string} c The parsed character.
-   * @param _c
+   * @param {string} _c The parsed character.
    */
   Open(parser: TexParser, _c: string) {
     // @test Identifier Font, Prime, Prime with subscript
@@ -137,8 +136,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * Handle }
    *
    * @param {TexParser} parser The calling parser.
-   * @param {string} c The parsed character.
-   * @param _c
+   * @param {string} _c The parsed character.
    */
   Close(parser: TexParser, _c: string) {
     // @test Identifier Font, Prime, Prime with subscript
@@ -166,8 +164,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * Handle tilde and spaces.
    *
    * @param {TexParser} parser The calling parser.
-   * @param {string} c The parsed character.
-   * @param _c
+   * @param {string} _c The parsed character.
    */
   Tilde(parser: TexParser, _c: string) {
     // @test Tilde, Tilde2
@@ -177,10 +174,8 @@ const BaseMethods: { [key: string]: ParseMethod } = {
   /**
    * Handling space, by doing nothing.
    *
-   * @param {TexParser} parser The calling parser.
-   * @param {string} c The parsed character.
-   * @param _parser
-   * @param _c
+   * @param {TexParser} _parser The calling parser.
+   * @param {string} _c The parsed character.
    */
   Space(_parser: TexParser, _c: string) {},
 
@@ -188,8 +183,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * Handle ^
    *
    * @param {TexParser} parser The calling parser.
-   * @param {string} c The parsed character.
-   * @param _c
+   * @param {string} _c The parsed character.
    */
   Superscript(parser: TexParser, _c: string) {
     if (parser.GetNext().match(/\d/)) {
@@ -266,8 +260,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * Handle _
    *
    * @param {TexParser} parser The calling parser.
-   * @param {string} c The parsed character.
-   * @param _c
+   * @param {string} _c The parsed character.
    */
   Subscript(parser: TexParser, _c: string) {
     if (parser.GetNext().match(/\d/)) {
@@ -382,8 +375,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * Handle comments
    *
    * @param {TexParser} parser The calling parser.
-   * @param {string} c The parsed character.
-   * @param _c
+   * @param {string} _c The parsed character.
    */
   Comment(parser: TexParser, _c: string) {
     while (
@@ -397,10 +389,8 @@ const BaseMethods: { [key: string]: ParseMethod } = {
   /**
    * Handle hash marks outside of definitions
    *
-   * @param {TexParser} parser The calling parser.
-   * @param {string} c The parsed character.
-   * @param _parser
-   * @param _c
+   * @param {TexParser} _parser The calling parser.
+   * @param {string} _c The parsed character.
    */
   Hash(_parser: TexParser, _c: string) {
     // @test Hash Error
@@ -413,10 +403,10 @@ const BaseMethods: { [key: string]: ParseMethod } = {
   /**
    * Handle \mathrm, \mathbf, etc, allowing for multi-letter runs to be one <mi>.
    *
-   * @param parser
-   * @param name
-   * @param variant
-   * @param italic
+   * @param {TexParser} parser The calling parser.
+   * @param {string} name The macro name.
+   * @param {string} variant The font variant.
+   * @param {string} italic Optionally, the italic font name.
    */
   MathFont(
     parser: TexParser,
@@ -443,8 +433,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * Setting font, e.g., via \\rm, \\bf etc.
    *
    * @param {TexParser} parser The calling parser.
-   * @param {string} name The macro name.
-   * @param _name
+   * @param {string} _name The macro name.
    * @param {string} font The font name.
    */
   SetFont(parser: TexParser, _name: string, font: string) {
@@ -456,8 +445,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * Setting style, e.g., via \\displaystyle, \\textstyle, etc.
    *
    * @param {TexParser} parser The calling parser.
-   * @param {string} name The macro name.
-   * @param _name
+   * @param {string} _name The macro name.
    * @param {string} texStyle The tex style name: D, T, S, SS
    * @param {boolean} style True if we are in displaystyle.
    * @param {string} level The nesting level for scripts.
@@ -482,8 +470,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * Setting size of an expression, e.g., \\small, \\huge.
    *
    * @param {TexParser} parser The calling parser.
-   * @param {string} name The macro name.
-   * @param _name
+   * @param {string} _name The macro name.
    * @param {number} size The size value.
    */
   SetSize(parser: TexParser, _name: string, size: number) {
@@ -499,8 +486,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * Setting explicit spaces, e.g., via commata or colons.
    *
    * @param {TexParser} parser The calling parser.
-   * @param {string} name The macro name.
-   * @param _name
+   * @param {string} _name The macro name.
    * @param {string} space The space value.
    */
   Spacer(parser: TexParser, _name: string, space: number) {
@@ -1145,8 +1131,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * Handle strut.
    *
    * @param {TexParser} parser The calling parser.
-   * @param {string} name The macro name.
-   * @param _name
+   * @param {string} _name The macro name.
    */
   Strut(parser: TexParser, _name: string) {
     // @test Strut
@@ -1292,7 +1277,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
-   * @param nobreak
+   * @param {boolean} nobreak Flag indicating if it is a linebreaking command.
    */
   Hskip(parser: TexParser, name: string, nobreak: boolean = false) {
     // @test Modulo
@@ -1307,8 +1292,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * Handle removal of spaces in script modes
    *
    * @param {TexParser} parser The calling parser.
-   * @param {string} name The macro name.
-   * @param _name
+   * @param {string} _name The macro name.
    */
   Nonscript(parser: TexParser, _name: string) {
     parser.Push(parser.itemFactory.create('nonscript'));
@@ -1499,8 +1483,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * Handle \\not.
    *
    * @param {TexParser} parser The calling parser.
-   * @param {string} name The macro name.
-   * @param _name
+   * @param {string} _name The macro name.
    */
   Not(parser: TexParser, _name: string) {
     // @test Negation Simple, Negation Complex, Negation Explicit,
@@ -1512,8 +1495,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * Handle dots.
    *
    * @param {TexParser} parser The calling parser.
-   * @param {string} name The macro name.
-   * @param _name
+   * @param {string} _name The macro name.
    */
   Dots(parser: TexParser, _name: string) {
     // @test Operator Dots
@@ -1543,8 +1525,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * Handle small matrix environments.
    *
    * @param {TexParser} parser The calling parser.
-   * @param {string} name The macro name.
-   * @param _name
+   * @param {string} _name The macro name.
    * @param {string} open Opening fence.
    * @param {string} close Closing fence.
    * @param {string} align Column alignment.
@@ -1803,8 +1784,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * Handle horizontal lines in arrays.
    *
    * @param {TexParser} parser The calling parser.
-   * @param {string} name The macro name.
-   * @param _name
+   * @param {string} _name The macro name.
    * @param {string} style Style of the line. E.g., dashed.
    */
   HLine(parser: TexParser, _name: string, style: string) {
@@ -1836,8 +1816,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * Handle hfill commands.
    *
    * @param {TexParser} parser The calling parser.
-   * @param {string} name The macro name.
-   * @param _name
+   * @param {string} _name The macro name.
    */
   HFill(parser: TexParser, _name: string) {
     const top = parser.stack.Top();
@@ -2158,8 +2137,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * Handles no tag commands.
    *
    * @param {TexParser} parser The calling parser.
-   * @param {string} name The macro name.
-   * @param _name
+   * @param {string} _name The macro name.
    */
   HandleNoTag(parser: TexParser, _name: string) {
     parser.tags.notag();

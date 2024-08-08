@@ -88,8 +88,8 @@ export abstract class AbstractTokenMap<T> implements TokenMap {
   /**
    * @class
    * @implements {TokenMap}
-   * @param {string} name Name of the mapping.
-   * @param {ParseMethod} parser The parser for the mappiong.
+   * @param {string} _name Name of the mapping.
+   * @param {ParseMethod} _parser The parser for the mappiong.
    */
   constructor(
     private _name: string,

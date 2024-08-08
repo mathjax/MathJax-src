@@ -45,9 +45,9 @@ export class JsdomAdaptor extends NodeMixin<
 /**
  * Function for creating an HTML adaptor using jsdom
  *
- * @param {any} JSDOM      The jsdom object to use for this adaptor
- * @param options
- * @returns {HTMLAdaptor}   The newly created adaptor
+ * @param {any} JSDOM          The jsdom object to use for this adaptor
+ * @param {OptionList} options The options for the adaptor
+ * @returns {HTMLAdaptor}      The newly created adaptor
  */
 export function jsdomAdaptor(
   JSDOM: any,

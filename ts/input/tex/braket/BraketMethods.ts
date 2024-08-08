@@ -33,8 +33,7 @@ const BraketMethods: { [key: string]: ParseMethod } = {
    * Generate a bra-ket expression.
    *
    * @param {TexParser} parser The current TeX parser.
-   * @param {string} name Name of the current control sequence.
-   * @param _name
+   * @param {string} _name Name of the current control sequence.
    * @param {string} open Opening delimiter.
    * @param {string} close Closing delimiter.
    * @param {boolean} stretchy Is it stretchy.

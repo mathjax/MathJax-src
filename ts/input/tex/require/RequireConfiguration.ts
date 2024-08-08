@@ -190,8 +190,8 @@ export function RequireLoad(parser: TexParser, name: string) {
 /**
  * Save the jax so that it can be used when \require{} is processed.
  *
- * @param _config
- * @param jax
+ * @param _config The parserconfiguration.
+ * @param jax The current TeX jax.
  */
 function config(_config: ParserConfiguration, jax: TeX<any, any, any>) {
   /* prettier-ignore */

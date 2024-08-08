@@ -571,8 +571,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
    * Record presence of \shoveleft and \shoveright
    *
    * @param {TexParser} parser The calling parser.
-   * @param {string} name The macro name.
-   * @param _name
+   * @param {string} _name The macro name.
    * @param {string} shove The shove value.
    */
   HandleShove(parser: TexParser, _name: string, shove: string) {

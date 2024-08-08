@@ -32,8 +32,7 @@ import BaseMethods from '../base/BaseMethods.js';
 export const TextMacrosMethods = {
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} c            The character that called this function
-   * @param _c
+   * @param {string} _c           The character that called this function
    */
   Comment(parser: TextParser, _c: string) {
     while (
@@ -117,8 +116,7 @@ export const TextMacrosMethods = {
 
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} c            The character that called this function
-   * @param _c
+   * @param {string} _c           The character that called this function
    */
   OpenBrace(parser: TextParser, _c: string) {
     //
@@ -132,8 +130,7 @@ export const TextMacrosMethods = {
 
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} c            The character that called this function
-   * @param _c
+   * @param {string} _c            The character that called this function
    */
   CloseBrace(parser: TextParser, _c: string) {
     //
@@ -184,8 +181,7 @@ export const TextMacrosMethods = {
 
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} c            The character that called this function
-   * @param _c
+   * @param {string} _c           The character that called this function
    */
   Tilde(parser: TextParser, _c: string) {
     parser.text += '\u00A0'; // non-breaking space
@@ -193,8 +189,7 @@ export const TextMacrosMethods = {
 
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} c            The character that called this function
-   * @param _c
+   * @param {string} _c           The character that called this function
    */
   Space(parser: TextParser, _c: string) {
     parser.text += ' '; // regular space, but skipping multiple spaces
@@ -211,8 +206,7 @@ export const TextMacrosMethods = {
 
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} name         The control sequence that called this function
-   * @param _name
+   * @param {string} _name        The control sequence that called this function
    * @param {string} c            The character to insert into the string
    */
   Insert(parser: TextParser, _name: string, c: string) {
@@ -250,7 +244,7 @@ export const TextMacrosMethods = {
   /**
    * @param {TextParser} parser   The text-mode parser
    * @param {string} name         The control sequence that called this function
-   * @param variant
+   * @param variant               The font variant
    */
   TextFont(parser: TextParser, name: string, variant: string) {
     parser.saveText();
@@ -259,8 +253,7 @@ export const TextMacrosMethods = {
 
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} name         The control sequence that called this function
-   * @param _name
+   * @param {string} _name        The control sequence that called this function
    * @param {string} variant      The font variant to use from now on
    */
   SetFont(parser: TextParser, _name: string, variant: string) {
@@ -270,8 +263,7 @@ export const TextMacrosMethods = {
 
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} name         The control sequence that called this function
-   * @param _name
+   * @param {string} _name        The control sequence that called this function
    * @param {number} size         The font size to use from now on
    */
   SetSize(parser: TextParser, _name: string, size: number) {

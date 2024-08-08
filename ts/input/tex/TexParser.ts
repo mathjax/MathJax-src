@@ -311,10 +311,8 @@ export default class TexParser {
    * Get and return a TeX argument (either a single character or control
    * sequence, or the contents of the next set of braces).
    *
-   * @param {string} name Name of the current control sequence.
-   * @param {boolean} noneOK? True if no argument is OK.
-   * @param _name
-   * @param noneOK
+   * @param {string} _name Name of the current control sequence.
+   * @param {boolean} noneOK True if no argument is OK.
    * @returns {string} The next argument.
    */
   public GetArgument(_name: string, noneOK?: boolean): string {
@@ -489,8 +487,7 @@ export default class TexParser {
   /**
    *  Get everything up to the given control sequence (token)
    *
-   * @param {string} name Name of the current control sequence.
-   * @param _name
+   * @param {string} _name Name of the current control sequence.
    * @param {string} token The element until where to parse.
    * @returns {string} The text between the current position and the given token.
    */

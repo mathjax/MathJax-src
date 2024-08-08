@@ -115,8 +115,7 @@ function internalMath(
 export const TextMacrosConfiguration = Configuration.create('textmacros', {
   [ConfigurationType.PRIORITY]: 1,
   /**
-   * @param {ParserConfiguration} config   The configuration object we are being configured within
-   * @param _config
+   * @param {ParserConfiguration} _config  The configuration object we are being configured within
    * @param {TeX<any,any,any>} jax         The TeX input jax in which we are running
    */
   config(_config: ParserConfiguration, jax: TeX<any, any, any>) {

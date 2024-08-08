@@ -348,7 +348,7 @@ export namespace Startup {
   /**
    * Perform the typesetting with handling of retries
    *
-   * @param elements
+   * @param elements The list of elements to typeset
    */
   export function typesetPromise(elements: any[]) {
     document.options.elements = elements;

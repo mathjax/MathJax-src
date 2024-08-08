@@ -81,8 +81,7 @@ export const OPTIONS = {
    * Function to report messages for invalid options
    *
    * @param {string} message   The message for the invalid parameter.
-   * @param {string} key       The invalid key itself.
-   * @param _key
+   * @param {string} _key      The invalid key itself.
    */
   optionError: (message: string, _key: string) => {
     if (OPTIONS.invalidOption === 'fatal') {
@@ -118,7 +117,7 @@ export class Expandable {}
  *
  * without reporting an error.
  *
- * @param def
+ * @param def The options list
  */
 export function expandable(def: OptionList) {
   return Object.assign(Object.create(Expandable.prototype), def);
@@ -128,7 +127,8 @@ export function expandable(def: OptionList) {
 /**
  *  Make sure an option is an Array
  *
- * @param x
+ * @param {any} x The object to turn into an array
+ * @returns {any[]} The array object containing x
  */
 export function makeArray(x: any): any[] {
   return Array.isArray(x) ? x : [x];

@@ -58,7 +58,6 @@ export class LiteBase extends AbstractDOMAdaptor<
   public parser: LiteParser;
 
   /**
-   * @param {OptionList} options  The options for the lite adaptor (e.g., fontSize)
    * @class
    */
   constructor() {

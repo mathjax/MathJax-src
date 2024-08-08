@@ -509,8 +509,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
    * Implements \shortvdotswithin.
    *
    * @param {TexParser} parser   The calling parser.
-   * @param {string} name        The macro name.
-   * @param _name
+   * @param {string} _name       The macro name.
    */
   ShortVDotsWithin(parser: TexParser, _name: string) {
     const top = parser.stack.Top() as EqnArrayItem;
@@ -678,8 +677,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
    * Implements \centeredcolon, \ordinarycolon, \MTThinColon.
    *
    * @param {TexParser} parser   The calling parser.
-   * @param {string} name        The macro name.
-   * @param _name
+   * @param {string} _name        The macro name.
    * @param {boolean} center     True if colon should be centered
    * @param {boolean} force      True menas always center (don't use centercolon option).
    * @param {boolean} thin       True if this is a thin color (for \coloneqq, etc).
@@ -711,8 +709,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
    * Implements \coloneqq and related macros.
    *
    * @param {TexParser} parser   The calling parser.
-   * @param {string} name        The macro name.
-   * @param _name
+   * @param {string} _name       The macro name.
    * @param {string} tex         The tex string to use (if not using unicode versions or if there isn't one).
    * @param {string} unicode     The unicode character (if there is one).
    */
@@ -740,8 +737,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
    * Implements \ndownarrow and \nuparrow via a terrible hack (visual only, no chance of this working with SRE).
    *
    * @param {TexParser} parser   The calling parser.
-   * @param {string} name        The macro name.
-   * @param _name
+   * @param {string} _name       The macro name.
    * @param {string} c           The base arrow for the slashed version
    * @param {string} dy          A vertical offset for the slash
    */

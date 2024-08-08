@@ -308,8 +308,7 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
    * Sets line style for inference rules.
    *
    * @param {TexParser} parser The current parser.
-   * @param {string} name The name of the command.
-   * @param _name
+   * @param {string} _name The name of the command.
    * @param {string} style The line style to set.
    * @param {boolean} always Set as permanent style.
    */
@@ -332,8 +331,7 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
    * Implements commands indicating where the root of the proof tree is.
    *
    * @param {TexParser} parser The current parser.
-   * @param {string} name The name of the command.
-   * @param _name
+   * @param {string} _name The name of the command.
    * @param {string} where If true root is at top, otherwise at bottom.
    */
   RootAtTop(parser: TexParser, _name: string, where: boolean) {
@@ -369,10 +367,8 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
   /**
    * Placeholder for Fcenter macro that can be overwritten with renewcommand.
    *
-   * @param {TexParser} parser The current parser.
-   * @param {string} name The name of the command.
-   * @param _parser
-   * @param _name
+   * @param {TexParser} _parser The current parser.
+   * @param {string} _name The name of the command.
    */
   FCenter(_parser: TexParser, _name: string) {},
 

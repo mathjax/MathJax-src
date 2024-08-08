@@ -1256,8 +1256,7 @@ export class CommonWrapper<
   }
 
   /**
-   * @param {number} i   The index of the child element whose alignment is needed
-   * @param _i
+   * @param {number} _i   The index of the child element whose alignment is needed
    * @returns {string}    The alignment child element
    */
   public getChildAlign(_i: number): string {

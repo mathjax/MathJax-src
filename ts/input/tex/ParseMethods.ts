@@ -95,8 +95,7 @@ namespace ParseMethods {
    * Lookup a control-sequence and process it.
    *
    * @param {TexParser} parser The current tex parser.
-   * @param {string} c The string '\'.
-   * @param _c
+   * @param {string} _c The string '\'.
    */
   export function controlSequence(parser: TexParser, _c: string) {
     const name = parser.GetCS();

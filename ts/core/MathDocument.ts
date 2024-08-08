@@ -178,8 +178,7 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
    *   (a blank name is a no-op)
    *
    * @param {string} method1    The method to use for the render() call
-   * @param {string} method1    The method to use for the rerender() and convert() calls
-   * @param method2
+   * @param {string} method2    The method to use for the rerender() and convert() calls
    */
   protected static methodActions(method1: string, method2: string = method1) {
     return [
@@ -507,7 +506,7 @@ export interface MathDocument<N, T, D> {
    *   container has been updated and you want to remove the
    *   associated MathItems)
    *
-   * @param {ContainerList<N>} elements   The container DOM elements whose math items are to be removed
+   * @param {ContainerList<N>} containers  The container DOM elements whose math items are to be removed
    * @returns {MathItem<N,T,D>[]}          The removed MathItems
    */
   clearMathItemsWithin(containers: ContainerList<N>): MathItem<N, T, D>[];

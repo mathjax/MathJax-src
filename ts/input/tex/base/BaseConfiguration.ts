@@ -82,8 +82,7 @@ export function Other(parser: TexParser, char: string) {
 /**
  * Handle undefined control sequence.
  *
- * @param {TexParser} parser The calling parser.
- * @param _parser
+ * @param {TexParser} _parser The calling parser.
  * @param {string} name The name of the control sequence.
  */
 function csUndefined(_parser: TexParser, name: string) {
@@ -98,10 +97,8 @@ function csUndefined(_parser: TexParser, name: string) {
 /**
  * Handle undefined environments.
  *
- * @param {TexParser} parser The calling parser.
- * @param {string} name The name of the control sequence.
- * @param _parser
- * @param env
+ * @param {TexParser} _parser The calling parser.
+ * @param {string} env The name of the environment.
  */
 function envUndefined(_parser: TexParser, env: string) {
   // @test Undefined-Env
@@ -111,7 +108,7 @@ function envUndefined(_parser: TexParser, env: string) {
 /**
  * Filter for removing spacing following \nonscript
  *
- * @param {ParseOptions} root0.data The active tex parser.
+ * @param {ParseOptions} data The active tex parser.
  */
 function filterNonscript({ data }: { data: ParseOptions }) {
   for (const mml of data.getList('nonscript')) {

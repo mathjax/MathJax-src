@@ -91,28 +91,22 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
    */
 
   /**
-   * @param {TextNode} node  The TextNode to visit
-   * @param {any[]} args  Any arguments needed by the visitor
-   * @param _node
-   * @param {...any} _args
+   * @param {TextNode} _node  The TextNode to visit
+   * @param {any[]} _args  Any arguments needed by the visitor
    * @returns {any}  Any return value needed for the visitor
    */
   public visitTextNode(_node: TextNode, ..._args: any[]): any {}
 
   /**
-   * @param {XMLNode} node   The XMLNode to visit
-   * @param {any[]} args     Any arguments needed by the visitor
-   * @param _node
-   * @param {...any} _args
+   * @param {XMLNode} _node   The XMLNode to visit
+   * @param {any[]} _args     Any arguments needed by the visitor
    * @returns {any}           Any return value needed for the visitor
    */
   public visitXMLNode(_node: XMLNode, ..._args: any[]): any {}
 
   /**
-   * @param {HtmlNode} node  The XMLNode to visit
-   * @param {any[]} args     Any arguments needed by the visitor
-   * @param _node
-   * @param {...any} _args
+   * @param {HtmlNode} _node  The XMLNode to visit
+   * @param {any[]} _args     Any arguments needed by the visitor
    * @returns {any}           Any return value needed for the visitor
    */
   public visitHtmlNode(_node: HtmlNode<any>, ..._args: any[]): any {}

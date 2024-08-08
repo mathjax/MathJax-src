@@ -47,8 +47,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
 
   /**
    * @param {TextNode} node  The text node to visit
-   * @param {string} space   The amount of indenting for this node
-   * @param _space
+   * @param {string} _space   The amount of indenting for this node
    * @returns {string}        The (HTML-quoted) text of the node
    */
   public visitTextNode(node: TextNode, _space: string): string {
@@ -66,8 +65,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
 
   /**
    * @param {HtmlNode} node  The HTML node to visit
-   * @param {string} space   The amount of indenting for this node
-   * @param _space
+   * @param {string} _space   The amount of indenting for this node
    * @returns {string}        The serialization of the HTML
    */
   public visitHtmlNode(node: HtmlNode<any>, _space: string): string {

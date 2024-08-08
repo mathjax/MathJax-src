@@ -72,8 +72,7 @@ function configmacrosInit(config: ParserConfiguration) {
 /**
  * Create the user-defined macros and environments from their options
  *
- * @param {Configuration} config   The configuration object for the input jax
- * @param _config
+ * @param {Configuration} _config  The configuration object for the input jax
  * @param {TeX} jax                The TeX input jax
  */
 function configmacrosConfig(_config: ParserConfiguration, jax: TEX) {

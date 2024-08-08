@@ -106,7 +106,8 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
   /**
    * Look up the path in the configuration's source list
    *
-   * @param data
+   * @param data The data object containing the filter functions
+   * @returns True
    */
   source: (data) => {
     if (CONFIG.source.hasOwnProperty(data.name)) {
@@ -118,7 +119,8 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
   /**
    * Add [mathjax] before any relative path, and add .js if needed
    *
-   * @param data
+   * @param data The data object containing the filter functions
+   * @returns True
    */
   normalize: (data) => {
     const name = data.name;
@@ -134,7 +136,8 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
   /**
    * Recursively replace path prefixes (e.g., [mathjax], [tex], etc.)
    *
-   * @param data
+   * @param data The data object containing the filter functions
+   * @returns True
    */
   prefix: (data) => {
     let match;
@@ -281,8 +284,7 @@ export namespace Loader {
    *
    * @param {string} name       The name of the extension being checked
    * @param {string} version    The version of the extension to check
-   * @param {string} type       The type of extension (future code may use this to check ranges of versions)
-   * @param _type
+   * @param {string} _type       The type of extension (future code may use this to check ranges of versions)
    * @returns {boolean}          True if there was a mismatch, false otherwise
    */
   export function checkVersion(
