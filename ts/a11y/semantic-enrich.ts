@@ -242,8 +242,10 @@ export function EnrichedMathItemMixin<
 
     /**
      * Correct the selection values for the maction items from the original MathML
+     *
+     * @returns {string} The updated MathML element.
      */
-    protected adjustSelections() {
+    protected adjustSelections(): string {
       const mml = this.inputData.originalMml;
       if (!this.inputData.hasMaction) return mml;
       const maction = [] as MmlNode[];
@@ -488,6 +490,8 @@ export function EnrichedMathDocumentMixin<
 
     /**
      * Attach speech from a MathItem to a node
+     *
+     * @returns The object for chaining.
      */
     public attachSpeech() {
       if (!this.processed.isSet('attach-speech')) {
@@ -563,6 +567,8 @@ export function EnrichedMathDocumentMixin<
 
     /**
      * Enrich the MathItems in this MathDocument
+     *
+     * @returns The object for chaining.
      */
     public enrich() {
       if (!this.processed.isSet('enriched')) {
@@ -577,9 +583,7 @@ export function EnrichedMathDocumentMixin<
     }
 
     /**
-     * @param _doc
-     * @param _math
-     * @param err
+     * @override
      */
     public enrichError(
       _doc: EnrichedMathDocument<N, T, D>,
@@ -590,9 +594,7 @@ export function EnrichedMathDocumentMixin<
     }
 
     /**
-     * @param _doc
-     * @param _math
-     * @param err
+     * @override
      */
     public speechError(
       _doc: EnrichedMathDocument<N, T, D>,

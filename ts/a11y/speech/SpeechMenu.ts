@@ -67,6 +67,7 @@ function csPrefsVariables(menu: MJContextMenu, prefs: string[]) {
  *
  * @param {MJContextMenu} menu The current context menu.
  * @param {string} locale The current locale.
+ * @returns The constructed selection box sub menu.
  */
 function csSelectionBox(menu: MJContextMenu, locale: string) {
   const prefs = Sre.clearspeakPreferences.getLocalePreferences();
@@ -185,8 +186,9 @@ function smartPreferences(previous: string, smart: string, locale: string) {
  *
  * @param {MJContextMenu} menu The context menu.
  * @param {Submenu} sub The submenu to attach elements to.
+ * @returns {SubMenu} The constructed clearspeak sub menu.
  */
-export function clearspeakMenu(menu: MJContextMenu, sub: Submenu) {
+export function clearspeakMenu(menu: MJContextMenu, sub: Submenu): SubMenu {
   const locale = menu.pool.lookup('locale').getValue() as string;
   const box = csSelectionBox(menu, locale);
   let items: object[] = [];
@@ -215,13 +217,15 @@ export function clearspeakMenu(menu: MJContextMenu, sub: Submenu) {
 MJContextMenu.DynamicSubmenus.set('Clearspeak', [clearspeakMenu, 'speech']);
 
 let LOCALE_MENU: SubMenu = null;
+
 /**
  * Creates dynamic locale menu.
  *
  * @param {MJContextMenu} menu The context menu.
  * @param {Submenu} sub The submenu to attach elements to.
+ * @returns {SubMenu} The constructed locale sub menu.
  */
-export function localeMenu(menu: MJContextMenu, sub: Submenu) {
+export function localeMenu(menu: MJContextMenu, sub: Submenu): SubMenu {
   if (LOCALE_MENU) {
     return LOCALE_MENU;
   }

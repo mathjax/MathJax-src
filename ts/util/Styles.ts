@@ -76,11 +76,6 @@ function splitSpaces(text: string): string[] {
  *
  * @param {string} name   The style to be processed
  */
-
-/**
- *
- * @param name
- */
 function splitTRBL(name: string) {
   const parts = splitSpaces(this.styles[name]);
   if (parts.length === 0) {
@@ -339,7 +334,7 @@ function saveFontParts(
 /**
  * Combine font parts into one (we don't actually do that)
  *
- * @param _name
+ * @param _name The font name
  */
 function combineFont(_name: string) {}
 

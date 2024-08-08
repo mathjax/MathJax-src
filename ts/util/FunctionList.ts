@@ -75,7 +75,7 @@ export class FunctionList extends PrioritizedList<Function> {
   public asyncExecute(...data: any[]): Promise<boolean> {
     let i = -1;
     const items = this.items;
-    return new Promise((ok: Function, fail: Function) => {
+    return new Promise((ok, fail) => {
       (function execute() {
         while (++i < items.length) {
           const result = items[i].item(...data);

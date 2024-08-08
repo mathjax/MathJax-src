@@ -101,11 +101,12 @@ function recurseSsml(
         case 'mark':
           instr.push({ mark: element.getAttribute('name') });
           break;
-        case 'say-as':
+        case 'say-as': {
           const txt = element.textContent;
           instr.push(Object.assign({ text: txt, character: true }, prosody));
           text.push(txt);
           break;
+        }
       }
     }
   }
@@ -122,12 +123,13 @@ const combinePros: { [key: string]: (x: number, sign: string) => number } = {
 };
 
 /**
- * Retrieves prosody annotations from and SSML node.
+ * Retrieves prosody annotations from an SSML node.
  *
  * @param {Element} element The SSML node.
  * @param {ProsodyElement} prosody The prosody annotation.
+ * @returns {ProsodyElement} The combined prosody element.
  */
-function getProsody(element: Element, prosody: ProsodyElement) {
+function getProsody(element: Element, prosody: ProsodyElement): ProsodyElement {
   const combine: ProsodyElement = {};
   for (const pros of ProsodyKeys) {
     if (element.hasAttribute(pros)) {
@@ -154,9 +156,10 @@ const prosodyRegexp = /([\+-]?)([0-9]+)%/;
 /**
  * Extracts the prosody value from an attribute.
  *
- * @param {string} attr
+ * @param {string} attr The prosody attribute.
+ * @returns {[string, string]} The in terms of sign and value.
  */
-function extractProsody(attr: string) {
+function extractProsody(attr: string): [string, string] {
   const match = attr.match(prosodyRegexp);
   if (!match) {
     console.warn('Something went wrong with the prosody matching.');
@@ -176,6 +179,7 @@ function extractProsody(attr: string) {
  * @param prefix The prefix expression.
  * @param postfix The postfix expression.
  * @param sep The separator string. Defaults to space.
+ * @returns The assembled label.
  */
 export function buildLabel(
   speech: string,

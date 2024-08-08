@@ -117,6 +117,10 @@ export interface SvgMactionClass<N, T, D>
 
 /**
  * The SvgMaction wrapper for the MmlMaction class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
   const Base = CommonMactionMixin<
@@ -384,9 +388,10 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
     /**
      * Add an event handler to the output for this maction
      *
-     * @param type
-     * @param handler
-     * @param dom
+     * @param {string} type The event handler type.
+     * @param {EventHandler} handler The actual event handler.
+     * @param {N=} dom The DOM node. If not provided goes over all elements of
+     *    the dom tree of this wrapper.
      */
     public setEventHandler(type: string, handler: EventHandler, dom: N = null) {
       (dom ? [dom] : this.dom).forEach((node) =>

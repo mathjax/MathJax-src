@@ -196,6 +196,8 @@ export function ComplexityMathDocumentMixin<N, T, D, B extends EMDocC<N, T, D>>(
 
     /**
      * Compute the complexity the MathItems in this MathDocument
+     *
+     * @returns The object for chaining.
      */
     public complexity() {
       if (!this.processed.isSet('complexity')) {

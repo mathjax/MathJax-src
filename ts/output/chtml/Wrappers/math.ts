@@ -100,6 +100,10 @@ export interface ChtmlMathClass<N, T, D>
 
 /**
  * The ChtmlMath wrapper class for the MmlMath class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
   const Base = CommonMathMixin<
@@ -199,7 +203,7 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
     /**
      *  Handle displayed equations (set min-width, and so on).
      *
-     * @param parent
+     * @param {N} parent     The HTML node to contain the HTML
      */
     protected handleDisplay(parent: N) {
       const adaptor = this.adaptor;
@@ -230,7 +234,7 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
     /**
      * Handle in-line expressions
      *
-     * @param parent
+     * @param {N} parent     The HTML node to contain the HTML
      */
     protected handleInline(parent: N) {
       //

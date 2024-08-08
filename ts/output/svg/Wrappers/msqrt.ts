@@ -144,15 +144,11 @@ export const SvgMsqrt = (function <N, T, D>(): SvgMsqrtClass<N, T, D> {
     /**
      * Add root HTML (overridden in mroot)
      *
-     * @param {N[]} ROOT         The container for the root
-     * @param {SvgWrapper} root  The wrapped MML root content
-     * @param {BBox} sbox        The bounding box of the surd
-     * @param {number} H         The height of the root as a whole
-     * @param {number}           The offset required by the root
-     * @param _ROOT
-     * @param _root
-     * @param _sbox
-     * @param _H
+     * @param {N[]} _ROOT         The container for the root
+     * @param {SvgWrapper} _root  The wrapped MML root content
+     * @param {BBox} _sbox        The bounding box of the surd
+     * @param {number} _H         The height of the root as a whole
+     * @returns {number}          The offset required by the root
      */
     protected addRoot(
       _ROOT: N[],

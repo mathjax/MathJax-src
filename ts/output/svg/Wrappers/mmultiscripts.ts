@@ -51,9 +51,10 @@ export type AlignFunction = (w: number, W: number) => number;
 /**
  * Get the function for aligning scripts horizontally (left, center, right)
  *
- * @param align
+ * @param {string} align Alignment value (left, center, right)
+ * @returns {AlignFunction} The constructred alignment function
  */
-export function AlignX(align: string) {
+export function AlignX(align: string): AlignFunction {
   return (
     (
       {
@@ -124,6 +125,10 @@ export interface SvgMmultiscriptsClass<N, T, D>
 
 /**
  * The SvgMmultiscripts wrapper class for the MmlMmultiscripts class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<
   N,
@@ -207,7 +212,7 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<
     /**
      * Create a table with the super and subscripts properly separated and aligned.
      *
-     * @param svg
+     * @param {N} svg          The SVG node
      * @param {number} x       The x offset of the scripts
      * @param {number} u       The baseline offset for the superscripts
      * @param {number} v       The baseline offset for the subscripts

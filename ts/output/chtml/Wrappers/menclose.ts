@@ -49,10 +49,11 @@ import { em } from '../../../util/lengths.js';
 /**
  *  The skew angle needed for the arrow head pieces
  *
- * @param x
- * @param y
+ * @param {number} x Delta x value.
+ * @param {number} y The y value.
+ * @returns {string} Skew angle in string format.
  */
-function Angle(x: number, y: number) {
+function Angle(x: number, y: number): string {
   return Math.atan2(x, y)
     .toFixed(3)
     .replace(/\.?0+$/, '');

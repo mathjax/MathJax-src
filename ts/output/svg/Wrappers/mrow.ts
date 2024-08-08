@@ -159,6 +159,7 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
 
     /**
      * @param {N[]} parents  The HTML nodes in which to place the lines
+     * @returns {N[]} The augmented nodes array
      */
     protected getSvgNodes(parents: N[]) {
       if (this.dh) {

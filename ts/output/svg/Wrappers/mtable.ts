@@ -288,7 +288,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
     }
 
     /**
-     * @param svg
+     * @param svg {N} The svg element
      * @returns {number}   The x-adjustement needed to handle the true size of percentage-width tables
      */
     protected handlePWidth(svg: N): number {
@@ -397,13 +397,13 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      * @param {number} t                The thickness of the line
      * @param {string} style            The border style for the line
      * @param {OptionList} properties   The list of properties to modify
-     * @param {OptionList}              The modified properties
+     * @returns {OptionList}            The modified properties
      */
     protected setLineThickness(
       t: number,
       style: string,
       properties: OptionList
-    ) {
+    ): OptionList {
       if (t !== 0.07) {
         properties['stroke-thickness'] = this.fixed(t);
         if (style !== 'solid') {
@@ -420,8 +420,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      * Handle addition of labels to the table
      *
      * @param {N} svg       The container for the table contents
-     * @param {N} parent    The parent containing the the table
-     * @param _parent
+     * @param {N} _parent   The parent containing the the table
      * @param {number} dx   The adjustement for percentage width tables
      */
     protected handleLabels(svg: N, _parent: N, dx: number) {

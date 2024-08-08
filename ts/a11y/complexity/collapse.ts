@@ -139,8 +139,9 @@ export class Collapse {
   /**
    * The type-to-function mapping for semantic types
    *
-   * @param node
-   * @param complexity
+   * @param node The current node
+   * @param complexity The current complexity
+   * @returns The newly computed complexity
    */
   public collapse: CollapseFunctionMap = new Map([
     //
@@ -530,7 +531,6 @@ export class Collapse {
   /**
    * Add maction nodes to the nodes in the tree that can collapse
    *
-   * @param node
    * @param {MmlNode} node   The root of the tree to check
    */
   public makeCollapse(node: MmlNode) {

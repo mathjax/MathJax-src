@@ -64,13 +64,8 @@ export interface RetryError extends Error {
  *                         runs completely, and fails if the code
  *                         generates an error (that is not a retry).
  */
-
-/**
- *
- * @param code
- */
-export function handleRetriesFor(code: Function): Promise<any> {
-  return new Promise(function run(ok: Function, fail: Function) {
+export function handleRetriesFor(code: () => void): Promise<any> {
+  return new Promise(function run(ok, fail) {
     try {
       ok(code());
     } catch (err) {
@@ -94,11 +89,6 @@ export function handleRetriesFor(code: Function): Promise<any> {
  *
  * @param {Promise} promise  The promise that must be satisfied before
  *                            actions will continue
- */
-
-/**
- *
- * @param promise
  */
 export function retryAfter(promise: Promise<any>) {
   const err = new Error('MathJax retry') as RetryError;
