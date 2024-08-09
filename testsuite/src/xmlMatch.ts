@@ -3,7 +3,7 @@ import { xml2json } from 'xml-js';
 
 expect.extend({
   // An xml matcher via deep equality on JSON objects.
-  toBeXmlMatch(received, expected) {
+  toBeXmlMatch(received: string, expected: string) {
     const recJson = xml2json(received);
     const exptJson = xml2json(expected)
     const pass = this.equals(recJson, exptJson, [this.utils.iterableEquality]);

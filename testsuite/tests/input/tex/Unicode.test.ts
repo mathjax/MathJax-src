@@ -1,5 +1,5 @@
-import { beforeEach, describe, it } from '@jest/globals';
-import { toXmlMatch, setupTex, tex2mml } from '#helpers';
+import { afterAll, beforeEach, describe, it } from '@jest/globals';
+import { getTokens, toXmlMatch, setupTex, tex2mml } from '#helpers';
 import '#js/input/tex/unicode/UnicodeConfiguration';
 
 beforeEach(() => setupTex(['base', 'unicode']));
@@ -217,3 +217,5 @@ describe('Unicode Errors', () => {
     </math>`
     ));
 });
+
+afterAll(() => getTokens('unicode'));

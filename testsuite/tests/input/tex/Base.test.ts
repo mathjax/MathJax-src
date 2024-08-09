@@ -1,5 +1,5 @@
-import { beforeEach, describe, it } from '@jest/globals';
-import { toXmlMatch, setupTex, tex2mml } from '#helpers';
+import { afterAll, beforeEach, describe, it } from '@jest/globals';
+import { toXmlMatch, setupTex, tex2mml, getTokens } from '#helpers';
 
 beforeEach(() => setupTex(['base']));
 
@@ -4416,7 +4416,6 @@ describe('Base Complex', () => {
     ));
 });
 
-
 describe('Column Parser', () => {
   it('BadPreamToken', () =>
     toXmlMatch(
@@ -4428,3 +4427,5 @@ describe('Column Parser', () => {
 </math>`
     ));
 });
+
+afterAll(() => getTokens('base'));

@@ -1,5 +1,5 @@
-import { beforeEach, describe, it } from '@jest/globals';
-import { toXmlMatch, setupTex, tex2mml } from '#helpers';
+import { afterAll, beforeEach, describe, it } from '@jest/globals';
+import { getTokens, toXmlMatch, setupTex, tex2mml } from '#helpers';
 import '#js/input/tex/ams/AmsConfiguration';
 
 beforeEach(() => setupTex(['ams', 'base']));
@@ -2594,3 +2594,5 @@ describe('Ams SideSet', () => {
     </math>`
     ));
 });
+
+afterAll(() => getTokens('ams'));
