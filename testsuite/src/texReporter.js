@@ -30,6 +30,7 @@ export default class TexReporter {
     for (let configuration of coverage) {
       result += `\n${createConfigurationOutput(configuration)}\n`;
     }
+    fs.unlinkSync(tmpJsonFile);
     console.log(result);
   }
 
