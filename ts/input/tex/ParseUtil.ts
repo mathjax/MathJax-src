@@ -233,7 +233,8 @@ export const ParseUtil = {
    * @param {MmlNode} mml The enclosed node.
    * @param {string} close The closing fence.
    * @param {string=} big Bigg command.
-   * @param color
+   * @param {string=} color The color name.
+   * @returns {MmlNode} The newly created mrow.
    */
   fenced(
     configuration: ParseOptions,
@@ -242,7 +243,7 @@ export const ParseUtil = {
     close: string,
     big: string = '',
     color: string = ''
-  ) {
+  ): MmlNode {
     // @test Fenced, Fenced3
     const nf = configuration.nodeFactory;
     const mrow = nf.create('node', 'mrow', [], {
