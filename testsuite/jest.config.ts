@@ -24,7 +24,8 @@ const config: Config = {
   extensionsToTreatAsEsm: ['.ts'],
   transform: {
     "^.+\\.tsx?$": [ tsjest, { useESM: true } ],
-  }
+  },
+  reporters: ['default', [path.resolve(__dirname, 'src/texReporter.js'), {}]]
 };
 
 export default config;
