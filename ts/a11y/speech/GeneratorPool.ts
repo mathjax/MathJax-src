@@ -15,10 +15,10 @@
  *  limitations under the License.
  */
 
-import {mathjax} from '../../mathjax.js';
-import {Sre} from '../sre.js';
-import {OptionList} from '../../util/Options.js';
-import {LiveRegion} from '../explorer/Region.js';
+import { mathjax } from '../../mathjax.js';
+import { Sre } from '../sre.js';
+import { OptionList } from '../../util/Options.js';
+import { LiveRegion } from '../explorer/Region.js';
 import { buildLabel, buildSpeech, InPlace } from '../speech/SpeechUtil.js';
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 
@@ -29,7 +29,6 @@ import { DOMAdaptor } from '../../core/DOMAdaptor.js';
  */
 
 export class GeneratorPool<N, T, D> {
-
   private _element: Element;
 
   set element(element: Element) {
@@ -81,18 +80,20 @@ export class GeneratorPool<N, T, D> {
   public set options(options: OptionList) {
     this._options = options;
     Sre.setupEngine(options.sre);
-    this.speechGenerator.setOptions(Object.assign(
-      {}, options?.sre || {}, {
+    this.speechGenerator.setOptions(
+      Object.assign({}, options?.sre || {}, {
         modality: 'speech',
         markup: 'ssml',
-        automark: true
-      }));
-    this.summaryGenerator.setOptions(Object.assign(
-      {}, options?.sre || {}, {
+        automark: true,
+      })
+    );
+    this.summaryGenerator.setOptions(
+      Object.assign({}, options?.sre || {}, {
         modality: 'summary',
         markup: 'ssml',
         automark: true,
-      }));
+      })
+    );
     this.brailleGenerator.setOptions({
       locale: options?.sre?.braille,
       domain: 'default',
@@ -141,12 +142,12 @@ export class GeneratorPool<N, T, D> {
     if (options.sre.braille !== GeneratorPool.currentBraille) {
       GeneratorPool.currentBraille = options.sre.braille;
       update = true;
-      Sre.setupEngine({locale: options.sre.braille})
+      Sre.setupEngine({ locale: options.sre.braille });
     }
     if (options.sre.locale !== GeneratorPool.currentLocale) {
       GeneratorPool.currentLocale = options.sre.locale;
       update = true;
-      Sre.setupEngine({locale: options.sre.locale})
+      Sre.setupEngine({ locale: options.sre.locale });
     }
     return update;
   }
@@ -161,8 +162,12 @@ export class GeneratorPool<N, T, D> {
   public computeSpeech(node: N, mml: string): [string, string] {
     this.element = Sre.parseDOM(mml);
     const xml = this.prepareXml(node);
-    const speech = this.options.enableSpeech ? this.speechGenerator.getSpeech(xml, this.element) : '';
-    const braille = this.options.enableBraille ? this.brailleGenerator.getSpeech(xml, this.element) : '';
+    const speech = this.options.enableSpeech
+      ? this.speechGenerator.getSpeech(xml, this.element)
+      : '';
+    const braille = this.options.enableBraille
+      ? this.brailleGenerator.getSpeech(xml, this.element)
+      : '';
     if (speech || braille) {
       this.setAria(node, xml, this.options.sre.locale);
     }
@@ -182,7 +187,7 @@ export class GeneratorPool<N, T, D> {
       return this.lastSpeech;
     }
     const xml = this.prepareXml(node);
-    this.lastSpeech = this.summaryGenerator.getSpeech(xml, this.element)
+    this.lastSpeech = this.summaryGenerator.getSpeech(xml, this.element);
     return this.lastSpeech;
   }
 
@@ -195,7 +200,11 @@ export class GeneratorPool<N, T, D> {
   public CleanUp(node: N) {
     if (this.lastMove) {
       // TODO: Remember the speech.
-      this.adaptor.setAttribute(node, 'aria-label', buildSpeech(this.getLabel(node))[0]);
+      this.adaptor.setAttribute(
+        node,
+        'aria-label',
+        buildSpeech(this.getLabel(node))[0]
+      );
     }
     this.lastMove = InPlace.NONE;
   }
@@ -242,8 +251,7 @@ export class GeneratorPool<N, T, D> {
     speechRegion.Update(speech);
     this.adaptor.setAttribute(node, 'aria-label', buildSpeech(speech)[0]);
     this.lastSpeech = '';
-    brailleRegion.Update(
-      this.adaptor.getAttribute(node, 'aria-braillelabel'));
+    brailleRegion.Update(this.adaptor.getAttribute(node, 'aria-braillelabel'));
   }
 
   /**
@@ -277,7 +285,8 @@ export class GeneratorPool<N, T, D> {
    */
   public nextStyle(node: N) {
     this.speechGenerator.nextStyle(
-      this.adaptor.getAttribute(node, 'data-semantic-id'));
+      this.adaptor.getAttribute(node, 'data-semantic-id')
+    );
     this.updateSummaryGenerator();
   }
 
@@ -311,9 +320,7 @@ export class GeneratorPool<N, T, D> {
    * @param {string=} center Core speech. Defaults to `data-semantic-speech`.
    * @param {string=} sep The speech separator. Defaults to space.
    */
-  public getLabel(node: N,
-                  center: string = '',
-                  sep: string = ' ') {
+  public getLabel(node: N, center: string = '', sep: string = ' ') {
     return buildLabel(
       center || this.adaptor.getAttribute(node, 'data-semantic-speech'),
       this.adaptor.getAttribute(node, 'data-semantic-prefix'),
@@ -345,7 +352,7 @@ export class GeneratorPool<N, T, D> {
     'data-semantic-postfix',
     'data-semantic-speech',
     'data-semantic-braille',
-  ]
+  ];
 
   /**
    * Attributes to be copied after an element was collapsed.
@@ -355,8 +362,8 @@ export class GeneratorPool<N, T, D> {
     'data-semantic-parent',
     'data-semantic-type',
     'data-semantic-role',
-    'role'
-  ]
+    'role',
+  ];
 
   /**
    * Retrieve and sets aria and braille labels recursively.
@@ -365,15 +372,19 @@ export class GeneratorPool<N, T, D> {
   public setAria(node: N, xml: Element, locale: string) {
     const kind = xml.getAttribute('data-semantic-type');
     if (kind) {
-      this.attrList.forEach(attr => this.copyAttributes(xml, node, attr));
+      this.attrList.forEach((attr) => this.copyAttributes(xml, node, attr));
       if (kind === 'dummy') {
-        this.dummyList.forEach(attr => this.copyAttributes(xml, node, attr));
+        this.dummyList.forEach((attr) => this.copyAttributes(xml, node, attr));
       }
     }
     if (this.options.a11y.speech) {
       const speech = this.getLabel(node);
       if (speech) {
-        this.adaptor.setAttribute(node, 'aria-label', buildSpeech(speech, locale)[0]);
+        this.adaptor.setAttribute(
+          node,
+          'aria-label',
+          buildSpeech(speech, locale)[0]
+        );
       }
     }
     if (this.options.a11y.braille) {
@@ -383,14 +394,14 @@ export class GeneratorPool<N, T, D> {
       }
     }
     const xmlChildren = Array.from(xml.childNodes);
-    Array.from(this.adaptor.childNodes(node)).forEach(
-      (child, index) => {
-        if (this.adaptor.kind(child) !== '#text' &&
-          this.adaptor.kind(child) !== '#comment') {
-          this.setAria(child as N, xmlChildren[index] as Element, locale);
-        }
+    Array.from(this.adaptor.childNodes(node)).forEach((child, index) => {
+      if (
+        this.adaptor.kind(child) !== '#text' &&
+        this.adaptor.kind(child) !== '#comment'
+      ) {
+        this.setAria(child as N, xmlChildren[index] as Element, locale);
       }
-    );
+    });
   }
 
   public depth(node: N, actionable: boolean) {
@@ -399,13 +410,12 @@ export class GeneratorPool<N, T, D> {
       return this.lastSpeech;
     }
     let postfix = this.summaryGenerator.getActionable(
-      actionable ?
-        (this.adaptor.childNodes(node).length === 0 ? -1 : 1)
-        : 0);
+      actionable ? (this.adaptor.childNodes(node).length === 0 ? -1 : 1) : 0
+    );
     const depth = this.summaryGenerator.getLevel(
-      this.adaptor.getAttribute(node, 'aria-level'));
+      this.adaptor.getAttribute(node, 'aria-level')
+    );
     this.lastSpeech = `${depth} ${postfix}`;
     return this.lastSpeech;
   }
-
 }

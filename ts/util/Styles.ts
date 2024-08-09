@@ -25,11 +25,12 @@
 /**
  * An object contining name: value pairs
  */
-export type StyleList = {[name: string]: string};
+export type StyleList = { [name: string]: string };
 
 /**
  * Data for how to map a combined style (like border) to its children
  */
+/* prettier-ignore */
 export type connection = {
   children: string[],               // suffix names to add to the base name
   split: (name: string) => void,    // function to split the value for the children
@@ -39,7 +40,7 @@ export type connection = {
 /**
  * A collection of connections
  */
-export type connections = {[name: string]: connection};
+export type connections = { [name: string]: connection };
 
 /*********************************************************/
 /**
@@ -158,9 +159,10 @@ function combineSame(name: string) {
 /**
  * Patterns for the parts of a boarder
  */
-const BORDER: {[name: string]: RegExp} = {
+const BORDER: { [name: string]: RegExp } = {
   width: /^(?:[\d.]+(?:[a-z]+)|thin|medium|thick|inherit|initial|unset)$/,
-  style: /^(?:none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset|inherit|initial|unset)$/
+  style:
+    /^(?:none|hidden|dotted|dashed|solid|double|groove|ridge|inset|outset|inherit|initial|unset)$/,
 };
 
 /**
@@ -169,7 +171,7 @@ const BORDER: {[name: string]: RegExp} = {
  * @param {string} name   The style to be processed
  */
 function splitWSC(name: string) {
-  let parts = {width: '', style: '', color: ''} as StyleList;
+  let parts = { width: '', style: '', color: '' } as StyleList;
   for (const part of splitSpaces(this.styles[name])) {
     if (part.match(BORDER.width) && parts.width === '') {
       parts.width = part;
@@ -208,33 +210,48 @@ function combineWSC(name: string) {
 /**
  * Patterns for the parts of a font declaration
  */
-const FONT: {[name: string]: RegExp} = {
+const FONT: { [name: string]: RegExp } = {
   style: /^(?:normal|italic|oblique|inherit|initial|unset)$/,
-  variant: new RegExp('^(?:' +
-                      ['normal|none',
-                       'inherit|initial|unset',
-                       'common-ligatures|no-common-ligatures',
-                       'discretionary-ligatures|no-discretionary-ligatures',
-                       'historical-ligatures|no-historical-ligatures',
-                       'contextual|no-contextual',
-                       '(?:stylistic|character-variant|swash|ornaments|annotation)\\([^)]*\\)',
-                       'small-caps|all-small-caps|petite-caps|all-petite-caps|unicase|titling-caps',
-                       'lining-nums|oldstyle-nums|proportional-nums|tabular-nums',
-                       'diagonal-fractions|stacked-fractions',
-                       'ordinal|slashed-zero',
-                       'jis78|jis83|jis90|jis04|simplified|traditional',
-                       'full-width|proportional-width',
-                       'ruby'].join('|') + ')$'),
+  variant: new RegExp(
+    '^(?:' +
+      [
+        'normal|none',
+        'inherit|initial|unset',
+        'common-ligatures|no-common-ligatures',
+        'discretionary-ligatures|no-discretionary-ligatures',
+        'historical-ligatures|no-historical-ligatures',
+        'contextual|no-contextual',
+        '(?:stylistic|character-variant|swash|ornaments|annotation)\\([^)]*\\)',
+        'small-caps|all-small-caps|petite-caps|all-petite-caps|unicase|titling-caps',
+        'lining-nums|oldstyle-nums|proportional-nums|tabular-nums',
+        'diagonal-fractions|stacked-fractions',
+        'ordinal|slashed-zero',
+        'jis78|jis83|jis90|jis04|simplified|traditional',
+        'full-width|proportional-width',
+        'ruby',
+      ].join('|') +
+      ')$'
+  ),
   weight: /^(?:normal|bold|bolder|lighter|[1-9]00|inherit|initial|unset)$/,
-  stretch: new RegExp('^(?:' +
-                      ['normal',
-                       '(?:(?:ultra|extra|semi)-)?(?:condensed|expanded)',
-                       'inherit|initial|unset']. join('|') + ')$'),
-  size: new RegExp('^(?:' +
-                   ['xx-small|x-small|small|medium|large|x-large|xx-large|larger|smaller',
-                    '[\\d.]+%|[\\d.]+[a-z]+',
-                    'inherit|initial|unset'].join('|') + ')' +
-                   '(?:\/(?:normal|[\\d.]+(?:%|[a-z]+)?))?$')
+  stretch: new RegExp(
+    '^(?:' +
+      [
+        'normal',
+        '(?:(?:ultra|extra|semi)-)?(?:condensed|expanded)',
+        'inherit|initial|unset',
+      ].join('|') +
+      ')$'
+  ),
+  size: new RegExp(
+    '^(?:' +
+      [
+        'xx-small|x-small|small|medium|large|x-large|xx-large|larger|smaller',
+        '[\\d.]+%|[\\d.]+[a-z]+',
+        'inherit|initial|unset',
+      ].join('|') +
+      ')' +
+      '(?:/(?:normal|[\\d.]+(?:%|[a-z]+)?))?$'
+  ),
 };
 
 /**
@@ -248,15 +265,23 @@ function splitFont(name: string) {
   //  The parts found (array means can be more than one word)
   //
   const value = {
-    style: '', variant: [], weight: '', stretch: '',
-    size: '', family: '', 'line-height': ''
-  } as {[name: string]: string | string[]};
+    style: '',
+    variant: [],
+    weight: '',
+    stretch: '',
+    size: '',
+    family: '',
+    'line-height': '',
+  } as { [name: string]: string | string[] };
   for (const part of parts) {
     if (!value.family) {
       value.family = part; // assume it is family unless otherwise (family must be present)
     }
     for (const name of Object.keys(FONT)) {
-      if ((Array.isArray(value[name]) || value[name] === '') && part.match(FONT[name])) {
+      if (
+        (Array.isArray(value[name]) || value[name] === '') &&
+        part.match(FONT[name])
+      ) {
         if (value.family === part) {
           value.family = '';
         }
@@ -290,7 +315,10 @@ function splitFont(name: string) {
  * @param {string} name   The style to be processed
  * @param {{[name: string]: string | string[]}} value  The list of parts detected above
  */
-function saveFontParts(name: string, value: {[name: string]: string | string[]}) {
+function saveFontParts(
+  name: string,
+  value: { [name: string]: string | string[] }
+) {
   for (const child of Styles.connect[name].children) {
     const cname = this.childName(name, child);
     if (Array.isArray(value[child])) {
@@ -298,7 +326,7 @@ function saveFontParts(name: string, value: {[name: string]: string | string[]})
       if (values.length) {
         this.styles[cname] = values.join(' ');
       }
-    } else  if (value[child] !== '') {
+    } else if (value[child] !== '') {
       this.styles[cname] = value[child];
     }
   }
@@ -314,15 +342,16 @@ function combineFont(_name: string) {}
  * Implements the Styles object (lite version of CssStyleDeclaration)
  */
 export class Styles {
-
   /**
    * Patterns for style values and comments
    */
-  public static pattern: {[name: string]: RegExp} = {
+  public static pattern: { [name: string]: RegExp } = {
     sanitize: /['";]/,
-    value: /^((:?'(?:\\.|[^'])*(?:'|$)|"(?:\\.|[^"])*(?:"|$)|\n|\\.|[^'";])*?)(?:;|$).*/,
-    style: /([-a-z]+)[\s\n]*:[\s\n]*((?:'(?:\\.|[^'])*(?:'|$)|"(?:\\.|[^"])*(?:"|$)|\n|\\.|[^';])*?)[\s\n]*(?:;|$)/g,
-    comment: /\/\*[^]*?\*\//g
+    value:
+      /^((:?'(?:\\.|[^'])*(?:'|$)|"(?:\\.|[^"])*(?:"|$)|\n|\\.|[^'";])*?)(?:;|$).*/,
+    style:
+      /([-a-z]+)[\s\n]*:[\s\n]*((?:'(?:\\.|[^'])*(?:'|$)|"(?:\\.|[^"])*(?:"|$)|\n|\\.|[^';])*?)[\s\n]*(?:;|$)/g,
+    comment: /\/\*[^]*?\*\//g,
   };
 
   /**
@@ -332,55 +361,63 @@ export class Styles {
     padding: {
       children: TRBL,
       split: splitTRBL,
-      combine: combineTRBL
+      combine: combineTRBL,
     },
 
     border: {
       children: TRBL,
       split: splitSame,
-      combine: combineSame
+      combine: combineSame,
     },
     'border-top': {
       children: WSC,
       split: splitWSC,
-      combine: combineWSC
+      combine: combineWSC,
     },
     'border-right': {
       children: WSC,
       split: splitWSC,
-      combine: combineWSC
+      combine: combineWSC,
     },
     'border-bottom': {
       children: WSC,
       split: splitWSC,
-      combine: combineWSC
+      combine: combineWSC,
     },
     'border-left': {
       children: WSC,
       split: splitWSC,
-      combine: combineWSC
+      combine: combineWSC,
     },
     'border-width': {
       children: TRBL,
       split: splitTRBL,
-      combine: null      // means its children combine to a different parent
+      combine: null, // means its children combine to a different parent
     },
     'border-style': {
       children: TRBL,
       split: splitTRBL,
-      combine: null      // means its children combine to a different parent
+      combine: null, // means its children combine to a different parent
     },
     'border-color': {
       children: TRBL,
       split: splitTRBL,
-      combine: null      // means its children combine to a different parent
+      combine: null, // means its children combine to a different parent
     },
 
     font: {
-      children: ['style', 'variant', 'weight', 'stretch', 'line-height', 'size', 'family'],
+      children: [
+        'style',
+        'variant',
+        'weight',
+        'stretch',
+        'line-height',
+        'size',
+        'family',
+      ],
       split: splitFont,
-      combine: combineFont
-    }
+      combine: combineFont,
+    },
   };
 
   /**
@@ -406,7 +443,10 @@ export class Styles {
       return text;
     }
     text = text.replace(PATTERN.value, '$1');
-    const test = text.replace(/\\./g, '').replace(/(['"]).*?\1/g, '').replace(/[^'"]/g, '');
+    const test = text
+      .replace(/\\./g, '')
+      .replace(/(['"]).*?\1/g, '')
+      .replace(/[^'"]/g, '');
     if (test.length) {
       text += test.charAt(0);
     }
@@ -431,7 +471,7 @@ export class Styles {
    * @return {StyleList} The object to map style names to the values
    */
   public get styleList(): StyleList {
-    return {...this.styles};
+    return { ...this.styles };
   }
 
   /**
@@ -467,7 +507,7 @@ export class Styles {
    */
   public get(name: string): string {
     name = this.normalizeName(name);
-    return (this.styles.hasOwnProperty(name) ? this.styles[name] : '');
+    return this.styles.hasOwnProperty(name) ? this.styles[name] : '';
   }
 
   /**
@@ -501,7 +541,7 @@ export class Styles {
    */
   protected parentName(name: string): string {
     const parent = name.replace(/-[^-]*$/, '');
-    return (name === parent ? '' : parent);
+    return name === parent ? '' : parent;
   }
 
   /**
@@ -532,7 +572,7 @@ export class Styles {
    * @return {string}      The name converted from CamelCase to lowercase with dashes
    */
   protected normalizeName(name: string): string {
-    return name.replace(/[A-Z]/g, c => '-' + c.toLowerCase());
+    return name.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase());
   }
 
   /**
@@ -543,12 +583,14 @@ export class Styles {
   protected parse(cssText: string = '') {
     let PATTERN = (this.constructor as typeof Styles).pattern;
     this.styles = {};
-    const parts = cssText.replace(/\n/g, ' ').replace(PATTERN.comment, '').split(PATTERN.style);
+    const parts = cssText
+      .replace(/\n/g, ' ')
+      .replace(PATTERN.comment, '')
+      .split(PATTERN.style);
     while (parts.length > 1) {
       let [space, name, value] = parts.splice(0, 3);
       if (space.match(/[^\s\n;]/)) return;
       this.set(name, value);
     }
   }
-
 }

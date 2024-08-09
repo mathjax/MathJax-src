@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PrioritizedList, PrioritizedListItem} from './PrioritizedList.js';
+import { PrioritizedList, PrioritizedListItem } from './PrioritizedList.js';
 
 /*****************************************************************/
 /**
@@ -36,7 +36,6 @@ export interface FunctionListItem extends PrioritizedListItem<Function> {}
  */
 
 export class FunctionList extends PrioritizedList<Function> {
-
   /**
    * Executes the functions in the list (in prioritized order),
    *   passing the given data to the functions.  If any return
@@ -81,7 +80,7 @@ export class FunctionList extends PrioritizedList<Function> {
         while (++i < items.length) {
           let result = items[i].item(...data);
           if (result instanceof Promise) {
-            result.then(execute).catch(err => fail(err));
+            result.then(execute).catch((err) => fail(err));
             return;
           }
           if (result === false) {
@@ -93,5 +92,4 @@ export class FunctionList extends PrioritizedList<Function> {
       })();
     });
   }
-
 }

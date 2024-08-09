@@ -25,7 +25,8 @@
  * @return {string}   The MathJax component root directory
  */
 export function mjxRoot(): string {
-  return new URL(import.meta.url).pathname
-    .replace(/[cm]js\/components\/[cm]js\/root.js$/, (_) => 'bundle');
+  return new URL(import.meta.url).pathname.replace(
+    /[cm]js\/components\/[cm]js\/root.js$/,
+    (_) => 'bundle'
+  );
 }
-

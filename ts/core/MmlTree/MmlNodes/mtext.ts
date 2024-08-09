@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlTokenNode, TEXCLASS } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,21 +30,16 @@ import {AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMtext extends AbstractMmlTokenNode {
-
   /**
    * Attributes that make an mpsace not spacelike
    */
-  public static NONSPACELIKE = [
-    'style',
-    'mathbackground',
-    'background'
-  ];
+  public static NONSPACELIKE = ['style', 'mathbackground', 'background'];
 
   /**
    * @override
    */
   public static defaults: PropertyList = {
-    ...AbstractMmlTokenNode.defaults
+    ...AbstractMmlTokenNode.defaults,
   };
 
   /**
@@ -67,8 +62,9 @@ export class MmlMtext extends AbstractMmlTokenNode {
    * @override
    */
   public get isSpacelike() {
-    return !!this.getText().match(/^\s*$/) &&
-           !this.attributes.hasOneOf(MmlMtext.NONSPACELIKE);
+    return (
+      !!this.getText().match(/^\s*$/) &&
+      !this.attributes.hasOneOf(MmlMtext.NONSPACELIKE)
+    );
   }
-
 }

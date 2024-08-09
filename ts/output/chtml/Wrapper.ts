@@ -21,15 +21,26 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {OptionList} from '../../util/Options.js';
-import {CommonWrapper, CommonWrapperClass, Constructor, StringMap, SPACE} from '../common/Wrapper.js';
-import {CHTML} from '../chtml.js';
-import {ChtmlWrapperFactory} from './WrapperFactory.js';
-import {BBox} from '../../util/BBox.js';
-import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
-        ChtmlFontData, ChtmlFontDataClass} from './FontData.js';
+import { OptionList } from '../../util/Options.js';
+import {
+  CommonWrapper,
+  CommonWrapperClass,
+  Constructor,
+  StringMap,
+  SPACE,
+} from '../common/Wrapper.js';
+import { CHTML } from '../chtml.js';
+import { ChtmlWrapperFactory } from './WrapperFactory.js';
+import { BBox } from '../../util/BBox.js';
+import {
+  ChtmlCharOptions,
+  ChtmlVariantData,
+  ChtmlDelimiterData,
+  ChtmlFontData,
+  ChtmlFontDataClass,
+} from './FontData.js';
 
-export {Constructor, StringMap} from '../common/Wrapper.js';
+export { Constructor, StringMap } from '../common/Wrapper.js';
 
 /*****************************************************************/
 
@@ -46,7 +57,7 @@ export const FONTSIZE: StringMap = {
   '144%': 'Lg',
   '173%': 'LG',
   '207%': 'hg',
-  '249%': 'HG'
+  '249%': 'HG',
 };
 
 /*****************************************************************/
@@ -60,28 +71,36 @@ export type ChtmlConstructor<N, T, D> = Constructor<ChtmlWrapper<N, T, D>>;
 /**
  *  The type of the ChtmlWrapper class (used when creating the wrapper factory for this class)
  */
-export interface ChtmlWrapperClass<N, T, D> extends CommonWrapperClass<
-  //
-  // The HTMLElement, TextNode, and Document classes (for the DOM implementation in use)
-  //
-  N, T, D,
-  //
-  // The Wrapper type and its Factory and Class (these need to know N, T, and D)
-  //
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  //
-  // These are font-related objects that depend on the output jax; e,g. the character options
-  //   for CHTML and SVG output differ (CHTML contains font information, while SVG has path data)
-  //
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {
-
+export interface ChtmlWrapperClass<N, T, D>
+  extends CommonWrapperClass<
+    //
+    // The HTMLElement, TextNode, and Document classes (for the DOM implementation in use)
+    //
+    N,
+    T,
+    D,
+    //
+    // The Wrapper type and its Factory and Class (these need to know N, T, and D)
+    //
+    CHTML<N, T, D>,
+    ChtmlWrapper<N, T, D>,
+    ChtmlWrapperFactory<N, T, D>,
+    ChtmlWrapperClass<N, T, D>,
+    //
+    // These are font-related objects that depend on the output jax; e,g. the character options
+    //   for CHTML and SVG output differ (CHTML contains font information, while SVG has path data)
+    //
+    ChtmlCharOptions,
+    ChtmlVariantData,
+    ChtmlDelimiterData,
+    ChtmlFontData,
+    ChtmlFontDataClass
+  > {
   /**
    * If true, this causes a style for the node type to be generated automatically
    * that sets display:inline-block (as needed for the output for MmlNodes).
    */
   autoStyle: boolean;
-
 }
 
 /*****************************************************************/
@@ -92,13 +111,20 @@ export interface ChtmlWrapperClass<N, T, D> extends CommonWrapperClass<
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class ChtmlWrapper<N, T, D> extends
-CommonWrapper<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
+export class ChtmlWrapper<N, T, D> extends CommonWrapper<
+  N,
+  T,
+  D,
+  CHTML<N, T, D>,
+  ChtmlWrapper<N, T, D>,
+  ChtmlWrapperFactory<N, T, D>,
+  ChtmlWrapperClass<N, T, D>,
+  ChtmlCharOptions,
+  ChtmlVariantData,
+  ChtmlDelimiterData,
+  ChtmlFontData,
+  ChtmlFontDataClass
 > {
-
   /**
    * @override
    */
@@ -131,7 +157,7 @@ CommonWrapper<
   public toEmbellishedCHTML(parents: N[]): boolean {
     if (parents.length <= 1 || !this.node.isEmbellished) return false;
     const adaptor = this.adaptor;
-    parents.forEach(dom => adaptor.append(dom, this.html('mjx-linestrut')));
+    parents.forEach((dom) => adaptor.append(dom, this.html('mjx-linestrut')));
     const style = this.coreMO().embellishedBreakStyle;
     //
     // At the end of the first line or beginning of the second,
@@ -139,7 +165,10 @@ CommonWrapper<
     //   and keep track of the created DOM nodes.
     //
     const dom = [];
-    for (const [parent, STYLE] of [[parents[0], 'before'], [parents[1], 'after']] as [N, string][]) {
+    for (const [parent, STYLE] of [
+      [parents[0], 'before'],
+      [parents[1], 'after'],
+    ] as [N, string][]) {
       if (style !== STYLE) {
         this.toCHTML([parent]);
         dom.push(this.dom[0]);
@@ -194,7 +223,7 @@ CommonWrapper<
    * @returns {N[]}  The roots of the HTML tree for the wrapped node's output
    */
   protected createChtmlNodes(parents: N[]): N[] {
-    this.dom = parents.map(_parent => this.html('mjx-' + this.node.kind));  // FIXME: add segment id
+    this.dom = parents.map((_parent) => this.html('mjx-' + this.node.kind)); // FIXME: add segment id
     parents = this.handleHref(parents);
     for (const i of parents.keys()) {
       this.adaptor.append(parents[i], this.dom[i]);
@@ -211,7 +240,10 @@ CommonWrapper<
   protected handleHref(parents: N[]): N[] {
     const href = this.node.attributes.get('href');
     if (!href) return parents;
-    return parents.map(parent => this.adaptor.append(parent, this.html('a', {href: href})) as N);
+    return parents.map(
+      (parent) =>
+        this.adaptor.append(parent, this.html('a', { href: href })) as N
+    );
   }
 
   /**
@@ -222,10 +254,16 @@ CommonWrapper<
     const styles = this.styles.cssText;
     if (styles) {
       const adaptor = this.adaptor;
-      this.dom.forEach(dom => adaptor.setAttribute(dom, 'style', styles));
+      this.dom.forEach((dom) => adaptor.setAttribute(dom, 'style', styles));
       const family = this.styles.get('font-family');
       if (family) {
-        this.dom.forEach(dom => adaptor.setStyle(dom, 'font-family', this.font.cssFamilyPrefix + ', ' + family));
+        this.dom.forEach((dom) =>
+          adaptor.setStyle(
+            dom,
+            'font-family',
+            this.font.cssFamilyPrefix + ', ' + family
+          )
+        );
       }
     }
   }
@@ -234,7 +272,7 @@ CommonWrapper<
    * Set the (relative) scaling factor for the node
    */
   protected handleScale() {
-    this.dom.forEach(dom => this.setScale(dom, this.bbox.rscale));
+    this.dom.forEach((dom) => this.setScale(dom, this.bbox.rscale));
   }
 
   /**
@@ -243,7 +281,7 @@ CommonWrapper<
    * @return {N}       The HTML node (for chaining)
    */
   protected setScale(chtml: N, rscale: number): N {
-    const scale = (Math.abs(rscale - 1) < .001 ? 1 : rscale);
+    const scale = Math.abs(rscale - 1) < 0.001 ? 1 : rscale;
     if (chtml && scale !== 1) {
       const size = this.percent(scale);
       if (FONTSIZE[size]) {
@@ -260,15 +298,23 @@ CommonWrapper<
    */
   protected handleSpace() {
     const adaptor = this.adaptor;
-    const breakable = !!this.node.getProperty('breakable') && !this.node.getProperty('newline');
+    const breakable =
+      !!this.node.getProperty('breakable') && !this.node.getProperty('newline');
     const n = this.dom.length - 1;
-    for (const data of [[this.getLineBBox(0).L, 'space',  'marginLeft', 0],
-                        [this.getLineBBox(n).R, 'rspace', 'marginRight', n]]) {
+    for (const data of [
+      [this.getLineBBox(0).L, 'space', 'marginLeft', 0],
+      [this.getLineBBox(n).R, 'rspace', 'marginRight', n],
+    ]) {
       const [dimen, name, margin, i] = data as [number, string, string, number];
       const space = this.em(dimen);
       if (breakable && name === 'space') {
-        const node = adaptor.node('mjx-break', SPACE[space] ? {size: SPACE[space]} :
-                                  {style: `letter-spacing: ${this.em(dimen - 1)}`}, [adaptor.text(' ')]);
+        const node = adaptor.node(
+          'mjx-break',
+          SPACE[space]
+            ? { size: SPACE[space] }
+            : { style: `letter-spacing: ${this.em(dimen - 1)}` },
+          [adaptor.text(' ')]
+        );
         adaptor.insert(node, this.dom[i]);
       } else if (dimen) {
         if (SPACE[space]) {
@@ -318,15 +364,18 @@ CommonWrapper<
   protected handleColor() {
     const adaptor = this.adaptor;
     const attributes = this.node.attributes;
-    const color = (attributes.getExplicit('mathcolor') || attributes.getExplicit('color')) as string;
+    const color = (attributes.getExplicit('mathcolor') ||
+      attributes.getExplicit('color')) as string;
     const background = (attributes.getExplicit('mathbackground') ||
-                        attributes.getExplicit('background') ||
-                        this.styles?.get('background-color')) as string;
+      attributes.getExplicit('background') ||
+      this.styles?.get('background-color')) as string;
     if (color) {
-      this.dom.forEach(dom => adaptor.setStyle(dom, 'color', color));
+      this.dom.forEach((dom) => adaptor.setStyle(dom, 'color', color));
     }
     if (background) {
-      this.dom.forEach(dom => adaptor.setStyle(dom, 'backgroundColor', background));
+      this.dom.forEach((dom) =>
+        adaptor.setStyle(dom, 'backgroundColor', background)
+      );
     }
   }
 
@@ -343,20 +392,26 @@ CommonWrapper<
     const defaults = attributes.getAllDefaults();
     const skip = ChtmlWrapper.skipAttributes;
     for (const name of attributes.getExplicitNames()) {
-      if (skip[name] === false || (!(name in defaults) && !skip[name] &&
-                                   !adaptor.hasAttribute(this.dom[0], name))) {
+      if (
+        skip[name] === false ||
+        (!(name in defaults) &&
+          !skip[name] &&
+          !adaptor.hasAttribute(this.dom[0], name))
+      ) {
         const value = attributes.getExplicit(name) as string;
-        this.dom.forEach(dom => adaptor.setAttribute(dom, name, value));
+        this.dom.forEach((dom) => adaptor.setAttribute(dom, name, value));
       }
     }
     if (attributes.get('class')) {
       const names = (attributes.get('class') as string).trim().split(/ +/);
       for (const name of names) {
-        this.dom.forEach(dom => adaptor.addClass(dom, name));
+        this.dom.forEach((dom) => adaptor.addClass(dom, name));
       }
     }
     if (this.node.getProperty('inline-breaks')) {
-      this.dom.forEach(dom => adaptor.setAttribute(dom, 'inline-breaks', 'true'));
+      this.dom.forEach((dom) =>
+        adaptor.setAttribute(dom, 'inline-breaks', 'true')
+      );
     }
   }
 
@@ -367,9 +422,11 @@ CommonWrapper<
     if (this.bbox.pwidth) {
       const adaptor = this.adaptor;
       if (this.bbox.pwidth === BBox.fullWidth) {
-        this.dom.forEach(dom => adaptor.setAttribute(dom, 'width', 'full'));
+        this.dom.forEach((dom) => adaptor.setAttribute(dom, 'width', 'full'));
       } else {
-        this.dom.forEach(dom => adaptor.setStyle(dom, 'width', this.bbox.pwidth));
+        this.dom.forEach((dom) =>
+          adaptor.setStyle(dom, 'width', this.bbox.pwidth)
+        );
       }
     }
   }
@@ -399,23 +456,34 @@ CommonWrapper<
    */
 
   public drawBBox() {
-    let {w, h, d, R}  = this.getOuterBBox();
-    const box = this.html('mjx-box', {style: {
-      opacity: .25, 'margin-left': this.em(-w - R)
-    }}, [
-      this.html('mjx-box', {style: {
-        height: this.em(h),
-        width: this.em(w),
-        'background-color': 'red'
-      }}),
-      this.html('mjx-box', {style: {
-        height: this.em(d),
-        width: this.em(w),
-        'margin-left': this.em(-w),
-        'vertical-align': this.em(-d),
-        'background-color': 'green'
-      }})
-    ] as N[]);
+    let { w, h, d, R } = this.getOuterBBox();
+    const box = this.html(
+      'mjx-box',
+      {
+        style: {
+          opacity: 0.25,
+          'margin-left': this.em(-w - R),
+        },
+      },
+      [
+        this.html('mjx-box', {
+          style: {
+            height: this.em(h),
+            width: this.em(w),
+            'background-color': 'red',
+          },
+        }),
+        this.html('mjx-box', {
+          style: {
+            height: this.em(d),
+            width: this.em(w),
+            'margin-left': this.em(-w),
+            'vertical-align': this.em(-d),
+            'background-color': 'green',
+          },
+        }),
+      ] as N[]
+    );
     const node = this.dom[0] || this.parent.dom[0];
     const size = this.adaptor.getAttribute(node, 'size');
     if (size) {
@@ -459,5 +527,4 @@ CommonWrapper<
   protected char(n: number): string {
     return this.font.charSelector(n).substring(1);
   }
-
 }

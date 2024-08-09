@@ -15,7 +15,6 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Basic enum types for map and configuration handlers.
  *
@@ -36,7 +35,6 @@ export enum ConfigurationType {
   PRIORITY = 'priority',
   PARSER = 'parser',
 }
-
 
 export enum HandlerType {
   DELIMITER = 'delimiter',

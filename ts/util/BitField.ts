@@ -22,7 +22,6 @@
  */
 
 export class BitField {
-
   /**
    * The largest bit available
    */
@@ -107,7 +106,6 @@ export class BitField {
     }
     return bit;
   }
-
 }
 
 /**

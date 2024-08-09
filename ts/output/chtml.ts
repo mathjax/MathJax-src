@@ -21,21 +21,27 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonOutputJax} from './common.js';
-import {CommonWrapper} from './common/Wrapper.js';
-import {StyleList} from '../util/Styles.js';
-import {StyleList as CssStyleList, CssStyles} from '../util/StyleList.js';
-import {OptionList} from '../util/Options.js';
-import {MathDocument} from '../core/MathDocument.js';
-import {MathItem} from '../core/MathItem.js';
-import {ChtmlWrapper, ChtmlWrapperClass} from './chtml/Wrapper.js';
-import {ChtmlWrapperFactory} from './chtml/WrapperFactory.js';
-import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
-        ChtmlFontData, ChtmlFontDataClass, FontExtensionData} from './chtml/FontData.js';
-import {Usage} from './chtml/Usage.js';
+import { CommonOutputJax } from './common.js';
+import { CommonWrapper } from './common/Wrapper.js';
+import { StyleList } from '../util/Styles.js';
+import { StyleList as CssStyleList, CssStyles } from '../util/StyleList.js';
+import { OptionList } from '../util/Options.js';
+import { MathDocument } from '../core/MathDocument.js';
+import { MathItem } from '../core/MathItem.js';
+import { ChtmlWrapper, ChtmlWrapperClass } from './chtml/Wrapper.js';
+import { ChtmlWrapperFactory } from './chtml/WrapperFactory.js';
+import {
+  ChtmlCharOptions,
+  ChtmlVariantData,
+  ChtmlDelimiterData,
+  ChtmlFontData,
+  ChtmlFontDataClass,
+  FontExtensionData,
+} from './chtml/FontData.js';
+import { Usage } from './chtml/Usage.js';
 import * as LENGTHS from '../util/lengths.js';
-import {unicodeChars} from '../util/string.js';
-import {DefaultFont} from './chtml/DefaultFont.js';
+import { unicodeChars } from '../util/string.js';
+import { DefaultFont } from './chtml/DefaultFont.js';
 
 /*****************************************************************/
 /**
@@ -45,23 +51,29 @@ import {DefaultFont} from './chtml/DefaultFont.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class CHTML<N, T, D> extends
-CommonOutputJax<
+export class CHTML<N, T, D> extends CommonOutputJax<
   //
   // The HTMLElement, TextNode, and Document classes (for the DOM implementation in use)
   //
-  N, T, D,
+  N,
+  T,
+  D,
   //
   // The Wrapper type and its Factory and Class (these need to know N, T, and D)
   //
-  ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
+  ChtmlWrapper<N, T, D>,
+  ChtmlWrapperFactory<N, T, D>,
+  ChtmlWrapperClass<N, T, D>,
   //
   // These are font-related objects that depend on the output jax; e,g. the character options
   //   for CHTML and SVG output differ (CHTML contains font information, while SVG has path data)
   //
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
+  ChtmlCharOptions,
+  ChtmlVariantData,
+  ChtmlDelimiterData,
+  ChtmlFontData,
+  ChtmlFontDataClass
 > {
-
   /**
    * The name of this output jax
    */
@@ -72,8 +84,8 @@ CommonOutputJax<
    */
   public static OPTIONS: OptionList = {
     ...CommonOutputJax.OPTIONS,
-    adaptiveCSS: true,            // true means only produce CSS that is used in the processed equations
-    matchFontHeight: true,        // true to match ex-height of surrounding font
+    adaptiveCSS: true, // true means only produce CSS that is used in the processed equations
+    matchFontHeight: true, // true to match ex-height of surrounding font
   };
 
   /**
@@ -82,59 +94,59 @@ CommonOutputJax<
   public static commonStyles: CssStyleList = {
     ...CommonOutputJax.commonStyles,
     'mjx-container[jax="CHTML"]': {
-      'white-space': 'nowrap'
+      'white-space': 'nowrap',
     },
 
-    'mjx-container[jax="CHTML"] :focus': {'outline': 'solid 3px'},
-    'mjx-container [space="1"]': {'margin-left': '.111em'},
-    'mjx-container [space="2"]': {'margin-left': '.167em'},
-    'mjx-container [space="3"]': {'margin-left': '.222em'},
-    'mjx-container [space="4"]': {'margin-left': '.278em'},
-    'mjx-container [space="5"]': {'margin-left': '.333em'},
+    'mjx-container[jax="CHTML"] :focus': { outline: 'solid 3px' },
+    'mjx-container [space="1"]': { 'margin-left': '.111em' },
+    'mjx-container [space="2"]': { 'margin-left': '.167em' },
+    'mjx-container [space="3"]': { 'margin-left': '.222em' },
+    'mjx-container [space="4"]': { 'margin-left': '.278em' },
+    'mjx-container [space="5"]': { 'margin-left': '.333em' },
 
-    'mjx-container [rspace="1"]': {'margin-right': '.111em'},
-    'mjx-container [rspace="2"]': {'margin-right': '.167em'},
-    'mjx-container [rspace="3"]': {'margin-right': '.222em'},
-    'mjx-container [rspace="4"]': {'margin-right': '.278em'},
-    'mjx-container [rspace="5"]': {'margin-right': '.333em'},
+    'mjx-container [rspace="1"]': { 'margin-right': '.111em' },
+    'mjx-container [rspace="2"]': { 'margin-right': '.167em' },
+    'mjx-container [rspace="3"]': { 'margin-right': '.222em' },
+    'mjx-container [rspace="4"]': { 'margin-right': '.278em' },
+    'mjx-container [rspace="5"]': { 'margin-right': '.333em' },
 
-    'mjx-container [size="s"]' : {'font-size': '70.7%'},
-    'mjx-container [size="ss"]': {'font-size': '50%'},
-    'mjx-container [size="Tn"]': {'font-size': '60%'},
-    'mjx-container [size="sm"]': {'font-size': '85%'},
-    'mjx-container [size="lg"]': {'font-size': '120%'},
-    'mjx-container [size="Lg"]': {'font-size': '144%'},
-    'mjx-container [size="LG"]': {'font-size': '173%'},
-    'mjx-container [size="hg"]': {'font-size': '207%'},
-    'mjx-container [size="HG"]': {'font-size': '249%'},
+    'mjx-container [size="s"]': { 'font-size': '70.7%' },
+    'mjx-container [size="ss"]': { 'font-size': '50%' },
+    'mjx-container [size="Tn"]': { 'font-size': '60%' },
+    'mjx-container [size="sm"]': { 'font-size': '85%' },
+    'mjx-container [size="lg"]': { 'font-size': '120%' },
+    'mjx-container [size="Lg"]': { 'font-size': '144%' },
+    'mjx-container [size="LG"]': { 'font-size': '173%' },
+    'mjx-container [size="hg"]': { 'font-size': '207%' },
+    'mjx-container [size="HG"]': { 'font-size': '249%' },
 
-    'mjx-container [width="full"]': {width: '100%'},
+    'mjx-container [width="full"]': { width: '100%' },
 
-    'mjx-box': {display: 'inline-block'},
-    'mjx-block': {display: 'block'},
-    'mjx-itable': {display: 'inline-table'},
-    'mjx-row': {display: 'table-row'},
-    'mjx-row > *': {display: 'table-cell'},
+    'mjx-box': { display: 'inline-block' },
+    'mjx-block': { display: 'block' },
+    'mjx-itable': { display: 'inline-table' },
+    'mjx-row': { display: 'table-row' },
+    'mjx-row > *': { display: 'table-cell' },
 
-    'mjx-container [inline-breaks]': {display: 'inline'},
+    'mjx-container [inline-breaks]': { display: 'inline' },
 
     //
     //  These don't have Wrapper subclasses, so add their styles here
     //
     'mjx-mtext': {
-      display: 'inline-block'
+      display: 'inline-block',
     },
     'mjx-mstyle': {
-      display: 'inline-block'
+      display: 'inline-block',
     },
     'mjx-merror': {
       display: 'inline-block',
       color: 'red',
-      'background-color': 'yellow'
+      'background-color': 'yellow',
     },
     'mjx-mphantom': {
-      visibility: 'hidden'
-    }
+      visibility: 'hidden',
+    },
   };
 
   /**
@@ -199,9 +211,9 @@ CommonOutputJax<
       }
       styles.addStyles(this.font.updateDynamicStyles());
       this.adaptor.insertRules(this.chtmlStyles, styles.getStyleRules());
-      return this.chtmlStyles;  // stylesheet is already added to the document
+      return this.chtmlStyles; // stylesheet is already added to the document
     }
-    const sheet = this.chtmlStyles = super.styleSheet(html);
+    const sheet = (this.chtmlStyles = super.styleSheet(html));
     this.adaptor.setAttribute(sheet, 'id', CHTML.STYLESHEETID);
     this.wrapperUsage.update();
     return sheet;
@@ -223,7 +235,9 @@ CommonOutputJax<
       return;
     }
     for (const kind of this.wrapperUsage.update()) {
-      const wrapper = this.factory.getNodeClass(kind) as any as typeof CommonWrapper;
+      const wrapper = this.factory.getNodeClass(
+        kind
+      ) as any as typeof CommonWrapper;
       wrapper && this.addClassStyles(wrapper, styles);
     }
   }
@@ -237,8 +251,8 @@ CommonOutputJax<
       styles.addStyles({
         ['mjx-' + CLASS.kind]: {
           display: 'inline-block',
-          'text-align': 'left'
-        }
+          'text-align': 'left',
+        },
       });
     }
     this.wrapperUsage.add(CLASS.kind);
@@ -280,11 +294,12 @@ CommonOutputJax<
     const scale = 100 / this.math.metrics.scale;
     if (scale !== 100) {
       styles['font-size'] = this.fixed(scale, 1) + '%';
-      styles.padding = LENGTHS.em(75 / scale) + ' 0 ' + LENGTHS.em(20 / scale) + ' 0';
+      styles.padding =
+        LENGTHS.em(75 / scale) + ' 0 ' + LENGTHS.em(20 / scale) + ' 0';
     }
     if (variant !== '-explicitFont') {
       const c = unicodeChars(text);
-      if (c.length !== 1 || c[0] < 0x1D400 || c[0] > 0x1D7FF) {
+      if (c.length !== 1 || c[0] < 0x1d400 || c[0] > 0x1d7ff) {
         this.cssFontStyles(this.font.getCssFont(variant), styles);
       }
     }
@@ -297,7 +312,9 @@ CommonOutputJax<
       styles.width = this.fixed(width * this.math.metrics.scale) + 'em';
     }
     //
-    return this.html('mjx-utext', {variant: variant, style: styles}, [this.text(text)]);
+    return this.html('mjx-utext', { variant: variant, style: styles }, [
+      this.text(text),
+    ]);
   }
 
   /**
@@ -313,21 +330,26 @@ CommonOutputJax<
     //
     // Work arround Safari bug with the MJXZERO font.
     //
-    adaptor.setStyle(text, 'font-family', adaptor.getStyle(text, 'font-family').replace(/MJXZERO, /g, ''));
+    adaptor.setStyle(
+      text,
+      'font-family',
+      adaptor.getStyle(text, 'font-family').replace(/MJXZERO, /g, '')
+    );
     //
     const em = this.math.metrics.em;
     const style = {
-      position: 'absolute', top: 0, left: 0,
+      position: 'absolute',
+      top: 0,
+      left: 0,
       'white-space': 'nowrap',
-      'font-size': this.fixed(em, 3) + 'px'
+      'font-size': this.fixed(em, 3) + 'px',
     };
-    const node = this.html('mjx-measure-text', {style}, [text]);
+    const node = this.html('mjx-measure-text', { style }, [text]);
     adaptor.append(adaptor.parent(this.math.start.node), this.container);
     adaptor.append(this.container, node);
     let w = adaptor.nodeSize(text, em)[0];
     adaptor.remove(this.container);
     adaptor.remove(node);
-    return {w: w, h: .75, d: .2};
+    return { w: w, h: 0.75, d: 0.2 };
   }
-
 }

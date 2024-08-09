@@ -15,65 +15,65 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Configuration file for the AMS package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
-import {Configuration, ParserConfiguration} from '../Configuration.js';
-import {MultlineItem, FlalignItem} from './AmsItems.js';
-import {AbstractTags} from '../Tags.js';
-import {NEW_OPS} from './AmsMethods.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration, ParserConfiguration } from '../Configuration.js';
+import { MultlineItem, FlalignItem } from './AmsItems.js';
+import { AbstractTags } from '../Tags.js';
+import { NEW_OPS } from './AmsMethods.js';
 import './AmsMappings.js';
-import {CommandMap} from '../TokenMap.js';
-
+import { CommandMap } from '../TokenMap.js';
 
 /**
  * Standard AMS style tagging.
  * @constructor
  * @extends {AbstractTags}
  */
-export class AmsTags extends AbstractTags { }
-
+export class AmsTags extends AbstractTags {}
 
 /**
  * Init method for AMS package.
  * @param {ParserConfiguration} config The current configuration.
  */
-let init = function(config: ParserConfiguration) {
+let init = function (config: ParserConfiguration) {
   new CommandMap(NEW_OPS, {});
-  config.append(Configuration.local({handler: {macro: [NEW_OPS]},
-                                    priority: -1}));
+  config.append(
+    Configuration.local({ handler: { macro: [NEW_OPS] }, priority: -1 })
+  );
 };
 
-export const AmsConfiguration = Configuration.create(
-  'ams', {
-    [ConfigurationType.HANDLER]: {
-      [HandlerType.CHARACTER]: ['AMSmath-operatorLetter'],
-      [HandlerType.DELIMITER]: ['AMSsymbols-delimiter', 'AMSmath-delimiter'],
-      [HandlerType.MACRO]: ['AMSsymbols-mathchar0mi', 'AMSsymbols-mathchar0mo',
-              'AMSsymbols-delimiter', 'AMSsymbols-macros',
-              'AMSmath-mathchar0mo', 'AMSmath-macros', 'AMSmath-delimiter'],
-      [HandlerType.ENVIRONMENT]: ['AMSmath-environment']
+export const AmsConfiguration = Configuration.create('ams', {
+  [ConfigurationType.HANDLER]: {
+    [HandlerType.CHARACTER]: ['AMSmath-operatorLetter'],
+    [HandlerType.DELIMITER]: ['AMSsymbols-delimiter', 'AMSmath-delimiter'],
+    [HandlerType.MACRO]: [
+      'AMSsymbols-mathchar0mi',
+      'AMSsymbols-mathchar0mo',
+      'AMSsymbols-delimiter',
+      'AMSsymbols-macros',
+      'AMSmath-mathchar0mo',
+      'AMSmath-macros',
+      'AMSmath-delimiter',
+    ],
+    [HandlerType.ENVIRONMENT]: ['AMSmath-environment'],
+  },
+  [ConfigurationType.ITEMS]: {
+    [MultlineItem.prototype.kind]: MultlineItem,
+    [FlalignItem.prototype.kind]: FlalignItem,
+  },
+  [ConfigurationType.TAGS]: { ams: AmsTags },
+  [ConfigurationType.INIT]: init,
+  [ConfigurationType.OPTIONS]: {
+    multlineWidth: '',
+    ams: {
+      operatornamePattern: /^[-*a-zA-Z]+/, // multiLetterIdentifier for \operatorname
+      multlineWidth: '100%', // The width to use for multline environments.
+      multlineIndent: '1em', // The margin to use on both sides of multline environments.
     },
-    [ConfigurationType.ITEMS]: {
-      [MultlineItem.prototype.kind]: MultlineItem,
-      [FlalignItem.prototype.kind]: FlalignItem,
-    },
-    [ConfigurationType.TAGS]: {'ams': AmsTags},
-    [ConfigurationType.INIT]: init,
-    [ConfigurationType.OPTIONS]: {
-      multlineWidth: '',
-      ams: {
-        operatornamePattern: /^[-*a-zA-Z]+/,  // multiLetterIdentifier for \operatorname
-        multlineWidth: '100%',  // The width to use for multline environments.
-        multlineIndent: '1em',  // The margin to use on both sides of multline environments.
-      }
-    }
-  }
-);
-
-
+  },
+});

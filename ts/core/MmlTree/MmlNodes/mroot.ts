@@ -21,8 +21,13 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {MmlNode, AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import {
+  MmlNode,
+  AbstractMmlNode,
+  AttributeList,
+  TEXCLASS,
+} from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,13 +35,12 @@ import {MmlNode, AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMroot extends AbstractMmlNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
     ...AbstractMmlNode.defaults,
-    'data-vertical-align': 'bottom'
+    'data-vertical-align': 'bottom',
   };
 
   /**
@@ -85,9 +89,18 @@ export class MmlMroot extends AbstractMmlNode {
    *
    * @override
    */
-  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+  protected setChildInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    prime: boolean
+  ) {
     this.childNodes[0].setInheritedAttributes(attributes, display, level, true);
-    this.childNodes[1].setInheritedAttributes(attributes, false, level + 2, prime);
+    this.childNodes[1].setInheritedAttributes(
+      attributes,
+      false,
+      level + 2,
+      prime
+    );
   }
-
 }

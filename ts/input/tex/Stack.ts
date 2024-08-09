@@ -15,22 +15,18 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview The Stack for the TeX parser.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-
 import NodeUtil from './NodeUtil.js';
-import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import {StackItem, EnvList} from './StackItem.js';
+import { MmlNode } from '../../core/MmlTree/MmlNode.js';
+import { StackItem, EnvList } from './StackItem.js';
 import StackItemFactory from './StackItemFactory.js';
 
-
 export default class Stack {
-
   /**
    * @type {EnvList}
    */
@@ -48,16 +44,18 @@ export default class Stack {
    * @param {EnvList} _env The environment.
    * @param {boolean} inner True if parser has been called recursively.
    */
-  constructor(private _factory: StackItemFactory,
-              private _env: EnvList, inner: boolean) {
-    this.global = {isInner: inner};
-    this.stack = [ this._factory.create('start', this.global) ];
+  constructor(
+    private _factory: StackItemFactory,
+    private _env: EnvList,
+    inner: boolean
+  ) {
+    this.global = { isInner: inner };
+    this.stack = [this._factory.create('start', this.global)];
     if (_env) {
       this.stack[0].env = _env;
     }
     this.env = this.stack[0].env;
   }
-
 
   /**
    * Set the environment of the stack.
@@ -67,7 +65,6 @@ export default class Stack {
     this._env = env;
   }
 
-
   /**
    * Retrieves the environment of that stack.
    * @return {EnvList} The current environment.
@@ -75,7 +72,6 @@ export default class Stack {
   public get env(): EnvList {
     return this._env;
   }
-
 
   /**
    * Pushes items or nodes onto stack.
@@ -86,11 +82,13 @@ export default class Stack {
       if (!node) {
         continue;
       }
-      const item = NodeUtil.isNode(node) ?
-        this._factory.create('mml', node) : node as StackItem;
+      const item = NodeUtil.isNode(node)
+        ? this._factory.create('mml', node)
+        : (node as StackItem);
       item.global = this.global;
-      const [top, success] =
-        this.stack.length ? this.Top().checkItem(item) : [null, true];
+      const [top, success] = this.stack.length
+        ? this.Top().checkItem(item)
+        : [null, true];
       if (!success) {
         continue;
       }
@@ -113,7 +111,6 @@ export default class Stack {
     }
   }
 
-
   /**
    * Pop the topmost elements off the stack.
    * @return {StackItem} A stack item.
@@ -123,10 +120,9 @@ export default class Stack {
     if (!item.isOpen) {
       delete item.env;
     }
-    this.env = (this.stack.length ? this.Top().env : {});
+    this.env = this.stack.length ? this.Top().env : {};
     return item;
   }
-
 
   /**
    * Look up the nth elements on the stack without removing them.
@@ -136,7 +132,6 @@ export default class Stack {
   public Top(n: number = 1): StackItem {
     return this.stack.length < n ? null : this.stack[this.stack.length - n];
   }
-
 
   /**
    * Look up the topmost element on the stack, returning the Mml node in that
@@ -157,12 +152,10 @@ export default class Stack {
     return this.stack.length;
   }
 
-
   /**
    * @override
    */
   public toString() {
     return 'stack[\n  ' + this.stack.join('\n  ') + '\n]';
   }
-
 }

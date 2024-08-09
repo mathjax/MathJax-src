@@ -15,28 +15,26 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Class for handling all explorers on a single Math Item.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {LiveRegion, SpeechRegion, ToolTip, HoverRegion} from './Region.js';
+import { LiveRegion, SpeechRegion, ToolTip, HoverRegion } from './Region.js';
 import type { ExplorerMathDocument, ExplorerMathItem } from '../explorer.js';
 
-import {Explorer} from './Explorer.js';
-import {SpeechExplorer} from './KeyExplorer.js';
+import { Explorer } from './Explorer.js';
+import { SpeechExplorer } from './KeyExplorer.js';
 import * as me from './MouseExplorer.js';
-import {TreeColorer, FlameColorer} from './TreeExplorer.js';
+import { TreeColorer, FlameColorer } from './TreeExplorer.js';
 
-import {Sre} from '../sre.js';
+import { Sre } from '../sre.js';
 
 /**
  * The regions objects needed for the explorers.
  */
 export class RegionPool {
-
   /**
    * The speech region.
    */
@@ -70,53 +68,118 @@ export class RegionPool {
   /**
    * @param document The document the handler belongs to.
    */
-  constructor(public document: ExplorerMathDocument) { }
-
+  constructor(public document: ExplorerMathDocument) {}
 }
-
 
 /**
  * Type of explorer initialization methods.
  * @type {(ExplorerMathDocument, HTMLElement, any[]): Explorer}
  */
-type ExplorerInit = (doc: ExplorerMathDocument, pool: ExplorerPool,
-                     node: HTMLElement, ...rest: any[]) => Explorer;
+type ExplorerInit = (
+  doc: ExplorerMathDocument,
+  pool: ExplorerPool,
+  node: HTMLElement,
+  ...rest: any[]
+) => Explorer;
 
 /**
  *  Generation methods for all MathJax explorers available via option settings.
  */
-let allExplorers: {[options: string]: ExplorerInit} = {
-  speech: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) => {
+let allExplorers: { [options: string]: ExplorerInit } = {
+  speech: (
+    doc: ExplorerMathDocument,
+    pool: ExplorerPool,
+    node: HTMLElement,
+    ...rest: any[]
+  ) => {
     let explorer = SpeechExplorer.create(
-      doc, pool, doc.explorerRegions.speechRegion, node,
-      doc.explorerRegions.brailleRegion, doc.explorerRegions.magnifier, rest[0], rest[1]) as SpeechExplorer;
+      doc,
+      pool,
+      doc.explorerRegions.speechRegion,
+      node,
+      doc.explorerRegions.brailleRegion,
+      doc.explorerRegions.magnifier,
+      rest[0],
+      rest[1]
+    ) as SpeechExplorer;
     explorer.sound = true;
     return explorer;
   },
-  mouseMagnifier: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ..._rest: any[]) =>
-    me.ContentHoverer.create(doc, pool, doc.explorerRegions.magnifier, node,
-                             (x: HTMLElement) => x.hasAttribute('data-semantic-type'),
-                             (x: HTMLElement) => x),
-  hover: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ..._rest: any[]) =>
-    me.FlameHoverer.create(doc, pool, null, node),
-  infoType: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ..._rest: any[]) =>
-    me.ValueHoverer.create(doc, pool, doc.explorerRegions.tooltip1, node,
-                           (x: HTMLElement) => x.hasAttribute('data-semantic-type'),
-                           (x: HTMLElement) => x.getAttribute('data-semantic-type')),
-  infoRole: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ..._rest: any[]) =>
-    me.ValueHoverer.create(doc, pool, doc.explorerRegions.tooltip2, node,
-                           (x: HTMLElement) => x.hasAttribute('data-semantic-role'),
-                           (x: HTMLElement) => x.getAttribute('data-semantic-role')),
-  infoPrefix: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ..._rest: any[]) =>
-    me.ValueHoverer.create(doc, pool, doc.explorerRegions.tooltip3, node,
-                           (x: HTMLElement) => x.hasAttribute('data-semantic-prefix'),
-                           (x: HTMLElement) => x.getAttribute('data-semantic-prefix')),
-  flame: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ..._rest: any[]) =>
-    FlameColorer.create(doc, pool, null, node),
-  treeColoring: (doc: ExplorerMathDocument, pool: ExplorerPool, node: HTMLElement, ...rest: any[]) =>
-    TreeColorer.create(doc, pool, null, node, ...rest)
+  mouseMagnifier: (
+    doc: ExplorerMathDocument,
+    pool: ExplorerPool,
+    node: HTMLElement,
+    ..._rest: any[]
+  ) =>
+    me.ContentHoverer.create(
+      doc,
+      pool,
+      doc.explorerRegions.magnifier,
+      node,
+      (x: HTMLElement) => x.hasAttribute('data-semantic-type'),
+      (x: HTMLElement) => x
+    ),
+  hover: (
+    doc: ExplorerMathDocument,
+    pool: ExplorerPool,
+    node: HTMLElement,
+    ..._rest: any[]
+  ) => me.FlameHoverer.create(doc, pool, null, node),
+  infoType: (
+    doc: ExplorerMathDocument,
+    pool: ExplorerPool,
+    node: HTMLElement,
+    ..._rest: any[]
+  ) =>
+    me.ValueHoverer.create(
+      doc,
+      pool,
+      doc.explorerRegions.tooltip1,
+      node,
+      (x: HTMLElement) => x.hasAttribute('data-semantic-type'),
+      (x: HTMLElement) => x.getAttribute('data-semantic-type')
+    ),
+  infoRole: (
+    doc: ExplorerMathDocument,
+    pool: ExplorerPool,
+    node: HTMLElement,
+    ..._rest: any[]
+  ) =>
+    me.ValueHoverer.create(
+      doc,
+      pool,
+      doc.explorerRegions.tooltip2,
+      node,
+      (x: HTMLElement) => x.hasAttribute('data-semantic-role'),
+      (x: HTMLElement) => x.getAttribute('data-semantic-role')
+    ),
+  infoPrefix: (
+    doc: ExplorerMathDocument,
+    pool: ExplorerPool,
+    node: HTMLElement,
+    ..._rest: any[]
+  ) =>
+    me.ValueHoverer.create(
+      doc,
+      pool,
+      doc.explorerRegions.tooltip3,
+      node,
+      (x: HTMLElement) => x.hasAttribute('data-semantic-prefix'),
+      (x: HTMLElement) => x.getAttribute('data-semantic-prefix')
+    ),
+  flame: (
+    doc: ExplorerMathDocument,
+    pool: ExplorerPool,
+    node: HTMLElement,
+    ..._rest: any[]
+  ) => FlameColorer.create(doc, pool, null, node),
+  treeColoring: (
+    doc: ExplorerMathDocument,
+    pool: ExplorerPool,
+    node: HTMLElement,
+    ...rest: any[]
+  ) => TreeColorer.create(doc, pool, null, node, ...rest),
 };
-
 
 /**
  * Class to bundle and handle all explorers on a Math item. This in particular
@@ -124,7 +187,6 @@ let allExplorers: {[options: string]: ExplorerInit} = {
  * uncontrolled interaction between highlighting of different explorers.
  */
 export class ExplorerPool {
-
   /**
    * A highlighter that is used to mark nodes during auto voicing.
    */
@@ -133,7 +195,7 @@ export class ExplorerPool {
   /**
    * The explorer dictionary.
    */
-  public explorers: {[key: string]: Explorer} = {};
+  public explorers: { [key: string]: Explorer } = {};
 
   /**
    * The currently attached explorers
@@ -190,15 +252,24 @@ export class ExplorerPool {
    * @param  node The node explorers will be attached to.
    * @param  mml The corresponding Mathml node as a string.
    */
-  public init(document: ExplorerMathDocument,
-              node: HTMLElement, mml: string,
-              item: ExplorerMathItem) {
+  public init(
+    document: ExplorerMathDocument,
+    node: HTMLElement,
+    mml: string,
+    item: ExplorerMathItem
+  ) {
     this.document = document;
     this.mml = mml;
     this.node = node;
     this.setPrimaryHighlighter();
     for (let key of Object.keys(allExplorers)) {
-      this.explorers[key] = allExplorers[key](this.document, this, this.node, this.mml, item);
+      this.explorers[key] = allExplorers[key](
+        this.document,
+        this,
+        this.node,
+        this.mml,
+        item
+      );
     }
     this.setSecondaryHighlighter();
     this.attach();
@@ -222,8 +293,11 @@ export class ExplorerPool {
         explorer.AddEvents();
         explorer.stoppable = false;
         keyExplorers.unshift(explorer);
-        if (this.speechExplorerKeys.some(
-          exKey => this.document.options.a11y[exKey])) {
+        if (
+          this.speechExplorerKeys.some(
+            (exKey) => this.document.options.a11y[exKey]
+          )
+        ) {
           explorer.Attach();
           this.attached.push(key);
         } else {
@@ -231,7 +305,10 @@ export class ExplorerPool {
         }
         continue;
       }
-      if (a11y[key] || (key === 'speech' && (a11y.braille || a11y.keyMagnifier))) {
+      if (
+        a11y[key] ||
+        (key === 'speech' && (a11y.braille || a11y.keyMagnifier))
+      ) {
         explorer.Attach();
         this.attached.push(key);
       } else {
@@ -253,21 +330,21 @@ export class ExplorerPool {
    * rerendered.
    */
   public reattach() {
-     for (let key of this.attached) {
-       let explorer = this.explorers[key];
-       if (explorer.active) {
+    for (let key of this.attached) {
+      let explorer = this.explorers[key];
+      if (explorer.active) {
         this._restart.push(key);
         explorer.Stop();
       }
-     }
+    }
   }
 
   /**
    * Restarts explorers after a MathItem is rerendered.
    */
   public restart() {
-    this._restart.forEach(x => {
-      this.explorers[x].Start(); 
+    this._restart.forEach((x) => {
+      this.explorers[x].Start();
     });
     this._restart = [];
   }
@@ -277,9 +354,10 @@ export class ExplorerPool {
    */
   protected setPrimaryHighlighter() {
     let [foreground, background] = this.colorOptions();
-    this._highlighter = Sre.getHighlighter(
-      background, foreground,
-      {renderer: this.document.outputJax.name, browser: 'v3'});
+    this._highlighter = Sre.getHighlighter(background, foreground, {
+      renderer: this.document.outputJax.name,
+      browser: 'v3',
+    });
   }
 
   /**
@@ -287,8 +365,9 @@ export class ExplorerPool {
    */
   protected setSecondaryHighlighter() {
     this.secondaryHighlighter = Sre.getHighlighter(
-      {color: 'red'}, {color: 'black'},
-      {renderer: this.document.outputJax.name, browser: 'v3'}
+      { color: 'red' },
+      { color: 'black' },
+      { renderer: this.document.outputJax.name, browser: 'v3' }
     );
     (this.speech.region as SpeechRegion).highlighter =
       this.secondaryHighlighter;
@@ -326,14 +405,19 @@ export class ExplorerPool {
    * @return {[foreground, background]} Color assignments for fore and
    *     background colors.
    */
-  private colorOptions(): [{color: string, alpha: number},
-                           {color: string, alpha: number}] {
+  private colorOptions(): [
+    { color: string; alpha: number },
+    { color: string; alpha: number },
+  ] {
     let opts = this.document.options.a11y;
-    let foreground = {color: opts.foregroundColor.toLowerCase(),
-                      alpha: opts.foregroundOpacity / 100};
-    let background = {color: opts.backgroundColor.toLowerCase(),
-                      alpha: opts.backgroundOpacity / 100};
+    let foreground = {
+      color: opts.foregroundColor.toLowerCase(),
+      alpha: opts.foregroundOpacity / 100,
+    };
+    let background = {
+      color: opts.backgroundColor.toLowerCase(),
+      alpha: opts.backgroundOpacity / 100,
+    };
     return [foreground, background];
   }
-
 }

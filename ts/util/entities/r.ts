@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     RBarr: '\u2910',
     REG: '\u00AE',
     Racute: '\u0154',
@@ -128,5 +129,7 @@ Entities.add({
     rtrif: '\u25B8',
     rtriltri: '\u29CE',
     ruluhar: '\u2968',
-    rx: '\u211E'
-}, 'r');
+    rx: '\u211E',
+  },
+  'r'
+);

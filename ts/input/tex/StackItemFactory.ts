@@ -15,7 +15,6 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview A factory for stack items. This allows particular items to be
  *     overwritten later.
@@ -23,10 +22,9 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {StackItemClass, StackItem, BaseItem} from './StackItem.js';
+import { StackItemClass, StackItem, BaseItem } from './StackItem.js';
 import ParseOptions from './ParseOptions.js';
-import {AbstractFactory} from '../../core/Tree/Factory.js';
-
+import { AbstractFactory } from '../../core/Tree/Factory.js';
 
 class DummyItem extends BaseItem {}
 
@@ -37,26 +35,25 @@ class DummyItem extends BaseItem {}
  * @constructor
  * @extends {AbstractFactory}
  */
-export default class StackItemFactory extends AbstractFactory<StackItem, StackItemClass> {
-
+export default class StackItemFactory extends AbstractFactory<
+  StackItem,
+  StackItemClass
+> {
   /**
    * @override
    */
-  public static DefaultStackItems: {[kind: string]: StackItemClass} = {
-    [DummyItem.prototype.kind]: DummyItem
+  public static DefaultStackItems: { [kind: string]: StackItemClass } = {
+    [DummyItem.prototype.kind]: DummyItem,
   };
-
 
   /**
    * @override
    */
   public defaultKind = 'dummy';
 
-
   /**
    * The parser configuration.
    * @type {ParseOptions}
    */
   public configuration: ParseOptions = null;
-
 }

@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     Fcy: '\u0424',
     FilledSmallSquare: '\u25FC',
     Fouriertrf: '\u2131',
@@ -50,5 +51,7 @@ Entities.add({
     frac56: '\u215A',
     frac58: '\u215D',
     frac78: '\u215E',
-    frasl: '\u2044'
-}, 'f');
+    frasl: '\u2044',
+  },
+  'f'
+);

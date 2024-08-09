@@ -251,7 +251,10 @@ export class LinkedList<DataClass> {
     }
     let item = new ListItem<DataClass>(data);
     let cur = this.list.next;
-    while (cur.data !== END && isBefore(cur.data as DataClass, item.data as DataClass)) {
+    while (
+      cur.data !== END &&
+      isBefore(cur.data as DataClass, item.data as DataClass)
+    ) {
       cur = cur.next;
     }
     item.prev = cur.prev;
@@ -306,7 +309,10 @@ export class LinkedList<DataClass> {
    * @param {SortFn} isBefore  The function used to order the data
    * @return {LinkedList}      The LinkedList instance (for chaining)
    */
-  public merge(list: LinkedList<DataClass>, isBefore: SortFn<DataClass> = null): LinkedList<DataClass> {
+  public merge(
+    list: LinkedList<DataClass>,
+    isBefore: SortFn<DataClass> = null
+  ): LinkedList<DataClass> {
     if (isBefore === null) {
       isBefore = this.isBefore.bind(this);
     }

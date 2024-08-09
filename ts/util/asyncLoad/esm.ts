@@ -21,13 +21,16 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {mathjax} from '../../mathjax.js';
+import { mathjax } from '../../mathjax.js';
 
-let root = new URL(import.meta.url).href.replace(/\/util\/asyncLoad\/esm.js$/, '/');
+let root = new URL(import.meta.url).href.replace(
+  /\/util\/asyncLoad\/esm.js$/,
+  '/'
+);
 
 if (!mathjax.asyncLoad) {
   mathjax.asyncLoad = async (name: string) => {
-    const file = (name.charAt(0) === '.' ? new URL(name, root).pathname : name);
+    const file = name.charAt(0) === '.' ? new URL(name, root).pathname : name;
     return import(file).then((result) => result?.default || result);
   };
 }

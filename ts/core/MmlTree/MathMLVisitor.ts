@@ -21,10 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MmlVisitor} from './MmlVisitor.js';
-import {MmlNode, TextNode, XMLNode} from './MmlNode.js';
-import {HtmlNode} from './MmlNodes/HtmlNode.js';
-
+import { MmlVisitor } from './MmlVisitor.js';
+import { MmlNode, TextNode, XMLNode } from './MmlNode.js';
+import { HtmlNode } from './MmlNodes/HtmlNode.js';
 
 /*****************************************************************/
 /**
@@ -32,7 +31,6 @@ import {HtmlNode} from './MmlNodes/HtmlNode.js';
  */
 
 export class MathMLVisitor extends MmlVisitor {
-
   /**
    * The document in which the nodes are being made
    */
@@ -119,5 +117,4 @@ export class MathMLVisitor extends MmlVisitor {
       mml.setAttribute(name, attributes[name].toString());
     }
   }
-
 }

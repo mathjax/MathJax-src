@@ -21,10 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVG} from '../svg.js';
+import { SVG } from '../svg.js';
 
 export class FontCache<N, T, D> {
-
   /**
    * The SVG jax that owsn this cache
    */
@@ -66,10 +65,18 @@ export class FontCache<N, T, D> {
    * @return {string}          The id for the cached <path> element
    */
   public cachePath(variant: string, C: string, path: string): string {
-    const id = 'MJX-' + this.localID + (this.jax.font.getVariant(variant).cacheID || '') + '-' + C;
+    const id =
+      'MJX-' +
+      this.localID +
+      (this.jax.font.getVariant(variant).cacheID || '') +
+      '-' +
+      C;
     if (!this.cache.has(id)) {
       this.cache.set(id, path);
-      this.jax.adaptor.append(this.defs, this.jax.svg('path', {id: id, d: path}));
+      this.jax.adaptor.append(
+        this.defs,
+        this.jax.svg('path', { id: id, d: path })
+      );
     }
     return id;
   }
@@ -103,5 +110,4 @@ export class FontCache<N, T, D> {
   public getCache() {
     return this.defs;
   }
-
 }

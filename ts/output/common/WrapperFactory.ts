@@ -21,11 +21,17 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonOutputJax} from '../common.js';
-import {AbstractWrapperFactory} from '../../core/Tree/WrapperFactory.js';
-import {CommonWrapper, CommonWrapperClass} from './Wrapper.js';
-import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from './FontData.js';
-import {MmlNode, MmlNodeClass} from '../../core/MmlTree/MmlNode.js';
+import { CommonOutputJax } from '../common.js';
+import { AbstractWrapperFactory } from '../../core/Tree/WrapperFactory.js';
+import { CommonWrapper, CommonWrapperClass } from './Wrapper.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from './FontData.js';
+import { MmlNode, MmlNodeClass } from '../../core/MmlTree/MmlNode.js';
 
 /*****************************************************************/
 
@@ -46,7 +52,9 @@ import {MmlNode, MmlNodeClass} from '../../core/MmlTree/MmlNode.js';
  * @template FC  The FontDataClass type
  */
 export class CommonWrapperFactory<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -55,15 +63,15 @@ export class CommonWrapperFactory<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, any, DD>,
-  FC extends FontDataClass<CC, VV, DD>
-  > extends AbstractWrapperFactory<MmlNode, MmlNodeClass, WW, WC> {
-
+  FC extends FontDataClass<CC, VV, DD>,
+> extends AbstractWrapperFactory<MmlNode, MmlNodeClass, WW, WC> {
   /**
    * The default list of wrapper nodes this factory can create
    *   (filled in by subclasses)
    */
+  /* prettier-ignore */
   public static defaultNodes: {
-    [kind: string]: CommonWrapperClass<any, any, any, any, any, any, any, any, any, any, any, any>
+    [kind: string]: CommonWrapperClass<any, any, any, any, any, any, any, any, any, any, any, any>;
   } = {};
 
   /**
@@ -77,5 +85,4 @@ export class CommonWrapperFactory<
   get Wrappers(): Object {
     return this.node;
   }
-
 }

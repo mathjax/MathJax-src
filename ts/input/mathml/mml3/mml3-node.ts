@@ -22,8 +22,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathDocument} from '../../../core/MathDocument.js';
-import {mjxRoot} from '#root/root.js';
+import { MathDocument } from '../../../core/MathDocument.js';
+import { mjxRoot } from '#root/root.js';
 
 /**
  * Create the transform function that uses Saxon-js to perform the
@@ -35,6 +35,7 @@ import {mjxRoot} from '#root/root.js';
  *
  * @return {(node: N, doc: MathDocument<N,T,D>) => N)}   The transformation function
  */
+/* prettier-ignore */
 export function createTransform<N, T, D>(): (node: N, doc: MathDocument<N, T, D>) => N {
   const nodeRequire = eval('require');   // get the actual require from node.
   try {

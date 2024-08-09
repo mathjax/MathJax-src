@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     ZHcy: '\u0416',
     Zacute: '\u0179',
     Zcaron: '\u017D',
@@ -32,5 +33,7 @@ Entities.add({
     zeetrf: '\u2128',
     zhcy: '\u0436',
     zwj: '\u200D',
-    zwnj: '\u200C'
-}, 'z');
+    zwnj: '\u200C',
+  },
+  'z'
+);

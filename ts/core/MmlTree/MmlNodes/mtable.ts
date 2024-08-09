@@ -21,9 +21,15 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {MmlNode, AbstractMmlNode, AttributeList, TEXCLASS, indentAttributes} from '../MmlNode.js';
-import {split} from '../../../util/string.js';
+import { PropertyList } from '../../Tree/Node.js';
+import {
+  MmlNode,
+  AbstractMmlNode,
+  AttributeList,
+  TEXCLASS,
+  indentAttributes,
+} from '../MmlNode.js';
+import { split } from '../../../util/string.js';
 
 /*****************************************************************/
 /**
@@ -31,7 +37,6 @@ import {split} from '../../../util/string.js';
  */
 
 export class MmlMtable extends AbstractMmlNode {
-
   /**
    * @override
    */
@@ -55,14 +60,14 @@ export class MmlMtable extends AbstractMmlNode {
     displaystyle: false,
     side: 'right',
     minlabelspacing: '0.8em',
-    'data-break-align': 'top'  // list of top/bottom/center for how broken cells should be aligned by column
+    'data-break-align': 'top', // list of top/bottom/center for how broken cells should be aligned by column
   };
 
   /**
    * Extra properties for this node
    */
   public properties = {
-    useHeight: true
+    useHeight: true,
   };
 
   /**
@@ -96,7 +101,12 @@ export class MmlMtable extends AbstractMmlNode {
   /**
    * @override
    */
-  public setInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+  public setInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    prime: boolean
+  ) {
     //
     // Force inheritance of shift and align values (since they are needed to output tables with labels)
     //   but make sure they are not given explicitly on the <mtable> tag.
@@ -119,19 +129,26 @@ export class MmlMtable extends AbstractMmlNode {
    *
    * @override
    */
-  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, _prime: boolean) {
+  protected setChildInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    _prime: boolean
+  ) {
     for (const child of this.childNodes) {
       if (!child.isKind('mtr')) {
-        this.replaceChild(this.factory.create('mtr'), child)
-          .appendChild(child);
+        this.replaceChild(this.factory.create('mtr'), child).appendChild(child);
       }
     }
-    level = this.getProperty('scriptlevel') as number || level;
-    display = !!(this.attributes.getExplicit('displaystyle') || this.attributes.getDefault('displaystyle'));
+    level = (this.getProperty('scriptlevel') as number) || level;
+    display = !!(
+      this.attributes.getExplicit('displaystyle') ||
+      this.attributes.getDefault('displaystyle')
+    );
     attributes = this.addInheritedAttributes(attributes, {
       columnalign: this.attributes.get('columnalign'),
       rowalign: 'center',
-      'data-break-align': this.attributes.get('data-break-align')
+      'data-break-align': this.attributes.get('data-break-align'),
     });
     const cramped = this.attributes.getExplicit('data-cramped') as boolean;
     const ralign = split(this.attributes.get('rowalign') as string);
@@ -147,12 +164,12 @@ export class MmlMtable extends AbstractMmlNode {
    * @override
    */
   protected verifyChildren(options: PropertyList) {
-    let mtr: MmlNode = null;      // all consecutive non-mtr elements are collected into one mtr
+    let mtr: MmlNode = null; // all consecutive non-mtr elements are collected into one mtr
     const factory = this.factory;
     for (let i = 0; i < this.childNodes.length; i++) {
       const child = this.childNodes[i];
       if (child.isKind('mtr')) {
-        mtr = null;               // start a new row if there are non-mtr children
+        mtr = null; // start a new row if there are non-mtr children
       } else {
         const isMtd = child.isKind('mtd');
         //
@@ -161,17 +178,21 @@ export class MmlMtable extends AbstractMmlNode {
         //
         if (mtr) {
           this.removeChild(child);
-          i--;   // there is one fewer child now
+          i--; // there is one fewer child now
         } else {
           mtr = this.replaceChild(factory.create('mtr'), child);
         }
-        mtr.appendChild(isMtd ? child : factory.create('mtd', {}, [child]));  // Move the child into the mtr
+        mtr.appendChild(isMtd ? child : factory.create('mtd', {}, [child])); // Move the child into the mtr
         if (!options['fixMtables']) {
-          child.parent.removeChild(child);  // remove the child from its mtd or mtr
-          child.parent = this;              // ... and make it think it is a child of the table again
-          isMtd && mtr.appendChild(factory.create('mtd'));  // child will be replaced, so make sure there is an mtd
-          const merror = child.mError('Children of ' + this.kind + ' must be mtr or mlabeledtr', options, isMtd);
-          mtr.childNodes[mtr.childNodes.length - 1].appendChild(merror);   // append the error to the mtd in the mtr
+          child.parent.removeChild(child); // remove the child from its mtd or mtr
+          child.parent = this; // ... and make it think it is a child of the table again
+          isMtd && mtr.appendChild(factory.create('mtd')); // child will be replaced, so make sure there is an mtd
+          const merror = child.mError(
+            'Children of ' + this.kind + ' must be mtr or mlabeledtr',
+            options,
+            isMtd
+          );
+          mtr.childNodes[mtr.childNodes.length - 1].appendChild(merror); // append the error to the mtd in the mtr
         }
       }
     }
@@ -188,5 +209,4 @@ export class MmlMtable extends AbstractMmlNode {
     }
     return this;
   }
-
 }

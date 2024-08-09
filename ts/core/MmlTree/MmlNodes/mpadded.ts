@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlLayoutNode, TEXCLASS, MmlNode} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlLayoutNode, TEXCLASS, MmlNode } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,7 +30,6 @@ import {AbstractMmlLayoutNode, TEXCLASS, MmlNode} from '../MmlNode.js';
  */
 
 export class MmlMpadded extends AbstractMmlLayoutNode {
-
   /**
    * @override
    */
@@ -40,7 +39,7 @@ export class MmlMpadded extends AbstractMmlLayoutNode {
     height: '',
     depth: '',
     lspace: 0,
-    voffset: 0
+    voffset: 0,
   };
 
   /**

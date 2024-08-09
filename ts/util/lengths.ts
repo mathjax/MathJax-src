@@ -29,6 +29,7 @@ export const BIGDIMEN = 1000000;
 /**
  *  Sizes of various units in pixels
  */
+/* prettier-ignore */
 export const UNITS: {[unit: string]: number} = {
   px: 1,
   'in': 96,            // 96 px to an inch
@@ -39,6 +40,7 @@ export const UNITS: {[unit: string]: number} = {
 /**
  *  Sizes of various relative units in em's
  */
+/* prettier-ignore */
 export const RELUNITS: {[unit: string]: number} = {
   em: 1,
   ex: .431,        // this.TEX.x_height;
@@ -50,8 +52,8 @@ export const RELUNITS: {[unit: string]: number} = {
 /**
  *  The various named spaces
  */
+/* prettier-ignore */
 export const MATHSPACE: {[name: string]: number} = {
-  /* tslint:disable:whitespace */
   veryverythinmathspace:           1/18,
   verythinmathspace:               2/18,
   thinmathspace:                   3/18,
@@ -66,7 +68,6 @@ export const MATHSPACE: {[name: string]: number} = {
   negativethickmathspace:         -5/18,
   negativeverythickmathspace:     -6/18,
   negativeveryverythickmathspace: -7/18,
-  /* tslint:enable */
 
   thin:   .04,
   medium: .06,
@@ -79,7 +80,6 @@ export const MATHSPACE: {[name: string]: number} = {
   infinity:  BIGDIMEN
 };
 
-
 /**
  * @param {string|number} length  A dimension (giving number and units) to be converted to ems
  * @param {number} size           The default size of the dimension (for percentage values)
@@ -87,7 +87,12 @@ export const MATHSPACE: {[name: string]: number} = {
  * @param {number} em             The size of an em in pixels
  * @return {number}               The dimension converted to ems
  */
-export function length2em(length: string | number, size: number = 0, scale: number = 1, em: number = 16): number {
+export function length2em(
+  length: string | number,
+  size: number = 0,
+  scale: number = 1,
+  em: number = 16
+): number {
   if (typeof length !== 'string') {
     length = String(length);
   }
@@ -97,21 +102,24 @@ export function length2em(length: string | number, size: number = 0, scale: numb
   if (MATHSPACE[length]) {
     return MATHSPACE[length];
   }
-  let match = length.match(/^\s*([-+]?(?:\.\d+|\d+(?:\.\d*)?))?(pt|em|ex|mu|px|pc|in|mm|cm|%)?/);
+  let match = length.match(
+    /^\s*([-+]?(?:\.\d+|\d+(?:\.\d*)?))?(pt|em|ex|mu|px|pc|in|mm|cm|%)?/
+  );
   if (!match || match[0] === '') {
     return size;
   }
-  let m = parseFloat(match[1] || '1'), unit = match[2];
+  let m = parseFloat(match[1] || '1');
+  let unit = match[2];
   if (UNITS.hasOwnProperty(unit)) {
-    return m * UNITS[unit] / em / scale;
+    return (m * UNITS[unit]) / em / scale;
   }
   if (RELUNITS.hasOwnProperty(unit)) {
     return m * RELUNITS[unit];
   }
   if (unit === '%') {
-    return m / 100 * size;  // percentage of the size
+    return (m / 100) * size; // percentage of the size
   }
-  return m * size;            // relative to size
+  return m * size; // relative to size
 }
 
 /**
@@ -127,8 +135,8 @@ export function percent(m: number): string {
  * @return {string}   The number with units of ems
  */
 export function em(m: number): string {
-  if (Math.abs(m) < .001) return '0';
-  return (m.toFixed(3).replace(/\.?0+$/, '')) + 'em';
+  if (Math.abs(m) < 0.001) return '0';
+  return m.toFixed(3).replace(/\.?0+$/, '') + 'em';
 }
 
 /**
@@ -140,6 +148,6 @@ export function em(m: number): string {
 export function px(m: number, M: number = -BIGDIMEN, em: number = 16): string {
   m *= em;
   if (M && m < M) m = M;
-  if (Math.abs(m) < .1) return '0';
+  if (Math.abs(m) < 0.1) return '0';
   return m.toFixed(1).replace(/\.0$/, '') + 'px';
 }

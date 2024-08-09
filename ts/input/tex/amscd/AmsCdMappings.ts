@@ -15,7 +15,6 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Token mappings for the AMScd package.
  *
@@ -26,13 +25,13 @@ import * as tm from '../TokenMap.js';
 import ParseMethods from '../ParseMethods.js';
 import AmsCdMethods from './AmsCdMethods.js';
 
-
-new tm.EnvironmentMap('amscd_environment', ParseMethods.environment,
-                      {CD: AmsCdMethods.CD});
+new tm.EnvironmentMap('amscd_environment', ParseMethods.environment, {
+  CD: AmsCdMethods.CD,
+});
 
 new tm.CommandMap('amscd_macros', {
   minCDarrowwidth: AmsCdMethods.minCDarrowwidth,
   minCDarrowheight: AmsCdMethods.minCDarrowheight,
 });
 
-new tm.MacroMap('amscd_special', {'@': AmsCdMethods.arrow});
+new tm.MacroMap('amscd_special', { '@': AmsCdMethods.arrow });

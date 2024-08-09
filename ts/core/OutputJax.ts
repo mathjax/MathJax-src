@@ -21,11 +21,11 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {userOptions, defaultOptions, OptionList} from '../util/Options.js';
-import {MathDocument} from './MathDocument.js';
-import {MathItem} from './MathItem.js';
-import {DOMAdaptor} from '../core/DOMAdaptor.js';
-import {FunctionList} from '../util/FunctionList.js';
+import { userOptions, defaultOptions, OptionList } from '../util/Options.js';
+import { MathDocument } from './MathDocument.js';
+import { MathItem } from './MathItem.js';
+import { DOMAdaptor } from '../core/DOMAdaptor.js';
+import { FunctionList } from '../util/FunctionList.js';
 
 /*****************************************************************/
 /**
@@ -113,7 +113,6 @@ export interface OutputJax<N, T, D> {
   pageElements(document: MathDocument<N, T, D>): N;
 }
 
-
 /*****************************************************************/
 /**
  *  The OutputJax abstract class
@@ -123,7 +122,6 @@ export interface OutputJax<N, T, D> {
  * @template D  The Document class
  */
 export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
-
   /**
    * The name for the output jax
    */
@@ -147,7 +145,7 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
   /**
    * The MathDocument's DOMAdaptor
    */
-  public adaptor: DOMAdaptor<N, T, D> = null;  // set by the handler
+  public adaptor: DOMAdaptor<N, T, D> = null; // set by the handler
 
   /**
    * @param {OptionList} options  The options for this instance
@@ -175,30 +173,33 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
   /**
    * @override
    */
-  public initialize() {
-  }
+  public initialize() {}
 
   /**
    * @override
    */
-  public reset(..._args: any[]) {
-  }
+  public reset(..._args: any[]) {}
 
   /**
    * @override
    */
-  public abstract typeset(math: MathItem<N, T, D>, document?: MathDocument<N, T, D>): N;
+  public abstract typeset(
+    math: MathItem<N, T, D>,
+    document?: MathDocument<N, T, D>
+  ): N;
 
   /**
    * @override
    */
-  public abstract escaped(math: MathItem<N, T, D>, document?: MathDocument<N, T, D>): N;
+  public abstract escaped(
+    math: MathItem<N, T, D>,
+    document?: MathDocument<N, T, D>
+  ): N;
 
   /**
    * @override
    */
-  public getMetrics(_document: MathDocument<N, T, D>) {
-  }
+  public getMetrics(_document: MathDocument<N, T, D>) {}
 
   /**
    * @override
@@ -225,12 +226,13 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
    * @return {any}                   The (possibly modified) data
    */
   protected executeFilters(
-    filters: FunctionList, math: MathItem<N, T, D>,
-    document: MathDocument<N, T, D>, data: any
+    filters: FunctionList,
+    math: MathItem<N, T, D>,
+    document: MathDocument<N, T, D>,
+    data: any
   ): any {
-    let args = {math, document, data};
+    let args = { math, document, data };
     filters.execute(args);
     return args.data;
   }
-
 }

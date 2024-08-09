@@ -21,10 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {XMLNode}  from '../MmlNode.js';
-import {DOMAdaptor} from '../../DOMAdaptor.js';
-import {PropertyList} from '../../Tree/Node.js';
-
+import { XMLNode } from '../MmlNode.js';
+import { DOMAdaptor } from '../../DOMAdaptor.js';
+import { PropertyList } from '../../Tree/Node.js';
 
 /******************************************************************/
 /**
@@ -33,7 +32,6 @@ import {PropertyList} from '../../Tree/Node.js';
  * @template N   The HTMLElement class
  */
 export class HtmlNode<N> extends XMLNode {
-
   /**
    * @override
    */
@@ -53,7 +51,10 @@ export class HtmlNode<N> extends XMLNode {
    * @param {DOMAdaptor} adaptor   DOM adaptor for the content
    * @return {HTMLNode}            The HTML node (for chaining of method calls)
    */
-  public setHTML(html: N, adaptor: DOMAdaptor<any, any, any> = null): HtmlNode<N> {
+  public setHTML(
+    html: N,
+    adaptor: DOMAdaptor<any, any, any> = null
+  ): HtmlNode<N> {
     //
     // Test if the HTML element has attributes and wrap in a <span> if not
     //
@@ -84,7 +85,7 @@ export class HtmlNode<N> extends XMLNode {
    */
   public toString() {
     const kind = this.adaptor.kind(this.xml);
-    return `HTML=<${kind}>...</${kind}>` ;
+    return `HTML=<${kind}>...</${kind}>`;
   }
 
   /**
@@ -96,5 +97,4 @@ export class HtmlNode<N> extends XMLNode {
       return;
     }
   }
-
 }

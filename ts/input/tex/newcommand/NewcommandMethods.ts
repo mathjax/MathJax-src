@@ -15,30 +15,26 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Mappings for TeX parsing for definitorial commands.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-
-import {HandlerType} from '../HandlerTypes.js';
-import {ParseMethod} from '../Types.js';
+import { HandlerType } from '../HandlerTypes.js';
+import { ParseMethod } from '../Types.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import * as sm from '../TokenMap.js';
-import {Token, Macro} from '../Token.js';
+import { Token, Macro } from '../Token.js';
 import BaseMethods from '../base/BaseMethods.js';
-import {ParseUtil} from '../ParseUtil.js';
-import {UnitUtil} from '../UnitUtil.js';
-import {StackItem} from '../StackItem.js';
+import { ParseUtil } from '../ParseUtil.js';
+import { UnitUtil } from '../UnitUtil.js';
+import { StackItem } from '../StackItem.js';
 import NewcommandUtil from './NewcommandUtil.js';
 
-
 // Namespace
-const NewcommandMethods: {[key: string]: ParseMethod} = {
-
+const NewcommandMethods: { [key: string]: ParseMethod } = {
   /**
    * Implements \newcommand{\name}[n][default]{...}
    * @param {TexParser} parser The calling parser.
@@ -54,7 +50,6 @@ const NewcommandMethods: {[key: string]: ParseMethod} = {
     parser.Push(parser.itemFactory.create('null'));
   },
 
-
   /**
    * Implements \newenvironment{name}[n][default]{begincmd}{endcmd}
    * @param {TexParser} parser The calling parser.
@@ -67,10 +62,15 @@ const NewcommandMethods: {[key: string]: ParseMethod} = {
     let opt = parser.GetBrackets(name);
     let bdef = parser.GetArgument(name);
     let edef = parser.GetArgument(name);
-    NewcommandUtil.addEnvironment(parser, env, NewcommandMethods.BeginEnv, [true, bdef, edef, n, opt]);
+    NewcommandUtil.addEnvironment(parser, env, NewcommandMethods.BeginEnv, [
+      true,
+      bdef,
+      edef,
+      n,
+      opt,
+    ]);
     parser.Push(parser.itemFactory.create('null'));
   },
-
 
   /**
    * Implements \def command.
@@ -82,14 +82,21 @@ const NewcommandMethods: {[key: string]: ParseMethod} = {
     let cs = NewcommandUtil.GetCSname(parser, name);
     let params = NewcommandUtil.GetTemplate(parser, name, '\\' + cs);
     let def = parser.GetArgument(name);
-    !(params instanceof Array) ?
-      // @test Def DoubleLet, DefReDef
-      NewcommandUtil.addMacro(parser, cs, NewcommandMethods.Macro, [def, params]) :
-      // @test Def Let
-      NewcommandUtil.addMacro(parser, cs, NewcommandMethods.MacroWithTemplate, [def].concat(params));
+    !(params instanceof Array)
+      ? // @test Def DoubleLet, DefReDef
+        NewcommandUtil.addMacro(parser, cs, NewcommandMethods.Macro, [
+          def,
+          params,
+        ])
+      : // @test Def Let
+        NewcommandUtil.addMacro(
+          parser,
+          cs,
+          NewcommandMethods.MacroWithTemplate,
+          [def].concat(params)
+        );
     parser.Push(parser.itemFactory.create('null'));
   },
-
 
   /**
    * Implements the \let command.
@@ -121,10 +128,17 @@ const NewcommandMethods: {[key: string]: ParseMethod} = {
     if (c === '\\') {
       // @test Let Bar, Let Brace Equal Stretchy
       name = NewcommandUtil.GetCSname(parser, name);
-      let macro = handlers.get(HandlerType.DELIMITER).lookup('\\' + name) as Token;
+      let macro = handlers
+        .get(HandlerType.DELIMITER)
+        .lookup('\\' + name) as Token;
       if (macro) {
         // @test Let Bar, Let Brace Equal Stretchy
-        NewcommandUtil.addDelimiter(parser, '\\' + cs, macro.char, macro.attributes);
+        NewcommandUtil.addDelimiter(
+          parser,
+          '\\' + cs,
+          macro.char,
+          macro.attributes
+        );
         return;
       }
       const map = handlers.get(HandlerType.MACRO).applicable(name);
@@ -135,7 +149,13 @@ const NewcommandMethods: {[key: string]: ParseMethod} = {
       if (map instanceof sm.MacroMap) {
         // @test Def Let, Newcommand Let
         const macro = (map as sm.CommandMap).lookup(name) as Macro;
-        NewcommandUtil.addMacro(parser, cs, macro.func, macro.args, macro.token);
+        NewcommandUtil.addMacro(
+          parser,
+          cs,
+          macro.func,
+          macro.args,
+          macro.token
+        );
         return;
       }
       macro = (map as sm.CharacterMap).lookup(name) as Token;
@@ -149,13 +169,17 @@ const NewcommandMethods: {[key: string]: ParseMethod} = {
     const macro = handlers.get(HandlerType.DELIMITER).lookup(c) as Token;
     if (macro) {
       // @test Let Paren Delim, Let Paren Stretchy
-      NewcommandUtil.addDelimiter(parser, '\\' + cs, macro.char, macro.attributes);
+      NewcommandUtil.addDelimiter(
+        parser,
+        '\\' + cs,
+        macro.char,
+        macro.attributes
+      );
       return;
     }
     // @test Let Brace Equal, Let Caret
     NewcommandUtil.addMacro(parser, cs, NewcommandMethods.Macro, [c]);
   },
-
 
   /**
    * Process a macro with a parameter template by replacing parameters in the
@@ -166,9 +190,13 @@ const NewcommandMethods: {[key: string]: ParseMethod} = {
    * @param {string} n The number of parameters.
    * @param {string[]} ...params The parameter values.
    */
-  MacroWithTemplate (parser: TexParser, name: string,
-                     text: string, n: string,
-                     ...params: string[]) {
+  MacroWithTemplate(
+    parser: TexParser,
+    name: string,
+    text: string,
+    n: string,
+    ...params: string[]
+  ) {
     const argCount = parseInt(n, 10);
     // @test Def Let
     if (params.length) {
@@ -177,8 +205,11 @@ const NewcommandMethods: {[key: string]: ParseMethod} = {
       parser.GetNext();
       if (params[0] && !NewcommandUtil.MatchParam(parser, params[0])) {
         // @test Missing Arguments
-        throw new TexError('MismatchUseDef',
-                           'Use of %1 doesn\'t match its definition', name);
+        throw new TexError(
+          'MismatchUseDef',
+          "Use of %1 doesn't match its definition",
+          name
+        );
       }
       if (argCount) {
         for (let i = 0; i < argCount; i++) {
@@ -188,12 +219,14 @@ const NewcommandMethods: {[key: string]: ParseMethod} = {
         text = ParseUtil.substituteArgs(parser, args, text);
       }
     }
-    parser.string = ParseUtil.addArgs(parser, text,
-                                      parser.string.slice(parser.i));
+    parser.string = ParseUtil.addArgs(
+      parser,
+      text,
+      parser.string.slice(parser.i)
+    );
     parser.i = 0;
     ParseUtil.checkMaxMacros(parser);
   },
-
 
   /**
    * Process a user-defined environment.
@@ -204,8 +237,14 @@ const NewcommandMethods: {[key: string]: ParseMethod} = {
    * @param {number} n The number of parameters.
    * @param {string} def Default for an optional parameter.
    */
-  BeginEnv(parser: TexParser, begin: StackItem,
-           bdef: string, edef: string, n: number, def: string) {
+  BeginEnv(
+    parser: TexParser,
+    begin: StackItem,
+    bdef: string,
+    edef: string,
+    n: number,
+    def: string
+  ) {
     // @test Newenvironment Empty, Newenvironment Content
     // We have an end item, and we are supposed to close this environment.
     const name = begin.getName();
@@ -215,7 +254,11 @@ const NewcommandMethods: {[key: string]: ParseMethod} = {
       if (edef && parser.stack.env['processing'] !== name) {
         // Parse the commands in the end environment definition, and do the \end again
         parser.stack.env['processing'] = name;
-        parser.string = ParseUtil.addArgs(parser, `${edef}\\end{${begin.getName()}}`, parser.string.slice(parser.i));
+        parser.string = ParseUtil.addArgs(
+          parser,
+          `${edef}\\end{${begin.getName()}}`,
+          parser.string.slice(parser.i)
+        );
         parser.i = 0;
         return null;
       }
@@ -238,13 +281,18 @@ const NewcommandMethods: {[key: string]: ParseMethod} = {
       bdef = ParseUtil.substituteArgs(parser, args, bdef);
       edef = ParseUtil.substituteArgs(parser, [], edef); // no args, but get errors for #n in edef
     }
-    parser.string = ParseUtil.addArgs(parser, bdef,
-                                      parser.string.slice(parser.i));
+    parser.string = ParseUtil.addArgs(
+      parser,
+      bdef,
+      parser.string.slice(parser.i)
+    );
     parser.i = 0;
-    return parser.itemFactory.create('beginEnv').setProperty('name', begin.getName());
+    return parser.itemFactory
+      .create('beginEnv')
+      .setProperty('name', begin.getName());
   },
 
   Macro: BaseMethods.Macro,
-}
+};
 
 export default NewcommandMethods;

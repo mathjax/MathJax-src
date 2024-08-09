@@ -23,7 +23,7 @@
 
 import Sre from '../sre.js';
 
-const ProsodyKeys = [ 'pitch', 'rate', 'volume' ];
+const ProsodyKeys = ['pitch', 'rate', 'volume'];
 
 interface ProsodyElement {
   [propName: string]: string | boolean | number;
@@ -64,14 +64,18 @@ export function ssmlParsing(speech: string): [string, SsmlElement[]] {
  * @param {String[]} text A list of text elements.
  * @param {ProsodyElement?} prosody The currently active prosody elements.
  */
-function recurseSsml(nodes: Node[], instr: SsmlElement[], text: String[],
-                     prosody: ProsodyElement = {}) {
+function recurseSsml(
+  nodes: Node[],
+  instr: SsmlElement[],
+  text: String[],
+  prosody: ProsodyElement = {}
+) {
   for (let node of nodes) {
     if (node.nodeType === 3) {
       let content = node.textContent.trim();
       if (content) {
         text.push(content);
-        instr.push(Object.assign({text: content}, prosody));
+        instr.push(Object.assign({ text: content }, prosody));
       }
       continue;
     }
@@ -83,20 +87,23 @@ function recurseSsml(nodes: Node[], instr: SsmlElement[], text: String[],
       }
       if (tag === 'prosody') {
         recurseSsml(
-          Array.from(node.childNodes), instr, text,
-          getProsody(element, prosody));
+          Array.from(node.childNodes),
+          instr,
+          text,
+          getProsody(element, prosody)
+        );
         continue;
       }
       switch (tag) {
         case 'break':
-          instr.push({pause: element.getAttribute('time')});
+          instr.push({ pause: element.getAttribute('time') });
           break;
         case 'mark':
-          instr.push({mark: element.getAttribute('name')});
+          instr.push({ mark: element.getAttribute('name') });
           break;
         case 'say-as':
           let txt = element.textContent;
-          instr.push(Object.assign({text: txt, character: true}, prosody));
+          instr.push(Object.assign({ text: txt, character: true }, prosody));
           text.push(txt);
           break;
       }
@@ -108,10 +115,10 @@ function recurseSsml(nodes: Node[], instr: SsmlElement[], text: String[],
  * Maps prosody types to scaling functions.
  */
 // TODO: These should be tweaked after more testing.
-const combinePros: {[key: string]: (x: number, sign: string) => number} = {
+const combinePros: { [key: string]: (x: number, sign: string) => number } = {
   pitch: (x: number, _sign: string) => 1 * (x / 100),
-  volume: (x: number, _sign: string) => .5 * (x / 100),
-  rate: (x: number, _sign: string) =>  1 * (x / 100)
+  volume: (x: number, _sign: string) => 0.5 * (x / 100),
+  rate: (x: number, _sign: string) => 1 * (x / 100),
 };
 
 /**
@@ -126,13 +133,13 @@ function getProsody(element: Element, prosody: ProsodyElement) {
       let [sign, value] = extractProsody(element.getAttribute(pros));
       if (!sign) {
         // TODO: Sort out the base value. It is .5 for volume!
-        combine[pros] = (pros === 'volume') ? .5 : 1;
+        combine[pros] = pros === 'volume' ? 0.5 : 1;
         continue;
       }
       let orig = prosody[pros] as number;
-      orig = orig ? orig : ((pros === 'volume') ? .5 : 1);
+      orig = orig ? orig : pros === 'volume' ? 0.5 : 1;
       let relative = combinePros[pros](parseInt(value, 10), sign);
-      combine[pros] = (sign === '-') ? orig - relative : orig + relative;
+      combine[pros] = sign === '-' ? orig - relative : orig + relative;
     }
   }
   return combine;
@@ -156,7 +163,6 @@ function extractProsody(attr: string) {
   return [match[1], match[2]];
 }
 
-
 /**
  * Speech, labels and aria
  */
@@ -170,7 +176,11 @@ function extractProsody(attr: string) {
  * @param sep The separator string. Defaults to space.
  */
 export function buildLabel(
-  speech: string, prefix: string, postfix: string, sep: string = ' ') {
+  speech: string,
+  prefix: string,
+  postfix: string,
+  sep: string = ' '
+) {
   if (!speech) {
     return '';
   }
@@ -193,13 +203,18 @@ export function buildLabel(
  * @param {string=} rate The base speech rate.
  * @return {[string, SsmlElement[]]} The speech with the ssml annotation structure
  */
-export function buildSpeech(speech: string, locale: string = 'en',
-                            rate: string = '100'): [string, SsmlElement[]] {
-  return ssmlParsing('<?xml version="1.0"?><speak version="1.1"' +
-    ' xmlns="http://www.w3.org/2001/10/synthesis"' +
-    ` xml:lang="${locale}">` +
-    `<prosody rate="${rate}%">${speech}`+
-    '</prosody></speak>');
+export function buildSpeech(
+  speech: string,
+  locale: string = 'en',
+  rate: string = '100'
+): [string, SsmlElement[]] {
+  return ssmlParsing(
+    '<?xml version="1.0"?><speak version="1.1"' +
+      ' xmlns="http://www.w3.org/2001/10/synthesis"' +
+      ` xml:lang="${locale}">` +
+      `<prosody rate="${rate}%">${speech}` +
+      '</prosody></speak>'
+  );
 }
 
 /**
@@ -211,7 +226,7 @@ export function honk() {
   os.frequency.value = 300;
   os.connect(ac.destination);
   os.start(ac.currentTime);
-  os.stop(ac.currentTime + .05);
+  os.stop(ac.currentTime + 0.05);
 }
 
 /**
@@ -220,6 +235,5 @@ export function honk() {
 export enum InPlace {
   NONE,
   DEPTH,
-  SUMMARY
+  SUMMARY,
 }
-

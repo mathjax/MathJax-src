@@ -22,6 +22,6 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-export const MathMaps: Map<string, {[path: string]: any}> = new Map();
+export const MathMaps: Map<string, { [path: string]: any }> = new Map();
 
 export default MathMaps;

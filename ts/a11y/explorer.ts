@@ -21,23 +21,27 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Handler} from '../core/Handler.js';
-import {MmlNode} from '../core/MmlTree/MmlNode.js';
-import {MathML} from '../input/mathml.js';
-import {STATE, newState} from '../core/MathItem.js';
-import {EnrichedMathItem, EnrichedMathDocument, EnrichHandler} from './semantic-enrich.js';
-import {MathDocumentConstructor} from '../core/MathDocument.js';
-import {OptionList, expandable} from '../util/Options.js';
-import {SerializedMmlVisitor} from '../core/MmlTree/SerializedMmlVisitor.js';
+import { Handler } from '../core/Handler.js';
+import { MmlNode } from '../core/MmlTree/MmlNode.js';
+import { MathML } from '../input/mathml.js';
+import { STATE, newState } from '../core/MathItem.js';
+import {
+  EnrichedMathItem,
+  EnrichedMathDocument,
+  EnrichHandler,
+} from './semantic-enrich.js';
+import { MathDocumentConstructor } from '../core/MathDocument.js';
+import { OptionList, expandable } from '../util/Options.js';
+import { SerializedMmlVisitor } from '../core/MmlTree/SerializedMmlVisitor.js';
 
-import {ExplorerPool, RegionPool} from './explorer/ExplorerPool.js';
+import { ExplorerPool, RegionPool } from './explorer/ExplorerPool.js';
 
-import {Sre} from './sre.js';
+import { Sre } from './sre.js';
 
 /**
  * Generic constructor for Mixins
  */
-export type Constructor<T> = new(...args: any[]) => T;
+export type Constructor<T> = new (...args: any[]) => T;
 
 /**
  * Shorthands for types with HTMLElement, Text, and Document instead of generics
@@ -47,7 +51,7 @@ export type HTMLDOCUMENT = EnrichedMathDocument<HTMLElement, Text, Document>;
 export type HTMLMATHITEM = EnrichedMathItem<HTMLElement, Text, Document>;
 export type MATHML = MathML<HTMLElement, Text, Document>;
 
-const hasWindow = (typeof window !== 'undefined');
+const hasWindow = typeof window !== 'undefined';
 
 /*==========================================================================*/
 
@@ -60,7 +64,6 @@ newState('EXPLORER', 160);
  * The properties added to MathItem for the Explorer
  */
 export interface ExplorerMathItem extends HTMLMATHITEM {
-
   /**
    * The Explorer objects for this math item
    */
@@ -71,7 +74,6 @@ export interface ExplorerMathItem extends HTMLMATHITEM {
    * @param {boolean} force          True to force the explorer even if enableExplorer is false
    */
   explorable(document: HTMLDOCUMENT, force?: boolean): void;
-
 }
 
 /**
@@ -87,9 +89,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
   BaseMathItem: B,
   toMathML: (node: MmlNode) => string
 ): Constructor<ExplorerMathItem> & B {
-
   return class extends BaseMathItem {
-
     /**
      * @override
      */
@@ -122,7 +122,10 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     /**
      * @override
      */
-    public rerender(document: ExplorerMathDocument, start: number = STATE.RERENDER) {
+    public rerender(
+      document: ExplorerMathDocument,
+      start: number = STATE.RERENDER
+    ) {
       if (this.explorers) {
         let speech = this.explorers.speech;
         if (speech && speech.attached && speech.active) {
@@ -147,16 +150,13 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
         this.explorers.restart();
       }
     }
-
   };
-
 }
 
 /**
  * The functions added to MathDocument for the Explorer
  */
 export interface ExplorerMathDocument extends HTMLDOCUMENT {
-
   /**
    * The objects needed for the explorer
    */
@@ -168,7 +168,6 @@ export interface ExplorerMathDocument extends HTMLDOCUMENT {
    * @returns {MathDocument}   The MathDocument (so calls can be chained)
    */
   explorable(): HTMLDOCUMENT;
-
 }
 
 /**
@@ -177,15 +176,14 @@ export interface ExplorerMathDocument extends HTMLDOCUMENT {
  * @param {B} BaseDocument      The MathDocument class to be extended
  * @returns {ExplorerMathDocument}  The extended MathDocument class
  */
-export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTMLDOCUMENT>>(
-  BaseDocument: B
-): MathDocumentConstructor<ExplorerMathDocument> & B {
-
+export function ExplorerMathDocumentMixin<
+  B extends MathDocumentConstructor<HTMLDOCUMENT>,
+>(BaseDocument: B): MathDocumentConstructor<ExplorerMathDocument> & B {
   return class extends BaseDocument {
-
     /**
      * @override
      */
+    /* prettier-ignore */
     public static OPTIONS: OptionList = {
       ...BaseDocument.OPTIONS,
       enableExplorer: hasWindow,           // only activate in interactive contexts
@@ -242,7 +240,7 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
         ProcessBits.allocate('explorer');
       }
       const visitor = new SerializedMmlVisitor(this.mmlFactory);
-      const toMathML = ((node: MmlNode) => visitor.visitTree(node));
+      const toMathML = (node: MmlNode) => visitor.visitTree(node);
       const options = this.options;
       if (!options.a11y.speechRules) {
         options.a11y.speechRules = `${options.sre.domain}-${options.sre.style}`;
@@ -278,11 +276,8 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
       }
       return this;
     }
-
   };
-
 }
-
 
 /*==========================================================================*/
 
@@ -293,14 +288,18 @@ export function ExplorerMathDocumentMixin<B extends MathDocumentConstructor<HTML
  * @param {MathML} MmlJax     A MathML input jax to be used for the semantic enrichment
  * @returns {Handler}         The handler that was modified (for purposes of chainging extensions)
  */
-export function ExplorerHandler(handler: HANDLER, MmlJax: MATHML = null): HANDLER {
+export function ExplorerHandler(
+  handler: HANDLER,
+  MmlJax: MATHML = null
+): HANDLER {
   if (!handler.documentClass.prototype.enrich && MmlJax) {
     handler = EnrichHandler(handler, MmlJax);
   }
-  handler.documentClass = ExplorerMathDocumentMixin(handler.documentClass as any);
+  handler.documentClass = ExplorerMathDocumentMixin(
+    handler.documentClass as any
+  );
   return handler;
 }
-
 
 /*==========================================================================*/
 
@@ -311,8 +310,11 @@ export function ExplorerHandler(handler: HANDLER, MmlJax: MATHML = null): HANDLE
  * @param {HTMLDOCUMENT} document The current document.
  * @param {{[key: string]: any}} options Association list for a11y option value pairs.
  */
-export function setA11yOptions(document: HTMLDOCUMENT, options: {[key: string]: any}) {
-  let sreOptions = Sre.engineSetup() as {[name: string]: string};
+export function setA11yOptions(
+  document: HTMLDOCUMENT,
+  options: { [key: string]: any }
+) {
+  let sreOptions = Sre.engineSetup() as { [name: string]: string };
   for (let key in options) {
     if (document.options.a11y[key] !== undefined) {
       setA11yOption(document, key, options[key]);
@@ -326,62 +328,65 @@ export function setA11yOptions(document: HTMLDOCUMENT, options: {[key: string]: 
   }
 }
 
-
 /**
  * Sets a single a11y option for a menu name.
  * @param {HTMLDOCUMENT} document The current document.
  * @param {string} option The option name in the menu.
  * @param {string|boolean} value The new value.
  */
-export function setA11yOption(document: HTMLDOCUMENT, option: string, value: string | boolean) {
+export function setA11yOption(
+  document: HTMLDOCUMENT,
+  option: string,
+  value: string | boolean
+) {
   switch (option) {
-  case 'speechRules':
-    const [domain, style] = (value as string).split('-');
-    document.options.sre.domain = domain;
-    document.options.sre.style = style;
-    break;
-  case 'magnification':
-    switch (value) {
-    case 'None':
-      document.options.a11y.magnification = value;
-      document.options.a11y.keyMagnifier = false;
-      document.options.a11y.mouseMagnifier = false;
+    case 'speechRules':
+      const [domain, style] = (value as string).split('-');
+      document.options.sre.domain = domain;
+      document.options.sre.style = style;
       break;
-    case 'Keyboard':
-      document.options.a11y.magnification = value;
-      document.options.a11y.keyMagnifier = true;
-      document.options.a11y.mouseMagnifier = false;
+    case 'magnification':
+      switch (value) {
+        case 'None':
+          document.options.a11y.magnification = value;
+          document.options.a11y.keyMagnifier = false;
+          document.options.a11y.mouseMagnifier = false;
+          break;
+        case 'Keyboard':
+          document.options.a11y.magnification = value;
+          document.options.a11y.keyMagnifier = true;
+          document.options.a11y.mouseMagnifier = false;
+          break;
+        case 'Mouse':
+          document.options.a11y.magnification = value;
+          document.options.a11y.keyMagnifier = false;
+          document.options.a11y.mouseMagnifier = true;
+          break;
+      }
       break;
-    case 'Mouse':
-      document.options.a11y.magnification = value;
-      document.options.a11y.keyMagnifier = false;
-      document.options.a11y.mouseMagnifier = true;
+    case 'highlight':
+      switch (value) {
+        case 'None':
+          document.options.a11y.highlight = value;
+          document.options.a11y.hover = false;
+          document.options.a11y.flame = false;
+          break;
+        case 'Hover':
+          document.options.a11y.highlight = value;
+          document.options.a11y.hover = true;
+          document.options.a11y.flame = false;
+          break;
+        case 'Flame':
+          document.options.a11y.highlight = value;
+          document.options.a11y.hover = false;
+          document.options.a11y.flame = true;
+          break;
+      }
       break;
-    }
-    break;
-  case 'highlight':
-    switch (value) {
-    case 'None':
-      document.options.a11y.highlight = value;
-      document.options.a11y.hover = false;
-      document.options.a11y.flame = false;
+    case 'locale':
+      document.options.sre.locale = value;
       break;
-    case 'Hover':
-      document.options.a11y.highlight = value;
-      document.options.a11y.hover = true;
-      document.options.a11y.flame = false;
-      break;
-    case 'Flame':
-      document.options.a11y.highlight = value;
-      document.options.a11y.hover = false;
-      document.options.a11y.flame = true;
-      break;
-    }
-    break;
-  case 'locale':
-    document.options.sre.locale = value;
-    break;
-  default:
-    document.options.a11y[option] = value;
+    default:
+      document.options.a11y[option] = value;
   }
 }

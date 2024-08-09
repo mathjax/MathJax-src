@@ -21,11 +21,11 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
-import {SvgWrapperFactory} from '../WrapperFactory.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMerror} from '../../../core/MmlTree/MmlNodes/merror.js';
-import {StyleList} from '../../../util/StyleList.js';
+import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
+import { SvgWrapperFactory } from '../WrapperFactory.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMerror } from '../../../core/MmlTree/MmlNodes/merror.js';
+import { StyleList } from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
@@ -45,9 +45,12 @@ export interface SvgMerrorNTD<N, T, D> extends SvgWrapper<N, T, D> {}
  * @template D  The Document class
  */
 export interface SvgMerrorClass<N, T, D> extends SvgWrapperClass<N, T, D> {
-  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMerrorNTD<N, T, D>;
+  new (
+    factory: SvgWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: SvgWrapper<N, T, D>
+  ): SvgMerrorNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
@@ -55,9 +58,10 @@ export interface SvgMerrorClass<N, T, D> extends SvgWrapperClass<N, T, D> {
  * The SvgMerror wrapper class for the MmlMerror class
  */
 export const SvgMerror = (function <N, T, D>(): SvgMerrorClass<N, T, D> {
-
-  return class SvgMerror extends SvgWrapper<N, T, D> implements SvgMerrorNTD<N, T, D> {
-
+  return class SvgMerror
+    extends SvgWrapper<N, T, D>
+    implements SvgMerrorNTD<N, T, D>
+  {
     /**
      * @override
      */
@@ -69,12 +73,12 @@ export const SvgMerror = (function <N, T, D>(): SvgMerrorClass<N, T, D> {
     public static styles: StyleList = {
       'g[data-mml-node="merror"] > g': {
         fill: 'red',
-        stroke: 'red'
+        stroke: 'red',
       },
       'g[data-mml-node="merror"] > rect[data-background]': {
         fill: 'yellow',
-        stroke: 'none'
-      }
+        stroke: 'none',
+      },
     };
 
     /**
@@ -82,18 +86,24 @@ export const SvgMerror = (function <N, T, D>(): SvgMerrorClass<N, T, D> {
      */
     public toSVG(parents: N[]) {
       const svg = this.standardSvgNodes(parents);
-      const {h, d, w} = this.getBBox();
-      this.adaptor.append(this.dom[0], this.svg('rect', {
-        'data-background': true,
-        width: this.fixed(w), height: this.fixed(h + d), y: this.fixed(-d)
-      }));
+      const { h, d, w } = this.getBBox();
+      this.adaptor.append(
+        this.dom[0],
+        this.svg('rect', {
+          'data-background': true,
+          width: this.fixed(w),
+          height: this.fixed(h + d),
+          y: this.fixed(-d),
+        })
+      );
       const title = this.node.attributes.get('title') as string;
       if (title) {
-        this.adaptor.append(this.dom[0], this.svg('title', {}, [this.adaptor.text(title)]));
+        this.adaptor.append(
+          this.dom[0],
+          this.svg('title', {}, [this.adaptor.text(title)])
+        );
       }
       this.addChildren(svg);
     }
-
   };
-
 })<any, any, any>();

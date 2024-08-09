@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {LiteNode} from './Element.js';
+import { LiteNode } from './Element.js';
 
 /************************************************************/
 /**
@@ -60,11 +60,10 @@ export class LiteList<N> {
        * @return {IteratorResult<LiteNode>}
        */
       next(): IteratorResult<LiteNode> {
-        return (i === this.nodes.length ?
-                {value: null, done: true} :
-                {value: this.nodes[i++], done: false});
-      }
+        return i === this.nodes.length
+          ? { value: null, done: true }
+          : { value: this.nodes[i++], done: false };
+      },
     };
   }
-
 }

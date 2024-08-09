@@ -21,15 +21,13 @@
  * @author i@omardo.com (Omar Al-Ithawi)
  */
 
-
 import NodeUtil from '../NodeUtil.js';
-import {ParseMethod} from '../Types.js';
-import {PropertyList} from '../../../core/Tree/Node.js';
-import {ParseUtil} from '../ParseUtil.js';
+import { ParseMethod } from '../Types.js';
+import { PropertyList } from '../../../core/Tree/Node.js';
+import { ParseUtil } from '../ParseUtil.js';
 import TexParser from '../TexParser.js';
 
-import {ColorModel} from './ColorUtil.js';
-
+import { ColorModel } from './ColorUtil.js';
 
 /**
  * Build PropertyList from padding value.
@@ -49,29 +47,27 @@ export function padding(colorPadding: string): PropertyList {
   };
 }
 
-
-export const ColorMethods: {[key: string]: ParseMethod} = {
-
-
+export const ColorMethods: { [key: string]: ParseMethod } = {
   /**
    * Override \color macro definition.
    *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The name of the control sequence.
    */
-  Color (parser: TexParser, name: string) {
+  Color(parser: TexParser, name: string) {
     const model = parser.GetBrackets(name, '');
     const colorDef = parser.GetArgument(name);
-    const colorModel: ColorModel = parser.configuration.packageData.get('color').model;
+    const colorModel: ColorModel =
+      parser.configuration.packageData.get('color').model;
     const color = colorModel.getColor(model, colorDef);
 
-    const style = parser.itemFactory.create('style')
-      .setProperties({styles: { mathcolor: color }});
+    const style = parser.itemFactory
+      .create('style')
+      .setProperties({ styles: { mathcolor: color } });
     parser.stack.env['color'] = color;
 
     parser.Push(style);
   },
-
 
   /**
    * Define the \textcolor macro.
@@ -79,10 +75,11 @@ export const ColorMethods: {[key: string]: ParseMethod} = {
    * @param {TexParser} parser The calling parser.
    * @param {string} name The name of the control sequence.
    */
-  TextColor (parser: TexParser, name: string) {
+  TextColor(parser: TexParser, name: string) {
     const model = parser.GetBrackets(name, '');
     const colorDef = parser.GetArgument(name);
-    const colorModel: ColorModel = parser.configuration.packageData.get('color').model;
+    const colorModel: ColorModel =
+      parser.configuration.packageData.get('color').model;
     const color = colorModel.getColor(model, colorDef);
     const old = parser.stack.env['color'];
 
@@ -95,7 +92,7 @@ export const ColorMethods: {[key: string]: ParseMethod} = {
       delete parser.stack.env['color'];
     }
 
-    const node = parser.create('node', 'mstyle', [math], {mathcolor: color});
+    const node = parser.create('node', 'mstyle', [math], { mathcolor: color });
     parser.Push(node);
   },
 
@@ -105,12 +102,13 @@ export const ColorMethods: {[key: string]: ParseMethod} = {
    * @param {TexParser} parser The calling parser.
    * @param {string} name The name of the control sequence.
    */
-  DefineColor (parser: TexParser, name: string) {
+  DefineColor(parser: TexParser, name: string) {
     const cname = parser.GetArgument(name);
     const model = parser.GetArgument(name);
     const def = parser.GetArgument(name);
 
-    const colorModel: ColorModel = parser.configuration.packageData.get('color').model;
+    const colorModel: ColorModel =
+      parser.configuration.packageData.get('color').model;
     colorModel.defineColor(model, cname, def);
     parser.Push(parser.itemFactory.create('null'));
   },
@@ -121,7 +119,7 @@ export const ColorMethods: {[key: string]: ParseMethod} = {
    * @param {TexParser} parser The calling parser.
    * @param {string} name The name of the control sequence.
    */
-  ColorBox (parser: TexParser, name: string) {
+  ColorBox(parser: TexParser, name: string) {
     const model = parser.GetBrackets(name, '');
     const cdef = parser.GetArgument(name);
     const math = ParseUtil.internalMath(parser, parser.GetArgument(name));
@@ -139,7 +137,7 @@ export const ColorMethods: {[key: string]: ParseMethod} = {
    * @param {TexParser} parser The calling parser.
    * @param {string} name The name of the control sequence.
    */
-  FColorBox (parser: TexParser, name: string) {
+  FColorBox(parser: TexParser, name: string) {
     const fmodel = parser.GetBrackets(name, '');
     const fname = parser.GetArgument(name);
     const cmodel = parser.GetBrackets(name, fmodel);
@@ -150,11 +148,10 @@ export const ColorMethods: {[key: string]: ParseMethod} = {
 
     const node = parser.create('node', 'mpadded', math, {
       mathbackground: colorModel.getColor(cmodel, cname),
-      style: `border: ${options.borderWidth} solid ${colorModel.getColor(fmodel, fname)}`
+      style: `border: ${options.borderWidth} solid ${colorModel.getColor(fmodel, fname)}`,
     });
 
     NodeUtil.setProperties(node, padding(options.padding));
     parser.Push(node);
   },
-
-}
+};

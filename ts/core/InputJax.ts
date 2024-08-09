@@ -21,13 +21,13 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathDocument} from './MathDocument.js';
-import {MathItem, ProtoItem} from './MathItem.js';
-import {MmlNode} from './MmlTree/MmlNode.js';
-import {MmlFactory} from './MmlTree/MmlFactory.js';
-import {userOptions, defaultOptions, OptionList} from '../util/Options.js';
-import {FunctionList} from '../util/FunctionList.js';
-import {DOMAdaptor} from '../core/DOMAdaptor.js';
+import { MathDocument } from './MathDocument.js';
+import { MathItem, ProtoItem } from './MathItem.js';
+import { MmlNode } from './MmlTree/MmlNode.js';
+import { MmlFactory } from './MmlTree/MmlFactory.js';
+import { userOptions, defaultOptions, OptionList } from '../util/Options.js';
+import { FunctionList } from '../util/FunctionList.js';
+import { DOMAdaptor } from '../core/DOMAdaptor.js';
 
 /*****************************************************************/
 /**
@@ -121,7 +121,6 @@ export interface InputJax<N, T, D> {
  * @template D  The Document class
  */
 export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
-
   /**
    * The name of the input jax
    */
@@ -150,11 +149,11 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
   /**
    * The DOMAdaptor for the MathDocument for this input jax
    */
-  public adaptor: DOMAdaptor<N, T, D> = null;  // set by the handler
+  public adaptor: DOMAdaptor<N, T, D> = null; // set by the handler
   /**
    * The MathML node factory
    */
-  public mmlFactory: MmlFactory = null;        // set by the handler
+  public mmlFactory: MmlFactory = null; // set by the handler
 
   /**
    * @param {OptionList} options  The options to apply to this input jax
@@ -192,14 +191,12 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
   /**
    * @override
    */
-  public initialize() {
-  }
+  public initialize() {}
 
   /**
    * @override
    */
-  public reset(..._args: any[]) {
-  }
+  public reset(..._args: any[]) {}
 
   /**
    * @return {boolean}  True means find math in string array, false means in DOM element
@@ -218,7 +215,10 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
   /**
    * @override
    */
-  public abstract compile(math: MathItem<N, T, D>, document: MathDocument<N, T, D>): MmlNode;
+  public abstract compile(
+    math: MathItem<N, T, D>,
+    document: MathDocument<N, T, D>
+  ): MmlNode;
 
   /**
    * Execute a set of filters, passing them the MathItem and any needed data,
@@ -231,12 +231,13 @@ export abstract class AbstractInputJax<N, T, D> implements InputJax<N, T, D> {
    * @return {any}                   The (possibly modified) data
    */
   protected executeFilters(
-    filters: FunctionList, math: MathItem<N, T, D>,
-    document: MathDocument<N, T, D>, data: any
+    filters: FunctionList,
+    math: MathItem<N, T, D>,
+    document: MathDocument<N, T, D>,
+    data: any
   ): any {
-    let args = {math: math, document: document, data: data};
+    let args = { math: math, document: document, data: data };
     filters.execute(args);
     return args.data;
   }
-
 }

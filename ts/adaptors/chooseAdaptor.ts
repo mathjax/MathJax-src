@@ -21,13 +21,13 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {liteAdaptor} from './liteAdaptor.js';
-import {browserAdaptor} from './browserAdaptor.js';
+import { liteAdaptor } from './liteAdaptor.js';
+import { browserAdaptor } from './browserAdaptor.js';
 
 let choose;
 
 try {
-  document;  // errors if not in browser
+  document; // errors if not in browser
   choose = browserAdaptor;
 } catch (e) {
   choose = liteAdaptor;

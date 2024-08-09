@@ -15,54 +15,55 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Configuration file for the Newcommand package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
-import {Configuration, ParserConfiguration} from '../Configuration.js';
-import {BeginEnvItem} from './NewcommandItems.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration, ParserConfiguration } from '../Configuration.js';
+import { BeginEnvItem } from './NewcommandItems.js';
 import NewcommandUtil from './NewcommandUtil.js';
 import './NewcommandMappings.js';
 import ParseMethods from '../ParseMethods.js';
 import * as sm from '../TokenMap.js';
 
-
 /**
  * Init method for Newcommand package.
  * @param {Configuration} config The current configuration.
  */
-let init = function(config: ParserConfiguration) {
-  new sm.DelimiterMap(NewcommandUtil.NEW_DELIMITER,
-                      ParseMethods.delimiter, {});
+let init = function (config: ParserConfiguration) {
+  new sm.DelimiterMap(NewcommandUtil.NEW_DELIMITER, ParseMethods.delimiter, {});
   new sm.CommandMap(NewcommandUtil.NEW_COMMAND, {});
-  new sm.EnvironmentMap(NewcommandUtil.NEW_ENVIRONMENT,
-                        ParseMethods.environment, {});
-  config.append(Configuration.local(
-    {[ConfigurationType.HANDLER]: {[HandlerType.CHARACTER]: [],
-                                   [HandlerType.DELIMITER]: [NewcommandUtil.NEW_DELIMITER],
-                                   [HandlerType.MACRO]: [NewcommandUtil.NEW_DELIMITER,
-                                           NewcommandUtil.NEW_COMMAND],
-                                   [HandlerType.ENVIRONMENT]: [NewcommandUtil.NEW_ENVIRONMENT]
-                                  },
-     [ConfigurationType.PRIORITY]: -1}));
+  new sm.EnvironmentMap(
+    NewcommandUtil.NEW_ENVIRONMENT,
+    ParseMethods.environment,
+    {}
+  );
+  config.append(
+    Configuration.local({
+      [ConfigurationType.HANDLER]: {
+        [HandlerType.CHARACTER]: [],
+        [HandlerType.DELIMITER]: [NewcommandUtil.NEW_DELIMITER],
+        [HandlerType.MACRO]: [
+          NewcommandUtil.NEW_DELIMITER,
+          NewcommandUtil.NEW_COMMAND,
+        ],
+        [HandlerType.ENVIRONMENT]: [NewcommandUtil.NEW_ENVIRONMENT],
+      },
+      [ConfigurationType.PRIORITY]: -1,
+    })
+  );
 };
 
-
-export const NewcommandConfiguration = Configuration.create(
-  'newcommand', {
-    [ConfigurationType.HANDLER]: {
-      macro: ['Newcommand-macros']
-    },
-    [ConfigurationType.ITEMS]: {
-      [BeginEnvItem.prototype.kind]: BeginEnvItem,
-    },
-    [ConfigurationType.OPTIONS]: {maxMacros: 1000},
-    [ConfigurationType.INIT]: init
-  }
-);
-
-
+export const NewcommandConfiguration = Configuration.create('newcommand', {
+  [ConfigurationType.HANDLER]: {
+    macro: ['Newcommand-macros'],
+  },
+  [ConfigurationType.ITEMS]: {
+    [BeginEnvItem.prototype.kind]: BeginEnvItem,
+  },
+  [ConfigurationType.OPTIONS]: { maxMacros: 1000 },
+  [ConfigurationType.INIT]: init,
+});

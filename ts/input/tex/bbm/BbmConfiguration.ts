@@ -15,45 +15,44 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview The bbm package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
-import {Configuration} from '../Configuration.js';
-import {CommandMap} from '../TokenMap.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration } from '../Configuration.js';
+import { CommandMap } from '../TokenMap.js';
 import BaseMethods from '../base/BaseMethods.js';
-import {ParseMethod} from '../Types.js';
+import { ParseMethod } from '../Types.js';
 import TexParser from '../TexParser.js';
 
 /**
  * The methods that implement the bbm package.
  */
-export const BbmMethods: {[key: string]: ParseMethod} = {
-
-  ChooseFont(parser: TexParser, name: string,
-             regular: string, bold: string) {
-    BaseMethods.MathFont(parser, name, parser.options.bbm.bold ? bold : regular);
+export const BbmMethods: { [key: string]: ParseMethod } = {
+  ChooseFont(parser: TexParser, name: string, regular: string, bold: string) {
+    BaseMethods.MathFont(
+      parser,
+      name,
+      parser.options.bbm.bold ? bold : regular
+    );
   },
-  
+
   ChangeBold(parser: TexParser, name: string) {
     const font = parser.GetArgument(name);
-    parser.options.bbm.bold = (font === 'bold' ? true : false);
+    parser.options.bbm.bold = font === 'bold' ? true : false;
   },
 
   MathFont: BaseMethods.MathFont,
-
 };
-
 
 new CommandMap('bbm', {
   mathversion: BbmMethods.ChangeBold,
   mathbbm: [BbmMethods.ChooseFont, '-bbm-normal', '-bbm-bold'],
   mathbbmss: [BbmMethods.ChooseFont, '-bbm-sans-serif', '-bbm-sans-serif-bold'],
-  mathbbmtt: [BbmMethods.MathFont, '-bbm-monospace']
+  mathbbmtt: [BbmMethods.MathFont, '-bbm-monospace'],
 });
 
 //
@@ -65,8 +64,7 @@ export const BbmConfiguration = Configuration.create('bbm', {
   },
   [ConfigurationType.OPTIONS]: {
     bbm: {
-      bold: false
-    }
-  }
+      bold: false,
+    },
+  },
 });
-

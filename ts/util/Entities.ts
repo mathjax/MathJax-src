@@ -21,21 +21,20 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {retryAfter} from './Retries.js';
-import {asyncLoad} from './AsyncLoad.js';
-import {OptionList} from './Options.js';
+import { retryAfter } from './Retries.js';
+import { asyncLoad } from './AsyncLoad.js';
+import { OptionList } from './Options.js';
 
 /**
  * The type for lists of entities
  */
-export type EntityList = {[name: string]: string};
-
+export type EntityList = { [name: string]: string };
 
 /**
  *  Options controlling the process of conversion
  */
 export const options: OptionList = {
-  loadMissingEntities: true           // True means load entity files dynamically if needed
+  loadMissingEntities: true, // True means load entity files dynamically if needed
 };
 
 /**
@@ -451,13 +450,13 @@ export const entities: EntityList = {
   //  Needed by TeX input jax
   nbsp: '\u00A0',
   rsquo: '\u2019',
-  lsquo: '\u2018'
+  lsquo: '\u2018',
 };
 
 /**
  * The files that have been loaded
  */
-const loaded: {[name: string]: boolean} = {};
+const loaded: { [name: string]: boolean } = {};
 
 /**
  * Used by entity files to add more entities to the table
@@ -484,7 +483,7 @@ export function remove(entity: string) {
  * @return {string}      The text with entries replaced
  */
 export function translate(text: string): string {
-  return text.replace(/&([a-z][a-z0-9]*|#(?:[0-9]+|x[0-9a-f]+));/ig, replace);
+  return text.replace(/&([a-z][a-z0-9]*|#(?:[0-9]+|x[0-9a-f]+));/gi, replace);
 }
 
 /**
@@ -504,7 +503,9 @@ function replace(match: string, entity: string): string {
     return entities[entity];
   }
   if (options['loadMissingEntities']) {
-    let file = (entity.match(/^[a-zA-Z](fr|scr|opf)$/) ? RegExp.$1 : entity.charAt(0).toLowerCase());
+    let file = entity.match(/^[a-zA-Z](fr|scr|opf)$/)
+      ? RegExp.$1
+      : entity.charAt(0).toLowerCase();
     if (!loaded[file]) {
       loaded[file] = true;
       retryAfter(asyncLoad('./util/entities/' + file + '.js'));
@@ -518,8 +519,7 @@ function replace(match: string, entity: string): string {
  * @return {string}        The character(s) with the given code point
  */
 export function numeric(entity: string): string {
-  let n = (entity.charAt(0) === 'x' ?
-           parseInt(entity.slice(1), 16) :
-           parseInt(entity));
+  let n =
+    entity.charAt(0) === 'x' ? parseInt(entity.slice(1), 16) : parseInt(entity);
   return String.fromCodePoint(n);
 }

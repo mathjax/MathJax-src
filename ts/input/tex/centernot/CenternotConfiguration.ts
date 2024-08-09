@@ -15,19 +15,18 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Configuration file for the centernot package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {ConfigurationType} from '../HandlerTypes.js';
-import {Configuration} from '../Configuration.js';
+import { ConfigurationType } from '../HandlerTypes.js';
+import { Configuration } from '../Configuration.js';
 import ParseOptions from '../ParseOptions.js';
 import TexParser from '../TexParser.js';
 import NodeUtil from '../NodeUtil.js';
-import {CommandMap} from '../TokenMap.js';
+import { CommandMap } from '../TokenMap.js';
 import BaseMethods from '../base/BaseMethods.js';
 
 /**
@@ -42,10 +41,18 @@ function CenterOver(parser: TexParser, name: string) {
   const base = new TexParser(arg, parser.stack.env, parser.configuration).mml();
   let mml = parser.create('node', 'TeXAtom', [
     new TexParser(arg, parser.stack.env, parser.configuration).mml(),
-    parser.create('node', 'mpadded', [
-      parser.create('node', 'mpadded', [over], {width: 0, lspace: '-.5width'}),
-      parser.create('node', 'mphantom', [base])
-    ], {width: 0, lspace: '-.5width'})
+    parser.create(
+      'node',
+      'mpadded',
+      [
+        parser.create('node', 'mpadded', [over], {
+          width: 0,
+          lspace: '-.5width',
+        }),
+        parser.create('node', 'mphantom', [base]),
+      ],
+      { width: 0, lspace: '-.5width' }
+    ),
   ]);
   parser.configuration.addNode('centerOver', base);
   parser.Push(mml);
@@ -53,7 +60,7 @@ function CenterOver(parser: TexParser, name: string) {
 
 new CommandMap('centernot', {
   centerOver: CenterOver,
-  centernot: [BaseMethods.Macro, '\\centerOver{#1}{{\u29F8}}', 1]
+  centernot: [BaseMethods.Macro, '\\centerOver{#1}{{\u29F8}}', 1],
 });
 
 /**
@@ -62,19 +69,18 @@ new CommandMap('centernot', {
  *
  * @param {ParseOptions} data   The active tex parser.
  */
-export function filterCenterOver({data}: {data: ParseOptions}) {
+export function filterCenterOver({ data }: { data: ParseOptions }) {
   for (const base of data.getList('centerOver')) {
     const texClass = NodeUtil.getTexClass(base.childNodes[0].childNodes[0]);
     if (texClass !== null) {
-      NodeUtil.setProperties(base.parent.parent.parent.parent.parent.parent, {texClass});
+      NodeUtil.setProperties(base.parent.parent.parent.parent.parent.parent, {
+        texClass,
+      });
     }
   }
 }
 
-
-export const CenternotConfiguration = Configuration.create(
-  'centernot', {
-    [ConfigurationType.HANDLER]: {macro: ['centernot']},
-    [ConfigurationType.POSTPROCESSORS]: [filterCenterOver]
-  }
-);
+export const CenternotConfiguration = Configuration.create('centernot', {
+  [ConfigurationType.HANDLER]: { macro: ['centernot'] },
+  [ConfigurationType.POSTPROCESSORS]: [filterCenterOver],
+});
