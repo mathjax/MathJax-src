@@ -183,12 +183,11 @@ export class SubHandlers {
   private map = new Map<HandlerType, SubHandler>();
 
   /**
-   * Adds a token map to the configuration if it exists.
+   * Adds subhandlers and fallbacks to the map.
    *
-   * @param {string} name of the token map.
-   * @param handlers
-   * @param fallbacks
-   * @param priority
+   * @param {HandlerConfig} handlers A handler configuration.
+   * @param {FallbackConfig} fallbacks A configuration of fallback functions.
+   * @param {number=} priority The priority of the handlers.
    */
   public add(
     handlers: HandlerConfig,

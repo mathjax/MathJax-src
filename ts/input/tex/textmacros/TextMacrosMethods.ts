@@ -59,9 +59,11 @@ export const TextMacrosMethods = {
     while ((c = parser.GetNext())) {
       j = parser.i++;
       switch (c) {
-        case '\\':
+        case '\\': {
           const cs = parser.GetCS();
           if (cs === ')') c = '\\('; // \( is the opening delimiter for \)
+        }
+          // falls through
         case '$':
           //
           //  If there are no unbalanced braces and we have found the close delimiter,

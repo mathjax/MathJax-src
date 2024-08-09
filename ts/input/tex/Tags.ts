@@ -84,28 +84,28 @@ export interface Tags {
   /**
    * IDs used in this equation.
    *
-   * @type {Object.<boolean>}
+   * @type {{ [key: string]: boolean }}
    */
   ids: { [key: string]: boolean };
 
   /**
    * IDs used in previous equations.
    *
-   * @type {Object.<boolean>}
+   * @type {{ [key: string]: boolean }}
    */
   allIds: { [key: string]: boolean };
 
   /**
    * Labels in the current equation.
    *
-   * @type {Object.<Label>}
+   * @type {{ [key: string]: Label }}
    */
   labels: { [key: string]: Label };
 
   /**
    * Labels in previous equations.
    *
-   * @type {Object.<Label>}
+   * @type {{ [key: string]: Label }}
    */
   allLabels: { [key: string]: Label };
 

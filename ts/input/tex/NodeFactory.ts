@@ -153,7 +153,7 @@ export class NodeFactory {
   /**
    * Adds a set of node creators to the factory.
    *
-   * @param {Object.<NodeFactoryMethod>} maps The set of functions.
+   * @param {{ [kind: string]: NodeFactoryMethod }} maps The set of functions.
    */
   public setCreators(maps: { [kind: string]: NodeFactoryMethod }) {
     for (const kind in maps) {
@@ -165,8 +165,7 @@ export class NodeFactory {
    * Creates a node for the internal data structure from the factory.
    *
    * @param {string} kind The type of node to be created.
-   * @param {any[]} ...rest The arguments for the node.
-   * @param {...any} rest
+   * @param {any[]} rest The arguments for the node.
    * @returns {MmlNode} The created node.
    */
   public create(kind: string, ...rest: any[]): MmlNode {
@@ -179,9 +178,12 @@ export class NodeFactory {
   }
 
   /**
-   * @param {string} kind The method for generating a node of given kind.
+   * Gets the method for generating a node of given kind.
+   *
+   * @param {string} kind The kind of node.
+   * @returns {NodeFactoryMethod} The method to generate that node type.
    */
-  public get(kind: string) {
+  public get(kind: string): NodeFactoryMethod {
     return this.factory[kind];
   }
 }

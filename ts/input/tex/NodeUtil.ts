@@ -175,8 +175,7 @@ namespace NodeUtil {
    * Removes a set of properties from a node.
    *
    * @param {MmlNode} node The node.
-   * @param {string[]} ...properties  A list of properties.
-   * @param {...any} properties
+   * @param {string[]} properties  A list of properties.
    */
   export function removeProperties(node: MmlNode, ...properties: string[]) {
     node.removeProperty(...properties);

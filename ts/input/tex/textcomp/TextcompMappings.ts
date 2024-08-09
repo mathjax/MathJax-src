@@ -29,11 +29,13 @@ import { ParseUtil } from '../ParseUtil.js';
 import { TextParser } from '../textmacros/TextParser.js';
 
 /**
+ * Inserts symbol and its font information into the current parser if it is a
+ * text parser.
  *
- * @param parser
- * @param name
- * @param c
- * @param font
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
+ * @param {string} c The actual unicode character.
+ * @param {string} font The font name.
  */
 function Insert(parser: TexParser, name: string, c: string, font: string) {
   if (parser instanceof TextParser) {
