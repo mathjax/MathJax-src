@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview The bbm package.
+ * @file The bbm package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */

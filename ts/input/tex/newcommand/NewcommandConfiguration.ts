@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the Newcommand package.
+ * @file Configuration file for the Newcommand package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -31,9 +31,10 @@ import * as sm from '../TokenMap.js';
 
 /**
  * Init method for Newcommand package.
+ *
  * @param {Configuration} config The current configuration.
  */
-let init = function (config: ParserConfiguration) {
+const init = function (config: ParserConfiguration) {
   new sm.DelimiterMap(NewcommandUtil.NEW_DELIMITER, ParseMethods.delimiter, {});
   new sm.CommandMap(NewcommandUtil.NEW_COMMAND, {});
   new sm.EnvironmentMap(

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Mappings for TeX parsing of the AMS math package.
+ * @file Mappings for TeX parsing of the AMS math package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */

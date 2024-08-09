@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the textcomp package.
+ * @file Configuration file for the textcomp package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */

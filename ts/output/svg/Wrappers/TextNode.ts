@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgTextNode wrapper for the TextNode object
+ * @file  Implements the SvgTextNode wrapper for the TextNode object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -116,9 +116,9 @@ export const SvgTextNode = (function <N, T, D>(): SvgTextNodeClass<N, T, D> {
     SvgTextNodeClass<N, T, D>
   >(SvgWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class SvgTextNode extends Base implements SvgTextNodeNTD<N, T, D> {
     /**
      * @override

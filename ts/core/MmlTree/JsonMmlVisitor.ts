@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  A visitor that produces a JSON version of an MmlNode tree
+ * @file  A visitor that produces a JSON version of an MmlNode tree
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -59,7 +59,7 @@ export class JsonMmlVisitor extends MmlVisitor {
    * Convert the tree rooted at a particular node into a JSON structure
    *
    * @param {MmlNode} node  The node to use as the root of the tree to traverse
-   * @return {MmlJSON}      The JSON object representing the internal tree
+   * @returns {MmlJSON}      The JSON object representing the internal tree
    */
   public visitTree(node: MmlNode): MmlJSON {
     return this.visitNode(node);
@@ -67,7 +67,7 @@ export class JsonMmlVisitor extends MmlVisitor {
 
   /**
    * @param {TextNode} node   The text node to visit
-   * @return {MmlJSON}        The JSON for the text element
+   * @returns {MmlJSON}        The JSON for the text element
    */
   public visitTextNode(node: TextNode): MmlTextJSON {
     return { kind: node.kind, text: node.getText() };
@@ -75,7 +75,7 @@ export class JsonMmlVisitor extends MmlVisitor {
 
   /**
    * @param {XMLNode} node  The XML node to visit
-   * @return {MmlJSON}      The JSON for the XML node
+   * @returns {MmlJSON}      The JSON for the XML node
    */
   public visitXMLNode(node: XMLNode): MmlXmlJSON {
     return { kind: node.kind, xml: node.getXML() };
@@ -89,10 +89,10 @@ export class JsonMmlVisitor extends MmlVisitor {
    *   Append the new node to the DOM parent.
    *
    * @param {MmlNode} node  The node to visit
-   * @return {MmlJSON}      The JSON object representing it
+   * @returns {MmlJSON}      The JSON object representing it
    */
   public visitDefault(node: MmlNode): MmlJSON {
-    let json: MmlJSON = {
+    const json: MmlJSON = {
       kind: node.kind.replace(/inferredM/, 'm'),
       texClass: node.texClass,
       attributes: this.getAttributes(node),
@@ -114,10 +114,10 @@ export class JsonMmlVisitor extends MmlVisitor {
 
   /**
    * @param {MmlNode} node    The node whose children are to be copied
-   * @return {MmlJSON[]}      The array of child JSON objects
+   * @returns {MmlJSON[]}      The array of child JSON objects
    */
   public getChildren(node: MmlNode): MmlJSON[] {
-    let children = [];
+    const children = [];
     for (const child of node.childNodes) {
       children.push(this.visitNode(child));
     }
@@ -126,7 +126,7 @@ export class JsonMmlVisitor extends MmlVisitor {
 
   /**
    * @param {MmlNode} node    The node whose attributes are to be copied
-   * @return {PropertyList}   The object containing the attributes;
+   * @returns {PropertyList}   The object containing the attributes;
    */
   public getAttributes(node: MmlNode): PropertyList {
     return Object.assign({}, node.attributes.getAllAttributes());
@@ -134,7 +134,7 @@ export class JsonMmlVisitor extends MmlVisitor {
 
   /**
    * @param {MmlNode} node    The node whose inherited attributes are to be copied
-   * @return {PropertyList}   The object containing the inherited attributes;
+   * @returns {PropertyList}   The object containing the inherited attributes;
    */
   public getInherited(node: MmlNode): PropertyList {
     return Object.assign({}, node.attributes.getAllInherited());
@@ -142,7 +142,7 @@ export class JsonMmlVisitor extends MmlVisitor {
 
   /**
    * @param {MmlNode} node    The node whose properties are to be copied
-   * @return {PropertyList}   The object containing the properties;
+   * @returns {PropertyList}   The object containing the properties;
    */
   public getProperties(node: MmlNode): PropertyList {
     return Object.assign({}, node.getAllProperties());

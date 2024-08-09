@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MathChoice node
+ * @file  Implements the MathChoice node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -49,6 +49,7 @@ export class MathChoice extends AbstractMmlBaseNode {
 
   /**
    * 4 children (display, text, script, and scriptscript styles)
+   *
    * @override
    */
   public get arity() {
@@ -57,6 +58,7 @@ export class MathChoice extends AbstractMmlBaseNode {
 
   /**
    * This element is not considered a MathML container
+   *
    * @override
    */
   public get notParent() {

@@ -15,7 +15,7 @@
  */
 
 /**
- * @fileoverview    Macro and environment mappings for the mathtools package.
+ * @file    Macro and environment mappings for the mathtools package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  * @author dpvc@mathjax.org (Davide P. Cervone)

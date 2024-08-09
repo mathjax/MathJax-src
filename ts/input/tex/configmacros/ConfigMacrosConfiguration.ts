@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview    Configuration file for the configmacros package.
+ * @file    Configuration file for the configmacros package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
@@ -72,7 +72,7 @@ function configmacrosInit(config: ParserConfiguration) {
 /**
  * Create the user-defined macros and environments from their options
  *
- * @param {Configuration} config   The configuration object for the input jax
+ * @param {Configuration} _config  The configuration object for the input jax
  * @param {TeX} jax                The TeX input jax
  */
 function configmacrosConfig(_config: ParserConfiguration, jax: TEX) {

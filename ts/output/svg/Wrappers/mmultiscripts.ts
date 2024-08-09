@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMmultiscripts wrapper for the MmlMmultiscripts object
+ * @file  Implements the SvgMmultiscripts wrapper for the MmlMmultiscripts object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -50,8 +50,11 @@ export type AlignFunction = (w: number, W: number) => number;
 
 /**
  * Get the function for aligning scripts horizontally (left, center, right)
+ *
+ * @param {string} align Alignment value (left, center, right)
+ * @returns {AlignFunction} The constructred alignment function
  */
-export function AlignX(align: string) {
+export function AlignX(align: string): AlignFunction {
   return (
     (
       {
@@ -122,6 +125,10 @@ export interface SvgMmultiscriptsClass<N, T, D>
 
 /**
  * The SvgMmultiscripts wrapper class for the MmlMmultiscripts class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<
   N,
@@ -144,10 +151,10 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<
     SvgMmultiscriptsClass<N, T, D>
   >(SvgMsubsup);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
   return class SvgMmultiscripts
-    // @ts-expect-error
+    // @ts-expect-error Avoid message about base constructors not having the
+    // same type (they should both be SvgWrapper<N, T, D>, but are thought of as
+    // different by typescript)
     extends Base
     implements SvgMmultiscriptsNTD<N, T, D>
   {
@@ -205,13 +212,14 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<
     /**
      * Create a table with the super and subscripts properly separated and aligned.
      *
+     * @param {N} svg          The SVG node
      * @param {number} x       The x offset of the scripts
      * @param {number} u       The baseline offset for the superscripts
      * @param {number} v       The baseline offset for the subscripts
      * @param {number} i       The starting index for the scripts
      * @param {number} n       The number of sub/super-scripts
      * @param {string} align   The alignment for the scripts
-     * @return {number}        The right-hand offset of the scripts
+     * @returns {number}        The right-hand offset of the scripts
      */
     protected addScripts(
       svg: N,
@@ -228,7 +236,7 @@ export const SvgMmultiscripts = (function <N, T, D>(): SvgMmultiscriptsClass<
       const subRow = adaptor.append(svg, this.svg('g')) as N;
       this.place(x, u, supRow);
       this.place(x, v, subRow);
-      let m = i + 2 * n;
+      const m = i + 2 * n;
       let dx = 0;
       while (i < m) {
         const [sub, sup] = [this.childNodes[i++], this.childNodes[i++]];

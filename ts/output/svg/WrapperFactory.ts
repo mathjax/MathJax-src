@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgWrapperFactory class
+ * @file  Implements the SvgWrapperFactory class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the AsciiMath version of the FindMath object
+ * @file  Implements the AsciiMath version of the FindMath object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -78,8 +78,8 @@ export class FindAsciiMath<N, T, D> extends AbstractFindMath<N, T, D> {
    *   based on the configuration options
    */
   protected getPatterns() {
-    let options = this.options;
-    let starts: string[] = [];
+    const options = this.options;
+    const starts: string[] = [];
     this.end = {};
     options['delimiters'].forEach((delims: Delims) =>
       this.addPattern(starts, delims, false)
@@ -96,7 +96,7 @@ export class FindAsciiMath<N, T, D> extends AbstractFindMath<N, T, D> {
    * @param {boolean} display  True if the delimiters are for display mode
    */
   protected addPattern(starts: string[], delims: Delims, display: boolean) {
-    let [open, close] = delims;
+    const [open, close] = delims;
     starts.push(quotePattern(open));
     this.end[open] = [close, display, new RegExp(quotePattern(close), 'g')];
   }
@@ -108,7 +108,7 @@ export class FindAsciiMath<N, T, D> extends AbstractFindMath<N, T, D> {
    * @param {number} n               The index of the string being searched
    * @param {RegExpExecArray} start  The result array from the start-delimiter search
    * @param {EndItem} end            The end-delimiter data corresponding to the start delimiter
-   * @return {ProtoItem}             The proto math item for the math, if found
+   * @returns {ProtoItem}             The proto math item for the math, if found
    */
   protected findEnd(
     text: string,
@@ -116,9 +116,9 @@ export class FindAsciiMath<N, T, D> extends AbstractFindMath<N, T, D> {
     start: RegExpExecArray,
     end: EndItem
   ): ProtoItem<N, T> {
-    let [, display, pattern] = end;
-    let i = (pattern.lastIndex = start.index + start[0].length);
-    let match = pattern.exec(text);
+    const [, display, pattern] = end;
+    const i = (pattern.lastIndex = start.index + start[0].length);
+    const match = pattern.exec(text);
     return !match
       ? null
       : protoItem<N, T>(
@@ -157,7 +157,7 @@ export class FindAsciiMath<N, T, D> extends AbstractFindMath<N, T, D> {
    * @override
    */
   public findMath(strings: string[]) {
-    let math: ProtoItem<N, T>[] = [];
+    const math: ProtoItem<N, T>[] = [];
     if (this.hasPatterns) {
       for (let i = 0, m = strings.length; i < m; i++) {
         this.findMathInString(math, i, strings[i]);

@@ -15,7 +15,7 @@
  */
 
 /**
- * @fileoverview    Utility functions for the mathtools package.
+ * @file    Utility functions for the mathtools package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
@@ -66,7 +66,7 @@ export const MathtoolsUtil = {
    *
    * @param {TexParser} parser   The current TeX parser.
    * @param {string} name        The name of the macro doing the checking.
-   * @return {EqnArrayItem}      The top item (an EqnArrayItem).
+   * @returns {EqnArrayItem}      The top item (an EqnArrayItem).
    */
   checkAlignment(parser: TexParser, name: string): EqnArrayItem {
     const top = parser.stack.Top() as EqnArrayItem;
@@ -121,7 +121,7 @@ export const MathtoolsUtil = {
    *
    * @param {string} name   The name of the macro doing the checking.
    * @param {string} n      The string to test as a number.
-   * @return {srtring}      The number with an explicit sign.
+   * @returns {string}      The number with an explicit sign.
    */
   plusOrMinus(name: string, n: string): string {
     n = n.trim();
@@ -137,7 +137,7 @@ export const MathtoolsUtil = {
    * @param {TexParser} parser   The active tex parser.
    * @param {string} name        The name of the calling macro (\prescript).
    * @param {string} pos         The position for the argument (sub, sup, arg).
-   * @return {MmlNode}           The parsed MML version of the argument.
+   * @returns {MmlNode}           The parsed MML version of the argument.
    */
   getScript(parser: TexParser, name: string, pos: string): MmlNode {
     let arg = UnitUtil.trimSpaces(parser.GetArgument(name));

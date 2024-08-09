@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Defines the operator dictionary structure
+ * @file  Defines the operator dictionary structure
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -36,7 +36,7 @@ export type RangeDef = [number, number, number, string, string?];
  * @param {number} rspace            The operator's MathML right-hand spacing
  * @param {number} texClass          The default TeX class for the operator
  * @param {PropertyList} properties  Any default properties from the operator dictionary
- * @return {OperatorDef}             The operator definition array
+ * @returns {OperatorDef}             The operator definition array
  */
 export function OPDEF(
   lspace: number,
@@ -153,7 +153,7 @@ export const RANGES: RangeDef[] = [
  * Get the Unicode range for the first character of a string
  *
  * @param {string} text   The character to check
- * @return {RangeDef}     The range containing that character, or null
+ * @returns {RangeDef}     The range containing that character, or null
  */
 export function getRange(text: string): RangeDef {
   const def =

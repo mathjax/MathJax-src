@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  The generic NodeFactory class for creating Node objects
+ * @file  The generic NodeFactory class for creating Node objects
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -39,7 +39,7 @@ export interface NodeFactory<
    * @param {string} kind  The kind of node to create
    * @param {PropertyList} properties  The list of initial properties for the node (if any)
    * @param {N[]} children  The array of initial child nodes (if any)
-   * @return {N}  The newly created node of the given kind
+   * @returns {N}  The newly created node of the given kind
    */
   create(kind: string, properties?: PropertyList, children?: N[]): N;
 }

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Base imports of sre locales.
+ * @file  Base imports of sre locales.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  * @author v.sorge@mathjax.org (Volker Sorge)

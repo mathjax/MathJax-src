@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implement FunctionList object
+ * @file  Implement FunctionList object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -42,12 +42,12 @@ export class FunctionList extends PrioritizedList<Function> {
    *   false, the list is terminated.
    *
    * @param {any[]} data  The array of arguments to pass to the functions
-   * @return {boolean}    False if any function stopped the list by
+   * @returns {boolean}    False if any function stopped the list by
    *                       returning false, true otherwise
    */
   public execute(...data: any[]): boolean {
     for (const item of this) {
-      let result = item.item(...data);
+      const result = item.item(...data);
       if (result === false) {
         return false;
       }
@@ -67,18 +67,18 @@ export class FunctionList extends PrioritizedList<Function> {
    *   and passes true.
    *
    * @param {any[]} data  The array of arguments to pass to the functions
-   * @return {Promise}    The promise that is satisfied when the function
+   * @returns {Promise}    The promise that is satisfied when the function
    *                       list completes (with argument true or false
    *                       depending on whether some function returned
    *                       false or not).
    */
   public asyncExecute(...data: any[]): Promise<boolean> {
     let i = -1;
-    let items = this.items;
-    return new Promise((ok: Function, fail: Function) => {
+    const items = this.items;
+    return new Promise((ok, fail) => {
       (function execute() {
         while (++i < items.length) {
-          let result = items[i].item(...data);
+          const result = items[i].item(...data);
           if (result instanceof Promise) {
             result.then(execute).catch((err) => fail(err));
             return;

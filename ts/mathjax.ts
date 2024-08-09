@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  The main MathJax global object
+ * @file  The main MathJax global object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -47,7 +47,7 @@ export const mathjax = {
    *
    * @param {any} document        The document to handle
    * @param {OptionList} options   The options to use for the document (e.g., input and output jax)
-   * @return {MathDocument}       The MathDocument to handle the document
+   * @returns {MathDocument}       The MathDocument to handle the document
    */
   document: function (
     document: any,

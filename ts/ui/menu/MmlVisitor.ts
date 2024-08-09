@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  A visitor to serialize MathML taking menu settings into account
+ * @file  A visitor to serialize MathML taking menu settings into account
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

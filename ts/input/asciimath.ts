@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the AsciiMath InputJax object
+ * @file  Implements the AsciiMath InputJax object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -60,7 +60,7 @@ export class AsciiMath<N, T, D> extends AbstractInputJax<N, T, D> {
    * @override
    */
   constructor(options: OptionList) {
-    let [, find, am] = separateOptions(
+    const [, find, am] = separateOptions(
       options,
       FindAsciiMath.OPTIONS,
       AsciiMath.OPTIONS

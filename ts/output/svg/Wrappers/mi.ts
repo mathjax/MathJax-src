@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMi wrapper for the MmlMi object
+ * @file  Implements the SvgMi wrapper for the MmlMi object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the v2-compatible color package.
+ * @file Configuration file for the v2-compatible color package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */

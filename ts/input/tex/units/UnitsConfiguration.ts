@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration and implementation of the units package.
+ * @file Configuration and implementation of the units package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -28,15 +28,16 @@ import { CommandMap } from '../TokenMap.js';
 import { ParseMethod } from '../Types.js';
 
 // Namespace
-export let UnitsMethods: { [key: string]: ParseMethod } = {
+export const UnitsMethods: { [key: string]: ParseMethod } = {
   /**
    * Implements the basic \units macro.
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {string} name The name of the calling macro.
    */
   Unit(parser: TexParser, name: string) {
-    let val = parser.GetBrackets(name);
-    let dim = parser.GetArgument(name);
+    const val = parser.GetBrackets(name);
+    const dim = parser.GetArgument(name);
     let macro = `\\mathrm{${dim}}`;
     if (val) {
       macro = val + (parser.options.units.loose ? '~' : '\\,') + macro;
@@ -47,13 +48,14 @@ export let UnitsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * The \unitfrac macro.
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {string} name The name of the calling macro.
    */
   UnitFrac(parser: TexParser, name: string) {
-    let val = parser.GetBrackets(name) || '';
-    let num = parser.GetArgument(name);
-    let den = parser.GetArgument(name);
+    const val = parser.GetBrackets(name) || '';
+    const num = parser.GetArgument(name);
+    const den = parser.GetArgument(name);
     let macro = `\\nicefrac[\\mathrm]{${num}}{${den}}`;
     if (val) {
       macro = val + (parser.options.units.loose ? '~' : '\\,') + macro;
@@ -64,19 +66,20 @@ export let UnitsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * The \nicefrac macro.
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {string} name The name of the calling macro.
    */
   NiceFrac(parser: TexParser, name: string) {
-    let font = parser.GetBrackets(name) || '\\mathrm';
-    let num = parser.GetArgument(name);
-    let den = parser.GetArgument(name);
-    let numMml = new TexParser(
+    const font = parser.GetBrackets(name) || '\\mathrm';
+    const num = parser.GetArgument(name);
+    const den = parser.GetArgument(name);
+    const numMml = new TexParser(
       `${font}{${num}}`,
       { ...parser.stack.env },
       parser.configuration
     ).mml();
-    let denMml = new TexParser(
+    const denMml = new TexParser(
       `${font}{${den}}`,
       { ...parser.stack.env },
       parser.configuration

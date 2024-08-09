@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMspace node
+ * @file  Implements the MmlMspace node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -81,6 +81,7 @@ export class MmlMspace extends AbstractMmlTokenNode {
 
   /**
    * mspace can't have children
+   *
    * @override
    */
   public get arity() {
@@ -110,7 +111,7 @@ export class MmlMspace extends AbstractMmlTokenNode {
   }
 
   /**
-   * @return {boolean}   True if mspace is allowed to break, i.e.,
+   * @returns {boolean}   True if mspace is allowed to break, i.e.,
    *                     no height/depth, no styles, and no background color.
    */
   public get canBreak(): boolean {

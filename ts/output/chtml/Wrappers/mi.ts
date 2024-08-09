@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMi wrapper for the MmlMi object
+ * @file  Implements the ChtmlMi wrapper for the MmlMi object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

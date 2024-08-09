@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonTeXAtom wrapper mixin for the MmlTeXAtom object
+ * @file  Implements the CommonTeXAtom wrapper mixin for the MmlTeXAtom object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -104,6 +104,7 @@ export interface CommonTeXAtomClass<
 /**
  * The CommonTeXAtom wrapper mixin for the TeXAtom object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type

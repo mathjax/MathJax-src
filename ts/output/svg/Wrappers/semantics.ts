@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgSemantics wrapper for the MmlSemantics object
+ * @file  Implements the SvgSemantics wrapper for the MmlSemantics object
  *                and the associated wrappers for annotations
  *
  * @author dpvc@mathjax.org (Davide Cervone)
@@ -283,9 +283,9 @@ export const SvgXmlNode = (function <N, T, D>(): SvgXmlNodeClass<N, T, D> {
     SvgXmlNodeClass<N, T, D>
   >(SvgWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class SvgXmlNode extends Base implements SvgXmlNodeNTD<N, T, D> {
     /**
      * The XMLNode wrapper

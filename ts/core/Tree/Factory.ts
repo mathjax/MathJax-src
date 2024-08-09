@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  The generic Factory class for creating arbitrary objects
+ * @file  The generic Factory class for creating arbitrary objects
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -37,7 +37,7 @@ export interface FactoryNodeClass<N extends FactoryNode> {
   /**
    * @param {Factory<N, FactoryNodeClass<N>>} factory  The factory for creating more nodes
    * @param {any[]} args  Any additional arguments needed by the node
-   * @return {N}  The newly created node
+   * @returns {N}  The newly created node
    */
   new (factory: Factory<N, FactoryNodeClass<N>>, ...args: any[]): N;
 }
@@ -59,7 +59,7 @@ export interface FactoryNodeClass<N extends FactoryNode> {
 export interface Factory<N extends FactoryNode, C extends FactoryNodeClass<N>> {
   /**
    * @param {string} kind  The kind of node to create
-   * @return {N}  The newly created node of the given kind
+   * @returns {N}  The newly created node of the given kind
    */
   create(kind: string): N;
 
@@ -73,7 +73,7 @@ export interface Factory<N extends FactoryNode, C extends FactoryNodeClass<N>> {
 
   /**
    * @param {string} kind  The kind of node whose class is to be returned
-   * @return {C}  The class object for the given kind
+   * @returns {C}  The class object for the given kind
    */
   getNodeClass(kind: string): C;
 
@@ -85,12 +85,12 @@ export interface Factory<N extends FactoryNode, C extends FactoryNodeClass<N>> {
   /**
    * @param {N} node  The node to test if it is of a given kind
    * @param {string} kind  The kind to test for
-   * @return {boolean}  True if the node is of the given kind, false otherwise
+   * @returns {boolean}  True if the node is of the given kind, false otherwise
    */
   nodeIsKind(node: N, kind: string): boolean;
 
   /**
-   * @return {string[]}  The names of all the available kinds of nodes
+   * @returns {string[]}  The names of all the available kinds of nodes
    */
   getKinds(): string[];
 }
@@ -166,8 +166,8 @@ export abstract class AbstractFactory<
    */
   public setNodeClass(kind: string, nodeClass: C) {
     this.nodeMap.set(kind, nodeClass);
-    let THIS = this;
-    let KIND = this.nodeMap.get(kind);
+    const THIS = this;
+    const KIND = this.nodeMap.get(kind);
     this.node[kind] = (...args: any[]) => {
       return new KIND(THIS, ...args);
     };

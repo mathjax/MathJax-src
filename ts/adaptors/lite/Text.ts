@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements a lightweight Text element replacement
+ * @file  Implements a lightweight Text element replacement
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -47,7 +47,7 @@ export class LiteText {
 
   /**
    * @param {string} text  The text for the node
-   * @constructor
+   * @class
    */
   constructor(text: string = '') {
     this.value = text;

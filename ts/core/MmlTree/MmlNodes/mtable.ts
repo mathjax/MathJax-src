@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMtable node
+ * @file  Implements the MmlMtable node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -84,6 +84,7 @@ export class MmlMtable extends AbstractMmlNode {
 
   /**
    * Linebreaks are allowed in tables
+   *
    * @override
    */
   public get linebreakContainer() {
@@ -92,6 +93,7 @@ export class MmlMtable extends AbstractMmlNode {
 
   /**
    * Don't reset indent attributes
+   *
    * @override
    */
   public get linebreakAlign() {

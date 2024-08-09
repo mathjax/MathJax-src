@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements a lightweight DOM adaptor
+ * @file  Implements a lightweight DOM adaptor
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -54,7 +54,7 @@ export class LiteDocument {
   }
 
   /**
-   * @constructor
+   * @class
    */
   constructor() {
     this.root = new LiteElement('html', {}, [

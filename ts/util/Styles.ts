@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements a lite CssStyleDeclaration replacement
+ * @file  Implements a lite CssStyleDeclaration replacement
  *                (very limited in scope)
  *
  * @author dpvc@mathjax.org (Davide Cervone)
@@ -53,7 +53,7 @@ export const WSC = ['width', 'style', 'color'];
  * Split a style at spaces (taking quotation marks and commas into account)
  *
  * @param {string} text  The combined styles to be split at spaces
- * @return {string[]}    Array of parts of the style (separated by spaces)
+ * @returns {string[]}    Array of parts of the style (separated by spaces)
  */
 function splitSpaces(text: string): string[] {
   const parts = text.split(/((?:'[^']*'|"[^"]*"|,[\s\n]|[^\s\n])*)/g);
@@ -76,7 +76,6 @@ function splitSpaces(text: string): string[] {
  *
  * @param {string} name   The style to be processed
  */
-
 function splitTRBL(name: string) {
   const parts = splitSpaces(this.styles[name]);
   if (parts.length === 0) {
@@ -171,7 +170,7 @@ const BORDER: { [name: string]: RegExp } = {
  * @param {string} name   The style to be processed
  */
 function splitWSC(name: string) {
-  let parts = { width: '', style: '', color: '' } as StyleList;
+  const parts = { width: '', style: '', color: '' } as StyleList;
   for (const part of splitSpaces(this.styles[name])) {
     if (part.match(BORDER.width) && parts.width === '') {
       parts.width = part;
@@ -334,6 +333,8 @@ function saveFontParts(
 
 /**
  * Combine font parts into one (we don't actually do that)
+ *
+ * @param _name The font name
  */
 function combineFont(_name: string) {}
 
@@ -427,7 +428,7 @@ export class Styles {
 
   /**
    * @param {string} cssText  The initial definition for the style
-   * @constructor
+   * @class
    */
   constructor(cssText: string = '') {
     this.parse(cssText);
@@ -435,10 +436,10 @@ export class Styles {
 
   /**
    * @param {string} text  The value to be sanitized
-   * @return {string}      The sanitized value (removes ; and anything past that, and balances quotation marks)
+   * @returns {string}      The sanitized value (removes ; and anything past that, and balances quotation marks)
    */
   protected sanitizeValue(text: string): string {
-    let PATTERN = (this.constructor as typeof Styles).pattern;
+    const PATTERN = (this.constructor as typeof Styles).pattern;
     if (!text.match(PATTERN.sanitize)) {
       return text;
     }
@@ -454,7 +455,7 @@ export class Styles {
   }
 
   /**
-   * @return {string}  The CSS string for the styles currently defined
+   * @returns {string}  The CSS string for the styles currently defined
    */
   public get cssText(): string {
     const styles = [] as string[];
@@ -468,7 +469,7 @@ export class Styles {
   }
 
   /**
-   * @return {StyleList} The object to map style names to the values
+   * @returns {StyleList} The object to map style names to the values
    */
   public get styleList(): StyleList {
     return { ...this.styles };
@@ -503,7 +504,7 @@ export class Styles {
 
   /**
    * @param {string} name  The name of the style to get
-   * @return {string}      The value of the style (or empty string if not defined)
+   * @returns {string}      The value of the style (or empty string if not defined)
    */
   public get(name: string): string {
     name = this.normalizeName(name);
@@ -537,7 +538,7 @@ export class Styles {
 
   /**
    * @param {string} name   The name of the style whose parent style is to be found
-   * @return {string}       The name of the parent, or '' if none
+   * @returns {string}       The name of the parent, or '' if none
    */
   protected parentName(name: string): string {
     const parent = name.replace(/-[^-]*$/, '');
@@ -547,7 +548,7 @@ export class Styles {
   /**
    * @param {string} name   The name of the parent style
    * @param {string} child  The suffix to be added to the parent
-   * @preturn {string}      The combined name
+   * @returns {string}      The combined name
    */
   protected childName(name: string, child: string) {
     //
@@ -569,7 +570,7 @@ export class Styles {
 
   /**
    * @param {string} name  The name of a style to normalize
-   * @return {string}      The name converted from CamelCase to lowercase with dashes
+   * @returns {string}      The name converted from CamelCase to lowercase with dashes
    */
   protected normalizeName(name: string): string {
     return name.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase());
@@ -581,14 +582,14 @@ export class Styles {
    *                           as well as the merged style shorthands)
    */
   protected parse(cssText: string = '') {
-    let PATTERN = (this.constructor as typeof Styles).pattern;
+    const PATTERN = (this.constructor as typeof Styles).pattern;
     this.styles = {};
     const parts = cssText
       .replace(/\n/g, ' ')
       .replace(PATTERN.comment, '')
       .split(PATTERN.style);
     while (parts.length > 1) {
-      let [space, name, value] = parts.splice(0, 3);
+      const [space, name, value] = parts.splice(0, 3);
       if (space.match(/[^\s\n;]/)) return;
       this.set(name, value);
     }

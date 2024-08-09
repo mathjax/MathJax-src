@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMtr wrapper for the MmlMtr object
+ * @file  Implements the ChtmlMtr wrapper for the MmlMtr object
  *                and ChtmlMlabeledtr for MmlMlabeledtr
  *
  * @author dpvc@mathjax.org (Davide Cervone)
@@ -122,9 +122,9 @@ export const ChtmlMtr = (function <N, T, D>(): ChtmlMtrClass<N, T, D> {
     ChtmlMtrClass<N, T, D>
   >(ChtmlWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class ChtmlMtr extends Base implements ChtmlMtrNTD<N, T, D> {
     /**
      * @override
@@ -252,7 +252,9 @@ export const ChtmlMlabeledtr = (function <N, T, D>(): ChtmlMlabeledtrClass<
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   return class ChtmlMlabeledtr
-    // @ts-expect-error
+    // @ts-expect-error Avoid message about base constructors not having the
+    // same type (they should both be ChtmlWrapper<N, T, D>, but are thought of
+    // as different by typescript)
     extends Base
     implements ChtmlMlabeledtrNTD<N, T, D>
   {

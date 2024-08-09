@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Utility functions for the newcommand package.
+ * @file Utility functions for the newcommand package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -31,13 +31,14 @@ import * as sm from '../TokenMap.js';
 namespace NewcommandUtil {
   /**
    * Get the next CS name or give an error.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} cmd The string starting with a control sequence.
-   * @return {string} The control sequence.
+   * @returns {string} The control sequence.
    */
   export function GetCSname(parser: TexParser, cmd: string): string {
     // @test Def ReDef, Let Bar, Let Brace Equal
-    let c = parser.GetNext();
+    const c = parser.GetNext();
     if (c !== '\\') {
       // @test No CS
       throw new TexError(
@@ -46,15 +47,16 @@ namespace NewcommandUtil {
         cmd
       );
     }
-    let cs = UnitUtil.trimSpaces(parser.GetArgument(cmd));
+    const cs = UnitUtil.trimSpaces(parser.GetArgument(cmd));
     return cs.substring(1);
   }
 
   /**
    * Get a control sequence name as an argument (doesn't require the backslash)
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro that is getting the name.
-   * @return {string} The control sequence.
+   * @returns {string} The control sequence.
    */
   export function GetCsNameArgument(parser: TexParser, name: string): string {
     let cs = UnitUtil.trimSpaces(parser.GetArgument(name));
@@ -75,9 +77,10 @@ namespace NewcommandUtil {
 
   /**
    * Get the number of arguments for a macro definition
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro that is getting the argument count.
-   * @return {string} The number of arguments (or blank).
+   * @returns {string} The number of arguments (or blank).
    */
   export function GetArgCount(parser: TexParser, name: string): string {
     let n = parser.GetBrackets(name);
@@ -99,10 +102,11 @@ namespace NewcommandUtil {
 
   /**
    * Get a \def parameter template.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} cmd The string starting with the template.
    * @param {string} cs The control sequence of the \def.
-   * @return {number | string[]} The number of parameters or a string array if
+   * @returns {number | string[]} The number of parameters or a string array if
    *     there is an optional argument.
    */
   export function GetTemplate(
@@ -112,7 +116,7 @@ namespace NewcommandUtil {
   ): number | string[] {
     // @test Def Double Let, Def ReDef, Def Let
     let c = parser.GetNext();
-    let params: string[] = [];
+    const params: string[] = [];
     let n = 0;
     let i = parser.i;
     while (parser.i < parser.string.length) {
@@ -169,6 +173,7 @@ namespace NewcommandUtil {
 
   /**
    * Find a single parameter delimited by a trailing template.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The name of the calling command.
    * @param {string} param The parameter for the macro.
@@ -182,7 +187,7 @@ namespace NewcommandUtil {
     let j = 0;
     let hasBraces = 0;
     while (parser.i < parser.string.length) {
-      let c = parser.string.charAt(parser.i);
+      const c = parser.string.charAt(parser.i);
       // @test Def Let, Def Optional Brace, Def Options CS
       if (c === '{') {
         // @test Def Optional Brace, Def Options CS
@@ -205,7 +210,7 @@ namespace NewcommandUtil {
         parser.i++;
         j++;
         hasBraces = 0;
-        let match = parser.string.substring(parser.i).match(/[a-z]+|./i);
+        const match = parser.string.substring(parser.i).match(/[a-z]+|./i);
         if (match) {
           // @test Def Options CS
           parser.i += match[0].length;
@@ -225,10 +230,11 @@ namespace NewcommandUtil {
   /**
    * Check if a template is at the current location.
    * (The match must be exact, with no spacing differences. TeX is
-   *  a little more forgiving than this about spaces after macro names)
+   * a little more forgiving than this about spaces after macro names)
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} param Tries to match an optional parameter.
-   * @return {number} The number of optional parameters, either 0 or 1.
+   * @returns {number} The number of optional parameters, either 0 or 1.
    */
   export function MatchParam(parser: TexParser, param: string): number {
     // @test Def Let, Def Optional Brace, Def Options CS
@@ -250,6 +256,7 @@ namespace NewcommandUtil {
 
   /**
    * Adds a new delimiter as extension to the parser.
+   *
    * @param {TexParser} parser The current parser.
    * @param {string} cs The control sequence of the delimiter.
    * @param {string} char The corresponding character.
@@ -268,6 +275,7 @@ namespace NewcommandUtil {
 
   /**
    * Adds a new macro as extension to the parser.
+   *
    * @param {TexParser} parser The current parser.
    * @param {string} cs The control sequence of the delimiter.
    * @param {ParseMethod} func The parse method for this macro.
@@ -289,6 +297,7 @@ namespace NewcommandUtil {
 
   /**
    * Adds a new environment as extension to the parser.
+   *
    * @param {TexParser} parser The current parser.
    * @param {string} env The environment name.
    * @param {ParseMethod} func The parse method for this macro.

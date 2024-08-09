@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMsqrt wrapper for the MmlMsqrt object
+ * @file  Implements the ChtmlMsqrt wrapper for the MmlMsqrt object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -101,6 +101,10 @@ export interface ChtmlMsqrtClass<N, T, D>
 
 /**
  * The ChtmlMsqrt wrapper class for the MmlMsqrt class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
   const Base = CommonMsqrtMixin<
@@ -119,9 +123,9 @@ export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
     ChtmlMsqrtClass<N, T, D>
   >(ChtmlWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class ChtmlMsqrt extends Base implements ChtmlMsqrtNTD<N, T, D> {
     /**
      * @override

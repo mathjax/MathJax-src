@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the empheq package.
+ * @file Configuration file for the empheq package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
@@ -108,7 +108,7 @@ export const EmpheqMethods = {
    * Create an <mo> with a given content
    *
    * @param {TexParser} parser   The active tex parser.
-   * @param {string} name        The name of the macro being processed.
+   * @param {string} _name       The name of the macro being processed.
    * @param {string} c           The character for the <mo>
    */
   EmpheqMO(parser: TexParser, _name: string, c: string) {

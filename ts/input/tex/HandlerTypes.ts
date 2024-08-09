@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Basic enum types for map and configuration handlers.
+ * @file Basic enum types for map and configuration handlers.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */

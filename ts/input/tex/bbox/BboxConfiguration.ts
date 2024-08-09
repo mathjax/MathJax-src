@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the bbox package.
+ * @file Configuration file for the bbox package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -32,6 +32,7 @@ import TexError from '../TexError.js';
 const BboxMethods: { [key: string]: ParseMethod } = {
   /**
    * Implements MathJax Bbox macro to pad and colorize background boxes.
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {string} name The name of the calling macro.
    */
@@ -120,11 +121,11 @@ const BboxMethods: { [key: string]: ParseMethod } = {
 };
 
 // Dummy methods. Need to be made Safe with security check.
-let BBoxStyle = function (styles: string) {
+const BBoxStyle = function (styles: string) {
   return styles;
 };
 
-let BBoxPadding = function (pad: string) {
+const BBoxPadding = function (pad: string) {
   return pad;
 };
 

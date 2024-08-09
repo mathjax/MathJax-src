@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMn wrapper for the MmlMn object
+ * @file  Implements the SvgMn wrapper for the MmlMn object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Support functions for the safe extension
+ * @file  Support functions for the safe extension
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -33,7 +33,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
    *
    * @param {Safe<N,T,D>} safe  The Safe object being used
    * @param {string} url        The URL being tested
-   * @return {string|null}      The URL if OK and null if not
+   * @returns {string|null}      The URL if OK and null if not
    *
    * @template N  The HTMLElement node class
    * @template T  The Text node class
@@ -55,7 +55,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
    *
    * @param {Safe<N,T,D>} safe  The Safe object being used
    * @param {string} list       The class list being tested
-   * @return {string|null}      The class list if OK and null if not
+   * @returns {string|null}      The class list if OK and null if not
    *
    * @template N  The HTMLElement node class
    * @template T  The Text node class
@@ -75,7 +75,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
    *
    * @param {Safe<N,T,D>} safe  The Safe object being used
    * @param {string} CLASS      The class being tested
-   * @return {string|null}      The class if OK and null if not
+   * @returns {string|null}      The class if OK and null if not
    *
    * @template N  The HTMLElement node class
    * @template T  The Text node class
@@ -94,7 +94,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
    *
    * @param {Safe<N,T,D>} safe  The Safe object being used
    * @param {string} id         The id being tested
-   * @return {string|null}      The id if OK and null if not
+   * @returns {string|null}      The id if OK and null if not
    *
    * @template N  The HTMLElement node class
    * @template T  The Text node class
@@ -113,7 +113,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
    *
    * @param {Safe<N,T,D>} safe  The Safe object being used
    * @param {string} styles     The style string being tested
-   * @return {string}           The sanitized style string
+   * @returns {string}           The sanitized style string
    *
    * @template N  The HTMLElement node class
    * @template T  The Text node class
@@ -154,7 +154,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
       //  Return the div2 style string
       //
       styles = adaptor.allStyles(div2);
-    } catch (err) {
+    } catch (_err) {
       styles = '';
     }
     return styles;
@@ -166,7 +166,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
    * @param {Safe<N,T,D>} safe  The Safe object being used
    * @param {string} style      The style name being tested
    * @param {N} div             The temp DIV node containing the style object to be tested
-   * @return {string|null}      The sanitized style string or null if invalid
+   * @returns {string|null}      The sanitized style string or null if invalid
    *
    * @template N  The HTMLElement node class
    * @template T  The Text node class
@@ -201,7 +201,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
    * @param {string} style      The style name being tested
    * @param {string} value      The value of the style to test
    * @param {N} div             The temp DIV node containing the style object to be tested
-   * @return {string|null}      The sanitized style string or null if invalid
+   * @returns {string|null}      The sanitized style string or null if invalid
    *
    * @template N  The HTMLElement node class
    * @template T  The Text node class
@@ -238,7 +238,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
    * @param {Safe<N,T,D>} safe  The Safe object being used
    * @param {string} style      The style name being tested
    * @param {string} value      The value of the style to test
-   * @return {string|null}      The sanitized length value
+   * @returns {string|null}      The sanitized length value
    *
    * @template N  The HTMLElement node class
    * @template T  The Text node class
@@ -265,7 +265,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
    *
    * @param {Safe<N,T,D>} safe  The Safe object being used
    * @param {string} size       The font size to test
-   * @return {string|null}      The sanitized style string or null if invalid
+   * @returns {string|null}      The sanitized style string or null if invalid
    *
    * @template N  The HTMLElement node class
    * @template T  The Text node class
@@ -280,7 +280,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
    *
    * @param {Safe<N,T,D>} safe  The Safe object being used
    * @param {string} size       The script size multiplier to test
-   * @return {string}           The sanitized size
+   * @returns {string}           The sanitized size
    *
    * @template N  The HTMLElement node class
    * @template T  The Text node class
@@ -299,7 +299,8 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
    *
    * @param {Safe<N,T,D>} safe  The Safe object being used
    * @param {string} size       The scriptlevel to test
-   * @return {string|null}      The sanitized scriptlevel or null
+   * @param level
+   * @returns {string|null}      The sanitized scriptlevel or null
    *
    * @template N  The HTMLElement node class
    * @template T  The Text node class
@@ -319,7 +320,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
    * @param {Safe<N,T,D>} safe  The Safe object being used
    * @param {string} value      The attribute's value
    * @param {string} id         The attribute's id (e.g., data-mjx-variant)
-   * @return {number|null}      The sanitized value or null
+   * @returns {number|null}      The sanitized value or null
    *
    * @template N  The HTMLElement node class
    * @template T  The Text node class

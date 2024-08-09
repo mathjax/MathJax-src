@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the LineBBox class
+ * @file  Implements the LineBBox class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -69,7 +69,7 @@ export class LineBBox extends BBox {
    * @param {BBox} bbox           The bbox to extend
    * @param {number} leading      The lineleading value for the break
    * @param {IndentData} indent   The align/shift information
-   * @return {ExtendedBBox}       The bbox extended
+   * @returns {LineBBox}          The extended bbox
    */
   public static from(
     bbox: BBox,
@@ -155,7 +155,7 @@ export class LineBBox extends BBox {
 
   /**
    * @param {LineBBox} bbox   The LineBBox whose indentData is to be copied
-   * @return {IndentData[]}   The copied array
+   * @returns {IndentData[]}   The copied array
    */
   protected copyIndentData(bbox: LineBBox): IndentData[] {
     return bbox.indentData.map(([align, indent]) => [align, indent]);

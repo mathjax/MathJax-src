@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Error class for the TeX parser.
+ * @file Error class for the TeX parser.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -27,18 +27,20 @@ export default class TexError {
 
   /**
    * Default error message.
+   *
    * @type {string}
    */
   public message: string;
 
   /**
    * The old MathJax processing function.
+   *
    * @param {string} str The basic error message.
    * @param {string[]} args The arguments to be replaced in the error message.
-   * @return {string} The processed error string.
+   * @returns {string} The processed error string.
    */
   private static processString(str: string, args: string[]): string {
-    let parts = str.split(TexError.pattern);
+    const parts = str.split(TexError.pattern);
     for (let i = 1, m = parts.length; i < m; i += 2) {
       let c = parts[i].charAt(0); // first char will be { or \d or a char to be
       // kept literally
@@ -66,7 +68,7 @@ export default class TexError {
           }
         } else {
           // %{plural:%n|...}
-          let match = parts[i].match(/^\{([a-z]+):%(\d+)\|(.*)\}$/);
+          const match = parts[i].match(/^\{([a-z]+):%(\d+)\|(.*)\}$/);
           if (match) {
             // Removed plural here.
             parts[i] = '%' + parts[i];
@@ -81,10 +83,10 @@ export default class TexError {
   }
 
   /**
-   * @constructor
-   * @param{string} id        message id (for localization)
-   * @param{string} message   text of English message
-   * @param{string[]=} rest   any substitution arguments
+   * @class
+   * @param {string} id        message id (for localization)
+   * @param {string} message   text of English message
+   * @param {string[]=} rest   any substitution arguments
    */
   constructor(
     public id: string,

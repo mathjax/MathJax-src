@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Basic type definitions.
+ * @file Basic type definitions.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */

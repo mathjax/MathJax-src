@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMtr and MmlMlabeledtr nodes
+ * @file  Implements the MmlMtr and MmlMlabeledtr nodes
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -52,6 +52,7 @@ export class MmlMtr extends AbstractMmlNode {
 
   /**
    * <mtr> can contain linebreaks
+   *
    * @override
    */
   public get linebreakContainer() {
@@ -60,6 +61,7 @@ export class MmlMtr extends AbstractMmlNode {
 
   /**
    * Don't reset indent attributes
+   *
    * @override
    */
   public get linebreakAlign() {
@@ -119,7 +121,7 @@ export class MmlMtr extends AbstractMmlNode {
     }
     for (const child of this.childNodes) {
       if (!child.isKind('mtd')) {
-        let mtd = this.replaceChild(this.factory.create('mtd'), child);
+        const mtd = this.replaceChild(this.factory.create('mtd'), child);
         mtd.appendChild(child);
         if (!options['fixMtables']) {
           child.mError('Children of ' + this.kind + ' must be mtd', options);
@@ -156,6 +158,7 @@ export class MmlMlabeledtr extends MmlMtr {
 
   /**
    * <mlabeledtr> requires at least one child (the label)
+   *
    * @override
    */
   get arity() {

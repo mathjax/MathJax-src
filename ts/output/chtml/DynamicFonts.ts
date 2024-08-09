@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements functions needed by dynamic font files.
+ * @file  Implements functions needed by dynamic font files.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

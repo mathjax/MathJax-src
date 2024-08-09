@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the cancel package.
+ * @file Configuration file for the cancel package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -34,6 +34,7 @@ import { ENCLOSE_OPTIONS } from '../enclose/EncloseConfiguration.js';
 export const CancelMethods: { [key: string]: ParseMethod } = {
   /**
    * Parse function for cancel macros of the form \(b|x)?cancel[attributes]{math}
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {string} name The name of the calling macro.
    * @param {string} notation The type of cancel notation to use.
@@ -48,6 +49,7 @@ export const CancelMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Parse function implementing \cancelto{value}[attributes]{math}
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {string} name The name of the calling macro.
    */

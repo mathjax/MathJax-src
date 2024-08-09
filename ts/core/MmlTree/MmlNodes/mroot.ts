@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMroot node
+ * @file  Implements the MmlMroot node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -57,6 +57,7 @@ export class MmlMroot extends AbstractMmlNode {
 
   /**
    * <mroot> requires two children
+   *
    * @override
    */
   public get arity() {
@@ -65,6 +66,7 @@ export class MmlMroot extends AbstractMmlNode {
 
   /**
    * <mroot> can contain line breaks
+   *
    * @override
    */
   public get linebreakContainer() {

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  The direction enum for delimiters
+ * @file  The direction enum for delimiters
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

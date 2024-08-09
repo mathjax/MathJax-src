@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMtext wrapper for the MmlMtext object
+ * @file  Implements the ChtmlMtext wrapper for the MmlMtext object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -116,9 +116,9 @@ export const ChtmlMtext = (function <N, T, D>(): ChtmlMtextClass<N, T, D> {
     ChtmlMtextClass<N, T, D>
   >(ChtmlWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class ChtmlMtext extends Base implements ChtmlMtextNTD<N, T, D> {
     /**
      * @override
@@ -149,7 +149,7 @@ export const ChtmlMtext = (function <N, T, D>(): ChtmlMtextClass<N, T, D> {
         // Get the start and end indices
         //
         let [si, sj] = this.breakPoints[i - 1] || [0, 0];
-        let [ei, ej] = this.breakPoints[i] || [childNodes.length, 0];
+        const [ei, ej] = this.breakPoints[i] || [childNodes.length, 0];
         //
         // Get the words for the start child, and if the start and end
         //   are in the same child, output the needed words

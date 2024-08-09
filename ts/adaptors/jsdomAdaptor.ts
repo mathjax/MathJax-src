@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the jdsom DOM adaptor
+ * @file  Implements the jdsom DOM adaptor
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -45,8 +45,9 @@ export class JsdomAdaptor extends NodeMixin<
 /**
  * Function for creating an HTML adaptor using jsdom
  *
- * @param {any} JSDOM      The jsdom object to use for this adaptor
- * @return {HTMLAdaptor}   The newly created adaptor
+ * @param {any} JSDOM          The jsdom object to use for this adaptor
+ * @param {OptionList} options The options for the adaptor
+ * @returns {HTMLAdaptor}      The newly created adaptor
  */
 export function jsdomAdaptor(
   JSDOM: any,

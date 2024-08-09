@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements a lightweight DOM adaptor
+ * @file  Implements a lightweight DOM adaptor
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -37,7 +37,7 @@ export class LiteList<N> {
 
   /**
    * @param {N[]} children  The children for the fragment
-   * @constructor
+   * @class
    */
   constructor(children: N[]) {
     this.nodes = [...children];
@@ -57,7 +57,7 @@ export class LiteList<N> {
     let i = 0;
     return {
       /**
-       * @return {IteratorResult<LiteNode>}
+       * @returns {IteratorResult<LiteNode>}
        */
       next(): IteratorResult<LiteNode> {
         return i === this.nodes.length

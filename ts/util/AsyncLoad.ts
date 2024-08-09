@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements asynchronous loading of files
+ * @file  Implements asynchronous loading of files
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -27,7 +27,7 @@ import { mathjax } from '../mathjax.js';
  * Load a file asynchronously using the mathjax.asynchLoad method, if there is one
  *
  * @param {string} name  The name of the file to load
- * @return {Promise}     The promise that is satisfied when the file is loaded
+ * @returns {Promise}     The promise that is satisfied when the file is loaded
  */
 export function asyncLoad(name: string): Promise<any> {
   if (!mathjax.asyncLoad) {

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Regions for A11y purposes.
+ * @file Regions for A11y purposes.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -41,6 +41,7 @@ export interface Region<T> {
 
   /**
    * Shows the live region in the document.
+   *
    * @param {HTMLElement} node
    * @param {Sre.highlighter} highlighter
    */
@@ -58,6 +59,7 @@ export interface Region<T> {
 
   /**
    * Updates the content of the region.
+   *
    * @template T
    */
   Update(content: T): void;
@@ -66,42 +68,48 @@ export interface Region<T> {
 export abstract class AbstractRegion<T> implements Region<T> {
   /**
    * CSS Classname of the element.
-   * @type {String}
+   *
+   * @type {string}
    */
   protected static className: string;
 
   /**
    * True if the style has already been added to the document.
+   *
    * @type {boolean}
    */
   protected static styleAdded: boolean = false;
 
   /**
    * The CSS style that needs to be added for this type of region.
+   *
    * @type {CssStyles}
    */
   protected static style: CssStyles;
 
   /**
    * The outer div node.
+   *
    * @type {HTMLElement}
    */
   public div: HTMLElement;
 
   /**
    * The inner node.
+   *
    * @type {HTMLElement}
    */
   protected inner: HTMLElement;
 
   /**
    * The actual class name to refer to static elements of a class.
+   *
    * @type {typeof AbstractRegion}
    */
   protected CLASS: typeof AbstractRegion;
 
   /**
-   * @constructor
+   * @class
    * @param {A11yDocument} document The document the live region is added to.
    */
   constructor(public document: A11yDocument) {
@@ -117,7 +125,7 @@ export abstract class AbstractRegion<T> implements Region<T> {
       return;
     }
     // TODO: should that be added to document.documentStyleSheet()?
-    let node = this.document.adaptor.node('style');
+    const node = this.document.adaptor.node('style');
     node.innerHTML = this.CLASS.style.cssText;
     this.document.adaptor
       .head(this.document.adaptor.document)
@@ -130,7 +138,7 @@ export abstract class AbstractRegion<T> implements Region<T> {
    */
   public AddElement() {
     if (this.div) return;
-    let element = this.document.adaptor.node('div');
+    const element = this.document.adaptor.node('div');
     element.classList.add(this.CLASS.className);
     this.div = element;
     this.inner = this.document.adaptor.node('div');
@@ -152,12 +160,14 @@ export abstract class AbstractRegion<T> implements Region<T> {
 
   /**
    * Computes the position where to place the element wrt. to the given node.
+   *
    * @param {HTMLElement} node The reference node.
    */
   protected abstract position(node: HTMLElement): void;
 
   /**
    * Highlights the region.
+   *
    * @param {Sre.highlighter} highlighter The Sre highlighter.
    */
   protected abstract highlight(highlighter: Sre.highlighter): void;
@@ -184,6 +194,7 @@ export abstract class AbstractRegion<T> implements Region<T> {
 
   /**
    * Auxiliary position method that stacks shown regions of the same type.
+   *
    * @param {HTMLElement} node The reference node.
    */
   protected stackRegions(node: HTMLElement) {
@@ -192,7 +203,7 @@ export abstract class AbstractRegion<T> implements Region<T> {
     const rect = node.getBoundingClientRect();
     let baseBottom = 0;
     let baseLeft = Number.POSITIVE_INFINITY;
-    let regions = this.document.adaptor.document.getElementsByClassName(
+    const regions = this.document.adaptor.document.getElementsByClassName(
       this.CLASS.className + '_Show'
     );
     // Get all the shown regions (one is this element!) and append at bottom.
@@ -432,7 +443,7 @@ export class SpeechRegion extends LiveRegion {
       !!speechSynthesis.getVoices().length;
     speechSynthesis.cancel();
     this.clear = true;
-    let [text, ssml] = buildSpeech(
+    const [text, ssml] = buildSpeech(
       speech,
       this.document.options.sre.locale,
       this.document.options.sre.rate
@@ -445,12 +456,13 @@ export class SpeechRegion extends LiveRegion {
 
   /**
    * Generates the utterance chain.
+   *
    * @param {SsmlElement[]} ssml The list of ssml annotations.
    * @param {string} locale The locale to use.
    */
   protected makeUtterances(ssml: SsmlElement[], locale: string) {
     let utterance = null;
-    for (let utter of ssml) {
+    for (const utter of ssml) {
       if (utter.mark) {
         if (!utterance) {
           // First utterance, call with init = true.
@@ -463,7 +475,7 @@ export class SpeechRegion extends LiveRegion {
         continue;
       }
       if (utter.pause) {
-        let time = parseInt(utter.pause.match(/^[0-9]+/)[0]);
+        const time = parseInt(utter.pause.match(/^[0-9]+/)[0]);
         if (isNaN(time) || !utterance) {
           continue;
         }
@@ -495,12 +507,14 @@ export class SpeechRegion extends LiveRegion {
 
   /**
    * Highlighting the node that is being marked in the SSML.
+   *
    * @param {string} id The id of the node to highlight.
-   * @param {boolean} init
+   * @param {boolean} init Flag to indicate the very first utterance where there
+   *     is no need for unhighlighting.
    */
   private highlightNode(id: string, init: boolean = false) {
     this.highlighter.unhighlight();
-    let nodes = Array.from(
+    const nodes = Array.from(
       this.node.querySelectorAll(`[data-semantic-id="${id}"]`)
     );
     if (!this.clear || init) {
@@ -562,9 +576,10 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
         top = nodeRect.bottom + 10;
         break;
       case 'center':
-      default:
+      default: {
         const yCenter = nodeRect.top + nodeRect.height / 2;
         top = yCenter - divRect.height / 2;
+      }
     }
     top = top + window.scrollY;
     top = top < 0 ? 0 : top;
@@ -615,15 +630,16 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
   public Update(node: HTMLElement) {
     if (!this.div) return;
     this.Clear();
-    let mjx = this.cloneNode(node);
+    const mjx = this.cloneNode(node);
     this.inner.appendChild(mjx);
     this.position(node);
   }
 
   /**
    * Clones the node to put into the hover region.
+   *
    * @param {HTMLElement} node The original node.
-   * @return {HTMLElement} The cloned node.
+   * @returns {HTMLElement} The cloned node.
    */
   private cloneNode(node: HTMLElement): HTMLElement {
     let mjx = node.cloneNode(true) as HTMLElement;

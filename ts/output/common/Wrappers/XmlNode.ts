@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonXmlNode wrapper mixin for the XmlNode object
+ * @file  Implements the CommonXmlNode wrapper mixin for the XmlNode object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -78,7 +78,7 @@ export interface CommonXmlNode<
   rscale: number;
 
   /**
-   * @return {N}                 The HTML for the node
+   * @returns {N}                 The HTML for the node
    */
   getHTML(): N;
 
@@ -92,13 +92,13 @@ export interface CommonXmlNode<
    * @param {N} xml          The XML tree to check
    * @param {string} use     The first xmlHDW value to check
    * @param {string} force   The second (optional) xmlHDW value to check
-   * @return {string}        The data-mjx-hdw value, if the options are met
+   * @returns {string}        The data-mjx-hdw value, if the options are met
    */
   getHDW(xml: N, use: string, force?: string): string;
 
   /**
    * @param {string} hdw     The data-mjx-hdw string to split
-   * @return {UnknownBBox}   The h, d, w values (in em units) as an object
+   * @returns {UnknownBBox}   The h, d, w values (in em units) as an object
    */
   splitHDW(hdw: string): UnknownBBox;
 }
@@ -138,6 +138,7 @@ export interface CommonXmlNodeClass<
 /**
  * The CommonXmlNode wrapper mixin for the XmlNode object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -292,8 +293,8 @@ export function CommonXmlNodeMixin<
     /**
      * Measure the width, height and depth of an annotation-xml node's content
      *
-     * @param{N} xml          The xml content node to be measured
-     * @return {UnknownBBox}  The width, height, and depth of the content
+     * @param {N} xml          The xml content node to be measured
+     * @returns {UnknownBBox}  The width, height, and depth of the content
      */
     public measureXmlNode(xml: N): UnknownBBox {
       const adaptor = this.adaptor;

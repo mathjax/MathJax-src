@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMtext wrapper mixin for the MmlMtext object
+ * @file  Implements the CommonMtext wrapper mixin for the MmlMtext object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -82,7 +82,7 @@ export interface CommonMtext<
 
   /**
    * @param {string} text   The string whose width is needed
-   * @return {number}       The width of the string
+   * @returns {number}       The width of the string
    */
   textWidth(text: string): number;
 
@@ -98,7 +98,7 @@ export interface CommonMtext<
 
   /**
    * @param {number} i   The breakpoint whose line width is needed
-   * @return {number}    The width of the text between that breakpoint and the previous one
+   * @returns {number}    The width of the text between that breakpoint and the previous one
    */
   getBreakWidth(i: number): number;
 }
@@ -146,6 +146,7 @@ export interface CommonMtextClass<
 /**
 b *  The CommonMtext wrapper mixin for the MmlMtext object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -305,7 +306,7 @@ export function CommonMtextMixin<
     public getBreakWidth(i: number) {
       const childNodes = this.childNodes;
       let [si, sj] = this.breakPoints[i - 1] || [0, 0];
-      let [ei, ej] = this.breakPoints[i] || [childNodes.length, 0];
+      const [ei, ej] = this.breakPoints[i] || [childNodes.length, 0];
       let words = (childNodes[si].node as TextNode).getText().split(/ /);
       if (si === ei) {
         return this.textWidth(words.slice(sj, ej).join(' '));

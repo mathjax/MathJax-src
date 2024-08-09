@@ -15,7 +15,7 @@
  */
 
 /**
- * @fileoverview    Configuration file for the mathtools package.
+ * @file    Configuration file for the mathtools package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  * @author dpvc@mathjax.org (Davide P. Cervone)
@@ -42,6 +42,7 @@ export const PAIREDDELIMS = 'mathtools-paired-delims';
 
 /**
  * Create the paired-delimiters command map, and link it into the configuration.
+ *
  * @param {ParserConfiguration} config   The current configuration.
  */
 function initMathtools(config: ParserConfiguration) {
@@ -56,8 +57,10 @@ function initMathtools(config: ParserConfiguration) {
 
 /**
  * Add any pre-defined paired delimiters, and subclass the configured tag format.
+ *
  * @param {ParserConfiguration} config   The current configuration.
  * @param {TeX} jac                      The TeX input jax
+ * @param jax
  */
 function configMathtools(config: ParserConfiguration, jax: TeX<any, any, any>) {
   const parser = jax.parseOptions;
@@ -70,6 +73,7 @@ function configMathtools(config: ParserConfiguration, jax: TeX<any, any, any>) {
 
 /**
  * A filter to fix up mmultiscripts elements.
+ *
  * @param {ParseOptions} data   The parse options.
  */
 export function fixPrescripts({ data }: { data: ParseOptions }) {

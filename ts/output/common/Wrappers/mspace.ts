@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMspace wrapper mixin for the MmlMspace object
+ * @file  Implements the CommonMspace wrapper mixin for the MmlMspace object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -124,6 +124,7 @@ export interface CommonMspaceClass<
 /**
  * The CommonMspace wrapper mixin for the MmlMspace object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type

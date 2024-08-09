@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the a base class for SvgMsubsup, SvgMunderover
+ * @file  Implements the a base class for SvgMsubsup, SvgMunderover
  *                and their relatives.  (Since munderover can become msubsup
  *                when movablelimits is set, munderover needs to be able to
  *                do the same thing as msubsup in some cases.)
@@ -122,9 +122,9 @@ export const SvgScriptbase = (function <N, T, D>(): SvgScriptbaseClass<
     SvgScriptbaseClass<N, T, D>
   >(SvgWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class SvgScriptbase extends Base implements SvgScriptbaseNTD<N, T, D> {
     /**
      * @override

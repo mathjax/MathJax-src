@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlWrapper class
+ * @file  Implements the ChtmlWrapper class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -152,7 +152,7 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
    * Create the HTML for an embellished mo, if this is one.
    *
    * @param {N[]} parents  The HTML nodes where the output is to be added
-   * @return {boolean}     True when embellished output is produced, false if not
+   * @returns {boolean}     True when embellished output is produced, false if not
    */
   public toEmbellishedCHTML(parents: N[]): boolean {
     if (parents.length <= 1 || !this.node.isEmbellished) return false;
@@ -235,7 +235,7 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
    * Add an anchor for hrefs and insert hot boxes into the DOM containers
    *
    * @param {N[]} parents   The HTML nodes in which the output is to be placed
-   * @return {N[]}          The roots of the HTML tree for the node's output
+   * @returns {N[]}          The roots of the HTML tree for the node's output
    */
   protected handleHref(parents: N[]): N[] {
     const href = this.node.attributes.get('href');
@@ -278,7 +278,7 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
   /**
    * @param {N} chtml  The HTML node to scale
    * @param {number} rscale      The relatie scale to apply
-   * @return {N}       The HTML node (for chaining)
+   * @returns {N}       The HTML node (for chaining)
    */
   protected setScale(chtml: N, rscale: number): N {
     const scale = Math.abs(rscale - 1) < 0.001 ? 1 : rscale;
@@ -456,7 +456,7 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
    */
 
   public drawBBox() {
-    let { w, h, d, R } = this.getOuterBBox();
+    const { w, h, d, R } = this.getOuterBBox();
     const box = this.html(
       'mjx-box',
       {
@@ -506,7 +506,7 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
    * @param {string} type      The tag name of the HTML node to be created
    * @param {OptionList} def   The properties to set for the created node
    * @param {(N|T)[]} content  The child nodes for the created HTML node
-   * @return {N}               The generated HTML tree
+   * @returns {N}               The generated HTML tree
    */
   public html(type: string, def: OptionList = {}, content: (N | T)[] = []): N {
     return this.jax.html(type, def, content);
@@ -514,7 +514,7 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
 
   /**
    * @param {string} text  The text from which to create an HTML text node
-   * @return {T}           The generated text node with the given text
+   * @returns {T}           The generated text node with the given text
    */
   public text(text: string): T {
     return this.jax.text(text);
@@ -522,7 +522,7 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
 
   /**
    * @param {number} n  A unicode code point to be converted to a character className reference.
-   * @return {string}   The className for the character
+   * @returns {string}   The className for the character
    */
   protected char(n: number): string {
     return this.font.charSelector(n).substring(1);

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMunderover wrapper for the MmlMunderover object
+ * @file  Implements the SvgMunderover wrapper for the MmlMunderover object
  *                and the special cases SvgMunder and SvgMsup
  *
  * @author dpvc@mathjax.org (Davide Cervone)
@@ -138,9 +138,9 @@ export const SvgMunder = (function <N, T, D>(): SvgMunderClass<N, T, D> {
     SvgMunderClass<N, T, D>
   >(SvgMsub);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  //   type (they should both be SvgWrapper<N, T, D>, but are thought of as
+  //   different by typescript)
   return class SvgMunder extends Base implements SvgMunderNTD<N, T, D> {
     /**
      * @override
@@ -255,9 +255,9 @@ export const SvgMover = (function <N, T, D>(): SvgMoverClass<N, T, D> {
     SvgMoverClass<N, T, D>
   >(SvgMsup);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class SvgMover extends Base implements SvgMoverNTD<N, T, D> {
     /**
      * @override
@@ -373,9 +373,9 @@ export const SvgMunderover = (function <N, T, D>(): SvgMunderoverClass<
     SvgMunderoverClass<N, T, D>
   >(SvgMsubsup);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  //   type (they should both be SvgWrapper<N, T, D>, but are thought of as
+  //   different by typescript)
   return class SvgMunderover extends Base implements SvgMunderoverNTD<N, T, D> {
     /**
      * @override

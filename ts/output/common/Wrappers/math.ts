@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMath wrapper mixin for the MmlMath object
+ * @file  Implements the CommonMath wrapper mixin for the MmlMath object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -104,6 +104,7 @@ export interface CommonMathClass<
 /**
  *  The CommonMath wrapper mixin for the MmlMath object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type

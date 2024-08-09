@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the interface and abstract class for HandlerList objects
+ * @file  Implements the interface and abstract class for HandlerList objects
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -41,14 +41,14 @@ import { MathDocument } from './MathDocument.js';
 export class HandlerList<N, T, D> extends PrioritizedList<Handler<N, T, D>> {
   /**
    * @param {Handler} handler  The handler to register
-   * @return {Handler}  The list item created for the handler
+   * @returns {Handler}  The list item created for the handler
    */
   public register(handler: Handler<N, T, D>): Handler<N, T, D> {
     return this.add(handler, handler.priority);
   }
 
   /**
-   * @param {Handler} Handler  The handler to remove from the list
+   * @param {Handler} handler  The handler to remove from the list
    */
   public unregister(handler: Handler<N, T, D>) {
     this.remove(handler);
@@ -56,11 +56,11 @@ export class HandlerList<N, T, D> extends PrioritizedList<Handler<N, T, D>> {
 
   /**
    * @param {any} document  The document (string, window, DOM element, etc) to be handled
-   * @return {Handler}      The handler from the list that can process the given document
+   * @returns {Handler}      The handler from the list that can process the given document
    */
   public handlesDocument(document: any): Handler<N, T, D> {
     for (const item of this) {
-      let handler = item.item;
+      const handler = item.item;
       if (handler.handlesDocument(document)) {
         return handler;
       }
@@ -71,7 +71,7 @@ export class HandlerList<N, T, D> extends PrioritizedList<Handler<N, T, D>> {
   /**
    * @param {any} document        The document to be processed
    * @param {OptionList} options  The options for the handler
-   * @return {MathDocument}       The MathDocument created by the handler for this document
+   * @returns {MathDocument}       The MathDocument created by the handler for this document
    */
   public document(
     document: any,

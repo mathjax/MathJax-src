@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview    Configuration file for the tagformat package.
+ * @file    Configuration file for the tagformat package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
@@ -24,7 +24,7 @@
 import { ConfigurationType } from '../HandlerTypes.js';
 import { Configuration, ParserConfiguration } from '../Configuration.js';
 import { TeX } from '../../tex.js';
-import { AbstractTags, TagsFactory } from '../Tags.js';
+import { AbstractTags as _AbstractTags, TagsFactory } from '../Tags.js';
 
 /**
  * Number used to make tag class unique (each TeX input has to have its own because
@@ -34,7 +34,8 @@ let tagID = 0;
 
 /**
  * Configure a class to use for the tag handler that uses the input jax's options
- *   to control the formatting of the tags
+ * to control the formatting of the tags
+ *
  * @param {Configuration} config   The configuration for the input jax
  * @param {TeX} jax                The TeX input jax
  */
@@ -55,7 +56,7 @@ export function tagformatConfig(
    * The original tag class to be extended (none, ams, or all)
    */
   const TagClass = TagsFactory.create(jax.parseOptions.options.tags)
-    .constructor as typeof AbstractTags;
+    .constructor as typeof _AbstractTags;
 
   /**
    * A Tags object that uses the input jax options to perform the formatting

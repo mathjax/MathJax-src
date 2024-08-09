@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMenclose node
+ * @file  Implements the MmlMenclose node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -45,6 +45,7 @@ export class MmlMenclose extends AbstractMmlNode {
 
   /**
    * The menclose kind
+   *
    * @override
    */
   public get kind() {
@@ -53,6 +54,7 @@ export class MmlMenclose extends AbstractMmlNode {
 
   /**
    * <menclose> has an inferred mrow
+   *
    * @override
    */
   public get arity() {
@@ -61,6 +63,7 @@ export class MmlMenclose extends AbstractMmlNode {
 
   /**
    * <menclose> is a linebreak container
+   *
    * @override
    */
   public get linebreakContainer() {

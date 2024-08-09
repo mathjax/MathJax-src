@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the enclose package.
+ * @file Configuration file for the enclose package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -30,6 +30,7 @@ import { ParseUtil } from '../ParseUtil.js';
 
 /**
  * The attributes allowed in \enclose{notation}[attributes]{math}
+ *
  * @type {{[key: string]: number}}
  */
 export const ENCLOSE_OPTIONS: { [key: string]: number } = {
@@ -47,11 +48,12 @@ export const EncloseMethods: { [key: string]: ParseMethod } = {
   /**
    * Implements \enclose{notation}[attr]{math}
    * (create <menclose notation="notation">math</menclose>)
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {string} name The name of the calling macro.
    */
   Enclose(parser: TexParser, name: string) {
-    let notation = parser.GetArgument(name).replace(/,/g, ' ');
+    const notation = parser.GetArgument(name).replace(/,/g, ' ');
     const attr = parser.GetBrackets(name, '');
     const math = parser.ParseArg(name);
     const def = ParseUtil.keyvalOptions(attr, ENCLOSE_OPTIONS);

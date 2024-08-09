@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMsqrt node
+ * @file  Implements the MmlMsqrt node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -57,6 +57,7 @@ export class MmlMsqrt extends AbstractMmlNode {
 
   /**
    * <msqrt> has an inferred mrow
+   *
    * @override
    */
   public get arity() {
@@ -65,6 +66,7 @@ export class MmlMsqrt extends AbstractMmlNode {
 
   /**
    * <msqrt> can contain line breaks
+   *
    * @override
    */
   public get linebreakContainer() {

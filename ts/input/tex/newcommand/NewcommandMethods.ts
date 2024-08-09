@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Mappings for TeX parsing for definitorial commands.
+ * @file Mappings for TeX parsing for definitorial commands.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -37,31 +37,33 @@ import NewcommandUtil from './NewcommandUtil.js';
 const NewcommandMethods: { [key: string]: ParseMethod } = {
   /**
    * Implements \newcommand{\name}[n][default]{...}
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The name of the calling command.
    */
   NewCommand(parser: TexParser, name: string) {
     // @test Newcommand Simple
-    let cs = NewcommandUtil.GetCsNameArgument(parser, name);
-    let n = NewcommandUtil.GetArgCount(parser, name);
-    let opt = parser.GetBrackets(name);
-    let def = parser.GetArgument(name);
+    const cs = NewcommandUtil.GetCsNameArgument(parser, name);
+    const n = NewcommandUtil.GetArgCount(parser, name);
+    const opt = parser.GetBrackets(name);
+    const def = parser.GetArgument(name);
     NewcommandUtil.addMacro(parser, cs, NewcommandMethods.Macro, [def, n, opt]);
     parser.Push(parser.itemFactory.create('null'));
   },
 
   /**
    * Implements \newenvironment{name}[n][default]{begincmd}{endcmd}
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The name of the calling command.
    */
   NewEnvironment(parser: TexParser, name: string) {
     // @test Newenvironment Empty, Newenvironment Content
-    let env = UnitUtil.trimSpaces(parser.GetArgument(name));
-    let n = NewcommandUtil.GetArgCount(parser, name);
-    let opt = parser.GetBrackets(name);
-    let bdef = parser.GetArgument(name);
-    let edef = parser.GetArgument(name);
+    const env = UnitUtil.trimSpaces(parser.GetArgument(name));
+    const n = NewcommandUtil.GetArgCount(parser, name);
+    const opt = parser.GetBrackets(name);
+    const bdef = parser.GetArgument(name);
+    const edef = parser.GetArgument(name);
     NewcommandUtil.addEnvironment(parser, env, NewcommandMethods.BeginEnv, [
       true,
       bdef,
@@ -74,14 +76,15 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Implements \def command.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The name of the calling command.
    */
   MacroDef(parser: TexParser, name: string) {
     // @test Def DoubleLet, DefReDef
-    let cs = NewcommandUtil.GetCSname(parser, name);
-    let params = NewcommandUtil.GetTemplate(parser, name, '\\' + cs);
-    let def = parser.GetArgument(name);
+    const cs = NewcommandUtil.GetCSname(parser, name);
+    const params = NewcommandUtil.GetTemplate(parser, name, '\\' + cs);
+    const def = parser.GetArgument(name);
     !(params instanceof Array)
       ? // @test Def DoubleLet, DefReDef
         NewcommandUtil.addMacro(parser, cs, NewcommandMethods.Macro, [
@@ -184,11 +187,13 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
   /**
    * Process a macro with a parameter template by replacing parameters in the
    * parser's string.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The name of the calling command.
    * @param {string} text The text template of the macro.
    * @param {string} n The number of parameters.
    * @param {string[]} ...params The parameter values.
+   * @param {...any} params
    */
   MacroWithTemplate(
     parser: TexParser,
@@ -201,7 +206,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
     // @test Def Let
     if (params.length) {
       // @test Def Let
-      let args = [];
+      const args = [];
       parser.GetNext();
       if (params[0] && !NewcommandUtil.MatchParam(parser, params[0])) {
         // @test Missing Arguments
@@ -230,6 +235,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Process a user-defined environment.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {StackItem} begin The begin stackitem.
    * @param {string} bdef The begin definition in the newenvironment macro.
@@ -268,10 +274,10 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
     }
     if (n) {
       // @test Newenvironment Optional, Newenvironment Arg Optional
-      let args: string[] = [];
+      const args: string[] = [];
       if (def != null) {
         // @test Newenvironment Optional, Newenvironment Arg Optional
-        let optional = parser.GetBrackets('\\begin{' + begin.getName() + '}');
+        const optional = parser.GetBrackets('\\begin{' + begin.getName() + '}');
         args.push(optional == null ? def : optional);
       }
       for (let i = args.length; i < n; i++) {

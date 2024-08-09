@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the HTMLHandler class
+ * @file  Implements the HTMLHandler class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -53,7 +53,9 @@ export class HTMLHandler<N, T, D> extends AbstractHandler<N, T, D> {
     if (typeof document === 'string') {
       try {
         document = adaptor.parse(document, 'text/html');
-      } catch (err) {}
+      } catch (_err) {
+        // continue regardless of error
+      }
     }
     if (
       document instanceof adaptor.window.Document ||
@@ -79,7 +81,7 @@ export class HTMLHandler<N, T, D> extends AbstractHandler<N, T, D> {
       document instanceof adaptor.window.HTMLElement ||
       document instanceof adaptor.window.DocumentFragment
     ) {
-      let child = document as N;
+      const child = document as N;
       document = adaptor.parse('', 'text/html');
       adaptor.append(adaptor.body(document), child);
     }

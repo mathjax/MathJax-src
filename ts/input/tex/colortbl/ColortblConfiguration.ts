@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview    Configuration file for the colortbl package.
+ * @file    Configuration file for the colortbl package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
@@ -176,7 +176,7 @@ new CommandMap('colortbl', {
  * The configuration function for colortbl.
  *
  * @param {ParserConfiguration} config   The configuration being used.
- * @param {Tex} jax                      The TeX jax using this configuration.
+ * @param {TeX} jax                      The TeX jax using this configuration.
  */
 const config = function (config: ParserConfiguration, jax: TeX<any, any, any>) {
   //

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the interface and abstract class for the OutputJax
+ * @file  Implements the interface and abstract class for the OutputJax
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -78,7 +78,7 @@ export interface OutputJax<N, T, D> {
    *
    * @param {MathItem} math          The MathItem to be typeset
    * @param {MathDocument} document  The MathDocument in which the typesetting should occur
-   * @return {N}                     The DOM tree for the typeset math
+   * @returns {N}                     The DOM tree for the typeset math
    */
   typeset(math: MathItem<N, T, D>, document?: MathDocument<N, T, D>): N;
 
@@ -87,7 +87,7 @@ export interface OutputJax<N, T, D> {
    *
    * @param {MathItem} math          The MathItem to be escaped
    * @param {MathDocument} document  The MathDocument in which the math occurs
-   * @return {N}                     The DOM tree for the escaped item
+   * @returns {N}                     The DOM tree for the escaped item
    */
   escaped(math: MathItem<N, T, D>, document?: MathDocument<N, T, D>): N;
 
@@ -151,13 +151,13 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
    * @param {OptionList} options  The options for this instance
    */
   constructor(options: OptionList = {}) {
-    let CLASS = this.constructor as typeof AbstractOutputJax;
+    const CLASS = this.constructor as typeof AbstractOutputJax;
     this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
     this.postFilters = new FunctionList();
   }
 
   /**
-   * @return {string}  The name for this output jax class
+   * @returns {string}  The name for this output jax class
    */
   public get name(): string {
     return (this.constructor as typeof AbstractOutputJax).NAME;
@@ -223,7 +223,7 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
    * @param {MathItem} math          The math item that is being processed
    * @param {MathDocument} document  The math document contaiing the math item
    * @param {any} data               Whatever other data is needed
-   * @return {any}                   The (possibly modified) data
+   * @returns {any}                   The (possibly modified) data
    */
   protected executeFilters(
     filters: FunctionList,
@@ -231,7 +231,7 @@ export abstract class AbstractOutputJax<N, T, D> implements OutputJax<N, T, D> {
     document: MathDocument<N, T, D>,
     data: any
   ): any {
-    let args = { math, document, data };
+    const args = { math, document, data };
     filters.execute(args);
     return args.data;
   }

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMmultiscripts wrapper mixin for the MmlMmultiscripts object
+ * @file  Implements the CommonMmultiscripts wrapper mixin for the MmlMmultiscripts object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -124,7 +124,7 @@ export interface CommonMmultiscripts<
   /**
    * @param {BBox} pre   The prescript bounding box
    * @param {BBox} post  The postcript bounding box
-   * @return {BBox}      The combined bounding box
+   * @returns {BBox}      The combined bounding box
    */
   combinePrePost(pre: BBox, post: BBox): BBox;
 
@@ -134,7 +134,7 @@ export interface CommonMmultiscripts<
   getScriptData(): void;
 
   /**
-   * @return {ScriptLists}  The bounding boxes for all the scripts divided into lists by position
+   * @returns {ScriptLists}  The bounding boxes for all the scripts divided into lists by position
    */
   getScriptBBoxLists(): ScriptLists;
 
@@ -165,7 +165,7 @@ export interface CommonMmultiscripts<
   getScaledWHD(bbox: BBox): void;
 
   /**
-   * @return {[number, number]}  The vertical shifts for super and subscripts
+   * @returns {[number, number]}  The vertical shifts for super and subscripts
    */
   getCombinedUV(): number[];
 
@@ -173,7 +173,7 @@ export interface CommonMmultiscripts<
    * @param {BBox} bbox   The bbox to adjust
    * @param {number} u    The vertical shift for superscripts
    * @param {number} v    The vertical shift for subscripts
-   * @return {BBox}       The modified bbox
+   * @returns {BBox}       The modified bbox
    */
   addPrescripts(bbox: BBox, u: number, v: number): BBox;
 }
@@ -213,6 +213,7 @@ export interface CommonMmultiscriptsClass<
 /**
  * The CommonMmultiscripts wrapper mixin for the MmlMmultiscripts object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type

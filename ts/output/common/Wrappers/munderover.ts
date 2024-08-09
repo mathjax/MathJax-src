@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMunderover wrapper mixin for the MmlMunderover object
+ * @file  Implements the CommonMunderover wrapper mixin for the MmlMunderover object
  *                and the special cases CommonMunder and CommonMsup
  *
  * @author dpvc@mathjax.org (Davide Cervone)
@@ -111,6 +111,7 @@ export interface CommonMunderClass<
 /**
  * The CommonMunder wrapper mixin for the MmlMunder object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -156,7 +157,7 @@ export function CommonMunderMixin<
 
     /**
      * @override
-     * @constructor
+     * @class
      */
     constructor(...args: any[]) {
       super(...args);
@@ -255,6 +256,7 @@ export interface CommonMoverClass<
 /**
  * The CommonMover wrapper mixin for the MmlMover object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -299,7 +301,7 @@ export function CommonMoverMixin<
 
     /**
      * @override
-     * @constructor
+     * @class
      */
     constructor(...args: any[]) {
       super(...args);
@@ -426,6 +428,10 @@ export interface CommonMunderoverClass<
  *
  * @template B   The mixin interface to create
  */
+/**
+ *
+ * @param Base
+ */
 export function CommonMunderoverMixin<
   N,
   T,
@@ -483,7 +489,7 @@ export function CommonMunderoverMixin<
 
     /**
      * @override
-     * @constructor
+     * @class
      */
     constructor(...args: any[]) {
       super(...args);

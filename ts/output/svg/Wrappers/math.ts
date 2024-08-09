@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMath wrapper for the MmlMath object
+ * @file  Implements the SvgMath wrapper for the MmlMath object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -128,7 +128,7 @@ export const SvgMath = (function <N, T, D>(): SvgMathClass<N, T, D> {
     public static kind = MmlMath.prototype.kind;
 
     /**
-     * @overreide
+     * @override
      */
     public static styles: StyleList = {
       'mjx-container[jax="SVG"][display="true"]': {
@@ -243,7 +243,7 @@ export const SvgMath = (function <N, T, D>(): SvgMathClass<N, T, D> {
     }
 
     /**
-     * @return {string}  A unique ID to use for aria-labeledby title elements
+     * @returns {string}  A unique ID to use for aria-labeledby title elements
      */
     protected getTitleID(): string {
       return 'mjx-svg-title-' + String(this.jax.options.titleID++);

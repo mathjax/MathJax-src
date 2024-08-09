@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgHtmlNode wrapper for the HtmlNode object
+ * @file  Implements the SvgHtmlNode wrapper for the HtmlNode object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -58,10 +58,10 @@ export interface SvgHtmlNodeClass<N, T, D> extends SvgXmlNodeClass<N, T, D> {
  * The SvgHtmlNode wrapper class for the MmlHtmlNode class
  */
 export const SvgHtmlNode = (function <N, T, D>(): SvgHtmlNodeClass<N, T, D> {
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
   return class SvgHtmlNode
-    // @ts-expect-error
+    // @ts-expect-error Avoid message about SvgXmlNode constructors not having
+    // the same type (they should both be SvgWrapper<N, T, D>, but are thought
+    // of as different by typescript)
     extends SvgXmlNode
     implements SvgHtmlNodeNTD<N, T, D>
   {

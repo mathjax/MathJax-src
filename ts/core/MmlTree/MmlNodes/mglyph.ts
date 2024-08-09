@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMglyph node
+ * @file  Implements the MmlMglyph node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

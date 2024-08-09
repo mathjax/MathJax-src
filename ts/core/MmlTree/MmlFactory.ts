@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlFactory to create Mml Nodes
+ * @file  Implements the MmlFactory to create Mml Nodes
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -37,10 +37,10 @@ export class MmlFactory extends AbstractNodeFactory<MmlNode, MmlNodeClass> {
   public static defaultNodes = MML;
 
   /**
-   * @return {Object}  The list of node-creation functions (similar to the
+   * @returns {object}  The list of node-creation functions (similar to the
    *                   MML object from MathJax v2).
    */
-  get MML(): Object {
+  get MML(): object {
     return this.node;
   }
 }

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements a parser for array column declarations.
+ * @file  Implements a parser for array column declarations.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

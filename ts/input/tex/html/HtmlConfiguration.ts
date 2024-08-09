@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the Html package.
+ * @file Configuration file for the Html package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */

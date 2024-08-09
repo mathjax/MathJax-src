@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMerror wrapper for the MmlMerror object
+ * @file  Implements the SvgMerror wrapper for the MmlMerror object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMmultiscripts node
+ * @file  Implements the MmlMmultiscripts node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -47,6 +47,7 @@ export class MmlMmultiscripts extends MmlMsubsup {
 
   /**
    * <mmultiscripts> requires at least one child (the base)
+   *
    * @override
    */
   public get arity() {
@@ -75,19 +76,19 @@ export class MmlMmultiscripts extends MmlMsubsup {
     );
     let prescripts = false;
     for (let i = 1, n = 0; i < this.childNodes.length; i++) {
-      let child = this.childNodes[i];
+      const child = this.childNodes[i];
       if (child.isKind('mprescripts')) {
         if (!prescripts) {
           prescripts = true;
           if (i % 2 === 0) {
-            let none = this.factory.create('none');
+            const none = this.factory.create('none');
             this.childNodes.splice(i, 0, none);
             none.parent = this;
             i++;
           }
         }
       } else {
-        let primestyle = prime || n % 2 === 0;
+        const primestyle = prime || n % 2 === 0;
         child.setInheritedAttributes(attributes, false, level + 1, primestyle);
         n++;
       }
@@ -110,9 +111,9 @@ export class MmlMmultiscripts extends MmlMsubsup {
    */
   protected verifyChildren(options: PropertyList) {
     let prescripts = false;
-    let fix = options['fixMmultiscripts'];
+    const fix = options['fixMmultiscripts'];
     for (let i = 0; i < this.childNodes.length; i++) {
-      let child = this.childNodes[i];
+      const child = this.childNodes[i];
       if (child.isKind('mprescripts')) {
         if (prescripts) {
           child.mError(
@@ -155,14 +156,14 @@ export class MmlMprescripts extends AbstractMmlNode {
   };
 
   /**
-   * @return {string}  The mprescripts kind
+   * @returns {string}  The mprescripts kind
    */
   public get kind(): string {
     return 'mprescripts';
   }
 
   /**
-   * @return {number}  <mprescripts> can have no children
+   * @returns {number}  <mprescripts> can have no children
    */
   public get arity(): number {
     return 0;
@@ -199,14 +200,14 @@ export class MmlNone extends AbstractMmlNode {
   };
 
   /**
-   * @return {string}  The none kind
+   * @returns {string}  The none kind
    */
   public get kind(): string {
     return 'none';
   }
 
   /**
-   * @return {number}  <none> can have no children
+   * @returns {number}  <none> can have no children
    */
   public get arity(): number {
     return 0;

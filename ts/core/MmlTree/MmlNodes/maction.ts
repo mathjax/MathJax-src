@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMaction node
+ * @file  Implements the MmlMaction node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -48,6 +48,7 @@ export class MmlMaction extends AbstractMmlNode {
 
   /**
    * At least one child
+   *
    * @override
    */
   public get arity() {
@@ -55,7 +56,7 @@ export class MmlMaction extends AbstractMmlNode {
   }
 
   /**
-   * @return {MmlNode}  The selected child node (or an mrow if none selected)
+   * @returns {MmlNode}  The selected child node (or an mrow if none selected)
    */
   public get selected(): MmlNode {
     const selection = this.attributes.get('selection') as number;
@@ -114,7 +115,7 @@ export class MmlMaction extends AbstractMmlNode {
     if (this.attributes.get('actiontype') === 'tooltip' && this.childNodes[1]) {
       this.childNodes[1].setTeXclass(null);
     }
-    let selected = this.selected;
+    const selected = this.selected;
     prev = selected.setTeXclass(prev);
     this.updateTeXclass(selected);
     return prev;
@@ -144,7 +145,7 @@ export class MmlMaction extends AbstractMmlNode {
     prime: boolean
   ) {
     if (
-      (this.attributes.get('actiontype') as String).toLowerCase() !== 'tooltip'
+      (this.attributes.get('actiontype') as string).toLowerCase() !== 'tooltip'
     ) {
       super.setChildInheritedAttributes(attributes, display, level, prime);
       return;

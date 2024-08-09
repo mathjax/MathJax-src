@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Base mappings for TeX Parsing.
+ * @file Base mappings for TeX Parsing.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Symbol mappings for the bboldx package.
+ * @file Symbol mappings for the bboldx package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */

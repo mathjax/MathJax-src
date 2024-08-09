@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the centernot package.
+ * @file Configuration file for the centernot package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
@@ -39,7 +39,7 @@ function CenterOver(parser: TexParser, name: string) {
   const arg = '{' + parser.GetArgument(name) + '}';
   const over = parser.ParseArg(name);
   const base = new TexParser(arg, parser.stack.env, parser.configuration).mml();
-  let mml = parser.create('node', 'TeXAtom', [
+  const mml = parser.create('node', 'TeXAtom', [
     new TexParser(arg, parser.stack.env, parser.configuration).mml(),
     parser.create(
       'node',

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMtext node
+ * @file  Implements the MmlMtext node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview StackItems needed for parsing AMS math commands.
+ * @file StackItems needed for parsing AMS math commands.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -82,7 +82,7 @@ export class MultlineItem extends ArrayItem {
         'multline'
       );
     }
-    let row = this.create('node', 'mtr', this.row);
+    const row = this.create('node', 'mtr', this.row);
     this.table.push(row);
     this.row = [];
   }
@@ -119,7 +119,7 @@ export class MultlineItem extends ArrayItem {
           TexConstant.Align.RIGHT
         );
       }
-      let tag = this.factory.configuration.tags.getTag();
+      const tag = this.factory.configuration.tags.getTag();
       if (tag) {
         label =
           this.arraydef.side === TexConstant.Align.LEFT
@@ -186,7 +186,7 @@ export class FlalignItem extends EqnArrayItem {
    */
   public EndRow() {
     let cell: MmlNode;
-    let row = this.row;
+    const row = this.row;
     //
     //  For xalignat and xxalignat, pad the row to the expected number if it is too short.
     //

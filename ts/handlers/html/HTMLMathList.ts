@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the HTMLMathList object
+ * @file  Implements the HTMLMathList object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

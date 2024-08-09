@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Stack items for parsing the braket package.
+ * @file Stack items for parsing the braket package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -87,8 +87,8 @@ export class BraketItem extends BaseItem {
       //
       return inner;
     }
-    let open = this.getProperty('open') as string;
-    let close = this.getProperty('close') as string;
+    const open = this.getProperty('open') as string;
+    const close = this.getProperty('close') as string;
     //
     // Add any saved bar nodes
     //
@@ -108,16 +108,16 @@ export class BraketItem extends BaseItem {
       }
       return ParseUtil.fenced(this.factory.configuration, open, inner, close);
     }
-    let attrs = {
+    const attrs = {
       fence: true,
       stretchy: false,
       symmetric: true,
       texClass: TEXCLASS.OPEN,
     };
-    let openNode = this.create('token', 'mo', attrs, open);
+    const openNode = this.create('token', 'mo', attrs, open);
     attrs.texClass = TEXCLASS.CLOSE;
-    let closeNode = this.create('token', 'mo', attrs, close);
-    let mrow = this.create('node', 'mrow', [openNode, inner, closeNode], {
+    const closeNode = this.create('token', 'mo', attrs, close);
+    const mrow = this.create('node', 'mrow', [openNode, inner, closeNode], {
       open: open,
       close: close,
     });

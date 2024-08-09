@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Constants file for the color package.
+ * @file Constants file for the color package.
  *
  * @author i@omardo.com (Omar Al-Ithawi)
  */

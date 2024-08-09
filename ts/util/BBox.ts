@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements a bounding-box object and operations on it
+ * @file  Implements a bounding-box object and operations on it
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -72,14 +72,14 @@ export class BBox {
   /* tslint:enable */
 
   /**
-   * @return {BBox}  A BBox initialized to zeros
+   * @returns {BBox}  A BBox initialized to zeros
    */
   public static zero(): BBox {
     return new BBox({ h: 0, d: 0, w: 0 });
   }
 
   /**
-   * @return {BBox}  A BBox with height and depth not set
+   * @returns {BBox}  A BBox with height and depth not set
    */
   public static empty(): BBox {
     return new BBox();
@@ -88,7 +88,7 @@ export class BBox {
   /**
    * @param {BBoxData} def  The data with which to initialize the BBox
    *
-   * @constructor
+   * @class
    */
   constructor(def: BBoxData = { w: 0, h: -BIGDIMEN, d: -BIGDIMEN }) {
     this.w = def.w || 0;
@@ -101,7 +101,8 @@ export class BBox {
 
   /**
    * Set up a bbox for append() and combine() operations
-   * @return {BBox}  the bbox itself (for chaining calls)
+   *
+   * @returns {BBox}  the bbox itself (for chaining calls)
    */
   public empty(): BBox {
     this.w = 0;
@@ -133,10 +134,10 @@ export class BBox {
    * @param {number} y   A y-offset for the child bounding box
    */
   public combine(cbox: BBox, x: number = 0, y: number = 0) {
-    let rscale = cbox.rscale;
-    let w = x + rscale * (cbox.w + cbox.L + cbox.R);
-    let h = y + rscale * cbox.h;
-    let d = rscale * cbox.d - y;
+    const rscale = cbox.rscale;
+    const w = x + rscale * (cbox.w + cbox.L + cbox.R);
+    const h = y + rscale * cbox.h;
+    const d = rscale * cbox.d - y;
     if (w > this.w) this.w = w;
     if (h > this.h) this.h = h;
     if (d > this.d) this.d = d;
@@ -146,7 +147,7 @@ export class BBox {
    * @param {BBox} cbox  A bounding box to be added to the right of this one
    */
   public append(cbox: BBox) {
-    let scale = cbox.rscale;
+    const scale = cbox.rscale;
     this.w += scale * (cbox.w + cbox.L + cbox.R);
     if (scale * cbox.h > this.h) {
       this.h = scale * cbox.h;
@@ -169,7 +170,7 @@ export class BBox {
   }
 
   /**
-   * @return {BBox}   A copy of the current BBox
+   * @returns {BBox}   A copy of the current BBox
    */
   public copy(): BBox {
     const bbox = new BBox();

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMspace wrapper for the MmlMspace object
+ * @file  Implements the ChtmlMspace wrapper for the MmlMspace object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -116,9 +116,9 @@ export const ChtmlMspace = (function <N, T, D>(): ChtmlMspaceClass<N, T, D> {
     ChtmlMspaceClass<N, T, D>
   >(ChtmlWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class ChtmlMspace extends Base implements ChtmlMspaceNTD<N, T, D> {
     /**
      * @override
@@ -133,7 +133,7 @@ export const ChtmlMspace = (function <N, T, D>(): ChtmlMspaceClass<N, T, D> {
         parents.forEach((dom) =>
           this.adaptor.append(dom, this.html('mjx-linestrut'))
         );
-      let chtml = this.standardChtmlNodes(parents);
+      const chtml = this.standardChtmlNodes(parents);
       let { w, h, d } = this.getBBox();
       if (w < 0) {
         this.adaptor.setStyle(chtml[0], 'marginRight', this.em(w));

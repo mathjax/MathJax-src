@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Parse methods for the bboldx package.
+ * @file Parse methods for the bboldx package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -57,6 +57,7 @@ export const BboldxMethods = {
 
   /**
    * Handle bboldx symbols as mi in normal variant.
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {Token} mchar The parsed token.
    */
@@ -73,6 +74,7 @@ export const BboldxMethods = {
 
   /**
    * Handle bboldx delimiters as mi in normal variant.
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {Token} delim The parsed token.
    */
@@ -85,6 +87,7 @@ export const BboldxMethods = {
 
   /**
    * Handle bboldx symbols as mi in bold variant.
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {Token} mchar The parsed token.
    */
@@ -101,6 +104,7 @@ export const BboldxMethods = {
 
   /**
    * Handle bboldx delimiters as mi in bold variant.
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {Token} delim The parsed token.
    */

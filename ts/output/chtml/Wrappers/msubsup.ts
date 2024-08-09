@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMsubsup wrapper for the MmlMsubsup object
+ * @file  Implements the ChtmlMsubsup wrapper for the MmlMsubsup object
  *                and the special cases ChtmlMsub and ChtmlMsup
  *
  * @author dpvc@mathjax.org (Davide Cervone)
@@ -133,9 +133,9 @@ export const ChtmlMsub = (function <N, T, D>(): ChtmlMsubClass<N, T, D> {
     ChtmlMsubClass<N, T, D>
   >(ChtmlScriptbase);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class ChtmlMsub extends Base implements ChtmlMsubNTD<N, T, D> {
     /**
      * @override
@@ -223,9 +223,9 @@ export const ChtmlMsup = (function <N, T, D>(): ChtmlMsupClass<N, T, D> {
     ChtmlMsupClass<N, T, D>
   >(ChtmlScriptbase);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class ChtmlMsup extends Base implements ChtmlMsupNTD<N, T, D> {
     /**
      * @override
@@ -313,9 +313,9 @@ export const ChtmlMsubsup = (function <N, T, D>(): ChtmlMsubsupClass<N, T, D> {
     ChtmlMsubsupClass<N, T, D>
   >(ChtmlScriptbase);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class ChtmlMsubsup extends Base implements ChtmlMsubsupNTD<N, T, D> {
     /**
      * @override

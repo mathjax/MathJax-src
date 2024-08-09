@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the elementary MathML3 support (experimental)
+ * @file  Implements the elementary MathML3 support (experimental)
  *                using David Carlisle's XLST transform.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
@@ -59,7 +59,7 @@ export class Mml3<N, T, D> {
 
   /**
    * @param {MathDocument} document   The MathDocument for the transformation
-   * @constructor
+   * @class
    */
   constructor(document: MathDocument<N, T, D>) {
     if (typeof XSLTProcessor === 'undefined') {
@@ -103,6 +103,8 @@ export class Mml3<N, T, D> {
 
 /**
  *  Add Mml3 support into the handler.
+ *
+ * @param handler
  */
 export function Mml3Handler<N, T, D>(
   handler: Handler<N, T, D>
@@ -120,7 +122,7 @@ export function Mml3Handler<N, T, D>(
      * Add a prefilter to the MathML input jax, if there is one.
      *
      * @override
-     * @constructor
+     * @class
      */
     constructor(...args: any[]) {
       super(...args);

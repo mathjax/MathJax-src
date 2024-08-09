@@ -82,6 +82,7 @@ export const CasesMethods = {
    * Implements the numcases environment.
    *
    * @param {TexParser} texparser   The active tex parser.
+   * @param parser
    * @param {CasesBeginItem} begin  The environment begin item.
    */
   NumCases(parser: TexParser, begin: CasesBeginItem) {
@@ -126,6 +127,9 @@ export const CasesMethods = {
 
   /**
    * Replacement for & in cases environment.
+   *
+   * @param parser
+   * @param name
    */
   Entry(parser: TexParser, name: string) {
     if (!parser.stack.Top().getProperty('numCases')) {

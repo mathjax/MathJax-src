@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMtd wrapper for the MmlMtd object
+ * @file  Implements the SvgMtd wrapper for the MmlMtd object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -69,7 +69,7 @@ export interface SvgMtdNTD<N, T, D>
    * @param {number} W    The width of the cell
    * @param {number} H    The height of the cell
    * @param {number} D    The depth of the cell
-   * @return {[number, number]}   The x and y offsets used
+   * @returns {[number, number]}   The x and y offsets used
    */
   placeCell(
     x: number,
@@ -140,9 +140,9 @@ export const SvgMtd = (function <N, T, D>(): SvgMtdClass<N, T, D> {
     SvgMtdClass<N, T, D>
   >(SvgWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  //   type (they should both be SvgWrapper<N, T, D>, but are thought of as
+  //   different by typescript)
   return class SvgMtd extends Base implements SvgMtdNTD<N, T, D> {
     /**
      * @override

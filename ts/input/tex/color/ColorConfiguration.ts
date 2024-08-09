@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the color package.
+ * @file Configuration file for the color package.
  *
  * @author i@omardo.com (Omar Al-Ithawi)
  */

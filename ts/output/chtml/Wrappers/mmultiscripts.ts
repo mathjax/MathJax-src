@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMmultiscripts wrapper for the MmlMmultiscripts object
+ * @file  Implements the ChtmlMmultiscripts wrapper for the MmlMmultiscripts object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -102,6 +102,10 @@ export interface ChtmlMmultiscriptsClass<N, T, D>
 
 /**
  * The ChtmlMmultiscripts wrapper class for the MmlMmultiscripts class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const ChtmlMmultiscripts = (function <
   N,
@@ -124,10 +128,10 @@ export const ChtmlMmultiscripts = (function <
     ChtmlMmultiscriptsClass<N, T, D>
   >(ChtmlMsubsup);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   return class ChtmlMmultiscripts
-    // @ts-expect-error
+    // @ts-expect-error Avoid message about base constructors not having the
+    // same type (they should both be ChtmlWrapper<N, T, D>, but are thought of
+    // as different by typescript)
     extends Base
     implements ChtmlMmultiscriptsNTD<N, T, D>
   {
@@ -226,7 +230,7 @@ export const ChtmlMmultiscripts = (function <
      * @param {BBox} sup       The superscript bounding box
      * @param {number} i       The starting index for the scripts
      * @param {number} n       The number of sub/super-scripts
-     * @return {N}             The script table for these scripts
+     * @returns {N}             The script table for these scripts
      */
     protected addScripts(
       dom: N,
@@ -247,7 +251,7 @@ export const ChtmlMmultiscripts = (function <
       const sepRow = this.html('mjx-row', rowdef);
       const subRow = this.html('mjx-row');
       const name = 'mjx-' + (isPre ? 'pre' : '') + 'scripts';
-      let m = i + 2 * n;
+      const m = i + 2 * n;
       while (i < m) {
         this.childNodes[i++].toCHTML([
           adaptor.append(subRow, this.html('mjx-cell')) as N,

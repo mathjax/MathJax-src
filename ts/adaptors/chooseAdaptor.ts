@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Chooses between jdsom and browser DOM adaptors
+ * @file  Chooses between jdsom and browser DOM adaptors
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -29,7 +29,7 @@ let choose;
 try {
   document; // errors if not in browser
   choose = browserAdaptor;
-} catch (e) {
+} catch (_e) {
   choose = liteAdaptor;
 }
 

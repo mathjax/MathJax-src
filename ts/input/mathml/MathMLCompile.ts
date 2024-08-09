@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implementation of the Compile function for the MathML input jax
+ * @file  Implementation of the Compile function for the MathML input jax
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -87,7 +87,7 @@ export class MathMLCompile<N, T, D> {
   }
 
   /**
-   * @param{MmlFactory} mmlFactory   The MathML factory to use for new nodes
+   * @param {MmlFactory} mmlFactory   The MathML factory to use for new nodes
    */
   public setMmlFactory(mmlFactory: MmlFactory) {
     this.factory = mmlFactory;
@@ -97,10 +97,10 @@ export class MathMLCompile<N, T, D> {
    * Convert a MathML DOM tree to internal MmlNodes
    *
    * @param {N} node     The <math> node to convert to MmlNodes
-   * @return {MmlNode}   The MmlNode at the root of the converted tree
+   * @returns {MmlNode}   The MmlNode at the root of the converted tree
    */
   public compile(node: N): MmlNode {
-    let mml = this.makeNode(node);
+    const mml = this.makeNode(node);
     mml.verifyTree(this.options['verify']);
     mml.setInheritedAttributes({}, false, 0, false);
     mml.walkTree(this.markMrows);
@@ -114,12 +114,12 @@ export class MathMLCompile<N, T, D> {
    *  FIXME: we should use data-* attributes rather than classes for these
    *
    * @param {N} node     The node to convert to an MmlNode
-   * @return {MmlNode}   The converted MmlNode
+   * @returns {MmlNode}   The converted MmlNode
    */
   public makeNode(node: N): MmlNode {
     const adaptor = this.adaptor;
     let limits = false;
-    let kind = adaptor.kind(node).replace(/^.*:/, '');
+    const kind = adaptor.kind(node).replace(/^.*:/, '');
     let texClass = adaptor.getAttribute(node, 'data-mjx-texclass') || '';
     if (texClass) {
       texClass = this.filterAttribute('data-mjx-texclass', texClass) || '';
@@ -146,7 +146,7 @@ export class MathMLCompile<N, T, D> {
    * @param {N} node           The original DOM node that is being transcribed
    * @param {string} texClass  The texClass specified on the node, if any
    * @param {boolean} limits   True if fixed limits are to be used
-   * @return {MmlNode}         The final MmlNode tree
+   * @returns {MmlNode}         The final MmlNode tree
    */
   protected createMml(
     type: string,
@@ -154,7 +154,7 @@ export class MathMLCompile<N, T, D> {
     texClass: string,
     limits: boolean
   ): MmlNode {
-    let mml = this.factory.create(type);
+    const mml = this.factory.create(type);
     if (type === 'TeXAtom' && texClass === 'OP' && !limits) {
       mml.setProperty('movesupsub', true);
       mml.attributes.setInherited('movablelimits', true);
@@ -174,7 +174,7 @@ export class MathMLCompile<N, T, D> {
    *
    * @param {string} type   The type of node being requested
    * @param {N} node        The HTML node used to create it.
-   * @return {MmlNode}      The HtmlNode holding the node (or null)
+   * @returns {MmlNode}      The HtmlNode holding the node (or null)
    */
   protected unknownNode(type: string, node: N): MmlNode {
     if (
@@ -199,8 +199,8 @@ export class MathMLCompile<N, T, D> {
   protected addAttributes(mml: MmlNode, node: N) {
     let ignoreVariant = false;
     for (const attr of this.adaptor.allAttributes(node)) {
-      let name = attr.name;
-      let value = this.filterAttribute(name, attr.value);
+      const name = attr.name;
+      const value = this.filterAttribute(name, attr.value);
       if (value === null || name === 'xmlns') {
         continue;
       }
@@ -232,7 +232,7 @@ export class MathMLCompile<N, T, D> {
             break;
         }
       } else if (name !== 'class') {
-        let val = value.toLowerCase();
+        const val = value.toLowerCase();
         if (val === 'true' || val === 'false') {
           mml.attributes.set(name, val === 'true');
         } else if (!ignoreVariant || name !== 'mathvariant') {
@@ -245,7 +245,7 @@ export class MathMLCompile<N, T, D> {
   /**
    * Provide a hook for the Safe extension to filter attribute values.
    *
-   * @param {string} name   The name of an attribute to filter
+   * @param {string} _name  The name of an attribute to filter
    * @param {string} value  The value to filter
    */
   protected filterAttribute(_name: string, value: string) {
@@ -284,7 +284,7 @@ export class MathMLCompile<N, T, D> {
           (this.factory.create('XML') as XMLNode).setXML(child, adaptor)
         );
       } else {
-        let childMml = mml.appendChild(this.makeNode(child));
+        const childMml = mml.appendChild(this.makeNode(child));
         if (
           childMml.arity === 0 &&
           adaptor.childNodes(child).length &&
@@ -331,7 +331,7 @@ export class MathMLCompile<N, T, D> {
    * @param {N} node  The MathML node whose class is to be processed
    */
   protected checkClass(mml: MmlNode, node: N) {
-    let classList = [];
+    const classList = [];
     for (const name of this.filterClassList(this.adaptor.allClasses(node))) {
       if (name.substring(0, 4) === 'MJX-') {
         if (name === 'MJX-variant') {
@@ -355,7 +355,7 @@ export class MathMLCompile<N, T, D> {
    * Fix the old incorrect spelling of calligraphic.
    *
    * @param {string} variant  The mathvariant name
-   * @return {string}         The corrected variant
+   * @returns {string}         The corrected variant
    */
   protected fixCalligraphic(variant: string): string {
     return variant.replace(/caligraphic/, 'calligraphic');
@@ -368,8 +368,8 @@ export class MathMLCompile<N, T, D> {
    */
   protected markMrows(mml: MmlNode) {
     if (mml.isKind('mrow') && !mml.isInferred && mml.childNodes.length >= 2) {
-      let first = mml.childNodes[0];
-      let last = mml.childNodes[mml.childNodes.length - 1];
+      const first = mml.childNodes[0];
+      const last = mml.childNodes[mml.childNodes.length - 1];
       if (
         first.isKind('mo') &&
         first.attributes.get('fence') &&
@@ -390,7 +390,7 @@ export class MathMLCompile<N, T, D> {
 
   /**
    * @param {string} text  The text to have spacing normalized
-   * @return {string}      The trimmed text
+   * @returns {string}      The trimmed text
    */
   protected normalizeSpace(text: string): string {
     return text

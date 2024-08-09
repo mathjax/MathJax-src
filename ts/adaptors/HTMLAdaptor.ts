@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the HTML DOM adaptor
+ * @file  Implements the HTML DOM adaptor
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -98,7 +98,7 @@ export interface MinHTMLElement<N, T> {
   getAttribute(name: string): string;
   removeAttribute(name: string): void;
   hasAttribute(name: string): boolean;
-  getBoundingClientRect(): Object;
+  getBoundingClientRect(): object;
   getBBox?(): { x: number; y: number; width: number; height: number };
   /* tslint:endable */
 }
@@ -213,7 +213,7 @@ export class HTMLAdaptor<
 
   /**
    * @override
-   * @constructor
+   * @class
    */
   constructor(window: MinWindow<N, D>) {
     super(window.document);
@@ -276,7 +276,7 @@ export class HTMLAdaptor<
    * @override
    */
   public tags(node: N, name: string, ns: string = null) {
-    let nodes = ns
+    const nodes = ns
       ? node.getElementsByTagNameNS(ns, name)
       : node.getElementsByTagName(name);
     return Array.from(nodes as N[]) as N[];
@@ -588,7 +588,7 @@ export class HTMLAdaptor<
    */
   public nodeSize(node: N, em: number = 1, local: boolean = false) {
     if (local && node.getBBox) {
-      let { width, height } = node.getBBox();
+      const { width, height } = node.getBBox();
       return [width / em, height / em] as [number, number];
     }
     return [node.offsetWidth / em, node.offsetHeight / em] as [number, number];

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the interface and abstract class for MathItem objects
+ * @file  Implements the interface and abstract class for MathItem objects
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -228,8 +228,16 @@ export type ProtoItem<N, T> = {
 /**
  *  Produce a proto math item that can be turned into a MathItem
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
+ * @param open   The opening delimiter
+ * @param math   The math expression itself
+ * @param close  The closing delimiter
+ * @param n      The index of the string in which this math is
+ * @param start  The starting location of the math
+ * @param end    The ending location of the math
+ * @param display True means display mode, false is inline mode
+ * @returns The proto math item
+ * @template N   The HTMLElement node class
+ * @template T   The Text node class
  */
 export function protoItem<N, T>(
   open: string,
@@ -240,7 +248,7 @@ export function protoItem<N, T>(
   end: number,
   display: boolean = null
 ) {
-  let item: ProtoItem<N, T> = {
+  const item: ProtoItem<N, T> = {
     open: open,
     math: math,
     close: close,
@@ -316,7 +324,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
   protected _state: number = STATE.UNPROCESSED;
 
   /**
-   * @return {boolean}   True when this item is an escaped delimiter
+   * @returns {boolean}   True when this item is an escaped delimiter
    */
   public get isEscaped(): boolean {
     return this.display === null;
@@ -324,11 +332,11 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
 
   /**
    * @param {string} math      The math expression for this item
-   * @param {Inputjax} jax     The input jax to use for this item
+   * @param {InputJax} jax     The input jax to use for this item
    * @param {boolean} display  True if display mode, false if inline
    * @param {Location} start   The starting position of the math in the document
    * @param {Location} end     The ending position of the math in the document
-   * @constructor
+   * @class
    */
   constructor(
     math: string,

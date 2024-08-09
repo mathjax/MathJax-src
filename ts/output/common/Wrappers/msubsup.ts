@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMsubsup wrapper mixin for the MmlMsubsup object
+ * @file  Implements the CommonMsubsup wrapper mixin for the MmlMsubsup object
  *                and the special cases CommonMsub and CommonMsup
  *
  * @author dpvc@mathjax.org (Davide Cervone)
@@ -111,6 +111,7 @@ export interface CommonMsubClass<
 /**
  * The CommonMsub wrapper mixin for the MmlMsub object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -238,6 +239,7 @@ export interface CommonMsupClass<
 /**
  * The CommonMsup wrapper mixin for the MmlMsup object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -345,7 +347,7 @@ export interface CommonMsubsup<
    *
    * @param {BBox} subbox     The bounding box of the superscript
    * @param {BBox} supbox     The bounding box of the subscript
-   * @return {number[]}       The vertical offsets for super and subscripts, and the space between them
+   * @returns {number[]}       The vertical offsets for super and subscripts, and the space between them
    */
   getUVQ(subbox?: BBox, supbox?: BBox): number[];
 }
@@ -385,6 +387,7 @@ export interface CommonMsubsupClass<
 /**
  * The CommomMsubsup wrapper for the MmlMsubsup object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -517,6 +520,8 @@ export function CommonMsubsupMixin<
 
     /**
      * @ override
+     *
+     * @param bbox
      */
     public appendScripts(bbox: BBox): BBox {
       const [subbox, supbox] = [

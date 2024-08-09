@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  The TextParser class for the textmacros package
+ * @file  The TextParser class for the textmacros package
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
@@ -71,7 +71,7 @@ export class TextParser extends TexParser {
 
   /**
    * @override
-   * @constructor
+   * @class
    */
   constructor(
     text: string,

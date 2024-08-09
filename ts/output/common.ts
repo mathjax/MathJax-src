@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the abstract class for the CommonOutputJax
+ * @file  Implements the abstract class for the CommonOutputJax
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -256,7 +256,7 @@ export abstract class CommonOutputJax<
    * @param {OptionList} options                   The configuration options
    * @param {CommonWrapperFactory} defaultFactory  The default wrapper factory class
    * @param {FC} defaultFont                       The default FontData constructor
-   * @constructor
+   * @class
    */
   constructor(
     options: OptionList = {},
@@ -308,7 +308,7 @@ export abstract class CommonOutputJax<
    *
    * @param {FontExtensionData} font   The name of the extension to add to this output jax's font
    * @param {string} prefix            The prefix for dynamically loaded files for this extension
-   * @return {string[]}                New CSS rules needed for the font
+   * @returns {string[]}                New CSS rules needed for the font
    */
   public addExtension(
     font: FontExtensionData<CC, DD>,
@@ -329,13 +329,13 @@ export abstract class CommonOutputJax<
    */
   public typeset(math: MathItem<N, T, D>, html: MathDocument<N, T, D>) {
     this.setDocument(html);
-    let node = this.createNode();
+    const node = this.createNode();
     this.toDOM(math, node, html);
     return node;
   }
 
   /**
-   * @return {N}  The container DOM node for the typeset math
+   * @returns {N}  The container DOM node for the typeset math
    */
   protected createNode(): N {
     const jax = (this.constructor as typeof CommonOutputJax).NAME;
@@ -435,7 +435,7 @@ export abstract class CommonOutputJax<
     this.math = math;
     math.root.setTeXclass(null);
     this.nodeMap = new Map<MmlNode, WW>();
-    let bbox = this.factory.wrap(math.root).getOuterBBox();
+    const bbox = this.factory.wrap(math.root).getOuterBBox();
     this.nodeMap = null;
     return bbox;
   }
@@ -551,7 +551,7 @@ export abstract class CommonOutputJax<
    * @param {MmlNode} node        The parent node to mark
    * @param {MmlNode} child       The child node to mark
    * @param {MmlNode} mo          The core mo to mark
-   * @return {boolean}            The modified marked variable
+   * @returns {boolean}            The modified marked variable
    */
   protected markInlineBreak(
     marked: boolean,
@@ -610,7 +610,7 @@ export abstract class CommonOutputJax<
   /**
    * @param {N} node            The container node whose metrics are to be measured
    * @param {boolean} display   True if the metrics are for displayed math
-   * @return {Metrics}          Object containing em, ex, containerWidth, etc.
+   * @returns {Metrics}          Object containing em, ex, containerWidth, etc.
    */
   public getMetricsFor(node: N, display: boolean): ExtendedMetrics {
     const getFamily =
@@ -625,7 +625,7 @@ export abstract class CommonOutputJax<
    * Get a MetricMap for the math list
    *
    * @param {MathDocument} html  The math document whose math list is to be processed.
-   * @return {MetricMap[]}       The node-to-metrics maps for all the containers that have math
+   * @returns {MetricMap[]}       The node-to-metrics maps for all the containers that have math
    */
   protected getMetricMaps(html: MathDocument<N, T, D>): MetricMap<N>[] {
     const adaptor = this.adaptor;
@@ -673,7 +673,8 @@ export abstract class CommonOutputJax<
 
   /**
    * @param {N} node    The math element to be measured
-   * @return {N}        The test elements that were added
+   * @param display
+   * @returns {N}        The test elements that were added
    */
   protected getTestElement(node: N, display: boolean): N {
     const adaptor = this.adaptor;
@@ -744,7 +745,7 @@ export abstract class CommonOutputJax<
   /**
    * @param {N} node              The test node to measure
    * @param {boolean} getFamily   True if font family of surroundings is to be determined
-   * @return {ExtendedMetrics}    The metric data for the given node
+   * @returns {ExtendedMetrics}    The metric data for the given node
    */
   protected measureMetrics(node: N, getFamily: boolean): ExtendedMetrics {
     const adaptor = this.adaptor;
@@ -846,7 +847,7 @@ export abstract class CommonOutputJax<
    * @param {OptionList} def   The properties to set on the HTML node
    * @param {(N|T)[]} content  Array of child nodes to set for the HTML node
    * @param {string} ns        The namespace for the element
-   * @return {N}               The newly created DOM tree
+   * @returns {N}               The newly created DOM tree
    */
   public html(
     type: string,
@@ -860,7 +861,7 @@ export abstract class CommonOutputJax<
   /**
    * @param {string} text  The text string for which to make a text node
    *
-   * @return {T}  A text node with the given text
+   * @returns {T}  A text node with the given text
    */
   public text(text: string): T {
     return this.adaptor.text(text);
@@ -869,7 +870,7 @@ export abstract class CommonOutputJax<
   /**
    * @param {number} m    A number to be shown with a fixed number of digits
    * @param {number=} n   The number of digits to use
-   * @return {string}     The formatted number
+   * @returns {string}     The formatted number
    */
   public fixed(m: number, n: number = 3): string {
     if (Math.abs(m) < 0.0006) {
@@ -889,7 +890,7 @@ export abstract class CommonOutputJax<
    *
    * @param {string} text        The text to be displayed
    * @param {string} variant     The name of the variant for the text
-   * @return {N}                 The text element containing the text
+   * @returns {N}                 The text element containing the text
    */
   public abstract unknownText(text: string, variant: string): N;
 
@@ -899,7 +900,7 @@ export abstract class CommonOutputJax<
    * @param {string} text        The text to measure
    * @param {string} variant     The variant for the text
    * @param {CssFontData} font   The family, italic, and bold data for explicit fonts
-   * @return {UnknownBBox}       The width, height, and depth of the text (in ems)
+   * @returns {UnknownBBox}       The width, height, and depth of the text (in ems)
    */
   public measureText(
     text: string,
@@ -922,7 +923,7 @@ export abstract class CommonOutputJax<
    * @param {string} chars       The string contained in the text node
    * @param {string} variant     The variant for the text
    * @param {CssFontData} font   The family, italic, and bold data for explicit fonts
-   * @return {UnknownBBox}       The width, height and depth for the text
+   * @returns {UnknownBBox}       The width, height and depth for the text
    */
   public measureTextNodeWithCache(
     text: N,
@@ -951,14 +952,14 @@ export abstract class CommonOutputJax<
    *  and looking up its size (fake the height and depth, since we can't measure that)
    *
    * @param {N} text            The text element to measure
-   * @return {UnknownBBox}      The width, height and depth for the text (in ems)
+   * @returns {UnknownBBox}      The width, height and depth for the text (in ems)
    */
   public abstract measureTextNode(text: N): UnknownBBox;
 
   /**
    * @param {CssFontData} font   The family, style, and weight for the given font
    * @param {StyleList} styles   The style object to add the font data to
-   * @return {StyleList}         The modified (or initialized) style object
+   * @returns {StyleList}         The modified (or initialized) style object
    */
   public cssFontStyles(font: CssFontData, styles: StyleList = {}): StyleList {
     const [family, italic, bold] = font;
@@ -970,7 +971,7 @@ export abstract class CommonOutputJax<
 
   /**
    * @param {Styles} styles   The style object to query
-   * @return {CssFontData}    The family, italic, and boolean values
+   * @returns {CssFontData}    The family, italic, and boolean values
    */
   public getFontData(styles: Styles): CssFontData {
     if (!styles) {

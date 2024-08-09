@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMsqrt wrapper for the MmlMsqrt object
+ * @file  Implements the CommonMsqrt wrapper for the MmlMsqrt object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -102,19 +102,19 @@ export interface CommonMsqrt<
 
   /**
    * @param {BBox} sbox  The bounding box for the surd character
-   * @return {number[]}  The p, q, and x values for the TeX layout computations
+   * @returns {number[]}  The p, q, and x values for the TeX layout computations
    */
   getPQ(sbox: BBox): number[];
 
   /**
    * @param {BBox} sbox  The bounding box of the surd
    * @param {number} H   The height of the root as a whole
-   * @return {number[]}  The x offset of the surd, and the height, x offset, and scale of the root
+   * @returns {number[]}  The x offset of the surd, and the height, x offset, and scale of the root
    */
-  getRootDimens(sbox: BBox, H: Number): number[];
+  getRootDimens(sbox: BBox, H: number): number[];
 
   /**
-   * @return {number}   The (approximate) width of the surd with its root
+   * @returns {number}   The (approximate) width of the surd with its root
    */
   rootWidth(): number;
 
@@ -159,6 +159,7 @@ export interface CommonMsqrtClass<
 /**
  * The CommonMsqrt wrapper mixin for the MmlMsqrt object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  An info box that allows text selection and has copy-to-clipboard functions
+ * @file  An info box that allows text selection and has copy-to-clipboard functions
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

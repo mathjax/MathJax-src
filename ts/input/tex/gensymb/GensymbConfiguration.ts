@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the gensymb package.
+ * @file Configuration file for the gensymb package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -30,6 +30,7 @@ import TexParser from '../TexParser.js';
 
 /**
  * Handle characters that are known units.
+ *
  * @param {TexParser} parser The current tex parser.
  * @param {Token} mchar The parsed token.
  */
