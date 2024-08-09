@@ -29,7 +29,7 @@ describe('Config Macros Active', () => {
 });
 
 describe('Config Macros Commands', () => {
-  it('Commands Simple', () => 
+  it('Commands Simple', () =>
     runMacroTests(
       {macros: {"RR": "{\\bf R}"}},
     `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"PH\" display=\"block\">

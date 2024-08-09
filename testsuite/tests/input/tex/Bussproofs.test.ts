@@ -1,5 +1,5 @@
-import { beforeEach, describe, it } from '@jest/globals';
-import { toXmlMatch, setupTexWithOutput, tex2mml } from '#helpers';
+import { afterAll, beforeEach, describe, it } from '@jest/globals';
+import { getTokens, toXmlMatch, setupTexWithOutput, tex2mml } from '#helpers';
 import '#js/input/tex/bussproofs/BussproofsConfiguration';
 import '#js/input/tex/ams/AmsConfiguration';
 
@@ -3209,3 +3209,5 @@ describe('BussproofsRegProofs', () => {
 </math>`
     ));
 });
+
+afterAll(() => getTokens('bussproofs'));
