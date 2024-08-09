@@ -1421,14 +1421,11 @@ export interface FontDataClass<
   defaultVariants: string[][];
   defaultParams: FontParameters;
   defaultAccentMap: RemapMap;
-  /* tslint:disable-next-line:jsdoc-require */
   charOptions(font: CharMap<C>, n: number): C;
-  /* tslint:disable-next-line:jsdoc-require */
   defineDynamicFiles(
     dynamicFiles: DynamicFileDef[],
     prefix?: string
   ): DynamicFileList;
-  /* tslint:disable-next-line:jsdoc-require */
   dynamicSetup<C extends CharOptions, D extends DelimiterData>(
     font: string,
     file: string,
@@ -1436,7 +1433,6 @@ export interface FontDataClass<
     delimiters?: DelimiterMap<D>,
     fonts?: string[]
   ): void;
-  /* tslint:disable-next-line:jsdoc-require */
   addExtension(data: FontExtensionData<C, D>, prefix?: string): void;
   new (...args: any[]): FontData<C, V, D>;
 }
