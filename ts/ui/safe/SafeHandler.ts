@@ -107,10 +107,9 @@ export function SafeMathDocumentMixin<
     }
 
     /**
-     * @param {{document:SafeMathDocument<N,T,D>}} data   The document to use for the filter
-     *                                                (note: this has been bound to the input jax)
-     * @param data.math
-     * @param data.document
+     * @param {MathItem} data.math The math item to sanitize
+     * @param {SafeMathDocument} data.document The document to use for the
+     *     filter (note: this has been bound to the input jax)
      */
     protected sanitize(data: {
       math: MathItem<N, T, D>;
