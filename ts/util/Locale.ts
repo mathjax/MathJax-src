@@ -42,7 +42,12 @@ export class Locale {
   public static current: string = 'en';
 
   /**
-   * True when the core component has been loaded (and so the Package path resolution is available
+   * The default locale for when a message has no current localization
+   */
+  public static default: string = 'en';
+
+  /**
+   * True when the core component has been loaded (and so the Package path resolution is available)
    */
   public static isComponent: boolean = false;
 
@@ -54,25 +59,19 @@ export class Locale {
   /**
    * The locale files to load for each locale (as registered by the components)
    */
-  protected static files: {[locale: string]: {component: string, file: string}[]} = {en: []};
+  protected static locations: {[component: string]: [string, Set<string>]} = {};
 
   /**
-   * Registers a given component's locale files
+   * Registers a given component's locale directory
    *
    * @param{string} component   The component's name (e.g., [tex]/bbox)
    * @param{string} prefix      The directory where the locales are located
-   * @param{string[]} locales   The list of localizations for this component (e.g., ['en', 'fr', 'de'])
    */
-  public static registerLocaleFiles(component: string, prefix: string, locales: string[]) {
-    if (this.isComponent) {
-      prefix = component;
-    }
-    for (const locale of locales) {
-      if (!this.files[locale]) {
-        this.files[locale] = [];
-      }
-      this.files[locale].push({component, file: `${prefix}/locales/${locale}.json`});
-    }
+  public static registerLocaleFiles(component: string, prefix: string = component) {
+    this.locations[component] = [
+      `${this.isComponent ? component : prefix}/locales`,
+      new Set()
+    ];
   }
 
   /**
@@ -103,7 +102,6 @@ export class Locale {
    *
    * @param{string} component       The component whose message is requested
    * @param{string} id              The id of the message
-   * @param{string} message         The English message for in case the localized version is missing
    * @param{string|namedDat} data   The first argument or the object of names arguments
    * @param{srting[]} ...args       Any additional string arguments (if data is a string)
    * @return{string}                The localized message with arguments substituted in
@@ -111,11 +109,10 @@ export class Locale {
   public static message(
     component: string,
     id: string,
-    message: string,
     data: string | namedData = {},
     ...args: string[]
   ): string {
-    message = this.lookupMessage(component, id, message);
+    const message = this.lookupMessage(component, id);
     if (typeof data === 'string') {
       data = {1: data};
       for (let i = 0; i < args.length; i++) {
@@ -131,11 +128,12 @@ export class Locale {
    *
    * @param{string} component   The component for this message
    * @param{string} id          The id of the message
-   * @param{string} message     The default message for if a localized one is not available
    * @return{string}            The message string to use
    */
-  public static lookupMessage(component: string, id: string, message: string): string {
-    return this.data[component]?.[this.current]?.[id] || message;
+  public static lookupMessage(component: string, id: string): string {
+    return this.data[component]?.[this.current]?.[id] ||
+           this.data[component]?.[this.default]?.[id] ||
+           `No localized or default version for message with id '${id}'`;
   }
 
   /**
@@ -159,18 +157,16 @@ export class Locale {
    *
    * @param{string} component       The component whose message is requested
    * @param{string} id              The id of the message
-   * @param{string} message         The English message for in case the localized version is missing
    * @param{string|namedDat} data   The first argument or the object of names arguments
    * @param{srting[]} ...args       Any additional string arguments (if data is a string)
    */
   public static error(
     component: string,
     id: string,
-    message: string,
     data: string | namedData,
     ...args: string[]
   ) {
-    throw Error(this.message(component, id, message, data, ...args));
+    throw Error(this.message(component, id, data, ...args));
   }
 
   /**
@@ -181,14 +177,12 @@ export class Locale {
    * @return{Promise<void>}   A promise that resolves when the locale files have been loaded
    */
   public static async setLocale(locale: string = this.current): Promise<void[]> {
-    const files = this.files[locale];
-    if (!files) {
-      this.error('core', 'UnknownLocale', 'Local "%1" is not defined', locale);
-    }
     const promises = [];
-    while (files.length) {
-      const {component, file} = files.shift();
-      promises.push(this.getLocaleData(component, this.current, file));
+    for (const [component, [directory, loaded]] of Object.entries(this.locations)) {
+      if (!loaded.has(locale)) {
+        loaded.add(locale);
+        promises.push(this.getLocaleData(component, this.current, `${directory}/${locale}.json`));
+      }
     }
     return Promise.all(promises);
   }
@@ -202,7 +196,28 @@ export class Locale {
    * @return{Promise<void>}     A promise that resolves when the file is loaded and registered
    */
   protected static async getLocaleData(component: string, locale: string, file: string): Promise<void> {
-    return asyncLoad(file).then((data: messageData) => this.registerMessages(component, locale, data));
+    return asyncLoad(file)
+      .then((data: messageData) => this.registerMessages(component, locale, data))
+      .catch((error) => this.localeError(component, locale, error));
+  }
+
+  /**
+   * Report an error thrown when loading a component's locale file
+   *
+   * @param{string} component   The component whose localization is being loaded
+   * @param{string} locale      The locale being loaded
+   * @param{Error} error        The Error object causing the issue
+   */
+  protected static localeError(component: string, locale: string, error: Error) {
+    const message = this.message(
+      'core',
+      'LocaleJsonError',
+      "MathJax(%1): Can't load '%2': %3",
+      component,
+      `${locale}.json`,
+      error.message
+    );
+    console.log(message);
   }
 
 }
