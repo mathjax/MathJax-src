@@ -20,7 +20,7 @@ export function copyToClipboard(text: string) {
   try {
     document.execCommand('copy');
   } catch (error) {
-    alert("Can't copy to clipboard: " + error.message);
+    alert(`Can't copy to clipboard: ${error.message}`);
   }
   document.body.removeChild(input);
 }

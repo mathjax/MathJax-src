@@ -62,7 +62,7 @@ export class SelectableInfo extends Info {
     try {
       document.execCommand('copy');
     } catch (err) {
-      alert("Can't copy to clipboard: " + err.message);
+      alert(`Can't copy to clipboard: ${err.message}`);
     }
     document.getSelection().removeAllRanges();
   }

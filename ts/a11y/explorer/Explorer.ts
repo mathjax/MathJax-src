@@ -254,8 +254,7 @@ export class AbstractExplorer<T> implements Explorer {
   /**
    * @override
    */
-  // @ts-expect-error: unused variable
-  public Update(force: boolean = false): void {}
+  public Update(_force: boolean = false): void {}
 
   /**
    * Stops the events of this explorer from bubbling.
