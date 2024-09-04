@@ -934,8 +934,8 @@ export class CommonWrapper<
    * Determine the scaling factor to use for this wrapped node, and set the styles for it.
    */
   protected getScale() {
-    let scale = 1,
-      parent = this.parent;
+    let scale = 1;
+    let parent = this.parent;
     let pscale = parent ? parent.bbox.scale : 1;
     let attributes = this.node.attributes;
     let scriptlevel = Math.min(attributes.get('scriptlevel') as number, 2);
@@ -1012,8 +1012,9 @@ export class CommonWrapper<
     //
     const child = node.coreParent();
     const parent = child.parent;
-    if (!parent || !parent.isKind('mrow') || parent.childNodes.length === 1)
+    if (!parent || !parent.isKind('mrow') || parent.childNodes.length === 1) {
       return;
+    }
     //
     // Get the lspace and rspace
     //
@@ -1403,12 +1404,7 @@ export class CommonWrapper<
    * @return {CharData}        The full CharData object, with CharOptions guaranteed to be defined
    */
   protected getVariantChar(variant: string, n: number): CharDataArray<CC> {
-    const char = this.font.getChar(variant, n) || [
-      0,
-      0,
-      0,
-      { unknown: true } as CC,
-    ];
+    const char = this.font.getChar(variant, n) || [0, 0, 0, { unknown: true }];
     if (char.length === 3) {
       (char as any)[3] = {};
     }

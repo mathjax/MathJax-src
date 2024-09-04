@@ -26,9 +26,9 @@ import { CommonMenclose } from './Wrappers/menclose.js';
 
 /*****************************************************************/
 
-export const ARROWX = 4,
-  ARROWDX = 1,
-  ARROWY = 2; // default relative arrowhead values
+export const ARROWX = 4;
+export const ARROWDX = 1;
+export const ARROWY = 2; // default relative arrowhead values
 
 export const THICKNESS = 0.067; // default rule thickness
 export const PADDING = 0.2; // default padding
@@ -40,39 +40,16 @@ export const SOLID = THICKNESS + 'em solid'; // a solid border
 /**
  * Shorthand for CommonMenclose
  */
-export type Menclose = CommonMenclose<
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any
->;
+/* prettier-ignore */
+export type Menclose =
+  CommonMenclose<any, any, any, any, any, any, any, any, any, any, any, any, any>;
 
 /**
  * Shorthand for CommonWrapper
  */
-export type AnyWrapper = CommonWrapper<
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any
->;
+/* prettier-ignore */
+export type AnyWrapper =
+  CommonWrapper<any, any, any, any, any, any, any, any, any, any, any, any>;
 
 /**
  * Top, right, bottom, left padding data

@@ -200,7 +200,8 @@ export interface CommonMaction<
   /* prettier-ignore */
   action: ActionHandler<
     N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
-    CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>;
+    CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  >;
   /**
    * The data for the specified actiontype
    */
@@ -260,9 +261,9 @@ export interface CommonMactionClass<
    * The valid action types and their handlers
    */
   /* prettier-ignore */
-  actions: ActionMap<
-    N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
-    CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>;
+  actions: ActionMap<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
+    CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  >;
 }
 
 /*****************************************************************/
@@ -309,17 +310,18 @@ export function CommonMactionMixin<
      * @override
      */
     /* prettier-ignore */
-    public static actions: ActionMap<
-      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
-      CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>;
+    public static actions: ActionMap<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD,
+      FC, CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+    >;
 
     /**
      * @override
      */
     /* prettier-ignore */
-    public action: ActionHandler<
-      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
-      CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>;
+    public action: ActionHandler<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
+      CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+    >;
+    
     /**
      * @override
      */
@@ -364,8 +366,8 @@ export function CommonMactionMixin<
       super(factory, node, parent);
       const actions =
         /* prettier-ignore */
-        (this.constructor as CommonMactionClass<
-          N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>)
+        (this.constructor as
+         CommonMactionClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>)
         .actions;
       const action = this.node.attributes.get('actiontype') as string;
       const [handler, data] =

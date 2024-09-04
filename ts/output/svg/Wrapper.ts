@@ -448,10 +448,10 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
       [t2, t2, t2, -t2],
     ][i];
     const [A, B] = path;
-    const x1 = A[0] + tx1 - dx,
-      y1 = A[1] + ty1;
-    const x2 = B[0] + tx2 - dx,
-      y2 = B[1] + ty2;
+    const x1 = A[0] + tx1 - dx;
+    const y1 = A[1] + ty1;
+    const x2 = B[0] + tx2 - dx;
+    const y2 = B[1] + ty2;
     const W = Math.abs(i % 2 ? y2 - y1 : x2 - x1);
     const n = dot ? Math.ceil(W / (2 * t)) : Math.ceil((W - t) / (4 * t));
     const m = W / (4 * n + 1);

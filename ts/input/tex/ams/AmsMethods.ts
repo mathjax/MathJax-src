@@ -51,11 +51,16 @@ export const NEW_OPS = 'ams-declare-ops';
  * @return {[MmlNode, MmlNode]} The msubsup with the scripts together with any extra nodes.
  */
 function splitSideSet(mml: MmlNode): [MmlNode, MmlNode] {
-  if (!mml || (mml.isInferred && mml.childNodes.length === 0))
+  if (!mml || (mml.isInferred && mml.childNodes.length === 0)) {
     return [null, null];
-  if (mml.isKind('msubsup') && checkSideSetBase(mml)) return [mml, null];
+  }
+  if (mml.isKind('msubsup') && checkSideSetBase(mml)) {
+    return [mml, null];
+  }
   const child = NodeUtil.getChildAt(mml, 0);
-  if (!(mml.isInferred && child && checkSideSetBase(child))) return [null, mml];
+  if (!(mml.isInferred && child && checkSideSetBase(child))) {
+    return [null, mml];
+  }
   mml.childNodes.splice(0, 1); // remove first child
   return [child, mml];
 }
@@ -126,11 +131,11 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     taggable: boolean
   ) {
     const name = begin.getName();
-    let n,
-      valign,
-      align = '',
-      balign = '',
-      spacing = [];
+    let n;
+    let valign;
+    let align = '';
+    let balign = '';
+    let spacing = [];
     if (!taggable) {
       // @test Alignedat
       valign = parser.GetBrackets('\\begin{' + name + '}');

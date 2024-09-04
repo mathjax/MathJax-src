@@ -108,8 +108,8 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
    */
   MtMultlined(parser: TexParser, begin: StackItem): ParseResult {
     const name = `\\begin{${begin.getName()}}`;
-    let pos = 'c',
-      width = '';
+    let pos = 'c';
+    let width = '';
     //
     //  Only process bracket arguments if they follow immediately with no space.
     //  Note that if [pos] is missing, [width] can still be provided.

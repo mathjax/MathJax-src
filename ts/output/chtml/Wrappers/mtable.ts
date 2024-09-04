@@ -359,9 +359,8 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
       const lines = this.getColumnAttributes('columnlines');
       for (const row of this.childNodes) {
         let i = 0;
-        for (const cell of this.adaptor
-          .childNodes(row.dom[0])
-          .slice(1) as N[]) {
+        const cells = this.adaptor.childNodes(row.dom[0]).slice(1) as N[];
+        for (const cell of cells) {
           const line = lines[i++];
           if (line === 'none') continue;
           this.adaptor.setStyle(cell, 'borderLeft', '.07em ' + line);

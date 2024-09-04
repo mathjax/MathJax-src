@@ -59,12 +59,15 @@ export class CasesTags extends AmsTags {
   public autoTag() {
     if (this.currentTag.tag != null) return;
     if (this.currentTag.env === 'subnumcases') {
-      if (this.subcounter === 0) this.counter++;
+      if (this.subcounter === 0) {
+        this.counter++;
+      }
       this.subcounter++;
       this.tag(this.formatNumber(this.counter, this.subcounter), false);
     } else {
-      if (this.subcounter === 0 || this.currentTag.env !== 'numcases-left')
+      if (this.subcounter === 0 || this.currentTag.env !== 'numcases-left') {
         this.counter++;
+      }
       this.tag(this.formatNumber(this.counter), false);
     }
   }
@@ -140,9 +143,9 @@ export const CasesMethods = {
     //  Make second column be in \text{...}
     //
     const tex = parser.string;
-    let braces = 0,
-      i = parser.i,
-      m = tex.length;
+    let braces = 0;
+    let i = parser.i;
+    let m = tex.length;
     //
     //  Look through the string character by character...
     //

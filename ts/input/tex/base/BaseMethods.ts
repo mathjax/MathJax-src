@@ -1562,10 +1562,10 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     //  in a \text{...}, for backward compatibility).
     //
     const str = parser.string;
-    let braces = 0,
-      close = -1,
-      i = parser.i,
-      m = str.length;
+    let braces = 0;
+     let close = -1;
+     let i = parser.i;
+     let m = str.length;
     const end = env
       ? new RegExp(`^\\\\end\\s*\\{${env.replace(/\*/, '\\*')}\\}`)
       : null;

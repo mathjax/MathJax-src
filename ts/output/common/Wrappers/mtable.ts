@@ -1189,8 +1189,8 @@ export function CommonMtableMixin<
       //
       // Get the columns needed to get dw as a small enough portion of the total width
       //
-      let w = 0,
-        n = 0;
+      let w = 0;
+      let n = 0;
       while (n < columns.length) {
         w += W[columns[n++]];
         if (w && dw / w < BREAK_BELOW) break;

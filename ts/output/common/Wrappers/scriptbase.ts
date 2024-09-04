@@ -649,8 +649,8 @@ export function CommonScriptbaseMixin<
       const sized = !!(
         this.baseCore.node.isKind('mo') &&
         /* prettier-ignore */
-        (this.baseCore as any as CommonMo<
-          N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).size
+        (this.baseCore as any as
+         CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).size
       );
       const scale = this.baseScale;
       return this.baseIsChar && !largeop && !sized && scale === 1 ? 0 : n;

@@ -83,8 +83,8 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
     }
 
     let mml;
-    let hdef = { minsize: top.getProperty('minw'), stretchy: true },
-      vdef = {
+    let hdef = { minsize: top.getProperty('minw'), stretchy: true };
+    let vdef = {
         minsize: top.getProperty('minh'),
         stretchy: true,
         symmetric: true,

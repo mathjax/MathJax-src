@@ -106,9 +106,9 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
    */
   protected getPatterns() {
     let options = this.options;
-    let starts: string[] = [],
-      parts: string[] = [],
-      subparts: string[] = [];
+    let starts: string[] = [];
+    let parts: string[] = [];
+    let subparts: string[] = [];
     this.end = {};
     this.env = this.sub = 0;
     let i = 1;

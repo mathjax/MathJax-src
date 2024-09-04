@@ -258,18 +258,9 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
             const cos = Math.cos(a);
             node.adaptor.append(
               node.dom[0],
-              node.path(
-                'mitre',
-                'M',
-                w,
-                t - d,
-                'L',
-                t + cos * t,
-                t - d,
-                'L',
-                cos * HD + t,
-                HD - d - t
-              )
+              /* prettier-ignore */
+              node.path('mitre', 'M', w, t - d, 'L',
+                        t + cos * t, t - d, 'L', cos * HD + t, HD - d - t)
             );
           },
           bbox: (node) => {
@@ -311,22 +302,10 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
             const p = node.padding;
             node.adaptor.append(
               node.dom[0],
-              node.path(
-                'round',
-                'M',
-                t,
-                t - d,
-                'a',
-                p - t / 2,
-                (h + d) / 2 - 4 * t,
-                0,
-                '0,1',
-                0,
-                h + d - 2 * t,
-                'L',
-                w - t,
-                h - t
-              )
+              /* prettier-ignore */
+              node.path('round', 'M', t, t - d, 'a',
+                        p - t / 2, (h + d) / 2 - 4 * t, 0, '0,1', 0,
+                        h + d - 2 * t, 'L', w - t, h - t)
             );
           },
           bbox: (node) => {
