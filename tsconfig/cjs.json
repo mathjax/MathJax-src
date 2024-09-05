@@ -6,7 +6,7 @@
     "module": "CommonJS",
     "paths": {
       "#js/*": ["../cjs/*"],
-      "#source/*": ["../components/cjs/*"],
+      "#source/*": ["../components/mjs/*"],
       "#root/*": ["../ts/components/cjs/*"],
       "#menu/*": ["../node_modules/mj-context-menu/cjs/*"],
       "#sre/*": ["../node_modules/speech-rule-engine/cjs/*"],
