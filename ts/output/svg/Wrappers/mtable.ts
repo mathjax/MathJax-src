@@ -501,9 +501,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
               : align === 'right'
                 ? 'xMaxYMid'
                 : 'xMidYMid',
-          viewBox: [this.fixed(-dx), this.fixed(-h), 1, this.fixed(h + d)].join(
-            ' '
-          ),
+          viewBox: `${this.fixed(-dx)} ${this.fixed(-h)} 1 ${this.fixed(h + d)}`,
         },
         [this.svg('g', { transform: matrix }, adaptor.childNodes(svg))]
       );

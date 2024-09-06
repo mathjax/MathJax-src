@@ -39,28 +39,11 @@ export namespace PATTERNS {
   export const VALUESPLIT = `(?:'([^']*)'|"([^"]*)"|([^\\s\\n]+))`;
   export const SPACE = '(?:\\s|\\n)+';
   export const OPTIONALSPACE = '(?:\\s|\\n)*';
-  export const ATTRIBUTE =
-    ATTNAME + '(?:' + OPTIONALSPACE + '=' + OPTIONALSPACE + VALUE + ')?';
-  export const ATTRIBUTESPLIT =
-    '(' +
-    ATTNAME +
-    ')(?:' +
-    OPTIONALSPACE +
-    '=' +
-    OPTIONALSPACE +
-    VALUESPLIT +
-    ')?';
+  export const ATTRIBUTE = `${ATTNAME}(?:${OPTIONALSPACE}=${OPTIONALSPACE}${VALUE})?`;
+  export const ATTRIBUTESPLIT = `(${ATTNAME})(?:${OPTIONALSPACE}=${OPTIONALSPACE}${VALUESPLIT})?`;
   export const TAG =
-    '(<(?:' +
-    TAGNAME +
-    '(?:' +
-    SPACE +
-    ATTRIBUTE +
-    ')*' +
-    OPTIONALSPACE +
-    '/?|/' +
-    TAGNAME +
-    '|!--[^]*?--|![^]*?)(?:>|$))';
+    `(<(?:${TAGNAME}(?:${SPACE}${ATTRIBUTE})*` +
+    `${OPTIONALSPACE}/?|/${TAGNAME}|!--[^]*?--|![^]*?)(?:>|$))`;
   export const tag = new RegExp(TAG, 'i');
   export const attr = new RegExp(ATTRIBUTE, 'i');
   export const attrsplit = new RegExp(ATTRIBUTESPLIT, 'i');
@@ -391,8 +374,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
       .join(' ');
     const content = this.serializeInner(adaptor, node, xml);
     const html =
-      '<' +
-      tag +
+      `<${tag}` +
       (attributes ? ' ' + attributes : '') +
       ((!xml || content) && !SELF_CLOSING[tag]
         ? `>${content}</${tag}>`
