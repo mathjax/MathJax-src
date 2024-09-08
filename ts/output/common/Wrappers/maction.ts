@@ -321,7 +321,7 @@ export function CommonMactionMixin<
     public action: ActionHandler<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
       CommonMaction<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
     >;
-    
+
     /**
      * @override
      */

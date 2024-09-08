@@ -79,13 +79,9 @@ export class MmlVisitor<N, T, D> extends SerializedMmlVisitor {
       return this.visitNode(node.childNodes[0], space);
     }
     return (
-      space +
-      '<mrow' +
-      this.getAttributes(node) +
-      '>\n' +
+      `${space}<mrow${this.getAttributes(node)}>\n` +
       this.childNodeMml(node, space + '  ', '\n') +
-      space +
-      '</mrow>'
+      `${space}</mrow>`
     );
   }
 
@@ -101,23 +97,13 @@ export class MmlVisitor<N, T, D> extends SerializedMmlVisitor {
     const addRow =
       node.childNodes.length && node.childNodes[0].childNodes.length > 1;
     return (
-      space +
-      '<math' +
-      this.getAttributes(node) +
-      '>\n' +
-      space +
-      '  <semantics>\n' +
+      `${space}<math${this.getAttributes(node)}>\n${space}  <semantics>\n` +
       (addRow ? space + '    <mrow>\n' : '') +
       this.childNodeMml(node, space + (addRow ? '      ' : '    '), '\n') +
       (addRow ? space + '    </mrow>\n' : '') +
-      space +
-      '    <annotation encoding="application/x-tex">' +
+      `${space}    <annotation encoding="application/x-tex">` +
       this.mathItem.math +
-      '</annotation>\n' +
-      space +
-      '  </semantics>\n' +
-      space +
-      '</math>'
+      `</annotation>\n${space}  </semantics>\n${space}</math>`
     );
   }
 

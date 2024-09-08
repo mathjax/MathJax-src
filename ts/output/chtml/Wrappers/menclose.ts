@@ -407,12 +407,7 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
                 node.html('mjx-ustrike', {
                   style: {
                     width: node.Em(W),
-                    transform:
-                      'translateX(' +
-                      node.Em(t) +
-                      ') rotate(' +
-                      node.fixed(-a) +
-                      'rad)',
+                    transform: `translateX(${node.Em(t)}) rotate(${node.fixed(-a)}rad)`,
                   },
                 })
               );

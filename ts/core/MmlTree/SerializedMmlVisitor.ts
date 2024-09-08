@@ -94,14 +94,8 @@ export class SerializedMmlVisitor extends MmlVisitor {
    * @return {string}         The serializied annotation element
    */
   public visitAnnotationNode(node: MmlNode, space: string): string {
-    return (
-      space +
-      '<annotation' +
-      this.getAttributes(node) +
-      '>' +
-      this.childNodeMml(node, '', '') +
-      '</annotation>'
-    );
+    const children = this.childNodeMml(node, '', '');
+    return `${space}<annotation${this.getAttributes(node)}>${children}</annotation>`;
   }
 
   /**
@@ -120,17 +114,8 @@ export class SerializedMmlVisitor extends MmlVisitor {
     let [nl, endspace] =
       node.isToken || node.childNodes.length === 0 ? ['', ''] : ['\n', space];
     const children = this.childNodeMml(node, space + '  ', nl);
-    return (
-      space +
-      '<' +
-      kind +
-      this.getAttributes(node) +
-      '>' +
-      (children.match(/\S/) ? nl + children + endspace : '') +
-      '</' +
-      kind +
-      '>'
-    );
+    const childNode = children.match(/\S/) ? nl + children + endspace : '';
+    return `${space}<${kind}${this.getAttributes(node)}>${childNode}</${kind}>`;
   }
 
   /**
