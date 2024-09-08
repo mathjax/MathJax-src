@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     GJcy: '\u0403',
     GT: '\u003E',
     Gammad: '\u03DC',
@@ -73,5 +74,7 @@ Entities.add({
     gtrless: '\u2277',
     gtrsim: '\u2273',
     gvertneqq: '\u2269\uFE00',
-    gvnE: '\u2269\uFE00'
-}, 'g');
+    gvnE: '\u2269\uFE00',
+  },
+  'g'
+);

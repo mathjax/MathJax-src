@@ -21,18 +21,21 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathItem} from '../../core/MathItem.js';
-import {MathDocument, MathDocumentConstructor} from '../../core/MathDocument.js';
-import {Handler} from '../../core/Handler.js';
+import { MathItem } from '../../core/MathItem.js';
+import {
+  MathDocument,
+  MathDocumentConstructor,
+} from '../../core/MathDocument.js';
+import { Handler } from '../../core/Handler.js';
 
-import {Safe} from './safe.js';
+import { Safe } from './safe.js';
 
 /*==========================================================================*/
 
 /**
  * Generic constructor for Mixins
  */
-export type Constructor<T> = new(...args: any[]) => T;
+export type Constructor<T> = new (...args: any[]) => T;
 
 /*==========================================================================*/
 
@@ -40,14 +43,11 @@ export type Constructor<T> = new(...args: any[]) => T;
  * The properties needed in the MathDocument for sanitizing the internal MathML
  */
 export interface SafeMathDocument<N, T, D> extends MathDocument<N, T, D> {
-
   /**
    * The Safe object for this document
    */
   safe: Safe<N, T, D>;
-
 }
-
 
 /**
  * The mixin for adding safe render action to MathDocuments
@@ -55,12 +55,13 @@ export interface SafeMathDocument<N, T, D> extends MathDocument<N, T, D> {
  * @param {B} BaseDocument             The MathDocument class to be extended
  * @return {SafeMathDocument<N,T,D>}   The extended MathDocument class
  */
-export function SafeMathDocumentMixin<N, T, D, B extends MathDocumentConstructor<MathDocument<N, T, D>>>(
-  BaseDocument: B
-): Constructor<SafeMathDocument<N, T, D>> & B {
-
+export function SafeMathDocumentMixin<
+  N,
+  T,
+  D,
+  B extends MathDocumentConstructor<MathDocument<N, T, D>>,
+>(BaseDocument: B): Constructor<SafeMathDocument<N, T, D>> & B {
   return class extends BaseDocument {
-
     /**
      * @override
      */
@@ -69,7 +70,7 @@ export function SafeMathDocumentMixin<N, T, D, B extends MathDocumentConstructor
       safeOptions: {
         ...Safe.OPTIONS,
       },
-      SafeClass: Safe
+      SafeClass: Safe,
     };
 
     /**
@@ -88,8 +89,12 @@ export function SafeMathDocumentMixin<N, T, D, B extends MathDocumentConstructor
       this.safe = new this.options.SafeClass(this, this.options.safeOptions);
       for (const jax of this.inputJax) {
         if (jax.name.match(/MathML/)) {
-          (jax as any).mathml.filterAttribute = this.safe.mmlAttribute.bind(this.safe);
-          (jax as any).mathml.filterClassList = this.safe.mmlClassList.bind(this.safe);
+          (jax as any).mathml.filterAttribute = this.safe.mmlAttribute.bind(
+            this.safe
+          );
+          (jax as any).mathml.filterClassList = this.safe.mmlClassList.bind(
+            this.safe
+          );
         } else if (jax.name.match(/TeX/)) {
           jax.postFilters.add(this.sanitize.bind(jax), -5.5);
         }
@@ -100,14 +105,15 @@ export function SafeMathDocumentMixin<N, T, D, B extends MathDocumentConstructor
      * @param {{document:SafeDocument<N,T,D>}} data   The document to use for the filter
      *                                                (note: this has been bound to the input jax)
      */
-    protected sanitize(data: {math: MathItem<N, T, D>, document: SafeMathDocument<N, T, D>}) {
+    protected sanitize(data: {
+      math: MathItem<N, T, D>;
+      document: SafeMathDocument<N, T, D>;
+    }) {
       data.math.root = (this as any).parseOptions.root;
       data.document.safe.sanitize(data.math, data.document);
     }
   };
-
 }
-
 
 /*==========================================================================*/
 
@@ -117,7 +123,9 @@ export function SafeMathDocumentMixin<N, T, D, B extends MathDocumentConstructor
  * @param {Handler} handler   The Handler instance to enhance
  * @return {Handler}          The handler that was modified (for purposes of chaining extensions)
  */
-export function SafeHandler<N, T, D>(handler: Handler<N, T, D>): Handler<N, T, D> {
+export function SafeHandler<N, T, D>(
+  handler: Handler<N, T, D>
+): Handler<N, T, D> {
   handler.documentClass = SafeMathDocumentMixin(handler.documentClass);
   return handler;
 }

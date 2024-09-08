@@ -21,11 +21,15 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {ChtmlWrapper} from '../Wrapper.js';
-import {ChtmlWrapperFactory} from '../WrapperFactory.js';
-import {ChtmlXmlNode, ChtmlXmlNodeNTD, ChtmlXmlNodeClass} from './semantics.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {HtmlNode} from '../../../core/MmlTree/MmlNodes/HtmlNode.js';
+import { ChtmlWrapper } from '../Wrapper.js';
+import { ChtmlWrapperFactory } from '../WrapperFactory.js';
+import {
+  ChtmlXmlNode,
+  ChtmlXmlNodeNTD,
+  ChtmlXmlNodeClass,
+} from './semantics.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { HtmlNode } from '../../../core/MmlTree/MmlNodes/HtmlNode.js';
 
 /*****************************************************************/
 /**
@@ -44,28 +48,35 @@ export interface ChtmlHtmlNodeNTD<N, T, D> extends ChtmlXmlNodeNTD<N, T, D> {}
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlHtmlNodeClass<N, T, D> extends ChtmlXmlNodeClass<N, T, D> {
-  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlHtmlNodeNTD<N, T, D>;
+export interface ChtmlHtmlNodeClass<N, T, D>
+  extends ChtmlXmlNodeClass<N, T, D> {
+  new (
+    factory: ChtmlWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: ChtmlWrapper<N, T, D>
+  ): ChtmlHtmlNodeNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
 /**
  * The ChtmlHtmlNode wrapper class for the MmlHtmlNode class
  */
-export const ChtmlHtmlNode = (function <N, T, D>(): ChtmlHtmlNodeClass<N, T, D> {
-
+export const ChtmlHtmlNode = (function <N, T, D>(): ChtmlHtmlNodeClass<
+  N,
+  T,
+  D
+> {
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
-  return class ChtmlHtmlNode extends ChtmlXmlNode implements ChtmlHtmlNodeNTD<N, T, D> {
-
+  // @ts-expect-error
+  return class ChtmlHtmlNode
+    extends ChtmlXmlNode
+    implements ChtmlHtmlNodeNTD<N, T, D>
+  {
     /**
      * @override
      */
     public static kind = HtmlNode.prototype.kind;
-
   };
-
 })<any, any, any>();

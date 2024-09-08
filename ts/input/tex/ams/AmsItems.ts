@@ -15,21 +15,18 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview StackItems needed for parsing AMS math commands.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-
-import {ArrayItem, EqnArrayItem} from '../base/BaseItems.js';
-import {ParseUtil} from '../ParseUtil.js';
+import { ArrayItem, EqnArrayItem } from '../base/BaseItems.js';
+import { ParseUtil } from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import TexError from '../TexError.js';
-import {TexConstant} from '../TexConstants.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-
+import { TexConstant } from '../TexConstants.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 
 /**
  * Item dealing with multiline environments as a special case of arrays. Note,
@@ -39,7 +36,6 @@ import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
  * Handles tagging information according to the given tagging style.
  */
 export class MultlineItem extends ArrayItem {
-
   /**
    * @override
    */
@@ -48,14 +44,12 @@ export class MultlineItem extends ArrayItem {
     this.factory.configuration.tags.start('multline', true, args[0]);
   }
 
-
   /**
    * @override
    */
   get kind() {
     return 'multline';
   }
-
 
   /**
    * @override
@@ -65,8 +59,12 @@ export class MultlineItem extends ArrayItem {
       ParseUtil.fixInitialMO(this.factory.configuration, this.nodes);
     }
     const shove = this.getProperty('shove');
-    const mtd = this.create('node',
-                            'mtd', this.nodes, shove ? {columnalign: shove} : {});
+    const mtd = this.create(
+      'node',
+      'mtd',
+      this.nodes,
+      shove ? { columnalign: shove } : {}
+    );
     this.setProperty('shove', null);
     this.row.push(mtd);
     this.Clear();
@@ -81,7 +79,8 @@ export class MultlineItem extends ArrayItem {
       throw new TexError(
         'MultlineRowsOneCol',
         'The rows within the %1 environment must have exactly one column',
-        'multline');
+        'multline'
+      );
     }
     let row = this.create('node', 'mtr', this.row);
     this.table.push(row);
@@ -94,23 +93,44 @@ export class MultlineItem extends ArrayItem {
   public EndTable() {
     super.EndTable();
     if (this.table.length) {
-      let m = this.table.length - 1, label = -1;
-      if (!NodeUtil.getAttribute(
-        NodeUtil.getChildren(this.table[0])[0], 'columnalign')) {
-        NodeUtil.setAttribute(NodeUtil.getChildren(this.table[0])[0],
-                              'columnalign', TexConstant.Align.LEFT);
+      let m = this.table.length - 1;
+      let label = -1;
+      if (
+        !NodeUtil.getAttribute(
+          NodeUtil.getChildren(this.table[0])[0],
+          'columnalign'
+        )
+      ) {
+        NodeUtil.setAttribute(
+          NodeUtil.getChildren(this.table[0])[0],
+          'columnalign',
+          TexConstant.Align.LEFT
+        );
       }
-      if (!NodeUtil.getAttribute(
-        NodeUtil.getChildren(this.table[m])[0], 'columnalign')) {
-        NodeUtil.setAttribute(NodeUtil.getChildren(this.table[m])[0],
-                              'columnalign', TexConstant.Align.RIGHT);
+      if (
+        !NodeUtil.getAttribute(
+          NodeUtil.getChildren(this.table[m])[0],
+          'columnalign'
+        )
+      ) {
+        NodeUtil.setAttribute(
+          NodeUtil.getChildren(this.table[m])[0],
+          'columnalign',
+          TexConstant.Align.RIGHT
+        );
       }
       let tag = this.factory.configuration.tags.getTag();
       if (tag) {
-        label = (this.arraydef.side === TexConstant.Align.LEFT ? 0 : this.table.length - 1);
+        label =
+          this.arraydef.side === TexConstant.Align.LEFT
+            ? 0
+            : this.table.length - 1;
         const mtr = this.table[label];
-        const mlabel = this.create('node', 'mlabeledtr',
-                                   [tag].concat(NodeUtil.getChildren(mtr)));
+        const mlabel = this.create(
+          'node',
+          'mlabeledtr',
+          [tag].concat(NodeUtil.getChildren(mtr))
+        );
         NodeUtil.copyAttributes(mtr, mlabel);
         this.table[label] = mlabel;
       }
@@ -123,7 +143,6 @@ export class MultlineItem extends ArrayItem {
  * StackItem for handling flalign, xalignat, and xxalignat environments.
  */
 export class FlalignItem extends EqnArrayItem {
-
   /**
    * @override
    */
@@ -131,12 +150,16 @@ export class FlalignItem extends EqnArrayItem {
     return 'flalign';
   }
 
-
   /**
    * @override
    */
-  constructor(factory: any, public name: string, public numbered: boolean,
-              public padded: boolean, public center: boolean) {
+  constructor(
+    factory: any,
+    public name: string,
+    public numbered: boolean,
+    public padded: boolean,
+    public center: boolean
+  ) {
     super(factory);
     this.factory.configuration.tags.start(name, numbered, numbered);
   }
@@ -149,10 +172,14 @@ export class FlalignItem extends EqnArrayItem {
     const n = this.getProperty('xalignat') as number;
     if (!n) return;
     if (this.row.length > n) {
-      throw new TexError('XalignOverflow', 'Extra %1 in row of %2', '&', this.name);
+      throw new TexError(
+        'XalignOverflow',
+        'Extra %1 in row of %2',
+        '&',
+        this.name
+      );
     }
   }
-
 
   /**
    * @override
@@ -196,12 +223,19 @@ export class FlalignItem extends EqnArrayItem {
     if (this.getProperty('zeroWidthLabel') && mtr.isKind('mlabeledtr')) {
       const mtd = NodeUtil.getChildren(mtr)[0];
       const side = this.factory.configuration.options['tagSide'];
-      const def = {width: 0, ...(side === 'right' ? {lspace: '-1width'} : {})};
-      const mpadded = this.create('node', 'mpadded', NodeUtil.getChildren(mtd), def);
+      const def = {
+        width: 0,
+        ...(side === 'right' ? { lspace: '-1width' } : {}),
+      };
+      const mpadded = this.create(
+        'node',
+        'mpadded',
+        NodeUtil.getChildren(mtd),
+        def
+      );
       mtd.setChildren([mpadded]);
     }
   }
-
 
   /**
    * @override
@@ -220,5 +254,4 @@ export class FlalignItem extends EqnArrayItem {
       }
     }
   }
-
 }

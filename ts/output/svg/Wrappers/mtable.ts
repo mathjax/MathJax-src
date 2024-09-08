@@ -21,17 +21,27 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVG} from '../../svg.js';
-import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
-import {SvgWrapperFactory} from '../WrapperFactory.js';
-import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
-import {CommonMtable, CommonMtableClass, CommonMtableMixin} from '../../common/Wrappers/mtable.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMtable} from '../../../core/MmlTree/MmlNodes/mtable.js';
-import {SvgMtrNTD} from './mtr.js';
-import {SvgMtdNTD} from './mtd.js';
-import {OptionList} from '../../../util/Options.js';
-import {StyleList} from '../../../util/StyleList.js';
+import { SVG } from '../../svg.js';
+import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
+import { SvgWrapperFactory } from '../WrapperFactory.js';
+import {
+  SvgCharOptions,
+  SvgVariantData,
+  SvgDelimiterData,
+  SvgFontData,
+  SvgFontDataClass,
+} from '../FontData.js';
+import {
+  CommonMtable,
+  CommonMtableClass,
+  CommonMtableMixin,
+} from '../../common/Wrappers/mtable.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMtable } from '../../../core/MmlTree/MmlNodes/mtable.js';
+import { SvgMtrNTD } from './mtr.js';
+import { SvgMtdNTD } from './mtd.js';
+import { OptionList } from '../../../util/Options.js';
+import { StyleList } from '../../../util/StyleList.js';
 
 const CLASSPREFIX = 'mjx-';
 
@@ -43,18 +53,27 @@ const CLASSPREFIX = 'mjx-';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SvgMtableNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMtable<
-  N, T, D,
-  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
-  SvgMtrNTD<N, T, D>
-> {
-
+export interface SvgMtableNTD<N, T, D>
+  extends SvgWrapper<N, T, D>,
+    CommonMtable<
+      N,
+      T,
+      D,
+      SVG<N, T, D>,
+      SvgWrapper<N, T, D>,
+      SvgWrapperFactory<N, T, D>,
+      SvgWrapperClass<N, T, D>,
+      SvgCharOptions,
+      SvgVariantData,
+      SvgDelimiterData,
+      SvgFontData,
+      SvgFontDataClass,
+      SvgMtrNTD<N, T, D>
+    > {
   /**
    * The column for labels
    */
   labels: N;
-
 }
 
 /**
@@ -64,14 +83,28 @@ export interface SvgMtableNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMtable
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SvgMtableClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonMtableClass<
-  N, T, D,
-  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
-> {
-  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMtableNTD<N, T, D>;
+export interface SvgMtableClass<N, T, D>
+  extends SvgWrapperClass<N, T, D>,
+    CommonMtableClass<
+      N,
+      T,
+      D,
+      SVG<N, T, D>,
+      SvgWrapper<N, T, D>,
+      SvgWrapperFactory<N, T, D>,
+      SvgWrapperClass<N, T, D>,
+      SvgCharOptions,
+      SvgVariantData,
+      SvgDelimiterData,
+      SvgFontData,
+      SvgFontDataClass
+    > {
+  new (
+    factory: SvgWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: SvgWrapper<N, T, D>
+  ): SvgMtableNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
@@ -79,20 +112,27 @@ export interface SvgMtableClass<N, T, D> extends SvgWrapperClass<N, T, D>, Commo
  * The SvgMtable wrapper class for the MmlMtable class
  */
 export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
-
   const Base = CommonMtableMixin<
-      N, T, D,
-      SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-      SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
-      SvgMtrNTD<N, T, D>,
-      SvgMtableClass<N, T, D>
-    >(SvgWrapper);
+    N,
+    T,
+    D,
+    SVG<N, T, D>,
+    SvgWrapper<N, T, D>,
+    SvgWrapperFactory<N, T, D>,
+    SvgWrapperClass<N, T, D>,
+    SvgCharOptions,
+    SvgVariantData,
+    SvgDelimiterData,
+    SvgFontData,
+    SvgFontDataClass,
+    SvgMtrNTD<N, T, D>,
+    SvgMtableClass<N, T, D>
+  >(SvgWrapper);
 
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class SvgMtable extends Base implements SvgMtableNTD<N, T, D> {
-
     /**
      * @override
      */
@@ -102,24 +142,28 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      * @override
      */
     public static styles: StyleList = {
-      'g[data-mml-node="mtable"] > line[data-line], svg[data-table] > g > line[data-line]': {
-        'stroke-width': '70px',
-        fill: 'none'
-      },
-      'g[data-mml-node="mtable"] > rect[data-frame], svg[data-table] > g > rect[data-frame]': {
-        'stroke-width': '70px',
-        fill: 'none'
-      },
-      'g[data-mml-node="mtable"] > .mjx-dashed, svg[data-table] > g > .mjx-dashed': {
-        'stroke-dasharray': '140'
-      },
-      'g[data-mml-node="mtable"] > .mjx-dotted, svg[data-table] > g > .mjx-dotted': {
-        'stroke-linecap': 'round',
-        'stroke-dasharray': '0,140'
-      },
+      'g[data-mml-node="mtable"] > line[data-line], svg[data-table] > g > line[data-line]':
+        {
+          'stroke-width': '70px',
+          fill: 'none',
+        },
+      'g[data-mml-node="mtable"] > rect[data-frame], svg[data-table] > g > rect[data-frame]':
+        {
+          'stroke-width': '70px',
+          fill: 'none',
+        },
+      'g[data-mml-node="mtable"] > .mjx-dashed, svg[data-table] > g > .mjx-dashed':
+        {
+          'stroke-dasharray': '140',
+        },
+      'g[data-mml-node="mtable"] > .mjx-dotted, svg[data-table] > g > .mjx-dotted':
+        {
+          'stroke-linecap': 'round',
+          'stroke-dasharray': '0,140',
+        },
       'g[data-mml-node="mtable"] > g > svg': {
-        overflow: 'visible'
-      }
+        overflow: 'visible',
+      },
     };
 
     /**
@@ -134,7 +178,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      */
     protected placeRows(svg: N) {
       const equal = this.node.attributes.get('equalrows') as boolean;
-      const {H, D} = this.getTableData();
+      const { H, D } = this.getTableData();
       const HD = this.getEqualRowHeight();
       const rSpace = this.getRowHalfSpacing();
       const rLines = [this.fLine, ...this.rLines, this.fLine];
@@ -157,8 +201,13 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      * @param {number} D        The natural depth of the row
      * @returns {number[]}      The (possibly scaled) height and depth to use
      */
-    protected getRowHD(equal: boolean, HD: number, H: number, D: number): [number, number] {
-      return (equal ? [(HD + H - D) / 2, (HD - H + D) / 2] : [H, D]);
+    protected getRowHD(
+      equal: boolean,
+      HD: number,
+      H: number,
+      D: number
+    ): [number, number] {
+      return equal ? [(HD + H - D) / 2, (HD - H + D) / 2] : [H, D];
     }
 
     /******************************************************************/
@@ -206,7 +255,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
       const lines = this.getRowAttributes('rowlines');
       if (!lines) return;
       const equal = this.node.attributes.get('equalrows') as boolean;
-      const {H, D} = this.getTableData();
+      const { H, D } = this.getTableData();
       const HD = this.getEqualRowHeight();
       const rSpace = this.getRowHalfSpacing();
       const rLines = this.rLines;
@@ -219,7 +268,6 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
         }
         y -= rLines[i];
       }
-
     }
 
     /**
@@ -229,7 +277,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      */
     protected handleFrame(svg: N) {
       if (this.frame && this.fLine) {
-        const {h, d, w} = this.getBBox();
+        const { h, d, w } = this.getBBox();
         const style = this.node.attributes.get('frame') as string;
         this.adaptor.append(svg, this.makeFrame(w, h, d, style));
       }
@@ -242,12 +290,16 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
       if (!this.pWidth) {
         return 0;
       }
-      const {w, L, R} = this.getBBox();
+      const { w, L, R } = this.getBBox();
       const W = L + this.pWidth + R;
       const align = this.getAlignShift()[0];
-      const CW = Math.max(this.isTop ? W : 0, this.container.getWrapWidth(this.containerI)) - L - R;
+      const max = Math.max(
+        this.isTop ? W : 0,
+        this.container.getWrapWidth(this.containerI)
+      );
+      const CW = max - L - R;
       const dw = w - (this.pWidth > CW ? CW : this.pWidth);
-      const dx = (align === 'left' ? 0 : align === 'right' ? dw : dw / 2);
+      const dx = align === 'left' ? 0 : align === 'right' ? dw : dw / 2;
       if (dx) {
         const table = this.svg('g', {}, this.adaptor.childNodes(svg));
         this.place(dx, 0, table);
@@ -275,11 +327,17 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      */
     protected makeFrame(w: number, h: number, d: number, style: string): N {
       const t = this.fLine;
-      return this.svg('rect', this.setLineThickness(t, style, {
-        'data-frame': true, 'class': this.lineClass(style),
-        width: this.fixed(w - t), height: this.fixed(h + d - t),
-        x: this.fixed(t / 2), y: this.fixed(t / 2 - d)
-      }));
+      return this.svg(
+        'rect',
+        this.setLineThickness(t, style, {
+          'data-frame': true,
+          class: this.lineClass(style),
+          width: this.fixed(w - t),
+          height: this.fixed(h + d - t),
+          x: this.fixed(t / 2),
+          y: this.fixed(t / 2 - d),
+        })
+      );
     }
 
     /**
@@ -289,13 +347,20 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      * @returns {N}            The SVG element for the line
      */
     protected makeVLine(x: number, style: string, t: number): N {
-      const {h, d} = this.getBBox();
-      const dt = (style === 'dotted' ? t / 2 : 0);
+      const { h, d } = this.getBBox();
+      const dt = style === 'dotted' ? t / 2 : 0;
       const X = this.fixed(x + t / 2);
-      return this.svg('line', this.setLineThickness(t, style, {
-        'data-line': 'v', 'class': this.lineClass(style),
-        x1: X, y1: this.fixed(dt - d), x2: X, y2: this.fixed(h - dt)
-      }));
+      return this.svg(
+        'line',
+        this.setLineThickness(t, style, {
+          'data-line': 'v',
+          class: this.lineClass(style),
+          x1: X,
+          y1: this.fixed(dt - d),
+          x2: X,
+          y2: this.fixed(h - dt),
+        })
+      );
     }
 
     /**
@@ -306,12 +371,19 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      */
     protected makeHLine(y: number, style: string, t: number): N {
       const w = this.getBBox().w;
-      const dt = (style === 'dotted' ? t / 2 : 0);
+      const dt = style === 'dotted' ? t / 2 : 0;
       const Y = this.fixed(y - t / 2);
-      return this.svg('line', this.setLineThickness(t, style, {
-        'data-line': 'h', 'class': this.lineClass(style),
-        x1: this.fixed(dt), y1: Y, x2: this.fixed(w - dt), y2: Y
-      }));
+      return this.svg(
+        'line',
+        this.setLineThickness(t, style, {
+          'data-line': 'h',
+          class: this.lineClass(style),
+          x1: this.fixed(dt),
+          y1: Y,
+          x2: this.fixed(w - dt),
+          y2: Y,
+        })
+      );
     }
 
     /**
@@ -320,11 +392,16 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      * @param {OptionList} properties   The list of properties to modify
      * @param {OptionList}              The modified properties
      */
-    protected setLineThickness(t: number, style: string, properties: OptionList) {
-      if (t !== .07) {
+    protected setLineThickness(
+      t: number,
+      style: string,
+      properties: OptionList
+    ) {
+      if (t !== 0.07) {
         properties['stroke-thickness'] = this.fixed(t);
         if (style !== 'solid') {
-          properties['stroke-dasharray'] = (style === 'dotted' ? '0,' : '') + this.fixed(2 * t);
+          properties['stroke-dasharray'] =
+            (style === 'dotted' ? '0,' : '') + this.fixed(2 * t);
         }
       }
       return properties;
@@ -355,7 +432,9 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
       // Handle top-level table to make it adapt to container size
       //   but place subtables explicitly
       //
-      this.isTop ? this.topTable(svg, labels, side) : this.subTable(svg, labels, side, dx);
+      this.isTop
+        ? this.topTable(svg, labels, side)
+        : this.subTable(svg, labels, side, dx);
     }
 
     /**
@@ -377,7 +456,15 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
         if (row.node.isKind('mlabeledtr')) {
           const cell = row.childNodes[0] as SvgMtdNTD<N, T, D>;
           y -= space[i] + row.H;
-          row.placeCell(cell, {x: 0, y: y, w: L, lSpace: 0, rSpace: 0, lLine: 0, rLine: 0});
+          row.placeCell(cell, {
+            x: 0,
+            y: y,
+            w: L,
+            lSpace: 0,
+            rSpace: 0,
+            lLine: 0,
+            rLine: 0,
+          });
           y -= row.D + space[i + 1] + this.rLines[i];
           current = adaptor.next(current) as N;
         } else {
@@ -395,28 +482,48 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      */
     protected topTable(svg: N, labels: N, side: string) {
       const adaptor = this.adaptor;
-      const {h, d, w, L, R} = this.getBBox();
+      const { h, d, w, L, R } = this.getBBox();
       const W = L + (this.pWidth || w) + R;
       const LW = this.getTableData().L;
-      const [ , align, shift] = this.getPadAlignShift(side);
-      const dx = shift + (align === 'right' ? -W : align === 'center' ? -W / 2 : 0) + L;
+      const [, align, shift] = this.getPadAlignShift(side);
+      const dx =
+        shift + (align === 'right' ? -W : align === 'center' ? -W / 2 : 0) + L;
       const matrix = 'matrix(1 0 0 -1 0 0)';
       const scale = `scale(${this.jax.fixed((this.font.params.x_height * 1000) / this.metrics.ex, 2)})`;
       const transform = `translate(0 ${this.fixed(h)}) ${matrix} ${scale}`;
-      let table = this.svg('svg', {
-        'data-table': true,
-        preserveAspectRatio: (align === 'left' ? 'xMinYMid' : align === 'right' ? 'xMaxYMid' : 'xMidYMid'),
-        viewBox: [this.fixed(-dx), this.fixed(-h), 1, this.fixed(h + d)].join(' ')
-      }, [
-        this.svg('g', {transform: matrix}, adaptor.childNodes(svg))
-      ]);
-      labels = this.svg('svg', {
-        'data-labels': true,
-        preserveAspectRatio: (side === 'left' ? 'xMinYMid' : 'xMaxYMid'),
-        viewBox: [side === 'left' ? 0 : this.fixed(LW), this.fixed(-h), 1, this.fixed(h + d)].join(' ')
-      }, [labels]);
-      adaptor.append(svg, this.svg('g', {transform: transform}, [table, labels]));
-      this.place(-L, 0, svg);  // remove spacing for L, which is added by the parent during appending
+      let table = this.svg(
+        'svg',
+        {
+          'data-table': true,
+          preserveAspectRatio:
+            align === 'left'
+              ? 'xMinYMid'
+              : align === 'right'
+                ? 'xMaxYMid'
+                : 'xMidYMid',
+          viewBox: `${this.fixed(-dx)} ${this.fixed(-h)} 1 ${this.fixed(h + d)}`,
+        },
+        [this.svg('g', { transform: matrix }, adaptor.childNodes(svg))]
+      );
+      labels = this.svg(
+        'svg',
+        {
+          'data-labels': true,
+          preserveAspectRatio: side === 'left' ? 'xMinYMid' : 'xMaxYMid',
+          viewBox: [
+            side === 'left' ? 0 : this.fixed(LW),
+            this.fixed(-h),
+            1,
+            this.fixed(h + d),
+          ].join(' '),
+        },
+        [labels]
+      );
+      adaptor.append(
+        svg,
+        this.svg('g', { transform: transform }, [table, labels])
+      );
+      this.place(-L, 0, svg); // remove spacing for L, which is added by the parent during appending
     }
 
     /**
@@ -427,24 +534,41 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      */
     protected subTable(svg: N, labels: N, side: string, dx: number) {
       const adaptor = this.adaptor;
-      const {w, L, R} = this.getBBox();
+      const { w, L, R } = this.getBBox();
       const W = L + (this.pWidth || w) + R;
       const labelW = this.getTableData().L;
       const align = this.getAlignShift()[0];
       const CW = Math.max(W, this.container.getWrapWidth(this.containerI));
-      this.place(side === 'left' ?
-                 (align === 'left' ? 0 : align === 'right' ? W - CW + dx : (W - CW) / 2 + dx) - L :
-                 (align === 'left' ? CW : align === 'right' ? W + dx : (CW + W) / 2 + dx) - L - labelW,
-                 0, labels);
+      this.place(
+        side === 'left'
+          ? (align === 'left'
+              ? 0
+              : align === 'right'
+                ? W - CW + dx
+                : (W - CW) / 2 + dx) - L
+          : (align === 'left'
+              ? CW
+              : align === 'right'
+                ? W + dx
+                : (CW + W) / 2 + dx) -
+              L -
+              labelW,
+        0,
+        labels
+      );
       adaptor.append(svg, labels);
     }
 
     /**
      * @override
      */
-    constructor(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent: SvgWrapper<N, T, D> = null) {
+    constructor(
+      factory: SvgWrapperFactory<N, T, D>,
+      node: MmlNode,
+      parent: SvgWrapper<N, T, D> = null
+    ) {
       super(factory, node, parent);
-      const def: OptionList = {'data-labels': true};
+      const def: OptionList = { 'data-labels': true };
       if (this.isTop) {
         def.transform = 'matrix(1 0 0 -1 0 0)';
       }
@@ -463,7 +587,5 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
       const dx = this.handlePWidth(svg);
       this.handleLabels(svg, parents[0], dx);
     }
-
   };
-
 })<any, any, any>();

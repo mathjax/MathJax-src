@@ -21,10 +21,10 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
-import {SvgWrapperFactory} from '../WrapperFactory.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMphantom} from '../../../core/MmlTree/MmlNodes/mphantom.js';
+import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
+import { SvgWrapperFactory } from '../WrapperFactory.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMphantom } from '../../../core/MmlTree/MmlNodes/mphantom.js';
 
 /*****************************************************************/
 /**
@@ -44,9 +44,12 @@ export interface SvgMphantomNTD<N, T, D> extends SvgWrapper<N, T, D> {}
  * @template D  The Document class
  */
 export interface SvgMphantomClass<N, T, D> extends SvgWrapperClass<N, T, D> {
-  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMphantomNTD<N, T, D>;
+  new (
+    factory: SvgWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: SvgWrapper<N, T, D>
+  ): SvgMphantomNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
@@ -54,9 +57,10 @@ export interface SvgMphantomClass<N, T, D> extends SvgWrapperClass<N, T, D> {
  * The SvgMphantom wrapper class for the MmlMphantom class
  */
 export const SvgMphantom = (function <N, T, D>(): SvgMphantomClass<N, T, D> {
-
-  return class SvgMphantom extends SvgWrapper<N, T, D> implements SvgMphantomNTD<N, T, D> {
-
+  return class SvgMphantom
+    extends SvgWrapper<N, T, D>
+    implements SvgMphantomNTD<N, T, D>
+  {
     /**
      * @override
      */
@@ -68,7 +72,5 @@ export const SvgMphantom = (function <N, T, D>(): SvgMphantomClass<N, T, D> {
     public toSVG(parents: N[]) {
       this.standardSvgNodes(parents);
     }
-
   };
-
 })<any, any, any>();

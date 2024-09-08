@@ -21,9 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AbstractMathItem, Location, STATE} from '../../core/MathItem.js';
-import {InputJax} from '../../core/InputJax.js';
-import {HTMLDocument} from './HTMLDocument.js';
+import { AbstractMathItem, Location, STATE } from '../../core/MathItem.js';
+import { InputJax } from '../../core/InputJax.js';
+import { HTMLDocument } from './HTMLDocument.js';
 
 /*****************************************************************/
 /**
@@ -34,7 +34,6 @@ import {HTMLDocument} from './HTMLDocument.js';
  * @template D  The Document class
  */
 export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
-
   /**
    * Easy access to DOM adaptor
    */
@@ -45,9 +44,13 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
   /**
    * @override
    */
-  constructor(math: string, jax: InputJax<N, T, D>, display: boolean = true,
-              start: Location<N, T> = {node: null, n: 0, delim: ''},
-              end: Location<N, T> = {node: null, n: 0, delim: ''}) {
+  constructor(
+    math: string,
+    jax: InputJax<N, T, D>,
+    display: boolean = true,
+    start: Location<N, T> = { node: null, n: 0, delim: '' },
+    end: Location<N, T> = { node: null, n: 0, delim: '' }
+  ) {
     super(math, jax, display, start, end);
   }
 
@@ -70,7 +73,10 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
       if (this.inputJax.processStrings) {
         let node = this.start.node as T;
         if (node === this.end.node) {
-          if (this.end.n && this.end.n < this.adaptor.value(this.end.node).length) {
+          if (
+            this.end.n &&
+            this.end.n < this.adaptor.value(this.end.node).length
+          ) {
             this.adaptor.split(this.end.node, this.end.n);
           }
           if (this.start.n) {
@@ -137,5 +143,4 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
       this.start.n = this.end.n = 0;
     }
   }
-
 }

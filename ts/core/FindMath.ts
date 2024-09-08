@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {userOptions, defaultOptions, OptionList} from '../util/Options.js';
-import {ProtoItem} from './MathItem.js';
+import { userOptions, defaultOptions, OptionList } from '../util/Options.js';
+import { ProtoItem } from './MathItem.js';
 
 /*****************************************************************/
 /**
@@ -60,7 +60,6 @@ export interface FindMath<N, T, _D> {
  * @template D  The Document class
  */
 export abstract class AbstractFindMath<N, T, D> implements FindMath<N, T, D> {
-
   /**
    * The default options for FindMath
    */
@@ -86,5 +85,4 @@ export abstract class AbstractFindMath<N, T, D> implements FindMath<N, T, D> {
    * @return {ProtoItem[]}              The array of proto math items found
    */
   public abstract findMath(where: N | string[]): ProtoItem<N, T>[];
-
 }

@@ -15,23 +15,25 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Explorers based on keyboard events.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-
-import {A11yDocument, HoverRegion, SpeechRegion, LiveRegion} from './Region.js';
-import {STATE} from '../../core/MathItem.js';
+import {
+  A11yDocument,
+  HoverRegion,
+  SpeechRegion,
+  LiveRegion,
+} from './Region.js';
+import { STATE } from '../../core/MathItem.js';
 import type { ExplorerMathItem } from '../explorer.js';
-import {Explorer, AbstractExplorer} from './Explorer.js';
-import {ExplorerPool} from './ExplorerPool.js';
-import {MmlNode} from '../../core/MmlTree/MmlNode.js';
+import { Explorer, AbstractExplorer } from './Explorer.js';
+import { ExplorerPool } from './ExplorerPool.js';
+import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import { honk, InPlace } from '../speech/SpeechUtil.js';
-import {Sre} from '../sre.js';
-
+import { Sre } from '../sre.js';
 
 /**
  * Interface for keyboard explorers. Adds the necessary keyboard events.
@@ -39,7 +41,6 @@ import {Sre} from '../sre.js';
  * @extends {Explorer}
  */
 export interface KeyExplorer extends Explorer {
-
   /**
    * Function to be executed on key down.
    * @param {KeyboardEvent} event The keyboard event.
@@ -68,16 +69,14 @@ export interface KeyExplorer extends Explorer {
    * A method that is executed if no move is executed.
    */
   NoMove(): void;
-
 }
-
 
 /**
  * Selectors for walking.
  */
 const roles = ['tree', 'group', 'treeitem'];
-const nav = roles.map(x => `[role="${x}"]`).join(',');
-const prevNav = roles.map(x => `[tabindex="0"][role="${x}"]`).join(',');
+const nav = roles.map((x) => `[role="${x}"]`).join(',');
+const prevNav = roles.map((x) => `[tabindex="0"][role="${x}"]`).join(',');
 
 function isContainer(el: HTMLElement) {
   return el.matches('mjx-container');
@@ -89,8 +88,10 @@ function isContainer(el: HTMLElement) {
  *
  * @template T  The type that is consumed by the Region of this explorer.
  */
-export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplorer {
-
+export class SpeechExplorer
+  extends AbstractExplorer<string>
+  implements KeyExplorer
+{
   /**
    * Flag indicating if the explorer is attached to an object.
    */
@@ -143,15 +144,13 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   /**
    * @override
    */
-  protected events: [string, (x: Event) => void][] =
-    super.Events().concat(
-      [
-        ['keydown', this.KeyDown.bind(this)],
-        ['mousedown', this.MouseDown.bind(this)],
-        ['click', this.Click.bind(this)],
-        ['focusin', this.FocusIn.bind(this)],
-        ['focusout', this.FocusOut.bind(this)]
-      ]);
+  protected events: [string, (x: Event) => void][] = super.Events().concat([
+    ['keydown', this.KeyDown.bind(this)],
+    ['mousedown', this.MouseDown.bind(this)],
+    ['click', this.Click.bind(this)],
+    ['focusin', this.FocusIn.bind(this)],
+    ['focusout', this.FocusOut.bind(this)],
+  ]);
 
   /**
    * Records a mouse down event on the element. This ensures that focus events
@@ -183,7 +182,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       }
       this.current = clicked;
       if (!this.triggerLinkMouse()) {
-        this.Start()
+        this.Start();
       }
       event.preventDefault();
     }
@@ -291,17 +290,18 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     return null;
   }
 
-  protected moves: Map<string, (node: HTMLElement) => HTMLElement | null> = new Map([
-    ['ArrowDown', (node: HTMLElement) => node.querySelector(nav)],
-    ['ArrowUp', (node: HTMLElement) => node.parentElement.closest(nav)],
-    ['ArrowLeft', this.prevSibling.bind(this)],
-    ['ArrowRight', this.nextSibling.bind(this)],
-    ['>', this.nextRules.bind(this)],
-    ['<', this.nextStyle.bind(this)],
-    ['x', this.summary.bind(this)],
-    ['Enter', this.expand.bind(this)],
-    ['d', this.depth.bind(this)],
-  ]);
+  protected moves: Map<string, (node: HTMLElement) => HTMLElement | null> =
+    new Map([
+      ['ArrowDown', (node: HTMLElement) => node.querySelector(nav)],
+      ['ArrowUp', (node: HTMLElement) => node.parentElement.closest(nav)],
+      ['ArrowLeft', this.prevSibling.bind(this)],
+      ['ArrowRight', this.nextSibling.bind(this)],
+      ['>', this.nextRules.bind(this)],
+      ['<', this.nextStyle.bind(this)],
+      ['x', this.summary.bind(this)],
+      ['Enter', this.expand.bind(this)],
+      ['d', this.depth.bind(this)],
+    ]);
 
   /**
    * Checks if a node is actionable, i.e., corresponds to an maction.
@@ -430,18 +430,18 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    * @constructor
    * @extends {AbstractKeyExplorer}
    */
-  constructor(public document: A11yDocument,
-              public pool: ExplorerPool,
-              public region: SpeechRegion,
-              protected node: HTMLElement,
-              public brailleRegion: LiveRegion,
-              public magnifyRegion: HoverRegion,
-              _mml: MmlNode,
-              public item: ExplorerMathItem
-             ) {
+  constructor(
+    public document: A11yDocument,
+    public pool: ExplorerPool,
+    public region: SpeechRegion,
+    protected node: HTMLElement,
+    public brailleRegion: LiveRegion,
+    public magnifyRegion: HoverRegion,
+    _mml: MmlNode,
+    public item: ExplorerMathItem
+  ) {
     super(document, pool, null, node);
   }
-
 
   /**
    * @override
@@ -450,7 +450,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     // In case the speech is not attached yet, we generate it
     if (this.item.state() < STATE.ATTACHSPEECH) {
       this.item.attachSpeech(this.document);
-    };
+    }
     if (!this.attached) return;
     if (this.node.hasAttribute('tabindex')) {
       this.node.removeAttribute('tabindex');
@@ -460,19 +460,24 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
       // Here we refocus after a restart: We either find the previously focused
       // node or we assume that it is inside the collapsed expression tree and
       // focus on the collapsed element.
-      this.current = this.node.querySelector(`[data-semantic-id="${this.restarted}"]`)
+      this.current = this.node.querySelector(
+        `[data-semantic-id="${this.restarted}"]`
+      );
       if (!this.current) {
         const dummies = Array.from(
-          this.node.querySelectorAll('[data-semantic-type="dummy"]'))
-          .map(x => x.getAttribute('data-semantic-id'))
+          this.node.querySelectorAll('[data-semantic-type="dummy"]')
+        ).map((x) => x.getAttribute('data-semantic-id'));
         let internal = this.generators.element.querySelector(
-          `[data-semantic-id="${this.restarted}"]`);
+          `[data-semantic-id="${this.restarted}"]`
+        );
         while (internal && internal !== this.generators.element) {
           let sid = internal.getAttribute('data-semantic-id');
           if (dummies.indexOf(sid) !== -1) {
-            this.current = this.node.querySelector(`[data-semantic-id="${sid}"]`);
+            this.current = this.node.querySelector(
+              `[data-semantic-id="${sid}"]`
+            );
             break;
-          };
+          }
           internal = internal.parentNode as Element;
         }
       }
@@ -486,27 +491,26 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     const options = this.document.options;
     let promise = Sre.sreReady();
     if (this.generators.update(options)) {
-      promise = promise.then(
-        () => this.Speech()
-      );
-    };
+      promise = promise.then(() => this.Speech());
+    }
     this.current.setAttribute('tabindex', '0');
     this.current.focus();
     super.Start();
     if (options.a11y.subtitles && options.a11y.speech && options.enableSpeech) {
-      promise.then(
-        () => this.region.Show(this.node, this.highlighter));
+      promise.then(() => this.region.Show(this.node, this.highlighter));
     }
-    if (options.a11y.viewBraille && options.a11y.braille && options.enableBraille) {
-      promise.then(
-        () => this.brailleRegion.Show(this.node, this.highlighter));
+    if (
+      options.a11y.viewBraille &&
+      options.a11y.braille &&
+      options.enableBraille
+    ) {
+      promise.then(() => this.brailleRegion.Show(this.node, this.highlighter));
     }
     if (options.a11y.keyMagnifier) {
       this.magnifyRegion.Show(this.current, this.highlighter);
     }
     this.Update();
   }
-
 
   /**
    * @override
@@ -530,8 +534,9 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
    * Computes the speech for the current expression.
    */
   public Speech() {
-    this.item.outputData.speech =
-      this.generators.updateSpeech(this.item.typesetRoot);
+    this.item.outputData.speech = this.generators.updateSpeech(
+      this.item.typesetRoot
+    );
   }
 
   /**
@@ -562,7 +567,7 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
         return;
       }
       if (this.active && this.triggerLinkKeyboard(event)) {
-        this.Stop()
+        this.Stop();
         this.stopEvent(event);
         return;
       }
@@ -609,9 +614,9 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
   }
 
   protected triggerLink(node: HTMLElement) {
-    let focus = node?.
-      getAttribute('data-semantic-postfix')?.
-      match(/(^| )link($| )/);
+    let focus = node
+      ?.getAttribute('data-semantic-postfix')
+      ?.match(/(^| )link($| )/);
     if (focus) {
       node.parentNode.dispatchEvent(new MouseEvent('click'));
       return true;
@@ -654,8 +659,9 @@ export class SpeechExplorer extends AbstractExplorer<string> implements KeyExplo
     const id = node.getAttribute('data-semantic-id');
     const stree = this.generators.speechGenerator.getRebuilt()?.stree;
     if (!stree) return null;
-    const snode = stree.root.querySelectorAll((x: any) => x.id.toString() === id)[0];
+    const snode = stree.root.querySelectorAll(
+      (x: any) => x.id.toString() === id
+    )[0];
     return snode || stree.root;
   }
-
 }

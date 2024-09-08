@@ -15,28 +15,29 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Postfilter utility for the Bussproofs package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-
 import ParseOptions from '../ParseOptions.js';
 import NodeUtil from '../NodeUtil.js';
-import {UnitUtil} from '../UnitUtil.js';
+import { UnitUtil } from '../UnitUtil.js';
 
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {Property} from '../../../core/Tree/Node.js';
-import {MathItem} from '../../../core/MathItem.js';
-import {MathDocument} from '../../../core/MathDocument.js';
-
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { Property } from '../../../core/Tree/Node.js';
+import { MathItem } from '../../../core/MathItem.js';
+import { MathDocument } from '../../../core/MathDocument.js';
 
 type MATHITEM = MathItem<any, any, any>;
 type MATHDOCUMENT = MathDocument<any, any, any>;
 
-type FilterData = {math: MATHITEM, document: MATHDOCUMENT, data: ParseOptions};
+type FilterData = {
+  math: MATHITEM;
+  document: MATHDOCUMENT;
+  data: ParseOptions;
+};
 
 /**
  *  Global constants local to the module. They instantiate an output jax for
@@ -45,17 +46,15 @@ type FilterData = {math: MATHITEM, document: MATHDOCUMENT, data: ParseOptions};
 let doc: MATHDOCUMENT = null;
 let item: MATHITEM = null;
 
-
 /**
  * Get the bounding box of a node.
  * @param {MmlNode} node The target node.
  */
-let getBBox = function(node: MmlNode) {
+let getBBox = function (node: MmlNode) {
   item.root = node;
-    let {w: width} = (doc.outputJax as any).getBBox(item, doc);
+  let { w: width } = (doc.outputJax as any).getBBox(item, doc);
   return width;
 };
-
 
 /**
  * Get the actual table that represents the inference rule, i.e., the rule
@@ -64,7 +63,7 @@ let getBBox = function(node: MmlNode) {
  * @param {MmlNode} node The out node representing the inference.
  * @return {MmlNode} The actual table representing the inference rule.
  */
-let getRule = function(node: MmlNode): MmlNode {
+let getRule = function (node: MmlNode): MmlNode {
   let i = 0;
   while (node && !NodeUtil.isType(node, 'mtable')) {
     if (NodeUtil.isType(node, 'text')) {
@@ -81,7 +80,6 @@ let getRule = function(node: MmlNode): MmlNode {
   return node;
 };
 
-
 /*******************************
  * Convenience methods for retrieving bits of the proof tree.
  */
@@ -92,11 +90,10 @@ let getRule = function(node: MmlNode): MmlNode {
  * @param {string} direction Up or down.
  * @return {MmlNode} The premisses.
  */
-let getPremises = function(rule: MmlNode, direction: string): MmlNode {
-  return rule.childNodes[direction === 'up' ? 1 : 0].childNodes[0].
-    childNodes[0].childNodes[0].childNodes[0];
+let getPremises = function (rule: MmlNode, direction: string): MmlNode {
+  return rule.childNodes[direction === 'up' ? 1 : 0].childNodes[0].childNodes[0]
+    .childNodes[0].childNodes[0];
 };
-
 
 /**
  * Gets nth premise.
@@ -104,30 +101,27 @@ let getPremises = function(rule: MmlNode, direction: string): MmlNode {
  * @param {number} n Number of premise to get.
  * @return {MmlNode} The nth premise.
  */
-let getPremise = function(premises: MmlNode, n: number): MmlNode {
+let getPremise = function (premises: MmlNode, n: number): MmlNode {
   return premises.childNodes[n].childNodes[0].childNodes[0];
 };
-
 
 /**
  * Gets first premise.
  * @param {MmlNode} premises The premises.
  * @return {MmlNode} The first premise.
  */
-let firstPremise = function(premises: MmlNode): MmlNode {
+let firstPremise = function (premises: MmlNode): MmlNode {
   return getPremise(premises, 0);
 };
-
 
 /**
  * Gets last premise.
  * @param {MmlNode} premises The premises.
  * @return {MmlNode} The last premise.
  */
-let lastPremise = function(premises: MmlNode): MmlNode {
+let lastPremise = function (premises: MmlNode): MmlNode {
   return getPremise(premises, premises.childNodes.length - 1);
 };
-
 
 /**
  * Get conclusion in an inference rule.
@@ -135,10 +129,10 @@ let lastPremise = function(premises: MmlNode): MmlNode {
  * @param {string} direction Up or down.
  * @return {MmlNode} The conclusion.
  */
-let getConclusion = function(rule: MmlNode, direction: string): MmlNode {
-  return rule.childNodes[direction === 'up' ? 0 : 1].childNodes[0].childNodes[0].childNodes[0];
+let getConclusion = function (rule: MmlNode, direction: string): MmlNode {
+  return rule.childNodes[direction === 'up' ? 0 : 1].childNodes[0].childNodes[0]
+    .childNodes[0];
 };
-
 
 /**
  * Gets the actual column element in an inference rule. I.e., digs down through
@@ -146,47 +140,44 @@ let getConclusion = function(rule: MmlNode, direction: string): MmlNode {
  * @param {MmlNode} inf The rule.
  * @return {MmlNode} The mtd element.
  */
-let getColumn = function(inf: MmlNode): MmlNode {
+let getColumn = function (inf: MmlNode): MmlNode {
   while (inf && !NodeUtil.isType(inf, 'mtd')) {
     inf = inf.parent;
   }
   return inf;
 };
 
-
 /**
  * Gets the next sibling of an inference rule.
  * @param {MmlNode} inf The inference rule.
  * @return {MmlNode} The next sibling.
  */
-let nextSibling = function(inf: MmlNode): MmlNode {
+let nextSibling = function (inf: MmlNode): MmlNode {
   return inf.parent.childNodes[inf.parent.childNodes.indexOf(inf) + 1];
 };
-
 
 /**
  * Gets the previous sibling of an inference rule.
  * @param {MmlNode} inf The inference rule.
  * @return {MmlNode} The previous sibling.
  */
-// @ts-ignore
-let previousSibling = function(inf: MmlNode): MmlNode {
+// TODO: Currently not used, but left there for a future extension.
+// @ts-expect-error
+let previousSibling = function (inf: MmlNode): MmlNode {
   return inf.parent.childNodes[inf.parent.childNodes.indexOf(inf) - 1];
 };
-
 
 /**
  * Get the parent inference rule.
  * @param {MmlNode} inf The inference rule.
  * @return {MmlNode} Its parent.
  */
-let getParentInf = function(inf: MmlNode): MmlNode {
+let getParentInf = function (inf: MmlNode): MmlNode {
   while (inf && getProperty(inf, 'inference') == null) {
     inf = inf.parent;
   }
   return inf;
 };
-
 
 // Computes bbox spaces
 //
@@ -201,7 +192,11 @@ let getParentInf = function(inf: MmlNode): MmlNode {
  * @param {boolean=} right True for right, o/w left.
  * @return {number} The spacing next to the rule.
  */
-let getSpaces = function(inf: MmlNode, rule: MmlNode, right: boolean = false): number {
+let getSpaces = function (
+  inf: MmlNode,
+  rule: MmlNode,
+  right: boolean = false
+): number {
   let result = 0;
   if (inf === rule) {
     return result;
@@ -225,7 +220,6 @@ let getSpaces = function(inf: MmlNode, rule: MmlNode, right: boolean = false): n
   return result;
 };
 
-
 // - Get rule T from Wrapper W.
 // - Get conclusion C in T.
 // - w: Preceding/following space/label.
@@ -236,16 +230,15 @@ let getSpaces = function(inf: MmlNode, rule: MmlNode, right: boolean = false): n
  * @param {boolean=} right True if adjustments are on the right.
  * @return {number} The adjustment value.
  */
-let adjustValue = function(inf: MmlNode, right: boolean = false): number {
+let adjustValue = function (inf: MmlNode, right: boolean = false): number {
   let rule = getRule(inf);
   let conc = getConclusion(rule, getProperty(rule, 'inferenceRule') as string);
   // TODO:  Here we have to improve sequent adjustment!
   let w = getSpaces(inf, rule, right);
   let x = getBBox(rule);
   let y = getBBox(conc);
-  return w + ((x - y) / 2);
+  return w + (x - y) / 2;
 };
-
 
 /**
  * Adds (positive or negative) space in the column containing the inference rule.
@@ -254,11 +247,14 @@ let adjustValue = function(inf: MmlNode, right: boolean = false): number {
  * @param {number} space The space to be added.
  * @param {boolean=} right True if adjustment is on the right.
  */
-let addSpace = function(config: ParseOptions, inf: MmlNode,
-                        space: number, right: boolean = false) {
+let addSpace = function (
+  config: ParseOptions,
+  inf: MmlNode,
+  space: number,
+  right: boolean = false
+) {
   if (space === 0) return;
-  if (getProperty(inf, 'inferenceRule') ||
-      getProperty(inf, 'labelledRule')) {
+  if (getProperty(inf, 'inferenceRule') || getProperty(inf, 'labelledRule')) {
     const mrow = config.nodeFactory.create('node', 'mrow');
     inf.parent.replaceChild(mrow, inf);
     mrow.setChildren([inf]);
@@ -270,12 +266,18 @@ let addSpace = function(config: ParseOptions, inf: MmlNode,
   let mspace = inf.childNodes[index];
   if (NodeUtil.isType(mspace, 'mspace')) {
     NodeUtil.setAttribute(
-      mspace, 'width',
-      UnitUtil.em(UnitUtil.dimen2em(
-        NodeUtil.getAttribute(mspace, 'width') as string) + space));
+      mspace,
+      'width',
+      UnitUtil.em(
+        UnitUtil.dimen2em(NodeUtil.getAttribute(mspace, 'width') as string) +
+          space
+      )
+    );
     return;
   }
-  mspace = config.nodeFactory.create('node', 'mspace', [], {width: UnitUtil.em(space)});
+  mspace = config.nodeFactory.create('node', 'mspace', [], {
+    width: UnitUtil.em(space),
+  });
   if (right) {
     inf.appendChild(mspace);
     return;
@@ -284,15 +286,14 @@ let addSpace = function(config: ParseOptions, inf: MmlNode,
   inf.childNodes.unshift(mspace);
 };
 
-
 /**
  * Propagates properties up the tree.
  * @param {MmlNode} src The source node.
  * @param {MmlNode} dest The destination node.
  */
-let moveProperties = function(src: MmlNode, dest: MmlNode) {
+let moveProperties = function (src: MmlNode, dest: MmlNode) {
   let props = ['inference', 'proof', 'labelledRule'];
-  props.forEach(x => {
+  props.forEach((x) => {
     let value = getProperty(src, x);
     if (value != null) {
       setProperty(dest, x, value);
@@ -300,8 +301,6 @@ let moveProperties = function(src: MmlNode, dest: MmlNode) {
     }
   });
 };
-
-
 
 /********************************
  * The following methods deal with sequents. There are still issues with the
@@ -314,12 +313,12 @@ let moveProperties = function(src: MmlNode, dest: MmlNode) {
  * Method to adjust sequent positioning after the tree is computed.
  * @param {ParseOptions} config Parser configuration options.
  */
-let adjustSequents = function(config: ParseOptions) {
+let adjustSequents = function (config: ParseOptions) {
   let sequents = config.nodeLists['sequent'];
   if (!sequents) {
     return;
   }
-  for (let i = sequents.length - 1, seq; seq = sequents[i]; i--) {
+  for (let i = sequents.length - 1, seq; (seq = sequents[i]); i--) {
     if (getProperty(seq, 'sequentProcessed')) {
       removeProperty(seq, 'sequentProcessed');
       continue;
@@ -333,12 +332,17 @@ let adjustSequents = function(config: ParseOptions) {
     while (getProperty(inf, 'inference') === 1) {
       // In case we have a table with a label.
       inf = getRule(inf);
-      let premise = firstPremise(getPremises(inf, getProperty(inf, 'inferenceRule') as string));
-      let sequent = (getProperty(premise, 'inferenceRule')) ?
-        // If the first premise is an inference rule, check the conclusions for a sequent.
-        getConclusion(premise, getProperty(premise, 'inferenceRule') as string) :
-        // Otherwise it is a hyp and we have to check the formula itself.
-        premise;
+      let premise = firstPremise(
+        getPremises(inf, getProperty(inf, 'inferenceRule') as string)
+      );
+      let sequent = getProperty(premise, 'inferenceRule')
+        ? // If the first premise is an inference rule, check the conclusions for a sequent.
+          getConclusion(
+            premise,
+            getProperty(premise, 'inferenceRule') as string
+          )
+        : // Otherwise it is a hyp and we have to check the formula itself.
+          premise;
       if (getProperty(sequent, 'sequent')) {
         seq = sequent.childNodes[0];
         collect.push(seq);
@@ -350,7 +354,6 @@ let adjustSequents = function(config: ParseOptions) {
   }
 };
 
-
 /**
  * Add spaces to the sequents where necessary.
  * @param {ParseOptions} config Parser configuration options.
@@ -359,10 +362,16 @@ let adjustSequents = function(config: ParseOptions) {
  * @param {string} direction Left or right of the turnstyle.
  * @param {number} width The space to add to the formulas.
  */
-const addSequentSpace = function(config: ParseOptions, sequent: MmlNode,
-                                 position: number, direction: string, width: number) {
-  let mspace = config.nodeFactory.create('node', 'mspace', [],
-                                         {width: UnitUtil.em(width)});
+const addSequentSpace = function (
+  config: ParseOptions,
+  sequent: MmlNode,
+  position: number,
+  direction: string,
+  width: number
+) {
+  let mspace = config.nodeFactory.create('node', 'mspace', [], {
+    width: UnitUtil.em(width),
+  });
   if (direction === 'left') {
     let row = sequent.childNodes[position].childNodes[0];
     mspace.parent = row;
@@ -372,7 +381,6 @@ const addSequentSpace = function(config: ParseOptions, sequent: MmlNode,
   }
   setProperty(sequent.parent, 'sequentAdjust_' + direction, width);
 };
-
 
 /**
  * Adjusts the sequent positioning for a list of inference rules by pairwise
@@ -390,19 +398,33 @@ const addSequentSpace = function(config: ParseOptions, sequent: MmlNode,
  * @param {ParseOptions} config Parser configuration options.
  * @param {MmlNode[]} sequents The list of sequents.
  */
-const adjustSequentPairwise = function(config: ParseOptions, sequents: MmlNode[]) {
+const adjustSequentPairwise = function (
+  config: ParseOptions,
+  sequents: MmlNode[]
+) {
   let top = sequents.pop();
   while (sequents.length) {
     let bottom = sequents.pop();
     let [left, right] = compareSequents(top, bottom);
     if (getProperty(top.parent, 'axiom')) {
-      addSequentSpace(config, left < 0 ? top : bottom, 0, 'left', Math.abs(left));
-      addSequentSpace(config, right < 0 ? top : bottom, 2, 'right', Math.abs(right));
+      addSequentSpace(
+        config,
+        left < 0 ? top : bottom,
+        0,
+        'left',
+        Math.abs(left)
+      );
+      addSequentSpace(
+        config,
+        right < 0 ? top : bottom,
+        2,
+        'right',
+        Math.abs(right)
+      );
     }
     top = bottom;
   }
 };
-
 
 /**
  * Compares the top and bottom sequent of a inference rule
@@ -414,7 +436,10 @@ const adjustSequentPairwise = function(config: ParseOptions, sequents: MmlNode[]
  * @param {MmlNode} bottom Bottom sequent.
  * @return {[number, number]} The delta for left and right side of the sequents.
  */
-const compareSequents = function(top: MmlNode, bottom: MmlNode): [number, number] {
+const compareSequents = function (
+  top: MmlNode,
+  bottom: MmlNode
+): [number, number] {
   const tr = getBBox(top.childNodes[2]);
   const br = getBBox(bottom.childNodes[2]);
   const tl = getBBox(top.childNodes[0]);
@@ -480,17 +505,20 @@ const compareSequents = function(top: MmlNode, bottom: MmlNode): [number, number
  * Implements the above algorithm.
  * @param {FilterData} arg The parser configuration and mathitem to filter.
  */
-export let balanceRules = function(arg: FilterData) {
+export let balanceRules = function (arg: FilterData) {
   item = new arg.document.options.MathItem('', null, arg.math.display);
   let config = arg.data;
   adjustSequents(config);
   let inferences = config.nodeLists['inference'] || [];
-  let maxAdjust = 0;  // accumulated adjsutment for complete proof
+  let maxAdjust = 0; // accumulated adjsutment for complete proof
   for (let inf of inferences) {
     let isProof = getProperty(inf, 'proof');
     // This currently only works with downwards rules.
     let rule = getRule(inf);
-    let premises = getPremises(rule, getProperty(rule, 'inferenceRule') as string);
+    let premises = getPremises(
+      rule,
+      getProperty(rule, 'inferenceRule') as string
+    );
     let premiseF = firstPremise(premises);
     let leftAdjust = 0;
     if (getProperty(premiseF, 'inference')) {
@@ -510,7 +538,7 @@ export let balanceRules = function(arg: FilterData) {
     let adjust = adjustValue(premiseL, true);
     addSpace(config, premiseL, -adjust, true);
     let w = getSpaces(inf, rule, true);
-    const delta = (getBBox(rule) - getBBox(premises.parent))/ 2; // offset from position above rule to end of rule
+    const delta = (getBBox(rule) - getBBox(premises.parent)) / 2; // offset from position above rule to end of rule
     addSpace(config, inf, delta < leftAdjust ? -delta : -leftAdjust);
     maxAdjust = Math.max(0, Math.max(0, maxAdjust + adjust - w) - delta);
     let column: MmlNode;
@@ -518,16 +546,22 @@ export let balanceRules = function(arg: FilterData) {
       // After the tree we add a space with the accumulated max value.
       // If the element is not in a column, we know we have some noise and the
       // proof is an mrow around the final inference.
-      addSpace(config,
-               // in case the rule has been moved into an mrow in Left Adjust.
-               getProperty(inf, 'proof') ? inf : inf.parent, maxAdjust, true);
+      addSpace(
+        config,
+        // in case the rule has been moved into an mrow in Left Adjust.
+        getProperty(inf, 'proof') ? inf : inf.parent,
+        maxAdjust,
+        true
+      );
       continue;
     }
     let sibling = nextSibling(column);
     if (sibling) {
       // If there is a next column, it is the empty one and we make it wider by
       // the accumulated max value.
-      const pos = config.nodeFactory.create('node', 'mspace', [],  {width: UnitUtil.em(maxAdjust)});
+      const pos = config.nodeFactory.create('node', 'mspace', [], {
+        width: UnitUtil.em(maxAdjust),
+      });
       sibling.appendChild(pos);
       maxAdjust = 0;
       continue;
@@ -537,7 +571,6 @@ export let balanceRules = function(arg: FilterData) {
     }
   }
 };
-
 
 /**
  * Facilities for semantically relevant properties. These are used by SRE and
@@ -553,10 +586,13 @@ const prefix_pattern = RegExp('^' + property_prefix);
  * @param {string} property The property to set.
  * @param {Property} value Its value.
  */
-export let setProperty = function(node: MmlNode, property: string, value: Property) {
+export let setProperty = function (
+  node: MmlNode,
+  property: string,
+  value: Property
+) {
   NodeUtil.setProperty(node, property_prefix + property, value);
 };
-
 
 /**
  * Gets a bussproofs property.
@@ -564,29 +600,27 @@ export let setProperty = function(node: MmlNode, property: string, value: Proper
  * @param {string} property The property to retrieve.
  * @return {Property} The property object.
  */
-export let getProperty = function(node: MmlNode, property: string): Property {
+export let getProperty = function (node: MmlNode, property: string): Property {
   return NodeUtil.getProperty(node, property_prefix + property);
 };
-
 
 /**
  * Removes a bussproofs property.
  * @param {MmlNode} node
  * @param {string} property
  */
-export let removeProperty = function(node: MmlNode, property: string) {
+export let removeProperty = function (node: MmlNode, property: string) {
   node.removeProperty(property_prefix + property);
 };
-
 
 /**
  * Postprocessor that adds properties as attributes to the nodes.
  * @param {FilterData} arg The object to post-process.
  */
-export let makeBsprAttributes = function(arg: FilterData) {
+export let makeBsprAttributes = function (arg: FilterData) {
   arg.data.root.walkTree((mml: MmlNode, _data?: any) => {
     let attr: string[] = [];
-    mml.getPropertyNames().forEach(x => {
+    mml.getPropertyNames().forEach((x) => {
       if (x.match(prefix_pattern)) {
         attr.push(x + ':' + mml.getProperty(x));
       }
@@ -604,7 +638,9 @@ export let makeBsprAttributes = function(arg: FilterData) {
 export let saveDocument = function (arg: FilterData) {
   doc = arg.document;
   if (!('getBBox' in doc.outputJax)) {
-    throw Error('The bussproofs extension requires an output jax with a getBBox() method');
+    throw Error(
+      'The bussproofs extension requires an output jax with a getBBox() method'
+    );
   }
 };
 

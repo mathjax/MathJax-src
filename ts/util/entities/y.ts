@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     YAcy: '\u042F',
     YIcy: '\u0407',
     YUcy: '\u042E',
@@ -31,5 +32,7 @@ Entities.add({
     ycy: '\u044B',
     yicy: '\u0457',
     yucy: '\u044E',
-    yuml: '\u00FF'
-}, 'y');
+    yuml: '\u00FF',
+  },
+  'y'
+);

@@ -21,14 +21,20 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MmlNode, TextNode, XMLNode, TEXCLASS, TEXCLASSNAMES} from './MmlNode.js';
-import {MmlMo} from './MmlNodes/mo.js';
-import {MmlMi} from './MmlNodes/mi.js';
-import {HtmlNode} from './MmlNodes/HtmlNode.js';
-import {MmlFactory} from './MmlFactory.js';
-import {AbstractVisitor} from '../Tree/Visitor.js';
-import {PropertyList} from '../Tree/Node.js';
-import {lookup} from '../../util/Options.js';
+import {
+  MmlNode,
+  TextNode,
+  XMLNode,
+  TEXCLASS,
+  TEXCLASSNAMES,
+} from './MmlNode.js';
+import { MmlMo } from './MmlNodes/mo.js';
+import { MmlMi } from './MmlNodes/mi.js';
+import { HtmlNode } from './MmlNodes/HtmlNode.js';
+import { MmlFactory } from './MmlFactory.js';
+import { AbstractVisitor } from '../Tree/Visitor.js';
+import { PropertyList } from '../Tree/Node.js';
+import { lookup } from '../../util/Options.js';
 
 export const DATAMJX = 'data-mjx-';
 
@@ -39,32 +45,31 @@ export const DATAMJX = 'data-mjx-';
  */
 
 export class MmlVisitor extends AbstractVisitor<MmlNode> {
-
   /**
    * MmlNode kinds to replace with other names
    */
   public static rename: PropertyList = {
-    TeXAtom: 'mrow'
+    TeXAtom: 'mrow',
   };
 
   /**
    * Translations for the internal mathvariants
    */
   public static variants: PropertyList = {
-    '-tex-calligraphic':      'script',
+    '-tex-calligraphic': 'script',
     '-tex-bold-calligraphic': 'bold-script',
-    '-tex-oldstyle':          'normal',
-    '-tex-bold-oldstyle':     'bold',
-    '-tex-mathit':            'italic'
+    '-tex-oldstyle': 'normal',
+    '-tex-bold-oldstyle': 'bold',
+    '-tex-mathit': 'italic',
   };
 
   /**
    * Attributes to include on every element of a given kind
    */
-  public static defaultAttributes: {[kind: string]: PropertyList} = {
+  public static defaultAttributes: { [kind: string]: PropertyList } = {
     math: {
-      xmlns: 'http://www.w3.org/1998/Math/MathML'
-    }
+      xmlns: 'http://www.w3.org/1998/Math/MathML',
+    },
   };
 
   /**
@@ -159,19 +164,26 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
     const data = {} as PropertyList;
     const variant = node.attributes.getExplicit('mathvariant') as string;
     const variants = (this.constructor as typeof MmlVisitor).variants;
-    variant && (node.getProperty('ignore-variant') || variants.hasOwnProperty(variant)) &&
+    variant &&
+      (node.getProperty('ignore-variant') ||
+        variants.hasOwnProperty(variant)) &&
       this.setDataAttribute(data, 'variant', variant);
-    node.getProperty('variantForm') && this.setDataAttribute(data, 'alternate', '1');
-    node.getProperty('pseudoscript') && this.setDataAttribute(data, 'pseudoscript', 'true');
-    node.getProperty('autoOP') === false && this.setDataAttribute(data, 'auto-op', 'false');
+    node.getProperty('variantForm') &&
+      this.setDataAttribute(data, 'alternate', '1');
+    node.getProperty('pseudoscript') &&
+      this.setDataAttribute(data, 'pseudoscript', 'true');
+    node.getProperty('autoOP') === false &&
+      this.setDataAttribute(data, 'auto-op', 'false');
     const vbox = node.getProperty('vbox') as string;
     vbox && this.setDataAttribute(data, 'vbox', vbox);
     const scriptalign = node.getProperty('scriptalign') as string;
     scriptalign && this.setDataAttribute(data, 'script-align', scriptalign);
     const accent = node.getProperty('mathaccent') as boolean;
     if (accent !== undefined) {
-      if ((accent && !(node as MmlMo).isMathAccent()) ||
-          (!accent && !(node as MmlMo).isMathAccentWithWidth())) {
+      if (
+        (accent && !(node as MmlMo).isMathAccent()) ||
+        (!accent && !(node as MmlMo).isMathAccentWithWidth())
+      ) {
         this.setDataAttribute(data, 'mathaccent', accent.toString());
       }
     }
@@ -182,9 +194,15 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
         const name = (node as MmlMi).getText();
         setclass = !(name.length > 1 && name.match(MmlMi.operatorName));
       }
-      setclass && this.setDataAttribute(data, 'texclass', texclass < 0 ? 'NONE' : TEXCLASSNAMES[texclass]);
+      setclass &&
+        this.setDataAttribute(
+          data,
+          'texclass',
+          texclass < 0 ? 'NONE' : TEXCLASSNAMES[texclass]
+        );
     }
-    node.getProperty('scriptlevel') && node.getProperty('useHeight') === false &&
+    node.getProperty('scriptlevel') &&
+      node.getProperty('useHeight') === false &&
       this.setDataAttribute(data, 'smallmatrix', 'true');
     return data;
   }
@@ -197,5 +215,4 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
   protected setDataAttribute(data: PropertyList, name: string, value: string) {
     data[DATAMJX + name] = value;
   }
-
 }

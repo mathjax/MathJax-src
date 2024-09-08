@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {MmlNode, AbstractMmlNode, TEXCLASS} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { MmlNode, AbstractMmlNode, TEXCLASS } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,12 +30,11 @@ import {MmlNode, AbstractMmlNode, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMrow extends AbstractMmlNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
-    ...AbstractMmlNode.defaults
+    ...AbstractMmlNode.defaults,
   };
 
   /**
@@ -182,9 +181,7 @@ export class MmlMrow extends AbstractMmlNode {
     }
     return prev;
   }
-
 }
-
 
 /*****************************************************************/
 /**
@@ -192,7 +189,6 @@ export class MmlMrow extends AbstractMmlNode {
  */
 
 export class MmlInferredMrow extends MmlMrow {
-
   /**
    * @override
    */
@@ -225,5 +221,4 @@ export class MmlInferredMrow extends MmlMrow {
   public toString() {
     return '[' + this.childNodes.join(',') + ']';
   }
-
 }

@@ -21,9 +21,13 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathDocument, AbstractMathDocument, MathDocumentConstructor} from './MathDocument.js';
-import {OptionList} from '../util/Options.js';
-import {DOMAdaptor} from '../core/DOMAdaptor.js';
+import {
+  MathDocument,
+  AbstractMathDocument,
+  MathDocumentConstructor,
+} from './MathDocument.js';
+import { OptionList } from '../util/Options.js';
+import { DOMAdaptor } from '../core/DOMAdaptor.js';
 
 /*****************************************************************/
 /**
@@ -93,7 +97,6 @@ class DefaultMathDocument<N, T, D> extends AbstractMathDocument<N, T, D> {}
  * @template D  The Document class
  */
 export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
-
   /**
    * The name of this class
    */
@@ -113,7 +116,8 @@ export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
    * The class implementing the MathDocument for this handler
    *   (so it can be subclassed by extensions as needed)
    */
-  public documentClass: MathDocumentConstructor<AbstractMathDocument<N, T, D>> = DefaultMathDocument;
+  public documentClass: MathDocumentConstructor<AbstractMathDocument<N, T, D>> =
+    DefaultMathDocument;
 
   /**
    * @param {number} priority  The priority to use for this handler
@@ -143,7 +147,10 @@ export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
    * @override
    */
   public create(document: any, options: OptionList) {
-    return new this.documentClass(document, this.adaptor, options) as MathDocument<N, T, D>;
+    return new this.documentClass(
+      document,
+      this.adaptor,
+      options
+    ) as MathDocument<N, T, D>;
   }
-
 }

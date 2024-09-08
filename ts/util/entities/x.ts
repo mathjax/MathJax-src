@@ -17,7 +17,8 @@
 
 import * as Entities from '../Entities.js';
 
-Entities.add({
+Entities.add(
+  {
     xcap: '\u22C2',
     xcirc: '\u25EF',
     xcup: '\u22C3',
@@ -37,5 +38,7 @@ Entities.add({
     xuplus: '\u2A04',
     xutri: '\u25B3',
     xvee: '\u22C1',
-    xwedge: '\u22C0'
-}, 'x');
+    xwedge: '\u22C0',
+  },
+  'x'
+);

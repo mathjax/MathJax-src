@@ -105,7 +105,11 @@ export class CssStyles {
     const defs: string[] = new Array(selectors.length);
     let i = 0;
     for (const selector of selectors) {
-      defs[i++] = selector + ' {\n' + this.getStyleDefString(this.styles[selector]) + '\n}';
+      defs[i++] =
+        selector +
+        ' {\n' +
+        this.getStyleDefString(this.styles[selector]) +
+        '\n}';
     }
     return defs;
   }
@@ -123,5 +127,4 @@ export class CssStyles {
     }
     return values.join('\n');
   }
-
 }

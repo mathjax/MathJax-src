@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlBaseNode, AttributeList} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlBaseNode, AttributeList } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,14 +30,13 @@ import {AbstractMmlBaseNode, AttributeList} from '../MmlNode.js';
  */
 
 export class MmlMsubsup extends AbstractMmlBaseNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
     ...AbstractMmlBaseNode.defaults,
     subscriptshift: '',
-    superscriptshift: ''
+    superscriptshift: '',
   };
 
   /**
@@ -81,16 +80,30 @@ export class MmlMsubsup extends AbstractMmlBaseNode {
    *
    * @override
    */
-  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+  protected setChildInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    prime: boolean
+  ) {
     let nodes = this.childNodes;
     nodes[0].setInheritedAttributes(attributes, display, level, prime);
-    nodes[1].setInheritedAttributes(attributes, false, level + 1, prime || this.sub === 1);
+    nodes[1].setInheritedAttributes(
+      attributes,
+      false,
+      level + 1,
+      prime || this.sub === 1
+    );
     if (!nodes[2]) {
       return;
     }
-    nodes[2].setInheritedAttributes(attributes, false, level + 1, prime || this.sub === 2);
+    nodes[2].setInheritedAttributes(
+      attributes,
+      false,
+      level + 1,
+      prime || this.sub === 2
+    );
   }
-
 }
 
 /*****************************************************************/
@@ -99,12 +112,11 @@ export class MmlMsubsup extends AbstractMmlBaseNode {
  */
 
 export class MmlMsub extends MmlMsubsup {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
-    ...MmlMsubsup.defaults
+    ...MmlMsubsup.defaults,
   };
 
   /**
@@ -121,7 +133,6 @@ export class MmlMsub extends MmlMsubsup {
   public get arity() {
     return 2;
   }
-
 }
 
 /*****************************************************************/
@@ -130,12 +141,11 @@ export class MmlMsub extends MmlMsubsup {
  */
 
 export class MmlMsup extends MmlMsubsup {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
-    ...MmlMsubsup.defaults
+    ...MmlMsubsup.defaults,
   };
 
   /**
@@ -168,6 +178,4 @@ export class MmlMsup extends MmlMsubsup {
   get sub() {
     return 2;
   }
-
 }
-

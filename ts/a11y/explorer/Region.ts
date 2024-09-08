@@ -15,23 +15,20 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Regions for A11y purposes.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-
-import {MathDocument} from '../../core/MathDocument.js';
-import {CssStyles} from '../../util/StyleList.js';
-import {Sre} from '../sre.js';
-import {SsmlElement, buildSpeech} from '../speech/SpeechUtil.js';
+import { MathDocument } from '../../core/MathDocument.js';
+import { CssStyles } from '../../util/StyleList.js';
+import { Sre } from '../sre.js';
+import { SsmlElement, buildSpeech } from '../speech/SpeechUtil.js';
 
 export type A11yDocument = MathDocument<HTMLElement, Text, Document>;
 
 export interface Region<T> {
-
   /**
    * Adds a style sheet for the live region to the document.
    */
@@ -64,11 +61,9 @@ export interface Region<T> {
    * @template T
    */
   Update(content: T): void;
-
 }
 
 export abstract class AbstractRegion<T> implements Region<T> {
-
   /**
    * CSS Classname of the element.
    * @type {String}
@@ -114,7 +109,6 @@ export abstract class AbstractRegion<T> implements Region<T> {
     this.AddStyles();
   }
 
-
   /**
    * @override
    */
@@ -125,11 +119,11 @@ export abstract class AbstractRegion<T> implements Region<T> {
     // TODO: should that be added to document.documentStyleSheet()?
     let node = this.document.adaptor.node('style');
     node.innerHTML = this.CLASS.style.cssText;
-    this.document.adaptor.head(this.document.adaptor.document).
-      appendChild(node);
+    this.document.adaptor
+      .head(this.document.adaptor.document)
+      .appendChild(node);
     this.CLASS.styleAdded = true;
   }
-
 
   /**
    * @override
@@ -141,12 +135,10 @@ export abstract class AbstractRegion<T> implements Region<T> {
     this.div = element;
     this.inner = this.document.adaptor.node('div');
     this.div.appendChild(this.inner);
-    this.document.adaptor.
-      body(this.document.adaptor.document).
-      appendChild(this.div);
-
+    this.document.adaptor
+      .body(this.document.adaptor.document)
+      .appendChild(this.div);
   }
-
 
   /**
    * @override
@@ -158,20 +150,17 @@ export abstract class AbstractRegion<T> implements Region<T> {
     this.div.classList.add(this.CLASS.className + '_Show');
   }
 
-
   /**
    * Computes the position where to place the element wrt. to the given node.
    * @param {HTMLElement} node The reference node.
    */
   protected abstract position(node: HTMLElement): void;
 
-
   /**
    * Highlights the region.
    * @param {Sre.highlighter} highlighter The Sre highlighter.
    */
   protected abstract highlight(highlighter: Sre.highlighter): void;
-
 
   /**
    * @override
@@ -183,18 +172,15 @@ export abstract class AbstractRegion<T> implements Region<T> {
     this.inner = null;
   }
 
-
   /**
    * @override
    */
   public abstract Clear(): void;
 
-
   /**
    * @override
    */
   public abstract Update(content: T): void;
-
 
   /**
    * Auxiliary position method that stacks shown regions of the same type.
@@ -207,25 +193,29 @@ export abstract class AbstractRegion<T> implements Region<T> {
     let baseBottom = 0;
     let baseLeft = Number.POSITIVE_INFINITY;
     let regions = this.document.adaptor.document.getElementsByClassName(
-      this.CLASS.className + '_Show');
+      this.CLASS.className + '_Show'
+    );
     // Get all the shown regions (one is this element!) and append at bottom.
-    for (let i = 0, region; region = regions[i]; i++) {
+    for (let i = 0, region; (region = regions[i]); i++) {
       if (region !== this.div) {
-        baseBottom = Math.max(region.getBoundingClientRect().bottom, baseBottom);
+        baseBottom = Math.max(
+          region.getBoundingClientRect().bottom,
+          baseBottom
+        );
         baseLeft = Math.min(region.getBoundingClientRect().left, baseLeft);
       }
     }
 
     const bot = (baseBottom ? baseBottom : rect.bottom + 10) + window.scrollY;
-    const left = (baseLeft < Number.POSITIVE_INFINITY ? baseLeft : rect.left) + window.scrollX;
+    const left =
+      (baseLeft < Number.POSITIVE_INFINITY ? baseLeft : rect.left) +
+      window.scrollX;
     this.div.style.top = bot + 'px';
     this.div.style.left = left + 'px';
   }
-
 }
 
 export class DummyRegion extends AbstractRegion<void> {
-
   /**
    * @override
    */
@@ -267,9 +257,7 @@ export class DummyRegion extends AbstractRegion<void> {
   public highlight(_highlighter: Sre.highlighter) {}
 }
 
-
 export class StringRegion extends AbstractRegion<string> {
-
   /**
    * @override
    */
@@ -279,7 +267,6 @@ export class StringRegion extends AbstractRegion<string> {
     this.inner.style.top = '';
     this.inner.style.backgroundColor = '';
   }
-
 
   /**
    * @override
@@ -301,7 +288,6 @@ export class StringRegion extends AbstractRegion<string> {
     this.stackRegions(node);
   }
 
-
   /**
    * @override
    */
@@ -311,12 +297,9 @@ export class StringRegion extends AbstractRegion<string> {
     this.inner.style.backgroundColor = color.background;
     this.inner.style.color = color.foreground;
   }
-
 }
 
-
 export class ToolTip extends StringRegion {
-
   /**
    * @override
    */
@@ -325,23 +308,24 @@ export class ToolTip extends StringRegion {
   /**
    * @override
    */
-  protected static style: CssStyles =
-    new CssStyles({
-      ['.' + ToolTip.className]: {
-        width: 'auto', height: 'auto', opacity: 1, 'text-align': 'center',
-        'border-radius': '6px', padding: 0,
-        'border-bottom': '1px dotted black',
-        position: 'absolute', display: 'inline-block',
-        'background-color': 'white',
-        'z-index': 202
-      }
-    });
-
+  protected static style: CssStyles = new CssStyles({
+    ['.' + ToolTip.className]: {
+      width: 'auto',
+      height: 'auto',
+      opacity: 1,
+      'text-align': 'center',
+      'border-radius': '6px',
+      padding: 0,
+      'border-bottom': '1px dotted black',
+      position: 'absolute',
+      display: 'inline-block',
+      'background-color': 'white',
+      'z-index': 202,
+    },
+  });
 }
 
-
 export class LiveRegion extends StringRegion {
-
   /**
    * @override
    */
@@ -350,27 +334,30 @@ export class LiveRegion extends StringRegion {
   /**
    * @override
    */
-  protected static style: CssStyles =
-    new CssStyles({
-      ['.' + LiveRegion.className]: {
-        position: 'absolute', top: 0,
-        display: 'block', width: 'auto', height: 'auto',
-        padding: 0, opacity: 1, 'z-index': '202',
-        left: 0, right: 0, 'margin': '0 auto',
-        'background-color': 'white',
-        'box-shadow': '0px 5px 20px #888',
-        border: '2px solid #CCCCCC'
-      }
-    });
-
+  protected static style: CssStyles = new CssStyles({
+    ['.' + LiveRegion.className]: {
+      position: 'absolute',
+      top: 0,
+      display: 'block',
+      width: 'auto',
+      height: 'auto',
+      padding: 0,
+      opacity: 1,
+      'z-index': '202',
+      left: 0,
+      right: 0,
+      margin: '0 auto',
+      'background-color': 'white',
+      'box-shadow': '0px 5px 20px #888',
+      border: '2px solid #CCCCCC',
+    },
+  });
 }
-
 
 /**
  * Region class that enables auto voicing of content via SSML markup.
  */
 export class SpeechRegion extends LiveRegion {
-
   /**
    * Flag to activate auto voicing.
    */
@@ -393,8 +380,9 @@ export class SpeechRegion extends LiveRegion {
    * The highlighter to use.
    */
   public highlighter: Sre.highlighter = Sre.getHighlighter(
-    {color: 'red'}, {color: 'black'},
-    {renderer: this.document.outputJax.name, browser: 'v3'}
+    { color: 'red' },
+    { color: 'black' },
+    { renderer: this.document.outputJax.name, browser: 'v3' }
   );
 
   /**
@@ -418,7 +406,9 @@ export class SpeechRegion extends LiveRegion {
       this.makeVoice(speech);
       return;
     }
-    speechSynthesis.onvoiceschanged = (() => this.voiceRequest = true).bind(this);
+    speechSynthesis.onvoiceschanged = (() => (this.voiceRequest = true)).bind(
+      this
+    );
     super.Update('\u00a0'); // Ensures region shown and cannot be overwritten.
     const promise = new Promise((resolve) => {
       setTimeout(() => {
@@ -433,13 +423,12 @@ export class SpeechRegion extends LiveRegion {
         }
       }, 100);
     });
-    promise.then(
-      () => this.makeVoice(speech)
-    );
+    promise.then(() => this.makeVoice(speech));
   }
 
   private makeVoice(speech: string) {
-    this.active = this.document.options.a11y.voicing &&
+    this.active =
+      this.document.options.a11y.voicing &&
       !!speechSynthesis.getVoices().length;
     speechSynthesis.cancel();
     this.clear = true;
@@ -512,21 +501,17 @@ export class SpeechRegion extends LiveRegion {
   private highlightNode(id: string, init: boolean = false) {
     this.highlighter.unhighlight();
     let nodes = Array.from(
-      this.node.querySelectorAll(`[data-semantic-id="${id}"]`));
+      this.node.querySelectorAll(`[data-semantic-id="${id}"]`)
+    );
     if (!this.clear || init) {
       this.highlighter.highlight(nodes as HTMLElement[]);
     }
     this.clear = false;
   }
-
-
 }
-
-
 
 // Region that overlays the current element.
 export class HoverRegion extends AbstractRegion<HTMLElement> {
-
   /**
    * @override
    */
@@ -535,19 +520,25 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
   /**
    * @override
    */
-  protected static style: CssStyles =
-    new CssStyles({
-      ['.' + HoverRegion.className]: {
-        display: 'block', position: 'absolute',
-        width: 'max-content', height: 'auto',
-        padding: 0, opacity: 1, 'z-index': '202', 'margin': '0 auto',
-        'background-color': 'white', 'line-height': 0,
-        'box-shadow': '0px 10px 20px #888', border: '2px solid #CCCCCC'
-      },
-      ['.' + HoverRegion.className + ' > div']: {
-        overflow: 'hidden'
-      }
-    });
+  protected static style: CssStyles = new CssStyles({
+    ['.' + HoverRegion.className]: {
+      display: 'block',
+      position: 'absolute',
+      width: 'max-content',
+      height: 'auto',
+      padding: 0,
+      opacity: 1,
+      'z-index': '202',
+      margin: '0 auto',
+      'background-color': 'white',
+      'line-height': 0,
+      'box-shadow': '0px 10px 20px #888',
+      border: '2px solid #CCCCCC',
+    },
+    ['.' + HoverRegion.className + ' > div']: {
+      overflow: 'hidden',
+    },
+  });
 
   /**
    * Sets the position of the region with respect to align parameter.  There are
@@ -558,25 +549,25 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
   protected position(node: HTMLElement) {
     const nodeRect = node.getBoundingClientRect();
     const divRect = this.div.getBoundingClientRect();
-    const xCenter = nodeRect.left + (nodeRect.width / 2);
-    let left = xCenter - (divRect.width / 2);
-    left = (left < 0) ? 0 : left;
+    const xCenter = nodeRect.left + nodeRect.width / 2;
+    let left = xCenter - divRect.width / 2;
+    left = left < 0 ? 0 : left;
     left = left + window.scrollX;
     let top;
     switch (this.document.options.a11y.align) {
-    case 'top':
-      top = nodeRect.top - divRect.height - 10;
-      break;
-    case 'bottom':
-      top = nodeRect.bottom + 10;
-      break;
-    case 'center':
-    default:
-      const yCenter = nodeRect.top + (nodeRect.height / 2);
-      top = yCenter - (divRect.height / 2);
+      case 'top':
+        top = nodeRect.top - divRect.height - 10;
+        break;
+      case 'bottom':
+        top = nodeRect.bottom + 10;
+        break;
+      case 'center':
+      default:
+        const yCenter = nodeRect.top + nodeRect.height / 2;
+        top = yCenter - divRect.height / 2;
     }
     top = top + window.scrollY;
-    top = (top < 0) ? 0 : top;
+    top = top < 0 ? 0 : top;
     this.div.style.top = top + 'px';
     this.div.style.left = left + 'px';
   }
@@ -587,8 +578,10 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
   protected highlight(highlighter: Sre.highlighter) {
     if (!this.div) return;
     // TODO Do this with styles to avoid the interaction of SVG/CHTML.
-    if (this.inner.firstChild &&
-        !(this.inner.firstChild as HTMLElement).hasAttribute('sre-highlight')) {
+    if (
+      this.inner.firstChild &&
+      !(this.inner.firstChild as HTMLElement).hasAttribute('sre-highlight')
+    ) {
       return;
     }
     const color = highlighter.colorString();
@@ -650,22 +643,28 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
         // SVG specific
         //
         if (mjx.nodeName === 'svg') {
-          (mjx.firstChild as HTMLElement).setAttribute('transform', 'matrix(1 0 0 -1 0 0)');
+          (mjx.firstChild as HTMLElement).setAttribute(
+            'transform',
+            'matrix(1 0 0 -1 0 0)'
+          );
           const W = parseFloat(mjx.getAttribute('viewBox').split(/ /)[2]);
           const w = parseFloat(mjx.getAttribute('width'));
-          const {x, y, width, height} = (node as any).getBBox();
-          mjx.setAttribute('viewBox', [x, -(y + height), width, height].join(' '));
+          const { x, y, width, height } = (node as any).getBBox();
+          mjx.setAttribute(
+            'viewBox',
+            [x, -(y + height), width, height].join(' ')
+          );
           mjx.removeAttribute('style');
-          mjx.setAttribute('width', (w / W * width) + 'ex');
-          mjx.setAttribute('height', (w / W * height) + 'ex');
+          mjx.setAttribute('width', (w / W) * width + 'ex');
+          mjx.setAttribute('height', (w / W) * height + 'ex');
           container.setAttribute('sre-highlight', 'false');
         }
       }
-      mjx = container.cloneNode(false).appendChild(mjx).parentNode as HTMLElement;
+      mjx = container.cloneNode(false).appendChild(mjx)
+        .parentNode as HTMLElement;
       //  remove displayed math margins (could be done in CSS)
       mjx.style.margin = '0';
     }
     return mjx;
   }
-
 }

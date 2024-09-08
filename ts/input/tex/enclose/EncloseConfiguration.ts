@@ -15,40 +15,35 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Configuration file for the enclose package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
-import {Configuration} from '../Configuration.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration } from '../Configuration.js';
 import TexParser from '../TexParser.js';
-import {CommandMap} from '../TokenMap.js';
-import {ParseMethod} from '../Types.js';
-import {ParseUtil} from '../ParseUtil.js';
-
+import { CommandMap } from '../TokenMap.js';
+import { ParseMethod } from '../Types.js';
+import { ParseUtil } from '../ParseUtil.js';
 
 /**
  * The attributes allowed in \enclose{notation}[attributes]{math}
  * @type {{[key: string]: number}}
  */
-export const ENCLOSE_OPTIONS: {[key: string]: number} = {
+export const ENCLOSE_OPTIONS: { [key: string]: number } = {
   'data-arrowhead': 1,
   color: 1,
   mathcolor: 1,
   background: 1,
   mathbackground: 1,
   'data-padding': 1,
-  'data-thickness': 1
+  'data-thickness': 1,
 };
 
-
 // Namespace
-export const EncloseMethods: {[key: string]: ParseMethod} = {
-
-
+export const EncloseMethods: { [key: string]: ParseMethod } = {
   /**
    * Implements \enclose{notation}[attr]{math}
    * (create <menclose notation="notation">math</menclose>)
@@ -63,14 +58,10 @@ export const EncloseMethods: {[key: string]: ParseMethod} = {
     def.notation = notation;
     parser.Push(parser.create('node', 'menclose', [math], def));
   },
-  
-}
+};
 
+new CommandMap('enclose', { enclose: EncloseMethods.Enclose });
 
-
-new CommandMap('enclose', {enclose: EncloseMethods.Enclose});
-
-
-export const EncloseConfiguration = Configuration.create(
-  'enclose', {[ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['enclose']}}
-);
+export const EncloseConfiguration = Configuration.create('enclose', {
+  [ConfigurationType.HANDLER]: { [HandlerType.MACRO]: ['enclose'] },
+});

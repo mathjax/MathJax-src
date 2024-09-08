@@ -15,15 +15,14 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Configuration file for the AMS package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
-import {Configuration} from '../Configuration.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration } from '../Configuration.js';
 import TexParser from '../TexParser.js';
 
 /**
@@ -35,7 +34,7 @@ import TexParser from '../TexParser.js';
 function noUndefined(parser: TexParser, name: string) {
   const textNode = parser.create('text', '\\' + name);
   const options = parser.options.noundefined || {};
-  const def = {} as {[name: string]: string};
+  const def = {} as { [name: string]: string };
   for (const id of ['color', 'background', 'size']) {
     if (options[id]) {
       def['math' + id] = options[id];
@@ -44,18 +43,14 @@ function noUndefined(parser: TexParser, name: string) {
   parser.Push(parser.create('node', 'mtext', [], def, textNode));
 }
 
-export const NoUndefinedConfiguration = Configuration.create(
-  'noundefined', {
-    [ConfigurationType.FALLBACK]: {[HandlerType.MACRO]: noUndefined},
-    [ConfigurationType.OPTIONS]: {
-      noundefined: {
-        color: 'red',
-        background: '',
-        size: ''
-      }
+export const NoUndefinedConfiguration = Configuration.create('noundefined', {
+  [ConfigurationType.FALLBACK]: { [HandlerType.MACRO]: noUndefined },
+  [ConfigurationType.OPTIONS]: {
+    noundefined: {
+      color: 'red',
+      background: '',
+      size: '',
     },
-    [ConfigurationType.PRIORITY]: 3
-  }
-);
-
-
+  },
+  [ConfigurationType.PRIORITY]: 3,
+});

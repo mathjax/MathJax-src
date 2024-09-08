@@ -21,10 +21,10 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MmlFactory} from '../MmlFactory.js';
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlBaseNode, MmlNode, TEXCLASS} from '../MmlNode.js';
-import {MmlMo} from './mo.js';
+import { MmlFactory } from '../MmlFactory.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlBaseNode, MmlNode, TEXCLASS } from '../MmlNode.js';
+import { MmlMo } from './mo.js';
 
 /*****************************************************************/
 /**
@@ -32,12 +32,11 @@ import {MmlMo} from './mo.js';
  */
 
 export class TeXAtom extends AbstractMmlBaseNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
-    ...AbstractMmlBaseNode.defaults
+    ...AbstractMmlBaseNode.defaults,
   };
 
   /**
@@ -71,9 +70,13 @@ export class TeXAtom extends AbstractMmlBaseNode {
   /**
    * @override
    */
-  constructor(factory: MmlFactory, attributes: PropertyList, children: MmlNode[]) {
+  constructor(
+    factory: MmlFactory,
+    attributes: PropertyList,
+    children: MmlNode[]
+  ) {
     super(factory, attributes, children);
-    this.setProperty('texClass', this.texClass);   // needed for serialization to include the texClass
+    this.setProperty('texClass', this.texClass); // needed for serialization to include the texClass
   }
 
   /**
@@ -92,7 +95,6 @@ export class TeXAtom extends AbstractMmlBaseNode {
   public adjustTeXclass(prev: MmlNode) {
     return prev;
   }
-
 }
 /**
  *  Use the method from the MmlMo class

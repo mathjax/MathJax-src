@@ -22,17 +22,28 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTML} from '../../chtml.js';
-import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
-import {ChtmlWrapperFactory} from '../WrapperFactory.js';
-import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
-        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
-import {CommonMtr, CommonMtrClass, CommonMtrMixin,
-        CommonMlabeledtr, CommonMlabeledtrClass, CommonMlabeledtrMixin} from '../../common/Wrappers/mtr.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMtr, MmlMlabeledtr} from '../../../core/MmlTree/MmlNodes/mtr.js';
-import {ChtmlMtableNTD} from './mtable.js';
-import {StyleList} from '../../../util/StyleList.js';
+import { CHTML } from '../../chtml.js';
+import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
+import { ChtmlWrapperFactory } from '../WrapperFactory.js';
+import {
+  ChtmlCharOptions,
+  ChtmlVariantData,
+  ChtmlDelimiterData,
+  ChtmlFontData,
+  ChtmlFontDataClass,
+} from '../FontData.js';
+import {
+  CommonMtr,
+  CommonMtrClass,
+  CommonMtrMixin,
+  CommonMlabeledtr,
+  CommonMlabeledtrClass,
+  CommonMlabeledtrMixin,
+} from '../../common/Wrappers/mtr.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMtr, MmlMlabeledtr } from '../../../core/MmlTree/MmlNodes/mtr.js';
+import { ChtmlMtableNTD } from './mtable.js';
+import { StyleList } from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
@@ -42,11 +53,22 @@ import {StyleList} from '../../../util/StyleList.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMtrNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMtr<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {}
+export interface ChtmlMtrNTD<N, T, D>
+  extends ChtmlWrapper<N, T, D>,
+    CommonMtr<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {}
 
 /**
  * The ChtmlMtrClass interface for the CHTML Mtr wrapper
@@ -55,14 +77,28 @@ export interface ChtmlMtrNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMtr<
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMtrClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonMtrClass<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {
-  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMtrNTD<N, T, D>;
+export interface ChtmlMtrClass<N, T, D>
+  extends ChtmlWrapperClass<N, T, D>,
+    CommonMtrClass<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {
+  new (
+    factory: ChtmlWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: ChtmlWrapper<N, T, D>
+  ): ChtmlMtrNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
@@ -70,19 +106,26 @@ export interface ChtmlMtrClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, Comm
  * The ChtmlMtr wrapper class for the MmlMtr class
  */
 export const ChtmlMtr = (function <N, T, D>(): ChtmlMtrClass<N, T, D> {
-
   const Base = CommonMtrMixin<
-      N, T, D,
-      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
-      ChtmlMtrClass<N, T, D>
-    >(ChtmlWrapper);
+    N,
+    T,
+    D,
+    CHTML<N, T, D>,
+    ChtmlWrapper<N, T, D>,
+    ChtmlWrapperFactory<N, T, D>,
+    ChtmlWrapperClass<N, T, D>,
+    ChtmlCharOptions,
+    ChtmlVariantData,
+    ChtmlDelimiterData,
+    ChtmlFontData,
+    ChtmlFontDataClass,
+    ChtmlMtrClass<N, T, D>
+  >(ChtmlWrapper);
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class ChtmlMtr extends Base implements ChtmlMtrNTD<N, T, D> {
-
     /**
      * @override
      */
@@ -96,20 +139,20 @@ export const ChtmlMtr = (function <N, T, D>(): ChtmlMtrClass<N, T, D> {
         display: 'table-row',
       },
       'mjx-mtr[rowalign="top"] > mjx-mtd': {
-        'vertical-align': 'top'
+        'vertical-align': 'top',
       },
       'mjx-mtr[rowalign="center"] > mjx-mtd': {
-        'vertical-align': 'middle'
+        'vertical-align': 'middle',
       },
       'mjx-mtr[rowalign="bottom"] > mjx-mtd': {
-        'vertical-align': 'bottom'
+        'vertical-align': 'bottom',
       },
       'mjx-mtr[rowalign="baseline"] > mjx-mtd': {
-        'vertical-align': 'baseline'
+        'vertical-align': 'baseline',
       },
       'mjx-mtr[rowalign="axis"] > mjx-mtd': {
-        'vertical-align': '.25em'
-      }
+        'vertical-align': '.25em',
+      },
     };
 
     /**
@@ -122,11 +165,8 @@ export const ChtmlMtr = (function <N, T, D>(): ChtmlMtrClass<N, T, D> {
         this.adaptor.setAttribute(this.dom[0], 'rowalign', align);
       }
     }
-
   };
-
 })<any, any, any>();
-
 
 /*****************************************************************/
 /**
@@ -136,11 +176,22 @@ export const ChtmlMtr = (function <N, T, D>(): ChtmlMtrClass<N, T, D> {
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMlabeledtrNTD<N, T, D> extends ChtmlMtrNTD<N, T, D>, CommonMlabeledtr<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {}
+export interface ChtmlMlabeledtrNTD<N, T, D>
+  extends ChtmlMtrNTD<N, T, D>,
+    CommonMlabeledtr<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {}
 
 /**
  * The ChtmlMlabeledtrClass interface for the CHTML Mlabeledtr wrapper
@@ -149,34 +200,62 @@ export interface ChtmlMlabeledtrNTD<N, T, D> extends ChtmlMtrNTD<N, T, D>, Commo
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMlabeledtrClass<N, T, D> extends ChtmlMtrClass<N, T, D>, CommonMlabeledtrClass<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {
-  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMlabeledtrNTD<N, T, D>;
+export interface ChtmlMlabeledtrClass<N, T, D>
+  extends ChtmlMtrClass<N, T, D>,
+    CommonMlabeledtrClass<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {
+  new (
+    factory: ChtmlWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: ChtmlWrapper<N, T, D>
+  ): ChtmlMlabeledtrNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
 /**
  * The ChtmlMlabeledtr wrapper class for the MmlMlabeledtr class
  */
-export const ChtmlMlabeledtr = (function <N, T, D>(): ChtmlMlabeledtrClass<N, T, D> {
-
+export const ChtmlMlabeledtr = (function <N, T, D>(): ChtmlMlabeledtrClass<
+  N,
+  T,
+  D
+> {
   const Base = CommonMlabeledtrMixin<
-      N, T, D,
-      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
-      ChtmlMlabeledtrClass<N, T, D>
-    >(ChtmlMtr);
+    N,
+    T,
+    D,
+    CHTML<N, T, D>,
+    ChtmlWrapper<N, T, D>,
+    ChtmlWrapperFactory<N, T, D>,
+    ChtmlWrapperClass<N, T, D>,
+    ChtmlCharOptions,
+    ChtmlVariantData,
+    ChtmlDelimiterData,
+    ChtmlFontData,
+    ChtmlFontDataClass,
+    ChtmlMlabeledtrClass<N, T, D>
+  >(ChtmlMtr);
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
-  return class ChtmlMlabeledtr extends Base implements ChtmlMlabeledtrNTD<N, T, D> {
-
+  return class ChtmlMlabeledtr
+    // @ts-expect-error
+    extends Base
+    implements ChtmlMlabeledtrNTD<N, T, D>
+  {
     /**
      * @override
      */
@@ -187,23 +266,23 @@ export const ChtmlMlabeledtr = (function <N, T, D>(): ChtmlMlabeledtrClass<N, T,
      */
     public static styles: StyleList = {
       'mjx-mlabeledtr': {
-        display: 'table-row'
+        display: 'table-row',
       },
       'mjx-mlabeledtr[rowalign="top"] > mjx-mtd': {
-        'vertical-align': 'top'
+        'vertical-align': 'top',
       },
       'mjx-mlabeledtr[rowalign="center"] > mjx-mtd': {
-        'vertical-align': 'middle'
+        'vertical-align': 'middle',
       },
       'mjx-mlabeledtr[rowalign="bottom"] > mjx-mtd': {
-        'vertical-align': 'bottom'
+        'vertical-align': 'bottom',
       },
       'mjx-mlabeledtr[rowalign="baseline"] > mjx-mtd': {
-        'vertical-align': 'baseline'
+        'vertical-align': 'baseline',
       },
       'mjx-mlabeledtr[rowalign="axis"] > mjx-mtd': {
-        'vertical-align': '.25em'
-      }
+        'vertical-align': '.25em',
+      },
     };
 
     /**
@@ -218,9 +297,13 @@ export const ChtmlMlabeledtr = (function <N, T, D>(): ChtmlMlabeledtrClass<N, T,
         //
         this.adaptor.remove(child);
         const align = this.node.attributes.get('rowalign') as string;
-        const attr = (align !== 'baseline' && align !== 'axis' ? {rowalign: align} : {});
+        const attr =
+          align !== 'baseline' && align !== 'axis' ? { rowalign: align } : {};
         const row = this.html('mjx-mtr', attr, [child]);
-        this.adaptor.append((this.parent as ChtmlMtableNTD<N, T, D>).labels, row);
+        this.adaptor.append(
+          (this.parent as ChtmlMtableNTD<N, T, D>).labels,
+          row
+        );
       }
     }
 
@@ -231,7 +314,5 @@ export const ChtmlMlabeledtr = (function <N, T, D>(): ChtmlMlabeledtrClass<N, T,
       super.markUsed();
       this.jax.wrapperUsage.add(ChtmlMtr.kind);
     }
-
   };
-
 })<any, any, any>();

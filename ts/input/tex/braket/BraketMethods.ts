@@ -15,23 +15,20 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Methods for TeX parsing of the braket package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {ParseMethod, ParseResult} from '../Types.js';
+import { ParseMethod, ParseResult } from '../Types.js';
 import BaseMethods from '../base/BaseMethods.js';
 import TexParser from '../TexParser.js';
-import {TEXCLASS} from '../../../core/MmlTree/MmlNode.js';
+import { TEXCLASS } from '../../../core/MmlTree/MmlNode.js';
 import TexError from '../TexError.js';
-import {BraketItem} from './BraketItems.js';
+import { BraketItem } from './BraketItems.js';
 
-
-const BraketMethods: {[key: string]: ParseMethod} = {
-
+const BraketMethods: { [key: string]: ParseMethod } = {
   /**
    * Generate a bra-ket expression.
    * @param {TexParser} parser The current TeX parser.
@@ -42,12 +39,22 @@ const BraketMethods: {[key: string]: ParseMethod} = {
    * @param {number} barmax Maximum number of bars allowed.
    * @param {boolean} space True to add space inside the delimiters
    */
-  Braket(parser: TexParser, _name: string,
-         open: string, close: string,
-         stretchy: boolean, barmax: number, space: boolean = false) {
+  Braket(
+    parser: TexParser,
+    _name: string,
+    open: string,
+    close: string,
+    stretchy: boolean,
+    barmax: number,
+    space: boolean = false
+  ) {
     let next = parser.GetNext();
     if (next === '') {
-      throw new TexError('MissingArgFor', 'Missing argument for %1', parser.currentCS);
+      throw new TexError(
+        'MissingArgFor',
+        'Missing argument for %1',
+        parser.currentCS
+      );
     }
     let single = true;
     if (next === '{') {
@@ -55,11 +62,18 @@ const BraketMethods: {[key: string]: ParseMethod} = {
       single = false;
     }
     const node = parser.itemFactory.create('braket');
-    node.setProperties({barcount: 0, barmax, open, close, stretchy, single, space});
+    node.setProperties({
+      barcount: 0,
+      barmax,
+      open,
+      close,
+      stretchy,
+      single,
+      space,
+    });
     parser.Push(node);
     node.env.braketItem = parser.stack.height - 1;
   },
-
 
   /**
    * Generate a bar. If inside a bra-ket expressions it's handled accordingly.
@@ -71,7 +85,11 @@ const BraketMethods: {[key: string]: ParseMethod} = {
     let c = name === '|' ? '|' : '\u2016';
     let n = parser.stack.height - (parser.stack.env.braketItem as number);
     let top = parser.stack.Top(n) as BraketItem;
-    if (!top || !top.isKind('braket') || top.getProperty('barcount') >= top.getProperty('barmax')) {
+    if (
+      !top ||
+      !top.isKind('braket') ||
+      top.getProperty('barcount') >= top.getProperty('barmax')
+    ) {
       return false;
     }
     if (c === '|' && parser.GetNext() === '|') {
@@ -79,14 +97,21 @@ const BraketMethods: {[key: string]: ParseMethod} = {
       c = '\u2016';
     }
     if (!top.getProperty('stretchy')) {
-      let node = parser.create('token', 'mo', {stretchy: false, 'data-braketbar': true, texClass: TEXCLASS.ORD}, c);
+      let node = parser.create(
+        'token',
+        'mo',
+        { stretchy: false, 'data-braketbar': true, texClass: TEXCLASS.ORD },
+        c
+      );
       parser.Push(node);
       return;
     }
     //
     // Close any pending \over constructs using a specially marked CloseItem
     //
-    let close = parser.itemFactory.create('close').setProperty('braketbar', true);
+    let close = parser.itemFactory
+      .create('close')
+      .setProperty('braketbar', true);
     parser.Push(close);
     //
     // Push a CLOSE atom, the bar as a BIN, and an OPEN atom onto the barNodes,
@@ -94,14 +119,19 @@ const BraketMethods: {[key: string]: ParseMethod} = {
     //  before, between, or after any bars
     //
     top.barNodes.push(
-      parser.create('node', 'TeXAtom', [], {texClass: TEXCLASS.CLOSE}),
-      parser.create('token', 'mo', {stretchy: true, 'data-braketbar': true, texClass: TEXCLASS.BIN}, c),
-      parser.create('node', 'TeXAtom', [], {texClass: TEXCLASS.OPEN})
+      parser.create('node', 'TeXAtom', [], { texClass: TEXCLASS.CLOSE }),
+      parser.create(
+        'token',
+        'mo',
+        { stretchy: true, 'data-braketbar': true, texClass: TEXCLASS.BIN },
+        c
+      ),
+      parser.create('node', 'TeXAtom', [], { texClass: TEXCLASS.OPEN })
     );
-    top.setProperty('barcount', top.getProperty('barcount') as number + 1);
+    top.setProperty('barcount', (top.getProperty('barcount') as number) + 1);
   },
 
-  Macro: BaseMethods.Macro
-}
+  Macro: BaseMethods.Macro,
+};
 
 export default BraketMethods;

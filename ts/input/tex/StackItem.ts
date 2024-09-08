@@ -15,33 +15,30 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Stack items hold information on the TexParser stack.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import {FactoryNodeClass} from '../../core/Tree/Factory.js';
+import { MmlNode } from '../../core/MmlTree/MmlNode.js';
+import { FactoryNodeClass } from '../../core/Tree/Factory.js';
 import TexError from './TexError.js';
 import StackItemFactory from './StackItemFactory.js';
 
 // Union types for abbreviation.
 export type EnvProp = string | number | boolean;
 
-export type EnvList = {[key: string]: EnvProp};
+export type EnvList = { [key: string]: EnvProp };
 
 // This is the type for all fields that used to be set with With.
 export type Prop = string | number | boolean | MmlNode | PropList;
 
-export type PropList = {[key: string]: Prop};
+export type PropList = { [key: string]: Prop };
 
 export type CheckType = [(MmlNode | StackItem)[], boolean];
 
-
 export interface NodeStack {
-
   /**
    * Get or set the topmost element on the node stack without removing it.
    * @return {MmlNode} The topmost node on the stack.
@@ -82,7 +79,6 @@ export interface NodeStack {
    */
   Clear(): void;
 
-
   /**
    * The LaTeX string at the moment item is called.
    */
@@ -107,13 +103,9 @@ export interface NodeStack {
    * @return {MmlNode} The topmost Mml node.
    */
   toMml(inferred?: boolean, forceRow?: boolean): MmlNode;
-
 }
 
-
 export abstract class MmlStack implements NodeStack {
-
-
   /**
    * @override
    */
@@ -134,7 +126,7 @@ export abstract class MmlStack implements NodeStack {
    * @extends {NodeStack}
    * @param {MmlNode[]} _nodes An initial list of nodes to put on the stack.
    */
-  constructor(private _nodes: MmlNode[]) { }
+  constructor(private _nodes: MmlNode[]) {}
 
   /**
    * @return {MmlNode[]} The nodes on the stack.
@@ -150,14 +142,12 @@ export abstract class MmlStack implements NodeStack {
     this._nodes.push(...nodes);
   }
 
-
   /**
    * @override
    */
   public Pop(): MmlNode {
     return this._nodes.pop();
   }
-
 
   /**
    * @override
@@ -166,14 +156,12 @@ export abstract class MmlStack implements NodeStack {
     return this._nodes[this.Size() - 1];
   }
 
-
   /**
    * @override
    */
   public set First(node: MmlNode) {
     this._nodes[this.Size() - 1] = node;
   }
-
 
   /**
    * @override
@@ -182,14 +170,12 @@ export abstract class MmlStack implements NodeStack {
     return this._nodes[0];
   }
 
-
   /**
    * @override
    */
   public set Last(node: MmlNode) {
     this._nodes[0] = node;
   }
-
 
   /**
    * @override
@@ -201,7 +187,6 @@ export abstract class MmlStack implements NodeStack {
     return this._nodes.slice(this.Size() - n);
   }
 
-
   /**
    * @override
    */
@@ -209,14 +194,12 @@ export abstract class MmlStack implements NodeStack {
     return this._nodes.length;
   }
 
-
   /**
    * @override
    */
   public Clear(): void {
     this._nodes = [];
   }
-
 
   protected abstract get factory(): StackItemFactory;
 
@@ -229,9 +212,12 @@ export abstract class MmlStack implements NodeStack {
     }
     // @test Two Identifiers
     return this.create(
-      'node', inferred ? 'inferredMrow' : 'mrow', this._nodes, {});
+      'node',
+      inferred ? 'inferredMrow' : 'mrow',
+      this._nodes,
+      {}
+    );
   }
-
 
   /**
    * Convenience method to create nodes with the node factory on this stack.
@@ -242,12 +228,9 @@ export abstract class MmlStack implements NodeStack {
   public create(kind: string, ...rest: any[]): MmlNode {
     return this.factory.configuration.nodeFactory.create(kind, ...rest);
   }
-
 }
 
 export interface StackItem extends NodeStack {
-
-
   /**
    * Type of stack item.
    * @type {string}
@@ -276,19 +259,19 @@ export interface StackItem extends NodeStack {
    * Global properties of the parser.
    * @type {EnvList}
    */
-   global: EnvList;
+  global: EnvList;
 
   /**
    * Local properties of the stack item.
    * @type {EnvList}
    */
-   env: EnvList;
+  env: EnvList;
 
   /**
    * Copy local properties when pushed to stack?
    * @type {boolean}
    */
-   copyEnv: boolean;
+  copyEnv: boolean;
 
   /**
    * Tests if item is of the given type.
@@ -349,20 +332,17 @@ export interface StackItem extends NodeStack {
    * @return {CheckType} True/false or an item or node.
    */
   checkItem(item: StackItem): CheckType;
-
 }
 
 export interface StackItemClass extends FactoryNodeClass<StackItem> {
   // new (factory: StackItemFactory, ...args: any[]): StackItem;
 }
 
-
 /**
  * Abstract basic item class that implements most of the stack item
  * functionality. In particular, it contains the base method for checkItem.
  */
 export abstract class BaseItem extends MmlStack implements StackItem {
-
   /**
    * The fail value.
    * @type {CheckType}
@@ -379,16 +359,15 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    * A list of basic errors.
    * @type {{[key: string]: string[]}}
    */
-  protected static errors: {[key: string]: string[]} = {
+  protected static errors: { [key: string]: string[] } = {
     // @test ExtraOpenMissingClose
     end: ['MissingBeginExtraEnd', 'Missing \\begin{%1} or extra \\end{%1}'],
     // @test ExtraCloseMissingOpen
     close: ['ExtraCloseMissingOpen', 'Extra close brace or missing open brace'],
     // @test MissingLeftExtraRight
     right: ['MissingLeftExtraRight', 'Missing \\left or extra \\right'],
-    middle: ['ExtraMiddle', 'Extra \\middle']
+    middle: ['ExtraMiddle', 'Extra \\middle'],
   };
-
 
   /**
    * @override
@@ -399,12 +378,14 @@ export abstract class BaseItem extends MmlStack implements StackItem {
 
   private _properties: PropList = {};
 
-
   /**
    * @constructor
    * @extends {MmlStack}
    */
-  constructor(protected factory: StackItemFactory, ...nodes: MmlNode[]) {
+  constructor(
+    protected factory: StackItemFactory,
+    ...nodes: MmlNode[]
+  ) {
     super(nodes);
     if (this.isOpen) {
       this._env = {};
@@ -455,7 +436,6 @@ export abstract class BaseItem extends MmlStack implements StackItem {
     return this;
   }
 
-
   /**
    * @return {boolean} True if item is an opening entity, i.e., it expects a
    *     closing counterpart on the stack later.
@@ -472,7 +452,6 @@ export abstract class BaseItem extends MmlStack implements StackItem {
     return false;
   }
 
-
   /**
    * @return {boolean} True if item is final, i.e., it contains one or multiple
    *      finished parsed nodes.
@@ -481,14 +460,12 @@ export abstract class BaseItem extends MmlStack implements StackItem {
     return false;
   }
 
-
   /**
    * @override
    */
   public isKind(kind: string) {
     return kind === this.kind;
   }
-
 
   /**
    * @override
@@ -518,7 +495,6 @@ export abstract class BaseItem extends MmlStack implements StackItem {
     return BaseItem.fail;
   }
 
-
   /**
    * Clears the item's environment.
    */
@@ -528,7 +504,6 @@ export abstract class BaseItem extends MmlStack implements StackItem {
     }
   }
 
-
   /**
    * @override
    */
@@ -537,7 +512,6 @@ export abstract class BaseItem extends MmlStack implements StackItem {
     return this;
   }
 
-
   /**
    * @override
    */
@@ -545,14 +519,12 @@ export abstract class BaseItem extends MmlStack implements StackItem {
     return this.getProperty('name') as string;
   }
 
-
   /**
    * @override
    */
   public toString() {
     return this.kind + '[' + this.nodes.join('; ') + ']';
   }
-
 
   /**
    * Get error messages for a particular types of stack items. This reads error
@@ -562,8 +534,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    * @return {string[]} The list of arguments for the TeXError.
    */
   public getErrors(kind: string): string[] {
-    const CLASS = (this.constructor as typeof BaseItem);
+    const CLASS = this.constructor as typeof BaseItem;
     return (CLASS.errors || {})[kind] || BaseItem.errors[kind];
   }
-
 }

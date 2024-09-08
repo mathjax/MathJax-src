@@ -22,7 +22,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CONFIG, Loader} from './loader.js';
+import { CONFIG, Loader } from './loader.js';
 
 /*
  * The browser document (for creating scripts to load components)
@@ -52,11 +52,15 @@ export class PackageError extends Error {
  */
 export type PackageReady = (name: string) => string | void;
 export type PackageFailed = (message: PackageError) => void;
-export type PackagePromise = (resolve: PackageReady, reject: PackageFailed) => void;
+export type PackagePromise = (
+  resolve: PackageReady,
+  reject: PackageFailed
+) => void;
 
 /**
  * The configuration data for a package
  */
+/* prettier-ignore */
 export interface PackageConfig {
   ready?: PackageReady;                // Function to call when package is loaded successfully
   failed?: PackageFailed;              // Function to call when package fails to load
@@ -142,7 +146,12 @@ export class Package {
    *                    in the past)
    */
   get canLoad(): boolean {
-    return this.dependencyCount === 0 && !this.noLoad && !this.isLoading && !this.hasFailed;
+    return (
+      this.dependencyCount === 0 &&
+      !this.noLoad &&
+      !this.isLoading &&
+      !this.hasFailed
+    );
   }
 
   /**
@@ -150,7 +159,9 @@ export class Package {
    */
   public static loadPromise(name: string): Promise<void> {
     const config = (CONFIG[name] || {}) as PackageConfig;
-    const promise = Promise.all((config.extraLoads || []).map((name) => Loader.load(name)));
+    const promise = Promise.all(
+      (config.extraLoads || []).map((name) => Loader.load(name))
+    );
     const checkReady = config.checkReady || (() => Promise.resolve());
     return promise.then(() => checkReady()) as Promise<void>;
   }
@@ -162,8 +173,11 @@ export class Package {
    * @param {boolean} addExtension   True if .js should be added automatically
    * @return {string}                The path (file or URL) for this package
    */
-  public static resolvePath(name: string, addExtension: boolean = true): string {
-    const data = {name, original: name, addExtension};
+  public static resolvePath(
+    name: string,
+    addExtension: boolean = true
+  ): string {
+    const data = { name, original: name, addExtension };
     Loader.pathFilters.execute(data);
     return data.name;
   }
@@ -209,7 +223,7 @@ export class Package {
     if (CONFIG.dependencies.hasOwnProperty(name)) {
       dependencies.push(...CONFIG.dependencies[name]);
     } else if (name !== 'core') {
-      dependencies.push('core');  //  Add 'core' dependency by default
+      dependencies.push('core'); //  Add 'core' dependency by default
     }
     //
     //  Add all the dependencies (creating them, if needed)
@@ -250,7 +264,9 @@ export class Package {
     //
     const config = (CONFIG[this.name] || {}) as PackageConfig;
     if (config.ready) {
-      promise = promise.then((_name: string) => config.ready(this.name)) as Promise<string>;
+      promise = promise.then((_name: string) =>
+        config.ready(this.name)
+      ) as Promise<string>;
     }
     //
     //  If there are promises for dependencies,
@@ -259,14 +275,18 @@ export class Package {
     //
     if (promises.length) {
       promises.push(promise);
-      promise = Promise.all(promises).then((names: string[]) => names.join(', '));
+      promise = Promise.all(promises).then((names: string[]) =>
+        names.join(', ')
+      );
     }
     //
     //  If there is a failed() function in the configuration for this package,
     //    Add a catch to handle the error
     //
     if (config.failed) {
-      promise.catch((message: string) => config.failed(new PackageError(message, this.name)));
+      promise.catch((message: string) =>
+        config.failed(new PackageError(message, this.name))
+      );
     }
     //
     //  Return the promise that represents when this file is loaded
@@ -296,8 +316,11 @@ export class Package {
     try {
       const result = CONFIG.require(url);
       if (result instanceof Promise) {
-        result.then(() => this.checkLoad())
-          .catch((err) => this.failed('Can\'t load "' + url + '"\n' + err.message.trim()));
+        result
+          .then(() => this.checkLoad())
+          .catch((err) =>
+            this.failed('Can\'t load "' + url + '"\n' + err.message.trim())
+          );
       } else {
         this.checkLoad();
       }
@@ -365,7 +388,9 @@ export class Package {
    *  before marking the file as loaded (or failing to load).
    */
   protected checkLoad() {
-    Package.loadPromise(this.name).then(() => this.loaded()).catch((message) => this.failed(message));
+    Package.loadPromise(this.name)
+      .then(() => this.loaded())
+      .catch((message) => this.failed(message));
   }
 
   /**
@@ -432,5 +457,4 @@ export class Package {
       }
     }
   }
-
 }

@@ -21,11 +21,21 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wrapper.js';
-import {CommonWrapperFactory} from '../WrapperFactory.js';
-import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
-import {CommonOutputJax} from '../../common.js';
-import {BBox} from '../../../util/BBox.js';
+import {
+  CommonWrapper,
+  CommonWrapperClass,
+  CommonWrapperConstructor,
+} from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { BBox } from '../../../util/BBox.js';
 
 /*****************************************************************/
 /**
@@ -45,7 +55,9 @@ import {BBox} from '../../../util/BBox.js';
  * @template FC  The FontDataClass type
  */
 export interface CommonMath<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -54,7 +66,7 @@ export interface CommonMath<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /**
@@ -74,7 +86,9 @@ export interface CommonMath<
  * @template FC  The FontDataClass type
  */
 export interface CommonMathClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -83,7 +97,7 @@ export interface CommonMathClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
@@ -106,7 +120,9 @@ export interface CommonMathClass<
  * @template B   The mixin interface to create
  */
 export function CommonMathMixin<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -116,17 +132,21 @@ export function CommonMathMixin<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
-
-  return class CommonMathMixin extends Base
-  implements CommonMath<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+): B {
+  return class CommonMathMixin
+    extends Base
+    implements CommonMath<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
      * @override
      */
     public getWrapWidth(_i: number) {
-      return (this.parent ? this.getBBox().w : this.metrics.containerWidth / this.jax.pxPerEm);
+      return this.parent
+        ? this.getBBox().w
+        : this.metrics.containerWidth / this.jax.pxPerEm;
     }
 
     /**
@@ -135,13 +155,15 @@ export function CommonMathMixin<
     protected computeBBox(bbox: BBox, recompute: boolean = false) {
       super.computeBBox(bbox, recompute);
       const attributes = this.node.attributes;
-      if (!this.parent && this.jax.math.display && attributes.get('overflow') === 'linebreak') {
+      if (
+        !this.parent &&
+        this.jax.math.display &&
+        attributes.get('overflow') === 'linebreak'
+      ) {
         const W = this.containerWidth;
         bbox.w > W && this.childNodes[0].breakToWidth(W);
         bbox.updateFrom(this.childNodes[0].getBBox());
       }
     }
-
   } as any as B;
-
 }

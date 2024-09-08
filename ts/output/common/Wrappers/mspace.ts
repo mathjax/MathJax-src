@@ -21,14 +21,24 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wrapper.js';
-import {CommonWrapperFactory} from '../WrapperFactory.js';
-import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
-import {CommonOutputJax} from '../../common.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMspace} from '../../../core/MmlTree/MmlNodes/mspace.js';
-import {BBox} from '../../../util/BBox.js';
-import {LineBBox} from '../LineBBox.js';
+import {
+  CommonWrapper,
+  CommonWrapperClass,
+  CommonWrapperConstructor,
+} from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMspace } from '../../../core/MmlTree/MmlNodes/mspace.js';
+import { BBox } from '../../../util/BBox.js';
+import { LineBBox } from '../LineBBox.js';
 
 /*****************************************************************/
 /**
@@ -48,7 +58,9 @@ import {LineBBox} from '../LineBBox.js';
  * @template FC  The FontDataClass type
  */
 export interface CommonMspace<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -57,9 +69,8 @@ export interface CommonMspace<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
   /**
    * True when mspace is allowed to break
    */
@@ -76,7 +87,6 @@ export interface CommonMspace<
    * @param {string} linebreak   The type of linebreak to set
    */
   setBreakStyle(linebreak?: string): void;
-
 }
 
 /**
@@ -96,7 +106,9 @@ export interface CommonMspace<
  * @template FC  The FontDataClass type
  */
 export interface CommonMspaceClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -105,7 +117,7 @@ export interface CommonMspaceClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
@@ -128,7 +140,9 @@ export interface CommonMspaceClass<
  * @template B   The mixin interface to create
  */
 export function CommonMspaceMixin<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -138,12 +152,14 @@ export function CommonMspaceMixin<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
-
-  return class CommonMspaceMixin extends Base
-  implements CommonMspace<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+): B {
+  return class CommonMspaceMixin
+    extends Base
+    implements CommonMspace<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
      * @override
      */
@@ -160,16 +176,19 @@ export function CommonMspaceMixin<
      * @override
      */
     get breakCount() {
-      return (this.breakStyle ? 1 : 0);
+      return this.breakStyle ? 1 : 0;
     }
 
     /**
      * @override
      */
     public setBreakStyle(linebreak: string = '') {
-      this.breakStyle = (linebreak ||
-                         (((this.node as MmlMspace).hasNewline ||
-                           this.node.getProperty('forcebreak')) ? 'before' : ''));
+      this.breakStyle =
+        linebreak ||
+        ((this.node as MmlMspace).hasNewline ||
+        this.node.getProperty('forcebreak')
+          ? 'before'
+          : '');
     }
 
     /***************************************************/
@@ -196,17 +215,20 @@ export function CommonMspaceMixin<
      * @override
      */
     public computeLineBBox(i: number): LineBBox {
-      const leadingString = this.node.attributes.get('data-lineleading') as string;
-      const leading = this.length2em(leadingString, this.linebreakOptions.lineleading);
+      const leadingString = this.node.attributes.get(
+        'data-lineleading'
+      ) as string;
+      const leading = this.length2em(
+        leadingString,
+        this.linebreakOptions.lineleading
+      );
       const bbox = LineBBox.from(BBox.zero(), leading);
       if (i === 1) {
         bbox.getIndentData(this.node);
         bbox.w = this.getBBox().w;
-        bbox.isFirst = (bbox.w === 0);
+        bbox.isFirst = bbox.w === 0;
       }
       return bbox;
     }
-
   } as any as B;
-
 }

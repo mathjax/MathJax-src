@@ -21,15 +21,24 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTML} from '../../chtml.js';
-import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
-import {ChtmlWrapperFactory} from '../WrapperFactory.js';
-import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
-        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
-import {CommonMtd, CommonMtdClass, CommonMtdMixin} from '../../common/Wrappers/mtd.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMtd} from '../../../core/MmlTree/MmlNodes/mtd.js';
-import {StyleList} from '../../../util/StyleList.js';
+import { CHTML } from '../../chtml.js';
+import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
+import { ChtmlWrapperFactory } from '../WrapperFactory.js';
+import {
+  ChtmlCharOptions,
+  ChtmlVariantData,
+  ChtmlDelimiterData,
+  ChtmlFontData,
+  ChtmlFontDataClass,
+} from '../FontData.js';
+import {
+  CommonMtd,
+  CommonMtdClass,
+  CommonMtdMixin,
+} from '../../common/Wrappers/mtd.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMtd } from '../../../core/MmlTree/MmlNodes/mtd.js';
+import { StyleList } from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
@@ -39,11 +48,22 @@ import {StyleList} from '../../../util/StyleList.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMtdNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMtd<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {}
+export interface ChtmlMtdNTD<N, T, D>
+  extends ChtmlWrapper<N, T, D>,
+    CommonMtd<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {}
 
 /**
  * The ChtmlMtdClass interface for the CHTML Mtd wrapper
@@ -52,14 +72,28 @@ export interface ChtmlMtdNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMtd<
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMtdClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonMtdClass<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {
-  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMtdNTD<N, T, D>;
+export interface ChtmlMtdClass<N, T, D>
+  extends ChtmlWrapperClass<N, T, D>,
+    CommonMtdClass<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {
+  new (
+    factory: ChtmlWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: ChtmlWrapper<N, T, D>
+  ): ChtmlMtdNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
@@ -67,19 +101,25 @@ export interface ChtmlMtdClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, Comm
  * The ChtmlMtd wrapper class for the MmlMtd class
  */
 export const ChtmlMtd = (function <N, T, D>(): ChtmlMtdClass<N, T, D> {
-
   const Base = CommonMtdMixin<
-      N, T, D,
-      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
-      ChtmlMtdClass<N, T, D>
-    >(ChtmlWrapper);
+    N,
+    T,
+    D,
+    CHTML<N, T, D>,
+    ChtmlWrapper<N, T, D>,
+    ChtmlWrapperFactory<N, T, D>,
+    ChtmlWrapperClass<N, T, D>,
+    ChtmlCharOptions,
+    ChtmlVariantData,
+    ChtmlDelimiterData,
+    ChtmlFontData,
+    ChtmlFontDataClass,
+    ChtmlMtdClass<N, T, D>
+  >(ChtmlWrapper);
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
   return class ChtmlMtd extends Base implements ChtmlMtdNTD<N, T, D> {
-
     /**
      * @override
      */
@@ -92,49 +132,49 @@ export const ChtmlMtd = (function <N, T, D>(): ChtmlMtdClass<N, T, D> {
       'mjx-mtd': {
         display: 'table-cell',
         'text-align': 'center',
-        'padding': '.215em .4em'
+        padding: '.215em .4em',
       },
       'mjx-mtd:first-child': {
-        'padding-left': 0
+        'padding-left': 0,
       },
       'mjx-mtd:last-child': {
-        'padding-right': 0
+        'padding-right': 0,
       },
       'mjx-mtable > * > mjx-itable > *:first-child > mjx-mtd': {
-        'padding-top': 0
+        'padding-top': 0,
       },
       'mjx-mtable > * > mjx-itable > *:last-child > mjx-mtd': {
-        'padding-bottom': 0
+        'padding-bottom': 0,
       },
       'mjx-tstrut': {
         display: 'inline-block',
         height: '1em',
-        'vertical-align': '-.25em'
+        'vertical-align': '-.25em',
       },
       'mjx-labels[align="left"] > mjx-mtr > mjx-mtd': {
-        'text-align': 'left'
+        'text-align': 'left',
       },
       'mjx-labels[align="right"] > mjx-mtr > mjx-mtd': {
-        'text-align': 'right'
+        'text-align': 'right',
       },
       'mjx-mtd[extra]': {
-        padding: 0
+        padding: 0,
       },
       'mjx-mtd[rowalign="top"]': {
-        'vertical-align': 'top'
+        'vertical-align': 'top',
       },
       'mjx-mtd[rowalign="center"]': {
-        'vertical-align': 'middle'
+        'vertical-align': 'middle',
       },
       'mjx-mtd[rowalign="bottom"]': {
-        'vertical-align': 'bottom'
+        'vertical-align': 'bottom',
       },
       'mjx-mtd[rowalign="baseline"]': {
-        'vertical-align': 'baseline'
+        'vertical-align': 'baseline',
       },
       'mjx-mtd[rowalign="axis"]': {
-        'vertical-align': '.25em'
-      }
+        'vertical-align': '.25em',
+      },
     };
 
     /**
@@ -148,9 +188,12 @@ export const ChtmlMtd = (function <N, T, D>(): ChtmlMtdClass<N, T, D> {
       if (ralign !== palign) {
         this.adaptor.setAttribute(this.dom[0], 'rowalign', ralign);
       }
-      if (calign !== 'center' &&
-          (this.parent.kind !== 'mlabeledtr' || this !== this.parent.childNodes[0] ||
-           calign !== this.parent.parent.node.attributes.get('side'))) {
+      if (
+        calign !== 'center' &&
+        (this.parent.kind !== 'mlabeledtr' ||
+          this !== this.parent.childNodes[0] ||
+          calign !== this.parent.parent.node.attributes.get('side'))
+      ) {
         this.adaptor.setStyle(this.dom[0], 'textAlign', calign);
       }
       //
@@ -161,7 +204,5 @@ export const ChtmlMtd = (function <N, T, D>(): ChtmlMtdClass<N, T, D> {
         this.adaptor.append(this.dom[0], this.html('mjx-tstrut'));
       }
     }
-
   };
-
 })<any, any, any>();

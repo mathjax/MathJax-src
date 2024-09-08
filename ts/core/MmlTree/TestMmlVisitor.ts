@@ -24,9 +24,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SerializedMmlVisitor} from './SerializedMmlVisitor.js';
-import {MmlNode} from './MmlNode.js';
-import {PropertyList} from '../Tree/Node.js';
+import { SerializedMmlVisitor } from './SerializedMmlVisitor.js';
+import { MmlNode } from './MmlNode.js';
+import { PropertyList } from '../Tree/Node.js';
 
 /*****************************************************************/
 /**
@@ -34,7 +34,6 @@ import {PropertyList} from '../Tree/Node.js';
  */
 
 export class TestMmlVisitor extends SerializedMmlVisitor {
-
   /**
    * The generic visiting function:
    *   Make the string versino of the open tag with it attributes (explicit and
@@ -48,20 +47,25 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
    */
   public visitDefault(node: MmlNode, space: string) {
     let kind = node.kind;
-    let [nl, endspace] = (node.isToken || node.childNodes.length === 0 ? ['', ''] : ['\n', space]);
-    let mml = space + '<' + kind + this.getAttributes(node) +
-      this.getInherited(node) + this.getProperties(node) + '\n' + space + '   ' +
-      this.attributeString({
+    let [nl, endspace] =
+      node.isToken || node.childNodes.length === 0 ? ['', ''] : ['\n', space];
+    let attributes = this.attributeString(
+      {
         isEmbellished: node.isEmbellished,
         isSpacelike: node.isSpacelike,
-        texClass: node.texClass
-      }, '{', '}') +
-      '>' + nl;
+        texClass: node.texClass,
+      },
+      '{',
+      '}'
+    );
+    let mml =
+      `${space}<${kind}${this.getAttributes(node)}${this.getInherited(node)}${this.getProperties(node)}\n` +
+      `${space}   ${attributes}>${nl}`;
     space += '  ';
     for (const child of node.childNodes) {
       mml += this.visitNode(child, space) + nl;
     }
-    mml += endspace + '</' + kind + '>';
+    mml += `${endspace}</${kind}>`;
     return mml;
   }
 
@@ -95,12 +99,15 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
    * @param {string} close  The closing delimiter to add after each attribute
    * @return {string}  The attribute list as a string
    */
-  protected attributeString(attributes: PropertyList, open: string, close: string): string {
+  protected attributeString(
+    attributes: PropertyList,
+    open: string,
+    close: string
+  ): string {
     let ATTR = '';
     for (const name of Object.keys(attributes)) {
-      ATTR += ' ' + open + name + '="' + this.quoteHTML(String(attributes[name])) + '"' + close;
+      ATTR += ` ${open}${name}="${this.quoteHTML(String(attributes[name]))}"${close}`;
     }
     return ATTR;
   }
-
 }

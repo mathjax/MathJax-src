@@ -21,16 +21,25 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTML} from '../../chtml.js';
-import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
-import {ChtmlWrapperFactory} from '../WrapperFactory.js';
-import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
-        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
-import {CommonMath, CommonMathClass, CommonMathMixin} from '../../common/Wrappers/math.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMath} from '../../../core/MmlTree/MmlNodes/math.js';
-import {StyleList} from '../../../util/StyleList.js';
-import {BBox} from '../../../util/BBox.js';
+import { CHTML } from '../../chtml.js';
+import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
+import { ChtmlWrapperFactory } from '../WrapperFactory.js';
+import {
+  ChtmlCharOptions,
+  ChtmlVariantData,
+  ChtmlDelimiterData,
+  ChtmlFontData,
+  ChtmlFontDataClass,
+} from '../FontData.js';
+import {
+  CommonMath,
+  CommonMathClass,
+  CommonMathMixin,
+} from '../../common/Wrappers/math.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMath } from '../../../core/MmlTree/MmlNodes/math.js';
+import { StyleList } from '../../../util/StyleList.js';
+import { BBox } from '../../../util/BBox.js';
 
 /*****************************************************************/
 /**
@@ -40,11 +49,22 @@ import {BBox} from '../../../util/BBox.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMathNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMath<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {}
+export interface ChtmlMathNTD<N, T, D>
+  extends ChtmlWrapper<N, T, D>,
+    CommonMath<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {}
 
 /**
  * The ChtmlMathClass interface for the CHTML Math wrapper
@@ -53,14 +73,28 @@ export interface ChtmlMathNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMath
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMathClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonMathClass<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {
-  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMathNTD<N, T, D>;
+export interface ChtmlMathClass<N, T, D>
+  extends ChtmlWrapperClass<N, T, D>,
+    CommonMathClass<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {
+  new (
+    factory: ChtmlWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: ChtmlWrapper<N, T, D>
+  ): ChtmlMathNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
@@ -68,19 +102,25 @@ export interface ChtmlMathClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, Com
  * The ChtmlMath wrapper class for the MmlMath class
  */
 export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
-
   const Base = CommonMathMixin<
-      N, T, D,
-      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
-      ChtmlMathClass<N, T, D>
-    >(ChtmlWrapper);
+    N,
+    T,
+    D,
+    CHTML<N, T, D>,
+    ChtmlWrapper<N, T, D>,
+    ChtmlWrapperFactory<N, T, D>,
+    ChtmlWrapperClass<N, T, D>,
+    ChtmlCharOptions,
+    ChtmlVariantData,
+    ChtmlDelimiterData,
+    ChtmlFontData,
+    ChtmlFontDataClass,
+    ChtmlMathClass<N, T, D>
+  >(ChtmlWrapper);
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
   return class ChtmlMath extends Base implements ChtmlMathNTD<N, T, D> {
-
     /**
      * @override
      */
@@ -101,28 +141,28 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
         'letter-spacing': 'normal',
         'word-wrap': 'normal',
         'word-spacing': 'normal',
-        'direction': 'ltr',
-        'padding': '1px 0'
+        direction: 'ltr',
+        padding: '1px 0',
       },
       'mjx-container[jax="CHTML"][display="true"]': {
         display: 'block',
         'text-align': 'center',
         'justify-content': 'center',
-        margin: '1em 0'
+        margin: '1em 0',
       },
       'mjx-container[jax="CHTML"][display="true"][width="full"]': {
-        display: 'flex'
+        display: 'flex',
       },
       'mjx-container[jax="CHTML"][display="true"] mjx-math': {
-        padding: 0
+        padding: 0,
       },
       'mjx-container[jax="CHTML"][justify="left"]': {
         'text-align': 'left',
-        'justify-content': 'left'
+        'justify-content': 'left',
       },
       'mjx-container[jax="CHTML"][justify="right"]': {
         'text-align': 'right',
-        'justify-content': 'right'
+        'justify-content': 'right',
       },
       //
       //  For inline breakpoints, use a space that is 1em width, make it breakable,
@@ -131,29 +171,29 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
       'mjx-container[jax="CHTML"] mjx-break': {
         'white-space': 'normal',
         'line-height': '0',
-        'font-family': 'MJX-BRK'
+        'font-family': 'MJX-BRK',
       },
       'mjx-break[size="0"]': {
-        'letter-spacing': (.001 - 1) + 'em'
+        'letter-spacing': 0.001 - 1 + 'em',
       },
       'mjx-break[size="1"]': {
-        'letter-spacing': (.111 - 1) + 'em'
+        'letter-spacing': 0.111 - 1 + 'em',
       },
       'mjx-break[size="2"]': {
-        'letter-spacing': (.167 - 1) + 'em'
+        'letter-spacing': 0.167 - 1 + 'em',
       },
       'mjx-break[size="3"]': {
-        'letter-spacing': (.222 - 1) + 'em'
+        'letter-spacing': 0.222 - 1 + 'em',
       },
       'mjx-break[size="4"]': {
-        'letter-spacing': (.278 - 1) + 'em'
+        'letter-spacing': 0.278 - 1 + 'em',
       },
       'mjx-break[size="5"]': {
-        'letter-spacing': (.333 - 1) + 'em'
+        'letter-spacing': 0.333 - 1 + 'em',
       },
       'mjx-math[breakable]': {
-        display: 'inline'
-      }
+        display: 'inline',
+      },
     };
 
     /**
@@ -168,7 +208,7 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
       if (this.bbox.pwidth === BBox.fullWidth) {
         adaptor.setAttribute(parent, 'width', 'full');
         if (this.jax.table) {
-          let {L, w, R} = this.jax.table.getOuterBBox();
+          let { L, w, R } = this.jax.table.getOuterBBox();
           if (align === 'right') {
             R = Math.max(R || -shift, -shift);
           } else if (align === 'left') {
@@ -209,7 +249,7 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
     public toCHTML(parents: N[]) {
       super.toCHTML(parents);
       const adaptor = this.adaptor;
-      const display = (this.node.attributes.get('display') === 'block');
+      const display = this.node.attributes.get('display') === 'block';
       if (display) {
         adaptor.setAttribute(this.dom[0], 'display', 'true');
         adaptor.setAttribute(parents[0], 'display', 'true');
@@ -223,8 +263,12 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
     /**
      * @override
      */
-    public setChildPWidths(recompute: boolean, w: number = null, clear: boolean = true) {
-      return (this.parent ? super.setChildPWidths(recompute, w, clear) : false);
+    public setChildPWidths(
+      recompute: boolean,
+      w: number = null,
+      clear: boolean = true
+    ) {
+      return this.parent ? super.setChildPWidths(recompute, w, clear) : false;
     }
 
     /**
@@ -234,10 +278,10 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
       super.handleAttributes();
       const adaptor = this.adaptor;
       if (this.node.getProperty('process-breaks')) {
-        this.dom.forEach(dom => adaptor.setAttribute(dom, 'breakable', 'true'));
+        this.dom.forEach((dom) =>
+          adaptor.setAttribute(dom, 'breakable', 'true')
+        );
       }
     }
-
   };
-
 })<any, any, any>();

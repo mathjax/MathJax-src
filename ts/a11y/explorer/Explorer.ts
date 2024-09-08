@@ -15,25 +15,22 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Explorers for A11Y purposes.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import { A11yDocument, Region } from './Region.js';
+import { Sre } from '../sre.js';
 
-import {A11yDocument, Region} from './Region.js';
-import {Sre} from '../sre.js';
-
-import type {ExplorerPool} from './ExplorerPool.js';
+import type { ExplorerPool } from './ExplorerPool.js';
 
 /**
  * A11y explorers.
  * @interface
  */
 export interface Explorer {
-
   /**
    * Flag indicating if the explorer is active.
    * @type {boolean}
@@ -45,7 +42,6 @@ export interface Explorer {
    * @type {boolean}
    */
   stoppable: boolean;
-
 
   /**
    * The pool the explorer belongs to.
@@ -73,7 +69,6 @@ export interface Explorer {
    */
   Stop(): void;
 
-
   /**
    * Adds the events of the explorer to the node's event listener.
    */
@@ -90,9 +85,7 @@ export interface Explorer {
    *     explorer is inactive.)
    */
   Update(force?: boolean): void;
-
 }
-
 
 /**
  * Abstract class implementing the very basic explorer functionality.
@@ -107,7 +100,6 @@ export interface Explorer {
  * @template T  The type that is consumed by the Region of this explorer.
  */
 export class AbstractExplorer<T> implements Explorer {
-
   /**
    * @override
    */
@@ -165,7 +157,8 @@ export class AbstractExplorer<T> implements Explorer {
     document: A11yDocument,
     pool: ExplorerPool,
     region: Region<T>,
-    node: HTMLElement, ...rest: any[]
+    node: HTMLElement,
+    ...rest: any[]
   ): Explorer {
     let explorer = new this(document, pool, region, node, ...rest);
     return explorer;
@@ -184,9 +177,7 @@ export class AbstractExplorer<T> implements Explorer {
     public region: Region<T>,
     protected node: HTMLElement,
     ..._rest: any[]
-  ) {
-  }
-
+  ) {}
 
   /**
    * @return {[string, (x: Event) => void][]} The events associated with this
@@ -195,7 +186,6 @@ export class AbstractExplorer<T> implements Explorer {
   protected Events(): [string, (x: Event) => void][] {
     return this.events;
   }
-
 
   /**
    * @override
@@ -247,7 +237,7 @@ export class AbstractExplorer<T> implements Explorer {
    * @override
    */
   public AddEvents() {
-    for (let [eventkind, eventfunc]  of this.events) {
+    for (let [eventkind, eventfunc] of this.events) {
       this.node.addEventListener(eventkind, eventfunc);
     }
   }
@@ -256,7 +246,7 @@ export class AbstractExplorer<T> implements Explorer {
    * @override
    */
   public RemoveEvents() {
-    for (let [eventkind, eventfunc]  of this.events) {
+    for (let [eventkind, eventfunc] of this.events) {
       this.node.removeEventListener(eventkind, eventfunc);
     }
   }
@@ -264,9 +254,7 @@ export class AbstractExplorer<T> implements Explorer {
   /**
    * @override
    */
-  // @ts-ignore: unused variable
-  public Update(force: boolean = false): void {}
-
+  public Update(_force: boolean = false): void {}
 
   /**
    * Stops the events of this explorer from bubbling.
@@ -277,5 +265,4 @@ export class AbstractExplorer<T> implements Explorer {
       AbstractExplorer.stopEvent(event);
     }
   }
-
 }

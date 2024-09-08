@@ -21,21 +21,30 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVG} from '../../svg.js';
-import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
-import {SvgWrapperFactory} from '../WrapperFactory.js';
-import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
-import {CommonMo, CommonMoClass, CommonMoMixin} from '../../common/Wrappers/mo.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
-import {BBox} from '../../../util/BBox.js';
-import {DIRECTION, SvgCharData} from '../FontData.js';
-
+import { SVG } from '../../svg.js';
+import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
+import { SvgWrapperFactory } from '../WrapperFactory.js';
+import {
+  SvgCharOptions,
+  SvgVariantData,
+  SvgDelimiterData,
+  SvgFontData,
+  SvgFontDataClass,
+} from '../FontData.js';
+import {
+  CommonMo,
+  CommonMoClass,
+  CommonMoMixin,
+} from '../../common/Wrappers/mo.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMo } from '../../../core/MmlTree/MmlNodes/mo.js';
+import { BBox } from '../../../util/BBox.js';
+import { DIRECTION, SvgCharData } from '../FontData.js';
 
 /*****************************************************************/
 
-const VFUZZ = 0.1;       // overlap for vertical stretchy glyphs
-const HFUZZ = 0.1;       // overlap for horizontal stretchy glyphs
+const VFUZZ = 0.1; // overlap for vertical stretchy glyphs
+const HFUZZ = 0.1; // overlap for horizontal stretchy glyphs
 
 /*****************************************************************/
 /**
@@ -45,11 +54,22 @@ const HFUZZ = 0.1;       // overlap for horizontal stretchy glyphs
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SvgMoNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMo<
-  N, T, D,
-  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
-> {}
+export interface SvgMoNTD<N, T, D>
+  extends SvgWrapper<N, T, D>,
+    CommonMo<
+      N,
+      T,
+      D,
+      SVG<N, T, D>,
+      SvgWrapper<N, T, D>,
+      SvgWrapperFactory<N, T, D>,
+      SvgWrapperClass<N, T, D>,
+      SvgCharOptions,
+      SvgVariantData,
+      SvgDelimiterData,
+      SvgFontData,
+      SvgFontDataClass
+    > {}
 
 /**
  * The SvgMoClass interface for the SVG Mo wrapper
@@ -58,14 +78,28 @@ export interface SvgMoNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMo<
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SvgMoClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonMoClass<
-  N, T, D,
-  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
-> {
-  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMoNTD<N, T, D>;
+export interface SvgMoClass<N, T, D>
+  extends SvgWrapperClass<N, T, D>,
+    CommonMoClass<
+      N,
+      T,
+      D,
+      SVG<N, T, D>,
+      SvgWrapper<N, T, D>,
+      SvgWrapperFactory<N, T, D>,
+      SvgWrapperClass<N, T, D>,
+      SvgCharOptions,
+      SvgVariantData,
+      SvgDelimiterData,
+      SvgFontData,
+      SvgFontDataClass
+    > {
+  new (
+    factory: SvgWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: SvgWrapper<N, T, D>
+  ): SvgMoNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
@@ -73,19 +107,26 @@ export interface SvgMoClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonMoC
  * The SvgMo wrapper class for the MmlMo class
  */
 export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
-
   const Base = CommonMoMixin<
-      N, T, D,
-      SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-      SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
-      SvgMoClass<N, T, D>
-    >(SvgWrapper);
+    N,
+    T,
+    D,
+    SVG<N, T, D>,
+    SvgWrapper<N, T, D>,
+    SvgWrapperFactory<N, T, D>,
+    SvgWrapperClass<N, T, D>,
+    SvgCharOptions,
+    SvgVariantData,
+    SvgDelimiterData,
+    SvgFontData,
+    SvgFontDataClass,
+    SvgMoClass<N, T, D>
+  >(SvgWrapper);
 
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class SvgMo extends Base implements SvgMoNTD<N, T, D> {
-
     /**
      * @override
      */
@@ -96,25 +137,42 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      */
     public toSVG(parents: N[]) {
       const attributes = this.node.attributes;
-      const symmetric = (attributes.get('symmetric') as boolean) && this.stretch.dir !== DIRECTION.Horizontal;
+      const symmetric =
+        (attributes.get('symmetric') as boolean) &&
+        this.stretch.dir !== DIRECTION.Horizontal;
       const stretchy = this.stretch.dir !== DIRECTION.None;
       if (stretchy && this.size === null) {
         this.getStretchedVariant([]);
       }
       let svg = this.standardSvgNodes(parents);
       if (svg.length > 1 && this.breakStyle !== 'duplicate') {
-        const i = (this.breakStyle === 'after' ? 1 : 0);
+        const i = this.breakStyle === 'after' ? 1 : 0;
         this.adaptor.remove(svg[i]);
         svg[i] = null;
       }
       if (stretchy && this.size < 0) {
         this.stretchSvg();
       } else {
-        const u = (symmetric || attributes.get('largeop') ? this.fixed(this.getCenterOffset()) : '0');
-        const v = (this.node.getProperty('mathaccent') ? this.fixed(this.getAccentOffset()) : '0');
+        const u =
+          symmetric || attributes.get('largeop')
+            ? this.fixed(this.getCenterOffset())
+            : '0';
+        const v = this.node.getProperty('mathaccent')
+          ? this.fixed(this.getAccentOffset())
+          : '0';
         if (u !== '0' || v !== '0') {
-          svg[0] && this.adaptor.setAttribute(svg[0], 'transform', `translate(${v} ${u})`);
-          svg[1] && this.adaptor.setAttribute(svg[1], 'transform', `translate(${v} ${u})`);
+          svg[0] &&
+            this.adaptor.setAttribute(
+              svg[0],
+              'transform',
+              `translate(${v} ${u})`
+            );
+          svg[1] &&
+            this.adaptor.setAttribute(
+              svg[1],
+              'transform',
+              `translate(${v} ${u})`
+            );
         }
         svg[0] && this.addChildren([svg[0]]);
         svg[1] && ((this.multChar || this) as SvgMo).addChildren([svg[1]]);
@@ -152,8 +210,12 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      * @param {string[]} variant    The variants for the parts to use for stretching
      * @param {BBox} bbox           The full size of the stretched character
      */
-    protected stretchVertical(stretch: number[], variant: string[], bbox: BBox) {
-      const {h, d, w} = bbox;
+    protected stretchVertical(
+      stretch: number[],
+      variant: string[],
+      bbox: BBox
+    ) {
+      const { h, d, w } = bbox;
       const T = this.addTop(stretch[0], variant[0], h, w);
       const B = this.addBot(stretch[2], variant[2], d, w);
       if (stretch.length === 4) {
@@ -170,7 +232,11 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      * @param {string[]} variant    The variants for the parts to use for stretching
      * @param {BBox} bbox           The full size of the stretched character
      */
-    protected stretchHorizontal(stretch: number[], variant: string[], bbox: BBox) {
+    protected stretchHorizontal(
+      stretch: number[],
+      variant: string[],
+      bbox: BBox
+    ) {
       const w = bbox.w;
       const L = this.addLeft(stretch[0], variant[0]);
       const R = this.addRight(stretch[2], variant[2], w);
@@ -193,7 +259,12 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      */
     protected getChar(n: number, variant: string): SvgCharData {
       const char = this.font.getChar(variant, n) || [0, 0, 0, null];
-      return [char[0], char[1], char[2], char[3] || {}] as [number, number, number, SvgCharOptions];
+      return [char[0], char[1], char[2], char[3] || {}] as [
+        number,
+        number,
+        number,
+        SvgCharOptions,
+      ];
     }
 
     /**
@@ -204,17 +275,23 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      * @param {N} parent         The container for the glyph
      * @return {number}          The width of the character placed
      */
-      protected addGlyph(n: number, variant: string, x: number, y: number, parent: N = null): number {
-        if (parent) {
-          return this.placeChar(n, x, y, parent, variant);
+    protected addGlyph(
+      n: number,
+      variant: string,
+      x: number,
+      y: number,
+      parent: N = null
+    ): number {
+      if (parent) {
+        return this.placeChar(n, x, y, parent, variant);
+      }
+      if (this.dom[0]) {
+        const dx = this.placeChar(n, x, y, this.dom[0], variant);
+        if (!this.dom[1]) {
+          return dx;
         }
-        if (this.dom[0]) {
-          const dx = this.placeChar(n, x, y, this.dom[0], variant);
-          if (!this.dom[1]) {
-            return dx;
-          }
-        }
-        return this.placeChar(n, x, y, this.dom[1], variant);
+      }
+      return this.placeChar(n, x, y, this.dom[1], variant);
     }
 
     /***********************************************************/
@@ -227,7 +304,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      * @return {number}     The total height of the top glyph
      */
     protected addTop(n: number, v: string, H: number, W: number): number {
-      if (!n)  return 0;
+      if (!n) return 0;
       const [h, d, w] = this.getChar(n, v);
       this.addGlyph(n, v, (W - w) / 2, H - h);
       return h + d;
@@ -242,6 +319,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      * @param {number} B    The height of the bottom glyph in the delimiter
      * @param {number} W    The width of the stretched delimiter
      */
+    /* prettier-ignore */
     protected addExtV(n: number, v: string, H: number, D: number, T: number, B: number, W: number) {
       if (!n) return;
       T = Math.max(0, T - VFUZZ);              // A little overlap on top
@@ -306,7 +384,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      * @return {number}    The width of the left glyph
      */
     protected addLeft(n: number, v: string): number {
-      return (n ? this.addGlyph(n, v, 0, 0) : 0);
+      return n ? this.addGlyph(n, v, 0, 0) : 0;
     }
 
     /**
@@ -317,25 +395,38 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      * @param {number} R   The width of the right glyph of the stretchy character
      * @param {number} x   The x-position of the extender (needed for ones with two extenders)
      */
-    protected addExtH(n: number, v: string, W: number, L: number, R: number, x: number = 0) {
+    protected addExtH(
+      n: number,
+      v: string,
+      W: number,
+      L: number,
+      R: number,
+      x: number = 0
+    ) {
       if (!n) return;
-      R = Math.max(0, R - HFUZZ);     // A little less than the width of the right glyph
-      L = Math.max(0, L - HFUZZ);     // A little less than the width of the left glyph
+      R = Math.max(0, R - HFUZZ); // A little less than the width of the right glyph
+      L = Math.max(0, L - HFUZZ); // A little less than the width of the left glyph
       const adaptor = this.adaptor;
       const [h, d, w] = this.getChar(n, v);
-      const X = W - L - R;            // The width of the extender
-      const Y = h + d + 2 * VFUZZ;    // The height (plus some fuzz) of the extender
-      const s = 1.5 * (X / w);        // Scale the width so that left- and right-bearing won't hurt us
-      const D = -(d + VFUZZ);         // The bottom position of the glyph
+      const X = W - L - R; // The width of the extender
+      const Y = h + d + 2 * VFUZZ; // The height (plus some fuzz) of the extender
+      const s = 1.5 * (X / w); // Scale the width so that left- and right-bearing won't hurt us
+      const D = -(d + VFUZZ); // The bottom position of the glyph
       if (X <= 0) return;
       const svg = this.svg('svg', {
-        width: this.fixed(X), height: this.fixed(Y),
-        x: this.fixed(x + L), y: this.fixed(D),
-        viewBox: [(s * w - X) / 2, D, X, Y].map(x => this.fixed(x)).join(' ')
+        width: this.fixed(X),
+        height: this.fixed(Y),
+        x: this.fixed(x + L),
+        y: this.fixed(D),
+        viewBox: [(s * w - X) / 2, D, X, Y].map((x) => this.fixed(x)).join(' '),
       });
       this.addGlyph(n, v, 0, 0, svg);
       const glyph = adaptor.lastChild(svg);
-      adaptor.setAttribute(glyph as N, 'transform', 'scale(' + this.jax.fixed(s) + ',1)');
+      adaptor.setAttribute(
+        glyph as N,
+        'transform',
+        `scale(${this.jax.fixed(s)},1)`
+      );
       if (this.dom[0]) {
         adaptor.append(this.dom[0], svg);
       }
@@ -368,7 +459,5 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
       this.addGlyph(n, v, (W - w) / 2, 0);
       return [(W - w) / 2, (W + w) / 2];
     }
-
   };
-
 })<any, any, any>();

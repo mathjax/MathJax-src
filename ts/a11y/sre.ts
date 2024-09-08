@@ -25,16 +25,15 @@
 import * as Api from '#sre/common/system.js';
 import * as SpeechGeneratorFactory from '#sre/speech_generator/speech_generator_factory.js';
 import { Engine } from '#sre/common/engine.js';
-import {ClearspeakPreferences} from '#sre/speech_rules/clearspeak_preferences.js';
-import {Highlighter} from '#sre/highlighter/highlighter.js';
+import { ClearspeakPreferences } from '#sre/speech_rules/clearspeak_preferences.js';
+import { Highlighter } from '#sre/highlighter/highlighter.js';
 import * as HighlighterFactory from '#sre/highlighter/highlighter_factory.js';
-import {SpeechGenerator} from '#sre/speech_generator/speech_generator.js';
+import { SpeechGenerator } from '#sre/speech_generator/speech_generator.js';
 import { parseInput } from '#sre/common/dom_util.js';
-import {Variables} from '#sre/common/variables.js';
+import { Variables } from '#sre/common/variables.js';
 import MathMaps from './mathmaps.js';
 
 export namespace Sre {
-
   export type highlighter = Highlighter;
 
   export type speechGenerator = SpeechGenerator;
@@ -65,12 +64,12 @@ export namespace Sre {
    * Loads locales that are already included in the imported MathMaps. Defaults
    * to standard loading if a locale is not yet preloaded.
    */
-  export const preloadLocales = async function(locale: string) {
+  export const preloadLocales = async function (locale: string) {
     const json = MathMaps.get(locale);
-    return json ? new Promise((res, _rej) => res(JSON.stringify(json))) :
-      Api.localeLoader()(locale);
+    return json
+      ? new Promise((res, _rej) => res(JSON.stringify(json)))
+      : Api.localeLoader()(locale);
   };
-
 }
 
 /**

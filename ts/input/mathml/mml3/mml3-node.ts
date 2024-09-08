@@ -22,8 +22,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathDocument} from '../../../core/MathDocument.js';
-import {mjxRoot} from '#root/root.js';
+import { MathDocument } from '../../../core/MathDocument.js';
+import { mjxRoot } from '#root/root.js';
 
 /**
  * Create the transform function that uses Saxon-js to perform the
@@ -35,19 +35,30 @@ import {mjxRoot} from '#root/root.js';
  *
  * @return {(node: N, doc: MathDocument<N,T,D>) => N)}   The transformation function
  */
-export function createTransform<N, T, D>(): (node: N, doc: MathDocument<N, T, D>) => N {
-  const nodeRequire = eval('require');   // get the actual require from node.
+export function createTransform<N, T, D>(): (
+  node: N,
+  doc: MathDocument<N, T, D>
+) => N {
+  // get the actual require from node.
+  const nodeRequire = eval('require');
   try {
-    nodeRequire.resolve('saxon-js');     // check if saxon-js is installed.
+    // check if saxon-js is installed.
+    nodeRequire.resolve('saxon-js');
   } catch (err) {
-    throw Error('Saxon-js not found.  Run the command:\n    npm install saxon-js\nand try again.');
+    throw Error(
+      'Saxon-js not found.  Run the command:\n    npm install saxon-js\nand try again.'
+    );
   }
-  const Saxon = nodeRequire('saxon-js'); // dynamically load Saxon-JS.
-  const path = nodeRequire('path');      // use the real version from node.
+  // dynamically load Saxon-JS.
+  const Saxon = nodeRequire('saxon-js');
+  // use the real version from node.
+  const path = nodeRequire('path');
   //
   // Load the XSLT stylesheet
   //
-  const xslt = nodeRequire(path.resolve(mjxRoot(), 'input', 'mml', 'extensions', 'mml3.sef.json'));
+  const xslt = nodeRequire(
+    path.resolve(mjxRoot(), 'input', 'mml', 'extensions', 'mml3.sef.json')
+  );
   return (node: N, doc: MathDocument<N, T, D>) => {
     const adaptor = doc.adaptor;
     let mml = adaptor.outerHTML(node);
@@ -55,18 +66,27 @@ export function createTransform<N, T, D>(): (node: N, doc: MathDocument<N, T, D>
     //  Make sure the namespace is present
     //
     if (!mml.match(/ xmlns[=:]/)) {
-      mml = mml.replace(/<(?:(\w+)(:))?math/, '<$1$2math xmlns$2$1="http://www.w3.org/1998/Math/MathML"');
+      mml = mml.replace(
+        /<(?:(\w+)(:))?math/,
+        '<$1$2math xmlns$2$1="http://www.w3.org/1998/Math/MathML"'
+      );
     }
     //
     //  Try to run the transform, and if it fails, return the original MathML
     //
     let result;
     try {
-      result = adaptor.firstChild(adaptor.body(adaptor.parse(Saxon.transform({
-        stylesheetInternal: xslt,
-        sourceText: mml,
-        destination: 'serialized'
-      }).principalResult))) as N;
+      result = adaptor.firstChild(
+        adaptor.body(
+          adaptor.parse(
+            Saxon.transform({
+              stylesheetInternal: xslt,
+              sourceText: mml,
+              destination: 'serialized',
+            }).principalResult
+          )
+        )
+      ) as N;
     } catch (err) {
       result = node;
     }

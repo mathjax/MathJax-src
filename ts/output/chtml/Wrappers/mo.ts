@@ -21,16 +21,25 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTML} from '../../chtml.js';
-import {ChtmlWrapper, ChtmlWrapperClass, StringMap} from '../Wrapper.js';
-import {ChtmlWrapperFactory} from '../WrapperFactory.js';
-import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
-        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
-import {CommonMo, CommonMoClass, CommonMoMixin} from '../../common/Wrappers/mo.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMo} from '../../../core/MmlTree/MmlNodes/mo.js';
-import {StyleList} from '../../../util/StyleList.js';
-import {DIRECTION} from '../FontData.js';
+import { CHTML } from '../../chtml.js';
+import { ChtmlWrapper, ChtmlWrapperClass, StringMap } from '../Wrapper.js';
+import { ChtmlWrapperFactory } from '../WrapperFactory.js';
+import {
+  ChtmlCharOptions,
+  ChtmlVariantData,
+  ChtmlDelimiterData,
+  ChtmlFontData,
+  ChtmlFontDataClass,
+} from '../FontData.js';
+import {
+  CommonMo,
+  CommonMoClass,
+  CommonMoMixin,
+} from '../../common/Wrappers/mo.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMo } from '../../../core/MmlTree/MmlNodes/mo.js';
+import { StyleList } from '../../../util/StyleList.js';
+import { DIRECTION } from '../FontData.js';
 
 /*****************************************************************/
 /**
@@ -40,11 +49,22 @@ import {DIRECTION} from '../FontData.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMoNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMo<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {}
+export interface ChtmlMoNTD<N, T, D>
+  extends ChtmlWrapper<N, T, D>,
+    CommonMo<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {}
 
 /**
  * The ChtmlMoClass interface for the CHTML Mo wrapper
@@ -53,14 +73,28 @@ export interface ChtmlMoNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMo<
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMoClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonMoClass<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {
-  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMoNTD<N, T, D>;
+export interface ChtmlMoClass<N, T, D>
+  extends ChtmlWrapperClass<N, T, D>,
+    CommonMoClass<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {
+  new (
+    factory: ChtmlWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: ChtmlWrapper<N, T, D>
+  ): ChtmlMoNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
@@ -68,19 +102,26 @@ export interface ChtmlMoClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, Commo
  * The ChtmlMo wrapper class for the MmlMo class
  */
 export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
-
   const Base = CommonMoMixin<
-      N, T, D,
-      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
-      ChtmlMoClass<N, T, D>
-    >(ChtmlWrapper);
+    N,
+    T,
+    D,
+    CHTML<N, T, D>,
+    ChtmlWrapper<N, T, D>,
+    ChtmlWrapperFactory<N, T, D>,
+    ChtmlWrapperClass<N, T, D>,
+    ChtmlCharOptions,
+    ChtmlVariantData,
+    ChtmlDelimiterData,
+    ChtmlFontData,
+    ChtmlFontDataClass,
+    ChtmlMoClass<N, T, D>
+  >(ChtmlWrapper);
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error
   return class ChtmlMo extends Base implements ChtmlMoNTD<N, T, D> {
-
     /**
      * @override
      */
@@ -95,7 +136,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       },
       'mjx-stretchy-h > *': {
         display: 'inline-block',
-        width: 0
+        width: 0,
       },
       'mjx-stretchy-h > mjx-ext': {
         '/* IE */ overflow': 'hidden',
@@ -103,32 +144,32 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
         width: '100%',
         border: '0px solid transparent',
         'box-sizing': 'border-box',
-        'text-align': 'center'
+        'text-align': 'center',
       },
       'mjx-stretchy-h > mjx-ext > mjx-c': {
         transform: 'scalex(500)',
-        width: 0
+        width: 0,
       },
 
       'mjx-stretchy-v': {
         display: 'inline-block',
-        'text-align': 'center'
+        'text-align': 'center',
       },
       'mjx-stretchy-v > *': {
         display: 'block',
-        height: 0
+        height: 0,
       },
       'mjx-stretchy-v > mjx-ext': {
         '/* IE */ overflow': 'hidden',
         '/* others */ overflow': 'visible clip',
         height: '100%',
         border: '0px solid transparent',
-        'box-sizing': 'border-box'
+        'box-sizing': 'border-box',
       },
       'mjx-mark': {
         display: 'inline-block',
-        height: 0
-      }
+        height: 0,
+      },
     };
 
     /**
@@ -137,15 +178,20 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
     public toCHTML(parents: N[]) {
       const adaptor = this.adaptor;
       const attributes = this.node.attributes;
-      const symmetric = (attributes.get('symmetric') as boolean) && this.stretch.dir !== DIRECTION.Horizontal;
+      const symmetric =
+        (attributes.get('symmetric') as boolean) &&
+        this.stretch.dir !== DIRECTION.Horizontal;
       const stretchy = this.stretch.dir !== DIRECTION.None;
       if (stretchy && this.size === null) {
         this.getStretchedVariant([]);
       }
-      parents.length > 1 && parents.forEach(dom => adaptor.append(dom, this.html('mjx-linestrut')));
+      parents.length > 1 &&
+        parents.forEach((dom) =>
+          adaptor.append(dom, this.html('mjx-linestrut'))
+        );
       let chtml = this.standardChtmlNodes(parents);
       if (chtml.length > 1 && this.breakStyle !== 'duplicate') {
-        const i = (this.breakStyle === 'after' ? 1 : 0);
+        const i = this.breakStyle === 'after' ? 1 : 0;
         adaptor.remove(chtml[i]);
         chtml[i] = null;
       }
@@ -155,17 +201,24 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
         if (symmetric || attributes.get('largeop')) {
           const u = this.em(this.getCenterOffset());
           if (u !== '0') {
-            chtml.forEach(dom => dom && adaptor.setStyle(dom, 'verticalAlign', u));
+            chtml.forEach(
+              (dom) => dom && adaptor.setStyle(dom, 'verticalAlign', u)
+            );
           }
         }
         if (this.node.getProperty('mathaccent')) {
-          chtml.forEach(dom => {
+          chtml.forEach((dom) => {
             adaptor.setStyle(dom, 'width', '0');
-            adaptor.setStyle(dom, 'margin-left', this.em(this.getAccentOffset()));
+            adaptor.setStyle(
+              dom,
+              'margin-left',
+              this.em(this.getAccentOffset())
+            );
           });
         }
         chtml[0] && this.addChildren([chtml[0]]);
-        chtml[1] && ((this.multChar || this) as ChtmlMo).addChildren([chtml[1]]);
+        chtml[1] &&
+          ((this.multChar || this) as ChtmlMo).addChildren([chtml[1]]);
       }
     }
 
@@ -196,7 +249,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       //  Set the styles needed
       //
       const styles: StringMap = {};
-      const {h, d, w} = this.bbox;
+      const { h, d, w } = this.bbox;
       if (delim.dir === DIRECTION.Vertical) {
         //
         //  Vertical needs an extra (empty) element to get vertical position right
@@ -211,11 +264,12 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       //
       //  Make the main element and add it to the parent
       //
-      const properties = {class: this.char(delim.c || c), style: styles};
+      const properties = { class: this.char(delim.c || c), style: styles };
       const html = this.html('mjx-stretchy-' + delim.dir, properties, content);
       const adaptor = this.adaptor;
       chtml[0] && adaptor.append(chtml[0], html);
-      chtml[1] && adaptor.append(chtml[1], chtml[0] ? adaptor.clone(html) : html);
+      chtml[1] &&
+        adaptor.append(chtml[1], chtml[0] ? adaptor.clone(html) : html);
     }
 
     /**
@@ -229,16 +283,20 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
     protected createPart(part: string, n: number, v: string, content: N[]) {
       if (n) {
         const options = this.font.getChar(v, n)[3];
-        const letter = options.f || (v === 'normal' ? '' : this.font.getVariant(v).letter);
-        const font = options.ff || (letter ? `${this.font.cssFontPrefix}-${letter}` : '');
-        let c = (options.c as string || String.fromCodePoint(n))
-          .replace(/\\[0-9A-F]+/ig, (x) => String.fromCodePoint(parseInt(x.substring(1), 16)));
-        content.push(this.html(part, {}, [
-          this.html('mjx-c', font ? {class: font} : {}, [this.text(c)])
-        ]));
+        const letter =
+          options.f || (v === 'normal' ? '' : this.font.getVariant(v).letter);
+        const font =
+          options.ff || (letter ? `${this.font.cssFontPrefix}-${letter}` : '');
+        let c = ((options.c as string) || String.fromCodePoint(n)).replace(
+          /\\[0-9A-F]+/gi,
+          (x) => String.fromCodePoint(parseInt(x.substring(1), 16))
+        );
+        content.push(
+          this.html(part, {}, [
+            this.html('mjx-c', font ? { class: font } : {}, [this.text(c)]),
+          ])
+        );
       }
     }
-
   };
-
 })<any, any, any>();

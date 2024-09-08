@@ -21,14 +21,13 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {length2em} from '../../util/lengths.js';
-import {Safe, FilterFunction} from './safe.js';
+import { length2em } from '../../util/lengths.js';
+import { Safe, FilterFunction } from './safe.js';
 
 /**
  * The default attribute-filtering functions
  */
-export const SafeMethods: {[name: string]: FilterFunction<any, any, any>} = {
-
+export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
   /**
    * Filter HREF URL's
    *
@@ -41,10 +40,14 @@ export const SafeMethods: {[name: string]: FilterFunction<any, any, any>} = {
    * @template D  The Document class
    */
   filterURL<N, T, D>(safe: Safe<N, T, D>, url: string): string | null {
-    const protocol = (url.match(/^\s*([a-z\n\r]+):/i) || [null, ''])[1].replace(/[\n\r]/g, '').toLowerCase();
+    const protocol = (url.match(/^\s*([a-z\n\r]+):/i) || [null, ''])[1]
+      .replace(/[\n\r]/g, '')
+      .toLowerCase();
     const allow = safe.allow.URLs;
-    return (allow === 'all' || (allow === 'safe' &&
-                                (safe.options.safeProtocols[protocol] || !protocol))) ? url : null;
+    return allow === 'all' ||
+      (allow === 'safe' && (safe.options.safeProtocols[protocol] || !protocol))
+      ? url
+      : null;
   },
 
   /**
@@ -60,7 +63,11 @@ export const SafeMethods: {[name: string]: FilterFunction<any, any, any>} = {
    */
   filterClassList<N, T, D>(safe: Safe<N, T, D>, list: string): string | null {
     const classes = list.trim().replace(/\s\s+/g, ' ').split(/ /);
-    return classes.map((name) => this.filterClass(safe, name) || '').join(' ').trim().replace(/\s\s+/g, '');
+    return classes
+      .map((name) => this.filterClass(safe, name) || '')
+      .join(' ')
+      .trim()
+      .replace(/\s\s+/g, '');
   },
 
   /**
@@ -76,7 +83,10 @@ export const SafeMethods: {[name: string]: FilterFunction<any, any, any>} = {
    */
   filterClass<N, T, D>(safe: Safe<N, T, D>, CLASS: string): string | null {
     const allow = safe.allow.classes;
-    return (allow === 'all' || (allow === 'safe' && CLASS.match(safe.options.classPattern))) ? CLASS : null;
+    return allow === 'all' ||
+      (allow === 'safe' && CLASS.match(safe.options.classPattern))
+      ? CLASS
+      : null;
   },
 
   /**
@@ -92,7 +102,10 @@ export const SafeMethods: {[name: string]: FilterFunction<any, any, any>} = {
    */
   filterID<N, T, D>(safe: Safe<N, T, D>, id: string): string | null {
     const allow = safe.allow.cssIDs;
-    return (allow === 'all' || (allow === 'safe' && id.match(safe.options.idPattern))) ? id : null;
+    return allow === 'all' ||
+      (allow === 'safe' && id.match(safe.options.idPattern))
+      ? id
+      : null;
   },
 
   /**
@@ -115,7 +128,7 @@ export const SafeMethods: {[name: string]: FilterFunction<any, any, any>} = {
       //
       //  Create div1 with styles set to the given styles, and div2 with blank styles
       //
-      const div1 = adaptor.node('div', {style: styles});
+      const div1 = adaptor.node('div', { style: styles });
       const div2 = adaptor.node('div');
       //
       //  Check each allowed style and transfer OK ones to div2
@@ -159,11 +172,19 @@ export const SafeMethods: {[name: string]: FilterFunction<any, any, any>} = {
    * @template T  The Text node class
    * @template D  The Document class
    */
-  filterStyle<N, T, D>(safe: Safe<N, T, D>, style: string, div: N): string | null {
+  filterStyle<N, T, D>(
+    safe: Safe<N, T, D>,
+    style: string,
+    div: N
+  ): string | null {
     const value = safe.adaptor.getStyle(div, style);
-    if (typeof value !== 'string' || value === '' || value.match(/^\s*calc/) ||
-        (value.match(/javascript:/) && !safe.options.safeProtocols.javascript) ||
-        (value.match(/data:/) && !safe.options.safeProtocols.data)) {
+    if (
+      typeof value !== 'string' ||
+      value === '' ||
+      value.match(/^\s*calc/) ||
+      (value.match(/javascript:/) && !safe.options.safeProtocols.javascript) ||
+      (value.match(/data:/) && !safe.options.safeProtocols.data)
+    ) {
       return null;
     }
     const name = style.replace(/Top|Right|Left|Bottom/, '');
@@ -186,7 +207,12 @@ export const SafeMethods: {[name: string]: FilterFunction<any, any, any>} = {
    * @template T  The Text node class
    * @template D  The Document class
    */
-  filterStyleValue<N, T, D>(safe: Safe<N, T, D>, style: string, value: string, div: N): string | null {
+  filterStyleValue<N, T, D>(
+    safe: Safe<N, T, D>,
+    style: string,
+    value: string,
+    div: N
+  ): string | null {
     const name = safe.options.styleLengths[style];
     if (!name) {
       return value;
@@ -194,7 +220,11 @@ export const SafeMethods: {[name: string]: FilterFunction<any, any, any>} = {
     if (typeof name !== 'string') {
       return this.filterStyleLength(safe, style, value);
     }
-    const length = this.filterStyleLength(safe, name, safe.adaptor.getStyle(div, name));
+    const length = this.filterStyleLength(
+      safe,
+      name,
+      safe.adaptor.getStyle(div, name)
+    );
     if (!length) {
       return null;
     }
@@ -214,12 +244,20 @@ export const SafeMethods: {[name: string]: FilterFunction<any, any, any>} = {
    * @template T  The Text node class
    * @template D  The Document class
    */
-  filterStyleLength<N, T, D>(safe: Safe<N, T, D>, style: string, value: string): string | null {
+  filterStyleLength<N, T, D>(
+    safe: Safe<N, T, D>,
+    style: string,
+    value: string
+  ): string | null {
     if (!value.match(/^(.+)(em|ex|ch|rem|px|mm|cm|in|pt|pc|%)$/)) return null;
     const em = length2em(value, 1);
     const lengths = safe.options.styleLengths[style];
-    const [m, M] = (Array.isArray(lengths) ? lengths : [-safe.options.lengthMax, safe.options.lengthMax]);
-    return (m <= em && em <= M ? value : (em < m ? m : M).toFixed(3).replace(/\.?0+$/, '') + 'em');
+    const [m, M] = Array.isArray(lengths)
+      ? lengths
+      : [-safe.options.lengthMax, safe.options.lengthMax];
+    return m <= em && em <= M
+      ? value
+      : (em < m ? m : M).toFixed(3).replace(/\.?0+$/, '') + 'em';
   },
 
   /**
@@ -249,7 +287,10 @@ export const SafeMethods: {[name: string]: FilterFunction<any, any, any>} = {
    * @template D  The Document class
    */
   filterSizeMultiplier<N, T, D>(safe: Safe<N, T, D>, size: string): string {
-    const [m, M] = safe.options.scriptsizemultiplierRange || [-Infinity, Infinity];
+    const [m, M] = safe.options.scriptsizemultiplierRange || [
+      -Infinity,
+      Infinity,
+    ];
     return Math.min(M, Math.max(m, parseFloat(size))).toString();
   },
 
@@ -264,7 +305,10 @@ export const SafeMethods: {[name: string]: FilterFunction<any, any, any>} = {
    * @template T  The Text node class
    * @template D  The Document class
    */
-  filterScriptLevel<N, T, D>(safe: Safe<N, T, D>, level: string): string | null {
+  filterScriptLevel<N, T, D>(
+    safe: Safe<N, T, D>,
+    level: string
+  ): string | null {
     const [m, M] = safe.options.scriptlevelRange || [-Infinity, Infinity];
     return Math.min(M, Math.max(m, parseInt(level))).toString();
   },
@@ -281,8 +325,11 @@ export const SafeMethods: {[name: string]: FilterFunction<any, any, any>} = {
    * @template T  The Text node class
    * @template D  The Document class
    */
-  filterData<N, T, D>(safe: Safe<N, T, D>, value: string, id: string): string | null {
-    return (id.match(safe.options.dataPattern) ? value : null);
-  }
-
+  filterData<N, T, D>(
+    safe: Safe<N, T, D>,
+    value: string,
+    id: string
+  ): string | null {
+    return id.match(safe.options.dataPattern) ? value : null;
+  },
 };

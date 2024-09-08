@@ -15,33 +15,29 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Configuration file for the AMScd package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
-import {Configuration} from '../Configuration.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration } from '../Configuration.js';
 import './AmsCdMappings.js';
 
-
-export const AmsCdConfiguration = Configuration.create(
-  'amscd', {
-    [ConfigurationType.HANDLER]: {
-      [HandlerType.CHARACTER]: ['amscd_special'],
-      [HandlerType.MACRO]: ['amscd_macros'],
-      [HandlerType.ENVIRONMENT]: ['amscd_environment']
+export const AmsCdConfiguration = Configuration.create('amscd', {
+  [ConfigurationType.HANDLER]: {
+    [HandlerType.CHARACTER]: ['amscd_special'],
+    [HandlerType.MACRO]: ['amscd_macros'],
+    [HandlerType.ENVIRONMENT]: ['amscd_environment'],
+  },
+  [ConfigurationType.OPTIONS]: {
+    amscd: {
+      colspace: '5pt',
+      rowspace: '5pt',
+      harrowsize: '2.75em',
+      varrowsize: '1.75em',
+      hideHorizontalLabels: false,
     },
-    [ConfigurationType.OPTIONS]: {
-      amscd: {
-        colspace: '5pt',
-        rowspace: '5pt',
-        harrowsize: '2.75em',
-        varrowsize: '1.75em',
-        hideHorizontalLabels: false
-      }
-    }
-  }
-);
+  },
+});

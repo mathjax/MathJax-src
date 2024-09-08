@@ -15,16 +15,15 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview The dsfont package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {HandlerType, ConfigurationType} from '../HandlerTypes.js';
-import {Configuration} from '../Configuration.js';
-import {CommandMap} from '../TokenMap.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration } from '../Configuration.js';
+import { CommandMap } from '../TokenMap.js';
 import BaseMethods from '../base/BaseMethods.js';
 import TexParser from '../TexParser.js';
 
@@ -32,10 +31,12 @@ import TexParser from '../TexParser.js';
  * The methods that implement the dsfont package.
  */
 function ChooseFont(parser: TexParser, name: string) {
-    BaseMethods.MathFont(
-      parser, name,
-      parser.options.dsfont.sans ? '-ds-ss' : '-ds-rm');
-  }
+  BaseMethods.MathFont(
+    parser,
+    name,
+    parser.options.dsfont.sans ? '-ds-ss' : '-ds-rm'
+  );
+}
 
 new CommandMap('dsfont', {
   mathds: ChooseFont,
@@ -50,8 +51,7 @@ export const DsfontConfiguration = Configuration.create('dsfont', {
   },
   [ConfigurationType.OPTIONS]: {
     dsfont: {
-      sans: false
-    }
-  }
+      sans: false,
+    },
+  },
 });
-

@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {mathjax} from '../mathjax.js';
+import { mathjax } from '../mathjax.js';
 
 /**
  * Load a file asynchronously using the mathjax.asynchLoad method, if there is one
@@ -31,7 +31,9 @@ import {mathjax} from '../mathjax.js';
  */
 export function asyncLoad(name: string): Promise<any> {
   if (!mathjax.asyncLoad) {
-    return Promise.reject(`Can't load '${name}': No mathjax.asyncLoad method specified`);
+    return Promise.reject(
+      `Can't load '${name}': No mathjax.asyncLoad method specified`
+    );
   }
   return new Promise((ok, fail) => {
     const result = mathjax.asyncLoad(name);

@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {LiteElement} from './Element.js';
+import { LiteElement } from './Element.js';
 
 /************************************************************/
 /**

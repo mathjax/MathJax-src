@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {MmlNode, AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { MmlNode, AbstractMmlTokenNode, TEXCLASS } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,17 +30,16 @@ import {MmlNode, AbstractMmlTokenNode, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMspace extends AbstractMmlTokenNode {
-
   /**
    * Attributes that make an mpsace not spacelike
    */
   public static NONSPACELIKE = [
-    /* 'width' */  // spec says not to allow breaks here, but we allow it
+    /* 'width' */ // spec says not to allow breaks here, but we allow it
     'height',
     'depth',
     'style',
     'mathbackground',
-    'background'
+    'background',
   ];
 
   /**
@@ -48,17 +47,17 @@ export class MmlMspace extends AbstractMmlTokenNode {
    */
   public static defaults: PropertyList = {
     ...AbstractMmlTokenNode.defaults,
-    width:  '0em',
+    width: '0em',
     height: '0ex',
-    depth:  '0ex',
+    depth: '0ex',
     linebreak: 'auto',
-    indentshift: 'auto',         // Use user configuration
+    indentshift: 'auto', // Use user configuration
     indentalign: 'auto',
     indenttarget: '',
     indentalignfirst: 'indentalign',
     indentshiftfirst: 'indentshift',
-    indentalignlast:  'indentalign',
-    indentshiftlast:  'indentshift'
+    indentalignlast: 'indentalign',
+    indentshiftlast: 'indentshift',
   };
 
   /**
@@ -104,7 +103,10 @@ export class MmlMspace extends AbstractMmlTokenNode {
    */
   public get hasNewline() {
     const linebreak = this.attributes.get('linebreak');
-    return this.canBreak && (linebreak === 'newline' || linebreak === 'indentingnewline');
+    return (
+      this.canBreak &&
+      (linebreak === 'newline' || linebreak === 'indentingnewline')
+    );
   }
 
   /**
@@ -114,5 +116,4 @@ export class MmlMspace extends AbstractMmlTokenNode {
   public get canBreak(): boolean {
     return !this.attributes.hasOneOf(MmlMspace.NONSPACELIKE);
   }
-
 }

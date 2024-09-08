@@ -21,9 +21,9 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlNode, AttributeList} from '../MmlNode.js';
-import {MmlMsubsup} from './msubsup.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlNode, AttributeList } from '../MmlNode.js';
+import { MmlMsubsup } from './msubsup.js';
 
 /*****************************************************************/
 /**
@@ -31,12 +31,11 @@ import {MmlMsubsup} from './msubsup.js';
  */
 
 export class MmlMmultiscripts extends MmlMsubsup {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
-    ...MmlMsubsup.defaults
+    ...MmlMsubsup.defaults,
   };
 
   /**
@@ -62,8 +61,18 @@ export class MmlMmultiscripts extends MmlMsubsup {
    *
    * @override
    */
-  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
-    this.childNodes[0].setInheritedAttributes(attributes, display, level, prime);
+  protected setChildInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    prime: boolean
+  ) {
+    this.childNodes[0].setInheritedAttributes(
+      attributes,
+      display,
+      level,
+      prime
+    );
     let prescripts = false;
     for (let i = 1, n = 0; i < this.childNodes.length; i++) {
       let child = this.childNodes[i];
@@ -78,14 +87,19 @@ export class MmlMmultiscripts extends MmlMsubsup {
           }
         }
       } else {
-        let primestyle = prime || (n % 2 === 0);
+        let primestyle = prime || n % 2 === 0;
         child.setInheritedAttributes(attributes, false, level + 1, primestyle);
         n++;
       }
     }
     if (this.childNodes.length % 2 === (prescripts ? 1 : 0)) {
       this.appendChild(this.factory.create('none'));
-      this.childNodes[this.childNodes.length - 1].setInheritedAttributes(attributes, false, level + 1, prime);
+      this.childNodes[this.childNodes.length - 1].setInheritedAttributes(
+        attributes,
+        false,
+        level + 1,
+        prime
+      );
     }
   }
 
@@ -101,21 +115,30 @@ export class MmlMmultiscripts extends MmlMsubsup {
       let child = this.childNodes[i];
       if (child.isKind('mprescripts')) {
         if (prescripts) {
-          child.mError(child.kind + ' can only appear once in ' + this.kind, options, true);
+          child.mError(
+            child.kind + ' can only appear once in ' + this.kind,
+            options,
+            true
+          );
         } else {
           prescripts = true;
           if (i % 2 === 0 && !fix) {
-            this.mError('There must be an equal number of prescripts of each type', options);
+            this.mError(
+              'There must be an equal number of prescripts of each type',
+              options
+            );
           }
         }
       }
     }
     if (this.childNodes.length % 2 === (prescripts ? 1 : 0) && !fix) {
-      this.mError('There must be an equal number of scripts of each type', options);
+      this.mError(
+        'There must be an equal number of scripts of each type',
+        options
+      );
     }
     super.verifyChildren(options);
   }
-
 }
 
 /*****************************************************************/
@@ -124,12 +147,11 @@ export class MmlMmultiscripts extends MmlMsubsup {
  */
 
 export class MmlMprescripts extends AbstractMmlNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
-    ...AbstractMmlNode.defaults
+    ...AbstractMmlNode.defaults,
   };
 
   /**
@@ -154,10 +176,13 @@ export class MmlMprescripts extends AbstractMmlNode {
   public verifyTree(options: PropertyList) {
     super.verifyTree(options);
     if (this.parent && !this.parent.isKind('mmultiscripts')) {
-      this.mError(this.kind + ' must be a child of mmultiscripts', options, true);
+      this.mError(
+        this.kind + ' must be a child of mmultiscripts',
+        options,
+        true
+      );
     }
   }
-
 }
 
 /*****************************************************************/
@@ -166,12 +191,11 @@ export class MmlMprescripts extends AbstractMmlNode {
  */
 
 export class MmlNone extends AbstractMmlNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
-    ...AbstractMmlNode.defaults
+    ...AbstractMmlNode.defaults,
   };
 
   /**
@@ -196,8 +220,11 @@ export class MmlNone extends AbstractMmlNode {
   public verifyTree(options: PropertyList) {
     super.verifyTree(options);
     if (this.parent && !this.parent.isKind('mmultiscripts')) {
-      this.mError(this.kind + ' must be a child of mmultiscripts', options, true);
+      this.mError(
+        this.kind + ' must be a child of mmultiscripts',
+        options,
+        true
+      );
     }
   }
-
 }

@@ -15,27 +15,24 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Singleton class for handling symbol maps.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {HandlerType} from './HandlerTypes.js';
-import {AbstractTokenMap, TokenMap} from './TokenMap.js';
-import {ParseInput, ParseResult, ParseMethod} from './Types.js';
-import {PrioritizedList} from '../../util/PrioritizedList.js';
-import {FunctionList} from '../../util/FunctionList.js';
+import { HandlerType } from './HandlerTypes.js';
+import { AbstractTokenMap, TokenMap } from './TokenMap.js';
+import { ParseInput, ParseResult, ParseMethod } from './Types.js';
+import { PrioritizedList } from '../../util/PrioritizedList.js';
+import { FunctionList } from '../../util/FunctionList.js';
 
-
-export type HandlerConfig = {[P in HandlerType]?: string[]};
-export type FallbackConfig = {[P in HandlerType]?: ParseMethod};
+export type HandlerConfig = { [P in HandlerType]?: string[] };
+export type FallbackConfig = { [P in HandlerType]?: ParseMethod };
 
 let maps: Map<string, TokenMap> = new Map();
 
 export const MapHandler = {
-
   /**
    * Adds a new token map to the map handler. Might overwrite an existing
    * token map of the same name.
@@ -46,7 +43,6 @@ export const MapHandler = {
     maps.set(map.name, map);
   },
 
-
   /**
    * Looks up a token map if it exists.
    *
@@ -55,17 +51,15 @@ export const MapHandler = {
    */
   getMap(name: string): TokenMap {
     return maps.get(name);
-  }
-
-}
-
+  },
+};
 
 /**
  * Class of token mappings that are active in a configuration.
  */
 export class SubHandler {
-
-  private _configuration: PrioritizedList<TokenMap> = new PrioritizedList<TokenMap>();
+  private _configuration: PrioritizedList<TokenMap> =
+    new PrioritizedList<TokenMap>();
   private _fallback: FunctionList = new FunctionList();
 
   /**
@@ -74,8 +68,11 @@ export class SubHandler {
    * @param {ParseMethod} fallback A fallback method.
    * @param {number} priority Optionally a priority.
    */
-  public add(maps: string[], fallback: ParseMethod,
-             priority: number = PrioritizedList.DEFAULTPRIORITY) {
+  public add(
+    maps: string[],
+    fallback: ParseMethod,
+    priority: number = PrioritizedList.DEFAULTPRIORITY
+  ) {
     for (const name of maps.slice().reverse()) {
       let map = MapHandler.getMap(name);
       if (!map) {
@@ -95,7 +92,7 @@ export class SubHandler {
    * @return {ParseResult} The output of the parsing function.
    */
   public parse(input: ParseInput): ParseResult {
-    for (let {item: map} of this._configuration) {
+    for (let { item: map } of this._configuration) {
       const result = map.parse(input);
       if (result) {
         return result;
@@ -104,7 +101,6 @@ export class SubHandler {
     let [env, token] = input;
     Array.from(this._fallback)[0].item(env, token);
   }
-
 
   /**
    * Maps a token to its "parse value" if it exists.
@@ -117,7 +113,6 @@ export class SubHandler {
     return map ? map.lookup(token) : null;
   }
 
-
   /**
    * Checks if a token is contained in one of the token mappings of this
    * configuration.
@@ -129,18 +124,16 @@ export class SubHandler {
     return this.applicable(token) ? true : false;
   }
 
-
   /**
    * @override
    */
   public toString(): string {
     let names = [];
-    for (let {item: map} of this._configuration) {
+    for (let { item: map } of this._configuration) {
       names.push(map.name);
     }
     return names.join(', ');
   }
-
 
   /**
    * Retrieves the first applicable token map in the configuration.
@@ -148,7 +141,7 @@ export class SubHandler {
    * @return {TokenMap} A map that can parse the token.
    */
   public applicable(token: string): TokenMap {
-    for (let {item: map} of this._configuration) {
+    for (let { item: map } of this._configuration) {
       if (map.contains(token)) {
         return map;
       }
@@ -156,21 +149,19 @@ export class SubHandler {
     return null;
   }
 
-
   /**
    * Retrieves the map of the given name.
    * @param {string} name Name of the token map.
    * @return {TokenMap} The map if it exists.
    */
   public retrieve(name: string): TokenMap {
-    for (let {item: map} of this._configuration) {
+    for (let { item: map } of this._configuration) {
       if (map.name === name) {
         return map;
       }
     }
     return null;
   }
-
 
   /**
    * Prints a warning message.
@@ -179,20 +170,20 @@ export class SubHandler {
   private warn(message: string) {
     console.log('TexParser Warning: ' + message);
   }
-
 }
 
-
 export class SubHandlers {
-
   private map = new Map<HandlerType, SubHandler>();
 
   /**
    * Adds a token map to the configuration if it exists.
    * @param {string} name of the token map.
    */
-  public add(handlers: HandlerConfig, fallbacks: FallbackConfig,
-             priority: number = PrioritizedList.DEFAULTPRIORITY): void {
+  public add(
+    handlers: HandlerConfig,
+    fallbacks: FallbackConfig,
+    priority: number = PrioritizedList.DEFAULTPRIORITY
+  ): void {
     for (const key of Object.keys(handlers)) {
       let name = key as HandlerType;
       let subHandler = this.get(name);
@@ -204,7 +195,6 @@ export class SubHandlers {
     }
   }
 
-
   /**
    * Setter for subhandlers.
    * @param {HandlerType} name The name of the subhandler.
@@ -214,7 +204,6 @@ export class SubHandlers {
     this.map.set(name, subHandler);
   }
 
-
   /**
    * Getter for subhandler.
    * @param {HandlerType} name Name of the subhandler.
@@ -223,7 +212,6 @@ export class SubHandlers {
   public get(name: HandlerType): SubHandler {
     return this.map.get(name);
   }
-
 
   /**
    * Retrieves a token map of the given name.
@@ -240,7 +228,6 @@ export class SubHandlers {
     return null;
   }
 
-
   /**
    * All names of registered subhandlers.
    * @return {IterableIterator<string>} Iterable list of keys.
@@ -248,5 +235,4 @@ export class SubHandlers {
   public keys(): IterableIterator<string> {
     return this.map.keys();
   }
-
 }

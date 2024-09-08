@@ -15,25 +15,22 @@
  *  limitations under the License.
  */
 
-
 /**
  * @fileoverview Utilities file for the empheq package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-
-import {ParseUtil} from '../ParseUtil.js';
+import { ParseUtil } from '../ParseUtil.js';
 import TexParser from '../TexParser.js';
-import {EnvList} from '../StackItem.js';
-import {AbstractTags} from '../Tags.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMtable} from '../../../core/MmlTree/MmlNodes/mtable.js';
-import {MmlMtd} from '../../../core/MmlTree/MmlNodes/mtd.js';
-import {EmpheqBeginItem} from './EmpheqConfiguration.js';
+import { EnvList } from '../StackItem.js';
+import { AbstractTags } from '../Tags.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMtable } from '../../../core/MmlTree/MmlNodes/mtable.js';
+import { MmlMtd } from '../../../core/MmlTree/MmlNodes/mtd.js';
+import { EmpheqBeginItem } from './EmpheqConfiguration.js';
 
 export const EmpheqUtil = {
-
   /**
    * Create the needed envinronment and process it by the give function.
    *
@@ -44,7 +41,9 @@ export const EmpheqUtil = {
    */
   environment(parser: TexParser, env: string, func: Function, args: any[]) {
     const name = args[0];
-    const item = parser.itemFactory.create(name + '-begin').setProperties({name: env, end: name});
+    const item = parser.itemFactory
+      .create(name + '-begin')
+      .setProperties({ name: env, end: name });
     parser.Push(func(parser, item, ...args.slice(1)));
   },
 
@@ -55,7 +54,10 @@ export const EmpheqUtil = {
    * @param {{[key:string]:number} allowed  Object containing options to allow
    * @return {EnvList}                      The parsed keys
    */
-  splitOptions(text: string, allowed: {[key: string]: number} = null): EnvList {
+  splitOptions(
+    text: string,
+    allowed: { [key: string]: number } = null
+  ): EnvList {
     return ParseUtil.keyvalOptions(text, allowed, true);
   },
 
@@ -85,20 +87,31 @@ export const EmpheqUtil = {
    * @param {string} env        The name of the current environment.
    * @return {MmlNode}          The mpadded element.
    */
-  cellBlock(tex: string, table: MmlMtable, parser: TexParser, env: string): MmlNode {
-    const mpadded = parser.create('node', 'mpadded', [], {height: 0, depth: 0, voffset: '-1height'});
+  cellBlock(
+    tex: string,
+    table: MmlMtable,
+    parser: TexParser,
+    env: string
+  ): MmlNode {
+    const mpadded = parser.create('node', 'mpadded', [], {
+      height: 0,
+      depth: 0,
+      voffset: '-1height',
+    });
     const result = new TexParser(tex, parser.stack.env, parser.configuration);
     const mml = result.mml();
     if (env && result.configuration.tags.label) {
       (result.configuration.tags.currentTag as any).env = env;
       (result.configuration.tags as AbstractTags).getTag(true);
     }
-    for (const child of (mml.isInferred ? mml.childNodes : [mml])) {
+    for (const child of mml.isInferred ? mml.childNodes : [mml]) {
       mpadded.appendChild(child);
     }
-    mpadded.appendChild(parser.create('node', 'mphantom', [
-      parser.create('node', 'mpadded', [table], {width: 0})
-    ]));
+    mpadded.appendChild(
+      parser.create('node', 'mphantom', [
+        parser.create('node', 'mpadded', [table], { width: 0 }),
+      ])
+    );
     return mpadded;
   },
 
@@ -114,7 +127,9 @@ export const EmpheqUtil = {
     const table = ParseUtil.copyNode(original, parser);
     table.setChildren(table.childNodes.slice(0, 1));
     table.attributes.set('align', 'baseline 1');
-    return original.factory.create('mphantom', {}, [parser.create('node', 'mpadded', [table],  {width: 0})]);
+    return original.factory.create('mphantom', {}, [
+      parser.create('node', 'mpadded', [table], { width: 0 }),
+    ]);
   },
 
   /**
@@ -127,12 +142,23 @@ export const EmpheqUtil = {
    * @param {TexParser} parser   The active tex parser.
    * @param {srting} env         The current environment.
    */
-  rowspanCell(mtd: MmlMtd, tex: string, table: MmlMtable, parser: TexParser, env: string) {
+  rowspanCell(
+    mtd: MmlMtd,
+    tex: string,
+    table: MmlMtable,
+    parser: TexParser,
+    env: string
+  ) {
     mtd.appendChild(
-      parser.create('node', 'mpadded', [
-        this.cellBlock(tex, ParseUtil.copyNode(table, parser), parser, env),
-        this.topRowTable(table, parser)
-      ], {height: 0, depth: 0, voffset: 'height'})
+      parser.create(
+        'node',
+        'mpadded',
+        [
+          this.cellBlock(tex, ParseUtil.copyNode(table, parser), parser, env),
+          this.topRowTable(table, parser),
+        ],
+        { height: 0, depth: 0, voffset: 'height' }
+      )
     );
   },
 
@@ -145,9 +171,21 @@ export const EmpheqUtil = {
    * @param {TexParser} parser    The active tex parser.
    * @param {string} env          The current environment.
    */
-  left(table: MmlMtable, original: MmlMtable, left: string, parser: TexParser, env: string = '') {
-    table.attributes.set('columnalign', 'right ' + (table.attributes.get('columnalign') || ''));
-    table.attributes.set('columnspacing', '0em ' + (table.attributes.get('columnspacing') || ''));
+  left(
+    table: MmlMtable,
+    original: MmlMtable,
+    left: string,
+    parser: TexParser,
+    env: string = ''
+  ) {
+    table.attributes.set(
+      'columnalign',
+      'right ' + (table.attributes.get('columnalign') || '')
+    );
+    table.attributes.set(
+      'columnspacing',
+      '0em ' + (table.attributes.get('columnspacing') || '')
+    );
     let mtd;
     for (const row of table.childNodes.slice(0).reverse()) {
       mtd = parser.create('node', 'mtd');
@@ -170,22 +208,35 @@ export const EmpheqUtil = {
    * @param {TexParser} parser    The active tex parser.
    * @param {string} env          The current environment.
    */
-  right(table: MmlMtable, original: MmlMtable, right: string, parser: TexParser, env: string = '') {
+  right(
+    table: MmlMtable,
+    original: MmlMtable,
+    right: string,
+    parser: TexParser,
+    env: string = ''
+  ) {
     if (table.childNodes.length === 0) {
       table.appendChild(parser.create('node', 'mtr'));
     }
     const m = EmpheqUtil.columnCount(table);
     const row = table.childNodes[0];
-    while (row.childNodes.length < m) row.appendChild(parser.create('node', 'mtd'));
+    while (row.childNodes.length < m)
+      row.appendChild(parser.create('node', 'mtd'));
     const mtd = row.appendChild(parser.create('node', 'mtd')) as MmlMtd;
     EmpheqUtil.rowspanCell(mtd, right, original, parser, env);
     table.attributes.set(
       'columnalign',
-      (table.attributes.get('columnalign') as string || '').split(/ /).slice(0, m).join(' ') + ' left'
+      ((table.attributes.get('columnalign') as string) || '')
+        .split(/ /)
+        .slice(0, m)
+        .join(' ') + ' left'
     );
     table.attributes.set(
       'columnspacing',
-      (table.attributes.get('columnspacing') as string || '').split(/ /).slice(0, m - 1).join(' ') + ' 0em'
+      ((table.attributes.get('columnspacing') as string) || '')
+        .split(/ /)
+        .slice(0, m - 1)
+        .join(' ') + ' 0em'
     );
   },
 
@@ -212,7 +263,7 @@ export const EmpheqUtil = {
     gather: true,
     flalign: true,
     alignat: true,
-    multline: true
+    multline: true,
   },
 
   /**
@@ -223,6 +274,5 @@ export const EmpheqUtil = {
    */
   checkEnv(env: string): boolean {
     return this.allowEnv.hasOwnProperty(env.replace(/\*$/, '')) || false;
-  }
-
+  },
 };

@@ -21,8 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlNode} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlNode } from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,13 +30,12 @@ import {AbstractMmlNode} from '../MmlNode.js';
  */
 
 export class MmlMalignmark extends AbstractMmlNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
     ...AbstractMmlNode.defaults,
-    edge: 'left'
+    edge: 'left',
   };
 
   /**
@@ -61,5 +60,4 @@ export class MmlMalignmark extends AbstractMmlNode {
   public get isSpacelike() {
     return true;
   }
-
 }

@@ -23,15 +23,15 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {DOMAdaptor} from '../core/DOMAdaptor.js';
-import {userOptions, defaultOptions, OptionList} from '../util/Options.js';
+import { DOMAdaptor } from '../core/DOMAdaptor.js';
+import { userOptions, defaultOptions, OptionList } from '../util/Options.js';
 
 /**
  * A constructor for a given class
  *
  * @template T   The class to construct
  */
-export type Constructor<T> = (new(...args: any[]) => T);
+export type Constructor<T> = new (...args: any[]) => T;
 
 /**
  * The type of an Adaptor class
@@ -41,6 +41,7 @@ export type AdaptorConstructor<N, T, D> = Constructor<DOMAdaptor<N, T, D>>;
 /**
  * The options to the NodeMixin
  */
+/* prettier-ignore */
 export const NodeMixinOptions: OptionList = {
   badCSS: true,     // getComputedStyles() is not implemented in the DOM
   badSizes: true,   // element sizes (e.g., ClientWidth, etc.) are not implemented in the DOM
@@ -55,14 +56,13 @@ export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
   Base: A,
   options: typeof NodeMixinOptions = {}
 ): A {
-
   options = userOptions(defaultOptions({}, NodeMixinOptions), options);
 
   return class NodeAdaptor extends Base {
-
     /**
      * The default options
      */
+    /* prettier-ignore */
     public static OPTIONS: OptionList = {
       ...(options.badCSS ? {
         fontSize: 16,          // We can't compute the font size, so always use this
@@ -78,25 +78,28 @@ export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
     /**
      * Pattern to identify CJK (i.e., full-width) characters
      */
-    public static cjkPattern = new RegExp([
-      '[',
-      '\u1100-\u115F', // Hangul Jamo
-      '\u2329\u232A',  // LEFT-POINTING ANGLE BRACKET, RIGHT-POINTING ANGLE BRACKET
-      '\u2E80-\u303E', // CJK Radicals Supplement ... CJK Symbols and Punctuation
-      '\u3040-\u3247', // Hiragana ... Enclosed CJK Letters and Months
-      '\u3250-\u4DBF', // Enclosed CJK Letters and Months ... CJK Unified Ideographs Extension A
-      '\u4E00-\uA4C6', // CJK Unified Ideographs ... Yi Radicals
-      '\uA960-\uA97C', // Hangul Jamo Extended-A
-      '\uAC00-\uD7A3', // Hangul Syllables
-      '\uF900-\uFAFF', // CJK Compatibility Ideographs
-      '\uFE10-\uFE19', // Vertical Forms
-      '\uFE30-\uFE6B', // CJK Compatibility Forms ... Small Form Variants
-      '\uFF01-\uFF60\uFFE0-\uFFE6', // Halfwidth and Fullwidth Forms
-      '\u{1B000}-\u{1B001}', // Kana Supplement
-      '\u{1F200}-\u{1F251}', // Enclosed Ideographic Supplement
-      '\u{20000}-\u{3FFFD}', // CJK Unified Ideographs Extension B ... Tertiary Ideographic Plane
-      ']'
-    ].join(''), 'gu');
+    public static cjkPattern = new RegExp(
+      [
+        '[',
+        '\u1100-\u115F', // Hangul Jamo
+        '\u2329\u232A', // LEFT-POINTING ANGLE BRACKET, RIGHT-POINTING ANGLE BRACKET
+        '\u2E80-\u303E', // CJK Radicals Supplement ... CJK Symbols and Punctuation
+        '\u3040-\u3247', // Hiragana ... Enclosed CJK Letters and Months
+        '\u3250-\u4DBF', // Enclosed CJK Letters and Months ... CJK Unified Ideographs Extension A
+        '\u4E00-\uA4C6', // CJK Unified Ideographs ... Yi Radicals
+        '\uA960-\uA97C', // Hangul Jamo Extended-A
+        '\uAC00-\uD7A3', // Hangul Syllables
+        '\uF900-\uFAFF', // CJK Compatibility Ideographs
+        '\uFE10-\uFE19', // Vertical Forms
+        '\uFE30-\uFE6B', // CJK Compatibility Forms ... Small Form Variants
+        '\uFF01-\uFF60\uFFE0-\uFFE6', // Halfwidth and Fullwidth Forms
+        '\u{1B000}-\u{1B001}', // Kana Supplement
+        '\u{1F200}-\u{1F251}', // Enclosed Ideographic Supplement
+        '\u{20000}-\u{3FFFD}', // CJK Unified Ideographs Extension B ... Tertiary Ideographic Plane
+        ']',
+      ].join(''),
+      'gu'
+    );
 
     /**
      * The node adaptors can't measure DOM node sizes
@@ -125,7 +128,7 @@ export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
      * @override
      */
     public fontSize(node: N) {
-      return (options.badCSS ? this.options.fontSize : super.fontSize(node));
+      return options.badCSS ? this.options.fontSize : super.fontSize(node);
     }
 
     /**
@@ -134,7 +137,7 @@ export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
      * @override
      */
     public fontFamily(node: N) {
-      return (options.badCSS ? this.options.fontFamily : super.fontFamily(node));
+      return options.badCSS ? this.options.fontFamily : super.fontFamily(node);
     }
 
     /**
@@ -145,11 +148,11 @@ export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
         return super.nodeSize(node, em, local);
       }
       const text = this.textContent(node);
-      const non = Array.from(text.replace(NodeAdaptor.cjkPattern, '')).length;  // # of non-CJK chars
-      const CJK = Array.from(text).length - non;                                // # of cjk chars
+      const non = Array.from(text.replace(NodeAdaptor.cjkPattern, '')).length; // # of non-CJK chars
+      const CJK = Array.from(text).length - non; // # of cjk chars
       return [
         CJK * this.options.cjkCharWidth + non * this.options.unknownCharWidth,
-        this.options.unknownCharHeight
+        this.options.unknownCharHeight,
       ] as [number, number];
     }
 
@@ -157,9 +160,9 @@ export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
      * @override
      */
     public nodeBBox(node: N) {
-      return (options.badSizes ? {left: 0, right: 0, top: 0, bottom: 0} : super.nodeBBox(node));
+      return options.badSizes
+        ? { left: 0, right: 0, top: 0, bottom: 0 }
+        : super.nodeBBox(node);
     }
-
   };
-
 }
