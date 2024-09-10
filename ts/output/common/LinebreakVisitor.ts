@@ -644,7 +644,10 @@ export class LinebreakVisitor<
   ): number {
     const linebreak = mspace.node.attributes.get('linebreak');
     const FACTORS = this.FACTORS;
-    const penalty = FACTORS.space(FACTORS.tail(FACTORS.width(0)), mspace as any);
+    const penalty = FACTORS.space(
+      FACTORS.tail(FACTORS.width(0)),
+      mspace as any
+    );
     return (this.PENALTY[linebreak as string] || ((p) => p))(
       FACTORS.depth(penalty)
     );

@@ -258,7 +258,9 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
       n--;
     } while (n > 0);
     const row = parser.create('node', 'mtr', children, {});
-    const table = parser.create('node', 'mtable', [row], { framespacing: '0 0' });
+    const table = parser.create('node', 'mtable', [row], {
+      framespacing: '0 0',
+    });
     const conclusion = paddedContent(parser, parser.GetArgument(name));
     const style = top.getProperty('currentLine') as string;
     if (style !== top.getProperty('line')) {
@@ -405,7 +407,9 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
       n--;
     } while (n > 0);
     const row = parser.create('node', 'mtr', children, {});
-    const table = parser.create('node', 'mtable', [row], { framespacing: '0 0' });
+    const table = parser.create('node', 'mtable', [row], {
+      framespacing: '0 0',
+    });
 
     const conclusion = parseFCenterLine(parser, name); // TODO: Padding
     const style = top.getProperty('currentLine') as string;

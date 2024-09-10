@@ -312,7 +312,10 @@ export class HTMLDomStrings<N, T, D> {
     }
 
     this.pushString();
-    const result = [this.strings, this.nodes] as [string[], HTMLNodeList<N, T>[]];
+    const result = [this.strings, this.nodes] as [
+      string[],
+      HTMLNodeList<N, T>[],
+    ];
     this.init(); // free up memory
     return result;
   }

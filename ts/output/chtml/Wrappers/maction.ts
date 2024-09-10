@@ -70,7 +70,7 @@ export interface ChtmlMactionNTD<N, T, D>
     > {
   /**
    * Add an event handler to the output for this maction
-   * 
+   *
    * @param {string} type The event handler type.
    * @param {EventHandler} handler The actual event handler.
    * @param {N=} dom The DOM node. If not provided goes over all elements of

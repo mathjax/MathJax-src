@@ -627,7 +627,7 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
     }
 
     /**
-     * @override 
+     * @override
      */
     // (make it public so it can be called by the notation functions)
     public Em(m: number) {

@@ -37,7 +37,10 @@ namespace FilterUtil {
    * @param {MmlNode} arg.math The node to rewrite.
    * @param {ParseOptions} arg.data The parse options.
    */
-  export const cleanStretchy = function (arg: { math: any; data: ParseOptions }) {
+  export const cleanStretchy = function (arg: {
+    math: any;
+    data: ParseOptions;
+  }) {
     const options = arg.data;
     for (const mo of options.getList('fixStretchy')) {
       if (NodeUtil.getProperty(mo, 'fixStretchy')) {
@@ -216,7 +219,11 @@ namespace FilterUtil {
    * @param {string} low String representing the lower part of the expression.
    * @param {string} up String representing the upper part.
    */
-  const _cleanSubSup = function (options: ParseOptions, low: string, up: string) {
+  const _cleanSubSup = function (
+    options: ParseOptions,
+    low: string,
+    up: string
+  ) {
     const remove: MmlNode[] = [];
     for (const mml of options.getList('m' + low + up) as any[]) {
       const children = mml.childNodes;
@@ -320,7 +327,10 @@ namespace FilterUtil {
    * @param {MmlNode} arg.math The node to rewrite.
    * @param {ParseOptions} arg.data The parse options.
    */
-  export const setInherited = function (arg: { math: any; data: ParseOptions }) {
+  export const setInherited = function (arg: {
+    math: any;
+    data: ParseOptions;
+  }) {
     arg.data.root.setInheritedAttributes({}, arg.math['display'], 0, false);
   };
 }

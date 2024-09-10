@@ -220,7 +220,9 @@ export function CommonMtrMixin<
      */
     public stretchChildren(HD: number[] = null) {
       const stretchy: WW[] = [];
-      const children = this.labeled ? this.childNodes.slice(1) : this.childNodes;
+      const children = this.labeled
+        ? this.childNodes.slice(1)
+        : this.childNodes;
       //
       //  Locate and count the stretchy children
       //

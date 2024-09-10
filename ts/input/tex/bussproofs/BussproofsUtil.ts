@@ -245,7 +245,10 @@ const getSpaces = function (
  */
 const adjustValue = function (inf: MmlNode, right: boolean = false): number {
   const rule = getRule(inf);
-  const conc = getConclusion(rule, getProperty(rule, 'inferenceRule') as string);
+  const conc = getConclusion(
+    rule,
+    getProperty(rule, 'inferenceRule') as string
+  );
   // TODO:  Here we have to improve sequent adjustment!
   const w = getSpaces(inf, rule, right);
   const x = getBBox(rule);
@@ -620,7 +623,10 @@ export const setProperty = function (
  * @param {string} property The property to retrieve.
  * @returns {Property} The property object.
  */
-export const getProperty = function (node: MmlNode, property: string): Property {
+export const getProperty = function (
+  node: MmlNode,
+  property: string
+): Property {
   return NodeUtil.getProperty(node, property_prefix + property);
 };
 
@@ -628,7 +634,7 @@ export const getProperty = function (node: MmlNode, property: string): Property 
  * Removes a bussproofs property.
  *
  * @param {MmlNode} node The proof node.
- * @param {string} property The property name. 
+ * @param {string} property The property name.
  */
 export const removeProperty = function (node: MmlNode, property: string) {
   node.removeProperty(property_prefix + property);

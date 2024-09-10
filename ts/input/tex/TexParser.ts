@@ -733,7 +733,8 @@ export default class TexParser {
     const children = atom.childNodes[0]?.childNodes;
     let expr = '';
     for (const child of children) {
-      const att = (child.attributes?.get(TexConstant.Attr.LATEX) || '') as string;
+      const att = (child.attributes?.get(TexConstant.Attr.LATEX) ||
+        '') as string;
       if (!att) continue;
       expr +=
         expr && expr.match(/[a-zA-Z]$/) && att.match(/^[a-zA-Z]/)

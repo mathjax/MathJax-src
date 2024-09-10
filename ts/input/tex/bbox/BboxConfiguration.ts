@@ -127,9 +127,9 @@ const BboxMethods: { [key: string]: ParseMethod } = {
  * @param {string} styles The bounding box style string.
  * @returns {string} The transformed bounding box style.
  */
-function BBoxStyle(styles: string):string {
+function BBoxStyle(styles: string): string {
   return styles;
-};
+}
 
 /**
  * Safety check and return padding information for bounding boxes.
@@ -139,7 +139,7 @@ function BBoxStyle(styles: string):string {
  */
 function BBoxPadding(pad: string): string {
   return pad;
-};
+}
 
 new CommandMap('bbox', { bbox: BboxMethods.BBox });
 

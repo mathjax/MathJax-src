@@ -28,7 +28,6 @@ import { DOMAdaptor } from '../../core/DOMAdaptor.js';
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-
 /**
  * @template N  The HTMLElement node class
  * @template T  The Text node class
@@ -146,7 +145,7 @@ export class GeneratorPool<N, T, D> {
 
   /**
    * Updates locales for Braille and speech if necessary.
-   * 
+   *
    * @param {OptionList} options A list of options.
    * @returns {boolean} True if the speech or Braille locale needed updating.
    */
@@ -428,7 +427,6 @@ export class GeneratorPool<N, T, D> {
       }
     });
   }
-
 
   /**
    * Computes the depth of the node in the overal math expression.

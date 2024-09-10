@@ -649,7 +649,7 @@ export class SpeechExplorer
 
   /**
    * Programmatically triggers a link if the clicked mouse event contains one.
-   * 
+   *
    * @returns {boolean} True if link was successfully triggered.
    */
   protected triggerLinkMouse(): boolean {

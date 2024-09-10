@@ -199,7 +199,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
 
     /**
      * Get the variant array for the assembly pieces
-     * 
+     *
      * @returns {string[]} The variants array
      */
     protected getStretchVariants() {

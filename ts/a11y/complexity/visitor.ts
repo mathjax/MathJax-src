@@ -392,7 +392,11 @@ export class ComplexityVisitor extends MmlVisitor {
    * @param {boolean} save       True if complexity is to be set or just reported
    * @returns {number}           The complexity of the node
    */
-  protected setComplexity(node: MmlNode, complexity: number, save: boolean): number {
+  protected setComplexity(
+    node: MmlNode,
+    complexity: number,
+    save: boolean
+  ): number {
     if (save) {
       if (this.options.identifyCollapsible) {
         complexity = this.collapse.check(node, complexity);

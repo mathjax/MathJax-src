@@ -402,7 +402,11 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     parser.configuration.nodeFactory.set('token', createVectorToken);
     parser.stack.env.vectorFont = star ? 'bold-italic' : 'bold';
     parser.stack.env.vectorStar = star;
-    const node = new TexParser(arg, parser.stack.env, parser.configuration).mml();
+    const node = new TexParser(
+      arg,
+      parser.stack.env,
+      parser.configuration
+    ).mml();
     if (oldFont) {
       parser.stack.env.font = oldFont;
     }
