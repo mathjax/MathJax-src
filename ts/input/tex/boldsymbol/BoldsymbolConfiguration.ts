@@ -90,9 +90,8 @@ export function createBoldToken(
 /**
  * Postprocessor to rewrite token nodes to bold font, if possible.
  *
- * @param arg
- * @param {ParseOptions} data The parse options.
- * @param arg.data
+ * @param {{ data: ParseOptions }} arg  The argument object.
+ * @param {ParseOptions} arg.data  The parse options.
  */
 export function rewriteBoldTokens(arg: { data: ParseOptions }) {
   for (const node of arg.data.getList('fixBold')) {

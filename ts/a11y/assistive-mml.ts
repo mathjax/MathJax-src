@@ -279,9 +279,9 @@ export function AssistiveMmlMathDocumentMixin<
     /**
      * Add assistive MathML to the MathItems in this MathDocument
      *
-     * @returns The  assistive mml document.
+     * @returns {AssistiveMmlMathDocument<N, T, D>} The assistive mml document.
      */
-    public assistiveMml() {
+    public assistiveMml(): AssistiveMmlMathDocument<N, T, D> {
       if (!this.processed.isSet('assistive-mml')) {
         for (const math of this.math) {
           (math as AssistiveMmlMathItem<N, T, D>).assistiveMml(this);

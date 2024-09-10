@@ -102,6 +102,7 @@ export class SubHandler {
     }
     const [env, token] = input;
     Array.from(this._fallback)[0].item(env, token);
+    return;
   }
 
   /**

@@ -1,6 +1,7 @@
 import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
 import { Configuration } from '../Configuration.js';
 import { EnvironmentMap, MacroMap } from '../TokenMap.js';
+import { ParseResult } from '../Types.js';
 import { ParseUtil } from '../ParseUtil.js';
 import BaseMethods from '../base/BaseMethods.js';
 import TexParser from '../TexParser.js';
@@ -84,11 +85,11 @@ export const CasesMethods = {
   /**
    * Implements the numcases environment.
    *
-   * @param {TexParser} texparser   The active tex parser.
-   * @param parser
+   * @param {TexParser} parser      The active tex parser.
    * @param {CasesBeginItem} begin  The environment begin item.
+   * @returns {ParseResult}         The array stack item.
    */
-  NumCases(parser: TexParser, begin: CasesBeginItem) {
+  NumCases(parser: TexParser, begin: CasesBeginItem): ParseResult {
     if (parser.stack.env.closing === begin.getName()) {
       delete parser.stack.env.closing;
       parser.Push(
@@ -131,12 +132,12 @@ export const CasesMethods = {
   /**
    * Replacement for & in cases environment.
    *
-   * @param parser
-   * @param name
+   * @param {TexParser} parser      The active tex parser.
+   * @param {string} name           The environment name.
    */
-  Entry(parser: TexParser, name: string) {
+  Entry(parser: TexParser, name: string): ParseResult {
     if (!parser.stack.Top().getProperty('numCases')) {
-      return BaseMethods.Entry(parser, name);
+       BaseMethods.Entry(parser, name);
     }
     parser.Push(
       parser.itemFactory

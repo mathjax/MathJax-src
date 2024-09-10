@@ -259,8 +259,10 @@ export class ColumnParser {
    * Get a dimension argument
    *
    * @param {ColumnState} state   The current state of the parser
+   *
+   * @returns {string} The dimension string
    */
-  public getDimen(state: ColumnState) {
+  public getDimen(state: ColumnState): string {
     const dim = this.getBraces(state) || '';
     if (!UnitUtil.matchDimen(dim)[0]) {
       throw new TexError(
@@ -276,8 +278,10 @@ export class ColumnParser {
    * Get an alignment argument
    *
    * @param {ColumnState} state   The current state of the parser
+   *
+   * @returns {string} The alignment string
    */
-  public getAlign(state: ColumnState) {
+  public getAlign(state: ColumnState): string {
     const align = this.getBraces(state);
     return lookup(
       align.toLowerCase(),
@@ -290,8 +294,10 @@ export class ColumnParser {
    * Get a braced argument
    *
    * @param {ColumnState} state   The current state of the parser
+   *
+   * @returns {string} The argument string
    */
-  public getBraces(state: ColumnState) {
+  public getBraces(state: ColumnState): string {
     while (state.template[state.i] === ' ') state.i++;
     if (state.i > state.template.length) {
       throw new TexError(

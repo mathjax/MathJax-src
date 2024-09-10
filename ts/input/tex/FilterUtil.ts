@@ -33,7 +33,7 @@ namespace FilterUtil {
    * not used as delimiters. Also wraps non-stretchy infix delimiters into a
    * TeXAtom.
    *
-   * @param arg The argument object.
+   * @param {object} arg The argument object.
    * @param {MmlNode} arg.math The node to rewrite.
    * @param {ParseOptions} arg.data The parse options.
    */
@@ -64,7 +64,7 @@ namespace FilterUtil {
    * an attribute, which is also an inherited attribute it will be removed. This
    * is necessary as attributes are set bottom up in the parser.
    *
-   * @param arg The argument object.
+   * @param {object} arg The argument object.
    * @param {ParseOptions} arg.data   The parse options.
    */
   export const cleanAttributes = function (arg: { data: ParseOptions }) {
@@ -93,7 +93,7 @@ namespace FilterUtil {
    * Combine adjacent <mo> elements that are relations (since MathML treats the
    * spacing very differently)
    *
-   * @param arg The argument object.
+   * @param {object} arg The argument object.
    * @param {ParseOptions} arg.data The parse options.
    */
   export const combineRelations = function (arg: { data: ParseOptions }) {
@@ -255,7 +255,7 @@ namespace FilterUtil {
    * Visitor that rewrites incomplete msubsup/munderover elements in the given
    * node into corresponding msub/sup/under/over nodes.
    *
-   * @param arg The argument object.
+   * @param {object} arg The argument object.
    * @param {MmlNode} arg.math The node to rewrite.
    * @param {ParseOptions} arg.data The parse options.
    */
@@ -310,7 +310,7 @@ namespace FilterUtil {
    * Visitor that rewrites in-line munderover elements with movablelimits but bases
    * that are not mo's into explicit msubsup elements.
    *
-   * @param arg The argument object.
+   * @param {object} arg The argument object.
    * @param {ParseOptions} arg.data  The parse options to use
    */
   export const moveLimits = function (arg: { data: ParseOptions }) {
@@ -323,7 +323,7 @@ namespace FilterUtil {
   /**
    * Recursively sets the inherited attributes on the math tree.
    *
-   * @param arg The argument object.
+   * @param {object} arg The argument object.
    * @param {MmlNode} arg.math The node to rewrite.
    * @param {ParseOptions} arg.data The parse options.
    */

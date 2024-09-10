@@ -246,7 +246,7 @@ export const TextMacrosMethods = {
   /**
    * @param {TextParser} parser   The text-mode parser
    * @param {string} name         The control sequence that called this function
-   * @param variant               The font variant
+   * @param {string} variant      The font variant
    */
   TextFont(parser: TextParser, name: string, variant: string) {
     parser.saveText();

@@ -339,7 +339,7 @@ export default class TexParser {
       case '\\':
         this.i++;
         return '\\' + this.GetCS();
-      case '{':
+      case '{': {
         const j = ++this.i;
         let parens = 1;
         while (this.i < this.string.length) {
@@ -359,6 +359,7 @@ export default class TexParser {
         }
         // @test MissingCloseBrace
         throw new TexError('MissingCloseBrace', 'Missing close brace');
+      }
     }
     const c = this.getCodePoint();
     this.i += c.length;
@@ -427,8 +428,7 @@ export default class TexParser {
    *  Get the name of a delimiter (check it in the delimiter list).
    *
    * @param {string} name Name of the current control sequence.
-   * @param {boolean} braceOK? Are braces around the delimiter OK.
-   * @param braceOK
+   * @param {boolean=} braceOK Are braces around the delimiter OK.
    * @returns {string} The delimiter name.
    */
   public GetDelimiter(name: string, braceOK?: boolean): string {
@@ -600,8 +600,7 @@ export default class TexParser {
    * configuration.
    *
    * @param {string} kind The kind of node to create.
-   * @param {any[]} ...rest The remaining arguments for the creation method.
-   * @param {...any} rest
+   * @param {any[]} rest The remaining arguments for the creation method.
    * @returns {MmlNode} The newly created node.
    */
   public create(kind: string, ...rest: any[]): MmlNode {
@@ -728,8 +727,10 @@ export default class TexParser {
    * Composes the content of a braced expression.
    *
    * @param {MmlNode} atom The current Mml node.
+   *
+   * @returns {string} The braced expression.
    */
-  private composeBracedContent(atom: MmlNode) {
+  private composeBracedContent(atom: MmlNode): string {
     const children = atom.childNodes[0]?.childNodes;
     let expr = '';
     for (const child of children) {

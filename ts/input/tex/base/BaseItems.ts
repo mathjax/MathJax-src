@@ -524,6 +524,7 @@ export class BreakItem extends BaseItem {
 
   /**
    * @override
+   * @param {StackItemFactory} factory The current stack item factory
    * @param {string} linebreak   The linbreak attribute to use
    * @param {boolean} insert     Whether to insert an mo if there isn't a following
    */
@@ -1084,7 +1085,7 @@ export class ArrayItem extends BaseItem {
   /**
    * Create the MathML representation of the table.
    *
-   * @returns {MmlNode}
+   * @returns {MmlNode} The new node.
    */
   public createMml(): MmlNode {
     const scriptlevel = this.arraydef['scriptlevel'];
@@ -1119,6 +1120,7 @@ export class ArrayItem extends BaseItem {
 
   /**
    * @param {MmlNode} mml  The mtable to frame
+   * @returns {MmlNode} The new node.
    */
   protected handleFrame(mml: MmlNode): MmlNode {
     if (!this.frame.length) return mml;
@@ -1222,6 +1224,9 @@ export class ArrayItem extends BaseItem {
 
   /**
    * Get the TeX string for the contents of the coming cell (if any)
+   *
+   * @returns {[string, string, string, boolean]} List of values for prefix,
+   *     entry, term, found.
    */
   protected getEntry(): [string, string, string, boolean] {
     const parser = this.parser;
@@ -1253,7 +1258,7 @@ export class ArrayItem extends BaseItem {
             break;
           }
         // fall through if not closing a nested array environment
-        default:
+        default: {
           if (braces || envs) continue;
           i -= match[2].length;
           let entry = parser.string.slice(parser.i, i).trim();
@@ -1266,6 +1271,7 @@ export class ArrayItem extends BaseItem {
           parser.string = parser.string.slice(i);
           parser.i = 0;
           return [prefix?.[0] || '', entry, match[2], true];
+        }
       }
     }
     return fail;
@@ -1422,7 +1428,7 @@ export class EqnArrayItem extends ArrayItem {
   /**
    * @override
    */
-  constructor(factory: any, ...args: any[]) {
+  constructor(factory: StackItemFactory, ...args: any[]) {
     super(factory);
     this.factory.configuration.tags.start(args[0], args[2], args[1]);
   }
@@ -1492,8 +1498,8 @@ export class EqnArrayItem extends ArrayItem {
    * Extend a column specification to include a repeating set of values
    * so that it has enough to match the maximum row length.
    *
-   * @param name
-   * @param max
+   * @param {string} name The name of the calling command.
+   * @param {number} max The maximum row length.
    */
   protected extendArray(name: string, max: number) {
     if (!this.arraydef[name]) return;
@@ -1554,12 +1560,13 @@ export class MstyleItem extends BeginItem {
   public attrList: PropertyList;
 
   /**
+   * @param {StackItemFactory} factory The current stack item factory
    * @param {PropertyList} attr  The properties to set on the mstyle
    * @param {string} name        The name of the environment being processed
    * @override
    * @class
    */
-  constructor(factory: any, attr: PropertyList, name: string) {
+  constructor(factory: StackItemFactory, attr: PropertyList, name: string) {
     super(factory);
     this.attrList = attr;
     this.setProperty('name', name);
@@ -1585,7 +1592,7 @@ export class EquationItem extends BaseItem {
   /**
    * @override
    */
-  constructor(factory: any, ...args: any[]) {
+  constructor(factory: StackItemFactory, ...args: any[]) {
     super(factory);
     this.factory.configuration.tags.start('equation', true, args[0]);
   }

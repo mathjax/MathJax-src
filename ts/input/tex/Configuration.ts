@@ -185,21 +185,21 @@ export class Configuration {
   }
 
   /**
-   * @param name package name for the configuration
-   * @param handler  configuration mapping handler types to lists of token mappings.
-   * @param fallback configuration mapping handler types to fallback methods.
-   * @param items for the StackItem factory.
-   * @param tags mapping tagging configurations to tagging objects.
-   * @param options parse options for the packages.
-   * @param nodes for the Node factory.
-   * @param preprocessors list of functions for preprocessing the LaTeX
+   * @param {string} name package name for the configuration
+   * @param {HandlerConfig} handler  configuration mapping handler types to lists of token mappings.
+   * @param {FallbackConfig} fallback configuration mapping handler types to fallback methods.
+   * @param {StackItemConfig} items for the StackItem factory.
+   * @param {TagsConfig} tags mapping tagging configurations to tagging objects.
+   * @param {OptionList} options parse options for the packages.
+   * @param {{ [key: string]: any }} nodes for the Node factory.
+   * @param {ProcessorList} preprocessors list of functions for preprocessing the LaTeX
    *      string wrt. to given parse options. Can contain a priority.
-   * @param postprocessors list of functions for postprocessing the MmlNode
+   * @param {ProcessorList} postprocessors list of functions for postprocessing the MmlNode
    *      wrt. to given parse options. Can contain a priority.
-   * @param initMethod init method and optionally its priority.
-   * @param configMethod config method and optionally its priority.
-   * @param priority default priority of the configuration.
-   * @param parser the name of the parser that this configuration targets.
+   * @param {Processor<InitMethod>} initMethod init method and optionally its priority.
+   * @param {Processor<ConfigMethod>} configMethod config method and optionally its priority.
+   * @param {number} priority default priority of the configuration.
+   * @param {string} parser the name of the parser that this configuration targets.
    * @class
    */
   private constructor(

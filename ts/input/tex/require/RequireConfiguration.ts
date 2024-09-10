@@ -84,7 +84,7 @@ function RegisterExtension(jax: TeX<any, any, any>, name: string) {
  *
  * @param {TeX} jax       The TeX jax whose configuration is to be modified
  * @param {string} name   The name of the extension being added (e.g., '[tex]/amscd')
- * @param extension
+ * @param {string} extension The name of the configuration handler for the extension.
  */
 function ProcessExtension(
   jax: TeX<any, any, any>,
@@ -190,8 +190,8 @@ export function RequireLoad(parser: TexParser, name: string) {
 /**
  * Save the jax so that it can be used when \require{} is processed.
  *
- * @param _config The parserconfiguration.
- * @param jax The current TeX jax.
+ * @param {ParserConfiguration} _config The parser configuration.
+ * @param {TeX} jax The current TeX jax.
  */
 function config(_config: ParserConfiguration, jax: TeX<any, any, any>) {
   /* prettier-ignore */

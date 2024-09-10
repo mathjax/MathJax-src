@@ -245,7 +245,9 @@ export const ParseUtil = {
    * @param {MmlNode} mml The enclosed node.
    * @param {string} close The closing fence.
    * @param {string=} big Bigg command.
-   * @param color
+   * @param {string=} color The color.
+   *
+   * @returns {MmlNode} The newly created mrow.
    */
   fenced(
     configuration: ParseOptions,
@@ -254,7 +256,7 @@ export const ParseUtil = {
     close: string,
     big: string = '',
     color: string = ''
-  ) {
+  ): MmlNode {
     // @test Fenced, Fenced3
     const nf = configuration.nodeFactory;
     const mrow = nf.create('node', 'mrow', [], {
@@ -788,8 +790,8 @@ export const ParseUtil = {
   /**
    *  Check for bad nesting of equation environments
    *
-   * @param parser
-   * @param nestable
+   * @param {TexParser} parser The current parser.
+   * @param {boolean=} nestable Is the environment nestable?
    */
   checkEqnEnv(parser: TexParser, nestable: boolean = true) {
     const top = parser.stack.Top();

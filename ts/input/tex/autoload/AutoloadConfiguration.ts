@@ -81,7 +81,7 @@ function Autoload(
  * the priorities of the initialization and configuration are set so that autoload
  * will run after require when both are used.)
  *
- * @param config
+ * @param {ParserConfiguration} config The parser configuration.
  */
 function initAutoload(config: ParserConfiguration) {
   if (!config.options.require) {
@@ -94,8 +94,8 @@ function initAutoload(config: ParserConfiguration) {
  * Only ones that aren't already defined are made to autoload
  * (except for \color, which is overridden if present)
  *
- * @param config
- * @param jax
+ * @param {ParserConfiguration} config The parser configuration.
+ * @param {TeX} jax The current tex input jax.
  */
 function configAutoload(config: ParserConfiguration, jax: TeX<any, any, any>) {
   const parser = jax.parseOptions;
