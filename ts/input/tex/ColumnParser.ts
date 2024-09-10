@@ -303,8 +303,8 @@ export class ColumnParser {
     if (state.template[state.i] !== '{') {
       return state.template[state.i++];
     }
-    let i = ++state.i,
-      braces = 1;
+    const i = ++state.i;
+    let braces = 1;
     while (state.i < state.template.length) {
       switch (state.template.charAt(state.i++)) {
         case '\\':

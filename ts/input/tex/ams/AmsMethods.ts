@@ -135,7 +135,6 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     taggable: boolean
   ) {
     const name = begin.getName();
-    let n;
     let valign;
     let align = '';
     let balign = '';
@@ -144,7 +143,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       // @test Alignedat
       valign = parser.GetBrackets('\\begin{' + name + '}');
     }
-    n = parser.GetArgument('\\begin{' + name + '}');
+    const n = parser.GetArgument('\\begin{' + name + '}');
     if (n.match(/[^0-9]/)) {
       // @test PositiveIntegerArg
       throw new TexError(

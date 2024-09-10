@@ -340,8 +340,8 @@ export default class TexParser {
         this.i++;
         return '\\' + this.GetCS();
       case '{':
-        let j = ++this.i,
-          parens = 1;
+        const j = ++this.i;
+        let parens = 1;
         while (this.i < this.string.length) {
           switch (this.string.charAt(this.i++)) {
             case '\\':
@@ -381,9 +381,9 @@ export default class TexParser {
     if (this.GetNext() !== '[') {
       return def;
     }
-    let j = ++this.i,
-      parens = 0,
-      brackets = 0;
+    const j = ++this.i;
+    let parens = 0;
+    let brackets = 0;
     while (this.i < this.string.length) {
       switch (this.string.charAt(this.i++)) {
         case '{':
