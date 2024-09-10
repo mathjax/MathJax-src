@@ -40,8 +40,10 @@ export class LiteText {
 
   /**
    * The kind of node is #text
+   *
+   * @returns {string} The node kind.
    */
-  public get kind() {
+  public get kind(): string {
     return '#text';
   }
 

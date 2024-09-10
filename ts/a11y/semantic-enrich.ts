@@ -488,9 +488,9 @@ export function EnrichedMathDocumentMixin<
     /**
      * Attach speech from a MathItem to a node
      *
-     * @returns The object for chaining.
+     * @returns {EnrichedMathDocument} The object for chaining.
      */
-    public attachSpeech() {
+    public attachSpeech(): EnrichedMathDocument<N, T, D> {
       if (!this.processed.isSet('attach-speech')) {
         if (this.options.enableSpeech || this.options.enableBraille) {
           if (this.options.speechTiming.asynchronous) {
@@ -565,9 +565,9 @@ export function EnrichedMathDocumentMixin<
     /**
      * Enrich the MathItems in this MathDocument
      *
-     * @returns The object for chaining.
+     * @returns {EnrichedMathDocument} The object for chaining.
      */
-    public enrich() {
+    public enrich(): EnrichedMathDocument<N, T, D> {
       if (!this.processed.isSet('enriched')) {
         if (this.options.enableEnrichment) {
           for (const math of this.math) {

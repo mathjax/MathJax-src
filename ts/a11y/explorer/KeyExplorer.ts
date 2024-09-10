@@ -86,10 +86,10 @@ const prevNav = roles.map((x) => `[tabindex="0"][role="${x}"]`).join(',');
 /**
  * Predicate to check if element is a MJX container.
  *
- * @param el The HTML element.
- * @returns True if the element is an mjx-container.
+ * @param {HTMLElement} el The HTML element.
+ * @returns {boolean} True if the element is an mjx-container.
  */
-function isContainer(el: HTMLElement) {
+function isContainer(el: HTMLElement): boolean {
   return el.matches('mjx-container');
 }
 
@@ -169,7 +169,7 @@ export class SpeechExplorer
    * Records a mouse down event on the element. This ensures that focus events
    * only fire if they were not triggered by a mouse click.
    *
-   * @param e The mouse event.
+   * @param {MouseEvent} e The mouse event.
    */
   private MouseDown(e: MouseEvent) {
     this.mousedown = true;
@@ -440,14 +440,14 @@ export class SpeechExplorer
   }
 
   /**
-   * @param document The accessible math document.
-   * @param pool The explorer pool.
-   * @param region The speech region for the explorer.
-   * @param node The node the explorer is assigned to.
-   * @param brailleRegion The braille region.
-   * @param magnifyRegion The magnification region.
-   * @param _mml The internal math node.
-   * @param item The math item.
+   * @param {A11yDocument} document The accessible math document.
+   * @param {ExplorerPool} pool The explorer pool.
+   * @param {SpeechRegion} region The speech region for the explorer.
+   * @param {HTMLElement} node The node the explorer is assigned to.
+   * @param {LiveRegion} brailleRegion The braille region.
+   * @param {HoverRegion} magnifyRegion The magnification region.
+   * @param {MmlNode} _mml The internal math node.
+   * @param {ExplorerMathItem} item The math item.
    * @class
    * @augments {AbstractExplorer}
    */

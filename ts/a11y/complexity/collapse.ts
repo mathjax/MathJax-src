@@ -139,9 +139,9 @@ export class Collapse {
   /**
    * The type-to-function mapping for semantic types
    *
-   * @param node The current node
-   * @param complexity The current complexity
-   * @returns The newly computed complexity
+   * @param {MmlNode} node The current node
+   * @param {number} complexity The current complexity
+   * @returns {number} The newly computed complexity
    */
   public collapse: CollapseFunctionMap = new Map([
     //
