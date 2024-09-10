@@ -44,7 +44,7 @@ import { mjxRoot } from '#root/root.js';
 /*
  * The browser document (if any)
  */
-declare let document: Document;
+declare const document: Document;
 
 /**
  * Function used to determine path to a given package.

@@ -25,7 +25,7 @@ import { mathjax } from '../../mathjax.js';
 import * as path from 'path';
 import { src } from '#source/source.cjs';
 
-declare let require: (name: string) => any;
+declare const require: (name: string) => any;
 
 let root = path.resolve(src, '..', '..', 'cjs');
 

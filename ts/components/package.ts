@@ -27,7 +27,7 @@ import { CONFIG, Loader } from './loader.js';
 /*
  * The browser document (for creating scripts to load components)
  */
-declare let document: Document;
+declare const document: Document;
 
 /**
  * A map of package names to Package instances

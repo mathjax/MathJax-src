@@ -121,11 +121,23 @@ const BboxMethods: { [key: string]: ParseMethod } = {
 };
 
 // Dummy methods. Need to be made Safe with security check.
-const BBoxStyle = function (styles: string) {
+/**
+ * Safety check and return style information for bounding boxes.
+ *
+ * @param {string} styles The bounding box style string.
+ * @returns {string} The transformed bounding box style.
+ */
+function BBoxStyle(styles: string):string {
   return styles;
 };
 
-const BBoxPadding = function (pad: string) {
+/**
+ * Safety check and return padding information for bounding boxes.
+ *
+ * @param {string} pad The bounding box padding string.
+ * @returns {string} The transformed bounding box padding.
+ */
+function BBoxPadding(pad: string): string {
   return pad;
 };
 
