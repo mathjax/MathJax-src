@@ -1430,6 +1430,7 @@ export class TextNode extends AbstractMmlEmptyNode {
 
   /**
    * Just use the text
+   *
    * @override
    */
   public toString() {
@@ -1499,6 +1500,7 @@ export class XMLNode extends AbstractMmlEmptyNode {
 
   /**
    * Just indicate that this is XML data
+   *
    * @override
    */
   public toString() {

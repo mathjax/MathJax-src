@@ -183,9 +183,9 @@ export function CommonMpaddedMixin<
       );
       const bbox = this.childNodes[0].getOuterBBox(); // get unmodified bbox of children
       let { w, h, d } = bbox;
-      let W = w;
-      let H = h;
-      let D = d;
+      const W = w;
+      const H = h;
+      const D = d;
       let x = 0;
       let y = 0;
       let dx = 0;

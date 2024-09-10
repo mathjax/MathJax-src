@@ -139,7 +139,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     let valign;
     let align = '';
     let balign = '';
-    let spacing = [];
+    const spacing = [];
     if (!taggable) {
       // @test Alignedat
       valign = parser.GetBrackets('\\begin{' + name + '}');

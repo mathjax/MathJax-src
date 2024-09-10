@@ -49,7 +49,7 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
     const kind = node.kind;
     const [nl, endspace] =
       node.isToken || node.childNodes.length === 0 ? ['', ''] : ['\n', space];
-    let attributes = this.attributeString(
+    const attributes = this.attributeString(
       {
         isEmbellished: node.isEmbellished,
         isSpacelike: node.isSpacelike,

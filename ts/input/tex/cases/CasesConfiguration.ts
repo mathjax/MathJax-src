@@ -149,7 +149,7 @@ export const CasesMethods = {
     const tex = parser.string;
     let braces = 0;
     let i = parser.i;
-    let m = tex.length;
+    const m = tex.length;
     //
     //  Look through the string character by character...
     //

@@ -82,6 +82,7 @@ export class HtmlNode<N> extends XMLNode {
 
   /**
    * Just indicate that this is HTML data
+   *
    * @override
    */
   public toString() {

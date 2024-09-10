@@ -167,12 +167,13 @@ const nextSibling = function (inf: MmlNode): MmlNode {
 
 /**
  * Gets the previous sibling of an inference rule.
+ *
  * @param {MmlNode} inf The inference rule.
- * @return {MmlNode} The previous sibling.
+ * @returns {MmlNode} The previous sibling.
  */
 // TODO: Currently not used, but left there for a future extension.
 // @ts-expect-error
-let previousSibling = function (inf: MmlNode): MmlNode {
+const previousSibling = function (inf: MmlNode): MmlNode {
   return inf.parent.childNodes[inf.parent.childNodes.indexOf(inf) - 1];
 };
 

@@ -182,6 +182,7 @@ export class MmlMo extends AbstractMmlTokenNode {
    * Use a getter to look up the TeX class from the operator table if it hasn't
    * been set yet (but don't save it in case the form changes when it is in its
    * location).
+   *
    * @returns {number} The TeX class.
    */
   public get texClass() {
