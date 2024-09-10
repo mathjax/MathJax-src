@@ -93,8 +93,8 @@ export class MultlineItem extends ArrayItem {
   public EndTable() {
     super.EndTable();
     if (this.table.length) {
-      let m = this.table.length - 1,
-        label = -1;
+      let m = this.table.length - 1;
+      let label = -1;
       if (
         !NodeUtil.getAttribute(
           NodeUtil.getChildren(this.table[0])[0],

@@ -49,32 +49,23 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
     const kind = node.kind;
     const [nl, endspace] =
       node.isToken || node.childNodes.length === 0 ? ['', ''] : ['\n', space];
+    let attributes = this.attributeString(
+      {
+        isEmbellished: node.isEmbellished,
+        isSpacelike: node.isSpacelike,
+        texClass: node.texClass,
+      },
+      '{',
+      '}'
+    );
     let mml =
-      space +
-      '<' +
-      kind +
-      this.getAttributes(node) +
-      this.getInherited(node) +
-      this.getProperties(node) +
-      '\n' +
-      space +
-      '   ' +
-      this.attributeString(
-        {
-          isEmbellished: node.isEmbellished,
-          isSpacelike: node.isSpacelike,
-          texClass: node.texClass,
-        },
-        '{',
-        '}'
-      ) +
-      '>' +
-      nl;
+      `${space}<${kind}${this.getAttributes(node)}${this.getInherited(node)}${this.getProperties(node)}\n` +
+      `${space}   ${attributes}>${nl}`;
     space += '  ';
     for (const child of node.childNodes) {
       mml += this.visitNode(child, space) + nl;
     }
-    mml += endspace + '</' + kind + '>';
+    mml += `${endspace}</${kind}>`;
     return mml;
   }
 
@@ -115,14 +106,7 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
   ): string {
     let ATTR = '';
     for (const name of Object.keys(attributes)) {
-      ATTR +=
-        ' ' +
-        open +
-        name +
-        '="' +
-        this.quoteHTML(String(attributes[name])) +
-        '"' +
-        close;
+      ATTR += ` ${open}${name}="${this.quoteHTML(String(attributes[name]))}"${close}`;
     }
     return ATTR;
   }

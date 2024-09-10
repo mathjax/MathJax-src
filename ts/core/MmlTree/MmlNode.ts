@@ -873,9 +873,7 @@ export abstract class AbstractMmlNode
     const scriptlevel = attributes.get('scriptlevel') as number;
     const defaults: AttributeList = !attributes.isSet('mathsize')
       ? {}
-      : {
-          mathsize: ['math', attributes.get('mathsize')],
-        };
+      : { mathsize: ['math', attributes.get('mathsize')] };
     const prime = (node.getProperty('texprimestyle') as boolean) || false;
     this.setInheritedAttributes(defaults, display, scriptlevel, prime);
   }

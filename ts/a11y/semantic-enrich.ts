@@ -97,10 +97,7 @@ export class enrichVisitor<N, T, D> extends SerializedMmlVisitor {
           .replace(/ data-maction-id="\d+"/, '');
     }
     return (
-      space +
-      '<maction' +
-      attributes +
-      '>' +
+      `${space}<maction${attributes}>` +
       (children.match(/\S/) ? nl + children + endspace : '') +
       '</maction>'
     );

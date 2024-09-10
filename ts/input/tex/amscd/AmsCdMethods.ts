@@ -85,14 +85,14 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
     }
 
     let mml;
-    const hdef = { minsize: top.getProperty('minw'), stretchy: true },
-      vdef = {
-        minsize: top.getProperty('minh'),
-        stretchy: true,
-        symmetric: true,
-        lspace: 0,
-        rspace: 0,
-      };
+    const hdef = { minsize: top.getProperty('minw'), stretchy: true };
+    const vdef = {
+      minsize: top.getProperty('minh'),
+      stretchy: true,
+      symmetric: true,
+      lspace: 0,
+      rspace: 0,
+    };
 
     if (c === '.') {
     } else if (c === '|') {

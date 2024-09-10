@@ -161,34 +161,46 @@ function readValue(
   let start = 0; // Counter for the starting left braces.
   let countBraces = true; // Flag for counting starting left braces.
   // after starting braces, but no other char yet.
-  /* prettier-ignore */
   while (index < length) {
     const c = text[index++];
     switch (c) {
-      case '\\':               // Handle control sequences (in particular, \{ and \})
+      // Handle control sequences (in particular, \{ and \})
+      case '\\':
         value += c + (text[index++] || '');
         countBraces = false;
         continue;
-      case ' ':                // Ignore spaces.
+      // Ignore spaces.
+      case ' ':
         break;
+      // Count open left braces at start.
       case '{':
-        if (countBraces) {     // Count open left braces at start.
+        if (countBraces) {
           start++;
         }
         braces++;
         break;
+      // Closing braces.
       case '}':
-        if (!braces) {         // Closing braces.
-          throw new TexError('ExtraCloseMissingOpen', 'Extra close brace or missing open brace');
+        if (!braces) {
+          throw new TexError(
+            'ExtraCloseMissingOpen',
+            'Extra close brace or missing open brace'
+          );
         }
         braces--;
-        countBraces = false;   // Stop counting start left braces.
+        countBraces = false; // Stop counting start left braces.
         break;
       default:
-        if (!braces && end.indexOf(c) !== -1) {   // End character reached.
-          return [removeBraces(value, l3keys ? Math.min(1, start) : start), c, text.slice(index)];
+        if (!braces && end.indexOf(c) !== -1) {
+          // End character reached.
+          return [
+            removeBraces(value, l3keys ? Math.min(1, start) : start),
+            c,
+            text.slice(index),
+          ];
         }
-        if (start > braces) {   // Some start left braces have been closed.
+        if (start > braces) {
+          // Some start left braces have been closed.
           start = braces;
         }
         countBraces = false;

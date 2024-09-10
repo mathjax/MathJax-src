@@ -134,10 +134,9 @@ export const SvgMpadded = (function <N, T, D>(): SvgMpaddedClass<N, T, D> {
       const [, , , , , dw, x, y, dx] = this.getDimens();
       const align =
         (this.node.attributes.get('data-align') as string) || 'left';
-      const X =
-        x +
-        dx -
-        (dw < 0 && align !== 'left' ? (align === 'center' ? dw / 2 : dw) : 0);
+      const dW =
+        dw < 0 && align !== 'left' ? (align === 'center' ? dw / 2 : dw) : 0;
+      const X = x + dx - dW;
       //
       // If there is a horizontal or vertical shift,
       //   use relative positioning to move the contents

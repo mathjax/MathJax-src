@@ -186,8 +186,8 @@ export function CommonMrowMixin<
       const count = stretchy.length;
       const nodeCount = this.childNodes.length;
       if (count && nodeCount > 1) {
-        let H = 0,
-          D = 0;
+        let H = 0;
+        let D = 0;
         //
         //  If all the children are stretchy, find the largest one,
         //  otherwise, find the height and depth of the non-stretchy

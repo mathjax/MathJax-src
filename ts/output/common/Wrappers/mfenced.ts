@@ -171,20 +171,9 @@ export function CommonMfencedMixin<
     /**
      * @override
      */
-    public mrow: CommonInferredMrow<
-      N,
-      T,
-      D,
-      JX,
-      WW,
-      WF,
-      WC,
-      CC,
-      VV,
-      DD,
-      FD,
-      FC
-    > = null;
+    /* prettier-ignore */
+    public mrow:
+      CommonInferredMrow<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> = null;
 
     /**
      * @override

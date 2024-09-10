@@ -142,7 +142,7 @@ function vectorApplication(
     arg = parser.GetArgument(name);
     lfence = enlarge ? '\\left\\{' : '';
     rfence = enlarge ? '\\right\\}' : '';
-    const macro = lfence + ' ' + arg + ' ' + rfence;
+    const macro = `${lfence} ${arg} ${rfence}`;
     parser.string = macro + parser.string.slice(parser.i);
     parser.i = 0;
     return;
@@ -189,7 +189,7 @@ function makeDiagMatrix(elements: string[], anti: boolean) {
   const matrix = [];
   for (let i = 0; i < length; i++) {
     matrix.push(
-      Array(anti ? length - i : i + 1).join('&') + '\\mqty{' + elements[i] + '}'
+      Array(anti ? length - i : i + 1).join('&') + `\\mqty{${elements[i]}}`
     );
   }
   return matrix.join('\\\\ ');
@@ -270,20 +270,10 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       right = arg ? close : '\\}';
       // TODO: Make all these fenced expressions.
       argument = star
-        ? next + ' ' + argument + ' ' + right
+        ? `${next} ${argument} ${right}`
         : big
-          ? '\\' +
-            big +
-            'l' +
-            next +
-            ' ' +
-            argument +
-            ' ' +
-            '\\' +
-            big +
-            'r' +
-            right
-          : '\\left' + next + ' ' + argument + ' ' + '\\right' + right;
+          ? `\\${big}l${next} ${argument} \\${big}r${right}`
+          : `\\left${next} ${argument} \\right${right}`;
       parser.Push(
         new TexParser(argument, parser.stack.env, parser.configuration).mml()
       );
@@ -383,20 +373,10 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     const arg2 = parser.GetArgument(name);
     let argument = arg1 + ',' + arg2;
     argument = star
-      ? open + ' ' + argument + ' ' + close
+      ? `${open} ${argument} ${close}`
       : big
-        ? '\\' +
-          big +
-          'l' +
-          open +
-          ' ' +
-          argument +
-          ' ' +
-          '\\' +
-          big +
-          'r' +
-          close
-        : '\\left' + open + ' ' + argument + ' ' + '\\right' + close;
+        ? `\\${big}l${open} ${argument} \\${big}r${close}`
+        : `\\left${open} ${argument} \\right${close}`;
     parser.Push(
       new TexParser(argument, parser.stack.env, parser.configuration).mml()
     );
@@ -657,7 +637,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       if (argMax > 2 && args.length > 1) {
         ignore = true;
       }
-      power1 = '^{' + optArg + '}';
+      power1 = `^{${optArg}}`;
       power2 = power1;
     }
     const frac = star ? '\\flatfrac' : '\\frac';
@@ -667,21 +647,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     for (let i = 2, arg; (arg = args[i]); i++) {
       rest += op + ' ' + arg;
     }
-    const macro =
-      frac +
-      '{' +
-      op +
-      power1 +
-      first +
-      '}' +
-      '{' +
-      op +
-      ' ' +
-      second +
-      power2 +
-      ' ' +
-      rest +
-      '}';
+    const macro = `${frac}{${op}${power1}${first}}{${op} ${second}${power2} ${rest}}`;
     parser.Push(
       new TexParser(macro, parser.stack.env, parser.configuration).mml()
     );
@@ -913,14 +879,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     }
     const macro =
       (open ? '\\left' : '') +
-      open +
-      '\\begin{' +
-      array +
-      '}{} ' +
-      arg +
-      '\\end{' +
-      array +
-      '}' +
+      `${open}\\begin{${array}}{} ${arg}\\end{${array}}` +
       (open ? '\\right' : '') +
       close;
     parser.Push(
