@@ -1979,7 +1979,11 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * @param {string=} style The display style to use
    * @returns {ParseResult} The array stack item.
    */
-  AlignedArray(parser: TexParser, begin: StackItem, style: string = ''): ParseResult {
+  AlignedArray(
+    parser: TexParser,
+    begin: StackItem,
+    style: string = ''
+  ): ParseResult {
     // @test Array1, Array2, Array Test
     const align = parser.GetBrackets('\\begin{' + begin.getName() + '}');
     const item = BaseMethods.Array(

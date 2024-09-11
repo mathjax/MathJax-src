@@ -137,7 +137,7 @@ export const CasesMethods = {
    */
   Entry(parser: TexParser, name: string): ParseResult {
     if (!parser.stack.Top().getProperty('numCases')) {
-       BaseMethods.Entry(parser, name);
+      BaseMethods.Entry(parser, name);
     }
     parser.Push(
       parser.itemFactory

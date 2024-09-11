@@ -67,7 +67,9 @@ export namespace Sre {
    * @param {string} locale A locale to preload from the bundle.
    * @returns {Promise} Promise that resolves when locales are loaded.
    */
-  export const preloadLocales = async function (locale: string): Promise<string> {
+  export const preloadLocales = async function (
+    locale: string
+  ): Promise<string> {
     const json = MathMaps.get(locale);
     return json
       ? new Promise((res, _rej) => res(JSON.stringify(json)))
