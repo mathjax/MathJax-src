@@ -125,7 +125,8 @@
     "make-components": "pnpm -s make-mjs-components",
     "compile": "pnpm -s compile-mjs",
     "build": "pnpm -s build-mjs",
-    "build-all": "pnpm -s build-mjs ; echo ; pnpm -s build-cjs"
+    "build-all": "pnpm -s build-mjs ; echo ; pnpm -s build-cjs",
+    "pre-push-lint": "pnpm lint-staged"
   },
   "devDependencies": {
     "copyfiles": "^2.4.1",
@@ -134,6 +135,8 @@
     "eslint-formatter-unix": "^8.40.0",
     "eslint-plugin-jsdoc": "^48.11.0",
     "eslint-plugin-prettier": "^5.2.1",
+    "husky": "^9.1.5",
+    "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "rimraf": "^5.0.5",
     "terser-webpack-plugin": "^5.3.10",
@@ -143,6 +146,13 @@
     "webpack": "^5.91.0",
     "webpack-cli": "^5.1.4",
     "xslt3": "^2.6.0"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "npx prettier --write",
+      "eslint src/*.{js,jsx,ts,tsx} --format unix --fix-dry-run --no-error-on-unmatched-pattern",
+      "pnpm run test"
+    ]
   },
   "dependencies": {
     "@xmldom/xmldom": "^0.8.10",
