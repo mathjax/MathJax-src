@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the bbox package.
+ * @file Configuration file for the bbox package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -32,6 +32,7 @@ import TexError from '../TexError.js';
 const BboxMethods: { [key: string]: ParseMethod } = {
   /**
    * Implements MathJax Bbox macro to pad and colorize background boxes.
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {string} name The name of the calling macro.
    */
@@ -120,13 +121,25 @@ const BboxMethods: { [key: string]: ParseMethod } = {
 };
 
 // Dummy methods. Need to be made Safe with security check.
-let BBoxStyle = function (styles: string) {
+/**
+ * Safety check and return style information for bounding boxes.
+ *
+ * @param {string} styles The bounding box style string.
+ * @returns {string} The transformed bounding box style.
+ */
+function BBoxStyle(styles: string): string {
   return styles;
-};
+}
 
-let BBoxPadding = function (pad: string) {
+/**
+ * Safety check and return padding information for bounding boxes.
+ *
+ * @param {string} pad The bounding box padding string.
+ * @returns {string} The transformed bounding box padding.
+ */
+function BBoxPadding(pad: string): string {
   return pad;
-};
+}
 
 new CommandMap('bbox', { bbox: BboxMethods.BBox });
 

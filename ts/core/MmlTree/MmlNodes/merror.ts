@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMerror node
+ * @file  Implements the MmlMerror node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -51,6 +51,7 @@ export class MmlMerror extends AbstractMmlNode {
 
   /**
    * <merror> gets an inferred mrow
+   *
    * @override
    */
   public get arity() {
@@ -59,6 +60,7 @@ export class MmlMerror extends AbstractMmlNode {
 
   /**
    * <merror> can contain line breaks
+   *
    * @override
    */
   public get linebreakContainer() {

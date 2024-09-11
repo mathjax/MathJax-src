@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the a base class for ChtmlMsubsup, ChtmlMunderover
+ * @file  Implements the a base class for ChtmlMsubsup, ChtmlMunderover
  *                and their relatives.  (Since munderover can become msubsup
  *                when movablelimits is set, munderover needs to be able to
  *                do the same thing as msubsup in some cases.)
@@ -127,6 +127,10 @@ export interface ChtmlScriptbaseClass<N, T, D>
 
 /**
  * The ChtmlScriptbase wrapper class for the MmlScriptbase class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const ChtmlScriptbase = (function <N, T, D>(): ChtmlScriptbaseClass<
   N,
@@ -149,10 +153,10 @@ export const ChtmlScriptbase = (function <N, T, D>(): ChtmlScriptbaseClass<
     ChtmlScriptbaseClass<N, T, D>
   >(ChtmlWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   return class ChtmlScriptbase
-    // @ts-expect-error
+    // @ts-expect-error Avoid message about base constructors not having the
+    // same type (they should both be ChtmlWrapper<N, T, D>, but are thought of
+    // as different by typescript)
     extends Base
     implements ChtmlScriptbaseNTD<N, T, D>
   {

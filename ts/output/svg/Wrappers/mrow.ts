@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMrow wrapper for the MmlMrow object
+ * @file  Implements the SvgMrow wrapper for the MmlMrow object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -104,6 +104,10 @@ export interface SvgMrowClass<N, T, D>
 
 /**
  * The SvgMrow wrapper for the MmlMrow type
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
   const Base = CommonMrowMixin<
@@ -122,9 +126,9 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
     SvgMrowClass<N, T, D>
   >(SvgWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class SvgMrow extends Base implements SvgMrowNTD<N, T, D> {
     /**
      * @override
@@ -155,6 +159,7 @@ export const SvgMrow = (function <N, T, D>(): SvgMrowClass<N, T, D> {
 
     /**
      * @param {N[]} parents  The HTML nodes in which to place the lines
+     * @returns {N[]} The augmented nodes array
      */
     protected getSvgNodes(parents: N[]) {
       if (this.dh) {
@@ -337,12 +342,12 @@ export const SvgInferredMrow = (function <N, T, D>(): SvgInferredMrowClass<
     SvgInferredMrowClass<N, T, D>
   >(SvgMrow);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
   return class SvgInferredMrowNTD
-    // @ts-expect-error
+    // @ts-expect-error Avoid message about base constructors not having the
+    // same type (they should both be SvgWrapper<N, T, D>, but are thought of as
+    // different by typescript)
     extends Base
-    // @ts-expect-error
+    // @ts-expect-error Avoid messages of use of typeof
     implements SvgInferredMrow<N, T, D>
   {
     /**

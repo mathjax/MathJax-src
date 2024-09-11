@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMtr wrapper for the MmlMtr object
+ * @file  Implements the SvgMtr wrapper for the MmlMtr object
  *                and SVGmlabeledtr for MmlMlabeledtr
  *
  * @author dpvc@mathjax.org (Davide Cervone)
@@ -108,9 +108,9 @@ export interface SvgMtrNTD<N, T, D>
   bLine: number;
 
   /**
-   * @param {Svgmtd} cell      The cell to place
+   * @param {SvgMtdNTD} cell   The cell to place
    * @param {SizeData} sizes   The positioning information
-   * @return {number}          The new x position
+   * @returns {number}         The new x position
    */
   placeCell(cell: SvgMtdNTD<N, T, D>, sizes: SizeData): number;
 }
@@ -149,6 +149,10 @@ export interface SvgMtrClass<N, T, D>
 
 /**
  * The SvgMtr wrapper class for the MmlMtr class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const SvgMtr = (function <N, T, D>(): SvgMtrClass<N, T, D> {
   const Base = CommonMtrMixin<
@@ -167,9 +171,9 @@ export const SvgMtr = (function <N, T, D>(): SvgMtrClass<N, T, D> {
     SvgMtrClass<N, T, D>
   >(SvgWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class SvgMtr extends Base implements SvgMtrNTD<N, T, D> {
     /**
      * @override
@@ -370,9 +374,9 @@ export const SvgMlabeledtr = (function <N, T, D>(): SvgMlabeledtrClass<
     SvgMlabeledtrClass<N, T, D>
   >(SvgMtr);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class SvgMlabeledtr extends Base implements SvgMlabeledtrNTD<N, T, D> {
     /**
      * @override

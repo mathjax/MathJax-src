@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMtable wrapper for the MmlMtable object
+ * @file  Implements the SvgMtable wrapper for the MmlMtable object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -110,6 +110,10 @@ export interface SvgMtableClass<N, T, D>
 
 /**
  * The SvgMtable wrapper class for the MmlMtable class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
   const Base = CommonMtableMixin<
@@ -129,9 +133,9 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
     SvgMtableClass<N, T, D>
   >(SvgWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class SvgMtable extends Base implements SvgMtableNTD<N, T, D> {
     /**
      * @override
@@ -284,6 +288,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
     }
 
     /**
+     * @param svg {N} The svg element
      * @returns {number}   The x-adjustement needed to handle the true size of percentage-width tables
      */
     protected handlePWidth(svg: N): number {
@@ -390,13 +395,13 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      * @param {number} t                The thickness of the line
      * @param {string} style            The border style for the line
      * @param {OptionList} properties   The list of properties to modify
-     * @param {OptionList}              The modified properties
+     * @returns {OptionList}            The modified properties
      */
     protected setLineThickness(
       t: number,
       style: string,
       properties: OptionList
-    ) {
+    ): OptionList {
       if (t !== 0.07) {
         properties['stroke-thickness'] = this.fixed(t);
         if (style !== 'solid') {
@@ -413,7 +418,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
      * Handle addition of labels to the table
      *
      * @param {N} svg       The container for the table contents
-     * @param {N} parent    The parent containing the the table
+     * @param {N} _parent   The parent containing the the table
      * @param {number} dx   The adjustement for percentage width tables
      */
     protected handleLabels(svg: N, _parent: N, dx: number) {
@@ -491,7 +496,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
       const matrix = 'matrix(1 0 0 -1 0 0)';
       const scale = `scale(${this.jax.fixed((this.font.params.x_height * 1000) / this.metrics.ex, 2)})`;
       const transform = `translate(0 ${this.fixed(h)}) ${matrix} ${scale}`;
-      let table = this.svg(
+      const table = this.svg(
         'svg',
         {
           'data-table': true,

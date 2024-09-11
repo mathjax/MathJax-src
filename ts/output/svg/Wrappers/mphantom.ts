@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMphantom wrapper for the MmlMphantom object
+ * @file  Implements the SvgMphantom wrapper for the MmlMphantom object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

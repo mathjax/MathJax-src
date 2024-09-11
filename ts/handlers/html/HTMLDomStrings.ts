@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the HTMLDomStrings class
+ * @file  Implements the HTMLDomStrings class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -127,10 +127,10 @@ export class HTMLDomStrings<N, T, D> {
 
   /**
    * @param {OptionList} options  The user-supplied options
-   * @constructor
+   * @class
    */
   constructor(options: OptionList = null) {
-    let CLASS = this.constructor as typeof HTMLDomStrings;
+    const CLASS = this.constructor as typeof HTMLDomStrings;
     this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
     this.init();
     this.getPatterns();
@@ -151,9 +151,9 @@ export class HTMLDomStrings<N, T, D> {
    * Create the search patterns for skipHtmlTags, ignoreHtmlClass, and processHtmlClass
    */
   protected getPatterns() {
-    let skip = makeArray(this.options['skipHtmlTags']);
-    let ignore = makeArray(this.options['ignoreHtmlClass']);
-    let process = makeArray(this.options['processHtmlClass']);
+    const skip = makeArray(this.options['skipHtmlTags']);
+    const ignore = makeArray(this.options['ignoreHtmlClass']);
+    const process = makeArray(this.options['processHtmlClass']);
     this.skipHtmlTags = new RegExp('^(?:' + skip.join('|') + ')$', 'i');
     this.ignoreHtmlClass = new RegExp(
       '(?:^| )(?:' + ignore.join('|') + ')(?: |$)'
@@ -192,7 +192,7 @@ export class HTMLDomStrings<N, T, D> {
    *
    * @param {T} node          The Text node to process
    * @param {boolean} ignore  Whether we are currently ignoring content
-   * @return {N | T}          The next element to process
+   * @returns {N | T}          The next element to process
    */
   protected handleText(node: T, ignore: boolean): N | T {
     if (!ignore) {
@@ -206,11 +206,11 @@ export class HTMLDomStrings<N, T, D> {
    *
    * @param {N} node          The node to process
    * @param {boolean} ignore  Whether we are currently ignoring content
-   * @return {N | T}          The next element to process
+   * @returns {N | T}          The next element to process
    */
   protected handleTag(node: N, ignore: boolean): N | T {
     if (!ignore) {
-      let text = this.options['includeHtmlTags'][this.adaptor.kind(node)];
+      const text = this.options['includeHtmlTags'][this.adaptor.kind(node)];
       if (text instanceof Function) {
         this.extendString(node, text(node, this.adaptor));
       } else {
@@ -234,7 +234,7 @@ export class HTMLDomStrings<N, T, D> {
    *
    * @param {N} node               The node to process
    * @param {boolean} ignore       Whether we are currently ignoring content
-   * @return {[N|T, boolean]}      The next element to process and whether to ignore its content
+   * @returns {[N|T, boolean]}      The next element to process and whether to ignore its content
    */
   protected handleContainer(node: N, ignore: boolean): [N | T, boolean] {
     this.pushString();
@@ -262,8 +262,8 @@ export class HTMLDomStrings<N, T, D> {
    * Handle an unknown node type (nodeType other than 1, 3, 8)
    *
    * @param {N} node           The node to process
-   * @param {boolean} ignore   Whether we are currently ignoring content
-   * @return {N|T}             The next element to process
+   * @param {boolean} _ignore  Whether we are currently ignoring content
+   * @returns {N|T}             The next element to process
    */
   protected handleOther(node: N, _ignore: boolean): N | T {
     this.pushString();
@@ -286,13 +286,13 @@ export class HTMLDomStrings<N, T, D> {
    *   Return the strings and node lists
    *
    * @param {N} node                       The node to search
-   * @return {[string[], HTMLNodeList[]]}  The array of strings and their associated lists of nodes
+   * @returns {[string[], HTMLNodeList[]]}  The array of strings and their associated lists of nodes
    */
   public find(node: N | T): [string[], HTMLNodeList<N, T>[]] {
     this.init();
-    let stop = this.adaptor.next(node);
+    const stop = this.adaptor.next(node);
     let ignore = false;
-    let include = this.options['includeHtmlTags'];
+    const include = this.options['includeHtmlTags'];
 
     while (node && node !== stop) {
       const kind = this.adaptor.kind(node);
@@ -312,7 +312,10 @@ export class HTMLDomStrings<N, T, D> {
     }
 
     this.pushString();
-    let result = [this.strings, this.nodes] as [string[], HTMLNodeList<N, T>[]];
+    const result = [this.strings, this.nodes] as [
+      string[],
+      HTMLNodeList<N, T>[],
+    ];
     this.init(); // free up memory
     return result;
   }

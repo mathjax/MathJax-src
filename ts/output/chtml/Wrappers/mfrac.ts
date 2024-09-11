@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMfrac wrapper for the MmlMfrac object
+ * @file  Implements the ChtmlMfrac wrapper for the MmlMfrac object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -119,9 +119,9 @@ export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
     ChtmlMfracClass<N, T, D>
   >(ChtmlWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class ChtmlMfrac extends Base implements ChtmlMfracNTD<N, T, D> {
     /**
      * @override

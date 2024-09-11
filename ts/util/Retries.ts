@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements methods for handling asynchronous actions
+ * @file  Implements methods for handling asynchronous actions
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -26,7 +26,7 @@
  *  The legacy MathJax object  (FIXME: remove this after all v2 code is gone)
  */
 
-declare var MathJax: { Callback: { After: Function } };
+declare const MathJax: { Callback: { After: Function } };
 
 /*****************************************************************/
 /**
@@ -60,13 +60,12 @@ export interface RetryError extends Error {
  *     });
  *
  * @param {Function} code  The code to run that might cause retries
- * @return {Promise}       A promise that is satisfied when the code
+ * @returns {Promise}       A promise that is satisfied when the code
  *                         runs completely, and fails if the code
  *                         generates an error (that is not a retry).
  */
-
-export function handleRetriesFor(code: Function): Promise<any> {
-  return new Promise(function run(ok: Function, fail: Function) {
+export function handleRetriesFor(code: () => void): Promise<any> {
+  return new Promise(function run(ok, fail) {
     try {
       ok(code());
     } catch (err) {
@@ -91,9 +90,8 @@ export function handleRetriesFor(code: Function): Promise<any> {
  * @param {Promise} promise  The promise that must be satisfied before
  *                            actions will continue
  */
-
 export function retryAfter(promise: Promise<any>) {
-  let err = new Error('MathJax retry') as RetryError;
+  const err = new Error('MathJax retry') as RetryError;
   err.retry = promise;
   throw err;
 }

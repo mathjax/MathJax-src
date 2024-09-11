@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Mappings for TeX parsing of the physics package.
+ * @file Mappings for TeX parsing of the physics package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */

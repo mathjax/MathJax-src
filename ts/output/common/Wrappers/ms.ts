@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMs wrapper mixin for the MmlMs object
+ * @file  Implements the CommonMs wrapper mixin for the MmlMs object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -72,7 +72,7 @@ export interface CommonMs<
    * Create a text wrapper with the given text;
    *
    * @param {string} text   The text for the wrapped element
-   * @return {WW}           The wrapped text node
+   * @returns {WW}           The wrapped text node
    */
   createText(text: string): WW;
 }
@@ -112,6 +112,7 @@ export interface CommonMsClass<
 /**
  * The CommonMs wrapper mixin for the MmlMs object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -152,7 +153,7 @@ export function CommonMsMixin<
      * Create a text wrapper with the given text;
      *
      * @param {string} text   The text for the wrapped element
-     * @return {WW}           The wrapped text node
+     * @returns {WW}           The wrapped text node
      */
     public createText(text: string): WW {
       const node = this.wrap(this.mmlText(text));
@@ -170,7 +171,7 @@ export function CommonMsMixin<
     constructor(factory: WF, node: MmlNode, parent: WW = null) {
       super(factory, node, parent);
       const attributes = this.node.attributes;
-      let quotes = attributes.getList('lquote', 'rquote');
+      const quotes = attributes.getList('lquote', 'rquote');
       if (this.variant !== 'monospace') {
         if (!attributes.isSet('lquote') && quotes.lquote === '"') {
           quotes.lquote = '\u201C';

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Provides the interface functionality to SRE.
+ * @file  Provides the interface functionality to SRE.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  * @author v.sorge@mathjax.org (Volker Sorge)
@@ -63,8 +63,13 @@ export namespace Sre {
   /**
    * Loads locales that are already included in the imported MathMaps. Defaults
    * to standard loading if a locale is not yet preloaded.
+   *
+   * @param {string} locale A locale to preload from the bundle.
+   * @returns {Promise} Promise that resolves when locales are loaded.
    */
-  export const preloadLocales = async function (locale: string) {
+  export const preloadLocales = async function (
+    locale: string
+  ): Promise<string> {
     const json = MathMaps.get(locale);
     return json
       ? new Promise((res, _rej) => res(JSON.stringify(json)))

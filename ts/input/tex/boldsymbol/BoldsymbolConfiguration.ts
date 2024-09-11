@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the boldsymbol package.
+ * @file Configuration file for the boldsymbol package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -32,7 +32,7 @@ import { ParseMethod } from '../Types.js';
 import { NodeFactory } from '../NodeFactory.js';
 import ParseOptions from '../ParseOptions.js';
 
-let BOLDVARIANT: { [key: string]: string } = {};
+const BOLDVARIANT: { [key: string]: string } = {};
 BOLDVARIANT[TexConstant.Variant.NORMAL] = TexConstant.Variant.BOLD;
 BOLDVARIANT[TexConstant.Variant.ITALIC] = TexConstant.Variant.BOLDITALIC;
 BOLDVARIANT[TexConstant.Variant.FRAKTUR] = TexConstant.Variant.BOLDFRAKTUR;
@@ -46,13 +46,14 @@ BOLDVARIANT['-tex-mathit'] = TexConstant.Variant.BOLDITALIC;
 export const BoldsymbolMethods: { [key: string]: ParseMethod } = {
   /**
    * Parse function for boldsymbol macro.
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {string} name The name of the macro.
    */
   Boldsymbol(parser: TexParser, name: string) {
-    let boldsymbol = parser.stack.env['boldsymbol'];
+    const boldsymbol = parser.stack.env['boldsymbol'];
     parser.stack.env['boldsymbol'] = true;
-    let mml = parser.ParseArg(name);
+    const mml = parser.ParseArg(name);
     parser.stack.env['boldsymbol'] = boldsymbol;
     parser.Push(mml);
   },
@@ -62,11 +63,12 @@ new CommandMap('boldsymbol', { boldsymbol: BoldsymbolMethods.Boldsymbol });
 
 /**
  * Creates token nodes in bold font if possible.
+ *
  * @param {NodeFactory} factory The current node factory.
  * @param {string} kind The type of token node to create.
  * @param {any} def Properties for the node.
  * @param {string} text The text content.
- * @return {MmlNode} The generated token node.
+ * @returns {MmlNode} The generated token node.
  */
 export function createBoldToken(
   factory: NodeFactory,
@@ -74,7 +76,7 @@ export function createBoldToken(
   def: any,
   text: string
 ): MmlNode {
-  let token = NodeFactory.createToken(factory, kind, def, text);
+  const token = NodeFactory.createToken(factory, kind, def, text);
   if (
     kind !== 'mtext' &&
     factory.configuration.parser.stack.env['boldsymbol']
@@ -87,12 +89,14 @@ export function createBoldToken(
 
 /**
  * Postprocessor to rewrite token nodes to bold font, if possible.
- * @param {ParseOptions} data The parse options.
+ *
+ * @param {{ data: ParseOptions }} arg  The argument object.
+ * @param {ParseOptions} arg.data  The parse options.
  */
 export function rewriteBoldTokens(arg: { data: ParseOptions }) {
-  for (let node of arg.data.getList('fixBold')) {
+  for (const node of arg.data.getList('fixBold')) {
     if (NodeUtil.getProperty(node, 'fixBold')) {
-      let variant = NodeUtil.getAttribute(node, 'mathvariant') as string;
+      const variant = NodeUtil.getAttribute(node, 'mathvariant') as string;
       if (variant == null) {
         NodeUtil.setAttribute(node, 'mathvariant', TexConstant.Variant.BOLD);
       } else {

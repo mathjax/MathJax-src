@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Mappings for TeX parsing for definitorial commands.
+ * @file Mappings for TeX parsing for definitorial commands.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */

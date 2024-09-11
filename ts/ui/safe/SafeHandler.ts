@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  MathItem, MathDocument, and Handler for the safe extension
+ * @file  MathItem, MathDocument, and Handler for the safe extension
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -53,7 +53,12 @@ export interface SafeMathDocument<N, T, D> extends MathDocument<N, T, D> {
  * The mixin for adding safe render action to MathDocuments
  *
  * @param {B} BaseDocument             The MathDocument class to be extended
- * @return {SafeMathDocument<N,T,D>}   The extended MathDocument class
+ * @returns {SafeMathDocument<N,T,D>}   The extended MathDocument class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ * @template B  The Base document
  */
 export function SafeMathDocumentMixin<
   N,
@@ -82,7 +87,7 @@ export function SafeMathDocumentMixin<
      * Extend the MathItem class used for this MathDocument
      *
      * @override
-     * @constructor
+     * @class
      */
     constructor(...args: any[]) {
       super(...args);
@@ -102,8 +107,10 @@ export function SafeMathDocumentMixin<
     }
 
     /**
-     * @param {{document:SafeDocument<N,T,D>}} data   The document to use for the filter
+     * @param {{document:SafeMathDocument<N,T,D>}} data   The document to use for the filter
      *                                                (note: this has been bound to the input jax)
+     * @param data.math
+     * @param data.document
      */
     protected sanitize(data: {
       math: MathItem<N, T, D>;
@@ -121,7 +128,7 @@ export function SafeMathDocumentMixin<
  * Add context-menu support to a Handler instance
  *
  * @param {Handler} handler   The Handler instance to enhance
- * @return {Handler}          The handler that was modified (for purposes of chaining extensions)
+ * @returns {Handler}          The handler that was modified (for purposes of chaining extensions)
  */
 export function SafeHandler<N, T, D>(
   handler: Handler<N, T, D>

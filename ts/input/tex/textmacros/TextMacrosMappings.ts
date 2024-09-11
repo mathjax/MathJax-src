@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Character and Macro mappings for the textmacros package
+ * @file  Character and Macro mappings for the textmacros package
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */

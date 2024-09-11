@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Mappings for TeX parsing for the bussproofs package.
+ * @file Mappings for TeX parsing for the bussproofs package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -32,23 +32,25 @@ import * as BussproofsUtil from './BussproofsUtil.js';
 
 /**
  * Pads content of an inference rule.
+ *
  * @param {TexParser} parser The calling parser.
  * @param {string} content The content to be padded.
- * @return {MmlNode} The mrow element with padded content.
+ * @returns {MmlNode} The mrow element with padded content.
  */
 function paddedContent(parser: TexParser, content: string): MmlNode {
   // Add padding on either site.
-  let nodes = ParseUtil.internalMath(parser, UnitUtil.trimSpaces(content), 0);
+  const nodes = ParseUtil.internalMath(parser, UnitUtil.trimSpaces(content), 0);
   if (!nodes[0].childNodes[0].childNodes.length) {
     return parser.create('node', 'mrow', []);
   }
-  let lpad = parser.create('node', 'mspace', [], { width: '.5ex' });
-  let rpad = parser.create('node', 'mspace', [], { width: '.5ex' });
+  const lpad = parser.create('node', 'mspace', [], { width: '.5ex' });
+  const rpad = parser.create('node', 'mspace', [], { width: '.5ex' });
   return parser.create('node', 'mrow', [lpad, ...nodes, rpad]);
 }
 
 /**
  * Creates a ND style inference rule.
+ *
  * @param {TexParser} parser The calling parser.
  * @param {MmlNode} premise The premise (a single table).
  * @param {MmlNode[]} conclusions Elements that are combined into the conclusion.
@@ -125,12 +127,13 @@ function createRule(
 
 /**
  * Parses a line with a sequent (i.e., one containing \\fcenter).
+ *
  * @param {TexParser} parser The current parser.
  * @param {string} name The name of the calling command.
- * @return {MmlNode} The parsed line.
+ * @returns {MmlNode} The parsed line.
  */
 function parseFCenterLine(parser: TexParser, name: string): MmlNode {
-  let dollar = parser.GetNext();
+  const dollar = parser.GetNext();
   if (dollar !== '$') {
     throw new TexError(
       'IllegalUseOfCommand',
@@ -139,7 +142,7 @@ function parseFCenterLine(parser: TexParser, name: string): MmlNode {
     );
   }
   parser.i++;
-  let axiom = parser.GetUpTo(name, '$');
+  const axiom = parser.GetUpTo(name, '$');
   if (axiom.indexOf('\\fCenter') === -1) {
     throw new TexError(
       'MissingProofCommand',
@@ -149,18 +152,18 @@ function parseFCenterLine(parser: TexParser, name: string): MmlNode {
     );
   }
   // Check for fCenter and throw error?
-  let [prem, conc] = axiom.split('\\fCenter');
-  let premise = new TexParser(
+  const [prem, conc] = axiom.split('\\fCenter');
+  const premise = new TexParser(
     prem,
     parser.stack.env,
     parser.configuration
   ).mml();
-  let conclusion = new TexParser(
+  const conclusion = new TexParser(
     conc,
     parser.stack.env,
     parser.configuration
   ).mml();
-  let fcenter = new TexParser(
+  const fcenter = new TexParser(
     '\\fCenter',
     parser.stack.env,
     parser.configuration
@@ -182,16 +185,17 @@ function parseFCenterLine(parser: TexParser, name: string): MmlNode {
 const BussproofsMethods: { [key: string]: ParseMethod } = {
   /**
    * Implements the proof tree environment.
+   *
    * @param {TexParser} parser The current parser.
    * @param {StackItem} begin The opening element of the environment.
-   * @return {StackItem} The proof tree stackitem.
+   * @returns {StackItem} The proof tree stackitem.
    */
   // TODO: Error handling if we have leftover elements or elements are not in the
   // required order.
   Prooftree(parser: TexParser, begin: StackItem): StackItem {
     parser.Push(begin);
     // TODO: Check if opening a proof tree is legal.
-    let newItem = parser.itemFactory.create('proofTree').setProperties({
+    const newItem = parser.itemFactory.create('proofTree').setProperties({
       name: begin.getName(),
       line: 'solid',
       currentLine: 'solid',
@@ -203,11 +207,12 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Implements the Axiom command.
+   *
    * @param {TexParser} parser The current parser.
    * @param {string} name The name of the command.
    */
   Axiom(parser: TexParser, name: string) {
-    let top = parser.stack.Top();
+    const top = parser.stack.Top();
     // TODO: Label error
     if (top.kind !== 'proofTree') {
       throw new TexError(
@@ -215,19 +220,20 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
         'Proof commands only allowed in prooftree environment.'
       );
     }
-    let content = paddedContent(parser, parser.GetArgument(name));
+    const content = paddedContent(parser, parser.GetArgument(name));
     BussproofsUtil.setProperty(content, 'axiom', true);
     top.Push(content);
   },
 
   /**
    * Implements the Inference rule commands.
+   *
    * @param {TexParser} parser The current parser.
    * @param {string} name The name of the command.
    * @param {number} n Number of premises for this inference rule.
    */
   Inference(parser: TexParser, name: string, n: number) {
-    let top = parser.stack.Top();
+    const top = parser.stack.Top();
     if (top.kind !== 'proofTree') {
       throw new TexError(
         'IllegalProofCommand',
@@ -239,7 +245,7 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
     }
     const rootAtTop = top.getProperty('rootAtTop') as boolean;
     const childCount = n === 1 && !top.Peek()[0].childNodes.length ? 0 : n;
-    let children: MmlNode[] = [];
+    const children: MmlNode[] = [];
     do {
       if (children.length) {
         children.unshift(parser.create('node', 'mtd', [], {}));
@@ -251,14 +257,16 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
       );
       n--;
     } while (n > 0);
-    let row = parser.create('node', 'mtr', children, {});
-    let table = parser.create('node', 'mtable', [row], { framespacing: '0 0' });
-    let conclusion = paddedContent(parser, parser.GetArgument(name));
-    let style = top.getProperty('currentLine') as string;
+    const row = parser.create('node', 'mtr', children, {});
+    const table = parser.create('node', 'mtable', [row], {
+      framespacing: '0 0',
+    });
+    const conclusion = paddedContent(parser, parser.GetArgument(name));
+    const style = top.getProperty('currentLine') as string;
     if (style !== top.getProperty('line')) {
       top.setProperty('currentLine', top.getProperty('line'));
     }
-    let rule = createRule(
+    const rule = createRule(
       parser,
       table,
       [conclusion],
@@ -276,12 +284,13 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Implements the label command.
+   *
    * @param {TexParser} parser The current parser.
    * @param {string} name The name of the command.
    * @param {string} side The side of the label.
    */
   Label(parser: TexParser, name: string, side: string) {
-    let top = parser.stack.Top();
+    const top = parser.stack.Top();
     // Label error
     if (top.kind !== 'proofTree') {
       throw new TexError(
@@ -289,8 +298,8 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
         'Proof commands only allowed in prooftree environment.'
       );
     }
-    let content = ParseUtil.internalMath(parser, parser.GetArgument(name), 0);
-    let label =
+    const content = ParseUtil.internalMath(parser, parser.GetArgument(name), 0);
+    const label =
       content.length > 1
         ? parser.create('node', 'mrow', content, {})
         : content[0];
@@ -299,13 +308,14 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Sets line style for inference rules.
+   *
    * @param {TexParser} parser The current parser.
-   * @param {string} name The name of the command.
+   * @param {string} _name The name of the command.
    * @param {string} style The line style to set.
    * @param {boolean} always Set as permanent style.
    */
   SetLine(parser: TexParser, _name: string, style: string, always: boolean) {
-    let top = parser.stack.Top();
+    const top = parser.stack.Top();
     // Label error
     if (top.kind !== 'proofTree') {
       throw new TexError(
@@ -321,12 +331,13 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Implements commands indicating where the root of the proof tree is.
+   *
    * @param {TexParser} parser The current parser.
-   * @param {string} name The name of the command.
+   * @param {string} _name The name of the command.
    * @param {string} where If true root is at top, otherwise at bottom.
    */
   RootAtTop(parser: TexParser, _name: string, where: boolean) {
-    let top = parser.stack.Top();
+    const top = parser.stack.Top();
     if (top.kind !== 'proofTree') {
       throw new TexError(
         'IllegalProofCommand',
@@ -338,37 +349,40 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Implements Axiom command for sequents.
+   *
    * @param {TexParser} parser The current parser.
    * @param {string} name The name of the command.
    */
   AxiomF(parser: TexParser, name: string) {
-    let top = parser.stack.Top();
+    const top = parser.stack.Top();
     if (top.kind !== 'proofTree') {
       throw new TexError(
         'IllegalProofCommand',
         'Proof commands only allowed in prooftree environment.'
       );
     }
-    let line = parseFCenterLine(parser, name);
+    const line = parseFCenterLine(parser, name);
     BussproofsUtil.setProperty(line, 'axiom', true);
     top.Push(line);
   },
 
   /**
    * Placeholder for Fcenter macro that can be overwritten with renewcommand.
-   * @param {TexParser} parser The current parser.
-   * @param {string} name The name of the command.
+   *
+   * @param {TexParser} _parser The current parser.
+   * @param {string} _name The name of the command.
    */
   FCenter(_parser: TexParser, _name: string) {},
 
   /**
    * Implements inference rules for sequents.
+   *
    * @param {TexParser} parser The current parser.
    * @param {string} name The name of the command.
    * @param {number} n Number of premises for this inference rule.
    */
   InferenceF(parser: TexParser, name: string, n: number) {
-    let top = parser.stack.Top();
+    const top = parser.stack.Top();
     if (top.kind !== 'proofTree') {
       throw new TexError(
         'IllegalProofCommand',
@@ -380,7 +394,7 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
     }
     const rootAtTop = top.getProperty('rootAtTop') as boolean;
     const childCount = n === 1 && !top.Peek()[0].childNodes.length ? 0 : n;
-    let children: MmlNode[] = [];
+    const children: MmlNode[] = [];
     do {
       if (children.length) {
         children.unshift(parser.create('node', 'mtd', [], {}));
@@ -392,15 +406,17 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
       );
       n--;
     } while (n > 0);
-    let row = parser.create('node', 'mtr', children, {});
-    let table = parser.create('node', 'mtable', [row], { framespacing: '0 0' });
+    const row = parser.create('node', 'mtr', children, {});
+    const table = parser.create('node', 'mtable', [row], {
+      framespacing: '0 0',
+    });
 
-    let conclusion = parseFCenterLine(parser, name); // TODO: Padding
-    let style = top.getProperty('currentLine') as string;
+    const conclusion = parseFCenterLine(parser, name); // TODO: Padding
+    const style = top.getProperty('currentLine') as string;
     if (style !== top.getProperty('line')) {
       top.setProperty('currentLine', top.getProperty('line'));
     }
-    let rule = createRule(
+    const rule = createRule(
       parser,
       table,
       [conclusion],

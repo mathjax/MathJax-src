@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Utilities for units.
+ * @file Utilities for units.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -82,8 +82,9 @@ const pxPerInch = 72;
 
 /**
  * Transforms mu dimension to em if necessary.
- * @param {[string, string, number]} [value, unit, length] The dimension triple.
- * @return {[string, string, number]} [value, unit, length] The transformed triple.
+ *
+ * @param {[string, string, number]} arg The dimension triple.
+ * @returns {[string, string, number]} The transformed triple.
  */
 function muReplace([value, unit, length]: [string, string, number]): [
   string,
@@ -93,7 +94,7 @@ function muReplace([value, unit, length]: [string, string, number]): [
   if (unit !== 'mu') {
     return [value, unit, length];
   }
-  let em = UnitUtil.em(
+  const em = UnitUtil.em(
     UnitUtil.UNIT_CASES.get(unit) * parseFloat(value || '1')
   );
   return [em.slice(0, -2), 'em', length];
@@ -116,14 +117,15 @@ export const UnitUtil = {
 
   /**
    * Matches for a dimension argument.
+   *
    * @param {string} dim The argument.
    * @param {boolean} rest Allow for trailing garbage in the dimension string.
-   * @return {[string, string, number]} The match result as (Anglosaxon) value,
+   * @returns {[string, string, number]} The match result as (Anglosaxon) value,
    *     unit name, length of matched string. The latter is interesting in the
    *     case of trailing garbage.
    */
   matchDimen(dim: string, rest: boolean = false): [string, string, number] {
-    let match = dim.match(
+    const match = dim.match(
       rest ? UnitUtil.UNIT_CASES.dimenRest : UnitUtil.UNIT_CASES.dimenEnd
     );
     return match
@@ -133,20 +135,22 @@ export const UnitUtil = {
 
   /**
    * Convert a dimension string into standard em dimension.
+   *
    * @param {string} dim The attribute string.
-   * @return {number} The numerical value.
+   * @returns {number} The numerical value.
    */
   dimen2em(dim: string): number {
-    let [value, unit] = UnitUtil.matchDimen(dim);
-    let m = parseFloat(value || '1');
-    let factor = UnitUtil.UNIT_CASES.get(unit);
+    const [value, unit] = UnitUtil.matchDimen(dim);
+    const m = parseFloat(value || '1');
+    const factor = UnitUtil.UNIT_CASES.get(unit);
     return factor ? factor * m : 0;
   },
 
   /**
    * Turns a number into an em value.
+   *
    * @param {number} m The number.
-   * @return {string} The em dimension string.
+   * @returns {string} The em dimension string.
    */
   em(m: number): string {
     if (Math.abs(m) < 0.0006) {
@@ -157,8 +161,9 @@ export const UnitUtil = {
 
   /**
    * Trim spaces from a string.
+   *
    * @param {string} text The string to clean.
-   * @return {string} The string with leading and trailing whitespace removed.
+   * @returns {string} The string with leading and trailing whitespace removed.
    */
   trimSpaces(text: string): string {
     if (typeof text !== 'string') {

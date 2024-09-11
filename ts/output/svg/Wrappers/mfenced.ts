@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMfenced wrapper for the MmlMfenced object
+ * @file  Implements the SvgMfenced wrapper for the MmlMfenced object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -117,9 +117,9 @@ export const SvgMfenced = (function <N, T, D>(): SvgMfencedClass<N, T, D> {
     SvgMfencedClass<N, T, D>
   >(SvgWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  //   type (they should both be SvgWrapper<N, T, D>, but are thought of as
+  //   different by typescript)
   return class SvgMfenced extends Base implements SvgMfencedNTD<N, T, D> {
     /**
      * @override

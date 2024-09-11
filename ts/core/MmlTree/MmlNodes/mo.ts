@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMo node
+ * @file  Implements the MmlMo node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -182,6 +182,8 @@ export class MmlMo extends AbstractMmlTokenNode {
    * Use a getter to look up the TeX class from the operator table if it hasn't
    * been set yet (but don't save it in case the form changes when it is in its
    * location).
+   *
+   * @returns {number} The TeX class.
    */
   public get texClass() {
     if (this._texClass === null) {
@@ -218,6 +220,7 @@ export class MmlMo extends AbstractMmlTokenNode {
 
   /**
    * All <mo> are considered embellished
+   *
    * @override
    */
   public get isEmbellished() {
@@ -225,13 +228,13 @@ export class MmlMo extends AbstractMmlTokenNode {
   }
 
   /**
-   * @return {MmlNode}  The node that is the outermost embellished operator
+   * @returns {MmlNode}  The node that is the outermost embellished operator
    *                    with this node as its core
    */
   public coreParent(): MmlNode {
     let embellished = this;
     let parent = this as MmlNode;
-    let math = this.factory.getNodeClass('math');
+    const math = this.factory.getNodeClass('math');
     while (
       parent &&
       parent.isEmbellished &&
@@ -246,7 +249,7 @@ export class MmlMo extends AbstractMmlTokenNode {
 
   /**
    * @param {MmlNode} parent  The node whose core text is to be obtained
-   * @return {string}         The text of the core MO of the given parent element
+   * @returns {string}         The text of the core MO of the given parent element
    */
   public coreText(parent: MmlNode): string {
     if (!parent) {
@@ -277,7 +280,7 @@ export class MmlMo extends AbstractMmlTokenNode {
   }
 
   /**
-   * @return {boolean}  True is this mo is an accent in an munderover construction
+   * @returns {boolean}  True is this mo is an accent in an munderover construction
    */
   get isAccent(): boolean {
     let accent = false;
@@ -314,7 +317,7 @@ export class MmlMo extends AbstractMmlTokenNode {
    * @override
    */
   public setTeXclass(prev: MmlNode): MmlNode {
-    let { form, fence } = this.attributes.getList('form', 'fence') as {
+    const { form, fence } = this.attributes.getList('form', 'fence') as {
       form: string;
       fence: string;
     };
@@ -338,10 +341,10 @@ export class MmlMo extends AbstractMmlTokenNode {
    * Follow the TeXBook rules for adjusting the TeX class once its neighbors are known
    *
    * @param {MmlNode} prev  The node appearing before this one in the output
-   * @return {MmlNode}      The last node displayed (this node)
+   * @returns {MmlNode}      The last node displayed (this node)
    */
   public adjustTeXclass(prev: MmlNode): MmlNode {
-    let texClass = this.texClass;
+    const texClass = this.texClass;
     let prevClass = this.prevClass;
     if (texClass === TEXCLASS.NONE) {
       return prev;
@@ -412,7 +415,7 @@ export class MmlMo extends AbstractMmlTokenNode {
     prime: boolean = false
   ) {
     super.setInheritedAttributes(attributes, display, level, prime);
-    let mo = this.getText();
+    const mo = this.getText();
     this.checkOperatorTable(mo);
     this.checkPseudoScripts(mo);
     this.checkPrimes(mo);
@@ -461,7 +464,7 @@ export class MmlMo extends AbstractMmlTokenNode {
   }
 
   /**
-   * @return {[string, string, string]}  The list of form attribute values in the
+   * @returns {[string, string, string]}  The list of form attribute values in the
    *                                     order they should be tested, based on the
    *                                     position of the element in its parent.
    */
@@ -491,7 +494,7 @@ export class MmlMo extends AbstractMmlTokenNode {
 
   /**
    * @param {string[]} forms     The three forms in the default order they are to be tested
-   * @return {string[]}          The forms in the new order, if there is an explicit form attribute
+   * @returns {string[]}          The forms in the new order, if there is an explicit form attribute
    */
   protected handleExplicitForm(forms: string[]): string[] {
     if (this.attributes.isSet('form')) {
@@ -562,7 +565,7 @@ export class MmlMo extends AbstractMmlTokenNode {
    * Check a string for being a mathaccent
    *
    * @param {string} mo   The string to check
-   * @return {boolean}    True if the string should be a mathaccent
+   * @returns {boolean}    True if the string should be a mathaccent
    */
   public isMathAccent(mo: string = this.getText()): boolean {
     const MATHACCENT = (this.constructor as typeof MmlMo).mathaccents;
@@ -573,7 +576,7 @@ export class MmlMo extends AbstractMmlTokenNode {
    * Check a string for being a mathaccent with non-zero width
    *
    * @param {string} mo   The string to check
-   * @return {boolean}    True if the string should be a mathaccent
+   * @returns {boolean}    True if the string should be a mathaccent
    */
   public isMathAccentWithWidth(mo: string = this.getText()): boolean {
     const MATHACCENT = (this.constructor as typeof MmlMo).mathaccentsWithWidth;

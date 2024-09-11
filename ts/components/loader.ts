@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  A dynamic loader for loading MathJax components based
+ * @file  A dynamic loader for loading MathJax components based
  *                on a user configuration, while handling timing of
  *                dependencies properly
  *
@@ -44,7 +44,7 @@ import { mjxRoot } from '#root/root.js';
 /*
  * The browser document (if any)
  */
-declare var document: Document;
+declare const document: Document;
 
 /**
  * Function used to determine path to a given package.
@@ -105,6 +105,9 @@ export interface MathJaxObject extends MJObject {
 export const PathFilters: { [name: string]: PathFilterFunction } = {
   /**
    * Look up the path in the configuration's source list
+   *
+   * @param data The data object containing the filter functions
+   * @returns True
    */
   source: (data) => {
     if (CONFIG.source.hasOwnProperty(data.name)) {
@@ -115,6 +118,9 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
 
   /**
    * Add [mathjax] before any relative path, and add .js if needed
+   *
+   * @param data The data object containing the filter functions
+   * @returns True
    */
   normalize: (data) => {
     const name = data.name;
@@ -129,6 +135,9 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
 
   /**
    * Recursively replace path prefixes (e.g., [mathjax], [tex], etc.)
+   *
+   * @param data The data object containing the filter functions
+   * @returns True
    */
   prefix: (data) => {
     let match;
@@ -275,8 +284,8 @@ export namespace Loader {
    *
    * @param {string} name       The name of the extension being checked
    * @param {string} version    The version of the extension to check
-   * @param {string} type       The type of extension (future code may use this to check ranges of versions)
-   * @return {boolean}          True if there was a mismatch, false otherwise
+   * @param {string} _type       The type of extension (future code may use this to check ranges of versions)
+   * @returns {boolean}          True if there was a mismatch, false otherwise
    */
   export function checkVersion(
     name: string,

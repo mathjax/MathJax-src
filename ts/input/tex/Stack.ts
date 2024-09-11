@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview The Stack for the TeX parser.
+ * @file The Stack for the TeX parser.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -34,12 +34,13 @@ export default class Stack {
 
   /**
    * The actual stack, a list of stack items.
+   *
    * @type {Array.<StackItem>}
    */
   private stack: StackItem[] = [];
 
   /**
-   * @constructor
+   * @class
    * @param {StackItemFactory} _factory The stack item factory.
    * @param {EnvList} _env The environment.
    * @param {boolean} inner True if parser has been called recursively.
@@ -59,6 +60,7 @@ export default class Stack {
 
   /**
    * Set the environment of the stack.
+   *
    * @param {EnvList} env The new environment.
    */
   public set env(env: EnvList) {
@@ -67,7 +69,8 @@ export default class Stack {
 
   /**
    * Retrieves the environment of that stack.
-   * @return {EnvList} The current environment.
+   *
+   * @returns {EnvList} The current environment.
    */
   public get env(): EnvList {
     return this._env;
@@ -75,6 +78,7 @@ export default class Stack {
 
   /**
    * Pushes items or nodes onto stack.
+   *
    * @param {...StackItem|MmlNode} args A list of items to push.
    */
   public Push(...args: (StackItem | MmlNode)[]) {
@@ -113,7 +117,8 @@ export default class Stack {
 
   /**
    * Pop the topmost elements off the stack.
-   * @return {StackItem} A stack item.
+   *
+   * @returns {StackItem} A stack item.
    */
   public Pop(): StackItem {
     const item = this.stack.pop();
@@ -126,8 +131,9 @@ export default class Stack {
 
   /**
    * Look up the nth elements on the stack without removing them.
+   *
    * @param {number=} n Position of element that should be returned. Default 1.
-   * @return {StackItem} Nth item on the stack.
+   * @returns {StackItem} Nth item on the stack.
    */
   public Top(n: number = 1): StackItem {
     return this.stack.length < n ? null : this.stack[this.stack.length - n];
@@ -136,8 +142,9 @@ export default class Stack {
   /**
    * Look up the topmost element on the stack, returning the Mml node in that
    * item. Optionally pops the Mml node from that stack item.
+   *
    * @param {boolean=} noPop Pop top item if true.
-   * @return {MmlNode} The Mml node in the topmost stack item.
+   * @returns {MmlNode} The Mml node in the topmost stack item.
    */
   public Prev(noPop?: boolean): MmlNode | void {
     const top = this.Top();
@@ -146,7 +153,8 @@ export default class Stack {
 
   /**
    * Look up the current number of stack items.
-   * @return {number}  The number of items on the stack.
+   *
+   * @returns {number}  The number of items on the stack.
    */
   public get height(): number {
     return this.stack.length;

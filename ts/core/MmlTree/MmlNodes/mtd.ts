@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMtd node
+ * @file  Implements the MmlMtd node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -53,7 +53,8 @@ export class MmlMtd extends AbstractMmlBaseNode {
 
   /**
    * <mtd> has an inferred mrow
-   * @overrride
+   *
+   * @override
    */
   public get arity() {
     return -1;
@@ -61,6 +62,7 @@ export class MmlMtd extends AbstractMmlBaseNode {
 
   /**
    * <mtd> can contain line breaks
+   *
    * @override
    */
   public get linebreakContainer() {

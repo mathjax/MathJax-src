@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Registers the HTML document type
+ * @file  Registers the HTML document type
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -29,7 +29,7 @@ import { DOMAdaptor } from '../core/DOMAdaptor.js';
  * Create the HTML handler object and register it with MathJax.
  *
  * @param {DOMAdaptor<N,T,D>} adaptor  The DOM adaptor to use with HTML
- * @return {HTMLHandler}               The newly created handler
+ * @returns {HTMLHandler}               The newly created handler
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class

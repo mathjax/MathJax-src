@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgWrapper class
+ * @file  Implements the SvgWrapper class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -153,7 +153,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * Create the HTML for an embellished mo, if this is one.
    *
    * @param {N[]} parents  The HTML nodes where the output is to be added
-   * @return {boolean}     True when embellished output is produced, false if not
+   * @returns {boolean}     True when embellished output is produced, false if not
    */
   public toEmbellishedSVG(parents: N[]): boolean {
     if (parents.length <= 1 || !this.node.isEmbellished) return false;
@@ -232,7 +232,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * Add an anchor for hrefs and insert hot boxes into the DOM containers
    *
    * @param {N[]} parents   The HTML nodes in which the output is to be placed
-   * @return {N[]}          The roots of the HTML tree for the node's output
+   * @returns {N[]}          The roots of the HTML tree for the node's output
    */
   protected handleHref(parents: N[]) {
     const href = this.node.attributes.get('href');
@@ -544,7 +544,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    *   element to help Safari get the right location.
    *
    * @param {number} y     The current offset of the element
-   * @return {number}      The new offset for the element if it has an id
+   * @returns {number}      The new offset for the element if it has an id
    */
   protected handleId(y: number): number {
     if (!this.node.attributes || !this.node.attributes.get('id')) {
@@ -576,7 +576,8 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   /**
    * Return the first child element, skipping id align boxes and href hit boxes
    *
-   * @return {N}   The first "real" child element
+   * @param dom
+   * @returns {N}   The first "real" child element
    */
   public firstChild(dom: N = this.dom[0]): N {
     const adaptor = this.adaptor;
@@ -605,7 +606,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {N} parent        The container for the character
    * @param {string} variant  The variant to use for the character
    * @param {boolean} buffer  True to collect unknown characters into one text element
-   * @return {number}         The width of the character
+   * @returns {number}         The width of the character
    */
   public placeChar(
     n: number,
@@ -674,7 +675,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {string} variant    The name of the variant being used
    * @param {string} C          The hex string for the character code
    * @param {string} path       The data from the character
-   * @return {N}                The <path> or <use> node for the glyph
+   * @returns {N}                The <path> or <use> node for the glyph
    */
   protected charNode(variant: string, C: string, path: string): N {
     const cache = this.jax.options.fontCache;
@@ -686,7 +687,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   /**
    * @param {string} C          The hex string for the character code
    * @param {string} path       The data from the character
-   * @return {N}                The <path> for the glyph
+   * @returns {N}                The <path> for the glyph
    */
   protected pathNode(C: string, path: string): N {
     return this.svg('path', { 'data-c': C, d: path });
@@ -696,7 +697,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {string} variant    The name of the variant being used
    * @param {string} C          The hex string for the character code
    * @param {string} path       The data from the character
-   * @return {N}                The <use> node for the glyph
+   * @returns {N}                The <use> node for the glyph
    */
   protected useNode(variant: string, C: string, path: string): N {
     const use = this.svg('use', { 'data-c': C });
@@ -716,7 +717,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    */
 
   public drawBBox() {
-    let { w, h, d } = this.getOuterBBox();
+    const { w, h, d } = this.getOuterBBox();
     const L = (this.styleData?.border?.width || [0, 0, 0, 0])[3];
     const def = { style: { opacity: 0.25 } } as OptionList;
     if (L) {
@@ -748,7 +749,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {string} type      The tag name of the HTML node to be created
    * @param {OptionList} def   The properties to set for the created node
    * @param {(N|T)[]} content  The child nodes for the created HTML node
-   * @return {N}               The generated HTML tree
+   * @returns {N}               The generated HTML tree
    */
   public html(type: string, def: OptionList = {}, content: (N | T)[] = []): N {
     return this.jax.html(type, def, content);
@@ -758,7 +759,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {string} type      The tag name of the svg node to be created
    * @param {OptionList} def   The properties to set for the created node
    * @param {(N|T)[]} content  The child nodes for the created SVG node
-   * @return {N}               The generated SVG tree
+   * @returns {N}               The generated SVG tree
    */
   public svg(type: string, def: OptionList = {}, content: (N | T)[] = []): N {
     return this.jax.svg(type, def, content);
@@ -766,7 +767,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
 
   /**
    * @param {string} text  The text from which to create an HTML text node
-   * @return {T}  The generated text node with the given text
+   * @returns {T}  The generated text node with the given text
    */
   public text(text: string): T {
     return this.jax.text(text);
@@ -775,7 +776,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   /**
    * @param {number} x   The dimension to display
    * @param {number=} n  The number of digits to display
-   * @return {string}    The dimension with the given number of digits (minus trailing zeros)
+   * @returns {string}    The dimension with the given number of digits (minus trailing zeros)
    */
   public fixed(x: number, n: number = 1): string {
     return this.jax.fixed(x * 1000, n);

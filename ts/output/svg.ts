@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SVG OutputJax object
+ * @file  Implements the SVG OutputJax object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -156,7 +156,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
 
   /**
    * @override
-   * @constructor
+   * @class
    */
   constructor(options: OptionList = {}) {
     super(options, SvgWrapperFactory as any, DefaultFont);
@@ -229,7 +229,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
    * Checks if there is already a font-cache element in the page
    *
    * @param {MathDocument} html   The document to search
-   * @return {boolean}            True if a font cache already exists in the page
+   * @returns {boolean}            True if a font cache already exists in the page
    */
   protected findCache(html: MathDocument<N, T, D>): boolean {
     const adaptor = this.adaptor;
@@ -276,7 +276,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
 
   /**
    * @param {SvgWrapper} wrapper   The wrapped math to process
-   * @return {[N, N]}              The svg and g nodes for the math
+   * @returns {[N, N]}              The svg and g nodes for the math
    */
   protected createRoot(wrapper: SvgWrapper<N, T, D>): [N, N] {
     const { w, h, d, pwidth } = wrapper.getOuterBBox();
@@ -306,7 +306,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
    * @param {number} h   The height of the SVG to create
    * @param {number} d   The depth of the SVG to create
    * @param {number} w   The width of the SVG to create
-   * @return {[N, N]}      The svg element and its initial g child
+   * @returns {[N, N]}      The svg element and its initial g child
    */
   protected createSVG(h: number, d: number, w: number): [N, N] {
     const px = this.math.metrics.em / 1000;
@@ -500,7 +500,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
 
   /**
    * @param {number} m  A number to be shown in ex
-   * @return {string}   The number with units of ex
+   * @returns {string}   The number with units of ex
    */
   public ex(m: number): string {
     m /= this.font.params.x_height;
@@ -513,7 +513,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
    * @param {string} kind             The kind of node to create
    * @param {OptionList} properties   The properties to set for the element
    * @param {(N|T)[]} children            The child nodes for this node
-   * @return {N}                      The newly created node in the SVG namespace
+   * @returns {N}                      The newly created node in the SVG namespace
    */
   public svg(
     kind: string,
@@ -526,7 +526,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
   /**
    * @param {string} text      The text to be displayed
    * @param {string} variant   The name of the variant for the text
-   * @return {N}               The text element containing the text
+   * @returns {N}               The text element containing the text
    */
   public unknownText(text: string, variant: string): N {
     const metrics = this.math.metrics;
@@ -562,7 +562,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
    *  and looking up its size (fake the height and depth, since we can't measure that)
    *
    * @param {N} text         The text element to measure
-   * @return {Object}        The width, height and depth for the text
+   * @returns {object}        The width, height and depth for the text
    */
   public measureTextNode(text: N): UnknownBBox {
     const adaptor = this.adaptor;
@@ -583,7 +583,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
       [text]
     );
     adaptor.append(adaptor.body(adaptor.document), svg);
-    let w = adaptor.nodeSize(text, 1000, true)[0];
+    const w = adaptor.nodeSize(text, 1000, true)[0];
     adaptor.remove(svg);
     return { w: w, h: 0.75, d: 0.2 };
   }

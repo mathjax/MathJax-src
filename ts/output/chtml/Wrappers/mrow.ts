@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMrow wrapper for the MmlMrow object
+ * @file  Implements the ChtmlMrow wrapper for the MmlMrow object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -107,6 +107,10 @@ export interface ChtmlMrowClass<N, T, D>
 
 /**
  * The ChtmlMrow wrapper class for the MmlMrow class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
   const Base = CommonMrowMixin<
@@ -125,9 +129,9 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
     ChtmlMrowClass<N, T, D>
   >(ChtmlWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class ChtmlMrow extends Base implements ChtmlMrowNTD<N, T, D> {
     /**
      * @override
@@ -234,7 +238,7 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
       ];
       for (const i of parents.keys()) {
         const bbox = lines[i];
-        let [indentalign, indentshift] =
+        const [indentalign, indentshift] =
           i === 0
             ? [alignfirst, shiftfirst]
             : bbox.indentData?.[i === n ? 2 : 1] || ['left', '0'];
@@ -430,10 +434,10 @@ export const ChtmlInferredMrow = (function <N, T, D>(): ChtmlInferredMrowClass<
     ChtmlInferredMrowClass<N, T, D>
   >(ChtmlMrow);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   return class ChtmlInferredMrow
-    // @ts-expect-error
+    // @ts-expect-error Avoid message about base constructors not having the
+    // same type (they should both be ChtmlWrapper<N, T, D>, but are thought of
+    // as different by typescript)
     extends Base
     implements ChtmlInferredMrowNTD<N, T, D>
   {

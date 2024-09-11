@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the AMS package.
+ * @file Configuration file for the AMS package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -31,16 +31,18 @@ import { CommandMap } from '../TokenMap.js';
 
 /**
  * Standard AMS style tagging.
- * @constructor
- * @extends {AbstractTags}
+ *
+ * @class
+ * @augments {AbstractTags}
  */
 export class AmsTags extends AbstractTags {}
 
 /**
  * Init method for AMS package.
+ *
  * @param {ParserConfiguration} config The current configuration.
  */
-let init = function (config: ParserConfiguration) {
+const init = function (config: ParserConfiguration) {
   new CommandMap(NEW_OPS, {});
   config.append(
     Configuration.local({ handler: { macro: [NEW_OPS] }, priority: -1 })

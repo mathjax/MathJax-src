@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Token mappings for the AMScd package.
+ * @file Token mappings for the AMScd package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */

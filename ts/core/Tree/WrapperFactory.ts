@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Generic WrapperFactory class for creating Wrapper objects
+ * @file Generic WrapperFactory class for creating Wrapper objects
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -45,7 +45,7 @@ export interface WrapperFactory<
    *
    * @param {N} node      The node to be wrapped
    * @param {any[]} args  Any additional arguments needed when wrapping the node
-   * @return {TT}         The newly wrapped node
+   * @returns {TT}         The newly wrapped node
    */
   wrap<TT extends WW = WW>(node: N, ...args: any[]): TT;
 }

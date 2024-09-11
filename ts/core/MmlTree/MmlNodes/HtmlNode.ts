@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implement html-in-mathml internal node type
+ * @file  Implement html-in-mathml internal node type
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -40,7 +40,7 @@ export class HtmlNode<N> extends XMLNode {
   }
 
   /**
-   * @return {N}  Return the node's HTML content
+   * @returns {N}  Return the node's HTML content
    */
   public getHTML(): N {
     return this.getXML() as any as N;
@@ -49,7 +49,7 @@ export class HtmlNode<N> extends XMLNode {
   /**
    * @param {N} html               The HTML content to be saved
    * @param {DOMAdaptor} adaptor   DOM adaptor for the content
-   * @return {HTMLNode}            The HTML node (for chaining of method calls)
+   * @returns {HtmlNode}            The HTML node (for chaining of method calls)
    */
   public setHTML(
     html: N,
@@ -60,21 +60,21 @@ export class HtmlNode<N> extends XMLNode {
     //
     try {
       adaptor.getAttribute(html, 'data-mjx-hdw');
-    } catch (error) {
+    } catch (_error) {
       html = adaptor.node('span', {}, [html]);
     }
     return this.setXML(html, adaptor) as HtmlNode<N>;
   }
 
   /**
-   * @return {string}  The serialized HTML content
+   * @returns {string}  The serialized HTML content
    */
   public getSerializedHTML(): string {
     return this.adaptor.outerHTML(this.xml);
   }
 
   /**
-   * @return {string}   The text of the HTML content
+   * @returns {string}   The text of the HTML content
    */
   public textContent(): string {
     return this.adaptor.textContent(this.xml);
@@ -82,6 +82,8 @@ export class HtmlNode<N> extends XMLNode {
 
   /**
    * Just indicate that this is HTML data
+   *
+   * @override
    */
   public toString() {
     const kind = this.adaptor.kind(this.xml);

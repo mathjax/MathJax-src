@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Explorers based on keyboard events.
+ * @file Explorers based on keyboard events.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -37,31 +37,36 @@ import { Sre } from '../sre.js';
 
 /**
  * Interface for keyboard explorers. Adds the necessary keyboard events.
+ *
  * @interface
- * @extends {Explorer}
+ * @augments {Explorer}
  */
 export interface KeyExplorer extends Explorer {
   /**
    * Function to be executed on key down.
+   *
    * @param {KeyboardEvent} event The keyboard event.
    */
   KeyDown(event: KeyboardEvent): void;
 
   /**
    * Function to be executed on focus in.
+   *
    * @param {KeyboardEvent} event The keyboard event.
    */
   FocusIn(event: FocusEvent): void;
 
   /**
    * Function to be executed on focus out.
+   *
    * @param {KeyboardEvent} event The keyboard event.
    */
   FocusOut(event: FocusEvent): void;
 
   /**
    * Move made on keypress.
-   * @param key The key code of the pressed key.
+   *
+   * @param event The keyboard event when a key is pressed.
    */
   Move(event: KeyboardEvent): void;
 
@@ -78,13 +83,19 @@ const roles = ['tree', 'group', 'treeitem'];
 const nav = roles.map((x) => `[role="${x}"]`).join(',');
 const prevNav = roles.map((x) => `[tabindex="0"][role="${x}"]`).join(',');
 
-function isContainer(el: HTMLElement) {
+/**
+ * Predicate to check if element is a MJX container.
+ *
+ * @param {HTMLElement} el The HTML element.
+ * @returns {boolean} True if the element is an mjx-container.
+ */
+function isContainer(el: HTMLElement): boolean {
   return el.matches('mjx-container');
 }
 
 /**
- * @constructor
- * @extends {AbstractExplorer}
+ * @class
+ * @augments {AbstractExplorer}
  *
  * @template T  The type that is consumed by the Region of this explorer.
  */
@@ -109,6 +120,8 @@ export class SpeechExplorer
 
   /**
    * Convenience getter for generator pool of the item.
+   *
+   * @returns The item's generator pool.
    */
   private get generators() {
     return this.item?.generatorPool;
@@ -156,7 +169,7 @@ export class SpeechExplorer
    * Records a mouse down event on the element. This ensures that focus events
    * only fire if they were not triggered by a mouse click.
    *
-   * @param e The mouse event.
+   * @param {MouseEvent} e The mouse event.
    */
   private MouseDown(e: MouseEvent) {
     this.mousedown = true;
@@ -252,7 +265,7 @@ export class SpeechExplorer
    * Navigate one step to the right on the same level.
    *
    * @param {HTMLElement} el The current element.
-   * @return {HTMLElement} The next element.
+   * @returns {HTMLElement} The next element.
    */
   protected nextSibling(el: HTMLElement): HTMLElement {
     const sib = el.nextElementSibling as HTMLElement;
@@ -273,7 +286,7 @@ export class SpeechExplorer
    * Navigate one step to the left on the same level.
    *
    * @param {HTMLElement} el The current element.
-   * @return {HTMLElement} The next element.
+   * @returns {HTMLElement} The next element.
    */
   protected prevSibling(el: HTMLElement): HTMLElement {
     const sib = el.previousElementSibling as HTMLElement;
@@ -319,7 +332,7 @@ export class SpeechExplorer
    * expression.
    *
    * @param {HTMLElement} node The current node.
-   * @return {HTMLElement} The refocused node.
+   * @returns {HTMLElement} The refocused node.
    */
   public depth(node: HTMLElement): HTMLElement {
     this.generators.depth(node, !!this.actionable(node));
@@ -332,7 +345,7 @@ export class SpeechExplorer
    * Expands or collapses the currently focused node.
    *
    * @param {HTMLElement} node The focused node.
-   * @return {HTMLElement} The node if action was successful. O/w null.
+   * @returns {HTMLElement} The node if action was successful. O/w null.
    */
   public expand(node: HTMLElement): HTMLElement {
     const expandable = this.actionable(node);
@@ -348,7 +361,7 @@ export class SpeechExplorer
    * replaced by the full speech on focus out.
    *
    * @param {HTMLElement} node The targeted node.
-   * @return {HTMLElement} The refocused targeted node.
+   * @returns {HTMLElement} The refocused targeted node.
    */
   public summary(node: HTMLElement): HTMLElement {
     this.generators.summary(node);
@@ -362,7 +375,7 @@ export class SpeechExplorer
    * the expression.
    *
    * @param {HTMLElement} node The targeted node.
-   * @return {HTMLElement} The refocused targeted node.
+   * @returns {HTMLElement} The refocused targeted node.
    */
   public nextRules(node: HTMLElement): HTMLElement {
     this.generators.nextRules(node);
@@ -376,7 +389,7 @@ export class SpeechExplorer
    * speech for the expression.
    *
    * @param {HTMLElement} node The targeted node.
-   * @return {HTMLElement} The refocused targeted node.
+   * @returns {HTMLElement} The refocused targeted node.
    */
   public nextStyle(node: HTMLElement): HTMLElement {
     this.generators.nextStyle(node);
@@ -427,8 +440,16 @@ export class SpeechExplorer
   }
 
   /**
-   * @constructor
-   * @extends {AbstractKeyExplorer}
+   * @param {A11yDocument} document The accessible math document.
+   * @param {ExplorerPool} pool The explorer pool.
+   * @param {SpeechRegion} region The speech region for the explorer.
+   * @param {HTMLElement} node The node the explorer is assigned to.
+   * @param {LiveRegion} brailleRegion The braille region.
+   * @param {HoverRegion} magnifyRegion The magnification region.
+   * @param {MmlNode} _mml The internal math node.
+   * @param {ExplorerMathItem} item The math item.
+   * @class
+   * @augments {AbstractExplorer}
    */
   constructor(
     public document: A11yDocument,
@@ -471,7 +492,7 @@ export class SpeechExplorer
           `[data-semantic-id="${this.restarted}"]`
         );
         while (internal && internal !== this.generators.element) {
-          let sid = internal.getAttribute('data-semantic-id');
+          const sid = internal.getAttribute('data-semantic-id');
           if (dummies.indexOf(sid) !== -1) {
             this.current = this.node.querySelector(
               `[data-semantic-id="${sid}"]`
@@ -597,9 +618,11 @@ export class SpeechExplorer
 
   /**
    * Programmatically triggers a link if the focused node contains one.
+   *
    * @param {KeyboardEvent} event The keyboard event for the last keydown event.
+   * @returns {boolean} True if link was successfully triggered.
    */
-  protected triggerLinkKeyboard(event: KeyboardEvent) {
+  protected triggerLinkKeyboard(event: KeyboardEvent): boolean {
     if (event.code !== 'Enter') {
       return false;
     }
@@ -614,7 +637,7 @@ export class SpeechExplorer
   }
 
   protected triggerLink(node: HTMLElement) {
-    let focus = node
+    const focus = node
       ?.getAttribute('data-semantic-postfix')
       ?.match(/(^| )link($| )/);
     if (focus) {
@@ -626,8 +649,10 @@ export class SpeechExplorer
 
   /**
    * Programmatically triggers a link if the clicked mouse event contains one.
+   *
+   * @returns {boolean} True if link was successfully triggered.
    */
-  protected triggerLinkMouse() {
+  protected triggerLinkMouse(): boolean {
     let node = this.current;
     while (node && node !== this.node) {
       if (this.triggerLink(node)) {
@@ -652,7 +677,7 @@ export class SpeechExplorer
   }
 
   /**
-   * @return The semantic node that is currently focused.
+   * @returns The semantic node that is currently focused.
    */
   public semanticFocus() {
     const node = this.current || this.node;

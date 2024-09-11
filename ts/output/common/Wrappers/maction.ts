@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMaction wrapper mixin for the MmlMaction object
+ * @file  Implements the CommonMaction wrapper mixin for the MmlMaction object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -270,6 +270,7 @@ export interface CommonMactionClass<
 /**
  * The CommonMaction wrapper mixin for the MmlMaction object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -352,7 +353,7 @@ export function CommonMactionMixin<
      */
     public getParameters() {
       const offsets = this.node.attributes.get('data-offsets') as string;
-      let [dx, dy] = split(offsets || '');
+      const [dx, dy] = split(offsets || '');
       this.tipDx = this.length2em(dx || TooltipData.dx);
       this.tipDy = this.length2em(dy || TooltipData.dy);
     }

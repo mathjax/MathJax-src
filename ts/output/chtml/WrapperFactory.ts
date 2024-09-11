@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlWrapperFactory class
+ * @file  Implements the ChtmlWrapperFactory class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

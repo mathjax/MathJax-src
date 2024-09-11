@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlTextNode wrapper for the TextNode object
+ * @file  Implements the ChtmlTextNode wrapper for the TextNode object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -100,6 +100,10 @@ export interface ChtmlTextNodeClass<N, T, D>
 
 /**
  * The ChtmlTextNode wrapper class for the MmlTextNode class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<
   N,
@@ -122,9 +126,9 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<
     ChtmlTextNodeClass<N, T, D>
   >(ChtmlWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class ChtmlTextNode extends Base implements ChtmlTextNodeNTD<N, T, D> {
     /**
      * The TextNode wrapper
@@ -211,7 +215,7 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<
      * @param {string} utext     The text to add
      * @param {string} variant   The mathvariant for the text
      * @param {N} parent         The parent node where the text is being added
-     * @return {string}          The new value for utext
+     * @returns {string}          The new value for utext
      */
     protected addUtext(utext: string, variant: string, parent: N): string {
       if (utext) {

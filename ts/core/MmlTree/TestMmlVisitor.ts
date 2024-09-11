@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  A visitor that produces a serilaied MathML string
+ * @file  A visitor that produces a serilaied MathML string
  *                that contains addition information about inherited
  *                attributes and internal properties.
  *                (For testing purposes only.)
@@ -46,10 +46,10 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
    * @param {string} space    The number of spaces to use for indentation
    */
   public visitDefault(node: MmlNode, space: string) {
-    let kind = node.kind;
-    let [nl, endspace] =
+    const kind = node.kind;
+    const [nl, endspace] =
       node.isToken || node.childNodes.length === 0 ? ['', ''] : ['\n', space];
-    let attributes = this.attributeString(
+    const attributes = this.attributeString(
       {
         isEmbellished: node.isEmbellished,
         isSpacelike: node.isSpacelike,
@@ -71,7 +71,7 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
 
   /**
    * @param {MmlNode} node  The node whose attributes are to be produced
-   * @return {string}  The attribute list as a string
+   * @returns {string}  The attribute list as a string
    */
   protected getAttributes(node: MmlNode): string {
     return this.attributeString(node.attributes.getAllAttributes(), '', '');
@@ -79,7 +79,7 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
 
   /**
    * @param {MmlNode} node  The node whose inherited attributes are to be produced
-   * @return {string}  The inhertited attribute list as a string (with each in [...])
+   * @returns {string}  The inhertited attribute list as a string (with each in [...])
    */
   protected getInherited(node: MmlNode): string {
     return this.attributeString(node.attributes.getAllInherited(), '[', ']');
@@ -87,7 +87,7 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
 
   /**
    * @param {MmlNode} node  The node whose properties are to be produced
-   * @return {string}  The property list as a string (with each in [[...]])
+   * @returns {string}  The property list as a string (with each in [[...]])
    */
   protected getProperties(node: MmlNode): string {
     return this.attributeString(node.getAllProperties(), '[[', ']]');
@@ -97,7 +97,7 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
    * @param {PropertyList} attributes  The attributes to be made into a list
    * @param {string} open  The opening delimiter to add before each attribute
    * @param {string} close  The closing delimiter to add after each attribute
-   * @return {string}  The attribute list as a string
+   * @returns {string}  The attribute list as a string
    */
   protected attributeString(
     attributes: PropertyList,

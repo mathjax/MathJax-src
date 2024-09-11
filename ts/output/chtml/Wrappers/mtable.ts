@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMtable wrapper for the MmlMtable object
+ * @file  Implements the ChtmlMtable wrapper for the MmlMtable object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -132,9 +132,9 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
     ChtmlMtableClass<N, T, D>
   >(ChtmlWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class ChtmlMtable extends Base implements ChtmlMtableNTD<N, T, D> {
     /**
      * @override
@@ -516,7 +516,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
      * @param {string} ralign      The alignment of the row
      * @param {number} HD          The total height+depth for the row
      * @param {number} D           The new depth for the row
-     * @return {boolean}           True if no other cells in this row need to be processed
+     * @returns {boolean}           True if no other cells in this row need to be processed
      */
     protected setCellBaseline(
       cell: ChtmlWrapper<N, T, D>,
@@ -656,7 +656,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
 
     /**
      * @param {string} side         The side for the labels
-     * @return {[string, number]}   The alignment and shift values
+     * @returns {[string, number]}   The alignment and shift values
      */
     protected addLabelPadding(side: string): [string, number] {
       const [, align, shift] = this.getPadAlignShift(side);
@@ -685,7 +685,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
      *   and set the baseline for labels that are baseline aligned.
      */
     protected updateRowHeights() {
-      let { H, D, NH, ND } = this.getTableData();
+      const { H, D, NH, ND } = this.getTableData();
       const space = this.getRowHalfSpacing();
       for (let i = 0; i < this.numRows; i++) {
         const row = this.childNodes[i];

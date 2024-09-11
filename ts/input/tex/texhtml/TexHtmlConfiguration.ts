@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the texhtml package.
+ * @file Configuration file for the texhtml package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */

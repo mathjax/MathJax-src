@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMpadded wrapper for the MmlMpadded object
+ * @file  Implements the ChtmlMpadded wrapper for the MmlMpadded object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -117,9 +117,9 @@ export const ChtmlMpadded = (function <N, T, D>(): ChtmlMpaddedClass<N, T, D> {
     ChtmlMpaddedClass<N, T, D>
   >(ChtmlWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  //   type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
+  //   different by typescript)
   return class ChtmlMpadded extends Base implements ChtmlMpaddedNTD<N, T, D> {
     /**
      * @override

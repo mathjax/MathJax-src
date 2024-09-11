@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the TeX version of the FindMath object
+ * @file  Implements the TeX version of the FindMath object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -39,7 +39,7 @@ export type Delims = [string, string];
  *  Locates TeX expressions within strings
  */
 
-/*
+/**
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
@@ -105,10 +105,10 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
    *   based on the configuration options
    */
   protected getPatterns() {
-    let options = this.options;
-    let starts: string[] = [];
-    let parts: string[] = [];
-    let subparts: string[] = [];
+    const options = this.options;
+    const starts: string[] = [];
+    const parts: string[] = [];
+    const subparts: string[] = [];
     this.end = {};
     this.env = this.sub = 0;
     let i = 1;
@@ -148,7 +148,7 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
    * @param {boolean} display  True if the delimiters are for display mode
    */
   protected addPattern(starts: string[], delims: Delims, display: boolean) {
-    let [open, close] = delims;
+    const [open, close] = delims;
     starts.push(quotePattern(open));
     this.end[open] = [close, display, this.endPattern(close)];
   }
@@ -158,7 +158,7 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
    *
    * @param {string} end   The end delimiter text
    * @param {string} endp  The end delimiter pattern (overrides the literal end pattern)
-   * @return {RegExp}      The regular expression for the end delimiter
+   * @returns {RegExp}      The regular expression for the end delimiter
    */
   protected endPattern(end: string, endp?: string): RegExp {
     return new RegExp(
@@ -176,7 +176,7 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
    * @param {number} n               The index of the string being searched
    * @param {RegExpExecArray} start  The result array from the start-delimiter search
    * @param {EndItem} end            The end-delimiter data corresponding to the start delimiter
-   * @return {ProtoItem<N,T>}        The proto math item for the math, if found
+   * @returns {ProtoItem<N,T>}        The proto math item for the math, if found
    */
   protected findEnd(
     text: string,
@@ -184,8 +184,8 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
     start: RegExpExecArray,
     end: EndItem
   ): ProtoItem<N, T> {
-    let [close, display, pattern] = end;
-    let i = (pattern.lastIndex = start.index + start[0].length);
+    const [close, display, pattern] = end;
+    const i = (pattern.lastIndex = start.index + start[0].length);
     let match: RegExpExecArray,
       braces: number = 0;
     while ((match = pattern.exec(text))) {
@@ -221,7 +221,7 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
     this.start.lastIndex = 0;
     while ((start = this.start.exec(text))) {
       if (start[this.env] !== undefined && this.env) {
-        let end = '\\\\end\\s*(\\{' + quotePattern(start[this.env]) + '\\})';
+        const end = '\\\\end\\s*(\\{' + quotePattern(start[this.env]) + '\\})';
         match = this.findEnd(text, n, start, [
           '{' + start[this.env] + '}',
           true,
@@ -232,8 +232,8 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
           match.open = match.close = '';
         }
       } else if (start[this.sub] !== undefined && this.sub) {
-        let math = start[this.sub];
-        let end = start.index + start[this.sub].length;
+        const math = start[this.sub];
+        const end = start.index + start[this.sub].length;
         if (math.length === 2) {
           match = protoItem<N, T>(
             '',
@@ -262,7 +262,7 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
    * @override
    */
   public findMath(strings: string[]) {
-    let math: ProtoItem<N, T>[] = [];
+    const math: ProtoItem<N, T>[] = [];
     if (this.hasPatterns) {
       for (let i = 0, m = strings.length; i < m; i++) {
         this.findMathInString(math, i, strings[i]);

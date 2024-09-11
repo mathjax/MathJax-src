@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements a radio button with customizable comparator.
+ * @file  Implements a radio button with customizable comparator.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -66,8 +66,9 @@ export class RadioCompare extends Radio {
   }
 
   /**
-   * @override
    * Toggles the aria checked attribute.
+   *
+   * @override
    */
   protected updateAria() {
     this.html.setAttribute(
@@ -77,8 +78,9 @@ export class RadioCompare extends Radio {
   }
 
   /**
-   * @override
    * Toggles the checked tick.
+   *
+   * @override
    */
   protected updateSpan() {
     this.span.style.display = this.comparator(this.variable.getValue(), this.id)

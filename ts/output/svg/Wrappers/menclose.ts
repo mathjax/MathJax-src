@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMenclose wrapper for the MmlMenclose object
+ * @file  Implements the SvgMenclose wrapper for the MmlMenclose object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -71,7 +71,7 @@ export interface SvgMencloseNTD<N, T, D>
    * Create a line element
    *
    * @param {number[]} pq   The coordinates of the endpoints, [x1, y1, x2, y2]
-   * @return {N}            The newly created line element
+   * @returns {N}            The newly created line element
    */
   line(pq: [number, number, number, number]): N;
 
@@ -82,7 +82,7 @@ export interface SvgMencloseNTD<N, T, D>
    * @param {number} h    The height of the rectangle
    * @param {number} d    The depth of the rectangle
    * @param {number=} r   The corner radius for a rounded rectangle
-   * @return {N}          The newly created line element
+   * @returns {N}          The newly created line element
    */
   box(w: number, h: number, d: number, r?: number): N;
 
@@ -92,7 +92,7 @@ export interface SvgMencloseNTD<N, T, D>
    * @param {number} w  The width of the ellipse
    * @param {number} h  The height of the ellipse
    * @param {number} d  The depth of the ellipse
-   * @return {N}        The newly created ellipse node
+   * @returns {N}        The newly created ellipse node
    */
   ellipse(w: number, h: number, d: number): N;
 
@@ -101,7 +101,7 @@ export interface SvgMencloseNTD<N, T, D>
    *
    * @param {string} join           The join style for the path
    * @param {(string|number)[]} P   The list of commands and coordinates for the path
-   * @return {N}                    The newly created path
+   * @returns {N}                    The newly created path
    */
   path(join: string, ...P: (string | number)[]): N;
 
@@ -110,7 +110,7 @@ export interface SvgMencloseNTD<N, T, D>
    *   (same as path above, but no thickness adjustments)
    *
    * @param {(string|number)[]} P   The list of commands and coordinates for the path
-   * @return {N}                    The newly created path
+   * @returns {N}                    The newly created path
    */
   fill(...P: (string | number)[]): N;
 }
@@ -168,9 +168,9 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
     SvgMencloseClass<N, T, D>
   >(SvgWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class SvgMenclose extends Base implements SvgMencloseNTD<N, T, D> {
     /**
      * @override

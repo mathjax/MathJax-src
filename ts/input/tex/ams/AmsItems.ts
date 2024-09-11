@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview StackItems needed for parsing AMS math commands.
+ * @file StackItems needed for parsing AMS math commands.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -26,6 +26,7 @@ import { ParseUtil } from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import TexError from '../TexError.js';
 import { TexConstant } from '../TexConstants.js';
+import StackItemFactory from '../StackItemFactory.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 
 /**
@@ -39,7 +40,7 @@ export class MultlineItem extends ArrayItem {
   /**
    * @override
    */
-  constructor(factory: any, ...args: any[]) {
+  constructor(factory: StackItemFactory, ...args: any[]) {
     super(factory);
     this.factory.configuration.tags.start('multline', true, args[0]);
   }
@@ -82,7 +83,7 @@ export class MultlineItem extends ArrayItem {
         'multline'
       );
     }
-    let row = this.create('node', 'mtr', this.row);
+    const row = this.create('node', 'mtr', this.row);
     this.table.push(row);
     this.row = [];
   }
@@ -93,7 +94,7 @@ export class MultlineItem extends ArrayItem {
   public EndTable() {
     super.EndTable();
     if (this.table.length) {
-      let m = this.table.length - 1;
+      const m = this.table.length - 1;
       let label = -1;
       if (
         !NodeUtil.getAttribute(
@@ -119,7 +120,7 @@ export class MultlineItem extends ArrayItem {
           TexConstant.Align.RIGHT
         );
       }
-      let tag = this.factory.configuration.tags.getTag();
+      const tag = this.factory.configuration.tags.getTag();
       if (tag) {
         label =
           this.arraydef.side === TexConstant.Align.LEFT
@@ -154,7 +155,7 @@ export class FlalignItem extends EqnArrayItem {
    * @override
    */
   constructor(
-    factory: any,
+    factory: StackItemFactory,
     public name: string,
     public numbered: boolean,
     public padded: boolean,
@@ -186,7 +187,7 @@ export class FlalignItem extends EqnArrayItem {
    */
   public EndRow() {
     let cell: MmlNode;
-    let row = this.row;
+    const row = this.row;
     //
     //  For xalignat and xxalignat, pad the row to the expected number if it is too short.
     //

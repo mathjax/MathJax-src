@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  A visitor class that visits MmlNode trees
+ * @file  A visitor class that visits MmlNode trees
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -75,8 +75,8 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
   /**
    * @param {MmlFactory} factory  The MmlNode factory (defaults to MmlFactory if not given)
    *
-   * @constructor
-   * @extends {AbstractVisitor}
+   * @class
+   * @augments {AbstractVisitor}
    */
   constructor(factory: MmlFactory = null) {
     if (!factory) {
@@ -91,23 +91,23 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
    */
 
   /**
-   * @param {TextNode} node  The TextNode to visit
-   * @param {any[]} args  Any arguments needed by the visitor
-   * @return {any}  Any return value needed for the visitor
+   * @param {TextNode} _node  The TextNode to visit
+   * @param {any[]} _args  Any arguments needed by the visitor
+   * @returns {any}  Any return value needed for the visitor
    */
   public visitTextNode(_node: TextNode, ..._args: any[]): any {}
 
   /**
-   * @param {XMLNode} node   The XMLNode to visit
-   * @param {any[]} args     Any arguments needed by the visitor
-   * @return {any}           Any return value needed for the visitor
+   * @param {XMLNode} _node   The XMLNode to visit
+   * @param {any[]} _args     Any arguments needed by the visitor
+   * @returns {any}           Any return value needed for the visitor
    */
   public visitXMLNode(_node: XMLNode, ..._args: any[]): any {}
 
   /**
-   * @param {HtmlNode} node  The XMLNode to visit
-   * @param {any[]} args     Any arguments needed by the visitor
-   * @return {any}           Any return value needed for the visitor
+   * @param {HtmlNode} _node  The XMLNode to visit
+   * @param {any[]} _args     Any arguments needed by the visitor
+   * @returns {any}           Any return value needed for the visitor
    */
   public visitHtmlNode(_node: HtmlNode<any>, ..._args: any[]): any {}
 
@@ -118,7 +118,7 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
 
   /**
    * @param {MmlNode} node  The node whose kind is needed
-   * @return {string}       The MamlML node name for that kind
+   * @returns {string}       The MamlML node name for that kind
    */
   protected getKind(node: MmlNode): string {
     const kind = node.kind;
@@ -132,7 +132,7 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
 
   /**
    * @param {MmlNode} node    The node whose attributes are to be produced
-   * @return {PropertyList}   The attribute list
+   * @returns {PropertyList}   The attribute list
    */
   protected getAttributeList(node: MmlNode): PropertyList {
     const CLASS = this.constructor as typeof MmlVisitor;
@@ -158,7 +158,7 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
    * Create the list of data-mjx-* attributes
    *
    * @param {MmlNode} node    The node whose data list is to be generated
-   * @return {PropertyList}   The final class attribute list
+   * @returns {PropertyList}   The final class attribute list
    */
   protected getDataAttributes(node: MmlNode): PropertyList {
     const data = {} as PropertyList;

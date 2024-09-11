@@ -16,13 +16,13 @@
  */
 
 /**
- * @fileoverview The AMS Parse methods.
+ * @file The AMS Parse methods.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
 import { StackItem } from '../StackItem.js';
-import { ParseMethod } from '../Types.js';
+import { ParseResult, ParseMethod } from '../Types.js';
 import { ParseUtil } from '../ParseUtil.js';
 import { UnitUtil } from '../UnitUtil.js';
 import ParseMethods from '../ParseMethods.js';
@@ -47,8 +47,9 @@ export const NEW_OPS = 'ams-declare-ops';
 
 /**
  * Utility for breaking the \sideset scripts from any other material.
+ *
  * @param {MmlNode} mml The node to check.
- * @return {[MmlNode, MmlNode]} The msubsup with the scripts together with any extra nodes.
+ * @returns {[MmlNode, MmlNode]} The msubsup with the scripts together with any extra nodes.
  */
 function splitSideSet(mml: MmlNode): [MmlNode, MmlNode] {
   if (!mml || (mml.isInferred && mml.childNodes.length === 0)) {
@@ -67,8 +68,9 @@ function splitSideSet(mml: MmlNode): [MmlNode, MmlNode] {
 
 /**
  * Utility for checking if a \sideset argument has scripts with an empty base.
+ *
  * @param {MmlNode} mml The node to check.
- * @return {boolean} True if the base is not and empty mi element.
+ * @returns {boolean} True if the base is not and empty mi element.
  */
 function checkSideSetBase(mml: MmlNode): boolean {
   const base = mml.childNodes[0];
@@ -81,6 +83,7 @@ function checkSideSetBase(mml: MmlNode): boolean {
 export const AmsMethods: { [key: string]: ParseMethod } = {
   /**
    * Handle AMS array environments.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {StackItem} begin The opening stackitem.
    * @param {boolean} numbered Environment numbered.
@@ -90,6 +93,8 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
    * @param {string} balign Column break alignment.
    * @param {string} spacing Column spacing.
    * @param {string} style Display style indicator.
+   *
+   * @returns {ParseResult} The constructed array stackitem.
    */
   AmsEqnArray(
     parser: TexParser,
@@ -100,7 +105,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     balign: string,
     spacing: string,
     style: string
-  ) {
+  ): ParseResult {
     // @test Aligned, Gathered
     const args = parser.GetBrackets('\\begin{' + begin.getName() + '}');
     const array = BaseMethods.EqnArray(
@@ -118,29 +123,31 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Handle AMS  alignat environments.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {StackItem} begin The opening stackitem.
    * @param {boolean} numbered Environment numbered.
    * @param {boolean} taggable Environment taggable (e.g., align* is taggable,
    *     split is not).
+   *
+   * @returns {ParseResult} The constructed array stackitem.
    */
   AlignAt(
     parser: TexParser,
     begin: StackItem,
     numbered: boolean,
     taggable: boolean
-  ) {
+  ): ParseResult {
     const name = begin.getName();
-    let n;
     let valign;
     let align = '';
     let balign = '';
-    let spacing = [];
+    const spacing = [];
     if (!taggable) {
       // @test Alignedat
       valign = parser.GetBrackets('\\begin{' + name + '}');
     }
-    n = parser.GetArgument('\\begin{' + name + '}');
+    const n = parser.GetArgument('\\begin{' + name + '}');
     if (n.match(/[^0-9]/)) {
       // @test PositiveIntegerArg
       throw new TexError(
@@ -156,7 +163,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       spacing.push('0em 0em');
       count--;
     }
-    let spaceStr = spacing.join(' ');
+    const spaceStr = spacing.join(' ');
     if (taggable) {
       // @test Alignat, Alignat Star
       return AmsMethods.EqnArray(
@@ -170,7 +177,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       );
     }
     // @test Alignedat
-    let array = AmsMethods.EqnArray(
+    const array = AmsMethods.EqnArray(
       parser,
       begin,
       numbered,
@@ -188,11 +195,18 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Implements multline environment (mostly handled through STACKITEM below)
+   *
    * @param {TexParser} parser The calling parser.
    * @param {StackItem} begin The opening stackitem.
    * @param {boolean} numbered Environment numbered.
+   *
+   * @returns {ParseResult} The constructed multiline stackitem.
    */
-  Multline(parser: TexParser, begin: StackItem, numbered: boolean) {
+  Multline(
+    parser: TexParser,
+    begin: StackItem,
+    numbered: boolean
+  ): ParseResult {
     // @test Shove*, Multline
     ParseUtil.checkEqnEnv(parser);
     parser.Push(begin);
@@ -217,18 +231,21 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Generate an align at environment.
+   *
    * @param {TexParser} parser The current TeX parser.
    * @param {StackItem} begin The begin stackitem.
    * @param {boolean} numbered Is this a numbered array.
    * @param {boolean} padded Is it padded.
+   *
+   * @returns {ParseResult} The constructed flalign stackitem.
    */
   XalignAt(
     parser: TexParser,
     begin: StackItem,
     numbered: boolean,
     padded: boolean
-  ) {
-    let n = parser.GetArgument('\\begin{' + begin.getName() + '}');
+  ): ParseResult {
+    const n = parser.GetArgument('\\begin{' + begin.getName() + '}');
     if (n.match(/[^0-9]/)) {
       throw new TexError(
         'PositiveIntegerArg',
@@ -256,6 +273,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Generate an flalign environment.
+   *
    * @param {TexParser} parser The current TeX parser.
    * @param {StackItem} begin The begin stackitem.
    * @param {boolean} numbered Is this a numbered array.
@@ -265,6 +283,8 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
    * @param {string} balign The vertical break alignment for columns
    * @param {string} width The column widths of the table
    * @param {boolean} zeroWidthLabel True if the label should be in llap/rlap
+   *
+   * @returns {ParseResult} The constructed flalign stackitem.
    */
   FlalignArray(
     parser: TexParser,
@@ -276,7 +296,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     balign: string,
     width: string,
     zeroWidthLabel: boolean = false
-  ) {
+  ): ParseResult {
     ParseUtil.checkEqnEnv(parser);
     parser.Push(begin);
     align = align
@@ -312,16 +332,17 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Handle DeclareMathOperator.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
   HandleDeclareOp(parser: TexParser, name: string) {
-    let star = parser.GetStar() ? '*' : '';
+    const star = parser.GetStar() ? '*' : '';
     let cs = UnitUtil.trimSpaces(parser.GetArgument(name));
     if (cs.charAt(0) === '\\') {
       cs = cs.substring(1);
     }
-    let op = parser.GetArgument(name);
+    const op = parser.GetArgument(name);
     (parser.configuration.handlers.retrieve(NEW_OPS) as CommandMap).add(
       cs,
       new Macro(cs, AmsMethods.Macro, [`\\operatorname${star}{${op}}`])
@@ -331,6 +352,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Handle operatorname.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
@@ -340,7 +362,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     //
     //  Parse the argument using operator letters and grouping multiple letters.
     //
-    let op = UnitUtil.trimSpaces(parser.GetArgument(name));
+    const op = UnitUtil.trimSpaces(parser.GetArgument(name));
     let mml = new TexParser(
       op,
       {
@@ -381,6 +403,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Handle sideset.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
@@ -475,10 +498,13 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Handle extra letters in \operatorname (- and *), default to normal otherwise.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} c The letter being checked
+   *
+   * @returns {false|void} Nothing.
    */
-  operatorLetter(parser: TexParser, c: string) {
+  operatorLetter(parser: TexParser, c: string): false | void {
     return parser.stack.env.operatorLetters
       ? ParseMethods.variable(parser, c)
       : false;
@@ -486,6 +512,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Handle multi integral signs.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    * @param {string} integral The actual integral sign.
@@ -494,7 +521,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     let next = parser.GetNext();
     if (next === '\\') {
       // @test MultiInt with Command
-      let i = parser.i;
+      const i = parser.i;
       next = parser.GetArgument(name);
       parser.i = i;
       if (next === '\\limits') {
@@ -514,6 +541,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
 
   /**
    *  Handle stretchable arrows.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    * @param {number} chr The arrow character in hex code.
@@ -521,13 +549,13 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
    * @param {number} r Right width.
    */
   xArrow(parser: TexParser, name: string, chr: number, l: number, r: number) {
-    let def = {
+    const def = {
       width: '+' + UnitUtil.em((l + r) / 18),
       lspace: UnitUtil.em(l / 18),
     };
-    let bot = parser.GetBrackets(name);
-    let first = parser.ParseArg(name);
-    let dstrut = parser.create('node', 'mspace', [], { depth: '.2em' });
+    const bot = parser.GetBrackets(name);
+    const first = parser.ParseArg(name);
+    const dstrut = parser.create('node', 'mspace', [], { depth: '.2em' });
     let arrow = parser.create(
       'token',
       'mo',
@@ -535,19 +563,19 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       String.fromCodePoint(chr)
     );
     arrow = parser.create('node', 'mstyle', [arrow], { scriptlevel: 0 });
-    let mml = parser.create('node', 'munderover', [arrow]) as MmlMunderover;
+    const mml = parser.create('node', 'munderover', [arrow]) as MmlMunderover;
     let mpadded = parser.create('node', 'mpadded', [first, dstrut], def);
     NodeUtil.setAttribute(mpadded, 'voffset', '-.2em');
     NodeUtil.setAttribute(mpadded, 'height', '-.2em');
     NodeUtil.setChild(mml, mml.over, mpadded);
     if (bot) {
       // @test Above Below Left Arrow, Above Below Right Arrow
-      let bottom = new TexParser(
+      const bottom = new TexParser(
         bot,
         parser.stack.env,
         parser.configuration
       ).mml();
-      let bstrut = parser.create('node', 'mspace', [], { height: '.75em' });
+      const bstrut = parser.create('node', 'mspace', [], { height: '.75em' });
       mpadded = parser.create('node', 'mpadded', [bottom, bstrut], def);
       NodeUtil.setAttribute(mpadded, 'voffset', '.15em');
       NodeUtil.setAttribute(mpadded, 'depth', '-.15em');
@@ -561,12 +589,13 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Record presence of \shoveleft and \shoveright
+   *
    * @param {TexParser} parser The calling parser.
-   * @param {string} name The macro name.
+   * @param {string} _name The macro name.
    * @param {string} shove The shove value.
    */
   HandleShove(parser: TexParser, _name: string, shove: string) {
-    let top = parser.stack.Top();
+    const top = parser.stack.Top();
     // @test Shove (Left|Right) (Top|Middle|Bottom)
     if (top.kind !== 'multline') {
       // @test Shove Error Environment
@@ -590,29 +619,30 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Handle \cfrac
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
   CFrac(parser: TexParser, name: string) {
     let lr = UnitUtil.trimSpaces(parser.GetBrackets(name, ''));
-    let num = parser.GetArgument(name);
-    let den = parser.GetArgument(name);
-    let lrMap: { [key: string]: string } = {
+    const num = parser.GetArgument(name);
+    const den = parser.GetArgument(name);
+    const lrMap: { [key: string]: string } = {
       l: TexConstant.Align.LEFT,
       r: TexConstant.Align.RIGHT,
       '': '',
     };
-    let numNode = new TexParser(
+    const numNode = new TexParser(
       '\\strut\\textstyle{' + num + '}',
       parser.stack.env,
       parser.configuration
     ).mml();
-    let denNode = new TexParser(
+    const denNode = new TexParser(
       '\\strut\\textstyle{' + den + '}',
       parser.stack.env,
       parser.configuration
     ).mml();
-    let frac = parser.create('node', 'mfrac', [numNode, denNode]);
+    const frac = parser.create('node', 'mfrac', [numNode, denNode]);
     lr = lrMap[lr];
     if (lr == null) {
       // @test Center Fraction Error
@@ -632,6 +662,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Implement AMS generalized fraction.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    * @param {string} left Left delimiter.
@@ -663,8 +694,8 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       // @test Genfrac
       style = UnitUtil.trimSpaces(parser.GetArgument(name));
     }
-    let num = parser.ParseArg(name);
-    let den = parser.ParseArg(name);
+    const num = parser.ParseArg(name);
+    const den = parser.ParseArg(name);
     let frac = parser.create('node', 'mfrac', [num, den]);
     if (thick !== '') {
       // @test Normal Binomial, Text Binomial, Display Binomial
@@ -676,8 +707,8 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       frac = ParseUtil.fixedFence(parser.configuration, left, frac, right);
     }
     if (style !== '') {
-      let styleDigit = parseInt(style, 10);
-      let styleAlpha = ['D', 'T', 'S', 'SS'][styleDigit];
+      const styleDigit = parseInt(style, 10);
+      const styleAlpha = ['D', 'T', 'S', 'SS'][styleDigit];
       if (styleAlpha == null) {
         // @test Genfrac Error
         throw new TexError(
@@ -706,6 +737,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Add the tag to the environment (to be added to the table row later).
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
@@ -723,8 +755,8 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       // @test Double Tag Error
       throw new TexError('MultipleCommand', 'Multiple %1', parser.currentCS);
     }
-    let star = parser.GetStar();
-    let tagId = UnitUtil.trimSpaces(parser.GetArgument(name));
+    const star = parser.GetStar();
+    const tagId = UnitUtil.trimSpaces(parser.GetArgument(name));
     parser.tags.tag(tagId, star);
     parser.Push(parser.itemFactory.create('null'));
   },

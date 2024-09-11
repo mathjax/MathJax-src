@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the mhchem package.
+ * @file Configuration file for the mhchem package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -34,12 +34,12 @@ import { mhchemParser } from '#mhchem/mhchemParser.js';
 // Namespace
 const MhchemMethods: { [key: string]: ParseMethod } = {
   /**
-   * @param{TeXParser} parser   The parser for this expression
-   * @param{string} name        The macro name being called
-   * @param{string} machine     The name of the finite-state machine to use
+   * @param {TexParser} parser   The parser for this expression
+   * @param {string} name        The macro name being called
+   * @param {string} machine     The name of the finite-state machine to use
    */
   Machine(parser: TexParser, name: string, machine: 'tex' | 'ce' | 'pu') {
-    let arg = parser.GetArgument(name);
+    const arg = parser.GetArgument(name);
     let tex;
     try {
       tex = mhchemParser.toTex(arg, machine);

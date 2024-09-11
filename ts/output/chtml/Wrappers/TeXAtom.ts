@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlTeXAtom wrapper for the MmlTeXAtom object
+ * @file  Implements the ChtmlTeXAtom wrapper for the MmlTeXAtom object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

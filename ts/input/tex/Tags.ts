@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Class for generating tags, references, etc.
+ * @file Class for generating tags, references, etc.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -33,7 +33,7 @@ import { OptionList } from '../../util/Options.js';
  */
 export class Label {
   /**
-   * @constructor
+   * @class
    * @param {string=} tag The tag that's displayed.
    * @param {string=} id The id that serves as reference.
    */
@@ -48,7 +48,7 @@ export class Label {
  */
 export class TagInfo {
   /**
-   * @constructor
+   * @class
    * @param {string} env The environment name (e.g., align).
    * @param {boolean} taggable Environment supports tags (e.g., align* does, but
    *     split does not.)
@@ -76,83 +76,96 @@ export class TagInfo {
 export interface Tags {
   /**
    * The global configurations in which the parsing takes place.
+   *
    * @type {ParseOptions}
    */
   configuration: ParseOptions;
 
   /**
    * IDs used in this equation.
-   * @type {Object.<boolean>}
+   *
+   * @type {{ [key: string]: boolean }}
    */
   ids: { [key: string]: boolean };
 
   /**
    * IDs used in previous equations.
-   * @type {Object.<boolean>}
+   *
+   * @type {{ [key: string]: boolean }}
    */
   allIds: { [key: string]: boolean };
 
   /**
    * Labels in the current equation.
-   * @type {Object.<Label>}
+   *
+   * @type {{ [key: string]: Label }}
    */
   labels: { [key: string]: Label };
 
   /**
    * Labels in previous equations.
-   * @type {Object.<Label>}
+   *
+   * @type {{ [key: string]: Label }}
    */
   allLabels: { [key: string]: Label };
 
   /**
    * The label to use for the next tag.
+   *
    * @type {string}
    */
   label: string;
 
   /**
    * True if the equation contains an undefined label and must be reprocessed later.
+   *
    * @type {boolean}
    */
   redo: boolean;
 
   /**
    * True when recompiling to update undefined references
+   *
    * @type {boolean}
    */
   refUpdate: boolean;
 
   /**
    * The environment that is currently tagged.
+   *
    * @type {string}
    */
   env: string;
 
   /**
    * The currently active tag.
+   *
    * @type {TagInfo}
    */
   currentTag: TagInfo;
 
   /**
    * How to format tags.
+   *
    * @param {string} tag The tag string.
-   * @return {string} The formatted numbered tag.
+   * @returns {string} The formatted numbered tag.
    */
   formatTag(tag: string): string;
 
   /**
    * How to format references to tags.
+   *
    * @param {string} tag The tag string.
-   * @return {string} The formatted numbered tag.
+   * @returns {string} The formatted numbered tag.
    */
   formatRef(tag: string): string;
 
   /**
    * How to format URLs for references.
+   *
    * @param {string} id The reference id.
    * @param {string} base The base URL in the reference.
-   * @return {}
+   * @returns {}
    */
   formatUrl(id: string, base: string): string;
 
@@ -162,7 +175,7 @@ export interface Tags {
   autoTag(): void;
 
   /**
-   * @return {MmlNode|void} Generates and returns the tag node.
+   * @returns {MmlNode|void} Generates and returns the tag node.
    */
   getTag(): MmlNode | void;
 
@@ -179,6 +192,7 @@ export interface Tags {
   /**
    * Fully resets the tag structure, in particular all the tagging and label
    * history.
+   *
    * @param {number} offset A new offset value to start counting ids from.
    */
   reset(offset?: number): void;
@@ -187,6 +201,7 @@ export interface Tags {
    * Initialise tagging for a MathItem
    * (clear equation-specific labels and ids, set counter
    * and check for recompile)
+   *
    * @param {MathItem} math   The MathItem for the current equation
    */
   startEquation(math: MathItem<any, any, any>): void;
@@ -199,14 +214,16 @@ export interface Tags {
 
   /**
    * Finalizes tag creation.
+   *
    * @param {MmlNode} node
    * @param {EnvList} env List of environment properties.
-   * @return {MmlNode} The newly created tag.
+   * @returns {MmlNode} The newly created tag.
    */
   finalize(node: MmlNode, env: EnvList): MmlNode;
 
   /**
    * Starts tagging on a given environment.
+   *
    * @param {string} env The name of the environment.
    * @param {boolean} taggable True if taggable.
    * @param {boolean} defaultTags True if tagged by default.
@@ -220,6 +237,7 @@ export interface Tags {
 
   /**
    * Computes the next tag.
+   *
    * @param {string} tag The tag content.
    * @param {boolean} noFormat True if tag should not be formatted.
    */
@@ -232,9 +250,10 @@ export interface Tags {
 
   /**
    * Entag an element by creating a table around it.
+   *
    * @param {MmlNode} node The node to be tagged.
    * @param {MmlNode} tag The tag node.
-   * @return {MmlNode} The table node containing the original node and tag.
+   * @returns {MmlNode} The table node containing the original node and tag.
    */
   enTag(node: MmlNode, tag: MmlNode): MmlNode;
 }
@@ -242,12 +261,14 @@ export interface Tags {
 export class AbstractTags implements Tags {
   /**
    * Current equation number.
+   *
    * @type {number}
    */
   protected counter: number = 0;
 
   /**
    * Equation number as equation begins.
+   *
    * @type {number}
    */
   protected allCounter: number = 0;
@@ -295,6 +316,7 @@ export class AbstractTags implements Tags {
   /**
    * Chronology of all previous tags, in case we need to look something up in
    * the finalize method.
+   *
    * @type {TagInfo[]}
    */
   protected history: TagInfo[] = [];
@@ -381,8 +403,9 @@ export class AbstractTags implements Tags {
 
   /**
    * How to format ids for labelling equations.
+   *
    * @param {string} id The unique part of the id (e.g., label or number).
-   * @return {string} The formatted id.
+   * @returns {string} The formatted id.
    */
   protected formatId(id: string): string {
     return 'mjx-eqn:' + id.replace(/\s/g, '_');
@@ -390,8 +413,9 @@ export class AbstractTags implements Tags {
 
   /**
    * How to format numbers in tags.
+   *
    * @param {number} n The tag number.
-   * @return {string} The formatted number.
+   * @returns {string} The formatted number.
    */
   protected formatNumber(n: number): string {
     return n.toString();
@@ -500,8 +524,8 @@ export class AbstractTags implements Tags {
     if (!env.display || this.currentTag.env || this.currentTag.tag == null) {
       return node;
     }
-    let tag = this.makeTag();
-    let table = this.enTag(node, tag);
+    const tag = this.makeTag();
+    const table = this.enTag(node, tag);
     return table;
   }
 
@@ -509,10 +533,10 @@ export class AbstractTags implements Tags {
    * @override
    */
   public enTag = function (node: MmlNode, tag: MmlNode): MmlNode {
-    let nf = this.configuration.nodeFactory;
-    let cell = nf.create('node', 'mtd', [node]);
-    let row = nf.create('node', 'mlabeledtr', [tag, cell]);
-    let table = nf.create('node', 'mtable', [row], {
+    const nf = this.configuration.nodeFactory;
+    const cell = nf.create('node', 'mtd', [node]);
+    const row = nf.create('node', 'mlabeledtr', [tag, cell]);
+    const table = nf.create('node', 'mtable', [row], {
       side: this.configuration.options['tagSide'],
       minlabelspacing: this.configuration.options['tagIndent'],
       displaystyle: true,
@@ -532,7 +556,7 @@ export class AbstractTags implements Tags {
   }
 
   /**
-   * @return {MmlNode} The actual tag node as an mtd.
+   * @returns {MmlNode} The actual tag node as an mtd.
    */
   private makeTag(): MmlNode {
     this.makeId();
@@ -543,7 +567,7 @@ export class AbstractTags implements Tags {
       );
       this.label = '';
     }
-    let mml = new TexParser(
+    const mml = new TexParser(
       '\\text{' + this.currentTag.tagFormat + '}',
       {},
       this.configuration
@@ -557,8 +581,9 @@ export class AbstractTags implements Tags {
 
 /**
  * No tags, except where explicitly set.
- * @constructor
- * @extends {AbstractTags}
+ *
+ * @class
+ * @augments {AbstractTags}
  */
 export class NoTags extends AbstractTags {
   /**
@@ -577,8 +602,9 @@ export class NoTags extends AbstractTags {
 /**
  * Tags every display formula. Exceptions are: Environments that explicitly
  * disallow tags, e.g., equation*.
- * @constructor
- * @extends {AbstractTags}
+ *
+ * @class
+ * @augments {AbstractTags}
  */
 export class AllTags extends AbstractTags {
   /**
@@ -593,13 +619,14 @@ export class AllTags extends AbstractTags {
     ) {
       return node;
     }
-    let tag = this.getTag(true);
+    const tag = this.getTag(true);
     return this.enTag(node, tag);
   }
 }
 
 /**
  * Class interface for factory.
+ *
  * @interface
  */
 export interface TagsClass {
@@ -607,7 +634,7 @@ export interface TagsClass {
 }
 
 export namespace TagsFactory {
-  let tagsMapping = new Map<string, TagsClass>([
+  const tagsMapping = new Map<string, TagsClass>([
     ['none', NoTags],
     ['all', AllTags],
   ]);
@@ -616,9 +643,10 @@ export namespace TagsFactory {
 
   /**
    * The default options for tagging
+   *
    * @type {OptionList}
    */
-  export let OPTIONS: OptionList = {
+  export const OPTIONS: OptionList = {
     // Tagging style, used to be autonumber in v2.
     tags: defaultTags,
     // This specifies the side on which \tag{} macros will place the tags.
@@ -639,18 +667,20 @@ export namespace TagsFactory {
 
   /**
    * Add a tagging object.
+   *
    * @param {string} name Name of the tagging object.
    * @param {TagsClass} constr The class of the Tagging object.
    */
-  export let add = function (name: string, constr: TagsClass) {
+  export const add = function (name: string, constr: TagsClass) {
     tagsMapping.set(name, constr);
   };
 
   /**
    * Adds a list of tagging objects to the factory.
+   *
    * @param {{[name: string]: TagsClass}} tags The list of tagging objects.
    */
-  export let addTags = function (tags: { [name: string]: TagsClass }) {
+  export const addTags = function (tags: { [name: string]: TagsClass }) {
     for (const key of Object.keys(tags)) {
       TagsFactory.add(key, tags[key]);
     }
@@ -658,11 +688,12 @@ export namespace TagsFactory {
 
   /**
    * Creates a new tagging object.
+   *
    * @param {string} name The name of the tagging object.
-   * @return {Tags} The newly created object.
+   * @returns {Tags} The newly created object.
    */
-  export let create = function (name: string): Tags {
-    let constr = tagsMapping.get(name) || tagsMapping.get(defaultTags);
+  export const create = function (name: string): Tags {
+    const constr = tagsMapping.get(name) || tagsMapping.get(defaultTags);
     if (!constr) {
       throw Error('Unknown tags class');
     }
@@ -671,16 +702,17 @@ export namespace TagsFactory {
 
   /**
    * Set the name of the default tagging object.
+   *
    * @param {string} name The default.
    */
-  export let setDefault = function (name: string) {
+  export const setDefault = function (name: string) {
     defaultTags = name;
   };
 
   /**
-   * @return {Tags} The default tagging object.
+   * @returns {Tags} The default tagging object.
    */
-  export let getDefault = function (): Tags {
+  export const getDefault = function (): Tags {
     return TagsFactory.create(defaultTags);
   };
 }

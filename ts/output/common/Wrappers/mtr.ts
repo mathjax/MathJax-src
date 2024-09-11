@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CcommonMtr wrapper mixin for the MmlMtr object
+ * @file  Implements the CcommonMtr wrapper mixin for the MmlMtr object
  *                and CommonMlabeledtr wrapper mixin for MmlMlabeledtr
  *
  * @author dpvc@mathjax.org (Davide Cervone)
@@ -88,12 +88,12 @@ export interface CommonMtr<
 
   /**
    * @param {number} i   The index of the child to get (skipping labels)
-   * @return {C}         The ith child node wrapper
+   * @returns {WW}       The ith child node wrapper
    */
   getChild(i: number): WW;
 
   /**
-   * @return {BBox[]}  An array of the bounding boxes for the mtd's in the row
+   * @returns {BBox[]}  An array of the bounding boxes for the mtd's in the row
    */
   getChildBBoxes(): BBox[];
 
@@ -143,6 +143,7 @@ export interface CommonMtrClass<
 /**
  * The CommonMtr wrapper for the MmlMtr object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -218,8 +219,10 @@ export function CommonMtrMixin<
      * @override
      */
     public stretchChildren(HD: number[] = null) {
-      let stretchy: WW[] = [];
-      let children = this.labeled ? this.childNodes.slice(1) : this.childNodes;
+      const stretchy: WW[] = [];
+      const children = this.labeled
+        ? this.childNodes.slice(1)
+        : this.childNodes;
       //
       //  Locate and count the stretchy children
       //
@@ -229,8 +232,8 @@ export function CommonMtrMixin<
           stretchy.push(child);
         }
       }
-      let count = stretchy.length;
-      let nodeCount = this.childNodes.length;
+      const count = stretchy.length;
+      const nodeCount = this.childNodes.length;
       if (count && nodeCount > 1 && !HD) {
         let H = 0;
         let D = 0;
@@ -239,7 +242,7 @@ export function CommonMtrMixin<
         //  otherwise, find the height and depth of the non-stretchy
         //  children.
         //
-        let all = count > 1 && count === nodeCount;
+        const all = count > 1 && count === nodeCount;
         for (const mtd of children) {
           const child = mtd.childNodes[0];
           const noStretch = child.stretch.dir === DIRECTION.None;
@@ -344,6 +347,7 @@ export interface CommonMlabeledtrClass<
 /**
  * The CommonMlabeledtr wrapper mixin for the MmlMlabeledtr object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type

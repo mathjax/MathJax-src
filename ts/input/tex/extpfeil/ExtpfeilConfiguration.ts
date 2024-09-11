@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the extpfeil package. Note that this is
+ * @file Configuration file for the extpfeil package. Note that this is
  *     based on AMS package and Newcommand utilities.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
@@ -36,6 +36,7 @@ import TexError from '../TexError.js';
 const ExtpfeilMethods: { [key: string]: ParseMethod } = {
   /**
    * Implements \Newextarrow to define a new arrow.
+   *
    * @param {TexParser} parser The current tex parser.
    * @param {string} name The name of the calling macro.
    */
@@ -65,7 +66,7 @@ const ExtpfeilMethods: { [key: string]: ParseMethod } = {
       );
     }
     cs = cs.substring(1);
-    let spaces = space.split(',');
+    const spaces = space.split(',');
     NewcommandUtil.addMacro(parser, cs, ExtpfeilMethods.xArrow, [
       parseInt(chr),
       parseInt(spaces[0]),
@@ -86,7 +87,7 @@ new CommandMap('extpfeil', {
   Newextarrow: ExtpfeilMethods.NewExtArrow,
 });
 
-let init = function (config: ParserConfiguration) {
+const init = function (config: ParserConfiguration) {
   NewcommandConfiguration.init(config);
 };
 

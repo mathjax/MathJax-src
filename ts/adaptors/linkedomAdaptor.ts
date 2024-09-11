@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the linkedom DOM adaptor
+ * @file  Implements the linkedom DOM adaptor
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -53,10 +53,10 @@ export class LinkedomAdaptor extends NodeMixin<
   }
 
   /**
-   * @override
-   *
    * This will do an HTML serialization, which may be good enough, but
    *   won't necessarily close some tags properly.
+   *
+   * @override
    */
   public serializeXML(node: HTMLElement) {
     return this.outerHTML(node);
@@ -67,7 +67,8 @@ export class LinkedomAdaptor extends NodeMixin<
  * Function for creating an HTML adaptor using linkedom
  *
  * @param {any} parseHTML       The linkedom HTML parser to use for this adaptor
- * @return {LinkeddomAdaptor}   The newly created adaptor
+ * @param {OptionList} options  The options for the adaptor
+ * @returns {LinkedomAdaptor}   The newly created adaptor
  */
 export function linkedomAdaptor(
   parseHTML: any,

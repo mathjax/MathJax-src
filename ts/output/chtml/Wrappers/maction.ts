@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMaction wrapper for the MmlMaction object
+ * @file  Implements the ChtmlMaction wrapper for the MmlMaction object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -70,6 +70,11 @@ export interface ChtmlMactionNTD<N, T, D>
     > {
   /**
    * Add an event handler to the output for this maction
+   *
+   * @param {string} type The event handler type.
+   * @param {EventHandler} handler The actual event handler.
+   * @param {N=} dom The DOM node. If not provided goes over all elements of
+   *the dom tree of this wrapper.
    */
   setEventHandler(type: string, handler: EventHandler, dom?: N): void;
 
@@ -77,7 +82,7 @@ export interface ChtmlMactionNTD<N, T, D>
    * Public access to em method (for use in notation functions)
    *
    * @param {number} m   The number to convert to pixels
-   * @return {string}    The dimension with "px" units
+   * @returns {string}    The dimension with "px" units
    */
   Em(m: number): string;
 }
@@ -134,9 +139,9 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
     ChtmlMactionClass<N, T, D>
   >(ChtmlWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class ChtmlMaction extends Base implements ChtmlMactionNTD<N, T, D> {
     /**
      * @override

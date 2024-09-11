@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview A visitor to convert the new to the old internal format.
+ * @file A visitor to convert the new to the old internal format.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -27,8 +27,8 @@ import { MmlNode, TextNode, XMLNode } from './MmlNode.js';
 /**
  *  Get access to legacy MML Element Jax
  */
-declare var MathJax: any;
-let MML = MathJax.ElementJax.mml;
+declare const MathJax: any;
+const MML = MathJax.ElementJax.mml;
 
 /*****************************************************************/
 /**
@@ -41,7 +41,7 @@ export class LegacyMmlVisitor extends MmlVisitor {
    * internal format used by MathJax v2.
    *
    * @param {MmlNode} node  The node to use as the root of the tree to traverse
-   * @return {any}  The old-style internal format equivalent of the tree
+   * @returns {any}  The old-style internal format equivalent of the tree
    */
   public visitTree(node: MmlNode): any {
     let root = MML.mrow();
@@ -92,7 +92,7 @@ export class LegacyMmlVisitor extends MmlVisitor {
    * @param {any} parent  The old-style parent to which this node should be added
    */
   public visitDefault(node: MmlNode, parent: any) {
-    let mml = MML[node.kind]();
+    const mml = MML[node.kind]();
     this.addAttributes(node, mml);
     this.addProperties(node, mml);
     for (const child of node.childNodes) {
@@ -106,8 +106,8 @@ export class LegacyMmlVisitor extends MmlVisitor {
    * @param {any} mml  The old-style node to which attributes are being added
    */
   public addAttributes(node: MmlNode, mml: any) {
-    let attributes = node.attributes;
-    let names = attributes.getExplicitNames();
+    const attributes = node.attributes;
+    const names = attributes.getExplicitNames();
     for (const name of names) {
       mml[name] = attributes.getExplicit(name);
     }
@@ -118,7 +118,7 @@ export class LegacyMmlVisitor extends MmlVisitor {
    * @param {any} mml  The old-stype node to which the properties are being copied
    */
   public addProperties(node: MmlNode, mml: any) {
-    let names = node.getPropertyNames();
+    const names = node.getPropertyNames();
     for (const name of names) {
       mml[name] = node.getProperty(name);
     }

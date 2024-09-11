@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Support for the safe extension
+ * @file  Support for the safe extension
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -250,7 +250,7 @@ export class Safe<N, T, D> {
    *
    * @param {string} id      The name of the attribute
    * @param {string} value   The value of the attribute
-   * @return {string|null}   The sanitized value
+   * @returns {string|null}   The sanitized value
    */
   public mmlAttribute(id: string, value: string): string | null {
     if (id === 'class') return null;
@@ -273,7 +273,7 @@ export class Safe<N, T, D> {
    * Sanitize a list of class names
    *
    * @param {string[]} list   The list of class names
-   * @return {string[]}       The sanitized list
+   * @returns {string[]}       The sanitized list
    */
   public mmlClassList(list: string[]): string[] {
     return list

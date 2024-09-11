@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMs wrapper for the MmlMs object
+ * @file  Implements the ChtmlMs wrapper for the MmlMs object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -116,9 +116,9 @@ export const ChtmlMs = (function <N, T, D>(): ChtmlMsClass<N, T, D> {
     ChtmlMsClass<N, T, D>
   >(ChtmlWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class ChtmlMs extends Base implements ChtmlMsNTD<N, T, D> {
     /**
      * @override

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Stack items for basic Tex parsing.
+ * @file Stack items for basic Tex parsing.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -134,7 +134,7 @@ export class OpenItem extends BaseItem {
   public checkItem(item: StackItem): CheckType {
     if (item.isKind('close')) {
       // @test PrimeSup
-      let mml = this.toMml();
+      const mml = this.toMml();
       const node = this.create('node', 'TeXAtom', [mml]);
       addLatexItem(node, item);
       return [[this.factory.create('mml', node)], true];
@@ -189,7 +189,7 @@ export class PrimeItem extends BaseItem {
    * @override
    */
   public checkItem(item: StackItem): CheckType {
-    let [top0, top1] = this.Peek(2);
+    const [top0, top1] = this.Peek(2);
     const isSup =
       NodeUtil.isType(top0, 'msubsup') &&
       !NodeUtil.getChildAt(top0, (top0 as MmlMsubsup).sup);
@@ -409,7 +409,7 @@ export class LeftItem extends BaseItem {
       //
       //  Create the fenced structure as an mrow
       //
-      let fenced = ParseUtil.fenced(
+      const fenced = ParseUtil.fenced(
         this.factory.configuration,
         this.getProperty('delim') as string,
         this.toMml(),
@@ -417,9 +417,9 @@ export class LeftItem extends BaseItem {
         '',
         item.getProperty('color') as string
       );
-      let left = fenced.childNodes[0];
-      let right = fenced.childNodes[fenced.childNodes.length - 1];
-      let mrow = this.factory.create('mml', fenced);
+      const left = fenced.childNodes[0];
+      const right = fenced.childNodes[fenced.childNodes.length - 1];
+      const mrow = this.factory.create('mml', fenced);
       addLatexItem(left, this, '\\left');
       addLatexItem(right, item, '\\right');
       mrow
@@ -438,7 +438,7 @@ export class LeftItem extends BaseItem {
       if (item.getProperty('color')) {
         def.mathcolor = item.getProperty('color');
       }
-      let middle = this.create('token', 'mo', def, item.getProperty('delim'));
+      const middle = this.create('token', 'mo', def, item.getProperty('delim'));
       addLatexItem(middle, item, '\\middle');
       this.Push(
         this.create('node', 'TeXAtom', [], { texClass: TEXCLASS.CLOSE }),
@@ -524,6 +524,7 @@ export class BreakItem extends BaseItem {
 
   /**
    * @override
+   * @param {StackItemFactory} factory The current stack item factory
    * @param {string} linebreak   The linbreak attribute to use
    * @param {boolean} insert     Whether to insert an mo if there isn't a following
    */
@@ -930,7 +931,7 @@ export class DotsItem extends BaseItem {
       return BaseItem.success;
     }
     let dots = this.getProperty('ldots') as MmlNode;
-    let top = item.First;
+    const top = item.First;
     // @test Operator Dots
     if (item.isKind('mml') && NodeUtil.isEmbellished(top)) {
       const tclass = NodeUtil.getTexClass(NodeUtil.getCoreMO(top));
@@ -949,30 +950,35 @@ export class DotsItem extends BaseItem {
 export class ArrayItem extends BaseItem {
   /**
    * The table as a list of rows.
+   *
    * @type {MmlNode[]}
    */
   public table: MmlNode[] = [];
 
   /**
    * The current row as a list of cells.
+   *
    * @type {MmlNode[]}
    */
   public row: MmlNode[] = [];
 
   /**
    * Frame specification as a list of pairs of strings [side, style].
+   *
    * @type {[string, string][]}
    */
   public frame: [string, string][] = [];
 
   /**
    * Hfill value.
+   *
    * @type {number[]}
    */
   public hfill: number[] = [];
 
   /**
    * Properties for special array definitions.
+   *
    * @type {{[key: string]: string|number|boolean}}
    */
   public arraydef: { [key: string]: string | number | boolean } = {};
@@ -1061,7 +1067,7 @@ export class ArrayItem extends BaseItem {
       }
       this.EndTable();
       this.clearEnv();
-      let newItem = this.factory.create('mml', this.createMml());
+      const newItem = this.factory.create('mml', this.createMml());
       if (this.getProperty('requireClose')) {
         // @test: Label
         if (item.isKind('close')) {
@@ -1079,7 +1085,7 @@ export class ArrayItem extends BaseItem {
   /**
    * Create the MathML representation of the table.
    *
-   * @return {MmlNode}
+   * @returns {MmlNode} The new node.
    */
   public createMml(): MmlNode {
     const scriptlevel = this.arraydef['scriptlevel'];
@@ -1114,6 +1120,7 @@ export class ArrayItem extends BaseItem {
 
   /**
    * @param {MmlNode} mml  The mtable to frame
+   * @returns {MmlNode} The new node.
    */
   protected handleFrame(mml: MmlNode): MmlNode {
     if (!this.frame.length) return mml;
@@ -1217,6 +1224,9 @@ export class ArrayItem extends BaseItem {
 
   /**
    * Get the TeX string for the contents of the coming cell (if any)
+   *
+   * @returns {[string, string, string, boolean]} List of values for prefix,
+   *     entry, term, found.
    */
   protected getEntry(): [string, string, string, boolean] {
     const parser = this.parser;
@@ -1248,7 +1258,7 @@ export class ArrayItem extends BaseItem {
             break;
           }
         // fall through if not closing a nested array environment
-        default:
+        default: {
           if (braces || envs) continue;
           i -= match[2].length;
           let entry = parser.string.slice(parser.i, i).trim();
@@ -1261,6 +1271,7 @@ export class ArrayItem extends BaseItem {
           parser.string = parser.string.slice(i);
           parser.i = 0;
           return [prefix?.[0] || '', entry, match[2], true];
+        }
       }
     }
     return fail;
@@ -1389,7 +1400,7 @@ export class ArrayItem extends BaseItem {
       const rows = (this.arraydef['rowspacing'] as string).split(/ /);
       if (!this.getProperty('rowspacing')) {
         // @test Array Custom Linebreak
-        let dimem = UnitUtil.dimen2em(rows[0]);
+        const dimem = UnitUtil.dimen2em(rows[0]);
         this.setProperty('rowspacing', dimem);
       }
       const rowspacing = this.getProperty('rowspacing') as number;
@@ -1417,7 +1428,7 @@ export class EqnArrayItem extends ArrayItem {
   /**
    * @override
    */
-  constructor(factory: any, ...args: any[]) {
+  constructor(factory: StackItemFactory, ...args: any[]) {
     super(factory);
     this.factory.configuration.tags.start(args[0], args[2], args[1]);
   }
@@ -1485,7 +1496,10 @@ export class EqnArrayItem extends ArrayItem {
 
   /**
    * Extend a column specification to include a repeating set of values
-   *   so that it has enough to match the maximum row length.
+   * so that it has enough to match the maximum row length.
+   *
+   * @param {string} name The name of the calling command.
+   * @param {number} max The maximum row length.
    */
   protected extendArray(name: string, max: number) {
     if (!this.arraydef[name]) return;
@@ -1546,12 +1560,13 @@ export class MstyleItem extends BeginItem {
   public attrList: PropertyList;
 
   /**
+   * @param {StackItemFactory} factory The current stack item factory
    * @param {PropertyList} attr  The properties to set on the mstyle
    * @param {string} name        The name of the environment being processed
    * @override
-   * @constructor
+   * @class
    */
-  constructor(factory: any, attr: PropertyList, name: string) {
+  constructor(factory: StackItemFactory, attr: PropertyList, name: string) {
     super(factory);
     this.attrList = attr;
     this.setProperty('name', name);
@@ -1577,7 +1592,7 @@ export class EquationItem extends BaseItem {
   /**
    * @override
    */
-  constructor(factory: any, ...args: any[]) {
+  constructor(factory: StackItemFactory, ...args: any[]) {
     super(factory);
     this.factory.configuration.tags.start('equation', true, args[0]);
   }
@@ -1601,8 +1616,8 @@ export class EquationItem extends BaseItem {
    */
   public checkItem(item: StackItem): CheckType {
     if (item.isKind('end')) {
-      let mml = this.toMml();
-      let tag = this.factory.configuration.tags.getTag();
+      const mml = this.toMml();
+      const tag = this.factory.configuration.tags.getTag();
       this.factory.configuration.tags.end();
       return [
         [tag ? this.factory.configuration.tags.enTag(mml, tag) : mml, item],
@@ -1625,7 +1640,7 @@ export class EquationItem extends BaseItem {
  * @param {string=} prefix A prefix for the LaTeX command.
  */
 function addLatexItem(node: MmlNode, item: StackItem, prefix: string = '') {
-  let str = item.startStr.slice(item.startI, item.stopI);
+  const str = item.startStr.slice(item.startI, item.stopI);
   if (str) {
     node.attributes.set(
       TexConstant.Attr.LATEXITEM,

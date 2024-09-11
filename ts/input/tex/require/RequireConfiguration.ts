@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview    Configuration file for the require package.
+ * @file    Configuration file for the require package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
@@ -63,7 +63,7 @@ function RegisterExtension(jax: TeX<any, any, any>, name: string) {
     //  and save the retry promise, if any, for when the dependencies need
     //  to restart the expression (due to preprocessors, see below).
     //
-    let retry = RegisterDependencies(jax, LOADERCONFIG.dependencies[name]);
+    const retry = RegisterDependencies(jax, LOADERCONFIG.dependencies[name]);
     //
     // If we need to restart the expression due to the dependencies,
     //   Wait for the dependencies to load, process this extension, then retry,
@@ -84,6 +84,7 @@ function RegisterExtension(jax: TeX<any, any, any>, name: string) {
  *
  * @param {TeX} jax       The TeX jax whose configuration is to be modified
  * @param {string} name   The name of the extension being added (e.g., '[tex]/amscd')
+ * @param {string} extension The name of the configuration handler for the extension.
  */
 function ProcessExtension(
   jax: TeX<any, any, any>,
@@ -129,7 +130,7 @@ function ProcessExtension(
  *
  * @param {TeX} jax          The jax whose configuration is being modified
  * @param {string[]} names   The names of the dependencies to register
- * @return {Promise<any>}    A promise resolved when all dependency's retries
+ * @returns {Promise<any>}    A promise resolved when all dependency's retries
  *                             are complete (or null if no retries)
  */
 function RegisterDependencies(
@@ -188,6 +189,9 @@ export function RequireLoad(parser: TexParser, name: string) {
 
 /**
  * Save the jax so that it can be used when \require{} is processed.
+ *
+ * @param {ParserConfiguration} _config The parser configuration.
+ * @param {TeX} jax The current TeX jax.
  */
 function config(_config: ParserConfiguration, jax: TeX<any, any, any>) {
   /* prettier-ignore */

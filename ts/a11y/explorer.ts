@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Mixin that implements the Explorer
+ * @file  Mixin that implements the Explorer
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -127,7 +127,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
       start: number = STATE.RERENDER
     ) {
       if (this.explorers) {
-        let speech = this.explorers.speech;
+        const speech = this.explorers.speech;
         if (speech && speech.attached && speech.active) {
           const focus = speech.semanticFocus();
           this.refocus = focus ? focus.id : null;
@@ -165,7 +165,7 @@ export interface ExplorerMathDocument extends HTMLDOCUMENT {
   /**
    * Add the Explorer to the MathItems in the MathDocument
    *
-   * @returns {MathDocument}   The MathDocument (so calls can be chained)
+   * @returns {HTMLDocument}   The MathDocument (so calls can be chained)
    */
   explorable(): HTMLDOCUMENT;
 }
@@ -175,6 +175,8 @@ export interface ExplorerMathDocument extends HTMLDOCUMENT {
  *
  * @param {B} BaseDocument      The MathDocument class to be extended
  * @returns {ExplorerMathDocument}  The extended MathDocument class
+ *
+ * @template B  The MathItem class to extend
  */
 export function ExplorerMathDocumentMixin<
   B extends MathDocumentConstructor<HTMLDOCUMENT>,
@@ -231,7 +233,7 @@ export function ExplorerMathDocumentMixin<
      *   and create the visitor and explorer objects needed for the explorer
      *
      * @override
-     * @constructor
+     * @class
      */
     constructor(...args: any[]) {
       super(...args);
@@ -252,7 +254,7 @@ export function ExplorerMathDocumentMixin<
     /**
      * Add the Explorer to the MathItems in this MathDocument
      *
-     * @return {ExplorerMathDocument}   The MathDocument (so calls can be chained)
+     * @returns {ExplorerMathDocument}   The MathDocument (so calls can be chained)
      */
     public explorable(): ExplorerMathDocument {
       if (!this.processed.isSet('explorer')) {
@@ -307,6 +309,7 @@ export function ExplorerHandler(
 
 /**
  * Sets a list of a11y options for a given document.
+ *
  * @param {HTMLDOCUMENT} document The current document.
  * @param {{[key: string]: any}} options Association list for a11y option value pairs.
  */
@@ -314,8 +317,8 @@ export function setA11yOptions(
   document: HTMLDOCUMENT,
   options: { [key: string]: any }
 ) {
-  let sreOptions = Sre.engineSetup() as { [name: string]: string };
-  for (let key in options) {
+  const sreOptions = Sre.engineSetup() as { [name: string]: string };
+  for (const key in options) {
     if (document.options.a11y[key] !== undefined) {
       setA11yOption(document, key, options[key]);
     } else if (sreOptions[key] !== undefined) {
@@ -323,13 +326,14 @@ export function setA11yOptions(
     }
   }
   // Reinit explorers
-  for (let item of document.math) {
+  for (const item of document.math) {
     (item as ExplorerMathItem)?.explorers?.attach();
   }
 }
 
 /**
  * Sets a single a11y option for a menu name.
+ *
  * @param {HTMLDOCUMENT} document The current document.
  * @param {string} option The option name in the menu.
  * @param {string|boolean} value The new value.
@@ -340,11 +344,12 @@ export function setA11yOption(
   value: string | boolean
 ) {
   switch (option) {
-    case 'speechRules':
+    case 'speechRules': {
       const [domain, style] = (value as string).split('-');
       document.options.sre.domain = domain;
       document.options.sre.style = style;
       break;
+    }
     case 'magnification':
       switch (value) {
         case 'None':

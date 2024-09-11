@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the HTMLDocument class
+ * @file  Implements the HTMLDocument class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -90,15 +90,15 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
 
   /**
    * @override
-   * @constructor
-   * @extends {AbstractMathDocument}
+   * @class
+   * @augments {AbstractMathDocument}
    */
   constructor(
     document: any,
     adaptor: DOMAdaptor<N, T, D>,
     options: OptionList
   ) {
-    let [html, dom] = separateOptions(options, HTMLDomStrings.OPTIONS);
+    const [html, dom] = separateOptions(options, HTMLDomStrings.OPTIONS);
     super(document, adaptor, html);
     this.domStrings =
       this.options['DomStrings'] || new HTMLDomStrings<N, T, D>(dom);
@@ -115,7 +115,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
    * @param {number} index         The position within the N's string that needs to be found
    * @param {string} delim         The delimiter for this position
    * @param {HTMLNodeArray} nodes  The list of node lists representing the string array
-   * @return {Location}            The Location object for the position of the delimiter in the document
+   * @returns {Location}            The Location object for the position of the delimiter in the document
    */
   protected findPosition(
     N: number,
@@ -125,7 +125,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
   ): Location<N, T> {
     const adaptor = this.adaptor;
     for (const list of nodes[N]) {
-      let [node, n] = list;
+      const [node, n] = list;
       if (index <= n && adaptor.kind(node) === '#text') {
         return { node: node, n: Math.max(index, 0), delim: delim };
       }
@@ -141,16 +141,16 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
    * @param {ProtoItem} item       The proto math item to turn into an actual MathItem
    * @param {InputJax} jax         The input jax to use for the MathItem
    * @param {HTMLNodeArray} nodes  The array of node lists that produced the string array
-   * @return {HTMLMathItem}        The MathItem for the given proto item
+   * @returns {HTMLMathItem}        The MathItem for the given proto item
    */
   protected mathItem(
     item: ProtoItem<N, T>,
     jax: InputJax<N, T, D>,
     nodes: HTMLNodeArray<N, T>
   ): HTMLMathItem<N, T, D> {
-    let math = item.math;
-    let start = this.findPosition(item.n, item.start.n, item.open, nodes);
-    let end = this.findPosition(item.n, item.end.n, item.close, nodes);
+    const math = item.math;
+    const start = this.findPosition(item.n, item.start.n, item.open, nodes);
+    const end = this.findPosition(item.n, item.end.n, item.close, nodes);
     return new this.options.MathItem(
       math,
       jax,
@@ -206,7 +206,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
    *
    * @param {InputJax<N,T,D>} jax    The jax being used
    * @param {N[]} containers         The containers to be searched in order
-   * @return {HTMLMathList<N,T,D>}   The list of MathItems found
+   * @returns {HTMLMathList<N,T,D>}   The list of MathItems found
    */
   protected findMathFromStrings(
     jax: InputJax<N, T, D>,
@@ -231,7 +231,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
    *
    * @param {InputJax<N,T,D>} jax    The jax being used
    * @param {N[]} containers         The containers to be searched in order
-   * @return {HTMLMathList<N,T,D>}   The list of MathItems found
+   * @returns {HTMLMathList<N,T,D>}   The list of MathItems found
    */
   protected findMathFromDOM(
     jax: InputJax<N, T, D>,
@@ -286,7 +286,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
     const adaptor = this.adaptor;
     if (sheet && !adaptor.parent(sheet)) {
       const head = adaptor.head(this.document);
-      let styles = this.findSheet(head, adaptor.getAttribute(sheet, 'id'));
+      const styles = this.findSheet(head, adaptor.getAttribute(sheet, 'id'));
       if (styles) {
         adaptor.replace(sheet, styles);
       } else {

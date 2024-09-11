@@ -16,13 +16,13 @@
  */
 
 /**
- * @fileoverview  Implements the CHTML OutputJax object
+ * @file  Implements the CHTML OutputJax object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 import { CommonOutputJax } from './common.js';
-import { CommonWrapper } from './common/Wrapper.js';
+import { CommonWrapper as _CommonWrapper } from './common/Wrapper.js';
 import { StyleList } from '../util/Styles.js';
 import { StyleList as CssStyleList, CssStyles } from '../util/StyleList.js';
 import { OptionList } from '../util/Options.js';
@@ -166,7 +166,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<
 
   /**
    * @override
-   * @constructor
+   * @class
    */
   constructor(options: OptionList = {}) {
     super(options, ChtmlWrapperFactory as any, DefaultFont);
@@ -237,7 +237,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<
     for (const kind of this.wrapperUsage.update()) {
       const wrapper = this.factory.getNodeClass(
         kind
-      ) as any as typeof CommonWrapper;
+      ) as any as typeof _CommonWrapper;
       wrapper && this.addClassStyles(wrapper, styles);
     }
   }
@@ -245,7 +245,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<
   /**
    * @override
    */
-  protected addClassStyles(wrapper: typeof CommonWrapper, styles: CssStyles) {
+  protected addClassStyles(wrapper: typeof _CommonWrapper, styles: CssStyles) {
     const CLASS = wrapper as typeof ChtmlWrapper;
     if (CLASS.autoStyle && CLASS.kind !== 'unknown') {
       styles.addStyles({
@@ -260,7 +260,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<
   }
 
   /**
-   * @param {WW} wrapper   The MML node wrapper whose HTML is to be produced
+   * @param {ChtmlWrapper} wrapper   The MML node wrapper whose HTML is to be produced
    * @param {N} parent     The HTML node to contain the HTML
    */
   public processMath(wrapper: ChtmlWrapper<N, T, D>, parent: N) {
@@ -347,7 +347,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<
     const node = this.html('mjx-measure-text', { style }, [text]);
     adaptor.append(adaptor.parent(this.math.start.node), this.container);
     adaptor.append(this.container, node);
-    let w = adaptor.nodeSize(text, em)[0];
+    const w = adaptor.nodeSize(text, em)[0];
     adaptor.remove(this.container);
     adaptor.remove(node);
     return { w: w, h: 0.75, d: 0.2 };

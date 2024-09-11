@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMstyle node
+ * @file  Implements the MmlMstyle node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -81,7 +81,7 @@ export class MmlMstyle extends AbstractMmlLayoutNode {
       }
       prime = false; // style change resets tex prime style
     }
-    let displaystyle = this.attributes.getExplicit('displaystyle') as boolean;
+    const displaystyle = this.attributes.getExplicit('displaystyle') as boolean;
     if (displaystyle != null) {
       display = displaystyle === true;
       prime = false; // style change resets tex prime style

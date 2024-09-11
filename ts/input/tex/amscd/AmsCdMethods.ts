@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Methods for the AMScd package.
+ * @file Methods for the AMScd package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -34,13 +34,15 @@ import NodeUtil from '../NodeUtil.js';
 const AmsCdMethods: { [key: string]: ParseMethod } = {
   /**
    * Handles CD environment for commutative diagrams.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {StackItem} begin The opening stackitem.
+   * @returns {ArrayItem} The constructed array stackitem.
    */
-  CD(parser: TexParser, begin: StackItem) {
+  CD(parser: TexParser, begin: StackItem): ArrayItem {
     parser.Push(begin);
-    let item = parser.itemFactory.create('array') as ArrayItem;
-    let options = parser.configuration.options.amscd;
+    const item = parser.itemFactory.create('array') as ArrayItem;
+    const options = parser.configuration.options.amscd;
     item.setProperties({
       minw: parser.stack.env.CD_minw || options.harrowsize,
       minh: parser.stack.env.CD_minh || options.varrowsize,
@@ -56,12 +58,15 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Converts arrows.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
+   * @returns {void} No value.
    */
-  arrow(parser: TexParser, name: string) {
-    let c = parser.string.charAt(parser.i);
+  arrow(parser: TexParser, name: string): void {
+    const c = parser.string.charAt(parser.i);
     if (!c.match(/[><VA.|=]/)) {
+      // TODO: This return is suspicious.
       return Other(parser, name);
     } else {
       parser.i++;
@@ -71,11 +76,11 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
       AmsCdMethods.cell(parser, name);
       first = parser.stack.Top();
     }
-    let top = first as ArrayItem;
+    const top = first as ArrayItem;
     //
     //  Add enough cells to place the arrow correctly
     //
-    let arrowRow = top.table.length % 2 === 1;
+    const arrowRow = top.table.length % 2 === 1;
     let n = (top.row.length + (arrowRow ? 0 : 1)) % 2;
     while (n) {
       AmsCdMethods.cell(parser, name);
@@ -83,8 +88,8 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
     }
 
     let mml;
-    let hdef = { minsize: top.getProperty('minw'), stretchy: true };
-    let vdef = {
+    const hdef = { minsize: top.getProperty('minw'), stretchy: true };
+    const vdef = {
       minsize: top.getProperty('minh'),
       stretchy: true,
       symmetric: true,
@@ -102,7 +107,7 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
       //  for @>>> @<<< @VVV and @AAA, get the arrow and labels
       //
       // TODO: cleanup!
-      let arrow: string = (
+      const arrow: string = (
         {
           '>': '\u2192',
           '<': '\u2190',
@@ -111,7 +116,7 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
         } as { [key: string]: string }
       )[c];
       let a = parser.GetUpTo(name + c, c);
-      let b = parser.GetUpTo(name + c, c);
+      const b = parser.GetUpTo(name + c, c);
       if (c === '>' || c === '<') {
         //
         //  Lay out horizontal arrows with munderover if it has labels
@@ -121,20 +126,20 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
           a = '\\kern ' + top.getProperty('minw');
         } // minsize needs work
         if (a || b) {
-          let pad: EnvList = { width: '+.67em', lspace: '.33em' };
+          const pad: EnvList = { width: '+.67em', lspace: '.33em' };
           mml = parser.create('node', 'munderover', [mml]) as MmlMunderover;
           if (a) {
-            let nodeA = new TexParser(
+            const nodeA = new TexParser(
               a,
               parser.stack.env,
               parser.configuration
             ).mml();
-            let mpadded = parser.create('node', 'mpadded', [nodeA], pad);
+            const mpadded = parser.create('node', 'mpadded', [nodeA], pad);
             NodeUtil.setAttribute(mpadded, 'voffset', '.1em');
             NodeUtil.setChild(mml, mml.over, mpadded);
           }
           if (b) {
-            let nodeB = new TexParser(
+            const nodeB = new TexParser(
               b,
               parser.stack.env,
               parser.configuration
@@ -156,7 +161,7 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
         //
         //  Lay out vertical arrows with mrow if there are labels
         //
-        let arrowNode = parser.create('token', 'mo', vdef, arrow);
+        const arrowNode = parser.create('token', 'mo', vdef, arrow);
         mml = arrowNode;
         if (a || b) {
           mml = parser.create('node', 'mrow');
@@ -191,11 +196,12 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Converts a cell in the diagram.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
   cell(parser: TexParser, name: string) {
-    let top = parser.stack.Top() as ArrayItem;
+    const top = parser.stack.Top() as ArrayItem;
     if ((top.table || []).length % 2 === 0 && (top.row || []).length === 0) {
       //
       // Add a strut to the first cell in even rows to get
@@ -214,6 +220,7 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Sets minimal width for arrows.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
@@ -223,6 +230,7 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Sets minimal height for arrows.
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */

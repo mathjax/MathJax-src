@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Stack items for the physics package.
+ * @file Stack items for the physics package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -67,10 +67,10 @@ export class AutoOpen extends BaseItem {
       return super.toMml(inferred, forceRow);
     }
     // Smash and right/left
-    let parser = this.factory.configuration.parser;
-    let right = this.getProperty('right') as string;
+    const parser = this.factory.configuration.parser;
+    const right = this.getProperty('right') as string;
     if (this.getProperty('smash')) {
-      let mml = super.toMml();
+      const mml = super.toMml();
       const smash = parser.create('node', 'mpadded', [mml], {
         height: 0,
         depth: 0,
@@ -83,7 +83,7 @@ export class AutoOpen extends BaseItem {
         new TexParser(right, parser.stack.env, parser.configuration).mml()
       );
     }
-    let mml = ParseUtil.fenced(
+    const mml = ParseUtil.fenced(
       this.factory.configuration,
       this.getProperty('open') as string,
       super.toMml(),
@@ -100,7 +100,9 @@ export class AutoOpen extends BaseItem {
 
   /**
    * Test whether a fence is a closing one for this item,
-   *   decrementing the open count if appropriate.
+   * decrementing the open count if appropriate.
+   *
+   * @param fence
    */
   public closing(fence: string) {
     return fence === this.getProperty('close') && !this.openCount--;

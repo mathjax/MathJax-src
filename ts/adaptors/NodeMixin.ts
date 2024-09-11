@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements a mixin for node-based adaptors that overrides
+ * @file  Implements a mixin for node-based adaptors that overrides
  *                the methods that obtain DOM node sizes, when those aren't
  *                available from the DOM itself.
  *
@@ -48,6 +48,10 @@ export const NodeMixinOptions: OptionList = {
 };
 
 /**
+ * @param {A} Base The base constructor for the adaptor
+ * @param {NodeMixinOptions} options The options
+ * @returns {A} The NodeAdaptor mixin class
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
@@ -112,13 +116,13 @@ export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
     public options: OptionList;
 
     /**
-     * @param {any} window          The window to work with
-     * @param {OptionList} options  The options for the adaptor
-     * @constructor
+     * @param {...any} args Parameters for the mixin class, where the first is
+     * the window to work with and the second are the options for the adaptor
+     * @class
      */
     constructor(...args: any[]) {
       super(args[0]);
-      let CLASS = this.constructor as typeof NodeAdaptor;
+      const CLASS = this.constructor as typeof NodeAdaptor;
       this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), args[1]);
     }
 

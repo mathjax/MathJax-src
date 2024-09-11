@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the TeXAtom node
+ * @file  Implements the TeXAtom node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -53,6 +53,7 @@ export class TeXAtom extends AbstractMmlBaseNode {
 
   /**
    * Inferred mrow with any number of children
+   *
    * @override
    */
   public get arity() {
@@ -61,6 +62,7 @@ export class TeXAtom extends AbstractMmlBaseNode {
 
   /**
    * This element is not considered a MathML container
+   *
    * @override
    */
   public get notParent() {

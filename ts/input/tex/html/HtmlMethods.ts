@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Methods for the Html package.
+ * @file Methods for the Html package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -34,6 +34,7 @@ const nonCharacterRegexp =
 
 /**
  * Whether the string is a valid HTML attribute name according to {@link https://html.spec.whatwg.org/multipage/syntax.html#attributes-2}.
+ *
  * @param {string} name String to validate.
  */
 function isLegalAttributeName(name: string): boolean {
@@ -46,6 +47,7 @@ function isLegalAttributeName(name: string): boolean {
 const HtmlMethods: { [key: string]: ParseMethod } = {
   /**
    * Implements \data{dataset}{content}
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
@@ -69,6 +71,7 @@ const HtmlMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Implements \href{url}{math}
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
@@ -81,13 +84,14 @@ const HtmlMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Implements \class{name}{math}
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
   Class(parser: TexParser, name: string) {
     let CLASS = parser.GetArgument(name);
     const arg = GetArgumentMML(parser, name);
-    let oldClass = NodeUtil.getAttribute(arg, 'class');
+    const oldClass = NodeUtil.getAttribute(arg, 'class');
     if (oldClass) {
       CLASS = oldClass + ' ' + CLASS;
     }
@@ -97,6 +101,7 @@ const HtmlMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Implements \style{style-string}{math}
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
@@ -104,7 +109,7 @@ const HtmlMethods: { [key: string]: ParseMethod } = {
     let style = parser.GetArgument(name);
     const arg = GetArgumentMML(parser, name);
     // check that it looks like a style string
-    let oldStyle = NodeUtil.getAttribute(arg, 'style');
+    const oldStyle = NodeUtil.getAttribute(arg, 'style');
     if (oldStyle) {
       if (style.charAt(style.length - 1) !== ';') {
         style += ';';
@@ -117,6 +122,7 @@ const HtmlMethods: { [key: string]: ParseMethod } = {
 
   /**
    * Implements \cssId{id}{math}
+   *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    */
@@ -132,16 +138,17 @@ const HtmlMethods: { [key: string]: ParseMethod } = {
  * Parses the math argument of the above commands and returns it as single
  * node (in an mrow if necessary). The HTML attributes are then
  * attached to this element.
+ *
  * @param {TexParser} parser The calling parser.
  * @param {string} name The calling macro name.
- * @return {MmlNode} The math node.
+ * @returns {MmlNode} The math node.
  */
-let GetArgumentMML = function (parser: TexParser, name: string): MmlNode {
-  let arg = parser.ParseArg(name);
+const GetArgumentMML = function (parser: TexParser, name: string): MmlNode {
+  const arg = parser.ParseArg(name);
   if (!NodeUtil.isInferred(arg)) {
     return arg;
   }
-  let children = NodeUtil.getChildren(arg);
+  const children = NodeUtil.getChildren(arg);
   if (children.length === 1) {
     return children[0];
   }

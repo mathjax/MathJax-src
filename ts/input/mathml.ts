@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MathML InputJax object
+ * @file  Implements the MathML InputJax object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -86,7 +86,7 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
    * @override
    */
   constructor(options: OptionList = {}) {
-    let [mml, find, compile] = separateOptions(
+    const [mml, find, compile] = separateOptions(
       options,
       FindMathML.OPTIONS,
       MathMLCompile.OPTIONS
@@ -160,10 +160,10 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
       if (this.options['parseAs'] === 'html') {
         mathml = `<html><head></head><body>${mathml}</body></html>`;
       }
-      let doc = this.checkForErrors(
+      const doc = this.checkForErrors(
         this.adaptor.parse(mathml, 'text/' + this.options['parseAs'])
       );
-      let body = this.adaptor.body(doc);
+      const body = this.adaptor.body(doc);
       if (this.adaptor.childNodes(body).length !== 1) {
         this.error('MathML must consist of a single element');
       }
@@ -187,10 +187,10 @@ export class MathML<N, T, D> extends AbstractInputJax<N, T, D> {
    * Check a parsed MathML string for errors.
    *
    * @param {D} doc  The document returns from the DOMParser
-   * @return {D}     The document
+   * @returns {D}     The document
    */
   protected checkForErrors(doc: D): D {
-    let err = this.adaptor.tags(this.adaptor.body(doc), 'parsererror')[0];
+    const err = this.adaptor.tags(this.adaptor.body(doc), 'parsererror')[0];
     if (err) {
       if (this.adaptor.textContent(err) === '') {
         this.error('Error processing MathML');

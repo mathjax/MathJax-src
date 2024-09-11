@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the textmacros package
+ * @file Configuration file for the textmacros package
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
@@ -86,7 +86,7 @@ export const TextBaseConfiguration = Configuration.create('text-base', {
  * @param {string} text           The text-mode string to be processed
  * @param {number|string} level   The scriptlevel of the text
  * @param {string} mathvariant    The mathvariant for the text
- * @return {MmlNode[]}            The final MmlNode generated for the text
+ * @returns {MmlNode[]}            The final MmlNode generated for the text
  */
 function internalMath(
   parser: TexParser,
@@ -115,7 +115,7 @@ function internalMath(
 export const TextMacrosConfiguration = Configuration.create('textmacros', {
   [ConfigurationType.PRIORITY]: 1,
   /**
-   * @param {ParserConfiguration} config   The configuration object we are being configured within
+   * @param {ParserConfiguration} _config  The configuration object we are being configured within
    * @param {TeX<any,any,any>} jax         The TeX input jax in which we are running
    */
   config(_config: ParserConfiguration, jax: TeX<any, any, any>) {

@@ -16,18 +16,16 @@
  */
 
 /**
- * @fileoverview Tree Explorers allow to switch on effects on the entire
+ * @file Tree Explorers allow to switch on effects on the entire
  *     expression tree.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
 import { A11yDocument, Region } from './Region.js';
-import { Explorer, AbstractExplorer } from './Explorer.js';
+import { AbstractExplorer } from './Explorer.js';
 import { ExplorerPool } from './ExplorerPool.js';
 import { Sre } from '../sre.js';
-
-export interface TreeExplorer extends Explorer {}
 
 export class AbstractTreeExplorer extends AbstractExplorer<void> {
   /**
@@ -93,7 +91,7 @@ export class TreeColorer extends AbstractTreeExplorer {
   public Start() {
     if (this.active) return;
     this.active = true;
-    let generator = Sre.getSpeechGenerator('Color');
+    const generator = Sre.getSpeechGenerator('Color');
     if (!this.node.hasAttribute('hasforegroundcolor')) {
       generator.generateSpeech(this.node, this.mml);
       this.node.setAttribute('hasforegroundcolor', 'true');

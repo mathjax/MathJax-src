@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  The generic visitor class for trees
+ * @file  The generic visitor class for trees
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -58,7 +58,7 @@ export interface Visitor<N extends VisitorNode<N>> {
    *
    * @param {N} tree      The node that is the root of the tree
    * @param {any[]} args  The arguments to pass to the visitNode functions
-   * @return {any}        Whatever the visitNode function returns for the root tree node
+   * @returns {any}        Whatever the visitNode function returns for the root tree node
    */
   visitTree(tree: N, ...args: any[]): any;
 
@@ -68,7 +68,7 @@ export interface Visitor<N extends VisitorNode<N>> {
    *
    * @param {N} node      The node to visit
    * @param {any[]} args  The arguments to pass to the visitor function for this node
-   * @return {any}        Whatever the visitor function returns for this node
+   * @returns {any}        Whatever the visitor function returns for this node
    */
   visitNode(node: N, ...args: any[]): any;
 
@@ -77,7 +77,7 @@ export interface Visitor<N extends VisitorNode<N>> {
    *
    * @param {N} node      The node to visit
    * @param {any[]} args  The arguments to pass to the visitor function for this node
-   * @return {any}        Whatever the visitor function returns for this node
+   * @returns {any}        Whatever the visitor function returns for this node
    */
   visitDefault(node: N, ...args: any[]): any;
 
@@ -122,7 +122,7 @@ export abstract class AbstractVisitor<N extends VisitorNode<N>>
    *    the node kind; e.g., visitTextNode for kind = text.
    *
    *  @param {string} kind  The node kind whose method name is needed
-   *  @return {string}  The name of the visitor method for the given node kind
+   *  @returns {string}  The name of the visitor method for the given node kind
    */
   protected static methodName(kind: string): string {
     return (
@@ -139,12 +139,12 @@ export abstract class AbstractVisitor<N extends VisitorNode<N>>
    * Create the node handler map by looking for methods with the correct names
    *   based on the node kinds available from the factory.
    *
-   * @constructor
-   * @param {NodeFactory} factory  The node factory for the kinds of nodes this visitor handles
+   * @class
+   * @param {Factory} factory  The node factory for the kinds of nodes this visitor handles
    */
   constructor(factory: Factory<N, FactoryNodeClass<N>>) {
     for (const kind of factory.getKinds()) {
-      let method = (this as Visitor<N>)[
+      const method = (this as Visitor<N>)[
         AbstractVisitor.methodName(kind)
       ] as VisitorFunction<N>;
       if (method) {
@@ -164,7 +164,7 @@ export abstract class AbstractVisitor<N extends VisitorNode<N>>
    * @override
    */
   public visitNode(node: N, ...args: any[]) {
-    let handler = this.nodeHandlers.get(node.kind) || this.visitDefault;
+    const handler = this.nodeHandlers.get(node.kind) || this.visitDefault;
     return handler.call(this, node, ...args);
   }
 

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements component Package object for handling
+ * @file  Implements component Package object for handling
  *                dynamic loading of components.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
@@ -27,7 +27,7 @@ import { CONFIG, Loader } from './loader.js';
 /*
  * The browser document (for creating scripts to load components)
  */
-declare var document: Document;
+declare const document: Document;
 
 /**
  * A map of package names to Package instances
@@ -141,7 +141,7 @@ export class Package {
   protected provided: Package[] = [];
 
   /**
-   * @return {boolean}  True when the package can be loaded (i.e., its dependencies are all loaded,
+   * @returns {boolean}  True when the package can be loaded (i.e., its dependencies are all loaded,
    *                    it is allowed to be loaded, isn't already loading, and hasn't failed to load
    *                    in the past)
    */
@@ -171,7 +171,7 @@ export class Package {
    *
    * @param {string} name            The name of the package to resolve
    * @param {boolean} addExtension   True if .js should be added automatically
-   * @return {string}                The path (file or URL) for this package
+   * @returns {string}                The path (file or URL) for this package
    */
   public static resolvePath(
     name: string,
@@ -208,7 +208,7 @@ export class Package {
   }
 
   /**
-   * @return {Promise<string>[]}   The array of promises that must be resolved before this package
+   * @returns {Promise<string>[]}   The array of promises that must be resolved before this package
    *                                 can be loaded
    */
   protected makeDependencies(): Promise<string>[] {
@@ -311,6 +311,8 @@ export class Package {
 
   /**
    * Load using a custom require method (usually the one from node.js)
+   *
+   * @param {string} url The URL to load from
    */
   protected loadCustom(url: string) {
     try {
@@ -331,6 +333,8 @@ export class Package {
 
   /**
    * Load in a browser by inserting a script to load the proper URL
+   *
+   * @param {string} url The URL to load from
    */
   protected loadScript(url: string) {
     const script = document.createElement('script');

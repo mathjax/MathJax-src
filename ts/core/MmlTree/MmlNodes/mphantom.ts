@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMphantom node
+ * @file  Implements the MmlMphantom node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMfenced wrapper mixin for the MmlMfenced object
+ * @file  Implements the CommonMfenced wrapper mixin for the MmlMfenced object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -131,6 +131,7 @@ export interface CommonMfencedClass<
 /**
  * The CommonMfenced wrapper mixin for the MmlMfenced object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -218,7 +219,7 @@ export function CommonMfencedMixin<
 
     /**
      * @override
-     * @constructor
+     * @class
      */
     constructor(factory: WF, node: MmlNode, parent: WW = null) {
       super(factory, node, parent);

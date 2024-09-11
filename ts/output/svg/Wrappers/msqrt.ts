@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMsqrt wrapper for the MmlMsqrt object
+ * @file  Implements the SvgMsqrt wrapper for the MmlMsqrt object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -105,6 +105,10 @@ export interface SvgMsqrtClass<N, T, D>
 
 /**
  * The SvgMsqrt wrapper for the MmlMsqrt class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const SvgMsqrt = (function <N, T, D>(): SvgMsqrtClass<N, T, D> {
   const Base = CommonMsqrtMixin<
@@ -123,9 +127,9 @@ export const SvgMsqrt = (function <N, T, D>(): SvgMsqrtClass<N, T, D> {
     SvgMsqrtClass<N, T, D>
   >(SvgWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class SvgMsqrt extends Base implements SvgMsqrtNTD<N, T, D> {
     /**
      * @override
@@ -140,11 +144,11 @@ export const SvgMsqrt = (function <N, T, D>(): SvgMsqrtClass<N, T, D> {
     /**
      * Add root HTML (overridden in mroot)
      *
-     * @param {N[]} ROOT         The container for the root
-     * @param {SvgWrapper} root  The wrapped MML root content
-     * @param {BBox} sbox        The bounding box of the surd
-     * @param {number} H         The height of the root as a whole
-     * @param {number}           The offset required by the root
+     * @param {N[]} _ROOT         The container for the root
+     * @param {SvgWrapper} _root  The wrapped MML root content
+     * @param {BBox} _sbox        The bounding box of the surd
+     * @param {number} _H         The height of the root as a whole
+     * @returns {number}          The offset required by the root
      */
     protected addRoot(
       _ROOT: N[],

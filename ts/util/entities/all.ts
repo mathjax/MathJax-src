@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Loads all the entity files (used to avoid dynamic loading)
+ * @file  Loads all the entity files (used to avoid dynamic loading)
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

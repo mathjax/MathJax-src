@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the setoptions package.
+ * @file Configuration file for the setoptions package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
@@ -42,7 +42,7 @@ export const SetOptionsUtil = {
    *
    * @param {TexParser} parser   The active tex parser.
    * @param {string} extension   The name of the package whose option is being set.
-   * @return {boolean}           True when options can be set for this package.
+   * @returns {boolean}           True when options can be set for this package.
    */
   filterPackage(parser: TexParser, extension: string): boolean {
     if (extension !== 'tex' && !ConfigurationHandler.get(extension)) {
@@ -69,7 +69,7 @@ export const SetOptionsUtil = {
    * @param {TexParser} parser   The active tex parser.
    * @param {string} extension   The name of the package whose option is being set.
    * @param {string} option      The name of the option being set.
-   * @return {boolean}           True when the option can be set.
+   * @returns {boolean}           True when the option can be set.
    */
   filterOption(parser: TexParser, extension: string, option: string): boolean {
     const config = parser.options.setoptions;
@@ -111,11 +111,11 @@ export const SetOptionsUtil = {
   /**
    * Verify an option's value before setting it.
    *
-   * @param {TexParser} parser   The active tex parser.
-   * @param {string} extension   The name of the package whose option this is.
-   * @param {string} option      The name of the option being set.
+   * @param {TexParser} _parser   The active tex parser.
+   * @param {string} _extension   The name of the package whose option this is.
+   * @param {string} _option      The name of the option being set.
    * @param {string} value       The value to give to the option.
-   * @return {string}            The (possibly modified) value for the option
+   * @returns {string}            The (possibly modified) value for the option
    */
   filterValue(
     _parser: TexParser,
@@ -156,7 +156,7 @@ const setOptionsMap = new CommandMap('setoptions', {
  *   and define a macro that loads the extension and sets
  *   its options, if any.
  *
- * @param {ParserConfiguration} config  The current configuration.
+ * @param {ParserConfiguration} _config The current configuration.
  * @param {TeX} jax                     The active tex input jax.
  */
 function setoptionsConfig(

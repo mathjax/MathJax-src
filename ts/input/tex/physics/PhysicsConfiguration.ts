@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration file for the Physics package.
+ * @file Configuration file for the Physics package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */

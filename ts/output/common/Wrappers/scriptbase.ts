@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the a base mixin for CommonMsubsup, CommonMunderover
+ * @file  Implements the a base mixin for CommonMsubsup, CommonMunderover
  *                and their relatives.  (Since munderover can become msubsup
  *                when movablelimits is set, munderover needs to be able to
  *                do the same thing as msubsup in some cases.)
@@ -143,7 +143,7 @@ export interface CommonScriptbase<
    */
 
   /**
-   * @return {WW}    The wrapper for the base core mi or mo (or whatever)
+   * @returns {WW}    The wrapper for the base core mi or mo (or whatever)
    */
   getBaseCore(): WW;
 
@@ -153,7 +153,7 @@ export interface CommonScriptbase<
   setBaseAccentsFor(core: WW): void;
 
   /**
-   * @return {WW}    The base fence item or null
+   * @returns {WW}    The base fence item or null
    */
   getSemanticBase(): WW;
 
@@ -162,12 +162,12 @@ export interface CommonScriptbase<
    *
    * @param {WW} fence    The potential fence
    * @param {string} id   The fencepointer id
-   * @return {WW}         The original fence the scripts belong to
+   * @returns {WW}         The original fence the scripts belong to
    */
   getBaseFence(fence: WW, id: string): WW;
 
   /**
-   * @return {number}   The scaling factor for the base core relative to the munderover/msubsup
+   * @returns {number}   The scaling factor for the base core relative to the munderover/msubsup
    */
   getBaseScale(): number;
 
@@ -182,7 +182,7 @@ export interface CommonScriptbase<
   getAdjustedIc(): number;
 
   /**
-   * @return {boolean}  True if the base is an mi, mn, or mo (not a largeop) consisting of
+   * @returns {boolean}  True if the base is an mi, mn, or mo (not a largeop) consisting of
    *                    a single unstretched character
    */
   isCharBase(): boolean;
@@ -194,7 +194,7 @@ export interface CommonScriptbase<
 
   /**
    * @param {WW} script   The script node to check for being a line
-   * @return {boolean}    True if the script is U+2015
+   * @returns {boolean}    True if the script is U+2015
    */
   isLineAccent(script: WW): boolean;
 
@@ -204,34 +204,34 @@ export interface CommonScriptbase<
    */
 
   /**
-   * @return {number}    The base child's width without the base italic correction (if not needed)
+   * @returns {number}    The base child's width without the base italic correction (if not needed)
    */
   getBaseWidth(): number;
 
   /**
    * Get the shift for the script (implemented in subclasses)
    *
-   * @return {number[]}   The horizontal and vertical offsets for the script
+   * @returns {number[]}   The horizontal and vertical offsets for the script
    */
   getOffset(): number[];
 
   /**
    * @param {number} n    The value to use if the base isn't a (non-large-op, unstretched) char
-   * @return {number}     Either n or 0
+   * @returns {number}     Either n or 0
    */
   baseCharZero(n: number): number;
 
   /**
    * Get the shift for a subscript (TeXBook Appendix G 18ab)
    *
-   * @return {number}     The vertical offset for the script
+   * @returns {number}     The vertical offset for the script
    */
   getV(): number;
 
   /**
    * Get the shift for a superscript (TeXBook Appendix G 18acd)
    *
-   * @return {number}     The vertical offset for the script
+   * @returns {number}     The vertical offset for the script
    */
   getU(): number;
 
@@ -241,7 +241,7 @@ export interface CommonScriptbase<
    */
 
   /**
-   * @return {boolean}  True if the base has movablelimits (needed by munderover)
+   * @returns {boolean}  True if the base has movablelimits (needed by munderover)
    */
   hasMovableLimits(): boolean;
 
@@ -250,7 +250,7 @@ export interface CommonScriptbase<
    *
    * @param {BBox} basebox  The bounding box of the base
    * @param {BBox} overbox  The bounding box of the overscript
-   * @return {number[]}     The separation between their boxes, and the offset of the overscript
+   * @returns {number[]}     The separation between their boxes, and the offset of the overscript
    */
   getOverKU(basebox: BBox, overbox: BBox): number[];
 
@@ -259,21 +259,21 @@ export interface CommonScriptbase<
    *
    * @param {BBox} basebox   The bounding box of the base
    * @param {BBox} underbox  The bounding box of the underscript
-   * @return {number[]}      The separation between their boxes, and the offset of the underscript
+   * @returns {number[]}      The separation between their boxes, and the offset of the underscript
    */
   getUnderKV(basebox: BBox, underbox: BBox): number[];
 
   /**
    * @param {BBox[]} boxes     The bounding boxes whose offsets are to be computed
    * @param {number[]=} delta  The initial x offsets of the boxes
-   * @return {number[]}        The actual offsets needed to center the boxes in the stack
+   * @returns {number[]}        The actual offsets needed to center the boxes in the stack
    */
   getDeltaW(boxes: BBox[], delta?: number[]): number[];
 
   /**
    * @param {WW} script         The child that is above or below the base
    * @param {boolean=} noskew   Whether to ignore the skew amount
-   * @return {number}           The offset for under and over
+   * @returns {number}           The offset for under and over
    */
   getDelta(script: WW, noskew?: boolean): number;
 
@@ -287,7 +287,7 @@ export interface CommonScriptbase<
    * Add the scripts into the given bounding box for msub and msup (overridden by msubsup)
    *
    * @param {BBox} bbox   The bounding box to augment
-   * @return {BBox}       The modified bounding box
+   * @returns {BBox}       The modified bounding box
    */
   appendScripts(bbox: BBox): BBox;
 }
@@ -366,6 +366,7 @@ export type CommonScriptbaseConstructor<
  * A base class for msup/msub/msubsup and munder/mover/munderover
  * wrapper mixin implementations
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -524,7 +525,7 @@ export function CommonScriptbaseMixin<
      * @override
      */
     public getSemanticBase(): WW {
-      let fence = this.node.attributes.getExplicit(
+      const fence = this.node.attributes.getExplicit(
         'data-semantic-fencepointer'
       ) as string;
       return this.getBaseFence(this.baseChild, fence);
@@ -581,7 +582,7 @@ export function CommonScriptbaseMixin<
      * @override
      */
     public isCharBase(): boolean {
-      let base = this.baseCore;
+      const base = this.baseCore;
       return (
         ((base.node.isKind('mo') && (base as any).size === null) ||
           base.node.isKind('mi') ||
@@ -801,7 +802,7 @@ export function CommonScriptbaseMixin<
      * @override
      */
     public stretchChildren() {
-      let stretchy: WW[] = [];
+      const stretchy: WW[] = [];
       //
       //  Locate and count the stretchy children
       //
@@ -810,15 +811,15 @@ export function CommonScriptbaseMixin<
           stretchy.push(child);
         }
       }
-      let count = stretchy.length;
-      let nodeCount = this.childNodes.length;
+      const count = stretchy.length;
+      const nodeCount = this.childNodes.length;
       if (count && nodeCount > 1) {
         let W = 0;
         //
         //  If all the children are stretchy, find the largest one,
         //  otherwise, find the width of the non-stretchy children.
         //
-        let all = count > 1 && count === nodeCount;
+        const all = count > 1 && count === nodeCount;
         for (const child of this.childNodes) {
           const noStretch = child.stretch.dir === DIRECTION.None;
           if (all || noStretch) {

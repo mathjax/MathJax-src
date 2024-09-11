@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMath node
+ * @file  Implements the MmlMath node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -74,6 +74,7 @@ export class MmlMath extends AbstractMmlLayoutNode {
 
   /**
    * Linebreaking can occur in math nodes
+   *
    * @override
    */
   public get linebreakContainer() {
@@ -82,6 +83,7 @@ export class MmlMath extends AbstractMmlLayoutNode {
 
   /**
    * Don't reset indent attributes
+   *
    * @override
    */
   public get linebreakAlign() {

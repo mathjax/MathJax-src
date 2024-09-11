@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Explorers based on mouse events.
+ * @file Explorers based on mouse events.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -28,26 +28,29 @@ import '../sre.js';
 
 /**
  * Interface for mouse explorers. Adds the necessary mouse events.
+ *
  * @interface
- * @extends {Explorer}
+ * @augments {Explorer}
  */
 export interface MouseExplorer extends Explorer {
   /**
    * Function to be executed on mouse over.
+   *
    * @param {MouseEvent} event The mouse event.
    */
   MouseOver(event: MouseEvent): void;
 
   /**
    * Function to be executed on mouse out.
+   *
    * @param {MouseEvent} event The mouse event.
    */
   MouseOut(event: MouseEvent): void;
 }
 
 /**
- * @constructor
- * @extends {AbstractExplorer}
+ * @class
+ * @augments {AbstractExplorer}
  *
  * @template T  The type that is consumed by the Region of this explorer.
  */
@@ -80,23 +83,25 @@ export abstract class AbstractMouseExplorer<T>
 
 /**
  * Exploration via hovering.
- * @constructor
- * @extends {AbstractMouseExplorer}
+ *
+ * @class
+ * @augments {AbstractMouseExplorer}
+ *
+ * @template T
  */
 export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
   /**
-   * @constructor
-   * @extends {AbstractMouseExplorer<T>}
+   * @class
+   * @augments {AbstractMouseExplorer<T>}
    *
    * @param {A11yDocument} document The current document.
+   * @param {ExplorerPool} pool The explorer pool.
    * @param {Region<T>} region A region to display results.
    * @param {HTMLElement} node The node on which the explorer works.
    * @param {(node: HTMLElement) => boolean} nodeQuery Predicate on nodes that
    *    will fire the hoverer.
    * @param {(node: HTMLElement) => T} nodeAccess Accessor to extract node value
    *    that is passed to the region.
-   *
-   * @template T
    */
   protected constructor(
     public document: A11yDocument,
@@ -123,8 +128,8 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
    */
   public MouseOver(event: MouseEvent) {
     super.MouseOver(event);
-    let target = event.target as HTMLElement;
-    let [node, kind] = this.getNode(target);
+    const target = event.target as HTMLElement;
+    const [node, kind] = this.getNode(target);
     if (!node) {
       return;
     }
@@ -142,10 +147,10 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
    * 3. Otherwise fails.
    *
    * @param {HTMLElement} node The node on which the mouse event fired.
-   * @return {[HTMLElement, T]} Node and output pair if successful.
+   * @returns {[HTMLElement, T]} Node and output pair if successful.
    */
   public getNode(node: HTMLElement): [HTMLElement, T] {
-    let original = node;
+    const original = node;
     while (node && node !== this.node) {
       if (this.nodeQuery(node)) {
         return [node, this.nodeAccess(node)];
@@ -157,7 +162,7 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
       if (this.nodeQuery(node)) {
         return [node, this.nodeAccess(node)];
       }
-      let child = node.childNodes[0] as HTMLElement;
+      const child = node.childNodes[0] as HTMLElement;
       node =
         child && child.tagName === 'defs' // This is for SVG.
           ? (node.childNodes[1] as HTMLElement)
@@ -169,22 +174,25 @@ export abstract class Hoverer<T> extends AbstractMouseExplorer<T> {
 
 /**
  * Hoverer that displays information on nodes (e.g., as tooltips).
- * @constructor
- * @extends {Hoverer}
+ *
+ * @class
+ * @augments {Hoverer}
  */
 export class ValueHoverer extends Hoverer<string> {}
 
 /**
  * Hoverer that displays node content (e.g., for magnification).
- * @constructor
- * @extends {Hoverer}
+ *
+ * @class
+ * @augments {Hoverer}
  */
 export class ContentHoverer extends Hoverer<HTMLElement> {}
 
 /**
  * Highlights maction nodes on hovering.
- * @constructor
- * @extends {Hoverer}
+ *
+ * @class
+ * @augments {Hoverer}
  */
 export class FlameHoverer extends Hoverer<void> {
   /**

@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMaction wrapper for the MmlMaction object
+ * @file  Implements the SvgMaction wrapper for the MmlMaction object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -78,7 +78,7 @@ export interface SvgMactionNTD<N, T, D>
 
   /**
    * @param {number} m   The number to convert to pixels
-   * @return {string}    The dimension with "px" units
+   * @returns {string}    The dimension with "px" units
    */
   Px(m: number): string;
 }
@@ -117,6 +117,10 @@ export interface SvgMactionClass<N, T, D>
 
 /**
  * The SvgMaction wrapper for the MmlMaction class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
   const Base = CommonMactionMixin<
@@ -135,9 +139,9 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
     SvgMactionClass<N, T, D>
   >(SvgWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  //   type (they should both be SvgWrapper<N, T, D>, but are thought of as
+  //   different by typescript)
   return class SvgMaction extends Base implements SvgMactionNTD<N, T, D> {
     /**
      * @override
@@ -383,6 +387,11 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
 
     /**
      * Add an event handler to the output for this maction
+     *
+     * @param {string} type The event handler type.
+     * @param {EventHandler} handler The actual event handler.
+     * @param {N=} dom The DOM node. If not provided goes over all elements of
+     *    the dom tree of this wrapper.
      */
     public setEventHandler(type: string, handler: EventHandler, dom: N = null) {
       (dom ? [dom] : this.dom).forEach((node) =>

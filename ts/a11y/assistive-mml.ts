@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Mixin that adds hidden MathML to the output
+ * @file  Mixin that adds hidden MathML to the output
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -83,7 +83,7 @@ export interface AssistiveMmlMathItem<N, T, D> extends MathItem<N, T, D> {
  * The mixin for adding assistive MathML to MathItems
  *
  * @param {B} BaseMathItem      The MathItem class to be extended
- * @return {AssistiveMathItem}  The augmented MathItem class
+ * @returns {AssistiveMmlMathItem}  The augmented MathItem class
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
@@ -162,14 +162,14 @@ export interface AssistiveMmlMathDocument<N, T, D>
   extends AbstractMathDocument<N, T, D> {
   /**
    * @param {MmlNode} node   The node to be serializes
-   * @return {string}        The serialization of the node
+   * @returns {string}        The serialization of the node
    */
   toMML: (node: MmlNode) => string;
 
   /**
    * Add assistive MathML to the MathItems in the MathDocument
    *
-   * @return {AssistiveMmlMathDocument}   The MathDocument (so calls can be chained)
+   * @returns {AssistiveMmlMathDocument}   The MathDocument (so calls can be chained)
    */
   assistiveMml(): AssistiveMmlMathDocument<N, T, D>;
 }
@@ -178,7 +178,7 @@ export interface AssistiveMmlMathDocument<N, T, D>
  * The mixin for adding assistive MathML to MathDocuments
  *
  * @param {B} BaseDocument         The MathDocument class to be extended
- * @return {AssistiveMmlMathDocument}  The Assistive MathML MathDocument class
+ * @returns {AssistiveMmlMathDocument}  The Assistive MathML MathDocument class
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
@@ -247,7 +247,7 @@ export function AssistiveMmlMathDocumentMixin<
      * Augment the MathItem class used for this MathDocument, and create the serialization visitor.
      *
      * @override
-     * @constructor
+     * @class
      */
     constructor(...args: any[]) {
       super(...args);
@@ -270,7 +270,7 @@ export function AssistiveMmlMathDocumentMixin<
 
     /**
      * @param {MmlNode} node   The node to be serializes
-     * @return {string}        The serialization of the node
+     * @returns {string}        The serialization of the node
      */
     public toMML(node: MmlNode): string {
       return this.visitor.visitTree(node);
@@ -278,8 +278,10 @@ export function AssistiveMmlMathDocumentMixin<
 
     /**
      * Add assistive MathML to the MathItems in this MathDocument
+     *
+     * @returns {AssistiveMmlMathDocument<N, T, D>} The assistive mml document.
      */
-    public assistiveMml() {
+    public assistiveMml(): AssistiveMmlMathDocument<N, T, D> {
       if (!this.processed.isSet('assistive-mml')) {
         for (const math of this.math) {
           (math as AssistiveMmlMathItem<N, T, D>).assistiveMml(this);
@@ -308,7 +310,7 @@ export function AssistiveMmlMathDocumentMixin<
  * Add assitive MathML support a Handler instance
  *
  * @param {Handler} handler   The Handler instance to enhance
- * @return {Handler}          The handler that was modified (for purposes of chainging extensions)
+ * @returns {Handler}          The handler that was modified (for purposes of chainging extensions)
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class

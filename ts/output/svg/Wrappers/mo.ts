@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMo wrapper for the MmlMo object
+ * @file  Implements the SvgMo wrapper for the MmlMo object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -105,6 +105,10 @@ export interface SvgMoClass<N, T, D>
 
 /**
  * The SvgMo wrapper class for the MmlMo class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
   const Base = CommonMoMixin<
@@ -123,9 +127,9 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
     SvgMoClass<N, T, D>
   >(SvgWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class SvgMo extends Base implements SvgMoNTD<N, T, D> {
     /**
      * @override
@@ -144,7 +148,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
       if (stretchy && this.size === null) {
         this.getStretchedVariant([]);
       }
-      let svg = this.standardSvgNodes(parents);
+      const svg = this.standardSvgNodes(parents);
       if (svg.length > 1 && this.breakStyle !== 'duplicate') {
         const i = this.breakStyle === 'after' ? 1 : 0;
         this.adaptor.remove(svg[i]);
@@ -195,6 +199,8 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
 
     /**
      * Get the variant array for the assembly pieces
+     *
+     * @returns {string[]} The variants array
      */
     protected getStretchVariants() {
       const c = this.stretch.c || this.getText().codePointAt(0);
@@ -255,7 +261,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
     /**
      * @param {number} n         The number of the character to look up
      * @param {string} variant   The variant for the character to look up
-     * @return {SvgCharData}     The full CharData object, with CharOptions guaranteed to be defined
+     * @returns {SvgCharData}     The full CharData object, with CharOptions guaranteed to be defined
      */
     protected getChar(n: number, variant: string): SvgCharData {
       const char = this.font.getChar(variant, n) || [0, 0, 0, null];
@@ -273,7 +279,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      * @param {number} x         The x position of the glyph
      * @param {number} y         The y position of the glyph
      * @param {N} parent         The container for the glyph
-     * @return {number}          The width of the character placed
+     * @returns {number}          The width of the character placed
      */
     protected addGlyph(
       n: number,
@@ -301,7 +307,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      * @param {string} v    The variant for the top glyph
      * @param {number} H    The height of the stretched delimiter
      * @param {number} W    The width of the stretched delimiter
-     * @return {number}     The total height of the top glyph
+     * @returns {number}     The total height of the top glyph
      */
     protected addTop(n: number, v: string, H: number, W: number): number {
       if (!n) return 0;
@@ -353,7 +359,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      * @param {string} v    The variant for the bottom glyph
      * @param {number} D    The depth of the stretched delimiter
      * @param {number} W    The width of the stretched delimiter
-     * @return {number}     The total height of the bottom glyph
+     * @returns {number}     The total height of the bottom glyph
      */
     protected addBot(n: number, v: string, D: number, W: number): number {
       if (!n) return 0;
@@ -366,7 +372,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      * @param {number} n    The character number for the middle glyph
      * @param {string} v    The variant for the middle glyph
      * @param {number} W    The width of the stretched delimiter
-     * @return {[number, number]}   The top and bottom positions of the middle glyph
+     * @returns {[number, number]}   The top and bottom positions of the middle glyph
      */
     protected addMidV(n: number, v: string, W: number): [number, number] {
       if (!n) return [0, 0];
@@ -381,7 +387,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
     /**
      * @param {number} n   The character number for the left glyph of the stretchy character
      * @param {string} v   The variant for the left glyph
-     * @return {number}    The width of the left glyph
+     * @returns {number}    The width of the left glyph
      */
     protected addLeft(n: number, v: string): number {
       return n ? this.addGlyph(n, v, 0, 0) : 0;
@@ -439,7 +445,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      * @param {number} n   The character number for the right glyph of the stretchy character
      * @param {string} v   The variant for the right glyph
      * @param {number} W   The width of the stretched character
-     * @return {number}    The width of the right glyph
+     * @returns {number}    The width of the right glyph
      */
     protected addRight(n: number, v: string, W: number): number {
       if (!n) return 0;
@@ -451,7 +457,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
      * @param {number} n   The character number for the middle glyph of the stretchy character
      * @param {string} v   The variant for the middle glyph
      * @param {number} W   The width of the stretched character
-     * @return {[number, number]}  The positions of the left and right edges of the middle glyph
+     * @returns {[number, number]}  The positions of the left and right edges of the middle glyph
      */
     protected addMidH(n: number, v: string, W: number): [number, number] {
       if (!n) return [0, 0];

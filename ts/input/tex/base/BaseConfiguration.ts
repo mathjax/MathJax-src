@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Configuration for the Base LaTeX parser.
+ * @file Configuration for the Base LaTeX parser.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -49,6 +49,7 @@ new CharacterMap('remap', null, {
 
 /**
  * Default handling of characters (as <mo> elements).
+ *
  * @param {TexParser} parser The calling parser.
  * @param {string} char The character to parse.
  */
@@ -56,13 +57,13 @@ export function Other(parser: TexParser, char: string) {
   const font = parser.stack.env['font'];
   const ifont = parser.stack.env['italicFont'];
   // @test Other Font
-  let def = font ? { mathvariant: font } : {};
+  const def = font ? { mathvariant: font } : {};
   const remap = (MapHandler.getMap('remap') as CharacterMap).lookup(char);
   const range = getRange(char);
   const type = range[3];
   // @test Other
   // @test Other Remap
-  let mo = parser.create('token', type, def, remap ? remap.char : char);
+  const mo = parser.create('token', type, def, remap ? remap.char : char);
   const style = ParseUtil.isLatinOrGreekChar(char)
     ? parser.configuration.mathStyle(char, true) || ifont
     : '';
@@ -80,7 +81,8 @@ export function Other(parser: TexParser, char: string) {
 
 /**
  * Handle undefined control sequence.
- * @param {TexParser} parser The calling parser.
+ *
+ * @param {TexParser} _parser The calling parser.
  * @param {string} name The name of the control sequence.
  */
 function csUndefined(_parser: TexParser, name: string) {
@@ -94,8 +96,9 @@ function csUndefined(_parser: TexParser, name: string) {
 
 /**
  * Handle undefined environments.
- * @param {TexParser} parser The calling parser.
- * @param {string} name The name of the control sequence.
+ *
+ * @param {TexParser} _parser The calling parser.
+ * @param {string} env The name of the environment.
  */
 function envUndefined(_parser: TexParser, env: string) {
   // @test Undefined-Env
@@ -104,7 +107,8 @@ function envUndefined(_parser: TexParser, env: string) {
 
 /**
  * Filter for removing spacing following \nonscript
- * @param{ParseOptions} data The active tex parser.
+ *
+ * @param {ParseOptions} data The active tex parser.
  */
 function filterNonscript({ data }: { data: ParseOptions }) {
   for (const mml of data.getList('nonscript')) {
@@ -142,13 +146,14 @@ function filterNonscript({ data }: { data: ParseOptions }) {
 }
 
 /**
- * @constructor
- * @extends {AbstractTags}
+ * @class
+ * @augments {AbstractTags}
  */
 export class BaseTags extends AbstractTags {}
 
 /**
  * The base configuration.
+ *
  * @type {Configuration}
  */
 export const BaseConfiguration: Configuration = Configuration.create('base', {

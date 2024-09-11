@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements utilities for notations for menclose elements
+ * @file  Implements utilities for notations for menclose elements
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -36,7 +36,7 @@ export type DEFPAIR<N, T, D> = Notation.DefPair<ChtmlMencloseNTD<N, T, D>, N>;
  *
  * @param {string} name    The name of the element to create
  * @param {string} offset  The offset direction to adjust if thickness is non-standard
- * @return {RENDERER}      The renderer function for the given element name
+ * @returns {RENDERER}      The renderer function for the given element name
  */
 export const RenderElement = function <N, T, D>(
   name: string,
@@ -57,7 +57,7 @@ export const RenderElement = function <N, T, D>(
 
 /**
  * @param {Notation.Side} side   The side on which a border should appear
- * @return {DEFPAIR}      The notation definition for the notation having a line on the given side
+ * @returns {DEFPAIR}      The notation definition for the notation having a line on the given side
  */
 export const Border = function <N, T, D>(
   side: Notation.Side
@@ -75,7 +75,7 @@ export const Border = function <N, T, D>(
  * @param {string} name    The name of the notation to define
  * @param {Notation.Side} side1   The first side to get a border
  * @param {Notation.Side} side2   The second side to get a border
- * @return {DEFPAIR}       The notation definition for the notation having lines on two sides
+ * @returns {DEFPAIR}       The notation definition for the notation having lines on two sides
  */
 export const Border2 = function <N, T, D>(
   name: string,
@@ -92,7 +92,7 @@ export const Border2 = function <N, T, D>(
 /**
  * @param {string} name  The name of the diagonal strike to define
  * @param {number} neg   1 or -1 to use with the angle
- * @return {DEFPAIR}     The notation definition for the diagonal strike
+ * @returns {DEFPAIR}     The notation definition for the diagonal strike
  */
 export const DiagonalStrike = function <N, T, D>(
   name: string,
@@ -119,7 +119,7 @@ export const DiagonalStrike = function <N, T, D>(
 
 /**
  * @param {string} name   The name of the diagonal arrow to define
- * @return {DEFPAIR}      The notation definition for the diagonal arrow
+ * @returns {DEFPAIR}      The notation definition for the diagonal arrow
  */
 export const DiagonalArrow = function <N, T, D>(
   name: string
@@ -133,7 +133,7 @@ export const DiagonalArrow = function <N, T, D>(
 
 /**
  * @param {string} name   The name of the horizontal or vertical arrow to define
- * @return {DEFPAIR}      The notation definition for the arrow
+ * @returns {DEFPAIR}      The notation definition for the arrow
  */
 export const Arrow = function <N, T, D>(name: string): DEFPAIR<N, T, D> {
   return Notation.CommonArrow<ChtmlMencloseNTD<N, T, D>, N>((node, arrow) => {

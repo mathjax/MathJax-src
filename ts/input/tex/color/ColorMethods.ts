@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Parse methods and helper functtions for the color package.
+ * @file Parse methods and helper functtions for the color package.
  *
  * @author i@omardo.com (Omar Al-Ithawi)
  */
@@ -33,7 +33,8 @@ import { ColorModel } from './ColorUtil.js';
  * Build PropertyList from padding value.
  *
  * @param {string} colorPadding: Padding for \colorbox and \fcolorbox.
- * @return {PropertyList} The padding properties.
+ * @param colorPadding
+ * @returns {PropertyList} The padding properties.
  */
 export function padding(colorPadding: string): PropertyList {
   const pad = `+${colorPadding}`;

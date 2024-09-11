@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview Generic Wrapper class for adding methods to a Node class for visitors
+ * @file Generic Wrapper class for adding methods to a Node class for visitors
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -59,7 +59,7 @@ export interface Wrapper<
    *
    * @param {Node} node   A node to be wrapped
    * @param {any[]} args  Any additional arguments needed when creating the wrapper
-   * @return {TT}         The wrapped node
+   * @returns {T}         The wrapped node
    */
   wrap<T extends W = W>(node: N, ...args: any[]): T;
 
@@ -87,7 +87,7 @@ export interface WrapperClass<
    * @param {WrapperFactory} factory  The factory used to create more wrappers
    * @param {N} node  The node to be wrapped
    * @param {any[]} args  Any additional arguments needed when creating the wrapper
-   * @return {W}  The wrapped node
+   * @returns {W}  The wrapped node
    */
   new (
     factory: WrapperFactory<N, C, W, WrapperClass<N, C, W>>,
@@ -136,7 +136,7 @@ export class AbstractWrapper<
    * @param {WrapperFactory} factory  The WrapperFactory to use to wrap child nodes when needed
    * @param {Node} node               The node to wrap
    *
-   * @constructor
+   * @class
    * @implements {Wrapper}
    */
   constructor(

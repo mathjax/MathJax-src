@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMunderover wrapper for the MmlMunderover object
+ * @file  Implements the ChtmlMunderover wrapper for the MmlMunderover object
  *                and the special cases ChtmlMunder and ChtmlMsup
  *
  * @author dpvc@mathjax.org (Davide Cervone)
@@ -139,9 +139,9 @@ export const ChtmlMunder = (function <N, T, D>(): ChtmlMunderClass<N, T, D> {
     ChtmlMunderClass<N, T, D>
   >(ChtmlMsub);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class ChtmlMunder extends Base implements ChtmlMunderNTD<N, T, D> {
     /**
      * @override
@@ -282,9 +282,9 @@ export const ChtmlMover = (function <N, T, D>(): ChtmlMoverClass<N, T, D> {
     ChtmlMoverClass<N, T, D>
   >(ChtmlMsup);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class ChtmlMover extends Base implements ChtmlMoverNTD<N, T, D> {
     /**
      * @override
@@ -417,10 +417,10 @@ export const ChtmlMunderover = (function <N, T, D>(): ChtmlMunderoverClass<
     ChtmlMunderoverClass<N, T, D>
   >(ChtmlMsubsup);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
   return class ChtmlMunderover
-    // @ts-expect-error
+    // @ts-expect-error Avoid message about base constructors not having the
+    // same type (they should both be ChtmlWrapper<N, T, D>, but are thought of
+    // as different by typescript)
     extends Base
     implements ChtmlMunderoverNTD<N, T, D>
   {

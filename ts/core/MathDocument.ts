@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the interface and abstract class for MathDocument objects
+ * @file  Implements the interface and abstract class for MathDocument objects
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -147,7 +147,7 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
   ): [RenderData<N, T, D>, number] {
     let renderDoc, renderMath;
     let convert = true;
-    let priority = action[0];
+    const priority = action[0];
     if (action.length === 1 || typeof action[1] === 'boolean') {
       action.length === 2 && (convert = action[1] as boolean);
       [renderDoc, renderMath] = this.methodActions(id);
@@ -178,9 +178,15 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
    *   (a blank name is a no-op)
    *
    * @param {string} method1    The method to use for the render() call
-   * @param {string} method1    The method to use for the rerender() and convert() calls
+   * @param {string} method2    The method to use for the rerender() and convert() calls
+   *
+   * @returns {[(document: any) => boolean, (math: any, document: any) => boolean]}
+   *     Two render action methods wrapping the parameter methods.
    */
-  protected static methodActions(method1: string, method2: string = method1) {
+  protected static methodActions(
+    method1: string,
+    method2: string = method1
+  ): [(document: any) => boolean, (math: any, document: any) => boolean] {
     return [
       (document: any) => {
         method1 && document[method1]();
@@ -406,7 +412,7 @@ export interface MathDocument<N, T, D> {
    * Rerender the MathItems on the page
    *
    * @param {number=} start    The state to start rerendering at
-   * @return {MathDocument}    The math document instance
+   * @returns {MathDocument}    The math document instance
    */
   rerender(start?: number): MathDocument<N, T, D>;
 
@@ -414,8 +420,8 @@ export interface MathDocument<N, T, D> {
    * Convert a math string to the document's output format
    *
    * @param {string} math           The math string to convert
-   * @params {OptionList} options   The options for the conversion (e.g., format, ex, em, etc.)
-   * @return {MmlNode|N}            The MmlNode or N node for the converted content
+   * @param {OptionList} options   The options for the conversion (e.g., format, ex, em, etc.)
+   * @returns {MmlNode|N}            The MmlNode or N node for the converted content
    */
   convert(math: string, options?: OptionList): MmlNode | N;
 
@@ -424,35 +430,35 @@ export interface MathDocument<N, T, D> {
    *  for the document.
    *
    * @param {OptionList} options  The options for locating the math
-   * @return {MathDocument}       The math document instance
+   * @returns {MathDocument}       The math document instance
    */
   findMath(options?: OptionList): MathDocument<N, T, D>;
 
   /**
    * Calls the input jax to process the MathItems in the MathList
    *
-   * @return {MathDocument}  The math document instance
+   * @returns {MathDocument}  The math document instance
    */
   compile(): MathDocument<N, T, D>;
 
   /**
    * Gets the metric information for the MathItems
    *
-   * @return {MathDocument}  The math document instance
+   * @returns {MathDocument}  The math document instance
    */
   getMetrics(): MathDocument<N, T, D>;
 
   /**
    * Calls the output jax to process the compiled math in the MathList
    *
-   * @return {MathDocument}  The math document instance
+   * @returns {MathDocument}  The math document instance
    */
   typeset(): MathDocument<N, T, D>;
 
   /**
    * Updates the document to include the typeset math
    *
-   * @return {MathDocument}  The math document instance
+   * @returns {MathDocument}  The math document instance
    */
   updateDocument(): MathDocument<N, T, D>;
 
@@ -461,7 +467,7 @@ export interface MathDocument<N, T, D> {
    *
    * @param {boolean} restore  True if the original math should be put
    *                            back into the document as well
-   * @return {MathDocument}    The math document instance
+   * @returns {MathDocument}    The math document instance
    */
   removeFromDocument(restore?: boolean): MathDocument<N, T, D>;
 
@@ -472,7 +478,7 @@ export interface MathDocument<N, T, D> {
    * @param {number} state     The new state of the document
    * @param {boolean} restore  True if the original math should be put
    *                            back into the document during the rollback
-   * @return {MathDocument}    The math document instance
+   * @returns {MathDocument}    The math document instance
    */
   state(state: number, restore?: boolean): MathDocument<N, T, D>;
 
@@ -480,7 +486,7 @@ export interface MathDocument<N, T, D> {
    * Clear the processed values so that the document can be reprocessed
    *
    * @param {ResetList} options   The things to be reset
-   * @return {MathDocument}       The math document instance
+   * @returns {MathDocument}       The math document instance
    */
   reset(options?: ResetList): MathDocument<N, T, D>;
 
@@ -488,7 +494,7 @@ export interface MathDocument<N, T, D> {
    * Reset the processed values and clear the MathList (so that new math
    * can be processed in the document).
    *
-   * @return {MathDocument}  The math document instance
+   * @returns {MathDocument}  The math document instance
    */
   clear(): MathDocument<N, T, D>;
 
@@ -496,7 +502,7 @@ export interface MathDocument<N, T, D> {
    * Merges a MathList into the list for this document.
    *
    * @param {MathList} list   The MathList to be merged into this document's list
-   * @return {MathDocument}   The math document instance
+   * @returns {MathDocument}   The math document instance
    */
   concat(list: MathList<N, T, D>): MathDocument<N, T, D>;
 
@@ -506,8 +512,8 @@ export interface MathDocument<N, T, D> {
    *   container has been updated and you want to remove the
    *   associated MathItems)
    *
-   * @param {ContainerList<N>} elements   The container DOM elements whose math items are to be removed
-   * @return {MathItem<N,T,D>[]}          The removed MathItems
+   * @param {ContainerList<N>} containers  The container DOM elements whose math items are to be removed
+   * @returns {MathItem<N,T,D>[]}          The removed MathItems
    */
   clearMathItemsWithin(containers: ContainerList<N>): MathItem<N, T, D>[];
 
@@ -515,7 +521,7 @@ export interface MathDocument<N, T, D> {
    * Get the typeset MathItems that are within a given container.
    *
    * @param {ContainerList<N>} elements   The container DOM elements whose math items are to be found
-   * @return {MathItem<N,T,D>[]}          The list of MathItems within that container
+   * @returns {MathItem<N,T,D>[]}          The list of MathItems within that container
    */
   getMathItemsWithin(elements: ContainerList<N>): MathItem<N, T, D>[];
 }
@@ -693,10 +699,10 @@ export abstract class AbstractMathDocument<N, T, D>
    * @param {any} document           The document (HTML string, parsed DOM, etc.) to be processed
    * @param {DOMAdaptor} adaptor     The DOM adaptor for this document
    * @param {OptionList} options     The options for this document
-   * @constructor
+   * @class
    */
   constructor(document: D, adaptor: DOMAdaptor<N, T, D>, options: OptionList) {
-    let CLASS = this.constructor as typeof AbstractMathDocument;
+    const CLASS = this.constructor as typeof AbstractMathDocument;
     this.document = document;
     this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
     this.math = new (this.options['MathList'] || DefaultMathList)();
@@ -731,7 +737,7 @@ export abstract class AbstractMathDocument<N, T, D>
   }
 
   /**
-   * @return {string}  The kind of document
+   * @returns {string}  The kind of document
    */
   public get kind(): string {
     return (this.constructor as typeof AbstractMathDocument).KIND;

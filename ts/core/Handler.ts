@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Interfaces and abstract classes for Handler objects
+ * @file  Interfaces and abstract classes for Handler objects
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -64,7 +64,7 @@ export interface Handler<N, T, D> {
    * Checks to see if the handler can process a given document
    *
    * @param {any} document  The document to be processed (string, window, etc.)
-   * @return {boolean}      True if this handler can process the given document
+   * @returns {boolean}      True if this handler can process the given document
    */
   handlesDocument(document: any): boolean;
 
@@ -73,7 +73,7 @@ export interface Handler<N, T, D> {
    *
    * @param {any} document        The document to be handled
    * @param {OptionList} options  The options for the handling of the document
-   * @return {MathDocument}       The MathDocument object that manages the processing
+   * @returns {MathDocument}       The MathDocument object that manages the processing
    */
   create(document: any, options: OptionList): MathDocument<N, T, D>;
 }
@@ -120,9 +120,10 @@ export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
     DefaultMathDocument;
 
   /**
+   * @param {DOMAdaptor} adaptor The DOM adaptor
    * @param {number} priority  The priority to use for this handler
    *
-   * @constructor
+   * @class
    */
   constructor(adaptor: DOMAdaptor<N, T, D>, priority: number = 5) {
     this.adaptor = adaptor;
@@ -130,7 +131,7 @@ export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
   }
 
   /**
-   * @return {string}  The name of this handler class
+   * @returns {string}  The name of this handler class
    */
   public get name(): string {
     return (this.constructor as typeof AbstractHandler).NAME;

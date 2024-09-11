@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the MmlSemantics, MmlAnnotation, and MmlAnnotationXML nodes
+ * @file  Implements the MmlSemantics, MmlAnnotation, and MmlAnnotationXML nodes
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -48,6 +48,7 @@ export class MmlSemantics extends AbstractMmlBaseNode {
 
   /**
    * <semantics> requires at least one node
+   *
    * @override
    */
   public get arity() {
@@ -56,6 +57,7 @@ export class MmlSemantics extends AbstractMmlBaseNode {
 
   /**
    * Ignore <semantics> when looking for partent node
+   *
    * @override
    */
   public get notParent() {
@@ -90,6 +92,7 @@ export class MmlAnnotationXML extends AbstractMmlNode {
 
   /**
    * Children are XMLNodes, so don't bother inheritting to them
+   *
    * @override
    */
   protected setChildInheritedAttributes() {}

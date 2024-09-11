@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMspace wrapper for the MmlMspace object
+ * @file  Implements the SvgMspace wrapper for the MmlMspace object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -116,9 +116,9 @@ export const SvgMspace = (function <N, T, D>(): SvgMspaceClass<N, T, D> {
     SvgMspaceClass<N, T, D>
   >(SvgWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class SvgMspace extends Base implements SvgMspaceNTD<N, T, D> {
     /**
      * @override

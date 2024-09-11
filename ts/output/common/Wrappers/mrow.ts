@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMrow wrapper minin for the MmlMrow object
+ * @file  Implements the CommonMrow wrapper minin for the MmlMrow object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -123,6 +123,7 @@ export interface CommonMrowClass<
 /**
  * The CommonMrow wrapper mixin for the MmlMrow object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -173,7 +174,7 @@ export function CommonMrowMixin<
      * @override
      */
     public stretchChildren() {
-      let stretchy: WW[] = [];
+      const stretchy: WW[] = [];
       //
       //  Locate and count the stretchy children
       //
@@ -182,8 +183,8 @@ export function CommonMrowMixin<
           stretchy.push(child);
         }
       }
-      let count = stretchy.length;
-      let nodeCount = this.childNodes.length;
+      const count = stretchy.length;
+      const nodeCount = this.childNodes.length;
       if (count && nodeCount > 1) {
         let H = 0;
         let D = 0;
@@ -192,7 +193,7 @@ export function CommonMrowMixin<
         //  otherwise, find the height and depth of the non-stretchy
         //  children.
         //
-        let all = count > 1 && count === nodeCount;
+        const all = count > 1 && count === nodeCount;
         for (const child of this.childNodes) {
           const noStretch = child.stretch.dir === DIRECTION.None;
           if (all || noStretch) {
@@ -245,7 +246,7 @@ export function CommonMrowMixin<
 
     /**
      * @override
-     * @constructor
+     * @class
      */
     constructor(factory: WF, node: MmlNode, parent: WW = null) {
       super(factory, node, parent);
@@ -332,6 +333,8 @@ export function CommonMrowMixin<
 
     /**
      * Adjust bbox vertical alignment. (E.g., for \vbox, \vcenter.)
+     *
+     * @param bbox
      */
     protected vboxAdjust(bbox: BBox) {
       if (!this.parent) return;
@@ -394,7 +397,7 @@ export function CommonMrowMixin<
       ];
       for (const i of lines.keys()) {
         const bbox = lines[i];
-        let [indentalign, indentshift] =
+        const [indentalign, indentshift] =
           i === 0
             ? [alignfirst, shiftfirst]
             : bbox.indentData?.[i === n ? 2 : 1] || ['left', '0'];
@@ -504,6 +507,7 @@ export interface CommonInferredMrowClass<
 /**
  * The CommonInferredMrow wrapper mixin for the MmlInferredMrow object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type

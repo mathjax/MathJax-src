@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMpadded wrapper mixin for the MmlMpadded object
+ * @file  Implements the CommonMpadded wrapper mixin for the MmlMpadded object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -73,7 +73,7 @@ export interface CommonMpadded<
    * Get the content bounding box, and the change in size and offsets
    *   as specified by the parameters
    *
-   * @return {number[]}  The original height, depth, width, the changes in height, depth,
+   * @returns {number[]}  The original height, depth, width, the changes in height, depth,
    *                    and width, and the horizontal and vertical offsets of the content
    */
   getDimens(): number[];
@@ -86,7 +86,7 @@ export interface CommonMpadded<
    * @param {BBox} bbox         The bbox of the mpadded content
    * @param {string=} d         The default dimension to use for relative sizes ('w', 'h', or 'd')
    * @param {number=} m         The minimum value allowed for the dimension
-   * @return {number}           The final dimension in ems
+   * @returns {number}           The final dimension in ems
    */
   dimen(length: Property, bbox: BBox, d?: string, m?: number): number;
 
@@ -133,6 +133,7 @@ export interface CommonMpaddedClass<
 /**
  * The CommomMpadded wrapper for the MmlMpadded object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -182,9 +183,9 @@ export function CommonMpaddedMixin<
       );
       const bbox = this.childNodes[0].getOuterBBox(); // get unmodified bbox of children
       let { w, h, d } = bbox;
-      let W = w;
-      let H = h;
-      let D = d;
+      const W = w;
+      const H = h;
+      const D = d;
       let x = 0;
       let y = 0;
       let dx = 0;

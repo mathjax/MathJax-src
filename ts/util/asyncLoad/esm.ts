@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements asynchronous loading for use with <script type="module">
+ * @file  Implements asynchronous loading for use with <script type="module">
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

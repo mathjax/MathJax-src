@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Method definitions for the textmacros package
+ * @file  Method definitions for the textmacros package
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
@@ -32,7 +32,7 @@ import BaseMethods from '../base/BaseMethods.js';
 export const TextMacrosMethods = {
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} c            The character that called this function
+   * @param {string} _c           The character that called this function
    */
   Comment(parser: TextParser, _c: string) {
     while (
@@ -50,7 +50,7 @@ export const TextMacrosMethods = {
    */
   Math(parser: TextParser, open: string) {
     parser.saveText();
-    let i = parser.i;
+    const i = parser.i;
     let j, c;
     let braces = 0;
     //
@@ -59,9 +59,11 @@ export const TextMacrosMethods = {
     while ((c = parser.GetNext())) {
       j = parser.i++;
       switch (c) {
-        case '\\':
+        case '\\': {
           const cs = parser.GetCS();
           if (cs === ')') c = '\\('; // \( is the opening delimiter for \)
+        }
+        // falls through
         case '$':
           //
           //  If there are no unbalanced braces and we have found the close delimiter,
@@ -116,7 +118,7 @@ export const TextMacrosMethods = {
 
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} c            The character that called this function
+   * @param {string} _c           The character that called this function
    */
   OpenBrace(parser: TextParser, _c: string) {
     //
@@ -130,7 +132,7 @@ export const TextMacrosMethods = {
 
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} c            The character that called this function
+   * @param {string} _c            The character that called this function
    */
   CloseBrace(parser: TextParser, _c: string) {
     //
@@ -181,7 +183,7 @@ export const TextMacrosMethods = {
 
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} c            The character that called this function
+   * @param {string} _c           The character that called this function
    */
   Tilde(parser: TextParser, _c: string) {
     parser.text += '\u00A0'; // non-breaking space
@@ -189,7 +191,7 @@ export const TextMacrosMethods = {
 
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} c            The character that called this function
+   * @param {string} _c           The character that called this function
    */
   Space(parser: TextParser, _c: string) {
     parser.text += ' '; // regular space, but skipping multiple spaces
@@ -206,7 +208,7 @@ export const TextMacrosMethods = {
 
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} name         The control sequence that called this function
+   * @param {string} _name        The control sequence that called this function
    * @param {string} c            The character to insert into the string
    */
   Insert(parser: TextParser, _name: string, c: string) {
@@ -244,6 +246,7 @@ export const TextMacrosMethods = {
   /**
    * @param {TextParser} parser   The text-mode parser
    * @param {string} name         The control sequence that called this function
+   * @param {string} variant      The font variant
    */
   TextFont(parser: TextParser, name: string, variant: string) {
     parser.saveText();
@@ -252,7 +255,7 @@ export const TextMacrosMethods = {
 
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} name         The control sequence that called this function
+   * @param {string} _name        The control sequence that called this function
    * @param {string} variant      The font variant to use from now on
    */
   SetFont(parser: TextParser, _name: string, variant: string) {
@@ -262,7 +265,7 @@ export const TextMacrosMethods = {
 
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} name         The control sequence that called this function
+   * @param {string} _name        The control sequence that called this function
    * @param {number} size         The font size to use from now on
    */
   SetSize(parser: TextParser, _name: string, size: number) {

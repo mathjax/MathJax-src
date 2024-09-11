@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements a class that computes complexities for enriched math
+ * @file  Implements a class that computes complexities for enriched math
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -96,7 +96,7 @@ export class ComplexityVisitor extends MmlVisitor {
    */
   constructor(factory: MmlFactory, options: OptionList) {
     super(factory);
-    let CLASS = this.constructor as typeof ComplexityVisitor;
+    const CLASS = this.constructor as typeof ComplexityVisitor;
     this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
     this.collapse = new this.options.Collapse(this);
     this.factory = factory;
@@ -144,8 +144,9 @@ export class ComplexityVisitor extends MmlVisitor {
    *
    * @param {MmlNode} node   The node whose complixity is being computed
    * @param {boolean} save   True if the complexity is to be saved or just returned
+   * @returns {number}       The complexity of the node
    */
-  protected visitMfracNode(node: MmlNode, save: boolean) {
+  protected visitMfracNode(node: MmlNode, save: boolean): number {
     const complexity =
       this.childrenComplexity(node) * this.complexity.script +
       this.complexity.fraction;
@@ -157,8 +158,9 @@ export class ComplexityVisitor extends MmlVisitor {
    *
    * @param {MmlNode} node   The node whose complixity is being computed
    * @param {boolean} save   True if the complexity is to be saved or just returned
+   * @returns {number}       The complexity of the node
    */
-  protected visitMsqrtNode(node: MmlNode, save: boolean) {
+  protected visitMsqrtNode(node: MmlNode, save: boolean): number {
     const complexity = this.childrenComplexity(node) + this.complexity.sqrt;
     return this.setComplexity(node, complexity, save);
   }
@@ -169,8 +171,9 @@ export class ComplexityVisitor extends MmlVisitor {
    *
    * @param {MmlMroot} node   The node whose complixity is being computed
    * @param {boolean} save   True if the complexity is to be saved or just returned
+   * @returns {number}       The complexity of the node
    */
-  protected visitMrootNode(node: MmlMroot, save: boolean) {
+  protected visitMrootNode(node: MmlMroot, save: boolean): number {
     const complexity =
       this.childrenComplexity(node) +
       this.complexity.sqrt -
@@ -183,8 +186,9 @@ export class ComplexityVisitor extends MmlVisitor {
    *
    * @param {MmlNode} node   The node whose complixity is being computed
    * @param {boolean} save   True if the complexity is to be saved or just returned
+   * @returns {number}       The complexity of the node
    */
-  protected visitMphantomNode(node: MmlNode, save: boolean) {
+  protected visitMphantomNode(node: MmlNode, save: boolean): number {
     return this.setComplexity(node, this.complexity.phantom, save);
   }
 
@@ -194,8 +198,9 @@ export class ComplexityVisitor extends MmlVisitor {
    *
    * @param {MmlNode} node   The node whose complixity is being computed
    * @param {boolean} save   True if the complexity is to be saved or just returned
+   * @returns {number}       The complexity of the node
    */
-  protected visitMsNode(node: MmlNode, save: boolean) {
+  protected visitMsNode(node: MmlNode, save: boolean): number {
     const text =
       node.attributes.get('lquote') +
       (node as AbstractMmlTokenNode).getText() +
@@ -211,8 +216,9 @@ export class ComplexityVisitor extends MmlVisitor {
    *
    * @param {MmlMsubsup} node   The node whose complixity is being computed
    * @param {boolean} save   True if the complexity is to be saved or just returned
+   * @returns {number}       The complexity of the node
    */
-  protected visitMsubsupNode(node: MmlMsubsup, save: boolean) {
+  protected visitMsubsupNode(node: MmlMsubsup, save: boolean): number {
     super.visitDefault(node, true);
     const sub = node.childNodes[node.sub];
     const sup = node.childNodes[node.sup];
@@ -230,15 +236,17 @@ export class ComplexityVisitor extends MmlVisitor {
   /**
    * @param {MmlMsub} node   The node whose complixity is being computed
    * @param {boolean} save   True if the complexity is to be saved or just returned
+   * @returns {number}       The complexity of the node
    */
-  protected visitMsubNode(node: MmlMsub, save: boolean) {
+  protected visitMsubNode(node: MmlMsub, save: boolean): number {
     return this.visitMsubsupNode(node, save);
   }
   /**
    * @param {MmlMsup} node   The node whose complixity is being computed
    * @param {boolean} save   True if the complexity is to be saved or just returned
+   * @returns {number}       The complexity of the node
    */
-  protected visitMsupNode(node: MmlMsup, save: boolean) {
+  protected visitMsupNode(node: MmlMsup, save: boolean): number {
     return this.visitMsubsupNode(node, save);
   }
 
@@ -250,8 +258,9 @@ export class ComplexityVisitor extends MmlVisitor {
    *
    * @param {MmlMunderover} node   The node whose complixity is being computed
    * @param {boolean} save   True if the complexity is to be saved or just returned
+   * @returns {number}       The complexity of the node
    */
-  protected visitMunderoverNode(node: MmlMunderover, save: boolean) {
+  protected visitMunderoverNode(node: MmlMunderover, save: boolean): number {
     super.visitDefault(node, true);
     const under = node.childNodes[node.under];
     const over = node.childNodes[node.over];
@@ -273,15 +282,17 @@ export class ComplexityVisitor extends MmlVisitor {
   /**
    * @param {MmlMunder} node   The node whose complixity is being computed
    * @param {boolean} save   True if the complexity is to be saved or just returned
+   * @returns {number}       The complexity of the node
    */
-  protected visitMunderNode(node: MmlMunder, save: boolean) {
+  protected visitMunderNode(node: MmlMunder, save: boolean): number {
     return this.visitMunderoverNode(node, save);
   }
   /**
    * @param {MmlMover} node   The node whose complixity is being computed
    * @param {boolean} save   True if the complexity is to be saved or just returned
+   * @returns {number}       The complexity of the node
    */
-  protected visitMoverNode(node: MmlMover, save: boolean) {
+  protected visitMoverNode(node: MmlMover, save: boolean): number {
     return this.visitMunderoverNode(node, save);
   }
 
@@ -290,8 +301,9 @@ export class ComplexityVisitor extends MmlVisitor {
    *
    * @param {MmlNode} node   The node whose complixity is being computed
    * @param {boolean} save   True if the complexity is to be saved or just returned
+   * @returns {number}       The complexity of the node
    */
-  protected visitMencloseNode(node: MmlNode, save: boolean) {
+  protected visitMencloseNode(node: MmlNode, save: boolean): number {
     const complexity = this.childrenComplexity(node) + this.complexity.enclose;
     return this.setComplexity(node, complexity, save);
   }
@@ -301,8 +313,9 @@ export class ComplexityVisitor extends MmlVisitor {
    *
    * @param {MmlMaction} node   The node whose complixity is being computed
    * @param {boolean} save   True if the complexity is to be saved or just returned
+   * @returns {number}       The complexity of the node
    */
-  protected visitMactionNode(node: MmlMaction, save: boolean) {
+  protected visitMactionNode(node: MmlMaction, save: boolean): number {
     this.childrenComplexity(node);
     const complexity = this.getComplexity(node.selected);
     return this.setComplexity(node, complexity, save);
@@ -313,8 +326,9 @@ export class ComplexityVisitor extends MmlVisitor {
    *
    * @param {MmlNode} node   The node whose complixity is being computed
    * @param {boolean} save   True if the complexity is to be saved or just returned
+   * @returns {number}       The complexity of the node
    */
-  protected visitMsemanticsNode(node: MmlNode, save: boolean) {
+  protected visitMsemanticsNode(node: MmlNode, save: boolean): number {
     const child = node.childNodes[0];
     let complexity = 0;
     if (child) {
@@ -329,8 +343,9 @@ export class ComplexityVisitor extends MmlVisitor {
    *
    * @param {MmlNode} node   The node whose complixity is being computed
    * @param {boolean} save   True if the complexity is to be saved or just returned
+   * @returns {number}       The complexity of the node
    */
-  protected visitAnnotationNode(node: MmlNode, save: boolean) {
+  protected visitAnnotationNode(node: MmlNode, save: boolean): number {
     return this.setComplexity(node, this.complexity.xml, save);
   }
 
@@ -339,8 +354,9 @@ export class ComplexityVisitor extends MmlVisitor {
    *
    * @param {MmlNode} node   The node whose complixity is being computed
    * @param {boolean} save   True if the complexity is to be saved or just returned
+   * @returns {number}       The complexity of the node
    */
-  protected visitAnnotation_xmlNode(node: MmlNode, save: boolean) {
+  protected visitAnnotation_xmlNode(node: MmlNode, save: boolean): number {
     return this.setComplexity(node, this.complexity.xml, save);
   }
 
@@ -349,8 +365,9 @@ export class ComplexityVisitor extends MmlVisitor {
    *
    * @param {MmlNode} node   The node whose complixity is being computed
    * @param {boolean} save   True if the complexity is to be saved or just returned
+   * @returns {number}       The complexity of the node (if collapsable, then the collapsed complexity)
    */
-  protected visitMglyphNode(node: MmlNode, save: boolean) {
+  protected visitMglyphNode(node: MmlNode, save: boolean): number {
     return this.setComplexity(node, this.complexity.glyph, save);
   }
 
@@ -358,7 +375,7 @@ export class ComplexityVisitor extends MmlVisitor {
 
   /**
    * @param {MmlNode} node   The node whose complixity is needed
-   * @return {number}        The complexity fof the node (if collapsable, then the collapsed complexity)
+   * @returns {number}        The complexity of the node (if collapsable, then the collapsed complexity)
    */
   public getComplexity(node: MmlNode): number {
     const collapsed = node.getProperty('collapsedComplexity');
@@ -371,10 +388,15 @@ export class ComplexityVisitor extends MmlVisitor {
 
   /**
    * @param {MmlNode} node       The node whose complixity is being set
-   * @param {complexity} number  The complexity for the node
+   * @param {number} complexity  The complexity for the node
    * @param {boolean} save       True if complexity is to be set or just reported
+   * @returns {number}           The complexity of the node
    */
-  protected setComplexity(node: MmlNode, complexity: number, save: boolean) {
+  protected setComplexity(
+    node: MmlNode,
+    complexity: number,
+    save: boolean
+  ): number {
     if (save) {
       if (this.options.identifyCollapsible) {
         complexity = this.collapse.check(node, complexity);
@@ -386,7 +408,7 @@ export class ComplexityVisitor extends MmlVisitor {
 
   /**
    * @param {MmlNode} node   The node whose children complexities are to be added
-   * @return {number}        The sum of the complexities, plus child complexity for each one
+   * @returns {number}        The sum of the complexities, plus child complexity for each one
    */
   protected childrenComplexity(node: MmlNode): number {
     super.visitDefault(node, true);

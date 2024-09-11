@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the CommonSemantics wrapper mixin for the MmlSemantics object
+ * @file  Implements the CommonSemantics wrapper mixin for the MmlSemantics object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -104,6 +104,7 @@ export interface CommonSemanticsClass<
 /**
  * The CommonSemantics wrapper mixin for the MmlSemantics object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type

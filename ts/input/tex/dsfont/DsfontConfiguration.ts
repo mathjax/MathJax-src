@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview The dsfont package.
+ * @file The dsfont package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
@@ -29,6 +29,9 @@ import TexParser from '../TexParser.js';
 
 /**
  * The methods that implement the dsfont package.
+ *
+ * @param parser
+ * @param name
  */
 function ChooseFont(parser: TexParser, name: string) {
   BaseMethods.MathFont(

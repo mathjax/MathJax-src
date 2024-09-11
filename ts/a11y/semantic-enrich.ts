@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Mixin that adds semantic enrichment to internal MathML
+ * @file  Mixin that adds semantic enrichment to internal MathML
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -80,7 +80,7 @@ export class enrichVisitor<N, T, D> extends SerializedMmlVisitor {
   }
 
   public visitMactionNode(node: MmlNode, space: string) {
-    let [nl, endspace] =
+    const [nl, endspace] =
       node.childNodes.length === 0 ? ['', ''] : ['\n', space];
     const children = this.childNodeMml(node, space + '  ', nl);
     let attributes = this.getAttributes(node);
@@ -142,7 +142,7 @@ export interface EnrichedMathItem<N, T, D> extends MathItem<N, T, D> {
  * @param {B} BaseMathItem     The MathItem class to be extended
  * @param {MathML} MmlJax      The MathML input jax used to convert the enriched MathML
  * @param {Function} toMathML  The function to serialize the internal MathML
- * @return {EnrichedMathItem}  The enriched MathItem class
+ * @returns {EnrichedMathItem}  The enriched MathItem class
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
@@ -172,7 +172,7 @@ export function EnrichedMathItemMixin<
 
     /**
      * @param {any} node  The node to be serialized
-     * @return {string}   The serialized version of node
+     * @returns {string}   The serialized version of node
      */
     protected serializeMml(node: any): string {
       if ('outerHTML' in node) {
@@ -239,9 +239,11 @@ export function EnrichedMathItemMixin<
 
     /**
      * Correct the selection values for the maction items from the original MathML
+     *
+     * @returns {string} The updated MathML element.
      */
-    protected adjustSelections() {
-      let mml = this.inputData.originalMml;
+    protected adjustSelections(): string {
+      const mml = this.inputData.originalMml;
       if (!this.inputData.hasMaction) return mml;
       const maction = [] as MmlNode[];
       this.root.walkTree((node: MmlNode) => {
@@ -260,7 +262,7 @@ export function EnrichedMathItemMixin<
      * Computes speech and braille label content if the information is already
      * on the node. In particular it respects existing labels.
      *
-     * @return {[string, string]} Pair comprising speech and braille.
+     * @returns {[string, string]} Pair comprising speech and braille.
      */
     protected existingSpeech(): [string, string] {
       const attributes = this.root.attributes;
@@ -270,7 +272,7 @@ export function EnrichedMathItemMixin<
           (attributes.get('data-semantic-speech') as string) || ''
         )[0];
       }
-      let braille = (attributes.get('aria-braillelabel') ||
+      const braille = (attributes.get('aria-braillelabel') ||
         attributes.get('data-semantic-braille') ||
         '') as string;
       return [speech, braille];
@@ -340,20 +342,20 @@ export interface EnrichedMathDocument<N, T, D>
   /**
    * Perform enrichment on the MathItems in the MathDocument
    *
-   * @return {EnrichedMathDocument}   The MathDocument (so calls can be chained)
+   * @returns {EnrichedMathDocument}   The MathDocument (so calls can be chained)
    */
   enrich(): EnrichedMathDocument<N, T, D>;
 
   /**
    * Attach speech to the MathItems in the MathDocument
    *
-   * @return {EnrichedMathDocument}   The MathDocument (so calls can be chained)
+   * @returns {EnrichedMathDocument}   The MathDocument (so calls can be chained)
    */
   attachSpeech(): EnrichedMathDocument<N, T, D>;
 
   /**
    * @param {EnrichedMathDocument} doc   The MathDocument for the error
-   * @paarm {EnrichedMathItem} math      The MathItem causing the error
+   * @param {EnrichedMathItem} math      The MathItem causing the error
    * @param {Error} err                  The error being processed
    */
   enrichError(
@@ -364,7 +366,7 @@ export interface EnrichedMathDocument<N, T, D>
 
   /**
    * @param {EnrichedMathDocument} doc   The MathDocument for the error
-   * @paarm {EnrichedMathItem} math      The MathItem causing the error
+   * @param {EnrichedMathItem} math      The MathItem causing the error
    * @param {Error} err                  The error being processed
    */
   speechError(
@@ -379,7 +381,7 @@ export interface EnrichedMathDocument<N, T, D>
  *
  * @param {B} BaseDocument     The MathDocument class to be extended
  * @param {MathML} MmlJax          The MathML input jax used to convert the enriched MathML
- * @return {EnrichedMathDocument}  The enriched MathDocument class
+ * @returns {EnrichedMathDocument}  The enriched MathDocument class
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
@@ -461,7 +463,7 @@ export function EnrichedMathDocumentMixin<
      *   temporary MathItem used for enrchment
      *
      * @override
-     * @constructor
+     * @class
      */
     constructor(...args: any[]) {
       super(...args);
@@ -485,8 +487,10 @@ export function EnrichedMathDocumentMixin<
 
     /**
      * Attach speech from a MathItem to a node
+     *
+     * @returns {EnrichedMathDocument} The object for chaining.
      */
-    public attachSpeech() {
+    public attachSpeech(): EnrichedMathDocument<N, T, D> {
       if (!this.processed.isSet('attach-speech')) {
         if (this.options.enableSpeech || this.options.enableBraille) {
           if (this.options.speechTiming.asynchronous) {
@@ -560,8 +564,10 @@ export function EnrichedMathDocumentMixin<
 
     /**
      * Enrich the MathItems in this MathDocument
+     *
+     * @returns {EnrichedMathDocument} The object for chaining.
      */
-    public enrich() {
+    public enrich(): EnrichedMathDocument<N, T, D> {
       if (!this.processed.isSet('enriched')) {
         if (this.options.enableEnrichment) {
           for (const math of this.math) {
@@ -574,6 +580,7 @@ export function EnrichedMathDocumentMixin<
     }
 
     /**
+     * @override
      */
     public enrichError(
       _doc: EnrichedMathDocument<N, T, D>,
@@ -584,6 +591,7 @@ export function EnrichedMathDocumentMixin<
     }
 
     /**
+     * @override
      */
     public speechError(
       _doc: EnrichedMathDocument<N, T, D>,
@@ -621,7 +629,7 @@ export function EnrichedMathDocumentMixin<
  *
  * @param {Handler} handler   The Handler instance to enhance
  * @param {MathML} MmlJax     The MathML input jax to use for reading the enriched MathML
- * @return {Handler}          The handler that was modified (for purposes of chainging extensions)
+ * @returns {Handler}          The handler that was modified (for purposes of chainging extensions)
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class

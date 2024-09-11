@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMenclose wrapper for the MmlMenclose object
+ * @file  Implements the ChtmlMenclose wrapper for the MmlMenclose object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -48,8 +48,12 @@ import { em } from '../../../util/lengths.js';
 
 /**
  *  The skew angle needed for the arrow head pieces
+ *
+ * @param {number} x Delta x value.
+ * @param {number} y The y value.
+ * @returns {string} Skew angle in string format.
  */
-function Angle(x: number, y: number) {
+function Angle(x: number, y: number): string {
   return Math.atan2(x, y)
     .toFixed(3)
     .replace(/\.?0+$/, '');
@@ -85,21 +89,21 @@ export interface ChtmlMencloseNTD<N, T, D>
   /**
    * @param {N} node   The HTML element whose border width must be
    *                   adjusted if the thickness isn't the default
-   * @return {N}       The adjusted element
+   * @returns {N}       The adjusted element
    */
   adjustBorder(node: N): N;
 
   /**
    * @param {N} shape   The svg element whose stroke-thickness must be
    *                    adjusted if the thickness isn't the default
-   * @return {N}        The adjusted element
+   * @returns {N}        The adjusted element
    */
   adjustThickness(shape: N): N;
 
   /**
    * @param {number} m    A number to be shown with a fixed number of digits
    * @param {number=} n   The number of digits to use
-   * @return {string}     The formatted number
+   * @returns {string}     The formatted number
    */
   fixed(m: number, n?: number): string;
 
@@ -107,7 +111,7 @@ export interface ChtmlMencloseNTD<N, T, D>
    * Public access to em method (for use in notation functions)
    *
    * @param {number} m   The number to convert to pixels
-   * @return {string}    The dimension with "px" units
+   * @returns {string}    The dimension with "px" units
    */
   Em(m: number): string;
 }
@@ -146,6 +150,10 @@ export interface ChtmlMencloseClass<N, T, D>
 
 /**
  * The ChtmlMenclose wrapper class for the MmlMenclose class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
   N,
@@ -169,9 +177,9 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
     ChtmlMencloseClass<N, T, D>
   >(ChtmlWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-expect-error
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class ChtmlMenclose extends Base implements ChtmlMencloseNTD<N, T, D> {
     /**
      * @override
@@ -620,8 +628,8 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
 
     /**
      * @override
-     * (make it public so it can be called by the notation functions)
      */
+    // (make it public so it can be called by the notation functions)
     public Em(m: number) {
       return super.em(m);
     }
