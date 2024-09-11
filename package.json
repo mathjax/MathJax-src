@@ -125,8 +125,7 @@
     "make-components": "pnpm -s make-mjs-components",
     "compile": "pnpm -s compile-mjs",
     "build": "pnpm -s build-mjs",
-    "build-all": "pnpm -s build-mjs ; echo ; pnpm -s build-cjs",
-    "pre-push-lint": "pnpm lint-staged"
+    "build-all": "pnpm -s build-mjs ; echo ; pnpm -s build-cjs"
   },
   "devDependencies": {
     "copyfiles": "^2.4.1",
