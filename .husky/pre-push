@@ -1,5 +1,1 @@
-#!/bin/sh
-
-. "$(dirname -- "$0")/_/husky.sh"
-
-pnpm pre-push-lint
+pnpm test

@@ -148,10 +148,8 @@
     "xslt3": "^2.6.0"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx}": [
-      "npx prettier --write",
-      "eslint src/*.{js,jsx,ts,tsx} --format unix --fix-dry-run --no-error-on-unmatched-pattern",
-      "pnpm run test"
+    "ts/**/*.ts": [
+      "pnpm format:fix"
     ]
   },
   "dependencies": {
