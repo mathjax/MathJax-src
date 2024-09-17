@@ -116,7 +116,7 @@ export class Attributes {
    * @returns {boolean}     True if the attribute is explicitly given on this node
    */
   public hasExplicit(name: string): boolean {
-    return this.attributes.hasOwnProperty(name);
+    return Object.hasOwn(this.attributes, name);
   }
 
   /**
@@ -175,8 +175,8 @@ export class Attributes {
    */
   public isSet(name: string): boolean {
     return (
-      this.attributes.hasOwnProperty(name) ||
-      this.inherited.hasOwnProperty(name)
+      Object.hasOwn(this.attributes, name) ||
+      Object.hasOwn(this.inherited, name)
     );
   }
 

@@ -322,7 +322,7 @@ export function selectOptions(
 ): OptionList {
   const subset: OptionList = {};
   for (const key of keys) {
-    if (options.hasOwnProperty(key)) {
+    if (Object.hasOwn(options, key)) {
       subset[key] = options[key];
     }
   }
@@ -389,5 +389,5 @@ export function separateOptions(
  * @returns {any}               The value for the key.
  */
 export function lookup(name: string, lookup: OptionList, def: any = null): any {
-  return lookup.hasOwnProperty(name) ? lookup[name] : def;
+  return Object.hasOwn(lookup, name) ? lookup[name] : def;
 }

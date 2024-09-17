@@ -759,8 +759,8 @@ export abstract class AbstractMmlNode
     const defaults = this.attributes.getAllDefaults();
     for (const key of Object.keys(attributes)) {
       if (
-        defaults.hasOwnProperty(key) ||
-        AbstractMmlNode.alwaysInherit.hasOwnProperty(key)
+        Object.hasOwn(defaults, key) ||
+        Object.hasOwn(AbstractMmlNode.alwaysInherit, key)
       ) {
         const [node, value] = attributes[key];
         !AbstractMmlNode.noInherit[node]?.[this.kind]?.[key] &&

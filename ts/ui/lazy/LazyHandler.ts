@@ -634,7 +634,7 @@ export function LazyMathDocumentMixin<
         if (math.lazyCompile) {
           math.state(STATE.COMPILED - 1);
           state = STATE.COMPILED;
-        } else if (!math.metrics.hasOwnProperty('em')) {
+        } else if (!Object.hasOwn(math.metrics, 'em')) {
           math.state(STATE.METRICS - 1);
           state = STATE.METRICS;
         } else {

@@ -106,11 +106,11 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
   /**
    * Look up the path in the configuration's source list
    *
-   * @param data The data object containing the filter functions
-   * @returns True
+   * @param {PathFilterFunction} data The data object containing the filter functions
+   * @returns {boolean} True
    */
   source: (data) => {
-    if (CONFIG.source.hasOwnProperty(data.name)) {
+    if (Object.hasOwn(CONFIG.source, data.name)) {
       data.name = CONFIG.source[data.name];
     }
     return true;
@@ -119,8 +119,8 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
   /**
    * Add [mathjax] before any relative path, and add .js if needed
    *
-   * @param data The data object containing the filter functions
-   * @returns True
+   * @param {PathFilterFunction} data The data object containing the filter functions
+   * @returns {boolean} True
    */
   normalize: (data) => {
     const name = data.name;
@@ -142,7 +142,7 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
   prefix: (data) => {
     let match;
     while ((match = data.name.match(/^\[([^\]]*)\]/))) {
-      if (!CONFIG.paths.hasOwnProperty(match[1])) break;
+      if (!Object.hasOwn(CONFIG.paths, match[1])) break;
       data.name = CONFIG.paths[match[1]] + data.name.substring(match[0].length);
     }
     return true;

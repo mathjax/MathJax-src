@@ -1156,7 +1156,7 @@ export class FontData<
    */
   public defineRemap(name: string, remap: RemapMap) {
     if (remap) {
-      if (!this.remapChars.hasOwnProperty(name)) {
+      if (!Object.hasOwn(this.remapChars, name)) {
         this.remapChars[name] = {};
       }
       Object.assign(this.remapChars[name], remap);
