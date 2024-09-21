@@ -349,7 +349,7 @@ export class LiveRegion extends StringRegion {
     ['.' + LiveRegion.className]: {
       position: 'absolute',
       top: 0,
-      display: 'block',
+      display: 'none',
       width: 'auto',
       height: 'auto',
       padding: 0,
@@ -361,6 +361,9 @@ export class LiveRegion extends StringRegion {
       'background-color': 'white',
       'box-shadow': '0px 5px 20px #888',
       border: '2px solid #CCCCCC',
+    },
+    ['.' + LiveRegion.className + '_Show']: {
+      display: 'block'
     },
   });
 }
