@@ -111,7 +111,8 @@ export interface CommonMunderClass<
 /**
  * The CommonMunder wrapper mixin for the MmlMunder object
  *
- * @param Base
+ * @param {CommonScriptbaseConstructor} Base The constructor class
+ * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -256,7 +257,8 @@ export interface CommonMoverClass<
 /**
  * The CommonMover wrapper mixin for the MmlMover object
  *
- * @param Base
+ * @param {CommonScriptbaseConstructor} Base The constructor class
+ * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -410,9 +412,11 @@ export interface CommonMunderoverClass<
 > extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
-/*
+/**
  * The CommonMunderover wrapper for the MmlMunderover object
  *
+ * @param {CommonScriptbaseConstructor} Base The constructor class
+ * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -427,10 +431,6 @@ export interface CommonMunderoverClass<
  * @template FC  The FontDataClass type
  *
  * @template B   The mixin interface to create
- */
-/**
- *
- * @param Base
  */
 export function CommonMunderoverMixin<
   N,

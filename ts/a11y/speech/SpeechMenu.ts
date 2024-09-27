@@ -67,9 +67,9 @@ function csPrefsVariables(menu: MJContextMenu, prefs: string[]) {
  *
  * @param {MJContextMenu} menu The current context menu.
  * @param {string} locale The current locale.
- * @returns The constructed selection box sub menu.
+ * @returns {object} The constructed selection box sub menu.
  */
-function csSelectionBox(menu: MJContextMenu, locale: string) {
+function csSelectionBox(menu: MJContextMenu, locale: string): object {
   const prefs = Sre.clearspeakPreferences.getLocalePreferences();
   const props = prefs[locale];
   if (!props) {
@@ -111,9 +111,9 @@ function csSelectionBox(menu: MJContextMenu, locale: string) {
  * Generates the menu items for the base preference menu.
  *
  * @param {string} previous The currently set preferences.
- * @returns The menu items.
+ * @returns {object[]} The menu items as a list of JSON objects.
  */
-function basePreferences(previous: string) {
+function basePreferences(previous: string): object[] {
   const items = [
     {
       type: 'radio',
@@ -140,9 +140,13 @@ function basePreferences(previous: string) {
  * @param {string} previous The currently set preferences.
  * @param {string} smart The semantic type of the smart preferences.
  * @param {string} locale The current locale.
- * @returns The menu of the smart choices.
+ * @returns {object[]} The menu of smart choices as a list of JSON objects.
  */
-function smartPreferences(previous: string, smart: string, locale: string) {
+function smartPreferences(
+  previous: string,
+  smart: string,
+  locale: string
+): object[] {
   const prefs = Sre.clearspeakPreferences.getLocalePreferences();
   const loc = prefs[locale];
   if (!loc) {

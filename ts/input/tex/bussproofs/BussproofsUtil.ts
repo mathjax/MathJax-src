@@ -172,8 +172,8 @@ const nextSibling = function (inf: MmlNode): MmlNode {
  * @returns {MmlNode} The previous sibling.
  */
 // TODO: Currently not used, but left there for a future extension.
-// @ts-expect-error
-const previousSibling = function (inf: MmlNode): MmlNode {
+// @ts-expect-error unused
+const _previousSibling = function (inf: MmlNode): MmlNode {
   return inf.parent.childNodes[inf.parent.childNodes.indexOf(inf) - 1];
 };
 

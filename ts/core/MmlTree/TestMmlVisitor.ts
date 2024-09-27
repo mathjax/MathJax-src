@@ -35,17 +35,9 @@ import { PropertyList } from '../Tree/Node.js';
 
 export class TestMmlVisitor extends SerializedMmlVisitor {
   /**
-   * The generic visiting function:
-   *   Make the string versino of the open tag with it attributes (explicit and
-   *     inherited) and properties
-   *   Increate the indentation level
-   *   Add the childnodes
-   *   Add the end tag with proper spacing (empty tags have the close tag following directly)
-   *
-   * @param {MmlNode} node  The node to visit
-   * @param {string} space    The number of spaces to use for indentation
+   * @override
    */
-  public visitDefault(node: MmlNode, space: string) {
+  public visitDefault(node: MmlNode, space: string): string {
     const kind = node.kind;
     const [nl, endspace] =
       node.isToken || node.childNodes.length === 0 ? ['', ''] : ['\n', space];
@@ -70,8 +62,7 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
   }
 
   /**
-   * @param {MmlNode} node  The node whose attributes are to be produced
-   * @returns {string}  The attribute list as a string
+   * @override
    */
   protected getAttributes(node: MmlNode): string {
     return this.attributeString(node.attributes.getAllAttributes(), '', '');

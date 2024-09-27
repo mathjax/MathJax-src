@@ -490,7 +490,8 @@ export interface CommonMtableClass<
 /**
  * The CommonMtable wrapper mixin for the MmlMtable object
  *
- * @param Base
+ * @param {CommonWrapperConstructor} Base The constructor class
+ * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type

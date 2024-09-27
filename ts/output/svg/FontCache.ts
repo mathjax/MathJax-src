@@ -23,9 +23,14 @@
 
 import { SVG } from '../svg.js';
 
+/**
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export class FontCache<N, T, D> {
   /**
-   * The SVG jax that owsn this cache
+   * The SVG jax that owns this cache
    */
   protected jax: SVG<N, T, D>;
 
@@ -92,7 +97,7 @@ export class FontCache<N, T, D> {
    * Use a localID (for font-specific caching), either with a specific string,
    * or from the nextID number.
    *
-   * @param id
+   * @param {string} id The prefix for the id
    */
   public useLocalID(id: string = null) {
     this.localID = (id == null ? ++this.nextID : id) + (id === '' ? '' : '-');
@@ -108,8 +113,10 @@ export class FontCache<N, T, D> {
 
   /**
    * Return the font cache <defs> element
+   *
+   * @returns {N} The definitions
    */
-  public getCache() {
+  public getCache(): N {
     return this.defs;
   }
 }

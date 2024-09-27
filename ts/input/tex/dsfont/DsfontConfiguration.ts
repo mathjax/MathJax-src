@@ -30,8 +30,8 @@ import TexParser from '../TexParser.js';
 /**
  * The methods that implement the dsfont package.
  *
- * @param parser
- * @param name
+ * @param {TexParser} parser The calling parser.
+ * @param {string} name The macro name.
  */
 function ChooseFont(parser: TexParser, name: string) {
   BaseMethods.MathFont(

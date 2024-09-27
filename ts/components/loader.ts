@@ -136,8 +136,8 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
   /**
    * Recursively replace path prefixes (e.g., [mathjax], [tex], etc.)
    *
-   * @param data The data object containing the filter functions
-   * @returns True
+   * @param {PathFilterFunction} data The data object containing the filter functions
+   * @returns {boolean} True
    */
   prefix: (data) => {
     let match;

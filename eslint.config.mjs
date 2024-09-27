@@ -26,9 +26,7 @@ export default tseslint.config({
     "@typescript-eslint/no-empty-object-type": ["error", {"allowInterfaces": "with-single-extends"}],
     "no-inner-declarations": "off",
     "prefer-const": ["error", {"destructuring": "all"}],
-    "jsdoc/tag-lines": ["warn", "always", {"count": 0, "startLines": 1}],
-    "jsdoc/require-param-type": "off",
-    "jsdoc/require-returns-type": "off"
+    "jsdoc/tag-lines": ["warn", "always", {"count": 0, "startLines": 1}]
   }
 });
 

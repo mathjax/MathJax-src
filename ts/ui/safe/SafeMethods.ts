@@ -298,8 +298,7 @@ export const SafeMethods: { [name: string]: FilterFunction<any, any, any> } = {
    *  Filter scriptLevel
    *
    * @param {Safe<N,T,D>} safe  The Safe object being used
-   * @param {string} size       The scriptlevel to test
-   * @param level
+   * @param {string} level      The scriptlevel to test
    * @returns {string|null}      The sanitized scriptlevel or null
    *
    * @template N  The HTMLElement node class

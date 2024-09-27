@@ -334,7 +334,7 @@ function saveFontParts(
 /**
  * Combine font parts into one (we don't actually do that)
  *
- * @param _name The font name
+ * @param {string} _name The font name
  */
 function combineFont(_name: string) {}
 

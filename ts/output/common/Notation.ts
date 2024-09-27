@@ -115,13 +115,14 @@ export const sideNames = Object.keys(sideIndex) as Side[];
 /**
  * Common BBox and Border functions
  *
- * @param node
+ * @param {Menclose} node The enclose node
+ * @returns {BBoxExtender<Menclose>} The bbox extender
  */
-export const fullBBox = ((node) =>
+export const fullBBox = ((node: Menclose) =>
   new Array(4).fill(node.thickness + node.padding)) as BBoxExtender<Menclose>;
-export const fullPadding = ((node) =>
+export const fullPadding = ((node: Menclose) =>
   new Array(4).fill(node.padding)) as BBoxExtender<Menclose>;
-export const fullBorder = ((node) =>
+export const fullBorder = ((node: Menclose) =>
   new Array(4).fill(node.thickness)) as BBoxBorder<Menclose>;
 
 /*****************************************************************/
@@ -129,9 +130,10 @@ export const fullBorder = ((node) =>
 /**
  * The length of an arrowhead
  *
- * @param node
+ * @param {Menclose} node The enclose node
+ * @returns {number} The arrowhead length
  */
-export const arrowHead = (node: Menclose) => {
+export const arrowHead = (node: Menclose): number => {
   return Math.max(
     node.padding,
     node.thickness * (node.arrowhead.x + node.arrowhead.dx + 1)
@@ -141,8 +143,9 @@ export const arrowHead = (node: Menclose) => {
 /**
  * Adjust short bbox for tall arrow heads
  *
- * @param node
- * @param TRBL
+ * @param {Menclose} node The enclose node
+ * @param {PaddingData} TRBL The arrow head data
+ * @returns {PaddingData} The adjusted arrow head
  */
 export const arrowBBoxHD = (node: Menclose, TRBL: PaddingData) => {
   if (node.childNodes[0]) {
@@ -158,8 +161,9 @@ export const arrowBBoxHD = (node: Menclose, TRBL: PaddingData) => {
 /**
  * Adjust thin bbox for wide arrow heads
  *
- * @param node
- * @param TRBL
+ * @param {Menclose} node The enclose node
+ * @param {PaddingData} TRBL The arrow head data
+ * @returns {PaddingData} The adjusted arrow head
  */
 export const arrowBBoxW = (node: Menclose, TRBL: PaddingData) => {
   if (node.childNodes[0]) {
