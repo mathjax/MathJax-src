@@ -60,7 +60,7 @@ export class TextParser extends TexParser {
    *
    * @returns {TexParser} The saved TexParser
    */
-  public get texParser() {
+  public get texParser(): TexParser {
     return this.configuration.packageData.get('textmacros').texParser;
   }
 

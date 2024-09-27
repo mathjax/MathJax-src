@@ -60,7 +60,7 @@ export const TextBaseConfiguration = Configuration.create('text-base', {
     //
     macro: (parser: TextParser, name: string) => {
       const texParser = parser.texParser;
-      const macro = texParser.lookup('macro', name);
+      const macro = texParser.lookup(HandlerType.MACRO, name);
       if (macro && macro._func !== TextMacrosMethods.Macro) {
         parser.Error(
           'MathMacro',
@@ -68,7 +68,7 @@ export const TextBaseConfiguration = Configuration.create('text-base', {
           '\\' + name
         );
       }
-      texParser.parse('macro', [parser, name]);
+      texParser.parse(HandlerType.MACRO, [parser, name]);
     },
   },
   items: {
