@@ -33,9 +33,11 @@ const nonCharacterRegexp =
   /[\u{FDD0}-\u{FDEF}\u{FFFE}\u{FFFF}\u{1FFFE}\u{1FFFF}\u{2FFFE}\u{2FFFF}\u{3FFFE}\u{3FFFF}\u{4FFFE}\u{4FFFF}\u{5FFFE}\u{5FFFF}\u{6FFFE}\u{6FFFF}\u{7FFFE}\u{7FFFF}\u{8FFFE}\u{8FFFF}\u{9FFFE}\u{9FFFF}\u{AFFFE}\u{AFFFF}\u{BFFFE}\u{BFFFF}\u{CFFFE}\u{CFFFF}\u{DFFFE}\u{DFFFF}\u{EFFFE}\u{EFFFF}\u{FFFFE}\u{FFFFF}\u{10FFFE}\u{10FFFF}]/u;
 
 /**
- * Whether the string is a valid HTML attribute name according to {@link https://html.spec.whatwg.org/multipage/syntax.html#attributes-2}.
+ * Whether the string is a valid HTML attribute name according to {@link
+ * https://html.spec.whatwg.org/multipage/syntax.html#attributes-2}.
  *
  * @param {string} name String to validate.
+ * @returns {boolean} True if name is a valid attribute name.
  */
 function isLegalAttributeName(name: string): boolean {
   return !(

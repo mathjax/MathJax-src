@@ -104,7 +104,8 @@ export class Mml3<N, T, D> {
 /**
  *  Add Mml3 support into the handler.
  *
- * @param handler
+ * @param {Handler} handler The current handler.
+ * @returns {Handler} The provided handler for pipelining.
  */
 export function Mml3Handler<N, T, D>(
   handler: Handler<N, T, D>

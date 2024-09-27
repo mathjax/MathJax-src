@@ -43,8 +43,8 @@ let tagID = 0;
  * Creates and registers a subclass of the currently configured tag class
  * that handles the formats created by the \newtagform macro.
  *
- * @param config
- * @param jax
+ * @param {ParserConfiguration} config   The current configuration.
+ * @param {TeX} jax                      The TeX input jax
  */
 export function MathtoolsTagFormat(
   config: ParserConfiguration,

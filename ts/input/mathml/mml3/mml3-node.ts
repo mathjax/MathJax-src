@@ -33,7 +33,7 @@ import { mjxRoot } from '#root/root.js';
  * @template T  The Text node class
  * @template D  The Document class
  *
- * @returns {(node: N, doc: MathDocument<N,T,D>) => N)}   The transformation function
+ * @returns {(node: N, doc: MathDocument<N,T,D>) => N}   The transformation function
  */
 export function createTransform<N, T, D>(): (
   node: N,
@@ -44,7 +44,7 @@ export function createTransform<N, T, D>(): (
   try {
     // check if saxon-js is installed.
     nodeRequire.resolve('saxon-js');
-  } catch (err) {
+  } catch (_err) {
     throw Error(
       'Saxon-js not found.  Run the command:\n    npm install saxon-js\nand try again.'
     );

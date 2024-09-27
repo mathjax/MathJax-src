@@ -59,8 +59,7 @@ function initMathtools(config: ParserConfiguration) {
  * Add any pre-defined paired delimiters, and subclass the configured tag format.
  *
  * @param {ParserConfiguration} config   The current configuration.
- * @param {TeX} jac                      The TeX input jax
- * @param jax
+ * @param {TeX} jax                      The TeX input jax
  */
 function configMathtools(config: ParserConfiguration, jax: TeX<any, any, any>) {
   const parser = jax.parseOptions;
