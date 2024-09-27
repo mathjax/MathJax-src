@@ -127,7 +127,7 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
     if (!name.match(/^(?:[a-z]+:\/)?\/|[a-z]:\\|\[/i)) {
       data.name = '[mathjax]/' + name.replace(/^\.\//, '');
     }
-    if (data.addExtension && !name.match(/\.[^\/]+$/)) {
+    if (data.addExtension && !name.match(/\.[^/]+$/)) {
       data.name += '.js';
     }
     return true;
@@ -273,7 +273,7 @@ export namespace Loader {
       const script =
         document.currentScript || document.getElementById('MathJax-script');
       if (script) {
-        return (script as HTMLScriptElement).src.replace(/\/[^\/]*$/, '');
+        return (script as HTMLScriptElement).src.replace(/\/[^/]*$/, '');
       }
     }
     return mjxRoot();

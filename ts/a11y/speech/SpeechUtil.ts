@@ -151,7 +151,7 @@ function getProsody(element: Element, prosody: ProsodyElement): ProsodyElement {
 /**
  * Extracts the prosody value from an attribute.
  */
-const prosodyRegexp = /([\+-]?)([0-9]+)%/;
+const prosodyRegexp = /([+-]?)([0-9]+)%/;
 
 /**
  * Extracts the prosody value from an attribute.
