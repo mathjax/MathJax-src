@@ -217,7 +217,7 @@ export class GeneratorPool<N, T, D> {
       this.adaptor.setAttribute(
         node,
         'aria-label',
-        buildSpeech(this.getLabel(node))[0]
+        this.adaptor.getAttribute(node, 'data-semantic-label')
       );
     }
     this.lastMove = InPlace.NONE;
@@ -265,9 +265,14 @@ export class GeneratorPool<N, T, D> {
     speechRegion: LiveRegion,
     brailleRegion: LiveRegion
   ) {
+    const adaptor = this.adaptor;
     const speech = this.getLabel(node, this.lastSpeech);
     speechRegion.Update(speech);
-    this.adaptor.setAttribute(node, 'aria-label', buildSpeech(speech)[0]);
+    const label = buildSpeech(speech)[0];
+    adaptor.setAttribute(node, 'data-semantic-label', label);
+    if (adaptor.hasAttribute(node, 'aria-label')) {
+      adaptor.setAttribute(node, 'aria-label', label);
+    }
     this.lastSpeech = '';
     brailleRegion.Update(this.adaptor.getAttribute(node, 'aria-braillelabel'));
   }
@@ -279,11 +284,15 @@ export class GeneratorPool<N, T, D> {
    * @returns {string} The aria label to speak.
    */
   public updateSpeech(node: N): string {
+    const adaptor = this.adaptor;
     const xml = this.prepareXml(node);
     const speech = this.speechGenerator.getSpeech(xml, this.element);
     this.setAria(node, xml, this.options.sre.locale);
     const label = buildSpeech(speech)[0];
-    this.adaptor.setAttribute(node, 'aria-label', label);
+    adaptor.setAttribute(node, 'data-semantic-label', label);
+    if (adaptor.hasAttribute(node, 'aria-label')) {
+      adaptor.setAttribute(node, 'aria-label', label);
+    }
     return label;
   }
 
@@ -404,11 +413,8 @@ export class GeneratorPool<N, T, D> {
     if (this.options.a11y.speech) {
       const speech = this.getLabel(node);
       if (speech) {
-        this.adaptor.setAttribute(
-          node,
-          'aria-label',
-          buildSpeech(speech, locale)[0]
-        );
+        const label = buildSpeech(speech, locale)[0];
+        this.adaptor.setAttribute(node, 'data-semantic-label', label);
       }
     }
     if (this.options.a11y.braille) {

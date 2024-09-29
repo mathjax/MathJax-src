@@ -79,9 +79,8 @@ export interface KeyExplorer extends Explorer {
 /**
  * Selectors for walking.
  */
-const roles = ['tree', 'group', 'treeitem'];
-const nav = roles.map((x) => `[role="${x}"]`).join(',');
-const prevNav = roles.map((x) => `[tabindex="0"][role="${x}"]`).join(',');
+const nav = '[data-speech-node]';
+const prevNav = `[tabindex="0"]${nav}`;
 
 /**
  * Predicate to check if element is a MJX container.
@@ -189,6 +188,43 @@ export class SpeechExplorer
   }
 
   /**
+   * Makes the speech and Braille available, sets the role, and hides the children.
+   *
+   * @param {Element} node   The node to set up for speech
+   */
+  protected addSpeech(node: Element) {
+    if (this.generators.options.enableSpeech && node.hasAttribute('data-semantic-label')) {
+      node.setAttribute('aria-label', node.getAttribute('data-semantic-label'));
+    }
+    if (this.generators.options.enableBraille && node.hasAttribute('data-semantic-braille')) {
+      node.setAttribute('aria-braillelabel', node.getAttribute('data-semantic-braille'));
+    }
+    node.removeAttribute('aria-hidden');
+    node.setAttribute('role', this.item.ariaRole);
+    node.setAttribute('aria-roledescription', this.item.roleDescription);
+    for (const child of Array.from(node.childNodes) as HTMLElement[]) {
+      child.setAttribute('aria-hidden', 'true');
+    }
+  }
+
+  /**
+   * Removes the speech, Braille, and role, and unhides the children.
+   *
+   * @param {Element} node   The node to clean up for speech
+   */
+  protected removeSpeech(node: Element) {
+    node.removeAttribute('aria-label');
+    node.removeAttribute('aria-braillelabel');
+    node.removeAttribute('role');
+    node.removeAttribute('aria-roledescription');
+    for (const child of Array.from(node.childNodes) as HTMLElement[]) {
+      if (!child.hasAttribute('data-keep-hidden')) {
+        child.removeAttribute('aria-hidden');
+      }
+    }
+  }
+
+  /**
    * Moves on mouse click to the closest clicked element.
    *
    * @param {MouseEvent} event The mouse click event.
@@ -211,6 +247,7 @@ export class SpeechExplorer
         this.FocusOut(null);
       }
       this.current = clicked;
+      this.addSpeech(this.current);
       if (!this.triggerLinkMouse()) {
         this.Start();
       }
@@ -226,7 +263,7 @@ export class SpeechExplorer
       this.mousedown = false;
       return;
     }
-    this.current = this.current || this.node.querySelector('[role="treeitem"]');
+    this.current = this.current || this.node.querySelector(nav);
     this.Start();
     event.preventDefault();
   }
@@ -239,6 +276,7 @@ export class SpeechExplorer
     // This guard is to FF and Safari, where focus in fired only once on
     // keyboard.
     if (!this.active) return;
+    this.removeSpeech(this.current);
     this.generators.CleanUp(this.current);
     if (!this.move) {
       this.Stop();
@@ -447,6 +485,8 @@ export class SpeechExplorer
     if (next) {
       target.removeAttribute('tabindex');
       next.setAttribute('tabindex', '0');
+      this.removeSpeech(this.current);
+      this.addSpeech(next);
       next.focus();
       this.current = next;
       this.move = false;
@@ -538,6 +578,9 @@ export class SpeechExplorer
     if (this.generators.update(options)) {
       promise = promise.then(() => this.Speech());
     }
+    this.removeSpeech(this.node);
+    this.addSpeech(this.current);
+    this.item.speechNode.setAttribute('aria-hidden', 'true');
     this.current.setAttribute('tabindex', '0');
     this.current.focus();
     super.Start();
@@ -618,7 +661,7 @@ export class SpeechExplorer
       }
       if (!this.active) {
         if (!this.current) {
-          this.current = this.node.querySelector('[role="treeitem"]');
+          this.current = this.node.querySelector(nav);
         }
         this.Start();
         this.stopEvent(event);
@@ -692,6 +735,10 @@ export class SpeechExplorer
    */
   public Stop() {
     if (this.active) {
+      this.addSpeech(this.node);
+      this.node.removeAttribute('role');
+      this.item.speechNode.removeAttribute('aria-hidden');
+      this.current = null;  // re-enter at top node
       this.pool.unhighlight();
       this.magnifyRegion.Hide();
       this.region.Hide();

@@ -312,9 +312,11 @@ export class CHTML<N, T, D> extends CommonOutputJax<
       styles.width = this.fixed(width * this.math.metrics.scale) + 'em';
     }
     //
-    return this.html('mjx-utext', { variant: variant, style: styles }, [
-      this.text(text),
-    ]);
+    return this.html(
+      'mjx-utext',
+      { variant: variant, style: styles, 'aria-hidden': 'true', 'data-keep-hidden': 'true' },
+      [ this.text(text) ]
+    );
   }
 
   /**

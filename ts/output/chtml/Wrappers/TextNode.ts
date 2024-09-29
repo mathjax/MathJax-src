@@ -186,7 +186,11 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<
               parent,
               this.html(
                 'mjx-c',
-                { class: this.char(n) + (font ? ' ' + font : '') },
+                {
+                  class: this.char(n) + (font ? ' ' + font : ''),
+                  'aria-hidden': 'true',
+                  'data-keep-hidden': 'true'
+                },
                 [this.text(data.c || String.fromCodePoint(n))]
               )
             );
