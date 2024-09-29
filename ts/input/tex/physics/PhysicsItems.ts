@@ -102,9 +102,10 @@ export class AutoOpen extends BaseItem {
    * Test whether a fence is a closing one for this item,
    * decrementing the open count if appropriate.
    *
-   * @param fence
+   * @param {string} fence The fence character.
+   * @returns {boolean} True if the fence is the appropriate closing one.
    */
-  public closing(fence: string) {
+  public closing(fence: string): boolean {
     return fence === this.getProperty('close') && !this.openCount--;
   }
 

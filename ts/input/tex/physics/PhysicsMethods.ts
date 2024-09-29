@@ -1096,8 +1096,9 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
    *
    * @param {TexParser} parser The calling parser.
    * @param {string} _name The macro name.
+   * @returns {ParseResult} The parse result.
    */
-  Vnabla(parser: TexParser, _name: string) {
+  Vnabla(parser: TexParser, _name: string): ParseResult {
     const argument = parser.options.physics.arrowdel
       ? '\\vec{\\gradientnabla}'
       : '{\\gradientnabla}';
@@ -1111,8 +1112,9 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
    *
    * @param {TexParser} parser The calling parser.
    * @param {string} _name The macro name.
+   * @returns {ParseResult} The parse result.
    */
-  DiffD(parser: TexParser, _name: string) {
+  DiffD(parser: TexParser, _name: string): ParseResult {
     const argument = parser.options.physics.italicdiff ? 'd' : '{\\rm d}';
     return parser.Push(
       new TexParser(argument, parser.stack.env, parser.configuration).mml()

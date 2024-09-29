@@ -156,6 +156,7 @@ export class Package {
 
   /**
    * @param {string} name   A promise for when extra files and checkReady have been fulfilled
+   * @returns {Promise<void>} The load promise
    */
   public static loadPromise(name: string): Promise<void> {
     const config = (CONFIG[name] || {}) as PackageConfig;
@@ -247,10 +248,11 @@ export class Package {
   }
 
   /**
-   * @param {Promise<string>[]} promises  The array or promises that must be resolved before
-   *                                        this package can load
+   * @param {Promise<string>[]} promises The array or promises that must be
+   *      resolved before this package can load
+   * @returns {Promise<string>} The promise indicating when this file is loaded
    */
-  protected makePromise(promises: Promise<string>[]) {
+  protected makePromise(promises: Promise<string>[]): Promise<string> {
     //
     //  Make a promise and save its resolve/reject functions
     //

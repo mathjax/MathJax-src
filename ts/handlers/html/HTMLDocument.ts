@@ -350,9 +350,9 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
   }
 
   /**
-   * Get the array of document-specific styles
+   * @returns {StyleList[]} Get the array of document-specific styles
    */
-  public getStyles() {
+  public getStyles(): StyleList[] {
     return this.styles;
   }
 }

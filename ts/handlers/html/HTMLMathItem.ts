@@ -22,6 +22,7 @@
  */
 
 import { AbstractMathItem, Location, STATE } from '../../core/MathItem.js';
+import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 import { InputJax } from '../../core/InputJax.js';
 import { HTMLDocument } from './HTMLDocument.js';
 
@@ -35,9 +36,9 @@ import { HTMLDocument } from './HTMLDocument.js';
  */
 export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
   /**
-   * Easy access to DOM adaptor
+   * @returns {DOMAdaptor<N, T, D>} Easy access to DOM adaptor
    */
-  get adaptor() {
+  get adaptor(): DOMAdaptor<N, T, D> {
     return this.inputJax.adaptor;
   }
 

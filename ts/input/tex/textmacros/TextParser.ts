@@ -208,8 +208,9 @@ export class TextParser extends TexParser {
    *
    * @param {string} name   The macro that is calling for a parameter
    * @param {EnvList} env   The environment to use
+   * @returns {MmlNode}     The parsed text node
    */
-  public ParseTextArg(name: string, env: EnvList) {
+  public ParseTextArg(name: string, env: EnvList): MmlNode {
     const text = this.GetArgument(name);
     env = Object.assign(Object.assign({}, this.stack.env), env);
     return new TextParser(text, env, this.configuration).mml();

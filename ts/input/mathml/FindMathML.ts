@@ -113,9 +113,10 @@ export class FindMathML<N, T, D> extends AbstractFindMath<N, T, D> {
   /**
    *  Produce the array of proto math items from the node set
    *
-   * @param set
+   * @param {Set<N>} set The original node set
+   * @returns {ProtoItem<N, T>[]} The set of proto math items
    */
-  protected processMath(set: Set<N>) {
+  protected processMath(set: Set<N>): ProtoItem<N, T>[] {
     const adaptor = this.adaptor;
     const math: ProtoItem<N, T>[] = [];
     for (const mml of set.values()) {

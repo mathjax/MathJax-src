@@ -320,8 +320,10 @@ export namespace Startup {
    * typesetting, if needed.
    *
    * Setting Mathjax.startup.pageReady in the configuration will override this.
+   *
+   * @returns {Promise<void>} The promise indicating when page is ready.
    */
-  export function defaultPageReady() {
+  export function defaultPageReady(): Promise<void> {
     return (
       CONFIG.loadAllFontFiles && (output as COMMONJAX).font
         ? (output as COMMONJAX).font.loadDynamicFiles()
@@ -338,9 +340,10 @@ export namespace Startup {
   /**
    * Perform the typesetting with handling of retries
    *
-   * @param elements The list of elements to typeset
+   * @param {any[]} elements The list of elements to typeset
+   * @returns {Promise<void>} The promise indicating when page is typeset.
    */
-  export function typesetPromise(elements: any[]) {
+  export function typesetPromise(elements: any[]): Promise<void> {
     document.options.elements = elements;
     document.reset();
     return mathjax.handleRetriesFor(() => {
