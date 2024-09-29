@@ -315,6 +315,8 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
             : { style: `letter-spacing: ${this.em(dimen - 1)}` },
           [adaptor.text(' ')]
         );
+        adaptor.setAttribute(node, 'aria-hidden', 'true');
+        adaptor.setAttribute(node, 'data-keep-hidden', 'true');
         adaptor.insert(node, this.dom[i]);
       } else if (dimen) {
         if (SPACE[space]) {

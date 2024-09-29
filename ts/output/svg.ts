@@ -537,6 +537,8 @@ export class SVG<N, T, D> extends CommonOutputJax<
         'data-variant': variant,
         transform: 'scale(1,-1)',
         'font-size': this.fixed(scale, 1) + 'px',
+        'aria-hidden': 'true',
+        'data-keep-hidden': 'true'
       },
       [this.text(text)]
     );

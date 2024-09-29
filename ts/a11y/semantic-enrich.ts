@@ -41,6 +41,7 @@ import { OptionList, expandable } from '../util/Options.js';
 import { Sre } from './sre.js';
 import { buildSpeech } from './speech/SpeechUtil.js';
 import { GeneratorPool } from './speech/GeneratorPool.js';
+import { StyleList } from '../util/StyleList.js';
 
 /*==========================================================================*/
 
@@ -120,6 +121,26 @@ export interface EnrichedMathItem<N, T, D> extends MathItem<N, T, D> {
   generatorPool: GeneratorPool<N, T, D>;
 
   /**
+   * The MathML serializer
+   */
+  toMathML: (node: MmlNode, math: MathItem<N, T, D>) => string;
+
+  /**
+   * The visually hidden speech string
+   */
+  speechNode: N;
+
+  /**
+   * The rol to use for navigation
+   */
+  ariaRole: string;
+
+  /**
+   * The term to use for the role description
+   */
+  roleDescription: string;
+
+  /**
    * @param {MathDocument} document  The document where enrichment is occurring
    * @param {boolean} force          True to force the enrichment even if not enabled
    */
@@ -166,9 +187,28 @@ export function EnrichedMathItemMixin<
     public generatorPool = new GeneratorPool<N, T, D>();
 
     /**
-     *  The MathML serializer
+     * @override
      */
     public toMathML = toMathML;
+
+    /**
+     * @override
+     */
+    public speechNode: N;
+
+    /**
+     * @override
+     */
+    public get ariaRole() {
+      return 'math';  // use 'button' or 'img' to avoid voicing of role description
+    }
+
+    /**
+     * @override
+     */
+    public get roleDescription() {
+      return 'MathJax expression';
+    }
 
     /**
      * @param {any} node  The node to be serialized
@@ -266,7 +306,7 @@ export function EnrichedMathItemMixin<
      */
     protected existingSpeech(): [string, string] {
       const attributes = this.root.attributes;
-      let speech = attributes.get('aria-label') as string;
+      let speech = (attributes.get('aria-label') || attributes.get('data-semantic-label')) as string;
       if (!speech) {
         speech = buildSpeech(
           (attributes.get('data-semantic-speech') as string) || ''
@@ -311,17 +351,31 @@ export function EnrichedMathItemMixin<
       if (!speech && !braille) return;
       const adaptor = document.adaptor;
       const node = this.typesetRoot;
-      if (speech && options.enableSpeech) {
-        adaptor.setAttribute(node, 'aria-label', speech as string);
-        this.root.attributes.set('aria-label', speech);
-      }
-      if (braille && options.enableBraille) {
-        adaptor.setAttribute(node, 'aria-braillelabel', braille as string);
-        this.root.attributes.set('aria-braillelabel', braille);
-      }
+      adaptor.setAttribute(node, 'has-speech', 'true');
       for (const child of adaptor.childNodes(node) as N[]) {
         adaptor.setAttribute(child, 'aria-hidden', 'true');
       }
+      this.speechNode = adaptor.node(
+        'mjx-speech',
+        { role: this.ariaRole, 'aria-roledescription': this.roleDescription }
+      );
+      adaptor.insert(this.speechNode, adaptor.firstChild(node));
+      if (speech && options.enableSpeech) {
+        adaptor.setAttribute(this.speechNode, 'aria-label', speech);
+        this.root.attributes.set('data-aria-label', speech);
+      }
+      if (braille && options.enableBraille) {
+        adaptor.setAttribute(this.speechNode, 'aria-braillelabel', braille);
+        this.root.attributes.set('data-aria-braille', braille);
+      }
+for (const child of (node as any).querySelectorAll('[role="treeitem"]')) {
+  adaptor.setAttribute(child, 'data-speech-node', 'true');
+  adaptor.removeAttribute(child, 'role');
+  adaptor.removeAttribute(child, 'aria-posinset');
+  adaptor.removeAttribute(child, 'aria-level');
+  adaptor.removeAttribute(child, 'aria-owns');
+  adaptor.removeAttribute(child, 'aria-setsize');
+}
       this.outputData.speech = speech;
       this.outputData.braille = braille;
     }
@@ -397,7 +451,7 @@ export function EnrichedMathDocumentMixin<
   BaseDocument: B,
   MmlJax: MathML<N, T, D>
 ): MathDocumentConstructor<EnrichedMathDocument<N, T, D>> & B {
-  return class extends BaseDocument {
+  return class BaseClass extends BaseDocument {
     /**
      * @override
      */
@@ -443,6 +497,20 @@ export function EnrichedMathDocumentMixin<
       }),
     };
 
+    public static speechStyles: StyleList = {
+      'mjx-container[has-speech="true"]': {
+        position: 'relative'
+      },
+      'mjx-speech': {
+        position: 'absolute',
+        'z-index': -1,
+        left: 0,
+        top: 0,
+        bottom: 0,
+        right: 0
+      }
+    }
+
     /**
      * The list of MathItems that need to be processed for speech
      */
@@ -483,6 +551,9 @@ export function EnrichedMathDocumentMixin<
         D,
         Constructor<AbstractMathItem<N, T, D>>
       >(this.options.MathItem, MmlJax, toMathML);
+      if ('addStyles' in this) {
+        (this as any).addStyles((this.constructor as typeof BaseClass).speechStyles);
+      }
     }
 
     /**
