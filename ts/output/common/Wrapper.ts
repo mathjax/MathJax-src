@@ -414,7 +414,7 @@ export class CommonWrapper<
   /**
    * Easy access to the output jax for this node
    *
-   * @returns The output jax for this node
+   * @returns {JX} The output jax for this node
    */
   get jax(): JX {
     return this.factory.jax;
@@ -651,7 +651,8 @@ export class CommonWrapper<
   /**
    * Get the bounding box for the i-th line of an embellished mo
    *
-   * @param i
+   * @param {number} i The line number
+   * @returns {LineBBox} The bounding box for that line
    */
   protected embellishedBBox(i: number): LineBBox {
     if (!this.node.isEmbellished || this.node.isKind('mo')) return null;
@@ -931,12 +932,13 @@ export class CommonWrapper<
    * @param {string} fontFamily  The font family to use
    * @param {string} fontWeight  The font weight to use
    * @param {string} fontStyle   The font style to use
+   * @returns {string} The explicit font marker
    */
   protected explicitVariant(
     fontFamily: string,
     fontWeight: string,
     fontStyle: string
-  ) {
+  ): string {
     let style = this.styles;
     if (!style) style = this.styles = new Styles();
     style.set('fontFamily', fontFamily);

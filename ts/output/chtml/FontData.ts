@@ -301,8 +301,10 @@ export class ChtmlFontData extends FontData<
 
   /**
    * Get the styles for dynamically loaded fonts since the last CSS update
+   *
+   * @returns {StyleList} The updated style list
    */
-  public updateDynamicStyles() {
+  public updateDynamicStyles(): StyleList {
     const styles = this.fontUsage;
     this.fontUsage = {};
     !this.options.adaptiveCSS && this.updateStyles(styles);
@@ -559,6 +561,7 @@ export class ChtmlFontData extends FontData<
    * @param {number} n          The unicode character to use for the part
    * @param {string} v          The variant for the character
    * @param {ChtmlCharData} HDW The height-depth-width data for the stretchy character
+   * @returns {number}          The width of the character
    */
   protected addDelimiterHPart(
     styles: StyleList,
@@ -567,7 +570,7 @@ export class ChtmlFontData extends FontData<
     n: number,
     v: string,
     HDW: ChtmlCharData
-  ) {
+  ): number {
     if (!n) return 0;
     const [, , w, options] = this.getChar(v, n);
     const css: StyleData = {
