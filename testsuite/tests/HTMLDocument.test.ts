@@ -1,10 +1,10 @@
 import { beforeEach, expect, describe, it } from '@jest/globals';
-// import { toXmlMatch, setupTex, tex2mml, getTokens } from '#helpers';
 import {TeX} from '#js/input/tex';
 import {HTMLDocument} from '#js/handlers/html/HTMLDocument.js';
 import {liteAdaptor} from '#js/adaptors/liteAdaptor.js';
 import {SerializedMmlVisitor} from '#js/core/MmlTree/SerializedMmlVisitor.js';
 import { toXmlMatch } from '#helpers';
+import {RegisterHTMLHandler} from '#js/handlers/html.js';
 
 let html: any, tex: any, toMml: any;
 
@@ -81,14 +81,18 @@ describe('Base Render Action Math', () => {
 
 describe('Base Math Document', () => {
   beforeEach(() => {
-    html = new HTMLDocument('', liteAdaptor(), {InputJax: tex, renderActions: {
+    RegisterHTMLHandler(liteAdaptor());
+    html = new HTMLDocument('<html><body>$$x$$</body></html>', liteAdaptor(), {InputJax: tex, renderActions: {
       typeset: [150,
-                (doc: any) => {for (const math of doc.math) {console.log('HERE1'); console.log(math)}},
+                (doc: any) => {for (const math of doc.math) {console.log('HERE1'); console.log(math.root.toString())}},
                 (_math: any, _doc: any) => {console.log('HERE3');}, true]
     }});
   })
-  it('Identifier', () => {
-    expect(html.render('<html>$$x$$</html>')).toBe(
+  it.only('Identifier', () => {
+    try{
+      html.render();
+    } catch (_e) {}
+    expect(html.typeset()).toBe(
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x" display="block">
   <mi data-latex="x">x</mi>
 </math>`)
