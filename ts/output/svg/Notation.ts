@@ -90,6 +90,7 @@ export const lineData = function (
  * @param {LineData} data   The line endpoints to adjust
  * @param {Menclose} node   The menclose node
  * @param {string} offset   The direction to offset
+ * @returns {LineData}      The computed line data
  */
 export const lineOffset = function (
   data: LineData,
@@ -115,8 +116,8 @@ export const lineOffset = function (
 
 /**
  * @param {LineName} line  The name of the line to create
- * @param offset
- * @returns {RENDERER}      The renderer function for the given line
+ * @param {string} offset  The direction to offset
+ * @returns {RENDERER}     The renderer function for the given line
  */
 export const RenderLine = function <N, T, D>(
   line: LineName,

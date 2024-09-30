@@ -52,12 +52,14 @@ export class LiteList<N> {
 
   /**
    * Make this class iterable (so it can be used with Array.from())
+   *
+   * @returns {Iterator<LiteNode>} The iterator.
    */
   public [Symbol.iterator](): Iterator<LiteNode> {
     let i = 0;
     return {
       /**
-       * @returns {IteratorResult<LiteNode>}
+       * @returns {IteratorResult<LiteNode>} The next iterator.
        */
       next(): IteratorResult<LiteNode> {
         return i === this.nodes.length

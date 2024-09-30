@@ -26,7 +26,7 @@
  *  The legacy MathJax object  (FIXME: remove this after all v2 code is gone)
  */
 
-declare let MathJax: { Callback: { After: Function } };
+declare const MathJax: { Callback: { After: Function } };
 
 /*****************************************************************/
 /**

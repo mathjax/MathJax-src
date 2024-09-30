@@ -27,7 +27,7 @@ import { CONFIG, Loader } from './loader.js';
 /*
  * The browser document (for creating scripts to load components)
  */
-declare let document: Document;
+declare const document: Document;
 
 /**
  * A map of package names to Package instances
@@ -153,8 +153,8 @@ export class Package {
   }
 
   /**
-   * @param {string} name The package configuration to be loaded  
-   * @returns {Promise} A promise for when extra files and checkReady have been fulfilled
+   * @param {string} name The package configuration to be loaded
+   * @returns {Promise<void>} A promise for when extra files and checkReady have been fulfilled
    */
   public static loadPromise(name: string): Promise<void> {
     const config = (CONFIG[name] || {}) as PackageConfig;
@@ -219,7 +219,7 @@ export class Package {
     //  Get the dependencies for this package
     //
     const dependencies = [] as string[];
-    if (CONFIG.dependencies.hasOwnProperty(name)) {
+    if (Object.hasOwn(CONFIG.dependencies, name)) {
       dependencies.push(...CONFIG.dependencies[name]);
     } else if (name !== 'core') {
       dependencies.push('core'); //  Add 'core' dependency by default
@@ -248,7 +248,7 @@ export class Package {
   /**
    * @param {Promise<string>[]} promises  The array or promises that must be resolved before
    *                                        this package can load
-   * @returns {Promise} The promise that represents when package is loaded
+   * @returns {Promise<string>} The promise indicating when this file is loaded
    */
   protected makePromise(promises: Promise<string>[]): Promise<string> {
     //

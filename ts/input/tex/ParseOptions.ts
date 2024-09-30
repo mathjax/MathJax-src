@@ -248,8 +248,10 @@ export default class ParseOptions {
    * set. Otherwise, your node list will always be empty!
    *
    * @param {string} property The property for which to retrieve the node list.
+   *
+   * @returns {MmlNode[]} The saved node list.
    */
-  public getList(property: string) {
+  public getList(property: string): MmlNode[] {
     const list = this.nodeLists[property] || [];
     const result = [];
     for (const node of list) {
@@ -282,8 +284,10 @@ export default class ParseOptions {
    * Tests if the node is in the tree spanned by the current root node.
    *
    * @param {MmlNode} node The node to test.
+   *
+   * @returns {boolean} True if the node is in the tree.
    */
-  private inTree(node: MmlNode) {
+  private inTree(node: MmlNode): boolean {
     while (node && node !== this.root) {
       node = node.parent;
     }

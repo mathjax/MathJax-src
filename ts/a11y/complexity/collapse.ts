@@ -139,9 +139,9 @@ export class Collapse {
   /**
    * The type-to-function mapping for semantic types
    *
-   * @param node The current node
-   * @param complexity The current complexity
-   * @returns The newly computed complexity
+   * @param {MmlNode} node The current node
+   * @param {number} complexity The current complexity
+   * @returns {number} The newly computed complexity
    */
   public collapse: CollapseFunctionMap = new Map([
     //
@@ -369,7 +369,7 @@ export class Collapse {
     if (this.collapse.has(type)) {
       return this.collapse.get(type).call(this, node, complexity);
     }
-    if (this.cutoff.hasOwnProperty(type)) {
+    if (Object.hasOwn(this.cutoff, type)) {
       return this.defaultCheck(node, complexity, type);
     }
     return complexity;

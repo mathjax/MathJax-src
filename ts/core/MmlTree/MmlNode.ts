@@ -171,6 +171,9 @@ export interface MmlNode extends Node<MmlNode, MmlNodeClass> {
   /**
    *  values needed for TeX spacing computations
    */
+  /**
+   * The TeX class for this node
+   */
   texClass: number;
   prevClass: number;
   prevLevel: number;
@@ -488,14 +491,14 @@ export abstract class AbstractMmlNode
   }
 
   /**
-   * The TeX class for this node
+   * @override
    */
   public get texClass(): number {
     return this.texclass;
   }
 
   /**
-   * The TeX class for this node
+   * @override
    */
   public set texClass(texClass: number) {
     this.texclass = texClass;
@@ -756,8 +759,8 @@ export abstract class AbstractMmlNode
     const defaults = this.attributes.getAllDefaults();
     for (const key of Object.keys(attributes)) {
       if (
-        defaults.hasOwnProperty(key) ||
-        AbstractMmlNode.alwaysInherit.hasOwnProperty(key)
+        Object.hasOwn(defaults, key) ||
+        Object.hasOwn(AbstractMmlNode.alwaysInherit, key)
       ) {
         const [node, value] = attributes[key];
         !AbstractMmlNode.noInherit[node]?.[this.kind]?.[key] &&
@@ -837,17 +840,20 @@ export abstract class AbstractMmlNode
       child.setInheritedAttributes(attributes, display, level, prime);
     }
   }
+
   /**
    * Used by subclasses to add their own attributes to the inherited list
    * (e.g., mstyle uses this to augment the inherited attibutes)
    *
    * @param {AttributeList} current    The current list of inherited attributes
    * @param {PropertyList} attributes  The new attributes to add into the list
+   *
+   * @returns {AttributeList} The updated attributes list.
    */
   protected addInheritedAttributes(
     current: AttributeList,
     attributes: PropertyList
-  ) {
+  ): AttributeList {
     const updated: AttributeList = { ...current };
     for (const name of Object.keys(attributes)) {
       if (
@@ -873,9 +879,7 @@ export abstract class AbstractMmlNode
     const scriptlevel = attributes.get('scriptlevel') as number;
     const defaults: AttributeList = !attributes.isSet('mathsize')
       ? {}
-      : {
-          mathsize: ['math', attributes.get('mathsize')],
-        };
+      : { mathsize: ['math', attributes.get('mathsize')] };
     const prime = (node.getProperty('texprimestyle') as boolean) || false;
     this.setInheritedAttributes(defaults, display, scriptlevel, prime);
   }
@@ -1020,8 +1024,10 @@ export abstract class AbstractMmlTokenNode extends AbstractMmlNode {
   /**
    * Get the text of the token node (skipping mglyphs, and combining
    *   multiple text nodes)
+   *
+   * @returns {string}  Return the node's text
    */
-  public getText() {
+  public getText(): string {
     let text = '';
     for (const child of this.childNodes) {
       if (child instanceof TextNode) {
@@ -1304,7 +1310,7 @@ export abstract class AbstractMmlEmptyNode
   }
 
   /**
-   * return {Attributes}  No attributes, so don't store one
+   * @returns {Attributes}  No attributes, so don't store one
    */
   public get attributes(): Attributes {
     return null;
@@ -1432,6 +1438,7 @@ export class TextNode extends AbstractMmlEmptyNode {
 
   /**
    * Just use the text
+   *
    * @override
    */
   public toString() {
@@ -1501,6 +1508,7 @@ export class XMLNode extends AbstractMmlEmptyNode {
 
   /**
    * Just indicate that this is XML data
+   *
    * @override
    */
   public toString() {

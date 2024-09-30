@@ -298,7 +298,7 @@ export class HTMLDomStrings<N, T, D> {
       const kind = this.adaptor.kind(node);
       if (kind === '#text') {
         node = this.handleText(node as T, ignore);
-      } else if (include.hasOwnProperty(kind)) {
+      } else if (Object.hasOwn(include, kind)) {
         node = this.handleTag(node as N, ignore);
       } else if (kind) {
         [node, ignore] = this.handleContainer(node as N, ignore);
@@ -312,7 +312,10 @@ export class HTMLDomStrings<N, T, D> {
     }
 
     this.pushString();
-    const result = [this.strings, this.nodes] as [string[], HTMLNodeList<N, T>[]];
+    const result = [this.strings, this.nodes] as [
+      string[],
+      HTMLNodeList<N, T>[],
+    ];
     this.init(); // free up memory
     return result;
   }

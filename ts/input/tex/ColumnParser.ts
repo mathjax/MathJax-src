@@ -142,7 +142,7 @@ export class ColumnParser {
       const c = (state.c =
         code === undefined ? '' : String.fromCodePoint(code));
       state.i += c.length;
-      if (!this.columnHandler.hasOwnProperty(c)) {
+      if (!Object.hasOwn(this.columnHandler, c)) {
         throw new TexError('BadPreamToken', 'Illegal pream-token (%1)', c);
       }
       this.columnHandler[c](state);
@@ -259,8 +259,10 @@ export class ColumnParser {
    * Get a dimension argument
    *
    * @param {ColumnState} state   The current state of the parser
+   *
+   * @returns {string} The dimension string
    */
-  public getDimen(state: ColumnState) {
+  public getDimen(state: ColumnState): string {
     const dim = this.getBraces(state) || '';
     if (!UnitUtil.matchDimen(dim)[0]) {
       throw new TexError(
@@ -276,8 +278,10 @@ export class ColumnParser {
    * Get an alignment argument
    *
    * @param {ColumnState} state   The current state of the parser
+   *
+   * @returns {string} The alignment string
    */
-  public getAlign(state: ColumnState) {
+  public getAlign(state: ColumnState): string {
     const align = this.getBraces(state);
     return lookup(
       align.toLowerCase(),
@@ -290,8 +294,10 @@ export class ColumnParser {
    * Get a braced argument
    *
    * @param {ColumnState} state   The current state of the parser
+   *
+   * @returns {string} The argument string
    */
-  public getBraces(state: ColumnState) {
+  public getBraces(state: ColumnState): string {
     while (state.template[state.i] === ' ') state.i++;
     if (state.i > state.template.length) {
       throw new TexError(
@@ -303,8 +309,8 @@ export class ColumnParser {
     if (state.template[state.i] !== '{') {
       return state.template[state.i++];
     }
-    let i = ++state.i,
-      braces = 1;
+    const i = ++state.i;
+    let braces = 1;
     while (state.i < state.template.length) {
       switch (state.template.charAt(state.i++)) {
         case '\\':

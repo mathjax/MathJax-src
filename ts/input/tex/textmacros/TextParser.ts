@@ -58,7 +58,7 @@ export class TextParser extends TexParser {
   /**
    * Short-hand for obtaining the saved TexParser
    *
-   * @returns {TexParser} The original tex parser
+   * @returns {TexParser} The saved TexParser
    */
   public get texParser(): TexParser {
     return this.configuration.packageData.get('textmacros').texParser;

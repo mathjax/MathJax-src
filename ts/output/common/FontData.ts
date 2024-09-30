@@ -348,9 +348,10 @@ export interface FontExtensionData<
 /**
  * Merge options into an object or array.
  *
- * @param obj
- * @param dst
- * @param src
+ * @param {OptionList} obj The target options list.
+ * @param {string} dst Name of the option to merge into.
+ * @param {OptionList} src The options to be merged.
+ * @returns The options for `dst`.
  */
 export function mergeOptions(obj: OptionList, dst: string, src: OptionList) {
   return src ? defaultOptions(obj, { [dst]: src })[dst] : obj[dst];
@@ -782,9 +783,8 @@ export class FontData<
    * @param {string} extension      The name of the font extension for this file
    * @param {string} file           The file being loaded
    * @param {CharMapMap} variants   The character data to be added
-   *
-   * @param delimiters
-   * @param fonts
+   * @param {DelimiterMap} delimiters The delimiter data to be added
+   * @param {string[]} fonts        The fonts to add CSS to
    * @template C  The CharOptions type
    * @template D  The DelimiterData type
    */
@@ -841,8 +841,9 @@ export class FontData<
   /**
    * @param {number[]} list   The list of numbers to adjust
    * @param {number} N        The pivot number
+   * @returns {number[]}      The list of adjusted numbers
    */
-  protected static adjustArrayIndices(list: number[], N: number) {
+  protected static adjustArrayIndices(list: number[], N: number): number[] {
     return list.map((n) => (n < 0 ? N - 1 - n : n));
   }
 
@@ -988,14 +989,14 @@ export class FontData<
   }
 
   /**
-   * Returns list of styles needed for the font
+   * @returns {StyleList} Returns list of styles needed for the font
    */
   get styles(): StyleList {
     return this._styles;
   }
 
   /**
-   * Sets styles needed for that font.
+   * @param {StyleList} style Sets styles needed for that font.
    */
   set styles(style: StyleList) {
     this._styles = style;
@@ -1056,8 +1057,8 @@ export class FontData<
    * Create the mapping from Basic Latin and Greek blocks to
    * the Math Alphanumeric block for a given variant.
    *
-   * @param chars
-   * @param name
+   * @param {CharMap<C>} chars The character mapping to fill.
+   * @param {string} name The new variant name.
    */
   protected remapSmpChars(chars: CharMap<C>, name: string) {
     const CLASS = this.CLASS;
@@ -1156,7 +1157,7 @@ export class FontData<
    */
   public defineRemap(name: string, remap: RemapMap) {
     if (remap) {
-      if (!this.remapChars.hasOwnProperty(name)) {
+      if (!Object.hasOwn(this.remapChars, name)) {
         this.remapChars[name] = {};
       }
       Object.assign(this.remapChars[name], remap);
@@ -1213,7 +1214,7 @@ export class FontData<
     const prefix = !dynamic.extension
       ? this.options.dynamicPrefix
       : this.CLASS.dynamicExtensions.get(dynamic.extension).prefix;
-    return dynamic.file.match(/^(?:[\/\[]|[a-z]+:\/\/|[a-z]:)/i)
+    return dynamic.file.match(/^(?:[/[]|[a-z]+:\/\/|[a-z]:)/i)
       ? dynamic.file
       : prefix + '/' + dynamic.file.replace(/(?<!\.js)$/, '.js');
   }

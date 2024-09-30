@@ -50,31 +50,31 @@ export class ComplexityVisitor extends MmlVisitor {
    */
   /* prettier-ignore */
   public static OPTIONS: OptionList = {
-        identifyCollapsible: true,    // mark elements that should be collapsed
-        makeCollapsible: true,        // insert maction to allow collapsing
-        Collapse: Collapse            // the Collapse class to use
-    };
+    identifyCollapsible: true,    // mark elements that should be collapsed
+    makeCollapsible: true,        // insert maction to allow collapsing
+    Collapse: Collapse            // the Collapse class to use
+  };
 
   /**
    * Values used to compute complexities
    */
   /* prettier-ignore */
   public complexity: {[name: string]: number} = {
-      text: .5,           // each character of a token element adds this to complexity
-      token: .5,          // each token element gets this additional complexity
-      child: 1,           // child nodes add this to their parent node's complexity
+    text: .5,           // each character of a token element adds this to complexity
+    token: .5,          // each token element gets this additional complexity
+    child: 1,           // child nodes add this to their parent node's complexity
 
-      script: .8,         // script elements reduce their complexity by this factor
-      sqrt: 2,            // sqrt adds this extra complexity
-      subsup: 2,          // sub-sup adds this extra complexity
-      underover: 2,       // under-over adds this extra complexity
-      fraction: 2,        // fractions add this extra complexity
-      enclose: 2,         // menclose adds this extra complexity
-      action: 2,          // maction adds this extra complexity
-      phantom: 0,         // mphantom makes complexity 0?
-      xml: 2,             // Can't really measure complexity of annotation-xml, so punt
-      glyph: 2            // Can't really measure complexity of mglyph, to punt
-    };
+    script: .8,         // script elements reduce their complexity by this factor
+    sqrt: 2,            // sqrt adds this extra complexity
+    subsup: 2,          // sub-sup adds this extra complexity
+    underover: 2,       // under-over adds this extra complexity
+    fraction: 2,        // fractions add this extra complexity
+    enclose: 2,         // menclose adds this extra complexity
+    action: 2,          // maction adds this extra complexity
+    phantom: 0,         // mphantom makes complexity 0?
+    xml: 2,             // Can't really measure complexity of annotation-xml, so punt
+    glyph: 2            // Can't really measure complexity of mglyph, to punt
+  };
 
   /**
    * The object used to handle collapsable content
@@ -392,7 +392,11 @@ export class ComplexityVisitor extends MmlVisitor {
    * @param {boolean} save       True if complexity is to be set or just reported
    * @returns {number}           The complexity of the node
    */
-  protected setComplexity(node: MmlNode, complexity: number, save: boolean): number {
+  protected setComplexity(
+    node: MmlNode,
+    complexity: number,
+    save: boolean
+  ): number {
     if (save) {
       if (this.options.identifyCollapsible) {
         complexity = this.collapse.check(node, complexity);

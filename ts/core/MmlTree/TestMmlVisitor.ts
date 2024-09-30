@@ -35,52 +35,34 @@ import { PropertyList } from '../Tree/Node.js';
 
 export class TestMmlVisitor extends SerializedMmlVisitor {
   /**
-   * The generic visiting function:
-   *   Make the string versino of the open tag with it attributes (explicit and
-   *     inherited) and properties
-   *   Increate the indentation level
-   *   Add the childnodes
-   *   Add the end tag with proper spacing (empty tags have the close tag following directly)
-   *
-   * @param {MmlNode} node  The node to visit
-   * @param {string} space    The number of spaces to use for indentation
+   * @override
    */
-  public visitDefault(node: MmlNode, space: string) {
+  public visitDefault(node: MmlNode, space: string): string {
     const kind = node.kind;
     const [nl, endspace] =
       node.isToken || node.childNodes.length === 0 ? ['', ''] : ['\n', space];
+    const attributes = this.attributeString(
+      {
+        isEmbellished: node.isEmbellished,
+        isSpacelike: node.isSpacelike,
+        texClass: node.texClass,
+      },
+      '{',
+      '}'
+    );
     let mml =
-      space +
-      '<' +
-      kind +
-      this.getAttributes(node) +
-      this.getInherited(node) +
-      this.getProperties(node) +
-      '\n' +
-      space +
-      '   ' +
-      this.attributeString(
-        {
-          isEmbellished: node.isEmbellished,
-          isSpacelike: node.isSpacelike,
-          texClass: node.texClass,
-        },
-        '{',
-        '}'
-      ) +
-      '>' +
-      nl;
+      `${space}<${kind}${this.getAttributes(node)}${this.getInherited(node)}${this.getProperties(node)}\n` +
+      `${space}   ${attributes}>${nl}`;
     space += '  ';
     for (const child of node.childNodes) {
       mml += this.visitNode(child, space) + nl;
     }
-    mml += endspace + '</' + kind + '>';
+    mml += `${endspace}</${kind}>`;
     return mml;
   }
 
   /**
-   * @param {MmlNode} node  The node whose attributes are to be produced
-   * @returns {string}  The attribute list as a string
+   * @override
    */
   protected getAttributes(node: MmlNode): string {
     return this.attributeString(node.attributes.getAllAttributes(), '', '');
@@ -115,14 +97,7 @@ export class TestMmlVisitor extends SerializedMmlVisitor {
   ): string {
     let ATTR = '';
     for (const name of Object.keys(attributes)) {
-      ATTR +=
-        ' ' +
-        open +
-        name +
-        '="' +
-        this.quoteHTML(String(attributes[name])) +
-        '"' +
-        close;
+      ATTR += ` ${open}${name}="${this.quoteHTML(String(attributes[name]))}"${close}`;
     }
     return ATTR;
   }

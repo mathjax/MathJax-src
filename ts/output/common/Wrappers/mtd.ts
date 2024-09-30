@@ -105,7 +105,8 @@ export interface CommonMtdClass<
 /**
  *  The CommonMtd wrapper mixin for the MmlMtd object
  *
- * @param Base
+ * @param {CommonWrapperConstructor} Base The constructor class
+ * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -161,35 +162,14 @@ export function CommonMtdMixin<
      * @override
      */
     public getWrapWidth(_j: number) {
-      const table = this.parent.parent as any as CommonMtable<
-        N,
-        T,
-        D,
-        JX,
-        WW,
-        WF,
-        WC,
-        CC,
-        VV,
-        DD,
-        FD,
-        FC,
-        CommonMtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
-      >;
-      const row = this.parent as any as CommonMtr<
-        N,
-        T,
-        D,
-        JX,
-        WW,
-        WF,
-        WC,
-        CC,
-        VV,
-        DD,
-        FD,
-        FC
-      >;
+      /* prettier-ignore */
+      const table = this.parent.parent as any as
+        CommonMtable<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
+          CommonMtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+         >;
+      /* prettier-ignore */
+      const row = this.parent as any as
+        CommonMtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
       const i = this.node.childPosition() - (row.labeled ? 1 : 0);
       return (
         typeof table.cWidths[i] === 'number'

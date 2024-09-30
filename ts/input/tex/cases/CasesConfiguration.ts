@@ -1,6 +1,7 @@
 import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
 import { Configuration } from '../Configuration.js';
 import { EnvironmentMap, MacroMap } from '../TokenMap.js';
+import { ParseResult } from '../Types.js';
 import { ParseUtil } from '../ParseUtil.js';
 import BaseMethods from '../base/BaseMethods.js';
 import TexParser from '../TexParser.js';
@@ -59,12 +60,15 @@ export class CasesTags extends AmsTags {
   public autoTag() {
     if (this.currentTag.tag != null) return;
     if (this.currentTag.env === 'subnumcases') {
-      if (this.subcounter === 0) this.counter++;
+      if (this.subcounter === 0) {
+        this.counter++;
+      }
       this.subcounter++;
       this.tag(this.formatNumber(this.counter, this.subcounter), false);
     } else {
-      if (this.subcounter === 0 || this.currentTag.env !== 'numcases-left')
+      if (this.subcounter === 0 || this.currentTag.env !== 'numcases-left') {
         this.counter++;
+      }
       this.tag(this.formatNumber(this.counter), false);
     }
   }
@@ -81,11 +85,11 @@ export const CasesMethods = {
   /**
    * Implements the numcases environment.
    *
-   * @param {TexParser} texparser   The active tex parser.
-   * @param parser
+   * @param {TexParser} parser      The active tex parser.
    * @param {CasesBeginItem} begin  The environment begin item.
+   * @returns {ParseResult}         The array stack item.
    */
-  NumCases(parser: TexParser, begin: CasesBeginItem) {
+  NumCases(parser: TexParser, begin: CasesBeginItem): ParseResult {
     if (parser.stack.env.closing === begin.getName()) {
       delete parser.stack.env.closing;
       parser.Push(
@@ -128,12 +132,12 @@ export const CasesMethods = {
   /**
    * Replacement for & in cases environment.
    *
-   * @param parser
-   * @param name
+   * @param {TexParser} parser      The active tex parser.
+   * @param {string} name           The environment name.
    */
-  Entry(parser: TexParser, name: string) {
+  Entry(parser: TexParser, name: string): ParseResult {
     if (!parser.stack.Top().getProperty('numCases')) {
-      return BaseMethods.Entry(parser, name);
+      BaseMethods.Entry(parser, name);
     }
     parser.Push(
       parser.itemFactory
@@ -144,9 +148,9 @@ export const CasesMethods = {
     //  Make second column be in \text{...}
     //
     const tex = parser.string;
-    let braces = 0,
-      i = parser.i,
-      m = tex.length;
+    let braces = 0;
+    let i = parser.i;
+    const m = tex.length;
     //
     //  Look through the string character by character...
     //

@@ -448,10 +448,10 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
       [t2, t2, t2, -t2],
     ][i];
     const [A, B] = path;
-    const x1 = A[0] + tx1 - dx,
-      y1 = A[1] + ty1;
-    const x2 = B[0] + tx2 - dx,
-      y2 = B[1] + ty2;
+    const x1 = A[0] + tx1 - dx;
+    const y1 = A[1] + ty1;
+    const x2 = B[0] + tx2 - dx;
+    const y2 = B[1] + ty2;
     const W = Math.abs(i % 2 ? y2 - y1 : x2 - x1);
     const n = dot ? Math.ceil(W / (2 * t)) : Math.ceil((W - t) / (4 * t));
     const m = W / (4 * n + 1);
@@ -576,7 +576,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   /**
    * Return the first child element, skipping id align boxes and href hit boxes
    *
-   * @param dom
+   * @param {N} dom The dom element
    * @returns {N}   The first "real" child element
    */
   public firstChild(dom: N = this.dom[0]): N {
@@ -656,6 +656,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {number} y         The y-position of the text
    * @param {N} parent         The container for the text
    * @param {string} variant   The variant to use for the string
+   * @returns {number}         The computed width of the text
    */
   protected addUtext(x: number, y: number, parent: N, variant: string): number {
     const c = this.utext;

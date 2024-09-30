@@ -143,7 +143,8 @@ export interface CommonMtrClass<
 /**
  * The CommonMtr wrapper for the MmlMtr object
  *
- * @param Base
+ * @param {CommonWrapperConstructor} Base The constructor class
+ * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -220,7 +221,9 @@ export function CommonMtrMixin<
      */
     public stretchChildren(HD: number[] = null) {
       const stretchy: WW[] = [];
-      const children = this.labeled ? this.childNodes.slice(1) : this.childNodes;
+      const children = this.labeled
+        ? this.childNodes.slice(1)
+        : this.childNodes;
       //
       //  Locate and count the stretchy children
       //
@@ -233,8 +236,8 @@ export function CommonMtrMixin<
       const count = stretchy.length;
       const nodeCount = this.childNodes.length;
       if (count && nodeCount > 1 && !HD) {
-        let H = 0,
-          D = 0;
+        let H = 0;
+        let D = 0;
         //
         //  If all the children are stretchy, find the largest one,
         //  otherwise, find the height and depth of the non-stretchy
@@ -345,7 +348,8 @@ export interface CommonMlabeledtrClass<
 /**
  * The CommonMlabeledtr wrapper mixin for the MmlMlabeledtr object
  *
- * @param Base
+ * @param {Constructor} Base The constructor class
+ * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type

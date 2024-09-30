@@ -100,20 +100,11 @@ export class Expandable {}
  * Produces an instance of Expandable with the given values (to be used in defining options
  * that can use keys that don't have default values).  E.g., default options of the form:
  *
- * OPTIONS = {
- * types: expandable({
- * a: 1,
- * b: 2
- * })
- * }
+ * `OPTIONS = { types: expandable({ a: 1, b: 2 }) }`
  *
  * would allow user options of
  *
- * {
- * types: {
- * c: 3
- * }
- * }
+ * `{ types: { c: 3 } }`
  *
  * without reporting an error.
  *
@@ -207,8 +198,8 @@ export function insert(
     //
     // Shorthands for the source and destination values
     //
-    let sval = src[key],
-      dval = dst[key];
+    const sval = src[key];
+    let dval = dst[key];
     //
     // If the source is an object literal and the destination exists and is either an
     //   object or a function (so can have properties added to it)...
@@ -330,7 +321,7 @@ export function selectOptions(
 ): OptionList {
   const subset: OptionList = {};
   for (const key of keys) {
-    if (options.hasOwnProperty(key)) {
+    if (Object.hasOwn(options, key)) {
       subset[key] = options[key];
     }
   }
@@ -394,7 +385,8 @@ export function separateOptions(
  * @param {string} name         The name of the key to look up.
  * @param {OptionList} lookup   The list of options to check.
  * @param {any} def             The default value if the key isn't found.
+ * @returns {any}               The value for the key.
  */
-export function lookup(name: string, lookup: OptionList, def: any = null) {
-  return lookup.hasOwnProperty(name) ? lookup[name] : def;
+export function lookup(name: string, lookup: OptionList, def: any = null): any {
+  return Object.hasOwn(lookup, name) ? lookup[name] : def;
 }

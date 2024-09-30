@@ -199,7 +199,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
 
     /**
      * Get the variant array for the assembly pieces
-     * 
+     *
      * @returns {string[]} The variants array
      */
     protected getStretchVariants() {
@@ -431,7 +431,7 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
       adaptor.setAttribute(
         glyph as N,
         'transform',
-        'scale(' + this.jax.fixed(s) + ',1)'
+        `scale(${this.jax.fixed(s)},1)`
       );
       if (this.dom[0]) {
         adaptor.append(this.dom[0], svg);

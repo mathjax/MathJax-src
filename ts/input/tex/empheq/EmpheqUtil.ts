@@ -51,7 +51,7 @@ export const EmpheqUtil = {
    * Parse an options string.
    *
    * @param {string} text                   The string to parse.
-   * @param {{[key:string]:number} allowed  Object containing options to allow
+   * @param {{[key:string]:number}} allowed  Object containing options to allow
    * @returns {EnvList}                      The parsed keys
    */
   splitOptions(
@@ -243,8 +243,8 @@ export const EmpheqUtil = {
   /**
    * Add the left- and right-hand material to the table.
    *
-   * @param empheq
-   * @param parser
+   * @param {EmpheqBeginItem} empheq The Empheq begin item.
+   * @param {TexParser} parser The calling parser.
    */
   adjustTable(empheq: EmpheqBeginItem, parser: TexParser) {
     const left = empheq.getProperty('left');
@@ -276,6 +276,6 @@ export const EmpheqUtil = {
    * @returns {boolean}     True if the environment is allowed.
    */
   checkEnv(env: string): boolean {
-    return this.allowEnv.hasOwnProperty(env.replace(/\*$/, '')) || false;
+    return Object.hasOwn(this.allowEnv, env.replace(/\*$/, '')) || false;
   },
 };

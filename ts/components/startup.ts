@@ -75,19 +75,9 @@ export type HANDLER = Handler<any, any, any>;
 export type DOMADAPTOR = DOMAdaptor<any, any, any>;
 export type INPUTJAX = InputJax<any, any, any>;
 export type OUTPUTJAX = OutputJax<any, any, any>;
-export type COMMONJAX = CommonOutputJax<
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any
->;
+/* prettier-ignore */
+export type COMMONJAX =
+  CommonOutputJax<any, any, any, any, any, any, any, any, any, any, any>;
 export type TEX = TeX<any, any, any>;
 
 /**
@@ -329,7 +319,7 @@ export namespace Startup {
    *
    * Setting Mathjax.startup.pageReady in the configuration will override this.
    *
-   * @returns {Promise} Promise resolving when page is ready to process.
+   * @returns {Promise<void>} Promise resolving when page is ready to process.
    */
   export function defaultPageReady(): Promise<void> {
     return (
@@ -348,10 +338,10 @@ export namespace Startup {
   /**
    * Perform the typesetting with handling of retries
    *
-   * @param elements The list of elements to typeset
-   * @returns The promise that resolves when elements are typeset
+   * @param {any[]} elements The list of elements to typeset
+   * @returns {Promise<void>} The promise that resolves when elements are typeset
    */
-  export function typesetPromise(elements: any[]) {
+  export function typesetPromise(elements: any[]): Promise<void> {
     document.options.elements = elements;
     document.reset();
     return mathjax.handleRetriesFor(() => {

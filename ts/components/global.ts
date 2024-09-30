@@ -130,6 +130,7 @@ export function combineDefaults(dst: any, name: string, src: any): any {
  * Combine configuration or data with the existing MathJax object
  *
  * @param {any} config   The data to be merged into the MathJax object
+ * @returns {MathJaxObject} The combined configuration object
  */
 export function combineWithMathJax(config: any): MathJaxObject {
   return combineConfig(MathJax, config);

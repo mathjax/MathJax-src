@@ -58,6 +58,7 @@ function paddedContent(parser: TexParser, content: string): MmlNode {
  * @param {MmlNode|null} right The right label if it exists.
  * @param {string} style Style of inference rule line.
  * @param {boolean} rootAtTop Direction of inference rule: true for root at top.
+ * @returns {MmlNode} The create rule node.
  */
 function createRule(
   parser: TexParser,
@@ -67,7 +68,7 @@ function createRule(
   right: MmlNode | null,
   style: string,
   rootAtTop: boolean
-) {
+): MmlNode {
   const upper = parser.create(
     'node',
     'mtr',
@@ -258,7 +259,9 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
       n--;
     } while (n > 0);
     const row = parser.create('node', 'mtr', children, {});
-    const table = parser.create('node', 'mtable', [row], { framespacing: '0 0' });
+    const table = parser.create('node', 'mtable', [row], {
+      framespacing: '0 0',
+    });
     const conclusion = paddedContent(parser, parser.GetArgument(name));
     const style = top.getProperty('currentLine') as string;
     if (style !== top.getProperty('line')) {
@@ -405,7 +408,9 @@ const BussproofsMethods: { [key: string]: ParseMethod } = {
       n--;
     } while (n > 0);
     const row = parser.create('node', 'mtr', children, {});
-    const table = parser.create('node', 'mtable', [row], { framespacing: '0 0' });
+    const table = parser.create('node', 'mtable', [row], {
+      framespacing: '0 0',
+    });
 
     const conclusion = parseFCenterLine(parser, name); // TODO: Padding
     const style = top.getProperty('currentLine') as string;

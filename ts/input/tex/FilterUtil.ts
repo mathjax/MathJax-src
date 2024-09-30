@@ -33,11 +33,14 @@ namespace FilterUtil {
    * not used as delimiters. Also wraps non-stretchy infix delimiters into a
    * TeXAtom.
    *
-   * @param arg The argument object.
+   * @param {object} arg The argument object.
    * @param {MmlNode} arg.math The node to rewrite.
    * @param {ParseOptions} arg.data The parse options.
    */
-  export const cleanStretchy = function (arg: { math: any; data: ParseOptions }) {
+  export const cleanStretchy = function (arg: {
+    math: any;
+    data: ParseOptions;
+  }) {
     const options = arg.data;
     for (const mo of options.getList('fixStretchy')) {
       if (NodeUtil.getProperty(mo, 'fixStretchy')) {
@@ -61,7 +64,7 @@ namespace FilterUtil {
    * an attribute, which is also an inherited attribute it will be removed. This
    * is necessary as attributes are set bottom up in the parser.
    *
-   * @param arg The argument object.
+   * @param {object} arg The argument object.
    * @param {ParseOptions} arg.data   The parse options.
    */
   export const cleanAttributes = function (arg: { data: ParseOptions }) {
@@ -90,7 +93,7 @@ namespace FilterUtil {
    * Combine adjacent <mo> elements that are relations (since MathML treats the
    * spacing very differently)
    *
-   * @param arg The argument object.
+   * @param {object} arg The argument object.
    * @param {ParseOptions} arg.data The parse options.
    */
   export const combineRelations = function (arg: { data: ParseOptions }) {
@@ -216,7 +219,11 @@ namespace FilterUtil {
    * @param {string} low String representing the lower part of the expression.
    * @param {string} up String representing the upper part.
    */
-  const _cleanSubSup = function (options: ParseOptions, low: string, up: string) {
+  const _cleanSubSup = function (
+    options: ParseOptions,
+    low: string,
+    up: string
+  ) {
     const remove: MmlNode[] = [];
     for (const mml of options.getList('m' + low + up) as any[]) {
       const children = mml.childNodes;
@@ -248,7 +255,7 @@ namespace FilterUtil {
    * Visitor that rewrites incomplete msubsup/munderover elements in the given
    * node into corresponding msub/sup/under/over nodes.
    *
-   * @param arg The argument object.
+   * @param {object} arg The argument object.
    * @param {MmlNode} arg.math The node to rewrite.
    * @param {ParseOptions} arg.data The parse options.
    */
@@ -303,7 +310,7 @@ namespace FilterUtil {
    * Visitor that rewrites in-line munderover elements with movablelimits but bases
    * that are not mo's into explicit msubsup elements.
    *
-   * @param arg The argument object.
+   * @param {object} arg The argument object.
    * @param {ParseOptions} arg.data  The parse options to use
    */
   export const moveLimits = function (arg: { data: ParseOptions }) {
@@ -316,11 +323,14 @@ namespace FilterUtil {
   /**
    * Recursively sets the inherited attributes on the math tree.
    *
-   * @param arg The argument object.
+   * @param {object} arg The argument object.
    * @param {MmlNode} arg.math The node to rewrite.
    * @param {ParseOptions} arg.data The parse options.
    */
-  export const setInherited = function (arg: { math: any; data: ParseOptions }) {
+  export const setInherited = function (arg: {
+    math: any;
+    data: ParseOptions;
+  }) {
     arg.data.root.setInheritedAttributes({}, arg.math['display'], 0, false);
   };
 }

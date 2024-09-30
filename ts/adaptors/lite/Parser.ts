@@ -39,28 +39,11 @@ export namespace PATTERNS {
   export const VALUESPLIT = `(?:'([^']*)'|"([^"]*)"|([^\\s\\n]+))`;
   export const SPACE = '(?:\\s|\\n)+';
   export const OPTIONALSPACE = '(?:\\s|\\n)*';
-  export const ATTRIBUTE =
-    ATTNAME + '(?:' + OPTIONALSPACE + '=' + OPTIONALSPACE + VALUE + ')?';
-  export const ATTRIBUTESPLIT =
-    '(' +
-    ATTNAME +
-    ')(?:' +
-    OPTIONALSPACE +
-    '=' +
-    OPTIONALSPACE +
-    VALUESPLIT +
-    ')?';
+  export const ATTRIBUTE = `${ATTNAME}(?:${OPTIONALSPACE}=${OPTIONALSPACE}${VALUE})?`;
+  export const ATTRIBUTESPLIT = `(${ATTNAME})(?:${OPTIONALSPACE}=${OPTIONALSPACE}${VALUESPLIT})?`;
   export const TAG =
-    '(<(?:' +
-    TAGNAME +
-    '(?:' +
-    SPACE +
-    ATTRIBUTE +
-    ')*' +
-    OPTIONALSPACE +
-    '/?|/' +
-    TAGNAME +
-    '|!--[^]*?--|![^]*?)(?:>|$))';
+    `(<(?:${TAGNAME}(?:${SPACE}${ATTRIBUTE})*` +
+    `${OPTIONALSPACE}/?|/${TAGNAME}|!--[^]*?--|![^]*?)(?:>|$))`;
   export const tag = new RegExp(TAG, 'i');
   export const attr = new RegExp(ATTRIBUTE, 'i');
   export const attrsplit = new RegExp(ATTRIBUTESPLIT, 'i');
@@ -213,7 +196,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     //
     // Get the child to be added to the node
     //
-    const kind = tag.match(/<(.*?)[\s\n>\/]/)[1].toLowerCase();
+    const kind = tag.match(/<(.*?)[\s\n>/]/)[1].toLowerCase();
     const child = adaptor.node(kind) as LiteElement;
     //
     // Split out the tag attributes as an array of space, name, value1, value3, value3,
@@ -391,8 +374,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
       .join(' ');
     const content = this.serializeInner(adaptor, node, xml);
     const html =
-      '<' +
-      tag +
+      `<${tag}` +
       (attributes ? ' ' + attributes : '') +
       ((!xml || content) && !SELF_CLOSING[tag]
         ? `>${content}</${tag}>`
@@ -414,7 +396,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     xml: boolean = false
   ): string {
     const PCDATA = (this.constructor as typeof LiteParser).PCDATA;
-    if (PCDATA.hasOwnProperty(node.kind)) {
+    if (Object.hasOwn(PCDATA, node.kind)) {
       return adaptor
         .childNodes(node)
         .map((x) => adaptor.value(x))
@@ -456,7 +438,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     //
     const kind = adaptor.kind(node);
     const xmlns = (this.constructor as typeof LiteParser).XMLNS;
-    if (!xmlns.hasOwnProperty(kind)) {
+    if (!Object.hasOwn(xmlns, kind)) {
       return attributes;
     }
     //

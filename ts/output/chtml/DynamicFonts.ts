@@ -28,11 +28,12 @@ import { ChtmlCharMap, ChtmlCharData } from './FontData.js';
  *
  * @param {{[variant: string]: {[id: string]: ChtmlCharMap}}} ranges  The variant data to be added
  * @param {string?} prefix  The prefix for when this is used from a font extension
+ * @returns {{ [variant: string]: ChtmlCharMap }} The variant map with integrated ranges
  */
 export function AddFontIds(
   ranges: { [variant: string]: { [id: string]: ChtmlCharMap } },
   prefix?: string
-) {
+): { [variant: string]: ChtmlCharMap } {
   const variants: { [variant: string]: ChtmlCharMap } = {};
   for (const id of Object.keys(ranges)) {
     const map = ranges[id];

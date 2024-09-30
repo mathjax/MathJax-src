@@ -22,7 +22,7 @@
  */
 
 import { StackItem } from '../StackItem.js';
-import { ParseMethod } from '../Types.js';
+import { ParseResult, ParseMethod } from '../Types.js';
 import { ParseUtil } from '../ParseUtil.js';
 import { UnitUtil } from '../UnitUtil.js';
 import ParseMethods from '../ParseMethods.js';
@@ -52,11 +52,16 @@ export const NEW_OPS = 'ams-declare-ops';
  * @returns {[MmlNode, MmlNode]} The msubsup with the scripts together with any extra nodes.
  */
 function splitSideSet(mml: MmlNode): [MmlNode, MmlNode] {
-  if (!mml || (mml.isInferred && mml.childNodes.length === 0))
+  if (!mml || (mml.isInferred && mml.childNodes.length === 0)) {
     return [null, null];
-  if (mml.isKind('msubsup') && checkSideSetBase(mml)) return [mml, null];
+  }
+  if (mml.isKind('msubsup') && checkSideSetBase(mml)) {
+    return [mml, null];
+  }
   const child = NodeUtil.getChildAt(mml, 0);
-  if (!(mml.isInferred && child && checkSideSetBase(child))) return [null, mml];
+  if (!(mml.isInferred && child && checkSideSetBase(child))) {
+    return [null, mml];
+  }
   mml.childNodes.splice(0, 1); // remove first child
   return [child, mml];
 }
@@ -88,6 +93,8 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
    * @param {string} balign Column break alignment.
    * @param {string} spacing Column spacing.
    * @param {string} style Display style indicator.
+   *
+   * @returns {ParseResult} The constructed array stackitem.
    */
   AmsEqnArray(
     parser: TexParser,
@@ -98,7 +105,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     balign: string,
     spacing: string,
     style: string
-  ) {
+  ): ParseResult {
     // @test Aligned, Gathered
     const args = parser.GetBrackets('\\begin{' + begin.getName() + '}');
     const array = BaseMethods.EqnArray(
@@ -122,24 +129,25 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
    * @param {boolean} numbered Environment numbered.
    * @param {boolean} taggable Environment taggable (e.g., align* is taggable,
    *     split is not).
+   *
+   * @returns {ParseResult} The constructed array stackitem.
    */
   AlignAt(
     parser: TexParser,
     begin: StackItem,
     numbered: boolean,
     taggable: boolean
-  ) {
+  ): ParseResult {
     const name = begin.getName();
-    let n,
-      valign,
-      align = '',
-      balign = '',
-      spacing = [];
+    let valign;
+    let align = '';
+    let balign = '';
+    const spacing = [];
     if (!taggable) {
       // @test Alignedat
       valign = parser.GetBrackets('\\begin{' + name + '}');
     }
-    n = parser.GetArgument('\\begin{' + name + '}');
+    const n = parser.GetArgument('\\begin{' + name + '}');
     if (n.match(/[^0-9]/)) {
       // @test PositiveIntegerArg
       throw new TexError(
@@ -191,8 +199,14 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
    * @param {TexParser} parser The calling parser.
    * @param {StackItem} begin The opening stackitem.
    * @param {boolean} numbered Environment numbered.
+   *
+   * @returns {ParseResult} The constructed multiline stackitem.
    */
-  Multline(parser: TexParser, begin: StackItem, numbered: boolean) {
+  Multline(
+    parser: TexParser,
+    begin: StackItem,
+    numbered: boolean
+  ): ParseResult {
     // @test Shove*, Multline
     ParseUtil.checkEqnEnv(parser);
     parser.Push(begin);
@@ -222,13 +236,15 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
    * @param {StackItem} begin The begin stackitem.
    * @param {boolean} numbered Is this a numbered array.
    * @param {boolean} padded Is it padded.
+   *
+   * @returns {ParseResult} The constructed flalign stackitem.
    */
   XalignAt(
     parser: TexParser,
     begin: StackItem,
     numbered: boolean,
     padded: boolean
-  ) {
+  ): ParseResult {
     const n = parser.GetArgument('\\begin{' + begin.getName() + '}');
     if (n.match(/[^0-9]/)) {
       throw new TexError(
@@ -267,6 +283,8 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
    * @param {string} balign The vertical break alignment for columns
    * @param {string} width The column widths of the table
    * @param {boolean} zeroWidthLabel True if the label should be in llap/rlap
+   *
+   * @returns {ParseResult} The constructed flalign stackitem.
    */
   FlalignArray(
     parser: TexParser,
@@ -278,7 +296,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     balign: string,
     width: string,
     zeroWidthLabel: boolean = false
-  ) {
+  ): ParseResult {
     ParseUtil.checkEqnEnv(parser);
     parser.Push(begin);
     align = align
@@ -483,8 +501,10 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
    *
    * @param {TexParser} parser The calling parser.
    * @param {string} c The letter being checked
+   *
+   * @returns {false|void} Nothing.
    */
-  operatorLetter(parser: TexParser, c: string) {
+  operatorLetter(parser: TexParser, c: string): false | void {
     return parser.stack.env.operatorLetters
       ? ParseMethods.variable(parser, c)
       : false;

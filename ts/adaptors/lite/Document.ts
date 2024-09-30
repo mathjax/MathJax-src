@@ -48,8 +48,10 @@ export class LiteDocument {
 
   /**
    * The kind is always #document
+   *
+   * @returns {string} The document string.
    */
-  public get kind() {
+  public get kind(): string {
     return '#document';
   }
 

@@ -64,7 +64,7 @@ export const TextMacrosMethods = {
           const cs = parser.GetCS();
           if (cs === ')') c = '\\('; // \( is the opening delimiter for \)
         }
-          // falls through
+        // falls through
         case '$':
           //
           //  If there are no unbalanced braces and we have found the close delimiter,
@@ -247,7 +247,7 @@ export const TextMacrosMethods = {
   /**
    * @param {TextParser} parser   The text-mode parser
    * @param {string} name         The control sequence that called this function
-   * @param variant               The font variant
+   * @param {string} variant      The font variant
    */
   TextFont(parser: TextParser, name: string, variant: string) {
     parser.saveText();

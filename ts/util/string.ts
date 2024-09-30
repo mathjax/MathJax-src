@@ -45,7 +45,7 @@ export function sortLength(a: string, b: string): number {
  * @returns {string}  The quoted string
  */
 export function quotePattern(text: string): string {
-  return text.replace(/([\^$(){}.+*?\-|\[\]\:\\])/g, '\\$1');
+  return text.replace(/([\^$(){}.+*?\-|[\]:\\])/g, '\\$1');
 }
 
 /**

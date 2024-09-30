@@ -112,7 +112,8 @@ export interface CommonMsClass<
 /**
  * The CommonMs wrapper mixin for the MmlMs object
  *
- * @param Base
+ * @param {CommonWrapperConstructor} Base The constructor class
+ * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -173,10 +174,12 @@ export function CommonMsMixin<
       const attributes = this.node.attributes;
       const quotes = attributes.getList('lquote', 'rquote');
       if (this.variant !== 'monospace') {
-        if (!attributes.isSet('lquote') && quotes.lquote === '"')
+        if (!attributes.isSet('lquote') && quotes.lquote === '"') {
           quotes.lquote = '\u201C';
-        if (!attributes.isSet('rquote') && quotes.rquote === '"')
+        }
+        if (!attributes.isSet('rquote') && quotes.rquote === '"') {
           quotes.rquote = '\u201D';
+        }
       }
       this.childNodes.unshift(this.createText(quotes.lquote as string));
       this.childNodes.push(this.createText(quotes.rquote as string));

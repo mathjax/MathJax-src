@@ -345,6 +345,8 @@ export abstract class AbstractNode<
 
   /**
    * Simple string version for debugging, just to get the structure.
+   *
+   * @override
    */
   public toString() {
     return this.kind + '(' + this.childNodes.join(',') + ')';
@@ -404,6 +406,8 @@ export abstract class AbstractEmptyNode<
 
   /**
    * Simple string version for debugging, just to get the structure.
+   *
+   * @override
    */
   public toString() {
     return this.kind;

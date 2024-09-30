@@ -26,9 +26,9 @@ import { CommonMenclose } from './Wrappers/menclose.js';
 
 /*****************************************************************/
 
-export const ARROWX = 4,
-  ARROWDX = 1,
-  ARROWY = 2; // default relative arrowhead values
+export const ARROWX = 4;
+export const ARROWDX = 1;
+export const ARROWY = 2; // default relative arrowhead values
 
 export const THICKNESS = 0.067; // default rule thickness
 export const PADDING = 0.2; // default padding
@@ -40,39 +40,16 @@ export const SOLID = THICKNESS + 'em solid'; // a solid border
 /**
  * Shorthand for CommonMenclose
  */
-export type Menclose = CommonMenclose<
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any
->;
+/* prettier-ignore */
+export type Menclose =
+  CommonMenclose<any, any, any, any, any, any, any, any, any, any, any, any, any>;
 
 /**
  * Shorthand for CommonWrapper
  */
-export type AnyWrapper = CommonWrapper<
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any
->;
+/* prettier-ignore */
+export type AnyWrapper =
+  CommonWrapper<any, any, any, any, any, any, any, any, any, any, any, any>;
 
 /**
  * Top, right, bottom, left padding data
@@ -138,13 +115,14 @@ export const sideNames = Object.keys(sideIndex) as Side[];
 /**
  * Common BBox and Border functions
  *
- * @param node
+ * @param {Menclose} node The enclose node
+ * @returns {BBoxExtender<Menclose>} The bbox extender
  */
-export const fullBBox = ((node) =>
+export const fullBBox = ((node: Menclose) =>
   new Array(4).fill(node.thickness + node.padding)) as BBoxExtender<Menclose>;
-export const fullPadding = ((node) =>
+export const fullPadding = ((node: Menclose) =>
   new Array(4).fill(node.padding)) as BBoxExtender<Menclose>;
-export const fullBorder = ((node) =>
+export const fullBorder = ((node: Menclose) =>
   new Array(4).fill(node.thickness)) as BBoxBorder<Menclose>;
 
 /*****************************************************************/
@@ -152,9 +130,10 @@ export const fullBorder = ((node) =>
 /**
  * The length of an arrowhead
  *
- * @param node
+ * @param {Menclose} node The enclose node
+ * @returns {number} The arrowhead length
  */
-export const arrowHead = (node: Menclose) => {
+export const arrowHead = (node: Menclose): number => {
   return Math.max(
     node.padding,
     node.thickness * (node.arrowhead.x + node.arrowhead.dx + 1)
@@ -164,8 +143,9 @@ export const arrowHead = (node: Menclose) => {
 /**
  * Adjust short bbox for tall arrow heads
  *
- * @param node
- * @param TRBL
+ * @param {Menclose} node The enclose node
+ * @param {PaddingData} TRBL The arrow head data
+ * @returns {PaddingData} The adjusted arrow head
  */
 export const arrowBBoxHD = (node: Menclose, TRBL: PaddingData) => {
   if (node.childNodes[0]) {
@@ -181,8 +161,9 @@ export const arrowBBoxHD = (node: Menclose, TRBL: PaddingData) => {
 /**
  * Adjust thin bbox for wide arrow heads
  *
- * @param node
- * @param TRBL
+ * @param {Menclose} node The enclose node
+ * @param {PaddingData} TRBL The arrow head data
+ * @returns {PaddingData} The adjusted arrow head
  */
 export const arrowBBoxW = (node: Menclose, TRBL: PaddingData) => {
   if (node.childNodes[0]) {

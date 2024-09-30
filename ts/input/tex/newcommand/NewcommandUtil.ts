@@ -177,8 +177,13 @@ namespace NewcommandUtil {
    * @param {TexParser} parser The calling parser.
    * @param {string} name The name of the calling command.
    * @param {string} param The parameter for the macro.
+   * @returns {string} The parameter.
    */
-  export function GetParameter(parser: TexParser, name: string, param: string) {
+  export function GetParameter(
+    parser: TexParser,
+    name: string,
+    param: string
+  ): string {
     if (param == null) {
       // @test Def Let, Def Optional Brace, Def Options CS
       return parser.GetArgument(name);

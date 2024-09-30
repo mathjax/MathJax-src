@@ -25,7 +25,7 @@ import { HandlerType } from '../HandlerTypes.js';
 import * as sitem from './BaseItems.js';
 import { StackItem, EnvList } from '../StackItem.js';
 import { Macro } from '../Token.js';
-import { ParseMethod } from '../Types.js';
+import { ParseResult, ParseMethod } from '../Types.js';
 import NodeUtil from '../NodeUtil.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
@@ -61,8 +61,9 @@ const MmlTokenAllow: { [key: string]: number } = {
 /**
  * @param {string} align   The vertical aligment to use (t, b, m or c)
  * @param {number} n       The number of expected alignment characters
+ * @returns {string} String with space separated alignment characters
  */
-export function splitAlignArray(align: string, n: number = Infinity) {
+export function splitAlignArray(align: string, n: number = Infinity): string {
   const list = align
     .replace(/\s+/g, '')
     .split('')
@@ -92,8 +93,9 @@ export function splitAlignArray(align: string, n: number = Infinity) {
  *
  * @param {TexParser} parser The calling parser.
  * @param {string} n The index of the root.
+ * @returns {MmlNode} The node with the parsed root.
  */
-function parseRoot(parser: TexParser, n: string) {
+function parseRoot(parser: TexParser, n: string): MmlNode {
   // @test General Root, Explicit Root
   const env = parser.stack.env;
   const inRoot = env['inRoot'];
@@ -1336,7 +1338,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     });
     if (v) {
       mml = parser.create('node', 'mpadded', [mml], { voffset: v });
-      if (v.match(/^\-/)) {
+      if (v.match(/^-/)) {
         NodeUtil.setAttribute(mml, 'height', v);
         NodeUtil.setAttribute(mml, 'depth', '+' + v.substring(1));
       } else {
@@ -1622,10 +1624,10 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     //  in a \text{...}, for backward compatibility).
     //
     const str = parser.string;
-    let braces = 0,
-      close = -1,
-      i = parser.i,
-      m = str.length;
+    let braces = 0;
+    let close = -1;
+    let i = parser.i;
+    let m = str.length;
     const end = env
       ? new RegExp(`^\\\\end\\s*\\{${env.replace(/\*/, '\\*')}\\}`)
       : null;
@@ -1911,6 +1913,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * @param {string} vspacing Row spacing.
    * @param {string} style Display or text style.
    * @param {boolean} raggedHeight Does the height need to be adjusted?
+   * @returns {ParseResult} The array stack item.
    */
   Array(
     parser: TexParser,
@@ -1922,7 +1925,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     vspacing: string,
     style: string,
     raggedHeight: boolean
-  ) {
+  ): ParseResult {
     if (!align) {
       // @test Array Single
       align = parser.GetArgument('\\begin{' + begin.getName() + '}');
@@ -1974,8 +1977,13 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * @param {TexParser} parser The calling parser.
    * @param {StackItem} begin The opening stackitem.
    * @param {string=} style The display style to use
+   * @returns {ParseResult} The array stack item.
    */
-  AlignedArray(parser: TexParser, begin: StackItem, style: string = '') {
+  AlignedArray(
+    parser: TexParser,
+    begin: StackItem,
+    style: string = ''
+  ): ParseResult {
     // @test Array1, Array2, Array Test
     const align = parser.GetBrackets('\\begin{' + begin.getName() + '}');
     const item = BaseMethods.Array(
@@ -2059,13 +2067,15 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * @param {StackItem} begin The opening stackitem.
    * @param {boolean} numbered True if environment is numbered.
    * @param {boolean} display True if equation is in display mode
+   *
+   * @returns {ParseResult} The constructed equation stackitem.
    */
   Equation(
     parser: TexParser,
     begin: StackItem,
     numbered: boolean,
     display: boolean = true
-  ) {
+  ): ParseResult {
     parser.configuration.mathItem.display = display;
     parser.stack.env.display = display;
     ParseUtil.checkEqnEnv(parser);
@@ -2085,6 +2095,8 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * @param {string} align Alignment string.
    * @param {string} balign Vertical alignment string.
    * @param {string} spacing Spacing between columns.
+   *
+   * @returns {ParseResult} The constructed array stackitem.
    */
   EqnArray(
     parser: TexParser,
@@ -2094,7 +2106,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     align: string,
     balign: string,
     spacing: string
-  ) {
+  ): ParseResult {
     // @test The Lorenz Equations, Maxwell's Equations, Cubic Binomial
     const name = begin.getName();
     const isGather = name === 'gather' || name === 'gather*';
@@ -2215,13 +2227,13 @@ const BaseMethods: { [key: string]: ParseMethod } = {
   },
 
   /**
-   * Macros
+   * Basic macro replacement.
    *
-   * @param parser
-   * @param name
-   * @param macro
-   * @param argcount
-   * @param def
+   * @param {TexParser} parser The calling parser.
+   * @param {string} name The macro name.
+   * @param {string} macro The macro string.
+   * @param {number} argcount The number of arguments of the macro.
+   * @param {string} def Additional definitions.
    */
   Macro(
     parser: TexParser,

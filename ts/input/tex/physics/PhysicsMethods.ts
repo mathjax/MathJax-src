@@ -63,8 +63,9 @@ const digits: [number, number] = [0x30, 0x39];
  *
  * @param {number} value The value.
  * @param {[number, number]} range The closed interval.
+ * @returns {boolean} True if in given range.
  */
-function inRange(value: number, range: [number, number]) {
+function inRange(value: number, range: [number, number]): boolean {
   return value >= range[0] && value <= range[1];
 }
 
@@ -112,9 +113,8 @@ function createVectorToken(
  * @param {string} kind The type of stack item to parse the operator into.
  * @param {string} name The macro name.
  * @param {string} operator The operator expression.
- * @param {string[]} ...fences List of opening fences that should be
+ * @param {string[]} fences List of opening fences that should be
  *     automatically sized and paired to its corresponding closing fence.
- * @param fences
  */
 function vectorApplication(
   parser: TexParser,
@@ -142,7 +142,7 @@ function vectorApplication(
     arg = parser.GetArgument(name);
     lfence = enlarge ? '\\left\\{' : '';
     rfence = enlarge ? '\\right\\}' : '';
-    const macro = lfence + ' ' + arg + ' ' + rfence;
+    const macro = `${lfence} ${arg} ${rfence}`;
     parser.string = macro + parser.string.slice(parser.i);
     parser.i = 0;
     return;
@@ -161,16 +161,19 @@ function vectorApplication(
 /**
  * Generates the expanded braket LaTeX code for matrix operations.
  *
- * @param {[string, string, string]} [arg1, arg2, arg3] The three arguments
- *     <arg1|arg2|arg3>.
+ * @param {string[]} args The three braket arguments.
+ * @param {string} args.arg1 The left braket argument.
+ * @param {string} args.arg2 The middle braket argument.
+ * @param {string} args.arg3 The right braket argument.
  * @param {boolean} star1 No automatic sizing of fences.
  * @param {boolean} star2 Automatic sizing of fences wrt. to arg1 & arg3 only.
+ * @returns {string} The expanded macro.
  */
 function outputBraket(
   [arg1, arg2, arg3]: [string, string, string],
   star1: boolean,
   star2: boolean
-) {
+): string {
   return star1 && star2
     ? `\\left\\langle{${arg1}}\\middle\\vert{${arg2}}\\middle\\vert{${arg3}}\\right\\rangle`
     : star1
@@ -183,13 +186,14 @@ function outputBraket(
  *
  * @param {string[]} elements The elements on the diagonal.
  * @param {boolean} anti True if constructing anti-diagonal matrix.
+ * @returns {string} The expanded macro.
  */
-function makeDiagMatrix(elements: string[], anti: boolean) {
+function makeDiagMatrix(elements: string[], anti: boolean): string {
   const length = elements.length;
   const matrix = [];
   for (let i = 0; i < length; i++) {
     matrix.push(
-      Array(anti ? length - i : i + 1).join('&') + '\\mqty{' + elements[i] + '}'
+      Array(anti ? length - i : i + 1).join('&') + `\\mqty{${elements[i]}}`
     );
   }
   return matrix.join('\\\\ ');
@@ -270,20 +274,10 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       right = arg ? close : '\\}';
       // TODO: Make all these fenced expressions.
       argument = star
-        ? next + ' ' + argument + ' ' + right
+        ? `${next} ${argument} ${right}`
         : big
-          ? '\\' +
-            big +
-            'l' +
-            next +
-            ' ' +
-            argument +
-            ' ' +
-            '\\' +
-            big +
-            'r' +
-            right
-          : '\\left' + next + ' ' + argument + ' ' + '\\right' + right;
+          ? `\\${big}l${next} ${argument} \\${big}r${right}`
+          : `\\left${next} ${argument} \\right${right}`;
       parser.Push(
         new TexParser(argument, parser.stack.env, parser.configuration).mml()
       );
@@ -383,20 +377,10 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     const arg2 = parser.GetArgument(name);
     let argument = arg1 + ',' + arg2;
     argument = star
-      ? open + ' ' + argument + ' ' + close
+      ? `${open} ${argument} ${close}`
       : big
-        ? '\\' +
-          big +
-          'l' +
-          open +
-          ' ' +
-          argument +
-          ' ' +
-          '\\' +
-          big +
-          'r' +
-          close
-        : '\\left' + open + ' ' + argument + ' ' + '\\right' + close;
+        ? `\\${big}l${open} ${argument} \\${big}r${close}`
+        : `\\left${open} ${argument} \\right${close}`;
     parser.Push(
       new TexParser(argument, parser.stack.env, parser.configuration).mml()
     );
@@ -422,7 +406,11 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     parser.configuration.nodeFactory.set('token', createVectorToken);
     parser.stack.env.vectorFont = star ? 'bold-italic' : 'bold';
     parser.stack.env.vectorStar = star;
-    const node = new TexParser(arg, parser.stack.env, parser.configuration).mml();
+    const node = new TexParser(
+      arg,
+      parser.stack.env,
+      parser.configuration
+    ).mml();
     if (oldFont) {
       parser.stack.env.font = oldFont;
     }
@@ -438,9 +426,8 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    * @param {number} argcount Number of arguments.
-   * @param {string[]} ...parts List of parts from which to assemble the macro.
+   * @param {string[]} parts List of parts from which to assemble the macro.
    *     If the original command is starred, a star will be injected at each part.
-   * @param {...any} parts
    */
   StarMacro(
     parser: TexParser,
@@ -474,9 +461,8 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    * @param {string} operator The operator expression.
-   * @param {string[]} ...fences List of opening fences that should be
+   * @param {string[]} fences List of opening fences that should be
    *     automatically sized and paired to its corresponding closing fence.
-   * @param {...any} fences
    */
   OperatorApplication(
     parser: TexParser,
@@ -495,9 +481,8 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
    * @param {string} operator The operator expression.
-   * @param {string[]} ...fences List of opening fences that should be
+   * @param {string[]} fences List of opening fences that should be
    *     automatically sized and paired to its corresponding closing fence.
-   * @param {...any} fences
    */
   VectorOperator(
     parser: TexParser,
@@ -657,7 +642,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       if (argMax > 2 && args.length > 1) {
         ignore = true;
       }
-      power1 = '^{' + optArg + '}';
+      power1 = `^{${optArg}}`;
       power2 = power1;
     }
     const frac = star ? '\\flatfrac' : '\\frac';
@@ -667,21 +652,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     for (let i = 2, arg; (arg = args[i]); i++) {
       rest += op + ' ' + arg;
     }
-    const macro =
-      frac +
-      '{' +
-      op +
-      power1 +
-      first +
-      '}' +
-      '{' +
-      op +
-      ' ' +
-      second +
-      power2 +
-      ' ' +
-      rest +
-      '}';
+    const macro = `${frac}{${op}${power1}${first}}{${op} ${second}${power2} ${rest}}`;
     parser.Push(
       new TexParser(macro, parser.stack.env, parser.configuration).mml()
     );
@@ -913,14 +884,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     }
     const macro =
       (open ? '\\left' : '') +
-      open +
-      '\\begin{' +
-      array +
-      '}{} ' +
-      arg +
-      '\\end{' +
-      array +
-      '}' +
+      `${open}\\begin{${array}}{} ${arg}\\end{${array}}` +
       (open ? '\\right' : '') +
       close;
     parser.Push(
@@ -1096,6 +1060,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
    * @param {TexParser} parser The calling parser.
    * @param {string} fence The fence.
    * @param {number} texclass The TeX class.
+   * @returns {ParseResult} The parse result.
    */
   AutoClose(parser: TexParser, fence: string, texclass: number): ParseResult {
     //
@@ -1131,8 +1096,9 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
    *
    * @param {TexParser} parser The calling parser.
    * @param {string} _name The macro name.
+   * @returns {ParseResult} The parse result.
    */
-  Vnabla(parser: TexParser, _name: string) {
+  Vnabla(parser: TexParser, _name: string): ParseResult {
     const argument = parser.options.physics.arrowdel
       ? '\\vec{\\gradientnabla}'
       : '{\\gradientnabla}';
@@ -1146,8 +1112,9 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
    *
    * @param {TexParser} parser The calling parser.
    * @param {string} _name The macro name.
+   * @returns {ParseResult} The parse result.
    */
-  DiffD(parser: TexParser, _name: string) {
+  DiffD(parser: TexParser, _name: string): ParseResult {
     const argument = parser.options.physics.italicdiff ? 'd' : '{\\rm d}';
     return parser.Push(
       new TexParser(argument, parser.stack.env, parser.configuration).mml()

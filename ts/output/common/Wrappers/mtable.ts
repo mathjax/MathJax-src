@@ -490,7 +490,8 @@ export interface CommonMtableClass<
 /**
  * The CommonMtable wrapper mixin for the MmlMtable object
  *
- * @param Base
+ * @param {CommonWrapperConstructor} Base The constructor class
+ * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -1190,8 +1191,8 @@ export function CommonMtableMixin<
       //
       // Get the columns needed to get dw as a small enough portion of the total width
       //
-      let w = 0,
-        n = 0;
+      let w = 0;
+      let n = 0;
       while (n < columns.length) {
         w += W[columns[n++]];
         if (w && dw / w < BREAK_BELOW) break;

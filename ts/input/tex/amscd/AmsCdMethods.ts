@@ -37,8 +37,9 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
    *
    * @param {TexParser} parser The calling parser.
    * @param {StackItem} begin The opening stackitem.
+   * @returns {ArrayItem} The constructed array stackitem.
    */
-  CD(parser: TexParser, begin: StackItem) {
+  CD(parser: TexParser, begin: StackItem): ArrayItem {
     parser.Push(begin);
     const item = parser.itemFactory.create('array') as ArrayItem;
     const options = parser.configuration.options.amscd;
@@ -60,10 +61,12 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
    *
    * @param {TexParser} parser The calling parser.
    * @param {string} name The macro name.
+   * @returns {void} No value.
    */
-  arrow(parser: TexParser, name: string) {
+  arrow(parser: TexParser, name: string): void {
     const c = parser.string.charAt(parser.i);
     if (!c.match(/[><VA.|=]/)) {
+      // TODO: This return is suspicious.
       return Other(parser, name);
     } else {
       parser.i++;
@@ -85,14 +88,14 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
     }
 
     let mml;
-    const hdef = { minsize: top.getProperty('minw'), stretchy: true },
-      vdef = {
-        minsize: top.getProperty('minh'),
-        stretchy: true,
-        symmetric: true,
-        lspace: 0,
-        rspace: 0,
-      };
+    const hdef = { minsize: top.getProperty('minw'), stretchy: true };
+    const vdef = {
+      minsize: top.getProperty('minh'),
+      stretchy: true,
+      symmetric: true,
+      lspace: 0,
+      rspace: 0,
+    };
 
     if (c === '.') {
     } else if (c === '|') {

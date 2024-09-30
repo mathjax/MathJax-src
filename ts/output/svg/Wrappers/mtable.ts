@@ -288,7 +288,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
     }
 
     /**
-     * @param svg {N} The svg element
+     * @param {N} svg The svg element
      * @returns {number}   The x-adjustement needed to handle the true size of percentage-width tables
      */
     protected handlePWidth(svg: N): number {
@@ -298,13 +298,11 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
       const { w, L, R } = this.getBBox();
       const W = L + this.pWidth + R;
       const align = this.getAlignShift()[0];
-      const CW =
-        Math.max(
-          this.isTop ? W : 0,
-          this.container.getWrapWidth(this.containerI)
-        ) -
-        L -
-        R;
+      const max = Math.max(
+        this.isTop ? W : 0,
+        this.container.getWrapWidth(this.containerI)
+      );
+      const CW = max - L - R;
       const dw = w - (this.pWidth > CW ? CW : this.pWidth);
       const dx = align === 'left' ? 0 : align === 'right' ? dw : dw / 2;
       if (dx) {
@@ -508,9 +506,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
               : align === 'right'
                 ? 'xMaxYMid'
                 : 'xMidYMid',
-          viewBox: [this.fixed(-dx), this.fixed(-h), 1, this.fixed(h + d)].join(
-            ' '
-          ),
+          viewBox: `${this.fixed(-dx)} ${this.fixed(-h)} 1 ${this.fixed(h + d)}`,
         },
         [this.svg('g', { transform: matrix }, adaptor.childNodes(svg))]
       );

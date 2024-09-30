@@ -27,7 +27,7 @@ import { MmlNode, TextNode, XMLNode } from './MmlNode.js';
 /**
  *  Get access to legacy MML Element Jax
  */
-declare let MathJax: any;
+declare const MathJax: any;
 const MML = MathJax.ElementJax.mml;
 
 /*****************************************************************/

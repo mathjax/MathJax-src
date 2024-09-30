@@ -179,8 +179,14 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
    *
    * @param {string} method1    The method to use for the render() call
    * @param {string} method2    The method to use for the rerender() and convert() calls
+   *
+   * @returns {[(document: any) => boolean, (math: any, document: any) => boolean]}
+   *     Two render action methods wrapping the parameter methods.
    */
-  protected static methodActions(method1: string, method2: string = method1) {
+  protected static methodActions(
+    method1: string,
+    method2: string = method1
+  ): [(document: any) => boolean, (math: any, document: any) => boolean] {
     return [
       (document: any) => {
         method1 && document[method1]();
@@ -405,7 +411,7 @@ export interface MathDocument<N, T, D> {
   /**
    * Rerender the MathItems on the page
    *
-   * @param {number=} start    The state to start rerendering at
+   * @param {number} [start]    The state to start rerendering at
    * @returns {MathDocument}    The math document instance
    */
   rerender(start?: number): MathDocument<N, T, D>;

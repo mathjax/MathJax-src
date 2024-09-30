@@ -151,7 +151,7 @@ function getProsody(element: Element, prosody: ProsodyElement): ProsodyElement {
 /**
  * Extracts the prosody value from an attribute.
  */
-const prosodyRegexp = /([\+-]?)([0-9]+)%/;
+const prosodyRegexp = /([+-]?)([0-9]+)%/;
 
 /**
  * Extracts the prosody value from an attribute.
@@ -175,18 +175,18 @@ function extractProsody(attr: string): [string, string] {
 /**
  * Builds a speech label from input components.
  *
- * @param speech The speech string.
- * @param prefix The prefix expression.
- * @param postfix The postfix expression.
- * @param sep The separator string. Defaults to space.
- * @returns The assembled label.
+ * @param {string} speech The speech string.
+ * @param {string} prefix The prefix expression.
+ * @param {string} postfix The postfix expression.
+ * @param {string=} sep The separator string. Defaults to space.
+ * @returns {string} The assembled label.
  */
 export function buildLabel(
   speech: string,
   prefix: string,
   postfix: string,
   sep: string = ' '
-) {
+): string {
   if (!speech) {
     return '';
   }

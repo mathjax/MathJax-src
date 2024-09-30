@@ -94,14 +94,8 @@ export class SerializedMmlVisitor extends MmlVisitor {
    * @returns {string}         The serializied annotation element
    */
   public visitAnnotationNode(node: MmlNode, space: string): string {
-    return (
-      space +
-      '<annotation' +
-      this.getAttributes(node) +
-      '>' +
-      this.childNodeMml(node, '', '') +
-      '</annotation>'
-    );
+    const children = this.childNodeMml(node, '', '');
+    return `${space}<annotation${this.getAttributes(node)}>${children}</annotation>`;
   }
 
   /**
@@ -120,17 +114,8 @@ export class SerializedMmlVisitor extends MmlVisitor {
     const [nl, endspace] =
       node.isToken || node.childNodes.length === 0 ? ['', ''] : ['\n', space];
     const children = this.childNodeMml(node, space + '  ', nl);
-    return (
-      space +
-      '<' +
-      kind +
-      this.getAttributes(node) +
-      '>' +
-      (children.match(/\S/) ? nl + children + endspace : '') +
-      '</' +
-      kind +
-      '>'
-    );
+    const childNode = children.match(/\S/) ? nl + children + endspace : '';
+    return `${space}<${kind}${this.getAttributes(node)}>${childNode}</${kind}>`;
   }
 
   /**
@@ -175,7 +160,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
-      .replace(/\"/g, '&quot;')
+      .replace(/"/g, '&quot;')
       .replace(/[\uD800-\uDBFF]./g, toEntity)
       .replace(/[\u0080-\uD7FF\uE000-\uFFFF]/g, toEntity);
   }

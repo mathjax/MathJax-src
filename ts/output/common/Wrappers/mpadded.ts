@@ -133,7 +133,8 @@ export interface CommonMpaddedClass<
 /**
  * The CommomMpadded wrapper for the MmlMpadded object
  *
- * @param Base
+ * @param {CommonWrapperConstructor} Base The constructor class
+ * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -183,12 +184,12 @@ export function CommonMpaddedMixin<
       );
       const bbox = this.childNodes[0].getOuterBBox(); // get unmodified bbox of children
       let { w, h, d } = bbox;
-      let W = w,
-        H = h,
-        D = d,
-        x = 0,
-        y = 0,
-        dx = 0;
+      const W = w;
+      const H = h;
+      const D = d;
+      let x = 0;
+      let y = 0;
+      let dx = 0;
       if (values.width !== '') w = this.dimen(values.width, bbox, 'w', 0);
       if (values.height !== '') h = this.dimen(values.height, bbox, 'h', 0);
       if (values.depth !== '') d = this.dimen(values.depth, bbox, 'd', 0);

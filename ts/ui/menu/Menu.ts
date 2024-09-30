@@ -906,7 +906,7 @@ export class Menu {
   /**
    * Enable/disable an assistive submenu's items
    *
-   * @param name
+   * @param {string} name The name of the item
    * @param {boolean} enable  True to enable, false to disable
    */
   protected enableAccessibilityItems(name: string, enable: boolean) {
@@ -1047,7 +1047,7 @@ export class Menu {
    *                               and rerendering complete
    */
   protected setRenderer(jax: string, rerender: boolean = true): Promise<void> {
-    if (this.jax.hasOwnProperty(jax) && this.jax[jax]) {
+    if (Object.hasOwn(this.jax, jax) && this.jax[jax]) {
       return this.setOutputJax(jax, rerender);
     }
     const name = jax.toLowerCase();
@@ -1089,8 +1089,10 @@ export class Menu {
 
   /**
    * Load the required extensions into the new output jax
+   *
+   * @returns {Promise} The promise combining all loading promises
    */
-  protected loadRequiredExtensions() {
+  protected loadRequiredExtensions(): Promise<string[]> {
     const jax = this.document.outputJax.name.toLowerCase();
     const promises = [];
     for (const path of this.requiredExtensions) {
@@ -1103,7 +1105,7 @@ export class Menu {
   /**
    * Add extensions that need to be loaded when the renderer changes
    *
-   * @param extensions
+   * @param {string[] }extensions The list of extensions
    */
   public addRequiredExtensions(extensions: string[]) {
     if (extensions) {
@@ -1308,8 +1310,8 @@ export class Menu {
   /**
    * Attempt to load a component and perform a callback when done
    *
-   * @param name
-   * @param callback
+   * @param {string} name The name of the component to load
+   * @param {() => void} callback The callback for after loading
    */
   protected loadComponent(name: string, callback: () => void) {
     if (Menu.loadingPromises.has(name)) return;
@@ -1484,8 +1486,9 @@ export class Menu {
 
   /**
    * @param {string} svg   The serialzied SVG to adjust
+   * @returns {string} The adjusted SVG string
    */
-  protected formatSvg(svg: string) {
+  protected formatSvg(svg: string): string {
     const css = (this.constructor as typeof Menu).SvgCss;
     svg = svg.match(/^<svg.*?><defs>/)
       ? svg.replace(/<defs>/, `<defs><style>${css}</style>`)
@@ -1678,7 +1681,8 @@ export class Menu {
    * Create JSON for an a11y specific variable.
    *
    * @param {keyof MenuSettings} name   The setting for which to make a variable
-   * @param action
+   * @param {(value: T) => void} action The action to perform when the variable
+   *      is updated
    * @returns {object}                  The JSON for the variable
    *
    * @template T    The type of variable being defined

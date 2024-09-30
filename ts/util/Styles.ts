@@ -334,7 +334,7 @@ function saveFontParts(
 /**
  * Combine font parts into one (we don't actually do that)
  *
- * @param _name The font name
+ * @param {string} _name The font name
  */
 function combineFont(_name: string) {}
 
@@ -508,7 +508,7 @@ export class Styles {
    */
   public get(name: string): string {
     name = this.normalizeName(name);
-    return this.styles.hasOwnProperty(name) ? this.styles[name] : '';
+    return Object.hasOwn(this.styles, name) ? this.styles[name] : '';
   }
 
   /**

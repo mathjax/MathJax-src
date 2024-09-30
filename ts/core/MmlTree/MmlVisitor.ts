@@ -144,8 +144,8 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
       node.attributes.getAllAttributes()
     ) as PropertyList;
     const variants = CLASS.variants;
-    if (attributes.hasOwnProperty('mathvariant')) {
-      if (variants.hasOwnProperty(attributes.mathvariant as string)) {
+    if (Object.hasOwn(attributes, 'mathvariant')) {
+      if (Object.hasOwn(variants, attributes.mathvariant as string)) {
         attributes.mathvariant = variants[attributes.mathvariant as string];
       } else if (node.getProperty('ignore-variant')) {
         delete attributes.mathvariant;
@@ -166,7 +166,7 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
     const variants = (this.constructor as typeof MmlVisitor).variants;
     variant &&
       (node.getProperty('ignore-variant') ||
-        variants.hasOwnProperty(variant)) &&
+        Object.hasOwn(variants, variant)) &&
       this.setDataAttribute(data, 'variant', variant);
     node.getProperty('variantForm') &&
       this.setDataAttribute(data, 'alternate', '1');

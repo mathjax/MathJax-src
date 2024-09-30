@@ -66,7 +66,7 @@ export class RegionPool {
   public tooltip3: ToolTip = new ToolTip(this.document);
 
   /**
-   * @param document The document the handler belongs to.
+   * @param {ExplorerMathDocument} document The document the handler belongs to.
    */
   constructor(public document: ExplorerMathDocument) {}
 }
@@ -253,10 +253,10 @@ export class ExplorerPool {
   }
 
   /**
-   * @param  document The target document.
-   * @param  node The node explorers will be attached to.
-   * @param  mml The corresponding Mathml node as a string.
-   * @param item The current math item.
+   * @param {ExplorerMathDocument} document The target document.
+   * @param {HTMLElement} node The node explorers will be attached to.
+   * @param {string} mml The corresponding Mathml node as a string.
+   * @param {ExplorerMathItem} item The current math item.
    */
   public init(
     document: ExplorerMathDocument,

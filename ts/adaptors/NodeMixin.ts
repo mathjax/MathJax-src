@@ -48,13 +48,14 @@ export const NodeMixinOptions: OptionList = {
 };
 
 /**
- * @param Base The base constructor for the adaptor
- * @param options The options
- * @returns The NodeAdaptor mixin class
+ * @param {A} Base The base constructor for the adaptor
+ * @param {NodeMixinOptions} options The options
+ * @returns {A} The NodeAdaptor mixin class
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
+ * @template A  Extension of AdaptorConstructor
  */
 export function NodeMixin<N, T, D, A extends AdaptorConstructor<N, T, D>>(
   Base: A,

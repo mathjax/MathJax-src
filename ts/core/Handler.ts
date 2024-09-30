@@ -120,7 +120,7 @@ export abstract class AbstractHandler<N, T, D> implements Handler<N, T, D> {
     DefaultMathDocument;
 
   /**
-   * @param {DOMAdator} adaptor The DOM adaptor
+   * @param {DOMAdaptor} adaptor The DOM adaptor
    * @param {number} priority  The priority to use for this handler
    *
    * @class

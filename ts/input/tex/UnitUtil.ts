@@ -83,8 +83,8 @@ const pxPerInch = 72;
 /**
  * Transforms mu dimension to em if necessary.
  *
- * @param {[string, string, number]} [value, unit, length] The dimension triple.
- * @returns {[string, string, number]} [value, unit, length] The transformed triple.
+ * @param {[string, string, number]} arg The dimension triple.
+ * @returns {[string, string, number]} The transformed triple.
  */
 function muReplace([value, unit, length]: [string, string, number]): [
   string,

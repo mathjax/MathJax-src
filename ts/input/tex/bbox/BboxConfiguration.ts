@@ -67,7 +67,7 @@ const BboxMethods: { [key: string]: ParseMethod } = {
             width: '+' + 2 * parseInt(match[1], 10) + match[3],
           };
         }
-      } else if (part.match(/^([a-z0-9]+|\#[0-9a-f]{6}|\#[0-9a-f]{3})$/i)) {
+      } else if (part.match(/^([a-z0-9]+|#[0-9a-f]{6}|#[0-9a-f]{3})$/i)) {
         // @test Bbox-Background
         if (background) {
           // @test Bbox-Background-Error
@@ -121,13 +121,25 @@ const BboxMethods: { [key: string]: ParseMethod } = {
 };
 
 // Dummy methods. Need to be made Safe with security check.
-const BBoxStyle = function (styles: string) {
+/**
+ * Safety check and return style information for bounding boxes.
+ *
+ * @param {string} styles The bounding box style string.
+ * @returns {string} The transformed bounding box style.
+ */
+function BBoxStyle(styles: string): string {
   return styles;
-};
+}
 
-const BBoxPadding = function (pad: string) {
+/**
+ * Safety check and return padding information for bounding boxes.
+ *
+ * @param {string} pad The bounding box padding string.
+ * @returns {string} The transformed bounding box padding.
+ */
+function BBoxPadding(pad: string): string {
   return pad;
-};
+}
 
 new CommandMap('bbox', { bbox: BboxMethods.BBox });
 

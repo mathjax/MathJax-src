@@ -23,10 +23,10 @@
 
 import { mathjax } from '../../mathjax.js';
 
-declare let System: { import: (name: string, url?: string) => any };
-declare let __dirname: string;
+declare const System: { import: (name: string, url?: string) => any };
+declare const __dirname: string;
 
-let root = 'file://' + __dirname.replace(/\/[^\/]*\/[^\/]*$/, '/');
+let root = 'file://' + __dirname.replace(/\/[^/]*\/[^/]*$/, '/');
 
 if (!mathjax.asyncLoad && typeof System !== 'undefined' && System.import) {
   mathjax.asyncLoad = (name: string) => {

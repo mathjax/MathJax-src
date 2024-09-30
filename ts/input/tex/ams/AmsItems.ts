@@ -26,6 +26,7 @@ import { ParseUtil } from '../ParseUtil.js';
 import NodeUtil from '../NodeUtil.js';
 import TexError from '../TexError.js';
 import { TexConstant } from '../TexConstants.js';
+import StackItemFactory from '../StackItemFactory.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 
 /**
@@ -39,7 +40,7 @@ export class MultlineItem extends ArrayItem {
   /**
    * @override
    */
-  constructor(factory: any, ...args: any[]) {
+  constructor(factory: StackItemFactory, ...args: any[]) {
     super(factory);
     this.factory.configuration.tags.start('multline', true, args[0]);
   }
@@ -93,8 +94,8 @@ export class MultlineItem extends ArrayItem {
   public EndTable() {
     super.EndTable();
     if (this.table.length) {
-      let m = this.table.length - 1,
-        label = -1;
+      const m = this.table.length - 1;
+      let label = -1;
       if (
         !NodeUtil.getAttribute(
           NodeUtil.getChildren(this.table[0])[0],
@@ -154,7 +155,7 @@ export class FlalignItem extends EqnArrayItem {
    * @override
    */
   constructor(
-    factory: any,
+    factory: StackItemFactory,
     public name: string,
     public numbered: boolean,
     public padded: boolean,

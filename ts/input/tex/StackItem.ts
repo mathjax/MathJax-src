@@ -281,6 +281,7 @@ export interface StackItem extends NodeStack {
 
   /**
    * Copy local properties when pushed to stack?
+   * Default is to copy local environment when pushed on stack.
    *
    * @type {boolean}
    */
@@ -400,8 +401,8 @@ export abstract class BaseItem extends MmlStack implements StackItem {
   private _properties: PropList = {};
 
   /**
-   * @param factory
-   * @param {...any} nodes
+   * @param {StackItemFactory} factory The factory for stack items.
+   * @param {MmlNode[]} nodes Initial list of nodes to put on the stack.
    * @class
    * @augments {MmlStack}
    */
@@ -439,7 +440,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
   }
 
   /**
-   * Default is to copy local environment when pushed on stack
+   * @override
    */
   public get copyEnv() {
     return true;
