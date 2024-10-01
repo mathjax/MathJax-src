@@ -26,6 +26,7 @@ import BaseMethods from '../../base/BaseMethods.js';
 import {ParseMethod} from '../../Types.js';
 import TexParser from '../../TexParser.js';
 import { ParseUtil } from '../../ParseUtil.js';
+import { UnitUtil } from '../../UnitUtil.js';
 import NodeUtil from '../../NodeUtil.js';
 import TexError from '../../TexError.js';
 import {TEXCLASS, MmlNode} from '../../../../core/MmlTree/MmlNode.js';
@@ -46,7 +47,7 @@ IeeeMacrosMethods.Matrix = BaseMethods.Matrix;
 IeeeMacrosMethods.Array = BaseMethods.Array;
 
 IeeeMacrosMethods.Hskip = function(parser: TexParser, name: string) {
-  ParseUtil.UNIT_CASES.set('pi', 1 / 10); // Same as points
+  UnitUtil.UNIT_CASES.set('pi', 1 / 10); // Same as points
   return BaseMethods.Hskip(parser, name);
 }
 
