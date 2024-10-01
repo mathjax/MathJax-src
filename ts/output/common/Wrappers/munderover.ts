@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2023 The MathJax Consortium
+ *  Copyright (c) 2017-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,19 +16,33 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMunderover wrapper mixin for the MmlMunderover object
+ * @file  Implements the CommonMunderover wrapper mixin for the MmlMunderover object
  *                and the special cases CommonMunder and CommonMsup
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass} from '../Wrapper.js';
-import {CommonWrapperFactory} from '../WrapperFactory.js';
-import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
-import {CommonOutputJax} from '../../common.js';
-import {CommonScriptbase, CommonScriptbaseClass, CommonScriptbaseConstructor} from './scriptbase.js';
-import {MmlMunderover, MmlMunder, MmlMover} from '../../../core/MmlTree/MmlNodes/munderover.js';
-import {BBox} from '../../../util/BBox.js';
+import { CommonWrapper, CommonWrapperClass } from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import {
+  CommonScriptbase,
+  CommonScriptbaseClass,
+  CommonScriptbaseConstructor,
+} from './scriptbase.js';
+import {
+  MmlMunderover,
+  MmlMunder,
+  MmlMover,
+} from '../../../core/MmlTree/MmlNodes/munderover.js';
+import { BBox } from '../../../util/BBox.js';
 
 /*****************************************************************/
 /**
@@ -48,7 +62,9 @@ import {BBox} from '../../../util/BBox.js';
  * @template FC  The FontDataClass type
  */
 export interface CommonMunder<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -57,7 +73,7 @@ export interface CommonMunder<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonScriptbase<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /**
@@ -77,7 +93,9 @@ export interface CommonMunder<
  * @template FC  The FontDataClass type
  */
 export interface CommonMunderClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -86,13 +104,14 @@ export interface CommonMunderClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
 /**
  * The CommonMunder wrapper mixin for the MmlMunder object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -109,7 +128,9 @@ export interface CommonMunderClass<
  * @template B   The mixin interface to create
  */
 export function CommonMunderMixin<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -119,12 +140,14 @@ export function CommonMunderMixin<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: CommonScriptbaseConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
-
-  return class CommonMunderMixin extends Base
-  implements CommonMunder<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
+  B extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonScriptbaseConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+): B {
+  return class CommonMunderMixin
+    extends Base
+    implements CommonMunder<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
      * @override
      */
@@ -134,7 +157,7 @@ export function CommonMunderMixin<
 
     /**
      * @override
-     * @constructor
+     * @class
      */
     constructor(...args: any[]) {
       super(...args);
@@ -153,7 +176,9 @@ export function CommonMunderMixin<
       const basebox = this.baseChild.getOuterBBox();
       const underbox = this.scriptChild.getOuterBBox();
       const v = this.getUnderKV(basebox, underbox)[1];
-      const delta = (this.isLineBelow ? 0 : this.getDelta(this.scriptChild, true));
+      const delta = this.isLineBelow
+        ? 0
+        : this.getDelta(this.scriptChild, true);
       const [bw, uw] = this.getDeltaW([basebox, underbox], [0, -delta]);
       bbox.combine(basebox, bw, 0);
       bbox.combine(underbox, uw, v);
@@ -161,9 +186,7 @@ export function CommonMunderMixin<
       bbox.clean();
       this.setChildPWidths(recompute);
     }
-
   } as any as B;
-
 }
 
 /*****************************************************************/
@@ -184,7 +207,9 @@ export function CommonMunderMixin<
  * @template FC  The FontDataClass type
  */
 export interface CommonMover<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -193,7 +218,7 @@ export interface CommonMover<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonScriptbase<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /**
@@ -213,7 +238,9 @@ export interface CommonMover<
  * @template FC  The FontDataClass type
  */
 export interface CommonMoverClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -222,13 +249,14 @@ export interface CommonMoverClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
 /**
  * The CommonMover wrapper mixin for the MmlMover object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -244,7 +272,9 @@ export interface CommonMoverClass<
  * @template B   The mixin interface to create
  */
 export function CommonMoverMixin<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -254,12 +284,14 @@ export function CommonMoverMixin<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: CommonScriptbaseConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
-
-  return class CommonMoverMixin extends Base
-  implements CommonMover<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonScriptbaseConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+): B {
+  return class CommonMoverMixin
+    extends Base
+    implements CommonMover<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
      * @override
      */
@@ -269,7 +301,7 @@ export function CommonMoverMixin<
 
     /**
      * @override
-     * @constructor
+     * @class
      */
     constructor(...args: any[]) {
       super(...args);
@@ -288,19 +320,20 @@ export function CommonMoverMixin<
       const basebox = this.baseChild.getOuterBBox();
       const overbox = this.scriptChild.getOuterBBox();
       if (this.node.attributes.get('accent')) {
-        basebox.h = Math.max(basebox.h, this.font.params.x_height * this.baseScale);
+        basebox.h = Math.max(
+          basebox.h,
+          this.font.params.x_height * this.baseScale
+        );
       }
       const u = this.getOverKU(basebox, overbox)[1];
-      const delta = (this.isLineAbove ? 0 : this.getDelta(this.scriptChild));
+      const delta = this.isLineAbove ? 0 : this.getDelta(this.scriptChild);
       const [bw, ow] = this.getDeltaW([basebox, overbox], [0, delta]);
       bbox.combine(basebox, bw, 0);
       bbox.combine(overbox, ow, u);
       bbox.h += this.font.params.big_op_spacing5;
       bbox.clean();
     }
-
   } as any as B;
-
 }
 
 /*****************************************************************/
@@ -321,7 +354,9 @@ export function CommonMoverMixin<
  * @template FC  The FontDataClass type
  */
 export interface CommonMunderover<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -330,9 +365,8 @@ export interface CommonMunderover<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonScriptbase<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
   /*
    * The wrapped under node
    */
@@ -342,7 +376,6 @@ export interface CommonMunderover<
    * The wrapped overder node
    */
   readonly overChild: WW;
-
 }
 
 /**
@@ -362,7 +395,9 @@ export interface CommonMunderover<
  * @template FC  The FontDataClass type
  */
 export interface CommonMunderoverClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -371,7 +406,7 @@ export interface CommonMunderoverClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonScriptbaseClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
@@ -393,8 +428,14 @@ export interface CommonMunderoverClass<
  *
  * @template B   The mixin interface to create
  */
+/**
+ *
+ * @param Base
+ */
 export function CommonMunderoverMixin<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -404,12 +445,14 @@ export function CommonMunderoverMixin<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: CommonScriptbaseConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
-
-  return class CommonMunderoverMixin extends Base
-  implements CommonMunderover<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonScriptbaseConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+): B {
+  return class CommonMunderoverMixin
+    extends Base
+    implements CommonMunderover<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /*
      * @override
      */
@@ -446,7 +489,7 @@ export function CommonMunderoverMixin<
 
     /**
      * @override
-     * @constructor
+     * @class
      */
     constructor(...args: any[]) {
       super(...args);
@@ -466,14 +509,19 @@ export function CommonMunderoverMixin<
       const basebox = this.baseChild.getOuterBBox();
       const underbox = this.underChild.getOuterBBox();
       if (this.node.attributes.get('accent')) {
-        basebox.h = Math.max(basebox.h, this.font.params.x_height * this.baseScale);
+        basebox.h = Math.max(
+          basebox.h,
+          this.font.params.x_height * this.baseScale
+        );
       }
       const u = this.getOverKU(basebox, overbox)[1];
       const v = this.getUnderKV(basebox, underbox)[1];
       const odelta = this.getDelta(this.overChild);
       const udelta = this.getDelta(this.underChild, true);
-      const [bw, uw, ow] = this.getDeltaW([basebox, underbox, overbox],
-                                          [0, this.isLineBelow ? 0 : -udelta, this.isLineAbove ? 0 : odelta]);
+      const [bw, uw, ow] = this.getDeltaW(
+        [basebox, underbox, overbox],
+        [0, this.isLineBelow ? 0 : -udelta, this.isLineAbove ? 0 : odelta]
+      );
       bbox.combine(basebox, bw, 0);
       bbox.combine(overbox, ow, u);
       bbox.combine(underbox, uw, v);
@@ -482,7 +530,5 @@ export function CommonMunderoverMixin<
       bbox.d += z;
       bbox.clean();
     }
-
   } as any as B;
-
 }

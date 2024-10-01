@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2023 The MathJax Consortium
+ *  Copyright (c) 2019-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,15 +16,22 @@
  */
 
 /**
- * @fileoverview  Implements a subclass of ContextMenu specific to MathJax
+ * @file  Implements a subclass of ContextMenu specific to MathJax
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathItem} from '../../core/MathItem.js';
-import {JaxList} from './Menu.js';
+import { MathItem } from '../../core/MathItem.js';
+import { OptionList } from '../../util/Options.js';
+import { JaxList } from './Menu.js';
 
-import {ContextMenu, SubMenu, Submenu, Menu, Item} from './mj-context-menu.js';
+import {
+  ContextMenu,
+  SubMenu,
+  Submenu,
+  Menu,
+  Item,
+} from './mj-context-menu.js';
 
 /*==========================================================================*/
 
@@ -33,17 +40,25 @@ import {ContextMenu, SubMenu, Submenu, Menu, Item} from './mj-context-menu.js';
  *   contextual menu (in particular, tying it to a MathItem).
  */
 export class MJContextMenu extends ContextMenu {
-
   /**
    * Static map to hold methods for re-computing dynamic submenus.
-   * @type {Map<string, (menu: MJContextMenu, sub: Submenu)}
+   *
+   * @type {Map<string, (menu: MJContextMenu, sub: Submenu) => Submenu>}
    */
-  public static DynamicSubmenus: Map<string, (menu: MJContextMenu, sub: Submenu) => SubMenu> = new Map();
+  public static DynamicSubmenus: Map<
+    string,
+    [(menu: MJContextMenu, sub: Submenu) => SubMenu, string]
+  > = new Map();
 
   /**
    * The MathItem that has posted the menu
    */
   public mathItem: MathItem<HTMLElement, Text, Document> = null;
+
+  /**
+   * The document options
+   */
+  public settings: OptionList;
 
   /**
    * The error message for the current MathItem
@@ -69,6 +84,7 @@ export class MJContextMenu extends ContextMenu {
         this.getOriginalMenu();
         this.getSemanticsMenu();
         this.getSpeechMenu();
+        this.getBrailleMenu();
         this.getSvgMenu();
         this.getErrorMessage();
         this.dynamicSubmenus();
@@ -84,6 +100,7 @@ export class MJContextMenu extends ContextMenu {
    */
   public unpost() {
     super.unpost();
+    this.mathItem?.typesetRoot?.blur();
     this.mathItem = null;
   }
 
@@ -99,11 +116,13 @@ export class MJContextMenu extends ContextMenu {
     let menu = this as Menu;
     let item = null as Item;
     for (const name of names) {
-      if (menu) {
-        item = menu.find(name);
-        menu = (item instanceof Submenu ? item.submenu : null);
-      } else {
-        item = null;
+      if (!menu) return null;
+      for (item of menu.items) {
+        if (item.id === name) {
+          menu = item instanceof Submenu ? item.submenu : null;
+          break;
+        }
+        menu = item = null;
       }
     }
     return item;
@@ -126,7 +145,8 @@ export class MJContextMenu extends ContextMenu {
   protected getOriginalMenu() {
     const input = this.mathItem.inputJax.name;
     const original = this.findID('Show', 'Original');
-    original.content = (input === 'MathML' ? 'Original MathML' : input + ' Commands');
+    original.content =
+      input === 'MathML' ? 'Original MathML' : input + ' Commands';
     const clipboard = this.findID('Copy', 'Original');
     clipboard.content = original.content;
   }
@@ -135,8 +155,10 @@ export class MJContextMenu extends ContextMenu {
    * Enable/disable the semantics settings item
    */
   protected getSemanticsMenu() {
-    const semantics = this.findID('Settings', 'semantics');
-    this.mathItem.inputJax.name === 'MathML' ? semantics.disable() : semantics.enable();
+    const semantics = this.findID('Settings', 'MathmlIncludes', 'semantics');
+    this.mathItem.inputJax.name === 'MathML'
+      ? semantics.disable()
+      : semantics.enable();
   }
 
   /**
@@ -146,6 +168,15 @@ export class MJContextMenu extends ContextMenu {
     const speech = this.mathItem.outputData.speech;
     this.findID('Show', 'Speech')[speech ? 'enable' : 'disable']();
     this.findID('Copy', 'Speech')[speech ? 'enable' : 'disable']();
+  }
+
+  /**
+   * Enable/disable the Braille menus
+   */
+  protected getBrailleMenu() {
+    const braille = this.mathItem.outputData.braille;
+    this.findID('Show', 'Braille')[braille ? 'enable' : 'disable']();
+    this.findID('Copy', 'Braille')[braille ? 'enable' : 'disable']();
   }
 
   /**
@@ -166,7 +197,9 @@ export class MJContextMenu extends ContextMenu {
     this.errorMsg = '';
     if (children.length === 1 && children[0].isKind('merror')) {
       const attributes = children[0].attributes;
-      this.errorMsg = (attributes.get('data-mjx-error') || attributes.get('data-mjx-message') || '') as string;
+      this.errorMsg = (attributes.get('data-mjx-error') ||
+        attributes.get('data-mjx-message') ||
+        '') as string;
       disable = !this.errorMsg;
     }
     this.findID('Show', 'Error')[disable ? 'disable' : 'enable']();
@@ -179,17 +212,16 @@ export class MJContextMenu extends ContextMenu {
    * Renews the dynamic submenus.
    */
   public dynamicSubmenus() {
-    for (const [id, method] of MJContextMenu.DynamicSubmenus) {
+    for (const [id, [method, option]] of MJContextMenu.DynamicSubmenus) {
       const menu = this.find(id) as Submenu;
       if (!menu) continue;
       const sub = method(this, menu);
       menu.submenu = sub;
-      if (sub.items.length) {
+      if (sub.items.length && (!option || this.settings[option])) {
         menu.enable();
       } else {
         menu.disable();
       }
     }
   }
-
 }

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2023 The MathJax Consortium
+ *  Copyright (c) 2019-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,18 +16,28 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMtext wrapper mixin for the MmlMtext object
+ * @file  Implements the CommonMtext wrapper mixin for the MmlMtext object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wrapper.js';
-import {CommonWrapperFactory} from '../WrapperFactory.js';
-import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
-import {CommonOutputJax} from '../../common.js';
-import {TextNode} from '../../../core/MmlTree/MmlNode.js';
-import {IndexData} from '../LinebreakVisitor.js';
-import {LineBBox} from '../LineBBox.js';
+import {
+  CommonWrapper,
+  CommonWrapperClass,
+  CommonWrapperConstructor,
+} from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { TextNode } from '../../../core/MmlTree/MmlNode.js';
+import { IndexData } from '../LinebreakVisitor.js';
+import { LineBBox } from '../LineBBox.js';
 
 /*****************************************************************/
 /**
@@ -47,7 +57,9 @@ import {LineBBox} from '../LineBBox.js';
  * @template FC  The FontDataClass type
  */
 export interface CommonMtext<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -56,9 +68,8 @@ export interface CommonMtext<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
   /**
    * The list of breakpoints within the text
    */
@@ -71,10 +82,9 @@ export interface CommonMtext<
 
   /**
    * @param {string} text   The string whose width is needed
-   * @return {number}       The width of the string
+   * @returns {number}       The width of the string
    */
   textWidth(text: string): number;
-
 
   /**
    * @param {IndexData} ij  The child and character indices for the breakpoint
@@ -88,10 +98,9 @@ export interface CommonMtext<
 
   /**
    * @param {number} i   The breakpoint whose line width is needed
-   * @return {number}    The width of the text between that breakpoint and the previous one
+   * @returns {number}    The width of the text between that breakpoint and the previous one
    */
   getBreakWidth(i: number): number;
-
 }
 
 /**
@@ -111,7 +120,9 @@ export interface CommonMtext<
  * @template FC  The FontDataClass type
  */
 export interface CommonMtextClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -120,23 +131,22 @@ export interface CommonMtextClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
   /**
    * The font-family, weight, and style to use for the variants when mtextInheritFont
    * is true or mtextFont is specified.  If not in this list, then the font's
    * getCssFont() is called.  When the font family is not specified, the inherited
    * or specified font is used.
    */
-  INHERITFONTS: {[name: string]: [string, boolean, boolean]};
-
+  INHERITFONTS: { [name: string]: [string, boolean, boolean] };
 }
 
 /*****************************************************************/
 /**
 b *  The CommonMtext wrapper mixin for the MmlMtext object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -153,7 +163,9 @@ b *  The CommonMtext wrapper mixin for the MmlMtext object
  * @template B   The mixin interface to create
  */
 export function CommonMtextMixin<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -163,21 +175,24 @@ export function CommonMtextMixin<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
-
-  return class CommonMtextMixin extends Base
-  implements CommonMtext<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+): B {
+  return class CommonMtextMixin
+    extends Base
+    implements CommonMtext<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
      * @override
      */
-    public static INHERITFONTS: {[name: string]: [string, boolean, boolean]} = {
-      normal: ['', false, false],
-      bold: ['', false, true],
-      italic: ['', true, false],
-      'bold-italic': ['', true, true]
-    };
+    public static INHERITFONTS: { [name: string]: [string, boolean, boolean] } =
+      {
+        normal: ['', false, false],
+        bold: ['', false, true],
+        italic: ['', true, false],
+        'bold-italic': ['', true, true],
+      };
 
     /**
      * @override
@@ -223,13 +238,24 @@ export function CommonMtextMixin<
       //  and see if it allows for inheritance. If so, set the variant appropriately,
       //  otherwise get the usual variant.
       //
-      const merror = ((!!data.merrorFamily || !!options.merrorFont) && this.node.Parent.isKind('merror'));
+      const merror =
+        (!!data.merrorFamily || !!options.merrorFont) &&
+        this.node.Parent.isKind('merror');
       if (!!data.mtextFamily || !!options.mtextFont || merror) {
         const variant = this.node.attributes.get('mathvariant') as string;
-        const font = (this.constructor as any).INHERITFONTS[variant] || this.jax.font.getCssFont(variant);
-        const family = font[0] || (merror ? data.merrorFamily || options.merrorFont :
-                                            data.mtextFamily || options.mtextFont);
-        this.variant = this.explicitVariant(family, font[2] ? 'bold' : '', font[1] ? 'italic' : '');
+        const font =
+          (this.constructor as any).INHERITFONTS[variant] ||
+          this.jax.font.getCssFont(variant);
+        const family =
+          font[0] ||
+          (merror
+            ? data.merrorFamily || options.merrorFont
+            : data.mtextFamily || options.mtextFont);
+        this.variant = this.explicitVariant(
+          family,
+          font[2] ? 'bold' : '',
+          font[1] ? 'italic' : ''
+        );
         return;
       }
       super.getVariant();
@@ -253,7 +279,10 @@ export function CommonMtextMixin<
      * @override
      */
     public computeLineBBox(i: number): LineBBox {
-      const bbox = LineBBox.from(this.getOuterBBox(), this.linebreakOptions.lineleading);
+      const bbox = LineBBox.from(
+        this.getOuterBBox(),
+        this.linebreakOptions.lineleading
+      );
       if (!this.breakCount) return bbox;
       bbox.w = this.getBreakWidth(i);
       if (i === 0) {
@@ -261,7 +290,11 @@ export function CommonMtextMixin<
         this.addLeftBorders(bbox);
       } else {
         bbox.L = 0;
-        bbox.indentData = [['left', '0'], ['left', '0'], ['left', '0']];  // FIXME: do something better, here
+        bbox.indentData = [
+          ['left', '0'],
+          ['left', '0'],
+          ['left', '0'],
+        ]; // FIXME: do something better, here
         i === this.breakCount && this.addRightBorders(bbox);
       }
       return bbox;
@@ -271,9 +304,9 @@ export function CommonMtextMixin<
      * @override
      */
     public getBreakWidth(i: number) {
-      const childNodes = this.childNodes
+      const childNodes = this.childNodes;
       let [si, sj] = this.breakPoints[i - 1] || [0, 0];
-      let [ei, ej] = this.breakPoints[i] || [childNodes.length, 0];
+      const [ei, ej] = this.breakPoints[i] || [childNodes.length, 0];
       let words = (childNodes[si].node as TextNode).getText().split(/ /);
       if (si === ei) {
         return this.textWidth(words.slice(sj, ej).join(' '));
@@ -288,7 +321,5 @@ export function CommonMtextMixin<
       }
       return w;
     }
-
   } as any as B;
-
 }

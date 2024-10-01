@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2023 The MathJax Consortium
+ *  Copyright (c) 2017-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
  */
 
 /**
- * @fileoverview  Implements functions needed by dynamic font files.
+ * @file  Implements functions needed by dynamic font files.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {ChtmlCharMap, ChtmlCharData} from './FontData.js';
+import { ChtmlCharMap, ChtmlCharData } from './FontData.js';
 
 /**
  * Used by dynamic font extensions to add font identifiers to ranges of characters in given variants
@@ -29,8 +29,11 @@ import {ChtmlCharMap, ChtmlCharData} from './FontData.js';
  * @param {{[variant: string]: {[id: string]: ChtmlCharMap}}} ranges  The variant data to be added
  * @param {string?} prefix  The prefix for when this is used from a font extension
  */
-export function AddFontIds(ranges: {[variant: string]: {[id: string]: ChtmlCharMap}}, prefix?: string) {
-  const variants: {[variant: string]: ChtmlCharMap} = {};
+export function AddFontIds(
+  ranges: { [variant: string]: { [id: string]: ChtmlCharMap } },
+  prefix?: string
+) {
+  const variants: { [variant: string]: ChtmlCharMap } = {};
   for (const id of Object.keys(ranges)) {
     const map = ranges[id];
     for (const variant of Object.keys(map)) {

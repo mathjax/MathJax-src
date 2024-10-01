@@ -16,10 +16,10 @@
  */
 
 /**
- * @fileoverview  The version of MathJax (used to tell what version a component
+ * @file  The version of MathJax (used to tell what version a component
  *                was compiled against).
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-export const VERSION = '4.0.0-beta.4';
+export const VERSION = '4.0.0-beta.7';

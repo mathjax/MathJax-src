@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2022-2023 The MathJax Consortium
+ *  Copyright (c) 2022-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,22 +16,24 @@
  */
 
 /**
- * @fileoverview  Implements a parser for array column declarations.
+ * @file  Implements a parser for array column declarations.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {ArrayItem} from './base/BaseItems.js';
+import { ArrayItem } from './base/BaseItems.js';
 import TexParser from './TexParser.js';
 import TexError from './TexError.js';
-import {lookup} from '../../util/Options.js';
-import {ParseUtil} from './ParseUtil.js';
+import { lookup } from '../../util/Options.js';
+import { ParseUtil } from './ParseUtil.js';
+import { UnitUtil } from './UnitUtil.js';
 
 /***********************************************************************/
 
 /**
  * The state of the columns analyzed so far.
  */
+/* prettier-ignore */
 export type ColumnState = {
   parser: TexParser,                    // the current TexParser
   template: string;                     // the template string for the columns
@@ -53,21 +55,19 @@ export type ColumnState = {
  */
 export type ColumnHandler = (state: ColumnState) => void;
 
-
 /***********************************************************************/
 
 /**
  * The ColumnParser class for processing array environment column templates.
  */
 export class ColumnParser {
-
   /**
    * The handlers for each column character type (future: can be augmented by \newcolumntype)
    */
-  public columnHandler: {[c: string]: ColumnHandler} = {
-    l: (state) => state.calign[state.j++] = 'left',
-    c: (state) => state.calign[state.j++] = 'center',
-    r: (state) => state.calign[state.j++] = 'right',
+  public columnHandler: { [c: string]: ColumnHandler } = {
+    l: (state) => (state.calign[state.j++] = 'left'),
+    c: (state) => (state.calign[state.j++] = 'center'),
+    r: (state) => (state.calign[state.j++] = 'right'),
     p: (state) => this.getColumn(state, 'top'),
     m: (state) => this.getColumn(state, 'middle'),
     b: (state) => this.getColumn(state, 'bottom'),
@@ -75,8 +75,12 @@ export class ColumnParser {
     W: (state) => this.getColumn(state, 'top', ''),
     '|': (state) => this.addRule(state, 'solid'),
     ':': (state) => this.addRule(state, 'dashed'),
-    '>': (state) => state.cstart[state.j] = (state.cstart[state.j] || '') + this.getBraces(state),
-    '<': (state) => state.cend[state.j - 1] = (state.cend[state.j - 1] || '') + this.getBraces(state),
+    '>': (state) =>
+      (state.cstart[state.j] =
+        (state.cstart[state.j] || '') + this.getBraces(state)),
+    '<': (state) =>
+      (state.cend[state.j - 1] =
+        (state.cend[state.j - 1] || '') + this.getBraces(state)),
     '@': (state) => this.addAt(state, this.getBraces(state)),
     '!': (state) => this.addBang(state, this.getBraces(state)),
     '*': (state) => this.repeat(state),
@@ -109,10 +113,19 @@ export class ColumnParser {
     // Initialize the state
     //
     const state: ColumnState = {
-      parser, template, i: 0, j: 0, c: '',
-      cwidth: [], calign: [], cspace: [], clines: [],
-      cstart: array.cstart, cend: array.cend,
-      ralign: array.ralign, cextra: array.cextra
+      parser,
+      template,
+      i: 0,
+      j: 0,
+      c: '',
+      cwidth: [],
+      calign: [],
+      cspace: [],
+      clines: [],
+      cstart: array.cstart,
+      cend: array.cend,
+      ralign: array.ralign,
+      cextra: array.cextra,
     };
     //
     // Loop through the template to process the column specifiers
@@ -120,10 +133,14 @@ export class ColumnParser {
     let n = 0;
     while (state.i < state.template.length) {
       if (n++ > this.MAXCOLUMNS) {
-        throw new TexError('MaxColumns', 'Too many column specifiers (perhaps looping column definitions?)');
+        throw new TexError(
+          'MaxColumns',
+          'Too many column specifiers (perhaps looping column definitions?)'
+        );
       }
       const code = state.template.codePointAt(state.i);
-      const c = state.c = (code === undefined ? '' : String.fromCodePoint(code));
+      const c = (state.c =
+        code === undefined ? '' : String.fromCodePoint(code));
       state.i += c.length;
       if (!this.columnHandler.hasOwnProperty(c)) {
         throw new TexError('BadPreamToken', 'Illegal pream-token (%1)', c);
@@ -158,7 +175,7 @@ export class ColumnParser {
     if (cwidth.length < state.calign.length) {
       cwidth.push('auto');
     }
-    array.arraydef.columnwidth = cwidth.map(w => w || 'auto').join(' ');
+    array.arraydef.columnwidth = cwidth.map((w) => w || 'auto').join(' ');
   }
 
   /**
@@ -171,7 +188,10 @@ export class ColumnParser {
     if (cspace.length < state.calign.length) {
       cspace.push('1em');
     }
-    array.arraydef.columnspacing = cspace.slice(1).map(d => d || '1em').join(' ');
+    array.arraydef.columnspacing = cspace
+      .slice(1)
+      .map((d) => d || '1em')
+      .join(' ');
   }
 
   /**
@@ -193,9 +213,9 @@ export class ColumnParser {
     }
     if (clines.length > 1) {
       // @test Enclosed left right
-      array.arraydef.columnlines =
-        clines.slice(1)
-        .map(l => l || 'none')
+      array.arraydef.columnlines = clines
+        .slice(1)
+        .map((l) => l || 'none')
         .join(' ');
     }
   }
@@ -208,8 +228,9 @@ export class ColumnParser {
     if (!state.cextra[0] && !state.cextra[state.calign.length - 1]) return;
     const i = state.calign.length - 1;
     const cspace = state.cspace;
-    const space = (!state.cextra[i] ? null : cspace[i]);
-    array.arraydef['data-array-padding'] = `${cspace[0] || '.5em'} ${space || '.5em'}`;
+    const space = !state.cextra[i] ? null : cspace[i];
+    array.arraydef['data-array-padding'] =
+      `${cspace[0] || '.5em'} ${space || '.5em'}`;
   }
 
   /**
@@ -219,10 +240,18 @@ export class ColumnParser {
    * @param {number} ralign       The vertical alignment for the column
    * @param {string=} calign      The column alignment ('' means get it as an argument)
    */
-  public getColumn(state: ColumnState, ralign: string, calign: string = 'left') {
+  public getColumn(
+    state: ColumnState,
+    ralign: string,
+    calign: string = 'left'
+  ) {
     state.calign[state.j] = calign || this.getAlign(state);
     state.cwidth[state.j] = this.getDimen(state);
-    state.ralign[state.j] = [ralign, state.cwidth[state.j], state.calign[state.j]];
+    state.ralign[state.j] = [
+      ralign,
+      state.cwidth[state.j],
+      state.calign[state.j],
+    ];
     state.j++;
   }
 
@@ -230,12 +259,17 @@ export class ColumnParser {
    * Get a dimension argument
    *
    * @param {ColumnState} state   The current state of the parser
+   *
+   * @returns {string} The dimension string
    */
-  public getDimen(state: ColumnState) {
+  public getDimen(state: ColumnState): string {
     const dim = this.getBraces(state) || '';
-    if (!ParseUtil.matchDimen(dim)[0]) {
-      throw new TexError('MissingColumnDimOrUnits',
-                         'Missing dimension or its units for %1 column declaration', state.c);
+    if (!UnitUtil.matchDimen(dim)[0]) {
+      throw new TexError(
+        'MissingColumnDimOrUnits',
+        'Missing dimension or its units for %1 column declaration',
+        state.c
+      );
     }
     return dim;
   }
@@ -244,35 +278,52 @@ export class ColumnParser {
    * Get an alignment argument
    *
    * @param {ColumnState} state   The current state of the parser
+   *
+   * @returns {string} The alignment string
    */
-  public getAlign(state: ColumnState) {
+  public getAlign(state: ColumnState): string {
     const align = this.getBraces(state);
-    return lookup(align.toLowerCase(), {l: 'left', c: 'center', r: 'right'}, '');
+    return lookup(
+      align.toLowerCase(),
+      { l: 'left', c: 'center', r: 'right' },
+      ''
+    );
   }
 
   /**
    * Get a braced argument
    *
    * @param {ColumnState} state   The current state of the parser
+   *
+   * @returns {string} The argument string
    */
-  public getBraces(state: ColumnState) {
+  public getBraces(state: ColumnState): string {
     while (state.template[state.i] === ' ') state.i++;
     if (state.i > state.template.length) {
-      throw new TexError('MissingArgForColumn', 'Missing argument for %1 column declaration', state.c);
+      throw new TexError(
+        'MissingArgForColumn',
+        'Missing argument for %1 column declaration',
+        state.c
+      );
     }
     if (state.template[state.i] !== '{') {
       return state.template[state.i++];
     }
-    let i = ++state.i, braces = 1;
+    const i = ++state.i;
+    let braces = 1;
     while (state.i < state.template.length) {
       switch (state.template.charAt(state.i++)) {
-      case '\\':  state.i++; break;
-      case '{':   braces++; break;
-      case '}':
-        if (--braces === 0) {
-          return state.template.slice(i, state.i - 1);
-        }
-        break;
+        case '\\':
+          state.i++;
+          break;
+        case '{':
+          braces++;
+          break;
+        case '}':
+          if (--braces === 0) {
+            return state.template.slice(i, state.i - 1);
+          }
+          break;
       }
     }
     throw new TexError('MissingCloseBrace', 'Missing close brace');
@@ -290,7 +341,9 @@ export class ColumnParser {
     while (n > 0 && n--) {
       args.push(this.getBraces(state));
     }
-    state.template = ParseUtil.substituteArgs(state.parser, args, macro) + state.template.slice(state.i);
+    state.template =
+      ParseUtil.substituteArgs(state.parser, args, macro) +
+      state.template.slice(state.i);
     state.i = 0;
   }
 
@@ -313,14 +366,14 @@ export class ColumnParser {
    * @param {string} macro        The replacement string for the column type
    */
   public addAt(state: ColumnState, macro: string) {
-    const {cstart, cspace, j} = state;
+    const { cstart, cspace, j } = state;
     state.cextra[j] = true;
     state.calign[j] = 'center';
     if (state.clines[j]) {
       if (cspace[j] === '.5em') {
         cstart[j - 1] += '\\hspace{.25em}';
       } else if (!cspace[j]) {
-        state.cend[j - 1] = (state.cend[j-1] || '') + '\\hspace{.5em}';
+        state.cend[j - 1] = (state.cend[j - 1] || '') + '\\hspace{.5em}';
       }
     }
     cstart[j] = macro;
@@ -335,10 +388,11 @@ export class ColumnParser {
    * @param {string} macro        The replacement string for the column type
    */
   public addBang(state: ColumnState, macro: string) {
-    const {cstart, cspace, j} = state;
+    const { cstart, cspace, j } = state;
     state.cextra[j] = true;
     state.calign[j] = 'center';
-    cstart[j] = (cspace[j] === '0' && state.clines[j] ? '\\hspace{.25em}' : '') + macro;
+    cstart[j] =
+      (cspace[j] === '0' && state.clines[j] ? '\\hspace{.25em}' : '') + macro;
     if (!cspace[j]) {
       cspace[j] = '.5em';
     }
@@ -355,10 +409,14 @@ export class ColumnParser {
     const cols = this.getBraces(state);
     const n = parseInt(num);
     if (String(n) !== num) {
-      throw new TexError('ColArgNotNum', 'First argument to %1 column specifier must be a number', '*');
+      throw new TexError(
+        'ColArgNotNum',
+        'First argument to %1 column specifier must be a number',
+        '*'
+      );
     }
-    state.template = new Array(n).fill(cols).join('') + state.template.substring(state.i);
+    state.template =
+      new Array(n).fill(cols).join('') + state.template.substring(state.i);
     state.i = 0;
   }
-
 }

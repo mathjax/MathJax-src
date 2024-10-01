@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2023 The MathJax Consortium
+ *  Copyright (c) 2019-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,16 +15,16 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview    Configuration file for the tagformat package.
+ * @file    Configuration file for the tagformat package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {Configuration, ParserConfiguration} from '../Configuration.js';
-import {TeX} from '../../tex.js';
-import {AbstractTags, TagsFactory} from '../Tags.js';
+import { ConfigurationType } from '../HandlerTypes.js';
+import { Configuration, ParserConfiguration } from '../Configuration.js';
+import { TeX } from '../../tex.js';
+import { AbstractTags as _AbstractTags, TagsFactory } from '../Tags.js';
 
 /**
  * Number used to make tag class unique (each TeX input has to have its own because
@@ -34,12 +34,15 @@ let tagID = 0;
 
 /**
  * Configure a class to use for the tag handler that uses the input jax's options
- *   to control the formatting of the tags
+ * to control the formatting of the tags
+ *
  * @param {Configuration} config   The configuration for the input jax
  * @param {TeX} jax                The TeX input jax
  */
-export function tagformatConfig(config: ParserConfiguration, jax: TeX<any, any, any>) {
-
+export function tagformatConfig(
+  config: ParserConfiguration,
+  jax: TeX<any, any, any>
+) {
   /**
    * If the tag format is being added by one of the other extensions,
    *   as is done for the 'ams' tags, make sure it is defined so we can create it.
@@ -52,7 +55,8 @@ export function tagformatConfig(config: ParserConfiguration, jax: TeX<any, any, 
   /**
    * The original tag class to be extended (none, ams, or all)
    */
-  const TagClass = TagsFactory.create(jax.parseOptions.options.tags).constructor as typeof AbstractTags;
+  const TagClass = TagsFactory.create(jax.parseOptions.options.tags)
+    .constructor as typeof _AbstractTags;
 
   /**
    * A Tags object that uses the input jax options to perform the formatting
@@ -62,7 +66,6 @@ export function tagformatConfig(config: ParserConfiguration, jax: TeX<any, any, 
    * If they did, we would use a common configTags class instead.
    */
   class TagFormat extends TagClass {
-
     /**
      * @override
      */
@@ -82,7 +85,7 @@ export function tagformatConfig(config: ParserConfiguration, jax: TeX<any, any, 
      */
     public formatRef(tag: string) {
       const ref = jax.parseOptions.options.tagformat.ref;
-      return (ref ? ref(tag) : this.formatTag(tag));
+      return ref ? ref(tag) : this.formatTag(tag);
     }
 
     /**
@@ -117,17 +120,15 @@ export function tagformatConfig(config: ParserConfiguration, jax: TeX<any, any, 
 /**
  * The configuration object for configTags
  */
-export const TagFormatConfiguration = Configuration.create(
-  'tagformat', {
-    config: [tagformatConfig, 10],
-    options: {
-      tagformat: {
-        number: (n: number) => n.toString(),
-        tag:    (tag: string) => '(' + tag + ')',
-        ref:    '',      // means use the tag function
-        id:     (id: string) => 'mjx-eqn:' + id.replace(/\s/g, '_'),
-        url:    (id: string, base: string) => base + '#' + encodeURIComponent(id),
-      }
-    }
-  }
-);
+export const TagFormatConfiguration = Configuration.create('tagformat', {
+  [ConfigurationType.CONFIG]: [tagformatConfig, 10],
+  [ConfigurationType.OPTIONS]: {
+    tagformat: {
+      number: (n: number) => n.toString(),
+      tag: (tag: string) => '(' + tag + ')',
+      ref: '', // means use the tag function
+      id: (id: string) => 'mjx-eqn:' + id.replace(/\s/g, '_'),
+      url: (id: string, base: string) => base + '#' + encodeURIComponent(id),
+    },
+  },
+});

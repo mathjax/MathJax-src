@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2023 The MathJax Consortium
+ *  Copyright (c) 2019-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,15 +16,14 @@
  */
 
 /**
- * @fileoverview  Implements the FontCache object for SVG output
+ * @file  Implements the FontCache object for SVG output
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVG} from '../svg.js';
+import { SVG } from '../svg.js';
 
 export class FontCache<N, T, D> {
-
   /**
    * The SVG jax that owsn this cache
    */
@@ -63,13 +62,21 @@ export class FontCache<N, T, D> {
    * @param {string} variant   The variant name for the character
    * @param {string} C         The character to be cached
    * @param {string} path      The SVG path data for the character
-   * @return {string}          The id for the cached <path> element
+   * @returns {string}          The id for the cached <path> element
    */
   public cachePath(variant: string, C: string, path: string): string {
-    const id = 'MJX-' + this.localID + (this.jax.font.getVariant(variant).cacheID || '') + '-' + C;
+    const id =
+      'MJX-' +
+      this.localID +
+      (this.jax.font.getVariant(variant).cacheID || '') +
+      '-' +
+      C;
     if (!this.cache.has(id)) {
       this.cache.set(id, path);
-      this.jax.adaptor.append(this.defs, this.jax.svg('path', {id: id, d: path}));
+      this.jax.adaptor.append(
+        this.defs,
+        this.jax.svg('path', { id: id, d: path })
+      );
     }
     return id;
   }
@@ -84,6 +91,8 @@ export class FontCache<N, T, D> {
   /**
    * Use a localID (for font-specific caching), either with a specific string,
    * or from the nextID number.
+   *
+   * @param id
    */
   public useLocalID(id: string = null) {
     this.localID = (id == null ? ++this.nextID : id) + (id === '' ? '' : '-');
@@ -103,5 +112,4 @@ export class FontCache<N, T, D> {
   public getCache() {
     return this.defs;
   }
-
 }

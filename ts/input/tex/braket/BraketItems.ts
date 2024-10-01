@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2023 The MathJax Consortium
+ *  Copyright (c) 2009-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,18 +15,16 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview Stack items for parsing the braket package.
+ * @file Stack items for parsing the braket package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-
-import {CheckType, BaseItem, StackItem} from '../StackItem.js';
-import {TEXCLASS, MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {ParseUtil} from '../ParseUtil.js';
-import {MATHSPACE, em} from '../../../util/lengths.js';
+import { CheckType, BaseItem, StackItem } from '../StackItem.js';
+import { TEXCLASS, MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { ParseUtil } from '../ParseUtil.js';
+import { MATHSPACE, em } from '../../../util/lengths.js';
 
 const THINSPACE = em(MATHSPACE.thinmathspace);
 
@@ -36,7 +34,6 @@ const THINSPACE = em(MATHSPACE.thinmathspace);
  * set). To finalise it adds the surrounding angle brackets or braces.
  */
 export class BraketItem extends BaseItem {
-
   /**
    * @override
    */
@@ -65,7 +62,7 @@ export class BraketItem extends BaseItem {
         this.barNodes.push(...super.toMml(true, true).childNodes);
         this.Clear();
         return BaseItem.fail;
-      };
+      }
       return [[this.factory.create('mml', this.toMml())], true];
     }
     if (item.isKind('mml')) {
@@ -77,7 +74,6 @@ export class BraketItem extends BaseItem {
     }
     return super.checkItem(item);
   }
-
 
   /**
    * @override
@@ -91,8 +87,8 @@ export class BraketItem extends BaseItem {
       //
       return inner;
     }
-    let open = this.getProperty('open') as string;
-    let close = this.getProperty('close') as string;
+    const open = this.getProperty('open') as string;
+    const close = this.getProperty('close') as string;
     //
     // Add any saved bar nodes
     //
@@ -105,19 +101,26 @@ export class BraketItem extends BaseItem {
       //
       if (this.getProperty('space')) {
         inner = this.create('node', 'inferredMrow', [
-          this.create('token', 'mspace', {width: THINSPACE}),
+          this.create('token', 'mspace', { width: THINSPACE }),
           inner,
-          this.create('token', 'mspace', {width: THINSPACE})
+          this.create('token', 'mspace', { width: THINSPACE }),
         ]);
       }
       return ParseUtil.fenced(this.factory.configuration, open, inner, close);
     }
-    let attrs = {fence: true, stretchy: false, symmetric: true, texClass: TEXCLASS.OPEN};
-    let openNode = this.create('token', 'mo', attrs, open);
+    const attrs = {
+      fence: true,
+      stretchy: false,
+      symmetric: true,
+      texClass: TEXCLASS.OPEN,
+    };
+    const openNode = this.create('token', 'mo', attrs, open);
     attrs.texClass = TEXCLASS.CLOSE;
-    let closeNode = this.create('token', 'mo', attrs, close);
-    let mrow = this.create('node', 'mrow', [openNode, inner, closeNode], {open: open, close: close});
+    const closeNode = this.create('token', 'mo', attrs, close);
+    const mrow = this.create('node', 'mrow', [openNode, inner, closeNode], {
+      open: open,
+      close: close,
+    });
     return mrow;
   }
-
 }

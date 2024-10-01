@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2022-2023 The MathJax Consortium
+ *  Copyright (c) 2022-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,18 +16,16 @@
  */
 
 /**
- * @fileoverview  Implements a radio button with customizable comparator.
+ * @file  Implements a radio button with customizable comparator.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Menu, Radio, ParserFactory} from './mj-context-menu.js';
+import { Menu, Radio, ParserFactory } from './mj-context-menu.js';
 
 // Extend the radio buttons with a customizable comparator to work for CS
 // preferences
 export class RadioCompare extends Radio {
-
-
   /**
    * @override
    */
@@ -57,14 +55,20 @@ export class RadioCompare extends Radio {
   /**
    * @override
    */
-  constructor(menu: Menu, content: string, variable: string, id: string,
-              private comparator: (variable: string, id: string) => boolean) {
+  constructor(
+    menu: Menu,
+    content: string,
+    variable: string,
+    id: string,
+    private comparator: (variable: string, id: string) => boolean
+  ) {
     super(menu, content, variable, id);
   }
 
   /**
-   * @override
    * Toggles the aria checked attribute.
+   *
+   * @override
    */
   protected updateAria() {
     this.html.setAttribute(
@@ -74,12 +78,13 @@ export class RadioCompare extends Radio {
   }
 
   /**
-   * @override
    * Toggles the checked tick.
+   *
+   * @override
    */
   protected updateSpan() {
-    this.span.style.display =
-      this.comparator(this.variable.getValue(), this.id) ? '' : 'none';
+    this.span.style.display = this.comparator(this.variable.getValue(), this.id)
+      ? ''
+      : 'none';
   }
-
 }

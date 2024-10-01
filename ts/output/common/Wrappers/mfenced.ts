@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2023 The MathJax Consortium
+ *  Copyright (c) 2018-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,19 +16,29 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMfenced wrapper mixin for the MmlMfenced object
+ * @file  Implements the CommonMfenced wrapper mixin for the MmlMfenced object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wrapper.js';
-import {CommonWrapperFactory} from '../WrapperFactory.js';
-import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
-import {CommonOutputJax} from '../../common.js';
-import {CommonInferredMrow} from './mrow.js';
-import {MmlNode, AbstractMmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMfenced} from '../../../core/MmlTree/MmlNodes/mfenced.js';
-import {BBox} from '../../../util/BBox.js';
+import {
+  CommonWrapper,
+  CommonWrapperClass,
+  CommonWrapperConstructor,
+} from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { CommonInferredMrow } from './mrow.js';
+import { MmlNode, AbstractMmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMfenced } from '../../../core/MmlTree/MmlNodes/mfenced.js';
+import { BBox } from '../../../util/BBox.js';
 
 /*****************************************************************/
 /**
@@ -48,7 +58,9 @@ import {BBox} from '../../../util/BBox.js';
  * @template FC  The FontDataClass type
  */
 export interface CommonMfenced<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -57,9 +69,8 @@ export interface CommonMfenced<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
   /**
    * An mrow to use for the layout of the mfenced
    */
@@ -83,7 +94,6 @@ export interface CommonMfenced<
    * @param {MmlNode} node  The mo element to push on the mrow
    */
   addMo(node: MmlNode): void;
-
 }
 
 /**
@@ -103,7 +113,9 @@ export interface CommonMfenced<
  * @template FC  The FontDataClass type
  */
 export interface CommonMfencedClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -112,13 +124,14 @@ export interface CommonMfencedClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
 /**
  * The CommonMfenced wrapper mixin for the MmlMfenced object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -135,7 +148,9 @@ export interface CommonMfencedClass<
  * @template B   The mixin interface to create
  */
 export function CommonMfencedMixin<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -145,16 +160,20 @@ export function CommonMfencedMixin<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
-
-  return class CommonMfencedMixin extends Base
-  implements CommonMfenced<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+): B {
+  return class CommonMfencedMixin
+    extends Base
+    implements CommonMfenced<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
      * @override
      */
-    public mrow: CommonInferredMrow<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> = null;
+    /* prettier-ignore */
+    public mrow:
+      CommonInferredMrow<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> = null;
 
     /**
      * @override
@@ -200,7 +219,7 @@ export function CommonMfencedMixin<
 
     /**
      * @override
-     * @constructor
+     * @class
      */
     constructor(factory: WF, node: MmlNode, parent: WW = null) {
       super(factory, node, parent);
@@ -229,7 +248,5 @@ export function CommonMfencedMixin<
     public computeLineBBox(i: number) {
       return this.mrow.getLineBBox(i);
     }
-
   } as any as B;
-
 }

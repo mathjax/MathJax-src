@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2023 The MathJax Consortium
+ *  Copyright (c) 2019-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,18 +16,28 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMtext wrapper for the MmlMtext object
+ * @file  Implements the SvgMtext wrapper for the MmlMtext object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVG} from '../../svg.js';
-import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
-import {SvgWrapperFactory} from '../WrapperFactory.js';
-import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
-import {CommonMtext, CommonMtextClass, CommonMtextMixin} from '../../common/Wrappers/mtext.js';
-import {MmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMtext} from '../../../core/MmlTree/MmlNodes/mtext.js';
+import { SVG } from '../../svg.js';
+import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
+import { SvgWrapperFactory } from '../WrapperFactory.js';
+import {
+  SvgCharOptions,
+  SvgVariantData,
+  SvgDelimiterData,
+  SvgFontData,
+  SvgFontDataClass,
+} from '../FontData.js';
+import {
+  CommonMtext,
+  CommonMtextClass,
+  CommonMtextMixin,
+} from '../../common/Wrappers/mtext.js';
+import { MmlNode, TextNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMtext } from '../../../core/MmlTree/MmlNodes/mtext.js';
 
 /*****************************************************************/
 /**
@@ -37,11 +47,22 @@ import {MmlMtext} from '../../../core/MmlTree/MmlNodes/mtext.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SvgMtextNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMtext<
-  N, T, D,
-  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
-> {}
+export interface SvgMtextNTD<N, T, D>
+  extends SvgWrapper<N, T, D>,
+    CommonMtext<
+      N,
+      T,
+      D,
+      SVG<N, T, D>,
+      SvgWrapper<N, T, D>,
+      SvgWrapperFactory<N, T, D>,
+      SvgWrapperClass<N, T, D>,
+      SvgCharOptions,
+      SvgVariantData,
+      SvgDelimiterData,
+      SvgFontData,
+      SvgFontDataClass
+    > {}
 
 /**
  * The SvgMtextClass interface for the SVG Mtext wrapper
@@ -50,14 +71,28 @@ export interface SvgMtextNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMtext<
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SvgMtextClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonMtextClass<
-  N, T, D,
-  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
-> {
-  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMtextNTD<N, T, D>;
+export interface SvgMtextClass<N, T, D>
+  extends SvgWrapperClass<N, T, D>,
+    CommonMtextClass<
+      N,
+      T,
+      D,
+      SVG<N, T, D>,
+      SvgWrapper<N, T, D>,
+      SvgWrapperFactory<N, T, D>,
+      SvgWrapperClass<N, T, D>,
+      SvgCharOptions,
+      SvgVariantData,
+      SvgDelimiterData,
+      SvgFontData,
+      SvgFontDataClass
+    > {
+  new (
+    factory: SvgWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: SvgWrapper<N, T, D>
+  ): SvgMtextNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
@@ -65,19 +100,26 @@ export interface SvgMtextClass<N, T, D> extends SvgWrapperClass<N, T, D>, Common
  * The SvgMtext wrapper class for the MmlMtext class
  */
 export const SvgMtext = (function <N, T, D>(): SvgMtextClass<N, T, D> {
-
   const Base = CommonMtextMixin<
-      N, T, D,
-      SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-      SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
-      SvgMtextClass<N, T, D>
-    >(SvgWrapper);
+    N,
+    T,
+    D,
+    SVG<N, T, D>,
+    SvgWrapper<N, T, D>,
+    SvgWrapperFactory<N, T, D>,
+    SvgWrapperClass<N, T, D>,
+    SvgCharOptions,
+    SvgVariantData,
+    SvgDelimiterData,
+    SvgFontData,
+    SvgFontDataClass,
+    SvgMtextClass<N, T, D>
+  >(SvgWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error Avoid message about base constructors not having the same
+  //   type (they should both be SvgWrapper<N, T, D>, but are thought of as
+  //   different by typescript)
   return class SvgMtext extends Base implements SvgMtextNTD<N, T, D> {
-
     /**
      * @override
      */
@@ -106,7 +148,7 @@ export const SvgMtext = (function <N, T, D>(): SvgMtextClass<N, T, D> {
         // Get the start and end indices
         //
         let [si, sj] = this.breakPoints[i - 1] || [0, 0];
-        let [ei, ej] = this.breakPoints[i] || [childNodes.length, 0];
+        const [ei, ej] = this.breakPoints[i] || [childNodes.length, 0];
         //
         // Get the words for the start child, and if the start and end
         //   are in the same child, output the needed words
@@ -143,7 +185,5 @@ export const SvgMtext = (function <N, T, D>(): SvgMtextClass<N, T, D> {
         }
       }
     }
-
   };
-
 })<any, any, any>();

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2023 The MathJax Consortium
+ *  Copyright (c) 2018-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,17 +16,27 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMtd wrapper mixin for the MmlMtd object
+ * @file  Implements the CommonMtd wrapper mixin for the MmlMtd object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wrapper.js';
-import {CommonWrapperFactory} from '../WrapperFactory.js';
-import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
-import {CommonOutputJax} from '../../common.js';
-import {CommonMtable} from '../../common/Wrappers/mtable.js';
-import {CommonMtr} from '../../common/Wrappers/mtr.js';
+import {
+  CommonWrapper,
+  CommonWrapperClass,
+  CommonWrapperConstructor,
+} from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { CommonMtable } from '../../common/Wrappers/mtable.js';
+import { CommonMtr } from '../../common/Wrappers/mtr.js';
 
 /*****************************************************************/
 /**
@@ -46,7 +56,9 @@ import {CommonMtr} from '../../common/Wrappers/mtr.js';
  * @template FC  The FontDataClass type
  */
 export interface CommonMtd<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -55,7 +67,7 @@ export interface CommonMtd<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /**
@@ -75,7 +87,9 @@ export interface CommonMtd<
  * @template FC  The FontDataClass type
  */
 export interface CommonMtdClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -84,13 +98,14 @@ export interface CommonMtdClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
 /**
  *  The CommonMtd wrapper mixin for the MmlMtd object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -107,7 +122,9 @@ export interface CommonMtdClass<
  * @template B   The mixin interface to create
  */
 export function CommonMtdMixin<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -117,12 +134,14 @@ export function CommonMtdMixin<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
-
-  return class CommonMtdMixin extends Base
-  implements CommonMtd<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+): B {
+  return class CommonMtdMixin
+    extends Base
+    implements CommonMtd<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
      * @override
      */
@@ -142,11 +161,20 @@ export function CommonMtdMixin<
      * @override
      */
     public getWrapWidth(_j: number) {
-      const table = this.parent.parent as any as CommonMtable<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
-                                                 CommonMtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>;
-      const row = this.parent as any as CommonMtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+      /* prettier-ignore */
+      const table = this.parent.parent as any as
+        CommonMtable<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC,
+          CommonMtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+         >;
+      /* prettier-ignore */
+      const row = this.parent as any as
+        CommonMtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
       const i = this.node.childPosition() - (row.labeled ? 1 : 0);
-      return (typeof(table.cWidths[i]) === 'number' ? table.cWidths[i] : table.getTableData().W[i]) as number;
+      return (
+        typeof table.cWidths[i] === 'number'
+          ? table.cWidths[i]
+          : table.getTableData().W[i]
+      ) as number;
     }
 
     /**
@@ -155,7 +183,5 @@ export function CommonMtdMixin<
     public getChildAlign(_i: number) {
       return this.node.attributes.get('columnalign') as string;
     }
-
   } as any as B;
-
 }

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2020-2023 The MathJax Consortium
+ *  Copyright (c) 2020-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,29 +15,30 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview  Method definitions for the textmacros package
+ * @file  Method definitions for the textmacros package
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
 import TexParser from '../TexParser.js';
-import {retryAfter} from '../../../util/Retries.js';
-import {TextParser} from './TextParser.js';
+import { retryAfter } from '../../../util/Retries.js';
+import { TextParser } from './TextParser.js';
 import BaseMethods from '../base/BaseMethods.js';
 
 /**
  * The methods used to implement the text-mode macros
  */
 export const TextMacrosMethods = {
-
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} c            The character that called this function
+   * @param {string} _c           The character that called this function
    */
   Comment(parser: TextParser, _c: string) {
-    while (parser.i < parser.string.length && parser.string.charAt(parser.i) !== '\n') {
+    while (
+      parser.i < parser.string.length &&
+      parser.string.charAt(parser.i) !== '\n'
+    ) {
       parser.i++;
     }
     parser.i++;
@@ -49,7 +50,7 @@ export const TextMacrosMethods = {
    */
   Math(parser: TextParser, open: string) {
     parser.saveText();
-    let i = parser.i;
+    const i = parser.i;
     let j, c;
     let braces = 0;
     //
@@ -58,37 +59,45 @@ export const TextMacrosMethods = {
     while ((c = parser.GetNext())) {
       j = parser.i++;
       switch (c) {
-
-      case '\\':
-        const cs = parser.GetCS();
-        if (cs === ')') c = '\\(';  // \( is the opening delimiter for \)
-      case '$':
-        //
-        //  If there are no unbalanced braces and we have found the close delimiter,
-        //    process the contents of the delimiters in math mode (using the original TeX parser)
-        //
-        if (braces === 0 && open === c) {
-          const config = parser.texParser.configuration;
-          // j > i!
-          const mml = (new TexParser(parser.string.substring(i, j), parser.stack.env, config)).mml();
-          parser.PushMath(mml);
-          return;
+        case '\\': {
+          const cs = parser.GetCS();
+          if (cs === ')') c = '\\('; // \( is the opening delimiter for \)
         }
-        break;
+        // falls through
+        case '$':
+          //
+          //  If there are no unbalanced braces and we have found the close delimiter,
+          //    process the contents of the delimiters in math mode (using the original TeX parser)
+          //
+          if (braces === 0 && open === c) {
+            const config = parser.texParser.configuration;
+            // j > i!
+            const mml = new TexParser(
+              parser.string.substring(i, j),
+              parser.stack.env,
+              config
+            ).mml();
+            parser.PushMath(mml);
+            return;
+          }
+          break;
 
-      case '{':
-        braces++;
-        break;
+        case '{':
+          braces++;
+          break;
 
-      case '}':
-        if (braces === 0) {
-          parser.Error('ExtraCloseMissingOpen', 'Extra close brace or missing open brace');
-        }
-        braces--;
-        break;
+        case '}':
+          if (braces === 0) {
+            parser.Error(
+              'ExtraCloseMissingOpen',
+              'Extra close brace or missing open brace'
+            );
+          }
+          braces--;
+          break;
       }
     }
-    parser.Error('MathNotTerminated', 'Math-mode is not properly terminated');
+    parser.Error('MathNotTerminated', 'Math mode is not properly terminated');
   },
 
   /**
@@ -96,7 +105,7 @@ export const TextMacrosMethods = {
    * @param {string} c            The character that called this function
    */
   MathModeOnly(parser: TextParser, c: string) {
-    parser.Error('MathModeOnly', '\'%1\' allowed only in math mode', c);
+    parser.Error('MathModeOnly', "'%1' allowed only in math mode", c);
   },
 
   /**
@@ -104,12 +113,12 @@ export const TextMacrosMethods = {
    * @param {string} c            The character that called this function
    */
   Misplaced(parser: TextParser, c: string) {
-    parser.Error('Misplaced', '\'%1\' can not be used here', c);
+    parser.Error('Misplaced', "Misplaced '%1'", c);
   },
 
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} c            The character that called this function
+   * @param {string} _c           The character that called this function
    */
   OpenBrace(parser: TextParser, _c: string) {
     //
@@ -123,7 +132,7 @@ export const TextMacrosMethods = {
 
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} c            The character that called this function
+   * @param {string} _c            The character that called this function
    */
   CloseBrace(parser: TextParser, _c: string) {
     //
@@ -133,7 +142,10 @@ export const TextMacrosMethods = {
       parser.saveText();
       parser.stack.env = parser.envStack.pop();
     } else {
-      parser.Error('ExtraCloseMissingOpen', 'Extra close brace or missing open brace');
+      parser.Error(
+        'ExtraCloseMissingOpen',
+        'Extra close brace or missing open brace'
+      );
     }
   },
 
@@ -171,18 +183,18 @@ export const TextMacrosMethods = {
 
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} c            The character that called this function
+   * @param {string} _c           The character that called this function
    */
   Tilde(parser: TextParser, _c: string) {
-    parser.text += '\u00A0';  // non-breaking space
+    parser.text += '\u00A0'; // non-breaking space
   },
 
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} c            The character that called this function
+   * @param {string} _c           The character that called this function
    */
   Space(parser: TextParser, _c: string) {
-    parser.text += ' ';  // regular space, but skipping multiple spaces
+    parser.text += ' '; // regular space, but skipping multiple spaces
     while (parser.GetNext().match(/\s/)) parser.i++;
   },
 
@@ -191,12 +203,12 @@ export const TextMacrosMethods = {
    * @param {string} name         The control sequence that called this function
    */
   SelfQuote(parser: TextParser, name: string) {
-    parser.text += name.substring(1);  // add in the quoted character
+    parser.text += name.substring(1); // add in the quoted character
   },
 
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} name         The control sequence that called this function
+   * @param {string} _name        The control sequence that called this function
    * @param {string} c            The character to insert into the string
    */
   Insert(parser: TextParser, _name: string, c: string) {
@@ -226,22 +238,24 @@ export const TextMacrosMethods = {
     //
     //  Switch to/from italics
     //
-    const variant = (parser.stack.env.mathvariant === '-tex-mathit' ? 'normal' : '-tex-mathit');
-    parser.Push(parser.ParseTextArg(name, {mathvariant: variant}));
+    const variant =
+      parser.stack.env.mathvariant === '-tex-mathit' ? 'normal' : '-tex-mathit';
+    parser.Push(parser.ParseTextArg(name, { mathvariant: variant }));
   },
 
   /**
    * @param {TextParser} parser   The text-mode parser
    * @param {string} name         The control sequence that called this function
+   * @param {string} variant      The font variant
    */
   TextFont(parser: TextParser, name: string, variant: string) {
     parser.saveText();
-    parser.Push(parser.ParseTextArg(name, {mathvariant: variant}));
+    parser.Push(parser.ParseTextArg(name, { mathvariant: variant }));
   },
 
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} name         The control sequence that called this function
+   * @param {string} _name        The control sequence that called this function
    * @param {string} variant      The font variant to use from now on
    */
   SetFont(parser: TextParser, _name: string, variant: string) {
@@ -251,7 +265,7 @@ export const TextMacrosMethods = {
 
   /**
    * @param {TextParser} parser   The text-mode parser
-   * @param {string} name         The control sequence that called this function
+   * @param {string} _name        The control sequence that called this function
    * @param {number} size         The font size to use from now on
    */
   SetSize(parser: TextParser, _name: string, size: number) {
@@ -296,6 +310,5 @@ export const TextMacrosMethods = {
   Lap: BaseMethods.Lap,
   Phantom: BaseMethods.Phantom,
   Smash: BaseMethods.Smash,
-  MmlToken: BaseMethods.MmlToken
-
+  MmlToken: BaseMethods.MmlToken,
 };

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2009-2023 The MathJax Consortium
+ *  Copyright (c) 2009-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,21 +15,25 @@
  *  limitations under the License.
  */
 
-import {mathjax} from '../../mathjax.js';
-import {Sre} from '../sre.js';
-import {OptionList} from '../../util/Options.js';
-import {LiveRegion} from '../explorer/Region.js';
+import { mathjax } from '../../mathjax.js';
+import { Sre } from '../sre.js';
+import { OptionList } from '../../util/Options.js';
+import { LiveRegion } from '../explorer/Region.js';
 import { buildLabel, buildSpeech, InPlace } from '../speech/SpeechUtil.js';
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 
 /**
- * @fileoverview Speech generator collections for enrichment and explorers.
+ * @file Speech generator collections for enrichment and explorers.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+/**
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
 export class GeneratorPool<N, T, D> {
-
   private _element: Element;
 
   set element(element: Element) {
@@ -68,8 +72,8 @@ export class GeneratorPool<N, T, D> {
   /**
    *  The current speech setting for Sre
    */
-  private currentLocale = 'none';
-  private currentBraille = 'none';
+  private static currentLocale = 'none';
+  private static currentBraille = 'none';
   private _options: OptionList = {};
 
   /**
@@ -81,18 +85,20 @@ export class GeneratorPool<N, T, D> {
   public set options(options: OptionList) {
     this._options = options;
     Sre.setupEngine(options.sre);
-    this.speechGenerator.setOptions(Object.assign(
-      {}, options?.sre || {}, {
+    this.speechGenerator.setOptions(
+      Object.assign({}, options?.sre || {}, {
         modality: 'speech',
         markup: 'ssml',
-        automark: true
-      }));
-    this.summaryGenerator.setOptions(Object.assign(
-      {}, options?.sre || {}, {
+        automark: true,
+      })
+    );
+    this.summaryGenerator.setOptions(
+      Object.assign({}, options?.sre || {}, {
         modality: 'summary',
         markup: 'ssml',
         automark: true,
-      }));
+      })
+    );
     this.brailleGenerator.setOptions({
       locale: options?.sre?.braille,
       domain: 'default',
@@ -113,6 +119,7 @@ export class GeneratorPool<N, T, D> {
    * loaded.
    *
    * @param {OptionList} options A list of options.
+   * @param {DOMAdaptor} adaptor The DOM adaptor providing access to nodes.
    */
   public init(options: OptionList, adaptor: DOMAdaptor<N, T, D>) {
     if (this._init) return;
@@ -129,24 +136,31 @@ export class GeneratorPool<N, T, D> {
    * loaded.
    *
    * @param {OptionList} options A list of options.
+   * @returns {boolean} True if the speech or Braille locale needed updating.
    */
-  public update(options: OptionList) {
+  public update(options: OptionList): boolean {
     this.options = options;
     return this._update(options);
   }
 
-  private _update(options: OptionList) {
+  /**
+   * Updates locales for Braille and speech if necessary.
+   *
+   * @param {OptionList} options A list of options.
+   * @returns {boolean} True if the speech or Braille locale needed updating.
+   */
+  private _update(options: OptionList): boolean {
     if (!options || !options.sre) return false;
     let update = false;
-    if (options.sre.braille !== this.currentBraille) {
-      this.currentBraille = options.sre.braille;
+    if (options.sre.braille !== GeneratorPool.currentBraille) {
+      GeneratorPool.currentBraille = options.sre.braille;
       update = true;
-      Sre.setupEngine({locale: options.sre.braille})
+      Sre.setupEngine({ locale: options.sre.braille });
     }
-    if (options.sre.locale !== this.currentLocale) {
-      this.currentLocale = options.sre.locale;
+    if (options.sre.locale !== GeneratorPool.currentLocale) {
+      GeneratorPool.currentLocale = options.sre.locale;
       update = true;
-      Sre.setupEngine({locale: options.sre.locale})
+      Sre.setupEngine({ locale: options.sre.locale });
     }
     return update;
   }
@@ -156,14 +170,18 @@ export class GeneratorPool<N, T, D> {
    *
    * @param {N} node The typeset node.
    * @param {string} mml The serialized mml node.
-   * @return {[string, string]} Speech and Braille expression pair.
+   * @returns {[string, string]} Speech and Braille expression pair.
    */
   public computeSpeech(node: N, mml: string): [string, string] {
     this.element = Sre.parseDOM(mml);
     const xml = this.prepareXml(node);
-    const speech = this.speechGenerator.getSpeech(xml, this.element);
-    const braille = this.brailleGenerator.getSpeech(xml, this.element);
-    if (this.options.enableSpeech || this.options.enableBraille) {
+    const speech = this.options.enableSpeech
+      ? this.speechGenerator.getSpeech(xml, this.element)
+      : '';
+    const braille = this.options.enableBraille
+      ? this.brailleGenerator.getSpeech(xml, this.element)
+      : '';
+    if (speech || braille) {
       this.setAria(node, xml, this.options.sre.locale);
     }
     return [speech, braille];
@@ -175,14 +193,15 @@ export class GeneratorPool<N, T, D> {
    * different summary.
    *
    * @param {N} node The typeset node.
+   * @returns {string} The last computed speech elements.
    */
-  public summary(node: N) {
+  public summary(node: N): string {
     if (this.lastMove === InPlace.SUMMARY) {
       this.CleanUp(node);
       return this.lastSpeech;
     }
     const xml = this.prepareXml(node);
-    this.lastSpeech = this.summaryGenerator.getSpeech(xml, this.element)
+    this.lastSpeech = this.summaryGenerator.getSpeech(xml, this.element);
     return this.lastSpeech;
   }
 
@@ -190,12 +209,16 @@ export class GeneratorPool<N, T, D> {
    * Cleans up after an explorer move by replacing the aria-label with the
    * original speech again.
    *
-   * @param {N} node
+   * @param {N} node The node to clean up.
    */
   public CleanUp(node: N) {
     if (this.lastMove) {
       // TODO: Remember the speech.
-      this.adaptor.setAttribute(node, 'aria-label', buildSpeech(this.getLabel(node))[0]);
+      this.adaptor.setAttribute(
+        node,
+        'aria-label',
+        buildSpeech(this.getLabel(node))[0]
+      );
     }
     this.lastMove = InPlace.NONE;
   }
@@ -213,13 +236,17 @@ export class GeneratorPool<N, T, D> {
 
   /**
    * Getter for last move.
+   *
+   * @returns {InPlace} The move value.
    */
-  public get lastMove() {
+  public get lastMove(): InPlace {
     return this.lastMove_;
   }
 
   /**
    * Setter for last move.
+   *
+   * @param {InPlace} move The latest move.
    */
   public set lastMove(move: InPlace) {
     this.lastMove_ = this.lastSpeech ? move : InPlace.NONE;
@@ -238,20 +265,20 @@ export class GeneratorPool<N, T, D> {
     speechRegion: LiveRegion,
     brailleRegion: LiveRegion
   ) {
-    let speech = this.getLabel(node, this.lastSpeech);
+    const speech = this.getLabel(node, this.lastSpeech);
     speechRegion.Update(speech);
     this.adaptor.setAttribute(node, 'aria-label', buildSpeech(speech)[0]);
     this.lastSpeech = '';
-    brailleRegion.Update(
-      this.adaptor.getAttribute(node, 'aria-braillelabel'));
+    brailleRegion.Update(this.adaptor.getAttribute(node, 'aria-braillelabel'));
   }
 
   /**
    * Updates the speech in the give node.
    *
    * @param {N} node The typeset node.
+   * @returns {string} The aria label to speak.
    */
-  public updateSpeech(node: N) {
+  public updateSpeech(node: N): string {
     const xml = this.prepareXml(node);
     const speech = this.speechGenerator.getSpeech(xml, this.element);
     this.setAria(node, xml, this.options.sre.locale);
@@ -277,7 +304,8 @@ export class GeneratorPool<N, T, D> {
    */
   public nextStyle(node: N) {
     this.speechGenerator.nextStyle(
-      this.adaptor.getAttribute(node, 'data-semantic-id'));
+      this.adaptor.getAttribute(node, 'data-semantic-id')
+    );
     this.updateSummaryGenerator();
   }
 
@@ -295,8 +323,9 @@ export class GeneratorPool<N, T, D> {
    * Makes a node amenable for SRE computations by reparsing.
    *
    * @param {N} node The node.
+   * @returns {Element} The reparsed element.
    */
-  private prepareXml(node: N) {
+  private prepareXml(node: N): Element {
     return Sre.parseDOM(this.adaptor.serializeXML(node));
   }
 
@@ -310,10 +339,9 @@ export class GeneratorPool<N, T, D> {
    * @param {N} node The typeset node.
    * @param {string=} center Core speech. Defaults to `data-semantic-speech`.
    * @param {string=} sep The speech separator. Defaults to space.
+   * @returns {string} The assembled label.
    */
-  public getLabel(node: N,
-                  center: string = '',
-                  sep: string = ' ') {
+  public getLabel(node: N, center: string = '', sep: string = ' '): string {
     return buildLabel(
       center || this.adaptor.getAttribute(node, 'data-semantic-speech'),
       this.adaptor.getAttribute(node, 'data-semantic-prefix'),
@@ -345,7 +373,7 @@ export class GeneratorPool<N, T, D> {
     'data-semantic-postfix',
     'data-semantic-speech',
     'data-semantic-braille',
-  ]
+  ];
 
   /**
    * Attributes to be copied after an element was collapsed.
@@ -355,53 +383,70 @@ export class GeneratorPool<N, T, D> {
     'data-semantic-parent',
     'data-semantic-type',
     'data-semantic-role',
-    'role'
-  ]
+    'role',
+  ];
 
   /**
    * Retrieve and sets aria and braille labels recursively.
-   * @param {MmlNode} node The root node to search from.
+   *
+   * @param {N} node The root node to search from.
+   * @param {Element} xml The enriched XML node.
+   * @param {string} locale The locale to use for Aria labels.
    */
   public setAria(node: N, xml: Element, locale: string) {
     const kind = xml.getAttribute('data-semantic-type');
     if (kind) {
-      this.attrList.forEach(attr => this.copyAttributes(xml, node, attr));
+      this.attrList.forEach((attr) => this.copyAttributes(xml, node, attr));
       if (kind === 'dummy') {
-        this.dummyList.forEach(attr => this.copyAttributes(xml, node, attr));
+        this.dummyList.forEach((attr) => this.copyAttributes(xml, node, attr));
       }
     }
-    const speech = this.getLabel(node);
-    if (speech) {
-      this.adaptor.setAttribute(node, 'aria-label', buildSpeech(speech, locale)[0]);
+    if (this.options.a11y.speech) {
+      const speech = this.getLabel(node);
+      if (speech) {
+        this.adaptor.setAttribute(
+          node,
+          'aria-label',
+          buildSpeech(speech, locale)[0]
+        );
+      }
     }
-    const braille = this.adaptor.getAttribute(node, 'data-semantic-braille');
-    if (braille) {
-      this.adaptor.setAttribute(node, 'aria-braillelabel', braille);
+    if (this.options.a11y.braille) {
+      const braille = this.adaptor.getAttribute(node, 'data-semantic-braille');
+      if (braille) {
+        this.adaptor.setAttribute(node, 'aria-braillelabel', braille);
+      }
     }
     const xmlChildren = Array.from(xml.childNodes);
-    Array.from(this.adaptor.childNodes(node)).forEach(
-      (child, index) => {
-        if (this.adaptor.kind(child) !== '#text' &&
-          this.adaptor.kind(child) !== '#comment') {
-          this.setAria(child as N, xmlChildren[index] as Element, locale);
-        }
+    Array.from(this.adaptor.childNodes(node)).forEach((child, index) => {
+      if (
+        this.adaptor.kind(child) !== '#text' &&
+        this.adaptor.kind(child) !== '#comment'
+      ) {
+        this.setAria(child as N, xmlChildren[index] as Element, locale);
       }
-    );
+    });
   }
 
+  /**
+   * Computes the depth of the node in the overal math expression.
+   *
+   * @param {N} node The node.
+   * @param {boolean} actionable If the node actionable (e.g., link, collapse).
+   * @returns {string} The last speech.
+   */
   public depth(node: N, actionable: boolean) {
     if (this.lastMove === InPlace.DEPTH) {
       this.CleanUp(node);
       return this.lastSpeech;
     }
-    let postfix = this.summaryGenerator.getActionable(
-      actionable ?
-        (this.adaptor.childNodes(node).length === 0 ? -1 : 1)
-        : 0);
+    const postfix = this.summaryGenerator.getActionable(
+      actionable ? (this.adaptor.childNodes(node).length === 0 ? -1 : 1) : 0
+    );
     const depth = this.summaryGenerator.getLevel(
-      this.adaptor.getAttribute(node, 'aria-level'));
+      this.adaptor.getAttribute(node, 'aria-level')
+    );
     this.lastSpeech = `${depth} ${postfix}`;
     return this.lastSpeech;
   }
-
 }

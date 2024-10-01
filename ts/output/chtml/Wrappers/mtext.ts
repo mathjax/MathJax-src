@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2023 The MathJax Consortium
+ *  Copyright (c) 2019-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,19 +16,28 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMtext wrapper for the MmlMtext object
+ * @file  Implements the ChtmlMtext wrapper for the MmlMtext object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTML} from '../../chtml.js';
-import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
-import {ChtmlWrapperFactory} from '../WrapperFactory.js';
-import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
-        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
-import {CommonMtext, CommonMtextClass, CommonMtextMixin} from '../../common/Wrappers/mtext.js';
-import {MmlNode, TextNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMtext} from '../../../core/MmlTree/MmlNodes/mtext.js';
+import { CHTML } from '../../chtml.js';
+import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
+import { ChtmlWrapperFactory } from '../WrapperFactory.js';
+import {
+  ChtmlCharOptions,
+  ChtmlVariantData,
+  ChtmlDelimiterData,
+  ChtmlFontData,
+  ChtmlFontDataClass,
+} from '../FontData.js';
+import {
+  CommonMtext,
+  CommonMtextClass,
+  CommonMtextMixin,
+} from '../../common/Wrappers/mtext.js';
+import { MmlNode, TextNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMtext } from '../../../core/MmlTree/MmlNodes/mtext.js';
 
 /*****************************************************************/
 /**
@@ -38,11 +47,22 @@ import {MmlMtext} from '../../../core/MmlTree/MmlNodes/mtext.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMtextNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMtext<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {}
+export interface ChtmlMtextNTD<N, T, D>
+  extends ChtmlWrapper<N, T, D>,
+    CommonMtext<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {}
 
 /**
  * The ChtmlMtextClass interface for the CHTML Mtext wrapper
@@ -51,14 +71,28 @@ export interface ChtmlMtextNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMte
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMtextClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonMtextClass<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {
-  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMtextNTD<N, T, D>;
+export interface ChtmlMtextClass<N, T, D>
+  extends ChtmlWrapperClass<N, T, D>,
+    CommonMtextClass<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {
+  new (
+    factory: ChtmlWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: ChtmlWrapper<N, T, D>
+  ): ChtmlMtextNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
@@ -66,19 +100,26 @@ export interface ChtmlMtextClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, Co
  * The ChtmlMtext wrapper class for the MmlMtext class
  */
 export const ChtmlMtext = (function <N, T, D>(): ChtmlMtextClass<N, T, D> {
-
   const Base = CommonMtextMixin<
-      N, T, D,
-      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
-      ChtmlMtextClass<N, T, D>
-    >(ChtmlWrapper);
+    N,
+    T,
+    D,
+    CHTML<N, T, D>,
+    ChtmlWrapper<N, T, D>,
+    ChtmlWrapperFactory<N, T, D>,
+    ChtmlWrapperClass<N, T, D>,
+    ChtmlCharOptions,
+    ChtmlVariantData,
+    ChtmlDelimiterData,
+    ChtmlFontData,
+    ChtmlFontDataClass,
+    ChtmlMtextClass<N, T, D>
+  >(ChtmlWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class ChtmlMtext extends Base implements ChtmlMtextNTD<N, T, D> {
-
     /**
      * @override
      */
@@ -108,7 +149,7 @@ export const ChtmlMtext = (function <N, T, D>(): ChtmlMtextClass<N, T, D> {
         // Get the start and end indices
         //
         let [si, sj] = this.breakPoints[i - 1] || [0, 0];
-        let [ei, ej] = this.breakPoints[i] || [childNodes.length, 0];
+        const [ei, ej] = this.breakPoints[i] || [childNodes.length, 0];
         //
         // Get the words for the start child, and if the start and end
         //   are in the same child, output the needed words
@@ -140,7 +181,5 @@ export const ChtmlMtext = (function <N, T, D>(): ChtmlMtextClass<N, T, D> {
         }
       }
     }
-
   };
-
 })<any, any, any>();

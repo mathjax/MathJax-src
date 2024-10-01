@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2023 The MathJax Consortium
+ *  Copyright (c) 2017-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,14 +15,14 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview The bboldx package.
+ * @file The bboldx package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration} from '../Configuration.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration } from '../Configuration.js';
 import './BboldxMappings.js';
 
 /**
@@ -32,10 +32,18 @@ import './BboldxMappings.js';
 Configuration.create('text-bboldx', {
   parser: 'text',
   handler: {
-    macro: ['text-bboldx', 'text-bboldx-mathchar0miNormal', 'text-bboldx-delimiterNormal',
-            'text-bboldx-mathchar0miBold', 'text-bboldx-delimiterBold'],
-    delimiter: ['text-bboldx-delimiterNormal', 'text-bboldx-delimiterBold'],
-  }
+    macro: [
+      'text-bboldx',
+      'text-bboldx-mathchar0miNormal',
+      'text-bboldx-delimiterNormal',
+      'text-bboldx-mathchar0miBold',
+      'text-bboldx-delimiterBold',
+    ],
+    [HandlerType.DELIMITER]: [
+      'text-bboldx-delimiterNormal',
+      'text-bboldx-delimiterBold',
+    ],
+  },
 });
 
 //
@@ -43,20 +51,28 @@ Configuration.create('text-bboldx', {
 // bold bb.
 //
 export const BboldxConfiguration = Configuration.create('bboldx', {
-  handler: {
-    macro: ['bboldx', 'bboldx-mathchar0miNormal', 'bboldx-delimiterNormal',
-            'bboldx-mathchar0miBold', 'bboldx-delimiterBold'],
-    delimiter: ['bboldx-delimiterNormal', 'bboldx-delimiterBold'],
+  [ConfigurationType.HANDLER]: {
+    [HandlerType.MACRO]: [
+      'bboldx',
+      'bboldx-mathchar0miNormal',
+      'bboldx-delimiterNormal',
+      'bboldx-mathchar0miBold',
+      'bboldx-delimiterBold',
+    ],
+    [HandlerType.DELIMITER]: ['bboldx-delimiterNormal', 'bboldx-delimiterBold'],
   },
-  options: {
+  [ConfigurationType.OPTIONS]: {
     bboldx: {
       bfbb: false,
-      light: false
+      light: false,
     },
-    // add text macros by default to textmacros
-    textmacros: {
-      packages: {'[+]': ['text-bboldx']}
+  },
+  config(_config, jax) {
+    const textmacros = jax.parseOptions.packageData.get('textmacros');
+    if (textmacros) {
+      textmacros.parseOptions.options.textmacros.packages.push('text-bboldx');
+      textmacros.textConf.add('text-bboldx', jax, {});
     }
-  }
+  },
+  priority: 3, // load before base, since we override \mathbb
 });
-

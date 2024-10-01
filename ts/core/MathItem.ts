@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2023 The MathJax Consortium
+ *  Copyright (c) 2017-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,15 +16,15 @@
  */
 
 /**
- * @fileoverview  Implements the interface and abstract class for MathItem objects
+ * @file  Implements the interface and abstract class for MathItem objects
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MathDocument} from './MathDocument.js';
-import {InputJax} from './InputJax.js';
-import {OptionList} from '../util/Options.js';
-import {MmlNode} from './MmlTree/MmlNode.js';
+import { MathDocument } from './MathDocument.js';
+import { InputJax } from './InputJax.js';
+import { OptionList } from '../util/Options.js';
+import { MmlNode } from './MmlTree/MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -214,6 +214,7 @@ export interface MathItem<N, T, D> {
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  */
+/* prettier-ignore */
 export type ProtoItem<N, T> = {
   math: string;            // The math expression itself
   start: Location<N, T>;   // The starting location of the math
@@ -227,13 +228,35 @@ export type ProtoItem<N, T> = {
 /**
  *  Produce a proto math item that can be turned into a MathItem
  *
- * @template N  The HTMLElement node class
- * @template T  The Text node class
+ * @param open   The opening delimiter
+ * @param math   The math expression itself
+ * @param close  The closing delimiter
+ * @param n      The index of the string in which this math is
+ * @param start  The starting location of the math
+ * @param end    The ending location of the math
+ * @param display True means display mode, false is inline mode
+ * @returns The proto math item
+ * @template N   The HTMLElement node class
+ * @template T   The Text node class
  */
-export function protoItem<N, T>(open: string, math: string, close: string, n: number,
-                                start: number, end: number, display: boolean = null) {
-  let item: ProtoItem<N, T> = {open: open, math: math, close: close,
-                               n: n, start: {n: start}, end: {n: end}, display: display};
+export function protoItem<N, T>(
+  open: string,
+  math: string,
+  close: string,
+  n: number,
+  start: number,
+  end: number,
+  display: boolean = null
+) {
+  const item: ProtoItem<N, T> = {
+    open: open,
+    math: math,
+    close: close,
+    n: n,
+    start: { n: start },
+    end: { n: end },
+    display: display,
+  };
   return item;
 }
 
@@ -246,7 +269,6 @@ export function protoItem<N, T>(open: string, math: string, close: string, n: nu
  * @template D  The Document class
  */
 export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
-
   /**
    * The source text for the math (e.g., TeX string)
    */
@@ -302,7 +324,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
   protected _state: number = STATE.UNPROCESSED;
 
   /**
-   * @return {boolean}   True when this item is an escaped delimiter
+   * @returns {boolean}   True when this item is an escaped delimiter
    */
   public get isEscaped(): boolean {
     return this.display === null;
@@ -310,15 +332,19 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
 
   /**
    * @param {string} math      The math expression for this item
-   * @param {Inputjax} jax     The input jax to use for this item
+   * @param {InputJax} jax     The input jax to use for this item
    * @param {boolean} display  True if display mode, false if inline
    * @param {Location} start   The starting position of the math in the document
    * @param {Location} end     The ending position of the math in the document
-   * @constructor
+   * @class
    */
-  constructor (math: string, jax: InputJax<N, T, D>, display: boolean = true,
-               start: Location<N, T> = {i: 0, n: 0, delim: ''},
-               end: Location<N, T> = {i: 0, n: 0, delim: ''}) {
+  constructor(
+    math: string,
+    jax: InputJax<N, T, D>,
+    display: boolean = true,
+    start: Location<N, T> = { i: 0, n: 0, delim: '' },
+    end: Location<N, T> = { i: 0, n: 0, delim: '' }
+  ) {
     this.math = math;
     this.inputJax = jax;
     this.display = display;
@@ -341,7 +367,10 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
   /**
    * @override
    */
-  public rerender(document: MathDocument<N, T, D>, start: number = STATE.RERENDER) {
+  public rerender(
+    document: MathDocument<N, T, D>,
+    start: number = STATE.RERENDER
+  ) {
     if (this.state() >= start) {
       this.state(start - 1);
     }
@@ -370,7 +399,9 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
    */
   public typeset(document: MathDocument<N, T, D>) {
     if (this.state() < STATE.TYPESET) {
-      this.typesetRoot = document.outputJax[this.isEscaped ? 'escaped' : 'typeset'](this, document);
+      this.typesetRoot = document.outputJax[
+        this.isEscaped ? 'escaped' : 'typeset'
+      ](this, document);
       this.state(STATE.TYPESET);
     }
   }
@@ -390,9 +421,10 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
    */
   public setMetrics(em: number, ex: number, cwidth: number, scale: number) {
     this.metrics = {
-      em: em, ex: ex,
+      em: em,
+      ex: ex,
       containerWidth: cwidth,
-      scale: scale
+      scale: scale,
     };
   }
 
@@ -421,7 +453,6 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
   public reset(restore: boolean = false) {
     this.state(STATE.UNPROCESSED, restore);
   }
-
 }
 
 /*****************************************************************/
@@ -429,7 +460,7 @@ export abstract class AbstractMathItem<N, T, D> implements MathItem<N, T, D> {
  * The various states that a MathItem (or MathDocument) can be in
  *   (open-ended so that extensions can add to it)
  */
-export const STATE: {[state: string]: number} = {
+export const STATE: { [state: string]: number } = {
   UNPROCESSED: 0,
   FINDMATH: 10,
   COMPILED: 20,
@@ -438,7 +469,7 @@ export const STATE: {[state: string]: number} = {
   RERENDER: 125,
   TYPESET: 150,
   INSERTED: 200,
-  LAST: 10000
+  LAST: 10000,
 };
 
 /**

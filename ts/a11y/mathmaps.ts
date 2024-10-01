@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2023 The MathJax Consortium
+ *  Copyright (c) 2018-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
  */
 
 /**
- * @fileoverview  Base imports of sre locales.
+ * @file  Base imports of sre locales.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-export const MathMaps: Map<string, {[path: string]: any}> = new Map();
+export const MathMaps: Map<string, { [path: string]: any }> = new Map();
 
 export default MathMaps;

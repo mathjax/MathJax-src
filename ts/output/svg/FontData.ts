@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2023 The MathJax Consortium
+ *  Copyright (c) 2017-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,23 +16,31 @@
  */
 
 /**
- * @fileoverview  Implements the SvgFontData class for font data in SVG output.
+ * @file  Implements the SvgFontData class for font data in SVG output.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CharMap, CharOptions, CharDataArray, VariantData, DelimiterData,
-        FontData, FontExtensionData, mergeOptions} from '../common/FontData.js';
+import {
+  CharMap,
+  CharOptions,
+  CharDataArray,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontExtensionData,
+  mergeOptions,
+} from '../common/FontData.js';
 export * from '../common/FontData.js';
 
-export type CharStringMap = {[name: number]: string};
+export type CharStringMap = { [name: number]: string };
 
 /**
  * Add the extra data needed for CharOptions in SVG
  */
 export interface SvgCharOptions extends CharOptions {
-  c?: string;                   // the character value (overrides default value)
-  p?: string;                   // svg path
+  c?: string; // the character value (overrides default value)
+  p?: string; // svg path
 }
 
 /**
@@ -51,32 +59,34 @@ export interface SvgVariantData extends VariantData<SvgCharOptions> {
 /**
  * the extra data neede for a Delimiter in SVG output
  */
-export interface SvgDelimiterData extends DelimiterData {
-}
-
+export interface SvgDelimiterData extends DelimiterData {}
 
 /**
  * Includes the data needed for SVG font extensions
  */
-export interface SvgFontExtensionData<C extends SvgCharOptions, D extends SvgDelimiterData>
-extends FontExtensionData<C, D> {
-  cacheIds: {[variant: string]: string}
+export interface SvgFontExtensionData<
+  C extends SvgCharOptions,
+  D extends SvgDelimiterData,
+> extends FontExtensionData<C, D> {
+  cacheIds?: { [variant: string]: string };
 }
-
 
 /****************************************************************************/
 
 /**
  * The SVG FontData class
  */
-export class SvgFontData extends FontData<SvgCharOptions, SvgVariantData, SvgDelimiterData> {
-
+export class SvgFontData extends FontData<
+  SvgCharOptions,
+  SvgVariantData,
+  SvgDelimiterData
+> {
   /**
    * @override
    */
   public static OPTIONS = {
     ...FontData.OPTIONS,
-    dynamicPrefix: './output/svg/fonts'
+    dynamicPrefix: './output/svg/fonts',
   };
 
   /**
@@ -101,7 +111,6 @@ export class SvgFontData extends FontData<SvgCharOptions, SvgVariantData, SvgDel
     super.addExtension(data, prefix);
     mergeOptions(this, 'variantCacheIds', data.cacheIds);
   }
-
 }
 
 export type SvgFontDataClass = typeof SvgFontData;
@@ -112,9 +121,13 @@ export type SvgFontDataClass = typeof SvgFontData;
  * @param {CharMap} font        The font to augment
  * @param {CharStringMap} paths     The path data to use for each character
  * @param {CharStringMap} content   The string to use for remapped characters
- * @return {SvgCharMap}            The augmented font
+ * @returns {SvgCharMap}            The augmented font
  */
-export function AddPaths(font: SvgCharMap, paths: CharStringMap, content: CharStringMap): SvgCharMap {
+export function AddPaths(
+  font: SvgCharMap,
+  paths: CharStringMap,
+  content: CharStringMap
+): SvgCharMap {
   for (const c of Object.keys(paths)) {
     const n = parseInt(c);
     SvgFontData.charOptions(font, n).p = paths[n];

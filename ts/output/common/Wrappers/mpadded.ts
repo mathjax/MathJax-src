@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2023 The MathJax Consortium
+ *  Copyright (c) 2017-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,17 +16,27 @@
  */
 
 /**
- * @fileoverview  Implements the CommonMpadded wrapper mixin for the MmlMpadded object
+ * @file  Implements the CommonMpadded wrapper mixin for the MmlMpadded object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor} from '../Wrapper.js';
-import {CommonWrapperFactory} from '../WrapperFactory.js';
-import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
-import {CommonOutputJax} from '../../common.js';
-import {BBox} from '../../../util/BBox.js';
-import {Property} from '../../../core/Tree/Node.js';
+import {
+  CommonWrapper,
+  CommonWrapperClass,
+  CommonWrapperConstructor,
+} from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { BBox } from '../../../util/BBox.js';
+import { Property } from '../../../core/Tree/Node.js';
 
 /*****************************************************************/
 /**
@@ -46,7 +56,9 @@ import {Property} from '../../../core/Tree/Node.js';
  * @template FC  The FontDataClass type
  */
 export interface CommonMpadded<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -55,14 +67,13 @@ export interface CommonMpadded<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
   /**
    * Get the content bounding box, and the change in size and offsets
    *   as specified by the parameters
    *
-   * @return {number[]}  The original height, depth, width, the changes in height, depth,
+   * @returns {number[]}  The original height, depth, width, the changes in height, depth,
    *                    and width, and the horizontal and vertical offsets of the content
    */
   getDimens(): number[];
@@ -75,7 +86,7 @@ export interface CommonMpadded<
    * @param {BBox} bbox         The bbox of the mpadded content
    * @param {string=} d         The default dimension to use for relative sizes ('w', 'h', or 'd')
    * @param {number=} m         The minimum value allowed for the dimension
-   * @return {number}           The final dimension in ems
+   * @returns {number}           The final dimension in ems
    */
   dimen(length: Property, bbox: BBox, d?: string, m?: number): number;
 
@@ -85,7 +96,6 @@ export interface CommonMpadded<
    * @param {BBox} bbox   The bbox to set
    */
   setBBoxDimens(bbox: BBox): void;
-
 }
 
 /**
@@ -105,7 +115,9 @@ export interface CommonMpadded<
  * @template FC  The FontDataClass type
  */
 export interface CommonMpaddedClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -114,13 +126,14 @@ export interface CommonMpaddedClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
 /**
  * The CommomMpadded wrapper for the MmlMpadded object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -137,7 +150,9 @@ export interface CommonMpaddedClass<
  * @template B   The mixin interface to create
  */
 export function CommonMpaddedMixin<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -147,25 +162,38 @@ export function CommonMpaddedMixin<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
-
-  return class CommonMpaddedMixin extends Base
-  implements CommonMpadded<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+): B {
+  return class CommonMpaddedMixin
+    extends Base
+    implements CommonMpadded<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
      * @override
      */
     public getDimens(): number[] {
-      const values = this.node.attributes.getList('width', 'height', 'depth', 'lspace', 'voffset');
-      const bbox = this.childNodes[0].getOuterBBox();  // get unmodified bbox of children
-      let {w, h, d} = bbox;
-      let W = w, H = h, D = d, x = 0, y = 0, dx = 0;
-      if (values.width !== '')   w = this.dimen(values.width, bbox, 'w', 0);
-      if (values.height !== '')  h = this.dimen(values.height, bbox, 'h', 0);
-      if (values.depth !== '')   d = this.dimen(values.depth, bbox, 'd', 0);
+      const values = this.node.attributes.getList(
+        'width',
+        'height',
+        'depth',
+        'lspace',
+        'voffset'
+      );
+      const bbox = this.childNodes[0].getOuterBBox(); // get unmodified bbox of children
+      let { w, h, d } = bbox;
+      const W = w;
+      const H = h;
+      const D = d;
+      let x = 0;
+      let y = 0;
+      let dx = 0;
+      if (values.width !== '') w = this.dimen(values.width, bbox, 'w', 0);
+      if (values.height !== '') h = this.dimen(values.height, bbox, 'h', 0);
+      if (values.depth !== '') d = this.dimen(values.depth, bbox, 'd', 0);
       if (values.voffset !== '') y = this.dimen(values.voffset, bbox);
-      if (values.lspace !== '')  x = this.dimen(values.lspace, bbox);
+      if (values.lspace !== '') x = this.dimen(values.lspace, bbox);
       const align = this.node.attributes.get('data-align') as string;
       if (align) {
         dx = this.getAlignX(w, bbox, align);
@@ -176,12 +204,22 @@ export function CommonMpaddedMixin<
     /**
      * @override
      */
-    public dimen(length: Property, bbox: BBox, d: string = '', m: number = null): number {
+    public dimen(
+      length: Property,
+      bbox: BBox,
+      d: string = '',
+      m: number = null
+    ): number {
       length = String(length);
       const match = length.match(/width|height|depth/);
-      const size = (match ? bbox[match[0].charAt(0) as (keyof BBox)] :
-                    (d ? bbox[d as (keyof BBox)] : 0)) as number;
-      let dimen = (this.length2em(length, size) || 0);
+      const size = (
+        match
+          ? bbox[match[0].charAt(0) as keyof BBox]
+          : d
+            ? bbox[d as keyof BBox]
+            : 0
+      ) as number;
+      let dimen = this.length2em(length, size) || 0;
       if (length.match(/^[-+]/) && d) {
         dimen += size;
       }
@@ -211,8 +249,11 @@ export function CommonMpaddedMixin<
       const w = this.childNodes[0].getOuterBBox().w;
       if (w > bbox.w) {
         const overflow = this.node.attributes.get('data-overflow');
-        if (overflow === 'linebreak' ||
-            (overflow === 'auto' && this.jax.math.root.attributes.get('overflow') === 'linebreak')) {
+        if (
+          overflow === 'linebreak' ||
+          (overflow === 'auto' &&
+            this.jax.math.root.attributes.get('overflow') === 'linebreak')
+        ) {
           this.childNodes[0].breakToWidth(bbox.w);
           this.setBBoxDimens(bbox);
         }
@@ -231,9 +272,7 @@ export function CommonMpaddedMixin<
      * @override
      */
     public getChildAlign(_i: number) {
-      return this.node.attributes.get('data-align') as string || 'left';
+      return (this.node.attributes.get('data-align') as string) || 'left';
     }
-
   } as any as B;
-
 }

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2023 The MathJax Consortium
+ *  Copyright (c) 2017-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,64 +16,76 @@
  */
 
 /**
- * @fileoverview  Implements the CommonWrapper class
+ * @file  Implements the CommonWrapper class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AbstractWrapper, WrapperClass} from '../../core/Tree/Wrapper.js';
-import {PropertyList} from '../../core/Tree/Node.js';
-import {MmlNode, MmlNodeClass, TextNode, AbstractMmlNode} from '../../core/MmlTree/MmlNode.js';
-import {MmlMo} from '../../core/MmlTree/MmlNodes/mo.js';
-import {Property} from '../../core/Tree/Node.js';
-import {unicodeChars} from '../../util/string.js';
+import { AbstractWrapper, WrapperClass } from '../../core/Tree/Wrapper.js';
+import { PropertyList } from '../../core/Tree/Node.js';
+import {
+  MmlNode,
+  MmlNodeClass,
+  TextNode,
+  AbstractMmlNode,
+} from '../../core/MmlTree/MmlNode.js';
+import { MmlMo } from '../../core/MmlTree/MmlNodes/mo.js';
+import { Property } from '../../core/Tree/Node.js';
+import { unicodeChars } from '../../util/string.js';
 import * as LENGTHS from '../../util/lengths.js';
-import {Styles} from '../../util/Styles.js';
-import {StyleList, CssStyles} from '../../util/StyleList.js';
-import {OptionList, lookup} from '../../util/Options.js';
-import {CommonOutputJax} from '../common.js';
-import {CommonWrapperFactory} from './WrapperFactory.js';
-import {CommonMo} from './Wrappers/mo.js';
-import {CommonMrow} from './Wrappers/mrow.js';
-import {BBox} from '../../util/BBox.js';
-import {LineBBox} from './LineBBox.js';
-import {FontData, FontDataClass, DelimiterData,
-        VariantData, CharOptions, CharDataArray, DIRECTION, NOSTRETCH} from './FontData.js';
+import { Styles } from '../../util/Styles.js';
+import { StyleList, CssStyles } from '../../util/StyleList.js';
+import { OptionList, lookup } from '../../util/Options.js';
+import { CommonOutputJax } from '../common.js';
+import { CommonWrapperFactory } from './WrapperFactory.js';
+import { CommonMo } from './Wrappers/mo.js';
+import { CommonMrow } from './Wrappers/mrow.js';
+import { BBox } from '../../util/BBox.js';
+import { LineBBox } from './LineBBox.js';
+import {
+  FontData,
+  FontDataClass,
+  DelimiterData,
+  VariantData,
+  CharOptions,
+  CharDataArray,
+  DIRECTION,
+  NOSTRETCH,
+} from './FontData.js';
 
 /*****************************************************************/
 
 /**
  * Shorthand for a dictionary object (an object of key:value pairs)
  */
-export type StringMap = {[key: string]: string};
+export type StringMap = { [key: string]: string };
 
 /**
  * MathML spacing rules
  */
-/* tslint:disable-next-line:whitespace */
+/* prettier-ignore */
 const SMALLSIZE = 2/18;
 
 /**
  * @param {boolean} script   The scriptlevel
  * @param {number} size      The space size
- * @return {number}          The size clamped to SMALLSIZE when scriptlevel > 0
+ * @returns {number}          The size clamped to SMALLSIZE when scriptlevel > 0
  */
 function MathMLSpace(script: boolean, size: number): number {
-  return (script ? size < SMALLSIZE ? 0 : SMALLSIZE : size);
+  return script ? (size < SMALLSIZE ? 0 : SMALLSIZE) : size;
 }
 
 /**
  * The standard space sizes
  */
+/* prettier-ignore */
 export const SPACE: StringMap = {
-  /* tslint:disable:whitespace */
   [LENGTHS.em(0)]:    '0',
   [LENGTHS.em(2/18)]: '1',
   [LENGTHS.em(3/18)]: '2',
   [LENGTHS.em(4/18)]: '3',
   [LENGTHS.em(5/18)]: '4',
   [LENGTHS.em(6/18)]: '5'
-  /* tslint:enable */
 };
 
 /**
@@ -82,17 +94,17 @@ export const SPACE: StringMap = {
 export type StyleData = {
   padding: [number, number, number, number];
   border: {
-    width: [number, number, number, number],
-    style: [string, string, string, string],
-    color: [string, string, string, string]
-  }
+    width: [number, number, number, number];
+    style: [string, string, string, string];
+    color: [string, string, string, string];
+  };
 };
 
 /*********************************************************/
 /**
  * Generic constructor type
  */
-export type Constructor<T> = new(...args: any[]) => T;
+export type Constructor<T> = new (...args: any[]) => T;
 
 /**
  * Generic CommonWrapper constructor
@@ -111,7 +123,9 @@ export type Constructor<T> = new(...args: any[]) => T;
  * @template FC  The FontDataClass type
  */
 export type CommonWrapperConstructor<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -121,9 +135,11 @@ export type CommonWrapperConstructor<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  CW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> =
-             CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
-> = new(factory: WF, node: MmlNode, parent?: WW) => CW;
+  /* prettier-ignore */
+  CW extends CommonWrapper<
+    N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
+  > = CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+> = new (factory: WF, node: MmlNode, parent?: WW) => CW;
 
 /*********************************************************/
 /**
@@ -143,7 +159,9 @@ export type CommonWrapperConstructor<
  * @template FC  The FontDataClass type
  */
 export interface CommonWrapperClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -152,9 +170,8 @@ export interface CommonWrapperClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends WrapperClass<MmlNode, MmlNodeClass, WW> {
-
   /**
    * The wrapper kind
    */
@@ -176,19 +193,19 @@ export interface CommonWrapperClass<
    * WILL be copied.  Most of these (like the font attributes) are handled
    * in other ways.
    */
-  skipAttributes: {[name: string]: boolean};
+  skipAttributes: { [name: string]: boolean };
 
   /**
    * The translation of mathvariant to bold styles, or to remove
    * bold from a mathvariant.
    */
-  BOLDVARIANTS: {[name: string]: StringMap};
+  BOLDVARIANTS: { [name: string]: StringMap };
 
   /**
    * The translation of mathvariant to italic styles, or to remove
    * italic from a mathvariant.
    */
-  ITALICVARIANTS: {[name: string]: StringMap};
+  ITALICVARIANTS: { [name: string]: StringMap };
 
   /**
    * Add any styles for this wrapper class
@@ -202,7 +219,6 @@ export interface CommonWrapperClass<
    * override
    */
   new (factory: WF, node: MmlNode, parent?: WW): WW;
-
 }
 
 /*****************************************************************/
@@ -223,7 +239,9 @@ export interface CommonWrapperClass<
  * @template FC  The FontDataClass type
  */
 export class CommonWrapper<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -232,9 +250,8 @@ export class CommonWrapper<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends AbstractWrapper<MmlNode, MmlNodeClass, WW> {
-
   /**
    * The wrapper kind
    */
@@ -249,8 +266,12 @@ export class CommonWrapper<
    * Styles that should not be passed on from style attribute
    */
   public static removeStyles: string[] = [
-    'fontSize', 'fontFamily', 'fontWeight',
-    'fontStyle', 'fontVariant', 'font'
+    'fontSize',
+    'fontFamily',
+    'fontWeight',
+    'fontStyle',
+    'fontVariant',
+    'font',
   ];
 
   /**
@@ -259,25 +280,31 @@ export class CommonWrapper<
    * WILL be copied.  Most of these (like the font attributes) are handled
    * in other ways.
    */
-  public static skipAttributes: {[name: string]: boolean} = {
-    fontfamily: true, fontsize: true, fontweight: true, fontstyle: true,
-    color: true, background: true,
-    'class': true, href: true, style: true,
-    xmlns: true
+  public static skipAttributes: { [name: string]: boolean } = {
+    fontfamily: true,
+    fontsize: true,
+    fontweight: true,
+    fontstyle: true,
+    color: true,
+    background: true,
+    class: true,
+    href: true,
+    style: true,
+    xmlns: true,
   };
 
   /**
    * The translation of mathvariant to bold styles, or to remove
    * bold from a mathvariant.
    */
-  public static BOLDVARIANTS: {[name: string]: StringMap} =  {
+  public static BOLDVARIANTS: { [name: string]: StringMap } = {
     bold: {
       normal: 'bold',
       italic: 'bold-italic',
       fraktur: 'bold-fraktur',
       script: 'bold-script',
       'sans-serif': 'bold-sans-serif',
-      'sans-serif-italic': 'sans-serif-bold-italic'
+      'sans-serif-italic': 'sans-serif-bold-italic',
     },
     normal: {
       bold: 'normal',
@@ -285,27 +312,27 @@ export class CommonWrapper<
       'bold-fraktur': 'fraktur',
       'bold-script': 'script',
       'bold-sans-serif': 'sans-serif',
-      'sans-serif-bold-italic': 'sans-serif-italic'
-    }
+      'sans-serif-bold-italic': 'sans-serif-italic',
+    },
   };
 
   /**
    * The translation of mathvariant to italic styles, or to remove
    * italic from a mathvariant.
    */
-  public static ITALICVARIANTS: {[name: string]: StringMap} = {
+  public static ITALICVARIANTS: { [name: string]: StringMap } = {
     italic: {
       normal: 'italic',
       bold: 'bold-italic',
       'sans-serif': 'sans-serif-italic',
-      'bold-sans-serif': 'sans-serif-bold-italic'
+      'bold-sans-serif': 'sans-serif-bold-italic',
     },
     normal: {
       italic: 'normal',
       'bold-italic': 'bold',
       'sans-serif-italic': 'sans-serif',
-      'sans-serif-bold-italic': 'bold-sans-serif'
-    }
+      'sans-serif-bold-italic': 'bold-sans-serif',
+    },
   };
 
   /**
@@ -439,12 +466,16 @@ export class CommonWrapper<
   get breakCount(): number {
     if (this._breakCount < 0) {
       const node = this.node;
-      this._breakCount = (
-        node.isEmbellished ? this.coreMO().embellishedBreakCount :
-          node.arity < 0 && !node.linebreakContainer &&
-          (this.childNodes[0] as any as CommonMrow<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>).isStack ?
-          this.childNodes[0].breakCount : 0
-      );
+      this._breakCount = node.isEmbellished
+        ? this.coreMO().embellishedBreakCount
+        : node.arity < 0 &&
+            !node.linebreakContainer &&
+            /* prettier-ignore */
+            (this.childNodes[0] as any as
+              CommonMrow<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>)
+              .isStack
+          ? this.childNodes[0].breakCount
+          : 0;
     }
     return this._breakCount;
   }
@@ -452,10 +483,12 @@ export class CommonWrapper<
   /**
    * @param {WW} mrow     The first mrow below this node
    * @param {WW} _child   The child containing the mrow
-   * @return {WW}         The linebreak container for the child
+   * @returns {WW}         The linebreak container for the child
    */
   public breakTop(mrow: WW, _child: WW): WW {
-    return ((this.node.linebreakContainer || !this.parent) ? mrow : this.parent.breakTop(mrow, this as any as WW));
+    return this.node.linebreakContainer || !this.parent
+      ? mrow
+      : this.parent.breakTop(mrow, this as any as WW);
   }
 
   /*******************************************************************/
@@ -485,7 +518,7 @@ export class CommonWrapper<
   /**
    * @param {MmlNode} node  The node to the wrapped
    * @param {WW} parent     The wrapped parent node
-   * @return {WW}           The newly wrapped node
+   * @returns {WW}           The newly wrapped node
    */
   public wrap<TT = WW>(node: MmlNode, parent: WW = null): TT {
     const wrapped = this.factory.wrap(node, parent || this);
@@ -502,13 +535,13 @@ export class CommonWrapper<
    *   or computed directly if not.
    *
    * @param {boolean} save   Whether to cache the bbox or not (used for stretchy elements)
-   * @return {BBox}          The computed bounding box
+   * @returns {BBox}          The computed bounding box
    */
   public getBBox(save: boolean = true): BBox {
     if (this.bboxComputed) {
       return this.bbox;
     }
-    const bbox = (save ? this.bbox : BBox.zero());
+    const bbox = save ? this.bbox : BBox.zero();
     this.computeBBox(bbox);
     this.bboxComputed = save;
     return bbox;
@@ -518,7 +551,7 @@ export class CommonWrapper<
    * Return the wrapped node's bounding box that includes borders and padding
    *
    * @param {boolean} save  Whether to cache the bbox or not (used for stretchy elements)
-   * @return {BBox}  The computed bounding box
+   * @returns {BBox}  The computed bounding box
    */
   public getOuterBBox(save: boolean = true): BBox {
     const bbox = this.getBBox(save);
@@ -526,8 +559,8 @@ export class CommonWrapper<
     const padding = this.styleData.padding;
     const border = this.styleData.border?.width || [0, 0, 0, 0];
     const obox = bbox.copy();
-    for (const [ , i, side] of BBox.boxSides) {
-      (obox as any)[side] += (padding[i] + border[i]);
+    for (const [, i, side] of BBox.boxSides) {
+      (obox as any)[side] += padding[i] + border[i];
     }
     return obox;
   }
@@ -535,14 +568,14 @@ export class CommonWrapper<
   /**
    * The height and depth without linebreaks
    *
-   * @return {[number, number]}   The height and depth
+   * @returns {[number, number]}   The height and depth
    */
   public getUnbrokenHD(): [number, number] {
     const n = this.breakCount + 1;
     let H = 0;
     let D = 0;
     for (let i = 0; i < n; i++) {
-      const {h, d} = this.getLineBBox(i);
+      const { h, d } = this.getLineBBox(i);
       if (h > H) {
         H = h;
       }
@@ -573,13 +606,13 @@ export class CommonWrapper<
    * Get the bbox from the lineBBox cache, or compute it, as needed.
    *
    * @param {number} i   The number of the segment whose sizes are to be obtained
-   * @return {LineBBox}  The bounding box of the specified segment
+   * @returns {LineBBox}  The bounding box of the specified segment
    */
   public getLineBBox(i: number): LineBBox {
     if (!this.lineBBox[i]) {
       const n = this.breakCount;
       if (n) {
-        const line = (this.embellishedBBox(i) || this.computeLineBBox(i));
+        const line = this.embellishedBBox(i) || this.computeLineBBox(i);
         this.lineBBox[i] = line;
         if (i === 0) {
           if (!this.node.isKind('mo') && this.node.isEmbellished) {
@@ -593,7 +626,10 @@ export class CommonWrapper<
         }
       } else {
         const obox = this.getOuterBBox();
-        this.lineBBox[i] = LineBBox.from(obox, this.linebreakOptions.lineleading);
+        this.lineBBox[i] = LineBBox.from(
+          obox,
+          this.linebreakOptions.lineleading
+        );
       }
     }
     return this.lineBBox[i];
@@ -601,6 +637,8 @@ export class CommonWrapper<
 
   /**
    * Get the bounding box for the i-th line of an embellished mo
+   *
+   * @param i
    */
   protected embellishedBBox(i: number): LineBBox {
     if (!this.node.isEmbellished || this.node.isKind('mo')) return null;
@@ -612,7 +650,7 @@ export class CommonWrapper<
    * Compute the bounding box for the i-th line (for when it is not in the cache).
    *
    * @param {number} i   The number of the line whose sizes are to be obtained
-   * @return {LineBBox}  The bounding box of the specified segment
+   * @returns {LineBBox}  The bounding box of the specified segment
    */
   protected computeLineBBox(i: number): LineBBox {
     return this.getChildLineBBox(this.childNodes[0], i);
@@ -622,7 +660,7 @@ export class CommonWrapper<
    * Find the (embellished) mo or mspace where a break occurs
    *
    * @param {LineBBox} bbox    The LineBBox for the line whose initial breakpoint is needed
-   * @return {[WW, WW]}        The embellished mo node and its core mo
+   * @returns {[WW, WW]}        The embellished mo node and its core mo
    */
   public getBreakNode(bbox: LineBBox): [WW, WW] {
     if (!bbox.start) {
@@ -632,7 +670,9 @@ export class CommonWrapper<
     if (this.node.isEmbellished) {
       return [this, this.coreMO()] as any as [WW, WW];
     }
-    const childNodes = (this.childNodes[0]?.node?.isInferred ? this.childNodes[0].childNodes : this.childNodes);
+    const childNodes = this.childNodes[0]?.node?.isInferred
+      ? this.childNodes[0].childNodes
+      : this.childNodes;
     if (this.node.isToken || !childNodes[i]) {
       return [this, null] as any as [WW, WW];
     }
@@ -642,7 +682,7 @@ export class CommonWrapper<
   /**
    * @param {WW} child   The child node whose i-th line bbox is to be obtained
    * @param {number} i   The number of the line whose bbox is to be obtained
-   * @return {LineBBox}  The bounding box of the specified line
+   * @returns {LineBBox}  The bounding box of the specified line
    */
   protected getChildLineBBox(child: WW, i: number): LineBBox {
     const n = this.breakCount;
@@ -700,9 +740,13 @@ export class CommonWrapper<
    * @param {boolean} recompute  True if we are recomputing due to changes in children
    * @param {(number|null)=} w   The width of the container (from which percentages are computed)
    * @param {boolean=} clear     True if pwidth marker is to be cleared
-   * @return {boolean}           True if a percentage width was found
+   * @returns {boolean}           True if a percentage width was found
    */
-  public setChildPWidths(recompute: boolean, w: (number | null) = null, clear: boolean = true): boolean {
+  public setChildPWidths(
+    recompute: boolean,
+    w: number | null = null,
+    clear: boolean = true
+  ): boolean {
     if (recompute) {
       return false;
     }
@@ -712,7 +756,10 @@ export class CommonWrapper<
     let changed = false;
     for (const child of this.childNodes) {
       const cbox = child.getBBox();
-      if (cbox.pwidth && child.setChildPWidths(recompute, w === null ? cbox.w : w, clear)) {
+      if (
+        cbox.pwidth &&
+        child.setChildPWidths(recompute, w === null ? cbox.w : w, clear)
+      ) {
         changed = true;
       }
     }
@@ -771,7 +818,7 @@ export class CommonWrapper<
   protected getStyles() {
     const styleString = this.node.attributes.getExplicit('style') as string;
     if (!styleString) return;
-    const style = this.styles = new Styles(styleString);
+    const style = (this.styles = new Styles(styleString));
     for (let i = 0, m = CommonWrapper.removeStyles.length; i < m; i++) {
       const id = CommonWrapper.removeStyles[i];
       if (style.get(id)) {
@@ -808,10 +855,13 @@ export class CommonWrapper<
         padding[i] = Math.max(0, this.length2em(p, 1));
       }
     }
-    this.styleData = (hasPadding || hasBorder) ? {
-      padding,
-      border: (hasBorder ? {width, style, color} : null)
-    } as StyleData : null;
+    this.styleData =
+      hasPadding || hasBorder
+        ? ({
+            padding,
+            border: hasBorder ? { width, style, color } : null,
+          } as StyleData)
+        : null;
   }
 
   /**
@@ -827,25 +877,36 @@ export class CommonWrapper<
         variant = 'normal';
       }
     } else {
-      const values = attributes.getList('fontfamily', 'fontweight', 'fontstyle') as StringMap;
+      const values = attributes.getList(
+        'fontfamily',
+        'fontweight',
+        'fontstyle'
+      ) as StringMap;
       if (this.removedStyles) {
         const style = this.removedStyles;
         if (style.fontFamily) values.family = style.fontFamily;
         if (style.fontWeight) values.weight = style.fontWeight;
-        if (style.fontStyle)  values.style  = style.fontStyle;
+        if (style.fontStyle) values.style = style.fontStyle;
       }
       if (values.fontfamily) values.family = values.fontfamily;
       if (values.fontweight) values.weight = values.fontweight;
-      if (values.fontstyle)  values.style  = values.fontstyle;
+      if (values.fontstyle) values.style = values.fontstyle;
       if (values.weight && values.weight.match(/^\d+$/)) {
-        values.weight = (parseInt(values.weight) > 600 ? 'bold' : 'normal');
+        values.weight = parseInt(values.weight) > 600 ? 'bold' : 'normal';
       }
       if (values.family) {
-        variant = this.explicitVariant(values.family, values.weight, values.style);
+        variant = this.explicitVariant(
+          values.family,
+          values.weight,
+          values.style
+        );
       } else {
         if (this.node.getProperty('variantForm')) variant = '-tex-variant';
-        variant = (CommonWrapper.BOLDVARIANTS[values.weight] || {})[variant] || variant;
-        variant = (CommonWrapper.ITALICVARIANTS[values.style] || {})[variant] || variant;
+        variant =
+          (CommonWrapper.BOLDVARIANTS[values.weight] || {})[variant] || variant;
+        variant =
+          (CommonWrapper.ITALICVARIANTS[values.style] || {})[variant] ||
+          variant;
       }
     }
     this.variant = variant;
@@ -858,12 +919,16 @@ export class CommonWrapper<
    * @param {string} fontWeight  The font weight to use
    * @param {string} fontStyle   The font style to use
    */
-  protected explicitVariant(fontFamily: string, fontWeight: string, fontStyle: string) {
+  protected explicitVariant(
+    fontFamily: string,
+    fontWeight: string,
+    fontStyle: string
+  ) {
     let style = this.styles;
     if (!style) style = this.styles = new Styles();
     style.set('fontFamily', fontFamily);
     if (fontWeight) style.set('fontWeight', fontWeight);
-    if (fontStyle)  style.set('fontStyle', fontStyle);
+    if (fontStyle) style.set('fontStyle', fontStyle);
     return '-explicitFont';
   }
 
@@ -871,18 +936,24 @@ export class CommonWrapper<
    * Determine the scaling factor to use for this wrapped node, and set the styles for it.
    */
   protected getScale() {
-    let scale = 1, parent = this.parent;
-    let pscale = (parent ? parent.bbox.scale : 1);
-    let attributes = this.node.attributes;
-    let scriptlevel = Math.min(attributes.get('scriptlevel') as number, 2);
+    let scale = 1;
+    const parent = this.parent;
+    const pscale = parent ? parent.bbox.scale : 1;
+    const attributes = this.node.attributes;
+    const scriptlevel = Math.min(attributes.get('scriptlevel') as number, 2);
     let fontsize = attributes.get('fontsize');
-    let mathsize = (this.node.isToken || this.node.isKind('mstyle') ?
-                    attributes.get('mathsize') : attributes.getInherited('mathsize'));
+    let mathsize =
+      this.node.isToken || this.node.isKind('mstyle')
+        ? attributes.get('mathsize')
+        : attributes.getInherited('mathsize');
     //
     // If scriptsize is non-zero, set scale based on scriptsizemultiplier
     //
     if (scriptlevel !== 0) {
-      scale = Math.pow(attributes.get('scriptsizemultiplier') as number, scriptlevel);
+      scale = Math.pow(
+        attributes.get('scriptsizemultiplier') as number,
+        scriptlevel
+      );
     }
     //
     // If there is style="font-size:...", and not fontsize attribute, use that as fontsize
@@ -906,7 +977,11 @@ export class CommonWrapper<
     // Use scriptminsize as minimum size for scripts
     //
     if (scriptlevel !== 0) {
-      let scriptminsize = this.length2em(attributes.get('scriptminsize'), .4, 1);
+      const scriptminsize = this.length2em(
+        attributes.get('scriptminsize'),
+        0.4,
+        1
+      );
       if (scale < scriptminsize) scale = scriptminsize;
     }
     //
@@ -939,18 +1014,20 @@ export class CommonWrapper<
     //
     const child = node.coreParent();
     const parent = child.parent;
-    if (!parent || !parent.isKind('mrow') || parent.childNodes.length === 1) return;
+    if (!parent || !parent.isKind('mrow') || parent.childNodes.length === 1) {
+      return;
+    }
     //
     // Get the lspace and rspace
     //
     const attributes = node.attributes;
-    const isScript = (attributes.get('scriptlevel') as number > 0);
-    this.bbox.L = (attributes.isSet('lspace') ?
-                   Math.max(0, this.length2em(attributes.get('lspace'))) :
-                   MathMLSpace(isScript, node.lspace));
-    this.bbox.R = (attributes.isSet('rspace') ?
-                   Math.max(0, this.length2em(attributes.get('rspace'))) :
-                   MathMLSpace(isScript, node.rspace));
+    const isScript = (attributes.get('scriptlevel') as number) > 0;
+    this.bbox.L = attributes.isSet('lspace')
+      ? Math.max(0, this.length2em(attributes.get('lspace')))
+      : MathMLSpace(isScript, node.lspace);
+    this.bbox.R = attributes.isSet('rspace')
+      ? Math.max(0, this.length2em(attributes.get('rspace')))
+      : MathMLSpace(isScript, node.rspace);
     //
     // If there are two adjacent <mo>, use enough left space to make it
     //   the maximum of the rspace of the first and lspace of the second
@@ -968,8 +1045,8 @@ export class CommonWrapper<
   /**
    * Get the spacing using the TeX rules
    *
-   * @parm {boolean} isTop       True when this is a top-level embellished operator
-   * @parm {boolean} hasSpacing  True when there is an explicit or inherited 'form' attribute
+   * @param {boolean} isTop       True when this is a top-level embellished operator
+   * @param {boolean} hasSpacing  True when there is an explicit or inherited 'form' attribute
    */
   protected getTeXSpacing(isTop: boolean, hasSpacing: boolean) {
     if (!hasSpacing) {
@@ -990,32 +1067,37 @@ export class CommonWrapper<
   }
 
   /**
-   * @return {boolean}   True if this is the top-most container of an embellished operator that is
+   * @returns {boolean}   True if this is the top-most container of an embellished operator that is
    *                       itself an embellished operator (the maximal embellished operator for its core)
    */
   protected isTopEmbellished(): boolean {
-    return (this.node.isEmbellished &&
-            !(this.node.parent && this.node.parent.isEmbellished));
+    return (
+      this.node.isEmbellished &&
+      !(this.node.parent && this.node.parent.isEmbellished)
+    );
   }
 
   /*******************************************************************/
 
   /**
-   * @return {WW}   The wrapper for this node's core node
+   * @returns {WW}   The wrapper for this node's core node
    */
   public core(): WW {
     return this.jax.nodeMap.get(this.node.core());
   }
 
   /**
-   * @return {CommonMo}   The wrapper for this node's core <mo> node
+   * @returns {CommonMo}   The wrapper for this node's core <mo> node
    */
   public coreMO(): CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-    return this.jax.nodeMap.get(this.node.coreMO()) as any as CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>;
+    /* prettier-ignore */
+    return this.jax.nodeMap.get(this.node.coreMO()) as any as CommonMo<
+      N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC
+    >;
   }
 
   /**
-   * @return {number}   The cumulative relative scaling for an embellised mo's core mo
+   * @returns {number}   The cumulative relative scaling for an embellised mo's core mo
    */
   public coreRScale(): number {
     let rscale = this.bbox.rscale;
@@ -1028,7 +1110,7 @@ export class CommonWrapper<
   }
 
   /**
-   * @return {number}   The cumulative relative scale from the root to the current node
+   * @returns {number}   The cumulative relative scale from the root to the current node
    */
   public getRScale(): number {
     let rscale = 1;
@@ -1041,7 +1123,7 @@ export class CommonWrapper<
   }
 
   /**
-   * @return {string}   For a token node, the combined text content of the node's children
+   * @returns {string}   For a token node, the combined text content of the node's children
    */
   public getText(): string {
     let text = '';
@@ -1057,12 +1139,12 @@ export class CommonWrapper<
 
   /**
    * @param {string} direction  The direction to stretch this node
-   * @return {boolean}          Whether the node can stretch in that direction
+   * @returns {boolean}          Whether the node can stretch in that direction
    */
   public canStretch(direction: string): boolean {
     this.stretch = NOSTRETCH as DD;
     if (this.node.isEmbellished) {
-      let core = this.core();
+      const core = this.core();
       if (core && core.node !== this.node) {
         if (core.canStretch(direction)) {
           this.stretch = core.stretch;
@@ -1073,10 +1155,10 @@ export class CommonWrapper<
   }
 
   /**
-   * @return {[string, number]}  The alignment and indentation shift for the expression
+   * @returns {[string, number]}  The alignment and indentation shift for the expression
    */
   protected getAlignShift(): [string, number] {
-    let {indentalign, indentshift, indentalignfirst, indentshiftfirst} =
+    let { indentalign, indentshift, indentalignfirst, indentshiftfirst } =
       this.node.attributes.getAllAttributes() as StringMap;
     if (indentalignfirst !== 'indentalign') {
       indentalign = indentalignfirst;
@@ -1093,7 +1175,7 @@ export class CommonWrapper<
    * @param {string} align         The default alignment for 'auto'
    * @param {string} shift         The default indentshift for 'auto'
    * @param {number} width         The container width for relative shifts
-   * @return {[string, number][]}  The alignment and indentation shift (normal and last) for the Mo
+   * @returns {[string, number][]}  The alignment and indentation shift (normal and last) for the Mo
    */
   public processIndent(
     indentalign: string,
@@ -1106,10 +1188,14 @@ export class CommonWrapper<
       return ['left', 0];
     }
     if (!align || align === 'auto') {
-      align = this.jax.math.outputData.inlineMarked ? 'left' : this.jax.options.displayAlign;
+      align = this.jax.math.outputData.inlineMarked
+        ? 'left'
+        : this.jax.options.displayAlign;
     }
     if (!shift || shift === 'auto') {
-      shift = this.jax.math.outputData.inlineMarked ? '0' : this.jax.options.displayIndent;
+      shift = this.jax.math.outputData.inlineMarked
+        ? '0'
+        : this.jax.options.displayIndent;
     }
     if (indentalign === 'auto') {
       indentalign = align;
@@ -1128,12 +1214,14 @@ export class CommonWrapper<
    * @param {number} W       The total width
    * @param {BBox} bbox      The bbox to be aligned
    * @param {string} align   How to align (left, center, right)
-   * @return {number}        The x position of the aligned width
+   * @returns {number}        The x position of the aligned width
    */
   protected getAlignX(W: number, bbox: BBox, align: string): number {
-    return (align === 'right' ? W - (bbox.w + bbox.R) * bbox.rscale :
-            align === 'left' ? bbox.L * bbox.rscale :
-            (W - bbox.w * bbox.rscale) / 2);
+    return align === 'right'
+      ? W - (bbox.w + bbox.R) * bbox.rscale
+      : align === 'left'
+        ? bbox.L * bbox.rscale
+        : (W - bbox.w * bbox.rscale) / 2;
   }
 
   /**
@@ -1142,26 +1230,35 @@ export class CommonWrapper<
    * @param {number} h        The height to be aligned
    * @param {number} d        The depth to be aligned
    * @param {string} align    How to align (top, bottom, center, axis, baseline)
-   * @return {number}         The y position of the aligned baseline
+   * @returns {number}         The y position of the aligned baseline
    */
-  protected getAlignY(H: number, D: number, h: number, d: number, align: string): number {
-    return (align === 'top' ? H - h :
-            align === 'bottom' ? d - D :
-            align === 'center' ? ((H - h) - (D - d)) / 2 :
-            0); // baseline and axis
+  protected getAlignY(
+    H: number,
+    D: number,
+    h: number,
+    d: number,
+    align: string
+  ): number {
+    return align === 'top'
+      ? H - h
+      : align === 'bottom'
+        ? d - D
+        : align === 'center'
+          ? (H - h - (D - d)) / 2
+          : 0; // baseline and axis
   }
 
   /**
    * @param {number} i   The index of the child element whose container is needed
-   * @return {number}    The inner width as a container (for percentage widths)
+   * @returns {number}    The inner width as a container (for percentage widths)
    */
   public getWrapWidth(i: number): number {
     return this.childNodes[i].getBBox().w;
   }
 
   /**
-   * @param {number} i   The index of the child element whose alignment is needed
-   * @return {string}    The alignment child element
+   * @param {number} _i   The index of the child element whose alignment is needed
+   * @returns {string}    The alignment child element
    */
   public getChildAlign(_i: number): string {
     return 'left';
@@ -1174,7 +1271,7 @@ export class CommonWrapper<
 
   /**
    * @param {number} m  A number to be shown as a percent
-   * @return {string}   The number m as a percent
+   * @returns {string}   The number m as a percent
    */
   protected percent(m: number): string {
     return LENGTHS.percent(m);
@@ -1182,7 +1279,7 @@ export class CommonWrapper<
 
   /**
    * @param {number} m  A number to be shown in ems
-   * @return {string}   The number with units of ems
+   * @returns {string}   The number with units of ems
    */
   protected em(m: number): string {
     return LENGTHS.em(m);
@@ -1191,7 +1288,7 @@ export class CommonWrapper<
   /**
    * @param {number} m   A number of em's to be shown as pixels
    * @param {number} M   The minimum number of pixels to allow
-   * @return {string}    The number with units of px
+   * @returns {string}    The number with units of px
    */
   protected px(m: number, M: number = -LENGTHS.BIGDIMEN): string {
     return LENGTHS.px(m, M, this.metrics.em);
@@ -1201,21 +1298,31 @@ export class CommonWrapper<
    * @param {Property} length  A dimension (giving number and units) or number to be converted to ems
    * @param {number} size      The default size of the dimension (for percentage values)
    * @param {number} scale     The current scaling factor (to handle absolute units)
-   * @return {number}          The dimension converted to ems
+   * @returns {number}          The dimension converted to ems
    */
-  protected length2em(length: Property, size: number = 1, scale: number = null): number {
+  protected length2em(
+    length: Property,
+    size: number = 1,
+    scale: number = null
+  ): number {
     if (scale === null) {
       scale = this.bbox.scale;
     }
     const t = this.font.params.rule_thickness;
-    const factor = lookup(length as string, {medium: 1, thin: 2 / 3, thick: 5 / 3}, 0);
-    return factor ? factor * t : LENGTHS.length2em(length as string, size, scale, this.jax.pxPerEm);
+    const factor = lookup(
+      length as string,
+      { medium: 1, thin: 2 / 3, thick: 5 / 3 },
+      0
+    );
+    return factor
+      ? factor * t
+      : LENGTHS.length2em(length as string, size, scale, this.jax.pxPerEm);
   }
 
   /**
    * @param {string} text   The text to turn into unicode locations
    * @param {string} name   The name of the variant for the characters
-   * @return {number[]}     Array of numbers represeting the string's unicode character positions
+   * @returns {number[]}     Array of numbers represeting the string's unicode character positions
    */
   protected unicodeChars(text: string, name: string = this.variant): number[] {
     let chars = unicodeChars(text);
@@ -1239,7 +1346,7 @@ export class CommonWrapper<
 
   /**
    * @param {number[]} chars    The array of unicode character numbers to remap
-   * @return {number[]}         The converted array
+   * @returns {number[]}         The converted array
    */
   public remapChars(chars: number[]): number[] {
     return chars;
@@ -1247,20 +1354,30 @@ export class CommonWrapper<
 
   /**
    * @param {string} text   The text from which to create a TextNode object
-   * @return {TextNode}     The TextNode with the given text
+   * @returns {TextNode}     The TextNode with the given text
    */
   public mmlText(text: string): TextNode {
-    return ((this.node as AbstractMmlNode).factory.create('text') as TextNode).setText(text);
+    return (
+      (this.node as AbstractMmlNode).factory.create('text') as TextNode
+    ).setText(text);
   }
 
   /**
    * @param {string} kind             The kind of MmlNode to create
-   * @param {ProperyList} properties  The properties to set initially
+   * @param {PropertyList} properties The properties to set initially
    * @param {MmlNode[]} children      The child nodes to add to the created node
-   * @return {MmlNode}                The newly created MmlNode
+   * @returns {MmlNode}                The newly created MmlNode
    */
-  public mmlNode(kind: string, properties: PropertyList = {}, children: MmlNode[] = []): MmlNode {
-    return (this.node as AbstractMmlNode).factory.create(kind, properties, children);
+  public mmlNode(
+    kind: string,
+    properties: PropertyList = {},
+    children: MmlNode[] = []
+  ): MmlNode {
+    return (this.node as AbstractMmlNode).factory.create(
+      kind,
+      properties,
+      children
+    );
   }
 
   /**
@@ -1268,12 +1385,14 @@ export class CommonWrapper<
    *   link it in, and give it the right defaults.
    *
    * @param {string} text   The text for the wrapped element
-   * @return {CommonMO}     The wrapped MmlMo node
+   * @returns {CommonMo}     The wrapped MmlMo node
    */
-  protected createMo(text: string): CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
+  protected createMo(
+    text: string
+  ): CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
     const mmlFactory = (this.node as AbstractMmlNode).factory;
     const textNode = (mmlFactory.create('text') as TextNode).setText(text);
-    const mml = mmlFactory.create('mo', {stretchy: true}, [textNode]);
+    const mml = mmlFactory.create('mo', { stretchy: true }, [textNode]);
     mml.inheritAttributesFrom(this.node);
     mml.parent = this.node.parent;
     const node = this.wrap(mml);
@@ -1284,10 +1403,10 @@ export class CommonWrapper<
   /**
    * @param {string} variant   The variant in which to look for the character
    * @param {number} n         The number of the character to look up
-   * @return {CharData}        The full CharData object, with CharOptions guaranteed to be defined
+   * @returns {CharDataArray}  The full CharData object, with CharOptions guaranteed to be defined
    */
   protected getVariantChar(variant: string, n: number): CharDataArray<CC> {
-    const char = this.font.getChar(variant, n) || [0, 0, 0, {unknown: true} as CC];
+    const char = this.font.getChar(variant, n) || [0, 0, 0, { unknown: true }];
     if (char.length === 3) {
       (char as any)[3] = {};
     }
@@ -1303,10 +1422,9 @@ export class CommonWrapper<
    * @param {string} type      The tag name of the HTML node to be created
    * @param {OptionList} def   The properties to set for the created node
    * @param {(N|T)[]} content  The child nodes for the created HTML node
-   * @return {N}               The generated HTML tree
+   * @returns {N}               The generated HTML tree
    */
   public html(type: string, def: OptionList = {}, content: (N | T)[] = []): N {
     return this.jax.html(type, def, content);
   }
-
 }

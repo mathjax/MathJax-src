@@ -1,5 +1,5 @@
 /*************************************************************
- *  Copyright (c) 2021-2023 MathJax Consortium
+ *  Copyright (c) 2021-2024 MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,29 +15,28 @@
  */
 
 /**
- * @fileoverview    Utility functions for the mathtools package.
+ * @file    Utility functions for the mathtools package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {EqnArrayItem} from '../base/BaseItems.js';
-import {ParseUtil} from '../ParseUtil.js';
+import { EqnArrayItem } from '../base/BaseItems.js';
+import { UnitUtil } from '../UnitUtil.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
-import {CommandMap} from '../TokenMap.js';
-import {Macro} from '../Token.js';
+import { CommandMap } from '../TokenMap.js';
+import { Macro } from '../Token.js';
 import ParseOptions from '../ParseOptions.js';
-import {lookup} from '../../../util/Options.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
+import { lookup } from '../../../util/Options.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 
-import {MathtoolsMethods} from './MathtoolsMethods.js';
-import {PAIREDDELIMS} from './MathtoolsConfiguration.js';
+import { MathtoolsMethods } from './MathtoolsMethods.js';
+import { PAIREDDELIMS } from './MathtoolsConfiguration.js';
 
 /**
  * Utility functions for the Mathtools package.
  */
 export const MathtoolsUtil = {
-
   /**
    * Set the displaystyle and scriptlevel attributes of an mstyle element
    *
@@ -46,12 +45,16 @@ export const MathtoolsUtil = {
    */
   setDisplayLevel(mml: MmlNode, style: string) {
     if (!style) return;
-    const [display, script] = lookup(style, {
-      '\\displaystyle':      [true, 0],
-      '\\textstyle':         [false, 0],
-      '\\scriptstyle':       [false, 1],
-      '\\scriptscriptstyle': [false, 2]
-    }, [null, null]);
+    const [display, script] = lookup(
+      style,
+      {
+        '\\displaystyle': [true, 0],
+        '\\textstyle': [false, 0],
+        '\\scriptstyle': [false, 1],
+        '\\scriptscriptstyle': [false, 2],
+      },
+      [null, null]
+    );
     if (display !== null) {
       mml.attributes.set('displaystyle', display);
       mml.attributes.set('scriptlevel', script);
@@ -63,12 +66,16 @@ export const MathtoolsUtil = {
    *
    * @param {TexParser} parser   The current TeX parser.
    * @param {string} name        The name of the macro doing the checking.
-   * @return {EqnArrayItem}      The top item (an EqnArrayItem).
+   * @returns {EqnArrayItem}      The top item (an EqnArrayItem).
    */
   checkAlignment(parser: TexParser, name: string): EqnArrayItem {
     const top = parser.stack.Top() as EqnArrayItem;
     if (top.kind !== EqnArrayItem.prototype.kind) {
-      throw new TexError('NotInAlignment', '%1 can only be used in aligment environments', name);
+      throw new TexError(
+        'NotInAlignment',
+        '%1 can only be used in aligment environments',
+        name
+      );
     }
     return top;
   },
@@ -98,10 +105,10 @@ export const MathtoolsUtil = {
     if (!mtable.isKind('mtable')) return;
     let rowspacing = mtable.attributes.get('rowspacing') as string;
     if (rowspacing) {
-      const add = ParseUtil.dimen2em(spread);
+      const add = UnitUtil.dimen2em(spread);
       rowspacing = rowspacing
         .split(/ /)
-        .map(s => ParseUtil.em(Math.max(0, ParseUtil.dimen2em(s) + add)))
+        .map((s) => UnitUtil.em(Math.max(0, UnitUtil.dimen2em(s) + add)))
         .join(' ');
     } else {
       rowspacing = spread;
@@ -114,14 +121,14 @@ export const MathtoolsUtil = {
    *
    * @param {string} name   The name of the macro doing the checking.
    * @param {string} n      The string to test as a number.
-   * @return {srtring}      The number with an explicit sign.
+   * @returns {string}      The number with an explicit sign.
    */
   plusOrMinus(name: string, n: string): string {
     n = n.trim();
     if (!n.match(/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)$/)) {
       throw new TexError('NotANumber', 'Argument to %1 is not a number', name);
     }
-    return (n.match(/^[-+]/) ? n : '+' + n);
+    return n.match(/^[-+]/) ? n : '+' + n;
   },
 
   /**
@@ -130,16 +137,15 @@ export const MathtoolsUtil = {
    * @param {TexParser} parser   The active tex parser.
    * @param {string} name        The name of the calling macro (\prescript).
    * @param {string} pos         The position for the argument (sub, sup, arg).
-   * @return {MmlNode}           The parsed MML version of the argument.
+   * @returns {MmlNode}           The parsed MML version of the argument.
    */
   getScript(parser: TexParser, name: string, pos: string): MmlNode {
-    let arg = ParseUtil.trimSpaces(parser.GetArgument(name));
+    let arg = UnitUtil.trimSpaces(parser.GetArgument(name));
     if (arg === '') {
       return parser.create('node', 'none');
     }
     const format = parser.options.mathtools[`prescript-${pos}-format`];
     format && (arg = `${format}{${arg}}`);
     return new TexParser(arg, parser.stack.env, parser.configuration).mml();
-  }
-
+  },
 };

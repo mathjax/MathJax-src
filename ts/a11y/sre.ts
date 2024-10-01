@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2023 The MathJax Consortium
+ *  Copyright (c) 2018-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Provides the interface functionality to SRE.
+ * @file  Provides the interface functionality to SRE.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  * @author v.sorge@mathjax.org (Volker Sorge)
@@ -25,16 +25,15 @@
 import * as Api from '#sre/common/system.js';
 import * as SpeechGeneratorFactory from '#sre/speech_generator/speech_generator_factory.js';
 import { Engine } from '#sre/common/engine.js';
-import {ClearspeakPreferences} from '#sre/speech_rules/clearspeak_preferences.js';
-import {Highlighter} from '#sre/highlighter/highlighter.js';
+import { ClearspeakPreferences } from '#sre/speech_rules/clearspeak_preferences.js';
+import { Highlighter } from '#sre/highlighter/highlighter.js';
 import * as HighlighterFactory from '#sre/highlighter/highlighter_factory.js';
-import {SpeechGenerator} from '#sre/speech_generator/speech_generator.js';
+import { SpeechGenerator } from '#sre/speech_generator/speech_generator.js';
 import { parseInput } from '#sre/common/dom_util.js';
-import {Variables} from '#sre/common/variables.js';
+import { Variables } from '#sre/common/variables.js';
 import MathMaps from './mathmaps.js';
 
 export namespace Sre {
-
   export type highlighter = Highlighter;
 
   export type speechGenerator = SpeechGenerator;
@@ -64,13 +63,18 @@ export namespace Sre {
   /**
    * Loads locales that are already included in the imported MathMaps. Defaults
    * to standard loading if a locale is not yet preloaded.
+   *
+   * @param {string} locale A locale to preload from the bundle.
+   * @returns {Promise} Promise that resolves when locales are loaded.
    */
-  export const preloadLocales = async function(locale: string) {
+  export const preloadLocales = async function (
+    locale: string
+  ): Promise<string> {
     const json = MathMaps.get(locale);
-    return json ? new Promise((res, _rej) => res(JSON.stringify(json))) :
-      Api.localeLoader()(locale);
+    return json
+      ? new Promise((res, _rej) => res(JSON.stringify(json)))
+      : Api.localeLoader()(locale);
   };
-
 }
 
 /**

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2023 The MathJax Consortium
+ *  Copyright (c) 2018-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,20 +16,20 @@
  */
 
 /**
- * @fileoverview  Chooses between jdsom and browser DOM adaptors
+ * @file  Chooses between jdsom and browser DOM adaptors
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {liteAdaptor} from './liteAdaptor.js';
-import {browserAdaptor} from './browserAdaptor.js';
+import { liteAdaptor } from './liteAdaptor.js';
+import { browserAdaptor } from './browserAdaptor.js';
 
 let choose;
 
 try {
-  document;  // errors if not in browser
+  document; // errors if not in browser
   choose = browserAdaptor;
-} catch (e) {
+} catch (_e) {
   choose = liteAdaptor;
 }
 

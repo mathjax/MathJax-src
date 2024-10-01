@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2023 The MathJax Consortium
+ *  Copyright (c) 2017-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,15 +16,15 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMtr and MmlMlabeledtr nodes
+ * @file  Implements the MmlMtr and MmlMlabeledtr nodes
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {MmlNode, AbstractMmlNode, AttributeList} from '../MmlNode.js';
-import {INHERIT} from '../Attributes.js';
-import {split} from '../../../util/string.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { MmlNode, AbstractMmlNode, AttributeList } from '../MmlNode.js';
+import { INHERIT } from '../Attributes.js';
+import { split } from '../../../util/string.js';
 
 /*****************************************************************/
 /**
@@ -32,7 +32,6 @@ import {split} from '../../../util/string.js';
  */
 
 export class MmlMtr extends AbstractMmlNode {
-
   /**
    * @override
    */
@@ -41,7 +40,7 @@ export class MmlMtr extends AbstractMmlNode {
     rowalign: INHERIT,
     columnalign: INHERIT,
     groupalign: INHERIT,
-    'data-break-align': 'top'     // how the broken cells in this row should be aligned
+    'data-break-align': 'top', // how the broken cells in this row should be aligned
   };
 
   /**
@@ -53,6 +52,7 @@ export class MmlMtr extends AbstractMmlNode {
 
   /**
    * <mtr> can contain linebreaks
+   *
    * @override
    */
   public get linebreakContainer() {
@@ -61,6 +61,7 @@ export class MmlMtr extends AbstractMmlNode {
 
   /**
    * Don't reset indent attributes
+   *
    * @override
    */
   public get linebreakAlign() {
@@ -72,11 +73,15 @@ export class MmlMtr extends AbstractMmlNode {
    *
    * @override
    */
-  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+  protected setChildInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    prime: boolean
+  ) {
     for (const child of this.childNodes) {
       if (!child.isKind('mtd')) {
-        this.replaceChild(this.factory.create('mtd'), child)
-            .appendChild(child);
+        this.replaceChild(this.factory.create('mtd'), child).appendChild(child);
       }
     }
     const calign = split(this.attributes.get('columnalign') as string);
@@ -88,11 +93,14 @@ export class MmlMtr extends AbstractMmlNode {
     attributes = this.addInheritedAttributes(attributes, {
       rowalign: this.attributes.get('rowalign'),
       columnalign: 'center',
-      'data-break-align': 'top'
+      'data-break-align': 'top',
     });
     for (const child of this.childNodes) {
       attributes.columnalign[1] = calign.shift() || attributes.columnalign[1];
-      attributes['data-vertical-align'] = [this.kind, balign.shift() || attributes['data-break-align'][1]];
+      attributes['data-vertical-align'] = [
+        this.kind,
+        balign.shift() || attributes['data-break-align'][1],
+      ];
       child.setInheritedAttributes(attributes, display, level, prime);
     }
   }
@@ -104,12 +112,16 @@ export class MmlMtr extends AbstractMmlNode {
    */
   protected verifyChildren(options: PropertyList) {
     if (this.parent && !this.parent.isKind('mtable')) {
-      this.mError(this.kind + ' can only be a child of an mtable', options, true);
+      this.mError(
+        this.kind + ' can only be a child of an mtable',
+        options,
+        true
+      );
       return;
     }
     for (const child of this.childNodes) {
       if (!child.isKind('mtd')) {
-        let mtd = this.replaceChild(this.factory.create('mtd'), child);
+        const mtd = this.replaceChild(this.factory.create('mtd'), child);
         mtd.appendChild(child);
         if (!options['fixMtables']) {
           child.mError('Children of ' + this.kind + ' must be mtd', options);
@@ -129,7 +141,6 @@ export class MmlMtr extends AbstractMmlNode {
     }
     return this;
   }
-
 }
 
 /*****************************************************************/
@@ -138,7 +149,6 @@ export class MmlMtr extends AbstractMmlNode {
  */
 
 export class MmlMlabeledtr extends MmlMtr {
-
   /**
    * @override
    */
@@ -148,10 +158,10 @@ export class MmlMlabeledtr extends MmlMtr {
 
   /**
    * <mlabeledtr> requires at least one child (the label)
+   *
    * @override
    */
   get arity() {
     return 1;
   }
-
 }

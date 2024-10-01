@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2023 The MathJax Consortium
+ *  Copyright (c) 2023-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,26 +16,30 @@
  */
 
 /**
- * @fileoverview  Implements asynchronous loading for use with <script type="module">
+ * @file  Implements asynchronous loading for use with <script type="module">
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {mathjax} from '../../mathjax.js';
+import { mathjax } from '../../mathjax.js';
 
-let root = new URL(import.meta.url).href.replace(/\/util\/asyncLoad\/esm.js$/, '');
+let root = new URL(import.meta.url).href.replace(
+  /\/util\/asyncLoad\/esm.js$/,
+  '/'
+);
 
 if (!mathjax.asyncLoad) {
-  mathjax.asyncLoad = (name: string) => {
-    return import(new URL(name, root).href);
+  mathjax.asyncLoad = async (name: string) => {
+    const file = name.charAt(0) === '.' ? new URL(name, root).pathname : name;
+    return import(file).then((result) => result?.default || result);
   };
 }
 
 /**
- * @param {string} URL   the base URL to use for loading relative paths
+ * @param {string} url   the base URL to use for loading relative paths
  */
-export function setBaseURL(URL: string) {
-  root = URL;
+export function setBaseURL(url: string) {
+  root = new URL(url, 'file://').href;
   if (!root.match(/\/$/)) {
     root += '/';
   }

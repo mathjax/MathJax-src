@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2022-2023 The MathJax Consortium
+ *  Copyright (c) 2022-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,15 +16,14 @@
  */
 
 /**
- * @fileoverview  Implement html-in-mathml internal node type
+ * @file  Implement html-in-mathml internal node type
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {XMLNode}  from '../MmlNode.js';
-import {DOMAdaptor} from '../../DOMAdaptor.js';
-import {PropertyList} from '../../Tree/Node.js';
-
+import { XMLNode } from '../MmlNode.js';
+import { DOMAdaptor } from '../../DOMAdaptor.js';
+import { PropertyList } from '../../Tree/Node.js';
 
 /******************************************************************/
 /**
@@ -33,7 +32,6 @@ import {PropertyList} from '../../Tree/Node.js';
  * @template N   The HTMLElement class
  */
 export class HtmlNode<N> extends XMLNode {
-
   /**
    * @override
    */
@@ -42,7 +40,7 @@ export class HtmlNode<N> extends XMLNode {
   }
 
   /**
-   * @return {N}  Return the node's HTML content
+   * @returns {N}  Return the node's HTML content
    */
   public getHTML(): N {
     return this.getXML() as any as N;
@@ -51,29 +49,32 @@ export class HtmlNode<N> extends XMLNode {
   /**
    * @param {N} html               The HTML content to be saved
    * @param {DOMAdaptor} adaptor   DOM adaptor for the content
-   * @return {HTMLNode}            The HTML node (for chaining of method calls)
+   * @returns {HtmlNode}            The HTML node (for chaining of method calls)
    */
-  public setHTML(html: N, adaptor: DOMAdaptor<any, any, any> = null): HtmlNode<N> {
+  public setHTML(
+    html: N,
+    adaptor: DOMAdaptor<any, any, any> = null
+  ): HtmlNode<N> {
     //
     // Test if the HTML element has attributes and wrap in a <span> if not
     //
     try {
       adaptor.getAttribute(html, 'data-mjx-hdw');
-    } catch (error) {
+    } catch (_error) {
       html = adaptor.node('span', {}, [html]);
     }
     return this.setXML(html, adaptor) as HtmlNode<N>;
   }
 
   /**
-   * @return {string}  The serialized HTML content
+   * @returns {string}  The serialized HTML content
    */
   public getSerializedHTML(): string {
     return this.adaptor.outerHTML(this.xml);
   }
 
   /**
-   * @return {string}   The text of the HTML content
+   * @returns {string}   The text of the HTML content
    */
   public textContent(): string {
     return this.adaptor.textContent(this.xml);
@@ -81,10 +82,12 @@ export class HtmlNode<N> extends XMLNode {
 
   /**
    * Just indicate that this is HTML data
+   *
+   * @override
    */
   public toString() {
     const kind = this.adaptor.kind(this.xml);
-    return `HTML=<${kind}>...</${kind}>` ;
+    return `HTML=<${kind}>...</${kind}>`;
   }
 
   /**
@@ -96,5 +99,4 @@ export class HtmlNode<N> extends XMLNode {
       return;
     }
   }
-
 }

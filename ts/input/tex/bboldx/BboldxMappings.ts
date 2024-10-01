@@ -15,15 +15,14 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview Symbol mappings for the bboldx package.
+ * @file Symbol mappings for the bboldx package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {CommandMap, CharacterMap, DelimiterMap} from '../TokenMap.js';
-import {BboldxMethods} from './BboldxMethods.js';
+import { CommandMap, CharacterMap, DelimiterMap } from '../TokenMap.js';
+import { BboldxMethods } from './BboldxMethods.js';
 
 /**
  * Bb symbols macros for bboldx package.
@@ -138,58 +137,72 @@ new DelimiterMap('bboldx-delimiterBold', BboldxMethods.delimiterBold, {
 });
 
 new CommandMap('bboldx', {
-  mathbb: ['ChooseFont', '-bboldx', '-bboldx-light', '-bboldx-bold'],
-  mathbfbb: ['ChooseFont', '-bboldx-bold', '-bboldx', '-bboldx-bold'],
-  imathbb: ['Macro', '\\bbdotlessi'],
-  jmathbb: ['Macro', '\\bbdotlessj'],
-  imathbfbb: ['Macro', '\\bfbbdotlessi'],
-  jmathbfbb: ['Macro', '\\bfbbdotlessj'],
-}, BboldxMethods);
+  mathbb: [
+    BboldxMethods.ChooseFont,
+    '-bboldx',
+    '-bboldx-light',
+    '-bboldx-bold',
+  ],
+  mathbfbb: [
+    BboldxMethods.ChooseFont,
+    '-bboldx-bold',
+    '-bboldx',
+    '-bboldx-bold',
+  ],
+  imathbb: [BboldxMethods.Macro, '\\bbdotlessi'],
+  jmathbb: [BboldxMethods.Macro, '\\bbdotlessj'],
+  imathbfbb: [BboldxMethods.Macro, '\\bfbbdotlessi'],
+  jmathbfbb: [BboldxMethods.Macro, '\\bfbbdotlessj'],
+});
 
 // Text Macros.
 /**
  * Bb symbols macros for text-bboldx package.
  */
-new CharacterMap('text-bboldx-mathchar0miNormal', BboldxMethods.mathchar0miNormal, {
-  // Upper Case Greek
-  txtbbGamma: '\u0393',
-  txtbbDelta: '\u2206',
-  txtbbTheta: '\u0398',
-  txtbbLambda: '\u039B',
-  txtbbXi: '\u039E',
-  txtbbPi: '\u03A0',
-  txtbbSigma: '\u03A3',
-  txtbbUpsilon: '\u03A5',
-  txtbbPhi: '\u03A6',
-  txtbbPsi: '\u03A8',
-  txtbbOmega: '\u2126',
-  // Lower Case Greek
-  txtbbalpha: '\u03B1',
-  txtbbbeta: '\u03B2',
-  txtbbgamma: '\u03B3',
-  txtbbdelta: '\u03B4',
-  txtbbepsilon: '\u03B5',
-  txtbbzeta: '\u03B6',
-  txtbbeta: '\u03B7',
-  txtbbtheta: '\u03B8',
-  txtbbiota: '\u03B9',
-  txtbbkappa: '\u03BA',
-  txtbblambda: '\u03BB',
-  txtbbmu: '\u00B5',
-  txtbbnu: '\u03BD',
-  txtbbxi: '\u03BE',
-  txtbbpi: '\u03C0',
-  txtbbrho: '\u03C1',
-  txtbbsigma: '\u03C3',
-  txtbbtau: '\u03C4',
-  txtbbupsilon: '\u03C5',
-  txtbbphi: '\u03C6',
-  txtbbchi: '\u03C7',
-  txtbbpsi: '\u03C8',
-  txtbbomega: '\u03C9',
-  txtbbdotlessi: '\u0131',
-  txtbbdotlessj: '\u0237',
-});
+new CharacterMap(
+  'text-bboldx-mathchar0miNormal',
+  BboldxMethods.mathchar0miNormal,
+  {
+    // Upper Case Greek
+    txtbbGamma: '\u0393',
+    txtbbDelta: '\u2206',
+    txtbbTheta: '\u0398',
+    txtbbLambda: '\u039B',
+    txtbbXi: '\u039E',
+    txtbbPi: '\u03A0',
+    txtbbSigma: '\u03A3',
+    txtbbUpsilon: '\u03A5',
+    txtbbPhi: '\u03A6',
+    txtbbPsi: '\u03A8',
+    txtbbOmega: '\u2126',
+    // Lower Case Greek
+    txtbbalpha: '\u03B1',
+    txtbbbeta: '\u03B2',
+    txtbbgamma: '\u03B3',
+    txtbbdelta: '\u03B4',
+    txtbbepsilon: '\u03B5',
+    txtbbzeta: '\u03B6',
+    txtbbeta: '\u03B7',
+    txtbbtheta: '\u03B8',
+    txtbbiota: '\u03B9',
+    txtbbkappa: '\u03BA',
+    txtbblambda: '\u03BB',
+    txtbbmu: '\u00B5',
+    txtbbnu: '\u03BD',
+    txtbbxi: '\u03BE',
+    txtbbpi: '\u03C0',
+    txtbbrho: '\u03C1',
+    txtbbsigma: '\u03C3',
+    txtbbtau: '\u03C4',
+    txtbbupsilon: '\u03C5',
+    txtbbphi: '\u03C6',
+    txtbbchi: '\u03C7',
+    txtbbpsi: '\u03C8',
+    txtbbomega: '\u03C9',
+    txtbbdotlessi: '\u0131',
+    txtbbdotlessj: '\u0237',
+  }
+);
 
 /**
  * Macros for delimiters.
@@ -260,11 +273,20 @@ new DelimiterMap('text-bboldx-delimiterBold', BboldxMethods.delimiterBold, {
 });
 
 new CommandMap('text-bboldx', {
-  textbb: ['ChooseTextFont', '-bboldx', '-bboldx-light', '-bboldx-bold'],
-  textbfbb: ['ChooseTextFont', '-bboldx-bold', '-bboldx', '-bboldx-bold'],
-  itextbb: ['Macro', '\\txtbbdotlessi'],
-  jtextbb: ['Macro', '\\txtbbdotlessj'],
-  itextbfbb: ['Macro', '\\txtbfbbdotlessi'],
-  jtextbfbb: ['Macro', '\\txtbfbbdotlessj'],
-}, BboldxMethods);
-
+  textbb: [
+    BboldxMethods.ChooseTextFont,
+    '-bboldx',
+    '-bboldx-light',
+    '-bboldx-bold',
+  ],
+  textbfbb: [
+    BboldxMethods.ChooseTextFont,
+    '-bboldx-bold',
+    '-bboldx',
+    '-bboldx-bold',
+  ],
+  itextbb: [BboldxMethods.Macro, '\\txtbbdotlessi'],
+  jtextbb: [BboldxMethods.Macro, '\\txtbbdotlessj'],
+  itextbfbb: [BboldxMethods.Macro, '\\txtbfbbdotlessi'],
+  jtextbfbb: [BboldxMethods.Macro, '\\txtbfbbdotlessj'],
+});

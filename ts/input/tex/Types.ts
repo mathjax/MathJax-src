@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2023 The MathJax Consortium
+ *  Copyright (c) 2017-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,15 +15,14 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview Basic type definitions.
+ * @file Basic type definitions.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {StackItem} from './StackItem.js';
-import {Token} from './Token.js';
+import { StackItem } from './StackItem.js';
+import { Token } from './Token.js';
 import TexParser from './TexParser.js';
 
 export type Args = boolean | number | string | null;
@@ -35,4 +34,8 @@ export type Environment = Record<string, Args>;
 export type ParseInput = [TexParser, string];
 export type ParseResult = void | boolean | StackItem;
 
-export type ParseMethod = (parser: TexParser, c: string | Token | StackItem, ...rest: any[]) => ParseResult;
+export type ParseMethod = (
+  parser: TexParser,
+  c: string | Token | StackItem,
+  ...rest: any[]
+) => ParseResult;

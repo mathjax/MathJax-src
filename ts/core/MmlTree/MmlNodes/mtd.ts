@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2023 The MathJax Consortium
+ *  Copyright (c) 2017-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,14 +16,14 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMtd node
+ * @file  Implements the MmlMtd node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {AbstractMmlBaseNode, MmlNode} from '../MmlNode.js';
-import {INHERIT} from '../Attributes.js';
+import { PropertyList } from '../../Tree/Node.js';
+import { AbstractMmlBaseNode, MmlNode } from '../MmlNode.js';
+import { INHERIT } from '../Attributes.js';
 
 /*****************************************************************/
 /**
@@ -31,7 +31,6 @@ import {INHERIT} from '../Attributes.js';
  */
 
 export class MmlMtd extends AbstractMmlBaseNode {
-
   /**
    * @override
    */
@@ -42,7 +41,7 @@ export class MmlMtd extends AbstractMmlBaseNode {
     rowalign: INHERIT,
     columnalign: INHERIT,
     groupalign: INHERIT,
-    'data-vertical-align': 'top'
+    'data-vertical-align': 'top',
   };
 
   /**
@@ -54,7 +53,8 @@ export class MmlMtd extends AbstractMmlBaseNode {
 
   /**
    * <mtd> has an inferred mrow
-   * @overrride
+   *
+   * @override
    */
   public get arity() {
     return -1;
@@ -62,6 +62,7 @@ export class MmlMtd extends AbstractMmlBaseNode {
 
   /**
    * <mtd> can contain line breaks
+   *
    * @override
    */
   public get linebreakContainer() {
@@ -82,7 +83,11 @@ export class MmlMtd extends AbstractMmlBaseNode {
    */
   protected verifyChildren(options: PropertyList) {
     if (this.parent && !this.parent.isKind('mtr')) {
-      this.mError(this.kind + ' can only be a child of an mtr or mlabeledtr', options, true);
+      this.mError(
+        this.kind + ' can only be a child of an mtr or mlabeledtr',
+        options,
+        true
+      );
       return;
     }
     super.verifyChildren(options);
@@ -96,5 +101,4 @@ export class MmlMtd extends AbstractMmlBaseNode {
     this.childNodes[0].setTeXclass(null);
     return this;
   }
-
 }

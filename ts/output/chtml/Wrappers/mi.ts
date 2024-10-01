@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2023 The MathJax Consortium
+ *  Copyright (c) 2017-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,19 +16,28 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMi wrapper for the MmlMi object
+ * @file  Implements the ChtmlMi wrapper for the MmlMi object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTML} from '../../chtml.js';
-import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
-import {ChtmlWrapperFactory} from '../WrapperFactory.js';
-import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
-        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
-import {CommonMi, CommonMiClass, CommonMiMixin} from '../../common/Wrappers/mi.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMi} from '../../../core/MmlTree/MmlNodes/mi.js';
+import { CHTML } from '../../chtml.js';
+import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
+import { ChtmlWrapperFactory } from '../WrapperFactory.js';
+import {
+  ChtmlCharOptions,
+  ChtmlVariantData,
+  ChtmlDelimiterData,
+  ChtmlFontData,
+  ChtmlFontDataClass,
+} from '../FontData.js';
+import {
+  CommonMi,
+  CommonMiClass,
+  CommonMiMixin,
+} from '../../common/Wrappers/mi.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMi } from '../../../core/MmlTree/MmlNodes/mi.js';
 
 /*****************************************************************/
 /**
@@ -38,11 +47,22 @@ import {MmlMi} from '../../../core/MmlTree/MmlNodes/mi.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMiNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMi<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {}
+export interface ChtmlMiNTD<N, T, D>
+  extends ChtmlWrapper<N, T, D>,
+    CommonMi<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {}
 
 /**
  * The ChtmlMiClass interface for the CHTML Mi wrapper
@@ -51,14 +71,28 @@ export interface ChtmlMiNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMi<
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMiClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonMiClass<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {
-  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMiNTD<N, T, D>;
+export interface ChtmlMiClass<N, T, D>
+  extends ChtmlWrapperClass<N, T, D>,
+    CommonMiClass<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {
+  new (
+    factory: ChtmlWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: ChtmlWrapper<N, T, D>
+  ): ChtmlMiNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
@@ -66,24 +100,28 @@ export interface ChtmlMiClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, Commo
  * The ChtmlMi wrapper class for the MmlMi class
  */
 export const ChtmlMi = (function <N, T, D>(): ChtmlMiClass<N, T, D> {
-
   const Base = CommonMiMixin<
-      N, T, D,
-      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
-      ChtmlMiClass<N, T, D>
-    >(ChtmlWrapper);
+    N,
+    T,
+    D,
+    CHTML<N, T, D>,
+    ChtmlWrapper<N, T, D>,
+    ChtmlWrapperFactory<N, T, D>,
+    ChtmlWrapperClass<N, T, D>,
+    ChtmlCharOptions,
+    ChtmlVariantData,
+    ChtmlDelimiterData,
+    ChtmlFontData,
+    ChtmlFontDataClass,
+    ChtmlMiClass<N, T, D>
+  >(ChtmlWrapper);
 
   // Avoid message about base constructors not having the same type
   //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
   return class ChtmlMi extends Base implements ChtmlMiNTD<N, T, D> {
-
     /**
      * @override
      */
     public static kind = MmlMi.prototype.kind;
-
   };
-
 })<any, any, any>();

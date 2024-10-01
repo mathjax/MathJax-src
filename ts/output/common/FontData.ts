@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2023 The MathJax Consortium
+ *  Copyright (c) 2017-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,25 +16,26 @@
  */
 
 /**
- * @fileoverview  Implements the FontData class for character bbox data
+ * @file  Implements the FontData class for character bbox data
  *                and stretchy delimiters.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {OptionList, defaultOptions, userOptions} from '../../util/Options.js';
-import {StyleList} from '../../util/StyleList.js';
-import {asyncLoad} from '../../util/AsyncLoad.js';
-import {retryAfter} from '../../util/Retries.js';
-import {mathjax} from '../../mathjax.js';
-import {DIRECTION} from './Direction.js';
-export {DIRECTION} from './Direction.js';
+import { mathjax } from '../../mathjax.js';
+import { OptionList, defaultOptions, userOptions } from '../../util/Options.js';
+import { StyleList } from '../../util/StyleList.js';
+import { asyncLoad } from '../../util/AsyncLoad.js';
+import { retryAfter } from '../../util/Retries.js';
+import { DIRECTION } from './Direction.js';
+export { DIRECTION } from './Direction.js';
 
 /****************************************************************************/
 
 /**
  * The extra options allowed in a CharData array
  */
+/* prettier-ignore */
 export interface CharOptions {
   ic?: number;                  // italic correction value
   oc?: number;                  // original ic for -tex-mit font
@@ -52,8 +53,8 @@ export interface CharOptions {
  *   [height, depth, width, {italic-correction, skew, options}]
  */
 export type CharDataArray<C extends CharOptions> =
-  [number, number, number] |
-  [number, number, number, C];
+  | [number, number, number]
+  | [number, number, number, C];
 
 /**
  * Data about a character or a dynamic file object
@@ -109,7 +110,6 @@ export type VariantMap<C extends CharOptions, V extends VariantData<C>> = {
   [name: string]: V;
 };
 
-
 /**
  * Data to use to map unknown characters in a variant to a
  * generic CSS font:
@@ -130,6 +130,7 @@ export type CssFontMap = {
 /**
  * Data needed for stretchy vertical and horizontal characters
  */
+/* prettier-ignore */
 export type DelimiterData = {
   dir: string;          // vertical or horizontal direction
   sizes?: number[];     // Array of fixed sizes for this character
@@ -158,7 +159,7 @@ export type DelimiterMap<D extends DelimiterData> = {
 /**
  * Delimiter data for a non-stretchy character
  */
-export const NOSTRETCH: DelimiterData = {dir: DIRECTION.None};
+export const NOSTRETCH: DelimiterData = { dir: DIRECTION.None };
 
 /****************************************************************************/
 
@@ -184,8 +185,14 @@ export type SmpMap = {
  * Data for Math Alphanumeric conversion:  starting positions for
  *  [Alpha, alpha, Greek, greek, Numbers]
  */
-export type SmpData = [number, number, number?, number?, number?, {[n: number]: number}?];
-
+export type SmpData = [
+  number,
+  number,
+  number?,
+  number?,
+  number?,
+  { [n: number]: number }?,
+];
 
 /****************************************************************************/
 
@@ -193,42 +200,42 @@ export type SmpData = [number, number, number?, number?, number?, {[n: number]: 
  * Font parameters (for TeX typesetting rules)
  */
 export type FontParameters = {
-  x_height: number,
-  quad: number,
-  num1: number,
-  num2: number,
-  num3: number,
-  denom1: number,
-  denom2: number,
-  sup1: number,
-  sup2: number,
-  sup3: number,
-  sub1: number,
-  sub2: number,
-  sup_drop: number,
-  sub_drop: number,
-  delim1: number,
-  delim2: number,
-  axis_height: number,
-  rule_thickness: number,
-  big_op_spacing1: number,
-  big_op_spacing2: number,
-  big_op_spacing3: number,
-  big_op_spacing4: number,
-  big_op_spacing5: number,
+  x_height: number;
+  quad: number;
+  num1: number;
+  num2: number;
+  num3: number;
+  denom1: number;
+  denom2: number;
+  sup1: number;
+  sup2: number;
+  sup3: number;
+  sub1: number;
+  sub2: number;
+  sup_drop: number;
+  sub_drop: number;
+  delim1: number;
+  delim2: number;
+  axis_height: number;
+  rule_thickness: number;
+  big_op_spacing1: number;
+  big_op_spacing2: number;
+  big_op_spacing3: number;
+  big_op_spacing4: number;
+  big_op_spacing5: number;
 
-  surd_height: number,
+  surd_height: number;
 
-  scriptspace: number,
-  nulldelimiterspace: number,
-  delimiterfactor: number,
-  delimitershortfall: number,
+  scriptspace: number;
+  nulldelimiterspace: number;
+  delimiterfactor: number;
+  delimitershortfall: number;
 
-  rule_factor: number,
-  min_rule_thickness: number,
-  separation_factor: number,
-  extra_ic: number,
-  extender_factor: number,
+  rule_factor: number;
+  min_rule_thickness: number;
+  separation_factor: number;
+  extra_ic: number;
+  extender_factor: number;
 };
 
 /**
@@ -243,12 +250,16 @@ export type FontParameterList = {
 /**
  * Generic Font data
  */
-export type Font = FontData<CharOptions, VariantData<CharOptions>, DelimiterData>;
+export type Font = FontData<
+  CharOptions,
+  VariantData<CharOptions>,
+  DelimiterData
+>;
 
 /**
  * A function for setting up an additional character-data file
  */
-export type DynamicSetup = ((font: Font) => void);
+export type DynamicSetup = (font: Font) => void;
 
 /**
  * Character numbers or ranges of numbers that cause a dynamic file to be laoded
@@ -259,7 +270,7 @@ export type DynamicRanges = (number | [number, number])[];
  * List of characters (number) or ranges ([number, number]) of characters for
  *   each variant in a dynamic font file
  */
-export type DynamicVariants = {[name: string]: DynamicRanges};
+export type DynamicVariants = { [name: string]: DynamicRanges };
 
 /**
  * Name and variant data for a dynamic font file
@@ -269,6 +280,7 @@ export type DynamicFileDef = [string, DynamicVariants, DynamicRanges?];
 /**
  * Data stored about a dynamic font
  */
+/* prettier-ignore */
 export type DynamicFile = {
   extension: string;              // name of the extension for this file (or blank)
   file: string;                   // file containing the character data
@@ -282,7 +294,7 @@ export type DynamicFile = {
 /**
  * Object listing dynamic file data indexed by file name
  */
-export type DynamicFileList = {[name: string]: DynamicFile};
+export type DynamicFileList = { [name: string]: DynamicFile };
 
 /**
  * Data for dynamic files for a font or font extension
@@ -303,7 +315,7 @@ export type DynamicFontMap = Map<string, DynamicFont>;
 /**
  * Map of characters that load a dynamic file
  */
-export type DynamicCharMap = {[name: number]: DynamicFile};
+export type DynamicCharMap = { [name: number]: DynamicFile };
 
 /****************************************************************************/
 
@@ -313,11 +325,14 @@ export type DynamicCharMap = {[name: number]: DynamicFile};
  * @template C  The CharOptions type
  * @template D  The DelimiterData type
  */
-export interface FontExtensionData<C extends CharOptions, D extends DelimiterData> {
+export interface FontExtensionData<
+  C extends CharOptions,
+  D extends DelimiterData,
+> {
   name: string;
   options?: OptionList;
-  variants?: string[][] | {'[+]'?: string[][], '[-]'?: string[][]};
-  variantSmp?: {[name: string]: SmpData | string};
+  variants?: string[][] | { '[+]'?: string[][]; '[-]'?: string[][] };
+  variantSmp?: { [name: string]: SmpData | string };
   cssFonts?: CssFontMap;
   accentMap?: RemapMap;
   moMap?: RemapMap;
@@ -325,16 +340,20 @@ export interface FontExtensionData<C extends CharOptions, D extends DelimiterDat
   parameters?: FontParameterList;
   delimiters?: DelimiterMap<D>;
   chars?: CharMapMap<C>;
-  sizeVariants?: string[] | {'[+]'?: string[], '[-]'?: string[]};
-  stretchVariants?: string[] | {'[+]'?: string[], '[-]'?: string[]};
+  sizeVariants?: string[] | { '[+]'?: string[]; '[-]'?: string[] };
+  stretchVariants?: string[] | { '[+]'?: string[]; '[-]'?: string[] };
   ranges?: DynamicFileDef[];
-};
+}
 
 /**
  * Merge options into an object or array.
+ *
+ * @param obj
+ * @param dst
+ * @param src
  */
 export function mergeOptions(obj: OptionList, dst: string, src: OptionList) {
-  return (src ? defaultOptions(obj, {[dst]: src})[dst] : obj[dst]);
+  return src ? defaultOptions(obj, { [dst]: src })[dst] : obj[dst];
 }
 
 /****************************************************************************/
@@ -346,11 +365,15 @@ export function mergeOptions(obj: OptionList, dst: string, src: OptionList) {
  * @template V  The VariantData type
  * @template D  The DelimiterData type
  */
-export class FontData<C extends CharOptions, V extends VariantData<C>, D extends DelimiterData> {
-
+export class FontData<
+  C extends CharOptions,
+  V extends VariantData<C>,
+  D extends DelimiterData,
+> {
   /**
    * Options for the font
    */
+  /* prettier-ignore */
   public static OPTIONS: OptionList = {
     unknownFamily: 'serif',     // Should use 'monospace' with LiteAdaptor
     dynamicPrefix: '.'          // Location of dynamically loaded files
@@ -398,7 +421,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     ['-tex-oldstyle', 'normal'],
     ['-tex-bold-oldstyle', 'bold'],
     ['-tex-mathit', 'italic'],
-    ['-tex-variant', 'normal']
+    ['-tex-variant', 'normal'],
   ];
 
   /**
@@ -428,7 +451,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     '-tex-oldstyle': ['unknown', false, false],
     '-tex-bold-oldstyle': ['unknown', false, true],
     '-tex-mathit': ['unknown', true, false],
-    '-tex-variant': ['unknown', false, false]
+    '-tex-variant': ['unknown', false, false],
   };
 
   /**
@@ -440,25 +463,33 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * Variant locations in the Math Alphabnumerics block:
    *  [upper-alpha, lower-alpha, upper-Greek, lower-Greek, numbers]
    */
-  public static VariantSmp: {[name: string]: SmpData | string} = {
-    bold: [0x1D400, 0x1D41A, 0x1D6A8, 0x1D6C2, 0x1D7CE, {0x3DC: 0x1D7CA, 0x3DD: 0x1D7CB}],
-    italic: [0x1D434, 0x1D44E, 0x1D6E2, 0x1D6FC],
-    'bold-italic': [0x1D468, 0x1D482, 0x1D71C, 0x1D736],
-    script: [0x1D49C, 0x1D4B6],
-    'bold-script': [0x1D4D0, 0x1D4EA],
-    fraktur: [0x1D504, 0x1D51E],
-    'double-struck': [0x1D538, 0x1D552, , , 0x1D7D8],
-    'bold-fraktur': [0x1D56C, 0x1D586],
-    'sans-serif': [0x1D5A0, 0x1D5BA, , , 0x1D7E2],
-    'bold-sans-serif': [0x1D5D4, 0x1D5EE, 0x1D756, 0x1D770, 0x1D7EC],
-    'sans-serif-italic': [0x1D608, 0x1D622],
-    'sans-serif-bold-italic': [0x1D63C, 0x1D656, 0x1D790, 0x1D7AA],
-    'monospace': [0x1D670, 0x1D68A, , , 0x1D7F6]
+  public static VariantSmp: { [name: string]: SmpData | string } = {
+    bold: [
+      0x1d400,
+      0x1d41a,
+      0x1d6a8,
+      0x1d6c2,
+      0x1d7ce,
+      { 0x3dc: 0x1d7ca, 0x3dd: 0x1d7cb },
+    ],
+    italic: [0x1d434, 0x1d44e, 0x1d6e2, 0x1d6fc],
+    'bold-italic': [0x1d468, 0x1d482, 0x1d71c, 0x1d736],
+    script: [0x1d49c, 0x1d4b6],
+    'bold-script': [0x1d4d0, 0x1d4ea],
+    fraktur: [0x1d504, 0x1d51e],
+    'double-struck': [0x1d538, 0x1d552, , , 0x1d7d8],
+    'bold-fraktur': [0x1d56c, 0x1d586],
+    'sans-serif': [0x1d5a0, 0x1d5ba, , , 0x1d7e2],
+    'bold-sans-serif': [0x1d5d4, 0x1d5ee, 0x1d756, 0x1d770, 0x1d7ec],
+    'sans-serif-italic': [0x1d608, 0x1d622],
+    'sans-serif-bold-italic': [0x1d63c, 0x1d656, 0x1d790, 0x1d7aa],
+    monospace: [0x1d670, 0x1d68a, , , 0x1d7f6],
   };
 
   /**
    * Character ranges to remap into Math Alphanumerics
    */
+  /* prettier-ignore */
   public static SmpRanges = [
     [0, 0x41, 0x5A],   // Upper-case alpha
     [1, 0x61, 0x7A],   // Lower-case alpha
@@ -471,6 +502,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * Characters to map back top other Unicode positions
    * (holes in the Math Alphanumeric ranges)
    */
+  /* prettier-ignore */
   public static SmpRemap: SmpMap = {
     0x1D455: 0x210E,   // PLANCK CONSTANT
     0x1D49D: 0x212C,   // SCRIPT CAPITAL B
@@ -501,6 +533,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    * Greek upper-case variants
    */
+  /* prettier-ignore */
   public static SmpRemapGreekU: SmpMap = {
     0x2207: 0x19,  // nabla
     0x03F4: 0x11   // theta symbol
@@ -509,6 +542,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    * Greek lower-case variants
    */
+  /* prettier-ignore */
   public static SmpRemapGreekL: SmpMap = {
     0x3D1: 0x1B,  // theta symbol
     0x3D5: 0x1D,  // phi symbol
@@ -522,6 +556,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    *  The default remappings
    */
+  /* prettier-ignore */
   public static defaultAccentMap: RemapMap = {
     0x005E: '\u02C6',  // hat
     0x007E: '\u02DC',  // tilde
@@ -542,19 +577,20 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * Default map for characters inside <mo>
    */
   protected static defaultMoMap: RemapMap = {
-    0x002D: '\u2212' // hyphen
+    0x002d: '\u2212', // hyphen
   };
 
   /**
    * Default map for characters inside <mn>
    */
   protected static defaultMnMap: RemapMap = {
-    0x002D: '\u2212' // hyphen
+    0x002d: '\u2212', // hyphen
   };
 
   /**
    *  The default font parameters for the font
    */
+  /* prettier-ignore */
   public static defaultParams: FontParameters = {
     x_height:         .442,
     quad:             1,
@@ -594,7 +630,6 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     extender_factor:     .333      // factor to adjust between full stretchy height/depth and extender height/depth
   };
 
-
   /**
    * The default delimiter data
    */
@@ -623,7 +658,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    * The font extension dynamic data
    */
-  protected static dynamicExtensions: DynamicFontMap = new Map();
+  public static dynamicExtensions: DynamicFontMap = new Map();
 
   /**
    * The font options
@@ -678,7 +713,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    * Factor by which to multiply italic correction for computation of delta in munderover
    */
-  public skewIcFactor: number = .75;
+  public skewIcFactor: number = 0.75;
 
   /**
    * Any styles needed for the font
@@ -686,7 +721,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   protected _styles: StyleList;
 
   /**
-   * @return {typeof FontData}   The constructor for this object
+   * @returns {typeof FontData}   The constructor for this object
    */
   public get CLASS(): typeof FontData {
     return this.constructor as typeof FontData;
@@ -695,12 +730,17 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    * @param {CharMap} font   The font to check
    * @param {number} n       The character to get options for
-   * @return {CharOptions}   The options for the character
+   * @returns {CharOptions}   The options for the character
    */
-  public static charOptions(font: CharMap<CharOptions>, n: number): CharOptions {
+  public static charOptions(
+    font: CharMap<CharOptions>,
+    n: number
+  ): CharOptions {
     const char = font[n];
     if (!Array.isArray(char)) {
-      throw Error(`Character data hasn't been loaded for 0x${n.toString(16).toUpperCase()}`);
+      throw Error(
+        `Character data hasn't been loaded for 0x${n.toString(16).toUpperCase()}`
+      );
     }
     if (char.length === 3) {
       (char as any)[3] = {};
@@ -713,14 +753,24 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    *
    * @param {DynamicFileDef[]} dynamicFiles   The definitions to make
    * @param {string} extension                The name of the extension for this file (or empty)
-   * @return {DynamicFileList}                The object of dynamic file data
+   * @returns {DynamicFileList}                The object of dynamic file data
    */
-  public static defineDynamicFiles(dynamicFiles: DynamicFileDef[], extension: string = ''): DynamicFileList {
+  public static defineDynamicFiles(
+    dynamicFiles: DynamicFileDef[],
+    extension: string = ''
+  ): DynamicFileList {
     const list: DynamicFileList = {};
     (dynamicFiles || []).forEach(([file, variants, delimiters]) => {
       list[file] = {
-        extension, file, variants, delimiters: delimiters || [],
-        promise: null, failed: false, setup: ((_font) => { list[file].failed = true; })
+        extension,
+        file,
+        variants,
+        delimiters: delimiters || [],
+        promise: null,
+        failed: false,
+        setup: (_font) => {
+          list[file].failed = true;
+        },
       };
     });
     return list;
@@ -733,33 +783,49 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * @param {string} file           The file being loaded
    * @param {CharMapMap} variants   The character data to be added
    *
+   * @param delimiters
+   * @param fonts
    * @template C  The CharOptions type
    * @template D  The DelimiterData type
    */
   public static dynamicSetup<C extends CharOptions, D extends DelimiterData>(
-    extension: string, file: string,
-    variants: CharMapMap<C>, delimiters: DelimiterMap<D> = {},
+    extension: string,
+    file: string,
+    variants: CharMapMap<C>,
+    delimiters: DelimiterMap<D> = {},
     fonts: string[] = null
   ) {
-    const data = (extension ? this.dynamicExtensions.get(extension) : null);
-    const files = (extension ? data.files : this.dynamicFiles);
+    const data = extension ? this.dynamicExtensions.get(extension) : null;
+    const files = extension ? data.files : this.dynamicFiles;
     files[file].setup = (font) => {
-      Object.keys(variants).forEach(name => font.defineChars(name, variants[name]));
+      Object.keys(variants).forEach((name) =>
+        font.defineChars(name, variants[name])
+      );
       font.defineDelimiters(delimiters);
-      extension && this.adjustDelimiters(font.delimiters, Object.keys(delimiters), data.sizeN, data.stretchN);
+      extension &&
+        this.adjustDelimiters(
+          font.delimiters,
+          Object.keys(delimiters),
+          data.sizeN,
+          data.stretchN
+        );
       fonts && font.addDynamicFontCss(fonts);
     };
   }
 
   /**
-   * @param {DelimiterMap<DelimiteData>} delimiters   The delimiter list to modify
+   * @param {DelimiterMap<DelimiterData>} delimiters  The delimiter list to modify
    * @param {string[]} keys                           The ids of the delimiters to check
    * @param {number} sizeN                            The original number of size variants
    * @param {number} stretchN                         The original number ot stretch variants
    */
-  public static adjustDelimiters(delimiters: DelimiterMap<DelimiterData>, keys: string[],
-                                 sizeN: number, stretchN: number) {
-    keys.forEach(id => {
+  public static adjustDelimiters(
+    delimiters: DelimiterMap<DelimiterData>,
+    keys: string[],
+    sizeN: number,
+    stretchN: number
+  ) {
+    keys.forEach((id) => {
       const delim = delimiters[parseInt(id)];
       if ('dir' in delim) {
         if (delim.variants) {
@@ -777,7 +843,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * @param {number} N        The pivot number
    */
   protected static adjustArrayIndices(list: number[], N: number) {
-    return list.map(n => (n < 0 ? N - 1 - n : n));
+    return list.map((n) => (n < 0 ? N - 1 - n : n));
   }
 
   /**
@@ -786,13 +852,17 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * @param {FontExtensionData} data    The extension data to add
    * @param {string} prefix             The [prefix] to add to all component names
    */
-  public static addExtension(data: FontExtensionData<CharOptions, DelimiterData>, prefix: string = '') {
+  public static addExtension(
+    data: FontExtensionData<CharOptions, DelimiterData>,
+    prefix: string = ''
+  ) {
     const extension = {
       name: data.name,
-      prefix: prefix,
+      prefix:
+        prefix || `[${data.name}-extension]/${this.JAX.toLowerCase()}/dynamic`,
       files: this.defineDynamicFiles(data.ranges, data.name),
       sizeN: this.defaultSizeVariants.length,
-      stretchN: this.defaultStretchVariants.length
+      stretchN: this.defaultStretchVariants.length,
     };
     this.dynamicExtensions.set(data.name, extension);
     for (const [src, dst] of [
@@ -806,13 +876,21 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
       ['parameters', 'defaultParams'],
       ['chars', 'defaultChars'],
       ['sizeVariants', 'defaultSizeVariants'],
-      ['stretchVariants', 'defaultStretchVariants']
-    ] as [keyof FontExtensionData<CharOptions, DelimiterData>, keyof typeof FontData][]) {
+      ['stretchVariants', 'defaultStretchVariants'],
+    ] as [
+      keyof FontExtensionData<CharOptions, DelimiterData>,
+      keyof typeof FontData,
+    ][]) {
       mergeOptions(this, dst, data[src] as OptionList);
     }
     if (data.delimiters) {
       Object.assign(this.defaultDelimiters, data.delimiters);
-      this.adjustDelimiters(this.defaultDelimiters, Object.keys(data.delimiters), extension.sizeN, extension.stretchN);
+      this.adjustDelimiters(
+        this.defaultDelimiters,
+        Object.keys(data.delimiters),
+        extension.sizeN,
+        extension.stretchN
+      );
     }
   }
 
@@ -821,24 +899,28 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    *
    * @param {OptionList} options   The options for this font
    *
-   * @constructor
+   * @class
    */
   constructor(options: OptionList = null) {
-    let CLASS = this.CLASS;
+    const CLASS = this.CLASS;
     this.options = userOptions(defaultOptions({}, CLASS.OPTIONS), options);
-    this.params = {...CLASS.defaultParams};
+    this.params = { ...CLASS.defaultParams };
     this.sizeVariants = [...CLASS.defaultSizeVariants];
     this.stretchVariants = [...CLASS.defaultStretchVariants];
     this.defineCssFonts(CLASS.defaultCssFonts);
     this.cssFamilyPrefix = CLASS.defaultCssFamilyPrefix;
     this.createVariants(CLASS.defaultVariants);
     this.defineDelimiters(CLASS.defaultDelimiters as DelimiterMap<D>);
-    Object.keys(CLASS.defaultChars).forEach(name => this.defineChars(name, CLASS.defaultChars[name] as CharMap<C>));
+    Object.keys(CLASS.defaultChars).forEach((name) =>
+      this.defineChars(name, CLASS.defaultChars[name] as CharMap<C>)
+    );
     this.defineRemap('accent', CLASS.defaultAccentMap);
     this.defineRemap('mo', CLASS.defaultMoMap);
     this.defineRemap('mn', CLASS.defaultMnMap);
     this.defineDynamicCharacters(CLASS.dynamicFiles);
-    CLASS.dynamicExtensions.forEach(data => this.defineDynamicCharacters(data.files));
+    CLASS.dynamicExtensions.forEach((data) =>
+      this.defineDynamicCharacters(data.files)
+    );
   }
 
   /**
@@ -853,14 +935,21 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    *
    * @param {FontExtensionData} data    The data for the font extension to merge into this font.
    * @param {string} prefix             The [prefix] to add to all component names
+   * @returns {string[]}                 The new CSS rules needed for this extension
    */
-  public addExtension(data: FontExtensionData<C, D>, prefix: string = '') {
+  public addExtension(
+    data: FontExtensionData<C, D>,
+    prefix: string = ''
+  ): string[] {
+    const jax = (
+      this.constructor as typeof FontData<C, V, D>
+    ).JAX.toLowerCase();
     const dynamicFont = {
       name: data.name,
-      prefix: prefix,
+      prefix: prefix || `[${data.name}-extension]/${jax}/dynamic`,
       files: this.CLASS.defineDynamicFiles(data.ranges, prefix),
       sizeN: this.sizeVariants.length,
-      stretchN: this.stretchVariants.length
+      stretchN: this.stretchVariants.length,
     };
     this.CLASS.dynamicExtensions.set(data.name, dynamicFont);
 
@@ -869,12 +958,22 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     mergeOptions(this, 'sizeVariants', data.sizeVariants);
     mergeOptions(this, 'stretchVariants', data.stretchVariants);
     mergeOptions(this.constructor, 'VariantSmp', data.variantSmp);
-    this.defineCssFonts(mergeOptions({cssFonts: {}}, 'cssFonts', data.cssFonts));
-    this.createVariants(mergeOptions({variants: []}, 'variants', data.variants));
+    this.defineCssFonts(
+      mergeOptions({ cssFonts: {} }, 'cssFonts', data.cssFonts)
+    );
+    this.createVariants(
+      mergeOptions({ variants: [] }, 'variants', data.variants)
+    );
     if (data.delimiters) {
-      this.defineDelimiters(mergeOptions({delimiters: {}}, 'delimiters', data.delimiters));
-      this.CLASS.adjustDelimiters(this.delimiters, Object.keys(data.delimiters),
-                                  dynamicFont.sizeN, dynamicFont.stretchN);
+      this.defineDelimiters(
+        mergeOptions({ delimiters: {} }, 'delimiters', data.delimiters)
+      );
+      this.CLASS.adjustDelimiters(
+        this.delimiters,
+        Object.keys(data.delimiters),
+        dynamicFont.sizeN,
+        dynamicFont.stretchN
+      );
     }
     for (const name of Object.keys(data.chars || {})) {
       this.defineChars(name, data.chars[name]);
@@ -885,6 +984,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     if (data.ranges) {
       this.defineDynamicCharacters(dynamicFont.files);
     }
+    return [];
   }
 
   /**
@@ -932,10 +1032,16 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * @param {string} link     A variant to search before the inherit one (but only
    *                           its top-level object).
    */
-  public createVariant(name: string, inherit: string = null, link: string = null) {
-    let variant = {
+  public createVariant(
+    name: string,
+    inherit: string = null,
+    link: string = null
+  ) {
+    const variant = {
       linked: [] as CharMap<C>[],
-      chars: Object.create(inherit ? this.variant[inherit].chars : {}) as CharMap<C>
+      chars: Object.create(
+        inherit ? this.variant[inherit].chars : {}
+      ) as CharMap<C>,
     } as unknown as V;
     if (this.variant[link]) {
       Object.assign(variant.chars, this.variant[link].chars);
@@ -949,6 +1055,9 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    * Create the mapping from Basic Latin and Greek blocks to
    * the Math Alphanumeric block for a given variant.
+   *
+   * @param chars
+   * @param name
    */
   protected remapSmpChars(chars: CharMap<C>, name: string) {
     const CLASS = this.CLASS;
@@ -963,7 +1072,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
       const base = remap[i] as number;
       if (!base) continue;
       for (let n = lo; n <= hi; n++) {
-        if (n === 0x3A2) continue;
+        if (n === 0x3a2) continue;
         const smp = base + n - lo;
         chars[n] = this.smpChar(SmpRemap[smp] || smp);
       }
@@ -981,10 +1090,10 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
 
   /**
    * @param {number} n           Math Alphanumerics position for this remapping
-   * @return {CharDataArray<C>}  The character data for the remapping
+   * @returns {CharDataArray<C>}  The character data for the remapping
    */
   protected smpChar(n: number): CharDataArray<C> {
-    return [ , , , {smp: n} as C];
+    return [, , , { smp: n } as C];
   }
 
   /**
@@ -1063,7 +1172,10 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
     for (const file of Object.keys(dynamicFiles)) {
       const dynamic = dynamicFiles[file];
       for (const name of Object.keys(dynamic.variants)) {
-        this.defineChars(name, this.flattenRanges(dynamic.variants[name], dynamic));
+        this.defineChars(
+          name,
+          this.flattenRanges(dynamic.variants[name], dynamic)
+        );
       }
       this.defineDelimiters(this.flattenRanges(dynamic.delimiters, dynamic));
     }
@@ -1074,9 +1186,12 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    *
    * @param {DynamicRanges} ranges   The ranges to be flattened
    * @param {DynamicFile} dynamic    The DynamicFile to tie to the ranges
-   * @return {DynamicCharMap}        The map from character positions to dynamic file
+   * @returns {DynamicCharMap}        The map from character positions to dynamic file
    */
-  protected flattenRanges(ranges: DynamicRanges, dynamic: DynamicFile): DynamicCharMap {
+  protected flattenRanges(
+    ranges: DynamicRanges,
+    dynamic: DynamicFile
+  ): DynamicCharMap {
     const chars: DynamicCharMap = {};
     for (const n of ranges) {
       if (Array.isArray(n)) {
@@ -1092,13 +1207,15 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
 
   /**
    * @param {DynamicFile} dynamic    The data for the dynamic file
-   * @return {string}                The prefixed name for the file
+   * @returns {string}                The prefixed name for the file
    */
   protected dynamicFileName(dynamic: DynamicFile): string {
-    const prefix = (!dynamic.extension ? this.options.dynamicPrefix :
-                    this.CLASS.dynamicExtensions.get(dynamic.extension).prefix);
-    return (dynamic.file.match(/^(?:[\/\[]|[a-z]+:\/\/|[a-z]:)/i) ? dynamic.file :
-      prefix + '/' + dynamic.file.replace(/\.js$/, ''));
+    const prefix = !dynamic.extension
+      ? this.options.dynamicPrefix
+      : this.CLASS.dynamicExtensions.get(dynamic.extension).prefix;
+    return dynamic.file.match(/^(?:[\/\[]|[a-z]+:\/\/|[a-z]:)/i)
+      ? dynamic.file
+      : prefix + '/' + dynamic.file.replace(/(?<!\.js)$/, '.js');
   }
 
   /**
@@ -1106,15 +1223,20 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    *   and do any associated setup that needs access to the FontData instance.
    *
    * @param {DynamicFile} dynamic   The data for the file to load
-   * @return {Promise<void>}        The promise that is resolved when the file is loaded
+   * @returns {Promise<void>}        The promise that is resolved when the file is loaded
    */
   public async loadDynamicFile(dynamic: DynamicFile): Promise<void> {
-    if (dynamic.failed) return Promise.reject(new Error(`dynamic file '${dynamic.file}' failed to load`));
+    if (dynamic.failed)
+      return Promise.reject(
+        new Error(`dynamic file '${dynamic.file}' failed to load`)
+      );
     if (!dynamic.promise) {
-      dynamic.promise = asyncLoad(this.dynamicFileName(dynamic)).catch(err => {
-        dynamic.failed = true;
-        console.warn(err);
-      });
+      dynamic.promise = asyncLoad(this.dynamicFileName(dynamic)).catch(
+        (err) => {
+          dynamic.failed = true;
+          console.warn(err);
+        }
+      );
     }
     return dynamic.promise.then(() => dynamic.setup(this));
   }
@@ -1122,13 +1244,19 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    * Load all dynamic files.
    *
-   * @return {Promise<void[]>}   A promise that is resolved after all the dynamic files are loaded.
+   * @returns {Promise<void[]>}   A promise that is resolved after all the dynamic files are loaded.
    */
   public loadDynamicFiles(): Promise<void[]> {
     const dynamicFiles = this.CLASS.dynamicFiles;
-    const promises = Object.keys(dynamicFiles).map(name => this.loadDynamicFile(dynamicFiles[name]));
+    const promises = Object.keys(dynamicFiles).map((name) =>
+      this.loadDynamicFile(dynamicFiles[name])
+    );
     for (const data of this.CLASS.dynamicExtensions.values()) {
-      promises.push(...Object.keys(data.files).map(name => this.loadDynamicFile(data.files[name])));
+      promises.push(
+        ...Object.keys(data.files).map((name) =>
+          this.loadDynamicFile(data.files[name])
+        )
+      );
     }
     return Promise.all(promises);
   }
@@ -1138,13 +1266,20 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    *   synchronous loading function, as in util/asyncLoad/node.ts.
    */
   public loadDynamicFilesSync() {
-    if (!mathjax.asyncLoad) {
-      throw Error('MathJax(loadDynamicFilesSync): mathjax.asyncLoad must be specified and synchronous');
+    if (!mathjax.asyncIsSynchronous) {
+      throw Error(
+        'MathJax(loadDynamicFilesSync): mathjax.asyncLoad must be specified and synchronous\n' +
+          '    Try importing #js/../components/require.mjs and #js/util/asyncLoad/node.js'
+      );
     }
     const dynamicFiles = this.CLASS.dynamicFiles;
-    Object.keys(dynamicFiles).forEach(name => this.loadDynamicFileSync(dynamicFiles[name]));
+    Object.keys(dynamicFiles).forEach((name) =>
+      this.loadDynamicFileSync(dynamicFiles[name])
+    );
     for (const data of this.CLASS.dynamicExtensions.values()) {
-      Object.keys(data.files).forEach(name => this.loadDynamicFileSync(data.files[name]));
+      Object.keys(data.files).forEach((name) =>
+        this.loadDynamicFileSync(data.files[name])
+      );
     }
   }
 
@@ -1170,12 +1305,11 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
    * @param {string[]} _fonts   The IDs for the fonts to add CSS for
    * @param {string} _root      The root URL for the fonts (can be set by extensions)
    */
-  public addDynamicFontCss(_fonts: string[], _root?: string) {
-  }
+  public addDynamicFontCss(_fonts: string[], _root?: string) {}
 
   /**
    * @param {number} n  The delimiter character number whose data is desired
-   * @return {DelimiterData}  The data for that delimiter (or undefined)
+   * @returns {DelimiterData}  The data for that delimiter (or undefined)
    */
   public getDelimiter(n: number): DelimiterData {
     const delim = this.delimiters[n];
@@ -1190,7 +1324,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    * @param {number} n  The delimiter character number whose variant is needed
    * @param {number} i  The index in the size array of the size whose variant is needed
-   * @return {string}   The variant of the i-th size for delimiter n
+   * @returns {string}   The variant of the i-th size for delimiter n
    */
   public getSizeVariant(n: number, i: number): string {
     const delim = this.getDelimiter(n);
@@ -1203,7 +1337,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
   /**
    * @param {number} n  The delimiter character number whose variant is needed
    * @param {number} i  The index in the stretch array of the part whose variant is needed
-   * @return {string}   The variant of the i-th part for delimiter n
+   * @returns {string}   The variant of the i-th part for delimiter n
    */
   public getStretchVariant(n: number, i: number): string {
     const delim = this.getDelimiter(n);
@@ -1212,23 +1346,23 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
 
   /**
    * @param {number} n   The delimiter character number whose variants are needed
-   * @return {string[]}  The variants for the parts of the delimiter
+   * @returns {string[]}  The variants for the parts of the delimiter
    */
   public getStretchVariants(n: number): string[] {
-    return [0, 1, 2, 3].map(i => this.getStretchVariant(n, i));
+    return [0, 1, 2, 3].map((i) => this.getStretchVariant(n, i));
   }
 
   /**
    * @param {string} name       The variant whose character data is being querried
    * @param {number} n          The unicode number for the character to be found
-   * @return {CharDataArray}    The data for the given character (or undefined)
+   * @returns {CharDataArray}    The data for the given character (or undefined)
    */
   public getChar(name: string, n: number): CharDataArray<C> {
     const char = this.variant[name].chars[n];
     if (char && !Array.isArray(char)) {
       const variant = this.variant[name];
       delete variant.chars[n];
-      variant.linked.forEach(link => delete link[n]);
+      variant.linked.forEach((link) => delete link[n]);
       retryAfter(this.loadDynamicFile(char));
       return null;
     }
@@ -1237,7 +1371,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
 
   /**
    * @param {string} name   The name of the variant whose data is to be obtained
-   * @return {V}            The data for the requested variant (or undefined)
+   * @returns {V}            The data for the requested variant (or undefined)
    */
   public getVariant(name: string): V {
     return this.variant[name];
@@ -1245,7 +1379,7 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
 
   /**
    * @param {string} variant   The name of the variant whose data is to be obtained
-   * @return {CssFontData}     The CSS data for the requested variant
+   * @returns {CssFontData}     The CSS data for the requested variant
    */
   public getCssFont(variant: string): CssFontData {
     return this.cssFontMap[variant] || ['serif', false, false];
@@ -1253,22 +1387,21 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
 
   /**
    * @param {string} family   The font camily to use
-   * @return {string}         The family with the css prefix
+   * @returns {string}         The family with the css prefix
    */
   public getFamily(family: string): string {
-    return (this.cssFamilyPrefix ? this.cssFamilyPrefix + ', ' + family : family);
+    return this.cssFamilyPrefix ? this.cssFamilyPrefix + ', ' + family : family;
   }
 
   /**
    * @param {string} name   The name of the map to query
    * @param {number} c      The character to remap
-   * @return {string}       The remapped character (or the original)
+   * @returns {string}       The remapped character (or the original)
    */
   public getRemappedChar(name: string, c: number): string {
-    const map = this.remapChars[name] || {} as RemapMap;
+    const map = this.remapChars[name] || ({} as RemapMap);
     return map[c];
   }
-
 }
 
 /**
@@ -1278,7 +1411,11 @@ export class FontData<C extends CharOptions, V extends VariantData<C>, D extends
  * @template V  The VariantData type
  * @template D  The DelimiterData type
  */
-export interface FontDataClass<C extends CharOptions, V extends VariantData<C>, D extends DelimiterData> {
+export interface FontDataClass<
+  C extends CharOptions,
+  V extends VariantData<C>,
+  D extends DelimiterData,
+> {
   OPTIONS: OptionList;
   defaultCssFonts: CssFontMap;
   defaultVariants: string[][];
@@ -1287,13 +1424,19 @@ export interface FontDataClass<C extends CharOptions, V extends VariantData<C>, 
   /* tslint:disable-next-line:jsdoc-require */
   charOptions(font: CharMap<C>, n: number): C;
   /* tslint:disable-next-line:jsdoc-require */
-  defineDynamicFiles(dynamicFiles: DynamicFileDef[], prefix?: string): DynamicFileList;
+  defineDynamicFiles(
+    dynamicFiles: DynamicFileDef[],
+    prefix?: string
+  ): DynamicFileList;
   /* tslint:disable-next-line:jsdoc-require */
   dynamicSetup<C extends CharOptions, D extends DelimiterData>(
-    font: string, file: string, variants: CharMapMap<C>, delimiters?: DelimiterMap<D>, fonts?: string[]
+    font: string,
+    file: string,
+    variants: CharMapMap<C>,
+    delimiters?: DelimiterMap<D>,
+    fonts?: string[]
   ): void;
   /* tslint:disable-next-line:jsdoc-require */
   addExtension(data: FontExtensionData<C, D>, prefix?: string): void;
-  new(...args: any[]): FontData<C, V, D>;
+  new (...args: any[]): FontData<C, V, D>;
 }
-

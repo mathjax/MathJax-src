@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2023 The MathJax Consortium
+ *  Copyright (c) 2017-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,43 +15,46 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview The dsfont package.
+ * @file The dsfont package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration} from '../Configuration.js';
-import {CommandMap} from '../TokenMap.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration } from '../Configuration.js';
+import { CommandMap } from '../TokenMap.js';
 import BaseMethods from '../base/BaseMethods.js';
 import TexParser from '../TexParser.js';
 
 /**
  * The methods that implement the dsfont package.
+ *
+ * @param parser
+ * @param name
  */
+function ChooseFont(parser: TexParser, name: string) {
+  BaseMethods.MathFont(
+    parser,
+    name,
+    parser.options.dsfont.sans ? '-ds-ss' : '-ds-rm'
+  );
+}
 
 new CommandMap('dsfont', {
-  mathds: 'ChooseFont',
-}, {
-  ChooseFont: function (parser: TexParser, name: string) {
-    BaseMethods.MathFont(
-      parser, name,
-      parser.options.dsfont.sans ? '-ds-ss' : '-ds-rm');
-  }
+  mathds: ChooseFont,
 });
 
 //
 //  Define the package configuration, including switch for sans serif.
 //
 export const DsfontConfiguration = Configuration.create('dsfont', {
-  handler: {
-    macro: ['dsfont'],
+  [ConfigurationType.HANDLER]: {
+    [HandlerType.MACRO]: ['dsfont'],
   },
-  options: {
+  [ConfigurationType.OPTIONS]: {
     dsfont: {
-      sans: false
-    }
-  }
+      sans: false,
+    },
+  },
 });
-

@@ -1,8 +1,10 @@
 *~
-/node_modules
+node_modules
+coverage
 /components/mjs/**/lib
 /components/cjs
 /cjs
 /mjs
 /bundle
 /bundle-cjs
+/testsuite/js

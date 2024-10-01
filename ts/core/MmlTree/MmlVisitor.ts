@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2023 The MathJax Consortium
+ *  Copyright (c) 2017-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,18 +16,25 @@
  */
 
 /**
- * @fileoverview  A visitor class that visits MmlNode trees
+ * @file  A visitor class that visits MmlNode trees
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MmlNode, TextNode, XMLNode, TEXCLASS, TEXCLASSNAMES} from './MmlNode.js';
-import {MmlMi} from './MmlNodes/mi.js';
-import {HtmlNode} from './MmlNodes/HtmlNode.js';
-import {MmlFactory} from './MmlFactory.js';
-import {AbstractVisitor} from '../Tree/Visitor.js';
-import {PropertyList} from '../Tree/Node.js';
-import {lookup} from '../../util/Options.js';
+import {
+  MmlNode,
+  TextNode,
+  XMLNode,
+  TEXCLASS,
+  TEXCLASSNAMES,
+} from './MmlNode.js';
+import { MmlMo } from './MmlNodes/mo.js';
+import { MmlMi } from './MmlNodes/mi.js';
+import { HtmlNode } from './MmlNodes/HtmlNode.js';
+import { MmlFactory } from './MmlFactory.js';
+import { AbstractVisitor } from '../Tree/Visitor.js';
+import { PropertyList } from '../Tree/Node.js';
+import { lookup } from '../../util/Options.js';
 
 export const DATAMJX = 'data-mjx-';
 
@@ -38,39 +45,38 @@ export const DATAMJX = 'data-mjx-';
  */
 
 export class MmlVisitor extends AbstractVisitor<MmlNode> {
-
   /**
    * MmlNode kinds to replace with other names
    */
   public static rename: PropertyList = {
-    TeXAtom: 'mrow'
+    TeXAtom: 'mrow',
   };
 
   /**
    * Translations for the internal mathvariants
    */
   public static variants: PropertyList = {
-    '-tex-calligraphic':      'script',
+    '-tex-calligraphic': 'script',
     '-tex-bold-calligraphic': 'bold-script',
-    '-tex-oldstyle':          'normal',
-    '-tex-bold-oldstyle':     'bold',
-    '-tex-mathit':            'italic'
+    '-tex-oldstyle': 'normal',
+    '-tex-bold-oldstyle': 'bold',
+    '-tex-mathit': 'italic',
   };
 
   /**
    * Attributes to include on every element of a given kind
    */
-  public static defaultAttributes: {[kind: string]: PropertyList} = {
+  public static defaultAttributes: { [kind: string]: PropertyList } = {
     math: {
-      xmlns: 'http://www.w3.org/1998/Math/MathML'
-    }
+      xmlns: 'http://www.w3.org/1998/Math/MathML',
+    },
   };
 
   /**
    * @param {MmlFactory} factory  The MmlNode factory (defaults to MmlFactory if not given)
    *
-   * @constructor
-   * @extends {AbstractVisitor}
+   * @class
+   * @augments {AbstractVisitor}
    */
   constructor(factory: MmlFactory = null) {
     if (!factory) {
@@ -85,23 +91,23 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
    */
 
   /**
-   * @param {TextNode} node  The TextNode to visit
-   * @param {any[]} args  Any arguments needed by the visitor
-   * @return {any}  Any return value needed for the visitor
+   * @param {TextNode} _node  The TextNode to visit
+   * @param {any[]} _args  Any arguments needed by the visitor
+   * @returns {any}  Any return value needed for the visitor
    */
   public visitTextNode(_node: TextNode, ..._args: any[]): any {}
 
   /**
-   * @param {XMLNode} node   The XMLNode to visit
-   * @param {any[]} args     Any arguments needed by the visitor
-   * @return {any}           Any return value needed for the visitor
+   * @param {XMLNode} _node   The XMLNode to visit
+   * @param {any[]} _args     Any arguments needed by the visitor
+   * @returns {any}           Any return value needed for the visitor
    */
   public visitXMLNode(_node: XMLNode, ..._args: any[]): any {}
 
   /**
-   * @param {HtmlNode} node  The XMLNode to visit
-   * @param {any[]} args     Any arguments needed by the visitor
-   * @return {any}           Any return value needed for the visitor
+   * @param {HtmlNode} _node  The XMLNode to visit
+   * @param {any[]} _args     Any arguments needed by the visitor
+   * @returns {any}           Any return value needed for the visitor
    */
   public visitHtmlNode(_node: HtmlNode<any>, ..._args: any[]): any {}
 
@@ -112,7 +118,7 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
 
   /**
    * @param {MmlNode} node  The node whose kind is needed
-   * @return {string}       The MamlML node name for that kind
+   * @returns {string}       The MamlML node name for that kind
    */
   protected getKind(node: MmlNode): string {
     const kind = node.kind;
@@ -126,7 +132,7 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
 
   /**
    * @param {MmlNode} node    The node whose attributes are to be produced
-   * @return {PropertyList}   The attribute list
+   * @returns {PropertyList}   The attribute list
    */
   protected getAttributeList(node: MmlNode): PropertyList {
     const CLASS = this.constructor as typeof MmlVisitor;
@@ -152,21 +158,35 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
    * Create the list of data-mjx-* attributes
    *
    * @param {MmlNode} node    The node whose data list is to be generated
-   * @return {PropertyList}   The final class attribute list
+   * @returns {PropertyList}   The final class attribute list
    */
   protected getDataAttributes(node: MmlNode): PropertyList {
     const data = {} as PropertyList;
     const variant = node.attributes.getExplicit('mathvariant') as string;
     const variants = (this.constructor as typeof MmlVisitor).variants;
-    variant && (node.getProperty('ignore-variant') || variants.hasOwnProperty(variant)) &&
+    variant &&
+      (node.getProperty('ignore-variant') ||
+        variants.hasOwnProperty(variant)) &&
       this.setDataAttribute(data, 'variant', variant);
-    node.getProperty('variantForm') && this.setDataAttribute(data, 'alternate', '1');
-    node.getProperty('pseudoscript') && this.setDataAttribute(data, 'pseudoscript', 'true');
-    node.getProperty('autoOP') === false && this.setDataAttribute(data, 'auto-op', 'false');
+    node.getProperty('variantForm') &&
+      this.setDataAttribute(data, 'alternate', '1');
+    node.getProperty('pseudoscript') &&
+      this.setDataAttribute(data, 'pseudoscript', 'true');
+    node.getProperty('autoOP') === false &&
+      this.setDataAttribute(data, 'auto-op', 'false');
     const vbox = node.getProperty('vbox') as string;
     vbox && this.setDataAttribute(data, 'vbox', vbox);
     const scriptalign = node.getProperty('scriptalign') as string;
     scriptalign && this.setDataAttribute(data, 'script-align', scriptalign);
+    const accent = node.getProperty('mathaccent') as boolean;
+    if (accent !== undefined) {
+      if (
+        (accent && !(node as MmlMo).isMathAccent()) ||
+        (!accent && !(node as MmlMo).isMathAccentWithWidth())
+      ) {
+        this.setDataAttribute(data, 'mathaccent', accent.toString());
+      }
+    }
     const texclass = node.getProperty('texClass') as number;
     if (texclass !== undefined) {
       let setclass = true;
@@ -174,9 +194,15 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
         const name = (node as MmlMi).getText();
         setclass = !(name.length > 1 && name.match(MmlMi.operatorName));
       }
-      setclass && this.setDataAttribute(data, 'texclass', texclass < 0 ? 'NONE' : TEXCLASSNAMES[texclass]);
+      setclass &&
+        this.setDataAttribute(
+          data,
+          'texclass',
+          texclass < 0 ? 'NONE' : TEXCLASSNAMES[texclass]
+        );
     }
-    node.getProperty('scriptlevel') && node.getProperty('useHeight') === false &&
+    node.getProperty('scriptlevel') &&
+      node.getProperty('useHeight') === false &&
       this.setDataAttribute(data, 'smallmatrix', 'true');
     return data;
   }
@@ -189,5 +215,4 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
   protected setDataAttribute(data: PropertyList, name: string, value: string) {
     data[DATAMJX + name] = value;
   }
-
 }

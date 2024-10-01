@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2023 The MathJax Consortium
+ *  Copyright (c) 2018-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,29 +16,32 @@
  */
 
 /**
- * @fileoverview  Implements a lightweight DOM adaptor
+ * @file  Implements a lightweight DOM adaptor
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {AbstractDOMAdaptor} from '../core/DOMAdaptor.js';
-import {NodeMixin, Constructor} from './NodeMixin.js';
-import {LiteDocument} from './lite/Document.js';
-import {LiteElement, LiteNode} from './lite/Element.js';
-import {LiteText, LiteComment} from './lite/Text.js';
-import {LiteList} from './lite/List.js';
-import {LiteWindow} from './lite/Window.js';
-import {LiteParser} from './lite/Parser.js';
-import {Styles} from '../util/Styles.js';
-import {OptionList} from '../util/Options.js';
+import { AbstractDOMAdaptor } from '../core/DOMAdaptor.js';
+import { NodeMixin, Constructor } from './NodeMixin.js';
+import { LiteDocument } from './lite/Document.js';
+import { LiteElement, LiteNode } from './lite/Element.js';
+import { LiteText, LiteComment } from './lite/Text.js';
+import { LiteList } from './lite/List.js';
+import { LiteWindow } from './lite/Window.js';
+import { LiteParser } from './lite/Parser.js';
+import { Styles } from '../util/Styles.js';
+import { OptionList } from '../util/Options.js';
 
 /************************************************************/
 
 /**
  * Implements a lightweight DOMAdaptor on liteweight HTML elements
  */
-export class LiteBase extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocument> {
-
+export class LiteBase extends AbstractDOMAdaptor<
+  LiteElement,
+  LiteText,
+  LiteDocument
+> {
   /**
    * The document in which the HTML nodes will be created
    */
@@ -55,8 +58,7 @@ export class LiteBase extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocu
   public parser: LiteParser;
 
   /**
-   * @param {OptionList} options  The options for the lite adaptor (e.g., fontSize)
-   * @constructor
+   * @class
    */
   constructor() {
     super();
@@ -87,14 +89,14 @@ export class LiteBase extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocu
 
   /**
    * @param {string} text   The text of the comment
-   * @return {LiteComment}  The comment node
+   * @returns {LiteComment}  The comment node
    */
   public comment(text: string): LiteComment {
     return new LiteComment(text);
   }
 
   /**
-   * @return {LiteDocument}  A new document element
+   * @returns {LiteDocument}  A new document element
    */
   public createDocument(): LiteDocument {
     return new LiteDocument();
@@ -133,13 +135,13 @@ export class LiteBase extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocu
    */
   public tags(node: LiteElement, name: string, ns: string = null) {
     let stack = [] as LiteNode[];
-    let tags = [] as LiteElement[];
+    const tags = [] as LiteElement[];
     if (ns) {
-      return tags;  // we don't have namespaces
+      return tags; // we don't have namespaces
     }
     let n: LiteNode = node;
     while (n) {
-      let kind = n.kind;
+      const kind = n.kind;
       if (kind !== '#text' && kind !== '#comment') {
         n = n as LiteElement;
         if (kind === name) {
@@ -157,7 +159,7 @@ export class LiteBase extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocu
   /**
    * @param {LiteElement} node   The node to be searched
    * @param {string} id          The id of the node to look for
-   * @return {LiteElement}       The child node having the given id
+   * @returns {LiteElement}       The child node having the given id
    */
   public elementById(node: LiteElement, id: string): LiteElement {
     let stack = [] as LiteNode[];
@@ -180,11 +182,11 @@ export class LiteBase extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocu
   /**
    * @param {LiteElement} node   The node to be searched
    * @param {string} name        The name of the class to find
-   * @return {LiteElement[]}     The nodes with the given class
+   * @returns {LiteElement[]}     The nodes with the given class
    */
   public elementsByClass(node: LiteElement, name: string): LiteElement[] {
     let stack = [] as LiteNode[];
-    let tags = [] as LiteElement[];
+    const tags = [] as LiteElement[];
     let n: LiteNode = node;
     while (n) {
       if (n.kind !== '#text' && n.kind !== '#comment') {
@@ -205,24 +207,32 @@ export class LiteBase extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocu
   /**
    * @override
    */
-  public getElements(nodes: (string | LiteElement | LiteElement[])[], document: LiteDocument) {
+  public getElements(
+    nodes: (string | LiteElement | LiteElement[])[],
+    document: LiteDocument
+  ) {
     let containers = [] as LiteElement[];
     const body = this.body(document);
     for (const node of nodes) {
-      if (typeof(node) === 'string') {
+      if (typeof node === 'string') {
         if (node.charAt(0) === '#') {
           const n = this.elementById(body, node.slice(1));
           if (n) {
             containers.push(n);
           }
         } else if (node.charAt(0) === '.') {
-          containers = containers.concat(this.elementsByClass(body, node.slice(1)));
+          containers = containers.concat(
+            this.elementsByClass(body, node.slice(1))
+          );
         } else if (node.match(/^[-a-z][-a-z0-9]*$/i)) {
           containers = containers.concat(this.tags(body, node));
         }
       } else if (Array.isArray(node)) {
         containers = containers.concat(node);
-      } else if (node instanceof this.window.NodeList || node instanceof this.window.HTMLCollection) {
+      } else if (
+        node instanceof this.window.NodeList ||
+        node instanceof this.window.HTMLCollection
+      ) {
         containers = containers.concat((node as LiteList<LiteElement>).nodes);
       } else {
         containers.push(node);
@@ -250,10 +260,10 @@ export class LiteBase extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocu
 
   /**
    * @param {LiteNode} node  The node whose index is needed
-   * @return {number}        The index of the node it its parent's children array
+   * @returns {number}        The index of the node it its parent's children array
    */
   public childIndex(node: LiteNode): number {
-    return (node.parent ? node.parent.children.findIndex(n => n === node) : -1);
+    return node.parent ? node.parent.children.findIndex((n) => n === node) : -1;
   }
 
   /**
@@ -312,18 +322,20 @@ export class LiteBase extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocu
    */
   public clone(node: LiteElement, deep: boolean = true) {
     const nnode = new LiteElement(node.kind);
-    nnode.attributes = {...node.attributes};
-    nnode.children = !deep ? [] : node.children.map(n => {
-      if (n.kind === '#text') {
-        return new LiteText((n as LiteText).value);
-      } else if (n.kind === '#comment') {
-        return new LiteComment((n as LiteComment).value);
-      } else {
-        const m = this.clone(n as LiteElement);
-        m.parent = nnode;
-        return m;
-      }
-    });
+    nnode.attributes = { ...node.attributes };
+    nnode.children = !deep
+      ? []
+      : node.children.map((n) => {
+          if (n.kind === '#text') {
+            return new LiteText((n as LiteText).value);
+          } else if (n.kind === '#comment') {
+            return new LiteComment((n as LiteComment).value);
+          } else {
+            const m = this.clone(n as LiteElement);
+            m.parent = nnode;
+            return m;
+          }
+        });
     return nnode;
   }
 
@@ -345,7 +357,7 @@ export class LiteBase extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocu
     const parent = node.parent;
     if (!parent) return null;
     const i = this.childIndex(node) + 1;
-    return (i >= 0 && i < parent.children.length ? parent.children[i] : null);
+    return i >= 0 && i < parent.children.length ? parent.children[i] : null;
   }
 
   /**
@@ -355,7 +367,7 @@ export class LiteBase extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocu
     const parent = node.parent;
     if (!parent) return null;
     const i = this.childIndex(node) - 1;
-    return (i >= 0 ? parent.children[i] : null);
+    return i >= 0 ? parent.children[i] : null;
   }
 
   /**
@@ -397,8 +409,11 @@ export class LiteBase extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocu
    * @override
    */
   public value(node: LiteNode | LiteText) {
-    return (node.kind === '#text' ? (node as LiteText).value :
-            node.kind === '#comment' ? (node as LiteComment).value.replace(/^<!(--)?((?:.|\n)*)\1>$/, '$2') : '');
+    return node.kind === '#text'
+      ? (node as LiteText).value
+      : node.kind === '#comment'
+        ? (node as LiteComment).value.replace(/^<!(--)?((?:.|\n)*)\1>$/, '$2')
+        : '';
   }
 
   /**
@@ -406,8 +421,14 @@ export class LiteBase extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocu
    */
   public textContent(node: LiteElement): string {
     return node.children.reduce((s: string, n: LiteNode) => {
-      return s + (n.kind === '#text' ? (n as LiteText).value :
-                  n.kind === '#comment' ? '' : this.textContent(n as LiteElement));
+      return (
+        s +
+        (n.kind === '#text'
+          ? (n as LiteText).value
+          : n.kind === '#comment'
+            ? ''
+            : this.textContent(n as LiteElement))
+      );
     }, '');
   }
 
@@ -435,7 +456,12 @@ export class LiteBase extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocu
   /**
    * @override
    */
-  public setAttribute(node: LiteElement, name: string, value: string | number, ns: string = null) {
+  public setAttribute(
+    node: LiteElement,
+    name: string,
+    value: string | number,
+    ns: string = null
+  ) {
     if (typeof value !== 'string') {
       value = String(value);
     }
@@ -476,7 +502,7 @@ export class LiteBase extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocu
     const attributes = node.attributes;
     const list = [];
     for (const name of Object.keys(attributes)) {
-      list.push({name: name, value: attributes[name] as string});
+      list.push({ name: name, value: attributes[name] as string });
     }
     return list;
   }
@@ -485,8 +511,8 @@ export class LiteBase extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocu
    * @override
    */
   public addClass(node: LiteElement, name: string) {
-    const classes = (node.attributes['class'] as string || '').split(/ /);
-    if (!classes.find(n => n === name)) {
+    const classes = ((node.attributes['class'] as string) || '').split(/ /);
+    if (!classes.find((n) => n === name)) {
       classes.push(name);
       node.attributes['class'] = classes.join(' ');
     }
@@ -496,8 +522,8 @@ export class LiteBase extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocu
    * @override
    */
   public removeClass(node: LiteElement, name: string) {
-    const classes = (node.attributes['class'] as string || '').split(/ /);
-    const i = classes.findIndex(n => n === name);
+    const classes = ((node.attributes['class'] as string) || '').split(/ /);
+    const i = classes.findIndex((n) => n === name);
     if (i >= 0) {
       classes.splice(i, 1);
       node.attributes['class'] = classes.join(' ');
@@ -508,8 +534,8 @@ export class LiteBase extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocu
    * @override
    */
   public hasClass(node: LiteElement, name: string) {
-    const classes = (node.attributes['class'] as string || '').split(/ /);
-    return !!classes.find(n => n === name);
+    const classes = ((node.attributes['class'] as string) || '').split(/ /);
+    return !!classes.find((n) => n === name);
   }
 
   /**
@@ -548,7 +574,9 @@ export class LiteBase extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocu
    * @override
    */
   public insertRules(node: LiteElement, rules: string[]) {
-    node.children = [this.text(this.textContent(node) + '\n\n' + rules.join('\n\n'))];
+    node.children = [
+      this.text(this.textContent(node) + '\n\n' + rules.join('\n\n')),
+    ];
   }
 
   /*******************************************************************/
@@ -581,22 +609,26 @@ export class LiteBase extends AbstractDOMAdaptor<LiteElement, LiteText, LiteDocu
    * @override
    */
   public nodeBBox(_node: LiteElement) {
-    return {left: 0, right: 0, top: 0, bottom: 0};
+    return { left: 0, right: 0, top: 0, bottom: 0 };
   }
-
 }
 
 /**
  * The LiteAdaptor class (add in the NodeMixin methods and options)
  */
-export class LiteAdaptor extends NodeMixin<LiteElement, LiteText, LiteDocument, Constructor<LiteBase>>(LiteBase) {}
+export class LiteAdaptor extends NodeMixin<
+  LiteElement,
+  LiteText,
+  LiteDocument,
+  Constructor<LiteBase>
+>(LiteBase) {}
 
 /************************************************************/
 /**
  * The function to call to obtain a LiteAdaptor
  *
  * @param {OptionList} options  The options for the adaptor
- * @return {LiteAdaptor}        The newly created adaptor
+ * @returns {LiteAdaptor}        The newly created adaptor
  */
 export function liteAdaptor(options: OptionList = null): LiteAdaptor {
   return new LiteAdaptor(null, options);

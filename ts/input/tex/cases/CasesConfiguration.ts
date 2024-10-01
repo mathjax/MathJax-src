@@ -1,20 +1,21 @@
-import {Configuration} from '../Configuration.js';
-import {EnvironmentMap, MacroMap} from '../TokenMap.js';
-import {ParseUtil} from '../ParseUtil.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration } from '../Configuration.js';
+import { EnvironmentMap, MacroMap } from '../TokenMap.js';
+import { ParseResult } from '../Types.js';
+import { ParseUtil } from '../ParseUtil.js';
 import BaseMethods from '../base/BaseMethods.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
-import {BeginItem, EqnArrayItem} from '../base/BaseItems.js';
-import {AmsTags} from '../ams/AmsConfiguration.js';
-import {StackItem, CheckType} from '../StackItem.js';
-import {MmlMtable} from '../../../core/MmlTree/MmlNodes/mtable.js';
-import {EmpheqUtil} from '../empheq/EmpheqUtil.js';
+import { BeginItem, EqnArrayItem } from '../base/BaseItems.js';
+import { AmsTags } from '../ams/AmsConfiguration.js';
+import { StackItem, CheckType } from '../StackItem.js';
+import { MmlMtable } from '../../../core/MmlTree/MmlNodes/mtable.js';
+import { EmpheqUtil } from '../empheq/EmpheqUtil.js';
 
 /**
  * The StackItem for the numcases environment.
  */
 export class CasesBeginItem extends BeginItem {
-
   /**
    * @override
    */
@@ -34,14 +35,12 @@ export class CasesBeginItem extends BeginItem {
     }
     return super.checkItem(item);
   }
-
 }
 
 /**
  * A tagging class for the subnumcases environment.
  */
 export class CasesTags extends AmsTags {
-
   /**
    * The counter for the subnumber.
    */
@@ -61,11 +60,15 @@ export class CasesTags extends AmsTags {
   public autoTag() {
     if (this.currentTag.tag != null) return;
     if (this.currentTag.env === 'subnumcases') {
-      if (this.subcounter === 0) this.counter++;
+      if (this.subcounter === 0) {
+        this.counter++;
+      }
       this.subcounter++;
       this.tag(this.formatNumber(this.counter, this.subcounter), false);
     } else {
-      if (this.subcounter === 0 || this.currentTag.env !== 'numcases-left') this.counter++;
+      if (this.subcounter === 0 || this.currentTag.env !== 'numcases-left') {
+        this.counter++;
+      }
       this.tag(this.formatNumber(this.counter), false);
     }
   }
@@ -76,32 +79,48 @@ export class CasesTags extends AmsTags {
   public formatNumber(n: number, m: number = null) {
     return n.toString() + (m === null ? '' : String.fromCharCode(0x60 + m));
   }
-
 }
 
 export const CasesMethods = {
-
   /**
    * Implements the numcases environment.
    *
-   * @param {TexParser} texparser   The active tex parser.
+   * @param {TexParser} parser      The active tex parser.
    * @param {CasesBeginItem} begin  The environment begin item.
+   * @returns {ParseResult}         The array stack item.
    */
-  NumCases(parser: TexParser, begin: CasesBeginItem) {
+  NumCases(parser: TexParser, begin: CasesBeginItem): ParseResult {
     if (parser.stack.env.closing === begin.getName()) {
       delete parser.stack.env.closing;
-      parser.Push(parser.itemFactory.create('end').setProperty('name', begin.getName())); // finish eqnarray
+      parser.Push(
+        parser.itemFactory.create('end').setProperty('name', begin.getName())
+      ); // finish eqnarray
       const cases = parser.stack.Top();
       const table = cases.Last as MmlMtable;
       const original = ParseUtil.copyNode(table, parser) as MmlMtable;
       const left = cases.getProperty('left');
-      EmpheqUtil.left(table, original, left + '\\empheqlbrace\\,', parser, 'numcases-left');
-      parser.Push(parser.itemFactory.create('end').setProperty('name', begin.getName()));
+      EmpheqUtil.left(
+        table,
+        original,
+        left + '\\empheqlbrace\\,',
+        parser,
+        'numcases-left'
+      );
+      parser.Push(
+        parser.itemFactory.create('end').setProperty('name', begin.getName())
+      );
       return null;
     } else {
       const left = parser.GetArgument('\\begin{' + begin.getName() + '}');
       begin.setProperty('left', left);
-      const array = BaseMethods.EqnArray(parser, begin, true, true, 'll', 'tt') as EqnArrayItem;
+      const array = BaseMethods.EqnArray(
+        parser,
+        begin,
+        true,
+        true,
+        'll',
+        'tt'
+      ) as EqnArrayItem;
       array.arraydef.displaystyle = false;
       array.arraydef.rowspacing = '.2em';
       array.setProperty('numCases', true);
@@ -112,17 +131,26 @@ export const CasesMethods = {
 
   /**
    * Replacement for & in cases environment.
+   *
+   * @param {TexParser} parser      The active tex parser.
+   * @param {string} name           The environment name.
    */
-  Entry(parser: TexParser, name: string) {
+  Entry(parser: TexParser, name: string): ParseResult {
     if (!parser.stack.Top().getProperty('numCases')) {
-      return BaseMethods.Entry(parser, name);
+      BaseMethods.Entry(parser, name);
     }
-    parser.Push(parser.itemFactory.create('cell').setProperties({isEntry: true, name: name}));
+    parser.Push(
+      parser.itemFactory
+        .create('cell')
+        .setProperties({ isEntry: true, name: name })
+    );
     //
     //  Make second column be in \text{...}
     //
     const tex = parser.string;
-    let braces = 0, i = parser.i, m = tex.length;
+    let braces = 0;
+    let i = parser.i;
+    const m = tex.length;
     //
     //  Look through the string character by character...
     //
@@ -152,7 +180,10 @@ export const CasesMethods = {
         //
         //  Extra alignment tabs are not allowed in cases
         //
-        throw new TexError('ExtraCasesAlignTab', 'Extra alignment tab in text for numcase environment');
+        throw new TexError(
+          'ExtraCasesAlignTab',
+          'Extra alignment tab in text for numcase environment'
+        );
       } else if (c === '\\' && braces === 0) {
         //
         //  If the macro is \cr or \\, end the search, otherwise skip the macro
@@ -179,35 +210,34 @@ export const CasesMethods = {
     const text = tex.substring(parser.i, i).replace(/^\s*/, '');
     parser.PushAll(ParseUtil.internalMath(parser, text, 0));
     parser.i = i;
-  }
-
+  },
 };
 
 /**
  * The environments for this package
  */
 new EnvironmentMap('cases-env', EmpheqUtil.environment, {
-  numcases: ['NumCases', 'cases'],
-  subnumcases: ['NumCases', 'cases']
-}, CasesMethods);
+  numcases: [CasesMethods.NumCases, 'cases'],
+  subnumcases: [CasesMethods.NumCases, 'cases'],
+});
 
 /**
  * The macros for this package
  */
 new MacroMap('cases-macros', {
-  '&': 'Entry'
-}, CasesMethods);
+  '&': CasesMethods.Entry,
+});
 
 //
 //  Define the package for our new environment
 //
 export const CasesConfiguration = Configuration.create('cases', {
-  handler: {
-    environment: ['cases-env'],
-    character: ['cases-macros']
+  [ConfigurationType.HANDLER]: {
+    [HandlerType.ENVIRONMENT]: ['cases-env'],
+    [HandlerType.CHARACTER]: ['cases-macros'],
   },
-  items: {
-    [CasesBeginItem.prototype.kind]: CasesBeginItem
+  [ConfigurationType.ITEMS]: {
+    [CasesBeginItem.prototype.kind]: CasesBeginItem,
   },
-  tags: {'cases': CasesTags}
+  [ConfigurationType.TAGS]: { cases: CasesTags },
 });

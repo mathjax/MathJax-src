@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2023 The MathJax Consortium
+ *  Copyright (c) 2017-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,21 +16,37 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlMrow wrapper for the MmlMrow object
+ * @file  Implements the ChtmlMrow wrapper for the MmlMrow object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTML} from '../../chtml.js';
-import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
-import {ChtmlWrapperFactory} from '../WrapperFactory.js';
-import {ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData,
-        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
-import {CommonMrow, CommonMrowClass, CommonMrowMixin} from '../../common/Wrappers/mrow.js';
-import {CommonInferredMrow, CommonInferredMrowClass, CommonInferredMrowMixin} from '../../common/Wrappers/mrow.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMrow, MmlInferredMrow} from '../../../core/MmlTree/MmlNodes/mrow.js';
-import {StyleList} from '../../../util/StyleList.js';
+import { CHTML } from '../../chtml.js';
+import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
+import { ChtmlWrapperFactory } from '../WrapperFactory.js';
+import {
+  ChtmlCharOptions,
+  ChtmlVariantData,
+  ChtmlDelimiterData,
+  ChtmlFontData,
+  ChtmlFontDataClass,
+} from '../FontData.js';
+import {
+  CommonMrow,
+  CommonMrowClass,
+  CommonMrowMixin,
+} from '../../common/Wrappers/mrow.js';
+import {
+  CommonInferredMrow,
+  CommonInferredMrowClass,
+  CommonInferredMrowMixin,
+} from '../../common/Wrappers/mrow.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import {
+  MmlMrow,
+  MmlInferredMrow,
+} from '../../../core/MmlTree/MmlNodes/mrow.js';
+import { StyleList } from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
@@ -40,11 +56,22 @@ import {StyleList} from '../../../util/StyleList.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMrowNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMrow<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {}
+export interface ChtmlMrowNTD<N, T, D>
+  extends ChtmlWrapper<N, T, D>,
+    CommonMrow<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {}
 
 /**
  * The ChtmlMrowClass interface for the CHTML Mrow wrapper
@@ -53,34 +80,59 @@ export interface ChtmlMrowNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonMrow
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlMrowClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonMrowClass<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {
-  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlMrowNTD<N, T, D>;
+export interface ChtmlMrowClass<N, T, D>
+  extends ChtmlWrapperClass<N, T, D>,
+    CommonMrowClass<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {
+  new (
+    factory: ChtmlWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: ChtmlWrapper<N, T, D>
+  ): ChtmlMrowNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
 /**
  * The ChtmlMrow wrapper class for the MmlMrow class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
 export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
-
   const Base = CommonMrowMixin<
-      N, T, D,
-      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
-      ChtmlMrowClass<N, T, D>
-    >(ChtmlWrapper);
+    N,
+    T,
+    D,
+    CHTML<N, T, D>,
+    ChtmlWrapper<N, T, D>,
+    ChtmlWrapperFactory<N, T, D>,
+    ChtmlWrapperClass<N, T, D>,
+    ChtmlCharOptions,
+    ChtmlVariantData,
+    ChtmlDelimiterData,
+    ChtmlFontData,
+    ChtmlFontDataClass,
+    ChtmlMrowClass<N, T, D>
+  >(ChtmlWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class ChtmlMrow extends Base implements ChtmlMrowNTD<N, T, D> {
-
     /**
      * @override
      */
@@ -98,63 +150,66 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
     public static styles: StyleList = {
       'mjx-linestack, mjx-mrow[break-top]': {
         display: 'inline-table',
-        width: '100%'
+        width: '100%',
       },
-      'mjx-linestack[break-align="bottom"], mjx-mrow[break-top][break-align="bottom"]': {
-        display: 'inline-block'
-      },
-      'mjx-linestack[break-align="middle"], mjx-mrow[break-top][break-align="middle"]': {
-        'vertical-align': 'middle'
-      },
-      'mjx-linestack[break-align="center"], mjx-mrow[break-top][break-align="center"]': {
-        'vertical-align': 'middle'
-      },
+      'mjx-linestack[break-align="bottom"], mjx-mrow[break-top][break-align="bottom"]':
+        {
+          display: 'inline-block',
+        },
+      'mjx-linestack[break-align="middle"], mjx-mrow[break-top][break-align="middle"]':
+        {
+          'vertical-align': 'middle',
+        },
+      'mjx-linestack[break-align="center"], mjx-mrow[break-top][break-align="center"]':
+        {
+          'vertical-align': 'middle',
+        },
       'mjx-linestack[breakable]': {
-        display: 'inline'
+        display: 'inline',
       },
       'mjx-linestack[breakable] > mjx-linebox': {
-        display: 'inline'
+        display: 'inline',
       },
       'mjx-linestack[breakable] > mjx-linebox::before': {
         'white-space': 'pre',
-        content: '"\\A"'
+        content: '"\\A"',
       },
       'mjx-linestack[breakable] > mjx-linebox::after': {
         'white-space': 'normal',
         content: '" "',
         'letter-spacing': '-.999em',
-        'font-family': 'MJX-BRK'
+        'font-family': 'MJX-BRK',
       },
       'mjx-linestack[breakable] > mjx-linebox:first-of-type::before': {
-        display: 'none'
+        display: 'none',
       },
       'mjx-linestack[breakable] > mjx-linebox:last-of-type::after': {
-        display: 'none'
+        display: 'none',
       },
       'mjx-linebox': {
-        display: 'block'
+        display: 'block',
       },
       'mjx-linebox[align="left"]': {
-        'text-align': 'left'
+        'text-align': 'left',
       },
       'mjx-linebox[align="center"]': {
-        'text-align': 'center'
+        'text-align': 'center',
       },
       'mjx-linebox[align="right"]': {
-        'text-align': 'right'
+        'text-align': 'right',
       },
       'mjx-linestrut': {
         display: 'inline-block',
         height: '1em',
-        'vertical-align': '-.25em'
-      }
+        'vertical-align': '-.25em',
+      },
     };
 
     /**
      * @override
      */
     public toCHTML(parents: N[]) {
-      const n = this.linebreakCount = (this.isStack ? 0 : this.breakCount);
+      const n = (this.linebreakCount = this.isStack ? 0 : this.breakCount);
       if (n || !this.node.isInferred) {
         parents = this.standardChtmlNodes(parents);
       } else {
@@ -177,22 +232,33 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
       this.getBBox(); // make sure we have linebreak information
       const lines = this.lineBBox;
       const adaptor = this.adaptor;
-      const [alignfirst, shiftfirst] = lines[1].indentData?.[0] || ['left', '0'];
+      const [alignfirst, shiftfirst] = lines[1].indentData?.[0] || [
+        'left',
+        '0',
+      ];
       for (const i of parents.keys()) {
         const bbox = lines[i];
-        let [indentalign, indentshift] = (
-          i === 0 ?
-            [alignfirst, shiftfirst] :
-            bbox.indentData?.[i === n ? 2 : 1] || ['left', '0']
+        const [indentalign, indentshift] =
+          i === 0
+            ? [alignfirst, shiftfirst]
+            : bbox.indentData?.[i === n ? 2 : 1] || ['left', '0'];
+        const [align, shift] = this.processIndent(
+          indentalign,
+          indentshift,
+          alignfirst,
+          shiftfirst
         );
-        const [align, shift] = this.processIndent(indentalign, indentshift, alignfirst, shiftfirst);
         adaptor.setAttribute(parents[i], 'align', align);
         if (shift) {
           adaptor.setStyle(parents[i], 'position', 'relative');
           adaptor.setStyle(parents[i], 'left', this.em(shift));
         }
         if (i < n && this.jax.math.display) {
-          adaptor.setStyle(parents[i], 'margin-bottom', this.em(bbox.lineLeading));
+          adaptor.setStyle(
+            parents[i],
+            'margin-bottom',
+            this.em(bbox.lineLeading)
+          );
         }
       }
     }
@@ -202,7 +268,11 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
      */
     protected handleVerticalAlign(dom: N) {
       if (this.dh) {
-        this.adaptor.setStyle(this.adaptor.parent(dom), 'vertical-align', this.em(this.dh));
+        this.adaptor.setStyle(
+          this.adaptor.parent(dom),
+          'vertical-align',
+          this.em(this.dh)
+        );
       }
     }
 
@@ -210,7 +280,7 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
      * @param {N} dom  The HTML element for the mrow
      */
     protected handleNegativeWidth(dom: N) {
-      const {w} = this.getBBox();
+      const { w } = this.getBBox();
       if (w < 0) {
         this.adaptor.setStyle(dom, 'width', this.em(Math.max(0, w)));
         this.adaptor.setStyle(dom, 'marginRight', this.em(w));
@@ -227,7 +297,9 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
       // Create a linestack/mrow node for the lines
       //
       const adaptor = this.adaptor;
-      const kind = (this.node.isInferred ? 'mjx-linestack' : 'mjx-' + this.node.kind);
+      const kind = this.node.isInferred
+        ? 'mjx-linestack'
+        : 'mjx-' + this.node.kind;
       this.dom = [adaptor.append(parents[0], this.html(kind)) as N];
       if (kind === 'mjx-mrow' && !this.isStack) {
         adaptor.setAttribute(this.dom[0], 'break-top', 'true');
@@ -236,7 +308,9 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
         adaptor.setAttribute(this.dom[0], 'breakable', 'true');
       }
       if (this.node.isInferred || !this.isStack) {
-        const valign = (this.parent.node.attributes.get('data-vertical-align') as string);
+        const valign = this.parent.node.attributes.get(
+          'data-vertical-align'
+        ) as string;
         if (valign === 'middle' || valign === 'center' || valign === 'bottom') {
           adaptor.setAttribute(this.dom[0], 'break-align', valign);
         }
@@ -244,13 +318,18 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
       //
       // Add an href anchor, if needed, and insert the linestack/mrow
       //
-      this.dom = [adaptor.append(this.handleHref(parents)[0], this.dom[0]) as N];
+      this.dom = [
+        adaptor.append(this.handleHref(parents)[0], this.dom[0]) as N,
+      ];
       //
       //  Add the line boxes
       //
       const chtml = Array(n) as N[];
       for (let i = 0; i <= n; i++) {
-        chtml[i] = adaptor.append(this.dom[0], this.html('mjx-linebox', {'lineno': i})) as N;
+        chtml[i] = adaptor.append(
+          this.dom[0],
+          this.html('mjx-linebox', { lineno: i })
+        ) as N;
       }
       //
       //  Return the line boxes as the parent nodes for their contents
@@ -269,12 +348,8 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
         i += n;
       }
     }
-
-
   };
-
 })<any, any, any>();
-
 
 /*****************************************************************/
 /*****************************************************************/
@@ -286,11 +361,22 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlInferredMrowNTD<N, T, D> extends ChtmlMrowNTD<N, T, D>, CommonInferredMrow<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {}
+export interface ChtmlInferredMrowNTD<N, T, D>
+  extends ChtmlMrowNTD<N, T, D>,
+    CommonInferredMrow<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {}
 
 /**
  * The ChtmlInferredMrowClass interface for the CHTML InferredMrow wrapper
@@ -299,39 +385,65 @@ export interface ChtmlInferredMrowNTD<N, T, D> extends ChtmlMrowNTD<N, T, D>, Co
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlInferredMrowClass<N, T, D> extends ChtmlMrowClass<N, T, D>, CommonInferredMrowClass<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {
-  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlInferredMrowNTD<N, T, D>;
+export interface ChtmlInferredMrowClass<N, T, D>
+  extends ChtmlMrowClass<N, T, D>,
+    CommonInferredMrowClass<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {
+  new (
+    factory: ChtmlWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: ChtmlWrapper<N, T, D>
+  ): ChtmlInferredMrowNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
 /**
  * The ChtmlInferredMrow wrapper class for the MmlInferredMrow class
  */
-export const ChtmlInferredMrow = (function <N, T, D>(): ChtmlInferredMrowClass<N, T, D> {
-
+export const ChtmlInferredMrow = (function <N, T, D>(): ChtmlInferredMrowClass<
+  N,
+  T,
+  D
+> {
   const Base = CommonInferredMrowMixin<
-      N, T, D,
-      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
-      ChtmlInferredMrowClass<N, T, D>
-    >(ChtmlMrow);
+    N,
+    T,
+    D,
+    CHTML<N, T, D>,
+    ChtmlWrapper<N, T, D>,
+    ChtmlWrapperFactory<N, T, D>,
+    ChtmlWrapperClass<N, T, D>,
+    ChtmlCharOptions,
+    ChtmlVariantData,
+    ChtmlDelimiterData,
+    ChtmlFontData,
+    ChtmlFontDataClass,
+    ChtmlInferredMrowClass<N, T, D>
+  >(ChtmlMrow);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
-  return class ChtmlInferredMrow extends Base implements ChtmlInferredMrowNTD<N, T, D> {
-
+  return class ChtmlInferredMrow
+    // @ts-expect-error Avoid message about base constructors not having the
+    // same type (they should both be ChtmlWrapper<N, T, D>, but are thought of
+    // as different by typescript)
+    extends Base
+    implements ChtmlInferredMrowNTD<N, T, D>
+  {
     /**
      * @override
      */
     public static kind = MmlInferredMrow.prototype.kind;
-
   };
-
 })<any, any, any>();

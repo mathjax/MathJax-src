@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2023 The MathJax Consortium
+ *  Copyright (c) 2019-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,22 +15,21 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview    Configuration file for the configmacros package.
+ * @file    Configuration file for the configmacros package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {Configuration, ParserConfiguration} from '../Configuration.js';
-import {expandable} from '../../../util/Options.js';
-import {CommandMap, EnvironmentMap, MacroMap} from '../TokenMap.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration, ParserConfiguration } from '../Configuration.js';
+import { expandable } from '../../../util/Options.js';
+import { CommandMap, EnvironmentMap, MacroMap } from '../TokenMap.js';
 import ParseMethods from '../ParseMethods.js';
-import {Macro} from '../Token.js';
+import { Macro } from '../Token.js';
 import NewcommandMethods from '../newcommand/NewcommandMethods.js';
-import {BeginEnvItem} from '../newcommand/NewcommandItems.js';
-import BaseMethods from '../base/BaseMethods.js';
-import {TeX} from '../../tex.js';
+import { BeginEnvItem } from '../newcommand/NewcommandItems.js';
+import { TeX } from '../../tex.js';
 
 type TEX = TeX<any, any, any>;
 
@@ -55,23 +54,25 @@ const ENVIRONMENTMAP = 'configmacros-env-map';
  * @param {Configuration} config   The configuration object for the input jax
  */
 function configmacrosInit(config: ParserConfiguration) {
-  new MacroMap(ACTIVEMAP, {}, BaseMethods);
-  new CommandMap(MACROSMAP, {}, {});
-  new EnvironmentMap(ENVIRONMENTMAP, ParseMethods.environment, {}, {});
-  config.append(Configuration.local({
-    handler: {
-      character: [ACTIVEMAP],
-      macro: [MACROSMAP],
-      environment: [ENVIRONMENTMAP]
-    },
-    priority: 3
-  }));
+  new MacroMap(ACTIVEMAP, {});
+  new CommandMap(MACROSMAP, {});
+  new EnvironmentMap(ENVIRONMENTMAP, ParseMethods.environment, {});
+  config.append(
+    Configuration.local({
+      handler: {
+        [HandlerType.CHARACTER]: [ACTIVEMAP],
+        [HandlerType.MACRO]: [MACROSMAP],
+        [HandlerType.ENVIRONMENT]: [ENVIRONMENTMAP],
+      },
+      priority: 3,
+    })
+  );
 }
 
 /**
  * Create the user-defined macros and environments from their options
  *
- * @param {Configuration} config   The configuration object for the input jax
+ * @param {Configuration} _config  The configuration object for the input jax
  * @param {TeX} jax                The TeX input jax
  */
 function configmacrosConfig(_config: ParserConfiguration, jax: TEX) {
@@ -91,10 +92,14 @@ function setMacros(name: string, map: string, jax: TEX) {
   const handler = jax.parseOptions.handlers.retrieve(map) as CommandMap;
   const macros = jax.parseOptions.options[name];
   for (const cs of Object.keys(macros)) {
-    const def = (typeof macros[cs] === 'string' ? [macros[cs]] : macros[cs]);
-    const macro = Array.isArray(def[2]) ?
-      new Macro(cs, NewcommandMethods.MacroWithTemplate, def.slice(0, 2).concat(def[2])) :
-      new Macro(cs, NewcommandMethods.Macro, def);
+    const def = typeof macros[cs] === 'string' ? [macros[cs]] : macros[cs];
+    const macro = Array.isArray(def[2])
+      ? new Macro(
+          cs,
+          NewcommandMethods.MacroWithTemplate,
+          def.slice(0, 2).concat(def[2])
+        )
+      : new Macro(cs, NewcommandMethods.Macro, def);
     handler.add(cs, macro);
   }
 }
@@ -123,27 +128,34 @@ function configMacros(jax: TEX) {
  * @param {TeX} jax   The TeX input jax
  */
 function configEnvironments(jax: TEX) {
-  const handler = jax.parseOptions.handlers.retrieve(ENVIRONMENTMAP) as EnvironmentMap;
+  const handler = jax.parseOptions.handlers.retrieve(
+    ENVIRONMENTMAP
+  ) as EnvironmentMap;
   const environments = jax.parseOptions.options.environments;
   for (const env of Object.keys(environments)) {
-    handler.add(env, new Macro(env, NewcommandMethods.BeginEnv, [true].concat(environments[env])));
+    handler.add(
+      env,
+      new Macro(
+        env,
+        NewcommandMethods.BeginEnv,
+        [true].concat(environments[env])
+      )
+    );
   }
 }
 
 /**
  * The configuration object for configmacros
  */
-export const ConfigMacrosConfiguration = Configuration.create(
-  'configmacros', {
-    init: configmacrosInit,
-    config: configmacrosConfig,
-    items: {
-      [BeginEnvItem.prototype.kind]: BeginEnvItem,
-    },
-    options: {
-      active: expandable({}),
-      macros: expandable({}),
-      environments: expandable({})
-    }
-  }
-);
+export const ConfigMacrosConfiguration = Configuration.create('configmacros', {
+  [ConfigurationType.INIT]: configmacrosInit,
+  [ConfigurationType.CONFIG]: configmacrosConfig,
+  [ConfigurationType.ITEMS]: {
+    [BeginEnvItem.prototype.kind]: BeginEnvItem,
+  },
+  [ConfigurationType.OPTIONS]: {
+    active: expandable({}),
+    macros: expandable({}),
+    environments: expandable({}),
+  },
+});

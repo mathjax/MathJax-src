@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2023 The MathJax Consortium
+ *  Copyright (c) 2017-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,30 +15,29 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview Token classes.
+ * @file Token classes.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Args, Attributes, ParseMethod} from './Types.js';
-
+import { Args, Attributes, ParseMethod } from './Types.js';
 
 /**
  * Token class
  */
 export class Token {
-
   /**
-   * @constructor
-   * @param {string} token The token parsed.
-   * @param {string} char The corresponding translation.
-   * @param {Attributes} attributes The attributes for the translation.
+   * @class
+   * @param {string} _token The token parsed.
+   * @param {string} _char The corresponding translation.
+   * @param {Attributes} _attributes The attributes for the translation.
    */
-  constructor(private _token: string, private _char: string,
-              private _attributes: Attributes) {
-  }
+  constructor(
+    private _token: string,
+    private _char: string,
+    private _attributes: Attributes
+  ) {}
 
   public get token(): string {
     return this._token;
@@ -51,20 +50,20 @@ export class Token {
   public get attributes(): Attributes {
     return this._attributes;
   }
-
 }
 
 export class Macro {
-
   /**
-   * @constructor
-   * @param {string} token The token parsed
-   * @param {ParseMethod} func The parsing function for that token.
-   * @param {Args[]} args Additional arguments for the function.
+   * @class
+   * @param {string} _token The token parsed
+   * @param {ParseMethod} _func The parsing function for that token.
+   * @param {Args[]} _args Additional arguments for the function.
    */
-  constructor(private _token: string, private _func: ParseMethod,
-              private _args: Args[] = []) {
-  }
+  constructor(
+    private _token: string,
+    private _func: ParseMethod,
+    private _args: Args[] = []
+  ) {}
 
   public get token(): string {
     return this._token;
@@ -77,5 +76,4 @@ export class Macro {
   public get args(): Args[] {
     return this._args;
   }
-
 }

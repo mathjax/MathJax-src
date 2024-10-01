@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2023 The MathJax Consortium
+ *  Copyright (c) 2018-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,24 +16,41 @@
  */
 
 /**
- * @fileoverview  Implements the SvgSemantics wrapper for the MmlSemantics object
+ * @file  Implements the SvgSemantics wrapper for the MmlSemantics object
  *                and the associated wrappers for annotations
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVG} from '../../svg.js';
-import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
-import {SvgWrapperFactory} from '../WrapperFactory.js';
-import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
-import {CommonSemantics, CommonSemanticsClass, CommonSemanticsMixin} from '../../common/Wrappers/semantics.js';
-import {CommonXmlNode, CommonXmlNodeClass, CommonXmlNodeMixin} from '../../common/Wrappers/XmlNode.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlSemantics, MmlAnnotation, MmlAnnotationXML} from '../../../core/MmlTree/MmlNodes/semantics.js';
-import {XMLNode} from '../../../core/MmlTree/MmlNode.js';
-import {StyleList} from '../../../util/StyleList.js';
-import {StyleList as Styles} from '../../../util/Styles.js';
-
+import { SVG } from '../../svg.js';
+import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
+import { SvgWrapperFactory } from '../WrapperFactory.js';
+import {
+  SvgCharOptions,
+  SvgVariantData,
+  SvgDelimiterData,
+  SvgFontData,
+  SvgFontDataClass,
+} from '../FontData.js';
+import {
+  CommonSemantics,
+  CommonSemanticsClass,
+  CommonSemanticsMixin,
+} from '../../common/Wrappers/semantics.js';
+import {
+  CommonXmlNode,
+  CommonXmlNodeClass,
+  CommonXmlNodeMixin,
+} from '../../common/Wrappers/XmlNode.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import {
+  MmlSemantics,
+  MmlAnnotation,
+  MmlAnnotationXML,
+} from '../../../core/MmlTree/MmlNodes/semantics.js';
+import { XMLNode } from '../../../core/MmlTree/MmlNode.js';
+import { StyleList } from '../../../util/StyleList.js';
+import { StyleList as Styles } from '../../../util/Styles.js';
 
 /*****************************************************************/
 /**
@@ -43,11 +60,22 @@ import {StyleList as Styles} from '../../../util/Styles.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SvgSemanticsNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonSemantics<
-  N, T, D,
-  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
-> {}
+export interface SvgSemanticsNTD<N, T, D>
+  extends SvgWrapper<N, T, D>,
+    CommonSemantics<
+      N,
+      T,
+      D,
+      SVG<N, T, D>,
+      SvgWrapper<N, T, D>,
+      SvgWrapperFactory<N, T, D>,
+      SvgWrapperClass<N, T, D>,
+      SvgCharOptions,
+      SvgVariantData,
+      SvgDelimiterData,
+      SvgFontData,
+      SvgFontDataClass
+    > {}
 
 /**
  * The SvgSemanticsClass interface for the SVG Semantics wrapper
@@ -56,14 +84,28 @@ export interface SvgSemanticsNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonSem
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SvgSemanticsClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonSemanticsClass<
-  N, T, D,
-  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
-> {
-  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgSemanticsNTD<N, T, D>;
+export interface SvgSemanticsClass<N, T, D>
+  extends SvgWrapperClass<N, T, D>,
+    CommonSemanticsClass<
+      N,
+      T,
+      D,
+      SVG<N, T, D>,
+      SvgWrapper<N, T, D>,
+      SvgWrapperFactory<N, T, D>,
+      SvgWrapperClass<N, T, D>,
+      SvgCharOptions,
+      SvgVariantData,
+      SvgDelimiterData,
+      SvgFontData,
+      SvgFontDataClass
+    > {
+  new (
+    factory: SvgWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: SvgWrapper<N, T, D>
+  ): SvgSemanticsNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
@@ -71,19 +113,25 @@ export interface SvgSemanticsClass<N, T, D> extends SvgWrapperClass<N, T, D>, Co
  * The SvgSemantics wrapper class for the MmlSemantics class
  */
 export const SvgSemantics = (function <N, T, D>(): SvgSemanticsClass<N, T, D> {
-
   const Base = CommonSemanticsMixin<
-      N, T, D,
-      SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-      SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
-      SvgSemanticsClass<N, T, D>
-    >(SvgWrapper);
+    N,
+    T,
+    D,
+    SVG<N, T, D>,
+    SvgWrapper<N, T, D>,
+    SvgWrapperFactory<N, T, D>,
+    SvgWrapperClass<N, T, D>,
+    SvgCharOptions,
+    SvgVariantData,
+    SvgDelimiterData,
+    SvgFontData,
+    SvgFontDataClass,
+    SvgSemanticsClass<N, T, D>
+  >(SvgWrapper);
 
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
   return class SvgSemantics extends Base implements SvgSemanticsNTD<N, T, D> {
-
     /**
      * @override
      */
@@ -99,20 +147,15 @@ export const SvgSemantics = (function <N, T, D>(): SvgSemanticsClass<N, T, D> {
         this.childNodes[0].toSVG(svg);
       }
     }
-
   };
-
 })<any, any, any>();
-
 
 /*****************************************************************/
 /**
  * The SvgAnnotation wrapper for the MmlAnnotation object
  */
 export const SvgAnnotation = (function <N, T, D>(): SvgWrapperClass<N, T, D> {
-
   return class SvgAnnotation extends SvgWrapper<N, T, D> {
-
     /**
      * The annotation wrapper
      */
@@ -133,19 +176,19 @@ export const SvgAnnotation = (function <N, T, D>(): SvgWrapperClass<N, T, D> {
       // FIXME:  compute using the DOM, if possible
       return this.bbox;
     }
-
   };
-
 })<any, any, any>();
-
 
 /*****************************************************************/
 /**
  * The SvgAnnotationXML wrapper for the MmlAnnotationXML object
  */
-export const SvgAnnotationXML = (function <N, T, D>(): SvgWrapperClass<N, T, D> {
+export const SvgAnnotationXML = (function <N, T, D>(): SvgWrapperClass<
+  N,
+  T,
+  D
+> {
   return class SvgAnnotationXML extends SvgWrapper<N, T, D> {
-
     /**
      * The annotation-xml wrapper
      */
@@ -158,14 +201,11 @@ export const SvgAnnotationXML = (function <N, T, D>(): SvgWrapperClass<N, T, D> 
       'foreignObject[data-mjx-xml]': {
         'font-family': 'initial',
         'line-height': 'normal',
-        overflow: 'visible'
-      }
+        overflow: 'visible',
+      },
     };
-
   };
-
 })<any, any, any>();
-
 
 /*****************************************************************/
 /**
@@ -175,11 +215,22 @@ export const SvgAnnotationXML = (function <N, T, D>(): SvgWrapperClass<N, T, D> 
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SvgXmlNodeNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonXmlNode<
-  N, T, D,
-  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
-> {}
+export interface SvgXmlNodeNTD<N, T, D>
+  extends SvgWrapper<N, T, D>,
+    CommonXmlNode<
+      N,
+      T,
+      D,
+      SVG<N, T, D>,
+      SvgWrapper<N, T, D>,
+      SvgWrapperFactory<N, T, D>,
+      SvgWrapperClass<N, T, D>,
+      SvgCharOptions,
+      SvgVariantData,
+      SvgDelimiterData,
+      SvgFontData,
+      SvgFontDataClass
+    > {}
 
 /**
  * The SvgXmlNodeClass interface for the SVG XmlNode wrapper
@@ -188,12 +239,27 @@ export interface SvgXmlNodeNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonXmlNo
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SvgXmlNodeClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonXmlNodeClass<
-  N, T, D,
-  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
-> {
-  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgXmlNodeNTD<N, T, D>;
+export interface SvgXmlNodeClass<N, T, D>
+  extends SvgWrapperClass<N, T, D>,
+    CommonXmlNodeClass<
+      N,
+      T,
+      D,
+      SVG<N, T, D>,
+      SvgWrapper<N, T, D>,
+      SvgWrapperFactory<N, T, D>,
+      SvgWrapperClass<N, T, D>,
+      SvgCharOptions,
+      SvgVariantData,
+      SvgDelimiterData,
+      SvgFontData,
+      SvgFontDataClass
+    > {
+  new (
+    factory: SvgWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: SvgWrapper<N, T, D>
+  ): SvgXmlNodeNTD<N, T, D>;
 }
 
 /**
@@ -201,19 +267,26 @@ export interface SvgXmlNodeClass<N, T, D> extends SvgWrapperClass<N, T, D>, Comm
  */
 
 export const SvgXmlNode = (function <N, T, D>(): SvgXmlNodeClass<N, T, D> {
-
   const Base = CommonXmlNodeMixin<
-      N, T, D,
-      SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-      SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
-      SvgXmlNodeClass<N, T, D>
-    >(SvgWrapper);
+    N,
+    T,
+    D,
+    SVG<N, T, D>,
+    SvgWrapper<N, T, D>,
+    SvgWrapperFactory<N, T, D>,
+    SvgWrapperClass<N, T, D>,
+    SvgCharOptions,
+    SvgVariantData,
+    SvgDelimiterData,
+    SvgFontData,
+    SvgFontDataClass,
+    SvgXmlNodeClass<N, T, D>
+  >(SvgWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be SvgWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class SvgXmlNode extends Base implements SvgXmlNodeNTD<N, T, D> {
-
     /**
      * The XMLNode wrapper
      */
@@ -224,9 +297,9 @@ export const SvgXmlNode = (function <N, T, D>(): SvgXmlNodeClass<N, T, D> {
      */
     public static styles: StyleList = {
       'foreignObject[data-mjx-html]': {
-        overflow: 'visible'
+        overflow: 'visible',
       },
-      ...Base.styles
+      ...Base.styles,
     };
 
     /**
@@ -236,22 +309,31 @@ export const SvgXmlNode = (function <N, T, D>(): SvgXmlNodeClass<N, T, D> {
       const metrics = this.jax.math.metrics;
       const em = metrics.em * metrics.scale * this.rscale;
       const scale = this.fixed(1 / em, 3);
-      const {w, h, d} = this.getBBox();
-      this.dom = [this.adaptor.append(parents[0], this.svg('foreignObject', {
-        'data-mjx-xml': true,
-        y: this.jax.fixed(-h * em) + 'px',
-        width: this.jax.fixed(w * em) + 'px',
-        height: this.jax.fixed((h + d) * em) + 'px',
-        transform: `scale(${scale}) matrix(1 0 0 -1 0 0)`
-      }, [this.getHTML()])) as N];
+      const { w, h, d } = this.getBBox();
+      this.dom = [
+        this.adaptor.append(
+          parents[0],
+          this.svg(
+            'foreignObject',
+            {
+              'data-mjx-xml': true,
+              y: this.jax.fixed(-h * em) + 'px',
+              width: this.jax.fixed(w * em) + 'px',
+              height: this.jax.fixed((h + d) * em) + 'px',
+              transform: `scale(${scale}) matrix(1 0 0 -1 0 0)`,
+            },
+            [this.getHTML()]
+          )
+        ) as N,
+      ];
     }
 
     /**
      * @override
      */
     public addHDW(html: N, styles: Styles): N {
-      html = this.html('mjx-html-holder', {style: styles}, [html]);
-      const {h, d, w} = this.getBBox();
+      html = this.html('mjx-html-holder', { style: styles }, [html]);
+      const { h, d, w } = this.getBBox();
       const scale = this.metrics.scale;
       styles.height = this.em((h + d) * scale);
       styles.width = this.em(w * scale);
@@ -259,7 +341,5 @@ export const SvgXmlNode = (function <N, T, D>(): SvgXmlNodeClass<N, T, D> {
       delete styles['font-size'], styles['font-family'];
       return html;
     }
-
   };
-
 })<any, any, any>();

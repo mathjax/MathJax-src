@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2023 The MathJax Consortium
+ *  Copyright (c) 2017-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,18 @@
  */
 
 /**
- * @fileoverview  Implements the MmlMroot node
+ * @file  Implements the MmlMroot node
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {PropertyList} from '../../Tree/Node.js';
-import {MmlNode, AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
+import { PropertyList } from '../../Tree/Node.js';
+import {
+  MmlNode,
+  AbstractMmlNode,
+  AttributeList,
+  TEXCLASS,
+} from '../MmlNode.js';
 
 /*****************************************************************/
 /**
@@ -30,13 +35,12 @@ import {MmlNode, AbstractMmlNode, AttributeList, TEXCLASS} from '../MmlNode.js';
  */
 
 export class MmlMroot extends AbstractMmlNode {
-
   /**
    * @override
    */
   public static defaults: PropertyList = {
     ...AbstractMmlNode.defaults,
-    'data-vertical-align': 'bottom'
+    'data-vertical-align': 'bottom',
   };
 
   /**
@@ -53,6 +57,7 @@ export class MmlMroot extends AbstractMmlNode {
 
   /**
    * <mroot> requires two children
+   *
    * @override
    */
   public get arity() {
@@ -61,6 +66,7 @@ export class MmlMroot extends AbstractMmlNode {
 
   /**
    * <mroot> can contain line breaks
+   *
    * @override
    */
   public get linebreakContainer() {
@@ -85,9 +91,18 @@ export class MmlMroot extends AbstractMmlNode {
    *
    * @override
    */
-  protected setChildInheritedAttributes(attributes: AttributeList, display: boolean, level: number, prime: boolean) {
+  protected setChildInheritedAttributes(
+    attributes: AttributeList,
+    display: boolean,
+    level: number,
+    prime: boolean
+  ) {
     this.childNodes[0].setInheritedAttributes(attributes, display, level, true);
-    this.childNodes[1].setInheritedAttributes(attributes, false, level + 2, prime);
+    this.childNodes[1].setInheritedAttributes(
+      attributes,
+      false,
+      level + 2,
+      prime
+    );
   }
-
 }

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2023 The MathJax Consortium
+ *  Copyright (c) 2019-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 /**
  * The data for a CDN
  */
+/* prettier-ignore */
 type CdnData = {
   api: string,         // URL for JSON containing version number
   key: string,         // key for versionb string in JSON data
@@ -32,6 +33,7 @@ type CdnList = Map<string, CdnData>;
 /**
  * The data from a script tag for latest.js
  */
+/* prettier-ignore */
 type ScriptData = {
   tag: HTMLScriptElement,   // the script DOM element
   src: string,              // the script's (possibly modified) source attribute
@@ -52,46 +54,63 @@ declare const window: {
 
 /*=====================================================================*/
 
-
 /**
  * The various CDNs and their data for how to obtain versions
  */
 const CDN: CdnList = new Map([
-  ['cdnjs.cloudflare.com', {
-    api: 'https://api.cdnjs.com/libraries/mathjax?fields=version',
-    key: 'version',
-    base: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/'
-  }],
+  [
+    'cdnjs.cloudflare.com',
+    {
+      api: 'https://api.cdnjs.com/libraries/mathjax?fields=version',
+      key: 'version',
+      base: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/',
+    },
+  ],
 
-  ['rawcdn.githack.com', {
-    api: 'https://api.github.com/repos/mathjax/mathjax/releases/latest',
-    key: 'tag_name',
-    base: 'https://rawcdn.githack.com/mathjax/MathJax/'
-  }],
+  [
+    'rawcdn.githack.com',
+    {
+      api: 'https://api.github.com/repos/mathjax/mathjax/releases/latest',
+      key: 'tag_name',
+      base: 'https://rawcdn.githack.com/mathjax/MathJax/',
+    },
+  ],
 
-  ['gitcdn.xyz', {
-    api: 'https://api.github.com/repos/mathjax/mathjax/releases/latest',
-    key: 'tag_name',
-    base: 'https://gitcdn.xyz/mathjax/MathJax/'
-  }],
+  [
+    'gitcdn.xyz',
+    {
+      api: 'https://api.github.com/repos/mathjax/mathjax/releases/latest',
+      key: 'tag_name',
+      base: 'https://gitcdn.xyz/mathjax/MathJax/',
+    },
+  ],
 
-  ['cdn.statically.io', {
-    api: 'https://api.github.com/repos/mathjax/mathjax/releases/latest',
-    key: 'tag_name',
-    base: 'https://cdn.statically.io/gh/mathjax/MathJax/'
-  }],
+  [
+    'cdn.statically.io',
+    {
+      api: 'https://api.github.com/repos/mathjax/mathjax/releases/latest',
+      key: 'tag_name',
+      base: 'https://cdn.statically.io/gh/mathjax/MathJax/',
+    },
+  ],
 
-  ['unpkg.com', {
-    api: 'https://api.github.com/repos/mathjax/mathjax/releases/latest',
-    key: 'tag_name',
-    base: 'https://unpkg.com/mathjax@'
-  }],
+  [
+    'unpkg.com',
+    {
+      api: 'https://api.github.com/repos/mathjax/mathjax/releases/latest',
+      key: 'tag_name',
+      base: 'https://unpkg.com/mathjax@',
+    },
+  ],
 
-  ['cdn.jsdelivr.net', {
-    api: 'https://api.github.com/repos/mathjax/mathjax/releases/latest',
-    key: 'tag_name',
-    base: 'https://cdn.jsdelivr.net/npm/mathjax@'
-  }]
+  [
+    'cdn.jsdelivr.net',
+    {
+      api: 'https://api.github.com/repos/mathjax/mathjax/releases/latest',
+      key: 'tag_name',
+      base: 'https://cdn.jsdelivr.net/npm/mathjax@',
+    },
+  ],
 ]);
 
 /**
@@ -99,7 +118,7 @@ const CDN: CdnList = new Map([
  */
 const GITHUB: CdnData = {
   api: 'https://api.github.com/repos/mathjax/mathjax/releases',
-  key: 'tag_name'
+  key: 'tag_name',
 };
 
 /**
@@ -115,7 +134,7 @@ const MJX_LATEST = 'mjx-latest-version';
 /**
  * The amount of time a cached version number is valid
  */
-const SAVE_TIME = 1000 * 60 * 60 * 24 * 7;   // one week
+const SAVE_TIME = 1000 * 60 * 60 * 24 * 7; // one week
 
 /**
  * Data for the script that loaded latest.js
@@ -140,9 +159,12 @@ function Error(message: string) {
  *
  * @param {HTMLScriptElement} script   The script tag whose data is desired
  * @param {CdnData} cdn                The CDN data already obtained for the script (or null)
- * @return {ScriptData}                The data for the given script
+ * @returns {ScriptData}                The data for the given script
  */
-function scriptData(script: HTMLScriptElement, cdn: CdnData = null): ScriptData {
+function scriptData(
+  script: HTMLScriptElement,
+  cdn: CdnData = null
+): ScriptData {
   script.parentNode.removeChild(script);
   let src = script.src;
   let file = src.replace(/.*?\/latest\.js(\?|$)/, '');
@@ -150,7 +172,10 @@ function scriptData(script: HTMLScriptElement, cdn: CdnData = null): ScriptData 
     file = 'startup.js';
     src = src.replace(/\?$/, '') + '?' + file;
   }
-  const version = (src.match(/(\d+\.\d+\.\d+)(\/es\d+)?\/latest.js\?/) || ['', ''])[1];
+  const version = (src.match(/(\d+\.\d+\.\d+)(\/es\d+)?\/latest.js\?/) || [
+    '',
+    '',
+  ])[1];
   const dir = (src.match(/(\/es\d+)\/latest.js\?/) || ['', ''])[1] || '';
   return {
     tag: script,
@@ -159,7 +184,7 @@ function scriptData(script: HTMLScriptElement, cdn: CdnData = null): ScriptData 
     version: version,
     dir: dir,
     file: file,
-    cdn: cdn
+    cdn: cdn,
   };
 }
 
@@ -167,14 +192,18 @@ function scriptData(script: HTMLScriptElement, cdn: CdnData = null): ScriptData 
  * Check if a script refers to MathJax on one of the CDNs
  *
  * @param {HTMLScriptElement} script   The script tag to check
- * @return {ScriptData | null}         Non-null if the script is from a MathJax CDN
+ * @returns {ScriptData | null}         Non-null if the script is from a MathJax CDN
  */
 function checkScript(script: HTMLScriptElement): ScriptData | null {
   for (const server of CDN.keys()) {
     const cdn = CDN.get(server);
     const url = cdn.base;
     const src = script.src;
-    if (src && src.substring(0, url.length) === url && src.match(/\/latest\.js(\?|$)/)) {
+    if (
+      src &&
+      src.substring(0, url.length) === url &&
+      src.match(/\/latest\.js(\?|$)/)
+    ) {
       return scriptData(script, cdn);
     }
   }
@@ -182,7 +211,7 @@ function checkScript(script: HTMLScriptElement): ScriptData | null {
 }
 
 /**
- * @return {ScriptData}   The data for the script tag that loaded latest.js
+ * @returns {ScriptData}   The data for the script tag that loaded latest.js
  */
 function getScript(): ScriptData {
   if (document.currentScript) {
@@ -214,13 +243,15 @@ function saveVersion(version: string) {
   try {
     const data = version + ' ' + Date.now();
     localStorage.setItem(MJX_LATEST, data);
-  } catch (err) {}
+  } catch (_err) {
+    // continue regardless of error
+  }
 }
 
 /**
  * Get the version from localStorage, and make sure it is fresh enough to use
  *
- * @return {string|null}   The version string (if one has been saved) or null (if not)
+ * @returns {string|null}   The version string (if one has been saved) or null (if not)
  */
 function getSavedVersion(): string | null {
   try {
@@ -228,7 +259,9 @@ function getSavedVersion(): string | null {
     if (date && Date.now() - parseInt(date) < SAVE_TIME) {
       return version;
     }
-  } catch (err) {}
+  } catch (_err) {
+    // continue regardless of error
+  }
   return null;
 }
 
@@ -248,11 +281,12 @@ function loadMathJax(url: string, id: string) {
   if (id) {
     script.id = id;
   }
-  const head = document.head || document.getElementsByTagName('head')[0] || document.body;
+  const head =
+    document.head || document.getElementsByTagName('head')[0] || document.body;
   if (head) {
     head.appendChild(script);
   } else {
-    Error('Can\'t find the document <head> element');
+    Error("Can't find the document <head> element");
   }
 }
 
@@ -263,7 +297,7 @@ function loadDefaultMathJax() {
   if (script) {
     loadMathJax(script.src.replace(/\/latest\.js\?/, '/'), script.id);
   } else {
-    Error('Can\'t determine the URL for loading MathJax');
+    Error("Can't determine the URL for loading MathJax");
   }
 }
 
@@ -278,14 +312,17 @@ function loadVersion(version: string) {
   if (script.version && script.version !== version) {
     script.file = 'latest.js?' + script.file;
   }
-  loadMathJax(script.cdn.base + version + script.dir + '/' + script.file, script.id);
+  loadMathJax(
+    script.cdn.base + version + script.dir + '/' + script.file,
+    script.id
+  );
 }
 
 /**
  * Check if the given version is acceptable and load it if it is.
  *
  * @param {string} version   The version to check if it is the latest (valid) one
- * @return {boolean}         True if it is the latest version, false if not
+ * @returns {boolean}         True if it is the latest version, false if not
  */
 function checkVersion(version: string): boolean {
   const major = parseInt(version.split(/\./)[0]);
@@ -302,15 +339,23 @@ function checkVersion(version: string): boolean {
 /**
  * Create an XMLHttpRequest object, if possible
  *
- * @return {XMLHttpRequest}   The XMLHttpRequest instance
+ * @returns {XMLHttpRequest}   The XMLHttpRequest instance
  */
 function getXMLHttpRequest(): XMLHttpRequest {
   if (window.XMLHttpRequest) {
     return new XMLHttpRequest();
   }
   if (window.ActiveXObject) {
-    try { return new window.ActiveXObject('Msxml2.XMLHTTP'); } catch (err) {}
-    try { return new window.ActiveXObject('Microsoft.XMLHTTP'); } catch (err) {}
+    try {
+      return new window.ActiveXObject('Msxml2.XMLHTTP');
+    } catch (_err) {
+      // continue regardless of error
+    }
+    try {
+      return new window.ActiveXObject('Microsoft.XMLHTTP');
+    } catch (_err) {
+      // continue regardless of error
+    }
   }
   return null;
 }
@@ -324,7 +369,11 @@ function getXMLHttpRequest(): XMLHttpRequest {
  * @param {Function} failure   The function to perform if data can't be obtained,
  *                               or if action() returns false
  */
-function requestXML(cdn: CdnData, action: (json: JSON | JSON[]) => boolean, failure: () => void) {
+function requestXML(
+  cdn: CdnData,
+  action: (json: JSON | JSON[]) => boolean,
+  failure: () => void
+) {
   const request = getXMLHttpRequest();
   if (request) {
     // tslint:disable-next-line:jsdoc-require
@@ -333,7 +382,9 @@ function requestXML(cdn: CdnData, action: (json: JSON | JSON[]) => boolean, fail
         if (request.status === 200) {
           !action(JSON.parse(request.responseText)) && failure();
         } else {
-          Error('Problem acquiring MathJax version: status = ' + request.status);
+          Error(
+            'Problem acquiring MathJax version: status = ' + request.status
+          );
           failure();
         }
       }
@@ -341,7 +392,7 @@ function requestXML(cdn: CdnData, action: (json: JSON | JSON[]) => boolean, fail
     request.open('GET', cdn.api, true);
     request.send(null);
   } else {
-    Error('Can\'t create XMLHttpRequest object');
+    Error("Can't create XMLHttpRequest object");
     failure();
   }
 }
@@ -352,15 +403,19 @@ function requestXML(cdn: CdnData, action: (json: JSON | JSON[]) => boolean, fail
  * is found, run the version from which latest.js was loaded.
  */
 function loadLatestGitVersion() {
-  requestXML(GITHUB, (json: JSON[]) => {
-    if (!(json instanceof Array)) return false;
-    for (const data of json) {
-      if (checkVersion((data as any)[GITHUB.key])) {
-        return true;
+  requestXML(
+    GITHUB,
+    (json: JSON[]) => {
+      if (!(json instanceof Array)) return false;
+      for (const data of json) {
+        if (checkVersion((data as any)[GITHUB.key])) {
+          return true;
+        }
       }
-    }
-    return false;
-  }, loadDefaultMathJax);
+      return false;
+    },
+    loadDefaultMathJax
+  );
 }
 
 /**
@@ -371,19 +426,22 @@ function loadLatestGitVersion() {
  * found, use the version where latest.js was loaded.
  */
 function loadLatestCdnVersion() {
-  requestXML(script.cdn, function (json) {
-    if (json instanceof Array) {
-      json = json[0];
-    }
-    if (!checkVersion((json as any)[script.cdn.key])) {
-      loadLatestGitVersion();
-    }
-    return true;
-  }, loadDefaultMathJax);
+  requestXML(
+    script.cdn,
+    function (json) {
+      if (json instanceof Array) {
+        json = json[0];
+      }
+      if (!checkVersion((json as any)[script.cdn.key])) {
+        loadLatestGitVersion();
+      }
+      return true;
+    },
+    loadDefaultMathJax
+  );
 }
 
 /*=====================================================================*/
-
 
 /**
  * Find the script that loaded latest.js
@@ -398,9 +456,7 @@ export function loadLatest() {
   script = getScript();
   if (script && script.cdn) {
     const version = getSavedVersion();
-    version ?
-      loadVersion(version) :
-      loadLatestCdnVersion();
+    version ? loadVersion(version) : loadLatestCdnVersion();
   } else {
     loadDefaultMathJax();
   }

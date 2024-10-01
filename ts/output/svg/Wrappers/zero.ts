@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2023 The MathJax Consortium
+ *  Copyright (c) 2023-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  */
 
 /**
- * @fileoverview  Exports the data URL for the MJX-ZERO font.
+ * @file  Exports the data URL for the MJX-ZERO font.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -44,5 +44,5 @@ export const ZeroFontDataUrl = [
   'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAEAQABAQETbWp4LWxtLXplcm9SZWd1bGFyAAEBASf4GwD4',
   'HAL4HQP4HgSLi/mC+nwFHQAAAIYPHQAAAIkRix0AAACUEgAFAQEMHyoxNlZlcnNpb24gMC4xbWp4LWxt',
   'LXplcm8gUmVndWxhcm1qeC1sbS16ZXJvUmVndWxhcnNwYWNlAAAAAYsAAgEBAwaLDvp8DgAAAAAD6AAA',
-  ') format("woff")'
+  ') format("woff")',
 ].join('');

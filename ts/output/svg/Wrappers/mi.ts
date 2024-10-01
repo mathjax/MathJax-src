@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2023 The MathJax Consortium
+ *  Copyright (c) 2018-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,18 +16,28 @@
  */
 
 /**
- * @fileoverview  Implements the SvgMi wrapper for the MmlMi object
+ * @file  Implements the SvgMi wrapper for the MmlMi object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVG} from '../../svg.js';
-import {SvgWrapper, SvgWrapperClass} from '../Wrapper.js';
-import {SvgWrapperFactory} from '../WrapperFactory.js';
-import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from '../FontData.js';
-import {CommonMi, CommonMiClass, CommonMiMixin} from '../../common/Wrappers/mi.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {MmlMi} from '../../../core/MmlTree/MmlNodes/mi.js';
+import { SVG } from '../../svg.js';
+import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
+import { SvgWrapperFactory } from '../WrapperFactory.js';
+import {
+  SvgCharOptions,
+  SvgVariantData,
+  SvgDelimiterData,
+  SvgFontData,
+  SvgFontDataClass,
+} from '../FontData.js';
+import {
+  CommonMi,
+  CommonMiClass,
+  CommonMiMixin,
+} from '../../common/Wrappers/mi.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { MmlMi } from '../../../core/MmlTree/MmlNodes/mi.js';
 
 /*****************************************************************/
 /**
@@ -37,11 +47,22 @@ import {MmlMi} from '../../../core/MmlTree/MmlNodes/mi.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SvgMiNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMi<
-  N, T, D,
-  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
-> {}
+export interface SvgMiNTD<N, T, D>
+  extends SvgWrapper<N, T, D>,
+    CommonMi<
+      N,
+      T,
+      D,
+      SVG<N, T, D>,
+      SvgWrapper<N, T, D>,
+      SvgWrapperFactory<N, T, D>,
+      SvgWrapperClass<N, T, D>,
+      SvgCharOptions,
+      SvgVariantData,
+      SvgDelimiterData,
+      SvgFontData,
+      SvgFontDataClass
+    > {}
 
 /**
  * The SvgMiClass interface for the SVG Mi wrapper
@@ -50,14 +71,28 @@ export interface SvgMiNTD<N, T, D> extends SvgWrapper<N, T, D>, CommonMi<
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface SvgMiClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonMiClass<
-  N, T, D,
-  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
-> {
-  new(factory: SvgWrapperFactory<N, T, D>, node: MmlNode, parent?: SvgWrapper<N, T, D>): SvgMiNTD<N, T, D>;
+export interface SvgMiClass<N, T, D>
+  extends SvgWrapperClass<N, T, D>,
+    CommonMiClass<
+      N,
+      T,
+      D,
+      SVG<N, T, D>,
+      SvgWrapper<N, T, D>,
+      SvgWrapperFactory<N, T, D>,
+      SvgWrapperClass<N, T, D>,
+      SvgCharOptions,
+      SvgVariantData,
+      SvgDelimiterData,
+      SvgFontData,
+      SvgFontDataClass
+    > {
+  new (
+    factory: SvgWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: SvgWrapper<N, T, D>
+  ): SvgMiNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
@@ -65,24 +100,28 @@ export interface SvgMiClass<N, T, D> extends SvgWrapperClass<N, T, D>, CommonMiC
  * The SvgMi wrapper class for the MmlMi class
  */
 export const SvgMi = (function <N, T, D>(): SvgMiClass<N, T, D> {
-
   const Base = CommonMiMixin<
-      N, T, D,
-      SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
-      SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass,
-      SvgMiClass<N, T, D>
-    >(SvgWrapper);
+    N,
+    T,
+    D,
+    SVG<N, T, D>,
+    SvgWrapper<N, T, D>,
+    SvgWrapperFactory<N, T, D>,
+    SvgWrapperClass<N, T, D>,
+    SvgCharOptions,
+    SvgVariantData,
+    SvgDelimiterData,
+    SvgFontData,
+    SvgFontDataClass,
+    SvgMiClass<N, T, D>
+  >(SvgWrapper);
 
   // Avoid message about base constructors not having the same type
   //   (they should both be SvgWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
   return class SvgMi extends Base implements SvgMiNTD<N, T, D> {
-
     /**
      * @override
      */
     public static kind = MmlMi.prototype.kind;
-
   };
-
 })<any, any, any>();

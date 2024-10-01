@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2021-2023 The MathJax Consortium
+ *  Copyright (c) 2021-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,20 +15,24 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview    Configuration file for the colortbl package.
+ * @file    Configuration file for the colortbl package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {ArrayItem} from '../base/BaseItems.js';
-import {Configuration, ParserConfiguration, ConfigurationHandler} from '../Configuration.js';
-import {CommandMap} from '../TokenMap.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { ArrayItem } from '../base/BaseItems.js';
+import {
+  Configuration,
+  ParserConfiguration,
+  ConfigurationHandler,
+} from '../Configuration.js';
+import { CommandMap } from '../TokenMap.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
 
-import {TeX} from '../../tex.js';
+import { TeX } from '../../tex.js';
 
 /**
  * Information about table colors.
@@ -49,7 +53,7 @@ export class ColorArrayItem extends ArrayItem {
   public color: ColorData = {
     cell: '',
     row: '',
-    col: []
+    col: [],
   };
 
   /**
@@ -63,7 +67,8 @@ export class ColorArrayItem extends ArrayItem {
   public EndEntry() {
     super.EndEntry();
     const cell = this.row[this.row.length - 1];
-    const color = this.color.cell || this.color.row || this.color.col[this.row.length - 1];
+    const color =
+      this.color.cell || this.color.row || this.color.col[this.row.length - 1];
     if (color) {
       cell.attributes.set('mathbackground', color);
       this.color.cell = '';
@@ -89,76 +94,89 @@ export class ColorArrayItem extends ArrayItem {
     //   in edge cells extends past their contents.
     //
     const mml = super.createMml();
-    let table = (mml.isKind('mrow') ? mml.childNodes[1] : mml);
+    let table = mml.isKind('mrow') ? mml.childNodes[1] : mml;
     if (table.isKind('menclose')) {
       table = table.childNodes[0].childNodes[0];
     }
     if (this.hasColor) {
       const attributes = table.attributes;
-      if (attributes.get('frame') === 'none' &&
-          attributes.get('data-frame-styles') === undefined) {
+      if (
+        attributes.get('frame') === 'none' &&
+        attributes.get('data-frame-styles') === undefined
+      ) {
         attributes.set('data-frame-styles', '');
       }
     }
     return mml;
   }
+}
 
+/**
+ * Add color to a column, row, or cell.
+ *
+ * @param {TexParser} parser       The active TeX parser
+ * @param {string} name            The name of the macro that is being processed
+ * @param {keyof ColorData} type   The type (col, row, cell) of color being added
+ */
+function TableColor(parser: TexParser, name: string, type: keyof ColorData) {
+  const lookup = parser.configuration.packageData.get('color').model; // use the color extension's color model
+  const model = parser.GetBrackets(name, '');
+  const color = lookup.getColor(model, parser.GetArgument(name));
+  //
+  // Check that we are in a colorable array.
+  //
+  const top = parser.stack.Top() as ColorArrayItem;
+  if (!(top instanceof ColorArrayItem)) {
+    throw new TexError(
+      'UnsupportedTableColor',
+      'Unsupported use of %1',
+      parser.currentCS
+    );
+  }
+  //
+  //  Check the position of the macro and save the color.
+  //
+  if (type === 'col') {
+    if (top.table.length && top.color.col[top.row.length] !== color) {
+      throw new TexError(
+        'ColumnColorNotTop',
+        '%1 must be in the top row or preamble',
+        name
+      );
+    }
+    top.color.col[top.row.length] = color;
+    //
+    // Ignore the left and right overlap options.
+    //
+    if (parser.GetBrackets(name, '')) {
+      parser.GetBrackets(name, '');
+    }
+  } else {
+    top.color[type] = color;
+    if (type === 'row' && (top.Size() || top.row.length)) {
+      throw new TexError(
+        'RowColorNotFirst',
+        '%1 must be at the beginning of a row',
+        name
+      );
+    }
+  }
 }
 
 //
 //  Define macros for table coloring.
 //
 new CommandMap('colortbl', {
-  cellcolor: ['TableColor', 'cell'],
-  rowcolor:  ['TableColor', 'row'],
-  columncolor: ['TableColor', 'col']
-}, {
-  /**
-   * Add color to a column, row, or cell.
-   *
-   * @param {TexParser} parser       The active TeX parser
-   * @param {string} name            The name of the macro that is being processed
-   * @param {keyof ColorData} type   The type (col, row, cell) of color being added
-   */
-  TableColor(parser: TexParser, name: string, type: keyof ColorData) {
-    const lookup = parser.configuration.packageData.get('color').model;  // use the color extension's color model
-    const model = parser.GetBrackets(name, '');
-    const color = lookup.getColor(model, parser.GetArgument(name));
-    //
-    // Check that we are in a colorable array.
-    //
-    const top = parser.stack.Top() as ColorArrayItem;
-    if (!(top instanceof ColorArrayItem)) {
-      throw new TexError('UnsupportedTableColor', 'Unsupported use of %1', parser.currentCS);
-    }
-    //
-    //  Check the position of the macro and save the color.
-    //
-    if (type === 'col') {
-      if (top.table.length && top.color.col[top.row.length] !== color) {
-        throw new TexError('ColumnColorNotTop', '%1 must be in the top row or preamble', name);
-      }
-      top.color.col[top.row.length] = color;
-      //
-      // Ignore the left and right overlap options.
-      //
-      if (parser.GetBrackets(name, '')) {
-        parser.GetBrackets(name, '');
-      }
-    } else {
-      top.color[type] = color;
-      if (type === 'row' && (top.Size() || top.row.length)) {
-        throw new TexError('RowColorNotFirst', '%1 must be at the beginning of a row', name);
-      }
-    }
-  }
+  cellcolor: [TableColor, 'cell'],
+  rowcolor: [TableColor, 'row'],
+  columncolor: [TableColor, 'col'],
 });
 
 /**
  * The configuration function for colortbl.
  *
  * @param {ParserConfiguration} config   The configuration being used.
- * @param {Tex} jax                      The TeX jax using this configuration.
+ * @param {TeX} jax                      The TeX jax using this configuration.
  */
 const config = function (config: ParserConfiguration, jax: TeX<any, any, any>) {
   //
@@ -172,9 +190,10 @@ const config = function (config: ParserConfiguration, jax: TeX<any, any, any>) {
 //
 //  Create the color-table configuration.
 //
+/* prettier-ignore */
 export const ColortblConfiguration = Configuration.create('colortbl', {
-  handler: {macro: ['colortbl']},
-  items: {'array': ColorArrayItem},  // overrides original array class
-  priority: 10,                      // make sure we are processed after the base package (to override its array)
-  config: [config, 10]               // make sure we configure after the color package, if it is used.
+  [ConfigurationType.HANDLER]: {[HandlerType.MACRO]: ['colortbl']},
+  [ConfigurationType.ITEMS]: {'array': ColorArrayItem},  // overrides original array class
+  [ConfigurationType.PRIORITY]: 10,                      // make sure we are processed after the base package (to override its array)
+  [ConfigurationType.CONFIG]: [config, 10]               // make sure we configure after the color package, if it is used.
 });

@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2023 The MathJax Consortium
+ *  Copyright (c) 2018-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
  */
 
 /**
- * @fileoverview  Implements a lightweight DOM adaptor
+ * @file  Implements a lightweight DOM adaptor
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {LiteElement} from './Element.js';
+import { LiteElement } from './Element.js';
 
 /************************************************************/
 /**
@@ -48,18 +48,19 @@ export class LiteDocument {
 
   /**
    * The kind is always #document
+   * @returns {string} The document string.
    */
-  public get kind() {
+  public get kind(): string {
     return '#document';
   }
 
   /**
-   * @constructor
+   * @class
    */
   constructor() {
     this.root = new LiteElement('html', {}, [
-      this.head = new LiteElement('head'),
-      this.body = new LiteElement('body')
+      (this.head = new LiteElement('head')),
+      (this.body = new LiteElement('body')),
     ]);
     this.type = '';
   }

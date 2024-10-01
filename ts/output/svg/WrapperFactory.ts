@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2023 The MathJax Consortium
+ *  Copyright (c) 2018-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,16 +16,22 @@
  */
 
 /**
- * @fileoverview  Implements the SvgWrapperFactory class
+ * @file  Implements the SvgWrapperFactory class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {SVG} from '../svg.js';
-import {CommonWrapperFactory} from '../common/WrapperFactory.js';
-import {SvgWrapper, SvgWrapperClass} from './Wrapper.js';
-import {SvgWrappers} from './Wrappers.js';
-import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass} from './FontData.js';
+import { SVG } from '../svg.js';
+import { CommonWrapperFactory } from '../common/WrapperFactory.js';
+import { SvgWrapper, SvgWrapperClass } from './Wrapper.js';
+import { SvgWrappers } from './Wrappers.js';
+import {
+  SvgCharOptions,
+  SvgVariantData,
+  SvgDelimiterData,
+  SvgFontData,
+  SvgFontDataClass,
+} from './FontData.js';
 
 /*****************************************************************/
 /*
@@ -35,26 +41,32 @@ import {SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDa
  * @template T  The Text node class
  * @template D  The Document class
  */
-export class SvgWrapperFactory<N, T, D> extends
-CommonWrapperFactory<
+export class SvgWrapperFactory<N, T, D> extends CommonWrapperFactory<
   //
   // The HTMLElement, TextNode, and Document classes (for the DOM implementation in use)
   //
-  N, T, D,
+  N,
+  T,
+  D,
   //
   // The Wrapper type and its Factory and Class (these need to know N, T, and D)
   //
-  SVG<N, T, D>, SvgWrapper<N, T, D>, SvgWrapperFactory<N, T, D>, SvgWrapperClass<N, T, D>,
+  SVG<N, T, D>,
+  SvgWrapper<N, T, D>,
+  SvgWrapperFactory<N, T, D>,
+  SvgWrapperClass<N, T, D>,
   //
   // These are font-related objects that depend on the output jax; e,g. the character options
   //   for CHTML and SVG output differ (CHTML contains font information, while SVG has path data)
   //
-  SvgCharOptions, SvgVariantData, SvgDelimiterData, SvgFontData, SvgFontDataClass
+  SvgCharOptions,
+  SvgVariantData,
+  SvgDelimiterData,
+  SvgFontData,
+  SvgFontDataClass
 > {
-
   /**
    * The default list of wrapper nodes this factory can create
    */
   public static defaultNodes = SvgWrappers;
-
 }

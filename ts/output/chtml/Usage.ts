@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2021-2023 The MathJax Consortium
+ *  Copyright (c) 2021-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,16 +16,17 @@
  */
 
 /**
- * @fileoverview  Keeps track of usage of font characters and wrappers
+ * @file  Keeps track of usage of font characters and wrappers
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
 /**
  * Class used for tracking usage of font characters or wrappers
+ *
+ * @template T
  */
 export class Usage<T> {
-
   /**
    * The used items.
    */
@@ -49,7 +50,7 @@ export class Usage<T> {
 
   /**
    * @param {T} item     The item to check for being used
-   * @return {boolean}   True if the item has been used
+   * @returns {boolean}   True if the item has been used
    */
   public has(item: T): boolean {
     return this.used.has(JSON.stringify(item));
@@ -71,6 +72,4 @@ export class Usage<T> {
     this.needsUpdate = [];
     return update;
   }
-
 }
-

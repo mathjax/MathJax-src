@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2023 The MathJax Consortium
+ *  Copyright (c) 2018-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,18 +16,18 @@
  */
 
 /**
- * @fileoverview  Implements component Package object for handling
+ * @file  Implements component Package object for handling
  *                dynamic loading of components.
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CONFIG, Loader} from './loader.js';
+import { CONFIG, Loader } from './loader.js';
 
 /*
  * The browser document (for creating scripts to load components)
  */
-declare var document: Document;
+declare const document: Document;
 
 /**
  * A map of package names to Package instances
@@ -52,16 +52,22 @@ export class PackageError extends Error {
  */
 export type PackageReady = (name: string) => string | void;
 export type PackageFailed = (message: PackageError) => void;
-export type PackagePromise = (resolve: PackageReady, reject: PackageFailed) => void;
+export type PackagePromise = (
+  resolve: PackageReady,
+  reject: PackageFailed
+) => void;
 
 /**
  * The configuration data for a package
  */
+/* prettier-ignore */
 export interface PackageConfig {
   ready?: PackageReady;                // Function to call when package is loaded successfully
   failed?: PackageFailed;              // Function to call when package fails to load
   checkReady?: () => Promise<void>;    // Function called to see if package is fully loaded
                                        //   (may cause additional packages to load, for example)
+  extraLoads?: string[];               // Extra packages to load after this one
+  rendererExtensions?: string[];       // Font extensions to load when renderer changes
 }
 
 /**
@@ -135,12 +141,29 @@ export class Package {
   protected provided: Package[] = [];
 
   /**
-   * @return {boolean}  True when the package can be loaded (i.e., its dependencies are all loaded,
+   * @returns {boolean}  True when the package can be loaded (i.e., its dependencies are all loaded,
    *                    it is allowed to be loaded, isn't already loading, and hasn't failed to load
    *                    in the past)
    */
   get canLoad(): boolean {
-    return this.dependencyCount === 0 && !this.noLoad && !this.isLoading && !this.hasFailed;
+    return (
+      this.dependencyCount === 0 &&
+      !this.noLoad &&
+      !this.isLoading &&
+      !this.hasFailed
+    );
+  }
+
+  /**
+   * @param {string} name   A promise for when extra files and checkReady have been fulfilled
+   */
+  public static loadPromise(name: string): Promise<void> {
+    const config = (CONFIG[name] || {}) as PackageConfig;
+    const promise = Promise.all(
+      (config.extraLoads || []).map((name) => Loader.load(name))
+    );
+    const checkReady = config.checkReady || (() => Promise.resolve());
+    return promise.then(() => checkReady()) as Promise<void>;
   }
 
   /**
@@ -148,10 +171,13 @@ export class Package {
    *
    * @param {string} name            The name of the package to resolve
    * @param {boolean} addExtension   True if .js should be added automatically
-   * @return {string}                The path (file or URL) for this package
+   * @returns {string}                The path (file or URL) for this package
    */
-  public static resolvePath(name: string, addExtension: boolean = true): string {
-    const data = {name, original: name, addExtension};
+  public static resolvePath(
+    name: string,
+    addExtension: boolean = true
+  ): string {
+    const data = { name, original: name, addExtension };
     Loader.pathFilters.execute(data);
     return data.name;
   }
@@ -182,7 +208,7 @@ export class Package {
   }
 
   /**
-   * @return {Promise<string>[]}   The array of promises that must be resolved before this package
+   * @returns {Promise<string>[]}   The array of promises that must be resolved before this package
    *                                 can be loaded
    */
   protected makeDependencies(): Promise<string>[] {
@@ -197,7 +223,7 @@ export class Package {
     if (CONFIG.dependencies.hasOwnProperty(name)) {
       dependencies.push(...CONFIG.dependencies[name]);
     } else if (name !== 'core') {
-      dependencies.push('core');  //  Add 'core' dependency by default
+      dependencies.push('core'); //  Add 'core' dependency by default
     }
     //
     //  Add all the dependencies (creating them, if needed)
@@ -238,7 +264,9 @@ export class Package {
     //
     const config = (CONFIG[this.name] || {}) as PackageConfig;
     if (config.ready) {
-      promise = promise.then((_name: string) => config.ready(this.name)) as Promise<string>;
+      promise = promise.then((_name: string) =>
+        config.ready(this.name)
+      ) as Promise<string>;
     }
     //
     //  If there are promises for dependencies,
@@ -247,14 +275,18 @@ export class Package {
     //
     if (promises.length) {
       promises.push(promise);
-      promise = Promise.all(promises).then((names: string[]) => names.join(', '));
+      promise = Promise.all(promises).then((names: string[]) =>
+        names.join(', ')
+      );
     }
     //
     //  If there is a failed() function in the configuration for this package,
     //    Add a catch to handle the error
     //
     if (config.failed) {
-      promise.catch((message: string) => config.failed(new PackageError(message, this.name)));
+      promise.catch((message: string) =>
+        config.failed(new PackageError(message, this.name))
+      );
     }
     //
     //  Return the promise that represents when this file is loaded
@@ -279,13 +311,18 @@ export class Package {
 
   /**
    * Load using a custom require method (usually the one from node.js)
+   *
+   * @param {string} url The URL to load from
    */
   protected loadCustom(url: string) {
     try {
       const result = CONFIG.require(url);
       if (result instanceof Promise) {
-        result.then(() => this.checkLoad())
-          .catch((err) => this.failed('Can\'t load "' + url + '"\n' + err.message.trim()));
+        result
+          .then(() => this.checkLoad())
+          .catch((err) =>
+            this.failed('Can\'t load "' + url + '"\n' + err.message.trim())
+          );
       } else {
         this.checkLoad();
       }
@@ -296,6 +333,8 @@ export class Package {
 
   /**
    * Load in a browser by inserting a script to load the proper URL
+   *
+   * @param {string} url The URL to load from
    */
   protected loadScript(url: string) {
     const script = document.createElement('script');
@@ -344,17 +383,17 @@ export class Package {
   /**
    * Check if a package is really ready to be marked as loaded
    * (When it is loaded, it may set its own checkReady() function
-   *  as a means of loading additional packages.  E.g., an output
-   *  jax may load a font package, dependent on its configuration.)
+   *  or extraLoads array as a means of loading additional packages.
+   *  E.g., an output jax may load a font package, dependent on its
+   *  configuration.)
    *
    *  The configuration's checkReady() function returns a promise
    *  that allows the loader to wait for addition actions to finish
    *  before marking the file as loaded (or failing to load).
    */
   protected checkLoad() {
-    const config = (CONFIG[this.name] || {}) as PackageConfig;
-    const checkReady = config.checkReady || (() => Promise.resolve());
-    checkReady().then(() => this.loaded())
+    Package.loadPromise(this.name)
+      .then(() => this.loaded())
       .catch((message) => this.failed(message));
   }
 
@@ -422,5 +461,4 @@ export class Package {
       }
     }
   }
-
 }

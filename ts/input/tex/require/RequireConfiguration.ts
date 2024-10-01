@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2023 The MathJax Consortium
+ *  Copyright (c) 2019-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,25 +15,30 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview    Configuration file for the require package.
+ * @file    Configuration file for the require package.
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import {Configuration, ParserConfiguration, ConfigurationHandler} from '../Configuration.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import {
+  Configuration,
+  ParserConfiguration,
+  ConfigurationHandler,
+} from '../Configuration.js';
 import TexParser from '../TexParser.js';
-import {CommandMap} from '../TokenMap.js';
-import {ParseMethod} from '../Types.js';
+import { CommandMap } from '../TokenMap.js';
+import { ParseMethod } from '../Types.js';
 import TexError from '../TexError.js';
-import {TeX} from '../../tex.js';
+import { TeX } from '../../tex.js';
 
-import {MathJax} from '../../../components/global.js';
-import {Package} from '../../../components/package.js';
-import {Loader, CONFIG as LOADERCONFIG} from '../../../components/loader.js';
-import {mathjax} from '../../../mathjax.js';
-import {expandable} from '../../../util/Options.js';
+import { MathJax } from '../../../components/startup.js';
+import { Package } from '../../../components/package.js';
+import { Loader, CONFIG as LOADERCONFIG } from '../../../components/loader.js';
+import { mathjax } from '../../../mathjax.js';
+import { expandable } from '../../../util/Options.js';
+import { MenuMathDocument } from '../../../ui/menu/MenuHandler.js';
 
 /**
  * The MathJax configuration block (for looking up user-defined package options)
@@ -48,7 +53,8 @@ const MJCONFIG = MathJax.config;
  */
 function RegisterExtension(jax: TeX<any, any, any>, name: string) {
   const require = jax.parseOptions.options.require;
-  const required = jax.parseOptions.packageData.get('require').required as string[];
+  const required = jax.parseOptions.packageData.get('require')
+    .required as string[];
   const extension = name.substring(require.prefix.length);
   if (required.indexOf(extension) < 0) {
     required.push(extension);
@@ -57,14 +63,16 @@ function RegisterExtension(jax: TeX<any, any, any>, name: string) {
     //  and save the retry promise, if any, for when the dependencies need
     //  to restart the expression (due to preprocessors, see below).
     //
-    let retry = RegisterDependencies(jax, LOADERCONFIG.dependencies[name]);
+    const retry = RegisterDependencies(jax, LOADERCONFIG.dependencies[name]);
     //
     // If we need to restart the expression due to the dependencies,
     //   Wait for the dependencies to load, process this extension, then retry,
     // Otherwise, process the extension now.
     //
     if (retry) {
-      mathjax.retryAfter(retry.then(() => ProcessExtension(jax, name, extension)));
+      mathjax.retryAfter(
+        retry.then(() => ProcessExtension(jax, name, extension))
+      );
     } else {
       ProcessExtension(jax, name, extension);
     }
@@ -76,8 +84,13 @@ function RegisterExtension(jax: TeX<any, any, any>, name: string) {
  *
  * @param {TeX} jax       The TeX jax whose configuration is to be modified
  * @param {string} name   The name of the extension being added (e.g., '[tex]/amscd')
+ * @param {string} extension The name of the configuration handler for the extension.
  */
-function ProcessExtension(jax: TeX<any, any, any>, name: string, extension: string) {
+function ProcessExtension(
+  jax: TeX<any, any, any>,
+  name: string,
+  extension: string
+) {
   //
   //  If the required file loaded an extension...
   //
@@ -88,8 +101,12 @@ function ProcessExtension(jax: TeX<any, any, any>, name: string, extension: stri
     //    (place them in a block for the extension, if needed)
     //
     let options = MJCONFIG[name] || {};
-    if (handler.options && Object.keys(handler.options).length === 1 && handler.options[extension]) {
-      options = {[extension]: options};
+    if (
+      handler.options &&
+      Object.keys(handler.options).length === 1 &&
+      handler.options[extension]
+    ) {
+      options = { [extension]: options };
     }
     //
     //  Register the extension with the jax's configuration
@@ -113,10 +130,13 @@ function ProcessExtension(jax: TeX<any, any, any>, name: string, extension: stri
  *
  * @param {TeX} jax          The jax whose configuration is being modified
  * @param {string[]} names   The names of the dependencies to register
- * @return {Promise<any>}    A promise resolved when all dependency's retries
+ * @returns {Promise<any>}    A promise resolved when all dependency's retries
  *                             are complete (or null if no retries)
  */
-function RegisterDependencies(jax: TeX<any, any, any>, names: string[] = []): Promise<any> {
+function RegisterDependencies(
+  jax: TeX<any, any, any>,
+  names: string[] = []
+): Promise<any> {
   const prefix = jax.parseOptions.options.require.prefix;
   const retries = [];
   for (const name of names) {
@@ -129,7 +149,7 @@ function RegisterDependencies(jax: TeX<any, any, any>, names: string[] = []): Pr
       }
     }
   }
-  return (retries.length ? Promise.all(retries) : null);
+  return retries.length ? Promise.all(retries) : null;
 }
 
 /**
@@ -142,22 +162,39 @@ export function RequireLoad(parser: TexParser, name: string) {
   const options = parser.options.require;
   const allow = options.allow;
   const extension = (name.substring(0, 1) === '[' ? '' : options.prefix) + name;
-  const allowed = (allow.hasOwnProperty(extension) ? allow[extension] :
-                   allow.hasOwnProperty(name) ? allow[name] : options.defaultAllow);
+  const allowed = allow.hasOwnProperty(extension)
+    ? allow[extension]
+    : allow.hasOwnProperty(name)
+      ? allow[name]
+      : options.defaultAllow;
   if (!allowed) {
-    throw new TexError('BadRequire', 'Extension "%1" is not allowed to be loaded', extension);
+    throw new TexError(
+      'BadRequire',
+      'Extension "%1" is not allowed to be loaded',
+      extension
+    );
   }
-  if (Package.packages.has(extension)) {
-    RegisterExtension(parser.configuration.packageData.get('require').jax, extension);
-  } else {
+  if (!Package.packages.has(extension)) {
     mathjax.retryAfter(Loader.load(extension));
   }
+  const require = LOADERCONFIG[extension]?.rendererExtensions;
+  (MathJax.startup.document as MenuMathDocument)?.menu?.addRequiredExtensions?.(
+    require
+  );
+  RegisterExtension(
+    parser.configuration.packageData.get('require').jax,
+    extension
+  );
 }
 
 /**
  * Save the jax so that it can be used when \require{} is processed.
+ *
+ * @param {ParserConfiguration} _config The parser configuration.
+ * @param {TeX} jax The current TeX jax.
  */
 function config(_config: ParserConfiguration, jax: TeX<any, any, any>) {
+  /* prettier-ignore */
   jax.parseOptions.packageData.set('require', {
     jax: jax,                             // \require needs access to this
     required: [...jax.options.packages],  // stores the names of the packages that have been added
@@ -174,12 +211,10 @@ function config(_config: ParserConfiguration, jax: TeX<any, any, any>) {
   options.prefix = '[' + prefix + ']/';
 }
 
-
 /**
  * Namespace for \require methods
  */
-export const RequireMethods: Record<string, ParseMethod> = {
-
+export const RequireMethods: { [key: string]: ParseMethod } = {
   /**
    * Implements \require macro to load TeX extensions
    *
@@ -189,11 +224,15 @@ export const RequireMethods: Record<string, ParseMethod> = {
   Require(parser: TexParser, name: string) {
     const required = parser.GetArgument(name);
     if (required.match(/[^_a-zA-Z0-9]/) || required === '') {
-      throw new TexError('BadPackageName', 'Argument for %1 is not a valid package name', name);
+      throw new TexError(
+        'BadPackageName',
+        'Argument for %1 is not a valid package name',
+        name
+      );
     }
     RequireLoad(parser, required);
-  }
-
+    parser.Push(parser.itemFactory.create('null'));
+  },
 };
 
 /**
@@ -213,7 +252,7 @@ export const options = {
       configmacros: false,
       tagformat: false,
       setoptions: false,
-      texhtml: false
+      texhtml: false,
     }),
     //
     //  The default allow value if the extension isn't in the list above
@@ -223,18 +262,20 @@ export const options = {
     //  The path prefix to use for exensions:  'tex' means use '[tex]/'
     //  before the extension name.
     //
-    prefix: 'tex'
-  }
+    prefix: 'tex',
+  },
 };
 
 /**
  * The command map for the \require macro
  */
-new CommandMap('require', {require: 'Require'}, RequireMethods);
+new CommandMap('require', { require: RequireMethods.Require });
 
 /**
  * The configuration for the \require macro
  */
-export const RequireConfiguration = Configuration.create(
-  'require', {handler: {macro: ['require']}, config, options}
-);
+export const RequireConfiguration = Configuration.create('require', {
+  [ConfigurationType.HANDLER]: { [HandlerType.MACRO]: ['require'] },
+  config,
+  options,
+});

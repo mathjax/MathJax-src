@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2023 The MathJax Consortium
+ *  Copyright (c) 2017-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,20 +16,30 @@
  */
 
 /**
- * @fileoverview  Implements the ChtmlTextNode wrapper for the TextNode object
+ * @file  Implements the ChtmlTextNode wrapper for the TextNode object
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CHTML} from '../../chtml.js';
-import {ChtmlWrapper, ChtmlWrapperClass} from '../Wrapper.js';
-import {ChtmlWrapperFactory} from '../WrapperFactory.js';
-import {ChtmlCharOptions, ChtmlCharData, ChtmlVariantData, ChtmlDelimiterData,
-        ChtmlFontData, ChtmlFontDataClass} from '../FontData.js';
-import {CommonTextNode, CommonTextNodeClass, CommonTextNodeMixin} from '../../common/Wrappers/TextNode.js';
-import {MmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {TextNode} from '../../../core/MmlTree/MmlNode.js';
-import {StyleList} from '../../../util/StyleList.js';
+import { CHTML } from '../../chtml.js';
+import { ChtmlWrapper, ChtmlWrapperClass } from '../Wrapper.js';
+import { ChtmlWrapperFactory } from '../WrapperFactory.js';
+import {
+  ChtmlCharOptions,
+  ChtmlCharData,
+  ChtmlVariantData,
+  ChtmlDelimiterData,
+  ChtmlFontData,
+  ChtmlFontDataClass,
+} from '../FontData.js';
+import {
+  CommonTextNode,
+  CommonTextNodeClass,
+  CommonTextNodeMixin,
+} from '../../common/Wrappers/TextNode.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { TextNode } from '../../../core/MmlTree/MmlNode.js';
+import { StyleList } from '../../../util/StyleList.js';
 
 /*****************************************************************/
 /**
@@ -39,11 +49,22 @@ import {StyleList} from '../../../util/StyleList.js';
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlTextNodeNTD<N, T, D> extends ChtmlWrapper<N, T, D>, CommonTextNode<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {}
+export interface ChtmlTextNodeNTD<N, T, D>
+  extends ChtmlWrapper<N, T, D>,
+    CommonTextNode<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {}
 
 /**
  * The ChtmlTextNodeClass interface for the CHTML TextNode wrapper
@@ -52,34 +73,63 @@ export interface ChtmlTextNodeNTD<N, T, D> extends ChtmlWrapper<N, T, D>, Common
  * @template T  The Text node class
  * @template D  The Document class
  */
-export interface ChtmlTextNodeClass<N, T, D> extends ChtmlWrapperClass<N, T, D>, CommonTextNodeClass<
-  N, T, D,
-  CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-  ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass
-> {
-  new(factory: ChtmlWrapperFactory<N, T, D>, node: MmlNode, parent?: ChtmlWrapper<N, T, D>): ChtmlTextNodeNTD<N, T, D>;
+export interface ChtmlTextNodeClass<N, T, D>
+  extends ChtmlWrapperClass<N, T, D>,
+    CommonTextNodeClass<
+      N,
+      T,
+      D,
+      CHTML<N, T, D>,
+      ChtmlWrapper<N, T, D>,
+      ChtmlWrapperFactory<N, T, D>,
+      ChtmlWrapperClass<N, T, D>,
+      ChtmlCharOptions,
+      ChtmlVariantData,
+      ChtmlDelimiterData,
+      ChtmlFontData,
+      ChtmlFontDataClass
+    > {
+  new (
+    factory: ChtmlWrapperFactory<N, T, D>,
+    node: MmlNode,
+    parent?: ChtmlWrapper<N, T, D>
+  ): ChtmlTextNodeNTD<N, T, D>;
 }
-
 
 /*****************************************************************/
 
 /**
  * The ChtmlTextNode wrapper class for the MmlTextNode class
+ *
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
  */
-export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<N, T, D> {
-
+export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<
+  N,
+  T,
+  D
+> {
   const Base = CommonTextNodeMixin<
-      N, T, D,
-      CHTML<N, T, D>, ChtmlWrapper<N, T, D>, ChtmlWrapperFactory<N, T, D>, ChtmlWrapperClass<N, T, D>,
-      ChtmlCharOptions, ChtmlVariantData, ChtmlDelimiterData, ChtmlFontData, ChtmlFontDataClass,
-      ChtmlTextNodeClass<N, T, D>
-    >(ChtmlWrapper);
+    N,
+    T,
+    D,
+    CHTML<N, T, D>,
+    ChtmlWrapper<N, T, D>,
+    ChtmlWrapperFactory<N, T, D>,
+    ChtmlWrapperClass<N, T, D>,
+    ChtmlCharOptions,
+    ChtmlVariantData,
+    ChtmlDelimiterData,
+    ChtmlFontData,
+    ChtmlFontDataClass,
+    ChtmlTextNodeClass<N, T, D>
+  >(ChtmlWrapper);
 
-  // Avoid message about base constructors not having the same type
-  //   (they should both be ChtmlWrapper<N, T, D>, but are thought of as different by typescript)
-  // @ts-ignore
+  // @ts-expect-error Avoid message about base constructors not having the same
+  // type (they should both be ChtmlWrapper<N, T, D>, but are thought of as
+  // different by typescript)
   return class ChtmlTextNode extends Base implements ChtmlTextNodeNTD<N, T, D> {
-
     /**
      * The TextNode wrapper
      */
@@ -97,12 +147,12 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<N, T, D> 
       'mjx-c': {
         display: 'inline-block',
         width: 0,
-        'text-align': 'right'
+        'text-align': 'right',
       },
       'mjx-utext': {
         display: 'inline-block',
-        padding: '.75em 0 .2em 0'
-      }
+        padding: '.75em 0 .2em 0',
+      },
     };
 
     /**
@@ -117,12 +167,11 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<N, T, D> 
       if (text.length === 0) return;
       const bbox = this.getBBox();
       if (variant === '-explicitFont') {
-        const {scale} = this.parent.getBBox();
-        adaptor.append(parent, this.jax.unknownText(text, variant, bbox.w, scale));
+        adaptor.append(parent, this.jax.unknownText(text, variant, bbox.w));
       } else {
         let utext = '';
         const chars = this.remappedText(text, variant);
-        const H = (chars.length > 1 ? this.em(this.parent.getBBox().h) : '');
+        const H = chars.length > 1 ? this.em(this.parent.getBBox().h) : '';
         const m = chars.length;
         for (let i = 0; i < m; i++) {
           const n = chars[i];
@@ -131,10 +180,16 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<N, T, D> 
             utext += String.fromCodePoint(n);
           } else {
             utext = this.addUtext(utext, variant, parent);
-            const font = data.ff || (data.f ? `${this.font.cssFontPrefix}-${data.f}` : '');
-            const node = adaptor.append(parent, this.html('mjx-c', {class: this.char(n) + (font ? ' ' + font : '')}, [
-              this.text(data.c || String.fromCodePoint(n))
-            ]));
+            const font =
+              data.ff || (data.f ? `${this.font.cssFontPrefix}-${data.f}` : '');
+            const node = adaptor.append(
+              parent,
+              this.html(
+                'mjx-c',
+                { class: this.char(n) + (font ? ' ' + font : '') },
+                [this.text(data.c || String.fromCodePoint(n))]
+              )
+            );
             if (i < m - 1 || bbox.oc) {
               adaptor.setAttribute(node as N, 'noic', 'true');
             }
@@ -160,7 +215,7 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<N, T, D> 
      * @param {string} utext     The text to add
      * @param {string} variant   The mathvariant for the text
      * @param {N} parent         The parent node where the text is being added
-     * @return {string}          The new value for utext
+     * @returns {string}          The new value for utext
      */
     protected addUtext(utext: string, variant: string, parent: N): string {
       if (utext) {
@@ -168,7 +223,5 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<N, T, D> 
       }
       return '';
     }
-
   };
-
 })<any, any, any>();

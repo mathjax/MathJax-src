@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2023 The MathJax Consortium
+ *  Copyright (c) 2017-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,18 +16,29 @@
  */
 
 /**
- * @fileoverview  Implements the CcommonMtr wrapper mixin for the MmlMtr object
+ * @file  Implements the CcommonMtr wrapper mixin for the MmlMtr object
  *                and CommonMlabeledtr wrapper mixin for MmlMlabeledtr
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {CommonWrapper, CommonWrapperClass, CommonWrapperConstructor, Constructor} from '../Wrapper.js';
-import {CommonWrapperFactory} from '../WrapperFactory.js';
-import {CharOptions, VariantData, DelimiterData, FontData, FontDataClass} from '../FontData.js';
-import {CommonOutputJax} from '../../common.js';
-import {BBox} from '../../../util/BBox.js';
-import {DIRECTION} from '../FontData.js';
+import {
+  CommonWrapper,
+  CommonWrapperClass,
+  CommonWrapperConstructor,
+  Constructor,
+} from '../Wrapper.js';
+import { CommonWrapperFactory } from '../WrapperFactory.js';
+import {
+  CharOptions,
+  VariantData,
+  DelimiterData,
+  FontData,
+  FontDataClass,
+} from '../FontData.js';
+import { CommonOutputJax } from '../../common.js';
+import { BBox } from '../../../util/BBox.js';
+import { DIRECTION } from '../FontData.js';
 
 /*****************************************************************/
 /**
@@ -47,7 +58,9 @@ import {DIRECTION} from '../FontData.js';
  * @template FC  The FontDataClass type
  */
 export interface CommonMtr<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -58,7 +71,6 @@ export interface CommonMtr<
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
   /**
    * The number of mtd's in the mtr
    */
@@ -76,12 +88,12 @@ export interface CommonMtr<
 
   /**
    * @param {number} i   The index of the child to get (skipping labels)
-   * @return {C}         The ith child node wrapper
+   * @returns {WW}       The ith child node wrapper
    */
   getChild(i: number): WW;
 
   /**
-   * @return {BBox[]}  An array of the bounding boxes for the mtd's in the row
+   * @returns {BBox[]}  An array of the bounding boxes for the mtd's in the row
    */
   getChildBBoxes(): BBox[];
 
@@ -94,7 +106,6 @@ export interface CommonMtr<
    * If this isn't specified, the maximum height and depth is computed.
    */
   stretchChildren(HD?: number[]): void;
-
 }
 
 /**
@@ -114,7 +125,9 @@ export interface CommonMtr<
  * @template FC  The FontDataClass type
  */
 export interface CommonMtrClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -123,13 +136,14 @@ export interface CommonMtrClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
 /**
  * The CommonMtr wrapper for the MmlMtr object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -146,7 +160,9 @@ export interface CommonMtrClass<
  * @template B   The mixin interface to create
  */
 export function CommonMtrMixin<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -156,12 +172,14 @@ export function CommonMtrMixin<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>): B {
-
-  return class CommonMtrMixin extends Base
-  implements CommonMtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
+  B extends CommonWrapperClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: CommonWrapperConstructor<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+): B {
+  return class CommonMtrMixin
+    extends Base
+    implements CommonMtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
      * @override
      */
@@ -194,15 +212,17 @@ export function CommonMtrMixin<
      * @override
      */
     public getChildBBoxes(): BBox[] {
-      return this.childNodes.map(cell => cell.getBBox());
+      return this.childNodes.map((cell) => cell.getBBox());
     }
 
     /**
      * @override
      */
     public stretchChildren(HD: number[] = null) {
-      let stretchy: WW[] = [];
-      let children = (this.labeled ? this.childNodes.slice(1) : this.childNodes);
+      const stretchy: WW[] = [];
+      const children = this.labeled
+        ? this.childNodes.slice(1)
+        : this.childNodes;
       //
       //  Locate and count the stretchy children
       //
@@ -212,21 +232,22 @@ export function CommonMtrMixin<
           stretchy.push(child);
         }
       }
-      let count = stretchy.length;
-      let nodeCount = this.childNodes.length;
+      const count = stretchy.length;
+      const nodeCount = this.childNodes.length;
       if (count && nodeCount > 1 && !HD) {
-        let H = 0, D = 0;
+        let H = 0;
+        let D = 0;
         //
         //  If all the children are stretchy, find the largest one,
         //  otherwise, find the height and depth of the non-stretchy
         //  children.
         //
-        let all = (count > 1 && count === nodeCount);
+        const all = count > 1 && count === nodeCount;
         for (const mtd of children) {
           const child = mtd.childNodes[0];
-          const noStretch = (child.stretch.dir === DIRECTION.None);
+          const noStretch = child.stretch.dir === DIRECTION.None;
           if (all || noStretch) {
-            const {h, d} = child.getBBox(noStretch);
+            const { h, d } = child.getBBox(noStretch);
             if (h > H) {
               H = h;
             }
@@ -243,7 +264,7 @@ export function CommonMtrMixin<
         //
         for (const child of stretchy) {
           const rscale = child.coreRScale();
-          child.coreMO().getStretchedVariant(HD.map(x => x * rscale));
+          child.coreMO().getStretchedVariant(HD.map((x) => x * rscale));
         }
       }
     }
@@ -256,9 +277,7 @@ export function CommonMtrMixin<
     get fixesPWidth() {
       return false;
     }
-
   } as any as B;
-
 }
 
 /*****************************************************************/
@@ -279,7 +298,9 @@ export function CommonMtrMixin<
  * @template FC  The FontDataClass type
  */
 export interface CommonMlabeledtr<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -288,7 +309,7 @@ export interface CommonMlabeledtr<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonMtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /**
@@ -308,7 +329,9 @@ export interface CommonMlabeledtr<
  * @template FC  The FontDataClass type
  */
 export interface CommonMlabeledtrClass<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -317,13 +340,14 @@ export interface CommonMlabeledtrClass<
   VV extends VariantData<CC>,
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
-  FC extends FontDataClass<CC, VV, DD>
+  FC extends FontDataClass<CC, VV, DD>,
 > extends CommonMtrClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {}
 
 /*****************************************************************/
 /**
  * The CommonMlabeledtr wrapper mixin for the MmlMlabeledtr object
  *
+ * @param Base
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -340,7 +364,9 @@ export interface CommonMlabeledtrClass<
  * @template B   The mixin interface to create
  */
 export function CommonMlabeledtrMixin<
-  N, T, D,
+  N,
+  T,
+  D,
   JX extends CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
   WW extends CommonWrapper<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
   WF extends CommonWrapperFactory<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
@@ -350,12 +376,14 @@ export function CommonMlabeledtrMixin<
   DD extends DelimiterData,
   FD extends FontData<CC, VV, DD>,
   FC extends FontDataClass<CC, VV, DD>,
-  B extends CommonMtrClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
->(Base: Constructor<CommonMtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>): B {
-
-  return class CommonMlabeledtrMixin extends Base
-  implements CommonMlabeledtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC> {
-
+  B extends CommonMtrClass<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>,
+>(
+  Base: Constructor<CommonMtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>>
+): B {
+  return class CommonMlabeledtrMixin
+    extends Base
+    implements CommonMlabeledtr<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>
+  {
     /**
      * @override
      */
@@ -394,9 +422,7 @@ export function CommonMlabeledtrMixin<
       //
       //  Don't include the label mtd
       //
-      return this.childNodes.slice(1).map(cell => cell.getBBox());
+      return this.childNodes.slice(1).map((cell) => cell.getBBox());
     }
-
   } as any as B;
-
 }

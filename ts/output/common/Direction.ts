@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2021-2023 The MathJax Consortium
+ *  Copyright (c) 2021-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
  */
 
 /**
- * @fileoverview  The direction enum for delimiters
+ * @file  The direction enum for delimiters
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-export const DIRECTION = {None: '', Vertical: 'v', Horizontal: 'h'}
+export const DIRECTION = { None: '', Vertical: 'v', Horizontal: 'h' };
 export const V = DIRECTION.Vertical;
 export const H = DIRECTION.Horizontal;

@@ -2,7 +2,7 @@
 
 /*************************************************************
  *
- *  Copyright (c) 2018-2023 The MathJax Consortium
+ *  Copyright (c) 2018-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ const EXPORTPATTERN =
       /(^export(?:\s+default)?(?:\s+abstract)?\s+(?:[^ {*}]+\s+(?:enum\s+)?[a-zA-Z0-9_.$]+|\{.* as .*\}))/m;
 
 const EXPORT_IGNORE = ['type', 'interface'];
-const EXPORT_PROCESS = ['let', 'const', 'var', 'function', 'class', 'namespace', 'as'];
+const EXPORT_PROCESS = ['let', 'const', 'var', 'function', 'class', 'namespace', 'enum', 'as'];
 
 /**
  * The module type to use ('cjs' or 'mjs')
@@ -159,7 +159,7 @@ function processParts(parts) {
   for (let i = 1; i < parts.length; i += 2) {
     const words = parts[i].split(/\s+/);
     const n = words.length;
-    const type = (words[n - 2] === 'enum' ? words[n - 3] : words[n - 2]);
+    const type = (words[n - 2] === 'enum' && n > 3 ? words[n - 3] : words[n - 2]);
     const name = words[n - 1].replace(/\}$/, '');
 
     if (words[1] === 'default' || type === 'default') {

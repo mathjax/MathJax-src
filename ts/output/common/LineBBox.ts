@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2022-2023 The MathJax Consortium
+ *  Copyright (c) 2022-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,17 +16,16 @@
  */
 
 /**
- * @fileoverview  Implements the LineBBox class
+ * @file  Implements the LineBBox class
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {MmlNode} from '../../core/MmlTree/MmlNode.js';
-import {BBox, BBoxData} from '../../util/BBox.js';
-import {StringMap} from './Wrapper.js';
+import { MmlNode } from '../../core/MmlTree/MmlNode.js';
+import { BBox, BBoxData } from '../../util/BBox.js';
+import { StringMap } from './Wrapper.js';
 
 /*****************************************************************/
-
 
 /**
  * align and indent values
@@ -37,7 +36,6 @@ export type IndentData = [string, string];
  * A BBox with extra data about line breaking
  */
 export class LineBBox extends BBox {
-
   /**
    * Indentation data for the line break
    */
@@ -71,9 +69,13 @@ export class LineBBox extends BBox {
    * @param {BBox} bbox           The bbox to extend
    * @param {number} leading      The lineleading value for the break
    * @param {IndentData} indent   The align/shift information
-   * @return {ExtendedBBox}       The bbox extended
+   * @returns {LineBBox}          The extended bbox
    */
-  public static from(bbox: BBox, leading: number, indent: IndentData[] = null): LineBBox {
+  public static from(
+    bbox: BBox,
+    leading: number,
+    indent: IndentData[] = null
+  ): LineBBox {
     const nbox = new this();
     Object.assign(nbox, bbox);
     nbox.lineLeading = leading;
@@ -100,7 +102,7 @@ export class LineBBox extends BBox {
   public append(cbox: LineBBox) {
     if (this.isFirst) {
       cbox.originalL += cbox.L;
-      cbox.L = 0;  // remove spacing after an operator with a linebreak after it
+      cbox.L = 0; // remove spacing after an operator with a linebreak after it
     }
     if (cbox.indentData) {
       this.indentData = cbox.indentData;
@@ -124,8 +126,14 @@ export class LineBBox extends BBox {
    * @param {MmlNode} node    The MmlNode to get attributes from
    */
   public getIndentData(node: MmlNode) {
-    let {indentalign, indentshift, indentalignfirst, indentshiftfirst, indentalignlast, indentshiftlast} =
-      node.attributes.getAllAttributes() as StringMap;
+    let {
+      indentalign,
+      indentshift,
+      indentalignfirst,
+      indentshiftfirst,
+      indentalignlast,
+      indentshiftlast,
+    } = node.attributes.getAllAttributes() as StringMap;
     if (indentalignfirst === 'indentalign') {
       indentalignfirst = node.attributes.getInherited('indentalign') as string;
     }
@@ -138,18 +146,18 @@ export class LineBBox extends BBox {
     if (indentshiftlast === 'indentshift') {
       indentshiftlast = indentshift;
     }
-    this.indentData = [[indentalignfirst, indentshiftfirst],
-                       [indentalign, indentshift],
-                       [indentalignlast, indentshiftlast]] as IndentData[];
+    this.indentData = [
+      [indentalignfirst, indentshiftfirst],
+      [indentalign, indentshift],
+      [indentalignlast, indentshiftlast],
+    ] as IndentData[];
   }
 
   /**
    * @param {LineBBox} bbox   The LineBBox whose indentData is to be copied
-   * @return {IndentData[]}   The copied array
+   * @returns {IndentData[]}   The copied array
    */
   protected copyIndentData(bbox: LineBBox): IndentData[] {
     return bbox.indentData.map(([align, indent]) => [align, indent]);
   }
-
 }
-

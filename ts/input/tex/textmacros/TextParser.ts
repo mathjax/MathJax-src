@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2020-2023 The MathJax Consortium
+ *  Copyright (c) 2020-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,9 +15,8 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview  The TextParser class for the textmacros package
+ * @file  The TextParser class for the textmacros package
  *
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
@@ -25,18 +24,17 @@
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
 import ParseOptions from '../ParseOptions.js';
-import {ParseUtil} from '../ParseUtil.js';
-import {StackItem} from '../StackItem.js';
-import {MmlNode, AbstractMmlNode} from '../../../core/MmlTree/MmlNode.js';
-import {EnvList} from '../StackItem.js';
+import { ParseUtil } from '../ParseUtil.js';
+import { StackItem } from '../StackItem.js';
+import { MmlNode, AbstractMmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { EnvList } from '../StackItem.js';
 import NodeUtil from '../NodeUtil.js';
-import {StopItem, StyleItem} from '../base/BaseItems.js';
+import { StopItem, StyleItem } from '../base/BaseItems.js';
 
 /**
  * Subclass of the TexParser but for handling text-mode material
  */
 export class TextParser extends TexParser {
-
   /**
    * The accumulated text material to go into an mtext element
    */
@@ -73,9 +71,14 @@ export class TextParser extends TexParser {
 
   /**
    * @override
-   * @constructor
+   * @class
    */
-  constructor(text: string, env: EnvList, configuration: ParseOptions, level?: number | string) {
+  constructor(
+    text: string,
+    env: EnvList,
+    configuration: ParseOptions,
+    level?: number | string
+  ) {
     super(text, env, configuration);
     this.level = level;
   }
@@ -88,9 +91,14 @@ export class TextParser extends TexParser {
   public mml() {
     this.copyLists();
     this.configuration.popParser();
-    return (this.level != null ?
-            this.create('node', 'mstyle', this.nodes, {displaystyle: false, scriptlevel: this.level}) :
-            this.nodes.length === 1 ? this.nodes[0] : this.create('node', 'mrow', this.nodes));
+    return this.level != null
+      ? this.create('node', 'mstyle', this.nodes, {
+          displaystyle: false,
+          scriptlevel: this.level,
+        })
+      : this.nodes.length === 1
+        ? this.nodes[0]
+        : this.create('node', 'mrow', this.nodes);
   }
 
   /**
@@ -122,7 +130,11 @@ export class TextParser extends TexParser {
   public saveText() {
     if (this.text) {
       const mathvariant = this.stack.env.mathvariant;
-      const text = ParseUtil.internalText(this, this.text, mathvariant ? {mathvariant} : {});
+      const text = ParseUtil.internalText(
+        this,
+        this.text,
+        mathvariant ? { mathvariant } : {}
+      );
       this.text = '';
       this.Push(text);
     }
@@ -157,7 +169,7 @@ export class TextParser extends TexParser {
   public PushMath(mml: MmlNode) {
     const env = this.stack.env;
     if (!mml.isKind('TeXAtom')) {
-      mml = this.create('node', 'TeXAtom', [mml]);  // make sure the math is an ORD
+      mml = this.create('node', 'TeXAtom', [mml]); // make sure the math is an ORD
     }
     for (const name of ['mathsize', 'mathcolor']) {
       if (env[name] && !mml.attributes.hasExplicit(name)) {
@@ -198,7 +210,7 @@ export class TextParser extends TexParser {
   public ParseTextArg(name: string, env: EnvList) {
     const text = this.GetArgument(name);
     env = Object.assign(Object.assign({}, this.stack.env), env);
-    return (new TextParser(text, env, this.configuration)).mml();
+    return new TextParser(text, env, this.configuration).mml();
   }
 
   /**
@@ -207,7 +219,11 @@ export class TextParser extends TexParser {
    * @override
    */
   public ParseArg(name: string) {
-    return (new TextParser(this.GetArgument(name), this.stack.env, this.configuration)).mml();
+    return new TextParser(
+      this.GetArgument(name),
+      this.stack.env,
+      this.configuration
+    ).mml();
   }
 
   /**
@@ -220,5 +236,4 @@ export class TextParser extends TexParser {
   public Error(id: string, message: string, ...args: string[]) {
     throw new TexError(id, message, ...args);
   }
-
 }

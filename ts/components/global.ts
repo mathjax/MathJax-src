@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2023 The MathJax Consortium
+ *  Copyright (c) 2018-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,13 +16,13 @@
  */
 
 /**
- * @fileoverview  Handles using MathJax global as config object, and to hold
+ * @file  Handles using MathJax global as config object, and to hold
  *                methods and data to be available to the page author
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {VERSION} from './version.js';
+import { VERSION } from './version.js';
 
 /**
  * The MathJax variable as a configuration object
@@ -59,16 +59,15 @@ declare const global: typeof globalThis;
  */
 const defaultGlobal = {};
 export const GLOBAL = (() => {
-  if (typeof window !== 'undefined') return window;            // for browsers
-  if (typeof global !== 'undefined') return global;            // for node
+  if (typeof window !== 'undefined') return window; // for browsers
+  if (typeof global !== 'undefined') return global; // for node
   if (typeof globalThis !== 'undefined') return globalThis;
-  return defaultGlobal;                                        // fallback shared object
-})() as any as Window & {MathJax: MathJaxObject | MathJaxConfig};
-
+  return defaultGlobal; // fallback shared object
+})() as any as Window & { MathJax: MathJaxObject | MathJaxConfig };
 
 /**
  * @param {any} x     An item to test if it is an object
- * @return {boolean}  True if the item is a non-null object
+ * @returns {boolean}  True if the item is a non-null object
  */
 export function isObject(x: any): boolean {
   return typeof x === 'object' && x !== null;
@@ -81,14 +80,16 @@ export function isObject(x: any): boolean {
  * @param {any} dst         The destination config object (to be merged into)
  * @param {any} src         The source configuration object (to replace default values in dst}
  * @param {boolean} check   True when combining into MathJax._ to avoid setting a property with a getter
- * @return {any}            The resulting (modified) config object
+ * @returns {any}            The resulting (modified) config object
  */
 export function combineConfig(dst: any, src: any, check: boolean = false): any {
   for (const id of Object.keys(src)) {
-    if (id === '__esModule' ||
-        dst[id] === src[id] ||
-        src[id] === null ||
-        src[id] === undefined) {
+    if (
+      id === '__esModule' ||
+      dst[id] === src[id] ||
+      src[id] === null ||
+      src[id] === undefined
+    ) {
       continue;
     }
     if (isObject(dst[id]) && isObject(src[id])) {
@@ -108,7 +109,7 @@ export function combineConfig(dst: any, src: any, check: boolean = false): any {
  * @param {any} dst      The destination config object (to be merged into)
  * @param {string} name  The id of the configuration block to modify (created if doesn't exist)
  * @param {any} src      The source configuration object (to replace default values in dst}
- * @return {any}         The resulting (modified) config object
+ * @returns {any}         The resulting (modified) config object
  */
 export function combineDefaults(dst: any, name: string, src: any): any {
   if (!dst[name]) {
@@ -129,11 +130,11 @@ export function combineDefaults(dst: any, name: string, src: any): any {
  * Combine configuration or data with the existing MathJax object
  *
  * @param {any} config   The data to be merged into the MathJax object
+ * @returns {MathJaxObject} The combined configuration object
  */
 export function combineWithMathJax(config: any): MathJaxObject {
   return combineConfig(MathJax, config);
 }
-
 
 /**
  * Create the MathJax global, if it doesn't exist
@@ -151,7 +152,7 @@ if (!(GLOBAL.MathJax as MathJaxObject).version) {
   GLOBAL.MathJax = {
     version: VERSION,
     _: {},
-    config: GLOBAL.MathJax
+    config: GLOBAL.MathJax,
   };
 }
 

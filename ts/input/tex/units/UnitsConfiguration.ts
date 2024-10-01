@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2023 The MathJax Consortium
+ *  Copyright (c) 2018-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,87 +15,93 @@
  *  limitations under the License.
  */
 
-
 /**
- * @fileoverview Configuration and implementation of the units package.
+ * @file Configuration and implementation of the units package.
  *
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import {Configuration} from '../Configuration.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
+import { Configuration } from '../Configuration.js';
 import TexParser from '../TexParser.js';
-import {CommandMap} from '../TokenMap.js';
-import {ParseMethod} from '../Types.js';
+import { CommandMap } from '../TokenMap.js';
+import { ParseMethod } from '../Types.js';
 
 // Namespace
-export let UnitsMethods: Record<string, ParseMethod> = {};
+export const UnitsMethods: { [key: string]: ParseMethod } = {
+  /**
+   * Implements the basic \units macro.
+   *
+   * @param {TexParser} parser The current tex parser.
+   * @param {string} name The name of the calling macro.
+   */
+  Unit(parser: TexParser, name: string) {
+    const val = parser.GetBrackets(name);
+    const dim = parser.GetArgument(name);
+    let macro = `\\mathrm{${dim}}`;
+    if (val) {
+      macro = val + (parser.options.units.loose ? '~' : '\\,') + macro;
+    }
+    parser.string = macro + parser.string.slice(parser.i);
+    parser.i = 0;
+  },
 
-/**
- * Implements the basic \units macro.
- * @param {TexParser} parser The current tex parser.
- * @param {string} name The name of the calling macro.
- */
-UnitsMethods.Unit = function(parser: TexParser, name: string) {
-  let val = parser.GetBrackets(name) ;
-  let dim = parser.GetArgument(name);
-  let macro = `\\mathrm{${dim}}`;
-  if (val) {
-    macro = val + (parser.options.units.loose ? '~' : '\\,') + macro;
-  }
-  parser.string = macro + parser.string.slice(parser.i);
-  parser.i = 0;
-};
+  /**
+   * The \unitfrac macro.
+   *
+   * @param {TexParser} parser The current tex parser.
+   * @param {string} name The name of the calling macro.
+   */
+  UnitFrac(parser: TexParser, name: string) {
+    const val = parser.GetBrackets(name) || '';
+    const num = parser.GetArgument(name);
+    const den = parser.GetArgument(name);
+    let macro = `\\nicefrac[\\mathrm]{${num}}{${den}}`;
+    if (val) {
+      macro = val + (parser.options.units.loose ? '~' : '\\,') + macro;
+    }
+    parser.string = macro + parser.string.slice(parser.i);
+    parser.i = 0;
+  },
 
-/**
- * The \unitfrac macro.
- * @param {TexParser} parser The current tex parser.
- * @param {string} name The name of the calling macro.
- */
-UnitsMethods.UnitFrac = function(parser: TexParser, name: string) {
-  let val = parser.GetBrackets(name) || '';
-  let num = parser.GetArgument(name);
-  let den = parser.GetArgument(name);
-  let macro = `\\nicefrac[\\mathrm]{${num}}{${den}}`;
-  if (val) {
-    macro = val + (parser.options.units.loose ? '~' : '\\,') + macro;
-  }
-  parser.string = macro + parser.string.slice(parser.i);
-  parser.i = 0;
-};
-
-/**
- * The \nicefrac macro.
- * @param {TexParser} parser The current tex parser.
- * @param {string} name The name of the calling macro.
- */
-UnitsMethods.NiceFrac = function(parser: TexParser, name: string) {
-  let font = parser.GetBrackets(name) || '\\mathrm';
-  let num = parser.GetArgument(name);
-  let den = parser.GetArgument(name);
-  let numMml = new TexParser(`${font}{${num}}`, {...parser.stack.env},
-                             parser.configuration).mml();
-  let denMml = new TexParser(`${font}{${den}}`, {...parser.stack.env},
-                             parser.configuration).mml();
-  const def = parser.options.units.ugly ? {} : {bevelled: true};
-  const node = parser.create('node', 'mfrac', [numMml, denMml], def);
-  parser.Push(node);
+  /**
+   * The \nicefrac macro.
+   *
+   * @param {TexParser} parser The current tex parser.
+   * @param {string} name The name of the calling macro.
+   */
+  NiceFrac(parser: TexParser, name: string) {
+    const font = parser.GetBrackets(name) || '\\mathrm';
+    const num = parser.GetArgument(name);
+    const den = parser.GetArgument(name);
+    const numMml = new TexParser(
+      `${font}{${num}}`,
+      { ...parser.stack.env },
+      parser.configuration
+    ).mml();
+    const denMml = new TexParser(
+      `${font}{${den}}`,
+      { ...parser.stack.env },
+      parser.configuration
+    ).mml();
+    const def = parser.options.units.ugly ? {} : { bevelled: true };
+    const node = parser.create('node', 'mfrac', [numMml, denMml], def);
+    parser.Push(node);
+  },
 };
 
 new CommandMap('units', {
-  units:    'Unit',
-  unitfrac: 'UnitFrac',
-  nicefrac: 'NiceFrac'
-}, UnitsMethods);
+  units: UnitsMethods.Unit,
+  unitfrac: UnitsMethods.UnitFrac,
+  nicefrac: UnitsMethods.NiceFrac,
+});
 
-
-export const UnitsConfiguration = Configuration.create(
-  'units', {
-    handler: {macro: ['units']},
-    options: {
-      units: {
-        loose: false,
-        ugly: false
-      }
-    }
-  }
-);
+export const UnitsConfiguration = Configuration.create('units', {
+  [ConfigurationType.HANDLER]: { [HandlerType.MACRO]: ['units'] },
+  [ConfigurationType.OPTIONS]: {
+    units: {
+      loose: false,
+      ugly: false,
+    },
+  },
+});

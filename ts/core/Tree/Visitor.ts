@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2017-2023 The MathJax Consortium
+ *  Copyright (c) 2017-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
  */
 
 /**
- * @fileoverview  The generic visitor class for trees
+ * @file  The generic visitor class for trees
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import {Factory, FactoryNode, FactoryNodeClass} from './Factory.js';
+import { Factory, FactoryNode, FactoryNodeClass } from './Factory.js';
 
 /*****************************************************************/
 
@@ -39,9 +39,11 @@ export interface VisitorNode<N extends VisitorNode<N>> extends FactoryNode {
  *
  * @template N   The node type being traversed
  */
-export type VisitorFunction<N extends VisitorNode<N>> =
-  (visitor: Factory<N, FactoryNodeClass<N>>, node: N, ...args: any[]) => any;
-
+export type VisitorFunction<N extends VisitorNode<N>> = (
+  visitor: Factory<N, FactoryNodeClass<N>>,
+  node: N,
+  ...args: any[]
+) => any;
 
 /*****************************************************************/
 
@@ -51,13 +53,12 @@ export type VisitorFunction<N extends VisitorNode<N>> =
  * @template N   The node type being traversed
  */
 export interface Visitor<N extends VisitorNode<N>> {
-
   /**
    * Visit the tree rooted at the given node (passing along any needed parameters)
    *
    * @param {N} tree      The node that is the root of the tree
    * @param {any[]} args  The arguments to pass to the visitNode functions
-   * @return {any}        Whatever the visitNode function returns for the root tree node
+   * @returns {any}        Whatever the visitNode function returns for the root tree node
    */
   visitTree(tree: N, ...args: any[]): any;
 
@@ -67,7 +68,7 @@ export interface Visitor<N extends VisitorNode<N>> {
    *
    * @param {N} node      The node to visit
    * @param {any[]} args  The arguments to pass to the visitor function for this node
-   * @return {any}        Whatever the visitor function returns for this node
+   * @returns {any}        Whatever the visitor function returns for this node
    */
   visitNode(node: N, ...args: any[]): any;
 
@@ -76,7 +77,7 @@ export interface Visitor<N extends VisitorNode<N>> {
    *
    * @param {N} node      The node to visit
    * @param {any[]} args  The arguments to pass to the visitor function for this node
-   * @return {any}        Whatever the visitor function returns for this node
+   * @returns {any}        Whatever the visitor function returns for this node
    */
   visitDefault(node: N, ...args: any[]): any;
 
@@ -101,7 +102,6 @@ export interface Visitor<N extends VisitorNode<N>> {
   [property: string]: any;
 }
 
-
 /*****************************************************************/
 /**
  *  Implements the generic Visitor object
@@ -109,7 +109,9 @@ export interface Visitor<N extends VisitorNode<N>> {
  * @template N   The node type being traversed
  * @template C   The node class for N (the constructor rather than instance of the class)
  */
-export abstract class AbstractVisitor<N extends VisitorNode<N>> implements Visitor<N> {
+export abstract class AbstractVisitor<N extends VisitorNode<N>>
+  implements Visitor<N>
+{
   /**
    * Holds the mapping from node kinds to visitor funcitons
    */
@@ -120,22 +122,31 @@ export abstract class AbstractVisitor<N extends VisitorNode<N>> implements Visit
    *    the node kind; e.g., visitTextNode for kind = text.
    *
    *  @param {string} kind  The node kind whose method name is needed
-   *  @return {string}  The name of the visitor method for the given node kind
+   *  @returns {string}  The name of the visitor method for the given node kind
    */
   protected static methodName(kind: string): string {
-    return 'visit' + (kind.charAt(0).toUpperCase() + kind.substring(1)).replace(/[^a-z0-9_]/ig, '_') + 'Node';
+    return (
+      'visit' +
+      (kind.charAt(0).toUpperCase() + kind.substring(1)).replace(
+        /[^a-z0-9_]/gi,
+        '_'
+      ) +
+      'Node'
+    );
   }
 
   /**
    * Create the node handler map by looking for methods with the correct names
    *   based on the node kinds available from the factory.
    *
-   * @constructor
-   * @param {NodeFactory} factory  The node factory for the kinds of nodes this visitor handles
+   * @class
+   * @param {Factory} factory  The node factory for the kinds of nodes this visitor handles
    */
   constructor(factory: Factory<N, FactoryNodeClass<N>>) {
     for (const kind of factory.getKinds()) {
-      let method = (this as Visitor<N>)[AbstractVisitor.methodName(kind)] as VisitorFunction<N>;
+      const method = (this as Visitor<N>)[
+        AbstractVisitor.methodName(kind)
+      ] as VisitorFunction<N>;
       if (method) {
         this.nodeHandlers.set(kind, method);
       }
@@ -153,7 +164,7 @@ export abstract class AbstractVisitor<N extends VisitorNode<N>> implements Visit
    * @override
    */
   public visitNode(node: N, ...args: any[]) {
-    let handler = this.nodeHandlers.get(node.kind) || this.visitDefault;
+    const handler = this.nodeHandlers.get(node.kind) || this.visitDefault;
     return handler.call(this, node, ...args);
   }
 
@@ -181,5 +192,4 @@ export abstract class AbstractVisitor<N extends VisitorNode<N>> implements Visit
   public removeNodeHandler(kind: string) {
     this.nodeHandlers.delete(kind);
   }
-
 }

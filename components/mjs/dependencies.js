@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2019-2023 The MathJax Consortium
+ *  Copyright (c) 2019-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,13 +18,12 @@
 export const dependencies = {
   'a11y/semantic-enrich': ['input/mml', 'a11y/sre'],
   'a11y/complexity': ['a11y/semantic-enrich'],
-  'a11y/explorer': ['a11y/semantic-enrich', 'ui/menu'],
+  'a11y/explorer': ['a11y/semantic-enrich'],
   '[mml]/mml3': ['input/mml'],
-  '[tex]/all-packages': ['input/tex-base'],
   '[tex]/action': ['input/tex-base', '[tex]/newcommand'],
-  '[tex]/autoload': ['input/tex-base', '[tex]/require'],
   '[tex]/ams': ['input/tex-base'],
   '[tex]/amscd': ['input/tex-base'],
+  '[tex]/autoload': ['input/tex-base', '[tex]/require'],
   '[tex]/bbm': ['input/tex-base'],
   '[tex]/bboldx': ['input/tex-base', '[tex]/textmacros'],
   '[tex]/bbox': ['input/tex-base', '[tex]/ams', '[tex]/newcommand'],
@@ -32,14 +31,17 @@ export const dependencies = {
   '[tex]/braket': ['input/tex-base'],
   '[tex]/bussproofs': ['input/tex-base'],
   '[tex]/cancel': ['input/tex-base', '[tex]/enclose'],
+  '[tex]/cases': ['[tex]/empheq'],
   '[tex]/centernot': ['input/tex-base'],
   '[tex]/color': ['input/tex-base'],
-  '[tex]/colorv2': ['input/tex-base'],
   '[tex]/colortbl': ['input/tex-base', '[tex]/color'],
+  '[tex]/colorv2': ['input/tex-base'],
   '[tex]/configmacros': ['input/tex-base', '[tex]/newcommand'],
-  '[tex]/dsfonts': ['input/tex/tex-base'],
+  '[tex]/dsfont': ['input/tex-base'],
+  '[tex]/empheq': ['input/tex-base', '[tex]/ams'],
   '[tex]/enclose': ['input/tex-base'],
   '[tex]/extpfeil': ['input/tex-base', '[tex]/newcommand', '[tex]/ams'],
+  '[tex]/gensymb': ['input/tex-base'],
   '[tex]/html': ['input/tex-base'],
   '[tex]/mathtools': ['input/tex-base', '[tex]/newcommand', '[tex]/ams'],
   '[tex]/mhchem': ['input/tex-base', '[tex]/ams'],
@@ -54,9 +56,9 @@ export const dependencies = {
   '[tex]/textcomp': ['input/tex-base', '[tex]/textmacros'],
   '[tex]/textmacros': ['input/tex-base'],
   '[tex]/unicode': ['input/tex-base'],
-  '[tex]/verb': ['input/tex-base'],
-  '[tex]/cases': ['[tex]/empheq'],
-  '[tex]/empheq': ['input/tex-base', '[tex]/ams']
+  '[tex]/units': ['input/tex-base'],
+  '[tex]/upgreek': ['input/tex-base'],
+  '[tex]/verb': ['input/tex-base']
 };
 
 export const paths = {
@@ -64,12 +66,6 @@ export const paths = {
   mml: '[mathjax]/input/mml/extensions',
   sre: '[mathjax]/sre/mathmaps'
 };
-
-const allPackages = Array.from(Object.keys(dependencies))
-      .filter(name => name.substring(0,5) === '[tex]' &&
-              name !== '[tex]/autoload' &&
-              name !== '[tex]/colorv2' &&
-              name !== '[tex]/all-packages');
 
 export const provides = {
   'startup': ['loader'],
@@ -81,13 +77,7 @@ export const provides = {
     '[tex]/require',
     '[tex]/autoload',
     '[tex]/configmacros'
-  ],
-  'input/tex-full': [
-    'input/tex-base',
-    '[tex]/all-packages',
-    ...allPackages
-  ],
-  '[tex]/all-packages': allPackages
+  ]
 };
 
 //
