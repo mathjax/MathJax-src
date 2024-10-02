@@ -193,109 +193,6 @@ describe('Base', () => {
   </mstyle>
 </math>`
     ));
-  it('Named Function', () =>
-    toXmlMatch(
-      tex2mml('\\sin x'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sin x" display="block">
-  <mi data-latex="\\sin">sin</mi>
-  <mo data-mjx-texclass="NONE">&#x2061;</mo>
-  <mi data-latex="x">x</mi>
-</math>`
-    ));
-  it('Named Function Arg', () =>
-    toXmlMatch(
-      tex2mml('\\sin(x)'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sin(x)" display="block">
-  <mi data-latex="\\sin">sin</mi>
-  <mo data-mjx-texclass="NONE">&#x2061;</mo>
-  <mo data-latex="(" stretchy="false">(</mo>
-  <mi data-latex="x">x</mi>
-  <mo data-latex=")" stretchy="false">)</mo>
-</math>`
-    ));
-  it('Fn Pos Space', () =>
-    toXmlMatch(
-      tex2mml('\\sin\\quad x'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sin\\quad x" display="block">
-  <mi data-latex="\\sin">sin</mi>
-  <mstyle scriptlevel="0" data-latex="\\quad">
-    <mspace width="1em"></mspace>
-  </mstyle>
-  <mi data-latex="x">x</mi>
-</math>`
-    ));
-  it('Fn Neg Space', () =>
-    toXmlMatch(
-      tex2mml('\\sin\\! x'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sin\\! x" display="block">
-  <mi data-latex="\\sin">sin</mi>
-  <mstyle scriptlevel="0" data-latex="\\!">
-    <mspace width="-0.167em"></mspace>
-  </mstyle>
-  <mi data-latex="x">x</mi>
-</math>`
-    ));
-  it('Fn Stretchy', () =>
-    toXmlMatch(
-      tex2mml('\\sin \\left(\\right)'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sin \\left(\\right)" display="block">
-  <mi data-latex="\\sin">sin</mi>
-  <mo data-mjx-texclass="NONE">&#x2061;</mo>
-  <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\right)" data-latex="\\left(\\right)">
-    <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
-    <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
-  </mrow>
-</math>`
-    ));
-  it('Fn Operator', () =>
-    toXmlMatch(
-      tex2mml('\\sin +'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sin +" display="block">
-  <mi data-latex="\\sin">sin</mi>
-  <mo data-latex="+">+</mo>
-</math>`
-    ));
-  it('Square Root', () =>
-    toXmlMatch(
-      tex2mml('\\sqrt{x}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sqrt{x}" display="block">
-  <msqrt data-latex="\\sqrt{x}">
-    <mi data-latex="x">x</mi>
-  </msqrt>
-</math>`
-    ));
-  it('Nth Root', () =>
-    toXmlMatch(
-      tex2mml('\\sqrt[n]{x}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sqrt[n]{x}" display="block">
-  <mroot data-latex="\\sqrt[n]{x}">
-    <mi data-latex="x">x</mi>
-    <mi data-latex="n">n</mi>
-  </mroot>
-</math>`
-    ));
-  it('Explicit Root', () =>
-    toXmlMatch(
-      tex2mml('\\root 4 \\of x'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\root 4 \\of x" display="block">
-  <mroot data-latex="\\root 4 \\of x">
-    <mi data-latex="x">x</mi>
-    <mn data-latex="4">4</mn>
-  </mroot>
-</math>`
-    ));
-  it('Tweaked Root', () =>
-    toXmlMatch(
-      tex2mml('\\sqrt[\\leftroot{-2}\\uproot{2}\\beta]{k}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sqrt[\\leftroot{-2}\\uproot{2}\\beta]{k}" display="block">
-  <mroot data-latex="\\sqrt[\\leftroot{-2}\\uproot{2}\\beta]{k}">
-    <mi data-latex="k">k</mi>
-    <mpadded width="-0.13333333333333333em" voffset="+0.13333333333333333em" height="+0.13333333333333333em">
-      <mi data-latex="\\leftroot{-2}\\uproot{2}\\beta">&#x3B2;</mi>
-    </mpadded>
-  </mroot>
-</math>`
-    ));
   it('Negation Simple', () =>
     toXmlMatch(
       tex2mml('a \\not= b'),
@@ -740,6 +637,17 @@ describe('Base', () => {
   </munder>
 </math>`
     ));
+  it('Overset', () =>
+    toXmlMatch(
+      tex2mml('\\overunderset{a}{b}{c}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\overunderset{a}{b}{c}\" display=\"block\">
+      <munderover data-latex=\"\\overunderset{a}{b}{c}\">
+        <mi data-latex=\"c\">c</mi>
+        <mi data-latex=\"b\">b</mi>
+        <mi data-latex=\"a\">a</mi>
+      </munderover>
+    </math>`
+    ));
   it('Strut', () =>
     toXmlMatch(
       tex2mml('\\strut{x}'),
@@ -1086,35 +994,6 @@ describe('Base', () => {
   </mtable>
 </math>`
     ));
-  it('spaces', () =>
-    toXmlMatch(
-      tex2mml('A\\,B\\!C'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="A\\,B\\!C" display="block">
-  <mi data-latex="A">A</mi>
-  <mstyle scriptlevel="0" data-latex="\\,">
-    <mspace width="0.167em"></mspace>
-  </mstyle>
-  <mi data-latex="B">B</mi>
-  <mstyle scriptlevel="0" data-latex="\\!">
-    <mspace width="-0.167em"></mspace>
-  </mstyle>
-  <mi data-latex="C">C</mi>
-</math>`
-    ));
-  it('Hfill', () =>
-    toXmlMatch(
-      tex2mml('\\begin{array}{c}a\\hfill b\\end{array}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{array}{c}a\\hfill b\\end{array}" display="block">
-  <mtable columnspacing="1em" rowspacing="4pt" data-frame-styles="" framespacing=".5em .125em" data-latex-item="{array}" data-latex="\\begin{array}{c}a\\hfill b\\end{array}">
-    <mtr data-latex-item="{c}" data-latex="{c}">
-      <mtd>
-        <mi data-latex="\\hfill">a</mi>
-        <mi data-latex="b">b</mi>
-      </mtd>
-    </mtr>
-  </mtable>
-</math>`
-    ));
 });
 
 describe('Digits', () => {
@@ -1219,6 +1098,62 @@ describe('DigitsEuropean', () => {
       tex2mml(','),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="," display="block">
   <mo data-latex=",">,</mo>
+</math>`
+    ));
+});
+
+describe('Roots', () => {
+  it('Square Root', () =>
+    toXmlMatch(
+      tex2mml('\\sqrt{x}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sqrt{x}" display="block">
+  <msqrt data-latex="\\sqrt{x}">
+    <mi data-latex="x">x</mi>
+  </msqrt>
+</math>`
+    ));
+  it('Square Root Fraction', () =>
+    toXmlMatch(
+      tex2mml('\\sqrt\\frac{a}{b}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\sqrt\\frac{a}{b}\" display=\"block\">
+      <msqrt data-latex=\"\\sqrt\\frac{a}{b}\">
+        <mfrac data-latex=\"\\frac{a}{b}\">
+          <mi data-latex=\"a\">a</mi>
+          <mi data-latex=\"b\">b</mi>
+        </mfrac>
+      </msqrt>
+    </math>`
+    ));
+  it('Nth Root', () =>
+    toXmlMatch(
+      tex2mml('\\sqrt[n]{x}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sqrt[n]{x}" display="block">
+  <mroot data-latex="\\sqrt[n]{x}">
+    <mi data-latex="x">x</mi>
+    <mi data-latex="n">n</mi>
+  </mroot>
+</math>`
+    ));
+  it('Explicit Root', () =>
+    toXmlMatch(
+      tex2mml('\\root 4 \\of x'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\root 4 \\of x" display="block">
+  <mroot data-latex="\\root 4 \\of x">
+    <mi data-latex="x">x</mi>
+    <mn data-latex="4">4</mn>
+  </mroot>
+</math>`
+    ));
+  it('Tweaked Root', () =>
+    toXmlMatch(
+      tex2mml('\\sqrt[\\leftroot{-2}\\uproot{2}\\beta]{k}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sqrt[\\leftroot{-2}\\uproot{2}\\beta]{k}" display="block">
+  <mroot data-latex="\\sqrt[\\leftroot{-2}\\uproot{2}\\beta]{k}">
+    <mi data-latex="k">k</mi>
+    <mpadded width="-0.13333333333333333em" voffset="+0.13333333333333333em" height="+0.13333333333333333em">
+      <mi data-latex="\\leftroot{-2}\\uproot{2}\\beta">&#x3B2;</mi>
+    </mpadded>
+  </mroot>
 </math>`
     ));
 });
@@ -4428,4 +4363,3374 @@ describe('Column Parser', () => {
     ));
 });
 
+describe('Environments', () => {
+  it('Eqnarray', () =>
+    toXmlMatch(
+      tex2mml('\\begin{eqnarray}a&=&b\\end{eqnarray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{eqnarray}a&amp;=&amp;b\\end{eqnarray}\" display=\"block\">
+      <mtable displaystyle=\"true\" columnalign=\"right center left\" columnspacing=\"0em 0.278em\" rowspacing=\"3pt\" data-break-align=\"bottom middle top\" data-latex-item=\"{eqnarray}\" data-latex=\"\\begin{eqnarray}a&amp;=&amp;b\\end{eqnarray}\">
+        <mtr>
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi></mi>
+            <mo data-latex=\"=\">=</mo>
+          </mtd>
+          <mtd>
+            <mstyle indentshift=\".7em\">
+              <mi data-latex=\"b\">b</mi>
+            </mstyle>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('Equation', () =>
+    toXmlMatch(
+      tex2mml('\\begin{equation}a=b\\end{equation}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{equation}a=b\\end{equation}\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mo data-latex=\"=\">=</mo>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
+  it('Displaymath', () =>
+    toXmlMatch(
+      tex2mml('\\begin{displaymath}a\\end{displaymath}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{displaymath}a\\end{displaymath}\" display=\"block\">
+      <mi data-latex=\"\\begin{displaymath}a\\end{displaymath}\" data-latex-item=\"{displaymath}\">a</mi>
+    </math>`
+    ));
+  it('math', () =>
+    toXmlMatch(
+      tex2mml('\\begin{math}a\\end{math}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{math}a\\end{math}\">
+      <mi data-latex=\"\\begin{math}a\\end{math}\" data-latex-item=\"{math}\">a</mi>
+    </math>`
+    ));
+  it('Array Center', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{c}a\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{c}a\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\begin{array}{c}a\\end{array}\">
+        <mtr data-latex-item=\"{c}\" data-latex=\"{c}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('Array Center Lines', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{c}a\\\\b\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{c}a\\\\b\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\begin{array}{c}a\\\\b\\end{array}\">
+        <mtr data-latex-item=\"{c}\" data-latex=\"{c}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+        </mtr>
+        <mtr data-latex-item=\"{c}\" data-latex=\"{c}\">
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('Array RCL', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{rcl}a&=&b\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{rcl}a&amp;=&amp;b\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" columnalign=\"right center left\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\begin{array}{rcl}a&amp;=&amp;b\\end{array}\">
+        <mtr data-latex-item=\"{rcl}\" data-latex=\"{rcl}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mo data-latex=\"=\">=</mo>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('Array RCL Lines', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{rcl}a&=&b\\\\c&=&d\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{rcl}a&amp;=&amp;b\\\\c&amp;=&amp;d\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" columnalign=\"right center left\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\begin{array}{rcl}a&amp;=&amp;b\\\\c&amp;=&amp;d\\end{array}\">
+        <mtr data-latex-item=\"{rcl}\" data-latex=\"{rcl}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mo data-latex=\"=\">=</mo>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+        </mtr>
+        <mtr data-latex-item=\"{rcl}\" data-latex=\"{rcl}\">
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+          <mtd>
+            <mo data-latex=\"=\">=</mo>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('Display Array Center', () =>
+    toXmlMatch(
+      tex2mml('\\begin{darray}{c}a\\end{darray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{darray}{c}a\\end{darray}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" displaystyle=\"true\" data-latex-item=\"{darray}\" data-latex=\"\\begin{darray}{c}a\\end{darray}\">
+        <mtr data-latex-item=\"{c}\" data-latex=\"{c}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('Display Array Center Lines', () =>
+    toXmlMatch(
+      tex2mml('\\begin{darray}{c}a\\\\b\\end{darray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{darray}{c}a\\\\b\\end{darray}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" displaystyle=\"true\" data-latex-item=\"{darray}\" data-latex=\"\\begin{darray}{c}a\\\\b\\end{darray}\">
+        <mtr data-latex-item=\"{c}\" data-latex=\"{c}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+        </mtr>
+        <mtr data-latex-item=\"{c}\" data-latex=\"{c}\">
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('Display Array RCL', () =>
+    toXmlMatch(
+      tex2mml('\\begin{darray}{rcl}a&=&b\\end{darray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{darray}{rcl}a&amp;=&amp;b\\end{darray}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" columnalign=\"right center left\" displaystyle=\"true\" data-latex-item=\"{darray}\" data-latex=\"\\begin{darray}{rcl}a&amp;=&amp;b\\end{darray}\">
+        <mtr data-latex-item=\"{rcl}\" data-latex=\"{rcl}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mo data-latex=\"=\">=</mo>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('Display Array RCL Lines', () =>
+    toXmlMatch(
+      tex2mml('\\begin{darray}{rcl}a&=&b\\\\c&=&d\\end{darray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{darray}{rcl}a&amp;=&amp;b\\\\c&amp;=&amp;d\\end{darray}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" columnalign=\"right center left\" displaystyle=\"true\" data-latex-item=\"{darray}\" data-latex=\"\\begin{darray}{rcl}a&amp;=&amp;b\\\\c&amp;=&amp;d\\end{darray}\">
+        <mtr data-latex-item=\"{rcl}\" data-latex=\"{rcl}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mo data-latex=\"=\">=</mo>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+        </mtr>
+        <mtr data-latex-item=\"{rcl}\" data-latex=\"{rcl}\">
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+          <mtd>
+            <mo data-latex=\"=\">=</mo>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('IndentAlign', () =>
+    toXmlMatch(
+      tex2mml('\\begin{indentalign}[10cm][20cm][30cm]{lcr}a\\end{indentalign}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{indentalign}[10cm][20cm][30cm]{lcr}a\\end{indentalign}\" display=\"block\">
+      <mstyle indentshiftfirst=\"10cm\" indentshift=\"20cm\" indentshiftlast=\"30cm\" indentalignfirst=\"left\" indentalign=\"center\" indentalignlast=\"right\" data-latex=\"\\begin{indentalign}[10cm][20cm][30cm]{lcr}a\\end{indentalign}\">
+        <mi data-latex=\"a\">a</mi>
+      </mstyle>
+    </math>`
+    ));
+});
+
+describe('Environment Errors', () => {
+  it('IndentAlign BadAlignment', () =>
+    toXmlMatch(
+      tex2mml('\\begin{indentalign}[10cm][20cm][30cm]{lkr}a\\end{indentalign}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{indentalign}[10cm][20cm][30cm]{lkr}a\\end{indentalign}\" display=\"block\">
+      <merror data-mjx-error=\"Alignment must be one to three copies of l, c, or r\">
+        <mtext>Alignment must be one to three copies of l, c, or r</mtext>
+      </merror>
+    </math>`
+    ));
+  it('IndentAlign BadDimension', () =>
+    toXmlMatch(
+      tex2mml('\\begin{indentalign}[10cm][20cm][30]{lcr}a\\end{indentalign}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{indentalign}[10cm][20cm][30]{lcr}a\\end{indentalign}\" display=\"block\">
+      <merror data-mjx-error=\"Bracket argument to \\begin{indentalign} must be a dimension\">
+        <mtext>Bracket argument to \\begin{indentalign} must be a dimension</mtext>
+      </merror>
+    </math>`
+    ));
+  it('BreakAlign BadBreakAlign', () =>
+    toXmlMatch(
+      tex2mml('\\begin{indentalign}[10cm][20cm][30]{lcr}a\\end{indentalign}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{indentalign}[10cm][20cm][30]{lcr}a\\end{indentalign}\" display=\"block\">
+      <merror data-mjx-error=\"Bracket argument to \\begin{indentalign} must be a dimension\">
+        <mtext>Bracket argument to \\begin{indentalign} must be a dimension</mtext>
+      </merror>
+    </math>`
+    ));
+});
+
+describe('BreakAlign', () => {
+  it('BreakAlign Case c', () =>
+    toXmlMatch(
+      tex2mml('\\begin{eqnarray}\\breakAlign{c}{t}a&=&b\\end{eqnarray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{eqnarray}\\breakAlign{c}{t}a&amp;=&amp;b\\end{eqnarray}\" display=\"block\">
+      <mtable displaystyle=\"true\" columnalign=\"right center left\" columnspacing=\"0em 0.278em\" rowspacing=\"3pt\" data-break-align=\"bottom middle top\" data-latex-item=\"{eqnarray}\" data-latex=\"\\begin{eqnarray}\\breakAlign{c}{t}a&amp;=&amp;b\\end{eqnarray}\">
+        <mtr>
+          <mtd data-vertical-align=\"top\">
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi></mi>
+            <mo data-latex=\"=\">=</mo>
+          </mtd>
+          <mtd>
+            <mstyle indentshift=\".7em\">
+              <mi data-latex=\"b\">b</mi>
+            </mstyle>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('BreakAlign Case c second cell', () =>
+    toXmlMatch(
+      tex2mml('\\begin{eqnarray}a&\\breakAlign{c}{t}=&b\\end{eqnarray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{eqnarray}a&amp;\\breakAlign{c}{t}=&amp;b\\end{eqnarray}\" display=\"block\">
+      <mtable displaystyle=\"true\" columnalign=\"right center left\" columnspacing=\"0em 0.278em\" rowspacing=\"3pt\" data-break-align=\"bottom middle top\" data-latex-item=\"{eqnarray}\" data-latex=\"\\begin{eqnarray}a&amp;\\breakAlign{c}{t}=&amp;b\\end{eqnarray}\">
+        <mtr>
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd data-vertical-align=\"top\">
+            <mi></mi>
+            <mo data-latex=\"=\">=</mo>
+          </mtd>
+          <mtd>
+            <mstyle indentshift=\".7em\">
+              <mi data-latex=\"b\">b</mi>
+            </mstyle>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('BreakAlign Case r', () =>
+    toXmlMatch(
+      tex2mml('\\begin{eqnarray}\\breakAlign{r}{t}a&=&b\\end{eqnarray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{eqnarray}\\breakAlign{r}{t}a&amp;=&amp;b\\end{eqnarray}\" display=\"block\">
+      <mtable displaystyle=\"true\" columnalign=\"right center left\" columnspacing=\"0em 0.278em\" rowspacing=\"3pt\" data-break-align=\"bottom middle top\" data-latex-item=\"{eqnarray}\" data-latex=\"\\begin{eqnarray}\\breakAlign{r}{t}a&amp;=&amp;b\\end{eqnarray}\">
+        <mtr data-break-align=\"top\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi></mi>
+            <mo data-latex=\"=\">=</mo>
+          </mtd>
+          <mtd>
+            <mstyle indentshift=\".7em\">
+              <mi data-latex=\"b\">b</mi>
+            </mstyle>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('BreakAlign Case r second row', () =>
+    toXmlMatch(
+      tex2mml('\\begin{eqnarray}\\breakAlign{r}{t}a&=&b\\\\\\breakAlign{r}{t}c&=&d\\end{eqnarray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{eqnarray}\\breakAlign{r}{t}a&amp;=&amp;b\\\\\\breakAlign{r}{t}c&amp;=&amp;d\\end{eqnarray}\" display=\"block\">
+      <mtable displaystyle=\"true\" columnalign=\"right center left\" columnspacing=\"0em 0.278em\" rowspacing=\"3pt\" data-break-align=\"bottom middle top\" data-latex-item=\"{eqnarray}\" data-latex=\"\\begin{eqnarray}\\breakAlign{r}{t}a&amp;=&amp;b\\\\\\breakAlign{r}{t}c&amp;=&amp;d\\end{eqnarray}\">
+        <mtr data-break-align=\"top\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi></mi>
+            <mo data-latex=\"=\">=</mo>
+          </mtd>
+          <mtd>
+            <mstyle indentshift=\".7em\">
+              <mi data-latex=\"b\">b</mi>
+            </mstyle>
+          </mtd>
+        </mtr>
+        <mtr data-break-align=\"top\">
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+          <mtd>
+            <mi></mi>
+            <mo data-latex=\"=\">=</mo>
+          </mtd>
+          <mtd>
+            <mstyle indentshift=\".7em\">
+              <mi data-latex=\"d\">d</mi>
+            </mstyle>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('BreakAlign Case r multi split', () =>
+    toXmlMatch(
+      tex2mml('\\begin{eqnarray}\\breakAlign{r}{tbmc}a&=&b\\end{eqnarray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{eqnarray}\\breakAlign{r}{tbmc}a&amp;=&amp;b\\end{eqnarray}\" display=\"block\">
+      <mtable displaystyle=\"true\" columnalign=\"right center left\" columnspacing=\"0em 0.278em\" rowspacing=\"3pt\" data-break-align=\"bottom middle top\" data-latex-item=\"{eqnarray}\" data-latex=\"\\begin{eqnarray}\\breakAlign{r}{tbmc}a&amp;=&amp;b\\end{eqnarray}\">
+        <mtr data-break-align=\"top bottom middle center\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi></mi>
+            <mo data-latex=\"=\">=</mo>
+          </mtd>
+          <mtd>
+            <mstyle indentshift=\".7em\">
+              <mi data-latex=\"b\">b</mi>
+            </mstyle>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('BreakAlign Case t', () =>
+    toXmlMatch(
+      tex2mml('\\begin{eqnarray}\\breakAlign{t}{t}a&=&b\\end{eqnarray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{eqnarray}\\breakAlign{t}{t}a&amp;=&amp;b\\end{eqnarray}\" display=\"block\">
+      <mtable displaystyle=\"true\" columnalign=\"right center left\" columnspacing=\"0em 0.278em\" rowspacing=\"3pt\" data-latex-item=\"{eqnarray}\" data-latex=\"\\begin{eqnarray}\\breakAlign{t}{t}a&amp;=&amp;b\\end{eqnarray}\">
+        <mtr>
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi></mi>
+            <mo data-latex=\"=\">=</mo>
+          </mtd>
+          <mtd>
+            <mstyle indentshift=\".7em\">
+              <mi data-latex=\"b\">b</mi>
+            </mstyle>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+});
+
+describe('BreakAlign Errors', () => {
+  it('BreakAlign Case c', () =>
+    toXmlMatch(
+      tex2mml('\\begin{eqnarray}a\\breakAlign{c}{t}&=&b\\end{eqnarray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{eqnarray}a\\breakAlign{c}{t}&amp;=&amp;b\\end{eqnarray}\" display=\"block\">
+      <merror data-mjx-error=\"\\breakAlign{c} must be at the beginning of an alignment entry\">
+        <mtext>\\breakAlign{c} must be at the beginning of an alignment entry</mtext>
+      </merror>
+    </math>`
+    ));
+  it('BreakAlign Case c split', () =>
+    toXmlMatch(
+      tex2mml('\\begin{eqnarray}a\\breakAlign{c}{tb}&=&b\\end{eqnarray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{eqnarray}a\\breakAlign{c}{tb}&amp;=&amp;b\\end{eqnarray}\" display=\"block\">
+      <merror data-mjx-error=\"\\breakAlign{c} must be at the beginning of an alignment entry\">
+        <mtext>\\breakAlign{c} must be at the beginning of an alignment entry</mtext>
+      </merror>
+    </math>`
+    ));
+  it('BreakAlign Case r', () =>
+    toXmlMatch(
+      tex2mml('\\begin{eqnarray}a&=&\\breakAlign{r}{t}b\\end{eqnarray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{eqnarray}a&amp;=&amp;\\breakAlign{r}{t}b\\end{eqnarray}\" display=\"block\">
+      <merror data-mjx-error=\"\\breakAlign{r} must be at the beginning of an alignment row\">
+        <mtext>\\breakAlign{r} must be at the beginning of an alignment row</mtext>
+      </merror>
+    </math>`
+    ));
+  it('BreakAlign Case t', () =>
+    toXmlMatch(
+      tex2mml('\\begin{eqnarray}a&=&\\breakAlign{t}{t}b\\end{eqnarray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{eqnarray}a&amp;=&amp;\\breakAlign{t}{t}b\\end{eqnarray}\" display=\"block\">
+      <merror data-mjx-error=\"\\breakAlign{t} must be at the beginning of an alignment\">
+        <mtext>\\breakAlign{t} must be at the beginning of an alignment</mtext>
+      </merror>
+    </math>`
+    ));
+  it('BreakAlign Case t second row', () =>
+    toXmlMatch(
+      tex2mml('\\begin{eqnarray}a&=&b\\\\\\breakAlign{t}{t}c&=&d\\end{eqnarray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{eqnarray}a&amp;=&amp;b\\\\\\breakAlign{t}{t}c&amp;=&amp;d\\end{eqnarray}\" display=\"block\">
+      <merror data-mjx-error=\"\\breakAlign{t} must be at the beginning of an alignment\">
+        <mtext>\\breakAlign{t} must be at the beginning of an alignment</mtext>
+      </merror>
+    </math>`
+    ));
+  it('BreakAlign Case t split', () =>
+    toXmlMatch(
+      tex2mml('\\begin{eqnarray}\\breakAlign{c}{tb}a&=&b\\end{eqnarray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{eqnarray}\\breakAlign{c}{tb}a&amp;=&amp;b\\end{eqnarray}\" display=\"block\">
+      <merror data-mjx-error=\"Too many alignment characters: tb\">
+        <mtext>Too many alignment characters: tb</mtext>
+      </merror>
+    </math>`
+    ));
+  it('BreakAlign Case unknown', () =>
+    toXmlMatch(
+      tex2mml('\\begin{eqnarray}\\breakAlign{a}{t}a&=&b\\end{eqnarray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{eqnarray}\\breakAlign{a}{t}a&amp;=&amp;b\\end{eqnarray}\" display=\"block\">
+      <merror data-mjx-error=\"First argument to \\breakAlign must be one of c, r, or t\">
+        <mtext>First argument to \\breakAlign must be one of c, r, or t</mtext>
+      </merror>
+    </math>`
+    ));
+  it('BreakAlign Case unknown split', () =>
+    toXmlMatch(
+      tex2mml('\\begin{eqnarray}\\breakAlign{t}{a}a&=&b\\end{eqnarray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{eqnarray}\\breakAlign{t}{a}a&amp;=&amp;b\\end{eqnarray}\" display=\"block\">
+      <merror data-mjx-error=\"Invalid alignment character: a\">
+        <mtext>Invalid alignment character: a</mtext>
+      </merror>
+    </math>`
+    ));
+});
+
+
+describe('Setting sizes', () => {
+  it('tiny', () =>
+    toXmlMatch(
+      tex2mml('\\tiny a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\tiny a\" display=\"block\">
+      <mstyle mathsize=\"0.5em\" data-latex=\"\\tiny a\">
+        <mi data-latex=\"a\">a</mi>
+      </mstyle>
+    </math>`
+    ));
+  it('Tiny', () =>
+    toXmlMatch(
+      tex2mml('\\Tiny a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Tiny a\" display=\"block\">
+      <mstyle mathsize=\"0.6em\" data-latex=\"\\Tiny a\">
+        <mi data-latex=\"a\">a</mi>
+      </mstyle>
+    </math>`
+    ));
+  it('scriptsize', () =>
+    toXmlMatch(
+      tex2mml('\\scriptsize a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\scriptsize a\" display=\"block\">
+      <mstyle mathsize=\"0.7em\" data-latex=\"\\scriptsize a\">
+        <mi data-latex=\"a\">a</mi>
+      </mstyle>
+    </math>`
+    ));
+  it('small', () =>
+    toXmlMatch(
+      tex2mml('\\small a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\small a\" display=\"block\">
+      <mstyle mathsize=\"0.85em\" data-latex=\"\\small a\">
+        <mi data-latex=\"a\">a</mi>
+      </mstyle>
+    </math>`
+    ));
+  it('normalsize', () =>
+    toXmlMatch(
+      tex2mml('\\normalsize a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\normalsize a\" display=\"block\">
+      <mstyle mathsize=\"1em\" data-latex=\"\\normalsize a\">
+        <mi data-latex=\"a\">a</mi>
+      </mstyle>
+    </math>`
+    ));
+  it('large', () =>
+    toXmlMatch(
+      tex2mml('\\large a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\large a\" display=\"block\">
+      <mstyle mathsize=\"1.2em\" data-latex=\"\\large a\">
+        <mi data-latex=\"a\">a</mi>
+      </mstyle>
+    </math>`
+    ));
+  it('Large', () =>
+    toXmlMatch(
+      tex2mml('\\Large a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Large a\" display=\"block\">
+      <mstyle mathsize=\"1.44em\" data-latex=\"\\Large a\">
+        <mi data-latex=\"a\">a</mi>
+      </mstyle>
+    </math>`
+    ));
+  it('LARGE', () =>
+    toXmlMatch(
+      tex2mml('\\LARGE a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\LARGE a\" display=\"block\">
+      <mstyle mathsize=\"1.73em\" data-latex=\"\\LARGE a\">
+        <mi data-latex=\"a\">a</mi>
+      </mstyle>
+    </math>`
+    ));
+  it('huge', () =>
+    toXmlMatch(
+      tex2mml('\\huge a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\huge a\" display=\"block\">
+      <mstyle mathsize=\"2.07em\" data-latex=\"\\huge a\">
+        <mi data-latex=\"a\">a</mi>
+      </mstyle>
+    </math>`
+    ));
+  it('Huge', () =>
+    toXmlMatch(
+      tex2mml('\\Huge a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Huge a\" display=\"block\">
+      <mstyle mathsize=\"2.49em\" data-latex=\"\\Huge a\">
+        <mi data-latex=\"a\">a</mi>
+      </mstyle>
+    </math>`
+    ));
+});
+
+describe('Spaces', () => {
+  it('spaces ,', () =>
+    toXmlMatch(
+      tex2mml('A\\,B'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="A\\,B" display="block">
+  <mi data-latex="A">A</mi>
+  <mstyle scriptlevel="0" data-latex="\\,">
+    <mspace width="0.167em"></mspace>
+  </mstyle>
+  <mi data-latex="B">B</mi>
+</math>`
+    ));
+  it('spaces :', () =>
+    toXmlMatch(
+      tex2mml('A\\:B'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"A\\:B\" display=\"block\">
+      <mi data-latex=\"A\">A</mi>
+      <mstyle scriptlevel=\"0\" data-latex=\"\\:\">
+        <mspace width=\"0.222em\"></mspace>
+      </mstyle>
+      <mi data-latex=\"B\">B</mi>
+    </math>`
+    ));
+  it('spaces >', () =>
+    toXmlMatch(
+      tex2mml('A\\>B'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"A\\&gt;B\" display=\"block\">
+      <mi data-latex=\"A\">A</mi>
+      <mstyle scriptlevel=\"0\" data-latex=\"\\&gt;\">
+        <mspace width=\"0.222em\"></mspace>
+      </mstyle>
+      <mi data-latex=\"B\">B</mi>
+    </math>`
+    ));
+  it('spaces ;', () =>
+    toXmlMatch(
+      tex2mml('A\\;B'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"A\\;B\" display=\"block\">
+      <mi data-latex=\"A\">A</mi>
+      <mstyle scriptlevel=\"0\" data-latex=\"\\;\">
+        <mspace width=\"0.278em\"></mspace>
+      </mstyle>
+      <mi data-latex=\"B\">B</mi>
+    </math>`
+    ));
+  it('spaces !', () =>
+    toXmlMatch(
+      tex2mml('A\\!B'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"A\\!B\" display=\"block\">
+      <mi data-latex=\"A\">A</mi>
+      <mstyle scriptlevel=\"0\" data-latex=\"\\!\">
+        <mspace width=\"-0.167em\"></mspace>
+      </mstyle>
+      <mi data-latex=\"B\">B</mi>
+    </math>`
+    ));
+  it('spaces quad', () =>
+    toXmlMatch(
+      tex2mml('A\\quad B'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"A\\quad B\" display=\"block\">
+      <mi data-latex=\"A\">A</mi>
+      <mstyle scriptlevel=\"0\" data-latex=\"\\quad\">
+        <mspace width=\"1em\"></mspace>
+      </mstyle>
+      <mi data-latex=\"B\">B</mi>
+    </math>`
+    ));
+  it('spaces qquad', () =>
+    toXmlMatch(
+      tex2mml('A\\qquad B'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"A\\qquad B\" display=\"block\">
+      <mi data-latex=\"A\">A</mi>
+      <mstyle scriptlevel=\"0\" data-latex=\"\\qquad\">
+        <mspace width=\"2em\"></mspace>
+      </mstyle>
+      <mi data-latex=\"B\">B</mi>
+    </math>`
+    ));
+  it('spaces enspace', () =>
+    toXmlMatch(
+      tex2mml('A\\enspace B'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"A\\enspace B\" display=\"block\">
+      <mi data-latex=\"A\">A</mi>
+      <mstyle scriptlevel=\"0\" data-latex=\"\\enspace\">
+        <mspace width=\"0.5em\"></mspace>
+      </mstyle>
+      <mi data-latex=\"B\">B</mi>
+    </math>`
+    ));
+  it('spaces thinspace', () =>
+    toXmlMatch(
+      tex2mml('A\\thinspace B'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"A\\thinspace B\" display=\"block\">
+      <mi data-latex=\"A\">A</mi>
+      <mstyle scriptlevel=\"0\" data-latex=\"\\thinspace\">
+        <mspace width=\"0.167em\"></mspace>
+      </mstyle>
+      <mi data-latex=\"B\">B</mi>
+    </math>`
+    ));
+  it('spaces negthinspace', () =>
+    toXmlMatch(
+      tex2mml('A\\negthinspace B'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"A\\negthinspace B\" display=\"block\">
+      <mi data-latex=\"A\">A</mi>
+      <mstyle scriptlevel=\"0\" data-latex=\"\\negthinspace\">
+        <mspace width=\"-0.167em\"></mspace>
+      </mstyle>
+      <mi data-latex=\"B\">B</mi>
+    </math>`
+    ));
+  it('Hfil', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{cc}a&\\hfil b\\\\d&ccc\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{cc}a&amp;\\hfil b\\\\d&amp;ccc\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" columnalign=\"center center\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\begin{array}{cc}a&amp;\\hfil b\\\\d&amp;ccc\\end{array}\">
+        <mtr data-latex-item=\"{cc}\" data-latex=\"{cc}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd columnalign=\"right\">
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+        </mtr>
+        <mtr data-latex-item=\"{cc}\" data-latex=\"{cc}\">
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+            <mi data-latex=\"c\">c</mi>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('Hfill', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{cc}a&\\hfill b\\\\d&ccc\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{cc}a&amp;\\hfill b\\\\d&amp;ccc\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" columnalign=\"center center\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\begin{array}{cc}a&amp;\\hfill b\\\\d&amp;ccc\\end{array}\">
+        <mtr data-latex-item=\"{cc}\" data-latex=\"{cc}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd columnalign=\"right\">
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+        </mtr>
+        <mtr data-latex-item=\"{cc}\" data-latex=\"{cc}\">
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+            <mi data-latex=\"c\">c</mi>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('Hfilll', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{cc}a&\\hfilll b\\\\d&ccc\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{cc}a&amp;\\hfilll b\\\\d&amp;ccc\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" columnalign=\"center center\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\begin{array}{cc}a&amp;\\hfilll b\\\\d&amp;ccc\\end{array}\">
+        <mtr data-latex-item=\"{cc}\" data-latex=\"{cc}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd columnalign=\"right\">
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+        </mtr>
+        <mtr data-latex-item=\"{cc}\" data-latex=\"{cc}\">
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+            <mi data-latex=\"c\">c</mi>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+});
+
+
+describe('Delimiters', () => {
+  it('<', () =>
+    toXmlMatch(
+      tex2mml('< a >'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"&lt; a &gt;\" display=\"block\">
+      <mo data-latex=\"&lt;\">&lt;</mo>
+      <mi data-latex=\"a\">a</mi>
+      <mo data-latex=\"&gt;\">&gt;</mo>
+    </math>`
+    ));
+  it('left right <', () =>
+    toXmlMatch(
+      tex2mml('\\left< a \\right>'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\left&lt; a \\right&gt;\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left&lt; a \\right&gt;\" data-latex=\"\\left&lt; a \\right&gt;\">
+        <mo data-mjx-texclass=\"OPEN\" data-latex-item=\"\\left&lt;\" data-latex=\"\\left&lt;\">&#x27E8;</mo>
+        <mi data-latex=\"a\">a</mi>
+        <mo data-mjx-texclass=\"CLOSE\" data-latex-item=\"\\right&gt;\" data-latex=\"\\right&gt;\">&#x27E9;</mo>
+      </mrow>
+    </math>`
+    ));
+  it('lt', () =>
+    toXmlMatch(
+      tex2mml('\\lt a \\gt'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\lt a \\gt\" display=\"block\">
+      <mo data-latex=\"\\lt\">&lt;</mo>
+      <mi data-latex=\"a\">a</mi>
+      <mo data-latex=\"\\gt\">&gt;</mo>
+    </math>`
+    ));
+  it('left right lt', () =>
+    toXmlMatch(
+      tex2mml('\\left\\lt a \\right\\gt'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\left\\lt a \\right\\gt\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left\\lt a \\right\\gt\" data-latex=\"\\left\\lt a \\right\\gt\">
+        <mo data-mjx-texclass=\"OPEN\" data-latex-item=\"\\left\\lt \" data-latex=\"\\left\\lt \">&#x27E8;</mo>
+        <mi data-latex=\"a\">a</mi>
+        <mo data-mjx-texclass=\"CLOSE\" data-latex-item=\"\\right\\gt\" data-latex=\"\\right\\gt\">&#x27E9;</mo>
+      </mrow>
+    </math>`
+    ));
+  it('/', () =>
+    toXmlMatch(
+      tex2mml('/ a \\\\'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"/ a \\\\\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\">
+        <mo data-latex=\"/\">/</mo>
+      </mrow>
+      <mi data-latex=\"a\">a</mi>
+      <mspace linebreak=\"newline\" data-latex=\"\\\\\"></mspace>
+    </math>`
+    ));
+  it('left right /', () =>
+    toXmlMatch(
+      tex2mml('\\left/ a \\right\\\\'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\left/ a \\right\\\\\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left/ a \\right\\\\\" data-latex=\"\\left/ a \\right\\\\\">
+        <mo data-mjx-texclass=\"OPEN\" fence=\"true\" stretchy=\"true\" symmetric=\"true\" data-latex-item=\"\\left/\" data-latex=\"\\left/\">/</mo>
+        <mi data-latex=\"a\">a</mi>
+        <mo data-mjx-texclass=\"CLOSE\" fence=\"true\" stretchy=\"true\" symmetric=\"true\" data-latex-item=\"\\right\\\\\" data-latex=\"\\right\\\\\">\\</mo>
+      </mrow>
+    </math>`
+    ));
+  it('lmoustache', () =>
+    toXmlMatch(
+      tex2mml('\\lmoustache a \\rmoustache'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\lmoustache a \\rmoustache\" display=\"block\">
+      <mo fence=\"false\" stretchy=\"false\" data-latex=\"\\lmoustache\">&#x23B0;</mo>
+      <mi data-latex=\"a\">a</mi>
+      <mo fence=\"false\" stretchy=\"false\" data-latex=\"\\rmoustache\">&#x23B1;</mo>
+    </math>`
+    ));
+  it('left right lmoustache', () =>
+    toXmlMatch(
+      tex2mml('\\left\\lmoustache a \\right\\rmoustache'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\left\\lmoustache a \\right\\rmoustache\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left\\lmoustache a \\right\\rmoustache\" data-latex=\"\\left\\lmoustache a \\right\\rmoustache\">
+        <mo data-mjx-texclass=\"OPEN\" data-latex-item=\"\\left\\lmoustache \" data-latex=\"\\left\\lmoustache \">&#x23B0;</mo>
+        <mi data-latex=\"a\">a</mi>
+        <mo data-mjx-texclass=\"CLOSE\" data-latex-item=\"\\right\\rmoustache\" data-latex=\"\\right\\rmoustache\">&#x23B1;</mo>
+      </mrow>
+    </math>`
+    ));
+  it('lgroup', () =>
+    toXmlMatch(
+      tex2mml('\\lgroup a \\rgroup'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\lgroup a \\rgroup\" display=\"block\">
+      <mo fence=\"false\" stretchy=\"false\" data-latex=\"\\lgroup\">&#x27EE;</mo>
+      <mi data-latex=\"a\">a</mi>
+      <mo fence=\"false\" stretchy=\"false\" data-latex=\"\\rgroup\">&#x27EF;</mo>
+    </math>`
+    ));
+  it('left right lgroup', () =>
+    toXmlMatch(
+      tex2mml('\\left\\lgroup a \\right\\rgroup'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\left\\lgroup a \\right\\rgroup\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left\\lgroup a \\right\\rgroup\" data-latex=\"\\left\\lgroup a \\right\\rgroup\">
+        <mo data-mjx-texclass=\"OPEN\" data-latex-item=\"\\left\\lgroup \" data-latex=\"\\left\\lgroup \">&#x27EE;</mo>
+        <mi data-latex=\"a\">a</mi>
+        <mo data-mjx-texclass=\"CLOSE\" data-latex-item=\"\\right\\rgroup\" data-latex=\"\\right\\rgroup\">&#x27EF;</mo>
+      </mrow>
+    </math>`
+    ));
+  it('arrowvert', () =>
+    toXmlMatch(
+      tex2mml('\\arrowvert a \\Arrowvert'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\arrowvert a \\Arrowvert\" display=\"block\">
+      <mo data-latex=\"\\arrowvert\">&#x23D0;</mo>
+      <mi data-latex=\"a\">a</mi>
+      <mo fence=\"false\" stretchy=\"false\" data-latex=\"\\Arrowvert\">&#x2016;</mo>
+    </math>`
+    ));
+  it('left right arrowvert', () =>
+    toXmlMatch(
+      tex2mml('\\left\\arrowvert a \\right\\Arrowvert'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\left\\arrowvert a \\right\\Arrowvert\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left\\arrowvert a \\right\\Arrowvert\" data-latex=\"\\left\\arrowvert a \\right\\Arrowvert\">
+        <mo data-mjx-texclass=\"OPEN\" fence=\"true\" stretchy=\"true\" symmetric=\"true\" data-latex-item=\"\\left\\arrowvert \" data-latex=\"\\left\\arrowvert \">&#x23D0;</mo>
+        <mi data-latex=\"a\">a</mi>
+        <mo data-mjx-texclass=\"CLOSE\" symmetric=\"true\" data-latex-item=\"\\right\\Arrowvert\" data-latex=\"\\right\\Arrowvert\">&#x2016;</mo>
+      </mrow>
+    </math>`
+    ));
+  it('bracevert', () =>
+    toXmlMatch(
+      tex2mml('\\bracevert a \\Vert'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\bracevert a \\Vert\" display=\"block\">
+      <mo data-latex=\"\\bracevert\">&#x23AA;</mo>
+      <mi data-latex=\"a\">a</mi>
+      <mo data-mjx-texclass=\"ORD\" fence=\"false\" stretchy=\"false\" data-latex=\"\\Vert\">&#x2016;</mo>
+    </math>`
+    ));
+  it('left right bracevert', () =>
+    toXmlMatch(
+      tex2mml('\\left\\bracevert a \\right\\Vert'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\left\\bracevert a \\right\\Vert\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left\\bracevert a \\right\\Vert\" data-latex=\"\\left\\bracevert a \\right\\Vert\">
+        <mo data-mjx-texclass=\"OPEN\" fence=\"true\" stretchy=\"true\" symmetric=\"true\" data-latex-item=\"\\left\\bracevert \" data-latex=\"\\left\\bracevert \">&#x23AA;</mo>
+        <mi data-latex=\"a\">a</mi>
+        <mo data-mjx-texclass=\"CLOSE\" symmetric=\"true\" data-latex-item=\"\\right\\Vert\" data-latex=\"\\right\\Vert\">&#x2016;</mo>
+      </mrow>
+    </math>`
+    ));
+  it('updownarrow', () =>
+    toXmlMatch(
+      tex2mml('\\updownarrow a \\Updownarrow'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\updownarrow a \\Updownarrow\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\updownarrow\">&#x2195;</mo>
+      <mi data-latex=\"a\">a</mi>
+      <mo stretchy=\"false\" data-latex=\"\\Updownarrow\">&#x21D5;</mo>
+    </math>`
+    ));
+  it('left right updownarrow', () =>
+    toXmlMatch(
+      tex2mml('\\left\\updownarrow a \\right\\Updownarrow'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\left\\updownarrow a \\right\\Updownarrow\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left\\updownarrow a \\right\\Updownarrow\" data-latex=\"\\left\\updownarrow a \\right\\Updownarrow\">
+        <mo data-mjx-texclass=\"OPEN\" fence=\"true\" symmetric=\"true\" data-latex-item=\"\\left\\updownarrow \" data-latex=\"\\left\\updownarrow \">&#x2195;</mo>
+        <mi data-latex=\"a\">a</mi>
+        <mo data-mjx-texclass=\"CLOSE\" fence=\"true\" symmetric=\"true\" data-latex-item=\"\\right\\Updownarrow\" data-latex=\"\\right\\Updownarrow\">&#x21D5;</mo>
+      </mrow>
+    </math>`
+    ));
+  it('backslash', () =>
+    toXmlMatch(
+      tex2mml('/ a \\backslash'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"/ a \\backslash\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\">
+        <mo data-latex=\"/\">/</mo>
+      </mrow>
+      <mi data-latex=\"a\">a</mi>
+      <mi mathvariant=\"normal\" data-latex=\"\\backslash\">\\</mi>
+    </math>`
+    ));
+  it('left right left/', () =>
+    toXmlMatch(
+      tex2mml('\\left/ a \\right\\backslash'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\left/ a \\right\\backslash\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left/ a \\right\\backslash\" data-latex=\"\\left/ a \\right\\backslash\">
+        <mo data-mjx-texclass=\"OPEN\" fence=\"true\" stretchy=\"true\" symmetric=\"true\" data-latex-item=\"\\left/\" data-latex=\"\\left/\">/</mo>
+        <mi data-latex=\"a\">a</mi>
+        <mo data-mjx-texclass=\"CLOSE\" fence=\"true\" stretchy=\"true\" symmetric=\"true\" data-latex-item=\"\\right\\backslash\" data-latex=\"\\right\\backslash\">\\</mo>
+      </mrow>
+    </math>`
+    ));
+  it('Uparrow', () =>
+    toXmlMatch(
+      tex2mml('\\Uparrow a \\Downarrow'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Uparrow a \\Downarrow\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\Uparrow\">&#x21D1;</mo>
+      <mi data-latex=\"a\">a</mi>
+      <mo stretchy=\"false\" data-latex=\"\\Downarrow\">&#x21D3;</mo>
+    </math>`
+    ));
+  it('left right Uparrow', () =>
+    toXmlMatch(
+      tex2mml('\\left\\Uparrow a \\right\\Downarrow'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\left\\Uparrow a \\right\\Downarrow\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left\\Uparrow a \\right\\Downarrow\" data-latex=\"\\left\\Uparrow a \\right\\Downarrow\">
+        <mo data-mjx-texclass=\"OPEN\" fence=\"true\" symmetric=\"true\" data-latex-item=\"\\left\\Uparrow \" data-latex=\"\\left\\Uparrow \">&#x21D1;</mo>
+        <mi data-latex=\"a\">a</mi>
+        <mo data-mjx-texclass=\"CLOSE\" fence=\"true\" symmetric=\"true\" data-latex-item=\"\\right\\Downarrow\" data-latex=\"\\right\\Downarrow\">&#x21D3;</mo>
+      </mrow>
+    </math>`
+    ));
+  it('rangle', () =>
+    toXmlMatch(
+      tex2mml('\\rangle a \\langle'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\rangle a \\langle\" display=\"block\">
+      <mo fence=\"false\" stretchy=\"false\" data-latex=\"\\rangle\">&#x27E9;</mo>
+      <mi data-latex=\"a\">a</mi>
+      <mo fence=\"false\" stretchy=\"false\" data-latex=\"\\langle\">&#x27E8;</mo>
+    </math>`
+    ));
+  it('left right rangle', () =>
+    toXmlMatch(
+      tex2mml('\\left\\rangle a \\right\\langle'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\left\\rangle a \\right\\langle\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left\\rangle a \\right\\langle\" data-latex=\"\\left\\rangle a \\right\\langle\">
+        <mo data-mjx-texclass=\"OPEN\" data-latex-item=\"\\left\\rangle \" data-latex=\"\\left\\rangle \">&#x27E9;</mo>
+        <mi data-latex=\"a\">a</mi>
+        <mo data-mjx-texclass=\"CLOSE\" data-latex-item=\"\\right\\langle\" data-latex=\"\\right\\langle\">&#x27E8;</mo>
+      </mrow>
+    </math>`
+    ));
+  it('rbrace', () =>
+    toXmlMatch(
+      tex2mml('\\rbrace a \\lbrace'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\rbrace a \\lbrace\" display=\"block\">
+      <mo fence=\"false\" stretchy=\"false\" data-latex=\"\\rbrace\">}</mo>
+      <mi data-latex=\"a\">a</mi>
+      <mo fence=\"false\" stretchy=\"false\" data-latex=\"\\lbrace\">{</mo>
+    </math>`
+    ));
+  it('left right rbrace', () =>
+    toXmlMatch(
+      tex2mml('\\left\\rbrace a \\right\\lbrace'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\left\\rbrace a \\right\\lbrace\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left\\rbrace a \\right\\lbrace\" data-latex=\"\\left\\rbrace a \\right\\lbrace\">
+        <mo data-mjx-texclass=\"OPEN\" data-latex-item=\"\\left\\rbrace \" data-latex=\"\\left\\rbrace \">}</mo>
+        <mi data-latex=\"a\">a</mi>
+        <mo data-mjx-texclass=\"CLOSE\" data-latex-item=\"\\right\\lbrace\" data-latex=\"\\right\\lbrace\">{</mo>
+      </mrow>
+    </math>`
+    ));
+  it('rceil', () =>
+    toXmlMatch(
+      tex2mml('\\rceil a \\lceil'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\rceil a \\lceil\" display=\"block\">
+      <mo fence=\"false\" stretchy=\"false\" data-latex=\"\\rceil\">&#x2309;</mo>
+      <mi data-latex=\"a\">a</mi>
+      <mo fence=\"false\" stretchy=\"false\" data-latex=\"\\lceil\">&#x2308;</mo>
+    </math>`
+    ));
+  it('left right rceil', () =>
+    toXmlMatch(
+      tex2mml('\\left\\rceil a \\right\\lceil'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\left\\rceil a \\right\\lceil\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left\\rceil a \\right\\lceil\" data-latex=\"\\left\\rceil a \\right\\lceil\">
+        <mo data-mjx-texclass=\"OPEN\" data-latex-item=\"\\left\\rceil \" data-latex=\"\\left\\rceil \">&#x2309;</mo>
+        <mi data-latex=\"a\">a</mi>
+        <mo data-mjx-texclass=\"CLOSE\" data-latex-item=\"\\right\\lceil\" data-latex=\"\\right\\lceil\">&#x2308;</mo>
+      </mrow>
+    </math>`
+    ));
+  it('rfloor', () =>
+    toXmlMatch(
+      tex2mml('\\rfloor a \\lfloor'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\rfloor a \\lfloor\" display=\"block\">
+      <mo fence=\"false\" stretchy=\"false\" data-latex=\"\\rfloor\">&#x230B;</mo>
+      <mi data-latex=\"a\">a</mi>
+      <mo fence=\"false\" stretchy=\"false\" data-latex=\"\\lfloor\">&#x230A;</mo>
+    </math>`
+    ));
+  it('left right rfloor', () =>
+    toXmlMatch(
+      tex2mml('\\left\\rfloor a \\right\\lfloor'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\left\\rfloor a \\right\\lfloor\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left\\rfloor a \\right\\lfloor\" data-latex=\"\\left\\rfloor a \\right\\lfloor\">
+        <mo data-mjx-texclass=\"OPEN\" data-latex-item=\"\\left\\rfloor \" data-latex=\"\\left\\rfloor \">&#x230B;</mo>
+        <mi data-latex=\"a\">a</mi>
+        <mo data-mjx-texclass=\"CLOSE\" data-latex-item=\"\\right\\lfloor\" data-latex=\"\\right\\lfloor\">&#x230A;</mo>
+      </mrow>
+    </math>`
+    ));
+  it('lbrack', () =>
+    toXmlMatch(
+      tex2mml('\\lbrack a \\rbrack'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\lbrack a \\rbrack\" display=\"block\">
+      <mo fence=\"false\" stretchy=\"false\" data-latex=\"\\lbrack\">[</mo>
+      <mi data-latex=\"a\">a</mi>
+      <mo fence=\"false\" stretchy=\"false\" data-latex=\"\\rbrack\">]</mo>
+    </math>`
+    ));
+  it('left right lbrack', () =>
+    toXmlMatch(
+      tex2mml('\\left\\lbrack a \\right\\rbrack'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\left\\lbrack a \\right\\rbrack\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left\\lbrack a \\right\\rbrack\" data-latex=\"\\left\\lbrack a \\right\\rbrack\">
+        <mo data-mjx-texclass=\"OPEN\" data-latex-item=\"\\left\\lbrack \" data-latex=\"\\left\\lbrack \">[</mo>
+        <mi data-latex=\"a\">a</mi>
+        <mo data-mjx-texclass=\"CLOSE\" data-latex-item=\"\\right\\rbrack\" data-latex=\"\\right\\rbrack\">]</mo>
+      </mrow>
+    </math>`
+    ));
+});
+
+describe('Named Functions', () => {
+  it('Named Function Arg', () =>
+    toXmlMatch(
+      tex2mml('\\sin x'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sin x" display="block">
+  <mi data-latex="\\sin">sin</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mi data-latex="x">x</mi>
+</math>`
+    ));
+  it('Named Function Parent Arg', () =>
+    toXmlMatch(
+      tex2mml('\\sin(x)'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sin(x)" display="block">
+  <mi data-latex="\\sin">sin</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mo data-latex="(" stretchy="false">(</mo>
+  <mi data-latex="x">x</mi>
+  <mo data-latex=")" stretchy="false">)</mo>
+</math>`
+    ));
+  it('Fn Pos Space', () =>
+    toXmlMatch(
+      tex2mml('\\sin\\quad x'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sin\\quad x" display="block">
+  <mi data-latex="\\sin">sin</mi>
+  <mstyle scriptlevel="0" data-latex="\\quad">
+    <mspace width="1em"></mspace>
+  </mstyle>
+  <mi data-latex="x">x</mi>
+</math>`
+    ));
+  it('Fn Neg Space', () =>
+    toXmlMatch(
+      tex2mml('\\sin\\! x'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sin\\! x" display="block">
+  <mi data-latex="\\sin">sin</mi>
+  <mstyle scriptlevel="0" data-latex="\\!">
+    <mspace width="-0.167em"></mspace>
+  </mstyle>
+  <mi data-latex="x">x</mi>
+</math>`
+    ));
+  it('Fn Stretchy', () =>
+    toXmlMatch(
+      tex2mml('\\sin \\left(\\right)'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sin \\left(\\right)" display="block">
+  <mi data-latex="\\sin">sin</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\right)" data-latex="\\left(\\right)">
+    <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
+    <mo data-mjx-texclass="CLOSE" data-latex-item="\\right)" data-latex="\\right)">)</mo>
+  </mrow>
+</math>`
+    ));
+  it('Fn Operator', () =>
+    toXmlMatch(
+      tex2mml('\\sin +'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sin +" display="block">
+  <mi data-latex="\\sin">sin</mi>
+  <mo data-latex="+">+</mo>
+</math>`
+    ));
+  it('arcsin', () =>
+    toXmlMatch(
+      tex2mml('\\arcsin'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\arcsin\" display=\"block\">
+      <mi data-latex=\"\\arcsin\">arcsin</mi>
+    </math>`
+    ));
+  it('arccos', () =>
+    toXmlMatch(
+      tex2mml('\\arccos'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\arccos\" display=\"block\">
+      <mi data-latex=\"\\arccos\">arccos</mi>
+    </math>`
+    ));
+  it('arctan', () =>
+    toXmlMatch(
+      tex2mml('\\arctan'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\arctan\" display=\"block\">
+      <mi data-latex=\"\\arctan\">arctan</mi>
+    </math>`
+    ));
+  it('arg', () =>
+    toXmlMatch(
+      tex2mml('\\arg'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\arg\" display=\"block\">
+      <mi data-latex=\"\\arg\">arg</mi>
+    </math>`
+    ));
+  it('cos', () =>
+    toXmlMatch(
+      tex2mml('\\cos'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\cos\" display=\"block\">
+      <mi data-latex=\"\\cos\">cos</mi>
+    </math>`
+    ));
+  it('cosh', () =>
+    toXmlMatch(
+      tex2mml('\\cosh'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\cosh\" display=\"block\">
+      <mi data-latex=\"\\cosh\">cosh</mi>
+    </math>`
+    ));
+  it('cot', () =>
+    toXmlMatch(
+      tex2mml('\\cot'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\cot\" display=\"block\">
+      <mi data-latex=\"\\cot\">cot</mi>
+    </math>`
+    ));
+  it('coth', () =>
+    toXmlMatch(
+      tex2mml('\\coth'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\coth\" display=\"block\">
+      <mi data-latex=\"\\coth\">coth</mi>
+    </math>`
+    ));
+  it('csc', () =>
+    toXmlMatch(
+      tex2mml('\\csc'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\csc\" display=\"block\">
+      <mi data-latex=\"\\csc\">csc</mi>
+    </math>`
+    ));
+  it('deg', () =>
+    toXmlMatch(
+      tex2mml('\\deg'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\deg\" display=\"block\">
+      <mi data-latex=\"\\deg\">deg</mi>
+    </math>`
+    ));
+  it('det', () =>
+    toXmlMatch(
+      tex2mml('\\det'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\det\" display=\"block\">
+      <mo data-mjx-texclass=\"OP\" movablelimits=\"true\" data-latex=\"\\det\">det</mo>
+    </math>`
+    ));
+  it('dim', () =>
+    toXmlMatch(
+      tex2mml('\\dim'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\dim\" display=\"block\">
+      <mi data-latex=\"\\dim\">dim</mi>
+    </math>`
+    ));
+  it('exp', () =>
+    toXmlMatch(
+      tex2mml('\\exp'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\exp\" display=\"block\">
+      <mi data-latex=\"\\exp\">exp</mi>
+    </math>`
+    ));
+  it('gcd', () =>
+    toXmlMatch(
+      tex2mml('\\gcd'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\gcd\" display=\"block\">
+      <mo data-mjx-texclass=\"OP\" movablelimits=\"true\" data-latex=\"\\gcd\">gcd</mo>
+    </math>`
+    ));
+  it('hom', () =>
+    toXmlMatch(
+      tex2mml('\\hom'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\hom\" display=\"block\">
+      <mi data-latex=\"\\hom\">hom</mi>
+    </math>`
+    ));
+  it('inf', () =>
+    toXmlMatch(
+      tex2mml('\\inf'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\inf\" display=\"block\">
+      <mo data-mjx-texclass=\"OP\" movablelimits=\"true\" data-latex=\"\\inf\">inf</mo>
+    </math>`
+    ));
+  it('ker', () =>
+    toXmlMatch(
+      tex2mml('\\ker'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\ker\" display=\"block\">
+      <mi data-latex=\"\\ker\">ker</mi>
+    </math>`
+    ));
+  it('lg', () =>
+    toXmlMatch(
+      tex2mml('\\lg'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\lg\" display=\"block\">
+      <mi data-latex=\"\\lg\">lg</mi>
+    </math>`
+    ));
+  it('liminf', () =>
+    toXmlMatch(
+      tex2mml('\\liminf'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\liminf\" display=\"block\">
+      <mo data-mjx-texclass=\"OP\" movablelimits=\"true\" data-latex=\"\\liminf\">lim&#x2006;inf</mo>
+    </math>`
+    ));
+  it('limsup', () =>
+    toXmlMatch(
+      tex2mml('\\limsup'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\limsup\" display=\"block\">
+      <mo data-mjx-texclass=\"OP\" movablelimits=\"true\" data-latex=\"\\limsup\">lim&#x2006;sup</mo>
+    </math>`
+    ));
+  it('ln', () =>
+    toXmlMatch(
+      tex2mml('\\ln'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\ln\" display=\"block\">
+      <mi data-latex=\"\\ln\">ln</mi>
+    </math>`
+    ));
+  it('log', () =>
+    toXmlMatch(
+      tex2mml('\\log'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\log\" display=\"block\">
+      <mi data-latex=\"\\log\">log</mi>
+    </math>`
+    ));
+  it('max', () =>
+    toXmlMatch(
+      tex2mml('\\max'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\max\" display=\"block\">
+      <mo data-mjx-texclass=\"OP\" movablelimits=\"true\" data-latex=\"\\max\">max</mo>
+    </math>`
+    ));
+  it('min', () =>
+    toXmlMatch(
+      tex2mml('\\min'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\min\" display=\"block\">
+      <mo data-mjx-texclass=\"OP\" movablelimits=\"true\" data-latex=\"\\min\">min</mo>
+    </math>`
+    ));
+  it('Pr', () =>
+    toXmlMatch(
+      tex2mml('\\Pr'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Pr\" display=\"block\">
+      <mo data-mjx-texclass=\"OP\" movablelimits=\"true\" data-latex=\"\\Pr\">Pr</mo>
+    </math>`
+    ));
+  it('sec', () =>
+    toXmlMatch(
+      tex2mml('\\sec'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\sec\" display=\"block\">
+      <mi data-latex=\"\\sec\">sec</mi>
+    </math>`
+    ));
+  it('sinh', () =>
+    toXmlMatch(
+      tex2mml('\\sinh'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\sinh\" display=\"block\">
+      <mi data-latex=\"\\sinh\">sinh</mi>
+    </math>`
+    ));
+  it('sup', () =>
+    toXmlMatch(
+      tex2mml('\\sup'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\sup\" display=\"block\">
+      <mo data-mjx-texclass=\"OP\" movablelimits=\"true\" data-latex=\"\\sup\">sup</mo>
+    </math>`
+    ));
+  it('tan', () =>
+    toXmlMatch(
+      tex2mml('\\tan'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\tan\" display=\"block\">
+      <mi data-latex=\"\\tan\">tan</mi>
+    </math>`
+    ));
+  it('tanh', () =>
+    toXmlMatch(
+      tex2mml('\\tanh'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\tanh\" display=\"block\">
+      <mi data-latex=\"\\tanh\">tanh</mi>
+    </math>`
+    ));
+});
+
+describe('Greek characters', () => {
+  it('delta', () =>
+    toXmlMatch(
+      tex2mml('\\delta'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\delta\" display=\"block\">
+      <mi data-latex=\"\\delta\">&#x3B4;</mi>
+    </math>`
+    ));
+  it('epsilon', () =>
+    toXmlMatch(
+      tex2mml('\\epsilon'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\epsilon\" display=\"block\">
+      <mi data-latex=\"\\epsilon\">&#x3F5;</mi>
+    </math>`
+    ));
+  it('zeta', () =>
+    toXmlMatch(
+      tex2mml('\\zeta'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\zeta\" display=\"block\">
+      <mi data-latex=\"\\zeta\">&#x3B6;</mi>
+    </math>`
+    ));
+  it('eta', () =>
+    toXmlMatch(
+      tex2mml('\\eta'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\eta\" display=\"block\">
+      <mi data-latex=\"\\eta\">&#x3B7;</mi>
+    </math>`
+    ));
+  it('theta', () =>
+    toXmlMatch(
+      tex2mml('\\theta'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\theta\" display=\"block\">
+      <mi data-latex=\"\\theta\">&#x3B8;</mi>
+    </math>`
+    ));
+  it('iota', () =>
+    toXmlMatch(
+      tex2mml('\\iota'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\iota\" display=\"block\">
+      <mi data-latex=\"\\iota\">&#x3B9;</mi>
+    </math>`
+    ));
+  it('kappa', () =>
+    toXmlMatch(
+      tex2mml('\\kappa'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\kappa\" display=\"block\">
+      <mi data-latex=\"\\kappa\">&#x3BA;</mi>
+    </math>`
+    ));
+  it('lambda', () =>
+    toXmlMatch(
+      tex2mml('\\lambda'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\lambda\" display=\"block\">
+      <mi data-latex=\"\\lambda\">&#x3BB;</mi>
+    </math>`
+    ));
+  it('nu', () =>
+    toXmlMatch(
+      tex2mml('\\nu'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\nu\" display=\"block\">
+      <mi data-latex=\"\\nu\">&#x3BD;</mi>
+    </math>`
+    ));
+  it('xi', () =>
+    toXmlMatch(
+      tex2mml('\\xi'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\xi\" display=\"block\">
+      <mi data-latex=\"\\xi\">&#x3BE;</mi>
+    </math>`
+    ));
+  it('omicron', () =>
+    toXmlMatch(
+      tex2mml('\\omicron'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\omicron\" display=\"block\">
+      <mi data-latex=\"\\omicron\">&#x3BF;</mi>
+    </math>`
+    ));
+  it('rho', () =>
+    toXmlMatch(
+      tex2mml('\\rho'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\rho\" display=\"block\">
+      <mi data-latex=\"\\rho\">&#x3C1;</mi>
+    </math>`
+    ));
+  it('tau', () =>
+    toXmlMatch(
+      tex2mml('\\tau'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\tau\" display=\"block\">
+      <mi data-latex=\"\\tau\">&#x3C4;</mi>
+    </math>`
+    ));
+  it('upsilon', () =>
+    toXmlMatch(
+      tex2mml('\\upsilon'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\upsilon\" display=\"block\">
+      <mi data-latex=\"\\upsilon\">&#x3C5;</mi>
+    </math>`
+    ));
+  it('chi', () =>
+    toXmlMatch(
+      tex2mml('\\chi'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\chi\" display=\"block\">
+      <mi data-latex=\"\\chi\">&#x3C7;</mi>
+    </math>`
+    ));
+  it('psi', () =>
+    toXmlMatch(
+      tex2mml('\\psi'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\psi\" display=\"block\">
+      <mi data-latex=\"\\psi\">&#x3C8;</mi>
+    </math>`
+    ));
+  it('omega', () =>
+    toXmlMatch(
+      tex2mml('\\omega'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\omega\" display=\"block\">
+      <mi data-latex=\"\\omega\">&#x3C9;</mi>
+    </math>`
+    ));
+  it('varepsilon', () =>
+    toXmlMatch(
+      tex2mml('\\varepsilon'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\varepsilon\" display=\"block\">
+      <mi data-latex=\"\\varepsilon\">&#x3B5;</mi>
+    </math>`
+    ));
+  it('vartheta', () =>
+    toXmlMatch(
+      tex2mml('\\vartheta'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\vartheta\" display=\"block\">
+      <mi data-latex=\"\\vartheta\">&#x3D1;</mi>
+    </math>`
+    ));
+  it('varpi', () =>
+    toXmlMatch(
+      tex2mml('\\varpi'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\varpi\" display=\"block\">
+      <mi data-latex=\"\\varpi\">&#x3D6;</mi>
+    </math>`
+    ));
+  it('varrho', () =>
+    toXmlMatch(
+      tex2mml('\\varrho'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\varrho\" display=\"block\">
+      <mi data-latex=\"\\varrho\">&#x3F1;</mi>
+    </math>`
+    ));
+  it('varsigma', () =>
+    toXmlMatch(
+      tex2mml('\\varsigma'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\varsigma\" display=\"block\">
+      <mi data-latex=\"\\varsigma\">&#x3C2;</mi>
+    </math>`
+    ));
+  it('varphi', () =>
+    toXmlMatch(
+      tex2mml('\\varphi'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\varphi\" display=\"block\">
+      <mi data-latex=\"\\varphi\">&#x3C6;</mi>
+    </math>`
+    ));
+  it('Delta', () =>
+    toXmlMatch(
+      tex2mml('\\Delta'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Delta\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\Delta\">&#x394;</mi>
+    </math>`
+    ));
+  it('Theta', () =>
+    toXmlMatch(
+      tex2mml('\\Theta'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Theta\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\Theta\">&#x398;</mi>
+    </math>`
+    ));
+  it('Xi', () =>
+    toXmlMatch(
+      tex2mml('\\Xi'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Xi\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\Xi\">&#x39E;</mi>
+    </math>`
+    ));
+  it('Pi', () =>
+    toXmlMatch(
+      tex2mml('\\Pi'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Pi\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\Pi\">&#x3A0;</mi>
+    </math>`
+    ));
+  it('Sigma', () =>
+    toXmlMatch(
+      tex2mml('\\Sigma'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Sigma\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\Sigma\">&#x3A3;</mi>
+    </math>`
+    ));
+  it('Phi', () =>
+    toXmlMatch(
+      tex2mml('\\Phi'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Phi\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\Phi\">&#x3A6;</mi>
+    </math>`
+    ));
+  it('Psi', () =>
+    toXmlMatch(
+      tex2mml('\\Psi'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Psi\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\Psi\">&#x3A8;</mi>
+    </math>`
+    ));
+});
+
+describe('Mathchar0mi', () => {
+  it('AA', () =>
+    toXmlMatch(
+      tex2mml('\\AA'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\AA\" display=\"block\">
+      <mi data-latex=\"\\AA\">&#x212B;</mi>
+    </math>`
+    ));
+  it('S', () =>
+    toXmlMatch(
+      tex2mml('\\S'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\S\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\S\">&#xA7;</mi>
+    </math>`
+    ));
+  it('aleph', () =>
+    toXmlMatch(
+      tex2mml('\\aleph'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\aleph\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\aleph\">&#x2135;</mi>
+    </math>`
+    ));
+  it('hbar', () =>
+    toXmlMatch(
+      tex2mml('\\hbar'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\hbar\" display=\"block\">
+      <mi data-mjx-alternate=\"1\" data-latex=\"\\hbar\">&#x210F;</mi>
+    </math>`
+    ));
+  it('imath', () =>
+    toXmlMatch(
+      tex2mml('\\imath'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\imath\" display=\"block\">
+      <mi data-latex=\"\\imath\">&#x131;</mi>
+    </math>`
+    ));
+  it('jmath', () =>
+    toXmlMatch(
+      tex2mml('\\jmath'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\jmath\" display=\"block\">
+      <mi data-latex=\"\\jmath\">&#x237;</mi>
+    </math>`
+    ));
+  it('ell', () =>
+    toXmlMatch(
+      tex2mml('\\ell'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\ell\" display=\"block\">
+      <mi data-latex=\"\\ell\">&#x2113;</mi>
+    </math>`
+    ));
+  it('wp', () =>
+    toXmlMatch(
+      tex2mml('\\wp'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\wp\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\wp\">&#x2118;</mi>
+    </math>`
+    ));
+  it('Re', () =>
+    toXmlMatch(
+      tex2mml('\\Re'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Re\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\Re\">&#x211C;</mi>
+    </math>`
+    ));
+  it('Im', () =>
+    toXmlMatch(
+      tex2mml('\\Im'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Im\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\Im\">&#x2111;</mi>
+    </math>`
+    ));
+  it('partial', () =>
+    toXmlMatch(
+      tex2mml('\\partial'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\partial\" display=\"block\">
+      <mi data-latex=\"\\partial\">&#x2202;</mi>
+    </math>`
+    ));
+  it('emptyset', () =>
+    toXmlMatch(
+      tex2mml('\\emptyset'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\emptyset\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\emptyset\">&#x2205;</mi>
+    </math>`
+    ));
+  it('nabla', () =>
+    toXmlMatch(
+      tex2mml('\\nabla'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\nabla\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\nabla\">&#x2207;</mi>
+    </math>`
+    ));
+  it('top', () =>
+    toXmlMatch(
+      tex2mml('\\top'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\top\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\top\">&#x22A4;</mi>
+    </math>`
+    ));
+  it('bot', () =>
+    toXmlMatch(
+      tex2mml('\\bot'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\bot\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\bot\">&#x22A5;</mi>
+    </math>`
+    ));
+  it('angle', () =>
+    toXmlMatch(
+      tex2mml('\\angle'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\angle\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\angle\">&#x2220;</mi>
+    </math>`
+    ));
+  it('triangle', () =>
+    toXmlMatch(
+      tex2mml('\\triangle'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\triangle\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\triangle\">&#x25B3;</mi>
+    </math>`
+    ));
+  it('forall', () =>
+    toXmlMatch(
+      tex2mml('\\forall'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\forall\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\forall\">&#x2200;</mi>
+    </math>`
+    ));
+  it('exists', () =>
+    toXmlMatch(
+      tex2mml('\\exists'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\exists\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\exists\">&#x2203;</mi>
+    </math>`
+    ));
+  it('neg', () =>
+    toXmlMatch(
+      tex2mml('\\neg'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\neg\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\neg\">&#xAC;</mi>
+    </math>`
+    ));
+  it('lnot', () =>
+    toXmlMatch(
+      tex2mml('\\lnot'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\lnot\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\lnot\">&#xAC;</mi>
+    </math>`
+    ));
+  it('flat', () =>
+    toXmlMatch(
+      tex2mml('\\flat'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\flat\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\flat\">&#x266D;</mi>
+    </math>`
+    ));
+  it('natural', () =>
+    toXmlMatch(
+      tex2mml('\\natural'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\natural\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\natural\">&#x266E;</mi>
+    </math>`
+    ));
+  it('sharp', () =>
+    toXmlMatch(
+      tex2mml('\\sharp'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\sharp\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\sharp\">&#x266F;</mi>
+    </math>`
+    ));
+  it('clubsuit', () =>
+    toXmlMatch(
+      tex2mml('\\clubsuit'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\clubsuit\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\clubsuit\">&#x2663;</mi>
+    </math>`
+    ));
+  it('diamondsuit', () =>
+    toXmlMatch(
+      tex2mml('\\diamondsuit'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\diamondsuit\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\diamondsuit\">&#x2662;</mi>
+    </math>`
+    ));
+  it('heartsuit', () =>
+    toXmlMatch(
+      tex2mml('\\heartsuit'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\heartsuit\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\heartsuit\">&#x2661;</mi>
+    </math>`
+    ));
+  it('spadesuit', () =>
+    toXmlMatch(
+      tex2mml('\\spadesuit'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\spadesuit\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\spadesuit\">&#x2660;</mi>
+    </math>`
+    ));
+});
+
+describe('Mathchar0mo', () => {
+  it('surd', () =>
+    toXmlMatch(
+      tex2mml('\\surd'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\surd\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\">
+        <mo stretchy=\"false\" data-latex=\"\\surd\">&#x221A;</mo>
+      </mrow>
+    </math>`
+    ));
+  it('coprod', () =>
+    toXmlMatch(
+      tex2mml('\\coprod'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\coprod\" display=\"block\">
+      <mo data-latex=\"\\coprod\">&#x2210;</mo>
+    </math>`
+    ));
+  it('bigvee', () =>
+    toXmlMatch(
+      tex2mml('\\bigvee'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\bigvee\" display=\"block\">
+      <mo data-latex=\"\\bigvee\">&#x22C1;</mo>
+    </math>`
+    ));
+  it('bigwedge', () =>
+    toXmlMatch(
+      tex2mml('\\bigwedge'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\bigwedge\" display=\"block\">
+      <mo data-latex=\"\\bigwedge\">&#x22C0;</mo>
+    </math>`
+    ));
+  it('biguplus', () =>
+    toXmlMatch(
+      tex2mml('\\biguplus'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\biguplus\" display=\"block\">
+      <mo data-latex=\"\\biguplus\">&#x2A04;</mo>
+    </math>`
+    ));
+  it('bigcap', () =>
+    toXmlMatch(
+      tex2mml('\\bigcap'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\bigcap\" display=\"block\">
+      <mo data-latex=\"\\bigcap\">&#x22C2;</mo>
+    </math>`
+    ));
+  it('intop', () =>
+    toXmlMatch(
+      tex2mml('\\intop'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\intop\" display=\"block\">
+      <mo movablelimits=\"true\" data-latex=\"\\intop\">&#x222B;</mo>
+    </math>`
+    ));
+  it('iint', () =>
+    toXmlMatch(
+      tex2mml('\\iint'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\iint\" display=\"block\">
+      <mo data-latex=\"\\iint\">&#x222C;</mo>
+    </math>`
+    ));
+  it('iiint', () =>
+    toXmlMatch(
+      tex2mml('\\iiint'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\iiint\" display=\"block\">
+      <mo data-latex=\"\\iiint\">&#x222D;</mo>
+    </math>`
+    ));
+  it('bigotimes', () =>
+    toXmlMatch(
+      tex2mml('\\bigotimes'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\bigotimes\" display=\"block\">
+      <mo data-latex=\"\\bigotimes\">&#x2A02;</mo>
+    </math>`
+    ));
+  it('bigoplus', () =>
+    toXmlMatch(
+      tex2mml('\\bigoplus'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\bigoplus\" display=\"block\">
+      <mo data-latex=\"\\bigoplus\">&#x2A01;</mo>
+    </math>`
+    ));
+  it('bigodot', () =>
+    toXmlMatch(
+      tex2mml('\\bigodot'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\bigodot\" display=\"block\">
+      <mo data-latex=\"\\bigodot\">&#x2A00;</mo>
+    </math>`
+    ));
+  it('ointop', () =>
+    toXmlMatch(
+      tex2mml('\\ointop'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\ointop\" display=\"block\">
+      <mo movablelimits=\"true\" data-latex=\"\\ointop\">&#x222E;</mo>
+    </math>`
+    ));
+  it('oiint', () =>
+    toXmlMatch(
+      tex2mml('\\oiint'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\oiint\" display=\"block\">
+      <mo data-latex=\"\\oiint\">&#x222F;</mo>
+    </math>`
+    ));
+  it('oiiint', () =>
+    toXmlMatch(
+      tex2mml('\\oiiint'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\oiiint\" display=\"block\">
+      <mo data-latex=\"\\oiiint\">&#x2230;</mo>
+    </math>`
+    ));
+  it('bigsqcup', () =>
+    toXmlMatch(
+      tex2mml('\\bigsqcup'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\bigsqcup\" display=\"block\">
+      <mo data-latex=\"\\bigsqcup\">&#x2A06;</mo>
+    </math>`
+    ));
+  it('smallint', () =>
+    toXmlMatch(
+      tex2mml('\\smallint'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\smallint\" display=\"block\">
+      <mo largeop=\"false\" data-latex=\"\\smallint\">&#x222B;</mo>
+    </math>`
+    ));
+  it('triangleleft', () =>
+    toXmlMatch(
+      tex2mml('\\triangleleft'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\triangleleft\" display=\"block\">
+      <mo data-latex=\"\\triangleleft\">&#x25C3;</mo>
+    </math>`
+    ));
+  it('triangleright', () =>
+    toXmlMatch(
+      tex2mml('\\triangleright'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\triangleright\" display=\"block\">
+      <mo data-latex=\"\\triangleright\">&#x25B9;</mo>
+    </math>`
+    ));
+  it('bigtriangleup', () =>
+    toXmlMatch(
+      tex2mml('\\bigtriangleup'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\bigtriangleup\" display=\"block\">
+      <mo data-latex=\"\\bigtriangleup\">&#x25B3;</mo>
+    </math>`
+    ));
+  it('bigtriangledown', () =>
+    toXmlMatch(
+      tex2mml('\\bigtriangledown'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\bigtriangledown\" display=\"block\">
+      <mo data-latex=\"\\bigtriangledown\">&#x25BD;</mo>
+    </math>`
+    ));
+  it('wedge', () =>
+    toXmlMatch(
+      tex2mml('\\wedge'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\wedge\" display=\"block\">
+      <mo data-latex=\"\\wedge\">&#x2227;</mo>
+    </math>`
+    ));
+  it('land', () =>
+    toXmlMatch(
+      tex2mml('\\land'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\land\" display=\"block\">
+      <mo data-latex=\"\\land\">&#x2227;</mo>
+    </math>`
+    ));
+  it('vee', () =>
+    toXmlMatch(
+      tex2mml('\\vee'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\vee\" display=\"block\">
+      <mo data-latex=\"\\vee\">&#x2228;</mo>
+    </math>`
+    ));
+  it('lor', () =>
+    toXmlMatch(
+      tex2mml('\\lor'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\lor\" display=\"block\">
+      <mo data-latex=\"\\lor\">&#x2228;</mo>
+    </math>`
+    ));
+  it('cap', () =>
+    toXmlMatch(
+      tex2mml('\\cap'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\cap\" display=\"block\">
+      <mo data-latex=\"\\cap\">&#x2229;</mo>
+    </math>`
+    ));
+  it('cup', () =>
+    toXmlMatch(
+      tex2mml('\\cup'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\cup\" display=\"block\">
+      <mo data-latex=\"\\cup\">&#x222A;</mo>
+    </math>`
+    ));
+  it('ddagger', () =>
+    toXmlMatch(
+      tex2mml('\\ddagger'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\ddagger\" display=\"block\">
+      <mo data-latex=\"\\ddagger\">&#x2021;</mo>
+    </math>`
+    ));
+  it('dagger', () =>
+    toXmlMatch(
+      tex2mml('\\dagger'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\dagger\" display=\"block\">
+      <mo data-latex=\"\\dagger\">&#x2020;</mo>
+    </math>`
+    ));
+  it('sqcap', () =>
+    toXmlMatch(
+      tex2mml('\\sqcap'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\sqcap\" display=\"block\">
+      <mo data-latex=\"\\sqcap\">&#x2293;</mo>
+    </math>`
+    ));
+  it('sqcup', () =>
+    toXmlMatch(
+      tex2mml('\\sqcup'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\sqcup\" display=\"block\">
+      <mo data-latex=\"\\sqcup\">&#x2294;</mo>
+    </math>`
+    ));
+  it('uplus', () =>
+    toXmlMatch(
+      tex2mml('\\uplus'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\uplus\" display=\"block\">
+      <mo data-latex=\"\\uplus\">&#x228E;</mo>
+    </math>`
+    ));
+  it('amalg', () =>
+    toXmlMatch(
+      tex2mml('\\amalg'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\amalg\" display=\"block\">
+      <mo data-latex=\"\\amalg\">&#x2A3F;</mo>
+    </math>`
+    ));
+  it('diamond', () =>
+    toXmlMatch(
+      tex2mml('\\diamond'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\diamond\" display=\"block\">
+      <mo data-latex=\"\\diamond\">&#x22C4;</mo>
+    </math>`
+    ));
+  it('bullet', () =>
+    toXmlMatch(
+      tex2mml('\\bullet'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\bullet\" display=\"block\">
+      <mo data-latex=\"\\bullet\">&#x2219;</mo>
+    </math>`
+    ));
+  it('wr', () =>
+    toXmlMatch(
+      tex2mml('\\wr'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\wr\" display=\"block\">
+      <mo data-latex=\"\\wr\">&#x2240;</mo>
+    </math>`
+    ));
+  it('div', () =>
+    toXmlMatch(
+      tex2mml('\\div'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\div\" display=\"block\">
+      <mo data-latex=\"\\div\">&#xF7;</mo>
+    </math>`
+    ));
+  it('odot', () =>
+    toXmlMatch(
+      tex2mml('\\odot'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\odot\" display=\"block\">
+      <mo data-latex=\"\\odot\">&#x2299;</mo>
+    </math>`
+    ));
+  it('oslash', () =>
+    toXmlMatch(
+      tex2mml('\\oslash'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\oslash\" display=\"block\">
+      <mo data-latex=\"\\oslash\">&#x2298;</mo>
+    </math>`
+    ));
+  it('otimes', () =>
+    toXmlMatch(
+      tex2mml('\\otimes'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\otimes\" display=\"block\">
+      <mo data-latex=\"\\otimes\">&#x2297;</mo>
+    </math>`
+    ));
+  it('ominus', () =>
+    toXmlMatch(
+      tex2mml('\\ominus'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\ominus\" display=\"block\">
+      <mo data-latex=\"\\ominus\">&#x2296;</mo>
+    </math>`
+    ));
+  it('oplus', () =>
+    toXmlMatch(
+      tex2mml('\\oplus'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\oplus\" display=\"block\">
+      <mo data-latex=\"\\oplus\">&#x2295;</mo>
+    </math>`
+    ));
+  it('mp', () =>
+    toXmlMatch(
+      tex2mml('\\mp'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mp\" display=\"block\">
+      <mo data-latex=\"\\mp\">&#x2213;</mo>
+    </math>`
+    ));
+  it('circ', () =>
+    toXmlMatch(
+      tex2mml('\\circ'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\circ\" display=\"block\">
+      <mo data-latex=\"\\circ\">&#x2218;</mo>
+    </math>`
+    ));
+  it('bigcirc', () =>
+    toXmlMatch(
+      tex2mml('\\bigcirc'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\bigcirc\" display=\"block\">
+      <mo data-latex=\"\\bigcirc\">&#x25EF;</mo>
+    </math>`
+    ));
+  it('setminus', () =>
+    toXmlMatch(
+      tex2mml('\\setminus'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\setminus\" display=\"block\">
+      <mo data-latex=\"\\setminus\">&#x2216;</mo>
+    </math>`
+    ));
+  it('cdot', () =>
+    toXmlMatch(
+      tex2mml('\\cdot'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\cdot\" display=\"block\">
+      <mo data-latex=\"\\cdot\">&#x22C5;</mo>
+    </math>`
+    ));
+  it('ast', () =>
+    toXmlMatch(
+      tex2mml('\\ast'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\ast\" display=\"block\">
+      <mo data-latex=\"\\ast\">&#x2217;</mo>
+    </math>`
+    ));
+  it('times', () =>
+    toXmlMatch(
+      tex2mml('\\times'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\times\" display=\"block\">
+      <mo data-latex=\"\\times\">&#xD7;</mo>
+    </math>`
+    ));
+  it('star', () =>
+    toXmlMatch(
+      tex2mml('\\star'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\star\" display=\"block\">
+      <mo data-latex=\"\\star\">&#x22C6;</mo>
+    </math>`
+    ));
+  it('propto', () =>
+    toXmlMatch(
+      tex2mml('\\propto'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\propto\" display=\"block\">
+      <mo data-latex=\"\\propto\">&#x221D;</mo>
+    </math>`
+    ));
+  it('sqsubseteq', () =>
+    toXmlMatch(
+      tex2mml('\\sqsubseteq'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\sqsubseteq\" display=\"block\">
+      <mo data-latex=\"\\sqsubseteq\">&#x2291;</mo>
+    </math>`
+    ));
+  it('sqsupseteq', () =>
+    toXmlMatch(
+      tex2mml('\\sqsupseteq'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\sqsupseteq\" display=\"block\">
+      <mo data-latex=\"\\sqsupseteq\">&#x2292;</mo>
+    </math>`
+    ));
+  it('parallel', () =>
+    toXmlMatch(
+      tex2mml('\\parallel'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\parallel\" display=\"block\">
+      <mo data-latex=\"\\parallel\">&#x2225;</mo>
+    </math>`
+    ));
+  it('mid', () =>
+    toXmlMatch(
+      tex2mml('\\mid'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mid\" display=\"block\">
+      <mo data-latex=\"\\mid\">&#x2223;</mo>
+    </math>`
+    ));
+  it('dashv', () =>
+    toXmlMatch(
+      tex2mml('\\dashv'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\dashv\" display=\"block\">
+      <mo data-latex=\"\\dashv\">&#x22A3;</mo>
+    </math>`
+    ));
+  it('vdash', () =>
+    toXmlMatch(
+      tex2mml('\\vdash'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\vdash\" display=\"block\">
+      <mo data-latex=\"\\vdash\">&#x22A2;</mo>
+    </math>`
+    ));
+  it('le', () =>
+    toXmlMatch(
+      tex2mml('\\le'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\le\" display=\"block\">
+      <mo data-latex=\"\\le\">&#x2264;</mo>
+    </math>`
+    ));
+  it('geq', () =>
+    toXmlMatch(
+      tex2mml('\\geq'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\geq\" display=\"block\">
+      <mo data-latex=\"\\geq\">&#x2265;</mo>
+    </math>`
+    ));
+  it('ge', () =>
+    toXmlMatch(
+      tex2mml('\\ge'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\ge\" display=\"block\">
+      <mo data-latex=\"\\ge\">&#x2265;</mo>
+    </math>`
+    ));
+  it('succ', () =>
+    toXmlMatch(
+      tex2mml('\\succ'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\succ\" display=\"block\">
+      <mo data-latex=\"\\succ\">&#x227B;</mo>
+    </math>`
+    ));
+  it('prec', () =>
+    toXmlMatch(
+      tex2mml('\\prec'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\prec\" display=\"block\">
+      <mo data-latex=\"\\prec\">&#x227A;</mo>
+    </math>`
+    ));
+  it('approx', () =>
+    toXmlMatch(
+      tex2mml('\\approx'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\approx\" display=\"block\">
+      <mo data-latex=\"\\approx\">&#x2248;</mo>
+    </math>`
+    ));
+  it('succeq', () =>
+    toXmlMatch(
+      tex2mml('\\succeq'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\succeq\" display=\"block\">
+      <mo data-latex=\"\\succeq\">&#x2AB0;</mo>
+    </math>`
+    ));
+  it('preceq', () =>
+    toXmlMatch(
+      tex2mml('\\preceq'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\preceq\" display=\"block\">
+      <mo data-latex=\"\\preceq\">&#x2AAF;</mo>
+    </math>`
+    ));
+  it('supset', () =>
+    toXmlMatch(
+      tex2mml('\\supset'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\supset\" display=\"block\">
+      <mo data-latex=\"\\supset\">&#x2283;</mo>
+    </math>`
+    ));
+  it('subset', () =>
+    toXmlMatch(
+      tex2mml('\\subset'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\subset\" display=\"block\">
+      <mo data-latex=\"\\subset\">&#x2282;</mo>
+    </math>`
+    ));
+  it('supseteq', () =>
+    toXmlMatch(
+      tex2mml('\\supseteq'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\supseteq\" display=\"block\">
+      <mo data-latex=\"\\supseteq\">&#x2287;</mo>
+    </math>`
+    ));
+  it('subseteq', () =>
+    toXmlMatch(
+      tex2mml('\\subseteq'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\subseteq\" display=\"block\">
+      <mo data-latex=\"\\subseteq\">&#x2286;</mo>
+    </math>`
+    ));
+  it('in', () =>
+    toXmlMatch(
+      tex2mml('\\in'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\in\" display=\"block\">
+      <mo data-latex=\"\\in\">&#x2208;</mo>
+    </math>`
+    ));
+  it('ni', () =>
+    toXmlMatch(
+      tex2mml('\\ni'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\ni\" display=\"block\">
+      <mo data-latex=\"\\ni\">&#x220B;</mo>
+    </math>`
+    ));
+  it('notin', () =>
+    toXmlMatch(
+      tex2mml('\\notin'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\notin\" display=\"block\">
+      <mo data-latex=\"\\notin\">&#x2209;</mo>
+    </math>`
+    ));
+  it('owns', () =>
+    toXmlMatch(
+      tex2mml('\\owns'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\owns\" display=\"block\">
+      <mo data-latex=\"\\owns\">&#x220B;</mo>
+    </math>`
+    ));
+  it('gg', () =>
+    toXmlMatch(
+      tex2mml('\\gg'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\gg\" display=\"block\">
+      <mo data-latex=\"\\gg\">&#x226B;</mo>
+    </math>`
+    ));
+  it('ll', () =>
+    toXmlMatch(
+      tex2mml('\\ll'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\ll\" display=\"block\">
+      <mo data-latex=\"\\ll\">&#x226A;</mo>
+    </math>`
+    ));
+  it('perp', () =>
+    toXmlMatch(
+      tex2mml('\\perp'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\perp\" display=\"block\">
+      <mo data-latex=\"\\perp\">&#x22A5;</mo>
+    </math>`
+    ));
+  it('equiv', () =>
+    toXmlMatch(
+      tex2mml('\\equiv'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\equiv\" display=\"block\">
+      <mo data-latex=\"\\equiv\">&#x2261;</mo>
+    </math>`
+    ));
+  it('smile', () =>
+    toXmlMatch(
+      tex2mml('\\smile'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\smile\" display=\"block\">
+      <mo data-latex=\"\\smile\">&#x2323;</mo>
+    </math>`
+    ));
+  it('frown', () =>
+    toXmlMatch(
+      tex2mml('\\frown'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\frown\" display=\"block\">
+      <mo data-latex=\"\\frown\">&#x2322;</mo>
+    </math>`
+    ));
+  it('ne', () =>
+    toXmlMatch(
+      tex2mml('\\ne'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\ne\" display=\"block\">
+      <mo data-latex=\"\\ne\">&#x2260;</mo>
+    </math>`
+    ));
+  it('neq', () =>
+    toXmlMatch(
+      tex2mml('\\neq'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\neq\" display=\"block\">
+      <mo data-latex=\"\\neq\">&#x2260;</mo>
+    </math>`
+    ));
+  it('doteq', () =>
+    toXmlMatch(
+      tex2mml('\\doteq'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\doteq\" display=\"block\">
+      <mo data-latex=\"\\doteq\">&#x2250;</mo>
+    </math>`
+    ));
+  it('bowtie', () =>
+    toXmlMatch(
+      tex2mml('\\bowtie'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\bowtie\" display=\"block\">
+      <mo data-latex=\"\\bowtie\">&#x22C8;</mo>
+    </math>`
+    ));
+  it('models', () =>
+    toXmlMatch(
+      tex2mml('\\models'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\models\" display=\"block\">
+      <mo data-latex=\"\\models\">&#x22A7;</mo>
+    </math>`
+    ));
+  it('notChar', () =>
+    toXmlMatch(
+      tex2mml('\\notChar'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\notChar\" display=\"block\">
+      <mo data-latex=\"\\notChar\">&#x29F8;</mo>
+    </math>`
+    ));
+  it('Leftrightarrow', () =>
+    toXmlMatch(
+      tex2mml('\\Leftrightarrow'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Leftrightarrow\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\Leftrightarrow\">&#x21D4;</mo>
+    </math>`
+    ));
+  it('Leftarrow', () =>
+    toXmlMatch(
+      tex2mml('\\Leftarrow'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Leftarrow\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\Leftarrow\">&#x21D0;</mo>
+    </math>`
+    ));
+  it('leftrightarrow', () =>
+    toXmlMatch(
+      tex2mml('\\leftrightarrow'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\leftrightarrow\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\leftrightarrow\">&#x2194;</mo>
+    </math>`
+    ));
+  it('leftarrow', () =>
+    toXmlMatch(
+      tex2mml('\\leftarrow'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\leftarrow\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\leftarrow\">&#x2190;</mo>
+    </math>`
+    ));
+  it('gets', () =>
+    toXmlMatch(
+      tex2mml('\\gets'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\gets\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\gets\">&#x2190;</mo>
+    </math>`
+    ));
+  it('to', () =>
+    toXmlMatch(
+      tex2mml('\\to'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\to\" display=\"block\">
+      <mo accent=\"false\" stretchy=\"false\" data-latex=\"\\to\">&#x2192;</mo>
+    </math>`
+    ));
+  it('mapsto', () =>
+    toXmlMatch(
+      tex2mml('\\mapsto'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mapsto\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\mapsto\">&#x21A6;</mo>
+    </math>`
+    ));
+  it('leftharpoonup', () =>
+    toXmlMatch(
+      tex2mml('\\leftharpoonup'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\leftharpoonup\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\leftharpoonup\">&#x21BC;</mo>
+    </math>`
+    ));
+  it('leftharpoondown', () =>
+    toXmlMatch(
+      tex2mml('\\leftharpoondown'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\leftharpoondown\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\leftharpoondown\">&#x21BD;</mo>
+    </math>`
+    ));
+  it('rightharpoonup', () =>
+    toXmlMatch(
+      tex2mml('\\rightharpoonup'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\rightharpoonup\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\rightharpoonup\">&#x21C0;</mo>
+    </math>`
+    ));
+  it('rightharpoondown', () =>
+    toXmlMatch(
+      tex2mml('\\rightharpoondown'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\rightharpoondown\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\rightharpoondown\">&#x21C1;</mo>
+    </math>`
+    ));
+  it('nearrow', () =>
+    toXmlMatch(
+      tex2mml('\\nearrow'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\nearrow\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\nearrow\">&#x2197;</mo>
+    </math>`
+    ));
+  it('searrow', () =>
+    toXmlMatch(
+      tex2mml('\\searrow'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\searrow\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\searrow\">&#x2198;</mo>
+    </math>`
+    ));
+  it('nwarrow', () =>
+    toXmlMatch(
+      tex2mml('\\nwarrow'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\nwarrow\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\nwarrow\">&#x2196;</mo>
+    </math>`
+    ));
+  it('swarrow', () =>
+    toXmlMatch(
+      tex2mml('\\swarrow'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\swarrow\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\swarrow\">&#x2199;</mo>
+    </math>`
+    ));
+  it('rightleftharpoons', () =>
+    toXmlMatch(
+      tex2mml('\\rightleftharpoons'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\rightleftharpoons\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\rightleftharpoons\">&#x21CC;</mo>
+    </math>`
+    ));
+  it('hookrightarrow', () =>
+    toXmlMatch(
+      tex2mml('\\hookrightarrow'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\hookrightarrow\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\hookrightarrow\">&#x21AA;</mo>
+    </math>`
+    ));
+  it('hookleftarrow', () =>
+    toXmlMatch(
+      tex2mml('\\hookleftarrow'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\hookleftarrow\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\hookleftarrow\">&#x21A9;</mo>
+    </math>`
+    ));
+  it('longleftarrow', () =>
+    toXmlMatch(
+      tex2mml('\\longleftarrow'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\longleftarrow\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\longleftarrow\">&#x27F5;</mo>
+    </math>`
+    ));
+  it('Longleftarrow', () =>
+    toXmlMatch(
+      tex2mml('\\Longleftarrow'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Longleftarrow\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\Longleftarrow\">&#x27F8;</mo>
+    </math>`
+    ));
+  it('Longrightarrow', () =>
+    toXmlMatch(
+      tex2mml('\\Longrightarrow'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Longrightarrow\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\Longrightarrow\">&#x27F9;</mo>
+    </math>`
+    ));
+  it('Longleftrightarrow', () =>
+    toXmlMatch(
+      tex2mml('\\Longleftrightarrow'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Longleftrightarrow\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\Longleftrightarrow\">&#x27FA;</mo>
+    </math>`
+    ));
+  it('longleftrightarrow', () =>
+    toXmlMatch(
+      tex2mml('\\longleftrightarrow'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\longleftrightarrow\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\longleftrightarrow\">&#x27F7;</mo>
+    </math>`
+    ));
+  it('longmapsto', () =>
+    toXmlMatch(
+      tex2mml('\\longmapsto'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\longmapsto\" display=\"block\">
+      <mo stretchy=\"false\" data-latex=\"\\longmapsto\">&#x27FC;</mo>
+    </math>`
+    ));
+  it('vdots', () =>
+    toXmlMatch(
+      tex2mml('\\vdots'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\vdots\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\">
+        <mo data-latex=\"\\vdots\">&#x22EE;</mo>
+      </mrow>
+    </math>`
+    ));
+  it('ddots', () =>
+    toXmlMatch(
+      tex2mml('\\ddots'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\ddots\" display=\"block\">
+      <mo data-latex=\"\\ddots\">&#x22F1;</mo>
+    </math>`
+    ));
+  it('iddots', () =>
+    toXmlMatch(
+      tex2mml('\\iddots'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\iddots\" display=\"block\">
+      <mo data-latex=\"\\iddots\">&#x22F0;</mo>
+    </math>`
+    ));
+  it('dotsc', () =>
+    toXmlMatch(
+      tex2mml('\\dotsc'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\dotsc\" display=\"block\">
+      <mo data-latex=\"\\dotsc\">&#x2026;</mo>
+    </math>`
+    ));
+  it('dotsb', () =>
+    toXmlMatch(
+      tex2mml('\\dotsb'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\dotsb\" display=\"block\">
+      <mo data-latex=\"\\dotsb\">&#x22EF;</mo>
+    </math>`
+    ));
+  it('dotsm', () =>
+    toXmlMatch(
+      tex2mml('\\dotsm'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\dotsm\" display=\"block\">
+      <mo data-latex=\"\\dotsm\">&#x22EF;</mo>
+    </math>`
+    ));
+  it('dotsi', () =>
+    toXmlMatch(
+      tex2mml('\\dotsi'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\dotsi\" display=\"block\">
+      <mo data-latex=\"\\dotsi\">&#x22EF;</mo>
+    </math>`
+    ));
+  it('dotso', () =>
+    toXmlMatch(
+      tex2mml('\\dotso'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\dotso\" display=\"block\">
+      <mo data-latex=\"\\dotso\">&#x2026;</mo>
+    </math>`
+    ));
+  it('ldotp', () =>
+    toXmlMatch(
+      tex2mml('\\ldotp'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\ldotp\" display=\"block\">
+      <mo data-mjx-texclass=\"PUNCT\" data-latex=\"\\ldotp\">.</mo>
+    </math>`
+    ));
+  it('cdotp', () =>
+    toXmlMatch(
+      tex2mml('\\cdotp'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\cdotp\" display=\"block\">
+      <mo data-mjx-texclass=\"PUNCT\" data-latex=\"\\cdotp\">&#x22C5;</mo>
+    </math>`
+    ));
+  it('colon', () =>
+    toXmlMatch(
+      tex2mml('\\colon'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\colon\" display=\"block\">
+      <mo data-mjx-texclass=\"PUNCT\" data-latex=\"\\colon\">:</mo>
+    </math>`
+    ));
+});
+
+describe('Font Simple', () => {
+  it('rm', () =>
+    toXmlMatch(
+      tex2mml('\\rm a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\rm a\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"\\rm a\">a</mi>
+    </math>`
+    ));
+  it('mit', () =>
+    toXmlMatch(
+      tex2mml('\\mit a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mit a\" display=\"block\">
+      <mi data-latex=\"\\mit a\">a</mi>
+    </math>`
+    ));
+  it('oldstyle', () =>
+    toXmlMatch(
+      tex2mml('\\oldstyle 9'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\oldstyle 9\" display=\"block\">
+      <mn data-mjx-variant=\"-tex-oldstyle\" mathvariant=\"normal\" data-latex=\"\\oldstyle 9\">9</mn>
+    </math>`
+    ));
+  it('it', () =>
+    toXmlMatch(
+      tex2mml('\\it a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\it a\" display=\"block\">
+      <mi data-mjx-variant=\"-tex-mathit\" mathvariant=\"italic\" data-latex=\"\\it a\">a</mi>
+    </math>`
+    ));
+  it('bf', () =>
+    toXmlMatch(
+      tex2mml('\\bf a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\bf a\" display=\"block\">
+      <mi mathvariant=\"bold\" data-latex=\"\\bf a\">a</mi>
+    </math>`
+    ));
+  it('sf', () =>
+    toXmlMatch(
+      tex2mml('\\sf a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\sf a\" display=\"block\">
+      <mi mathvariant=\"sans-serif\" data-latex=\"\\sf a\">a</mi>
+    </math>`
+    ));
+  it('tt', () =>
+    toXmlMatch(
+      tex2mml('\\tt a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\tt a\" display=\"block\">
+      <mi mathvariant=\"monospace\" data-latex=\"\\tt a\">a</mi>
+    </math>`
+    ));
+  it('frak', () =>
+    toXmlMatch(
+      tex2mml('\\frak a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\frak a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\frak a\">
+        <mi mathvariant=\"fraktur\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('Bbb', () =>
+    toXmlMatch(
+      tex2mml('\\Bbb a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Bbb a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\Bbb a\">
+        <mi mathvariant=\"double-struck\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('mathup', () =>
+    toXmlMatch(
+      tex2mml('\\mathup a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mathup a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathup a\">
+        <mi mathvariant=\"normal\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('mathnormal', () =>
+    toXmlMatch(
+      tex2mml('\\mathnormal a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mathnormal a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathnormal a\">
+        <mi data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('mathbfup', () =>
+    toXmlMatch(
+      tex2mml('\\mathbfup a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mathbfup a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathbfup a\">
+        <mi mathvariant=\"bold\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('mathit', () =>
+    toXmlMatch(
+      tex2mml('\\mathit a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mathit a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathit a\">
+        <mi data-mjx-variant=\"-tex-mathit\" mathvariant=\"italic\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('mathbfit', () =>
+    toXmlMatch(
+      tex2mml('\\mathbfit a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mathbfit a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathbfit a\">
+        <mi mathvariant=\"bold-italic\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('mathbb', () =>
+    toXmlMatch(
+      tex2mml('\\mathbb a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mathbb a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathbb a\">
+        <mi mathvariant=\"double-struck\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('mathfrak', () =>
+    toXmlMatch(
+      tex2mml('\\mathfrak a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mathfrak a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathfrak a\">
+        <mi mathvariant=\"fraktur\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('mathbffrak', () =>
+    toXmlMatch(
+      tex2mml('\\mathbffrak a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mathbffrak a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathbffrak a\">
+        <mi mathvariant=\"bold-fraktur\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('mathscr', () =>
+    toXmlMatch(
+      tex2mml('\\mathscr a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mathscr a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathscr a\">
+        <mi mathvariant=\"script\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('mathbfscr', () =>
+    toXmlMatch(
+      tex2mml('\\mathbfscr a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mathbfscr a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathbfscr a\">
+        <mi mathvariant=\"bold-script\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('mathsf', () =>
+    toXmlMatch(
+      tex2mml('\\mathsf a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mathsf a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathsf a\">
+        <mi mathvariant=\"sans-serif\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('mathsfup', () =>
+    toXmlMatch(
+      tex2mml('\\mathsfup a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mathsfup a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathsfup a\">
+        <mi mathvariant=\"sans-serif\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('mathbfsf', () =>
+    toXmlMatch(
+      tex2mml('\\mathbfsf a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mathbfsf a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathbfsf a\">
+        <mi mathvariant=\"bold-sans-serif\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('mathbfsfup', () =>
+    toXmlMatch(
+      tex2mml('\\mathbfsfup a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mathbfsfup a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathbfsfup a\">
+        <mi mathvariant=\"bold-sans-serif\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('mathsfit', () =>
+    toXmlMatch(
+      tex2mml('\\mathsfit a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mathsfit a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathsfit a\">
+        <mi mathvariant=\"sans-serif-italic\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('mathbfsfit', () =>
+    toXmlMatch(
+      tex2mml('\\mathbfsfit a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mathbfsfit a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathbfsfit a\">
+        <mi mathvariant=\"sans-serif-bold-italic\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('mathtt', () =>
+    toXmlMatch(
+      tex2mml('\\mathtt a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mathtt a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathtt a\">
+        <mi mathvariant=\"monospace\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('mathcal', () =>
+    toXmlMatch(
+      tex2mml('\\mathcal a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mathcal a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathcal a\">
+        <mi data-mjx-variant=\"-tex-calligraphic\" mathvariant=\"script\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('mathbfcal', () =>
+    toXmlMatch(
+      tex2mml('\\mathbfcal a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mathbfcal a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathbfcal a\">
+        <mi data-mjx-variant=\"-tex-bold-calligraphic\" mathvariant=\"bold-script\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('symrm', () =>
+    toXmlMatch(
+      tex2mml('\\symrm a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\symrm a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\symrm a\">
+        <mi mathvariant=\"normal\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('symup', () =>
+    toXmlMatch(
+      tex2mml('\\symup a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\symup a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\symup a\">
+        <mi mathvariant=\"normal\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('symnormal', () =>
+    toXmlMatch(
+      tex2mml('\\symnormal a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\symnormal a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\symnormal a\">
+        <mi data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('symbf', () =>
+    toXmlMatch(
+      tex2mml('\\symbf a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\symbf a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\symbf a\">
+        <mi mathvariant=\"bold\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('symbfup', () =>
+    toXmlMatch(
+      tex2mml('\\symbfup a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\symbfup a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\symbfup a\">
+        <mi mathvariant=\"bold\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('symit', () =>
+    toXmlMatch(
+      tex2mml('\\symit a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\symit a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\symit a\">
+        <mi data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('symbfit', () =>
+    toXmlMatch(
+      tex2mml('\\symbfit a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\symbfit a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\symbfit a\">
+        <mi mathvariant=\"bold-italic\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('symbb', () =>
+    toXmlMatch(
+      tex2mml('\\symbb a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\symbb a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\symbb a\">
+        <mi mathvariant=\"double-struck\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('symfrak', () =>
+    toXmlMatch(
+      tex2mml('\\symfrak a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\symfrak a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\symfrak a\">
+        <mi mathvariant=\"fraktur\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('symbffrak', () =>
+    toXmlMatch(
+      tex2mml('\\symbffrak a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\symbffrak a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\symbffrak a\">
+        <mi mathvariant=\"bold-fraktur\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('symscr', () =>
+    toXmlMatch(
+      tex2mml('\\symscr a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\symscr a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\symscr a\">
+        <mi mathvariant=\"script\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('symbfscr', () =>
+    toXmlMatch(
+      tex2mml('\\symbfscr a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\symbfscr a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\symbfscr a\">
+        <mi mathvariant=\"bold-script\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('symsf', () =>
+    toXmlMatch(
+      tex2mml('\\symsf a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\symsf a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\symsf a\">
+        <mi mathvariant=\"sans-serif\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('symsfup', () =>
+    toXmlMatch(
+      tex2mml('\\symsfup a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\symsfup a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\symsfup a\">
+        <mi mathvariant=\"sans-serif\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('symbfsf', () =>
+    toXmlMatch(
+      tex2mml('\\symbfsf a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\symbfsf a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\symbfsf a\">
+        <mi mathvariant=\"bold-sans-serif\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('symbfsfup', () =>
+    toXmlMatch(
+      tex2mml('\\symbfsfup a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\symbfsfup a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\symbfsfup a\">
+        <mi mathvariant=\"bold-sans-serif\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('symsfit', () =>
+    toXmlMatch(
+      tex2mml('\\symsfit a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\symsfit a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\symsfit a\">
+        <mi mathvariant=\"sans-serif-italic\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('symbfsfit', () =>
+    toXmlMatch(
+      tex2mml('\\symbfsfit a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\symbfsfit a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\symbfsfit a\">
+        <mi mathvariant=\"sans-serif-bold-italic\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('symtt', () =>
+    toXmlMatch(
+      tex2mml('\\symtt a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\symtt a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\symtt a\">
+        <mi mathvariant=\"monospace\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('symcal', () =>
+    toXmlMatch(
+      tex2mml('\\symcal a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\symcal a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\symcal a\">
+        <mi data-mjx-variant=\"-tex-calligraphic\" mathvariant=\"script\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('symbfcal', () =>
+    toXmlMatch(
+      tex2mml('\\symbfcal a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\symbfcal a\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\symbfcal a\">
+        <mi data-mjx-variant=\"-tex-bold-calligraphic\" mathvariant=\"bold-script\" data-latex=\"a\">a</mi>
+      </mrow>
+    </math>`
+    ));
+  it('textrm', () =>
+    toXmlMatch(
+      tex2mml('\\textrm a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\textrm a\" display=\"block\">
+      <mtext data-latex=\"\\textrm a\">a</mtext>
+    </math>`
+    ));
+  it('textup', () =>
+    toXmlMatch(
+      tex2mml('\\textup a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\textup a\" display=\"block\">
+      <mtext data-latex=\"\\textup a\">a</mtext>
+    </math>`
+    ));
+  it('textnormal', () =>
+    toXmlMatch(
+      tex2mml('\\textnormal a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\textnormal a\" display=\"block\">
+      <mtext data-latex=\"\\textnormal a\">a</mtext>
+    </math>`
+    ));
+  it('textit', () =>
+    toXmlMatch(
+      tex2mml('\\textit a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\textit a\" display=\"block\">
+      <mtext mathvariant=\"italic\" data-latex=\"\\textit a\">a</mtext>
+    </math>`
+    ));
+  it('textbf', () =>
+    toXmlMatch(
+      tex2mml('\\textbf a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\textbf a\" display=\"block\">
+      <mtext mathvariant=\"bold\" data-latex=\"\\textbf a\">a</mtext>
+    </math>`
+    ));
+  it('textsf', () =>
+    toXmlMatch(
+      tex2mml('\\textsf a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\textsf a\" display=\"block\">
+      <mtext mathvariant=\"sans-serif\" data-latex=\"\\textsf a\">a</mtext>
+    </math>`
+    ));
+  it('texttt', () =>
+    toXmlMatch(
+      tex2mml('\\texttt a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\texttt a\" display=\"block\">
+      <mtext mathvariant=\"monospace\" data-latex=\"\\texttt a\">a</mtext>
+    </math>`
+    ));
+});
+
+describe('Over Under Extenders', () => {
+  it('overparen', () =>
+    toXmlMatch(
+      tex2mml('\\overparen{ab}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\overparen{ab}\" display=\"block\">
+      <mover data-latex=\"\\overparen{ab}\">
+        <mrow data-latex=\"ab\">
+          <mi data-latex=\"a\">a</mi>
+          <mi data-latex=\"b\">b</mi>
+        </mrow>
+        <mo>&#x23DC;</mo>
+      </mover>
+    </math>`
+    ));
+  it('underparen', () =>
+    toXmlMatch(
+      tex2mml('\\underparen{ab}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\underparen{ab}\" display=\"block\">
+      <munder data-latex=\"\\underparen{ab}\">
+        <mrow data-latex=\"ab\">
+          <mi data-latex=\"a\">a</mi>
+          <mi data-latex=\"b\">b</mi>
+        </mrow>
+        <mo>&#x23DD;</mo>
+      </munder>
+    </math>`
+    ));
+  it('overrightarrow', () =>
+    toXmlMatch(
+      tex2mml('\\overrightarrow{ab}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\overrightarrow{ab}\" display=\"block\">
+      <mover data-latex=\"\\overrightarrow{ab}\">
+        <mrow data-latex=\"ab\">
+          <mi data-latex=\"a\">a</mi>
+          <mi data-latex=\"b\">b</mi>
+        </mrow>
+        <mo>&#x2192;</mo>
+      </mover>
+    </math>`
+    ));
+  it('underrightarrow', () =>
+    toXmlMatch(
+      tex2mml('\\underrightarrow{ab}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\underrightarrow{ab}\" display=\"block\">
+      <munder data-latex=\"\\underrightarrow{ab}\">
+        <mrow data-latex=\"ab\">
+          <mi data-latex=\"a\">a</mi>
+          <mi data-latex=\"b\">b</mi>
+        </mrow>
+        <mo>&#x2192;</mo>
+      </munder>
+    </math>`
+    ));
+  it('overleftarrow', () =>
+    toXmlMatch(
+      tex2mml('\\overleftarrow{ab}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\overleftarrow{ab}\" display=\"block\">
+      <mover data-latex=\"\\overleftarrow{ab}\">
+        <mrow data-latex=\"ab\">
+          <mi data-latex=\"a\">a</mi>
+          <mi data-latex=\"b\">b</mi>
+        </mrow>
+        <mo>&#x2190;</mo>
+      </mover>
+    </math>`
+    ));
+  it('underleftarrow', () =>
+    toXmlMatch(
+      tex2mml('\\underleftarrow{ab}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\underleftarrow{ab}\" display=\"block\">
+      <munder data-latex=\"\\underleftarrow{ab}\">
+        <mrow data-latex=\"ab\">
+          <mi data-latex=\"a\">a</mi>
+          <mi data-latex=\"b\">b</mi>
+        </mrow>
+        <mo>&#x2190;</mo>
+      </munder>
+    </math>`
+    ));
+  it('overleftrightarrow', () =>
+    toXmlMatch(
+      tex2mml('\\overleftrightarrow{ab}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\overleftrightarrow{ab}\" display=\"block\">
+      <mover data-latex=\"\\overleftrightarrow{ab}\">
+        <mrow data-latex=\"ab\">
+          <mi data-latex=\"a\">a</mi>
+          <mi data-latex=\"b\">b</mi>
+        </mrow>
+        <mo>&#x2194;</mo>
+      </mover>
+    </math>`
+    ));
+});
+
+describe('Math style sizes', () => {
+  it('displaystyle', () =>
+    toXmlMatch(
+      tex2mml('\\displaystyle A', false),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\displaystyle A\">
+      <mstyle displaystyle=\"true\" scriptlevel=\"0\" data-latex=\"\\displaystyle A\">
+        <mi data-latex=\"A\">A</mi>
+      </mstyle>
+    </math>`
+    ));
+  it('textstyle', () =>
+    toXmlMatch(
+      tex2mml('\\textstyle B', false),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\textstyle B\">
+      <mstyle displaystyle=\"false\" scriptlevel=\"0\" data-latex=\"\\textstyle B\">
+        <mi data-latex=\"B\">B</mi>
+      </mstyle>
+    </math>`
+    ));
+  it('scriptstyle', () =>
+    toXmlMatch(
+      tex2mml('\\scriptstyle C', false),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\scriptstyle C\">
+      <mstyle displaystyle=\"false\" scriptlevel=\"1\" data-latex=\"\\scriptstyle C\">
+        <mi data-latex=\"C\">C</mi>
+      </mstyle>
+    </math>`
+    ));
+});
+
+describe('Special characters', () => {
+  // it('Space', () =>
+  //   toXmlMatch(
+  //     tex2mml('a\ b'),
+  //     ``
+  //   ));
+  // it('Tab', () =>
+  //   toXmlMatch(
+  //     tex2mml('a\tb'),
+  //     ``
+  //   ));
+  // it('CR', () =>
+  //   toXmlMatch(
+  //     tex2mml('a\rb'),
+  //     ``
+  //   ));
+  // it('Newline', () =>
+  //   toXmlMatch(
+  //     tex2mml('a\nb'),
+  //     ``
+  //   ));
+  // it('No break space', () =>
+  //   toXmlMatch(
+  //     tex2mml('a{\u00A0}b'),
+  //     ``
+  //   ));
+  it('Prime', () =>
+    toXmlMatch(
+      tex2mml('a\u2019b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a&#x2019;b\" display=\"block\">
+      <msup>
+        <mi data-latex=\"a\">a</mi>
+        <mo data-mjx-alternate=\"1\" data-latex=\"&#x2019;\">&#x2032;</mo>
+      </msup>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
+});
+
+describe('Big Commands for Delimiters', () => {
+  it('big', () =>
+    toXmlMatch(
+      tex2mml('\\big|'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\big|\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\big|\">
+        <mo minsize=\"1.2em\" maxsize=\"1.2em\">|</mo>
+      </mrow>
+    </math>`
+    ));
+  it('Big', () =>
+    toXmlMatch(
+      tex2mml('\\Big|'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Big|\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\Big|\">
+        <mo minsize=\"1.623em\" maxsize=\"1.623em\">|</mo>
+      </mrow>
+    </math>`
+    ));
+  it('bigg', () =>
+    toXmlMatch(
+      tex2mml('\\bigg|'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\bigg|\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\bigg|\">
+        <mo minsize=\"2.047em\" maxsize=\"2.047em\">|</mo>
+      </mrow>
+    </math>`
+    ));
+  it('Bigg', () =>
+    toXmlMatch(
+      tex2mml('\\Bigg|'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Bigg|\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\Bigg|\">
+        <mo minsize=\"2.470em\" maxsize=\"2.470em\">|</mo>
+      </mrow>
+    </math>`
+    ));
+  it('Biggl', () =>
+    toXmlMatch(
+      tex2mml('\\Biggl|'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Biggl|\" display=\"block\">
+      <mrow data-mjx-texclass=\"OPEN\" data-latex=\"\\Biggl|\">
+        <mo minsize=\"2.470em\" maxsize=\"2.470em\">|</mo>
+      </mrow>
+    </math>`
+    ));
+  it('Biggr', () =>
+    toXmlMatch(
+      tex2mml('\\Biggr|'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Biggr|\" display=\"block\">
+      <mrow data-mjx-texclass=\"CLOSE\" data-latex=\"\\Biggr|\">
+        <mo minsize=\"2.470em\" maxsize=\"2.470em\">|</mo>
+      </mrow>
+    </math>`
+    ));
+  it('bigm', () =>
+    toXmlMatch(
+      tex2mml('\\bigm|'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\bigm|\" display=\"block\">
+      <mrow data-mjx-texclass=\"REL\" data-latex=\"\\bigm|\">
+        <mo minsize=\"1.2em\" maxsize=\"1.2em\">|</mo>
+      </mrow>
+    </math>`
+    ));
+  it('Bigm', () =>
+    toXmlMatch(
+      tex2mml('\\Bigm|'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Bigm|\" display=\"block\">
+      <mrow data-mjx-texclass=\"REL\" data-latex=\"\\Bigm|\">
+        <mo minsize=\"1.623em\" maxsize=\"1.623em\">|</mo>
+      </mrow>
+    </math>`
+    ));
+  it('biggm', () =>
+    toXmlMatch(
+      tex2mml('\\biggm|'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\biggm|\" display=\"block\">
+      <mrow data-mjx-texclass=\"REL\" data-latex=\"\\biggm|\">
+        <mo minsize=\"2.047em\" maxsize=\"2.047em\">|</mo>
+      </mrow>
+    </math>`
+    ));
+  it('Biggm', () =>
+    toXmlMatch(
+      tex2mml('\\Biggm|'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Biggm|\" display=\"block\">
+      <mrow data-mjx-texclass=\"REL\" data-latex=\"\\Biggm|\">
+        <mo minsize=\"2.470em\" maxsize=\"2.470em\">|</mo>
+      </mrow>
+    </math>`
+    ));
+});
+
+// describe('Complete Base Items', () => {
+//   it('Middle Color', () =>
+//     toXmlMatch(
+//       tex2mml('\\left(A\\color{red}\\middle|B\\right)'),
+//       `<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+//   <mrow data-mjx-texclass="INNER">
+//     <mo data-mjx-texclass="OPEN">(</mo>
+//     <mi>A</mi>
+//     <mstyle mathcolor="red"></mstyle>
+//     <mrow data-mjx-texclass="CLOSE"></mrow>
+//     <mo mathcolor="red">|</mo>
+//     <mrow data-mjx-texclass="OPEN"></mrow>
+//     <mi>B</mi>
+//     <mo data-mjx-texclass="CLOSE">)</mo>
+//   </mrow>
+// </math>`
+//     ));
+// });
+
+describe('Complete Base Methods', () => {
+  it('Comment', () =>
+    toXmlMatch(
+      tex2mml('a %comment'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a %comment\" display=\"block\">
+      <mi data-latex=\"a %comment\">a</mi>
+    </math>`
+    ));
+});
+
 afterAll(() => getTokens('base'));
+
+// describe('', () => {
+//   it('', () =>
+//     toXmlMatch(
+//       tex2mml(''),
+//       ``
+//     ));
+// });
