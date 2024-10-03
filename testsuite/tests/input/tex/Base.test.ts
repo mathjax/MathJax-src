@@ -270,58 +270,6 @@ describe('Base', () => {
   <mo stretchy="false" data-latex="\\Rightarrow">&#x21D2;</mo>
 </math>`
     ));
-  it('MathChar7 Single', () =>
-    toXmlMatch(
-      tex2mml('\\Upsilon'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Upsilon" display="block">
-  <mi mathvariant="normal" data-latex="\\Upsilon">&#x3A5;</mi>
-</math>`
-    ));
-  it('MathChar7 Single Font', () =>
-    toXmlMatch(
-      tex2mml('\\mathbf{\\Upsilon}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathbf{\\Upsilon}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="\\mathbf{\\Upsilon}">
-    <mi mathvariant="bold" data-latex="\\Upsilon">&#x3A5;</mi>
-  </mrow>
-</math>`
-    ));
-  it('MathChar7 Operator', () =>
-    toXmlMatch(
-      tex2mml('\\And'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\And" display="block">
-  <mi mathvariant="normal" data-latex="\\And">&amp;</mi>
-</math>`
-    ));
-  it('MathChar7 Multi', () =>
-    toXmlMatch(
-      tex2mml('\\Lambda \\& \\Gamma \\Rightarrow \\Omega\\And\\Upsilon'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Lambda \\&amp; \\Gamma \\Rightarrow \\Omega\\And\\Upsilon" display="block">
-  <mi mathvariant="normal" data-latex="\\Lambda">&#x39B;</mi>
-  <mi mathvariant="normal" data-latex="\\&amp;">&amp;</mi>
-  <mi mathvariant="normal" data-latex="\\Gamma">&#x393;</mi>
-  <mo stretchy="false" data-latex="\\Rightarrow">&#x21D2;</mo>
-  <mi mathvariant="normal" data-latex="\\Omega">&#x3A9;</mi>
-  <mi mathvariant="normal" data-latex="\\And">&amp;</mi>
-  <mi mathvariant="normal" data-latex="\\Upsilon">&#x3A5;</mi>
-</math>`
-    ));
-  it('Tilde', () =>
-    toXmlMatch(
-      tex2mml('~'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="~" display="block">
-  <mtext data-latex="~">&#xA0;</mtext>
-</math>`
-    ));
-  it('Tilde2', () =>
-    toXmlMatch(
-      tex2mml('a~b'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a~b" display="block">
-  <mi data-latex="a">a</mi>
-  <mtext data-latex="~">&#xA0;</mtext>
-  <mi data-latex="b">b</mi>
-</math>`
-    ));
   it('Empty base', () =>
     toXmlMatch(
       tex2mml('^2'),
@@ -476,28 +424,6 @@ describe('Base', () => {
   </mfrac>
 </math>`
     ));
-  it('Raise', () =>
-    toXmlMatch(
-      tex2mml('\\raise 1em {x}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\raise 1em {x}" display="block">
-  <mpadded height="+1em" depth="-1em" voffset="+1em" data-latex="\\raise 1em {x}">
-    <mrow data-mjx-texclass="ORD">
-      <mi data-latex="x">x</mi>
-    </mrow>
-  </mpadded>
-</math>`
-    ));
-  it('Lower', () =>
-    toXmlMatch(
-      tex2mml('\\lower 1em {x}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\lower 1em {x}" display="block">
-  <mpadded height="-1em" depth="+1em" voffset="-1em" data-latex="\\lower 1em {x}">
-    <mrow data-mjx-texclass="ORD">
-      <mi data-latex="x">x</mi>
-    </mrow>
-  </mpadded>
-</math>`
-    ));
   it('Operator Dots', () =>
     toXmlMatch(
       tex2mml('+\\dots+'),
@@ -574,49 +500,6 @@ describe('Base', () => {
   </mrow>
 </math>`
     ));
-  it('Vector', () =>
-    toXmlMatch(
-      tex2mml('\\vec{a}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\vec{a}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="\\vec{a}">
-    <mover>
-      <mi data-latex="a">a</mi>
-      <mo stretchy="false">&#x2192;</mo>
-    </mover>
-  </mrow>
-</math>`
-    ));
-  it('Vector Multi', () =>
-    toXmlMatch(
-      tex2mml('\\vec{\\vec{a}}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\vec{\\vec{a}}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="\\vec{\\vec{a}}">
-    <mover>
-      <mrow data-mjx-texclass="ORD" data-latex="\\vec{a}">
-        <mover>
-          <mi data-latex="a">a</mi>
-          <mo stretchy="false">&#x2192;</mo>
-        </mover>
-      </mrow>
-      <mo stretchy="false">&#x2192;</mo>
-    </mover>
-  </mrow>
-</math>`
-    ));
-  it('Vector Font', () =>
-    toXmlMatch(
-      tex2mml('\\mathrm{\\vec{a}}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathrm{\\vec{a}}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{\\vec{a}}">
-    <mrow data-mjx-texclass="ORD" data-latex="\\vec{a}">
-      <mover>
-        <mi mathvariant="normal" data-latex="a">a</mi>
-        <mo stretchy="false">&#x2192;</mo>
-      </mover>
-    </mrow>
-  </mrow>
-</math>`
-    ));
   it('Overset', () =>
     toXmlMatch(
       tex2mml('\\overset{a}{b}'),
@@ -648,238 +531,6 @@ describe('Base', () => {
       </munderover>
     </math>`
     ));
-  it('Strut', () =>
-    toXmlMatch(
-      tex2mml('\\strut{x}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\strut{x}" display="block">
-  <mpadded height="8.6pt" depth="3pt" width="0" data-latex="\\strut">
-    <mrow></mrow>
-  </mpadded>
-  <mrow data-mjx-texclass="ORD" data-latex="{x}">
-    <mi data-latex="x">x</mi>
-  </mrow>
-</math>`
-    ));
-  it('Fbox', () =>
-    toXmlMatch(
-      tex2mml('\\fbox{x}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\fbox{x}" display="block">
-  <menclose notation="box" data-latex="\\fbox{x}">
-    <mtext>x</mtext>
-  </menclose>
-</math>`
-    ));
-  it('Hbox', () =>
-    toXmlMatch(
-      tex2mml('\\hbox{x}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\hbox{x}" display="block">
-  <mstyle displaystyle="false" scriptlevel="0" data-latex="\\hbox{x}">
-    <mtext>x</mtext>
-  </mstyle>
-</math>`
-    ));
-  it('Phantom', () =>
-    toXmlMatch(
-      tex2mml('x\\phantom{y}z'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x\\phantom{y}z" display="block">
-  <mi data-latex="x">x</mi>
-  <mrow data-mjx-texclass="ORD" data-latex="\\phantom{y}">
-    <mphantom>
-      <mi data-latex="y">y</mi>
-    </mphantom>
-  </mrow>
-  <mi data-latex="z">z</mi>
-</math>`
-    ));
-  it('Vertical Phantom', () =>
-    toXmlMatch(
-      tex2mml('x\\vphantom{y}z'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x\\vphantom{y}z" display="block">
-  <mi data-latex="x">x</mi>
-  <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{y}">
-    <mpadded width="0">
-      <mphantom>
-        <mi data-latex="y">y</mi>
-      </mphantom>
-    </mpadded>
-  </mrow>
-  <mi data-latex="z">z</mi>
-</math>`
-    ));
-  it('Horizontal Phantom', () =>
-    toXmlMatch(
-      tex2mml('x\\hphantom{y}z'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x\\hphantom{y}z" display="block">
-  <mi data-latex="x">x</mi>
-  <mrow data-mjx-texclass="ORD" data-latex="\\hphantom{y}">
-    <mpadded height="0" depth="0">
-      <mphantom>
-        <mi data-latex="y">y</mi>
-      </mphantom>
-    </mpadded>
-  </mrow>
-  <mi data-latex="z">z</mi>
-</math>`
-    ));
-  it('Smash', () =>
-    toXmlMatch(
-      tex2mml('\\smash{x}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smash{x}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="\\smash{x}">
-    <mpadded height="0" depth="0">
-      <mi data-latex="x">x</mi>
-    </mpadded>
-  </mrow>
-</math>`
-    ));
-  it('Smash Bottom', () =>
-    toXmlMatch(
-      tex2mml('\\smash[b]{x}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smash[b]{x}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="\\smash[b]{x}">
-    <mpadded depth="0">
-      <mi data-latex="x">x</mi>
-    </mpadded>
-  </mrow>
-</math>`
-    ));
-  it('Smash Top', () =>
-    toXmlMatch(
-      tex2mml('\\smash[t]{x}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smash[t]{x}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{x}">
-    <mpadded height="0">
-      <mi data-latex="x">x</mi>
-    </mpadded>
-  </mrow>
-</math>`
-    ));
-  it('Llap', () =>
-    toXmlMatch(
-      tex2mml('\\llap{x}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\llap{x}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="\\llap{x}">
-    <mpadded width="0" lspace="-1width">
-      <mi data-latex="x">x</mi>
-    </mpadded>
-  </mrow>
-</math>`
-    ));
-  it('Rlap', () =>
-    toXmlMatch(
-      tex2mml('\\rlap{x}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\rlap{x}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="\\rlap{x}">
-    <mpadded width="0">
-      <mi data-latex="x">x</mi>
-    </mpadded>
-  </mrow>
-</math>`
-    ));
-  it('Rlap 2', () =>
-    toXmlMatch(
-      tex2mml('a\\mathrel{\\rlap{\\,/}{=}}b'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\mathrel{\\rlap{\\,/}{=}}b" display="block">
-  <mi data-latex="a">a</mi>
-  <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\rlap{\\,/}{=}}">
-    <mrow data-mjx-texclass="ORD" data-latex="\\rlap{\\,/}">
-      <mpadded width="0">
-        <mstyle scriptlevel="0" data-latex="\\,">
-          <mspace width="0.167em"></mspace>
-        </mstyle>
-        <mrow data-mjx-texclass="ORD">
-          <mo data-latex="/">/</mo>
-        </mrow>
-      </mpadded>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{=}">
-      <mo data-latex="=">=</mo>
-    </mrow>
-  </mrow>
-  <mi data-latex="b">b</mi>
-</math>`
-    ));
-  it('Llap 2', () =>
-    toXmlMatch(
-      tex2mml('a\\mathrel{{=}\\llap{/\\,}}b'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\mathrel{{=}\\llap{/\\,}}b" display="block">
-  <mi data-latex="a">a</mi>
-  <mrow data-mjx-texclass="REL" data-latex="\\mathrel{{=}\\llap{/\\,}}">
-    <mrow data-mjx-texclass="ORD" data-latex="{=}">
-      <mo data-latex="=">=</mo>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="\\llap{/\\,}">
-      <mpadded width="0" lspace="-1width">
-        <mrow data-mjx-texclass="ORD">
-          <mo data-latex="/">/</mo>
-        </mrow>
-        <mstyle scriptlevel="0" data-latex="\\,">
-          <mspace width="0.167em"></mspace>
-        </mstyle>
-      </mpadded>
-    </mrow>
-  </mrow>
-  <mi data-latex="b">b</mi>
-</math>`
-    ));
-  it('Raise In Line', () =>
-    toXmlMatch(
-      tex2mml('x\\raise{2pt}{y}z'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x\\raise{2pt}{y}z" display="block">
-  <mi data-latex="x">x</mi>
-  <mpadded height="+2pt" depth="-2pt" voffset="+2pt" data-latex="{}">
-    <mrow data-mjx-texclass="ORD">
-      <mi data-latex="y">y</mi>
-    </mrow>
-  </mpadded>
-  <mi data-latex="z">z</mi>
-</math>`
-    ));
-  it('Lower 2', () =>
-    toXmlMatch(
-      tex2mml('x\\lower{2pt}{y}z'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x\\lower{2pt}{y}z" display="block">
-  <mi data-latex="x">x</mi>
-  <mpadded height="-2pt" depth="+2pt" voffset="-2pt" data-latex="{}">
-    <mrow data-mjx-texclass="ORD">
-      <mi data-latex="y">y</mi>
-    </mrow>
-  </mpadded>
-  <mi data-latex="z">z</mi>
-</math>`
-    ));
-  it('Raise Negative', () =>
-    toXmlMatch(
-      tex2mml('x\\raise{-2pt}{y}z'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x\\raise{-2pt}{y}z" display="block">
-  <mi data-latex="x">x</mi>
-  <mpadded height="-2pt" depth="+2pt" voffset="-2pt" data-latex="{}">
-    <mrow data-mjx-texclass="ORD">
-      <mi data-latex="y">y</mi>
-    </mrow>
-  </mpadded>
-  <mi data-latex="z">z</mi>
-</math>`
-    ));
-  it('Lower Negative', () =>
-    toXmlMatch(
-      tex2mml('x\\lower{-2pt}{y}z'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x\\lower{-2pt}{y}z" display="block">
-  <mi data-latex="x">x</mi>
-  <mpadded height="+2pt" depth="-2pt" voffset="+2pt" data-latex="{}">
-    <mrow data-mjx-texclass="ORD">
-      <mi data-latex="y">y</mi>
-    </mrow>
-  </mpadded>
-  <mi data-latex="z">z</mi>
-</math>`
-    ));
-  it.skip('Move Left', () => toXmlMatch(tex2mml('x\\moveleft{2pt}{y}z'), ''));
-  it.skip('Move Right', () => toXmlMatch(tex2mml('x\\moveright{2pt}{y}z'), ''));
-  it.skip('Move Left Negative', () =>
-    toXmlMatch(tex2mml('x\\moveleft{-2pt}{y}z'), ''));
-  it.skip('Move Right Negative', () =>
-    toXmlMatch(tex2mml('x\\moveright{-2pt}{y}z'), ''));
   it('Rule 2D', () =>
     toXmlMatch(
       tex2mml('\\rule{2cm}{1cm}'),
@@ -929,69 +580,6 @@ describe('Base', () => {
     </mover>
   </mrow>
   <mi data-latex="y">y</mi>
-</math>`
-    ));
-  it('Linebreak', () =>
-    toXmlMatch(
-      tex2mml('a\\\\b'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\\\b" display="block">
-  <mi data-latex="a">a</mi>
-  <mspace linebreak="newline" data-latex="\\\\"></mspace>
-  <mi data-latex="b">b</mi>
-</math>`
-    ));
-  it('Custom Linebreak', () =>
-    toXmlMatch(
-      tex2mml('a\\\\[2ex]b'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\\\[2ex]b" display="block">
-  <mi data-latex="a">a</mi>
-  <mspace linebreak="newline" data-lineleading="2ex" data-latex="\\\\[2ex]"></mspace>
-  <mi data-latex="b">b</mi>
-</math>`
-    ));
-  it('Custom Linebreak European', () =>
-    toXmlMatch(
-      tex2mml('a\\\\[1,5cm]b'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\\\[1,5cm]b" display="block">
-  <mi data-latex="a">a</mi>
-  <mspace linebreak="newline" data-lineleading="1.5cm" data-latex="\\\\[1,5cm]"></mspace>
-  <mi data-latex="b">b</mi>
-</math>`
-    ));
-  it('Cr Linebreak', () =>
-    toXmlMatch(
-      tex2mml('\\array{a\\cr b}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\array{a\\cr b}" display="block">
-  <mtable rowspacing="4pt" columnspacing="1em" data-frame-styles="" framespacing=".2em .125em" data-latex="\\array{a\\cr b}">
-    <mtr data-latex-item="{" data-latex="{">
-      <mtd>
-        <mi data-latex="a">a</mi>
-      </mtd>
-    </mtr>
-    <mtr data-latex-item="{" data-latex="{">
-      <mtd>
-        <mi data-latex="b">b</mi>
-      </mtd>
-    </mtr>
-  </mtable>
-</math>`
-    ));
-  it('Array Custom Linebreak', () =>
-    toXmlMatch(
-      tex2mml('\\array{a\\\\[1cm] b}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\array{a\\\\[1cm] b}" display="block">
-  <mtable rowspacing="3.235em 0.4em" columnspacing="1em" data-frame-styles="" framespacing=".2em .125em" data-latex="\\array{a\\\\[1cm] b}">
-    <mtr data-latex-item="{" data-latex="{">
-      <mtd>
-        <mi data-latex="a">a</mi>
-      </mtd>
-    </mtr>
-    <mtr data-latex-item="{" data-latex="{">
-      <mtd>
-        <mi data-latex="b">b</mi>
-      </mtd>
-    </mtr>
-  </mtable>
 </math>`
     ));
 });
@@ -3525,6 +3113,20 @@ describe('Moving limits', () => {
     <mn data-latex="2">2</mn>
   </mover>
 </math>`
+    ));
+  it('Underleftrightarrow', () =>
+    toXmlMatch(
+      tex2mml('\\underleftrightarrow{abc}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\underleftrightarrow{abc}\" display=\"block\">
+      <munder data-latex=\"\\underleftrightarrow{abc}\">
+        <mrow data-latex=\"abc\">
+          <mi data-latex=\"a\">a</mi>
+          <mi data-latex=\"b\">b</mi>
+          <mi data-latex=\"c\">c</mi>
+        </mrow>
+        <mo>&#x2194;</mo>
+      </munder>
+    </math>`
     ));
 });
 
@@ -7696,6 +7298,907 @@ describe('Big Commands for Delimiters', () => {
     ));
 });
 
+describe('Boxes', () => {
+  it('Fbox', () =>
+    toXmlMatch(
+      tex2mml('\\fbox{x}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\fbox{x}" display="block">
+  <menclose notation="box" data-latex="\\fbox{x}">
+    <mtext>x</mtext>
+  </menclose>
+</math>`
+    ));
+  it('Hbox', () =>
+    toXmlMatch(
+      tex2mml('\\hbox{x}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\hbox{x}" display="block">
+  <mstyle displaystyle="false" scriptlevel="0" data-latex="\\hbox{x}">
+    <mtext>x</mtext>
+  </mstyle>
+</math>`
+    ));
+  it('Vtop', () =>
+    toXmlMatch(
+      tex2mml('\\vtop{x}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\vtop{x}\" display=\"block\">
+      <mpadded data-mjx-vbox=\"top\" data-mjx-texclass=\"ORD\" data-vertical-align=\"top\" data-latex=\"\\vtop{x}\">
+        <mi data-latex=\"x\">x</mi>
+      </mpadded>
+    </math>`
+    ));
+  it('Vtop Hsize', () =>
+    toXmlMatch(
+      tex2mml('\\hsize{2cm}\\vtop{x}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\hsize{2cm}\\vtop{x}\" display=\"block\" maxwidth=\"2cm\" overflow=\"linebreak\">
+      <mpadded data-mjx-vbox=\"top\" data-mjx-texclass=\"ORD\" data-vertical-align=\"top\" width=\"2cm\" data-overflow=\"linebreak\" data-latex=\"\\hsize{2cm}\\vtop{x}\">
+        <mi data-latex=\"x\">x</mi>
+      </mpadded>
+    </math>`
+    ));
+  it('Vcenter', () =>
+    toXmlMatch(
+      tex2mml('\\vcenter{x}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\vcenter{x}\" display=\"block\">
+      <mpadded data-mjx-vbox=\"center\" data-mjx-texclass=\"ORD\" data-vertical-align=\"center\" data-latex=\"\\vcenter{x}\">
+        <mi data-latex=\"x\">x</mi>
+      </mpadded>
+    </math>`
+    ));
+  it('Vcenter Hsize', () =>
+    toXmlMatch(
+      tex2mml('\\hsize{2cm}\\vcenter{x}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\hsize{2cm}\\vcenter{x}\" display=\"block\" maxwidth=\"2cm\" overflow=\"linebreak\">
+      <mpadded data-mjx-vbox=\"center\" data-mjx-texclass=\"ORD\" data-vertical-align=\"center\" width=\"2cm\" data-overflow=\"linebreak\" data-latex=\"\\hsize{2cm}\\vcenter{x}\">
+        <mi data-latex=\"x\">x</mi>
+      </mpadded>
+    </math>`
+    ));
+  it('Vbox', () =>
+    toXmlMatch(
+      tex2mml('\\vbox{x}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\vbox{x}\" display=\"block\">
+      <mpadded data-mjx-vbox=\"bottom\" data-mjx-texclass=\"ORD\" data-vertical-align=\"bottom\" data-latex=\"\\vbox{x}\">
+        <mi data-latex=\"x\">x</mi>
+      </mpadded>
+    </math>`
+    ));
+  it('Vbox Hsize', () =>
+    toXmlMatch(
+      tex2mml('\\hsize{2cm}\\vbox{x}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\hsize{2cm}\\vbox{x}\" display=\"block\" maxwidth=\"2cm\" overflow=\"linebreak\">
+      <mpadded data-mjx-vbox=\"bottom\" data-mjx-texclass=\"ORD\" data-vertical-align=\"bottom\" width=\"2cm\" data-overflow=\"linebreak\" data-latex=\"\\hsize{2cm}\\vbox{x}\">
+        <mi data-latex=\"x\">x</mi>
+      </mpadded>
+    </math>`
+    ));
+  it('Parbox', () =>
+    toXmlMatch(
+      tex2mml('\\parbox{2cm}{x}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\parbox{2cm}{x}\" display=\"block\">
+      <mpadded data-mjx-vbox=\"center\" width=\"2cm\" data-overflow=\"linebreak\" data-vertical-align=\"center\" data-latex=\"\\parbox{2cm}{x}\">
+        <mtext>x</mtext>
+      </mpadded>
+    </math>`
+    ));
+  it('Boxed', () =>
+    toXmlMatch(
+      tex2mml('\\boxed{x}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\boxed{x}\" display=\"block\">
+      <menclose notation=\"box\" data-latex=\"\\fbox{$\\displaystyle{x}$}\">
+        <mrow data-mjx-texclass=\"ORD\">
+          <mstyle displaystyle=\"true\" scriptlevel=\"0\" data-latex=\"\\displaystyle{x}\">
+            <mrow data-mjx-texclass=\"ORD\" data-latex=\"{x}\">
+              <mi data-latex=\"x\">x</mi>
+            </mrow>
+          </mstyle>
+        </mrow>
+      </menclose>
+    </math>`
+    ));
+  it('Framebox', () =>
+    toXmlMatch(
+      tex2mml('\\framebox{x}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\framebox{x}\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\framebox{x}\">
+        <menclose notation=\"box\">
+          <mtext>x</mtext>
+        </menclose>
+      </mrow>
+    </math>`
+    ));
+  it('Framebox', () =>
+    toXmlMatch(
+      tex2mml('\\framebox[2cm]{x}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\framebox[2cm]{x}\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\framebox[2cm]{x}\">
+        <menclose notation=\"box\">
+          <mpadded width=\"2cm\" data-align=\"center\">
+            <mtext>x</mtext>
+          </mpadded>
+        </menclose>
+      </mrow>
+    </math>`
+    ));
+  it('Framebox', () =>
+    toXmlMatch(
+      tex2mml('\\framebox[2cm][c]{x}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\framebox[2cm][c]{x}\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\framebox[2cm][c]{x}\">
+        <menclose notation=\"box\">
+          <mpadded width=\"2cm\" data-align=\"center\">
+            <mtext>x</mtext>
+          </mpadded>
+        </menclose>
+      </mrow>
+    </math>`
+    ));
+  it('Makebox', () =>
+    toXmlMatch(
+      tex2mml('\\makebox{x}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\makebox{x}\" display=\"block\">
+      <mpadded data-align=\"center\" data-latex=\"\\makebox{x}\">
+        <mtext>x</mtext>
+      </mpadded>
+    </math>`
+    ));
+  it('Makebox', () =>
+    toXmlMatch(
+      tex2mml('\\makebox[2cm]{x}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\makebox[2cm]{x}\" display=\"block\">
+      <mpadded width=\"2cm\" data-align=\"center\" data-latex=\"\\makebox[2cm]{x}\">
+        <mtext>x</mtext>
+      </mpadded>
+    </math>`
+    ));
+  it('Makebox', () =>
+    toXmlMatch(
+      tex2mml('\\makebox[2cm][c]{x}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\makebox[2cm][c]{x}\" display=\"block\">
+      <mpadded width=\"2cm\" data-align=\"center\" data-latex=\"\\makebox[2cm][c]{x}\">
+        <mtext>x</mtext>
+      </mpadded>
+    </math>`
+    ));
+});
+
+describe('Moving Elements', () => {
+  it('Strut', () =>
+    toXmlMatch(
+      tex2mml('\\strut{x}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\strut{x}" display="block">
+  <mpadded height="8.6pt" depth="3pt" width="0" data-latex="\\strut">
+    <mrow></mrow>
+  </mpadded>
+  <mrow data-mjx-texclass="ORD" data-latex="{x}">
+    <mi data-latex="x">x</mi>
+  </mrow>
+</math>`
+    ));
+  it('Phantom', () =>
+    toXmlMatch(
+      tex2mml('x\\phantom{y}z'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x\\phantom{y}z" display="block">
+  <mi data-latex="x">x</mi>
+  <mrow data-mjx-texclass="ORD" data-latex="\\phantom{y}">
+    <mphantom>
+      <mi data-latex="y">y</mi>
+    </mphantom>
+  </mrow>
+  <mi data-latex="z">z</mi>
+</math>`
+    ));
+  it('Vertical Phantom', () =>
+    toXmlMatch(
+      tex2mml('x\\vphantom{y}z'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x\\vphantom{y}z" display="block">
+  <mi data-latex="x">x</mi>
+  <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{y}">
+    <mpadded width="0">
+      <mphantom>
+        <mi data-latex="y">y</mi>
+      </mphantom>
+    </mpadded>
+  </mrow>
+  <mi data-latex="z">z</mi>
+</math>`
+    ));
+  it('Horizontal Phantom', () =>
+    toXmlMatch(
+      tex2mml('x\\hphantom{y}z'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x\\hphantom{y}z" display="block">
+  <mi data-latex="x">x</mi>
+  <mrow data-mjx-texclass="ORD" data-latex="\\hphantom{y}">
+    <mpadded height="0" depth="0">
+      <mphantom>
+        <mi data-latex="y">y</mi>
+      </mphantom>
+    </mpadded>
+  </mrow>
+  <mi data-latex="z">z</mi>
+</math>`
+    ));
+  it('Smash', () =>
+    toXmlMatch(
+      tex2mml('\\smash{x}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smash{x}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\smash{x}">
+    <mpadded height="0" depth="0">
+      <mi data-latex="x">x</mi>
+    </mpadded>
+  </mrow>
+</math>`
+    ));
+  it('Smash Bottom', () =>
+    toXmlMatch(
+      tex2mml('\\smash[b]{x}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smash[b]{x}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\smash[b]{x}">
+    <mpadded depth="0">
+      <mi data-latex="x">x</mi>
+    </mpadded>
+  </mrow>
+</math>`
+    ));
+  it('Smash Top', () =>
+    toXmlMatch(
+      tex2mml('\\smash[t]{x}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smash[t]{x}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{x}">
+    <mpadded height="0">
+      <mi data-latex="x">x</mi>
+    </mpadded>
+  </mrow>
+</math>`
+    ));
+  it('Llap', () =>
+    toXmlMatch(
+      tex2mml('\\llap{x}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\llap{x}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\llap{x}">
+    <mpadded width="0" lspace="-1width">
+      <mi data-latex="x">x</mi>
+    </mpadded>
+  </mrow>
+</math>`
+    ));
+  it('Rlap', () =>
+    toXmlMatch(
+      tex2mml('\\rlap{x}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\rlap{x}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\rlap{x}">
+    <mpadded width="0">
+      <mi data-latex="x">x</mi>
+    </mpadded>
+  </mrow>
+</math>`
+    ));
+  it('Rlap 2', () =>
+    toXmlMatch(
+      tex2mml('a\\mathrel{\\rlap{\\,/}{=}}b'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\mathrel{\\rlap{\\,/}{=}}b" display="block">
+  <mi data-latex="a">a</mi>
+  <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\rlap{\\,/}{=}}">
+    <mrow data-mjx-texclass="ORD" data-latex="\\rlap{\\,/}">
+      <mpadded width="0">
+        <mstyle scriptlevel="0" data-latex="\\,">
+          <mspace width="0.167em"></mspace>
+        </mstyle>
+        <mrow data-mjx-texclass="ORD">
+          <mo data-latex="/">/</mo>
+        </mrow>
+      </mpadded>
+    </mrow>
+    <mrow data-mjx-texclass="ORD" data-latex="{=}">
+      <mo data-latex="=">=</mo>
+    </mrow>
+  </mrow>
+  <mi data-latex="b">b</mi>
+</math>`
+    ));
+  it('Llap 2', () =>
+    toXmlMatch(
+      tex2mml('a\\mathrel{{=}\\llap{/\\,}}b'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\mathrel{{=}\\llap{/\\,}}b" display="block">
+  <mi data-latex="a">a</mi>
+  <mrow data-mjx-texclass="REL" data-latex="\\mathrel{{=}\\llap{/\\,}}">
+    <mrow data-mjx-texclass="ORD" data-latex="{=}">
+      <mo data-latex="=">=</mo>
+    </mrow>
+    <mrow data-mjx-texclass="ORD" data-latex="\\llap{/\\,}">
+      <mpadded width="0" lspace="-1width">
+        <mrow data-mjx-texclass="ORD">
+          <mo data-latex="/">/</mo>
+        </mrow>
+        <mstyle scriptlevel="0" data-latex="\\,">
+          <mspace width="0.167em"></mspace>
+        </mstyle>
+      </mpadded>
+    </mrow>
+  </mrow>
+  <mi data-latex="b">b</mi>
+</math>`
+    ));
+  it('Raise In Line', () =>
+    toXmlMatch(
+      tex2mml('x\\raise{2pt}{y}z'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x\\raise{2pt}{y}z" display="block">
+  <mi data-latex="x">x</mi>
+  <mpadded height="+2pt" depth="-2pt" voffset="+2pt" data-latex="{}">
+    <mrow data-mjx-texclass="ORD">
+      <mi data-latex="y">y</mi>
+    </mrow>
+  </mpadded>
+  <mi data-latex="z">z</mi>
+</math>`
+    ));
+  it('Lower 2', () =>
+    toXmlMatch(
+      tex2mml('x\\lower{2pt}{y}z'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x\\lower{2pt}{y}z" display="block">
+  <mi data-latex="x">x</mi>
+  <mpadded height="-2pt" depth="+2pt" voffset="-2pt" data-latex="{}">
+    <mrow data-mjx-texclass="ORD">
+      <mi data-latex="y">y</mi>
+    </mrow>
+  </mpadded>
+  <mi data-latex="z">z</mi>
+</math>`
+    ));
+  it('Raise Negative', () =>
+    toXmlMatch(
+      tex2mml('x\\raise{-2pt}{y}z'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x\\raise{-2pt}{y}z" display="block">
+  <mi data-latex="x">x</mi>
+  <mpadded height="-2pt" depth="+2pt" voffset="-2pt" data-latex="{}">
+    <mrow data-mjx-texclass="ORD">
+      <mi data-latex="y">y</mi>
+    </mrow>
+  </mpadded>
+  <mi data-latex="z">z</mi>
+</math>`
+    ));
+  it('Lower Negative', () =>
+    toXmlMatch(
+      tex2mml('x\\lower{-2pt}{y}z'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="x\\lower{-2pt}{y}z" display="block">
+  <mi data-latex="x">x</mi>
+  <mpadded height="+2pt" depth="-2pt" voffset="+2pt" data-latex="{}">
+    <mrow data-mjx-texclass="ORD">
+      <mi data-latex="y">y</mi>
+    </mrow>
+  </mpadded>
+  <mi data-latex="z">z</mi>
+</math>`
+    ));
+  it('Raise', () =>
+    toXmlMatch(
+      tex2mml('\\raise 1em {x}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\raise 1em {x}" display="block">
+  <mpadded height="+1em" depth="-1em" voffset="+1em" data-latex="\\raise 1em {x}">
+    <mrow data-mjx-texclass="ORD">
+      <mi data-latex="x">x</mi>
+    </mrow>
+  </mpadded>
+</math>`
+    ));
+  it('Lower', () =>
+    toXmlMatch(
+      tex2mml('\\lower 1em {x}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\lower 1em {x}" display="block">
+  <mpadded height="-1em" depth="+1em" voffset="-1em" data-latex="\\lower 1em {x}">
+    <mrow data-mjx-texclass="ORD">
+      <mi data-latex="x">x</mi>
+    </mrow>
+  </mpadded>
+</math>`
+    ));
+  it('Moveright', () =>
+    toXmlMatch(
+      tex2mml('\\moveright 1em {x}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\moveright 1em {x}\" display=\"block\">
+      <mspace width=\"1em\"></mspace>
+      <mrow data-mjx-texclass=\"ORD\">
+        <mi data-latex=\"x\">x</mi>
+      </mrow>
+      <mspace width=\"-1em\" data-latex=\"{}\"></mspace>
+    </math>`
+    ));
+  it('Moveleft', () =>
+    toXmlMatch(
+      tex2mml('\\moveleft 1em {x}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\moveleft 1em {x}\" display=\"block\">
+      <mspace width=\"-1em\"></mspace>
+      <mrow data-mjx-texclass=\"ORD\">
+        <mi data-latex=\"x\">x</mi>
+      </mrow>
+      <mspace width=\"1em\" data-latex=\"{}\"></mspace>
+    </math>`
+    ));
+  it('Move Left Negative', () =>
+    toXmlMatch(
+      tex2mml('x\\moveleft -2pt {y} z'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"x\\moveleft -2pt {y} z\" display=\"block\">
+      <mi data-latex=\"x\">x</mi>
+      <mspace width=\"2pt\"></mspace>
+      <mrow data-mjx-texclass=\"ORD\">
+        <mi data-latex=\"y\">y</mi>
+      </mrow>
+      <mspace width=\"-2pt\" data-latex=\"{}\"></mspace>
+      <mi data-latex=\"z\">z</mi>
+    </math>`
+    ));
+  it('Move Right Negative', () =>
+    toXmlMatch(
+      tex2mml('x\\moveright -2pt {y} z'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"x\\moveright -2pt {y} z\" display=\"block\">
+      <mi data-latex=\"x\">x</mi>
+      <mspace width=\"-2pt\"></mspace>
+      <mrow data-mjx-texclass=\"ORD\">
+        <mi data-latex=\"y\">y</mi>
+      </mrow>
+      <mspace width=\"2pt\" data-latex=\"{}\"></mspace>
+      <mi data-latex=\"z\">z</mi>
+    </math>`
+    ));
+  it('Mathstrut', () =>
+    toXmlMatch(
+      tex2mml('\\mathstrut{x}'),
+      ``
+    ));
+});
+
+describe('Linebreaks', () => {
+  it('Linebreak', () =>
+    toXmlMatch(
+      tex2mml('a\\\\b'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\\\b" display="block">
+  <mi data-latex="a">a</mi>
+  <mspace linebreak="newline" data-latex="\\\\"></mspace>
+  <mi data-latex="b">b</mi>
+</math>`
+    ));
+  it('Custom Linebreak', () =>
+    toXmlMatch(
+      tex2mml('a\\\\[2ex]b'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\\\[2ex]b" display="block">
+  <mi data-latex="a">a</mi>
+  <mspace linebreak="newline" data-lineleading="2ex" data-latex="\\\\[2ex]"></mspace>
+  <mi data-latex="b">b</mi>
+</math>`
+    ));
+  it('Custom Linebreak European', () =>
+    toXmlMatch(
+      tex2mml('a\\\\[1,5cm]b'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\\\[1,5cm]b" display="block">
+  <mi data-latex="a">a</mi>
+  <mspace linebreak="newline" data-lineleading="1.5cm" data-latex="\\\\[1,5cm]"></mspace>
+  <mi data-latex="b">b</mi>
+</math>`
+    ));
+  it('Cr Linebreak', () =>
+    toXmlMatch(
+      tex2mml('\\array{a\\cr b}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\array{a\\cr b}" display="block">
+  <mtable rowspacing="4pt" columnspacing="1em" data-frame-styles="" framespacing=".2em .125em" data-latex="\\array{a\\cr b}">
+    <mtr data-latex-item="{" data-latex="{">
+      <mtd>
+        <mi data-latex="a">a</mi>
+      </mtd>
+    </mtr>
+    <mtr data-latex-item="{" data-latex="{">
+      <mtd>
+        <mi data-latex="b">b</mi>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>`
+    ));
+  it('Array Custom Linebreak', () =>
+    toXmlMatch(
+      tex2mml('\\array{a\\\\[1cm] b}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\array{a\\\\[1cm] b}" display="block">
+  <mtable rowspacing="3.235em 0.4em" columnspacing="1em" data-frame-styles="" framespacing=".2em .125em" data-latex="\\array{a\\\\[1cm] b}">
+    <mtr data-latex-item="{" data-latex="{">
+      <mtd>
+        <mi data-latex="a">a</mi>
+      </mtd>
+    </mtr>
+    <mtr data-latex-item="{" data-latex="{">
+      <mtd>
+        <mi data-latex="b">b</mi>
+      </mtd>
+    </mtr>
+  </mtable>
+</math>`
+    ));
+  it('allowbreak', () =>
+    toXmlMatch(
+      tex2mml('a\\allowbreak b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\allowbreak b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mspace data-latex=\"\\allowbreak\"></mspace>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
+  it('allowbreak', () =>
+    toXmlMatch(
+      tex2mml('a\\allowbreak \cdot b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\allowbreak cdot b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mspace data-latex=\"\\allowbreak\"></mspace>
+      <mi data-latex=\"c\">c</mi>
+      <mi data-latex=\"d\">d</mi>
+      <mi data-latex=\"o\">o</mi>
+      <mi data-latex=\"t\">t</mi>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
+  it('goodbreak', () =>
+    toXmlMatch(
+      tex2mml('a\\goodbreak b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\goodbreak b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mspace linebreak=\"goodbreak\"></mspace>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
+  it('goodbreak cdot', () =>
+    toXmlMatch(
+      tex2mml('a\\goodbreak\\cdot b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\goodbreak\\cdot b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mo linebreak=\"goodbreak\" data-latex=\"\\cdot\">&#x22C5;</mo>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
+  it('badbreak', () =>
+    toXmlMatch(
+      tex2mml('a\\badbreak b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\badbreak b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mspace linebreak=\"badbreak\"></mspace>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
+  it('badbreak cdot', () =>
+    toXmlMatch(
+      tex2mml('a\\badbreak\\cdot b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\badbreak\\cdot b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mo linebreak=\"badbreak\" data-latex=\"\\cdot\">&#x22C5;</mo>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
+  it('nobreak', () =>
+    toXmlMatch(
+      tex2mml('a\\nobreak b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\nobreak b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mspace linebreak=\"nobreak\"></mspace>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
+  it('nobreak cdot', () =>
+    toXmlMatch(
+      tex2mml('a\\nobreak\\cdot b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\nobreak\\cdot b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mo linebreak=\"nobreak\" data-latex=\"\\cdot\">&#x22C5;</mo>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
+  it('break', () =>
+    toXmlMatch(
+      tex2mml('a\\break b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\break b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mspace linebreak=\"newline\" data-latex=\"\\break\"></mspace>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
+});
+
+describe('MathChar7', () => {
+  it('MathChar7 Single', () =>
+    toXmlMatch(
+      tex2mml('\\Upsilon'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Upsilon" display="block">
+  <mi mathvariant="normal" data-latex="\\Upsilon">&#x3A5;</mi>
+</math>`
+    ));
+  it('MathChar7 Single Font', () =>
+    toXmlMatch(
+      tex2mml('\\mathbf{\\Upsilon}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathbf{\\Upsilon}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\mathbf{\\Upsilon}">
+    <mi mathvariant="bold" data-latex="\\Upsilon">&#x3A5;</mi>
+  </mrow>
+</math>`
+    ));
+  it('MathChar7 Operator', () =>
+    toXmlMatch(
+      tex2mml('\\And'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\And" display="block">
+  <mi mathvariant="normal" data-latex="\\And">&amp;</mi>
+</math>`
+    ));
+  it('MathChar7 Multi', () =>
+    toXmlMatch(
+      tex2mml('\\Lambda \\& \\Gamma \\Rightarrow \\Omega\\And\\Upsilon'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Lambda \\&amp; \\Gamma \\Rightarrow \\Omega\\And\\Upsilon" display="block">
+  <mi mathvariant="normal" data-latex="\\Lambda">&#x39B;</mi>
+  <mi mathvariant="normal" data-latex="\\&amp;">&amp;</mi>
+  <mi mathvariant="normal" data-latex="\\Gamma">&#x393;</mi>
+  <mo stretchy="false" data-latex="\\Rightarrow">&#x21D2;</mo>
+  <mi mathvariant="normal" data-latex="\\Omega">&#x3A9;</mi>
+  <mi mathvariant="normal" data-latex="\\And">&amp;</mi>
+  <mi mathvariant="normal" data-latex="\\Upsilon">&#x3A5;</mi>
+</math>`
+    ));
+  it('Tilde', () =>
+    toXmlMatch(
+      tex2mml('~'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="~" display="block">
+  <mtext data-latex="~">&#xA0;</mtext>
+</math>`
+    ));
+  it('Tilde2', () =>
+    toXmlMatch(
+      tex2mml('a~b'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a~b" display="block">
+  <mi data-latex="a">a</mi>
+  <mtext data-latex="~">&#xA0;</mtext>
+  <mi data-latex="b">b</mi>
+</math>`
+    ));
+  it('Underscore', () =>
+    toXmlMatch(
+      tex2mml('a\\_b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\_b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mi mathvariant=\"normal\" data-latex=\"\\_\">_</mi>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
+  it('Hash', () =>
+    toXmlMatch(
+      tex2mml('a\\#b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\#b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mi mathvariant=\"normal\" data-latex=\"\\#\">#</mi>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
+  it('Dollar', () =>
+    toXmlMatch(
+      tex2mml('a\\$b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\$b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mi mathvariant=\"normal\" data-latex=\"\\$\">$</mi>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
+  it('Percentage', () =>
+    toXmlMatch(
+      tex2mml('a\\%b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\%b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mi mathvariant=\"normal\" data-latex=\"\\%\">%</mi>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
+});
+
+describe('Accents', () => {
+  it('Vector', () =>
+    toXmlMatch(
+      tex2mml('\\vec{a}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\vec{a}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\vec{a}">
+    <mover>
+      <mi data-latex="a">a</mi>
+      <mo stretchy="false">&#x2192;</mo>
+    </mover>
+  </mrow>
+</math>`
+    ));
+  it('Vector Multi', () =>
+    toXmlMatch(
+      tex2mml('\\vec{\\vec{a}}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\vec{\\vec{a}}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\vec{\\vec{a}}">
+    <mover>
+      <mrow data-mjx-texclass="ORD" data-latex="\\vec{a}">
+        <mover>
+          <mi data-latex="a">a</mi>
+          <mo stretchy="false">&#x2192;</mo>
+        </mover>
+      </mrow>
+      <mo stretchy="false">&#x2192;</mo>
+    </mover>
+  </mrow>
+</math>`
+    ));
+  it('Vector Font', () =>
+    toXmlMatch(
+      tex2mml('\\mathrm{\\vec{a}}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathrm{\\vec{a}}" display="block">
+  <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{\\vec{a}}">
+    <mrow data-mjx-texclass="ORD" data-latex="\\vec{a}">
+      <mover>
+        <mi mathvariant="normal" data-latex="a">a</mi>
+        <mo stretchy="false">&#x2192;</mo>
+      </mover>
+    </mrow>
+  </mrow>
+</math>`
+    ));
+  it('acute', () =>
+    toXmlMatch(
+      tex2mml('\\acute{a}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\acute{a}\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\acute{a}\">
+        <mover>
+          <mi data-latex=\"a\">a</mi>
+          <mo data-mjx-pseudoscript=\"true\">&#xB4;</mo>
+        </mover>
+      </mrow>
+    </math>`
+    ));
+  it('grave', () =>
+    toXmlMatch(
+      tex2mml('\\grave{a}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\grave{a}\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\grave{a}\">
+        <mover>
+          <mi data-latex=\"a\">a</mi>
+          <mo data-mjx-pseudoscript=\"true\">\`</mo>
+        </mover>
+      </mrow>
+    </math>`
+    ));
+  it('ddot', () =>
+    toXmlMatch(
+      tex2mml('\\ddot{a}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\ddot{a}\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\ddot{a}\">
+        <mover>
+          <mi data-latex=\"a\">a</mi>
+          <mo>&#xA8;</mo>
+        </mover>
+      </mrow>
+    </math>`
+    ));
+  it('dddot', () =>
+    toXmlMatch(
+      tex2mml('\\dddot{a}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\dddot{a}\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\dddot{a}\">
+        <mover>
+          <mi data-latex=\"a\">a</mi>
+          <mo>&#x20DB;</mo>
+        </mover>
+      </mrow>
+    </math>`
+    ));
+  it('ddddot', () =>
+    toXmlMatch(
+      tex2mml('\\ddddot{a}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\ddddot{a}\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\ddddot{a}\">
+        <mover>
+          <mi data-latex=\"a\">a</mi>
+          <mo>&#x20DC;</mo>
+        </mover>
+      </mrow>
+    </math>`
+    ));
+  it('tilde', () =>
+    toXmlMatch(
+      tex2mml('\\tilde{a}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\tilde{a}\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\tilde{a}\">
+        <mover>
+          <mi data-latex=\"a\">a</mi>
+          <mo stretchy=\"false\">~</mo>
+        </mover>
+      </mrow>
+    </math>`
+    ));
+  it('bar', () =>
+    toXmlMatch(
+      tex2mml('\\bar{a}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\bar{a}\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\bar{a}\">
+        <mover>
+          <mi data-latex=\"a\">a</mi>
+          <mo stretchy=\"false\">&#xAF;</mo>
+        </mover>
+      </mrow>
+    </math>`
+    ));
+  it('breve', () =>
+    toXmlMatch(
+      tex2mml('\\breve{a}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\breve{a}\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\breve{a}\">
+        <mover>
+          <mi data-latex=\"a\">a</mi>
+          <mo>&#x2D8;</mo>
+        </mover>
+      </mrow>
+    </math>`
+    ));
+  it('check', () =>
+    toXmlMatch(
+      tex2mml('\\check{a}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\check{a}\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\check{a}\">
+        <mover>
+          <mi data-latex=\"a\">a</mi>
+          <mo stretchy=\"false\">&#x2C7;</mo>
+        </mover>
+      </mrow>
+    </math>`
+    ));
+  it('hat', () =>
+    toXmlMatch(
+      tex2mml('\\hat{a}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\hat{a}\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\hat{a}\">
+        <mover>
+          <mi data-latex=\"a\">a</mi>
+          <mo stretchy=\"false\">^</mo>
+        </mover>
+      </mrow>
+    </math>`
+    ));
+  it('dot', () =>
+    toXmlMatch(
+      tex2mml('\\dot{a}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\dot{a}\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\dot{a}\">
+        <mover>
+          <mi data-latex=\"a\">a</mi>
+          <mo>&#x2D9;</mo>
+        </mover>
+      </mrow>
+    </math>`
+    ));
+  it('widetilde', () =>
+    toXmlMatch(
+      tex2mml('\\widetilde{abc}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\widetilde{abc}\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\widetilde{abc}\">
+        <mover>
+          <mrow data-latex=\"abc\">
+            <mi data-latex=\"a\">a</mi>
+            <mi data-latex=\"b\">b</mi>
+            <mi data-latex=\"c\">c</mi>
+          </mrow>
+          <mo>~</mo>
+        </mover>
+      </mrow>
+    </math>`
+    ));
+  it('widehat', () =>
+    toXmlMatch(
+      tex2mml('\\widehat{abc}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\widehat{abc}\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\widehat{abc}\">
+        <mover>
+          <mrow data-latex=\"abc\">
+            <mi data-latex=\"a\">a</mi>
+            <mi data-latex=\"b\">b</mi>
+            <mi data-latex=\"c\">c</mi>
+          </mrow>
+          <mo>^</mo>
+        </mover>
+      </mrow>
+    </math>`
+    ));
+});
+
 // describe('Complete Base Items', () => {
 //   it('Middle Color', () =>
 //     toXmlMatch(
@@ -7723,6 +8226,15 @@ describe('Complete Base Methods', () => {
       <mi data-latex=\"a %comment\">a</mi>
     </math>`
     ));
+  it('Elided Times', () =>
+    toXmlMatch(
+      tex2mml('a\\* b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\* b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mo linebreakmultchar=\"&#xD7;\" data-latex=\"\\*\">&#x2062;</mo>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
 });
 
 afterAll(() => getTokens('base'));
@@ -7734,3 +8246,6 @@ afterAll(() => getTokens('base'));
 //       ``
 //     ));
 // });
+
+// Do we still use LineBreakStyle?
+// Lines in BaseItems: 552-554 Where does 'insert' come from?
