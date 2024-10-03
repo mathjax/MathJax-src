@@ -433,15 +433,6 @@ describe('Base', () => {
   <mo data-latex="+">+</mo>
 </math>`
     ));
-  it('Operatorname', () =>
-    toXmlMatch(
-      tex2mml('a\\operatorname{xyz}b'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\operatorname{xyz}b" display="block">
-  <merror data-mjx-error="Undefined control sequence \\operatorname">
-    <mtext>Undefined control sequence \\operatorname</mtext>
-  </merror>
-</math>`
-    ));
   it('Mathop', () =>
     toXmlMatch(
       tex2mml('\\mathop{\\rm a} b'),

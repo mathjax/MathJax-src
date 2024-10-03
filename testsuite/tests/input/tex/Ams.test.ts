@@ -578,6 +578,16 @@ describe('Ams', () => {
   <mi data-latex="b">b</mi>
 </math>`
     ));
+  it('Operatorname', () =>
+    toXmlMatch(
+      tex2mml('a\\operatorname{xyz}b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\operatorname{xyz}b\" display=\"block\">
+  <mi data-latex=\"a\">a</mi>
+  <mi data-latex=\"\\operatorname{xyz}\">xyz</mi>
+  <mo data-mjx-texclass=\"NONE\">&#x2061;</mo>
+  <mi data-latex=\"b\">b</mi>
+</math>`
+    ));
 });
 
 describe('Ams Environments', () => {
