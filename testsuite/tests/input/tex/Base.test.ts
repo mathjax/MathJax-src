@@ -433,64 +433,6 @@ describe('Base', () => {
   <mo data-latex="+">+</mo>
 </math>`
     ));
-  it('Mathop', () =>
-    toXmlMatch(
-      tex2mml('\\mathop{\\rm a} b'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathop{\\rm a} b" display="block">
-  <mi data-mjx-texclass="OP" mathvariant="normal" data-latex="\\mathop{\\rm a}">a</mi>
-  <mo data-mjx-texclass="NONE">&#x2061;</mo>
-  <mi data-latex="b">b</mi>
-</math>`
-    ));
-  it('Mathop Super', () =>
-    toXmlMatch(
-      tex2mml('\\mathop{\\rm a}^b'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathop{\\rm a}^b" display="block">
-  <mover data-latex="\\mathop{\\rm a}^b">
-    <mi data-mjx-texclass="OP" mathvariant="normal" data-latex="\\mathop{\\rm a}">a</mi>
-    <mi data-latex="b">b</mi>
-  </mover>
-</math>`
-    ));
-  it('Mathop Sub', () =>
-    toXmlMatch(
-      tex2mml('\\mathop{\\rm a}_b'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathop{\\rm a}_b" display="block">
-  <munder data-latex="\\mathop{\\rm a}_b">
-    <mi data-mjx-texclass="OP" mathvariant="normal" data-latex="\\mathop{\\rm a}">a</mi>
-    <mi data-latex="b">b</mi>
-  </munder>
-</math>`
-    ));
-  it('Mathop Sub Super', () =>
-    toXmlMatch(
-      tex2mml('\\mathop{\\rm a}_b^c'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathop{\\rm a}_b^c" display="block">
-  <munderover data-latex="\\mathop{\\rm a}_b^c">
-    <mi data-mjx-texclass="OP" mathvariant="normal" data-latex="\\mathop{\\rm a}">a</mi>
-    <mi data-latex="b">b</mi>
-    <mi data-latex="c">c</mi>
-  </munderover>
-</math>`
-    ));
-  it('Mathop Cal', () =>
-    toXmlMatch(
-      tex2mml('\\mathop{\\cal a}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathop{\\cal a}" display="block">
-  <mrow data-mjx-texclass="OP" data-latex="\\mathop{\\cal a}">
-    <mi data-mjx-variant="-tex-calligraphic" mathvariant="script" data-latex="\\cal a">a</mi>
-  </mrow>
-</math>`
-    ));
-  it('Mathrel', () =>
-    toXmlMatch(
-      tex2mml('\\mathrel{R}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathrel{R}" display="block">
-  <mrow data-mjx-texclass="REL" data-latex="\\mathrel{R}">
-    <mi data-latex="R">R</mi>
-  </mrow>
-</math>`
-    ));
   it('Overset', () =>
     toXmlMatch(
       tex2mml('\\overset{a}{b}'),
@@ -528,6 +470,24 @@ describe('Base', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\rule{2cm}{1cm}" display="block">
   <mspace width="2cm" height="1cm" mathbackground="black" data-latex="\\rule{2cm}{1cm}"></mspace>
 </math>`
+    ));
+  it('Rule 2D positive raise', () =>
+    toXmlMatch(
+      tex2mml('\\rule[3cm]{2cm}{1cm}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\rule[3cm]{2cm}{1cm}\" display=\"block\">
+      <mpadded voffset=\"3cm\" height=\"+3cm\" data-latex=\"\\rule[3cm]{2cm}{1cm}\">
+        <mspace width=\"2cm\" height=\"1cm\" mathbackground=\"black\"></mspace>
+      </mpadded>
+    </math>`
+    ));
+  it('Rule 2D negative raise', () =>
+    toXmlMatch(
+      tex2mml('\\rule[-3cm]{2cm}{1cm}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\rule[-3cm]{2cm}{1cm}\" display=\"block\">
+      <mpadded voffset=\"-3cm\" height=\"-3cm\" depth=\"+3cm\" data-latex=\"\\rule[-3cm]{2cm}{1cm}\">
+        <mspace width=\"2cm\" height=\"1cm\" mathbackground=\"black\"></mspace>
+      </mpadded>
+    </math>`
     ));
   it('Rule 3D', () =>
     toXmlMatch(
@@ -906,51 +866,6 @@ describe('Error', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="1 \\over 2 \\over 3" display="block">
   <merror data-mjx-error="Ambiguous use of \\over">
     <mtext>Ambiguous use of \\over</mtext>
-  </merror>
-</math>`
-    ));
-  it('Token Illegal Type', () =>
-    toXmlMatch(
-      tex2mml('\\mmlToken{mk}[]{}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mmlToken{mk}[]{}" display="block">
-  <merror data-mjx-error="mk is not a token element">
-    <mtext>mk is not a token element</mtext>
-  </merror>
-</math>`
-    ));
-  it('Token Wrong Type', () =>
-    toXmlMatch(
-      tex2mml('\\mmlToken{mrow}[]{}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mmlToken{mrow}[]{}" display="block">
-  <merror data-mjx-error="mrow is not a token element">
-    <mtext>mrow is not a token element</mtext>
-  </merror>
-</math>`
-    ));
-  it('Token Invalid Attribute', () =>
-    toXmlMatch(
-      tex2mml('\\mmlToken{mi}[m1=true]{}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mmlToken{mi}[m1=true]{}" display="block">
-  <merror data-mjx-error="Invalid MathML attribute: m1=true">
-    <mtext>Invalid MathML attribute: m1=true</mtext>
-  </merror>
-</math>`
-    ));
-  it('Token Unknown Attribute', () =>
-    toXmlMatch(
-      tex2mml('\\mmlToken{mo}[nothing="something"]{}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mmlToken{mo}[nothing=&quot;something&quot;]{}" display="block">
-  <merror data-mjx-error="nothing is not a recognized attribute for mo">
-    <mtext>nothing is not a recognized attribute for mo</mtext>
-  </merror>
-</math>`
-    ));
-  it('Token Wrong Attribute', () =>
-    toXmlMatch(
-      tex2mml('\\mmlToken{mi}[movablelimit=true]{}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mmlToken{mi}[movablelimit=true]{}" display="block">
-  <merror data-mjx-error="movablelimit is not a recognized attribute for mi">
-    <mtext>movablelimit is not a recognized attribute for mi</mtext>
   </merror>
 </math>`
     ));
@@ -1555,6 +1470,9 @@ describe('Mathchoice', () => {
   </msub>
 </math>`
     ));
+});
+
+describe('Stacking expressions', () => {
   it('Choose', () =>
     toXmlMatch(
       tex2mml('n \\choose k'),
@@ -2016,6 +1934,189 @@ describe('Mathchoice', () => {
   </msup>
 </math>`
     ));
+  it('stackrel', () =>
+    toXmlMatch(
+      tex2mml('x\\stackrel{a}{b}y'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"x\\stackrel{a}{b}y\" display=\"block\">
+      <mi data-latex=\"x\">x</mi>
+      <mrow data-mjx-texclass=\"REL\" data-latex=\"\\mathrel{\\mathop{b}\\limits^{a}}\">
+        <mover data-latex=\"\\mathop{b}\\limits^{a}\">
+          <mrow data-mjx-texclass=\"OP\" data-latex=\"\\limits\">
+            <mi data-latex=\"b\">b</mi>
+          </mrow>
+          <mrow data-mjx-texclass=\"ORD\" data-latex=\"{a}\">
+            <mi data-latex=\"a\">a</mi>
+          </mrow>
+        </mover>
+      </mrow>
+      <mi data-latex=\"y\">y</mi>
+    </math>`
+    ));
+  it('stackbin', () =>
+    toXmlMatch(
+      tex2mml('x\\stackbin{a}{b}y'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"x\\stackbin{a}{b}y\" display=\"block\">
+      <mi data-latex=\"x\">x</mi>
+      <mrow data-mjx-texclass=\"BIN\" data-latex=\"\\mathbin{\\mathop{b}\\limits^{a}}\">
+        <mover data-latex=\"\\mathop{b}\\limits^{a}\">
+          <mrow data-mjx-texclass=\"OP\" data-latex=\"\\limits\">
+            <mi data-latex=\"b\">b</mi>
+          </mrow>
+          <mrow data-mjx-texclass=\"ORD\" data-latex=\"{a}\">
+            <mi data-latex=\"a\">a</mi>
+          </mrow>
+        </mover>
+      </mrow>
+      <mi data-latex=\"y\">y</mi>
+    </math>`
+    ));
+  it('atop', () =>
+    toXmlMatch(
+      tex2mml('a \\atop b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a \\atop b\" display=\"block\">
+      <mfrac linethickness=\"0\" data-latex-item=\"\\atop\" data-latex=\"a \\atop b\">
+        <mi data-latex=\"a\">a</mi>
+        <mi data-latex=\"b\">b</mi>
+      </mfrac>
+    </math>`
+    ));
+  it('atopwithdelims', () =>
+    toXmlMatch(
+      tex2mml('a \\atopwithdelims [ ] b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a \\atopwithdelims [ ] b\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex-item=\"\\atopwithdelims\" data-latex=\"a \\atopwithdelims [ ] b\">
+        <mrow data-mjx-texclass=\"OPEN\" data-latex=\"\\biggl [\">
+          <mo minsize=\"2.047em\" maxsize=\"2.047em\">[</mo>
+        </mrow>
+        <mfrac linethickness=\"0\">
+          <mi data-latex=\"a\">a</mi>
+          <mi data-latex=\"b\">b</mi>
+        </mfrac>
+        <mrow data-mjx-texclass=\"CLOSE\" data-latex=\"\\biggr ]\">
+          <mo minsize=\"2.047em\" maxsize=\"2.047em\">]</mo>
+        </mrow>
+      </mrow>
+    </math>`
+    ));
+  it('brack', () =>
+    toXmlMatch(
+      tex2mml('n \\brack k'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"n \\brack k\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex-item=\"\\brack\" data-latex=\"n \\brack k\">
+        <mrow data-mjx-texclass=\"OPEN\" data-latex=\"\\biggl [\">
+          <mo minsize=\"2.047em\" maxsize=\"2.047em\">[</mo>
+        </mrow>
+        <mfrac linethickness=\"0\">
+          <mi data-latex=\"n\">n</mi>
+          <mi data-latex=\"k\">k</mi>
+        </mfrac>
+        <mrow data-mjx-texclass=\"CLOSE\" data-latex=\"\\biggr ]\">
+          <mo minsize=\"2.047em\" maxsize=\"2.047em\">]</mo>
+        </mrow>
+      </mrow>
+    </math>`
+    ));
+  it('brace', () =>
+    toXmlMatch(
+      tex2mml('n \\brace k'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"n \\brace k\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex-item=\"\\brace\" data-latex=\"n \\brace k\">
+        <mrow data-mjx-texclass=\"OPEN\" data-latex=\"\\biggl \\{\">
+          <mo minsize=\"2.047em\" maxsize=\"2.047em\">{</mo>
+        </mrow>
+        <mfrac linethickness=\"0\">
+          <mi data-latex=\"n\">n</mi>
+          <mi data-latex=\"k\">k</mi>
+        </mfrac>
+        <mrow data-mjx-texclass=\"CLOSE\" data-latex=\"\\biggr \\}\">
+          <mo minsize=\"2.047em\" maxsize=\"2.047em\">}</mo>
+        </mrow>
+      </mrow>
+    </math>`
+    ));
+});
+
+describe('MmlToken', () => {
+  it('MmlToken mo', () =>
+    toXmlMatch(
+      tex2mml('\\mmlToken{mo}{rem}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mmlToken{mo}{rem}\" display=\"block\">
+      <mo data-latex=\"\\mmlToken{mo}{rem}\">rem</mo>
+    </math>`
+    ));
+  it('MmlToken mi', () =>
+    toXmlMatch(
+      tex2mml('\\mmlToken{mi}{=}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mmlToken{mi}{=}\" display=\"block\">
+      <mi data-latex=\"\\mmlToken{mi}{=}\">=</mi>
+    </math>`
+    ));
+  it('MmlToken attribute', () =>
+    toXmlMatch(
+      tex2mml('\\mmlToken{mo}[mathvariant=normal]{=}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mmlToken{mo}[mathvariant=normal]{=}\" display=\"block\">
+      <mo mathvariant=\"normal\" data-latex=\"\\mmlToken{mo}[mathvariant=normal]{=}\">=</mo>
+    </math>`
+    ));
+  it('MmlToken attribute boolean', () =>
+    toXmlMatch(
+      tex2mml('\\mmlToken{mo}[mathvariant=normal,largeop=true]{=}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mmlToken{mo}[mathvariant=normal,largeop=true]{=}\" display=\"block\">
+      <mo mathvariant=\"normal\" largeop=\"true\" data-latex=\"\\mmlToken{mo}[mathvariant=normal,largeop=true]{=}\">=</mo>
+    </math>`
+    ));
+  it('MmlToken attribute boolean false', () =>
+    toXmlMatch(
+      tex2mml('\\mmlToken{mo}[mathvariant=normal,largeop=false]{=}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mmlToken{mo}[mathvariant=normal,largeop=false]{=}\" display=\"block\">
+      <mo mathvariant=\"normal\" largeop=\"false\" data-latex=\"\\mmlToken{mo}[mathvariant=normal,largeop=false]{=}\">=</mo>
+    </math>`
+    ));
+  it('Token Illegal Type', () =>
+    toXmlMatch(
+      tex2mml('\\mmlToken{mk}[]{}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mmlToken{mk}[]{}" display="block">
+  <merror data-mjx-error="mk is not a token element">
+    <mtext>mk is not a token element</mtext>
+  </merror>
+</math>`
+    ));
+  it('Token Wrong Type', () =>
+    toXmlMatch(
+      tex2mml('\\mmlToken{mrow}[]{}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mmlToken{mrow}[]{}" display="block">
+  <merror data-mjx-error="mrow is not a token element">
+    <mtext>mrow is not a token element</mtext>
+  </merror>
+</math>`
+    ));
+  it('Token Invalid Attribute', () =>
+    toXmlMatch(
+      tex2mml('\\mmlToken{mi}[m1=true]{}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mmlToken{mi}[m1=true]{}" display="block">
+  <merror data-mjx-error="Invalid MathML attribute: m1=true">
+    <mtext>Invalid MathML attribute: m1=true</mtext>
+  </merror>
+</math>`
+    ));
+  it('Token Unknown Attribute', () =>
+    toXmlMatch(
+      tex2mml('\\mmlToken{mo}[nothing="something"]{}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mmlToken{mo}[nothing=&quot;something&quot;]{}" display="block">
+  <merror data-mjx-error="nothing is not a recognized attribute for mo">
+    <mtext>nothing is not a recognized attribute for mo</mtext>
+  </merror>
+</math>`
+    ));
+  it('Token Wrong Attribute', () =>
+    toXmlMatch(
+      tex2mml('\\mmlToken{mi}[movablelimit=true]{}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mmlToken{mi}[movablelimit=true]{}" display="block">
+  <merror data-mjx-error="movablelimit is not a recognized attribute for mi">
+    <mtext>movablelimit is not a recognized attribute for mi</mtext>
+  </merror>
+</math>`
+    ));
 });
 
 describe('Matrix', () => {
@@ -2177,6 +2278,119 @@ describe('Matrix', () => {
   </mrow>
 </math>`
     ));
+  it('Matrix Cases', () =>
+    toXmlMatch(
+      tex2mml('\\cases{a}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\cases{a}" display="block">
+  <mrow data-mjx-texclass="INNER" data-latex="\\cases{a}">
+    <mo data-mjx-texclass="OPEN">{</mo>
+    <mtable rowspacing=".2em" columnspacing="1em" columnalign="left left" data-frame-styles="" framespacing=".2em .125em">
+      <mtr data-latex-item="{" data-latex="{">
+        <mtd>
+          <mi data-latex="a">a</mi>
+        </mtd>
+      </mtr>
+    </mtable>
+    <mo data-mjx-texclass="CLOSE" fence="true" stretchy="true" symmetric="true"></mo>
+  </mrow>
+</math>`
+    ));
+  it('Matrix Cases two columns', () =>
+    toXmlMatch(
+      tex2mml('\\cases{a & b}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\cases{a &amp; b}\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex=\"\\cases{a &amp; b}\">
+        <mo data-mjx-texclass=\"OPEN\">{</mo>
+        <mtable rowspacing=\".2em\" columnspacing=\"1em\" columnalign=\"left left\" data-frame-styles=\"\" framespacing=\".2em .125em\">
+          <mtr data-latex-item=\"{\" data-latex=\"{\">
+            <mtd>
+              <mi data-latex=\"a\">a</mi>
+            </mtd>
+            <mtd>
+              <mstyle displaystyle=\"false\" scriptlevel=\"0\" data-latex=\"b\">
+                <mtext>b</mtext>
+              </mstyle>
+            </mtd>
+          </mtr>
+        </mtable>
+        <mo data-mjx-texclass=\"CLOSE\" fence=\"true\" stretchy=\"true\" symmetric=\"true\"></mo>
+      </mrow>
+    </math>`
+    ));
+  it('Matrix Cases two columns braces', () =>
+    toXmlMatch(
+      tex2mml('\\cases{a & {b}}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\cases{a &amp; {b}}\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex=\"\\cases{a &amp; {b}}\">
+        <mo data-mjx-texclass=\"OPEN\">{</mo>
+        <mtable rowspacing=\".2em\" columnspacing=\"1em\" columnalign=\"left left\" data-frame-styles=\"\" framespacing=\".2em .125em\">
+          <mtr data-latex-item=\"{\" data-latex=\"{\">
+            <mtd>
+              <mi data-latex=\"a\">a</mi>
+            </mtd>
+            <mtd>
+              <mstyle displaystyle=\"false\" scriptlevel=\"0\" data-latex=\"{b}\">
+                <mtext>{b}</mtext>
+              </mstyle>
+            </mtd>
+          </mtr>
+        </mtable>
+        <mo data-mjx-texclass=\"CLOSE\" fence=\"true\" stretchy=\"true\" symmetric=\"true\"></mo>
+      </mrow>
+    </math>`
+    ));
+  it('Matrix Cases two rows', () =>
+    toXmlMatch(
+      tex2mml('\\cases{a & b\\\\ c & d}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\cases{a &amp; b\\\\ c &amp; d}\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex=\"\\cases{a &amp; b\\\\ c &amp; d}\">
+        <mo data-mjx-texclass=\"OPEN\">{</mo>
+        <mtable rowspacing=\".2em\" columnspacing=\"1em\" columnalign=\"left left\" data-frame-styles=\"\" framespacing=\".2em .125em\">
+          <mtr data-latex-item=\"{\" data-latex=\"{\">
+            <mtd>
+              <mi data-latex=\"a\">a</mi>
+            </mtd>
+            <mtd>
+              <mstyle displaystyle=\"false\" scriptlevel=\"0\" data-latex=\"b\">
+                <mtext>b</mtext>
+              </mstyle>
+            </mtd>
+          </mtr>
+          <mtr data-latex-item=\"{\" data-latex=\"{\">
+            <mtd>
+              <mi data-latex=\"c\">c</mi>
+            </mtd>
+            <mtd>
+              <mstyle displaystyle=\"false\" scriptlevel=\"0\" data-latex=\"d\">
+                <mtext>d</mtext>
+              </mstyle>
+            </mtd>
+          </mtr>
+        </mtable>
+        <mo data-mjx-texclass=\"CLOSE\" fence=\"true\" stretchy=\"true\" symmetric=\"true\"></mo>
+      </mrow>
+    </math>`
+    ));
+  it('Matrix Cases text', () =>
+    toXmlMatch(
+      tex2mml('\\cases{a & \\text{b}}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\cases{a &amp; \\text{b}}\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex=\"\\cases{a &amp; \\text{b}}\">
+        <mo data-mjx-texclass=\"OPEN\">{</mo>
+        <mtable rowspacing=\".2em\" columnspacing=\"1em\" columnalign=\"left left\" data-frame-styles=\"\" framespacing=\".2em .125em\">
+          <mtr data-latex-item=\"{\" data-latex=\"{\">
+            <mtd>
+              <mi data-latex=\"a\">a</mi>
+            </mtd>
+            <mtd>
+              <mtext data-latex=\"\\text{b}\">b</mtext>
+            </mtd>
+          </mtr>
+        </mtable>
+        <mo data-mjx-texclass=\"CLOSE\" fence=\"true\" stretchy=\"true\" symmetric=\"true\"></mo>
+      </mrow>
+    </math>`
+    ));
   it('Matrix Numbered', () =>
     toXmlMatch(
       tex2mml('\\eqalignno{a&b&c}'),
@@ -2195,6 +2409,24 @@ describe('Matrix', () => {
     </mlabeledtr>
   </mtable>
 </math>`
+    ));
+  it('Displaylines', () =>
+    toXmlMatch(
+      tex2mml('\\displaylines{a\\\\ b}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\displaylines{a\\\\ b}\" display=\"block\">
+      <mtable rowspacing=\".5em\" columnspacing=\"1em\" displaystyle=\"true\" data-latex=\"\\displaylines{a\\\\ b}\">
+        <mtr data-latex-item=\"{\" data-latex=\"{\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+        </mtr>
+        <mtr data-latex-item=\"{\" data-latex=\"{\">
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
     ));
 });
 
@@ -3483,6 +3715,16 @@ describe('Other', () => {
   <mi data-latex="b">b</mi>
 </math>`
     ));
+  it('CKJ', () =>
+    toXmlMatch(
+      tex2mml('褯¥'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"&#x892F;&#xA5;\" display=\"block\">
+      <mi mathvariant=\"normal\" data-latex=\"&#x892F;\">&#x892F;</mi>
+      <mrow data-mjx-texclass=\"ORD\">
+        <mo data-latex=\"&#xA5;\">&#xA5;</mo>
+      </mrow>
+    </math>`
+    ));
 });
 
 describe('Base Complex', () => {
@@ -4353,6 +4595,15 @@ describe('BreakAlign', () => {
 });
 
 describe('BreakAlign Errors', () => {
+  it('BreakAlign not in environment', () =>
+    toXmlMatch(
+      tex2mml('\\breakAlign{c}{t}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\breakAlign{c}{t}\" display=\"block\">
+      <merror data-mjx-error=\"\\breakAlign must be used in an alignment environment\">
+        <mtext>\\breakAlign must be used in an alignment environment</mtext>
+      </merror>
+    </math>`
+    ));
   it('BreakAlign Case c', () =>
     toXmlMatch(
       tex2mml('\\begin{eqnarray}a\\breakAlign{c}{t}&=&b\\end{eqnarray}'),
@@ -7734,7 +7985,18 @@ describe('Moving Elements', () => {
   it('Mathstrut', () =>
     toXmlMatch(
       tex2mml('\\mathstrut{x}'),
-      ``
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mathstrut{x}\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\vphantom{(}\">
+        <mpadded width=\"0\">
+          <mphantom>
+            <mo data-latex=\"(\" stretchy=\"false\">(</mo>
+          </mphantom>
+        </mpadded>
+      </mrow>
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"{x}\">
+        <mi data-latex=\"x\">x</mi>
+      </mrow>
+    </math>`
     ));
 });
 
@@ -7745,6 +8007,15 @@ describe('Linebreaks', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\\\b" display="block">
   <mi data-latex="a">a</mi>
   <mspace linebreak="newline" data-latex="\\\\"></mspace>
+  <mi data-latex="b">b</mi>
+</math>`
+    ));
+  it('Pagebreak', () =>
+    toXmlMatch(
+      tex2mml('a\\\\*b'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\\\*b" display="block">
+  <mi data-latex="a">a</mi>
+  <mspace linebreak="newline" data-latex="\\\\*"></mspace>
   <mi data-latex="b">b</mi>
 </math>`
     ));
@@ -7842,6 +8113,26 @@ describe('Linebreaks', () => {
       <mi data-latex=\"b\">b</mi>
     </math>`
     ));
+  it('goodbreak cdot cdot', () =>
+    toXmlMatch(
+      tex2mml('a\\cdot\\goodbreak\\cdot b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\cdot\\goodbreak\\cdot b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mo data-latex=\"\\cdot\">&#x22C5;</mo>
+      <mo linebreak=\"goodbreak\" data-latex=\"\\cdot\">&#x22C5;</mo>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
+  it('goodbreak comma cdot', () =>
+    toXmlMatch(
+      tex2mml('a,\\goodbreak\\cdot b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a,\\goodbreak\\cdot b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mo data-latex=\",\" linebreak=\"goodbreak\">,</mo>
+      <mo linebreak=\"goodbreak\" data-latex=\"\\cdot\">&#x22C5;</mo>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
   it('badbreak', () =>
     toXmlMatch(
       tex2mml('a\\badbreak b'),
@@ -7884,6 +8175,15 @@ describe('Linebreaks', () => {
       `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\break b\" display=\"block\">
       <mi data-latex=\"a\">a</mi>
       <mspace linebreak=\"newline\" data-latex=\"\\break\"></mspace>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
+  it('newline', () =>
+    toXmlMatch(
+      tex2mml('a\\newline b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\newline b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mspace linebreak=\"newline\" data-latex=\"\\newline\"></mspace>
       <mi data-latex=\"b\">b</mi>
     </math>`
     ));
@@ -8190,6 +8490,215 @@ describe('Accents', () => {
     ));
 });
 
+describe('Character Class Changes', () => {
+  it('Mathop', () =>
+    toXmlMatch(
+      tex2mml('\\mathop{\\rm a} b'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathop{\\rm a} b" display="block">
+  <mi data-mjx-texclass="OP" mathvariant="normal" data-latex="\\mathop{\\rm a}">a</mi>
+  <mo data-mjx-texclass="NONE">&#x2061;</mo>
+  <mi data-latex="b">b</mi>
+</math>`
+    ));
+  it('Mathop Super', () =>
+    toXmlMatch(
+      tex2mml('\\mathop{\\rm a}^b'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathop{\\rm a}^b" display="block">
+  <mover data-latex="\\mathop{\\rm a}^b">
+    <mi data-mjx-texclass="OP" mathvariant="normal" data-latex="\\mathop{\\rm a}">a</mi>
+    <mi data-latex="b">b</mi>
+  </mover>
+</math>`
+    ));
+  it('Mathop Sub', () =>
+    toXmlMatch(
+      tex2mml('\\mathop{\\rm a}_b'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathop{\\rm a}_b" display="block">
+  <munder data-latex="\\mathop{\\rm a}_b">
+    <mi data-mjx-texclass="OP" mathvariant="normal" data-latex="\\mathop{\\rm a}">a</mi>
+    <mi data-latex="b">b</mi>
+  </munder>
+</math>`
+    ));
+  it('Mathop Sub Super', () =>
+    toXmlMatch(
+      tex2mml('\\mathop{\\rm a}_b^c'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathop{\\rm a}_b^c" display="block">
+  <munderover data-latex="\\mathop{\\rm a}_b^c">
+    <mi data-mjx-texclass="OP" mathvariant="normal" data-latex="\\mathop{\\rm a}">a</mi>
+    <mi data-latex="b">b</mi>
+    <mi data-latex="c">c</mi>
+  </munderover>
+</math>`
+    ));
+  it('Mathop Cal', () =>
+    toXmlMatch(
+      tex2mml('\\mathop{\\cal a}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathop{\\cal a}" display="block">
+  <mrow data-mjx-texclass="OP" data-latex="\\mathop{\\cal a}">
+    <mi data-mjx-variant="-tex-calligraphic" mathvariant="script" data-latex="\\cal a">a</mi>
+  </mrow>
+</math>`
+    ));
+  it('Mathrel', () =>
+    toXmlMatch(
+      tex2mml('\\mathrel{R}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathrel{R}" display="block">
+  <mrow data-mjx-texclass="REL" data-latex="\\mathrel{R}">
+    <mi data-latex="R">R</mi>
+  </mrow>
+</math>`
+    ));
+  it('mathord', () =>
+    toXmlMatch(
+      tex2mml('a\\mathord{b}c'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\mathord{b}c\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\mathord{b}\">
+        <mi data-latex=\"b\">b</mi>
+      </mrow>
+      <mi data-latex=\"c\">c</mi>
+    </math>`
+    ));
+  it('mathopen', () =>
+    toXmlMatch(
+      tex2mml('a\\mathopen{b}c'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\mathopen{b}c\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mrow data-mjx-texclass=\"OPEN\" data-latex=\"\\mathopen{b}\">
+        <mi data-latex=\"b\">b</mi>
+      </mrow>
+      <mi data-latex=\"c\">c</mi>
+    </math>`
+    ));
+  it('mathclose', () =>
+    toXmlMatch(
+      tex2mml('a\\mathclose{b}c'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\mathclose{b}c\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mrow data-mjx-texclass=\"CLOSE\" data-latex=\"\\mathclose{b}\">
+        <mi data-latex=\"b\">b</mi>
+      </mrow>
+      <mi data-latex=\"c\">c</mi>
+    </math>`
+    ));
+  it('mathbin', () =>
+    toXmlMatch(
+      tex2mml('a\\mathbin{b}c'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\mathbin{b}c\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mrow data-mjx-texclass=\"BIN\" data-latex=\"\\mathbin{b}\">
+        <mi data-latex=\"b\">b</mi>
+      </mrow>
+      <mi data-latex=\"c\">c</mi>
+    </math>`
+    ));
+  it('mathpunct', () =>
+    toXmlMatch(
+      tex2mml('a\\mathpunct{b}c'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\mathpunct{b}c\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mrow data-mjx-texclass=\"PUNCT\" data-latex=\"\\mathpunct{b}\">
+        <mi data-latex=\"b\">b</mi>
+      </mrow>
+      <mi data-latex=\"c\">c</mi>
+    </math>`
+    ));
+  it('mathinner', () =>
+    toXmlMatch(
+      tex2mml('a\\mathinner{b}c'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\mathinner{b}c\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mrow data-mjx-texclass=\"INNER\" data-latex=\"\\mathinner{b}\">
+        <mi data-latex=\"b\">b</mi>
+      </mrow>
+      <mi data-latex=\"c\">c</mi>
+    </math>`
+    ));
+});
+
+
+describe('Spacing', () => {
+    it('Nonscript toplevel', () =>
+    toXmlMatch(
+      tex2mml('\\left. a \\nonscript\\;\\middle|\\nonscript\\; b \\right.'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\left. a \\nonscript\\;\\middle|\\nonscript\\; b \\right.\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left. a \\nonscript\\;\\middle|\\nonscript\\; b \\right.\" data-latex=\"\\left. a \\nonscript\\;\\middle|\\nonscript\\; b \\right.\">
+        <mo data-mjx-texclass=\"OPEN\" fence=\"true\" stretchy=\"true\" symmetric=\"true\" data-latex-item=\"\\left.\" data-latex=\"\\left.\"></mo>
+        <mi data-latex=\"a\">a</mi>
+        <mstyle scriptlevel=\"0\">
+          <mspace width=\"0.278em\"></mspace>
+        </mstyle>
+        <mrow data-mjx-texclass=\"CLOSE\"></mrow>
+        <mo data-latex-item=\"\\middle|\" data-latex=\"\\middle|\">|</mo>
+        <mrow data-mjx-texclass=\"OPEN\" data-latex=\"\\middle|\"></mrow>
+        <mstyle scriptlevel=\"0\">
+          <mspace width=\"0.278em\"></mspace>
+        </mstyle>
+        <mi data-latex=\"b\">b</mi>
+        <mo data-mjx-texclass=\"CLOSE\" fence=\"true\" stretchy=\"true\" symmetric=\"true\" data-latex-item=\"\\right.\" data-latex=\"\\right.\"></mo>
+      </mrow>
+    </math>`
+    ));
+  it('Nonscript scriptlevel', () =>
+    toXmlMatch(
+      tex2mml('X_{\\left. a \\nonscript\\;\\middle|\\nonscript\\; b \\right.}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"X_{\\left. a \\nonscript\\;\\middle|\\nonscript\\; b \\right.}\" display=\"block\">
+      <msub data-latex=\"X_{\\left. a \\nonscript\\;\\middle|\\nonscript\\; b \\right.}\">
+        <mi data-latex=\"X\">X</mi>
+        <mrow data-mjx-texclass=\"ORD\" data-latex=\"{\\left. a \\nonscript\\;\\middle|\\nonscript\\; b \\right.}\">
+          <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left. a \\nonscript\\;\\middle|\\nonscript\\; b \\right.\" data-latex=\"\\left. a \\nonscript\\;\\middle|\\nonscript\\; b \\right.\">
+            <mo data-mjx-texclass=\"OPEN\" fence=\"true\" stretchy=\"true\" symmetric=\"true\" data-latex-item=\"\\left.\" data-latex=\"\\left.\"></mo>
+            <mi data-latex=\"a\">a</mi>
+            <mrow data-mjx-texclass=\"CLOSE\"></mrow>
+            <mo data-latex-item=\"\\middle|\" data-latex=\"\\middle|\">|</mo>
+            <mrow data-mjx-texclass=\"OPEN\" data-latex=\"\\middle|\"></mrow>
+            <mi data-latex=\"b\">b</mi>
+            <mo data-mjx-texclass=\"CLOSE\" fence=\"true\" stretchy=\"true\" symmetric=\"true\" data-latex-item=\"\\right.\" data-latex=\"\\right.\"></mo>
+          </mrow>
+        </mrow>
+      </msub>
+    </math>`
+    ));
+  it('hskip', () =>
+    toXmlMatch(
+      tex2mml('\\hskip{1cm}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\hskip{1cm}\" display=\"block\">
+      <mspace width=\"1cm\" data-latex=\"\\hskip{1cm}\"></mspace>
+    </math>`
+    ));
+  it('hspace', () =>
+    toXmlMatch(
+      tex2mml('\\hspace{1cm}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\hspace{1cm}\" display=\"block\">
+      <mspace width=\"1cm\" data-latex=\"\\hspace{1cm}\"></mspace>
+    </math>`
+    ));
+  it('mskip', () =>
+    toXmlMatch(
+      tex2mml('\\mskip{1cm}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mskip{1cm}\" display=\"block\">
+      <mspace width=\"1cm\" data-latex=\"\\mskip{1cm}\"></mspace>
+    </math>`
+    ));
+  it('mspace', () =>
+    toXmlMatch(
+      tex2mml('\\mspace{1cm}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mspace{1cm}\" display=\"block\">
+      <mspace width=\"1cm\" data-latex=\"\\mspace{1cm}\"></mspace>
+    </math>`
+    ));
+  it('mkern', () =>
+    toXmlMatch(
+      tex2mml('\\mkern{1cm}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\mkern{1cm}\" display=\"block\">
+      <mspace width=\"1cm\" linebreak=\"nobreak\" data-latex=\"\\mkern{1cm}\"></mspace>
+    </math>`
+    ));
+});
+
+
+
 // describe('Complete Base Items', () => {
 //   it('Middle Color', () =>
 //     toXmlMatch(
@@ -8238,5 +8747,7 @@ afterAll(() => getTokens('base'));
 //     ));
 // });
 
-// Do we still use LineBreakStyle?
+// Do we still use LineBreakStyle? This comes from different MO entries in the operator table
 // Lines in BaseItems: 552-554 Where does 'insert' come from?
+
+// pnpm -s test -- testsuite/tests/input/tex/Base.test.ts --collectCoverageFrom="./mjs/input/tex/base/*.js" &> /tmp/base.out42
