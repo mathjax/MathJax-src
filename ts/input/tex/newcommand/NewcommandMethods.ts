@@ -259,9 +259,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
       delete parser.stack.env['closing'];
       const beginN = parser.stack.global['beginEnv'] as number;
       if (beginN) {
-        const beginItem = parser.stack.Top(parser.stack.height - beginN);
-        const prevBegin = beginItem.getProperty('prev-begin') as number;
-        parser.stack.global['beginEnv'] = prevBegin || 0;
+        (parser.stack.global['beginEnv'] as number)--;
         if (edef) {
           // Parse the commands in the end environment definition.
           let rest = parser.string.slice(parser.i);
@@ -297,12 +295,10 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
       parser.string.slice(parser.i)
     );
     parser.i = 0;
-    const item = parser.itemFactory
+    parser.stack.global['beginEnv'] = (parser.stack.global['beginEnv'] as number || 0) + 1;
+    return parser.itemFactory
       .create('beginEnv')
-      .setProperty('name', name)
-      .setProperty('prev-begin', parser.stack.global['beginEnv']);
-    parser.stack.global['beginEnv'] = parser.stack.height;
-    return item;
+      .setProperty('name', name);
   },
 
   Macro: BaseMethods.Macro,
