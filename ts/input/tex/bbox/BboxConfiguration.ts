@@ -67,7 +67,7 @@ const BboxMethods: { [key: string]: ParseMethod } = {
             width: '+' + 2 * parseInt(match[1], 10) + match[3],
           };
         }
-      } else if (part.match(/^([a-z0-9]+|\#[0-9a-f]{6}|\#[0-9a-f]{3})$/i)) {
+      } else if (part.match(/^([a-z0-9]+|#[0-9a-f]{6}|#[0-9a-f]{3})$/i)) {
         // @test Bbox-Background
         if (background) {
           // @test Bbox-Background-Error

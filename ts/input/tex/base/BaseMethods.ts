@@ -1338,7 +1338,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     });
     if (v) {
       mml = parser.create('node', 'mpadded', [mml], { voffset: v });
-      if (v.match(/^\-/)) {
+      if (v.match(/^-/)) {
         NodeUtil.setAttribute(mml, 'height', v);
         NodeUtil.setAttribute(mml, 'depth', '+' + v.substring(1));
       } else {

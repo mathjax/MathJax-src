@@ -39,7 +39,7 @@ const nonCharacterRegexp =
  */
 function isLegalAttributeName(name: string): boolean {
   return !(
-    name.match(/[\x00-\x1f\x7f-\x9f "'>\/=]/) || name.match(nonCharacterRegexp)
+    name.match(/[\x00-\x1f\x7f-\x9f "'>/=]/) || name.match(nonCharacterRegexp)
   );
 }
 

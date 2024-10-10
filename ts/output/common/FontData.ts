@@ -348,9 +348,10 @@ export interface FontExtensionData<
 /**
  * Merge options into an object or array.
  *
- * @param obj
- * @param dst
- * @param src
+ * @param {OptionList} obj The target options list.
+ * @param {string} dst Name of the option to merge into.
+ * @param {OptionList} src The options to be merged.
+ * @returns The options for `dst`.
  */
 export function mergeOptions(obj: OptionList, dst: string, src: OptionList) {
   return src ? defaultOptions(obj, { [dst]: src })[dst] : obj[dst];
@@ -1213,7 +1214,7 @@ export class FontData<
     const prefix = !dynamic.extension
       ? this.options.dynamicPrefix
       : this.CLASS.dynamicExtensions.get(dynamic.extension).prefix;
-    return dynamic.file.match(/^(?:[\/\[]|[a-z]+:\/\/|[a-z]:)/i)
+    return dynamic.file.match(/^(?:[/[]|[a-z]+:\/\/|[a-z]:)/i)
       ? dynamic.file
       : prefix + '/' + dynamic.file.replace(/(?<!\.js)$/, '.js');
   }
