@@ -111,7 +111,7 @@ export interface CommonMsubClass<
 /**
  * The CommonMsub wrapper mixin for the MmlMsub object
  *
- * @param {CommonScriptbaseConstructor} Base The constructor class
+ * @param {CommonScriptbaseConstructor} Base The constructor class to extend
  * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type
@@ -240,7 +240,7 @@ export interface CommonMsupClass<
 /**
  * The CommonMsup wrapper mixin for the MmlMsup object
  *
- * @param {CommonScriptbaseConstructor} Base The constructor class
+ * @param {CommonScriptbaseConstructor} Base The constructor class to extend
  * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type
@@ -389,7 +389,7 @@ export interface CommonMsubsupClass<
 /**
  * The CommomMsubsup wrapper for the MmlMsubsup object
  *
- * @param {CommonScriptbaseConstructor} Base The constructor class
+ * @param {CommonScriptbaseConstructor} Base The constructor class to extend
  * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type

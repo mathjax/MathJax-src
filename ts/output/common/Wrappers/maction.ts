@@ -270,7 +270,7 @@ export interface CommonMactionClass<
 /**
  * The CommonMaction wrapper mixin for the MmlMaction object
  *
- * @param {CommonWrapperConstructor} Base The constructor class
+ * @param {CommonWrapperConstructor} Base The constructor class to extend
  * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type

@@ -123,7 +123,7 @@ export interface CommonMrowClass<
 /**
  * The CommonMrow wrapper mixin for the MmlMrow object
  *
- * @param {CommonWrapperConstructor} Base The constructor class
+ * @param {CommonWrapperConstructor} Base The constructor class to extend
  * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type
@@ -508,7 +508,7 @@ export interface CommonInferredMrowClass<
 /**
  * The CommonInferredMrow wrapper mixin for the MmlInferredMrow object
  *
- * @param {CommonWrapperConstructor} Base The constructor class
+ * @param {CommonWrapperConstructor} Base The constructor class to extend
  * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type
