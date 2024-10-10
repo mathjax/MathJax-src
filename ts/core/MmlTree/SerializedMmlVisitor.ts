@@ -160,7 +160,7 @@ export class SerializedMmlVisitor extends MmlVisitor {
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
-      .replace(/\"/g, '&quot;')
+      .replace(/"/g, '&quot;')
       .replace(/[\uD800-\uDBFF]./g, toEntity)
       .replace(/[\u0080-\uD7FF\uE000-\uFFFF]/g, toEntity);
   }

@@ -247,8 +247,9 @@ export class MathMLCompile<N, T, D> {
    *
    * @param {string} _name  The name of an attribute to filter
    * @param {string} value  The value to filter
+   * @returns {string} The filtered value.
    */
-  protected filterAttribute(_name: string, value: string) {
+  protected filterAttribute(_name: string, value: string): string {
     return value;
   }
 
@@ -256,6 +257,7 @@ export class MathMLCompile<N, T, D> {
    * Provide a hook for the Safe extension to filter class names.
    *
    * @param {string[]} list   The list of class names to filter
+   * @returns {string[]}      The list of filtered class names
    */
   protected filterClassList(list: string[]) {
     return list;

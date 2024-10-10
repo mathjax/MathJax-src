@@ -111,7 +111,8 @@ export interface CommonMsubClass<
 /**
  * The CommonMsub wrapper mixin for the MmlMsub object
  *
- * @param Base
+ * @param {CommonScriptbaseConstructor} Base The constructor class to extend
+ * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -239,7 +240,8 @@ export interface CommonMsupClass<
 /**
  * The CommonMsup wrapper mixin for the MmlMsup object
  *
- * @param Base
+ * @param {CommonScriptbaseConstructor} Base The constructor class to extend
+ * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -387,7 +389,8 @@ export interface CommonMsubsupClass<
 /**
  * The CommomMsubsup wrapper for the MmlMsubsup object
  *
- * @param Base
+ * @param {CommonScriptbaseConstructor} Base The constructor class to extend
+ * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -519,9 +522,7 @@ export function CommonMsubsupMixin<
     /*********************************************************************/
 
     /**
-     * @ override
-     *
-     * @param bbox
+     * @override
      */
     public appendScripts(bbox: BBox): BBox {
       const [subbox, supbox] = [

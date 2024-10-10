@@ -75,7 +75,7 @@ export const SetOptionsUtil = {
     const config = parser.options.setoptions;
     const options = config.allowOptions[extension] || {};
     const allow =
-      options.hasOwnProperty(option) && !isObject(options[option])
+      Object.hasOwn(options, option) && !isObject(options[option])
         ? options[option]
         : null;
     if (allow === false || (allow === null && !config.allowOptionsDefault)) {
@@ -85,12 +85,10 @@ export const SetOptionsUtil = {
         option
       );
     }
-    if (
-      !(
-        extension === 'tex' ? parser.options : parser.options[extension]
-      )?.hasOwnProperty(option)
-    ) {
-      if (extension === 'tex') {
+    const isTex = extension === 'tex';
+    const extOptions = isTex ? parser.options : parser.options[extension];
+    if (!extOptions || !Object.hasOwn(extOptions, option)) {
+      if (isTex) {
         throw new TexError(
           'InvalidTexOption',
           'Invalid TeX option "%1"',

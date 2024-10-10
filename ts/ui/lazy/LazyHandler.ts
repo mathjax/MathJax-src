@@ -95,8 +95,9 @@ export class LazyList<N, T, D> {
    * Remove an item from the map
    *
    * @param {string} id   The ID of the MathItem to remove
+   * @returns {boolean}   True if MathItem was deleted
    */
-  public delete(id: string) {
+  public delete(id: string): boolean {
     return this.items.delete(id);
   }
 }
@@ -634,7 +635,7 @@ export function LazyMathDocumentMixin<
         if (math.lazyCompile) {
           math.state(STATE.COMPILED - 1);
           state = STATE.COMPILED;
-        } else if (!math.metrics.hasOwnProperty('em')) {
+        } else if (!Object.hasOwn(math.metrics, 'em')) {
           math.state(STATE.METRICS - 1);
           state = STATE.METRICS;
         } else {

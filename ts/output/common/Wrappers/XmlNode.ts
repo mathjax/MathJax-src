@@ -138,7 +138,8 @@ export interface CommonXmlNodeClass<
 /**
  * The CommonXmlNode wrapper mixin for the XmlNode object
  *
- * @param Base
+ * @param {CommonWrapperConstructor} Base The constructor class to extend
+ * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -276,8 +277,10 @@ export function CommonXmlNodeMixin<
 
     /**
      * The font-size and font-family values to use for the XML
+     *
+     * @returns {StyleList} The font info
      */
-    public getFontStyles() {
+    public getFontStyles(): { 'font-family': string; 'font-size': string } {
       const adaptor = this.adaptor;
       const metrics = this.metrics as ExtendedMetrics;
       return {

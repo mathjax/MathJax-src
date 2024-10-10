@@ -492,7 +492,7 @@ export class LiteBase extends AbstractDOMAdaptor<
    * @override
    */
   public hasAttribute(node: LiteElement, name: string) {
-    return node.attributes.hasOwnProperty(name);
+    return Object.hasOwn(node.attributes, name);
   }
 
   /**

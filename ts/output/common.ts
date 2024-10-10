@@ -43,6 +43,7 @@ import { percent } from '../util/lengths.js';
 import { length2em } from '../util/lengths.js';
 import { StyleList, Styles } from '../util/Styles.js';
 import { StyleList as CssStyleList, CssStyles } from '../util/StyleList.js';
+import { BBox } from '../util/BBox.js';
 
 /*****************************************************************/
 
@@ -214,9 +215,10 @@ export abstract class CommonOutputJax<
   >;
 
   /**
-   * True when inkline breaks need to be forced (e.g., for SVG output)
+   * @returns {boolean} True when in-line breaks need to be forced (e.g., for
+   *     SVG output)
    */
-  get forceInlineBreaks() {
+  get forceInlineBreaks(): boolean {
     return false;
   }
 
@@ -364,9 +366,9 @@ export abstract class CommonOutputJax<
   }
 
   /**
-   * The initial scaling value for the math node
+   * @returns {number} The initial scaling value for the math node
    */
-  protected getInitialScale() {
+  protected getInitialScale(): number {
     return this.math.metrics.scale;
   }
 
@@ -429,8 +431,9 @@ export abstract class CommonOutputJax<
   /**
    * @param {MathItem} math      The MathItem to get the bounding box for
    * @param {MathDocument} html  The MathDocument for the math
+   * @returns {BBox}             The bounding box
    */
-  public getBBox(math: MathItem<N, T, D>, html: MathDocument<N, T, D>) {
+  public getBBox(math: MathItem<N, T, D>, html: MathDocument<N, T, D>): BBox {
     this.setDocument(html);
     this.math = math;
     math.root.setTeXclass(null);
@@ -673,7 +676,7 @@ export abstract class CommonOutputJax<
 
   /**
    * @param {N} node    The math element to be measured
-   * @param display
+   * @param {boolean} display Is the element in display math?
    * @returns {N}        The test elements that were added
    */
   protected getTestElement(node: N, display: boolean): N {

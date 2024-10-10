@@ -369,7 +369,7 @@ export class Collapse {
     if (this.collapse.has(type)) {
       return this.collapse.get(type).call(this, node, complexity);
     }
-    if (this.cutoff.hasOwnProperty(type)) {
+    if (Object.hasOwn(this.cutoff, type)) {
       return this.defaultCheck(node, complexity, type);
     }
     return complexity;

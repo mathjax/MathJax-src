@@ -413,13 +413,17 @@ export class CommonWrapper<
 
   /**
    * Easy access to the output jax for this node
+   *
+   * @returns {JX} The output jax for this node
    */
-  get jax() {
+  get jax(): JX {
     return this.factory.jax;
   }
 
   /**
    * Easy access to the DOMAdaptor object
+   *
+   * @returns The DOMAdaptor object
    */
   get adaptor() {
     return this.factory.jax.adaptor;
@@ -427,6 +431,8 @@ export class CommonWrapper<
 
   /**
    * Easy access to the metric data for this node
+   *
+   * @returns The metric data for this node
    */
   get metrics() {
     return this.factory.jax.math.metrics;
@@ -434,13 +440,17 @@ export class CommonWrapper<
 
   /**
    * Easy access to the container width
+   *
+   * @returns {number} The container width
    */
-  get containerWidth() {
+  get containerWidth(): number {
     return this.jax.containerWidth;
   }
 
   /**
    * Easy access to the linebreak visitor
+   *
+   * @returns The linebreak visitor
    */
   get linebreaks() {
     return this.jax.linebreaks;
@@ -448,20 +458,23 @@ export class CommonWrapper<
 
   /**
    * Easy access to the linebreak options
+   *
+   * @returns The linebreak options
    */
   get linebreakOptions() {
     return this.jax.options.linebreaks;
   }
 
   /**
-   * True if children with percentage widths should be resolved by this container
+   * @returns {boolean} True if children with percentage widths should be
+   *     resolved by this container
    */
-  get fixesPWidth() {
+  get fixesPWidth(): boolean {
     return !this.node.notParent && !this.node.isToken;
   }
 
   /**
-   * The number of breakpoints in the node
+   * @returns {number} The number of breakpoints in the node
    */
   get breakCount(): number {
     if (this._breakCount < 0) {
@@ -638,7 +651,8 @@ export class CommonWrapper<
   /**
    * Get the bounding box for the i-th line of an embellished mo
    *
-   * @param i
+   * @param {number} i The line number
+   * @returns {LineBBox} The bounding box for that line
    */
   protected embellishedBBox(i: number): LineBBox {
     if (!this.node.isEmbellished || this.node.isKind('mo')) return null;
@@ -918,12 +932,13 @@ export class CommonWrapper<
    * @param {string} fontFamily  The font family to use
    * @param {string} fontWeight  The font weight to use
    * @param {string} fontStyle   The font style to use
+   * @returns {string} The explicit font marker
    */
   protected explicitVariant(
     fontFamily: string,
     fontWeight: string,
     fontStyle: string
-  ) {
+  ): string {
     let style = this.styles;
     if (!style) style = this.styles = new Styles();
     style.set('fontFamily', fontFamily);

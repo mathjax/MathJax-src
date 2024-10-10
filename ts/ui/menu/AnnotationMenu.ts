@@ -43,12 +43,14 @@ type AnnotationTypes = { [type: string]: string[] };
  * @param {AnnotationTypes} types The legitimate annotation types.
  * @param {[string, string][]} cache We cache annotations of a math item, so we
  *    only have to compute them once for the two annotation menus.
+ * @returns {(menu: MJContextMenu, sub: Submenu) => SubMenu} Method generating
+ *    the show annotations submenu.
  */
 export function showAnnotations(
   box: SelectableInfo,
   types: AnnotationTypes,
   cache: [string, string][]
-) {
+): (menu: MJContextMenu, sub: Submenu) => SubMenu {
   return (menu: MJContextMenu, sub: Submenu) => {
     getAnnotation(getSemanticNode(menu), types, cache);
     box.attachMenu(menu);
@@ -61,6 +63,8 @@ export function showAnnotations(
  * Clears the annotation cache parameter.
  *
  * @param {[string, string][]} cache The annotation cache.
+ * @returns {(menu: MJContextMenu, sub: Submenu) => SubMenu} Method generating
+ *    the copy annotations submenu.
  */
 export function copyAnnotations(cache: [string, string][]) {
   return (menu: MJContextMenu, sub: Submenu) => {
@@ -75,7 +79,7 @@ export function copyAnnotations(cache: [string, string][]) {
 /**
  * Find the top-most semantics element that encloses the contents of the expression (if any)
  *
- * @param menu
+ * @param {MJContextMenu} menu The MathJax context menu
  * @returns {MmlNode | null} The semantics node that was found (or null)
  */
 function getSemanticNode(menu: MJContextMenu): MmlNode | null {
@@ -119,7 +123,7 @@ function getAnnotation(
 /**
  * @param {MmlNode} child The annotation node to check if its encoding is one
  *     of the displayable ones.
- * @param types
+ * @param {AnnotationTypes} types The annotation types.
  * @returns {string | null} The annotation type if it exists, o/w null.
  */
 function annotationMatch(

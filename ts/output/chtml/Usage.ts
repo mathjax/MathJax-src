@@ -66,8 +66,10 @@ export class Usage<T> {
 
   /**
    * Get the items marked as used since the last update.
+   *
+   * @returns {T[]} The already used items.
    */
-  public update() {
+  public update(): T[] {
     const update = this.needsUpdate;
     this.needsUpdate = [];
     return update;

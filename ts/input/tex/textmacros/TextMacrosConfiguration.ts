@@ -58,9 +58,9 @@ export const TextBaseConfiguration = Configuration.create('text-base', {
     //   produces the error as configured in the main TeX parser, so
     //   this will respect the noundefined package, if loaded).
     //
-    macro: (parser: TextParser, name: string) => {
+    [HandlerType.MACRO]: (parser: TextParser, name: string) => {
       const texParser = parser.texParser;
-      const macro = texParser.lookup('macro', name);
+      const macro = texParser.lookup(HandlerType.MACRO, name);
       if (macro && macro._func !== TextMacrosMethods.Macro) {
         parser.Error(
           'MathMacro',
@@ -68,10 +68,10 @@ export const TextBaseConfiguration = Configuration.create('text-base', {
           '\\' + name
         );
       }
-      texParser.parse('macro', [parser, name]);
+      texParser.parse(HandlerType.MACRO, [parser, name]);
     },
   },
-  items: {
+  [ConfigurationType.ITEMS]: {
     [StartItem.prototype.kind]: StartItem,
     [StopItem.prototype.kind]: StopItem,
     [MmlItem.prototype.kind]: MmlItem,
@@ -118,7 +118,10 @@ export const TextMacrosConfiguration = Configuration.create('textmacros', {
    * @param {ParserConfiguration} _config  The configuration object we are being configured within
    * @param {TeX<any,any,any>} jax         The TeX input jax in which we are running
    */
-  config(_config: ParserConfiguration, jax: TeX<any, any, any>) {
+  [ConfigurationType.CONFIG]: (
+    _config: ParserConfiguration,
+    jax: TeX<any, any, any>
+  ) => {
     //
     //  Create the configuration and parseOptions objects for the
     //    internal TextParser and add the textBase configuration.

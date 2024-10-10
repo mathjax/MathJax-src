@@ -11,7 +11,7 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "baseUrl": ".",
-    "lib": ["ES6", "DOM", "ES2020"],
+    "lib": ["ES6", "DOM", "ES2022"],
     "noLib": false,
     "sourceMap": true,
     "typeRoots": []

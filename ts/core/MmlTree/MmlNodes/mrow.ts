@@ -217,6 +217,8 @@ export class MmlInferredMrow extends MmlMrow {
 
   /**
    * Show the child nodes in brackets
+   *
+   * @returns {string} The child nodes string
    */
   public toString() {
     return '[' + this.childNodes.join(',') + ']';

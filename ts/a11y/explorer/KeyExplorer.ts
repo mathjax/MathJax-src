@@ -33,6 +33,7 @@ import { Explorer, AbstractExplorer } from './Explorer.js';
 import { ExplorerPool } from './ExplorerPool.js';
 import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import { honk, InPlace } from '../speech/SpeechUtil.js';
+import { GeneratorPool } from '../speech/GeneratorPool.js';
 import { Sre } from '../sre.js';
 
 /**
@@ -121,9 +122,9 @@ export class SpeechExplorer
   /**
    * Convenience getter for generator pool of the item.
    *
-   * @returns The item's generator pool.
+   * @returns {GeneratorPool} The item's generator pool.
    */
-  private get generators() {
+  private get generators(): GeneratorPool<HTMLElement, Text, Document> {
     return this.item?.generatorPool;
   }
 

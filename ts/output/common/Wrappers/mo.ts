@@ -230,7 +230,8 @@ export interface CommonMoClass<
 /**
  * The CommomMo wrapper mixin for the MmlMo object
  *
- * @param Base
+ * @param {CommonWrapperConstructor} Base The constructor class to extend
+ * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -451,7 +452,7 @@ export function CommonMoMixin<
      * @override
      */
     public getStretchBBox(WHD: number[], D: number, C: DelimiterData) {
-      if (C.hasOwnProperty('min') && C.min > D) {
+      if (Object.hasOwn(C, 'min') && C.min > D) {
         D = C.min;
       }
       let [h, d, w] = C.HDW;

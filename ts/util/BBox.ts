@@ -56,7 +56,6 @@ export class BBox {
   /**
    *  These are the data stored for a bounding box
    */
-  /* tslint:disable:jsdoc-require */
   public w: number;
   public h: number;
   public d: number;
@@ -69,7 +68,6 @@ export class BBox {
   public oc: number; // alternate italic correction for -tex-mit variant
   public sk: number; // skew
   public dx: number; // offset for combining characters as accents
-  /* tslint:enable */
 
   /**
    * @returns {BBox}  A BBox initialized to zeros
