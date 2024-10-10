@@ -73,7 +73,6 @@ export class PrioritizedList<DataClass> {
     let i = 0;
     const items = this.items;
     return {
-      /* tslint:disable-next-line:jsdoc-require */
       next(): IteratorResult<PrioritizedListItem<DataClass>> {
         return { value: items[i++], done: i > items.length };
       },

@@ -38,13 +38,11 @@ export type PackageMap = Map<string, Package>;
  * An error class that includes the package name
  */
 export class PackageError extends Error {
-  /* tslint:disable:jsdoc-require */
   public package: string;
   constructor(message: string, name: string) {
     super(message);
     this.package = name;
   }
-  /* tslint:enable */
 }
 
 /**
@@ -155,7 +153,8 @@ export class Package {
   }
 
   /**
-   * @param {string} name   A promise for when extra files and checkReady have been fulfilled
+   * @param {string} name The package configuration to be loaded
+   * @returns {Promise<void>} A promise for when extra files and checkReady have been fulfilled
    */
   public static loadPromise(name: string): Promise<void> {
     const config = (CONFIG[name] || {}) as PackageConfig;
@@ -249,8 +248,9 @@ export class Package {
   /**
    * @param {Promise<string>[]} promises  The array or promises that must be resolved before
    *                                        this package can load
+   * @returns {Promise<string>} The promise indicating when this file is loaded
    */
-  protected makePromise(promises: Promise<string>[]) {
+  protected makePromise(promises: Promise<string>[]): Promise<string> {
     //
     //  Make a promise and save its resolve/reject functions
     //

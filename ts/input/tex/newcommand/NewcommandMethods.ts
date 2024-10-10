@@ -22,7 +22,7 @@
  */
 
 import { HandlerType } from '../HandlerTypes.js';
-import { ParseMethod } from '../Types.js';
+import { ParseResult, ParseMethod } from '../Types.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import * as sm from '../TokenMap.js';
@@ -192,8 +192,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
    * @param {string} name The name of the calling command.
    * @param {string} text The text template of the macro.
    * @param {string} n The number of parameters.
-   * @param {string[]} ...params The parameter values.
-   * @param {...any} params
+   * @param {string[]} params The parameter values.
    */
   MacroWithTemplate(
     parser: TexParser,
@@ -242,6 +241,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
    * @param {string} edef The end definition in the newenvironment macro.
    * @param {number} n The number of parameters.
    * @param {string} def Default for an optional parameter.
+   * @returns {ParseResult} The begin environment stack item.
    */
   BeginEnv(
     parser: TexParser,
@@ -250,7 +250,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
     edef: string,
     n: number,
     def: string
-  ) {
+  ): ParseResult {
     // @test Newenvironment Empty, Newenvironment Content
     // We have an end item, and we are supposed to close this environment.
     const name = begin.getName();

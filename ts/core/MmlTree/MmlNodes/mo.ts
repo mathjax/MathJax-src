@@ -31,6 +31,7 @@ import {
 import { MmlMrow } from './mrow.js';
 import { MmlMover, MmlMunder, MmlMunderover } from './munderover.js';
 import {
+  OperatorDef,
   OperatorList,
   OPTABLE,
   OPDEF,
@@ -426,8 +427,9 @@ export class MmlMo extends AbstractMmlTokenNode {
    * get the operator definition from the operator table
    *
    * @param {string} mo   The text of the mo element
+   * @returns {OperatorDef} The operator definition
    */
-  protected getOperatorDef(mo: string) {
+  protected getOperatorDef(mo: string): OperatorDef {
     const [form1, form2, form3] = this.handleExplicitForm(this.getForms());
     this.attributes.setInherited('form', form1);
     const CLASS = this.constructor as typeof MmlMo;

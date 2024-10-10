@@ -123,7 +123,8 @@ export interface CommonMrowClass<
 /**
  * The CommonMrow wrapper mixin for the MmlMrow object
  *
- * @param Base
+ * @param {CommonWrapperConstructor} Base The constructor class to extend
+ * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -334,7 +335,7 @@ export function CommonMrowMixin<
     /**
      * Adjust bbox vertical alignment. (E.g., for \vbox, \vcenter.)
      *
-     * @param bbox
+     * @param {BBox} bbox The adjusted bounding box.
      */
     protected vboxAdjust(bbox: BBox) {
       if (!this.parent) return;
@@ -507,7 +508,8 @@ export interface CommonInferredMrowClass<
 /**
  * The CommonInferredMrow wrapper mixin for the MmlInferredMrow object
  *
- * @param Base
+ * @param {CommonWrapperConstructor} Base The constructor class to extend
+ * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type

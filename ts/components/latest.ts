@@ -376,7 +376,6 @@ function requestXML(
 ) {
   const request = getXMLHttpRequest();
   if (request) {
-    // tslint:disable-next-line:jsdoc-require
     request.onreadystatechange = function () {
       if (request.readyState === 4) {
         if (request.status === 200) {

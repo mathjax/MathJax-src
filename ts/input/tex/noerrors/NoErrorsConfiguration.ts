@@ -24,6 +24,7 @@
 import { ConfigurationType } from '../HandlerTypes.js';
 import { Configuration } from '../Configuration.js';
 import { NodeFactory } from '../NodeFactory.js';
+import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 
 /**
  * Generates an error node containing the erroneous expression.
@@ -32,13 +33,14 @@ import { NodeFactory } from '../NodeFactory.js';
  * @param {string} message The error message.
  * @param {string} _id The error id (which is ignored).
  * @param {string} expr The original LaTeX expression.
+ * @returns {MmlNode} The error output node.
  */
 function noErrors(
   factory: NodeFactory,
   message: string,
   _id: string,
   expr: string
-) {
+): MmlNode {
   const mtext = factory.create('token', 'mtext', {}, expr.replace(/\n/g, ' '));
   const error = factory.create('node', 'merror', [mtext], {
     'data-mjx-error': message,

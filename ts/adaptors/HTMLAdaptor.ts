@@ -42,12 +42,10 @@ export interface MinDocument<N, T> {
   body: N;
   title: string;
   doctype: { name: string };
-  /* tslint:disable:jsdoc-require */
   createElement(kind: string): N;
   createElementNS(ns: string, kind: string): N;
   createTextNode(text: string): T;
   querySelectorAll(selector: string): ArrayLike<N>;
-  /* tslint:enable */
 }
 
 /*****************************************************************/
@@ -81,7 +79,6 @@ export interface MinHTMLElement<N, T> {
   childNodes: (N | T)[] | NodeList;
   firstChild: N | T | Node;
   lastChild: N | T | Node;
-  /* tslint:disable:jsdoc-require */
   getElementsByTagName(name: string): N[] | HTMLCollectionOf<Element>;
   getElementsByTagNameNS(
     ns: string,
@@ -100,7 +97,6 @@ export interface MinHTMLElement<N, T> {
   hasAttribute(name: string): boolean;
   getBoundingClientRect(): object;
   getBBox?(): { x: number; y: number; width: number; height: number };
-  /* tslint:endable */
 }
 
 /*****************************************************************/

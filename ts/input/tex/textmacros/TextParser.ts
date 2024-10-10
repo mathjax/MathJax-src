@@ -57,8 +57,10 @@ export class TextParser extends TexParser {
 
   /**
    * Short-hand for obtaining the saved TexParser
+   *
+   * @returns {TexParser} The saved TexParser
    */
-  public get texParser() {
+  public get texParser(): TexParser {
     return this.configuration.packageData.get('textmacros').texParser;
   }
 
@@ -206,8 +208,9 @@ export class TextParser extends TexParser {
    *
    * @param {string} name   The macro that is calling for a parameter
    * @param {EnvList} env   The environment to use
+   * @returns {MmlNode}  The node with the parsed text element
    */
-  public ParseTextArg(name: string, env: EnvList) {
+  public ParseTextArg(name: string, env: EnvList): MmlNode {
     const text = this.GetArgument(name);
     env = Object.assign(Object.assign({}, this.stack.env), env);
     return new TextParser(text, env, this.configuration).mml();

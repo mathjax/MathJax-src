@@ -143,7 +143,8 @@ export interface CommonMtrClass<
 /**
  * The CommonMtr wrapper for the MmlMtr object
  *
- * @param Base
+ * @param {CommonWrapperConstructor} Base The constructor class to extend
+ * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type
@@ -347,7 +348,8 @@ export interface CommonMlabeledtrClass<
 /**
  * The CommonMlabeledtr wrapper mixin for the MmlMlabeledtr object
  *
- * @param Base
+ * @param {Constructor} Base The constructor class to extend
+ * @returns {B} The mixin constructor
  * @template N   The DOM node type
  * @template T   The DOM text node type
  * @template D   The DOM document type

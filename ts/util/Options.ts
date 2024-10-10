@@ -22,14 +22,13 @@
  */
 
 /*****************************************************************/
-/* tslint:disable-next-line:jsdoc-require */
 const OBJECT = {}.constructor;
 
 /**
  *  Check if an object is an object literal (as opposed to an instance of a class)
  *
- * @param {any} obj The object to test.
- * @returns {boolean} True if argument is an object.
+ * @param {any} obj A javascript entity
+ * @returns {boolean} True if entity is really an object
  */
 export function isObject(obj: any): boolean {
   return (
@@ -110,7 +109,7 @@ export class Expandable {}
  * without reporting an error.
  *
  * @param {OptionList} def The options list
- * @returns {OptionList} The expanded options list.
+ * @returns {OptionList} The augmented options list
  */
 export function expandable(def: OptionList): OptionList {
   return Object.assign(Object.create(Expandable.prototype), def);

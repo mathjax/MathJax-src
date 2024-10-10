@@ -124,13 +124,14 @@ export const BboldxMethods = {
  * @param {string} normal Variant string for normal mode.
  * @param {string} light Variant string for light mode.
  * @param {string} bfbb Variant string for bold mode.
+ * @returns {string} The selected variant string.
  */
 function getBbxFont(
   parser: TexParser,
   normal: string,
   light: string,
   bfbb: string
-) {
+): string {
   if (!parser.options?.bboldx) {
     return normal;
   }

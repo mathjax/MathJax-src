@@ -576,7 +576,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
   /**
    * Return the first child element, skipping id align boxes and href hit boxes
    *
-   * @param dom
+   * @param {N} dom The dom element
    * @returns {N}   The first "real" child element
    */
   public firstChild(dom: N = this.dom[0]): N {
@@ -656,6 +656,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
    * @param {number} y         The y-position of the text
    * @param {N} parent         The container for the text
    * @param {string} variant   The variant to use for the string
+   * @returns {number}         The computed width of the text
    */
   protected addUtext(x: number, y: number, parent: N, variant: string): number {
     const c = this.utext;

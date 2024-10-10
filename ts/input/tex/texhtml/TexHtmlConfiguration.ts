@@ -39,8 +39,9 @@ export const HtmlNodeMethods: { [key: string]: ParseMethod } = {
    *
    * @param {TexParser} parser  The active TeX parser
    * @param {string} _name       The name of the macro
+   * @returns {boolean} Success value
    */
-  TexHTML(parser: TexParser, _name: string) {
+  TexHTML(parser: TexParser, _name: string): boolean {
     //
     //  Check that <tex-html> is allowed and that that is what we have
     //

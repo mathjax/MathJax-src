@@ -32,8 +32,7 @@ import { ColorModel } from './ColorUtil.js';
 /**
  * Build PropertyList from padding value.
  *
- * @param {string} colorPadding: Padding for \colorbox and \fcolorbox.
- * @param colorPadding
+ * @param {string} colorPadding Padding for \colorbox and \fcolorbox.
  * @returns {PropertyList} The padding properties.
  */
 export function padding(colorPadding: string): PropertyList {

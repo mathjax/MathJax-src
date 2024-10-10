@@ -783,9 +783,8 @@ export class FontData<
    * @param {string} extension      The name of the font extension for this file
    * @param {string} file           The file being loaded
    * @param {CharMapMap} variants   The character data to be added
-   *
-   * @param delimiters
-   * @param fonts
+   * @param {DelimiterMap} delimiters The delimiter data to be added
+   * @param {string[]} fonts        The fonts to add CSS to
    * @template C  The CharOptions type
    * @template D  The DelimiterData type
    */
@@ -842,8 +841,9 @@ export class FontData<
   /**
    * @param {number[]} list   The list of numbers to adjust
    * @param {number} N        The pivot number
+   * @returns {number[]}      The list of adjusted numbers
    */
-  protected static adjustArrayIndices(list: number[], N: number) {
+  protected static adjustArrayIndices(list: number[], N: number): number[] {
     return list.map((n) => (n < 0 ? N - 1 - n : n));
   }
 
@@ -989,14 +989,14 @@ export class FontData<
   }
 
   /**
-   * Returns list of styles needed for the font
+   * @returns {StyleList} Returns list of styles needed for the font
    */
   get styles(): StyleList {
     return this._styles;
   }
 
   /**
-   * Sets styles needed for that font.
+   * @param {StyleList} style Sets styles needed for that font.
    */
   set styles(style: StyleList) {
     this._styles = style;
@@ -1057,8 +1057,8 @@ export class FontData<
    * Create the mapping from Basic Latin and Greek blocks to
    * the Math Alphanumeric block for a given variant.
    *
-   * @param chars
-   * @param name
+   * @param {CharMap<C>} chars The character mapping to fill.
+   * @param {string} name The new variant name.
    */
   protected remapSmpChars(chars: CharMap<C>, name: string) {
     const CLASS = this.CLASS;
@@ -1422,14 +1422,11 @@ export interface FontDataClass<
   defaultVariants: string[][];
   defaultParams: FontParameters;
   defaultAccentMap: RemapMap;
-  /* tslint:disable-next-line:jsdoc-require */
   charOptions(font: CharMap<C>, n: number): C;
-  /* tslint:disable-next-line:jsdoc-require */
   defineDynamicFiles(
     dynamicFiles: DynamicFileDef[],
     prefix?: string
   ): DynamicFileList;
-  /* tslint:disable-next-line:jsdoc-require */
   dynamicSetup<C extends CharOptions, D extends DelimiterData>(
     font: string,
     file: string,
@@ -1437,7 +1434,6 @@ export interface FontDataClass<
     delimiters?: DelimiterMap<D>,
     fonts?: string[]
   ): void;
-  /* tslint:disable-next-line:jsdoc-require */
   addExtension(data: FontExtensionData<C, D>, prefix?: string): void;
   new (...args: any[]): FontData<C, V, D>;
 }

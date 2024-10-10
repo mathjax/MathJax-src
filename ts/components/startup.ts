@@ -105,7 +105,6 @@ export interface MathJaxObject extends MJObject {
     document: MATHDOCUMENT;
     promise: Promise<void>;
     rerenderPromise: Promise<void>;
-    /* tslint:disable:jsdoc-require */
     registerConstructor(name: string, constructor: any): void;
     useHandler(name: string, force?: boolean): void;
     useAdaptor(name: string, force?: boolean): void;
@@ -125,7 +124,6 @@ export interface MathJaxObject extends MJObject {
     getOutputJax(): OUTPUTJAX;
     getAdaptor(): DOMADAPTOR;
     getHandler(): HANDLER;
-    /* tslint:enable */
   };
   [name: string]: any; // Needed for the methods created by the startup module
 }
@@ -320,8 +318,10 @@ export namespace Startup {
    * typesetting, if needed.
    *
    * Setting Mathjax.startup.pageReady in the configuration will override this.
+   *
+   * @returns {Promise<void>} Promise resolving when page is ready to process.
    */
-  export function defaultPageReady() {
+  export function defaultPageReady(): Promise<void> {
     return (
       CONFIG.loadAllFontFiles && (output as COMMONJAX).font
         ? (output as COMMONJAX).font.loadDynamicFiles()
@@ -338,9 +338,10 @@ export namespace Startup {
   /**
    * Perform the typesetting with handling of retries
    *
-   * @param elements The list of elements to typeset
+   * @param {any[]} elements The list of elements to typeset
+   * @returns {Promise<void>} The promise that resolves when elements are typeset
    */
-  export function typesetPromise(elements: any[]) {
+  export function typesetPromise(elements: any[]): Promise<void> {
     document.options.elements = elements;
     document.reset();
     return mathjax.handleRetriesFor(() => {

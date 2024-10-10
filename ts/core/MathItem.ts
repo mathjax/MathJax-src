@@ -228,14 +228,14 @@ export type ProtoItem<N, T> = {
 /**
  *  Produce a proto math item that can be turned into a MathItem
  *
- * @param open   The opening delimiter
- * @param math   The math expression itself
- * @param close  The closing delimiter
- * @param n      The index of the string in which this math is
- * @param start  The starting location of the math
- * @param end    The ending location of the math
- * @param display True means display mode, false is inline mode
- * @returns The proto math item
+ * @param {string} open   The opening delimiter
+ * @param {string} math   The math expression itself
+ * @param {string} close  The closing delimiter
+ * @param {number} n      The index of the string in which this math is
+ * @param {number} start  The starting location of the math
+ * @param {number} end    The ending location of the math
+ * @param {boolean} display True means display mode, false is inline mode
+ * @returns {ProtoItem<N, T>} The proto math item
  * @template N   The HTMLElement node class
  * @template T   The Text node class
  */

@@ -311,7 +311,7 @@ export class LinebreakVisitor<
   /******************************************************************************/
 
   /**
-   * @param wrapper
+   * @param {WW} wrapper The wrapper object
    * @returns {StateData<WW>}  The new state object
    */
   protected createState(wrapper: WW): StateData<WW> {
@@ -591,6 +591,7 @@ export class LinebreakVisitor<
 
   /**
    * @param {CommonMo} mo   The mo whose preceeding mo node is needed
+   * @returns {MmlNode | null} The core mo if it exists
    */
   protected getPrevious(
     mo: CommonMo<N, T, D, JX, WW, WF, WC, CC, VV, DD, FD, FC>

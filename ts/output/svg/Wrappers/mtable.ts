@@ -288,7 +288,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
     }
 
     /**
-     * @param svg {N} The svg element
+     * @param {N} svg The svg element
      * @returns {number}   The x-adjustement needed to handle the true size of percentage-width tables
      */
     protected handlePWidth(svg: N): number {
