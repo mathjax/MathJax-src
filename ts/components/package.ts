@@ -220,7 +220,7 @@ export class Package {
     //  Get the dependencies for this package
     //
     const dependencies = [] as string[];
-    if (CONFIG.dependencies.hasOwnProperty(name)) {
+    if (Object.hasOwn(CONFIG.dependencies, name)) {
       dependencies.push(...CONFIG.dependencies[name]);
     } else if (name !== 'core') {
       dependencies.push('core'); //  Add 'core' dependency by default

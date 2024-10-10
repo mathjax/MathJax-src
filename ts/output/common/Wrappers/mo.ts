@@ -451,7 +451,7 @@ export function CommonMoMixin<
      * @override
      */
     public getStretchBBox(WHD: number[], D: number, C: DelimiterData) {
-      if (C.hasOwnProperty('min') && C.min > D) {
+      if (Object.hasOwn(C, 'min') && C.min > D) {
         D = C.min;
       }
       let [h, d, w] = C.HDW;

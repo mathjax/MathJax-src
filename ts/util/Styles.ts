@@ -508,7 +508,7 @@ export class Styles {
    */
   public get(name: string): string {
     name = this.normalizeName(name);
-    return this.styles.hasOwnProperty(name) ? this.styles[name] : '';
+    return Object.hasOwn(this.styles, name) ? this.styles[name] : '';
   }
 
   /**

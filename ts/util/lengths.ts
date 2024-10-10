@@ -110,10 +110,10 @@ export function length2em(
   }
   const m = parseFloat(match[1] || '1');
   const unit = match[2];
-  if (UNITS.hasOwnProperty(unit)) {
+  if (Object.hasOwn(UNITS, unit)) {
     return (m * UNITS[unit]) / em / scale;
   }
-  if (RELUNITS.hasOwnProperty(unit)) {
+  if (Object.hasOwn(RELUNITS, unit)) {
     return m * RELUNITS[unit];
   }
   if (unit === '%') {

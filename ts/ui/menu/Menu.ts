@@ -1047,7 +1047,7 @@ export class Menu {
    *                               and rerendering complete
    */
   protected setRenderer(jax: string, rerender: boolean = true): Promise<void> {
-    if (this.jax.hasOwnProperty(jax) && this.jax[jax]) {
+    if (Object.hasOwn(this.jax, jax) && this.jax[jax]) {
       return this.setOutputJax(jax, rerender);
     }
     const name = jax.toLowerCase();

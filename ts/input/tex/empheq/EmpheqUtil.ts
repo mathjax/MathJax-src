@@ -276,6 +276,6 @@ export const EmpheqUtil = {
    * @returns {boolean}     True if the environment is allowed.
    */
   checkEnv(env: string): boolean {
-    return this.allowEnv.hasOwnProperty(env.replace(/\*$/, '')) || false;
+    return Object.hasOwn(this.allowEnv, env.replace(/\*$/, '')) || false;
   },
 };

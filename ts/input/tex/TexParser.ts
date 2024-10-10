@@ -85,7 +85,7 @@ export default class TexParser {
     env: EnvList,
     public configuration: ParseOptions
   ) {
-    const inner = env.hasOwnProperty('isInner');
+    const inner = Object.hasOwn(env, 'isInner');
     const isInner = env['isInner'] as boolean;
     delete env['isInner'];
     let ENV: EnvList;

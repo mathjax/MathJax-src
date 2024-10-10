@@ -162,9 +162,9 @@ export function RequireLoad(parser: TexParser, name: string) {
   const options = parser.options.require;
   const allow = options.allow;
   const extension = (name.substring(0, 1) === '[' ? '' : options.prefix) + name;
-  const allowed = allow.hasOwnProperty(extension)
+  const allowed = Object.hasOwn(allow, extension)
     ? allow[extension]
-    : allow.hasOwnProperty(name)
+    : Object.hasOwn(allow, name)
       ? allow[name]
       : options.defaultAllow;
   if (!allowed) {

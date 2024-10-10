@@ -875,7 +875,7 @@ export const ParseUtil = {
     const def: EnvList = readKeyval(attrib, l3keys);
     if (allowed) {
       for (const key of Object.keys(def)) {
-        if (allowed.hasOwnProperty(key)) {
+        if (Object.hasOwn(allowed, key)) {
           //
           // If allowed[key] is a type definition, check the key value against that
           //

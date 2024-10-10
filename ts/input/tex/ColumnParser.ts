@@ -142,7 +142,7 @@ export class ColumnParser {
       const c = (state.c =
         code === undefined ? '' : String.fromCodePoint(code));
       state.i += c.length;
-      if (!this.columnHandler.hasOwnProperty(c)) {
+      if (!Object.hasOwn(this.columnHandler, c)) {
         throw new TexError('BadPreamToken', 'Illegal pream-token (%1)', c);
       }
       this.columnHandler[c](state);

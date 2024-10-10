@@ -48,7 +48,7 @@ export function tagformatConfig(
    *   as is done for the 'ams' tags, make sure it is defined so we can create it.
    */
   const tags = jax.parseOptions.options.tags;
-  if (tags !== 'base' && config.tags.hasOwnProperty(tags)) {
+  if (tags !== 'base' && Object.hasOwn(config.tags, tags)) {
     TagsFactory.add(tags, config.tags[tags]);
   }
 

@@ -396,7 +396,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     xml: boolean = false
   ): string {
     const PCDATA = (this.constructor as typeof LiteParser).PCDATA;
-    if (PCDATA.hasOwnProperty(node.kind)) {
+    if (Object.hasOwn(PCDATA, node.kind)) {
       return adaptor
         .childNodes(node)
         .map((x) => adaptor.value(x))
@@ -438,7 +438,7 @@ export class LiteParser implements MinDOMParser<LiteDocument> {
     //
     const kind = adaptor.kind(node);
     const xmlns = (this.constructor as typeof LiteParser).XMLNS;
-    if (!xmlns.hasOwnProperty(kind)) {
+    if (!Object.hasOwn(xmlns, kind)) {
       return attributes;
     }
     //
