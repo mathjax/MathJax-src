@@ -411,7 +411,7 @@ export interface MathDocument<N, T, D> {
   /**
    * Rerender the MathItems on the page
    *
-   * @param {number} [start]    The state to start rerendering at
+   * @param {number} start      The state to start rerendering at
    * @returns {MathDocument}    The math document instance
    */
   rerender(start?: number): MathDocument<N, T, D>;
