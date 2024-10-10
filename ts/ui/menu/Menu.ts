@@ -1105,7 +1105,7 @@ export class Menu {
   /**
    * Add extensions that need to be loaded when the renderer changes
    *
-   * @param {string[] }extensions The list of extensions
+   * @param {string[]} extensions The list of extensions
    */
   public addRequiredExtensions(extensions: string[]) {
     if (extensions) {

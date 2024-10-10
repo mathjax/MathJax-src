@@ -215,7 +215,7 @@ export abstract class CommonOutputJax<
   >;
 
   /**
-   * @returns {boolean} True when inkline breaks need to be forced (e.g., for
+   * @returns {boolean} True when in-line breaks need to be forced (e.g., for
    *     SVG output)
    */
   get forceInlineBreaks(): boolean {
@@ -676,7 +676,7 @@ export abstract class CommonOutputJax<
 
   /**
    * @param {N} node    The math element to be measured
-   * @param {boolean} display Is the element is display math?
+   * @param {boolean} display Is the element in display math?
    * @returns {N}        The test elements that were added
    */
   protected getTestElement(node: N, display: boolean): N {

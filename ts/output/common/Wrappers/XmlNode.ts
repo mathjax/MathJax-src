@@ -278,7 +278,7 @@ export function CommonXmlNodeMixin<
     /**
      * The font-size and font-family values to use for the XML
      *
-     * @returns {{'font-family': string, 'font-size': string}} The font info
+     * @returns {StyleList} The font info
      */
     public getFontStyles(): { 'font-family': string; 'font-size': string } {
       const adaptor = this.adaptor;

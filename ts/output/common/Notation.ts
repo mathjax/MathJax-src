@@ -118,11 +118,11 @@ export const sideNames = Object.keys(sideIndex) as Side[];
  * @param {Menclose} node The enclose node
  * @returns {BBoxExtender<Menclose>} The bbox extender
  */
-export const fullBBox = ((node: Menclose) =>
+export const fullBBox = ((node) =>
   new Array(4).fill(node.thickness + node.padding)) as BBoxExtender<Menclose>;
-export const fullPadding = ((node: Menclose) =>
+export const fullPadding = ((node) =>
   new Array(4).fill(node.padding)) as BBoxExtender<Menclose>;
-export const fullBorder = ((node: Menclose) =>
+export const fullBorder = ((node) =>
   new Array(4).fill(node.thickness)) as BBoxBorder<Menclose>;
 
 /*****************************************************************/
