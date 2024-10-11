@@ -3079,6 +3079,72 @@ describe('Array', () => {
   </mrow>
 </math>`
     ));
+  it('Newcolumntype', () =>
+    toXmlMatch(
+      tex2mml('\\newcolumntype{a}{c}\\begin{array}{a|a}a&b\\\\c&d\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\newcolumntype{a}{c}\\begin{array}{a|a}a&amp;b\\\\c&amp;d\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" columnalign=\"center center\" columnlines=\"solid\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\newcolumntype{a}{c}\\begin{array}{a|a}a&amp;b\\\\c&amp;d\\end{array}\">
+        <mtr data-latex-item=\"{a|a}\" data-latex=\"{a|a}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+        </mtr>
+        <mtr data-latex-item=\"{a|a}\" data-latex=\"{a|a}\">
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('Newcolumntype Option', () =>
+    toXmlMatch(
+      tex2mml('\\newcolumntype{a}[1]{c}\\begin{array}{a|a}a&b\\\\c&d\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\newcolumntype{a}[1]{c}\\begin{array}{a|a}a&amp;b\\\\c&amp;d\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" columnalign=\"center center\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\newcolumntype{a}[1]{c}\\begin{array}{a|a}a&amp;b\\\\c&amp;d\\end{array}\">
+        <mtr data-latex-item=\"{a|a}\" data-latex=\"{a|a}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+        </mtr>
+        <mtr data-latex-item=\"{a|a}\" data-latex=\"{a|a}\">
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('Newcolumntype Error Argument', () =>
+    toXmlMatch(
+      tex2mml('\\newcolumntype{ab}{c}\\begin{array}{a|a}a&b\\\\c&d\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\newcolumntype{ab}{c}\\begin{array}{a|a}a&amp;b\\\\c&amp;d\\end{array}\" display=\"block\">
+      <merror data-mjx-error=\"Column specifier must be exactly one character: ab\">
+        <mtext>Column specifier must be exactly one character: ab</mtext>
+      </merror>
+    </math>`
+    ));
+  it('Newcolumntype Error Option', () =>
+    toXmlMatch(
+      tex2mml('\\newcolumntype{a}[-1]{c}\\begin{array}{a|a}a&b\\\\c&d\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\newcolumntype{a}[-1]{c}\\begin{array}{a|a}a&amp;b\\\\c&amp;d\\end{array}\" display=\"block\">
+      <merror data-mjx-error=\"Argument to -1 must be a positive integer\">
+        <mtext>Argument to -1 must be a positive integer</mtext>
+      </merror>
+    </math>`
+    ));
 });
 
 describe('Moving limits', () => {
@@ -8735,6 +8801,282 @@ describe('Complete Base Methods', () => {
       <mi data-latex=\"b\">b</mi>
     </math>`
     ));
+});
+
+describe('Referencing', () => {
+  beforeEach(() =>
+    setupTex(['base'], { tags: 'all' })
+  );
+  it('Label', () =>
+    toXmlMatch(
+      tex2mml('a\\label{A}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\label{A}\" display=\"block\">
+      <mtable displaystyle=\"true\" data-latex=\"a\\label{A}\">
+        <mlabeledtr>
+          <mtd id=\"mjx-eqn:A\">
+            <mtext data-latex=\"\\text{(1)}\">(1)</mtext>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"\\label{A}\">a</mi>
+          </mtd>
+        </mlabeledtr>
+      </mtable>
+    </math>`
+    ));
+  it('Label Empty', () =>
+    toXmlMatch(
+      tex2mml('a\\label{}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\label{}\" display=\"block\">
+      <mtable displaystyle=\"true\" data-latex=\"a\\label{}\">
+        <mlabeledtr>
+          <mtd id=\"mjx-eqn:1\">
+            <mtext data-latex=\"\\text{(1)}\">(1)</mtext>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"\\label{}\">a</mi>
+          </mtd>
+        </mlabeledtr>
+      </mtable>
+    </math>`
+    ));
+  it('Label Multiple', () =>
+    toXmlMatch(
+      tex2mml('\\begin{eqnarray}a\\label{A}\\\\c\\label{B}\\end{eqnarray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{eqnarray}a\\label{A}\\\\c\\label{B}\\end{eqnarray}\" display=\"block\">
+      <mtable displaystyle=\"true\" columnalign=\"right\" columnspacing=\"\" rowspacing=\"3pt\" data-break-align=\"bottom\" data-latex-item=\"{eqnarray}\" data-latex=\"\\begin{eqnarray}a\\label{A}\\\\c\\label{B}\\end{eqnarray}\">
+        <mlabeledtr>
+          <mtd id=\"mjx-eqn:A\">
+            <mtext data-latex=\"\\text{(1)}\">(1)</mtext>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"\\label{A}\">a</mi>
+          </mtd>
+        </mlabeledtr>
+        <mlabeledtr>
+          <mtd id=\"mjx-eqn:B\">
+            <mtext data-latex=\"\\text{(2)}\">(2)</mtext>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"\\label{B}\">c</mi>
+          </mtd>
+        </mlabeledtr>
+      </mtable>
+    </math>`
+    ));
+  it('Label Multiple Error', () =>
+    toXmlMatch(
+      tex2mml('a\\label{A}c\\label{B}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\label{A}c\\label{B}\" display=\"block\">
+      <merror data-mjx-error=\"Multiple \\label\">
+        <mtext>Multiple \\label</mtext>
+      </merror>
+    </math>`
+    ));
+  it('Label Multiply Defined Error', () =>
+    toXmlMatch(
+      tex2mml('\\begin{eqnarray}a\\label{A}\\\\c\\label{A}\\end{eqnarray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{eqnarray}a\\label{A}\\\\c\\label{A}\\end{eqnarray}\" display=\"block\">
+      <merror data-mjx-error=\"Label 'A' multiply defined\">
+        <mtext>Label 'A' multiply defined</mtext>
+      </merror>
+    </math>`
+    ));
+  it('Ref', () =>
+    toXmlMatch(
+      tex2mml('a\\label{A}\\ref{A}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\label{A}\\ref{A}\" display=\"block\">
+      <mtable displaystyle=\"true\" data-latex=\"a\\label{A}\\ref{A}\">
+        <mlabeledtr>
+          <mtd id=\"mjx-eqn:A\">
+            <mtext data-latex=\"\\text{(1)}\">(1)</mtext>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"\\label{A}\">a</mi>
+            <mrow href=\"#\" class=\"MathJax_ref\" data-latex=\"\\ref{A}\">
+              <mtext>???</mtext>
+            </mrow>
+          </mtd>
+        </mlabeledtr>
+      </mtable>
+    </math>`
+    ));
+  it('Ref Unknown', () =>
+    toXmlMatch(
+      tex2mml('a\\label{A}\\ref{B}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\label{A}\\ref{B}\" display=\"block\">
+      <mtable displaystyle=\"true\" data-latex=\"a\\label{A}\\ref{B}\">
+        <mlabeledtr>
+          <mtd id=\"mjx-eqn:A\">
+            <mtext data-latex=\"\\text{(1)}\">(1)</mtext>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"\\label{A}\">a</mi>
+            <mrow href=\"#\" class=\"MathJax_ref\" data-latex=\"\\ref{B}\">
+              <mtext>???</mtext>
+            </mrow>
+          </mtd>
+        </mlabeledtr>
+      </mtable>
+    </math>`
+    ));
+  it('Nonumber', () =>
+    toXmlMatch(
+      tex2mml('\\begin{eqnarray}a\\\\c\\nonumber\\end{eqnarray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{eqnarray}a\\\\c\\nonumber\\end{eqnarray}\" display=\"block\">
+      <mtable displaystyle=\"true\" columnalign=\"right\" columnspacing=\"\" rowspacing=\"3pt\" data-break-align=\"bottom\" data-latex-item=\"{eqnarray}\" data-latex=\"\\begin{eqnarray}a\\\\c\\nonumber\\end{eqnarray}\">
+        <mlabeledtr>
+          <mtd id=\"mjx-eqn:1\">
+            <mtext data-latex=\"\\text{(1)}\">(1)</mtext>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+        </mlabeledtr>
+        <mtr>
+          <mtd>
+            <mi data-latex=\"\\nonumber\">c</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+});
+
+
+/**
+ *  
+ * For completion we need define some extra commands reflecting those in other
+ * packages, that needed provisions in Base.
+ *
+ */
+import {Configuration} from '#js/input/tex/Configuration';
+import {HandlerType, ConfigurationType} from '#js/input/tex/HandlerTypes.js';
+import { CommandMap, EnvironmentMap } from '#js/input/tex/TokenMap.js';
+import BaseMethods from '#js/input/tex/base/BaseMethods.js';
+import ParseMethods from '#js/input/tex/ParseMethods.js';
+
+describe('User Defined Macros', () => {
+  new CommandMap('userMacros', {
+    eqref: [BaseMethods.HandleRef, true],
+    RR: [BaseMethods.Macro, '{\\bf R}', 1, 'a']
+  });
+  Configuration.create('userMacros', {
+    [ConfigurationType.HANDLER]: {
+      [HandlerType.MACRO]: ['userMacros'],
+    }});
+  beforeEach(() =>
+    setupTex(['base', 'userMacros'])
+            );
+  it('Macro with optional def', () =>
+    toXmlMatch(
+      tex2mml('\\RR'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\RR\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"{\\bf R}\">
+        <mi mathvariant=\"bold\" data-latex=\"R\">R</mi>
+      </mrow>
+    </math>`
+    ));
+  it('EqRef', () =>
+    toXmlMatch(
+      tex2mml('a\\label{A}\\eqref{A}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\label{A}\\eqref{A}\" display=\"block\">
+      <mi data-latex=\"\\label{A}\">a</mi>
+      <mrow href=\"#\" class=\"MathJax_ref\" data-latex=\"\\eqref{A}\">
+        <mtext>(???)</mtext>
+      </mrow>
+    </math>`
+    ));
+});
+
+describe('User Defined Environments', () => {
+  new EnvironmentMap('userEnvs', ParseMethods.environment, {
+    smallmatrix: [
+      BaseMethods.Array,
+      null,
+      null,
+      null,
+      'c',
+      '1',
+      '.2em',
+      'S',
+      1,
+    ],
+    pmatrix: [BaseMethods.Array, null, '(', ')', 'c'],
+  });
+  Configuration.create('userEnvs', {
+    [ConfigurationType.HANDLER]: {
+      [HandlerType.ENVIRONMENT]: ['userEnvs'],
+    }});
+  beforeEach(() =>
+    setupTex(['base', 'userEnvs'])
+            );
+  it('smallmatrix', () =>
+    toXmlMatch(
+      tex2mml('\\begin{smallmatrix} a & b \\\\ c & d \\end{smallmatrix}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{smallmatrix} a &amp; b \\\\ c &amp; d \\end{smallmatrix}\" display=\"block\">
+      <mtable data-mjx-smallmatrix=\"true\" columnspacing=\"1\" rowspacing=\".2em\" data-latex-item=\"{smallmatrix}\" data-latex=\"\\begin{smallmatrix} a &amp; b \\\\ c &amp; d \\end{smallmatrix}\">
+        <mtr>
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('pmatrix', () =>
+    toXmlMatch(
+      tex2mml('\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{pmatrix} a &amp; b \\\\ c &amp; d \\end{pmatrix}\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"{pmatrix}\" data-latex=\"\\begin{pmatrix} a &amp; b \\\\ c &amp; d \\end{pmatrix}\">
+        <mo data-mjx-texclass=\"OPEN\">(</mo>
+        <mtable columnspacing=\"1em\" rowspacing=\"4pt\">
+          <mtr>
+            <mtd>
+              <mi data-latex=\"a\">a</mi>
+            </mtd>
+            <mtd>
+              <mi data-latex=\"b\">b</mi>
+            </mtd>
+          </mtr>
+          <mtr>
+            <mtd>
+              <mi data-latex=\"c\">c</mi>
+            </mtd>
+            <mtd>
+              <mi data-latex=\"d\">d</mi>
+            </mtd>
+          </mtr>
+        </mtable>
+        <mo data-mjx-texclass=\"CLOSE\">)</mo>
+      </mrow>
+    </math>`
+    ));
+  // it('', () =>
+  //   toXmlMatch(
+  //     tex2mml(''),
+  //     ``
+  //   ));
+  // it('', () =>
+  //   toXmlMatch(
+  //     tex2mml(''),
+  //     ``
+  //   ));
+  // it('', () =>
+  //   toXmlMatch(
+  //     tex2mml(''),
+  //     ``
+  //   ));
 });
 
 afterAll(() => getTokens('base'));
