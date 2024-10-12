@@ -34,11 +34,11 @@ const dir = global.MathJax.config.__dirname;   // set up by node-main.mjs or nod
  * Set up the initial configuration
  */
 combineDefaults(MathJax.config, 'loader', {
-  paths: {'mathjax-modern': 'mathjax-modern-font'},
+  paths: {'mathjax-newcm': 'mathjax-newcm-font'},
   require: eval("(file) => import(file)"),   // use dynamic imports
   failed: (err) => {throw err}               // pass on error message to init()'s catch function
 });
-combineDefaults(MathJax.config, 'output', {font: 'mathjax-modern'});
+combineDefaults(MathJax.config, 'output', {font: 'mathjax-newcm'});
 
 /*
  * Mark the preloaded components
