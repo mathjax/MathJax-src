@@ -1470,6 +1470,28 @@ describe('Mathchoice', () => {
   </msub>
 </math>`
     ));
+  it(`Pmod`, () =>
+    toXmlMatch(
+      tex2mml('a \\pmod b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a \\pmod b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mspace width=\"1em\" linebreak=\"nobreak\" data-latex=\"\\kern18mu\"></mspace>
+      <mo data-latex=\"(\" stretchy=\"false\">(</mo>
+      <mi data-latex=\"\\mmlToken{mi}{mod}\">mod</mi>
+      <mspace width=\"0.333em\" linebreak=\"nobreak\" data-latex=\"\\kern 6mu\"></mspace>
+      <mi data-latex=\"b\">b</mi>
+      <mo data-latex=\")\" stretchy=\"false\">)</mo>
+    </math>`
+    ));
+  it(`Bmod`, () =>
+    toXmlMatch(
+      tex2mml('a \\bmod b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a \\bmod b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mo lspace=\"0.278em\" rspace=\"0.278em\" data-latex=\"\\mmlToken{mo}[lspace=&quot;0.278em&quot; rspace=&quot;0.278em&quot;]{mod}\">mod</mo>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
 });
 
 describe('Stacking expressions', () => {
@@ -2409,6 +2431,44 @@ describe('Matrix', () => {
     </mlabeledtr>
   </mtable>
 </math>`
+    ));
+  it('Matrix Numbered Left', () =>
+    toXmlMatch(
+      tex2mml('\\leqalignno{a&b&c}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\leqalignno{a&amp;b&amp;c}\" display=\"block\">
+      <mtable rowspacing=\".5em\" columnspacing=\"0.278em\" side=\"left\" displaystyle=\"true\" columnalign=\"right left\" data-latex=\"\\leqalignno{a&amp;b&amp;c}\">
+        <mlabeledtr data-latex-item=\"{\" data-latex=\"{\">
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+        </mlabeledtr>
+      </mtable>
+    </math>`
+    ));
+  it('Matrix Not Numbered', () =>
+    toXmlMatch(
+      tex2mml('\\eqalign{a&b&c}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\eqalign{a&amp;b&amp;c}\" display=\"block\">
+      <mtable rowspacing=\".5em\" columnspacing=\"0.278em\" displaystyle=\"true\" columnalign=\"right left\" data-latex=\"\\eqalign{a&amp;b&amp;c}\">
+        <mtr data-latex-item=\"{\" data-latex=\"{\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
     ));
   it('Displaylines', () =>
     toXmlMatch(
@@ -9002,6 +9062,18 @@ describe('User Defined Environments', () => {
       1,
     ],
     pmatrix: [BaseMethods.Array, null, '(', ')', 'c'],
+    crampedsubarray: [
+      BaseMethods.Array,
+      null,
+      null,
+      null,
+      null,
+      '0em',
+      '0.1em',
+      "S'",
+      1,
+    ],
+    gather: [BaseMethods.EqnArray, null, true, true, 'c', 'm']
   });
   Configuration.create('userEnvs', {
     [ConfigurationType.HANDLER]: {
@@ -9062,21 +9134,61 @@ describe('User Defined Environments', () => {
       </mrow>
     </math>`
     ));
+  it('Crampedsubarray', () =>
+    toXmlMatch(
+      tex2mml('\\begin{crampedsubarray}{cc} a & b \\\\ c & d \\end{crampedsubarray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{crampedsubarray}{cc} a &amp; b \\\\ c &amp; d \\end{crampedsubarray}\" display=\"block\">
+      <mtable data-mjx-smallmatrix=\"true\" columnspacing=\"0em\" rowspacing=\"0.1em\" columnalign=\"center center\" data-cramped=\"true\" data-latex-item=\"{crampedsubarray}\" data-latex=\"\\begin{crampedsubarray}{cc} a &amp; b \\\\ c &amp; d \\end{crampedsubarray}\">
+        <mtr data-latex-item=\"{cc}\" data-latex=\"{cc}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+        </mtr>
+        <mtr data-latex-item=\"{cc}\" data-latex=\"{cc}\">
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('Gather', () =>
+    toXmlMatch(
+      tex2mml('\\begin{gather}a\\end{gather}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{gather}a\\end{gather}\" display=\"block\">
+      <mtable displaystyle=\"true\" columnspacing=\"1em\" rowspacing=\"3pt\" data-break-align=\"middle\" data-latex-item=\"{gather}\" data-latex=\"\\begin{gather}a\\end{gather}\">
+        <mtr>
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
   // it('', () =>
   //   toXmlMatch(
   //     tex2mml(''),
   //     ``
   //   ));
-  // it('', () =>
-  //   toXmlMatch(
-  //     tex2mml(''),
-  //     ``
-  //   ));
-  // it('', () =>
-  //   toXmlMatch(
-  //     tex2mml(''),
-  //     ``
-  //   ));
+});
+
+describe('Complete Array', () => {
+  it('Angle Brackets', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{c<c>r}a&a\\end{array}'),
+      ``
+    ));
+  it('p and @', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{c<c>rp{2cm}@{h&h}}a&a&d\\end{array}'),
+      ``
+    ));
 });
 
 afterAll(() => getTokens('base'));
