@@ -1642,6 +1642,7 @@ export class Menu {
       true
     );
     this.menu.store.insert(element);
+    element.tabIndex = this.settings.inTabOrder ? 0 : -1;
   }
 
   /**
