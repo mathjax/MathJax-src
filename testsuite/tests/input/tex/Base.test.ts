@@ -424,15 +424,6 @@ describe('Base', () => {
   </mfrac>
 </math>`
     ));
-  it('Operator Dots', () =>
-    toXmlMatch(
-      tex2mml('+\\dots+'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="+\\dots+" display="block">
-  <mo data-latex="+">+</mo>
-  <mo>&#x22EF;</mo>
-  <mo data-latex="+">+</mo>
-</math>`
-    ));
   it('Overset', () =>
     toXmlMatch(
       tex2mml('\\overset{a}{b}'),
@@ -453,7 +444,7 @@ describe('Base', () => {
   </munder>
 </math>`
     ));
-  it('Overset', () =>
+  it('Overunderset', () =>
     toXmlMatch(
       tex2mml('\\overunderset{a}{b}{c}'),
       `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\overunderset{a}{b}{c}\" display=\"block\">
@@ -6850,6 +6841,63 @@ describe('Mathchar0mo', () => {
       <mo stretchy=\"false\" data-latex=\"\\longmapsto\">&#x27FC;</mo>
     </math>`
     ));
+  it('colon', () =>
+    toXmlMatch(
+      tex2mml('\\colon'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\colon\" display=\"block\">
+      <mo data-mjx-texclass=\"PUNCT\" data-latex=\"\\colon\">:</mo>
+    </math>`
+    ));
+});
+
+describe('Dots', () => {
+  it('Identifier Dots', () =>
+    toXmlMatch(
+      tex2mml('A\\dots B'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="A\\dots B" display="block">
+  <mi data-latex="A">A</mi>
+  <mo>&#x2026;</mo>
+  <mi data-latex="B">B</mi>
+</math>`
+    ));
+  it('Operator Dots', () =>
+    toXmlMatch(
+      tex2mml('+\\dots+'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="+\\dots+" display="block">
+  <mo data-latex="+">+</mo>
+  <mo>&#x22EF;</mo>
+  <mo data-latex="+">+</mo>
+</math>`
+    ));
+  it('Dots Left', () =>
+    toXmlMatch(
+      tex2mml('\\dots\\left( A\\right)'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\dots\\left( A\\right)\" display=\"block\">
+      <mo>&#x2026;</mo>
+      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left( A\\right)\" data-latex=\"\\left( A\\right)\">
+        <mo data-mjx-texclass=\"OPEN\" data-latex-item=\"\\left(\" data-latex=\"\\left(\">(</mo>
+        <mi data-latex=\"A\">A</mi>
+        <mo data-mjx-texclass=\"CLOSE\" data-latex-item=\"\\right)\" data-latex=\"\\right)\">)</mo>
+      </mrow>
+    </math>`
+    ));
+  it('Dots Open', () =>
+    toXmlMatch(
+      tex2mml('\\dots{\\alpha}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\dots{\\alpha}\" display=\"block\">
+      <mo>&#x2026;</mo>
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"{\\alpha}\">
+        <mi data-latex=\"\\alpha\">&#x3B1;</mi>
+      </mrow>
+    </math>`
+    ));
+  it('ldots', () =>
+    toXmlMatch(
+      tex2mml('\\ldots'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\ldots\" display=\"block\">
+      <mo data-latex=\"\\ldots\">&#x2026;</mo>
+    </math>`
+    ));
   it('vdots', () =>
     toXmlMatch(
       tex2mml('\\vdots'),
@@ -6857,6 +6905,13 @@ describe('Mathchar0mo', () => {
       <mrow data-mjx-texclass=\"ORD\">
         <mo data-latex=\"\\vdots\">&#x22EE;</mo>
       </mrow>
+    </math>`
+    ));
+  it('cdots', () =>
+    toXmlMatch(
+      tex2mml('\\cdots'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\cdots\" display=\"block\">
+      <mo data-latex=\"\\cdots\">&#x22EF;</mo>
     </math>`
     ));
   it('ddots', () =>
@@ -6922,14 +6977,8 @@ describe('Mathchar0mo', () => {
       <mo data-mjx-texclass=\"PUNCT\" data-latex=\"\\cdotp\">&#x22C5;</mo>
     </math>`
     ));
-  it('colon', () =>
-    toXmlMatch(
-      tex2mml('\\colon'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\colon\" display=\"block\">
-      <mo data-mjx-texclass=\"PUNCT\" data-latex=\"\\colon\">:</mo>
-    </math>`
-    ));
 });
+
 
 describe('Font Simple', () => {
   it('rm', () =>
@@ -8313,6 +8362,26 @@ describe('Linebreaks', () => {
       <mi data-latex=\"b\">b</mi>
     </math>`
     ));
+  it('goodbreak comma', () =>
+    toXmlMatch(
+      tex2mml('a,\\goodbreak b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a,\\goodbreak b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mo data-latex=\",\" linebreak=\"goodbreak\">,</mo>
+      <mspace linebreak=\"goodbreak\"></mspace>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
+  it('goodbreak comma comma', () =>
+    toXmlMatch(
+      tex2mml('a,\\goodbreak, b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a,\\goodbreak, b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mo data-latex=\",\" linebreak=\"goodbreak\">,</mo>
+      <mo data-latex=\",\">,</mo>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
 });
 
 describe('MathChar7', () => {
@@ -9004,7 +9073,7 @@ describe('Referencing', () => {
 
 
 /**
- *  
+ *
  * For completion we need define some extra commands reflecting those in other
  * packages, that needed provisions in Base.
  *
@@ -9014,11 +9083,20 @@ import {HandlerType, ConfigurationType} from '#js/input/tex/HandlerTypes.js';
 import { CommandMap, EnvironmentMap } from '#js/input/tex/TokenMap.js';
 import BaseMethods from '#js/input/tex/base/BaseMethods.js';
 import ParseMethods from '#js/input/tex/ParseMethods.js';
+import TexParser from '#js/input/tex/TexParser.js';
 
 describe('User Defined Macros', () => {
   new CommandMap('userMacros', {
     eqref: [BaseMethods.HandleRef, true],
-    RR: [BaseMethods.Macro, '{\\bf R}', 1, 'a']
+    RR: [BaseMethods.Macro, '{\\bf R}', 1, 'a'],
+    color: (parser: TexParser, name: string) => {
+      const color = parser.GetArgument(name);
+      const style = parser.itemFactory
+        .create('style')
+        .setProperties({ styles: { mathcolor: color } });
+      parser.stack.env['color'] = color;
+      parser.Push(style);
+    }
   });
   Configuration.create('userMacros', {
     [ConfigurationType.HANDLER]: {
@@ -9043,6 +9121,22 @@ describe('User Defined Macros', () => {
       <mi data-latex=\"\\label{A}\">a</mi>
       <mrow href=\"#\" class=\"MathJax_ref\" data-latex=\"\\eqref{A}\">
         <mtext>(???)</mtext>
+      </mrow>
+    </math>`
+    ));
+  it('Middle Color', () =>
+    toXmlMatch(
+      tex2mml('\\left(A\\color{red}\\middle|B\\right)'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\left(A\\color{red}\\middle|B\\right)\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left(A\\color{red}\\middle|B\\right)\" data-latex=\"\\left(A\\color{red}\\middle|B\\right)\">
+        <mo data-mjx-texclass=\"OPEN\" data-latex-item=\"\\left(\" data-latex=\"\\left(\">(</mo>
+        <mi data-latex=\"A\">A</mi>
+        <mstyle mathcolor=\"red\"></mstyle>
+        <mrow data-mjx-texclass=\"CLOSE\"></mrow>
+        <mo mathcolor=\"red\" data-latex-item=\"\\middle|\" data-latex=\"\\middle|\">|</mo>
+        <mrow data-mjx-texclass=\"OPEN\" data-latex=\"\\middle|\"></mrow>
+        <mi data-latex=\"B\">B</mi>
+        <mo data-mjx-texclass=\"CLOSE\" data-latex-item=\"\\right)\" data-latex=\"\\right)\">)</mo>
       </mrow>
     </math>`
     ));
@@ -9179,6 +9273,935 @@ describe('User Defined Environments', () => {
 });
 
 describe('Complete Array', () => {
+  it('column r c l', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{rcl}a & b &c\\\\ d & e & f\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{rcl}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" columnalign=\"right center left\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\begin{array}{rcl}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}\">
+        <mtr data-latex-item=\"{rcl}\" data-latex=\"{rcl}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+        </mtr>
+        <mtr data-latex-item=\"{rcl}\" data-latex=\"{rcl}\">
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"e\">e</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"f\">f</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('column r c l | ', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{r|c|l}a & b & c\\\\d & e & f\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{r|c|l}a &amp; b &amp; c\\\\d &amp; e &amp; f\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" columnalign=\"right center left\" columnlines=\"solid solid\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\begin{array}{r|c|l}a &amp; b &amp; c\\\\d &amp; e &amp; f\\end{array}\">
+        <mtr data-latex-item=\"{r|c|l}\" data-latex=\"{r|c|l}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+        </mtr>
+        <mtr data-latex-item=\"{r|c|l}\" data-latex=\"{r|c|l}\">
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"e\">e</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"f\">f</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('column r c l : ', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{r:c:l}a & b &c\\\\ d & e & f\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{r:c:l}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" columnalign=\"right center left\" columnlines=\"dashed dashed\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\begin{array}{r:c:l}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}\">
+        <mtr data-latex-item=\"{r:c:l}\" data-latex=\"{r:c:l}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+        </mtr>
+        <mtr data-latex-item=\"{r:c:l}\" data-latex=\"{r:c:l}\">
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"e\">e</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"f\">f</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('column r c l @ ', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{r@{h}c@{h}l}a & b &c\\\\ d & e & f\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{r@{h}c@{h}l}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"0 0 0 0\" rowspacing=\"4pt\" columnalign=\"right center center center left\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"h&amp;f\\end{array}\">
+        <mtr>
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"h\">h</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"h\">h</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"h\">h</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"e\">e</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"h\">h</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"f\">f</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('column r c l ! ', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{r!{h}c!{h}l}a & b &c\\\\ d & e & f\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{r!{h}c!{h}l}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}\" display=\"block\">
+      <mtable columnspacing=\".5em .5em .5em .5em\" rowspacing=\"4pt\" columnalign=\"right center center center left\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"h&amp;f\\end{array}\">
+        <mtr>
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"h\">h</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"h\">h</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"h\">h</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"e\">e</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"h\">h</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"f\">f</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('column p ', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{p{1cm}p{1cm}p{1cm}}a & b &c\\\\ d & e & f\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{p{1cm}p{1cm}p{1cm}}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" columnalign=\"left left left\" columnwidth=\"1cm 1cm 1cm\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\text{f}\\end{array}\">
+        <mtr>
+          <mtd>
+            <mpadded data-mjx-vbox=\"top\" width=\"1cm\" data-overflow=\"auto\" data-align=\"left\" data-vertical-align=\"top\">
+              <mtext data-latex=\"\\text{a}\">a</mtext>
+            </mpadded>
+          </mtd>
+          <mtd>
+            <mpadded data-mjx-vbox=\"top\" width=\"1cm\" data-overflow=\"auto\" data-align=\"left\" data-vertical-align=\"top\">
+              <mtext data-latex=\"\\text{b}\">b</mtext>
+            </mpadded>
+          </mtd>
+          <mtd>
+            <mpadded data-mjx-vbox=\"top\" width=\"1cm\" data-overflow=\"auto\" data-align=\"left\" data-vertical-align=\"top\">
+              <mtext data-latex=\"\\text{c}\">c</mtext>
+            </mpadded>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mpadded data-mjx-vbox=\"top\" width=\"1cm\" data-overflow=\"auto\" data-align=\"left\" data-vertical-align=\"top\">
+              <mtext data-latex=\"\\text{d}\">d</mtext>
+            </mpadded>
+          </mtd>
+          <mtd>
+            <mpadded data-mjx-vbox=\"top\" width=\"1cm\" data-overflow=\"auto\" data-align=\"left\" data-vertical-align=\"top\">
+              <mtext data-latex=\"\\text{e}\">e</mtext>
+            </mpadded>
+          </mtd>
+          <mtd>
+            <mpadded data-mjx-vbox=\"top\" width=\"1cm\" data-overflow=\"auto\" data-align=\"left\" data-vertical-align=\"top\">
+              <mtext data-latex=\"\\text{f}\">f</mtext>
+            </mpadded>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('column m ', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{m{1cm}m{1cm}m{1cm}}a & b &c\\\\ d & e & f\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{m{1cm}m{1cm}m{1cm}}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" columnalign=\"left left left\" columnwidth=\"1cm 1cm 1cm\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\text{f}\\end{array}\">
+        <mtr>
+          <mtd>
+            <mpadded data-mjx-vbox=\"middle\" width=\"1cm\" data-overflow=\"auto\" data-align=\"left\" data-vertical-align=\"middle\">
+              <mtext data-latex=\"\\text{a}\">a</mtext>
+            </mpadded>
+          </mtd>
+          <mtd>
+            <mpadded data-mjx-vbox=\"middle\" width=\"1cm\" data-overflow=\"auto\" data-align=\"left\" data-vertical-align=\"middle\">
+              <mtext data-latex=\"\\text{b}\">b</mtext>
+            </mpadded>
+          </mtd>
+          <mtd>
+            <mpadded data-mjx-vbox=\"middle\" width=\"1cm\" data-overflow=\"auto\" data-align=\"left\" data-vertical-align=\"middle\">
+              <mtext data-latex=\"\\text{c}\">c</mtext>
+            </mpadded>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mpadded data-mjx-vbox=\"middle\" width=\"1cm\" data-overflow=\"auto\" data-align=\"left\" data-vertical-align=\"middle\">
+              <mtext data-latex=\"\\text{d}\">d</mtext>
+            </mpadded>
+          </mtd>
+          <mtd>
+            <mpadded data-mjx-vbox=\"middle\" width=\"1cm\" data-overflow=\"auto\" data-align=\"left\" data-vertical-align=\"middle\">
+              <mtext data-latex=\"\\text{e}\">e</mtext>
+            </mpadded>
+          </mtd>
+          <mtd>
+            <mpadded data-mjx-vbox=\"middle\" width=\"1cm\" data-overflow=\"auto\" data-align=\"left\" data-vertical-align=\"middle\">
+              <mtext data-latex=\"\\text{f}\">f</mtext>
+            </mpadded>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('column b ', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{b{1cm}b{1cm}b{1cm}}a & b &c\\\\ d & e & f\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{b{1cm}b{1cm}b{1cm}}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" columnalign=\"left left left\" columnwidth=\"1cm 1cm 1cm\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\text{f}\\end{array}\">
+        <mtr>
+          <mtd>
+            <mpadded data-mjx-vbox=\"bottom\" width=\"1cm\" data-overflow=\"auto\" data-align=\"left\" data-vertical-align=\"bottom\">
+              <mtext data-latex=\"\\text{a}\">a</mtext>
+            </mpadded>
+          </mtd>
+          <mtd>
+            <mpadded data-mjx-vbox=\"bottom\" width=\"1cm\" data-overflow=\"auto\" data-align=\"left\" data-vertical-align=\"bottom\">
+              <mtext data-latex=\"\\text{b}\">b</mtext>
+            </mpadded>
+          </mtd>
+          <mtd>
+            <mpadded data-mjx-vbox=\"bottom\" width=\"1cm\" data-overflow=\"auto\" data-align=\"left\" data-vertical-align=\"bottom\">
+              <mtext data-latex=\"\\text{c}\">c</mtext>
+            </mpadded>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mpadded data-mjx-vbox=\"bottom\" width=\"1cm\" data-overflow=\"auto\" data-align=\"left\" data-vertical-align=\"bottom\">
+              <mtext data-latex=\"\\text{d}\">d</mtext>
+            </mpadded>
+          </mtd>
+          <mtd>
+            <mpadded data-mjx-vbox=\"bottom\" width=\"1cm\" data-overflow=\"auto\" data-align=\"left\" data-vertical-align=\"bottom\">
+              <mtext data-latex=\"\\text{e}\">e</mtext>
+            </mpadded>
+          </mtd>
+          <mtd>
+            <mpadded data-mjx-vbox=\"bottom\" width=\"1cm\" data-overflow=\"auto\" data-align=\"left\" data-vertical-align=\"bottom\">
+              <mtext data-latex=\"\\text{f}\">f</mtext>
+            </mpadded>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('column r c l >', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{>{A}rcl}a & b &c\\\\ d & e & f\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{&gt;{A}rcl}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" columnalign=\"right center left\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"Ad&amp; e &amp; f\\end{array}\">
+        <mtr>
+          <mtd>
+            <mi data-latex=\"A\">A</mi>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mi data-latex=\"A\">A</mi>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"e\">e</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"f\">f</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('column r c l <', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{r<{A}cl}a & b &c\\\\ d & e & f\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{r&lt;{A}cl}a &amp; b &amp;c\\\\ d &amp; e &amp; f\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" columnalign=\"right center left\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"dA&amp; e &amp; f\\end{array}\">
+        <mtr>
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+            <mi data-latex=\"A\">A</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+            <mi data-latex=\"A\">A</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"e\">e</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"f\">f</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('column c >', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{>{A}c}a \\\\ d\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{&gt;{A}c}a \\\\ d\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"Ad\\end{array}\">
+        <mtr>
+          <mtd>
+            <mi data-latex=\"A\">A</mi>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mi data-latex=\"A\">A</mi>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('column c <', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{c<{A}}a\\\\ d \\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{c&lt;{A}}a\\\\ d \\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"dA\\end{array}\">
+        <mtr>
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+            <mi data-latex=\"A\">A</mi>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+            <mi data-latex=\"A\">A</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('column c @ end', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{c@{h}}a\\\\ d \\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{c@{h}}a\\\\ d \\end{array}\" display=\"block\">
+      <mtable columnspacing=\"0 0\" rowspacing=\"4pt\" columnalign=\"center center\" data-array-padding=\".5em 0\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"h\\end{array}\">
+        <mtr>
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"h\">h</mi>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"h\">h</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('column c @&', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{c@{\\alpha}c}a&\\hfill&b\\\\ d&\\hfill&e \\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{c@{\\alpha}c}a&amp;\\hfill&amp;b\\\\ d&amp;\\hfill&amp;e \\end{array}\" display=\"block\">
+      <mtable columnspacing=\"0 0\" rowspacing=\"4pt\" columnalign=\"center center center\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\hfill\\alpha&amp;&amp;e \\end{array}\">
+        <mtr>
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd columnalign=\"right\">
+            <mi data-latex=\"\\alpha\">&#x3B1;</mi>
+          </mtd>
+          <mtd></mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+          <mtd columnalign=\"right\">
+            <mi data-latex=\"\\alpha\">&#x3B1;</mi>
+          </mtd>
+          <mtd></mtd>
+          <mtd>
+            <mi data-latex=\"e\">e</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('column c w', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{cw{c}{1cm}c}a&b&c\\\\ d&e&f \\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{cw{c}{1cm}c}a&amp;b&amp;c\\\\ d&amp;e&amp;f \\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" columnalign=\"center center center\" columnwidth=\"auto 1cm auto\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\text{e}&amp;f \\end{array}\">
+        <mtr data-latex-item=\"{cw{c}{1cm}c}\" data-latex=\"{cw{c}{1cm}c}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mpadded data-mjx-vbox=\"top\" width=\"1cm\" data-overflow=\"auto\" data-align=\"center\" data-vertical-align=\"top\">
+              <mtext data-latex=\"\\text{b}\">b</mtext>
+            </mpadded>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+        </mtr>
+        <mtr data-latex-item=\"{cw{c}{1cm}c}\" data-latex=\"{cw{c}{1cm}c}\">
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+          <mtd>
+            <mpadded data-mjx-vbox=\"top\" width=\"1cm\" data-overflow=\"auto\" data-align=\"center\" data-vertical-align=\"top\">
+              <mtext data-latex=\"\\text{e}\">e</mtext>
+            </mpadded>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"f\">f</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('column c W', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{cW{c}{1cm}c}a&b&c\\\\ d&e&f \\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{cW{c}{1cm}c}a&amp;b&amp;c\\\\ d&amp;e&amp;f \\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" columnalign=\"center center center\" columnwidth=\"auto 1cm auto\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\text{e}&amp;f \\end{array}\">
+        <mtr data-latex-item=\"{cW{c}{1cm}c}\" data-latex=\"{cW{c}{1cm}c}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mpadded data-mjx-vbox=\"top\" width=\"1cm\" data-overflow=\"auto\" data-align=\"center\" data-vertical-align=\"top\">
+              <mtext data-latex=\"\\text{b}\">b</mtext>
+            </mpadded>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+        </mtr>
+        <mtr data-latex-item=\"{cW{c}{1cm}c}\" data-latex=\"{cW{c}{1cm}c}\">
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+          <mtd>
+            <mpadded data-mjx-vbox=\"top\" width=\"1cm\" data-overflow=\"auto\" data-align=\"center\" data-vertical-align=\"top\">
+              <mtext data-latex=\"\\text{e}\">e</mtext>
+            </mpadded>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"f\">f</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('column repeat r c ', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{*{2}rc}a & b & c\\\\d & e & f\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{*{2}rc}a &amp; b &amp; c\\\\d &amp; e &amp; f\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" columnalign=\"right right center\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\begin{array}{*{2}rc}a &amp; b &amp; c\\\\d &amp; e &amp; f\\end{array}\">
+        <mtr data-latex-item=\"{*{2}rc}\" data-latex=\"{*{2}rc}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+        </mtr>
+        <mtr data-latex-item=\"{*{2}rc}\" data-latex=\"{*{2}rc}\">
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"e\">e</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"f\">f</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('column r repeat c ', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{r*{2}c}a & b & c\\\\d & e & f\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{r*{2}c}a &amp; b &amp; c\\\\d &amp; e &amp; f\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" columnalign=\"right center center\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\begin{array}{r*{2}c}a &amp; b &amp; c\\\\d &amp; e &amp; f\\end{array}\">
+        <mtr data-latex-item=\"{r*{2}c}\" data-latex=\"{r*{2}c}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+        </mtr>
+        <mtr data-latex-item=\"{r*{2}c}\" data-latex=\"{r*{2}c}\">
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"e\">e</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"f\">f</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('column r c repeat | ', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{r*{2}|c}a& b & c\\\\d & e & f\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{r*{2}|c}a&amp; b &amp; c\\\\d &amp; e &amp; f\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"0 0\" rowspacing=\"4pt\" columnalign=\"right center center\" columnlines=\"solid solid\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\hspace{.5em}e&amp; f\\end{array}\">
+        <mtr>
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+            <mspace width=\".5em\" data-latex=\"\\hspace{.5em}\"></mspace>
+          </mtd>
+          <mtd>
+            <mstyle scriptlevel=\"0\" data-latex=\"\\,\">
+              <mspace width=\"0.167em\"></mspace>
+            </mstyle>
+          </mtd>
+          <mtd>
+            <mspace width=\".5em\" data-latex=\"\\hspace{.5em}\"></mspace>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+            <mspace width=\".5em\" data-latex=\"\\hspace{.5em}\"></mspace>
+          </mtd>
+          <mtd>
+            <mstyle scriptlevel=\"0\" data-latex=\"\\,\">
+              <mspace width=\"0.167em\"></mspace>
+            </mstyle>
+          </mtd>
+          <mtd>
+            <mspace width=\".5em\" data-latex=\"\\hspace{.5em}\"></mspace>
+            <mi data-latex=\"e\">e</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"f\">f</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+
+  it('column r c repeat | {}', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{r*{2}|c}a {\\hbox{(3)}}& b & c\\\\d & e & f\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{r*{2}|c}a {\\hbox{(3)}}&amp; b &amp; c\\\\d &amp; e &amp; f\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"0 0\" rowspacing=\"4pt\" columnalign=\"right center center\" columnlines=\"solid solid\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\hspace{.5em}e&amp; f\\end{array}\">
+        <mtr>
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+            <mrow data-mjx-texclass=\"ORD\" data-latex=\"{\\hbox{(3)}}\">
+              <mstyle displaystyle=\"false\" scriptlevel=\"0\" data-latex=\"\\hbox{(3)}\">
+                <mtext>(3)</mtext>
+              </mstyle>
+            </mrow>
+            <mspace width=\".5em\" data-latex=\"\\hspace{.5em}\"></mspace>
+          </mtd>
+          <mtd>
+            <mstyle scriptlevel=\"0\" data-latex=\"\\,\">
+              <mspace width=\"0.167em\"></mspace>
+            </mstyle>
+          </mtd>
+          <mtd>
+            <mspace width=\".5em\" data-latex=\"\\hspace{.5em}\"></mspace>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+            <mspace width=\".5em\" data-latex=\"\\hspace{.5em}\"></mspace>
+          </mtd>
+          <mtd>
+            <mstyle scriptlevel=\"0\" data-latex=\"\\,\">
+              <mspace width=\"0.167em\"></mspace>
+            </mstyle>
+          </mtd>
+          <mtd>
+            <mspace width=\".5em\" data-latex=\"\\hspace{.5em}\"></mspace>
+            <mi data-latex=\"e\">e</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"f\">f</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('column r c repeat | {}', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{r*{2}|c}a {\\begin{array}{c}Q\\end{array}}& b & c\\\\d & e & f\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{r*{2}|c}a {\\begin{array}{c}Q\\end{array}}&amp; b &amp; c\\\\d &amp; e &amp; f\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"0 0\" rowspacing=\"4pt\" columnalign=\"right center center\" columnlines=\"solid solid\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\hspace{.5em}e&amp; f\\end{array}\">
+        <mtr>
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+            <mrow data-mjx-texclass=\"ORD\" data-latex=\"{{array}}\">
+              <mtable columnspacing=\"1em\" rowspacing=\"4pt\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"{array}\">
+                <mtr data-latex-item=\"{c}\" data-latex=\"{c}\">
+                  <mtd>
+                    <mi data-latex=\"Q\">Q</mi>
+                  </mtd>
+                </mtr>
+              </mtable>
+            </mrow>
+            <mspace width=\".5em\" data-latex=\"\\hspace{.5em}\"></mspace>
+          </mtd>
+          <mtd>
+            <mstyle scriptlevel=\"0\" data-latex=\"\\,\">
+              <mspace width=\"0.167em\"></mspace>
+            </mstyle>
+          </mtd>
+          <mtd>
+            <mspace width=\".5em\" data-latex=\"\\hspace{.5em}\"></mspace>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+            <mspace width=\".5em\" data-latex=\"\\hspace{.5em}\"></mspace>
+          </mtd>
+          <mtd>
+            <mstyle scriptlevel=\"0\" data-latex=\"\\,\">
+              <mspace width=\"0.167em\"></mspace>
+            </mstyle>
+          </mtd>
+          <mtd>
+            <mspace width=\".5em\" data-latex=\"\\hspace{.5em}\"></mspace>
+            <mi data-latex=\"e\">e</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"f\">f</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('column r c repeat | {}', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{r*{2}|c}a \\begin{array}{c}Q\\end{array}& b & c\\\\d & e & f\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{r*{2}|c}a \\begin{array}{c}Q\\end{array}&amp; b &amp; c\\\\d &amp; e &amp; f\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"0 0\" rowspacing=\"4pt\" columnalign=\"right center center\" columnlines=\"solid solid\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\hspace{.5em}e&amp; f\\end{array}\">
+        <mtr>
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+            <mtable columnspacing=\"1em\" rowspacing=\"4pt\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"{array}\">
+              <mtr data-latex-item=\"{c}\" data-latex=\"{c}\">
+                <mtd>
+                  <mi data-latex=\"Q\">Q</mi>
+                </mtd>
+              </mtr>
+            </mtable>
+            <mspace width=\".5em\" data-latex=\"\\hspace{.5em}\"></mspace>
+          </mtd>
+          <mtd>
+            <mstyle scriptlevel=\"0\" data-latex=\"\\,\">
+              <mspace width=\"0.167em\"></mspace>
+            </mstyle>
+          </mtd>
+          <mtd>
+            <mspace width=\".5em\" data-latex=\"\\hspace{.5em}\"></mspace>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+            <mspace width=\".5em\" data-latex=\"\\hspace{.5em}\"></mspace>
+          </mtd>
+          <mtd>
+            <mstyle scriptlevel=\"0\" data-latex=\"\\,\">
+              <mspace width=\"0.167em\"></mspace>
+            </mstyle>
+          </mtd>
+          <mtd>
+            <mspace width=\".5em\" data-latex=\"\\hspace{.5em}\"></mspace>
+            <mi data-latex=\"e\">e</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"f\">f</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+
+  it('column c @& hfil', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{c@{\\alpha}c}a&&b\\\\ d&&e\\hfil \\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{c@{\\alpha}c}a&amp;&amp;b\\\\ d&amp;&amp;e\\hfil \\end{array}\" display=\"block\">
+      <mtable columnspacing=\"0 0\" rowspacing=\"4pt\" columnalign=\"center center center\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\alpha&amp;&amp;e\\hfil \\end{array}\">
+        <mtr>
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"\\alpha\">&#x3B1;</mi>
+          </mtd>
+          <mtd></mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"\\alpha\">&#x3B1;</mi>
+          </mtd>
+          <mtd></mtd>
+          <mtd columnalign=\"left\">
+            <mi data-latex=\"\\hfil\">e</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+
+  it('Label Error', () =>
+    toXmlMatch(
+      tex2mml('\\eqalignno{a &  & {\\hbox{(3)}}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\eqalignno{a &amp;  &amp; {\\hbox{(3)}}\" display=\"block\">
+      <merror data-mjx-error=\"Missing close brace\">
+        <mtext>Missing close brace</mtext>
+      </merror>
+    </math>`
+    ));
+
+  it('end row spacing r c l', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{rcl}a & b &c\\\\[2cm] d & e & f\\\\[2cm] \\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{rcl}a &amp; b &amp;c\\\\[2cm] d &amp; e &amp; f\\\\[2cm] \\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"6.069em 6.069em\" columnalign=\"right center left\" data-frame-styles=\"\" framespacing=\".5em .125em\" data-latex-item=\"{array}\" data-latex=\"\\begin{array}{rcl}a &amp; b &amp;c\\\\[2cm] d &amp; e &amp; f\\\\[2cm] \\end{array}\">
+        <mtr data-latex-item=\"{rcl}\" data-latex=\"{rcl}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+        </mtr>
+        <mtr data-latex-item=\"{rcl}\" data-latex=\"{rcl}\">
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"e\">e</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"f\">f</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('eqnarray extend last row', () =>
+    toXmlMatch(
+      tex2mml('\\begin{eqnarray}{rcl}a & b \\\\d&c&c&c \\\\\\end{eqnarray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{eqnarray}{rcl}a &amp; b \\\\d&amp;c&amp;c&amp;c \\\\\\end{eqnarray}\" display=\"block\">
+      <mtable displaystyle=\"true\" columnalign=\"right center left right\" columnspacing=\"0em 0.278em 0em\" rowspacing=\"3pt\" data-break-align=\"bottom middle top bottom\" data-latex-item=\"{eqnarray}\" data-latex=\"\\begin{eqnarray}{rcl}a &amp; b \\\\d&amp;c&amp;c&amp;c \\\\\\end{eqnarray}\">
+        <mtr>
+          <mtd>
+            <mrow data-mjx-texclass=\"ORD\" data-latex=\"{r c l}\">
+              <mi data-latex=\"r\">r</mi>
+              <mi data-latex=\"c\">c</mi>
+              <mi data-latex=\"l\">l</mi>
+            </mrow>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+          <mtd>
+            <mstyle indentshift=\".7em\">
+              <mi data-latex=\"c\">c</mi>
+            </mstyle>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('end row hline c', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{|c|}\\hline a\\\\\\hline b\\\\\\hline\\end{array}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{array}{|c|}\\hline a\\\\\\hline b\\\\\\hline\\end{array}\" display=\"block\">
+      <mtable columnspacing=\"1em\" rowspacing=\"4pt\" rowlines=\"solid\" framespacing=\".5em .125em\" frame=\"solid\" data-latex-item=\"{array}\" data-latex=\"\\begin{array}{|c|}\\hline a\\\\\\hline b\\\\\\hline\\end{array}\">
+        <mtr data-latex-item=\"{|c|}\" data-latex=\"{|c|}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+        </mtr>
+        <mtr data-latex-item=\"{|c|}\" data-latex=\"{|c|}\">
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+
+  it.skip('column } infinite Error', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{cW{c}{1cm}c}a&b}&c\\\\ d&e&f \\end{array}'),
+      ``
+    ));
+  it.skip('Nested array', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{rcl}a&{}{b}&c\\begin{array}{cc}f&h\\\\g\\end{array}\\end{array}'),
+      ``
+    ));
+ });
+
+describe.skip('Complete Array 2', () => {
   it('Angle Brackets', () =>
     toXmlMatch(
       tex2mml('\\begin{array}{c<c>r}a&a\\end{array}'),
@@ -9186,10 +10209,39 @@ describe('Complete Array', () => {
     ));
   it('p and @', () =>
     toXmlMatch(
-      tex2mml('\\begin{array}{c<c>rp{2cm}@{h&h}}a&a&d\\end{array}'),
+      tex2mml('\\begin{array}{crp{2cm}@{h&h}}a&a&d\\end{array}'),
+      ``
+    ));
+  it('@ with command', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{r@{h}l}\\alpha&\\hfill&{a}\\end{array}'),
+      ``
+    ));
+  it('Nested array', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{rcl}\\begin{array}{c}f\\\\g\\end{array}a&b\\end{array}'),
+      ``
+    ));
+
+  it('new column', () =>
+    toXmlMatch(
+      tex2mml(`\\newcolumntype{C}{>{:}p{2cm}<{!}}
+\\begin{array}{|c|C|C|C|}
+10000 &  1 \\\\
+1     & 101
+\\end{array}`),
+      ``
+    ));
+  it('* n ...', () =>
+    toXmlMatch(
+      tex2mml('\\begin{array}{*{2}cr}a&b&c\\\\ a=a&b=b&c=c\\end{array}'),
       ``
     ));
 });
+
+describe('Complete Rest', () => {
+});
+
 
 afterAll(() => getTokens('base'));
 
