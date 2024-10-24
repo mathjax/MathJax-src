@@ -1214,7 +1214,10 @@ export class ArrayItem extends BaseItem {
         entry = '\\text{' + entry.trim() + '}';
       }
       if (start || end || ralign) {
-        if (++this.templateSubs > parser.configuration.options.maxTemplateSubtitutions) {
+        if (
+          ++this.templateSubs >
+          parser.configuration.options.maxTemplateSubtitutions
+        ) {
           throw new TexError(
             'MaxTemplateSubs',
             'Maximum template substitutions exceeded; ' +
