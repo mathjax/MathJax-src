@@ -334,7 +334,6 @@ namespace FilterUtil {
     arg.data.root.setInheritedAttributes({}, arg.math['display'], 0, false);
   };
 
-
   /**
    * Removes unneeded mstyle elements that just set the scriptlevel
    */
@@ -352,15 +351,18 @@ namespace FilterUtil {
         }
       }
       const names = attributes.getExplicitNames();
-      if (names.filter(key => key.substring(0, 10) !== 'data-latex').length === 0) {
+      if (
+        names.filter((key) => key.substring(0, 10) !== 'data-latex').length ===
+        0
+      ) {
         const child = mml.childNodes[0].childNodes[0];
-        names.forEach(key => child.attributes.set(key, attributes.get(key)));
+        names.forEach((key) => child.attributes.set(key, attributes.get(key)));
         mml.parent.replaceChild(child, mml);
         remove.push(mml);
       }
     }
     options.removeFromList('mstyle', remove);
-  }
+  };
 }
 
 export default FilterUtil;
