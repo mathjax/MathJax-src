@@ -131,19 +131,6 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
     if (c === '\\') {
       // @test Let Bar, Let Brace Equal Stretchy
       name = NewcommandUtil.GetCSname(parser, name);
-      let macro = handlers
-        .get(HandlerType.DELIMITER)
-        .lookup('\\' + name) as Token;
-      if (macro) {
-        // @test Let Bar, Let Brace Equal Stretchy
-        NewcommandUtil.addDelimiter(
-          parser,
-          '\\' + cs,
-          macro.char,
-          macro.attributes
-        );
-        return;
-      }
       const map = handlers.get(HandlerType.MACRO).applicable(name);
       if (!map) {
         // @test Let Undefined CS
@@ -158,6 +145,19 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
           macro.func,
           macro.args,
           macro.token
+        );
+        return;
+      }
+      let macro = handlers
+        .get(HandlerType.DELIMITER)
+        .lookup('\\' + name) as Token;
+      if (macro) {
+        // @test Let Bar, Let Brace Equal Stretchy
+        NewcommandUtil.addDelimiter(
+          parser,
+          '\\' + cs,
+          macro.char,
+          macro.attributes
         );
         return;
       }
