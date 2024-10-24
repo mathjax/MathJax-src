@@ -215,7 +215,7 @@ export class MathMLCompile<N, T, D> {
             ignoreVariant = true;
             break;
           case 'smallmatrix':
-            mml.setProperty('scriptlevel', 1);
+            mml.setProperty('smallmatrix', true);
             mml.setProperty('useHeight', false);
             break;
           case 'mathaccent':
