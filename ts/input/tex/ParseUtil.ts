@@ -637,7 +637,9 @@ export const ParseUtil = {
     let node: MmlNode = mml;
     if (stack) {
       // @test Overbrace 1 2 3, Underbrace, Overbrace Op 1 2
-      node = parser.create('node', 'TeXAtom', [mml], {
+      node = parser.create('node', 'TeXAtom', [
+        parser.create('node', 'mstyle', [mml], { displaystyle: true, scriptlevel: 0 })
+      ], {
         texClass: TEXCLASS.OP,
         movesupsub: true,
       });

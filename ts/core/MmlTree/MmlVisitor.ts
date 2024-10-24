@@ -201,8 +201,7 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
           texclass < 0 ? 'NONE' : TEXCLASSNAMES[texclass]
         );
     }
-    node.getProperty('scriptlevel') &&
-      node.getProperty('useHeight') === false &&
+    node.getProperty('smallmatrix') &&
       this.setDataAttribute(data, 'smallmatrix', 'true');
     return data;
   }

@@ -333,6 +333,34 @@ namespace FilterUtil {
   }) {
     arg.data.root.setInheritedAttributes({}, arg.math['display'], 0, false);
   };
+
+
+  /**
+   * Removes unneeded mstyle elements that just set the scriptlevel
+   */
+  export const checkScriptlevel = function (arg: { data: ParseOptions }) {
+    const options = arg.data;
+    const remove: MmlNode[] = [];
+    for (const mml of options.getList('mstyle')) {
+      if (mml.childNodes?.[0]?.childNodes?.length !== 1) {
+        continue;
+      }
+      const attributes = mml.attributes;
+      for (const key of ['displaystyle', 'scriptlevel']) {
+        if (attributes.getExplicit(key) === attributes.getInherited(key)) {
+          attributes.unset(key);
+        }
+      }
+      const names = attributes.getExplicitNames();
+      if (names.filter(key => key.substring(0, 10) !== 'data-latex').length === 0) {
+        const child = mml.childNodes[0].childNodes[0];
+        names.forEach(key => child.attributes.set(key, attributes.get(key)));
+        mml.parent.replaceChild(child, mml);
+        remove.push(mml);
+      }
+    }
+    options.removeFromList('mstyle', remove);
+  }
 }
 
 export default FilterUtil;

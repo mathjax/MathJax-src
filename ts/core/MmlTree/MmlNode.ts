@@ -771,14 +771,8 @@ export abstract class AbstractMmlNode
         delete attributes[key];
       }
     }
-    const displaystyle = this.attributes.getExplicit('displaystyle');
-    if (displaystyle === undefined) {
-      this.attributes.setInherited('displaystyle', display);
-    }
-    const scriptlevel = this.attributes.getExplicit('scriptlevel');
-    if (scriptlevel === undefined) {
-      this.attributes.setInherited('scriptlevel', level);
-    }
+    this.attributes.setInherited('displaystyle', display);
+    this.attributes.setInherited('scriptlevel', level);
     if (prime) {
       this.setProperty('texprimestyle', prime);
     }
