@@ -659,7 +659,7 @@ new sm.CommandMap('macros', {
   cr: BaseMethods.Cr,
   '\\': BaseMethods.CrLaTeX,
   newline: [BaseMethods.CrLaTeX, true],
-  hline: [BaseMethods.HLine, 'solid'],
+  hline: BaseMethods.HLine,
   hdashline: [BaseMethods.HLine, 'dashed'],
   //      noalign:            BaseMethods.HandleNoAlign,
   eqalignno: [
