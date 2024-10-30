@@ -4436,6 +4436,15 @@ describe('Environments', () => {
       </mstyle>
     </math>`
     ));
+  it('IndentAlign Single', () =>
+    toXmlMatch(
+      tex2mml('\\begin{indentalign}[10cm][20cm][30cm]{c}a\\end{indentalign}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{indentalign}[10cm][20cm][30cm]{c}a\\end{indentalign}\" display=\"block\">
+      <mstyle indentshiftfirst=\"10cm\" indentshift=\"20cm\" indentshiftlast=\"30cm\" indentalignfirst=\"center\" indentalign=\"center\" data-latex=\"\\begin{indentalign}[10cm][20cm][30cm]{c}a\\end{indentalign}\">
+        <mi data-latex=\"a\">a</mi>
+      </mstyle>
+    </math>`
+    ));
 });
 
 describe('Environment Errors', () => {
@@ -7890,6 +7899,15 @@ describe('Boxes', () => {
       </mpadded>
     </math>`
     ));
+  it('Vtop Hsize =', () =>
+    toXmlMatch(
+      tex2mml('\\hsize=2cm\\vtop{x}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\hsize=2cm\\vtop{x}\" display=\"block\" maxwidth=\"2cm\" overflow=\"linebreak\">
+      <mpadded data-mjx-vbox=\"top\" data-mjx-texclass=\"ORD\" data-vertical-align=\"top\" width=\"2cm\" data-overflow=\"linebreak\" data-latex=\"\\hsize=2cm\\vtop{x}\">
+        <mi data-latex=\"x\">x</mi>
+      </mpadded>
+    </math>`
+    ));
   it('Vcenter', () =>
     toXmlMatch(
       tex2mml('\\vcenter{x}'),
@@ -8010,6 +8028,15 @@ describe('Boxes', () => {
       tex2mml('\\makebox[2cm][c]{x}'),
       `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\makebox[2cm][c]{x}\" display=\"block\">
       <mpadded width=\"2cm\" data-align=\"center\" data-latex=\"\\makebox[2cm][c]{x}\">
+        <mtext>x</mtext>
+      </mpadded>
+    </math>`
+    ));
+  it('Makebox Cap position', () =>
+    toXmlMatch(
+      tex2mml('\\makebox[2cm][C]{x}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\makebox[2cm][C]{x}\" display=\"block\">
+      <mpadded width=\"2cm\" data-align=\"center\" data-overflow=\"linebreak\" data-latex=\"\\makebox[2cm][C]{x}\">
         <mtext>x</mtext>
       </mpadded>
     </math>`
@@ -10206,6 +10233,22 @@ describe('User Defined Macros', () => {
       <mi data-latex=\"\\label{A}\">a</mi>
       <mrow href=\"#\" class=\"MathJax_ref\" data-latex=\"\\eqref{A}\">
         <mtext>(???)</mtext>
+      </mrow>
+    </math>`
+    ));
+  it('Right Color', () =>
+    toXmlMatch(
+      tex2mml('\\left(A\\middle|B\\color{red}\\right)'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\left(A\\middle|B\\color{red}\\right)\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left(A\\middle|B\\color{red}\\right)\" data-latex=\"\\left(A\\middle|B\\color{red}\\right)\">
+        <mo data-mjx-texclass=\"OPEN\" data-latex-item=\"\\left(\" data-latex=\"\\left(\">(</mo>
+        <mi data-latex=\"A\">A</mi>
+        <mrow data-mjx-texclass=\"CLOSE\"></mrow>
+        <mo data-latex-item=\"\\middle|\" data-latex=\"\\middle|\">|</mo>
+        <mrow data-mjx-texclass=\"OPEN\" data-latex=\"\\middle|\"></mrow>
+        <mi data-latex=\"B\">B</mi>
+        <mstyle mathcolor=\"red\"></mstyle>
+        <mo data-mjx-texclass=\"CLOSE\" mathcolor=\"red\" data-latex-item=\"\\right)\" data-latex=\"\\right)\">)</mo>
       </mrow>
     </math>`
     ));
