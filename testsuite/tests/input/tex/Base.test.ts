@@ -7979,7 +7979,7 @@ describe('Boxes', () => {
       </mrow>
     </math>`
     ));
-  it('Framebox', () =>
+  it('Framebox dimension', () =>
     toXmlMatch(
       tex2mml('\\framebox[2cm]{x}'),
       `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\framebox[2cm]{x}\" display=\"block\">
@@ -7992,7 +7992,7 @@ describe('Boxes', () => {
       </mrow>
     </math>`
     ));
-  it('Framebox', () =>
+  it('Framebox dimension position', () =>
     toXmlMatch(
       tex2mml('\\framebox[2cm][c]{x}'),
       `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\framebox[2cm][c]{x}\" display=\"block\">
@@ -8014,7 +8014,7 @@ describe('Boxes', () => {
       </mpadded>
     </math>`
     ));
-  it('Makebox', () =>
+  it('Makebox dimension', () =>
     toXmlMatch(
       tex2mml('\\makebox[2cm]{x}'),
       `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\makebox[2cm]{x}\" display=\"block\">
@@ -8023,7 +8023,7 @@ describe('Boxes', () => {
       </mpadded>
     </math>`
     ));
-  it('Makebox', () =>
+  it('Makebox dimension position', () =>
     toXmlMatch(
       tex2mml('\\makebox[2cm][c]{x}'),
       `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\makebox[2cm][c]{x}\" display=\"block\">
@@ -8041,9 +8041,6 @@ describe('Boxes', () => {
       </mpadded>
     </math>`
     ));
-});
-
-describe('Moving Elements', () => {
   it('Rule 2D', () =>
     toXmlMatch(
       tex2mml('\\rule{2cm}{1cm}'),
@@ -8076,6 +8073,9 @@ describe('Moving Elements', () => {
   <mspace width="2cm" height="2cm" depth="1cm" mathbackground="black" data-latex="\\Rule{2cm}{2cm}{1cm}"></mspace>
 </math>`
     ));
+});
+
+describe('Moving Elements', () => {
   it('Space 3D', () =>
     toXmlMatch(
       tex2mml('\\Space{2cm}{2cm}{1cm}'),
@@ -8461,7 +8461,7 @@ describe('Linebreaks', () => {
       <mi data-latex=\"b\">b</mi>
     </math>`
     ));
-  it('allowbreak', () =>
+  it('allowbreak cdot', () =>
     toXmlMatch(
       tex2mml('a\\allowbreak \cdot b'),
       `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\allowbreak cdot b\" display=\"block\">
