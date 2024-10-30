@@ -463,7 +463,9 @@ export class Middle extends BaseItem {
   constructor(factory: StackItemFactory, delim: string, color: string) {
     super(factory);
     this.setProperty('delim', delim);
-    color && this.setProperty('color', color);
+    if (color) {
+      this.setProperty('color', color);
+    }
   }
 
   /**
@@ -492,7 +494,9 @@ export class RightItem extends BaseItem {
   constructor(factory: StackItemFactory, delim: string, color: string) {
     super(factory);
     this.setProperty('delim', delim);
-    color && this.setProperty('color', color);
+    if (color) {
+      this.setProperty('color', color);
+    }
   }
 
   /**
@@ -1250,7 +1254,9 @@ export class ArrayItem extends BaseItem {
           braces--;
           break;
         case '\\begin{array}':
-          !braces && envs++;
+          if (!braces) {
+            envs++;
+          }
           break;
         case '\\end{array}':
           if (!braces && envs) {
