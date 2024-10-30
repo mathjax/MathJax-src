@@ -133,7 +133,7 @@ export function getTokens(configuration: string) {
 // A prototype extension for the macro table lookups.
 AbstractParseMap.prototype.lookup = function(token: string) {
   const result = this.map.get(token);
-  if (result && !token.match(/^\s$/)) {
+  if (result) {
     addToken(this.name, token);
   }
   return result;

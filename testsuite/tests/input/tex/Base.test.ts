@@ -7584,31 +7584,47 @@ describe('Math style sizes', () => {
 });
 
 describe('Special characters', () => {
-  // it('Space', () =>
-  //   toXmlMatch(
-  //     tex2mml('a\ b'),
-  //     ``
-  //   ));
-  // it('Tab', () =>
-  //   toXmlMatch(
-  //     tex2mml('a\tb'),
-  //     ``
-  //   ));
-  // it('CR', () =>
-  //   toXmlMatch(
-  //     tex2mml('a\rb'),
-  //     ``
-  //   ));
-  // it('Newline', () =>
-  //   toXmlMatch(
-  //     tex2mml('a\nb'),
-  //     ``
-  //   ));
-  // it('No break space', () =>
-  //   toXmlMatch(
-  //     tex2mml('a{\u00A0}b'),
-  //     ``
-  //   ));
+  it('Space', () =>
+    toXmlMatch(
+      tex2mml('a b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
+  it('Tab', () =>
+    toXmlMatch(
+      tex2mml('a\tb'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a	b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
+  it('CR', () =>
+    toXmlMatch(
+      tex2mml('a\rb'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\rb\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
+  it('Newline', () =>
+    toXmlMatch(
+      tex2mml('a\nb'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\nb\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
+  it('No break space', () =>
+    toXmlMatch(
+      tex2mml('a{\u00A0}b'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a{&#xA0;}b\" display=\"block\">
+      <mi data-latex=\"a\">a</mi>
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"{}\"></mrow>
+      <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
   it('Prime', () =>
     toXmlMatch(
       tex2mml('a\u2019b'),
@@ -7618,6 +7634,144 @@ describe('Special characters', () => {
         <mo data-mjx-alternate=\"1\" data-latex=\"&#x2019;\">&#x2032;</mo>
       </msup>
       <mi data-latex=\"b\">b</mi>
+    </math>`
+    ));
+});
+
+describe('Special macros', () => {
+  it('Iff', () =>
+    toXmlMatch(
+      tex2mml('A \\iff B'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"A \\iff B\" display=\"block\">
+      <mi data-latex=\"A\">A</mi>
+      <mstyle scriptlevel=\"0\" data-latex=\"\\;\">
+        <mspace width=\"0.278em\"></mspace>
+      </mstyle>
+      <mo stretchy=\"false\" data-latex=\"\\Longleftrightarrow\">&#x27FA;</mo>
+      <mstyle scriptlevel=\"0\" data-latex=\"\\;\">
+        <mspace width=\"0.278em\"></mspace>
+      </mstyle>
+      <mi data-latex=\"B\">B</mi>
+    </math>`
+    ));
+  it('TeX', () =>
+    toXmlMatch(
+      tex2mml('\\TeX'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\TeX\" display=\"block\">
+      <mi data-latex=\"T\">T</mi>
+      <mspace width=\"-.14em\" linebreak=\"nobreak\" data-latex=\"\\kern-.14em\"></mspace>
+      <mpadded height=\"-.5ex\" depth=\"+.5ex\" voffset=\"-.5ex\" data-latex=\"{}\">
+        <mrow data-mjx-texclass=\"ORD\">
+          <mi data-latex=\"E\">E</mi>
+        </mrow>
+      </mpadded>
+      <mspace width=\"-.115em\" linebreak=\"nobreak\" data-latex=\"\\kern-.115em\"></mspace>
+      <mi data-latex=\"X\">X</mi>
+    </math>`
+    ));
+  it('LaTeX', () =>
+    toXmlMatch(
+      tex2mml('\\LaTeX'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\LaTeX\" display=\"block\">
+      <mi data-latex=\"L\">L</mi>
+      <mspace width=\"-.325em\" linebreak=\"nobreak\" data-latex=\"\\kern-.325em\"></mspace>
+      <mpadded height=\"+.21em\" depth=\"-.21em\" voffset=\"+.21em\" data-latex=\"{}\">
+        <mrow data-mjx-texclass=\"ORD\">
+          <mstyle displaystyle=\"false\" scriptlevel=\"1\">
+            <mrow data-mjx-texclass=\"ORD\" data-latex=\"{A}\">
+              <mi data-latex=\"A\">A</mi>
+            </mrow>
+          </mstyle>
+        </mrow>
+      </mpadded>
+      <mspace width=\"-.17em\" linebreak=\"nobreak\" data-latex=\"\\kern-.17em\"></mspace>
+      <mi data-latex=\"T\">T</mi>
+      <mspace width=\"-.14em\" linebreak=\"nobreak\" data-latex=\"\\kern-.14em\"></mspace>
+      <mpadded height=\"-.5ex\" depth=\"+.5ex\" voffset=\"-.5ex\" data-latex=\"{}\">
+        <mrow data-mjx-texclass=\"ORD\">
+          <mi data-latex=\"E\">E</mi>
+        </mrow>
+      </mpadded>
+      <mspace width=\"-.115em\" linebreak=\"nobreak\" data-latex=\"\\kern-.115em\"></mspace>
+      <mi data-latex=\"X\">X</mi>
+    </math>`
+    ));
+  it('Skew 7', () =>
+    toXmlMatch(
+      tex2mml('\\skew7\\hat A'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\skew7\\hat A\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"{{\\hat{A\\mkern7mu}\\mkern-7mu}{}}\">
+        <mrow data-mjx-texclass=\"ORD\" data-latex=\"{\\hat{A\\mkern7mu}\\mkern-7mu}\">
+          <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\hat{A\\mkern7mu}\">
+            <mover>
+              <mrow data-latex=\"A\\mkern7mu\">
+                <mi data-latex=\"A\">A</mi>
+                <mspace width=\"0.389em\" linebreak=\"nobreak\" data-latex=\"\\mkern7mu\"></mspace>
+              </mrow>
+              <mo stretchy=\"false\">^</mo>
+            </mover>
+          </mrow>
+          <mspace width=\"-0.389em\" linebreak=\"nobreak\" data-latex=\"\\mkern-7mu\"></mspace>
+        </mrow>
+        <mrow data-mjx-texclass=\"ORD\" data-latex=\"{}\"></mrow>
+      </mrow>
+    </math>`
+    ));
+  it('Skew 20', () =>
+    toXmlMatch(
+      tex2mml('\\skew{20}\\hat A'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\skew{20}\\hat A\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"{{\\hat{A\\mkern20mu}\\mkern-20mu}{}}\">
+        <mrow data-mjx-texclass=\"ORD\" data-latex=\"{\\hat{A\\mkern20mu}\\mkern-20mu}\">
+          <mrow data-mjx-texclass=\"ORD\" data-latex=\"\\hat{A\\mkern20mu}\">
+            <mover>
+              <mrow data-latex=\"A\\mkern20mu\">
+                <mi data-latex=\"A\">A</mi>
+                <mspace width=\"1.111em\" linebreak=\"nobreak\" data-latex=\"\\mkern20mu\"></mspace>
+              </mrow>
+              <mo stretchy=\"false\">^</mo>
+            </mover>
+          </mrow>
+          <mspace width=\"-1.111em\" linebreak=\"nobreak\" data-latex=\"\\mkern-20mu\"></mspace>
+        </mrow>
+        <mrow data-mjx-texclass=\"ORD\" data-latex=\"{}\"></mrow>
+      </mrow>
+    </math>`
+    ));
+  it('Pmb', () =>
+    toXmlMatch(
+      tex2mml('a \\pmb a \\boldsymbol a'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a \\pmb a \\boldsymbol a\" display=\"block\">
+      <merror data-mjx-error=\"Undefined control sequence \\boldsymbol\">
+        <mtext>Undefined control sequence \\boldsymbol</mtext>
+      </merror>
+    </math>`
+    ));
+  it('Space', () =>
+    toXmlMatch(
+      tex2mml('A \\space B'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"A \\space B\" display=\"block\">
+      <mi data-latex=\"A\">A</mi>
+      <mtext data-latex=\"\\space\">&#xA0;</mtext>
+      <mi data-latex=\"B\">B</mi>
+    </math>`
+    ));
+  it('Space 2', () =>
+    toXmlMatch(
+      tex2mml('A \\ B'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"A \\ B\" display=\"block\">
+      <mi data-latex=\"A\">A</mi>
+      <mtext>&#xA0;</mtext>
+      <mi data-latex=\"B\">B</mi>
+    </math>`
+    ));
+  it('Space 3', () =>
+    toXmlMatch(
+      tex2mml('A \\ B'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"A \\&#xA0;B\" display=\"block\">
+      <mi data-latex=\"A\">A</mi>
+      <mtext>&#xA0;</mtext>
+      <mi data-latex=\"B\">B</mi>
     </math>`
     ));
 });
@@ -8893,26 +9047,6 @@ describe('Spacing', () => {
 });
 
 
-
-// describe('Complete Base Items', () => {
-//   it('Middle Color', () =>
-//     toXmlMatch(
-//       tex2mml('\\left(A\\color{red}\\middle|B\\right)'),
-//       `<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
-//   <mrow data-mjx-texclass="INNER">
-//     <mo data-mjx-texclass="OPEN">(</mo>
-//     <mi>A</mi>
-//     <mstyle mathcolor="red"></mstyle>
-//     <mrow data-mjx-texclass="CLOSE"></mrow>
-//     <mo mathcolor="red">|</mo>
-//     <mrow data-mjx-texclass="OPEN"></mrow>
-//     <mi>B</mi>
-//     <mo data-mjx-texclass="CLOSE">)</mo>
-//   </mrow>
-// </math>`
-//     ));
-// });
-
 describe('Complete Base Methods', () => {
   it('Comment', () =>
     toXmlMatch(
@@ -9069,207 +9203,6 @@ describe('Referencing', () => {
       </mtable>
     </math>`
     ));
-});
-
-
-/**
- *
- * For completion we need define some extra commands reflecting those in other
- * packages, that needed provisions in Base.
- *
- */
-import {Configuration} from '#js/input/tex/Configuration';
-import {HandlerType, ConfigurationType} from '#js/input/tex/HandlerTypes.js';
-import { CommandMap, EnvironmentMap } from '#js/input/tex/TokenMap.js';
-import BaseMethods from '#js/input/tex/base/BaseMethods.js';
-import ParseMethods from '#js/input/tex/ParseMethods.js';
-import TexParser from '#js/input/tex/TexParser.js';
-
-describe('User Defined Macros', () => {
-  new CommandMap('userMacros', {
-    eqref: [BaseMethods.HandleRef, true],
-    RR: [BaseMethods.Macro, '{\\bf R}', 1, 'a'],
-    color: (parser: TexParser, name: string) => {
-      const color = parser.GetArgument(name);
-      const style = parser.itemFactory
-        .create('style')
-        .setProperties({ styles: { mathcolor: color } });
-      parser.stack.env['color'] = color;
-      parser.Push(style);
-    }
-  });
-  Configuration.create('userMacros', {
-    [ConfigurationType.HANDLER]: {
-      [HandlerType.MACRO]: ['userMacros'],
-    }});
-  beforeEach(() =>
-    setupTex(['base', 'userMacros'])
-            );
-  it('Macro with optional def', () =>
-    toXmlMatch(
-      tex2mml('\\RR'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\RR\" display=\"block\">
-      <mrow data-mjx-texclass=\"ORD\" data-latex=\"{\\bf R}\">
-        <mi mathvariant=\"bold\" data-latex=\"R\">R</mi>
-      </mrow>
-    </math>`
-    ));
-  it('EqRef', () =>
-    toXmlMatch(
-      tex2mml('a\\label{A}\\eqref{A}'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\label{A}\\eqref{A}\" display=\"block\">
-      <mi data-latex=\"\\label{A}\">a</mi>
-      <mrow href=\"#\" class=\"MathJax_ref\" data-latex=\"\\eqref{A}\">
-        <mtext>(???)</mtext>
-      </mrow>
-    </math>`
-    ));
-  it('Middle Color', () =>
-    toXmlMatch(
-      tex2mml('\\left(A\\color{red}\\middle|B\\right)'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\left(A\\color{red}\\middle|B\\right)\" display=\"block\">
-      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left(A\\color{red}\\middle|B\\right)\" data-latex=\"\\left(A\\color{red}\\middle|B\\right)\">
-        <mo data-mjx-texclass=\"OPEN\" data-latex-item=\"\\left(\" data-latex=\"\\left(\">(</mo>
-        <mi data-latex=\"A\">A</mi>
-        <mstyle mathcolor=\"red\"></mstyle>
-        <mrow data-mjx-texclass=\"CLOSE\"></mrow>
-        <mo mathcolor=\"red\" data-latex-item=\"\\middle|\" data-latex=\"\\middle|\">|</mo>
-        <mrow data-mjx-texclass=\"OPEN\" data-latex=\"\\middle|\"></mrow>
-        <mi data-latex=\"B\">B</mi>
-        <mo data-mjx-texclass=\"CLOSE\" data-latex-item=\"\\right)\" data-latex=\"\\right)\">)</mo>
-      </mrow>
-    </math>`
-    ));
-});
-
-describe('User Defined Environments', () => {
-  new EnvironmentMap('userEnvs', ParseMethods.environment, {
-    smallmatrix: [
-      BaseMethods.Array,
-      null,
-      null,
-      null,
-      'c',
-      '1',
-      '.2em',
-      'S',
-      1,
-    ],
-    pmatrix: [BaseMethods.Array, null, '(', ')', 'c'],
-    crampedsubarray: [
-      BaseMethods.Array,
-      null,
-      null,
-      null,
-      null,
-      '0em',
-      '0.1em',
-      "S'",
-      1,
-    ],
-    gather: [BaseMethods.EqnArray, null, true, true, 'c', 'm']
-  });
-  Configuration.create('userEnvs', {
-    [ConfigurationType.HANDLER]: {
-      [HandlerType.ENVIRONMENT]: ['userEnvs'],
-    }});
-  beforeEach(() =>
-    setupTex(['base', 'userEnvs'])
-            );
-  it('smallmatrix', () =>
-    toXmlMatch(
-      tex2mml('\\begin{smallmatrix} a & b \\\\ c & d \\end{smallmatrix}'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{smallmatrix} a &amp; b \\\\ c &amp; d \\end{smallmatrix}\" display=\"block\">
-      <mtable data-mjx-smallmatrix=\"true\" columnspacing=\"1\" rowspacing=\".2em\" data-latex-item=\"{smallmatrix}\" data-latex=\"\\begin{smallmatrix} a &amp; b \\\\ c &amp; d \\end{smallmatrix}\">
-        <mtr>
-          <mtd>
-            <mi data-latex=\"a\">a</mi>
-          </mtd>
-          <mtd>
-            <mi data-latex=\"b\">b</mi>
-          </mtd>
-        </mtr>
-        <mtr>
-          <mtd>
-            <mi data-latex=\"c\">c</mi>
-          </mtd>
-          <mtd>
-            <mi data-latex=\"d\">d</mi>
-          </mtd>
-        </mtr>
-      </mtable>
-    </math>`
-    ));
-  it('pmatrix', () =>
-    toXmlMatch(
-      tex2mml('\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{pmatrix} a &amp; b \\\\ c &amp; d \\end{pmatrix}\" display=\"block\">
-      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"{pmatrix}\" data-latex=\"\\begin{pmatrix} a &amp; b \\\\ c &amp; d \\end{pmatrix}\">
-        <mo data-mjx-texclass=\"OPEN\">(</mo>
-        <mtable columnspacing=\"1em\" rowspacing=\"4pt\">
-          <mtr>
-            <mtd>
-              <mi data-latex=\"a\">a</mi>
-            </mtd>
-            <mtd>
-              <mi data-latex=\"b\">b</mi>
-            </mtd>
-          </mtr>
-          <mtr>
-            <mtd>
-              <mi data-latex=\"c\">c</mi>
-            </mtd>
-            <mtd>
-              <mi data-latex=\"d\">d</mi>
-            </mtd>
-          </mtr>
-        </mtable>
-        <mo data-mjx-texclass=\"CLOSE\">)</mo>
-      </mrow>
-    </math>`
-    ));
-  it('Crampedsubarray', () =>
-    toXmlMatch(
-      tex2mml('\\begin{crampedsubarray}{cc} a & b \\\\ c & d \\end{crampedsubarray}'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{crampedsubarray}{cc} a &amp; b \\\\ c &amp; d \\end{crampedsubarray}\" display=\"block\">
-      <mtable data-mjx-smallmatrix=\"true\" columnspacing=\"0em\" rowspacing=\"0.1em\" columnalign=\"center center\" data-cramped=\"true\" data-latex-item=\"{crampedsubarray}\" data-latex=\"\\begin{crampedsubarray}{cc} a &amp; b \\\\ c &amp; d \\end{crampedsubarray}\">
-        <mtr data-latex-item=\"{cc}\" data-latex=\"{cc}\">
-          <mtd>
-            <mi data-latex=\"a\">a</mi>
-          </mtd>
-          <mtd>
-            <mi data-latex=\"b\">b</mi>
-          </mtd>
-        </mtr>
-        <mtr data-latex-item=\"{cc}\" data-latex=\"{cc}\">
-          <mtd>
-            <mi data-latex=\"c\">c</mi>
-          </mtd>
-          <mtd>
-            <mi data-latex=\"d\">d</mi>
-          </mtd>
-        </mtr>
-      </mtable>
-    </math>`
-    ));
-  it('Gather', () =>
-    toXmlMatch(
-      tex2mml('\\begin{gather}a\\end{gather}'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{gather}a\\end{gather}\" display=\"block\">
-      <mtable displaystyle=\"true\" columnspacing=\"1em\" rowspacing=\"3pt\" data-break-align=\"middle\" data-latex-item=\"{gather}\" data-latex=\"\\begin{gather}a\\end{gather}\">
-        <mtr>
-          <mtd>
-            <mi data-latex=\"a\">a</mi>
-          </mtd>
-        </mtr>
-      </mtable>
-    </math>`
-    ));
-  // it('', () =>
-  //   toXmlMatch(
-  //     tex2mml(''),
-  //     ``
-  //   ));
 });
 
 describe('Complete Array', () => {
@@ -10092,7 +10025,6 @@ describe('Complete Array', () => {
       </mtable>
     </math>`
     ));
-
   it('Label Error', () =>
     toXmlMatch(
       tex2mml('\\eqalignno{a &  & {\\hbox{(3)}}'),
@@ -10189,6 +10121,7 @@ describe('Complete Array', () => {
     </math>`
     ));
 
+  // The following currently lead to uncaught errors
   it.skip('column } infinite Error', () =>
     toXmlMatch(
       tex2mml('\\begin{array}{cW{c}{1cm}c}a&b}&c\\\\ d&e&f \\end{array}'),
@@ -10201,59 +10134,200 @@ describe('Complete Array', () => {
     ));
  });
 
-describe.skip('Complete Array 2', () => {
-  it('Angle Brackets', () =>
-    toXmlMatch(
-      tex2mml('\\begin{array}{c<c>r}a&a\\end{array}'),
-      ``
-    ));
-  it('p and @', () =>
-    toXmlMatch(
-      tex2mml('\\begin{array}{crp{2cm}@{h&h}}a&a&d\\end{array}'),
-      ``
-    ));
-  it('@ with command', () =>
-    toXmlMatch(
-      tex2mml('\\begin{array}{r@{h}l}\\alpha&\\hfill&{a}\\end{array}'),
-      ``
-    ));
-  it('Nested array', () =>
-    toXmlMatch(
-      tex2mml('\\begin{array}{rcl}\\begin{array}{c}f\\\\g\\end{array}a&b\\end{array}'),
-      ``
-    ));
+/**
+ *
+ * For completion we need define some extra commands reflecting those in other
+ * packages, that needed provisions in Base.
+ *
+ */
+import {Configuration} from '#js/input/tex/Configuration';
+import {HandlerType, ConfigurationType} from '#js/input/tex/HandlerTypes.js';
+import { CommandMap, EnvironmentMap } from '#js/input/tex/TokenMap.js';
+import BaseMethods from '#js/input/tex/base/BaseMethods.js';
+import ParseMethods from '#js/input/tex/ParseMethods.js';
+import TexParser from '#js/input/tex/TexParser.js';
 
-  it('new column', () =>
+describe('User Defined Macros', () => {
+  new CommandMap('userMacros', {
+    eqref: [BaseMethods.HandleRef, true],
+    RR: [BaseMethods.Macro, '{\\bf R}', 1, 'a'],
+    color: (parser: TexParser, name: string) => {
+      const color = parser.GetArgument(name);
+      const style = parser.itemFactory
+        .create('style')
+        .setProperties({ styles: { mathcolor: color } });
+      parser.stack.env['color'] = color;
+      parser.Push(style);
+    }
+  });
+  Configuration.create('userMacros', {
+    [ConfigurationType.HANDLER]: {
+      [HandlerType.MACRO]: ['userMacros'],
+    }});
+  beforeEach(() =>
+    setupTex(['base', 'userMacros'])
+            );
+  it('Macro with optional def', () =>
     toXmlMatch(
-      tex2mml(`\\newcolumntype{C}{>{:}p{2cm}<{!}}
-\\begin{array}{|c|C|C|C|}
-10000 &  1 \\\\
-1     & 101
-\\end{array}`),
-      ``
+      tex2mml('\\RR'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\RR\" display=\"block\">
+      <mrow data-mjx-texclass=\"ORD\" data-latex=\"{\\bf R}\">
+        <mi mathvariant=\"bold\" data-latex=\"R\">R</mi>
+      </mrow>
+    </math>`
     ));
-  it('* n ...', () =>
+  it('EqRef', () =>
     toXmlMatch(
-      tex2mml('\\begin{array}{*{2}cr}a&b&c\\\\ a=a&b=b&c=c\\end{array}'),
-      ``
+      tex2mml('a\\label{A}\\eqref{A}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"a\\label{A}\\eqref{A}\" display=\"block\">
+      <mi data-latex=\"\\label{A}\">a</mi>
+      <mrow href=\"#\" class=\"MathJax_ref\" data-latex=\"\\eqref{A}\">
+        <mtext>(???)</mtext>
+      </mrow>
+    </math>`
+    ));
+  it('Middle Color', () =>
+    toXmlMatch(
+      tex2mml('\\left(A\\color{red}\\middle|B\\right)'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\left(A\\color{red}\\middle|B\\right)\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"\\left(A\\color{red}\\middle|B\\right)\" data-latex=\"\\left(A\\color{red}\\middle|B\\right)\">
+        <mo data-mjx-texclass=\"OPEN\" data-latex-item=\"\\left(\" data-latex=\"\\left(\">(</mo>
+        <mi data-latex=\"A\">A</mi>
+        <mstyle mathcolor=\"red\"></mstyle>
+        <mrow data-mjx-texclass=\"CLOSE\"></mrow>
+        <mo mathcolor=\"red\" data-latex-item=\"\\middle|\" data-latex=\"\\middle|\">|</mo>
+        <mrow data-mjx-texclass=\"OPEN\" data-latex=\"\\middle|\"></mrow>
+        <mi data-latex=\"B\">B</mi>
+        <mo data-mjx-texclass=\"CLOSE\" data-latex-item=\"\\right)\" data-latex=\"\\right)\">)</mo>
+      </mrow>
+    </math>`
     ));
 });
 
-describe('Complete Rest', () => {
+describe('User Defined Environments', () => {
+  new EnvironmentMap('userEnvs', ParseMethods.environment, {
+    smallmatrix: [
+      BaseMethods.Array,
+      null,
+      null,
+      null,
+      'c',
+      '1',
+      '.2em',
+      'S',
+      1,
+    ],
+    pmatrix: [BaseMethods.Array, null, '(', ')', 'c'],
+    crampedsubarray: [
+      BaseMethods.Array,
+      null,
+      null,
+      null,
+      null,
+      '0em',
+      '0.1em',
+      "S'",
+      1,
+    ],
+    gather: [BaseMethods.EqnArray, null, true, true, 'c', 'm']
+  });
+  Configuration.create('userEnvs', {
+    [ConfigurationType.HANDLER]: {
+      [HandlerType.ENVIRONMENT]: ['userEnvs'],
+    }});
+  beforeEach(() =>
+    setupTex(['base', 'userEnvs'])
+            );
+  it('smallmatrix', () =>
+    toXmlMatch(
+      tex2mml('\\begin{smallmatrix} a & b \\\\ c & d \\end{smallmatrix}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{smallmatrix} a &amp; b \\\\ c &amp; d \\end{smallmatrix}\" display=\"block\">
+      <mtable data-mjx-smallmatrix=\"true\" columnspacing=\"1\" rowspacing=\".2em\" data-latex-item=\"{smallmatrix}\" data-latex=\"\\begin{smallmatrix} a &amp; b \\\\ c &amp; d \\end{smallmatrix}\">
+        <mtr>
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+        </mtr>
+        <mtr>
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('pmatrix', () =>
+    toXmlMatch(
+      tex2mml('\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{pmatrix} a &amp; b \\\\ c &amp; d \\end{pmatrix}\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex-item=\"{pmatrix}\" data-latex=\"\\begin{pmatrix} a &amp; b \\\\ c &amp; d \\end{pmatrix}\">
+        <mo data-mjx-texclass=\"OPEN\">(</mo>
+        <mtable columnspacing=\"1em\" rowspacing=\"4pt\">
+          <mtr>
+            <mtd>
+              <mi data-latex=\"a\">a</mi>
+            </mtd>
+            <mtd>
+              <mi data-latex=\"b\">b</mi>
+            </mtd>
+          </mtr>
+          <mtr>
+            <mtd>
+              <mi data-latex=\"c\">c</mi>
+            </mtd>
+            <mtd>
+              <mi data-latex=\"d\">d</mi>
+            </mtd>
+          </mtr>
+        </mtable>
+        <mo data-mjx-texclass=\"CLOSE\">)</mo>
+      </mrow>
+    </math>`
+    ));
+  it('Crampedsubarray', () =>
+    toXmlMatch(
+      tex2mml('\\begin{crampedsubarray}{cc} a & b \\\\ c & d \\end{crampedsubarray}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{crampedsubarray}{cc} a &amp; b \\\\ c &amp; d \\end{crampedsubarray}\" display=\"block\">
+      <mtable data-mjx-smallmatrix=\"true\" columnspacing=\"0em\" rowspacing=\"0.1em\" columnalign=\"center center\" data-cramped=\"true\" data-latex-item=\"{crampedsubarray}\" data-latex=\"\\begin{crampedsubarray}{cc} a &amp; b \\\\ c &amp; d \\end{crampedsubarray}\">
+        <mtr data-latex-item=\"{cc}\" data-latex=\"{cc}\">
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"b\">b</mi>
+          </mtd>
+        </mtr>
+        <mtr data-latex-item=\"{cc}\" data-latex=\"{cc}\">
+          <mtd>
+            <mi data-latex=\"c\">c</mi>
+          </mtd>
+          <mtd>
+            <mi data-latex=\"d\">d</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+  it('Gather', () =>
+    toXmlMatch(
+      tex2mml('\\begin{gather}a\\end{gather}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{gather}a\\end{gather}\" display=\"block\">
+      <mtable displaystyle=\"true\" columnspacing=\"1em\" rowspacing=\"3pt\" data-break-align=\"middle\" data-latex-item=\"{gather}\" data-latex=\"\\begin{gather}a\\end{gather}\">
+        <mtr>
+          <mtd>
+            <mi data-latex=\"a\">a</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
 });
-
 
 afterAll(() => getTokens('base'));
 
-// describe('', () => {
-//   it('', () =>
-//     toXmlMatch(
-//       tex2mml(''),
-//       ``
-//     ));
-// });
-
-// Do we still use LineBreakStyle? This comes from different MO entries in the operator table
-// Lines in BaseItems: 552-554 Where does 'insert' come from?
-
-// pnpm -s test -- testsuite/tests/input/tex/Base.test.ts --collectCoverageFrom="./mjs/input/tex/base/*.js" &> /tmp/base.out42
