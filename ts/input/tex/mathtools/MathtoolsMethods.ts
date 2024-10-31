@@ -516,11 +516,15 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
     const star = parser.GetStar();
     if (top.EndEntry) {
       MathtoolsMethods.FlushSpaceAbove(parser, '\\MTFlushSpaceAbove');
-      !star && top.EndEntry();
+      if (!star) {
+        top.EndEntry();
+      }
     }
     MathtoolsMethods.VDotsWithin(parser, '\\vdotswithin');
     if (top.EndEntry) {
-      star && top.EndEntry();
+      if (star) {
+        top.EndEntry();
+      }
       MathtoolsMethods.FlushSpaceBelow(parser, '\\MTFlushSpaceBelow');
     }
   },
@@ -550,7 +554,9 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
   FlushSpaceBelow(parser: TexParser, name: string) {
     const top = MathtoolsUtil.checkAlignment(parser, name);
     if (top.table) {
-      top.Size() && top.EndEntry();
+      if (top.Size()) {
+        top.EndEntry();
+      }
       top.EndRow();
       top.addRowSpacing(
         '-' + parser.options.mathtools['shortvdotsadjustbelow']

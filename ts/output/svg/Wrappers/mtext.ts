@@ -171,7 +171,9 @@ export const SvgMtext = (function <N, T, D>(): SvgMtextClass<N, T, D> {
         while (++si < ei && si < childNodes.length) {
           const child = childNodes[si];
           child.toSVG(DOM);
-          child.dom && child.place(x, 0);
+          if (child.dom) {
+            child.place(x, 0);
+          }
           x += child.getBBox().w;
         }
         //

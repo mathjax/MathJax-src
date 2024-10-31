@@ -307,7 +307,9 @@ export const ParseUtil = {
         closeNode
       );
     }
-    color && mo.attributes.set('mathcolor', color);
+    if (color) {
+      mo.attributes.set('mathcolor', color);
+    }
     NodeUtil.appendChildren(mrow, [mo]);
     return mrow;
   },
@@ -823,7 +825,9 @@ export const ParseUtil = {
       options.addNode(n.kind, n);
       const lists = ((n.getProperty('in-lists') as string) || '').split(/,/);
       for (const list of lists) {
-        list && options.addNode(list, n);
+        if (list) {
+          options.addNode(list, n);
+        }
       }
     });
     return tree;

@@ -1671,7 +1671,9 @@ export class Menu {
       getter: () => this.settings[name],
       setter: (value: T) => {
         (this.settings as any)[name] = value;
-        action && action(value);
+        if (action) {
+          action(value);
+        }
         this.saveUserSettings();
       },
     };
@@ -1697,7 +1699,9 @@ export class Menu {
       setter: (value: T) => {
         (this.settings as any)[name] = value;
         this.setA11y({ [name]: value });
-        action && action(value);
+        if (action) {
+          action(value);
+        }
         this.saveUserSettings();
       },
     };

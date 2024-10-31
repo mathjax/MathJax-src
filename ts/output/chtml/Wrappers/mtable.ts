@@ -719,11 +719,12 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
       for (let i = 0; i < this.numRows; i++) {
         const row = this.childNodes[i];
         if (row.node.isKind('mlabeledtr')) {
-          h &&
+          if (h) {
             adaptor.insert(
               this.html('mjx-mtr', { style: { height: this.em(h) } }),
               current
             );
+          }
           adaptor.setStyle(
             current,
             'height',

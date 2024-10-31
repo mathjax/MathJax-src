@@ -763,8 +763,9 @@ export abstract class AbstractMmlNode
         Object.hasOwn(AbstractMmlNode.alwaysInherit, key)
       ) {
         const [node, value] = attributes[key];
-        !AbstractMmlNode.noInherit[node]?.[this.kind]?.[key] &&
+        if (!AbstractMmlNode.noInherit[node]?.[this.kind]?.[key]) {
           this.attributes.setInherited(key, value);
+        }
       }
       if (AbstractMmlNode.stopInherit[this.kind]?.[key]) {
         attributes = { ...attributes };
@@ -1482,7 +1483,7 @@ export class XMLNode extends AbstractMmlEmptyNode {
    * @returns {XMLNode}  The XML node (for chaining of method calls)
    */
   public setXML(
-    xml: Object, // eslint-disable-line
+    xml: Object, // eslint-disable-line @typescript-eslint/no-wrapper-object-types
     adaptor: DOMAdaptor<any, any, any> = null
   ): XMLNode {
     this.xml = xml;

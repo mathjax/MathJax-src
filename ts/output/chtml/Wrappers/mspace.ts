@@ -129,10 +129,11 @@ export const ChtmlMspace = (function <N, T, D>(): ChtmlMspaceClass<N, T, D> {
      * @override
      */
     public toCHTML(parents: N[]) {
-      parents.length > 1 &&
+      if (parents.length > 1) {
         parents.forEach((dom) =>
           this.adaptor.append(dom, this.html('mjx-linestrut'))
         );
+      }
       const chtml = this.standardChtmlNodes(parents);
       let { w, h, d } = this.getBBox();
       if (w < 0) {

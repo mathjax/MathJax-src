@@ -950,7 +950,9 @@ export function CommonScriptbaseMixin<
         );
       const bbox = this.baseChild.getLineBBox(i).copy();
       if (i < n) {
-        i === 0 && this.addLeftBorders(bbox);
+        if (i === 0) {
+          this.addLeftBorders(bbox);
+        }
         this.addMiddleBorders(bbox);
       } else {
         this.appendScripts(bbox);

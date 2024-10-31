@@ -379,7 +379,9 @@ function requestXML(
     request.onreadystatechange = function () {
       if (request.readyState === 4) {
         if (request.status === 200) {
-          !action(JSON.parse(request.responseText)) && failure();
+          if (!action(JSON.parse(request.responseText))) {
+            failure();
+          }
         } else {
           Error(
             'Problem acquiring MathJax version: status = ' + request.status
