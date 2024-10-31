@@ -1018,6 +1018,11 @@ export class ArrayItem extends BaseItem {
   };
 
   /**
+   * Substitution count for template substitutions (to avoid infinite loops)
+   */
+  public templateSubs: number = 0;
+
+  /**
    * The TeX parser that created this item
    */
   public parser: TexParser;
@@ -1207,6 +1212,18 @@ export class ArrayItem extends BaseItem {
       //
       if (ralign) {
         entry = '\\text{' + entry.trim() + '}';
+      }
+      if (start || end || ralign) {
+        if (
+          ++this.templateSubs >
+          parser.configuration.options.maxTemplateSubtitutions
+        ) {
+          throw new TexError(
+            'MaxTemplateSubs',
+            'Maximum template substitutions exceeded; ' +
+              'is there an invalid use of \\\\ in the template?'
+          );
+        }
       }
     }
     //
