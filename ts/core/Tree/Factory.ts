@@ -107,6 +107,7 @@ interface AbstractFactoryClass<
   N extends FactoryNode,
   C extends FactoryNodeClass<N>,
 > extends Function {
+  // eslint-disable-line
   defaultNodes: { [kind: string]: C };
 }
 

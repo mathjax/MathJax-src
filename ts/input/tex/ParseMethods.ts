@@ -28,6 +28,8 @@ import NodeUtil from './NodeUtil.js';
 import { TexConstant } from './TexConstants.js';
 import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import { ParseUtil } from './ParseUtil.js';
+import { ParseMethod } from './Types.js';
+import { StackItem } from './StackItem.js';
 
 const MATHVARIANT = TexConstant.Variant;
 
@@ -207,14 +209,14 @@ namespace ParseMethods {
   export function environment(
     parser: TexParser,
     env: string,
-    func: Function,
+    func: ParseMethod,
     args: any[]
   ) {
     const end = args[0];
     let mml = parser.itemFactory
       .create('begin')
       .setProperties({ name: env, end: end });
-    mml = func(parser, mml, ...args.slice(1));
+    mml = func(parser, mml, ...args.slice(1)) as StackItem;
     parser.Push(mml);
   }
 }
