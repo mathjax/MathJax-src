@@ -678,9 +678,9 @@ export class SpeechExplorer
   }
 
   /**
-   * @returns The semantic node that is currently focused.
+   * @returns {Sre.semanticNode} The semantic node that is currently focused.
    */
-  public semanticFocus() {
+  public semanticFocus(): Sre.semanticNode {
     const node = this.current || this.node;
     const id = node.getAttribute('data-semantic-id');
     const stree = this.generators.speechGenerator.getRebuilt()?.stree;

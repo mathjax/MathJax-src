@@ -141,6 +141,7 @@ export class MmlMo extends AbstractMmlTokenNode {
    *  (property mathaccent = true)
    */
   /* prettier-ignore */
+  /* eslint-disable no-misleading-character-class */
   protected static mathaccents = new RegExp([
     '^[',
     '\u00B4\u0301\u02CA',  // acute

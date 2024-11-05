@@ -29,6 +29,7 @@ import { ClearspeakPreferences } from '#sre/speech_rules/clearspeak_preferences.
 import { Highlighter } from '#sre/highlighter/highlighter.js';
 import * as HighlighterFactory from '#sre/highlighter/highlighter_factory.js';
 import { SpeechGenerator } from '#sre/speech_generator/speech_generator.js';
+import { SemanticNode } from '#sre/semantic_tree/semantic_node.js';
 import { parseInput } from '#sre/common/dom_util.js';
 import { Variables } from '#sre/common/variables.js';
 import MathMaps from './mathmaps.js';
@@ -37,6 +38,8 @@ export namespace Sre {
   export type highlighter = Highlighter;
 
   export type speechGenerator = SpeechGenerator;
+
+  export type semanticNode = SemanticNode;
 
   export const locales = Variables.LOCALES;
 

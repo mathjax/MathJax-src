@@ -1012,7 +1012,7 @@ export function CommonMtableMixin<
     public getEqualRowHeight(): number {
       const { H, D } = this.getTableData();
       const HD = Array.from(H.keys()).map((i) => H[i] + D[i]);
-      return Math.max.apply(Math, HD);
+      return Math.max(...HD);
     }
 
     /**

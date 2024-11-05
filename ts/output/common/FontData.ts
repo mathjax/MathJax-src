@@ -351,9 +351,13 @@ export interface FontExtensionData<
  * @param {OptionList} obj The target options list.
  * @param {string} dst Name of the option to merge into.
  * @param {OptionList} src The options to be merged.
- * @returns The options for `dst`.
+ * @returns {OptionList} The options for `dst`.
  */
-export function mergeOptions(obj: OptionList, dst: string, src: OptionList) {
+export function mergeOptions(
+  obj: OptionList,
+  dst: string,
+  src: OptionList
+): OptionList {
   return src ? defaultOptions(obj, { [dst]: src })[dst] : obj[dst];
 }
 
@@ -464,6 +468,7 @@ export class FontData<
    * Variant locations in the Math Alphabnumerics block:
    *  [upper-alpha, lower-alpha, upper-Greek, lower-Greek, numbers]
    */
+  /* eslint-disable no-sparse-arrays */
   public static VariantSmp: { [name: string]: SmpData | string } = {
     bold: [
       0x1d400,
@@ -966,7 +971,7 @@ export class FontData<
       mergeOptions({ cssFonts: {} }, 'cssFonts', data.cssFonts)
     );
     this.createVariants(
-      mergeOptions({ variants: [] }, 'variants', data.variants)
+      mergeOptions({ variants: [] }, 'variants', data.variants) as string[][]
     );
     if (data.delimiters) {
       this.defineDelimiters(
