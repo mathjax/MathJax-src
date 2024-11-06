@@ -802,7 +802,7 @@ export class FnItem extends BaseItem {
       return [[top, node, item], true];
     }
     // @test Mathop Super, Mathop Sub
-    return super.checkItem.apply(this, arguments);
+    return super.checkItem(item);
   }
 }
 

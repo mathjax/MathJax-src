@@ -97,12 +97,11 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
       rspace: 0,
     };
 
-    if (c === '.') {
-    } else if (c === '|') {
+    if (c === '|') {
       mml = parser.create('token', 'mo', vdef, '\u2225');
     } else if (c === '=') {
       mml = parser.create('token', 'mo', hdef, '=');
-    } else {
+    } else if (c !== '.') {
       //
       //  for @>>> @<<< @VVV and @AAA, get the arrow and labels
       //

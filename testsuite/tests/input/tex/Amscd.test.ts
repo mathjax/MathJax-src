@@ -712,6 +712,37 @@ describe('AmsCD', () => {
   </mtable>
 </math>`
     ));
+  it('Suspicious Return', () =>
+    toXmlMatch(
+      tex2mml('\\begin{CD}A @Ra>> BaD\\end{CD}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{CD}A @Ra&gt;&gt; BaD\\end{CD}\" display=\"block\">
+      <mtable columnspacing=\"5pt\" rowspacing=\"5pt\" displaystyle=\"true\" data-latex-item=\"{CD}\" data-latex=\"\\begin{CD}A @Ra&gt;&gt; BaD\\end{CD}\">
+        <mtr>
+          <mtd>
+            <mi data-latex=\"A\">A</mi>
+            <mrow data-mjx-texclass=\"ORD\">
+              <mo data-latex=\"@\">@</mo>
+            </mrow>
+            <mi data-latex=\"R\">R</mi>
+            <mi data-latex=\"a\">a</mi>
+            <mo data-latex=\"&gt;\">&gt;&gt;</mo>
+            <mi data-latex=\"B\">B</mi>
+            <mi data-latex=\"a\">a</mi>
+            <mi data-latex=\"D\">D</mi>
+          </mtd>
+        </mtr>
+      </mtable>
+    </math>`
+    ));
+});
+
+describe.skip('AmsCD Options', () => {
+  beforeEach(() => setupTex(['base', 'amscd'], { amscd: {hideHorizontalLabels: true } }));
+  it('Hide Horizontal Labels', () =>
+    toXmlMatch(
+      tex2mml('\\begin{CD}A @>a>> B\\\\@VVbV @VVcV\\\\C @>d>> D\\end{CD}'),
+      ``
+    ));
 });
 
 afterAll(() => getTokens('amscd'));
