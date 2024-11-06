@@ -23,7 +23,7 @@
 
 import { PrioritizedList, PrioritizedListItem } from './PrioritizedList.js';
 
-type AnyFunction = (...args: any[]) => any;
+type AnyFunction = (...args: unknown[]) => unknown;
 
 /*****************************************************************/
 /**
