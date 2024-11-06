@@ -28,7 +28,16 @@ import { Macro, Token } from '../Token.js';
 import { Args, Attributes, ParseMethod } from '../Types.js';
 import * as sm from '../TokenMap.js';
 
-namespace NewcommandUtil {
+/**
+ * Naming constants for the extension mappings.
+ */
+export enum NewcommandTables {
+  NEW_DELIMITER = 'new-Delimiter',
+  NEW_COMMAND = 'new-Command',
+  NEW_ENVIRONMENT = 'new-Environment',
+}
+
+export const NewcommandUtil = {
   /**
    * Get the next CS name or give an error.
    *
@@ -36,7 +45,7 @@ namespace NewcommandUtil {
    * @param {string} cmd The string starting with a control sequence.
    * @returns {string} The control sequence.
    */
-  export function GetCSname(parser: TexParser, cmd: string): string {
+  GetCSname(parser: TexParser, cmd: string): string {
     // @test Def ReDef, Let Bar, Let Brace Equal
     const c = parser.GetNext();
     if (c !== '\\') {
@@ -49,7 +58,7 @@ namespace NewcommandUtil {
     }
     const cs = UnitUtil.trimSpaces(parser.GetArgument(cmd));
     return cs.substring(1);
-  }
+  },
 
   /**
    * Get a control sequence name as an argument (doesn't require the backslash)
@@ -58,7 +67,7 @@ namespace NewcommandUtil {
    * @param {string} name The macro that is getting the name.
    * @returns {string} The control sequence.
    */
-  export function GetCsNameArgument(parser: TexParser, name: string): string {
+  GetCsNameArgument(parser: TexParser, name: string): string {
     let cs = UnitUtil.trimSpaces(parser.GetArgument(name));
     if (cs.charAt(0) === '\\') {
       // @test Newcommand Simple
@@ -73,7 +82,7 @@ namespace NewcommandUtil {
       );
     }
     return cs;
-  }
+  },
 
   /**
    * Get the number of arguments for a macro definition
@@ -82,7 +91,7 @@ namespace NewcommandUtil {
    * @param {string} name The macro that is getting the argument count.
    * @returns {string} The number of arguments (or blank).
    */
-  export function GetArgCount(parser: TexParser, name: string): string {
+  GetArgCount(parser: TexParser, name: string): string {
     let n = parser.GetBrackets(name);
     if (n) {
       // @test Newcommand Optional, Newcommand Arg, Newcommand Arg Optional
@@ -98,7 +107,7 @@ namespace NewcommandUtil {
       }
     }
     return n;
-  }
+  },
 
   /**
    * Get a \def parameter template.
@@ -109,11 +118,7 @@ namespace NewcommandUtil {
    * @returns {number | string[]} The number of parameters or a string array if
    *     there is an optional argument.
    */
-  export function GetTemplate(
-    parser: TexParser,
-    cmd: string,
-    cs: string
-  ): number | string[] {
+  GetTemplate(parser: TexParser, cmd: string, cs: string): number | string[] {
     // @test Def Double Let, Def ReDef, Def Let
     let c = parser.GetNext();
     const params: string[] = [];
@@ -169,7 +174,7 @@ namespace NewcommandUtil {
       'Missing replacement string for definition of %1',
       cmd
     );
-  }
+  },
 
   /**
    * Find a single parameter delimited by a trailing template.
@@ -179,11 +184,7 @@ namespace NewcommandUtil {
    * @param {string} param The parameter for the macro.
    * @returns {string} The parameter.
    */
-  export function GetParameter(
-    parser: TexParser,
-    name: string,
-    param: string
-  ): string {
+  GetParameter(parser: TexParser, name: string, param: string): string {
     if (param == null) {
       // @test Def Let, Def Optional Brace, Def Options CS
       return parser.GetArgument(name);
@@ -202,7 +203,7 @@ namespace NewcommandUtil {
         }
         parser.GetArgument(name);
         j = parser.i - i;
-      } else if (MatchParam(parser, param)) {
+      } else if (this.MatchParam(parser, param)) {
         // @test Def Let, Def Optional Brace, Def Options CS
         if (hasBraces) {
           // @test Def Optional Brace
@@ -230,7 +231,7 @@ namespace NewcommandUtil {
     }
     // @test Runaway Argument
     throw new TexError('RunawayArgument', 'Runaway argument for %1?', name);
-  }
+  },
 
   /**
    * Check if a template is at the current location.
@@ -241,7 +242,7 @@ namespace NewcommandUtil {
    * @param {string} param Tries to match an optional parameter.
    * @returns {number} The number of optional parameters, either 0 or 1.
    */
-  export function MatchParam(parser: TexParser, param: string): number {
+  MatchParam(parser: TexParser, param: string): number {
     // @test Def Let, Def Optional Brace, Def Options CS
     if (parser.string.substring(parser.i, parser.i + param.length) !== param) {
       // @test Def Let, Def Options CS
@@ -257,7 +258,7 @@ namespace NewcommandUtil {
     // @test Def Let, Def Optional Brace, Def Options CS
     parser.i += param.length;
     return 1;
-  }
+  },
 
   /**
    * Adds a new delimiter as extension to the parser.
@@ -267,16 +268,13 @@ namespace NewcommandUtil {
    * @param {string} char The corresponding character.
    * @param {Attributes} attr The attributes needed for parsing.
    */
-  export function addDelimiter(
-    parser: TexParser,
-    cs: string,
-    char: string,
-    attr: Attributes
-  ) {
+  addDelimiter(parser: TexParser, cs: string, char: string, attr: Attributes) {
     const handlers = parser.configuration.handlers;
-    const handler = handlers.retrieve(NEW_DELIMITER) as sm.DelimiterMap;
+    const handler = handlers.retrieve(
+      NewcommandTables.NEW_DELIMITER
+    ) as sm.DelimiterMap;
     handler.add(cs, new Token(cs, char, attr));
-  }
+  },
 
   /**
    * Adds a new macro as extension to the parser.
@@ -288,7 +286,7 @@ namespace NewcommandUtil {
    * @param {string=} token Optionally original token for macro, in case it is
    *     different from the control sequence.
    */
-  export function addMacro(
+  addMacro(
     parser: TexParser,
     cs: string,
     func: ParseMethod,
@@ -296,9 +294,11 @@ namespace NewcommandUtil {
     token: string = ''
   ) {
     const handlers = parser.configuration.handlers;
-    const handler = handlers.retrieve(NEW_COMMAND) as sm.CommandMap;
+    const handler = handlers.retrieve(
+      NewcommandTables.NEW_COMMAND
+    ) as sm.CommandMap;
     handler.add(cs, new Macro(token ? token : cs, func, attr));
-  }
+  },
 
   /**
    * Adds a new environment as extension to the parser.
@@ -308,23 +308,16 @@ namespace NewcommandUtil {
    * @param {ParseMethod} func The parse method for this macro.
    * @param {Args[]} attr The attributes needed for parsing.
    */
-  export function addEnvironment(
+  addEnvironment(
     parser: TexParser,
     env: string,
     func: ParseMethod,
     attr: Args[]
   ) {
     const handlers = parser.configuration.handlers;
-    const handler = handlers.retrieve(NEW_ENVIRONMENT) as sm.EnvironmentMap;
+    const handler = handlers.retrieve(
+      NewcommandTables.NEW_ENVIRONMENT
+    ) as sm.EnvironmentMap;
     handler.add(env, new Macro(env, func, attr));
-  }
-
-  /**
-   * Naming constants for the extension mappings.
-   */
-  export const NEW_DELIMITER = 'new-Delimiter';
-  export const NEW_COMMAND = 'new-Command';
-  export const NEW_ENVIRONMENT = 'new-Environment';
-}
-
-export default NewcommandUtil;
+  },
+};

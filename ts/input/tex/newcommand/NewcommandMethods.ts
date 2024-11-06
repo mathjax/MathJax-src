@@ -31,7 +31,7 @@ import BaseMethods from '../base/BaseMethods.js';
 import { ParseUtil } from '../ParseUtil.js';
 import { UnitUtil } from '../UnitUtil.js';
 import { StackItem } from '../StackItem.js';
-import NewcommandUtil from './NewcommandUtil.js';
+import { NewcommandUtil } from './NewcommandUtil.js';
 
 // Namespace
 const NewcommandMethods: { [key: string]: ParseMethod } = {
@@ -275,9 +275,11 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
     if (n) {
       // @test Newenvironment Optional, Newenvironment Arg Optional
       const args: string[] = [];
+      // Note, here we test against undefined and null, so need `!=`.
       if (def != null) {
         // @test Newenvironment Optional, Newenvironment Arg Optional
         const optional = parser.GetBrackets('\\begin{' + begin.getName() + '}');
+        // Note, here we test against undefined and null, so need `==`.
         args.push(optional == null ? def : optional);
       }
       for (let i = args.length; i < n; i++) {
