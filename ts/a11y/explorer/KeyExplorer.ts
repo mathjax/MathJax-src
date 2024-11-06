@@ -34,7 +34,7 @@ import { ExplorerPool } from './ExplorerPool.js';
 import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import { honk, InPlace } from '../speech/SpeechUtil.js';
 import { GeneratorPool } from '../speech/GeneratorPool.js';
-import { Sre } from '../sre.js';
+import * as Sre from '../sre.js';
 
 /**
  * Interface for keyboard explorers. Adds the necessary keyboard events.

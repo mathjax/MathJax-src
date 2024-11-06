@@ -21,7 +21,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import Sre from '../sre.js';
+import * as Sre from '../sre.js';
 
 const ProsodyKeys = ['pitch', 'rate', 'volume'];
 

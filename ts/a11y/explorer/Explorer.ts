@@ -22,7 +22,7 @@
  */
 
 import { A11yDocument, Region } from './Region.js';
-import { Sre } from '../sre.js';
+import * as Sre from '../sre.js';
 
 import type { ExplorerPool } from './ExplorerPool.js';
 

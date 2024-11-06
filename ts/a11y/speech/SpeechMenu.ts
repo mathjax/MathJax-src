@@ -24,7 +24,7 @@
 import { ExplorerMathItem } from '../explorer.js';
 import { MJContextMenu } from '../../ui/menu/MJContextMenu.js';
 import { SubMenu, Submenu } from '../../ui/menu/mj-context-menu.js';
-import { Sre } from '../sre.js';
+import * as Sre from '../sre.js';
 
 /**
  * Values for the ClearSpeak preference variables.

@@ -16,7 +16,7 @@
  */
 
 import { mathjax } from '../../mathjax.js';
-import { Sre } from '../sre.js';
+import * as Sre from '../sre.js';
 import { OptionList } from '../../util/Options.js';
 import { LiveRegion } from '../explorer/Region.js';
 import { buildLabel, buildSpeech, InPlace } from '../speech/SpeechUtil.js';
