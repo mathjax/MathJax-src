@@ -16,7 +16,7 @@
  */
 
 /**
- * @file  A visitor that produces MathML DOM nodes from the iternal nodes
+ * @file  A visitor that produces MathML DOM nodes from the internal nodes
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */

@@ -40,11 +40,7 @@ import {
 } from './package.js';
 import { FunctionList } from '../util/FunctionList.js';
 import { mjxRoot } from '#root/root.js';
-
-/*
- * The browser document (if any)
- */
-declare const document: Document;
+import { context } from '../util/context.js';
 
 /**
  * Function used to determine path to a given package.
@@ -269,11 +265,11 @@ export namespace Loader {
    * @returns {string}   The root location (directory for node.js, URL for browser)
    */
   export function getRoot(): string {
-    if (typeof document !== 'undefined') {
+    if (context.document) {
       const script =
-        document.currentScript || document.getElementById('MathJax-script');
-      if (script) {
-        return (script as HTMLScriptElement).src.replace(/\/[^/]*$/, '');
+        context.document.currentScript || context.document.getElementById('MathJax-script');
+      if (script && script instanceof HTMLScriptElement) {
+        return script.src.replace(/\/[^/]*$/, '');
       }
     }
     return mjxRoot();

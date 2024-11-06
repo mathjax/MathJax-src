@@ -33,6 +33,7 @@ import {
 import { MathDocumentConstructor } from '../core/MathDocument.js';
 import { OptionList, expandable } from '../util/Options.js';
 import { SerializedMmlVisitor } from '../core/MmlTree/SerializedMmlVisitor.js';
+import { hasWindow } from '../util/context.js';
 
 import { ExplorerPool, RegionPool } from './explorer/ExplorerPool.js';
 
@@ -50,8 +51,6 @@ export type HANDLER = Handler<HTMLElement, Text, Document>;
 export type HTMLDOCUMENT = EnrichedMathDocument<HTMLElement, Text, Document>;
 export type HTMLMATHITEM = EnrichedMathItem<HTMLElement, Text, Document>;
 export type MATHML = MathML<HTMLElement, Text, Document>;
-
-const hasWindow = typeof window !== 'undefined';
 
 /*==========================================================================*/
 
