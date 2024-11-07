@@ -385,7 +385,7 @@ export class MmlMo extends AbstractMmlTokenNode {
       // Check if node is the last one in its container since the rule
       // above only takes effect if there is a node that follows.
       //
-      let child: MmlNode = this;
+      let child: MmlNode = this; // eslint-disable-line @typescript-eslint/no-this-alias
       let parent = this.parent;
       while (
         parent &&
@@ -472,7 +472,7 @@ export class MmlMo extends AbstractMmlTokenNode {
    *                                     position of the element in its parent.
    */
   public getForms(): [string, string, string] {
-    let core: MmlNode = this;
+    let core: MmlNode = this; // eslint-disable-line @typescript-eslint/no-this-alias
     let parent = this.parent;
     let Parent = this.Parent;
     while (Parent && Parent.isEmbellished) {
