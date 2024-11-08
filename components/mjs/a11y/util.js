@@ -5,9 +5,9 @@ import './semantic-enrich/semantic-enrich.js';
 import './explorer/explorer.js';
 import {MathMaps} from '#js/a11y/mathmaps.js';
 
-const base = require('speech-rule-engine/lib/mathmaps/base.json');
-const en = require('speech-rule-engine/lib/mathmaps/en.json');
-const nemeth = require('speech-rule-engine/lib/mathmaps/nemeth.json');
+import base from 'speech-rule-engine/lib/mathmaps/base.json' with {type: 'json'};
+import en from 'speech-rule-engine/lib/mathmaps/en.json' with {type: 'json'};
+import nemeth from 'speech-rule-engine/lib/mathmaps/nemeth.json' with {type: 'json'};
 
 Loader.preLoad(
   'a11y/sre',
