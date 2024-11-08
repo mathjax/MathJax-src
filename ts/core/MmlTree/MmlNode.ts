@@ -1176,23 +1176,21 @@ export abstract class AbstractMmlBaseNode extends AbstractMmlNode {
     this.getPrevClass(prev);
     this.texClass = TEXCLASS.ORD;
     const base = this.childNodes[0];
+    let result = null;
     if (base) {
       if (this.isEmbellished || base.isKind('mi')) {
-        prev = base.setTeXclass(prev);
+        result = base.setTeXclass(prev);
         this.updateTeXclass(this.core());
       } else {
         base.setTeXclass(null);
-        prev = this;
       }
-    } else {
-      prev = this;
     }
     for (const child of this.childNodes.slice(1)) {
       if (child) {
         child.setTeXclass(null);
       }
     }
-    return prev;
+    return result || this;
   }
 }
 
