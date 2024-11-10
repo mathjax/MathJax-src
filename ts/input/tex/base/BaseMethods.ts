@@ -1885,7 +1885,6 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     const macro = parser.configuration.handlers
       .get(HandlerType.ENVIRONMENT)
       .lookup(env) as Macro;
-
     if (macro && name === '\\end') {
       // If the first argument is true, we have some sort of user defined
       // environment. Otherwise we have a standard LaTeX environment that is
