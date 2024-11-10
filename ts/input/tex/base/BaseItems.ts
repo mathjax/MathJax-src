@@ -591,13 +591,10 @@ export class BeginItem extends BaseItem {
           item.getName()
         );
       }
-      if (!this.getProperty('end')) {
-        // @test Hfill
-        const node = this.toMml();
-        addLatexItem(node, item);
-        return [[this.factory.create('mml', node)], true];
-      }
-      return BaseItem.fail; // TODO: This case could probably go!
+      // @test Hfill
+      const node = this.toMml();
+      addLatexItem(node, item);
+      return [[this.factory.create('mml', node)], true];
     }
     if (item.isKind('stop')) {
       // @test EnvMissingEnd Array
