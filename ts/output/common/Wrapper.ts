@@ -1013,7 +1013,9 @@ export class CommonWrapper<
     const isTop = this.isTopEmbellished();
     const hasSpacing = this.node.hasSpacingAttributes();
     if (this.jax.options.mathmlSpacing || hasSpacing) {
-      isTop && this.getMathMLSpacing();
+      if (isTop) {
+        this.getMathMLSpacing();
+      }
     } else {
       this.getTeXSpacing(isTop, hasSpacing);
     }

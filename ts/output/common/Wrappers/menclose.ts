@@ -395,7 +395,9 @@ export function CommonMencloseMixin<
     public initializeNotations() {
       for (const name of Object.keys(this.notations)) {
         const init = this.notations[name].init;
-        init && init(this as any);
+        if (init) {
+          init(this as any);
+        }
       }
     }
 

@@ -165,21 +165,27 @@ export const SvgMo = (function <N, T, D>(): SvgMoClass<N, T, D> {
           ? this.fixed(this.getAccentOffset())
           : '0';
         if (u !== '0' || v !== '0') {
-          svg[0] &&
+          if (svg[0]) {
             this.adaptor.setAttribute(
               svg[0],
               'transform',
               `translate(${v} ${u})`
             );
-          svg[1] &&
+          }
+          if (svg[1]) {
             this.adaptor.setAttribute(
               svg[1],
               'transform',
               `translate(${v} ${u})`
             );
+          }
         }
-        svg[0] && this.addChildren([svg[0]]);
-        svg[1] && ((this.multChar || this) as SvgMo).addChildren([svg[1]]);
+        if (svg[0]) {
+          this.addChildren([svg[0]]);
+        }
+        if (svg[1]) {
+          ((this.multChar || this) as SvgMo).addChildren([svg[1]]);
+        }
       }
     }
 

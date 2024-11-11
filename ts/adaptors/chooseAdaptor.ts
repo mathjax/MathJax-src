@@ -27,7 +27,8 @@ import { browserAdaptor } from './browserAdaptor.js';
 let choose;
 
 try {
-  document; // errors if not in browser
+  // errors if not in browser
+  document; // eslint-disable-line @typescript-eslint/no-unused-expressions
   choose = browserAdaptor;
 } catch (_e) {
   choose = liteAdaptor;

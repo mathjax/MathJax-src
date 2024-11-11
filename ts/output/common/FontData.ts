@@ -802,14 +802,17 @@ export class FontData<
         font.defineChars(name, variants[name])
       );
       font.defineDelimiters(delimiters);
-      extension &&
+      if (extension) {
         this.adjustDelimiters(
           font.delimiters,
           Object.keys(delimiters),
           data.sizeN,
           data.stretchN
         );
-      fonts && font.addDynamicFontCss(fonts);
+      }
+      if (fonts) {
+        font.addDynamicFontCss(fonts);
+      }
     };
   }
 

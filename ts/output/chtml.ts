@@ -238,7 +238,9 @@ export class CHTML<N, T, D> extends CommonOutputJax<
       const wrapper = this.factory.getNodeClass(
         kind
       ) as any as typeof _CommonWrapper;
-      wrapper && this.addClassStyles(wrapper, styles);
+      if (wrapper) {
+        this.addClassStyles(wrapper, styles);
+      }
     }
   }
 

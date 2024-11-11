@@ -145,7 +145,9 @@ export const MathtoolsUtil = {
       return parser.create('node', 'none');
     }
     const format = parser.options.mathtools[`prescript-${pos}-format`];
-    format && (arg = `${format}{${arg}}`);
+    if (format) {
+      arg = `${format}{${arg}}`;
+    }
     return new TexParser(arg, parser.stack.env, parser.configuration).mml();
   },
 };

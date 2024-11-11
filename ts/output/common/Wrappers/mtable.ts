@@ -674,7 +674,9 @@ export function CommonMtableMixin<
             ? (this.cWidths[i] as number)
             : null;
         this.stretchColumn(i, width);
-        width !== null && this.breakColumn(i, width, swidths[i]);
+        if (width !== null) {
+          this.breakColumn(i, width, swidths[i]);
+        }
       }
     }
 
@@ -986,7 +988,9 @@ export function CommonMtableMixin<
         this.containerWidth / 10,
         this.containerWidth - pad - (align === 'center' ? pad : 0)
       );
-      this.naturalWidth() > W && this.adjustColumnWidths(W);
+      if (this.naturalWidth() > W) {
+        this.adjustColumnWidths(W);
+      }
     }
 
     /**

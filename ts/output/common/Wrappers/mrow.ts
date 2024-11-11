@@ -277,7 +277,9 @@ export function CommonMrowMixin<
       for (const i of this.childNodes.keys()) {
         const child = this.childNodes[i];
         bbox.append(child.getOuterBBox());
-        breaks && this.computeChildLineBBox(child, i);
+        if (breaks) {
+          this.computeChildLineBBox(child, i);
+        }
       }
       bbox.clean();
       if (breaks && !this.coreMO().node.isEmbellished) {
@@ -303,8 +305,12 @@ export function CommonMrowMixin<
         for (const k of lines.keys()) {
           const line = lines[k];
           this.addMiddleBorders(line);
-          k === 0 && this.addLeftBorders(line);
-          k === n && this.addRightBorders(line);
+          if (k === 0) {
+            this.addLeftBorders(line);
+          }
+          if (k === n) {
+            this.addRightBorders(line);
+          }
         }
       }
       let y = 0;

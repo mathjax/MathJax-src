@@ -401,7 +401,9 @@ export abstract class CommonOutputJax<
     const overflow = math.root.attributes.get('overflow') as string;
     this.adaptor.setAttribute(node, 'overflow', overflow);
     const linebreak = overflow === 'linebreak';
-    linebreak && this.getLinebreakWidth();
+    if (linebreak) {
+      this.getLinebreakWidth();
+    }
     if (
       this.options.linebreaks.inline &&
       !math.display &&

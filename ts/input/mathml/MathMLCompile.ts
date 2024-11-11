@@ -304,7 +304,9 @@ export class MathMLCompile<N, T, D> {
         }
       }
     }
-    mml.isToken && this.trimSpace(mml);
+    if (mml.isToken) {
+      this.trimSpace(mml);
+    }
   }
 
   /**
@@ -406,9 +408,13 @@ export class MathMLCompile<N, T, D> {
   protected trimSpace(mml: MmlNode) {
     let child = mml.childNodes[0] as TextNode;
     if (!child) return;
-    child.isKind('text') && child.setText(child.getText().replace(/^ +/, ''));
+    if (child.isKind('text')) {
+      child.setText(child.getText().replace(/^ +/, ''));
+    }
     child = mml.childNodes[mml.childNodes.length - 1] as TextNode;
-    child.isKind('text') && child.setText(child.getText().replace(/ +$/, ''));
+    if (child.isKind('text')) {
+      child.setText(child.getText().replace(/ +$/, ''));
+    }
   }
   /**
    * @param {string} message  The error message to produce

@@ -418,7 +418,9 @@ export function LazyMathDocumentMixin<
       //  Allocate a process bit for lazyAlways
       //
       const ProcessBits = (this.constructor as typeof HTMLDocument).ProcessBits;
-      !ProcessBits.has('lazyAlways') && ProcessBits.allocate('lazyAlways');
+      if (!ProcessBits.has('lazyAlways')) {
+        ProcessBits.allocate('lazyAlways');
+      }
       //
       //  Set up the lazy observer and other needed data
       //
@@ -438,7 +440,9 @@ export function LazyMathDocumentMixin<
       if (window) {
         let done = false;
         const handler = () => {
-          !done && this.lazyTypesetAll();
+          if (!done) {
+            this.lazyTypesetAll();
+          }
           done = true;
         };
         window.matchMedia('print').addListener(handler); // for Safari
@@ -531,8 +535,9 @@ export function LazyMathDocumentMixin<
         // Mark it as not lazy and remove it from the observer.
         //
         math.lazyCompile = math.lazyTypeset = false;
-        math.lazyMarker &&
+        if (math.lazyMarker) {
           this.lazyObserver.unobserve(math.lazyMarker as any as Element);
+        }
       }
       //
       // If something needs updating
@@ -642,8 +647,9 @@ export function LazyMathDocumentMixin<
           math.state(STATE.TYPESET - 1);
         }
         math.lazyCompile = math.lazyTypeset = false;
-        math.lazyMarker &&
+        if (math.lazyMarker) {
           this.lazyObserver.unobserve(math.lazyMarker as any as Element);
+        }
       }
       return state;
     }
@@ -664,8 +670,9 @@ export function LazyMathDocumentMixin<
           break;
         }
         earlier.lazyCompile = false;
-        earlier.lazyMarker &&
+        if (earlier.lazyMarker) {
           this.lazyObserver.unobserve(earlier.lazyMarker as any as Element);
+        }
         earlier.state(STATE.COMPILED - 1);
         compile = true;
       }
