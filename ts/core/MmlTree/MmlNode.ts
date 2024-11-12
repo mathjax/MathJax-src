@@ -658,12 +658,13 @@ export abstract class AbstractMmlNode
    * @override
    */
   public childPosition() {
-    let child: MmlNode = this; // eslint-disable-line @typescript-eslint/no-this-alias
-    let parent = child.parent;
+    let child: MmlNode = null;
+    let parent = this.parent;
     while (parent && parent.notParent) {
       child = parent;
       parent = parent.parent;
     }
+    child = child || this;
     if (parent) {
       let i = 0;
       for (const node of parent.childNodes) {
