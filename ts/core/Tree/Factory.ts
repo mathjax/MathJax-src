@@ -106,6 +106,7 @@ export interface Factory<N extends FactoryNode, C extends FactoryNodeClass<N>> {
 interface AbstractFactoryClass<
   N extends FactoryNode,
   C extends FactoryNodeClass<N>,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 > extends Function {
   defaultNodes: { [kind: string]: C };
 }

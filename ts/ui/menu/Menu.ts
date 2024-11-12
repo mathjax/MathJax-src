@@ -197,11 +197,11 @@ export class Menu {
   /**
    * Function used to resolve the _loadingPromise
    */
-  protected static _loadingOK: Function = null;
+  protected static _loadingOK: () => void = null;
   /**
    * Function used to reject the _loadingPromise
    */
-  protected static _loadingFailed: Function = null;
+  protected static _loadingFailed: (err: Error) => void = null;
 
   /**
    * The options for this menu

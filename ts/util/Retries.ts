@@ -26,7 +26,11 @@
  *  The legacy MathJax object  (FIXME: remove this after all v2 code is gone)
  */
 
-declare const MathJax: { Callback: { After: Function } };
+declare const MathJax: {
+  Callback: {
+    After: (cb1: () => void, cb2: () => void) => Promise<any>;
+  };
+};
 
 /*****************************************************************/
 /**
