@@ -348,7 +348,6 @@ new sm.DelimiterMap('delimiter', ParseMethods.delimiter, {
   '/': '/',
   '|': ['|', { texClass: TEXCLASS.ORD }],
   '.': '',
-  '\\\\': '\\',
   '\\lmoustache': '\u23B0', // non-standard
   '\\rmoustache': '\u23B1', // non-standard
   '\\lgroup': '\u27EE', // non-standard
@@ -659,7 +658,7 @@ new sm.CommandMap('macros', {
   cr: BaseMethods.Cr,
   '\\': BaseMethods.CrLaTeX,
   newline: [BaseMethods.CrLaTeX, true],
-  hline: [BaseMethods.HLine, 'solid'],
+  hline: BaseMethods.HLine,
   hdashline: [BaseMethods.HLine, 'dashed'],
   //      noalign:            BaseMethods.HandleNoAlign,
   eqalignno: [

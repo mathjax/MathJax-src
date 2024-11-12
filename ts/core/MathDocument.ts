@@ -149,19 +149,27 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
     let convert = true;
     const priority = action[0];
     if (action.length === 1 || typeof action[1] === 'boolean') {
-      action.length === 2 && (convert = action[1] as boolean);
+      if (action.length === 2) {
+        convert = action[1] as boolean;
+      }
       [renderDoc, renderMath] = this.methodActions(id);
     } else if (typeof action[1] === 'string') {
       if (typeof action[2] === 'string') {
-        action.length === 4 && (convert = action[3] as boolean);
+        if (action.length === 4) {
+          convert = action[3] as boolean;
+        }
         const [method1, method2] = action.slice(1) as [string, string];
         [renderDoc, renderMath] = this.methodActions(method1, method2);
       } else {
-        action.length === 3 && (convert = action[2] as boolean);
+        if (action.length === 3) {
+          convert = action[2] as boolean;
+        }
         [renderDoc, renderMath] = this.methodActions(action[1] as string);
       }
     } else {
-      action.length === 4 && (convert = action[3] as boolean);
+      if (action.length === 4) {
+        convert = action[3] as boolean;
+      }
       [renderDoc, renderMath] = action.slice(1) as [
         RenderDoc<N, T, D>,
         RenderMath<N, T, D>,
@@ -189,11 +197,15 @@ export class RenderList<N, T, D> extends PrioritizedList<RenderData<N, T, D>> {
   ): [(document: any) => boolean, (math: any, document: any) => boolean] {
     return [
       (document: any) => {
-        method1 && document[method1]();
+        if (method1) {
+          document[method1]();
+        }
         return false;
       },
       (math: any, document: any) => {
-        method2 && math[method2](document);
+        if (method2) {
+          math[method2](document);
+        }
         return false;
       },
     ];
@@ -1020,11 +1032,18 @@ export abstract class AbstractMathDocument<N, T, D>
    */
   public reset(options: ResetList = { processed: true }) {
     options = userOptions(Object.assign({}, resetOptions), options);
-    options.all && Object.assign(options, resetAllOptions);
-    options.processed && this.processed.reset();
-    options.inputJax &&
+    if (options.all) {
+      Object.assign(options, resetAllOptions);
+    }
+    if (options.processed) {
+      this.processed.reset();
+    }
+    if (options.inputJax) {
       this.inputJax.forEach((jax) => jax.reset(...options.inputJax));
-    options.outputJax && this.outputJax.reset(...options.outputJax);
+    }
+    if (options.outputJax) {
+      this.outputJax.reset(...options.outputJax);
+    }
     return this;
   }
 

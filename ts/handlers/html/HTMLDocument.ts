@@ -124,14 +124,16 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
     nodes: HTMLNodeArray<N, T>
   ): Location<N, T> {
     const adaptor = this.adaptor;
-    for (const list of nodes[N]) {
-      const [node, n] = list;
+    const inc = 1 / (nodes[N].length || 1);
+    let i = N;
+    for (const [node, n] of nodes[N]) {
       if (index <= n && adaptor.kind(node) === '#text') {
-        return { node: node, n: Math.max(index, 0), delim: delim };
+        return { i, node, n: Math.max(index, 0), delim };
       }
       index -= n;
+      i += inc;
     }
-    return { node: null, n: 0, delim: delim };
+    return { node: null, n: 0, delim };
   }
 
   /**

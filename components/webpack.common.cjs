@@ -53,14 +53,10 @@ function quoteRE(string) {
  */
 const PLUGINS = function (js, dir, target, font, jax, name) {
   //
-  // Replace a11y/util and components/mjs/root with the webpack versions
+  // Replace components/mjs/root with the webpack version
   //   and map mathjax-full/js to mathjax-full/${target}
   //
   const plugins = [
-    new webpack.NormalModuleReplacementPlugin(
-      /components\/[cm]js\/a11y\/util\.js/,
-      './util-pack.js'
-    ),
     new webpack.NormalModuleReplacementPlugin(
       /mjs\/components\/mjs\/root\.js/,
       '../../../components/root-pack.js'

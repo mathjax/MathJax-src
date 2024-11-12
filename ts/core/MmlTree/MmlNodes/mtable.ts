@@ -187,7 +187,10 @@ export class MmlMtable extends AbstractMmlNode {
         if (!options['fixMtables']) {
           child.parent.removeChild(child); // remove the child from its mtd or mtr
           child.parent = this; // ... and make it think it is a child of the table again
-          isMtd && mtr.appendChild(factory.create('mtd')); // child will be replaced, so make sure there is an mtd
+          if (isMtd) {
+            // child will be replaced, so make sure there is an mtd
+            mtr.appendChild(factory.create('mtd'));
+          }
           const merror = child.mError(
             'Children of ' + this.kind + ' must be mtr or mlabeledtr',
             options,

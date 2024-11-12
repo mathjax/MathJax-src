@@ -657,7 +657,9 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
       //
       for (const name of Object.keys(this.notations)) {
         const notation = this.notations[name];
-        !notation.renderChild && notation.renderer(this, block);
+        if (!notation.renderChild) {
+          notation.renderer(this, block);
+        }
       }
       //
       //  Add the needed padding, if any
@@ -665,8 +667,9 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
       const pbox = this.getPadding();
       for (const name of Notation.sideNames) {
         const i = Notation.sideIndex[name];
-        pbox[i] > 0 &&
+        if (pbox[i] > 0) {
           adaptor.setStyle(block, 'padding-' + name, this.em(pbox[i]));
+        }
       }
     }
 

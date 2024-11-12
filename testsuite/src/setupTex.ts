@@ -11,7 +11,7 @@ import {MmlNode} from '#js/core/MmlTree/MmlNode';
 import {tmpJsonFile} from './constants';
 import * as fs from 'fs';
 
-let convert: (tex: string) => string;
+let convert: (tex: string, display: boolean) => string;
 
 export function setupTex(packages: string[] = ['base'], options = {}) {
   const parserOptions = Object.assign({}, {packages: packages}, options);
@@ -19,8 +19,8 @@ export function setupTex(packages: string[] = ['base'], options = {}) {
   const html = new HTMLDocument('', liteAdaptor(), {InputJax: tex});
   const visitor = new SerializedMmlVisitor();
   const toMathML = ((node: MmlNode) => visitor.visitTree(node));
-  convert = (expr: string) =>
-    toMathML(html.convert(expr, {display: true, end: STATE.CONVERT}));
+  convert = (expr: string, display: boolean) =>
+    toMathML(html.convert(expr, {display: display, end: STATE.CONVERT}));
 }
 
 import {SVG} from '#js/output/svg';
@@ -31,12 +31,12 @@ export function setupTexWithOutput(packages: string[] = ['base'], options = {}) 
   const html = new HTMLDocument('', liteAdaptor(), {InputJax: tex, OutputJax: new SVG()});
   const visitor = new SerializedMmlVisitor();
   const toMathML = ((node: MmlNode) => visitor.visitTree(node));
-  convert = (expr: string) =>
-    toMathML(html.convert(expr, {display: true, end: STATE.CONVERT}));
+  convert = (expr: string, display: boolean) =>
+    toMathML(html.convert(expr, {display: display, end: STATE.CONVERT}));
 }
 
-export function tex2mml(tex: string) {
-  return convert(tex);
+export function tex2mml(tex: string, display: boolean = true) {
+  return convert(tex, display);
 };
 
 // Machinery for measuring the completeness of our macro tests.
@@ -133,7 +133,7 @@ export function getTokens(configuration: string) {
 // A prototype extension for the macro table lookups.
 AbstractParseMap.prototype.lookup = function(token: string) {
   const result = this.map.get(token);
-  if (result && !token.match(/^\s$/)) {
+  if (result) {
     addToken(this.name, token);
   }
   return result;

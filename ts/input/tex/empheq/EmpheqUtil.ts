@@ -22,9 +22,11 @@
  */
 
 import { ParseUtil } from '../ParseUtil.js';
+import { StackItem } from '../StackItem.js';
 import TexParser from '../TexParser.js';
 import { EnvList } from '../StackItem.js';
 import { AbstractTags } from '../Tags.js';
+import { ParseMethod } from '../Types.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMtable } from '../../../core/MmlTree/MmlNodes/mtable.js';
 import { MmlMtd } from '../../../core/MmlTree/MmlNodes/mtd.js';
@@ -36,15 +38,15 @@ export const EmpheqUtil = {
    *
    * @param {TexParser} parser   The active tex parser.
    * @param {string} env         The environment to create.
-   * @param {Function} func      A function to process the environment.
+   * @param {ParseMethod} func   A function to process the environment.
    * @param {any[]} args         The arguments for func.
    */
-  environment(parser: TexParser, env: string, func: Function, args: any[]) {
+  environment(parser: TexParser, env: string, func: ParseMethod, args: any[]) {
     const name = args[0];
     const item = parser.itemFactory
       .create(name + '-begin')
       .setProperties({ name: env, end: name });
-    parser.Push(func(parser, item, ...args.slice(1)));
+    parser.Push(func(parser, item, ...args.slice(1)) as MmlNode | StackItem);
   },
 
   /**

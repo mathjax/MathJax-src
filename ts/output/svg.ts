@@ -266,8 +266,9 @@ export class SVG<N, T, D> extends CommonOutputJax<
     //
     const [svg, g] = this.createRoot(wrapper);
     this.typesetSvg(wrapper, svg, g);
-    wrapper.node.getProperty('process-breaks') &&
+    if (wrapper.node.getProperty('process-breaks')) {
       this.handleInlineBreaks(wrapper, svg, g);
+    }
     //
     //  Put back the original container
     //

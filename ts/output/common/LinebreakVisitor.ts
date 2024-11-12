@@ -294,7 +294,9 @@ export class LinebreakVisitor<
     const n = wrapper.breakCount;
     for (let i = 0; i <= n; i++) {
       const line = wrapper.lineBBox[i] || wrapper.getLineBBox(i);
-      line.w > W && this.breakLineToWidth(wrapper, i);
+      if (line.w > W) {
+        this.breakLineToWidth(wrapper, i);
+      }
     }
     for (const [ww, ij] of this.state.breaks) {
       if (ij === null) {
@@ -476,9 +478,13 @@ export class LinebreakVisitor<
       this.addWidth(bbox);
     } else {
       const [L, R] = this.getBorderLR(wrapper);
-      i === 0 && this.addWidth(bbox, bbox.L + L);
+      if (i === 0) {
+        this.addWidth(bbox, bbox.L + L);
+      }
       this.visitNode(wrapper.childNodes[0], i);
-      i === wrapper.breakCount && this.addWidth(bbox, bbox.R + R);
+      if (i === wrapper.breakCount) {
+        this.addWidth(bbox, bbox.R + R);
+      }
     }
   }
 
@@ -896,9 +902,13 @@ export class LinebreakVisitor<
     >;
     const bbox = wrapper.getLineBBox(i);
     const [L, R] = this.getBorderLR(wrapper);
-    i === 0 && this.addWidth(bbox, bbox.L + L);
+    if (i === 0) {
+      this.addWidth(bbox, bbox.L + L);
+    }
     this.visitNode(mfenced.mrow as any as WW, i);
-    i === wrapper.breakCount && this.addWidth(bbox, bbox.R + R);
+    if (i === wrapper.breakCount) {
+      this.addWidth(bbox, bbox.R + R);
+    }
   }
 
   /******************************************************************************/
@@ -914,9 +924,13 @@ export class LinebreakVisitor<
     >;
     const bbox = wrapper.getLineBBox(i);
     const [L, R] = this.getBorderLR(wrapper);
-    i === 0 && this.addWidth(bbox, bbox.L + L);
+    if (i === 0) {
+      this.addWidth(bbox, bbox.L + L);
+    }
     this.visitNode(maction.selected, i);
-    i === wrapper.breakCount && this.addWidth(bbox, bbox.R + R);
+    if (i === wrapper.breakCount) {
+      this.addWidth(bbox, bbox.R + R);
+    }
   }
 }
 

@@ -731,7 +731,7 @@ export default class TexParser {
    * @returns {string} The braced expression.
    */
   private composeBracedContent(atom: MmlNode): string {
-    const children = atom.childNodes[0]?.childNodes;
+    const children = atom.childNodes[0]?.childNodes || [];
     let expr = '';
     for (const child of children) {
       const att = (child.attributes?.get(TexConstant.Attr.LATEX) ||

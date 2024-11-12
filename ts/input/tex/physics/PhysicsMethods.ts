@@ -1089,6 +1089,7 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
     parser.Push(
       parser.itemFactory.create('mml', mo).setProperties({ autoclose: true })
     );
+    return true;
   },
 
   /**

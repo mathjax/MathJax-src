@@ -164,20 +164,29 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
     const data = {} as PropertyList;
     const variant = node.attributes.getExplicit('mathvariant') as string;
     const variants = (this.constructor as typeof MmlVisitor).variants;
-    variant &&
-      (node.getProperty('ignore-variant') ||
-        Object.hasOwn(variants, variant)) &&
+    if (
+      variant &&
+      (node.getProperty('ignore-variant') || Object.hasOwn(variants, variant))
+    ) {
       this.setDataAttribute(data, 'variant', variant);
-    node.getProperty('variantForm') &&
+    }
+    if (node.getProperty('variantForm')) {
       this.setDataAttribute(data, 'alternate', '1');
-    node.getProperty('pseudoscript') &&
+    }
+    if (node.getProperty('pseudoscript')) {
       this.setDataAttribute(data, 'pseudoscript', 'true');
-    node.getProperty('autoOP') === false &&
+    }
+    if (node.getProperty('autoOP') === false) {
       this.setDataAttribute(data, 'auto-op', 'false');
+    }
     const vbox = node.getProperty('vbox') as string;
-    vbox && this.setDataAttribute(data, 'vbox', vbox);
+    if (vbox) {
+      this.setDataAttribute(data, 'vbox', vbox);
+    }
     const scriptalign = node.getProperty('scriptalign') as string;
-    scriptalign && this.setDataAttribute(data, 'script-align', scriptalign);
+    if (scriptalign) {
+      this.setDataAttribute(data, 'script-align', scriptalign);
+    }
     const accent = node.getProperty('mathaccent') as boolean;
     if (accent !== undefined) {
       if (
@@ -194,15 +203,17 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
         const name = (node as MmlMi).getText();
         setclass = !(name.length > 1 && name.match(MmlMi.operatorName));
       }
-      setclass &&
+      if (setclass) {
         this.setDataAttribute(
           data,
           'texclass',
           texclass < 0 ? 'NONE' : TEXCLASSNAMES[texclass]
         );
+      }
     }
-    node.getProperty('smallmatrix') &&
+    if (node.getProperty('smallmatrix')) {
       this.setDataAttribute(data, 'smallmatrix', 'true');
+    }
     return data;
   }
 

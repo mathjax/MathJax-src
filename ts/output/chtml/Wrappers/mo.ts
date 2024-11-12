@@ -189,10 +189,11 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       if (stretchy && this.size === null) {
         this.getStretchedVariant([]);
       }
-      parents.length > 1 &&
+      if (parents.length > 1) {
         parents.forEach((dom) =>
           adaptor.append(dom, this.html('mjx-linestrut'))
         );
+      }
       const chtml = this.standardChtmlNodes(parents);
       if (chtml.length > 1 && this.breakStyle !== 'duplicate') {
         const i = this.breakStyle === 'after' ? 1 : 0;
@@ -220,9 +221,12 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
             );
           });
         }
-        chtml[0] && this.addChildren([chtml[0]]);
-        chtml[1] &&
+        if (chtml[0]) {
+          this.addChildren([chtml[0]]);
+        }
+        if (chtml[1]) {
           ((this.multChar || this) as ChtmlMo).addChildren([chtml[1]]);
+        }
       }
     }
 
@@ -271,9 +275,12 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       const properties = { class: this.char(delim.c || c), style: styles };
       const html = this.html('mjx-stretchy-' + delim.dir, properties, content);
       const adaptor = this.adaptor;
-      chtml[0] && adaptor.append(chtml[0], html);
-      chtml[1] &&
+      if (chtml[0]) {
+        adaptor.append(chtml[0], html);
+      }
+      if (chtml[1]) {
         adaptor.append(chtml[1], chtml[0] ? adaptor.clone(html) : html);
+      }
     }
 
     /**
