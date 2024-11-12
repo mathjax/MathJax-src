@@ -17,7 +17,7 @@ export default tseslint.config({
     }
   },
   files: ['ts/**/*.ts'],
-  ignores: ["**/*.d.ts", "**/*.js"],
+  ignores: ["**/*.d.ts", "**/*.js", "**/cjs/*"],
   "rules": {
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unused-vars": ["error",

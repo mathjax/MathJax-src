@@ -21,6 +21,8 @@
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
+import { DOMAdaptor } from '../../core/DOMAdaptor.js';
+import { Metrics } from '../../core/MathItem.js';
 import { AbstractWrapper, WrapperClass } from '../../core/Tree/Wrapper.js';
 import { PropertyList } from '../../core/Tree/Node.js';
 import {
@@ -42,6 +44,7 @@ import { CommonMo } from './Wrappers/mo.js';
 import { CommonMrow } from './Wrappers/mrow.js';
 import { BBox } from '../../util/BBox.js';
 import { LineBBox } from './LineBBox.js';
+import { Linebreaks } from './LinebreakVisitor.js';
 import {
   FontData,
   FontDataClass,
@@ -423,18 +426,18 @@ export class CommonWrapper<
   /**
    * Easy access to the DOMAdaptor object
    *
-   * @returns The DOMAdaptor object
+   * @returns {DOMAdaptor} The DOMAdaptor object
    */
-  get adaptor() {
+  get adaptor(): DOMAdaptor<N, T, D> {
     return this.factory.jax.adaptor;
   }
 
   /**
    * Easy access to the metric data for this node
    *
-   * @returns The metric data for this node
+   * @returns {Metrics} The metric data for this node
    */
-  get metrics() {
+  get metrics(): Metrics {
     return this.factory.jax.math.metrics;
   }
 
@@ -450,18 +453,30 @@ export class CommonWrapper<
   /**
    * Easy access to the linebreak visitor
    *
-   * @returns The linebreak visitor
+   * @returns {Linebreaks} The linebreak visitor
    */
-  get linebreaks() {
+  /* prettier-ignore */
+  get linebreaks(): Linebreaks<
+    N, T, D,
+    CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
+    WW, WF, WC, CC, VV, DD, FD, FC> {
     return this.jax.linebreaks;
   }
 
   /**
    * Easy access to the linebreak options
    *
-   * @returns The linebreak options
+   * @returns {{inline: boolean,
+   *   width: string,
+   *   lineleading: number,
+   *   LinebreakVisitor: null}} The linebreak options
    */
-  get linebreakOptions() {
+  get linebreakOptions(): {
+    inline: boolean;
+    width: string;
+    lineleading: number;
+    LinebreakVisitor: null;
+  } {
     return this.jax.options.linebreaks;
   }
 
