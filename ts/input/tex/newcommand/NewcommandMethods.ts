@@ -263,8 +263,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
         if (edef) {
           // Parse the commands in the end environment definition.
           let rest = parser.string.slice(parser.i);
-          parser.string = edef;
-          parser.i = 0;
+          parser.string = ParseUtil.addArgs(parser, parser.string.substring(0, parser.i), edef);
           parser.Parse();
           // Reset to parsing the remainder of the expression.
           parser.string = rest;
