@@ -475,6 +475,7 @@ export class CommonWrapper<
     inline: boolean;
     width: string;
     lineleading: number;
+    LinebreakVisitor: null;
   } {
     return this.jax.options.linebreaks;
   }
