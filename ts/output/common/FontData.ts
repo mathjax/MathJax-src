@@ -505,7 +505,7 @@ export class FontData<
   ];
 
   /**
-   * Characters to map back top other Unicode positions
+   * Characters to map back to other Unicode positions
    * (holes in the Math Alphanumeric ranges)
    */
   /* prettier-ignore */
