@@ -142,7 +142,6 @@ export class MmlMtable extends AbstractMmlNode {
         this.replaceChild(this.factory.create('mtr'), child).appendChild(child);
       }
     }
-    level = (this.getProperty('scriptlevel') as number) || level;
     display = !!(
       this.attributes.getExplicit('displaystyle') ||
       this.attributes.getDefault('displaystyle')

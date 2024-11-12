@@ -211,10 +211,7 @@ export class MmlVisitor extends AbstractVisitor<MmlNode> {
         );
       }
     }
-    if (
-      node.getProperty('scriptlevel') &&
-      node.getProperty('useHeight') === false
-    ) {
+    if (node.getProperty('smallmatrix')) {
       this.setDataAttribute(data, 'smallmatrix', 'true');
     }
     return data;
