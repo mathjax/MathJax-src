@@ -126,7 +126,7 @@ async function webpackLib(dir) {
     }
     const list = [];
     for (const module of modules) {
-      if (module.moduleType.match(/javascript/)) {
+      if (module.moduleType.match(/javascript|json/)) {
         let name = (module.nameForCondition || module.name)
             .replace(compRE, '[components]')
             .replace(nodeRE, '[node]')

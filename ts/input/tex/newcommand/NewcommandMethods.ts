@@ -257,18 +257,20 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
     if (begin.getProperty('end') && parser.stack.env['closing'] === name) {
       // @test Newenvironment Empty, Newenvironment Content
       delete parser.stack.env['closing'];
-      if (edef && parser.stack.env['processing'] !== name) {
-        // Parse the commands in the end environment definition, and do the \end again
-        parser.stack.env['processing'] = name;
-        parser.string = ParseUtil.addArgs(
-          parser,
-          `${edef}\\end{${begin.getName()}}`,
-          parser.string.slice(parser.i)
-        );
-        parser.i = 0;
-        return null;
+      const beginN = parser.stack.global['beginEnv'] as number;
+      if (beginN) {
+        (parser.stack.global['beginEnv'] as number)--;
+        if (edef) {
+          // Parse the commands in the end environment definition.
+          let rest = parser.string.slice(parser.i);
+          parser.string = edef;
+          parser.i = 0;
+          parser.Parse();
+          // Reset to parsing the remainder of the expression.
+          parser.string = rest;
+          parser.i = 0;
+        }
       }
-      delete parser.stack.env['processing'];
       // Close this environment.
       return parser.itemFactory.create('end').setProperty('name', name);
     }
@@ -278,13 +280,13 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
       // Note, here we test against undefined and null, so need `!=`.
       if (def != null) {
         // @test Newenvironment Optional, Newenvironment Arg Optional
-        const optional = parser.GetBrackets('\\begin{' + begin.getName() + '}');
+        const optional = parser.GetBrackets(`\\begin{${name}}`);
         // Note, here we test against undefined and null, so need `==`.
         args.push(optional == null ? def : optional);
       }
       for (let i = args.length; i < n; i++) {
         // @test Newenvironment Arg Optional
-        args.push(parser.GetArgument('\\begin{' + begin.getName() + '}'));
+        args.push(parser.GetArgument(`\\begin{${name}}`));
       }
       bdef = ParseUtil.substituteArgs(parser, args, bdef);
       edef = ParseUtil.substituteArgs(parser, [], edef); // no args, but get errors for #n in edef
@@ -295,9 +297,10 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
       parser.string.slice(parser.i)
     );
     parser.i = 0;
+    parser.stack.global['beginEnv'] = (parser.stack.global['beginEnv'] as number || 0) + 1;
     return parser.itemFactory
       .create('beginEnv')
-      .setProperty('name', begin.getName());
+      .setProperty('name', name);
   },
 
   Macro: BaseMethods.Macro,
