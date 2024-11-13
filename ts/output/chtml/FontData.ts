@@ -95,8 +95,8 @@ export class ChtmlFontData extends FontData<
    */
   public static OPTIONS = {
     ...FontData.OPTIONS,
-    dynamicPrefix: './output/chtml/fonts',
-    fontURL: 'js/output/chtml/fonts/woff',
+    dynamicPrefix: './chtml/dynamic',
+    fontURL: './chtml/woff2',
   };
 
   /**
@@ -186,7 +186,7 @@ export class ChtmlFontData extends FontData<
       const name = font.slice(4);
       fontStyles[`@font-face /* ${name} */`] = {
         'font-family': font,
-        src: `url("%%URL%%/${font.toLowerCase()}.woff") format("woff")`,
+        src: `url("%%URL%%/${font.toLowerCase()}.woff2") format("woff2")`,
       };
       styles[`.${name}`] = {
         'font-family': `${this.defaultCssFamilyPrefix}, ${font}`,

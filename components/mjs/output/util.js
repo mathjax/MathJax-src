@@ -64,7 +64,7 @@ export const OutputUtil = {
         });
         if (jax === 'chtml') {
           combineDefaults(MathJax.config, jax, {
-            fontURL: Package.resolvePath(`${font}/${jax}/woff`, false),
+            fontURL: Package.resolvePath(`${font}/${jax}/woff2`, false),
           });
         }
 
