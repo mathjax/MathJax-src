@@ -38,7 +38,7 @@ import { HtmlNode } from '../core/MmlTree/MmlNodes/HtmlNode.js';
 import { MathML } from '../input/mathml.js';
 import { SerializedMmlVisitor } from '../core/MmlTree/SerializedMmlVisitor.js';
 import { OptionList, expandable } from '../util/Options.js';
-import { Sre } from './sre.js';
+import * as Sre from './sre.js';
 import { buildSpeech } from './speech/SpeechUtil.js';
 import { GeneratorPool } from './speech/GeneratorPool.js';
 

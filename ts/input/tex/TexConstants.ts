@@ -22,8 +22,8 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-export namespace TexConstant {
-  export const Variant = {
+export const TexConstant = {
+  Variant: {
     NORMAL: 'normal',
     BOLD: 'bold',
     ITALIC: 'italic',
@@ -47,49 +47,49 @@ export namespace TexConstant {
     OLDSTYLE: '-tex-oldstyle',
     BOLDOLDSTYLE: '-tex-bold-oldstyle',
     MATHITALIC: '-tex-mathit',
-  };
+  },
 
-  export const Form = {
+  Form: {
     PREFIX: 'prefix',
     INFIX: 'infix',
     POSTFIX: 'postfix',
-  };
+  },
 
-  export const LineBreak = {
+  LineBreak: {
     AUTO: 'auto',
     NEWLINE: 'newline',
     NOBREAK: 'nobreak',
     GOODBREAK: 'goodbreak',
     BADBREAK: 'badbreak',
-  };
+  },
 
-  export const LineBreakStyle = {
+  LineBreakStyle: {
     BEFORE: 'before',
     AFTER: 'after',
     DUPLICATE: 'duplicate',
     INFIXLINBREAKSTYLE: 'infixlinebreakstyle',
-  };
+  },
 
-  export const IndentAlign = {
+  IndentAlign: {
     LEFT: 'left',
     CENTER: 'center',
     RIGHT: 'right',
     AUTO: 'auto',
     ID: 'id',
     INDENTALIGN: 'indentalign',
-  };
+  },
 
-  export const IndentShift = {
+  IndentShift: {
     INDENTSHIFT: 'indentshift',
-  };
+  },
 
-  export const LineThickness = {
+  LineThickness: {
     THIN: 'thin',
     MEDIUM: 'medium',
     THICK: 'thick',
-  };
+  },
 
-  export const Notation = {
+  Notation: {
     LONGDIV: 'longdiv',
     ACTUARIAL: 'actuarial',
     PHASORANGLE: 'phasorangle',
@@ -108,9 +108,9 @@ export namespace TexConstant {
     NORTHEASTARROW: 'northeastarrow',
     MADRUWB: 'madruwb',
     UPDIAGONALARROW: 'updiagonalarrow',
-  };
+  },
 
-  export const Align = {
+  Align: {
     TOP: 'top',
     BOTTOM: 'bottom',
     CENTER: 'center',
@@ -118,42 +118,42 @@ export namespace TexConstant {
     AXIS: 'axis',
     LEFT: 'left',
     RIGHT: 'right',
-  };
+  },
 
-  export const Lines = {
+  Lines: {
     NONE: 'none',
     SOLID: 'solid',
     DASHED: 'dashed',
-  };
+  },
 
-  export const Side = {
+  Side: {
     LEFT: 'left',
     RIGHT: 'right',
     LEFTOVERLAP: 'leftoverlap',
     RIGHTOVERLAP: 'rightoverlap',
-  };
+  },
 
-  export const Width = {
+  Width: {
     AUTO: 'auto',
     FIT: 'fit',
-  };
+  },
 
-  export const Actiontype = {
+  Actiontype: {
     TOGGLE: 'toggle',
     STATUSLINE: 'statusline',
     TOOLTIP: 'tooltip',
     INPUT: 'input',
-  };
+  },
 
-  export const Overflow = {
+  Overflow: {
     LINBREAK: 'linebreak',
     SCROLL: 'scroll',
     ELIDE: 'elide',
     TRUNCATE: 'truncate',
     SCALE: 'scale',
-  };
+  },
 
-  export const Unit = {
+  Unit: {
     EM: 'em',
     EX: 'ex',
     PX: 'px',
@@ -162,10 +162,10 @@ export namespace TexConstant {
     MM: 'mm',
     PT: 'pt',
     PC: 'pc',
-  };
+  },
 
-  export const Attr = {
+  Attr: {
     LATEX: 'data-latex',
     LATEXITEM: 'data-latex-item',
-  };
-}
+  },
+};

@@ -34,7 +34,7 @@ import NodeUtil from '../NodeUtil.js';
 import { TEXCLASS } from '../../../core/MmlTree/MmlNode.js';
 import { length2em, em } from '../../../util/lengths.js';
 import { lookup } from '../../../util/Options.js';
-import NewcommandUtil from '../newcommand/NewcommandUtil.js';
+import { NewcommandUtil } from '../newcommand/NewcommandUtil.js';
 import NewcommandMethods from '../newcommand/NewcommandMethods.js';
 
 import { MathtoolsTags } from './MathtoolsTags.js';
