@@ -155,14 +155,14 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
 const VERSION = MJGlobal.version;
 
 /**
- * The versions of all the loaded extensions.
- */
-const versions = new Map<string, string>();
-
-/**
  * The implementation of the dynamic loader
  */
 export const Loader = {
+  /**
+   * The versions of all the loaded extensions.
+   */
+  versions: new Map<string, string>(),
+
   /**
    * Get a promise that is resolved when all the named packages have been loaded.
    *
@@ -202,7 +202,10 @@ export const Loader = {
       promises.push(
         extension.promise.then(() => {
           if (!CONFIG.versionWarnings) return;
-          if (extension.isLoaded && !versions.has(Package.resolvePath(name))) {
+          if (
+            extension.isLoaded &&
+            !Loader.versions.has(Package.resolvePath(name))
+          ) {
             console.warn(
               `No version information available for component ${name}`
             );
@@ -304,7 +307,7 @@ export const Loader = {
    * @param {string} name       The name of the extension being checked
    */
   saveVersion(name: string) {
-    versions.set(Package.resolvePath(name), VERSION);
+    Loader.versions.set(Package.resolvePath(name), VERSION);
   },
 
   /**

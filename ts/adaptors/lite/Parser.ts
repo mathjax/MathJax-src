@@ -32,28 +32,22 @@ import { LiteAdaptor } from '../liteAdaptor.js';
 /**
  * Patterns used in parsing serialized HTML
  */
-enum Simple {
-  TAGNAME = '[a-z][^\\s\\n>]*',
-  ATTNAME = '[a-z][^\\s\\n>=]*',
-  VALUE = `(?:'[^']*'|"[^"]*"|[^\\s\\n]+)`,
-  VALUESPLIT = `(?:'([^']*)'|"([^"]*)"|([^\\s\\n]+))`,
-  SPACE = '(?:\\s|\\n)+',
-  OPTIONALSPACE = '(?:\\s|\\n)*',
-}
-
-const Complex = {
-  ATTRIBUTE: `${Simple.ATTNAME}(?:${Simple.OPTIONALSPACE}=${Simple.OPTIONALSPACE}${Simple.VALUE})?`,
-  ATTRIBUTESPLIT: `(${Simple.ATTNAME})(?:${Simple.OPTIONALSPACE}=${Simple.OPTIONALSPACE}${Simple.VALUESPLIT})?`,
-  TAG: '',
-};
-Complex.TAG =
-  `(<(?:${Simple.TAGNAME}(?:${Simple.SPACE}${Complex.ATTRIBUTE})*` +
-  `${Simple.OPTIONALSPACE}/?|/${Simple.TAGNAME}|!--[^]*?--|![^]*?)(?:>|$))`;
+const TAGNAME = '[a-z][^\\s\\n>]*';
+const ATTNAME = '[a-z][^\\s\\n>=]*';
+const VALUE = `(?:'[^']*'|"[^"]*"|[^\\s\\n]+)`;
+const VALUESPLIT = `(?:'([^']*)'|"([^"]*)"|([^\\s\\n]+))`;
+const SPACE = '(?:\\s|\\n)+';
+const OPTIONALSPACE = '(?:\\s|\\n)*';
+const ATTRIBUTE = `${ATTNAME}(?:${OPTIONALSPACE}=${OPTIONALSPACE}${VALUE})?`;
+const ATTRIBUTESPLIT = `(${ATTNAME})(?:${OPTIONALSPACE}=${OPTIONALSPACE}${VALUESPLIT})?`;
+const TAG =
+  `(<(?:${TAGNAME}(?:${SPACE}${ATTRIBUTE})*` +
+  `${OPTIONALSPACE}/?|/${TAGNAME}|!--[^]*?--|![^]*?)(?:>|$))`;
 
 export const PATTERNS = {
-  tag: new RegExp(Complex.TAG, 'i'),
-  attr: new RegExp(Complex.ATTRIBUTE, 'i'),
-  attrsplit: new RegExp(Complex.ATTRIBUTESPLIT, 'i'),
+  tag: new RegExp(TAG, 'i'),
+  attr: new RegExp(ATTRIBUTE, 'i'),
+  attrsplit: new RegExp(ATTRIBUTESPLIT, 'i'),
 };
 
 /************************************************************/

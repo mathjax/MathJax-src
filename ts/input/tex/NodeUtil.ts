@@ -33,21 +33,21 @@ import { Property, PropertyList } from '../../core/Tree/Node.js';
 import { Args } from './Types.js';
 import { OperatorDef } from '../../core/MmlTree/OperatorDictionary.js';
 
-const attrs: Map<string, boolean> = new Map([
-  ['autoOP', true],
-  ['fnOP', true],
-  ['movesupsub', true],
-  ['subsupOK', true],
-  ['texprimestyle', true],
-  ['useHeight', true],
-  ['variantForm', true],
-  ['withDelims', true],
-  ['mathaccent', true],
-  ['open', true],
-  ['close', true],
-]);
-
 const NodeUtil = {
+  attrs: new Set<string>([
+    'autoOP',
+    'fnOP',
+    'movesupsub',
+    'subsupOK',
+    'texprimestyle',
+    'useHeight',
+    'variantForm',
+    'withDelims',
+    'mathaccent',
+    'open',
+    'close',
+  ]),
+
   /**
    * Creates a single character from a unicode hex string.
    *
@@ -131,7 +131,7 @@ const NodeUtil = {
         }
       } else if (name === 'inferred') {
         // ignore
-      } else if (attrs.has(name)) {
+      } else if (NodeUtil.attrs.has(name)) {
         node.setProperty(name, value);
       } else {
         node.attributes.set(name, value);

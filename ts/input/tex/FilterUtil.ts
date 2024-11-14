@@ -342,7 +342,7 @@ const FilterUtil = {
       }
     }
     options.removeFromList('mstyle', remove);
-  }
+  },
 };
 
 export default FilterUtil;
