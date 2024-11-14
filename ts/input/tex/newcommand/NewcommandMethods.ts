@@ -131,19 +131,6 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
     if (c === '\\') {
       // @test Let Bar, Let Brace Equal Stretchy
       name = NewcommandUtil.GetCSname(parser, name);
-      let macro = handlers
-        .get(HandlerType.DELIMITER)
-        .lookup('\\' + name) as Token;
-      if (macro) {
-        // @test Let Bar, Let Brace Equal Stretchy
-        NewcommandUtil.addDelimiter(
-          parser,
-          '\\' + cs,
-          macro.char,
-          macro.attributes
-        );
-        return;
-      }
       const map = handlers.get(HandlerType.MACRO).applicable(name);
       if (!map) {
         // @test Let Undefined CS
@@ -158,6 +145,19 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
           macro.func,
           macro.args,
           macro.token
+        );
+        return;
+      }
+      let macro = handlers
+        .get(HandlerType.DELIMITER)
+        .lookup('\\' + name) as Token;
+      if (macro) {
+        // @test Let Bar, Let Brace Equal Stretchy
+        NewcommandUtil.addDelimiter(
+          parser,
+          '\\' + cs,
+          macro.char,
+          macro.attributes
         );
         return;
       }
@@ -263,8 +263,11 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
         if (edef) {
           // Parse the commands in the end environment definition.
           let rest = parser.string.slice(parser.i);
-          parser.string = edef;
-          parser.i = 0;
+          parser.string = ParseUtil.addArgs(
+            parser,
+            parser.string.substring(0, parser.i),
+            edef
+          );
           parser.Parse();
           // Reset to parsing the remainder of the expression.
           parser.string = rest;
@@ -297,10 +300,9 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
       parser.string.slice(parser.i)
     );
     parser.i = 0;
-    parser.stack.global['beginEnv'] = (parser.stack.global['beginEnv'] as number || 0) + 1;
-    return parser.itemFactory
-      .create('beginEnv')
-      .setProperty('name', name);
+    parser.stack.global['beginEnv'] =
+      ((parser.stack.global['beginEnv'] as number) || 0) + 1;
+    return parser.itemFactory.create('beginEnv').setProperty('name', name);
   },
 
   Macro: BaseMethods.Macro,

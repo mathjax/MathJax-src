@@ -348,7 +348,6 @@ new sm.DelimiterMap('delimiter', ParseMethods.delimiter, {
   '/': '/',
   '|': ['|', { texClass: TEXCLASS.ORD }],
   '.': '',
-  '\\\\': '\\',
   '\\lmoustache': '\u23B0', // non-standard
   '\\rmoustache': '\u23B1', // non-standard
   '\\lgroup': '\u27EE', // non-standard

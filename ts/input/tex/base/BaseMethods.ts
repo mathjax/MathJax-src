@@ -1965,10 +1965,8 @@ const BaseMethods: { [key: string]: ParseMethod } = {
       // @test Subarray, Small Matrix
       array.arraydef['displaystyle'] = false;
     }
-    if (style === 'S') {
-      // @test Subarray, Small Matrix
-      array.arraydef['scriptlevel'] = 1;
-    }
+    // @test Subarray, Small Matrix
+    array.arraydef['scriptlevel'] = style === 'S' ? 1 : 0;
     if (raggedHeight) {
       // @test Subarray, Small Matrix
       array.arraydef['useHeight'] = false;
