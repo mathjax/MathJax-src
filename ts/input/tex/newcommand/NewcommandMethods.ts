@@ -295,10 +295,9 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
       parser.string.slice(parser.i)
     );
     parser.i = 0;
-    parser.stack.global['beginEnv'] = (parser.stack.global['beginEnv'] as number || 0) + 1;
-    return parser.itemFactory
-      .create('beginEnv')
-      .setProperty('name', name);
+    parser.stack.global['beginEnv'] =
+      ((parser.stack.global['beginEnv'] as number) || 0) + 1;
+    return parser.itemFactory.create('beginEnv').setProperty('name', name);
   },
 
   Macro: BaseMethods.Macro,
