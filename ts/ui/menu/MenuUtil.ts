@@ -29,7 +29,7 @@ import {context} from '../../util/context.js';
 export const isMac = context.window?.navigator?.platform?.substring(0, 3) === 'Mac';
 
 /**
- * @param {string} text   The text to be copied ot the clipboard
+ * @param {string} text   The text to be copied to the clipboard
  */
 export function copyToClipboard(text: string) {
   const document = context.document;
