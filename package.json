@@ -41,6 +41,7 @@
       "import": "./components/mjs/*",
       "require": "./components/cjs/*"
     },
+    "./require.mjs": "./bundle/require.mjs",
     "./es5/*": "./bundle/*",
     "./*": "./*"
   },
