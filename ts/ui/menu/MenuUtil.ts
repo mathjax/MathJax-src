@@ -16,7 +16,7 @@
  */
 
 /**
- * @file  Implements a functino to handle copying to clipboard
+ * @file  Implements a function to handle copying to clipboard
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
