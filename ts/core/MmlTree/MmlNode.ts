@@ -658,12 +658,13 @@ export abstract class AbstractMmlNode
    * @override
    */
   public childPosition() {
-    let child: MmlNode = this;
-    let parent = child.parent;
+    let child: MmlNode = null;
+    let parent = this.parent;
     while (parent && parent.notParent) {
       child = parent;
       parent = parent.parent;
     }
+    child = child || this;
     if (parent) {
       let i = 0;
       for (const node of parent.childNodes) {
@@ -1170,23 +1171,21 @@ export abstract class AbstractMmlBaseNode extends AbstractMmlNode {
     this.getPrevClass(prev);
     this.texClass = TEXCLASS.ORD;
     const base = this.childNodes[0];
+    let result = null;
     if (base) {
       if (this.isEmbellished || base.isKind('mi')) {
-        prev = base.setTeXclass(prev);
+        result = base.setTeXclass(prev);
         this.updateTeXclass(this.core());
       } else {
         base.setTeXclass(null);
-        prev = this;
       }
-    } else {
-      prev = this;
     }
     for (const child of this.childNodes.slice(1)) {
       if (child) {
         child.setTeXclass(null);
       }
     }
-    return prev;
+    return result || this;
   }
 }
 

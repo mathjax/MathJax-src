@@ -167,12 +167,12 @@ export abstract class AbstractFactory<
    */
   public setNodeClass(kind: string, nodeClass: C) {
     this.nodeMap.set(kind, nodeClass);
-    const THIS = this;
     const KIND = this.nodeMap.get(kind);
     this.node[kind] = (...args: any[]) => {
-      return new KIND(THIS, ...args);
+      return new KIND(this, ...args);
     };
   }
+
   /**
    * @override
    */
