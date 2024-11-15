@@ -316,6 +316,9 @@ const FilterUtil = {
 
   /**
    * Removes unneeded mstyle elements that just set the scriptlevel
+   *
+   * @param {object} arg The argument object.
+   * @param {ParseOptions} arg.data The parse options.
    */
   checkScriptlevel(arg: { data: ParseOptions }) {
     const options = arg.data;
