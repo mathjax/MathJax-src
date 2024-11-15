@@ -8602,23 +8602,23 @@ describe('Physics7_11', () => {
   it('Matrices_Other_8', () =>
     toXmlMatch(
       tex2mml('\\begin{smallmatrix} a & b \\\\ c & d \\end{smallmatrix}'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\begin{smallmatrix} a &amp; b \\\\ c &amp; d \\end{smallmatrix}\" display=\"block\">
-  <mstyle scriptlevel=\"1\" data-latex-item=\"{smallmatrix}\" data-latex=\"\\begin{smallmatrix} a &amp; b \\\\ c &amp; d \\end{smallmatrix}\">
-    <mtable data-mjx-smallmatrix=\"true\" columnspacing=\"0.333em\" rowspacing=\".2em\" displaystyle=\"false\">
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{smallmatrix} a &amp; b \\\\ c &amp; d \\end{smallmatrix}" display="block">
+  <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="\\begin{smallmatrix} a &amp; b \\\\ c &amp; d \\end{smallmatrix}">
+    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
       <mtr>
         <mtd>
-          <mi data-latex=\"a\">a</mi>
+          <mi data-latex="a">a</mi>
         </mtd>
         <mtd>
-          <mi data-latex=\"b\">b</mi>
+          <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
       <mtr>
         <mtd>
-          <mi data-latex=\"c\">c</mi>
+          <mi data-latex="c">c</mi>
         </mtd>
         <mtd>
-          <mi data-latex=\"d\">d</mi>
+          <mi data-latex="d">d</mi>
         </mtd>
       </mtr>
     </mtable>
@@ -9246,24 +9246,24 @@ describe('Physics7_2', () => {
   it('Matrices_Small_1', () =>
     toXmlMatch(
       tex2mml('\\smallmatrixquantity*{a & b \\\\ c & d}'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\smallmatrixquantity*{a &amp; b \\\\ c &amp; d}\" display=\"block\">
-  <mstyle scriptlevel=\"1\" data-latex-item=\"{smallmatrix}\" data-latex=\"\\smallmatrixquantity*{a &amp; b \\\\ c &amp; d}\">
-    <mtable data-mjx-smallmatrix=\"true\" columnspacing=\"0.333em\" rowspacing=\".2em\" displaystyle=\"false\">
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smallmatrixquantity*{a &amp; b \\\\ c &amp; d}" display="block">
+  <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="\\smallmatrixquantity*{a &amp; b \\\\ c &amp; d}">
+    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
       <mtr>
         <mtd>
-          <mrow data-mjx-texclass=\"ORD\" data-latex=\"{}\"></mrow>
-          <mi data-latex=\"a\">a</mi>
+          <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+          <mi data-latex="a">a</mi>
         </mtd>
         <mtd>
-          <mi data-latex=\"b\">b</mi>
+          <mi data-latex="b">b</mi>
         </mtd>
       </mtr>
       <mtr>
         <mtd>
-          <mi data-latex=\"c\">c</mi>
+          <mi data-latex="c">c</mi>
         </mtd>
         <mtd>
-          <mi data-latex=\"d\">d</mi>
+          <mi data-latex="d">d</mi>
         </mtd>
       </mtr>
     </mtable>
