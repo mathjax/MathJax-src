@@ -166,9 +166,8 @@ export class MmlMo extends AbstractMmlTokenNode {
    *   whose widths are to be respected (property mathaccent = false)
    */
   /* prettier-ignore */
-  protected static mathaccentsWithWidth = new RegExp([
+  public static mathaccentsWithWidth = new RegExp([
     '^[',
-    '\u2015',              // overline and underline
     '\u2190\u2192\u2194',  // arrows
     '\u23DC\u23DD',        // over and under parens
     '\u23DE\u23DF',        // over and under braces
