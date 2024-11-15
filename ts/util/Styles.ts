@@ -481,7 +481,7 @@ export class Styles {
    */
   public set(name: string, value: string | number | boolean) {
     name = this.normalizeName(name);
-    this.setStyle(name, value as string);
+    this.setStyle(name, value.toString());
     //
     // If there is no combine function, the children combine to
     // a separate parent (e.g., border-width sets border-top-width, etc.
