@@ -12,7 +12,7 @@ describe('BussproofsRegInf', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{prooftree}\\AxiomC{A}\\end{prooftree}" display="block">
   <mrow data-latex="\\begin{prooftree}\\AxiomC{A}\\end{prooftree}" data-latex-item="{prooftree}" semantics="bspr_axiom:true;bspr_proof:true">
     <mspace width=".5ex"></mspace>
-    <mstyle displaystyle="false" scriptlevel="0">
+    <mstyle displaystyle="false">
       <mtext>A</mtext>
     </mstyle>
     <mspace width=".5ex"></mspace>
@@ -31,9 +31,7 @@ describe('BussproofsRegInf', () => {
             <mtd rowalign="bottom">
               <mrow data-latex="\\AxiomC{A}" semantics="bspr_axiom:true">
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>A</mtext>
-                </mstyle>
+                <mtext>A</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -45,9 +43,7 @@ describe('BussproofsRegInf', () => {
       <mtd>
         <mrow>
           <mspace width=".5ex"></mspace>
-          <mstyle displaystyle="false" scriptlevel="0">
-            <mtext>B</mtext>
-          </mstyle>
+          <mtext>B</mtext>
           <mspace width=".5ex"></mspace>
         </mrow>
       </mtd>
@@ -69,9 +65,7 @@ describe('BussproofsRegInf', () => {
             <mtd rowalign="bottom">
               <mrow data-latex="\\AxiomC{A}" semantics="bspr_axiom:true">
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>A</mtext>
-                </mstyle>
+                <mtext>A</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -79,9 +73,7 @@ describe('BussproofsRegInf', () => {
             <mtd rowalign="bottom">
               <mrow data-latex="\\AxiomC{B}" semantics="bspr_axiom:true">
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>B</mtext>
-                </mstyle>
+                <mtext>B</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -93,9 +85,7 @@ describe('BussproofsRegInf', () => {
       <mtd>
         <mrow>
           <mspace width=".5ex"></mspace>
-          <mstyle displaystyle="false" scriptlevel="0">
-            <mtext>C</mtext>
-          </mstyle>
+          <mtext>C</mtext>
           <mspace width=".5ex"></mspace>
         </mrow>
       </mtd>
@@ -117,9 +107,7 @@ describe('BussproofsRegInf', () => {
             <mtd rowalign="bottom">
               <mrow data-latex="\\AxiomC{A}" semantics="bspr_axiom:true">
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>A</mtext>
-                </mstyle>
+                <mtext>A</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -127,9 +115,7 @@ describe('BussproofsRegInf', () => {
             <mtd rowalign="bottom">
               <mrow data-latex="\\AxiomC{B}" semantics="bspr_axiom:true">
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>B</mtext>
-                </mstyle>
+                <mtext>B</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -137,9 +123,7 @@ describe('BussproofsRegInf', () => {
             <mtd rowalign="bottom">
               <mrow data-latex="\\AxiomC{C}" semantics="bspr_axiom:true">
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>C</mtext>
-                </mstyle>
+                <mtext>C</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -151,9 +135,7 @@ describe('BussproofsRegInf', () => {
       <mtd>
         <mrow>
           <mspace width=".5ex"></mspace>
-          <mstyle displaystyle="false" scriptlevel="0">
-            <mtext>D</mtext>
-          </mstyle>
+          <mtext>D</mtext>
           <mspace width=".5ex"></mspace>
         </mrow>
       </mtd>
@@ -175,9 +157,7 @@ describe('BussproofsRegInf', () => {
             <mtd rowalign="bottom">
               <mrow data-latex="\\AxiomC{A}" semantics="bspr_axiom:true">
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>A</mtext>
-                </mstyle>
+                <mtext>A</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -185,9 +165,7 @@ describe('BussproofsRegInf', () => {
             <mtd rowalign="bottom">
               <mrow data-latex="\\AxiomC{B}" semantics="bspr_axiom:true">
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>B</mtext>
-                </mstyle>
+                <mtext>B</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -195,9 +173,7 @@ describe('BussproofsRegInf', () => {
             <mtd rowalign="bottom">
               <mrow data-latex="\\AxiomC{C}" semantics="bspr_axiom:true">
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>C</mtext>
-                </mstyle>
+                <mtext>C</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -205,9 +181,7 @@ describe('BussproofsRegInf', () => {
             <mtd rowalign="bottom">
               <mrow data-latex="\\AxiomC{D}" semantics="bspr_axiom:true">
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>D</mtext>
-                </mstyle>
+                <mtext>D</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -219,9 +193,7 @@ describe('BussproofsRegInf', () => {
       <mtd>
         <mrow>
           <mspace width=".5ex"></mspace>
-          <mstyle displaystyle="false" scriptlevel="0">
-            <mtext>E</mtext>
-          </mstyle>
+          <mtext>E</mtext>
           <mspace width=".5ex"></mspace>
         </mrow>
       </mtd>
@@ -243,9 +215,7 @@ describe('BussproofsRegInf', () => {
             <mtd rowalign="bottom">
               <mrow data-latex="\\AxiomC{A}" semantics="bspr_axiom:true">
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>A</mtext>
-                </mstyle>
+                <mtext>A</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -253,9 +223,7 @@ describe('BussproofsRegInf', () => {
             <mtd rowalign="bottom">
               <mrow data-latex="\\AxiomC{B}" semantics="bspr_axiom:true">
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>B</mtext>
-                </mstyle>
+                <mtext>B</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -263,9 +231,7 @@ describe('BussproofsRegInf', () => {
             <mtd rowalign="bottom">
               <mrow data-latex="\\AxiomC{C}" semantics="bspr_axiom:true">
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>C</mtext>
-                </mstyle>
+                <mtext>C</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -273,9 +239,7 @@ describe('BussproofsRegInf', () => {
             <mtd rowalign="bottom">
               <mrow data-latex="\\AxiomC{D}" semantics="bspr_axiom:true">
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>D</mtext>
-                </mstyle>
+                <mtext>D</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -283,9 +247,7 @@ describe('BussproofsRegInf', () => {
             <mtd rowalign="bottom">
               <mrow data-latex="\\AxiomC{E}" semantics="bspr_axiom:true">
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>E</mtext>
-                </mstyle>
+                <mtext>E</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -297,9 +259,7 @@ describe('BussproofsRegInf', () => {
       <mtd>
         <mrow>
           <mspace width=".5ex"></mspace>
-          <mstyle displaystyle="false" scriptlevel="0">
-            <mtext>F</mtext>
-          </mstyle>
+          <mtext>F</mtext>
           <mspace width=".5ex"></mspace>
         </mrow>
       </mtd>
@@ -315,7 +275,7 @@ describe('BussproofsRegInf', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{prooftree}\\AxiomC{A}\\LeftLabel{L}\\UnaryInfC{B}\\end{prooftree}" display="block">
       <mrow data-latex="\\begin{prooftree}\\AxiomC{A}\\LeftLabel{L}\\UnaryInfC{B}\\end{prooftree}" data-latex-item="{prooftree}" semantics="bspr_labelledRule:left;bspr_inference:1;bspr_proof:true">
         <mpadded height=".25em" depth="+.25em" width="+.5ex" voffset="-.25em" semantics="bspr_prooflabel:left">
-          <mstyle displaystyle="false" scriptlevel="0">
+          <mstyle displaystyle="false">
             <mtext>L</mtext>
           </mstyle>
         </mpadded>
@@ -327,9 +287,7 @@ describe('BussproofsRegInf', () => {
                   <mtd rowalign="bottom">
                     <mrow data-latex="\\LeftLabel{L}" semantics="bspr_axiom:true">
                       <mspace width=".5ex"></mspace>
-                      <mstyle displaystyle="false" scriptlevel="0">
-                        <mtext>A</mtext>
-                      </mstyle>
+                      <mtext>A</mtext>
                       <mspace width=".5ex"></mspace>
                     </mrow>
                   </mtd>
@@ -341,9 +299,7 @@ describe('BussproofsRegInf', () => {
             <mtd>
               <mrow>
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>B</mtext>
-                </mstyle>
+                <mtext>B</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -367,9 +323,7 @@ describe('BussproofsRegInf', () => {
                   <mtd rowalign="bottom">
                     <mrow data-latex="\\RightLabel{R}" semantics="bspr_axiom:true">
                       <mspace width=".5ex"></mspace>
-                      <mstyle displaystyle="false" scriptlevel="0">
-                        <mtext>A</mtext>
-                      </mstyle>
+                      <mtext>A</mtext>
                       <mspace width=".5ex"></mspace>
                     </mrow>
                   </mtd>
@@ -381,16 +335,14 @@ describe('BussproofsRegInf', () => {
             <mtd>
               <mrow>
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>B</mtext>
-                </mstyle>
+                <mtext>B</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
           </mtr>
         </mtable>
         <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-          <mstyle displaystyle="false" scriptlevel="0">
+          <mstyle displaystyle="false">
             <mtext>R</mtext>
           </mstyle>
         </mpadded>
@@ -405,7 +357,7 @@ describe('BussproofsRegInf', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{prooftree}\\AxiomC{A}\\LeftLabel{L}\\RightLabel{R}\\UnaryInfC{B}\\end{prooftree}" display="block">
       <mrow data-latex="\\begin{prooftree}\\AxiomC{A}\\LeftLabel{L}\\RightLabel{R}\\UnaryInfC{B}\\end{prooftree}" data-latex-item="{prooftree}" semantics="bspr_labelledRule:both;bspr_inference:1;bspr_proof:true">
         <mpadded height=".25em" depth="+.25em" width="+.5ex" voffset="-.25em" semantics="bspr_prooflabel:left">
-          <mstyle displaystyle="false" scriptlevel="0">
+          <mstyle displaystyle="false">
             <mtext>L</mtext>
           </mstyle>
         </mpadded>
@@ -417,9 +369,7 @@ describe('BussproofsRegInf', () => {
                   <mtd rowalign="bottom">
                     <mrow data-latex="\\RightLabel{R}" semantics="bspr_axiom:true">
                       <mspace width=".5ex"></mspace>
-                      <mstyle displaystyle="false" scriptlevel="0">
-                        <mtext>A</mtext>
-                      </mstyle>
+                      <mtext>A</mtext>
                       <mspace width=".5ex"></mspace>
                     </mrow>
                   </mtd>
@@ -431,16 +381,14 @@ describe('BussproofsRegInf', () => {
             <mtd>
               <mrow>
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>B</mtext>
-                </mstyle>
+                <mtext>B</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
           </mtr>
         </mtable>
         <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-          <mstyle displaystyle="false" scriptlevel="0">
+          <mstyle displaystyle="false">
             <mtext>R</mtext>
           </mstyle>
         </mpadded>
@@ -453,7 +401,7 @@ describe('BussproofsRegInf', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{prooftree}\\AXC{A}\\end{prooftree}" display="block">
   <mrow data-latex="\\begin{prooftree}\\AXC{A}\\end{prooftree}" data-latex-item="{prooftree}" semantics="bspr_axiom:true;bspr_proof:true">
     <mspace width=".5ex"></mspace>
-    <mstyle displaystyle="false" scriptlevel="0">
+    <mstyle displaystyle="false">
       <mtext>A</mtext>
     </mstyle>
     <mspace width=".5ex"></mspace>
@@ -472,9 +420,7 @@ describe('BussproofsRegInf', () => {
             <mtd rowalign="bottom">
               <mrow data-latex="\\AXC{A}" semantics="bspr_axiom:true">
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>A</mtext>
-                </mstyle>
+                <mtext>A</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -486,9 +432,7 @@ describe('BussproofsRegInf', () => {
       <mtd>
         <mrow>
           <mspace width=".5ex"></mspace>
-          <mstyle displaystyle="false" scriptlevel="0">
-            <mtext>B</mtext>
-          </mstyle>
+          <mtext>B</mtext>
           <mspace width=".5ex"></mspace>
         </mrow>
       </mtd>
@@ -508,9 +452,7 @@ describe('BussproofsRegInf', () => {
             <mtd rowalign="bottom">
               <mrow data-latex="\\AXC{A}" semantics="bspr_axiom:true">
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>A</mtext>
-                </mstyle>
+                <mtext>A</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -518,9 +460,7 @@ describe('BussproofsRegInf', () => {
             <mtd rowalign="bottom">
               <mrow data-latex="\\AXC{B}" semantics="bspr_axiom:true">
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>B</mtext>
-                </mstyle>
+                <mtext>B</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -532,9 +472,7 @@ describe('BussproofsRegInf', () => {
       <mtd>
         <mrow>
           <mspace width=".5ex"></mspace>
-          <mstyle displaystyle="false" scriptlevel="0">
-            <mtext>C</mtext>
-          </mstyle>
+          <mtext>C</mtext>
           <mspace width=".5ex"></mspace>
         </mrow>
       </mtd>
@@ -556,9 +494,7 @@ describe('BussproofsRegInf', () => {
             <mtd rowalign="bottom">
               <mrow data-latex="\\AXC{A}" semantics="bspr_axiom:true">
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>A</mtext>
-                </mstyle>
+                <mtext>A</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -566,9 +502,7 @@ describe('BussproofsRegInf', () => {
             <mtd rowalign="bottom">
               <mrow data-latex="\\AXC{B}" semantics="bspr_axiom:true">
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>B</mtext>
-                </mstyle>
+                <mtext>B</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -576,9 +510,7 @@ describe('BussproofsRegInf', () => {
             <mtd rowalign="bottom">
               <mrow data-latex="\\AXC{C}" semantics="bspr_axiom:true">
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>C</mtext>
-                </mstyle>
+                <mtext>C</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -590,9 +522,7 @@ describe('BussproofsRegInf', () => {
       <mtd>
         <mrow>
           <mspace width=".5ex"></mspace>
-          <mstyle displaystyle="false" scriptlevel="0">
-            <mtext>D</mtext>
-          </mstyle>
+          <mtext>D</mtext>
           <mspace width=".5ex"></mspace>
         </mrow>
       </mtd>
@@ -608,7 +538,7 @@ describe('BussproofsRegInf', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{prooftree}\\AXC{A}\\LeftLabel{L}\\UIC{B}\\end{prooftree}" display="block">
       <mrow data-latex="\\begin{prooftree}\\AXC{A}\\LeftLabel{L}\\UIC{B}\\end{prooftree}" data-latex-item="{prooftree}" semantics="bspr_labelledRule:left;bspr_inference:1;bspr_proof:true">
         <mpadded height=".25em" depth="+.25em" width="+.5ex" voffset="-.25em" semantics="bspr_prooflabel:left">
-          <mstyle displaystyle="false" scriptlevel="0">
+          <mstyle displaystyle="false">
             <mtext>L</mtext>
           </mstyle>
         </mpadded>
@@ -620,9 +550,7 @@ describe('BussproofsRegInf', () => {
                   <mtd rowalign="bottom">
                     <mrow data-latex="\\LeftLabel{L}" semantics="bspr_axiom:true">
                       <mspace width=".5ex"></mspace>
-                      <mstyle displaystyle="false" scriptlevel="0">
-                        <mtext>A</mtext>
-                      </mstyle>
+                      <mtext>A</mtext>
                       <mspace width=".5ex"></mspace>
                     </mrow>
                   </mtd>
@@ -634,9 +562,7 @@ describe('BussproofsRegInf', () => {
             <mtd>
               <mrow>
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>B</mtext>
-                </mstyle>
+                <mtext>B</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -660,9 +586,7 @@ describe('BussproofsRegInf', () => {
                   <mtd rowalign="bottom">
                     <mrow data-latex="\\RightLabel{R}" semantics="bspr_axiom:true">
                       <mspace width=".5ex"></mspace>
-                      <mstyle displaystyle="false" scriptlevel="0">
-                        <mtext>A</mtext>
-                      </mstyle>
+                      <mtext>A</mtext>
                       <mspace width=".5ex"></mspace>
                     </mrow>
                   </mtd>
@@ -674,16 +598,14 @@ describe('BussproofsRegInf', () => {
             <mtd>
               <mrow>
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>B</mtext>
-                </mstyle>
+                <mtext>B</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
           </mtr>
         </mtable>
         <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-          <mstyle displaystyle="false" scriptlevel="0">
+          <mstyle displaystyle="false">
             <mtext>R</mtext>
           </mstyle>
         </mpadded>
@@ -698,7 +620,7 @@ describe('BussproofsRegInf', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{prooftree}\\AXC{A}\\LeftLabel{L}\\RightLabel{R}\\UIC{B}\\end{prooftree}" display="block">
       <mrow data-latex="\\begin{prooftree}\\AXC{A}\\LeftLabel{L}\\RightLabel{R}\\UIC{B}\\end{prooftree}" data-latex-item="{prooftree}" semantics="bspr_labelledRule:both;bspr_inference:1;bspr_proof:true">
         <mpadded height=".25em" depth="+.25em" width="+.5ex" voffset="-.25em" semantics="bspr_prooflabel:left">
-          <mstyle displaystyle="false" scriptlevel="0">
+          <mstyle displaystyle="false">
             <mtext>L</mtext>
           </mstyle>
         </mpadded>
@@ -710,9 +632,7 @@ describe('BussproofsRegInf', () => {
                   <mtd rowalign="bottom">
                     <mrow data-latex="\\RightLabel{R}" semantics="bspr_axiom:true">
                       <mspace width=".5ex"></mspace>
-                      <mstyle displaystyle="false" scriptlevel="0">
-                        <mtext>A</mtext>
-                      </mstyle>
+                      <mtext>A</mtext>
                       <mspace width=".5ex"></mspace>
                     </mrow>
                   </mtd>
@@ -724,16 +644,14 @@ describe('BussproofsRegInf', () => {
             <mtd>
               <mrow>
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>B</mtext>
-                </mstyle>
+                <mtext>B</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
           </mtr>
         </mtable>
         <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-          <mstyle displaystyle="false" scriptlevel="0">
+          <mstyle displaystyle="false">
             <mtext>R</mtext>
           </mstyle>
         </mpadded>
@@ -758,9 +676,7 @@ describe('BussproofsRegProofs', () => {
                   <mtd rowalign="bottom">
                     <mrow data-latex="\\AxiomC{D}" semantics="bspr_axiom:true">
                       <mspace width=".5ex"></mspace>
-                      <mstyle displaystyle="false" scriptlevel="0">
-                        <mtext>D</mtext>
-                      </mstyle>
+                      <mtext>D</mtext>
                       <mspace width=".5ex"></mspace>
                     </mrow>
                   </mtd>
@@ -775,9 +691,7 @@ describe('BussproofsRegProofs', () => {
                                 <mtd rowalign="bottom">
                                   <mrow data-latex="\\AxiomC{A}" semantics="bspr_axiom:true">
                                     <mspace width=".5ex"></mspace>
-                                    <mstyle displaystyle="false" scriptlevel="0">
-                                      <mtext>A</mtext>
-                                    </mstyle>
+                                    <mtext>A</mtext>
                                     <mspace width=".5ex"></mspace>
                                   </mrow>
                                 </mtd>
@@ -791,9 +705,7 @@ describe('BussproofsRegProofs', () => {
                                             <mtd rowalign="bottom">
                                               <mrow data-latex="\\AxiomC{B}" semantics="bspr_axiom:true">
                                                 <mspace width=".5ex"></mspace>
-                                                <mstyle displaystyle="false" scriptlevel="0">
-                                                  <mtext>B</mtext>
-                                                </mstyle>
+                                                <mtext>B</mtext>
                                                 <mspace width=".5ex"></mspace>
                                               </mrow>
                                             </mtd>
@@ -801,9 +713,7 @@ describe('BussproofsRegProofs', () => {
                                             <mtd rowalign="bottom">
                                               <mrow data-latex="\\AxiomC{R}" semantics="bspr_axiom:true">
                                                 <mspace width=".5ex"></mspace>
-                                                <mstyle displaystyle="false" scriptlevel="0">
-                                                  <mtext>R</mtext>
-                                                </mstyle>
+                                                <mtext>R</mtext>
                                                 <mspace width=".5ex"></mspace>
                                               </mrow>
                                             </mtd>
@@ -815,15 +725,13 @@ describe('BussproofsRegProofs', () => {
                                       <mtd>
                                         <mrow>
                                           <mspace width=".5ex"></mspace>
-                                          <mstyle displaystyle="false" scriptlevel="0">
-                                            <mrow data-mjx-texclass="ORD">
-                                              <mi data-latex="C">C</mi>
-                                              <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                              <mi data-latex="D">D</mi>
-                                              <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                              <mi data-latex="Q">Q</mi>
-                                            </mrow>
-                                          </mstyle>
+                                          <mrow data-mjx-texclass="ORD">
+                                            <mi data-latex="C">C</mi>
+                                            <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                            <mi data-latex="D">D</mi>
+                                            <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                            <mi data-latex="Q">Q</mi>
+                                          </mrow>
                                           <mspace width=".5ex"></mspace>
                                         </mrow>
                                       </mtd>
@@ -838,9 +746,7 @@ describe('BussproofsRegProofs', () => {
                           <mtd>
                             <mrow>
                               <mspace width=".5ex"></mspace>
-                              <mstyle displaystyle="false" scriptlevel="0">
-                                <mtext>E</mtext>
-                              </mstyle>
+                              <mtext>E</mtext>
                               <mspace width=".5ex"></mspace>
                             </mrow>
                           </mtd>
@@ -857,9 +763,7 @@ describe('BussproofsRegProofs', () => {
             <mtd>
               <mrow>
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>F</mtext>
-                </mstyle>
+                <mtext>F</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -891,9 +795,7 @@ describe('BussproofsRegProofs', () => {
                   <mtd rowalign="bottom">
                     <mrow data-latex="\\AxiomC{D}" semantics="bspr_axiom:true">
                       <mspace width=".5ex"></mspace>
-                      <mstyle displaystyle="false" scriptlevel="0">
-                        <mtext>D</mtext>
-                      </mstyle>
+                      <mtext>D</mtext>
                       <mspace width=".5ex"></mspace>
                     </mrow>
                   </mtd>
@@ -908,9 +810,7 @@ describe('BussproofsRegProofs', () => {
                                 <mtd rowalign="bottom">
                                   <mrow data-latex="\\AxiomC{A}" semantics="bspr_axiom:true">
                                     <mspace width=".5ex"></mspace>
-                                    <mstyle displaystyle="false" scriptlevel="0">
-                                      <mtext>A</mtext>
-                                    </mstyle>
+                                    <mtext>A</mtext>
                                     <mspace width=".5ex"></mspace>
                                   </mrow>
                                 </mtd>
@@ -924,9 +824,7 @@ describe('BussproofsRegProofs', () => {
                                             <mtd rowalign="bottom">
                                               <mrow data-latex="\\AxiomC{B}" semantics="bspr_axiom:true">
                                                 <mspace width=".5ex"></mspace>
-                                                <mstyle displaystyle="false" scriptlevel="0">
-                                                  <mtext>B</mtext>
-                                                </mstyle>
+                                                <mtext>B</mtext>
                                                 <mspace width=".5ex"></mspace>
                                               </mrow>
                                             </mtd>
@@ -934,9 +832,7 @@ describe('BussproofsRegProofs', () => {
                                             <mtd rowalign="bottom">
                                               <mrow data-latex="$" semantics="bspr_axiom:true">
                                                 <mspace width=".5ex"></mspace>
-                                                <mstyle displaystyle="false" scriptlevel="0">
-                                                  <mtext>R</mtext>
-                                                </mstyle>
+                                                <mtext>R</mtext>
                                                 <mspace width=".5ex"></mspace>
                                               </mrow>
                                             </mtd>
@@ -948,15 +844,13 @@ describe('BussproofsRegProofs', () => {
                                       <mtd>
                                         <mrow>
                                           <mspace width=".5ex"></mspace>
-                                          <mstyle displaystyle="false" scriptlevel="0">
-                                            <mrow data-mjx-texclass="ORD">
-                                              <mi data-latex="C">C</mi>
-                                              <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                              <mi data-latex="D">D</mi>
-                                              <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                              <mi data-latex="Q">Q</mi>
-                                            </mrow>
-                                          </mstyle>
+                                          <mrow data-mjx-texclass="ORD">
+                                            <mi data-latex="C">C</mi>
+                                            <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                            <mi data-latex="D">D</mi>
+                                            <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                            <mi data-latex="Q">Q</mi>
+                                          </mrow>
                                           <mspace width=".5ex"></mspace>
                                         </mrow>
                                       </mtd>
@@ -971,9 +865,7 @@ describe('BussproofsRegProofs', () => {
                           <mtd>
                             <mrow>
                               <mspace width=".5ex"></mspace>
-                              <mstyle displaystyle="false" scriptlevel="0">
-                                <mtext>E</mtext>
-                              </mstyle>
+                              <mtext>E</mtext>
                               <mspace width=".5ex"></mspace>
                             </mrow>
                           </mtd>
@@ -990,9 +882,7 @@ describe('BussproofsRegProofs', () => {
             <mtd>
               <mrow>
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mtext>F</mtext>
-                </mstyle>
+                <mtext>F</mtext>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -1034,9 +924,7 @@ describe('BussproofsRegProofs', () => {
                                               <mtd rowalign="bottom">
                                                 <mrow data-latex="\\AxiomC{D}" semantics="bspr_axiom:true">
                                                   <mspace width=".5ex"></mspace>
-                                                  <mstyle displaystyle="false" scriptlevel="0">
-                                                    <mtext>D</mtext>
-                                                  </mstyle>
+                                                  <mtext>D</mtext>
                                                   <mspace width=".5ex"></mspace>
                                                 </mrow>
                                               </mtd>
@@ -1044,9 +932,7 @@ describe('BussproofsRegProofs', () => {
                                               <mtd rowalign="bottom">
                                                 <mrow data-latex="\\AxiomC{A1}" semantics="bspr_axiom:true">
                                                   <mspace width=".5ex"></mspace>
-                                                  <mstyle displaystyle="false" scriptlevel="0">
-                                                    <mtext>A1</mtext>
-                                                  </mstyle>
+                                                  <mtext>A1</mtext>
                                                   <mspace width=".5ex"></mspace>
                                                 </mrow>
                                               </mtd>
@@ -1054,9 +940,7 @@ describe('BussproofsRegProofs', () => {
                                               <mtd rowalign="bottom">
                                                 <mrow data-latex="\\AxiomC{A2}" semantics="bspr_axiom:true">
                                                   <mspace width=".5ex"></mspace>
-                                                  <mstyle displaystyle="false" scriptlevel="0">
-                                                    <mtext>A2</mtext>
-                                                  </mstyle>
+                                                  <mtext>A2</mtext>
                                                   <mspace width=".5ex"></mspace>
                                                 </mrow>
                                               </mtd>
@@ -1068,9 +952,7 @@ describe('BussproofsRegProofs', () => {
                                         <mtd>
                                           <mrow>
                                             <mspace width=".5ex"></mspace>
-                                            <mstyle displaystyle="false" scriptlevel="0">
-                                              <mtext>Q</mtext>
-                                            </mstyle>
+                                            <mtext>Q</mtext>
                                             <mspace width=".5ex"></mspace>
                                           </mrow>
                                         </mtd>
@@ -1089,9 +971,7 @@ describe('BussproofsRegProofs', () => {
                                               <mtd rowalign="bottom">
                                                 <mrow data-latex="\\AxiomC{A}" semantics="bspr_axiom:true">
                                                   <mspace width=".5ex"></mspace>
-                                                  <mstyle displaystyle="false" scriptlevel="0">
-                                                    <mtext>A</mtext>
-                                                  </mstyle>
+                                                  <mtext>A</mtext>
                                                   <mspace width=".5ex"></mspace>
                                                 </mrow>
                                               </mtd>
@@ -1105,9 +985,7 @@ describe('BussproofsRegProofs', () => {
                                                           <mtd rowalign="bottom">
                                                             <mrow data-latex="\\AxiomC{B}" semantics="bspr_axiom:true">
                                                               <mspace width=".5ex"></mspace>
-                                                              <mstyle displaystyle="false" scriptlevel="0">
-                                                                <mtext>B</mtext>
-                                                              </mstyle>
+                                                              <mtext>B</mtext>
                                                               <mspace width=".5ex"></mspace>
                                                             </mrow>
                                                           </mtd>
@@ -1115,9 +993,7 @@ describe('BussproofsRegProofs', () => {
                                                           <mtd rowalign="bottom">
                                                             <mrow data-latex="\\AxiomC{R}" semantics="bspr_axiom:true">
                                                               <mspace width=".5ex"></mspace>
-                                                              <mstyle displaystyle="false" scriptlevel="0">
-                                                                <mtext>R</mtext>
-                                                              </mstyle>
+                                                              <mtext>R</mtext>
                                                               <mspace width=".5ex"></mspace>
                                                             </mrow>
                                                           </mtd>
@@ -1129,15 +1005,13 @@ describe('BussproofsRegProofs', () => {
                                                     <mtd>
                                                       <mrow>
                                                         <mspace width=".5ex"></mspace>
-                                                        <mstyle displaystyle="false" scriptlevel="0">
-                                                          <mrow data-mjx-texclass="ORD">
-                                                            <mi data-latex="C">C</mi>
-                                                            <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                                            <mi data-latex="D">D</mi>
-                                                            <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                                            <mi data-latex="Q">Q</mi>
-                                                          </mrow>
-                                                        </mstyle>
+                                                        <mrow data-mjx-texclass="ORD">
+                                                          <mi data-latex="C">C</mi>
+                                                          <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                                          <mi data-latex="D">D</mi>
+                                                          <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                                          <mi data-latex="Q">Q</mi>
+                                                        </mrow>
                                                         <mspace width=".5ex"></mspace>
                                                       </mrow>
                                                     </mtd>
@@ -1152,9 +1026,7 @@ describe('BussproofsRegProofs', () => {
                                         <mtd>
                                           <mrow>
                                             <mspace width=".5ex"></mspace>
-                                            <mstyle displaystyle="false" scriptlevel="0">
-                                              <mtext>E</mtext>
-                                            </mstyle>
+                                            <mtext>E</mtext>
                                             <mspace width=".5ex"></mspace>
                                           </mrow>
                                         </mtd>
@@ -1171,9 +1043,7 @@ describe('BussproofsRegProofs', () => {
                           <mtd>
                             <mrow>
                               <mspace width=".5ex"></mspace>
-                              <mstyle displaystyle="false" scriptlevel="0">
-                                <mtext>F</mtext>
-                              </mstyle>
+                              <mtext>F</mtext>
                               <mspace width=".5ex"></mspace>
                             </mrow>
                           </mtd>
@@ -1187,9 +1057,7 @@ describe('BussproofsRegProofs', () => {
                   <mtd rowalign="bottom">
                     <mrow data-latex="\\AxiomC{M}" semantics="bspr_axiom:true">
                       <mspace width=".5ex"></mspace>
-                      <mstyle displaystyle="false" scriptlevel="0">
-                        <mtext>M</mtext>
-                      </mstyle>
+                      <mtext>M</mtext>
                       <mspace width=".5ex"></mspace>
                     </mrow>
                   </mtd>
@@ -1201,13 +1069,11 @@ describe('BussproofsRegProofs', () => {
             <mtd>
               <mrow>
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mrow data-mjx-texclass="ORD">
-                    <mi data-latex="N">N</mi>
-                    <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                    <mi data-latex="R">R</mi>
-                  </mrow>
-                </mstyle>
+                <mrow data-mjx-texclass="ORD">
+                  <mi data-latex="N">N</mi>
+                  <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                  <mi data-latex="R">R</mi>
+                </mrow>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -1252,9 +1118,7 @@ describe('BussproofsRegProofs', () => {
                                                     <mtd rowalign="bottom">
                                                       <mrow data-latex="\\AxiomC{D}" semantics="bspr_axiom:true">
                                                         <mspace width=".5ex"></mspace>
-                                                        <mstyle displaystyle="false" scriptlevel="0">
-                                                          <mtext>D</mtext>
-                                                        </mstyle>
+                                                        <mtext>D</mtext>
                                                         <mspace width=".5ex"></mspace>
                                                       </mrow>
                                                     </mtd>
@@ -1262,9 +1126,7 @@ describe('BussproofsRegProofs', () => {
                                                     <mtd rowalign="bottom">
                                                       <mrow data-latex="\\AxiomC{A1}" semantics="bspr_axiom:true">
                                                         <mspace width=".5ex"></mspace>
-                                                        <mstyle displaystyle="false" scriptlevel="0">
-                                                          <mtext>A1</mtext>
-                                                        </mstyle>
+                                                        <mtext>A1</mtext>
                                                         <mspace width=".5ex"></mspace>
                                                       </mrow>
                                                     </mtd>
@@ -1272,9 +1134,7 @@ describe('BussproofsRegProofs', () => {
                                                     <mtd rowalign="bottom">
                                                       <mrow data-latex="\\AxiomC{A2}" semantics="bspr_axiom:true">
                                                         <mspace width=".5ex"></mspace>
-                                                        <mstyle displaystyle="false" scriptlevel="0">
-                                                          <mtext>A2</mtext>
-                                                        </mstyle>
+                                                        <mtext>A2</mtext>
                                                         <mspace width=".5ex"></mspace>
                                                       </mrow>
                                                     </mtd>
@@ -1286,9 +1146,7 @@ describe('BussproofsRegProofs', () => {
                                               <mtd>
                                                 <mrow>
                                                   <mspace width=".5ex"></mspace>
-                                                  <mstyle displaystyle="false" scriptlevel="0">
-                                                    <mtext>Q</mtext>
-                                                  </mstyle>
+                                                  <mtext>Q</mtext>
                                                   <mspace width=".5ex"></mspace>
                                                 </mrow>
                                               </mtd>
@@ -1308,9 +1166,7 @@ describe('BussproofsRegProofs', () => {
                                                       <mtd rowalign="bottom">
                                                         <mrow data-latex="\\AxiomC{A}" semantics="bspr_axiom:true">
                                                           <mspace width=".5ex"></mspace>
-                                                          <mstyle displaystyle="false" scriptlevel="0">
-                                                            <mtext>A</mtext>
-                                                          </mstyle>
+                                                          <mtext>A</mtext>
                                                           <mspace width=".5ex"></mspace>
                                                         </mrow>
                                                       </mtd>
@@ -1326,9 +1182,7 @@ describe('BussproofsRegProofs', () => {
                                                                       <mtd rowalign="bottom">
                                                                         <mrow data-latex="\\AxiomC{B}" semantics="bspr_axiom:true">
                                                                           <mspace width=".5ex"></mspace>
-                                                                          <mstyle displaystyle="false" scriptlevel="0">
-                                                                            <mtext>B</mtext>
-                                                                          </mstyle>
+                                                                          <mtext>B</mtext>
                                                                           <mspace width=".5ex"></mspace>
                                                                         </mrow>
                                                                       </mtd>
@@ -1336,9 +1190,7 @@ describe('BussproofsRegProofs', () => {
                                                                       <mtd rowalign="bottom">
                                                                         <mrow data-latex="\\AxiomC{R}" semantics="bspr_axiom:true">
                                                                           <mspace width=".5ex"></mspace>
-                                                                          <mstyle displaystyle="false" scriptlevel="0">
-                                                                            <mtext>R</mtext>
-                                                                          </mstyle>
+                                                                          <mtext>R</mtext>
                                                                           <mspace width=".5ex"></mspace>
                                                                         </mrow>
                                                                       </mtd>
@@ -1350,24 +1202,20 @@ describe('BussproofsRegProofs', () => {
                                                                 <mtd>
                                                                   <mrow>
                                                                     <mspace width=".5ex"></mspace>
-                                                                    <mstyle displaystyle="false" scriptlevel="0">
-                                                                      <mrow data-mjx-texclass="ORD">
-                                                                        <mi data-latex="C">C</mi>
-                                                                        <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                                                        <mi data-latex="D">D</mi>
-                                                                        <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                                                        <mi data-latex="Q">Q</mi>
-                                                                      </mrow>
-                                                                    </mstyle>
+                                                                    <mrow data-mjx-texclass="ORD">
+                                                                      <mi data-latex="C">C</mi>
+                                                                      <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                                                      <mi data-latex="D">D</mi>
+                                                                      <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                                                      <mi data-latex="Q">Q</mi>
+                                                                    </mrow>
                                                                     <mspace width=".5ex"></mspace>
                                                                   </mrow>
                                                                 </mtd>
                                                               </mtr>
                                                             </mtable>
                                                             <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-                                                              <mstyle displaystyle="false" scriptlevel="0">
-                                                                <mtext>AAAA</mtext>
-                                                              </mstyle>
+                                                              <mtext>AAAA</mtext>
                                                             </mpadded>
                                                           </mrow>
                                                           <mspace width="-3.216em"></mspace>
@@ -1381,18 +1229,14 @@ describe('BussproofsRegProofs', () => {
                                                 <mtd>
                                                   <mrow>
                                                     <mspace width=".5ex"></mspace>
-                                                    <mstyle displaystyle="false" scriptlevel="0">
-                                                      <mtext>E</mtext>
-                                                    </mstyle>
+                                                    <mtext>E</mtext>
                                                     <mspace width=".5ex"></mspace>
                                                   </mrow>
                                                 </mtd>
                                               </mtr>
                                             </mtable>
                                             <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-                                              <mstyle displaystyle="false" scriptlevel="0">
-                                                <mtext>BBB</mtext>
-                                              </mstyle>
+                                              <mtext>BBB</mtext>
                                             </mpadded>
                                           </mrow>
                                           <mspace width="-6.134em"></mspace>
@@ -1406,18 +1250,14 @@ describe('BussproofsRegProofs', () => {
                                 <mtd>
                                   <mrow>
                                     <mspace width=".5ex"></mspace>
-                                    <mstyle displaystyle="false" scriptlevel="0">
-                                      <mtext>F</mtext>
-                                    </mstyle>
+                                    <mtext>F</mtext>
                                     <mspace width=".5ex"></mspace>
                                   </mrow>
                                 </mtd>
                               </mtr>
                             </mtable>
                             <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-                              <mstyle displaystyle="false" scriptlevel="0">
-                                <mtext>CCCCC</mtext>
-                              </mstyle>
+                              <mtext>CCCCC</mtext>
                             </mpadded>
                           </mrow>
                         </mrow>
@@ -1429,9 +1269,7 @@ describe('BussproofsRegProofs', () => {
                     <mtd rowalign="bottom">
                       <mrow data-latex="\\AxiomC{M}" semantics="bspr_axiom:true">
                         <mspace width=".5ex"></mspace>
-                        <mstyle displaystyle="false" scriptlevel="0">
-                          <mtext>M</mtext>
-                        </mstyle>
+                        <mtext>M</mtext>
                         <mspace width=".5ex"></mspace>
                       </mrow>
                     </mtd>
@@ -1443,20 +1281,18 @@ describe('BussproofsRegProofs', () => {
               <mtd>
                 <mrow>
                   <mspace width=".5ex"></mspace>
-                  <mstyle displaystyle="false" scriptlevel="0">
-                    <mrow data-mjx-texclass="ORD">
-                      <mi data-latex="N">N</mi>
-                      <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                      <mi data-latex="R">R</mi>
-                    </mrow>
-                  </mstyle>
+                  <mrow data-mjx-texclass="ORD">
+                    <mi data-latex="N">N</mi>
+                    <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                    <mi data-latex="R">R</mi>
+                  </mrow>
                   <mspace width=".5ex"></mspace>
                 </mrow>
               </mtd>
             </mtr>
           </mtable>
           <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-            <mstyle displaystyle="false" scriptlevel="0">
+            <mstyle displaystyle="false">
               <mtext>QERE</mtext>
             </mstyle>
           </mpadded>
@@ -1474,7 +1310,7 @@ describe('BussproofsRegProofs', () => {
         <mspace width="3.835em"></mspace>
         <mrow data-latex="\\begin{prooftree}\\AxiomC{D}\\AxiomC{A1}\\AxiomC{A2}\\TrinaryInfC{Q}\\LeftLabel{AAAA}\\AxiomC{A}\\AxiomC{B}\\AxiomC{R}\\BinaryInfC{$C \\rightarrow D \\rightarrow Q$}\\LeftLabel{BBB}\\BinaryInfC{E}\\LeftLabel{CCCCC}\\BinaryInfC{F}\\LeftLabel{QERE}\\AxiomC{M}\\BinaryInfC{$N \\rightarrow R$}\\LeftLabel{Nowhere}\\end{prooftree}" data-latex-item="{prooftree}">
           <mpadded height=".25em" depth="+.25em" width="+.5ex" voffset="-.25em" semantics="bspr_prooflabel:left">
-            <mstyle displaystyle="false" scriptlevel="0">
+            <mstyle displaystyle="false">
               <mtext>QERE</mtext>
             </mstyle>
           </mpadded>
@@ -1491,9 +1327,7 @@ describe('BussproofsRegProofs', () => {
                           <mrow data-latex="\\LeftLabel{QERE}">
                             <mspace width="0.551em"></mspace>
                             <mpadded height=".25em" depth="+.25em" width="+.5ex" voffset="-.25em" semantics="bspr_prooflabel:left">
-                              <mstyle displaystyle="false" scriptlevel="0">
-                                <mtext>CCCCC</mtext>
-                              </mstyle>
+                              <mtext>CCCCC</mtext>
                             </mpadded>
                             <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
                               <mtr>
@@ -1511,9 +1345,7 @@ describe('BussproofsRegProofs', () => {
                                                     <mtd rowalign="bottom">
                                                       <mrow data-latex="\\AxiomC{D}" semantics="bspr_axiom:true">
                                                         <mspace width=".5ex"></mspace>
-                                                        <mstyle displaystyle="false" scriptlevel="0">
-                                                          <mtext>D</mtext>
-                                                        </mstyle>
+                                                        <mtext>D</mtext>
                                                         <mspace width=".5ex"></mspace>
                                                       </mrow>
                                                     </mtd>
@@ -1521,9 +1353,7 @@ describe('BussproofsRegProofs', () => {
                                                     <mtd rowalign="bottom">
                                                       <mrow data-latex="\\AxiomC{A1}" semantics="bspr_axiom:true">
                                                         <mspace width=".5ex"></mspace>
-                                                        <mstyle displaystyle="false" scriptlevel="0">
-                                                          <mtext>A1</mtext>
-                                                        </mstyle>
+                                                        <mtext>A1</mtext>
                                                         <mspace width=".5ex"></mspace>
                                                       </mrow>
                                                     </mtd>
@@ -1531,9 +1361,7 @@ describe('BussproofsRegProofs', () => {
                                                     <mtd rowalign="bottom">
                                                       <mrow data-latex="\\AxiomC{A2}" semantics="bspr_axiom:true">
                                                         <mspace width=".5ex"></mspace>
-                                                        <mstyle displaystyle="false" scriptlevel="0">
-                                                          <mtext>A2</mtext>
-                                                        </mstyle>
+                                                        <mtext>A2</mtext>
                                                         <mspace width=".5ex"></mspace>
                                                       </mrow>
                                                     </mtd>
@@ -1545,9 +1373,7 @@ describe('BussproofsRegProofs', () => {
                                               <mtd>
                                                 <mrow>
                                                   <mspace width=".5ex"></mspace>
-                                                  <mstyle displaystyle="false" scriptlevel="0">
-                                                    <mtext>Q</mtext>
-                                                  </mstyle>
+                                                  <mtext>Q</mtext>
                                                   <mspace width=".5ex"></mspace>
                                                 </mrow>
                                               </mtd>
@@ -1560,9 +1386,7 @@ describe('BussproofsRegProofs', () => {
                                         <mrow semantics="bspr_inference:2;bspr_labelledRule:left">
                                           <mrow data-latex="\\LeftLabel{CCCCC}">
                                             <mpadded height=".25em" depth="+.25em" width="+.5ex" voffset="-.25em" semantics="bspr_prooflabel:left">
-                                              <mstyle displaystyle="false" scriptlevel="0">
-                                                <mtext>BBB</mtext>
-                                              </mstyle>
+                                              <mtext>BBB</mtext>
                                             </mpadded>
                                             <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
                                               <mtr>
@@ -1572,9 +1396,7 @@ describe('BussproofsRegProofs', () => {
                                                       <mtd rowalign="bottom">
                                                         <mrow data-latex="\\AxiomC{A}" semantics="bspr_axiom:true">
                                                           <mspace width=".5ex"></mspace>
-                                                          <mstyle displaystyle="false" scriptlevel="0">
-                                                            <mtext>A</mtext>
-                                                          </mstyle>
+                                                          <mtext>A</mtext>
                                                           <mspace width=".5ex"></mspace>
                                                         </mrow>
                                                       </mtd>
@@ -1582,9 +1404,7 @@ describe('BussproofsRegProofs', () => {
                                                       <mtd rowalign="bottom">
                                                         <mrow data-latex="\\LeftLabel{BBB}" semantics="bspr_labelledRule:left;bspr_inference:2">
                                                           <mpadded height=".25em" depth="+.25em" width="+.5ex" voffset="-.25em" semantics="bspr_prooflabel:left">
-                                                            <mstyle displaystyle="false" scriptlevel="0">
-                                                              <mtext>AAAA</mtext>
-                                                            </mstyle>
+                                                            <mtext>AAAA</mtext>
                                                           </mpadded>
                                                           <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
                                                             <mtr>
@@ -1594,9 +1414,7 @@ describe('BussproofsRegProofs', () => {
                                                                     <mtd rowalign="bottom">
                                                                       <mrow data-latex="\\AxiomC{B}" semantics="bspr_axiom:true">
                                                                         <mspace width=".5ex"></mspace>
-                                                                        <mstyle displaystyle="false" scriptlevel="0">
-                                                                          <mtext>B</mtext>
-                                                                        </mstyle>
+                                                                        <mtext>B</mtext>
                                                                         <mspace width=".5ex"></mspace>
                                                                       </mrow>
                                                                     </mtd>
@@ -1604,9 +1422,7 @@ describe('BussproofsRegProofs', () => {
                                                                     <mtd rowalign="bottom">
                                                                       <mrow data-latex="\\AxiomC{R}" semantics="bspr_axiom:true">
                                                                         <mspace width=".5ex"></mspace>
-                                                                        <mstyle displaystyle="false" scriptlevel="0">
-                                                                          <mtext>R</mtext>
-                                                                        </mstyle>
+                                                                        <mtext>R</mtext>
                                                                         <mspace width=".5ex"></mspace>
                                                                       </mrow>
                                                                     </mtd>
@@ -1618,15 +1434,13 @@ describe('BussproofsRegProofs', () => {
                                                               <mtd>
                                                                 <mrow>
                                                                   <mspace width=".5ex"></mspace>
-                                                                  <mstyle displaystyle="false" scriptlevel="0">
-                                                                    <mrow data-mjx-texclass="ORD">
-                                                                      <mi data-latex="C">C</mi>
-                                                                      <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                                                      <mi data-latex="D">D</mi>
-                                                                      <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                                                      <mi data-latex="Q">Q</mi>
-                                                                    </mrow>
-                                                                  </mstyle>
+                                                                  <mrow data-mjx-texclass="ORD">
+                                                                    <mi data-latex="C">C</mi>
+                                                                    <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                                                    <mi data-latex="D">D</mi>
+                                                                    <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                                                    <mi data-latex="Q">Q</mi>
+                                                                  </mrow>
                                                                   <mspace width=".5ex"></mspace>
                                                                 </mrow>
                                                               </mtd>
@@ -1642,9 +1456,7 @@ describe('BussproofsRegProofs', () => {
                                                 <mtd>
                                                   <mrow>
                                                     <mspace width=".5ex"></mspace>
-                                                    <mstyle displaystyle="false" scriptlevel="0">
-                                                      <mtext>E</mtext>
-                                                    </mstyle>
+                                                    <mtext>E</mtext>
                                                     <mspace width=".5ex"></mspace>
                                                   </mrow>
                                                 </mtd>
@@ -1662,9 +1474,7 @@ describe('BussproofsRegProofs', () => {
                                 <mtd>
                                   <mrow>
                                     <mspace width=".5ex"></mspace>
-                                    <mstyle displaystyle="false" scriptlevel="0">
-                                      <mtext>F</mtext>
-                                    </mstyle>
+                                    <mtext>F</mtext>
                                     <mspace width=".5ex"></mspace>
                                   </mrow>
                                 </mtd>
@@ -1680,9 +1490,7 @@ describe('BussproofsRegProofs', () => {
                     <mtd rowalign="bottom">
                       <mrow data-latex="\\AxiomC{M}" semantics="bspr_axiom:true">
                         <mspace width=".5ex"></mspace>
-                        <mstyle displaystyle="false" scriptlevel="0">
-                          <mtext>M</mtext>
-                        </mstyle>
+                        <mtext>M</mtext>
                         <mspace width=".5ex"></mspace>
                       </mrow>
                     </mtd>
@@ -1694,13 +1502,11 @@ describe('BussproofsRegProofs', () => {
               <mtd>
                 <mrow>
                   <mspace width=".5ex"></mspace>
-                  <mstyle displaystyle="false" scriptlevel="0">
-                    <mrow data-mjx-texclass="ORD">
-                      <mi data-latex="N">N</mi>
-                      <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                      <mi data-latex="R">R</mi>
-                    </mrow>
-                  </mstyle>
+                  <mrow data-mjx-texclass="ORD">
+                    <mi data-latex="N">N</mi>
+                    <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                    <mi data-latex="R">R</mi>
+                  </mrow>
                   <mspace width=".5ex"></mspace>
                 </mrow>
               </mtd>
@@ -1720,7 +1526,7 @@ describe('BussproofsRegProofs', () => {
         <mspace width="4.379em"></mspace>
         <mrow data-latex="\\begin{prooftree}\\AxiomC{D}\\AxiomC{A1}\\AxiomC{A2}\\TrinaryInfC{Q}\\RightLabel{AAAA}\\AxiomC{A}\\AxiomC{B}\\AxiomC{R}\\BinaryInfC{$C \\rightarrow D \\rightarrow Q$}\\LeftLabel{BBB}\\BinaryInfC{E}\\LeftLabel{CCCCC}\\BinaryInfC{F}\\RightLabel{QERE}\\LeftLabel{DD}\\AxiomC{M}\\BinaryInfC{$N \\rightarrow R$}\\LeftLabel{Nowhere}\\end{prooftree}" data-latex-item="{prooftree}">
           <mpadded height=".25em" depth="+.25em" width="+.5ex" voffset="-.25em" semantics="bspr_prooflabel:left">
-            <mstyle displaystyle="false" scriptlevel="0">
+            <mstyle displaystyle="false">
               <mtext>DD</mtext>
             </mstyle>
           </mpadded>
@@ -1737,9 +1543,7 @@ describe('BussproofsRegProofs', () => {
                           <mrow data-latex="\\LeftLabel{DD}">
                             <mspace width="0.551em"></mspace>
                             <mpadded height=".25em" depth="+.25em" width="+.5ex" voffset="-.25em" semantics="bspr_prooflabel:left">
-                              <mstyle displaystyle="false" scriptlevel="0">
-                                <mtext>CCCCC</mtext>
-                              </mstyle>
+                              <mtext>CCCCC</mtext>
                             </mpadded>
                             <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
                               <mtr>
@@ -1757,9 +1561,7 @@ describe('BussproofsRegProofs', () => {
                                                     <mtd rowalign="bottom">
                                                       <mrow data-latex="\\AxiomC{D}" semantics="bspr_axiom:true">
                                                         <mspace width=".5ex"></mspace>
-                                                        <mstyle displaystyle="false" scriptlevel="0">
-                                                          <mtext>D</mtext>
-                                                        </mstyle>
+                                                        <mtext>D</mtext>
                                                         <mspace width=".5ex"></mspace>
                                                       </mrow>
                                                     </mtd>
@@ -1767,9 +1569,7 @@ describe('BussproofsRegProofs', () => {
                                                     <mtd rowalign="bottom">
                                                       <mrow data-latex="\\AxiomC{A1}" semantics="bspr_axiom:true">
                                                         <mspace width=".5ex"></mspace>
-                                                        <mstyle displaystyle="false" scriptlevel="0">
-                                                          <mtext>A1</mtext>
-                                                        </mstyle>
+                                                        <mtext>A1</mtext>
                                                         <mspace width=".5ex"></mspace>
                                                       </mrow>
                                                     </mtd>
@@ -1777,9 +1577,7 @@ describe('BussproofsRegProofs', () => {
                                                     <mtd rowalign="bottom">
                                                       <mrow data-latex="\\AxiomC{A2}" semantics="bspr_axiom:true">
                                                         <mspace width=".5ex"></mspace>
-                                                        <mstyle displaystyle="false" scriptlevel="0">
-                                                          <mtext>A2</mtext>
-                                                        </mstyle>
+                                                        <mtext>A2</mtext>
                                                         <mspace width=".5ex"></mspace>
                                                       </mrow>
                                                     </mtd>
@@ -1791,9 +1589,7 @@ describe('BussproofsRegProofs', () => {
                                               <mtd>
                                                 <mrow>
                                                   <mspace width=".5ex"></mspace>
-                                                  <mstyle displaystyle="false" scriptlevel="0">
-                                                    <mtext>Q</mtext>
-                                                  </mstyle>
+                                                  <mtext>Q</mtext>
                                                   <mspace width=".5ex"></mspace>
                                                 </mrow>
                                               </mtd>
@@ -1806,9 +1602,7 @@ describe('BussproofsRegProofs', () => {
                                         <mrow semantics="bspr_inference:2;bspr_labelledRule:left">
                                           <mrow data-latex="\\LeftLabel{CCCCC}">
                                             <mpadded height=".25em" depth="+.25em" width="+.5ex" voffset="-.25em" semantics="bspr_prooflabel:left">
-                                              <mstyle displaystyle="false" scriptlevel="0">
-                                                <mtext>BBB</mtext>
-                                              </mstyle>
+                                              <mtext>BBB</mtext>
                                             </mpadded>
                                             <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
                                               <mtr>
@@ -1818,9 +1612,7 @@ describe('BussproofsRegProofs', () => {
                                                       <mtd rowalign="bottom">
                                                         <mrow data-latex="\\AxiomC{A}" semantics="bspr_axiom:true">
                                                           <mspace width=".5ex"></mspace>
-                                                          <mstyle displaystyle="false" scriptlevel="0">
-                                                            <mtext>A</mtext>
-                                                          </mstyle>
+                                                          <mtext>A</mtext>
                                                           <mspace width=".5ex"></mspace>
                                                         </mrow>
                                                       </mtd>
@@ -1836,9 +1628,7 @@ describe('BussproofsRegProofs', () => {
                                                                       <mtd rowalign="bottom">
                                                                         <mrow data-latex="\\AxiomC{B}" semantics="bspr_axiom:true">
                                                                           <mspace width=".5ex"></mspace>
-                                                                          <mstyle displaystyle="false" scriptlevel="0">
-                                                                            <mtext>B</mtext>
-                                                                          </mstyle>
+                                                                          <mtext>B</mtext>
                                                                           <mspace width=".5ex"></mspace>
                                                                         </mrow>
                                                                       </mtd>
@@ -1846,9 +1636,7 @@ describe('BussproofsRegProofs', () => {
                                                                       <mtd rowalign="bottom">
                                                                         <mrow data-latex="\\AxiomC{R}" semantics="bspr_axiom:true">
                                                                           <mspace width=".5ex"></mspace>
-                                                                          <mstyle displaystyle="false" scriptlevel="0">
-                                                                            <mtext>R</mtext>
-                                                                          </mstyle>
+                                                                          <mtext>R</mtext>
                                                                           <mspace width=".5ex"></mspace>
                                                                         </mrow>
                                                                       </mtd>
@@ -1860,24 +1648,20 @@ describe('BussproofsRegProofs', () => {
                                                                 <mtd>
                                                                   <mrow>
                                                                     <mspace width=".5ex"></mspace>
-                                                                    <mstyle displaystyle="false" scriptlevel="0">
-                                                                      <mrow data-mjx-texclass="ORD">
-                                                                        <mi data-latex="C">C</mi>
-                                                                        <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                                                        <mi data-latex="D">D</mi>
-                                                                        <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                                                        <mi data-latex="Q">Q</mi>
-                                                                      </mrow>
-                                                                    </mstyle>
+                                                                    <mrow data-mjx-texclass="ORD">
+                                                                      <mi data-latex="C">C</mi>
+                                                                      <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                                                      <mi data-latex="D">D</mi>
+                                                                      <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                                                      <mi data-latex="Q">Q</mi>
+                                                                    </mrow>
                                                                     <mspace width=".5ex"></mspace>
                                                                   </mrow>
                                                                 </mtd>
                                                               </mtr>
                                                             </mtable>
                                                             <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-                                                              <mstyle displaystyle="false" scriptlevel="0">
-                                                                <mtext>AAAA</mtext>
-                                                              </mstyle>
+                                                              <mtext>AAAA</mtext>
                                                             </mpadded>
                                                           </mrow>
                                                           <mspace width="-3.216em"></mspace>
@@ -1891,9 +1675,7 @@ describe('BussproofsRegProofs', () => {
                                                 <mtd>
                                                   <mrow>
                                                     <mspace width=".5ex"></mspace>
-                                                    <mstyle displaystyle="false" scriptlevel="0">
-                                                      <mtext>E</mtext>
-                                                    </mstyle>
+                                                    <mtext>E</mtext>
                                                     <mspace width=".5ex"></mspace>
                                                   </mrow>
                                                 </mtd>
@@ -1911,9 +1693,7 @@ describe('BussproofsRegProofs', () => {
                                 <mtd>
                                   <mrow>
                                     <mspace width=".5ex"></mspace>
-                                    <mstyle displaystyle="false" scriptlevel="0">
-                                      <mtext>F</mtext>
-                                    </mstyle>
+                                    <mtext>F</mtext>
                                     <mspace width=".5ex"></mspace>
                                   </mrow>
                                 </mtd>
@@ -1929,9 +1709,7 @@ describe('BussproofsRegProofs', () => {
                     <mtd rowalign="bottom">
                       <mrow data-latex="\\AxiomC{M}" semantics="bspr_axiom:true">
                         <mspace width=".5ex"></mspace>
-                        <mstyle displaystyle="false" scriptlevel="0">
-                          <mtext>M</mtext>
-                        </mstyle>
+                        <mtext>M</mtext>
                         <mspace width=".5ex"></mspace>
                       </mrow>
                     </mtd>
@@ -1943,20 +1721,18 @@ describe('BussproofsRegProofs', () => {
               <mtd>
                 <mrow>
                   <mspace width=".5ex"></mspace>
-                  <mstyle displaystyle="false" scriptlevel="0">
-                    <mrow data-mjx-texclass="ORD">
-                      <mi data-latex="N">N</mi>
-                      <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                      <mi data-latex="R">R</mi>
-                    </mrow>
-                  </mstyle>
+                  <mrow data-mjx-texclass="ORD">
+                    <mi data-latex="N">N</mi>
+                    <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                    <mi data-latex="R">R</mi>
+                  </mrow>
                   <mspace width=".5ex"></mspace>
                 </mrow>
               </mtd>
             </mtr>
           </mtable>
           <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-            <mstyle displaystyle="false" scriptlevel="0">
+            <mstyle displaystyle="false">
               <mtext>QERE</mtext>
             </mstyle>
           </mpadded>
@@ -2000,9 +1776,7 @@ describe('BussproofsRegProofs', () => {
                                                     <mtd rowalign="bottom">
                                                       <mrow data-latex="\\AxiomC{D}" semantics="bspr_axiom:true">
                                                         <mspace width=".5ex"></mspace>
-                                                        <mstyle displaystyle="false" scriptlevel="0">
-                                                          <mtext>D</mtext>
-                                                        </mstyle>
+                                                        <mtext>D</mtext>
                                                         <mspace width=".5ex"></mspace>
                                                       </mrow>
                                                     </mtd>
@@ -2010,9 +1784,7 @@ describe('BussproofsRegProofs', () => {
                                                     <mtd rowalign="bottom">
                                                       <mrow data-latex="\\AxiomC{A1}" semantics="bspr_axiom:true">
                                                         <mspace width=".5ex"></mspace>
-                                                        <mstyle displaystyle="false" scriptlevel="0">
-                                                          <mtext>A1</mtext>
-                                                        </mstyle>
+                                                        <mtext>A1</mtext>
                                                         <mspace width=".5ex"></mspace>
                                                       </mrow>
                                                     </mtd>
@@ -2020,9 +1792,7 @@ describe('BussproofsRegProofs', () => {
                                                     <mtd rowalign="bottom">
                                                       <mrow data-latex="\\RightLabel{AAAA}" semantics="bspr_axiom:true">
                                                         <mspace width=".5ex"></mspace>
-                                                        <mstyle displaystyle="false" scriptlevel="0">
-                                                          <mtext>A2</mtext>
-                                                        </mstyle>
+                                                        <mtext>A2</mtext>
                                                         <mspace width=".5ex"></mspace>
                                                       </mrow>
                                                     </mtd>
@@ -2034,18 +1804,14 @@ describe('BussproofsRegProofs', () => {
                                               <mtd>
                                                 <mrow>
                                                   <mspace width=".5ex"></mspace>
-                                                  <mstyle displaystyle="false" scriptlevel="0">
-                                                    <mtext>Q</mtext>
-                                                  </mstyle>
+                                                  <mtext>Q</mtext>
                                                   <mspace width=".5ex"></mspace>
                                                 </mrow>
                                               </mtd>
                                             </mtr>
                                           </mtable>
                                           <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-                                            <mstyle displaystyle="false" scriptlevel="0">
-                                              <mtext>AAAA</mtext>
-                                            </mstyle>
+                                            <mtext>AAAA</mtext>
                                           </mpadded>
                                         </mrow>
                                       </mrow>
@@ -2062,9 +1828,7 @@ describe('BussproofsRegProofs', () => {
                                                     <mtd rowalign="bottom">
                                                       <mrow data-latex="\\AxiomC{A}" semantics="bspr_axiom:true">
                                                         <mspace width=".5ex"></mspace>
-                                                        <mstyle displaystyle="false" scriptlevel="0">
-                                                          <mtext>A</mtext>
-                                                        </mstyle>
+                                                        <mtext>A</mtext>
                                                         <mspace width=".5ex"></mspace>
                                                       </mrow>
                                                     </mtd>
@@ -2080,9 +1844,7 @@ describe('BussproofsRegProofs', () => {
                                                                     <mtd rowalign="bottom">
                                                                       <mrow data-latex="\\AxiomC{B}" semantics="bspr_axiom:true">
                                                                         <mspace width=".5ex"></mspace>
-                                                                        <mstyle displaystyle="false" scriptlevel="0">
-                                                                          <mtext>B</mtext>
-                                                                        </mstyle>
+                                                                        <mtext>B</mtext>
                                                                         <mspace width=".5ex"></mspace>
                                                                       </mrow>
                                                                     </mtd>
@@ -2090,9 +1852,7 @@ describe('BussproofsRegProofs', () => {
                                                                     <mtd rowalign="bottom">
                                                                       <mrow data-latex="\\AxiomC{R}" semantics="bspr_axiom:true">
                                                                         <mspace width=".5ex"></mspace>
-                                                                        <mstyle displaystyle="false" scriptlevel="0">
-                                                                          <mtext>R</mtext>
-                                                                        </mstyle>
+                                                                        <mtext>R</mtext>
                                                                         <mspace width=".5ex"></mspace>
                                                                       </mrow>
                                                                     </mtd>
@@ -2104,24 +1864,20 @@ describe('BussproofsRegProofs', () => {
                                                               <mtd>
                                                                 <mrow>
                                                                   <mspace width=".5ex"></mspace>
-                                                                  <mstyle displaystyle="false" scriptlevel="0">
-                                                                    <mrow data-mjx-texclass="ORD">
-                                                                      <mi data-latex="C">C</mi>
-                                                                      <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                                                      <mi data-latex="D">D</mi>
-                                                                      <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                                                      <mi data-latex="Q">Q</mi>
-                                                                    </mrow>
-                                                                  </mstyle>
+                                                                  <mrow data-mjx-texclass="ORD">
+                                                                    <mi data-latex="C">C</mi>
+                                                                    <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                                                    <mi data-latex="D">D</mi>
+                                                                    <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                                                    <mi data-latex="Q">Q</mi>
+                                                                  </mrow>
                                                                   <mspace width=".5ex"></mspace>
                                                                 </mrow>
                                                               </mtd>
                                                             </mtr>
                                                           </mtable>
                                                           <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-                                                            <mstyle displaystyle="false" scriptlevel="0">
-                                                              <mtext>Nowhere</mtext>
-                                                            </mstyle>
+                                                            <mtext>Nowhere</mtext>
                                                           </mpadded>
                                                         </mrow>
                                                         <mspace width="-4.023em"></mspace>
@@ -2135,18 +1891,14 @@ describe('BussproofsRegProofs', () => {
                                               <mtd>
                                                 <mrow>
                                                   <mspace width=".5ex"></mspace>
-                                                  <mstyle displaystyle="false" scriptlevel="0">
-                                                    <mtext>E</mtext>
-                                                  </mstyle>
+                                                  <mtext>E</mtext>
                                                   <mspace width=".5ex"></mspace>
                                                 </mrow>
                                               </mtd>
                                             </mtr>
                                           </mtable>
                                           <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-                                            <mstyle displaystyle="false" scriptlevel="0">
-                                              <mtext>BBB</mtext>
-                                            </mstyle>
+                                            <mtext>BBB</mtext>
                                           </mpadded>
                                         </mrow>
                                         <mspace width="-6.135em"></mspace>
@@ -2160,18 +1912,14 @@ describe('BussproofsRegProofs', () => {
                               <mtd>
                                 <mrow>
                                   <mspace width=".5ex"></mspace>
-                                  <mstyle displaystyle="false" scriptlevel="0">
-                                    <mtext>F</mtext>
-                                  </mstyle>
+                                  <mtext>F</mtext>
                                   <mspace width=".5ex"></mspace>
                                 </mrow>
                               </mtd>
                             </mtr>
                           </mtable>
                           <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-                            <mstyle displaystyle="false" scriptlevel="0">
-                              <mtext>CCCCC</mtext>
-                            </mstyle>
+                            <mtext>CCCCC</mtext>
                           </mpadded>
                         </mrow>
                       </mrow>
@@ -2203,9 +1951,7 @@ describe('BussproofsRegProofs', () => {
                                                           <mtd rowalign="bottom">
                                                             <mrow data-latex="\\AxiomC{M}" semantics="bspr_axiom:true">
                                                               <mspace width=".5ex"></mspace>
-                                                              <mstyle displaystyle="false" scriptlevel="0">
-                                                                <mtext>M</mtext>
-                                                              </mstyle>
+                                                              <mtext>M</mtext>
                                                               <mspace width=".5ex"></mspace>
                                                             </mrow>
                                                           </mtd>
@@ -2217,18 +1963,14 @@ describe('BussproofsRegProofs', () => {
                                                     <mtd>
                                                       <mrow>
                                                         <mspace width=".5ex"></mspace>
-                                                        <mstyle displaystyle="false" scriptlevel="0">
-                                                          <mtext>More and more</mtext>
-                                                        </mstyle>
+                                                        <mtext>More and more</mtext>
                                                         <mspace width=".5ex"></mspace>
                                                       </mrow>
                                                     </mtd>
                                                   </mtr>
                                                 </mtable>
                                                 <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-                                                  <mstyle displaystyle="false" scriptlevel="0">
-                                                    <mtext>QERE</mtext>
-                                                  </mstyle>
+                                                  <mtext>QERE</mtext>
                                                 </mpadded>
                                               </mrow>
                                               <mspace width="-3.092em"></mspace>
@@ -2242,9 +1984,7 @@ describe('BussproofsRegProofs', () => {
                                     <mtd>
                                       <mrow>
                                         <mspace width=".5ex"></mspace>
-                                        <mstyle displaystyle="false" scriptlevel="0">
-                                          <mtext>More and more</mtext>
-                                        </mstyle>
+                                        <mtext>More and more</mtext>
                                         <mspace width=".5ex"></mspace>
                                       </mrow>
                                     </mtd>
@@ -2259,9 +1999,7 @@ describe('BussproofsRegProofs', () => {
                         <mtd>
                           <mrow>
                             <mspace width=".5ex"></mspace>
-                            <mstyle displaystyle="false" scriptlevel="0">
-                              <mtext>More and more</mtext>
-                            </mstyle>
+                            <mtext>More and more</mtext>
                             <mspace width=".5ex"></mspace>
                           </mrow>
                         </mtd>
@@ -2276,13 +2014,11 @@ describe('BussproofsRegProofs', () => {
             <mtd>
               <mrow>
                 <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mrow data-mjx-texclass="ORD">
-                    <mi data-latex="N">N</mi>
-                    <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                    <mi data-latex="R">R</mi>
-                  </mrow>
-                </mstyle>
+                <mrow data-mjx-texclass="ORD">
+                  <mi data-latex="N">N</mi>
+                  <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                  <mi data-latex="R">R</mi>
+                </mrow>
                 <mspace width=".5ex"></mspace>
               </mrow>
             </mtd>
@@ -2297,636 +2033,584 @@ describe('BussproofsRegProofs', () => {
       tex2mml(
         '\\begin{prooftree}\\AXC{}\\RL{$Hyp^{1}$}\\UIC{$P$}\\AXC{$P\\rightarrow Q$}\\RL{$\\rightarrow_E$}\\solidLine\\BIC{$Q^2$}\\AXC{$Q\\rightarrow R$} \\RL{$\\rightarrow_E$} \\BIC{$R$} \\AXC{$Q$}\\RL{Rit$^2$} \\UIC{$Q$}\\RL{$\\wedge_I$}\\BIC{$Q\\wedge R$}\\RL{${\\rightarrow_I}^1$}\\UIC{$P\\rightarrow Q\\wedge R$}\\end{prooftree}'
       ),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{prooftree}\\AXC{}\\RL{\$Hyp^{1}\$}\\UIC{\$P\$}\\AXC{\$P\\rightarrow Q\$}\\RL{\$\\rightarrow_E\$}\\solidLine\\BIC{\$Q^2\$}\\AXC{\$Q\\rightarrow R\$} \\RL{\$\\rightarrow_E\$} \\BIC{\$R\$} \\AXC{\$Q\$}\\RL{Rit\$^2\$} \\UIC{\$Q\$}\\RL{\$\\wedge_I\$}\\BIC{\$Q\\wedge R\$}\\RL{\${\\rightarrow_I}^1\$}\\UIC{\$P\\rightarrow Q\\wedge R\$}\\end{prooftree}" display="block">
-  <mrow semantics="bspr_inference:1;bspr_proof:true;bspr_labelledRule:right">
-    <mrow>
-      <mspace width="13.248em"></mspace>
-      <mrow data-latex="\\begin{prooftree}\\AXC{}\\RL{\$Hyp^{1}\$}\\UIC{\$P\$}\\AXC{\$P\\rightarrow Q\$}\\RL{\$\\rightarrow_E\$}\\solidLine\\BIC{\$Q^2\$}\\AXC{\$Q\\rightarrow R\$} \\RL{\$\\rightarrow_E\$} \\BIC{\$R\$} \\AXC{\$Q\$}\\RL{Rit\$^2\$} \\UIC{\$Q\$}\\RL{\$\\wedge_I\$}\\BIC{\$Q\\wedge R\$}\\RL{\${\\rightarrow_I}^1\$}\\UIC{\$P\\rightarrow Q\\wedge R\$}\\end{prooftree}" data-latex-item="{prooftree}">
-        <mspace width="-1.155em"></mspace>
-        <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
-          <mtr>
-            <mtd>
-              <mtable framespacing="0 0">
-                <mtr>
-                  <mtd rowalign="bottom">
-                    <mrow semantics="bspr_inference:2;bspr_labelledRule:right">
-                      <mrow>
-                        <mspace width="-13.248em"></mspace>
-                        <mrow>
-                          <mspace width="9.11em"></mspace>
-                          <mrow data-latex="\\RL{\${\\rightarrow_I}^1\$}">
-                            <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
-                              <mtr>
-                                <mtd>
-                                  <mtable framespacing="0 0">
-                                    <mtr>
-                                      <mtd rowalign="bottom">
-                                        <mrow semantics="bspr_inference:2;bspr_labelledRule:right">
-                                          <mspace width="-9.11em"></mspace>
-                                          <mrow>
-                                            <mspace width="3.592em"></mspace>
-                                            <mrow data-latex="\\BIC{\$R\$}">
-                                              <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
-                                                <mtr>
-                                                  <mtd>
-                                                    <mtable framespacing="0 0">
-                                                      <mtr>
-                                                        <mtd rowalign="bottom">
-                                                          <mrow semantics="bspr_inference:2;bspr_labelledRule:right">
-                                                            <mspace width="-3.592em"></mspace>
-                                                            <mrow data-latex="\\BIC{\$Q^2\$}">
-                                                              <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
-                                                                <mtr>
-                                                                  <mtd>
-                                                                    <mtable framespacing="0 0">
-                                                                      <mtr>
-                                                                        <mtd rowalign="bottom">
-                                                                          <mrow data-latex="\\UIC{\$P\$}" semantics="bspr_labelledRule:right;bspr_inference:0">
-                                                                            <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
-                                                                              <mtr>
-                                                                                <mtd>
-                                                                                  <mtable framespacing="0 0">
-                                                                                    <mtr>
-                                                                                      <mtd rowalign="bottom">
-                                                                                        <mrow data-latex="\\RL{\$Hyp^{1}\$}" semantics="bspr_axiom:true"></mrow>
-                                                                                      </mtd>
-                                                                                    </mtr>
-                                                                                  </mtable>
-                                                                                </mtd>
-                                                                              </mtr>
-                                                                              <mtr>
-                                                                                <mtd>
-                                                                                  <mrow>
-                                                                                    <mspace width=".5ex"></mspace>
-                                                                                    <mstyle displaystyle="false" scriptlevel="0">
-                                                                                      <mrow data-mjx-texclass="ORD">
-                                                                                        <mi data-latex="P">P</mi>
-                                                                                      </mrow>
-                                                                                    </mstyle>
-                                                                                    <mspace width=".5ex"></mspace>
-                                                                                  </mrow>
-                                                                                </mtd>
-                                                                              </mtr>
-                                                                            </mtable>
-                                                                            <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-                                                                              <mstyle displaystyle="false" scriptlevel="0">
-                                                                                <mrow data-mjx-texclass="ORD">
-                                                                                  <mi data-latex="H">H</mi>
-                                                                                  <mi data-latex="y">y</mi>
-                                                                                  <msup data-latex="p^{1}">
-                                                                                    <mi data-latex="p">p</mi>
-                                                                                    <mrow data-mjx-texclass="ORD" data-latex="{1}">
-                                                                                      <mn data-latex="1">1</mn>
-                                                                                    </mrow>
-                                                                                  </msup>
-                                                                                </mrow>
-                                                                              </mstyle>
-                                                                            </mpadded>
-                                                                          </mrow>
-                                                                        </mtd>
-                                                                        <mtd></mtd>
-                                                                        <mtd rowalign="bottom">
-                                                                          <mrow data-latex="\\solidLine" semantics="bspr_axiom:true">
-                                                                            <mspace width=".5ex"></mspace>
-                                                                            <mstyle displaystyle="false" scriptlevel="0">
-                                                                              <mrow data-mjx-texclass="ORD">
-                                                                                <mi data-latex="P">P</mi>
-                                                                                <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                                                                <mi data-latex="Q">Q</mi>
-                                                                              </mrow>
-                                                                            </mstyle>
-                                                                            <mspace width=".5ex"></mspace>
-                                                                          </mrow>
-                                                                        </mtd>
-                                                                      </mtr>
-                                                                    </mtable>
-                                                                  </mtd>
-                                                                </mtr>
-                                                                <mtr>
-                                                                  <mtd>
-                                                                    <mrow>
-                                                                      <mspace width=".5ex"></mspace>
-                                                                      <mstyle displaystyle="false" scriptlevel="0">
-                                                                        <mrow data-mjx-texclass="ORD">
-                                                                          <msup data-latex="Q^2 ">
-                                                                            <mi data-latex="Q">Q</mi>
-                                                                            <mn data-latex="2">2</mn>
-                                                                          </msup>
-                                                                        </mrow>
-                                                                      </mstyle>
-                                                                      <mspace width=".5ex"></mspace>
-                                                                    </mrow>
-                                                                  </mtd>
-                                                                </mtr>
-                                                              </mtable>
-                                                              <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-                                                                <mstyle displaystyle="false" scriptlevel="0">
-                                                                  <mrow data-mjx-texclass="ORD">
-                                                                    <msub data-latex="\\rightarrow_E">
-                                                                      <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                                                      <mi data-latex="E">E</mi>
-                                                                    </msub>
-                                                                  </mrow>
-                                                                </mstyle>
-                                                              </mpadded>
-                                                            </mrow>
-                                                          </mrow>
-                                                        </mtd>
-                                                        <mtd></mtd>
-                                                        <mtd rowalign="bottom">
-                                                          <mrow data-latex="\\RL{\$\\rightarrow_E\$}" semantics="bspr_axiom:true">
-                                                            <mspace width=".5ex"></mspace>
-                                                            <mstyle displaystyle="false" scriptlevel="0">
-                                                              <mrow data-mjx-texclass="ORD">
-                                                                <mi data-latex="Q">Q</mi>
-                                                                <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                                                <mi data-latex="R">R</mi>
-                                                              </mrow>
-                                                            </mstyle>
-                                                            <mspace width=".5ex"></mspace>
-                                                          </mrow>
-                                                        </mtd>
-                                                      </mtr>
-                                                    </mtable>
-                                                  </mtd>
-                                                </mtr>
-                                                <mtr>
-                                                  <mtd>
-                                                    <mrow>
-                                                      <mspace width=".5ex"></mspace>
-                                                      <mstyle displaystyle="false" scriptlevel="0">
-                                                        <mrow data-mjx-texclass="ORD">
-                                                          <mi data-latex="R">R</mi>
-                                                        </mrow>
-                                                      </mstyle>
-                                                      <mspace width=".5ex"></mspace>
-                                                    </mrow>
-                                                  </mtd>
-                                                </mtr>
-                                              </mtable>
-                                              <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-                                                <mstyle displaystyle="false" scriptlevel="0">
-                                                  <mrow data-mjx-texclass="ORD">
-                                                    <msub data-latex="\\rightarrow_E">
-                                                      <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                                      <mi data-latex="E">E</mi>
-                                                    </msub>
-                                                  </mrow>
-                                                </mstyle>
-                                              </mpadded>
-                                            </mrow>
-                                          </mrow>
-                                        </mrow>
-                                      </mtd>
-                                      <mtd></mtd>
-                                      <mtd rowalign="bottom">
-                                        <mrow semantics="bspr_inference:1;bspr_labelledRule:right">
-                                          <mrow data-latex="\\RL{\$\\wedge_I\$}">
-                                            <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
-                                              <mtr>
-                                                <mtd>
-                                                  <mtable framespacing="0 0">
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{prooftree}\\AXC{}\\RL{$Hyp^{1}$}\\UIC{$P$}\\AXC{$P\\rightarrow Q$}\\RL{$\\rightarrow_E$}\\solidLine\\BIC{$Q^2$}\\AXC{$Q\\rightarrow R$} \\RL{$\\rightarrow_E$} \\BIC{$R$} \\AXC{$Q$}\\RL{Rit$^2$} \\UIC{$Q$}\\RL{$\\wedge_I$}\\BIC{$Q\\wedge R$}\\RL{\${\\rightarrow_I}^1$}\\UIC{$P\\rightarrow Q\\wedge R$}\\end{prooftree}" display="block">
+      <mrow semantics="bspr_inference:1;bspr_proof:true;bspr_labelledRule:right">
+        <mrow>
+          <mspace width="13.248em"></mspace>
+          <mrow data-latex="\\begin{prooftree}\\AXC{}\\RL{$Hyp^{1}$}\\UIC{$P$}\\AXC{$P\\rightarrow Q$}\\RL{$\\rightarrow_E$}\\solidLine\\BIC{$Q^2$}\\AXC{$Q\\rightarrow R$} \\RL{$\\rightarrow_E$} \\BIC{$R$} \\AXC{$Q$}\\RL{Rit$^2$} \\UIC{$Q$}\\RL{$\\wedge_I$}\\BIC{$Q\\wedge R$}\\RL{\${\\rightarrow_I}^1$}\\UIC{$P\\rightarrow Q\\wedge R$}\\end{prooftree}" data-latex-item="{prooftree}">
+            <mspace width="-1.155em"></mspace>
+            <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
+              <mtr>
+                <mtd>
+                  <mtable framespacing="0 0">
+                    <mtr>
+                      <mtd rowalign="bottom">
+                        <mrow semantics="bspr_inference:2;bspr_labelledRule:right">
+                          <mrow>
+                            <mspace width="-13.248em"></mspace>
+                            <mrow>
+                              <mspace width="9.11em"></mspace>
+                              <mrow data-latex="\\RL{\${\\rightarrow_I}^1$}">
+                                <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
+                                  <mtr>
+                                    <mtd>
+                                      <mtable framespacing="0 0">
+                                        <mtr>
+                                          <mtd rowalign="bottom">
+                                            <mrow semantics="bspr_inference:2;bspr_labelledRule:right">
+                                              <mspace width="-9.11em"></mspace>
+                                              <mrow>
+                                                <mspace width="3.592em"></mspace>
+                                                <mrow data-latex="\\BIC{$R$}">
+                                                  <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
                                                     <mtr>
-                                                      <mtd rowalign="bottom">
-                                                        <mrow data-latex="\\RL{Rit\$^2\$}" semantics="bspr_axiom:true">
+                                                      <mtd>
+                                                        <mtable framespacing="0 0">
+                                                          <mtr>
+                                                            <mtd rowalign="bottom">
+                                                              <mrow semantics="bspr_inference:2;bspr_labelledRule:right">
+                                                                <mspace width="-3.592em"></mspace>
+                                                                <mrow data-latex="\\BIC{$Q^2$}">
+                                                                  <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
+                                                                    <mtr>
+                                                                      <mtd>
+                                                                        <mtable framespacing="0 0">
+                                                                          <mtr>
+                                                                            <mtd rowalign="bottom">
+                                                                              <mrow data-latex="\\UIC{$P$}" semantics="bspr_labelledRule:right;bspr_inference:0">
+                                                                                <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
+                                                                                  <mtr>
+                                                                                    <mtd>
+                                                                                      <mtable framespacing="0 0">
+                                                                                        <mtr>
+                                                                                          <mtd rowalign="bottom">
+                                                                                            <mrow data-latex="\\RL{$Hyp^{1}$}" semantics="bspr_axiom:true"></mrow>
+                                                                                          </mtd>
+                                                                                        </mtr>
+                                                                                      </mtable>
+                                                                                    </mtd>
+                                                                                  </mtr>
+                                                                                  <mtr>
+                                                                                    <mtd>
+                                                                                      <mrow>
+                                                                                        <mspace width=".5ex"></mspace>
+                                                                                        <mrow data-mjx-texclass="ORD">
+                                                                                          <mi data-latex="P">P</mi>
+                                                                                        </mrow>
+                                                                                        <mspace width=".5ex"></mspace>
+                                                                                      </mrow>
+                                                                                    </mtd>
+                                                                                  </mtr>
+                                                                                </mtable>
+                                                                                <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
+                                                                                  <mrow data-mjx-texclass="ORD">
+                                                                                    <mi data-latex="H">H</mi>
+                                                                                    <mi data-latex="y">y</mi>
+                                                                                    <msup data-latex="p^{1}">
+                                                                                      <mi data-latex="p">p</mi>
+                                                                                      <mrow data-mjx-texclass="ORD" data-latex="{1}">
+                                                                                        <mn data-latex="1">1</mn>
+                                                                                      </mrow>
+                                                                                    </msup>
+                                                                                  </mrow>
+                                                                                </mpadded>
+                                                                              </mrow>
+                                                                            </mtd>
+                                                                            <mtd></mtd>
+                                                                            <mtd rowalign="bottom">
+                                                                              <mrow data-latex="\\solidLine" semantics="bspr_axiom:true">
+                                                                                <mspace width=".5ex"></mspace>
+                                                                                <mrow data-mjx-texclass="ORD">
+                                                                                  <mi data-latex="P">P</mi>
+                                                                                  <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                                                                  <mi data-latex="Q">Q</mi>
+                                                                                </mrow>
+                                                                                <mspace width=".5ex"></mspace>
+                                                                              </mrow>
+                                                                            </mtd>
+                                                                          </mtr>
+                                                                        </mtable>
+                                                                      </mtd>
+                                                                    </mtr>
+                                                                    <mtr>
+                                                                      <mtd>
+                                                                        <mrow>
+                                                                          <mspace width=".5ex"></mspace>
+                                                                          <mrow data-mjx-texclass="ORD">
+                                                                            <msup data-latex="Q^2 ">
+                                                                              <mi data-latex="Q">Q</mi>
+                                                                              <mn data-latex="2">2</mn>
+                                                                            </msup>
+                                                                          </mrow>
+                                                                          <mspace width=".5ex"></mspace>
+                                                                        </mrow>
+                                                                      </mtd>
+                                                                    </mtr>
+                                                                  </mtable>
+                                                                  <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
+                                                                    <mrow data-mjx-texclass="ORD">
+                                                                      <msub data-latex="\\rightarrow_E">
+                                                                        <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                                                        <mi data-latex="E">E</mi>
+                                                                      </msub>
+                                                                    </mrow>
+                                                                  </mpadded>
+                                                                </mrow>
+                                                              </mrow>
+                                                            </mtd>
+                                                            <mtd></mtd>
+                                                            <mtd rowalign="bottom">
+                                                              <mrow data-latex="\\RL{$\\rightarrow_E$}" semantics="bspr_axiom:true">
+                                                                <mspace width=".5ex"></mspace>
+                                                                <mrow data-mjx-texclass="ORD">
+                                                                  <mi data-latex="Q">Q</mi>
+                                                                  <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                                                  <mi data-latex="R">R</mi>
+                                                                </mrow>
+                                                                <mspace width=".5ex"></mspace>
+                                                              </mrow>
+                                                            </mtd>
+                                                          </mtr>
+                                                        </mtable>
+                                                      </mtd>
+                                                    </mtr>
+                                                    <mtr>
+                                                      <mtd>
+                                                        <mrow>
                                                           <mspace width=".5ex"></mspace>
-                                                          <mstyle displaystyle="false" scriptlevel="0">
-                                                            <mrow data-mjx-texclass="ORD">
-                                                              <mi data-latex="Q">Q</mi>
-                                                            </mrow>
-                                                          </mstyle>
+                                                          <mrow data-mjx-texclass="ORD">
+                                                            <mi data-latex="R">R</mi>
+                                                          </mrow>
                                                           <mspace width=".5ex"></mspace>
                                                         </mrow>
                                                       </mtd>
                                                     </mtr>
                                                   </mtable>
-                                                </mtd>
-                                              </mtr>
-                                              <mtr>
-                                                <mtd>
-                                                  <mrow>
-                                                    <mspace width=".5ex"></mspace>
-                                                    <mstyle displaystyle="false" scriptlevel="0">
-                                                      <mrow data-mjx-texclass="ORD">
-                                                        <mi data-latex="Q">Q</mi>
-                                                      </mrow>
-                                                    </mstyle>
-                                                    <mspace width=".5ex"></mspace>
-                                                  </mrow>
-                                                </mtd>
-                                              </mtr>
-                                            </mtable>
-                                            <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-                                              <mstyle displaystyle="false" scriptlevel="0">
-                                                <mtext>Rit</mtext>
-                                                <mrow data-mjx-texclass="ORD">
-                                                  <msup data-latex="^2 ">
-                                                    <mi></mi>
-                                                    <mn data-latex="2">2</mn>
-                                                  </msup>
+                                                  <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
+                                                    <mrow data-mjx-texclass="ORD">
+                                                      <msub data-latex="\\rightarrow_E">
+                                                        <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                                        <mi data-latex="E">E</mi>
+                                                      </msub>
+                                                    </mrow>
+                                                  </mpadded>
                                                 </mrow>
-                                              </mstyle>
-                                            </mpadded>
-                                          </mrow>
-                                          <mspace width="-2.055em"></mspace>
+                                              </mrow>
+                                            </mrow>
+                                          </mtd>
+                                          <mtd></mtd>
+                                          <mtd rowalign="bottom">
+                                            <mrow semantics="bspr_inference:1;bspr_labelledRule:right">
+                                              <mrow data-latex="\\RL{$\\wedge_I$}">
+                                                <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
+                                                  <mtr>
+                                                    <mtd>
+                                                      <mtable framespacing="0 0">
+                                                        <mtr>
+                                                          <mtd rowalign="bottom">
+                                                            <mrow data-latex="\\RL{Rit$^2$}" semantics="bspr_axiom:true">
+                                                              <mspace width=".5ex"></mspace>
+                                                              <mrow data-mjx-texclass="ORD">
+                                                                <mi data-latex="Q">Q</mi>
+                                                              </mrow>
+                                                              <mspace width=".5ex"></mspace>
+                                                            </mrow>
+                                                          </mtd>
+                                                        </mtr>
+                                                      </mtable>
+                                                    </mtd>
+                                                  </mtr>
+                                                  <mtr>
+                                                    <mtd>
+                                                      <mrow>
+                                                        <mspace width=".5ex"></mspace>
+                                                        <mrow data-mjx-texclass="ORD">
+                                                          <mi data-latex="Q">Q</mi>
+                                                        </mrow>
+                                                        <mspace width=".5ex"></mspace>
+                                                      </mrow>
+                                                    </mtd>
+                                                  </mtr>
+                                                </mtable>
+                                                <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
+                                                  <mstyle>
+                                                    <mtext>Rit</mtext>
+                                                    <mrow data-mjx-texclass="ORD">
+                                                      <msup data-latex="^2 ">
+                                                        <mi></mi>
+                                                        <mn data-latex="2">2</mn>
+                                                      </msup>
+                                                    </mrow>
+                                                  </mstyle>
+                                                </mpadded>
+                                              </mrow>
+                                              <mspace width="-2.055em"></mspace>
+                                            </mrow>
+                                          </mtd>
+                                        </mtr>
+                                      </mtable>
+                                    </mtd>
+                                  </mtr>
+                                  <mtr>
+                                    <mtd>
+                                      <mrow>
+                                        <mspace width=".5ex"></mspace>
+                                        <mrow data-mjx-texclass="ORD">
+                                          <mi data-latex="Q">Q</mi>
+                                          <mo data-latex="\\wedge">&#x2227;</mo>
+                                          <mi data-latex="R">R</mi>
                                         </mrow>
-                                      </mtd>
-                                    </mtr>
-                                  </mtable>
-                                </mtd>
-                              </mtr>
-                              <mtr>
-                                <mtd>
-                                  <mrow>
-                                    <mspace width=".5ex"></mspace>
-                                    <mstyle displaystyle="false" scriptlevel="0">
-                                      <mrow data-mjx-texclass="ORD">
-                                        <mi data-latex="Q">Q</mi>
-                                        <mo data-latex="\\wedge">&#x2227;</mo>
-                                        <mi data-latex="R">R</mi>
+                                        <mspace width=".5ex"></mspace>
                                       </mrow>
-                                    </mstyle>
-                                    <mspace width=".5ex"></mspace>
+                                    </mtd>
+                                  </mtr>
+                                </mtable>
+                                <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
+                                  <mrow data-mjx-texclass="ORD">
+                                    <msub data-latex="\\wedge_I">
+                                      <mo data-latex="\\wedge">&#x2227;</mo>
+                                      <mi data-latex="I">I</mi>
+                                    </msub>
                                   </mrow>
-                                </mtd>
-                              </mtr>
-                            </mtable>
-                            <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-                              <mstyle displaystyle="false" scriptlevel="0">
-                                <mrow data-mjx-texclass="ORD">
-                                  <msub data-latex="\\wedge_I">
-                                    <mo data-latex="\\wedge">&#x2227;</mo>
-                                    <mi data-latex="I">I</mi>
-                                  </msub>
-                                </mrow>
-                              </mstyle>
-                            </mpadded>
+                                </mpadded>
+                              </mrow>
+                            </mrow>
                           </mrow>
+                          <mspace width="-5.455em"></mspace>
                         </mrow>
-                      </mrow>
-                      <mspace width="-5.455em"></mspace>
+                      </mtd>
+                    </mtr>
+                  </mtable>
+                </mtd>
+              </mtr>
+              <mtr>
+                <mtd>
+                  <mrow>
+                    <mspace width=".5ex"></mspace>
+                    <mrow data-mjx-texclass="ORD">
+                      <mi data-latex="P">P</mi>
+                      <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                      <mi data-latex="Q">Q</mi>
+                      <mo data-latex="\\wedge">&#x2227;</mo>
+                      <mi data-latex="R">R</mi>
                     </mrow>
-                  </mtd>
-                </mtr>
-              </mtable>
-            </mtd>
-          </mtr>
-          <mtr>
-            <mtd>
-              <mrow>
-                <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mrow data-mjx-texclass="ORD">
-                    <mi data-latex="P">P</mi>
-                    <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                    <mi data-latex="Q">Q</mi>
-                    <mo data-latex="\\wedge">&#x2227;</mo>
-                    <mi data-latex="R">R</mi>
+                    <mspace width=".5ex"></mspace>
                   </mrow>
-                </mstyle>
-                <mspace width=".5ex"></mspace>
-              </mrow>
-            </mtd>
-          </mtr>
-        </mtable>
-        <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-          <mstyle displaystyle="false" scriptlevel="0">
-            <mrow data-mjx-texclass="ORD">
-              <msup data-latex="{\\rightarrow_I}^1 ">
-                <mrow data-mjx-texclass="ORD" data-latex="{\\rightarrow_I}">
-                  <msub data-latex="\\rightarrow_I">
-                    <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                    <mi data-latex="I">I</mi>
-                  </msub>
+                </mtd>
+              </mtr>
+            </mtable>
+            <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
+              <mstyle displaystyle="false">
+                <mrow data-mjx-texclass="ORD">
+                  <msup data-latex="{\\rightarrow_I}^1 ">
+                    <mrow data-mjx-texclass="ORD" data-latex="{\\rightarrow_I}">
+                      <msub data-latex="\\rightarrow_I">
+                        <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                        <mi data-latex="I">I</mi>
+                      </msub>
+                    </mrow>
+                    <mn data-latex="1">1</mn>
+                  </msup>
                 </mrow>
-                <mn data-latex="1">1</mn>
-              </msup>
-            </mrow>
-          </mstyle>
-        </mpadded>
+              </mstyle>
+            </mpadded>
+          </mrow>
+        </mrow>
+        <mspace width="2.952em"></mspace>
       </mrow>
-    </mrow>
-    <mspace width="2.952em"></mspace>
-  </mrow>
-</math>`
+    </math>`
     ));
   it('Proof Mixing Order', () =>
     toXmlMatch(
       tex2mml(
-        '\\begin{prooftree}\\alwaysRootAtTop\\AXC{}\\RL{$Hyp^{1}$}\\UIC{$P$}\\AXC{$P\\rightarrow Q$}\\RL{$\\rightarrow_E$}\\solidLine\\BIC{$Q^2$}\\alwaysRootAtBottom\\AXC{$Q\\rightarrow R$} \\RL{$\\rightarrow_E$} \\BIC{$R$} \\AXC{$Q$}\\RL{Rit$^2$} \\UIC{$Q$}\\RL{$\\wedge_I$}\\BIC{$Q\\wedge R$}\\RL{${\\rightarrow_I}^1$}\\UIC{$P\\rightarrow Q\\wedge R$}\\end{prooftree}'
+        '\\begin{prooftree}\\alwaysRootAtTop\\AXC{}\\RL{$Hyp^{1}$}\\UIC{$P$}\\AXC{$P\\rightarrow Q$}\\RL{$\\rightarrow_E$}\\solidLine\\BIC{$Q^2$}\\alwaysRootAtBottom\\AXC{$Q\\rightarrow R$} \\RL{$\\rightarrow_E$} \\BIC{$R$} \\AXC{$Q$}\\RL{Rit$^2$} \\UIC{$Q$}\\RL{$\\wedge_I$}\\BIC{$Q\\wedge R$}\\RL{\${\\rightarrow_I}^1$}\\UIC{$P\\rightarrow Q\\wedge R$}\\end{prooftree}'
       ),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{prooftree}\\alwaysRootAtTop\\AXC{}\\RL{\$Hyp^{1}\$}\\UIC{\$P\$}\\AXC{\$P\\rightarrow Q\$}\\RL{\$\\rightarrow_E\$}\\solidLine\\BIC{\$Q^2\$}\\alwaysRootAtBottom\\AXC{\$Q\\rightarrow R\$} \\RL{\$\\rightarrow_E\$} \\BIC{\$R\$} \\AXC{\$Q\$}\\RL{Rit\$^2\$} \\UIC{\$Q\$}\\RL{\$\\wedge_I\$}\\BIC{\$Q\\wedge R\$}\\RL{\${\\rightarrow_I}^1\$}\\UIC{\$P\\rightarrow Q\\wedge R\$}\\end{prooftree}" display="block">
-  <mrow semantics="bspr_inference:1;bspr_proof:true;bspr_labelledRule:right">
-    <mrow>
-      <mspace width="13.248em"></mspace>
-      <mrow data-latex="\\begin{prooftree}\\alwaysRootAtTop\\AXC{}\\RL{\$Hyp^{1}\$}\\UIC{\$P\$}\\AXC{\$P\\rightarrow Q\$}\\RL{\$\\rightarrow_E\$}\\solidLine\\BIC{\$Q^2\$}\\alwaysRootAtBottom\\AXC{\$Q\\rightarrow R\$} \\RL{\$\\rightarrow_E\$} \\BIC{\$R\$} \\AXC{\$Q\$}\\RL{Rit\$^2\$} \\UIC{\$Q\$}\\RL{\$\\wedge_I\$}\\BIC{\$Q\\wedge R\$}\\RL{\${\\rightarrow_I}^1\$}\\UIC{\$P\\rightarrow Q\\wedge R\$}\\end{prooftree}" data-latex-item="{prooftree}">
-        <mspace width="-1.155em"></mspace>
-        <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
-          <mtr>
-            <mtd>
-              <mtable framespacing="0 0">
-                <mtr>
-                  <mtd rowalign="bottom">
-                    <mrow semantics="bspr_inference:2;bspr_labelledRule:right">
-                      <mrow>
-                        <mspace width="-13.248em"></mspace>
-                        <mrow>
-                          <mspace width="9.11em"></mspace>
-                          <mrow data-latex="\\RL{\${\\rightarrow_I}^1\$}">
-                            <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
-                              <mtr>
-                                <mtd>
-                                  <mtable framespacing="0 0">
-                                    <mtr>
-                                      <mtd rowalign="bottom">
-                                        <mrow semantics="bspr_inference:2;bspr_labelledRule:right">
-                                          <mspace width="-9.11em"></mspace>
-                                          <mrow>
-                                            <mspace width="3.592em"></mspace>
-                                            <mrow data-latex="\\BIC{\$R\$}">
-                                              <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
-                                                <mtr>
-                                                  <mtd>
-                                                    <mtable framespacing="0 0">
-                                                      <mtr>
-                                                        <mtd rowalign="bottom">
-                                                          <mrow semantics="bspr_inference:2;bspr_labelledRule:right">
-                                                            <mspace width="-3.592em"></mspace>
-                                                            <mrow data-latex="\\alwaysRootAtBottom">
-                                                              <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:up">
-                                                                <mtr>
-                                                                  <mtd>
-                                                                    <mrow>
-                                                                      <mspace width=".5ex"></mspace>
-                                                                      <mstyle displaystyle="false" scriptlevel="0">
-                                                                        <mrow data-mjx-texclass="ORD">
-                                                                          <msup data-latex="Q^2 ">
-                                                                            <mi data-latex="Q">Q</mi>
-                                                                            <mn data-latex="2">2</mn>
-                                                                          </msup>
-                                                                        </mrow>
-                                                                      </mstyle>
-                                                                      <mspace width=".5ex"></mspace>
-                                                                    </mrow>
-                                                                  </mtd>
-                                                                </mtr>
-                                                                <mtr>
-                                                                  <mtd>
-                                                                    <mtable framespacing="0 0">
-                                                                      <mtr>
-                                                                        <mtd rowalign="top">
-                                                                          <mrow data-latex="\\UIC{\$P\$}" semantics="bspr_labelledRule:right;bspr_inference:0">
-                                                                            <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:up">
-                                                                              <mtr>
-                                                                                <mtd>
-                                                                                  <mrow>
-                                                                                    <mspace width=".5ex"></mspace>
-                                                                                    <mstyle displaystyle="false" scriptlevel="0">
-                                                                                      <mrow data-mjx-texclass="ORD">
-                                                                                        <mi data-latex="P">P</mi>
-                                                                                      </mrow>
-                                                                                    </mstyle>
-                                                                                    <mspace width=".5ex"></mspace>
-                                                                                  </mrow>
-                                                                                </mtd>
-                                                                              </mtr>
-                                                                              <mtr>
-                                                                                <mtd>
-                                                                                  <mtable framespacing="0 0">
-                                                                                    <mtr>
-                                                                                      <mtd rowalign="top">
-                                                                                        <mrow data-latex="\\RL{\$Hyp^{1}\$}" semantics="bspr_axiom:true"></mrow>
-                                                                                      </mtd>
-                                                                                    </mtr>
-                                                                                  </mtable>
-                                                                                </mtd>
-                                                                              </mtr>
-                                                                            </mtable>
-                                                                            <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-                                                                              <mstyle displaystyle="false" scriptlevel="0">
-                                                                                <mrow data-mjx-texclass="ORD">
-                                                                                  <mi data-latex="H">H</mi>
-                                                                                  <mi data-latex="y">y</mi>
-                                                                                  <msup data-latex="p^{1}">
-                                                                                    <mi data-latex="p">p</mi>
-                                                                                    <mrow data-mjx-texclass="ORD" data-latex="{1}">
-                                                                                      <mn data-latex="1">1</mn>
-                                                                                    </mrow>
-                                                                                  </msup>
-                                                                                </mrow>
-                                                                              </mstyle>
-                                                                            </mpadded>
-                                                                          </mrow>
-                                                                        </mtd>
-                                                                        <mtd></mtd>
-                                                                        <mtd rowalign="top">
-                                                                          <mrow data-latex="\\solidLine" semantics="bspr_axiom:true">
-                                                                            <mspace width=".5ex"></mspace>
-                                                                            <mstyle displaystyle="false" scriptlevel="0">
-                                                                              <mrow data-mjx-texclass="ORD">
-                                                                                <mi data-latex="P">P</mi>
-                                                                                <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                                                                <mi data-latex="Q">Q</mi>
-                                                                              </mrow>
-                                                                            </mstyle>
-                                                                            <mspace width=".5ex"></mspace>
-                                                                          </mrow>
-                                                                        </mtd>
-                                                                      </mtr>
-                                                                    </mtable>
-                                                                  </mtd>
-                                                                </mtr>
-                                                              </mtable>
-                                                              <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-                                                                <mstyle displaystyle="false" scriptlevel="0">
-                                                                  <mrow data-mjx-texclass="ORD">
-                                                                    <msub data-latex="\\rightarrow_E">
-                                                                      <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                                                      <mi data-latex="E">E</mi>
-                                                                    </msub>
-                                                                  </mrow>
-                                                                </mstyle>
-                                                              </mpadded>
-                                                            </mrow>
-                                                          </mrow>
-                                                        </mtd>
-                                                        <mtd></mtd>
-                                                        <mtd rowalign="bottom">
-                                                          <mrow data-latex="\\RL{\$\\rightarrow_E\$}" semantics="bspr_axiom:true">
-                                                            <mspace width=".5ex"></mspace>
-                                                            <mstyle displaystyle="false" scriptlevel="0">
-                                                              <mrow data-mjx-texclass="ORD">
-                                                                <mi data-latex="Q">Q</mi>
-                                                                <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                                                <mi data-latex="R">R</mi>
-                                                              </mrow>
-                                                            </mstyle>
-                                                            <mspace width=".5ex"></mspace>
-                                                          </mrow>
-                                                        </mtd>
-                                                      </mtr>
-                                                    </mtable>
-                                                  </mtd>
-                                                </mtr>
-                                                <mtr>
-                                                  <mtd>
-                                                    <mrow>
-                                                      <mspace width=".5ex"></mspace>
-                                                      <mstyle displaystyle="false" scriptlevel="0">
-                                                        <mrow data-mjx-texclass="ORD">
-                                                          <mi data-latex="R">R</mi>
-                                                        </mrow>
-                                                      </mstyle>
-                                                      <mspace width=".5ex"></mspace>
-                                                    </mrow>
-                                                  </mtd>
-                                                </mtr>
-                                              </mtable>
-                                              <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-                                                <mstyle displaystyle="false" scriptlevel="0">
-                                                  <mrow data-mjx-texclass="ORD">
-                                                    <msub data-latex="\\rightarrow_E">
-                                                      <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                                      <mi data-latex="E">E</mi>
-                                                    </msub>
-                                                  </mrow>
-                                                </mstyle>
-                                              </mpadded>
-                                            </mrow>
-                                          </mrow>
-                                        </mrow>
-                                      </mtd>
-                                      <mtd></mtd>
-                                      <mtd rowalign="bottom">
-                                        <mrow semantics="bspr_inference:1;bspr_labelledRule:right">
-                                          <mrow data-latex="\\RL{\$\\wedge_I\$}">
-                                            <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
-                                              <mtr>
-                                                <mtd>
-                                                  <mtable framespacing="0 0">
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{prooftree}\\alwaysRootAtTop\\AXC{}\\RL{$Hyp^{1}$}\\UIC{$P$}\\AXC{$P\\rightarrow Q$}\\RL{$\\rightarrow_E$}\\solidLine\\BIC{$Q^2$}\\alwaysRootAtBottom\\AXC{$Q\\rightarrow R$} \\RL{$\\rightarrow_E$} \\BIC{$R$} \\AXC{$Q$}\\RL{Rit$^2$} \\UIC{$Q$}\\RL{$\\wedge_I$}\\BIC{$Q\\wedge R$}\\RL{\${\\rightarrow_I}^1$}\\UIC{$P\\rightarrow Q\\wedge R$}\\end{prooftree}" display="block">
+      <mrow semantics="bspr_inference:1;bspr_proof:true;bspr_labelledRule:right">
+        <mrow>
+          <mspace width="13.248em"></mspace>
+          <mrow data-latex="\\begin{prooftree}\\alwaysRootAtTop\\AXC{}\\RL{$Hyp^{1}$}\\UIC{$P$}\\AXC{$P\\rightarrow Q$}\\RL{$\\rightarrow_E$}\\solidLine\\BIC{$Q^2$}\\alwaysRootAtBottom\\AXC{$Q\\rightarrow R$} \\RL{$\\rightarrow_E$} \\BIC{$R$} \\AXC{$Q$}\\RL{Rit$^2$} \\UIC{$Q$}\\RL{$\\wedge_I$}\\BIC{$Q\\wedge R$}\\RL{\${\\rightarrow_I}^1$}\\UIC{$P\\rightarrow Q\\wedge R$}\\end{prooftree}" data-latex-item="{prooftree}">
+            <mspace width="-1.155em"></mspace>
+            <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
+              <mtr>
+                <mtd>
+                  <mtable framespacing="0 0">
+                    <mtr>
+                      <mtd rowalign="bottom">
+                        <mrow semantics="bspr_inference:2;bspr_labelledRule:right">
+                          <mrow>
+                            <mspace width="-13.248em"></mspace>
+                            <mrow>
+                              <mspace width="9.11em"></mspace>
+                              <mrow data-latex="\\RL{\${\\rightarrow_I}^1$}">
+                                <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
+                                  <mtr>
+                                    <mtd>
+                                      <mtable framespacing="0 0">
+                                        <mtr>
+                                          <mtd rowalign="bottom">
+                                            <mrow semantics="bspr_inference:2;bspr_labelledRule:right">
+                                              <mspace width="-9.11em"></mspace>
+                                              <mrow>
+                                                <mspace width="3.592em"></mspace>
+                                                <mrow data-latex="\\BIC{$R$}">
+                                                  <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
                                                     <mtr>
-                                                      <mtd rowalign="bottom">
-                                                        <mrow data-latex="\\RL{Rit\$^2\$}" semantics="bspr_axiom:true">
+                                                      <mtd>
+                                                        <mtable framespacing="0 0">
+                                                          <mtr>
+                                                            <mtd rowalign="bottom">
+                                                              <mrow semantics="bspr_inference:2;bspr_labelledRule:right">
+                                                                <mspace width="-3.592em"></mspace>
+                                                                <mrow data-latex="\\alwaysRootAtBottom">
+                                                                  <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:up">
+                                                                    <mtr>
+                                                                      <mtd>
+                                                                        <mrow>
+                                                                          <mspace width=".5ex"></mspace>
+                                                                          <mrow data-mjx-texclass="ORD">
+                                                                            <msup data-latex="Q^2 ">
+                                                                              <mi data-latex="Q">Q</mi>
+                                                                              <mn data-latex="2">2</mn>
+                                                                            </msup>
+                                                                          </mrow>
+                                                                          <mspace width=".5ex"></mspace>
+                                                                        </mrow>
+                                                                      </mtd>
+                                                                    </mtr>
+                                                                    <mtr>
+                                                                      <mtd>
+                                                                        <mtable framespacing="0 0">
+                                                                          <mtr>
+                                                                            <mtd rowalign="top">
+                                                                              <mrow data-latex="\\UIC{$P$}" semantics="bspr_labelledRule:right;bspr_inference:0">
+                                                                                <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:up">
+                                                                                  <mtr>
+                                                                                    <mtd>
+                                                                                      <mrow>
+                                                                                        <mspace width=".5ex"></mspace>
+                                                                                        <mrow data-mjx-texclass="ORD">
+                                                                                          <mi data-latex="P">P</mi>
+                                                                                        </mrow>
+                                                                                        <mspace width=".5ex"></mspace>
+                                                                                      </mrow>
+                                                                                    </mtd>
+                                                                                  </mtr>
+                                                                                  <mtr>
+                                                                                    <mtd>
+                                                                                      <mtable framespacing="0 0">
+                                                                                        <mtr>
+                                                                                          <mtd rowalign="top">
+                                                                                            <mrow data-latex="\\RL{$Hyp^{1}$}" semantics="bspr_axiom:true"></mrow>
+                                                                                          </mtd>
+                                                                                        </mtr>
+                                                                                      </mtable>
+                                                                                    </mtd>
+                                                                                  </mtr>
+                                                                                </mtable>
+                                                                                <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
+                                                                                  <mrow data-mjx-texclass="ORD">
+                                                                                    <mi data-latex="H">H</mi>
+                                                                                    <mi data-latex="y">y</mi>
+                                                                                    <msup data-latex="p^{1}">
+                                                                                      <mi data-latex="p">p</mi>
+                                                                                      <mrow data-mjx-texclass="ORD" data-latex="{1}">
+                                                                                        <mn data-latex="1">1</mn>
+                                                                                      </mrow>
+                                                                                    </msup>
+                                                                                  </mrow>
+                                                                                </mpadded>
+                                                                              </mrow>
+                                                                            </mtd>
+                                                                            <mtd></mtd>
+                                                                            <mtd rowalign="top">
+                                                                              <mrow data-latex="\\solidLine" semantics="bspr_axiom:true">
+                                                                                <mspace width=".5ex"></mspace>
+                                                                                <mrow data-mjx-texclass="ORD">
+                                                                                  <mi data-latex="P">P</mi>
+                                                                                  <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                                                                  <mi data-latex="Q">Q</mi>
+                                                                                </mrow>
+                                                                                <mspace width=".5ex"></mspace>
+                                                                              </mrow>
+                                                                            </mtd>
+                                                                          </mtr>
+                                                                        </mtable>
+                                                                      </mtd>
+                                                                    </mtr>
+                                                                  </mtable>
+                                                                  <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
+                                                                    <mrow data-mjx-texclass="ORD">
+                                                                      <msub data-latex="\\rightarrow_E">
+                                                                        <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                                                        <mi data-latex="E">E</mi>
+                                                                      </msub>
+                                                                    </mrow>
+                                                                  </mpadded>
+                                                                </mrow>
+                                                              </mrow>
+                                                            </mtd>
+                                                            <mtd></mtd>
+                                                            <mtd rowalign="bottom">
+                                                              <mrow data-latex="\\RL{$\\rightarrow_E$}" semantics="bspr_axiom:true">
+                                                                <mspace width=".5ex"></mspace>
+                                                                <mrow data-mjx-texclass="ORD">
+                                                                  <mi data-latex="Q">Q</mi>
+                                                                  <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                                                  <mi data-latex="R">R</mi>
+                                                                </mrow>
+                                                                <mspace width=".5ex"></mspace>
+                                                              </mrow>
+                                                            </mtd>
+                                                          </mtr>
+                                                        </mtable>
+                                                      </mtd>
+                                                    </mtr>
+                                                    <mtr>
+                                                      <mtd>
+                                                        <mrow>
                                                           <mspace width=".5ex"></mspace>
-                                                          <mstyle displaystyle="false" scriptlevel="0">
-                                                            <mrow data-mjx-texclass="ORD">
-                                                              <mi data-latex="Q">Q</mi>
-                                                            </mrow>
-                                                          </mstyle>
+                                                          <mrow data-mjx-texclass="ORD">
+                                                            <mi data-latex="R">R</mi>
+                                                          </mrow>
                                                           <mspace width=".5ex"></mspace>
                                                         </mrow>
                                                       </mtd>
                                                     </mtr>
                                                   </mtable>
-                                                </mtd>
-                                              </mtr>
-                                              <mtr>
-                                                <mtd>
-                                                  <mrow>
-                                                    <mspace width=".5ex"></mspace>
-                                                    <mstyle displaystyle="false" scriptlevel="0">
-                                                      <mrow data-mjx-texclass="ORD">
-                                                        <mi data-latex="Q">Q</mi>
-                                                      </mrow>
-                                                    </mstyle>
-                                                    <mspace width=".5ex"></mspace>
-                                                  </mrow>
-                                                </mtd>
-                                              </mtr>
-                                            </mtable>
-                                            <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-                                              <mstyle displaystyle="false" scriptlevel="0">
-                                                <mtext>Rit</mtext>
-                                                <mrow data-mjx-texclass="ORD">
-                                                  <msup data-latex="^2 ">
-                                                    <mi></mi>
-                                                    <mn data-latex="2">2</mn>
-                                                  </msup>
+                                                  <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
+                                                    <mrow data-mjx-texclass="ORD">
+                                                      <msub data-latex="\\rightarrow_E">
+                                                        <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                                        <mi data-latex="E">E</mi>
+                                                      </msub>
+                                                    </mrow>
+                                                  </mpadded>
                                                 </mrow>
-                                              </mstyle>
-                                            </mpadded>
-                                          </mrow>
-                                          <mspace width="-2.055em"></mspace>
+                                              </mrow>
+                                            </mrow>
+                                          </mtd>
+                                          <mtd></mtd>
+                                          <mtd rowalign="bottom">
+                                            <mrow semantics="bspr_inference:1;bspr_labelledRule:right">
+                                              <mrow data-latex="\\RL{$\\wedge_I$}">
+                                                <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
+                                                  <mtr>
+                                                    <mtd>
+                                                      <mtable framespacing="0 0">
+                                                        <mtr>
+                                                          <mtd rowalign="bottom">
+                                                            <mrow data-latex="\\RL{Rit$^2$}" semantics="bspr_axiom:true">
+                                                              <mspace width=".5ex"></mspace>
+                                                              <mrow data-mjx-texclass="ORD">
+                                                                <mi data-latex="Q">Q</mi>
+                                                              </mrow>
+                                                              <mspace width=".5ex"></mspace>
+                                                            </mrow>
+                                                          </mtd>
+                                                        </mtr>
+                                                      </mtable>
+                                                    </mtd>
+                                                  </mtr>
+                                                  <mtr>
+                                                    <mtd>
+                                                      <mrow>
+                                                        <mspace width=".5ex"></mspace>
+                                                        <mrow data-mjx-texclass="ORD">
+                                                          <mi data-latex="Q">Q</mi>
+                                                        </mrow>
+                                                        <mspace width=".5ex"></mspace>
+                                                      </mrow>
+                                                    </mtd>
+                                                  </mtr>
+                                                </mtable>
+                                                <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
+                                                  <mstyle>
+                                                    <mtext>Rit</mtext>
+                                                    <mrow data-mjx-texclass="ORD">
+                                                      <msup data-latex="^2 ">
+                                                        <mi></mi>
+                                                        <mn data-latex="2">2</mn>
+                                                      </msup>
+                                                    </mrow>
+                                                  </mstyle>
+                                                </mpadded>
+                                              </mrow>
+                                              <mspace width="-2.055em"></mspace>
+                                            </mrow>
+                                          </mtd>
+                                        </mtr>
+                                      </mtable>
+                                    </mtd>
+                                  </mtr>
+                                  <mtr>
+                                    <mtd>
+                                      <mrow>
+                                        <mspace width=".5ex"></mspace>
+                                        <mrow data-mjx-texclass="ORD">
+                                          <mi data-latex="Q">Q</mi>
+                                          <mo data-latex="\\wedge">&#x2227;</mo>
+                                          <mi data-latex="R">R</mi>
                                         </mrow>
-                                      </mtd>
-                                    </mtr>
-                                  </mtable>
-                                </mtd>
-                              </mtr>
-                              <mtr>
-                                <mtd>
-                                  <mrow>
-                                    <mspace width=".5ex"></mspace>
-                                    <mstyle displaystyle="false" scriptlevel="0">
-                                      <mrow data-mjx-texclass="ORD">
-                                        <mi data-latex="Q">Q</mi>
-                                        <mo data-latex="\\wedge">&#x2227;</mo>
-                                        <mi data-latex="R">R</mi>
+                                        <mspace width=".5ex"></mspace>
                                       </mrow>
-                                    </mstyle>
-                                    <mspace width=".5ex"></mspace>
+                                    </mtd>
+                                  </mtr>
+                                </mtable>
+                                <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
+                                  <mrow data-mjx-texclass="ORD">
+                                    <msub data-latex="\\wedge_I">
+                                      <mo data-latex="\\wedge">&#x2227;</mo>
+                                      <mi data-latex="I">I</mi>
+                                    </msub>
                                   </mrow>
-                                </mtd>
-                              </mtr>
-                            </mtable>
-                            <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-                              <mstyle displaystyle="false" scriptlevel="0">
-                                <mrow data-mjx-texclass="ORD">
-                                  <msub data-latex="\\wedge_I">
-                                    <mo data-latex="\\wedge">&#x2227;</mo>
-                                    <mi data-latex="I">I</mi>
-                                  </msub>
-                                </mrow>
-                              </mstyle>
-                            </mpadded>
+                                </mpadded>
+                              </mrow>
+                            </mrow>
                           </mrow>
+                          <mspace width="-5.455em"></mspace>
                         </mrow>
-                      </mrow>
-                      <mspace width="-5.455em"></mspace>
+                      </mtd>
+                    </mtr>
+                  </mtable>
+                </mtd>
+              </mtr>
+              <mtr>
+                <mtd>
+                  <mrow>
+                    <mspace width=".5ex"></mspace>
+                    <mrow data-mjx-texclass="ORD">
+                      <mi data-latex="P">P</mi>
+                      <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                      <mi data-latex="Q">Q</mi>
+                      <mo data-latex="\\wedge">&#x2227;</mo>
+                      <mi data-latex="R">R</mi>
                     </mrow>
-                  </mtd>
-                </mtr>
-              </mtable>
-            </mtd>
-          </mtr>
-          <mtr>
-            <mtd>
-              <mrow>
-                <mspace width=".5ex"></mspace>
-                <mstyle displaystyle="false" scriptlevel="0">
-                  <mrow data-mjx-texclass="ORD">
-                    <mi data-latex="P">P</mi>
-                    <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                    <mi data-latex="Q">Q</mi>
-                    <mo data-latex="\\wedge">&#x2227;</mo>
-                    <mi data-latex="R">R</mi>
+                    <mspace width=".5ex"></mspace>
                   </mrow>
-                </mstyle>
-                <mspace width=".5ex"></mspace>
-              </mrow>
-            </mtd>
-          </mtr>
-        </mtable>
-        <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-          <mstyle displaystyle="false" scriptlevel="0">
-            <mrow data-mjx-texclass="ORD">
-              <msup data-latex="{\\rightarrow_I}^1 ">
-                <mrow data-mjx-texclass="ORD" data-latex="{\\rightarrow_I}">
-                  <msub data-latex="\\rightarrow_I">
-                    <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                    <mi data-latex="I">I</mi>
-                  </msub>
+                </mtd>
+              </mtr>
+            </mtable>
+            <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
+              <mstyle displaystyle="false">
+                <mrow data-mjx-texclass="ORD">
+                  <msup data-latex="{\\rightarrow_I}^1 ">
+                    <mrow data-mjx-texclass="ORD" data-latex="{\\rightarrow_I}">
+                      <msub data-latex="\\rightarrow_I">
+                        <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                        <mi data-latex="I">I</mi>
+                      </msub>
+                    </mrow>
+                    <mn data-latex="1">1</mn>
+                  </msup>
                 </mrow>
-                <mn data-latex="1">1</mn>
-              </msup>
-            </mrow>
-          </mstyle>
-        </mpadded>
+              </mstyle>
+            </mpadded>
+          </mrow>
+        </mrow>
+        <mspace width="2.952em"></mspace>
       </mrow>
-    </mrow>
-    <mspace width="2.952em"></mspace>
-  </mrow>
-</math>`
+    </math>`
     ));
   it('Extreme', () =>
     toXmlMatch(
@@ -2938,7 +2622,7 @@ describe('BussproofsRegProofs', () => {
     <mspace width="16.317em"></mspace>
     <mrow data-latex="\\begin{prooftree}\\LL{HHHHH}\\RL{11111111111111111}\\AxiomC{D}\\AxiomC{A1}\\AxiomC{A2}\\TrinaryInfC{Q}\\RightLabel{AAAA}\\AxiomC{A}\\AxiomC{B}\\AxiomC{R}\\LL{qqqq}\\BinaryInfC{\$C \\rightarrow D \\rightarrow Q\$}\\LeftLabel{BBBB}\\RightLabel{MMM}\\BinaryInfC{E}\\RightLabel{CCCCC}\\LL{WWW}\\BinaryInfC{F}\\RightLabel{QERE}\\AxiomC{M}\\LL{BBB}\\BinaryInfC{\$N \\rightarrow R\$}\\RightLabel{Nowhere}\\end{prooftree}" data-latex-item="{prooftree}">
       <mpadded height=".25em" depth="+.25em" width="+.5ex" voffset="-.25em" semantics="bspr_prooflabel:left">
-        <mstyle displaystyle="false" scriptlevel="0">
+        <mstyle displaystyle="false">
           <mtext>BBB</mtext>
         </mstyle>
       </mpadded>
@@ -2954,9 +2638,7 @@ describe('BussproofsRegProofs', () => {
                       <mspace width="3.94em"></mspace>
                       <mrow data-latex="\\RightLabel{QERE}">
                         <mpadded height=".25em" depth="+.25em" width="+.5ex" voffset="-.25em" semantics="bspr_prooflabel:left">
-                          <mstyle displaystyle="false" scriptlevel="0">
-                            <mtext>WWW</mtext>
-                          </mstyle>
+                          <mtext>WWW</mtext>
                         </mpadded>
                         <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
                           <mtr>
@@ -2968,9 +2650,7 @@ describe('BussproofsRegProofs', () => {
                                       <mspace width="-7.239em"></mspace>
                                       <mrow data-latex="\\RightLabel{AAAA}">
                                         <mpadded height=".25em" depth="+.25em" width="+.5ex" voffset="-.25em" semantics="bspr_prooflabel:left">
-                                          <mstyle displaystyle="false" scriptlevel="0">
-                                            <mtext>HHHHH</mtext>
-                                          </mstyle>
+                                          <mtext>HHHHH</mtext>
                                         </mpadded>
                                         <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
                                           <mtr>
@@ -2980,9 +2660,7 @@ describe('BussproofsRegProofs', () => {
                                                   <mtd rowalign="bottom">
                                                     <mrow data-latex="\\AxiomC{D}" semantics="bspr_axiom:true">
                                                       <mspace width=".5ex"></mspace>
-                                                      <mstyle displaystyle="false" scriptlevel="0">
-                                                        <mtext>D</mtext>
-                                                      </mstyle>
+                                                      <mtext>D</mtext>
                                                       <mspace width=".5ex"></mspace>
                                                     </mrow>
                                                   </mtd>
@@ -2990,9 +2668,7 @@ describe('BussproofsRegProofs', () => {
                                                   <mtd rowalign="bottom">
                                                     <mrow data-latex="\\AxiomC{A1}" semantics="bspr_axiom:true">
                                                       <mspace width=".5ex"></mspace>
-                                                      <mstyle displaystyle="false" scriptlevel="0">
-                                                        <mtext>A1</mtext>
-                                                      </mstyle>
+                                                      <mtext>A1</mtext>
                                                       <mspace width=".5ex"></mspace>
                                                     </mrow>
                                                   </mtd>
@@ -3000,9 +2676,7 @@ describe('BussproofsRegProofs', () => {
                                                   <mtd rowalign="bottom">
                                                     <mrow data-latex="\\AxiomC{A2}" semantics="bspr_axiom:true">
                                                       <mspace width=".5ex"></mspace>
-                                                      <mstyle displaystyle="false" scriptlevel="0">
-                                                        <mtext>A2</mtext>
-                                                      </mstyle>
+                                                      <mtext>A2</mtext>
                                                       <mspace width=".5ex"></mspace>
                                                     </mrow>
                                                   </mtd>
@@ -3014,18 +2688,14 @@ describe('BussproofsRegProofs', () => {
                                             <mtd>
                                               <mrow>
                                                 <mspace width=".5ex"></mspace>
-                                                <mstyle displaystyle="false" scriptlevel="0">
-                                                  <mtext>Q</mtext>
-                                                </mstyle>
+                                                <mtext>Q</mtext>
                                                 <mspace width=".5ex"></mspace>
                                               </mrow>
                                             </mtd>
                                           </mtr>
                                         </mtable>
                                         <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-                                          <mstyle displaystyle="false" scriptlevel="0">
-                                            <mtext>11111111111111111</mtext>
-                                          </mstyle>
+                                          <mtext>11111111111111111</mtext>
                                         </mpadded>
                                       </mrow>
                                     </mrow>
@@ -3035,9 +2705,7 @@ describe('BussproofsRegProofs', () => {
                                     <mrow semantics="bspr_inference:2;bspr_labelledRule:both">
                                       <mrow data-latex="\\LL{WWW}">
                                         <mpadded height=".25em" depth="+.25em" width="+.5ex" voffset="-.25em" semantics="bspr_prooflabel:left">
-                                          <mstyle displaystyle="false" scriptlevel="0">
-                                            <mtext>BBBB</mtext>
-                                          </mstyle>
+                                          <mtext>BBBB</mtext>
                                         </mpadded>
                                         <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
                                           <mtr>
@@ -3047,9 +2715,7 @@ describe('BussproofsRegProofs', () => {
                                                   <mtd rowalign="bottom">
                                                     <mrow data-latex="\\AxiomC{A}" semantics="bspr_axiom:true">
                                                       <mspace width=".5ex"></mspace>
-                                                      <mstyle displaystyle="false" scriptlevel="0">
-                                                        <mtext>A</mtext>
-                                                      </mstyle>
+                                                      <mtext>A</mtext>
                                                       <mspace width=".5ex"></mspace>
                                                     </mrow>
                                                   </mtd>
@@ -3058,9 +2724,7 @@ describe('BussproofsRegProofs', () => {
                                                     <mrow semantics="bspr_inference:2;bspr_labelledRule:both">
                                                       <mrow data-latex="\\RightLabel{MMM}">
                                                         <mpadded height=".25em" depth="+.25em" width="+.5ex" voffset="-.25em" semantics="bspr_prooflabel:left">
-                                                          <mstyle displaystyle="false" scriptlevel="0">
-                                                            <mtext>qqqq</mtext>
-                                                          </mstyle>
+                                                          <mtext>qqqq</mtext>
                                                         </mpadded>
                                                         <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
                                                           <mtr>
@@ -3070,9 +2734,7 @@ describe('BussproofsRegProofs', () => {
                                                                   <mtd rowalign="bottom">
                                                                     <mrow data-latex="\\AxiomC{B}" semantics="bspr_axiom:true">
                                                                       <mspace width=".5ex"></mspace>
-                                                                      <mstyle displaystyle="false" scriptlevel="0">
-                                                                        <mtext>B</mtext>
-                                                                      </mstyle>
+                                                                      <mtext>B</mtext>
                                                                       <mspace width=".5ex"></mspace>
                                                                     </mrow>
                                                                   </mtd>
@@ -3080,9 +2742,7 @@ describe('BussproofsRegProofs', () => {
                                                                   <mtd rowalign="bottom">
                                                                     <mrow data-latex="\\LL{qqqq}" semantics="bspr_axiom:true">
                                                                       <mspace width=".5ex"></mspace>
-                                                                      <mstyle displaystyle="false" scriptlevel="0">
-                                                                        <mtext>R</mtext>
-                                                                      </mstyle>
+                                                                      <mtext>R</mtext>
                                                                       <mspace width=".5ex"></mspace>
                                                                     </mrow>
                                                                   </mtd>
@@ -3094,24 +2754,20 @@ describe('BussproofsRegProofs', () => {
                                                             <mtd>
                                                               <mrow>
                                                                 <mspace width=".5ex"></mspace>
-                                                                <mstyle displaystyle="false" scriptlevel="0">
-                                                                  <mrow data-mjx-texclass="ORD">
-                                                                    <mi data-latex="C">C</mi>
-                                                                    <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                                                    <mi data-latex="D">D</mi>
-                                                                    <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                                                                    <mi data-latex="Q">Q</mi>
-                                                                  </mrow>
-                                                                </mstyle>
+                                                                <mrow data-mjx-texclass="ORD">
+                                                                  <mi data-latex="C">C</mi>
+                                                                  <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                                                  <mi data-latex="D">D</mi>
+                                                                  <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                                                                  <mi data-latex="Q">Q</mi>
+                                                                </mrow>
                                                                 <mspace width=".5ex"></mspace>
                                                               </mrow>
                                                             </mtd>
                                                           </mtr>
                                                         </mtable>
                                                         <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-                                                          <mstyle displaystyle="false" scriptlevel="0">
-                                                            <mtext>AAAA</mtext>
-                                                          </mstyle>
+                                                          <mtext>AAAA</mtext>
                                                         </mpadded>
                                                       </mrow>
                                                       <mspace width="-3.216em"></mspace>
@@ -3125,18 +2781,14 @@ describe('BussproofsRegProofs', () => {
                                             <mtd>
                                               <mrow>
                                                 <mspace width=".5ex"></mspace>
-                                                <mstyle displaystyle="false" scriptlevel="0">
-                                                  <mtext>E</mtext>
-                                                </mstyle>
+                                                <mtext>E</mtext>
                                                 <mspace width=".5ex"></mspace>
                                               </mrow>
                                             </mtd>
                                           </mtr>
                                         </mtable>
                                         <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-                                          <mstyle displaystyle="false" scriptlevel="0">
-                                            <mtext>MMM</mtext>
-                                          </mstyle>
+                                          <mtext>MMM</mtext>
                                         </mpadded>
                                       </mrow>
                                       <mspace width="-7.925em"></mspace>
@@ -3150,18 +2802,14 @@ describe('BussproofsRegProofs', () => {
                             <mtd>
                               <mrow>
                                 <mspace width=".5ex"></mspace>
-                                <mstyle displaystyle="false" scriptlevel="0">
-                                  <mtext>F</mtext>
-                                </mstyle>
+                                <mtext>F</mtext>
                                 <mspace width=".5ex"></mspace>
                               </mrow>
                             </mtd>
                           </mtr>
                         </mtable>
                         <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-                          <mstyle displaystyle="false" scriptlevel="0">
-                            <mtext>CCCCC</mtext>
-                          </mstyle>
+                          <mtext>CCCCC</mtext>
                         </mpadded>
                       </mrow>
                     </mrow>
@@ -3173,9 +2821,7 @@ describe('BussproofsRegProofs', () => {
                 <mtd rowalign="bottom">
                   <mrow data-latex="\\LL{BBB}" semantics="bspr_axiom:true">
                     <mspace width=".5ex"></mspace>
-                    <mstyle displaystyle="false" scriptlevel="0">
-                      <mtext>M</mtext>
-                    </mstyle>
+                    <mtext>M</mtext>
                     <mspace width=".5ex"></mspace>
                   </mrow>
                 </mtd>
@@ -3187,20 +2833,18 @@ describe('BussproofsRegProofs', () => {
           <mtd>
             <mrow>
               <mspace width=".5ex"></mspace>
-              <mstyle displaystyle="false" scriptlevel="0">
-                <mrow data-mjx-texclass="ORD">
-                  <mi data-latex="N">N</mi>
-                  <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-                  <mi data-latex="R">R</mi>
-                </mrow>
-              </mstyle>
+              <mrow data-mjx-texclass="ORD">
+                <mi data-latex="N">N</mi>
+                <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
+                <mi data-latex="R">R</mi>
+              </mrow>
               <mspace width=".5ex"></mspace>
             </mrow>
           </mtd>
         </mtr>
       </mtable>
       <mpadded height="-.25em" depth="+.25em" width="+.5ex" voffset="-.25em" lspace=".5ex" semantics="bspr_prooflabel:right">
-        <mstyle displaystyle="false" scriptlevel="0">
+        <mstyle displaystyle="false">
           <mtext>QERE</mtext>
         </mstyle>
       </mpadded>
