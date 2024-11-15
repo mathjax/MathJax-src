@@ -436,7 +436,7 @@ export class ParserConfiguration {
    */
   protected getPackage(name: string): Configuration {
     const config = ConfigurationHandler.get(name);
-    if (config && this.parsers.indexOf(config.parser) < 0) {
+    if (config && !this.parsers.includes(config.parser)) {
       throw Error(`Package ${name} doesn't target the proper parser`);
     }
     return config;

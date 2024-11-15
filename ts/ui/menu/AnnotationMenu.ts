@@ -132,7 +132,7 @@ function annotationMatch(
 ): string | null {
   const encoding = child.attributes.get('encoding') as string;
   for (const type of Object.keys(types)) {
-    if (types[type].indexOf(encoding) >= 0) {
+    if (types[type].includes(encoding)) {
       return type;
     }
   }

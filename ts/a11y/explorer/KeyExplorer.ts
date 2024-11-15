@@ -494,7 +494,7 @@ export class SpeechExplorer
         );
         while (internal && internal !== this.generators.element) {
           const sid = internal.getAttribute('data-semantic-id');
-          if (dummies.indexOf(sid) !== -1) {
+          if (dummies.includes(sid)) {
             this.current = this.node.querySelector(
               `[data-semantic-id="${sid}"]`
             );
