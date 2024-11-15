@@ -41,6 +41,7 @@
       "import": "./components/mjs/*",
       "require": "./components/cjs/*"
     },
+    "./require.mjs": "./bundle/require.mjs",
     "./es5/*": "./bundle/*",
     "./*": "./*"
   },
@@ -51,7 +52,7 @@
     "#menu/*": "mj-context-menu/js/*",
     "#sre/*": "speech-rule-engine/js/*",
     "#mhchem/*": "mhchemparser/esm/*",
-    "#default-font/*": "mathjax-modern-font/mjs/*"
+    "#default-font/*": "mathjax-newcm-font/mjs/*"
   },
   "files": [
     "/bundle",
@@ -153,7 +154,7 @@
   },
   "dependencies": {
     "@xmldom/xmldom": "^0.8.10",
-    "mathjax-modern-font": "^4.0.0-beta.7",
+    "mathjax-newcm-font": "^4.0.0-beta.7",
     "mhchemparser": "^4.2.1",
     "mj-context-menu": "^0.9.1",
     "speech-rule-engine": "^4.1.0-beta.11",

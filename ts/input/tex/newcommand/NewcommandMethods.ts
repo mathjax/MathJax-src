@@ -31,7 +31,7 @@ import BaseMethods from '../base/BaseMethods.js';
 import { ParseUtil } from '../ParseUtil.js';
 import { UnitUtil } from '../UnitUtil.js';
 import { StackItem } from '../StackItem.js';
-import NewcommandUtil from './NewcommandUtil.js';
+import { NewcommandUtil } from './NewcommandUtil.js';
 
 // Namespace
 const NewcommandMethods: { [key: string]: ParseMethod } = {
@@ -131,19 +131,6 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
     if (c === '\\') {
       // @test Let Bar, Let Brace Equal Stretchy
       name = NewcommandUtil.GetCSname(parser, name);
-      let macro = handlers
-        .get(HandlerType.DELIMITER)
-        .lookup('\\' + name) as Token;
-      if (macro) {
-        // @test Let Bar, Let Brace Equal Stretchy
-        NewcommandUtil.addDelimiter(
-          parser,
-          '\\' + cs,
-          macro.char,
-          macro.attributes
-        );
-        return;
-      }
       const map = handlers.get(HandlerType.MACRO).applicable(name);
       if (!map) {
         // @test Let Undefined CS
@@ -158,6 +145,19 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
           macro.func,
           macro.args,
           macro.token
+        );
+        return;
+      }
+      let macro = handlers
+        .get(HandlerType.DELIMITER)
+        .lookup('\\' + name) as Token;
+      if (macro) {
+        // @test Let Bar, Let Brace Equal Stretchy
+        NewcommandUtil.addDelimiter(
+          parser,
+          '\\' + cs,
+          macro.char,
+          macro.attributes
         );
         return;
       }
@@ -254,7 +254,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
     // @test Newenvironment Empty, Newenvironment Content
     // We have an end item, and we are supposed to close this environment.
     const name = begin.getName();
-    if (begin.getProperty('end') && parser.stack.env['closing'] === name) {
+    if (parser.stack.env['closing'] === name) {
       // @test Newenvironment Empty, Newenvironment Content
       delete parser.stack.env['closing'];
       const beginN = parser.stack.global['beginEnv'] as number;
@@ -263,8 +263,11 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
         if (edef) {
           // Parse the commands in the end environment definition.
           let rest = parser.string.slice(parser.i);
-          parser.string = edef;
-          parser.i = 0;
+          parser.string = ParseUtil.addArgs(
+            parser,
+            parser.string.substring(0, parser.i),
+            edef
+          );
           parser.Parse();
           // Reset to parsing the remainder of the expression.
           parser.string = rest;
@@ -277,9 +280,11 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
     if (n) {
       // @test Newenvironment Optional, Newenvironment Arg Optional
       const args: string[] = [];
+      // Note, here we test against undefined and null, so need `!=`.
       if (def != null) {
         // @test Newenvironment Optional, Newenvironment Arg Optional
         const optional = parser.GetBrackets(`\\begin{${name}}`);
+        // Note, here we test against undefined and null, so need `==`.
         args.push(optional == null ? def : optional);
       }
       for (let i = args.length; i < n; i++) {
@@ -295,10 +300,9 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
       parser.string.slice(parser.i)
     );
     parser.i = 0;
-    parser.stack.global['beginEnv'] = (parser.stack.global['beginEnv'] as number || 0) + 1;
-    return parser.itemFactory
-      .create('beginEnv')
-      .setProperty('name', name);
+    parser.stack.global['beginEnv'] =
+      ((parser.stack.global['beginEnv'] as number) || 0) + 1;
+    return parser.itemFactory.create('beginEnv').setProperty('name', name);
   },
 
   Macro: BaseMethods.Macro,

@@ -34,7 +34,7 @@ import { ExplorerPool } from './ExplorerPool.js';
 import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import { honk, InPlace } from '../speech/SpeechUtil.js';
 import { GeneratorPool } from '../speech/GeneratorPool.js';
-import { Sre } from '../sre.js';
+import * as Sre from '../sre.js';
 
 /**
  * Interface for keyboard explorers. Adds the necessary keyboard events.
@@ -167,14 +167,26 @@ export class SpeechExplorer
   ]);
 
   /**
+   * Test of an event has any modifier keys
+   *
+   * @param {MouseEvent} event   The event to check
+   * @returns {boolean}          True if shift, ctrl, alt, or meta key is pressed
+   */
+  protected hasModifiers(event: MouseEvent): boolean {
+    return event.shiftKey || event.metaKey || event.altKey || event.ctrlKey;
+  }
+
+  /**
    * Records a mouse down event on the element. This ensures that focus events
    * only fire if they were not triggered by a mouse click.
    *
    * @param {MouseEvent} e The mouse event.
    */
   private MouseDown(e: MouseEvent) {
+    this.FocusOut(null);
     this.mousedown = true;
-    e.preventDefault();
+    if (this.hasModifiers(e)) return;
+    document.getSelection()?.removeAllRanges();
   }
 
   /**
@@ -184,6 +196,11 @@ export class SpeechExplorer
    */
   public Click(event: MouseEvent) {
     const clicked = (event.target as HTMLElement).closest(nav) as HTMLElement;
+    if (this.hasModifiers(event) || document.getSelection().type === 'Range') {
+      this.FocusOut(null);
+      return;
+    }
+    if (this.node.getAttribute('tabIndex') === '-1') return;
     if (!this.node.contains(clicked)) {
       // In case the mjx-container is in a div, we get the click, although it is outside.
       this.mousedown = false;
@@ -219,7 +236,8 @@ export class SpeechExplorer
    * @override
    */
   public FocusOut(_event: FocusEvent) {
-    // This guard is to FF and Safari, where focus in fires only once on
+    (document.activeElement as HTMLElement)?.blur();
+    // This guard is to FF and Safari, where focus in fired only once on
     // keyboard.
     if (!this.active) return;
     this.generators.CleanUp(this.current);
@@ -269,6 +287,9 @@ export class SpeechExplorer
    * @returns {HTMLElement} The next element.
    */
   protected nextSibling(el: HTMLElement): HTMLElement {
+    if (!this.current.getAttribute('data-semantic-parent')) {
+      return null;
+    }
     const sib = el.nextElementSibling as HTMLElement;
     if (sib) {
       if (sib.matches(nav)) {
@@ -290,6 +311,9 @@ export class SpeechExplorer
    * @returns {HTMLElement} The next element.
    */
   protected prevSibling(el: HTMLElement): HTMLElement {
+    if (!this.current.getAttribute('data-semantic-parent')) {
+      return null;
+    }
     const sib = el.previousElementSibling as HTMLElement;
     if (sib) {
       if (sib.matches(nav)) {
@@ -678,9 +702,9 @@ export class SpeechExplorer
   }
 
   /**
-   * @returns The semantic node that is currently focused.
+   * @returns {Sre.semanticNode} The semantic node that is currently focused.
    */
-  public semanticFocus() {
+  public semanticFocus(): Sre.semanticNode {
     const node = this.current || this.node;
     const id = node.getAttribute('data-semantic-id');
     const stree = this.generators.speechGenerator.getRebuilt()?.stree;

@@ -393,11 +393,12 @@ export class ParserConfiguration {
   public addPackage(pkg: string | [string, number]) {
     const name = typeof pkg === 'string' ? pkg : pkg[0];
     const conf = this.getPackage(name);
-    conf &&
+    if (conf) {
       this.configurations.add(
         conf,
         typeof pkg === 'string' ? conf.priority : pkg[1]
       );
+    }
   }
 
   /**

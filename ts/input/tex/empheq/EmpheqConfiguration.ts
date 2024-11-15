@@ -28,30 +28,8 @@ import { ParseUtil } from '../ParseUtil.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
 import { BeginItem } from '../base/BaseItems.js';
-import { StackItem } from '../StackItem.js';
 import { EmpheqUtil } from './EmpheqUtil.js';
-
-/**
- * A StackItem for empheq environments.
- */
-export class EmpheqBeginItem extends BeginItem {
-  /**
-   * @override
-   */
-  public get kind() {
-    return 'empheq-begin';
-  }
-
-  /**
-   * @override
-   */
-  public checkItem(item: StackItem) {
-    if (item.isKind('end') && item.getName() === this.getName()) {
-      this.setProperty('end', false);
-    }
-    return super.checkItem(item);
-  }
-}
+import ParseMethods from '../ParseMethods.js';
 
 /**
  * The methods that implement the empheq package.
@@ -63,7 +41,7 @@ export const EmpheqMethods = {
    * @param {TexParser} parser        The active tex parser.
    * @param {EmpheqBeginItem} begin   The begin item for this environment.
    */
-  Empheq(parser: TexParser, begin: EmpheqBeginItem) {
+  Empheq(parser: TexParser, begin: BeginItem) {
     if (parser.stack.env.closing === begin.getName()) {
       delete parser.stack.env.closing;
       parser.Push(
@@ -72,7 +50,7 @@ export const EmpheqMethods = {
           .setProperty('name', parser.stack.global.empheq)
       );
       parser.stack.global.empheq = '';
-      const empheq = parser.stack.Top() as EmpheqBeginItem;
+      const empheq = parser.stack.Top() as BeginItem;
       EmpheqUtil.adjustTable(empheq, parser);
       parser.Push(
         parser.itemFactory.create('end').setProperty('name', 'empheq')
@@ -132,7 +110,7 @@ export const EmpheqMethods = {
 //
 //  Define an environment map to add the new empheq environment
 //
-new EnvironmentMap('empheq-env', EmpheqUtil.environment, {
+new EnvironmentMap('empheq-env', ParseMethods.environment, {
   empheq: [EmpheqMethods.Empheq, 'empheq'],
 });
 
@@ -185,8 +163,5 @@ export const EmpheqConfiguration = Configuration.create('empheq', {
   [ConfigurationType.HANDLER]: {
     [HandlerType.MACRO]: ['empheq-macros'],
     [HandlerType.ENVIRONMENT]: ['empheq-env'],
-  },
-  [ConfigurationType.ITEMS]: {
-    [EmpheqBeginItem.prototype.kind]: EmpheqBeginItem,
   },
 });

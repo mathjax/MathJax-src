@@ -106,6 +106,7 @@ export interface Factory<N extends FactoryNode, C extends FactoryNodeClass<N>> {
 interface AbstractFactoryClass<
   N extends FactoryNode,
   C extends FactoryNodeClass<N>,
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 > extends Function {
   defaultNodes: { [kind: string]: C };
 }
@@ -166,12 +167,12 @@ export abstract class AbstractFactory<
    */
   public setNodeClass(kind: string, nodeClass: C) {
     this.nodeMap.set(kind, nodeClass);
-    const THIS = this;
     const KIND = this.nodeMap.get(kind);
     this.node[kind] = (...args: any[]) => {
-      return new KIND(THIS, ...args);
+      return new KIND(this, ...args);
     };
   }
+
   /**
    * @override
    */

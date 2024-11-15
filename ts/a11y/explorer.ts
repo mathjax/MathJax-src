@@ -37,7 +37,7 @@ import { hasWindow } from '../util/context.js';
 
 import { ExplorerPool, RegionPool } from './explorer/ExplorerPool.js';
 
-import { Sre } from './sre.js';
+import * as Sre from './sre.js';
 
 /**
  * Generic constructor for Mixins
@@ -215,9 +215,9 @@ export function ExplorerMathDocumentMixin<
         magnification: 'None',             // type of magnification
         magnify: '400%',                   // percentage of magnification of zoomed expressions
         mouseMagnifier: false,             // switch on magnification via mouse hovering
-        subtitles: true,                   // show speech as a subtitle
+        subtitles: false,                  // show speech as a subtitle
         treeColoring: false,               // tree color expression
-        viewBraille: true,                 // display Braille output as subtitles
+        viewBraille: false,                // display Braille output as subtitles
         voicing: false,                    // switch on speech output
       }
     };

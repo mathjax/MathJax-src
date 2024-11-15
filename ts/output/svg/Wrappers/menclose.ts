@@ -490,7 +490,9 @@ export const SvgMenclose = (function <N, T, D>(): SvgMencloseClass<N, T, D> {
       //
       for (const name of Object.keys(this.notations)) {
         const notation = this.notations[name];
-        !notation.renderChild && notation.renderer(this, svg[0]);
+        if (!notation.renderChild) {
+          notation.renderer(this, svg[0]);
+        }
       }
     }
   };

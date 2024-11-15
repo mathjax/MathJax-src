@@ -202,6 +202,17 @@ describe('Braket', () => {
   </mrow>
 </math>`
     ));
+  it('Braket-Set-small', () =>
+    toXmlMatch(
+      tex2mml('\\set{x}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\set{x}\" display=\"block\">
+      <mrow data-latex=\"\\set{x}\">
+        <mo data-mjx-texclass=\"OPEN\" stretchy=\"false\">{</mo>
+        <mi data-latex=\"x\">x</mi>
+        <mo data-mjx-texclass=\"CLOSE\" stretchy=\"false\">}</mo>
+      </mrow>
+    </math>`
+    ));
   it('Braket-Set', () =>
     toXmlMatch(
       tex2mml('\\Set{x}'),
@@ -250,6 +261,22 @@ describe('Braket', () => {
     <mo data-mjx-texclass="CLOSE">}</mo>
   </mrow>
 </math>`
+    ));
+  it('Braket-Set-over', () =>
+    toXmlMatch(
+      tex2mml('\\Set{x\\over y}'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Set{x\\over y}\" display=\"block\">
+      <mrow data-mjx-texclass=\"INNER\" data-latex=\"\\Set{x\\over y}\">
+        <mo data-mjx-texclass=\"OPEN\">{</mo>
+        <mspace width=\"0.167em\"></mspace>
+        <mfrac data-latex-item=\"\\over\">
+          <mi data-latex=\"x\">x</mi>
+          <mi data-latex=\"y\">y</mi>
+        </mfrac>
+        <mspace width=\"0.167em\"></mspace>
+        <mo data-mjx-texclass=\"CLOSE\">}</mo>
+      </mrow>
+    </math>`
     ));
   it('Braket-bar-small', () =>
     toXmlMatch(

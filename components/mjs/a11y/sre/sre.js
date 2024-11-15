@@ -1,7 +1,7 @@
 import './lib/sre.js';
 import './sre_config.js';
-import {Sre} from '#js/a11y/sre.js';
 import {context} from '#js/util/context.js';
+import * as Sre from '#js/a11y/sre.js';
 
 export {Sre};
 

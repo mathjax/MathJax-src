@@ -366,7 +366,8 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     do {
       // @test Prime, PrimeSup, Double Prime, PrePrime
       sup += entities.prime;
-      parser.i++, (c = parser.GetNext());
+      parser.i++;
+      c = parser.GetNext();
     } while (c === "'" || c === entities.rsquo);
     sup = ['', '\u2032', '\u2033', '\u2034', '\u2057'][sup.length] || sup;
     const node = parser.create('token', 'mo', { variantForm: true }, sup);
@@ -844,7 +845,9 @@ const BaseMethods: { [key: string]: ParseMethod } = {
       { stretchy: true, accent: true },
       entity
     );
-    mo.setProperty('mathaccent', false);
+    if (entity.match(MmlMo.mathaccentsWithWidth)) {
+      mo.setProperty('mathaccent', false);
+    }
     const pos = name.charAt(1) === 'o' ? 'over' : 'under';
     const base = parser.ParseArg(name);
     parser.Push(ParseUtil.underOver(parser, base, mo, pos, stack));
@@ -979,7 +982,9 @@ const BaseMethods: { [key: string]: ParseMethod } = {
    * @param {string} name The macro name.
    */
   Hsize(parser: TexParser, name: string) {
-    parser.GetNext() === '=' && parser.i++;
+    if (parser.GetNext() === '=') {
+      parser.i++;
+    }
     parser.stack.env.hsize = parser.GetDimen(name);
     parser.Push(parser.itemFactory.create('null'));
   },
@@ -1286,7 +1291,9 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     const node = parser.create('node', 'mspace', [], {
       width: parser.GetDimen(name),
     });
-    nobreak && NodeUtil.setAttribute(node, 'linebreak', 'nobreak');
+    if (nobreak) {
+      NodeUtil.setAttribute(node, 'linebreak', 'nobreak');
+    }
     parser.Push(node);
   },
 
@@ -1476,8 +1483,9 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     if (align) {
       NodeUtil.setAttribute(mml, 'data-align', align);
     }
-    pos.toLowerCase() !== pos &&
+    if (pos.toLowerCase() !== pos) {
       NodeUtil.setAttribute(mml, 'data-overflow', 'linebreak');
+    }
     parser.Push(mml);
   },
 
@@ -1931,8 +1939,9 @@ const BaseMethods: { [key: string]: ParseMethod } = {
       align = parser.GetArgument('\\begin{' + begin.getName() + '}');
     }
     const array = parser.itemFactory.create('array') as sitem.ArrayItem;
-    begin.getName() === 'array' &&
+    if (begin.getName() === 'array') {
       array.setProperty('arrayPadding', '.5em .125em');
+    }
     array.parser = parser;
     array.arraydef = {
       columnspacing: spacing || '1em',
@@ -1958,10 +1967,8 @@ const BaseMethods: { [key: string]: ParseMethod } = {
       // @test Subarray, Small Matrix
       array.arraydef['displaystyle'] = false;
     }
-    if (style === 'S') {
-      // @test Subarray, Small Matrix
-      array.arraydef['scriptlevel'] = 1;
-    }
+    // @test Subarray, Small Matrix
+    array.arraydef['scriptlevel'] = style === 'S' ? 1 : 0;
     if (raggedHeight) {
       // @test Subarray, Small Matrix
       array.arraydef['useHeight'] = false;
@@ -2037,7 +2044,9 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     const align = [...lcr].map(
       (c) => ({ l: 'left', c: 'center', r: 'right' })[c]
     );
-    align.length === 1 && align.push(align[0]);
+    if (align.length === 1) {
+      align.push(align[0]);
+    }
     //
     // Set the properties for the mstyle
     //

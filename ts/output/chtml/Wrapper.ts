@@ -172,7 +172,9 @@ export class ChtmlWrapper<N, T, D> extends CommonWrapper<
       if (style !== STYLE) {
         this.toCHTML([parent]);
         dom.push(this.dom[0]);
-        STYLE === 'after' && adaptor.removeAttribute(this.dom[0], 'space');
+        if (STYLE === 'after') {
+          adaptor.removeAttribute(this.dom[0], 'space');
+        }
       } else {
         dom.push(this.createChtmlNodes([parent])[0]);
       }

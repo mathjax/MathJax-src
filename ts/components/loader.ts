@@ -146,18 +146,18 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
 };
 
 /**
+ * The version of MathJax that is running.
+ */
+const VERSION = MJGlobal.version;
+
+/**
  * The implementation of the dynamic loader
  */
-export namespace Loader {
-  /**
-   * The version of MathJax that is running.
-   */
-  const VERSION = MJGlobal.version;
-
+export const Loader = {
   /**
    * The versions of all the loaded extensions.
    */
-  export const versions: Map<string, string> = new Map();
+  versions: new Map<string, string>(),
 
   /**
    * Get a promise that is resolved when all the named packages have been loaded.
@@ -165,7 +165,7 @@ export namespace Loader {
    * @param {string[]} names  The packages to wait for
    * @returns {Promise}       A promise that resolves when all the named packages are ready
    */
-  export function ready(...names: string[]): Promise<string[]> {
+  ready(...names: string[]): Promise<string[]> {
     if (names.length === 0) {
       names = Array.from(Package.packages.keys());
     }
@@ -175,7 +175,7 @@ export namespace Loader {
       promises.push(extension.promise);
     }
     return Promise.all(promises);
-  }
+  },
 
   /**
    * Load the named packages and return a promise that is resolved when they are all loaded
@@ -183,7 +183,7 @@ export namespace Loader {
    * @param {string[]} names  The packages to load
    * @returns {Promise}       A promise that resolves when all the named packages are ready
    */
-  export function load(...names: string[]): Promise<void | string[]> {
+  load(...names: string[]): Promise<void | string[]> {
     if (names.length === 0) {
       return Promise.resolve();
     }
@@ -198,7 +198,10 @@ export namespace Loader {
       promises.push(
         extension.promise.then(() => {
           if (!CONFIG.versionWarnings) return;
-          if (extension.isLoaded && !versions.has(Package.resolvePath(name))) {
+          if (
+            extension.isLoaded &&
+            !Loader.versions.has(Package.resolvePath(name))
+          ) {
             console.warn(
               `No version information available for component ${name}`
             );
@@ -208,14 +211,14 @@ export namespace Loader {
     }
     Package.loadAll();
     return Promise.all(promises);
-  }
+  },
 
   /**
    * Indicate that the named packages are being loaded by hand (e.g., as part of a larger package).
    *
    * @param {string[]} names  The packages to load
    */
-  export function preLoad(...names: string[]) {
+  preLoad(...names: string[]) {
     for (const name of names) {
       let extension = Package.packages.get(name);
       if (!extension) {
@@ -224,7 +227,7 @@ export namespace Loader {
       }
       extension.loaded();
     }
-  }
+  },
 
   /**
    * Insert options into a package configuration
@@ -232,7 +235,7 @@ export namespace Loader {
    * @param {string} name         The package whose configuration is being augmented
    * @param {PackageConfig} data  The extra configuraiton information to add
    */
-  export function addPackageData(name: string, data: PackageConfig) {
+  addPackageData(name: string, data: PackageConfig) {
     let config = CONFIG[name];
     if (!config) {
       config = CONFIG[name] = {};
@@ -248,23 +251,23 @@ export namespace Loader {
         config[key] = value;
       }
     }
-  }
+  },
 
   /**
    * The default function to perform when all the packages are loaded
    */
-  export function defaultReady() {
+  defaultReady() {
     if (typeof MathJax.startup !== 'undefined') {
       MathJax.config.startup.ready();
     }
-  }
+  },
 
   /**
    * Get the root location for where the MathJax package files are found
    *
    * @returns {string}   The root location (directory for node.js, URL for browser)
    */
-  export function getRoot(): string {
+  getRoot(): string {
     if (context.document) {
       const script =
         context.document.currentScript || context.document.getElementById('MathJax-script');
@@ -273,7 +276,7 @@ export namespace Loader {
       }
     }
     return mjxRoot();
-  }
+  },
 
   /**
    * Check the version of an extension and report an error if not correct
@@ -283,12 +286,8 @@ export namespace Loader {
    * @param {string} _type       The type of extension (future code may use this to check ranges of versions)
    * @returns {boolean}          True if there was a mismatch, false otherwise
    */
-  export function checkVersion(
-    name: string,
-    version: string,
-    _type?: string
-  ): boolean {
-    saveVersion(name);
+  checkVersion(name: string, version: string, _type?: string): boolean {
+    this.saveVersion(name);
     if (CONFIG.versionWarnings && version !== VERSION) {
       console.warn(
         `Component ${name} uses ${version} of MathJax; version in use is ${VERSION}`
@@ -296,29 +295,29 @@ export namespace Loader {
       return true;
     }
     return false;
-  }
+  },
 
   /**
    * Set the version of an extension (used for combined components so they can be loaded)
    *
    * @param {string} name       The name of the extension being checked
    */
-  export function saveVersion(name: string) {
-    versions.set(Package.resolvePath(name), VERSION);
-  }
+  saveVersion(name: string) {
+    Loader.versions.set(Package.resolvePath(name), VERSION);
+  },
 
   /**
    * The filters to use to modify the paths used to obtain the packages
    */
-  export const pathFilters = new FunctionList();
+  pathFilters: new FunctionList(),
+};
 
-  /**
-   * The default filters to use.
-   */
-  pathFilters.add(PathFilters.source, 0);
-  pathFilters.add(PathFilters.normalize, 10);
-  pathFilters.add(PathFilters.prefix, 20);
-}
+/**
+ * The default filters to use.
+ */
+Loader.pathFilters.add(PathFilters.source, 0);
+Loader.pathFilters.add(PathFilters.normalize, 10);
+Loader.pathFilters.add(PathFilters.prefix, 20);
 
 /**
  * Export the global MathJax object for convenience

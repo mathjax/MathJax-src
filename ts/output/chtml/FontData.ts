@@ -203,8 +203,9 @@ export class ChtmlFontData extends FontData<
     prefix: string = ''
   ) {
     super.addExtension(data, prefix);
-    data.fonts &&
+    if (data.fonts) {
       this.addDynamicFontCss(this.defaultStyles, data.fonts, data.fontURL);
+    }
   }
 
   /**
@@ -307,7 +308,9 @@ export class ChtmlFontData extends FontData<
   public updateDynamicStyles(): StyleList {
     const styles = this.fontUsage;
     this.fontUsage = {};
-    !this.options.adaptiveCSS && this.updateStyles(styles);
+    if (!this.options.adaptiveCSS) {
+      this.updateStyles(styles);
+    }
     return styles;
   }
 

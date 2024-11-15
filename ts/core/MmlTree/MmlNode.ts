@@ -658,12 +658,13 @@ export abstract class AbstractMmlNode
    * @override
    */
   public childPosition() {
-    let child: MmlNode = this;
-    let parent = child.parent;
+    let child: MmlNode = null;
+    let parent = this.parent;
     while (parent && parent.notParent) {
       child = parent;
       parent = parent.parent;
     }
+    child = child || this;
     if (parent) {
       let i = 0;
       for (const node of parent.childNodes) {
@@ -763,22 +764,17 @@ export abstract class AbstractMmlNode
         Object.hasOwn(AbstractMmlNode.alwaysInherit, key)
       ) {
         const [node, value] = attributes[key];
-        !AbstractMmlNode.noInherit[node]?.[this.kind]?.[key] &&
+        if (!AbstractMmlNode.noInherit[node]?.[this.kind]?.[key]) {
           this.attributes.setInherited(key, value);
+        }
       }
       if (AbstractMmlNode.stopInherit[this.kind]?.[key]) {
         attributes = { ...attributes };
         delete attributes[key];
       }
     }
-    const displaystyle = this.attributes.getExplicit('displaystyle');
-    if (displaystyle === undefined) {
-      this.attributes.setInherited('displaystyle', display);
-    }
-    const scriptlevel = this.attributes.getExplicit('scriptlevel');
-    if (scriptlevel === undefined) {
-      this.attributes.setInherited('scriptlevel', level);
-    }
+    this.attributes.setInherited('displaystyle', display);
+    this.attributes.setInherited('scriptlevel', level);
     if (prime) {
       this.setProperty('texprimestyle', prime);
     }
@@ -1175,23 +1171,21 @@ export abstract class AbstractMmlBaseNode extends AbstractMmlNode {
     this.getPrevClass(prev);
     this.texClass = TEXCLASS.ORD;
     const base = this.childNodes[0];
+    let result = null;
     if (base) {
       if (this.isEmbellished || base.isKind('mi')) {
-        prev = base.setTeXclass(prev);
+        result = base.setTeXclass(prev);
         this.updateTeXclass(this.core());
       } else {
         base.setTeXclass(null);
-        prev = this;
       }
-    } else {
-      prev = this;
     }
     for (const child of this.childNodes.slice(1)) {
       if (child) {
         child.setTeXclass(null);
       }
     }
-    return prev;
+    return result || this;
   }
 }
 
@@ -1482,7 +1476,7 @@ export class XMLNode extends AbstractMmlEmptyNode {
    * @returns {XMLNode}  The XML node (for chaining of method calls)
    */
   public setXML(
-    xml: Object, // eslint-disable-line
+    xml: Object, // eslint-disable-line @typescript-eslint/no-wrapper-object-types
     adaptor: DOMAdaptor<any, any, any> = null
   ): XMLNode {
     this.xml = xml;

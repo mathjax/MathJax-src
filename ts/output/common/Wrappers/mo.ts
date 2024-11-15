@@ -541,7 +541,9 @@ export function CommonMoMixin<
         //
         const i = this.parent.node.childIndex(this.node);
         const next = this.parent.node.childNodes[i + 1];
-        next && next.setTeXclass(this.multChar.node);
+        if (next) {
+          next.setTeXclass(this.multChar.node);
+        }
       }
     }
 
