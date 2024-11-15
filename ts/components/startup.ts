@@ -42,6 +42,7 @@ import { CommonOutputJax } from '../output/common.js';
 import { DOMAdaptor } from '../core/DOMAdaptor.js';
 import { PrioritizedList } from '../util/PrioritizedList.js';
 import { OptionList, OPTIONS } from '../util/Options.js';
+import { context} from '../util/context.js';
 
 import { TeX } from '../input/tex.js';
 
@@ -619,7 +620,7 @@ if (typeof MathJax._.startup === 'undefined') {
     output: '',
     handler: null,
     adaptor: null,
-    document: typeof document === 'undefined' ? '' : document,
+    document: context.document || '',
     elements: null,
     typeset: true,
     ready: Startup.defaultReady.bind(Startup),

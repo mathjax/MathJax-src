@@ -35,6 +35,7 @@ import { getRange } from '../../../core/MmlTree/OperatorDictionary.js';
 import ParseOptions from '../ParseOptions.js';
 import { ParseUtil } from '../ParseUtil.js';
 import { TexConstant } from '../TexConstants.js';
+import { context } from '../../../util/context.js';
 
 const MATHVARIANT = TexConstant.Variant;
 
@@ -210,10 +211,10 @@ export const BaseConfiguration: Configuration = Configuration.create('base', {
     maxMacros: 1000,
     identifierPattern: /^[a-zA-Z]+/, // pattern for multiLetterIdentifiers in \mathrm, etc.
     baseURL:
-      typeof document === 'undefined' ||
-      document.getElementsByTagName('base').length === 0
+      !context.document ||
+      context.document.getElementsByTagName('base').length === 0
         ? ''
-        : String(document.location).replace(/#.*$/, ''),
+        : String(context.document.location).replace(/#.*$/, ''),
   },
   [ConfigurationType.TAGS]: {
     base: BaseTags,

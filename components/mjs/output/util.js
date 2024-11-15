@@ -1,9 +1,10 @@
 import {combineDefaults, combineWithMathJax} from '#js/components/global.js';
-import {Package} from "#js/components/package.js";
+import {Package} from '#js/components/package.js';
+import {hasWindow} from '#js/util/context.js';
 
-export const FONTPATH = (typeof document === 'undefined' ?
-                         '@mathjax/%%FONT%%-font' :
-                         'https://cdn.jsdelivr.net/npm/%%FONT%%-font');
+export const FONTPATH = hasWindow ?
+                        'https://cdn.jsdelivr.net/npm/%%FONT%%-font':
+                        '@mathjax/%%FONT%%-font';
 
 export const OutputUtil = {
   config(jax, jaxClass, defaultFont, fontClass) {

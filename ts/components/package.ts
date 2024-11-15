@@ -23,11 +23,7 @@
  */
 
 import { CONFIG, Loader } from './loader.js';
-
-/*
- * The browser document (for creating scripts to load components)
- */
-declare const document: Document;
+import { context } from '../util/context.js';
 
 /**
  * A map of package names to Package instances
@@ -337,13 +333,13 @@ export class Package {
    * @param {string} url The URL to load from
    */
   protected loadScript(url: string) {
-    const script = document.createElement('script');
+    const script = context.document.createElement('script');
     script.src = url;
     script.charset = 'UTF-8';
     script.onload = (_event) => this.checkLoad();
     script.onerror = (_event) => this.failed('Can\'t load "' + url + '"');
     // FIXME: Should there be a timeout failure as well?
-    document.head.appendChild(script);
+    context.document.head.appendChild(script);
   }
 
   /**

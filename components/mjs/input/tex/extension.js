@@ -1,8 +1,9 @@
 import {combineDefaults} from '#js/components/global.js';
+import {hasWindow} from '#js/util/context.js';
 
 export function fontExtension(id, name, pkg = `@mathjax/${name}`) {
   if (MathJax.loader) {
-    const FONTPATH = (typeof document === 'undefined' ? pkg : `https://cdn.jsdelivr.net/npm/${name}`);
+    const FONTPATH = hasWindow ? `https://cdn.jsdelivr.net/npm/${name}` : pkg;
     const path = name.replace(/-font-extension$/, '-extension');
     const extension = name.replace(/-font-extension$/, '');
     const jax = (MathJax.config?.startup?.output || 'chtml');

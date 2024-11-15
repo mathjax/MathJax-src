@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  Copyright (c) 2018-2024 The MathJax Consortium
+ *  Copyright (c) 2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,17 +16,20 @@
  */
 
 /**
- * @file  Chooses between jdsom and browser DOM adaptors
+ * @file  Provides the browser window and document values
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
 
-import { liteAdaptor } from './liteAdaptor.js';
-import { browserAdaptor } from './browserAdaptor.js';
-import { context } from '../util/context.js';
+/**
+ * True if there is a window object
+ */
+export const hasWindow = typeof window !== 'undefined';
 
 /**
- *  Select which adaptor to use (depending on whether we are in a browser or node.js)
+ * The browsers window and document objects, if any
  */
-export const chooseAdaptor = context.document ? browserAdaptor : liteAdaptor;
-
+export const context = {
+  window: hasWindow ? window : null,
+  document: hasWindow ? window.document : null,
+};

@@ -26,6 +26,7 @@ import { HandlerList } from './core/HandlerList.js';
 import { handleRetriesFor, retryAfter } from './util/Retries.js';
 import { OptionList } from './util/Options.js';
 import { MathDocument } from './core/MathDocument.js';
+import { context } from './util/context.js';
 
 /*****************************************************************/
 /**
@@ -36,6 +37,11 @@ export const mathjax = {
    *  The MathJax version number
    */
   version: VERSION,
+
+  /**
+   * The browser context (window and document values)
+   */
+  context: context,
 
   /**
    *  The list of registers document handlers
