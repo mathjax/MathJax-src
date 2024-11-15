@@ -1,7 +1,7 @@
 import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
 import { Configuration } from '../Configuration.js';
 import { EnvironmentMap, MacroMap } from '../TokenMap.js';
-import { ParseResult } from '../Types.js';
+import { ParseResult, ParseMethod } from '../Types.js';
 import { ParseUtil } from '../ParseUtil.js';
 import BaseMethods from '../base/BaseMethods.js';
 import TexParser from '../TexParser.js';
@@ -217,14 +217,14 @@ export const CasesMethods = {
    *
    * @param {TexParser} parser   The active tex parser.
    * @param {string} env         The environment to create.
-   * @param {Function} func      A function to process the environment.
+   * @param {ParseMethod} func      A function to process the environment.
    * @param {any[]} args         The arguments for func.
    */
-  environment(parser: TexParser, env: string, func: Function, args: any[]) {
+  environment(parser: TexParser, env: string, func: ParseMethod, args: any[]) {
     const item = parser.itemFactory
       .create('cases-begin')
       .setProperties({ name: env, end: true });
-    parser.Push(func(parser, item, ...args));
+    parser.Push(func(parser, item, ...args) as StackItem);
   },
 };
 

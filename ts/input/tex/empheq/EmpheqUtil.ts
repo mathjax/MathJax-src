@@ -22,11 +22,9 @@
  */
 
 import { ParseUtil } from '../ParseUtil.js';
-import { StackItem } from '../StackItem.js';
 import TexParser from '../TexParser.js';
 import { EnvList } from '../StackItem.js';
 import { AbstractTags } from '../Tags.js';
-import { ParseMethod } from '../Types.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMtable } from '../../../core/MmlTree/MmlNodes/mtable.js';
 import { MmlMtd } from '../../../core/MmlTree/MmlNodes/mtd.js';
