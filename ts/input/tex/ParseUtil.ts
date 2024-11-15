@@ -307,7 +307,9 @@ export const ParseUtil = {
         closeNode
       );
     }
-    color && mo.attributes.set('mathcolor', color);
+    if (color) {
+      mo.attributes.set('mathcolor', color);
+    }
     NodeUtil.appendChildren(mrow, [mo]);
     return mrow;
   },
@@ -637,10 +639,20 @@ export const ParseUtil = {
     let node: MmlNode = mml;
     if (stack) {
       // @test Overbrace 1 2 3, Underbrace, Overbrace Op 1 2
-      node = parser.create('node', 'TeXAtom', [mml], {
-        texClass: TEXCLASS.OP,
-        movesupsub: true,
-      });
+      node = parser.create(
+        'node',
+        'TeXAtom',
+        [
+          parser.create('node', 'mstyle', [mml], {
+            displaystyle: true,
+            scriptlevel: 0,
+          }),
+        ],
+        {
+          texClass: TEXCLASS.OP,
+          movesupsub: true,
+        }
+      );
     }
     NodeUtil.setProperty(node, 'subsupOK', true);
     return node;
@@ -823,7 +835,9 @@ export const ParseUtil = {
       options.addNode(n.kind, n);
       const lists = ((n.getProperty('in-lists') as string) || '').split(/,/);
       for (const list of lists) {
-        list && options.addNode(list, n);
+        if (list) {
+          options.addNode(list, n);
+        }
       }
     });
     return tree;

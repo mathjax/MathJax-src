@@ -338,7 +338,8 @@ export const SvgXmlNode = (function <N, T, D>(): SvgXmlNodeClass<N, T, D> {
       styles.height = this.em((h + d) * scale);
       styles.width = this.em(w * scale);
       styles['vertical-align'] = this.em(-d * scale);
-      delete styles['font-size'], styles['font-family'];
+      delete styles['font-size'];
+      delete styles['font-family'];
       return html;
     }
   };

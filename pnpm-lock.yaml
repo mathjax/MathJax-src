@@ -11,7 +11,7 @@ importers:
       '@xmldom/xmldom':
         specifier: ^0.8.10
         version: 0.8.10
-      mathjax-modern-font:
+      mathjax-newcm-font:
         specifier: ^4.0.0-beta.7
         version: 4.0.0-beta.7
       mhchemparser:
@@ -931,8 +931,8 @@ packages:
     resolution: {integrity: sha512-IJ4uwUTi2qCccrioU6g9g/5rvvVl13bsdczUUcqbciD9iLr095yj8DQKdObriEvuNSx325N1rV1O0sJFszx75g==}
     engines: {node: 14 || >=16.14}
 
-  mathjax-modern-font@4.0.0-beta.7:
-    resolution: {integrity: sha512-mGrlxuFPRoHpGYyRaXJpfyM9k77XCpH11lIVLO7+VNTFJXIeqnMXv+AGFiYL/GftQpdhPlCg4zqd/JXlse9S0A==}
+  mathjax-newcm-font@4.0.0-beta.7:
+    resolution: {integrity: sha512-XEARAvV1VzAnVzmSNhkwskSwxQ9kSrfqksxDa4qYhgy3RqEdQrrw0emvC1lmeedTKMXLedx3KNsfMkWCiWkg2w==}
 
   merge-stream@2.0.0:
     resolution: {integrity: sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==}
@@ -2355,7 +2355,7 @@ snapshots:
 
   lru-cache@10.0.1: {}
 
-  mathjax-modern-font@4.0.0-beta.7: {}
+  mathjax-newcm-font@4.0.0-beta.7: {}
 
   merge-stream@2.0.0: {}
 

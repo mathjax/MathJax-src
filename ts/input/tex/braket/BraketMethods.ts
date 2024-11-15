@@ -106,7 +106,7 @@ const BraketMethods: { [key: string]: ParseMethod } = {
         c
       );
       parser.Push(node);
-      return;
+      return true;
     }
     //
     // Close any pending \over constructs using a specially marked CloseItem
@@ -131,6 +131,7 @@ const BraketMethods: { [key: string]: ParseMethod } = {
       parser.create('node', 'TeXAtom', [], { texClass: TEXCLASS.OPEN })
     );
     top.setProperty('barcount', (top.getProperty('barcount') as number) + 1);
+    return true;
   },
 
   Macro: BaseMethods.Macro,

@@ -64,6 +64,18 @@ describe('Newcommand', () => {
   <mi data-latex="a">a</mi>
 </math>`
     ));
+  it('Newenvironment Optional Noarg', () =>
+    toXmlMatch(
+      tex2mml(
+        '\\newenvironment{argument}[1][a]{\\textbf{Argument #1:}}{aa}\\begin{argument}b\\end{argument}'
+      ),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\newenvironment{argument}[1][a]{\\textbf{Argument #1:}}{aa}\\begin{argument}b\\end{argument}\" display=\"block\">
+      <mtext mathvariant=\"bold\" data-latex=\"\\textbf{Argument a:}\">Argument a:</mtext>
+      <mi data-latex=\"b\">b</mi>
+      <mi data-latex=\"a\">a</mi>
+      <mi data-latex=\"a\">a</mi>
+    </math>`
+    ));
   it('Newenvironment Arg Optional', () =>
     toXmlMatch(
       tex2mml(
@@ -757,6 +769,15 @@ describe('NewcommandError', () => {
     <mtext>You can\'t use \'macro parameter character #\' in math mode</mtext>
   </merror>
 </math>`
+    ));
+  it('Missing End Error', () =>
+    toXmlMatch(
+      tex2mml('\\newenvironment{env}{aa}{bb}\\begin{env}cc'),
+      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\newenvironment{env}{aa}{bb}\\begin{env}cc\" display=\"block\">
+      <merror data-mjx-error=\"Missing \\end{env}\">
+        <mtext>Missing \\end{env}</mtext>
+      </merror>
+    </math>`
     ));
 });
 

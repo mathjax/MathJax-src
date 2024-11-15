@@ -17,7 +17,7 @@ export default tseslint.config({
     }
   },
   files: ['ts/**/*.ts'],
-  ignores: ["**/*.d.ts", "**/*.js"],
+  ignores: ["**/*.d.ts", "**/*.js", "**/cjs/*"],
   "rules": {
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unused-vars": ["error",
@@ -25,6 +25,7 @@ export default tseslint.config({
                                             "caughtErrorsIgnorePattern": "^_" }
                                          ],
     "@typescript-eslint/no-empty-object-type": ["error", {"allowInterfaces": "with-single-extends"}],
+    "@typescript-eslint/no-unused-expressions": ["error", { "allowTernary": true }],
     "prefer-const": ["error", {"destructuring": "all"}],
     "jsdoc/tag-lines": ["warn", "always", {"count": 0, "startLines": 1}]
   }

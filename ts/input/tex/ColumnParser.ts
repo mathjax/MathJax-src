@@ -352,7 +352,9 @@ export class ColumnParser {
    * @param {string} rule         The type of rule to add (solid or dashed)
    */
   public addRule(state: ColumnState, rule: string) {
-    state.clines[state.j] && this.addAt(state, '\\,');
+    if (state.clines[state.j]) {
+      this.addAt(state, '\\,');
+    }
     state.clines[state.j] = rule;
     if (state.cspace[state.j] === '0') {
       state.cstart[state.j] = '\\hspace{.5em}';
