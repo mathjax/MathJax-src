@@ -23,19 +23,21 @@
 
 import { PrioritizedList, PrioritizedListItem } from './PrioritizedList.js';
 
+type AnyFunction = (...args: unknown[]) => unknown;
+
 /*****************************************************************/
 /**
  *  The FunctionListItem interface (extends PrioritizedListItem<Function>)
  */
 
-export interface FunctionListItem extends PrioritizedListItem<Function> {}
+export interface FunctionListItem extends PrioritizedListItem<AnyFunction> {}
 
 /*****************************************************************/
 /**
  *  Implements the FunctionList class (extends PrioritizedList<Function>)
  */
 
-export class FunctionList extends PrioritizedList<Function> {
+export class FunctionList extends PrioritizedList<AnyFunction> {
   /**
    * Executes the functions in the list (in prioritized order),
    *   passing the given data to the functions.  If any return

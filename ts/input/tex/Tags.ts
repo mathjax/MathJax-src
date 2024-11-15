@@ -26,7 +26,6 @@ import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import { MathItem } from '../../core/MathItem.js';
 import { EnvList } from './StackItem.js';
 import ParseOptions from './ParseOptions.js';
-import { OptionList } from '../../util/Options.js';
 
 /**
  *  Simple class for label objects.
@@ -633,20 +632,18 @@ export interface TagsClass {
   new (): Tags;
 }
 
-export namespace TagsFactory {
-  const tagsMapping = new Map<string, TagsClass>([
-    ['none', NoTags],
-    ['all', AllTags],
-  ]);
+const tagsMapping = new Map<string, TagsClass>([
+  ['none', NoTags],
+  ['all', AllTags],
+]);
 
-  let defaultTags = 'none';
+let defaultTags = 'none';
 
+export const TagsFactory = {
   /**
    * The default options for tagging
-   *
-   * @type {OptionList}
    */
-  export const OPTIONS: OptionList = {
+  OPTIONS: {
     // Tagging style, used to be autonumber in v2.
     tags: defaultTags,
     // This specifies the side on which \tag{} macros will place the tags.
@@ -663,7 +660,7 @@ export namespace TagsFactory {
     ignoreDuplicateLabels: false,
     // The rowalign value to use for tag cells.
     tagAlign: 'baseline',
-  };
+  },
 
   /**
    * Add a tagging object.
@@ -671,20 +668,20 @@ export namespace TagsFactory {
    * @param {string} name Name of the tagging object.
    * @param {TagsClass} constr The class of the Tagging object.
    */
-  export const add = function (name: string, constr: TagsClass) {
+  add(name: string, constr: TagsClass) {
     tagsMapping.set(name, constr);
-  };
+  },
 
   /**
    * Adds a list of tagging objects to the factory.
    *
    * @param {{[name: string]: TagsClass}} tags The list of tagging objects.
    */
-  export const addTags = function (tags: { [name: string]: TagsClass }) {
+  addTags(tags: { [name: string]: TagsClass }) {
     for (const key of Object.keys(tags)) {
       TagsFactory.add(key, tags[key]);
     }
-  };
+  },
 
   /**
    * Creates a new tagging object.
@@ -692,27 +689,27 @@ export namespace TagsFactory {
    * @param {string} name The name of the tagging object.
    * @returns {Tags} The newly created object.
    */
-  export const create = function (name: string): Tags {
+  create(name: string): Tags {
     const constr = tagsMapping.get(name) || tagsMapping.get(defaultTags);
     if (!constr) {
       throw Error('Unknown tags class');
     }
     return new constr();
-  };
+  },
 
   /**
    * Set the name of the default tagging object.
    *
    * @param {string} name The default.
    */
-  export const setDefault = function (name: string) {
+  setDefault(name: string) {
     defaultTags = name;
-  };
+  },
 
   /**
    * @returns {Tags} The default tagging object.
    */
-  export const getDefault = function (): Tags {
+  getDefault(): Tags {
     return TagsFactory.create(defaultTags);
-  };
-}
+  },
+};

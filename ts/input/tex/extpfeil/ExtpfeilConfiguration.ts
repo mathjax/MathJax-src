@@ -28,7 +28,7 @@ import TexParser from '../TexParser.js';
 import { CommandMap } from '../TokenMap.js';
 import { ParseMethod } from '../Types.js';
 import { AmsMethods } from '../ams/AmsMethods.js';
-import NewcommandUtil from '../newcommand/NewcommandUtil.js';
+import { NewcommandUtil } from '../newcommand/NewcommandUtil.js';
 import { NewcommandConfiguration } from '../newcommand/NewcommandConfiguration.js';
 import TexError from '../TexError.js';
 

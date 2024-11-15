@@ -488,11 +488,15 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       movablelimits: true,
     });
     if (preRest) {
-      preScripts && mrow.appendChild(preScripts);
+      if (preScripts) {
+        mrow.appendChild(preScripts);
+      }
       mrow.appendChild(preRest);
     }
     mrow.appendChild(mml);
-    postRest && mrow.appendChild(postRest);
+    if (postRest) {
+      mrow.appendChild(postRest);
+    }
     parser.Push(mrow);
   },
 

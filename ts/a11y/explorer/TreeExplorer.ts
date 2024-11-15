@@ -25,7 +25,7 @@
 import { A11yDocument, Region } from './Region.js';
 import { AbstractExplorer } from './Explorer.js';
 import { ExplorerPool } from './ExplorerPool.js';
-import { Sre } from '../sre.js';
+import * as Sre from '../sre.js';
 
 export class AbstractTreeExplorer extends AbstractExplorer<void> {
   /**

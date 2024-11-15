@@ -296,7 +296,9 @@ export function CommonMtextMixin<
           ['left', '0'],
           ['left', '0'],
         ]; // FIXME: do something better, here
-        i === this.breakCount && this.addRightBorders(bbox);
+        if (i === this.breakCount) {
+          this.addRightBorders(bbox);
+        }
       }
       return bbox;
     }

@@ -141,6 +141,7 @@ export class MmlMo extends AbstractMmlTokenNode {
    *  (property mathaccent = true)
    */
   /* prettier-ignore */
+  /* eslint-disable no-misleading-character-class */
   protected static mathaccents = new RegExp([
     '^[',
     '\u00B4\u0301\u02CA',  // acute
@@ -233,7 +234,7 @@ export class MmlMo extends AbstractMmlTokenNode {
    *                    with this node as its core
    */
   public coreParent(): MmlNode {
-    let embellished = this;
+    let embellished = null;
     let parent = this as MmlNode;
     const math = this.factory.getNodeClass('math');
     while (
@@ -245,7 +246,7 @@ export class MmlMo extends AbstractMmlTokenNode {
       embellished = parent;
       parent = (parent as MmlNode).parent;
     }
-    return embellished;
+    return embellished || this;
   }
 
   /**
@@ -384,7 +385,7 @@ export class MmlMo extends AbstractMmlTokenNode {
       // Check if node is the last one in its container since the rule
       // above only takes effect if there is a node that follows.
       //
-      let child: MmlNode = this;
+      let child: MmlNode = null;
       let parent = this.parent;
       while (
         parent &&
@@ -396,6 +397,7 @@ export class MmlMo extends AbstractMmlTokenNode {
         child = parent;
         parent = parent.parent;
       }
+      child = child || this;
       if (parent.childNodes[parent.childNodes.length - 1] === child) {
         this.texClass = TEXCLASS.ORD;
       }
@@ -471,7 +473,7 @@ export class MmlMo extends AbstractMmlTokenNode {
    *                                     position of the element in its parent.
    */
   public getForms(): [string, string, string] {
-    let core: MmlNode = this;
+    let core: MmlNode = null;
     let parent = this.parent;
     let Parent = this.Parent;
     while (Parent && Parent.isEmbellished) {
@@ -479,6 +481,7 @@ export class MmlMo extends AbstractMmlTokenNode {
       parent = Parent.parent;
       Parent = Parent.Parent;
     }
+    core = core || this;
     if (
       parent &&
       parent.isKind('mrow') &&

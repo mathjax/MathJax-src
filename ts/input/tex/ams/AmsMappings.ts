@@ -205,7 +205,7 @@ new sm.EnvironmentMap('AMSmath-environment', ParseMethods.environment, {
     ParseUtil.cols(0),
     '0.1em',
     'S',
-    1,
+    true,
   ],
   smallmatrix: [
     AmsMethods.Array,
@@ -216,7 +216,7 @@ new sm.EnvironmentMap('AMSmath-environment', ParseMethods.environment, {
     ParseUtil.cols(1 / 3),
     '.2em',
     'S',
-    1,
+    true,
   ],
   matrix: [AmsMethods.Array, null, null, null, 'c'],
   pmatrix: [AmsMethods.Array, null, '(', ')', 'c'],

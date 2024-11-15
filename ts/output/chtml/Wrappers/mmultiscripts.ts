@@ -199,8 +199,9 @@ export const ChtmlMmultiscripts = (function <
           this.firstPrescript,
           data.numPrescripts
         );
-        preAlign !== 'right' &&
+        if (preAlign !== 'right') {
           this.adaptor.setAttribute(scripts, 'script-align', preAlign);
+        }
       }
       this.childNodes[0].toCHTML(chtml);
       if (data.numScripts) {
@@ -214,8 +215,9 @@ export const ChtmlMmultiscripts = (function <
           1,
           data.numScripts
         );
-        postAlign !== 'left' &&
+        if (postAlign !== 'left') {
           this.adaptor.setAttribute(scripts, 'script-align', postAlign);
+        }
       }
     }
 

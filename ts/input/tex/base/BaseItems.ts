@@ -463,7 +463,9 @@ export class Middle extends BaseItem {
   constructor(factory: StackItemFactory, delim: string, color: string) {
     super(factory);
     this.setProperty('delim', delim);
-    color && this.setProperty('color', color);
+    if (color) {
+      this.setProperty('color', color);
+    }
   }
 
   /**
@@ -492,7 +494,9 @@ export class RightItem extends BaseItem {
   constructor(factory: StackItemFactory, delim: string, color: string) {
     super(factory);
     this.setProperty('delim', delim);
-    color && this.setProperty('color', color);
+    if (color) {
+      this.setProperty('color', color);
+    }
   }
 
   /**
@@ -591,13 +595,10 @@ export class BeginItem extends BaseItem {
           item.getName()
         );
       }
-      if (!this.getProperty('end')) {
-        // @test Hfill
-        const node = this.toMml();
-        addLatexItem(node, item);
-        return [[this.factory.create('mml', node)], true];
-      }
-      return BaseItem.fail; // TODO: This case could probably go!
+      // @test Hfill
+      const node = this.toMml();
+      addLatexItem(node, item);
+      return [[this.factory.create('mml', node)], true];
     }
     if (item.isKind('stop')) {
       // @test EnvMissingEnd Array
@@ -798,7 +799,7 @@ export class FnItem extends BaseItem {
       return [[top, node, item], true];
     }
     // @test Mathop Super, Mathop Sub
-    return super.checkItem.apply(this, arguments);
+    return super.checkItem(item);
   }
 }
 
@@ -1097,7 +1098,7 @@ export class ArrayItem extends BaseItem {
     delete this.arraydef['scriptlevel'];
     let mml = this.create('node', 'mtable', this.table, this.arraydef);
     if (scriptlevel) {
-      mml.setProperty('scriptlevel', scriptlevel);
+      mml.setProperty('smallmatrix', true);
     }
     if (this.breakAlign.table) {
       NodeUtil.setAttribute(mml, 'data-break-align', this.breakAlign.table);
@@ -1111,6 +1112,9 @@ export class ArrayItem extends BaseItem {
       );
     }
     mml = this.handleFrame(mml);
+    if (scriptlevel !== undefined) {
+      mml = this.create('node', 'mstyle', [mml], { scriptlevel });
+    }
     if (this.getProperty('open') || this.getProperty('close')) {
       // @test Cross Product Formula
       mml = ParseUtil.fenced(
@@ -1267,7 +1271,9 @@ export class ArrayItem extends BaseItem {
           braces--;
           break;
         case '\\begin{array}':
-          !braces && envs++;
+          if (!braces) {
+            envs++;
+          }
           break;
         case '\\end{array}':
           if (!braces && envs) {

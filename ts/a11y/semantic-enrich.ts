@@ -38,7 +38,7 @@ import { HtmlNode } from '../core/MmlTree/MmlNodes/HtmlNode.js';
 import { MathML } from '../input/mathml.js';
 import { SerializedMmlVisitor } from '../core/MmlTree/SerializedMmlVisitor.js';
 import { OptionList, expandable } from '../util/Options.js';
-import { Sre } from './sre.js';
+import * as Sre from './sre.js';
 import { buildSpeech } from './speech/SpeechUtil.js';
 import { GeneratorPool } from './speech/GeneratorPool.js';
 
@@ -319,8 +319,12 @@ export function EnrichedMathItemMixin<
         adaptor.setAttribute(node, 'aria-braillelabel', braille as string);
         this.root.attributes.set('aria-braillelabel', braille);
       }
-      for (const child of adaptor.childNodes(node) as N[]) {
-        adaptor.setAttribute(child, 'aria-hidden', 'true');
+      for (const child of adaptor.childNodes(node)) {
+        // Special case if renderactions add text elements like the spaces for
+        // to allow copying in the Euro Braille example.
+        if (adaptor.kind(child) !== '#text') {
+          adaptor.setAttribute(child as N, 'aria-hidden', 'true');
+        }
       }
       this.outputData.speech = speech;
       this.outputData.braille = braille;
