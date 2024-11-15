@@ -203,16 +203,14 @@ const ParseMethods = {
    *
    * @param {TexParser} parser The current tex parser.
    * @param {string} env The name of the environment.
-   * @param {Function} func The parse method for the environment.
+   * @param {ParseMethod} func The parse method for the environment.
    * @param {any[]} args A list of additional arguments.
    */
   environment(parser: TexParser, env: string, func: ParseMethod, args: any[]) {
-    const end = args[0];
-    let mml = parser.itemFactory
+    const mml = parser.itemFactory
       .create('begin')
-      .setProperties({ name: env, end: end });
-    mml = func(parser, mml, ...args.slice(1)) as StackItem;
-    parser.Push(mml);
+      .setProperty('name', env);
+    parser.Push(func(parser, mml, ...args.slice(1)) as StackItem);
   },
 };
 

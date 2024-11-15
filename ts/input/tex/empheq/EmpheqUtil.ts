@@ -22,33 +22,15 @@
  */
 
 import { ParseUtil } from '../ParseUtil.js';
-import { StackItem } from '../StackItem.js';
 import TexParser from '../TexParser.js';
 import { EnvList } from '../StackItem.js';
 import { AbstractTags } from '../Tags.js';
-import { ParseMethod } from '../Types.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMtable } from '../../../core/MmlTree/MmlNodes/mtable.js';
 import { MmlMtd } from '../../../core/MmlTree/MmlNodes/mtd.js';
-import { EmpheqBeginItem } from './EmpheqConfiguration.js';
+import { BeginItem } from '../base/BaseItems.js';
 
 export const EmpheqUtil = {
-  /**
-   * Create the needed envinronment and process it by the give function.
-   *
-   * @param {TexParser} parser   The active tex parser.
-   * @param {string} env         The environment to create.
-   * @param {ParseMethod} func   A function to process the environment.
-   * @param {any[]} args         The arguments for func.
-   */
-  environment(parser: TexParser, env: string, func: ParseMethod, args: any[]) {
-    const name = args[0];
-    const item = parser.itemFactory
-      .create(name + '-begin')
-      .setProperties({ name: env, end: name });
-    parser.Push(func(parser, item, ...args.slice(1)) as MmlNode | StackItem);
-  },
-
   /**
    * Parse an options string.
    *
@@ -245,10 +227,10 @@ export const EmpheqUtil = {
   /**
    * Add the left- and right-hand material to the table.
    *
-   * @param {EmpheqBeginItem} empheq The Empheq begin item.
+   * @param {BeginItem} empheq The Empheq begin item.
    * @param {TexParser} parser The calling parser.
    */
-  adjustTable(empheq: EmpheqBeginItem, parser: TexParser) {
+  adjustTable(empheq: BeginItem, parser: TexParser) {
     const left = empheq.getProperty('left');
     const right = empheq.getProperty('right');
     if (left || right) {

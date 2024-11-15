@@ -1,7 +1,7 @@
 import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
 import { Configuration } from '../Configuration.js';
 import { EnvironmentMap, MacroMap } from '../TokenMap.js';
-import { ParseResult } from '../Types.js';
+import { ParseResult, ParseMethod } from '../Types.js';
 import { ParseUtil } from '../ParseUtil.js';
 import BaseMethods from '../base/BaseMethods.js';
 import TexParser from '../TexParser.js';
@@ -137,7 +137,7 @@ export const CasesMethods = {
    */
   Entry(parser: TexParser, name: string): ParseResult {
     if (!parser.stack.Top().getProperty('numCases')) {
-      BaseMethods.Entry(parser, name);
+      return BaseMethods.Entry(parser, name);
     }
     parser.Push(
       parser.itemFactory
@@ -211,12 +211,27 @@ export const CasesMethods = {
     parser.PushAll(ParseUtil.internalMath(parser, text, 0));
     parser.i = i;
   },
+
+  /**
+   * Create the needed envinronment and process it by the give function.
+   *
+   * @param {TexParser} parser   The active tex parser.
+   * @param {string} env         The environment to create.
+   * @param {ParseMethod} func      A function to process the environment.
+   * @param {any[]} args         The arguments for func.
+   */
+  environment(parser: TexParser, env: string, func: ParseMethod, args: any[]) {
+    const item = parser.itemFactory
+      .create('cases-begin')
+      .setProperties({ name: env, end: true });
+    parser.Push(func(parser, item, ...args) as StackItem);
+  },
 };
 
 /**
  * The environments for this package
  */
-new EnvironmentMap('cases-env', EmpheqUtil.environment, {
+new EnvironmentMap('cases-env', CasesMethods.environment, {
   numcases: [CasesMethods.NumCases, 'cases'],
   subnumcases: [CasesMethods.NumCases, 'cases'],
 });

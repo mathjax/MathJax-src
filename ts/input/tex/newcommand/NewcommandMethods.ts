@@ -254,7 +254,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
     // @test Newenvironment Empty, Newenvironment Content
     // We have an end item, and we are supposed to close this environment.
     const name = begin.getName();
-    if (begin.getProperty('end') && parser.stack.env['closing'] === name) {
+    if (parser.stack.env['closing'] === name) {
       // @test Newenvironment Empty, Newenvironment Content
       delete parser.stack.env['closing'];
       const beginN = parser.stack.global['beginEnv'] as number;
