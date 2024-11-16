@@ -3,7 +3,6 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "./js",
-    "moduleResolution": "node",
     "paths": {
       "#js/*": ["../mjs/*"],
       "#source/*": ["../components/mjs/*"],

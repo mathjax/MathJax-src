@@ -22,7 +22,7 @@
  */
 
 import { HandlerType } from './HandlerTypes.js';
-import { AbstractTokenMap, TokenMap } from './TokenMap.js';
+import { AbstractTokenMap, TokenMap, CharacterMap } from './TokenMap.js';
 import { ParseInput, ParseResult, ParseMethod } from './Types.js';
 import { PrioritizedList } from '../../util/PrioritizedList.js';
 import { FunctionList } from '../../util/FunctionList.js';
@@ -58,6 +58,8 @@ export const MapHandler = {
  * Class of token mappings that are active in a configuration.
  */
 export class SubHandler {
+  public static FALLBACK = Symbol('fallback');
+
   private _configuration: PrioritizedList<TokenMap> =
     new PrioritizedList<TokenMap>();
   private _fallback: FunctionList = new FunctionList();
@@ -96,6 +98,9 @@ export class SubHandler {
   public parse(input: ParseInput): ParseResult {
     for (const { item: map } of this._configuration) {
       const result = map.parse(input);
+      if (result === SubHandler.FALLBACK) {
+        break;
+      }
       if (result) {
         return result;
       }
@@ -149,6 +154,9 @@ export class SubHandler {
   public applicable(token: string): TokenMap {
     for (const { item: map } of this._configuration) {
       if (map.contains(token)) {
+        if (map instanceof CharacterMap && map.lookup(token).char === null) {
+          return null;
+        }
         return map;
       }
     }

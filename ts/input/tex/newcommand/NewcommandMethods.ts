@@ -26,7 +26,7 @@ import { ParseResult, ParseMethod } from '../Types.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import * as sm from '../TokenMap.js';
-import { Token, Macro } from '../Token.js';
+import { Token } from '../Token.js';
 import BaseMethods from '../base/BaseMethods.js';
 import { ParseUtil } from '../ParseUtil.js';
 import { UnitUtil } from '../UnitUtil.js';
@@ -131,14 +131,13 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
     if (c === '\\') {
       // @test Let Bar, Let Brace Equal Stretchy
       name = NewcommandUtil.GetCSname(parser, name);
-      const map = handlers.get(HandlerType.MACRO).applicable(name);
-      if (!map) {
-        // @test Let Undefined CS
+      if (cs === name) {
         return;
       }
+      const map = handlers.get(HandlerType.MACRO).applicable(name);
       if (map instanceof sm.MacroMap) {
         // @test Def Let, Newcommand Let
-        const macro = (map as sm.CommandMap).lookup(name) as Macro;
+        const macro = map.lookup(name);
         NewcommandUtil.addMacro(
           parser,
           cs,
@@ -148,7 +147,14 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
         );
         return;
       }
-      let macro = handlers
+      if (map instanceof sm.CharacterMap && !(map instanceof sm.DelimiterMap)) {
+        const macro = map.lookup(name);
+        // @test Let Relet, Let Let, Let Circular Macro
+        const method = (p: TexParser) => map.parser(p, macro);
+        NewcommandUtil.addMacro(parser, cs, method, [cs, macro.char]);
+        return;
+      }
+      const macro = handlers
         .get(HandlerType.DELIMITER)
         .lookup('\\' + name) as Token;
       if (macro) {
@@ -161,10 +167,9 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
         );
         return;
       }
-      macro = (map as sm.CharacterMap).lookup(name) as Token;
-      // @test Let Relet, Let Let, Let Circular Macro
-      const method = (p: TexParser) => map.parser(p, macro);
-      NewcommandUtil.addMacro(parser, cs, method, [cs, macro.char]);
+      // @test Let Undefined CS
+      NewcommandUtil.undefineMacro(parser, cs);
+      NewcommandUtil.undefineDelimiter(parser, '\\' + cs);
       return;
     }
     // @test Let Brace Equal, Let Caret

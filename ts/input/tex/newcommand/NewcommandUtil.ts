@@ -21,6 +21,8 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import { HandlerType } from '../HandlerTypes.js';
+import { SubHandler } from '../MapHandler.js';
 import { UnitUtil } from '../UnitUtil.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
@@ -270,17 +272,19 @@ export const NewcommandUtil = {
    */
   addDelimiter(parser: TexParser, cs: string, char: string, attr: Attributes) {
     const handlers = parser.configuration.handlers;
-    const handler = handlers.retrieve(
-      NewcommandTables.NEW_DELIMITER
-    ) as sm.DelimiterMap;
-    handler.add(cs, new Token(cs, char, attr));
+    if (char !== null && cs.charAt(0) === '\\') {
+      const macros = handlers.retrieve(NewcommandTables.NEW_COMMAND);
+      (macros as sm.CommandMap).remove(cs.slice(1));
+    }
+    const handler = handlers.retrieve(NewcommandTables.NEW_DELIMITER);
+    (handler as sm.DelimiterMap).add(cs, new Token(cs, char, attr));
   },
 
   /**
    * Adds a new macro as extension to the parser.
    *
    * @param {TexParser} parser The current parser.
-   * @param {string} cs The control sequence of the delimiter.
+   * @param {string} cs The control sequence of the macro.
    * @param {ParseMethod} func The parse method for this macro.
    * @param {Args[]} attr The attributes needed for parsing.
    * @param {string=} token Optionally original token for macro, in case it is
@@ -293,6 +297,7 @@ export const NewcommandUtil = {
     attr: Args[],
     token: string = ''
   ) {
+    this.undefineDelimiter(parser, '\\' + cs);
     const handlers = parser.configuration.handlers;
     const handler = handlers.retrieve(
       NewcommandTables.NEW_COMMAND
@@ -319,5 +324,49 @@ export const NewcommandUtil = {
       NewcommandTables.NEW_ENVIRONMENT
     ) as sm.EnvironmentMap;
     handler.add(env, new Macro(env, func, attr));
+  },
+
+  /**
+   * Removes a user-defined macro, if there is one, and
+   * Adds an undefined macro (to block ones in later maps),
+   *   if needed.
+   *
+   * @param {TexParser} parser The current parser.
+   * @param {string} cs The control sequence to undefine.
+   */
+  undefineMacro(parser: TexParser, cs: string) {
+    const handlers = parser.configuration.handlers;
+    const macros = handlers.retrieve(NewcommandTables.NEW_COMMAND);
+    (macros as sm.CommandMap).remove(cs);
+    if (handlers.get(HandlerType.MACRO).applicable(cs)) {
+      //
+      // This will hide the macro that is in a later mapping
+      // by forcing the parser to jump directly to the fallback
+      // handler.
+      //
+      this.addMacro(parser, cs, () => SubHandler.FALLBACK, []);
+    }
+  },
+
+  /**
+   * Removes a user-defined delimiter, if there is one, and
+   * Adds an undefined one (to block ones in later maps),
+   *   if needed.
+   *
+   * @param {TexParser} parser The current parser.
+   * @param {string} cs The control sequence to undefine.
+   */
+  undefineDelimiter(parser: TexParser, cs: string) {
+    const handlers = parser.configuration.handlers;
+    const delims = handlers.retrieve(NewcommandTables.NEW_DELIMITER);
+    (delims as sm.DelimiterMap).remove(cs);
+    if (handlers.get(HandlerType.DELIMITER).applicable(cs)) {
+      //
+      // This will hide the delimiter that is in a later mapping
+      // by forcing the parser to jump directly to the fallback
+      // handler.
+      //
+      this.addDelimiter(parser, cs, null);
+    }
   },
 };
