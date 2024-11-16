@@ -29,4 +29,3 @@ import { context } from '../util/context.js';
  *  Select which adaptor to use (depending on whether we are in a browser or node.js)
  */
 export const chooseAdaptor = context.document ? browserAdaptor : liteAdaptor;
-
