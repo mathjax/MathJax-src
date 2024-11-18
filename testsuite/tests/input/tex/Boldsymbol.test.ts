@@ -47,7 +47,7 @@ describe('Boldsymbol', () => {
   <mi data-latex="a" mathvariant="bold-italic">a</mi>
   <mo data-latex="+" mathvariant="bold">+</mo>
   <mi data-latex="b" mathvariant="bold-italic">b</mi>
-  <mstyle displaystyle="false" scriptlevel="0" data-latex="\\mbox{ w $c+\\boldsymbol{d+e}$ w }">
+  <mstyle displaystyle="false" data-latex="\\mbox{ w $c+\\boldsymbol{d+e}$ w }">
     <mtext>&#xA0;w&#xA0;</mtext>
     <mrow data-mjx-texclass="ORD">
       <mi data-latex="c">c</mi>

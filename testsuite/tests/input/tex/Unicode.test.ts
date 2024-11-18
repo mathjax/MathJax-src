@@ -53,7 +53,7 @@ describe('Unicode', () => {
     toXmlMatch(
       tex2mml('\\mbox{A}\\unicode{65}{B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mbox{A}\\unicode{65}{B}" display="block">
-  <mstyle displaystyle="false" scriptlevel="0" data-latex="\\mbox{A}">
+  <mstyle displaystyle="false" data-latex="\\mbox{A}">
     <mtext>A</mtext>
   </mstyle>
   <mtext data-latex="\\unicode{65}">A</mtext>

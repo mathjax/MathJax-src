@@ -10,9 +10,7 @@ describe('Extpfeil', () => {
       tex2mml('\\xtwoheadrightarrow{abcxyz}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xtwoheadrightarrow{abcxyz}" display="block">
   <mover data-latex="\\xtwoheadrightarrow{abcxyz}">
-    <mstyle scriptlevel="0">
-      <mo data-mjx-texclass="REL">&#x21A0;</mo>
-    </mstyle>
+    <mo data-mjx-texclass="REL">&#x21A0;</mo>
     <mpadded width="+1.556em" lspace="0.667em" voffset="-.2em" height="-.2em">
       <mi data-latex="a">a</mi>
       <mi data-latex="b">b</mi>
@@ -30,9 +28,7 @@ describe('Extpfeil', () => {
       tex2mml('\\xtwoheadleftarrow{abcxyz}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xtwoheadleftarrow{abcxyz}" display="block">
   <mover data-latex="\\xtwoheadleftarrow{abcxyz}">
-    <mstyle scriptlevel="0">
-      <mo data-mjx-texclass="REL">&#x219E;</mo>
-    </mstyle>
+    <mo data-mjx-texclass="REL">&#x219E;</mo>
     <mpadded width="+1.667em" lspace="0.944em" voffset="-.2em" height="-.2em">
       <mi data-latex="a">a</mi>
       <mi data-latex="b">b</mi>
@@ -50,9 +46,7 @@ describe('Extpfeil', () => {
       tex2mml('\\xmapsto{abcxyz}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xmapsto{abcxyz}" display="block">
   <mover data-latex="\\xmapsto{abcxyz}">
-    <mstyle scriptlevel="0">
-      <mo data-mjx-texclass="REL">&#x21A6;</mo>
-    </mstyle>
+    <mo data-mjx-texclass="REL">&#x21A6;</mo>
     <mpadded width="+0.722em" lspace="0.333em" voffset="-.2em" height="-.2em">
       <mi data-latex="a">a</mi>
       <mi data-latex="b">b</mi>
@@ -70,9 +64,7 @@ describe('Extpfeil', () => {
       tex2mml('\\xlongequal{abcxyz}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xlongequal{abcxyz}" display="block">
   <mover data-latex="\\xlongequal{abcxyz}">
-    <mstyle scriptlevel="0">
-      <mo data-mjx-texclass="REL" stretchy="true">=</mo>
-    </mstyle>
+    <mo data-mjx-texclass="REL" stretchy="true">=</mo>
     <mpadded width="+0.778em" lspace="0.389em" voffset="-.2em" height="-.2em">
       <mi data-latex="a">a</mi>
       <mi data-latex="b">b</mi>
@@ -90,9 +82,7 @@ describe('Extpfeil', () => {
       tex2mml('\\xtofrom{abcxyz}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\xtofrom{abcxyz}" display="block">
   <mover data-latex="\\xtofrom{abcxyz}">
-    <mstyle scriptlevel="0">
-      <mo data-mjx-texclass="REL">&#x21C4;</mo>
-    </mstyle>
+    <mo data-mjx-texclass="REL">&#x21C4;</mo>
     <mpadded width="+1.333em" lspace="0.667em" voffset="-.2em" height="-.2em">
       <mi data-latex="a">a</mi>
       <mi data-latex="b">b</mi>
@@ -110,9 +100,7 @@ describe('Extpfeil', () => {
       tex2mml('\\Newextarrow{\\ab}{10,20}{8672}\\ab{xyz}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Newextarrow{\\ab}{10,20}{8672}\\ab{xyz}" display="block">
   <mover data-latex="\\Newextarrow{\\ab}{10,20}{8672}\\ab{xyz}">
-    <mstyle scriptlevel="0">
-      <mo data-mjx-texclass="REL">&#x21E0;</mo>
-    </mstyle>
+    <mo data-mjx-texclass="REL">&#x21E0;</mo>
     <mpadded width="+1.667em" lspace="0.556em" voffset="-.2em" height="-.2em">
       <mi data-latex="x">x</mi>
       <mi data-latex="y">y</mi>
@@ -128,8 +116,8 @@ describe('Extpfeil Errors', () => {
   it('NewextarrowArg1', () =>
     toXmlMatch(
       tex2mml('\\Newextarrow{ab}{10,20}{8672}\\ab{xyz}'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Newextarrow{ab}{10,20}{8672}\\ab{xyz}\" display=\"block\">
-      <merror data-mjx-error=\"First argument to \\Newextarrow must be a control sequence name\">
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Newextarrow{ab}{10,20}{8672}\\ab{xyz}" display="block">
+      <merror data-mjx-error="First argument to \\Newextarrow must be a control sequence name">
         <mtext>First argument to \\Newextarrow must be a control sequence name</mtext>
       </merror>
     </math>`
@@ -137,8 +125,8 @@ describe('Extpfeil Errors', () => {
   it('NewextarrowArg2 One', () =>
     toXmlMatch(
       tex2mml('\\Newextarrow{\\ab}{10}{8672}\\ab{xyz}'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Newextarrow{\\ab}{10}{8672}\\ab{xyz}\" display=\"block\">
-      <merror data-mjx-error=\"Second argument to \\Newextarrow must be two integers separated by a comma\">
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Newextarrow{\\ab}{10}{8672}\\ab{xyz}" display="block">
+      <merror data-mjx-error="Second argument to \\Newextarrow must be two integers separated by a comma">
         <mtext>Second argument to \\Newextarrow must be two integers separated by a comma</mtext>
       </merror>
     </math>`
@@ -146,8 +134,8 @@ describe('Extpfeil Errors', () => {
   it('NewextarrowArg2 Two', () =>
     toXmlMatch(
       tex2mml('\\Newextarrow{\\ab}{10 20}{8672}\\ab{xyz}'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Newextarrow{\\ab}{10 20}{8672}\\ab{xyz}\" display=\"block\">
-      <merror data-mjx-error=\"Second argument to \\Newextarrow must be two integers separated by a comma\">
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Newextarrow{\\ab}{10 20}{8672}\\ab{xyz}" display="block">
+      <merror data-mjx-error="Second argument to \\Newextarrow must be two integers separated by a comma">
         <mtext>Second argument to \\Newextarrow must be two integers separated by a comma</mtext>
       </merror>
     </math>`
@@ -155,8 +143,8 @@ describe('Extpfeil Errors', () => {
   it('NewextarrowArg2 Three', () =>
     toXmlMatch(
       tex2mml('\\Newextarrow{\\ab}{aa}{8672}\\ab{xyz}'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Newextarrow{\\ab}{aa}{8672}\\ab{xyz}\" display=\"block\">
-      <merror data-mjx-error=\"Second argument to \\Newextarrow must be two integers separated by a comma\">
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Newextarrow{\\ab}{aa}{8672}\\ab{xyz}" display="block">
+      <merror data-mjx-error="Second argument to \\Newextarrow must be two integers separated by a comma">
         <mtext>Second argument to \\Newextarrow must be two integers separated by a comma</mtext>
       </merror>
     </math>`
@@ -164,8 +152,8 @@ describe('Extpfeil Errors', () => {
   it('NewextarrowArg3', () =>
     toXmlMatch(
       tex2mml('\\Newextarrow{\\ab}{10,20}{AG}\\ab{xyz}'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\Newextarrow{\\ab}{10,20}{AG}\\ab{xyz}\" display=\"block\">
-      <merror data-mjx-error=\"Third argument to \\Newextarrow must be a unicode character number\">
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Newextarrow{\\ab}{10,20}{AG}\\ab{xyz}" display="block">
+      <merror data-mjx-error="Third argument to \\Newextarrow must be a unicode character number">
         <mtext>Third argument to \\Newextarrow must be a unicode character number</mtext>
       </merror>
     </math>`
