@@ -68,7 +68,7 @@
   "scripts": {
     "=============================================================================== code hygene": "",
     "lint": "eslint ts/",
-    "lint:fix": "eslint --fix ts/",
+    "lint:fix": "eslint --fix ts/ --format unix",
     "format": "prettier --check \"ts/**/*.{ts,tsx}\"",
     "format:fix": "prettier --write \"ts/**/*.{ts,tsx}\"",
     "=============================================================================== clean": "",
@@ -149,7 +149,8 @@
   },
   "lint-staged": {
     "ts/**/*.ts": [
-      "pnpm format:fix"
+      "pnpm format:fix",
+      "pnpm lint:fix"
     ]
   },
   "dependencies": {

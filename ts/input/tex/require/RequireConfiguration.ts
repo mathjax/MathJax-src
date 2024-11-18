@@ -56,7 +56,7 @@ function RegisterExtension(jax: TeX<any, any, any>, name: string) {
   const required = jax.parseOptions.packageData.get('require')
     .required as string[];
   const extension = name.substring(require.prefix.length);
-  if (required.indexOf(extension) < 0) {
+  if (!required.includes(extension)) {
     required.push(extension);
     //
     //  Register any dependencies that were loaded to handle this one,

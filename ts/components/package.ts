@@ -226,7 +226,7 @@ export class Package {
     //
     for (const dependent of dependencies) {
       const extension = map.get(dependent) || new Package(dependent, noLoad);
-      if (this.dependencies.indexOf(extension) < 0) {
+      if (!this.dependencies.includes(extension)) {
         extension.addDependent(this, noLoad);
         this.dependencies.push(extension);
         if (!extension.isLoaded) {

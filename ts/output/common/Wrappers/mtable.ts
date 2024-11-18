@@ -1085,7 +1085,7 @@ export function CommonMtableMixin<
      * @override
      */
     public getColumnWidthsPercent(swidths: string[]): ColumnWidths {
-      const hasFit = swidths.indexOf('fit') >= 0;
+      const hasFit = swidths.includes('fit');
       const { W } = hasFit ? this.getTableData() : { W: null };
       return Array.from(swidths.keys()).map((i) => {
         const x = swidths[i];
