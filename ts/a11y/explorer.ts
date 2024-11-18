@@ -39,6 +39,8 @@ import { ExplorerPool, RegionPool } from './explorer/ExplorerPool.js';
 
 import * as Sre from './sre.js';
 
+import { TaskPool } from './speech/WebWorker.js';
+
 /**
  * Generic constructor for Mixins
  */
@@ -222,6 +224,8 @@ export function ExplorerMathDocumentMixin<
       }
     };
 
+    public webworker: TaskPool;
+
     /**
      * The objects needed for the explorer
      */
@@ -248,6 +252,13 @@ export function ExplorerMathDocumentMixin<
       }
       options.MathItem = ExplorerMathItemMixin(options.MathItem, toMathML);
       this.explorerRegions = new RegionPool(this);
+      this.webworker = TaskPool.Create(0, 4);
+      const promise = this.webworker.Start();
+      console.log(promise);
+      promise.then(() => {
+        this.webworker.Task('start', { name: 'HERE', mml: '<mo>=</mo>' });
+      });
+      window.WWWW = this.webworker;
     }
 
     /**
