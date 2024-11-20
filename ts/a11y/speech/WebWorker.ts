@@ -31,12 +31,14 @@ export type Command = { cmd: string; data: {}; task?: number; worker?: number };
 //
 export class WorkerHandler {
   // These need to become options.
-  // private static DOMAIN = 'https://88.166.18.204';
-  private static DOMAIN = 'https://88.174.118.32';
+  private static DOMAIN = 'https://88.166.18.204';
+  // private static DOMAIN = 'https://88.174.118.32';
+  // private static DOMAIN = 'https://localhost';
   private static POOL = WorkerHandler.DOMAIN + '/workers/workerpool2.html';
-  // private static timeout = 10*1000;         // delay (ms) to wait for pool to start
+  private static TIMEOUT = 200; // delay (ms) to wait for pool to start
+  private static REPEAT = 20; // repeat wait
+  private static SRE: string = WorkerHandler.DOMAIN + '/workers/sre.js'; // SRE library to import
   // private static imports: string = "http://localhost/sre/speech-rule-engine/lib/sre.js";             // libraries to import automatically
-  // private static imports: string = WorkerHandler.DOMAIN + '/workers/sre.js'; // libraries to import autom
   static ID = 0;
 
   // public static Create(min: number, max: number) {
@@ -113,9 +115,32 @@ export class WorkerHandler {
     //  Start a timer to call the callback if the iframe doesn't
     //  load in a reasonable amount of time.
     //
-    Commands['Ready'](this, null);
-    this.wait = new Promise((res, rej) => (this.ready ? res() : rej()));
+    this.wait = this.Wait();
     return this.wait;
+  }
+
+  private async Wait() {
+    return new Promise<void>((res, rej) => {
+      let n = 0;
+      /* eslint-disable-next-line @typescript-eslint/no-this-alias */
+      const POOL = this;
+      /**
+       *
+       */
+      function checkReady() {
+        if (POOL.ready) {
+          res();
+        } else {
+          if (n >= WorkerHandler.REPEAT) {
+            rej('Something went wrong loading web worker.');
+          } else {
+            n++;
+            setTimeout(checkReady, WorkerHandler.TIMEOUT);
+          }
+        }
+      }
+      checkReady();
+    }).catch((err) => console.log(err));
   }
 
   //
@@ -131,6 +156,8 @@ export class WorkerHandler {
     console.log('In WorkerHandler listener');
     console.log(event.data);
     let origin = event.origin;
+    console.log(origin);
+    console.log(this.domain);
     if (origin === 'null' || origin === 'file://') origin = '*';
     if (origin !== this.domain) return; // make sure the message is from the WorkerPool
     if (Object.hasOwn(Commands, event.data.cmd)) {
@@ -144,7 +171,14 @@ export class WorkerHandler {
   //  Tasks use this to send messages to their workers.
   //
   public Post(msg: Command) {
-    this.pool.postMessage(msg, this.domain);
+    this.wait.then(() => this.pool.postMessage(msg, this.domain));
+  }
+
+  public Import(library: string = WorkerHandler.SRE) {
+    this.Post({
+      cmd: 'Worker',
+      data: { cmd: 'import', data: { imports: library } },
+    });
   }
 
   //
@@ -211,52 +245,3 @@ export const Commands: {
     console.log(msg.data);
   },
 };
-
-// type Action = {
-//   after?: boolean;
-//   before?: boolean;
-//   method: (pool: WorkerHandler, msg: Command) => void;
-// };
-
-// //
-// //  The list of actions to be taken automatically in response
-// //  to messages from the woker (in addition to the Task handlers).
-// //
-// export const Actions: { [key: string]: Action } = {
-//   //
-//   //  The worker is ready.
-//   //  Inform the worker of the associated worker id.
-//   //
-//   ready: {
-//     before: true,
-//     method: function (pool, msg) {
-//       pool.tasks[msg.task]._ready(msg.worker);
-//     },
-//   },
-//   //
-//   //  The worker is done with its task.
-//   //  Inform the task that the worker is done.
-//   //  Tell the worker to stop running.
-//   //  Free up the task id for re-use.
-//   //
-//   done: {
-//     after: true,
-//     method: function (pool, msg) {
-//       pool.tasks[msg.task]._done();
-//       pool.Post({ cmd: 'Stop', task: msg.task, worker: msg.worker } as Command);
-//       // pool.tasks[msg.task] = pool.free;
-//       pool.free = msg.task;
-//     },
-//   },
-//   //
-//   //  An error occurred.
-//   //  If the task stops for errors, call the done method above.
-//   //
-//   error: {
-//     after: true,
-//     method: function (pool, msg) {
-//       const task = pool.tasks[msg.task];
-//       if (!task.nonstop) Actions.done.method(pool, msg);
-//     },
-//   },
-// };
