@@ -342,12 +342,13 @@ export abstract class Startup {
   public static typesetPromise(elements: any[]): Promise<void> {
     Startup.document.options.elements = elements;
     Startup.document.reset();
-    return Startup.mathjax.handleRetriesFor(() => {
+    Startup.rerenderPromise = Startup.promise = Startup.mathjax.handleRetriesFor(() => {
       Startup.document.render();
       const promise = Promise.all(Startup.document.renderPromises);
       Startup.document.renderPromises = [];
       return promise;
     });
+    return Startup.promise;
   }
 
   /**

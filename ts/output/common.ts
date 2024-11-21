@@ -404,13 +404,17 @@ export abstract class CommonOutputJax<
     if (linebreak) {
       this.getLinebreakWidth();
     }
+    const inlineMarked = !!math.root.getProperty('inlineMarked');
     if (
       this.options.linebreaks.inline &&
       !math.display &&
-      !math.outputData.inlineMarked
+      !inlineMarked
     ) {
       this.markInlineBreaks(math.root.childNodes?.[0]);
-      math.outputData.inlineMarked = true;
+      math.root.setProperty('inlineMarked', true);
+    } else if (!this.options.linebreaks.inline && inlineMarked) {
+      this.unmarkInlineBreaks(math.root);
+      math.root.setProperty('inlineMarked', false);
     }
     math.root.setTeXclass(null);
     const wrapper = this.factory.wrap(math.root);
@@ -586,6 +590,21 @@ export abstract class CommonOutputJax<
       marked = true;
     }
     return marked;
+  }
+
+  /**
+   * @param {MmlNode} node   The node where inline breaks are to be removed
+   */
+  public unmarkInlineBreaks(node: MmlNode) {
+    if (!node) return;
+    node.removeProperty('forcebreak');
+    node.removeProperty('breakable');
+    if (node.getProperty('process-breaks')) {
+      node.removeProperty('process-breaks');
+      for (const child of node.childNodes) {
+        this.unmarkInlineBreaks(child);
+      }
+    }
   }
 
   /**

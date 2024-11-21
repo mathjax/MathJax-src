@@ -1220,12 +1220,12 @@ export class CommonWrapper<
       return ['left', 0];
     }
     if (!align || align === 'auto') {
-      align = this.jax.math.outputData.inlineMarked
+      align = this.jax.math.root.getProperty('inlineMarked')
         ? 'left'
         : this.jax.options.displayAlign;
     }
     if (!shift || shift === 'auto') {
-      shift = this.jax.math.outputData.inlineMarked
+      shift = this.jax.math.root.getProperty('inlineMarked')
         ? '0'
         : this.jax.options.displayIndent;
     }
