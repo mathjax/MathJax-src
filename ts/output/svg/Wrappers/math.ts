@@ -131,31 +131,15 @@ export const SvgMath = (function <N, T, D>(): SvgMathClass<N, T, D> {
      * @override
      */
     public static styles: StyleList = {
-      'mjx-container[jax="SVG"][display="true"]': {
-        display: 'block',
-        'text-align': 'center',
-        'justify-content': 'center',
-        margin: '1em 0',
-      },
-      'mjx-container[jax="SVG"][display="true"][width="full"]': {
-        display: 'flex',
-      },
-      'mjx-container[jax="SVG"][justify="left"]': {
-        'text-align': 'left',
-        'justify-content': 'left',
-      },
-      'mjx-container[jax="SVG"][justify="right"]': {
-        'text-align': 'right',
-        'justify-content': 'right',
-      },
       //
       //  For inline breakpoints, use a space that is 1em width, make it breakable,
-      //    and then set the letter-spacing to make the sace the proper size.
+      //    and then set the letter-spacing to make the space the proper size.
       //
       'mjx-container[jax="SVG"] mjx-break': {
         'white-space': 'normal',
         'line-height': '0',
-        'font-family': 'MJX-ZERO',
+        'clip-path': 'rect(0 0 0 0)',
+        'font-family': 'MJX-ZERO ! important',
       },
       'mjx-break[size="0"]': {
         'letter-spacing': 0.001 - 1 + 'em',

@@ -155,12 +155,30 @@ export abstract class CommonOutputJax<
    */
   public static commonStyles: CssStyleList = {
     'mjx-container[overflow="scroll"][display]': {
-      'overflow-x': 'auto',
+      'overflow': 'auto clip',
       'min-width': 'initial !important',
     },
     'mjx-container[overflow="truncate"][display]': {
-      'overflow-x': 'hidden',
+      'overflow': 'hidden clip',
       'min-width': 'initial !important',
+    },
+    'mjx-container[display]': {
+      display: 'block',
+      'text-align': 'center',
+      'justify-content': 'center',
+      margin: 'calc(1em - 2px) 0',
+      padding: '2px 0'
+    },
+    'mjx-container[display][width="full"]': {
+      display: 'flex',
+    },
+    'mjx-container[justify="left"]': {
+      'text-align': 'left',
+      'justify-content': 'left',
+    },
+    'mjx-container[justify="right"]': {
+      'text-align': 'right',
+      'justify-content': 'right',
     },
   };
 
