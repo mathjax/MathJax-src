@@ -503,7 +503,11 @@ export class Menu {
       jax.options.displayOverflow.substring(0, 1).toUpperCase() +
       jax.options.displayOverflow.substring(1).toLowerCase();
     this.settings.breakInline = jax.options.linebreaks.inline;
-    this.defaultSettings = Object.assign({}, this.document.options.a11y, this.settings);
+    this.defaultSettings = Object.assign(
+      {},
+      this.document.options.a11y,
+      this.settings
+    );
   }
 
   /**
@@ -1374,13 +1378,12 @@ export class Menu {
       this.document = startup.document = startup.getDocument();
       this.document.menu = this;
       this.setA11y(this.settings);
-      this.defaultSettings =
-        Object.assign(
-          {},
-          this.document.options.a11y,
-          MathJax.config?.options?.a11y || {},
-          this.defaultSettings
-        );
+      this.defaultSettings = Object.assign(
+        {},
+        this.document.options.a11y,
+        MathJax.config?.options?.a11y || {},
+        this.defaultSettings
+      );
       this.document.outputJax.reset();
       this.transferMathList(document);
       this.document.processed = document.processed;

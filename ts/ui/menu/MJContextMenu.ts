@@ -85,7 +85,8 @@ export class MJContextMenu extends ContextMenu {
    */
   public post(x?: any, y?: number) {
     if (this.mathItem) {
-      this.refocus = document.activeElement.nodeName.toLowerCase() !== 'mjx-container';
+      this.refocus =
+        document.activeElement.nodeName.toLowerCase() !== 'mjx-container';
       if (y !== undefined) {
         this.getOriginalMenu();
         this.getSemanticsMenu();

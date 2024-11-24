@@ -405,11 +405,7 @@ export abstract class CommonOutputJax<
       this.getLinebreakWidth();
     }
     const inlineMarked = !!math.root.getProperty('inlineMarked');
-    if (
-      this.options.linebreaks.inline &&
-      !math.display &&
-      !inlineMarked
-    ) {
+    if (this.options.linebreaks.inline && !math.display && !inlineMarked) {
       this.markInlineBreaks(math.root.childNodes?.[0]);
       math.root.setProperty('inlineMarked', true);
     } else if (!this.options.linebreaks.inline && inlineMarked) {
