@@ -128,13 +128,8 @@ export class WorkerHandler {
   private async Wait() {
     return new Promise<void>((res, rej) => {
       let n = 0;
-      /* eslint-disable-next-line @typescript-eslint/no-this-alias */
-      const POOL = this;
-      /**
-       *
-       */
-      function checkReady() {
-        if (POOL.ready) {
+      const checkReady = () => {
+        if (this.ready) {
           res();
         } else {
           if (n >= WorkerHandler.REPEAT) {
@@ -144,7 +139,7 @@ export class WorkerHandler {
             setTimeout(checkReady, WorkerHandler.TIMEOUT);
           }
         }
-      }
+      };
       checkReady();
     }).catch((err) => console.log(err));
   }
