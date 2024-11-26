@@ -19,15 +19,15 @@ export class WorkerPool {
   //  values passed to us by the parent window
   //
   static Create() {
-    let data = (location.hash.substr(1)).split(/&/, 1);
+    let data = (location.hash.substr(1)).split(/&/);
     let domain = decodeURIComponent(data[0]); // the domain of the parent
-    return new WorkerPool(domain);
+    return new WorkerPool(domain, data[1]);
   }
 
-  constructor(domain) {
+  constructor(domain, src) {
     this.domain = domain; // the parent window domain
     this.parent = window.parent; // the parent window
-    this.WORKER = 'worker2.js'; // the URL for the webworkers
+    this.WORKER = src;  // 'worker2.js'; // the URL for the webworkers
     this.worker = null;
   }
 
@@ -91,7 +91,6 @@ export class WorkerPool {
       (event) => {
         console.log('Worker  >>>  Iframe:', event.data);
         let data = event.data;
-        console.log(data.cmd);
         if (WorkerCommands.hasOwnProperty(data.cmd)) {
           WorkerCommands[data.cmd](this, data);
         } else {

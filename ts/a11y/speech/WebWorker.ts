@@ -26,30 +26,36 @@ export type Callbacks = { [name: string]: (data: {}) => void };
 export type Message = { post: string; action: string; data: {}; task?: number };
 export type Command = { cmd: string; data: {}; task?: number; worker?: number };
 
+// These need to become options.
+const DOMAIN = 'https://88.166.18.204';
+// const DOMAIN = 'https://88.174.118.32';
+// const DOMAIN = 'https://localhost';
+const BASEDIR = 'workers';
+const POOL = 'workerpool2.html';
+const WORKER = 'worker2.js'; // the URL for the webworkers
+const SRE = 'sre.js'; // SRE library to import
+
 //
 //  The main WorkerHandler class
 //
 export class WorkerHandler {
-  // These need to become options.
-  private static DOMAIN = 'https://88.166.18.204';
-  // private static DOMAIN = 'https://88.174.118.32';
-  // private static DOMAIN = 'https://localhost';
-  private static POOL = WorkerHandler.DOMAIN + '/workers/workerpool2.html';
   private static TIMEOUT = 200; // delay (ms) to wait for pool to start
   private static REPEAT = 20; // repeat wait
-  private static SRE: string = WorkerHandler.DOMAIN + '/workers/sre.js'; // SRE library to import
-  // private static imports: string = "http://localhost/sre/speech-rule-engine/lib/sre.js";             // libraries to import automatically
+
   static ID = 0;
 
   public iframe: HTMLIFrameElement = null; // the hidden iframe
   public pool: Window = null; // window of the iframe for the pool
   public ready: boolean = false; // callback for ready signal
   public domain = ''; // the domain of the pool
+  public url = '';
   public wait: Promise<void>; // waiting for timeout?
 
   // the minimum number of workers to start
   // the maximum number of simultaneous workers
-  constructor() {}
+  constructor() {
+    this.url = DOMAIN + '/' + BASEDIR + '/';
+  }
 
   //
   //  Set up the iframe
@@ -61,6 +67,17 @@ export class WorkerHandler {
     this.iframe.id = 'WorkerHandler-' + ++WorkerHandler.ID;
   }
 
+  private computeSrc(domain: string, parameters: string[]) {
+    const hash = encodeURIComponent(domain);
+    parameters.unshift(hash);
+    return this.url + POOL + '#' + parameters.join('&');
+  }
+
+  private rewriteFirefox(domain: string) {
+    // Firefox doesn't match this
+    return domain === 'file://' ? '*' : domain;
+  }
+
   //
   //  Get the domains (for use with the postMessage() function)
   //
@@ -70,15 +87,10 @@ export class WorkerHandler {
       '//' +
       location.host +
       (location.port ? ':' + location.port : '');
-    if (domain === 'file://') {
-      domain = '*'; // Firefox doesn't match this
-    }
-    const hash = encodeURIComponent(domain);
-    this.iframe.src = WorkerHandler.POOL + '#' + hash; // pass the min, max, and domain to the pool
+    domain = this.rewriteFirefox(domain);
+    this.iframe.src = this.computeSrc(domain, [WORKER]);
     this.domain = this.iframe.src.replace(/^(.*?:\/\/.*?)\/.*/, '$1'); // the pool's domain
-    if (this.domain === 'file://') {
-      this.domain = '*'; // Firefox doesn't match this
-    }
+    this.domain = this.rewriteFirefox(this.domain);
   }
 
   //
@@ -165,7 +177,7 @@ export class WorkerHandler {
     this.wait.then(() => this.pool.postMessage(msg, this.domain));
   }
 
-  public Import(library: string = WorkerHandler.SRE) {
+  public Import(library: string = this.url + SRE) {
     this.Post({
       cmd: 'Worker',
       data: { cmd: 'import', data: { imports: library } },
