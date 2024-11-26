@@ -42,6 +42,8 @@ import * as Sre from './sre.js';
 import { buildSpeech } from './speech/SpeechUtil.js';
 import { GeneratorPool } from './speech/GeneratorPool.js';
 
+import { WorkerHandler } from './speech/WebWorker.js';
+
 /*==========================================================================*/
 
 /**
@@ -295,6 +297,9 @@ export function EnrichedMathItemMixin<
         (!braille && options.enableBraille)
       ) {
         try {
+          (document as EnrichedMathDocument<N, T, D>).webworker.Speech(
+            this.toMathML(this.root, this)
+          );
           [newSpeech, newBraille] = this.generatorPool.computeSpeech(
             this.typesetRoot,
             this.toMathML(this.root, this)
@@ -378,6 +383,8 @@ export interface EnrichedMathDocument<N, T, D>
     math: EnrichedMathItem<N, T, D>,
     err: Error
   ): void;
+
+  webworker: WorkerHandler;
 }
 
 /**
@@ -462,6 +469,8 @@ export function EnrichedMathDocumentMixin<
      */
     protected attachSpeechDone: () => void;
 
+    public webworker: WorkerHandler = null;
+
     /**
      * Enrich the MathItem class used for this MathDocument, and create the
      *   temporary MathItem used for enrchment
@@ -495,6 +504,11 @@ export function EnrichedMathDocumentMixin<
      * @returns {EnrichedMathDocument} The object for chaining.
      */
     public attachSpeech(): EnrichedMathDocument<N, T, D> {
+      if (!this.webworker) {
+        this.webworker = new WorkerHandler();
+        this.webworker.Start();
+        this.webworker.Import();
+      }
       if (!this.processed.isSet('attach-speech')) {
         if (this.options.enableSpeech || this.options.enableBraille) {
           if (this.options.speechTiming.asynchronous) {

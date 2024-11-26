@@ -41,15 +41,9 @@ export class WorkerHandler {
   // private static imports: string = "http://localhost/sre/speech-rule-engine/lib/sre.js";             // libraries to import automatically
   static ID = 0;
 
-  // public static Create(min: number, max: number) {
-  //   return new WorkerHandler(min, max);
-  // }
-
   public iframe: HTMLIFrameElement = null; // the hidden iframe
   public pool: Window = null; // window of the iframe for the pool
   public ready: boolean = false; // callback for ready signal
-  // public tasks: Task[] = []; // tasks in the pool
-  public free = 0; // first available task index
   public domain = ''; // the domain of the pool
   public wait: Promise<void>; // waiting for timeout?
 
@@ -153,17 +147,14 @@ export class WorkerHandler {
   //  otherwise we throw an error.
   //
   public Listener(event: MessageEvent) {
-    console.log('In WorkerHandler listener');
-    console.log(event.data);
+    console.log('Iframe  >>>  Client:', event.data);
     let origin = event.origin;
-    console.log(origin);
-    console.log(this.domain);
     if (origin === 'null' || origin === 'file://') origin = '*';
     if (origin !== this.domain) return; // make sure the message is from the WorkerPool
     if (Object.hasOwn(Commands, event.data.cmd)) {
       Commands[event.data.cmd](this, event.data);
     } else {
-      throw Error('Invalid command from pool: ' + event.data.cmd);
+      console.error('Invalid command from pool: ' + event.data.cmd);
     }
   }
 
@@ -181,6 +172,16 @@ export class WorkerHandler {
     });
   }
 
+  public Speech(math: string) {
+    this.Post({
+      cmd: 'Worker',
+      data: {
+        cmd: 'speech',
+        data: { mml: math },
+      },
+    });
+  }
+
   //
   //  Stop the pool from running by removing and freeing the iframe.
   //  Clear the values so that the pool can be restarted, if desired.
@@ -190,7 +191,6 @@ export class WorkerHandler {
     document.body.removeChild(this.iframe);
     this.iframe = this.pool = null;
     this.ready = false;
-    this.free = 0;
   }
 }
 
@@ -212,9 +212,9 @@ export const Commands: {
     pool.pool = pool.iframe.contentWindow;
     pool.ready = true;
   },
-  Setup: function (_pool: WorkerHandler, _msg: Message) {
-    console.log(7);
-  },
+  // Setup: function (_pool: WorkerHandler, _msg: Message) {
+  //   console.log(7);
+  // },
   //
   //  Workers send messages to the Task objects via this command.
   //  The message has the task id and the action to perform.
@@ -240,8 +240,6 @@ export const Commands: {
   //  via this function.
   //
   Log: function (_pool: WorkerHandler, msg: Message) {
-    console.log(2);
-    console.log('Logging');
     console.log(msg.data);
   },
 };

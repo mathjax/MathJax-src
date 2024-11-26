@@ -10,7 +10,7 @@
  */
 
 //
-//  The WorkerPool object
+//  The WorkerPool object (currently we only implement a single speech worker)
 //
 export class WorkerPool {
   //
@@ -29,7 +29,6 @@ export class WorkerPool {
     this.parent = window.parent; // the parent window
     this.WORKER = 'worker2.js'; // the URL for the webworkers
     this.worker = null;
-    this.cache = []; // tasks that are cached until a worker is available
   }
 
   //
@@ -53,9 +52,8 @@ export class WorkerPool {
   //    If so, run it, otherwise produce an error.
   //
   Listener(event) {
-    console.log('In WorkerPool listener');
-    console.log(event);
-    var origin = event.origin || event.originalEvent.origin;
+    console.log('Client  >>>  Iframe:', event.data);
+    let origin = event.origin || event.originalEvent.origin;
     if (origin === 'null' || origin === 'file://') {
       origin = '*';
     }
@@ -65,7 +63,7 @@ export class WorkerPool {
     if (Object.hasOwn(TaskCommands, event.data.cmd)) {
       TaskCommands[event.data.cmd](this, event.data);
     } else {
-      this.Log('WorkerPool: invalid Task command: ' + event.data.cmd);
+      this.Log(`WorkerPool: invalid Task command: ${event.data.cmd}`);
     }
   }
 
@@ -91,15 +89,14 @@ export class WorkerPool {
     this.worker.addEventListener(
       'message',
       (event) => {
-        console.log('In Worker listener');
-        console.log(event);
+        console.log('Worker  >>>  Iframe:', event.data);
         let data = event.data;
+        console.log(data.cmd);
         if (WorkerCommands.hasOwnProperty(data.cmd)) {
-          WorkerCommands[data.cmd].call(this, data);
+          WorkerCommands[data.cmd](this, data);
         } else {
           this.Log(
-            'WorkerPool: invalid Worker command ' +
-              data.cmd
+            `WorkerPool: invalid Worker command ${data.cmd}`
           );
         }
       }
@@ -110,7 +107,7 @@ export class WorkerPool {
 //
 //  This is the list of commands that the parent page can send us.
 //
-export var TaskCommands = {
+export const TaskCommands = {
   //
   //  This starts a task in a webworker.
   //    If there are no free workers, cache the task.
@@ -124,33 +121,15 @@ export var TaskCommands = {
     pool.worker.postMessage({ cmd: 'start', data: msg.data });
   },
   //
-  //  This is the how the Task sends commands to its associated worker
+  //  This is how the Task sends commands to its associated worker
   //    Check that the worker is defined and assigned to the task.
   //    If so, send the worker the message, otherwise produce an error.
   //
   Worker: function (pool, msg) {
-    console.log(3);
-    console.log(this);
-    console.log(this.worker);
-    if (pool.worker) {
-      pool.worker.postMessage(msg.data);
-    } else {
-      pool.createWorker();
-      pool.Log('Worker ' + msg.worker + ' is not assigned to task ' + msg.task);
-      pool.parent.postMessage(
-        {
-          cmd: 'Task',
-          data: {
-            message: 'Worker ' + msg.worker + ' is not assigned to this task',
-          },
-          action: 'error',
-          task: msg.task,
-          worker: msg.worker,
-          post: msg.post,
-        },
-        pool.domain
-      );
+    if (!pool.worker) {
+      pool.Start();
     }
+    pool.worker.postMessage(msg.data);
   },
   //
   //  This stops the given webworker.
@@ -158,30 +137,25 @@ export var TaskCommands = {
   //    If there are any pending tasks, start the first one.
   //
   Stop: function (pool, msg) {
-    pool.free.unshift(msg.worker);
-    pool.tasks[msg.worker] = null;
-    pool.Log('WorkerPool: ending task ' + msg.worker);
-    var msg = pool.cache.shift();
-    if (msg) TaskCommands.Start.call(this, msg);
+    pool.worker.terminate();
   },
 };
 
 //
 //  This is the list of commands that can come from the workers
 //
-export var WorkerCommands = {
+export const WorkerCommands = {
   //
   //  This is how the worker sends commands to the associated Task.
   //    Add the task id to the messaage and post it to the parent window
   //
-  Task: function (msg) {
-    msg.task = this.tasks[msg.worker];
-    this.parent.postMessage(msg, this.domain);
+  Task: function (pool, msg) {
+    pool.parent.postMessage(msg, pool.domain);
   },
   //
   //  This can be used to log messages to the parent
   //
-  Log: function (msg) {
-    this.Log('Worker ' + msg.worker + ': ' + msg.data);
+  Log: function (pool, msg) {
+    pool.Log(`Worker log: ${msg.data}`);
   },
 };
