@@ -44,6 +44,8 @@ import { GeneratorPool } from './speech/GeneratorPool.js';
 
 import { WorkerHandler } from './speech/WebWorker.js';
 
+// declare const SRE: any;
+
 /*==========================================================================*/
 
 /**
@@ -214,7 +216,11 @@ export function EnrichedMathItemMixin<
           } else {
             mml = this.adjustSelections();
           }
+          performance.mark('startMark');
+          // const enriched = typeof SRE !== 'undefined' ? SRE.toEnriched(mml) : Sre.toEnriched(mml);
           const enriched = Sre.toEnriched(mml);
+          performance.mark('endMark');
+          performance.measure('zorkow', 'startMark', 'endMark');
           this.inputData.enrichedMml = math.math = this.serializeMml(enriched);
           math.display = this.display;
           math.compile(document);
@@ -289,50 +295,48 @@ export function EnrichedMathItemMixin<
       if (this.state() >= STATE.ATTACHSPEECH) return;
       this.state(STATE.ATTACHSPEECH);
       if (this.isEscaped || !document.options.enableEnrichment) return;
-      let [speech, braille] = this.existingSpeech();
-      let [newSpeech, newBraille] = ['', ''];
+      const [speech, braille] = this.existingSpeech();
+      // let [newSpeech, newBraille] = ['', ''];
       const options = document.options;
+      // const adaptor = document.adaptor;
+      // const node = this.typesetRoot;
       if (
         (!speech && options.enableSpeech) ||
         (!braille && options.enableBraille)
       ) {
         try {
-          (document as EnrichedMathDocument<N, T, D>).webworker.Speech(
-            this.toMathML(this.root, this)
-          );
-          [newSpeech, newBraille] = this.generatorPool.computeSpeech(
-            this.typesetRoot,
-            this.toMathML(this.root, this)
-          );
-          if (newSpeech) {
-            newSpeech = buildSpeech(newSpeech)[0];
-          }
+          const worker = (document as EnrichedMathDocument<N, T, D>).webworker;
+          const id = worker.counter;
+          document.adaptor.setAttribute(this.typesetRoot, 'data-worker', id);
+          // TODO: attach all the speech elements here!
+          worker.Speech(this.toMathML(this.root, this), id);
+          // if (newSpeech) {
+          //   newSpeech = buildSpeech(newSpeech)[0];
+          // }
         } catch (err) {
           document.options.speechError(document, this, err);
         }
       }
-      speech = speech || newSpeech;
-      braille = braille || newBraille;
-      if (!speech && !braille) return;
-      const adaptor = document.adaptor;
-      const node = this.typesetRoot;
-      if (speech && options.enableSpeech) {
-        adaptor.setAttribute(node, 'aria-label', speech as string);
-        this.root.attributes.set('aria-label', speech);
-      }
-      if (braille && options.enableBraille) {
-        adaptor.setAttribute(node, 'aria-braillelabel', braille as string);
-        this.root.attributes.set('aria-braillelabel', braille);
-      }
-      for (const child of adaptor.childNodes(node)) {
-        // Special case if renderactions add text elements like the spaces for
-        // to allow copying in the Euro Braille example.
-        if (adaptor.kind(child) !== '#text') {
-          adaptor.setAttribute(child as N, 'aria-hidden', 'true');
-        }
-      }
-      this.outputData.speech = speech;
-      this.outputData.braille = braille;
+      // speech = speech || newSpeech;
+      // braille = braille || newBraille;
+      // if (!speech && !braille) return;
+      // if (speech && options.enableSpeech) {
+      //   adaptor.setAttribute(node, 'aria-label', speech as string);
+      //   this.root.attributes.set('aria-label', speech);
+      // }
+      // if (braille && options.enableBraille) {
+      //   adaptor.setAttribute(node, 'aria-braillelabel', braille as string);
+      //   this.root.attributes.set('aria-braillelabel', braille);
+      // }
+      // for (const child of adaptor.childNodes(node)) {
+      //   // Special case if renderactions add text elements like the spaces for
+      //   // to allow copying in the Euro Braille example.
+      //   if (adaptor.kind(child) !== '#text') {
+      //     adaptor.setAttribute(child as N, 'aria-hidden', 'true');
+      //   }
+      // }
+      // this.outputData.speech = speech;
+      // this.outputData.braille = braille;
     }
   };
 }
@@ -384,7 +388,7 @@ export interface EnrichedMathDocument<N, T, D>
     err: Error
   ): void;
 
-  webworker: WorkerHandler;
+  webworker: WorkerHandler<N, T, D>;
 }
 
 /**
@@ -435,9 +439,9 @@ export function EnrichedMathDocumentMixin<
       /* prettier-ignore */
       speechTiming: {
         asynchronous: true,                // true to allow screen updates while adding speech, false to not
-        initial: 100,                      // initial delay until starting to add speech
+        initial: 1000,                      // initial delay until starting to add speech
         threshold: 250,                    // time (in milliseconds) to process speech before letting screen update
-        intermediate: 10                   // delay after processing speech reaches the threshold
+        intermediate: 100                   // delay after processing speech reaches the threshold
       },
       /* prettier-ignore */
       sre: expandable({
@@ -469,7 +473,7 @@ export function EnrichedMathDocumentMixin<
      */
     protected attachSpeechDone: () => void;
 
-    public webworker: WorkerHandler = null;
+    public webworker: WorkerHandler<N, T, D> = null;
 
     /**
      * Enrich the MathItem class used for this MathDocument, and create the
@@ -504,13 +508,13 @@ export function EnrichedMathDocumentMixin<
      * @returns {EnrichedMathDocument} The object for chaining.
      */
     public attachSpeech(): EnrichedMathDocument<N, T, D> {
-      if (!this.webworker) {
-        this.webworker = new WorkerHandler();
-        this.webworker.Start();
-        this.webworker.Import();
-      }
       if (!this.processed.isSet('attach-speech')) {
         if (this.options.enableSpeech || this.options.enableBraille) {
+          if (!this.webworker) {
+            this.webworker = new WorkerHandler(this.adaptor);
+            this.webworker.Start();
+            this.webworker.Import();
+          }
           if (this.options.speechTiming.asynchronous) {
             this.attachSpeechAsync();
           } else {

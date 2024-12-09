@@ -33,6 +33,7 @@ import { SemanticNode } from '#sre/semantic_tree/semantic_node.js';
 import { parseInput } from '#sre/common/dom_util.js';
 import { Variables } from '#sre/common/variables.js';
 import MathMaps from './mathmaps.js';
+export { semanticMathmlNode } from '#sre/enrich_mathml/enrich.js';
 
 export type highlighter = Highlighter;
 

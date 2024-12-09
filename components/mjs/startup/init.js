@@ -17,4 +17,3 @@ export function startup(ready) {
                .then(() => CONFIG.ready())
                .catch(error => CONFIG.failed(error));
 }
-

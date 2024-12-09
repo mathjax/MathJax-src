@@ -165,27 +165,32 @@ export class GeneratorPool<N, T, D> {
     return update;
   }
 
-  /**
-   * Compute speech using the original MathML element as reference.
-   *
-   * @param {N} node The typeset node.
-   * @param {string} mml The serialized mml node.
-   * @returns {[string, string]} Speech and Braille expression pair.
-   */
-  public computeSpeech(node: N, mml: string): [string, string] {
-    this.element = Sre.parseDOM(mml);
-    const xml = this.prepareXml(node);
-    const speech = this.options.enableSpeech
-      ? this.speechGenerator.getSpeech(xml, this.element)
-      : '';
-    const braille = this.options.enableBraille
-      ? this.brailleGenerator.getSpeech(xml, this.element)
-      : '';
-    if (speech || braille) {
-      this.setAria(node, xml, this.options.sre.locale);
-    }
-    return [speech, braille];
-  }
+  // /**
+  //  * Compute speech using the original MathML element as reference.
+  //  *
+  //  * @param {N} node The typeset node.
+  //  * @param {string} mml The serialized mml node.
+  //  * @returns {[string, string]} Speech and Braille expression pair.
+  //  */
+  // public computeSpeech(node: N, mml: string, worker: WorkerHandler): [string, string] {
+  //   const id = worker.counter;
+  //   this.adaptor.setAttribute(node, 'data-worker', id);
+  //   // TODO: attach all the speech elements here!
+  //   worker.Speech(mml, id);
+
+  //   // this.element = Sre.parseDOM(mml);
+  //   // const xml = this.prepareXml(node);
+  //   // const speech = this.options.enableSpeech
+  //   //   ? this.speechGenerator.getSpeech(xml, this.element)
+  //   //   : '';
+  //   // const braille = this.options.enableBraille
+  //   //   ? this.brailleGenerator.getSpeech(xml, this.element)
+  //   //   : '';
+  //   // if (speech || braille) {
+  //   //   // this.setAria(node, xml, this.options.sre.locale);
+  //   // }
+  //   // return [speech, braille];
+  // }
 
   /**
    * Computes the summary for the current node. Summary computations are very
@@ -281,7 +286,7 @@ export class GeneratorPool<N, T, D> {
   public updateSpeech(node: N): string {
     const xml = this.prepareXml(node);
     const speech = this.speechGenerator.getSpeech(xml, this.element);
-    this.setAria(node, xml, this.options.sre.locale);
+    // this.setAria(node, xml, this.options.sre.locale);
     const label = buildSpeech(speech)[0];
     this.adaptor.setAttribute(node, 'aria-label', label);
     return label;

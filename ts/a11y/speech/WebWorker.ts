@@ -21,10 +21,22 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import { DOMAdaptor } from '../../core/DOMAdaptor.js';
+
 /* eslint @typescript-eslint/no-empty-object-type: 0 */
 export type Callbacks = { [name: string]: (data: {}) => void };
-export type Message = { post: string; action: string; data: {}; task?: number };
-export type Command = { cmd: string; data: {}; task?: number; worker?: number };
+export type Message = {
+  cmd: string;
+  debug: boolean;
+  data: { [key: string]: any };
+  task?: number;
+};
+export type Command = {
+  cmd: string;
+  data: Message;
+  task?: number;
+  worker?: number;
+};
 
 // These need to become options.
 const DOMAIN = 'https://88.166.18.204';
@@ -34,15 +46,26 @@ const BASEDIR = 'workers';
 const POOL = 'workerpool2.html';
 const WORKER = 'worker2.js'; // the URL for the webworkers
 const SRE = 'sre.js'; // SRE library to import
+const DEBUG = false;
 
 //
 //  The main WorkerHandler class
 //
-export class WorkerHandler {
+/**
+ * @template N  The HTMLElement node class
+ * @template T  The Text node class
+ * @template D  The Document class
+ */
+export class WorkerHandler<N, T, D> {
   private static TIMEOUT = 200; // delay (ms) to wait for pool to start
   private static REPEAT = 20; // repeat wait
 
   static ID = 0;
+  private _count = 0;
+
+  public get counter() {
+    return this._count++;
+  }
 
   public iframe: HTMLIFrameElement = null; // the hidden iframe
   public pool: Window = null; // window of the iframe for the pool
@@ -51,9 +74,12 @@ export class WorkerHandler {
   public url = '';
   public wait: Promise<void>; // waiting for timeout?
 
-  // the minimum number of workers to start
-  // the maximum number of simultaneous workers
-  constructor() {
+  /**
+   * The adaptor to work with typeset nodes.
+   *
+   * @param {DOMAdaptor} adaptor The adaptor to use for DOM access.
+   */
+  constructor(public adaptor: DOMAdaptor<N, T, D>) {
     this.url = DOMAIN + '/' + BASEDIR + '/';
   }
 
@@ -88,7 +114,7 @@ export class WorkerHandler {
       location.host +
       (location.port ? ':' + location.port : '');
     domain = this.rewriteFirefox(domain);
-    this.iframe.src = this.computeSrc(domain, [WORKER]);
+    this.iframe.src = this.computeSrc(domain, [WORKER, DEBUG.toString()]);
     this.domain = this.iframe.src.replace(/^(.*?:\/\/.*?)\/.*/, '$1'); // the pool's domain
     this.domain = this.rewriteFirefox(this.domain);
   }
@@ -144,6 +170,12 @@ export class WorkerHandler {
     }).catch((err) => console.log(err));
   }
 
+  private debug(msg: string, ...rest: any[]) {
+    if (DEBUG) {
+      console.info(msg, ...rest);
+    }
+  }
+
   //
   //  Listener for the messages from the iframe.
   //  We check that the origin of the message is correct (since
@@ -154,15 +186,17 @@ export class WorkerHandler {
   //  otherwise we throw an error.
   //
   public Listener(event: MessageEvent) {
-    console.log('Iframe  >>>  Client:', event.data);
+    this.debug('Iframe  >>>  Client:', event.data);
     let origin = event.origin;
     if (origin === 'null' || origin === 'file://') origin = '*';
     if (origin !== this.domain) return; // make sure the message is from the WorkerPool
-    if (Object.hasOwn(Commands, event.data.cmd)) {
-      Commands[event.data.cmd](this, event.data);
-    } else {
-      console.error('Invalid command from pool: ' + event.data.cmd);
+    // Here!
+    if (Object.hasOwn(this.Commands, event.data.cmd)) {
+      this.Commands[event.data.cmd](this, event.data);
     }
+    // else {
+    //   console.error('Invalid command from pool: ' + event.data.cmd);
+    // }
   }
 
   //
@@ -175,16 +209,21 @@ export class WorkerHandler {
   public Import(library: string = this.url + SRE) {
     this.Post({
       cmd: 'Worker',
-      data: { cmd: 'import', data: { imports: library } },
+      data: {
+        cmd: 'import',
+        debug: DEBUG,
+        data: { imports: library },
+      },
     });
   }
 
-  public Speech(math: string) {
+  public Speech(math: string, id: number) {
     this.Post({
       cmd: 'Worker',
       data: {
         cmd: 'speech',
-        data: { mml: math },
+        debug: DEBUG,
+        data: { mml: math, id: id },
       },
     });
   }
@@ -199,54 +238,80 @@ export class WorkerHandler {
     this.iframe = this.pool = null;
     this.ready = false;
   }
+
+  //
+  //  The list of valid commands from the WorkerPool in the iframe.
+  //
+  public Commands: {
+    [id: string]: (pool: WorkerHandler<N, T, D>, msg: Message) => void;
+  } = {
+    //
+    //  This signals that the pool in the iframe is loaded and ready
+    //  (we clear the timeout, save the pool window, and signal
+    //  the callback that everything is OK).
+    //
+    Ready: function (pool: WorkerHandler<N, T, D>, _msg: Message) {
+      pool.pool = pool.iframe.contentWindow;
+      pool.ready = true;
+    },
+    // Setup: function (_pool: WorkerHandler, _msg: Message) {
+    //   console.log(7);
+    // },
+    //
+    //  Workers send messages to the Task objects via this command.
+    //  The message has the task id and the action to perform.
+    //  We look up the action from the Actions object below,
+    //  and if there is one, we perform a pre-action or a post-action.
+    //  Then we ask the task to dispatch the callback for the given action.
+    //
+    Task: function (pool: WorkerHandler<N, T, D>, msg: Message) {
+      const container = document.querySelector(
+        `[data-worker="${msg?.data?.id}"]`
+      ) as N;
+      if (!container) return; // The element gone, must have been retypeset.
+      // Container needs to get the aria label.
+      let rootId: string = null;
+      const setAttribute = function (node: N) {
+        const id = pool.adaptor.getAttribute(node, 'data-semantic-id');
+        const speech = msg.data.speech[id] || {};
+        for (let [key, value] of Object.entries(speech)) {
+          key = key.replace(/-ssml$/, '');
+          if (value) {
+            pool.adaptor.setAttribute(
+              node,
+              `data-semantic-${key}`,
+              value as string
+            );
+          }
+        }
+      };
+      const setAttributes = function (root: N | T) {
+        if (
+          !root ||
+          pool.adaptor.kind(root) === '#text' ||
+          pool.adaptor.kind(root) === '#comment'
+        )
+          return;
+        root = root as N;
+        if (pool.adaptor.hasAttribute(root, 'data-semantic-id')) {
+          setAttribute(root);
+          if (
+            !rootId &&
+            !pool.adaptor.hasAttribute(root, 'data-semantic-parent')
+          ) {
+            rootId = pool.adaptor.getAttribute(root, 'data-semantic-id');
+          }
+        }
+        Array.from(pool.adaptor.childNodes(root)).forEach(setAttributes);
+      };
+      setAttributes(pool.adaptor.childNodes(container)[0]);
+    },
+    //
+    //  Can be used to send messages to the console that can be trapped
+    //  via this function.
+    //
+    Log: function (pool: WorkerHandler<N, T, D>, msg: Message) {
+      pool.debug('', msg.data);
+    },
+  };
 }
-
-WorkerHandler.ID = 0; // the id number of the pool
-
-//
-//  The list of valid commands from the WorkerPool in the iframe.
-//
-
-export const Commands: {
-  [id: string]: (pool: WorkerHandler, msg: Message) => void;
-} = {
-  //
-  //  This signals that the pool in the iframe is loaded and ready
-  //  (we clear the timeout, save the pool window, and signal
-  //  the callback that everything is OK).
-  //
-  Ready: function (pool: WorkerHandler, _msg: Message) {
-    pool.pool = pool.iframe.contentWindow;
-    pool.ready = true;
-  },
-  // Setup: function (_pool: WorkerHandler, _msg: Message) {
-  //   console.log(7);
-  // },
-  //
-  //  Workers send messages to the Task objects via this command.
-  //  The message has the task id and the action to perform.
-  //  We look up the action from the Actions object below,
-  //  and if there is one, we perform a pre-action or a post-action.
-  //  Then we ask the task to dispatch the callback for the given action.
-  //
-  Task: function (pool: WorkerHandler, msg: Message) {
-    console.log(1);
-    console.log('Running a task!');
-    console.log(pool);
-    console.log(msg);
-    // const i = msg.task;
-    // const action = Object.hasOwn(Actions, msg.action)
-    //   ? Actions[msg.action]
-    //   : null;
-    // if (action && action.before) action.method.call(this, msg, 'before');
-    // // pool.tasks[i]._dispatch(msg);
-    // if (action && action.after) action.method.call(this, msg, 'after');
-  },
-  //
-  //  Can be used to send messages to the console that can be trapped
-  //  via this function.
-  //
-  Log: function (_pool: WorkerHandler, msg: Message) {
-    console.log(msg.data);
-  },
-};

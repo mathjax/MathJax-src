@@ -20,7 +20,9 @@
 //  commands, we produce an error.
 //  
 self.addEventListener('message',function (event) {
-  console.log('Iframe  >>>  Worker:', event.data);
+  if (event.data?.debug) {
+    console.log('Iframe  >>>  Worker:', event.data);
+  }
   const {cmd, data, post} = event.data;
   if (Commands.hasOwnProperty(cmd)) {
     Post('Log',`running ${cmd}`);
@@ -77,9 +79,10 @@ const Commands = {
    * @param post The call back specification
    */
   speech: function(data, post) {
+    // console.log('Computing speech!');
     if (data?.mml) {
       SRE.engineReady().then(() => {
-        Task('attach', SRE.toSpeech(data.mml), post);
+        Task('attach', {speech: SRE.toSpeechStructure(data.mml), id: data.id}, post);
       });
     }
   },
