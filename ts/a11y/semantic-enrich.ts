@@ -308,7 +308,7 @@ export function EnrichedMathItemMixin<
           const worker = (document as EnrichedMathDocument<N, T, D>).webworker;
           const id = worker.counter;
           document.adaptor.setAttribute(this.typesetRoot, 'data-worker', id);
-          // TODO: attach all the speech elements here!
+          worker.Setup(document.options);
           worker.Speech(this.toMathML(this.root, this), id);
           // if (newSpeech) {
           //   newSpeech = buildSpeech(newSpeech)[0];

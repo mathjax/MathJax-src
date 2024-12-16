@@ -39,9 +39,9 @@ export class WorkerPool {
   }
 
   //
-  //  Starts the WorkerPool
+  //  Starts the Worker
   //    Add the event listener for the messages from the TaskPool
-  //    Create the required minimum number of workers
+  //    Create the worker
   //    Signal that the pool is ready
   //
   Start() {
@@ -145,6 +145,7 @@ export const TaskCommands = {
   Stop: function (pool, msg) {
     pool.worker.terminate();
   },
+
 };
 
 //
@@ -156,6 +157,8 @@ export const WorkerCommands = {
   //    Add the task id to the messaage and post it to the parent window
   //
   Task: function (pool, msg) {
+    console.log(9);
+    console.log(msg);
     pool.parent.postMessage(msg, pool.domain);
   },
   //

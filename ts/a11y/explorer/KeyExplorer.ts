@@ -578,6 +578,8 @@ export class SpeechExplorer
 
   /**
    * Computes the speech for the current expression.
+   *
+   * Refactor: This is called when we change rule sets, etc.
    */
   public Speech() {
     this.item.outputData.speech = this.generators.updateSpeech(

@@ -22,6 +22,7 @@
  */
 
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
+import { OptionList } from '../../util/Options.js';
 
 /* eslint @typescript-eslint/no-empty-object-type: 0 */
 export type Callbacks = { [name: string]: (data: {}) => void };
@@ -39,14 +40,14 @@ export type Command = {
 };
 
 // These need to become options.
-const DOMAIN = 'https://88.166.18.204';
+// const DOMAIN = 'https://88.166.18.204';
 // const DOMAIN = 'https://88.174.118.32';
-// const DOMAIN = 'https://localhost';
+const DOMAIN = 'https://localhost';
 const BASEDIR = 'workers';
 const POOL = 'workerpool2.html';
 const WORKER = 'worker2.js'; // the URL for the webworkers
 const SRE = 'sre.js'; // SRE library to import
-const DEBUG = false;
+const DEBUG = true;
 
 //
 //  The main WorkerHandler class
@@ -193,19 +194,21 @@ export class WorkerHandler<N, T, D> {
     // Here!
     if (Object.hasOwn(this.Commands, event.data.cmd)) {
       this.Commands[event.data.cmd](this, event.data);
+    } else {
+      this.debug('Invalid command from pool: ' + event.data.cmd);
     }
-    // else {
-    //   console.error('Invalid command from pool: ' + event.data.cmd);
-    // }
   }
 
-  //
-  //  Tasks use this to send messages to their workers.
-  //
+  /**
+   * Send messages to the worker.
+   *
+   * @param {Command} msg The command message.
+   */
   public Post(msg: Command) {
     this.wait.then(() => this.pool.postMessage(msg, this.domain));
   }
 
+  // Short cuts for posts.
   public Import(library: string = this.url + SRE) {
     this.Post({
       cmd: 'Worker',
@@ -224,6 +227,22 @@ export class WorkerHandler<N, T, D> {
         cmd: 'speech',
         debug: DEBUG,
         data: { mml: math, id: id },
+      },
+    });
+  }
+
+  public Setup(options: OptionList) {
+    this.Post({
+      cmd: 'Worker',
+      data: {
+        cmd: 'setup',
+        debug: DEBUG,
+        data: {
+          domain: options.sre.domain,
+          style: options.sre.style,
+          locale: options.sre.locale,
+          modality: options.sre.modality,
+        },
       },
     });
   }
@@ -254,9 +273,9 @@ export class WorkerHandler<N, T, D> {
       pool.pool = pool.iframe.contentWindow;
       pool.ready = true;
     },
-    // Setup: function (_pool: WorkerHandler, _msg: Message) {
-    //   console.log(7);
-    // },
+    Setup: function (_pool: WorkerHandler<N, T, D>, _msg: Message) {
+      console.log(7);
+    },
     //
     //  Workers send messages to the Task objects via this command.
     //  The message has the task id and the action to perform.
@@ -264,7 +283,8 @@ export class WorkerHandler<N, T, D> {
     //  and if there is one, we perform a pre-action or a post-action.
     //  Then we ask the task to dispatch the callback for the given action.
     //
-    Task: function (pool: WorkerHandler<N, T, D>, msg: Message) {
+    Attach: function (pool: WorkerHandler<N, T, D>, msg: Message) {
+      console.log(msg);
       const container = document.querySelector(
         `[data-worker="${msg?.data?.id}"]`
       ) as N;

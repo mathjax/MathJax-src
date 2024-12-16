@@ -280,6 +280,8 @@ export class GeneratorPool<N, T, D> {
   /**
    * Updates the speech in the give node.
    *
+   * Refactor: This is called when we change rule sets
+   *
    * @param {N} node The typeset node.
    * @returns {string} The aria label to speak.
    */
@@ -399,6 +401,7 @@ export class GeneratorPool<N, T, D> {
    * @param {string} locale The locale to use for Aria labels.
    */
   public setAria(node: N, xml: Element, locale: string) {
+    console.log(3);
     const kind = xml.getAttribute('data-semantic-type');
     if (kind) {
       this.attrList.forEach((attr) => this.copyAttributes(xml, node, attr));

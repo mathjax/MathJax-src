@@ -27,6 +27,9 @@ self.addEventListener('message',function (event) {
   if (Commands.hasOwnProperty(cmd)) {
     Post('Log',`running ${cmd}`);
     try {
+      console.log(cmd);
+      console.log(data);
+      console.log(post);
       (Commands[cmd])(data, post);
     } catch (err) {
       Task('error', copyError(err), post);
@@ -79,7 +82,6 @@ const Commands = {
    * @param post The call back specification
    */
   speech: function(data, post) {
-    // console.log('Computing speech!');
     if (data?.mml) {
       SRE.engineReady().then(() => {
         Task('attach', {speech: SRE.toSpeechStructure(data.mml), id: data.id}, post);
