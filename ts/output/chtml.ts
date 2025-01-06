@@ -109,12 +109,11 @@ export class CHTML<N, T, D> extends CommonOutputJax<
       'mjx-ms > mjx-c',
       'mjx-mtext > mjx-c',
       'mjx-stretchy-h',
-      'mjx-stretchy-v'
-    ].join(', ')]:
-      {
-        'clip-path':
-          'padding-box xywh(-1em -2px calc(100% + 2em) calc(100% + 4px))',
-      },
+      'mjx-stretchy-v',
+    ].join(', ')]: {
+      'clip-path':
+        'padding-box xywh(-1em -2px calc(100% + 2em) calc(100% + 4px))',
+    },
 
     'mjx-container[jax="CHTML"] :focus': { outline: 'solid 2px' },
     'mjx-container [space="1"]': { 'margin-left': '.111em' },

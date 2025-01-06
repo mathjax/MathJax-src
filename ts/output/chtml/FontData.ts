@@ -495,7 +495,7 @@ export class ChtmlFontData extends FontData<
       //
       css['line-height'] = this.em0(h + d);
       styles[`mjx-stretchy-v${c} > mjx-${part} > mjx-spacer`] = {
-        'margin-top': this.em(-d)
+        'margin-top': this.em(-d),
       };
     }
     styles[`mjx-stretchy-v${c} > mjx-${part}`] = css;
@@ -549,7 +549,8 @@ export class ChtmlFontData extends FontData<
         `0 ${this.em0(We - 0.06)} 0 ${this.em0(Wb - 0.06)}`;
     }
     if (data.ext) {
-      styles[`mjx-stretchy-h${c} > mjx-ext > mjx-spacer`]['letter-spacing'] = this.em(-data.ext);
+      styles[`mjx-stretchy-h${c} > mjx-ext > mjx-spacer`]['letter-spacing'] =
+        this.em(-data.ext);
     }
   }
 
@@ -577,15 +578,15 @@ export class ChtmlFontData extends FontData<
     };
     if (part === 'ext') {
       if (w === 0 && options.dx) {
-        w = 2 * options.dx - .06;
+        w = 2 * options.dx - 0.06;
       }
       styles[`mjx-stretchy-h${c} > mjx-${part} > mjx-spacer`] = {
-        'margin-left': this.em(-w / 2)
+        'margin-left': this.em(-w / 2),
       };
       if (options.cmb) {
         styles[`mjx-stretchy-h${c} > mjx-${part} > mjx-c`] = {
           width: this.em(w),
-          'text-align': 'right'
+          'text-align': 'right',
         };
       }
     } else {

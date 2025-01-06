@@ -270,7 +270,14 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
         styles.height = this.em(h + d);
         styles.verticalAlign = this.em(-d);
       } else {
-        this.createAssembly(parts, stretch, stretchv, content, w, delim.ext || 0);
+        this.createAssembly(
+          parts,
+          stretch,
+          stretchv,
+          content,
+          w,
+          delim.ext || 0
+        );
         styles.width = this.em(w);
       }
       //
@@ -314,22 +321,41 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       //
       // Get the part width/heights (beginning, extender, end, middle)
       //
-      const [ WHb, WHx, WHe, WHm ] =
-        parts.map((part) => part ? (nl ? part[0] + part[1] : part[2] ): 0);
+      const [WHb, WHx, WHe, WHm] = parts.map((part) =>
+        part ? (nl ? part[0] + part[1] : part[2]) : 0
+      );
       //
       // Get the extension width/heights (two when there is a middle piece)
       //
-      const [ WH1, WH2 ] = parts[3]
-        ? [ (wh - WHm) / 2 - WHb, (wh - WHm) / 2 - WHe ]
-        : [ wh - WHb - WHe, 0 ];
+      const [WH1, WH2] = parts[3]
+        ? [(wh - WHm) / 2 - WHb, (wh - WHm) / 2 - WHe]
+        : [wh - WHb - WHe, 0];
       //
       //  Set up the beginning, extension, and end pieces
       //
       this.createPart('mjx-beg', parts[0], sn[0], sv[0], content);
-      this.createPart('mjx-ext', parts[1], sn[1], sv[1], content, WH1, WHx - ext, nl);
+      this.createPart(
+        'mjx-ext',
+        parts[1],
+        sn[1],
+        sv[1],
+        content,
+        WH1,
+        WHx - ext,
+        nl
+      );
       if (parts[3]) {
         this.createPart('mjx-mid', parts[3], sn[3], sv[3], content);
-        this.createPart('mjx-ext', parts[1], sn[1], sv[1], content, WH2, WHx - ext, nl);
+        this.createPart(
+          'mjx-ext',
+          parts[1],
+          sn[1],
+          sv[1],
+          content,
+          WH2,
+          WHx - ext,
+          nl
+        );
       }
       this.createPart('mjx-end', parts[2], sn[2], sv[2], content);
     }
@@ -363,10 +389,10 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
         const font =
           options.ff || (letter ? `${this.font.cssFontPrefix}-${letter}` : '');
         const c = options.c || String.fromCodePoint(n);
-        let nodes = [] as (N|T)[];
+        let nodes = [] as (N | T)[];
         if (part === 'mjx-ext' && (Wx || options.dx)) {
           if (!Wx) {
-            Wx = 2 * options.dx - .06;
+            Wx = 2 * options.dx - 0.06;
           }
           const n = Math.min(Math.ceil(W / Wx) + 1, 500);
           if (options.cmb) {
@@ -376,7 +402,13 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
             }
           } else {
             nodes = [
-              this.html('mjx-spacer', {}, [this.text(Array(n).fill(c + nl).join(''))])
+              this.html('mjx-spacer', {}, [
+                this.text(
+                  Array(n)
+                    .fill(c + nl)
+                    .join('')
+                ),
+              ]),
             ];
           }
         } else {
