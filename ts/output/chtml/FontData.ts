@@ -445,16 +445,15 @@ export class ChtmlFontData extends FontData<
       const m = this.em(Hm / 2 - 0.03);
       styles[`mjx-stretchy-v${c} > mjx-ext:first-of-type`] = {
         height: '50%',
-        'border-width': `${this.em0(Hb - 0.03)} 0 ${m}`,
+        'border-width': `${this.em1(Hb - 0.03)} 0 ${m}`,
       };
       styles[`mjx-stretchy-v${c} > mjx-ext:last-of-type`] = {
         height: '50%',
-        'border-width': `${m} 0 ${this.em0(He - 0.03)}`,
+        'border-width': `${m} 0 ${this.em1(He - 0.03)}`,
       };
     } else if (He || Hb) {
-      styles['mjx-stretchy-v' + c + ' > mjx-ext'] = {
-        'border-width': `${this.em0(Hb - 0.03)} 0 ${this.em0(He - 0.03)}`,
-      };
+      styles[`mjx-stretchy-v${c} > mjx-ext`]['border-width'] =
+        `${this.em1(Hb - 0.03)} 0 ${this.em1(He - 0.03)}`;
     }
   }
 
@@ -483,28 +482,23 @@ export class ChtmlFontData extends FontData<
       // If the non-extender is wider than the assembly,
       //   use negative margins to center over the assembly
       //
-      if (w > HDW[2]) {
-        css.margin = `0 ${this.em((HDW[2] - w) / 2)}`;
-      }
+      const dw = w > HDW[2] ? this.em((HDW[2] - w) / 2) : 'auto';
       //
       // Non-extenders are 0 height, so place properly
       //
       const y = part === 'beg' ? h : part === 'end' ? -d : (h - d) / 2;
-      if (y > 0) {
-        css['padding-top'] = this.em(y);
-      } else if (y < 0) {
-        css.transform = `translateY(${this.em(y)})`;
-      }
+      css.margin = `${this.em(y)} ${dw} ${this.em(-y)}`;
     } else {
       //
-      //  Put one fifth above the top of the extender (to avoid ragged ends)
-      //  and then scale with origin at the top of the extender (so most extends down)
+      // Set the line-height to have the extenders touch,
+      // and shift the extender stack to center it.
       //
-      const y = h - (h + d) / 5;
-      css.transform = `translateY(${this.em(y)}) scaleY(500)`;
-      css['transform-origin'] = `center ${this.em(0.03 - y)}`;
+      css['line-height'] = this.em0(h + d);
+      styles[`mjx-stretchy-v${c} > mjx-${part} > mjx-spacer`] = {
+        'margin-top': this.em(-d)
+      };
     }
-    styles[`mjx-stretchy-v${c} mjx-${part} mjx-c`] = css;
+    styles[`mjx-stretchy-v${c} > mjx-${part}`] = css;
     return h + d;
   }
 
@@ -551,9 +545,11 @@ export class ChtmlFontData extends FontData<
         'border-width': `0 ${this.em0(We - 0.03)} 0 ${m}`,
       };
     } else if (Wb || We) {
-      styles[`mjx-stretchy-h${c} > mjx-ext`] = {
-        'border-width': `0 ${this.em0(We - 0.03)} 0 ${this.em0(Wb - 0.03)}`,
-      };
+      styles[`mjx-stretchy-h${c} > mjx-ext`]['border-width'] =
+        `0 ${this.em0(We - 0.06)} 0 ${this.em0(Wb - 0.06)}`;
+    }
+    if (data.ext) {
+      styles[`mjx-stretchy-h${c} > mjx-ext > mjx-spacer`]['letter-spacing'] = this.em(-data.ext);
     }
   }
 
@@ -575,17 +571,32 @@ export class ChtmlFontData extends FontData<
     HDW: ChtmlCharData
   ): number {
     if (!n) return 0;
-    const [, , w, options] = this.getChar(v, n);
+    let [, , w, options] = this.getChar(v, n);
     const css: StyleData = {
       padding: this.padding(HDW as ChtmlCharData, w - HDW[2]),
     };
-    if (part === 'end') {
-      css['margin-left'] = this.em(-w);
-    } else if (part === 'mid') {
-      css['margin-left'] = this.em(-w / 2);
+    if (part === 'ext') {
+      if (w === 0 && options.dx) {
+        w = 2 * options.dx - .06;
+      }
+      styles[`mjx-stretchy-h${c} > mjx-${part} > mjx-spacer`] = {
+        'margin-left': this.em(-w / 2)
+      };
+      if (options.cmb) {
+        styles[`mjx-stretchy-h${c} > mjx-${part} > mjx-c`] = {
+          width: this.em(w),
+          'text-align': 'right'
+        };
+      }
+    } else {
+      if (part === 'mid') {
+        css['margin'] = `0 ${this.em(-w / 2)}`;
+      } else {
+        css[part == 'end' ? 'margin-left' : 'margin-right'] = this.em(-w);
+      }
+      this.checkCombiningChar(options, css);
     }
-    this.checkCombiningChar(options, css);
-    styles[`mjx-stretchy-h${c} mjx-${part} mjx-c`] = css;
+    styles[`mjx-stretchy-h${c} > mjx-${part}`] = css;
     return w;
   }
 
@@ -651,6 +662,15 @@ export class ChtmlFontData extends FontData<
    */
   public em0(n: number): string {
     return em(Math.max(0, n));
+  }
+
+  /**
+   * @param {number} n  The number of ems (will be restricted to non-negative values, with .1px rather than 0em)
+   * @returns {string}   The string representing the number with units of "em"
+   */
+  public em1(n: number): string {
+    const m = em(Math.max(0, n));
+    return m === '0' ? '.1px' : m;
   }
 
   /**
