@@ -38,8 +38,8 @@ export const EmpheqMethods = {
   /**
    * Handle an empheq environment.
    *
-   * @param {TexParser} parser        The active tex parser.
-   * @param {EmpheqBeginItem} begin   The begin item for this environment.
+   * @param {TexParser} parser   The active tex parser.
+   * @param {BeginItem} begin    The begin item for this environment.
    */
   Empheq(parser: TexParser, begin: BeginItem) {
     if (parser.stack.env.closing === begin.getName()) {

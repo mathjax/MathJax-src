@@ -134,6 +134,7 @@ export const CasesMethods = {
    *
    * @param {TexParser} parser      The active tex parser.
    * @param {string} name           The environment name.
+   * @returns {ParseResult}         The parser result code.
    */
   Entry(parser: TexParser, name: string): ParseResult {
     if (!parser.stack.Top().getProperty('numCases')) {
@@ -210,6 +211,7 @@ export const CasesMethods = {
     const text = tex.substring(parser.i, i).replace(/^\s*/, '');
     parser.PushAll(ParseUtil.internalMath(parser, text, 0));
     parser.i = i;
+    return null;
   },
 
   /**
