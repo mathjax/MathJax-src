@@ -42,7 +42,7 @@ export const MhchemUtils = {
       stretchy: true,
       texClass: TEXCLASS.REL,
       mathvariant: '-mhchem',
-      ...(mchar.attributes || {})
+      ...(mchar.attributes || {}),
     };
     const node = parser.create('token', 'mo', def, mchar.char);
     parser.Push(node);
@@ -54,10 +54,22 @@ export const MhchemUtils = {
  * of the needed arrows
  */
 export const MhchemReplacements = new Map<string, RegExp>([
-  ['\\mhchemBondTD', /\\rlap\{\\lower\.1em\{-\}\}\\raise\.1em\{\\tripledash\}/g],
-  ['\\mhchemBondTDD', /\\rlap\{\\lower\.2em\{-\}\}\\rlap\{\\raise\.2em\{\\tripledash\}\}-/g],
-  ['\\mhchemBondDTD', /\\rlap\{\\lower\.2em\{-\}\}\\rlap\{\\raise.2em\{-\}\}\\tripledash/g],
-  ['\\mhchem$1', /\\(x?(?:long)?(?:left|right|[Ll]eftright|[Rr]ightleft)(?:arrow|harpoons))/g],
+  [
+    '\\mhchemBondTD',
+    /\\rlap\{\\lower\.1em\{-\}\}\\raise\.1em\{\\tripledash\}/g,
+  ],
+  [
+    '\\mhchemBondTDD',
+    /\\rlap\{\\lower\.2em\{-\}\}\\rlap\{\\raise\.2em\{\\tripledash\}\}-/g,
+  ],
+  [
+    '\\mhchemBondDTD',
+    /\\rlap\{\\lower\.2em\{-\}\}\\rlap\{\\raise.2em\{-\}\}\\tripledash/g,
+  ],
+  [
+    '\\mhchem$1',
+    /\\(x?(?:long)?(?:left|right|[Ll]eftright|[Rr]ightleft)(?:arrow|harpoons))/g,
+  ],
 ]);
 
 // Namespace
@@ -92,12 +104,12 @@ export const MhchemMethods: { [key: string]: ParseMethod } = {
 new CommandMap('mhchem', {
   ce: [MhchemMethods.Machine, 'ce'],
   pu: [MhchemMethods.Machine, 'pu'],
-  mhchemxrightarrow: [MhchemMethods.xArrow, 0xE429, 5, 9],
-  mhchemxleftarrow: [MhchemMethods.xArrow, 0xE428, 9, 5],
-  mhchemxleftrightarrow: [MhchemMethods.xArrow, 0xE42A, 9, 9],
-  mhchemxrightleftharpoons: [MhchemMethods.xArrow, 0xE408, 5, 9],
-  mhchemxRightleftharpoons: [MhchemMethods.xArrow, 0xE409, 5, 9],
-  mhchemxLeftrightharpoons: [MhchemMethods.xArrow, 0xE40A, 9, 11],
+  mhchemxrightarrow: [MhchemMethods.xArrow, 0xe429, 5, 9],
+  mhchemxleftarrow: [MhchemMethods.xArrow, 0xe428, 9, 5],
+  mhchemxleftrightarrow: [MhchemMethods.xArrow, 0xe42a, 9, 9],
+  mhchemxrightleftharpoons: [MhchemMethods.xArrow, 0xe408, 5, 9],
+  mhchemxRightleftharpoons: [MhchemMethods.xArrow, 0xe409, 5, 9],
+  mhchemxLeftrightharpoons: [MhchemMethods.xArrow, 0xe40a, 9, 11],
 });
 
 /**
