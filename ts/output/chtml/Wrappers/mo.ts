@@ -244,7 +244,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       const delim = this.stretch;
       const stretch = delim.stretch;
       const stretchv = this.font.getStretchVariants(c);
-      const content: N[] = [];
+      const dom: N[] = [];
 
       //
       //  Look up the characters to use
@@ -261,30 +261,27 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       const { h, d, w } = this.bbox;
       const styles: StringMap = {};
       if (delim.dir === DIRECTION.Vertical) {
-        this.createAssembly(parts, stretch, stretchv, content, h + d, 0, '\n');
+        //
+        //  The ext parameter should be 0, but line-height in Safari
+        //  is not accurate, so this produces extra extenders to compensate
+        //
+        this.createAssembly(parts, stretch, stretchv, dom, h + d, 0.05, '\n');
         //
         //  Vertical needs an extra (empty) element to get vertical position right
         //  in some browsers (e.g., Safari)
         //
-        content.push(this.html('mjx-mark'));
+        dom.push(this.html('mjx-mark'));
         styles.height = this.em(h + d);
         styles.verticalAlign = this.em(-d);
       } else {
-        this.createAssembly(
-          parts,
-          stretch,
-          stretchv,
-          content,
-          w,
-          delim.ext || 0
-        );
+        this.createAssembly(parts, stretch, stretchv, dom, w, delim.ext || 0);
         styles.width = this.em(w);
       }
       //
       //  Make the main element and add it to the parent
       //
       const properties = { class: this.char(delim.c || c), style: styles };
-      const html = this.html('mjx-stretchy-' + delim.dir, properties, content);
+      const html = this.html('mjx-stretchy-' + delim.dir, properties, dom);
       const adaptor = this.adaptor;
       if (chtml[0]) {
         adaptor.append(chtml[0], html);
@@ -300,7 +297,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
      * @param {PartData[]} parts   The extender parts character data array
      * @param {number[]} sn        The extender parts character code points
      * @param {string[]} sv        The extender parts variants
-     * @param {N[]} content        The assembly DOM to build
+     * @param {N[]} dom            The assembly DOM to build
      * @param {number} wh          The delimiter's full width/height
      * @param {number} ext         The extender character's bearing whitspace
      * @param {string} nl          The string to use between extender characters
@@ -309,9 +306,9 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       parts: PartData[],
       sn: number[],
       sv: string[],
-      content: N[],
+      dom: N[],
       wh: number,
-      ext: number = 0,
+      ext: number,
       nl: string = ''
     ) {
       //
@@ -321,9 +318,10 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       //
       // Get the part width/heights (beginning, extender, end, middle)
       //
-      const [WHb, WHx, WHe, WHm] = parts.map((part) =>
+      let [WHb, WHx, WHe, WHm] = parts.map((part) =>
         part ? (nl ? part[0] + part[1] : part[2]) : 0
       );
+      WHx = Math.max(0, WHx - ext);
       //
       // Get the extension width/heights (two when there is a middle piece)
       //
@@ -333,31 +331,13 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       //
       //  Set up the beginning, extension, and end pieces
       //
-      this.createPart('mjx-beg', parts[0], sn[0], sv[0], content);
-      this.createPart(
-        'mjx-ext',
-        parts[1],
-        sn[1],
-        sv[1],
-        content,
-        WH1,
-        WHx - ext,
-        nl
-      );
+      this.createPart('mjx-beg', parts[0], sn[0], sv[0], dom);
+      this.createPart('mjx-ext', parts[1], sn[1], sv[1], dom, WH1, WHx, nl);
       if (parts[3]) {
-        this.createPart('mjx-mid', parts[3], sn[3], sv[3], content);
-        this.createPart(
-          'mjx-ext',
-          parts[1],
-          sn[1],
-          sv[1],
-          content,
-          WH2,
-          WHx - ext,
-          nl
-        );
+        this.createPart('mjx-mid', parts[3], sn[3], sv[3], dom);
+        this.createPart('mjx-ext', parts[1], sn[1], sv[1], dom, WH2, WHx, nl);
       }
-      this.createPart('mjx-end', parts[2], sn[2], sv[2], content);
+      this.createPart('mjx-end', parts[2], sn[2], sv[2], dom);
     }
 
     /**
@@ -367,7 +347,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
      * @param {PartData} data  The character data for the part
      * @param {number} n       The unicode character to use
      * @param {string} v       The variant for the character
-     * @param {N[]} content    The DOM assembly
+     * @param {N[]} dom        The DOM assembly
      * @param {number} W       The extendion width
      * @param {number} Wx      The width of the extender character
      * @param {string} nl      Character to use between extenders
@@ -377,7 +357,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       data: PartData,
       n: number,
       v: string,
-      content: N[],
+      dom: N[],
       W: number = 0,
       Wx: number = 0,
       nl: string = ''
@@ -391,8 +371,13 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
         const c = options.c || String.fromCodePoint(n);
         let nodes = [] as (N | T)[];
         if (part === 'mjx-ext' && (Wx || options.dx)) {
+          //
+          // Some combining characters are listed as width 0,
+          //   so get "real" width from dx and take off some
+          //   for the right bearing.
+          //
           if (!Wx) {
-            Wx = 2 * options.dx - 0.06;
+            Wx = Math.max(0.06, 2 * options.dx - 0.06);
           }
           const n = Math.min(Math.ceil(W / Wx) + 1, 500);
           if (options.cmb) {
@@ -403,18 +388,14 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
           } else {
             nodes = [
               this.html('mjx-spacer', {}, [
-                this.text(
-                  Array(n)
-                    .fill(c + nl)
-                    .join('')
-                ),
+                this.text(Array(n).fill(c).join(nl)),
               ]),
             ];
           }
         } else {
           nodes = [this.text(c)];
         }
-        content.push(this.html(part, font ? { class: font } : {}, nodes));
+        dom.push(this.html(part, font ? { class: font } : {}, nodes));
       }
     }
   };

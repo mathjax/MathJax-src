@@ -491,9 +491,11 @@ export class ChtmlFontData extends FontData<
     } else {
       //
       // Set the line-height to have the extenders touch,
-      // and shift the extender stack to center it.
+      // (plus a little extra for Safari, whose line-height is
+      // not accurate), and shift the extender stack to overlap
+      // the ends.
       //
-      css['line-height'] = this.em0(h + d);
+      css['line-height'] = this.em0(h + d + .005);
       styles[`mjx-stretchy-v${c} > mjx-${part} > mjx-spacer`] = {
         'margin-top': this.em(-d),
       };
