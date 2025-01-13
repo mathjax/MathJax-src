@@ -363,8 +363,7 @@ export const NewcommandUtil = {
     if (handlers.get(HandlerType.DELIMITER).applicable(cs)) {
       //
       // This will hide the delimiter that is in a later mapping
-      // by forcing the parser to jump directly to the fallback
-      // handler.
+      // by forcing the parser to skip any additional maps.
       //
       this.addDelimiter(parser, cs, null);
     }
