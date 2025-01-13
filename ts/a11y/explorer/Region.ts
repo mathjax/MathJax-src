@@ -363,7 +363,7 @@ export class LiveRegion extends StringRegion {
       border: '2px solid #CCCCCC',
     },
     ['.' + LiveRegion.className + '_Show']: {
-      display: 'block'
+      display: 'block',
     },
   });
 }

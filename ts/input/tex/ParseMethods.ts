@@ -207,9 +207,7 @@ const ParseMethods = {
    * @param {any[]} args A list of additional arguments.
    */
   environment(parser: TexParser, env: string, func: ParseMethod, args: any[]) {
-    const mml = parser.itemFactory
-      .create('begin')
-      .setProperty('name', env);
+    const mml = parser.itemFactory.create('begin').setProperty('name', env);
     parser.Push(func(parser, mml, ...args.slice(1)) as StackItem);
   },
 };
