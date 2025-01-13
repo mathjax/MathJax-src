@@ -68,7 +68,7 @@
   "scripts": {
     "=============================================================================== code hygene": "",
     "lint": "check() { eslint ${1:-ts/}; }; check",
-    "lint:fix": "fix() { eslint --fix ${1:-ts/}; }; fix",
+    "lint:fix": "fix() { eslint --fix ${1:-ts/}; -- format unix}; fix",
     "format": "check() { prettier --check ${1:-\"ts/**/*.{ts,tsx}\"}; }; check",
     "format:fix": "fix() { prettier --write ${1:-\"ts/**/*.{ts,tsx}\"}; }; fix",
     "=============================================================================== clean": "",
@@ -149,7 +149,8 @@
   },
   "lint-staged": {
     "ts/**/*.ts": [
-      "pnpm format:fix"
+      "pnpm format:fix",
+      "pnpm lint:fix"
     ]
   },
   "dependencies": {

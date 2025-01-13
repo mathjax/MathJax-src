@@ -137,7 +137,7 @@ function vectorApplication(
   let lfence = '',
     rfence = '',
     arg = '';
-  const enlarge = fences.indexOf(left) !== -1;
+  const enlarge = fences.includes(left);
   if (left === '{') {
     arg = parser.GetArgument(name);
     lfence = enlarge ? '\\left\\{' : '';

@@ -80,7 +80,7 @@ export const KeyValueTypes: {
   oneof: (...values: string[]) =>
     new KeyValueType<string>(
       'oneof',
-      (value) => values.indexOf(value) >= 0,
+      (value) => values.includes(value),
       (value) => value
     ),
   dimen: new KeyValueType<string>(
@@ -191,7 +191,7 @@ function readValue(
         countBraces = false; // Stop counting start left braces.
         break;
       default:
-        if (!braces && end.indexOf(c) !== -1) {
+        if (!braces && end.includes(c)) {
           // End character reached.
           return [
             removeBraces(value, l3keys ? Math.min(1, start) : start),

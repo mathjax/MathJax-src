@@ -270,7 +270,8 @@ export const Loader = {
   getRoot(): string {
     if (context.document) {
       const script =
-        context.document.currentScript || context.document.getElementById('MathJax-script');
+        context.document.currentScript ||
+        context.document.getElementById('MathJax-script');
       if (script && script instanceof HTMLScriptElement) {
         return script.src.replace(/\/[^/]*$/, '');
       }

@@ -42,7 +42,7 @@ import { CommonOutputJax } from '../output/common.js';
 import { DOMAdaptor } from '../core/DOMAdaptor.js';
 import { PrioritizedList } from '../util/PrioritizedList.js';
 import { OptionList, OPTIONS } from '../util/Options.js';
-import { context} from '../util/context.js';
+import { context } from '../util/context.js';
 
 import { TeX } from '../input/tex.js';
 

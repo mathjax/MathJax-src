@@ -514,7 +514,7 @@ export class HTMLAdaptor<
     if (node.classList) {
       return node.classList.contains(name);
     }
-    return node.className.split(/ /).indexOf(name) >= 0;
+    return node.className.split(/ /).includes(name);
   }
 
   /**

@@ -144,7 +144,7 @@ function parseFCenterLine(parser: TexParser, name: string): MmlNode {
   }
   parser.i++;
   const axiom = parser.GetUpTo(name, '$');
-  if (axiom.indexOf('\\fCenter') === -1) {
+  if (!axiom.includes('\\fCenter')) {
     throw new TexError(
       'MissingProofCommand',
       'Missing %1 in %2.',
