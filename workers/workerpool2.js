@@ -38,12 +38,11 @@ export class WorkerPool {
     }
   }
 
-  //
-  //  Starts the Worker
-  //    Add the event listener for the messages from the TaskPool
-  //    Create the worker
-  //    Signal that the pool is ready
-  //
+  /**
+   * Starts the Worker
+   *   Adds the event listener for the messages from the WorkerPool
+   *   Signals that the pool is ready
+   */
   Start() {
     window.addEventListener('message', this.Listener.bind(this), false);
     this.createWorker();
@@ -51,13 +50,13 @@ export class WorkerPool {
     return this;
   }
 
-  //
-  //  The handler for messages from the parent window.
-  //    Check the message origin to make sure it is correct (since any
-  //      window can send us messages).
-  //    If it is OK, then check to see if there is a Pool command for the message
-  //    If so, run it, otherwise produce an error.
-  //
+  /**
+   * The handler for messages from the parent window.
+   *   Check the message origin to make sure it is correct (since any
+   *     window can send us messages).
+   *   If it is OK, then check to see if there is a Pool command for the message
+   *   If so, run it, otherwise produce an error.
+   */
   Listener(event) {
     this.debug('Client  >>>  Iframe:', event.data);
     let origin = event.origin || event.originalEvent.origin;
@@ -67,30 +66,36 @@ export class WorkerPool {
     if (origin !== this.domain) {
       return; //  make sure message is from TaskPool
     }
-    if (Object.hasOwn(TaskCommands, event.data.cmd)) {
-      TaskCommands[event.data.cmd](this, event.data);
+    this.Execute(event.data);
+  }
+
+  /**
+   * Execute a command on the Pool.
+   *
+   * @param data The data for the command.
+   */
+  Execute(data) {
+    if (Object.hasOwn(PoolCommands, data.cmd)) {
+      PoolCommands[data.cmd](this, data);
     } else {
-      this.Log(`WorkerPool: invalid Task command: ${event.data.cmd}`);
+      this.Log(`WorkerPool: invalid Pool command: ${data.cmd}`);
     }
   }
 
-  //
-  //  Send a Log message to the parent window
-  //
+  /**
+   * Send a Log message to the parent window
+   *
+   * @param {string} msg The message.
+   */
   Log(msg) {
     this.parent.postMessage({ cmd: 'Log', data: msg }, this.domain);
   }
 
-  //
-  //  Get the given worker, starting it, if necessary.
-  //  If the worker needs to be started,
-  //    Create the worker and save it.
-  //    Add an event listener for the worker that
-  //      adds the worker id to the message
-  //      and checks to see if the worker command exists for that message.
-  //      If so, run the command otherwise log the error.
-  //  Return the worker.
-  //
+  /**
+   *   Create the worker and save it.  Add an event listener for the worker that
+   *   executes worker commands by checking if the worker command exists for
+   *   that message.  If so, run the command otherwise log the error.
+   */
   createWorker() {
     this.worker = new Worker(this.WORKER);
     this.worker.addEventListener(
@@ -113,7 +118,7 @@ export class WorkerPool {
 //
 //  This is the list of commands that the parent page can send us.
 //
-export const TaskCommands = {
+export const PoolCommands = {
   //
   //  This starts a task in a webworker.
   //    If there are no free workers, cache the task.
@@ -152,14 +157,16 @@ export const TaskCommands = {
 //  This is the list of commands that can come from the workers
 //
 export const WorkerCommands = {
+  // Post to client
   //
-  //  This is how the worker sends commands to the associated Task.
-  //    Add the task id to the messaage and post it to the parent window
+  Client: function (pool, msg) {
+    pool.parent.postMessage(msg.data, pool.domain);
+  },
   //
-  Task: function (pool, msg) {
-    console.log(9);
-    console.log(msg);
-    pool.parent.postMessage(msg, pool.domain);
+  // Exexute a command on pool
+  //
+  Pool: function (pool, msg) {
+    pool.Execute(msg);
   },
   //
   //  This can be used to log messages to the parent
@@ -167,4 +174,10 @@ export const WorkerCommands = {
   Log: function (pool, msg) {
     pool.Log(`Worker log: ${msg.data}`);
   },
+  error: function (pool, msg) {
+    console.log(2);
+    console.log(msg.data);
+    pool.Log(`EEEEEEEEEEEEEError log: ${msg.data}`);
+  },
+  
 };

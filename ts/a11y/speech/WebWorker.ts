@@ -29,13 +29,11 @@ export type Callbacks = { [name: string]: (data: {}) => void };
 export type Message = {
   cmd: string;
   debug: boolean;
-  data: { [key: string]: any };
-  task?: number;
+  data?: { [key: string]: any };
 };
 export type Command = {
   cmd: string;
   data: Message;
-  task?: number;
   worker?: number;
 };
 
@@ -49,10 +47,9 @@ const WORKER = 'worker2.js'; // the URL for the webworkers
 const SRE = 'sre.js'; // SRE library to import
 const DEBUG = true;
 
-//
-//  The main WorkerHandler class
-//
 /**
+ * The main WorkerHandler class
+ *
  * @template N  The HTMLElement node class
  * @template T  The Text node class
  * @template D  The Document class
@@ -84,30 +81,40 @@ export class WorkerHandler<N, T, D> {
     this.url = DOMAIN + '/' + BASEDIR + '/';
   }
 
-  //
-  //  Set up the iframe
-  //
-  // TODO: make this a getter/setter
+  /**
+   * Set up the basic iframe
+   */
   private createIframe() {
     this.iframe = document.createElement('iframe');
     this.iframe.style.display = 'none';
     this.iframe.id = 'WorkerHandler-' + ++WorkerHandler.ID;
   }
 
+  /**
+   * Computes the URL passed to the worker pool.
+   *
+   * @param {string} domain The source domain.
+   * @param {string[]} parameters Additional parameters to encode.
+   */
   private computeSrc(domain: string, parameters: string[]) {
     const hash = encodeURIComponent(domain);
     parameters.unshift(hash);
     return this.url + POOL + '#' + parameters.join('&');
   }
 
+  /**
+   * Firefox is tricky if we run from File protocol.
+   *
+   * @param {string} domain The domain to rewrite.
+   */
   private rewriteFirefox(domain: string) {
     // Firefox doesn't match this
     return domain === 'file://' ? '*' : domain;
   }
 
-  //
-  //  Get the domains (for use with the postMessage() function)
-  //
+  /**
+   * Get the domains (for use with the postMessage() function)
+   */
   private computeDomain() {
     let domain =
       location.protocol +
@@ -120,39 +127,39 @@ export class WorkerHandler<N, T, D> {
     this.domain = this.rewriteFirefox(this.domain);
   }
 
-  //
-  //  This starts the task pool so that you can create tasks within the
-  //  pool.  This works by creating an iframe that loads a file
-  //  (potentially from the CDN) where the webworkers are launched.  Since
-  //  the webworkers are created from the iframe, they can use resources
-  //  from the CDN, even though the page with the WorkerPool is from a
-  //  different origin.
-  //
-  //  Since the iframe comes (or may come) from a different origin, we use
-  //  the iframe window's postMessage() command and our own onmessage handler
-  //  to communicate with the iframe.
-  //
+  /**
+   * This starts the worker pool so that you can create the SRE worker.
+   * This works by creating an iframe that loads a file from the backend where
+   * the webworkers are launched. Since the webworkers are created from the
+   * iframe, they can use resources from the backend (and only from the
+   * backend!), even though the page with the WorkerPool is from a different
+   * origin.
+   *
+   * Since the iframe comes (or may come) from a different origin, we use
+   * the iframe window's postMessage() command and our own onmessage handler
+   * to communicate with the iframe.
+   */
   public async Start() {
     if (this.ready) throw Error('WorkerHandler already started');
     this.createIframe();
     this.computeDomain();
-    //
     //  Add a listener for the messages from the iframe
-    //
     window.addEventListener('message', this.Listener.bind(this));
-    //
     //  Add the iframe to the page (starting the process of loading its content)
-    //
     document.body.appendChild(this.iframe);
-    //
     //  Start a timer to call the callback if the iframe doesn't
     //  load in a reasonable amount of time.
-    //
     this.wait = this.Wait();
     return this.wait;
   }
 
-  private async Wait() {
+  /**
+   * A timer to wait for the iframe to initialize.
+   *
+   * @returns {Promise<void>} A promise that fulfills when the worker pool is
+   *     established.
+   */
+  private async Wait(): Promise<void> {
     return new Promise<void>((res, rej) => {
       let n = 0;
       const checkReady = () => {
@@ -171,21 +178,30 @@ export class WorkerHandler<N, T, D> {
     }).catch((err) => console.log(err));
   }
 
+  /**
+   * Debug output when debug flag is set.
+   *
+   * @param {string} msg Base message
+   * @param {any[]} ...rest Remaining arguments
+   * @param {...any} rest
+   */
   private debug(msg: string, ...rest: any[]) {
     if (DEBUG) {
       console.info(msg, ...rest);
     }
   }
 
-  //
-  //  Listener for the messages from the iframe.
-  //  We check that the origin of the message is correct (since
-  //  any window could send messages to us).
-  //  The message will contain a command and data, and we look
-  //  in the list of commands to see if we have an implementation for the
-  //  given one.  If so, we run the command on the data from the message,
-  //  otherwise we throw an error.
-  //
+  /**
+   * Listener for the messages from the iframe.
+   * We check that the origin of the message is correct (since
+   * any window could send messages to us).
+   * The message will contain a command and data, and we look
+   * in the list of commands to see if we have an implementation for the
+   * given one.  If so, we run the command on the data from the message,
+   * otherwise we throw an error.
+   *
+   * @param {MessageEvent} event The message event.
+   */
   public Listener(event: MessageEvent) {
     this.debug('Iframe  >>>  Client:', event.data);
     let origin = event.origin;
@@ -247,12 +263,27 @@ export class WorkerHandler<N, T, D> {
     });
   }
 
+  /**
+   * Terminates the rule's worker without waiting for results.
+   *
+   * @param rule - The rule to stop.
+   */
+  public Terminate() {
+    this.Post({
+      cmd: 'Worker',
+      data: { cmd: 'terminate', debug: DEBUG, data: {} },
+    });
+  }
+
   //
   //  Stop the pool from running by removing and freeing the iframe.
   //  Clear the values so that the pool can be restarted, if desired.
   //
   public Stop() {
-    if (!this.iframe) throw Error('WorkerHandler has not been started');
+    if (!this.iframe) {
+      throw Error('WorkerHandler has not been started');
+    }
+    this.Terminate();
     document.body.removeChild(this.iframe);
     this.iframe = this.pool = null;
     this.ready = false;
@@ -284,16 +315,15 @@ export class WorkerHandler<N, T, D> {
     //  Then we ask the task to dispatch the callback for the given action.
     //
     Attach: function (pool: WorkerHandler<N, T, D>, msg: Message) {
-      console.log(msg);
       const container = document.querySelector(
-        `[data-worker="${msg?.data?.id}"]`
+        `[data-worker="${msg?.data.id}"]`
       ) as N;
       if (!container) return; // The element gone, must have been retypeset.
       // Container needs to get the aria label.
       let rootId: string = null;
       const setAttribute = function (node: N) {
         const id = pool.adaptor.getAttribute(node, 'data-semantic-id');
-        const speech = msg.data.speech[id] || {};
+        const speech = msg.data?.speech[id] || {};
         for (let [key, value] of Object.entries(speech)) {
           key = key.replace(/-ssml$/, '');
           if (value) {

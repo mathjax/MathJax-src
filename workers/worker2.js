@@ -23,19 +23,16 @@ self.addEventListener('message',function (event) {
   if (event.data?.debug) {
     console.log('Iframe  >>>  Worker:', event.data);
   }
-  const {cmd, data, post} = event.data;
+  const {cmd, data} = event.data;
   if (Commands.hasOwnProperty(cmd)) {
     Post('Log',`running ${cmd}`);
     try {
-      console.log(cmd);
-      console.log(data);
-      console.log(post);
-      (Commands[cmd])(data, post);
+      (Commands[cmd])(data);
     } catch (err) {
-      Task('error', copyError(err), post);
+      Pool('Error', copyError(err));
     }
   } else {
-    Task('error', {message: `Invalid worker command: ${cmd}`}, post);
+    Pool('Error', {message: `Invalid worker command: ${cmd}`});
   }
 }, false);
 
@@ -52,25 +49,24 @@ const Commands = {
   //     Import any needed libraries
   //     Signal the Task that we are ready to go.
   //
-  start: function(data, post) {
-    global = {};
-    Task('ready', null, post);
+  start: function(data) {
+    Pool('ready', null);
   },
   //
   //  This stops the task by signalling the Task that we are done
   //  (this also causes the Pool to free up the worker to be reused).
   //
-  stop: function (data, post) {Task('done', data, post);},
+  stop: function (data) {Pool('done', data);},
   //
   //  This simply returns the data it was sent
   //  (for debugging, using the echo callback of the Task).
   //
-  echo: function (data, post) {Task('echo', data, post);},
+  echo: function (data) {Pool('echo', data);},
   //
   //  This loads one or more libraries
   //  (it signals completion by the imported callback).
   //
-  import: function (data, post) {
+  import: function (data) {
     if (data?.imports) {
       Import(data.imports);
     }
@@ -81,15 +77,15 @@ const Commands = {
    * @param data The data object
    * @param post The call back specification
    */
-  speech: function(data, post) {
+  speech: function(data) {
     if (data?.mml) {
       SRE.engineReady().then(() => {
-        Task('attach', {speech: SRE.toSpeechStructure(data.mml), id: data.id}, post);
+        Pool('Client', {cmd: 'Attach', data:{ speech: SRE.toSpeechStructure(data.mml), id: data.id}});
       });
     }
   },
 
-  setup: function(data, post) {
+  setup: function(data) {
     if (data) {
       SRE.setupEngine(data);
     }
@@ -97,27 +93,25 @@ const Commands = {
 
 };
 
-const global = {};   // an object where eval commands can store persistent data
-
 //
 //  Send a message to the Pool (to be passed on to the parent window),
 //  trapping errors so that if the message can't be JSON stringified,
 //  an error is produced.
 //
-function Post(cmd, data, action, post) {
-  const msg = {cmd: cmd, data: data, action: action, post: post};
+function Post(cmd, data, action) {
+  const msg = {cmd: cmd, data: data, action: action};
   try {
     self.postMessage(msg);
   } catch (err) {
-    Task('error', copyError(err), post);
+    Pool('error', copyError(err));
   }
 }
 
 //
 //  Send an action to the parent Task object
 //
-function Task(action, data, post) {
-  Post('Task', data, action, post);
+function Pool(action, data) {
+  Post(action, data);
 }
 
 //
@@ -147,3 +141,6 @@ function Import(data) {
   }
 }
 
+// TODO:
+// Do we really need error?
+// go over all the commands to see if they are necessary
