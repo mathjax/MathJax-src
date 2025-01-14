@@ -299,7 +299,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
      * @param {string[]} sv        The extender parts variants
      * @param {N[]} dom            The assembly DOM to build
      * @param {number} wh          The delimiter's full width/height
-     * @param {number} ext         The extender character's bearing whitspace
+     * @param {number} ext         The extender character's bearing whitespace
      * @param {string} nl          The string to use between extender characters
      */
     protected createAssembly(
@@ -348,7 +348,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
      * @param {number} n       The unicode character to use
      * @param {string} v       The variant for the character
      * @param {N[]} dom        The DOM assembly
-     * @param {number} W       The extendion width
+     * @param {number} W       The extension width
      * @param {number} Wx      The width of the extender character
      * @param {string} nl      Character to use between extenders
      */

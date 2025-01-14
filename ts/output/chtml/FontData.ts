@@ -579,7 +579,7 @@ export class ChtmlFontData extends FontData<
       padding: this.padding(HDW as ChtmlCharData, w - HDW[2]),
     };
     if (part === 'ext') {
-      if (w === 0 && options.dx) {
+      if (!w && options.dx) {
         w = 2 * options.dx - 0.06;
       }
       styles[`mjx-stretchy-h${c} > mjx-${part} > mjx-spacer`] = {
