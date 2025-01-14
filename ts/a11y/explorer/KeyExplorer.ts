@@ -403,8 +403,18 @@ export class SpeechExplorer
    * @returns {HTMLElement} The refocused targeted node.
    */
   public nextRules(node: HTMLElement): HTMLElement {
-    this.generators.nextRules(node);
-    this.Speech();
+    console.log(this.item);
+    console.log(this.document);
+    console.log(this.item.typesetRoot);
+    console.log(this.item.toMathML(this.item.root, this.item));
+    this.document.options.sre.domain = 'mathspeak';
+    this.document.webworker.Setup(this.document.options);
+    this.document.webworker.Speech(
+      this.item.toMathML(this.item.root, this.item),
+      this.document.adaptor.getAttribute(this.item.typesetRoot, 'data-worker')
+    );
+    // this.generators.nextRules(node);
+    // this.Speech();
     this.refocus(node);
     return node;
   }
