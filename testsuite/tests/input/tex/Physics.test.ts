@@ -8604,7 +8604,7 @@ describe('Physics7_11', () => {
       tex2mml('\\begin{smallmatrix} a & b \\\\ c & d \\end{smallmatrix}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{smallmatrix} a &amp; b \\\\ c &amp; d \\end{smallmatrix}" display="block">
   <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="\\begin{smallmatrix} a &amp; b \\\\ c &amp; d \\end{smallmatrix}">
-    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
       <mtr>
         <mtd>
           <mi data-latex="a">a</mi>
@@ -8630,7 +8630,7 @@ describe('Physics7_11', () => {
       tex2mml('\\smqty{\\imat{3}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smqty{\\imat{3}}" display="block">
   <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="\\smqty{\\imat{3}}">
-    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
       <mtr>
         <mtd>
           <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9232,7 +9232,7 @@ describe('Physics7_2', () => {
       tex2mml('\\smallmatrixquantity{Q}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smallmatrixquantity{Q}" display="block">
   <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="\\smallmatrixquantity{Q}">
-    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
       <mtr>
         <mtd>
           <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9248,7 +9248,7 @@ describe('Physics7_2', () => {
       tex2mml('\\smallmatrixquantity*{a & b \\\\ c & d}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smallmatrixquantity*{a &amp; b \\\\ c &amp; d}" display="block">
   <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="\\smallmatrixquantity*{a &amp; b \\\\ c &amp; d}">
-    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
       <mtr>
         <mtd>
           <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9277,7 +9277,7 @@ describe('Physics7_2', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\lgroup\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right\\rgroup" data-latex="\\smallmatrixquantity*(a &amp; b \\\\ c &amp; d)">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\lgroup" data-latex="\\left\\lgroup">&#x27EE;</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9308,7 +9308,7 @@ describe('Physics7_2', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right)" data-latex="\\smallmatrixquantity(a &amp; b \\\\ c &amp; d)">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9339,7 +9339,7 @@ describe('Physics7_2', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right|" data-latex="\\smallmatrixquantity|a &amp; b \\\\ c &amp; d|">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9368,7 +9368,7 @@ describe('Physics7_2', () => {
       tex2mml('\\smqty{a & b \\\\ c & d}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\smqty{a &amp; b \\\\ c &amp; d}" display="block">
   <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="\\smqty{a &amp; b \\\\ c &amp; d}">
-    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+    <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
       <mtr>
         <mtd>
           <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9397,7 +9397,7 @@ describe('Physics7_2', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right)" data-latex="\\smqty(a &amp; b \\\\ c &amp; d)">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9428,7 +9428,7 @@ describe('Physics7_2', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\lgroup\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right\\rgroup" data-latex="\\smqty*(a &amp; b \\\\ c &amp; d)">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\lgroup" data-latex="\\left\\lgroup">&#x27EE;</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9459,7 +9459,7 @@ describe('Physics7_2', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left[\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right]" data-latex="\\smqty[a &amp; b \\\\ c &amp; d]">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left[" data-latex="\\left[">[</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9490,7 +9490,7 @@ describe('Physics7_2', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right|" data-latex="\\smqty|a &amp; b \\\\ c &amp; d|">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9524,7 +9524,7 @@ describe('Physics7_3', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\begin{smallmatrix}{} Q\\end{smallmatrix}\\right)" data-latex="\\left(\\begin{smallmatrix}{} Q\\end{smallmatrix}\\right)">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9538,7 +9538,7 @@ describe('Physics7_3', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\begin{smallmatrix}{} R\\end{smallmatrix}\\right)" data-latex="\\left(\\begin{smallmatrix}{} R\\end{smallmatrix}\\right)">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9558,7 +9558,7 @@ describe('Physics7_3', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\lgroup\\begin{smallmatrix}{} Q\\end{smallmatrix}\\right\\rgroup" data-latex="\\left\\lgroup\\begin{smallmatrix}{} Q\\end{smallmatrix}\\right\\rgroup">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\lgroup" data-latex="\\left\\lgroup">&#x27EE;</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9572,7 +9572,7 @@ describe('Physics7_3', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\lgroup\\begin{smallmatrix}{} R\\end{smallmatrix}\\right\\rgroup" data-latex="\\left\\lgroup\\begin{smallmatrix}{} R\\end{smallmatrix}\\right\\rgroup">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\lgroup" data-latex="\\left\\lgroup">&#x27EE;</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9592,7 +9592,7 @@ describe('Physics7_3', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left[\\begin{smallmatrix}{} Q\\end{smallmatrix}\\right]" data-latex="\\left[\\begin{smallmatrix}{} Q\\end{smallmatrix}\\right]">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left[" data-latex="\\left[">[</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9606,7 +9606,7 @@ describe('Physics7_3', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left[\\begin{smallmatrix}{} R\\end{smallmatrix}\\right]" data-latex="\\left[\\begin{smallmatrix}{} R\\end{smallmatrix}\\right]">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left[" data-latex="\\left[">[</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9626,7 +9626,7 @@ describe('Physics7_3', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{smallmatrix}{} Q\\end{smallmatrix}\\right|" data-latex="\\left|\\begin{smallmatrix}{} Q\\end{smallmatrix}\\right|">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9640,7 +9640,7 @@ describe('Physics7_3', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{smallmatrix}{} R\\end{smallmatrix}\\right|" data-latex="\\left|\\begin{smallmatrix}{} R\\end{smallmatrix}\\right|">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9660,7 +9660,7 @@ describe('Physics7_3', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left(\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right)" data-latex="\\smqty(a &amp; b \\\\ c &amp; d)">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9691,7 +9691,7 @@ describe('Physics7_3', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\lgroup\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right\\rgroup" data-latex="\\smqty*(a &amp; b \\\\ c &amp; d)">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\lgroup" data-latex="\\left\\lgroup">&#x27EE;</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9722,7 +9722,7 @@ describe('Physics7_3', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left[\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right]" data-latex="\\smqty[a &amp; b \\\\ c &amp; d]">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left[" data-latex="\\left[">[</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9753,7 +9753,7 @@ describe('Physics7_3', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right|" data-latex="\\smqty|a &amp; b \\\\ c &amp; d|">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9843,7 +9843,7 @@ describe('Physics7_4', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{smallmatrix}{} a &amp; b \\\\ c &amp; d\\end{smallmatrix}\\right|" data-latex="\\smqty|a &amp; b \\\\ c &amp; d| ">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -9910,7 +9910,7 @@ describe('Physics7_4', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left|\\begin{smallmatrix}{} a\\end{smallmatrix}\\right|" data-latex="\\left|\\begin{smallmatrix}{} a\\end{smallmatrix}\\right|">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left|" data-latex="\\left|">|</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -10183,7 +10183,7 @@ describe('Physics7_6', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left &amp; 1\\\\ 1 &amp; 1 &amp; 1\\end{smallmatrix}\\right)" data-latex="\\smqty(\\xmat{1}{2}{3})">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -10220,7 +10220,7 @@ describe('Physics7_6', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left &amp; a\\\\ a &amp; a &amp; a\\\\ a &amp; a &amp; a\\end{smallmatrix}\\right)" data-latex="\\smqty(\\xmat{a}{3}{3}) ">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -10268,7 +10268,7 @@ describe('Physics7_6', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\\\ a\\end{smallmatrix}\\right)" data-latex="\\smqty(\\xmat{a}{3}{1}) ">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -10298,7 +10298,7 @@ describe('Physics7_6', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left &amp; a\\end{smallmatrix}\\right)" data-latex="\\smqty(\\xmat{a}{1}{3})">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -10324,7 +10324,7 @@ describe('Physics7_6', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left}{1}} &amp; 1_{{1}{2}} &amp; 1_{{1}{3}}\\\\ 1_{{2}{1}} &amp; 1_{{2}{2}} &amp; 1_{{2}{3}}\\end{smallmatrix}\\right)" data-latex="\\smqty(\\xmat*{1}{2}{3})">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -10421,7 +10421,7 @@ describe('Physics7_6', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left}{1}} &amp; a_{{1}{2}} &amp; a_{{1}{3}}\\\\ a_{{2}{1}} &amp; a_{{2}{2}} &amp; a_{{2}{3}}\\\\ a_{{3}{1}} &amp; a_{{3}{2}} &amp; a_{{3}{3}}\\end{smallmatrix}\\right)" data-latex="\\smqty(\\xmat*{a}{3}{3})">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -10559,7 +10559,7 @@ describe('Physics7_6', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\\\ a_{2}\\\\ a_{3}\\end{smallmatrix}\\right)" data-latex="\\smqty(\\xmat*{a}{3}{1})">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -10604,7 +10604,7 @@ describe('Physics7_6', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left &amp; a_{2} &amp; a_{3}\\end{smallmatrix}\\right)" data-latex="\\smqty(\\xmat*{a}{1}{3})">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -10645,7 +10645,7 @@ describe('Physics7_6', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left{smallmatrix}\\right)" data-latex="\\smqty(\\xmat*{a}{1}{1})">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -10665,7 +10665,7 @@ describe('Physics7_6', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left{smallmatrix}\\right)" data-latex="\\smqty(\\xmat*{a}{-1}{-1})">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -10685,7 +10685,7 @@ describe('Physics7_6', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left &amp; 0\\end{smallmatrix}\\right)" data-latex="\\smqty(\\zmat{1}{3})">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -10711,7 +10711,7 @@ describe('Physics7_6', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left &amp; 0\\\\ 0 &amp; 0 &amp; 0\\end{smallmatrix}\\right)" data-latex="\\smqty(\\zmat{2}{3})">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -10748,7 +10748,7 @@ describe('Physics7_6', () => {
   <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\\\ 0\\end{smallmatrix}\\right)" data-latex="\\smqty(\\zmat{3}{1})">
     <mo data-mjx-texclass="OPEN" data-latex-item="\\left(" data-latex="\\left(">(</mo>
     <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="{smallmatrix}">
-      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em" displaystyle="false">
+      <mtable data-mjx-smallmatrix="true" columnspacing="0.333em" rowspacing=".2em">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>

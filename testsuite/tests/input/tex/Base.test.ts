@@ -2302,7 +2302,7 @@ describe('Matrix', () => {
     toXmlMatch(
       tex2mml('\\eqalignno{a&b&c}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\eqalignno{a&amp;b&amp;c}" display="block">
-  <mtable rowspacing=".5em" columnspacing="0.278em" columnalign="right left" data-latex="\\eqalignno{a&amp;b&amp;c}">
+  <mtable rowspacing=".5em" columnspacing="0.278em" displaystyle="true" columnalign="right left" data-latex="\\eqalignno{a&amp;b&amp;c}">
     <mlabeledtr data-latex-item="{" data-latex="{">
       <mtd>
         <mi data-latex="c">c</mi>
@@ -2321,7 +2321,7 @@ describe('Matrix', () => {
     toXmlMatch(
       tex2mml('\\leqalignno{a&b&c}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\leqalignno{a&amp;b&amp;c}" display="block">
-      <mtable rowspacing=".5em" columnspacing="0.278em" side="left" columnalign="right left" data-latex="\\leqalignno{a&amp;b&amp;c}">
+      <mtable rowspacing=".5em" columnspacing="0.278em" side="left" displaystyle="true" columnalign="right left" data-latex="\\leqalignno{a&amp;b&amp;c}">
         <mlabeledtr data-latex-item="{" data-latex="{">
           <mtd>
             <mi data-latex="c">c</mi>
@@ -2340,7 +2340,7 @@ describe('Matrix', () => {
     toXmlMatch(
       tex2mml('\\eqalign{a&b&c}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\eqalign{a&amp;b&amp;c}" display="block">
-      <mtable rowspacing=".5em" columnspacing="0.278em" columnalign="right left" data-latex="\\eqalign{a&amp;b&amp;c}">
+      <mtable rowspacing=".5em" columnspacing="0.278em" displaystyle="true" columnalign="right left" data-latex="\\eqalign{a&amp;b&amp;c}">
         <mtr data-latex-item="{" data-latex="{">
           <mtd>
             <mi data-latex="a">a</mi>
@@ -2359,7 +2359,7 @@ describe('Matrix', () => {
     toXmlMatch(
       tex2mml('\\displaylines{a\\\\ b}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\displaylines{a\\\\ b}" display="block">
-      <mtable rowspacing=".5em" columnspacing="1em" data-latex="\\displaylines{a\\\\ b}">
+      <mtable rowspacing=".5em" columnspacing="1em" displaystyle="true" data-latex="\\displaylines{a\\\\ b}">
         <mtr data-latex-item="{" data-latex="{">
           <mtd>
             <mi data-latex="a">a</mi>
@@ -2776,7 +2776,7 @@ describe('Array', () => {
     toXmlMatch(
       tex2mml('\\eqalignno{a &  & {\\hbox{(3)}}}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\eqalignno{a &amp;  &amp; {\\hbox{(3)}}}" display="block">
-  <mtable rowspacing=".5em" columnspacing="0.278em" columnalign="right left" data-latex="\\eqalignno{a &amp;  &amp; {\\hbox{(3)}}}">
+  <mtable rowspacing=".5em" columnspacing="0.278em" displaystyle="true" columnalign="right left" data-latex="\\eqalignno{a &amp;  &amp; {\\hbox{(3)}}}">
     <mlabeledtr data-latex-item="{" data-latex="{">
       <mtd>
         <mrow data-mjx-texclass="ORD" data-latex="{\\hbox{(3)}}">
@@ -4208,7 +4208,7 @@ describe('Environments', () => {
     toXmlMatch(
       tex2mml('\\begin{eqnarray}a&=&b\\end{eqnarray}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray}a&amp;=&amp;b\\end{eqnarray}" display="block">
-      <mtable columnalign="right center left" columnspacing="0em 0.278em" rowspacing="3pt" data-break-align="bottom middle top" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}a&amp;=&amp;b\\end{eqnarray}">
+      <mtable displaystyle="true" columnalign="right center left" columnspacing="0em 0.278em" rowspacing="3pt" data-break-align="bottom middle top" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}a&amp;=&amp;b\\end{eqnarray}">
         <mtr>
           <mtd>
             <mi data-latex="a">a</mi>
@@ -4333,7 +4333,7 @@ describe('Environments', () => {
     toXmlMatch(
       tex2mml('\\begin{darray}{c}a\\end{darray}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{darray}{c}a\\end{darray}" display="block">
-      <mtable columnspacing="1em" rowspacing="4pt" data-latex-item="{darray}" data-latex="\\begin{darray}{c}a\\end{darray}">
+      <mtable columnspacing="1em" rowspacing="4pt" displaystyle="true" data-latex-item="{darray}" data-latex="\\begin{darray}{c}a\\end{darray}">
         <mtr data-latex-item="{c}" data-latex="{c}">
           <mtd>
             <mi data-latex="a">a</mi>
@@ -4346,7 +4346,7 @@ describe('Environments', () => {
     toXmlMatch(
       tex2mml('\\begin{darray}{c}a\\\\b\\end{darray}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{darray}{c}a\\\\b\\end{darray}" display="block">
-      <mtable columnspacing="1em" rowspacing="4pt" data-latex-item="{darray}" data-latex="\\begin{darray}{c}a\\\\b\\end{darray}">
+      <mtable columnspacing="1em" rowspacing="4pt" displaystyle="true" data-latex-item="{darray}" data-latex="\\begin{darray}{c}a\\\\b\\end{darray}">
         <mtr data-latex-item="{c}" data-latex="{c}">
           <mtd>
             <mi data-latex="a">a</mi>
@@ -4364,7 +4364,7 @@ describe('Environments', () => {
     toXmlMatch(
       tex2mml('\\begin{darray}{rcl}a&=&b\\end{darray}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{darray}{rcl}a&amp;=&amp;b\\end{darray}" display="block">
-      <mtable columnspacing="1em" rowspacing="4pt" columnalign="right center left" data-latex-item="{darray}" data-latex="\\begin{darray}{rcl}a&amp;=&amp;b\\end{darray}">
+      <mtable columnspacing="1em" rowspacing="4pt" columnalign="right center left" displaystyle="true" data-latex-item="{darray}" data-latex="\\begin{darray}{rcl}a&amp;=&amp;b\\end{darray}">
         <mtr data-latex-item="{rcl}" data-latex="{rcl}">
           <mtd>
             <mi data-latex="a">a</mi>
@@ -4383,7 +4383,7 @@ describe('Environments', () => {
     toXmlMatch(
       tex2mml('\\begin{darray}{rcl}a&=&b\\\\c&=&d\\end{darray}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{darray}{rcl}a&amp;=&amp;b\\\\c&amp;=&amp;d\\end{darray}" display="block">
-      <mtable columnspacing="1em" rowspacing="4pt" columnalign="right center left" data-latex-item="{darray}" data-latex="\\begin{darray}{rcl}a&amp;=&amp;b\\\\c&amp;=&amp;d\\end{darray}">
+      <mtable columnspacing="1em" rowspacing="4pt" columnalign="right center left" displaystyle="true" data-latex-item="{darray}" data-latex="\\begin{darray}{rcl}a&amp;=&amp;b\\\\c&amp;=&amp;d\\end{darray}">
         <mtr data-latex-item="{rcl}" data-latex="{rcl}">
           <mtd>
             <mi data-latex="a">a</mi>
@@ -4464,7 +4464,7 @@ describe('BreakAlign', () => {
     toXmlMatch(
       tex2mml('\\begin{eqnarray}\\breakAlign{c}{t}a&=&b\\end{eqnarray}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray}\\breakAlign{c}{t}a&amp;=&amp;b\\end{eqnarray}" display="block">
-      <mtable columnalign="right center left" columnspacing="0em 0.278em" rowspacing="3pt" data-break-align="bottom middle top" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}\\breakAlign{c}{t}a&amp;=&amp;b\\end{eqnarray}">
+      <mtable displaystyle="true" columnalign="right center left" columnspacing="0em 0.278em" rowspacing="3pt" data-break-align="bottom middle top" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}\\breakAlign{c}{t}a&amp;=&amp;b\\end{eqnarray}">
         <mtr>
           <mtd data-vertical-align="top">
             <mi data-latex="a">a</mi>
@@ -4486,7 +4486,7 @@ describe('BreakAlign', () => {
     toXmlMatch(
       tex2mml('\\begin{eqnarray}a&\\breakAlign{c}{t}=&b\\end{eqnarray}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray}a&amp;\\breakAlign{c}{t}=&amp;b\\end{eqnarray}" display="block">
-      <mtable columnalign="right center left" columnspacing="0em 0.278em" rowspacing="3pt" data-break-align="bottom middle top" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}a&amp;\\breakAlign{c}{t}=&amp;b\\end{eqnarray}">
+      <mtable displaystyle="true" columnalign="right center left" columnspacing="0em 0.278em" rowspacing="3pt" data-break-align="bottom middle top" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}a&amp;\\breakAlign{c}{t}=&amp;b\\end{eqnarray}">
         <mtr>
           <mtd>
             <mi data-latex="a">a</mi>
@@ -4508,7 +4508,7 @@ describe('BreakAlign', () => {
     toXmlMatch(
       tex2mml('\\begin{eqnarray}\\breakAlign{r}{t}a&=&b\\end{eqnarray}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray}\\breakAlign{r}{t}a&amp;=&amp;b\\end{eqnarray}" display="block">
-      <mtable columnalign="right center left" columnspacing="0em 0.278em" rowspacing="3pt" data-break-align="bottom middle top" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}\\breakAlign{r}{t}a&amp;=&amp;b\\end{eqnarray}">
+      <mtable displaystyle="true" columnalign="right center left" columnspacing="0em 0.278em" rowspacing="3pt" data-break-align="bottom middle top" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}\\breakAlign{r}{t}a&amp;=&amp;b\\end{eqnarray}">
         <mtr data-break-align="top">
           <mtd>
             <mi data-latex="a">a</mi>
@@ -4530,7 +4530,7 @@ describe('BreakAlign', () => {
     toXmlMatch(
       tex2mml('\\begin{eqnarray}\\breakAlign{r}{t}a&=&b\\\\\\breakAlign{r}{t}c&=&d\\end{eqnarray}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray}\\breakAlign{r}{t}a&amp;=&amp;b\\\\\\breakAlign{r}{t}c&amp;=&amp;d\\end{eqnarray}" display="block">
-      <mtable columnalign="right center left" columnspacing="0em 0.278em" rowspacing="3pt" data-break-align="bottom middle top" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}\\breakAlign{r}{t}a&amp;=&amp;b\\\\\\breakAlign{r}{t}c&amp;=&amp;d\\end{eqnarray}">
+      <mtable displaystyle="true" columnalign="right center left" columnspacing="0em 0.278em" rowspacing="3pt" data-break-align="bottom middle top" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}\\breakAlign{r}{t}a&amp;=&amp;b\\\\\\breakAlign{r}{t}c&amp;=&amp;d\\end{eqnarray}">
         <mtr data-break-align="top">
           <mtd>
             <mi data-latex="a">a</mi>
@@ -4566,7 +4566,7 @@ describe('BreakAlign', () => {
     toXmlMatch(
       tex2mml('\\begin{eqnarray}\\breakAlign{r}{tbmc}a&=&b\\end{eqnarray}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray}\\breakAlign{r}{tbmc}a&amp;=&amp;b\\end{eqnarray}" display="block">
-      <mtable columnalign="right center left" columnspacing="0em 0.278em" rowspacing="3pt" data-break-align="bottom middle top" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}\\breakAlign{r}{tbmc}a&amp;=&amp;b\\end{eqnarray}">
+      <mtable displaystyle="true" columnalign="right center left" columnspacing="0em 0.278em" rowspacing="3pt" data-break-align="bottom middle top" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}\\breakAlign{r}{tbmc}a&amp;=&amp;b\\end{eqnarray}">
         <mtr data-break-align="top bottom middle center">
           <mtd>
             <mi data-latex="a">a</mi>
@@ -4588,7 +4588,7 @@ describe('BreakAlign', () => {
     toXmlMatch(
       tex2mml('\\begin{eqnarray}\\breakAlign{t}{t}a&=&b\\end{eqnarray}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray}\\breakAlign{t}{t}a&amp;=&amp;b\\end{eqnarray}" display="block">
-      <mtable columnalign="right center left" columnspacing="0em 0.278em" rowspacing="3pt" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}\\breakAlign{t}{t}a&amp;=&amp;b\\end{eqnarray}">
+      <mtable displaystyle="true" columnalign="right center left" columnspacing="0em 0.278em" rowspacing="3pt" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}\\breakAlign{t}{t}a&amp;=&amp;b\\end{eqnarray}">
         <mtr>
           <mtd>
             <mi data-latex="a">a</mi>
@@ -9058,7 +9058,7 @@ describe('Referencing', () => {
     toXmlMatch(
       tex2mml('a\\label{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\label{A}" display="block">
-      <mtable data-latex="a\\label{A}">
+      <mtable displaystyle="true" data-latex="a\\label{A}">
         <mlabeledtr>
           <mtd id="mjx-eqn:A">
             <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -9074,7 +9074,7 @@ describe('Referencing', () => {
     toXmlMatch(
       tex2mml('a\\label{}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\label{}" display="block">
-      <mtable data-latex="a\\label{}">
+      <mtable displaystyle="true" data-latex="a\\label{}">
         <mlabeledtr>
           <mtd id="mjx-eqn:1">
             <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -9090,7 +9090,7 @@ describe('Referencing', () => {
     toXmlMatch(
       tex2mml('\\begin{eqnarray}a\\label{A}\\\\c\\label{B}\\end{eqnarray}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray}a\\label{A}\\\\c\\label{B}\\end{eqnarray}" display="block">
-      <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}a\\label{A}\\\\c\\label{B}\\end{eqnarray}">
+      <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}a\\label{A}\\\\c\\label{B}\\end{eqnarray}">
         <mlabeledtr>
           <mtd id="mjx-eqn:A">
             <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -9132,7 +9132,7 @@ describe('Referencing', () => {
     toXmlMatch(
       tex2mml('a\\label{A}\\ref{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\label{A}\\ref{A}" display="block">
-      <mtable data-latex="a\\label{A}\\ref{A}">
+      <mtable displaystyle="true" data-latex="a\\label{A}\\ref{A}">
         <mlabeledtr>
           <mtd id="mjx-eqn:A">
             <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -9151,7 +9151,7 @@ describe('Referencing', () => {
     toXmlMatch(
       tex2mml('a\\label{A}\\ref{B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\label{A}\\ref{B}" display="block">
-      <mtable data-latex="a\\label{A}\\ref{B}">
+      <mtable displaystyle="true" data-latex="a\\label{A}\\ref{B}">
         <mlabeledtr>
           <mtd id="mjx-eqn:A">
             <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -9170,7 +9170,7 @@ describe('Referencing', () => {
     toXmlMatch(
       tex2mml('\\begin{eqnarray}a\\\\c\\nonumber\\end{eqnarray}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray}a\\\\c\\nonumber\\end{eqnarray}" display="block">
-      <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}a\\\\c\\nonumber\\end{eqnarray}">
+      <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}a\\\\c\\nonumber\\end{eqnarray}">
         <mlabeledtr>
           <mtd id="mjx-eqn:1">
             <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -10035,7 +10035,7 @@ describe('Complete Array', () => {
     toXmlMatch(
       tex2mml('\\begin{eqnarray}{rcl}a & b \\\\d&c&c&c \\\\\\end{eqnarray}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{eqnarray}{rcl}a &amp; b \\\\d&amp;c&amp;c&amp;c \\\\\\end{eqnarray}" display="block">
-      <mtable columnalign="right center left right" columnspacing="0em 0.278em 0em" rowspacing="3pt" data-break-align="bottom middle top bottom" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}{rcl}a &amp; b \\\\d&amp;c&amp;c&amp;c \\\\\\end{eqnarray}">
+      <mtable displaystyle="true" columnalign="right center left right" columnspacing="0em 0.278em 0em" rowspacing="3pt" data-break-align="bottom middle top bottom" data-latex-item="{eqnarray}" data-latex="\\begin{eqnarray}{rcl}a &amp; b \\\\d&amp;c&amp;c&amp;c \\\\\\end{eqnarray}">
         <mtr>
           <mtd>
             <mrow data-mjx-texclass="ORD" data-latex="{r c l}">
@@ -10225,7 +10225,7 @@ describe('User Defined Environments', () => {
       tex2mml('\\begin{smallmatrix} a & b \\\\ c & d \\end{smallmatrix}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{smallmatrix} a &amp; b \\\\ c &amp; d \\end{smallmatrix}" display="block">
       <mstyle scriptlevel="1" data-latex-item="{smallmatrix}" data-latex="\\begin{smallmatrix} a &amp; b \\\\ c &amp; d \\end{smallmatrix}">
-        <mtable data-mjx-smallmatrix="true" columnspacing="1" rowspacing=".2em" displaystyle="false">
+        <mtable data-mjx-smallmatrix="true" columnspacing="1" rowspacing=".2em">
           <mtr>
             <mtd>
               <mi data-latex="a">a</mi>
@@ -10279,7 +10279,7 @@ describe('User Defined Environments', () => {
       tex2mml('\\begin{crampedsubarray}{cc} a & b \\\\ c & d \\end{crampedsubarray}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{crampedsubarray}{cc} a &amp; b \\\\ c &amp; d \\end{crampedsubarray}" display="block">
       <mstyle scriptlevel="1" data-latex-item="{crampedsubarray}" data-latex="\\begin{crampedsubarray}{cc} a &amp; b \\\\ c &amp; d \\end{crampedsubarray}">
-        <mtable data-mjx-smallmatrix="true" columnspacing="0em" rowspacing="0.1em" columnalign="center center" data-cramped="true" displaystyle="false">
+        <mtable data-mjx-smallmatrix="true" columnspacing="0em" rowspacing="0.1em" columnalign="center center" data-cramped="true">
           <mtr data-latex-item="{cc}" data-latex="{cc}">
             <mtd>
               <mi data-latex="a">a</mi>
@@ -10304,7 +10304,7 @@ describe('User Defined Environments', () => {
     toXmlMatch(
       tex2mml('\\begin{gather}a\\end{gather}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{gather}a\\end{gather}" display="block">
-      <mtable columnspacing="1em" rowspacing="3pt" data-break-align="middle" data-latex-item="{gather}" data-latex="\\begin{gather}a\\end{gather}">
+      <mtable displaystyle="true" columnspacing="1em" rowspacing="3pt" data-break-align="middle" data-latex-item="{gather}" data-latex="\\begin{gather}a\\end{gather}">
         <mtr>
           <mtd>
             <mi data-latex="a">a</mi>
