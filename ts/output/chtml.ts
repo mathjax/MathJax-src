@@ -100,12 +100,20 @@ export class CHTML<N, T, D> extends CommonOutputJax<
     //
     // Clip the token elements' character content,
     //   to remove excessive height and depth of ZERO font
+    // Do the same for stretchy characters
     //
-    'mjx-mo > mjx-c, mjx-mi > mjx-c, mjx-mn > mjx-c, mjx-ms > mjx-c, mjx-mtext > mjx-c':
-      {
-        'clip-path':
-          'padding-box xywh(-1em -2px calc(100% + 2em) calc(100% + 4px))',
-      },
+    [[
+      'mjx-mo > mjx-c',
+      'mjx-mi > mjx-c',
+      'mjx-mn > mjx-c',
+      'mjx-ms > mjx-c',
+      'mjx-mtext > mjx-c',
+      'mjx-stretchy-h',
+      'mjx-stretchy-v',
+    ].join(', ')]: {
+      'clip-path':
+        'padding-box xywh(-1em -2px calc(100% + 2em) calc(100% + 4px))',
+    },
 
     'mjx-container[jax="CHTML"] :focus': { outline: 'solid 2px' },
     'mjx-container [space="1"]': { 'margin-left': '.111em' },

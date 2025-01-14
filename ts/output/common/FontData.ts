@@ -141,6 +141,7 @@ export type DelimiterData = {
   HDW?: number[];       // [h, d, w] (for vertical, h and d are the normal size, w is the multi-character width,
                         //            for horizontal, h and d are the multi-character ones, w is for the normal size).
   hd?: number[];        // The extender's original [h, d] values
+  ext?: number;         // The extenders left- plus right-bearing
   min?: number;         // The minimum size a multi-character version can be
   c?: number;           // The character number (for aliased delimiters)
   fullExt?: [number, number]  // When present, extenders must be full sized, and the first number is
