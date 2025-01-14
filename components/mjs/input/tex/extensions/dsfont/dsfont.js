@@ -1,4 +1,4 @@
 import './lib/dsfont.js';
 import {fontExtension} from '../../extension.js';
 
-fontExtension('[tex]/dsfont', 'mathjax-dsfont-font-extension');
+fontExtension('[tex]/dsfont', '@mathjax/mathjax-dsfont-font-extension');

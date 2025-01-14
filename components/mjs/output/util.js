@@ -3,7 +3,7 @@ import {Package} from '#js/components/package.js';
 import {hasWindow} from '#js/util/context.js';
 
 export const FONTPATH = hasWindow ?
-                        'https://cdn.jsdelivr.net/npm/%%FONT%%-font':
+                        'https://cdn.jsdelivr.net/npm/@mathjax/%%FONT%%-font':
                         '@mathjax/%%FONT%%-font';
 
 export const OutputUtil = {
