@@ -8,7 +8,7 @@ describe('TagAll', () => {
     toXmlMatch(
       tex2mml('a'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a" display="block">
-  <mtable data-latex="a">
+  <mtable displaystyle="true"  data-latex="a">
     <mlabeledtr>
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -24,7 +24,7 @@ describe('TagAll', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -40,7 +40,7 @@ describe('TagAll', () => {
     toXmlMatch(
       tex2mml('\\begin{multline}a\\\\ b\\\\ c\\end{multline}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline}a\\\\ b\\\\ c\\end{multline}" display="block">
-  <mtable rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex-item="{multline}" data-latex="\\begin{multline}a\\\\ b\\\\ c\\end{multline}">
+  <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex-item="{multline}" data-latex="\\begin{multline}a\\\\ b\\\\ c\\end{multline}">
     <mtr>
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
@@ -66,7 +66,7 @@ describe('TagAll', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\label{}\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{}\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -82,7 +82,7 @@ describe('TagAll', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\label{A}\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{A}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{A}\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -98,7 +98,7 @@ describe('TagAll', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\notag\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\notag\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\notag\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\notag\\end{align}">
     <mtr>
       <mtd>
         <mi data-latex="\\notag">a</mi>
@@ -111,7 +111,7 @@ describe('TagAll', () => {
     toXmlMatch(
       tex2mml('\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}" display="block">
-  <mtable rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex-item="{multline}" data-latex="\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}">
+  <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex-item="{multline}" data-latex="\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}">
     <mtr>
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
@@ -134,7 +134,7 @@ describe('TagAll', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\tag{A}\\notag\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\notag\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\notag\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\notag\\end{align}">
     <mtr>
       <mtd>
         <mi data-latex="\\notag">a</mi>
@@ -147,7 +147,7 @@ describe('TagAll', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\ref{A}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -166,7 +166,7 @@ describe('TagAll', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\ref{B}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -185,7 +185,7 @@ describe('TagAll', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\label{A}\\end{align}\\eqref{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\eqref{A}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -204,7 +204,7 @@ describe('TagAll', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a=b\\label{A}\\\\ c&=d \\label{B}\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a=b\\label{A}\\\\ c&amp;=d \\label{B}\\end{align}" display="block">
-  <mtable columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex-item="{align}" data-latex="\\begin{align}a=b\\label{A}\\\\ c&amp;=d \\label{B}\\end{align}">
+  <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex-item="{align}" data-latex="\\begin{align}a=b\\label{A}\\\\ c&amp;=d \\label{B}\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -273,7 +273,7 @@ describe('TagAll', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -289,7 +289,7 @@ describe('TagAll', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\tag{A}\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -305,7 +305,7 @@ describe('TagAll', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\tag{A}\\\\b\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\\\b\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\\\b\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\\\b\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -329,7 +329,7 @@ describe('TagAll', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -353,7 +353,7 @@ describe('TagAll', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\label{A}\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{A}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{A}\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -369,7 +369,7 @@ describe('TagAll', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\tag{A}\\label{A}\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -385,7 +385,7 @@ describe('TagAll', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -411,7 +411,7 @@ describe('TagAll', () => {
         '\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -435,7 +435,7 @@ describe('TagAll', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\ref{A}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -454,7 +454,7 @@ describe('TagAll', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\tag{A}\\label{A}\\end{align}\\ref{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}\\ref{A}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -475,7 +475,7 @@ describe('TagAll', () => {
         '\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}\\ref{A}\\ref{B}'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}\\ref{A}\\ref{B}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -507,7 +507,7 @@ describe('TagAll', () => {
         '\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}\\ref{A}\\ref{B}'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}\\ref{A}\\ref{B}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -548,7 +548,7 @@ describe('TagNone', () => {
     toXmlMatch(
       tex2mml('a\\tag{0}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\tag{0}" display="block">
-  <mtable data-latex="a\\tag{0}">
+  <mtable displaystyle="true" data-latex="a\\tag{0}">
     <mlabeledtr>
       <mtd id="mjx-eqn:0">
         <mtext data-latex="\\text{(0)}">(0)</mtext>
@@ -564,7 +564,7 @@ describe('TagNone', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\end{align}">
     <mtr>
       <mtd>
         <mi data-latex="a">a</mi>
@@ -577,7 +577,7 @@ describe('TagNone', () => {
     toXmlMatch(
       tex2mml('\\begin{split}a\\end{split}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{split}a\\end{split}" display="block">
-  <mtable columnalign="right" columnspacing="0em" rowspacing="3pt" data-break-align="bottom" data-latex-item="{split}" data-latex="\\begin{split}a\\end{split}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="0em" rowspacing="3pt" data-break-align="bottom" data-latex-item="{split}" data-latex="\\begin{split}a\\end{split}">
     <mtr>
       <mtd>
         <mi data-latex="a">a</mi>
@@ -590,7 +590,7 @@ describe('TagNone', () => {
     toXmlMatch(
       tex2mml('\\begin{multline}a\\\\ b\\\\ c\\end{multline}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline}a\\\\ b\\\\ c\\end{multline}" display="block">
-  <mtable rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex-item="{multline}" data-latex="\\begin{multline}a\\\\ b\\\\ c\\end{multline}">
+  <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex-item="{multline}" data-latex="\\begin{multline}a\\\\ b\\\\ c\\end{multline}">
     <mtr>
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
@@ -613,7 +613,7 @@ describe('TagNone', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\label{}\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{}\\end{align}">
     <mtr>
       <mtd>
         <mi data-latex="\\label{}">a</mi>
@@ -626,7 +626,7 @@ describe('TagNone', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\label{A}\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{A}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{A}\\end{align}">
     <mtr>
       <mtd>
         <mi data-latex="\\label{A}">a</mi>
@@ -639,7 +639,7 @@ describe('TagNone', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\notag\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\notag\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\notag\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\notag\\end{align}">
     <mtr>
       <mtd>
         <mi data-latex="\\notag">a</mi>
@@ -652,7 +652,7 @@ describe('TagNone', () => {
     toXmlMatch(
       tex2mml('\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}" display="block">
-  <mtable rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex-item="{multline}" data-latex="\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}">
+  <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex-item="{multline}" data-latex="\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}">
     <mtr>
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
@@ -675,7 +675,7 @@ describe('TagNone', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\tag{A}\\notag\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\notag\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\notag\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\notag\\end{align}">
     <mtr>
       <mtd>
         <mi data-latex="\\notag">a</mi>
@@ -688,7 +688,7 @@ describe('TagNone', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\ref{A}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
     <mtr>
       <mtd>
         <mi data-latex="\\label{A}">a</mi>
@@ -704,7 +704,7 @@ describe('TagNone', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\ref{B}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
     <mtr>
       <mtd>
         <mi data-latex="\\label{A}">a</mi>
@@ -720,7 +720,7 @@ describe('TagNone', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\label{A}\\end{align}\\eqref{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\eqref{A}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
     <mtr>
       <mtd>
         <mi data-latex="\\label{A}">a</mi>
@@ -781,7 +781,7 @@ describe('TagNone', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\end{align}">
     <mtr>
       <mtd>
         <mi data-latex="a">a</mi>
@@ -794,7 +794,7 @@ describe('TagNone', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\tag{A}\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -810,7 +810,7 @@ describe('TagNone', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\tag{A}\\\\b\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\\\b\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\\\b\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\\\b\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -831,7 +831,7 @@ describe('TagNone', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -855,7 +855,7 @@ describe('TagNone', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\label{A}\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{A}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{A}\\end{align}">
     <mtr>
       <mtd>
         <mi data-latex="\\label{A}">a</mi>
@@ -868,7 +868,7 @@ describe('TagNone', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\tag{A}\\label{A}\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -884,7 +884,7 @@ describe('TagNone', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -907,7 +907,7 @@ describe('TagNone', () => {
         '\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -931,7 +931,7 @@ describe('TagNone', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\ref{A}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
     <mtr>
       <mtd>
         <mi data-latex="\\label{A}">a</mi>
@@ -947,7 +947,7 @@ describe('TagNone', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\tag{A}\\label{A}\\end{align}\\ref{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}\\ref{A}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -968,7 +968,7 @@ describe('TagNone', () => {
         '\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}\\ref{A}\\ref{B}'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}\\ref{A}\\ref{B}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -997,7 +997,7 @@ describe('TagNone', () => {
         '\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}\\ref{A}\\ref{B}'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}\\ref{A}\\ref{B}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -1038,7 +1038,7 @@ describe('TagAms', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -1054,7 +1054,7 @@ describe('TagAms', () => {
     toXmlMatch(
       tex2mml('\\begin{split}a\\end{split}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{split}a\\end{split}" display="block">
-  <mtable columnalign="right" columnspacing="0em" rowspacing="3pt" data-break-align="bottom" data-latex-item="{split}" data-latex="\\begin{split}a\\end{split}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="0em" rowspacing="3pt" data-break-align="bottom" data-latex-item="{split}" data-latex="\\begin{split}a\\end{split}">
     <mtr>
       <mtd>
         <mi data-latex="a">a</mi>
@@ -1067,7 +1067,7 @@ describe('TagAms', () => {
     toXmlMatch(
       tex2mml('\\begin{multline}a\\\\ b\\\\ c\\end{multline}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline}a\\\\ b\\\\ c\\end{multline}" display="block">
-  <mtable rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex-item="{multline}" data-latex="\\begin{multline}a\\\\ b\\\\ c\\end{multline}">
+  <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex-item="{multline}" data-latex="\\begin{multline}a\\\\ b\\\\ c\\end{multline}">
     <mtr>
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
@@ -1093,7 +1093,7 @@ describe('TagAms', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\label{}\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{}\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -1109,7 +1109,7 @@ describe('TagAms', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\label{A}\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{A}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{A}\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -1125,7 +1125,7 @@ describe('TagAms', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\notag\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\notag\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\notag\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\notag\\end{align}">
     <mtr>
       <mtd>
         <mi data-latex="\\notag">a</mi>
@@ -1138,7 +1138,7 @@ describe('TagAms', () => {
     toXmlMatch(
       tex2mml('\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}" display="block">
-  <mtable rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex-item="{multline}" data-latex="\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}">
+  <mtable displaystyle="true" rowspacing=".5em" columnspacing="100%" width="100%" data-array-padding="1em 1em" data-width-includes-label="true" data-latex-item="{multline}" data-latex="\\begin{multline}a\\\\ b\\\\ c\\notag\\end{multline}">
     <mtr>
       <mtd columnalign="left">
         <mi data-latex="a">a</mi>
@@ -1161,7 +1161,7 @@ describe('TagAms', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\tag{A}\\notag\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\notag\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\notag\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\notag\\end{align}">
     <mtr>
       <mtd>
         <mi data-latex="\\notag">a</mi>
@@ -1174,7 +1174,7 @@ describe('TagAms', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\ref{A}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -1193,7 +1193,7 @@ describe('TagAms', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\ref{B}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -1212,7 +1212,7 @@ describe('TagAms', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\label{A}\\end{align}\\eqref{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\eqref{A}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -1231,7 +1231,7 @@ describe('TagAms', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a=b\\label{A}\\\\ c&=d \\label{B}\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a=b\\label{A}\\\\ c&amp;=d \\label{B}\\end{align}" display="block">
-  <mtable columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex-item="{align}" data-latex="\\begin{align}a=b\\label{A}\\\\ c&amp;=d \\label{B}\\end{align}">
+  <mtable displaystyle="true" columnalign="right left" columnspacing="0em" rowspacing="3pt" data-break-align="bottom top" data-latex-item="{align}" data-latex="\\begin{align}a=b\\label{A}\\\\ c&amp;=d \\label{B}\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -1300,7 +1300,7 @@ describe('TagAms', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:1">
         <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -1316,7 +1316,7 @@ describe('TagAms', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\tag{A}\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -1332,7 +1332,7 @@ describe('TagAms', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\tag{A}\\\\b\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\\\b\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\\\b\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\\\b\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -1356,7 +1356,7 @@ describe('TagAms', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\\\b\\tag{B}\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -1380,7 +1380,7 @@ describe('TagAms', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\label{A}\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{A}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\label{A}\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -1396,7 +1396,7 @@ describe('TagAms', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\tag{A}\\label{A}\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -1412,7 +1412,7 @@ describe('TagAms', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -1438,7 +1438,7 @@ describe('TagAms', () => {
         '\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -1462,7 +1462,7 @@ describe('TagAms', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\label{A}\\end{align}\\ref{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\label{A}\\end{align}\\ref{A}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(1)}">(1)</mtext>
@@ -1481,7 +1481,7 @@ describe('TagAms', () => {
     toXmlMatch(
       tex2mml('\\begin{align}a\\tag{A}\\label{A}\\end{align}\\ref{A}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\end{align}\\ref{A}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -1502,7 +1502,7 @@ describe('TagAms', () => {
         '\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}\\ref{A}\\ref{B}'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\label{B}\\end{align}\\ref{A}\\ref{B}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
@@ -1534,7 +1534,7 @@ describe('TagAms', () => {
         '\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}\\ref{A}\\ref{B}'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{align}a\\tag{A}\\label{A}\\\\b\\tag{B}\\label{B}\\end{align}\\ref{A}\\ref{B}" display="block">
-  <mtable columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
+  <mtable displaystyle="true" columnalign="right" columnspacing="" rowspacing="3pt" data-break-align="bottom" data-latex-item="{align}" data-latex="{align}">
     <mlabeledtr>
       <mtd id="mjx-eqn:A">
         <mtext data-latex="\\text{(A)}">(A)</mtext>
