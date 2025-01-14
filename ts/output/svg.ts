@@ -114,7 +114,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
     },
     'rect[sre-highlighter-added]': {
       stroke: 'black',
-      'stroke-width': '40px',
+      'stroke-width': '80px',
     },
   };
 
