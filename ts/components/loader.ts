@@ -84,7 +84,7 @@ export interface MathJaxObject extends MJObject {
   loader: {
     ready: (...names: string[]) => Promise<string[]>; // Get a promise for when all the named packages are loaded
     load: (...names: string[]) => Promise<string>; // Load the packages and return a promise for when ready
-    preLoad: (...names: string[]) => void; // Indicate that packages are already loaded by hand
+    preLoaded: (...names: string[]) => void; // Indicate that packages are already loaded by hand
     defaultReady: () => void; // The function performed when all packages are loaded
     getRoot: () => string; // Find the root URL for the MathJax files
     checkVersion: (name: string, version: string) => boolean; // Check the version of an extension
@@ -218,7 +218,7 @@ export const Loader = {
    *
    * @param {string[]} names  The packages to load
    */
-  preLoad(...names: string[]) {
+  preLoaded(...names: string[]) {
     for (const name of names) {
       let extension = Package.packages.get(name);
       if (!extension) {

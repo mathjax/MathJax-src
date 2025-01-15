@@ -6,7 +6,7 @@ import {loadFont} from '../output/chtml/chtml.js';
 import '../ui/menu/menu.js';
 import {checkSre} from '../a11y/util.js';
 
-Loader.preLoad(
+Loader.preLoaded(
   'core',
   'input/tex',
   'output/chtml',
