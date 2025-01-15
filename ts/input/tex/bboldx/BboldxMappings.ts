@@ -71,13 +71,13 @@ new CharacterMap('bboldx-mathchar0miNormal', BboldxMethods.mathchar0miNormal, {
 /**
  * Macros for delimiters.
  */
-new DelimiterMap('bboldx-delimiterNormal', BboldxMethods.delimiterNormal, {
-  '\\bbLparen': '\u0028',
-  '\\bbRparen': '\u0029',
-  '\\bbLbrack': '\u005B',
-  '\\bbRbrack': '\u005D',
-  '\\bbLangle': '\u2329',
-  '\\bbRangle': '\u232A',
+new CharacterMap('bboldx-delimiterNormal', BboldxMethods.delimiterNormal, {
+  bbLparen: '\u0028',
+  bbRparen: '\u0029',
+  bbLbrack: '\u005B',
+  bbRbrack: '\u005D',
+  bbLangle: '\u2329',
+  bbRangle: '\u232A',
 });
 
 /**
@@ -127,13 +127,13 @@ new CharacterMap('bboldx-mathchar0miBold', BboldxMethods.mathchar0miBold, {
 /**
  * Macros for delimiters.
  */
-new DelimiterMap('bboldx-delimiterBold', BboldxMethods.delimiterBold, {
-  '\\bfbbLparen': '\u0028',
-  '\\bfbbRparen': '\u0029',
-  '\\bfbbLbrack': '\u005B',
-  '\\bfbbRbrack': '\u005D',
-  '\\bfbbLangle': '\u2329',
-  '\\bfbbRangle': '\u232A',
+new CharacterMap('bboldx-delimiterBold', BboldxMethods.delimiterBold, {
+  bfbbLparen: '\u0028',
+  bfbbRparen: '\u0029',
+  bfbbLbrack: '\u005B',
+  bfbbRbrack: '\u005D',
+  bfbbLangle: '\u2329',
+  bfbbRangle: '\u232A',
 });
 
 new CommandMap('bboldx', {
