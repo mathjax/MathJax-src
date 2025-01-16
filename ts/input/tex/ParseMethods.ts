@@ -26,9 +26,8 @@ import { Token } from './Token.js';
 import TexParser from './TexParser.js';
 import NodeUtil from './NodeUtil.js';
 import { TexConstant } from './TexConstants.js';
-import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import { ParseUtil } from './ParseUtil.js';
-import { ParseMethod } from './Types.js';
+import { ParseMethod, ParseResult } from './Types.js';
 import { StackItem } from './StackItem.js';
 
 const MATHVARIANT = TexConstant.Variant;
@@ -73,24 +72,25 @@ const ParseMethods = {
    * Handle a number (a sequence of digits, with decimal separator, etc.).
    *
    * @param {TexParser} parser The current tex parser.
-   * @param {string} c The first character of a number than can be parsed with
+   * @param {string} _c The first character of a number that can be parsed with
    *     the digits pattern.
+   * @returns {ParseResult}  false if the string doesn't match a number
+   *     (e.g., a decimal with no following digit).
    */
-  digit(parser: TexParser, c: string) {
-    let mml: MmlNode;
-    const pattern = parser.configuration.options['digits'];
+  digit(parser: TexParser, _c: string): ParseResult {
+    const pattern = parser.configuration.options['numberPattern'];
     const n = parser.string.slice(parser.i - 1).match(pattern);
     // @test Integer Font
     const def = ParseUtil.getFontDef(parser);
-    if (n) {
-      // @test Integer, Number, Decimal (European)
-      mml = parser.create('token', 'mn', def, n[0].replace(/[{}]/g, ''));
-      parser.i += n[0].length - 1;
-    } else {
+    if (!n) {
       // @test Decimal Point, Decimal Point European
-      mml = parser.create('token', 'mo', def, c);
+      return false;
     }
+    // @test Integer, Number, Decimal (European)
+    const mml = parser.create('token', 'mn', def, n[0].replace(/[{}]/g, ''));
+    parser.i += n[0].length - 1;
     parser.Push(mml);
+    return true;
   },
 
   /**

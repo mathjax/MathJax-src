@@ -27,12 +27,13 @@ import { MapHandler } from '../MapHandler.js';
 import TexError from '../TexError.js';
 import NodeUtil from '../NodeUtil.js';
 import TexParser from '../TexParser.js';
-import { CharacterMap } from '../TokenMap.js';
+import { CharacterMap, RegExpMap } from '../TokenMap.js';
 import * as bitem from './BaseItems.js';
 import { AbstractTags } from '../Tags.js';
 import './BaseMappings.js';
 import { getRange } from '../../../core/MmlTree/OperatorDictionary.js';
 import ParseOptions from '../ParseOptions.js';
+import ParseMethods from '../ParseMethods.js';
 import { ParseUtil } from '../ParseUtil.js';
 import { TexConstant } from '../TexConstants.js';
 import { context } from '../../../util/context.js';
@@ -158,8 +159,19 @@ export class BaseTags extends AbstractTags {}
  * @type {Configuration}
  */
 export const BaseConfiguration: Configuration = Configuration.create('base', {
+  [ConfigurationType.CONFIG]: function (config, jax) {
+    const options = jax.parseOptions.options;
+    if (options.digits) {
+      // backward compatibility // FIXME: Remove in a later version
+      options.numberPattern = options.digits;
+    }
+    new RegExpMap('digit', ParseMethods.digit, options.initialDigit);
+    new RegExpMap('letter', ParseMethods.variable, options.initialLetter);
+    const handler = config.handlers.get(HandlerType.CHARACTER);
+    handler.add(['letter', 'digit'], null, 4);
+  },
   [ConfigurationType.HANDLER]: {
-    [HandlerType.CHARACTER]: ['command', 'special', 'letter', 'digit'],
+    [HandlerType.CHARACTER]: ['command', 'special'],
     [HandlerType.DELIMITER]: ['delimiter'],
     // Note, that the position of the delimiters here is important!
     [HandlerType.MACRO]: [
@@ -208,8 +220,12 @@ export const BaseConfiguration: Configuration = Configuration.create('base', {
     [bitem.MstyleItem.prototype.kind]: bitem.MstyleItem,
   },
   [ConfigurationType.OPTIONS]: {
-    maxMacros: 1000,
+    maxMacros: 1000, //              // Maximum number of macro substitutions to process allowed
+    digits: '', //                   // backward compatibility // FIXME: remove in a later version
+    numberPattern: /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
+    initialDigit: /[0-9.,]/, //      // pattern for initial digit or decimal point for a number
     identifierPattern: /^[a-zA-Z]+/, // pattern for multiLetterIdentifiers in \mathrm, etc.
+    initialLetter: /[a-zA-Z]/, //    // pettern for initial letter in identifiers
     baseURL:
       !context.document ||
       context.document.getElementsByTagName('base').length === 0
