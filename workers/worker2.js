@@ -1,5 +1,21 @@
-/********************************************************************/
-/*
+/*************************************************************
+ *
+ *  Copyright (c) 2018-2024 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
  *  This is the code run by the webworkers in the iframe.
  *  It can load content from the CDN since the iframe runs from there.
  *  You can add importScripts() commands at the top to preload libraries
@@ -11,21 +27,21 @@
  *  imported at the bottom of this file using importScripts().
  */
 
-//
-//  Add an event listener so that we can act on the commands from the Pool
-//  We extract the command and data from the event, and look for the
-//  command in the Commands object below.  If the command is defined,
-//  we try to run the command, and if there is an error, we send it to
-//  the calling Task.  If the command was not found in the list of valid
-//  commands, we produce an error.
-//  
+/**
+ * Add an event listener so that we can act on commands from Iframe.
+ * We extract the command and data from the event, and look for the
+ * command in the Commands object below.  If the command is defined,
+ * we try to run the command, and if there is an error, we send it to
+ * the calling Rule. If the command was not found in the list of valid
+ * commands, we produce an error.
+ */
 self.addEventListener('message',function (event) {
   if (event.data?.debug) {
     console.log('Iframe  >>>  Worker:', event.data);
   }
   const {cmd, data} = event.data;
   if (Commands.hasOwnProperty(cmd)) {
-    Post('Log',`running ${cmd}`);
+    Pool('Log',`running ${cmd}`);
     try {
       (Commands[cmd])(data);
     } catch (err) {
@@ -36,36 +52,15 @@ self.addEventListener('message',function (event) {
   }
 }, false);
 
-//
-//  These are the commands that can be sent from the Tasks in the main window.
-//  The commands are augmented by the libraries that are loaded via the import
-//  command or by importScripts() calls added to this file, or by eval commands
-//  that add to the list.
-//  
+/**
+ * These are the commands that can be sent from the main window via the iframe.
+ */
 const Commands = {
-  //
-  //  This is called when a Task is assigned to the worker.
-  //     Clear the global data (removing any data from previous Tasks)
-  //     Import any needed libraries
-  //     Signal the Task that we are ready to go.
-  //
-  start: function(data) {
-    Pool('ready', null);
-  },
-  //
-  //  This stops the task by signalling the Task that we are done
-  //  (this also causes the Pool to free up the worker to be reused).
-  //
-  stop: function (data) {Pool('done', data);},
-  //
-  //  This simply returns the data it was sent
-  //  (for debugging, using the echo callback of the Task).
-  //
-  echo: function (data) {Pool('echo', data);},
-  //
-  //  This loads one or more libraries
-  //  (it signals completion by the imported callback).
-  //
+
+  /**
+   * This loads one or more libraries.
+   * @param data The data object
+   */
   import: function (data) {
     if (data?.imports) {
       Import(data.imports);
@@ -80,11 +75,21 @@ const Commands = {
   speech: function(data) {
     if (data?.mml) {
       SRE.engineReady().then(() => {
-        Pool('Client', {cmd: 'Attach', data:{ speech: SRE.toSpeechStructure(data.mml), id: data.id}});
+        Pool('Client', {
+          cmd: 'Attach',
+          data: {
+            speech: SRE.toSpeechStructure(data.mml),
+            id: data.id
+          }
+        });
       });
     }
   },
 
+  /**
+   * Setup the speech rule engine.
+   * @param data The feature vector for SRE.
+   */
   setup: function(data) {
     if (data) {
       SRE.setupEngine(data);
@@ -93,30 +98,27 @@ const Commands = {
 
 };
 
-//
-//  Send a message to the Pool (to be passed on to the parent window),
-//  trapping errors so that if the message can't be JSON stringified,
-//  an error is produced.
-//
-function Post(cmd, data, action) {
-  const msg = {cmd: cmd, data: data, action: action};
+/**
+ * Post a command back to the pool. Catches the error in case the data cannot be
+ * JSON stringified.
+ * @param cmd The command to be posted.
+ * @param data The data object to be send.
+ */
+function Pool(cmd, data) {
+  const msg = {cmd: cmd, data: data};
   try {
     self.postMessage(msg);
   } catch (err) {
-    Pool('error', copyError(err));
+    console.log('Posting error in worker', copyError(err));
   }
 }
 
-//
-//  Send an action to the parent Task object
-//
-function Pool(action, data) {
-  Post(action, data);
-}
-
-//
-//  Make a copy of an Error object (since those can't be stringified).
-//
+/**
+ * Make a copy of an Error object (since those can't be stringified).
+ *
+ * @param error The error object.
+ * @returns The copied error object.
+ */
 function copyError(error) {
   return {
     message: error.message,
@@ -126,11 +128,16 @@ function copyError(error) {
   };
 }
 
-//
-//  We keep track of the imported libraries, so that we don't
-//  load them again if another Task asks for them.
-//
+/**
+ * We keep track of the imported libraries, so that we don't
+ * load them again if another rules asks for them.
+ */
 const _imported = {};
+/**
+ * The actual Import method.
+ *
+ * @param data List of libraries to import.
+ */
 function Import(data) {
   if (!(data instanceof Array)) data = [data];
   for (let imp of data) {
@@ -140,7 +147,3 @@ function Import(data) {
     }
   }
 }
-
-// TODO:
-// Do we really need error?
-// go over all the commands to see if they are necessary

@@ -1,37 +1,67 @@
-/**************************************************************************/
-/*
+/*************************************************************
+ *
+ *  Copyright (c) 2018-2024 The MathJax Consortium
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
  *  The WorkerPool object.
  *
  *  This implements the remote worker pool that lives in an iframe
- *  within the main page.  It is what creates the actual webworkers,
+ *  within the main page.  It is what creates the actual webworker,
  *  and it uses messages to and from the main window to coordinate the
- *  workers with the tasks in the main window.
+ *  worker.
  *
  */
 
-//
-//  The WorkerPool object (currently we only implement a single speech worker)
-//
+/**
+ * The WorkerPool object (currently we only implement a single speech worker)
+ */
 export class WorkerPool {
-  //
-  //  Creates a new WorkerPool (though only one is ever used)
-  //  using the location hash to determine the min, max, and domain
-  //  values passed to us by the parent window
-  //
+
+  /**
+   * Creates a new WorkerPool (though only one is ever used) using the location
+   * hash to determine the domain values and the source of the base worker code
+   * passed to us by the parent window. Additionally we can send a flag for
+   * debugging.
+   */
   static Create() {
     let data = (location.hash.substr(1)).split(/&/);
     let domain = decodeURIComponent(data[0]); // the domain of the parent
-    return new WorkerPool(domain, data.slice(1));
+    return new WorkerPool(domain, data[1], data[2]);
   }
 
-  constructor(domain, [src, debug]) {
-    this.domain = domain; // the parent window domain
+  /**
+   * @param {string} domain The parent window domain
+   * @param {string} src Location of the base worker code
+   * @param {boolean} debug Optionally a debug flag for logging.
+   */
+  constructor(domain, src, debug = true) {
+    this.domain = domain;
     this.parent = window.parent; // the parent window
-    this.WORKER = src;  // 'worker2.js'; // the URL for the webworkers
-    this.DEBUG = debug === 'true';
-    this.worker = null;
+    this.WORKER = src;
+    this.DEBUG = debug.toLowerCase() === 'true';
+    this.worker = null; // We really only have one worker for now.
   }
 
+
+  /**
+   * Debug output if flag ist set.
+   *
+   * @param {string} msg Logs the message.
+   * @param {any[]} rest Arbitrary remaining arguments.
+   */
   debug(msg, ...rest) {
     if (this.DEBUG) {
       console.info(msg, ...rest);
@@ -88,7 +118,7 @@ export class WorkerPool {
    * @param {string} msg The message.
    */
   Log(msg) {
-    this.parent.postMessage({ cmd: 'Log', data: msg }, this.domain);
+    this.parent.postMessage({ cmd: 'Log', data: {msg: msg} }, this.domain);
   }
 
   /**
@@ -113,71 +143,78 @@ export class WorkerPool {
       }
     );
   }
+
+  /**
+   * Terminates the worker.
+   */
+  Terminate() {
+    if (this.workers) {
+      this.Log(`Terminate worker`);
+      this.worker.terminate();
+      this.worker = null;
+    }
+  }
+
 }
 
-//
-//  This is the list of commands that the parent page can send us.
-//
+/**
+ *  This is the list of commands that the parent page can send to the pool.
+ */
 export const PoolCommands = {
-  //
-  //  This starts a task in a webworker.
-  //    If there are no free workers, cache the task.
-  //    Otherwise, get the next free worker and save the associated task.
-  //    Create the webworker, if needed.
-  //    Log the action.
-  //    Send the worker a start message so that it lets us know when it is ready.
-  //
+  /**
+   *  Start the webworker.
+   */
   Start: function (pool, msg) {
     pool.Log('WorkerPool: starting worker.');
     pool.worker.postMessage({ cmd: 'start', data: msg.data });
   },
-  //
-  //  This is how the Task sends commands to its associated worker
-  //    Check that the worker is defined and assigned to the task.
-  //    If so, send the worker the message, otherwise produce an error.
-  //
+  /**
+   * Sends commands to the worker associated with the rule.
+   * Check that the worker exists, if not start it.
+   */
   Worker: function (pool, msg) {
     if (!pool.worker) {
       pool.Start();
     }
     pool.worker.postMessage(msg.data);
   },
-  //
-  //  This stops the given webworker.
-  //    Add the worker to the free list, clear its task, and log the action.
-  //    If there are any pending tasks, start the first one.
-  //
-  Stop: function (pool, msg) {
-    pool.worker.terminate();
+  /**
+   *  Terminates the worker.
+   */
+  Terminate: function (pool, _msg) {
+    pool.Terminate();
   },
 
 };
 
-//
-//  This is the list of commands that can come from the workers
-//
+
+/**
+ * This is the list of commands that can come from the workers
+ */
 export const WorkerCommands = {
-  // Post to client
-  //
+  /**
+   * Send a client command.
+   */
   Client: function (pool, msg) {
     pool.parent.postMessage(msg.data, pool.domain);
   },
-  //
-  // Exexute a command on pool
-  //
+  /**
+   * Execute a pool command.
+   */
   Pool: function (pool, msg) {
     pool.Execute(msg);
   },
-  //
-  //  This can be used to log messages to the parent
-  //
+  /**
+   * Logging a worker message.
+   */
   Log: function (pool, msg) {
     pool.Log(`Worker log: ${msg.data}`);
   },
-  error: function (pool, msg) {
-    console.log(2);
-    console.log(msg.data);
-    pool.Log(`EEEEEEEEEEEEEError log: ${msg.data}`);
+  /**
+   * Logging a worker error.
+   */
+  Error: function (pool, msg) {
+    pool.Log(`Worker error: ${msg.data}`);
   },
   
 };

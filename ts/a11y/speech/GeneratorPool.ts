@@ -401,7 +401,6 @@ export class GeneratorPool<N, T, D> {
    * @param {string} locale The locale to use for Aria labels.
    */
   public setAria(node: N, xml: Element, locale: string) {
-    console.log(3);
     const kind = xml.getAttribute('data-semantic-type');
     if (kind) {
       this.attrList.forEach((attr) => this.copyAttributes(xml, node, attr));
