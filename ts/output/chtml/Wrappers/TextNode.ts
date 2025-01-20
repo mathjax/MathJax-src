@@ -39,7 +39,7 @@ import {
 } from '../../common/Wrappers/TextNode.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { TextNode } from '../../../core/MmlTree/MmlNode.js';
-import { StyleList } from '../../../util/StyleList.js';
+import { StyleJson } from '../../../util/StyleJson.js';
 
 /*****************************************************************/
 /**
@@ -143,7 +143,7 @@ export const ChtmlTextNode = (function <N, T, D>(): ChtmlTextNodeClass<
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'mjx-c': {
         display: 'inline-block',
         width: 0,

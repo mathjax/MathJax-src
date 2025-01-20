@@ -39,7 +39,7 @@ import {
 } from '../../common/Wrappers/mo.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMo } from '../../../core/MmlTree/MmlNodes/mo.js';
-import { StyleList } from '../../../util/StyleList.js';
+import { StyleJson } from '../../../util/StyleJson.js';
 import { DIRECTION } from '../FontData.js';
 
 /*****************************************************************/
@@ -137,7 +137,7 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'mjx-stretchy-h': {
         display: 'inline-block',
       },

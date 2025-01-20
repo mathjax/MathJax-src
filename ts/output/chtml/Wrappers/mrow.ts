@@ -46,7 +46,7 @@ import {
   MmlMrow,
   MmlInferredMrow,
 } from '../../../core/MmlTree/MmlNodes/mrow.js';
-import { StyleList } from '../../../util/StyleList.js';
+import { StyleJson } from '../../../util/StyleJson.js';
 
 /*****************************************************************/
 /**
@@ -147,7 +147,7 @@ export const ChtmlMrow = (function <N, T, D>(): ChtmlMrowClass<N, T, D> {
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'mjx-linestack, mjx-mrow[break-top]': {
         display: 'inline-table',
         width: '100%',

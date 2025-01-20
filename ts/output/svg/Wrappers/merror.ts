@@ -25,7 +25,7 @@ import { SvgWrapper, SvgWrapperClass } from '../Wrapper.js';
 import { SvgWrapperFactory } from '../WrapperFactory.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMerror } from '../../../core/MmlTree/MmlNodes/merror.js';
-import { StyleList } from '../../../util/StyleList.js';
+import { StyleJson } from '../../../util/StyleJson.js';
 
 /*****************************************************************/
 /**
@@ -70,7 +70,7 @@ export const SvgMerror = (function <N, T, D>(): SvgMerrorClass<N, T, D> {
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'g[data-mml-node="merror"] > g': {
         fill: 'red',
         stroke: 'red',

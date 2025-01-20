@@ -24,7 +24,7 @@
 
 import { mathjax } from '../../mathjax.js';
 import { OptionList, defaultOptions, userOptions } from '../../util/Options.js';
-import { StyleList } from '../../util/StyleList.js';
+import { StyleJson } from '../../util/StyleJson.js';
 import { asyncLoad } from '../../util/AsyncLoad.js';
 import { retryAfter } from '../../util/Retries.js';
 import { DIRECTION } from './Direction.js';
@@ -725,7 +725,7 @@ export class FontData<
   /**
    * Any styles needed for the font
    */
-  protected _styles: StyleList;
+  protected _styles: StyleJson;
 
   /**
    * @returns {typeof FontData}   The constructor for this object
@@ -998,16 +998,16 @@ export class FontData<
   }
 
   /**
-   * @returns {StyleList} Returns list of styles needed for the font
+   * @returns {StyleJson}   List of styles needed for the font
    */
-  get styles(): StyleList {
+  get styles(): StyleJson {
     return this._styles;
   }
 
   /**
-   * @param {StyleList} style Sets styles needed for that font.
+   * @param {StyleJson} style   Sets styles needed for the font
    */
-  set styles(style: StyleList) {
+  set styles(style: StyleJson) {
     this._styles = style;
   }
 

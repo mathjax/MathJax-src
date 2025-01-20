@@ -34,7 +34,7 @@ import { HTMLDomStrings } from './HTMLDomStrings.js';
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 import { InputJax } from '../../core/InputJax.js';
 import { STATE, ProtoItem, Location } from '../../core/MathItem.js';
-import { StyleList } from '../../util/StyleList.js';
+import { StyleJson } from '../../util/StyleJson.js';
 
 /*****************************************************************/
 /**
@@ -81,7 +81,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
   /**
    * Extra styles to be included in the document's stylesheet (added by extensions)
    */
-  protected styles: StyleList[];
+  protected styles: StyleJson[];
 
   /**
    * The DomString parser for locating the text in DOM trees
@@ -115,7 +115,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
    * @param {number} index         The position within the N's string that needs to be found
    * @param {string} delim         The delimiter for this position
    * @param {HTMLNodeArray} nodes  The list of node lists representing the string array
-   * @returns {Location}            The Location object for the position of the delimiter in the document
+   * @returns {Location}           The Location object for the position of the delimiter in the document
    */
   protected findPosition(
     N: number,
@@ -143,7 +143,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
    * @param {ProtoItem} item       The proto math item to turn into an actual MathItem
    * @param {InputJax} jax         The input jax to use for the MathItem
    * @param {HTMLNodeArray} nodes  The array of node lists that produced the string array
-   * @returns {HTMLMathItem}        The MathItem for the given proto item
+   * @returns {HTMLMathItem}       The MathItem for the given proto item
    */
   protected mathItem(
     item: ProtoItem<N, T>,
@@ -208,7 +208,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
    *
    * @param {InputJax<N,T,D>} jax    The jax being used
    * @param {N[]} containers         The containers to be searched in order
-   * @returns {HTMLMathList<N,T,D>}   The list of MathItems found
+   * @returns {HTMLMathList<N,T,D>}  The list of MathItems found
    */
   protected findMathFromStrings(
     jax: InputJax<N, T, D>,
@@ -233,7 +233,7 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
    *
    * @param {InputJax<N,T,D>} jax    The jax being used
    * @param {N[]} containers         The containers to be searched in order
-   * @returns {HTMLMathList<N,T,D>}   The list of MathItems found
+   * @returns {HTMLMathList<N,T,D>}  The list of MathItems found
    */
   protected findMathFromDOM(
     jax: InputJax<N, T, D>,
@@ -345,16 +345,16 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
   /**
    * Add styles to be included in the document's stylesheet
    *
-   * @param {StyleList} styles   The styles to include
+   * @param {StyleJson} styles   The styles to include
    */
-  public addStyles(styles: StyleList) {
+  public addStyles(styles: StyleJson) {
     this.styles.push(styles);
   }
 
   /**
-   * @returns {StyleList[]} Get the array of document-specific styles
+   * @returns {StyleJson[]}   The array of document-specific styles
    */
-  public getStyles(): StyleList[] {
+  public getStyles(): StyleJson[] {
     return this.styles;
   }
 }

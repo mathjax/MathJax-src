@@ -41,7 +41,7 @@ import { MmlMtable } from '../../../core/MmlTree/MmlNodes/mtable.js';
 import { SvgMtrNTD } from './mtr.js';
 import { SvgMtdNTD } from './mtd.js';
 import { OptionList } from '../../../util/Options.js';
-import { StyleList } from '../../../util/StyleList.js';
+import { StyleJson } from '../../../util/StyleJson.js';
 
 const CLASSPREFIX = 'mjx-';
 
@@ -145,7 +145,7 @@ export const SvgMtable = (function <N, T, D>(): SvgMtableClass<N, T, D> {
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'g[data-mml-node="mtable"] > line[data-line], svg[data-table] > g > line[data-line]':
         {
           'stroke-width': '70px',
