@@ -3,7 +3,8 @@
     "to": "../../../bundle/sre",
     "from": "[node]/speech-rule-engine/lib",
     "copy": [
-      "mathmaps"
+      "mathmaps",
+      "sre.js"
     ]
   }
 }

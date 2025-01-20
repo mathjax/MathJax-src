@@ -4,7 +4,8 @@
     "targets": [
       "a11y/semantic-enrich.ts",
       "a11y/speech/SpeechUtil.ts",
-      "a11y/speech/GeneratorPool.ts"
+      "a11y/speech/GeneratorPool.ts",
+      "a11y/speech/WebWorker.ts"
     ]
   },
   "webpack": {
@@ -13,6 +14,15 @@
       "components/src/input/mml/lib",
       "components/src/core/lib",
       "components/src/a11y/sre/lib"
+    ]
+  },
+  "copy": {
+    "to": "../../../../bundle/sre",
+    "from": "../../../../workers",
+    "copy": [
+      "speech-worker.js",
+      "speech-workerpool.html",
+      "speech-workerpool.js"
     ]
   }
 }

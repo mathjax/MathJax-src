@@ -439,7 +439,7 @@ export function EnrichedMathDocumentMixin<
       }),
       worker: {
         path: MathJax.config.loader['a11y/semantic-enrich'].worker.path,
-        basedir: 'workers',
+        basedir: 'sre',
         pool: 'speech-workerpool.html',
         worker: 'speech-worker.js',
         sre: 'sre.js',
