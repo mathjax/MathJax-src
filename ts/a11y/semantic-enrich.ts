@@ -493,8 +493,6 @@ export function EnrichedMathDocumentMixin<
      */
     constructor(...args: any[]) {
       super(...args);
-      console.log(9);
-      console.log(BaseDocument.OPTIONS);
       MmlJax.setMmlFactory(this.mmlFactory);
       const ProcessBits = (this.constructor as typeof AbstractMathDocument)
         .ProcessBits;
