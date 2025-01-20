@@ -403,16 +403,16 @@ export class SpeechExplorer
    * @returns {HTMLElement} The refocused targeted node.
    */
   public nextRules(node: HTMLElement): HTMLElement {
-    console.log(this.item);
-    console.log(this.document);
-    console.log(this.item.typesetRoot);
-    console.log(this.item.toMathML(this.item.root, this.item));
-    this.document.options.sre.domain = 'mathspeak';
-    this.document.webworker.Setup(this.document.options);
-    this.document.webworker.Speech(
-      this.item.toMathML(this.item.root, this.item),
-      this.document.adaptor.getAttribute(this.item.typesetRoot, 'data-worker')
-    );
+    // console.log(this.item);
+    // console.log(this.document);
+    // console.log(this.item.typesetRoot);
+    // console.log(this.item.toMathML(this.item.root, this.item));
+    // this.document.options.sre.domain = 'mathspeak';
+    // this.document.webworker.Setup(this.document.options);
+    // this.document.webworker.Speech(
+    //   this.item.toMathML(this.item.root, this.item),
+    //   this.document.adaptor.getAttribute(this.item.typesetRoot, 'data-worker')
+    // );
     // this.generators.nextRules(node);
     // this.Speech();
     this.refocus(node);
@@ -499,6 +499,27 @@ export class SpeechExplorer
     super(document, pool, null, node);
   }
 
+  private restarts = 0;
+  private static maxRestarts = 20;
+
+  private async Restart() {
+    setTimeout(() => {
+      return new Promise((res, rej) => {
+        if (this.node.hasAttribute('data-speech-attached')) {
+          res(true);
+        } else if (this.restarts > SpeechExplorer.maxRestarts) {
+          this.restarts = 0;
+          rej();
+        } else {
+          this.restarts++;
+          this.Restart();
+        }
+      })
+        .then(() => this.Start())
+        .catch((_err) => {});
+    }, 100);
+  }
+
   /**
    * @override
    */
@@ -508,6 +529,10 @@ export class SpeechExplorer
       this.item.attachSpeech(this.document);
     }
     if (!this.attached) return;
+    if (!this.node.hasAttribute('data-speech-attached')) {
+      this.Restart();
+      return;
+    }
     if (this.node.hasAttribute('tabindex')) {
       this.node.removeAttribute('tabindex');
     }
