@@ -436,6 +436,14 @@ export function EnrichedMathDocumentMixin<
         enrich: [STATE.ENRICHED],
         attachSpeech: [STATE.ATTACHSPEECH],
       }),
+      worker: {
+        domain: 'https://localhost',
+        basedir: 'workers',
+        pool: 'workerpool2.html',
+        worker: 'worker2.js',
+        sre: 'sre.js',
+        debug: false,
+      },
       /* prettier-ignore */
       speechTiming: {
         asynchronous: true,                // true to allow screen updates while adding speech, false to not
@@ -511,7 +519,10 @@ export function EnrichedMathDocumentMixin<
       if (!this.processed.isSet('attach-speech')) {
         if (this.options.enableSpeech || this.options.enableBraille) {
           if (!this.webworker) {
-            this.webworker = new WorkerHandler(this.adaptor);
+            this.webworker = new WorkerHandler(
+              this.adaptor,
+              this.options.worker
+            );
             this.webworker.Start();
             this.webworker.Import();
           }

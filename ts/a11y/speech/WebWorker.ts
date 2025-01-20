@@ -26,26 +26,20 @@ import { OptionList } from '../../util/Options.js';
 
 /* eslint @typescript-eslint/no-empty-object-type: 0 */
 export type Callbacks = { [name: string]: (data: {}) => void };
-export type Message = {
+export type Message = { [key: string]: any };
+export type WorkerCommand = {
   cmd: string;
   debug: boolean;
-  data?: { [key: string]: any };
+  data: Message;
 };
 export type Command = {
   cmd: string;
-  data: Message;
-  worker?: number;
+  data: WorkerCommand | {};
 };
 
 // These need to become options.
 // const DOMAIN = 'https://88.166.18.204';
 // const DOMAIN = 'https://88.174.118.32';
-const DOMAIN = 'https://localhost';
-const BASEDIR = 'workers';
-const POOL = 'workerpool2.html';
-const WORKER = 'worker2.js'; // the URL for the webworkers
-const SRE = 'sre.js'; // SRE library to import
-const DEBUG = true;
 
 /**
  * The main WorkerHandler class
@@ -58,7 +52,7 @@ export class WorkerHandler<N, T, D> {
   private static TIMEOUT = 200; // delay (ms) to wait for pool to start
   private static REPEAT = 20; // repeat wait
 
-  static ID = 0;
+  private static ID = 0;
   private _count = 0;
 
   public get counter() {
@@ -76,9 +70,13 @@ export class WorkerHandler<N, T, D> {
    * The adaptor to work with typeset nodes.
    *
    * @param {DOMAdaptor} adaptor The adaptor to use for DOM access.
+   * @param options
    */
-  constructor(public adaptor: DOMAdaptor<N, T, D>) {
-    this.url = DOMAIN + '/' + BASEDIR + '/';
+  constructor(
+    public adaptor: DOMAdaptor<N, T, D>,
+    private options: OptionList
+  ) {
+    this.url = this.options.domain + '/' + this.options.basedir + '/';
   }
 
   /**
@@ -99,7 +97,7 @@ export class WorkerHandler<N, T, D> {
   private computeSrc(domain: string, parameters: string[]) {
     const hash = encodeURIComponent(domain);
     parameters.unshift(hash);
-    return this.url + POOL + '#' + parameters.join('&');
+    return this.url + this.options.pool + '#' + parameters.join('&');
   }
 
   /**
@@ -122,7 +120,10 @@ export class WorkerHandler<N, T, D> {
       location.host +
       (location.port ? ':' + location.port : '');
     domain = this.rewriteFirefox(domain);
-    this.iframe.src = this.computeSrc(domain, [WORKER, DEBUG.toString()]);
+    this.iframe.src = this.computeSrc(domain, [
+      this.options.worker,
+      this.options.debug.toString(),
+    ]);
     this.domain = this.iframe.src.replace(/^(.*?:\/\/.*?)\/.*/, '$1'); // the pool's domain
     this.domain = this.rewriteFirefox(this.domain);
   }
@@ -186,7 +187,7 @@ export class WorkerHandler<N, T, D> {
    * @param {...any} rest
    */
   private debug(msg: string, ...rest: any[]) {
-    if (DEBUG) {
+    if (this.options.debug) {
       console.info(msg, ...rest);
     }
   }
@@ -209,7 +210,7 @@ export class WorkerHandler<N, T, D> {
     if (origin !== this.domain) return; // make sure the message is from the WorkerPool
     // Here!
     if (Object.hasOwn(this.Commands, event.data.cmd)) {
-      this.Commands[event.data.cmd](this, event.data);
+      this.Commands[event.data.cmd](this, event.data.data);
     } else {
       this.debug('Invalid command from pool: ' + event.data.cmd);
     }
@@ -225,34 +226,50 @@ export class WorkerHandler<N, T, D> {
   }
 
   // Short cuts for posts.
-  public Import(library: string = this.url + SRE) {
+  /**
+   * Import a given library into the worker.
+   *
+   * @param {string} library The library to import. Defaults to SRE.
+   */
+  public Import(library: string = this.url + this.options.sre) {
     this.Post({
       cmd: 'Worker',
       data: {
         cmd: 'import',
-        debug: DEBUG,
+        debug: this.options.debug,
         data: { imports: library },
       },
     });
   }
 
+  /**
+   * Compute speech strcuture for the math.
+   *
+   * @param {string} math The mml string.
+   * @param {number} id The math item id.
+   */
   public Speech(math: string, id: number) {
     this.Post({
       cmd: 'Worker',
       data: {
         cmd: 'speech',
-        debug: DEBUG,
+        debug: this.options.debug,
         data: { mml: math, id: id },
       },
     });
   }
 
+  /**
+   * Setup the engine in the SRE worker.
+   *
+   * @param {OptionList} options The options list.
+   */
   public Setup(options: OptionList) {
     this.Post({
       cmd: 'Worker',
       data: {
         cmd: 'setup',
-        debug: DEBUG,
+        debug: this.options.debug,
         data: {
           domain: options.sre.domain,
           style: options.sre.style,
@@ -264,21 +281,16 @@ export class WorkerHandler<N, T, D> {
   }
 
   /**
-   * Terminates the rule's worker without waiting for results.
-   *
-   * @param rule - The rule to stop.
+   * Terminates the worker.
    */
   public Terminate() {
-    this.Post({
-      cmd: 'Worker',
-      data: { cmd: 'terminate', debug: DEBUG, data: {} },
-    });
+    this.Post({ cmd: 'Terminate', data: {} });
   }
 
-  //
-  //  Stop the pool from running by removing and freeing the iframe.
-  //  Clear the values so that the pool can be restarted, if desired.
-  //
+  /**
+   * Stop the pool from running by removing and freeing the iframe.
+   * Clear the values so that the pool can be restarted, if desired.
+   */
   public Stop() {
     if (!this.iframe) {
       throw Error('WorkerHandler has not been started');
@@ -289,41 +301,39 @@ export class WorkerHandler<N, T, D> {
     this.ready = false;
   }
 
-  //
-  //  The list of valid commands from the WorkerPool in the iframe.
-  //
+  /**
+   * The list of valid commands from the WorkerPool in the iframe.
+   */
   public Commands: {
-    [id: string]: (pool: WorkerHandler<N, T, D>, msg: Message) => void;
+    [id: string]: (pool: WorkerHandler<N, T, D>, data: Message) => void;
   } = {
-    //
-    //  This signals that the pool in the iframe is loaded and ready
-    //  (we clear the timeout, save the pool window, and signal
-    //  the callback that everything is OK).
-    //
-    Ready: function (pool: WorkerHandler<N, T, D>, _msg: Message) {
+    /**
+     * This signals that the worker in the iframe is loaded and ready
+     *
+     * @param pool
+     * @param _data
+     */
+    Ready: function (pool: WorkerHandler<N, T, D>, _data: Message) {
       pool.pool = pool.iframe.contentWindow;
       pool.ready = true;
     },
-    Setup: function (_pool: WorkerHandler<N, T, D>, _msg: Message) {
-      console.log(7);
-    },
-    //
-    //  Workers send messages to the Task objects via this command.
-    //  The message has the task id and the action to perform.
-    //  We look up the action from the Actions object below,
-    //  and if there is one, we perform a pre-action or a post-action.
-    //  Then we ask the task to dispatch the callback for the given action.
-    //
-    Attach: function (pool: WorkerHandler<N, T, D>, msg: Message) {
+    /**
+     * Attaches speech returned from the worker to the DOM element with the
+     * corresponding data-worker id.
+     *
+     * @param pool
+     * @param data
+     */
+    Attach: function (pool: WorkerHandler<N, T, D>, data: Message) {
       const container = document.querySelector(
-        `[data-worker="${msg?.data.id}"]`
+        `[data-worker="${data?.id}"]`
       ) as N;
       if (!container) return; // The element gone, must have been retypeset.
       // Container needs to get the aria label.
       let rootId: string = null;
       const setAttribute = function (node: N) {
         const id = pool.adaptor.getAttribute(node, 'data-semantic-id');
-        const speech = msg.data?.speech[id] || {};
+        const speech = data?.speech[id] || {};
         for (let [key, value] of Object.entries(speech)) {
           key = key.replace(/-ssml$/, '');
           if (value) {
@@ -355,13 +365,16 @@ export class WorkerHandler<N, T, D> {
         Array.from(pool.adaptor.childNodes(root)).forEach(setAttributes);
       };
       setAttributes(pool.adaptor.childNodes(container)[0]);
+      pool.adaptor.setAttribute(container, 'data-speech-attached', 'true');
     },
-    //
-    //  Can be used to send messages to the console that can be trapped
-    //  via this function.
-    //
-    Log: function (pool: WorkerHandler<N, T, D>, msg: Message) {
-      pool.debug('', msg.data);
+    /**
+     * Logs a message from the pool or worker.
+     *
+     * @param pool
+     * @param data
+     */
+    Log: function (pool: WorkerHandler<N, T, D>, data: Message) {
+      pool.debug(data.msg);
     },
   };
 }
