@@ -42,6 +42,7 @@ import * as Sre from './sre.js';
 import { buildSpeech } from './speech/SpeechUtil.js';
 import { GeneratorPool } from './speech/GeneratorPool.js';
 
+import { MathJax } from '../components/startup.js';
 import { WorkerHandler } from './speech/WebWorker.js';
 
 // declare const SRE: any;
@@ -437,10 +438,10 @@ export function EnrichedMathDocumentMixin<
         attachSpeech: [STATE.ATTACHSPEECH],
       }),
       worker: {
-        domain: 'https://localhost',
+        path: MathJax.config.loader['a11y/semantic-enrich'].worker.path,
         basedir: 'workers',
-        pool: 'workerpool2.html',
-        worker: 'worker2.js',
+        pool: 'speech-workerpool.html',
+        worker: 'speech-worker.js',
         sre: 'sre.js',
         debug: false,
       },
@@ -492,6 +493,8 @@ export function EnrichedMathDocumentMixin<
      */
     constructor(...args: any[]) {
       super(...args);
+      console.log(9);
+      console.log(BaseDocument.OPTIONS);
       MmlJax.setMmlFactory(this.mmlFactory);
       const ProcessBits = (this.constructor as typeof AbstractMathDocument)
         .ProcessBits;

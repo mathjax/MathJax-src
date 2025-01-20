@@ -76,7 +76,7 @@ export class WorkerHandler<N, T, D> {
     public adaptor: DOMAdaptor<N, T, D>,
     private options: OptionList
   ) {
-    this.url = this.options.domain + '/' + this.options.basedir + '/';
+    this.url = this.options.path + '/' + this.options.basedir + '/';
   }
 
   /**
