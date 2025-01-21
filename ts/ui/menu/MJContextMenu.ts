@@ -56,11 +56,6 @@ export class MJContextMenu extends ContextMenu {
   public mathItem: MathItem<HTMLElement, Text, Document> = null;
 
   /**
-   * True when the menu is posted while the explorer is in operation
-   */
-  public refocus: boolean = false;
-
-  /**
    * The document options
    */
   public settings: OptionList;
@@ -85,8 +80,6 @@ export class MJContextMenu extends ContextMenu {
    */
   public post(x?: any, y?: number) {
     if (this.mathItem) {
-      this.refocus =
-        document.activeElement.nodeName.toLowerCase() !== 'mjx-container';
       if (y !== undefined) {
         this.getOriginalMenu();
         this.getSemanticsMenu();
@@ -106,20 +99,8 @@ export class MJContextMenu extends ContextMenu {
    * @override
    */
   public unpost() {
-    this.mathItem = null;
-    if (this.refocus) {
-      super.unpost();
-      return;
-    }
-    //
-    // Prevent store.active.focus() from refocusing the menu in super.unpost()
-    //   (no pretty way to do it without making changes to mj-context-menu)
-    //
-    const store = this.store;
-    const active = store.active;
-    (store as any)._active = document.body;
     super.unpost();
-    store.active = active;
+    this.mathItem.outputData.nofocus = false;
   }
 
   /*======================================================================*/

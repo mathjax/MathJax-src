@@ -1569,7 +1569,6 @@ export class Menu {
    * @param {number=} start   The state at which to start rerendering
    */
   protected rerender(start: number = STATE.TYPESET) {
-    this.menu.refocus = false;
     this.rerenderStart = Math.min(start, this.rerenderStart);
     const startup = MathJax.startup;
     if (!Menu.loading && startup.rerenderPromise) {
@@ -1639,7 +1638,7 @@ export class Menu {
     const element = math.typesetRoot;
     element.addEventListener(
       'contextmenu',
-      () => (this.menu.mathItem = math),
+      () => (this.menu.mathItem = math, math.outputData.nofocus = true),
       true
     );
     element.addEventListener(
