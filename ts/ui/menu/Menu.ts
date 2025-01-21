@@ -649,7 +649,7 @@ export class Menu {
             this.checkbox('BreakInline', 'Allow In-line Breaks', 'breakInline'),
           ]),
           this.rule(),
-          this.submenu('MathmlIncludes', 'MathML Includes', [
+          this.submenu('MathmlIncludes', 'MathML/SVG has', [
             this.checkbox('showSRE', 'Semantic attributes', 'showSRE'),
             this.checkbox('showTex', 'LaTeX attributes', 'showTex'),
             this.checkbox('texHints', 'TeX hints', 'texHints'),
@@ -1496,6 +1496,23 @@ export class Menu {
     svg = svg
       .replace(/ (?:role|focusable)=".*?"/g, '')
       .replace(/"currentColor"/g, '"black"');
+    if (!this.settings.showSRE) {
+      svg = svg.replace(
+        / (?:data-semantic-.*?|role|aria-(?:level|posinset|setsize|owns))=".*?"/g,
+        ''
+      );
+    }
+    if (!this.settings.showTex) {
+      svg = svg.replace(/ data-latex(?:-item)?=".*?"/g, '');
+    }
+    if (!this.settings.texHints) {
+      svg = svg
+        .replace(
+          / data-mjx-(?:texclass|alternate|variant|smallmatrix|mathaccent|auto-op|script-align|vbox)=".*?"/g,
+          ''
+        )
+        .replace(/ data-mml-node="TeXAtom"/g, '');
+    }
     return `${XMLDECLARATION}\n${svg}`;
   }
 
