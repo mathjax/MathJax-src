@@ -1638,7 +1638,10 @@ export class Menu {
     const element = math.typesetRoot;
     element.addEventListener(
       'contextmenu',
-      () => (this.menu.mathItem = math, math.outputData.nofocus = true),
+      () => {
+        this.menu.mathItem = math;
+        math.outputData.nofocus = true;
+      },
       true
     );
     element.addEventListener(
