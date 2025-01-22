@@ -349,7 +349,7 @@ export class Styles {
   public static pattern: { [name: string]: RegExp } = {
     sanitize: /['";]/,
     value:
-      /^((:?'(?:\\.|[^'])*(?:'|$)|"(?:\\.|[^"])*(?:"|$)|\n|\\.|[^'";])*?)(?:;|$).*/,
+      /^((:?'(?:\\.|[^'])*(?:'|$)|"(?:\\.|[^"])*(?:"|$)|\n|\\.|[^'";])*?)[\s\n]*(?:;|$).*/,
     style:
       /([-a-z]+)[\s\n]*:[\s\n]*((?:'(?:\\.|[^'])*(?:'|$)|"(?:\\.|[^"])*(?:"|$)|\n|\\.|[^';])*?)[\s\n]*(?:;|$)/g,
     comment: /\/\*[^]*?\*\//g,
@@ -436,7 +436,8 @@ export class Styles {
 
   /**
    * @param {string} text  The value to be sanitized
-   * @returns {string}      The sanitized value (removes ; and anything past that, and balances quotation marks)
+   * @returns {string}     The sanitized value
+   *                         (removes ; and anything past that, and balances quotation marks)
    */
   protected sanitizeValue(text: string): string {
     const PATTERN = (this.constructor as typeof Styles).pattern;
@@ -462,7 +463,7 @@ export class Styles {
     for (const name of Object.keys(this.styles)) {
       const parent = this.parentName(name);
       if (!this.styles[parent]) {
-        styles.push(name + ': ' + this.sanitizeValue(this.styles[name]) + ';');
+        styles.push(`${name}: ${this.styles[name]};`);
       }
     }
     return styles.join(' ');
@@ -481,7 +482,7 @@ export class Styles {
    */
   public set(name: string, value: string | number | boolean) {
     name = this.normalizeName(name);
-    this.setStyle(name, value.toString());
+    this.setStyle(name, String(value));
     //
     // If there is no combine function, the children combine to
     // a separate parent (e.g., border-width sets border-top-width, etc.
@@ -516,7 +517,7 @@ export class Styles {
    * @param {string} value  The value to set it to
    */
   protected setStyle(name: string, value: string) {
-    this.styles[name] = value;
+    this.styles[name] = this.sanitizeValue(value);
     if (Styles.connect[name] && Styles.connect[name].children) {
       Styles.connect[name].split.call(this, name);
     }
@@ -550,7 +551,7 @@ export class Styles {
    * @param {string} child  The suffix to be added to the parent
    * @returns {string}      The combined name
    */
-  protected childName(name: string, child: string) {
+  protected childName(name: string, child: string): string {
     //
     // If the child contains a dash, it is already the fill name
     //
