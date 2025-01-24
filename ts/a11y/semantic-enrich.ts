@@ -305,7 +305,8 @@ export function EnrichedMathItemMixin<
           const id = worker.counter;
           document.adaptor.setAttribute(this.typesetRoot, 'data-worker', id);
           worker.Setup(document.options);
-          worker.Speech(this.toMathML(this.root, this), id);
+          this.outputData.mml = this.toMathML(this.root, this);
+          worker.Speech(this.outputData.mml, id);
           // if (newSpeech) {
           //   newSpeech = buildSpeech(newSpeech)[0];
           // }
@@ -438,7 +439,7 @@ export function EnrichedMathDocumentMixin<
         pool: 'speech-workerpool.html',
         worker: 'speech-worker.js',
         sre: 'sre.js',
-        debug: true,
+        debug: false,
       },
       /* prettier-ignore */
       speechTiming: {
