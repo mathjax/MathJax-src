@@ -61,11 +61,18 @@ const Commands = {
    * This loads one or more libraries.
    * @param data The data object
    */
-  import: function (data) {
+  import: function(data) {
     if (data?.imports) {
       Import(data.imports);
     }
   },
+
+  feature: function(data) {
+    SREfeature = {
+      json: data.json
+    };
+  },
+
 
   /**
    * Compute speech

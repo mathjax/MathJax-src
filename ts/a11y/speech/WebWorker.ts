@@ -235,6 +235,14 @@ export class WorkerHandler<N, T, D> {
     this.Post({
       cmd: 'Worker',
       data: {
+        cmd: 'feature',
+        debug: this.options.debug,
+        data: { json: this.url + 'mathmaps/' },
+      },
+    });
+    this.Post({
+      cmd: 'Worker',
+      data: {
         cmd: 'import',
         debug: this.options.debug,
         data: { imports: library },

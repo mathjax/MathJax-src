@@ -41,11 +41,7 @@ import { OptionList, expandable } from '../util/Options.js';
 import * as Sre from './sre.js';
 import { buildSpeech } from './speech/SpeechUtil.js';
 import { GeneratorPool } from './speech/GeneratorPool.js';
-
-import { MathJax } from '../components/startup.js';
 import { WorkerHandler } from './speech/WebWorker.js';
-
-// declare const SRE: any;
 
 /*==========================================================================*/
 
@@ -218,7 +214,6 @@ export function EnrichedMathItemMixin<
             mml = this.adjustSelections();
           }
           performance.mark('startMark');
-          // const enriched = typeof SRE !== 'undefined' ? SRE.toEnriched(mml) : Sre.toEnriched(mml);
           const enriched = Sre.toEnriched(mml);
           performance.mark('endMark');
           performance.measure('zorkow', 'startMark', 'endMark');
@@ -438,12 +433,12 @@ export function EnrichedMathDocumentMixin<
         attachSpeech: [STATE.ATTACHSPEECH],
       }),
       worker: {
-        path: MathJax.config.loader['a11y/semantic-enrich'].worker.path,
+        path: 'https://localhost',
         basedir: 'sre',
         pool: 'speech-workerpool.html',
         worker: 'speech-worker.js',
         sre: 'sre.js',
-        debug: false,
+        debug: true,
       },
       /* prettier-ignore */
       speechTiming: {
