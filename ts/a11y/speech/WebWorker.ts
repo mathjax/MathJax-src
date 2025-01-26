@@ -49,8 +49,8 @@ export type Command = {
  * @template D  The Document class
  */
 export class WorkerHandler<N, T, D> {
-  private static TIMEOUT = 200; // delay (ms) to wait for pool to start
-  private static REPEAT = 20; // repeat wait
+  // private static TIMEOUT = 200; // delay (ms) to wait for pool to start
+  // private static REPEAT = 20; // repeat wait
 
   private static ID = 0;
   private _count = 0;
@@ -64,7 +64,20 @@ export class WorkerHandler<N, T, D> {
   public ready: boolean = false; // callback for ready signal
   public domain = ''; // the domain of the pool
   public url = '';
-  public wait: Promise<void>; // waiting for timeout?
+  // public wait: Promise<void>; // waiting for timeout?
+
+  // Promise handling
+  public promise = Promise.resolve();
+  public resolve = () => {};
+  public reject = () => {};
+
+  private getPromise() {
+    this.promise = new Promise((res, rej) => {
+      this.resolve = res;
+      this.reject = rej;
+    });
+    return this.promise;
+  }
 
   /**
    * The adaptor to work with typeset nodes.
@@ -150,8 +163,7 @@ export class WorkerHandler<N, T, D> {
     document.body.appendChild(this.iframe);
     //  Start a timer to call the callback if the iframe doesn't
     //  load in a reasonable amount of time.
-    this.wait = this.Wait();
-    return this.wait;
+    return this.getPromise();
   }
 
   /**
@@ -160,24 +172,24 @@ export class WorkerHandler<N, T, D> {
    * @returns {Promise<void>} A promise that fulfills when the worker pool is
    *     established.
    */
-  private async Wait(): Promise<void> {
-    return new Promise<void>((res, rej) => {
-      let n = 0;
-      const checkReady = () => {
-        if (this.ready) {
-          res();
-        } else {
-          if (n >= WorkerHandler.REPEAT) {
-            rej('Something went wrong loading web worker.');
-          } else {
-            n++;
-            setTimeout(checkReady, WorkerHandler.TIMEOUT);
-          }
-        }
-      };
-      checkReady();
-    }).catch((err) => console.log(err));
-  }
+  // private async Wait(): Promise<void> {
+  //   return new Promise<void>((res, rej) => {
+  //     let n = 0;
+  //     const checkReady = () => {
+  //       if (this.ready) {
+  //         res();
+  //       } else {
+  //         if (n >= WorkerHandler.REPEAT) {
+  //           rej('Something went wrong loading web worker.');
+  //         } else {
+  //           n++;
+  //           setTimeout(checkReady, WorkerHandler.TIMEOUT);
+  //         }
+  //       }
+  //     };
+  //     checkReady();
+  //   }).catch((err) => console.log(err));
+  // }
 
   /**
    * Debug output when debug flag is set.
@@ -222,7 +234,7 @@ export class WorkerHandler<N, T, D> {
    * @param {Command} msg The command message.
    */
   public Post(msg: Command) {
-    this.wait.then(() => this.pool.postMessage(msg, this.domain));
+    this.promise.then(() => this.pool.postMessage(msg, this.domain));
   }
 
   // Short cuts for posts.
@@ -324,6 +336,7 @@ export class WorkerHandler<N, T, D> {
     Ready: function (pool: WorkerHandler<N, T, D>, _data: Message) {
       pool.pool = pool.iframe.contentWindow;
       pool.ready = true;
+      pool.resolve();
     },
     /**
      * Attaches speech returned from the worker to the DOM element with the
