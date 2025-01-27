@@ -21,7 +21,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import { CommandMap, CharacterMap, DelimiterMap } from '../TokenMap.js';
+import { CommandMap, CharacterMap } from '../TokenMap.js';
 import { BboldxMethods } from './BboldxMethods.js';
 
 /**
@@ -207,7 +207,7 @@ new CharacterMap(
 /**
  * Macros for delimiters.
  */
-new DelimiterMap('text-bboldx-delimiterNormal', BboldxMethods.delimiterNormal, {
+new CharacterMap('text-bboldx-delimiterNormal', BboldxMethods.delimiterNormal, {
   '\\txtbbLparen': '\u0028',
   '\\txtbbRparen': '\u0029',
   '\\txtbbLbrack': '\u005B',
@@ -263,7 +263,7 @@ new CharacterMap('text-bboldx-mathchar0miBold', BboldxMethods.mathchar0miBold, {
 /**
  * Macros for delimiters.
  */
-new DelimiterMap('text-bboldx-delimiterBold', BboldxMethods.delimiterBold, {
+new CharacterMap('text-bboldx-delimiterBold', BboldxMethods.delimiterBold, {
   '\\txtbfbbLparen': '\u0028',
   '\\txtbfbbRparen': '\u0029',
   '\\txtbfbbLbrack': '\u005B',
