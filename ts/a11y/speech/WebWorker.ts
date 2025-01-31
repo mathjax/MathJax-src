@@ -32,14 +32,15 @@ export type WorkerCommand = {
   debug: boolean;
   data: Message;
 };
-export type Command = {
+export type PoolCommand = {
   cmd: string;
-  data: WorkerCommand | {};
+  data: WorkerCommand | Message;
 };
 
 // These need to become options.
 // const DOMAIN = 'https://88.166.18.204';
 // const DOMAIN = 'https://88.174.118.32';
+// window.Resolves = [];
 
 /**
  * The main WorkerHandler class
@@ -71,12 +72,27 @@ export class WorkerHandler<N, T, D> {
   public resolve = () => {};
   public reject = () => {};
 
-  private getPromise() {
+  private async getPromise() {
     this.promise = new Promise((res, rej) => {
       this.resolve = res;
+      // window.Resolves.push(res);
       this.reject = rej;
     });
-    return this.promise;
+    return this.promise.then(() => this.postNext());
+  }
+
+  private tasks: PoolCommand[] = [];
+
+  private enqueueTask(task: PoolCommand) {
+    console.log('Enqueuing task: ' + task.data.cmd);
+    this.tasks.unshift(task);
+  }
+
+  private dequeueTask(): PoolCommand {
+    const task = this.tasks.pop();
+    console.log('Dequeuing task: ' + task.data.cmd);
+    return task;
+    // return this.tasks.pop();
   }
 
   /**
@@ -231,10 +247,20 @@ export class WorkerHandler<N, T, D> {
   /**
    * Send messages to the worker.
    *
-   * @param {Command} msg The command message.
+   * @param {PoolCommand} msg The command message.
    */
-  public Post(msg: Command) {
-    this.promise.then(() => this.pool.postMessage(msg, this.domain));
+  public Post(msg: PoolCommand) {
+    this.enqueueTask(msg);
+    if (this.ready && this.tasks.length === 1) {
+      this.postNext();
+    }
+  }
+
+  private postNext() {
+    if (this.tasks.length) {
+      this.getPromise();
+      this.pool.postMessage(this.dequeueTask(), this.domain);
+    }
   }
 
   // Short cuts for posts.
@@ -338,6 +364,9 @@ export class WorkerHandler<N, T, D> {
       pool.ready = true;
       pool.resolve();
     },
+    Finished: function (pool: WorkerHandler<N, T, D>, _data: Message) {
+      pool.resolve();
+    },
     /**
      * Attaches speech returned from the worker to the DOM element with the
      * corresponding data-worker id.
@@ -349,7 +378,7 @@ export class WorkerHandler<N, T, D> {
       const container = document.querySelector(
         `[data-worker="${data?.id}"]`
       ) as N;
-      if (!container) return; // The element gone, must have been retypeset.
+      if (!container) return; // The element is gone, must have been retypeset.
       // Container needs to get the aria label.
       let rootId: string = null;
       const setAttribute = function (node: N) {

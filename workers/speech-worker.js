@@ -65,12 +65,14 @@ const Commands = {
     if (data?.imports) {
       Import(data.imports);
     }
+    Finished();
   },
 
   feature: function(data) {
     SREfeature = {
       json: data.json
     };
+    Finished();
   },
 
 
@@ -82,13 +84,12 @@ const Commands = {
   speech: function(data) {
     if (data?.mml) {
       SRE.engineReady().then(() => {
-        Pool('Client', {
-          cmd: 'Attach',
-          data: {
+        SRE.setupEngine({modality: 'speech'});
+        Client('Attach',
+               {
             speech: SRE.toSpeechStructure(data.mml),
             id: data.id
-          }
-        });
+          });
       });
     }
   },
@@ -101,6 +102,12 @@ const Commands = {
     if (data) {
       SRE.setupEngine(data);
     }
+    Finished();
+  },
+
+  nextRules: function(data) {
+    console.log('hhhhhh');
+    console.log(SRE);
   }
 
 };
@@ -118,6 +125,15 @@ function Pool(cmd, data) {
   } catch (err) {
     console.log('Posting error in worker', copyError(err));
   }
+}
+
+function Client(cmd, data) {
+  Pool('Client', {cmd: cmd, data: data});
+  Finished();
+}
+
+function Finished() {
+  Pool('Client', {cmd: 'Finished', data: {}});
 }
 
 /**
