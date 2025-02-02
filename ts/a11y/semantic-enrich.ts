@@ -204,7 +204,6 @@ export function EnrichedMathItemMixin<
     public enrich(document: MathDocument<N, T, D>, force: boolean = false) {
       if (this.state() >= STATE.ENRICHED) return;
       if (!this.isEscaped && (document.options.enableEnrichment || force)) {
-        this.generatorPool.init(document.options, document.adaptor);
         const math = new document.options.MathItem('', MmlJax);
         try {
           let mml;
@@ -291,6 +290,11 @@ export function EnrichedMathItemMixin<
       if (this.state() >= STATE.ATTACHSPEECH) return;
       this.state(STATE.ATTACHSPEECH);
       if (this.isEscaped || !document.options.enableEnrichment) return;
+      this.generatorPool.init(
+        document.options,
+        document.adaptor,
+        (document as EnrichedMathDocument<N, T, D>).webworker
+      );
       const [speech, braille] = this.existingSpeech();
       // let [newSpeech, newBraille] = ['', ''];
       const options = document.options;
@@ -301,15 +305,11 @@ export function EnrichedMathItemMixin<
         (!braille && options.enableBraille)
       ) {
         try {
-          const worker = (document as EnrichedMathDocument<N, T, D>).webworker;
-          const id = worker.counter;
-          document.adaptor.setAttribute(this.typesetRoot, 'data-worker', id);
-          worker.Setup(document.options);
           this.outputData.mml = this.toMathML(this.root, this);
-          worker.Speech(this.outputData.mml, id);
-          // if (newSpeech) {
-          //   newSpeech = buildSpeech(newSpeech)[0];
-          // }
+          this.generatorPool.computeSpeech(
+            this.typesetRoot,
+            this.outputData.mml
+          );
         } catch (err) {
           document.options.speechError(document, this, err);
         }
@@ -439,7 +439,7 @@ export function EnrichedMathDocumentMixin<
         pool: 'speech-workerpool.html',
         worker: 'speech-worker.js',
         sre: 'sre.js',
-        debug: false,
+        debug: true,
       },
       /* prettier-ignore */
       speechTiming: {
@@ -455,6 +455,8 @@ export function EnrichedMathDocumentMixin<
         domain: 'clearspeak',              // speech rules domain
         style: 'default',                  // speech rules style
         braille: 'nemeth',                 // TODO: Dummy switch for braille
+        structure: true,                   // Generates full aria structure
+        aria: true,
       }),
       /* prettier-ignore */
       a11y: expandable({
@@ -600,6 +602,7 @@ export function EnrichedMathDocumentMixin<
     public enrich(): EnrichedMathDocument<N, T, D> {
       if (!this.processed.isSet('enriched')) {
         if (this.options.enableEnrichment) {
+          Sre.setupEngine(this.options.sre);
           for (const math of this.math) {
             (math as EnrichedMathItem<N, T, D>).enrich(this);
           }

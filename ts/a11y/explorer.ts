@@ -195,8 +195,6 @@ export function ExplorerMathDocumentMixin<
       sre: expandable({
         ...BaseDocument.OPTIONS.sre,
         speech: 'none',                    // None as speech is explicitly computed
-        structure: true,                   // Generates full aria structure
-        aria: true,
       }),
       a11y: {
         ...BaseDocument.OPTIONS.a11y,

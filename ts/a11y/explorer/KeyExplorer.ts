@@ -393,10 +393,8 @@ export class SpeechExplorer
       'data-semantic-speech',
       node.getAttribute('data-semantic-summary')
     );
-    // this.generators.summary(node);
     this.Stop();
     this.Restart();
-    // this.refocus(node);
     this.generators.lastMove = InPlace.SUMMARY;
     return node;
   }
@@ -405,20 +403,15 @@ export class SpeechExplorer
    * Cycles to next speech rule set if possible and recomputes the speech for
    * the expression.
    *
-   * @param {HTMLElement} node The targeted node.
+   * @param {HTMLElement} _node The targeted node.
    * @returns {HTMLElement} The refocused targeted node.
    */
-  public nextRules(node: HTMLElement): HTMLElement {
+  public nextRules(_node: HTMLElement): HTMLElement {
     this.node.removeAttribute('data-speech-attached');
-    this.document.options.sre.domain = 'mathspeak';
-    this.document.webworker.Setup(this.document.options);
-    this.document.webworker.Speech(
-      this.item.outputData.mml,
-      this.document.adaptor.getAttribute(this.item.typesetRoot, 'data-worker')
-    );
+    this.generators.nextRules(this.item.typesetRoot, this.item.outputData.mml);
     this.Stop();
     this.Restart();
-    return node;
+    return _node;
   }
 
   /**
@@ -429,9 +422,14 @@ export class SpeechExplorer
    * @returns {HTMLElement} The refocused targeted node.
    */
   public nextStyle(node: HTMLElement): HTMLElement {
-    this.generators.nextStyle(node);
-    this.Speech();
-    this.refocus(node);
+    this.node.removeAttribute('data-speech-attached');
+    this.generators.nextStyle(
+      node,
+      this.item.typesetRoot,
+      this.item.outputData.mml
+    );
+    this.Stop();
+    this.Restart();
     return node;
   }
 
@@ -574,10 +572,10 @@ export class SpeechExplorer
       this.current = this.node.childNodes[0] as HTMLElement;
     }
     const options = this.document.options;
-    let promise = Sre.sreReady();
-    if (this.generators.update(options)) {
-      promise = promise.then(() => this.Speech());
-    }
+    const promise = Promise.resolve(); // Sre.sreReady();
+    // if (this.generators.update(options)) {
+    //   promise = promise.then(() => this.Speech());
+    // }
     this.current.setAttribute('tabindex', '0');
     this.current.focus();
     super.Start();
@@ -621,9 +619,9 @@ export class SpeechExplorer
    * Refactor: This is called when we change rule sets, etc.
    */
   public Speech() {
-    this.item.outputData.speech = this.generators.updateSpeech(
-      this.item.typesetRoot
-    );
+    // this.item.outputData.speech = this.generators.updateSpeech(
+    //   this.item.typesetRoot
+    // );
   }
 
   /**

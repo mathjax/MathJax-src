@@ -15,12 +15,18 @@
  *  limitations under the License.
  */
 
-import { mathjax } from '../../mathjax.js';
+// import { mathjax } from '../../mathjax.js';
 import * as Sre from '../sre.js';
 import { OptionList } from '../../util/Options.js';
 import { LiveRegion } from '../explorer/Region.js';
-import { buildLabel, buildSpeech, InPlace } from '../speech/SpeechUtil.js';
+import {
+  buildLabel,
+  buildSpeech,
+  InPlace,
+  SemAttr,
+} from '../speech/SpeechUtil.js';
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
+import { WorkerHandler } from './WebWorker.js';
 
 /**
  * @file Speech generator collections for enrichment and explorers.
@@ -34,6 +40,7 @@ import { DOMAdaptor } from '../../core/DOMAdaptor.js';
  * @template D  The Document class
  */
 export class GeneratorPool<N, T, D> {
+  private webworker: WorkerHandler<N, T, D>;
   private _element: Element;
 
   set element(element: Element) {
@@ -83,29 +90,31 @@ export class GeneratorPool<N, T, D> {
    * @param {OptionList} options The option list.
    */
   public set options(options: OptionList) {
-    this._options = options;
-    Sre.setupEngine(options.sre);
-    this.speechGenerator.setOptions(
-      Object.assign({}, options?.sre || {}, {
-        modality: 'speech',
-        markup: 'ssml',
-        automark: true,
-      })
-    );
-    this.summaryGenerator.setOptions(
-      Object.assign({}, options?.sre || {}, {
-        modality: 'summary',
-        markup: 'ssml',
-        automark: true,
-      })
-    );
-    this.brailleGenerator.setOptions({
-      locale: options?.sre?.braille,
-      domain: 'default',
-      style: 'default',
-      modality: 'braille',
-      markup: 'none',
-    });
+    // TODO: Compare for global changes?
+    this._options = Object.assign({}, options?.sre || {});
+    // this._options = options; //
+    // Sre.setupEngine(options.sre);
+    // this.speechGenerator.setOptions(
+    //   Object.assign({}, options?.sre || {}, {
+    //     modality: 'speech',
+    //     markup: 'ssml',
+    //     automark: true,
+    //   })
+    // );
+    // this.summaryGenerator.setOptions(
+    //   Object.assign({}, options?.sre || {}, {
+    //     modality: 'summary',
+    //     markup: 'ssml',
+    //     automark: true,
+    //   })
+    // );
+    // this.brailleGenerator.setOptions({
+    //   locale: options?.sre?.braille,
+    //   domain: 'default',
+    //   style: 'default',
+    //   modality: 'braille',
+    //   markup: 'none',
+    // });
   }
 
   public get options() {
@@ -120,15 +129,21 @@ export class GeneratorPool<N, T, D> {
    *
    * @param {OptionList} options A list of options.
    * @param {DOMAdaptor} adaptor The DOM adaptor providing access to nodes.
+   * @param webworker
    */
-  public init(options: OptionList, adaptor: DOMAdaptor<N, T, D>) {
+  public init(
+    options: OptionList,
+    adaptor: DOMAdaptor<N, T, D>,
+    webworker: WorkerHandler<N, T, D>
+  ) {
     if (this._init) return;
     this.adaptor = adaptor;
     this.options = options;
+    this.webworker = webworker;
     this._init = true;
-    if (this._update(options)) {
-      mathjax.retryAfter(Sre.sreReady());
-    }
+    // if (this._update(options)) {
+    //   mathjax.retryAfter(Sre.sreReady());
+    // }
   }
 
   /**
@@ -139,7 +154,7 @@ export class GeneratorPool<N, T, D> {
    * @returns {boolean} True if the speech or Braille locale needed updating.
    */
   public update(options: OptionList): boolean {
-    this.options = options;
+    Object.assign(this.options, options);
     return this._update(options);
   }
 
@@ -150,47 +165,35 @@ export class GeneratorPool<N, T, D> {
    * @returns {boolean} True if the speech or Braille locale needed updating.
    */
   private _update(options: OptionList): boolean {
-    if (!options || !options.sre) return false;
+    if (!options) return false;
     let update = false;
-    if (options.sre.braille !== GeneratorPool.currentBraille) {
-      GeneratorPool.currentBraille = options.sre.braille;
+    if (options.braille !== GeneratorPool.currentBraille) {
+      GeneratorPool.currentBraille = options.braille;
       update = true;
-      Sre.setupEngine({ locale: options.sre.braille });
+      Sre.setupEngine({ locale: options.braille });
     }
-    if (options.sre.locale !== GeneratorPool.currentLocale) {
-      GeneratorPool.currentLocale = options.sre.locale;
+    if (options.locale !== GeneratorPool.currentLocale) {
+      GeneratorPool.currentLocale = options.locale;
       update = true;
-      Sre.setupEngine({ locale: options.sre.locale });
+      Sre.setupEngine({ locale: options.locale });
     }
     return update;
   }
 
-  // /**
-  //  * Compute speech using the original MathML element as reference.
-  //  *
-  //  * @param {N} node The typeset node.
-  //  * @param {string} mml The serialized mml node.
-  //  * @returns {[string, string]} Speech and Braille expression pair.
-  //  */
-  // public computeSpeech(node: N, mml: string, worker: WorkerHandler): [string, string] {
-  //   const id = worker.counter;
-  //   this.adaptor.setAttribute(node, 'data-worker', id);
-  //   // TODO: attach all the speech elements here!
-  //   worker.Speech(mml, id);
-
-  //   // this.element = Sre.parseDOM(mml);
-  //   // const xml = this.prepareXml(node);
-  //   // const speech = this.options.enableSpeech
-  //   //   ? this.speechGenerator.getSpeech(xml, this.element)
-  //   //   : '';
-  //   // const braille = this.options.enableBraille
-  //   //   ? this.brailleGenerator.getSpeech(xml, this.element)
-  //   //   : '';
-  //   // if (speech || braille) {
-  //   //   // this.setAria(node, xml, this.options.sre.locale);
-  //   // }
-  //   // return [speech, braille];
-  // }
+  /**
+   * Compute speech using the original MathML element as reference.
+   *
+   * @param {N} node The typeset node.
+   * @param {string} mml The serialized mml node.
+   */
+  public computeSpeech(node: N, mml: string) {
+    const id = this.webworker.counter;
+    this.adaptor.setAttribute(node, 'data-worker', id);
+    this.webworker.Setup(
+      Object.assign({}, this.options, { modality: 'speech' })
+    );
+    this.webworker.Speech(mml, id.toString());
+  }
 
   /**
    * Computes the summary for the current node. Summary computations are very
@@ -294,37 +297,61 @@ export class GeneratorPool<N, T, D> {
     return label;
   }
 
+  private getOptions(node: N): { [key: string]: string } {
+    console.log(24);
+    console.log(node);
+    console.log(25);
+    return {
+      locale: this.adaptor.getAttribute(node, 'data-semantic-locale') ?? '',
+      domain: this.adaptor.getAttribute(node, 'data-semantic-domain') ?? '',
+      style: this.adaptor.getAttribute(node, 'data-semantic-style') ?? '',
+    };
+  }
+
   /**
    * Cycles rule sets for the speech generator.
    *
-   * @param {N} _node The typeset node.
+   * @param {N} node The typeset node.
+   * @param mml
    */
-  public nextRules(_node: N) {
-    this.speechGenerator.nextRules();
-    this.updateSummaryGenerator();
+  public nextRules(node: N, mml: string) {
+    const options = this.getOptions(node);
+    this.update(options);
+    this.webworker.nextRules(
+      Object.assign({}, this.options, { modality: 'speech' })
+    );
+    this.webworker.Speech(mml, this.adaptor.getAttribute(node, 'data-worker'));
   }
 
   /**
    * Cycles style or preference settings for the speech generator.
    *
    * @param {N} node The typeset node.
+   * @param root
+   * @param mml
    */
-  public nextStyle(node: N) {
-    this.speechGenerator.nextStyle(
-      this.adaptor.getAttribute(node, 'data-semantic-id')
+  public nextStyle(node: N, root: N, mml: string) {
+    const options = this.getOptions(root);
+    this.update(options);
+    this.webworker.Setup(
+      Object.assign({}, this.options, { modality: 'speech' })
     );
-    this.updateSummaryGenerator();
+    this.webworker.nextStyle(
+      mml,
+      this.adaptor.getAttribute(node, 'data-semantic-id'),
+      this.adaptor.getAttribute(root, 'data-worker')
+    );
   }
 
   /**
    * Copies domain and style option from speech to summary generator. This is
    * necessary after when either option is changed on the fly.
    */
-  private updateSummaryGenerator() {
-    const options = this.speechGenerator.getOptions();
-    this.summaryGenerator.setOption('domain', options['domain']);
-    this.summaryGenerator.setOption('style', options['style']);
-  }
+  // private updateSummaryGenerator() {
+  //   const options = this.speechGenerator.getOptions();
+  //   this.summaryGenerator.setOption('domain', options['domain']);
+  //   this.summaryGenerator.setOption('style', options['style']);
+  // }
 
   /**
    * Makes a node amenable for SRE computations by reparsing.
@@ -350,10 +377,10 @@ export class GeneratorPool<N, T, D> {
    */
   public getLabel(node: N, center: string = '', sep: string = ' '): string {
     return buildLabel(
-      center || this.adaptor.getAttribute(node, 'data-semantic-speech'),
-      this.adaptor.getAttribute(node, 'data-semantic-prefix'),
+      center || this.adaptor.getAttribute(node, SemAttr.SPEECH),
+      this.adaptor.getAttribute(node, SemAttr.PREFIX),
       // TODO: check if we need this or if it is automatic by the screen readers.
-      this.adaptor.getAttribute(node, 'data-semantic-postfix'),
+      this.adaptor.getAttribute(node, SemAttr.POSTFIX),
       sep
     );
   }

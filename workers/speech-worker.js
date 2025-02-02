@@ -85,9 +85,20 @@ const Commands = {
     if (data?.mml) {
       SRE.engineReady().then(() => {
         SRE.setupEngine({modality: 'speech'});
-        Client('Attach',
-               {
+        const {
+          locale: locale,
+          domain: domain,
+          style: style
+        } = SRE.engineSetup();
+        Client(
+          'Attach',
+          {
             speech: SRE.toSpeechStructure(data.mml),
+            options: {
+              locale: locale,
+              domain: domain,
+              style: style
+            },
             id: data.id
           });
       });
@@ -106,9 +117,29 @@ const Commands = {
   },
 
   nextRules: function(data) {
-    console.log('hhhhhh');
-    console.log(SRE);
-  }
+    SRE.nextDomain(data);
+    Finished();
+  },
+
+  nextStyle: function(data) {
+    const speech = SRE.nextStyle(data.mml, data.nodeId);
+    const {
+      locale: locale,
+      domain: domain,
+      style: style
+    } = SRE.engineSetup();
+    Client(
+      'Attach',
+      {
+        speech: speech,
+        options: {
+          locale: locale,
+          domain: domain,
+          style: style
+        },
+        id: data.workerId
+      });
+  },
 
 };
 

@@ -214,7 +214,7 @@ export const WorkerCommands = {
    * Logging a worker error.
    */
   Error: function (pool, msg) {
-    pool.Log(`Worker error: ${msg.data}`);
+    pool.Log(`Worker error: ${JSON.stringify(msg.data)}`);
   },
   
 };

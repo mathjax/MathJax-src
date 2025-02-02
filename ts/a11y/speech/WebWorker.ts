@@ -75,7 +75,6 @@ export class WorkerHandler<N, T, D> {
   private async getPromise() {
     this.promise = new Promise((res, rej) => {
       this.resolve = res;
-      // window.Resolves.push(res);
       this.reject = rej;
     });
     return this.promise.then(() => this.postNext());
@@ -177,8 +176,6 @@ export class WorkerHandler<N, T, D> {
     window.addEventListener('message', this.Listener.bind(this));
     //  Add the iframe to the page (starting the process of loading its content)
     document.body.appendChild(this.iframe);
-    //  Start a timer to call the callback if the iframe doesn't
-    //  load in a reasonable amount of time.
     return this.getPromise();
   }
 
@@ -236,7 +233,6 @@ export class WorkerHandler<N, T, D> {
     let origin = event.origin;
     if (origin === 'null' || origin === 'file://') origin = '*';
     if (origin !== this.domain) return; // make sure the message is from the WorkerPool
-    // Here!
     if (Object.hasOwn(this.Commands, event.data.cmd)) {
       this.Commands[event.data.cmd](this, event.data.data);
     } else {
@@ -292,9 +288,9 @@ export class WorkerHandler<N, T, D> {
    * Compute speech strcuture for the math.
    *
    * @param {string} math The mml string.
-   * @param {number} id The math item id.
+   * @param {string} id The math item id.
    */
-  public Speech(math: string, id: number) {
+  public Speech(math: string, id: string) {
     this.Post({
       cmd: 'Worker',
       data: {
@@ -317,11 +313,59 @@ export class WorkerHandler<N, T, D> {
         cmd: 'setup',
         debug: this.options.debug,
         data: {
-          domain: options.sre.domain,
-          style: options.sre.style,
-          locale: options.sre.locale,
-          modality: options.sre.modality,
+          domain: options.domain,
+          style: options.style,
+          locale: options.locale,
+          modality: options.modality,
         },
+      },
+    });
+  }
+
+  /**
+   * Computes the next rule set for this particular SRE setting. We assume that
+   * the engine has been set to the options of the current expression.
+   *
+   * @param {OptionList} options The options list.
+   */
+  public nextRules(options: OptionList) {
+    this.Post({
+      cmd: 'Worker',
+      data: {
+        cmd: 'nextRules',
+        debug: this.options.debug,
+        data: {
+          domain: options.domain,
+          style: options.style,
+          locale: options.locale,
+          modality: options.modality,
+        },
+      },
+    });
+  }
+
+  /**
+   * Computes the next style for the particular SRE settings and the currently
+   * focused node. We assume that the engine has been set to the options of the
+   * current expression.
+   *
+   * Note, that we compute not only the next style but also the next speech
+   * structure in the method, as smart computation is done wrt. the semantic
+   * node, and we do not want to reconstruct the semantic XML tree on the SRE
+   * side twice. Hence we pass the math expression, plus the semantic ID of the
+   * currently focused node, plus the worker ID.
+   *
+   * @param {string} math The linearized mml expression.
+   * @param {string} nodeId The semantic Id of the currenctly focused node.
+   * @param {string} workerId The id for reattaching the speech.
+   */
+  public nextStyle(math: string, nodeId: string, workerId: string) {
+    this.Post({
+      cmd: 'Worker',
+      data: {
+        cmd: 'nextStyle',
+        debug: this.options.debug,
+        data: { mml: math, nodeId: nodeId, workerId: workerId },
       },
     });
   }
@@ -379,6 +423,25 @@ export class WorkerHandler<N, T, D> {
         `[data-worker="${data?.id}"]`
       ) as N;
       if (!container) return; // The element is gone, must have been retypeset.
+      // Attach options
+      const options = data.options;
+      if (options) {
+        pool.adaptor.setAttribute(
+          container,
+          'data-semantic-locale',
+          options.locale ?? ''
+        );
+        pool.adaptor.setAttribute(
+          container,
+          'data-semantic-domain',
+          options.domain ?? ''
+        );
+        pool.adaptor.setAttribute(
+          container,
+          'data-semantic-style',
+          options.style ?? ''
+        );
+      }
       // Container needs to get the aria label.
       let rootId: string = null;
       const setAttribute = function (node: N) {
