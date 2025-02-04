@@ -52,7 +52,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
         HD.replace(/ /g, '').match(/^(\d+(\.\d*)?|\.\d+),(\d+(\.\d*)?|\.\d+)$/)
       ) {
         HDsplit = HD.replace(/ /g, '').split(/,/);
-        font = parser.GetBrackets(name);
+        font = parser.GetBrackets(name) || '';
       } else {
         font = HD;
       }
