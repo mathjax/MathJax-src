@@ -5,6 +5,8 @@
 import {tmpJsonFile} from './constants.js';
 import * as fs from 'fs';
 
+const ESC = '\u001B';
+
 export default class TexReporter {
 
   constructor(globalConfig, reporterOptions, reporterContext) {
@@ -26,12 +28,8 @@ export default class TexReporter {
       return;
     }
     coverage = coverage.slice(1);
-    let result = '';
-    for (let configuration of coverage) {
-      result += `\n${createConfigurationOutput(configuration)}\n`;
-    }
     fs.unlinkSync(tmpJsonFile);
-    console.log(result);
+    createCoverageOutput(coverage);
   }
 
   // Optionally, reporters can force Jest to exit with non zero code by returning
@@ -43,40 +41,82 @@ export default class TexReporter {
   }
 }
 
+/**
+ * Convert the array of configurations to a array of rows of data,
+ * sorted by package name.
+ * @param coverage The coverage data from the json file
+ * @return The array of rows of data
+ */
+function combineCoverage(coverage) {
+  const maps = [];
+  coverage = coverage.sort((a, b) => a.configuration < b.configuration ? -1 : 1);
+  for (const configuration of coverage) {
+    const rows = [];
+    let actual = 0;
+    let size = 0;
+    for (const table of configuration.tables.sort((a, b) => a.table < b.table ? -1 : 1)) {
+      if (table.actual > table.size) {
+        table.actual = table.size;
+      }
+      actual += table.actual;
+      size += table.size;
+      rows.push([' ' + table.table, table.size, table.actual, table.missing.join(', ')]);
+    }
+    maps.push([configuration.configuration, size, actual, ''], ...rows);
+  }
+  return maps;
+}
 
 /**
- * Creates the output table per configuration.
- * @param configuration The configuration JSON.
- * @return The string containing the table.
+ * Print the coverage table
+ * @param coverage The converage data from the json file
  */
-function createConfigurationOutput(configuration) {
-  let allSize = 0;
-  let allActual = 0;
-  let result = '\n';
-  // Compute columns
-  let maxWidth = configuration.tables.reduce((max, val) => Math.max(val.table.length, max), 0);
-  result += makeColumn('Table', maxWidth, true);
-  result += 'Entries | Tested | Percentage | Missing ';
-  result += '\n';
-  result += makeColumn('', maxWidth).replaceAll(' ', '-');
-  result += '--------|--------|------------|--------';
-  maxWidth = Math.max(configuration.configuration.length, maxWidth);
-  for (let {table, size, actual, missing} of configuration.tables) {
-    allSize += size;
-    allActual += actual;
-    result += '\n';
-    result += makeColumn(table, maxWidth, true);
-    result += makeColumn(size, 7);
-    result += makeColumn(actual, 6);
-    result += makeColumn(percentage(actual, size), 10);
-    result += ` ${missing.join(', ')}`;
+function createCoverageOutput(coverage) {
+  const rows = combineCoverage(coverage);
+  if (rows.length === 0) return;
+  const width = rows.reduce((max, row) => Math.max(row[0].length, max), 5);
+  const mwidth = trimMissing(rows, width);
+  const line = [
+    makeColumn('', width).replaceAll(' ', '-'),
+    '--------|--------|------------|',
+    makeColumn('', mwidth).replaceAll(' ', '-').replace('|-', '')
+  ].join('');
+  console.log(line);
+  console.log(makeColumn('Table', width, 0, true) + 'Entries | Tested | Percentage | Missing');
+  console.log(line);
+  for (const [table, size, actual, missing] of rows) {
+    const color = getColor(actual, size);
+    console.log([
+      makeColumn(table, width, color, true),
+      makeColumn(size, 7, color),
+      makeColumn(actual, 6, color),
+      makeColumn(percentage(actual, size), 10, color),
+      colorize(missing, color)
+    ].join(''));
   }
-  result += '\n';
-  result += makeColumn(configuration.configuration, maxWidth, true);
-  result += makeColumn(allSize, 7);
-  result += makeColumn(allActual, 6);
-  result += makeColumn(percentage(allActual, allSize), 10);
-  return result;
+  console.log(line);
+  console.log('');
+}
+
+/**
+ * Trim the missing token list to fit the screen
+ * @param rows The rows whose data is to be trimmed
+ * @param width The width of the table name column
+ * @return The width of the missing token column
+ */
+function trimMissing(rows, width) {
+  const rest = process.stdout.columns - width - 32;
+  let mwidth = 8;
+  for (const row of rows) {
+    let missing = row[3];
+    if (missing.length > rest) {
+      row[3] = missing = '...' + missing.slice(missing.length - rest + 4).replace(/.*?, /, '');
+    }
+    if (missing.length > mwidth) {
+      mwidth = missing.length;
+    }
+  }
+  return mwidth;
 }
 
 /**
@@ -86,9 +126,10 @@ function createConfigurationOutput(configuration) {
  * @param left Cell is left aligned if set.
  * @return The string with the correctly set column
  */
-function makeColumn(cell, size, left = false) {
+function makeColumn(cell, size, color = 0, left = false) {
   let length = cell.toString().length;
-  let column = new Array(size - length + 1).join(' ');
+  let column = new Array(Math.max(0, size - length + 1)).join(' ');
+  cell = colorize(cell, color);
   if (left) {
     column = cell + column;
   } else {
@@ -107,3 +148,25 @@ function makeColumn(cell, size, left = false) {
 function percentage(actual, size) {
   return Math.round((actual/size) * 10000) / 100;
 }
+
+/**
+ * Get the color number for the percentage of coverage
+ * @param actual The number of tested elements.
+ * @param size The table size.
+ * @return The color number for use in a color escape sequence
+ */
+function getColor(actual, size) {
+  const percent = actual/size * 100;
+  return percent >= 80 ? 32 : percent >= 50 ? 33 : 31;
+}
+
+/**
+ * Add color escape seuences, if needed
+ * @param cell The cell contents
+ * @param color The color number to use in the scape sequence
+ * @return The cell contents with color sequences
+ */
+function colorize(cell, color) {
+  return color && process.stdout.isTTY ? `${ESC}[1m${ESC}[${color}m${cell}${ESC}[0m` : cell;
+}
+

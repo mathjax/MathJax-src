@@ -18,3 +18,15 @@ export function toXmlMatch(received: string, expected: string) {
   // matcher extensions.
   (expect(received) as any).toBeXmlMatch(expected);
 }
+
+//
+// Compares an array of results to an array of expected results.
+//
+export function toXmlArrayMatch(received: string[], expected: string[]) {
+  const r = received.length;
+  const e = expected.length;
+  expect(`${r} MathML string${r === 1 ? '' : 's'}`).toBe(`${e} MathML string${e === 1 ? '' : 's'}`);
+  for (let i = 0; i < received.length; i++) {
+    toXmlMatch(`<!--${i+1}-->\n${received[i]}`, `<!--${i+1}-->\n${expected[i]}`);
+  }
+}
