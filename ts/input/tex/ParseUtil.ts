@@ -60,7 +60,7 @@ export type KeyValueType = KeyValueDef<any>;
  *  const allowed = {
  *    compact: KeyValueTypes.boolean,
  *    direction: KeyValueDef.oneof('up', 'down'),
- *    'open-brace': KeyValueType.string
+ *    'open-brace': KeyValueTypes.string
  *  };
  *
  *  ParseUtil.keyvalOptions(options, allowed, true);
