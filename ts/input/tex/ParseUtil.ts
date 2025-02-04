@@ -35,7 +35,15 @@ import { UnitUtil } from './UnitUtil.js';
 /**
  * The data needed for checking the value of a key-value pair.
  */
-export class KeyValueType<T> {
+export class KeyValueDef<T> {
+  public static oneof(...values: string[]) {
+    return new this<string>(
+      'string',
+      (value) => values.includes(value),
+      (value) => value
+    );
+  }
+
   constructor(
     public name: string,
     public verify: (value: string) => boolean,
@@ -43,47 +51,42 @@ export class KeyValueType<T> {
   ) {}
 }
 
+export type KeyValueFn = (...data: any[]) => KeyValueDef<any>;
+export type KeyValueType = KeyValueDef<any>;
+
 /**
  * Predefined value types that can be used to create the list of allowed types.  E.g.
  *
  *  const allowed = {
  *    compact: KeyValueTypes.boolean,
- *    direction: KeyValueTypes.oneof('up', 'down'),
+ *    direction: KeyValueDef.oneof('up', 'down'),
  *    'open-brace': KeyValueType.string
  *  };
  *
- *  ParseUtil.keyvalueOptions(options, allowed, true);
+ *  ParseUtil.keyvalOptions(options, allowed, true);
  */
-export const KeyValueTypes: {
-  [name: string]: KeyValueType<any> | ((data: any) => KeyValueType<any>);
-} = {
-  boolean: new KeyValueType<boolean>(
+export const KeyValueTypes: { [name: string]: KeyValueType } = {
+  boolean: new KeyValueDef<boolean>(
     'boolean',
     (value) => value === 'true' || value === 'false',
     (value) => value === 'true'
   ),
-  number: new KeyValueType<number>(
+  number: new KeyValueDef<number>(
     'number',
     (value) => !!value.match(/^[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[-+]?\d+)?$/),
     (value) => parseFloat(value)
   ),
-  integer: new KeyValueType<number>(
+  integer: new KeyValueDef<number>(
     'integer',
     (value) => !!value.match(/^[-+]?\d+$/),
     (value) => parseInt(value)
   ),
-  string: new KeyValueType<string>(
+  string: new KeyValueDef<string>(
     'string',
     (_value) => true,
     (value) => value
   ),
-  oneof: (...values: string[]) =>
-    new KeyValueType<string>(
-      'oneof',
-      (value) => values.includes(value),
-      (value) => value
-    ),
-  dimen: new KeyValueType<string>(
+  dimen: new KeyValueDef<string>(
     'dimen',
     (value) => UnitUtil.matchDimen(value)[0] !== null,
     (value) => value
@@ -810,7 +813,10 @@ export const ParseUtil = {
     //
     // The gather environment can include align and others, but only one level deep.
     //
-    if (top.getProperty('nestable') && nestable && !first) {
+    if (
+      (top.getProperty('nestable') && nestable && !first) ||
+      top.getProperty('nestStart')
+    ) {
       return;
     }
     if (!top.isKind('start') || first) {
@@ -881,7 +887,7 @@ export const ParseUtil = {
    */
   keyvalOptions(
     attrib: string,
-    allowed: { [key: string]: number | KeyValueType<any> } = null,
+    allowed: { [key: string]: number | KeyValueType } = null,
     error: boolean = false,
     l3keys: boolean = false
   ): EnvList {
@@ -892,8 +898,8 @@ export const ParseUtil = {
           //
           // If allowed[key] is a type definition, check the key value against that
           //
-          if (allowed[key] instanceof KeyValueType) {
-            const type = allowed[key] as KeyValueType<any>;
+          if (allowed[key] instanceof KeyValueDef) {
+            const type = allowed[key] as KeyValueDef<any>;
             const value = String(def[key]);
             if (!type.verify(value)) {
               throw new TexError(

@@ -121,7 +121,7 @@ const ParseMethods = {
   },
 
   /**
-   * Handle mathcharupper-case Greek in current family.
+   * Handle upper-case Greek in current family.
    *
    * @param {TexParser} parser The current tex parser.
    * @param {Token} mchar The parsed token.
