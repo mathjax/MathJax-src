@@ -21,20 +21,34 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import { TeX } from '../../tex.js';
 import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
 import { Configuration, ParserConfiguration } from '../Configuration.js';
 import { BeginEnvItem } from './NewcommandItems.js';
-import { NewcommandTables } from './NewcommandUtil.js';
+import { NewcommandTables, NewcommandPriority } from './NewcommandUtil.js';
 import './NewcommandMappings.js';
 import ParseMethods from '../ParseMethods.js';
 import * as sm from '../TokenMap.js';
 
 /**
- * Init method for Newcommand package.
+ * Initialize the newcommand maps for delimiters, commands, and environments,
+ * if they aren't already in place.
  *
- * @param {Configuration} config The current configuration.
+ * @param {ParserConfiguration} _config  The parser configuration (ignored)
+ * @param {TeX} jax                      The TeX input jax
  */
-const init = function (config: ParserConfiguration) {
+export function NewcommandConfig(
+  _config: ParserConfiguration,
+  jax: TeX<any, any, any>
+) {
+  //
+  //  Check if we are already initialzied (since other packages call this)
+  //
+  if (jax.parseOptions.packageData.has('newcommand')) {
+    return;
+  }
+  jax.parseOptions.packageData.set('newcommand', {});
+
   new sm.DelimiterMap(
     NewcommandTables.NEW_DELIMITER,
     ParseMethods.delimiter,
@@ -46,21 +60,20 @@ const init = function (config: ParserConfiguration) {
     ParseMethods.environment,
     {}
   );
-  config.append(
-    Configuration.local({
-      [ConfigurationType.HANDLER]: {
-        [HandlerType.CHARACTER]: [],
-        [HandlerType.DELIMITER]: [NewcommandTables.NEW_DELIMITER],
-        [HandlerType.MACRO]: [
-          NewcommandTables.NEW_DELIMITER,
-          NewcommandTables.NEW_COMMAND,
-        ],
-        [HandlerType.ENVIRONMENT]: [NewcommandTables.NEW_ENVIRONMENT],
-      },
-      [ConfigurationType.PRIORITY]: -1,
-    })
+  jax.parseOptions.handlers.add(
+    {
+      [HandlerType.CHARACTER]: [],
+      [HandlerType.DELIMITER]: [NewcommandTables.NEW_DELIMITER],
+      [HandlerType.MACRO]: [
+        NewcommandTables.NEW_DELIMITER,
+        NewcommandTables.NEW_COMMAND,
+      ],
+      [HandlerType.ENVIRONMENT]: [NewcommandTables.NEW_ENVIRONMENT],
+    },
+    {},
+    NewcommandPriority
   );
-};
+}
 
 export const NewcommandConfiguration = Configuration.create('newcommand', {
   [ConfigurationType.HANDLER]: {
@@ -69,6 +82,9 @@ export const NewcommandConfiguration = Configuration.create('newcommand', {
   [ConfigurationType.ITEMS]: {
     [BeginEnvItem.prototype.kind]: BeginEnvItem,
   },
-  [ConfigurationType.OPTIONS]: { maxMacros: 1000 },
-  [ConfigurationType.INIT]: init,
+  [ConfigurationType.OPTIONS]: {
+    maxMacros: 1000,
+    protectedMacros: ['begingroupSandbox'],
+  },
+  [ConfigurationType.CONFIG]: NewcommandConfig,
 });

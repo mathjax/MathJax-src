@@ -1,11 +1,11 @@
 {
   "build": {
-    "id": "[tex]/ams",
-    "component": "input/tex/extensions/ams",
-    "targets": ["input/tex/ams"]
+    "id": "[tex]/begingroup",
+    "component": "input/tex/extensions/begingroup",
+    "targets": ["input/tex/begingroup"]
   },
   "webpack": {
-    "name": "input/tex/extensions/ams",
+    "name": "input/tex/extensions/begingroup",
     "libs": [
       "components/src/input/tex/extensions/newcommand/lib",
       "components/src/input/tex-base/lib",

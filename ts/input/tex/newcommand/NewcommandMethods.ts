@@ -168,6 +168,7 @@ const NewcommandMethods: { [key: string]: ParseMethod } = {
         return;
       }
       // @test Let Undefined CS
+      NewcommandUtil.checkProtectedMacros(parser, cs);
       NewcommandUtil.undefineMacro(parser, cs);
       NewcommandUtil.undefineDelimiter(parser, '\\' + cs);
       return;
