@@ -439,7 +439,7 @@ export function EnrichedMathDocumentMixin<
         pool: 'speech-workerpool.html',
         worker: 'speech-worker.js',
         sre: 'sre.js',
-        debug: true,
+        debug: false,
       },
       /* prettier-ignore */
       speechTiming: {

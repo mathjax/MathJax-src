@@ -416,6 +416,7 @@ export class SpeechRegion extends LiveRegion {
    * @override
    */
   public Update(speech: string) {
+    // TODO (Volker): Make sure we use speech and ssml!
     if (this.voiceRequest) {
       this.makeVoice(speech);
       return;

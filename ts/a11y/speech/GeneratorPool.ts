@@ -92,29 +92,6 @@ export class GeneratorPool<N, T, D> {
   public set options(options: OptionList) {
     // TODO: Compare for global changes?
     this._options = Object.assign({}, options?.sre || {});
-    // this._options = options; //
-    // Sre.setupEngine(options.sre);
-    // this.speechGenerator.setOptions(
-    //   Object.assign({}, options?.sre || {}, {
-    //     modality: 'speech',
-    //     markup: 'ssml',
-    //     automark: true,
-    //   })
-    // );
-    // this.summaryGenerator.setOptions(
-    //   Object.assign({}, options?.sre || {}, {
-    //     modality: 'summary',
-    //     markup: 'ssml',
-    //     automark: true,
-    //   })
-    // );
-    // this.brailleGenerator.setOptions({
-    //   locale: options?.sre?.braille,
-    //   domain: 'default',
-    //   style: 'default',
-    //   modality: 'braille',
-    //   markup: 'none',
-    // });
   }
 
   public get options() {
@@ -201,16 +178,30 @@ export class GeneratorPool<N, T, D> {
    * different summary.
    *
    * @param {N} node The typeset node.
-   * @returns {string} The last computed speech elements.
    */
-  public summary(node: N): string {
+  public summary(node: N) {
     if (this.lastMove === InPlace.SUMMARY) {
       this.CleanUp(node);
-      return this.lastSpeech;
+      return;
     }
-    const xml = this.prepareXml(node);
-    this.lastSpeech = this.summaryGenerator.getSpeech(xml, this.element);
-    return this.lastSpeech;
+    this.lastSpeech.set(
+      SemAttr.SPEECH,
+      this.adaptor.getAttribute(node, SemAttr.SPEECH)
+    );
+    this.lastSpeech.set(
+      SemAttr.SPEECH_SSML,
+      this.adaptor.getAttribute(node, SemAttr.SPEECH_SSML)
+    );
+    this.adaptor.setAttribute(
+      node,
+      SemAttr.SPEECH_SSML,
+      this.adaptor.getAttribute(node, SemAttr.SUMMARY_SSML)
+    );
+    this.adaptor.setAttribute(
+      node,
+      SemAttr.SPEECH,
+      this.adaptor.getAttribute(node, SemAttr.SUMMARY)
+    );
   }
 
   /**
@@ -221,20 +212,30 @@ export class GeneratorPool<N, T, D> {
    */
   public CleanUp(node: N) {
     if (this.lastMove) {
-      // TODO: Remember the speech.
       this.adaptor.setAttribute(
         node,
-        'aria-label',
-        buildSpeech(this.getLabel(node))[0]
+        SemAttr.SPEECH,
+        this.lastSpeech.get(SemAttr.SPEECH)
       );
+      this.adaptor.setAttribute(
+        node,
+        SemAttr.SPEECH_SSML,
+        this.lastSpeech.get(SemAttr.SPEECH_SSML)
+      );
+      this.lastSpeech.clear();
+      // TODO: Remember the speech.
+      // this.adaptor.setAttribute(
+      //   node,
+      //   'aria-label',
+      //   buildSpeech(this.getLabel(node))[0]
+      // );
     }
-    this.lastMove = InPlace.NONE;
   }
 
   /**
    * Remembers the last speech element after a summary computation.
    */
-  private lastSpeech = '';
+  private lastSpeech: Map<SemAttr, string> = new Map();
 
   /**
    * Remembers whether the last speech computation was in-place, i.e., a summary
@@ -252,12 +253,13 @@ export class GeneratorPool<N, T, D> {
   }
 
   /**
-   * Setter for last move.
+   * Setter for last move. This implements toggling. If the current move is the
+   * same as the previous it cancels out.
    *
    * @param {InPlace} move The latest move.
    */
   public set lastMove(move: InPlace) {
-    this.lastMove_ = this.lastSpeech ? move : InPlace.NONE;
+    this.lastMove_ = move !== this.lastMove_ ? move : InPlace.NONE;
   }
 
   /**
@@ -273,10 +275,9 @@ export class GeneratorPool<N, T, D> {
     speechRegion: LiveRegion,
     brailleRegion: LiveRegion
   ) {
-    const speech = this.getLabel(node, this.lastSpeech);
+    const speech = this.getLabel(node);
     speechRegion.Update(speech);
     this.adaptor.setAttribute(node, 'aria-label', buildSpeech(speech)[0]);
-    this.lastSpeech = '';
     brailleRegion.Update(this.adaptor.getAttribute(node, 'aria-braillelabel'));
   }
 
@@ -297,10 +298,11 @@ export class GeneratorPool<N, T, D> {
     return label;
   }
 
-  private getOptions(node: N): { [key: string]: string } {
-    console.log(24);
-    console.log(node);
-    console.log(25);
+  /**
+   * @param node
+   *  @returns {OptionList} The relevant SRE options.
+   */
+  private getOptions(node: N): OptionList {
     return {
       locale: this.adaptor.getAttribute(node, 'data-semantic-locale') ?? '',
       domain: this.adaptor.getAttribute(node, 'data-semantic-domain') ?? '',
@@ -371,16 +373,16 @@ export class GeneratorPool<N, T, D> {
    * Computes the speech label from the node combining prefixes and postfixes.
    *
    * @param {N} node The typeset node.
-   * @param {string=} center Core speech. Defaults to `data-semantic-speech`.
+   * @param {string=} _center Core speech. Defaults to `data-semantic-speech`.
    * @param {string=} sep The speech separator. Defaults to space.
    * @returns {string} The assembled label.
    */
-  public getLabel(node: N, center: string = '', sep: string = ' '): string {
+  public getLabel(node: N, _center: string = '', sep: string = ' '): string {
     return buildLabel(
-      center || this.adaptor.getAttribute(node, SemAttr.SPEECH),
-      this.adaptor.getAttribute(node, SemAttr.PREFIX),
+      this.adaptor.getAttribute(node, SemAttr.SPEECH_SSML),
+      this.adaptor.getAttribute(node, SemAttr.PREFIX_SSML),
       // TODO: check if we need this or if it is automatic by the screen readers.
-      this.adaptor.getAttribute(node, SemAttr.POSTFIX),
+      this.adaptor.getAttribute(node, SemAttr.POSTFIX_SSML),
       sep
     );
   }
@@ -467,12 +469,12 @@ export class GeneratorPool<N, T, D> {
    *
    * @param {N} node The node.
    * @param {boolean} actionable If the node actionable (e.g., link, collapse).
-   * @returns {string} The last speech.
    */
   public depth(node: N, actionable: boolean) {
+    // TODO (Volker): This needs to go through the worker!
     if (this.lastMove === InPlace.DEPTH) {
       this.CleanUp(node);
-      return this.lastSpeech;
+      return;
     }
     const postfix = this.summaryGenerator.getActionable(
       actionable ? (this.adaptor.childNodes(node).length === 0 ? -1 : 1) : 0
@@ -480,7 +482,15 @@ export class GeneratorPool<N, T, D> {
     const depth = this.summaryGenerator.getLevel(
       this.adaptor.getAttribute(node, 'aria-level')
     );
-    this.lastSpeech = `${depth} ${postfix}`;
-    return this.lastSpeech;
+    this.lastSpeech.set(
+      SemAttr.SPEECH,
+      this.adaptor.getAttribute(node, SemAttr.SPEECH)
+    );
+    this.lastSpeech.set(
+      SemAttr.SPEECH_SSML,
+      this.adaptor.getAttribute(node, SemAttr.SPEECH_SSML)
+    );
+    this.adaptor.setAttribute(node, SemAttr.SPEECH_SSML, `${depth} ${postfix}`);
+    this.adaptor.setAttribute(node, SemAttr.SPEECH, `${depth} ${postfix}`);
   }
 }

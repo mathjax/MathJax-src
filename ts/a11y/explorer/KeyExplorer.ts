@@ -241,6 +241,7 @@ export class SpeechExplorer
     // keyboard.
     if (!this.active) return;
     this.generators.CleanUp(this.current);
+    this.generators.lastMove = InPlace.NONE;
     if (!this.move) {
       this.Stop();
     }
@@ -361,7 +362,7 @@ export class SpeechExplorer
    */
   public depth(node: HTMLElement): HTMLElement {
     this.generators.depth(node, !!this.actionable(node));
-    this.refocus(node);
+    this.refocus();
     this.generators.lastMove = InPlace.DEPTH;
     return node;
   }
@@ -389,12 +390,8 @@ export class SpeechExplorer
    * @returns {HTMLElement} The refocused targeted node.
    */
   public summary(node: HTMLElement): HTMLElement {
-    node.setAttribute(
-      'data-semantic-speech',
-      node.getAttribute('data-semantic-summary')
-    );
-    this.Stop();
-    this.Restart();
+    this.generators.summary(node);
+    this.refocus();
     this.generators.lastMove = InPlace.SUMMARY;
     return node;
   }
@@ -409,8 +406,7 @@ export class SpeechExplorer
   public nextRules(_node: HTMLElement): HTMLElement {
     this.node.removeAttribute('data-speech-attached');
     this.generators.nextRules(this.item.typesetRoot, this.item.outputData.mml);
-    this.Stop();
-    this.Restart();
+    this.refocus();
     return _node;
   }
 
@@ -428,8 +424,7 @@ export class SpeechExplorer
       this.item.typesetRoot,
       this.item.outputData.mml
     );
-    this.Stop();
-    this.Restart();
+    this.refocus();
     return node;
   }
 
@@ -438,9 +433,9 @@ export class SpeechExplorer
    *
    * @param {HTMLElement} node The node to refocus on.
    */
-  private refocus(node: HTMLElement) {
-    node.blur();
-    node.focus();
+  private refocus() {
+    this.Stop();
+    this.Restart();
   }
 
   /**
@@ -598,10 +593,10 @@ export class SpeechExplorer
   /**
    * @override
    */
-  public Update(force: boolean = false) {
+  public Update() {
     // TODO (v4): This is a hack to avoid double voicing on initial startup!
     // Make that cleaner and remove force as it is not really used!
-    if (!this.active && !force) return;
+    if (!this.active) return;
     this.pool.unhighlight();
     this.pool.highlight([this.current]);
     this.region.node = this.node;

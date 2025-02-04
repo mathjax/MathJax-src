@@ -83,15 +83,12 @@ export class WorkerHandler<N, T, D> {
   private tasks: PoolCommand[] = [];
 
   private enqueueTask(task: PoolCommand) {
-    console.log('Enqueuing task: ' + task.data.cmd);
     this.tasks.unshift(task);
   }
 
   private dequeueTask(): PoolCommand {
     const task = this.tasks.pop();
-    console.log('Dequeuing task: ' + task.data.cmd);
     return task;
-    // return this.tasks.pop();
   }
 
   /**
