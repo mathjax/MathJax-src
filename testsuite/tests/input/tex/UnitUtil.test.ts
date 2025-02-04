@@ -1,6 +1,8 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
 import { UnitUtil } from '#js/input/tex/UnitUtil.js';
 
+/**********************************************************************************/
+
 // These methods will be rewritten into non-ParseUtil ones.
 function convertLength(unit: string, num: number) {
   return UnitUtil.UNIT_CASES.get(unit) * num;
@@ -18,6 +20,9 @@ function convertEm(num: number) {
   return UnitUtil.em(num);
 }
 
+/**********************************************************************************/
+/**********************************************************************************/
+
 describe('Length conversion', () => {
   it('em', () => expect(convertLength('em', 9)).toBe(9));
   it('ex', () => expect(convertLength('ex', 9)).toBe(3.87));
@@ -33,6 +38,9 @@ describe('Length conversion', () => {
   it('nix', () => expect(convertLength('nix', 9)).toBe(0.9));
 });
 
+/**********************************************************************************/
+/**********************************************************************************/
+
 describe('Em conversion', () => {
   it('9', () => expect(convertEm(9)).toBe('9em'));
   it('10', () => expect(convertEm(10)).toBe('10em'));
@@ -43,9 +51,11 @@ describe('Em conversion', () => {
   it('0.0005', () => expect(convertEm(0.0005)).toBe('0em'));
   it('0.0006', () => expect(convertEm(0.0006)).toBe('0.001em'));
   it('0.0007', () => expect(convertEm(0.0007)).toBe('0.001em'));
-  it('25.511811023622045', () =>
-    expect(convertEm(25.511811023622045)).toBe('25.512em'));
+  it('25.51181102', () => expect(convertEm(25.51181102)).toBe('25.512em'));
 });
+
+/**********************************************************************************/
+/**********************************************************************************/
 
 describe('Dimension matching', () => {
   it('9', () => expect(matchDimension('9')).toEqual([null, null, 0]));
@@ -72,7 +82,11 @@ describe('Dimension matching', () => {
   it('10mm', () => expect(matchDimension('10mm')).toEqual(['10', 'mm', 4]));
   it('9mu', () => expect(matchDimension('9mu')).toEqual(['0.5', 'em', 3]));
   it('10mu', () => expect(matchDimension('10mu')).toEqual(['0.556', 'em', 4]));
+  it('rest', () => expect(UnitUtil.matchDimen('9em rest', true)).toEqual(['9', 'em', 4]));
 });
+
+/**********************************************************************************/
+/**********************************************************************************/
 
 describe('Dimension conversion', () => {
   it('9', () => expect(convertDimension('9')).toBe(0.1));
@@ -90,6 +104,9 @@ describe('Dimension conversion', () => {
   it('9mu', () => expect(convertDimension('9mu')).toBe(0.5));
 });
 
+/**********************************************************************************/
+/**********************************************************************************/
+
 // Useful for the IEEE case.
 describe('Adds pi unit', () => {
   beforeEach(() => UnitUtil.UNIT_CASES.set('pi', 1 / 10));
@@ -98,3 +115,28 @@ describe('Adds pi unit', () => {
   it('10pi', () => expect(matchDimension('10pi')).toEqual(['10', 'pi', 4]));
   it('9pi', () => expect(convertDimension('9pi')).toBe(0.9));
 });
+
+/**********************************************************************************/
+/**********************************************************************************/
+
+describe('Remove Unit', () => {
+  it('existing unit', () => {
+    UnitUtil.UNIT_CASES.set('test', 2);
+    expect(UnitUtil.UNIT_CASES.delete('test')).toBe(true);
+  });
+  it('non-existing unit', () => {
+    expect(UnitUtil.UNIT_CASES.delete('test')).toBe(false);
+  });
+});
+
+/**********************************************************************************/
+/**********************************************************************************/
+
+describe('Trim spaces', () => {
+  it('removes spaces and tabs', () => expect(UnitUtil.trimSpaces(' \t abc \t ')).toBe('abc'));
+  it('non-text argument', () => expect(UnitUtil.trimSpaces(null)).toBe(null));
+  it('space macro at end', () => expect(UnitUtil.trimSpaces('\\ ')).toBe('\\ '));
+});
+
+/**********************************************************************************/
+/**********************************************************************************/
