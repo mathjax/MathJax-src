@@ -283,10 +283,6 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       );
       return;
     }
-    if (arg) {
-      next = open;
-      right = close;
-    }
     parser.i++;
     parser.Push(
       parser.itemFactory
@@ -710,10 +706,9 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
           ? `\\langle{${bra}}\\vert{${ket}}\\rangle`
           : `\\left\\langle{${bra}}\\middle\\vert{${ket}}\\right\\rangle`;
     } else {
-      macro =
-        starBra || starKet
-          ? `\\langle{${bra}}\\vert`
-          : `\\left\\langle{${bra}}\\right\\vert{${ket}}`;
+      macro = starBra
+        ? `\\langle{${bra}}\\vert`
+        : `\\left\\langle{${bra}}\\right\\vert{${ket}}`;
     }
     parser.Push(
       new TexParser(macro, parser.stack.env, parser.configuration).mml()
@@ -1041,10 +1036,6 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       } catch (_e) {
         parser.i = endI;
         elements.push(parser.string.slice(currentI, endI - 1));
-        break;
-      }
-      if (parser.i >= endI) {
-        elements.push(parser.string.slice(currentI, endI));
         break;
       }
       currentI = parser.i;
