@@ -1327,10 +1327,6 @@ export class ArrayItem extends BaseItem {
     const ralign = this.ralign[this.row.length];
     if (ralign) {
       const [valign, cwidth, calign] = ralign;
-      //      let [valign, cwidth, calign] = ralign;
-      //      if (this.breakAlign.cell) {
-      //        valign = this.breakAlign.cell;
-      //      }
       const box = this.create('node', 'mpadded', mtd.childNodes[0].childNodes, {
         width: cwidth,
         'data-overflow': 'auto',
