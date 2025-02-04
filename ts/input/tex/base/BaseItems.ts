@@ -191,10 +191,10 @@ export class PrimeItem extends BaseItem {
   public checkItem(item: StackItem): CheckType {
     const [top0, top1] = this.Peek(2);
     const isSup =
-      NodeUtil.isType(top0, 'msubsup') &&
+      (NodeUtil.isType(top0, 'msubsup') || NodeUtil.isType(top0, 'msup')) &&
       !NodeUtil.getChildAt(top0, (top0 as MmlMsubsup).sup);
     const isOver =
-      NodeUtil.isType(top0, 'munderover') &&
+      (NodeUtil.isType(top0, 'munderover') || NodeUtil.isType(top0, 'mover')) &&
       !NodeUtil.getChildAt(top0, (top0 as MmlMunderover).over) &&
       !NodeUtil.getProperty(top0, 'subsupOK');
     if (!isSup && !isOver) {
@@ -276,12 +276,10 @@ export class SubsupItem extends BaseItem {
       const result = this.factory.create('mml', top);
       return [[result], true];
     }
-    if (super.checkItem(item)[1]) {
-      // @test Brace Superscript Error, MissingOpenForSup, MissingOpenForSub
-      const error = this.getErrors(['', 'sub', 'sup'][position]);
-      throw new TexError(error[0], error[1], ...error.splice(2));
-    }
-    return null;
+    super.checkItem(item);
+    // @test Brace Superscript Error, MissingOpenForSup, MissingOpenForSub
+    const error = this.getErrors(['', 'sub', 'sup'][position]);
+    throw new TexError(error[0], error[1], ...error.splice(2));
   }
 }
 
@@ -1193,7 +1191,8 @@ export class ArrayItem extends BaseItem {
     // Check if there are extra entries at the end of a row to be added
     //
     if (term !== '&') {
-      found = !!entry.trim() || !!(n || term.substring(0, 4) !== '\\end');
+      found =
+        !!entry.trim() || !!(n || (term && term.substring(0, 4) !== '\\end'));
       if (cextra[n + 1] && !cextra[n]) {
         end = (end || '') + '&'; // extra entries follow this one
         this.atEnd = true;
@@ -1327,10 +1326,11 @@ export class ArrayItem extends BaseItem {
     //
     const ralign = this.ralign[this.row.length];
     if (ralign) {
-      let [valign, cwidth, calign] = ralign;
-      if (this.breakAlign.cell) {
-        valign = this.breakAlign.cell;
-      }
+      const [valign, cwidth, calign] = ralign;
+      //      let [valign, cwidth, calign] = ralign;
+      //      if (this.breakAlign.cell) {
+      //        valign = this.breakAlign.cell;
+      //      }
       const box = this.create('node', 'mpadded', mtd.childNodes[0].childNodes, {
         width: cwidth,
         'data-overflow': 'auto',
@@ -1541,7 +1541,6 @@ export class EqnArrayItem extends ArrayItem {
    *   better in alignments.
    */
   protected addIndentshift() {
-    if (!this.arraydef.columnalign) return;
     const align = (this.arraydef.columnalign as string).split(/ /);
     let prev = '';
     for (const i of align.keys()) {
