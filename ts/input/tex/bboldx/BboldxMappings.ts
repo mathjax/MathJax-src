@@ -208,12 +208,12 @@ new CharacterMap(
  * Macros for delimiters.
  */
 new CharacterMap('text-bboldx-delimiterNormal', BboldxMethods.delimiterNormal, {
-  '\\txtbbLparen': '\u0028',
-  '\\txtbbRparen': '\u0029',
-  '\\txtbbLbrack': '\u005B',
-  '\\txtbbRbrack': '\u005D',
-  '\\txtbbLangle': '\u2329',
-  '\\txtbbRangle': '\u232A',
+  txtbbLparen: '\u0028',
+  txtbbRparen: '\u0029',
+  txtbbLbrack: '\u005B',
+  txtbbRbrack: '\u005D',
+  txtbbLangle: '\u2329',
+  txtbbRangle: '\u232A',
 });
 
 /**
@@ -264,12 +264,12 @@ new CharacterMap('text-bboldx-mathchar0miBold', BboldxMethods.mathchar0miBold, {
  * Macros for delimiters.
  */
 new CharacterMap('text-bboldx-delimiterBold', BboldxMethods.delimiterBold, {
-  '\\txtbfbbLparen': '\u0028',
-  '\\txtbfbbRparen': '\u0029',
-  '\\txtbfbbLbrack': '\u005B',
-  '\\txtbfbbRbrack': '\u005D',
-  '\\txtbfbbLangle': '\u2329',
-  '\\txtbfbbRangle': '\u232A',
+  txtbfbbLparen: '\u0028',
+  txtbfbbRparen: '\u0029',
+  txtbfbbLbrack: '\u005B',
+  txtbfbbRbrack: '\u005D',
+  txtbfbbLangle: '\u2329',
+  txtbfbbRangle: '\u232A',
 });
 
 new CommandMap('text-bboldx', {
