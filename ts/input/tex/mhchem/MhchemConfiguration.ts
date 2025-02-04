@@ -23,13 +23,59 @@
 
 import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
 import { Configuration } from '../Configuration.js';
-import { CommandMap } from '../TokenMap.js';
+import { CommandMap, CharacterMap } from '../TokenMap.js';
+import { Token } from '../Token.js';
 import { ParseMethod } from '../Types.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import BaseMethods from '../base/BaseMethods.js';
 import { AmsMethods } from '../ams/AmsMethods.js';
 import { mhchemParser } from '#mhchem/mhchemParser.js';
+import { TEXCLASS } from '../../../core/MmlTree/MmlNode.js';
+
+/**
+ * Creates mo token elements with the proper attributes
+ */
+export const MhchemUtils = {
+  relmo(parser: TexParser, mchar: Token) {
+    const def = {
+      stretchy: true,
+      texClass: TEXCLASS.REL,
+      mathvariant: '-mhchem',
+      ...(mchar.attributes || {}),
+    };
+    const node = parser.create('token', 'mo', def, mchar.char);
+    parser.Push(node);
+  },
+};
+
+/**
+ * Replace these constructs in mhchem output now that we have stretchy versions
+ * of the needed arrows
+ */
+export const MhchemReplacements = new Map<string, RegExp>([
+  [
+    '\\mhchemx$3[$1]{$2}',
+    /\\underset{\\lower2mu{(.*?)}}{\\overset{(.*?)}{\\long(.*?)}}/g,
+  ],
+  ['\\mhchemx$2{$1}', /\\overset{(.*?)}{\\long(.*?)}/g],
+  [
+    '\\mhchemBondTD',
+    /\\rlap\{\\lower\.1em\{-\}\}\\raise\.1em\{\\tripledash\}/g,
+  ],
+  [
+    '\\mhchemBondTDD',
+    /\\rlap\{\\lower\.2em\{-\}\}\\rlap\{\\raise\.2em\{\\tripledash\}\}-/g,
+  ],
+  [
+    '\\mhchemBondDTD',
+    /\\rlap\{\\lower\.2em\{-\}\}\\rlap\{\\raise.2em\{-\}\}\\tripledash/g,
+  ],
+  [
+    '\\mhchem$1',
+    /\\(x?(?:long)?(?:left|right|[Ll]eftright|[Rr]ightleft)(?:arrow|harpoons))/g,
+  ],
+]);
 
 // Namespace
 const MhchemMethods: { [key: string]: ParseMethod } = {
@@ -57,33 +103,33 @@ const MhchemMethods: { [key: string]: ParseMethod } = {
 new CommandMap('mhchem', {
   ce: [MhchemMethods.Machine, 'ce'],
   pu: [MhchemMethods.Machine, 'pu'],
-  longrightleftharpoons: [
-    MhchemMethods.Macro,
-    '\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}',
-  ],
-  longRightleftharpoons: [
-    MhchemMethods.Macro,
-    '\\stackrel{\\textstyle{-}\\!\\!{\\rightharpoonup}}{\\smash{\\leftharpoondown}}',
-  ],
-  longLeftrightharpoons: [
-    MhchemMethods.Macro,
-    '\\stackrel{\\textstyle\\vphantom{{-}}{\\rightharpoonup}}{\\smash{{\\leftharpoondown}\\!\\!{-}}}',
-  ],
-  longleftrightarrows: [
-    MhchemMethods.Macro,
-    '\\stackrel{\\longrightarrow}{\\smash{\\longleftarrow}\\Rule{0px}{.25em}{0px}}',
-  ],
-  //
-  //  Needed for \bond for the ~ forms
-  //
-  tripledash: [
-    MhchemMethods.Macro,
-    '\\vphantom{-}\\raise2mu{\\kern2mu\\tiny\\text{-}\\kern1mu\\text{-}\\kern1mu\\text{-}\\kern2mu}',
-  ],
-  xleftrightarrow: [MhchemMethods.xArrow, 0x2194, 6, 6],
-  xrightleftharpoons: [MhchemMethods.xArrow, 0x21cc, 5, 7], // FIXME:  doesn't stretch in HTML-CSS output
-  xRightleftharpoons: [MhchemMethods.xArrow, 0x21cc, 5, 7], // FIXME:  how should this be handled?
-  xLeftrightharpoons: [MhchemMethods.xArrow, 0x21cc, 5, 7],
+  mhchemxrightarrow: [MhchemMethods.xArrow, 0xe429, 5, 9],
+  mhchemxleftarrow: [MhchemMethods.xArrow, 0xe428, 9, 5],
+  mhchemxleftrightarrow: [MhchemMethods.xArrow, 0xe42a, 9, 9],
+  mhchemxleftrightarrows: [MhchemMethods.xArrow, 0xe42b, 9, 9],
+  mhchemxrightleftharpoons: [MhchemMethods.xArrow, 0xe408, 5, 9],
+  mhchemxRightleftharpoons: [MhchemMethods.xArrow, 0xe409, 5, 9],
+  mhchemxLeftrightharpoons: [MhchemMethods.xArrow, 0xe40a, 9, 11],
+});
+
+/**
+ * The character macros
+ */
+new CharacterMap('mhchem-chars', MhchemUtils.relmo, {
+  tripledash: ['\uE410', { stretchy: false }],
+  mhchemBondTD: ['\uE411', { stretchy: false }],
+  mhchemBondTDD: ['\uE412', { stretchy: false }],
+  mhchemBondDTD: ['\uE413', { stretchy: false }],
+  mhchemlongleftarrow: '\uE428',
+  mhchemlongrightarrow: '\uE429',
+  mhchemlongleftrightarrow: '\uE42A',
+  mhchemlongrightleftharpoons: '\uE408',
+  mhchemlongRightleftharpoons: '\uE409',
+  mhchemlongLeftrightharpoons: '\uE40A',
+  mhchemlongleftrightarrows: '\uE42B',
+  mhchemrightarrow: '\uE42C',
+  mhchemleftarrow: '\uE42D',
+  mhchemleftrightarrow: '\uE42E',
 });
 
 export const MhchemConfiguration = Configuration.create('mhchem', {
