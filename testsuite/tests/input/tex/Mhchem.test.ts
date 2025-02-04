@@ -3625,7 +3625,7 @@ describe('Mhchem8', () => {
         '\\ce{Zn^2+  <=>[+ 2OH-][+ 2H+]  $\\underset{\\text{amphoteres Hydroxid}}{\\ce{Zn(OH)2 v}}$  <=>[+ 2OH-][+ 2H+]  $\\underset{\\text{Hydroxozikat}}{\\ce{[Zn(OH)4]^2-}}$}'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{Zn^2+  &lt;=&gt;[+ 2OH-][+ 2H+]  $\\underset{\\text{amphoteres Hydroxid}}{\\ce{Zn(OH)2 v}}$  &lt;=&gt;[+ 2OH-][+ 2H+]  $\\underset{\\text{Hydroxozikat}}{\\ce{[Zn(OH)4]^2-}}$}" display="block">
-      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{Zn}{\\vphantom{A}}^{2+} {}\\mathrel{\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\overset{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}{\\mhchemlongrightleftharpoons}}}{} \\underset{\\text{amphoteres Hydroxid}}{\\ce{Zn(OH)2 v}}  {}\\mathrel{\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\overset{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}{\\mhchemlongrightleftharpoons}}}{} \\underset{\\text{Hydroxozikat}}{\\ce{[Zn(OH)4]^2-}} }">
+      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{Zn}{\\vphantom{A}}^{2+} {}\\mathrel{\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\mhchemxrightleftharpoons{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}}}{} \\underset{\\text{amphoteres Hydroxid}}{\\ce{Zn(OH)2 v}}  {}\\mathrel{\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\mhchemxrightleftharpoons{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}}}{} \\underset{\\text{Hydroxozikat}}{\\ce{[Zn(OH)4]^2-}} }">
         <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{Zn}">
           <mi data-mjx-auto-op="false" data-latex="Zn">Zn</mi>
         </mrow>
@@ -3645,11 +3645,11 @@ describe('Mhchem8', () => {
           </mrow>
         </msup>
         <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\overset{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}{\\mhchemlongrightleftharpoons}}}">
-          <munder data-latex="\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\overset{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}{\\mhchemlongrightleftharpoons}}">
-            <mover data-latex="\\overset{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}{\\mhchemlongrightleftharpoons}">
-              <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" stretchy="true" data-latex="\\mhchemlongrightleftharpoons">&#xE408;</mo>
-              <mrow data-latex=" {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}">
+        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\mhchemxrightleftharpoons{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}}}">
+          <munder data-latex="\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\mhchemxrightleftharpoons{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}}">
+            <mover data-latex="\\mhchemxrightleftharpoons{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}">
+              <mo data-mjx-texclass="REL" stretchy="true">&#xE408;</mo>
+              <mpadded width="+0.778em" lspace="0.278em" voffset="-.2em" height="-.2em">
                 <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
                 <mo data-latex="+">+</mo>
                 <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -3674,7 +3674,8 @@ describe('Mhchem8', () => {
                     <mo data-latex="-">&#x2212;</mo>
                   </mrow>
                 </msup>
-              </mrow>
+                <mspace depth=".2em"></mspace>
+              </mpadded>
             </mover>
             <mpadded height="-0.333em" depth="+0.333em" voffset="-0.333em" data-latex="\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}">
               <mrow data-mjx-texclass="ORD">
@@ -3741,11 +3742,11 @@ describe('Mhchem8', () => {
           <mtext data-latex="\\text{amphoteres Hydroxid}">amphoteres Hydroxid</mtext>
         </munder>
         <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\overset{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}{\\mhchemlongrightleftharpoons}}}">
-          <munder data-latex="\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\overset{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}{\\mhchemlongrightleftharpoons}}">
-            <mover data-latex="\\overset{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}{\\mhchemlongrightleftharpoons}">
-              <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" stretchy="true" data-latex="\\mhchemlongrightleftharpoons">&#xE408;</mo>
-              <mrow data-latex=" {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}">
+        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\mhchemxrightleftharpoons{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}}}">
+          <munder data-latex="\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\mhchemxrightleftharpoons{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}}">
+            <mover data-latex="\\mhchemxrightleftharpoons{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}">
+              <mo data-mjx-texclass="REL" stretchy="true">&#xE408;</mo>
+              <mpadded width="+0.778em" lspace="0.278em" voffset="-.2em" height="-.2em">
                 <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
                 <mo data-latex="+">+</mo>
                 <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
@@ -3770,7 +3771,8 @@ describe('Mhchem8', () => {
                     <mo data-latex="-">&#x2212;</mo>
                   </mrow>
                 </msup>
-              </mrow>
+                <mspace depth=".2em"></mspace>
+              </mpadded>
             </mover>
             <mpadded height="-0.333em" depth="+0.333em" voffset="-0.333em" data-latex="\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}">
               <mrow data-mjx-texclass="ORD">

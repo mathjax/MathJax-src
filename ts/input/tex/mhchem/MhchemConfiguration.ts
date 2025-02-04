@@ -55,6 +55,11 @@ export const MhchemUtils = {
  */
 export const MhchemReplacements = new Map<string, RegExp>([
   [
+    '\\mhchemx$3[$1]{$2}',
+    /\\underset{\\lower2mu{(.*?)}}{\\overset{(.*?)}{\\long(.*?)}}/g,
+  ],
+  ['\\mhchemx$2{$1}', /\\overset{(.*?)}{\\long(.*?)}/g],
+  [
     '\\mhchemBondTD',
     /\\rlap\{\\lower\.1em\{-\}\}\\raise\.1em\{\\tripledash\}/g,
   ],
@@ -107,6 +112,7 @@ new CommandMap('mhchem', {
   mhchemxrightarrow: [MhchemMethods.xArrow, 0xe429, 5, 9],
   mhchemxleftarrow: [MhchemMethods.xArrow, 0xe428, 9, 5],
   mhchemxleftrightarrow: [MhchemMethods.xArrow, 0xe42a, 9, 9],
+  mhchemxleftrightarrows: [MhchemMethods.xArrow, 0xe42b, 9, 9],
   mhchemxrightleftharpoons: [MhchemMethods.xArrow, 0xe408, 5, 9],
   mhchemxRightleftharpoons: [MhchemMethods.xArrow, 0xe409, 5, 9],
   mhchemxLeftrightharpoons: [MhchemMethods.xArrow, 0xe40a, 9, 11],
