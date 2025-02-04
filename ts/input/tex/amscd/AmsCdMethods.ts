@@ -124,37 +124,35 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
         if (!a) {
           a = '\\kern ' + top.getProperty('minw');
         } // minsize needs work
-        if (a || b) {
-          const pad: EnvList = { width: '+.67em', lspace: '.33em' };
-          mml = parser.create('node', 'munderover', [mml]) as MmlMunderover;
-          if (a) {
-            const nodeA = new TexParser(
-              a,
-              parser.stack.env,
-              parser.configuration
-            ).mml();
-            const mpadded = parser.create('node', 'mpadded', [nodeA], pad);
-            NodeUtil.setAttribute(mpadded, 'voffset', '.1em');
-            NodeUtil.setChild(mml, mml.over, mpadded);
-          }
-          if (b) {
-            const nodeB = new TexParser(
-              b,
-              parser.stack.env,
-              parser.configuration
-            ).mml();
-            NodeUtil.setChild(
-              mml,
-              mml.under,
-              parser.create('node', 'mpadded', [nodeB], pad)
-            );
-          }
-          if (parser.configuration.options.amscd.hideHorizontalLabels) {
-            mml = parser.create('node', 'mpadded', mml, {
-              depth: 0,
-              height: '.67em',
-            });
-          }
+        const pad: EnvList = { width: '+.67em', lspace: '.33em' };
+        mml = parser.create('node', 'munderover', [mml]) as MmlMunderover;
+        if (a) {
+          const nodeA = new TexParser(
+            a,
+            parser.stack.env,
+            parser.configuration
+          ).mml();
+          const mpadded = parser.create('node', 'mpadded', [nodeA], pad);
+          NodeUtil.setAttribute(mpadded, 'voffset', '.1em');
+          NodeUtil.setChild(mml, mml.over, mpadded);
+        }
+        if (b) {
+          const nodeB = new TexParser(
+            b,
+            parser.stack.env,
+            parser.configuration
+          ).mml();
+          NodeUtil.setChild(
+            mml,
+            mml.under,
+            parser.create('node', 'mpadded', [nodeB], pad)
+          );
+        }
+        if (parser.configuration.options.amscd.hideHorizontalLabels) {
+          mml = parser.create('node', 'mpadded', [mml], {
+            depth: 0,
+            height: '.67em',
+          });
         }
       } else {
         //
@@ -201,7 +199,7 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
    */
   cell(parser: TexParser, name: string) {
     const top = parser.stack.Top() as ArrayItem;
-    if ((top.table || []).length % 2 === 0 && (top.row || []).length === 0) {
+    if (top.table.length % 2 === 0 && top.row.length === 0) {
       //
       // Add a strut to the first cell in even rows to get
       // better spacing of arrow rows.
