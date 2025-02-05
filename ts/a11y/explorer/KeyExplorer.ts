@@ -361,7 +361,7 @@ export class SpeechExplorer
    * @returns {HTMLElement} The refocused node.
    */
   public depth(node: HTMLElement): HTMLElement {
-    this.generators.depth(node, !!this.actionable(node));
+    this.generators.depth(node, this.node, !!this.actionable(node));
     this.refocus();
     this.generators.lastMove = InPlace.DEPTH;
     return node;
