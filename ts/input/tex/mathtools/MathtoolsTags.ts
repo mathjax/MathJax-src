@@ -90,7 +90,7 @@ export function MathtoolsTagFormat(
         if (!Array.isArray(forms[form]) || forms[form].length !== 3) {
           throw new TexError(
             'InvalidTagFormDef',
-            'The tag form definition for "%1" should be an array fo three strings',
+            'The tag form definition for "%1" should be an array of three strings',
             form
           );
         }

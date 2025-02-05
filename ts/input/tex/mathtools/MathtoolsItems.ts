@@ -46,7 +46,7 @@ export class MultlinedItem extends MultlineItem {
     }
     if (this.table.length > 1) {
       const options = this.factory.configuration.options.mathtools;
-      const gap = options.multlinegap;
+      const gap = options['multlined-gap'];
       const firstskip = options['firstline-afterskip'] || gap;
       const lastskip = options['lastline-preskip'] || gap;
       const first = NodeUtil.getChildren(this.table[0])[0];
