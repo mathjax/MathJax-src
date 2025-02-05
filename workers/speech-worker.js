@@ -90,10 +90,14 @@ const Commands = {
           domain: domain,
           style: style
         } = SRE.engineSetup();
+        const structure = SRE.toSpeechStructure(data.mml);
+        const mactions = structure['mactions'] ?? {};
+        delete structure['mactions'];
         Client(
           'Attach',
           {
-            speech: SRE.toSpeechStructure(data.mml),
+            speech: structure,
+            mactions: mactions,
             options: {
               locale: locale,
               domain: domain,

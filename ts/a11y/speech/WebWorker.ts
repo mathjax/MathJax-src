@@ -439,6 +439,16 @@ export class WorkerHandler<N, T, D> {
           options.style ?? ''
         );
       }
+      for (const [id, sid] of Object.entries(data.mactions)) {
+        let node = document.querySelector(`[id="${id}"]`) as N;
+        if (!node || !pool.adaptor.childNodes(node)[0]) {
+          continue;
+        }
+        node = pool.adaptor.childNodes(node)[0] as N;
+        pool.adaptor.setAttribute(node, 'role', 'treeitem');
+        pool.adaptor.setAttribute(node, 'data-semantic-type', 'dummy');
+        pool.adaptor.setAttribute(node, 'data-semantic-id', sid as string);
+      }
       // Container needs to get the aria label.
       let rootId: string = null;
       const setAttribute = function (node: N) {

@@ -97,7 +97,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     /**
      * Semantic id of the rerendered element that should regain the focus.
      */
-    protected refocus: number = null;
+    protected refocus: string = null;
 
     /**
      * Add the explorer to the output for this math item
@@ -127,9 +127,8 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     ) {
       if (this.explorers) {
         const speech = this.explorers.speech;
-        if (speech && speech.attached && speech.active) {
-          const focus = speech.semanticFocus();
-          this.refocus = focus ? focus.id : null;
+        if (speech && speech.attached) {
+          this.refocus = speech.semanticFocus() ?? null;
         }
         this.explorers.reattach();
       }

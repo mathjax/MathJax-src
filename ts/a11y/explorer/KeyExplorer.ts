@@ -117,7 +117,7 @@ export class SpeechExplorer
   /**
    * Id of the element focused before the restart.
    */
-  public restarted: number = null;
+  public restarted: string = null;
 
   /**
    * Convenience getter for generator pool of the item.
@@ -738,14 +738,9 @@ export class SpeechExplorer
   /**
    * @returns {Sre.semanticNode} The semantic node that is currently focused.
    */
-  public semanticFocus(): Sre.semanticNode {
+  public semanticFocus(): string {
     const node = this.current || this.node;
     const id = node.getAttribute('data-semantic-id');
-    const stree = this.generators.speechGenerator.getRebuilt()?.stree;
-    if (!stree) return null;
-    const snode = stree.root.querySelectorAll(
-      (x: any) => x.id.toString() === id
-    )[0];
-    return snode || stree.root;
+    return id;
   }
 }

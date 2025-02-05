@@ -68,7 +68,7 @@ export class enrichVisitor<N, T, D> extends SerializedMmlVisitor {
   protected mactionId: number;
 
   public visitTree(node: MmlNode, math?: MathItem<N, T, D>) {
-    this.mactionId = 1;
+    this.mactionId = 0;
     const mml = super.visitTree(node);
     if (this.mactionId) {
       math.inputData.hasMaction = true;
@@ -86,7 +86,7 @@ export class enrichVisitor<N, T, D> extends SerializedMmlVisitor {
     const children = this.childNodeMml(node, space + '  ', nl);
     let attributes = this.getAttributes(node);
     if (node.attributes.get('actiontype') === 'toggle') {
-      const id = this.mactionId++;
+      const id = ++this.mactionId;
       node.setProperty('mactionId', id);
       //
       // Add maction id and make sure selection is the next attribute
