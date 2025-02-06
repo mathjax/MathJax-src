@@ -463,49 +463,34 @@ export class GeneratorPool<N, T, D> {
   }
 
   /**
-   * Computes the depth of the node in the overal math expression.
-   *
-   * @param {N} node The node.
-   * @param {N} root The root node of the expression.
-   * @returns {number} The depth level of the node.
-   */
-  private computeLevel(node: N, root: N): number {
-    const id = this.adaptor.getAttribute(node, 'data-semantic-id');
-    while (node !== root) {
-      const owns = this.adaptor.getAttribute(node, 'aria-owns');
-      if (!owns) {
-        node = this.adaptor.parent(node);
-        continue;
-      }
-      if (owns.match(`\\b${id}\\b`)) {
-        return parseInt(this.adaptor.getAttribute(node, 'aria-level')) + 1;
-      }
-      node = this.adaptor.parent(node);
-    }
-    return 0;
-  }
-
-  // TODO (Volker): This needs to go through the worker!
-  /**
    * Outputs the depth of the node in the overal math expression. Computes it,
    * if necessary for a collapsed element.
    *
    * @param {N} node The node.
    * @param {N} root The root node of the expression.
-   * @param {boolean} actionable If the node actionable (e.g., link, collapse).
+   * @param {boolean} actionable If the node actionable (e.g., collapse).
    */
   public depth(node: N, root: N, actionable: boolean) {
     if (this.lastMove === InPlace.DEPTH) {
       this.CleanUp(node);
       return;
     }
-    const postfix = this.summaryGenerator.getActionable(
-      actionable ? (this.adaptor.childNodes(node).length === 0 ? -1 : 1) : 0
-    );
-    const depth = this.summaryGenerator.getLevel(
-      this.adaptor.getAttribute(node, 'aria-level') ??
-        this.computeLevel(node, root).toString()
-    );
+    let postfix = '';
+    let sep = '';
+    if (actionable) {
+      postfix =
+        this.adaptor.getAttribute(
+          root,
+          this.adaptor.childNodes(node).length === 0
+            ? 'data-semantic-expandable'
+            : 'data-semantic-collapsible'
+        ) ?? '';
+      sep = ' ';
+    }
+    const depth =
+      (this.adaptor.getAttribute(root, 'data-semantic-level') ?? '') +
+      ' ' +
+      (this.adaptor.getAttribute(node, 'aria-level') ?? '0');
     this.lastSpeech.set(
       SemAttr.SPEECH,
       this.adaptor.getAttribute(node, SemAttr.SPEECH)
@@ -514,7 +499,11 @@ export class GeneratorPool<N, T, D> {
       SemAttr.SPEECH_SSML,
       this.adaptor.getAttribute(node, SemAttr.SPEECH_SSML)
     );
-    this.adaptor.setAttribute(node, SemAttr.SPEECH_SSML, `${depth} ${postfix}`);
-    this.adaptor.setAttribute(node, SemAttr.SPEECH, `${depth} ${postfix}`);
+    this.adaptor.setAttribute(
+      node,
+      SemAttr.SPEECH_SSML,
+      `${depth}${sep}${postfix}`
+    );
+    this.adaptor.setAttribute(node, SemAttr.SPEECH, `${depth}${sep}${postfix}`);
   }
 }

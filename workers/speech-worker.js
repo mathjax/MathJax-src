@@ -159,15 +159,10 @@ function Finished() {
  */
 async function Speech(func, id, mml, options, ...rest) {
   if (mml) {
-    const structure = await func.call(null, mml, options, ...rest);
-    Client(
-      'Attach',
-    {
-      speech: structure.speech,
-      mactions: structure.mactions,
-      options: structure.options,
-      id: id,
-    });
+    let structure = await func.call(null, mml, options, ...rest);
+    structure = structure ?? {};
+    structure.id = id;
+    Client('Attach', structure);
   }
 }
 
