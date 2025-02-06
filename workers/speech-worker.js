@@ -75,38 +75,24 @@ const Commands = {
     Finished();
   },
 
-
   /**
    * Compute speech
    * @param data The data object
    * @param post The call back specification
    */
-  speech: function(data) {
+  speech: async function(data) {
     if (data?.mml) {
-      SRE.engineReady().then(() => {
-        SRE.setupEngine({modality: 'speech'});
-        const {
-          locale: locale,
-          domain: domain,
-          style: style
-        } = SRE.engineSetup();
-        const structure = SRE.toSpeechStructure(data.mml);
-        const mactions = structure['mactions'] ?? {};
-        delete structure['mactions'];
-        Client(
-          'Attach',
-          {
-            speech: structure,
-            mactions: mactions,
-            options: {
-              locale: locale,
-              domain: domain,
-              style: style
-            },
-            id: data.id
-          });
-      });
+      const structure = await SRE.workerSpeech(data.mml, data.options);
+      Client(
+        'Attach',
+        {
+          speech: structure.speech,
+          mactions: structure.mactions,
+          options: structure.options,
+          id: data.id
+        });
     }
+    Finished();
   },
 
   /**
@@ -120,29 +106,34 @@ const Commands = {
     Finished();
   },
 
-  nextRules: function(data) {
-    SRE.nextDomain(data);
+  nextRules: async function(data) {
+    if (data?.mml) {
+      const structure = await SRE.workerNextRules(data.mml, data.options);
+      Client(
+        'Attach',
+        {
+          speech: structure.speech,
+          mactions: structure.mactions,
+          options: structure.options,
+          id: data.id
+        });
+    }
     Finished();
   },
 
-  nextStyle: function(data) {
-    const speech = SRE.nextStyle(data.mml, data.nodeId);
-    const {
-      locale: locale,
-      domain: domain,
-      style: style
-    } = SRE.engineSetup();
-    Client(
-      'Attach',
-      {
-        speech: speech,
-        options: {
-          locale: locale,
-          domain: domain,
-          style: style
-        },
-        id: data.workerId
-      });
+  nextStyle: async function(data) {
+    if (data?.mml) {
+      const structure = await SRE.workerNextStyle(data.mml, data.options, data.nodeId);
+      Client(
+        'Attach',
+        {
+          speech: structure.speech,
+          mactions: structure.mactions,
+          options: structure.options,
+          id: data.workerId
+        });
+    }
+    Finished();
   },
 
 };

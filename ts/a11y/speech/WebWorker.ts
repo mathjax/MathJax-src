@@ -287,13 +287,13 @@ export class WorkerHandler<N, T, D> {
    * @param {string} math The mml string.
    * @param {string} id The math item id.
    */
-  public Speech(math: string, id: string) {
+  public Speech(math: string, options: {}, id: string) {
     this.Post({
       cmd: 'Worker',
       data: {
         cmd: 'speech',
         debug: this.options.debug,
-        data: { mml: math, id: id },
+        data: { mml: math, options: options, id: id },
       },
     });
   }
@@ -324,19 +324,16 @@ export class WorkerHandler<N, T, D> {
    * the engine has been set to the options of the current expression.
    *
    * @param {OptionList} options The options list.
+   * @param math
+   * @param id
    */
-  public nextRules(options: OptionList) {
+  public nextRules(math: string, options: {}, id: string) {
     this.Post({
       cmd: 'Worker',
       data: {
         cmd: 'nextRules',
         debug: this.options.debug,
-        data: {
-          domain: options.domain,
-          style: options.style,
-          locale: options.locale,
-          modality: options.modality,
-        },
+        data: { mml: math, options: options, id: id },
       },
     });
   }
@@ -356,13 +353,23 @@ export class WorkerHandler<N, T, D> {
    * @param {string} nodeId The semantic Id of the currenctly focused node.
    * @param {string} workerId The id for reattaching the speech.
    */
-  public nextStyle(math: string, nodeId: string, workerId: string) {
+  public nextStyle(
+    math: string,
+    options: {},
+    nodeId: string,
+    workerId: string
+  ) {
     this.Post({
       cmd: 'Worker',
       data: {
         cmd: 'nextStyle',
         debug: this.options.debug,
-        data: { mml: math, nodeId: nodeId, workerId: workerId },
+        data: {
+          mml: math,
+          options: options,
+          nodeId: nodeId,
+          workerId: workerId,
+        },
       },
     });
   }
@@ -439,15 +446,19 @@ export class WorkerHandler<N, T, D> {
           options.style ?? ''
         );
       }
+      // Sort out Mactions
       for (const [id, sid] of Object.entries(data.mactions)) {
         let node = document.querySelector(`[id="${id}"]`) as N;
         if (!node || !pool.adaptor.childNodes(node)[0]) {
           continue;
         }
         node = pool.adaptor.childNodes(node)[0] as N;
-        pool.adaptor.setAttribute(node, 'role', 'treeitem');
         pool.adaptor.setAttribute(node, 'data-semantic-type', 'dummy');
-        pool.adaptor.setAttribute(node, 'data-semantic-id', sid as string);
+        for (const [key, value] of Object.entries(sid)) {
+          if (value) {
+            pool.adaptor.setAttribute(node, key, value);
+          }
+        }
       }
       // Container needs to get the aria label.
       let rootId: string = null;

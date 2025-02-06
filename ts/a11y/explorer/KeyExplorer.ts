@@ -34,7 +34,7 @@ import { ExplorerPool } from './ExplorerPool.js';
 import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import { honk, InPlace } from '../speech/SpeechUtil.js';
 import { GeneratorPool } from '../speech/GeneratorPool.js';
-import * as Sre from '../sre.js';
+// import * as Sre from '../sre.js';
 
 /**
  * Interface for keyboard explorers. Adds the necessary keyboard events.
@@ -736,11 +736,10 @@ export class SpeechExplorer
   }
 
   /**
-   * @returns {Sre.semanticNode} The semantic node that is currently focused.
+   * @returns {string} The semantic id of the node that is currently focused.
    */
   public semanticFocus(): string {
     const node = this.current || this.node;
-    const id = node.getAttribute('data-semantic-id');
-    return id;
+    return node.getAttribute('data-semantic-id');
   }
 }

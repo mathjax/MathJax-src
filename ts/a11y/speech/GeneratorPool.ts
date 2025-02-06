@@ -92,6 +92,7 @@ export class GeneratorPool<N, T, D> {
   public set options(options: OptionList) {
     // TODO: Compare for global changes?
     this._options = Object.assign({}, options?.sre || {});
+    delete this._options.custom;
   }
 
   public get options() {
@@ -166,10 +167,8 @@ export class GeneratorPool<N, T, D> {
   public computeSpeech(node: N, mml: string) {
     const id = this.webworker.counter;
     this.adaptor.setAttribute(node, 'data-worker', id);
-    this.webworker.Setup(
-      Object.assign({}, this.options, { modality: 'speech' })
-    );
-    this.webworker.Speech(mml, id.toString());
+    const options = Object.assign({}, this.options, { modality: 'speech' });
+    this.webworker.Speech(mml, options, id.toString());
   }
 
   /**
@@ -320,9 +319,10 @@ export class GeneratorPool<N, T, D> {
     const options = this.getOptions(node);
     this.update(options);
     this.webworker.nextRules(
-      Object.assign({}, this.options, { modality: 'speech' })
+      mml,
+      Object.assign({}, this.options, { modality: 'speech' }),
+      this.adaptor.getAttribute(node, 'data-worker')
     );
-    this.webworker.Speech(mml, this.adaptor.getAttribute(node, 'data-worker'));
   }
 
   /**
@@ -335,11 +335,9 @@ export class GeneratorPool<N, T, D> {
   public nextStyle(node: N, root: N, mml: string) {
     const options = this.getOptions(root);
     this.update(options);
-    this.webworker.Setup(
-      Object.assign({}, this.options, { modality: 'speech' })
-    );
     this.webworker.nextStyle(
       mml,
+      Object.assign({}, this.options, { modality: 'speech' }),
       this.adaptor.getAttribute(node, 'data-semantic-id'),
       this.adaptor.getAttribute(root, 'data-worker')
     );
