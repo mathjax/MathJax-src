@@ -537,6 +537,36 @@ describe('Newcommand', () => {
 
   /********************************************************************************/
 
+  it('Def Template Matching', () => {
+    toXmlMatch(
+      tex2mml('\\def\\ending{+}\\def\\test#1\\end{[#1]} \\test a\\ending b\\end'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\ending{+}\\def\\test#1\\end{[#1]} \\test a\\ending b\\end" display="block">
+         <mo data-latex="[" stretchy="false">[</mo>
+         <mi data-latex="a">a</mi>
+         <mo data-latex="+">+</mo>
+         <mi data-latex="b">b</mi>
+         <mo data-latex="]" stretchy="false">]</mo>
+       </math>`
+    );
+  });
+
+  /********************************************************************************/
+
+  it('Def Hash Replacement', () => {
+    toXmlMatch(
+      tex2mml('\\def\\x#1{\\def\\y##1#1{[##1]}\\y} \\x\\X abc \\X'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x#1{\\def\\y##1#1{[##1]}\\y} \\x\\X abc \\X" display="block">
+         <mo data-latex="[" stretchy="false">[</mo>
+         <mi data-latex="a">a</mi>
+         <mi data-latex="b">b</mi>
+         <mi data-latex="c">c</mi>
+         <mo data-latex="]" stretchy="false">]</mo>
+       </math>`
+    );
+  });
+
+  /********************************************************************************/
+
 });
 
 /**********************************************************************************/
@@ -921,6 +951,27 @@ describe('NewcommandError', () => {
 
   /********************************************************************************/
 
+  it('Hash Error', () => {
+    expectTexError('\\def\\x#1{a #1 b #c} \\x{a}')
+      .toBe('Illegal macro parameter reference');
+  });
+
+  /********************************************************************************/
+
+  it('Recursive Macro', () => {
+    expectTexError('\\def\\x{\\x} \\x')
+      .toBe('MathJax maximum macro substitution count exceeded; is here a recursive macro call?');
+  });
+
+  /********************************************************************************/
+
+  it('Recursive Environment', () => {
+    expectTexError('\\newenvironment{error}{\\begin{error}}{\\end{error}} \\begin{error}\\end{error}')
+      .toBe('MathJax maximum substitution count exceeded; is there a recursive latex environment?');
+  });
+
+  /********************************************************************************/
+
 });
 
 /**********************************************************************************/
@@ -1103,53 +1154,184 @@ describe('Newcommand Overrides', () => {
 
   /********************************************************************************/
 
-  it('Def template matching', () => {
+});
+
+/**********************************************************************************/
+/**********************************************************************************/
+
+describe('Nested Environments', () => {
+  beforeEach(() => setupTex(['base', 'ams', 'newcommand']));
+
+  /********************************************************************************/
+
+  it('Newenvironment with Begin', () => {
     toXmlMatch(
-      tex2mml('\\def\\ending{+}\\def\\test#1\\end{[#1]} \\test a\\ending b\\end'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\ending{+}\\def\\test#1\\end{[#1]} \\test a\\ending b\\end" display="block">
-         <mo data-latex="[" stretchy="false">[</mo>
-         <mi data-latex="a">a</mi>
-         <mo data-latex="+">+</mo>
-         <mi data-latex="b">b</mi>
-         <mo data-latex="]" stretchy="false">]</mo>
+      tex2mml(
+        [
+          '\\newenvironment{boxed}{\\begin{array}{|c|c|}\\hline}{\\\\\\hline\\end{array}}',
+          '\\begin{boxed}a&b\\\\c&d\\end{boxed}'
+        ].join('')
+      ),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\newenvironment{boxed}{\\begin{array}{|c|c|}\\hline}{\\\\\\hline\\end{array}}\\begin{boxed}a&amp;b\\\\c&amp;d\\end{boxed}" display="block">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" columnlines="solid" framespacing=".5em .125em" frame="solid" data-latex-item="{array}" data-latex="">
+           <mtr data-latex-item="{|c|c|}" data-latex="{|c|c|}">
+             <mtd>
+               <mi data-latex="a">a</mi>
+             </mtd>
+             <mtd>
+               <mi data-latex="b">b</mi>
+             </mtd>
+           </mtr>
+           <mtr data-latex-item="{|c|c|}" data-latex="{|c|c|}">
+             <mtd>
+               <mi data-latex="c">c</mi>
+             </mtd>
+             <mtd>
+               <mi data-latex="d">d</mi>
+             </mtd>
+           </mtr>
+         </mtable>
        </math>`
     );
   });
 
   /********************************************************************************/
 
-  it('Def Hash Replacement', () => {
+  it('Environments Nested', () => {
     toXmlMatch(
-      tex2mml('\\def\\x#1{\\def\\y##1#1{[##1]}\\y} \\x\\X abc \\X'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\x#1{\\def\\y##1#1{[##1]}\\y} \\x\\X abc \\X" display="block">
-         <mo data-latex="[" stretchy="false">[</mo>
-         <mi data-latex="a">a</mi>
-         <mi data-latex="b">b</mi>
-         <mi data-latex="c">c</mi>
-         <mo data-latex="]" stretchy="false">]</mo>
+      tex2mml(
+        [
+          '\\newenvironment{boxed}{\\begin{array}{|c|c|}\\hline}{\\\\\\hline\\end{array}}',
+          '\\begin{boxed}\\begin{boxed}a&b\\\\c&d\\end{boxed} & X \\\end{boxed}'
+        ].join('')
+      ),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\newenvironment{boxed}{\\begin{array}{|c|c|}\\hline}{\\\\\\hline\\end{array}}\\begin{boxed}\\begin{boxed}a&amp;b\\\\c&amp;d\\end{boxed} &amp; X \\end{boxed}" display="block">
+         <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" columnlines="solid" framespacing=".5em .125em" frame="solid" data-latex-item="{array}" data-latex="">
+           <mtr data-latex-item="{|c|c|}" data-latex="{|c|c|}">
+             <mtd>
+               <mtable columnspacing="1em" rowspacing="4pt" columnalign="center center" columnlines="solid" framespacing=".5em .125em" frame="solid" data-latex-item="{array}" data-latex="{array}">
+                 <mtr data-latex-item="{|c|c|}" data-latex="{|c|c|}">
+                   <mtd>
+                     <mi data-latex="a">a</mi>
+                   </mtd>
+                   <mtd>
+                     <mi data-latex="b">b</mi>
+                   </mtd>
+                 </mtr>
+                 <mtr data-latex-item="{|c|c|}" data-latex="{|c|c|}">
+                   <mtd>
+                     <mi data-latex="c">c</mi>
+                   </mtd>
+                   <mtd>
+                     <mi data-latex="d">d</mi>
+                   </mtd>
+                 </mtr>
+               </mtable>
+             </mtd>
+             <mtd>
+               <mi data-latex="X">X</mi>
+             </mtd>
+           </mtr>
+         </mtable>
        </math>`
     );
   });
 
   /********************************************************************************/
 
-  it('Hash Error', () => {
-    expectTexError('\\def\\x#1{a #1 b #c} \\x{a}')
-      .toBe('Illegal macro parameter reference');
+  it('Environments Intermixed', () => {
+    toXmlMatch(
+      tex2mml(
+        [
+          '\\newenvironment{a}{\\begin{b}}{\\end{b}}',
+          '\\newenvironment{b}{x}{y}',
+          '\\begin{a} ... \\end{b}\\begin{b}\\end{a}'
+        ].join('')
+      ),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\newenvironment{a}{\\begin{b}}{\\end{b}}\\newenvironment{b}{x}{y}\\begin{a} ... \\end{b}\\begin{b}\\end{a}" display="block">
+         <mi data-latex="x">x</mi>
+         <mo data-latex=".">.</mo>
+         <mo data-latex=".">.</mo>
+         <mo data-latex=".">.</mo>
+         <mi data-latex="y">y</mi>
+         <mi data-latex="x">x</mi>
+         <mi data-latex="y">y</mi>
+       </math>`
+    );
   });
 
   /********************************************************************************/
 
-  it('Recursive Macro', () => {
-    expectTexError('\\def\\x{\\x} \\x')
-      .toBe('MathJax maximum macro substitution count exceeded; is here a recursive macro call?');
+  it('Nested Begins', () => {
+    toXmlMatch(
+      tex2mml('\\newenvironment{a}{x}{y}\\newenvironment{b}{p}{q}\\begin{a}\\begin{b}X\\end{b}\\end{a}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\newenvironment{a}{x}{y}\\newenvironment{b}{p}{q}\\begin{a}\\begin{b}X\\end{b}\\end{a}" display="block">
+         <mi data-latex="x">x</mi>
+         <mi data-latex="p">p</mi>
+         <mi data-latex="X">X</mi>
+         <mi data-latex="q">q</mi>
+         <mi data-latex="y">y</mi>
+       </math>`
+    );
   });
 
   /********************************************************************************/
 
-  it('Recursive Environment', () => {
-    expectTexError('\\newenvironment{error}{\\begin{error}}{\\end{error}} \\begin{error}\\end{error}')
-      .toBe('MathJax maximum substitution count exceeded; is there a recursive latex environment?');
+  it('Dangling End', () => {
+    expectTexError('\\newenvironment{a}{x}{y\\end{a}}\\begin{a} ... \\end{a}')
+      .toBe('Missing \\begin{a} or extra \\end{a}');
+  });
+
+  /********************************************************************************/
+
+  it('Nested Dangling End', () => {
+    expectTexError(
+      '\\newenvironment{a}{\\begin{b}}{\\end{b}}\\newenvironment{b}{x}{y\\end{b}}\\begin{a}X\\end{a}')
+      .toBe('\\begin{a} ended with \\end{b}');
+  });
+
+  /********************************************************************************/
+
+  it('Badly Nested Begins', () => {
+    expectTexError(
+      '\\newenvironment{a}{x}{y}\\newenvironment{b}{p}{q}\\begin{a}\\begin{b} ... \\end{a}\\end{b}'
+    ).toBe('\\begin{b} ended with \\end{a}');
+  });
+
+  /********************************************************************************/
+
+  it('Ended by Wrong Environment', () => {
+    expectTexError('\\newenvironment{a}{x}{y}\\begin{a} X \\end{cases}')
+      .toBe('\\begin{a} ended with \\end{cases}');
+  });
+
+  /********************************************************************************/
+
+  it('Unbalanced Ends 1', () => {
+    expectTexError(
+      '\\newenvironment{a}{a}{b\\end{a}}\\newenvironment{b}{x}{y}\\begin{a}\\begin{b}...\\end{b}\\end{a}'
+    ).toBe('Missing \\begin{a} or extra \\end{a}');
+  });
+
+  /********************************************************************************/
+
+  it('Unbalanced Ends 2', () => {
+    expectTexError(
+      '\\newenvironment{a}{a}{b\\end{a}}\\newenvironment{b}{x}{y}\\begin{b}\\begin{a}...\\end{a}\\end{b}'
+    ).toBe('\\begin{b} ended with \\end{a}');
+  });
+
+  /********************************************************************************/
+
+  it('Triple Nesting', () => {
+    expectTexError(
+      [
+        '\\newenvironment{c}{x}{\\end{a}y}',
+        '\\newenvironment{b}{begin{c}x}{\\end{c}y}',
+        '\\newenvironment{a}{\\begin{b}x}{\\end{b}y}',
+        '\\begin{a} ... '
+      ].join('')
+    ).toBe('Missing \\end{b}');
   });
 
   /********************************************************************************/
