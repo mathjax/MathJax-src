@@ -37,11 +37,6 @@ export type PoolCommand = {
   data: WorkerCommand | Message;
 };
 
-// These need to become options.
-// const DOMAIN = 'https://88.166.18.204';
-// const DOMAIN = 'https://88.174.118.32';
-// window.Resolves = [];
-
 /**
  * The main WorkerHandler class
  *
@@ -50,9 +45,6 @@ export type PoolCommand = {
  * @template D  The Document class
  */
 export class WorkerHandler<N, T, D> {
-  // private static TIMEOUT = 200; // delay (ms) to wait for pool to start
-  // private static REPEAT = 20; // repeat wait
-
   private static ID = 0;
   private _count = 0;
 
@@ -65,27 +57,37 @@ export class WorkerHandler<N, T, D> {
   public ready: boolean = false; // callback for ready signal
   public domain = ''; // the domain of the pool
   public url = '';
-  // public wait: Promise<void>; // waiting for timeout?
 
   // Promise handling
   public promise = Promise.resolve();
   public resolve = () => {};
-  public reject = () => {};
 
-  private async getPromise() {
-    this.promise = new Promise((res, rej) => {
+  /**
+   * @returns {Promise<void>} Pomise resolves on the task completion.
+   */
+  private async getPromise(): Promise<void> {
+    this.promise = new Promise((res) => {
       this.resolve = res;
-      this.reject = rej;
     });
     return this.promise.then(() => this.postNext());
   }
 
   private tasks: PoolCommand[] = [];
 
+  /**
+   * Enqueues a pool command task.
+   *
+   * @param {PoolCommand} task The task to enqueue.
+   */
   private enqueueTask(task: PoolCommand) {
     this.tasks.unshift(task);
   }
 
+  /**
+   * Dequeues a pool command task.
+   *
+   * @returns {PoolCommand} The next task.
+   */
   private dequeueTask(): PoolCommand {
     const task = this.tasks.pop();
     return task;
@@ -175,31 +177,6 @@ export class WorkerHandler<N, T, D> {
     document.body.appendChild(this.iframe);
     return this.getPromise();
   }
-
-  /**
-   * A timer to wait for the iframe to initialize.
-   *
-   * @returns {Promise<void>} A promise that fulfills when the worker pool is
-   *     established.
-   */
-  // private async Wait(): Promise<void> {
-  //   return new Promise<void>((res, rej) => {
-  //     let n = 0;
-  //     const checkReady = () => {
-  //       if (this.ready) {
-  //         res();
-  //       } else {
-  //         if (n >= WorkerHandler.REPEAT) {
-  //           rej('Something went wrong loading web worker.');
-  //         } else {
-  //           n++;
-  //           setTimeout(checkReady, WorkerHandler.TIMEOUT);
-  //         }
-  //       }
-  //     };
-  //     checkReady();
-  //   }).catch((err) => console.log(err));
-  // }
 
   /**
    * Debug output when debug flag is set.
@@ -293,7 +270,7 @@ export class WorkerHandler<N, T, D> {
       data: {
         cmd: 'speech',
         debug: this.options.debug,
-        data: { mml: math, options: options, id: id },
+        data: { mml: math, options: options, workerId: id },
       },
     });
   }
@@ -333,15 +310,14 @@ export class WorkerHandler<N, T, D> {
       data: {
         cmd: 'nextRules',
         debug: this.options.debug,
-        data: { mml: math, options: options, id: id },
+        data: { mml: math, options: options, workerId: id },
       },
     });
   }
 
   /**
    * Computes the next style for the particular SRE settings and the currently
-   * focused node. We assume that the engine has been set to the options of the
-   * current expression.
+   * focused node. We pass the options of the current expression.
    *
    * Note, that we compute not only the next style but also the next speech
    * structure in the method, as smart computation is done wrt. the semantic
@@ -412,9 +388,11 @@ export class WorkerHandler<N, T, D> {
       pool.ready = true;
       pool.resolve();
     },
+
     Finished: function (pool: WorkerHandler<N, T, D>, _data: Message) {
       pool.resolve();
     },
+
     /**
      * Attaches speech returned from the worker to the DOM element with the
      * corresponding data-worker id.
@@ -427,25 +405,12 @@ export class WorkerHandler<N, T, D> {
         `[data-worker="${data?.id}"]`
       ) as N;
       if (!container) return; // The element is gone, must have been retypeset.
-      // Attach options
-      const options = data.options;
-      if (options) {
-        pool.adaptor.setAttribute(
-          container,
-          'data-semantic-locale',
-          options.locale ?? ''
-        );
-        pool.adaptor.setAttribute(
-          container,
-          'data-semantic-domain',
-          options.domain ?? ''
-        );
-        pool.adaptor.setAttribute(
-          container,
-          'data-semantic-style',
-          options.style ?? ''
-        );
-      }
+      pool.setSpecialAttributes(container, data.options, 'data-semantic-', [
+        'locale',
+        'domain',
+        'style',
+      ]);
+      pool.setSpecialAttributes(container, data.translations, 'data-semantic-');
       // Sort out Mactions
       for (const [id, sid] of Object.entries(data.mactions)) {
         let node = document.querySelector(`[id="${id}"]`) as N;
@@ -454,13 +419,9 @@ export class WorkerHandler<N, T, D> {
         }
         node = pool.adaptor.childNodes(node)[0] as N;
         pool.adaptor.setAttribute(node, 'data-semantic-type', 'dummy');
-        for (const [key, value] of Object.entries(sid)) {
-          if (value) {
-            pool.adaptor.setAttribute(node, key, value);
-          }
-        }
+        pool.setSpecialAttributes(node, sid, '');
       }
-      // Container needs to get the aria label.
+      // Container needs to get the aria label?
       let rootId: string = null;
       const setAttribute = function (node: N) {
         const id = pool.adaptor.getAttribute(node, 'data-semantic-id');
@@ -498,6 +459,7 @@ export class WorkerHandler<N, T, D> {
       setAttributes(pool.adaptor.childNodes(container)[0]);
       pool.adaptor.setAttribute(container, 'data-speech-attached', 'true');
     },
+
     /**
      * Logs a message from the pool or worker.
      *
@@ -508,4 +470,28 @@ export class WorkerHandler<N, T, D> {
       pool.debug(data.msg);
     },
   };
+
+  /**
+   * Adds a set of attributes to the given node.
+   *
+   * @param {N} node The node on which to set attributes.
+   * @param {OptionList} map The attribute to value map.
+   * @param {string} prefix A possible prefix for the attribute name.
+   * @param {string[]} keys An optional list to select only those attributes.
+   */
+  private setSpecialAttributes(
+    node: N,
+    map: OptionList,
+    prefix: string,
+    keys?: string[]
+  ) {
+    if (!map) return;
+    keys = keys || Object.keys(map);
+    for (const key of keys) {
+      const value = map[key];
+      if (value) {
+        this.adaptor.setAttribute(node, `${prefix}${key}`, value);
+      }
+    }
+  }
 }

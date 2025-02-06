@@ -68,30 +68,15 @@ const Commands = {
     Finished();
   },
 
+  /**
+   * Sets the SRE feature vector in the worker. Useful for presetting mathmaps
+   * path or custom loader.
+   * @param data The data object
+   */
   feature: function(data) {
     SREfeature = {
       json: data.json
     };
-    Finished();
-  },
-
-  /**
-   * Compute speech
-   * @param data The data object
-   * @param post The call back specification
-   */
-  speech: async function(data) {
-    if (data?.mml) {
-      const structure = await SRE.workerSpeech(data.mml, data.options);
-      Client(
-        'Attach',
-        {
-          speech: structure.speech,
-          mactions: structure.mactions,
-          options: structure.options,
-          id: data.id
-        });
-    }
     Finished();
   },
 
@@ -106,34 +91,28 @@ const Commands = {
     Finished();
   },
 
-  nextRules: async function(data) {
-    if (data?.mml) {
-      const structure = await SRE.workerNextRules(data.mml, data.options);
-      Client(
-        'Attach',
-        {
-          speech: structure.speech,
-          mactions: structure.mactions,
-          options: structure.options,
-          id: data.id
-        });
-    }
-    Finished();
+  /**
+   * Compute speech
+   * @param data The data object
+   */
+  speech: function(data) {
+    Speech(SRE.workerSpeech, data.workerId, data.mml, data.options);
   },
 
-  nextStyle: async function(data) {
-    if (data?.mml) {
-      const structure = await SRE.workerNextStyle(data.mml, data.options, data.nodeId);
-      Client(
-        'Attach',
-        {
-          speech: structure.speech,
-          mactions: structure.mactions,
-          options: structure.options,
-          id: data.workerId
-        });
-    }
-    Finished();
+  /**
+   * Compute speech for the next rule set
+   * @param data The data object
+   */
+  nextRules: function(data) {
+    Speech(SRE.workerNextRules, data.workerId, data.mml, data.options);
+  },
+
+  /**
+   * Compute speech for the next style or preference
+   * @param data The data object
+   */
+  nextStyle: function(data) {
+    Speech(SRE.workerNextStyle, data.workerId, data.mml, data.options, data.nodeId);
   },
 
 };
@@ -153,13 +132,43 @@ function Pool(cmd, data) {
   }
 }
 
+/**
+ * Post a command back to the client.
+ * @param cmd The client command to be sent to the client.
+ * @param data The payload data to be sent to the client.
+ */
 function Client(cmd, data) {
   Pool('Client', {cmd: cmd, data: data});
   Finished();
 }
 
+/**
+ * Post that the current command is finished to the client.
+ */
 function Finished() {
   Pool('Client', {cmd: 'Finished', data: {}});
+}
+
+/**
+ * Post a command that returns a new speech structure.
+ * @param func The function to call for speech computation.
+ * @param id The worker-id of the node.
+ * @param mml The mml expression.
+ * @param options Setup options for SRE.
+ * @param rest Remaining arguments.
+ */
+async function Speech(func, id, mml, options, ...rest) {
+  if (mml) {
+    const structure = await func.call(null, mml, options, ...rest);
+    Client(
+      'Attach',
+    {
+      speech: structure.speech,
+      mactions: structure.mactions,
+      options: structure.options,
+      id: id,
+    });
+  }
 }
 
 /**
