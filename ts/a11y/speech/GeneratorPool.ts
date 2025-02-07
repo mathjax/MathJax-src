@@ -276,10 +276,6 @@ export class GeneratorPool<N, T, D> {
   }
 
   /**
-   * Speech, labels and aria
-   */
-
-  /**
    * Computes the speech label from the node combining prefixes and postfixes.
    *
    * @param {N} node The typeset node.

@@ -392,9 +392,9 @@ export function EnrichedMathDocumentMixin<
       /* prettier-ignore */
       speechTiming: {
         asynchronous: true,                // true to allow screen updates while adding speech, false to not
-        initial: 1000,                      // initial delay until starting to add speech
+        initial: 100,                      // initial delay until starting to add speech
         threshold: 250,                    // time (in milliseconds) to process speech before letting screen update
-        intermediate: 100                   // delay after processing speech reaches the threshold
+        intermediate: 10                   // delay after processing speech reaches the threshold
       },
       /* prettier-ignore */
       sre: expandable({

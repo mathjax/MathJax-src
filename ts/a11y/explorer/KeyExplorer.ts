@@ -495,6 +495,9 @@ export class SpeechExplorer
   private restarts = 0;
   private static maxRestarts = 20;
 
+  /**
+   * Wait for speech to be reattached.
+   */
   private async Restart() {
     setTimeout(
       () =>
@@ -676,6 +679,12 @@ export class SpeechExplorer
     return this.triggerLink(this.current);
   }
 
+  /**
+   * Executiving the trigger the link action.
+   *
+   * @param {HTMLElement} node The node with the link.
+   * @returns {boolean} True if link was successfully triggered.
+   */
   protected triggerLink(node: HTMLElement) {
     const focus = node
       ?.getAttribute('data-semantic-postfix')
