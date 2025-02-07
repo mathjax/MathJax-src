@@ -15,8 +15,6 @@
  *  limitations under the License.
  */
 
-// import { mathjax } from '../../mathjax.js';
-import * as Sre from '../sre.js';
 import { OptionList } from '../../util/Options.js';
 import { LiveRegion } from '../explorer/Region.js';
 import {
@@ -45,11 +43,6 @@ export class GeneratorPool<N, T, D> {
 
   set element(element: Element) {
     this._element = element;
-    // We always force a rebuild of the semantic tree, in case the element was
-    // re-rendered. Otherwise we might have incorrect maction links etc.
-    const rebuilt = this.speechGenerator.computeRebuilt(element, true);
-    this.brailleGenerator.setRebuilt(rebuilt);
-    this.summaryGenerator.setRebuilt(rebuilt);
   }
 
   get element() {
@@ -62,25 +55,8 @@ export class GeneratorPool<N, T, D> {
   public adaptor: DOMAdaptor<N, T, D> = null;
 
   /**
-   * The speech generator for a math item.
-   */
-  public speechGenerator = Sre.getSpeechGenerator('Tree');
-
-  /**
-   * The braille generator for a math item.
-   */
-  public brailleGenerator = Sre.getSpeechGenerator('Tree');
-
-  /**
-   * The summary generator for a math item.
-   */
-  public summaryGenerator = Sre.getSpeechGenerator('Summary');
-
-  /**
    *  The current speech setting for Sre
    */
-  private static currentLocale = 'none';
-  private static currentBraille = 'none';
   private _options: OptionList = {};
 
   /**
@@ -90,7 +66,6 @@ export class GeneratorPool<N, T, D> {
    * @param {OptionList} options The option list.
    */
   public set options(options: OptionList) {
-    // TODO: Compare for global changes?
     this._options = Object.assign({}, options?.sre || {});
     delete this._options.custom;
   }
@@ -102,12 +77,11 @@ export class GeneratorPool<N, T, D> {
   private _init = false;
 
   /**
-   * Init method for speech generation. Runs a retry until locales have been
-   * loaded.
+   * Init method for speech generation.
    *
    * @param {OptionList} options A list of options.
    * @param {DOMAdaptor} adaptor The DOM adaptor providing access to nodes.
-   * @param webworker
+   * @param {WorkerHandler} webworker The webworker with SRE.
    */
   public init(
     options: OptionList,
@@ -119,9 +93,6 @@ export class GeneratorPool<N, T, D> {
     this.options = options;
     this.webworker = webworker;
     this._init = true;
-    // if (this._update(options)) {
-    //   mathjax.retryAfter(Sre.sreReady());
-    // }
   }
 
   /**
@@ -129,33 +100,9 @@ export class GeneratorPool<N, T, D> {
    * loaded.
    *
    * @param {OptionList} options A list of options.
-   * @returns {boolean} True if the speech or Braille locale needed updating.
    */
-  public update(options: OptionList): boolean {
+  public update(options: OptionList) {
     Object.assign(this.options, options);
-    return this._update(options);
-  }
-
-  /**
-   * Updates locales for Braille and speech if necessary.
-   *
-   * @param {OptionList} options A list of options.
-   * @returns {boolean} True if the speech or Braille locale needed updating.
-   */
-  private _update(options: OptionList): boolean {
-    if (!options) return false;
-    let update = false;
-    if (options.braille !== GeneratorPool.currentBraille) {
-      GeneratorPool.currentBraille = options.braille;
-      update = true;
-      Sre.setupEngine({ locale: options.braille });
-    }
-    if (options.locale !== GeneratorPool.currentLocale) {
-      GeneratorPool.currentLocale = options.locale;
-      update = true;
-      Sre.setupEngine({ locale: options.locale });
-    }
-    return update;
   }
 
   /**
@@ -221,13 +168,13 @@ export class GeneratorPool<N, T, D> {
         SemAttr.SPEECH_SSML,
         this.lastSpeech.get(SemAttr.SPEECH_SSML)
       );
+      // TODO (volker): Do this with the speech element only.
+      this.adaptor.setAttribute(
+        node,
+        'aria-label',
+        buildSpeech(this.getLabel(node))[0]
+      );
       this.lastSpeech.clear();
-      // TODO: Remember the speech.
-      // this.adaptor.setAttribute(
-      //   node,
-      //   'aria-label',
-      //   buildSpeech(this.getLabel(node))[0]
-      // );
     }
   }
 
@@ -281,25 +228,10 @@ export class GeneratorPool<N, T, D> {
   }
 
   /**
-   * Updates the speech in the give node.
+   * Retrieves the last options from the node.
    *
-   * Refactor: This is called when we change rule sets
-   *
-   * @param {N} node The typeset node.
-   * @returns {string} The aria label to speak.
-   */
-  public updateSpeech(node: N): string {
-    const xml = this.prepareXml(node);
-    const speech = this.speechGenerator.getSpeech(xml, this.element);
-    // this.setAria(node, xml, this.options.sre.locale);
-    const label = buildSpeech(speech)[0];
-    this.adaptor.setAttribute(node, 'aria-label', label);
-    return label;
-  }
-
-  /**
-   * @param node
-   *  @returns {OptionList} The relevant SRE options.
+   * @param {N} node The root node of the expression.
+   * @returns {OptionList} The relevant SRE options.
    */
   private getOptions(node: N): OptionList {
     return {
@@ -313,7 +245,7 @@ export class GeneratorPool<N, T, D> {
    * Cycles rule sets for the speech generator.
    *
    * @param {N} node The typeset node.
-   * @param mml
+   * @param {string} mml The mathml expression.
    */
   public nextRules(node: N, mml: string) {
     const options = this.getOptions(node);
@@ -329,8 +261,8 @@ export class GeneratorPool<N, T, D> {
    * Cycles style or preference settings for the speech generator.
    *
    * @param {N} node The typeset node.
-   * @param root
-   * @param mml
+   * @param {N} root The typeset root.
+   * @param {string} mml The mathml expression.
    */
   public nextStyle(node: N, root: N, mml: string) {
     const options = this.getOptions(root);
@@ -341,26 +273,6 @@ export class GeneratorPool<N, T, D> {
       this.adaptor.getAttribute(node, 'data-semantic-id'),
       this.adaptor.getAttribute(root, 'data-worker')
     );
-  }
-
-  /**
-   * Copies domain and style option from speech to summary generator. This is
-   * necessary after when either option is changed on the fly.
-   */
-  // private updateSummaryGenerator() {
-  //   const options = this.speechGenerator.getOptions();
-  //   this.summaryGenerator.setOption('domain', options['domain']);
-  //   this.summaryGenerator.setOption('style', options['style']);
-  // }
-
-  /**
-   * Makes a node amenable for SRE computations by reparsing.
-   *
-   * @param {N} node The node.
-   * @returns {Element} The reparsed element.
-   */
-  private prepareXml(node: N): Element {
-    return Sre.parseDOM(this.adaptor.serializeXML(node));
   }
 
   /**
@@ -383,83 +295,6 @@ export class GeneratorPool<N, T, D> {
       this.adaptor.getAttribute(node, SemAttr.POSTFIX_SSML),
       sep
     );
-  }
-
-  /**
-   * Copies an attribute from the enriched element to the current typeset node.
-   *
-   * @param {Element} xml The enriched XML.
-   * @param {N} node The typeset node.
-   * @param {string} attr The attribute to copy.
-   */
-  private copyAttributes(xml: Element, node: N, attr: string) {
-    const value = xml.getAttribute(attr);
-    if (value !== undefined && value !== null) {
-      this.adaptor.setAttribute(node, attr, value);
-    }
-  }
-
-  /**
-   * Attributes to be copied after updating speech.
-   */
-  private attrList: string[] = [
-    'data-semantic-prefix',
-    'data-semantic-postfix',
-    'data-semantic-speech',
-    'data-semantic-braille',
-  ];
-
-  /**
-   * Attributes to be copied after an element was collapsed.
-   */
-  private dummyList: string[] = [
-    'data-semantic-id',
-    'data-semantic-parent',
-    'data-semantic-type',
-    'data-semantic-role',
-    'role',
-  ];
-
-  /**
-   * Retrieve and sets aria and braille labels recursively.
-   *
-   * @param {N} node The root node to search from.
-   * @param {Element} xml The enriched XML node.
-   * @param {string} locale The locale to use for Aria labels.
-   */
-  public setAria(node: N, xml: Element, locale: string) {
-    const kind = xml.getAttribute('data-semantic-type');
-    if (kind) {
-      this.attrList.forEach((attr) => this.copyAttributes(xml, node, attr));
-      if (kind === 'dummy') {
-        this.dummyList.forEach((attr) => this.copyAttributes(xml, node, attr));
-      }
-    }
-    if (this.options.a11y.speech) {
-      const speech = this.getLabel(node);
-      if (speech) {
-        this.adaptor.setAttribute(
-          node,
-          'aria-label',
-          buildSpeech(speech, locale)[0]
-        );
-      }
-    }
-    if (this.options.a11y.braille) {
-      const braille = this.adaptor.getAttribute(node, 'data-semantic-braille');
-      if (braille) {
-        this.adaptor.setAttribute(node, 'aria-braillelabel', braille);
-      }
-    }
-    const xmlChildren = Array.from(xml.childNodes);
-    Array.from(this.adaptor.childNodes(node)).forEach((child, index) => {
-      if (
-        this.adaptor.kind(child) !== '#text' &&
-        this.adaptor.kind(child) !== '#comment'
-      ) {
-        this.setAria(child as N, xmlChildren[index] as Element, locale);
-      }
-    });
   }
 
   /**

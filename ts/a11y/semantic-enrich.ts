@@ -39,7 +39,6 @@ import { MathML } from '../input/mathml.js';
 import { SerializedMmlVisitor } from '../core/MmlTree/SerializedMmlVisitor.js';
 import { OptionList, expandable } from '../util/Options.js';
 import * as Sre from './sre.js';
-import { buildSpeech } from './speech/SpeechUtil.js';
 import { GeneratorPool } from './speech/GeneratorPool.js';
 import { WorkerHandler } from './speech/WebWorker.js';
 
@@ -212,10 +211,7 @@ export function EnrichedMathItemMixin<
           } else {
             mml = this.adjustSelections();
           }
-          performance.mark('startMark');
           const enriched = Sre.toEnriched(mml);
-          performance.mark('endMark');
-          performance.measure('zorkow', 'startMark', 'endMark');
           this.inputData.enrichedMml = math.math = this.serializeMml(enriched);
           math.display = this.display;
           math.compile(document);
@@ -262,26 +258,6 @@ export function EnrichedMathItemMixin<
     }
 
     /**
-     * Computes speech and braille label content if the information is already
-     * on the node. In particular it respects existing labels.
-     *
-     * @returns {[string, string]} Pair comprising speech and braille.
-     */
-    protected existingSpeech(): [string, string] {
-      const attributes = this.root.attributes;
-      let speech = attributes.get('aria-label') as string;
-      if (!speech) {
-        speech = buildSpeech(
-          (attributes.get('data-semantic-speech') as string) || ''
-        )[0];
-      }
-      const braille = (attributes.get('aria-braillelabel') ||
-        attributes.get('data-semantic-braille') ||
-        '') as string;
-      return [speech, braille];
-    }
-
-    /**
      * Attaches the aria labels for speech and braille.
      *
      * @param {MathDocument} document   The MathDocument for the MathItem
@@ -295,15 +271,7 @@ export function EnrichedMathItemMixin<
         document.adaptor,
         (document as EnrichedMathDocument<N, T, D>).webworker
       );
-      const [speech, braille] = this.existingSpeech();
-      // let [newSpeech, newBraille] = ['', ''];
-      const options = document.options;
-      // const adaptor = document.adaptor;
-      // const node = this.typesetRoot;
-      if (
-        (!speech && options.enableSpeech) ||
-        (!braille && options.enableBraille)
-      ) {
+      if (document.options.enableSpeech || document.options.enableBraille) {
         try {
           this.outputData.mml = this.toMathML(this.root, this);
           this.generatorPool.computeSpeech(
@@ -314,26 +282,6 @@ export function EnrichedMathItemMixin<
           document.options.speechError(document, this, err);
         }
       }
-      // speech = speech || newSpeech;
-      // braille = braille || newBraille;
-      // if (!speech && !braille) return;
-      // if (speech && options.enableSpeech) {
-      //   adaptor.setAttribute(node, 'aria-label', speech as string);
-      //   this.root.attributes.set('aria-label', speech);
-      // }
-      // if (braille && options.enableBraille) {
-      //   adaptor.setAttribute(node, 'aria-braillelabel', braille as string);
-      //   this.root.attributes.set('aria-braillelabel', braille);
-      // }
-      // for (const child of adaptor.childNodes(node)) {
-      //   // Special case if renderactions add text elements like the spaces for
-      //   // to allow copying in the Euro Braille example.
-      //   if (adaptor.kind(child) !== '#text') {
-      //     adaptor.setAttribute(child as N, 'aria-hidden', 'true');
-      //   }
-      // }
-      // this.outputData.speech = speech;
-      // this.outputData.braille = braille;
     }
   };
 }
@@ -509,6 +457,7 @@ export function EnrichedMathDocumentMixin<
       >(this.options.MathItem, MmlJax, toMathML);
     }
 
+    // TODO: Do we still need async handling here?
     /**
      * Attach speech from a MathItem to a node
      *

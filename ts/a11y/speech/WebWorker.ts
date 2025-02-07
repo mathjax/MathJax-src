@@ -97,7 +97,7 @@ export class WorkerHandler<N, T, D> {
    * The adaptor to work with typeset nodes.
    *
    * @param {DOMAdaptor} adaptor The adaptor to use for DOM access.
-   * @param options
+   * @param {OptionList} options The worker options.
    */
   constructor(
     public adaptor: DOMAdaptor<N, T, D>,
@@ -120,8 +120,9 @@ export class WorkerHandler<N, T, D> {
    *
    * @param {string} domain The source domain.
    * @param {string[]} parameters Additional parameters to encode.
+   * @returns {string} The source URL with all the parameters.
    */
-  private computeSrc(domain: string, parameters: string[]) {
+  private computeSrc(domain: string, parameters: string[]): string {
     const hash = encodeURIComponent(domain);
     parameters.unshift(hash);
     return this.url + this.options.pool + '#' + parameters.join('&');
@@ -131,8 +132,9 @@ export class WorkerHandler<N, T, D> {
    * Firefox is tricky if we run from File protocol.
    *
    * @param {string} domain The domain to rewrite.
+   * @returns {string} The source URL rewritten for Firefox.
    */
-  private rewriteFirefox(domain: string) {
+  private rewriteFirefox(domain: string): string {
     // Firefox doesn't match this
     return domain === 'file://' ? '*' : domain;
   }
@@ -177,15 +179,14 @@ export class WorkerHandler<N, T, D> {
     document.body.appendChild(this.iframe);
     // Adding a dummy to the queue to not loose the first entry on resolve
     this.enqueueTask({ cmd: 'dummy', data: {} });
-    return this.getPromise();
+    this.getPromise();
   }
 
   /**
    * Debug output when debug flag is set.
    *
    * @param {string} msg Base message
-   * @param {any[]} ...rest Remaining arguments
-   * @param {...any} rest
+   * @param {...any} rest Remaining arguments
    */
   private debug(msg: string, ...rest: any[]) {
     if (this.options.debug) {
@@ -264,15 +265,16 @@ export class WorkerHandler<N, T, D> {
    * Compute speech strcuture for the math.
    *
    * @param {string} math The mml string.
-   * @param {string} id The math item id.
+   * @param {OptionList} options The options list.
+   * @param {string} workerId The id for reattaching the speech.
    */
-  public Speech(math: string, options: {}, id: string) {
+  public Speech(math: string, options: OptionList, workerId: string) {
     this.Post({
       cmd: 'Worker',
       data: {
         cmd: 'speech',
         debug: this.options.debug,
-        data: { mml: math, options: options, workerId: id },
+        data: { mml: math, options: options, workerId: workerId },
       },
     });
   }
@@ -302,17 +304,17 @@ export class WorkerHandler<N, T, D> {
    * Computes the next rule set for this particular SRE setting. We assume that
    * the engine has been set to the options of the current expression.
    *
+   * @param {string} math The mml string.
    * @param {OptionList} options The options list.
-   * @param math
-   * @param id
+   * @param {string} workerId The id for reattaching the speech.
    */
-  public nextRules(math: string, options: {}, id: string) {
+  public nextRules(math: string, options: OptionList, workerId: string) {
     this.Post({
       cmd: 'Worker',
       data: {
         cmd: 'nextRules',
         debug: this.options.debug,
-        data: { mml: math, options: options, workerId: id },
+        data: { mml: math, options: options, workerId: workerId },
       },
     });
   }
@@ -328,12 +330,13 @@ export class WorkerHandler<N, T, D> {
    * currently focused node, plus the worker ID.
    *
    * @param {string} math The linearized mml expression.
+   * @param {OptionList} options The options list.
    * @param {string} nodeId The semantic Id of the currenctly focused node.
    * @param {string} workerId The id for reattaching the speech.
    */
   public nextStyle(
     math: string,
-    options: {},
+    options: OptionList,
     nodeId: string,
     workerId: string
   ) {
@@ -382,8 +385,8 @@ export class WorkerHandler<N, T, D> {
     /**
      * This signals that the worker in the iframe is loaded and ready
      *
-     * @param pool
-     * @param _data
+     * @param {WorkerHandler} pool The active handler for the worker.
+     * @param {Message} _data The data received from the worker. Ignored.
      */
     Ready: function (pool: WorkerHandler<N, T, D>, _data: Message) {
       pool.pool = pool.iframe.contentWindow;
@@ -391,6 +394,12 @@ export class WorkerHandler<N, T, D> {
       pool.resolve();
     },
 
+    /**
+     * Signals that the worker has finished its last task.
+     *
+     * @param {WorkerHandler} pool The active handler for the worker.
+     * @param {Message} _data The data received from the worker. Ignored.
+     */
     Finished: function (pool: WorkerHandler<N, T, D>, _data: Message) {
       pool.resolve();
     },
@@ -399,8 +408,8 @@ export class WorkerHandler<N, T, D> {
      * Attaches speech returned from the worker to the DOM element with the
      * corresponding data-worker id.
      *
-     * @param pool
-     * @param data
+     * @param {WorkerHandler} pool The active handler for the worker.
+     * @param {Message} data The data received from the worker.
      */
     Attach: function (pool: WorkerHandler<N, T, D>, data: Message) {
       const container = document.querySelector(
@@ -413,6 +422,16 @@ export class WorkerHandler<N, T, D> {
         'style',
       ]);
       pool.setSpecialAttributes(container, data.translations, 'data-semantic-');
+      if (data.label) {
+        pool.adaptor.setAttribute(container, 'aria-label', data.label);
+      }
+      if (data.braillelabel) {
+        pool.adaptor.setAttribute(
+          container,
+          'aria-braillelabel',
+          data.braillelabel
+        );
+      }
       // Sort out Mactions
       for (const [id, sid] of Object.entries(data.mactions)) {
         let node = document.querySelector(`[id="${id}"]`) as N;
@@ -423,7 +442,6 @@ export class WorkerHandler<N, T, D> {
         pool.adaptor.setAttribute(node, 'data-semantic-type', 'dummy');
         pool.setSpecialAttributes(node, sid, '');
       }
-      // Container needs to get the aria label?
       let rootId: string = null;
       const setAttribute = function (node: N) {
         const id = pool.adaptor.getAttribute(node, 'data-semantic-id');
@@ -465,8 +483,8 @@ export class WorkerHandler<N, T, D> {
     /**
      * Logs a message from the pool or worker.
      *
-     * @param pool
-     * @param data
+     * @param {WorkerHandler} pool The active handler for the worker.
+     * @param {Message} data The data received from the worker.
      */
     Log: function (pool: WorkerHandler<N, T, D>, data: Message) {
       pool.debug(data.msg);

@@ -428,9 +428,8 @@ export class SpeechExplorer
   }
 
   /**
-   * Refocuses the active elements, mainly to alert screenreaders of changes.
-   *
-   * @param {HTMLElement} node The node to refocus on.
+   * Refocuses the active elements, after recomputed speech and to alert
+   * screenreaders of changes.
    */
   private refocus() {
     this.Stop();
