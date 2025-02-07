@@ -34,7 +34,6 @@ import { ExplorerPool } from './ExplorerPool.js';
 import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import { honk, InPlace } from '../speech/SpeechUtil.js';
 import { GeneratorPool } from '../speech/GeneratorPool.js';
-// import * as Sre from '../sre.js';
 
 /**
  * Interface for keyboard explorers. Adds the necessary keyboard events.
@@ -567,22 +566,18 @@ export class SpeechExplorer
       this.current = this.node.childNodes[0] as HTMLElement;
     }
     const options = this.document.options;
-    const promise = Promise.resolve(); // Sre.sreReady();
-    // if (this.generators.update(options)) {
-    //   promise = promise.then(() => this.Speech());
-    // }
     this.current.setAttribute('tabindex', '0');
     this.current.focus();
     super.Start();
     if (options.a11y.subtitles && options.a11y.speech && options.enableSpeech) {
-      promise.then(() => this.region.Show(this.node, this.highlighter));
+      this.region.Show(this.node, this.highlighter);
     }
     if (
       options.a11y.viewBraille &&
       options.a11y.braille &&
       options.enableBraille
     ) {
-      promise.then(() => this.brailleRegion.Show(this.node, this.highlighter));
+      this.brailleRegion.Show(this.node, this.highlighter);
     }
     if (options.a11y.keyMagnifier) {
       this.magnifyRegion.Show(this.current, this.highlighter);
@@ -594,8 +589,7 @@ export class SpeechExplorer
    * @override
    */
   public Update() {
-    // TODO (v4): This is a hack to avoid double voicing on initial startup!
-    // Make that cleaner and remove force as it is not really used!
+    // TODO (v4): This avoids double voicing on initial startup!
     if (!this.active) return;
     this.pool.unhighlight();
     this.pool.highlight([this.current]);
@@ -609,22 +603,10 @@ export class SpeechExplorer
   }
 
   /**
-   * Computes the speech for the current expression.
-   *
-   * Refactor: This is called when we change rule sets, etc.
-   */
-  public Speech() {
-    // this.item.outputData.speech = this.generators.updateSpeech(
-    //   this.item.typesetRoot
-    // );
-  }
-
-  /**
    * @override
    */
   public KeyDown(event: KeyboardEvent) {
     const code = event.key;
-    // this.walker.modifier = event.shiftKey;
     if (code === 'Tab') {
       return;
     }
