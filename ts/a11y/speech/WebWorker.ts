@@ -59,17 +59,18 @@ export class WorkerHandler<N, T, D> {
   public url = '';
 
   // Promise handling
-  public promise = Promise.resolve();
   public resolve = () => {};
+  public promise: Promise<void> = new Promise((res) => (this.resolve = res));
 
   /**
    * @returns {Promise<void>} Pomise resolves on the task completion.
    */
   private async getPromise(): Promise<void> {
-    this.promise = new Promise((res) => {
-      this.resolve = res;
+    this.promise = new Promise((res) => (this.resolve = res));
+    return this.promise.then(() => {
+      this.dequeueTask();
+      return this.postNext();
     });
-    return this.promise.then(() => this.postNext());
   }
 
   private tasks: PoolCommand[] = [];
@@ -80,7 +81,7 @@ export class WorkerHandler<N, T, D> {
    * @param {PoolCommand} task The task to enqueue.
    */
   private enqueueTask(task: PoolCommand) {
-    this.tasks.unshift(task);
+    this.tasks.push(task);
   }
 
   /**
@@ -89,8 +90,7 @@ export class WorkerHandler<N, T, D> {
    * @returns {PoolCommand} The next task.
    */
   private dequeueTask(): PoolCommand {
-    const task = this.tasks.pop();
-    return task;
+    return this.tasks.shift();
   }
 
   /**
@@ -175,6 +175,8 @@ export class WorkerHandler<N, T, D> {
     window.addEventListener('message', this.Listener.bind(this));
     //  Add the iframe to the page (starting the process of loading its content)
     document.body.appendChild(this.iframe);
+    // Adding a dummy to the queue to not loose the first entry on resolve
+    this.enqueueTask({ cmd: 'dummy', data: {} });
     return this.getPromise();
   }
 
@@ -229,7 +231,7 @@ export class WorkerHandler<N, T, D> {
   private postNext() {
     if (this.tasks.length) {
       this.getPromise();
-      this.pool.postMessage(this.dequeueTask(), this.domain);
+      this.pool.postMessage(this.tasks[0], this.domain);
     }
   }
 
