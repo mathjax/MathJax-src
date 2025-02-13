@@ -464,6 +464,14 @@ export class WorkerHandler<N, T, D> {
             );
           }
         }
+        if (data?.braille) {
+          const braille = data.braille[id];
+          if (braille) {
+            const value = braille['braille-none'] || '';
+            pool.adaptor.setAttribute(node, 'data-semantic-braille', value);
+            pool.adaptor.setAttribute(node, 'aria-braillelabel', value);
+          }
+        }
       };
       const setAttributes = function (root: N | T) {
         if (
@@ -486,6 +494,9 @@ export class WorkerHandler<N, T, D> {
       };
       setAttributes(pool.adaptor.childNodes(container)[0]);
       pool.adaptor.setAttribute(container, 'data-speech-attached', 'true');
+      if (data.braille) {
+        pool.adaptor.setAttribute(container, 'data-braille-attached', 'true');
+      }
     },
 
     /**
