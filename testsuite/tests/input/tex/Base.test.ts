@@ -6532,7 +6532,9 @@ describe('Mathchar0mo', () => {
     toXmlMatch(
       tex2mml('\\perp'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\perp" display="block">
-      <mo data-latex="\\perp">&#x22A5;</mo>
+      <mrow data-mjx-texclass="ORD">
+        <mo data-latex="\\perp">&#x27C2;</mo>
+      </mrow>
     </math>`
     ));
   it('equiv', () =>
