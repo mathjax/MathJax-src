@@ -31,6 +31,7 @@ import {
   FontExtensionData,
   mergeOptions,
 } from '../common/FontData.js';
+
 export * from '../common/FontData.js';
 
 export type CharStringMap = { [name: number]: string };
@@ -86,7 +87,7 @@ export class SvgFontData extends FontData<
    */
   public static OPTIONS = {
     ...FontData.OPTIONS,
-    dynamicPrefix: './output/svg/fonts',
+    dynamicPrefix: './svg/dynamic',
   };
 
   /**

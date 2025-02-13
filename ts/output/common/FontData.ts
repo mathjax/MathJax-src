@@ -382,7 +382,7 @@ export class FontData<
   /* prettier-ignore */
   public static OPTIONS: OptionList = {
     unknownFamily: 'serif',     // Should use 'monospace' with LiteAdaptor
-    dynamicPrefix: '.'          // Location of dynamically loaded files
+    dynamicPrefix: '.',         // Location of dynamically loaded files
   };
 
   /**
