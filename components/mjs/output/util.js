@@ -78,12 +78,12 @@ export const OutputUtil = {
 
   },
 
-  loadFont(startup, jax, font, preload) {
+  loadFont(startup, jax, font, preloaded) {
     if (!MathJax.loader) {
       return startup;
     }
-    if (preload) {
-      MathJax.loader.preLoad(`[${font}]/${jax}`);
+    if (preloaded) {
+      MathJax.loader.preLoaded(`[${font}]/${jax}`);
     }
     return Package.loadPromise(`output/${jax}`).then(startup);
   }

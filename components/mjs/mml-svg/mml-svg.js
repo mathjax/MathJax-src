@@ -6,7 +6,7 @@ import {loadFont} from '../output/svg/svg.js';
 import '../ui/menu/menu.js';
 import {checkSre} from '../a11y/util.js';
 
-Loader.preLoad(
+Loader.preLoaded(
   'loader', 'startup',
   'core',
   'input/mml',
