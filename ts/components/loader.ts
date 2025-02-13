@@ -113,7 +113,7 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
   },
 
   /**
-   * Add [mathjax] before any relative path, and add .js if needed
+   * Add [mathjax] before any relative path
    *
    * @param {PathFilterFunction} data The data object containing the filter functions
    * @returns {boolean} True
@@ -122,9 +122,6 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
     const name = data.name;
     if (!name.match(/^(?:[a-z]+:\/)?\/|[a-z]:\\|\[/i)) {
       data.name = '[mathjax]/' + name.replace(/^\.\//, '');
-    }
-    if (data.addExtension && !name.match(/\.[^/]+$/)) {
-      data.name += '.js';
     }
     return true;
   },
@@ -140,6 +137,19 @@ export const PathFilters: { [name: string]: PathFilterFunction } = {
     while ((match = data.name.match(/^\[([^\]]*)\]/))) {
       if (!Object.hasOwn(CONFIG.paths, match[1])) break;
       data.name = CONFIG.paths[match[1]] + data.name.substring(match[0].length);
+    }
+    return true;
+  },
+
+  /**
+   * Add .js, if missing
+   *
+   * @param {PathFilterFunction} data The data object containing the filter functions
+   * @returns {boolean} True
+   */
+  addExtension: (data) => {
+    if (data.addExtension && !data.name.match(/\.[^/]+$/)) {
+      data.name += '.js';
     }
     return true;
   },
@@ -319,6 +329,7 @@ export const Loader = {
 Loader.pathFilters.add(PathFilters.source, 0);
 Loader.pathFilters.add(PathFilters.normalize, 10);
 Loader.pathFilters.add(PathFilters.prefix, 20);
+Loader.pathFilters.add(PathFilters.addExtension, 30);
 
 /**
  * Export the global MathJax object for convenience
