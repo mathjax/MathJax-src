@@ -37,6 +37,15 @@ export type PoolCommand = {
   data: WorkerCommand | Message;
 };
 
+class Task {
+  constructor(
+    public cmd: PoolCommand,
+    public id?: string,
+    public resolve: () => void = () => {},
+    public reject: () => void = () => {}
+  ) {}
+}
+
 /**
  * The main WorkerHandler class
  *
@@ -58,7 +67,7 @@ export class WorkerHandler<N, T, D> {
   public domain = ''; // the domain of the pool
   public url = '';
 
-  private tasks: PoolCommand[] = [];
+  private tasks: Task[] = [];
 
   /**
    * The adaptor to work with typeset nodes.
@@ -185,9 +194,17 @@ export class WorkerHandler<N, T, D> {
    * Send messages to the worker.
    *
    * @param {PoolCommand} msg The command message.
+   * @param id
+   * @param resolve
+   * @param reject
    */
-  public Post(msg: PoolCommand) {
-    this.tasks.push(msg);
+  public Post(
+    msg: PoolCommand,
+    id?: string,
+    resolve: () => void = () => {},
+    reject: () => void = () => {}
+  ) {
+    this.tasks.push(new Task(msg, id, resolve, reject));
     if (this.ready && this.tasks.length === 1) {
       this.postNext();
     }
@@ -195,7 +212,7 @@ export class WorkerHandler<N, T, D> {
 
   private postNext() {
     if (this.tasks.length) {
-      this.pool.postMessage(this.tasks[0], this.domain);
+      this.pool.postMessage(this.tasks[0].cmd, this.domain);
     }
   }
 
@@ -230,16 +247,26 @@ export class WorkerHandler<N, T, D> {
    * @param {string} math The mml string.
    * @param {OptionList} options The options list.
    * @param {string} workerId The id for reattaching the speech.
+   * @param reject
    */
-  public Speech(math: string, options: OptionList, workerId: string) {
-    this.Post({
-      cmd: 'Worker',
-      data: {
-        cmd: 'speech',
-        debug: this.options.debug,
-        data: { mml: math, options: options, workerId: workerId },
+  public Speech(
+    math: string,
+    options: OptionList,
+    workerId: string,
+    reject: () => void
+  ) {
+    this.Post(
+      {
+        cmd: 'Worker',
+        data: {
+          cmd: 'speech',
+          debug: this.options.debug,
+          data: { mml: math, options: options, workerId: workerId },
+        },
       },
-    });
+      workerId,
+      reject
+    );
   }
 
   /**
@@ -270,16 +297,26 @@ export class WorkerHandler<N, T, D> {
    * @param {string} math The mml string.
    * @param {OptionList} options The options list.
    * @param {string} workerId The id for reattaching the speech.
+   * @param reject
    */
-  public nextRules(math: string, options: OptionList, workerId: string) {
-    this.Post({
-      cmd: 'Worker',
-      data: {
-        cmd: 'nextRules',
-        debug: this.options.debug,
-        data: { mml: math, options: options, workerId: workerId },
+  public nextRules(
+    math: string,
+    options: OptionList,
+    workerId: string,
+    reject: () => void
+  ) {
+    this.Post(
+      {
+        cmd: 'Worker',
+        data: {
+          cmd: 'nextRules',
+          debug: this.options.debug,
+          data: { mml: math, options: options, workerId: workerId },
+        },
       },
-    });
+      workerId,
+      reject
+    );
   }
 
   /**
@@ -296,26 +333,32 @@ export class WorkerHandler<N, T, D> {
    * @param {OptionList} options The options list.
    * @param {string} nodeId The semantic Id of the currenctly focused node.
    * @param {string} workerId The id for reattaching the speech.
+   * @param reject
    */
   public nextStyle(
     math: string,
     options: OptionList,
     nodeId: string,
-    workerId: string
+    workerId: string,
+    reject: () => void
   ) {
-    this.Post({
-      cmd: 'Worker',
-      data: {
-        cmd: 'nextStyle',
-        debug: this.options.debug,
+    this.Post(
+      {
+        cmd: 'Worker',
         data: {
-          mml: math,
-          options: options,
-          nodeId: nodeId,
-          workerId: workerId,
+          cmd: 'nextStyle',
+          debug: this.options.debug,
+          data: {
+            mml: math,
+            options: options,
+            nodeId: nodeId,
+            workerId: workerId,
+          },
         },
       },
-    });
+      workerId,
+      reject
+    );
   }
 
   /**
@@ -364,7 +407,8 @@ export class WorkerHandler<N, T, D> {
      * @param {Message} _data The data received from the worker. Ignored.
      */
     Finished: function (pool: WorkerHandler<N, T, D>, _data: Message) {
-      pool.tasks.shift();
+      const task = pool.tasks.shift();
+      task.resolve(); // TODO: add data.
       pool.postNext();
     },
 
@@ -379,7 +423,7 @@ export class WorkerHandler<N, T, D> {
       const container = document.querySelector(
         `[data-worker="${data?.id}"]`
       ) as N;
-      if (!container) return; // The element is gone, must have been retypeset.
+      if (!container) return; // Element is gone, maybe retypeset or removed.
       pool.setSpecialAttributes(container, data.options, 'data-semantic-', [
         'locale',
         'domain',

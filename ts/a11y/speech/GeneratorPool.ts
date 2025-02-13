@@ -49,6 +49,19 @@ export class GeneratorPool<N, T, D> {
     return this._element;
   }
 
+  public promise: Promise<void> = Promise.resolve();
+
+  public resolve: () => void = () => {};
+
+  public reject: () => void = () => {};
+
+  protected getPromise() {
+    this.promise = new Promise((res, rej) => {
+      this.resolve = res;
+      this.reject = rej;
+    });
+  }
+
   /**
    * The adaptor to work with typeset nodes.
    */
@@ -115,7 +128,8 @@ export class GeneratorPool<N, T, D> {
     const id = this.webworker.counter;
     this.adaptor.setAttribute(node, 'data-worker', id);
     const options = Object.assign({}, this.options, { modality: 'speech' });
-    this.webworker.Speech(mml, options, id.toString());
+    this.getPromise();
+    this.webworker.Speech(mml, options, id.toString(), this.resolve);
   }
 
   /**
@@ -250,10 +264,12 @@ export class GeneratorPool<N, T, D> {
   public nextRules(node: N, mml: string) {
     const options = this.getOptions(node);
     this.update(options);
+    this.getPromise();
     this.webworker.nextRules(
       mml,
       Object.assign({}, this.options, { modality: 'speech' }),
-      this.adaptor.getAttribute(node, 'data-worker')
+      this.adaptor.getAttribute(node, 'data-worker'),
+      this.resolve
     );
   }
 
@@ -267,11 +283,13 @@ export class GeneratorPool<N, T, D> {
   public nextStyle(node: N, root: N, mml: string) {
     const options = this.getOptions(root);
     this.update(options);
+    this.getPromise();
     this.webworker.nextStyle(
       mml,
       Object.assign({}, this.options, { modality: 'speech' }),
       this.adaptor.getAttribute(node, 'data-semantic-id'),
-      this.adaptor.getAttribute(root, 'data-worker')
+      this.adaptor.getAttribute(root, 'data-worker'),
+      this.resolve
     );
   }
 

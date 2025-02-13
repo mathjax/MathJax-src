@@ -492,30 +492,11 @@ export class SpeechExplorer
     super(document, pool, null, node);
   }
 
-  private restarts = 0;
-  private static maxRestarts = 20;
-
   /**
    * Wait for speech to be reattached.
    */
   private async Restart() {
-    setTimeout(
-      () =>
-        new Promise((res, rej) => {
-          if (this.node.hasAttribute('data-speech-attached')) {
-            res(true);
-          } else if (this.restarts > SpeechExplorer.maxRestarts) {
-            this.restarts = 0;
-            rej();
-          } else {
-            this.restarts++;
-            this.Restart();
-          }
-        })
-          .then(() => this.Start())
-          .catch((_err) => {}),
-      100
-    );
+    this.generators.promise.then(() => this.Start()).catch((_err) => {});
   }
 
   /**
