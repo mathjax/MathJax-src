@@ -10,46 +10,46 @@ describe('Mhchem0', () => {
     toXmlMatch(
       tex2mml('\\ce{CO2 + C -> 2 CO}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{CO2 + C -&gt; 2 CO}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{CO}{\\vphantom{A}}_{\\smash[t]{2}} {}+{} \\mathrm{C} {}\\mathrel{\\longrightarrow}{} 2\\,\\mathrm{CO}}">
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{CO}">
-      <mi data-mjx-auto-op="false" data-latex="CO">CO</mi>
-    </mrow>
-    <msub data-latex="{\\vphantom{A}}_{\\smash[t]{2}}">
-      <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-          <mpadded width="0">
-            <mphantom>
-              <mi data-latex="A">A</mi>
-            </mphantom>
-          </mpadded>
+      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{CO}{\\vphantom{A}}_{\\smash[t]{2}} {}+{} \\mathrm{C} {}\\mathrel{\\mhchemlongrightarrow}{} 2\\,\\mathrm{CO}}">
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{CO}">
+          <mi data-mjx-auto-op="false" data-latex="CO">CO</mi>
+        </mrow>
+        <msub data-latex="{\\vphantom{A}}_{\\smash[t]{2}}">
+          <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+              <mpadded width="0">
+                <mphantom>
+                  <mi data-latex="A">A</mi>
+                </mphantom>
+              </mpadded>
+            </mrow>
+          </mrow>
+          <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{2}}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{2}">
+              <mpadded height="0">
+                <mn data-latex="2">2</mn>
+              </mpadded>
+            </mrow>
+          </mrow>
+        </msub>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mo data-latex="+">+</mo>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{C}">
+          <mi mathvariant="normal" data-latex="C">C</mi>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mhchemlongrightarrow}">
+          <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" stretchy="true" data-latex="\\mhchemlongrightarrow">&#xE429;</mo>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mn data-latex="2">2</mn>
+        <mspace width="0.167em" data-latex="\\,"></mspace>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{CO}">
+          <mi data-mjx-auto-op="false" data-latex="CO">CO</mi>
         </mrow>
       </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{2}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{2}">
-          <mpadded height="0">
-            <mn data-latex="2">2</mn>
-          </mpadded>
-        </mrow>
-      </mrow>
-    </msub>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mo data-latex="+">+</mo>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{C}">
-      <mi mathvariant="normal" data-latex="C">C</mi>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\longrightarrow}">
-      <mo stretchy="false" data-latex="\\longrightarrow">&#x27F6;</mo>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mn data-latex="2">2</mn>
-    <mspace width="0.167em" data-latex="\\,"></mspace>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{CO}">
-      <mi data-mjx-auto-op="false" data-latex="CO">CO</mi>
-    </mrow>
-  </mrow>
-</math>`
+    </math>`
     ));
   it('Chem-3', () =>
     toXmlMatch(
@@ -1177,232 +1177,134 @@ describe('Mhchem2', () => {
     toXmlMatch(
       tex2mml('\\ce{A -> B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{A -&gt; B}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A} {}\\mathrel{\\longrightarrow}{} \\mathrm{B}}">
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
-      <mi mathvariant="normal" data-latex="A">A</mi>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\longrightarrow}">
-      <mo stretchy="false" data-latex="\\longrightarrow">&#x27F6;</mo>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
-      <mi mathvariant="normal" data-latex="B">B</mi>
-    </mrow>
-  </mrow>
-</math>`
+      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A} {}\\mathrel{\\mhchemlongrightarrow}{} \\mathrm{B}}">
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
+          <mi mathvariant="normal" data-latex="A">A</mi>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mhchemlongrightarrow}">
+          <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" stretchy="true" data-latex="\\mhchemlongrightarrow">&#xE429;</mo>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
+          <mi mathvariant="normal" data-latex="B">B</mi>
+        </mrow>
+      </mrow>
+    </math>`
     ));
   it('Chem-24', () =>
     toXmlMatch(
       tex2mml('\\ce{A <- B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{A &lt;- B}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A} {}\\mathrel{\\longleftarrow}{} \\mathrm{B}}">
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
-      <mi mathvariant="normal" data-latex="A">A</mi>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\longleftarrow}">
-      <mo stretchy="false" data-latex="\\longleftarrow">&#x27F5;</mo>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
-      <mi mathvariant="normal" data-latex="B">B</mi>
-    </mrow>
-  </mrow>
-</math>`
+      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A} {}\\mathrel{\\mhchemlongleftarrow}{} \\mathrm{B}}">
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
+          <mi mathvariant="normal" data-latex="A">A</mi>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mhchemlongleftarrow}">
+          <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" stretchy="true" data-latex="\\mhchemlongleftarrow">&#xE428;</mo>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
+          <mi mathvariant="normal" data-latex="B">B</mi>
+        </mrow>
+      </mrow>
+    </math>`
     ));
   it('Chem-25', () =>
     toXmlMatch(
       tex2mml('\\ce{A <-> B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{A &lt;-&gt; B}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A} {}\\mathrel{\\longleftrightarrow}{} \\mathrm{B}}">
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
-      <mi mathvariant="normal" data-latex="A">A</mi>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\longleftrightarrow}">
-      <mo stretchy="false" data-latex="\\longleftrightarrow">&#x27F7;</mo>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
-      <mi mathvariant="normal" data-latex="B">B</mi>
-    </mrow>
-  </mrow>
-</math>`
+      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A} {}\\mathrel{\\mhchemlongleftrightarrow}{} \\mathrm{B}}">
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
+          <mi mathvariant="normal" data-latex="A">A</mi>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mhchemlongleftrightarrow}">
+          <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" stretchy="true" data-latex="\\mhchemlongleftrightarrow">&#xE42A;</mo>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
+          <mi mathvariant="normal" data-latex="B">B</mi>
+        </mrow>
+      </mrow>
+    </math>`
     ));
   it('Chem-26', () =>
     toXmlMatch(
       tex2mml('\\ce{A <--> B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{A &lt;--&gt; B}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A} {}\\mathrel{\\longleftrightarrows}{} \\mathrm{B}}">
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
-      <mi mathvariant="normal" data-latex="A">A</mi>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\longleftrightarrows}">
-      <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mathop{\\smash{\\longleftarrow}\\Rule{0px}{.25em}{0px}}\\limits^{\\longrightarrow}}">
-        <mover data-latex="\\mathop{\\smash{\\longleftarrow}\\Rule{0px}{.25em}{0px}}\\limits^{\\longrightarrow}">
-          <mrow data-mjx-texclass="OP" data-latex="\\limits">
-            <mrow data-mjx-texclass="ORD" data-latex="\\smash{\\longleftarrow}">
-              <mpadded height="0" depth="0">
-                <mo stretchy="false" data-latex="\\longleftarrow">&#x27F5;</mo>
-              </mpadded>
-            </mrow>
-            <mspace width="0px" height=".25em" depth="0px" mathbackground="black" data-latex="\\Rule{0px}{.25em}{0px}"></mspace>
-          </mrow>
-          <mrow data-mjx-texclass="ORD" data-latex="{\\longrightarrow}">
-            <mo stretchy="false" data-latex="\\longrightarrow">&#x27F6;</mo>
-          </mrow>
-        </mover>
+      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A} {}\\mathrel{\\mhchemlongleftrightarrows}{} \\mathrm{B}}">
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
+          <mi mathvariant="normal" data-latex="A">A</mi>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mhchemlongleftrightarrows}">
+          <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" stretchy="true" data-latex="\\mhchemlongleftrightarrows">&#xE42B;</mo>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
+          <mi mathvariant="normal" data-latex="B">B</mi>
+        </mrow>
       </mrow>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
-      <mi mathvariant="normal" data-latex="B">B</mi>
-    </mrow>
-  </mrow>
-</math>`
+    </math>`
     ));
   it('Chem-27', () =>
     toXmlMatch(
       tex2mml('\\ce{A <=> B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{A &lt;=&gt; B}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A} {}\\mathrel{\\longrightleftharpoons}{} \\mathrm{B}}">
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
-      <mi mathvariant="normal" data-latex="A">A</mi>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\longrightleftharpoons}">
-      <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mathop{\\smash{{\\leftharpoondown}\\!\\!{-}}}\\limits^{\\textstyle{-}\\!\\!{\\rightharpoonup}}}">
-        <mover data-latex="\\mathop{\\smash{{\\leftharpoondown}\\!\\!{-}}}\\limits^{\\textstyle{-}\\!\\!{\\rightharpoonup}}">
-          <mrow data-mjx-texclass="OP" data-latex="\\limits">
-            <mrow data-mjx-texclass="ORD" data-latex="\\smash{{\\leftharpoondown}\\!\\!{-}}">
-              <mpadded height="0" depth="0">
-                <mrow data-mjx-texclass="ORD" data-latex="{\\leftharpoondown}">
-                  <mo stretchy="false" data-latex="\\leftharpoondown">&#x21BD;</mo>
-                </mrow>
-                <mspace width="-0.167em" data-latex="\\!"></mspace>
-                <mspace width="-0.167em" data-latex="\\!"></mspace>
-                <mrow data-mjx-texclass="ORD" data-latex="{-}">
-                  <mo data-latex="-">&#x2212;</mo>
-                </mrow>
-              </mpadded>
-            </mrow>
-          </mrow>
-          <mrow data-mjx-texclass="ORD" data-latex="{}">
-            <mstyle scriptlevel="0">
-              <mrow data-mjx-texclass="ORD" data-latex="{-}">
-                <mo data-latex="-">&#x2212;</mo>
-              </mrow>
-              <mspace width="-0.167em" data-latex="\\!"></mspace>
-              <mspace width="-0.167em" data-latex="\\!"></mspace>
-              <mrow data-mjx-texclass="ORD" data-latex="{\\rightharpoonup}">
-                <mo stretchy="false" data-latex="\\rightharpoonup">&#x21C0;</mo>
-              </mrow>
-            </mstyle>
-          </mrow>
-        </mover>
+      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A} {}\\mathrel{\\mhchemlongrightleftharpoons}{} \\mathrm{B}}">
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
+          <mi mathvariant="normal" data-latex="A">A</mi>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mhchemlongrightleftharpoons}">
+          <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" stretchy="true" data-latex="\\mhchemlongrightleftharpoons">&#xE408;</mo>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
+          <mi mathvariant="normal" data-latex="B">B</mi>
+        </mrow>
       </mrow>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
-      <mi mathvariant="normal" data-latex="B">B</mi>
-    </mrow>
-  </mrow>
-</math>`
+    </math>`
     ));
   it('Chem-28', () =>
     toXmlMatch(
       tex2mml('\\ce{A <=>> B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{A &lt;=&gt;&gt; B}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A} {}\\mathrel{\\longRightleftharpoons}{} \\mathrm{B}}">
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
-      <mi mathvariant="normal" data-latex="A">A</mi>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\longRightleftharpoons}">
-      <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mathop{\\smash{\\leftharpoondown}}\\limits^{\\textstyle{-}\\!\\!{\\rightharpoonup}}}">
-        <mover data-latex="\\mathop{\\smash{\\leftharpoondown}}\\limits^{\\textstyle{-}\\!\\!{\\rightharpoonup}}">
-          <mrow data-mjx-texclass="OP" data-latex="\\limits">
-            <mrow data-mjx-texclass="ORD" data-latex="\\smash{\\leftharpoondown}">
-              <mpadded height="0" depth="0">
-                <mo stretchy="false" data-latex="\\leftharpoondown">&#x21BD;</mo>
-              </mpadded>
-            </mrow>
-          </mrow>
-          <mrow data-mjx-texclass="ORD" data-latex="{}">
-            <mstyle scriptlevel="0">
-              <mrow data-mjx-texclass="ORD" data-latex="{-}">
-                <mo data-latex="-">&#x2212;</mo>
-              </mrow>
-              <mspace width="-0.167em" data-latex="\\!"></mspace>
-              <mspace width="-0.167em" data-latex="\\!"></mspace>
-              <mrow data-mjx-texclass="ORD" data-latex="{\\rightharpoonup}">
-                <mo stretchy="false" data-latex="\\rightharpoonup">&#x21C0;</mo>
-              </mrow>
-            </mstyle>
-          </mrow>
-        </mover>
+      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A} {}\\mathrel{\\mhchemlongRightleftharpoons}{} \\mathrm{B}}">
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
+          <mi mathvariant="normal" data-latex="A">A</mi>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mhchemlongRightleftharpoons}">
+          <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" stretchy="true" data-latex="\\mhchemlongRightleftharpoons">&#xE409;</mo>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
+          <mi mathvariant="normal" data-latex="B">B</mi>
+        </mrow>
       </mrow>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
-      <mi mathvariant="normal" data-latex="B">B</mi>
-    </mrow>
-  </mrow>
-</math>`
+    </math>`
     ));
   it('Chem-29', () =>
     toXmlMatch(
       tex2mml('\\ce{A <<=> B}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{A &lt;&lt;=&gt; B}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A} {}\\mathrel{\\longLeftrightharpoons}{} \\mathrm{B}}">
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
-      <mi mathvariant="normal" data-latex="A">A</mi>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\longLeftrightharpoons}">
-      <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mathop{\\smash{{\\leftharpoondown}\\!\\!{-}}}\\limits^{\\textstyle\\vphantom{{-}}{\\rightharpoonup}}}">
-        <mover data-latex="\\mathop{\\smash{{\\leftharpoondown}\\!\\!{-}}}\\limits^{\\textstyle\\vphantom{{-}}{\\rightharpoonup}}">
-          <mrow data-mjx-texclass="OP" data-latex="\\limits">
-            <mrow data-mjx-texclass="ORD" data-latex="\\smash{{\\leftharpoondown}\\!\\!{-}}">
-              <mpadded height="0" depth="0">
-                <mrow data-mjx-texclass="ORD" data-latex="{\\leftharpoondown}">
-                  <mo stretchy="false" data-latex="\\leftharpoondown">&#x21BD;</mo>
-                </mrow>
-                <mspace width="-0.167em" data-latex="\\!"></mspace>
-                <mspace width="-0.167em" data-latex="\\!"></mspace>
-                <mrow data-mjx-texclass="ORD" data-latex="{-}">
-                  <mo data-latex="-">&#x2212;</mo>
-                </mrow>
-              </mpadded>
-            </mrow>
-          </mrow>
-          <mrow data-mjx-texclass="ORD" data-latex="{}">
-            <mstyle scriptlevel="0">
-              <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{{-}}">
-                <mpadded width="0">
-                  <mphantom>
-                    <mrow data-mjx-texclass="ORD" data-latex="{-}">
-                      <mo data-latex="-">&#x2212;</mo>
-                    </mrow>
-                  </mphantom>
-                </mpadded>
-              </mrow>
-              <mrow data-mjx-texclass="ORD" data-latex="{\\rightharpoonup}">
-                <mo stretchy="false" data-latex="\\rightharpoonup">&#x21C0;</mo>
-              </mrow>
-            </mstyle>
-          </mrow>
-        </mover>
+      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A} {}\\mathrel{\\mhchemlongLeftrightharpoons}{} \\mathrm{B}}">
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
+          <mi mathvariant="normal" data-latex="A">A</mi>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mhchemlongLeftrightharpoons}">
+          <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" stretchy="true" data-latex="\\mhchemlongLeftrightharpoons">&#xE40A;</mo>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
+          <mi mathvariant="normal" data-latex="B">B</mi>
+        </mrow>
       </mrow>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
-      <mi mathvariant="normal" data-latex="B">B</mi>
-    </mrow>
-  </mrow>
-</math>`
+    </math>`
     ));
 });
 
@@ -2671,215 +2573,53 @@ describe('Mhchem6', () => {
     toXmlMatch(
       tex2mml('\\ce{A\\bond{~}B\\bond{~-}C}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{A\\bond{~}B\\bond{~-}C}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{-}\\raise2mu{\\kern2mu\\tiny\\text{-}\\kern1mu\\text{-}\\kern1mu\\text{-}\\kern2mu}}}\\mathrm{C}}">
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
-      <mi mathvariant="normal" data-latex="A">A</mi>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{-}{}}">
-      <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{-}">
-        <mpadded width="0">
-          <mphantom>
-            <mo data-latex="-">&#x2212;</mo>
-          </mphantom>
-        </mpadded>
-      </mrow>
-      <mpadded height="+0.111em" depth="-0.111em" voffset="+0.111em" data-latex="{}">
-        <mrow data-mjx-texclass="ORD">
-          <mspace width="0.111em" linebreak="nobreak" data-latex="\\kern2mu"></mspace>
-          <mstyle mathsize="0.5em">
-            <mtext data-latex="\\text{-}">-</mtext>
-            <mspace width="0.056em" linebreak="nobreak" data-latex="\\kern1mu"></mspace>
-            <mtext data-latex="\\text{-}">-</mtext>
-            <mspace width="0.056em" linebreak="nobreak" data-latex="\\kern1mu"></mspace>
-            <mtext data-latex="\\text{-}">-</mtext>
-            <mspace width="0.111em" linebreak="nobreak" data-latex="\\kern2mu"></mspace>
-          </mstyle>
+      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A}{\\tripledash}\\mathrm{B}{\\mhchemBondTD}\\mathrm{C}}">
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
+          <mi mathvariant="normal" data-latex="A">A</mi>
         </mrow>
-      </mpadded>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
-      <mi mathvariant="normal" data-latex="B">B</mi>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{\\rlap{\\lower.1em{-}}{}}">
-      <mrow data-mjx-texclass="ORD" data-latex="\\rlap{\\lower.1em{-}}">
-        <mpadded width="0">
-          <mpadded height="-.1em" depth="+.1em" voffset="-.1em" data-latex="\\lower.1em{-}">
-            <mrow data-mjx-texclass="ORD">
-              <mo data-latex="-">&#x2212;</mo>
-            </mrow>
-          </mpadded>
-        </mpadded>
-      </mrow>
-      <mpadded height="+.1em" depth="-.1em" voffset="+.1em" data-latex="{}">
-        <mrow data-mjx-texclass="ORD">
-          <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{-}">
-            <mpadded width="0">
-              <mphantom>
-                <mo data-latex="-">&#x2212;</mo>
-              </mphantom>
-            </mpadded>
-          </mrow>
-          <mpadded height="+0.111em" depth="-0.111em" voffset="+0.111em" data-latex="{}">
-            <mrow data-mjx-texclass="ORD">
-              <mspace width="0.111em" linebreak="nobreak" data-latex="\\kern2mu"></mspace>
-              <mstyle mathsize="0.5em">
-                <mtext data-latex="\\text{-}">-</mtext>
-                <mspace width="0.056em" linebreak="nobreak" data-latex="\\kern1mu"></mspace>
-                <mtext data-latex="\\text{-}">-</mtext>
-                <mspace width="0.056em" linebreak="nobreak" data-latex="\\kern1mu"></mspace>
-                <mtext data-latex="\\text{-}">-</mtext>
-                <mspace width="0.111em" linebreak="nobreak" data-latex="\\kern2mu"></mspace>
-              </mstyle>
-            </mrow>
-          </mpadded>
+        <mrow data-mjx-texclass="ORD" data-latex="{\\tripledash}">
+          <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" data-latex="\\tripledash">&#xE410;</mo>
         </mrow>
-      </mpadded>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{C}">
-      <mi mathvariant="normal" data-latex="C">C</mi>
-    </mrow>
-  </mrow>
-</math>`
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
+          <mi mathvariant="normal" data-latex="B">B</mi>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{\\mhchemBondTD}">
+          <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" data-latex="\\mhchemBondTD">&#xE411;</mo>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{C}">
+          <mi mathvariant="normal" data-latex="C">C</mi>
+        </mrow>
+      </mrow>
+    </math>`
     ));
   it('Chem-62', () =>
     toXmlMatch(
       tex2mml('\\ce{A\\bond{~--}B\\bond{~=}C\\bond{-~-}D}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{A\\bond{~--}B\\bond{~=}C\\bond{-~-}D}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{-}\\raise2mu{\\kern2mu\\tiny\\text{-}\\kern1mu\\text{-}\\kern1mu\\text{-}\\kern2mu}}\\mathrm{D}}">
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
-      <mi mathvariant="normal" data-latex="A">A</mi>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{\\rlap{\\lower.2em{-}}\\rlap{\\raise.2em{\\tripledash}}-}">
-      <mrow data-mjx-texclass="ORD" data-latex="\\rlap{\\lower.2em{-}}">
-        <mpadded width="0">
-          <mpadded height="-.2em" depth="+.2em" voffset="-.2em" data-latex="\\lower.2em{-}">
-            <mrow data-mjx-texclass="ORD">
-              <mo data-latex="-">&#x2212;</mo>
-            </mrow>
-          </mpadded>
-        </mpadded>
-      </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="\\rlap{\\raise.2em{\\tripledash}}">
-        <mpadded width="0">
-          <mpadded height="+.2em" depth="-.2em" voffset="+.2em" data-latex="\\vphantom{-}\\raise2mu{\\kern2mu\\tiny\\text{-}\\kern1mu\\text{-}\\kern1mu\\text{-}\\kern2mu}}">
-            <mrow data-mjx-texclass="ORD">
-              <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{-}">
-                <mpadded width="0">
-                  <mphantom>
-                    <mo data-latex="-">&#x2212;</mo>
-                  </mphantom>
-                </mpadded>
-              </mrow>
-              <mpadded height="+0.111em" depth="-0.111em" voffset="+0.111em" data-latex="{}">
-                <mrow data-mjx-texclass="ORD">
-                  <mspace width="0.111em" linebreak="nobreak" data-latex="\\kern2mu"></mspace>
-                  <mstyle mathsize="0.5em">
-                    <mtext data-latex="\\text{-}">-</mtext>
-                    <mspace width="0.056em" linebreak="nobreak" data-latex="\\kern1mu"></mspace>
-                    <mtext data-latex="\\text{-}">-</mtext>
-                    <mspace width="0.056em" linebreak="nobreak" data-latex="\\kern1mu"></mspace>
-                    <mtext data-latex="\\text{-}">-</mtext>
-                    <mspace width="0.111em" linebreak="nobreak" data-latex="\\kern2mu"></mspace>
-                  </mstyle>
-                </mrow>
-              </mpadded>
-            </mrow>
-          </mpadded>
-        </mpadded>
-      </mrow>
-      <mo data-latex="-">&#x2212;</mo>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
-      <mi mathvariant="normal" data-latex="B">B</mi>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{\\rlap{\\lower.2em{-}}\\rlap{\\raise.2em{\\tripledash}}-}">
-      <mrow data-mjx-texclass="ORD" data-latex="\\rlap{\\lower.2em{-}}">
-        <mpadded width="0">
-          <mpadded height="-.2em" depth="+.2em" voffset="-.2em" data-latex="\\lower.2em{-}">
-            <mrow data-mjx-texclass="ORD">
-              <mo data-latex="-">&#x2212;</mo>
-            </mrow>
-          </mpadded>
-        </mpadded>
-      </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="\\rlap{\\raise.2em{\\tripledash}}">
-        <mpadded width="0">
-          <mpadded height="+.2em" depth="-.2em" voffset="+.2em" data-latex="\\vphantom{-}\\raise2mu{\\kern2mu\\tiny\\text{-}\\kern1mu\\text{-}\\kern1mu\\text{-}\\kern2mu}}">
-            <mrow data-mjx-texclass="ORD">
-              <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{-}">
-                <mpadded width="0">
-                  <mphantom>
-                    <mo data-latex="-">&#x2212;</mo>
-                  </mphantom>
-                </mpadded>
-              </mrow>
-              <mpadded height="+0.111em" depth="-0.111em" voffset="+0.111em" data-latex="{}">
-                <mrow data-mjx-texclass="ORD">
-                  <mspace width="0.111em" linebreak="nobreak" data-latex="\\kern2mu"></mspace>
-                  <mstyle mathsize="0.5em">
-                    <mtext data-latex="\\text{-}">-</mtext>
-                    <mspace width="0.056em" linebreak="nobreak" data-latex="\\kern1mu"></mspace>
-                    <mtext data-latex="\\text{-}">-</mtext>
-                    <mspace width="0.056em" linebreak="nobreak" data-latex="\\kern1mu"></mspace>
-                    <mtext data-latex="\\text{-}">-</mtext>
-                    <mspace width="0.111em" linebreak="nobreak" data-latex="\\kern2mu"></mspace>
-                  </mstyle>
-                </mrow>
-              </mpadded>
-            </mrow>
-          </mpadded>
-        </mpadded>
-      </mrow>
-      <mo data-latex="-">&#x2212;</mo>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{C}">
-      <mi mathvariant="normal" data-latex="C">C</mi>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{\\rlap{\\lower.2em{-}}\\rlap{\\raise.2em{-}}\\vphantom{-}{}}">
-      <mrow data-mjx-texclass="ORD" data-latex="\\rlap{\\lower.2em{-}}">
-        <mpadded width="0">
-          <mpadded height="-.2em" depth="+.2em" voffset="-.2em" data-latex="\\lower.2em{-}">
-            <mrow data-mjx-texclass="ORD">
-              <mo data-latex="-">&#x2212;</mo>
-            </mrow>
-          </mpadded>
-        </mpadded>
-      </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="\\rlap{\\raise.2em{-}}">
-        <mpadded width="0">
-          <mpadded height="+.2em" depth="-.2em" voffset="+.2em" data-latex="\\raise.2em{-}">
-            <mrow data-mjx-texclass="ORD">
-              <mo data-latex="-">&#x2212;</mo>
-            </mrow>
-          </mpadded>
-        </mpadded>
-      </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{-}">
-        <mpadded width="0">
-          <mphantom>
-            <mo data-latex="-">&#x2212;</mo>
-          </mphantom>
-        </mpadded>
-      </mrow>
-      <mpadded height="+0.111em" depth="-0.111em" voffset="+0.111em" data-latex="{}">
-        <mrow data-mjx-texclass="ORD">
-          <mspace width="0.111em" linebreak="nobreak" data-latex="\\kern2mu"></mspace>
-          <mstyle mathsize="0.5em">
-            <mtext data-latex="\\text{-}">-</mtext>
-            <mspace width="0.056em" linebreak="nobreak" data-latex="\\kern1mu"></mspace>
-            <mtext data-latex="\\text{-}">-</mtext>
-            <mspace width="0.056em" linebreak="nobreak" data-latex="\\kern1mu"></mspace>
-            <mtext data-latex="\\text{-}">-</mtext>
-            <mspace width="0.111em" linebreak="nobreak" data-latex="\\kern2mu"></mspace>
-          </mstyle>
+      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A}{\\mhchemBondTDD}\\mathrm{B}{\\mhchemBondTDD}\\mathrm{C}{\\mhchemBondDTD}\\mathrm{D}}">
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
+          <mi mathvariant="normal" data-latex="A">A</mi>
         </mrow>
-      </mpadded>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{D}">
-      <mi mathvariant="normal" data-latex="D">D</mi>
-    </mrow>
-  </mrow>
-</math>`
+        <mrow data-mjx-texclass="ORD" data-latex="{\\mhchemBondTDD}">
+          <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" data-latex="\\mhchemBondTDD">&#xE412;</mo>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
+          <mi mathvariant="normal" data-latex="B">B</mi>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{\\mhchemBondTDD}">
+          <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" data-latex="\\mhchemBondTDD">&#xE412;</mo>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{C}">
+          <mi mathvariant="normal" data-latex="C">C</mi>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{\\mhchemBondDTD}">
+          <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" data-latex="\\mhchemBondDTD">&#xE413;</mo>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{D}">
+          <mi mathvariant="normal" data-latex="D">D</mi>
+        </mrow>
+      </mrow>
+    </math>`
     ));
   it('Chem-63', () =>
     toXmlMatch(
@@ -2927,24 +2667,24 @@ describe('Mhchem6', () => {
     toXmlMatch(
       tex2mml('\\ce{A\\bond{->}B\\bond{<-}C}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{A\\bond{-&gt;}B\\bond{&lt;-}C}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A}{\\rightarrow}\\mathrm{B}{\\leftarrow}\\mathrm{C}}">
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
-      <mi mathvariant="normal" data-latex="A">A</mi>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{\\rightarrow}">
-      <mo stretchy="false" data-latex="\\rightarrow">&#x2192;</mo>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
-      <mi mathvariant="normal" data-latex="B">B</mi>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{\\leftarrow}">
-      <mo stretchy="false" data-latex="\\leftarrow">&#x2190;</mo>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{C}">
-      <mi mathvariant="normal" data-latex="C">C</mi>
-    </mrow>
-  </mrow>
-</math>`
+      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A}{\\mhchemrightarrow}\\mathrm{B}{\\mhchemleftarrow}\\mathrm{C}}">
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
+          <mi mathvariant="normal" data-latex="A">A</mi>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{\\mhchemrightarrow}">
+          <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" stretchy="true" data-latex="\\mhchemrightarrow">&#xE42C;</mo>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
+          <mi mathvariant="normal" data-latex="B">B</mi>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{\\mhchemleftarrow}">
+          <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" stretchy="true" data-latex="\\mhchemleftarrow">&#xE42D;</mo>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{C}">
+          <mi mathvariant="normal" data-latex="C">C</mi>
+        </mrow>
+      </mrow>
+    </math>`
     ));
   it('Chem-65', () =>
     toXmlMatch(
@@ -3616,94 +3356,94 @@ describe('Mhchem7', () => {
     toXmlMatch(
       tex2mml('\\ce{SO4^2- + Ba^2+ -> BaSO4 v}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{SO4^2- + Ba^2+ -&gt; BaSO4 v}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{SO}{\\vphantom{A}}_{\\smash[t]{4}}{\\vphantom{A}}^{2-} {}+{} \\mathrm{Ba}{\\vphantom{A}}^{2+} {}\\mathrel{\\longrightarrow}{} \\mathrm{BaSO}{\\vphantom{A}}_{\\smash[t]{4}} \\downarrow{} }">
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{SO}">
-      <mi data-mjx-auto-op="false" data-latex="SO">SO</mi>
-    </mrow>
-    <msub data-latex="{\\vphantom{A}}_{\\smash[t]{4}}">
-      <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-          <mpadded width="0">
-            <mphantom>
-              <mi data-latex="A">A</mi>
-            </mphantom>
-          </mpadded>
+      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{SO}{\\vphantom{A}}_{\\smash[t]{4}}{\\vphantom{A}}^{2-} {}+{} \\mathrm{Ba}{\\vphantom{A}}^{2+} {}\\mathrel{\\mhchemlongrightarrow}{} \\mathrm{BaSO}{\\vphantom{A}}_{\\smash[t]{4}} \\downarrow{} }">
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{SO}">
+          <mi data-mjx-auto-op="false" data-latex="SO">SO</mi>
         </mrow>
-      </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{4}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{4}">
-          <mpadded height="0">
-            <mn data-latex="4">4</mn>
-          </mpadded>
-        </mrow>
-      </mrow>
-    </msub>
-    <msup data-latex="{\\vphantom{A}}^{2-}">
-      <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-          <mpadded width="0">
-            <mphantom>
-              <mi data-latex="A">A</mi>
-            </mphantom>
-          </mpadded>
-        </mrow>
-      </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="{2-}">
-        <mn data-latex="2">2</mn>
-        <mo data-latex="-">&#x2212;</mo>
-      </mrow>
-    </msup>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mo data-latex="+">+</mo>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{Ba}">
-      <mi data-mjx-auto-op="false" data-latex="Ba">Ba</mi>
-    </mrow>
-    <msup data-latex="{\\vphantom{A}}^{2+}">
-      <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-          <mpadded width="0">
-            <mphantom>
-              <mi data-latex="A">A</mi>
-            </mphantom>
-          </mpadded>
-        </mrow>
-      </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="{2+}">
-        <mn data-latex="2">2</mn>
+        <msub data-latex="{\\vphantom{A}}_{\\smash[t]{4}}">
+          <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+              <mpadded width="0">
+                <mphantom>
+                  <mi data-latex="A">A</mi>
+                </mphantom>
+              </mpadded>
+            </mrow>
+          </mrow>
+          <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{4}}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{4}">
+              <mpadded height="0">
+                <mn data-latex="4">4</mn>
+              </mpadded>
+            </mrow>
+          </mrow>
+        </msub>
+        <msup data-latex="{\\vphantom{A}}^{2-}">
+          <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+              <mpadded width="0">
+                <mphantom>
+                  <mi data-latex="A">A</mi>
+                </mphantom>
+              </mpadded>
+            </mrow>
+          </mrow>
+          <mrow data-mjx-texclass="ORD" data-latex="{2-}">
+            <mn data-latex="2">2</mn>
+            <mo data-latex="-">&#x2212;</mo>
+          </mrow>
+        </msup>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
         <mo data-latex="+">+</mo>
-      </mrow>
-    </msup>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\longrightarrow}">
-      <mo stretchy="false" data-latex="\\longrightarrow">&#x27F6;</mo>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{BaSO}">
-      <mi data-mjx-auto-op="false" data-latex="BaSO">BaSO</mi>
-    </mrow>
-    <msub data-latex="{\\vphantom{A}}_{\\smash[t]{4}}">
-      <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-          <mpadded width="0">
-            <mphantom>
-              <mi data-latex="A">A</mi>
-            </mphantom>
-          </mpadded>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{Ba}">
+          <mi data-mjx-auto-op="false" data-latex="Ba">Ba</mi>
         </mrow>
-      </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{4}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{4}">
-          <mpadded height="0">
-            <mn data-latex="4">4</mn>
-          </mpadded>
+        <msup data-latex="{\\vphantom{A}}^{2+}">
+          <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+              <mpadded width="0">
+                <mphantom>
+                  <mi data-latex="A">A</mi>
+                </mphantom>
+              </mpadded>
+            </mrow>
+          </mrow>
+          <mrow data-mjx-texclass="ORD" data-latex="{2+}">
+            <mn data-latex="2">2</mn>
+            <mo data-latex="+">+</mo>
+          </mrow>
+        </msup>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mhchemlongrightarrow}">
+          <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" stretchy="true" data-latex="\\mhchemlongrightarrow">&#xE429;</mo>
         </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{BaSO}">
+          <mi data-mjx-auto-op="false" data-latex="BaSO">BaSO</mi>
+        </mrow>
+        <msub data-latex="{\\vphantom{A}}_{\\smash[t]{4}}">
+          <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+              <mpadded width="0">
+                <mphantom>
+                  <mi data-latex="A">A</mi>
+                </mphantom>
+              </mpadded>
+            </mrow>
+          </mrow>
+          <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{4}}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{4}">
+              <mpadded height="0">
+                <mn data-latex="4">4</mn>
+              </mpadded>
+            </mrow>
+          </mrow>
+        </msub>
+        <mo stretchy="false" data-latex="\\downarrow">&#x2193;</mo>
+        <mrow data-mjx-texclass="ORD" data-latex="{}\"></mrow>
       </mrow>
-    </msub>
-    <mo stretchy="false" data-latex="\\downarrow">&#x2193;</mo>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-  </mrow>
-</math>`
+    </math>`
     ));
 });
 
@@ -3712,36 +3452,36 @@ describe('Mhchem8', () => {
     toXmlMatch(
       tex2mml('\\ce{A v B (v) -> B ^ B (^)}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{A v B (v) -&gt; B ^ B (^)}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A} \\downarrow{} ~\\mathrm{B} \\downarrow{}  {}\\mathrel{\\longrightarrow}{} \\mathrm{B} \\uparrow{} ~\\mathrm{B} \\uparrow{} }">
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
-      <mi mathvariant="normal" data-latex="A">A</mi>
-    </mrow>
-    <mo stretchy="false" data-latex="\\downarrow">&#x2193;</mo>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mtext data-latex="~">&#xA0;</mtext>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
-      <mi mathvariant="normal" data-latex="B">B</mi>
-    </mrow>
-    <mo stretchy="false" data-latex="\\downarrow">&#x2193;</mo>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\longrightarrow}">
-      <mo stretchy="false" data-latex="\\longrightarrow">&#x27F6;</mo>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
-      <mi mathvariant="normal" data-latex="B">B</mi>
-    </mrow>
-    <mo stretchy="false" data-latex="\\uparrow">&#x2191;</mo>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mtext data-latex="~">&#xA0;</mtext>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
-      <mi mathvariant="normal" data-latex="B">B</mi>
-    </mrow>
-    <mo stretchy="false" data-latex="\\uparrow">&#x2191;</mo>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-  </mrow>
-</math>`
+      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A} \\downarrow{} ~\\mathrm{B} \\downarrow{}  {}\\mathrel{\\mhchemlongrightarrow}{} \\mathrm{B} \\uparrow{} ~\\mathrm{B} \\uparrow{} }">
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
+          <mi mathvariant="normal" data-latex="A">A</mi>
+        </mrow>
+        <mo stretchy="false" data-latex="\\downarrow">&#x2193;</mo>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mtext data-latex="~">&#xA0;</mtext>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
+          <mi mathvariant="normal" data-latex="B">B</mi>
+        </mrow>
+        <mo stretchy="false" data-latex="\\downarrow">&#x2193;</mo>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mhchemlongrightarrow}">
+          <mo data-mjx-variant="-mhchem" data-mjx-texclass="REL" stretchy="true" data-latex="\\mhchemlongrightarrow">&#xE429;</mo>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
+          <mi mathvariant="normal" data-latex="B">B</mi>
+        </mrow>
+        <mo stretchy="false" data-latex="\\uparrow">&#x2191;</mo>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mtext data-latex="~">&#xA0;</mtext>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
+          <mi mathvariant="normal" data-latex="B">B</mi>
+        </mrow>
+        <mo stretchy="false" data-latex="\\uparrow">&#x2191;</mo>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+      </mrow>
+    </math>`
     ));
   it('Chem-81', () =>
     toXmlMatch(
@@ -3884,129 +3624,12 @@ describe('Mhchem8', () => {
       tex2mml(
         '\\ce{Zn^2+  <=>[+ 2OH-][+ 2H+]  $\\underset{\\text{amphoteres Hydroxid}}{\\ce{Zn(OH)2 v}}$  <=>[+ 2OH-][+ 2H+]  $\\underset{\\text{Hydroxozikat}}{\\ce{[Zn(OH)4]^2-}}$}'
       ),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{Zn^2+  &lt;=&gt;[+ 2OH-][+ 2H+]  \$\\underset{\\text{amphoteres Hydroxid}}{\\ce{Zn(OH)2 v}}\$  &lt;=&gt;[+ 2OH-][+ 2H+]  \$\\underset{\\text{Hydroxozikat}}{\\ce{[Zn(OH)4]^2-}}\$}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{Zn}{\\vphantom{A}}^{2+} {}\\mathrel{\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\overset{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}{\\longrightleftharpoons}}}{} \\underset{\\text{amphoteres Hydroxid}}{\\ce{Zn(OH)2 v}}  {}\\mathrel{\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\overset{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}{\\longrightleftharpoons}}}{} \\underset{\\text{Hydroxozikat}}{\\ce{[Zn(OH)4]^2-}} }">
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{Zn}">
-      <mi data-mjx-auto-op="false" data-latex="Zn">Zn</mi>
-    </mrow>
-    <msup data-latex="{\\vphantom{A}}^{2+}">
-      <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-          <mpadded width="0">
-            <mphantom>
-              <mi data-latex="A">A</mi>
-            </mphantom>
-          </mpadded>
-        </mrow>
-      </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="{2+}">
-        <mn data-latex="2">2</mn>
-        <mo data-latex="+">+</mo>
-      </mrow>
-    </msup>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\overset{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}{\\longrightleftharpoons}}}">
-      <munder data-latex="\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\overset{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}{\\longrightleftharpoons}}">
-        <mover data-latex="\\overset{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}{\\longrightleftharpoons}">
-          <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mathop{\\smash{{\\leftharpoondown}\\!\\!{-}}}\\limits^{\\textstyle{-}\\!\\!{\\rightharpoonup}}}">
-            <mover data-latex="\\mathop{\\smash{{\\leftharpoondown}\\!\\!{-}}}\\limits^{\\textstyle{-}\\!\\!{\\rightharpoonup}}">
-              <mrow data-mjx-texclass="OP" data-latex="\\limits">
-                <mrow data-mjx-texclass="ORD" data-latex="\\smash{{\\leftharpoondown}\\!\\!{-}}">
-                  <mpadded height="0" depth="0">
-                    <mrow data-mjx-texclass="ORD" data-latex="{\\leftharpoondown}">
-                      <mo stretchy="false" data-latex="\\leftharpoondown">&#x21BD;</mo>
-                    </mrow>
-                    <mspace width="-0.167em" data-latex="\\!"></mspace>
-                    <mspace width="-0.167em" data-latex="\\!"></mspace>
-                    <mrow data-mjx-texclass="ORD" data-latex="{-}">
-                      <mo data-latex="-">&#x2212;</mo>
-                    </mrow>
-                  </mpadded>
-                </mrow>
-              </mrow>
-              <mrow data-mjx-texclass="ORD" data-latex="{}">
-                <mstyle scriptlevel="0">
-                  <mrow data-mjx-texclass="ORD" data-latex="{-}">
-                    <mo data-latex="-">&#x2212;</mo>
-                  </mrow>
-                  <mspace width="-0.167em" data-latex="\\!" data-latex="\\!"></mspace>
-                  <mspace width="-0.167em" data-latex="\\!"></mspace>
-                  <mrow data-mjx-texclass="ORD" data-latex="{\\rightharpoonup}">
-                    <mo stretchy="false" data-latex="\\rightharpoonup">&#x21C0;</mo>
-                  </mrow>
-                </mstyle>
-              </mrow>
-            </mover>
-          </mrow>
-          <mrow data-latex=" {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}">
-            <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-            <mo data-latex="+">+</mo>
-            <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-            <mn data-latex="2">2</mn>
-            <mstyle scriptlevel="0" data-latex="\\,">
-              <mspace width="0.167em"></mspace>
-            </mstyle>
-            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{OH}">
-              <mi data-mjx-auto-op="false" data-latex="OH">OH</mi>
-            </mrow>
-            <msup data-latex="{\\vphantom{A}}^{-}">
-              <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-                <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-                  <mpadded width="0">
-                    <mphantom>
-                      <mi data-latex="A">A</mi>
-                    </mphantom>
-                  </mpadded>
-                </mrow>
-              </mrow>
-              <mrow data-mjx-texclass="ORD" data-latex="{-}">
-                <mo data-latex="-">&#x2212;</mo>
-              </mrow>
-            </msup>
-          </mrow>
-        </mover>
-        <mpadded height="-0.333em" depth="+0.333em" voffset="-0.333em" data-latex="\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}">
-          <mrow data-mjx-texclass="ORD">
-            <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-            <mo data-latex="+">+</mo>
-            <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-            <mn data-latex="2">2</mn>
-            <mstyle scriptlevel="0" data-latex="\\,">
-              <mspace width="0.167em"></mspace>
-            </mstyle>
-            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{H}">
-              <mi mathvariant="normal" data-latex="H">H</mi>
-            </mrow>
-            <msup data-latex="{\\vphantom{A}}^{+}">
-              <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-                <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-                  <mpadded width="0">
-                    <mphantom>
-                      <mi data-latex="A">A</mi>
-                    </mphantom>
-                  </mpadded>
-                </mrow>
-              </mrow>
-              <mrow data-mjx-texclass="ORD" data-latex="{+}">
-                <mo data-latex="+">+</mo>
-              </mrow>
-            </msup>
-          </mrow>
-        </mpadded>
-      </munder>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <munder data-latex="\\underset{\\text{amphoteres Hydroxid}}{\\ce{Zn(OH)2 v}}">
-      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{Zn}(\\mathrm{OH}){\\vphantom{A}}_{\\smash[t]{2}} \\downarrow{} }">
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{Zn^2+  &lt;=&gt;[+ 2OH-][+ 2H+]  $\\underset{\\text{amphoteres Hydroxid}}{\\ce{Zn(OH)2 v}}$  &lt;=&gt;[+ 2OH-][+ 2H+]  $\\underset{\\text{Hydroxozikat}}{\\ce{[Zn(OH)4]^2-}}$}" display="block">
+      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{Zn}{\\vphantom{A}}^{2+} {}\\mathrel{\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\mhchemxrightleftharpoons{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}}}{} \\underset{\\text{amphoteres Hydroxid}}{\\ce{Zn(OH)2 v}}  {}\\mathrel{\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\mhchemxrightleftharpoons{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}}}{} \\underset{\\text{Hydroxozikat}}{\\ce{[Zn(OH)4]^2-}} }">
         <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{Zn}">
           <mi data-mjx-auto-op="false" data-latex="Zn">Zn</mi>
         </mrow>
-        <mo data-latex="(" stretchy="false">(</mo>
-        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{OH}">
-          <mi data-mjx-auto-op="false" data-latex="OH">OH</mi>
-        </mrow>
-        <mo data-latex=")" stretchy="false">)</mo>
-        <msub data-latex="{\\vphantom{A}}_{\\smash[t]{2}}">
+        <msup data-latex="{\\vphantom{A}}^{2+}">
           <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
             <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
               <mpadded width="0">
@@ -4016,161 +3639,222 @@ describe('Mhchem8', () => {
               </mpadded>
             </mrow>
           </mrow>
-          <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{2}}">
-            <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{2}">
-              <mpadded height="0">
-                <mn data-latex="2">2</mn>
-              </mpadded>
-            </mrow>
-          </mrow>
-        </msub>
-        <mo stretchy="false" data-latex="\\downarrow">&#x2193;</mo>
-        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-      </mrow>
-      <mtext data-latex="\\text{amphoteres Hydroxid}">amphoteres Hydroxid</mtext>
-    </munder>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\overset{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}{\\longrightleftharpoons}}}">
-      <munder data-latex="\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\overset{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}{\\longrightleftharpoons}}">
-        <mover data-latex="\\overset{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}{\\longrightleftharpoons}">
-          <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mathop{\\smash{{\\leftharpoondown}\\!\\!{-}}}\\limits^{\\textstyle{-}\\!\\!{\\rightharpoonup}}}">
-            <mover data-latex="\\mathop{\\smash{{\\leftharpoondown}\\!\\!{-}}}\\limits^{\\textstyle{-}\\!\\!{\\rightharpoonup}}">
-              <mrow data-mjx-texclass="OP" data-latex="\\limits">
-                <mrow data-mjx-texclass="ORD" data-latex="\\smash{{\\leftharpoondown}\\!\\!{-}}">
-                  <mpadded height="0" depth="0">
-                    <mrow data-mjx-texclass="ORD" data-latex="{\\leftharpoondown}">
-                      <mo stretchy="false" data-latex="\\leftharpoondown">&#x21BD;</mo>
-                    </mrow>
-                    <mspace width="-0.167em" data-latex="\\!"></mspace>
-                    <mspace width="-0.167em" data-latex="\\!"></mspace>
-                    <mrow data-mjx-texclass="ORD" data-latex="{-}">
-                      <mo data-latex="-">&#x2212;</mo>
-                    </mrow>
-                  </mpadded>
-                </mrow>
-              </mrow>
-              <mrow data-mjx-texclass="ORD" data-latex="{}">
-                <mstyle scriptlevel="0">
-                  <mrow data-mjx-texclass="ORD" data-latex="{-}">
-                    <mo data-latex="-">&#x2212;</mo>
-                  </mrow>
-                  <mspace width="-0.167em" data-latex="\\!"></mspace>
-                  <mspace width="-0.167em" data-latex="\\!"></mspace>
-                  <mrow data-mjx-texclass="ORD" data-latex="{\\rightharpoonup}">
-                    <mo stretchy="false" data-latex="\\rightharpoonup">&#x21C0;</mo>
-                  </mrow>
-                </mstyle>
-              </mrow>
-            </mover>
-          </mrow>
-          <mrow data-latex=" {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}">
-            <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+          <mrow data-mjx-texclass="ORD" data-latex="{2+}">
+            <mn data-latex="2">2</mn>
             <mo data-latex="+">+</mo>
-            <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-            <mn data-latex="2">2</mn>
-            <mstyle scriptlevel="0" data-latex="\\,">
-              <mspace width="0.167em"></mspace>
-            </mstyle>
-            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{OH}">
-              <mi data-mjx-auto-op="false" data-latex="OH">OH</mi>
-            </mrow>
-            <msup data-latex="{\\vphantom{A}}^{-}">
-              <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-                <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-                  <mpadded width="0">
-                    <mphantom>
-                      <mi data-latex="A">A</mi>
-                    </mphantom>
-                  </mpadded>
-                </mrow>
-              </mrow>
-              <mrow data-mjx-texclass="ORD" data-latex="{-}">
-                <mo data-latex="-">&#x2212;</mo>
-              </mrow>
-            </msup>
-          </mrow>
-        </mover>
-        <mpadded height="-0.333em" depth="+0.333em" voffset="-0.333em" data-latex="\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}">
-          <mrow data-mjx-texclass="ORD">
-            <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-            <mo data-latex="+">+</mo>
-            <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-            <mn data-latex="2">2</mn>
-            <mstyle scriptlevel="0" data-latex="\\,">
-              <mspace width="0.167em"></mspace>
-            </mstyle>
-            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{H}">
-              <mi mathvariant="normal" data-latex="H">H</mi>
-            </mrow>
-            <msup data-latex="{\\vphantom{A}}^{+}">
-              <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-                <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-                  <mpadded width="0">
-                    <mphantom>
-                      <mi data-latex="A">A</mi>
-                    </mphantom>
-                  </mpadded>
-                </mrow>
-              </mrow>
-              <mrow data-mjx-texclass="ORD" data-latex="{+}">
-                <mo data-latex="+">+</mo>
-              </mrow>
-            </msup>
-          </mrow>
-        </mpadded>
-      </munder>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <munder data-latex="\\underset{\\text{Hydroxozikat}}{\\ce{[Zn(OH)4]^2-}}">
-      <mrow data-mjx-texclass="ORD" data-latex="{[\\mathrm{Zn}(\\mathrm{OH}){\\vphantom{A}}_{\\smash[t]{4}}]{\\vphantom{A}}^{2-}}">
-        <mo data-latex="[" stretchy="false">[</mo>
-        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{Zn}">
-          <mi data-mjx-auto-op="false" data-latex="Zn">Zn</mi>
-        </mrow>
-        <mo data-latex="(" stretchy="false">(</mo>
-        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{OH}">
-          <mi data-mjx-auto-op="false" data-latex="OH">OH</mi>
-        </mrow>
-        <mo data-latex=")" stretchy="false">)</mo>
-        <msub data-latex="{\\vphantom{A}}_{\\smash[t]{4}}">
-          <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-            <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-              <mpadded width="0">
-                <mphantom>
-                  <mi data-latex="A">A</mi>
-                </mphantom>
-              </mpadded>
-            </mrow>
-          </mrow>
-          <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{4}}">
-            <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{4}">
-              <mpadded height="0">
-                <mn data-latex="4">4</mn>
-              </mpadded>
-            </mrow>
-          </mrow>
-        </msub>
-        <mo data-latex="]" stretchy="false">]</mo>
-        <msup data-latex="{\\vphantom{A}}^{2-}">
-          <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-            <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-              <mpadded width="0">
-                <mphantom>
-                  <mi data-latex="A">A</mi>
-                </mphantom>
-              </mpadded>
-            </mrow>
-          </mrow>
-          <mrow data-mjx-texclass="ORD" data-latex="{2-}">
-            <mn data-latex="2">2</mn>
-            <mo data-latex="-">&#x2212;</mo>
           </mrow>
         </msup>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\mhchemxrightleftharpoons{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}}}">
+          <munder data-latex="\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\mhchemxrightleftharpoons{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}}">
+            <mover data-latex="\\mhchemxrightleftharpoons{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}">
+              <mo data-mjx-texclass="REL" stretchy="true">&#xE408;</mo>
+              <mpadded width="+0.778em" lspace="0.278em" voffset="-.2em" height="-.2em">
+                <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+                <mo data-latex="+">+</mo>
+                <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+                <mn data-latex="2">2</mn>
+                <mstyle scriptlevel="0" data-latex="\\,">
+                  <mspace width="0.167em"></mspace>
+                </mstyle>
+                <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{OH}">
+                  <mi data-mjx-auto-op="false" data-latex="OH">OH</mi>
+                </mrow>
+                <msup data-latex="{\\vphantom{A}}^{-}">
+                  <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+                    <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+                      <mpadded width="0">
+                        <mphantom>
+                          <mi data-latex="A">A</mi>
+                        </mphantom>
+                      </mpadded>
+                    </mrow>
+                  </mrow>
+                  <mrow data-mjx-texclass="ORD" data-latex="{-}">
+                    <mo data-latex="-">&#x2212;</mo>
+                  </mrow>
+                </msup>
+                <mspace depth=".2em"></mspace>
+              </mpadded>
+            </mover>
+            <mpadded height="-0.333em" depth="+0.333em" voffset="-0.333em" data-latex="\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}">
+              <mrow data-mjx-texclass="ORD">
+                <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+                <mo data-latex="+">+</mo>
+                <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+                <mn data-latex="2">2</mn>
+                <mstyle scriptlevel="0" data-latex="\\,">
+                  <mspace width="0.167em"></mspace>
+                </mstyle>
+                <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{H}">
+                  <mi mathvariant="normal" data-latex="H">H</mi>
+                </mrow>
+                <msup data-latex="{\\vphantom{A}}^{+}">
+                  <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+                    <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+                      <mpadded width="0">
+                        <mphantom>
+                          <mi data-latex="A">A</mi>
+                        </mphantom>
+                      </mpadded>
+                    </mrow>
+                  </mrow>
+                  <mrow data-mjx-texclass="ORD" data-latex="{+}">
+                    <mo data-latex="+">+</mo>
+                  </mrow>
+                </msup>
+              </mrow>
+            </mpadded>
+          </munder>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <munder data-latex="\\underset{\\text{amphoteres Hydroxid}}{\\ce{Zn(OH)2 v}}">
+          <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{Zn}(\\mathrm{OH}){\\vphantom{A}}_{\\smash[t]{2}} \\downarrow{} }">
+            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{Zn}">
+              <mi data-mjx-auto-op="false" data-latex="Zn">Zn</mi>
+            </mrow>
+            <mo data-latex="(" stretchy="false">(</mo>
+            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{OH}">
+              <mi data-mjx-auto-op="false" data-latex="OH">OH</mi>
+            </mrow>
+            <mo data-latex=")" stretchy="false">)</mo>
+            <msub data-latex="{\\vphantom{A}}_{\\smash[t]{2}}">
+              <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+                <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+                  <mpadded width="0">
+                    <mphantom>
+                      <mi data-latex="A">A</mi>
+                    </mphantom>
+                  </mpadded>
+                </mrow>
+              </mrow>
+              <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{2}}">
+                <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{2}">
+                  <mpadded height="0">
+                    <mn data-latex="2">2</mn>
+                  </mpadded>
+                </mrow>
+              </mrow>
+            </msub>
+            <mo stretchy="false" data-latex="\\downarrow">&#x2193;</mo>
+            <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+          </mrow>
+          <mtext data-latex="\\text{amphoteres Hydroxid}">amphoteres Hydroxid</mtext>
+        </munder>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\mhchemxrightleftharpoons{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}}}">
+          <munder data-latex="\\underset{\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}}{\\mhchemxrightleftharpoons{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}}">
+            <mover data-latex="\\mhchemxrightleftharpoons{ {}+{} 2\\,\\mathrm{OH}{\\vphantom{A}}^{-}}">
+              <mo data-mjx-texclass="REL" stretchy="true">&#xE408;</mo>
+              <mpadded width="+0.778em" lspace="0.278em" voffset="-.2em" height="-.2em">
+                <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+                <mo data-latex="+">+</mo>
+                <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+                <mn data-latex="2">2</mn>
+                <mstyle scriptlevel="0" data-latex="\\,">
+                  <mspace width="0.167em"></mspace>
+                </mstyle>
+                <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{OH}">
+                  <mi data-mjx-auto-op="false" data-latex="OH">OH</mi>
+                </mrow>
+                <msup data-latex="{\\vphantom{A}}^{-}">
+                  <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+                    <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+                      <mpadded width="0">
+                        <mphantom>
+                          <mi data-latex="A">A</mi>
+                        </mphantom>
+                      </mpadded>
+                    </mrow>
+                  </mrow>
+                  <mrow data-mjx-texclass="ORD" data-latex="{-}">
+                    <mo data-latex="-">&#x2212;</mo>
+                  </mrow>
+                </msup>
+                <mspace depth=".2em"></mspace>
+              </mpadded>
+            </mover>
+            <mpadded height="-0.333em" depth="+0.333em" voffset="-0.333em" data-latex="\\lower6mu{ {}+{} 2\\,\\mathrm{H}{\\vphantom{A}}^{+}}">
+              <mrow data-mjx-texclass="ORD">
+                <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+                <mo data-latex="+">+</mo>
+                <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+                <mn data-latex="2">2</mn>
+                <mstyle scriptlevel="0" data-latex="\\,">
+                  <mspace width="0.167em"></mspace>
+                </mstyle>
+                <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{H}">
+                  <mi mathvariant="normal" data-latex="H">H</mi>
+                </mrow>
+                <msup data-latex="{\\vphantom{A}}^{+}">
+                  <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+                    <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+                      <mpadded width="0">
+                        <mphantom>
+                          <mi data-latex="A">A</mi>
+                        </mphantom>
+                      </mpadded>
+                    </mrow>
+                  </mrow>
+                  <mrow data-mjx-texclass="ORD" data-latex="{+}">
+                    <mo data-latex="+">+</mo>
+                  </mrow>
+                </msup>
+              </mrow>
+            </mpadded>
+          </munder>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <munder data-latex="\\underset{\\text{Hydroxozikat}}{\\ce{[Zn(OH)4]^2-}}">
+          <mrow data-mjx-texclass="ORD" data-latex="{[\\mathrm{Zn}(\\mathrm{OH}){\\vphantom{A}}_{\\smash[t]{4}}]{\\vphantom{A}}^{2-}}">
+            <mo data-latex="[" stretchy="false">[</mo>
+            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{Zn}">
+              <mi data-mjx-auto-op="false" data-latex="Zn">Zn</mi>
+            </mrow>
+            <mo data-latex="(" stretchy="false">(</mo>
+            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{OH}">
+              <mi data-mjx-auto-op="false" data-latex="OH">OH</mi>
+            </mrow>
+            <mo data-latex=")" stretchy="false">)</mo>
+            <msub data-latex="{\\vphantom{A}}_{\\smash[t]{4}}">
+              <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+                <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+                  <mpadded width="0">
+                    <mphantom>
+                      <mi data-latex="A">A</mi>
+                    </mphantom>
+                  </mpadded>
+                </mrow>
+              </mrow>
+              <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{4}}">
+                <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{4}">
+                  <mpadded height="0">
+                    <mn data-latex="4">4</mn>
+                  </mpadded>
+                </mrow>
+              </mrow>
+            </msub>
+            <mo data-latex="]" stretchy="false">]</mo>
+            <msup data-latex="{\\vphantom{A}}^{2-}">
+              <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+                <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+                  <mpadded width="0">
+                    <mphantom>
+                      <mi data-latex="A">A</mi>
+                    </mphantom>
+                  </mpadded>
+                </mrow>
+              </mrow>
+              <mrow data-mjx-texclass="ORD" data-latex="{2-}">
+                <mn data-latex="2">2</mn>
+                <mo data-latex="-">&#x2212;</mo>
+              </mrow>
+            </msup>
+          </mrow>
+          <mtext data-latex="\\text{Hydroxozikat}">Hydroxozikat</mtext>
+        </munder>
       </mrow>
-      <mtext data-latex="\\text{Hydroxozikat}">Hydroxozikat</mtext>
-    </munder>
-  </mrow>
-</math>`
+    </math>`
     ));
   it('Chem-89', () =>
     toXmlMatch(
@@ -4593,499 +4277,52 @@ describe('Mhchem-Ams', () => {
     toXmlMatch(
       tex2mml('\\ce{Hg^2+ ->[I-] HgI2 ->[I-] [Hg^{II}I4]^2-}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{Hg^2+ -&gt;[I-] HgI2 -&gt;[I-] [Hg^{II}I4]^2-}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{Hg}{\\vphantom{A}}^{2+} {}\\mathrel{\\xrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}}{} \\mathrm{HgI}{\\vphantom{A}}_{\\smash[t]{2}} {}\\mathrel{\\xrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}}{} [\\mathrm{Hg}{\\vphantom{A}}^{\\mathrm{II}}\\mathrm{I}{\\vphantom{A}}_{\\smash[t]{4}}]{\\vphantom{A}}^{2-}}">
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{Hg}">
-      <mi data-mjx-auto-op="false" data-latex="Hg">Hg</mi>
-    </mrow>
-    <msup data-latex="{\\vphantom{A}}^{2+}">
-      <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-          <mpadded width="0">
-            <mphantom>
-              <mi data-latex="A">A</mi>
-            </mphantom>
-          </mpadded>
+      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{Hg}{\\vphantom{A}}^{2+} {}\\mathrel{\\mhchemxrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}}{} \\mathrm{HgI}{\\vphantom{A}}_{\\smash[t]{2}} {}\\mathrel{\\mhchemxrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}}{} [\\mathrm{Hg}{\\vphantom{A}}^{\\mathrm{II}}\\mathrm{I}{\\vphantom{A}}_{\\smash[t]{4}}]{\\vphantom{A}}^{2-}}">
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{Hg}">
+          <mi data-mjx-auto-op="false" data-latex="Hg">Hg</mi>
         </mrow>
-      </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="{2+}">
-        <mn data-latex="2">2</mn>
-        <mo data-latex="+">+</mo>
-      </mrow>
-    </msup>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\xrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}}">
-      <mover data-latex="\\xrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}">
-        <mo data-mjx-texclass="REL">&#x2192;</mo>
-        <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
-          <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{I}">
-            <mi mathvariant="normal" data-latex="I">I</mi>
+        <msup data-latex="{\\vphantom{A}}^{2+}">
+          <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+              <mpadded width="0">
+                <mphantom>
+                  <mi data-latex="A">A</mi>
+                </mphantom>
+              </mpadded>
+            </mrow>
           </mrow>
-          <msup data-latex="{\\vphantom{A}}^{-}">
-            <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-              <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-                <mpadded width="0">
-                  <mphantom>
-                    <mi data-latex="A">A</mi>
-                  </mphantom>
-                </mpadded>
-              </mrow>
-            </mrow>
-            <mrow data-mjx-texclass="ORD" data-latex="{-}">
-              <mo data-latex="-">&#x2212;</mo>
-            </mrow>
-          </msup>
-          <mspace depth=".2em"></mspace>
-        </mpadded>
-      </mover>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{HgI}">
-      <mi data-mjx-auto-op="false" data-latex="HgI">HgI</mi>
-    </mrow>
-    <msub data-latex="{\\vphantom{A}}_{\\smash[t]{2}}">
-      <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-          <mpadded width="0">
-            <mphantom>
-              <mi data-latex="A">A</mi>
-            </mphantom>
-          </mpadded>
-        </mrow>
-      </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{2}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{2}">
-          <mpadded height="0">
+          <mrow data-mjx-texclass="ORD" data-latex="{2+}">
             <mn data-latex="2">2</mn>
-          </mpadded>
-        </mrow>
-      </mrow>
-    </msub>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\xrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}}">
-      <mover data-latex="\\xrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}">
-        <mo data-mjx-texclass="REL">&#x2192;</mo>
-        <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
-          <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{I}">
-            <mi mathvariant="normal" data-latex="I">I</mi>
+            <mo data-latex="+">+</mo>
           </mrow>
-          <msup data-latex="{\\vphantom{A}}^{-}">
-            <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-              <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-                <mpadded width="0">
-                  <mphantom>
-                    <mi data-latex="A">A</mi>
-                  </mphantom>
-                </mpadded>
+        </msup>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mhchemxrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}}">
+          <mover data-latex="\\mhchemxrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}">
+            <mo data-mjx-texclass="REL" stretchy="true">&#xE429;</mo>
+            <mpadded width="+0.778em" lspace="0.278em" voffset="-.2em" height="-.2em">
+              <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{I}">
+                <mi mathvariant="normal" data-latex="I">I</mi>
               </mrow>
-            </mrow>
-            <mrow data-mjx-texclass="ORD" data-latex="{-}">
-              <mo data-latex="-">&#x2212;</mo>
-            </mrow>
-          </msup>
-          <mspace depth=".2em"></mspace>
-        </mpadded>
-      </mover>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mo data-latex="[" stretchy="false">[</mo>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{Hg}">
-      <mi data-mjx-auto-op="false" data-latex="Hg">Hg</mi>
-    </mrow>
-    <msup data-latex="{\\vphantom{A}}^{\\mathrm{II}}">
-      <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-          <mpadded width="0">
-            <mphantom>
-              <mi data-latex="A">A</mi>
-            </mphantom>
-          </mpadded>
+              <msup data-latex="{\\vphantom{A}}^{-}">
+                <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+                  <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+                    <mpadded width="0">
+                      <mphantom>
+                        <mi data-latex="A">A</mi>
+                      </mphantom>
+                    </mpadded>
+                  </mrow>
+                </mrow>
+                <mrow data-mjx-texclass="ORD" data-latex="{-}">
+                  <mo data-latex="-">&#x2212;</mo>
+                </mrow>
+              </msup>
+              <mspace depth=".2em"></mspace>
+            </mpadded>
+          </mover>
         </mrow>
-      </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{II}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{II}">
-          <mi data-mjx-auto-op="false" data-latex="II">II</mi>
-        </mrow>
-      </mrow>
-    </msup>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{I}">
-      <mi mathvariant="normal" data-latex="I">I</mi>
-    </mrow>
-    <msub data-latex="{\\vphantom{A}}_{\\smash[t]{4}}">
-      <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-          <mpadded width="0">
-            <mphantom>
-              <mi data-latex="A">A</mi>
-            </mphantom>
-          </mpadded>
-        </mrow>
-      </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{4}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{4}">
-          <mpadded height="0">
-            <mn data-latex="4">4</mn>
-          </mpadded>
-        </mrow>
-      </mrow>
-    </msub>
-    <mo data-latex="]" stretchy="false">]</mo>
-    <msup data-latex="{\\vphantom{A}}^{2-}">
-      <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-          <mpadded width="0">
-            <mphantom>
-              <mi data-latex="A">A</mi>
-            </mphantom>
-          </mpadded>
-        </mrow>
-      </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="{2-}">
-        <mn data-latex="2">2</mn>
-        <mo data-latex="-">&#x2212;</mo>
-      </mrow>
-    </msup>
-  </mrow>
-</math>`
-    ));
-  it('Chem-30', () =>
-    toXmlMatch(
-      tex2mml('\\ce{A ->[H2O] B}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{A -&gt;[H2O] B}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A} {}\\mathrel{\\xrightarrow{\\mathrm{H}{\\vphantom{A}}_{\\smash[t]{2}}\\mathrm{O}}}{} \\mathrm{B}}">
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
-      <mi mathvariant="normal" data-latex="A">A</mi>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\xrightarrow{\\mathrm{H}{\\vphantom{A}}_{\\smash[t]{2}}\\mathrm{O}}}">
-      <mover data-latex="\\xrightarrow{\\mathrm{H}{\\vphantom{A}}_{\\smash[t]{2}}\\mathrm{O}}">
-        <mo data-mjx-texclass="REL">&#x2192;</mo>
-        <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
-          <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{H}">
-            <mi mathvariant="normal" data-latex="H">H</mi>
-          </mrow>
-          <msub data-latex="{\\vphantom{A}}_{\\smash[t]{2}}">
-            <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-              <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-                <mpadded width="0">
-                  <mphantom>
-                    <mi data-latex="A">A</mi>
-                  </mphantom>
-                </mpadded>
-              </mrow>
-            </mrow>
-            <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{2}}">
-              <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{2}">
-                <mpadded height="0">
-                  <mn data-latex="2">2</mn>
-                </mpadded>
-              </mrow>
-            </mrow>
-          </msub>
-          <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{O}">
-            <mi mathvariant="normal" data-latex="O">O</mi>
-          </mrow>
-          <mspace depth=".2em"></mspace>
-        </mpadded>
-      </mover>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
-      <mi mathvariant="normal" data-latex="B">B</mi>
-    </mrow>
-  </mrow>
-</math>`
-    ));
-  it('Chem-31', () =>
-    toXmlMatch(
-      tex2mml('\\ce{A ->[{text above}][{text below}] B}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{A -&gt;[{text above}][{text below}] B}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A} {}\\mathrel{\\xrightarrow[{{\\text{text below}}}]{{\\text{text above}}}}{} \\mathrm{B}}">
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
-      <mi mathvariant="normal" data-latex="A">A</mi>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\xrightarrow[{{\\text{text below}}}]{{\\text{text above}}}}">
-      <munderover data-latex="\\xrightarrow[{{\\text{text below}}}]{{\\text{text above}}}">
-        <mo data-mjx-texclass="REL">&#x2192;</mo>
-        <mpadded width="+0.833em" lspace="0.278em" voffset=".15em" depth="-.15em">
-          <mrow data-mjx-texclass="ORD" data-latex="{{\\text{text below}}}">
-            <mrow data-mjx-texclass="ORD" data-latex="{\\text{text below}}">
-              <mtext data-latex="\\text{text below}">text below</mtext>
-            </mrow>
-          </mrow>
-          <mspace height=".75em"></mspace>
-        </mpadded>
-        <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
-          <mrow data-mjx-texclass="ORD" data-latex="{\\text{text above}}">
-            <mtext data-latex="\\text{text above}">text above</mtext>
-          </mrow>
-          <mspace depth=".2em"></mspace>
-        </mpadded>
-      </munderover>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
-      <mi mathvariant="normal" data-latex="B">B</mi>
-    </mrow>
-  </mrow>
-</math>`
-    ));
-  it('Chem-32', () =>
-    toXmlMatch(
-      tex2mml('\\ce{A ->[$x$][$x_i$] B}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{A -&gt;[\$x\$][\$x_i\$] B}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A} {}\\mathrel{\\xrightarrow[{x_i }]{x }}{} \\mathrm{B}}">
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
-      <mi mathvariant="normal" data-latex="A">A</mi>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\xrightarrow[{x_i }]{x }}">
-      <munderover data-latex="\\xrightarrow[{x_i }]{x }">
-        <mo data-mjx-texclass="REL">&#x2192;</mo>
-        <mpadded width="+0.833em" lspace="0.278em" voffset=".15em" depth="-.15em">
-          <mrow data-mjx-texclass="ORD" data-latex="{x_i }">
-            <msub data-latex="x_i">
-              <mi data-latex="x">x</mi>
-              <mi data-latex="i">i</mi>
-            </msub>
-          </mrow>
-          <mspace height=".75em"></mspace>
-        </mpadded>
-        <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
-          <mi data-latex="x ">x</mi>
-          <mspace depth=".2em"></mspace>
-        </mpadded>
-      </munderover>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
-      <mi mathvariant="normal" data-latex="B">B</mi>
-    </mrow>
-  </mrow>
-</math>`
-    ));
-  it('Chem-43', () =>
-    toXmlMatch(
-      tex2mml('\\ce{x Na(NH4)HPO4 ->[\\Delta] (NaPO3)_x + x NH3 ^ + x H2O}'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{x Na(NH4)HPO4 -&gt;[\\Delta] (NaPO3)_x + x NH3 ^ + x H2O}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="{x\\,\\mathrm{Na}(\\mathrm{NH}{\\vphantom{A}}_{\\smash[t]{4}})\\mathrm{HPO}{\\vphantom{A}}_{\\smash[t]{4}} {}\\mathrel{\\xrightarrow{\\mathrm{\\Delta}}}{} (\\mathrm{NaPO}{\\vphantom{A}}_{\\smash[t]{3}}){\\vphantom{A}}_{\\smash[t]{x }} {}+{} x\\,\\mathrm{NH}{\\vphantom{A}}_{\\smash[t]{3}} \\uparrow{}  {}+{} x\\,\\mathrm{H}{\\vphantom{A}}_{\\smash[t]{2}}\\mathrm{O}}">
-    <mi data-latex="x">x</mi>
-    <mspace width="0.167em" data-latex="\\,"></mspace>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{Na}">
-      <mi data-mjx-auto-op="false" data-latex="Na">Na</mi>
-    </mrow>
-    <mo data-latex="(" stretchy="false">(</mo>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{NH}">
-      <mi data-mjx-auto-op="false" data-latex="NH">NH</mi>
-    </mrow>
-    <msub data-latex="{\\vphantom{A}}_{\\smash[t]{4}}">
-      <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-          <mpadded width="0">
-            <mphantom>
-              <mi data-latex="A">A</mi>
-            </mphantom>
-          </mpadded>
-        </mrow>
-      </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{4}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{4}">
-          <mpadded height="0">
-            <mn data-latex="4">4</mn>
-          </mpadded>
-        </mrow>
-      </mrow>
-    </msub>
-    <mo data-latex=")" stretchy="false">)</mo>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{HPO}">
-      <mi data-mjx-auto-op="false" data-latex="HPO">HPO</mi>
-    </mrow>
-    <msub data-latex="{\\vphantom{A}}_{\\smash[t]{4}}">
-      <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-          <mpadded width="0">
-            <mphantom>
-              <mi data-latex="A">A</mi>
-            </mphantom>
-          </mpadded>
-        </mrow>
-      </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{4}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{4}">
-          <mpadded height="0">
-            <mn data-latex="4">4</mn>
-          </mpadded>
-        </mrow>
-      </mrow>
-    </msub>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\xrightarrow{\\mathrm{\\Delta}}}">
-      <mover data-latex="\\xrightarrow{\\mathrm{\\Delta}}">
-        <mo data-mjx-texclass="REL">&#x2192;</mo>
-        <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
-          <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{\\Delta}">
-            <mi mathvariant="normal" data-latex="\\Delta">&#x394;</mi>
-          </mrow>
-          <mspace depth=".2em"></mspace>
-        </mpadded>
-      </mover>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mo data-latex="(" stretchy="false">(</mo>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{NaPO}">
-      <mi data-mjx-auto-op="false" data-latex="NaPO">NaPO</mi>
-    </mrow>
-    <msub data-latex="{\\vphantom{A}}_{\\smash[t]{3}}">
-      <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-          <mpadded width="0">
-            <mphantom>
-              <mi data-latex="A">A</mi>
-            </mphantom>
-          </mpadded>
-        </mrow>
-      </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{3}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{3}">
-          <mpadded height="0">
-            <mn data-latex="3">3</mn>
-          </mpadded>
-        </mrow>
-      </mrow>
-    </msub>
-    <mo data-latex=")" stretchy="false">)</mo>
-    <msub data-latex="{\\vphantom{A}}_{\\smash[t]{x }}">
-      <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-          <mpadded width="0">
-            <mphantom>
-              <mi data-latex="A">A</mi>
-            </mphantom>
-          </mpadded>
-        </mrow>
-      </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{x }}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{x }">
-          <mpadded height="0">
-            <mi data-latex="x ">x</mi>
-          </mpadded>
-        </mrow>
-      </mrow>
-    </msub>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mo data-latex="+">+</mo>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mi data-latex="x">x</mi>
-    <mspace width="0.167em" data-latex="\\,"></mspace>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{NH}">
-      <mi data-mjx-auto-op="false" data-latex="NH">NH</mi>
-    </mrow>
-    <msub data-latex="{\\vphantom{A}}_{\\smash[t]{3}}">
-      <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-          <mpadded width="0">
-            <mphantom>
-              <mi data-latex="A">A</mi>
-            </mphantom>
-          </mpadded>
-        </mrow>
-      </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{3}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{3}">
-          <mpadded height="0">
-            <mn data-latex="3">3</mn>
-          </mpadded>
-        </mrow>
-      </mrow>
-    </msub>
-    <mo stretchy="false" data-latex="\\uparrow">&#x2191;</mo>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mo data-latex="+">+</mo>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mi data-latex="x">x</mi>
-    <mspace width="0.167em" data-latex="\\,"></mspace>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{H}">
-      <mi mathvariant="normal" data-latex="H">H</mi>
-    </mrow>
-    <msub data-latex="{\\vphantom{A}}_{\\smash[t]{2}}">
-      <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-          <mpadded width="0">
-            <mphantom>
-              <mi data-latex="A">A</mi>
-            </mphantom>
-          </mpadded>
-        </mrow>
-      </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{2}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{2}">
-          <mpadded height="0">
-            <mn data-latex="2">2</mn>
-          </mpadded>
-        </mrow>
-      </mrow>
-    </msub>
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{O}">
-      <mi mathvariant="normal" data-latex="O">O</mi>
-    </mrow>
-  </mrow>
-</math>`
-    ));
-  it('Chem-91', () =>
-    toXmlMatch(
-      tex2mml(
-        '\\ce{Hg^2+ ->[I-]  $\\underset{\\mathrm{red}}{\\ce{HgI2}}$  ->[I-]  $\\underset{\\mathrm{red}}{\\ce{[Hg^{II}I4]^2-}}$}'
-      ),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{Hg^2+ -&gt;[I-]  \$\\underset{\\mathrm{red}}{\\ce{HgI2}}\$  -&gt;[I-]  \$\\underset{\\mathrm{red}}{\\ce{[Hg^{II}I4]^2-}}\$}" display="block">
-  <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{Hg}{\\vphantom{A}}^{2+} {}\\mathrel{\\xrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}}{} \\underset{\\mathrm{red}}{\\ce{HgI2}}  {}\\mathrel{\\xrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}}{} \\underset{\\mathrm{red}}{\\ce{[Hg^{II}I4]^2-}} }">
-    <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{Hg}">
-      <mi data-mjx-auto-op="false" data-latex="Hg">Hg</mi>
-    </mrow>
-    <msup data-latex="{\\vphantom{A}}^{2+}">
-      <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-        <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-          <mpadded width="0">
-            <mphantom>
-              <mi data-latex="A">A</mi>
-            </mphantom>
-          </mpadded>
-        </mrow>
-      </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="{2+}">
-        <mn data-latex="2">2</mn>
-        <mo data-latex="+">+</mo>
-      </mrow>
-    </msup>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\xrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}}">
-      <mover data-latex="\\xrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}">
-        <mo data-mjx-texclass="REL">&#x2192;</mo>
-        <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
-          <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{I}">
-            <mi mathvariant="normal" data-latex="I">I</mi>
-          </mrow>
-          <msup data-latex="{\\vphantom{A}}^{-}">
-            <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-              <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-                <mpadded width="0">
-                  <mphantom>
-                    <mi data-latex="A">A</mi>
-                  </mphantom>
-                </mpadded>
-              </mrow>
-            </mrow>
-            <mrow data-mjx-texclass="ORD" data-latex="{-}">
-              <mo data-latex="-">&#x2212;</mo>
-            </mrow>
-          </msup>
-          <mspace depth=".2em"></mspace>
-        </mpadded>
-      </mover>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <munder data-latex="\\underset{\\mathrm{red}}{\\ce{HgI2}}">
-      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{HgI}{\\vphantom{A}}_{\\smash[t]{2}}}">
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
         <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{HgI}">
           <mi data-mjx-auto-op="false" data-latex="HgI">HgI</mi>
         </mrow>
@@ -5107,40 +4344,33 @@ describe('Mhchem-Ams', () => {
             </mrow>
           </mrow>
         </msub>
-      </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{red}">
-        <mi data-mjx-auto-op="false" data-latex="red">red</mi>
-      </mrow>
-    </munder>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\xrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}}">
-      <mover data-latex="\\xrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}">
-        <mo data-mjx-texclass="REL">&#x2192;</mo>
-        <mpadded width="+0.833em" lspace="0.278em" voffset="-.2em" height="-.2em">
-          <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{I}">
-            <mi mathvariant="normal" data-latex="I">I</mi>
-          </mrow>
-          <msup data-latex="{\\vphantom{A}}^{-}">
-            <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
-              <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
-                <mpadded width="0">
-                  <mphantom>
-                    <mi data-latex="A">A</mi>
-                  </mphantom>
-                </mpadded>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mhchemxrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}}">
+          <mover data-latex="\\mhchemxrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}">
+            <mo data-mjx-texclass="REL" stretchy="true">&#xE429;</mo>
+            <mpadded width="+0.778em" lspace="0.278em" voffset="-.2em" height="-.2em">
+              <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{I}">
+                <mi mathvariant="normal" data-latex="I">I</mi>
               </mrow>
-            </mrow>
-            <mrow data-mjx-texclass="ORD" data-latex="{-}">
-              <mo data-latex="-">&#x2212;</mo>
-            </mrow>
-          </msup>
-          <mspace depth=".2em"></mspace>
-        </mpadded>
-      </mover>
-    </mrow>
-    <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
-    <munder data-latex="\\underset{\\mathrm{red}}{\\ce{[Hg^{II}I4]^2-}}">
-      <mrow data-mjx-texclass="ORD" data-latex="{[\\mathrm{Hg}{\\vphantom{A}}^{\\mathrm{II}}\\mathrm{I}{\\vphantom{A}}_{\\smash[t]{4}}]{\\vphantom{A}}^{2-}}">
+              <msup data-latex="{\\vphantom{A}}^{-}">
+                <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+                  <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+                    <mpadded width="0">
+                      <mphantom>
+                        <mi data-latex="A">A</mi>
+                      </mphantom>
+                    </mpadded>
+                  </mrow>
+                </mrow>
+                <mrow data-mjx-texclass="ORD" data-latex="{-}">
+                  <mo data-latex="-">&#x2212;</mo>
+                </mrow>
+              </msup>
+              <mspace depth=".2em"></mspace>
+            </mpadded>
+          </mover>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
         <mo data-latex="[" stretchy="false">[</mo>
         <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{Hg}">
           <mi data-mjx-auto-op="false" data-latex="Hg">Hg</mi>
@@ -5199,12 +4429,466 @@ describe('Mhchem-Ams', () => {
           </mrow>
         </msup>
       </mrow>
-      <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{red}">
-        <mi data-mjx-auto-op="false" data-latex="red">red</mi>
+    </math>`
+    ));
+  it('Chem-30', () =>
+    toXmlMatch(
+      tex2mml('\\ce{A ->[H2O] B}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{A -&gt;[H2O] B}" display="block">
+      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A} {}\\mathrel{\\mhchemxrightarrow{\\mathrm{H}{\\vphantom{A}}_{\\smash[t]{2}}\\mathrm{O}}}{} \\mathrm{B}}">
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
+          <mi mathvariant="normal" data-latex="A">A</mi>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mhchemxrightarrow{\\mathrm{H}{\\vphantom{A}}_{\\smash[t]{2}}\\mathrm{O}}}">
+          <mover data-latex="\\mhchemxrightarrow{\\mathrm{H}{\\vphantom{A}}_{\\smash[t]{2}}\\mathrm{O}}">
+            <mo data-mjx-texclass="REL" stretchy="true">&#xE429;</mo>
+            <mpadded width="+0.778em" lspace="0.278em" voffset="-.2em" height="-.2em">
+              <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{H}">
+                <mi mathvariant="normal" data-latex="H">H</mi>
+              </mrow>
+              <msub data-latex="{\\vphantom{A}}_{\\smash[t]{2}}">
+                <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+                  <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+                    <mpadded width="0">
+                      <mphantom>
+                        <mi data-latex="A">A</mi>
+                      </mphantom>
+                    </mpadded>
+                  </mrow>
+                </mrow>
+                <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{2}}">
+                  <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{2}">
+                    <mpadded height="0">
+                      <mn data-latex="2">2</mn>
+                    </mpadded>
+                  </mrow>
+                </mrow>
+              </msub>
+              <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{O}">
+                <mi mathvariant="normal" data-latex="O">O</mi>
+              </mrow>
+              <mspace depth=".2em"></mspace>
+            </mpadded>
+          </mover>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
+          <mi mathvariant="normal" data-latex="B">B</mi>
+        </mrow>
       </mrow>
-    </munder>
-  </mrow>
-</math>`
+    </math>`
+    ));
+  it('Chem-31', () =>
+    toXmlMatch(
+      tex2mml('\\ce{A ->[{text above}][{text below}] B}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{A -&gt;[{text above}][{text below}] B}" display="block">
+      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A} {}\\mathrel{\\mhchemxrightarrow[{{\\text{text below}}}]{{\\text{text above}}}}{} \\mathrm{B}}">
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
+          <mi mathvariant="normal" data-latex="A">A</mi>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mhchemxrightarrow[{{\\text{text below}}}]{{\\text{text above}}}}">
+          <munderover data-latex="\\mhchemxrightarrow[{{\\text{text below}}}]{{\\text{text above}}}">
+            <mo data-mjx-texclass="REL" stretchy="true">&#xE429;</mo>
+            <mpadded width="+0.778em" lspace="0.278em" voffset=".15em" depth="-.15em">
+              <mrow data-mjx-texclass="ORD" data-latex="{{\\text{text below}}}">
+                <mrow data-mjx-texclass="ORD" data-latex="{\\text{text below}}">
+                  <mtext data-latex="\\text{text below}">text below</mtext>
+                </mrow>
+              </mrow>
+              <mspace height=".75em"></mspace>
+            </mpadded>
+            <mpadded width="+0.778em" lspace="0.278em" voffset="-.2em" height="-.2em">
+              <mrow data-mjx-texclass="ORD" data-latex="{\\text{text above}}">
+                <mtext data-latex="\\text{text above}">text above</mtext>
+              </mrow>
+              <mspace depth=".2em"></mspace>
+            </mpadded>
+          </munderover>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
+          <mi mathvariant="normal" data-latex="B">B</mi>
+        </mrow>
+      </mrow>
+    </math>`
+    ));
+  it('Chem-32', () =>
+    toXmlMatch(
+      tex2mml('\\ce{A ->[$x$][$x_i$] B}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{A -&gt;[$x$][$x_i$] B}" display="block">
+      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{A} {}\\mathrel{\\mhchemxrightarrow[{x_i }]{x }}{} \\mathrm{B}}">
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{A}">
+          <mi mathvariant="normal" data-latex="A">A</mi>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mhchemxrightarrow[{x_i }]{x }}">
+          <munderover data-latex="\\mhchemxrightarrow[{x_i }]{x }">
+            <mo data-mjx-texclass="REL" stretchy="true">&#xE429;</mo>
+            <mpadded width="+0.778em" lspace="0.278em" voffset=".15em" depth="-.15em">
+              <mrow data-mjx-texclass="ORD" data-latex="{x_i }">
+                <msub data-latex="x_i">
+                  <mi data-latex="x">x</mi>
+                  <mi data-latex="i">i</mi>
+                </msub>
+              </mrow>
+              <mspace height=".75em"></mspace>
+            </mpadded>
+            <mpadded width="+0.778em" lspace="0.278em" voffset="-.2em" height="-.2em">
+              <mi data-latex="x ">x</mi>
+              <mspace depth=".2em"></mspace>
+            </mpadded>
+          </munderover>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{B}">
+          <mi mathvariant="normal" data-latex="B">B</mi>
+        </mrow>
+      </mrow>
+    </math>`
+    ));
+  it('Chem-43', () =>
+    toXmlMatch(
+      tex2mml('\\ce{x Na(NH4)HPO4 ->[\\Delta] (NaPO3)_x + x NH3 ^ + x H2O}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{x Na(NH4)HPO4 -&gt;[\\Delta] (NaPO3)_x + x NH3 ^ + x H2O}" display="block">
+      <mrow data-mjx-texclass="ORD" data-latex="{x\\,\\mathrm{Na}(\\mathrm{NH}{\\vphantom{A}}_{\\smash[t]{4}})\\mathrm{HPO}{\\vphantom{A}}_{\\smash[t]{4}} {}\\mathrel{\\mhchemxrightarrow{\\mathrm{\\Delta}}}{} (\\mathrm{NaPO}{\\vphantom{A}}_{\\smash[t]{3}}){\\vphantom{A}}_{\\smash[t]{x }} {}+{} x\\,\\mathrm{NH}{\\vphantom{A}}_{\\smash[t]{3}} \\uparrow{}  {}+{} x\\,\\mathrm{H}{\\vphantom{A}}_{\\smash[t]{2}}\\mathrm{O}}">
+        <mi data-latex="x">x</mi>
+        <mspace width="0.167em" data-latex="\\,"></mspace>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{Na}">
+          <mi data-mjx-auto-op="false" data-latex="Na">Na</mi>
+        </mrow>
+        <mo data-latex="(" stretchy="false">(</mo>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{NH}">
+          <mi data-mjx-auto-op="false" data-latex="NH">NH</mi>
+        </mrow>
+        <msub data-latex="{\\vphantom{A}}_{\\smash[t]{4}}">
+          <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+              <mpadded width="0">
+                <mphantom>
+                  <mi data-latex="A">A</mi>
+                </mphantom>
+              </mpadded>
+            </mrow>
+          </mrow>
+          <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{4}}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{4}">
+              <mpadded height="0">
+                <mn data-latex="4">4</mn>
+              </mpadded>
+            </mrow>
+          </mrow>
+        </msub>
+        <mo data-latex=")" stretchy="false">)</mo>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{HPO}">
+          <mi data-mjx-auto-op="false" data-latex="HPO">HPO</mi>
+        </mrow>
+        <msub data-latex="{\\vphantom{A}}_{\\smash[t]{4}}">
+          <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+              <mpadded width="0">
+                <mphantom>
+                  <mi data-latex="A">A</mi>
+                </mphantom>
+              </mpadded>
+            </mrow>
+          </mrow>
+          <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{4}}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{4}">
+              <mpadded height="0">
+                <mn data-latex="4">4</mn>
+              </mpadded>
+            </mrow>
+          </mrow>
+        </msub>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mhchemxrightarrow{\\mathrm{\\Delta}}}">
+          <mover data-latex="\\mhchemxrightarrow{\\mathrm{\\Delta}}">
+            <mo data-mjx-texclass="REL" stretchy="true">&#xE429;</mo>
+            <mpadded width="+0.778em" lspace="0.278em" voffset="-.2em" height="-.2em">
+              <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{\\Delta}">
+                <mi mathvariant="normal" data-latex="\\Delta">&#x394;</mi>
+              </mrow>
+              <mspace depth=".2em"></mspace>
+            </mpadded>
+          </mover>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mo data-latex="(" stretchy="false">(</mo>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{NaPO}">
+          <mi data-mjx-auto-op="false" data-latex="NaPO">NaPO</mi>
+        </mrow>
+        <msub data-latex="{\\vphantom{A}}_{\\smash[t]{3}}">
+          <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+              <mpadded width="0">
+                <mphantom>
+                  <mi data-latex="A">A</mi>
+                </mphantom>
+              </mpadded>
+            </mrow>
+          </mrow>
+          <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{3}}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{3}">
+              <mpadded height="0">
+                <mn data-latex="3">3</mn>
+              </mpadded>
+            </mrow>
+          </mrow>
+        </msub>
+        <mo data-latex=")" stretchy="false">)</mo>
+        <msub data-latex="{\\vphantom{A}}_{\\smash[t]{x }}">
+          <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+              <mpadded width="0">
+                <mphantom>
+                  <mi data-latex="A">A</mi>
+                </mphantom>
+              </mpadded>
+            </mrow>
+          </mrow>
+          <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{x }}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{x }">
+              <mpadded height="0">
+                <mi data-latex="x ">x</mi>
+              </mpadded>
+            </mrow>
+          </mrow>
+        </msub>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mo data-latex="+">+</mo>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mi data-latex="x">x</mi>
+        <mspace width="0.167em" data-latex="\\,"></mspace>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{NH}">
+          <mi data-mjx-auto-op="false" data-latex="NH">NH</mi>
+        </mrow>
+        <msub data-latex="{\\vphantom{A}}_{\\smash[t]{3}}">
+          <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+              <mpadded width="0">
+                <mphantom>
+                  <mi data-latex="A">A</mi>
+                </mphantom>
+              </mpadded>
+            </mrow>
+          </mrow>
+          <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{3}}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{3}">
+              <mpadded height="0">
+                <mn data-latex="3">3</mn>
+              </mpadded>
+            </mrow>
+          </mrow>
+        </msub>
+        <mo stretchy="false" data-latex="\\uparrow">&#x2191;</mo>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mo data-latex="+">+</mo>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mi data-latex="x">x</mi>
+        <mspace width="0.167em" data-latex="\\,"></mspace>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{H}">
+          <mi mathvariant="normal" data-latex="H">H</mi>
+        </mrow>
+        <msub data-latex="{\\vphantom{A}}_{\\smash[t]{2}}">
+          <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+              <mpadded width="0">
+                <mphantom>
+                  <mi data-latex="A">A</mi>
+                </mphantom>
+              </mpadded>
+            </mrow>
+          </mrow>
+          <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{2}}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{2}">
+              <mpadded height="0">
+                <mn data-latex="2">2</mn>
+              </mpadded>
+            </mrow>
+          </mrow>
+        </msub>
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{O}">
+          <mi mathvariant="normal" data-latex="O">O</mi>
+        </mrow>
+      </mrow>
+    </math>`
+    ));
+  it('Chem-91', () =>
+    toXmlMatch(
+      tex2mml(
+        '\\ce{Hg^2+ ->[I-]  $\\underset{\\mathrm{red}}{\\ce{HgI2}}$  ->[I-]  $\\underset{\\mathrm{red}}{\\ce{[Hg^{II}I4]^2-}}$}'
+      ),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ce{Hg^2+ -&gt;[I-]  $\\underset{\\mathrm{red}}{\\ce{HgI2}}$  -&gt;[I-]  $\\underset{\\mathrm{red}}{\\ce{[Hg^{II}I4]^2-}}$}" display="block">
+      <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{Hg}{\\vphantom{A}}^{2+} {}\\mathrel{\\mhchemxrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}}{} \\underset{\\mathrm{red}}{\\ce{HgI2}}  {}\\mathrel{\\mhchemxrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}}{} \\underset{\\mathrm{red}}{\\ce{[Hg^{II}I4]^2-}} }">
+        <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{Hg}">
+          <mi data-mjx-auto-op="false" data-latex="Hg">Hg</mi>
+        </mrow>
+        <msup data-latex="{\\vphantom{A}}^{2+}">
+          <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+              <mpadded width="0">
+                <mphantom>
+                  <mi data-latex="A">A</mi>
+                </mphantom>
+              </mpadded>
+            </mrow>
+          </mrow>
+          <mrow data-mjx-texclass="ORD" data-latex="{2+}">
+            <mn data-latex="2">2</mn>
+            <mo data-latex="+">+</mo>
+          </mrow>
+        </msup>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mhchemxrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}}">
+          <mover data-latex="\\mhchemxrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}">
+            <mo data-mjx-texclass="REL" stretchy="true">&#xE429;</mo>
+            <mpadded width="+0.778em" lspace="0.278em" voffset="-.2em" height="-.2em">
+              <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{I}">
+                <mi mathvariant="normal" data-latex="I">I</mi>
+              </mrow>
+              <msup data-latex="{\\vphantom{A}}^{-}">
+                <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+                  <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+                    <mpadded width="0">
+                      <mphantom>
+                        <mi data-latex="A">A</mi>
+                      </mphantom>
+                    </mpadded>
+                  </mrow>
+                </mrow>
+                <mrow data-mjx-texclass="ORD" data-latex="{-}">
+                  <mo data-latex="-">&#x2212;</mo>
+                </mrow>
+              </msup>
+              <mspace depth=".2em"></mspace>
+            </mpadded>
+          </mover>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <munder data-latex="\\underset{\\mathrm{red}}{\\ce{HgI2}}">
+          <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{HgI}{\\vphantom{A}}_{\\smash[t]{2}}}">
+            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{HgI}">
+              <mi data-mjx-auto-op="false" data-latex="HgI">HgI</mi>
+            </mrow>
+            <msub data-latex="{\\vphantom{A}}_{\\smash[t]{2}}">
+              <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+                <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+                  <mpadded width="0">
+                    <mphantom>
+                      <mi data-latex="A">A</mi>
+                    </mphantom>
+                  </mpadded>
+                </mrow>
+              </mrow>
+              <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{2}}">
+                <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{2}">
+                  <mpadded height="0">
+                    <mn data-latex="2">2</mn>
+                  </mpadded>
+                </mrow>
+              </mrow>
+            </msub>
+          </mrow>
+          <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{red}">
+            <mi data-mjx-auto-op="false" data-latex="red">red</mi>
+          </mrow>
+        </munder>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <mrow data-mjx-texclass="REL" data-latex="\\mathrel{\\mhchemxrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}}">
+          <mover data-latex="\\mhchemxrightarrow{\\mathrm{I}{\\vphantom{A}}^{-}}">
+            <mo data-mjx-texclass="REL" stretchy="true">&#xE429;</mo>
+            <mpadded width="+0.778em" lspace="0.278em" voffset="-.2em" height="-.2em">
+              <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{I}">
+                <mi mathvariant="normal" data-latex="I">I</mi>
+              </mrow>
+              <msup data-latex="{\\vphantom{A}}^{-}">
+                <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+                  <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+                    <mpadded width="0">
+                      <mphantom>
+                        <mi data-latex="A">A</mi>
+                      </mphantom>
+                    </mpadded>
+                  </mrow>
+                </mrow>
+                <mrow data-mjx-texclass="ORD" data-latex="{-}">
+                  <mo data-latex="-">&#x2212;</mo>
+                </mrow>
+              </msup>
+              <mspace depth=".2em"></mspace>
+            </mpadded>
+          </mover>
+        </mrow>
+        <mrow data-mjx-texclass="ORD" data-latex="{}"></mrow>
+        <munder data-latex="\\underset{\\mathrm{red}}{\\ce{[Hg^{II}I4]^2-}}">
+          <mrow data-mjx-texclass="ORD" data-latex="{[\\mathrm{Hg}{\\vphantom{A}}^{\\mathrm{II}}\\mathrm{I}{\\vphantom{A}}_{\\smash[t]{4}}]{\\vphantom{A}}^{2-}}">
+            <mo data-latex="[" stretchy="false">[</mo>
+            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{Hg}">
+              <mi data-mjx-auto-op="false" data-latex="Hg">Hg</mi>
+            </mrow>
+            <msup data-latex="{\\vphantom{A}}^{\\mathrm{II}}">
+              <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+                <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+                  <mpadded width="0">
+                    <mphantom>
+                      <mi data-latex="A">A</mi>
+                    </mphantom>
+                  </mpadded>
+                </mrow>
+              </mrow>
+              <mrow data-mjx-texclass="ORD" data-latex="{\\mathrm{II}}">
+                <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{II}">
+                  <mi data-mjx-auto-op="false" data-latex="II">II</mi>
+                </mrow>
+              </mrow>
+            </msup>
+            <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{I}">
+              <mi mathvariant="normal" data-latex="I">I</mi>
+            </mrow>
+            <msub data-latex="{\\vphantom{A}}_{\\smash[t]{4}}">
+              <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+                <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+                  <mpadded width="0">
+                    <mphantom>
+                      <mi data-latex="A">A</mi>
+                    </mphantom>
+                  </mpadded>
+                </mrow>
+              </mrow>
+              <mrow data-mjx-texclass="ORD" data-latex="{\\smash[t]{4}}">
+                <mrow data-mjx-texclass="ORD" data-latex="\\smash[t]{4}">
+                  <mpadded height="0">
+                    <mn data-latex="4">4</mn>
+                  </mpadded>
+                </mrow>
+              </mrow>
+            </msub>
+            <mo data-latex="]" stretchy="false">]</mo>
+            <msup data-latex="{\\vphantom{A}}^{2-}">
+              <mrow data-mjx-texclass="ORD" data-latex="{\\vphantom{A}}">
+                <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{A}">
+                  <mpadded width="0">
+                    <mphantom>
+                      <mi data-latex="A">A</mi>
+                    </mphantom>
+                  </mpadded>
+                </mrow>
+              </mrow>
+              <mrow data-mjx-texclass="ORD" data-latex="{2-}">
+                <mn data-latex="2">2</mn>
+                <mo data-latex="-">&#x2212;</mo>
+              </mrow>
+            </msup>
+          </mrow>
+          <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{red}">
+            <mi data-mjx-auto-op="false" data-latex="red">red</mi>
+          </mrow>
+        </munder>
+      </mrow>
+    </math>`
     ));
 });
 
