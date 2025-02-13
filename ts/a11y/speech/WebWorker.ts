@@ -58,40 +58,7 @@ export class WorkerHandler<N, T, D> {
   public domain = ''; // the domain of the pool
   public url = '';
 
-  // Promise handling
-  public resolve = () => {};
-  public promise: Promise<void> = new Promise((res) => (this.resolve = res));
-
-  /**
-   * @returns {Promise<void>} Pomise resolves on the task completion.
-   */
-  private async getPromise(): Promise<void> {
-    this.promise = new Promise((res) => (this.resolve = res));
-    return this.promise.then(() => {
-      this.dequeueTask();
-      return this.postNext();
-    });
-  }
-
   private tasks: PoolCommand[] = [];
-
-  /**
-   * Enqueues a pool command task.
-   *
-   * @param {PoolCommand} task The task to enqueue.
-   */
-  private enqueueTask(task: PoolCommand) {
-    this.tasks.push(task);
-  }
-
-  /**
-   * Dequeues a pool command task.
-   *
-   * @returns {PoolCommand} The next task.
-   */
-  private dequeueTask(): PoolCommand {
-    return this.tasks.shift();
-  }
 
   /**
    * The adaptor to work with typeset nodes.
@@ -177,9 +144,6 @@ export class WorkerHandler<N, T, D> {
     window.addEventListener('message', this.Listener.bind(this));
     //  Add the iframe to the page (starting the process of loading its content)
     document.body.appendChild(this.iframe);
-    // Adding a dummy to the queue to not loose the first entry on resolve
-    this.enqueueTask({ cmd: 'dummy', data: {} });
-    this.getPromise();
   }
 
   /**
@@ -223,7 +187,7 @@ export class WorkerHandler<N, T, D> {
    * @param {PoolCommand} msg The command message.
    */
   public Post(msg: PoolCommand) {
-    this.enqueueTask(msg);
+    this.tasks.push(msg);
     if (this.ready && this.tasks.length === 1) {
       this.postNext();
     }
@@ -231,7 +195,6 @@ export class WorkerHandler<N, T, D> {
 
   private postNext() {
     if (this.tasks.length) {
-      this.getPromise();
       this.pool.postMessage(this.tasks[0], this.domain);
     }
   }
@@ -391,7 +354,7 @@ export class WorkerHandler<N, T, D> {
     Ready: function (pool: WorkerHandler<N, T, D>, _data: Message) {
       pool.pool = pool.iframe.contentWindow;
       pool.ready = true;
-      pool.resolve();
+      pool.postNext();
     },
 
     /**
@@ -401,7 +364,8 @@ export class WorkerHandler<N, T, D> {
      * @param {Message} _data The data received from the worker. Ignored.
      */
     Finished: function (pool: WorkerHandler<N, T, D>, _data: Message) {
-      pool.resolve();
+      pool.tasks.shift();
+      pool.postNext();
     },
 
     /**
