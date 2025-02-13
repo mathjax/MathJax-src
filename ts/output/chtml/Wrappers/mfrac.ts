@@ -39,7 +39,7 @@ import {
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMfrac } from '../../../core/MmlTree/MmlNodes/mfrac.js';
 import { ChtmlMoNTD } from './mo.js';
-import { StyleList } from '../../../util/StyleList.js';
+import { StyleJson } from '../../../util/StyleJson.js';
 import { OptionList } from '../../../util/Options.js';
 
 /*****************************************************************/
@@ -132,7 +132,7 @@ export const ChtmlMfrac = (function <N, T, D>(): ChtmlMfracClass<N, T, D> {
      * @override
      */
     /* prettier-ignore */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'mjx-frac': {
         display: 'inline-block',
         'vertical-align': '0.17em',  // axis_height - 1.5 * rule_thickness

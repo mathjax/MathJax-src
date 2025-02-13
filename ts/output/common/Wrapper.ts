@@ -36,7 +36,7 @@ import { Property } from '../../core/Tree/Node.js';
 import { unicodeChars } from '../../util/string.js';
 import * as LENGTHS from '../../util/lengths.js';
 import { Styles } from '../../util/Styles.js';
-import { StyleList, CssStyles } from '../../util/StyleList.js';
+import { StyleJson, StyleJsonSheet } from '../../util/StyleJson.js';
 import { OptionList, lookup } from '../../util/Options.js';
 import { CommonOutputJax } from '../common.js';
 import { CommonWrapperFactory } from './WrapperFactory.js';
@@ -183,7 +183,7 @@ export interface CommonWrapperClass<
   /**
    * Any styles needed for the class
    */
-  styles: StyleList;
+  styles: StyleJson;
 
   /**
    * Styles that should not be passed on from style attribute
@@ -213,10 +213,11 @@ export interface CommonWrapperClass<
   /**
    * Add any styles for this wrapper class
    *
-   * @param {CssStyles} styles   The styles object to extend
-   * @param {JX} jax             The output jax whose style sheet is being modified (in case options are needed)
+   * @param {StyleJsonSheet} styles  The styles object to extend
+   * @param {JX} jax                 The output jax whose style sheet is being modified
+   *                                   (in case options are needed)
    */
-  addStyles<JX>(styles: CssStyles, jax: JX): void;
+  addStyles<JX>(styles: StyleJsonSheet, jax: JX): void;
 
   /**
    * override
@@ -263,7 +264,7 @@ export class CommonWrapper<
   /**
    * Any styles needed for the class
    */
-  public static styles: StyleList = {};
+  public static styles: StyleJson = {};
 
   /**
    * Styles that should not be passed on from style attribute
@@ -341,7 +342,7 @@ export class CommonWrapper<
   /**
    * @override
    */
-  public static addStyles<JX>(styles: CssStyles, _jax: JX) {
+  public static addStyles<JX>(styles: StyleJsonSheet, _jax: JX) {
     styles.addStyles(this.styles);
   }
 

@@ -38,7 +38,7 @@ import {
 } from '../../common/Wrappers/math.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMath } from '../../../core/MmlTree/MmlNodes/math.js';
-import { StyleList } from '../../../util/StyleList.js';
+import { StyleJson } from '../../../util/StyleJson.js';
 import { BBox } from '../../../util/BBox.js';
 import { ZeroFontDataUrl } from './zero.js';
 
@@ -130,7 +130,7 @@ export const SvgMath = (function <N, T, D>(): SvgMathClass<N, T, D> {
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       //
       //  For inline breakpoints, use a space that is 1em width, make it breakable,
       //    and then set the letter-spacing to make the space the proper size.

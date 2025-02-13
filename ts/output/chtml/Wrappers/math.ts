@@ -38,7 +38,7 @@ import {
 } from '../../common/Wrappers/math.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMath } from '../../../core/MmlTree/MmlNodes/math.js';
-import { StyleList } from '../../../util/StyleList.js';
+import { StyleJson } from '../../../util/StyleJson.js';
 import { BBox } from '../../../util/BBox.js';
 
 /*****************************************************************/
@@ -133,7 +133,7 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'mjx-math': {
         'line-height': 0,
         'text-align': 'left',

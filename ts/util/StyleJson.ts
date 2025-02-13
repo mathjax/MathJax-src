@@ -16,7 +16,7 @@
  */
 
 /**
- * @file  Implements the CssStyles class for handling stylesheets
+ * @file  Implements the StyleJson class for handling style definitions
  *
  * @author dpvc@mathjax.org (Davide Cervone)
  */
@@ -24,27 +24,26 @@
 /**
  * The data for a selector
  */
-export type StyleData = {
+export type StyleJsonData = {
   [property: string]: string | number;
 };
 
 /**
  * A list of selectors and their data (basically a stylesheet)
  */
-export type StyleList = {
-  [selector: string]: StyleData;
+export type StyleJson = {
+  [selector: string]: StyleJsonData;
 };
 
 /******************************************************************************/
 /**
- * The CssStyles class (for managing a collection of CSS style definitions)
+ * The StyleJsonSheet class (for managing a collection of style definitions)
  */
-
-export class CssStyles {
+export class StyleJsonSheet {
   /**
    * The styles as they currently stand
    */
-  protected styles: StyleList = {};
+  protected styles: StyleJson = {};
 
   /**
    * @returns {string}  The styles as a CSS string
@@ -54,17 +53,17 @@ export class CssStyles {
   }
 
   /**
-   * @param {StyleList} styles  The initial styles to use, if any
+   * @param {StyleJson} styles  The initial styles to use, if any
    * @class
    */
-  constructor(styles: StyleList = null) {
+  constructor(styles: StyleJson = null) {
     this.addStyles(styles);
   }
 
   /**
-   * @param {StyleList} styles  The styles to combine with the existing ones
+   * @param {StyleJson} styles  The styles to combine with the existing ones
    */
-  public addStyles(styles: StyleList) {
+  public addStyles(styles: StyleJson) {
     if (!styles) return;
     for (const style of Object.keys(styles)) {
       if (!this.styles[style]) {
@@ -115,10 +114,10 @@ export class CssStyles {
   }
 
   /**
-   * @param {StyleData} styles  The style data to be stringified
-   * @returns {string}           The CSS string for the given data
+   * @param {StyleJsonData} styles  The style data to be stringified
+   * @returns {string}              The CSS string for the given data
    */
-  public getStyleDefString(styles: StyleData): string {
+  public getStyleDefString(styles: StyleJsonData): string {
     const properties = Object.keys(styles);
     const values: string[] = new Array(properties.length);
     let i = 0;
