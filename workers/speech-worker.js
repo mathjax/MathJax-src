@@ -35,7 +35,7 @@
  * the calling Rule. If the command was not found in the list of valid
  * commands, we produce an error.
  */
-self.addEventListener('message',function (event) {
+self.addEventListener('message',async function (event) {
   if (event.data?.debug) {
     console.log('Iframe  >>>  Worker:', event.data);
   }
@@ -43,12 +43,16 @@ self.addEventListener('message',function (event) {
   if (Commands.hasOwnProperty(cmd)) {
     Pool('Log',`running ${cmd}`);
     try {
-      (Commands[cmd])(data);
+      await (Commands[cmd])(data);
     } catch (err) {
       Pool('Error', copyError(err));
+      Finished(cmd, false);
+      return;
     }
+    Finished(cmd, true);
   } else {
     Pool('Error', {message: `Invalid worker command: ${cmd}`});
+    Finished(cmd, false);
   }
 }, false);
 
@@ -62,11 +66,9 @@ const Commands = {
    * @param data The data object
    */
   import: function(data) {
-    let success = false;
     if (data.imports) {
-      success = Import(data.imports);
+      Import(data.imports);
     }
-    Finished(success);
   },
 
   /**
@@ -78,7 +80,6 @@ const Commands = {
     SREfeature = {
       json: data.json
     };
-    Finished();
   },
 
   /**
@@ -89,31 +90,30 @@ const Commands = {
     if (data) {
       SRE.setupEngine(data);
     }
-    Finished();
   },
 
   /**
    * Compute speech
    * @param data The data object
    */
-  speech: function(data) {
-    Speech(SRE.workerSpeech, data.workerId, data.mml, data.options);
+  speech: async function(data) {
+    return Speech(SRE.workerSpeech, data.workerId, data.mml, data.options);
   },
 
   /**
    * Compute speech for the next rule set
    * @param data The data object
    */
-  nextRules: function(data) {
-    Speech(SRE.workerNextRules, data.workerId, data.mml, data.options);
+  nextRules: async function(data) {
+    return Speech(SRE.workerNextRules, data.workerId, data.mml, data.options);
   },
 
   /**
    * Compute speech for the next style or preference
    * @param data The data object
    */
-  nextStyle: function(data) {
-    Speech(SRE.workerNextStyle, data.workerId, data.mml, data.options, data.nodeId);
+  nextStyle: async function(data) {
+    return Speech(SRE.workerNextStyle, data.workerId, data.mml, data.options, data.nodeId);
   },
 
 };
@@ -140,14 +140,13 @@ function Pool(cmd, data) {
  */
 function Client(cmd, data) {
   Pool('Client', {cmd: cmd, data: data});
-  Finished();
 }
 
 /**
  * Post that the current command is finished to the client.
  */
-function Finished(success = true) {
-  Pool('Client', {cmd: 'Finished', data: {success: success}});
+function Finished(cmd, success = true) {
+  Pool('Client', {cmd: 'Finished', data: {cmd: cmd, success: success}});
 }
 
 /**
@@ -200,9 +199,8 @@ function Import(imp) {
       importScripts(imp);
     } catch (err) {
       imported[imp] = false;
-      return false;
+      throw err;
     }
     imported[imp] = true;
   }
-  return true;
 }
