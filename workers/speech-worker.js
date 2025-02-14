@@ -62,10 +62,11 @@ const Commands = {
    * @param data The data object
    */
   import: function(data) {
-    if (data?.imports) {
-      Import(data.imports);
+    let success = false;
+    if (data.imports) {
+      success = Import(data.imports);
     }
-    Finished();
+    Finished(success);
   },
 
   /**
@@ -145,8 +146,8 @@ function Client(cmd, data) {
 /**
  * Post that the current command is finished to the client.
  */
-function Finished() {
-  Pool('Client', {cmd: 'Finished', data: {}});
+function Finished(success = true) {
+  Pool('Client', {cmd: 'Finished', data: {success: success}});
 }
 
 /**
@@ -185,18 +186,23 @@ function copyError(error) {
  * We keep track of the imported libraries, so that we don't
  * load them again if another rules asks for them.
  */
-const _imported = {};
+const imported = {};
+
 /**
  * The actual Import method.
  *
  * @param data List of libraries to import.
+ * @returns {boolean} True if the library is loaded.
  */
-function Import(data) {
-  if (!(data instanceof Array)) data = [data];
-  for (let imp of data) {
-    if (!_imported[imp]) {
+function Import(imp) {
+  if (!imported[imp]) {
+    try {
       importScripts(imp);
-      _imported[imp] = true;
+    } catch (err) {
+      imported[imp] = false;
+      return false;
     }
+    imported[imp] = true;
   }
+  return true;
 }
