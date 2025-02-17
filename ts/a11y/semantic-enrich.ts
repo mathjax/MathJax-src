@@ -40,7 +40,6 @@ import { SerializedMmlVisitor } from '../core/MmlTree/SerializedMmlVisitor.js';
 import { OptionList, expandable } from '../util/Options.js';
 import * as Sre from './sre.js';
 import { GeneratorPool } from './speech/GeneratorPool.js';
-import { WorkerHandler } from './speech/WebWorker.js';
 
 /*==========================================================================*/
 
@@ -55,11 +54,6 @@ export type Constructor<T> = new (...args: any[]) => T;
  * Add STATE value for being enriched (after COMPILED and before TYPESET)
  */
 newState('ENRICHED', STATE.COMPILED + 10);
-
-/**
- * Add STATE value for adding speech (after INSERTED)
- */
-newState('ATTACHSPEECH', STATE.INSERTED + 10);
 
 /*==========================================================================*/
 
@@ -124,11 +118,6 @@ export interface EnrichedMathItem<N, T, D> extends MathItem<N, T, D> {
    * @param {boolean} force          True to force the enrichment even if not enabled
    */
   enrich(document: MathDocument<N, T, D>, force?: boolean): void;
-
-  /**
-   * @param {MathDocument} document  The document where enrichment is occurring
-   */
-  attachSpeech(document: MathDocument<N, T, D>): void;
 
   /**
    * @param {MathDocument} document   The MathDocument for the MathItem
@@ -256,30 +245,6 @@ export function EnrichedMathItemMixin<
           `${prefix}"${maction[id].attributes.get('selection')}"`
       );
     }
-
-    /**
-     * Attaches the aria labels for speech and braille.
-     *
-     * @param {MathDocument} document   The MathDocument for the MathItem
-     */
-    public attachSpeech(document: MathDocument<N, T, D>) {
-      if (this.state() >= STATE.ATTACHSPEECH) return;
-      this.state(STATE.ATTACHSPEECH);
-      if (this.isEscaped || !document.options.enableEnrichment) return;
-      this.generatorPool.init(
-        document.options,
-        document.adaptor,
-        (document as EnrichedMathDocument<N, T, D>).webworker
-      );
-      if (document.options.enableSpeech || document.options.enableBraille) {
-        try {
-          this.outputData.mml = this.toMathML(this.root, this);
-          this.generatorPool.Speech(this.typesetRoot, this.outputData.mml);
-        } catch (err) {
-          document.options.speechError(document, this, err);
-        }
-      }
-    }
   };
 }
 
@@ -302,13 +267,6 @@ export interface EnrichedMathDocument<N, T, D>
   enrich(): EnrichedMathDocument<N, T, D>;
 
   /**
-   * Attach speech to the MathItems in the MathDocument
-   *
-   * @returns {EnrichedMathDocument}   The MathDocument (so calls can be chained)
-   */
-  attachSpeech(): EnrichedMathDocument<N, T, D>;
-
-  /**
    * @param {EnrichedMathDocument} doc   The MathDocument for the error
    * @param {EnrichedMathItem} math      The MathItem causing the error
    * @param {Error} err                  The error being processed
@@ -318,19 +276,6 @@ export interface EnrichedMathDocument<N, T, D>
     math: EnrichedMathItem<N, T, D>,
     err: Error
   ): void;
-
-  /**
-   * @param {EnrichedMathDocument} doc   The MathDocument for the error
-   * @param {EnrichedMathItem} math      The MathItem causing the error
-   * @param {Error} err                  The error being processed
-   */
-  speechError(
-    doc: EnrichedMathDocument<N, T, D>,
-    math: EnrichedMathItem<N, T, D>,
-    err: Error
-  ): void;
-
-  webworker: WorkerHandler<N, T, D>;
 }
 
 /**
@@ -368,31 +313,10 @@ export function EnrichedMathDocumentMixin<
         math: EnrichedMathItem<N, T, D>,
         err: Error
       ) => doc.enrichError(doc, math, err),
-      speechError: (
-        doc: EnrichedMathDocument<N, T, D>,
-        math: EnrichedMathItem<N, T, D>,
-        err: Error
-      ) => doc.speechError(doc, math, err),
       renderActions: expandable({
         ...BaseDocument.OPTIONS.renderActions,
         enrich: [STATE.ENRICHED],
-        attachSpeech: [STATE.ATTACHSPEECH],
       }),
-      worker: {
-        path: 'https://localhost',
-        basedir: 'sre',
-        pool: 'speech-workerpool.html',
-        worker: 'speech-worker.js',
-        sre: 'sre.js',
-        debug: false,
-      },
-      /* prettier-ignore */
-      speechTiming: {
-        asynchronous: true,                // true to allow screen updates while adding speech, false to not
-        initial: 100,                      // initial delay until starting to add speech
-        threshold: 250,                    // time (in milliseconds) to process speech before letting screen update
-        intermediate: 10                   // delay after processing speech reaches the threshold
-      },
       /* prettier-ignore */
       sre: expandable({
         speech: 'none',                    // by default no speech is included
@@ -409,23 +333,6 @@ export function EnrichedMathDocumentMixin<
         braille: true,                     // switch on Braille output
       }),
     };
-
-    /**
-     * The list of MathItems that need to be processed for speech
-     */
-    protected awaitingSpeech: MathItem<N, T, D>[];
-
-    /**
-     * The identifier from setTimeout for the next speech loop
-     */
-    protected speechTimeout: number = 0;
-
-    /**
-     * The function to resolve when the speech loop finishes
-     */
-    protected attachSpeechDone: () => void;
-
-    public webworker: WorkerHandler<N, T, D> = null;
 
     /**
      * Enrich the MathItem class used for this MathDocument, and create the
@@ -452,92 +359,6 @@ export function EnrichedMathDocumentMixin<
         D,
         Constructor<AbstractMathItem<N, T, D>>
       >(this.options.MathItem, MmlJax, toMathML);
-    }
-
-    // TODO: Do we still need async handling here?
-    /**
-     * Attach speech from a MathItem to a node
-     *
-     * @returns {EnrichedMathDocument} The object for chaining.
-     */
-    public attachSpeech(): EnrichedMathDocument<N, T, D> {
-      if (!this.processed.isSet('attach-speech')) {
-        if (this.options.enableSpeech || this.options.enableBraille) {
-          if (!this.webworker) {
-            this.webworker = new WorkerHandler(
-              this.adaptor,
-              this.options.worker
-            );
-            this.webworker.Start();
-            this.webworker.Import();
-          }
-          if (this.options.speechTiming.asynchronous) {
-            this.attachSpeechAsync();
-          } else {
-            this.attachSpeechSync();
-          }
-        }
-        this.processed.set('attach-speech');
-      }
-      return this;
-    }
-
-    /**
-     * Add speech synchronously (e.g., for use in node applications on the server)
-     */
-    protected attachSpeechSync() {
-      for (const math of this.math) {
-        (math as EnrichedMathItem<N, T, D>).attachSpeech(this);
-      }
-    }
-
-    /**
-     * Add speech in small chunks, allowing screen updates in between
-     * (e.g., helpful with lazy typesetting)
-     */
-    protected attachSpeechAsync() {
-      if (this.speechTimeout) {
-        clearTimeout(this.speechTimeout);
-        this.speechTimeout = 0;
-        this.attachSpeechDone();
-      }
-      this.awaitingSpeech = Array.from(this.math);
-      if (this.awaitingSpeech.length === 0) {
-        this.awaitingSpeech = null;
-        return;
-      }
-      this.renderPromises.push(
-        new Promise<void>((ok, _fail) => {
-          this.attachSpeechDone = ok;
-        })
-      );
-      this.speechTimeout = setTimeout(
-        () => this.attachSpeechLoop(),
-        this.options.speechTiming.initial
-      );
-    }
-
-    /**
-     * Loops through math items to attach speech until the timeout threshold is reached.
-     */
-    protected attachSpeechLoop() {
-      const timing = this.options.speechTiming;
-      const awaitingSpeech = this.awaitingSpeech;
-      const timeStart = new Date().getTime();
-      const timeEnd = timeStart + timing.threshold;
-      do {
-        const math = awaitingSpeech.shift();
-        (math as EnrichedMathItem<N, T, D>).attachSpeech(this);
-      } while (awaitingSpeech.length && new Date().getTime() < timeEnd);
-      if (awaitingSpeech.length) {
-        this.speechTimeout = setTimeout(
-          () => this.attachSpeechLoop(),
-          timing.intermediate
-        );
-      } else {
-        this.speechTimeout = 0;
-        this.attachSpeechDone();
-      }
     }
 
     /**
@@ -572,17 +393,6 @@ export function EnrichedMathDocumentMixin<
     /**
      * @override
      */
-    public speechError(
-      _doc: EnrichedMathDocument<N, T, D>,
-      _math: EnrichedMathItem<N, T, D>,
-      err: Error
-    ) {
-      console.warn('Speech generation error:', err);
-    }
-
-    /**
-     * @override
-     */
     public state(state: number, restore: boolean = false) {
       super.state(state, restore);
       if (state < STATE.ENRICHED) {
@@ -592,9 +402,6 @@ export function EnrichedMathDocumentMixin<
             (item as EnrichedMathItem<N, T, D>).unEnrich(this);
           }
         }
-      }
-      if (state < STATE.ATTACHSPEECH) {
-        this.processed.clear('attach-speech');
       }
       return this;
     }

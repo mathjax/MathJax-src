@@ -25,11 +25,7 @@ import { Handler } from '../core/Handler.js';
 import { MmlNode } from '../core/MmlTree/MmlNode.js';
 import { MathML } from '../input/mathml.js';
 import { STATE, newState } from '../core/MathItem.js';
-import {
-  EnrichedMathItem,
-  EnrichedMathDocument,
-  EnrichHandler,
-} from './semantic-enrich.js';
+import { SpeechMathItem, SpeechMathDocument, SpeechHandler } from './speech.js';
 import { MathDocumentConstructor } from '../core/MathDocument.js';
 import { OptionList, expandable } from '../util/Options.js';
 import { SerializedMmlVisitor } from '../core/MmlTree/SerializedMmlVisitor.js';
@@ -48,8 +44,8 @@ export type Constructor<T> = new (...args: any[]) => T;
  * Shorthands for types with HTMLElement, Text, and Document instead of generics
  */
 export type HANDLER = Handler<HTMLElement, Text, Document>;
-export type HTMLDOCUMENT = EnrichedMathDocument<HTMLElement, Text, Document>;
-export type HTMLMATHITEM = EnrichedMathItem<HTMLElement, Text, Document>;
+export type HTMLDOCUMENT = SpeechMathDocument<HTMLElement, Text, Document>;
+export type HTMLMATHITEM = SpeechMathItem<HTMLElement, Text, Document>;
 export type MATHML = MathML<HTMLElement, Text, Document>;
 
 /*==========================================================================*/
@@ -290,8 +286,8 @@ export function ExplorerHandler(
   handler: HANDLER,
   MmlJax: MATHML = null
 ): HANDLER {
-  if (!handler.documentClass.prototype.enrich && MmlJax) {
-    handler = EnrichHandler(handler, MmlJax);
+  if (!handler.documentClass.prototype.attachSpeech) {
+    handler = SpeechHandler(handler, MmlJax);
   }
   handler.documentClass = ExplorerMathDocumentMixin(
     handler.documentClass as any

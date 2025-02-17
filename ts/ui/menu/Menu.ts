@@ -879,7 +879,8 @@ export class Menu {
           this.settings.collapsible ||
           this.settings.speech ||
           this.settings.braille) &&
-        !MathJax._?.a11y?.['semantic-enrich']
+        !MathJax._?.a11y?.['semantic-enrich'] &&
+        !MathJax._?.a11y?.['speech']
       ) {
         this.loadA11y('explorer');
       }
@@ -1159,7 +1160,7 @@ export class Menu {
   protected setSpeech(speech: boolean) {
     this.enableAccessibilityItems('Speech', speech);
     this.document.options.enableSpeech = speech;
-    if (!speech || MathJax._?.a11y?.['semantic-enrich']) {
+    if (!speech || MathJax._?.a11y?.['speech']) {
       this.rerender(STATE.COMPILED);
     } else {
       this.loadA11y('explorer');
@@ -1172,7 +1173,7 @@ export class Menu {
   protected setBraille(braille: boolean) {
     this.enableAccessibilityItems('Braille', braille);
     this.document.options.enableBraille = braille;
-    if (!braille || MathJax._?.a11y?.['semantic-enrich']) {
+    if (!braille || MathJax._?.a11y?.['speech']) {
       this.rerender(STATE.COMPILED);
     } else {
       this.loadA11y('explorer');

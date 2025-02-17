@@ -28,7 +28,8 @@ import {
 import { MathItem, STATE, newState } from '../../core/MathItem.js';
 import { HTMLDocument } from '../../handlers/html/HTMLDocument.js';
 import { HTMLHandler } from '../../handlers/html/HTMLHandler.js';
-import { EnrichedMathItem } from '../../a11y/semantic-enrich.js';
+// import { EnrichedMathItem } from '../../a11y/semantic-enrich.js';
+import { SpeechMathItem } from '../../a11y/speech.js';
 import { handleRetriesFor } from '../../util/Retries.js';
 import { OptionList } from '../../util/Options.js';
 
@@ -155,7 +156,7 @@ export function LazyMathItemMixin<
   N,
   T,
   D,
-  B extends Constructor<EnrichedMathItem<N, T, D>>,
+  B extends Constructor<SpeechMathItem<N, T, D>>,
 >(BaseMathItem: B): Constructor<LazyMathItem<N, T, D>> & B {
   return class extends BaseMathItem {
     /**
@@ -412,7 +413,7 @@ export function LazyMathDocumentMixin<
         N,
         T,
         D,
-        Constructor<EnrichedMathItem<N, T, D>>
+        Constructor<SpeechMathItem<N, T, D>>
       >(this.options.MathItem);
       //
       //  Allocate a process bit for lazyAlways
