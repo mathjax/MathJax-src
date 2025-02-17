@@ -25,6 +25,7 @@ import {
 } from '../speech/SpeechUtil.js';
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 import { WorkerHandler } from './WebWorker.js';
+import { PromiseFunctions } from './MessageTypes.js';
 
 /**
  * @file Speech generator collections for enrichment and explorers.
@@ -49,17 +50,17 @@ export class GeneratorPool<N, T, D> {
     return this._element;
   }
 
+  /**
+   * The initial start of the promise chain.
+   */
   public promise: Promise<void> = Promise.resolve();
 
-  public resolve: () => void = () => {};
-
-  public reject: () => void = () => {};
-
   protected getPromise() {
-    this.promise = new Promise((res, rej) => {
-      this.resolve = res;
-      this.reject = rej;
+    let chain: PromiseFunctions;
+    this.promise = new Promise<void>((res, rej) => {
+      chain = { resolve: res, reject: rej };
     });
+    return chain;
   }
 
   /**
@@ -124,12 +125,11 @@ export class GeneratorPool<N, T, D> {
    * @param {N} node The typeset node.
    * @param {string} mml The serialized mml node.
    */
-  public computeSpeech(node: N, mml: string) {
+  public Speech(node: N, mml: string) {
     const id = this.webworker.counter;
     this.adaptor.setAttribute(node, 'data-worker', id);
     const options = Object.assign({}, this.options, { modality: 'speech' });
-    this.getPromise();
-    this.webworker.Speech(mml, options, id.toString(), this.resolve);
+    this.webworker.Speech(mml, options, id.toString(), this.getPromise());
   }
 
   /**
@@ -264,12 +264,11 @@ export class GeneratorPool<N, T, D> {
   public nextRules(node: N, mml: string) {
     const options = this.getOptions(node);
     this.update(options);
-    this.getPromise();
     this.webworker.nextRules(
       mml,
       Object.assign({}, this.options, { modality: 'speech' }),
       this.adaptor.getAttribute(node, 'data-worker'),
-      this.resolve
+      this.getPromise()
     );
   }
 
@@ -283,13 +282,12 @@ export class GeneratorPool<N, T, D> {
   public nextStyle(node: N, root: N, mml: string) {
     const options = this.getOptions(root);
     this.update(options);
-    this.getPromise();
     this.webworker.nextStyle(
       mml,
       Object.assign({}, this.options, { modality: 'speech' }),
       this.adaptor.getAttribute(node, 'data-semantic-id'),
       this.adaptor.getAttribute(root, 'data-worker'),
-      this.resolve
+      this.getPromise()
     );
   }
 

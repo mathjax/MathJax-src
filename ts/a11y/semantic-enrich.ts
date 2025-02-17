@@ -274,10 +274,7 @@ export function EnrichedMathItemMixin<
       if (document.options.enableSpeech || document.options.enableBraille) {
         try {
           this.outputData.mml = this.toMathML(this.root, this);
-          this.generatorPool.computeSpeech(
-            this.typesetRoot,
-            this.outputData.mml
-          );
+          this.generatorPool.Speech(this.typesetRoot, this.outputData.mml);
         } catch (err) {
           document.options.speechError(document, this, err);
         }

@@ -218,6 +218,9 @@ export class SpeechExplorer
     }
   }
 
+  // Avoids double focus in event and thus double Start.
+  private focusin = false;
+
   /**
    * @override
    */
@@ -226,6 +229,10 @@ export class SpeechExplorer
       this.mousedown = false;
       return;
     }
+    if (this.focusin) {
+      return;
+    }
+    this.focusin = !this.focusin;
     this.current = this.current || this.node.querySelector('[role="treeitem"]');
     this.Start();
     event.preventDefault();
@@ -433,7 +440,10 @@ export class SpeechExplorer
    */
   private refocus() {
     this.Stop();
-    this.Restart();
+    this.Restart((_err) => {
+      this.node.setAttribute('data-speech-attached', 'true');
+      this.Start();
+    });
   }
 
   /**
@@ -494,9 +504,16 @@ export class SpeechExplorer
 
   /**
    * Wait for speech to be reattached.
+   *
+   * @param handler
    */
-  private async Restart() {
-    this.generators.promise.then(() => this.Start()).catch((_err) => {});
+  private async Restart(handler: (err: string) => void = (_err: string) => {}) {
+    this.generators.promise
+      .then(() => this.Start())
+      .catch((err) => {
+        console.info(`Restart error for ${err}`);
+        handler(err);
+      });
   }
 
   /**
@@ -698,6 +715,7 @@ export class SpeechExplorer
    */
   public Stop() {
     if (this.active) {
+      this.focusin = false;
       this.pool.unhighlight();
       this.magnifyRegion.Hide();
       this.region.Hide();

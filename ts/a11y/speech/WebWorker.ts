@@ -23,6 +23,7 @@
 
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 import { OptionList } from '../../util/Options.js';
+import { PromiseFunctions } from './MessageTypes.js';
 
 /* eslint @typescript-eslint/no-empty-object-type: 0 */
 export type Callbacks = { [name: string]: (data: {}) => void };
@@ -40,9 +41,9 @@ export type PoolCommand = {
 class Task {
   constructor(
     public cmd: PoolCommand,
-    public id?: string,
-    public resolve: () => void = () => {},
-    public reject: () => void = () => {}
+    public id: string,
+    public resolve: () => void,
+    public reject: (cmd: string) => void
   ) {}
 }
 
@@ -202,7 +203,7 @@ export class WorkerHandler<N, T, D> {
     msg: PoolCommand,
     id?: string,
     resolve: () => void = () => {},
-    reject: () => void = () => {}
+    reject: (cmd: string) => void = () => {}
   ) {
     this.tasks.push(new Task(msg, id, resolve, reject));
     if (this.ready && this.tasks.length === 1) {
@@ -248,12 +249,13 @@ export class WorkerHandler<N, T, D> {
    * @param {OptionList} options The options list.
    * @param {string} workerId The id for reattaching the speech.
    * @param reject
+   * @param promise
    */
   public Speech(
     math: string,
     options: OptionList,
     workerId: string,
-    reject: () => void
+    promise: PromiseFunctions
   ) {
     this.Post(
       {
@@ -265,7 +267,8 @@ export class WorkerHandler<N, T, D> {
         },
       },
       workerId,
-      reject
+      promise.resolve,
+      promise.reject
     );
   }
 
@@ -298,12 +301,13 @@ export class WorkerHandler<N, T, D> {
    * @param {OptionList} options The options list.
    * @param {string} workerId The id for reattaching the speech.
    * @param reject
+   * @param promise
    */
   public nextRules(
     math: string,
     options: OptionList,
     workerId: string,
-    reject: () => void
+    promise: PromiseFunctions
   ) {
     this.Post(
       {
@@ -315,7 +319,8 @@ export class WorkerHandler<N, T, D> {
         },
       },
       workerId,
-      reject
+      promise.resolve,
+      promise.reject
     );
   }
 
@@ -334,13 +339,14 @@ export class WorkerHandler<N, T, D> {
    * @param {string} nodeId The semantic Id of the currenctly focused node.
    * @param {string} workerId The id for reattaching the speech.
    * @param reject
+   * @param promise
    */
   public nextStyle(
     math: string,
     options: OptionList,
     nodeId: string,
     workerId: string,
-    reject: () => void
+    promise: PromiseFunctions
   ) {
     this.Post(
       {
@@ -357,7 +363,8 @@ export class WorkerHandler<N, T, D> {
         },
       },
       workerId,
-      reject
+      promise.resolve,
+      promise.reject
     );
   }
 
@@ -405,10 +412,15 @@ export class WorkerHandler<N, T, D> {
      *
      * @param {WorkerHandler} pool The active handler for the worker.
      * @param {Message} _data The data received from the worker. Ignored.
+     * @param data
      */
-    Finished: function (pool: WorkerHandler<N, T, D>, _data: Message) {
+    Finished: function (pool: WorkerHandler<N, T, D>, data: Message) {
       const task = pool.tasks.shift();
-      task.resolve(); // TODO: add data.
+      if (data.success) {
+        task.resolve(); // TODO: add data.
+      } else {
+        task.reject(data.cmd);
+      }
       pool.postNext();
     },
 
