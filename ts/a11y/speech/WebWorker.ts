@@ -23,21 +23,11 @@
 
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 import { OptionList } from '../../util/Options.js';
-import { PromiseFunctions } from './MessageTypes.js';
+import { Message, PoolCommand, PromiseFunctions } from './MessageTypes.js';
 
-/* eslint @typescript-eslint/no-empty-object-type: 0 */
-export type Callbacks = { [name: string]: (data: {}) => void };
-export type Message = { [key: string]: any };
-export type WorkerCommand = {
-  cmd: string;
-  debug: boolean;
-  data: Message;
-};
-export type PoolCommand = {
-  cmd: string;
-  data: WorkerCommand | Message;
-};
-
+/**
+ * Class for relevant task information.
+ */
 class Task {
   constructor(
     public cmd: PoolCommand,
@@ -62,10 +52,29 @@ export class WorkerHandler<N, T, D> {
     return this._count++;
   }
 
-  public iframe: HTMLIFrameElement = null; // the hidden iframe
-  public pool: Window = null; // window of the iframe for the pool
-  public ready: boolean = false; // callback for ready signal
-  public domain = ''; // the domain of the pool
+  /**
+   * The hidden iframe
+   */
+  public iframe: HTMLIFrameElement = null;
+
+  /**
+   * Window of the iframe for the pool
+   */
+  public pool: Window = null;
+
+  /**
+   * Callback for ready signal
+   */
+  public ready: boolean = false;
+
+  /**
+   * The domain for the worker functions
+   */
+  public domain = '';
+
+  /**
+   * The url for the worker functions
+   */
   public url = '';
 
   private tasks: Task[] = [];
@@ -130,7 +139,7 @@ export class WorkerHandler<N, T, D> {
       this.options.worker,
       this.options.debug.toString(),
     ]);
-    this.domain = this.iframe.src.replace(/^(.*?:\/\/.*?)\/.*/, '$1'); // the pool's domain
+    this.domain = this.iframe.src.replace(/^(.*?:\/\/.*?)\/.*/, '$1');
     this.domain = this.rewriteFirefox(this.domain);
   }
 
