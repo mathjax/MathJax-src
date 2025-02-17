@@ -505,7 +505,8 @@ export class SpeechExplorer
   /**
    * Wait for speech to be reattached.
    *
-   * @param handler
+   * @param {(err: string) => void} handler The error handling function should
+   *      restart fail.
    */
   private async Restart(handler: (err: string) => void = (_err: string) => {}) {
     this.generators.promise

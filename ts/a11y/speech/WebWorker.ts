@@ -195,9 +195,10 @@ export class WorkerHandler<N, T, D> {
    * Send messages to the worker.
    *
    * @param {PoolCommand} msg The command message.
-   * @param id
-   * @param resolve
-   * @param reject
+   * @param {string} id Optional id for webworker to find the DOM element.
+   * @param {() => void} resolve Function to resolve the promise.
+   * @param {(cmd: string) => void} reject Function to reject promise. Takes the
+   *     command name as input.
    */
   public Post(
     msg: PoolCommand,
@@ -248,8 +249,7 @@ export class WorkerHandler<N, T, D> {
    * @param {string} math The mml string.
    * @param {OptionList} options The options list.
    * @param {string} workerId The id for reattaching the speech.
-   * @param reject
-   * @param promise
+   * @param {PromiseFunctions} promise Set of promise functions.
    */
   public Speech(
     math: string,
@@ -300,8 +300,7 @@ export class WorkerHandler<N, T, D> {
    * @param {string} math The mml string.
    * @param {OptionList} options The options list.
    * @param {string} workerId The id for reattaching the speech.
-   * @param reject
-   * @param promise
+   * @param {PromiseFunctions} promise Set of promise functions.
    */
   public nextRules(
     math: string,
@@ -338,8 +337,7 @@ export class WorkerHandler<N, T, D> {
    * @param {OptionList} options The options list.
    * @param {string} nodeId The semantic Id of the currenctly focused node.
    * @param {string} workerId The id for reattaching the speech.
-   * @param reject
-   * @param promise
+   * @param {PromiseFunctions} promise Set of promise functions.
    */
   public nextStyle(
     math: string,
@@ -411,8 +409,7 @@ export class WorkerHandler<N, T, D> {
      * Signals that the worker has finished its last task.
      *
      * @param {WorkerHandler} pool The active handler for the worker.
-     * @param {Message} _data The data received from the worker. Ignored.
-     * @param data
+     * @param {Message} data The data received from the worker. Ignored.
      */
     Finished: function (pool: WorkerHandler<N, T, D>, data: Message) {
       const task = pool.tasks.shift();

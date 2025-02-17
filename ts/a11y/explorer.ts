@@ -313,6 +313,8 @@ export function setA11yOptions(
   document: HTMLDOCUMENT,
   options: { [key: string]: any }
 ) {
+  // TODO (volker): This needs to be replace by the engine feature vector.
+  // Minus rule sets etc. Breaking change in SRE.
   const sreOptions = Sre.engineSetup() as { [name: string]: string };
   for (const key in options) {
     if (document.options.a11y[key] !== undefined) {
