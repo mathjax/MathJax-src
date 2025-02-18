@@ -17,8 +17,9 @@
 
 export const dependencies = {
   'a11y/semantic-enrich': ['input/mml', 'a11y/sre'],
+  'a11y/speech': ['a11y/semantic-enrich'],
   'a11y/complexity': ['a11y/semantic-enrich'],
-  'a11y/explorer': ['a11y/semantic-enrich'],
+  'a11y/explorer': ['a11y/speech'],
   '[mml]/mml3': ['input/mml'],
   '[tex]/action': ['input/tex-base', '[tex]/newcommand'],
   '[tex]/ams': ['input/tex-base'],
