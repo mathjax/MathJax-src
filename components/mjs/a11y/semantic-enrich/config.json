@@ -15,14 +15,5 @@
       "components/src/core/lib",
       "components/src/a11y/sre/lib"
     ]
-  },
-  "copy": {
-    "to": "../../../../bundle/sre",
-    "from": "../../../../workers",
-    "copy": [
-      "speech-worker.js",
-      "speech-workerpool.html",
-      "speech-workerpool.js"
-    ]
   }
 }
