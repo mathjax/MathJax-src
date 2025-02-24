@@ -86,25 +86,44 @@ export interface DOMAdaptor<N, T, D> {
    * @param {D} doc   The document whose head is to be obtained
    * @returns {N}      The document.head element
    */
-  head(doc: D): N;
+  head(doc?: D): N;
 
   /**
    * @param {D} doc   The document whose body is to be obtained
    * @returns {N}      The document.body element
    */
-  body(doc: D): N;
+  body(doc?: D): N;
 
   /**
    * @param {D} doc   The document whose documentElement is to be obtained
    * @returns {N}      The documentElement
    */
-  root(doc: D): N;
+  root(doc?: D): N;
 
   /**
    * @param {D} doc     The document whose doctype is to be obtained
    * @returns {string}   The DOCTYPE comment
    */
-  doctype(doc: D): string;
+  doctype(doc?: D): string;
+
+  /**
+   * @param {D | N} doc  The document or iframe whose domain is to be obtained
+   * @returns {string}   The domain
+   */
+  domain(doc?: D | N): string;
+
+  /**
+   * @param {(event: any) => void} listener  The message listener to attach
+   * @param {D} doc                          The document whose window to attach the listener to
+   */
+  listener(listener: (event: any) => void, doc?: D): void;
+
+  /**
+   * @param {any} msg         The message to post
+   * @param {string} domain   The window's domain
+   * @param {D} doc           The document whose window should post the message
+   */
+  post(msg: any, domain: string, doc?: D): void;
 
   /**
    * @param {N} node        The node to search for tags
@@ -123,6 +142,15 @@ export interface DOMAdaptor<N, T, D> {
    * @returns {N[]}                        The array of containers to search
    */
   getElements(nodes: (string | N | N[])[], document: D): N[];
+
+  /**
+   * Get an element specified by CSS selector.
+   *
+   * @param {string} selector   The selector to locate
+   * @param {D | N} node        The document or element in which to search
+   * @returns {N | null}        The first matching element
+   */
+  getElement(selector: string, node?: D | N): N | null;
 
   /**
    * Determine if a container node contains a given node somewhere in its DOM tree
@@ -250,6 +278,20 @@ export interface DOMAdaptor<N, T, D> {
    * @returns {string}  The serialized node and its content
    */
   serializeXML(node: N): string;
+
+  /**
+   * @param {N} node        The HTML node whose property is to be set
+   * @param {string} name   The property to set
+   * @param {any} value     The property's new value
+   */
+  setProperty(node: N, name: string, value: any): void;
+
+  /**
+   * @param {N} node        The HTML node whose property is to be retrieved
+   * @param {string} name   The property to get
+   * @returns {any}         The property's value
+   */
+  getProperty(node: N, name: string): any;
 
   /**
    * @param {N} node               The HTML node whose attribute is to be set
@@ -444,6 +486,20 @@ export abstract class AbstractDOMAdaptor<N, T, D>
   public abstract text(text: string): T;
 
   /**
+   * @override
+   */
+  public setProperty(node: N, name: string, value: any) {
+    (node as any)[name] = value;
+  }
+
+  /**
+   * @override
+   */
+  public getProperty(node: N, name: string): any {
+    return (node as any)[name];
+  }
+
+  /**
    * @param {N} node           The HTML element whose attributes are to be set
    * @param {OptionList} def   The attributes to set on that node
    */
@@ -475,22 +531,37 @@ export abstract class AbstractDOMAdaptor<N, T, D>
   /**
    * @override
    */
-  public abstract head(doc: D): N;
+  public abstract head(doc?: D): N;
 
   /**
    * @override
    */
-  public abstract body(doc: D): N;
+  public abstract body(doc?: D): N;
 
   /**
    * @override
    */
-  public abstract root(doc: D): N;
+  public abstract root(doc?: D): N;
 
   /**
    * @override
    */
-  public abstract doctype(doc: D): string;
+  public abstract doctype(doc?: D): string;
+
+  /**
+   * @override
+   */
+  public abstract domain(doc?: D | N): string;
+
+  /**
+   * @override
+   */
+  public abstract listener(listender: (event: any) => void, doc?: D): void;
+
+  /**
+   * @override
+   */
+  public abstract post(msg: any, domain: string, doc?: D): void;
 
   /**
    * @override
@@ -501,6 +572,11 @@ export abstract class AbstractDOMAdaptor<N, T, D>
    * @override
    */
   public abstract getElements(nodes: (string | N | N[])[], document: D): N[];
+
+  /**
+   * @override
+   */
+  public abstract getElement(selector: string, node?: D | N): N;
 
   /**
    * @override

@@ -1,7 +1,7 @@
 {
   "build": {
     "component": "a11y/sre",
-    "targets": ["a11y/sre.ts", "a11y/sre"]
+    "targets": ["a11y/sre.ts"]
   },
   "webpack": {
     "name": "a11y/sre",
@@ -9,13 +9,6 @@
       "components/src/input/mml/lib",
       "components/src/core/lib",
       "components/src/startup/lib"
-    ]
-  },
-  "copy": {
-    "to": "../../../../bundle/sre",
-    "from": "../../../../ts/a11y/sre",
-    "copy": [
-      "speech-workerpool.html"
     ]
   }
 }

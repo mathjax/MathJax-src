@@ -42,10 +42,13 @@ export interface MinDocument<N, T> {
   body: N;
   title: string;
   doctype: { name: string };
+  defaultView: MinWindow<N, MinDocument<N, T>>;
+  location: { protocol: string; host: string };
   createElement(kind: string): N;
   createElementNS(ns: string, kind: string): N;
   createTextNode(text: string): T;
   querySelectorAll(selector: string): ArrayLike<N>;
+  querySelector(selector: string): N | null;
 }
 
 /*****************************************************************/
@@ -97,6 +100,8 @@ export interface MinHTMLElement<N, T> {
   hasAttribute(name: string): boolean;
   getBoundingClientRect(): object;
   getBBox?(): { x: number; y: number; width: number; height: number };
+  querySelector(selector: string): N | null;
+  src?: string;
 }
 
 /*****************************************************************/
@@ -157,6 +162,8 @@ export interface MinWindow<N, D> {
   DocumentFragment: any;
   Document: any;
   getComputedStyle(node: N): any;
+  addEventListener(kind: string, listener: (event: any) => void): void;
+  postMessage(msg: any, domain: string): void;
 }
 
 /*****************************************************************/
@@ -243,29 +250,56 @@ export class HTMLAdaptor<
   /**
    * @override
    */
-  public head(doc: D) {
+  public head(doc: D = this.document) {
     return doc.head || (doc as any as N);
   }
 
   /**
    * @override
    */
-  public body(doc: D) {
+  public body(doc: D = this.document) {
     return doc.body || (doc as any as N);
   }
 
   /**
    * @override
    */
-  public root(doc: D) {
+  public root(doc: D = this.document) {
     return doc.documentElement || (doc as any as N);
   }
 
   /**
    * @override
    */
-  public doctype(doc: D) {
+  public doctype(doc: D = this.document) {
     return doc.doctype ? `<!DOCTYPE ${doc.doctype.name}>` : '';
+  }
+
+  /**
+   * @override
+   */
+  public domain(doc: D | N = this.document) {
+    if ('src' in doc) {
+      return doc.src.replace(/^(.*?:\/\/.*?)\/.*/, '$1');
+    }
+    if (!('location' in doc)) {
+      doc = this.document;
+    }
+    return doc.location.protocol + '//' + doc.location.host;
+  }
+
+  /**
+   * @override
+   */
+  public listener(listener: (event: any) => void, doc: D = this.document) {
+    return doc.defaultView.addEventListener('message', listener);
+  }
+
+  /**
+   * @override
+   */
+  public post(msg: any, domain: string, doc: D = this.document) {
+    return doc.defaultView.postMessage(msg, domain);
   }
 
   /**
@@ -300,6 +334,13 @@ export class HTMLAdaptor<
       }
     }
     return containers;
+  }
+
+  /**
+   * @override
+   */
+  public getElement(selector: string, node: D | N = this.document): N {
+    return node.querySelector(selector);
   }
 
   /**
@@ -436,6 +477,9 @@ export class HTMLAdaptor<
     return node.outerHTML;
   }
 
+  /**
+   * @override
+   */
   public serializeXML(node: N) {
     const serializer = new this.window.XMLSerializer();
     return serializer.serializeToString(node) as string;

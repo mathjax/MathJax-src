@@ -32,7 +32,7 @@ import { SpeechGenerator } from '#sre/speech_generator/speech_generator.js';
 import { SemanticNode } from '#sre/semantic_tree/semantic_node.js';
 import { parseInput } from '#sre/common/dom_util.js';
 import { Variables } from '#sre/common/variables.js';
-import MathMaps from './mathmaps.js';
+
 export { semanticMathmlNode } from '#sre/enrich_mathml/enrich.js';
 
 export type highlighter = Highlighter;
@@ -70,17 +70,16 @@ export const getSpeechGenerator = SpeechGeneratorFactory.generator;
 export const parseDOM = parseInput;
 
 /**
- * Loads locales that are already included in the imported MathMaps. Defaults
- * to standard loading if a locale is not yet preloaded.
+ * For now, we disable loading locales, since they are now only needed
+ * in the web worker.
  *
- * @param {string} locale A locale to preload from the bundle.
+ * @param {string} _locale A locale to preload from the bundle.
  * @returns {Promise} Promise that resolves when locales are loaded.
  */
-export const preloadLocales = async function (locale: string): Promise<string> {
-  const json = MathMaps.get(locale);
-  return json
-    ? new Promise((res, _rej) => res(JSON.stringify(json)))
-    : Api.localeLoader()(locale);
+export const preloadLocales = async function (
+  _locale: string
+): Promise<string> {
+  return Promise.resolve('{}');
 };
 
 // Setting delay stops SRE from setting itself up (and loading locales) when it

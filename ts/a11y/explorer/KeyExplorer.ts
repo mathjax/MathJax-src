@@ -406,14 +406,14 @@ export class SpeechExplorer
    * Cycles to next speech rule set if possible and recomputes the speech for
    * the expression.
    *
-   * @param {HTMLElement} _node The targeted node.
+   * @param {HTMLElement} node The targeted node.
    * @returns {HTMLElement} The refocused targeted node.
    */
-  public nextRules(_node: HTMLElement): HTMLElement {
+  public nextRules(node: HTMLElement): HTMLElement {
     this.node.removeAttribute('data-speech-attached');
-    this.generators.nextRules(this.item.typesetRoot, this.item.outputData.mml);
+    this.generators.nextRules(this.item);
     this.refocus();
-    return _node;
+    return node;
   }
 
   /**
@@ -425,11 +425,7 @@ export class SpeechExplorer
    */
   public nextStyle(node: HTMLElement): HTMLElement {
     this.node.removeAttribute('data-speech-attached');
-    this.generators.nextStyle(
-      node,
-      this.item.typesetRoot,
-      this.item.outputData.mml
-    );
+    this.generators.nextStyle(node, this.item);
     this.refocus();
     return node;
   }

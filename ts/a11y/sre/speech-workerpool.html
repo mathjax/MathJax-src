@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8"/>
 <title>MathJax webworker pool</title>
   <!--
    | The main purpose of this file is to allow a resources from the CDN
@@ -9,8 +10,6 @@
    | the CDN and it is where the webworkers are started, the webworkers can
    | load files from the CDN as well.
   -->
-<!-- <script src="lib/traceur.min.js"></script> -->
-<!-- <script src="lib/system.js"></script> -->
 
 <script type="module">
 import { WorkerPool } from './speech-workerpool.js'

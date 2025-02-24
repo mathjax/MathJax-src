@@ -24,6 +24,7 @@ import {
   SemAttr,
 } from '../speech/SpeechUtil.js';
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
+import { MathItem } from '../../core/MathItem.js';
 import { WorkerHandler } from './WebWorker.js';
 import { PromiseFunctions } from './MessageTypes.js';
 
@@ -122,14 +123,12 @@ export class GeneratorPool<N, T, D> {
   /**
    * Compute speech using the original MathML element as reference.
    *
-   * @param {N} node The typeset node.
-   * @param {string} mml The serialized mml node.
+   * @param {MathItem} item   The MathItem to add speech to
    */
-  public Speech(node: N, mml: string) {
-    const id = this.webworker.counter;
-    this.adaptor.setAttribute(node, 'data-worker', id);
+  public Speech(item: MathItem<N, T, D>) {
+    const mml = item.outputData.mml;
     const options = Object.assign({}, this.options, { modality: 'speech' });
-    this.webworker.Speech(mml, options, id.toString(), this.getPromise());
+    this.webworker.Speech(mml, options, item, this.getPromise());
   }
 
   /**
@@ -258,16 +257,15 @@ export class GeneratorPool<N, T, D> {
   /**
    * Cycles rule sets for the speech generator.
    *
-   * @param {N} node The typeset node.
-   * @param {string} mml The mathml expression.
+   * @param {MathItem} item The MathItem whose rule set is changing
    */
-  public nextRules(node: N, mml: string) {
-    const options = this.getOptions(node);
+  public nextRules(item: MathItem<N, T, D>) {
+    const options = this.getOptions(item.typesetRoot);
     this.update(options);
     this.webworker.nextRules(
-      mml,
+      item.outputData.mml,
       Object.assign({}, this.options, { modality: 'speech' }),
-      this.adaptor.getAttribute(node, 'data-worker'),
+      item,
       this.getPromise()
     );
   }
@@ -276,17 +274,16 @@ export class GeneratorPool<N, T, D> {
    * Cycles style or preference settings for the speech generator.
    *
    * @param {N} node The typeset node.
-   * @param {N} root The typeset root.
-   * @param {string} mml The mathml expression.
+   * @param {MathItem} item The MathItem whose preferences are changing
    */
-  public nextStyle(node: N, root: N, mml: string) {
-    const options = this.getOptions(root);
+  public nextStyle(node: N, item: MathItem<N, T, D>) {
+    const options = this.getOptions(item.typesetRoot);
     this.update(options);
     this.webworker.nextStyle(
-      mml,
+      item.outputData.mml,
       Object.assign({}, this.options, { modality: 'speech' }),
       this.adaptor.getAttribute(node, 'data-semantic-id'),
-      this.adaptor.getAttribute(root, 'data-worker'),
+      item,
       this.getPromise()
     );
   }

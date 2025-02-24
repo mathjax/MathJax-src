@@ -1,7 +1,8 @@
 {
   "build": {
     "component": "a11y/speech",
-    "targets": ["a11y/speech.ts", "a11y/speech"]
+    "targets": ["a11y/speech.ts", "a11y/speech"],
+    "exclude": ["a11y/speech/SpeechMenu.ts"]
   },
   "webpack": {
     "name": "a11y/speech",

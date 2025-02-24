@@ -17,6 +17,37 @@
 
 import { PoolCommand, WorkerCommand } from '../speech/MessageTypes.js';
 
+/*****************************************************************/
+
+/**
+ * Values that need to be changed for use in node
+ */
+const context =
+  typeof window === 'undefined'
+    ? {
+        Worker: null,
+        window: null,
+        parent: null,
+        hash: '',
+      }
+    : {
+        Worker: Worker,
+        window: window,
+        parent: window.parent,
+        hash: location.hash.substring(1),
+      };
+
+/**
+ * Function to allow the context values to be set in node
+ *
+ * @param {typeof context} config  The context to apply
+ */
+export function setContext(config: typeof context) {
+  Object.assign(context, config);
+}
+
+/*****************************************************************/
+
 /**
  *  The WorkerPool object.
  *
@@ -39,10 +70,10 @@ export class WorkerPool {
    * @returns {WorkerPool} The newly created workerpool.
    */
   static Create(): WorkerPool {
-    const data = location.hash.substring(1).split(/&/);
-    // the domain of the parent
-    const domain = decodeURIComponent(data[0]);
-    return new WorkerPool(domain, data[1], data[2]);
+    const data = context.hash
+      .split(/&/)
+      .map((part) => decodeURIComponent(part));
+    return new WorkerPool(data[0], data[1], data[2]);
   }
 
   public parent: Window;
@@ -60,7 +91,7 @@ export class WorkerPool {
     src: string,
     debug: string = 'true'
   ) {
-    this.parent = window.parent; // the parent window
+    this.parent = context.parent; // the parent window
     this.WORKER = src;
     this.DEBUG = debug.toLowerCase() === 'true';
     this.worker = null; // We really only have one worker for now.
@@ -81,14 +112,12 @@ export class WorkerPool {
   /**
    * Starts the Worker
    *   Adds the event listener for the messages from the WorkerPool
-   *   Signals that the pool is ready
    *
    * @returns {WorkerPool} The workerpool
    */
   Start(): WorkerPool {
-    window.addEventListener('message', this.Listener.bind(this), false);
+    context.window.addEventListener('message', this.Listener.bind(this), false);
     this.createWorker();
-    this.parent.postMessage({ cmd: 'Ready' }, this.domain);
     return this;
   }
 
@@ -142,7 +171,7 @@ export class WorkerPool {
    * message.  If so, run the command otherwise log the error.
    */
   createWorker() {
-    this.worker = new Worker(this.WORKER);
+    this.worker = new context.Worker(this.WORKER, { type: 'module' });
     this.worker.addEventListener('message', (event) => {
       this.debug('Worker  >>>  Iframe:', event.data);
       const data = event.data;
@@ -158,6 +187,7 @@ export class WorkerPool {
    * Terminates the worker.
    */
   Terminate() {
+    if (!this.worker) return;
     this.Log(`Terminate worker`);
     this.worker.terminate();
     this.worker = null;
@@ -176,7 +206,7 @@ export const PoolCommands: {
    * @param {WorkerPool} pool The current workerpool.
    * @param {PoolCommand} msg The pool command.
    */
-  Start: function (pool: WorkerPool, msg: PoolCommand) {
+  Start(pool: WorkerPool, msg: PoolCommand) {
     pool.Log('WorkerPool: starting worker.');
     pool.worker.postMessage({ cmd: 'start', data: msg.data });
   },
@@ -188,7 +218,7 @@ export const PoolCommands: {
    * @param {WorkerPool} pool The current workerpool.
    * @param {PoolCommand} msg The pool command.
    */
-  Worker: function (pool: WorkerPool, msg: PoolCommand) {
+  Worker(pool: WorkerPool, msg: PoolCommand) {
     if (!pool.worker) {
       pool.Start();
     }
@@ -201,7 +231,7 @@ export const PoolCommands: {
    * @param {WorkerPool} pool The current workerpool.
    * @param {PoolCommand} _msg The pool command, which is ignored.
    */
-  Terminate: function (pool: WorkerPool, _msg: PoolCommand) {
+  Terminate(pool: WorkerPool, _msg: PoolCommand) {
     pool.Terminate();
   },
 };
@@ -212,6 +242,15 @@ export const PoolCommands: {
 export const WorkerCommands: {
   [cmd: string]: (pool: WorkerPool, msg: WorkerCommand) => void;
 } = {
+  /**
+   * Indicate that the worker is ready.
+   *
+   * @param {WorkerPool} pool The current workerpool.
+   * @param {WorkerCommand} _msg The worker command.
+   */
+  Ready(pool: WorkerPool, _msg: WorkerCommand) {
+    pool.parent.postMessage({ cmd: 'Ready' }, pool.domain);
+  },
   /**
    * Send a client command.
    *

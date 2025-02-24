@@ -39,7 +39,6 @@ import { MathML } from '../input/mathml.js';
 import { SerializedMmlVisitor } from '../core/MmlTree/SerializedMmlVisitor.js';
 import { OptionList, expandable } from '../util/Options.js';
 import * as Sre from './sre.js';
-import { GeneratorPool } from './speech/GeneratorPool.js';
 
 /*==========================================================================*/
 
@@ -109,9 +108,9 @@ export class enrichVisitor<N, T, D> extends SerializedMmlVisitor {
  */
 export interface EnrichedMathItem<N, T, D> extends MathItem<N, T, D> {
   /**
-   * The speech generators for this math item.
+   * The serialization visitor
    */
-  generatorPool: GeneratorPool<N, T, D>;
+  toMathML: (node: MmlNode, math: MathItem<N, T, D>) => string;
 
   /**
    * @param {MathDocument} document  The document where enrichment is occurring
@@ -149,11 +148,6 @@ export function EnrichedMathItemMixin<
   toMathML: (node: MmlNode, math: MathItem<N, T, D>) => string
 ): Constructor<EnrichedMathItem<N, T, D>> & B {
   return class extends BaseMathItem {
-    /**
-     * @override
-     */
-    public generatorPool = new GeneratorPool<N, T, D>();
-
     /**
      *  The MathML serializer
      */
@@ -196,7 +190,7 @@ export function EnrichedMathItemMixin<
         try {
           let mml;
           if (!this.inputData.originalMml) {
-            mml = this.inputData.originalMml = toMathML(this.root, this);
+            mml = this.inputData.originalMml = this.toMathML(this.root, this);
           } else {
             mml = this.adjustSelections();
           }
@@ -327,11 +321,6 @@ export function EnrichedMathDocumentMixin<
         structure: true,                   // Generates full aria structure
         aria: true,
       }),
-      /* prettier-ignore */
-      a11y: expandable({
-        speech: true,                      // switch on speech output
-        braille: true,                     // switch on Braille output
-      }),
     };
 
     /**
@@ -348,7 +337,6 @@ export function EnrichedMathDocumentMixin<
         .ProcessBits;
       if (!ProcessBits.has('enriched')) {
         ProcessBits.allocate('enriched');
-        ProcessBits.allocate('attach-speech');
       }
       const visitor = new enrichVisitor<N, T, D>(this.mmlFactory);
       const toMathML = (node: MmlNode, math: MathItem<N, T, D>) =>
