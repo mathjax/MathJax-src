@@ -577,7 +577,7 @@ export abstract class AbstractMmlNode
   }
 
   /**
-   * If there is an inferred row, the the children of that instead
+   * If there is an inferred row, set the children of that instead
    *
    * @override
    */

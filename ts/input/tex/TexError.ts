@@ -75,9 +75,6 @@ export default class TexError {
           }
         }
       }
-      if (parts[i] == null) {
-        parts[i] = '???';
-      }
     }
     return parts.join('');
   }

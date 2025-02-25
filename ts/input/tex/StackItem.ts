@@ -552,7 +552,7 @@ export abstract class BaseItem extends MmlStack implements StackItem {
   }
 
   /**
-   * Get error messages for a particular types of stack items. This reads error
+   * Get error messages for a particular types of stack item. This reads error
    * messages from the static errors object, which can be extended in
    * subclasses.
    *
@@ -561,6 +561,6 @@ export abstract class BaseItem extends MmlStack implements StackItem {
    */
   public getErrors(kind: string): string[] {
     const CLASS = this.constructor as typeof BaseItem;
-    return (CLASS.errors || {})[kind] || BaseItem.errors[kind];
+    return CLASS.errors[kind] || BaseItem.errors[kind];
   }
 }
