@@ -11,6 +11,9 @@ importers:
       '@jest/globals':
         specifier: ^29.7.0
         version: 29.7.0
+      '@mathjax/mathjax-bbm-font-extension':
+        specifier: 0.4.2-beta.8
+        version: 0.4.2-beta.8
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.12
@@ -298,6 +301,9 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
+
+  '@mathjax/mathjax-bbm-font-extension@0.4.2-beta.8':
+    resolution: {integrity: sha512-FU/M4IJ6dRCRxxfnxRSAwWgEEvcpgqqzupiSe3JW8TCl2zR0co3zaYtO1oaHGrmmlqAkARPRJnpxViIWhfPr6A==}
 
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
@@ -1653,6 +1659,8 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
+
+  '@mathjax/mathjax-bbm-font-extension@0.4.2-beta.8': {}
 
   '@sinclair/typebox@0.27.8': {}
 

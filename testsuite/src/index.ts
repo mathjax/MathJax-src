@@ -1,2 +1,2 @@
-export * from './setupTex';
-export * from './xmlMatch';
+export * from './setupTex.js';
+export * from './xmlMatch.js';
