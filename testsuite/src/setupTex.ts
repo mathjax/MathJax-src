@@ -326,12 +326,8 @@ export async function setupComponents(config: any) {
   MathJax.config.loader.require = (file: string) => {
     return new Promise((ok, fail) => import(file).then(ok).catch(e => fail(e)));
   }
-  if (!config.startup) {
-    config.startup = {};
-  }
-  if (config.startup.typeset === undefined) {
-    config.startup.typeset = false;
-  }
+  config.startup ??= {};
+  config.startup.typeset ??= false;
   config = Object.assign({}, throwCompileErrors, config);
   componentPromise = init(config);
 }
