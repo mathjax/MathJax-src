@@ -22,12 +22,11 @@
  */
 
 import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
-import { Configuration, ParserConfiguration } from '../Configuration.js';
+import { Configuration } from '../Configuration.js';
 import { MultlineItem, FlalignItem } from './AmsItems.js';
 import { AbstractTags } from '../Tags.js';
-import { NEW_OPS } from './AmsMethods.js';
 import './AmsMappings.js';
-import { CommandMap } from '../TokenMap.js';
+import { NewcommandConfig } from '../newcommand/NewcommandConfiguration.js';
 
 /**
  * Standard AMS style tagging.
@@ -36,18 +35,6 @@ import { CommandMap } from '../TokenMap.js';
  * @augments {AbstractTags}
  */
 export class AmsTags extends AbstractTags {}
-
-/**
- * Init method for AMS package.
- *
- * @param {ParserConfiguration} config The current configuration.
- */
-const init = function (config: ParserConfiguration) {
-  new CommandMap(NEW_OPS, {});
-  config.append(
-    Configuration.local({ handler: { macro: [NEW_OPS] }, priority: -1 })
-  );
-};
 
 export const AmsConfiguration = Configuration.create('ams', {
   [ConfigurationType.HANDLER]: {
@@ -69,7 +56,6 @@ export const AmsConfiguration = Configuration.create('ams', {
     [FlalignItem.prototype.kind]: FlalignItem,
   },
   [ConfigurationType.TAGS]: { ams: AmsTags },
-  [ConfigurationType.INIT]: init,
   [ConfigurationType.OPTIONS]: {
     multlineWidth: '',
     ams: {
@@ -78,4 +64,5 @@ export const AmsConfiguration = Configuration.create('ams', {
       multlineIndent: '1em', // The margin to use on both sides of multline environments.
     },
   },
+  [ConfigurationType.CONFIG]: NewcommandConfig,
 });

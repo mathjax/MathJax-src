@@ -84,7 +84,7 @@ export class Configuration {
       [ConfigurationType.PARSER]?: string;
     } = {}
   ): Configuration {
-    const priority = config.priority || PrioritizedList.DEFAULTPRIORITY;
+    const priority = config.priority ?? PrioritizedList.DEFAULTPRIORITY;
     const init = config.init ? this.makeProcessor(config.init, priority) : null;
     const conf = config.config
       ? this.makeProcessor(config.config, priority)
