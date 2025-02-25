@@ -499,11 +499,15 @@ export class Menu {
     this.jax[jax.name] = jax;
     this.settings.renderer = jax.name;
     this.settings.scale = jax.options.scale;
-    this.defaultSettings = Object.assign({}, this.settings);
     this.settings.overflow =
       jax.options.displayOverflow.substring(0, 1).toUpperCase() +
       jax.options.displayOverflow.substring(1).toLowerCase();
     this.settings.breakInline = jax.options.linebreaks.inline;
+    this.defaultSettings = Object.assign(
+      {},
+      this.document.options.a11y,
+      this.settings
+    );
   }
 
   /**
@@ -1019,7 +1023,9 @@ export class Menu {
    */
   protected setOverflow(overflow: string) {
     this.document.outputJax.options.displayOverflow = overflow.toLowerCase();
-    this.document.rerender();
+    if (!Menu.loading) {
+      this.document.rerender();
+    }
   }
 
   /**
@@ -1027,7 +1033,9 @@ export class Menu {
    */
   protected setInlineBreaks(breaks: boolean) {
     this.document.outputJax.options.linebreaks.inline = breaks;
-    this.document.rerender();
+    if (!Menu.loading) {
+      this.document.rerender();
+    }
   }
 
   /**
@@ -1035,7 +1043,9 @@ export class Menu {
    */
   protected setScale(scale: string) {
     this.document.outputJax.options.scale = parseFloat(scale);
-    this.document.rerender();
+    if (!Menu.loading) {
+      this.document.rerender();
+    }
   }
 
   /**
@@ -1277,15 +1287,17 @@ export class Menu {
     Menu.loading++; // pretend we're loading, to suppress rerendering for each variable change
     const pool = this.menu.pool;
     const settings = this.defaultSettings;
-    for (const name of Object.keys(this.settings) as (keyof MenuSettings)[]) {
+    for (const name of Object.keys(settings) as (keyof MenuSettings)[]) {
       const variable = pool.lookup(name);
       if (variable) {
-        variable.setValue(settings[name] as string | boolean);
-        const item = (variable as any).items[0];
-        if (item) {
-          item.executeCallbacks_();
+        if (variable.getValue() !== settings[name]) {
+          variable.setValue(settings[name] as string | boolean);
+          const item = (variable as any).items[0];
+          if (item) {
+            item.executeCallbacks_();
+          }
         }
-      } else {
+      } else if (Object.hasOwn(this.settings, name)) {
         (this.settings as any)[name] = settings[name];
       }
     }
@@ -1366,6 +1378,12 @@ export class Menu {
       this.document = startup.document = startup.getDocument();
       this.document.menu = this;
       this.setA11y(this.settings);
+      this.defaultSettings = Object.assign(
+        {},
+        this.document.options.a11y,
+        MathJax.config?.options?.a11y || {},
+        this.defaultSettings
+      );
       this.document.outputJax.reset();
       this.transferMathList(document);
       this.document.processed = document.processed;
@@ -1468,11 +1486,8 @@ export class Menu {
     math.root = root.copy(true);
     math.root.setInheritedAttributes({}, math.display, 0, false);
     if (breaks) {
-      math.root.walkTree((n) => {
-        n.removeProperty('process-breaks');
-        n.removeProperty('forcebreak');
-        n.removeProperty('breakable');
-      });
+      jax.unmarkInlineBreaks(math.root);
+      math.root.setProperty('inlineMarked', false);
     }
     const promise = mathjax.handleRetriesFor(() => {
       jax.toDOM(math, div, jax.document);
@@ -1623,7 +1638,10 @@ export class Menu {
     const element = math.typesetRoot;
     element.addEventListener(
       'contextmenu',
-      () => (this.menu.mathItem = math),
+      () => {
+        this.menu.mathItem = math;
+        math.outputData.nofocus = true;
+      },
       true
     );
     element.addEventListener(

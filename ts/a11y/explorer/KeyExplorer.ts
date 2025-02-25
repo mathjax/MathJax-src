@@ -223,6 +223,9 @@ export class SpeechExplorer
    * @override
    */
   public FocusIn(event: FocusEvent) {
+    if (this.item.outputData.nofocus) {
+      return;
+    }
     if (this.mousedown) {
       this.mousedown = false;
       return;
