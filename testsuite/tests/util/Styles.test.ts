@@ -23,6 +23,27 @@ describe('CssStyles object', () => {
     cssTest('  a  : \n  0  ;   b\n :   1px \n ', {a: '0', b: '1px'}, 'a: 0; b: 1px;'); // extra spaces
     cssTest('abc: ; xyz: 0', {xyz: '0'}, 'xyz: 0;'); // missing value
     cssTest('abc xyz: 1px', {}, ''); // malformed CSS string
+
+    cssTest(`abc: xy 'pqr`, {abc: `xy 'pqr'`}, `abc: xy 'pqr';`);            // append missing '
+    cssTest(`abc: xy "pqr`, {abc: `xy "pqr"`}, `abc: xy "pqr";`);            // append missing "
+    cssTest(`abc: xy '\\'pqr`, {abc: `xy '\\'pqr'`}, `abc: xy '\\'pqr';`);   // handle quoted '
+    cssTest(`abc: xy "\\"pqr`, {abc: `xy "\\"pqr"`}, `abc: xy "\\"pqr";`);   // handle quoted "
+    cssTest(`abc: ';'`, {abc: `';'`});               // handle quoted ;
+    cssTest(`abc: ';`, {abc: `';'`}, `abc: ';';`);   // and missing '
+
+    cssTest('\nabc\n:\n xyz \n; \n def \n : \n pqr\n ; \n ', {
+      abc: 'xyz',
+      def: 'pqr'
+    }, 'abc: xyz; def: pqr;');
+    cssTest(`abc: \n xy \n 'pqr\n`, {abc: `xy   'pqr '`}, `abc: xy   'pqr ';`);
+
+    //
+    // Remove unquoted ; and beyond
+    //
+    const styles = new Styles();
+    styles.set('abc', 'xy ; z');
+    expect(styles.styleList).toEqual({abc: 'xy'});
+    expect(styles.cssText).toBe('abc: xy;');
   });
 
   test('padding', () => {

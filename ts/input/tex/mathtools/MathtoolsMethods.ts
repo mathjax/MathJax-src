@@ -629,7 +629,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
     const cs = NewcommandUtil.GetCsNameArgument(parser, name);
     const open = parser.GetArgument(name);
     const close = parser.GetArgument(name);
-    MathtoolsUtil.addPairedDelims(parser.configuration, cs, [open, close]);
+    MathtoolsUtil.addPairedDelims(parser, cs, [open, close]);
     parser.Push(parser.itemFactory.create('null'));
   },
 
@@ -645,12 +645,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
     const open = parser.GetArgument(name);
     const close = parser.GetArgument(name);
     const body = parser.GetArgument(name);
-    MathtoolsUtil.addPairedDelims(parser.configuration, cs, [
-      open,
-      close,
-      body,
-      n,
-    ]);
+    MathtoolsUtil.addPairedDelims(parser, cs, [open, close, body, n]);
     parser.Push(parser.itemFactory.create('null'));
   },
 
@@ -668,7 +663,7 @@ export const MathtoolsMethods: { [key: string]: ParseMethod } = {
     const close = parser.GetArgument(name);
     const post = parser.GetArgument(name);
     const body = parser.GetArgument(name);
-    MathtoolsUtil.addPairedDelims(parser.configuration, cs, [
+    MathtoolsUtil.addPairedDelims(parser, cs, [
       open,
       close,
       body,

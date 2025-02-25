@@ -366,6 +366,15 @@ describe('Newcommand', () => {
   <mi data-latex="b">b</mi>
 </math>`
     ));
+  it('Let Self', () =>
+     toXmlMatch(
+       tex2mml('\\let\\x\\x \\x'),
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\x\\x \\x" display="block">
+          <merror data-mjx-error="Undefined control sequence \\x" >
+            <mtext>Undefined control sequence \\x</mtext>
+          </merror>
+        </math>`
+     ));
   it('Let Overwrite Sqrt Choose', () =>
     toXmlMatch(
       tex2mml('\\let\\sqrt\\choose a\\sqrt b'),
@@ -934,6 +943,17 @@ describe('Newcommand Overrides', () => {
        `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\test{X}\\let\\test=&lt; \\test" display="block">
       <mo fence="false" stretchy="false" data-latex="\\def\\test{X}\\let\\test=&lt; \\test">&#x27E8;</mo>
     </math>`
+     ));
+  it('Def template matching', () =>
+     toXmlMatch(
+       tex2mml('\\def\\ending{+}\\def\\test#1\\end{[#1]} \\test a\\ending b\\end'),
+       `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\def\\ending{+}\\def\\test#1\\end{[#1]} \\test a\\ending b\\end\" display=\"block\">
+         <mo data-latex=\"[\" stretchy=\"false\">[</mo>
+         <mi data-latex=\"a\">a</mi>
+         <mo data-latex=\"+\">+</mo>
+         <mi data-latex=\"b\">b</mi>
+         <mo data-latex=\"]\" stretchy=\"false\">]</mo>
+       </math>`
      ));
 });
 

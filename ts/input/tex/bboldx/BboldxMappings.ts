@@ -21,7 +21,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import { CommandMap, CharacterMap, DelimiterMap } from '../TokenMap.js';
+import { CommandMap, CharacterMap } from '../TokenMap.js';
 import { BboldxMethods } from './BboldxMethods.js';
 
 /**
@@ -71,13 +71,13 @@ new CharacterMap('bboldx-mathchar0miNormal', BboldxMethods.mathchar0miNormal, {
 /**
  * Macros for delimiters.
  */
-new DelimiterMap('bboldx-delimiterNormal', BboldxMethods.delimiterNormal, {
-  '\\bbLparen': '\u0028',
-  '\\bbRparen': '\u0029',
-  '\\bbLbrack': '\u005B',
-  '\\bbRbrack': '\u005D',
-  '\\bbLangle': '\u2329',
-  '\\bbRangle': '\u232A',
+new CharacterMap('bboldx-delimiterNormal', BboldxMethods.delimiterNormal, {
+  bbLparen: '\u0028',
+  bbRparen: '\u0029',
+  bbLbrack: '\u005B',
+  bbRbrack: '\u005D',
+  bbLangle: '\u2329',
+  bbRangle: '\u232A',
 });
 
 /**
@@ -127,13 +127,13 @@ new CharacterMap('bboldx-mathchar0miBold', BboldxMethods.mathchar0miBold, {
 /**
  * Macros for delimiters.
  */
-new DelimiterMap('bboldx-delimiterBold', BboldxMethods.delimiterBold, {
-  '\\bfbbLparen': '\u0028',
-  '\\bfbbRparen': '\u0029',
-  '\\bfbbLbrack': '\u005B',
-  '\\bfbbRbrack': '\u005D',
-  '\\bfbbLangle': '\u2329',
-  '\\bfbbRangle': '\u232A',
+new CharacterMap('bboldx-delimiterBold', BboldxMethods.delimiterBold, {
+  bfbbLparen: '\u0028',
+  bfbbRparen: '\u0029',
+  bfbbLbrack: '\u005B',
+  bfbbRbrack: '\u005D',
+  bfbbLangle: '\u2329',
+  bfbbRangle: '\u232A',
 });
 
 new CommandMap('bboldx', {
@@ -207,13 +207,13 @@ new CharacterMap(
 /**
  * Macros for delimiters.
  */
-new DelimiterMap('text-bboldx-delimiterNormal', BboldxMethods.delimiterNormal, {
-  '\\txtbbLparen': '\u0028',
-  '\\txtbbRparen': '\u0029',
-  '\\txtbbLbrack': '\u005B',
-  '\\txtbbRbrack': '\u005D',
-  '\\txtbbLangle': '\u2329',
-  '\\txtbbRangle': '\u232A',
+new CharacterMap('text-bboldx-delimiterNormal', BboldxMethods.delimiterNormal, {
+  txtbbLparen: '\u0028',
+  txtbbRparen: '\u0029',
+  txtbbLbrack: '\u005B',
+  txtbbRbrack: '\u005D',
+  txtbbLangle: '\u2329',
+  txtbbRangle: '\u232A',
 });
 
 /**
@@ -263,13 +263,13 @@ new CharacterMap('text-bboldx-mathchar0miBold', BboldxMethods.mathchar0miBold, {
 /**
  * Macros for delimiters.
  */
-new DelimiterMap('text-bboldx-delimiterBold', BboldxMethods.delimiterBold, {
-  '\\txtbfbbLparen': '\u0028',
-  '\\txtbfbbRparen': '\u0029',
-  '\\txtbfbbLbrack': '\u005B',
-  '\\txtbfbbRbrack': '\u005D',
-  '\\txtbfbbLangle': '\u2329',
-  '\\txtbfbbRangle': '\u232A',
+new CharacterMap('text-bboldx-delimiterBold', BboldxMethods.delimiterBold, {
+  txtbfbbLparen: '\u0028',
+  txtbfbbRparen: '\u0029',
+  txtbfbbLbrack: '\u005B',
+  txtbfbbRbrack: '\u005D',
+  txtbfbbLangle: '\u2329',
+  txtbfbbRangle: '\u232A',
 });
 
 new CommandMap('text-bboldx', {

@@ -39,7 +39,7 @@ import {
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMglyph } from '../../../core/MmlTree/MmlNodes/mglyph.js';
 import { ChtmlTextNodeNTD } from './TextNode.js';
-import { StyleList, StyleData } from '../../../util/StyleList.js';
+import { StyleJson, StyleJsonData } from '../../../util/StyleJson.js';
 
 /*****************************************************************/
 /**
@@ -130,7 +130,7 @@ export const ChtmlMglyph = (function <N, T, D>(): ChtmlMglyphClass<N, T, D> {
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'mjx-mglyph > img': {
         display: 'inline-block',
         border: 0,
@@ -148,7 +148,7 @@ export const ChtmlMglyph = (function <N, T, D>(): ChtmlMglyphClass<N, T, D> {
         return;
       }
       const { src, alt } = this.node.attributes.getList('src', 'alt');
-      const styles: StyleData = {
+      const styles: StyleJsonData = {
         width: this.em(this.width),
         height: this.em(this.height),
       };

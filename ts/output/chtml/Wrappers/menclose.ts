@@ -41,7 +41,7 @@ import { ChtmlMsqrtNTD } from './msqrt.js';
 import { MmlMenclose } from '../../../core/MmlTree/MmlNodes/menclose.js';
 import * as Notation from '../Notation.js';
 import { OptionList } from '../../../util/Options.js';
-import { StyleList } from '../../../util/StyleList.js';
+import { StyleJson } from '../../../util/StyleJson.js';
 import { em } from '../../../util/lengths.js';
 
 /*****************************************************************/
@@ -189,7 +189,7 @@ export const ChtmlMenclose = (function <N, T, D>(): ChtmlMencloseClass<
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'mjx-menclose': {
         position: 'relative',
       },

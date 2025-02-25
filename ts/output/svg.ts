@@ -34,7 +34,7 @@ import {
   SvgFontData,
   SvgFontDataClass,
 } from './svg/FontData.js';
-import { StyleList as CssStyleList } from '../util/StyleList.js';
+import { StyleJson } from '../util/StyleJson.js';
 import { FontCache } from './svg/FontCache.js';
 import { unicodeChars } from '../util/string.js';
 import * as LENGTHS from '../util/lengths.js';
@@ -97,7 +97,7 @@ export class SVG<N, T, D> extends CommonOutputJax<
   /**
    *  The default styles for SVG
    */
-  public static commonStyles: CssStyleList = {
+  public static commonStyles: StyleJson = {
     ...CommonOutputJax.commonStyles,
     'mjx-container[jax="SVG"]': {
       direction: 'ltr',

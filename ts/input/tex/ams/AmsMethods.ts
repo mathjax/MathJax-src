@@ -30,8 +30,6 @@ import NodeUtil from '../NodeUtil.js';
 import { TexConstant } from '../TexConstants.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
-import { Macro } from '../Token.js';
-import { CommandMap } from '../TokenMap.js';
 import { ArrayItem } from '../base/BaseItems.js';
 import { FlalignItem } from './AmsItems.js';
 import BaseMethods from '../base/BaseMethods.js';
@@ -42,8 +40,7 @@ import {
   MmlNode,
   AbstractMmlTokenNode,
 } from '../../../core/MmlTree/MmlNode.js';
-
-export const NEW_OPS = 'ams-declare-ops';
+import { NewcommandUtil } from '../newcommand/NewcommandUtil.js';
 
 /**
  * Utility for breaking the \sideset scripts from any other material.
@@ -338,15 +335,11 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
    */
   HandleDeclareOp(parser: TexParser, name: string) {
     const star = parser.GetStar() ? '*' : '';
-    let cs = UnitUtil.trimSpaces(parser.GetArgument(name));
-    if (cs.charAt(0) === '\\') {
-      cs = cs.substring(1);
-    }
+    const cs = NewcommandUtil.GetCsNameArgument(parser, name);
     const op = parser.GetArgument(name);
-    (parser.configuration.handlers.retrieve(NEW_OPS) as CommandMap).add(
-      cs,
-      new Macro(cs, AmsMethods.Macro, [`\\operatorname${star}{${op}}`])
-    );
+    NewcommandUtil.addMacro(parser, cs, AmsMethods.Macro, [
+      `\\operatorname${star}{${op}}`,
+    ]);
     parser.Push(parser.itemFactory.create('null'));
   },
 

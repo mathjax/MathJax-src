@@ -44,7 +44,7 @@ import {
   TextNode,
   AbstractMmlNode,
 } from '../../../core/MmlTree/MmlNode.js';
-import { StyleList } from '../../../util/StyleList.js';
+import { StyleJson } from '../../../util/StyleJson.js';
 import { STATE } from '../../../core/MathItem.js';
 
 /*****************************************************************/
@@ -151,7 +151,7 @@ export const SvgMaction = (function <N, T, D>(): SvgMactionClass<N, T, D> {
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       '[jax="SVG"] mjx-tool': {
         display: 'inline-block',
         position: 'relative',

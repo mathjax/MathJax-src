@@ -40,7 +40,7 @@ import { ChtmlMsubsup, ChtmlMsubsupClass, ChtmlMsubsupNTD } from './msubsup.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMmultiscripts } from '../../../core/MmlTree/MmlNodes/mmultiscripts.js';
 import { BBox } from '../../../util/BBox.js';
-import { StyleList } from '../../../util/StyleList.js';
+import { StyleJson } from '../../../util/StyleJson.js';
 import { split } from '../../../util/string.js';
 
 /*****************************************************************/
@@ -143,7 +143,7 @@ export const ChtmlMmultiscripts = (function <
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'mjx-prescripts': {
         display: 'inline-table',
         'padding-left': '.05em', // scriptspace

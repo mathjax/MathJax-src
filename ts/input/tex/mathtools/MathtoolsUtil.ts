@@ -24,14 +24,12 @@ import { EqnArrayItem } from '../base/BaseItems.js';
 import { UnitUtil } from '../UnitUtil.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
-import { CommandMap } from '../TokenMap.js';
-import { Macro } from '../Token.js';
-import ParseOptions from '../ParseOptions.js';
 import { lookup } from '../../../util/Options.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
+import { HandlerType } from '../HandlerTypes.js';
+import { NewcommandUtil } from '../newcommand/NewcommandUtil.js';
 
 import { MathtoolsMethods } from './MathtoolsMethods.js';
-import { PAIREDDELIMS } from './MathtoolsConfiguration.js';
 
 /**
  * Utility functions for the Mathtools package.
@@ -83,16 +81,27 @@ export const MathtoolsUtil = {
   /**
    * Add a paired delimiter to the list of them.
    *
-   * @param {ParseOptions} config   The parse options to modify.
-   * @param {string} cs             The control sequence for the paired delimiters.
-   * @param {string[]} args         The definition for the paired delimiters.  One of:
-   *                                   [left, right]
-   *                                   [left, right, body, argcount]
-   *                                   [left, right, body, argcount, pre, post]
+   * @param {TexParser} parser   The current TeX parser
+   * @param {string} cs          The control sequence for the paired delimiters.
+   * @param {string[]} args      The definition for the paired delimiters.  One of:
+   *                                [left, right]
+   *                                [left, right, body, argcount]
+   *                                [left, right, body, argcount, pre, post]
    */
-  addPairedDelims(config: ParseOptions, cs: string, args: string[]) {
-    const delims = config.handlers.retrieve(PAIREDDELIMS) as CommandMap;
-    delims.add(cs, new Macro(cs, MathtoolsMethods.PairedDelimiters, args));
+  addPairedDelims(parser: TexParser, cs: string, args: string[]) {
+    if (parser.configuration.handlers.get(HandlerType.MACRO).contains(cs)) {
+      throw new TexError(
+        'CommadExists',
+        'Command %1 already defined',
+        `\\${cs}`
+      );
+    }
+    NewcommandUtil.addMacro(
+      parser,
+      cs,
+      MathtoolsMethods.PairedDelimiters,
+      args
+    );
   },
 
   /**

@@ -4,7 +4,7 @@ import {combineDefaults} from '#js/components/global.js';
 import {dependencies, paths, provides, compatibility} from '../dependencies.js';
 import {Loader, CONFIG} from '#js/components/loader.js';
 
-Loader.preLoad('loader', 'startup');
+Loader.preLoaded('loader', 'startup');
 
 combineDefaults(MathJax.config.loader, 'dependencies', dependencies);
 combineDefaults(MathJax.config.loader, 'paths', paths);
