@@ -63,7 +63,7 @@ export function trapOutput(method: string, code: () => void) {
 }
 
 /**
- * Trap errors produces while running code.
+ * Trap errors produced while running code.
  * @param code The code to run.
  * @return The error message produced.
  */
@@ -76,7 +76,7 @@ export function trapErrors(code: () => void) {
 }
 
 /**
- * Trap errors produces while running code.
+ * Trap errors produced while running code.
  * @param code The code to run.
  * @return The error message produced.
  */
@@ -89,7 +89,7 @@ export async function trapAsyncErrors(code: () => Promise<void>) {
 }
 
 /**
- * When true, errors with throw rather than poroduce merror elements.
+ * When true, errors will throw rather than produce merror elements.
  */
 let reportErrors = false;
 
