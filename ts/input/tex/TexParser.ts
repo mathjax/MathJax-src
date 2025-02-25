@@ -263,7 +263,7 @@ export default class TexParser {
    */
   public convertDelimiter(c: string): string {
     const token = this.lookup(HandlerType.DELIMITER, c) as Token;
-    return token && token.char ? token.char : null;
+    return token?.char ?? null;
   }
 
   /**
