@@ -21,13 +21,11 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
-import { Configuration } from '../Configuration.js';
 import { CommandMap } from '../TokenMap.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
 import BaseMethods from '../base/BaseMethods.js';
-import { BegingroupStack, begingroupStack } from './BegingroupStack.js';
+import { begingroupStack } from './BegingroupStack.js';
 
 export const BegingroupMethods = {
   /**

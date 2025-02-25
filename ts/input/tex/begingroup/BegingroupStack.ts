@@ -68,12 +68,14 @@ export class BegingroupStack {
    * The most recently used priority.
    */
   protected i: number = NewcommandPriority;
+
   /**
    * The priority of the "top" of the stack when the expression began
-   * (used to remove groups added during an epxression that is restarted
+   * (used to remove groups added during an expression that is restarted
    * by a retry error).
    */
   protected top: number = NewcommandPriority;
+
   /**
    * The base group's priority (can change to -2 for sandboxed groups).
    */
