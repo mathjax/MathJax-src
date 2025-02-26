@@ -64,7 +64,7 @@ export const MathtoolsUtil = {
    *
    * @param {TexParser} parser   The current TeX parser.
    * @param {string} name        The name of the macro doing the checking.
-   * @returns {EqnArrayItem}      The top item (an EqnArrayItem).
+   * @returns {EqnArrayItem}     The top item (an EqnArrayItem).
    */
   checkAlignment(parser: TexParser, name: string): EqnArrayItem {
     const top = parser.stack.Top() as EqnArrayItem;
@@ -113,15 +113,11 @@ export const MathtoolsUtil = {
   spreadLines(mtable: MmlNode, spread: string) {
     if (!mtable.isKind('mtable')) return;
     let rowspacing = mtable.attributes.get('rowspacing') as string;
-    if (rowspacing) {
-      const add = UnitUtil.dimen2em(spread);
-      rowspacing = rowspacing
-        .split(/ /)
-        .map((s) => UnitUtil.em(Math.max(0, UnitUtil.dimen2em(s) + add)))
-        .join(' ');
-    } else {
-      rowspacing = spread;
-    }
+    const add = UnitUtil.dimen2em(spread);
+    rowspacing = rowspacing
+      .split(/ /)
+      .map((s) => UnitUtil.em(Math.max(0, UnitUtil.dimen2em(s) + add)))
+      .join(' ');
     mtable.attributes.set('rowspacing', rowspacing);
   },
 
@@ -146,7 +142,7 @@ export const MathtoolsUtil = {
    * @param {TexParser} parser   The active tex parser.
    * @param {string} name        The name of the calling macro (\prescript).
    * @param {string} pos         The position for the argument (sub, sup, arg).
-   * @returns {MmlNode}           The parsed MML version of the argument.
+   * @returns {MmlNode}          The parsed MML version of the argument.
    */
   getScript(parser: TexParser, name: string, pos: string): MmlNode {
     let arg = UnitUtil.trimSpaces(parser.GetArgument(name));
@@ -157,6 +153,13 @@ export const MathtoolsUtil = {
     if (format) {
       arg = `${format}{${arg}}`;
     }
-    return new TexParser(arg, parser.stack.env, parser.configuration).mml();
+    const mml = new TexParser(
+      arg,
+      parser.stack.env,
+      parser.configuration
+    ).mml();
+    return mml.isKind('TeXAtom') && mml.childNodes[0].childNodes.length === 0
+      ? parser.create('node', 'none')
+      : mml;
   },
 };

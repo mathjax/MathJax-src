@@ -44,7 +44,7 @@ export const dependencies = {
   '[tex]/extpfeil': ['input/tex-base', '[tex]/newcommand', '[tex]/ams'],
   '[tex]/gensymb': ['input/tex-base'],
   '[tex]/html': ['input/tex-base'],
-  '[tex]/mathtools': ['input/tex-base', '[tex]/newcommand', '[tex]/ams'],
+  '[tex]/mathtools': ['input/tex-base', '[tex]/newcommand', '[tex]/ams', '[tex]/boldsymbol'],
   '[tex]/mhchem': ['input/tex-base', '[tex]/ams'],
   '[tex]/newcommand': ['input/tex-base'],
   '[tex]/noerrors': ['input/tex-base'],
