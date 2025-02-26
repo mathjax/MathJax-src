@@ -68,8 +68,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     ...AbstractInputJax.OPTIONS,
     FindTeX: null,
     packages: ['base'],
-    // Digit pattern to match numbers.
-    digits: /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
     // Maximum size of TeX string to process.
     maxBuffer: 5 * 1024,
     // Maximum number of array template substitutions (avoids infinite loop from @{\\} for example)
@@ -203,7 +201,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     this.latex = math.math;
     let node: MmlNode;
     this.parseOptions.tags.startEquation(math);
-    let globalEnv;
     let parser;
     try {
       parser = new TexParser(
@@ -212,7 +209,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
         this.parseOptions
       );
       node = parser.mml();
-      globalEnv = parser.stack.global;
     } catch (err) {
       if (!(err instanceof TexError)) {
         throw err;
@@ -222,9 +218,6 @@ export class TeX<N, T, D> extends AbstractInputJax<N, T, D> {
     }
     node = this.parseOptions.nodeFactory.create('node', 'math', [node]);
     node.attributes.set(TexConstant.Attr.LATEX, this.latex);
-    if (globalEnv?.indentalign) {
-      NodeUtil.setAttribute(node, 'indentalign', globalEnv.indentalign);
-    }
     if (math.display) {
       NodeUtil.setAttribute(node, 'display', 'block');
     }

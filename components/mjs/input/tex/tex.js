@@ -3,7 +3,7 @@ import './lib/tex.js';
 import {registerTeX} from './register.js';
 import {Loader} from '#js/components/loader.js';
 
-Loader.preLoad(
+Loader.preLoaded(
   'input/tex-base',
   '[tex]/ams',
   '[tex]/newcommand',

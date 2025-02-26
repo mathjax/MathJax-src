@@ -54,7 +54,7 @@ import {
   MmlMsub,
   MmlMsup,
 } from '../../../core/MmlTree/MmlNodes/msubsup.js';
-import { StyleList } from '../../../util/StyleList.js';
+import { StyleJson } from '../../../util/StyleJson.js';
 
 /*****************************************************************/
 /**
@@ -325,7 +325,7 @@ export const ChtmlMsubsup = (function <N, T, D>(): ChtmlMsubsupClass<N, T, D> {
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'mjx-script': {
         display: 'inline-block',
         'padding-right': '.05em', // scriptspace

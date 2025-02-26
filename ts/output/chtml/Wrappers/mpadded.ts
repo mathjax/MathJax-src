@@ -38,7 +38,7 @@ import {
 } from '../../common/Wrappers/mpadded.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMpadded } from '../../../core/MmlTree/MmlNodes/mpadded.js';
-import { StyleList } from '../../../util/StyleList.js';
+import { StyleJson } from '../../../util/StyleJson.js';
 
 /*****************************************************************/
 /**
@@ -129,7 +129,7 @@ export const ChtmlMpadded = (function <N, T, D>(): ChtmlMpaddedClass<N, T, D> {
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'mjx-mpadded': {
         display: 'inline-block',
       },

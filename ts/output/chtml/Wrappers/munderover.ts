@@ -60,7 +60,7 @@ import {
   ChtmlMsubsupClass,
   ChtmlMsubsupNTD,
 } from './msubsup.js';
-import { StyleList } from '../../../util/StyleList.js';
+import { StyleJson } from '../../../util/StyleJson.js';
 
 /*****************************************************************/
 /**
@@ -151,7 +151,7 @@ export const ChtmlMunder = (function <N, T, D>(): ChtmlMunderClass<N, T, D> {
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'mjx-over': {
         'text-align': 'left',
       },
@@ -294,7 +294,7 @@ export const ChtmlMover = (function <N, T, D>(): ChtmlMoverClass<N, T, D> {
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'mjx-mover:not([limits="false"])': {
         'padding-top': '.1em', // big_op_spacing5
       },
@@ -432,7 +432,7 @@ export const ChtmlMunderover = (function <N, T, D>(): ChtmlMunderoverClass<
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'mjx-munderover:not([limits="false"])': {
         'padding-top': '.1em', // big_op_spacing5
       },

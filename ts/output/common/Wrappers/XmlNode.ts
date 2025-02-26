@@ -37,8 +37,8 @@ import {
 import { CommonOutputJax, ExtendedMetrics, UnknownBBox } from '../../common.js';
 import { MmlNode, XMLNode } from '../../../core/MmlTree/MmlNode.js';
 import { BBox } from '../../../util/BBox.js';
-import { StyleList as Styles } from '../../../util/Styles.js';
-import { StyleList } from '../../../util/StyleList.js';
+import { StyleList } from '../../../util/Styles.js';
+import { StyleJson } from '../../../util/StyleJson.js';
 import { split } from '../../../util/string.js';
 
 /*****************************************************************/
@@ -78,27 +78,27 @@ export interface CommonXmlNode<
   rscale: number;
 
   /**
-   * @returns {N}                 The HTML for the node
+   * @returns {N}  The HTML for the node
    */
   getHTML(): N;
 
   /**
    * @param {N} html            The html to adjust if using or forcing HDW
-   * @param {Styles} styles     The styles object to add to, as needed
+   * @param {StyleList} styles  The styles object to add to, as needed
    */
-  addHDW(html: N, styles: Styles): N;
+  addHDW(html: N, styles: StyleList): N;
 
   /**
    * @param {N} xml          The XML tree to check
    * @param {string} use     The first xmlHDW value to check
    * @param {string} force   The second (optional) xmlHDW value to check
-   * @returns {string}        The data-mjx-hdw value, if the options are met
+   * @returns {string}       The data-mjx-hdw value, if the options are met
    */
   getHDW(xml: N, use: string, force?: string): string;
 
   /**
    * @param {string} hdw     The data-mjx-hdw string to split
-   * @returns {UnknownBBox}   The h, d, w values (in em units) as an object
+   * @returns {UnknownBBox}  The h, d, w values (in em units) as an object
    */
   splitHDW(hdw: string): UnknownBBox;
 }
@@ -184,7 +184,7 @@ export function CommonXmlNodeMixin<
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'mjx-measure-xml': {
         position: 'absolute',
         left: 0,
@@ -255,7 +255,7 @@ export function CommonXmlNodeMixin<
     /**
      * @override
      */
-    abstract addHDW(html: N, _styles: Styles): N;
+    abstract addHDW(html: N, _styles: StyleList): N;
 
     /**
      * @override
@@ -278,7 +278,7 @@ export function CommonXmlNodeMixin<
     /**
      * The font-size and font-family values to use for the XML
      *
-     * @returns {StyleList} The font info
+     * @returns {StyleJson} The font info
      */
     public getFontStyles(): { 'font-family': string; 'font-size': string } {
       const adaptor = this.adaptor;

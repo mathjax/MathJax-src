@@ -52,6 +52,7 @@ function _copyExplicit(attrs: string[], node1: MmlNode, node2: MmlNode) {
  * - lspace attribute of node1 is ignored.
  * - rspace attribute of node2 is ignored.
  * - stretchy=false attributes are ignored.
+ * - data-latex and -data-latex-item are ignored.
  *
  * @param {MmlNode} node1 The first node.
  * @param {MmlNode} node2 Its next sibling.
@@ -61,7 +62,12 @@ function _compareExplicit(node1: MmlNode, node2: MmlNode): boolean {
   const filter = (attr: Attributes, space: string): string[] => {
     const exp = attr.getExplicitNames();
     return exp.filter((x) => {
-      return x !== space && (x !== 'stretchy' || attr.hasExplicit('stretchy'));
+      return (
+        x !== space &&
+        (x !== 'stretchy' || attr.getExplicit('stretchy')) &&
+        x !== 'data-latex' &&
+        x !== 'data-latex-item'
+      );
     });
   };
   const attr1 = node1.attributes;
@@ -104,11 +110,7 @@ function _cleanSubSup(options: ParseOptions, low: string, up: string) {
           children[mml[up]],
         ]);
     NodeUtil.copyAttributes(mml, newNode);
-    if (parent) {
-      parent.replaceChild(newNode, mml);
-    } else {
-      options.root = newNode;
-    }
+    parent.replaceChild(newNode, mml);
     remove.push(mml);
   }
   options.removeFromList('m' + low + up, remove);
@@ -137,11 +139,7 @@ function _moveLimits(options: ParseOptions, underover: string, subsup: string) {
     ) {
       const node = options.nodeFactory.create('node', subsup, mml.childNodes);
       NodeUtil.copyAttributes(mml, node);
-      if (mml.parent) {
-        mml.parent.replaceChild(node, mml);
-      } else {
-        options.root = node;
-      }
+      mml.parent.replaceChild(node, mml);
       remove.push(mml);
     }
   }
@@ -189,9 +187,6 @@ const FilterUtil = {
     const node = arg.data.root;
     node.walkTree((mml: MmlNode, _d: any) => {
       const attribs = mml.attributes;
-      if (!attribs) {
-        return;
-      }
       const keep = new Set(
         ((attribs.get('mjx-keep-attrs') as string) || '').split(/ /)
       );
@@ -249,6 +244,13 @@ const FilterUtil = {
           _copyExplicit(['stretchy', 'rspace'], mo, m2);
           for (const name of m2.getPropertyNames()) {
             mo.setProperty(name, m2.getProperty(name));
+          }
+          if (m2.attributes.get('data-latex')) {
+            mo.attributes.set(
+              'data-latex',
+              (mo.attributes.get('data-latex') as string) +
+                (m2.attributes.get('data-latex') as string)
+            );
           }
           children.splice(next, 1);
           remove.push(m2);
@@ -324,7 +326,7 @@ const FilterUtil = {
     const options = arg.data;
     const remove: MmlNode[] = [];
     for (const mml of options.getList('mstyle')) {
-      if (mml.childNodes?.[0]?.childNodes?.length !== 1) {
+      if (mml.childNodes[0].childNodes.length !== 1) {
         continue;
       }
       const attributes = mml.attributes;

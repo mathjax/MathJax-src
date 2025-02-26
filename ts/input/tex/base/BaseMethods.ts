@@ -546,9 +546,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     let insert = true;
     const prev = parser.stack.Prev(true);
     if (prev && prev.isKind('mo')) {
-      const style =
-        NodeUtil.getOp(prev as any as MmlMo)?.[3]?.linebreakstyle ||
-        NodeUtil.getAttribute(prev, 'linebreakstyle');
+      const style = NodeUtil.getMoAttribute(prev, 'linebreakstyle');
       if (style !== TexConstant.LineBreakStyle.BEFORE) {
         prev.attributes.set('linebreak', linebreak);
         insert = false;
@@ -659,7 +657,9 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     NodeUtil.setProperty(op, 'movesupsub', limits ? true : false);
     NodeUtil.setProperties(NodeUtil.getCoreMO(op), { movablelimits: false });
     if (
-      NodeUtil.getAttribute(op, 'movablelimits') ||
+      (NodeUtil.isType(op, 'mo')
+        ? NodeUtil.getMoAttribute(op, 'movableLimits')
+        : NodeUtil.getAttribute(op, 'movablelimits')) ||
       NodeUtil.getProperty(op, 'movablelimits')
     ) {
       NodeUtil.setProperties(op, { movablelimits: false });
@@ -808,8 +808,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
       mathaccent: stretchy === undefined ? true : stretchy,
     };
     const entity = NodeUtil.createEntity(accent);
-    const moNode = parser.create('token', 'mo', def, entity);
-    const mml = moNode;
+    const mml = parser.create('token', 'mo', def, entity);
     NodeUtil.setAttribute(mml, 'stretchy', stretchy ? true : false);
     // @test Vector Op, Vector
     const mo = NodeUtil.isEmbellished(c) ? NodeUtil.getCoreMO(c) : c;
@@ -865,7 +864,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     const base = parser.ParseArg(name);
     const topMo = top.coreMO();
     const accent =
-      topMo.isKind('mo') && NodeUtil.getAttribute(topMo, 'accent') === true;
+      topMo.isKind('mo') && NodeUtil.getMoAttribute(topMo, 'accent') === true;
     ParseUtil.checkMovableLimits(base);
     const node = parser.create('node', 'mover', [base, top], { accent });
     parser.Push(node);
@@ -883,7 +882,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     const base = parser.ParseArg(name);
     const botMo = bot.coreMO();
     const accentunder =
-      botMo.isKind('mo') && NodeUtil.getAttribute(botMo, 'accent') === true;
+      botMo.isKind('mo') && NodeUtil.getMoAttribute(botMo, 'accent') === true;
     ParseUtil.checkMovableLimits(base);
     const node = parser.create('node', 'munder', [base, bot], { accentunder });
     parser.Push(node);
@@ -902,9 +901,9 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     const topMo = top.coreMO();
     const botMo = bot.coreMO();
     const accent =
-      topMo.isKind('mo') && NodeUtil.getAttribute(topMo, 'accent') === true;
+      topMo.isKind('mo') && NodeUtil.getMoAttribute(topMo, 'accent') === true;
     const accentunder =
-      botMo.isKind('mo') && NodeUtil.getAttribute(botMo, 'accent') === true;
+      botMo.isKind('mo') && NodeUtil.getMoAttribute(botMo, 'accent') === true;
     ParseUtil.checkMovableLimits(base);
     const node = parser.create('node', 'munderover', [base, bot, top], {
       accent,
@@ -1703,6 +1702,7 @@ const BaseMethods: { [key: string]: ParseMethod } = {
     //    (otherwise process the second column as normal, since it is in \text{}
     //
     // i >= parser.i
+    //
     const text = str.substring(parser.i, i);
     if (
       !text.match(/^\s*\\text[^a-zA-Z]/) ||

@@ -78,7 +78,7 @@ export const MhchemReplacements = new Map<string, RegExp>([
 ]);
 
 // Namespace
-const MhchemMethods: { [key: string]: ParseMethod } = {
+export const MhchemMethods: { [key: string]: ParseMethod } = {
   /**
    * @param {TexParser} parser   The parser for this expression
    * @param {string} name        The macro name being called
@@ -89,6 +89,9 @@ const MhchemMethods: { [key: string]: ParseMethod } = {
     let tex;
     try {
       tex = mhchemParser.toTex(arg, machine);
+      for (const [name, pattern] of MhchemReplacements.entries()) {
+        tex = tex.replace(pattern, name);
+      }
     } catch (err) {
       throw new TexError(err[0], err[1]);
     }
@@ -100,6 +103,9 @@ const MhchemMethods: { [key: string]: ParseMethod } = {
   xArrow: AmsMethods.xArrow,
 };
 
+/**
+ * The command macros
+ */
 new CommandMap('mhchem', {
   ce: [MhchemMethods.Machine, 'ce'],
   pu: [MhchemMethods.Machine, 'pu'],
@@ -132,6 +138,11 @@ new CharacterMap('mhchem-chars', MhchemUtils.relmo, {
   mhchemleftrightarrow: '\uE42E',
 });
 
+/**
+ * The mhchem configuration
+ */
 export const MhchemConfiguration = Configuration.create('mhchem', {
-  [ConfigurationType.HANDLER]: { [HandlerType.MACRO]: ['mhchem'] },
+  [ConfigurationType.HANDLER]: {
+    [HandlerType.MACRO]: ['mhchem', 'mhchem-chars'],
+  },
 });
