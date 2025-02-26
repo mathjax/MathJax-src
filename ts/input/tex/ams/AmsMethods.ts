@@ -183,11 +183,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       balign,
       spaceStr
     );
-    return ParseUtil.setArrayAlign(
-      array as ArrayItem,
-      valign,
-      !taggable ? parser : null
-    );
+    return ParseUtil.setArrayAlign(array as ArrayItem, valign, parser);
   },
 
   /**
@@ -384,8 +380,8 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     //  Skip a following \limits macro if not a starred operator
     //
     if (!star) {
-      const c = parser.GetNext(),
-        i = parser.i;
+      const c = parser.GetNext();
+      const i = parser.i;
       if (c === '\\' && ++parser.i && parser.GetCS() !== 'limits') {
         parser.i = i;
       }
@@ -522,13 +518,8 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       next = parser.GetArgument(name);
       parser.i = i;
       if (next === '\\limits') {
-        if (name === '\\idotsint') {
-          // @test MultiInt with Limits
-          integral = '\\!\\!\\mathop{\\,\\,' + integral + '}';
-        } else {
-          // Question: This is not used anymore?
-          integral = '\\!\\!\\!\\mathop{\\,\\,\\,' + integral + '}';
-        }
+        // @test MultiInt with Limits
+        integral = '\\!\\!\\mathop{\\,\\,' + integral + '}';
       }
     }
     // @test MultiInt, MultiInt in Context
@@ -544,8 +535,16 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
    * @param {number} chr The arrow character in hex code.
    * @param {number} l Left width.
    * @param {number} r Right width.
+   * @param {number} m Min width
    */
-  xArrow(parser: TexParser, name: string, chr: number, l: number, r: number) {
+  xArrow(
+    parser: TexParser,
+    name: string,
+    chr: number,
+    l: number,
+    r: number,
+    m: number = 0
+  ) {
     const def = {
       width: '+' + UnitUtil.em((l + r) / 18),
       lspace: UnitUtil.em(l / 18),
@@ -559,6 +558,9 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       { stretchy: true, texClass: TEXCLASS.REL },
       String.fromCodePoint(chr)
     );
+    if (m) {
+      arrow.attributes.set('minsize', UnitUtil.em(m));
+    }
     arrow = parser.create('node', 'mstyle', [arrow], { scriptlevel: 0 });
     const mml = parser.create('node', 'munderover', [arrow]) as MmlMunderover;
     let mpadded = parser.create('node', 'mpadded', [first, dstrut], def);
