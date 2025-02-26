@@ -30,18 +30,18 @@ import { Info, HtmlClasses } from './mj-context-menu.js';
  */
 export class SelectableInfo extends Info {
   /**
-   * Add a keypress event to handle "select all" so that only
-   * the info-box's text is selected (not the whole page)
+   * Handle "select all" so that only the info-box's text is selected
+   * (not the whole page)
    *
    * @override
    */
-  public addEvents(element: HTMLElement) {
-    element.addEventListener('keypress', (event: KeyboardEvent) => {
-      if (event.key === 'a' && (event.ctrlKey || event.metaKey)) {
-        this.selectAll();
-        this.stop(event);
-      }
-    });
+  public keydown(event: KeyboardEvent) {
+    if (event.key === 'a' && (event.ctrlKey || event.metaKey)) {
+      this.selectAll();
+      this.stop(event);
+      return;
+    }
+    super.keydown(event);
   }
 
   /**

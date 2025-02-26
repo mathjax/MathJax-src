@@ -38,7 +38,7 @@ import {
 } from '../../common/Wrappers/mtd.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMtd } from '../../../core/MmlTree/MmlNodes/mtd.js';
-import { StyleList } from '../../../util/StyleList.js';
+import { StyleJson } from '../../../util/StyleJson.js';
 
 /*****************************************************************/
 /**
@@ -128,7 +128,7 @@ export const ChtmlMtd = (function <N, T, D>(): ChtmlMtdClass<N, T, D> {
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'mjx-mtd': {
         display: 'table-cell',
         'text-align': 'center',

@@ -39,10 +39,6 @@ Configuration.create('text-bboldx', {
       'text-bboldx-mathchar0miBold',
       'text-bboldx-delimiterBold',
     ],
-    [HandlerType.DELIMITER]: [
-      'text-bboldx-delimiterNormal',
-      'text-bboldx-delimiterBold',
-    ],
   },
 });
 
@@ -59,7 +55,6 @@ export const BboldxConfiguration = Configuration.create('bboldx', {
       'bboldx-mathchar0miBold',
       'bboldx-delimiterBold',
     ],
-    [HandlerType.DELIMITER]: ['bboldx-delimiterNormal', 'bboldx-delimiterBold'],
   },
   [ConfigurationType.OPTIONS]: {
     bboldx: {

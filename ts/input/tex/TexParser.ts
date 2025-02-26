@@ -263,7 +263,7 @@ export default class TexParser {
    */
   public convertDelimiter(c: string): string {
     const token = this.lookup(HandlerType.DELIMITER, c) as Token;
-    return token ? token.char : null;
+    return token?.char ?? null;
   }
 
   /**
@@ -315,7 +315,7 @@ export default class TexParser {
    * @param {boolean} noneOK True if no argument is OK.
    * @returns {string} The next argument.
    */
-  public GetArgument(_name: string, noneOK?: boolean): string {
+  public GetArgument(_name: string, noneOK: boolean = false): string {
     switch (this.GetNext()) {
       case '':
         if (!noneOK) {
@@ -383,18 +383,18 @@ export default class TexParser {
       return def;
     }
     const j = ++this.i;
-    let parens = 0;
+    let braces = 0;
     let brackets = 0;
     while (this.i < this.string.length) {
       switch (this.string.charAt(this.i++)) {
         case '{':
-          parens++;
+          braces++;
           break;
         case '\\':
           this.i++;
           break;
         case '}':
-          if (parens-- <= 0) {
+          if (braces-- <= 0) {
             // @test ExtraCloseLooking1
             throw new TexError(
               'ExtraCloseLooking',
@@ -404,10 +404,10 @@ export default class TexParser {
           }
           break;
         case '[':
-          if (parens === 0) brackets++;
+          if (braces === 0) brackets++;
           break;
         case ']':
-          if (parens === 0) {
+          if (braces === 0) {
             if (!matchBrackets || brackets === 0) {
               return this.string.slice(j, this.i - 1);
             }
@@ -431,7 +431,7 @@ export default class TexParser {
    * @param {boolean=} braceOK Are braces around the delimiter OK.
    * @returns {string} The delimiter name.
    */
-  public GetDelimiter(name: string, braceOK?: boolean): string {
+  public GetDelimiter(name: string, braceOK: boolean = false): string {
     let c = this.GetNext();
     this.i += c.length;
     if (this.i <= this.string.length) {
@@ -496,7 +496,7 @@ export default class TexParser {
       this.i++;
     }
     const j = this.i;
-    let parens = 0;
+    let braces = 0;
     while (this.i < this.string.length) {
       const k = this.i;
       let c = this.GetNext();
@@ -506,10 +506,10 @@ export default class TexParser {
           c += this.GetCS();
           break;
         case '{':
-          parens++;
+          braces++;
           break;
         case '}':
-          if (parens === 0) {
+          if (braces === 0) {
             // @test ExtraCloseLooking2
             throw new TexError(
               'ExtraCloseLooking',
@@ -517,10 +517,10 @@ export default class TexParser {
               token
             );
           }
-          parens--;
+          braces--;
           break;
       }
-      if (parens === 0 && c === token) {
+      if (braces === 0 && c === token) {
         return this.string.slice(j, k);
       }
     }
@@ -706,7 +706,7 @@ export default class TexParser {
   ) {
     if (!node.childNodes[pos1] || !node.childNodes[pos2]) return;
     const expr =
-      node.childNodes[pos1].attributes.get(TexConstant.Attr.LATEX) +
+      (node.childNodes[pos1].attributes.get(TexConstant.Attr.LATEX) || '') +
       comp +
       node.childNodes[pos2].attributes.get(TexConstant.Attr.LATEX);
     node.attributes.set(TexConstant.Attr.LATEX, expr);
@@ -718,7 +718,6 @@ export default class TexParser {
    * @param {MmlNode} atom The current Mml node.
    */
   private composeBraces(atom: MmlNode) {
-    if (!atom) return;
     const str = this.composeBracedContent(atom);
     atom.attributes.set(TexConstant.Attr.LATEX, `{${str}}`);
   }

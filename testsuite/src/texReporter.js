@@ -42,7 +42,7 @@ export default class TexReporter {
 }
 
 /**
- * Convert the array of configurations to a array of rows of data,
+ * Convert the array of configurations to an array of rows of data,
  * sorted by package name.
  * @param coverage The coverage data from the json file
  * @return The array of rows of data
@@ -161,9 +161,9 @@ function getColor(actual, size) {
 }
 
 /**
- * Add color escape seuences, if needed
+ * Add color escape sequences, if needed
  * @param cell The cell contents
- * @param color The color number to use in the scape sequence
+ * @param color The color number to use in the escape sequence
  * @return The cell contents with color sequences
  */
 function colorize(cell, color) {

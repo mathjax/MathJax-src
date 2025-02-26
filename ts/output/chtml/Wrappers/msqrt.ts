@@ -40,7 +40,7 @@ import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { ChtmlMoNTD } from './mo.js';
 import { BBox } from '../../../util/BBox.js';
 import { MmlMsqrt } from '../../../core/MmlTree/MmlNodes/msqrt.js';
-import { StyleList } from '../../../util/StyleList.js';
+import { StyleJson } from '../../../util/StyleJson.js';
 
 /*****************************************************************/
 /**
@@ -135,7 +135,7 @@ export const ChtmlMsqrt = (function <N, T, D>(): ChtmlMsqrtClass<N, T, D> {
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'mjx-root': {
         display: 'inline-block',
         'white-space': 'nowrap',

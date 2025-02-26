@@ -37,7 +37,7 @@ import {
   CommonTextNodeMixin,
 } from '../../common/Wrappers/TextNode.js';
 import { MmlNode, TextNode } from '../../../core/MmlTree/MmlNode.js';
-import { CssStyles } from '../../../util/StyleList.js';
+import { StyleJsonSheet } from '../../../util/StyleJson.js';
 
 /*****************************************************************/
 /**
@@ -129,7 +129,7 @@ export const SvgTextNode = (function <N, T, D>(): SvgTextNodeClass<N, T, D> {
      * @override
      */
     public static addStyles<JX extends SVG<any, any, any>>(
-      styles: CssStyles,
+      styles: StyleJsonSheet,
       jax: JX
     ) {
       styles.addStyles({

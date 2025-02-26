@@ -49,8 +49,8 @@ import {
   MmlAnnotationXML,
 } from '../../../core/MmlTree/MmlNodes/semantics.js';
 import { XMLNode } from '../../../core/MmlTree/MmlNode.js';
-import { StyleList } from '../../../util/StyleList.js';
-import { StyleList as Styles } from '../../../util/Styles.js';
+import { StyleJson } from '../../../util/StyleJson.js';
+import { StyleList } from '../../../util/Styles.js';
 
 /*****************************************************************/
 /**
@@ -197,7 +197,7 @@ export const SvgAnnotationXML = (function <N, T, D>(): SvgWrapperClass<
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'foreignObject[data-mjx-xml]': {
         'font-family': 'initial',
         'line-height': 'normal',
@@ -295,7 +295,7 @@ export const SvgXmlNode = (function <N, T, D>(): SvgXmlNodeClass<N, T, D> {
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'foreignObject[data-mjx-html]': {
         overflow: 'visible',
       },
@@ -331,7 +331,7 @@ export const SvgXmlNode = (function <N, T, D>(): SvgXmlNodeClass<N, T, D> {
     /**
      * @override
      */
-    public addHDW(html: N, styles: Styles): N {
+    public addHDW(html: N, styles: StyleList): N {
       html = this.html('mjx-html-holder', { style: styles }, [html]);
       const { h, d, w } = this.getBBox();
       const scale = this.metrics.scale;

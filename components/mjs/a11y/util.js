@@ -9,7 +9,7 @@ import base from 'speech-rule-engine/lib/mathmaps/base.json' with {type: 'json'}
 import en from 'speech-rule-engine/lib/mathmaps/en.json' with {type: 'json'};
 import nemeth from 'speech-rule-engine/lib/mathmaps/nemeth.json' with {type: 'json'};
 
-Loader.preLoad(
+Loader.preLoaded(
   'a11y/sre',
   'a11y/semantic-enrich',
   'a11y/explorer'
