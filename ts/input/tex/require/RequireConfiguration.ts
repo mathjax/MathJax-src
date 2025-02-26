@@ -178,9 +178,10 @@ export function RequireLoad(parser: TexParser, name: string) {
     mathjax.retryAfter(Loader.load(extension));
   }
   const require = LOADERCONFIG[extension]?.rendererExtensions;
-  (MathJax.startup.document as MenuMathDocument)?.menu?.addRequiredExtensions?.(
-    require
-  );
+  const menu = (MathJax.startup.document as MenuMathDocument).menu;
+  if (require && menu) {
+    menu.addRequiredExtensions(require);
+  }
   RegisterExtension(
     parser.configuration.packageData.get('require').jax,
     extension
@@ -275,7 +276,9 @@ new CommandMap('require', { require: RequireMethods.Require });
  * The configuration for the \require macro
  */
 export const RequireConfiguration = Configuration.create('require', {
-  [ConfigurationType.HANDLER]: { [HandlerType.MACRO]: ['require'] },
-  config,
-  options,
+  [ConfigurationType.HANDLER]: {
+    [HandlerType.MACRO]: ['require'],
+  },
+  [ConfigurationType.CONFIG]: config,
+  [ConfigurationType.OPTIONS]: options,
 });
