@@ -66,7 +66,7 @@ export class CasesTags extends AmsTags {
       this.subcounter++;
       this.tag(this.formatNumber(this.counter, this.subcounter), false);
     } else {
-      if (this.subcounter === 0 || this.currentTag.env !== 'numcases-left') {
+      if (this.currentTag.env !== 'numcases-left') {
         this.counter++;
       }
       this.tag(this.formatNumber(this.counter), false);
@@ -102,7 +102,7 @@ export const CasesMethods = {
       EmpheqUtil.left(
         table,
         original,
-        left + '\\empheqlbrace\\,',
+        left + '\\mmlToken{mo}{\\U{7B}}\\,',
         parser,
         'numcases-left'
       );
@@ -192,7 +192,13 @@ export const CasesMethods = {
         //   characters in the main loop)
         //
         const cs = (tex.slice(i + 1).match(/^[a-z]+|./i) || [])[0];
-        if (cs === '\\' || cs === 'cr' || cs === 'end' || cs === 'label') {
+        if (
+          cs === '\\' ||
+          cs === 'cr' ||
+          cs === 'end' ||
+          cs === 'label' ||
+          cs === undefined
+        ) {
           break;
         } else {
           i += cs.length;
