@@ -126,16 +126,14 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
         } // minsize needs work
         const pad: EnvList = { width: '+.67em', lspace: '.33em' };
         mml = parser.create('node', 'munderover', [mml]) as MmlMunderover;
-        if (a) {
-          const nodeA = new TexParser(
-            a,
-            parser.stack.env,
-            parser.configuration
-          ).mml();
-          const mpadded = parser.create('node', 'mpadded', [nodeA], pad);
-          NodeUtil.setAttribute(mpadded, 'voffset', '.1em');
-          NodeUtil.setChild(mml, mml.over, mpadded);
-        }
+        const nodeA = new TexParser(
+          a,
+          parser.stack.env,
+          parser.configuration
+        ).mml();
+        const mpadded = parser.create('node', 'mpadded', [nodeA], pad);
+        NodeUtil.setAttribute(mpadded, 'voffset', '.1em');
+        NodeUtil.setChild(mml, mml.over, mpadded);
         if (b) {
           const nodeB = new TexParser(
             b,
