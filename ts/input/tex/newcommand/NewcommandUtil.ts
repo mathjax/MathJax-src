@@ -219,7 +219,7 @@ export const NewcommandUtil = {
           i++;
           j -= 2;
         }
-        return j < 0 ? '' : parser.string.substring(i, i + j);
+        return parser.string.substring(i, i + j);
       } else if (c === '\\') {
         // @test Def Options CS
         parser.i++;
