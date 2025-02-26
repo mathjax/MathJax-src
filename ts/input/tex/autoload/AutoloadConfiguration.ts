@@ -21,7 +21,7 @@
  * @author dpvc@mathjax.org (Davide P. Cervone)
  */
 
-import { HandlerType } from '../HandlerTypes.js';
+import { HandlerType, ConfigurationType } from '../HandlerTypes.js';
 import { Configuration, ParserConfiguration } from '../Configuration.js';
 import TexParser from '../TexParser.js';
 import { CommandMap } from '../TokenMap.js';
@@ -148,11 +148,11 @@ const AutoloadEnvironments = new CommandMap('autoload-environments', {});
  * The configuration object for configmacros
  */
 export const AutoloadConfiguration = Configuration.create('autoload', {
-  handler: {
-    macro: ['autoload-macros'],
+  [ConfigurationType.HANDLER]: {
+    [HandlerType.MACRO]: ['autoload-macros'],
     [HandlerType.ENVIRONMENT]: ['autoload-environments'],
   },
-  options: {
+  [ConfigurationType.OPTIONS]: {
     //
     //  These are the extension names and the macros and environments they contain.
     //    The format is [macros...] or [[macros...], [environments...]]
@@ -203,7 +203,7 @@ export const AutoloadConfiguration = Configuration.create('autoload', {
       verb: ['verb'],
     }),
   },
-  config: configAutoload,
-  init: initAutoload,
-  priority: 10,
+  [ConfigurationType.CONFIG]: configAutoload,
+  [ConfigurationType.INIT]: initAutoload,
+  [ConfigurationType.PRIORITY]: 10,
 });
