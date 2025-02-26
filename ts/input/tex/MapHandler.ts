@@ -79,7 +79,7 @@ export class SubHandler {
     for (const name of maps.slice().reverse()) {
       const map = MapHandler.getMap(name);
       if (!map) {
-        this.warn('Configuration ' + name + ' not found! Omitted.');
+        this.warn(`Configuration '${name}' not found! Omitted.`);
         return;
       }
       this._configuration.add(map, priority);

@@ -49,8 +49,8 @@ import {
   MmlAnnotationXML,
 } from '../../../core/MmlTree/MmlNodes/semantics.js';
 import { XMLNode } from '../../../core/MmlTree/MmlNode.js';
-import { StyleList } from '../../../util/StyleList.js';
-import { StyleList as Styles } from '../../../util/Styles.js';
+import { StyleJson } from '../../../util/StyleJson.js';
+import { StyleList } from '../../../util/Styles.js';
 
 /*****************************************************************/
 /**
@@ -208,7 +208,7 @@ export const ChtmlAnnotationXML = (function <N, T, D>(): ChtmlWrapperClass<
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'mjx-annotation-xml': {
         'font-family': 'initial',
         'line-height': 'normal',
@@ -312,7 +312,7 @@ export const ChtmlXmlNode = (function <N, T, D>(): ChtmlWrapperClass<N, T, D> {
     /**
      * @override
      */
-    public addHDW(html: N, styles: Styles): N {
+    public addHDW(html: N, styles: StyleList): N {
       const scale = this.jax.options.scale;
       const { h, d, w } = this.bbox;
       const rscale = scale * this.metrics.scale;

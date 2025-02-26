@@ -53,7 +53,7 @@ export const HtmlNodeMethods: { [key: string]: ParseMethod } = {
     //
     //  Get the serialized HTML that <tex-html> contains
     //  (If there are nested <tex-html>, they are marked using an n="x" attribute and
-    //   and associated comment <!x> that marks which </tex-html> goes with it.)
+    //   an associated comment <!x> that marks which </tex-html> goes with it.)
     //
     parser.i += match[0].length;
     const end = (match[1] ? `<!${match[1]}>` : '') + '</tex-html>';

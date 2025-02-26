@@ -41,7 +41,7 @@ import { MmlMaction } from '../../../core/MmlTree/MmlNodes/maction.js';
 import { ActionDef } from '../../common/Wrappers/maction.js';
 import { EventHandler, TooltipData } from '../../common/Wrappers/maction.js';
 import { TextNode } from '../../../core/MmlTree/MmlNode.js';
-import { StyleList } from '../../../util/StyleList.js';
+import { StyleJson } from '../../../util/StyleJson.js';
 import { STATE } from '../../../core/MathItem.js';
 
 /*****************************************************************/
@@ -151,7 +151,7 @@ export const ChtmlMaction = (function <N, T, D>(): ChtmlMactionClass<N, T, D> {
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'mjx-maction': {
         position: 'relative',
       },

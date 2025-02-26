@@ -327,6 +327,26 @@ const NodeUtil = {
   getOp(mo: MmlMo, form: string = 'infix'): OperatorDef {
     return MmlMo.OPTABLE[form][mo.getText()] || null;
   },
+
+  /**
+   * Gets an explicit or inherited attribute of an mo, or its default from the
+   * operator dictionary, or the default value
+   *
+   * @param {MmlMo} mo       The mo node.
+   * @param {string} attr    The attribute to return.
+   * @returns {Property}     The attributes property.
+   */
+  getMoAttribute(mo: MmlNode, attr: string): Property {
+    if (!mo.attributes.isSet(attr)) {
+      for (const form of ['infix', 'postfix', 'prefix']) {
+        const value = this.getOp(mo, form)?.[3]?.[attr];
+        if (value !== undefined) {
+          return value;
+        }
+      }
+    }
+    return mo.attributes.get(attr);
+  },
 };
 
 export default NodeUtil;

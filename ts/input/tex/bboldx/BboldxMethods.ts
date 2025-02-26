@@ -73,14 +73,14 @@ export const BboldxMethods = {
   },
 
   /**
-   * Handle bboldx delimiters as mi in normal variant.
+   * Handle bboldx delimiters as mo in normal variant.
    *
    * @param {TexParser} parser The current tex parser.
    * @param {Token} delim The parsed token.
    */
   delimiterNormal: function (parser: TexParser, delim: Token) {
     const font = getBbxFont(parser, '-bboldx', '-bboldx-light', '-bboldx-bold');
-    const def = { fence: false, stretchy: false, mathvariant: font };
+    const def = { stretchy: false, mathvariant: font };
     const node = parser.create('token', 'mo', def, delim.char);
     parser.Push(node);
   },
@@ -103,14 +103,14 @@ export const BboldxMethods = {
   },
 
   /**
-   * Handle bboldx delimiters as mi in bold variant.
+   * Handle bboldx delimiters as mo in bold variant.
    *
    * @param {TexParser} parser The current tex parser.
    * @param {Token} delim The parsed token.
    */
   delimiterBold: function (parser: TexParser, delim: Token) {
     const font = getBbxFont(parser, '-bboldx-bold', '-bboldx', '-bboldx-bold');
-    const def = { fence: false, stretchy: false, mathvariant: font };
+    const def = { stretchy: false, mathvariant: font };
     const node = parser.create('token', 'mo', def, delim.char);
     parser.Push(node);
   },
@@ -132,9 +132,6 @@ function getBbxFont(
   light: string,
   bfbb: string
 ): string {
-  if (!parser.options?.bboldx) {
-    return normal;
-  }
-  const options = parser.options?.bboldx;
+  const options = parser.options.bboldx;
   return options.bfbb ? bfbb : options.light ? light : normal;
 }

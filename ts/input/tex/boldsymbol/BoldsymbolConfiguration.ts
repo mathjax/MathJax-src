@@ -97,15 +97,11 @@ export function rewriteBoldTokens(arg: { data: ParseOptions }) {
   for (const node of arg.data.getList('fixBold')) {
     if (NodeUtil.getProperty(node, 'fixBold')) {
       const variant = NodeUtil.getAttribute(node, 'mathvariant') as string;
-      if (variant == null) {
-        NodeUtil.setAttribute(node, 'mathvariant', TexConstant.Variant.BOLD);
-      } else {
-        NodeUtil.setAttribute(
-          node,
-          'mathvariant',
-          BOLDVARIANT[variant] || variant
-        );
-      }
+      NodeUtil.setAttribute(
+        node,
+        'mathvariant',
+        BOLDVARIANT[variant] || variant
+      );
       NodeUtil.removeProperties(node, 'fixBold');
     }
   }

@@ -5,7 +5,6 @@ export function fontExtension(id, name, pkg = `@mathjax/${name}`) {
   if (MathJax.loader) {
     const FONTPATH = hasWindow ? `https://cdn.jsdelivr.net/npm/${name}` : pkg;
     const path = name.replace(/-font-extension$/, '-extension');
-    const extension = name.replace(/-font-extension$/, '');
     const jax = (MathJax.config?.startup?.output || 'chtml');
     combineDefaults(MathJax.config.loader, 'paths', {[path]: FONTPATH});
     combineDefaults(MathJax.config.loader, 'dependencies', {[`[${path}]/${jax}`]: [`output/${jax}`]});

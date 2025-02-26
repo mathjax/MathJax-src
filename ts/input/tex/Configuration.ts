@@ -84,10 +84,7 @@ export class Configuration {
       [ConfigurationType.PARSER]?: string;
     } = {}
   ): Configuration {
-    const priority =
-      config.priority !== undefined
-        ? config.priority
-        : PrioritizedList.DEFAULTPRIORITY;
+    const priority = config.priority ?? PrioritizedList.DEFAULTPRIORITY;
     const init = config.init ? this.makeProcessor(config.init, priority) : null;
     const conf = config.config
       ? this.makeProcessor(config.config, priority)
@@ -440,7 +437,10 @@ export class ParserConfiguration {
   protected getPackage(name: string): Configuration {
     const config = ConfigurationHandler.get(name);
     if (config && !this.parsers.includes(config.parser)) {
-      throw Error(`Package ${name} doesn't target the proper parser`);
+      throw Error(`Package '${name}' doesn't target the proper parser`);
+    }
+    if (!config) {
+      this.warn(`Package '${name}' not found.  Omitted.`);
     }
     return config;
   }
@@ -479,5 +479,14 @@ export class ParserConfiguration {
     for (const [post, priority] of config.postprocessors) {
       jax.postFilters.add(post, priority);
     }
+  }
+
+  /**
+   * Prints a warning message.
+   *
+   * @param {string} message The warning.
+   */
+  private warn(message: string) {
+    console.warn('MathJax Warning: ' + message);
   }
 }

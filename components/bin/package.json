@@ -7,6 +7,6 @@
     "#menu/*": "mj-context-menu/cjs/*",
     "#sre/*": "speech-rule-engine/cjs/*",
     "#mhchem/*": "mhchemparser/dist/*",
-    "#default-font/*": "mathjax-newcm-font/cjs/*"
+    "#default-font/*": "@mathjax/mathjax-newcm-font/cjs/*"
   }
 }

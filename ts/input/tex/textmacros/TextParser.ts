@@ -170,9 +170,6 @@ export class TextParser extends TexParser {
    */
   public PushMath(mml: MmlNode) {
     const env = this.stack.env;
-    if (!mml.isKind('TeXAtom')) {
-      mml = this.create('node', 'TeXAtom', [mml]); // make sure the math is an ORD
-    }
     for (const name of ['mathsize', 'mathcolor']) {
       if (env[name] && !mml.attributes.hasExplicit(name)) {
         if (!mml.isToken && !mml.isKind('mstyle')) {
@@ -183,6 +180,9 @@ export class TextParser extends TexParser {
     }
     if (mml.isInferred) {
       mml = this.create('node', 'mrow', mml.childNodes);
+    }
+    if (!mml.isKind('TeXAtom')) {
+      mml = this.create('node', 'TeXAtom', [mml]); // make sure the math is an ORD
     }
     this.nodes.push(mml);
   }

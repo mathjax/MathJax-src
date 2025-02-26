@@ -164,12 +164,15 @@ export const EmpheqUtil = {
   ) {
     table.attributes.set(
       'columnalign',
-      'right ' + (table.attributes.get('columnalign') || '')
+      'right ' + table.attributes.get('columnalign')
     );
     table.attributes.set(
       'columnspacing',
-      '0em ' + (table.attributes.get('columnspacing') || '')
+      '0em ' + table.attributes.get('columnspacing')
     );
+    if (table.childNodes.length === 0) {
+      table.appendChild(parser.create('node', 'mtr'));
+    }
     let mtd;
     for (const row of table.childNodes.slice(0).reverse()) {
       mtd = parser.create('node', 'mtd');
@@ -202,10 +205,12 @@ export const EmpheqUtil = {
     if (table.childNodes.length === 0) {
       table.appendChild(parser.create('node', 'mtr'));
     }
-    const m = EmpheqUtil.columnCount(table);
     const row = table.childNodes[0];
-    while (row.childNodes.length < m)
+    const m =
+      EmpheqUtil.columnCount(table) + (row.isKind('mlabeledtr') ? 1 : 0);
+    while (row.childNodes.length < m) {
       row.appendChild(parser.create('node', 'mtd'));
+    }
     const mtd = row.appendChild(parser.create('node', 'mtd')) as MmlMtd;
     EmpheqUtil.rowspanCell(mtd, right, original, parser, env);
     table.attributes.set(
@@ -217,7 +222,7 @@ export const EmpheqUtil = {
     );
     table.attributes.set(
       'columnspacing',
-      ((table.attributes.get('columnspacing') as string) || '')
+      (table.attributes.get('columnspacing') as string)
         .split(/ /)
         .slice(0, m - 1)
         .join(' ') + ' 0em'

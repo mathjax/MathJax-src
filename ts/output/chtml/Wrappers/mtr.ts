@@ -43,7 +43,7 @@ import {
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMtr, MmlMlabeledtr } from '../../../core/MmlTree/MmlNodes/mtr.js';
 import { ChtmlMtableNTD } from './mtable.js';
-import { StyleList } from '../../../util/StyleList.js';
+import { StyleJson } from '../../../util/StyleJson.js';
 
 /*****************************************************************/
 /**
@@ -134,7 +134,7 @@ export const ChtmlMtr = (function <N, T, D>(): ChtmlMtrClass<N, T, D> {
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'mjx-mtr': {
         display: 'table-row',
       },
@@ -266,7 +266,7 @@ export const ChtmlMlabeledtr = (function <N, T, D>(): ChtmlMlabeledtrClass<
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'mjx-mlabeledtr': {
         display: 'table-row',
       },

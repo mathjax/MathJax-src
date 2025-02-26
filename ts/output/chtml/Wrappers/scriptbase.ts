@@ -42,7 +42,7 @@ import {
 import { ChtmlMsubsup } from './msubsup.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { BBox } from '../../../util/BBox.js';
-import { StyleData } from '../../../util/StyleList.js';
+import { StyleJsonData } from '../../../util/StyleJson.js';
 
 /*****************************************************************/
 /**
@@ -176,7 +176,7 @@ export const ChtmlScriptbase = (function <N, T, D>(): ChtmlScriptbaseClass<
       this.dom = this.standardChtmlNodes(parents);
       const [x, v] = this.getOffset();
       const dx = x - (this.baseRemoveIc ? this.baseIc : 0);
-      const style: StyleData = { 'vertical-align': this.em(v) };
+      const style: StyleJsonData = { 'vertical-align': this.em(v) };
       if (dx) {
         style['margin-left'] = this.em(dx);
       }
