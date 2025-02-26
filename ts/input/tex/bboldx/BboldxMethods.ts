@@ -132,9 +132,6 @@ function getBbxFont(
   light: string,
   bfbb: string
 ): string {
-  if (!parser.options?.bboldx) {
-    return normal;
-  }
-  const options = parser.options?.bboldx;
+  const options = parser.options.bboldx;
   return options.bfbb ? bfbb : options.light ? light : normal;
 }
