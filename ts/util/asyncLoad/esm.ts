@@ -31,9 +31,7 @@ let root = new URL(import.meta.url).href.replace(
 if (!mathjax.asyncLoad) {
   mathjax.asyncLoad = async (name: string) => {
     const file = name.charAt(0) === '.' ? new URL(name, root).pathname : name;
-    return import(file).then((result) =>
-      result.default === undefined ? result : result.default
-    );
+    return import(file).then((result) => result.default ?? result);
   };
 }
 
