@@ -551,7 +551,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
       return y;
     }
     const adaptor = this.adaptor;
-    const {h, rscale} = this.getBBox();
+    const { h, rscale } = this.getBBox();
     //
     //  Remove the element's children and put them into a <g> with transform
     //
