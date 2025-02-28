@@ -134,12 +134,20 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
     let c = '';
     const text = parser.string.substring(parser.i);
     if (next === "'") {
-      match = text.match(/^'(?:([0-7]{1,7}) ?|(\\\S)|(.))/u);
+      match = text.match(/^'([0-7]{1,7}) ?/u);
       if (match) {
-        if (match[1]) {
-          c = String.fromCodePoint(parseInt(match[1], 8));
-        } else if (match[3]) {
-          c = match[3];
+        c = String.fromCodePoint(parseInt(match[1], 8));
+      }
+    } else if (next === '"') {
+      match = text.match(/^"([0-9A-F]{1,6}) ?/);
+      if (match) {
+        c = String.fromCodePoint(parseInt(match[1], 16));
+      }
+    } else if (next === '`') {
+      match = text.match(/^`(?:(\\\S)|(.))/u);
+      if (match) {
+        if (match[2]) {
+          c = match[2];
         } else {
           parser.i += 2;
           const cs = [...parser.GetCS()];
@@ -153,11 +161,6 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
           c = cs[0];
           match = [''];
         }
-      }
-    } else if (next === '"') {
-      match = text.match(/^"([0-9A-F]{1,6}) ?/);
-      if (match) {
-        c = String.fromCodePoint(parseInt(match[1], 16));
       }
     } else {
       match = text.match(/^([0-9]{1,7}) ?/);

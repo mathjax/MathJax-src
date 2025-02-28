@@ -231,22 +231,22 @@ describe('Unicode others', () => {
 
   it('Char alpha', () => {
     toXmlMatch(
-      tex2mml('\\char\'A'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\char'A" display="block">
-         <mi data-latex="\\char'A">A</mi>
-       </math>`
-    );
+      tex2mml('\\char`A'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\char\`A" display="block">
+        <mi data-latex="\\char\`A">A</mi>
+      </math>`
+    )
   });
 
   /********************************************************************************/
 
   it('Char command number', () => {
     toXmlMatch(
-      tex2mml('\\char\'\\3'),
-      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\char'\\3" display="block">
-         <mn data-latex="\\char'\\3">3</mn>
+      tex2mml('\\char`\\3'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\char\`\\3" display="block">
+        <mn data-latex="\\char\`\\3">3</mn>
        </math>`
-    );
+    )
   });
 
   /********************************************************************************/
@@ -306,7 +306,7 @@ describe('Unicode Errors', () => {
   /********************************************************************************/
 
   it('Unicode InvalidAlphanumeric', () => {
-    expectTexError('\\char\'\\nix')
+    expectTexError('\\char`\\nix')
       .toBe('Invalid alphanumeric constant for \\char');
   });
 
