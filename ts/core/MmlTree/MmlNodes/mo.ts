@@ -142,7 +142,7 @@ export class MmlMo extends AbstractMmlTokenNode {
    */
   /* prettier-ignore */
   /* eslint-disable no-misleading-character-class */
-  protected static mathaccents = new RegExp([
+  public static mathaccents = new RegExp([
     '^[',
     '\u00B4\u0301\u02CA',  // acute
     '\u0060\u0300\u02CB',  // grave
@@ -439,6 +439,7 @@ export class MmlMo extends AbstractMmlTokenNode {
     if (def) {
       return def;
     }
+    this.setProperty('noDictDef', true);
     const limits = this.attributes.get('movablelimits');
     const isOP = !!mo.match(CLASS.opPattern);
     if ((isOP || limits) && this.getProperty('texClass') === undefined) {
