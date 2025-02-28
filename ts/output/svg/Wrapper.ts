@@ -551,7 +551,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
       return y;
     }
     const adaptor = this.adaptor;
-    const h = this.getBBox().h;
+    const {h, rscale} = this.getBBox();
     //
     //  Remove the element's children and put them into a <g> with transform
     //
@@ -570,7 +570,7 @@ export class SvgWrapper<N, T, D> extends CommonWrapper<
       this.svg('text', { 'data-id-align': true }, [this.text('')])
     );
     adaptor.append(this.dom[0], g);
-    return y + h;
+    return y + h * rscale;
   }
 
   /**
