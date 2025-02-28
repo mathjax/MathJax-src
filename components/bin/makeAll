@@ -125,10 +125,9 @@ function fileRegExp(name) {
 }
 
 /**
- * Get and change the current working directory
+ * Get the current working directory
  */
 const root = process.cwd();
-process.chdir(path.dirname(path.dirname(__dirname)));
 
 /**
  * Regular expression for the components directory
