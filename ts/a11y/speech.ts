@@ -163,7 +163,7 @@ export interface SpeechMathDocument<N, T, D>
   attachSpeech(): SpeechMathDocument<N, T, D>;
 
   /**
-   * Dettach speech from the MathItems in the MathDocument
+   * Detach speech from the MathItems in the MathDocument
    *
    * @returns {SpeechMathDocument}   The MathDocument (so calls can be chained)
    */
