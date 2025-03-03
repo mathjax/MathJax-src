@@ -112,10 +112,10 @@ const HtmlMethods: { [key: string]: ParseMethod } = {
     let style = parser.GetArgument(name);
     const arg = GetArgumentMML(parser, name);
     // check that it looks like a style string
-    const oldStyle = NodeUtil.getAttribute(arg, 'style');
+    let oldStyle = NodeUtil.getAttribute(arg, 'style') as string;
     if (oldStyle) {
-      if (style.charAt(style.length - 1) !== ';') {
-        style += ';';
+      if (oldStyle.charAt(style.length - 1) !== ';') {
+        oldStyle += ';';
       }
       style = oldStyle + ' ' + style;
     }
@@ -150,10 +150,6 @@ const GetArgumentMML = function (parser: TexParser, name: string): MmlNode {
   const arg = parser.ParseArg(name);
   if (!NodeUtil.isInferred(arg)) {
     return arg;
-  }
-  const children = NodeUtil.getChildren(arg);
-  if (children.length === 1) {
-    return children[0];
   }
   const mrow = parser.create('node', 'mrow');
   NodeUtil.copyChildren(arg, mrow);
