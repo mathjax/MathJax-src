@@ -86,7 +86,7 @@ declare const SRE: any;
   } else {
     global = (self as any).global = self; // for web workers make global be the self object
     global.copyStructure = (structure: any) => structure;
-    global.SREfeaure = { json: './mathmaps/' };
+    global.SREfeature = { json: './mathmaps/' };
   }
   global.exports = self; // lets SRE get defined as a global variable
 
@@ -144,7 +144,7 @@ declare const SRE: any;
      * This loads one or more libraries.
      *
      * @param {Message} data The data object
-     * @returns {Promise} A promise the completes when the imports are done
+     * @returns {Promise} A promise that completes when the imports are done
      */
     import(data: Message): Promise<void> {
       return Array.isArray(data.imports)
