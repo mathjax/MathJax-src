@@ -248,7 +248,6 @@ export const options = {
     //
     allow: expandable({
       base: false,
-      'all-packages': false,
       autoload: false,
       configmacros: false,
       tagformat: false,

@@ -137,9 +137,12 @@ export function combineWithMathJax(config: any): MathJaxObject {
 }
 
 /**
- * Create the MathJax global, if it doesn't exist
+ * Create the MathJax global, if it doesn't exist or is not an object literal
  */
-if (typeof GLOBAL.MathJax === 'undefined') {
+if (
+  typeof GLOBAL.MathJax === 'undefined' ||
+  GLOBAL.MathJax.constructor !== {}.constructor
+) {
   GLOBAL.MathJax = {} as MathJaxConfig;
 }
 
