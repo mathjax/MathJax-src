@@ -5,7 +5,7 @@ import {context} from '#js/util/context.js';
 // This sets up the correct link to the mathmaps files.
 if (MathJax.startup) {
 
-  let path = Package.resolvePath('[sre]', false);
+  let path = Package.resolvePath('[sre]/mathmaps', false);
 
   if (context.window) {
     context.window.SREfeature = {json: path};

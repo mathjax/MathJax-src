@@ -25,11 +25,7 @@ import { Handler } from '../core/Handler.js';
 import { MmlNode } from '../core/MmlTree/MmlNode.js';
 import { MathML } from '../input/mathml.js';
 import { STATE, newState } from '../core/MathItem.js';
-import {
-  EnrichedMathItem,
-  EnrichedMathDocument,
-  EnrichHandler,
-} from './semantic-enrich.js';
+import { SpeechMathItem, SpeechMathDocument, SpeechHandler } from './speech.js';
 import { MathDocumentConstructor } from '../core/MathDocument.js';
 import { OptionList, expandable } from '../util/Options.js';
 import { SerializedMmlVisitor } from '../core/MmlTree/SerializedMmlVisitor.js';
@@ -48,8 +44,8 @@ export type Constructor<T> = new (...args: any[]) => T;
  * Shorthands for types with HTMLElement, Text, and Document instead of generics
  */
 export type HANDLER = Handler<HTMLElement, Text, Document>;
-export type HTMLDOCUMENT = EnrichedMathDocument<HTMLElement, Text, Document>;
-export type HTMLMATHITEM = EnrichedMathItem<HTMLElement, Text, Document>;
+export type HTMLDOCUMENT = SpeechMathDocument<HTMLElement, Text, Document>;
+export type HTMLMATHITEM = SpeechMathItem<HTMLElement, Text, Document>;
 export type MATHML = MathML<HTMLElement, Text, Document>;
 
 /*==========================================================================*/
@@ -97,7 +93,7 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     /**
      * Semantic id of the rerendered element that should regain the focus.
      */
-    protected refocus: number = null;
+    protected refocus: string = null;
 
     /**
      * Add the explorer to the output for this math item
@@ -127,9 +123,8 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     ) {
       if (this.explorers) {
         const speech = this.explorers.speech;
-        if (speech && speech.attached && speech.active) {
-          const focus = speech.semanticFocus();
-          this.refocus = focus ? focus.id : null;
+        if (speech && speech.attached) {
+          this.refocus = speech.semanticFocus() ?? null;
         }
         this.explorers.reattach();
       }
@@ -195,8 +190,6 @@ export function ExplorerMathDocumentMixin<
       sre: expandable({
         ...BaseDocument.OPTIONS.sre,
         speech: 'none',                    // None as speech is explicitly computed
-        structure: true,                   // Generates full aria structure
-        aria: true,
       }),
       a11y: {
         ...BaseDocument.OPTIONS.a11y,
@@ -293,8 +286,8 @@ export function ExplorerHandler(
   handler: HANDLER,
   MmlJax: MATHML = null
 ): HANDLER {
-  if (!handler.documentClass.prototype.enrich && MmlJax) {
-    handler = EnrichHandler(handler, MmlJax);
+  if (!handler.documentClass.prototype.attachSpeech) {
+    handler = SpeechHandler(handler, MmlJax);
   }
   handler.documentClass = ExplorerMathDocumentMixin(
     handler.documentClass as any
@@ -316,6 +309,8 @@ export function setA11yOptions(
   document: HTMLDOCUMENT,
   options: { [key: string]: any }
 ) {
+  // TODO (volker): This needs to be replace by the engine feature vector.
+  // Minus rule sets etc. Breaking change in SRE.
   const sreOptions = Sre.engineSetup() as { [name: string]: string };
   for (const key in options) {
     if (document.options.a11y[key] !== undefined) {

@@ -198,7 +198,6 @@ export abstract class AbstractRegion<T> implements Region<T> {
    * @param {HTMLElement} node The reference node.
    */
   protected stackRegions(node: HTMLElement) {
-    this.AddElement();
     // TODO: This could be made more efficient by caching regions of a class.
     const rect = node.getBoundingClientRect();
     let baseBottom = 0;
@@ -403,6 +402,7 @@ export class SpeechRegion extends LiveRegion {
    * @override
    */
   public Show(node: HTMLElement, highlighter: Sre.highlighter) {
+    super.Update('\u00a0'); // Ensures region shown and cannot be overwritten.
     this.node = node;
     super.Show(node, highlighter);
   }
@@ -416,6 +416,7 @@ export class SpeechRegion extends LiveRegion {
    * @override
    */
   public Update(speech: string) {
+    // TODO (Volker): Make sure we use speech and ssml!
     if (this.voiceRequest) {
       this.makeVoice(speech);
       return;
@@ -423,7 +424,6 @@ export class SpeechRegion extends LiveRegion {
     speechSynthesis.onvoiceschanged = (() => (this.voiceRequest = true)).bind(
       this
     );
-    super.Update('\u00a0'); // Ensures region shown and cannot be overwritten.
     const promise = new Promise((resolve) => {
       setTimeout(() => {
         if (this.voiceRequest) {

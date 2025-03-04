@@ -1,13 +1,13 @@
 {
   "build": {
-    "component": "a11y/explorer",
-    "targets": ["a11y/explorer.ts", "a11y/explorer"]
+    "component": "a11y/speech",
+    "targets": ["a11y/speech.ts", "a11y/speech"],
+    "exclude": ["a11y/speech/SpeechMenu.ts"]
   },
   "webpack": {
-    "name": "a11y/explorer",
+    "name": "a11y/speech",
     "libs": [
       "components/src/a11y/semantic-enrich/lib",
-      "components/src/a11y/speech/lib",
       "components/src/a11y/sre/lib",
       "components/src/input/mml/lib",
       "components/src/core/lib"

@@ -243,3 +243,17 @@ export enum InPlace {
   DEPTH,
   SUMMARY,
 }
+
+/**
+ * Speech attributes.
+ */
+export enum SemAttr {
+  SPEECH = 'data-semantic-speech-none',
+  SPEECH_SSML = 'data-semantic-speech',
+  SUMMARY = 'data-semantic-summary-none',
+  SUMMARY_SSML = 'data-semantic-summary',
+  PREFIX = 'data-semantic-prefix-none',
+  PREFIX_SSML = 'data-semantic-prefix',
+  POSTFIX = 'data-semantic-postfix-none',
+  POSTFIX_SSML = 'data-semantic-postfix',
+}

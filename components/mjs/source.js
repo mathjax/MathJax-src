@@ -71,6 +71,7 @@ export const source = {
   'output/svg': `${src}/output/svg/svg.js`,
   'a11y/assistive-mml': `${src}/a11y/assistive-mml/assistive-mml.js`,
   'a11y/semantic-enrich': `${src}/a11y/semantic-enrich/semantic-enrich.js`,
+  'a11y/speech': `${src}/a11y/speech/speech.js`,
   'a11y/complexity': `${src}/a11y/complexity/complexity.js`,
   'a11y/explorer': `${src}/a11y/explorer/explorer.js`,
   'a11y/sre': `${src}/a11y/sre/sre.js`,

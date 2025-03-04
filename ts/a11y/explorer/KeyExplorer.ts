@@ -34,7 +34,6 @@ import { ExplorerPool } from './ExplorerPool.js';
 import { MmlNode } from '../../core/MmlTree/MmlNode.js';
 import { honk, InPlace } from '../speech/SpeechUtil.js';
 import { GeneratorPool } from '../speech/GeneratorPool.js';
-import * as Sre from '../sre.js';
 
 /**
  * Interface for keyboard explorers. Adds the necessary keyboard events.
@@ -117,7 +116,7 @@ export class SpeechExplorer
   /**
    * Id of the element focused before the restart.
    */
-  public restarted: number = null;
+  public restarted: string = null;
 
   /**
    * Convenience getter for generator pool of the item.
@@ -219,6 +218,9 @@ export class SpeechExplorer
     }
   }
 
+  // Avoids double focus in event and thus double Start.
+  private focusin = false;
+
   /**
    * @override
    */
@@ -230,6 +232,10 @@ export class SpeechExplorer
       this.mousedown = false;
       return;
     }
+    if (this.focusin) {
+      return;
+    }
+    this.focusin = !this.focusin;
     this.current = this.current || this.node.querySelector('[role="treeitem"]');
     this.Start();
     event.preventDefault();
@@ -244,6 +250,7 @@ export class SpeechExplorer
     // keyboard.
     if (!this.active) return;
     this.generators.CleanUp(this.current);
+    this.generators.lastMove = InPlace.NONE;
     if (!this.move) {
       this.Stop();
     }
@@ -363,8 +370,8 @@ export class SpeechExplorer
    * @returns {HTMLElement} The refocused node.
    */
   public depth(node: HTMLElement): HTMLElement {
-    this.generators.depth(node, !!this.actionable(node));
-    this.refocus(node);
+    this.generators.depth(node, this.node, !!this.actionable(node));
+    this.refocus();
     this.generators.lastMove = InPlace.DEPTH;
     return node;
   }
@@ -393,7 +400,7 @@ export class SpeechExplorer
    */
   public summary(node: HTMLElement): HTMLElement {
     this.generators.summary(node);
-    this.refocus(node);
+    this.refocus();
     this.generators.lastMove = InPlace.SUMMARY;
     return node;
   }
@@ -406,9 +413,9 @@ export class SpeechExplorer
    * @returns {HTMLElement} The refocused targeted node.
    */
   public nextRules(node: HTMLElement): HTMLElement {
-    this.generators.nextRules(node);
-    this.Speech();
-    this.refocus(node);
+    this.node.removeAttribute('data-speech-attached');
+    this.generators.nextRules(this.item);
+    this.refocus();
     return node;
   }
 
@@ -420,20 +427,22 @@ export class SpeechExplorer
    * @returns {HTMLElement} The refocused targeted node.
    */
   public nextStyle(node: HTMLElement): HTMLElement {
-    this.generators.nextStyle(node);
-    this.Speech();
-    this.refocus(node);
+    this.node.removeAttribute('data-speech-attached');
+    this.generators.nextStyle(node, this.item);
+    this.refocus();
     return node;
   }
 
   /**
-   * Refocuses the active elements, mainly to alert screenreaders of changes.
-   *
-   * @param {HTMLElement} node The node to refocus on.
+   * Refocuses the active elements, after recomputed speech and to alert
+   * screenreaders of changes.
    */
-  private refocus(node: HTMLElement) {
-    node.blur();
-    node.focus();
+  private refocus() {
+    this.Stop();
+    this.Restart((_err) => {
+      this.node.setAttribute('data-speech-attached', 'true');
+      this.Start();
+    });
   }
 
   /**
@@ -493,6 +502,21 @@ export class SpeechExplorer
   }
 
   /**
+   * Wait for speech to be reattached.
+   *
+   * @param {(err: string) => void} handler The error handling function should
+   *      restart fail.
+   */
+  private async Restart(handler: (err: string) => void = (_err: string) => {}) {
+    this.generators.promise
+      .then(() => this.Start())
+      .catch((err) => {
+        console.info(`Restart error for ${err}`);
+        handler(err);
+      });
+  }
+
+  /**
    * @override
    */
   public Start() {
@@ -501,6 +525,10 @@ export class SpeechExplorer
       this.item.attachSpeech(this.document);
     }
     if (!this.attached) return;
+    if (!this.node.hasAttribute('data-speech-attached')) {
+      this.Restart();
+      return;
+    }
     if (this.node.hasAttribute('tabindex')) {
       this.node.removeAttribute('tabindex');
     }
@@ -538,22 +566,18 @@ export class SpeechExplorer
       this.current = this.node.childNodes[0] as HTMLElement;
     }
     const options = this.document.options;
-    let promise = Sre.sreReady();
-    if (this.generators.update(options)) {
-      promise = promise.then(() => this.Speech());
-    }
     this.current.setAttribute('tabindex', '0');
     this.current.focus();
     super.Start();
     if (options.a11y.subtitles && options.a11y.speech && options.enableSpeech) {
-      promise.then(() => this.region.Show(this.node, this.highlighter));
+      this.region.Show(this.node, this.highlighter);
     }
     if (
       options.a11y.viewBraille &&
       options.a11y.braille &&
       options.enableBraille
     ) {
-      promise.then(() => this.brailleRegion.Show(this.node, this.highlighter));
+      this.brailleRegion.Show(this.node, this.highlighter);
     }
     if (options.a11y.keyMagnifier) {
       this.magnifyRegion.Show(this.current, this.highlighter);
@@ -564,10 +588,9 @@ export class SpeechExplorer
   /**
    * @override
    */
-  public Update(force: boolean = false) {
-    // TODO (v4): This is a hack to avoid double voicing on initial startup!
-    // Make that cleaner and remove force as it is not really used!
-    if (!this.active && !force) return;
+  public Update() {
+    // TODO (v4): This avoids double voicing on initial startup!
+    if (!this.active) return;
     this.pool.unhighlight();
     this.pool.highlight([this.current]);
     this.region.node = this.node;
@@ -580,20 +603,10 @@ export class SpeechExplorer
   }
 
   /**
-   * Computes the speech for the current expression.
-   */
-  public Speech() {
-    this.item.outputData.speech = this.generators.updateSpeech(
-      this.item.typesetRoot
-    );
-  }
-
-  /**
    * @override
    */
   public KeyDown(event: KeyboardEvent) {
     const code = event.key;
-    // this.walker.modifier = event.shiftKey;
     if (code === 'Tab') {
       return;
     }
@@ -664,6 +677,12 @@ export class SpeechExplorer
     return this.triggerLink(this.current);
   }
 
+  /**
+   * Executiving the trigger the link action.
+   *
+   * @param {HTMLElement} node The node with the link.
+   * @returns {boolean} True if link was successfully triggered.
+   */
   protected triggerLink(node: HTMLElement) {
     const focus = node
       ?.getAttribute('data-semantic-postfix')
@@ -696,6 +715,7 @@ export class SpeechExplorer
    */
   public Stop() {
     if (this.active) {
+      this.focusin = false;
       this.pool.unhighlight();
       this.magnifyRegion.Hide();
       this.region.Hide();
@@ -705,16 +725,10 @@ export class SpeechExplorer
   }
 
   /**
-   * @returns {Sre.semanticNode} The semantic node that is currently focused.
+   * @returns {string} The semantic id of the node that is currently focused.
    */
-  public semanticFocus(): Sre.semanticNode {
+  public semanticFocus(): string {
     const node = this.current || this.node;
-    const id = node.getAttribute('data-semantic-id');
-    const stree = this.generators.speechGenerator.getRebuilt()?.stree;
-    if (!stree) return null;
-    const snode = stree.root.querySelectorAll(
-      (x: any) => x.id.toString() === id
-    )[0];
-    return snode || stree.root;
+    return node.getAttribute('data-semantic-id');
   }
 }

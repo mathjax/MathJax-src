@@ -21,7 +21,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import { ExplorerMathItem } from '../explorer.js';
+// import { ExplorerMathItem } from '../explorer.js';
 import { MJContextMenu } from '../../ui/menu/MJContextMenu.js';
 import { SubMenu, Submenu } from '../../ui/menu/mj-context-menu.js';
 import * as Sre from '../sre.js';
@@ -134,6 +134,7 @@ function basePreferences(previous: string): object[] {
   return items;
 }
 
+// TODO(volker): This now needs to go through the worker as well.
 /**
  * Generates the items for smart preference choices, depending on the top most
  *
@@ -142,48 +143,48 @@ function basePreferences(previous: string): object[] {
  * @param {string} locale The current locale.
  * @returns {object[]} The menu of smart choices as a list of JSON objects.
  */
-function smartPreferences(
-  previous: string,
-  smart: string,
-  locale: string
-): object[] {
-  const prefs = Sre.clearspeakPreferences.getLocalePreferences();
-  const loc = prefs[locale];
-  if (!loc) {
-    return [];
-  }
-  const items = [
-    { type: 'label', content: 'Preferences for ' + smart },
-    { type: 'rule' },
-  ];
-  return items.concat(
-    loc[smart].map(function (x) {
-      const [key, value] = x.split('_');
-      return {
-        type: 'radioCompare',
-        content: value,
-        id:
-          'clearspeak-' +
-          Sre.clearspeakPreferences.addPreference(previous, key, value),
-        variable: 'speechRules',
-        comparator: (x: string, y: string) => {
-          if (x === y) {
-            return true;
-          }
-          if (value !== 'Auto') {
-            return false;
-          }
-          const [dom1, pref] = x.split('-');
-          const [dom2] = y.split('-');
-          return (
-            dom1 === dom2 &&
-            !Sre.clearspeakPreferences.fromPreference(pref)[key]
-          );
-        },
-      };
-    })
-  );
-}
+// function smartPreferences(
+//   previous: string,
+//   smart: string,
+//   locale: string
+// ): object[] {
+//   const prefs = Sre.clearspeakPreferences.getLocalePreferences();
+//   const loc = prefs[locale];
+//   if (!loc) {
+//     return [];
+//   }
+//   const items = [
+//     { type: 'label', content: 'Preferences for ' + smart },
+//     { type: 'rule' },
+//   ];
+//   return items.concat(
+//     loc[smart].map(function (x) {
+//       const [key, value] = x.split('_');
+//       return {
+//         type: 'radioCompare',
+//         content: value,
+//         id:
+//           'clearspeak-' +
+//           Sre.clearspeakPreferences.addPreference(previous, key, value),
+//         variable: 'speechRules',
+//         comparator: (x: string, y: string) => {
+//           if (x === y) {
+//             return true;
+//           }
+//           if (value !== 'Auto') {
+//             return false;
+//           }
+//           const [dom1, pref] = x.split('-');
+//           const [dom2] = y.split('-');
+//           return (
+//             dom1 === dom2 &&
+//             !Sre.clearspeakPreferences.fromPreference(pref)[key]
+//           );
+//         },
+//       };
+//     })
+//   );
+// }
 
 /**
  * Creates dynamic clearspeak menu.
@@ -197,14 +198,14 @@ export function clearspeakMenu(menu: MJContextMenu, sub: Submenu): SubMenu {
   const box = csSelectionBox(menu, locale);
   let items: object[] = [];
   if (menu.settings.speech) {
-    const explorer = (menu.mathItem as ExplorerMathItem)?.explorers?.speech;
-    const semantic = explorer?.semanticFocus();
+    // const explorer = (menu.mathItem as ExplorerMathItem)?.explorers?.speech;
+    // const semantic = explorer?.semanticFocus();
     const previous = Sre.clearspeakPreferences.currentPreference();
     items = items.concat(basePreferences(previous));
-    if (semantic) {
-      const smart = Sre.clearspeakPreferences.relevantPreferences(semantic);
-      items = items.concat(smartPreferences(previous, smart, locale));
-    }
+    // if (semantic) {
+    //   const smart = Sre.clearspeakPreferences.relevantPreferences(semantic);
+    //   items = items.concat(smartPreferences(previous, smart, locale));
+    // }
     if (box) {
       items.splice(2, 0, box);
     }

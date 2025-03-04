@@ -24,7 +24,7 @@
 import { AbstractDOMAdaptor } from '../core/DOMAdaptor.js';
 import { NodeMixin, Constructor } from './NodeMixin.js';
 import { LiteDocument } from './lite/Document.js';
-import { LiteElement, LiteNode } from './lite/Element.js';
+import { LiteElement, LiteNode, LiteIFrame } from './lite/Element.js';
 import { LiteText, LiteComment } from './lite/Text.js';
 import { LiteList } from './lite/List.js';
 import { LiteWindow } from './lite/Window.js';
@@ -77,7 +77,7 @@ export class LiteBase extends AbstractDOMAdaptor<
    * @override
    */
   protected create(kind: string, _ns: string = null) {
-    return new LiteElement(kind);
+    return kind === 'iframe' ? new LiteIFrame(kind) : new LiteElement(kind);
   }
 
   /**
@@ -105,35 +105,64 @@ export class LiteBase extends AbstractDOMAdaptor<
   /**
    * @override
    */
-  public head(doc: LiteDocument) {
+  public head(doc: LiteDocument = this.document) {
     return doc.head;
   }
 
   /**
    * @override
    */
-  public body(doc: LiteDocument) {
+  public body(doc: LiteDocument = this.document) {
     return doc.body;
   }
 
   /**
    * @override
    */
-  public root(doc: LiteDocument) {
+  public root(doc: LiteDocument = this.document) {
     return doc.root;
   }
 
   /**
    * @override
    */
-  public doctype(doc: LiteDocument) {
+  public doctype(doc: LiteDocument = this.document) {
     return doc.type;
   }
 
   /**
    * @override
    */
-  public tags(node: LiteElement, name: string, ns: string = null) {
+  public domain(_doc: LiteDocument | LiteElement = this.document) {
+    return 'file://';
+  }
+
+  /**
+   * @override
+   */
+  public listener(
+    listener: (event: any) => void,
+    doc: LiteDocument = this.document
+  ) {
+    return doc.addEventListener('message', listener);
+  }
+
+  /**
+   * @override
+   */
+  public post(msg: any, domain: string, doc: LiteDocument = this.document) {
+    doc.postMessage(msg, domain);
+  }
+
+  /**
+   * @override
+   */
+  public tags(
+    node: LiteElement,
+    name: string,
+    ns: string = null,
+    stop: number = null
+  ) {
     let stack = [] as LiteNode[];
     const tags = [] as LiteElement[];
     if (ns) {
@@ -146,6 +175,9 @@ export class LiteBase extends AbstractDOMAdaptor<
         n = n as LiteElement;
         if (kind === name) {
           tags.push(n);
+          if (tags.length === stop) {
+            return tags;
+          }
         }
         if (n.children.length) {
           stack = n.children.concat(stack);
@@ -182,9 +214,14 @@ export class LiteBase extends AbstractDOMAdaptor<
   /**
    * @param {LiteElement} node   The node to be searched
    * @param {string} name        The name of the class to find
+   * @param {number} stop        Number of elements to collect
    * @returns {LiteElement[]}     The nodes with the given class
    */
-  public elementsByClass(node: LiteElement, name: string): LiteElement[] {
+  public elementsByClass(
+    node: LiteElement,
+    name: string,
+    stop: number = null
+  ): LiteElement[] {
     let stack = [] as LiteNode[];
     const tags = [] as LiteElement[];
     let n: LiteNode = node;
@@ -194,6 +231,44 @@ export class LiteBase extends AbstractDOMAdaptor<
         const classes = (n.attributes['class'] || '').trim().split(/ +/);
         if (classes.includes(name)) {
           tags.push(n);
+          if (tags.length === stop) {
+            return tags;
+          }
+        }
+        if (n.children.length) {
+          stack = n.children.concat(stack);
+        }
+      }
+      n = stack.shift();
+    }
+    return tags;
+  }
+
+  /**
+   * @param {LiteElement} node   The node to be searched
+   * @param {string} name        The name of the attribute to find
+   * @param {string} value       The value of the attribute to match
+   * @param {number} stop        Number of elements to collect
+   * @returns {LiteElement[]}    The nodes with the given attribute
+   */
+  public elementsByAttribute(
+    node: LiteElement,
+    name: string,
+    value: string,
+    stop: number = null
+  ): LiteElement[] {
+    let stack = [] as LiteNode[];
+    const tags = [] as LiteElement[];
+    let n: LiteNode = node;
+    while (n) {
+      if (n.kind !== '#text' && n.kind !== '#comment') {
+        n = n as LiteElement;
+        const attribute = n.attributes[name];
+        if (attribute === value) {
+          tags.push(n);
+          if (tags.length === stop) {
+            return tags;
+          }
         }
         if (n.children.length) {
           stack = n.children.concat(stack);
@@ -226,6 +301,13 @@ export class LiteBase extends AbstractDOMAdaptor<
           );
         } else if (node.match(/^[-a-z][-a-z0-9]*$/i)) {
           containers = containers.concat(this.tags(body, node));
+        } else {
+          const match = node.match(/^\[(.*?)="(.*?)"\]$/);
+          if (match) {
+            containers = containers.concat(
+              this.elementsByAttribute(body, match[1], match[2])
+            );
+          }
         }
       } else if (Array.isArray(node)) {
         containers = containers.concat(node);
@@ -239,6 +321,32 @@ export class LiteBase extends AbstractDOMAdaptor<
       }
     }
     return containers;
+  }
+
+  /**
+   * @override
+   */
+  public getElement(
+    selector: string,
+    node: LiteElement | LiteDocument = this.document
+  ): LiteElement {
+    if (node instanceof LiteDocument) {
+      node = this.body(node);
+    }
+    if (selector.charAt(0) === '#') {
+      return this.elementById(node, selector.slice(1));
+    }
+    if (selector.charAt(0) === '.') {
+      return this.elementsByClass(node, selector.slice(1), 1)[0];
+    }
+    if (selector.match(/^[-a-z][-a-z0-9]*$/i)) {
+      return this.tags(node, selector, null, 1)[0];
+    }
+    const match = selector.match(/^\[(.*?)="(.*?)"\]$/);
+    if (match) {
+      return this.elementsByAttribute(node, match[1], match[2], 1)[0];
+    }
+    return null;
   }
 
   /**
@@ -275,6 +383,11 @@ export class LiteBase extends AbstractDOMAdaptor<
     }
     node.children.push(child);
     child.parent = node;
+    if (child instanceof LiteIFrame) {
+      if (String(child.attributes.id).match(/^WorkerHandler-\d+$/)) {
+        child.loadWorker(this.document);
+      }
+    }
     return child;
   }
 

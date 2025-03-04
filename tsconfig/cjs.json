@@ -16,6 +16,7 @@
   },
   "exclude": [
     "../ts/**/mjs/*",
-    "../ts/util/asyncLoad/esm.ts"
+    "../ts/util/asyncLoad/esm.ts",
+    "../ts/a11y/sre/speech-worker.ts"
   ]
 }
