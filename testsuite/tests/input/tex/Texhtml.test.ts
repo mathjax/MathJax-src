@@ -136,7 +136,7 @@ describe('Texhtml not enabled', () => {
          <mi data-latex="t">t</mi>
          <mi data-latex="m">m</mi>
          <mi data-latex="l">l</mi>
-         <mo data-latex="&gt;&lt;">&gt;&lt;</mo>
+         <mo data-mjx-texclass="REL"  data-latex="&gt;&lt;">&gt;&lt;</mo>
          <mi data-latex="b">b</mi>
          <mo data-latex="&gt;">&gt;</mo>
          <mi data-latex="a">a</mi>
@@ -145,7 +145,7 @@ describe('Texhtml not enabled', () => {
            <mo data-latex="/">/</mo>
          </mrow>
          <mi data-latex="b">b</mi>
-         <mo data-latex="&gt;&lt;">&gt;&lt;</mo>
+         <mo data-mjx-texclass="REL" data-latex="&gt;&lt;">&gt;&lt;</mo>
          <mrow data-mjx-texclass="ORD">
            <mo data-latex="/">/</mo>
          </mrow>

@@ -765,7 +765,7 @@ describe('AmsCD', () => {
                </mrow>
                <mi data-latex="R">R</mi>
                <mi data-latex="a">a</mi>
-               <mo data-latex="&gt;&gt;">&gt;&gt;</mo>
+               <mo data-mjx-texclass="REL" data-latex="&gt;&gt;">&gt;&gt;</mo>
                <mi data-latex="B">B</mi>
                <mi data-latex="a">a</mi>
                <mi data-latex="D">D</mi>

@@ -256,6 +256,7 @@ const FilterUtil = {
           remove.push(m2);
           m2.parent = null;
           m2.setProperty('relationsCombined', true);
+          mo.setProperty('texClass', TEXCLASS.REL);
         } else {
           // @test Preset Rspace Lspace
           if (!mo.attributes.hasExplicit('rspace')) {
