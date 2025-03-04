@@ -21,12 +21,14 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
+import { HandlerType } from '../HandlerTypes.js';
+import { SubHandler } from '../MapHandler.js';
 import { UnitUtil } from '../UnitUtil.js';
 import TexError from '../TexError.js';
 import TexParser from '../TexParser.js';
 import { Macro, Token } from '../Token.js';
 import { Args, Attributes, ParseMethod } from '../Types.js';
-import * as sm from '../TokenMap.js';
+import * as tm from '../TokenMap.js';
 
 /**
  * Naming constants for the extension mappings.
@@ -36,6 +38,11 @@ export enum NewcommandTables {
   NEW_COMMAND = 'new-Command',
   NEW_ENVIRONMENT = 'new-Environment',
 }
+
+/**
+ * The priority for the maps where definitions are stored.
+ */
+export const NewcommandPriority = -100;
 
 export const NewcommandUtil = {
   /**
@@ -56,8 +63,9 @@ export const NewcommandUtil = {
         cmd
       );
     }
-    const cs = UnitUtil.trimSpaces(parser.GetArgument(cmd));
-    return cs.substring(1);
+    const cs = UnitUtil.trimSpaces(parser.GetArgument(cmd)).substring(1);
+    this.checkProtectedMacros(parser, cs);
+    return cs;
   },
 
   /**
@@ -81,6 +89,7 @@ export const NewcommandUtil = {
         name
       );
     }
+    this.checkProtectedMacros(parser, cs);
     return cs;
   },
 
@@ -261,6 +270,48 @@ export const NewcommandUtil = {
   },
 
   /**
+   * Gets the proper maps depending on whether \global is in effect.
+   * If it is, begingroup is called to clear any definitions and return the global maps
+   * Otherwise, the named maps are retrieved.
+   *
+   * @param {TexParser} parser  The current parser.
+   * @param {string[]} tokens   The tokens to delete from each begingroup map if global
+   * @param {string[]} maps     The map names to return
+   * @returns {tm.AbstractParseMap}   The array of requested maps
+   *
+   * @template T  the type of AbstractParseMap to get (Token or Macro)
+   */
+  checkGlobal<T>(
+    parser: TexParser,
+    tokens: string[],
+    maps: string[]
+  ): tm.AbstractParseMap<T>[] {
+    return (
+      parser.stack.env.isGlobal
+        ? parser.configuration.packageData
+            .get('begingroup')
+            .stack.checkGlobal(tokens, maps)
+        : maps.map((name) => parser.configuration.handlers.retrieve(name))
+    ) as tm.AbstractParseMap<T>[];
+  },
+
+  /**
+   * Checks if a control sequence is protected from being redefined.
+   *
+   * @param {TexParser} parser  The current parser.
+   * @param {string} cs         The control sequence name to check
+   */
+  checkProtectedMacros(parser: TexParser, cs: string) {
+    if (parser.options.protectedMacros?.includes(cs)) {
+      throw new TexError(
+        'ProtectedMacro',
+        "The control sequence %1 can't be redefined",
+        `\\${cs}`
+      );
+    }
+  },
+
+  /**
    * Adds a new delimiter as extension to the parser.
    *
    * @param {TexParser} parser The current parser.
@@ -269,18 +320,25 @@ export const NewcommandUtil = {
    * @param {Attributes} attr The attributes needed for parsing.
    */
   addDelimiter(parser: TexParser, cs: string, char: string, attr: Attributes) {
-    const handlers = parser.configuration.handlers;
-    const handler = handlers.retrieve(
-      NewcommandTables.NEW_DELIMITER
-    ) as sm.DelimiterMap;
-    handler.add(cs, new Token(cs, char, attr));
+    const name = cs.substring(1);
+    this.checkProtectedMacros(parser, name);
+    const [macros, delims] = NewcommandUtil.checkGlobal<Token>(
+      parser,
+      [name, cs],
+      [NewcommandTables.NEW_COMMAND, NewcommandTables.NEW_DELIMITER]
+    );
+    if (name !== cs) {
+      macros.remove(name);
+    }
+    delims.add(cs, new Token(cs, char, attr));
+    delete parser.stack.env.isGlobal;
   },
 
   /**
    * Adds a new macro as extension to the parser.
    *
    * @param {TexParser} parser The current parser.
-   * @param {string} cs The control sequence of the delimiter.
+   * @param {string} cs The control sequence of the macro.
    * @param {ParseMethod} func The parse method for this macro.
    * @param {Args[]} attr The attributes needed for parsing.
    * @param {string=} token Optionally original token for macro, in case it is
@@ -293,11 +351,15 @@ export const NewcommandUtil = {
     attr: Args[],
     token: string = ''
   ) {
-    const handlers = parser.configuration.handlers;
-    const handler = handlers.retrieve(
-      NewcommandTables.NEW_COMMAND
-    ) as sm.CommandMap;
-    handler.add(cs, new Macro(token ? token : cs, func, attr));
+    this.checkProtectedMacros(parser, cs);
+    const macros = NewcommandUtil.checkGlobal<Macro>(
+      parser,
+      [cs],
+      [NewcommandTables.NEW_COMMAND]
+    )[0];
+    this.undefineDelimiter(parser, '\\' + cs);
+    macros.add(cs, new Macro(token ? token : cs, func, attr));
+    delete parser.stack.env.isGlobal;
   },
 
   /**
@@ -314,10 +376,66 @@ export const NewcommandUtil = {
     func: ParseMethod,
     attr: Args[]
   ) {
-    const handlers = parser.configuration.handlers;
-    const handler = handlers.retrieve(
-      NewcommandTables.NEW_ENVIRONMENT
-    ) as sm.EnvironmentMap;
-    handler.add(env, new Macro(env, func, attr));
+    const envs = NewcommandUtil.checkGlobal<Macro>(
+      parser,
+      [env],
+      [NewcommandTables.NEW_ENVIRONMENT]
+    )[0];
+    envs.add(env, new Macro(env, func, attr));
+    delete parser.stack.env.isGlobal;
+  },
+
+  /**
+   * Removes a user-defined macro, if there is one, and
+   * Adds an undefined macro (to block ones in later maps),
+   *   if needed.
+   *
+   * @param {TexParser} parser The current parser.
+   * @param {string} cs The control sequence to undefine.
+   */
+  undefineMacro(parser: TexParser, cs: string) {
+    const macros = NewcommandUtil.checkGlobal<Macro>(
+      parser,
+      [cs],
+      [NewcommandTables.NEW_COMMAND]
+    )[0];
+    macros.remove(cs);
+    if (parser.configuration.handlers.get(HandlerType.MACRO).applicable(cs)) {
+      //
+      // This will hide the macro that is in a later mapping
+      // by forcing the parser to jump directly to the fallback
+      // handler.
+      //
+      macros.add(cs, new Macro(cs, () => SubHandler.FALLBACK, []));
+      this.undefineDelimiter(parser, '\\' + cs);
+    }
+    delete parser.stack.env.isGlobal;
+  },
+
+  /**
+   * Removes a user-defined delimiter, if there is one, and
+   * Adds an undefined one (to block ones in later maps),
+   *   if needed.
+   *
+   * @param {TexParser} parser The current parser.
+   * @param {string} cs The control sequence to undefine.
+   */
+  undefineDelimiter(parser: TexParser, cs: string) {
+    const delims = NewcommandUtil.checkGlobal<Token>(
+      parser,
+      [cs],
+      [NewcommandTables.NEW_DELIMITER]
+    )[0];
+    delims.remove(cs);
+    if (
+      parser.configuration.handlers.get(HandlerType.DELIMITER).applicable(cs)
+    ) {
+      //
+      // This will hide the delimiter that is in a later mapping
+      // by forcing the parser to skip any additional maps.
+      //
+      delims.add(cs, new Token(cs, null, {}));
+    }
+    delete parser.stack.env.isGlobal;
   },
 };

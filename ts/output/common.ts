@@ -42,7 +42,7 @@ import { Linebreaks, LinebreakVisitor } from './common/LinebreakVisitor.js';
 import { percent } from '../util/lengths.js';
 import { length2em } from '../util/lengths.js';
 import { StyleList, Styles } from '../util/Styles.js';
-import { StyleList as CssStyleList, CssStyles } from '../util/StyleList.js';
+import { StyleJson, StyleJsonSheet } from '../util/StyleJson.js';
 import { BBox } from '../util/BBox.js';
 
 /*****************************************************************/
@@ -147,27 +147,45 @@ export abstract class CommonOutputJax<
     wrapperFactory: null,          // The wrapper factory to use
     fontData: null,                // The FontData object to use
     fontPath: FONTPATH,            // The path to the font definitions
-    cssStyles: null                // The CssStyles object to use
+    styleJson: null                // The StyleJsonSheet object to use
   };
 
   /**
    *  The default styles for the output jax
    */
-  public static commonStyles: CssStyleList = {
+  public static commonStyles: StyleJson = {
     'mjx-container[overflow="scroll"][display]': {
-      'overflow-x': 'auto',
+      overflow: 'auto clip',
       'min-width': 'initial !important',
     },
     'mjx-container[overflow="truncate"][display]': {
-      'overflow-x': 'hidden',
+      overflow: 'hidden clip',
       'min-width': 'initial !important',
+    },
+    'mjx-container[display]': {
+      display: 'block',
+      'text-align': 'center',
+      'justify-content': 'center',
+      margin: 'calc(1em - 2px) 0',
+      padding: '2px 0',
+    },
+    'mjx-container[display][width="full"]': {
+      display: 'flex',
+    },
+    'mjx-container[justify="left"]': {
+      'text-align': 'left',
+      'justify-content': 'left',
+    },
+    'mjx-container[justify="right"]': {
+      'text-align': 'right',
+      'justify-content': 'right',
     },
   };
 
   /**
    * Used for collecting styles needed for the output jax
    */
-  public cssStyles: CssStyles;
+  public styleJson: StyleJsonSheet;
 
   /**
    * The MathDocument for the math we find
@@ -278,12 +296,12 @@ export abstract class CommonOutputJax<
       this.options.wrapperFactory ||
       /* prettier-ignore */
       new defaultFactory<
-        N, T, D, 
+        N, T, D,
         CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
         WW, WF, WC, CC, VV, DD, FD, FC
       >();
     this.factory.jax = this;
-    this.cssStyles = this.options.cssStyles || new CssStyles();
+    this.styleJson = this.options.styleJson || new StyleJsonSheet();
     this.font = font || new fontClass(fontOptions);
     this.font.setOptions({ mathmlSpacing: this.options.mathmlSpacing });
     this.unknownCache = new Map();
@@ -404,13 +422,13 @@ export abstract class CommonOutputJax<
     if (linebreak) {
       this.getLinebreakWidth();
     }
-    if (
-      this.options.linebreaks.inline &&
-      !math.display &&
-      !math.outputData.inlineMarked
-    ) {
+    const inlineMarked = !!math.root.getProperty('inlineMarked');
+    if (this.options.linebreaks.inline && !math.display && !inlineMarked) {
       this.markInlineBreaks(math.root.childNodes?.[0]);
-      math.outputData.inlineMarked = true;
+      math.root.setProperty('inlineMarked', true);
+    } else if (!this.options.linebreaks.inline && inlineMarked) {
+      this.unmarkInlineBreaks(math.root);
+      math.root.setProperty('inlineMarked', false);
     }
     math.root.setTeXclass(null);
     const wrapper = this.factory.wrap(math.root);
@@ -586,6 +604,21 @@ export abstract class CommonOutputJax<
       marked = true;
     }
     return marked;
+  }
+
+  /**
+   * @param {MmlNode} node   The node where inline breaks are to be removed
+   */
+  public unmarkInlineBreaks(node: MmlNode) {
+    if (!node) return;
+    node.removeProperty('forcebreak');
+    node.removeProperty('breakable');
+    if (node.getProperty('process-breaks')) {
+      node.removeProperty('process-breaks');
+      for (const child of node.childNodes) {
+        this.unmarkInlineBreaks(child);
+      }
+    }
   }
 
   /**
@@ -782,43 +815,43 @@ export abstract class CommonOutputJax<
     //
     // Start with the common styles
     //
-    this.cssStyles.clear();
-    this.cssStyles.addStyles(
+    this.styleJson.clear();
+    this.styleJson.addStyles(
       (this.constructor as typeof CommonOutputJax).commonStyles
     );
     //
     // Add document-specific styles
     //
     if ('getStyles' in html) {
-      for (const styles of (html as any).getStyles() as CssStyleList[]) {
-        this.cssStyles.addStyles(styles);
+      for (const styles of (html as any).getStyles() as StyleJson[]) {
+        this.styleJson.addStyles(styles);
       }
     }
     //
     // Gather the CSS from the classes and font
     //
-    this.addWrapperStyles(this.cssStyles);
-    this.addFontStyles(this.cssStyles);
+    this.addWrapperStyles(this.styleJson);
+    this.addFontStyles(this.styleJson);
     //
     // Create the stylesheet for the CSS
     //
     const sheet = this.html('style', { id: 'MJX-styles' }, [
-      this.text('\n' + this.cssStyles.cssText + '\n'),
+      this.text('\n' + this.styleJson.cssText + '\n'),
     ]);
     return sheet as N;
   }
 
   /**
-   * @param {CssStyles} styles   The style object to add to
+   * @param {StyleJsonSheet} styles   The style object to add to
    */
-  protected addFontStyles(styles: CssStyles) {
+  protected addFontStyles(styles: StyleJsonSheet) {
     styles.addStyles(this.font.styles);
   }
 
   /**
-   * @param {CssStyles} styles   The style object to add to
+   * @param {StyleJsonSheet} styles   The style object to add to
    */
-  protected addWrapperStyles(styles: CssStyles) {
+  protected addWrapperStyles(styles: StyleJsonSheet) {
     for (const kind of this.factory.getKinds()) {
       this.addClassStyles(this.factory.getNodeClass(kind), styles);
     }
@@ -826,9 +859,12 @@ export abstract class CommonOutputJax<
 
   /**
    * @param {typeof CommonWrapper} CLASS  The Wrapper class whose styles are to be added
-   * @param {CssStyles} styles            The style object to add to.
+   * @param {StyleJsonSheet} styles       The style object to add to.
    */
-  protected addClassStyles(CLASS: typeof CommonWrapper, styles: CssStyles) {
+  protected addClassStyles(
+    CLASS: typeof CommonWrapper,
+    styles: StyleJsonSheet
+  ) {
     CLASS.addStyles<CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>>(
       styles,
       this

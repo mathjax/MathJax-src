@@ -39,7 +39,7 @@ import {
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMtable } from '../../../core/MmlTree/MmlNodes/mtable.js';
 import { ChtmlMtrNTD } from './mtr.js';
-import { StyleList } from '../../../util/StyleList.js';
+import { StyleJson } from '../../../util/StyleJson.js';
 import { isPercent } from '../../../util/string.js';
 import { OptionList } from '../../../util/Options.js';
 
@@ -144,7 +144,7 @@ export const ChtmlMtable = (function <N, T, D>(): ChtmlMtableClass<N, T, D> {
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'mjx-mtable': {
         'vertical-align': '.25em',
         'text-align': 'center',

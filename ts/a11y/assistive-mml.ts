@@ -36,7 +36,7 @@ import {
 import { MmlNode } from '../core/MmlTree/MmlNode.js';
 import { SerializedMmlVisitor } from '../core/MmlTree/SerializedMmlVisitor.js';
 import { OptionList, expandable } from '../util/Options.js';
-import { StyleList } from '../util/StyleList.js';
+import { StyleJson } from '../util/StyleJson.js';
 
 /*==========================================================================*/
 
@@ -209,7 +209,7 @@ export function AssistiveMmlMathDocumentMixin<
     /**
      * styles needed for the hidden MathML
      */
-    public static assistiveStyles: StyleList = {
+    public static assistiveStyles: StyleJson = {
       'mjx-assistive-mml': {
         position: 'absolute !important',
         top: '0px',

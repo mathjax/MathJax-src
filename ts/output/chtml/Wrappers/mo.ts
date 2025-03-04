@@ -31,6 +31,7 @@ import {
   ChtmlFontData,
   ChtmlFontDataClass,
 } from '../FontData.js';
+import { CharDataArray } from '../../common/FontData.js';
 import {
   CommonMo,
   CommonMoClass,
@@ -38,7 +39,7 @@ import {
 } from '../../common/Wrappers/mo.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMo } from '../../../core/MmlTree/MmlNodes/mo.js';
-import { StyleList } from '../../../util/StyleList.js';
+import { StyleJson } from '../../../util/StyleJson.js';
 import { DIRECTION } from '../FontData.js';
 
 /*****************************************************************/
@@ -96,6 +97,8 @@ export interface ChtmlMoClass<N, T, D>
   ): ChtmlMoNTD<N, T, D>;
 }
 
+export type PartData = CharDataArray<ChtmlCharOptions>;
+
 /*****************************************************************/
 
 /**
@@ -134,27 +137,22 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'mjx-stretchy-h': {
         display: 'inline-block',
       },
       'mjx-stretchy-h > *': {
         display: 'inline-block',
         width: 0,
+        'text-align': 'right',
       },
       'mjx-stretchy-h > mjx-ext': {
-        '/* IE */ overflow': 'hidden',
-        '/* others */ overflow': 'clip visible',
+        'clip-path': 'padding-box xywh(0 -1em 100% calc(100% + 2em))',
         width: '100%',
         border: '0px solid transparent',
         'box-sizing': 'border-box',
-        'text-align': 'center',
+        'text-align': 'left',
       },
-      'mjx-stretchy-h > mjx-ext > mjx-c': {
-        transform: 'scalex(500)',
-        width: 0,
-      },
-
       'mjx-stretchy-v': {
         display: 'inline-block',
         'text-align': 'center',
@@ -162,13 +160,17 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       'mjx-stretchy-v > *': {
         display: 'block',
         height: 0,
+        margin: '0 auto',
+      },
+      'mjx-stretchy-v > mjx-ext > mjx-spacer': {
+        display: 'block',
       },
       'mjx-stretchy-v > mjx-ext': {
-        '/* IE */ overflow': 'hidden',
-        '/* others */ overflow': 'visible clip',
+        'clip-path': 'padding-box xywh(-1em 0 calc(100% + 2em) 100%)',
         height: '100%',
-        border: '0px solid transparent',
+        border: '0.1px solid transparent',
         'box-sizing': 'border-box',
+        'white-space': 'wrap',
       },
       'mjx-mark': {
         display: 'inline-block',
@@ -242,38 +244,44 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
       const delim = this.stretch;
       const stretch = delim.stretch;
       const stretchv = this.font.getStretchVariants(c);
-      const content: N[] = [];
+      const dom: N[] = [];
+
       //
-      //  Set up the beginning, extension, and end pieces
+      //  Look up the characters to use
       //
-      this.createPart('mjx-beg', stretch[0], stretchv[0], content);
-      this.createPart('mjx-ext', stretch[1], stretchv[1], content);
-      if (stretch.length === 4) {
-        this.createPart('mjx-mid', stretch[3], stretchv[3], content);
-        this.createPart('mjx-ext', stretch[1], stretchv[1], content);
+      const parts: PartData[] = [];
+      for (let i = 0; i < stretch.length; i++) {
+        if (stretch[i]) {
+          parts[i] = this.font.getChar(stretchv[i], stretch[i]);
+        }
       }
-      this.createPart('mjx-end', stretch[2], stretchv[2], content);
       //
       //  Set the styles needed
       //
-      const styles: StringMap = {};
       const { h, d, w } = this.bbox;
+      const styles: StringMap = {};
       if (delim.dir === DIRECTION.Vertical) {
+        //
+        //  The ext parameter should be 0, but line-height in Safari
+        //  is not accurate, so this produces extra extenders to compensate
+        //
+        this.createAssembly(parts, stretch, stretchv, dom, h + d, 0.05, '\n');
         //
         //  Vertical needs an extra (empty) element to get vertical position right
         //  in some browsers (e.g., Safari)
         //
-        content.push(this.html('mjx-mark'));
+        dom.push(this.html('mjx-mark'));
         styles.height = this.em(h + d);
         styles.verticalAlign = this.em(-d);
       } else {
+        this.createAssembly(parts, stretch, stretchv, dom, w, delim.ext || 0);
         styles.width = this.em(w);
       }
       //
       //  Make the main element and add it to the parent
       //
       const properties = { class: this.char(delim.c || c), style: styles };
-      const html = this.html('mjx-stretchy-' + delim.dir, properties, content);
+      const html = this.html('mjx-stretchy-' + delim.dir, properties, dom);
       const adaptor = this.adaptor;
       if (chtml[0]) {
         adaptor.append(chtml[0], html);
@@ -284,29 +292,110 @@ export const ChtmlMo = (function <N, T, D>(): ChtmlMoClass<N, T, D> {
     }
 
     /**
+     * Create a multi-character assembly
+     *
+     * @param {PartData[]} parts   The extender parts character data array
+     * @param {number[]} sn        The extender parts character code points
+     * @param {string[]} sv        The extender parts variants
+     * @param {N[]} dom            The assembly DOM to build
+     * @param {number} wh          The delimiter's full width/height
+     * @param {number} ext         The extender character's bearing whitespace
+     * @param {string} nl          The string to use between extender characters
+     */
+    protected createAssembly(
+      parts: PartData[],
+      sn: number[],
+      sv: string[],
+      dom: N[],
+      wh: number,
+      ext: number,
+      nl: string = ''
+    ) {
+      //
+      // Pad array to length 4
+      //
+      parts = [...parts, null, null, null].slice(0, 4);
+      //
+      // Get the part width/heights (beginning, extender, end, middle)
+      //
+      let [WHb, WHx, WHe, WHm] = parts.map((part) =>
+        part ? (nl ? part[0] + part[1] : part[2]) : 0
+      );
+      WHx = Math.max(0, WHx - ext);
+      //
+      // Get the extension width/heights (two when there is a middle piece)
+      //
+      const [WH1, WH2] = parts[3]
+        ? [(wh - WHm) / 2 - WHb, (wh - WHm) / 2 - WHe]
+        : [wh - WHb - WHe, 0];
+      //
+      //  Set up the beginning, extension, and end pieces
+      //
+      this.createPart('mjx-beg', parts[0], sn[0], sv[0], dom);
+      this.createPart('mjx-ext', parts[1], sn[1], sv[1], dom, WH1, WHx, nl);
+      if (parts[3]) {
+        this.createPart('mjx-mid', parts[3], sn[3], sv[3], dom);
+        this.createPart('mjx-ext', parts[1], sn[1], sv[1], dom, WH2, WHx, nl);
+      }
+      this.createPart('mjx-end', parts[2], sn[2], sv[2], dom);
+    }
+
+    /**
      * Create an element of a multi-character assembly
      *
      * @param {string} part    The part to create
+     * @param {PartData} data  The character data for the part
      * @param {number} n       The unicode character to use
      * @param {string} v       The variant for the character
-     * @param {N[]} content    The DOM assembly
+     * @param {N[]} dom        The DOM assembly
+     * @param {number} W       The extension width
+     * @param {number} Wx      The width of the extender character
+     * @param {string} nl      Character to use between extenders
      */
-    protected createPart(part: string, n: number, v: string, content: N[]) {
+    protected createPart(
+      part: string,
+      data: PartData,
+      n: number,
+      v: string,
+      dom: N[],
+      W: number = 0,
+      Wx: number = 0,
+      nl: string = ''
+    ) {
       if (n) {
-        const options = this.font.getChar(v, n)[3];
+        const options = data[3];
         const letter =
           options.f || (v === 'normal' ? '' : this.font.getVariant(v).letter);
         const font =
           options.ff || (letter ? `${this.font.cssFontPrefix}-${letter}` : '');
-        const c = ((options.c as string) || String.fromCodePoint(n)).replace(
-          /\\[0-9A-F]+/gi,
-          (x) => String.fromCodePoint(parseInt(x.substring(1), 16))
-        );
-        content.push(
-          this.html(part, {}, [
-            this.html('mjx-c', font ? { class: font } : {}, [this.text(c)]),
-          ])
-        );
+        const c = options.c || String.fromCodePoint(n);
+        let nodes = [] as (N | T)[];
+        if (part === 'mjx-ext' && (Wx || options.dx)) {
+          //
+          // Some combining characters are listed as width 0,
+          //   so get "real" width from dx and take off some
+          //   for the right bearing.
+          //
+          if (!Wx) {
+            Wx = Math.max(0.06, 2 * options.dx - 0.06);
+          }
+          const n = Math.min(Math.ceil(W / Wx) + 1, 500);
+          if (options.cmb) {
+            nodes.push(this.html('mjx-spacer'));
+            for (let i = 0; i < n; i++) {
+              nodes.push(this.html('mjx-c', {}, [this.text(c)]));
+            }
+          } else {
+            nodes = [
+              this.html('mjx-spacer', {}, [
+                this.text(Array(n).fill(c).join(nl)),
+              ]),
+            ];
+          }
+        } else {
+          nodes = [this.text(c)];
+        }
+        dom.push(this.html(part, font ? { class: font } : {}, nodes));
       }
     }
   };

@@ -38,8 +38,8 @@ export const EmpheqMethods = {
   /**
    * Handle an empheq environment.
    *
-   * @param {TexParser} parser        The active tex parser.
-   * @param {EmpheqBeginItem} begin   The begin item for this environment.
+   * @param {TexParser} parser   The active tex parser.
+   * @param {BeginItem} begin    The begin item for this environment.
    */
   Empheq(parser: TexParser, begin: BeginItem) {
     if (parser.stack.env.closing === begin.getName()) {
@@ -58,13 +58,18 @@ export const EmpheqMethods = {
     } else {
       ParseUtil.checkEqnEnv(parser);
       const opts = parser.GetBrackets('\\begin{' + begin.getName() + '}') || '';
-      const [env, n] = (
-        parser.GetArgument('\\begin{' + begin.getName() + '}') || ''
-      ).split(/=/);
+      const [env, n] = parser
+        .GetArgument('\\begin{' + begin.getName() + '}')
+        .split(/=/);
       if (!EmpheqUtil.checkEnv(env)) {
-        throw new TexError('UnknownEnv', 'Unknown environment "%1"', env);
+        throw new TexError(
+          'EmpheqInvalidEnv',
+          'Invalid environment "%1" for %2',
+          env,
+          begin.getName()
+        );
       }
-      begin.setProperty('nestable', true);
+      begin.setProperty('nestStart', true);
       if (opts) {
         begin.setProperties(
           EmpheqUtil.splitOptions(opts, { left: 1, right: 1 })

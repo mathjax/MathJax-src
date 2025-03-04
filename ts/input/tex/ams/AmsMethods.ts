@@ -30,8 +30,6 @@ import NodeUtil from '../NodeUtil.js';
 import { TexConstant } from '../TexConstants.js';
 import TexParser from '../TexParser.js';
 import TexError from '../TexError.js';
-import { Macro } from '../Token.js';
-import { CommandMap } from '../TokenMap.js';
 import { ArrayItem } from '../base/BaseItems.js';
 import { FlalignItem } from './AmsItems.js';
 import BaseMethods from '../base/BaseMethods.js';
@@ -42,8 +40,7 @@ import {
   MmlNode,
   AbstractMmlTokenNode,
 } from '../../../core/MmlTree/MmlNode.js';
-
-export const NEW_OPS = 'ams-declare-ops';
+import { NewcommandUtil } from '../newcommand/NewcommandUtil.js';
 
 /**
  * Utility for breaking the \sideset scripts from any other material.
@@ -186,11 +183,7 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       balign,
       spaceStr
     );
-    return ParseUtil.setArrayAlign(
-      array as ArrayItem,
-      valign,
-      !taggable ? parser : null
-    );
+    return ParseUtil.setArrayAlign(array as ArrayItem, valign, parser);
   },
 
   /**
@@ -338,15 +331,11 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
    */
   HandleDeclareOp(parser: TexParser, name: string) {
     const star = parser.GetStar() ? '*' : '';
-    let cs = UnitUtil.trimSpaces(parser.GetArgument(name));
-    if (cs.charAt(0) === '\\') {
-      cs = cs.substring(1);
-    }
+    const cs = NewcommandUtil.GetCsNameArgument(parser, name);
     const op = parser.GetArgument(name);
-    (parser.configuration.handlers.retrieve(NEW_OPS) as CommandMap).add(
-      cs,
-      new Macro(cs, AmsMethods.Macro, [`\\operatorname${star}{${op}}`])
-    );
+    NewcommandUtil.addMacro(parser, cs, AmsMethods.Macro, [
+      `\\operatorname${star}{${op}}`,
+    ]);
     parser.Push(parser.itemFactory.create('null'));
   },
 
@@ -391,8 +380,8 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
     //  Skip a following \limits macro if not a starred operator
     //
     if (!star) {
-      const c = parser.GetNext(),
-        i = parser.i;
+      const c = parser.GetNext();
+      const i = parser.i;
       if (c === '\\' && ++parser.i && parser.GetCS() !== 'limits') {
         parser.i = i;
       }
@@ -529,13 +518,8 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       next = parser.GetArgument(name);
       parser.i = i;
       if (next === '\\limits') {
-        if (name === '\\idotsint') {
-          // @test MultiInt with Limits
-          integral = '\\!\\!\\mathop{\\,\\,' + integral + '}';
-        } else {
-          // Question: This is not used anymore?
-          integral = '\\!\\!\\!\\mathop{\\,\\,\\,' + integral + '}';
-        }
+        // @test MultiInt with Limits
+        integral = '\\!\\!\\mathop{\\,\\,' + integral + '}';
       }
     }
     // @test MultiInt, MultiInt in Context
@@ -551,8 +535,16 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
    * @param {number} chr The arrow character in hex code.
    * @param {number} l Left width.
    * @param {number} r Right width.
+   * @param {number} m Min width
    */
-  xArrow(parser: TexParser, name: string, chr: number, l: number, r: number) {
+  xArrow(
+    parser: TexParser,
+    name: string,
+    chr: number,
+    l: number,
+    r: number,
+    m: number = 0
+  ) {
     const def = {
       width: '+' + UnitUtil.em((l + r) / 18),
       lspace: UnitUtil.em(l / 18),
@@ -566,6 +558,9 @@ export const AmsMethods: { [key: string]: ParseMethod } = {
       { stretchy: true, texClass: TEXCLASS.REL },
       String.fromCodePoint(chr)
     );
+    if (m) {
+      arrow.attributes.set('minsize', UnitUtil.em(m));
+    }
     arrow = parser.create('node', 'mstyle', [arrow], { scriptlevel: 0 });
     const mml = parser.create('node', 'munderover', [arrow]) as MmlMunderover;
     let mpadded = parser.create('node', 'mpadded', [first, dstrut], def);

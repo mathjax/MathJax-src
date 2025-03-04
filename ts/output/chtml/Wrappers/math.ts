@@ -38,7 +38,7 @@ import {
 } from '../../common/Wrappers/math.js';
 import { MmlNode } from '../../../core/MmlTree/MmlNode.js';
 import { MmlMath } from '../../../core/MmlTree/MmlNodes/math.js';
-import { StyleList } from '../../../util/StyleList.js';
+import { StyleJson } from '../../../util/StyleJson.js';
 import { BBox } from '../../../util/BBox.js';
 
 /*****************************************************************/
@@ -133,7 +133,7 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
     /**
      * @override
      */
-    public static styles: StyleList = {
+    public static styles: StyleJson = {
       'mjx-math': {
         'line-height': 0,
         'text-align': 'left',
@@ -148,34 +148,22 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
         direction: 'ltr',
         padding: '1px 0',
       },
-      'mjx-container[jax="CHTML"][display="true"]': {
-        display: 'block',
-        'text-align': 'center',
-        'justify-content': 'center',
-        margin: '1em 0',
-      },
-      'mjx-container[jax="CHTML"][display="true"][width="full"]': {
-        display: 'flex',
-      },
       'mjx-container[jax="CHTML"][display="true"] mjx-math': {
         padding: 0,
       },
-      'mjx-container[jax="CHTML"][justify="left"]': {
-        'text-align': 'left',
-        'justify-content': 'left',
-      },
-      'mjx-container[jax="CHTML"][justify="right"]': {
-        'text-align': 'right',
-        'justify-content': 'right',
+      'mjx-math[breakable]': {
+        display: 'inline',
+        'font-family': 'inherit',
       },
       //
       //  For inline breakpoints, use a space that is 1em width, make it breakable,
-      //    and then set the letter-spacing to make the sace the proper size.
+      //    and then set the letter-spacing to make the space the proper size.
       //
       'mjx-container[jax="CHTML"] mjx-break': {
         'white-space': 'normal',
         'line-height': '0',
-        'font-family': 'MJX-BRK',
+        'clip-path': 'rect(0 0 0 0)',
+        'font-family': 'MJX-BRK !important',
       },
       'mjx-break[size="0"]': {
         'letter-spacing': 0.001 - 1 + 'em',
@@ -194,9 +182,6 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
       },
       'mjx-break[size="5"]': {
         'letter-spacing': 0.333 - 1 + 'em',
-      },
-      'mjx-math[breakable]': {
-        display: 'inline',
       },
     };
 

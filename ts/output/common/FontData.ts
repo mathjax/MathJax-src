@@ -24,7 +24,7 @@
 
 import { mathjax } from '../../mathjax.js';
 import { OptionList, defaultOptions, userOptions } from '../../util/Options.js';
-import { StyleList } from '../../util/StyleList.js';
+import { StyleJson } from '../../util/StyleJson.js';
 import { asyncLoad } from '../../util/AsyncLoad.js';
 import { retryAfter } from '../../util/Retries.js';
 import { DIRECTION } from './Direction.js';
@@ -141,6 +141,7 @@ export type DelimiterData = {
   HDW?: number[];       // [h, d, w] (for vertical, h and d are the normal size, w is the multi-character width,
                         //            for horizontal, h and d are the multi-character ones, w is for the normal size).
   hd?: number[];        // The extender's original [h, d] values
+  ext?: number;         // The extenders left- plus right-bearing
   min?: number;         // The minimum size a multi-character version can be
   c?: number;           // The character number (for aliased delimiters)
   fullExt?: [number, number]  // When present, extenders must be full sized, and the first number is
@@ -381,7 +382,7 @@ export class FontData<
   /* prettier-ignore */
   public static OPTIONS: OptionList = {
     unknownFamily: 'serif',     // Should use 'monospace' with LiteAdaptor
-    dynamicPrefix: '.'          // Location of dynamically loaded files
+    dynamicPrefix: '.',         // Location of dynamically loaded files
   };
 
   /**
@@ -724,7 +725,7 @@ export class FontData<
   /**
    * Any styles needed for the font
    */
-  protected _styles: StyleList;
+  protected _styles: StyleJson;
 
   /**
    * @returns {typeof FontData}   The constructor for this object
@@ -997,16 +998,16 @@ export class FontData<
   }
 
   /**
-   * @returns {StyleList} Returns list of styles needed for the font
+   * @returns {StyleJson}   List of styles needed for the font
    */
-  get styles(): StyleList {
+  get styles(): StyleJson {
     return this._styles;
   }
 
   /**
-   * @param {StyleList} style Sets styles needed for that font.
+   * @param {StyleJson} style   Sets styles needed for the font
    */
-  set styles(style: StyleList) {
+  set styles(style: StyleJson) {
     this._styles = style;
   }
 

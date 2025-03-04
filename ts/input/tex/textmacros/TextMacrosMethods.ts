@@ -196,7 +196,7 @@ export const TextMacrosMethods = {
    */
   Space(parser: TextParser, _c: string) {
     parser.text += ' '; // regular space, but skipping multiple spaces
-    while (parser.GetNext().match(/\s/)) parser.i++;
+    parser.GetNext();
   },
 
   /**

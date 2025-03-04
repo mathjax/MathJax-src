@@ -36,7 +36,7 @@ import { Property } from '../../core/Tree/Node.js';
 import { unicodeChars } from '../../util/string.js';
 import * as LENGTHS from '../../util/lengths.js';
 import { Styles } from '../../util/Styles.js';
-import { StyleList, CssStyles } from '../../util/StyleList.js';
+import { StyleJson, StyleJsonSheet } from '../../util/StyleJson.js';
 import { OptionList, lookup } from '../../util/Options.js';
 import { CommonOutputJax } from '../common.js';
 import { CommonWrapperFactory } from './WrapperFactory.js';
@@ -66,16 +66,17 @@ export type StringMap = { [key: string]: string };
 /**
  * MathML spacing rules
  */
-/* prettier-ignore */
-const SMALLSIZE = 2/18;
+const SMALLSIZE = 2 / 18;
+const MOSPACE = 5 / 18;
 
 /**
  * @param {boolean} script   The scriptlevel
+ * @param {boolean} nodict   True if the mo text is not in the operator dictionary
  * @param {number} size      The space size
- * @returns {number}          The size clamped to SMALLSIZE when scriptlevel > 0
+ * @returns {number}         The size clamped to SMALLSIZE when scriptlevel > 0
  */
-function MathMLSpace(script: boolean, size: number): number {
-  return script ? (size < SMALLSIZE ? 0 : SMALLSIZE) : size;
+function MathMLSpace(script: boolean, nodict: boolean, size: number): number {
+  return nodict ? MOSPACE : script ? (size < SMALLSIZE ? 0 : SMALLSIZE) : size;
 }
 
 /**
@@ -183,7 +184,7 @@ export interface CommonWrapperClass<
   /**
    * Any styles needed for the class
    */
-  styles: StyleList;
+  styles: StyleJson;
 
   /**
    * Styles that should not be passed on from style attribute
@@ -213,10 +214,11 @@ export interface CommonWrapperClass<
   /**
    * Add any styles for this wrapper class
    *
-   * @param {CssStyles} styles   The styles object to extend
-   * @param {JX} jax             The output jax whose style sheet is being modified (in case options are needed)
+   * @param {StyleJsonSheet} styles  The styles object to extend
+   * @param {JX} jax                 The output jax whose style sheet is being modified
+   *                                   (in case options are needed)
    */
-  addStyles<JX>(styles: CssStyles, jax: JX): void;
+  addStyles<JX>(styles: StyleJsonSheet, jax: JX): void;
 
   /**
    * override
@@ -263,7 +265,7 @@ export class CommonWrapper<
   /**
    * Any styles needed for the class
    */
-  public static styles: StyleList = {};
+  public static styles: StyleJson = {};
 
   /**
    * Styles that should not be passed on from style attribute
@@ -341,7 +343,7 @@ export class CommonWrapper<
   /**
    * @override
    */
-  public static addStyles<JX>(styles: CssStyles, _jax: JX) {
+  public static addStyles<JX>(styles: StyleJsonSheet, _jax: JX) {
     styles.addStyles(this.styles);
   }
 
@@ -1052,14 +1054,15 @@ export class CommonWrapper<
     //
     // Get the lspace and rspace
     //
+    const noDictDef = node.getProperty('noDictDef');
     const attributes = node.attributes;
     const isScript = (attributes.get('scriptlevel') as number) > 0;
     this.bbox.L = attributes.isSet('lspace')
       ? Math.max(0, this.length2em(attributes.get('lspace')))
-      : MathMLSpace(isScript, node.lspace);
+      : MathMLSpace(isScript, noDictDef as boolean, node.lspace);
     this.bbox.R = attributes.isSet('rspace')
       ? Math.max(0, this.length2em(attributes.get('rspace')))
-      : MathMLSpace(isScript, node.rspace);
+      : MathMLSpace(isScript, noDictDef as boolean, node.rspace);
     //
     // If there are two adjacent <mo>, use enough left space to make it
     //   the maximum of the rspace of the first and lspace of the second
@@ -1220,12 +1223,12 @@ export class CommonWrapper<
       return ['left', 0];
     }
     if (!align || align === 'auto') {
-      align = this.jax.math.outputData.inlineMarked
+      align = this.jax.math.root.getProperty('inlineMarked')
         ? 'left'
         : this.jax.options.displayAlign;
     }
     if (!shift || shift === 'auto') {
-      shift = this.jax.math.outputData.inlineMarked
+      shift = this.jax.math.root.getProperty('inlineMarked')
         ? '0'
         : this.jax.options.displayIndent;
     }

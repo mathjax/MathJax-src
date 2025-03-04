@@ -69,11 +69,11 @@ describe('Newcommand', () => {
       tex2mml(
         '\\newenvironment{argument}[1][a]{\\textbf{Argument #1:}}{aa}\\begin{argument}b\\end{argument}'
       ),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\newenvironment{argument}[1][a]{\\textbf{Argument #1:}}{aa}\\begin{argument}b\\end{argument}\" display=\"block\">
-      <mtext mathvariant=\"bold\" data-latex=\"\\textbf{Argument a:}\">Argument a:</mtext>
-      <mi data-latex=\"b\">b</mi>
-      <mi data-latex=\"a\">a</mi>
-      <mi data-latex=\"a\">a</mi>
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\newenvironment{argument}[1][a]{\\textbf{Argument #1:}}{aa}\\begin{argument}b\\end{argument}" display="block">
+      <mtext mathvariant="bold" data-latex="\\textbf{Argument a:}">Argument a:</mtext>
+      <mi data-latex="b">b</mi>
+      <mi data-latex="a">a</mi>
+      <mi data-latex="a">a</mi>
     </math>`
     ));
   it('Newenvironment Arg Optional', () =>
@@ -366,6 +366,15 @@ describe('Newcommand', () => {
   <mi data-latex="b">b</mi>
 </math>`
     ));
+  it('Let Self', () =>
+     toXmlMatch(
+       tex2mml('\\let\\x\\x \\x'),
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\x\\x \\x" display="block">
+          <merror data-mjx-error="Undefined control sequence \\x" >
+            <mtext>Undefined control sequence \\x</mtext>
+          </merror>
+        </math>`
+     ));
   it('Let Overwrite Sqrt Choose', () =>
     toXmlMatch(
       tex2mml('\\let\\sqrt\\choose a\\sqrt b'),
@@ -773,12 +782,179 @@ describe('NewcommandError', () => {
   it('Missing End Error', () =>
     toXmlMatch(
       tex2mml('\\newenvironment{env}{aa}{bb}\\begin{env}cc'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\newenvironment{env}{aa}{bb}\\begin{env}cc\" display=\"block\">
-      <merror data-mjx-error=\"Missing \\end{env}\">
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\newenvironment{env}{aa}{bb}\\begin{env}cc" display="block">
+      <merror data-mjx-error="Missing \\end{env}">
         <mtext>Missing \\end{env}</mtext>
       </merror>
     </math>`
     ));
+});
+
+describe('Newcommand Overrides', () => {
+  beforeEach(() => setupTex(['base', 'newcommand']));
+  it('Let def macro be undefined', () =>
+     toXmlMatch(
+       tex2mml('\\def\\test{error} \\let\\test=\\undefined \\test'),
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\test{error} \\let\\test=\\undefined \\test" display="block">
+      <merror data-mjx-error="Undefined control sequence \\test">
+        <mtext>Undefined control sequence \\test</mtext>
+      </merror>
+    </math>`
+     ));
+  it('Let existing macro be undefined', () =>
+     toXmlMatch(
+       tex2mml('\\let\\sqrt=\\undefined \\sqrt{x}'),
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\sqrt=\\undefined \\sqrt{x}" display="block">
+      <merror data-mjx-error="Undefined control sequence \\sqrt">
+        <mtext>Undefined control sequence \\sqrt</mtext>
+      </merror>
+    </math>`
+     ));
+  it('Let existing delimiter be undefined', () =>
+     toXmlMatch(
+       tex2mml('\\let\\|=\\undefined \\left\\| X \\right\\|'),
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\|=\\undefined \\left\\| X \\right\\|" display="block">
+      <merror data-mjx-error="Missing or unrecognized delimiter for \\left">
+        <mtext>Missing or unrecognized delimiter for \\left</mtext>
+      </merror>
+    </math>`
+     ));
+  it('Let after def of existing macro be undefined', () =>
+     toXmlMatch(
+       tex2mml('\\def\\sqrt{X} \\let\\sqrt=\\undefined \\sqrt{x}'),
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\sqrt{X} \\let\\sqrt=\\undefined \\sqrt{x}" display="block">
+      <merror data-mjx-error="Undefined control sequence \\sqrt">
+        <mtext>Undefined control sequence \\sqrt</mtext>
+      </merror>
+    </math>`
+     ));
+  it('Def overrides let delimiter', () =>
+     toXmlMatch(
+       tex2mml('\\let\\test=\\| \\def\\test{x} \\left\\test X \\right\\test'),
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\test=\\| \\def\\test{x} \\left\\test X \\right\\test" display="block">
+      <merror data-mjx-error="Missing or unrecognized delimiter for \\left">
+        <mtext>Missing or unrecognized delimiter for \\left</mtext>
+      </merror>
+    </math>`
+     ));
+  it('Def overrides let delimiter as macro', () =>
+     toXmlMatch(
+       tex2mml('\\let\\test=\\| \\def\\test{x} \\test'),
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\test=\\| \\def\\test{x} \\test" display="block">
+      <mi data-latex="x">x</mi>
+    </math>`
+     ));
+  it('Def overrides existing delimiter', () =>
+     toXmlMatch(
+       tex2mml('\\def\\|{x} \\left\\| X \\right\\|'),
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\|{x} \\left\\| X \\right\\|" display="block">
+      <merror data-mjx-error="Missing or unrecognized delimiter for \\left">
+        <mtext>Missing or unrecognized delimiter for \\left</mtext>
+      </merror>
+    </math>`
+     ));
+  it('Def overrides existing delimiter as macro', () =>
+     toXmlMatch(
+       tex2mml('\\def\\|{x} \\|'),
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\|{x} \\|" display="block">
+      <mi data-latex="x">x</mi>
+    </math>`
+     ));
+  it('Let overrides def macro', () =>
+     toXmlMatch(
+       tex2mml('\\def\\test{x} \\let\\test=\\| \\test X \\test'),
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\test{x} \\let\\test=\\| \\test X \\test" display="block">
+      <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\test">&#x2016;</mo>
+      <mi data-latex="X">X</mi>
+      <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\test">&#x2016;</mo>
+    </math>`
+     ));
+  it('Let overrides def macro as delimiter', () =>
+     toXmlMatch(
+       tex2mml('\\def\\test{x} \\let\\test=\\| \\left\\test X \\right\\test'),
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\test{x} \\let\\test=\\| \\left\\test X \\right\\test" display="block">
+      <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\test X \\right\\test" data-latex="\\def\\test{x} \\let\\test=\\| \\left\\test X \\right\\test">
+        <mo data-mjx-texclass="OPEN" symmetric="true" data-latex-item="\\left\\test " data-latex="\\left\\test ">&#x2016;</mo>
+        <mi data-latex="X">X</mi>
+        <mo data-mjx-texclass="CLOSE" symmetric="true" data-latex-item="\\right\\test" data-latex="\\right\\test">&#x2016;</mo>
+      </mrow>
+    </math>`
+     ));
+  it('Let overrides existing macro', () =>
+     toXmlMatch(
+       tex2mml('\\let\\sqrt=\\| \\sqrt X'),
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\sqrt=\\| \\sqrt X" display="block">
+      <mo data-mjx-texclass="ORD" fence="false" stretchy="false" data-latex="\\sqrt">&#x2016;</mo>
+      <mi data-latex="X">X</mi>
+    </math>`
+     ));
+  it('Let overrides existing macro as delimiter', () =>
+     toXmlMatch(
+       tex2mml('\\let\\sqrt=\\| \\left\\sqrt X \\right\\sqrt'),
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\sqrt=\\| \\left\\sqrt X \\right\\sqrt" display="block">
+      <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\sqrt X \\right\\sqrt" data-latex="\\let\\sqrt=\\| \\left\\sqrt X \\right\\sqrt">
+        <mo data-mjx-texclass="OPEN" symmetric="true" data-latex-item="\\left\\sqrt " data-latex="\\left\\sqrt ">&#x2016;</mo>
+        <mi data-latex="X">X</mi>
+        <mo data-mjx-texclass="CLOSE" symmetric="true" data-latex-item="\\right\\sqrt" data-latex="\\right\\sqrt">&#x2016;</mo>
+      </mrow>
+    </math>`
+     ));
+  it('Let overrides delimiter', () =>
+     toXmlMatch(
+       tex2mml('\\let\\|=\\sqrt \\left\\| X \\right\\|'),
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\|=\\sqrt \\left\\| X \\right\\|" display="block">
+      <merror data-mjx-error="Missing or unrecognized delimiter for \\left">
+        <mtext>Missing or unrecognized delimiter for \\left</mtext>
+      </merror>
+    </math>`
+     ));
+  it('Let overrides delimiter as macro', () =>
+     toXmlMatch(
+       tex2mml('\\let\\|=\\sqrt \\| X'),
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\|=\\sqrt \\| X" display="block">
+      <msqrt data-latex="\\let\\|=\\sqrt \\| X">
+        <mi data-latex="X">X</mi>
+      </msqrt>
+    </math>`
+     ));
+  it('Let of character macro overrides delimiter', () =>
+     toXmlMatch(
+       tex2mml('\\let\\|=\\alpha \\left\\| X \\right\\|'),
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\|=\\alpha \\left\\| X \\right\\|" display="block">
+      <merror data-mjx-error="Missing or unrecognized delimiter for \\left">
+        <mtext>Missing or unrecognized delimiter for \\left</mtext>
+      </merror>
+    </math>`
+     ));
+  it('Let of character creates delimiter', () =>
+     toXmlMatch(
+       tex2mml('\\let\\test=< \\left\\test X \\right\\test'),
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\let\\test=&lt; \\left\\test X \\right\\test" display="block">
+      <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\test X \\right\\test" data-latex="\\let\\test=&lt; \\left\\test X \\right\\test">
+        <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\test " data-latex="\\left\\test ">&#x27E8;</mo>
+        <mi data-latex="X">X</mi>
+        <mo data-mjx-texclass="CLOSE" data-latex-item="\\right\\test" data-latex="\\right\\test">&#x27E8;</mo>
+      </mrow>
+    </math>`
+     ));
+  it('Let of character overrides def', () =>
+     toXmlMatch(
+       tex2mml('\\def\\test{X}\\let\\test=< \\test'),
+       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\def\\test{X}\\let\\test=&lt; \\test" display="block">
+      <mo fence="false" stretchy="false" data-latex="\\def\\test{X}\\let\\test=&lt; \\test">&#x27E8;</mo>
+    </math>`
+     ));
+  it('Def template matching', () =>
+     toXmlMatch(
+       tex2mml('\\def\\ending{+}\\def\\test#1\\end{[#1]} \\test a\\ending b\\end'),
+       `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\def\\ending{+}\\def\\test#1\\end{[#1]} \\test a\\ending b\\end\" display=\"block\">
+         <mo data-latex=\"[\" stretchy=\"false\">[</mo>
+         <mi data-latex=\"a\">a</mi>
+         <mo data-latex=\"+\">+</mo>
+         <mi data-latex=\"b\">b</mi>
+         <mo data-latex=\"]\" stretchy=\"false\">]</mo>
+       </math>`
+     ));
 });
 
 afterAll(() => getTokens('newcommand'));

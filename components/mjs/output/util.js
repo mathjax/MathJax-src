@@ -3,7 +3,7 @@ import {Package} from '#js/components/package.js';
 import {hasWindow} from '#js/util/context.js';
 
 export const FONTPATH = hasWindow ?
-                        'https://cdn.jsdelivr.net/npm/%%FONT%%-font':
+                        'https://cdn.jsdelivr.net/npm/@mathjax/%%FONT%%-font':
                         '@mathjax/%%FONT%%-font';
 
 export const OutputUtil = {
@@ -64,7 +64,7 @@ export const OutputUtil = {
         });
         if (jax === 'chtml') {
           combineDefaults(MathJax.config, jax, {
-            fontURL: Package.resolvePath(`${font}/${jax}/woff`, false),
+            fontURL: Package.resolvePath(`${font}/${jax}/woff2`, false),
           });
         }
 
@@ -78,12 +78,12 @@ export const OutputUtil = {
 
   },
 
-  loadFont(startup, jax, font, preload) {
+  loadFont(startup, jax, font, preloaded) {
     if (!MathJax.loader) {
       return startup;
     }
-    if (preload) {
-      MathJax.loader.preLoad(`[${font}]/${jax}`);
+    if (preloaded) {
+      MathJax.loader.preLoaded(`[${font}]/${jax}`);
     }
     return Package.loadPromise(`output/${jax}`).then(startup);
   }

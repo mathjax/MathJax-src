@@ -24,7 +24,7 @@
 import { CommonOutputJax } from './common.js';
 import { CommonWrapper as _CommonWrapper } from './common/Wrapper.js';
 import { StyleList } from '../util/Styles.js';
-import { StyleList as CssStyleList, CssStyles } from '../util/StyleList.js';
+import { StyleJson, StyleJsonSheet } from '../util/StyleJson.js';
 import { OptionList } from '../util/Options.js';
 import { MathDocument } from '../core/MathDocument.js';
 import { MathItem } from '../core/MathItem.js';
@@ -91,13 +91,31 @@ export class CHTML<N, T, D> extends CommonOutputJax<
   /**
    *  The default styles for CommonHTML
    */
-  public static commonStyles: CssStyleList = {
+  public static commonStyles: StyleJson = {
     ...CommonOutputJax.commonStyles,
     'mjx-container[jax="CHTML"]': {
       'white-space': 'nowrap',
     },
 
-    'mjx-container[jax="CHTML"] :focus': { outline: 'solid 3px' },
+    //
+    // Clip the token elements' character content,
+    //   to remove excessive height and depth of ZERO font
+    // Do the same for stretchy characters
+    //
+    [[
+      'mjx-mo > mjx-c',
+      'mjx-mi > mjx-c',
+      'mjx-mn > mjx-c',
+      'mjx-ms > mjx-c',
+      'mjx-mtext > mjx-c',
+      'mjx-stretchy-h',
+      'mjx-stretchy-v',
+    ].join(', ')]: {
+      'clip-path':
+        'padding-box xywh(-1em -2px calc(100% + 2em) calc(100% + 4px))',
+    },
+
+    'mjx-container[jax="CHTML"] :focus': { outline: 'solid 2px' },
     'mjx-container [space="1"]': { 'margin-left': '.111em' },
     'mjx-container [space="2"]': { 'margin-left': '.167em' },
     'mjx-container [space="3"]': { 'margin-left': '.222em' },
@@ -201,7 +219,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<
    */
   public styleSheet(html: MathDocument<N, T, D>) {
     if (this.chtmlStyles) {
-      const styles = new CssStyles();
+      const styles = new StyleJsonSheet();
       if (this.options.adaptiveCSS) {
         //
         // Update the style sheet rules
@@ -220,16 +238,16 @@ export class CHTML<N, T, D> extends CommonOutputJax<
   }
 
   /**
-   * @param {CssStyles} styles   The styles to update with newly used character styles
+   * @param {StyleJsonSheet} styles   The styles to update with newly used character styles
    */
-  protected updateFontStyles(styles: CssStyles) {
+  protected updateFontStyles(styles: StyleJsonSheet) {
     styles.addStyles(this.font.updateStyles({}));
   }
 
   /**
    * @override
    */
-  protected addWrapperStyles(styles: CssStyles) {
+  protected addWrapperStyles(styles: StyleJsonSheet) {
     if (!this.options.adaptiveCSS) {
       super.addWrapperStyles(styles);
       return;
@@ -247,7 +265,10 @@ export class CHTML<N, T, D> extends CommonOutputJax<
   /**
    * @override
    */
-  protected addClassStyles(wrapper: typeof _CommonWrapper, styles: CssStyles) {
+  protected addClassStyles(
+    wrapper: typeof _CommonWrapper,
+    styles: StyleJsonSheet
+  ) {
     const CLASS = wrapper as typeof ChtmlWrapper;
     if (CLASS.autoStyle && CLASS.kind !== 'unknown') {
       styles.addStyles({
@@ -273,7 +294,7 @@ export class CHTML<N, T, D> extends CommonOutputJax<
    * Clear the cache of which items need their styles to be output
    */
   public clearCache() {
-    this.cssStyles.clear();
+    this.styleJson.clear();
     this.font.clearCache();
     this.wrapperUsage.clear();
     this.chtmlStyles = null;

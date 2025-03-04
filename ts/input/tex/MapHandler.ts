@@ -22,7 +22,7 @@
  */
 
 import { HandlerType } from './HandlerTypes.js';
-import { AbstractTokenMap, TokenMap } from './TokenMap.js';
+import { AbstractTokenMap, TokenMap, CharacterMap } from './TokenMap.js';
 import { ParseInput, ParseResult, ParseMethod } from './Types.js';
 import { PrioritizedList } from '../../util/PrioritizedList.js';
 import { FunctionList } from '../../util/FunctionList.js';
@@ -58,6 +58,8 @@ export const MapHandler = {
  * Class of token mappings that are active in a configuration.
  */
 export class SubHandler {
+  public static FALLBACK = Symbol('fallback');
+
   private _configuration: PrioritizedList<TokenMap> =
     new PrioritizedList<TokenMap>();
   private _fallback: FunctionList = new FunctionList();
@@ -77,13 +79,31 @@ export class SubHandler {
     for (const name of maps.slice().reverse()) {
       const map = MapHandler.getMap(name);
       if (!map) {
-        this.warn('Configuration ' + name + ' not found! Omitted.');
+        this.warn(`Configuration '${name}' not found! Omitted.`);
         return;
       }
       this._configuration.add(map, priority);
     }
     if (fallback) {
       this._fallback.add(fallback, priority);
+    }
+  }
+
+  /**
+   * Removes a list of token maps from the handler
+   *
+   * @param {string[]} maps          The names of the token maps to remove.
+   * @param {ParseMethod} fallback   A fallback method to remove.
+   */
+  public remove(maps: string[], fallback: ParseMethod = null) {
+    for (const name of maps) {
+      const map = this.retrieve(name);
+      if (map) {
+        this._configuration.remove(map);
+      }
+    }
+    if (fallback) {
+      this._fallback.remove(fallback);
     }
   }
 
@@ -96,6 +116,9 @@ export class SubHandler {
   public parse(input: ParseInput): ParseResult {
     for (const { item: map } of this._configuration) {
       const result = map.parse(input);
+      if (result === SubHandler.FALLBACK) {
+        break;
+      }
       if (result) {
         return result;
       }
@@ -126,7 +149,10 @@ export class SubHandler {
    * @returns {boolean} True if the token is contained in the mapping.
    */
   public contains(token: string): boolean {
-    return this.applicable(token) ? true : false;
+    const map = this.applicable(token);
+    return (
+      !!map && !(map instanceof CharacterMap && map.lookup(token).char === null)
+    );
   }
 
   /**
@@ -203,6 +229,21 @@ export class SubHandlers {
         this.set(name, subHandler);
       }
       subHandler.add(handlers[name], fallbacks[name], priority);
+    }
+  }
+
+  /**
+   * Removes subhandlers and fallbacks from the map.
+   *
+   * @param {HandlerConfig} handlers     A handler configuration to remove
+   * @param {FallbackConfig} fallbacks   A configuration of fallback functions to remove
+   */
+  public remove(handlers: HandlerConfig, fallbacks: FallbackConfig) {
+    for (const name of Object.keys(handlers) as HandlerType[]) {
+      const subHandler = this.get(name);
+      if (subHandler) {
+        subHandler.remove(handlers[name], fallbacks[name]);
+      }
     }
   }
 

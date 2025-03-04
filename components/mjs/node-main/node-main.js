@@ -43,7 +43,7 @@ combineDefaults(MathJax.config, 'output', {font: 'mathjax-newcm'});
 /*
  * Mark the preloaded components
  */
-Loader.preLoad('loader', 'startup', 'core', 'adaptors/liteDOM');
+Loader.preLoaded('loader', 'startup', 'core', 'adaptors/liteDOM');
 
 if (path.basename(dir) === 'node-main') {
   CONFIG.paths.esm = CONFIG.paths.mathjax;

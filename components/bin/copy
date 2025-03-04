@@ -43,18 +43,15 @@ const target = (process.argv[2] || 'mjs');
 const bundle = (process.argv[3] || 'bundle');
 
 /**
- * The configuration data for the copy operation
+ * The configuration data for the copy operation(s)
  */
 const json = path.resolve(process.argv[4] || '.', 'config.json');
-const config = require(json).copy;
-if (!config) process.exit();
-process.chdir(path.dirname(json));
-
-/**
- * Redirect the bundle, if not the default
- */
-if (bundle !== 'bundle') {
-  config.to = config.to.replace(/\/bundle(\/|$)/, '/' + bundle + '$1');
+let configs = require(json).copy;
+if (!configs) process.exit();
+const wd = path.dirname(json);
+process.chdir(wd);
+if (!Array.isArray(configs)) {
+  configs = [configs];
 }
 
 /**
@@ -88,11 +85,23 @@ function copyFile(from, to, name, space) {
 }
 
 /**
- * Copy the given files
+ * Handle the copying for a given configuration
+ *
+ * @param {{from: string, to: string, copy: string[]}} config  The configuration for the copy operation
  */
-const wd = process.cwd();
-const to = path.resolve(wd, config.to);
-const from = path.resolve(wd, config.from.replace(/\[node\]/, nodeDir));
-for (const name of config.copy) {
-  copyFile(from, to, name, '');
+function processConfig(config) {
+  const to = path.resolve(wd, config.to.replace(/\/bundle(\/|$)/, '/' + bundle + '$1'));
+  const from = path.resolve(wd, config.from.replace(/\[node\]/, nodeDir));
+  for (const name of config.copy) {
+    copyFile(from, to, name, '');
+  }
 }
+
+/**
+ * Process all the configurations
+ */
+for (const config of configs) {
+  processConfig(config);
+}
+
+

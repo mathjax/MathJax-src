@@ -3,13 +3,15 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "./js",
-    "moduleResolution": "node",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "paths": {
       "#js/*": ["../mjs/*"],
       "#source/*": ["../components/mjs/*"],
+      "#src/*": ["./src/*"],
       "#helpers": ["./src/index.js"]
     },
-    "lib": ["es2017"]
+    "lib": ["es2022"]
   },
   "include": ["./tests/**/*.ts", "./src/*.ts"]
 }

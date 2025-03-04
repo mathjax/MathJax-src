@@ -30,6 +30,7 @@ export const source = {
   '[tex]/bbm': `${src}/input/tex/extensions/bbm/bbm.js`,
   '[tex]/bboldx': `${src}/input/tex/extensions/bboldx/bboldx.js`,
   '[tex]/bbox': `${src}/input/tex/extensions/bbox/bbox.js`,
+  '[tex]/begingroup': `${src}/input/tex/extensions/begingroup/begingroup.js`,
   '[tex]/boldsymbol': `${src}/input/tex/extensions/boldsymbol/boldsymbol.js`,
   '[tex]/braket': `${src}/input/tex/extensions/braket/braket.js`,
   '[tex]/bussproofs': `${src}/input/tex/extensions/bussproofs/bussproofs.js`,

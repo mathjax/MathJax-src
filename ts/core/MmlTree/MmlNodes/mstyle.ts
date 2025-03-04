@@ -61,6 +61,20 @@ export class MmlMstyle extends AbstractMmlLayoutNode {
   }
 
   /**
+   * @override
+   */
+  public setInheritedAttributes(
+    attributes: AttributeList = {},
+    display: boolean = false,
+    level: number = 0,
+    prime: boolean = false
+  ) {
+    this.attributes.setInherited('displaystyle', display);
+    this.attributes.setInherited('scriptlevel', level);
+    super.setInheritedAttributes(attributes, display, level, prime);
+  }
+
+  /**
    * Handle scriptlevel changes, and add mstyle attributes to the ones being inherited.
    *
    * @override

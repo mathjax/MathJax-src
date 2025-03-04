@@ -4,7 +4,7 @@ import {Sre} from './sre/sre.js';
 import './semantic-enrich/semantic-enrich.js';
 import './explorer/explorer.js';
 
-Loader.preLoad(
+Loader.preLoaded(
   'a11y/sre',
   'a11y/semantic-enrich',
   'a11y/explorer'

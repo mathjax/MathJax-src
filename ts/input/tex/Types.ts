@@ -32,7 +32,7 @@ export type Attributes = Record<string, Args>;
 export type Environment = Record<string, Args>;
 
 export type ParseInput = [TexParser, string];
-export type ParseResult = void | boolean | StackItem;
+export type ParseResult = void | boolean | StackItem | symbol;
 
 export type ParseMethod = (
   parser: TexParser,

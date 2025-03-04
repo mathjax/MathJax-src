@@ -22,7 +22,7 @@
  */
 
 import { MathDocument } from '../../core/MathDocument.js';
-import { CssStyles } from '../../util/StyleList.js';
+import { StyleJsonSheet } from '../../util/StyleJson.js';
 import * as Sre from '../sre.js';
 import { SsmlElement, buildSpeech } from '../speech/SpeechUtil.js';
 
@@ -83,9 +83,9 @@ export abstract class AbstractRegion<T> implements Region<T> {
   /**
    * The CSS style that needs to be added for this type of region.
    *
-   * @type {CssStyles}
+   * @type {StyleJsonSheet}
    */
-  protected static style: CssStyles;
+  protected static style: StyleJsonSheet;
 
   /**
    * The outer div node.
@@ -318,7 +318,7 @@ export class ToolTip extends StringRegion {
   /**
    * @override
    */
-  protected static style: CssStyles = new CssStyles({
+  protected static style: StyleJsonSheet = new StyleJsonSheet({
     ['.' + ToolTip.className]: {
       width: 'auto',
       height: 'auto',
@@ -344,7 +344,7 @@ export class LiveRegion extends StringRegion {
   /**
    * @override
    */
-  protected static style: CssStyles = new CssStyles({
+  protected static style: StyleJsonSheet = new StyleJsonSheet({
     ['.' + LiveRegion.className]: {
       position: 'absolute',
       top: 0,
@@ -537,7 +537,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
   /**
    * @override
    */
-  protected static style: CssStyles = new CssStyles({
+  protected static style: StyleJsonSheet = new StyleJsonSheet({
     ['.' + HoverRegion.className]: {
       display: 'block',
       position: 'absolute',

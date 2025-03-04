@@ -261,7 +261,7 @@ new sm.CharacterMap('mathchar0mo', ParseMethods.mathchar0mo, {
   ll: '\u226A',
   sim: '\u223C',
   simeq: '\u2243',
-  perp: '\u22A5',
+  perp: '\u27C2',
   equiv: '\u2261',
   asymp: '\u224D',
   smile: '\u2323',

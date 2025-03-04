@@ -52,7 +52,7 @@
     "#menu/*": "mj-context-menu/js/*",
     "#sre/*": "speech-rule-engine/js/*",
     "#mhchem/*": "mhchemparser/esm/*",
-    "#default-font/*": "mathjax-newcm-font/js/*"
+    "#default-font/*": "@mathjax/mathjax-newcm-font/mjs/*"
   },
   "files": [
     "/bundle",
@@ -67,10 +67,10 @@
   ],
   "scripts": {
     "=============================================================================== code hygene": "",
-    "lint": "eslint ts/",
-    "lint:fix": "eslint --fix ts/ --format unix",
-    "format": "prettier --check \"ts/**/*.{ts,tsx}\"",
-    "format:fix": "prettier --write \"ts/**/*.{ts,tsx}\"",
+    "lint": "check() { eslint ${1:-ts/}; }; check",
+    "lint:fix": "fix() { eslint --fix ${1:-ts/}; -- format unix}; fix",
+    "format": "check() { prettier --check ${1:-\"ts/**/*.{ts,tsx}\"}; }; check",
+    "format:fix": "fix() { prettier --write ${1:-\"ts/**/*.{ts,tsx}\"}; }; fix",
     "=============================================================================== clean": "",
     "clean:dir": "clean() { pnpm -s log:single \"Cleaning $1 directory\"; pnpm rimraf $1; }; clean",
     "clean:lib": "clean() { pnpm -s log:single \"Cleaning $1 component libs\"; pnpm rimraf -g components/$1'/**/lib'; }; clean",
@@ -127,7 +127,7 @@
     "build-mjs": "pnpm -s mjs:build",
     "make-cjs-components": "pnpm -s cjs:components:make && pnpm -s cjs:bundle:finalize",
     "make-mjs-components": "pnpm -s mjs:components:make",
-    "make-one": "make() { components/bin/makeAll --no-subdirs $3 $4 --$2 components/$2/$1; }; make",
+    "make-one": "make() { components/bin/makeAll --no-subdirs $3 $4 --${2:-mjs} components/${2-:mjs}/$1; }; make",
     "make-components": "pnpm -s make-mjs-components",
     "compile": "pnpm -s compile-mjs",
     "build": "pnpm -s build-mjs",
@@ -159,8 +159,8 @@
     ]
   },
   "dependencies": {
+    "@mathjax/mathjax-newcm-font": "0.4.0-beta.8",
     "@xmldom/xmldom": "^0.8.10",
-    "mathjax-newcm-font": "^4.0.0-beta.7",
     "mhchemparser": "^4.2.1",
     "mj-context-menu": "^0.9.1",
     "speech-rule-engine": "^4.1.0-beta.11",
