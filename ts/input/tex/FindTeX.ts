@@ -236,7 +236,7 @@ export class FindTeX<N, T, D> extends AbstractFindMath<N, T, D> {
         const end = start.index + start[this.sub].length;
         if (math.length === 2) {
           match = protoItem<N, T>(
-            '',
+            '\\',
             math.substring(1),
             '',
             n,

@@ -1524,7 +1524,7 @@ export class Menu {
     if (!this.settings.texHints) {
       svg = svg
         .replace(
-          / data-mjx-(?:texclass|alternate|variant|smallmatrix|mathaccent|auto-op|script-align|vbox)=".*?"/g,
+          / data-mjx-(?:texclass|alternate|variant|pseudoscript|smallmatrix|mathaccent|auto-op|script-align|vbox)=".*?"/g,
           ''
         )
         .replace(/ data-mml-node="TeXAtom"/g, '');

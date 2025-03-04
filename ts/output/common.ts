@@ -654,7 +654,7 @@ export abstract class CommonOutputJax<
     const getFamily =
       this.options.mtextInheritFont || this.options.merrorInheritFont;
     const test = this.getTestElement(node, display);
-    const metrics = this.measureMetrics(test, getFamily);
+    const metrics = { ...this.measureMetrics(test, getFamily), display };
     this.adaptor.remove(test);
     return metrics;
   }

@@ -230,6 +230,9 @@ export class MathMLCompile<N, T, D> {
           case 'vbox':
             mml.setProperty('vbox', value);
             break;
+          default:
+            mml.attributes.set(name, value);
+            break;
         }
       } else if (name !== 'class') {
         const val = value.toLowerCase();
