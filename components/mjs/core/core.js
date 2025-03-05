@@ -10,5 +10,10 @@ if (MathJax.startup) {
   MathJax.startup.useAdaptor('browserAdaptor');
 }
 if (MathJax.loader) {
-  MathJax._.mathjax.mathjax.asyncLoad = (name => MathJax.loader.load(name));
+  const config = MathJax.config.loader;
+  MathJax._.mathjax.mathjax.asyncLoad = (
+    (name) => name.substring(0, 5) === 'node:'
+      ? config.require(name)
+      : MathJax.loader.load(name).then(result => result[0])
+  );
 }

@@ -23,7 +23,12 @@
 
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 import { OptionList } from '../../util/Options.js';
-import { Message, PoolCommand, PromiseFunctions } from './MessageTypes.js';
+import {
+  Message,
+  PoolCommand,
+  Structure,
+  StructureData,
+} from './MessageTypes.js';
 import { MathItem } from '../../core/MathItem.js';
 import { hasWindow } from '../../util/context.js';
 
@@ -34,7 +39,7 @@ class Task<N, T, D> {
   constructor(
     public cmd: PoolCommand,
     public item: MathItem<N, T, D>,
-    public resolve: () => void,
+    public resolve: (value: any) => void,
     public reject: (cmd: string) => void
   ) {}
 }
@@ -188,22 +193,22 @@ export class WorkerHandler<N, T, D> {
    *
    * @param {PoolCommand} msg The command message.
    * @param {MathItem} item Optional MathItem that is being processed
-   * @param {() => void} resolve Function to resolve the promise.
-   * @param {(cmd: string) => void} reject Function to reject promise. Takes the
    *     command name as input.
+   * @returns {Promise<any>} A promise that resolves when the command completes
    */
-  public Post(
-    msg: PoolCommand,
-    item?: MathItem<N, T, D>,
-    resolve: () => void = () => {},
-    reject: (cmd: string) => void = () => {}
-  ) {
-    this.tasks.push(new Task(msg, item, resolve, reject));
+  public Post(msg: PoolCommand, item?: MathItem<N, T, D>): Promise<any> {
+    const promise = new Promise((resolve, reject) => {
+      this.tasks.push(new Task(msg, item, resolve, reject));
+    });
     if (this.ready && this.tasks.length === 1) {
       this.postNext();
     }
+    return promise;
   }
 
+  /**
+   * Post the next available task, if there is one.
+   */
   private postNext() {
     if (this.tasks.length) {
       this.adaptor.post(this.tasks[0].cmd, this.domain, this.pool);
@@ -211,41 +216,26 @@ export class WorkerHandler<N, T, D> {
   }
 
   /**
-   * Compute speech strcuture for the math.
+   * Remove a task from the task list.
    *
-   * @param {string} math The mml string.
-   * @param {OptionList} options The options list.
-   * @param {MathItem} item The mathitem for reattaching the speech.
-   * @param {PromiseFunctions} promise Set of promise functions.
+   * @param {MathItem} item   The item whose task is to be canceled.
    */
-  public Speech(
-    math: string,
-    options: OptionList,
-    item: MathItem<N, T, D>,
-    promise: PromiseFunctions
-  ) {
-    this.Post(
-      {
-        cmd: 'Worker',
-        data: {
-          cmd: 'speech',
-          debug: this.options.debug,
-          data: { mml: math, options: options },
-        },
-      },
-      item,
-      promise.resolve,
-      promise.reject
-    );
+  public Cancel(item: MathItem<N, T, D>) {
+    const i = this.tasks.findIndex((task) => task.item === item);
+    if (i > 0) {
+      this.tasks[i].reject(`Task ${this.tasks[i].cmd.cmd} cancelled`);
+      this.tasks.splice(i, 1);
+    }
   }
 
   /**
    * Setup the engine in the SRE worker.
    *
    * @param {OptionList} options The options list.
+   * @returns {Promise<void>} A promise that resolves when the command completes
    */
-  public Setup(options: OptionList) {
-    this.Post({
+  public Setup(options: OptionList): Promise<void> {
+    return this.Post({
       cmd: 'Worker',
       data: {
         cmd: 'setup',
@@ -261,32 +251,61 @@ export class WorkerHandler<N, T, D> {
   }
 
   /**
+   * Compute speech strcuture for the math.
+   *
+   * @param {string} math The mml string.
+   * @param {OptionList} options The options list.
+   * @param {MathItem} item The mathitem for reattaching the speech.
+   * @returns {Promise<void>} A promise that resolves when the command completes
+   */
+  public async Speech(
+    math: string,
+    options: OptionList,
+    item: MathItem<N, T, D>
+  ): Promise<void> {
+    this.Attach(
+      item,
+      await this.Post(
+        {
+          cmd: 'Worker',
+          data: {
+            cmd: 'speech',
+            debug: this.options.debug,
+            data: { mml: math, options: options },
+          },
+        },
+        item
+      )
+    );
+  }
+
+  /**
    * Computes the next rule set for this particular SRE setting. We assume that
    * the engine has been set to the options of the current expression.
    *
    * @param {string} math The mml string.
    * @param {OptionList} options The options list.
    * @param {MathItem} item The mathitem for reattaching the speech.
-   * @param {PromiseFunctions} promise Set of promise functions.
+   * @returns {Promise<void>} A promise that resolves when the command completes
    */
-  public nextRules(
+  public async nextRules(
     math: string,
     options: OptionList,
-    item: MathItem<N, T, D>,
-    promise: PromiseFunctions
-  ) {
-    this.Post(
-      {
-        cmd: 'Worker',
-        data: {
-          cmd: 'nextRules',
-          debug: this.options.debug,
-          data: { mml: math, options: options },
-        },
-      },
+    item: MathItem<N, T, D>
+  ): Promise<void> {
+    this.Attach(
       item,
-      promise.resolve,
-      promise.reject
+      await this.Post(
+        {
+          cmd: 'Worker',
+          data: {
+            cmd: 'nextRules',
+            debug: this.options.debug,
+            data: { mml: math, options: options },
+          },
+        },
+        item
+      )
     );
   }
 
@@ -304,51 +323,186 @@ export class WorkerHandler<N, T, D> {
    * @param {OptionList} options The options list.
    * @param {string} nodeId The semantic Id of the currenctly focused node.
    * @param {MathItem} item The mathitem for reattaching the speech.
-   * @param {PromiseFunctions} promise Set of promise functions.
+   * @returns {Promise<void>} A promise that resolves when the command completes
    */
-  public nextStyle(
+  public async nextStyle(
     math: string,
     options: OptionList,
     nodeId: string,
-    item: MathItem<N, T, D>,
-    promise: PromiseFunctions
-  ) {
-    this.Post(
-      {
-        cmd: 'Worker',
-        data: {
-          cmd: 'nextStyle',
-          debug: this.options.debug,
+    item: MathItem<N, T, D>
+  ): Promise<void> {
+    this.Attach(
+      item,
+      await this.Post(
+        {
+          cmd: 'Worker',
           data: {
-            mml: math,
-            options: options,
-            nodeId: nodeId,
+            cmd: 'nextStyle',
+            debug: this.options.debug,
+            data: {
+              mml: math,
+              options: options,
+              nodeId: nodeId,
+            },
           },
         },
-      },
-      item,
-      promise.resolve,
-      promise.reject
+        item
+      )
     );
   }
 
   /**
-   * Terminates the worker.
+   * Attach the speech structure to an item's DOM
+   *
+   * @param {MathItem} item             The MathItem to attach to
+   * @param {StructureData} structure   The speech structure to attach
    */
-  public Terminate() {
-    this.Post({ cmd: 'Terminate', data: {} });
-    // FIXME:  reject all pending tasks
+  public Attach(item: MathItem<N, T, D>, structure: StructureData) {
+    const data = (
+      typeof structure === 'string' ? JSON.parse(structure) : structure
+    ) as Structure;
+    const container = item.typesetRoot;
+    if (!container) return; // Element is gone, maybe retypeset or removed.
+    this.setSpecialAttributes(container, data.options, 'data-semantic-', [
+      'locale',
+      'domain',
+      'style',
+    ]);
+    const adaptor = this.adaptor;
+    this.setSpecialAttributes(container, data.translations, 'data-semantic-');
+    if (data.label) {
+      adaptor.setAttribute(container, 'aria-label', data.label);
+    }
+    if (data.braillelabel) {
+      adaptor.setAttribute(container, 'aria-braillelabel', data.braillelabel);
+    }
+    // Sort out Mactions
+    for (const [id, sid] of Object.entries(data.mactions)) {
+      let node = adaptor.getElement('#' + id, container);
+      if (!node || !adaptor.childNodes(node)[0]) {
+        continue;
+      }
+      node = adaptor.childNodes(node)[0] as N;
+      adaptor.setAttribute(node, 'data-semantic-type', 'dummy');
+      this.setSpecialAttributes(node, sid, '');
+    }
+    this.setSpeechAttributes(adaptor.childNodes(container)[0], '', data);
+    adaptor.setAttribute(container, 'data-speech-attached', 'true');
+    if (data.braille) {
+      adaptor.setAttribute(container, 'data-braille-attached', 'true');
+    }
+  }
+
+  /**
+   * Add the speech attributes to a node
+   *
+   * @param {N} node           The node to add speech to
+   * @param {Structure} data   The speech data to use
+   */
+  protected setSpeechAttribute(node: N, data: Structure) {
+    const adaptor = this.adaptor;
+    const id = adaptor.getAttribute(node, 'data-semantic-id');
+    const speech = data.speech[id] || {};
+    for (let [key, value] of Object.entries(speech)) {
+      key = key.replace(/-ssml$/, '');
+      if (value) {
+        adaptor.setAttribute(node, `data-semantic-${key}`, value as string);
+      }
+    }
+    if (data.braille) {
+      const braille = data.braille[id];
+      if (braille) {
+        const value = braille['braille-none'] || '';
+        adaptor.setAttribute(node, 'data-semantic-braille', value);
+        adaptor.setAttribute(node, 'aria-braillelabel', value);
+      }
+    }
+  }
+
+  /**
+   * Add the speech attributes to a node's DOM tree
+   *
+   * @param {N|T} root         The node to add speech to
+   * @param {string} rootId    The root nodes's ID
+   * @param {Structure} data   The speech data to use
+   * @returns {string}         The updated root ID
+   */
+  protected setSpeechAttributes(
+    root: N | T,
+    rootId: string,
+    data: Structure
+  ): string {
+    const adaptor = this.adaptor;
+    if (
+      !root ||
+      adaptor.kind(root) === '#text' ||
+      adaptor.kind(root) === '#comment'
+    ) {
+      return rootId;
+    }
+    root = root as N;
+    if (adaptor.hasAttribute(root, 'data-semantic-id')) {
+      this.setSpeechAttribute(root, data);
+      if (!rootId && !adaptor.hasAttribute(root, 'data-semantic-parent')) {
+        rootId = adaptor.getAttribute(root, 'data-semantic-id');
+      }
+    }
+    for (const child of Array.from(adaptor.childNodes(root))) {
+      rootId = this.setSpeechAttributes(child, rootId, data);
+    }
+    return rootId;
+  }
+
+  /**
+   * Adds a set of attributes to the given node.
+   *
+   * @param {N} node The node on which to set attributes.
+   * @param {OptionList} map The attribute to value map.
+   * @param {string} prefix A possible prefix for the attribute name.
+   * @param {string[]} keys An optional list to select only those attributes.
+   */
+  protected setSpecialAttributes(
+    node: N,
+    map: OptionList,
+    prefix: string,
+    keys?: string[]
+  ) {
+    if (!map) return;
+    keys = keys || Object.keys(map);
+    for (const key of keys) {
+      const value = map[key];
+      if (value) {
+        this.adaptor.setAttribute(node, `${prefix}${key.toLowerCase()}`, value);
+      }
+    }
+  }
+
+  /**
+   * Terminates the worker.
+   *
+   * @returns {Promise<void>} A promise that resolves when the command completes
+   */
+  public Terminate(): Promise<void> {
+    this.debug('Terminating pending tasks');
+    for (const task of this.tasks) {
+      task.reject(
+        `${task.cmd.data.cmd} cancelled by WorkerHandler termination`
+      );
+    }
+    this.tasks = [];
+    this.debug('Terminating WorkerPool');
+    return this.Post({ cmd: 'Terminate', data: {} });
   }
 
   /**
    * Stop the pool from running by removing and freeing the iframe.
    * Clear the values so that the pool can be restarted, if desired.
    */
-  public Stop() {
+  public async Stop() {
     if (!this.iframe) {
       throw Error('WorkerHandler has not been started');
     }
-    this.Terminate();
+    await this.Terminate();
     this.adaptor.remove(this.iframe);
     this.iframe = this.pool = null;
     this.ready = false;
@@ -384,131 +538,11 @@ export class WorkerHandler<N, T, D> {
     Finished(pool: WorkerHandler<N, T, D>, data: Message) {
       const task = pool.tasks.shift();
       if (data.success) {
-        task.resolve(); // TODO: add data.
+        task.resolve(data.result);
       } else {
-        task.reject(data.cmd);
+        task.reject(data.error);
       }
       pool.postNext();
     },
-
-    /**
-     * Attaches speech returned from the worker to the DOM element
-     * for the item in the task taht is running.
-     *
-     * @param {WorkerHandler} pool The active handler for the worker.
-     * @param {Message} data The data received from the worker.
-     */
-    Attach(pool: WorkerHandler<N, T, D>, data: Message | string) {
-      data = typeof data === 'string' ? (JSON.parse(data) as Message) : data;
-      const container = pool.tasks[0].item.typesetRoot;
-      if (!container) return; // Element is gone, maybe retypeset or removed.
-      pool.setSpecialAttributes(container, data.options, 'data-semantic-', [
-        'locale',
-        'domain',
-        'style',
-      ]);
-      pool.setSpecialAttributes(container, data.translations, 'data-semantic-');
-      if (data.label) {
-        pool.adaptor.setAttribute(container, 'aria-label', data.label);
-      }
-      if (data.braillelabel) {
-        pool.adaptor.setAttribute(
-          container,
-          'aria-braillelabel',
-          data.braillelabel
-        );
-      }
-      // Sort out Mactions
-      for (const [id, sid] of Object.entries(data.mactions)) {
-        let node = pool.adaptor.getElement('#' + id, container);
-        if (!node || !pool.adaptor.childNodes(node)[0]) {
-          continue;
-        }
-        node = pool.adaptor.childNodes(node)[0] as N;
-        pool.adaptor.setAttribute(node, 'data-semantic-type', 'dummy');
-        pool.setSpecialAttributes(node, sid, '');
-      }
-      let rootId: string = null;
-      const setAttribute = function (node: N) {
-        const id = pool.adaptor.getAttribute(node, 'data-semantic-id');
-        const speech = data?.speech[id] || {};
-        for (let [key, value] of Object.entries(speech)) {
-          key = key.replace(/-ssml$/, '');
-          if (value) {
-            pool.adaptor.setAttribute(
-              node,
-              `data-semantic-${key}`,
-              value as string
-            );
-          }
-        }
-        if (data?.braille) {
-          const braille = data.braille[id];
-          if (braille) {
-            const value = braille['braille-none'] || '';
-            pool.adaptor.setAttribute(node, 'data-semantic-braille', value);
-            pool.adaptor.setAttribute(node, 'aria-braillelabel', value);
-          }
-        }
-      };
-      const setAttributes = function (root: N | T) {
-        if (
-          !root ||
-          pool.adaptor.kind(root) === '#text' ||
-          pool.adaptor.kind(root) === '#comment'
-        )
-          return;
-        root = root as N;
-        if (pool.adaptor.hasAttribute(root, 'data-semantic-id')) {
-          setAttribute(root);
-          if (
-            !rootId &&
-            !pool.adaptor.hasAttribute(root, 'data-semantic-parent')
-          ) {
-            rootId = pool.adaptor.getAttribute(root, 'data-semantic-id');
-          }
-        }
-        Array.from(pool.adaptor.childNodes(root)).forEach(setAttributes);
-      };
-      setAttributes(pool.adaptor.childNodes(container)[0]);
-      pool.adaptor.setAttribute(container, 'data-speech-attached', 'true');
-      if (data.braille) {
-        pool.adaptor.setAttribute(container, 'data-braille-attached', 'true');
-      }
-    },
-
-    /**
-     * Logs a message from the pool or worker.
-     *
-     * @param {WorkerHandler} pool The active handler for the worker.
-     * @param {Message} data The data received from the worker.
-     */
-    Log(pool: WorkerHandler<N, T, D>, data: Message) {
-      pool.debug(data.msg);
-    },
   };
-
-  /**
-   * Adds a set of attributes to the given node.
-   *
-   * @param {N} node The node on which to set attributes.
-   * @param {OptionList} map The attribute to value map.
-   * @param {string} prefix A possible prefix for the attribute name.
-   * @param {string[]} keys An optional list to select only those attributes.
-   */
-  private setSpecialAttributes(
-    node: N,
-    map: OptionList,
-    prefix: string,
-    keys?: string[]
-  ) {
-    if (!map) return;
-    keys = keys || Object.keys(map);
-    for (const key of keys) {
-      const value = map[key];
-      if (value) {
-        this.adaptor.setAttribute(node, `${prefix}${key.toLowerCase()}`, value);
-      }
-    }
-  }
 }

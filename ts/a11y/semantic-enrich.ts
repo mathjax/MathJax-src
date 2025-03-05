@@ -300,8 +300,6 @@ export function EnrichedMathDocumentMixin<
     public static OPTIONS: OptionList = {
       ...BaseDocument.OPTIONS,
       enableEnrichment: true,
-      enableSpeech: true,
-      enableBraille: true,
       enrichError: (
         doc: EnrichedMathDocument<N, T, D>,
         math: EnrichedMathItem<N, T, D>,

@@ -230,7 +230,7 @@ export abstract class Startup {
    * @returns {string}        The serialized MathML from the tree
    */
   public static toMML(node: MmlNode): string {
-    return Startup.visitor.visitTree(node, document);
+    return Startup.visitor.visitTree(node, this.document);
   }
 
   /**
@@ -382,6 +382,7 @@ export abstract class Startup {
    *   Make input2mml() and input2mmlPromise() conversion methods and inputReset() method
    *   If there is a registered output jax
    *     Make input2output() and input2outputPromise conversion methods and outputStylesheet() method
+   * Create the MathJax.done() method.
    */
   public static makeMethods() {
     if (Startup.input && Startup.output) {
@@ -396,6 +397,7 @@ export abstract class Startup {
         Startup.makeOutputMethods(iname, oname, jax);
       }
     }
+    MathJax.done = () => Startup.document.done();
   }
 
   /**

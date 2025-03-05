@@ -15,6 +15,12 @@
  *  limitations under the License.
  */
 
+/**
+ * @file Speech generator collections for enrichment and explorers.
+ *
+ * @author v.sorge@mathjax.org (Volker Sorge)
+ */
+
 import { OptionList } from '../../util/Options.js';
 import { LiveRegion } from '../explorer/Region.js';
 import {
@@ -26,13 +32,7 @@ import {
 import { DOMAdaptor } from '../../core/DOMAdaptor.js';
 import { MathItem } from '../../core/MathItem.js';
 import { WorkerHandler } from './WebWorker.js';
-import { PromiseFunctions } from './MessageTypes.js';
-
-/**
- * @file Speech generator collections for enrichment and explorers.
- *
- * @author v.sorge@mathjax.org (Volker Sorge)
- */
+import { StructurePromise } from './MessageTypes.js';
 
 /**
  * @template N  The HTMLElement node class
@@ -54,15 +54,7 @@ export class GeneratorPool<N, T, D> {
   /**
    * The initial start of the promise chain.
    */
-  public promise: Promise<void> = Promise.resolve();
-
-  protected getPromise() {
-    let chain: PromiseFunctions;
-    this.promise = new Promise<void>((res, rej) => {
-      chain = { resolve: res, reject: rej };
-    });
-    return chain;
-  }
+  public promise: StructurePromise = Promise.resolve({});
 
   /**
    * The adaptor to work with typeset nodes.
@@ -124,11 +116,21 @@ export class GeneratorPool<N, T, D> {
    * Compute speech using the original MathML element as reference.
    *
    * @param {MathItem} item   The MathItem to add speech to
+   * @returns {StructurePromise}   The promise that resolves when the command is complete
    */
-  public Speech(item: MathItem<N, T, D>) {
+  public Speech(item: MathItem<N, T, D>): StructurePromise {
     const mml = item.outputData.mml;
     const options = Object.assign({}, this.options, { modality: 'speech' });
-    this.webworker.Speech(mml, options, item, this.getPromise());
+    return (this.promise = this.webworker.Speech(mml, options, item));
+  }
+
+  /**
+   * Cancel a pending speech task
+   *
+   * @param {MathItem} item   The MathItem whose task is to be cancelled
+   */
+  public cancel(item: MathItem<N, T, D>) {
+    this.webworker.Cancel(item);
   }
 
   /**
@@ -258,16 +260,16 @@ export class GeneratorPool<N, T, D> {
    * Cycles rule sets for the speech generator.
    *
    * @param {MathItem} item The MathItem whose rule set is changing
+   * @returns {StructurePromise} A promise that resolves when the command completes
    */
-  public nextRules(item: MathItem<N, T, D>) {
+  public nextRules(item: MathItem<N, T, D>): StructurePromise {
     const options = this.getOptions(item.typesetRoot);
     this.update(options);
-    this.webworker.nextRules(
+    return (this.promise = this.webworker.nextRules(
       item.outputData.mml,
       Object.assign({}, this.options, { modality: 'speech' }),
-      item,
-      this.getPromise()
-    );
+      item
+    ));
   }
 
   /**
@@ -275,17 +277,17 @@ export class GeneratorPool<N, T, D> {
    *
    * @param {N} node The typeset node.
    * @param {MathItem} item The MathItem whose preferences are changing
+   * @returns {StructurePromise} A promise that resolves when the command completes
    */
-  public nextStyle(node: N, item: MathItem<N, T, D>) {
+  public nextStyle(node: N, item: MathItem<N, T, D>): StructurePromise {
     const options = this.getOptions(item.typesetRoot);
     this.update(options);
-    this.webworker.nextStyle(
+    return (this.promise = this.webworker.nextStyle(
       item.outputData.mml,
       Object.assign({}, this.options, { modality: 'speech' }),
       this.adaptor.getAttribute(node, 'data-semantic-id'),
-      item,
-      this.getPromise()
-    );
+      item
+    ));
   }
 
   /**

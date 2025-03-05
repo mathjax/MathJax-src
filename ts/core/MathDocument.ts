@@ -511,6 +511,11 @@ export interface MathDocument<N, T, D> {
   clear(): MathDocument<N, T, D>;
 
   /**
+   * Indicate that the MathDocument is no longer needed.
+   */
+  done(): Promise<void>;
+
+  /**
    * Merges a MathList into the list for this document.
    *
    * @param {MathList} list   The MathList to be merged into this document's list
@@ -1059,6 +1064,13 @@ export abstract class AbstractMathDocument<N, T, D>
   /**
    * @override
    */
+  public done() {
+    return Promise.resolve();
+  }
+
+  /**
+   * @override
+   */
   public concat(list: MathList<N, T, D>) {
     this.math.merge(list);
     return this;
@@ -1069,6 +1081,9 @@ export abstract class AbstractMathDocument<N, T, D>
    */
   public clearMathItemsWithin(containers: ContainerList<N>) {
     const items = this.getMathItemsWithin(containers);
+    for (const item of items.slice(0).reverse()) {
+      item.clear();
+    }
     this.math.remove(...items);
     return items;
   }
