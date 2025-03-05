@@ -36,4 +36,3 @@ export type PoolCommand = {
 
 export type Structure = { [id: string]: any };
 export type StructureData = Structure | string;
-export type StructurePromise = Promise<StructureData>;
