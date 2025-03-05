@@ -82,14 +82,14 @@ export function handleRetriesFor(code: () => any): Promise<any> {
       } else {
         fail(err);
       }
-    }
+    };
     //
     // Run the user code
     //   If it returns a promise, wait on it
     //     when done, resolve the original promise with its returned value,
     //     or if it errors, handle a retry or fail with the error.
     //   Otherwise resolve the original promise with the result.
-    // If there was an error, handle a retry otherwise faile with the error.
+    // If there was an error, handle a retry otherwise fail with the error.
     try {
       const result = code();
       if (result instanceof Promise) {
