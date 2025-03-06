@@ -72,7 +72,14 @@ export class GeneratorPool<N, T, D> {
    * @param {OptionList} options The option list.
    */
   public set options(options: OptionList) {
-    this._options = Object.assign({}, options?.sre || {});
+    this._options = Object.assign(
+      {},
+      options?.sre || {},
+      {
+        enableSpeech: options.enableSpeech,
+        enableBraille: options.enableBraille
+      }
+    );
     delete this._options.custom;
   }
 

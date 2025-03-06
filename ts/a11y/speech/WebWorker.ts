@@ -265,6 +265,8 @@ export class WorkerHandler<N, T, D> {
   ): Promise<void> {
     this.Attach(
       item,
+      options.enableSpeech,
+      options.enableBraille,
       await this.Post(
         {
           cmd: 'Worker',
@@ -295,6 +297,8 @@ export class WorkerHandler<N, T, D> {
   ): Promise<void> {
     this.Attach(
       item,
+      options.enableSpeech,
+      options.enableBraille,
       await this.Post(
         {
           cmd: 'Worker',
@@ -333,6 +337,8 @@ export class WorkerHandler<N, T, D> {
   ): Promise<void> {
     this.Attach(
       item,
+      options.enableSpeech,
+      options.enableBraille,
       await this.Post(
         {
           cmd: 'Worker',
@@ -355,9 +361,16 @@ export class WorkerHandler<N, T, D> {
    * Attach the speech structure to an item's DOM
    *
    * @param {MathItem} item             The MathItem to attach to
+   * @param {boolean} speech            True when speech should be added
+   * @param {boolean} braille           True when Braille should be added
    * @param {StructureData} structure   The speech structure to attach
    */
-  public Attach(item: MathItem<N, T, D>, structure: StructureData) {
+  public Attach(
+    item: MathItem<N, T, D>,
+    speech: boolean,
+    braille: boolean,
+    structure: StructureData
+  ) {
     const data = (
       typeof structure === 'string' ? JSON.parse(structure) : structure
     ) as Structure;
@@ -370,12 +383,6 @@ export class WorkerHandler<N, T, D> {
     ]);
     const adaptor = this.adaptor;
     this.setSpecialAttributes(container, data.translations, 'data-semantic-');
-    if (data.label) {
-      adaptor.setAttribute(container, 'aria-label', data.label);
-    }
-    if (data.braillelabel) {
-      adaptor.setAttribute(container, 'aria-braillelabel', data.braillelabel);
-    }
     // Sort out Mactions
     for (const [id, sid] of Object.entries(data.mactions)) {
       let node = adaptor.getElement('#' + id, container);
@@ -386,10 +393,20 @@ export class WorkerHandler<N, T, D> {
       adaptor.setAttribute(node, 'data-semantic-type', 'dummy');
       this.setSpecialAttributes(node, sid, '');
     }
-    this.setSpeechAttributes(adaptor.childNodes(container)[0], '', data);
-    adaptor.setAttribute(container, 'data-speech-attached', 'true');
-    if (data.braille) {
-      adaptor.setAttribute(container, 'data-braille-attached', 'true');
+    this.setSpeechAttributes(adaptor.childNodes(container)[0], '', data, speech, braille);
+    if (speech) {
+      if (data.label) {
+        adaptor.setAttribute(container, 'aria-label', data.label);
+      }
+      adaptor.setAttribute(container, 'data-speech-attached', 'true');
+    }
+    if (braille) {
+      if (data.braillelabel) {
+        adaptor.setAttribute(container, 'aria-braillelabel', data.braillelabel);
+      }
+      if (data.braille) {
+        adaptor.setAttribute(container, 'data-braille-attached', 'true');
+      }
     }
   }
 
@@ -398,24 +415,29 @@ export class WorkerHandler<N, T, D> {
    *
    * @param {N} node           The node to add speech to
    * @param {Structure} data   The speech data to use
+   * @param {boolean} speech   True when speech should be added
+   * @param {boolean} braille  True when Braille should be added
    */
-  protected setSpeechAttribute(node: N, data: Structure) {
+  protected setSpeechAttribute(
+    node: N,
+    data: Structure,
+    speech: boolean,
+    braille: boolean
+  ) {
     const adaptor = this.adaptor;
     const id = adaptor.getAttribute(node, 'data-semantic-id');
-    const speech = data.speech[id] || {};
-    for (let [key, value] of Object.entries(speech)) {
-      key = key.replace(/-ssml$/, '');
-      if (value) {
-        adaptor.setAttribute(node, `data-semantic-${key}`, value as string);
+    if (speech) {
+      for (let [key, value] of Object.entries(data.speech[id])) {
+        key = key.replace(/-ssml$/, '');
+        if (value) {
+          adaptor.setAttribute(node, `data-semantic-${key}`, value as string);
+        }
       }
     }
-    if (data.braille) {
-      const braille = data.braille[id];
-      if (braille) {
-        const value = braille['braille-none'] || '';
-        adaptor.setAttribute(node, 'data-semantic-braille', value);
-        adaptor.setAttribute(node, 'aria-braillelabel', value);
-      }
+    if (braille && data.braille?.[id]) {
+      const value = data.braille[id]['braille-none'] || '';
+      adaptor.setAttribute(node, 'data-semantic-braille', value);
+      adaptor.setAttribute(node, 'aria-braillelabel', value);
     }
   }
 
@@ -425,12 +447,16 @@ export class WorkerHandler<N, T, D> {
    * @param {N|T} root         The node to add speech to
    * @param {string} rootId    The root nodes's ID
    * @param {Structure} data   The speech data to use
+   * @param {boolean} speech   True when speech should be added
+   * @param {boolean} braille  True when Braille should be added
    * @returns {string}         The updated root ID
    */
   protected setSpeechAttributes(
     root: N | T,
     rootId: string,
-    data: Structure
+    data: Structure,
+    speech: boolean,
+    braille: boolean
   ): string {
     const adaptor = this.adaptor;
     if (
@@ -442,13 +468,13 @@ export class WorkerHandler<N, T, D> {
     }
     root = root as N;
     if (adaptor.hasAttribute(root, 'data-semantic-id')) {
-      this.setSpeechAttribute(root, data);
+      this.setSpeechAttribute(root, data, speech, braille);
       if (!rootId && !adaptor.hasAttribute(root, 'data-semantic-parent')) {
         rootId = adaptor.getAttribute(root, 'data-semantic-id');
       }
     }
     for (const child of Array.from(adaptor.childNodes(root))) {
-      rootId = this.setSpeechAttributes(child, rootId, data);
+      rootId = this.setSpeechAttributes(child, rootId, data, speech, braille);
     }
     return rootId;
   }
