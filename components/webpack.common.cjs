@@ -128,7 +128,7 @@ const RESOLVE = function (js, dir, target, libs) {
   //  Add directory names to libraries
   //
   const libREs = libs
-        .map(lib => lib.replace(/components\/src\//, 'components/' + target + '/'))
+        .map(lib => lib.replace(/components\/(?:src|js)\//, 'components/' + target + '/'))
         .map(lib => (lib.charAt(0) === '.' ?
                      [jsRE, path.join(dir, lib) + path.sep] :
                      [mjRE, path.join(root, lib) + path.sep]));

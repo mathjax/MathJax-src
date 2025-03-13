@@ -60,7 +60,8 @@ export const dependencies = {
   '[tex]/unicode': ['input/tex-base'],
   '[tex]/units': ['input/tex-base'],
   '[tex]/upgreek': ['input/tex-base'],
-  '[tex]/verb': ['input/tex-base']
+  '[tex]/verb': ['input/tex-base'],
+  'ui/menu': ['a11y/sre'],
 };
 
 export const paths = {
