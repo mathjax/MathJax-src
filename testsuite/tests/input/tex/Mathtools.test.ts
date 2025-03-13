@@ -211,7 +211,7 @@ describe('Mathtools Spacing Control', () => {
       tex2mml('\\mathord{==}\\textllap{a b}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathord{==}\\textllap{a b}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\mathord{==}">
-           <mo data-latex="==">==</mo>
+           <mo data-mjx-texclass="REL" data-latex="==">==</mo>
          </mrow>
          <mpadded width="0" lspace="-1width" data-latex="\\textllap{a b}">
            <mstyle displaystyle="false">
@@ -234,7 +234,7 @@ describe('Mathtools Spacing Control', () => {
            </mstyle>
          </mpadded>
          <mrow data-mjx-texclass="ORD" data-latex="\\mathord{==}">
-           <mo data-latex="==">==</mo>
+           <mo data-mjx-texclass="REL" data-latex="==">==</mo>
          </mrow>
        </math>`
     );
@@ -306,7 +306,7 @@ describe('Mathtools Spacing Control', () => {
       tex2mml('\\mathord{==}\\crampedllap{x^2}'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\mathord{==}\\crampedllap{x^2}" display="block">
          <mrow data-mjx-texclass="ORD" data-latex="\\mathord{==}">
-           <mo data-latex="==">==</mo>
+           <mo data-mjx-texclass="REL" data-latex="==">==</mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="\\crampedllap{x^2}">
            <mstyle data-cramped="true">
@@ -339,7 +339,7 @@ describe('Mathtools Spacing Control', () => {
            </mstyle>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="\\mathord{==}">
-           <mo data-latex="==">==</mo>
+           <mo data-mjx-texclass="REL" data-latex="==">==</mo>
          </mrow>
        </math>`
     );
@@ -5003,7 +5003,7 @@ describe('Mathtools Centered Colons', () => {
       tex2mml('a := b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a := b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-latex=":=">:=</mo>
+         <mo data-mjx-texclass="REL" data-latex=":=">:=</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -5032,7 +5032,7 @@ describe('Mathtools Centered Colons', () => {
       tex2mml('a \\ordinarycolon= b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a \\ordinarycolon= b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-latex="\\ordinarycolon=">:=</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\ordinarycolon=">:=</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -6253,7 +6253,7 @@ describe('Mathtools options', () => {
          <mi data-latex="x">x</mi>
          <mo data-latex="]" stretchy="false">]</mo>
          <mo fence="false" stretchy="false" data-latex="\\}">}</mo>
-         <mo stretchy="false" data-latex="\\Leftarrow\\Rightarrow">&#x21D0;&#x21D2;</mo>
+         <mo data-mjx-texclass="REL" stretchy="false" data-latex="\\Leftarrow\\Rightarrow">&#x21D0;&#x21D2;</mo>
          <mrow data-mjx-texclass="OPEN" data-latex="\\mathopen{\\left\\{[x]\\right\\}}">
            <mrow data-mjx-texclass="INNER" data-latex-item="\\left\\{[x]\\right\\}" data-latex="\\left\\{[x]\\right\\}">
              <mo data-mjx-texclass="OPEN" data-latex-item="\\left\\{" data-latex="\\left\\{">{</mo>
@@ -6264,7 +6264,7 @@ describe('Mathtools options', () => {
            </mrow>
          </mrow>
          <mrow data-mjx-texclass="CLOSE" data-latex="\\mathclose{}"></mrow>
-         <mo stretchy="false" data-latex="\\Leftarrow\\Rightarrow">&#x21D0;&#x21D2;</mo>
+         <mo data-mjx-texclass="REL" stretchy="false" data-latex="\\Leftarrow\\Rightarrow">&#x21D0;&#x21D2;</mo>
          <mrow data-mjx-texclass="OPEN" data-latex="\\biggl\\{">
            <mo minsize="2.047em" maxsize="2.047em">{</mo>
          </mrow>
