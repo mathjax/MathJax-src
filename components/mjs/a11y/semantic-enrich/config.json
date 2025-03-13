@@ -2,10 +2,7 @@
   "build": {
     "component": "a11y/semantic-enrich",
     "targets": [
-      "a11y/semantic-enrich.ts",
-      "a11y/speech/SpeechUtil.ts",
-      "a11y/speech/GeneratorPool.ts",
-      "a11y/speech/WebWorker.ts"
+      "a11y/semantic-enrich.ts"
     ]
   },
   "webpack": {

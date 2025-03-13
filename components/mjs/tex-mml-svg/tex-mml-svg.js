@@ -5,7 +5,7 @@ import '../input/tex/tex.js';
 import '../input/mml/mml.js';
 import {loadFont} from '../output/svg/svg.js';
 import '../ui/menu/menu.js';
-import {checkSre} from '../a11y/util.js';
+import '../a11y/util.js';
 
 Loader.preLoaded(
   'loader', 'startup',
@@ -16,4 +16,4 @@ Loader.preLoaded(
 );
 Loader.saveVersion('tex-mml-svg');
 
-loadFont(checkSre(startup), true);
+loadFont(startup, true);
