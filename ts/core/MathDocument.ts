@@ -822,10 +822,10 @@ export abstract class AbstractMathDocument<N, T, D>
     const mitem = new this.options.MathItem(math, jax, display);
     mitem.start.node = this.adaptor.body(this.document);
     mitem.setMetrics(em, ex, containerWidth, scale);
-    if (this.outputJax.options.mtextInheritFont) {
+    if (family && this.outputJax.options.mtextInheritFont) {
       mitem.outputData.mtextFamily = family;
     }
-    if (this.outputJax.options.merrorInheritFont) {
+    if (family && this.outputJax.options.merrorInheritFont) {
       mitem.outputData.merrorFamily = family;
     }
     mitem.convert(this, end);
