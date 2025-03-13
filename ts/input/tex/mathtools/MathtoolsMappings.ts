@@ -61,6 +61,10 @@ new CommandMap('mathtools-macros', {
   xrightharpoonup: [MathtoolsMethods.xArrow, 0x21c0, 5, 10],
   xleftharpoonup: [MathtoolsMethods.xArrow, 0x21bc, 10, 5],
   xleftrightharpoons: [MathtoolsMethods.xArrow, 0x21cb, 10, 10],
+  xlongrightarrow: [MathtoolsMethods.xArrow, 0x27f6, 7, 12, 1.45],
+  xlongleftarrow: [MathtoolsMethods.xArrow, 0x27f5, 12, 7, 1.45],
+  xLongrightarrow: [MathtoolsMethods.xArrow, 0x27f9, 7, 12, 1.45],
+  xLongleftarrow: [MathtoolsMethods.xArrow, 0x27f8, 12, 7, 1.45],
 
   mathllap: [MathtoolsMethods.MathLap, 'l', false],
   mathrlap: [MathtoolsMethods.MathLap, 'r', false],
@@ -95,6 +99,7 @@ new CommandMap('mathtools-macros', {
     '2',
   ],
   Aboxed: MathtoolsMethods.Aboxed,
+  MakeAboxedCommand: MathtoolsMethods.MakeAboxedCommand,
 
   ArrowBetweenLines: MathtoolsMethods.ArrowBetweenLines,
   vdotswithin: MathtoolsMethods.VDotsWithin,
@@ -113,23 +118,31 @@ new CommandMap('mathtools-macros', {
   DeclarePairedDelimitersX: MathtoolsMethods.DeclarePairedDelimiterX,
   DeclarePairedDelimitersXPP: MathtoolsMethods.DeclarePairedDelimiterXPP,
 
-  centercolon: [MathtoolsMethods.CenterColon, true, true],
+  vcentercolon: [MathtoolsMethods.CenterColon, true, true],
   ordinarycolon: [MathtoolsMethods.CenterColon, false],
   MTThinColon: [MathtoolsMethods.CenterColon, true, true, true],
 
   coloneqq: [MathtoolsMethods.Relation, ':=', '\u2254'],
   Coloneqq: [MathtoolsMethods.Relation, '::=', '\u2A74'],
-  coloneq: [MathtoolsMethods.Relation, ':-'],
-  Coloneq: [MathtoolsMethods.Relation, '::-'],
+  coloneq: [MathtoolsMethods.Relation, ':=', '\u2254'],
+  Coloneq: [MathtoolsMethods.Relation, '::=', '\u2A7A'],
   eqqcolon: [MathtoolsMethods.Relation, '=:', '\u2255'],
   Eqqcolon: [MathtoolsMethods.Relation, '=::'],
-  eqcolon: [MathtoolsMethods.Relation, '-:', '\u2239'],
-  Eqcolon: [MathtoolsMethods.Relation, '-::'],
+  eqcolon: [MathtoolsMethods.Relation, '=:', '\u2255'],
+  Eqcolon: [MathtoolsMethods.Relation, '=::'],
   colonapprox: [MathtoolsMethods.Relation, ':\\approx'],
   Colonapprox: [MathtoolsMethods.Relation, '::\\approx'],
   colonsim: [MathtoolsMethods.Relation, ':\\sim'],
   Colonsim: [MathtoolsMethods.Relation, '::\\sim'],
   dblcolon: [MathtoolsMethods.Relation, '::', '\u2237'],
+  approxcolon: [MathtoolsMethods.Relation, '\\approx:'],
+  Approxcolon: [MathtoolsMethods.Relation, '\\approx::'],
+  simcolon: [MathtoolsMethods.Relation, '\\sim:'],
+  Simcolon: [MathtoolsMethods.Relation, '\\sim::'],
+  colondash: [MathtoolsMethods.Relation, ':-'],
+  Colondash: [MathtoolsMethods.Relation, '::-'],
+  dashcolon: [MathtoolsMethods.Relation, '-:', '\u2239'],
+  Dashcolon: [MathtoolsMethods.Relation, '-::'],
 
   nuparrow: [MathtoolsMethods.NArrow, '\u2191', '.06em'],
   ndownarrow: [MathtoolsMethods.NArrow, '\u2193', '.25em'],
@@ -161,6 +174,13 @@ new CommandMap('mathtools-macros', {
   ],
 
   mathtoolsset: MathtoolsMethods.SetOptions,
+});
+
+new CommandMap('mathtools-legacycolonsymbols', {
+  coloneq: [MathtoolsMethods.Relation, ':-'],
+  Coloneq: [MathtoolsMethods.Relation, '::-'],
+  eqcolon: [MathtoolsMethods.Relation, '-:', '\u2239'],
+  Eqcolon: [MathtoolsMethods.Relation, '-::'],
 });
 
 /**

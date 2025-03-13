@@ -1,5 +1,5 @@
 import { afterAll, beforeEach, describe, test, expect } from '@jest/globals';
-import { getTokens, toXmlMatch, setupTex, tex2mml } from '#helpers';
+import { getTokens, toXmlMatch, setupTex, tex2mml, expectTexError } from '#helpers';
 import '#js/input/tex/begingroup/BegingroupConfiguration';
 import '#js/input/tex/newcommand/NewcommandConfiguration';
 
@@ -8,7 +8,8 @@ import { CommandMap } from "#js/input/tex/TokenMap.js";
 import TexParser from "#js/input/tex/TexParser.js";
 import { mathjax } from "#js/mathjax.js";
 
-/*************************************************************************/
+/**********************************************************************************/
+/**********************************************************************************/
 
 /**
  * Implement a command that forces a retry error (like \require would),
@@ -25,20 +26,8 @@ new CommandMap('retry', {
 
 Configuration.create('retry', {handler: {macro: ['retry']}});
 
-/**
- * Test a TeX expression to see if it throws an error
- */
-function texError(tex: string) {
-  try {
-    tex2mml(tex);
-    return null;
-  } catch (e) {
-    return e.message;
-  }
-}
-
-/*************************************************************************/
-/*************************************************************************/
+/**********************************************************************************/
+/**********************************************************************************/
 
 describe('Begingroup', () => {
 
@@ -46,7 +35,7 @@ describe('Begingroup', () => {
     formatError: (_jax: any, err: Error) => {throw err}
   }));
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup Def Single', () => {
     toXmlMatch(
@@ -59,7 +48,7 @@ describe('Begingroup', () => {
     );
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup Def Nested', () => {
     toXmlMatch(
@@ -74,7 +63,7 @@ describe('Begingroup', () => {
     );
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup Let Single', () => {
     toXmlMatch(
@@ -87,7 +76,7 @@ describe('Begingroup', () => {
     );
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup Let Nested', () => {
     toXmlMatch(
@@ -102,7 +91,7 @@ describe('Begingroup', () => {
     );
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup Env Single', () => {
     toXmlMatch(
@@ -121,7 +110,7 @@ describe('Begingroup', () => {
     );
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup Delimiter Single', () => {
     toXmlMatch(
@@ -146,7 +135,7 @@ describe('Begingroup', () => {
     );
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup Delimiter Nested', () => {
     toXmlMatch(
@@ -181,7 +170,7 @@ describe('Begingroup', () => {
     );
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup Global', () => {
     toXmlMatch(
@@ -195,7 +184,7 @@ describe('Begingroup', () => {
     );
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup Global Nested', () => {
     toXmlMatch(
@@ -210,7 +199,7 @@ describe('Begingroup', () => {
     );
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup Global Let', () => {
     toXmlMatch(
@@ -224,23 +213,23 @@ describe('Begingroup', () => {
     );
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup Persists', () => {
     toXmlMatch(
       tex2mml('\\def\\x{A} \\begingroup \\def\\x{B}'),
       `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\def\\x{A} \\begingroup \\def\\x{B}\" display=\"block\"></math>`
-    );
-    toXmlMatch(
-      tex2mml('\\x \\endgroup \\x'),
-      `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\x \\endgroup \\x\" display=\"block\">
-         <mi data-latex=\"\\endgroup\">B</mi>
-         <mi data-latex=\"A\">A</mi>
-       </math>`
+         );
+         toXmlMatch(
+           tex2mml('\\x \\endgroup \\x'),
+           `<math xmlns=\"http://www.w3.org/1998/Math/MathML\" data-latex=\"\\x \\endgroup \\x\" display=\"block\">
+              <mi data-latex=\"\\endgroup\">B</mi>
+              <mi data-latex=\"A\">A</mi>
+            </math>`
     );
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup Reset', () => {
     toXmlMatch(
@@ -251,32 +240,32 @@ describe('Begingroup', () => {
     );
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup End without Begin', () => {
-    expect(texError('\\endgroup')).toBe('Missing \\begingroup or extra \\endgroup');
+    expectTexError('\\endgroup').toBe('Missing \\begingroup or extra \\endgroup');
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup End without Begin 2', () => {
-    expect(texError('\\begingroup \\endgroup \\endgroup')).toBe('Missing \\begingroup or extra \\endgroup');
+    expectTexError('\\begingroup \\endgroup \\endgroup').toBe('Missing \\begingroup or extra \\endgroup');
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup global misplaced', () => {
-    expect(texError('\\global\\sqrt{x}')).toBe('Invalid use of \\global');
-    expect(texError('\\global x')).toBe('Invalid use of \\global');
+    expectTexError('\\global\\sqrt{x}').toBe('Invalid use of \\global');
+    expectTexError('\\global x').toBe('Invalid use of \\global');
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup reset', () => {
-    expect(texError('\\begingroup \\begingroupReset \\endgroup')).toBe('Missing \\begingroup or extra \\endgroup');
+    expectTexError('\\begingroup \\begingroupReset \\endgroup').toBe('Missing \\begingroup or extra \\endgroup');
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup reset 2', () => {
     toXmlMatch(
@@ -287,14 +276,14 @@ describe('Begingroup', () => {
     );
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup let undefined', () => {
-    expect(texError('\\def\\x{A} \\begingroup \\let\\x=\\undefined \\x \\endgroup'))
+    expectTexError('\\def\\x{A} \\begingroup \\let\\x=\\undefined \\x \\endgroup')
       .toBe('Undefined control sequence \\x');
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup let undefined 2', () => {
     toXmlMatch(
@@ -305,7 +294,7 @@ describe('Begingroup', () => {
     );
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup global def undefines local delimiter', () => {
     toXmlMatch(
@@ -320,7 +309,7 @@ describe('Begingroup', () => {
     );
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup global let delimiter undefines local def', () => {
     toXmlMatch(
@@ -335,7 +324,7 @@ describe('Begingroup', () => {
     );
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup sandbox', () => {
     toXmlMatch(
@@ -346,7 +335,7 @@ describe('Begingroup', () => {
     );
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup double sandbox', () => {
     toXmlMatch(
@@ -357,49 +346,49 @@ describe('Begingroup', () => {
     );
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup sandbox not ended', () => {
-    expect(texError('\\begingroupSandbox \\endgroup')).toBe('Missing \\begingroup or extra \\endgroup');
+    expectTexError('\\begingroupSandbox \\endgroup').toBe('Missing \\begingroup or extra \\endgroup');
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup sandbox redefine', () => {
-    expect(texError('\\let\\begingroupSandbox=\\undefined'))
+    expectTexError('\\let\\begingroupSandbox=\\undefined')
       .toBe("The control sequence \\begingroupSandbox can't be redefined");
-    expect(texError('\\def\\begingroupSandbox{x}'))
+    expectTexError('\\def\\begingroupSandbox{x}')
       .toBe("The control sequence \\begingroupSandbox can't be redefined");
-    expect(texError('\\newcommand{\\begingroupSandbox}{x}'))
+    expectTexError('\\newcommand{\\begingroupSandbox}{x}')
       .toBe("The control sequence \\begingroupSandbox can't be redefined");
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup with retry', async () => {
     await expect(mathjax.handleRetriesFor(
       () => tex2mml('\\sin \\begingroup\\def\\sin{SIN}\\retry\\endgroup')
     )).resolves.toBe(
-`<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sin \\begingroup\\def\\sin{SIN}\\retry\\endgroup" display="block">
+    `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\sin \\begingroup\\def\\sin{SIN}\\retry\\endgroup" display="block">
   <mi data-latex="\\sin \\begingroup\\def\\sin{SIN}\\retry\\endgroup">sin</mi>
 </math>`
     );
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup sandbox with retry', async () => {
     tex2mml('\\def\\x{A}\\begingroupSandbox');
     await expect(mathjax.handleRetriesFor(
       () => tex2mml('\\x \\begingroup\\def\\x{B}\\retry\\endgroup')
     )).resolves.toBe(
-`<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\x \\begingroup\\def\\x{B}\\retry\\endgroup" display="block">
+    `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\x \\begingroup\\def\\x{B}\\retry\\endgroup" display="block">
   <mi data-latex="A\\begingroup\\def\\x{B}\\retry\\endgroup">A</mi>
 </math>`
     );
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup retry error', async () => {
     await expect(mathjax.handleRetriesFor(
@@ -407,7 +396,7 @@ describe('Begingroup', () => {
     ).catch((e) => e.message)).resolves.toBe('Missing \\begingroup or extra \\endgroup');
   });
 
-  /***********************************************************************/
+  /********************************************************************************/
 
   test('Begingroup sandbox retry error', async () => {
     tex2mml('\\begingroupSandbox');
@@ -416,6 +405,11 @@ describe('Begingroup', () => {
     ).catch((e) => e.message)).resolves.toBe('Missing \\begingroup or extra \\endgroup');
   });
 
+  /********************************************************************************/
+
 });
+
+/**********************************************************************************/
+/**********************************************************************************/
 
 afterAll(() => getTokens('begingroup'));
