@@ -2892,9 +2892,9 @@ describe('Multirel', () => {
       tex2mml('a <\\equiv \\mathrm{=>}\\thickapprox b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a &lt;\\equiv \\mathrm{=&gt;}\\thickapprox b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-latex="&lt;\\equiv">&lt;&#x2261;</mo>
+         <mo data-mjx-texclass="REL" data-latex="&lt;\\equiv">&lt;&#x2261;</mo>
          <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{=&gt;}">
-           <mo data-latex="=&gt;">=&gt;</mo>
+           <mo data-mjx-texclass="REL" data-latex="=&gt;">=&gt;</mo>
          </mrow>
          <mo data-mjx-alternate="1" data-latex="\\thickapprox">&#x2248;</mo>
          <mi data-latex="b">b</mi>
@@ -2909,11 +2909,11 @@ describe('Multirel', () => {
       tex2mml('a <\\equiv \\mathrm{=>}\\thickapprox\\thicksim b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a &lt;\\equiv \\mathrm{=&gt;}\\thickapprox\\thicksim b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-latex="&lt;\\equiv">&lt;&#x2261;</mo>
+         <mo data-mjx-texclass="REL" data-latex="&lt;\\equiv">&lt;&#x2261;</mo>
          <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{=&gt;}">
-           <mo data-latex="=&gt;">=&gt;</mo>
+           <mo data-mjx-texclass="REL" data-latex="=&gt;">=&gt;</mo>
          </mrow>
-         <mo data-mjx-alternate="1" data-latex="\\thickapprox\\thicksim">&#x2248;&#x223C;</mo>
+         <mo data-mjx-alternate="1" data-mjx-texclass="REL" data-latex="\\thickapprox\\thicksim">&#x2248;&#x223C;</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -2926,8 +2926,8 @@ describe('Multirel', () => {
       tex2mml('a <\\equiv =>\\thickapprox\\thicksim b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a &lt;\\equiv =&gt;\\thickapprox\\thicksim b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-latex="&lt;\\equiv=&gt;" rspace="0pt">&lt;&#x2261;=&gt;</mo>
-         <mo data-mjx-alternate="1" data-latex="\\thickapprox\\thicksim" lspace="0pt">&#x2248;&#x223C;</mo>
+         <mo data-mjx-texclass="REL" data-latex="&lt;\\equiv=&gt;" rspace="0pt">&lt;&#x2261;=&gt;</mo>
+         <mo data-mjx-alternate="1" data-mjx-texclass="REL" data-latex="\\thickapprox\\thicksim" lspace="0pt">&#x2248;&#x223C;</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -2942,15 +2942,15 @@ describe('Multirel', () => {
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a &lt;\\equiv \\mathrm{=}\\mathrm{&gt;}\\thickapprox\\thicksim\\frown\\smile=\\updownarrow b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-latex="&lt;\\equiv">&lt;&#x2261;</mo>
+         <mo data-mjx-texclass="REL" data-latex="&lt;\\equiv">&lt;&#x2261;</mo>
          <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{=}">
            <mo data-latex="=">=</mo>
          </mrow>
          <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{&gt;}">
            <mo data-latex="&gt;">&gt;</mo>
          </mrow>
-         <mo data-mjx-alternate="1" data-latex="\\thickapprox\\thicksim" rspace="0pt">&#x2248;&#x223C;</mo>
-         <mo data-latex="\\frown\\smile=\\updownarrow" lspace="0pt" stretchy="false">&#x2322;&#x2323;=&#x2195;</mo>
+         <mo data-mjx-alternate="1" data-mjx-texclass="REL" data-latex="\\thickapprox\\thicksim" rspace="0pt">&#x2248;&#x223C;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\frown\\smile=\\updownarrow" lspace="0pt" stretchy="false">&#x2322;&#x2323;=&#x2195;</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -2963,7 +2963,7 @@ describe('Multirel', () => {
       tex2mml('a\\lesssim\\gtrsim b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\lesssim\\gtrsim b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-latex="\\lesssim\\gtrsim">&#x2272;&#x2273;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\lesssim\\gtrsim">&#x2272;&#x2273;</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -2976,7 +2976,7 @@ describe('Multirel', () => {
       tex2mml('a\\gtrsim\\lesssim b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\gtrsim\\lesssim b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-latex="\\gtrsim\\lesssim">&#x2273;&#x2272;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\gtrsim\\lesssim">&#x2273;&#x2272;</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -4312,7 +4312,7 @@ describe('Ams symbols', () => {
          <mo data-mjx-alternate="1" data-latex="\\centerdot">&#x22C5;</mo>
          <mo data-latex="\\divideontimes">&#x22C7;</mo>
          <mo data-latex="\\intercal">&#x22BA;</mo>
-         <mo data-latex="\\leqq\\geqq\\leqslant\\geqslant\\eqslantless\\eqslantgtr\\lessapprox\\gtrapprox">&#x2266;&#x2267;&#x2A7D;&#x2A7E;&#x2A95;&#x2A96;&#x2A85;&#x2A86;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\leqq\\geqq\\leqslant\\geqslant\\eqslantless\\eqslantgtr\\lessapprox\\gtrapprox">&#x2266;&#x2267;&#x2A7D;&#x2A7E;&#x2A95;&#x2A96;&#x2A85;&#x2A86;</mo>
        </math>`
     );
   });
@@ -4325,7 +4325,7 @@ describe('Ams symbols', () => {
         '\\approxeq\\lessdot\\gtrdot\\lll\\llless\\ggg\\gggtr\\lessgtr\\gtrless\\lesseqgtr\\gtreqless\\lesseqqgtr\\gtreqqless'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\approxeq\\lessdot\\gtrdot\\lll\\llless\\ggg\\gggtr\\lessgtr\\gtrless\\lesseqgtr\\gtreqless\\lesseqqgtr\\gtreqqless" display="block">
-         <mo data-latex="\\approxeq\\lessdot\\gtrdot\\lll\\llless\\ggg\\gggtr\\lessgtr\\gtrless\\lesseqgtr\\gtreqless\\lesseqqgtr\\gtreqqless">&#x224A;&#x22D6;&#x22D7;&#x22D8;&#x22D8;&#x22D9;&#x22D9;&#x2276;&#x2277;&#x22DA;&#x22DB;&#x2A8B;&#x2A8C;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\approxeq\\lessdot\\gtrdot\\lll\\llless\\ggg\\gggtr\\lessgtr\\gtrless\\lesseqgtr\\gtreqless\\lesseqqgtr\\gtreqqless">&#x224A;&#x22D6;&#x22D7;&#x22D8;&#x22D8;&#x22D9;&#x22D9;&#x2276;&#x2277;&#x22DA;&#x22DB;&#x2A8B;&#x2A8C;</mo>
        </math>`
     );
   });
@@ -4338,7 +4338,7 @@ describe('Ams symbols', () => {
         '\\doteqdot\\Doteq\\eqcirc\\risingdotseq\\circeq\\fallingdotseq\\triangleq\\backsim\\backsimeq\\subseteqq\\supseteqq'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\doteqdot\\Doteq\\eqcirc\\risingdotseq\\circeq\\fallingdotseq\\triangleq\\backsim\\backsimeq\\subseteqq\\supseteqq" display="block">
-         <mo data-latex="\\doteqdot\\Doteq\\eqcirc\\risingdotseq\\circeq\\fallingdotseq\\triangleq\\backsim\\backsimeq\\subseteqq\\supseteqq">&#x2251;&#x2251;&#x2256;&#x2253;&#x2257;&#x2252;&#x225C;&#x223D;&#x22CD;&#x2AC5;&#x2AC6;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\doteqdot\\Doteq\\eqcirc\\risingdotseq\\circeq\\fallingdotseq\\triangleq\\backsim\\backsimeq\\subseteqq\\supseteqq">&#x2251;&#x2251;&#x2256;&#x2253;&#x2257;&#x2252;&#x225C;&#x223D;&#x22CD;&#x2AC5;&#x2AC6;</mo>
        </math>`
     );
   });
@@ -4351,7 +4351,7 @@ describe('Ams symbols', () => {
         '\\Subset\\Supset\\sqsubset\\sqsupset\\preccurlyeq\\succcurlyeq\\curlyeqprec\\curlyeqsucc\\precsim\\succsim\\precapprox'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Subset\\Supset\\sqsubset\\sqsupset\\preccurlyeq\\succcurlyeq\\curlyeqprec\\curlyeqsucc\\precsim\\succsim\\precapprox" display="block">
-         <mo data-latex="\\Subset\\Supset\\sqsubset\\sqsupset\\preccurlyeq\\succcurlyeq\\curlyeqprec\\curlyeqsucc\\precsim\\succsim\\precapprox">&#x22D0;&#x22D1;&#x228F;&#x2290;&#x227C;&#x227D;&#x22DE;&#x22DF;&#x227E;&#x227F;&#x2AB7;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\Subset\\Supset\\sqsubset\\sqsupset\\preccurlyeq\\succcurlyeq\\curlyeqprec\\curlyeqsucc\\precsim\\succsim\\precapprox">&#x22D0;&#x22D1;&#x228F;&#x2290;&#x227C;&#x227D;&#x22DE;&#x22DF;&#x227E;&#x227F;&#x2AB7;</mo>
        </math>`
     );
   });
@@ -4364,7 +4364,7 @@ describe('Ams symbols', () => {
         '\\succapprox\\vartriangleleft\\lhd\\vartriangleright\\rhd\\trianglelefteq\\unlhd\\trianglerighteq\\unrhd\\vDash\\Vdash'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\succapprox\\vartriangleleft\\lhd\\vartriangleright\\rhd\\trianglelefteq\\unlhd\\trianglerighteq\\unrhd\\vDash\\Vdash" display="block">
-         <mo data-latex="\\succapprox\\vartriangleleft\\lhd\\vartriangleright\\rhd\\trianglelefteq\\unlhd\\trianglerighteq\\unrhd\\vDash\\Vdash">&#x2AB8;&#x22B2;&#x22B2;&#x22B3;&#x22B3;&#x22B4;&#x22B4;&#x22B5;&#x22B5;&#x22A8;&#x22A9;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\succapprox\\vartriangleleft\\lhd\\vartriangleright\\rhd\\trianglelefteq\\unlhd\\trianglerighteq\\unrhd\\vDash\\Vdash">&#x2AB8;&#x22B2;&#x22B2;&#x22B3;&#x22B3;&#x22B4;&#x22B4;&#x22B5;&#x22B5;&#x22A8;&#x22A9;</mo>
        </math>`
     );
   });
@@ -4378,8 +4378,8 @@ describe('Ams symbols', () => {
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\Vvdash\\smallsmile\\shortmid\\smallfrown\\shortparallel\\bumpeq\\between\\Bumpeq\\pitchfork\\varpropto\\backepsilon" display="block">
          <mo data-latex="\\Vvdash" rspace="0pt">&#x22AA;</mo>
-         <mo data-mjx-alternate="1" data-latex="\\smallsmile\\shortmid\\smallfrown\\shortparallel" lspace="0pt" rspace="0pt">&#x2323;&#x2223;&#x2322;&#x2225;</mo>
-         <mo data-latex="\\bumpeq\\between\\Bumpeq\\pitchfork" lspace="0pt" rspace="0pt">&#x224F;&#x226C;&#x224E;&#x22D4;</mo>
+         <mo data-mjx-alternate="1" data-mjx-texclass="REL" data-latex="\\smallsmile\\shortmid\\smallfrown\\shortparallel" lspace="0pt" rspace="0pt">&#x2323;&#x2223;&#x2322;&#x2225;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\bumpeq\\between\\Bumpeq\\pitchfork" lspace="0pt" rspace="0pt">&#x224F;&#x226C;&#x224E;&#x22D4;</mo>
          <mo data-mjx-alternate="1" data-latex="\\varpropto" lspace="0pt" rspace="0pt">&#x221D;</mo>
          <mo data-latex="\\backepsilon" lspace="0pt">&#x220D;</mo>
        </math>`
@@ -4396,9 +4396,9 @@ describe('Ams symbols', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\blacktriangleleft\\blacktriangleright\\therefore\\because\\eqsim\\vartriangle\\Join\\nless\\ngtr\\nleq\\ngeq" display="block">
          <mo data-latex="\\blacktriangleleft">&#x25C2;</mo>
          <mo data-latex="\\blacktriangleright">&#x25B8;</mo>
-         <mo data-latex="\\therefore\\because\\eqsim">&#x2234;&#x2235;&#x2242;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\therefore\\because\\eqsim">&#x2234;&#x2235;&#x2242;</mo>
          <mo data-mjx-alternate="1" data-latex="\\vartriangle">&#x25B3;</mo>
-         <mo data-latex="\\Join\\nless\\ngtr\\nleq\\ngeq">&#x22C8;&#x226E;&#x226F;&#x2270;&#x2271;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\Join\\nless\\ngtr\\nleq\\ngeq">&#x22C8;&#x226E;&#x226F;&#x2270;&#x2271;</mo>
        </math>`
     );
   });
@@ -4411,10 +4411,10 @@ describe('Ams symbols', () => {
         '\\nleqslant\\ngeqslant\\nleqq\\ngeqq\\lneq\\gneq\\lneqq\\gneqq\\lvertneqq\\gvertneqq\\lnsim\\gnsim\\lnapprox\\gnapprox'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\nleqslant\\ngeqslant\\nleqq\\ngeqq\\lneq\\gneq\\lneqq\\gneqq\\lvertneqq\\gvertneqq\\lnsim\\gnsim\\lnapprox\\gnapprox" display="block">
-         <mo data-mjx-alternate="1" data-latex="\\nleqslant\\ngeqslant\\nleqq\\ngeqq" rspace="0pt">&#x2A87;&#x2A88;&#x2270;&#x2271;</mo>
-         <mo data-latex="\\lneq\\gneq\\lneqq\\gneqq" lspace="0pt" rspace="0pt">&#x2A87;&#x2A88;&#x2268;&#x2269;</mo>
-         <mo data-mjx-alternate="1" data-latex="\\lvertneqq\\gvertneqq" lspace="0pt" rspace="0pt">&#x2268;&#x2269;</mo>
-         <mo data-latex="\\lnsim\\gnsim\\lnapprox\\gnapprox" lspace="0pt">&#x22E6;&#x22E7;&#x2A89;&#x2A8A;</mo>
+         <mo data-mjx-alternate="1" data-mjx-texclass="REL" data-latex="\\nleqslant\\ngeqslant\\nleqq\\ngeqq" rspace="0pt">&#x2A87;&#x2A88;&#x2270;&#x2271;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\lneq\\gneq\\lneqq\\gneqq" lspace="0pt" rspace="0pt">&#x2A87;&#x2A88;&#x2268;&#x2269;</mo>
+         <mo data-mjx-alternate="1" data-mjx-texclass="REL" data-latex="\\lvertneqq\\gvertneqq" lspace="0pt" rspace="0pt">&#x2268;&#x2269;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\lnsim\\gnsim\\lnapprox\\gnapprox" lspace="0pt">&#x22E6;&#x22E7;&#x2A89;&#x2A8A;</mo>
        </math>`
     );
   });
@@ -4427,9 +4427,9 @@ describe('Ams symbols', () => {
         '\\nprec\\nsucc\\npreceq\\nsucceq\\precneqq\\succneqq\\precnsim\\succnsim\\precnapprox\\succnapprox\\nsim\\ncong'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\nprec\\nsucc\\npreceq\\nsucceq\\precneqq\\succneqq\\precnsim\\succnsim\\precnapprox\\succnapprox\\nsim\\ncong" display="block">
-         <mo data-latex="\\nprec\\nsucc" rspace="0pt">&#x2280;&#x2281;</mo>
-         <mo data-mjx-alternate="1" data-latex="\\npreceq\\nsucceq" lspace="0pt" rspace="0pt">&#x22E0;&#x22E1;</mo>
-         <mo data-latex="\\precneqq\\succneqq\\precnsim\\succnsim\\precnapprox\\succnapprox\\nsim\\ncong" lspace="0pt">&#x2AB5;&#x2AB6;&#x22E8;&#x22E9;&#x2AB9;&#x2ABA;&#x2241;&#x2247;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\nprec\\nsucc" rspace="0pt">&#x2280;&#x2281;</mo>
+         <mo data-mjx-alternate="1" data-mjx-texclass="REL" data-latex="\\npreceq\\nsucceq" lspace="0pt" rspace="0pt">&#x22E0;&#x22E1;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\precneqq\\succneqq\\precnsim\\succnsim\\precnapprox\\succnapprox\\nsim\\ncong" lspace="0pt">&#x2AB5;&#x2AB6;&#x22E8;&#x22E9;&#x2AB9;&#x2ABA;&#x2241;&#x2247;</mo>
        </math>`
     );
   });
@@ -4442,8 +4442,8 @@ describe('Ams symbols', () => {
         '\\nshortmid\\nshortparallel\\nmid\\nparallel\\nvdash\\nvDash\\nVdash\\nVDash\\ntriangleleft\\ntriangleright'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\nshortmid\\nshortparallel\\nmid\\nparallel\\nvdash\\nvDash\\nVdash\\nVDash\\ntriangleleft\\ntriangleright" display="block">
-         <mo data-mjx-alternate="1" data-latex="\\nshortmid\\nshortparallel" rspace="0pt">&#x2224;&#x2226;</mo>
-         <mo data-latex="\\nmid\\nparallel\\nvdash\\nvDash\\nVdash\\nVDash\\ntriangleleft\\ntriangleright" lspace="0pt">&#x2224;&#x2226;&#x22AC;&#x22AD;&#x22AE;&#x22AF;&#x22EA;&#x22EB;</mo>
+         <mo data-mjx-alternate="1" data-mjx-texclass="REL" data-latex="\\nshortmid\\nshortparallel" rspace="0pt">&#x2224;&#x2226;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\nmid\\nparallel\\nvdash\\nvDash\\nVdash\\nVDash\\ntriangleleft\\ntriangleright" lspace="0pt">&#x2224;&#x2226;&#x22AC;&#x22AD;&#x22AE;&#x22AF;&#x22EA;&#x22EB;</mo>
        </math>`
     );
   });
@@ -4456,9 +4456,9 @@ describe('Ams symbols', () => {
         '\\ntrianglelefteq\\ntrianglerighteq\\nsubseteq\\nsupseteq\\nsubseteqq\\nsupseteqq\\subsetneq\\supsetneq\\varsubsetneq'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\ntrianglelefteq\\ntrianglerighteq\\nsubseteq\\nsupseteq\\nsubseteqq\\nsupseteqq\\subsetneq\\supsetneq\\varsubsetneq" display="block">
-         <mo data-latex="\\ntrianglelefteq\\ntrianglerighteq\\nsubseteq\\nsupseteq" rspace="0pt">&#x22EC;&#x22ED;&#x2288;&#x2289;</mo>
-         <mo data-mjx-alternate="1" data-latex="\\nsubseteqq\\nsupseteqq" lspace="0pt" rspace="0pt">&#x2288;&#x2289;</mo>
-         <mo data-latex="\\subsetneq\\supsetneq" lspace="0pt" rspace="0pt">&#x228A;&#x228B;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\ntrianglelefteq\\ntrianglerighteq\\nsubseteq\\nsupseteq" rspace="0pt">&#x22EC;&#x22ED;&#x2288;&#x2289;</mo>
+         <mo data-mjx-alternate="1" data-mjx-texclass="REL" data-latex="\\nsubseteqq\\nsupseteqq" lspace="0pt" rspace="0pt">&#x2288;&#x2289;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\subsetneq\\supsetneq" lspace="0pt" rspace="0pt">&#x228A;&#x228B;</mo>
          <mo data-mjx-alternate="1" data-latex="\\varsubsetneq" lspace="0pt">&#x228A;</mo>
        </math>`
     );
@@ -4473,9 +4473,9 @@ describe('Ams symbols', () => {
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\varsupsetneq\\subsetneqq\\supsetneqq\\varsubsetneqq\\varsupsetneqq\\leftleftarrows\\rightrightarrows\\leftrightarrows" display="block">
          <mo data-mjx-alternate="1" data-latex="\\varsupsetneq" rspace="0pt">&#x228B;</mo>
-         <mo data-latex="\\subsetneqq\\supsetneqq" lspace="0pt" rspace="0pt">&#x2ACB;&#x2ACC;</mo>
-         <mo data-mjx-alternate="1" data-latex="\\varsubsetneqq\\varsupsetneqq" lspace="0pt" rspace="0pt">&#x2ACB;&#x2ACC;</mo>
-         <mo stretchy="false" data-latex="\\leftleftarrows\\rightrightarrows\\leftrightarrows" lspace="0pt">&#x21C7;&#x21C9;&#x21C6;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\subsetneqq\\supsetneqq" lspace="0pt" rspace="0pt">&#x2ACB;&#x2ACC;</mo>
+         <mo data-mjx-alternate="1" data-mjx-texclass="REL" data-latex="\\varsubsetneqq\\varsupsetneqq" lspace="0pt" rspace="0pt">&#x2ACB;&#x2ACC;</mo>
+         <mo data-mjx-texclass="REL" stretchy="false" data-latex="\\leftleftarrows\\rightrightarrows\\leftrightarrows" lspace="0pt">&#x21C7;&#x21C9;&#x21C6;</mo>
        </math>`
     );
   });
@@ -4488,7 +4488,7 @@ describe('Ams symbols', () => {
         '\\rightleftarrows\\Lleftarrow\\Rrightarrow\\twoheadleftarrow\\twoheadrightarrow\\leftarrowtail\\rightarrowtail'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\rightleftarrows\\Lleftarrow\\Rrightarrow\\twoheadleftarrow\\twoheadrightarrow\\leftarrowtail\\rightarrowtail" display="block">
-         <mo stretchy="false" data-latex="\\rightleftarrows\\Lleftarrow\\Rrightarrow\\twoheadleftarrow\\twoheadrightarrow\\leftarrowtail\\rightarrowtail">&#x21C4;&#x21DA;&#x21DB;&#x219E;&#x21A0;&#x21A2;&#x21A3;</mo>
+         <mo data-mjx-texclass="REL" stretchy="false" data-latex="\\rightleftarrows\\Lleftarrow\\Rrightarrow\\twoheadleftarrow\\twoheadrightarrow\\leftarrowtail\\rightarrowtail">&#x21C4;&#x21DA;&#x21DB;&#x219E;&#x21A0;&#x21A2;&#x21A3;</mo>
        </math>`
     );
   });
@@ -4501,9 +4501,9 @@ describe('Ams symbols', () => {
         '\\looparrowleft\\looparrowright\\leftrightharpoons\\rightleftharpoons\\curvearrowleft\\curvearrowright\\circlearrowleft'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\looparrowleft\\looparrowright\\leftrightharpoons\\rightleftharpoons\\curvearrowleft\\curvearrowright\\circlearrowleft" display="block">
-         <mo stretchy="false" data-latex="\\looparrowleft\\looparrowright\\leftrightharpoons" rspace="0pt">&#x21AB;&#x21AC;&#x21CB;</mo>
+         <mo data-mjx-texclass="REL" stretchy="false" data-latex="\\looparrowleft\\looparrowright\\leftrightharpoons" rspace="0pt">&#x21AB;&#x21AC;&#x21CB;</mo>
          <mo data-mjx-alternate="1" stretchy="false" data-latex="\\rightleftharpoons" lspace="0pt" rspace="0pt">&#x21CC;</mo>
-         <mo data-latex="\\curvearrowleft\\curvearrowright\\circlearrowleft" lspace="0pt">&#x21B6;&#x21B7;&#x21BA;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\curvearrowleft\\curvearrowright\\circlearrowleft" lspace="0pt">&#x21B6;&#x21B7;&#x21BA;</mo>
        </math>`
     );
   });
@@ -4516,7 +4516,7 @@ describe('Ams symbols', () => {
         '\\circlearrowright\\Lsh\\Rsh\\upuparrows\\downdownarrows\\upharpoonleft\\upharpoonright\\downharpoonleft\\restriction'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\circlearrowright\\Lsh\\Rsh\\upuparrows\\downdownarrows\\upharpoonleft\\upharpoonright\\downharpoonleft\\restriction" display="block">
-         <mo data-latex="\\circlearrowright\\Lsh\\Rsh\\upuparrows\\downdownarrows\\upharpoonleft\\upharpoonright\\downharpoonleft\\restriction" stretchy="false">&#x21BB;&#x21B0;&#x21B1;&#x21C8;&#x21CA;&#x21BF;&#x21BE;&#x21C3;&#x21BE;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\circlearrowright\\Lsh\\Rsh\\upuparrows\\downdownarrows\\upharpoonleft\\upharpoonright\\downharpoonleft\\restriction" stretchy="false">&#x21BB;&#x21B0;&#x21B1;&#x21C8;&#x21CA;&#x21BF;&#x21BE;&#x21C3;&#x21BE;</mo>
        </math>`
     );
   });
@@ -4529,7 +4529,7 @@ describe('Ams symbols', () => {
         '\\multimap\\downharpoonright\\leftrightsquigarrow\\rightsquigarrow\\leadsto\\dashrightarrow\\dashleftarrow\\nleftarrow'
       ),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\multimap\\downharpoonright\\leftrightsquigarrow\\rightsquigarrow\\leadsto\\dashrightarrow\\dashleftarrow\\nleftarrow" display="block">
-         <mo data-latex="\\multimap\\downharpoonright\\leftrightsquigarrow\\rightsquigarrow\\leadsto\\dashrightarrow\\dashleftarrow\\nleftarrow" stretchy="false">&#x22B8;&#x21C2;&#x21AD;&#x21DD;&#x21DD;&#x21E2;&#x21E0;&#x219A;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\multimap\\downharpoonright\\leftrightsquigarrow\\rightsquigarrow\\leadsto\\dashrightarrow\\dashleftarrow\\nleftarrow" stretchy="false">&#x22B8;&#x21C2;&#x21AD;&#x21DD;&#x21DD;&#x21E2;&#x21E0;&#x219A;</mo>
        </math>`
     );
   });
@@ -4540,7 +4540,7 @@ describe('Ams symbols', () => {
     toXmlMatch(
       tex2mml('\\nrightarrow\\nLeftarrow\\nRightarrow\\nleftrightarrow\\nLeftrightarrow'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\nrightarrow\\nLeftarrow\\nRightarrow\\nleftrightarrow\\nLeftrightarrow" display="block">
-         <mo data-latex="\\nrightarrow\\nLeftarrow\\nRightarrow\\nleftrightarrow\\nLeftrightarrow">&#x219B;&#x21CD;&#x21CF;&#x21AE;&#x21CE;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\nrightarrow\\nLeftarrow\\nRightarrow\\nleftrightarrow\\nLeftrightarrow">&#x219B;&#x21CD;&#x21CF;&#x21AE;&#x21CE;</mo>
        </math>`
     );
   });

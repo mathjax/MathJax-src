@@ -4273,7 +4273,7 @@ describe('Multirel', () => {
       tex2mml('a<<b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a&lt;&lt;b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-latex="&lt;&lt;">&lt;&lt;</mo>
+         <mo data-mjx-texclass="REL" data-latex="&lt;&lt;">&lt;&lt;</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -4286,7 +4286,7 @@ describe('Multirel', () => {
       tex2mml('a<=b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a&lt;=b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-latex="&lt;=">&lt;=</mo>
+         <mo data-mjx-texclass="REL" data-latex="&lt;=">&lt;=</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -4340,7 +4340,7 @@ describe('Multirel', () => {
       tex2mml('a=='),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a==" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-latex="==">==</mo>
+         <mo data-mjx-texclass="REL" data-latex="==">==</mo>
        </math>`
     );
   });
@@ -4380,7 +4380,7 @@ describe('Multirel', () => {
       tex2mml('a\\rightarrow=b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a\\rightarrow=b" display="block">
          <mi data-latex="a">a</mi>
-         <mo stretchy="false" data-latex="\\rightarrow=">&#x2192;=</mo>
+         <mo data-mjx-texclass="REL" stretchy="false" data-latex="\\rightarrow=">&#x2192;=</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -4393,7 +4393,7 @@ describe('Multirel', () => {
       tex2mml('a=<>=b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a=&lt;&gt;=b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-latex="=&lt;&gt;=">=&lt;&gt;=</mo>
+         <mo data-mjx-texclass="REL" data-latex="=&lt;&gt;=">=&lt;&gt;=</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -4405,7 +4405,7 @@ describe('Multirel', () => {
     toXmlMatch(
       tex2mml('==a'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="==a" display="block">
-         <mo data-latex="==">==</mo>
+         <mo data-mjx-texclass="REL" data-latex="==">==</mo>
          <mi data-latex="a">a</mi>
        </math>`
     );
@@ -4431,7 +4431,7 @@ describe('Multirel', () => {
       tex2mml('a <=\\mathrm{>} b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a &lt;=\\mathrm{&gt;} b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-latex="&lt;=">&lt;=</mo>
+         <mo data-mjx-texclass="REL" data-latex="&lt;=">&lt;=</mo>
          <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{&gt;}">
            <mo data-latex="&gt;">&gt;</mo>
          </mrow>
@@ -4447,9 +4447,9 @@ describe('Multirel', () => {
       tex2mml('a <=\\mathrm{=>} b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a &lt;=\\mathrm{=&gt;} b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-latex="&lt;=">&lt;=</mo>
+         <mo data-mjx-texclass="REL" data-latex="&lt;=">&lt;=</mo>
          <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{=&gt;}">
-           <mo data-latex="=&gt;">=&gt;</mo>
+           <mo data-mjx-texclass="REL" data-latex="=&gt;">=&gt;</mo>
          </mrow>
          <mi data-latex="b">b</mi>
        </math>`
@@ -4463,7 +4463,7 @@ describe('Multirel', () => {
       tex2mml('a <=\\mathrm{=}\\mathrm{>} b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a &lt;=\\mathrm{=}\\mathrm{&gt;} b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-latex="&lt;=">&lt;=</mo>
+         <mo data-mjx-texclass="REL" data-latex="&lt;=">&lt;=</mo>
          <mrow data-mjx-texclass="ORD" data-latex="\\mathrm{=}">
            <mo data-latex="=">=</mo>
          </mrow>
@@ -4520,7 +4520,7 @@ describe('Multirel', () => {
       tex2mml('a =\\sim b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a =\\sim b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-latex="=\\sim">=&#x223C;</mo>
+         <mo data-mjx-texclass="REL" data-latex="=\\sim">=&#x223C;</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -4533,7 +4533,7 @@ describe('Multirel', () => {
       tex2mml('a \\sim\\simeq b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a \\sim\\simeq b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-latex="\\sim\\simeq">&#x223C;&#x2243;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\sim\\simeq">&#x223C;&#x2243;</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -4546,7 +4546,7 @@ describe('Multirel', () => {
       tex2mml('a \\sim\\asymp b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a \\sim\\asymp b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-latex="\\sim\\asymp">&#x223C;&#x224D;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\sim\\asymp">&#x223C;&#x224D;</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -4559,7 +4559,7 @@ describe('Multirel', () => {
       tex2mml('a \\sim\\simeq\\asymp b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a \\sim\\simeq\\asymp b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-latex="\\sim\\simeq\\asymp">&#x223C;&#x2243;&#x224D;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\sim\\simeq\\asymp">&#x223C;&#x2243;&#x224D;</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -4572,7 +4572,7 @@ describe('Multirel', () => {
       tex2mml('a \\sim\\asymp\\simeq b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a \\sim\\asymp\\simeq b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-latex="\\sim\\asymp\\simeq">&#x223C;&#x224D;&#x2243;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\sim\\asymp\\simeq">&#x223C;&#x224D;&#x2243;</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -4585,7 +4585,7 @@ describe('Multirel', () => {
       tex2mml('a \\sim\\cong b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a \\sim\\cong b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-latex="\\sim\\cong">&#x223C;&#x2245;</mo>
+         <mo data-mjx-texclass="REL" data-latex="\\sim\\cong">&#x223C;&#x2245;</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
@@ -4598,7 +4598,7 @@ describe('Multirel', () => {
       tex2mml('a=\\rightarrow b'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="a=\\rightarrow b" display="block">
          <mi data-latex="a">a</mi>
-         <mo data-latex="=\\rightarrow" stretchy="false">=&#x2192;</mo>
+         <mo data-mjx-texclass="REL" data-latex="=\\rightarrow" stretchy="false">=&#x2192;</mo>
          <mi data-latex="b">b</mi>
        </math>`
     );
