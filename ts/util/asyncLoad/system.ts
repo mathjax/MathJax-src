@@ -33,7 +33,7 @@ if (!mathjax.asyncLoad && typeof System !== 'undefined' && System.import) {
     const file = (
       name.charAt(0) === '.' ? new URL(name, root) : new URL(name, 'file://')
     ).href;
-    return System.import(file).then((result: any) => result?.default || result);
+    return System.import(file).then((result: any) => result.default ?? result);
   };
 }
 
