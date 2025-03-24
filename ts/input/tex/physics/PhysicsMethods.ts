@@ -300,19 +300,6 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
   Eval(parser: TexParser, name: string) {
     const star = parser.GetStar();
     const next = parser.GetNext();
-    if (next === '{') {
-      const arg = parser.GetArgument(name);
-      const replace =
-        '\\left. ' +
-        (star ? '\\smash{' + arg + '}' : arg) +
-        ' ' +
-        '\\vphantom{\\int}\\right|';
-      parser.string =
-        parser.string.slice(0, parser.i) +
-        replace +
-        parser.string.slice(parser.i);
-      return;
-    }
     if (next === '(' || next === '[') {
       parser.i++;
       parser.Push(
@@ -325,11 +312,13 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       );
       return;
     }
-    throw new TexError(
-      'MissingArgFor',
-      'Missing argument for %1',
-      parser.currentCS
-    );
+    let replace = '\\left.\\vphantom{\\int}\\right|';
+    if (next === '{') {
+      const arg = parser.GetArgument(name);
+      replace = `\\left.${star ? `\\smash{${arg}}` : arg}\\vphantom{\\int}\\right|`;
+    }
+    parser.string = replace + parser.string.slice(parser.i);
+    parser.i = 0;
   },
 
   /**
