@@ -317,8 +317,10 @@ const PhysicsMethods: { [key: string]: ParseMethod } = {
       const arg = parser.GetArgument(name);
       replace = `\\left.${star ? `\\smash{${arg}}` : arg}\\vphantom{\\int}\\right|`;
     }
-    parser.string = replace + parser.string.slice(parser.i);
-    parser.i = 0;
+    parser.string =
+      parser.string.substring(0, parser.i) +
+      replace +
+      parser.string.slice(parser.i);
   },
 
   /**
