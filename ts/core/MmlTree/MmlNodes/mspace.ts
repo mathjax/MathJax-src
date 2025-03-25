@@ -116,7 +116,9 @@ export class MmlMspace extends AbstractMmlTokenNode {
    *                     and width non-negative.
    */
   public get canBreak(): boolean {
-    return !this.attributes.hasOneOf(MmlMspace.NONSPACELIKE) &&
-      String(this.attributes.get('width')).trim().charAt(0) !== '-';
+    return (
+      !this.attributes.hasOneOf(MmlMspace.NONSPACELIKE) &&
+      String(this.attributes.get('width')).trim().charAt(0) !== '-'
+    );
   }
 }
