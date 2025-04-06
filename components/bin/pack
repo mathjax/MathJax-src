@@ -86,6 +86,7 @@ async function readJSON(dir) {
       }
       ok(json);
     });
+    child.stderr.on('data', (data) => console.error(String(data)));
   });
 }
 
