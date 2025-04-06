@@ -1225,7 +1225,7 @@ export class FontData<
       : this.CLASS.dynamicExtensions.get(dynamic.extension).prefix;
     return dynamic.file.match(/^(?:[/[]|[a-z]+:\/\/|[a-z]:)/i)
       ? dynamic.file
-      : prefix + '/' + dynamic.file.replace(/(?<!\.js)$/, '.js');
+      : prefix + '/' + dynamic.file.replace(/(\.js)?$/, '.js');
   }
 
   /**
