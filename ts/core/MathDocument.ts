@@ -948,16 +948,23 @@ export abstract class AbstractMathDocument<N, T, D>
       //
       const result = action();
       //
+      // Get a promise that returns the result after
+      // any new _readyPromise resolves (in case action
+      // called whenReady() or another function that does).
+      //
+      const promise = this._readyPromise.then(() => result);
+      //
       // Put back the original promise.
       //
       this._readyPromise = ready;
       //
-      // Return the result of the action, which may be a promise for
-      // when action is complete.  If it is, then the original
+      // Return promise that returns the result.  The original
       // _readyPromise will wait on it to complete before it resolves,
       // since promises that return promises automatically chain.
+      // This inserts any new _readyPromise promises into the
+      // original _readyPromise chain at this point.
       //
-      return result;
+      return promise;
     }));
   }
 
