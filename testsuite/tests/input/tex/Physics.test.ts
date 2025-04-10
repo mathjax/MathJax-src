@@ -780,8 +780,8 @@ describe('Physics1_4', () => {
     toXmlMatch(
       tex2mml('\\evaluated{x}_0^\\infty'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\evaluated{x}_0^\\infty" display="block">
-         <msubsup data-latex="\\evaluated{x}\\left. x \\vphantom{\\int}\\right|_0 ^\\infty">
-           <mrow data-mjx-texclass="INNER" data-latex-item="\\left. x \\vphantom{\\int}\\right|" data-latex="\\left. x \\vphantom{\\int}\\right|">
+         <msubsup data-latex="\\evaluated{x}\\left.x\\vphantom{\\int}\\right|_0 ^\\infty">
+           <mrow data-mjx-texclass="INNER" data-latex-item="\\left.x\\vphantom{\\int}\\right|" data-latex="\\left.x\\vphantom{\\int}\\right|">
              <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
              <mi data-latex="x">x</mi>
              <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{\\int}">
@@ -806,8 +806,8 @@ describe('Physics1_4', () => {
     toXmlMatch(
       tex2mml('\\eval{x}_0^\\infty'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\eval{x}_0^\\infty" display="block">
-         <msubsup data-latex="\\eval{x}\\left. x \\vphantom{\\int}\\right|_0 ^\\infty">
-           <mrow data-mjx-texclass="INNER" data-latex-item="\\left. x \\vphantom{\\int}\\right|" data-latex="\\left. x \\vphantom{\\int}\\right|">
+         <msubsup data-latex="\\eval{x}\\left.x\\vphantom{\\int}\\right|_0 ^\\infty">
+           <mrow data-mjx-texclass="INNER" data-latex-item="\\left.x\\vphantom{\\int}\\right|" data-latex="\\left.x\\vphantom{\\int}\\right|">
              <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
              <mi data-latex="x">x</mi>
              <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{\\int}">
@@ -832,8 +832,8 @@ describe('Physics1_4', () => {
     toXmlMatch(
       tex2mml('\\eval*{x}_0^\\infty'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\eval*{x}_0^\\infty" display="block">
-         <msubsup data-latex="\\eval*{x}\\left. \\smash{x} \\vphantom{\\int}\\right|_0 ^\\infty">
-           <mrow data-mjx-texclass="INNER" data-latex-item="\\left. \\smash{x} \\vphantom{\\int}\\right|" data-latex="\\left. \\smash{x} \\vphantom{\\int}\\right|">
+         <msubsup data-latex="\\eval*{x}\\left.\\smash{x}\\vphantom{\\int}\\right|_0 ^\\infty">
+           <mrow data-mjx-texclass="INNER" data-latex-item="\\left.\\smash{x}\\vphantom{\\int}\\right|" data-latex="\\left.\\smash{x}\\vphantom{\\int}\\right|">
              <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
              <mrow data-mjx-texclass="ORD" data-latex="\\smash{x}">
                <mpadded height="0" depth="0">
@@ -918,8 +918,8 @@ describe('Physics1_4', () => {
     toXmlMatch(
       tex2mml('\\eval*{\\frac{A}{\\frac{A}{\\int x}}}_0^\\infty'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\eval*{\\frac{A}{\\frac{A}{\\int x}}}_0^\\infty" display="block">
-         <msubsup data-latex="\\eval*{\\frac{A}{\\frac{A}{\\int x}}}\\left. \\smash{\\frac{A}{\\frac{A}{\\int x}}} \\vphantom{\\int}\\right|_0 ^\\infty">
-           <mrow data-mjx-texclass="INNER" data-latex-item="\\left. \\smash{\\frac{A}{\\frac{A}{\\int x}}} \\vphantom{\\int}\\right|" data-latex="\\left. \\smash{\\frac{A}{\\frac{A}{\\int x}}} \\vphantom{\\int}\\right|">
+         <msubsup data-latex="\\eval*{\\frac{A}{\\frac{A}{\\int x}}}\\left.\\smash{\\frac{A}{\\frac{A}{\\int x}}}\\vphantom{\\int}\\right|_0 ^\\infty">
+           <mrow data-mjx-texclass="INNER" data-latex-item="\\left.\\smash{\\frac{A}{\\frac{A}{\\int x}}}\\vphantom{\\int}\\right|" data-latex="\\left.\\smash{\\frac{A}{\\frac{A}{\\int x}}}\\vphantom{\\int}\\right|">
              <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
              <mrow data-mjx-texclass="ORD" data-latex="\\smash{\\frac{A}{\\frac{A}{\\int x}}}">
                <mpadded height="0" depth="0">
@@ -957,8 +957,8 @@ describe('Physics1_4', () => {
     toXmlMatch(
       tex2mml('\\eval{\\frac{A}{\\frac{A}{\\int x}}}_0^\\infty'),
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\eval{\\frac{A}{\\frac{A}{\\int x}}}_0^\\infty" display="block">
-         <msubsup data-latex="\\eval{\\frac{A}{\\frac{A}{\\int x}}}\\left. \\frac{A}{\\frac{A}{\\int x}} \\vphantom{\\int}\\right|_0 ^\\infty">
-           <mrow data-mjx-texclass="INNER" data-latex-item="\\left. \\frac{A}{\\frac{A}{\\int x}} \\vphantom{\\int}\\right|" data-latex="\\left. \\frac{A}{\\frac{A}{\\int x}} \\vphantom{\\int}\\right|">
+         <msubsup data-latex="\\eval{\\frac{A}{\\frac{A}{\\int x}}}\\left.\\frac{A}{\\frac{A}{\\int x}}\\vphantom{\\int}\\right|_0 ^\\infty">
+           <mrow data-mjx-texclass="INNER" data-latex-item="\\left.\\frac{A}{\\frac{A}{\\int x}}\\vphantom{\\int}\\right|" data-latex="\\left.\\frac{A}{\\frac{A}{\\int x}}\\vphantom{\\int}\\right|">
              <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
              <mfrac data-latex="\\frac{A}{\\frac{A}{\\int x}}">
                <mi data-latex="A">A</mi>
@@ -1135,6 +1135,29 @@ describe('Physics1_4', () => {
   });
 
   /********************************************************************************/
+
+  it('Quantities_Eval_11', () => {
+    toXmlMatch(
+      tex2mml('\\eval_0^\\infty'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\eval_0^\\infty" display="block">
+         <msubsup data-latex="\\eval\\left.\\vphantom{\\int}\\right|_0 ^\\infty">
+           <mrow data-mjx-texclass="INNER" data-latex-item="\\left.\\vphantom{\\int}\\right|" data-latex="\\left.\\vphantom{\\int}\\right|">
+             <mo data-mjx-texclass="OPEN" fence="true" stretchy="true" symmetric="true" data-latex-item="\\left." data-latex="\\left."></mo>
+             <mrow data-mjx-texclass="ORD" data-latex="\\vphantom{\\int}">
+               <mpadded width="0">
+                 <mphantom>
+                   <mo data-latex="\\int">&#x222B;</mo>
+                 </mphantom>
+               </mpadded>
+             </mrow>
+             <mo data-mjx-texclass="CLOSE" data-latex-item="\\right|" data-latex="\\right|">|</mo>
+           </mrow>
+           <mn data-latex="0">0</mn>
+           <mi mathvariant="normal" data-latex="infty">&#x221E;</mi>
+         </msubsup>
+       </math>`
+    );
+  });
 
 });
 
@@ -14115,12 +14138,6 @@ describe('Physics Errors', () => {
 
   it('MissingArgFor Quantity', () => {
     expectTexError('\\pqty').toBe('Missing argument for \\pqty');
-  });
-
-  /********************************************************************************/
-
-  it('MissingArgFor Eval', () => {
-    expectTexError('\\eval').toBe('Missing argument for \\eval');
   });
 
   /********************************************************************************/
