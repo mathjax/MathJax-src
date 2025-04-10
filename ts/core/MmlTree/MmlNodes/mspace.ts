@@ -111,10 +111,14 @@ export class MmlMspace extends AbstractMmlTokenNode {
   }
 
   /**
-   * @returns {boolean}   True if mspace is allowed to break, i.e.,
-   *                     no height/depth, no styles, and no background color.
+   * @returns {boolean}  True if mspace is allowed to break, i.e.,
+   *                     no height/depth, no styles, no background color,
+   *                     and width non-negative.
    */
   public get canBreak(): boolean {
-    return !this.attributes.hasOneOf(MmlMspace.NONSPACELIKE);
+    return (
+      !this.attributes.hasOneOf(MmlMspace.NONSPACELIKE) &&
+      String(this.attributes.get('width')).trim().charAt(0) !== '-'
+    );
   }
 }

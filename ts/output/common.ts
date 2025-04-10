@@ -25,6 +25,7 @@ import { AbstractOutputJax } from '../core/OutputJax.js';
 import { MathDocument } from '../core/MathDocument.js';
 import { MathItem, Metrics, STATE } from '../core/MathItem.js';
 import { MmlNode, TEXCLASS } from '../core/MmlTree/MmlNode.js';
+import { MmlMspace } from '../core/MmlTree/MmlNodes/mspace.js';
 import { DOMAdaptor } from '../core/DOMAdaptor.js';
 import {
   FontData,
@@ -529,7 +530,7 @@ export abstract class CommonOutputJax<
         postbreak = linebreak === 'newline' && linebreakstyle === 'after';
       } else if (child.isKind('mspace')) {
         const linebreak = child.attributes.get('linebreak') as string;
-        if (linebreak !== 'nobreak') {
+        if (linebreak !== 'nobreak' && (child as MmlMspace).canBreak) {
           marked = this.markInlineBreak(
             marked,
             forcebreak,
