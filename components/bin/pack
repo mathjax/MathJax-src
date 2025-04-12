@@ -79,14 +79,18 @@ async function readJSON(dir) {
       '-c', path.relative('.', path.join(compPath, 'webpack.config.' + target))
     ]);
     child.stdout.on('data', (data) => buffer.push(String(data)));
-    child.stdout.on('close', (code) => {
+    child.stderr.on('data', (data) => console.error(String(data)));
+    child.on('close', (code) => {
+      if (code !== 0) {
+        fail('Webpack failed with code ' + code);
+        return;
+      }
       const json = JSON.parse(buffer.join(''));
       if (json.errors && json.errors.length) {
         fail(json.errors[0].message);
       }
       ok(json);
     });
-    child.stderr.on('data', (data) => console.error(String(data)));
   });
 }
 
