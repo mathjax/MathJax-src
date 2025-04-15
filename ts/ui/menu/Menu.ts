@@ -1589,16 +1589,15 @@ export class Menu {
   protected rerender(start: number = STATE.TYPESET) {
     this.rerenderStart = Math.min(start, this.rerenderStart);
     const startup = MathJax.startup;
-    if (!Menu.loading && startup.rerenderPromise) {
-      startup.rerenderPromise = startup.promise = startup.rerenderPromise.then(
-        () =>
-          mathjax.handleRetriesFor(() => {
-            if (this.rerenderStart <= STATE.COMPILED) {
-              this.document.reset({ inputJax: [] });
-            }
-            this.document.rerender(this.rerenderStart);
-            this.rerenderStart = STATE.LAST;
-          })
+    if (!Menu.loading && startup.hasTypeset) {
+      startup.document.whenReady(
+        () => {
+          if (this.rerenderStart <= STATE.COMPILED) {
+            this.document.reset({ inputJax: [] });
+          }
+          this.document.rerender(this.rerenderStart);
+          this.rerenderStart = STATE.LAST;
+        }
       );
     }
   }

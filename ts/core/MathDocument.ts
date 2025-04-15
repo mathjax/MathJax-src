@@ -36,6 +36,7 @@ import { MmlFactory } from '../core/MmlTree/MmlFactory.js';
 import { DOMAdaptor } from '../core/DOMAdaptor.js';
 import { BitField, BitFieldClass } from '../util/BitField.js';
 import { PrioritizedList } from '../util/PrioritizedList.js';
+import { handleRetriesFor } from '../util/Retries.js';
 
 /*****************************************************************/
 
@@ -373,11 +374,6 @@ export interface MathDocument<N, T, D> {
   renderActions: RenderList<N, T, D>;
 
   /**
-   * The promises that indicate when rendering is fully complete
-   */
-  renderPromises: Promise<void>[];
-
-  /**
    * This object tracks what operations have been performed, so that (when
    *  asynchronous operations are used), the ones that have already been
    *  completed won't be performed again.
@@ -417,8 +413,17 @@ export interface MathDocument<N, T, D> {
 
   /**
    * Perform the renderActions on the document
+   *
+   * @returns {MathDocument}    The math document instance
    */
   render(): MathDocument<N, T, D>;
+
+  /**
+   * Perform the renderActions on the document with retry handling
+   *
+   * @returns {Promise<MathDocument>}   A promise that resolves when the render is complete
+   */
+  renderPromise(): Promise<MathDocument<N, T, D>>;
 
   /**
    * Rerender the MathItems on the page
@@ -429,20 +434,58 @@ export interface MathDocument<N, T, D> {
   rerender(start?: number): MathDocument<N, T, D>;
 
   /**
+   * Rerender the MathItems on the page
+   *
+   * @param {number} start              The state to start rerendering at
+   * @returns {Promise<MathDocument>}   A promise that resolves when the rerender is complete
+   */
+  rerenderPromise(start?: number): Promise<MathDocument<N, T, D>>;
+
+  /**
    * Convert a math string to the document's output format
    *
    * @param {string} math           The math string to convert
-   * @param {OptionList} options   The options for the conversion (e.g., format, ex, em, etc.)
-   * @returns {MmlNode|N}            The MmlNode or N node for the converted content
+   * @param {OptionList} options    The options for the conversion (e.g., format, ex, em, etc.)
+   * @returns {MmlNode|N}           The MmlNode or N node for the converted content
    */
   convert(math: string, options?: OptionList): MmlNode | N;
+
+  /**
+   * Convert a math string to the document's output format
+   *
+   * @param {string} math           The math string to convert
+   * @param {OptionList} options    The options for the conversion (e.g., format, ex, em, etc.)
+   * @returns {Promise<MmlNode|N>}  A promise that resolves when the conversion is complete
+   */
+  convertPromise(math: string, options?: OptionList): Promise<MmlNode | N>;
+
+  /**
+   * Perform an action when previous actions are complete.
+   * (Used to chain promise-based typeset and conversion actions.)
+   */
+  whenReady(action: () => any): Promise<any>;
+
+  /**
+   * Return a promise that resolves when all of the  action promises have been resolved
+   */
+  actionPromises(): Promise<any[]>;
+
+  /**
+   * Clear the action promises
+   */
+  clearPromises(): void;
+
+  /**
+   * Save a promise in the action romises list
+   */
+  savePromise(promise: Promise<any>): void;
 
   /**
    * Locates the math in the document and constructs the MathList
    *  for the document.
    *
    * @param {OptionList} options  The options for locating the math
-   * @returns {MathDocument}       The math document instance
+   * @returns {MathDocument}      The math document instance
    */
   findMath(options?: OptionList): MathDocument<N, T, D>;
 
@@ -685,7 +728,14 @@ export abstract class AbstractMathDocument<N, T, D>
   /**
    * The render action promise list
    */
-  public renderPromises: Promise<void>[];
+  protected _actionPromises: Promise<void>[];
+
+  /**
+   * Promise for the current typeset or conversion action
+   * (used to chain the promise-based calls so they don't
+   * overlap).
+   */
+  protected _readyPromise: Promise<any>;
 
   /**
    * The bit-field used to tell what steps have been taken on the document (for retries)
@@ -726,7 +776,8 @@ export abstract class AbstractMathDocument<N, T, D>
     this.renderActions = RenderList.create<N, T, D>(
       this.options['renderActions']
     );
-    this.renderPromises = [];
+    this._actionPromises = [];
+    this._readyPromise = Promise.resolve();
     this.processed = new AbstractMathDocument.ProcessBits();
     this.outputJax =
       this.options['OutputJax'] || new DefaultOutputJax<N, T, D>();
@@ -785,9 +836,23 @@ export abstract class AbstractMathDocument<N, T, D>
    * @override
    */
   public render() {
-    this.renderPromises = [];
+    this.clearPromises();
     this.renderActions.renderDoc(this);
     return this;
+  }
+
+  /**
+   * @override
+   */
+  public renderPromise() {
+    return this.whenReady(() =>
+      handleRetriesFor(async () => {
+        this.render();
+        await this.actionPromises();
+        this.clearPromises();
+        return this;
+      })
+    );
   }
 
   /**
@@ -797,6 +862,20 @@ export abstract class AbstractMathDocument<N, T, D>
     this.state(start - 1);
     this.render();
     return this;
+  }
+
+  /**
+   * @override
+   */
+  public rerenderPromise(start: number = STATE.RERENDER) {
+    return this.whenReady(() =>
+      handleRetriesFor(async () => {
+        this.rerender(start);
+        await this.actionPromises();
+        this.clearPromises();
+        return this;
+      })
+    );
   }
 
   /**
@@ -833,8 +912,81 @@ export abstract class AbstractMathDocument<N, T, D>
     if (this.outputJax.options.merrorInheritFont) {
       mitem.outputData.merrorFamily = family;
     }
+    this.clearPromises();
     mitem.convert(this, end);
     return mitem.typesetRoot || mitem.root;
+  }
+
+  /**
+   * @override
+   */
+  public convertPromise(math: string, options: OptionList = {}) {
+    return this.whenReady(() =>
+      handleRetriesFor(async () => {
+        const node = this.convert(math, options);
+        await this.actionPromises();
+        this.clearPromises();
+        return node;
+      })
+    );
+  }
+
+  /**
+   * @override
+   */
+  public whenReady(action: () => any): Promise<any> {
+    return (this._readyPromise = this._readyPromise.then(() => {
+      //
+      // Cache old _readyPromise and replace it with a resolved
+      // promise in case action() calls whenReady(), so we don't get
+      // a circular dependency where the action is waiting on itself.
+      //
+      const ready = this._readyPromise;
+      this._readyPromise = Promise.resolve();
+      //
+      // Do the action and save its result.
+      //
+      const result = action();
+      //
+      // Get a promise that returns the result after
+      // any new _readyPromise resolves (in case action
+      // called whenReady() or another function that does).
+      //
+      const promise = this._readyPromise.then(() => result);
+      //
+      // Put back the original promise.
+      //
+      this._readyPromise = ready;
+      //
+      // Return promise that returns the result.  The original
+      // _readyPromise will wait on it to complete before it resolves,
+      // since promises that return promises automatically chain.
+      // This inserts any new _readyPromise promises into the
+      // original _readyPromise chain at this point.
+      //
+      return promise;
+    }));
+  }
+
+  /**
+   * @override
+   */
+  public actionPromises() {
+    return Promise.all(this._actionPromises);
+  }
+
+  /**
+   * @override
+   */
+  public clearPromises() {
+    this._actionPromises = [];
+  }
+
+  /**
+   * @override
+   */
+  public savePromise(promise: Promise<any>) {
+    this._actionPromises.push(promise);
   }
 
   /**
