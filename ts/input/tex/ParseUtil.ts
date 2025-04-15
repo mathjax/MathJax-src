@@ -602,8 +602,8 @@ export const ParseUtil = {
     // @test Label, Fbox, Hbox
     text = text
       .replace(/\n+/g, ' ')
-      .replace(/^\s+/, entities.nbsp)
-      .replace(/\s+$/, entities.nbsp);
+      .replace(/^ +/, entities.nbsp)
+      .replace(/ +$/, entities.nbsp);
     const textNode = parser.create('text', text);
     return parser.create('node', 'mtext', [], def, textNode);
   },
