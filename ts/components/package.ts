@@ -89,6 +89,11 @@ export class Package {
   public promise: Promise<string>;
 
   /**
+   * The result of loading a module via the custom loader
+   */
+  public result: any = {};
+
+  /**
    * True when the package is being loaded but hasn't yet finished loading
    */
   protected isLoading: boolean = false;
@@ -315,6 +320,7 @@ export class Package {
       const result = CONFIG.require(url);
       if (result instanceof Promise) {
         result
+          .then((result) => (this.result = result))
           .then(() => this.checkLoad())
           .catch((err) =>
             this.failed('Can\'t load "' + url + '"\n' + err.message.trim())

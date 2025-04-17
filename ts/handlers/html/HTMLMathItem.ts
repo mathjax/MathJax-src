@@ -124,6 +124,7 @@ export class HTMLMathItem<N, T, D> extends AbstractMathItem<N, T, D> {
    * @override
    */
   public removeFromDocument(restore: boolean = false) {
+    super.removeFromDocument(restore);
     if (this.state() >= STATE.TYPESET) {
       const adaptor = this.adaptor;
       const node = this.start.node;

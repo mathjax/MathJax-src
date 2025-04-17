@@ -21,11 +21,6 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-export interface PromiseFunctions {
-  resolve: () => void;
-  reject: (cmd: string) => void;
-}
-
 export type Message = { [key: string]: any };
 
 export type WorkerCommand = {
@@ -38,3 +33,6 @@ export type PoolCommand = {
   cmd: string;
   data: WorkerCommand | Message;
 };
+
+export type Structure = { [id: string]: any };
+export type StructureData = Structure | string;

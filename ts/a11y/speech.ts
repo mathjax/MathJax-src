@@ -109,20 +109,20 @@ export function SpeechMathItemMixin<
       if (
         this.isEscaped ||
         !(document.options.enableSpeech || document.options.enableBraille)
-      )
+      ) {
         return;
+      }
       document.getWebworker();
       this.generatorPool.init(
         document.options,
         document.adaptor,
         document.webworker
       );
-      try {
-        this.outputData.mml = this.toMathML(this.root, this);
-        this.generatorPool.Speech(this);
-      } catch (err) {
-        document.options.speechError(document, this, err);
-      }
+      this.outputData.mml = this.toMathML(this.root, this);
+      const promise = this.generatorPool
+        .Speech(this)
+        .catch((err) => document.options.speechError(document, this, err));
+      document.savePromise(promise);
     }
 
     /**
@@ -136,6 +136,13 @@ export function SpeechMathItemMixin<
     //   //   typeset math here.  trhis should undo whatever was done
     //   //   by the attachSpeech() method.
     // }
+
+    /**
+     * @override
+     */
+    clear() {
+      this.generatorPool.cancel(this);
+    }
   };
 }
 
@@ -325,6 +332,14 @@ export function SpeechMathDocumentMixin<
         // should call detachSpeech() on all MathItems if state >= STATE.TYPESET
       }
       return this;
+    }
+
+    /**
+     * @override
+     */
+    public async done() {
+      await this.webworker.Stop();
+      return super.done();
     }
   };
 }

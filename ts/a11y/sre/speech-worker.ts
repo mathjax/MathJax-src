@@ -34,6 +34,10 @@
  */
 type OptionList = { [name: string]: any };
 type Message = { [key: string]: any };
+type WorkerResult = Promise<any>;
+type WorkerFunction = (data: Message) => WorkerResult;
+type Structure = { [id: string]: any };
+type StructureData = Structure | string;
 
 declare let global: any;
 declare const SRE: any;
@@ -49,7 +53,8 @@ declare const SRE: any;
 
     global.DedicatedWorkerGlobalScope = global.constructor; // so SRE knows we are a worker
 
-    global.copyStructure = (structure: any) => JSON.stringify(structure);
+    global.copyStructure = (structure: StructureData) =>
+      JSON.stringify(structure);
 
     //
     // Create addEventListener() and postMessage() function
@@ -85,8 +90,8 @@ declare const SRE: any;
     };
   } else {
     global = (self as any).global = self; // for web workers make global be the self object
-    global.copyStructure = (structure: any) => structure;
-    global.SREfeature = { json: './mathmaps/' };
+    global.copyStructure = (structure: StructureData) => structure;
+    global.SREfeature = { json: './mathmaps' };
   }
   global.exports = self; // lets SRE get defined as a global variable
 
@@ -111,24 +116,18 @@ declare const SRE: any;
    */
   self.addEventListener(
     'message',
-    async function (event: MessageEvent) {
+    function (event: MessageEvent) {
       if (event.data.debug) {
         console.log('Iframe  >>>  Worker:', event.data);
       }
       const { cmd, data } = event.data;
       if (Object.hasOwn(Commands, cmd)) {
         Pool('Log', `running ${cmd}`);
-        try {
-          await Commands[cmd](data);
-        } catch (err) {
-          Pool('Error', copyError(err));
-          Finished(cmd, false);
-          return;
-        }
-        Finished(cmd, true);
+        Commands[cmd](data)
+          .then((result) => Finished(cmd, { result }))
+          .catch((error) => Finished(cmd, { error: error.message }));
       } else {
-        Pool('Error', { message: `Invalid worker command: ${cmd}` });
-        Finished(cmd, false);
+        Finished(cmd, { error: `Invalid worker command: ${cmd}` });
       }
     },
     false
@@ -137,51 +136,40 @@ declare const SRE: any;
   /**
    * These are the commands that can be sent from the main window via the iframe.
    */
-  const Commands: {
-    [id: string]: (data: Message) => void | Promise<void>;
-  } = {
+  const Commands: { [id: string]: WorkerFunction } = {
     /**
      * This loads one or more libraries.
      *
      * @param {Message} data The data object
-     * @returns {Promise} A promise that completes when the imports are done
+     * @returns {WorkerResult} A promise the completes when the imports are done
      */
-    import(data: Message): Promise<void> {
+    import(data: Message): WorkerResult {
       return Array.isArray(data.imports)
         ? Promise.all(data.imports.map((file: string) => import(file)))
         : import(data.imports);
     },
 
     /**
-     * Sets the SRE feature vector in the worker. Useful for presetting mathmaps
-     * path or custom loader.
-     *
-     * @param {Message} data The data object
-     */
-    feature(data: Message) {
-      global.SREfeature = {
-        json: data.json,
-      };
-    },
-
-    /**
      * Setup the speech rule engine.
      *
      * @param {Message} data The feature vector for SRE.
+     * @returns {WorkerResult} A promise that completes when the imports are done
      */
-    setup(data: Message) {
-      if (data) {
-        SRE.setupEngine(data);
+    setup(data: Message): WorkerResult {
+      if (!data) {
+        return Promise.resolve();
       }
+      SRE.setupEngine(data);
+      return SRE.engineReady();
     },
 
     /**
      * Compute speech
      *
      * @param {Message} data The data object
-     * @returns {Promise<void>} Promise fulfilled when computation is complete.
+     * @returns {WorkerResult} Promise fulfilled when computation is complete.
      */
-    speech(data: Message): Promise<void> {
+    speech(data: Message): WorkerResult {
       return Speech(SRE.workerSpeech, data.mml, data.options);
     },
 
@@ -189,9 +177,9 @@ declare const SRE: any;
      * Compute speech for the next rule set
      *
      * @param {Message} data The data object
-     * @returns {Promise<void>} Promise fulfilled when computation is complete.
+     * @returns {WorkerResult} Promise fulfilled when computation is complete.
      */
-    nextRules(data: Message): Promise<void> {
+    nextRules(data: Message): WorkerResult {
       return Speech(SRE.workerNextRules, data.mml, data.options);
     },
 
@@ -199,9 +187,9 @@ declare const SRE: any;
      * Compute speech for the next style or preference
      *
      * @param {Message} data The data object
-     * @returns {Promise<void>} Promise fulfilled when computation is complete.
+     * @returns {WorkerResult} Promise fulfilled when computation is complete.
      */
-    nextStyle(data: Message): Promise<void> {
+    nextStyle(data: Message): WorkerResult {
       return Speech(SRE.workerNextStyle, data.mml, data.options, data.nodeId);
     },
   };
@@ -235,10 +223,10 @@ declare const SRE: any;
    * Post that the current command is finished to the client.
    *
    * @param {string} cmd The command that has finished.
-   * @param {boolean} success Flag indicating if success of the command.
+   * @param {Message} msg The data to send back (error or result)
    */
-  function Finished(cmd: string, success: boolean = true) {
-    Client('Finished', { cmd: cmd, success: success });
+  function Finished(cmd: string, msg: Message) {
+    Client('Finished', { ...msg, cmd: cmd, success: !msg.error });
   }
 
   /**
@@ -250,22 +238,17 @@ declare const SRE: any;
    * @param {string} mml The mml expression.
    * @param {OptionList} options Setup options for SRE.
    * @param {string[]} rest Remaining arguments.
+   * @returns {Promise<StructureData>} A promise returning the data to be attached to the DOM
    */
   async function Speech(
-    func: (
-      mml: string,
-      options: OptionList,
-      rest: string[]
-    ) => { [id: string]: string },
+    func: (mml: string, options: OptionList, rest: string[]) => StructureData,
     mml: string,
     options: OptionList,
     ...rest: string[]
-  ) {
-    if (mml) {
-      let structure = await func.call(null, mml, options, ...rest);
-      structure = structure ?? {};
-      Client('Attach', global.copyStructure(structure));
-    }
+  ): Promise<StructureData> {
+    if (!mml) return '';
+    const structure = (await func.call(null, mml, options, ...rest)) ?? {};
+    return global.copyStructure(structure);
   }
 
   /**

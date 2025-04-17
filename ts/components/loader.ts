@@ -193,9 +193,9 @@ export const Loader = {
    * @param {string[]} names  The packages to load
    * @returns {Promise}       A promise that resolves when all the named packages are ready
    */
-  load(...names: string[]): Promise<void | string[]> {
+  load(...names: string[]): Promise<any[]> {
     if (names.length === 0) {
-      return Promise.resolve();
+      return Promise.resolve([]);
     }
     const promises = [];
     for (const name of names) {
@@ -207,8 +207,8 @@ export const Loader = {
       extension.checkNoLoad();
       promises.push(
         extension.promise.then(() => {
-          if (!CONFIG.versionWarnings) return;
           if (
+            CONFIG.versionWarnings &&
             extension.isLoaded &&
             !Loader.versions.has(Package.resolvePath(name))
           ) {
@@ -216,7 +216,8 @@ export const Loader = {
               `No version information available for component ${name}`
             );
           }
-        }) as Promise<null>
+          return extension.result;
+        }) as Promise<any>
       );
     }
     Package.loadAll();

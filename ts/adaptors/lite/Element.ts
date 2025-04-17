@@ -144,7 +144,7 @@ export class LiteIFrame extends LiteElement {
     // Subclass the Worker from node:worder_threads to include
     //  addEventListener and postMessage methods
     //
-    const { Worker } = await asyncLoad('worker_threads');
+    const { Worker } = await asyncLoad('node:worker_threads');
     class LiteWorker {
       protected worker: WebWorker;
       constructor(url: string, options: OptionList = {}) {
