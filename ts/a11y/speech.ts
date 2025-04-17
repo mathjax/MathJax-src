@@ -122,7 +122,7 @@ export function SpeechMathItemMixin<
       const promise = this.generatorPool
         .Speech(this)
         .catch((err) => document.options.speechError(document, this, err));
-      document.renderPromises.push(promise);
+      document.savePromise(promise);
     }
 
     /**
