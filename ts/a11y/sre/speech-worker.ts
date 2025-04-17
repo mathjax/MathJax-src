@@ -153,10 +153,12 @@ declare const SRE: any;
      * Setup the speech rule engine.
      *
      * @param {Message} data The feature vector for SRE.
-     * @returns {WorkerResult} A promise the completes when the imports are done
+     * @returns {WorkerResult} A promise that completes when the imports are done
      */
     setup(data: Message): WorkerResult {
-      if (!data) return Promise.resolve();
+      if (!data) {
+        return Promise.resolve();
+      }
       SRE.setupEngine(data);
       return SRE.engineReady();
     },

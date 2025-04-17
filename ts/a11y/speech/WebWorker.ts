@@ -251,7 +251,7 @@ export class WorkerHandler<N, T, D> {
   }
 
   /**
-   * Compute speech strcuture for the math.
+   * Compute speech structure for the math.
    *
    * @param {string} math The mml string.
    * @param {OptionList} options The options list.
