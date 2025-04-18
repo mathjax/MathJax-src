@@ -29,8 +29,9 @@ import {
   Structure,
   StructureData,
 } from './MessageTypes.js';
-import { MathItem } from '../../core/MathItem.js';
+import { SpeechMathItem } from '../speech.js';
 import { hasWindow } from '../../util/context.js';
+import { SemAttr } from './SpeechUtil.js';
 
 /**
  * Class for relevant task information.
@@ -38,7 +39,7 @@ import { hasWindow } from '../../util/context.js';
 class Task<N, T, D> {
   constructor(
     public cmd: PoolCommand,
-    public item: MathItem<N, T, D>,
+    public item: SpeechMathItem<N, T, D>,
     public resolve: (value: any) => void,
     public reject: (cmd: string) => void
   ) {}
@@ -192,11 +193,11 @@ export class WorkerHandler<N, T, D> {
    * Send messages to the worker.
    *
    * @param {PoolCommand} msg The command message.
-   * @param {MathItem} item Optional MathItem that is being processed
+   * @param {SpeechMathItem} item Optional SpeechMathItem that is being processed
    *     command name as input.
    * @returns {Promise<any>} A promise that resolves when the command completes
    */
-  public Post(msg: PoolCommand, item?: MathItem<N, T, D>): Promise<any> {
+  public Post(msg: PoolCommand, item?: SpeechMathItem<N, T, D>): Promise<any> {
     const promise = new Promise((resolve, reject) => {
       this.tasks.push(new Task(msg, item, resolve, reject));
     });
@@ -218,9 +219,9 @@ export class WorkerHandler<N, T, D> {
   /**
    * Remove a task from the task list.
    *
-   * @param {MathItem} item   The item whose task is to be canceled.
+   * @param {SpeechMathItem} item   The item whose task is to be canceled.
    */
-  public Cancel(item: MathItem<N, T, D>) {
+  public Cancel(item: SpeechMathItem<N, T, D>) {
     const i = this.tasks.findIndex((task) => task.item === item);
     if (i > 0) {
       this.tasks[i].reject(`Task ${this.tasks[i].cmd.cmd} cancelled`);
@@ -255,13 +256,13 @@ export class WorkerHandler<N, T, D> {
    *
    * @param {string} math The mml string.
    * @param {OptionList} options The options list.
-   * @param {MathItem} item The mathitem for reattaching the speech.
+   * @param {SpeechMathItem} item The mathitem for reattaching the speech.
    * @returns {Promise<void>} A promise that resolves when the command completes
    */
   public async Speech(
     math: string,
     options: OptionList,
-    item: MathItem<N, T, D>
+    item: SpeechMathItem<N, T, D>
   ): Promise<void> {
     this.Attach(
       item,
@@ -287,13 +288,13 @@ export class WorkerHandler<N, T, D> {
    *
    * @param {string} math The mml string.
    * @param {OptionList} options The options list.
-   * @param {MathItem} item The mathitem for reattaching the speech.
+   * @param {SpeechMathItem} item The mathitem for reattaching the speech.
    * @returns {Promise<void>} A promise that resolves when the command completes
    */
   public async nextRules(
     math: string,
     options: OptionList,
-    item: MathItem<N, T, D>
+    item: SpeechMathItem<N, T, D>
   ): Promise<void> {
     this.Attach(
       item,
@@ -326,14 +327,14 @@ export class WorkerHandler<N, T, D> {
    * @param {string} math The linearized mml expression.
    * @param {OptionList} options The options list.
    * @param {string} nodeId The semantic Id of the currenctly focused node.
-   * @param {MathItem} item The mathitem for reattaching the speech.
+   * @param {SpeechMathItem} item The mathitem for reattaching the speech.
    * @returns {Promise<void>} A promise that resolves when the command completes
    */
   public async nextStyle(
     math: string,
     options: OptionList,
     nodeId: string,
-    item: MathItem<N, T, D>
+    item: SpeechMathItem<N, T, D>
   ): Promise<void> {
     this.Attach(
       item,
@@ -360,13 +361,13 @@ export class WorkerHandler<N, T, D> {
   /**
    * Attach the speech structure to an item's DOM
    *
-   * @param {MathItem} item             The MathItem to attach to
+   * @param {SpeechMathItem} item       The SpeechMathItem to attach to
    * @param {boolean} speech            True when speech should be added
    * @param {boolean} braille           True when Braille should be added
    * @param {StructureData} structure   The speech structure to attach
    */
   public Attach(
-    item: MathItem<N, T, D>,
+    item: SpeechMathItem<N, T, D>,
     speech: boolean,
     braille: boolean,
     structure: StructureData
@@ -393,16 +394,24 @@ export class WorkerHandler<N, T, D> {
       adaptor.setAttribute(node, 'data-semantic-type', 'dummy');
       this.setSpecialAttributes(node, sid, '');
     }
-    this.setSpeechAttributes(adaptor.childNodes(container)[0], '', data, speech, braille);
+    this.setSpeechAttributes(
+      adaptor.childNodes(container)[0],
+      '',
+      data,
+      speech,
+      braille
+    );
     if (speech) {
       if (data.label) {
-        adaptor.setAttribute(container, 'aria-label', data.label);
+        adaptor.setAttribute(container, SemAttr.SPEECH, data.label);
+        item.outputData.speech = data.label;
       }
       adaptor.setAttribute(container, 'data-speech-attached', 'true');
     }
     if (braille) {
       if (data.braillelabel) {
-        adaptor.setAttribute(container, 'aria-braillelabel', data.braillelabel);
+        adaptor.setAttribute(container, SemAttr.BRAILLE, data.braillelabel);
+        item.outputData.braille = data.braillelabel;
       }
       if (data.braille) {
         adaptor.setAttribute(container, 'data-braille-attached', 'true');
@@ -436,8 +445,7 @@ export class WorkerHandler<N, T, D> {
     }
     if (braille && data.braille?.[id]) {
       const value = data.braille[id]['braille-none'] || '';
-      adaptor.setAttribute(node, 'data-semantic-braille', value);
-      adaptor.setAttribute(node, 'aria-braillelabel', value);
+      adaptor.setAttribute(node, SemAttr.BRAILLE, value);
     }
   }
 
@@ -500,6 +508,44 @@ export class WorkerHandler<N, T, D> {
       if (value) {
         this.adaptor.setAttribute(node, `${prefix}${key.toLowerCase()}`, value);
       }
+    }
+  }
+
+  /**
+   * Remove speech attributes from a MathItem
+   *
+   * @param {SpeechMathItem} item   The MathItem whose speech attributes should be removed.
+   */
+  public Detach(item: SpeechMathItem<N, T, D>) {
+    const container = item.typesetRoot;
+    this.adaptor.removeAttribute(container, 'data-speech-attached');
+    this.adaptor.removeAttribute(container, 'data-braille-attached');
+    this.detachSpeech(container);
+  }
+
+  /**
+   * Recursively remove speech attributes from a DOM tree
+   *
+   * @param {N} node  The root node of the tree to modify
+   */
+  public detachSpeech(node: N) {
+    const adaptor = this.adaptor;
+    const children = adaptor.childNodes(node);
+    if (!children) return;
+    if (adaptor.kind(node) !== '#text') {
+      for (const key of [
+        'none',
+        'summary-none',
+        'speech',
+        'speech-none',
+        'summary',
+        'braille',
+      ]) {
+        adaptor.removeAttribute(node, `data-semantic-${key}`);
+      }
+    }
+    for (const child of children) {
+      this.detachSpeech(child as N);
     }
   }
 

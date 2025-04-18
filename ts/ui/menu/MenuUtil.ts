@@ -26,8 +26,7 @@ import { context } from '../../util/context.js';
 /**
  * True when platform is a Mac (so we can enable CMD menu item for zoom trigger)
  */
-export const isMac =
-  context.window?.navigator?.platform?.substring(0, 3) === 'Mac';
+export const isMac = context.os === 'MacOS';
 
 /**
  * @param {string} text   The text to be copied to the clipboard

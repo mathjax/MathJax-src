@@ -287,7 +287,7 @@ export class StringRegion extends AbstractRegion<string> {
     }
     if (this.inner) {
       this.inner.textContent = '';
-      this.inner.textContent = speech;
+      this.inner.textContent = speech || '\u00a0';
     }
   }
 

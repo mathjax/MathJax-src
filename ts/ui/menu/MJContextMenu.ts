@@ -101,6 +101,7 @@ export class MJContextMenu extends ContextMenu {
   public unpost() {
     super.unpost();
     this.mathItem.outputData.nofocus = false;
+    this.mathItem = null;
   }
 
   /*======================================================================*/

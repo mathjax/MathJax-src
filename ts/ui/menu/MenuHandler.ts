@@ -86,6 +86,11 @@ export interface MenuMathItem
   addMenu(document: MenuMathDocument, force?: boolean): void;
 
   /**
+   * @param {MenuMathDocument} document   The document where the menu is being added
+   */
+  getMenus(document: MenuMathDocument): void;
+
+  /**
    * @param {MenuMathDocument} document   The document to check for if anything is being loaded
    */
   checkLoading(document: MenuMathDocument): void;
@@ -113,6 +118,13 @@ export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
         document.menu.addMenu(this);
       }
       this.state(STATE.CONTEXT_MENU);
+    }
+
+    /**
+     * @param {MenuMathDocument} document   The document where the menu is being added
+     */
+    public getMenus(document: MenuMathDocument) {
+      (document.menu.menu.store as any).sort();
     }
 
     /**
@@ -191,6 +203,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
       renderActions: expandable({
         ...BaseDocument.OPTIONS.renderActions,
         addMenu: [STATE.CONTEXT_MENU],
+        getMenus: [STATE.INSERTED + 5, false],
         checkLoading: [STATE.UNPROCESSED + 1],
       }),
     };
@@ -243,6 +256,13 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
     }
 
     /**
+     * @override
+     */
+    public getMenus() {
+      (this.menu.menu.store as any).sort();
+    }
+
+    /**
      * Checks if there are files being loaded by the menu, and restarts the typesetting if so
      *
      * @returns {MenuMathDocument}   The MathDocument (so calls can be chained)
@@ -270,15 +290,6 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
       if (state < STATE.CONTEXT_MENU) {
         this.processed.clear('context-menu');
       }
-      return this;
-    }
-
-    /**
-     * @override
-     */
-    public updateDocument() {
-      super.updateDocument();
-      (this.menu.menu.store as any).sort();
       return this;
     }
   };

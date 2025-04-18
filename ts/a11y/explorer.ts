@@ -30,10 +30,14 @@ import { MathDocumentConstructor } from '../core/MathDocument.js';
 import { OptionList, expandable } from '../util/Options.js';
 import { SerializedMmlVisitor } from '../core/MmlTree/SerializedMmlVisitor.js';
 import { hasWindow } from '../util/context.js';
+import { StyleJson } from '../util/StyleJson.js';
+import { context } from '../util/context.js';
 
 import { ExplorerPool, RegionPool } from './explorer/ExplorerPool.js';
 
 import * as Sre from './sre.js';
+
+const isMac = context.os === 'MacOS';
 
 /**
  * Generic constructor for Mixins
@@ -60,6 +64,21 @@ newState('EXPLORER', 160);
  */
 export interface ExplorerMathItem extends HTMLMATHITEM {
   /**
+   * The value to use for the aria role for typeset math
+   */
+  ariaRole: string;
+
+  /**
+   * The aria-roleDescription to use for the math
+   */
+  roleDescription: string;
+
+  /**
+   * The string to use for when there is no description;
+   */
+  none: string;
+
+  /**
    * The Explorer objects for this math item
    */
   explorers: ExplorerPool;
@@ -84,7 +103,38 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
   BaseMathItem: B,
   toMathML: (node: MmlNode) => string
 ): Constructor<ExplorerMathItem> & B {
-  return class extends BaseMathItem {
+  return class BaseClass extends BaseMathItem {
+    /**
+     * The value to use for the aria role for typeset math
+     */
+    protected static ariaRole: string = isMac ? 'none' : 'application';
+
+    /**
+     * The aria-roleDescription to use for the math
+     */
+    protected static roleDescription: string = 'math';
+
+    /**
+     * Decription to use when set to none
+     *  (private-use-1 is not spoken by any screen reader tested)
+     */
+    protected static none: string = '\u0091';
+
+    public get ariaRole() {
+      return (this.constructor as typeof BaseClass).ariaRole;
+    }
+
+    public get roleDescription() {
+      const CLASS = this.constructor as typeof BaseClass;
+      return CLASS.roleDescription === 'none'
+        ? CLASS.none
+        : CLASS.roleDescription;
+    }
+
+    public get none() {
+      return (this.constructor as typeof BaseClass).none;
+    }
+
     /**
      * @override
      */
@@ -94,6 +144,25 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      * Semantic id of the rerendered element that should regain the focus.
      */
     protected refocus: string = null;
+
+    /**
+     * @override
+     */
+    public attachSpeech(document: ExplorerMathDocument) {
+      super.attachSpeech(document);
+      const promise = this.outputData.speechPromise;
+      if (promise) {
+        promise.then(() => this.explorers.speech.attachSpeech());
+      }
+    }
+
+    /**
+     * @override
+     */
+    public detachSpeech(document: ExplorerMathDocument) {
+      super.detachSpeech(document);
+      this.explorers.speech.detachSpeech();
+    }
 
     /**
      * Add the explorer to the output for this math item
@@ -152,6 +221,11 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
  */
 export interface ExplorerMathDocument extends HTMLDOCUMENT {
   /**
+   * The info icon for the selected expression
+   */
+  infoIcon: HTMLElement;
+
+  /**
    * The objects needed for the explorer
    */
   explorerRegions: RegionPool;
@@ -175,7 +249,7 @@ export interface ExplorerMathDocument extends HTMLDOCUMENT {
 export function ExplorerMathDocumentMixin<
   B extends MathDocumentConstructor<HTMLDOCUMENT>,
 >(BaseDocument: B): MathDocumentConstructor<ExplorerMathDocument> & B {
-  return class extends BaseDocument {
+  return class BaseClass extends BaseDocument {
     /**
      * @override
      */
@@ -212,8 +286,123 @@ export function ExplorerMathDocumentMixin<
         treeColoring: false,               // tree color expression
         viewBraille: false,                // display Braille output as subtitles
         voicing: false,                    // switch on speech output
+        help: true,                        // include "press h for help" messages on focus
       }
     };
+
+    /**
+     * Styles to add for speech
+     */
+    public static speechStyles: StyleJson = {
+      'mjx-container[has-speech="true"]': {
+        position: 'relative',
+        cursor: 'default',
+      },
+      'mjx-speech': {
+        position: 'absolute',
+        'z-index': -1,
+        left: 0,
+        top: 0,
+        bottom: 0,
+        right: 0,
+      },
+      'mjx-speech:focus': {
+        outline: 'none',
+      },
+      'mjx-container .mjx-selected': {
+        outline: '2px solid black',
+      },
+      'mjx-container > mjx-help': {
+        display: 'none',
+        position: 'absolute',
+        top: '-.33em',
+        right: '-.5em',
+        width: '.6em',
+        height: '.6em',
+        cursor: 'pointer',
+      },
+      'mjx-container[display="true"] > mjx-help': {
+        right: 0,
+      },
+      'mjx-help > svg': {
+        stroke: 'black',
+        width: '100%',
+        height: '100%',
+      },
+      'mjx-help > svg > circle': {
+        'stroke-width': '1.5px',
+        cx: '9px',
+        cy: '9px',
+        r: '9px',
+        fill: 'white',
+      },
+      'mjx-help > svg > circle:nth-child(2)': {
+        fill: 'rgba(0, 0, 255, 0.2)',
+        r: '7px',
+      },
+      'mjx-help > svg > line': {
+        'stroke-width': '2.5px',
+        'stroke-linecap': 'round',
+      },
+      'mjx-help:hover > svg > circle:nth-child(2)': {
+        fill: 'white',
+      },
+      'mjx-container.mjx-explorer-active > mjx-help': {
+        display: 'inline-flex',
+        'align-items': 'center',
+      },
+
+      'mjx-help-sizer': {
+        position: 'fixed',
+        width: '40%',
+        'max-width': '30em',
+        top: '3em',
+        left: '50%',
+      },
+      'mjx-help-dialog': {
+        position: 'absolute',
+        width: '200%',
+        left: '-100%',
+        border: '3px outset',
+        'border-radius': '15px',
+        color: 'black',
+        'background-color': '#DDDDDD',
+        'z-index': '301',
+        'text-align': 'right',
+        'font-style': 'normal',
+        'text-indent': 0,
+        'text-transform': 'none',
+        'line-height': 'normal',
+        'letter-spacing': 'normal',
+        'word-spacing': 'normal',
+        'word-wrap': 'normal',
+        float: 'none',
+        'box-shadow': '0px 10px 20px #808080',
+        outline: 'none',
+      },
+      'mjx-help-dialog > h1': {
+        'font-size': '24px',
+        'text-align': 'center',
+        margin: '.5em 0',
+      },
+      'mjx-help-dialog > div': {
+        margin: '0 1em',
+        padding: '3px',
+        overflow: 'auto',
+        height: '20em',
+        border: '2px inset black',
+        'background-color': 'white',
+        'text-align': 'left',
+      },
+      'mjx-help-dialog > input': {
+        margin: '.5em 2em',
+      },
+    };
+
+    /**
+     * The info icon for the selected expression
+     */
+    public infoIcon: HTMLElement;
 
     /**
      * The objects needed for the explorer
@@ -241,6 +430,26 @@ export function ExplorerMathDocumentMixin<
       }
       options.MathItem = ExplorerMathItemMixin(options.MathItem, toMathML);
       this.explorerRegions = new RegionPool(this);
+      if ('addStyles' in this) {
+        (this as any).addStyles(
+          (this.constructor as typeof BaseClass).speechStyles
+        );
+      }
+      const adaptor = this.adaptor;
+      const SVGNS = 'http://www.w3.org/2000/svg';
+      this.infoIcon = adaptor.node('mjx-help', {}, [
+        adaptor.node(
+          'svg',
+          { viewBox: '0 0 18 18', xmlns: SVGNS, 'aria-hidden': 'true' },
+          [
+            adaptor.node('circle', { stroke: 'none' }, [], SVGNS),
+            adaptor.node('circle', {}, [], SVGNS),
+            adaptor.node('line', { x1: 9, y1: 9, x2: 9, y2: 13 }, [], SVGNS),
+            adaptor.node('line', { x1: 9, y1: 5.5, x2: 9, y2: 5.5 }, [], SVGNS),
+          ],
+          SVGNS
+        ),
+      ]);
     }
 
     /**
@@ -318,6 +527,9 @@ export function setA11yOptions(
     } else if (sreOptions[key] !== undefined) {
       document.options.sre[key] = options[key];
     }
+  }
+  if (options.roleDescription) {
+    document.options.MathItem.roleDescription = options.roleDescription;
   }
   // Reinit explorers
   for (const item of document.math) {

@@ -196,6 +196,9 @@ export function EnrichedMathItemMixin<
           }
           const enriched = Sre.toEnriched(mml);
           this.inputData.enrichedMml = math.math = this.serializeMml(enriched);
+          math.math = math.math
+            .replace(/ role="treeitem"/g, ' data-speech-node="true"')
+            .replace(/ aria-(?:posinset|owns|setsize)=".*?"/g, '');
           math.display = this.display;
           math.compile(document);
           this.root = math.root;
