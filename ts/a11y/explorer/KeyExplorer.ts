@@ -366,7 +366,6 @@ export class SpeechExplorer
     ['click', this.Click.bind(this)],
   ]);
 
-
   /**
    * @override
    */
@@ -463,7 +462,11 @@ export class SpeechExplorer
     //
     // If we are extending a click region, focus out
     //
-    if (hasModifiers(event) || event.buttons !== 0 || document.getSelection().type === 'Range') {
+    if (
+      hasModifiers(event) ||
+      event.buttons !== 0 ||
+      document.getSelection().type === 'Range'
+    ) {
       this.FocusOut(null);
       return;
     }
@@ -546,7 +549,8 @@ export class SpeechExplorer
   /**
    * Process Enter key events
    *
-   * @returns {void | boolean}  False means play the honk sound
+   * @param {KeyboardEvent} event  The event for the enter key
+   * @returns {void | boolean}     False means play the honk sound
    */
   protected enterKey(event: KeyboardEvent): void | boolean {
     if (this.active) {
