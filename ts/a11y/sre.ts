@@ -23,12 +23,10 @@
  */
 
 import * as Api from '#sre/common/system.js';
-import * as SpeechGeneratorFactory from '#sre/speech_generator/speech_generator_factory.js';
 import { Engine } from '#sre/common/engine.js';
 import { ClearspeakPreferences } from '#sre/speech_rules/clearspeak_preferences.js';
 import { Highlighter } from '#sre/highlighter/highlighter.js';
 import * as HighlighterFactory from '#sre/highlighter/highlighter_factory.js';
-import { SpeechGenerator } from '#sre/speech_generator/speech_generator.js';
 import { SemanticNode } from '#sre/semantic_tree/semantic_node.js';
 import { parseInput } from '#sre/common/dom_util.js';
 import { Variables } from '#sre/common/variables.js';
@@ -36,8 +34,6 @@ import { Variables } from '#sre/common/variables.js';
 export { semanticMathmlNode } from '#sre/enrich_mathml/enrich.js';
 
 export type highlighter = Highlighter;
-
-export type speechGenerator = SpeechGenerator;
 
 export type semanticNode = SemanticNode;
 
@@ -64,8 +60,6 @@ export const clearspeakPreferences = ClearspeakPreferences;
 export const getHighlighter = HighlighterFactory.highlighter;
 
 export const updateHighlighter = HighlighterFactory.update;
-
-export const getSpeechGenerator = SpeechGeneratorFactory.generator;
 
 export const parseDOM = parseInput;
 
