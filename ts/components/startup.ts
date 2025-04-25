@@ -378,6 +378,7 @@ export abstract class Startup {
    *   If there is a registered output jax
    *     Make input2output() and input2outputPromise conversion methods and outputStylesheet() method
    * Create the MathJax.done() method.
+   * Create the MathJax.whenReady() method.
    */
   public static makeMethods() {
     if (Startup.input && Startup.output) {
@@ -393,6 +394,8 @@ export abstract class Startup {
       }
     }
     MathJax.done = () => Startup.document.done();
+    MathJax.whenReady = (action: () => any) =>
+      Startup.document.whenReady(action);
   }
 
   /**
