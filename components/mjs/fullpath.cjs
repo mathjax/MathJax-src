@@ -19,7 +19,7 @@
  * Gets the fully resolved path from a webpack request object using the
  * correct package.json file to map pseudo-packages to the mjs/cjs directories.
  * When this file is in the components/cjs directory, it will use the
- * package.json in that directory, which maps them to the mathjax-full/cjs files.
+ * package.json in that directory, which maps them to the @mathjax/src/cjs files.
  * When in the components/mjs directory, the main package.json file will be used.
  */
 
