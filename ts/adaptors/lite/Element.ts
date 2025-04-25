@@ -30,7 +30,6 @@ import { LiteWindow } from './Window.js';
 import { asyncLoad } from '../../util/AsyncLoad.js';
 import { mathjax } from '../../mathjax.js';
 
-
 declare const MathJax: any;
 
 /**
