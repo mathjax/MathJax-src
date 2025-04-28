@@ -129,7 +129,7 @@ export class GeneratorPool<N, T, D> {
    * @param {MathItem} item   The MathItem whose task is to be cancelled
    */
   public cancel(item: MathItem<N, T, D>) {
-    this.webworker.Cancel(item);
+    this.webworker?.Cancel(item);
   }
 
   /**
