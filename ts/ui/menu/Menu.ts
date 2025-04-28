@@ -84,7 +84,6 @@ export interface MenuSettings {
   enrich: boolean;
   inTabOrder: boolean;
   assistiveMml: boolean;
-  roleDescription: string;
   // A11y settings
   backgroundColor: string;
   backgroundOpacity: string;
@@ -106,6 +105,7 @@ export interface MenuSettings {
   viewBraille: boolean;
   voicing: boolean;
   help: boolean;
+  roleDescription: string;
 }
 
 export type HTMLMATHITEM = MathItem<HTMLElement, Text, Document>;
@@ -225,6 +225,11 @@ export class Menu {
    * The contextual menu object that is managed by this Menu
    */
   public menu: MJContextMenu = null;
+
+  /**
+   * The current element being explored
+   */
+  public current: HTMLElement = null;
 
   /**
    * A MathML serializer that has options corresponding to the menu settings
@@ -470,6 +475,13 @@ export class Menu {
     ''
   );
 
+  protected postInfo(dialog: Info) {
+    if (this.menu.mathItem) {
+      this.menu.nofocus = !!this.menu.mathItem.outputData.nofocus;
+    }
+    dialog.post();
+  }
+
   /*======================================================================*/
 
   /**
@@ -502,10 +514,12 @@ export class Menu {
     this.jax[jax.name] = jax;
     this.settings.renderer = jax.name;
     this.settings.scale = jax.options.scale;
-    this.settings.overflow =
-      jax.options.displayOverflow.substring(0, 1).toUpperCase() +
-      jax.options.displayOverflow.substring(1).toLowerCase();
-    this.settings.breakInline = jax.options.linebreaks.inline;
+    if (jax.options.displayOverflow) {
+      this.settings.overflow =
+        jax.options.displayOverflow.substring(0, 1).toUpperCase() +
+        jax.options.displayOverflow.substring(1).toLowerCase();
+    }
+    this.settings.breakInline = jax.options.linebreaks?.inline;
     this.defaultSettings = Object.assign(
       {},
       this.document.options.a11y,
@@ -556,8 +570,8 @@ export class Menu {
         this.a11yVar<boolean>('subtitles'),
         this.a11yVar<boolean>('viewBraille'),
         this.a11yVar<boolean>('voicing'),
-        this.variable<string>('roleDescription', (name) =>
-          this.setRoleDescription(name)
+        this.a11yVar<string>('roleDescription', () =>
+          this.setRoleDescription()
         ),
         this.a11yVar<boolean>('help'),
         this.a11yVar<string>('locale', (locale) => this.setLocale(locale)),
@@ -588,19 +602,24 @@ export class Menu {
       items: [
         this.submenu('Show', 'Show Math As', [
           this.command('MathMLcode', 'MathML Code', () =>
-            this.mathmlCode.post()
+            this.postInfo(this.mathmlCode)
           ),
           this.command('Original', 'Original Form', () =>
-            this.originalText.post()
+            this.postInfo(this.originalText)
           ),
           this.rule(),
-          this.command('Speech', 'Speech Text', () => this.speechText.post(), {
-            disabled: true,
-          }),
+          this.command(
+            'Speech',
+            'Speech Text',
+            () => this.postInfo(this.speechText),
+            {
+              disabled: true,
+            }
+          ),
           this.command(
             'Braille',
             'Braille Code',
-            () => this.brailleText.post(),
+            () => this.postInfo(this.brailleText),
             { disabled: true }
           ),
           this.command('SVG', 'SVG Image', () => this.postSvgImage(), {
@@ -611,7 +630,7 @@ export class Menu {
           this.command(
             'Error',
             'Error Message',
-            () => this.errorMessage.post(),
+            () => this.postInfo(this.errorMessage),
             { disabled: true }
           ),
         ]),
@@ -845,8 +864,8 @@ export class Menu {
           ),
         ]),
         this.rule(),
-        this.command('About', 'About MathJax', () => this.about.post()),
-        this.command('Help', 'MathJax Help', () => this.help.post()),
+        this.command('About', 'About MathJax', () => this.postInfo(this.about)),
+        this.command('Help', 'MathJax Help', () => this.postInfo(this.help)),
       ],
     }) as MJContextMenu;
     const menu = this.menu;
@@ -902,8 +921,7 @@ export class Menu {
           this.settings.collapsible ||
           this.settings.speech ||
           this.settings.braille) &&
-        !MathJax._?.a11y?.['semantic-enrich'] &&
-        !MathJax._?.a11y?.['speech']
+        !MathJax._?.a11y?.explorer
       ) {
         this.loadA11y('explorer');
       }
@@ -1025,7 +1043,9 @@ export class Menu {
       const options = this.document.outputJax.options;
       options.scale = parseFloat(settings.scale);
       options.displayOverflow = settings.overflow.toLowerCase();
-      options.linebreaks.inline = settings.breakInline;
+      if (options.linebreaks) {
+        options.linebreaks.inline = settings.breakInline;
+      }
       if (!settings.speechRules) {
         const sre = this.document.options.sre;
         settings.speechRules = `${sre.domain || 'clearspeak'}-${sre.style || 'default'}`;
@@ -1187,7 +1207,7 @@ export class Menu {
   protected setSpeech(speech: boolean) {
     this.enableAccessibilityItems('Speech', speech);
     this.document.options.enableSpeech = speech;
-    if (!speech || MathJax._?.a11y?.['speech']) {
+    if (!speech || MathJax._?.a11y?.explorer) {
       this.rerender(STATE.COMPILED);
     } else {
       this.loadA11y('explorer');
@@ -1200,7 +1220,7 @@ export class Menu {
   protected setBraille(braille: boolean) {
     this.enableAccessibilityItems('Braille', braille);
     this.document.options.enableBraille = braille;
-    if (!braille || MathJax._?.a11y?.['speech']) {
+    if (!braille || MathJax._?.a11y?.explorer) {
       this.rerender(STATE.COMPILED);
     } else {
       this.loadA11y('explorer');
@@ -1224,10 +1244,9 @@ export class Menu {
   }
 
   /**
-   * @param {string} name   The role description to use for math expressions
+   * Rerender when the role description changes
    */
-  protected setRoleDescription(name: string) {
-    this.setA11y({ roleDescription: name });
+  protected setRoleDescription() {
     this.rerender(STATE.COMPILED);
   }
 
@@ -1237,7 +1256,7 @@ export class Menu {
   protected setEnrichment(enrich: boolean) {
     this.document.options.enableEnrichment = enrich;
     this.setAccessibilityMenus();
-    if (!enrich || MathJax._?.a11y?.['semantic-enrich']) {
+    if (!enrich || MathJax._?.a11y?.explorer) {
       this.rerender(STATE.COMPILED);
     } else {
       this.loadA11y('explorer');
@@ -1292,6 +1311,11 @@ export class Menu {
       'Scale all mathematics (compared to surrounding text) by',
       scale + '%'
     );
+    if (this.current) {
+      const speech = (this.menu.mathItem as any).explorers.speech;
+      speech.refocus = this.current;
+      speech.node.focus();
+    }
     if (percent) {
       if (percent.match(/^\s*\d+(\.\d*)?\s*%?\s*$/)) {
         const scale = parseFloat(percent) / 100;
@@ -1539,7 +1563,7 @@ export class Menu {
       .replace(/"currentColor"/g, '"black"');
     if (!this.settings.showSRE) {
       svg = svg.replace(
-        / (?:data-semantic-.*?|role|aria-(?:level|posinset|setsize|owns))=".*?"/g,
+        / (?:data-semantic-.*?|data-speech-node|role|aria-(?:level|posinset|setsize|owns))=".*?"/g,
         ''
       );
     }
@@ -1561,7 +1585,7 @@ export class Menu {
    * Get the SVG image and post it
    */
   public postSvgImage() {
-    this.svgImage.post();
+    this.postInfo(this.svgImage);
     this.toSVG(this.menu.mathItem).then((svg) => {
       const html = this.svgImage.html.querySelector('#svg-image');
       html.innerHTML = this.formatSource(svg).replace(/\n/g, '<br>');
@@ -1586,7 +1610,7 @@ export class Menu {
         //
         this.menu.post(event);
       }
-      this.zoomBox.post();
+      this.postInfo(this.zoomBox);
     }
   }
 
@@ -1677,13 +1701,21 @@ export class Menu {
   public addMenu(math: HTMLMATHITEM) {
     const element = math.typesetRoot;
     element.addEventListener(
+      'mousedown',
+      () => {
+        this.menu.mathItem = math;
+        this.current = (math as any).explorers?.speech?.current;
+      },
+      true
+    );
+    element.addEventListener(
       'contextmenu',
       () => {
         this.menu.mathItem = math;
         const speech = (math as any).explorers?.speech;
         if (speech) {
-          math.outputData.nofocus = !speech.active;
-          speech.refocus = speech.current;
+          math.outputData.nofocus = !this.current;
+          speech.refocus = this.current;
         }
       },
       true
@@ -1747,7 +1779,7 @@ export class Menu {
    *
    * @param {keyof MenuSettings} name   The setting for which to make a variable
    * @param {(value: T) => void} action The action to perform when the variable
-   *      is updated
+   *                                      is updated
    * @returns {object}                  The JSON for the variable
    *
    * @template T    The type of variable being defined

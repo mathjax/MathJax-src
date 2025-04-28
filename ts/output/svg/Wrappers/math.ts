@@ -204,35 +204,6 @@ export const SvgMath = (function <N, T, D>(): SvgMathClass<N, T, D> {
       }
     }
 
-    /**
-     * Handle adding speech to the top-level node, if any.
-     */
-    protected handleSpeech() {
-      const adaptor = this.adaptor;
-      const attributes = this.node.attributes;
-      const speech = (attributes.get('aria-label') ||
-        attributes.get('data-semantic-speech')) as string;
-      if (speech) {
-        const id = this.getTitleID();
-        const label = this.svg('title', { id }, [this.text(speech)]);
-        adaptor.insert(label, adaptor.firstChild(this.dom[0]));
-        adaptor.setAttribute(this.dom[0], 'aria-labeledby', id);
-        adaptor.removeAttribute(this.dom[0], 'aria-label');
-        for (const child of this.childNodes[0].childNodes) {
-          child.dom.forEach((node) =>
-            adaptor.setAttribute(node, 'aria-hidden', 'true')
-          );
-        }
-      }
-    }
-
-    /**
-     * @returns {string}  A unique ID to use for aria-labeledby title elements
-     */
-    protected getTitleID(): string {
-      return 'mjx-svg-title-' + String(this.jax.options.titleID++);
-    }
-
     /************************************************************/
 
     /**
@@ -245,9 +216,6 @@ export const SvgMath = (function <N, T, D>(): SvgMathClass<N, T, D> {
       if (display) {
         adaptor.setAttribute(this.jax.container, 'display', 'true');
         this.handleDisplay();
-      }
-      if (this.jax.document.options.internalSpeechTitles) {
-        this.handleSpeech();
       }
     }
 

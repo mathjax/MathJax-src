@@ -87,8 +87,6 @@ export class SVG<N, T, D> extends CommonOutputJax<
   public static OPTIONS: OptionList = {
     ...CommonOutputJax.OPTIONS,
     blacker: 3,                     // the stroke-width to use for SVG character paths
-    internalSpeechTitles: true,     // insert <title> tags with speech content
-    titleID: 0,                     // initial id number to use for aria-labeledby titles
     fontCache: 'local',             // or 'global' or 'none'
     localID: null,                  // ID to use for local font cache (for single equation processing)
     useXlink: true,                 // true to include xlink namespace for <use> hrefs, false to not

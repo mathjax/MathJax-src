@@ -56,6 +56,11 @@ export class MJContextMenu extends ContextMenu {
   public mathItem: MathItem<HTMLElement, Text, Document> = null;
 
   /**
+   * Records the mathItem's nofocus value when a SelectInfo dialog is opened
+   */
+  public nofocus: boolean = false;
+
+  /**
    * The document options
    */
   public settings: OptionList;
@@ -100,8 +105,11 @@ export class MJContextMenu extends ContextMenu {
    */
   public unpost() {
     super.unpost();
-    this.mathItem.outputData.nofocus = false;
+    if (this.mathItem) {
+      this.mathItem.outputData.nofocus = this.nofocus;
+    }
     this.mathItem = null;
+    this.nofocus = false;
   }
 
   /*======================================================================*/

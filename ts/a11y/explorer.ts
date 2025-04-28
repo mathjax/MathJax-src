@@ -287,6 +287,7 @@ export function ExplorerMathDocumentMixin<
         viewBraille: false,                // display Braille output as subtitles
         voicing: false,                    // switch on speech output
         help: true,                        // include "press h for help" messages on focus
+        roleDescription: 'math',           // the role description to use for math expressions
       }
     };
 
@@ -429,6 +430,7 @@ export function ExplorerMathDocumentMixin<
         options.a11y.speechRules = `${options.sre.domain}-${options.sre.style}`;
       }
       options.MathItem = ExplorerMathItemMixin(options.MathItem, toMathML);
+      options.MathItem.roleDescription = options.roleDescription;
       this.explorerRegions = new RegionPool(this);
       if ('addStyles' in this) {
         (this as any).addStyles(
