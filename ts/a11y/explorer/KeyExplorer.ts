@@ -487,7 +487,7 @@ export class SpeechExplorer
       return;
     }
     //
-    // If the node contains the clickd element,
+    // If the node contains the clicked element,
     //   don't propagate the event
     //   focus on the clicked element when focusin occurs
     //   start the explorer if this isn't a link
@@ -518,7 +518,7 @@ export class SpeechExplorer
   }
 
   /**
-   * Stop speeking.
+   * Stop speaking.
    *
    * @returns {boolean}  Don't cancel the event
    */

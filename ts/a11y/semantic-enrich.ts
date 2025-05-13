@@ -196,6 +196,11 @@ export function EnrichedMathItemMixin<
           }
           const enriched = Sre.toEnriched(mml);
           this.inputData.enrichedMml = math.math = this.serializeMml(enriched);
+          //
+          // Replace treeitem with a data attribute marking speech nodes
+          // and remove unused aria attributes.  This will be removed when
+          // SRE is updated to do this itself.
+          //
           math.math = math.math
             .replace(/ role="treeitem"/g, ' data-speech-node="true"')
             .replace(/ aria-(?:posinset|owns|setsize)=".*?"/g, '');
