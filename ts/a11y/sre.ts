@@ -22,7 +22,6 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-import * as SpeechGeneratorFactory from '#sre/speech_generator/speech_generator_factory.js';
 import { Engine } from '#sre/common/engine.js';
 import { ClearspeakPreferences } from '#sre/speech_rules/clearspeak_preferences.js';
 import { Highlighter } from '#sre/highlighter/highlighter.js';
@@ -53,7 +52,5 @@ export const clearspeakPreferences = ClearspeakPreferences;
 export const getHighlighter = HighlighterFactory.highlighter;
 
 export const updateHighlighter = HighlighterFactory.update;
-
-export const getSpeechGenerator = SpeechGeneratorFactory.generator;
 
 export const parseDOM = parseInput;

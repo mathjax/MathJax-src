@@ -127,7 +127,7 @@ export class GeneratorPool<N, T, D> {
    * @param {SpeechMathItem} item   The SpeechMathItem whose task is to be cancelled
    */
   public cancel(item: SpeechMathItem<N, T, D>) {
-    this.webworker.Cancel(item);
+    this.webworker?.Cancel(item);
   }
 
   /**
