@@ -393,6 +393,7 @@ export class WorkerHandler<N, T, D> {
       node = adaptor.childNodes(node)[0] as N;
       adaptor.setAttribute(node, 'data-semantic-type', 'dummy');
       this.setSpecialAttributes(node, sid, '');
+      adaptor.setAttribute(node, 'data-speech-node', 'true');
     }
     this.setSpeechAttributes(
       adaptor.childNodes(container)[0],
