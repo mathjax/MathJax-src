@@ -674,6 +674,7 @@ export class SpeechExplorer
    */
   public nextRules() {
     this.node.removeAttribute('data-speech-attached');
+    this.pool.unhighlight();
     this.restartAfter(this.generators.nextRules(this.item));
   }
 
@@ -683,6 +684,7 @@ export class SpeechExplorer
    */
   public nextStyle() {
     this.node.removeAttribute('data-speech-attached');
+    this.pool.unhighlight();
     this.restartAfter(this.generators.nextStyle(this.current, this.item));
   }
 
@@ -762,9 +764,10 @@ export class SpeechExplorer
     if (this.current) {
       this.current.classList.remove('mjx-selected');
       this.pool.unhighlight();
-      this.current = null;
       if (!node) {
         this.removeSpeech();
+        this.node.removeAttribute('aria-busy');
+        return;
       }
     }
     //
