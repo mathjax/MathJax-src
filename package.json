@@ -72,7 +72,7 @@
   "scripts": {
     "=============================================================================== code hygene": "",
     "lint": "check() { eslint ${1:-ts/}; }; check",
-    "lint:fix": "fix() { eslint --fix ${1:-ts/}; -- format unix}; fix",
+    "lint:fix": "fix() { eslint --fix ${1:-ts/}; }; fix",
     "format": "check() { prettier --check ${1:-\"ts/**/*.{ts,tsx}\"}; }; check",
     "format:fix": "fix() { prettier --write ${1:-\"ts/**/*.{ts,tsx}\"}; }; fix",
     "=============================================================================== clean": "",
@@ -167,7 +167,7 @@
     "@xmldom/xmldom": "^0.8.10",
     "mhchemparser": "^4.2.1",
     "mj-context-menu": "^0.9.1",
-    "speech-rule-engine": "^4.1.0-beta.11",
+    "speech-rule-engine": "^5.0.0-alpha.1",
     "wicked-good-xpath": "^1.3.0"
   }
 }
