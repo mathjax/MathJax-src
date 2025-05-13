@@ -84,6 +84,7 @@ export interface MenuSettings {
   enrich: boolean;
   inTabOrder: boolean;
   assistiveMml: boolean;
+  roleDescription: string;
   // A11y settings
   backgroundColor: string;
   backgroundOpacity: string;
@@ -104,6 +105,7 @@ export interface MenuSettings {
   treeColoring: boolean;
   viewBraille: boolean;
   voicing: boolean;
+  help: boolean;
 }
 
 export type HTMLMATHITEM = MathItem<HTMLElement, Text, Document>;
@@ -152,6 +154,7 @@ export class Menu {
       braille: true,
       brailleCode: 'nemeth',
       speechRules: 'clearspeak-default',
+      roleDescription: 'math',
     },
     jax: {
       CHTML: null,
@@ -553,6 +556,10 @@ export class Menu {
         this.a11yVar<boolean>('subtitles'),
         this.a11yVar<boolean>('viewBraille'),
         this.a11yVar<boolean>('voicing'),
+        this.variable<string>('roleDescription', (name) =>
+          this.setRoleDescription(name)
+        ),
+        this.a11yVar<boolean>('help'),
         this.a11yVar<string>('locale', (locale) => this.setLocale(locale)),
         this.variable<string>('speechRules', (value) => {
           const [domain, style] = value.split('-');
@@ -810,6 +817,18 @@ export class Menu {
             ],
             true
           ),
+          this.rule(),
+          this.submenu('Role Description', 'Describe math as', [
+            this.radioGroup('roleDescription', [
+              ['MathJax expression'],
+              ['MathJax'],
+              ['math'],
+              ['clickable math'],
+              ['explorable math'],
+              ['none'],
+            ]),
+          ]),
+          this.checkbox('Math Help', 'Help message on focus', 'help'),
         ]),
         this.submenu('Options', '\xA0 \xA0 Options', [
           this.checkbox('Enrich', 'Semantic Enrichment', 'enrich'),
@@ -1001,12 +1020,7 @@ export class Menu {
     this.setAccessibilityMenus();
     const renderer =
       this.settings.renderer.replace(/[^a-zA-Z0-9]/g, '') || 'CHTML';
-    const promise = (Menu._loadingPromise || Promise.resolve()).then(() =>
-      renderer !== this.defaultSettings.renderer
-        ? this.setRenderer(renderer, false)
-        : Promise.resolve()
-    );
-    promise.then(() => {
+    (Menu._loadingPromise || Promise.resolve()).then(() => {
       const settings = this.settings;
       const options = this.document.outputJax.options;
       options.scale = parseFloat(settings.scale);
@@ -1015,6 +1029,9 @@ export class Menu {
       if (!settings.speechRules) {
         const sre = this.document.options.sre;
         settings.speechRules = `${sre.domain || 'clearspeak'}-${sre.style || 'default'}`;
+      }
+      if (renderer !== this.defaultSettings.renderer) {
+        this.setRenderer(renderer, false);
       }
     });
   }
@@ -1203,6 +1220,14 @@ export class Menu {
    */
   protected setLocale(locale: string) {
     this.document.options.sre.locale = locale;
+    this.rerender(STATE.COMPILED);
+  }
+
+  /**
+   * @param {string} name   The role description to use for math expressions
+   */
+  protected setRoleDescription(name: string) {
+    this.setA11y({ roleDescription: name });
     this.rerender(STATE.COMPILED);
   }
 
@@ -1590,15 +1615,13 @@ export class Menu {
     this.rerenderStart = Math.min(start, this.rerenderStart);
     const startup = MathJax.startup;
     if (!Menu.loading && startup.hasTypeset) {
-      startup.document.whenReady(
-        () => {
-          if (this.rerenderStart <= STATE.COMPILED) {
-            this.document.reset({ inputJax: [] });
-          }
-          this.document.rerender(this.rerenderStart);
-          this.rerenderStart = STATE.LAST;
+      startup.document.whenReady(() => {
+        if (this.rerenderStart <= STATE.COMPILED) {
+          this.document.reset({ inputJax: [] });
         }
-      );
+        this.document.rerender(this.rerenderStart);
+        this.rerenderStart = STATE.LAST;
+      });
     }
   }
 
@@ -1657,7 +1680,11 @@ export class Menu {
       'contextmenu',
       () => {
         this.menu.mathItem = math;
-        math.outputData.nofocus = true;
+        const speech = (math as any).explorers?.speech;
+        if (speech) {
+          math.outputData.nofocus = !speech.active;
+          speech.refocus = speech.current;
+        }
       },
       true
     );

@@ -488,7 +488,7 @@ export abstract class Startup {
     ) => {
       options.end = STATE.CONVERT;
       options.format = input.name;
-      const node = await Startup.document.convertPromise(math, options)
+      const node = await Startup.document.convertPromise(math, options);
       return Startup.toMML(node);
     };
   }

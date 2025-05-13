@@ -223,7 +223,6 @@ export class ExplorerPool {
   protected mml: string;
 
   /**
-   
    * The primary highlighter shared by all explorers.
    */
   private _highlighter: Sre.highlighter;
@@ -296,7 +295,6 @@ export class ExplorerPool {
     const a11y = this.document.options.a11y;
     for (const [key, explorer] of Object.entries(this.explorers)) {
       if (explorer instanceof SpeechExplorer) {
-        explorer.AddEvents();
         explorer.stoppable = false;
         keyExplorers.unshift(explorer);
         if (

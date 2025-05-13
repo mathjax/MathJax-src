@@ -28,7 +28,7 @@ import {
   EnrichedMathDocument,
   EnrichHandler,
 } from './semantic-enrich.js';
-import { MathItem, STATE, newState } from '../core/MathItem.js';
+import { STATE, newState } from '../core/MathItem.js';
 import { MathML } from '../input/mathml.js';
 import { OptionList, expandable } from '../util/Options.js';
 import { GeneratorPool } from './speech/GeneratorPool.js';
@@ -72,7 +72,7 @@ export interface SpeechMathItem<N, T, D> extends EnrichedMathItem<N, T, D> {
   /**
    * @param {MathDocument} document The MathDocument for the MathItem
    */
-  // detachSpeech(document: MathDocument<N, T, D>): void;
+  detachSpeech(document: MathDocument<N, T, D>): void;
 }
 
 /**
@@ -104,6 +104,7 @@ export function SpeechMathItemMixin<
      * @param {MathDocument} document   The MathDocument for the MathItem
      */
     public attachSpeech(document: SpeechMathDocument<N, T, D>) {
+      this.outputData.speechPromise = null;
       if (this.state() >= STATE.ATTACHSPEECH) return;
       this.state(STATE.ATTACHSPEECH);
       if (
@@ -123,19 +124,15 @@ export function SpeechMathItemMixin<
         .Speech(this)
         .catch((err) => document.options.speechError(document, this, err));
       document.savePromise(promise);
+      this.outputData.speechPromise = promise;
     }
 
     /**
-     * @param {MathDocument} document  The MathDocument for the MathItem
+     * @param {SpeechMathDocument} document  The MathDocument for the MathItem
      */
-    // public detachSpeech(_document: MathDocument<N, T, D>) {
-    //   // remove all the speech elements?
-    //   // Do we need this. Nothing is stored on the root anymore!
-    //   //
-    //   // Technically, we should remove the speech attributes from the
-    //   //   typeset math here.  trhis should undo whatever was done
-    //   //   by the attachSpeech() method.
-    // }
+    public detachSpeech(document: SpeechMathDocument<N, T, D>) {
+      document.webworker.Detach(this);
+    }
 
     /**
      * @override
@@ -168,13 +165,6 @@ export interface SpeechMathDocument<N, T, D>
    * @returns {SpeechMathDocument}   The MathDocument (so calls can be chained)
    */
   attachSpeech(): SpeechMathDocument<N, T, D>;
-
-  /**
-   * Detach speech from the MathItems in the MathDocument
-   *
-   * @returns {SpeechMathDocument}   The MathDocument (so calls can be chained)
-   */
-  // detachSpeech(): SpeechMathDocument<N, T, D>;
 
   /**
    * @param {SpeechMathDocument} doc   The MathDocument for the error
@@ -235,27 +225,11 @@ export function SpeechMathDocumentMixin<
         worker: 'speech-worker.js',
         debug: false,
       },
-      /* prettier-ignore */
       a11y: expandable({
-        speech: true,                      // switch on speech output
-        braille: true,                     // switch on Braille output
+        speech: true, //    // switch on speech output
+        braille: true, //   // switch on Braille output
       }),
     };
-
-    /**
-     * The list of MathItems that need to be processed for speech
-     */
-    protected awaitingSpeech: MathItem<N, T, D>[];
-
-    /**
-     * The identifier from setTimeout for the next speech loop
-     */
-    protected speechTimeout: number = 0;
-
-    /**
-     * The function to resolve when the speech loop finishes
-     */
-    protected attachSpeechDone: () => void;
 
     /**
      * The webworker handler for the document
@@ -329,7 +303,11 @@ export function SpeechMathDocumentMixin<
       super.state(state, restore);
       if (state < STATE.ATTACHSPEECH) {
         this.processed.clear('attach-speech');
-        // should call detachSpeech() on all MathItems if state >= STATE.TYPESET
+        if (state >= STATE.TYPESET) {
+          for (const math of this.math) {
+            (math as SpeechMathItem<N, T, D>).detachSpeech(this);
+          }
+        }
       }
       return this;
     }
@@ -351,7 +329,7 @@ export function SpeechMathDocumentMixin<
  *
  * @param {Handler} handler   The Handler instance to speech
  * @param {MathML} MmlJax     The MathML input jax to use for reading the enriched MathML
- * @returns {Handler}          The handler that was modified (for purposes of chainging extensions)
+ * @returns {Handler}         The handler that was modified (for purposes of chainging extensions)
  *
  * @template N  The HTMLElement node class
  * @template T  The Text node class

@@ -256,4 +256,5 @@ export enum SemAttr {
   PREFIX_SSML = 'data-semantic-prefix',
   POSTFIX = 'data-semantic-postfix-none',
   POSTFIX_SSML = 'data-semantic-postfix',
+  BRAILLE = 'data-semantic-braille',
 }

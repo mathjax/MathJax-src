@@ -115,7 +115,6 @@ export class CHTML<N, T, D> extends CommonOutputJax<
         'padding-box xywh(-1em -2px calc(100% + 2em) calc(100% + 4px))',
     },
 
-    'mjx-container[jax="CHTML"] :focus': { outline: 'solid 2px' },
     'mjx-container [space="1"]': { 'margin-left': '.111em' },
     'mjx-container [space="2"]': { 'margin-left': '.167em' },
     'mjx-container [space="3"]': { 'margin-left': '.222em' },

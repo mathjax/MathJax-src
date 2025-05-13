@@ -81,7 +81,7 @@
     "clean:mod": "clean() { pnpm -s log:comp \"Cleaning $1 module\"; pnpm -s clean:dir $1 && pnpm -s clean:lib $1; }; clean",
     "=============================================================================== copy": "",
     "copy:assets": "pnpm -s log:comp 'Copying assets'; copy() { pnpm -s copy:mj2 $1 && pnpm -s copy:mml3 $1 && pnpm -s copy:html $1; }; copy",
-    "copy:html": "copy() { pnpm -s log:single 'Copying worker html file'; pnpm copyfiles -u 1 'ts/a11y/sre/*.html' 'ts/a11y/sre/require.*' $1; }; copy",
+    "copy:html": "copy() { pnpm -s log:single 'Copying sre auxiliary files'; pnpm copyfiles -u 1 'ts/a11y/sre/*.html' 'ts/a11y/sre/require.*' $1; }; copy",
     "copy:mj2": "copy() { pnpm -s log:single 'Copying legacy code AsciiMath'; pnpm copyfiles -u 1 'ts/input/asciimath/legacy/**/*' $1; }; copy",
     "copy:mml3": "copy() { pnpm -s log:single 'Copying legacy code MathML3'; pnpm copyfiles -u 1 ts/input/mathml/mml3/mml3.sef.json $1; }; copy",
     "copy:pkg": "copy() { pnpm -s log:single \"Copying package.json to $1\"; pnpm copyfiles -u 2 components/bin/package.json $1; }; copy",

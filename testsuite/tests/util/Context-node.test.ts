@@ -4,7 +4,7 @@ import { context, hasWindow } from '#js/util/context.js';
 describe('context object', () => {
 
   test('context', () => {
-    expect(context).toEqual({window: null, document: null});
+    expect(context).toEqual({window: null, document: null, os: 'unknown'});
     expect(hasWindow).toBe(false);
   });
 

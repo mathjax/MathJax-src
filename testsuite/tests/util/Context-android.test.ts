@@ -1,6 +1,6 @@
 import { describe, test, expect } from '@jest/globals';
 
-const window = {document: {}, navigator: {appVersion: 'Linux'}};
+const window = {document: {}, navigator: {userAgent: 'Android', appVersion: ''}};
 (global as any).window = window;
 
 describe('context object', () => {
