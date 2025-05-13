@@ -326,6 +326,7 @@ export class Package {
             this.failed('Can\'t load "' + url + '"\n' + err.message.trim())
           );
       } else {
+        this.result = result;
         this.checkLoad();
       }
     } catch (err) {

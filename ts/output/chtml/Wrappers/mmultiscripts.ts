@@ -164,6 +164,13 @@ export const ChtmlMmultiscripts = (function <
       '[script-align="right"] > mjx-row > mjx-cell': {
         'text-align': 'right',
       },
+      //
+      // This declaration avoids a Safari positioning bug:
+      //
+      'mjx-none': {
+        display: 'inline-block',
+        height: '1px',
+      },
     };
 
     /*************************************************************/

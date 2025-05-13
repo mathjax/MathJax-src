@@ -28,6 +28,9 @@ import { LiteDocument } from './Document.js';
 import { LiteWindow } from './Window.js';
 
 import { asyncLoad } from '../../util/AsyncLoad.js';
+import { mathjax } from '../../mathjax.js';
+
+declare const MathJax: any;
 
 /**
  * A minimal webworker interface
@@ -168,9 +171,11 @@ export class LiteIFrame extends LiteElement {
       `${this.options.path}/${this.options.worker}`,
       this.options.debug,
     ];
-    const { WorkerPool, setContext } = await asyncLoad(
-      `${this.options.path}/speech-workerpool.js`
-    );
+    const pool = `${this.options.path}/speech-workerpool.js`;
+    if (MathJax?.loader) {
+      MathJax.loader.versions.set(pool, mathjax.version);
+    }
+    const { WorkerPool, setContext } = await asyncLoad(pool);
     setContext({
       Worker: LiteWorker,
       window: this.contentWindow,

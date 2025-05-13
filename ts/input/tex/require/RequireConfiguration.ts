@@ -178,7 +178,7 @@ export function RequireLoad(parser: TexParser, name: string) {
     mathjax.retryAfter(Loader.load(extension));
   }
   const require = LOADERCONFIG[extension]?.rendererExtensions;
-  const menu = (MathJax.startup.document as MenuMathDocument).menu;
+  const menu = (MathJax.startup.document as MenuMathDocument)?.menu;
   if (require && menu) {
     menu.addRequiredExtensions(require);
   }

@@ -223,6 +223,7 @@ export function AssistiveMmlMathDocumentMixin<
         display: 'block !important',
         width: 'auto !important',
         overflow: 'hidden !important',
+        'text-indent': '0px ! important',
         /*
          *  Don't allow the assistive MathML to become part of the selection
          */
