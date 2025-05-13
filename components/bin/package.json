@@ -1,9 +1,9 @@
 {
   "type": "commonjs",
   "imports": {
-    "#js/*": "mathjax-full/cjs/*",
-    "#source/*": "mathjax-full/components/cjs/*",
-    "#root/*": "mathjax-full/cjs/components/cjs/*",
+    "#js/*": "@mathjax/src/cjs/*",
+    "#source/*": "@mathjax/src/components/cjs/*",
+    "#root/*": "@mathjax/src/cjs/components/cjs/*",
     "#menu/*": "mj-context-menu/cjs/*",
     "#sre/*": "speech-rule-engine/cjs/*",
     "#mhchem/*": "mhchemparser/dist/*",
