@@ -92,9 +92,9 @@ export class GeneratorPool<N, T, D> {
     adaptor: DOMAdaptor<N, T, D>,
     webworker: WorkerHandler<N, T, D>
   ) {
+    this.options = options;
     if (this._init) return;
     this.adaptor = adaptor;
-    this.options = options;
     this.webworker = webworker;
     this._init = true;
   }

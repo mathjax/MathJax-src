@@ -371,7 +371,11 @@ export class SpeechExplorer
    */
   public FocusIn(_event: FocusEvent) {
     if (this.item.outputData.nofocus) {
-      return; // we are refocusing after the menu has closed
+      //
+      // we are refocusing after a menu or dialog box has closed
+      //
+      this.item.outputData.nofocus = false;
+      return;
     }
     if (!this.clicked) {
       this.Start();
@@ -421,7 +425,7 @@ export class SpeechExplorer
    * @param {MouseEvent} event   The mouse down event
    */
   private MouseDown(event: MouseEvent) {
-    if (hasModifiers(event) || event.buttons !== 0) return;
+    if (hasModifiers(event) || event.buttons === 2) return;
     //
     // Get the speech element that was clicked
     //
@@ -464,7 +468,7 @@ export class SpeechExplorer
     //
     if (
       hasModifiers(event) ||
-      event.buttons !== 0 ||
+      event.buttons === 2 ||
       document.getSelection().type === 'Range'
     ) {
       this.FocusOut(null);
