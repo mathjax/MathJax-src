@@ -101,7 +101,7 @@ export class Package {
   /**
    * True if the package has failed to load
    */
-  protected hasFailed: boolean = false;
+  public hasFailed: boolean = false;
 
   /**
    * True if this package should be loaded automatically (e.g., it was created in reference
