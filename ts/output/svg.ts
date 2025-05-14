@@ -34,7 +34,7 @@ import {
   SvgFontData,
   SvgFontDataClass,
 } from './svg/FontData.js';
-import { StyleJson } from '../util/StyleJson.js';
+import { StyleJson, StyleJsonSheet } from '../util/StyleJson.js';
 import { FontCache } from './svg/FontCache.js';
 import { unicodeChars } from '../util/string.js';
 import * as LENGTHS from '../util/lengths.js';
@@ -203,6 +203,18 @@ export class SVG<N, T, D> extends CommonOutputJax<
     const sheet = (this.svgStyles = super.styleSheet(html));
     this.adaptor.setAttribute(sheet, 'id', SVG.STYLESHEETID);
     return sheet;
+  }
+
+  /**
+   * @override
+   */
+  public insertStyles(styles: StyleJson) {
+    if (this.svgStyles) {
+      this.adaptor.insertRules(
+        this.svgStyles,
+        new StyleJsonSheet(styles).getStyleRules()
+      );
+    }
   }
 
   /**

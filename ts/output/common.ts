@@ -92,19 +92,19 @@ export abstract class CommonOutputJax<
   D,
   /* prettier-ignore */
   WW extends CommonWrapper<
-    N, T, D, 
+    N, T, D,
     CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
     WW, WF, WC, CC, VV, DD, FD, FC
   >,
   /* prettier-ignore */
   WF extends CommonWrapperFactory<
-    N, T, D, 
+    N, T, D,
     CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
     WW, WF, WC, CC, VV, DD, FD, FC
   >,
   /* prettier-ignore */
   WC extends CommonWrapperClass<
-    N, T, D, 
+    N, T, D,
     CommonOutputJax<N, T, D, WW, WF, WC, CC, VV, DD, FD, FC>,
     WW, WF, WC, CC, VV, DD, FD, FC
   >,
@@ -871,6 +871,13 @@ export abstract class CommonOutputJax<
       this
     );
   }
+
+  /**
+   * Insert styles into an existing stylesheet
+   *
+   * @param {StyleJson} _styles  The styles to insert
+   */
+  public insertStyles(_styles: StyleJson) {}
 
   /*****************************************************************/
 

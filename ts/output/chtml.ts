@@ -282,6 +282,18 @@ export class CHTML<N, T, D> extends CommonOutputJax<
   }
 
   /**
+   * @override
+   */
+  public insertStyles(styles: StyleJson) {
+    if (this.chtmlStyles) {
+      this.adaptor.insertRules(
+        this.chtmlStyles,
+        new StyleJsonSheet(styles).getStyleRules()
+      );
+    }
+  }
+
+  /**
    * @param {ChtmlWrapper} wrapper   The MML node wrapper whose HTML is to be produced
    * @param {N} parent     The HTML node to contain the HTML
    */

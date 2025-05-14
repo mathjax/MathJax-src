@@ -349,6 +349,9 @@ export class HTMLDocument<N, T, D> extends AbstractMathDocument<N, T, D> {
    */
   public addStyles(styles: StyleJson) {
     this.styles.push(styles);
+    if ('insertStyles' in this.outputJax) {
+      (this.outputJax as any).insertStyles(styles);
+    }
   }
 
   /**
