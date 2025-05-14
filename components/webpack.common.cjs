@@ -55,6 +55,7 @@ const PLUGINS = function (js, dir, target, font, jax, name) {
   //
   // Replace components/mjs/root with the webpack version
   //   and map mathjax-full/js to mathjax-full/${target}
+  //   similarly for @mathjax/src/js.
   //
   const plugins = [
     new webpack.NormalModuleReplacementPlugin(
@@ -65,6 +66,12 @@ const PLUGINS = function (js, dir, target, font, jax, name) {
       /mathjax-full\/js\//,
       function (resource) {
         resource.request = resource.request.replace(/mathjax-full\/js\//, `mathjax-full/${target}/`);
+      }
+    ),
+    new webpack.NormalModuleReplacementPlugin(
+      /@mathjax\/src\/js\//,
+      function (resource) {
+        resource.request = resource.request.replace(/@mathjax\/src\/js\//, `@mathjax/src/${target}/`);
       }
     )
   ];
