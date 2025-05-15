@@ -508,6 +508,14 @@ export class SpeechRegion extends LiveRegion {
   }
 
   /**
+   * @override
+   */
+  public Hide() {
+    speechSynthesis.cancel();
+    super.Hide();
+  }
+
+  /**
    * Highlighting the node that is being marked in the SSML.
    *
    * @param {string} id The id of the node to highlight.

@@ -404,6 +404,7 @@ export class WorkerHandler<N, T, D> {
     if (speech) {
       if (data.label) {
         adaptor.setAttribute(container, SemAttr.SPEECH, data.label);
+        adaptor.setAttribute(container, SemAttr.SPEECH_SSML, data.ssml);
         item.outputData.speech = data.label;
       }
       adaptor.setAttribute(container, 'data-speech-attached', 'true');
