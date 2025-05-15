@@ -48,8 +48,12 @@ export type Constructor<T> = new (...args: any[]) => T;
  * Shorthands for types with HTMLElement, Text, and Document instead of generics
  */
 export type HANDLER = Handler<HTMLElement, Text, Document>;
-export type HTMLDOCUMENT = SpeechMathDocument<HTMLElement, Text, Document>;
-export type HTMLMATHITEM = SpeechMathItem<HTMLElement, Text, Document>;
+export type HTMLDOCUMENT = SpeechMathDocument<HTMLElement, Text, Document> & {
+  menu?: any;
+};
+export type HTMLMATHITEM = SpeechMathItem<HTMLElement, Text, Document> & {
+  addListeners?(doc: SpeechMathDocument<HTMLElement, Text, Document>): void;
+};
 export type MATHML = MathML<HTMLElement, Text, Document>;
 
 /*==========================================================================*/
@@ -150,10 +154,17 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      */
     public attachSpeech(document: ExplorerMathDocument) {
       super.attachSpeech(document);
-      const promise = this.outputData.speechPromise;
-      if (promise) {
-        promise.then(() => this.explorers.speech.attachSpeech());
-      }
+      this.outputData.speechPromise
+        ?.then(() => this.explorers.speech.attachSpeech())
+        ?.then(() => {
+          if (this.explorers?.speech) {
+            this.explorers.speech.restarted = this.refocus;
+          }
+          this.refocus = null;
+          if (this.explorers) {
+            this.explorers.restart();
+          }
+        });
     }
 
     /**
@@ -186,6 +197,14 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     /**
      * @override
      */
+    public addListeners(document: ExplorerMathDocument) {
+      super.addListeners?.(document);
+      this.explorers?.speech?.addListeners();
+    }
+
+    /**
+     * @override
+     */
     public rerender(
       document: ExplorerMathDocument,
       start: number = STATE.RERENDER
@@ -198,20 +217,6 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
         this.explorers.reattach();
       }
       super.rerender(document, start);
-    }
-
-    /**
-     * @override
-     */
-    public updateDocument(document: ExplorerMathDocument) {
-      super.updateDocument(document);
-      if (this.explorers?.speech) {
-        this.explorers.speech.restarted = this.refocus;
-      }
-      this.refocus = null;
-      if (this.explorers) {
-        this.explorers.restart();
-      }
     }
   };
 }

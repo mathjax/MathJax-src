@@ -436,6 +436,7 @@ export class WorkerHandler<N, T, D> {
     const adaptor = this.adaptor;
     const id = adaptor.getAttribute(node, 'data-semantic-id');
     if (speech) {
+      adaptor.setAttribute(node, 'data-speech-node', 'true');
       for (let [key, value] of Object.entries(data.speech[id])) {
         key = key.replace(/-ssml$/, '');
         if (value) {
@@ -444,6 +445,7 @@ export class WorkerHandler<N, T, D> {
       }
     }
     if (braille && data.braille?.[id]) {
+      adaptor.setAttribute(node, 'data-speech-node', 'true');
       const value = data.braille[id]['braille-none'] || '';
       adaptor.setAttribute(node, SemAttr.BRAILLE, value);
     }
