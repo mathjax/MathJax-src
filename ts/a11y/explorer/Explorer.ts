@@ -22,7 +22,7 @@
  */
 
 import { A11yDocument, Region } from './Region.js';
-import * as Sre from '../sre.js';
+import { Highlighter } from './Highlighter.js';
 
 import type { ExplorerPool } from './ExplorerPool.js';
 
@@ -122,7 +122,7 @@ export class AbstractExplorer<T> implements Explorer {
    *
    * @type {Sre.highlighter}
    */
-  protected get highlighter(): Sre.highlighter {
+  protected get highlighter(): Highlighter {
     return this.pool.highlighter;
   }
 
