@@ -48,24 +48,34 @@ import '../../a11y/speech/SpeechMenu.js';
 export type Constructor<T> = new (...args: any[]) => T;
 
 /**
+ * Generic A11Y MathItem type
+ */
+export type A11yMathItem = ComplexityMathItem<HTMLElement, Text, Document> &
+  ExplorerMathItem &
+  AssistiveMmlMathItem<HTMLElement, Text, Document>;
+
+/**
  * Constructor for base MathItem for MenuMathItem
  */
 export type A11yMathItemConstructor = {
-  new (
-    ...args: any[]
-  ): ComplexityMathItem<HTMLElement, Text, Document> &
-    ExplorerMathItem &
-    AssistiveMmlMathItem<HTMLElement, Text, Document>;
+  new (...args: any[]): A11yMathItem;
 };
+
+/**
+ * Generic A11Y MathDocument type
+ */
+export type A11yMathDocument = ComplexityMathDocument<
+  HTMLElement,
+  Text,
+  Document
+> &
+  ExplorerMathDocument &
+  AssistiveMmlMathDocument<HTMLElement, Text, Document>;
 
 /**
  * Constructor for base document for MenuMathDocument
  */
-export type A11yDocumentConstructor = MathDocumentConstructor<
-  ComplexityMathDocument<HTMLElement, Text, Document> &
-    ExplorerMathDocument &
-    AssistiveMmlMathDocument<HTMLElement, Text, Document>
->;
+export type A11yDocumentConstructor = MathDocumentConstructor<A11yMathDocument>;
 
 /*==========================================================================*/
 
@@ -133,6 +143,14 @@ export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
     public checkLoading(document: MenuMathDocument) {
       document.checkLoading();
     }
+
+    /**
+     * @override
+     */
+    public addListeners(document: A11yMathDocument) {
+      super.addListeners?.(document);
+      (document.menu as Menu).addEvents(this);
+    }
   };
 }
 
@@ -142,7 +160,8 @@ export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
  * The properties needed in the MathDocument for context menus
  */
 export interface MenuMathDocument
-  extends ComplexityMathDocument<HTMLElement, Text, Document> {
+  extends ComplexityMathDocument<HTMLElement, Text, Document>,
+    ExplorerMathDocument {
   /**
    * The menu associated with this document
    */

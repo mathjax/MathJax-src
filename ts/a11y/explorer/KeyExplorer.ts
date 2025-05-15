@@ -331,6 +331,11 @@ export class SpeechExplorer
   protected speech: HTMLElement = null;
 
   /**
+   * Set to 'd' when depth is showing, 'x' when summary, '' when speech.
+   */
+  protected speechType: string = '';
+
+  /**
    * The speech node when the top-level node has no role
    */
   protected img: HTMLElement = null;
@@ -364,6 +369,7 @@ export class SpeechExplorer
     ['keydown', this.KeyDown.bind(this)],
     ['mousedown', this.MouseDown.bind(this)],
     ['click', this.Click.bind(this)],
+    ['dblclick', this.DblClick.bind(this)],
   ]);
 
   /**
@@ -425,7 +431,10 @@ export class SpeechExplorer
    * @param {MouseEvent} event   The mouse down event
    */
   private MouseDown(event: MouseEvent) {
-    if (hasModifiers(event) || event.buttons === 2) return;
+    if (hasModifiers(event) || event.buttons === 2) {
+      this.item.outputData.nofocus = true;
+      return;
+    }
     //
     // Get the speech element that was clicked
     //
@@ -443,17 +452,14 @@ export class SpeechExplorer
     }
     //
     // Remove any selection ranges and
-    // if the clicked element is not the top-level node,
-    //   if the target is the highlight rectangle, refocus on the clicked element
+    // If the target is the highlight rectangle, refocus on the clicked element
     //   otherwise record the click for the focusin handler
     //
     document.getSelection()?.removeAllRanges();
-    if (document.activeElement !== this.node) {
-      if ((event.target as HTMLElement).getAttribute('sre-highlighter-added')) {
-        this.refocus = clicked;
-      } else {
-        this.clicked = clicked;
-      }
+    if ((event.target as HTMLElement).getAttribute('sre-highlighter-added')) {
+      this.refocus = clicked;
+    } else {
+      this.clicked = clicked;
     }
   }
 
@@ -502,6 +508,22 @@ export class SpeechExplorer
       if (!this.triggerLinkMouse()) {
         this.Start();
       }
+    }
+  }
+
+  /**
+   * Handle a double-click event (focus full expression)
+   *
+   * @param {MouseEvent} event   The mouse click event
+   */
+  public DblClick(event: MouseEvent) {
+    const direction = (document.getSelection() as any).direction ?? 'none';
+    if (hasModifiers(event) || event.buttons === 2 || direction !== 'none') {
+      this.FocusOut(null);
+    } else {
+      this.stopEvent(event);
+      this.refocus = this.node.querySelector(nav);
+      this.Start();
     }
   }
 
@@ -636,6 +658,11 @@ export class SpeechExplorer
    * expression.
    */
   public depth() {
+    if (this.speechType === 'd') {
+      this.setCurrent(this.current);
+      return;
+    }
+    this.speechType = 'd';
     const parts = [
       [
         this.node.getAttribute('data-semantic-level') ?? 'Level',
@@ -644,10 +671,11 @@ export class SpeechExplorer
         .join(' ')
         .trim(),
     ];
-    if (this.actionable(this.current)) {
+    const action = this.actionable(this.current);
+    if (action) {
       parts.unshift(
         this.node.getAttribute(
-          this.current.childNodes.length === 0
+          action.getAttribute('toggle') === '1'
             ? 'data-semantic-expandable'
             : 'data-semantic-collapsible'
         ) ?? ''
@@ -660,6 +688,11 @@ export class SpeechExplorer
    * Computes the summary for this expression.
    */
   public summary() {
+    if (this.speechType === 'x') {
+      this.setCurrent(this.current);
+      return;
+    }
+    this.speechType = 'x';
     const summary = this.current.getAttribute(SemAttr.SUMMARY);
     this.speak(
       summary,
@@ -746,6 +779,7 @@ export class SpeechExplorer
     addSpeech: boolean = true,
     addDescription: boolean = false
   ) {
+    this.speechType = '';
     if (!document.hasFocus()) {
       this.refocus = this.current;
     }
@@ -843,17 +877,18 @@ export class SpeechExplorer
     ssml: string[] = null,
     description: string = this.none
   ) {
+    if (!speech) {
+      speech = 'blank';
+    }
     const oldspeech = this.speech;
     this.speech = document.createElement('mjx-speech');
     this.speech.setAttribute('role', 'math');
-    if (speech) {
-      this.speech.setAttribute('aria-label', speech);
-      this.speech.setAttribute(SemAttr.SPEECH, speech);
-      if (ssml) {
-        this.speech.setAttribute(SemAttr.PREFIX_SSML, ssml[0] || '');
-        this.speech.setAttribute(SemAttr.SPEECH_SSML, ssml[1] || '');
-        this.speech.setAttribute(SemAttr.POSTFIX_SSML, ssml[2] || '');
-      }
+    this.speech.setAttribute('aria-label', speech);
+    this.speech.setAttribute(SemAttr.SPEECH, speech);
+    if (ssml) {
+      this.speech.setAttribute(SemAttr.PREFIX_SSML, ssml[0] || '');
+      this.speech.setAttribute(SemAttr.SPEECH_SSML, ssml[1] || '');
+      this.speech.setAttribute(SemAttr.POSTFIX_SSML, ssml[2] || '');
     }
     if (braille) {
       this.speech.setAttribute('aria-braillelabel', braille);
@@ -876,7 +911,7 @@ export class SpeechExplorer
   public attachSpeech() {
     const item = this.item;
     const container = this.node;
-    const speech = container.getAttribute(SemAttr.SPEECH);
+    const speech = container.getAttribute(SemAttr.SPEECH) || '';
     for (const child of Array.from(container.childNodes) as HTMLElement[]) {
       child.setAttribute('aria-hidden', 'true'); // hide the content
     }
@@ -894,6 +929,34 @@ export class SpeechExplorer
       'aria-roledescription': item.none,
     });
     container.appendChild(this.img);
+    this.updateAT();
+  }
+
+  /**
+   * Replace the container with a cloned version so AT will be
+   * informed of the new attributes (needed for Orca in particular).
+   */
+  protected updateAT() {
+    const container = this.node;
+    if (!container.parentNode) return;
+    const store = this.document.menu?.menu?.store;
+    if (store) {
+      store.remove(container);
+      container.classList.remove(store.attachedClass);
+    }
+    const item = this.item;
+    this.node = container.cloneNode(false) as HTMLElement;
+    if (item.end.node === item.typesetRoot) {
+      item.start.node = item.end.node = this.node;
+    }
+    item.typesetRoot = this.node;
+    for (const child of Array.from(container.childNodes)) {
+      this.node.append(child);
+    }
+    item.addListeners(this.document);
+    container.parentNode.insertBefore(this.node, container);
+    container.remove();
+    store?.insert(this.node);
   }
 
   /**
@@ -1047,6 +1110,7 @@ export class SpeechExplorer
     this.img.remove();
     this.img = null;
     await promise;
+    this.pool.unhighlight();
     this.attachSpeech();
     const current = this.current;
     this.current = null;
@@ -1237,6 +1301,13 @@ export class SpeechExplorer
     }
   }
 
+  /**
+   * @override
+   */
+  public addListeners() {
+    super.AddEvents();
+  }
+
   /********************************************************************/
   /*
    * Actions and links
@@ -1313,7 +1384,7 @@ export class SpeechExplorer
     let node = this.current || this.node;
     const action = this.actionable(node);
     if (action) {
-      name = 'data-maction-id';
+      name = action.hasAttribute('data-maction-id') ? 'data-maction-id' : 'id';
       node = action;
       focus.push(nav);
     }
