@@ -616,6 +616,7 @@ export class Collapse {
     for (const name of Object.keys(attributes)) {
       if (
         name.substring(0, 14) === 'data-semantic-' ||
+        name.substring(0, 12) === 'data-speech-' ||
         name.substring(0, 5) === 'aria-' ||
         name === 'role'
       ) {

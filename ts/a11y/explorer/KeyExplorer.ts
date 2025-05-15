@@ -944,9 +944,6 @@ export class SpeechExplorer
       store.remove(container);
       container.classList.remove(store.attachedClass);
     }
-    const marker = this.document.adaptor.node('span');
-    container.parentNode.insertBefore(marker, container);
-    container.remove();
     const item = this.item;
     this.node = container.cloneNode(false) as HTMLElement;
     if (item.end.node === item.typesetRoot) {
@@ -957,8 +954,8 @@ export class SpeechExplorer
       this.node.append(child);
     }
     item.addListeners(this.document);
-    marker.parentNode.insertBefore(this.node, marker);
-    marker.remove();
+    container.parentNode.insertBefore(this.node, container);
+    container.remove();
     store?.insert(this.node);
   }
 
