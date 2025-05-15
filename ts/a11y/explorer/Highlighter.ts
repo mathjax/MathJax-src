@@ -129,19 +129,21 @@ export interface Highlighter {
 /**
  * Highlight information consisting of node, opacity, fore and background color.
  */
-export interface Highlight {
+interface Highlight {
   node: HTMLElement;
   opacity?: string;
   background?: string;
   foreground?: string;
-  // The following is for the CSS highlighter
-  box?: HTMLElement;
-  position?: string;
 }
 
 let counter = 0;
 
-export abstract class AbstractHighlighter implements Highlighter {
+abstract class AbstractHighlighter implements Highlighter {
+  /**
+   * This counter creates a unique highlighter name. This is important in case
+   * we have more than a single highlighter on a node, e.g., during auto voicing
+   * with synchronised highlighting.
+   */
   public counter = counter++;
 
   /**
@@ -303,7 +305,7 @@ export abstract class AbstractHighlighter implements Highlighter {
   }
 }
 
-export class SvgHighlighter extends AbstractHighlighter {
+class SvgHighlighter extends AbstractHighlighter {
   /**
    * @override
    */
@@ -406,7 +408,7 @@ export class SvgHighlighter extends AbstractHighlighter {
   }
 }
 
-export class ChtmlHighlighter extends AbstractHighlighter {
+class ChtmlHighlighter extends AbstractHighlighter {
   /**
    * @override
    */
@@ -457,16 +459,12 @@ export class ChtmlHighlighter extends AbstractHighlighter {
 }
 
 /**
- * Produces a highlighter that goes with the current Mathjax renderer if
- * highlighting is possible.
+ * Highlighter factory that returns the highlighter that goes with the current
+ * Mathjax renderer.
  *
  * @param back A background color specification.
  * @param fore A foreground color specification.
- * @param rendererInfo Information on renderer,
- * browser. Has to at least contain the renderer field.
- * @param rendererInfo.renderer The renderer name.
- * @param rendererInfo.browser The browser name.
- * @param renderer
+ * @param renderer The renderer name.
  * @returns A new highlighter.
  */
 export function getHighlighter(
@@ -480,21 +478,8 @@ export function getHighlighter(
 }
 
 /**
- * Updates the color setting for the given highlighter using named colors.
- * Note, this is only used outside SRE, hence exported!
- *
- * @param back Background color as a named color.
- * @param fore Foreground color as a named color.
- * @param highlighter The highlighter to update.
+ * Mapping renderer names to highlighter constructor.
  */
-export function updateHighlighter(
-  back: NamedColor,
-  fore: NamedColor,
-  highlighter: Highlighter
-) {
-  highlighter.setColor(back, fore);
-}
-
 const highlighterMapping: { [key: string]: new () => Highlighter } = {
   SVG: SvgHighlighter,
   CHTML: ChtmlHighlighter,
