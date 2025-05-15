@@ -127,11 +127,10 @@ export interface Highlighter {
 }
 
 /**
- * Highlight information consisting of node, opacity, fore and background color.
+ * Highlight information consisting of node, fore and background color.
  */
 interface Highlight {
   node: HTMLElement;
-  opacity?: string;
   background?: string;
   foreground?: string;
 }
