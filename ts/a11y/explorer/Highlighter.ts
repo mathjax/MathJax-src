@@ -18,7 +18,6 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-
 interface NamedColor {
   color: string;
   alpha?: number;
@@ -31,15 +30,6 @@ interface ChannelColor {
   alpha?: number;
 }
 
-export interface StringColor {
-  background: string;
-  alphaback?: string;
-  foreground: string;
-  alphafore?: string;
-}
-
-export type Color = ChannelColor | NamedColor;
-
 const namedColors: { [key: string]: ChannelColor } = {
   red: { red: 255, green: 0, blue: 0 },
   green: { red: 0, green: 255, blue: 0 },
@@ -48,138 +38,47 @@ const namedColors: { [key: string]: ChannelColor } = {
   cyan: { red: 0, green: 255, blue: 255 },
   magenta: { red: 255, green: 0, blue: 255 },
   white: { red: 255, green: 255, blue: 255 },
-  black: { red: 0, green: 0, blue: 0 }
+  black: { red: 0, green: 0, blue: 0 },
 };
 
 /**
- * Turns a color definition a channel color definition. Augments it if
- * necessary.
+ * Turns a named color into a channel color.
  *
  * @param color The definition.
- * @param deflt The default color if color does not exist.
- * @returns The augmented color definition.
+ * @param deflt The default color name if the named color does not exist.
+ * @returns The channel color.
  */
-function getChannelColor(color: Color, deflt: string): ChannelColor {
-  const col = color || { color: deflt };
-  let channel = Object.prototype.hasOwnProperty.call(col, 'color')
-    ? namedColors[(col as NamedColor).color]
-    : col;
-  if (!channel) {
-    channel = namedColors[deflt];
-  }
-  channel.alpha = Object.prototype.hasOwnProperty.call(col, 'alpha')
-    ? col.alpha
-    : 1;
-  return normalizeColor(channel as ChannelColor);
+function getColorString(color: NamedColor, deflt: NamedColor): string {
+  const channel = namedColors[color.color] || namedColors[deflt.color];
+  channel.alpha = color.alpha ?? deflt.alpha;
+  return rgba(channel);
 }
 
 /**
- * Normalizes the color channels, i.e., rgb in [0,255] and alpha in [0,1].
+ * RGBa string version of the channel color.
  *
- * @param color The color definition.
- * @returns The normalized color definition.
+ * @param {ChannelColor} color The channel color.
+ * @returns The color in RGBa format.
  */
-function normalizeColor(color: ChannelColor): ChannelColor {
-  const normalizeCol = (col: number) => {
-    col = Math.max(col, 0);
-    col = Math.min(255, col);
-    return Math.round(col);
-  };
-  color.red = normalizeCol(color.red);
-  color.green = normalizeCol(color.green);
-  color.blue = normalizeCol(color.blue);
-  color.alpha = Math.max(color.alpha, 0);
-  color.alpha = Math.min(1, color.alpha);
-  return color;
+function rgba(color: ChannelColor): string {
+  return `rgba(${color.red},${color.green},${color.blue},${color.alpha ?? 1})`;
 }
 
-export class ColorPicker {
-  /**
-   * The default background color if a none existing color is provided.
-   */
-  private static DEFAULT_BACKGROUND_ = 'blue';
+/**
+ * The default background color if a none existing color is provided.
+ */
+const DEFAULT_BACKGROUND: NamedColor = { color: 'blue', alpha: 1 };
 
-  /**
-   * The default color if a none existing color is provided.
-   */
-  private static DEFAULT_FOREGROUND_ = 'black';
-
-  /**
-   * The foreground color in RGBa.
-   */
-  public foreground: ChannelColor;
-
-  /**
-   * The background color in RGBa.
-   */
-  public background: ChannelColor;
-
-  /**
-   * Color picker class.
-   *
-   * @param background The background color definition.
-   * @param foreground The optional foreground color definition.
-   */
-  constructor(background: Color, foreground?: Color) {
-    this.foreground = getChannelColor(
-      foreground,
-      ColorPicker.DEFAULT_FOREGROUND_
-    );
-    this.background = getChannelColor(
-      background,
-      ColorPicker.DEFAULT_BACKGROUND_
-    );
-  }
-
-  /**
-   * RGBa version of the colors.
-   *
-   * @returns The color in RGBa format.
-   */
-  public rgba(): StringColor {
-    const rgba = function (col: ChannelColor) {
-      return (
-        'rgba(' +
-        col.red +
-        ',' +
-        col.green +
-        ',' +
-        col.blue +
-        ',' +
-        col.alpha +
-        ')'
-      );
-    };
-    return {
-      background: rgba(this.background),
-      foreground: rgba(this.foreground)
-    };
-  }
-
-  // /**
-  //  * RGB version of the colors.
-  //  *
-  //  * @returns The color in Rgb format.
-  //  */
-  // public rgb(): StringColor {
-  //   const rgb = function (col: ChannelColor) {
-  //     return 'rgb(' + col.red + ',' + col.green + ',' + col.blue + ')';
-  //   };
-  //   return {
-  //     background: rgb(this.background),
-  //     alphaback: this.background.alpha.toString(),
-  //     foreground: rgb(this.foreground),
-  //     alphafore: this.foreground.alpha.toString()
-  //   };
-  // }
-
-}
+/**
+ * The default color if a none existing color is provided.
+ */
+const DEFAULT_FOREGROUND: NamedColor = { color: 'black', alpha: 1 };
 
 export interface Highlighter {
   /**
    * Sets highlighting on a node.
    *
-   * @param nodes The nodes to highlight.
+   * @param {HTMLElement} nodes The nodes to highlight.
    */
   highlight(nodes: HTMLElement[]): void;
 
@@ -191,7 +90,7 @@ export interface Highlighter {
   /**
    * Sets highlighting on all maction-like sub nodes of the given node.
    *
-   * @param node The node to highlight.
+   * @param {HTMLElement} node The node to highlight.
    */
   highlightAll(node: HTMLElement): void;
 
@@ -203,25 +102,28 @@ export interface Highlighter {
   /**
    * Predicate to check if a node is an maction node.
    *
-   * @param node A DOM node.
-   * @returns True if the node is an maction node.
+   * @param {Element} node A DOM node.
+   * @returns {boolean} True if the node is an maction node.
    */
   isMactionNode(node: Element): boolean;
 
   /**
-   * Sets of the color the highlighter is using.
-   *
-   * @param color The new color to use.
+   * @returns {string} The foreground color as rgba string.
    */
-  setColor(color: ColorPicker): void;
+  get foreground(): string;
 
   /**
-   * Turns the current color into a string representation.
-   *
-   * @returns The color string, by default as rgba.
+   * @returns {string} The background color as rgba string.
    */
-  colorString(): StringColor;
+  get background(): string;
 
+  /**
+   * Sets of the color the highlighter is using.
+   *
+   * @param {NamedColor} background The new background color to use.
+   * @param {NamedColor} foreground The new foreground color to use.
+   */
+  setColor(background: NamedColor, foreground: NamedColor): void;
 }
 
 /**
@@ -248,9 +150,14 @@ export abstract class AbstractHighlighter implements Highlighter {
   protected ATTR = 'sre-highlight-' + this.counter.toString();
 
   /**
-   * The color picker.
+   * The foreground color.
    */
-  protected color: ColorPicker = null;
+  private _foreground: string;
+
+  /**
+   * The background color.
+   */
+  private _background: string;
 
   /**
    * The maction name/class for a highlighter.
@@ -328,15 +235,23 @@ export abstract class AbstractHighlighter implements Highlighter {
   /**
    * @override
    */
-  public setColor(color: ColorPicker) {
-    this.color = color;
+  public setColor(background: NamedColor, foreground: NamedColor) {
+    this._foreground = getColorString(foreground, DEFAULT_FOREGROUND);
+    this._background = getColorString(background, DEFAULT_BACKGROUND);
   }
 
   /**
    * @override
    */
-  public colorString(): StringColor {
-    return this.color.rgba();
+  public get foreground(): string {
+    return this._foreground;
+  }
+
+  /**
+   * @override
+   */
+  public get background(): string {
+    return this._background;
   }
 
   /**
@@ -386,7 +301,6 @@ export abstract class AbstractHighlighter implements Highlighter {
   public unsetHighlighted(node: HTMLElement) {
     node.removeAttribute(this.ATTR);
   }
-
 }
 
 export class SvgHighlighter extends AbstractHighlighter {
@@ -406,8 +320,8 @@ export class SvgHighlighter extends AbstractHighlighter {
     if (this.isHighlighted(node)) {
       info = {
         node: node,
-        background: this.colorString().background,
-        foreground: this.colorString().foreground
+        background: this.background,
+        foreground: this.foreground,
       };
       return info;
     }
@@ -415,19 +329,16 @@ export class SvgHighlighter extends AbstractHighlighter {
       info = {
         node: node,
         background: node.style.backgroundColor,
-        foreground: node.style.color
+        foreground: node.style.color,
       };
-      node.style.backgroundColor = this.colorString().background;
-      node.style.color = this.colorString().foreground;
+      node.style.backgroundColor = this.background;
+      node.style.color = this.foreground;
       return info;
     }
     // This is a hack for v4.
     // TODO: v4 Change
     // const rect = (document ?? DomUtil).createElementNS(
-    const rect = (document).createElementNS(
-      'http://www.w3.org/2000/svg',
-      'rect'
-    );
+    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     rect.setAttribute(
       'sre-highlighter-added', // Mark highlighting rect.
       'true'
@@ -442,13 +353,13 @@ export class SvgHighlighter extends AbstractHighlighter {
     if (transform) {
       rect.setAttribute('transform', transform);
     }
-    rect.setAttribute('fill', this.colorString().background);
+    rect.setAttribute('fill', this.background);
     node.setAttribute(this.ATTR, 'true');
     node.parentNode.insertBefore(rect, node);
     info = { node: node, foreground: node.getAttribute('fill') };
     if (node.nodeName !== 'rect') {
       // We currently do not change foreground of collapsed nodes.
-      node.setAttribute('fill', this.colorString().foreground);
+      node.setAttribute('fill', this.foreground);
     }
     return info;
   }
@@ -496,7 +407,6 @@ export class SvgHighlighter extends AbstractHighlighter {
 }
 
 export class ChtmlHighlighter extends AbstractHighlighter {
-
   /**
    * @override
    */
@@ -512,12 +422,11 @@ export class ChtmlHighlighter extends AbstractHighlighter {
     const info = {
       node: node,
       background: node.style.backgroundColor,
-      foreground: node.style.color
+      foreground: node.style.color,
     };
     if (!this.isHighlighted(node)) {
-      const color = this.colorString();
-      node.style.backgroundColor = color.background;
-      node.style.color = color.foreground;
+      node.style.backgroundColor = this.background;
+      node.style.color = this.foreground;
     }
     return info;
   }
@@ -557,17 +466,16 @@ export class ChtmlHighlighter extends AbstractHighlighter {
  * browser. Has to at least contain the renderer field.
  * @param rendererInfo.renderer The renderer name.
  * @param rendererInfo.browser The browser name.
+ * @param renderer
  * @returns A new highlighter.
  */
 export function getHighlighter(
-  back: Color,
-  fore: Color,
+  back: NamedColor,
+  fore: NamedColor,
   renderer: string
 ): Highlighter {
-  const colorPicker = new ColorPicker(back, fore);
-  const highlighter = new (highlighterMapping[renderer] ||
-    highlighterMapping['NativeMML'])();
-  highlighter.setColor(colorPicker);
+  const highlighter = new highlighterMapping[renderer]();
+  highlighter.setColor(back, fore);
   return highlighter;
 }
 
@@ -579,12 +487,15 @@ export function getHighlighter(
  * @param fore Foreground color as a named color.
  * @param highlighter The highlighter to update.
  */
-export function updateHighlighter(back: Color, fore: Color, highlighter: Highlighter) {
-  const colorPicker = new ColorPicker(back, fore);
-  highlighter.setColor(colorPicker);
+export function updateHighlighter(
+  back: NamedColor,
+  fore: NamedColor,
+  highlighter: Highlighter
+) {
+  highlighter.setColor(back, fore);
 }
 
 const highlighterMapping: { [key: string]: new () => Highlighter } = {
   SVG: SvgHighlighter,
-  CHTML: ChtmlHighlighter
+  CHTML: ChtmlHighlighter,
 };
