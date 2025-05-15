@@ -29,7 +29,7 @@ import { SpeechExplorer } from './KeyExplorer.js';
 import * as me from './MouseExplorer.js';
 import { TreeColorer, FlameColorer } from './TreeExplorer.js';
 
-import { Highlighter, getHighlighter, updateHighlighter } from './Highlighter.js';
+import { Highlighter, getHighlighter } from './Highlighter.js';
 // import * as Sre from '../sre.js';
 
 /**
@@ -248,7 +248,7 @@ export class ExplorerPool {
       return this._highlighter;
     }
     const [foreground, background] = this.colorOptions();
-    updateHighlighter(background, foreground, this._highlighter);
+    this._highlighter.setColor(background, foreground);
     return this._highlighter;
   }
 
@@ -359,8 +359,11 @@ export class ExplorerPool {
    */
   protected setPrimaryHighlighter() {
     const [foreground, background] = this.colorOptions();
-    this._highlighter = getHighlighter(background, foreground,
-                                       this.document.outputJax.name);
+    this._highlighter = getHighlighter(
+      background,
+      foreground,
+      this.document.outputJax.name
+    );
   }
 
   /**
