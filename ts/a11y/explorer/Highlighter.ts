@@ -44,9 +44,9 @@ const namedColors: { [key: string]: ChannelColor } = {
 /**
  * Turns a named color into a channel color.
  *
- * @param color The definition.
- * @param deflt The default color name if the named color does not exist.
- * @returns The channel color.
+ * @param {NamedColor} color The definition.
+ * @param {NamedColor} deflt The default color name if the named color does not exist.
+ * @returns {string} The channel color.
  */
 function getColorString(color: NamedColor, deflt: NamedColor): string {
   const channel = namedColors[color.color] || namedColors[deflt.color];
@@ -58,7 +58,7 @@ function getColorString(color: NamedColor, deflt: NamedColor): string {
  * RGBa string version of the channel color.
  *
  * @param {ChannelColor} color The channel color.
- * @returns The color in RGBa format.
+ * @returns {string} The color in RGBa format.
  */
 function rgba(color: ChannelColor): string {
   return `rgba(${color.red},${color.green},${color.blue},${color.alpha ?? 1})`;
@@ -259,8 +259,8 @@ abstract class AbstractHighlighter implements Highlighter {
   /**
    * Returns the maction sub nodes of a given node.
    *
-   * @param node The root node.
-   * @returns The list of maction sub nodes.
+   * @param {HTMLElement} node The root node.
+   * @returns {HTMLElement[]} The list of maction sub nodes.
    */
   public getMactionNodes(node: HTMLElement): HTMLElement[] {
     return Array.from(
@@ -279,8 +279,8 @@ abstract class AbstractHighlighter implements Highlighter {
   /**
    * Check if a node is already highlighted.
    *
-   * @param node The node.
-   * @returns True if already highlighted.
+   * @param {HTMLElement} node The node.
+   * @returns {boolean} True if already highlighted.
    */
   public isHighlighted(node: HTMLElement): boolean {
     return node.hasAttribute(this.ATTR);
@@ -289,7 +289,7 @@ abstract class AbstractHighlighter implements Highlighter {
   /**
    * Sets the indicator attribute that node is already highlighted.
    *
-   * @param node The node.
+   * @param {HTMLElement} node The node.
    */
   public setHighlighted(node: HTMLElement) {
     node.setAttribute(this.ATTR, 'true');
@@ -298,7 +298,7 @@ abstract class AbstractHighlighter implements Highlighter {
   /**
    * Removes the indicator attribute that node is already highlighted.
    *
-   * @param node The node.
+   * @param {HTMLElement} node The node.
    */
   public unsetHighlighted(node: HTMLElement) {
     node.removeAttribute(this.ATTR);
@@ -462,10 +462,10 @@ class ChtmlHighlighter extends AbstractHighlighter {
  * Highlighter factory that returns the highlighter that goes with the current
  * Mathjax renderer.
  *
- * @param back A background color specification.
- * @param fore A foreground color specification.
- * @param renderer The renderer name.
- * @returns A new highlighter.
+ * @param {NamedColor} back A background color specification.
+ * @param {NamedColor} fore A foreground color specification.
+ * @param {string} renderer The renderer name.
+ * @returns {Highlighter} A new highlighter.
  */
 export function getHighlighter(
   back: NamedColor,
