@@ -697,7 +697,7 @@ export class SpeechExplorer
     this.speak(
       summary,
       this.current.getAttribute(SemAttr.BRAILLE),
-      this.SsmlAttributes(this.current)
+      this.SsmlAttributes(this.current, SemAttr.SUMMARY_SSML)
     );
   }
 
@@ -843,7 +843,11 @@ export class SpeechExplorer
       }
       speech += description;
     }
-    this.speak(speech, node.getAttribute(SemAttr.BRAILLE));
+    this.speak(
+      speech,
+      node.getAttribute(SemAttr.BRAILLE),
+      this.SsmlAttributes(node, SemAttr.SPEECH_SSML)
+    );
     this.node.setAttribute('tabindex', '-1');
   }
 
@@ -1091,12 +1095,13 @@ export class SpeechExplorer
    * Get the SSML attribute array
    *
    * @param {HTMLElement} node  The node whose SSML attributes are to be obtained
+   * @param center
    * @returns {string[]}        The prefix/summary/postfix array
    */
-  protected SsmlAttributes(node: HTMLElement): string[] {
+  protected SsmlAttributes(node: HTMLElement, center: SemAttr): string[] {
     return [
       node.getAttribute(SemAttr.PREFIX_SSML),
-      node.getAttribute(SemAttr.SUMMARY_SSML),
+      node.getAttribute(center),
       node.getAttribute(SemAttr.POSTFIX_SSML),
     ];
   }
