@@ -303,9 +303,8 @@ export class StringRegion extends AbstractRegion<string> {
    */
   protected highlight(highlighter: Highlighter) {
     if (!this.div) return;
-    const color = highlighter.colorString();
-    this.inner.style.backgroundColor = color.background;
-    this.inner.style.color = color.foreground;
+    this.inner.style.backgroundColor = highlighter.background;
+    this.inner.style.color = highlighter.foreground;
   }
 }
 
@@ -602,9 +601,8 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
     ) {
       return;
     }
-    const color = highlighter.colorString();
-    this.inner.style.backgroundColor = color.background;
-    this.inner.style.color = color.foreground;
+    this.inner.style.backgroundColor = highlighter.background;
+    this.inner.style.color = highlighter.foreground;
   }
 
   /**
