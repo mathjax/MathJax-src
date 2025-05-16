@@ -84,6 +84,14 @@ export interface Explorer {
   RemoveEvents(): void;
 
   /**
+   * Update the node and adds events again when explorer node is cloned.
+   *
+   * @param {HTMLElement} node   The cloned node
+   * @param {boolean} events     Whether to add events to the node
+   */
+  UpdateNode(node: HTMLElement, events: boolean): void;
+
+  /**
    * Update the explorer after state changes.
    *
    * @param {boolean=} force Forces the update in any case. (E.g., even if
@@ -260,6 +268,16 @@ export class AbstractExplorer<T> implements Explorer {
   public RemoveEvents() {
     for (const [eventkind, eventfunc] of this.events) {
       this.node.removeEventListener(eventkind, eventfunc);
+    }
+  }
+
+  /**
+   * @override
+   */
+  public UpdateNode(node: HTMLElement, events: boolean) {
+    this.node = node;
+    if (events) {
+      this.AddEvents();
     }
   }
 

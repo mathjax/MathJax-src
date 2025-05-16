@@ -945,18 +945,24 @@ export class SpeechExplorer
       container.classList.remove(store.attachedClass);
     }
     const item = this.item;
-    this.node = container.cloneNode(false) as HTMLElement;
+    const node = container.cloneNode(false) as HTMLElement;
     if (item.end.node === item.typesetRoot) {
-      item.start.node = item.end.node = this.node;
+      item.start.node = item.end.node = node;
     }
-    item.typesetRoot = this.node;
+    this.refocus = this.current;
+    this.Stop();
+    item.typesetRoot = node;
     for (const child of Array.from(container.childNodes)) {
-      this.node.append(child);
+      if (child !== this.speech) {
+        node.append(child);
+      }
     }
-    item.addListeners(this.document);
-    container.parentNode.insertBefore(this.node, container);
-    container.remove();
-    store?.insert(this.node);
+    item.addListeners?.(node, this.document);
+    container.replaceWith(node);
+    store?.insert(node);
+    if (this.refocus) {
+      this.Start();
+    }
   }
 
   /**
@@ -1110,11 +1116,7 @@ export class SpeechExplorer
     this.img.remove();
     this.img = null;
     await promise;
-    this.pool.unhighlight();
     this.attachSpeech();
-    const current = this.current;
-    this.current = null;
-    this.setCurrent(current);
   }
 
   /********************************************************************/
@@ -1304,8 +1306,9 @@ export class SpeechExplorer
   /**
    * @override
    */
-  public addListeners() {
-    super.AddEvents();
+  public UpdateNode(node: HTMLElement, active: boolean) {
+    this.eventsAttached = false;
+    super.UpdateNode(node, active);
   }
 
   /********************************************************************/

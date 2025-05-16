@@ -607,7 +607,7 @@ export class WorkerHandler<N, T, D> {
      * Signals that the worker has finished its last task.
      *
      * @param {WorkerHandler} pool The active handler for the worker.
-     * @param {Message} data The data received from the worker. Ignored.
+     * @param {Message} data The data received from the worker.
      */
     Finished(pool: WorkerHandler<N, T, D>, data: Message) {
       const task = pool.tasks.shift();
@@ -617,6 +617,18 @@ export class WorkerHandler<N, T, D> {
         task.reject(data.error);
       }
       pool.postNext();
+    },
+
+    /**
+     * Logs a message from the worker
+     *
+     * @param {WorkerHandler} pool The active handler for the worker.
+     * @param {Message} data The data received from the worker.
+     */
+    Log(pool: WorkerHandler<N, T, D>, data: Message) {
+      if (pool.options.debug) {
+        console.log(data.msg);
+      }
     },
   };
 }

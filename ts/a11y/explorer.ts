@@ -52,16 +52,19 @@ export type HTMLDOCUMENT = SpeechMathDocument<HTMLElement, Text, Document> & {
   menu?: any;
 };
 export type HTMLMATHITEM = SpeechMathItem<HTMLElement, Text, Document> & {
-  addListeners?(doc: SpeechMathDocument<HTMLElement, Text, Document>): void;
+  addListeners?(
+    node: HTMLElement,
+    doc: SpeechMathDocument<HTMLElement, Text, Document>
+  ): void;
 };
 export type MATHML = MathML<HTMLElement, Text, Document>;
 
 /*==========================================================================*/
 
 /**
- * Add STATE value for having the Explorer added (after TYPESET and before INSERTED or CONTEXT_MENU)
+ * Add STATE value for having the Explorer added (after INSERTED and before CONTEXT_MENU)
  */
-newState('EXPLORER', 160);
+newState('EXPLORER', STATE.INSERTED + 30);
 
 /**
  * The properties added to MathItem for the Explorer
@@ -197,9 +200,9 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     /**
      * @override
      */
-    public addListeners(document: ExplorerMathDocument) {
-      super.addListeners?.(document);
-      this.explorers?.speech?.addListeners();
+    public addListeners(node: HTMLElement, document: ExplorerMathDocument) {
+      super.addListeners?.(node, document);
+      this.explorers?.updateNode(node);
     }
 
     /**

@@ -147,8 +147,8 @@ export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
     /**
      * @override
      */
-    public addListeners(document: A11yMathDocument) {
-      super.addListeners?.(document);
+    public addListeners(node: HTMLElement, document: A11yMathDocument) {
+      super.addListeners?.(node, document);
       (document.menu as Menu).addEvents(this);
     }
   };
@@ -175,11 +175,11 @@ export interface MenuMathDocument
   addMenu(): MenuMathDocument;
 
   /**
-   * Checks if there are files being loaded by the menu, and restarts the typesetting if so
+   * Checks if there are files being loaded by the menu, and cancels the typesetting if so.
    *
-   * @returns {MenuMathDocument}   The MathDocument (so calls can be chained)
+   * @returns {boolean}   True if we need to wait for extensions
    */
-  checkLoading(): MenuMathDocument;
+  checkLoading(): boolean;
 }
 
 /**
@@ -223,7 +223,11 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
         ...BaseDocument.OPTIONS.renderActions,
         addMenu: [STATE.CONTEXT_MENU],
         getMenus: [STATE.INSERTED + 5, false],
-        checkLoading: [STATE.UNPROCESSED + 1],
+        checkLoading: [
+          STATE.UNPROCESSED + 1,
+          (doc: MenuMathDocument) => doc.checkLoading(),
+          '',
+        ],
       }),
     };
 
@@ -282,11 +286,27 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
     }
 
     /**
+     * @override
+     */
+    public checkLoading(): boolean {
+      let result = true;
+      try {
+        this._checkLoading();
+        result = false;
+      } catch (err) {
+        if (!err.retry) {
+          throw err;
+        }
+      }
+      return result;
+    }
+
+    /**
      * Checks if there are files being loaded by the menu, and restarts the typesetting if so
      *
      * @returns {MenuMathDocument}   The MathDocument (so calls can be chained)
      */
-    public checkLoading(): MenuMathDocument {
+    public _checkLoading(): MenuMathDocument {
       if (this.menu.isLoading) {
         mathjax.retryAfter(
           this.menu.loadingPromise.catch((err) => console.log(err))

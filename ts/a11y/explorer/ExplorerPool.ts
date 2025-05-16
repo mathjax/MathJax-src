@@ -354,6 +354,17 @@ export class ExplorerPool {
   }
 
   /**
+   * Update the root node and add listeners for all attached explorers.
+   *
+   * @param {HTMLElement} node   The new root node
+   */
+  public updateNode(node: HTMLElement) {
+    for (const [name, explorer] of Object.entries(this.explorers)) {
+      explorer.UpdateNode(node, this.attached.includes(name));
+    }
+  }
+
+  /**
    * A highlighter for the explorer.
    */
   protected setPrimaryHighlighter() {
