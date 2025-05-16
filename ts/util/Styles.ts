@@ -462,7 +462,8 @@ export class Styles {
     const styles = [] as string[];
     for (const name of Object.keys(this.styles)) {
       const parent = this.parentName(name);
-      if (!this.styles[parent]) {
+      const cname = name.replace(/.*-/, '');
+      if (!this.styles[parent] || !Styles.connect[parent]?.children?.includes(cname)) {
         styles.push(`${name}: ${this.styles[name]};`);
       }
     }
@@ -539,7 +540,7 @@ export class Styles {
 
   /**
    * @param {string} name   The name of the style whose parent style is to be found
-   * @returns {string}       The name of the parent, or '' if none
+   * @returns {string}      The name of the parent, or '' if none
    */
   protected parentName(name: string): string {
     const parent = name.replace(/-[^-]*$/, '');
@@ -553,7 +554,7 @@ export class Styles {
    */
   protected childName(name: string, child: string): string {
     //
-    // If the child contains a dash, it is already the fill name
+    // If the child contains a dash, it is already the full name
     //
     if (child.match(/-/)) {
       return child;
