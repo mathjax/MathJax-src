@@ -381,6 +381,7 @@ export class WorkerHandler<N, T, D> {
       'locale',
       'domain',
       'style',
+      'domain2style'
     ]);
     const adaptor = this.adaptor;
     this.setSpecialAttributes(container, data.translations, 'data-semantic-');
