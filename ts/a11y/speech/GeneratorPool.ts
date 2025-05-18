@@ -158,6 +158,8 @@ export class GeneratorPool<N, T, D> {
       locale: this.adaptor.getAttribute(node, 'data-semantic-locale') ?? '',
       domain: this.adaptor.getAttribute(node, 'data-semantic-domain') ?? '',
       style: this.adaptor.getAttribute(node, 'data-semantic-style') ?? '',
+      domain2style:
+        this.adaptor.getAttribute(node, 'data-semantic-domain2style') ?? '',
     };
   }
 
