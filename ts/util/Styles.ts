@@ -463,7 +463,10 @@ export class Styles {
     for (const name of Object.keys(this.styles)) {
       const parent = this.parentName(name);
       const cname = name.replace(/.*-/, '');
-      if (!this.styles[parent] || !Styles.connect[parent]?.children?.includes(cname)) {
+      if (
+        !this.styles[parent] ||
+        !Styles.connect[parent]?.children?.includes(cname)
+      ) {
         styles.push(`${name}: ${this.styles[name]};`);
       }
     }
