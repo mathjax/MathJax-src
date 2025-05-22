@@ -863,7 +863,7 @@ export class Menu {
           this.submenu('TabSelects', 'Tabbing Focuses on', [
             this.radioGroup('tabSelects', [
               ['all', 'Whole Expression'],
-              ['last', 'Last Explored Node']
+              ['last', 'Last Explored Node'],
             ]),
           ]),
           this.rule(),
