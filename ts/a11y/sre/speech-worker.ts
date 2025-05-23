@@ -192,6 +192,14 @@ declare const SRE: any;
     nextStyle(data: Message): WorkerResult {
       return Speech(SRE.workerNextStyle, data.mml, data.options, data.nodeId);
     },
+
+
+    localePreferences(_data: Message): WorkerResult {
+      console.log(44);
+      console.log(SRE.workerLocalePreferences);
+      return Menu(SRE.workerLocalePreferences);
+    },
+
   };
 
   /**
@@ -250,6 +258,14 @@ declare const SRE: any;
     const structure = (await func.call(null, mml, options, ...rest)) ?? {};
     return global.copyStructure(structure);
   }
+
+  async function Menu(
+    func: () => StructureData,
+  ): Promise<StructureData> {
+    const structure = (await func.call(null)) ?? {};
+    return global.copyStructure(structure);
+  }
+
 
   /**
    * Make a copy of an Error object (since those can't be stringified).

@@ -225,4 +225,8 @@ export class GeneratorPool<N, T, D> {
       adaptor.getAttribute(node, SemAttr.BRAILLE)
     );
   }
+
+  public getLocalePreferences(item: SpeechMathItem<N, T, D>): Promise<void> {
+    return (this.promise = this.webworker.clearspeakLocalePreferences(item));
+  }
 }

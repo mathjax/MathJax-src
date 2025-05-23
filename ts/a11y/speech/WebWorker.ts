@@ -584,6 +584,22 @@ export class WorkerHandler<N, T, D> {
     this.ready = false;
   }
 
+
+  public async clearspeakLocalePreferences(item: SpeechMathItem<N, T, D>) {
+    console.log(43);
+    await this.Post(
+      {
+        cmd: 'Worker',
+        data: {
+          cmd: 'localePreferences',
+          debug: this.options.debug,
+          data: { },
+        },
+      },
+      item
+    ).then((e) => console.log(e));
+  }
+
   /**
    * The list of valid commands from the WorkerPool in the iframe.
    */

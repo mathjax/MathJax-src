@@ -21,7 +21,7 @@
  * @author v.sorge@mathjax.org (Volker Sorge)
  */
 
-// import { ExplorerMathItem } from '../explorer.js';
+import { ExplorerMathItem } from '../explorer.js';
 import { MJContextMenu } from '../../ui/menu/MJContextMenu.js';
 import { SubMenu, Submenu } from '../../ui/menu/mj-context-menu.js';
 import * as Sre from '../sre.js';
@@ -30,6 +30,13 @@ import * as Sre from '../sre.js';
  * Values for the ClearSpeak preference variables.
  */
 let csPrefsSetting: { [pref: string]: string } = {};
+let previousPrefs: string = null;
+
+function currentPreference(settings?: string) {
+  const matcher = settings?.match(/^clearspeak-(.*)/);
+  previousPrefs = (matcher && matcher[1]) ?? previousPrefs ?? 'default';
+  return previousPrefs;
+}
 
 /**
  * Generator of all variables for the Clearspeak Preference settings.
@@ -38,9 +45,11 @@ let csPrefsSetting: { [pref: string]: string } = {};
  * @param {string[]} prefs The preferences.
  */
 function csPrefsVariables(menu: MJContextMenu, prefs: string[]) {
+  console.log(69);
   const srVariable = menu.pool.lookup('speechRules');
-  const previous = Sre.clearspeakPreferences.currentPreference();
-  csPrefsSetting = Sre.clearspeakPreferences.fromPreference(previous);
+  const previous = currentPreference();
+  csPrefsSetting = Sre.clearspeakPreferences.fromPreference(previous); // Do here
+  console.log(csPrefsSetting);
   for (const pref of prefs) {
     menu.factory.get('variable')(
       menu.factory,
@@ -50,7 +59,7 @@ function csPrefsVariables(menu: MJContextMenu, prefs: string[]) {
           csPrefsSetting[pref] = value;
           srVariable.setValue(
             'clearspeak-' +
-              Sre.clearspeakPreferences.toPreference(csPrefsSetting)
+              Sre.clearspeakPreferences.toPreference(csPrefsSetting) // Do here
           );
         },
         getter: () => {
@@ -70,7 +79,11 @@ function csPrefsVariables(menu: MJContextMenu, prefs: string[]) {
  * @returns {object} The constructed selection box sub menu.
  */
 function csSelectionBox(menu: MJContextMenu, locale: string): object {
-  const prefs = Sre.clearspeakPreferences.getLocalePreferences();
+  // const prefs = Sre.clearspeakPreferences.getLocalePreferences(); // Need SRE
+  const item = menu.mathItem as ExplorerMathItem
+  item.generatorPool.getLocalePreferences(item);
+  const prefs: { [pref: string]: {[prop: string]: string[] }} = {};
+  console.log(prefs);
   const props = prefs[locale];
   if (!props) {
     const csEntry = menu.findID('Accessibility', 'Speech', 'Clearspeak');
@@ -108,7 +121,14 @@ function csSelectionBox(menu: MJContextMenu, locale: string): object {
 }
 
 /**
- * Generates the menu items for the base preference menu.
+ * Generates the two menu items for the base preference menu:
+ * 1. No Preferences: All preferences are set to Auto.
+ *
+ * 2. Current Preferences: The last chosen preferences for clearspeak. These are
+ * initially set to:
+ *  * default, when no other information is available
+ *  * the value read from localStorage if there is one for clearspeak
+ *  * previousPrefs that remembers the value before switching to Mathspeak
  *
  * @param {string} previous The currently set preferences.
  * @returns {object[]} The menu items as a list of JSON objects.
@@ -143,48 +163,48 @@ function basePreferences(previous: string): object[] {
  * @param {string} locale The current locale.
  * @returns {object[]} The menu of smart choices as a list of JSON objects.
  */
-// function smartPreferences(
-//   previous: string,
-//   smart: string,
-//   locale: string
-// ): object[] {
-//   const prefs = Sre.clearspeakPreferences.getLocalePreferences();
-//   const loc = prefs[locale];
-//   if (!loc) {
-//     return [];
-//   }
-//   const items = [
-//     { type: 'label', content: 'Preferences for ' + smart },
-//     { type: 'rule' },
-//   ];
-//   return items.concat(
-//     loc[smart].map(function (x) {
-//       const [key, value] = x.split('_');
-//       return {
-//         type: 'radioCompare',
-//         content: value,
-//         id:
-//           'clearspeak-' +
-//           Sre.clearspeakPreferences.addPreference(previous, key, value),
-//         variable: 'speechRules',
-//         comparator: (x: string, y: string) => {
-//           if (x === y) {
-//             return true;
-//           }
-//           if (value !== 'Auto') {
-//             return false;
-//           }
-//           const [dom1, pref] = x.split('-');
-//           const [dom2] = y.split('-');
-//           return (
-//             dom1 === dom2 &&
-//             !Sre.clearspeakPreferences.fromPreference(pref)[key]
-//           );
-//         },
-//       };
-//     })
-//   );
-// }
+function smartPreferences(
+  previous: string,
+  smart: string,
+  locale: string
+): object[] {
+  const prefs = Sre.clearspeakPreferences.getLocalePreferences(); // Need SRE
+  const loc = prefs[locale];
+  if (!loc) {
+    return [];
+  }
+  const items = [
+    { type: 'label', content: 'Preferences for ' + smart },
+    { type: 'rule' },
+  ];
+  return items.concat(
+    loc[smart].map(function (x) {
+      const [key, value] = x.split('_');
+      return {
+        type: 'radioCompare',
+        content: value,
+        id:
+          'clearspeak-' +
+          Sre.clearspeakPreferences.addPreference(previous, key, value), // Do here
+        variable: 'speechRules',
+        comparator: (x: string, y: string) => {
+          if (x === y) {
+            return true;
+          }
+          if (value !== 'Auto') {
+            return false;
+          }
+          const [dom1, pref] = x.split('-');
+          const [dom2] = y.split('-');
+          return (
+            dom1 === dom2 &&
+            !Sre.clearspeakPreferences.fromPreference(pref)[key] // Do here
+          );
+        },
+      };
+    })
+  );
+}
 
 /**
  * Creates dynamic clearspeak menu.
@@ -194,18 +214,28 @@ function basePreferences(previous: string): object[] {
  * @returns {SubMenu} The constructed clearspeak sub menu.
  */
 export function clearspeakMenu(menu: MJContextMenu, sub: Submenu): SubMenu {
+  console.log(70);
+
   const locale = menu.pool.lookup('locale').getValue() as string;
+  console.log(38);
   const box = csSelectionBox(menu, locale);
+  console.log(box);
+  console.log(39);
   let items: object[] = [];
   if (menu.settings.speech) {
-    // const explorer = (menu.mathItem as ExplorerMathItem)?.explorers?.speech;
-    // const semantic = explorer?.semanticFocus();
-    const previous = Sre.clearspeakPreferences.currentPreference();
+    console.log(71);
+    console.log(menu);
+    const explorer = (menu.mathItem as ExplorerMathItem)?.explorers?.speech;
+    const semantic = explorer?.refocus;
+    console.log(menu.settings.speechRules);
+    const previous = currentPreference(menu.settings.speechRules);
     items = items.concat(basePreferences(previous));
-    // if (semantic) {
-    //   const smart = Sre.clearspeakPreferences.relevantPreferences(semantic);
-    //   items = items.concat(smartPreferences(previous, smart, locale));
-    // }
+    if (semantic) {
+      // const smart = Sre.clearspeakPreferences.relevantPreferences(semantic);
+      const smart = '';
+      console.log(smart);
+      items = items.concat(smartPreferences(previous, smart, locale));
+    }
     if (box) {
       items.splice(2, 0, box);
     }
