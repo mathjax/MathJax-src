@@ -796,10 +796,11 @@ export class SpeechExplorer
     if (this.current) {
       this.current.classList.remove('mjx-selected');
       this.pool.unhighlight();
-      this.current = null;
       if (!node) {
+        this.restarted = this.semanticFocus();
         this.removeSpeech();
       }
+      this.current = null;
     }
     //
     // If there is a current node
@@ -933,7 +934,7 @@ export class SpeechExplorer
       'aria-roledescription': item.none,
     });
     container.appendChild(this.img);
-    this.updateAT();
+    // this.updateAT();
   }
 
   /**
