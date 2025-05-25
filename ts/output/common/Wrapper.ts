@@ -76,7 +76,15 @@ const MOSPACE = 5 / 18;
  * @returns {number}         The size clamped to SMALLSIZE when scriptlevel > 0
  */
 function MathMLSpace(script: boolean, nodict: boolean, size: number): number {
-  return nodict ? MOSPACE : script ? (size < SMALLSIZE ? 0 : SMALLSIZE) : size;
+  return nodict
+    ? script
+      ? SMALLSIZE
+      : MOSPACE
+    : script
+      ? size < SMALLSIZE
+        ? 0
+        : SMALLSIZE
+      : size;
 }
 
 /**
