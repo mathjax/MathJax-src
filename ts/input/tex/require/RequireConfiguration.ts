@@ -174,8 +174,12 @@ export function RequireLoad(parser: TexParser, name: string) {
       extension
     );
   }
-  if (!Package.packages.has(extension)) {
-    mathjax.retryAfter(Loader.load(extension));
+  const data = Package.packages.get(extension);
+  if (!data) {
+    mathjax.retryAfter(Loader.load(extension).catch((_) => {}));
+  }
+  if (data.hasFailed) {
+    throw new TexError('RequireFail', 'Extension "%1" failed to load', name);
   }
   const require = LOADERCONFIG[extension]?.rendererExtensions;
   const menu = (MathJax.startup.document as MenuMathDocument)?.menu;
