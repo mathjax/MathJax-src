@@ -114,6 +114,7 @@ export interface MathJaxObject extends MJObject {
     toMML(node: MmlNode): string;
     defaultReady(): void;
     defaultPageReady(): Promise<void>;
+    defaultOptionError(message: string, key: string): void;
     getComponents(): void;
     makeMethods(): void;
     makeTypesetMethods(): void;
@@ -333,17 +334,22 @@ export abstract class Startup {
   }
 
   /**
+   * The default OptionError function
+   */
+  public static defaultOptionError = OPTIONS.optionError;
+
+  /**
    * Perform the typesetting with handling of retries
    *
    * @param {any[]} elements The list of elements to typeset
    * @returns {Promise<any>} The promise that resolves when elements are typeset
    */
   public static typesetPromise(elements: any[]): Promise<any> {
+    this.hasTypeset = true;
     return Startup.document.whenReady(async () => {
       Startup.document.options.elements = elements;
       Startup.document.reset();
       await Startup.document.renderPromise();
-      this.hasTypeset = true;
     });
   }
 
@@ -408,10 +414,10 @@ export abstract class Startup {
    */
   public static makeTypesetMethods() {
     MathJax.typeset = (elements: any[] = null) => {
+      this.hasTypeset = true;
       Startup.document.options.elements = elements;
       Startup.document.reset();
       Startup.document.render();
-      this.hasTypeset = true;
     };
     MathJax.typesetPromise = (elements: any[] = null) => {
       return Startup.typesetPromise(elements);
