@@ -341,12 +341,6 @@ export function LazyMathDocumentMixin<
       ...BaseDocument.OPTIONS,
       lazyMargin: '500px',
       lazyAlwaysTypeset: null,
-      speechTiming: {
-        ...(BaseDocument.OPTIONS.speechTiming || {}),
-        initial: 150,
-        threshold: 100,
-        intermediate: 10,
-      },
       renderActions: {
         ...BaseDocument.OPTIONS.renderActions,
         lazyAlways: [STATE.LAZYALWAYS, 'lazyAlways', '', false],

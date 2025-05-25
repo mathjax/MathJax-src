@@ -27,6 +27,6 @@
 export function sreRoot(): string {
   return new URL(import.meta.url).pathname.replace(
     /components\/[cm]js\/sre-root.js$/,
-    (_) => 'a11y/sre'
+    'a11y/sre'
   );
 }
