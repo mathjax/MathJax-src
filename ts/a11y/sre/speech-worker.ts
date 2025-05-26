@@ -194,10 +194,8 @@ declare const SRE: any;
     },
 
 
-    localePreferences(_data: Message): WorkerResult {
-      console.log(44);
-      console.log(SRE.workerLocalePreferences);
-      return Menu(SRE.workerLocalePreferences);
+    localePreferences(data: Message): WorkerResult {
+      return Menu(SRE.workerLocalePreferences, data.options);
     },
 
   };
@@ -260,9 +258,10 @@ declare const SRE: any;
   }
 
   async function Menu(
-    func: () => StructureData,
+    func: (options: OptionList) => StructureData,
+    options: OptionList
   ): Promise<StructureData> {
-    const structure = (await func.call(null)) ?? {};
+    const structure = (await func.call(null, options)) ?? {};
     return global.copyStructure(structure);
   }
 

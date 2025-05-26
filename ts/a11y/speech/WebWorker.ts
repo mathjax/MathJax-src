@@ -585,19 +585,26 @@ export class WorkerHandler<N, T, D> {
   }
 
 
-  public async clearspeakLocalePreferences(item: SpeechMathItem<N, T, D>) {
-    console.log(43);
+  public async clearspeakLocalePreferences(
+    item: SpeechMathItem<N, T, D>,
+    options: OptionList,
+    prefs: {[key: string]: {[prop: string]: string[] }}
+  ) {
     await this.Post(
       {
         cmd: 'Worker',
         data: {
           cmd: 'localePreferences',
           debug: this.options.debug,
-          data: { },
+          data: {
+            options: options
+          },
         },
       },
       item
-    ).then((e) => console.log(e));
+    ).then((e) => {
+      prefs[options.locale] = e;
+    });
   }
 
   /**
