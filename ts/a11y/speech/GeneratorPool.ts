@@ -226,7 +226,14 @@ export class GeneratorPool<N, T, D> {
     );
   }
 
-  public getLocalePreferences(item: SpeechMathItem<N, T, D>): Promise<void> {
-    return (this.promise = this.webworker.clearspeakLocalePreferences(item));
+  public getLocalePreferences(
+    item: SpeechMathItem<N, T, D>,
+    prefs: { [key: string]: { [prop: string]: string[] } }
+  ): Promise<void> {
+    return (this.promise = this.webworker.clearspeakLocalePreferences(
+      item,
+      this.options,
+      prefs
+    ));
   }
 }

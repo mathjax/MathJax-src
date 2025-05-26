@@ -45,11 +45,9 @@ function currentPreference(settings?: string) {
  * @param {string[]} prefs The preferences.
  */
 function csPrefsVariables(menu: MJContextMenu, prefs: string[]) {
-  console.log(69);
   const srVariable = menu.pool.lookup('speechRules');
   const previous = currentPreference();
   csPrefsSetting = Sre.clearspeakPreferences.fromPreference(previous); // Do here
-  console.log(csPrefsSetting);
   for (const pref of prefs) {
     menu.factory.get('variable')(
       menu.factory,
@@ -71,53 +69,55 @@ function csPrefsVariables(menu: MJContextMenu, prefs: string[]) {
   }
 }
 
+const localePreferences: {[key: string]: {[prop: string]: string[] }} = {};
+
 /**
  * Generate the selection box for the Clearspeak Preferences.
  *
  * @param {MJContextMenu} menu The current context menu.
  * @param {string} locale The current locale.
- * @returns {object} The constructed selection box sub menu.
+ * @returns {Promise<object>} The constructed selection box sub menu.
  */
-function csSelectionBox(menu: MJContextMenu, locale: string): object {
-  // const prefs = Sre.clearspeakPreferences.getLocalePreferences(); // Need SRE
+async function csSelectionBox(menu: MJContextMenu, locale: string): Promise<object> {
   const item = menu.mathItem as ExplorerMathItem
-  item.generatorPool.getLocalePreferences(item);
-  const prefs: { [pref: string]: {[prop: string]: string[] }} = {};
-  console.log(prefs);
-  const props = prefs[locale];
+  let props = localePreferences[locale];
   if (!props) {
-    const csEntry = menu.findID('Accessibility', 'Speech', 'Clearspeak');
-    if (csEntry) {
-      csEntry.disable();
+    await item.generatorPool.getLocalePreferences(item, localePreferences);
+  }
+  props = localePreferences[locale];
+  if (!props) {
+      const csEntry = menu.findID('Accessibility', 'Speech', 'Clearspeak');
+      if (csEntry) {
+        csEntry.disable();
+      }
+      return {};
     }
-    return null;
-  }
-  csPrefsVariables(menu, Object.keys(props));
-  const items = [];
-  for (const prop of Object.getOwnPropertyNames(props)) {
-    items.push({
-      title: prop,
-      values: props[prop].map((x) => x.replace(RegExp('^' + prop + '_'), '')),
-      variable: 'csprf_' + prop,
-    });
-  }
-  const sb = menu.factory.get('selectionBox')(
-    menu.factory,
-    {
-      title: 'Clearspeak Preferences',
-      signature: '',
-      order: 'alphabetic',
-      grid: 'square',
-      selections: items,
-    },
-    menu
-  );
-  return {
-    type: 'command',
-    id: 'ClearspeakPreferences',
-    content: 'Select Preferences',
-    action: () => sb.post(0, 0),
-  };
+    csPrefsVariables(menu, Object.keys(props));
+    const items = [];
+    for (const prop of Object.getOwnPropertyNames(props)) {
+      items.push({
+        title: prop,
+        values: props[prop].map((x) => x.replace(RegExp('^' + prop + '_'), '')),
+        variable: 'csprf_' + prop,
+      });
+    }
+    const sb = menu.factory.get('selectionBox')(
+      menu.factory,
+      {
+        title: 'Clearspeak Preferences',
+        signature: '',
+        order: 'alphabetic',
+        grid: 'square',
+        selections: items,
+      },
+      menu
+    );
+    return {
+      type: 'command',
+      id: 'ClearspeakPreferences',
+      content: 'Select Preferences',
+      action: () => sb.post(0, 0),
+    };
 }
 
 /**
@@ -163,13 +163,19 @@ function basePreferences(previous: string): object[] {
  * @param {string} locale The current locale.
  * @returns {object[]} The menu of smart choices as a list of JSON objects.
  */
-function smartPreferences(
+async function smartPreferences(
+  item: ExplorerMathItem,
   previous: string,
   smart: string,
   locale: string
-): object[] {
-  const prefs = Sre.clearspeakPreferences.getLocalePreferences(); // Need SRE
-  const loc = prefs[locale];
+): Promise<object[]> {
+  let loc = localePreferences[locale];
+  if (!loc) {
+    await item.generatorPool.getLocalePreferences(item, localePreferences);
+  }
+  loc = localePreferences[locale];
+  // const prefs = Sre.clearspeakPreferences.getLocalePreferences(); // Need SRE
+  // const loc = prefs[locale];
   if (!loc) {
     return [];
   }
@@ -211,43 +217,49 @@ function smartPreferences(
  *
  * @param {MJContextMenu} menu The context menu.
  * @param {Submenu} sub The submenu to attach elements to.
- * @returns {SubMenu} The constructed clearspeak sub menu.
+ * @param {(sub: SubMenu) => void} callback Callback to apply on the constructed
+ *   submenu.
  */
-export function clearspeakMenu(menu: MJContextMenu, sub: Submenu): SubMenu {
-  console.log(70);
-
+export async function clearspeakMenu(menu: MJContextMenu,
+                                     sub: Submenu,
+                                     callback: (sub: SubMenu) => void) {
+  if (!menu.settings.speech) {
+    callback(menu.factory.get('subMenu')(
+      menu.factory,
+      {
+        items: [],
+        id: 'Clearspeak',
+      },
+      sub
+    ));
+    return;
+  }
   const locale = menu.pool.lookup('locale').getValue() as string;
-  console.log(38);
-  const box = csSelectionBox(menu, locale);
-  console.log(box);
-  console.log(39);
+  const box = await csSelectionBox(menu, locale);
   let items: object[] = [];
   if (menu.settings.speech) {
-    console.log(71);
-    console.log(menu);
-    const explorer = (menu.mathItem as ExplorerMathItem)?.explorers?.speech;
-    const semantic = explorer?.refocus;
-    console.log(menu.settings.speechRules);
+    const item = menu.mathItem as ExplorerMathItem;
+    const explorer = item?.explorers?.speech;
+    const semantic = explorer?.refocus || true; // fix this up!
     const previous = currentPreference(menu.settings.speechRules);
     items = items.concat(basePreferences(previous));
     if (semantic) {
-      // const smart = Sre.clearspeakPreferences.relevantPreferences(semantic);
-      const smart = '';
-      console.log(smart);
-      items = items.concat(smartPreferences(previous, smart, locale));
-    }
-    if (box) {
-      items.splice(2, 0, box);
+      const smart = Sre.clearspeakPreferences.relevantPreferences(semantic as any); // need SRE
+      if (smart) {
+        const smartItems = await smartPreferences(item, previous, smart, locale);
+        items = items.concat(smartItems);
+      }
     }
   }
-  return menu.factory.get('subMenu')(
+  items.splice(2, 0, box);
+  callback(menu.factory.get('subMenu')(
     menu.factory,
     {
       items: items,
       id: 'Clearspeak',
     },
     sub
-  );
+  ));
 }
 MJContextMenu.DynamicSubmenus.set('Clearspeak', [clearspeakMenu, 'speech']);
 
@@ -258,11 +270,13 @@ let LOCALE_MENU: SubMenu = null;
  *
  * @param {MJContextMenu} menu The context menu.
  * @param {Submenu} sub The submenu to attach elements to.
- * @returns {SubMenu} The constructed locale sub menu.
+ * @param {(sub: SubMenu) => void} callback Callback to apply on the constructed
+ *   submenu.
  */
-export function localeMenu(menu: MJContextMenu, sub: Submenu): SubMenu {
+export function localeMenu(menu: MJContextMenu, sub: Submenu, callback: (sub: SubMenu) => void) {
   if (LOCALE_MENU) {
-    return LOCALE_MENU;
+    callback(LOCALE_MENU);
+    return;
   }
   const radios: {
     type: string;
@@ -288,6 +302,6 @@ export function localeMenu(menu: MJContextMenu, sub: Submenu): SubMenu {
     },
     sub
   );
-  return LOCALE_MENU;
+  callback(LOCALE_MENU);
 }
 MJContextMenu.DynamicSubmenus.set('A11yLanguage', [localeMenu, 'speech']);
