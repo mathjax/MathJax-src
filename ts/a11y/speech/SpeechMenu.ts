@@ -50,7 +50,7 @@ function currentPreference(settings?: string) {
  */
 function csPrefsVariables(menu: MJContextMenu, prefs: string[]) {
   const srVariable = menu.pool.lookup('speechRules');
-  const previous = currentPreference();
+  const previous = currentPreference(menu.settings.speechRules);
   csPrefsSetting = Sre.clearspeakPreferences.fromPreference(previous); // Do here
   for (const pref of prefs) {
     menu.factory.get('variable')(
@@ -102,7 +102,7 @@ async function csSelectionBox(
   if (!localePreferences.has(locale)) {
     await item.generatorPool.getLocalePreferences(localePreferences);
   }
-  if (localePreferences.has(locale)) {
+  if (!localePreferences.has(locale)) {
     const csEntry = menu.findID('Accessibility', 'Speech', 'Clearspeak');
     if (csEntry) {
       csEntry.disable();
