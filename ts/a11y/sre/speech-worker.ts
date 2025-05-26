@@ -194,8 +194,15 @@ declare const SRE: any;
     },
 
 
-    localePreferences(data: Message): WorkerResult {
-      return Menu(SRE.workerLocalePreferences, data.options);
+    async localePreferences(data: Message): WorkerResult {
+      const structure = (await SRE.workerLocalePreferences(data.options)) ?? {};
+      // Not strictly necessary for the menu as there should not be one in node.
+      // However, it allows for getting the preferences in a different context.
+      return global.copyStructure(structure);
+    },
+
+    async relevantPreferences(data: Message): WorkerResult {
+      return await SRE.workerRelevantPreferences(data.mml, data.id) ?? '';
     },
 
   };
@@ -256,15 +263,6 @@ declare const SRE: any;
     const structure = (await func.call(null, mml, options, ...rest)) ?? {};
     return global.copyStructure(structure);
   }
-
-  async function Menu(
-    func: (options: OptionList) => StructureData,
-    options: OptionList
-  ): Promise<StructureData> {
-    const structure = (await func.call(null, options)) ?? {};
-    return global.copyStructure(structure);
-  }
-
 
   /**
    * Make a copy of an Error object (since those can't be stringified).

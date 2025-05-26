@@ -586,7 +586,6 @@ export class WorkerHandler<N, T, D> {
 
 
   public async clearspeakLocalePreferences(
-    item: SpeechMathItem<N, T, D>,
     options: OptionList,
     prefs: {[key: string]: {[prop: string]: string[] }}
   ) {
@@ -600,10 +599,34 @@ export class WorkerHandler<N, T, D> {
             options: options
           },
         },
-      },
-      item
+      }
     ).then((e) => {
       prefs[options.locale] = e;
+    });
+  }
+
+  public async clearspeakRelevantPreferences(
+    math: string,
+    options: OptionList,
+    semantic: string,
+    prefs: { [key: number]: string },
+    counter: number
+  ) {
+    await this.Post(
+      {
+        cmd: 'Worker',
+        data: {
+          cmd: 'relevantPreferences',
+          debug: this.options.debug,
+          data: {
+            mml: math,
+            options: options,
+            id: semantic,
+          },
+        },
+      }
+    ).then((e) => {
+      prefs[counter] = e;
     });
   }
 
