@@ -32,6 +32,10 @@ import * as Sre from '../sre.js';
 let csPrefsSetting: { [pref: string]: string } = {};
 let previousPrefs: string = null;
 
+/**
+ *
+ * @param settings
+ */
 function currentPreference(settings?: string) {
   const matcher = settings?.match(/^clearspeak-(.*)/);
   previousPrefs = (matcher && matcher[1]) ?? previousPrefs ?? 'default';
@@ -69,7 +73,17 @@ function csPrefsVariables(menu: MJContextMenu, prefs: string[]) {
   }
 }
 
-const localePreferences: Map<string, {[prop: string]: string[] }> = new Map();
+/**
+ * Map for storing clearspeak preferences per locale, which can vary. They need
+ * to becomputed only once as they should not change during a single run.
+ */
+const localePreferences: Map<string, { [prop: string]: string[] }> = new Map();
+
+/**
+ * Map for temporarily storing clearspeak preference categories that is relevant
+ * for a particular node that is currently focused. They are computed on the fly
+ * in the worker. To coordinate messages we use an increasing counter.
+ */
 const relevantPreferences: Map<number, string> = new Map();
 let counter = 0;
 
@@ -80,8 +94,11 @@ let counter = 0;
  * @param {string} locale The current locale.
  * @returns {Promise<object>} The constructed selection box sub menu.
  */
-async function csSelectionBox(menu: MJContextMenu, locale: string): Promise<object> {
-  const item = menu.mathItem as ExplorerMathItem
+async function csSelectionBox(
+  menu: MJContextMenu,
+  locale: string
+): Promise<object> {
+  const item = menu.mathItem as ExplorerMathItem;
   if (!localePreferences.has(locale)) {
     await item.generatorPool.getLocalePreferences(localePreferences);
   }
@@ -127,9 +144,9 @@ async function csSelectionBox(menu: MJContextMenu, locale: string): Promise<obje
  *
  * 2. Current Preferences: The last chosen preferences for clearspeak. These are
  * initially set to:
- *  * default, when no other information is available
- *  * the value read from localStorage if there is one for clearspeak
- *  * previousPrefs that remembers the value before switching to Mathspeak
+ *  default, when no other information is available
+ *  the value read from localStorage if there is one for clearspeak
+ *  previousPrefs that remembers the value before switching to Mathspeak
  *
  * @param {string} previous The currently set preferences.
  * @returns {object[]} The menu items as a list of JSON objects.
@@ -158,6 +175,7 @@ function basePreferences(previous: string): object[] {
 /**
  * Generates the items for smart preference choices, depending on the top most
  *
+ * @param item
  * @param {string} previous The currently set preferences.
  * @param {string} smart The semantic type of the smart preferences.
  * @param {string} locale The current locale.
@@ -169,14 +187,13 @@ async function smartPreferences(
   smart: string,
   locale: string
 ): Promise<object[]> {
-  let loc = localePreferences[locale];
-  if (!loc) {
+  if (!localePreferences.has(locale)) {
     await item.generatorPool.getLocalePreferences(localePreferences);
   }
-  loc = localePreferences[locale];
-  if (!loc) {
+  if (!localePreferences.has(locale)) {
     return [];
   }
+  const loc = localePreferences.get(locale);
   const items = [
     { type: 'label', content: 'Preferences for ' + smart },
     { type: 'rule' },
@@ -218,18 +235,22 @@ async function smartPreferences(
  * @param {(sub: SubMenu) => void} callback Callback to apply on the constructed
  *   submenu.
  */
-export async function clearspeakMenu(menu: MJContextMenu,
-                                     sub: Submenu,
-                                     callback: (sub: SubMenu) => void) {
+export async function clearspeakMenu(
+  menu: MJContextMenu,
+  sub: Submenu,
+  callback: (sub: SubMenu) => void
+) {
   if (!menu.settings.speech) {
-    callback(menu.factory.get('subMenu')(
-      menu.factory,
-      {
-        items: [],
-        id: 'Clearspeak',
-      },
-      sub
-    ));
+    callback(
+      menu.factory.get('subMenu')(
+        menu.factory,
+        {
+          items: [],
+          id: 'Clearspeak',
+        },
+        sub
+      )
+    );
     return;
   }
   const locale = menu.pool.lookup('locale').getValue() as string;
@@ -244,7 +265,11 @@ export async function clearspeakMenu(menu: MJContextMenu,
     const semantic = focus?.getAttribute('data-semantic-id') ?? null;
     const count = counter++;
     await item.generatorPool.getRelevantPreferences(
-      item, semantic, relevantPreferences, count);
+      item,
+      semantic,
+      relevantPreferences,
+      count
+    );
     const smart = relevantPreferences.get(count);
     relevantPreferences.delete(count);
     if (smart) {
@@ -253,14 +278,16 @@ export async function clearspeakMenu(menu: MJContextMenu,
     }
   }
   items.splice(2, 0, box);
-  callback(menu.factory.get('subMenu')(
-    menu.factory,
-    {
-      items: items,
-      id: 'Clearspeak',
-    },
-    sub
-  ));
+  callback(
+    menu.factory.get('subMenu')(
+      menu.factory,
+      {
+        items: items,
+        id: 'Clearspeak',
+      },
+      sub
+    )
+  );
 }
 MJContextMenu.DynamicSubmenus.set('Clearspeak', [clearspeakMenu, 'speech']);
 
@@ -274,7 +301,11 @@ let LOCALE_MENU: SubMenu = null;
  * @param {(sub: SubMenu) => void} callback Callback to apply on the constructed
  *   submenu.
  */
-export function localeMenu(menu: MJContextMenu, sub: Submenu, callback: (sub: SubMenu) => void) {
+export function localeMenu(
+  menu: MJContextMenu,
+  sub: Submenu,
+  callback: (sub: SubMenu) => void
+) {
   if (LOCALE_MENU) {
     callback(LOCALE_MENU);
     return;
