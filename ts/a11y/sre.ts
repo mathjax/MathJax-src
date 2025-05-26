@@ -23,10 +23,14 @@
  */
 
 import { Engine } from '#sre/common/engine.js';
-import { ClearspeakPreferences } from '#sre/speech_rules/clearspeak_preferences.js';
 import { parseInput } from '#sre/common/dom_util.js';
 import { Variables } from '#sre/common/variables.js';
 import { semanticMathmlSync } from '#sre/enrich_mathml/enrich.js';
+export {
+  addPreference,
+  fromPreference,
+  toPreference
+} from '#sre/speech_rules/clearspeak_preference_string.js';
 
 export const locales = Variables.LOCALES;
 
@@ -42,7 +46,5 @@ export const engineSetup = () => {
 export const toEnriched = (mml: string) => {
   return semanticMathmlSync(mml, Engine.getInstance().options);
 };
-
-export const clearspeakPreferences = ClearspeakPreferences;
 
 export const parseDOM = parseInput;
