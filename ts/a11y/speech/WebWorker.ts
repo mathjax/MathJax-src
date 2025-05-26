@@ -584,11 +584,17 @@ export class WorkerHandler<N, T, D> {
     this.ready = false;
   }
 
-
+  /**
+   * Worker call to compute clearspeak preferences for the current locale.
+   *
+   * @param {OptionList} options The options list.
+   * @param {Map<string, { [prop: string]: string[] }>} prefs Map to store the compute preferences.
+   * @returns {Promise<void>} The promise that resolves when the command is complete
+   */
   public async clearspeakLocalePreferences(
     options: OptionList,
-    prefs: {[key: string]: {[prop: string]: string[] }}
-  ) {
+    prefs: Map<string, {[prop: string]: string[] }>
+  ): Promise<void> {
     await this.Post(
       {
         cmd: 'Worker',
@@ -601,17 +607,26 @@ export class WorkerHandler<N, T, D> {
         },
       }
     ).then((e) => {
-      prefs[options.locale] = e;
+      prefs.set(options.locale, e);
     });
   }
 
+  /**
+   * Computes the clearspeak preference category that are semantically relevant
+   * for the currently focused node.
+   *
+   * @param {string} math The linearized mml expression.
+   * @param {string} nodeId The semantic id of node to compute the preference for.
+   * @param {Map<number, string>} prefs Map for recording the computed preference.
+   * @param {number} counter Counter for storing the result in the map.
+   * @returns {Promise<void>} The promise that resolves when the command is complete
+   */
   public async clearspeakRelevantPreferences(
     math: string,
-    options: OptionList,
-    semantic: string,
-    prefs: { [key: number]: string },
+    nodeId: string,
+    prefs: Map<number, string>,
     counter: number
-  ) {
+  ): Promise<void> {
     await this.Post(
       {
         cmd: 'Worker',
@@ -620,13 +635,12 @@ export class WorkerHandler<N, T, D> {
           debug: this.options.debug,
           data: {
             mml: math,
-            options: options,
-            id: semantic,
+            id: nodeId,
           },
         },
       }
     ).then((e) => {
-      prefs[counter] = e;
+      prefs.set(counter, e);
     });
   }
 
