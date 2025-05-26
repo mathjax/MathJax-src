@@ -69,8 +69,8 @@ function csPrefsVariables(menu: MJContextMenu, prefs: string[]) {
   }
 }
 
-const localePreferences: {[key: string]: {[prop: string]: string[] }} = {};
-const relevantPreferences: {[key: number]: string} = {};
+const localePreferences: Map<string, {[prop: string]: string[] }> = new Map();
+const relevantPreferences: Map<number, string> = new Map();
 let counter = 0;
 
 /**
@@ -82,44 +82,43 @@ let counter = 0;
  */
 async function csSelectionBox(menu: MJContextMenu, locale: string): Promise<object> {
   const item = menu.mathItem as ExplorerMathItem
-  let props = localePreferences[locale];
-  if (!props) {
+  if (!localePreferences.has(locale)) {
     await item.generatorPool.getLocalePreferences(localePreferences);
   }
-  props = localePreferences[locale];
-  if (!props) {
-      const csEntry = menu.findID('Accessibility', 'Speech', 'Clearspeak');
-      if (csEntry) {
-        csEntry.disable();
-      }
-      return {};
+  if (localePreferences.has(locale)) {
+    const csEntry = menu.findID('Accessibility', 'Speech', 'Clearspeak');
+    if (csEntry) {
+      csEntry.disable();
     }
-    csPrefsVariables(menu, Object.keys(props));
-    const items = [];
-    for (const prop of Object.getOwnPropertyNames(props)) {
-      items.push({
-        title: prop,
-        values: props[prop].map((x) => x.replace(RegExp('^' + prop + '_'), '')),
-        variable: 'csprf_' + prop,
-      });
-    }
-    const sb = menu.factory.get('selectionBox')(
-      menu.factory,
-      {
-        title: 'Clearspeak Preferences',
-        signature: '',
-        order: 'alphabetic',
-        grid: 'square',
-        selections: items,
-      },
-      menu
-    );
-    return {
-      type: 'command',
-      id: 'ClearspeakPreferences',
-      content: 'Select Preferences',
-      action: () => sb.post(0, 0),
-    };
+    return {};
+  }
+  const props = localePreferences.get(locale);
+  csPrefsVariables(menu, Object.keys(props));
+  const items = [];
+  for (const prop of Object.getOwnPropertyNames(props)) {
+    items.push({
+      title: prop,
+      values: props[prop].map((x) => x.replace(RegExp('^' + prop + '_'), '')),
+      variable: 'csprf_' + prop,
+    });
+  }
+  const sb = menu.factory.get('selectionBox')(
+    menu.factory,
+    {
+      title: 'Clearspeak Preferences',
+      signature: '',
+      order: 'alphabetic',
+      grid: 'square',
+      selections: items,
+    },
+    menu
+  );
+  return {
+    type: 'command',
+    id: 'ClearspeakPreferences',
+    content: 'Select Preferences',
+    action: () => sb.post(0, 0),
+  };
 }
 
 /**
@@ -246,8 +245,8 @@ export async function clearspeakMenu(menu: MJContextMenu,
     const count = counter++;
     await item.generatorPool.getRelevantPreferences(
       item, semantic, relevantPreferences, count);
-    const smart = relevantPreferences[count];
-    delete relevantPreferences[count];
+    const smart = relevantPreferences.get(count);
+    relevantPreferences.delete(count);
     if (smart) {
       const smartItems = await smartPreferences(item, previous, smart, locale);
       items = items.concat(smartItems);

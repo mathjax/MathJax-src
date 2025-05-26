@@ -218,6 +218,12 @@ export class GeneratorPool<N, T, D> {
     );
   }
 
+  /**
+   * Computes the braille label from the node.
+   *
+   * @param {N} node            The typeset node.
+   * @returns {string}          The assembled label.
+   */
   public getBraille(node: N): string {
     const adaptor = this.adaptor;
     return (
@@ -226,25 +232,44 @@ export class GeneratorPool<N, T, D> {
     );
   }
 
-  public getLocalePreferences(prefs: {
-    [key: string]: { [prop: string]: string[] };
-  }): Promise<void> {
+  /*********************************************************/
+  /**
+   * Menu related functions.
+   */
+  /**
+   * Computes the clearspeak preferences for the current locale.
+   *
+   * @param {Map<string, { [prop: string]: string[] }>} prefs Map to store the compute preferences.
+   * @returns {Promise<void>} The promise that resolves when the command is complete
+   */
+  public getLocalePreferences(
+    prefs: Map<string, { [prop: string]: string[] }>
+  ): Promise<void> {
     return (this.promise = this.webworker.clearspeakLocalePreferences(
       this.options,
       prefs
     ));
   }
 
+  /**
+   * Computes the clearspeak preferences that are semantically relevant for the
+   * currently focused node.
+   *
+   * @param {SpeechMathItem} item The SpeechMathItem where is menu is opened.
+   * @param {string} semantic The semantic id of the last focused node.
+   * @param {Map<number, string>} prefs Map for recording the computed preference.
+   * @param {number} counter Counter for storing the result in the map.
+   * @returns {Promise<void>} The promise that resolves when the command is complete
+   */
   public getRelevantPreferences(
     item: SpeechMathItem<N, T, D>,
     semantic: string,
-    prefs: { [key: number]: string },
+    prefs: Map<number, string>,
     counter: number
   ): Promise<void> {
     const mml = item.outputData.mml;
     return (this.promise = this.webworker.clearspeakRelevantPreferences(
       mml,
-      this.options,
       semantic,
       prefs,
       counter
