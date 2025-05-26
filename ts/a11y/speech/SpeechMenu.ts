@@ -70,6 +70,8 @@ function csPrefsVariables(menu: MJContextMenu, prefs: string[]) {
 }
 
 const localePreferences: {[key: string]: {[prop: string]: string[] }} = {};
+const relevantPreferences: {[key: number]: string} = {};
+let counter = 0;
 
 /**
  * Generate the selection box for the Clearspeak Preferences.
@@ -82,7 +84,7 @@ async function csSelectionBox(menu: MJContextMenu, locale: string): Promise<obje
   const item = menu.mathItem as ExplorerMathItem
   let props = localePreferences[locale];
   if (!props) {
-    await item.generatorPool.getLocalePreferences(item, localePreferences);
+    await item.generatorPool.getLocalePreferences(localePreferences);
   }
   props = localePreferences[locale];
   if (!props) {
@@ -154,7 +156,6 @@ function basePreferences(previous: string): object[] {
   return items;
 }
 
-// TODO(volker): This now needs to go through the worker as well.
 /**
  * Generates the items for smart preference choices, depending on the top most
  *
@@ -171,11 +172,9 @@ async function smartPreferences(
 ): Promise<object[]> {
   let loc = localePreferences[locale];
   if (!loc) {
-    await item.generatorPool.getLocalePreferences(item, localePreferences);
+    await item.generatorPool.getLocalePreferences(localePreferences);
   }
   loc = localePreferences[locale];
-  // const prefs = Sre.clearspeakPreferences.getLocalePreferences(); // Need SRE
-  // const loc = prefs[locale];
   if (!loc) {
     return [];
   }
@@ -240,15 +239,18 @@ export async function clearspeakMenu(menu: MJContextMenu,
   if (menu.settings.speech) {
     const item = menu.mathItem as ExplorerMathItem;
     const explorer = item?.explorers?.speech;
-    const semantic = explorer?.refocus || true; // fix this up!
     const previous = currentPreference(menu.settings.speechRules);
     items = items.concat(basePreferences(previous));
-    if (semantic) {
-      const smart = Sre.clearspeakPreferences.relevantPreferences(semantic as any); // need SRE
-      if (smart) {
-        const smartItems = await smartPreferences(item, previous, smart, locale);
-        items = items.concat(smartItems);
-      }
+    const focus = explorer?.refocus;
+    const semantic = focus?.getAttribute('data-semantic-id') ?? null;
+    const count = counter++;
+    await item.generatorPool.getRelevantPreferences(
+      item, semantic, relevantPreferences, count);
+    const smart = relevantPreferences[count];
+    delete relevantPreferences[count];
+    if (smart) {
+      const smartItems = await smartPreferences(item, previous, smart, locale);
+      items = items.concat(smartItems);
     }
   }
   items.splice(2, 0, box);

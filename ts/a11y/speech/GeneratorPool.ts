@@ -226,14 +226,28 @@ export class GeneratorPool<N, T, D> {
     );
   }
 
-  public getLocalePreferences(
-    item: SpeechMathItem<N, T, D>,
-    prefs: { [key: string]: { [prop: string]: string[] } }
-  ): Promise<void> {
+  public getLocalePreferences(prefs: {
+    [key: string]: { [prop: string]: string[] };
+  }): Promise<void> {
     return (this.promise = this.webworker.clearspeakLocalePreferences(
-      item,
       this.options,
       prefs
+    ));
+  }
+
+  public getRelevantPreferences(
+    item: SpeechMathItem<N, T, D>,
+    semantic: string,
+    prefs: { [key: number]: string },
+    counter: number
+  ): Promise<void> {
+    const mml = item.outputData.mml;
+    return (this.promise = this.webworker.clearspeakRelevantPreferences(
+      mml,
+      this.options,
+      semantic,
+      prefs,
+      counter
     ));
   }
 }
