@@ -29,7 +29,7 @@ import { semanticMathmlSync } from '#sre/enrich_mathml/enrich.js';
 export {
   addPreference,
   fromPreference,
-  toPreference
+  toPreference,
 } from '#sre/speech_rules/clearspeak_preference_string.js';
 
 export const locales = Variables.LOCALES;

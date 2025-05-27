@@ -381,7 +381,7 @@ export class WorkerHandler<N, T, D> {
       'locale',
       'domain',
       'style',
-      'domain2style'
+      'domain2style',
     ]);
     const adaptor = this.adaptor;
     this.setSpecialAttributes(container, data.translations, 'data-semantic-');
@@ -593,20 +593,18 @@ export class WorkerHandler<N, T, D> {
    */
   public async clearspeakLocalePreferences(
     options: OptionList,
-    prefs: Map<string, {[prop: string]: string[] }>
+    prefs: Map<string, { [prop: string]: string[] }>
   ): Promise<void> {
-    await this.Post(
-      {
-        cmd: 'Worker',
+    await this.Post({
+      cmd: 'Worker',
+      data: {
+        cmd: 'localePreferences',
+        debug: this.options.debug,
         data: {
-          cmd: 'localePreferences',
-          debug: this.options.debug,
-          data: {
-            options: options
-          },
+          options: options,
         },
-      }
-    ).then((e) => {
+      },
+    }).then((e) => {
       prefs.set(options.locale, e);
     });
   }
@@ -627,19 +625,17 @@ export class WorkerHandler<N, T, D> {
     prefs: Map<number, string>,
     counter: number
   ): Promise<void> {
-    await this.Post(
-      {
-        cmd: 'Worker',
+    await this.Post({
+      cmd: 'Worker',
+      data: {
+        cmd: 'relevantPreferences',
+        debug: this.options.debug,
         data: {
-          cmd: 'relevantPreferences',
-          debug: this.options.debug,
-          data: {
-            mml: math,
-            id: nodeId,
-          },
+          mml: math,
+          id: nodeId,
         },
-      }
-    ).then((e) => {
+      },
+    }).then((e) => {
       prefs.set(counter, e);
     });
   }

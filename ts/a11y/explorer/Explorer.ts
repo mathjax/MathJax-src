@@ -118,9 +118,7 @@ export class AbstractExplorer<T> implements Explorer {
   protected events: [string, (x: Event) => void][] = [];
 
   /**
-   * The Sre highlighter associated with the walker.
-   *
-   * @type {Sre.highlighter}
+   * @returns {Highlighter} The Sre highlighter associated with the walker.
    */
   protected get highlighter(): Highlighter {
     return this.pool.highlighter;

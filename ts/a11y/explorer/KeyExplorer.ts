@@ -1095,8 +1095,8 @@ export class SpeechExplorer
    * Get the SSML attribute array
    *
    * @param {HTMLElement} node  The node whose SSML attributes are to be obtained
-   * @param center
-   * @returns {string[]}        The prefix/summary/postfix array
+   * @param {SemAttr} center    The name of the SSML attribute between pre and postfix
+   * @returns {string[]}        The prefix/speech or summary/postfix array
    */
   protected SsmlAttributes(node: HTMLElement, center: SemAttr): string[] {
     return [
