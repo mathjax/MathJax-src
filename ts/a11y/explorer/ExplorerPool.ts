@@ -28,8 +28,7 @@ import { Explorer } from './Explorer.js';
 import { SpeechExplorer } from './KeyExplorer.js';
 import * as me from './MouseExplorer.js';
 import { TreeColorer, FlameColorer } from './TreeExplorer.js';
-
-import * as Sre from '../sre.js';
+import { Highlighter, getHighlighter } from './Highlighter.js';
 
 /**
  * The regions objects needed for the explorers.
@@ -195,7 +194,7 @@ export class ExplorerPool {
   /**
    * A highlighter that is used to mark nodes during auto voicing.
    */
-  public secondaryHighlighter: Sre.highlighter;
+  public secondaryHighlighter: Highlighter;
 
   /**
    * The explorer dictionary.
@@ -225,7 +224,7 @@ export class ExplorerPool {
   /**
    * The primary highlighter shared by all explorers.
    */
-  private _highlighter: Sre.highlighter;
+  private _highlighter: Highlighter;
 
   /**
    * The name of the current output jax.
@@ -238,16 +237,16 @@ export class ExplorerPool {
   private _restart: string[] = [];
 
   /**
-   * @returns {Sre.highlighter} The primary highlighter shared by all explorers.
+   * @returns {Highlighter} The primary highlighter shared by all explorers.
    */
-  public get highlighter(): Sre.highlighter {
+  public get highlighter(): Highlighter {
     if (this._renderer !== this.document.outputJax.name) {
       this._renderer = this.document.outputJax.name;
       this.setPrimaryHighlighter();
       return this._highlighter;
     }
     const [foreground, background] = this.colorOptions();
-    Sre.updateHighlighter(background, foreground, this._highlighter);
+    this._highlighter.setColor(background, foreground);
     return this._highlighter;
   }
 
@@ -358,20 +357,21 @@ export class ExplorerPool {
    */
   protected setPrimaryHighlighter() {
     const [foreground, background] = this.colorOptions();
-    this._highlighter = Sre.getHighlighter(background, foreground, {
-      renderer: this.document.outputJax.name,
-      browser: 'v3',
-    });
+    this._highlighter = getHighlighter(
+      background,
+      foreground,
+      this.document.outputJax.name
+    );
   }
 
   /**
    * Sets the secondary highlighter for marking nodes during autovoicing.
    */
   protected setSecondaryHighlighter() {
-    this.secondaryHighlighter = Sre.getHighlighter(
+    this.secondaryHighlighter = getHighlighter(
       { color: 'red' },
       { color: 'black' },
-      { renderer: this.document.outputJax.name, browser: 'v3' }
+      this.document.outputJax.name
     );
     (this.speech.region as SpeechRegion).highlighter =
       this.secondaryHighlighter;
