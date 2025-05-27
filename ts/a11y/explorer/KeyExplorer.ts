@@ -901,17 +901,19 @@ export class SpeechExplorer
     this.focusSpeech = false;
     this.Update();
     if (oldspeech) {
-      setTimeout(() => oldspeech.remove(), 0);
+      setTimeout(() => oldspeech.remove(), 1);
     }
   }
 
   /**
    * Set up the MathItem output to handle the speech exploration
+   *
+   * @param {boolean} update   True for updating the AT about the root changes
    */
-  public attachSpeech() {
+  public attachSpeech(update: boolean = true) {
     const item = this.item;
     const container = this.node;
-    const speech = container.getAttribute(SemAttr.SPEECH) || '';
+    let speech = container.getAttribute(SemAttr.SPEECH) || '';
     for (const child of Array.from(container.childNodes) as HTMLElement[]) {
       child.setAttribute('aria-hidden', 'true'); // hide the content
     }
@@ -922,14 +924,21 @@ export class SpeechExplorer
       container.setAttribute('role', item.ariaRole);
       container.setAttribute('aria-roledescription', description);
     }
-    this.img?.remove();
-    this.img = this.document.adaptor.node('mjx-speech', {
-      'aria-label': speech + (description ? ', ' + description : ''),
-      role: 'img',
-      'aria-roledescription': item.none,
-    });
-    container.appendChild(this.img);
-    this.updateAT();
+    if (description) {
+      speech += ', ' + description;
+    }
+    if (update) {
+      this.img?.remove();
+      this.img = this.document.adaptor.node('mjx-speech', {
+        'aria-label': speech,
+        role: 'img',
+        'aria-roledescription': item.none,
+      });
+      container.appendChild(this.img);
+      this.updateAT();
+    } else {
+      this.img.setAttribute('aria-label', speech);
+    }
   }
 
   /**
@@ -960,7 +969,7 @@ export class SpeechExplorer
     item.addListeners?.(node, this.document);
     container.replaceWith(node);
     store?.insert(node);
-    if (this.refocus) {
+    if (this.refocus || this.restarted) {
       this.Start();
     }
   }
@@ -1113,10 +1122,11 @@ export class SpeechExplorer
    * @param {Promise<void>} promise  The promise to restart after
    */
   protected async restartAfter(promise: Promise<void>) {
-    this.img.remove();
-    this.img = null;
     await promise;
-    this.attachSpeech();
+    this.refocus = this.current;
+    this.Stop();
+    this.attachSpeech(false);
+    setTimeout(() => this.Start(), 10);
   }
 
   /********************************************************************/
