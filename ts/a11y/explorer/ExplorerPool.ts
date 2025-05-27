@@ -1,6 +1,6 @@
 /*************************************************************
  *
- *  COPYRIGHT (c) 2022-2024 The MathJax Consortium
+ *  Copyright (c) 2022-2024 The MathJax Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,9 +28,7 @@ import { Explorer } from './Explorer.js';
 import { SpeechExplorer } from './KeyExplorer.js';
 import * as me from './MouseExplorer.js';
 import { TreeColorer, FlameColorer } from './TreeExplorer.js';
-
 import { Highlighter, getHighlighter } from './Highlighter.js';
-// import * as Sre from '../sre.js';
 
 /**
  * The regions objects needed for the explorers.

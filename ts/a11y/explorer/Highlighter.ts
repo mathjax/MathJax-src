@@ -65,18 +65,18 @@ function rgba(color: ChannelColor): string {
 }
 
 /**
- * The default background color if a none existing color is provided.
+ * The default background color if a non-existing color is provided.
  */
 const DEFAULT_BACKGROUND: NamedColor = { color: 'blue', alpha: 1 };
 
 /**
- * The default color if a none existing color is provided.
+ * The default color if a non-existing color is provided.
  */
 const DEFAULT_FOREGROUND: NamedColor = { color: 'black', alpha: 1 };
 
 export interface Highlighter {
   /**
-   * Sets highlighting on a node.
+   * Sets highlighting on a set of nodes.
    *
    * @param {HTMLElement} nodes The nodes to highlight.
    */
@@ -118,7 +118,7 @@ export interface Highlighter {
   get background(): string;
 
   /**
-   * Sets of the color the highlighter is using.
+   * Sets the colors the highlighter is using.
    *
    * @param {NamedColor} background The new background color to use.
    * @param {NamedColor} foreground The new foreground color to use.
@@ -203,8 +203,10 @@ abstract class AbstractHighlighter implements Highlighter {
    */
   public highlightAll(node: HTMLElement) {
     const mactions = this.getMactionNodes(node);
-    for (let i = 0, maction; (maction = mactions[i]); i++) {
-      this.highlight([maction]);
+    for (const maction of mactions) {
+      if (maction.hasAttribute('data-collapsible')) {
+        this.highlight([maction]);
+      }
     }
   }
 
@@ -270,10 +272,7 @@ abstract class AbstractHighlighter implements Highlighter {
   /**
    * @override
    */
-  public isMactionNode(node: Element): boolean {
-    const className = node.className || node.getAttribute('class');
-    return className ? !!className.match(new RegExp(this.mactionName)) : false;
-  }
+  public abstract isMactionNode(node: Element): boolean;
 
   /**
    * Check if a node is already highlighted.
@@ -336,9 +335,6 @@ class SvgHighlighter extends AbstractHighlighter {
       node.style.color = this.foreground;
       return info;
     }
-    // This is a hack for v4.
-    // TODO: v4 Change
-    // const rect = (document ?? DomUtil).createElementNS(
     const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     rect.setAttribute(
       'sre-highlighter-added', // Mark highlighting rect.
@@ -444,7 +440,7 @@ class ChtmlHighlighter extends AbstractHighlighter {
    * @override
    */
   public isMactionNode(node: HTMLElement) {
-    return node.tagName?.toUpperCase() === this.mactionName.toUpperCase();
+    return node.tagName?.toLowerCase() === this.mactionName;
   }
 
   /**
