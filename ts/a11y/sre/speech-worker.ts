@@ -200,7 +200,7 @@ declare const SRE: any;
      * @returns {WorkerResult} Promise fulfilled when computation is complete.
      */
     async localePreferences(data: Message): WorkerResult {
-      const structure = (await SRE.workerLocalePreferences(data.options));
+      const structure = await SRE.workerLocalePreferences(data.options);
       // Not strictly necessary for the menu as there should not be one in node.
       // However, it allows for getting the preferences in a different context.
       return structure ? global.copyStructure(structure) : structure;
@@ -213,9 +213,8 @@ declare const SRE: any;
      * @returns {WorkerResult} Promise fulfilled when computation is complete.
      */
     async relevantPreferences(data: Message): WorkerResult {
-      return await SRE.workerRelevantPreferences(data.mml, data.id) ?? '';
+      return (await SRE.workerRelevantPreferences(data.mml, data.id)) ?? '';
     },
-
   };
 
   /**

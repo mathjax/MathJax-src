@@ -33,10 +33,13 @@ let csPrefsSetting: { [pref: string]: string } = {};
 let previousPrefs: string = null;
 
 /**
+ * Computes the current ClearSpeak preference, by either extracting it from the
+ * settings, returning the previously stored one, or returning the default.
  *
- * @param settings
+ * @param {string} settings The current speech rule options setting.
+ * @returns {string} The current ClearSpeak preference.
  */
-function currentPreference(settings?: string) {
+function currentPreference(settings?: string): string {
   const matcher = settings?.match(/^clearspeak-(.*)/);
   previousPrefs = (matcher && matcher[1]) ?? previousPrefs ?? 'default';
   return previousPrefs;
@@ -74,19 +77,21 @@ function csPrefsVariables(menu: MJContextMenu, prefs: string[]) {
 
 /**
  * Map for storing clearspeak preferences per locale, which can vary. They need
- * to becomputed only once as they should not change during a single run.
+ * to be computed only once as they should not change during a single run.
  */
 const localePreferences: Map<string, { [prop: string]: string[] }> = new Map();
 
 /**
+ * Computes the clearspeak preferences for the given locale via the worker.
  *
- * @param menu
- * @param locale
+ * @param {MJContextMenu} menu The parent menu.
+ * @param {string} locale The locale to get.
  */
 async function getLocalePreferences(menu: MJContextMenu, locale: string) {
-  const item = menu.mathItem as ExplorerMathItem;
   if (!localePreferences.has(locale)) {
-    await item.generatorPool.getLocalePreferences(localePreferences);
+    await (
+      menu.mathItem as ExplorerMathItem
+    ).generatorPool.getLocalePreferences(localePreferences);
   }
 }
 
@@ -172,7 +177,6 @@ function basePreferences(previous: string): object[] {
 /**
  * Generates the items for smart preference choices, depending on the top most
  *
- * @param item
  * @param {string} previous The currently set preferences.
  * @param {string} smart The semantic type of the smart preferences.
  * @param {string} locale The current locale.

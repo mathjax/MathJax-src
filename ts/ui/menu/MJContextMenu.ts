@@ -47,8 +47,14 @@ export class MJContextMenu extends ContextMenu {
    */
   public static DynamicSubmenus: Map<
     string,
-    [(menu: MJContextMenu, sub: Submenu,
-      callback: (sub: SubMenu) => void) => void, string]
+    [
+      (
+        menu: MJContextMenu,
+        sub: Submenu,
+        callback: (sub: SubMenu) => void
+      ) => void,
+      string,
+    ]
   > = new Map();
 
   /**
@@ -224,16 +230,14 @@ export class MJContextMenu extends ContextMenu {
     for (const [id, [method, option]] of MJContextMenu.DynamicSubmenus) {
       const menu = this.find(id) as Submenu;
       if (!menu) continue;
-      method(this, menu,
-             (sub: SubMenu) => {
-               menu.submenu = sub;
-               if (sub?.items?.length && (!option || this.settings[option])) {
-                 menu.enable();
-               } else {
-                 menu.disable();
-               }
-             }
-            );
+      method(this, menu, (sub: SubMenu) => {
+        menu.submenu = sub;
+        if (sub?.items?.length && (!option || this.settings[option])) {
+          menu.enable();
+        } else {
+          menu.disable();
+        }
+      });
     }
   }
 }
