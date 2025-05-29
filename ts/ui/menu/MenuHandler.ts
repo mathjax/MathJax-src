@@ -34,6 +34,7 @@ import {
   AssistiveMmlMathDocument,
   AssistiveMmlMathItem,
 } from '../../a11y/assistive-mml.js';
+import { SpeechMathDocument } from '../../a11y/speech.js';
 import { expandable } from '../../util/Options.js';
 
 import { Menu } from './Menu.js';
@@ -67,6 +68,7 @@ export type A11yMathDocument = ComplexityMathDocument<
   Text,
   Document
 > &
+  SpeechMathDocument<HTMLElement, Text, Document> &
   AssistiveMmlMathDocument<HTMLElement, Text, Document>;
 
 /**
@@ -149,7 +151,8 @@ export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
  * The properties needed in the MathDocument for context menus
  */
 export interface MenuMathDocument
-  extends ComplexityMathDocument<HTMLElement, Text, Document> {
+  extends ComplexityMathDocument<HTMLElement, Text, Document>,
+    SpeechMathDocument<HTMLElement, Text, Document> {
   /**
    * The menu associated with this document
    */
