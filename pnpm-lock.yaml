@@ -21,8 +21,8 @@ importers:
         specifier: ^0.9.1
         version: 0.9.1
       speech-rule-engine:
-        specifier: ^5.0.0-alpha.3
-        version: 5.0.0-alpha.3
+        specifier: ^5.0.0-alpha.4
+        version: 5.0.0-alpha.4
       wicked-good-xpath:
         specifier: ^1.3.0
         version: 1.3.0
@@ -1245,8 +1245,8 @@ packages:
   spdx-license-ids@3.0.18:
     resolution: {integrity: sha512-xxRs31BqRYHwiMzudOrpSiHtZ8i/GeionCBDSilhYRj+9gIcI8wCZTlXZKu9vZIVqViP3dcp9qE5G6AlIaD+TQ==}
 
-  speech-rule-engine@5.0.0-alpha.3:
-    resolution: {integrity: sha512-IZi+cUiCw4mSNt+VBcMP77DOES6QuxhlfDfmvoS5VZhRPLgx8hm9B/BHMhJ9SFsDrhSMP07Dh9e4jj6py4hlMQ==}
+  speech-rule-engine@5.0.0-alpha.4:
+    resolution: {integrity: sha512-88kD4YbtjFuU1YudCgMXOw8HoN2lcrrEDBG6GsraWg7I0s8ltUGrWYpoegyV2nic5ZHs6IzwOFOs5Ai+yxnQzw==}
     hasBin: true
 
   string-argv@0.3.2:
@@ -2633,7 +2633,7 @@ snapshots:
 
   spdx-license-ids@3.0.18: {}
 
-  speech-rule-engine@5.0.0-alpha.3:
+  speech-rule-engine@5.0.0-alpha.4:
     dependencies:
       '@xmldom/xmldom': 0.9.8
       commander: 13.1.0
