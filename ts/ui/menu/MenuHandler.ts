@@ -219,7 +219,7 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
           STATE.UNPROCESSED + 1,
           (doc: MenuMathDocument) => doc.checkLoading(),
           '',
-          false
+          false,
         ],
       }),
     };

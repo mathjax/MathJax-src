@@ -768,10 +768,7 @@ export class SpeechExplorer
    * @param {HTMLElement} node         The node that should become current
    * @param {boolean} addDescription   True if the speech node should get a description
    */
-  protected setCurrent(
-    node: HTMLElement,
-    addDescription: boolean = false
-  ) {
+  protected setCurrent(node: HTMLElement, addDescription: boolean = false) {
     this.speechType = '';
     if (!document.hasFocus()) {
       this.refocus = this.current;
@@ -912,7 +909,9 @@ export class SpeechExplorer
       container.setAttribute('has-speech', 'true');
     }
     const description = item.roleDescription;
-    const speech = (container.getAttribute(SemAttr.SPEECH) || '') + (description ? ', ' + description : '');
+    const speech =
+      (container.getAttribute(SemAttr.SPEECH) || '') +
+      (description ? ', ' + description : '');
     this.img?.remove();
     this.img = this.document.adaptor.node('mjx-speech', {
       'aria-label': speech,
