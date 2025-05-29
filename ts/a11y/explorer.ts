@@ -288,6 +288,7 @@ export function ExplorerMathDocumentMixin<
         voicing: false,                    // switch on speech output
         help: true,                        // include "press h for help" messages on focus
         roleDescription: 'math',           // the role description to use for math expressions
+        tabSelects: 'all',                 // 'all' for whole expression, 'last' for last explored node
       }
     };
 

@@ -106,6 +106,7 @@ export interface MenuSettings {
   voicing: boolean;
   help: boolean;
   roleDescription: string;
+  tabSelects: string;
 }
 
 export type HTMLMATHITEM = MathItem<HTMLElement, Text, Document>;
@@ -155,6 +156,7 @@ export class Menu {
       brailleCode: 'nemeth',
       speechRules: 'clearspeak-default',
       roleDescription: 'math',
+      tabSelects: 'all',
     },
     jax: {
       CHTML: null,
@@ -595,6 +597,7 @@ export class Menu {
           this.setEnrichment(enrich)
         ),
         this.variable<boolean>('inTabOrder', (tab) => this.setTabOrder(tab)),
+        this.a11yVar<string>('tabSelects'),
         this.variable<boolean>('assistiveMml', (mml) =>
           this.setAssistiveMml(mml)
         ),
@@ -857,6 +860,13 @@ export class Menu {
           }),
           this.rule(),
           this.checkbox('InTabOrder', 'Include in Tab Order', 'inTabOrder'),
+          this.submenu('TabSelects', 'Tabbing Focuses on', [
+            this.radioGroup('tabSelects', [
+              ['all', 'Whole Expression'],
+              ['last', 'Last Explored Node'],
+            ]),
+          ]),
+          this.rule(),
           this.checkbox(
             'AssistiveMml',
             'Include Hidden MathML',
@@ -1166,6 +1176,8 @@ export class Menu {
    * @param {boolean} tab   True for including math in the tab order, false for not
    */
   protected setTabOrder(tab: boolean) {
+    const menu = this.menu.findID('Options', 'TabSelects');
+    tab ? menu.enable() : menu.disable();
     this.menu.store.inTaborder(tab);
   }
 
