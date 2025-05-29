@@ -30,7 +30,6 @@ import {
   ComplexityMathDocument,
   ComplexityMathItem,
 } from '../../a11y/complexity.js';
-import { ExplorerMathDocument, ExplorerMathItem } from '../../a11y/explorer.js';
 import {
   AssistiveMmlMathDocument,
   AssistiveMmlMathItem,
@@ -51,7 +50,6 @@ export type Constructor<T> = new (...args: any[]) => T;
  * Generic A11Y MathItem type
  */
 export type A11yMathItem = ComplexityMathItem<HTMLElement, Text, Document> &
-  ExplorerMathItem &
   AssistiveMmlMathItem<HTMLElement, Text, Document>;
 
 /**
@@ -69,7 +67,6 @@ export type A11yMathDocument = ComplexityMathDocument<
   Text,
   Document
 > &
-  ExplorerMathDocument &
   AssistiveMmlMathDocument<HTMLElement, Text, Document>;
 
 /**
@@ -152,8 +149,7 @@ export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
  * The properties needed in the MathDocument for context menus
  */
 export interface MenuMathDocument
-  extends ComplexityMathDocument<HTMLElement, Text, Document>,
-    ExplorerMathDocument {
+  extends ComplexityMathDocument<HTMLElement, Text, Document> {
   /**
    * The menu associated with this document
    */
