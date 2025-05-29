@@ -48,24 +48,34 @@ import '../../a11y/speech/SpeechMenu.js';
 export type Constructor<T> = new (...args: any[]) => T;
 
 /**
+ * Generic A11Y MathItem type
+ */
+export type A11yMathItem = ComplexityMathItem<HTMLElement, Text, Document> &
+  ExplorerMathItem &
+  AssistiveMmlMathItem<HTMLElement, Text, Document>;
+
+/**
  * Constructor for base MathItem for MenuMathItem
  */
 export type A11yMathItemConstructor = {
-  new (
-    ...args: any[]
-  ): ComplexityMathItem<HTMLElement, Text, Document> &
-    ExplorerMathItem &
-    AssistiveMmlMathItem<HTMLElement, Text, Document>;
+  new (...args: any[]): A11yMathItem;
 };
+
+/**
+ * Generic A11Y MathDocument type
+ */
+export type A11yMathDocument = ComplexityMathDocument<
+  HTMLElement,
+  Text,
+  Document
+> &
+  ExplorerMathDocument &
+  AssistiveMmlMathDocument<HTMLElement, Text, Document>;
 
 /**
  * Constructor for base document for MenuMathDocument
  */
-export type A11yDocumentConstructor = MathDocumentConstructor<
-  ComplexityMathDocument<HTMLElement, Text, Document> &
-    ExplorerMathDocument &
-    AssistiveMmlMathDocument<HTMLElement, Text, Document>
->;
+export type A11yDocumentConstructor = MathDocumentConstructor<A11yMathDocument>;
 
 /*==========================================================================*/
 
@@ -142,7 +152,8 @@ export function MenuMathItemMixin<B extends A11yMathItemConstructor>(
  * The properties needed in the MathDocument for context menus
  */
 export interface MenuMathDocument
-  extends ComplexityMathDocument<HTMLElement, Text, Document> {
+  extends ComplexityMathDocument<HTMLElement, Text, Document>,
+    ExplorerMathDocument {
   /**
    * The menu associated with this document
    */
@@ -156,11 +167,11 @@ export interface MenuMathDocument
   addMenu(): MenuMathDocument;
 
   /**
-   * Checks if there are files being loaded by the menu, and restarts the typesetting if so
+   * Checks if there are files being loaded by the menu, and cancels the typesetting if so.
    *
-   * @returns {MenuMathDocument}   The MathDocument (so calls can be chained)
+   * @returns {boolean}   True if we need to wait for extensions
    */
-  checkLoading(): MenuMathDocument;
+  checkLoading(): boolean;
 }
 
 /**
@@ -204,7 +215,12 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
         ...BaseDocument.OPTIONS.renderActions,
         addMenu: [STATE.CONTEXT_MENU],
         getMenus: [STATE.INSERTED + 5, false],
-        checkLoading: [STATE.UNPROCESSED + 1],
+        checkLoading: [
+          STATE.UNPROCESSED + 1,
+          (doc: MenuMathDocument) => doc.checkLoading(),
+          '',
+          false
+        ],
       }),
     };
 
@@ -263,11 +279,27 @@ export function MenuMathDocumentMixin<B extends A11yDocumentConstructor>(
     }
 
     /**
+     * @override
+     */
+    public checkLoading(): boolean {
+      let result = true;
+      try {
+        this._checkLoading();
+        result = false;
+      } catch (err) {
+        if (!err.retry) {
+          throw err;
+        }
+      }
+      return result;
+    }
+
+    /**
      * Checks if there are files being loaded by the menu, and restarts the typesetting if so
      *
      * @returns {MenuMathDocument}   The MathDocument (so calls can be chained)
      */
-    public checkLoading(): MenuMathDocument {
+    public _checkLoading(): MenuMathDocument {
       if (this.menu.isLoading) {
         mathjax.retryAfter(
           this.menu.loadingPromise.catch((err) => console.log(err))

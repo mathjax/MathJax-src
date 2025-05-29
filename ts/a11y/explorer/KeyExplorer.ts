@@ -274,7 +274,7 @@ export class SpeechExplorer
   }
 
   /**
-   * Shorthand for the item's ARIA role
+   * Shorthand for the item's speech ARIA role
    *
    * @returns {string}  The role
    */
@@ -331,14 +331,14 @@ export class SpeechExplorer
   protected speech: HTMLElement = null;
 
   /**
+   * Set to 'd' when depth is showing, 'x' when summary, '' when speech.
+   */
+  protected speechType: string = '';
+
+  /**
    * The speech node when the top-level node has no role
    */
   protected img: HTMLElement = null;
-
-  /**
-   * True when top-level role is none
-   */
-  protected descend: boolean = false;
 
   /**
    * True when explorer is attached to a node
@@ -364,6 +364,7 @@ export class SpeechExplorer
     ['keydown', this.KeyDown.bind(this)],
     ['mousedown', this.MouseDown.bind(this)],
     ['click', this.Click.bind(this)],
+    ['dblclick', this.DblClick.bind(this)],
   ]);
 
   /**
@@ -425,7 +426,10 @@ export class SpeechExplorer
    * @param {MouseEvent} event   The mouse down event
    */
   private MouseDown(event: MouseEvent) {
-    if (hasModifiers(event) || event.buttons === 2) return;
+    if (hasModifiers(event) || event.buttons === 2) {
+      this.item.outputData.nofocus = true;
+      return;
+    }
     //
     // Get the speech element that was clicked
     //
@@ -443,17 +447,14 @@ export class SpeechExplorer
     }
     //
     // Remove any selection ranges and
-    // if the clicked element is not the top-level node,
-    //   if the target is the highlight rectangle, refocus on the clicked element
+    // If the target is the highlight rectangle, refocus on the clicked element
     //   otherwise record the click for the focusin handler
     //
     document.getSelection()?.removeAllRanges();
-    if (document.activeElement !== this.node) {
-      if ((event.target as HTMLElement).getAttribute('sre-highlighter-added')) {
-        this.refocus = clicked;
-      } else {
-        this.clicked = clicked;
-      }
+    if ((event.target as HTMLElement).getAttribute('sre-highlighter-added')) {
+      this.refocus = clicked;
+    } else {
+      this.clicked = clicked;
     }
   }
 
@@ -502,6 +503,22 @@ export class SpeechExplorer
       if (!this.triggerLinkMouse()) {
         this.Start();
       }
+    }
+  }
+
+  /**
+   * Handle a double-click event (focus full expression)
+   *
+   * @param {MouseEvent} event   The mouse click event
+   */
+  public DblClick(event: MouseEvent) {
+    const direction = (document.getSelection() as any).direction ?? 'none';
+    if (hasModifiers(event) || event.buttons === 2 || direction !== 'none') {
+      this.FocusOut(null);
+    } else {
+      this.stopEvent(event);
+      this.refocus = this.node.querySelector(nav);
+      this.Start();
     }
   }
 
@@ -636,6 +653,11 @@ export class SpeechExplorer
    * expression.
    */
   public depth() {
+    if (this.speechType === 'd') {
+      this.setCurrent(this.current);
+      return;
+    }
+    this.speechType = 'd';
     const parts = [
       [
         this.node.getAttribute('data-semantic-level') ?? 'Level',
@@ -644,10 +666,11 @@ export class SpeechExplorer
         .join(' ')
         .trim(),
     ];
-    if (this.actionable(this.current)) {
+    const action = this.actionable(this.current);
+    if (action) {
       parts.unshift(
         this.node.getAttribute(
-          this.current.childNodes.length === 0
+          action.getAttribute('toggle') === '1'
             ? 'data-semantic-expandable'
             : 'data-semantic-collapsible'
         ) ?? ''
@@ -660,6 +683,11 @@ export class SpeechExplorer
    * Computes the summary for this expression.
    */
   public summary() {
+    if (this.speechType === 'x') {
+      this.setCurrent(this.current);
+      return;
+    }
+    this.speechType = 'x';
     const summary = this.current.getAttribute(SemAttr.SUMMARY);
     this.speak(
       summary,
@@ -738,14 +766,13 @@ export class SpeechExplorer
    * Set the currently selected node and speak its label, if requested.
    *
    * @param {HTMLElement} node         The node that should become current
-   * @param {boolean} addSpeech        True if speech is to be added for that node
    * @param {boolean} addDescription   True if the speech node should get a description
    */
   protected setCurrent(
     node: HTMLElement,
-    addSpeech: boolean = true,
     addDescription: boolean = false
   ) {
+    this.speechType = '';
     if (!document.hasFocus()) {
       this.refocus = this.current;
     }
@@ -778,9 +805,7 @@ export class SpeechExplorer
     if (this.current) {
       this.current.classList.add('mjx-selected');
       this.pool.highlight([this.current]);
-      if (addSpeech) {
-        this.addSpeech(node, addDescription);
-      }
+      this.addSpeech(node, addDescription);
     }
     //
     // Done making changes
@@ -807,7 +832,7 @@ export class SpeechExplorer
     if (describe) {
       let description =
         this.description === this.none ? '' : ', ' + this.description;
-      if (this.descend && this.document.options.a11y.help) {
+      if (this.document.options.a11y.help) {
         description += ', press h for help';
       }
       speech += description;
@@ -846,17 +871,18 @@ export class SpeechExplorer
     ssml: string[] = null,
     description: string = this.none
   ) {
+    if (!speech) {
+      speech = 'blank';
+    }
     const oldspeech = this.speech;
     this.speech = document.createElement('mjx-speech');
-    this.speech.setAttribute('role', 'math');
-    if (speech) {
-      this.speech.setAttribute('aria-label', speech);
-      this.speech.setAttribute(SemAttr.SPEECH, speech);
-      if (ssml) {
-        this.speech.setAttribute(SemAttr.PREFIX_SSML, ssml[0] || '');
-        this.speech.setAttribute(SemAttr.SPEECH_SSML, ssml[1] || '');
-        this.speech.setAttribute(SemAttr.POSTFIX_SSML, ssml[2] || '');
-      }
+    this.speech.setAttribute('role', this.role);
+    this.speech.setAttribute('aria-label', speech);
+    this.speech.setAttribute(SemAttr.SPEECH, speech);
+    if (ssml) {
+      this.speech.setAttribute(SemAttr.PREFIX_SSML, ssml[0] || '');
+      this.speech.setAttribute(SemAttr.SPEECH_SSML, ssml[1] || '');
+      this.speech.setAttribute(SemAttr.POSTFIX_SSML, ssml[2] || '');
     }
     if (braille) {
       this.speech.setAttribute('aria-braillelabel', braille);
@@ -869,7 +895,7 @@ export class SpeechExplorer
     this.focusSpeech = false;
     this.Update();
     if (oldspeech) {
-      setTimeout(() => oldspeech.remove(), 0);
+      setTimeout(() => oldspeech.remove(), 100);
     }
   }
 
@@ -879,20 +905,17 @@ export class SpeechExplorer
   public attachSpeech() {
     const item = this.item;
     const container = this.node;
-    const speech = container.getAttribute(SemAttr.SPEECH);
-    for (const child of Array.from(container.childNodes) as HTMLElement[]) {
-      child.setAttribute('aria-hidden', 'true'); // hide the content
+    if (!container.hasAttribute('has-speech')) {
+      for (const child of Array.from(container.childNodes) as HTMLElement[]) {
+        child.setAttribute('aria-hidden', 'true'); // hide the content
+      }
+      container.setAttribute('has-speech', 'true');
     }
-    container.setAttribute('has-speech', 'true');
     const description = item.roleDescription;
-    if (!this.descend) {
-      container.setAttribute('aria-label', speech);
-      container.setAttribute('role', item.ariaRole);
-      container.setAttribute('aria-roledescription', description);
-    }
+    const speech = (container.getAttribute(SemAttr.SPEECH) || '') + (description ? ', ' + description : '');
     this.img?.remove();
     this.img = this.document.adaptor.node('mjx-speech', {
-      'aria-label': speech + (description ? ', ' + description : ''),
+      'aria-label': speech,
       role: 'img',
       'aria-roledescription': item.none,
     });
@@ -905,9 +928,6 @@ export class SpeechExplorer
   public detachSpeech() {
     const container = this.node;
     this.img?.remove();
-    container.removeAttribute('aria-label');
-    container.removeAttribute('role');
-    container.removeAttribute('aria-roledescription');
     container.removeAttribute('has-speech');
     for (const child of Array.from(container.childNodes) as HTMLElement[]) {
       child.removeAttribute('aria-hidden');
@@ -1047,12 +1067,11 @@ export class SpeechExplorer
    * @param {Promise<void>} promise  The promise to restart after
    */
   protected async restartAfter(promise: Promise<void>) {
-    this.img.remove();
-    this.img = null;
     await promise;
     this.attachSpeech();
     const current = this.current;
     this.current = null;
+    this.pool.unhighlight();
     this.setCurrent(current);
   }
 
@@ -1132,21 +1151,8 @@ export class SpeechExplorer
     // current node (which creates the speech) and start the explorer.
     //
     const node = this.findStartNode();
-    const add = this.descend || !!node;
-    this.setCurrent(node || this.node.querySelector(nav), add, !node);
+    this.setCurrent(node || this.node.querySelector(nav), !node);
     super.Start();
-    //
-    // Add the help message if we are focusing the top-level node
-    //
-    if (!node && !this.descend && this.document.options.a11y.help) {
-      const description = this.description;
-      this.node.setAttribute(
-        'aria-roledescription',
-        (description === this.none ? '' : description + ' ') +
-          'press h for help' +
-          (context.os === 'unix' ? ' when focused' : '')
-      );
-    }
     //
     // Show any needed regions
     //
@@ -1204,7 +1210,6 @@ export class SpeechExplorer
     if (this.attached) return;
     super.Attach();
     this.node.setAttribute('tabindex', '0');
-    this.descend = this.role === 'none';
     this.attached = true;
   }
 
@@ -1316,7 +1321,7 @@ export class SpeechExplorer
     let node = this.current || this.node;
     const action = this.actionable(node);
     if (action) {
-      name = 'data-maction-id';
+      name = action.hasAttribute('data-maction-id') ? 'data-maction-id' : 'id';
       node = action;
       focus.push(nav);
     }

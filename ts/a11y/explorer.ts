@@ -37,7 +37,7 @@ import { ExplorerPool, RegionPool } from './explorer/ExplorerPool.js';
 
 import * as Sre from './sre.js';
 
-const isMac = context.os === 'MacOS';
+const isUnix = context.os === 'Unix';
 
 /**
  * Generic constructor for Mixins
@@ -48,23 +48,25 @@ export type Constructor<T> = new (...args: any[]) => T;
  * Shorthands for types with HTMLElement, Text, and Document instead of generics
  */
 export type HANDLER = Handler<HTMLElement, Text, Document>;
-export type HTMLDOCUMENT = SpeechMathDocument<HTMLElement, Text, Document>;
+export type HTMLDOCUMENT = SpeechMathDocument<HTMLElement, Text, Document> & {
+  menu?: any;
+};
 export type HTMLMATHITEM = SpeechMathItem<HTMLElement, Text, Document>;
 export type MATHML = MathML<HTMLElement, Text, Document>;
 
 /*==========================================================================*/
 
 /**
- * Add STATE value for having the Explorer added (after TYPESET and before INSERTED or CONTEXT_MENU)
+ * Add STATE value for having the Explorer added (after INSERTED and before CONTEXT_MENU)
  */
-newState('EXPLORER', 160);
+newState('EXPLORER', STATE.INSERTED + 30);
 
 /**
  * The properties added to MathItem for the Explorer
  */
 export interface ExplorerMathItem extends HTMLMATHITEM {
   /**
-   * The value to use for the aria role for typeset math
+   * The value to use for the aria role for mjx-speech elements
    */
   ariaRole: string;
 
@@ -105,9 +107,9 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
 ): Constructor<ExplorerMathItem> & B {
   return class BaseClass extends BaseMathItem {
     /**
-     * The value to use for the aria role for typeset math
+     * The value to use for the aria role for mjx-speech elements
      */
-    protected static ariaRole: string = isMac ? 'none' : 'application';
+    protected static ariaRole: string = isUnix ? 'tree' : 'application';
 
     /**
      * The aria-roleDescription to use for the math
@@ -150,10 +152,17 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      */
     public attachSpeech(document: ExplorerMathDocument) {
       super.attachSpeech(document);
-      const promise = this.outputData.speechPromise;
-      if (promise) {
-        promise.then(() => this.explorers.speech.attachSpeech());
-      }
+      this.outputData.speechPromise
+        ?.then(() => this.explorers.speech.attachSpeech())
+        ?.then(() => {
+          if (this.explorers?.speech) {
+            this.explorers.speech.restarted = this.refocus;
+          }
+          this.refocus = null;
+          if (this.explorers) {
+            this.explorers.restart();
+          }
+        });
     }
 
     /**
@@ -198,20 +207,6 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
         this.explorers.reattach();
       }
       super.rerender(document, start);
-    }
-
-    /**
-     * @override
-     */
-    public updateDocument(document: ExplorerMathDocument) {
-      super.updateDocument(document);
-      if (this.explorers?.speech) {
-        this.explorers.speech.restarted = this.refocus;
-      }
-      this.refocus = null;
-      if (this.explorers) {
-        this.explorers.restart();
-      }
     }
   };
 }
