@@ -157,7 +157,7 @@ settings.</li>
 <li><b>d</b> gives the current depth within the expression.</li>
 
 <li><b>&gt;</b> cycles through the available speech rule sets
-(MathSpeak, ClearSpeak, ChromeVox).</li>
+(MathSpeak, ClearSpeak).</li>
 
 <li><b>&lt;</b> cycles through the verbosity levels for the current
 rule set.</li>
