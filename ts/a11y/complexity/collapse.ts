@@ -531,9 +531,16 @@ export class Collapse {
   /**
    * Add maction nodes to the nodes in the tree that can collapse
    *
-   * @param {MmlNode} node   The root of the tree to check
+   * @param {MmlNode} node     The root of the tree to check
+   * @param {number|null} id   The initial id to use
+   * @returns {number}         The initial id used
    */
-  public makeCollapse(node: MmlNode) {
+  public makeCollapse(node: MmlNode, id: number | null): number {
+    if (id === null) {
+      id = this.idCount;
+    } else {
+      this.idCount = id;
+    }
     const nodes: MmlNode[] = [];
     node.walkTree((child: MmlNode) => {
       if (child.getProperty('collapse-marker')) {
@@ -541,6 +548,7 @@ export class Collapse {
       }
     });
     this.makeActions(nodes);
+    return id;
   }
 
   /**

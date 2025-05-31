@@ -24,6 +24,7 @@
 import { MathItem } from '../../core/MathItem.js';
 import { OptionList } from '../../util/Options.js';
 import { JaxList } from './Menu.js';
+import { ExplorerMathItem } from '../../a11y/explorer.js';
 
 import {
   ContextMenu,
@@ -85,6 +86,10 @@ export class MJContextMenu extends ContextMenu {
    */
   public post(x?: any, y?: number) {
     if (this.mathItem) {
+      const speech = (this.mathItem as ExplorerMathItem)?.explorers?.speech;
+      if (speech?.active) {
+        speech.restarted = speech.semanticFocus();
+      }
       if (y !== undefined) {
         this.getOriginalMenu();
         this.getSemanticsMenu();
