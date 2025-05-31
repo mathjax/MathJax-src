@@ -153,7 +153,6 @@ export const ChtmlMath = (function <N, T, D>(): ChtmlMathClass<N, T, D> {
       },
       'mjx-math[breakable]': {
         display: 'inline',
-        'font-family': 'inherit',
       },
       //
       //  For inline breakpoints, use a space that is 1em width, make it breakable,

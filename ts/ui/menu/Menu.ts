@@ -527,6 +527,7 @@ export class Menu {
       this.document.options.a11y,
       this.settings
     );
+    this.setA11y({ roleDescription: this.settings.roleDescription });
   }
 
   /**
@@ -926,16 +927,20 @@ export class Menu {
    */
   protected checkLoadableItems() {
     if (MathJax && MathJax._ && MathJax.loader && MathJax.startup) {
+      const settings = this.settings;
+      const options = this.document.options;
       if (
-        (this.settings.enrich ||
-          this.settings.collapsible ||
-          this.settings.speech ||
-          this.settings.braille) &&
+        (settings.enrich ||
+          (settings.speech && options.enableSpeech) ||
+          (settings.braille && options.enableBraille)) &&
         !MathJax._?.a11y?.explorer
       ) {
         this.loadA11y('explorer');
       }
-      if (this.settings.assistiveMml && !MathJax._?.a11y?.['assistive-mml']) {
+      if (settings.collapsible && !MathJax._?.a11y?.complexity) {
+        this.loadA11y('complexity');
+      }
+      if (settings.assistiveMml && !MathJax._?.a11y?.['assistive-mml']) {
         this.loadA11y('assistive-mml');
       }
     } else {
@@ -1072,7 +1077,7 @@ export class Menu {
   protected setOverflow(overflow: string) {
     this.document.outputJax.options.displayOverflow = overflow.toLowerCase();
     if (!Menu.loading) {
-      this.document.rerender();
+      this.document.rerenderPromise();
     }
   }
 
@@ -1082,7 +1087,7 @@ export class Menu {
   protected setInlineBreaks(breaks: boolean) {
     this.document.outputJax.options.linebreaks.inline = breaks;
     if (!Menu.loading) {
-      this.document.rerender();
+      this.document.rerenderPromise();
     }
   }
 
@@ -1092,7 +1097,7 @@ export class Menu {
   protected setScale(scale: string) {
     this.document.outputJax.options.scale = parseFloat(scale);
     if (!Menu.loading) {
-      this.document.rerender();
+      this.document.rerenderPromise();
     }
   }
 
@@ -1397,11 +1402,11 @@ export class Menu {
       .then(() => {
         Menu.loading--;
         Menu.loadingPromises.delete(name);
-        callback();
         if (Menu.loading === 0 && Menu._loadingPromise) {
           Menu._loadingPromise = null;
           Menu._loadingOK();
         }
+        callback();
       })
       .catch((err) => {
         if (Menu._loadingPromise) {
@@ -1439,6 +1444,9 @@ export class Menu {
       const document = this.document;
       this.document = startup.document = startup.getDocument();
       this.document.menu = this;
+      if (document.webworker) {
+        this.document.webworker = document.webworker;
+      }
       this.setA11y(this.settings);
       this.defaultSettings = Object.assign(
         {},
@@ -1711,8 +1719,14 @@ export class Menu {
    * @param {HTMLMATHITEM} math   The math to attach the context menu and zoom triggers to
    */
   public addMenu(math: HTMLMATHITEM) {
-    const element = math.typesetRoot;
-    element.addEventListener(
+    this.addEvents(math);
+    this.menu.store.insert(math.typesetRoot);
+    math.typesetRoot.tabIndex = this.settings.inTabOrder ? 0 : -1;
+  }
+
+  public addEvents(math: HTMLMATHITEM) {
+    const node = math.typesetRoot;
+    node.addEventListener(
       'mousedown',
       () => {
         this.menu.mathItem = math;
@@ -1720,7 +1734,7 @@ export class Menu {
       },
       true
     );
-    element.addEventListener(
+    node.addEventListener(
       'contextmenu',
       () => {
         this.menu.mathItem = math;
@@ -1732,23 +1746,17 @@ export class Menu {
       },
       true
     );
-    element.addEventListener(
-      'keydown',
-      () => (this.menu.mathItem = math),
-      true
-    );
-    element.addEventListener(
+    node.addEventListener('keydown', () => (this.menu.mathItem = math), true);
+    node.addEventListener(
       'click',
       (event) => this.zoom(event, 'Click', math),
       true
     );
-    element.addEventListener(
+    node.addEventListener(
       'dblclick',
       (event) => this.zoom(event, 'DoubleClick', math),
       true
     );
-    this.menu.store.insert(element);
-    element.tabIndex = this.settings.inTabOrder ? 0 : -1;
   }
 
   /**
