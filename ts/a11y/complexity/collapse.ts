@@ -536,9 +536,11 @@ export class Collapse {
    * @returns {number}         The initial id used
    */
   public makeCollapse(node: MmlNode, id: number | null): number {
+    let oldCount = null;
     if (id === null) {
       id = this.idCount;
     } else {
+      oldCount = this.idCount;
       this.idCount = id;
     }
     const nodes: MmlNode[] = [];
@@ -548,6 +550,9 @@ export class Collapse {
       }
     });
     this.makeActions(nodes);
+    if (oldCount !== null) {
+      this.idCount = oldCount;
+    }
     return id;
   }
 
