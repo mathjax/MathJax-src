@@ -86,10 +86,26 @@ export interface ExplorerMathItem extends HTMLMATHITEM {
   explorers: ExplorerPool;
 
   /**
+   * Semantic id of the rerendered element that should regain the focus.
+   */
+  refocus: string;
+
+  /**
    * @param {HTMLDocument} document  The document where the Explorer is being added
    * @param {boolean} force          True to force the explorer even if enableExplorer is false
    */
   explorable(document: HTMLDOCUMENT, force?: boolean): void;
+
+  /**
+   * @param {ExplorerMathDocument} document  The explorer document being used
+   * @returns {HTMLElement}                  The temporary focus element, if any
+   */
+  setTemporaryFocus(document: ExplorerMathDocument): HTMLElement;
+
+  /**
+   * @param {HTMLElement} focus  The temporary focus element, if any
+   */
+  clearTemporaryFocus(focus: HTMLElement): void;
 }
 
 /**
@@ -143,9 +159,9 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     public explorers: ExplorerPool;
 
     /**
-     * Semantic id of the rerendered element that should regain the focus.
+     * @override
      */
-    protected refocus: string = null;
+    public refocus: string = null;
 
     /**
      * @override
@@ -195,18 +211,61 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
     /**
      * @override
      */
+    public state(state: number = null, restore: boolean = false) {
+      if (state < STATE.EXPLORER && this.explorers) {
+        for (const explorer of Object.values(this.explorers.explorers)) {
+          if (explorer.active) {
+            explorer.Stop();
+          }
+        }
+      }
+      return super.state(state, restore);
+    }
+
+    /**
+     * @override
+     */
     public rerender(
       document: ExplorerMathDocument,
       start: number = STATE.RERENDER
     ) {
+      const focus = this.setTemporaryFocus(document);
+      super.rerender(document, start);
+      this.clearTemporaryFocus(focus);
+    }
+
+    /**
+     * Focuses a temporary element during rerendering
+     *
+     * @param {ExplorerMathDocument} document   The explorer document to use
+     * @returns {HTMLElement}                   The temporary focus element, if any
+     */
+    public setTemporaryFocus(document: ExplorerMathDocument): HTMLElement {
+      let focus = null;
       if (this.explorers) {
         const speech = this.explorers.speech;
-        if (speech && speech.attached) {
+        focus = speech?.attached ? document.tmpFocus : null;
+        if (focus) {
           this.refocus = speech.semanticFocus() ?? null;
+          const adaptor = document.adaptor;
+          adaptor.append(adaptor.body(), focus);
         }
         this.explorers.reattach();
+        focus?.focus();
       }
-      super.rerender(document, start);
+      return focus;
+    }
+
+    /**
+     * Removes the temporary element after rerendering
+     *
+     * @param {HTMLElement} focus  The temporary focus element, if any
+     */
+    public clearTemporaryFocus(focus: HTMLElement) {
+      if (focus) {
+        const promise = this.outputData.speechPromise ?? Promise.resolve();
+        promise.then(() => setTimeout(() => focus.remove(), 100));
+      }
     }
   };
 }
@@ -221,9 +280,19 @@ export interface ExplorerMathDocument extends HTMLDOCUMENT {
   infoIcon: HTMLElement;
 
   /**
+   * An element ot use for temporary focus during rerendering
+   */
+  tmpFocus: HTMLElement;
+
+  /**
    * The objects needed for the explorer
    */
   explorerRegions: RegionPool;
+
+  /**
+   * The MathItem with the active KeyExplorer, if any
+   */
+  activeItem: ExplorerMathItem;
 
   /**
    * Add the Explorer to the MathItems in the MathDocument
@@ -402,9 +471,19 @@ export function ExplorerMathDocumentMixin<
     public infoIcon: HTMLElement;
 
     /**
+     * An element ot use for temporary focus during rerendering
+     */
+    public tmpFocus: HTMLElement;
+
+    /**
      * The objects needed for the explorer
      */
     public explorerRegions: RegionPool = null;
+
+    /**
+     * The MathItem with the active KeyExplorer, if any
+     */
+    public activeItem: ExplorerMathItem = null;
 
     /**
      * Extend the MathItem class used for this MathDocument
@@ -425,8 +504,11 @@ export function ExplorerMathDocumentMixin<
       if (!options.a11y.speechRules) {
         options.a11y.speechRules = `${options.sre.domain}-${options.sre.style}`;
       }
-      options.MathItem = ExplorerMathItemMixin(options.MathItem, toMathML);
-      options.MathItem.roleDescription = options.roleDescription;
+      const mathItem = (options.MathItem = ExplorerMathItemMixin(
+        options.MathItem,
+        toMathML
+      ));
+      mathItem.roleDescription = options.roleDescription;
       this.explorerRegions = new RegionPool(this);
       if ('addStyles' in this) {
         (this as any).addStyles(
@@ -448,6 +530,22 @@ export function ExplorerMathDocumentMixin<
           SVGNS
         ),
       ]);
+      this.tmpFocus = this.adaptor.node('mjx-focus', {
+        tabIndex: 0,
+        style: {
+          outline: 'none',
+          display: 'block',
+          position: 'absolute',
+          top: 0,
+          left: '-10px',
+          width: '1px',
+          height: '1px',
+          overflow: 'hidden',
+        },
+        role: mathItem.ariaRole,
+        'aria-label': mathItem.none,
+        'aria-roledescription': mathItem.none,
+      });
     }
 
     /**
@@ -464,6 +562,17 @@ export function ExplorerMathDocumentMixin<
         }
         this.processed.set('explorer');
       }
+      return this;
+    }
+
+    /**
+     * @override
+     */
+    public rerender(start?: number) {
+      const active = this.activeItem;
+      const focus = active?.setTemporaryFocus(this);
+      super.rerender(start);
+      active?.clearTemporaryFocus(focus);
       return this;
     }
 

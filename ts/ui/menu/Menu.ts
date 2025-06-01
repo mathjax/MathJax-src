@@ -34,6 +34,7 @@ import {
   defaultOptions,
   expandable,
 } from '../../util/Options.js';
+import { ExplorerMathItem } from '../../a11y/explorer.js';
 
 import { SVG } from '../../output/svg.js';
 
@@ -1307,6 +1308,9 @@ export class Menu {
       variable.setValue(true);
       (variable as any).items[0]?.executeCallbacks_?.();
     }
+    if (!Menu.loadingPromises.has('a11y/complexity')) {
+      this.rerender(STATE.COMPILED);
+    }
   }
 
   /**
@@ -1321,9 +1325,9 @@ export class Menu {
       scale + '%'
     );
     if (this.current) {
-      const speech = (this.menu.mathItem as any).explorers.speech;
+      const speech = (this.menu.mathItem as ExplorerMathItem).explorers.speech;
       speech.refocus = this.current;
-      speech.node.focus();
+      speech.focus();
     }
     if (percent) {
       if (percent.match(/^\s*\d+(\.\d*)?\s*%?\s*$/)) {
@@ -1435,6 +1439,7 @@ export class Menu {
       //
       const document = this.document;
       this.document = startup.document = startup.getDocument();
+      this.document.processed = document.processed;
       this.document.menu = this;
       if (document.webworker) {
         this.document.webworker = document.webworker;
@@ -1651,11 +1656,11 @@ export class Menu {
     this.rerenderStart = Math.min(start, this.rerenderStart);
     const startup = MathJax.startup;
     if (!Menu.loading && startup.hasTypeset) {
-      startup.document.whenReady(() => {
+      startup.document.whenReady(async () => {
         if (this.rerenderStart <= STATE.COMPILED) {
           this.document.reset({ inputJax: [] });
         }
-        this.document.rerender(this.rerenderStart);
+        await this.document.rerenderPromise(this.rerenderStart);
         this.rerenderStart = STATE.LAST;
       });
     }

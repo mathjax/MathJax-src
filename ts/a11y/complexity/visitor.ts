@@ -107,11 +107,12 @@ export class ComplexityVisitor extends MmlVisitor {
   /**
    * @override
    */
-  public visitTree(node: MmlNode) {
+  public visitTree(node: MmlNode, id: number) {
     super.visitTree(node, true);
     if (this.options.makeCollapsible) {
-      this.collapse.makeCollapse(node);
+      id = this.collapse.makeCollapse(node, id);
     }
+    return id;
   }
 
   /**

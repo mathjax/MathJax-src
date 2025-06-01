@@ -640,6 +640,10 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
     if (!this.div) return;
     this.Clear();
     const mjx = this.cloneNode(node);
+    const selected = mjx.querySelector('[data-mjx-clone]') as HTMLElement;
+    this.inner.style.backgroundColor = node.style.backgroundColor;
+    selected.style.backgroundColor = '';
+    selected.classList.remove('mjx-selected');
     this.inner.appendChild(mjx);
     this.position(node);
   }
@@ -652,6 +656,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
    */
   private cloneNode(node: HTMLElement): HTMLElement {
     let mjx = node.cloneNode(true) as HTMLElement;
+    mjx.setAttribute('data-mjx-clone', 'true');
     if (mjx.nodeName !== 'MJX-CONTAINER') {
       // remove element spacing (could be done in CSS)
       if (mjx.nodeName !== 'g') {

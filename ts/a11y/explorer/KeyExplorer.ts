@@ -850,7 +850,9 @@ export class SpeechExplorer
     if (this.speech) {
       this.speech.remove();
       this.speech = null;
-      this.node.append(this.img);
+      if (this.img) {
+        this.node.append(this.img);
+      }
       this.node.setAttribute('tabindex', '0');
     }
   }
@@ -935,6 +937,13 @@ export class SpeechExplorer
     for (const child of Array.from(container.childNodes) as HTMLElement[]) {
       child.removeAttribute('aria-hidden');
     }
+  }
+
+  /**
+   * Set focus on the current node
+   */
+  public focus() {
+    this.node.focus();
   }
 
   /********************************************************************/
@@ -1132,6 +1141,7 @@ export class SpeechExplorer
     // If we aren't attached or already active, return
     //
     if (!this.attached || this.active) return;
+    this.document.activeItem = this.item;
     //
     // If there is no speech, request the speech and wait for it
     //
@@ -1322,14 +1332,17 @@ export class SpeechExplorer
   public semanticFocus(): string {
     const focus = [];
     let name = 'data-semantic-id';
-    let node = this.current || this.node;
+    let node = this.current || this.refocus || this.node;
     const action = this.actionable(node);
     if (action) {
       name = action.hasAttribute('data-maction-id') ? 'data-maction-id' : 'id';
       node = action;
       focus.push(nav);
     }
-    focus.unshift(`[${name}="${node.getAttribute(name)}"]`);
+    const attr = node.getAttribute(name);
+    if (attr) {
+      focus.unshift(`[${name}="${attr}"]`);
+    }
     return focus.join(' ');
   }
 }
