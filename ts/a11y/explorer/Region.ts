@@ -23,7 +23,7 @@
 
 import { MathDocument } from '../../core/MathDocument.js';
 import { StyleJsonSheet } from '../../util/StyleJson.js';
-import * as Sre from '../sre.js';
+import { Highlighter, getHighlighter } from './Highlighter.js';
 import { SsmlElement, buildSpeech } from '../speech/SpeechUtil.js';
 
 export type A11yDocument = MathDocument<HTMLElement, Text, Document>;
@@ -43,9 +43,9 @@ export interface Region<T> {
    * Shows the live region in the document.
    *
    * @param {HTMLElement} node
-   * @param {Sre.highlighter} highlighter
+   * @param {Highlighter} highlighter
    */
-  Show(node: HTMLElement, highlighter: Sre.highlighter): void;
+  Show(node: HTMLElement, highlighter: Highlighter): void;
 
   /**
    * Takes the element out of the document flow.
@@ -151,7 +151,7 @@ export abstract class AbstractRegion<T> implements Region<T> {
   /**
    * @override
    */
-  public Show(node: HTMLElement, highlighter: Sre.highlighter) {
+  public Show(node: HTMLElement, highlighter: Highlighter) {
     this.AddElement();
     this.position(node);
     this.highlight(highlighter);
@@ -168,9 +168,9 @@ export abstract class AbstractRegion<T> implements Region<T> {
   /**
    * Highlights the region.
    *
-   * @param {Sre.highlighter} highlighter The Sre highlighter.
+   * @param {Highlighter} highlighter The Sre highlighter.
    */
-  protected abstract highlight(highlighter: Sre.highlighter): void;
+  protected abstract highlight(highlighter: Highlighter): void;
 
   /**
    * @override
@@ -264,7 +264,7 @@ export class DummyRegion extends AbstractRegion<void> {
   /**
    * @override
    */
-  public highlight(_highlighter: Sre.highlighter) {}
+  public highlight(_highlighter: Highlighter) {}
 }
 
 export class StringRegion extends AbstractRegion<string> {
@@ -301,11 +301,10 @@ export class StringRegion extends AbstractRegion<string> {
   /**
    * @override
    */
-  protected highlight(highlighter: Sre.highlighter) {
+  protected highlight(highlighter: Highlighter) {
     if (!this.div) return;
-    const color = highlighter.colorString();
-    this.inner.style.backgroundColor = color.background;
-    this.inner.style.color = color.foreground;
+    this.inner.style.backgroundColor = highlighter.background;
+    this.inner.style.color = highlighter.foreground;
   }
 }
 
@@ -392,16 +391,16 @@ export class SpeechRegion extends LiveRegion {
   /**
    * The highlighter to use.
    */
-  public highlighter: Sre.highlighter = Sre.getHighlighter(
+  public highlighter: Highlighter = getHighlighter(
     { color: 'red' },
     { color: 'black' },
-    { renderer: this.document.outputJax.name, browser: 'v3' }
+    this.document.outputJax.name
   );
 
   /**
    * @override
    */
-  public Show(node: HTMLElement, highlighter: Sre.highlighter) {
+  public Show(node: HTMLElement, highlighter: Highlighter) {
     super.Update('\u00a0'); // Ensures region shown and cannot be overwritten.
     this.node = node;
     super.Show(node, highlighter);
@@ -509,6 +508,14 @@ export class SpeechRegion extends LiveRegion {
   }
 
   /**
+   * @override
+   */
+  public Hide() {
+    speechSynthesis.cancel();
+    super.Hide();
+  }
+
+  /**
    * Highlighting the node that is being marked in the SSML.
    *
    * @param {string} id The id of the node to highlight.
@@ -593,7 +600,7 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
   /**
    * @override
    */
-  protected highlight(highlighter: Sre.highlighter) {
+  protected highlight(highlighter: Highlighter) {
     if (!this.div) return;
     // TODO Do this with styles to avoid the interaction of SVG/CHTML.
     if (
@@ -602,15 +609,14 @@ export class HoverRegion extends AbstractRegion<HTMLElement> {
     ) {
       return;
     }
-    const color = highlighter.colorString();
-    this.inner.style.backgroundColor = color.background;
-    this.inner.style.color = color.foreground;
+    this.inner.style.backgroundColor = highlighter.background;
+    this.inner.style.color = highlighter.foreground;
   }
 
   /**
    * @override
    */
-  public Show(node: HTMLElement, highlighter: Sre.highlighter) {
+  public Show(node: HTMLElement, highlighter: Highlighter) {
     this.AddElement();
     this.div.style.fontSize = this.document.options.a11y.magnify;
     this.Update(node);

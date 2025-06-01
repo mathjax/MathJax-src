@@ -167,7 +167,7 @@
     "@xmldom/xmldom": "^0.8.10",
     "mhchemparser": "^4.2.1",
     "mj-context-menu": "^0.9.1",
-    "speech-rule-engine": "^5.0.0-alpha.2",
+    "speech-rule-engine": "^5.0.0-alpha.4",
     "wicked-good-xpath": "^1.3.0"
   }
 }

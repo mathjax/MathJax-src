@@ -757,14 +757,6 @@ export class Menu {
             'Clearspeak',
             this.radioGroup('speechRules', [['clearspeak-default', 'Auto']])
           ),
-          this.submenu(
-            'ChromeVox',
-            'ChromeVox',
-            this.radioGroup('speechRules', [
-              ['chromevox-default', 'Standard'],
-              ['chromevox-alternative', 'Alternative'],
-            ])
-          ),
           this.rule(),
           this.submenu('A11yLanguage', 'Language'),
         ]),

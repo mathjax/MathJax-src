@@ -157,7 +157,7 @@ settings.</li>
 <li><b>d</b> gives the current depth within the expression.</li>
 
 <li><b>&gt;</b> cycles through the available speech rule sets
-(MathSpeak, ClearSpeak, ChromeVox).</li>
+(MathSpeak, ClearSpeak).</li>
 
 <li><b>&lt;</b> cycles through the verbosity levels for the current
 rule set.</li>
@@ -692,7 +692,7 @@ export class SpeechExplorer
     this.speak(
       summary,
       this.current.getAttribute(SemAttr.BRAILLE),
-      this.SsmlAttributes(this.current)
+      this.SsmlAttributes(this.current, SemAttr.SUMMARY_SSML)
     );
   }
 
@@ -834,7 +834,11 @@ export class SpeechExplorer
       }
       speech += description;
     }
-    this.speak(speech, node.getAttribute(SemAttr.BRAILLE));
+    this.speak(
+      speech,
+      node.getAttribute(SemAttr.BRAILLE),
+      this.SsmlAttributes(node, SemAttr.SPEECH_SSML)
+    );
     this.node.setAttribute('tabindex', '-1');
   }
 
@@ -1050,12 +1054,13 @@ export class SpeechExplorer
    * Get the SSML attribute array
    *
    * @param {HTMLElement} node  The node whose SSML attributes are to be obtained
-   * @returns {string[]}        The prefix/summary/postfix array
+   * @param {SemAttr} center    The name of the SSML attribute between pre and postfix
+   * @returns {string[]}        The prefix/speech or summary/postfix array
    */
-  protected SsmlAttributes(node: HTMLElement): string[] {
+  protected SsmlAttributes(node: HTMLElement, center: SemAttr): string[] {
     return [
       node.getAttribute(SemAttr.PREFIX_SSML),
-      node.getAttribute(SemAttr.SUMMARY_SSML),
+      node.getAttribute(center),
       node.getAttribute(SemAttr.POSTFIX_SSML),
     ];
   }

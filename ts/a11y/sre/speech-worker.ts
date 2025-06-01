@@ -192,6 +192,29 @@ declare const SRE: any;
     nextStyle(data: Message): WorkerResult {
       return Speech(SRE.workerNextStyle, data.mml, data.options, data.nodeId);
     },
+
+    /**
+     * Compute clearspeak preferences for a given locale
+     *
+     * @param {Message} data The data object
+     * @returns {WorkerResult} Promise fulfilled when computation is complete.
+     */
+    async localePreferences(data: Message): WorkerResult {
+      const structure = await SRE.workerLocalePreferences(data.options);
+      // Not strictly necessary for the menu as there should not be one in node.
+      // However, it allows for getting the preferences in a different context.
+      return structure ? global.copyStructure(structure) : structure;
+    },
+
+    /**
+     * Compute relevant clearspeak preference category for a semantic node.
+     *
+     * @param {Message} data The data object
+     * @returns {WorkerResult} Promise fulfilled when computation is complete.
+     */
+    async relevantPreferences(data: Message): WorkerResult {
+      return (await SRE.workerRelevantPreferences(data.mml, data.id)) ?? '';
+    },
   };
 
   /**

@@ -381,6 +381,7 @@ export class WorkerHandler<N, T, D> {
       'locale',
       'domain',
       'style',
+      'domain2style',
     ]);
     const adaptor = this.adaptor;
     this.setSpecialAttributes(container, data.translations, 'data-semantic-');
@@ -404,6 +405,7 @@ export class WorkerHandler<N, T, D> {
     if (speech) {
       if (data.label) {
         adaptor.setAttribute(container, SemAttr.SPEECH, data.label);
+        adaptor.setAttribute(container, SemAttr.SPEECH_SSML, data.ssml);
         item.outputData.speech = data.label;
       }
       adaptor.setAttribute(container, 'data-speech-attached', 'true');
@@ -580,6 +582,62 @@ export class WorkerHandler<N, T, D> {
     this.adaptor.remove(this.iframe);
     this.iframe = this.pool = null;
     this.ready = false;
+  }
+
+  /**
+   * Worker call to compute clearspeak preferences for the current locale.
+   *
+   * @param {OptionList} options The options list.
+   * @param {Map<string, { [prop: string]: string[] }>} prefs Map to store the compute preferences.
+   * @returns {Promise<void>} The promise that resolves when the command is complete
+   */
+  public async clearspeakLocalePreferences(
+    options: OptionList,
+    prefs: Map<string, { [prop: string]: string[] }>
+  ): Promise<void> {
+    await this.Post({
+      cmd: 'Worker',
+      data: {
+        cmd: 'localePreferences',
+        debug: this.options.debug,
+        data: {
+          options: options,
+        },
+      },
+    }).then((e) => {
+      prefs.set(options.locale, e);
+    });
+  }
+
+  /**
+   * Computes the clearspeak preference category that are semantically relevant
+   * for the currently focused node.
+   *
+   * @param {string} math The linearized mml expression.
+   * @param {string} nodeId The semantic id of node to compute the preference for.
+   * @param {Map<number, string>} prefs Map for recording the computed preference.
+   * @param {number} counter Counter for storing the result in the map.
+   * @returns {Promise<void>} The promise that resolves when the command is complete
+   */
+  public async clearspeakRelevantPreferences(
+    math: string,
+    nodeId: string,
+    prefs: Map<number, string>,
+    counter: number
+  ): Promise<void> {
+    await this.Post({
+      cmd: 'Worker',
+      data: {
+        cmd: 'relevantPreferences',
+        debug: this.options.debug,
+        data: {
+          mml: math,
+          id: nodeId,
+        },
+      },
+    }).then((e) => {
+      prefs.set(counter, e);
+    });
   }
 
   /**
