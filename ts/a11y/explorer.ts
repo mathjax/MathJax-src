@@ -212,12 +212,10 @@ export function ExplorerMathItemMixin<B extends Constructor<HTMLMATHITEM>>(
      * @override
      */
     public state(state: number = null, restore: boolean = false) {
-      if (state < STATE.EXPLORER) {
-        if (this.explorers) {
-          for (const explorer of Object.values(this.explorers.explorers)) {
-            if (explorer.active) {
-              explorer.Stop();
-            }
+      if (state < STATE.EXPLORER && this.explorers) {
+        for (const explorer of Object.values(this.explorers.explorers)) {
+          if (explorer.active) {
+            explorer.Stop();
           }
         }
       }
