@@ -94,7 +94,7 @@ export function MathtoolsTagFormat(
             form
           );
         }
-        this.mtFormats.set(form, forms[form]);
+        this.mtFormats.set(form, forms[form] as [string, string, string]);
       }
     }
 

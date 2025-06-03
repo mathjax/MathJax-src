@@ -1140,7 +1140,7 @@ export class Menu {
     const promise = this.loadRequiredExtensions();
     return rerender
       ? promise.then(() => mathjax.handleRetriesFor(() => this.rerender()))
-      : promise;
+      : promise.then(() => {});
   }
 
   /**
