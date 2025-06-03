@@ -501,8 +501,16 @@ export class Styles {
     // it with its parent's other children
     //
     while (name.match(/-/)) {
+      const cname = name;
       name = this.parentName(name);
-      if (!Styles.connect[name]) break;
+      if (
+        !Styles.connect[cname] &&
+        !Styles.connect[name]?.children?.includes(
+          cname.substring(name.length + 1)
+        )
+      ) {
+        break;
+      }
       Styles.connect[name].combine.call(this, name);
     }
   }

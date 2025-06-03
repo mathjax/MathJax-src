@@ -248,6 +248,13 @@ describe('CssStyles object', () => {
       'border-top': 'red',
       'border-top-color': 'red',
     }, 'border-top: red; border-right: red; border-bottom: red;');
+    cssTest('border-radius: 3px', {
+      'border-radius': '3px',
+    });
+    cssTest('background: red; background-clip: none', {
+      'background': 'red',
+      'background-clip': 'none',
+    });
   });
 
   test('font', () => {
