@@ -8,7 +8,7 @@ import {
   setupComponents,
   expectTexError
 } from '#helpers';
-import '#js/input/tex/setoptions/SetoptionsConfiguration';
+import '#js/input/tex/setoptions/SetOptionsConfiguration';
 import '#js/input/tex/ams/AmsConfiguration';
 import '#js/input/tex/units/UnitsConfiguration';
 

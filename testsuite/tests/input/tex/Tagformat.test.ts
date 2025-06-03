@@ -1,6 +1,6 @@
 import { beforeEach, describe, test } from '@jest/globals';
 import { toXmlMatch, setupTex, tex2mml } from '#helpers';
-import '#js/input/tex/tagformat/TagformatConfiguration';
+import '#js/input/tex/tagformat/TagFormatConfiguration';
 import '#js/input/tex/ams/AmsConfiguration';
 
 beforeEach(() => setupTex(['base', 'ams', 'tagformat'], {
