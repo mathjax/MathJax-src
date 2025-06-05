@@ -1,0 +1,48 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    name: Compile and test MathJax
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 10
+          run_install: false
+
+      - name: Install packages
+        run: |
+          pnpm -r i
+          pnpm link:src
+
+      - name: Temporarily make link
+        run: |
+          cd node_modules
+          ln -s @mathjax/src mathjax-full
+          
+      - name: Compile MathJax
+        run: |
+          pnpm mjs:compile
+          components/bin/makeAll --mjs --terse --build components/mjs
+          pnpm cjs:compile
+          pnpm cjs:components:src:build
+          components/bin/makeAll --cjs --terse --build components/cjs
+          pnpm copy:pkg cjs
+
+      - name: Build tests
+        run: pnpm tsc -p testsuite/tsconfig.json
+          
+      - name: Run tests
+        run: pnpm test:gh
