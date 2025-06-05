@@ -3,7 +3,6 @@
  * https://jestjs.io/docs/configuration
  */
 
-// import type {Config} from 'jest';
 import * as path from 'path';
 import { fileURLToPath } from 'node:url';
 

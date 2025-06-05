@@ -24,8 +24,8 @@ jobs:
 
       - name: Install packages
         run: |
-          pnpm -r i
-          pnpm link:src
+          pnpm -s -r i
+          pnpm -s link:src
 
       - name: Temporarily make link
         run: |
@@ -35,18 +35,18 @@ jobs:
           
       - name: Compile MathJax
         run: |
-          pnpm mjs:compile
+          pnpm -s mjs:compile
           components/bin/makeAll --mjs --terse --build components/mjs
-          pnpm cjs:compile
-          pnpm cjs:components:src:build
+          pnpm -s cjs:compile
+          pnpm -s cjs:components:src:build
           components/bin/makeAll --cjs --terse --build components/cjs
-          pnpm copy:pkg cjs
+          pnpm -s copy:pkg cjs
 
       - name: Build tests
-        run: pnpm tsc -p testsuite/tsconfig.json
+        run: pnpm -s tsc -p testsuite/tsconfig.json
           
       - name: Run tests
-        run: pnpm test:gh
+        run: pnpm -s test:gh
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
