@@ -4127,6 +4127,25 @@ describe('Moving limits', () => {
 
   /********************************************************************************/
 
+  it('Subscripted overline with space (#3372)', () => {
+    toXmlMatch(
+      tex2mml('\\overline{X}_ {y}'),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\overline{X}_ {y}" display="block">
+         <msub data-latex="\\overline{X}_ {y}">
+           <mover data-latex="\\overline{X}">
+             <mi data-latex="X">X</mi>
+             <mo accent="true">&#x2015;</mo>
+           </mover>
+           <mrow data-mjx-texclass="ORD">
+             <mi data-latex="y">y</mi>
+           </mrow>
+         </msub>
+       </math>`
+    );
+  });
+
+  /********************************************************************************/
+
   it('Overbrace 1', () => {
     toXmlMatch(
       tex2mml('\\overbrace{abc}'),
