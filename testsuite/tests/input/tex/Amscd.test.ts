@@ -778,6 +778,38 @@ describe('AmsCD', () => {
 
   /********************************************************************************/
 
+  it('Entry with prime (#3373)', () => {
+    toXmlMatch(
+      tex2mml(`\\begin{CD}A' @>>> B\\end{CD}`),
+      `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{CD}A' @&gt;&gt;&gt; B\\end{CD}" display="block">
+         <mtable columnspacing="5pt" rowspacing="5pt" displaystyle="true" data-latex-item="{CD}" data-latex="\\begin{CD}A' @&gt;&gt;&gt; B\\end{CD}">
+           <mtr>
+             <mtd>
+               <msup>
+                 <mi data-latex="A">A</mi>
+                 <mo data-mjx-alternate="1">&#x2032;</mo>
+               </msup>
+               <mpadded height="8.5pt" depth="2pt"></mpadded>
+             </mtd>
+             <mtd>
+               <mover>
+                 <mo minsize="2.75em">&#x2192;</mo>
+                 <mpadded width="+.67em" lspace=".33em" voffset=".1em">
+                   <mspace width="2.75em" linebreak="nobreak" data-latex="\\kern 2.75em"></mspace>
+                 </mpadded>
+               </mover>
+             </mtd>
+             <mtd>
+               <mi data-latex="B">B</mi>
+             </mtd>
+           </mtr>
+         </mtable>
+       </math>`
+    );
+  });
+
+  /********************************************************************************/
+
 });
 
 /**********************************************************************************/

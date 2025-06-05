@@ -197,7 +197,7 @@ const AmsCdMethods: { [key: string]: ParseMethod } = {
    */
   cell(parser: TexParser, name: string) {
     const top = parser.stack.Top() as ArrayItem;
-    if (top.table.length % 2 === 0 && top.row.length === 0) {
+    if ((top.table || []).length % 2 === 0 && (top.row || []).length === 0) {
       //
       // Add a strut to the first cell in even rows to get
       // better spacing of arrow rows.
