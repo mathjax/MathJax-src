@@ -134,6 +134,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
     let c = '';
     const text = parser.string.substring(parser.i);
     if (next === "'") {
+      // @ts-ignore
       match = text.match(/^'([0-7]{1,7}) ?/u);
       if (match) {
         c = String.fromCodePoint(parseInt(match[1], 8));
@@ -144,6 +145,7 @@ const UnicodeMethods: { [key: string]: ParseMethod } = {
         c = String.fromCodePoint(parseInt(match[1], 16));
       }
     } else if (next === '`') {
+      // @ts-ignore
       match = text.match(/^`(?:(\\\S)|(.))/u);
       if (match) {
         if (match[2]) {

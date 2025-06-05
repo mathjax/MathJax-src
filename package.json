@@ -123,7 +123,8 @@
     "use-cjs": "echo '{\n  \"extends\": \"./tsconfig/cjs.json\"\n}' > tsconfig.json",
     "use-mjs": "echo '{\n  \"extends\": \"./tsconfig/mjs.json\"\n}' > tsconfig.json",
     "=============================================================================== aliases": "",
-    "test": "cd testsuite && pnpm -s test --",
+    "test": "cd testsuite && pnpm -s test --verbose",
+    "test:gh": "cd testsuite && pnpm -s test --silent",
     "clean": "pnpm -s clean:mod cjs && pnpm -s cjs:bundle:clean && pnpm -s clean:mod mjs && pnpm -s clean:dir bundle",
     "compile-cjs": "pnpm -s cjs:compile",
     "compile-mjs": "pnpm -s mjs:compile",
@@ -140,21 +141,21 @@
   "devDependencies": {
     "copyfiles": "^2.4.1",
     "diff": "^5.2.0",
-    "eslint": "^9.7.0",
+    "eslint": "^9.28.0",
     "eslint-formatter-unix": "^8.40.0",
     "eslint-plugin-jsdoc": "^48.11.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "husky": "^9.1.5",
-    "lint-staged": "^15.2.10",
-    "prettier": "^3.3.3",
-    "rimraf": "^5.0.5",
-    "terser-webpack-plugin": "^5.3.10",
-    "typescript": "^5.4.5",
-    "typescript-eslint": "^8.0.0",
+    "eslint-plugin-prettier": "^5.4.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.2",
+    "prettier": "^3.5.3",
+    "rimraf": "^5.0.10",
+    "terser-webpack-plugin": "^5.3.14",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.33.1",
     "typescript-tools": "^0.3.1",
-    "webpack": "^5.91.0",
+    "webpack": "^5.99.9",
     "webpack-cli": "^5.1.4",
-    "xslt3": "^2.6.0"
+    "xslt3": "^2.7.0"
   },
   "lint-staged": {
     "ts/**/*.ts": [
@@ -163,11 +164,11 @@
     ]
   },
   "dependencies": {
-    "@mathjax/mathjax-newcm-font": "0.4.0-beta.8",
+    "@mathjax/mathjax-newcm-font": "0.4.3-beta.8",
     "@xmldom/xmldom": "^0.8.10",
     "mhchemparser": "^4.2.1",
     "mj-context-menu": "^0.9.1",
-    "speech-rule-engine": "^5.0.0-alpha.4",
+    "speech-rule-engine": "5.0.0-alpha.4",
     "wicked-good-xpath": "^1.3.0"
   }
 }

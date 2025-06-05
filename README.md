@@ -10,6 +10,8 @@
 ![npm monthly downloads (full)](https://img.shields.io/npm/dm/mathjax-full?label=npm%20%28full%29)
 ![npm total downloads](https://img.shields.io/npm/dt/mathjax.svg?style=flat&label=npm%20total)
 ![npm total downloads](https://img.shields.io/npm/dt/mathjax-full.svg?style=flat&label=npm%20total%20%28full%29)
+![test workflow](https://github.com/MathJax/MathJax-src/actions/workflows/test.js.yml/badge.svg?branch=develop)
+[![codecov](https://codecov.io/gh/mathjax/mathjax-src/develop/main/graph/badge.svg)](https://codecov.io/gh/mathjax/mathjax-src)
 
 ## Beautiful math in all browsers
 
