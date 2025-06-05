@@ -13,8 +13,10 @@ import {mathjax} from '#js/mathjax.js';
 import {OptionList} from '#js/util/Options.js';
 import {tmpJsonFile} from '#src/constants.js';
 import * as fs from 'fs';
+// @ts-ignore
 import {init} from '#source/node-main/node-main.mjs';
 import {expect} from '@jest/globals';
+// @ts-ignore
 import {source} from '#source/source.js';
 
 declare const MathJax: any;
