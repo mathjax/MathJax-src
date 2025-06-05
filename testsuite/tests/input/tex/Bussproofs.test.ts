@@ -2140,7 +2140,7 @@ describe('BussproofsRegProofs', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{prooftree}\\AXC{}\\RL{$Hyp^{1}$}\\UIC{$P$}\\AXC{$P\\rightarrow Q$}\\RL{$\\rightarrow_E$}\\solidLine\\BIC{$Q^2$}\\AXC{$Q\\rightarrow R$} \\RL{$\\rightarrow_E$} \\BIC{$R$} \\AXC{$Q$}\\RL{Rit$^2$} \\UIC{$Q$}\\RL{$\\wedge_I$}\\BIC{$Q\\wedge R$}\\RL{\${\\rightarrow_I}^1$}\\UIC{$P\\rightarrow Q\\wedge R$}\\end{prooftree}" display="block">
          <mrow semantics="bspr_inference:1;bspr_proof:true;bspr_labelledRule:right">
            <mrow>
-             <mspace width="13.248em"></mspace>
+             <mspace width="13.25em"></mspace>
              <mrow data-latex="\\begin{prooftree}\\AXC{}\\RL{$Hyp^{1}$}\\UIC{$P$}\\AXC{$P\\rightarrow Q$}\\RL{$\\rightarrow_E$}\\solidLine\\BIC{$Q^2$}\\AXC{$Q\\rightarrow R$} \\RL{$\\rightarrow_E$} \\BIC{$R$} \\AXC{$Q$}\\RL{Rit$^2$} \\UIC{$Q$}\\RL{$\\wedge_I$}\\BIC{$Q\\wedge R$}\\RL{\${\\rightarrow_I}^1$}\\UIC{$P\\rightarrow Q\\wedge R$}\\end{prooftree}" data-latex-item="{prooftree}">
                <mspace width="-1.155em"></mspace>
                <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
@@ -2151,9 +2151,9 @@ describe('BussproofsRegProofs', () => {
                          <mtd rowalign="bottom">
                            <mrow semantics="bspr_inference:2;bspr_labelledRule:right">
                              <mrow>
-                               <mspace width="-13.248em"></mspace>
+                               <mspace width="-13.25em"></mspace>
                                <mrow>
-                                 <mspace width="9.11em"></mspace>
+                                 <mspace width="9.111em"></mspace>
                                  <mrow data-latex="\\RL{\${\\rightarrow_I}^1$}">
                                    <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
                                      <mtr>
@@ -2162,7 +2162,7 @@ describe('BussproofsRegProofs', () => {
                                            <mtr>
                                              <mtd rowalign="bottom">
                                                <mrow semantics="bspr_inference:2;bspr_labelledRule:right">
-                                                 <mspace width="-9.11em"></mspace>
+                                                 <mspace width="-9.111em"></mspace>
                                                  <mrow>
                                                    <mspace width="3.592em"></mspace>
                                                    <mrow data-latex="\\BIC{$R$}">
@@ -2380,7 +2380,7 @@ describe('BussproofsRegProofs', () => {
                                  </mrow>
                                </mrow>
                              </mrow>
-                             <mspace width="-5.455em"></mspace>
+                             <mspace width="-5.456em"></mspace>
                            </mrow>
                          </mtd>
                        </mtr>
@@ -2420,7 +2420,7 @@ describe('BussproofsRegProofs', () => {
                </mpadded>
              </mrow>
            </mrow>
-           <mspace width="2.952em"></mspace>
+           <mspace width="2.953em"></mspace>
          </mrow>
        </math>`
     );
@@ -2436,7 +2436,7 @@ describe('BussproofsRegProofs', () => {
       `<math xmlns="http://www.w3.org/1998/Math/MathML" data-latex="\\begin{prooftree}\\alwaysRootAtTop\\AXC{}\\RL{$Hyp^{1}$}\\UIC{$P$}\\AXC{$P\\rightarrow Q$}\\RL{$\\rightarrow_E$}\\solidLine\\BIC{$Q^2$}\\alwaysRootAtBottom\\AXC{$Q\\rightarrow R$} \\RL{$\\rightarrow_E$} \\BIC{$R$} \\AXC{$Q$}\\RL{Rit$^2$} \\UIC{$Q$}\\RL{$\\wedge_I$}\\BIC{$Q\\wedge R$}\\RL{\${\\rightarrow_I}^1$}\\UIC{$P\\rightarrow Q\\wedge R$}\\end{prooftree}" display="block">
          <mrow semantics="bspr_inference:1;bspr_proof:true;bspr_labelledRule:right">
            <mrow>
-             <mspace width="13.248em"></mspace>
+             <mspace width="13.25em"></mspace>
              <mrow data-latex="\\begin{prooftree}\\alwaysRootAtTop\\AXC{}\\RL{$Hyp^{1}$}\\UIC{$P$}\\AXC{$P\\rightarrow Q$}\\RL{$\\rightarrow_E$}\\solidLine\\BIC{$Q^2$}\\alwaysRootAtBottom\\AXC{$Q\\rightarrow R$} \\RL{$\\rightarrow_E$} \\BIC{$R$} \\AXC{$Q$}\\RL{Rit$^2$} \\UIC{$Q$}\\RL{$\\wedge_I$}\\BIC{$Q\\wedge R$}\\RL{\${\\rightarrow_I}^1$}\\UIC{$P\\rightarrow Q\\wedge R$}\\end{prooftree}" data-latex-item="{prooftree}">
                <mspace width="-1.155em"></mspace>
                <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
@@ -2447,9 +2447,9 @@ describe('BussproofsRegProofs', () => {
                          <mtd rowalign="bottom">
                            <mrow semantics="bspr_inference:2;bspr_labelledRule:right">
                              <mrow>
-                               <mspace width="-13.248em"></mspace>
+                               <mspace width="-13.25em"></mspace>
                                <mrow>
-                                 <mspace width="9.11em"></mspace>
+                                 <mspace width="9.111em"></mspace>
                                  <mrow data-latex="\\RL{\${\\rightarrow_I}^1$}">
                                    <mtable align="top 2" rowlines="solid" framespacing="0 0" semantics="bspr_inferenceRule:down">
                                      <mtr>
@@ -2458,7 +2458,7 @@ describe('BussproofsRegProofs', () => {
                                            <mtr>
                                              <mtd rowalign="bottom">
                                                <mrow semantics="bspr_inference:2;bspr_labelledRule:right">
-                                                 <mspace width="-9.11em"></mspace>
+                                                 <mspace width="-9.111em"></mspace>
                                                  <mrow>
                                                    <mspace width="3.592em"></mspace>
                                                    <mrow data-latex="\\BIC{$R$}">
@@ -2676,7 +2676,7 @@ describe('BussproofsRegProofs', () => {
                                  </mrow>
                                </mrow>
                              </mrow>
-                             <mspace width="-5.455em"></mspace>
+                             <mspace width="-5.456em"></mspace>
                            </mrow>
                          </mtd>
                        </mtr>
@@ -2716,7 +2716,7 @@ describe('BussproofsRegProofs', () => {
                </mpadded>
              </mrow>
            </mrow>
-           <mspace width="2.952em"></mspace>
+           <mspace width="2.953em"></mspace>
          </mrow>
        </math>`
     );
