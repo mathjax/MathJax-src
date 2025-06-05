@@ -15,6 +15,7 @@ import {tmpJsonFile} from '#src/constants.js';
 import * as fs from 'fs';
 import {init} from '#source/node-main/node-main.mjs';
 import {expect} from '@jest/globals';
+import {source} from '#source/source.js';
 
 declare const MathJax: any;
 type MATHITEM = MathItem<any, any, any>;
@@ -31,7 +32,7 @@ let page: (text: string) => Promise<string[]>;
 /**
  * A promise that resolves when the components are loaded and set up.
  */
-let componentPromise: Promise<string[]>;
+let componentPromise: Promise<void | typeof MathJax>;
 
 /**
  * Get the adaptor, and register HTML documents.
@@ -326,6 +327,7 @@ export async function setupComponents(config: any) {
   MathJax.config.loader.require = (file: string) => {
     return new Promise((ok, fail) => import(file).then(ok).catch(e => fail(e)));
   }
+  MathJax.config.loader.source = source;
   config.startup ??= {};
   config.startup.typeset ??= false;
   config = Object.assign({}, throwCompileErrors, config);

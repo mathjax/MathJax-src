@@ -11,7 +11,7 @@
       "#src/*": ["./src/*"],
       "#helpers": ["./src/index.js"]
     },
-    "lib": ["es2022"]
+    "lib": ["DOM", "es2022"]
   },
   "include": ["./tests/**/*.ts", "./src/*.ts"]
 }
