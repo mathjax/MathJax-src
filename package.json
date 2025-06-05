@@ -164,7 +164,7 @@
     ]
   },
   "dependencies": {
-    "@mathjax/mathjax-newcm-font": "0.4.0-beta.8",
+    "@mathjax/mathjax-newcm-font": "0.4.3-beta.8",
     "@xmldom/xmldom": "^0.8.10",
     "mhchemparser": "^4.2.1",
     "mj-context-menu": "^0.9.1",

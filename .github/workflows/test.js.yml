@@ -27,12 +27,6 @@ jobs:
           pnpm -s -r i
           pnpm -s link:src
 
-      - name: Temporarily make link
-        run: |
-          cd node_modules
-          ln -s @mathjax/src mathjax-full
-          cd ..
-          
       - name: Compile MathJax
         run: |
           pnpm -s mjs:compile
