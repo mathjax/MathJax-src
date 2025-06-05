@@ -14,17 +14,18 @@ const tsjest = path.resolve(__dirname, 'node_modules', 'ts-jest');
 const config = {
   rootDir: '..',
   clearMocks: true,
-  coverageDirectory: "coverage",
-  coverageProvider: "v8",
-  coveragePathIgnorePatterns: ["node_modules", "testsuite", "mjs/util/entities"],
-  testEnvironment: "node",
+  collectCoverage: true,
+  coverageDirectory: 'coverage',
+  coverageProvider: 'v8',
+  coveragePathIgnorePatterns: ['node_modules', 'testsuite', 'mjs/util/entities'],
+  testEnvironment: 'node',
   preset: tsjest,
   testMatch: [
-    "**/tests/**/*.test.ts"
+    '**/tests/**/*.test.ts'
   ],
   extensionsToTreatAsEsm: ['.ts'],
   transform: {
-    "^.+\\.tsx?$": [ tsjest, { useESM: true } ],
+    '^.+\\.tsx?$': [ tsjest, { useESM: true } ],
   },
   reporters: ['default', [path.resolve(__dirname, 'src/texReporter.js'), {}]]
 };

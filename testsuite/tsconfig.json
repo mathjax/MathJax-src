@@ -9,8 +9,9 @@
       "#js/*": ["../mjs/*"],
       "#source/*": ["../components/mjs/*"],
       "#src/*": ["./src/*"],
-      "#helpers": ["./src/index.js"]
+      "#helpers": ["./js/src/index.js"]
     },
+    "isolatedModules": true,
     "lib": ["DOM", "es2022"]
   },
   "include": ["./tests/**/*.ts", "./src/*.ts"]
