@@ -3,7 +3,6 @@
 ![GitHub release version](https://img.shields.io/github/v/release/mathjax/MathJax-src.svg?sort=semver)
 ![GitHub release version (v2)](https://img.shields.io/github/package-json/v/mathjax/MathJax/legacy-v2.svg?label=release-v2)
 ![NPM version](https://img.shields.io/npm/v/mathjax.svg?style=flat)
-<a href="http://www.numfocus.org">![powered by NumFOCUS](https://img.shields.io/badge/powered%20by-NumFOCUS-orange.svg?style=flat)</a>
 ![jsdelivr rank](https://flat.badgen.net/jsdelivr/rank/npm/mathjax?color=green)
 ![jsDelivr hits (npm)](https://img.shields.io/jsdelivr/npm/hm/mathjax)
 ![npm monthly downloads (full)](https://img.shields.io/npm/dm/mathjax?label=npm)
@@ -11,7 +10,7 @@
 ![npm total downloads](https://img.shields.io/npm/dt/mathjax.svg?style=flat&label=npm%20total)
 ![npm total downloads](https://img.shields.io/npm/dt/mathjax-full.svg?style=flat&label=npm%20total%20%28full%29)
 ![test workflow](https://github.com/MathJax/MathJax-src/actions/workflows/test.js.yml/badge.svg?branch=develop)
-[![codecov](https://codecov.io/gh/mathjax/mathjax-src/develop/main/graph/badge.svg)](https://codecov.io/gh/mathjax/mathjax-src)
+[![codecov](https://codecov.io/gh/mathjax/mathjax-src/branch/develop/graph/badge.svg)](https://codecov.io/gh/mathjax/mathjax-src/tree/develop)
 
 ## Beautiful math in all browsers
 
