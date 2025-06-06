@@ -164,6 +164,7 @@
     ]
   },
   "dependencies": {
+    "@eslint/js": "^9.28.0",
     "@mathjax/mathjax-newcm-font": "0.4.3-beta.8",
     "@xmldom/xmldom": "^0.8.10",
     "mhchemparser": "^4.2.1",

@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@eslint/js':
+        specifier: ^9.28.0
+        version: 9.28.0
       '@mathjax/mathjax-newcm-font':
         specifier: 0.4.3-beta.8
         version: 0.4.3-beta.8
